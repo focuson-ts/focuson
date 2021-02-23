@@ -23,5 +23,5 @@ laoban clean && laoban tsc && laoban test && laoban status
 echo
 echo "Check that the status for tsc and tests is 'true' in all projects"
 echo "then you can type"
-echo "        laoban publish && loaban status"
+echo "        laoban publish && laoban status"
 

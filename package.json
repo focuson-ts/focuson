@@ -14,7 +14,7 @@
     "optics"
   ],
   "license": "MIT",
-  "repository": "git@github.com:phil-rice/focuson.git",
+  "repository"     : "github:focuson-ts/focuson",
   "scripts": {
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
