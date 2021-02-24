@@ -20,8 +20,8 @@ dependancies (other than devDependencies)
 * https://www.linkedin.com/pulse/functional-lenses-javascript-vladim%C3%ADr-gorej/
 
 ## Example projects
-* [An example showing how much simpler lens code is than the normal copy code](https://github.com/phil-rice/ts-lens-react/blob/master/examples/lens/dragon)
-* [State management in react](https://github.com/phil-rice/ts-lens-react/blob/master/modules/state)
+* [An example showing how much simpler lens code is than the normal copy code](https://github.com/focuson-ts/focuson/tree/master/examples/lens/dragon)
+* [State management in react](https://www.npmjs.com/package/@focuson/state)
 
 # Downloading
 

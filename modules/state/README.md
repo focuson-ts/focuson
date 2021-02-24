@@ -18,6 +18,19 @@ With this project we have the idea that a lens is focused on a bit of the state.
 (just like in redux), and components can normally change just that bit of the json (unlike redux where there is no such
 protection).
 
+# Dependencies
+
+This project is very light weight. The only dependency is on the sister library [the library that implements lens](https://www.npmjs.com/package/@focuson/lens)
+
+Note that although it talks about react, there are no dependency on React or any other library or framework. This code
+is a library that can be used in any project with any other framework. All of the examples are currently
+in React simply because this project grew out of a refactoring of React/Redux code.
+
+# Size of code
+This project and it's sister library are extremely small. The power in them is from the power in the
+idea behind lens. As much as possible has been removed from these libraries leaving just a single file 
+in each that is itself quite small. 
+
 # Getting started
 
 ## Download
@@ -150,3 +163,9 @@ to the structure. However there are projects I can visualise where redux would b
 redux actions actually used lens)
 
 Certainly the ability to test the code is (in my experience) far easier than with redux.
+
+# Where are the tests?
+
+To keep the projects small, the tests have been moved  [here](https://github.com/focuson-ts/focuson/tree/master/modules/lenstest)
+
+The tests in the example projects act as integration tests as well
