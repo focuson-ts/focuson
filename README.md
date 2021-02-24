@@ -1,25 +1,25 @@
 # What is this project?
 
 This project is a number of projects bundled together in a mono repo
-* [@focuson/lens: Easy - perhaps even beautiful - code for editing deep immutable objects](modules/lens/README.md)
-     * [An example showing how much simpler lens code is than the normal copy code](examples/lens/dragon)
-* [@focuson/state: State management for projects (including React) using the lens in the above project](modules/state/README.md)
-     * [@focuson/example_state_cpq - the Redux 'counter' example](examples/state/counter)
-     * [@focuson/example_state_cpq - A 'configure price quote' example](examples/state/cpq)
-     * [@focuson/example_state_cart - The Redux 'shopping cart' example](examples/state/shopping-cart)
-     * [@focuson/example_state_tictactoe - The React tictactoe example](examples/state/shopping-cart)
+* [@focuson/lens: Easy - perhaps even beautiful - code for editing deep immutable objects](https://www.npmjs.com/package/@focuson/lens)
+     * [An example showing how much simpler lens code is than the normal copy code](https://github.com/focuson-ts/focuson/tree/master/examples/lens/dragon)
+* [@focuson/state: State management for projects (including React) using the lens in the above project](https://www.npmjs.com/package/@focuson/state)
+     * [@focuson/example_state_cpq - the Redux 'counter' example](https://github.com/focuson-ts/focuson/tree/master/examples/state/counter)
+     * [@focuson/example_state_cpq - A 'configure price quote' example](https://github.com/focuson-ts/focuson/tree/master/examples/state/cpq)
+     * [@focuson/example_state_cart - The Redux 'shopping cart' example](https://github.com/focuson-ts/focuson/tree/master/examples/state/shopping-cart)
+     * [@focuson/example_state_tictactoe - The React tictactoe example](https://github.com/focuson-ts/focuson/tree/master/examples/state/tictactoe)
 
 The code on demand is still work in progress.
-* [@focuson/codeondemand: Code on Demand for Restful servers that are resiliant to change (this is more R&D than the others)](modules/codeondemand/README.md)
-     * [@focuson/example_state_tictactoe - The React tictactoe example](examples/state/shopping-cart)
-     * [@focuson/examples_codeondemand_cpq - A 'configure price quote' example](examples/state/cpq)
+* [@focuson/codeondemand: Code on Demand for Restful servers that are resiliant to change (this is more R&D than the others)](https://www.npmjs.com/package/@focuson/codeondemand)
+     * [@focuson/example_state_tictactoe - The React tictactoe example](https://github.com/focuson-ts/focuson/tree/master/examples/codeondemand/tictactoe)
+     * [@focuson/examples_codeondemand_cpq - A 'configure price quote' example](https://github.com/focuson-ts/focuson/tree/master/examples/codeondemand/cpq)
 
 # Getting started
 
 These show how to use the lenses for state management in React.
 
-* [Getting started with a simple counter example](https://github.com/phil-rice/ts-lens-react/tree/master/tutorial/counter)
-* [A more complicated example](https://github.com/phil-rice/ts-lens-react/blob/master/tutorial/tictactoe)
+* [Getting started with a simple counter example](https://github.com/focuson-ts/focuson/tree/master/tutorial/counter)
+* [A more complicated example](https://github.com/focuson-ts/focuson/tree/master/tutorial/tictactoe)
 
 # Working with the project
 
