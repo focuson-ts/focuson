@@ -51,7 +51,7 @@ Unfortunately IDEs don't seem to work well with mono repos. When using an IDE su
 Setting up to publish
 ```shell
 # From the root directory...
-scripts/prepublish.sh
+scripts/stage.sh
 # Please check the status is suitable for publishing
 ```
 
