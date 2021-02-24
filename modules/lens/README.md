@@ -10,8 +10,8 @@ dependancies (other than devDependencies)
 # Getting started
 
 ## Tutorials
-* [Getting started with a simple counter example](https://github.com/phil-rice/ts-lens-react/tree/master/tutorial/counter)
-* [A more complicated example](https://github.com/phil-rice/ts-lens-react/blob/master/tutorial/tictactoe)
+* [Getting started with a simple counter example](https://github.com/focuson-ts/focuson/tree/master/tutorial/counter)
+* [A more complicated example](https://github.com/focuson-ts/focuson/tree/master/tutorial/tictactoe)
 
 ## Links about lenses
 
@@ -33,7 +33,7 @@ npm install @focuson/lens
 
 # Where are the tests?
 
-To keep the projects small, the tests have been moved  [here](https://github.com/phil-rice/ts-lens-react/blob/master/modules/lenstest)
+To keep the projects small, the tests have been moved  [here](https://github.com/focuson-ts/focuson/tree/master/modules/lenstest)
 
 # Example usage
 

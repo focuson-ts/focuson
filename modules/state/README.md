@@ -32,14 +32,14 @@ This code uses the lens defined [here](https://github.com/phil-rice/ts-lens-reac
 README introduces Lens.
 
 ## Tutorials
-* [Getting started with a simple counter example](https://github.com/phil-rice/ts-lens-react/tree/master/tutorial/counter)
-* [A more complicated example](https://github.com/phil-rice/ts-lens-react/blob/master/tutorial/tictactoe)
+* [Getting started with a simple counter example](https://github.com/focuson-ts/focuson/tree/master/tutorial/counter)
+* [A more complicated example](https://github.com/focuson-ts/focuson/tree/master/tutorial/tictactoe)
 
 ## Examples
- * [@focuson/example_state_cpq - the Redux 'counter' example](https://github.com/phil-rice/ts-lens-react/tree/master/examples/state/counter)
- * [@focuson/example_state_cpq - A 'configure price quote' example](https://github.com/phil-rice/ts-lens-react/tree/master/examples/state/cpq)
- * [@focuson/example_state_cart - The Redux 'shopping cart' example](https://github.com/phil-rice/ts-lens-react/tree/master/examples/state/shopping-cart)
- * [@focuson/example_state_tictactoe - The React tictactoe example](https://github.com/phil-rice/ts-lens-react/tree/master/examples/state/tictactoe)
+* [@focuson/example_state_cpq - the Redux 'counter' example](https://github.com/focuson-ts/focuson/tree/master/examples/state/counter)
+* [@focuson/example_state_cpq - A 'configure price quote' example](https://github.com/focuson-ts/focuson/tree/master/examples/state/cpq)
+* [@focuson/example_state_cart - The Redux 'shopping cart' example](https://github.com/focuson-ts/focuson/tree/master/examples/state/shopping-cart)
+* [@focuson/example_state_tictactoe - The React tictactoe example](https://github.com/focuson-ts/focuson/tree/master/examples/state/tictactoe)
 
 # When should I use this project
 
