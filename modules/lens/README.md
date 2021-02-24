@@ -83,8 +83,11 @@ export function eat(dragon: Dragon, item: any): Dragon {
 Now let's try writing it with Lenses. And once we've written it, let's consider how easy or hard it would be to change if the structure of
 the dragon changed
 ```typescript
-export let dragonContentsL: Lens<Dragon, any[]> = Lenses.build<Dragon>('dragon').focusOn('body').focusOn('chest').focusOn('stomach').focusOn('contents')
-export let eat: (dragon: Dragon, item: any) => dragonContentsL.transform(oldContents => [...oldContents, item])(dragon);
+export let dragonContentsL: Lens<Dragon, any[]> = 
+    Lenses.build<Dragon>('dragon').focusOn('body').focusOn('chest').
+                                       focusOn('stomach').focusOn('contents')
+export let eat: (dragon: Dragon, item: any) => 
+    dragonContentsL.transform(oldContents => [...oldContents, item])(dragon);
 ```
 
 # Lenses and focus
@@ -106,7 +109,9 @@ takes an original main, a new child and returns a new main. `(m: Main, c: Child)
 ## The magic of composibility
 This is easy enough, but the magic comes when we discover that they are composible. It is the composibility that allows the magic of 
 ```typescript
-export let dragonContentsL: Lens<Dragon, any[]> = Lenses.build<Dragon>('dragon').focusOn('body').focusOn('chest').focusOn('stomach').focusOn('contents')
+export let dragonContentsL: Lens<Dragon, any[]> = 
+               Lenses.build<Dragon>('dragon').focusOn('body').focusOn('chest').
+               focusOn('stomach').focusOn('contents')
 ```
 Here we started with a lens that was focused on the whole dragon (not the most exciting lens), and then gradually 'focused in' on 
 the place of interest (the contents of the stomach). This works because lenses are composible. If I have a `Lens[Main,Child]` and a `Lens[Child,Grandchild]` 

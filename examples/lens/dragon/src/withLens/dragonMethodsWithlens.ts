@@ -19,8 +19,6 @@ export let dragonContentsL: Lens<Dragon, any[]> = dragonL.focusOn('body').focusO
 export function eat(item: any): (d: Dragon) => Dragon {
     return dragonContentsL.transform(oldContents => [...oldContents, item]);}
 
-
-
 export function damage(locationHpL: Lens<Dragon, Hitpoint>, damage: Hitpoint): (d: Dragon) => Dragon {
     return locationHpL.transform(hp => damage > hp ? 0 : hp - damage)
 }
