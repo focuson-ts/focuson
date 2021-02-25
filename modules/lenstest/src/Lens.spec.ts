@@ -55,7 +55,7 @@ describe("Lens", () => {
     describe("lens.nth", () => {
         let abc = ['a', 'b', 'c'];
         it("should throw exception with negative length", () => {
-            expect(() => Lenses.nth<string>(-1)).toThrow('Cannot set Lens.nth with negative number [-1]')
+            expect(() => Lenses.nth<string>(-1)).toThrow('Cannot give Lens.nth a negative n [-1]')
         })
         it("should have a description", () => {
             expect(Lenses.nth(0).description).toEqual('[0]')

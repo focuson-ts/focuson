@@ -127,8 +127,9 @@ export function Counter<Main>({context}: LensProps<CounterDomain, Main, CounterD
 
 # More complicated methods
 
-It is quite common to want to change two parts of the state simultaneously. For example if we are the tictactoe came and click on a square, the lens
-for the component displaying the square is 'focusedon' the square. As well as wanting to change the square we also want to change the 'next value'.
+It is quite common to want to change two parts of the state simultaneously. For example if we are writting the tictactoe game 'click on a square', the lens
+for the component displaying the square is 'focusedon' the square. As well as wanting to change the square we also want to change the 'next value', so we
+want to update them both simultaneously: 'an atomic change'. 
 
 Here we are setting the two values explicitly
 ```typescript
