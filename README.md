@@ -46,6 +46,11 @@ Unfortunately IDEs don't seem to work well with mono repos. When using an IDE su
 * ideify.sh   -  This changes imports such as @focuson/lens to relative addresses, which allows the ide access to the code
 * prepare.sh  -  This changes the imports back again. You should do this before running anything (such as tests/the actual code in react) 
 
+This is quite painful:
+* To run the tests from the command line you must run `scripts/prepare.sh` first 
+* To run the examples in react you must run `scripts/prepare.sh` first
+* to edit the files in the IDE with codeinsight., compiling and linking working you must run `scripts/ideify.sh` first
+
 # Publishing
 
 Setting up to publish

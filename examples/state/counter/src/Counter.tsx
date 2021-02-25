@@ -10,9 +10,9 @@ export function Counter<Main>({state}: LensProps<Main, CounterData>) {
     return (<p>
             Clicked: {value} times
             {' '}
-            <button onClick={increment}>+</button>
+            <button id='increment' onClick={increment}>+</button>
             {' '}
-            <button onClick={decrement}>-</button>
+            <button  id='decrement' onClick={decrement}>-</button>
         </p>
     )
 }

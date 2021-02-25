@@ -20,6 +20,8 @@ laoban ls-ideify -a | while read line; do
          to=`realpath --relative-to=$targetDir $dir`
          sed "s#\"$from\";#\"$to\"; //changed from $from;#" -i $file
     done
-
-
 done
+echo "changed code, now compiling"
+laoban run 'rm -rf dist'
+laoban tsc -asl #All... nicer display and do them in generation order
+laoban status

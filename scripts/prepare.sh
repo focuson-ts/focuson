@@ -14,5 +14,5 @@ if [ $# -ne  0 ]; then
 "
  exit 2
  fi
-
+laoban run 'rm -rf dist'
 grep -R --exclude-dir=node_modules --exclude-dir=dist "import.*; //changed from"  --include='*.tsx' --include='*.ts' -l  | xargs -L1 -r  sed "s#\"\(.*\)\; //changed from \(.*\);#\"\2\";#" -i

@@ -67,6 +67,7 @@
     ],
     "extraDeps": {},
     "extraDevDeps": {},
+    "test": true,
     "port": 3001
   }
 }
