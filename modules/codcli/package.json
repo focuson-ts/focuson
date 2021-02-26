@@ -52,8 +52,8 @@
   },
   "version": "0.2.15",
   "template": "noreact",
-  "name": "@focuson/orgcmd",
-  "description": "Generate build suitable for code on demand",
+  "name": "@focuson/cod",
+  "description": "A command line tool to help with the code on demand",
   "details": {
     "publish": true,
     "links": [],
