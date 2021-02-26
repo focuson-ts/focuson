@@ -44,10 +44,10 @@ function squareContext(state: LensState<GameData, GameData>, n: number): LensSta
 
 function compare<Domain, Main, Data>(wrapper: ShallowWrapper<any, React.Component["state"], React.Component>, state: LensState<Main, Data>, expectedLensDescription: string) {
     let props: any = wrapper.props()
-    let childContext: LensState<Main, Data> = props.context
-    expect(childContext.lens.description).toBe(expectedLensDescription)
-    expect(childContext.main).toBe(state.main)
-    expect(childContext.dangerouslySetMain).toBe(state.dangerouslySetMain)
+    let childState: LensState<Main, Data> = props.state
+    expect(childState.lens.description).toBe(expectedLensDescription)
+    expect(childState.main).toBe(state.main)
+    expect(childState.dangerouslySetMain).toBe(state.dangerouslySetMain)
 
 }
 

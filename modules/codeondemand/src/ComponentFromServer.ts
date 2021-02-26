@@ -3,13 +3,17 @@ import {LoadAndCompileCache} from "./LoadAndCompileCache";
 import React, {useContext} from "react";
 import {Lens} from "@focuson/lens";
 import {LensProps, LensState, setJsonForFlux} from "@focuson/state";
-import {ComponentCacheContext} from "./ComponentCacheProvider";
+import {ComponentCacheContext} from "./ComponentCacheContext";
 
 
 export function loadJsonFromUrl<Main>(description: string, cache: LoadAndCompileCache<MakeComponentFromServer<React.ReactElement>>, processContext: (cache: LoadAndCompileCache<MakeComponentFromServer<React.ReactElement>>, c: LensState<Main, Main>) => void): (url: string) => Promise<void> {
     return url => {
-        return fetch(url).then(r => r.json()).then(json =>
-            cache.loadFromBlob(json).then(() => setJsonForFlux<Main, void>(description, c => processContext(cache, c))(json)))
+        cache.debug(`loadJsonFromUrl: ${url}`)
+        return fetch(url).then(r => r.text()).then(jsonString => {
+            cache.debug(`loadJsonFromUrl. ${url} => ${jsonString}`)
+            let json = JSON.parse(jsonString)
+            cache.loadFromBlob(json).then(() => setJsonForFlux<Main, void>(description, c => processContext(cache, c))(json))
+        })
     }
 }
 
@@ -26,14 +30,26 @@ function findRenderUrl(name: string, child: any): string {
     throw Error(`Cannot find renderUrl for  [${name}] in [${JSON.stringify(child, null, 2)}]`)
 }
 
-export function ComponentFromServer<Main, T>({ state}: LensProps<Main, T>) {
+export function ComponentFromServer<Main, T>({state}: LensProps<Main, T>) {
     const cache = useContext(ComponentCacheContext);
     let renderUrl = findRenderUrl("_self", state.json())
     let makeComponent = cache.getFromCache(renderUrl)
-    console.log("makecomponent", makeComponent)
-    let result = makeComponent(state);
-    console.log("madecomponent", result)
-    return result
+    try {
+        console.log("Calling ", makeComponent)
+        console.log("with ", state)
+        let props: any = {state}
+        let result = makeComponent(props);
+        console.log("madecomponent", result)
+        return result
+    } catch (e) {
+        console.error("Had exception making a component")
+        console.log("    error renderUrl", renderUrl)
+        console.log("    error state", state)
+        console.log("    error json", state.json())
+        console.log("    error makecomponent", makeComponent)
+        throw e
+
+    }
 }
 
 export function ChildFromServer<Main, T, Child>({state, render, lens}: LensPropsWithRender<Main, T, Child>) {
@@ -41,5 +57,6 @@ export function ChildFromServer<Main, T, Child>({state, render, lens}: LensProps
     let parentJson = state.json()
     let renderUrl = findRenderUrl(render, parentJson)
     let makeComponent = cache.getFromCache(renderUrl)
-    return makeComponent(state.chainLens(lens))
+    let props: any = {state: state.chainLens(lens)}
+    return makeComponent(props)
 }

@@ -1,5 +1,5 @@
 //Copyright (c)2020-2021 Philip Rice. <br />Permission is hereby granted, free of charge, to any person obtaining a copyof this software and associated documentation files (the Software), to dealin the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  <br />The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED AS
-import {digestorChecker, LoadAndCompileCache} from "./LoadAndCompileCache";
+import {defaultCompiler, digestorChecker, LoadAndCompileCache} from "./LoadAndCompileCache";
 import {LoadAndCompileFixture} from "./LoadAndCompileFixture";
 import {fromMap} from "./utils";
 
@@ -17,6 +17,33 @@ describe("digestChecker", () => {
 
     it("should cause an exception if the digest doesn't match", () => {
         expect(() => checker("value_dig", "wrongvalue")).toThrow("Digest mismatch for value_dig actually had [wrongvalue_dig] expected [value_dig].\nThe string was wrongvalue")
+    })
+})
+
+function removeWhiteSpace(s: String) {return s.replace(/\s+/g, '')}
+describe("defaultCompiler", () => {
+    function setup(block: (compiler: (s: string) => any, list: string[]) => void) {
+        let list: string[] = []
+        let compiler = defaultCompiler((msg, s, e) => list.push(`$msg $s $w`))
+        block(compiler, list)
+    }
+    it("should compiled the parameter", () => {
+        setup((compiler, list) => {
+            expect(compiler("return 1")).toEqual(1)
+            expect(list).toEqual([])
+        })
+    })
+    it("should give a nice error message if cannot compiler", () => {
+        setup((compiler, list) => {
+            try {
+                compiler("abcdefg")
+                fail("Should have thrown error")
+            } catch
+                (e) {
+                console.log('e', e)
+                expect(removeWhiteSpace(e.message)).toEqual(removeWhiteSpace(`Cannot compile abcdefg Results in error ReferenceError: abcdefg is not defined`))
+            }
+        })
     })
 })
 

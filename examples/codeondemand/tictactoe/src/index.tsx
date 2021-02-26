@@ -4,21 +4,27 @@ import './index.css';
 import {SHA256} from 'crypto-js'
 import {GameContext, GameData, GameDomain, onClickSquare} from "./GameDomain";
 import {getElement} from "@focuson/state";
-import {ComponentFromServer, LoadAndCompileCache, loadJsonFromUrl, MakeComponentFromServer} from "@focuson/codeondemand";
-import React from "react";
+import {ComponentCacheContext, ComponentFromServer, LoadAndCompileCache, loadJsonFromUrl, MakeComponentFromServer} from "@focuson/codeondemand";
+import React, {useContext} from "react";
 
 let cache = LoadAndCompileCache.create<MakeComponentFromServer<React.ReactElement>>((s: string) => SHA256(s).toString())
 
 
 let element = getElement('root')
 
+// @ts-ignore
+window.useContext=useContext
+// @ts-ignore
+window.GameContext=GameContext
+
 function loadJson(url: string) {
     const domain: GameDomain = {loadJson, onClickSquare}
     return loadJsonFromUrl<GameData>('game', cache, (cache, s) =>
         ReactDOM.render(
+            <ComponentCacheContext.Provider value={cache}>
             <GameContext.Provider value={domain}>
                 <ComponentFromServer state={s}/>
-            </GameContext.Provider>, element))(url)
+            </GameContext.Provider></ComponentCacheContext.Provider>, element))(url)
 }
 
 loadJson('created/gameJson1.json')

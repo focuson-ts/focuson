@@ -4,6 +4,7 @@ import {MakeComponentFromServer} from "./ComponentFromServer";
 
 function defaultCache<Result>(): ILoadAndCompileCache<MakeComponentFromServer<Result>> {
     return ({
+        debug(s: string){console.log(s)},
         loadFromBlob(jsonBlob: any) {throw Error('ComponentCacheContext.Provider probably not created')},
         getFromCache(url: string) {throw Error('ComponentCacheContext.Provider probably not created')}
     });

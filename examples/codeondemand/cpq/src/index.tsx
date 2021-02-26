@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import {SHA256} from 'crypto-js'
 import {getElement, setJsonForFlux} from "@focuson/state";
-import {ComponentFromServer, LoadAndCompileCache, MakeComponentFromServer} from "@focuson/codeondemand";
+import {ComponentFromServer, LoadAndCompileCache, MakeComponentFromServer,ComponentCacheContext} from "@focuson/codeondemand";
 import React from "react";
 import {CpqData} from "./CpqDomain";
 import {Nav} from "@focuson/nav";
@@ -22,11 +22,13 @@ fetch("created/index.json").then(j => j.json()).then(indexJson => {
     function setJson(cpqData: CpqData) {
         console.log("setJson", cpqData)
         cache.loadFromBlob(cpqData).then(() =>
-            setJsonForFlux( 'cpq',
+            setJsonForFlux('cpq',
                 c => ReactDOM.render(
                     <div>
-                        <Nav jsonFiles={jsonFiles} fetch={fetchData} setData={setJson}></Nav>
-                        <ComponentFromServer state={c}/>
+                        <Nav jsonFiles={jsonFiles} fetch={fetchData} setData={setJson}/>
+                        <ComponentCacheContext.Provider value={cache}>
+                            <ComponentFromServer state={c}/>
+                        </ComponentCacheContext.Provider>
                     </div>, element))(cpqData))
     }
     fetchData(jsonFiles[0]).then(setJson)

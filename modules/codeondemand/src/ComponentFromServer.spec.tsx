@@ -3,7 +3,7 @@ import {render, screen} from "@testing-library/react";
 import {ComponentFromServer, MakeComponentFromServer} from "./ComponentFromServer";
 import {lensState} from "@focuson/state";
 import {ILoadAndCompileCache} from "./LoadAndCompileCache";
-import {ComponentCacheContext} from "./ComponentCacheProvider";
+import {ComponentCacheContext} from "./ComponentCacheContext";
 
 
 interface MainForTest {
@@ -17,6 +17,7 @@ interface MainDomainForTest {
 }
 
 let cache: ILoadAndCompileCache<R> = {
+    debug(s: string){console.log(s)},
     loadFromBlob(jsonBlob: any): Promise<R[]> {return Promise.resolve([])},
     getFromCache(url: string): R {
         if (url !== 'someCompUrl') throw Error('fail: url was' + url)
