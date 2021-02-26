@@ -13,18 +13,19 @@ let cache = LoadAndCompileCache.create<MakeComponentFromServer<React.ReactElemen
 let element = getElement('root')
 
 // @ts-ignore
-window.useContext=useContext
+window.useContext = useContext
 // @ts-ignore
-window.GameContext=GameContext
+window.GameContext = GameContext
 
 function loadJson(url: string) {
     const domain: GameDomain = {loadJson, onClickSquare}
     return loadJsonFromUrl<GameData>('game', cache, (cache, s) =>
         ReactDOM.render(
             <ComponentCacheContext.Provider value={cache}>
-            <GameContext.Provider value={domain}>
-                <ComponentFromServer state={s}/>
-            </GameContext.Provider></ComponentCacheContext.Provider>, element))(url)
+                <GameContext.Provider value={domain}>
+                    <ComponentFromServer state={s}/>
+                </GameContext.Provider>
+            </ComponentCacheContext.Provider>, element))(url)
 }
 
 loadJson('created/gameJson1.json')
