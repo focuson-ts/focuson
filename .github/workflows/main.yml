@@ -39,8 +39,8 @@ jobs:
            sudo npm i --global laoban
            laoban
 
-      - name: loaban upgrade
-        run:  laoban  upgrade
+      - name: loaban update
+        run:  laoban update
 
       - name: loaban tsc
         run:  |
