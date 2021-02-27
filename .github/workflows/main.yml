@@ -30,7 +30,37 @@ jobs:
         run: echo Hello, world!
 
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Check versions
         run: |
+          npm --version
+          node --version
+          tsc --version
+
           echo Add other actions to build,
           echo test, and deploy your project.
+
+      - name: install laoban
+        run:  |
+           npm i --global laoban
+           laoban
+
+      - name: loaban upgrade
+        run:  laoban  upgrade
+
+      - name: loaban tsc
+        run:  |
+           laoban tsc
+           laoban status
+
+      - name: loaban test
+        run:  |
+           laoban test
+           laoban status
+
+
+      - name: logs
+        uses: actions/upload-artifact@v2
+        with:
+           name: logs
+           path: |
+              .session
