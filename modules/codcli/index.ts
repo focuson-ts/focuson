@@ -6,6 +6,7 @@
 import path from 'path';
 import {Files} from './src/Files';
 import * as fs from "fs";
+import * as Path from "path";
 
 const commander = require('commander');
 const {BuildCode} = require('./src/BuildCode');
@@ -14,7 +15,8 @@ const program = new commander.Command();
 const files = new Files();
 var version = "development"
 try {
-    version = JSON.parse(fs.readFileSync("./package.json").toString()).version
+    let path = Path.join(Path.dirname(Path.dirname(process.argv[1])), "package.json");
+    version = JSON.parse(fs.readFileSync(path).toString()).version
 } catch (e) {
     // version already set to development
 }
