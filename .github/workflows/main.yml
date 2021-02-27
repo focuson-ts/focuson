@@ -27,12 +27,13 @@ jobs:
 
       - name: Check versions
         run: |
+          echo npm
           npm --version
+          echo node
           node --version
+          echo tsc
           tsc --version
 
-          echo Add other actions to build,
-          echo test, and deploy your project.
 
       - name: yarn
         run:  yarn
@@ -47,12 +48,12 @@ jobs:
 
       - name: loaban tsc
         run:  |
-           laoban tsc
+           laoban tsc -as
            laoban status
 
       - name: loaban test
         run:  |
-           laoban test
+           laoban test -as
            laoban status
 
 
