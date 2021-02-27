@@ -32,10 +32,10 @@ is being served by the server
 
 # What does this mean for testing
 
-The author of this toolkit has spent years working with contract testing. One of the most exciting things about this 
-approach is that it removed the need for most integration tests, and even most contract tests. The same tests exist but 
-they have been pushed further down the testing pyramid. The tests run faster, are easier to manage, and because they
-only have to test 'now' and not 'all the previous versions'  they are much simpler to write and maintain
+The author of this toolkit has spent years working with contract testing. One of the most exciting things about the approach 
+in this project is that it pushs tests that would normally have to be done as integration or contract tests further
+down the testing pyramid. The sames tests need to be written, but they now run faster, are easier to manage, and because they
+only have to test 'now' and not 'all the previous versions' they are much simpler to write and maintain
 
 # Using the code
 
@@ -45,6 +45,9 @@ Currently the toolchain is extremely primitive. I use two command terminals: One
 to run the react code. It would be nice to incorporate the code on demand code into the tool chain and that is 'on the 
 backlog'.
 
+### Command line
+There is a command line tool that transpiles components and json [@focuson/cod](https://www.npmjs.com/package/@focuson/cod). 
+Typically when working I run this tool in a different terminal than the react server.
 
 ## Writing React 'Code on Demand' Components
 

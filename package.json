@@ -26,8 +26,9 @@
   },
   "version": "0.1.23",
   "dependencies": {
+    "@focuson/cod": "^0.2.19",
     "global": "^4.4.0",
-    "npm": "7.5.4"
+    "npm": "^7.6.0"
   },
   "main": "index.js",
   "author": "phil <phil.rice@validoc.org>"

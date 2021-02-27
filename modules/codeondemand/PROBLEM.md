@@ -1,7 +1,17 @@
 # Why is this good
 Read https://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven (mentioned above)
 
-What we are doing here is focusing on the media type and the Rest 'code on demand' idea. The client knows nothing about the data representation / schema, and doesn't need to.
+In that link there are a number of guidelines:
+* Do NOT use a schema (capitals deliberate). There should be no out of band communication between client and server
+* Focus on media types rather than schemas. A media type is much more like 'pdf' then 'a description of domain objects'
+* Reduce the coupling between client and server so that we can handle change / variation and we have an architecture that doesn't break
+every time there is a change in the backend.
+  
+# We are using two of the key ideas from rest
+* the media type
+* a'code on demand'
+  
+The client knows nothing very little about the domain and doesn't need to
 
 ## Data representation changing by time
 The one constant in IT is change. Json formats will change across time. The design principles in the link above tell us
@@ -21,7 +31,7 @@ And as time progresses we want to allow multiple addresses
 Our api that serves up addresses could have dozens of clients. It is desirable that they are not coupled to the data representation.
 We can deal with this by
 ``` { "name": "phil", address: "some address" , "_render": "someUrlOfTheComponentToRender"}```
-The client doesn't 'decide' how to render the address: it asks the server 'how should I render it', and is thus decoupled from the data representation
+The client doesn't 'decide' how to render the address: it is told by the server how to render it, and is thus decoupled from the data representation
 
 # Geographic variations
 
@@ -41,7 +51,7 @@ By using code on demand the server can give the different data, and the client c
 * In America we have zip codes
 * In China the order of all the data is 'biggest first.'. e.g.: Country, Province, City, region, street, house number
 
-Some of this can be handled by (extremely complex) css, but this approach gives massive simplicity
+Some of this can be handled by (extremely complex) css, but the code on demand principle shown here gives massive simplicity
 
 # White labeling
 

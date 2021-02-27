@@ -11,12 +11,11 @@
       "@babel/preset-react": "^7.12.7",
       "@babel/preset-typescript": "^7.12.7",
       "commander": "^6.2.0",
-      "@types/commander": "^2.12.2",
       "crypto-js": "^4.0.0"
     },
     "extraDevDeps": {},
     "extraBins": {
-      "orgcmd": "./dist/index.js"
+      "cod": "./dist/index.js"
     }
   }
 }

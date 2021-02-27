@@ -4,11 +4,11 @@
 
 /** Require dependencies */
 import path from 'path';
-import {Files} from './Files';
+import {Files} from './src/Files';
 import * as fs from "fs";
 
 const commander = require('commander');
-const {BuildCode} = require('./BuildCode');
+const {BuildCode} = require('./src/BuildCode');
 
 const program = new commander.Command();
 const files = new Files();
