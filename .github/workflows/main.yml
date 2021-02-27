@@ -63,3 +63,12 @@ jobs:
            name: logs
            path: |
               .session
+
+      - name: Pass or fail
+        run:  |
+            laoban status
+            countOfFalse=`laoban status | grep false | wc -l`
+            if [ "$countOfFalse" -ne "0" ]; then
+                echo "failed [$countOfFalse] times"
+                exit 1
+            fi
