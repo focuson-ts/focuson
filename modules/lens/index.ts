@@ -93,6 +93,13 @@ export class Lenses {
     /** Given a main which is an object, with a field name, this returns a lens that goes from the Main to the contents of the field name */
     static identity<M>(): Lens<M, M> { return lens(m => m, (m, c) => c, 'identity') }
 
+    /** this should only be used when we 'know' that a Lens<Main,Child|undefined> is really a Lens<Main,Child>. The typescript compiler isn't much help here */
+    static define<T>(): Lens<T | undefined, T> {
+        return lens(main => {if (main != undefined) return main; else throw new Error("undefined")},
+            (main, child) => child)
+    }
+
+
     /** This returns a lens from an array of T to the nth member of the array */
     static nth<T>(n: number): Lens<T[], T> {
         const check = (verb: string, length: number) => { if (n > length) throw Error(`Cannot Lens.nth(${n}).${verb}. arr.length is ${length}`)};

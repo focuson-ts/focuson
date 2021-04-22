@@ -44,6 +44,11 @@ export class LensState<Main, T> {
      * Very often the LensContext is being used in a flux pattern (for example with react) and this method will cause other things to happen (like re-rendering) */
     setJson(json: T) { this.dangerouslySetMain(this.lens.set(this.main, json)) }
 
+    addSecond<T2>(lens2: Lens<Main, T2>): LensState2<Main, T, T2> {
+        return new LensState2(this.main, this.lens, lens2, this.dangerouslySetMain)
+    }
+
+
     useOtherLensAsWell<T2>(lens: Lens<Main, T2>) {
         let parent = this
         return new class extends WithTwoLens<Main, T, T2> {
@@ -98,3 +103,71 @@ export function getElement(name: string): HTMLElement {
     if (result === null) throw Error(`Must have an element called ${name}, and can't find it`)
     return result
 }
+
+
+export class LensState2<Main, T1, T2> {
+    main: Main
+    lens1: Lens<Main, T1>
+    lens2: Lens<Main, T2>
+    dangerouslySetMain: (m: Main) => void
+
+    constructor(main: Main, lens1: Lens<Main, T1>, lens2: Lens<Main, T2>, dangerouslySetMain: (m: Main) => void) {
+        this.main = main;
+        this.lens1 = lens1;
+        this.lens2 = lens2;
+        this.dangerouslySetMain = dangerouslySetMain;
+    }
+    addThird<T3>(lens: Lens<Main, T3>) {return new LensState3<Main, T1, T2, T3>(this.main, this.lens1, this.lens2, lens, this.dangerouslySetMain)}
+    state1(): LensState<Main, T1> { return new LensState<Main, T1>(this.main, this.dangerouslySetMain, this.lens1)}
+    json1(): T1 {return this.lens1.get(this.main)}
+    focus1On<K extends keyof T1>(k: K): LensState2<Main, T1[K], T2> { return new LensState2<Main, T1[K], T2>(this.main, this.lens1.focusOn(k), this.lens2, this.dangerouslySetMain) }
+
+    state2(): LensState<Main, T2> { return new LensState<Main, T2>(this.main, this.dangerouslySetMain, this.lens2)}
+    json2(): T2 {return this.lens2.get(this.main)}
+    focus2On<K extends keyof T2>(k: K): LensState2<Main, T1, T2[K]> { return new LensState2(this.main, this.lens1, this.lens2.focusOn(k), this.dangerouslySetMain); }
+
+    setJson(t1: T1, t2: T2) { this.dangerouslySetMain(this.lens2.set(this.lens1.set(this.main, t1), t2))}
+    transformJson(fn1: (t1: T1) => T1, fn2: (t2: T2) => T2) {
+        this.dangerouslySetMain(this.lens1.transform(fn1)(this.lens2.transform(fn2)(this.main)))
+    }
+
+}
+
+export class LensState3<Main, T1, T2, T3> {
+    main: Main
+    lens1: Lens<Main, T1>
+    lens2: Lens<Main, T2>
+    lens3: Lens<Main, T3>
+    dangerouslySetMain: (m: Main) => void
+
+    constructor(main: Main, lens1: Lens<Main, T1>, lens2: Lens<Main, T2>, lens3: Lens<Main, T3>, dangerouslySetMain: (m: Main) => void) {
+        this.main = main;
+        this.lens1 = lens1;
+        this.lens2 = lens2;
+        this.lens3 = lens3;
+        this.dangerouslySetMain = dangerouslySetMain;
+    }
+    state1(): LensState<Main, T1> { return new LensState<Main, T1>(this.main, this.dangerouslySetMain, this.lens1)}
+    json1(): T1 {return this.lens1.get(this.main)}
+    focus1On<K extends keyof T1>(k: K): LensState3<Main, T1[K], T2, T3> { return new LensState3(this.main, this.lens1.focusOn(k), this.lens2, this.lens3, this.dangerouslySetMain) }
+
+    state2(): LensState<Main, T2> { return new LensState<Main, T2>(this.main, this.dangerouslySetMain, this.lens2)}
+    json2(): T2 {return this.lens2.get(this.main)}
+    focus2On<K extends keyof T2>(k: K): LensState3<Main, T1, T2[K], T3> { return new LensState3(this.main, this.lens1, this.lens2.focusOn(k), this.lens3, this.dangerouslySetMain); }
+
+    state3(): LensState<Main, T3> { return new LensState<Main, T3>(this.main, this.dangerouslySetMain, this.lens3)}
+    json3(): T3 {return this.lens3.get(this.main)}
+    focus3On<K extends keyof T3>(k: K): LensState3<Main, T1, T2, T3[K]> { return new LensState3(this.main, this.lens1, this.lens2, this.lens3.focusOn(k), this.dangerouslySetMain); }
+
+    setJson(t1: T1, t2: T2, t3: T3) { this.dangerouslySetMain(this.lens3.set(this.lens2.set(this.lens1.set(this.main, t1), t2), t3))}
+    transformJson(fn1: (t1: T1) => T1, fn2: (t2: T2) => T2, fn3: (t3: T3) => T3) {
+        this.dangerouslySetMain(this.lens1.transform(fn1)(this.lens2.transform(fn2)(this.lens3.transform(fn3)(this.main))))
+    }
+
+}
+
+
+export interface LensProps2<Main, T1, T2> {
+    state: LensState2<Main, T1, T2>
+}
+
