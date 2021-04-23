@@ -1,6 +1,6 @@
 //Copyright (c)2020-2021 Philip Rice. <br />Permission is hereby granted, free of charge, to any person obtaining a copyof this software and associated documentation files (the Software), to dealin the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  <br />The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED AS
 import {Lens, Lenses} from "@focuson/lens";
-import {focusOnNth, LensProps} from "@focuson/state";
+import {focus1OnNth, LensProps, LensProps2, LensState2} from "@focuson/state";
 import * as React from "react";
 
 
@@ -9,10 +9,11 @@ export interface GameData {
     next: NoughtOrCross,
     board: BoardData
 }
-type NoughtOrCross = "O" | "X" | ""
+export type NoughtOrCross = "O" | "X" | ""
 export interface BoardData {squares: SquareData}
 type SquareData = NoughtOrCross[]
-
+export const gameDataL: Lens<GameData, GameData> = Lenses.build<GameData>('game')
+export const gameDataToNextL: Lens<GameData,NoughtOrCross> = gameDataL.focusOn('next')
 
 /** This is a helper to get rid of the noise of  LensProps<GameDomain, GameData, T> replacing it with GameProps<T> */
 export type GameProps<Main, T> = LensProps<Main, T>
@@ -26,10 +27,11 @@ export let emptyGame: GameData = {
 }
 
 export function SimpleGame({state}: GameProps<GameData, GameData>) {
+    let newState: LensState2<GameData, BoardData, NoughtOrCross> = state.addSecond<NoughtOrCross>(gameDataToNextL).focus1On('board');
     return (
         <div className='game'>
             <NextMove state={state.focusOn('next')}/>
-            <Board state={state.focusOn('board')}/>
+            <Board state={newState}/>
         </div>)
 }
 
@@ -38,10 +40,9 @@ export function NextMove({state}: GameProps<GameData, NoughtOrCross>) {
     return (<div> Next Move{state.json()}</div>)
 }
 
-
-export function Board({state}: GameProps<GameData, BoardData>) {
-    let squares = state.focusOn('squares');
-    let sq = (n: number) => (<Square state={focusOnNth(squares, n)}/>)
+export function Board({state}: LensProps2<GameData, BoardData, NoughtOrCross>) {
+    let squares = state.focus1On('squares');
+    let sq = (n: number) => (<Square state={focus1OnNth(squares, n)}/>)
     return (<div className='board'>
         <div>{sq(0)}{sq(1)}{sq(2)}</div>
         <div>{sq(3)}{sq(4)}{sq(5)}</div>
@@ -50,14 +51,10 @@ export function Board({state}: GameProps<GameData, BoardData>) {
 }
 
 function invert(s: NoughtOrCross): NoughtOrCross {return (s === 'X' ? 'O' : 'X')}
-export let nextStateLens: Lens<GameData, NoughtOrCross> = Lenses.build<GameData>('game').focusOn('next')
 const nextValueForSquare = (sq: NoughtOrCross, next: NoughtOrCross) => next;
 const nextValueForNext = (sq: NoughtOrCross, next: NoughtOrCross) => invert(next);
 
-export function Square({state}: GameProps<GameData, NoughtOrCross>) {
-    let onClick = () => {
-        if (state.json() == '')
-            state.useOtherLensAsWell<NoughtOrCross>(nextStateLens).transformTwoValues(nextValueForSquare, nextValueForNext)
-    }
-    return (<button className='square' onClick={onClick}>{state.json()}</button>)
+export function Square({state}: LensProps2<GameData, NoughtOrCross, NoughtOrCross>) {
+    let onClick = () => { if (state.json1() == '') state.transformJson2(nextValueForSquare, nextValueForNext) }
+    return (<button className='square' onClick={onClick}>{state.json1()}</button>)
 }

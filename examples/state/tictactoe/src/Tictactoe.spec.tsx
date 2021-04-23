@@ -3,8 +3,8 @@ import React from 'react';
 
 import {enzymeSetup} from './enzymeAdapterSetup';
 import {shallow, ShallowWrapper} from "enzyme";
-import {focusOnNth, LensState, lensState} from "@focuson/state";
-import {Board, BoardData, GameData, SimpleGame, Square} from "./game";
+import {focus1OnNth, focusOnNth, LensState, lensState, LensState2} from "@focuson/state";
+import {Board, BoardData, GameData, gameDataToNextL, NoughtOrCross, SimpleGame, Square} from "./game";
 
 
 enzymeSetup()
@@ -16,15 +16,24 @@ let gameJson: GameData = {"board": boardJson, next: 'X'}
 function setJson(json: GameData): void {throw new Error('should not be called')}
 
 let state = lensState<GameData>(gameJson, setJson, 'game')
-function squareState(state: LensState<GameData, GameData>, n: number) {
-    let squaresContext = state.focusOn('board').focusOn('squares');
-    return focusOnNth(squaresContext, n)
+function squareState(state: LensState<GameData, GameData>, n: number): LensState2<GameData, NoughtOrCross, NoughtOrCross> {
+    let squaresContext = state.addSecond<NoughtOrCross>(gameDataToNextL).focus1On('board').focus1On('squares');
+    return focus1OnNth(squaresContext, n)
 }
 
 function compare<Domain, Main, Data>(wrapper: ShallowWrapper<any, React.Component["state"], React.Component>, state: LensState<Main, Data>, expectedLensDescription: string) {
     let props: any = wrapper.props()
     let childState: LensState<Main, Data> = props.state
     expect(childState.lens.description).toBe(expectedLensDescription)
+    expect(childState.main).toBe(state.main)
+    expect(childState.dangerouslySetMain).toBe(state.dangerouslySetMain)
+
+}
+function compare2<Domain, Main, Data>(wrapper: ShallowWrapper<any, React.Component["state"], React.Component>, state: LensState<Main, Data>, expectedLens1Description: string,expectedLens2Description: string) {
+    let props: any = wrapper.props()
+    let childState: LensState2<Main, Data,NoughtOrCross> = props.state
+    expect(childState.state1().lens.description).toBe(expectedLens1Description)
+    expect(childState.state2().lens.description).toBe(expectedLens2Description)
     expect(childState.main).toBe(state.main)
     expect(childState.dangerouslySetMain).toBe(state.dangerouslySetMain)
 
@@ -40,16 +49,17 @@ describe("Tictactoe", () => {
             compare(game.find('NextMove').at(0), state, 'game/next')
 
             expect(game.find('Board')).toHaveLength(1)
-            compare(game.find('Board').at(0), state, 'game/board')
+            compare2(game.find('Board').at(0), state, 'game/board', 'game/next')
         })
     })
     describe("board", () => {
         it("should render", () => {
-            const board = shallow(<Board state={state.focusOn('board')}/>)
+            let state1: LensState2<GameData, BoardData, NoughtOrCross> = state.addSecond<NoughtOrCross>(gameDataToNextL).focus1On('board');
+            const board = shallow(<Board state={state1}/>)
             let componentSquares = board.find('Square');
             expect(componentSquares).toHaveLength(9)
             componentSquares.forEach((square, i) =>
-                compare(square, state, `game/board/squares/[${i}]`))
+                compare2(square, state, `game/board/squares/[${i}]`, 'game/next'))
         })
     })
     describe("square", () => {
