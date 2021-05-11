@@ -104,7 +104,7 @@
       "guard":        "${projectDetails.details.publish}",
       "commands":     [
         {"name": "tsc", "command": "${packageManager} tsc --noEmit false --outDir dist", "status": true},
-        {"name": "publish", "command": "${packageManager} publish", "status": true}
+        {"name": "publish", "command": "${packageManager} publish --access public", "status": true}
       ],
       "inLinksOrder": true
     },

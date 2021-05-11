@@ -115,6 +115,14 @@ export class Lenses {
                 return result
             }, `[${n}]`)
     }
+
+    static safeList<T>(): Lens<T[] | undefined, T[]> {
+        return lens<T[] | undefined, T[]>(
+            (list: T[] | undefined) => list ? list : [],
+            (main: T[] | undefined, list: T[]) => list,
+            'removeUndefined'
+        )
+    }
 }
 
 /** This 'changes' two parts of Main simultaneously.
