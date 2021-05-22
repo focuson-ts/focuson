@@ -1,5 +1,5 @@
-import {lensState, LensState} from "@focuson/state";
-import {Lens, transformTwoValues} from "@focuson/lens";
+import {lensState, LensState} from "../../state"; //changed from @focuson/state;
+import {Lens, transformTwoValues} from "../../lens"; //changed from @focuson/lens;
 
 
 export interface ViewStore<State, Element> {
