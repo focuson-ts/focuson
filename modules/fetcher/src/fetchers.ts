@@ -1,5 +1,5 @@
-import {lensState, LensState} from "../../state"; //changed from @focuson/state;
-import {Lens} from "../../lens"; //changed from @focuson/lens;
+import {lensState, LensState} from "@focuson/state";
+import {Lens} from "@focuson/lens";
 
 
 /** Mixed into Fetcher when we want to have a component that normally displays the state (which might well be the most common case
