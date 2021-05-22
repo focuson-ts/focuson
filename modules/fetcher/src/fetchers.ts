@@ -17,11 +17,8 @@ export interface Fetcher<State> {
 
     /** This changes the state by loading something */
     load: (oldState: State, newState: State) => Promise<State>,
-
-    /** If the loading goes wrong this modifies the state to reflect that. Perhaps by adding a global message or similar */
-    onError: (s: State, e: any) => State,
-
 }
+
 
 export type TaggedFetchers<State> = (tag: string) => Fetcher<State> | undefined
 
@@ -34,9 +31,8 @@ export function from<State>(t: TaggerFetcher<State>): TaggedFetchers<State> {
 }
 
 export function fetcher<State>(shouldLoad: (os: State, ns: State) => boolean,
-                               load: (s: State) => Promise<State>,
-                               onError?: (s: State, e: any) => State): Fetcher<State> {
-    return ({shouldLoad, load, onError: onError ? onError : (s, e) => s})
+                               load: (os: State, ns: State) => Promise<State>): Fetcher<State> {
+    return ({shouldLoad, load})
 }
 
 
@@ -45,8 +41,24 @@ export function currentFetcher<State>(s: State, lens: Lens<State, string | undef
     return tag && f(tag)
 }
 
+export function lensFetcher<State, Child>(lens: Lens<State, Child>,
+                                          shouldLoad: (os: State, ns: State) => boolean,
+                                          load: (os: State, ns: State) => Promise<Child>): Fetcher<State> {
+    return ({
+        shouldLoad,
+        load: (os, ns) => load(os, ns).then(c => lens.set(ns, c))
+    })
+}
+
+export function lensFetcherWhenUndefined<State, Child>(lens: Lens<State, Child>,
+                                                       load: (os: State, ns: State) => Promise<Child>): Fetcher<State> {
+    return ({
+        shouldLoad: loadIfUndefined(lens),
+        load: (os, ns) => load(os, ns).then(c => lens.set(ns, c))
+    })
+}
+
 /** This handles the case when we have a tag that describes what wants to be fetched.
- *
  * @param lens is the lens to the tag
  * @param taggedFetchers is mapping from tag to metchers*/
 export function taggedFetcher<State>(lens: Lens<State, string | undefined>, taggedFetchers: TaggedFetchers<State>): Fetcher<State> {
@@ -57,8 +69,7 @@ export function taggedFetcher<State>(lens: Lens<State, string | undefined>, tagg
 
     return ({
         shouldLoad: (os, ns) => !!currentFetcher(ns, lens, taggedFetchers)?.shouldLoad(os, ns),
-        load: (os, ns) => getFrom(ns, f => f.load(os, ns), Promise.resolve(ns)),
-        onError: (s, e) => getFrom(s, f => f.onError(s, e), s)
+        load: (os, ns) => getFrom(ns, f => f.load(os, ns), Promise.resolve(ns))
     })
 }
 
@@ -70,10 +81,10 @@ export function loadIfUndefined<State, Selection>(lens: Lens<State, Selection | 
 }
 
 
-export const loadFromUrl = <State, T>(lens: Lens<State, T>, fetchFn?: (input: RequestInfo, init?: RequestInit) => Promise<Response>) =>
-    (url: RequestInfo, init?: RequestInit) => (s: State) => {
+export const loadFromUrl = <T>(fetchFn?: (input: RequestInfo, init?: RequestInit) => Promise<Response>) =>
+    (url: RequestInfo, init?: RequestInit): Promise<T> => {
         const f = fetchFn ? fetchFn : fetch
-        return f(url, init).then(r => r.json()).then(t => lens.set(s, t));
+        return f(url, init).then(r => r.json());
     }
 
 
@@ -88,10 +99,14 @@ function arraysEqual<T>(a: T[], b: T[]) {
 }
 
 
-export function setJsonForView<State, Element>(fetcher: Fetcher<State>, description: string, fn: (lc: LensState<State, State>) => void): (oldM: undefined | State, m: State) => void {
+export function setJsonForView<State, Element>(fetcher: Fetcher<State>, description: string, onError: (os: State, e: any) => State, fn: (lc: LensState<State, State>) => void): (oldM: undefined | State, m: State) => void {
     return (oldM: undefined | State, main: State) => {
-        let newStateFn = (fs: State) => fn(lensState(fs, state => setJsonForView(fetcher, description, fn)(main, state), description))
-        newStateFn(main)
-        if (fetcher.shouldLoad(oldM, main)) fetcher.load(oldM, main).then(newStateFn).catch(e => fetcher.onError(main, e))
+        let newStateFn = (fs: State) => fn(lensState(fs, state => setJsonForView(fetcher, description, onError, fn)(main, state), description))
+        try {
+            newStateFn(main)
+            if (fetcher.shouldLoad(oldM, main)) fetcher.load(oldM, main).then(newStateFn).catch(e => onError(main, e))
+        } catch (e) {
+            newStateFn(onError(main, e))
+        }
     }
 }

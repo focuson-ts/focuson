@@ -1,4 +1,14 @@
-import {Fetcher, fetcher, from, loadFromUrl, loadIfUndefined, taggedFetcher, tags} from "./fetchers";
+import {
+    Fetcher,
+    fetcher,
+    from,
+    lensFetcher,
+    lensFetcherWhenUndefined,
+    loadFromUrl,
+    loadIfUndefined,
+    taggedFetcher,
+    tags
+} from "./fetchers";
 import {Lens, Lenses} from "../../lens";
 import {child, FetcherGraph, fetcherGraph} from "./fetcherGraph";
 
@@ -41,13 +51,18 @@ function siteMapLoader(bookmark: string): Promise<SiteMap> {
     })
 }
 
+export interface ApiData {
+    api?: Api,
+    source?: string[],
+    status?: string,
+    desc?: string
+}
+
 export interface State {
     sitemap?: SiteMap,
     entity: Entity | undefined,
-    api: Api | undefined
-    apiSource: string[],
-    apiStatus: string
-    apiDesc: string
+    apiData: ApiData,
+    thing: Thing | undefined,
     selectionState: {
         tag: string,
         selectedEntity: string,
@@ -60,27 +75,30 @@ export interface State {
 export const stateL = Lenses.build<State>('state')
 export const stateToSiteMapL = stateL.focusOn('sitemap')
 
-const loadSiteMapF = fetcher<State>(loadIfUndefined(stateToSiteMapL), loadFromUrl(stateToSiteMapL)("someUrl"))
+const loadSiteMapF = lensFetcherWhenUndefined<State, SiteMap>(
+    stateToSiteMapL,
+    () => loadFromUrl<SiteMap>()("someUrl"))
 
-const loadApiF: Fetcher<State> = fetcher<State>(
+const loadApiF: Fetcher<State> = lensFetcher<State, ApiData>(
+    stateL.focusOn('apiData'),
     tags(s => [s.selectionState.selectedEntity, s.selectionState.selectedApi]),
-    loadFromUrl(stateL.focusOn('api'))("someUrl"))
+    () => loadFromUrl<Api>()("someApiUrl").then(api => ({api})))
 
-const loadThingF: Fetcher<State> = fetcher<State>(
-    tags(s => [s.selectionState.selectedEntity, s.selectionState.selectedThing]),
-    loadFromUrl(stateL.focusOn('api'))("someUrl"))
+const loadThingF: Fetcher<State> = lensFetcherWhenUndefined<State, Thing>(
+    stateL.focusOn('thing'),
+    () => loadFromUrl<Thing>()("someUrl"))
 
-const loadApiDescF: Fetcher<State> = fetcher<State>(
-    tags(s => [s.selectionState.selectedEntity, s.selectionState.selectedApi]),
-    loadFromUrl(stateL.focusOn('apiDesc'))("someUrl"))
+const loadApiDescF: Fetcher<State> = lensFetcherWhenUndefined<State, string>(
+    stateL.focusOn('apiData').focusOn('desc'),
+    () => loadFromUrl<string>()("someUrl"))
 
-const loadApiStatus: Fetcher<State> = fetcher<State>(
-    tags(s => [s.selectionState.selectedEntity, s.selectionState.selectedApi]),
-    loadFromUrl(stateL.focusOn('apiStatus'))("someUrl"))
+const loadApiStatus: Fetcher<State> = lensFetcherWhenUndefined<State, string>(
+    stateL.focusOn('apiData').focusOn('status'),
+    () => loadFromUrl<string>()("someUrl"))
 
-const loadApiSrc: Fetcher<State> = fetcher<State>(
-    tags(s => [s.selectionState.selectedEntity, s.selectionState.selectedApi]),
-    loadFromUrl(stateL.focusOn('apiSource'))("someUrl"))
+const loadApiSrc: Fetcher<State> = lensFetcherWhenUndefined<State, string[]>(
+    stateL.focusOn('apiData').focusOn("source"),
+    () => loadFromUrl<string[]>()("someUrl"))
 
 const loadApiChild = taggedFetcher(stateL.focusOn('selectionState').focusOn('tag'),
     from({'desc': loadApiDescF, 'src': loadApiSrc, 'status': loadApiStatus}))
