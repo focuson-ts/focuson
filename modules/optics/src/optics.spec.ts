@@ -44,7 +44,7 @@ describe("iso", () => {
         expect(toA.getOption(ab)).toEqual("a")
     })
     it("should return a lens if chained with a lens", () => {
-        let toA: Lens<AB, string | undefined> = identityOptics<AB>().chainWithLens(identityOptics<AB>().focusOn('a'))
+        let toA: Lens<AB, string | undefined> = identityOptics<AB>().chainLens(identityOptics<AB>().focusOn('a'))
         expect(toA.set(ab, "newA")).toEqual({a: "newA", b: "b"})
         expect(toA.get(ab)).toBe("a")
         expect(toA.getOption(ab)).toEqual("a")
@@ -56,28 +56,58 @@ describe("lens", () => {
     it("should be focusable and return a lens", () => {
         let lensToa: Lens<Holder, string | undefined> = identityOptics<Holder>().focusOn('ab').focusOn('a')
         expect(lensToa.set(holder, "newA")).toEqual({ab: {a: "newA", b: "b"}, c: "c"})
+        expect(lensToa.setOption(holder, "newA")).toEqual({ab: {a: "newA", b: "b"}, c: "c"})
+        expect(lensToa.get(holder)).toEqual("a")
+        expect(lensToa.getOption(holder)).toEqual("a")
     })
     it("should allow chained lens", () => {
-        let lensToa: Lens<Holder, string | undefined> = identityOptics<Holder>().chainWithLens(identityOptics<Holder>().focusOn('ab')).chainWithLens(identityOptics<AB>().focusOn('a'))
+        let lensToa: Lens<Holder, string | undefined> = identityOptics<Holder>().chainLens(identityOptics<Holder>().focusOn('ab')).chainLens(identityOptics<AB>().focusOn('a'))
         expect(lensToa.set(holder, "newA")).toEqual({ab: {a: "newA", b: "b"}, c: "c"})
+        expect(lensToa.setOption(holder, "newA")).toEqual({ab: {a: "newA", b: "b"}, c: "c"})
+        expect(lensToa.get(holder)).toEqual("a")
+        expect(lensToa.getOption(holder)).toEqual("a")
     })
     it("should allow focusWithDefault creating a lens with a default value ", () => {
         expect(lensToAWithDefault.get({ab: {}, c: "c"})).toEqual("defaultA")
         expect(lensToAWithDefault.getOption({ab: {}, c: "c"})).toEqual("defaultA")
         expect(lensToAWithDefault.set({ab: {}, c: "c"}, "someA")).toEqual({ab: {a: "someA"}, c: "c"})
+        expect(lensToAWithDefault.setOption({ab: {}, c: "c"}, "someA")).toEqual({ab: {a: "someA"}, c: "c"})
     })
     it("should have a focusQuery creating an optional", () => {
-        let lensToqueryA: Optional<Holder, string> = identityOptics<Holder>().focusOn('ab').focusQuery('a')
-        expect(lensToqueryA.getOption({ab: {}, c: "c"})).toEqual(undefined)
-        expect(lensToqueryA.getOption({ab: {a: "a"}, c: "c"})).toEqual("a")
-        expect(lensToqueryA.set({ab: {}, c: "c"}, "a")).toEqual({ab: {a: "a"}, c: "c"})
+        let optToQueryA: Optional<Holder, string> = identityOptics<Holder>().focusOn('ab').focusQuery('a')
+        expect(optToQueryA.getOption({ab: {}, c: "c"})).toEqual(undefined)
+        expect(optToQueryA.getOption({ab: {a: "a"}, c: "c"})).toEqual("a")
+
+        expect(optToQueryA.set({ab: {}, c: "c"}, "newA")).toEqual({ab: {a: "newA"}, c: "c"})
+        expect(optToQueryA.set({ab: {a: "a"}, c: "c"}, "newA")).toEqual({ab: {a: "newA"}, c: "c"})
+
+        expect(optToQueryA.setOption({ab: {}, c: "c"}, "newA")).toEqual({ab: {a: "newA"}, c: "c"})
+        expect(optToQueryA.setOption({ab: {a: "a"}, c: "c"}, "newA")).toEqual({ab: {a: "newA"}, c: "c"})
     })
-    it("should have a focusQuery that keeps on nesting: depth 2", () => {
+    it("should have a focusQuery that keeps on nesting: depth 2, and the getOption returns undefined if nothing there", () => {
+        let optToQueryA: Optional<Holder, string> = identityOptics<Holder>().focusOn('ab').focusQuery('ab').focusQuery('ab').focusQuery('a')
+        expect(optToQueryA.getOption({ab: {}, c: "c"})).toEqual(undefined)
+        expect(optToQueryA.getOption({ab: {ab: {}}, c: "c"})).toEqual(undefined)
+        expect(optToQueryA.getOption({ab: {ab: {ab: {}}}, c: "c"})).toEqual(undefined)
+        expect(optToQueryA.getOption({ab: {ab: {ab: {a: "a"}}}, c: "c"})).toEqual("a")
+    })
+    it("should have a focusQuery that keeps on nesting: depth 2, and the setOption returns undefined if if can't safely put it there", () => {
         let lensToqueryA: Optional<Holder, string> = identityOptics<Holder>().focusOn('ab').focusQuery('ab').focusQuery('ab').focusQuery('a')
-        expect(lensToqueryA.getOption({ab: {}, c: "c"})).toEqual(undefined)
-        expect(lensToqueryA.getOption({ab: {ab: {}}, c: "c"})).toEqual(undefined)
-        expect(lensToqueryA.getOption({ab: {ab: {ab: {}}}, c: "c"})).toEqual(undefined)
-        expect(lensToqueryA.getOption({ab: {ab: {ab: {a: "a"}}}, c: "c"})).toEqual("a")
+
+        expect(lensToqueryA.setOption({ab: {}, c: "c"}, "a")).toEqual(undefined)
+        expect(lensToqueryA.setOption({ab: {ab: {}}, c: "c"}, "a")).toEqual(undefined)
+        expect(lensToqueryA.setOption({ab: {ab: {ab: {}}}, c: "c"}, "a")).toEqual({
+            "ab": {"ab": {"ab": {"a": "a"}}},
+            "c": "c"
+        })
+        expect(lensToqueryA.setOption({ab: {ab: {ab: {a: "oldA"}}}, c: "c"}, "a")).toEqual({
+            ab: {ab: {ab: {a: "a"}}},
+            c: "c"
+        })
+    })
+
+    it("should have a focusQuery that keeps on nesting: depth 2, and the set returns the input  if nothing there, and modifies it if there is something there (like 'map')", () => {
+        let lensToqueryA: Optional<Holder, string> = identityOptics<Holder>().focusOn('ab').focusQuery('ab').focusQuery('ab').focusQuery('a')
 
         expect(lensToqueryA.set({ab: {}, c: "c"}, "a")).toEqual({ab: {}, c: "c"})
         expect(lensToqueryA.set({ab: {ab: {}}, c: "c"}, "a")).toEqual({ab: {ab: {}}, c: "c"})
@@ -89,7 +119,7 @@ describe("lens", () => {
         let abL = identityOptics<Holder>().focusOn('ab')
         let aL = abL.focusOn('a')
         let bL = abL.focusOn('b')
-        let aCombinedBL: Lens<Holder, [string | undefined, string | undefined]> = aL.combineWithLens(bL)
+        let aCombinedBL: Lens<Holder, [string | undefined, string | undefined]> = aL.combineLens(bL)
         expect(aCombinedBL.get(holder)).toEqual(["a", "b"])
         expect(aCombinedBL.getOption(holder)).toEqual(["a", "b"])
         expect(aCombinedBL.set(holder, ["newA", "newB"])).toEqual({ab: {a: "newA", b: "newB"}, c: "c"})

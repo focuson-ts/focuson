@@ -1,6 +1,7 @@
-import {Fetcher, fetcherWhenUndefined, from, lensFetcher, loadFromUrl, taggedFetcher, tags} from "./fetchers";
+import {Fetcher, fetcherWhenUndefined, loadFromUrl, selStateFetcher} from "./fetchers";
 import {child, FetcherTree, fetherTree} from "./fetcherTree";
-import {identityOptics} from "../../optics";
+import {identityOptics, Iso, Optional} from "../../optics";
+import {fetchRadioButton, fromTaggedFetcher} from "./RadioButtonFetcher";
 
 export interface SiteMap {
     [entity: string]: Entity
@@ -71,13 +72,18 @@ export interface SelectionState {
     apiView: 'desc' | 'src' | 'status'
 }
 
+interface Holder<T> {
+    t: T,
+    tags: string[]
+}
+
 export interface State {
     sitemap?: SiteMap,
     entity?: Entity,
-    apiData?: ApiData,
+    apiData?: Holder<ApiData>,
     thing?: Thing,
-    desiredSelection: SelectionState,
-    currentSelection?: SelectionState,
+    selState: SelectionState,
+    radioButton: string
 }
 
 export const stateL = identityOptics<State>()
@@ -86,7 +92,8 @@ export const stateToSiteMapL = stateL.focusQuery('sitemap')
 function loadFromSiteMap<T>(fn: (siteMap: SiteMap, s: SelectionState) => string) {
     return (ns: State): Promise<T> => {
         const siteMap = ns.sitemap
-        const sel = ns.desiredSelection
+        if (siteMap == undefined) throw new Error('Trying to load from siteMap when the site map is not defined')
+        const sel = ns.selState
         const url = fn(siteMap, sel)
         return fetch(url).then(r => r.json())
     }
@@ -96,32 +103,41 @@ const loadSiteMapF = fetcherWhenUndefined<State, SiteMap>(
     stateToSiteMapL,
     () => loadFromUrl<SiteMap>()("someUrl"))
 
-const loadApiF: Fetcher<State> = lensFetcher<State, ApiData>(
+function holderIso<T>(): Iso<Holder<T>, [string[], T]> {
+    return new Iso<Holder<T>, [string[], T]>(
+        holder => [holder.tags, holder.t],
+        arr => ({t: arr[1], tags: arr[0]}))
+}
+
+const loadApiF: Fetcher<State> = selStateFetcher(stateL.focusOn('selState'), holderIso<ApiData>())
+(sel => [sel.selectedEntity, sel.selectedApi],
     stateL.focusQuery('apiData'),
-    tags(s => [s.currentSelection.selectedEntity, s.currentSelection.selectedApi], s => [s.desiredSelection.selectedEntity, s.desiredSelection.selectedApi]),
     loadFromSiteMap((siteMap, sel) => siteMap[sel.selectedEntity].api[sel.selectedApi]._links.self))
+
 
 const loadThingF: Fetcher<State> = fetcherWhenUndefined<State, Thing>(
     stateL.focusQuery('thing'),
     () => loadFromUrl<Thing>()("someUrl"))
 
-let apiDataL = stateL.focusQuery('apiData')
+let apiDataL: Optional<State, ApiData> = stateL.focusQuery('apiData').focusQuery('t')
 
 const loadApiDescF: Fetcher<State> = fetcherWhenUndefined<State, string>(
     apiDataL.focusQuery('desc'),
     loadFromSiteMap((siteMap, sel) => siteMap[sel.selectedEntity].api[sel.selectedApi]._links.description))
 
 const loadApiStatus: Fetcher<State> = fetcherWhenUndefined<State, string>(
-    apiDataL.focusOn('status'),
+    apiDataL.focusQuery('status'),
     loadFromSiteMap((siteMap, sel) => siteMap[sel.selectedEntity].api[sel.selectedApi]._links.status))
 
 const loadApiSrc: Fetcher<State> = fetcherWhenUndefined<State, string[]>(
-    apiDataL.focusOn("source"),
+    apiDataL.focusQuery("source"),
     loadFromSiteMap((siteMap, sel) => siteMap[sel.selectedEntity].api[sel.selectedApi]._links.source))
 
-const loadApiChild = taggedFetcher<State>(
-    s => s.desiredSelection.tag,
-    from({'desc': loadApiDescF, 'src': loadApiSrc, 'status': loadApiStatus}))
+
+const loadApiChild = fetchRadioButton<State>(
+    s => s.selState.tag,
+    identityOptics<State>().focusOn('radioButton'),
+    fromTaggedFetcher({'desc': loadApiDescF, 'src': loadApiSrc, 'status': loadApiStatus}))
 
 const fetchGraph: FetcherTree<State> = fetherTree(
     loadSiteMapF,
