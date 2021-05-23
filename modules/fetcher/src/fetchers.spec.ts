@@ -3,6 +3,7 @@ import {load} from "../../view/src/view";
 import {identityOptics} from "../../optics";
 import {iso} from "../../optics/src/optional";
 import {fetchRadioButton, fromTaggedFetcher, TaggedFetcher} from "./RadioButtonFetcher";
+import {fetcherTree} from "./fetcherTree";
 
 const shouldLoadTrue = <T extends any>(t: T): boolean => true;
 const shouldLoadFalse = <T extends any>(t: T): boolean => false;
@@ -54,18 +55,11 @@ describe("lens fetcher", () => {
         expect(await applyFetcher(f, {ab: {}})).toEqual({ab: {a: "."}})
         expect(f.description).toEqual("lensFetcher(Optional(I.focus?(ab).focus?(a)),loadTrueF)")
     })
-    it("should throw execption if  the condition to the focused on item, and load if condition is false, and the item is not defined", async () => {
+    it("should do nothing  undefined if  the condition to the focused on item, and load if condition is false, and the item is not defined", async () => {
         const opticsTo = identityOptics<AB>().focusQuery('ab').focusQuery('a')
-        let f: Fetcher<AB> = lensFetcher(opticsTo, loadFalseF);
-        expect(f.shouldLoad({ab: {}})).toEqual(true)
-        // expect(await applyFetcher(f, {ab: {}})).toEqual({ab: {a: "."}})
-
-        try {
-            await applyFetcher(f, {ab: {}})
-            fail()
-        } catch (e) {
-            expect(e.message).toEqual("The fetcher doesn't know how to handle 'undefined' [object Object]")
-        }
+        let f: Fetcher<AB> = lensFetcher<AB, string>(opticsTo, loadFalseF);
+        expect(f.shouldLoad({ab: {}})).toEqual(false)
+        expect(await applyFetcher(f, {ab: {}})).toEqual({"ab": {}})
     })
 })
 
@@ -75,7 +69,7 @@ describe("fetcherWhenUndefined", () => {
     const fErrorIfLoad = fetcherWhenUndefined(opticToA, () => {
         throw Error('')
     }, "fErrorIfLoad")
-    it ("should have a description", () =>{
+    it("should have a description", () => {
         expect(fOKToLoad.description).toEqual("fetcherWhenUndefined(Optional(I.focus?(a)))")
         expect(fErrorIfLoad.description).toEqual("fErrorIfLoad")
 
@@ -143,7 +137,7 @@ describe("selStateFetcher", () => {
     const f = fetchMaker(sel => [sel.selProfile, sel.selEntity], identityOptics<TState>().focusQuery('entityAndName'), load)
 
 
-    it ("should have a description", () =>{
+    it("should have a description", () => {
         expect(f.description).toEqual("selStateFetcher(sel=Lens(I.focusOn(selState)),holder=Iso(iso),target=Optional(I.focus?(entityAndName)))")
     })
 
@@ -203,7 +197,7 @@ let radioGroup: TaggedFetcher<TState> = ({
 })
 describe("fetchRadioButton", () => {
     let f: Fetcher<TState> = fetchRadioButton<TState>(s => s.selState.selRadioTag, radioTagL, fromTaggedFetcher(radioGroup))
-    it ("should have a description", () =>{
+    it("should have a description", () => {
         expect(f.description).toEqual("fetchRadioButton(Optional(I.focus?(radioTag)))")
     })
     it("should not fetch if tag  is undefined", async () => {
@@ -238,3 +232,4 @@ describe("fetchRadioButton", () => {
         })
     })
 })
+

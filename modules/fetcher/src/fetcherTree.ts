@@ -6,6 +6,25 @@ export interface FetcherTree<State> {
     children: FetcherChildLink<State, any>[]
 }
 
+const blanks = "                                                       "
+
+export function descriptionOf<T>(ft: FetcherTree<T>, depth?: number): string[] {
+    const d = depth ? depth : 0
+    const i = blanks.substr(0, d * 2)
+    return [
+        `${i}FetcherTree(`,
+        `${i}  ${ft.fetcher.description}`,
+        ...ft.children.flatMap(fcl => [`${i}   ${fcl.lens}`, ...descriptionOf(fcl.child, d + 3)])]
+}
+
+export function wouldLoad<T>(ft: FetcherTree<T>, state: T|undefined, depth?: number): string[] {
+    const d = depth ? depth : 0
+    const i = blanks.substr(0, d * 2)
+    return [
+        `${i}${ft.fetcher.description} ${ft.fetcher.shouldLoad(state)}`,
+        ...ft.children.flatMap(fcl => [`${i}  ${fcl.lens}`, ...wouldLoad(fcl.child, state, d + 2)])]
+}
+
 export interface FetcherChildLink<State, Child> {
     lens: Lens<State, Child>,
     child: FetcherTree<Child>
@@ -44,7 +63,7 @@ export function graphAsFetcher<State>(fg: FetcherTree<State>): Fetcher<State> {
     })
 }
 
-export function fetherTree<State>(fetcher: Fetcher<State>, ...children: FetcherChildLink<State, any>[]): FetcherTree<State> {
+export function fetcherTree<State>(fetcher: Fetcher<State>, ...children: FetcherChildLink<State, any>[]): FetcherTree<State> {
     return ({fetcher, children})
 }
 

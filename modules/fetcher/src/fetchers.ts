@@ -10,37 +10,31 @@ export interface Fetcher<State> {
     /** This works out if we need to load. Typically is a strategy */
     shouldLoad: (newState: State | undefined) => boolean,
     /** This changes the state by loading something */
-    load: (newState: State | undefined) => Promise<State>,
+    load: (newState: State | undefined) => Promise<State | undefined>,
     description: string
 }
 
 
 export function fetcher<State>(shouldLoad: (ns: State | undefined) => boolean,
-                               load: (ns: State | undefined) => Promise<State>,
+                               load: (ns: State | undefined) => Promise<State | undefined>,
                                description: string): Fetcher<State> {
     return ({shouldLoad, load, description})
 }
 
-export const applyFetcher = <State>(fetcher: Fetcher<State>, s: State | undefined): Promise<State> => {
-    if (fetcher.shouldLoad(s)) {
-        return fetcher.load(s)
-    }
-    if (s == undefined) throw Error(`The fetcher doesn't know how to handle 'undefined' ${fetcher}`)
-    return Promise.resolve(s)
-
-}
+export const applyFetcher = <State>(fetcher: Fetcher<State>, s: State | undefined): Promise<State | undefined> =>
+    fetcher.shouldLoad(s) ? fetcher.load(s) : Promise.resolve(s)
 
 export function lensFetcher<State, Child>(lens: Optional<State, Child>, fetcher: Fetcher<Child>): Fetcher<State> {
     return ({
         shouldLoad: (ns) => {
             if (!ns) return false
             let nc = lens.getOption(ns);
-            return nc ? fetcher.shouldLoad(nc) : true
+            return fetcher.shouldLoad(nc)
         },
         load: async (ns) => {
-            if (ns == undefined) throw Error(`Cannot use lens fetcher ${lens} when the main state is not defined`)
+            if (ns == undefined) return Promise.resolve(undefined)
             const child = await applyFetcher(fetcher, lens.getOption(ns))
-            return lens.set(ns, child)
+            return child ? lens.set(ns, child) : ns
         },
         description: "lensFetcher(" + lens + "," + fetcher.description + ")"
     })
@@ -52,13 +46,10 @@ export function loadIfUndefined<State, Selection>(lens: Optional<State, Selectio
 }
 
 export function fetcherWhenUndefined<State, Child>(lens: Optional<State, Child>,
-                                                   load: (s: State) => Promise<Child>, description?: string): Fetcher<State> {
+                                                   load: (s: State) => Promise<Child|undefined>, description?: string): Fetcher<State> {
     return ({
         shouldLoad: ns => !!ns && loadIfUndefined(lens)(ns),
-        load: (ns) => {
-            if (ns == undefined) throw Error('software error. Should not be able to call this')
-            return load(ns).then(c => lens.set(ns, c))
-        },
+        load: (ns) => ns ? load(ns).then(c => c ? lens.set(ns, c) : ns) : Promise.resolve(undefined),
         description: description ? description : "fetcherWhenUndefined(" + lens + ")"
 
     })
@@ -72,19 +63,19 @@ export const selStateFetcher = <State, SelState, Holder, T>(sel: Lens<State, Sel
                                                             holderMaker: Iso<Holder, [string [], T]>) =>
     (tagFn: (s: SelState) => (string | undefined)[],
      target: Optional<State, Holder>,
-     loadT: (s: State) => Promise<T>,
+     loadT: (s: State) => Promise<T | undefined>,
      description?: string): Fetcher<State> => {
         const shouldLoad = (s: State | undefined): boolean => {
             let desiredTags = s ? tagFn(sel.get(s)) : [];
             let allTagsDefined = areAllDefined(desiredTags)
             return !!s && allTagsDefined && !arraysEqual(target.chain(holderMaker).chain(firstIn2()).getOption(s), desiredTags);
         }
-        const load = (s: State | undefined): Promise<State> => {
+        const load = (s: State | undefined): Promise<State | undefined> => {
             if (s == undefined) throw new Error('software error this should not be possible')
             const desiredTags = tagFn(sel.get(s))
             if (areAllDefined(desiredTags))
-                return loadT(s).then(t => target.set(s, holderMaker.reverseGet([desiredTags, t])));
-            throw Error(`Have an undefined tag ${desiredTags}`)
+                return loadT(s).then(t => t && target.set(s, holderMaker.reverseGet([desiredTags, t])));
+            throw Error(`software error Have an undefined tag ${desiredTags}`)
         }
         return ({
             shouldLoad,
