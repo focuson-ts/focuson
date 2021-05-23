@@ -1,5 +1,5 @@
 import {Fetcher, fetcherWhenUndefined, loadFromUrl, selStateFetcher} from "./fetchers";
-import {child, descriptionOf, FetcherTree, fetcherTree, wouldLoad} from "./fetcherTree";
+import {child, descriptionOf, FetcherTree, fetcherTree, wouldLoad, wouldLoadDescription} from "./fetcherTree";
 import {identityOptics, Iso, Optional} from "../../optics";
 import {fetchRadioButton, fromTaggedFetcher} from "./RadioButtonFetcher";
 import {iso} from "../../optics/src/optional";
@@ -51,11 +51,13 @@ function entity(e: string): Entity {
     })
 }
 
+const exampleSiteMap = {
+    "be": entity("be"),
+    "uk": entity("uk")
+};
+
 function siteMapLoader(bookmark: string): Promise<SiteMap> {
-    return Promise.resolve({
-        "be": entity("be"),
-        "uk": entity("uk")
-    })
+    return Promise.resolve(exampleSiteMap)
 }
 
 export interface ApiData {
@@ -70,7 +72,7 @@ export interface SelectionState {
     selectedEntity?: string,
     selectedThing?: string,
     selectedApi?: string,
-    apiView: 'desc' | 'src' | 'status'
+    apiView?: 'desc' | 'src' | 'status'
 }
 
 interface Holder<T> {
@@ -82,10 +84,11 @@ export interface State {
     sitemap?: SiteMap,
     entity?: Entity,
     apiData?: Holder<ApiData>,
-    thing?: Thing,
-    selState?: SelectionState,
+    thing?: Holder<Thing>,
+    selState: SelectionState,
     radioButton?: string
 }
+
 
 export const stateL = identityOptics<State>()
 export const stateToSiteMapL = stateL.focusQuery('sitemap')
@@ -103,24 +106,30 @@ function loadFromSiteMap<T>(fn: (siteMap: SiteMap, s: SelectionState) => string 
 
 const loadSiteMapF = fetcherWhenUndefined<State, SiteMap>(
     stateToSiteMapL,
-    () => loadFromUrl<SiteMap>()("someUrl"))
+    () => loadFromUrl<SiteMap>()("someUrl"), "loadSiteMapF")
 
-function holderIso<T>(): Iso<Holder<T>, [string[], T]> {
+function holderIso<T>(description: string): Iso<Holder<T>, [string[], T]> {
     return iso(
         holder => [holder.tags, holder.t],
-        arr => ({t: arr[1], tags: arr[0]}))
+        arr => ({t: arr[1], tags: arr[0]}),
+        description
+    )
 }
 
-const loadApiF: Fetcher<State> = selStateFetcher(stateL.focusOn('selState'), holderIso<ApiData>())
+const loadApiF: Fetcher<State> = selStateFetcher(stateL.focusOn('selState'), holderIso<ApiData>('H/ApiData'))
 (sel => [sel?.selectedEntity, sel?.selectedApi],
     stateL.focusQuery('apiData'),
     loadFromSiteMap((siteMap, sel) =>
-        sel.selectedEntity && sel.selectedApi && siteMap[sel.selectedEntity].api[sel.selectedApi]._links.self))
+        sel.selectedEntity && sel.selectedApi && siteMap[sel.selectedEntity].api[sel.selectedApi]._links.self), "loadApiF")
 
 
-const loadThingF: Fetcher<State> = fetcherWhenUndefined<State, Thing>(
+const loadThingF: Fetcher<State> = selStateFetcher<State, SelectionState, Holder<Thing>, Thing>(
+    stateL.focusOn('selState'),
+    holderIso<Thing>('H/Thing'))(
+    s => [s.selectedEntity, s.selectedThing],
     stateL.focusQuery('thing'),
-    () => loadFromUrl<Thing>()("someUrl"))
+    loadFromSiteMap((siteMap, sel) =>
+        sel.selectedEntity && sel.selectedThing && siteMap[sel.selectedEntity].things[sel.selectedThing].href), 'LoadThingF')
 
 let apiDataL: Optional<State, ApiData> = stateL.focusQuery('apiData').focusQuery('t')
 
@@ -160,38 +169,79 @@ describe("fetchTree", () => {
     it("should have a description", () => {
         expect(descriptionOf(demoTree)).toEqual([
             "FetcherTree(",
-            "  fetcherWhenUndefined(Optional(I.focus?(sitemap)))",
+            "  loadSiteMapF",
             "   Iso(I)",
             "      FetcherTree(",
-            "        fetcherWhenUndefined(Optional(I.focus?(thing)))",
+            "        LoadThingF",
             "   Iso(I)",
             "      FetcherTree(",
-            "        selStateFetcher(sel=Lens(I.focusOn(selState)),holder=Iso(iso),target=Optional(I.focus?(apiData)))",
+            "        loadApiF",
             "         Iso(I)",
             "            FetcherTree(",
             "              loadApiChild"
         ])
     })
 })
-describe("wouldLoadshould report what a fetchTree would do for the current state. Doesn't take into account any intermedite loads", () => {
+describe("wouldLoad should provide test friendly means of showing what a fetchTree will do for the current state. Doesn't take into account any intermedite loads", () => {
     it("for undefined", () => {
-        expect(wouldLoad<State>(demoTree, undefined)).toEqual([
-            "fetcherWhenUndefined(Optional(I.focus?(sitemap))) false",
+        expect(wouldLoad(demoTree, undefined)).toEqual([
+                [loadSiteMapF, false],
+                [loadThingF, false],
+                [loadApiF, false],
+                [loadApiChild, false],
+            ]
+        )
+    })
+    it("for empty", () => {
+        expect(wouldLoad(demoTree, {selState: {}})).toEqual([
+                [loadSiteMapF, true],
+                [loadThingF, false],
+                [loadApiF, false],
+                [loadApiChild, false],
+            ]
+        )
+    })
+    it("when sitemap loaded and no thing desired or actual", () => {
+        expect(wouldLoad(demoTree, {sitemap: exampleSiteMap, selState: {}})).toEqual([
+                [loadSiteMapF, false],
+                [loadThingF, false],
+                [loadApiF, false],
+                [loadApiChild, false],
+            ]
+        )
+    })
+    it("when sitemap loaded and thing desired but no actual", () => {
+        expect(wouldLoad(demoTree, {
+            sitemap: exampleSiteMap,
+            selState: {selectedEntity: "be", selectedThing: "t1"}
+        })).toEqual([
+                [loadSiteMapF, false],
+                [loadThingF, true],
+                [loadApiF, false],
+                [loadApiChild, false],
+            ]
+        )
+    })
+})
+describe("wouldLoadDescription should report what a fetchTree would do for the current state. ", () => {
+    it("for undefined", () => {
+        expect(wouldLoadDescription<State>(demoTree, undefined)).toEqual([
+            "loadSiteMapF false",
             "  Iso(I)",
-            "    fetcherWhenUndefined(Optional(I.focus?(thing))) false",
+            "    LoadThingF false",
             "  Iso(I)",
-            "    selStateFetcher(sel=Lens(I.focusOn(selState)),holder=Iso(iso),target=Optional(I.focus?(apiData))) false",
+            "    loadApiF false",
             "      Iso(I)",
             "        loadApiChild false"
         ])
     })
-    it("for {}}", () => {
-        expect(wouldLoad<State>(demoTree, {})).toEqual([
-            "fetcherWhenUndefined(Optional(I.focus?(sitemap))) true",
+    it("for empty", () => {
+        expect(wouldLoadDescription<State>(demoTree, {selState: {}})).toEqual([
+            "loadSiteMapF true",
             "  Iso(I)",
-            "    fetcherWhenUndefined(Optional(I.focus?(thing))) true",
+            "    LoadThingF false",
             "  Iso(I)",
-            "    selStateFetcher(sel=Lens(I.focusOn(selState)),holder=Iso(iso),target=Optional(I.focus?(apiData))) false",
+            "    loadApiF false",
             "      Iso(I)",
             "        loadApiChild false"
         ])

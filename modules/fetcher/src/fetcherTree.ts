@@ -17,12 +17,22 @@ export function descriptionOf<T>(ft: FetcherTree<T>, depth?: number): string[] {
         ...ft.children.flatMap(fcl => [`${i}   ${fcl.lens}`, ...descriptionOf(fcl.child, d + 3)])]
 }
 
-export function wouldLoad<T>(ft: FetcherTree<T>, state: T|undefined, depth?: number): string[] {
+export function wouldLoadDescription<T>(ft: FetcherTree<T>, state: T | undefined, depth?: number): string[] {
     const d = depth ? depth : 0
     const i = blanks.substr(0, d * 2)
     return [
         `${i}${ft.fetcher.description} ${ft.fetcher.shouldLoad(state)}`,
-        ...ft.children.flatMap(fcl => [`${i}  ${fcl.lens}`, ...wouldLoad(fcl.child, state, d + 2)])]
+        ...ft.children.flatMap(fcl => [`${i}  ${fcl.lens}`, ...wouldLoadDescription(fcl.child, state, d + 2)])]
+}
+
+export function foldFetchers<Result>(ft: FetcherTree<any>, foldFn: (acc: Result, v: Fetcher<any>, i?: number, depth?: number) => Result, start: Result, i?: number, depth?: number): Result {
+    const num = i ? i : 0
+    const d = depth ? depth : 0
+    return ft.children.reduce<Result>((acc, fcl, i) => foldFetchers(fcl.child, foldFn, acc, d, i), foldFn(start, ft.fetcher, num, d + 1))
+}
+
+export function wouldLoad<T>(ft: FetcherTree<T>, state: T | undefined, depth?: number): [Fetcher<any>, boolean][] {
+    return foldFetchers<[Fetcher<any>, boolean][]>(ft, (acc, f) => [...acc, [f, f.shouldLoad(state)]], [])
 }
 
 export interface FetcherChildLink<State, Child> {
@@ -30,22 +40,17 @@ export interface FetcherChildLink<State, Child> {
     child: FetcherTree<Child>
 }
 
-export function loadIfNeeded<State>(f: Fetcher<State>) {
-    return (ns: State | undefined): Promise<State> => {
-        if (f.shouldLoad(ns)) return f.load(ns)
-        if (ns) return Promise.resolve(ns)
-        throw new Error('Cannt handle undefined')
-    }
-}
+export const loadIfNeeded = <State>(f: Fetcher<State>) =>
+    (ns: State | undefined): Promise<State | undefined> => f.shouldLoad(ns) ? f.load(ns) : Promise.resolve(ns);
 
 
-const loadGraphChildLink = <State, Child>(ps: Promise<State>, g: FetcherChildLink<State, Child>): Promise<State> =>
-    ps.then(ns => loadGraph(g.child, g.lens.get(ns)).then(nc => g.lens.set(ns, nc)));
+const loadGraphChildLink = <State, Child>(ps: Promise<State>, g: FetcherChildLink<State, Child>): Promise<State | undefined> =>
+    ps.then(ns => loadGraph(g.child, g.lens.get(ns)).then(nc => nc ? g.lens.set(ns, nc) : undefined));
 
 
-function loadGraph<State>(fg: FetcherTree<State>, ns: State | undefined): Promise<State> {
-    let initialValue: Promise<State> = loadIfNeeded(fg.fetcher)(ns);
-    return fg.children.reduce(loadGraphChildLink, initialValue)
+async function loadGraph<State>(fg: FetcherTree<State>, ns: State | undefined): Promise<State | undefined> {
+    let initialValue = await loadIfNeeded(fg.fetcher)(ns);
+    return initialValue ? fg.children.reduce(loadGraphChildLink, Promise.resolve(initialValue)) : undefined
 }
 
 export function graphAsFetcher<State>(fg: FetcherTree<State>): Fetcher<State> {
