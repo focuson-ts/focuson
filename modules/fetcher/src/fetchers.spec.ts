@@ -14,12 +14,12 @@ interface AB {
     ab?: AB
 }
 
-let loadTrueF = fetcher(shouldLoadTrue, loadAddsDot);
-let loadFalseF = fetcher(shouldLoadFalse, loadAddsDot);
+let loadTrueF = fetcher(shouldLoadTrue, loadAddsDot, "loadTrueF");
+let loadFalseF = fetcher(shouldLoadFalse, loadAddsDot, "loadFalseF");
 
 describe("fetcher", () => {
     it("should make a fetcher", () => {
-        expect(loadTrueF).toEqual({shouldLoad: shouldLoadTrue, load: loadAddsDot})
+        expect(loadTrueF).toEqual({shouldLoad: shouldLoadTrue, load: loadAddsDot, "description": "loadTrueF"})
     })
 })
 describe("apply fetcher", () => {
@@ -30,14 +30,14 @@ describe("apply fetcher", () => {
         expect(await applyFetcher(loadFalseF, "someString")).toEqual("someString")
     })
 
-    it(" throw an error if it is not set up to handle undefined", async () => {
-        try {
-            await applyFetcher(loadFalseF, undefined)
-            fail()
-        } catch (e) {
-            expect(e.message).toEqual("The fetcher doesn't know how to handle 'undefined' [object Object]")
-        }
-    })
+    // it(" throw an error if it is not set up to handle undefined", async () => {
+    //     try {
+    //         await applyFetcher(loadFalseF, undefined)
+    //         fail()
+    //     } catch (e) {
+    //         expect(e.message).toEqual("The fetcher doesn't know how to handle 'undefined' [object Object]")
+    //     }
+    // })
 })
 
 describe("lens fetcher", () => {
@@ -45,20 +45,28 @@ describe("lens fetcher", () => {
         const opticsTo = identityOptics<AB>().focusQuery('ab').focusQuery('a')
         let f: Fetcher<AB> = lensFetcher(opticsTo, loadTrueF);
         expect(await applyFetcher(f, {ab: {a: "a"}})).toEqual({ab: {a: "a."}})
+        expect(f.description).toEqual("lensFetcher(Optional(I.focus?(ab).focus?(a)),loadTrueF)")
     })
     it("should apply the condition to the focused on item, and load if condition is true, and the item is not defined", async () => {
         const opticsTo = identityOptics<AB>().focusQuery('ab').focusQuery('a')
         let f: Fetcher<AB> = lensFetcher(opticsTo, loadTrueF);
         expect(f.shouldLoad({ab: {}})).toEqual(true)
         expect(await applyFetcher(f, {ab: {}})).toEqual({ab: {a: "."}})
+        expect(f.description).toEqual("lensFetcher(Optional(I.focus?(ab).focus?(a)),loadTrueF)")
     })
-    it("should apply the condition to the focused on item, and load if condition is false, and the item is not defined", async () => {
+    it("should throw execption if  the condition to the focused on item, and load if condition is false, and the item is not defined", async () => {
         const opticsTo = identityOptics<AB>().focusQuery('ab').focusQuery('a')
-        let f: Fetcher<AB> = lensFetcher(opticsTo, loadTrueF);
+        let f: Fetcher<AB> = lensFetcher(opticsTo, loadFalseF);
         expect(f.shouldLoad({ab: {}})).toEqual(true)
-        expect(await applyFetcher(f, {ab: {}})).toEqual({ab: {a: "."}})
-    })
+        // expect(await applyFetcher(f, {ab: {}})).toEqual({ab: {a: "."}})
 
+        try {
+            await applyFetcher(f, {ab: {}})
+            fail()
+        } catch (e) {
+            expect(e.message).toEqual("The fetcher doesn't know how to handle 'undefined' [object Object]")
+        }
+    })
 })
 
 describe("fetcherWhenUndefined", () => {
@@ -66,6 +74,11 @@ describe("fetcherWhenUndefined", () => {
     const fOKToLoad = fetcherWhenUndefined<AB, string>(opticToA, () => Promise.resolve("loadedA"))
     const fErrorIfLoad = fetcherWhenUndefined(opticToA, () => {
         throw Error('')
+    }, "fErrorIfLoad")
+    it ("should have a description", () =>{
+        expect(fOKToLoad.description).toEqual("fetcherWhenUndefined(Optional(I.focus?(a)))")
+        expect(fErrorIfLoad.description).toEqual("fErrorIfLoad")
+
     })
     it('doesnt load when the main state is undefined', () => {
         expect(fErrorIfLoad.shouldLoad(undefined)).toEqual(false)
@@ -129,6 +142,11 @@ describe("selStateFetcher", () => {
     const load = (s: TState): Promise<Entity> => Promise.resolve({desc: "loaded"});
     const f = fetchMaker(sel => [sel.selProfile, sel.selEntity], identityOptics<TState>().focusQuery('entityAndName'), load)
 
+
+    it ("should have a description", () =>{
+        expect(f.description).toEqual("selStateFetcher(sel=Lens(I.focusOn(selState)),holder=Iso(iso),target=Optional(I.focus?(entityAndName)))")
+    })
+
     it("should not load if any of the tags are undefined", async () => {
         expect(await applyFetcher(f, {selState: {}})).toEqual({selState: {}})
         expect(await applyFetcher(f, {selState: {selEntity: 'someEntity'}})).toEqual({selState: {selEntity: 'someEntity'}})
@@ -185,6 +203,9 @@ let radioGroup: TaggedFetcher<TState> = ({
 })
 describe("fetchRadioButton", () => {
     let f: Fetcher<TState> = fetchRadioButton<TState>(s => s.selState.selRadioTag, radioTagL, fromTaggedFetcher(radioGroup))
+    it ("should have a description", () =>{
+        expect(f.description).toEqual("fetchRadioButton(Optional(I.focus?(radioTag)))")
+    })
     it("should not fetch if tag  is undefined", async () => {
         expect(await applyFetcher(f, {selState: {}})).toEqual({"selState": {}})
     })
@@ -205,7 +226,7 @@ describe("fetchRadioButton", () => {
             "selState": {"selRadioTag": "tag3"}
         })
     })
-    it("should fetch if the tag is defined, but a different value. It should set 'actualTag'", async() => {
+    it("should fetch if the tag is defined, but a different value. It should set 'actualTag'", async () => {
         expect(await applyFetcher(f, {
             "radio": {"r1": "loaded - this should be changed by the load"},
             "radioTag": "tag1",
@@ -216,5 +237,4 @@ describe("fetchRadioButton", () => {
             "selState": {"selRadioTag": "tag2"}
         })
     })
-
 })

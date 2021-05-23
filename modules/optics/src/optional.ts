@@ -9,7 +9,7 @@ function copyWithFieldSet<T, K extends keyof T>(t: T, k: K, v: T[K]) {
 }
 
 
-export const identityOptics = <State>(): Iso<State, State> => new Iso(x => x, x => x);
+export const identityOptics = <State>(description?: string): Iso<State, State> => new Iso(x => x, x => x, description ? description : "I");
 
 
 export function nthItem<T>(n: number): Optional<T[], T> {
@@ -19,16 +19,16 @@ export function nthItem<T>(n: number): Optional<T[], T> {
             let result = [...arr]
             result[n] = t
             return result
-        }
+        }, "nth(" + n + ")"
     )
 }
 
 export function firstIn2<T1, T2>(): Optional<[T1, T2], T1> {
-    return new Optional(arr => arr[0], (arr, t1) => [t1, arr[1]])
+    return new Optional(arr => arr[0], (arr, t1) => [t1, arr[1]], "firstIn2")
 }
 
 export function secondIn2<T1, T2>(): Optional<[T1, T2], T2> {
-    return new Optional(arr => arr[1], (arr, t2) => [arr[0], t2])
+    return new Optional(arr => arr[1], (arr, t2) => [arr[0], t2], "secondIn2")
 }
 
 // interface Optics2<Main,Child>{
@@ -41,10 +41,12 @@ export function secondIn2<T1, T2>(): Optional<[T1, T2], T2> {
 export class Optional<Main, Child> {
     getOption: (m: Main) => Child | undefined
     setOption: (m: Main, c: Child) => Main | undefined
+    description: string
 
-    constructor(getOption: (m: Main) => (Child | undefined), optionalSet: (m: Main, c: Child) => Main | undefined) {
+    constructor(getOption: (m: Main) => (Child | undefined), optionalSet: (m: Main, c: Child) => Main | undefined, description: string) {
         this.getOption = getOption;
         this.setOption = optionalSet;
+        this.description = description
     }
 
     set = (m: Main, c: Child): Main => useOrDefault(m)(this.setOption(m, c));
@@ -60,21 +62,23 @@ export class Optional<Main, Child> {
     focusOn<K extends keyof Child>(k: K): Optional<Main, Child[K]> {
         return new Optional<Main, Child[K]>(
             (m) => apply(this.getOption(m),
-                c => c[k]), (m, v: Child[K]) => apply(this.getOption(m), c => this.set(m, copyWithFieldSet(c, k, v))))
+                c => c[k]), (m, v: Child[K]) => apply(this.getOption(m), c => this.set(m, copyWithFieldSet(c, k, v))), this.description + ".focusOn(" + k + ")")
     }
 
     /** Used to focus onto a child that might not be there. If you don't use this, then the type system is likely to complain if you try and carry on focusing. */
     focusQuery<K extends keyof Child, Req extends Required<Child>>(k: K): Optional<Main, Req[K]> {
         return new Optional<Main, Req[K]>(
             // @ts-ignore
-            m => apply(this.getOption(m), c => c[k]), (m, v) => apply(this.getOption(m), c => this.set(m, copyWithFieldSet(c, k, v))))
+            m => apply(this.getOption(m), c => c[k]), (m, v) => apply(this.getOption(m), c => this.set(m, copyWithFieldSet(c, k, v))),
+            this.description + ".focus?(" + k + ")")
     }
 
 
     chain<T>(o: Optional<Child, T>): Optional<Main, T> {
         return new Optional<Main, T>(
             m => apply(this.getOption(m), c => o.getOption(c)),
-            (m, t) => this.map(m, oldC => o.set(oldC, t))
+            (m, t) => this.map(m, oldC => o.set(oldC, t)),
+            this.description + ".chain(" + o.description + ")"
         )
     }
 
@@ -85,21 +89,26 @@ export class Optional<Main, Child> {
             (m, newChild) => {
                 let [nc, noc] = newChild
                 return this.set(other.set(m, noc), nc)
-            })
+            },
+            "combine(" + this.description + "," + other.description + ")"
+        )
     }
 
     combineAs<OtherChild, NewChild>(other: Optional<Main, OtherChild>, iso: Iso<[Child, OtherChild], NewChild>): Optional<Main, NewChild> {
         return this.combine(other).chain(iso)
     }
 
+    toString() {
+        return "Optional(" + this.description + ")"
+    }
 }
 
 export class Lens<Main, Child> extends Optional<Main, Child> {
     set: (m: Main, c: Child) => Main
     get: (m: Main) => Child
 
-    constructor(get: (m: Main) => (Child), set: (m: Main, c: Child) => Main) {
-        super(get, set);
+    constructor(get: (m: Main) => (Child), set: (m: Main, c: Child) => Main, description: string) {
+        super(get, set, description);
         this.get = get;
         this.set = set;
     }
@@ -118,7 +127,8 @@ export class Lens<Main, Child> extends Optional<Main, Child> {
     focusOn<K extends keyof Child>(k: K): Lens<Main, Child[K]> {
         return new Lens<Main, Child[K]>(
             (m) => this.get(m)[k],
-            (m, c) => this.set(m, copyWithFieldSet(this.get(m), k, c)))
+            (m, c) => this.set(m, copyWithFieldSet(this.get(m), k, c)),
+            this.description + ".focusOn(" + k + ")")
     }
 
     /** interface AB{
@@ -132,40 +142,57 @@ export class Lens<Main, Child> extends Optional<Main, Child> {
      */
     focusWithDefault<K extends keyof Child, Req extends Required<Child>>(k: K, def: Child[K]): Lens<Main, Req[K]> {
         // @ts-ignore
-        return new Lens<Main, Required<Child[K]>>((m: Main) => useOrDefault(def)(this.get(m)[k]), (m, v) => this.set(m, copyWithFieldSet(this.get(m), k, v)))
+        return new Lens<Main, Required<Child[K]>>((m: Main) => useOrDefault(def)(this.get(m)[k]),
+        // @ts-ignore
+            (m, v) => this.set(m, copyWithFieldSet(this.get(m), k, v)),
+            this.description + ".focusWithDefault(" + k + ")")
     }
 
 
     chainLens = <T>(o: Lens<Child, T>): Lens<Main, T> => new Lens<Main, T>(
         m => o.get(this.get(m)),
-        (m, t) => this.set(m, o.set(this.get(m), t)));
+        (m, t) => this.set(m, o.set(this.get(m), t)),
+        this.description + ".chain(" + o.description + ")");
 
     combineLens<OtherChild>(other: Lens<Main, OtherChild>): Lens<Main, [Child, OtherChild]> {
         return new Lens<Main, [Child, OtherChild]>(
             m => [this.get(m), other.get(m)],
-            (m, newChild) => this.set(other.set(m, newChild[1]), newChild[0]))
+            (m, newChild) => this.set(other.set(m, newChild[1]), newChild[0]),
+            "combine(" + this.description + "," + other.description + ")")
     }
+    toString() {
+        return "Lens(" + this.description + ")"
+    }
+
 }
 
 export class Prism<Main, Child> extends Optional<Main, Child> {
     reverseGet: (c: Child) => Main
 
-    constructor(getOption: (m: Main) => (Child | undefined), reverseGet: (c: Child) => Main) {
-        super(getOption, (m, c) => reverseGet(c));
+    constructor(getOption: (m: Main) => (Child | undefined), reverseGet: (c: Child) => Main, description: string) {
+        super(getOption, (m, c) => reverseGet(c), description);
         this.reverseGet = reverseGet;
     }
+    toString() {
+        return "Prims(" + this.description + ")"
+    }
+
 }
 
-export function iso<Main,Child>(get: (m: Main) => Child, reverseGet:(c:  Child) => Main):Iso<Main, Child>{
-    return new Iso(get, reverseGet)
+export function iso<Main, Child>(get: (m: Main) => Child, reverseGet: (c: Child) => Main, description?: string ): Iso<Main, Child> {
+    return new Iso(get, reverseGet, description ? description : "iso")
 }
 
 export class Iso<Main, Child> extends Lens<Main, Child> {
     reverseGet: (c: Child) => Main
 
-    constructor(get: (m: Main) => Child, reverseGet: (c: Child) => Main) {
-        super(get, (m, c) => reverseGet(c));
+    constructor(get: (m: Main) => Child, reverseGet: (c: Child) => Main, description: string) {
+        super(get, (m, c) => reverseGet(c), description);
         this.reverseGet = reverseGet;
     }
+    toString() {
+        return "Iso(" + this.description + ")"
+    }
+
 }
 

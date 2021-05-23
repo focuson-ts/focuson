@@ -5,14 +5,14 @@ import {Optional} from "../../optics";
 export function fetchRadioButton<State>(
     desiredTagFn: (s: State) => (string | undefined),//The desired tag.
     actualTag: Optional<State, string>, // this is the tag that names the currently actually selected radio button
-    whichFetcher: (tag: string) => Fetcher<State>
+    whichFetcher: (tag: string) => Fetcher<State>,
+    description?: string
 ): Fetcher<State> {
     return {
         shouldLoad: ns => {
             if (!ns) return false
             const [desiredTag, f] = desiredFetcher(ns, desiredTagFn, whichFetcher)
             const tag = actualTag.getOption(ns)
-            console.log('tag', tag, "desiredTag", desiredTag)
             if (tag != desiredTag) return true//because when the radio button changes...we need to load
             return f ? f.shouldLoad(ns) : false
         },
@@ -20,7 +20,8 @@ export function fetchRadioButton<State>(
             if (!ns) throw Error('Should not happen')
             const [tag, f] = desiredFetcher(ns, desiredTagFn, whichFetcher)
             return f && tag ? f.load(ns).then(s => actualTag.set(s, tag)) : Promise.resolve(ns)
-        }
+        },
+        description: description ? description : "fetchRadioButton(" + actualTag + ")"
     }
 }
 

@@ -11,12 +11,14 @@ export interface Fetcher<State> {
     shouldLoad: (newState: State | undefined) => boolean,
     /** This changes the state by loading something */
     load: (newState: State | undefined) => Promise<State>,
+    description: string
 }
 
 
 export function fetcher<State>(shouldLoad: (ns: State | undefined) => boolean,
-                               load: (ns: State | undefined) => Promise<State>): Fetcher<State> {
-    return ({shouldLoad, load})
+                               load: (ns: State | undefined) => Promise<State>,
+                               description: string): Fetcher<State> {
+    return ({shouldLoad, load, description})
 }
 
 export const applyFetcher = <State>(fetcher: Fetcher<State>, s: State | undefined): Promise<State> => {
@@ -39,7 +41,8 @@ export function lensFetcher<State, Child>(lens: Optional<State, Child>, fetcher:
             if (ns == undefined) throw Error(`Cannot use lens fetcher ${lens} when the main state is not defined`)
             const child = await applyFetcher(fetcher, lens.getOption(ns))
             return lens.set(ns, child)
-        }
+        },
+        description: "lensFetcher(" + lens + "," + fetcher.description + ")"
     })
 
 }
@@ -49,13 +52,15 @@ export function loadIfUndefined<State, Selection>(lens: Optional<State, Selectio
 }
 
 export function fetcherWhenUndefined<State, Child>(lens: Optional<State, Child>,
-                                                   load: (s: State) => Promise<Child>): Fetcher<State> {
+                                                   load: (s: State) => Promise<Child>, description?: string): Fetcher<State> {
     return ({
         shouldLoad: ns => !!ns && loadIfUndefined(lens)(ns),
         load: (ns) => {
             if (ns == undefined) throw Error('software error. Should not be able to call this')
             return load(ns).then(c => lens.set(ns, c))
-        }
+        },
+        description: description ? description : "fetcherWhenUndefined(" + lens + ")"
+
     })
 }
 
@@ -67,7 +72,8 @@ export const selStateFetcher = <State, SelState, Holder, T>(sel: Lens<State, Sel
                                                             holderMaker: Iso<Holder, [string [], T]>) =>
     (tagFn: (s: SelState) => (string | undefined)[],
      target: Optional<State, Holder>,
-     loadT: (s: State) => Promise<T>): Fetcher<State> => {
+     loadT: (s: State) => Promise<T>,
+     description?: string): Fetcher<State> => {
         const shouldLoad = (s: State | undefined): boolean => {
             let desiredTags = s ? tagFn(sel.get(s)) : [];
             let allTagsDefined = areAllDefined(desiredTags)
@@ -75,12 +81,16 @@ export const selStateFetcher = <State, SelState, Holder, T>(sel: Lens<State, Sel
         }
         const load = (s: State | undefined): Promise<State> => {
             if (s == undefined) throw new Error('software error this should not be possible')
-            let desiredTags = tagFn(sel.get(s))
+            const desiredTags = tagFn(sel.get(s))
             if (areAllDefined(desiredTags))
                 return loadT(s).then(t => target.set(s, holderMaker.reverseGet([desiredTags, t])));
             throw Error(`Have an undefined tag ${desiredTags}`)
         }
-        return ({shouldLoad, load})
+        return ({
+            shouldLoad,
+            load,
+            description: description ? description : "selStateFetcher(sel=" + sel + ",holder=" + holderMaker + ",target=" + target + ")"
+        })
     };
 
 
