@@ -1,16 +1,6 @@
-import {
-    Fetcher,
-    fetcher,
-    from,
-    lensFetcher,
-    lensFetcherWhenUndefined,
-    loadFromUrl,
-    loadIfUndefined,
-    taggedFetcher,
-    tags
-} from "./fetchers";
-import {Lens, Lenses} from "../../lens";
-import {child, FetcherGraph, fetcherGraph} from "./fetcherGraph";
+import {Fetcher, fetcherWhenUndefined, from, lensFetcher, loadFromUrl, taggedFetcher, tags} from "./fetchers";
+import {child, FetcherTree, fetherTree} from "./fetcherTree";
+import {identityOptics} from "../../optics";
 
 export interface SiteMap {
     [entity: string]: Entity
@@ -23,23 +13,38 @@ export interface Entity {
 
 export interface Api {
     name: string,
-    description: string
+    _links: {
+        self: string,
+        status: string,
+        description: string,
+        source: string
+    }
+
 }
 
 export interface Thing {
     name: string,
-    description: string
+    href: string
+}
+
+function links(s: string) {
+    return ({
+        self: `/${s}/api`,
+        status: `/${s}/status`,
+        description: `/${s}/description`,
+        source: `/${s}/source`
+    })
 }
 
 function entity(e: string): Entity {
     return ({
         things: {
-            t1: {name: `${e}1`, description: `${e}d1`},
-            t2: {name: `${e}2`, description: `${e}d2`}
+            t1: {name: `${e}1`, href: `/t1/thing`},
+            t2: {name: `${e}2`, href: `/t2/thing`}
         },
         api: {
-            a1: {name: `${e}1`, description: `${e}d1`},
-            a2: {name: `${e}2`, description: `${e}d2`}
+            a1: {name: `${e}1`, _links: links(`${e}/a1`)},
+            a2: {name: `${e}2`, _links: links(`${e}/a2`)}
         }
     })
 }
@@ -58,52 +63,67 @@ export interface ApiData {
     desc?: string
 }
 
+export interface SelectionState {
+    tag: string,
+    selectedEntity: string,
+    selectedThing: string,
+    selectedApi: string,
+    apiView: 'desc' | 'src' | 'status'
+}
+
 export interface State {
     sitemap?: SiteMap,
-    entity: Entity | undefined,
-    apiData: ApiData,
-    thing: Thing | undefined,
-    selectionState: {
-        tag: string,
-        selectedEntity: string,
-        selectedThing: string,
-        selectedApi: string,
-        apiView: 'desc' | 'src' | 'status'
+    entity?: Entity,
+    apiData?: ApiData,
+    thing?: Thing,
+    desiredSelection: SelectionState,
+    currentSelection?: SelectionState,
+}
+
+export const stateL = identityOptics<State>()
+export const stateToSiteMapL = stateL.focusQuery('sitemap')
+
+function loadFromSiteMap<T>(fn: (siteMap: SiteMap, s: SelectionState) => string) {
+    return (ns: State): Promise<T> => {
+        const siteMap = ns.sitemap
+        const sel = ns.desiredSelection
+        const url = fn(siteMap, sel)
+        return fetch(url).then(r => r.json())
     }
 }
 
-export const stateL = Lenses.build<State>('state')
-export const stateToSiteMapL = stateL.focusOn('sitemap')
-
-const loadSiteMapF = lensFetcherWhenUndefined<State, SiteMap>(
+const loadSiteMapF = fetcherWhenUndefined<State, SiteMap>(
     stateToSiteMapL,
     () => loadFromUrl<SiteMap>()("someUrl"))
 
 const loadApiF: Fetcher<State> = lensFetcher<State, ApiData>(
-    stateL.focusOn('apiData'),
-    tags(s => [s.selectionState.selectedEntity, s.selectionState.selectedApi]),
-    () => loadFromUrl<Api>()("someApiUrl").then(api => ({api})))
+    stateL.focusQuery('apiData'),
+    tags(s => [s.currentSelection.selectedEntity, s.currentSelection.selectedApi], s => [s.desiredSelection.selectedEntity, s.desiredSelection.selectedApi]),
+    loadFromSiteMap((siteMap, sel) => siteMap[sel.selectedEntity].api[sel.selectedApi]._links.self))
 
-const loadThingF: Fetcher<State> = lensFetcherWhenUndefined<State, Thing>(
-    stateL.focusOn('thing'),
+const loadThingF: Fetcher<State> = fetcherWhenUndefined<State, Thing>(
+    stateL.focusQuery('thing'),
     () => loadFromUrl<Thing>()("someUrl"))
 
-const loadApiDescF: Fetcher<State> = lensFetcherWhenUndefined<State, string>(
-    stateL.focusOn('apiData').focusOn('desc'),
-    () => loadFromUrl<string>()("someUrl"))
+let apiDataL = stateL.focusQuery('apiData')
 
-const loadApiStatus: Fetcher<State> = lensFetcherWhenUndefined<State, string>(
-    stateL.focusOn('apiData').focusOn('status'),
-    () => loadFromUrl<string>()("someUrl"))
+const loadApiDescF: Fetcher<State> = fetcherWhenUndefined<State, string>(
+    apiDataL.focusQuery('desc'),
+    loadFromSiteMap((siteMap, sel) => siteMap[sel.selectedEntity].api[sel.selectedApi]._links.description))
 
-const loadApiSrc: Fetcher<State> = lensFetcherWhenUndefined<State, string[]>(
-    stateL.focusOn('apiData').focusOn("source"),
-    () => loadFromUrl<string[]>()("someUrl"))
+const loadApiStatus: Fetcher<State> = fetcherWhenUndefined<State, string>(
+    apiDataL.focusOn('status'),
+    loadFromSiteMap((siteMap, sel) => siteMap[sel.selectedEntity].api[sel.selectedApi]._links.status))
 
-const loadApiChild = taggedFetcher(stateL.focusOn('selectionState').focusOn('tag'),
+const loadApiSrc: Fetcher<State> = fetcherWhenUndefined<State, string[]>(
+    apiDataL.focusOn("source"),
+    loadFromSiteMap((siteMap, sel) => siteMap[sel.selectedEntity].api[sel.selectedApi]._links.source))
+
+const loadApiChild = taggedFetcher<State>(
+    s => s.desiredSelection.tag,
     from({'desc': loadApiDescF, 'src': loadApiSrc, 'status': loadApiStatus}))
 
-const fetchGraph: FetcherGraph<State> = fetcherGraph(
+const fetchGraph: FetcherTree<State> = fetherTree(
     loadSiteMapF,
     child(loadThingF),
     child(loadApiF,
