@@ -1,4 +1,4 @@
-import {identityOptics, Lens} from "../../optics";
+import {identityOptics, Lens} from "@focuson/optics";
 import {applyFetcher, defaultFetchFn, Fetcher, FetchFn, MutateFn} from "./fetchers";
 
 export interface FetcherTree<State> {
@@ -31,6 +31,7 @@ export function foldFetchers<Result>(ft: FetcherTree<any>, foldFn: (acc: Result,
     return ft.children.reduce<Result>((acc, fcl, i) => foldFetchers(fcl.child, foldFn, acc, d, i), foldFn(start, ft.fetcher, num, d + 1))
 }
 
+
 export interface WouldLoad {
     fetcher: Fetcher<any, any>,
     load: boolean,
@@ -52,9 +53,6 @@ export interface FetcherChildLink<State, Child> {
     child: FetcherTree<Child>
 }
 
-export const loadIfNeeded = <State>(f: Fetcher<State>) =>
-    (ns: State | undefined): Promise<State | undefined> => f.shouldLoad(ns) ? f.load(ns) : Promise.resolve(ns);
-
 
 const loadGraphChildLink = (fetchFn: FetchFn) => <State, Child>(ps: Promise<State | undefined>, g: FetcherChildLink<State, Child>): Promise<State | undefined> =>
     ps.then(ns => ns ? loadTree(g.child, g.lens.get(ns), fetchFn).then(nc => nc ? g.lens.set(ns, nc) : undefined) : undefined);
@@ -68,29 +66,15 @@ export async function loadTree<State>(fg: FetcherTree<State>, ns: State | undefi
 
 }
 
-export function graphAsFetcher<State>(fg: FetcherTree<State>): Fetcher<State> {
-    return ({
-        shouldLoad: () => true,//we will always execute load
-        load: (ns): Promise<State> => {
-            let result = loadTree<State>(fg, ns)
-            return result.then(r => {
-                if (r) return r
-                if (ns) return ns
-                throw new Error("Cannot fetch and state is undefined")
-            })
-        },
-        description: "graphAsFetcher"
-    })
-}
 
-export function fetcherTree<State>(fetcher: Fetcher<State>, ...children: FetcherChildLink<State, any>[]): FetcherTree<State> {
+export function fetcherTree<State>(fetcher: Fetcher<State, any>, ...children: FetcherChildLink<State, any>[]): FetcherTree<State> {
     return ({fetcher, children})
 }
 
-export function child<State>(fetcher: Fetcher<State>, ...children: FetcherChildLink<State, any>[]): FetcherChildLink<State, State> {
+export function child<State>(fetcher: Fetcher<State, any>, ...children: FetcherChildLink<State, any>[]): FetcherChildLink<State, State> {
     return ({lens: identityOptics(), child: {fetcher, children}})
 }
 
-export function lensAndChild<State, Child>(lens: Lens<State, Child>, fetcher: Fetcher<Child>, ...children: FetcherChildLink<Child, any>[]): FetcherChildLink<State, Child> {
+export function lensAndChild<State, Child>(lens: Lens<State, Child>, fetcher: Fetcher<Child, any>, ...children: FetcherChildLink<Child, any>[]): FetcherChildLink<State, Child> {
     return ({lens, child: {fetcher, children}})
 }

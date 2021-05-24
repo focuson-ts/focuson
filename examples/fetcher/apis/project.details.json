@@ -1,0 +1,11 @@
+{
+  "template"      : "noreact",
+  "name"          : "@focuson/example_fetcher_api",
+  "description"   : "A relatively complex example of fetchers showing",
+  "details": {
+    "links": ["@focuson/lens"],
+    "extraDeps"   : {},
+    "extraDevDeps": {},
+    "test": true
+  }
+}

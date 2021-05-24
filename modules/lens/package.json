@@ -52,5 +52,6 @@
     "extraDeps": {},
     "extraDevDeps": {}
   },
+  "test": false,
   "name": "@focuson/lens"
 }

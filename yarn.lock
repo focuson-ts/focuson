@@ -1197,6 +1197,14 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@focuson/view@0.2.31":
+  version "0.2.31"
+  resolved "https://registry.yarnpkg.com/@focuson/view/-/view-0.2.31.tgz#94d83537463833b668a3e271c1751b819eaf17eb"
+  integrity sha512-WYAW9vXU2WFqfETBpFmaSH9PpUW7OM+z/QBerMqpR7fHLIN19NGq6WFjqWUYMB2gLRb2SYB9eInl2UvrNu9rsw==
+  dependencies:
+    "@focuson/lens" "0.2.31"
+    "@focuson/state" "0.2.31"
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.1.4.tgz"

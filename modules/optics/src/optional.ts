@@ -184,7 +184,7 @@ export class DirtyPrism<Main, Child> extends Optional<Main, Child> {
     }
 
     toString() {
-        return "DirtyPrims(" + this.description + ")"
+        return "DirtyPrism(" + this.description + ")"
     }
 
 }

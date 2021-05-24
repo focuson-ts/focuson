@@ -1,12 +1,16 @@
 {
-  "template":    "noreact",
-  "name":        "@focuson/lenstest",
-  "description": "Tests the lens defined in @focuson/lens, and the state defined in @focuson/state",
-  "details":     {
-    "ideify":       true,
-    "publish":      true,
-    "links":        ["@focuson/lens","@focuson/state"],
-    "extraDeps":    {},
+  "template": "noreact",
+  "name": "@focuson/lenstest",
+  "description": "Tests the lens defined in @focuson/lens, the state defined in @focuson/state, and the fetchers in @focuson/fetcher",
+  "details": {
+    "ideify": true,
+    "publish": true,
+    "links": [
+      "@focuson/lens",
+      "@focuson/state",
+      "@focuson/fetcher"
+    ],
+    "extraDeps": {},
     "extraDevDeps": {},
     "test": true
   }

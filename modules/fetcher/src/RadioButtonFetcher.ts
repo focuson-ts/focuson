@@ -1,5 +1,5 @@
 import {Fetcher, MutateFn, partialFnUsageError} from "./fetchers";
-import {Optional} from "../../optics";
+import {Optional} from "@focuson/optics";
 
 
 export function fetchRadioButton<State, T>(

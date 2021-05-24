@@ -7,10 +7,10 @@ import {
     LoadFn,
     ReqFn,
     selStateFetcher
-} from "./fetchers";
-import {identityOptics} from "../../optics";
-import {dirtyPrism, iso} from "../../optics/src/optional";
-import {fetchRadioButton, fromTaggedFetcher, TaggedFetcher} from "./RadioButtonFetcher";
+} from "@focuson/fetcher";
+import {identityOptics} from "@focuson/optics";
+import {dirtyPrism, iso} from "@focuson/optics";
+import {fetchRadioButton, fromTaggedFetcher, TaggedFetcher} from "@focuson/fetcher";
 
 const shouldLoadTrue = <T extends any>(t: T): boolean => true;
 const shouldLoadFalse = <T extends any>(t: T): boolean => false;
@@ -218,7 +218,7 @@ describe("selStateFetcher", () => {
 
 
     it("should have a description", () => {
-        expect(f.description).toEqual("selStateFetcher(sel=Lens(I.focusOn(selState)),holder=Iso(iso),target=Optional(I.focus?(entityAndName)))")
+        expect(f.description).toEqual("selStateFetcher(sel=Lens(I.focusOn(selState)),holder=DirtyPrism(prism),target=Optional(I.focus?(entityAndName)))")
         const f2 = fetchMaker(sel => [sel.selProfile, sel.selEntity], identityOptics<TState>().focusQuery('entityAndName'), reqFn, "someDescription")
         expect(f2.description).toEqual("someDescription")
     })

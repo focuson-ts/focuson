@@ -12,7 +12,7 @@
     ]
   },
   "dependencies": {
-    "@focuson/lens": "0.2.31",
+    "@focuson/optics": "0.2.31",
     "@focuson/state": "0.2.31"
   },
   "devDependencies": {
@@ -47,16 +47,17 @@
   },
   "version": "0.2.31",
   "template": "noreact",
-  "description": "Used when we want to fetch data from APIs in order to display it",
+  "description": "Used when we want to fetch data from APIs in order to display it. This provides a declarative and composable approach to state management",
   "details": {
     "ideify": true,
     "publish": true,
     "links": [
-      "@focuson/lens",
+      "@focuson/optics",
       "@focuson/state"
     ],
     "extraDeps": {},
     "extraDevDeps": {}
   },
+  "test": true,
   "name": "@focuson/fetcher"
 }
