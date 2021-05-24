@@ -4,8 +4,8 @@ import React from 'react';
 import {enzymeSetup} from './enzymeAdapterSetup';
 import {shallow, ShallowWrapper} from "enzyme";
 
-import {Lenses} from "../../../../modules/lens"; //changed from @focuson/lens;
-import {lensState, LensState} from "../../../../modules/state"; //changed from @focuson/state;
+import {Lenses} from "@focuson/lens";
+import {lensState, LensState} from "@focuson/state";
 import {CpqData} from "./CpqDomain";
 import {Cpq} from "./render/Cpq";
 import {SimpleFilter} from "./render/SimpleFilter";
@@ -61,7 +61,7 @@ describe("Code on demand CPQ", () => {
             let filters = cpq.find('ComponentFromServer');
             expect(filters).toHaveLength(4)
             console.log('filters', filters)
-            filters.forEach((filter, i) => compare(filter, state, `cpq/filters/[${i}]`))
+            filters.forEach((filter, i) => compare(filter, state, `cpq.focusOn(filters).chain([${i}])`))
         })
     })
     describe("SimpleFilter", () => {

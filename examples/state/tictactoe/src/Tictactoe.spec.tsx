@@ -3,7 +3,7 @@ import React from 'react';
 
 import {enzymeSetup} from './enzymeAdapterSetup';
 import {shallow, ShallowWrapper} from "enzyme";
-import {focus1OnNth, focusOnNth, LensState, lensState, LensState2} from "../../../../modules/state"; //changed from @focuson/state;
+import {focus1OnNth, focusOnNth, LensState, lensState, LensState2} from "@focuson/state";
 import {Board, BoardData, GameData, gameDataToNextL, NoughtOrCross, SimpleGame, Square} from "./game";
 
 
@@ -46,10 +46,10 @@ describe("Tictactoe", () => {
             console.log("game", game.text())
 
             expect(game.find('NextMove')).toHaveLength(1)
-            compare(game.find('NextMove').at(0), state, 'game/next')
+            compare(game.find('NextMove').at(0), state, 'game.focusOn(next)')
 
             expect(game.find('Board')).toHaveLength(1)
-            compare2(game.find('Board').at(0), state, 'game/board', 'game/next')
+            compare2(game.find('Board').at(0), state, 'game.focusOn(board)', 'game.focusOn(next)')
         })
     })
     describe("board", () => {
@@ -59,7 +59,7 @@ describe("Tictactoe", () => {
             let componentSquares = board.find('Square');
             expect(componentSquares).toHaveLength(9)
             componentSquares.forEach((square, i) =>
-                compare2(square, state, `game/board/squares/[${i}]`, 'game/next'))
+                compare2(square, state, `game.focusOn(board).focusOn(squares).chain([${i}])`, 'game.focusOn(next)'))
         })
     })
     describe("square", () => {

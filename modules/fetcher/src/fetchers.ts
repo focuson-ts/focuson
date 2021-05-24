@@ -1,7 +1,7 @@
 /** Mixed into Fetcher when we want to have a component that normally displays the state (which might well be the most common case
  * An example would be 'go get profile' as a fetcher and then have a <Profile... > component that shows it.
  */
-import {DirtyPrism, firstIn2, Lens, Optional} from "@focuson/optics";
+import {DirtyPrism, firstIn2, Lens, Optional} from "@focuson/lens";
 
 export interface FetchFn {
     <T>(re: RequestInfo, init?: RequestInit): Promise<[number, T]>

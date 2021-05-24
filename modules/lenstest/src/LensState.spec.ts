@@ -30,7 +30,7 @@ function checkContext<T>(context: LensState< Dragon, T>, lensDescription: string
 describe("LensContext", () => {
     it("create", () => {
         checkContext(dragonC, 'dragon')
-        checkContext(chestC, 'dragon/body/chest')
+        checkContext(chestC, 'dragon.focusOn(body).focusOn(chest)')
     })
     it("should have json equal to the focus of the  lens", () => {
         expect(dragonC.json()).toEqual(dragon)
@@ -43,7 +43,7 @@ describe("LensContext", () => {
     })
     it("with withChildLens should concatenate with the parent lens", () => {
         let child = chestC.chainLens(Lenses.identity<Chest>().withDescription('childName'))
-        checkContext(child, 'dragon/body/chest/childName')
+        checkContext(child, 'dragon.focusOn(body).focusOn(chest).chain(childName)')
     })
     it("setJson should call danagerouslySetMain with the result of passing main and the new json to the lens", () => {
         let json = {contents: [1, 2, 3]};

@@ -1,5 +1,5 @@
 import {State} from "./fetcher.fixture";
-import {identityOptics, Iso, Lens, Optional} from "../../optics/src/optional";
+import {identityOptics, Iso, Lens, Optional} from "@focuson/lens";
 
 
 export let state: State = {}

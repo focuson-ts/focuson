@@ -1,4 +1,4 @@
-import {identityOptics, Lens} from "@focuson/optics";
+import {identityOptics, Lens} from "@focuson/lens";
 import {applyFetcher, defaultFetchFn, Fetcher, FetchFn, MutateFn} from "./fetchers";
 
 export interface FetcherTree<State> {

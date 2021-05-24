@@ -13,7 +13,7 @@ describe("Lens", () => {
             expect(lens.set(a1b2ca3, "newValue")).toBe("newValue")
         })
         it("should have a description = identity", () => {
-            expect(lens.description).toEqual('identity')
+            expect(lens.description).toEqual('I')
         })
     })
     describe("nth", () => {
@@ -36,7 +36,7 @@ describe("Lens", () => {
             expect(old).toEqual(3);
             return 9
         })(a1b2ca3)).toEqual({a: 1, b: 2, c: {a: 9}})
-        expect(letnstoca.description).toEqual('toC/toa')
+        expect(letnstoca.description).toEqual('toC.chain(toa)')
     })
     describe("'then' should use the field names", () => {
         let dragonStomachL: Lens<Dragon, Stomach> = Lenses.build<Dragon>('dragon').focusOn('body').focusOn('chest').focusOn('stomach')
@@ -49,7 +49,7 @@ describe("Lens", () => {
 
         })
         it('should have a nice description', () => {
-            expect(dragonStomachL.description).toEqual("dragon/body/chest/stomach")
+            expect(dragonStomachL.description).toEqual("dragon.focusOn(body).focusOn(chest).focusOn(stomach)")
         })
     })
     describe("lens.nth", () => {

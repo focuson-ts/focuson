@@ -1,16 +1,5 @@
-import {
-    applyFetcher, fetchAndMutate,
-    Fetcher,
-    fetcher,
-    fetcherWhenUndefined,
-    lensFetcher,
-    LoadFn,
-    ReqFn,
-    selStateFetcher
-} from "@focuson/fetcher";
-import {identityOptics} from "@focuson/optics";
-import {dirtyPrism, iso} from "@focuson/optics";
-import {fetchRadioButton, fromTaggedFetcher, TaggedFetcher} from "@focuson/fetcher";
+import {applyFetcher, fetchAndMutate, Fetcher, fetcher, fetcherWhenUndefined, fetchRadioButton, fromTaggedFetcher, lensFetcher, LoadFn, ReqFn, selStateFetcher, TaggedFetcher} from "@focuson/fetcher";
+import {dirtyPrism, identityOptics} from "@focuson/lens";
 
 const shouldLoadTrue = <T extends any>(t: T): boolean => true;
 const shouldLoadFalse = <T extends any>(t: T): boolean => false;

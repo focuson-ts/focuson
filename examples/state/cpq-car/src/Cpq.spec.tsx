@@ -4,7 +4,7 @@ import React from 'react';
 import {enzymeSetup} from './enzymeAdapterSetup';
 import {mount} from "enzyme";
 import {Cpq, CpqData} from "./Cpq";
-import {lensState} from "../../../../modules/state"; //changed from @focuson/state;
+import {lensState} from "@focuson/state";
 
 enzymeSetup()
 

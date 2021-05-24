@@ -3,7 +3,7 @@ import React from 'react';
 
 import {enzymeSetup} from './enzymeAdapterSetup';
 import {shallow} from "enzyme";
-import {LensState, lensState} from "../../../../modules/state"; //changed from @focuson/state;
+import {LensState, lensState} from "@focuson/state";
 import {CounterData} from "./domain";
 import {Counter} from "./Counter";
 

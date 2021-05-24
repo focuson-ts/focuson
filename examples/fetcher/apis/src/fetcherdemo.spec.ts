@@ -1,5 +1,5 @@
-import {child, descriptionOf, fetchAndMutate, Fetcher, FetcherTree, fetcherTree, fetcherWhenUndefined, fetchRadioButton, fromTaggedFetcher, loadTree, ReqFn, selStateFetcher, wouldLoad, wouldLoadDescription} from "../../../../modules/fetcher"; //changed from @focuson/fetcher;
-import {dirtyPrism, DirtyPrism, identityOptics, Iso, iso, Optional} from "../../../../modules/optics"; //changed from @focuson/optics;
+import {child, descriptionOf, fetchAndMutate, Fetcher, FetcherTree, fetcherTree, fetcherWhenUndefined, fetchRadioButton, fromTaggedFetcher, loadTree, ReqFn, selStateFetcher, wouldLoad, wouldLoadDescription} from "@focuson/fetcher";
+import {dirtyPrism, DirtyPrism, identityOptics, Iso, iso, Lenses, Optional} from "../../../../modules/lens";
 
 export interface SiteMap {
     [entity: string]: Entity
@@ -106,7 +106,7 @@ export interface State {
 }
 
 
-export const stateL = identityOptics<State>()
+export const stateL = Lenses.identity<State>()
 export const stateToSiteMapL = stateL.focusQuery('sitemap')
 
 function loadFromSiteMap(fn: (siteMap: SiteMap, s: SelectionState) => string | undefined): ReqFn<State> {
