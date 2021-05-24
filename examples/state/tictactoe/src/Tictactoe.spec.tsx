@@ -3,7 +3,7 @@ import React from 'react';
 
 import {enzymeSetup} from './enzymeAdapterSetup';
 import {shallow, ShallowWrapper} from "enzyme";
-import {focus1OnNth, focusOnNth, LensState, lensState, LensState2} from "@focuson/state";
+import {focus1OnNth, focusOnNth, LensState, lensState, LensState2} from "../../../../modules/state"; //changed from @focuson/state;
 import {Board, BoardData, GameData, gameDataToNextL, NoughtOrCross, SimpleGame, Square} from "./game";
 
 

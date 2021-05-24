@@ -1,20 +1,5 @@
-import {
-    child,
-    descriptionOf,
-    fetchAndMutate,
-    Fetcher,
-    FetcherTree,
-    fetcherTree,
-    fetcherWhenUndefined,
-    fetchRadioButton,
-    fromTaggedFetcher,
-    loadTree,
-    ReqFn,
-    selStateFetcher,
-    wouldLoad,
-    wouldLoadDescription
-} from "@focuson/fetcher";
-import {dirtyPrism, DirtyPrism, identityOptics, Iso, iso, Optional} from "@focuson/optics";
+import {child, descriptionOf, fetchAndMutate, Fetcher, FetcherTree, fetcherTree, fetcherWhenUndefined, fetchRadioButton, fromTaggedFetcher, loadTree, ReqFn, selStateFetcher, wouldLoad, wouldLoadDescription} from "../../../../modules/fetcher"; //changed from @focuson/fetcher;
+import {dirtyPrism, DirtyPrism, identityOptics, Iso, iso, Optional} from "../../../../modules/optics"; //changed from @focuson/optics;
 
 export interface SiteMap {
     [entity: string]: Entity
@@ -156,8 +141,8 @@ function holderIso<T>(description: string): Iso<Holder<T>, [string[], T]> {
     )
 }
 
-const loadApiF: Fetcher<State, Api> = selStateFetcher(stateL.focusOn('selState'), apiDataHolder('H/ApiData'))
-(sel => [sel?.selectedEntity, sel?.selectedApi],
+const loadApiF: Fetcher<State, Api> = selStateFetcher<State,SelectionState,ApiData,Api>(stateL.focusOn('selState'), apiDataHolder('H/ApiData'))
+((sel: SelectionState) => [sel?.selectedEntity, sel?.selectedApi],
     stateL.focusQuery('apiData'),
     loadFromSiteMap((siteMap, sel) =>
         sel.selectedEntity && sel.selectedApi && siteMap[sel.selectedEntity].api[sel.selectedApi]._links.self),

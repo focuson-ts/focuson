@@ -2,8 +2,8 @@
 import {CartData, InventoryData, ProductData} from "../domain";
 import React from "react";
 import {ProductList} from "./ProductList";
-import {Lens} from "@focuson/lens";
-import {LensState} from "@focuson/state";
+import {Lens} from "../../../../../modules/lens"; //changed from @focuson/lens;
+import {LensState} from "../../../../../modules/state"; //changed from @focuson/state;
 
 interface InventoryProps<Main> {
     state: LensState<Main, InventoryData>,

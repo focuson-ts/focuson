@@ -46,7 +46,7 @@ describe("LensContext", () => {
         checkContext(child, 'dragon/body/chest/childName')
     })
     it("setJson should call danagerouslySetMain with the result of passing main and the new json to the lens", () => {
-        let json = {stomach: {contents: [1, 2, 3]}};
+        let json = {contents: [1, 2, 3]};
         setupForSetMain(stomachC, (context, setMain) => {
             context.setJson(json)
             checkSetMainWas(setMain, stomachC.lens.set(dragon, json))
