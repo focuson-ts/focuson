@@ -143,7 +143,7 @@ export class Lens<Main, Child> extends Optional<Main, Child> {
     focusWithDefault<K extends keyof Child, Req extends Required<Child>>(k: K, def: Child[K]): Lens<Main, Req[K]> {
         // @ts-ignore
         return new Lens<Main, Required<Child[K]>>((m: Main) => useOrDefault(def)(this.get(m)[k]),
-        // @ts-ignore
+            // @ts-ignore
             (m, v) => this.set(m, copyWithFieldSet(this.get(m), k, v)),
             this.description + ".focusWithDefault(" + k + ")")
     }
@@ -160,26 +160,48 @@ export class Lens<Main, Child> extends Optional<Main, Child> {
             (m, newChild) => this.set(other.set(m, newChild[1]), newChild[0]),
             "combine(" + this.description + "," + other.description + ")")
     }
+
     toString() {
         return "Lens(" + this.description + ")"
     }
 
 }
 
-export class Prism<Main, Child> extends Optional<Main, Child> {
+export function prism<Main, Child>(getOption: (m: Main) => Child | undefined, reverseGet: (c: Child) => Main, description?: string): Prism<Main, Child> {
+    return new Prism(getOption, reverseGet, description ? description : "prism")
+}
+
+export function dirtyPrism<Main, Child>(getOption: (m: Main) => Child | undefined, reverseGet: (c: Child) => Main, description?: string): DirtyPrism<Main, Child> {
+    return new DirtyPrism(getOption, reverseGet, description ? description : "prism")
+}
+
+export class DirtyPrism<Main, Child> extends Optional<Main, Child> {
     reverseGet: (c: Child) => Main
 
     constructor(getOption: (m: Main) => (Child | undefined), reverseGet: (c: Child) => Main, description: string) {
         super(getOption, (m, c) => reverseGet(c), description);
         this.reverseGet = reverseGet;
     }
+
+    toString() {
+        return "DirtyPrims(" + this.description + ")"
+    }
+
+}
+
+export class Prism<Main, Child> extends DirtyPrism<Main, Child> {
+
+    constructor(getOption: (m: Main) => (Child | undefined), reverseGet: (c: Child) => Main, description: string) {
+        super(getOption, reverseGet, description);
+    }
+
     toString() {
         return "Prims(" + this.description + ")"
     }
 
 }
 
-export function iso<Main, Child>(get: (m: Main) => Child, reverseGet: (c: Child) => Main, description?: string ): Iso<Main, Child> {
+export function iso<Main, Child>(get: (m: Main) => Child, reverseGet: (c: Child) => Main, description?: string): Iso<Main, Child> {
     return new Iso(get, reverseGet, description ? description : "iso")
 }
 
@@ -190,6 +212,7 @@ export class Iso<Main, Child> extends Lens<Main, Child> {
         super(get, (m, c) => reverseGet(c), description);
         this.reverseGet = reverseGet;
     }
+
     toString() {
         return "Iso(" + this.description + ")"
     }
