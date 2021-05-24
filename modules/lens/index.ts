@@ -1,4 +1,3 @@
-
 export const identityOptics = <State>(description?: string): Iso<State, State> => new Iso(x => x, x => x, description ? description : "I");
 
 /** An Optional is like a lens, except that it is not guaranteed to 'work'. Specifically if you ask for a child... maybe that child isn't there.
@@ -69,6 +68,11 @@ export class Optional<Main, Child> {
             "combine(" + this.description + "," + other.description + ")"
         )
     }
+    /** If you desire to change the description this will do that. It is rarely called outside the Lens code itself */
+    withDescription(description: string) {
+        return new Optional(this.getOption, this.set, description)
+    }
+
 
     combineAs<OtherChild, NewChild>(other: Optional<Main, OtherChild>, iso: Iso<[Child, OtherChild], NewChild>): Optional<Main, NewChild> {
         return this.combine(other).chain(iso)
@@ -295,8 +299,11 @@ export class Iso<Main, Child> extends Lens<Main, Child> {
  * @returns a function that given a Main will return a new main with the two functions used to modify the parts of Main that the two lens are focused in on
  *
  */
-export const transformTwoValues = <Main, C1, C2>(lens1: Lens<Main, C1>, lens2: Lens<Main, C2>) => (fn1: (c1: C1, c2: C2) => C1, fn2: (c1: C1, c2: C2) => C2) => (main: Main): Main =>
-    lens1.set(lens2.set(main, fn2(lens1.get(main), lens2.get(main))), fn1(lens1.get(main), lens2.get(main)))
+export const transformTwoValues = <Main, C1, C2>(lens1: Optional<Main, C1>, lens2: Optional<Main, C2>) => (fn1: (c1: C1, c2: C2) => C1, fn2: (c1: C1, c2: C2) => C2) => (main: Main): Main => {
+    let c1 = lens1.getOption(main)
+    let c2 = lens2.getOption(main)
+    return c1 && c2 ? lens1.set(lens2.set(main, fn2(c1, c2)), fn1(c1, c2)) : main
+}
 
 /** This 'changes' two parts of Main simultaneously.
  *
@@ -308,8 +315,9 @@ export const transformTwoValues = <Main, C1, C2>(lens1: Lens<Main, C1>, lens2: L
  * @returns a new main with the parts the two lens are focused on changed by the new values
  *
  */
-export const updateTwoValues = <Main, C1, C2>(lens1: Lens<Main, C1>, lens2: Lens<Main, C2>) => (main: Main, c1: C1, c2: C2): Main =>
+export const updateTwoValues = <Main, C1, C2>(lens1: Optional<Main, C1>, lens2: Optional<Main, C2>) => (main: Main, c1: C1, c2: C2): Main =>
     lens1.set(lens2.set(main, c2), c1)
+
 
 /** This 'changes' three parts of Main simultaneously.
  *
@@ -323,7 +331,7 @@ export const updateTwoValues = <Main, C1, C2>(lens1: Lens<Main, C1>, lens2: Lens
  * @returns a new main with the parts the three lens are focused on changed by the new values
  *
  */
-export const updateThreeValues = <Main, C1, C2, C3>(lens1: Lens<Main, C1>, lens2: Lens<Main, C2>, lens3: Lens<Main, C3>) =>
+export const updateThreeValues = <Main, C1, C2, C3>(lens1: Optional<Main, C1>, lens2: Optional<Main, C2>, lens3: Optional<Main, C3>) =>
     (main: Main, c1: C1, c2: C2, c3: C3): Main => lens1.set(lens2.set(lens3.set(main, c3), c2), c1)
 
 

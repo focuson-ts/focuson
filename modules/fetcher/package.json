@@ -12,7 +12,7 @@
     ]
   },
   "dependencies": {
-    "@focuson/optics": "0.3.1",
+    "@focuson/lens": "0.3.1",
     "@focuson/state": "0.3.1"
   },
   "devDependencies": {
@@ -52,7 +52,7 @@
     "ideify": true,
     "publish": true,
     "links": [
-      "@focuson/optics",
+      "@focuson/lens",
       "@focuson/state"
     ],
     "extraDeps": {},

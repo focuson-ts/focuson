@@ -6,7 +6,7 @@
     "ideify": true,
     "publish": true,
     "links": [
-      "@focuson/optics",
+      "@focuson/lens",
       "@focuson/state"
     ],
     "extraDeps": {},

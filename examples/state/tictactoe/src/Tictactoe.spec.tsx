@@ -24,7 +24,7 @@ function squareState(state: LensState<GameData, GameData>, n: number): LensState
 function compare<Domain, Main, Data>(wrapper: ShallowWrapper<any, React.Component["state"], React.Component>, state: LensState<Main, Data>, expectedLensDescription: string) {
     let props: any = wrapper.props()
     let childState: LensState<Main, Data> = props.state
-    expect(childState.lens.description).toBe(expectedLensDescription)
+    expect(childState.optional.description).toBe(expectedLensDescription)
     expect(childState.main).toBe(state.main)
     expect(childState.dangerouslySetMain).toBe(state.dangerouslySetMain)
 
@@ -32,8 +32,8 @@ function compare<Domain, Main, Data>(wrapper: ShallowWrapper<any, React.Componen
 function compare2<Domain, Main, Data>(wrapper: ShallowWrapper<any, React.Component["state"], React.Component>, state: LensState<Main, Data>, expectedLens1Description: string,expectedLens2Description: string) {
     let props: any = wrapper.props()
     let childState: LensState2<Main, Data,NoughtOrCross> = props.state
-    expect(childState.state1().lens.description).toBe(expectedLens1Description)
-    expect(childState.state2().lens.description).toBe(expectedLens2Description)
+    expect(childState.state1().optional.description).toBe(expectedLens1Description)
+    expect(childState.state2().optional.description).toBe(expectedLens2Description)
     expect(childState.main).toBe(state.main)
     expect(childState.dangerouslySetMain).toBe(state.dangerouslySetMain)
 
@@ -46,10 +46,10 @@ describe("Tictactoe", () => {
             console.log("game", game.text())
 
             expect(game.find('NextMove')).toHaveLength(1)
-            compare(game.find('NextMove').at(0), state, 'game.focusOn(next)')
+            compare(game.find('NextMove').at(0), state, 'game.focus?(next)')
 
             expect(game.find('Board')).toHaveLength(1)
-            compare2(game.find('Board').at(0), state, 'game.focusOn(board)', 'game.focusOn(next)')
+            compare2(game.find('Board').at(0), state, 'game.focus?(board)', 'game.focusOn(next)')
         })
     })
     describe("board", () => {
@@ -59,7 +59,7 @@ describe("Tictactoe", () => {
             let componentSquares = board.find('Square');
             expect(componentSquares).toHaveLength(9)
             componentSquares.forEach((square, i) =>
-                compare2(square, state, `game.focusOn(board).focusOn(squares).chain([${i}])`, 'game.focusOn(next)'))
+                compare2(square, state, `game.focus?(board).focus?(squares).chain([${i}])`, 'game.focusOn(next)'))
         })
     })
     describe("square", () => {

@@ -9,11 +9,16 @@ export interface GameData {
     next: NoughtOrCross,
     board: BoardData
 }
+
 export type NoughtOrCross = "O" | "X" | ""
-export interface BoardData {squares: SquareData}
+
+export interface BoardData {
+    squares: SquareData
+}
+
 type SquareData = NoughtOrCross[]
 export const gameDataL: Lens<GameData, GameData> = Lenses.build<GameData>('game')
-export const gameDataToNextL: Lens<GameData,NoughtOrCross> = gameDataL.focusOn('next')
+export const gameDataToNextL: Lens<GameData, NoughtOrCross> = gameDataL.focusOn('next')
 
 /** This is a helper to get rid of the noise of  LensProps<GameDomain, GameData, T> replacing it with GameProps<T> */
 export type GameProps<Main, T> = LensProps<Main, T>
@@ -28,6 +33,8 @@ export let emptyGame: GameData = {
 
 export function SimpleGame({state}: GameProps<GameData, GameData>) {
     let newState: LensState2<GameData, BoardData, NoughtOrCross> = state.addSecond<NoughtOrCross>(gameDataToNextL).focus1On('board');
+    console.log('simplegame', state.optJson())
+    console.log('simplegame - next', state.focusOn('next').optJson())
     return (
         <div className='game'>
             <NextMove state={state.focusOn('next')}/>
@@ -42,6 +49,10 @@ export function NextMove({state}: GameProps<GameData, NoughtOrCross>) {
 
 export function Board({state}: LensProps2<GameData, BoardData, NoughtOrCross>) {
     let squares = state.focus1On('squares');
+    console.log('Board - next', state.optJson1(), state.optJson2())
+    console.log('Board - squares', squares.optJson1(), squares.optJson2())
+    console.log('Board - squares(n)', focus1OnNth(squares, 1).optJson1(), focus1OnNth(squares, 1).optJson2())
+
     let sq = (n: number) => (<Square state={focus1OnNth(squares, n)}/>)
     return (<div className='board'>
         <div>{sq(0)}{sq(1)}{sq(2)}</div>
@@ -50,11 +61,16 @@ export function Board({state}: LensProps2<GameData, BoardData, NoughtOrCross>) {
     </div>)
 }
 
-function invert(s: NoughtOrCross): NoughtOrCross {return (s === 'X' ? 'O' : 'X')}
+function invert(s: NoughtOrCross): NoughtOrCross {
+    return (s === 'X' ? 'O' : 'X')
+}
+
 const nextValueForSquare = (sq: NoughtOrCross, next: NoughtOrCross) => next;
 const nextValueForNext = (sq: NoughtOrCross, next: NoughtOrCross) => invert(next);
 
 export function Square({state}: LensProps2<GameData, NoughtOrCross, NoughtOrCross>) {
-    let onClick = () => { if (state.json1() == '') state.transformJson2(nextValueForSquare, nextValueForNext) }
+    let onClick = () => {
+        if (state.json1() == '') state.transformJson2(nextValueForSquare, nextValueForNext)
+    }
     return (<button className='square' onClick={onClick}>{state.json1()}</button>)
 }

@@ -12,7 +12,7 @@ let stomachC = chestC.focusOn('stomach')
 
 function setupForSetMain< Main, T>(context: LensState< Main, T>, fn: (context: LensState< Main, T>, setMain: jest.Mock) => void) {
     const setMain = jest.fn()
-    let newContext: LensState<Main, T> =new LensState(context.main, setMain, context.lens)
+    let newContext: LensState<Main, T> =new LensState(context.main, setMain, context.optional)
     fn(newContext, setMain)
 }
 
@@ -24,13 +24,13 @@ function checkSetMainWas<Main>(setMain: jest.Mock, expected: Main) {
 
 function checkContext<T>(context: LensState< Dragon, T>, lensDescription: string) {
     expect(context.main).toEqual(dragon)
-    expect(context.lens.description).toEqual(lensDescription)
+    expect(context.optional.description).toEqual(lensDescription)
     expect(context.dangerouslySetMain).toEqual(setMain)
 }
 describe("LensContext", () => {
     it("create", () => {
         checkContext(dragonC, 'dragon')
-        checkContext(chestC, 'dragon.focusOn(body).focusOn(chest)')
+        checkContext(chestC, 'dragon.focus?(body).focus?(chest)')
     })
     it("should have json equal to the focus of the  lens", () => {
         expect(dragonC.json()).toEqual(dragon)
@@ -38,18 +38,18 @@ describe("LensContext", () => {
     })
 
     it("with Lens should ignore the parent lens", () => {
-        let replace = chestC.copyWithLens(chestC.lens.withDescription('theNewLens'))
+        let replace = chestC.copyWithLens(chestC.optional.withDescription('theNewLens'))
         checkContext(replace, 'theNewLens')
     })
     it("with withChildLens should concatenate with the parent lens", () => {
         let child = chestC.chainLens(Lenses.identity<Chest>().withDescription('childName'))
-        checkContext(child, 'dragon.focusOn(body).focusOn(chest).chain(childName)')
+        checkContext(child, 'dragon.focus?(body).focus?(chest).chain(childName)')
     })
     it("setJson should call danagerouslySetMain with the result of passing main and the new json to the lens", () => {
         let json = {contents: [1, 2, 3]};
         setupForSetMain(stomachC, (context, setMain) => {
             context.setJson(json)
-            checkSetMainWas(setMain, stomachC.lens.set(dragon, json))
+            checkSetMainWas(setMain, stomachC.optional.set(dragon, json))
         })
     })
 
@@ -58,7 +58,7 @@ describe("LensContext", () => {
     //     setupForSetMain(stomachC, (context, setMain) => {
     //         let newLens = Lens.build<Dragon>('passedLens')
     //         context.setFrom(newLens, json)
-    //         checkSetMainWas(setMain, context.lens.andThen(square3L).set(SimpleGameDomain.emptyGame, 'X'))
+    //         checkSetMainWas(setMain, context.optional.andThen(square3L).set(SimpleGameDomain.emptyGame, 'X'))
     //     })
     // })
 

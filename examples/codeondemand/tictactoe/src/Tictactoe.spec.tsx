@@ -45,7 +45,7 @@ function squareContext(state: LensState<GameData, GameData>, n: number): LensSta
 function compare<Domain, Main, Data>(wrapper: ShallowWrapper<any, React.Component["state"], React.Component>, state: LensState<Main, Data>, expectedLensDescription: string) {
     let props: any = wrapper.props()
     let childState: LensState<Main, Data> = props.state
-    expect(childState.lens.description).toBe(expectedLensDescription)
+    expect(childState.optional.description).toBe(expectedLensDescription)
     expect(childState.main).toBe(state.main)
     expect(childState.dangerouslySetMain).toBe(state.dangerouslySetMain)
 
@@ -58,7 +58,7 @@ describe("Tictactoe", () => {
             expect(game.find('LoadGame')).toHaveLength(2)
             let componentServers = game.find('ComponentFromServer');
             expect(componentServers).toHaveLength(1)
-            compare(componentServers.at(0), state, 'game.focusOn(_embedded).focusOn(board)')
+            compare(componentServers.at(0), state, 'game.focus?(_embedded).focus?(board)')
         })
     })
     describe("board", () => {
@@ -66,9 +66,11 @@ describe("Tictactoe", () => {
             const board = shallow(<Board state={state.focusOn('_embedded').focusOn('board')}/>)
             let componentServers = board.find('ChildFromServer');
             expect(componentServers).toHaveLength(9)
-            componentServers.forEach((square, i) => compare(square, state, 'game.focusOn(_embedded).focusOn(board)'))
+            componentServers.forEach((square, i) => compare(square, state, 'game.focus?(_embedded).focus?(board)'))
             componentServers.forEach((square, i) => {
                 let props: any = square.props()
+                console.log('props', props)
+                console.log('props.lens', props.lens)
                 expect(props.lens.description).toBe(`board.focusOn(squares).chain([${i}])`)
                 expect(props.render).toEqual('square')
             })

@@ -47,7 +47,7 @@ let state = lensState(cpqJson, setJson, 'cpq')
 function compare<Domain, Main, Data>(wrapper: ShallowWrapper<any, React.Component["state"], React.Component>, state: LensState<Main, Data>, expectedLensDescription: string) {
     let props: any = wrapper.props()
     let childState: LensState<Main, Data> = props.state
-    expect(childState.lens.description).toBe(expectedLensDescription)
+    expect(childState.optional.description).toBe(expectedLensDescription)
     expect(childState.main).toBe(state.main)
     expect(childState.dangerouslySetMain).toBe(state.dangerouslySetMain)
 
@@ -61,7 +61,7 @@ describe("Code on demand CPQ", () => {
             let filters = cpq.find('ComponentFromServer');
             expect(filters).toHaveLength(4)
             console.log('filters', filters)
-            filters.forEach((filter, i) => compare(filter, state, `cpq.focusOn(filters).chain([${i}])`))
+            filters.forEach((filter, i) => compare(filter, state, `cpq.focus?(filters).chain([${i}])`))
         })
     })
     describe("SimpleFilter", () => {
