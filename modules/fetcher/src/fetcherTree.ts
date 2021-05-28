@@ -5,7 +5,10 @@ export interface FetcherTree<State> {
     fetcher: Fetcher<State, any>,
     children: FetcherChildLink<State, any>[]
 }
-
+export interface FetcherChildLink<State, Child> {
+    lens: Lens<State, Child>,
+    child: FetcherTree<Child>
+}
 const blanks = "                                                       "
 
 export function descriptionOf<T>(ft: FetcherTree<T>, depth?: number): string[] {
@@ -48,10 +51,7 @@ export function wouldLoad<T>(ft: FetcherTree<T>, state: T | undefined, depth?: n
 }
 
 
-export interface FetcherChildLink<State, Child> {
-    lens: Lens<State, Child>,
-    child: FetcherTree<Child>
-}
+
 
 
 const loadGraphChildLink = (fetchFn: FetchFn) => <State, Child>(ps: Promise<State | undefined>, g: FetcherChildLink<State, Child>): Promise<State | undefined> =>

@@ -4,7 +4,8 @@
     "modules/*",
     "examples/lens/*",
     "examples/state/*",
-    "examples/codeondemand/*"
+    "examples/codeondemand/*",
+    "examples/fetcher/*"
   ],
   "name": "ts-lens",
   "description": "This is the 'master project' with many child projects. There is no code in this project: it is all managed in child projects",

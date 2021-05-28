@@ -1,5 +1,5 @@
 //Copyright (c)2020-2021 Philip Rice. <br />Permission is hereby granted, free of charge, to any person obtaining a copyof this software and associated documentation files (the Software), to dealin the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  <br />The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED AS
-import {Lens, Lenses} from "@focuson/lens";
+import {identityOptics, Lens, Lenses, transformTwoValues} from "@focuson/lens";
 import {a1b2ca3, dragon, Dragon, dragon2, letnstoca, list123, Stomach} from "./LensFixture";
 
 
@@ -80,5 +80,26 @@ describe("Lens", () => {
                 expect(() => Lenses.nth<string>(4).set(abc, 'd')).toThrow("Cannot Lens.nth(4).set. arr.length is 3")
             })
         })
+
+    })
+
+    describe("trasnformTwoValues", () => {
+        let start: TestItem2 = {item1: "one", selected: {item2: "two"}}
+        let lens1 = identityOptics<TestItem2>().focusQuery('item1')
+        let lens2 = identityOptics<TestItem2>().focusQuery('selected').focusQuery('item2')
+        const add = (infix: string) => (a: string, b: string) => a + infix + b
+        let tx = transformTwoValues(lens1, lens2)(add("+"), add("-"))
+
+        it("should transform when both can be set", () => {
+            expect(tx({item1: "one", selected: {item2: "two2"}})).toEqual( {"item1": "one+two2", "selected": {"item2": "one-two2"}})
+        })
+
     })
 })
+
+interface TestItem2 {
+    item1?: string,
+    selected?: {
+        item2?: string
+    }
+}

@@ -1,4 +1,4 @@
-import {applyFetcher, fetchAndMutate, Fetcher, fetcher, fetcherWhenUndefined, fetchRadioButton, fromTaggedFetcher, lensFetcher, LoadFn, ReqFn, selStateFetcher, TaggedFetcher} from "@focuson/fetcher";
+import {applyFetcher, fetchAndMutate, Fetcher, fetcher, fetcherWhenUndefined, fromTaggedFetcher, lensFetcher, LoadFn, loadSelectedFetcher, radioButtonFetcher, ReqFn, TaggedFetcher} from "@focuson/fetcher";
 import {dirtyPrism, identityOptics} from "@focuson/lens";
 
 const shouldLoadTrue = <T extends any>(t: T): boolean => true;
@@ -199,9 +199,9 @@ describe("fetchAndMutate", () => {
     })
 })
 
-describe("selStateFetcher", () => {
+describe("loadSelectedFetcher", () => {
 
-    const fetchMaker = selStateFetcher(identityOptics<TState>().focusOn('selState'), entityAndNameI)
+    const fetchMaker = loadSelectedFetcher(identityOptics<TState>().focusOn('selState'), entityAndNameI)
     const reqFn: ReqFn<TState> = (s: TState | undefined) => ["someUrl", reqInit];
     const f = fetchMaker(sel => [sel.selProfile, sel.selEntity], identityOptics<TState>().focusQuery('entityAndName'), reqFn)
 
@@ -281,7 +281,7 @@ let radioGroup: TaggedFetcher<TState> = ({
     tag3: r3Fetcher,
 })
 describe("fetchRadioButton", () => {
-    let f: Fetcher<TState, Radio> = fetchRadioButton<TState, Radio>(s => s.selState.selRadioTag, radioTagL, fromTaggedFetcher(radioGroup))
+    let f: Fetcher<TState, Radio> = radioButtonFetcher<TState>(s => s.selState.selRadioTag, radioTagL, fromTaggedFetcher(radioGroup))
     it("should have a description", () => {
         expect(f.description).toEqual("fetchRadioButton(Optional(I.focus?(radioTag)))")
     })

@@ -49,5 +49,5 @@ const nextValueForSquare = (sq: NoughtOrCross, next: NoughtOrCross) => next;
 const nextValueForNext = (sq: NoughtOrCross, next: NoughtOrCross) => invert(next);
 export function onClickSquare(squareContext: LensState<GameData, NoughtOrCross>): void {
     if (squareContext.json() == '')
-        squareContext.useOtherLensAsWell<NoughtOrCross>(nextStateLens).transformTwoValues(nextValueForSquare, nextValueForNext)
+        squareContext.useOtherAsWell<NoughtOrCross>(nextStateLens).transformTwoValues(nextValueForSquare, nextValueForNext)
 }

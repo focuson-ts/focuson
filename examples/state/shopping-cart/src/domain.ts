@@ -37,7 +37,7 @@ export function removeFromContextAddToList<Main>(context: LensState<Main, Produc
     let item = listThatWillHaveItemRemoved[index]
     let newToremoveList = removeItemFromList(listThatWillHaveItemRemoved, index)
     let newToAddList = addItemToList(toAddLens.get(context.main), item)
-    context.useOtherLensAsWell(toAddLens).setTwoValues(newToremoveList, newToAddList)
+    context.useOtherAsWell(toAddLens).setTwoValues(newToremoveList, newToAddList)
 }
 
 export interface AppData {

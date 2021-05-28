@@ -19,8 +19,9 @@ export interface LoadFn<State, T> {
 }
 
 export interface ReqFn<State> {
-    (newState: State | undefined): [RequestInfo, RequestInit | undefined] | undefined
+    (newState: State): [RequestInfo, RequestInit | undefined] | undefined
 }
+
 
 /** The fetcher is responsible for modifying state. It is effectively a PartialFunction */
 export interface Fetcher<State, T> {
@@ -76,13 +77,13 @@ export function loadIfUndefined<State, Selection>(lens: Optional<State, Selectio
     return (ns: State) => lens.getOption(ns) == undefined
 }
 
-export function fetcherWhenUndefined<State, Child>(lens: Optional<State, Child>,
+export function fetcherWhenUndefined<State, Child>(optional: Optional<State, Child>,
                                                    reqFn: ReqFn<State>,
                                                    description?: string): Fetcher<State, Child> {
     let result: Fetcher<State, Child> = ({
         shouldLoad: (ns) => {
             if (!ns) return false
-            let nc = lens.getOption(ns);
+            let nc = optional.getOption(ns);
             let req = reqFn(ns)
             return req != undefined && nc == undefined
         },
@@ -92,10 +93,10 @@ export function fetcherWhenUndefined<State, Child>(lens: Optional<State, Child>,
             if (req === undefined) throw partialFnUsageError(result)
             const [url, init] = req;
             const x: State = s
-            let mutate: MutateFn<State, Child> = s => (status, json) => lens.set(x, json);
+            let mutate: MutateFn<State, Child> = s => (status, json) => optional.set(x, json);
             return [url, init, mutate]
         },
-        description: description ? description : "fetcherWhenUndefined(" + lens + ")"
+        description: description ? description : "fetcherWhenUndefined(" + optional + ")"
     })
     return result
 }
@@ -117,8 +118,8 @@ function areAllDefined<T>(arr: (T | undefined)[]): arr is T[] {
     return arr.reduce<boolean>((acc, t) => (t != undefined) && acc, true)
 }
 
-export const selStateFetcher = <State, SelState, Holder, T>(sel: Lens<State, SelState>,
-                                                            holderPrism: DirtyPrism<Holder, [string [], T]>) =>
+export const loadSelectedFetcher = <State, SelState, Holder, T>(sel: Lens<State, SelState>,
+                                                                holderPrism: DirtyPrism<Holder, [string [], T]>) =>
     (tagFn: (s: SelState) => (string | undefined)[],
      target: Optional<State, Holder>,
      reqFn: ReqFn<State>,
