@@ -96,7 +96,7 @@ export class Optional<Main, Child> {
 export function lens<Main, Child>(get: (main: Main) => Child, set: (main: Main, newChild: Child) => Main, description?: string): Lens<Main, Child> {
     checkIsFunction(get)
     checkIsFunction(set)
-    return new Lens(get, set, description)
+    return new Lens(get, set, description?description:"lens")
 }
 
 /** This is the class that represents a Lens<Main,Child> which focuses on Child which is a part of the Main */

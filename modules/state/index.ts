@@ -200,7 +200,7 @@ export class LensState2<Main, T1, T2> {
         return getOr(this.lens2, this.main, errorMessageIfNotHere)
     }
 
-    optJson2(): T2 {
+    optJson2(): T2|undefined {
         return this.lens2.getOption(this.main)
     }
 

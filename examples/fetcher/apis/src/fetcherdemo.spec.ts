@@ -1,10 +1,7 @@
 
 import {dirtyPrism, DirtyPrism, identityOptics, Iso, iso, Lenses, Optional} from "@focuson/lens";
-import {Holder, holderIso} from "./Holder";
-import {fetchAndMutate, Fetcher, fetcherWhenUndefined, loadSelectedFetcher, ReqFn} from "./fetchers";
-import {fromTaggedFetcher, radioButtonFetcher} from "./RadioButtonFetcher";
-import {child, descriptionOf, fetcherTree, FetcherTree, loadTree, wouldLoad, wouldLoadDescription} from "./fetcherTree";
-;
+import {child, descriptionOf, fetchAndMutate, Fetcher, fetcherTree, FetcherTree, fetcherWhenUndefined, fromTaggedFetcher, Holder, holderIso, loadSelectedFetcher, loadTree, radioButtonFetcher, ReqFn, wouldLoad, wouldLoadDescription} from "@focuson/fetcher";
+
 
 export interface SiteMap {
     [entity: string]: Entity
