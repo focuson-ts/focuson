@@ -20,13 +20,6 @@ export function descriptionOf<T>(ft: FetcherTree<T>, depth?: number): string[] {
         ...ft.children.flatMap(fcl => [`${i}   ${fcl.lens}`, ...descriptionOf(fcl.child, d + 3)])]
 }
 
-export function wouldLoadDescription<T>(ft: FetcherTree<T>, state: T | undefined, depth?: number): string[] {
-    const d = depth ? depth : 0
-    const i = blanks.substr(0, d * 2)
-    return [
-        `${i}${ft.fetcher.description} ${ft.fetcher.shouldLoad(state)}`,
-        ...ft.children.flatMap(fcl => [`${i}  ${fcl.lens}`, ...wouldLoadDescription(fcl.child, state, d + 2)])]
-}
 
 export function foldFetchers<Result>(ft: FetcherTree<any>, foldFn: (acc: Result, v: Fetcher<any, any>, i?: number, depth?: number) => Result, start: Result, i?: number, depth?: number): Result {
     const num = i ? i : 0

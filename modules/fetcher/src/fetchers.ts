@@ -117,6 +117,16 @@ export function lensFetcher<State, Child, T>(lens: Optional<State, Child>, fetch
     return result
 }
 
+
+export function ifEEqualsFetcher<State>(condition: (s: State) => boolean, fetcher: Fetcher<State, any>, description?: string): Fetcher<State, any> {
+    return ({
+        shouldLoad: (ns: State | undefined) => ns && condition(ns) && fetcher.shouldLoad(ns),
+        load: (ns: State | undefined) => fetcher.load(ns),
+        description: description ? description : `ifEqualsFetcher(${fetcher.description})`
+    });
+}
+
+
 export function fetcherWhenUndefined<State, Child>(optional: Optional<State, Child>,
                                                    reqFn: ReqFn<State>,
                                                    description?: string): Fetcher<State, Child> {
@@ -160,38 +170,37 @@ function areAllDefined<T>(arr: (T | undefined)[]): arr is T[] {
     return arr.reduce<boolean>((acc, t) => (t != undefined) && acc, true)
 }
 
-export const loadSelectedFetcher = <State, SelState, Holder, T>(sel: Lens<State, SelState>,
-                                                                holderPrism: DirtyPrism<Holder, [string [], T]>) =>
-    (tagFn: (s: SelState) => (string | undefined)[],
-     target: Optional<State, Holder>,
-     reqFn: ReqFn<State>,
-     description?: string): Fetcher<State, T> => {
-        let currentTagFn = target.chain(holderPrism).chain(firstIn2()).getOption
-        let result: Fetcher<State, T> = {
-            shouldLoad: (s: State | undefined): boolean => {
-                const desiredTags = s ? tagFn(sel.get(s)) : [];
-                const allTagsDefined = areAllDefined(desiredTags)
-                const req = s && reqFn(s)
-                return (s != undefined) && (req != undefined) && allTagsDefined && !arraysEqual(currentTagFn(s), desiredTags);
-            },
-            load: (s: State | undefined) => {
-                if (s == undefined) throw partialFnUsageError(result)
-                const desiredTags = tagFn(sel.get(s))
-                if (!areAllDefined(desiredTags)) throw partialFnUsageError(result)
-                const req = reqFn(s);
-                if (!req) throw partialFnUsageError(result)
-                const [url, info] = req
-                const mutateForHolder: MutateFn<State, T> = state => (status, json) => {
-                    if (!state) throw partialFnUsageError(result)
-                    let newHolder: Holder = holderPrism.reverseGet([desiredTags, json])
-                    return target.set(state, newHolder)
-                }
-                return [url, info, mutateForHolder];
-            },
-            description: description ? description : "selStateFetcher(sel=" + sel + ",holder=" + holderPrism + ",target=" + target + ")"
-        };
-        return result
+export const loadSelectedFetcher = <State, Holder, T>(tagFn: (s: State) => (string | undefined)[],
+                                                      holderPrism: DirtyPrism<Holder, [string [], T]>,
+                                                      target: Optional<State, Holder>,
+                                                      reqFn: ReqFn<State>,
+                                                      description?: string): Fetcher<State, T> => {
+    let currentTagFn = target.chain(holderPrism).chain(firstIn2()).getOption
+    let result: Fetcher<State, T> = {
+        shouldLoad: (s: State | undefined): boolean => {
+            const desiredTags = s ? tagFn(s) : [];
+            const allTagsDefined = areAllDefined(desiredTags)
+            const req = s && reqFn(s)
+            return (s != undefined) && (req != undefined) && allTagsDefined && !arraysEqual(currentTagFn(s), desiredTags);
+        },
+        load: (s: State | undefined) => {
+            if (s == undefined) throw partialFnUsageError(result)
+            const desiredTags = tagFn(s)
+            if (!areAllDefined(desiredTags)) throw partialFnUsageError(result)
+            const req = reqFn(s);
+            if (!req) throw partialFnUsageError(result)
+            const [url, info] = req
+            const mutateForHolder: MutateFn<State, T> = state => (status, json) => {
+                if (!state) throw partialFnUsageError(result)
+                let newHolder: Holder = holderPrism.reverseGet([desiredTags, json])
+                return target.set(state, newHolder)
+            }
+            return [url, info, mutateForHolder];
+        },
+        description: description ? description : "selStateFetcher(holder=" + holderPrism + ",target=" + target + ")"
     };
+    return result
+};
 
 
 export const loadFromUrl = <T>(fetchFn?: (input: RequestInfo, init?: RequestInit) => Promise<Response>) =>

@@ -11,8 +11,8 @@ The core idea is to have all this done as part of the 'flux loop'. So the compon
 in the state such as 'the selected thing' and possible a 'tag' that explains how to load the data. Thus the components
 don't 'call actions' or anything
 
-This is currently under heavy development: fetchers are being added, signatures being changed, in order to make
-the library 'more polished'
+This is currently under heavy development: fetchers are being added, signatures being changed, in order to make the
+library 'more polished'
 
 # Key Concepts
 
@@ -41,13 +41,9 @@ export interface Fetcher<State, T> {
     description: string
 }
 
-export interface LoadFn<State, T> {
-    (newState: State | undefined): [RequestInfo, RequestInit | undefined, MutateFn<State, T>]
-}
-
-export interface MutateFn<State, T> {
-    (s: State | undefined): (status: number, json: T) => State
-}
+export interface LoadFn<State, T> {(newState: State | undefined): LoadInfo<State, T>}
+export type LoadInfo<State, T> = [RequestInfo, RequestInit | undefined, MutateFn<State, T>]
+export interface MutateFn<State, T> {(s: State | undefined): (status: number, json: T) => State}
 ```
 
 A PartialFunction is a function that might not be callable. You need to call the 'shouldLoad' method first to see if the
@@ -149,8 +145,13 @@ Examples of where you might want to use this
 ## loadSelectedFetcher
 
 ```typescript
- const loadSelectedFetcher = <State, SelState, Holder, T>(sel: Lens<State, SelState>, holderPrism: DirtyPrism<Holder, [string [], T]>) =>
-    (tagFn: (s: SelState) => (string | undefined)[], target: Optional<State, Holder>, reqFn: ReqFn<State>, description?: string): Fetcher<State, T> = {...}
+
+export const loadSelectedFetcher = <State, Holder, T>(tagFn: (s: State) => (string | undefined)[],
+                                                      holderPrism: DirtyPrism<Holder, [string [], T]>,
+                                                      target: Optional<State, Holder>,
+                                                      reqFn: ReqFn<State>,
+                                                      description?: string): Fetcher<State, T>
+{}
 ```
 
 Imagine we have a shopping application. We have things like 'the selected department - books/washing machines/...',
@@ -161,20 +162,17 @@ state varies.
 ### Generics
 
 * `State` is the type of the full state. This fetcher know nothing about it, other than 'there is one'
-* `SelState` is the place that holds the selection state. This is the javascript object that holds things like '
-  selectedDepartmentId', 'selectedProductId'
 * `Holder` When we load the thing, we need to store things about it (such as the current value of the tags). This is
   stored in a Holder. There is a 'default holder' called `Holder<T>` but you can use your own to make the names nicer
 * `T` The type that will be fetched.
 
 ### Parameters
 
-* `sel: Lens<State, SelState>` Tells the fetcher how to get the selection state that is needed for tagFn
-* `holderPrism: DirtyPrism<Holder, [string [], T]>`. Looks scary but is actually just a constructor/destructor. Given
-  a `Holder` it know how to rip it apart into the list of tags and a T, and given a list of tags and a T it knows how to
-  make the holder.
-* `tagFn: (s: SelState) => (string | undefined)[]` given a SelState, this rips out the bits of data that we care about.
-  If they change then the `loadSelectedFetcher` will fetch something. In the example we are discussing this would
+* `holderPrism: DirtyPrism<Holder, [string [], T]>`. DirtyPrisms 'Look scary' but this is actually just a
+  constructor/destructor. Given a `Holder` it know how to rip it apart into the list of tags and a T, and given a list
+  of tags and a T it knows how to make the holder.
+* `tagFn: (s: State) => (string | undefined)[]` given a State, this rips out the bits of data that we care about. If
+  they change then the `loadSelectedFetcher` will fetch something. In the example we are discussing this would
   return `['selectedDepartmentId', 'selectedProductId'`. Note that it returns the current values of these, not their
   names
 * `target: Optional<State, Holder>` where to put the loaded target
@@ -184,10 +182,10 @@ state varies.
 ### Example
 
 ```typescript
-const loadApiF: Fetcher<State, Api> = loadSelectedFetcher<State, SelectionState, ApiData, Api>
-(stateL.focusOn('selState'), apiDataHolder('H/ApiData'))
-((sel: SelectionState) => [sel?.selectedEntity, sel?.selectedApi],
+const loadApiF: Fetcher<State, Api> = loadSelectedFetcher<State, ApiData, Api>
+((s: State) => [s.selState?.selectedEntity, s.selState?.selectedApi],
     stateL.focusQuery('apiData'),
+    apiDataHolder('H/ApiData'),
     s => [`http//someDomain/api/${s.selState.selectedEntity}/api/${s.selState.selectedApi}`],
     "loadApiF")
 
@@ -220,9 +218,22 @@ tags (`selectedEntity` & `selectedApi`) change then in the main state the `apiDa
 than dependant data about the api (metadata that will be loaded by other fetchers if needed)
 is part of the ApiData so that it is always cleared if a new api is loaded.
 
-### Testing
+
+## ifEEqualsFetcher
+
+We often only want data fetched if we are displaying it. Examples of this include 'status data', 'the selected item', 'the user history'. For
+this kind of scenario we have the 'ifEqualsFetcher'.
+
+```typescript
+export function ifEEqualsFetcher<State>(condition: (s: State) => boolean, fetcher: Fetcher<State, any>, description?: string): Fetcher<State, any> {}
+```
+The fetcher is only invoked if the condition is true. Often the condition will be something like 'is the selected radio button equal to someValue'.
+
 
 ## radioButtonFetcher
+@Deprecated
+
+We will probably delete this as the ifEqualsFetcher seems to do this job better and simple
 
 ```typescript
 function radioButtonFetcher<State>(
@@ -350,33 +361,35 @@ const demoTree: FetcherTree<State> = fetcherTree(
         child(loadApiChild)))
 ```
 
-
 ### Testing
 
 The key to testing is the `wouldLoad` function
+
 ```typescript
 function wouldLoad<T>(ft: FetcherTree<T>, state: T | undefined, depth?: number): WouldLoad[] 
 ```
 
 This is fantastic in tests
+
 ```typescript
     it("when sitemap loaded and api not loaded but radio selected", () => {
-        expect(wouldLoad(demoTree, {
-            sitemap: exampleSiteMap,
-            selState: {selectedEntity: "be", selectedApi: "a1", selectedRadioButton: "src"}
-        })).toEqual([
-                {fetcher: loadSiteMapF, load: false},
-                {fetcher: loadThingF, load: false},
-                {fetcher: loadApiF, load: true, reqData: ["/be/a1/api", {}]},
-                {fetcher: loadApiChild, load: true, reqData: ["/be/a1/source", {}]}
-            ]
-        )
-    })
+    expect(wouldLoad(demoTree, {
+        sitemap: exampleSiteMap,
+        selState: {selectedEntity: "be", selectedApi: "a1", selectedRadioButton: "src"}
+    })).toEqual([
+            {fetcher: loadSiteMapF, load: false},
+            {fetcher: loadThingF, load: false},
+            {fetcher: loadApiF, load: true, reqData: ["/be/a1/api", {}]},
+            {fetcher: loadApiChild, load: true, reqData: ["/be/a1/source", {}]}
+        ]
+    )
+})
 ```
-Here we have our `fetcherTree` called `demoTree`. We give it a state and `wouldLoad` tells us what it would load. 
 
-`WouldLoad` allows us to worry about 'what should happen'. If we have tested the individual fetchers, we can now test the
-orchestration of those fetchers assuming that they work. This allows us to write lots of permutations covering 
-lots of possibility cheaply and quickly without worry about test data management.
+Here we have our `fetcherTree` called `demoTree`. We give it a state and `wouldLoad` tells us what it would load.
+
+`WouldLoad` allows us to worry about 'what should happen'. If we have tested the individual fetchers, we can now test
+the orchestration of those fetchers assuming that they work. This allows us to write lots of permutations covering lots
+of possibility cheaply and quickly without worry about test data management.
 
 Note that when you use this recommended style of testing, you do need to test the fetchers as well
