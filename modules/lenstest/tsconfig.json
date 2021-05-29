@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "esnext",
     "target": "es6",
     "outDir": "./dist",
     "moduleResolution": "node",
@@ -9,8 +9,17 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "lib": [
-      "es2019","dom"
-    ]
+      "es2019",
+      "dom"
+    ],
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx"
   },
   "include": [
     "src/**/*.ts",

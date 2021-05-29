@@ -1,4 +1,4 @@
-import {applyFetcher, fetchAndMutate, Fetcher, fetcher, fetcherWhenUndefined, fromTaggedFetcher, lensFetcher, LoadFn, loadSelectedFetcher, radioButtonFetcher, ReqFn, TaggedFetcher} from "@focuson/fetcher";
+import {applyFetcher, fetchAndMutate, Fetcher, fetcher, fetcherWhenUndefined, fromTaggedFetcher, lensFetcher, LoadFn, loadIfMarkerChangesFetcher, loadSelectedFetcher, radioButtonFetcher, ReqFn, TaggedFetcher} from "@focuson/fetcher";
 import {dirtyPrism, identityOptics} from "@focuson/lens";
 
 const shouldLoadTrue = <T extends any>(t: T): boolean => true;
@@ -196,6 +196,35 @@ describe("fetchAndMutate", () => {
         expect(url).toEqual("load url from someString")
         expect(init).toEqual(reqInit)
         expect(mutate("startState")(200, "loaded")).toEqual(".startState/200/loaded_mut")
+    })
+})
+
+describe("loadIfMarkerChangesFetcher", () => {
+    interface MarkerChangesState {
+        actual?: string,
+        selected?: string,
+        target?: string
+    }
+
+    const id = identityOptics<MarkerChangesState>()
+    const fetcher = loadIfMarkerChangesFetcher<MarkerChangesState, string>(id.focusQuery('actual'), id.focusQuery('selected'), id.focusQuery('target'), s => ["someUrl", {}], "someFetcher")
+    it("should not load if the selected is undefined", () => {
+        expect(fetcher.shouldLoad(undefined)).toEqual(false)
+        expect(fetcher.shouldLoad({})).toEqual(false)
+        expect(fetcher.shouldLoad({selected: undefined})).toEqual(false)
+        expect(fetcher.shouldLoad({actual: undefined, selected: undefined})).toEqual(false)
+    })
+    it("should not load if the selected and actual are the same", () => {
+        expect(fetcher.shouldLoad({actual: "tag", selected: "tag"})).toEqual(false)
+    })
+    it("should load if the selected and actual are different, and the actual should be updated", () => {
+        let state = {actual: "different", selected: "newTag"};
+        expect(fetcher.shouldLoad(state)).toEqual(true)
+        const [reqInfo, reqInit, mutate] = fetcher.load(state)
+        expect(reqInfo).toEqual("someUrl")
+        expect(reqInit).toEqual({})
+        expect(mutate(state)(200, "targetString")).toEqual({actual: "newTag", selected: "newTag", target: "targetString"})
+
     })
 })
 
