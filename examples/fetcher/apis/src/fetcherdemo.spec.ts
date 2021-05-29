@@ -1,6 +1,5 @@
-
-import {dirtyPrism, DirtyPrism, identityOptics, Iso, iso, Lenses, Optional} from "@focuson/lens";
-import {child, descriptionOf, fetchAndMutate, Fetcher, fetcherTree, FetcherTree, fetcherWhenUndefined, fromTaggedFetcher, Holder, holderIso, loadSelectedFetcher, loadTree, radioButtonFetcher, ReqFn, wouldLoad, wouldLoadDescription} from "@focuson/fetcher";
+import {dirtyPrism, DirtyPrism, identityOptics, Lenses, Optional} from "@focuson/lens";
+import {child, descriptionOf, fetchAndMutate, Fetcher, fetcherTree, FetcherTree, fetcherWhenUndefined, fromTaggedFetcher, Holder, holderIso, ifEEqualsFetcher, loadSelectedFetcher, loadTree, radioButtonFetcher, ReqFn, wouldLoad} from "@focuson/fetcher";
 
 
 export interface SiteMap {
@@ -86,13 +85,12 @@ function apiDataHolder(description: string): DirtyPrism<ApiData, [string[], Api]
 }
 
 export interface SelectionState {
-    selectedRadioButton?: 'desc' | 'src' | 'status',
+    selectedRadioButton?: string,
     selectedEntity?: string,
     selectedThing?: string,
     selectedApi?: string,
     // apiView?: 'desc' | 'src' | 'status'
 }
-
 
 
 export interface State {
@@ -123,7 +121,8 @@ function defaultSelectState(s: SiteMap | undefined): SelectionState {
     const selectedEntity = Object.keys(s)[0]
     const selectedThing = Object.keys(s[selectedEntity].things)[0]
     const selectedApi = Object.keys(s[selectedEntity].api)[0]
-    return ({selectedEntity, selectedThing, selectedApi})
+    const selectedRadioButton = 'erd'
+    return ({selectedEntity, selectedThing, selectedApi, selectedRadioButton})
 }
 
 const loadSiteMapF = fetchAndMutate(fetcherWhenUndefined<State, SiteMap>(
@@ -132,36 +131,35 @@ const loadSiteMapF = fetchAndMutate(fetcherWhenUndefined<State, SiteMap>(
     s => ({...s, selState: defaultSelectState(s.sitemap)})
 );
 
-const loadApiF: Fetcher<State, Api> = loadSelectedFetcher<State, SelectionState, ApiData, Api>(
-    stateL.focusOn('selState'),
-    apiDataHolder('H/ApiData'))
-((sel: SelectionState) => [sel?.selectedEntity, sel?.selectedApi],
-    stateL.focusQuery('apiData'),
-    loadFromSiteMap((siteMap, sel) => sel.selectedEntity && sel.selectedApi && siteMap[sel.selectedEntity].api[sel.selectedApi]._links.self),
-    "loadApiF")
+let radioButtonL = stateL.focusOn('selState').focusOn('selectedRadioButton')
+
+const loadApiF: Fetcher<State, Api> =
+    loadSelectedFetcher<State, ApiData, Api>(
+        (s: State) => [s.selState.selectedEntity, s.selState?.selectedApi],
+        apiDataHolder('H/ApiData'),
+        stateL.focusQuery('apiData'),
+        loadFromSiteMap((siteMap, sel) => sel.selectedEntity && sel.selectedApi && siteMap[sel.selectedEntity].api[sel.selectedApi]._links.self), "loadApiF")
 
 
-const loadThingF: Fetcher<State, Thing> = loadSelectedFetcher<State, SelectionState, Holder<Thing>, Thing>(
-    stateL.focusOn('selState'),
-    holderIso<Thing>('H/Thing'))(
-    s => [s.selectedEntity, s.selectedThing],
+const loadThingF: Fetcher<State, Thing> = ifEEqualsFetcher<State>(s => s.selState.selectedRadioButton == "erd", loadSelectedFetcher<State, Holder<Thing>, Thing>(
+    s => [s.selState.selectedEntity, s.selState.selectedThing],
+    holderIso<Thing>('H/Thing'),
     stateL.focusQuery('thing'),
     loadFromSiteMap((siteMap, sel) =>
-        sel.selectedEntity && sel.selectedThing && siteMap[sel.selectedEntity].things[sel.selectedThing].href),
+        sel.selectedEntity && sel.selectedThing && siteMap[sel.selectedEntity].things[sel.selectedThing].href)),
     'LoadThingF')
 
 let apiDataL: Optional<State, ApiData> = stateL.focusQuery('apiData')
 
-const loadApiDescF: Fetcher<State, string> = fetcherWhenUndefined<State, string>(
+const loadApiDescF: Fetcher<State, string> = ifEEqualsFetcher<State>(s => s.selState.selectedRadioButton == "desc", fetcherWhenUndefined<State, string>(
     apiDataL.focusQuery('desc'),
     loadFromSiteMap((siteMap, sel) =>
-        sel.selectedEntity && sel.selectedApi && siteMap[sel.selectedEntity].api[sel.selectedApi]._links.description),
+        sel.selectedEntity && sel.selectedApi && siteMap[sel.selectedEntity].api[sel.selectedApi]._links.description)),
     "loadApiDescF")
 
-const loadApiStatus: Fetcher<State, string> = fetcherWhenUndefined<State, string>(
-    apiDataL.focusQuery('status'),
-    loadFromSiteMap((siteMap, sel) =>
-        sel.selectedEntity && sel.selectedApi && siteMap[sel.selectedEntity].api[sel.selectedApi]._links.status),
+const loadApiStatus: Fetcher<State, string> = ifEEqualsFetcher<State>(s => s.selState.selectedRadioButton == 'status',
+    fetcherWhenUndefined(apiDataL.focusQuery('status'),
+        loadFromSiteMap((siteMap, sel) => sel.selectedEntity && sel.selectedApi && siteMap[sel.selectedEntity].api[sel.selectedApi]._links.status)),
     "loadApiStatus")
 
 const loadApiSrc: Fetcher<State, string[]> = fetcherWhenUndefined<State, string[]>(
@@ -239,10 +237,23 @@ describe("wouldLoad should provide test friendly means of showing what a fetchTr
             ]
         )
     })
-    it("when sitemap loaded and thing desired but no actual", () => {
+    it("when sitemap loaded and thing desired but no actual, and not radiobutton", () => {
         expect(wouldLoad(demoTree, {
             sitemap: exampleSiteMap,
             selState: {selectedEntity: "be", selectedThing: "t1"}
+        })).toEqual([
+                {fetcher: loadSiteMapF, load: false},
+                {fetcher: loadThingF, load: false},
+                {fetcher: loadApiF, load: false},
+                {fetcher: loadApiChild, load: false}
+            ]
+        )
+    })
+
+    it("when sitemap loaded and thing desired but no actual and radio button", () => {
+        expect(wouldLoad(demoTree, {
+            sitemap: exampleSiteMap,
+            selState: {selectedEntity: "be", selectedThing: "t1", selectedRadioButton: "erd"}
         })).toEqual([
                 {fetcher: loadSiteMapF, load: false},
                 {fetcher: loadThingF, load: true, reqData: ["/t1/thing", {}]},
@@ -328,30 +339,6 @@ describe("wouldLoad should provide test friendly means of showing what a fetchTr
         )
     })
 })
-describe("wouldLoadDescription should report what a fetchTree would do for the current state. ", () => {
-    it("for undefined", () => {
-        expect(wouldLoadDescription<State>(demoTree, undefined)).toEqual([
-            "loadSiteMapF.withMutate false",
-            "  Iso(I)",
-            "    LoadThingF false",
-            "  Iso(I)",
-            "    loadApiF false",
-            "      Iso(I)",
-            "        loadApiChild false"
-        ])
-    })
-    it("for empty", () => {
-        expect(wouldLoadDescription<State>(demoTree, {selState: {}})).toEqual([
-            "loadSiteMapF.withMutate true",
-            "  Iso(I)",
-            "    LoadThingF false",
-            "  Iso(I)",
-            "    loadApiF false",
-            "      Iso(I)",
-            "        loadApiChild false"
-        ])
-    })
-})
 
 describe("integration test for fetcherDemo", () => {
 
@@ -377,7 +364,8 @@ describe("integration test for fetcherDemo", () => {
             sitemap: exampleSiteMap, "selState": {
                 "selectedApi": "a1",
                 "selectedEntity": "be",
-                "selectedThing": "t1"
+                "selectedThing": "t1",
+                "selectedRadioButton": "erd"
             },
             apiData: {api: exampleApi("a1"), tags: ["be", "a1"]},
             thing: {"t": exampleThing("t1"), "tags": ["be", "t1"]}

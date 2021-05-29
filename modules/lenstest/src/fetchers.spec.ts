@@ -230,14 +230,14 @@ describe("loadIfMarkerChangesFetcher", () => {
 
 describe("loadSelectedFetcher", () => {
 
-    const fetchMaker = loadSelectedFetcher(identityOptics<TState>().focusOn('selState'), entityAndNameI)
+
     const reqFn: ReqFn<TState> = (s: TState | undefined) => ["someUrl", reqInit];
-    const f = fetchMaker(sel => [sel.selProfile, sel.selEntity], identityOptics<TState>().focusQuery('entityAndName'), reqFn)
+    const f = loadSelectedFetcher(s => [s.selState.selProfile, s.selState.selEntity], entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn)
 
 
     it("should have a description", () => {
-        expect(f.description).toEqual("selStateFetcher(sel=Lens(I.focusOn(selState)),holder=DirtyPrism(prism),target=Optional(I.focus?(entityAndName)))")
-        const f2 = fetchMaker(sel => [sel.selProfile, sel.selEntity], identityOptics<TState>().focusQuery('entityAndName'), reqFn, "someDescription")
+        expect(f.description).toEqual("selStateFetcher(holder=DirtyPrism(prism),target=Optional(I.focus?(entityAndName)))")
+        const f2 = loadSelectedFetcher(s => [s.selState.selProfile, s.selState.selEntity], entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, "someDescription")
         expect(f2.description).toEqual("someDescription")
     })
 
