@@ -1,4 +1,4 @@
-import {applyFetcher, fetchAndMutate, Fetcher, fetcher, fetcherWhenUndefined, fromTaggedFetcher, lensFetcher, LoadFn, loadIfMarkerChangesFetcher, loadSelectedFetcher, radioButtonFetcher, ReqFn, TaggedFetcher} from "@focuson/fetcher";
+import {applyFetcher, fetchAndMutate, Fetcher, fetcher, fetcherWhenUndefined, fromTaggedFetcher, ifErrorFetcher, lensFetcher, LoadFn, loadIfMarkerChangesFetcher, loadSelectedFetcher, radioButtonFetcher, ReqFn, TaggedFetcher} from "@focuson/fetcher";
 import {dirtyPrism, identityOptics} from "@focuson/lens";
 
 const shouldLoadTrue = <T extends any>(t: T): boolean => true;
@@ -44,12 +44,8 @@ describe("lens fetcher ", () => {
         expect(fTrue.description).toEqual("lensFetcher(Optional(I.focus?(ab).focus?(a)),loadTrueF)")
         expect(fFalse.description).toEqual("fFalse")
     })
-    it("when state is undefined", () => {
-        expect(fTrue.shouldLoad(undefined)).toEqual(false)
-        expect(() => fTrue.load(undefined)).toThrow('')
-    })
     it("when child condition is false", () => {
-        expect(fTrue.shouldLoad(undefined)).toEqual(false)
+        expect(fFalse.shouldLoad({})).toEqual(false)
     })
     it.skip("when child  condition is true BUT the place the child is going to be added to is undefined", () => {
         expect(fTrue.shouldLoad({})).toEqual(false) //there is no ab to put the value loaded into
@@ -64,11 +60,6 @@ describe("lens fetcher ", () => {
 
 })
 describe("lens fetcher", () => {
-    it("when state undefined", () => {
-        const opticsTo = identityOptics<AB>().focusQuery('ab').focusQuery('a')
-        let f: Fetcher<AB, string> = lensFetcher(opticsTo, loadTrueF);
-        expect(f.shouldLoad(undefined)).toEqual(false)
-    })
     it("when state defined but holder is undefined", () => {
         const opticsTo = identityOptics<AB>().focusQuery('ab').focusQuery('a')
         let f: Fetcher<AB, string> = lensFetcher(opticsTo, loadTrueF);
@@ -115,9 +106,6 @@ describe("fetcherWhenUndefined", () => {
         expect(fOKToLoad.description).toEqual("fetcherWhenUndefined(Optional(I.focus?(a)))")
         expect(fErrorIfLoad.description).toEqual("fErrorIfLoad")
 
-    })
-    it('doesnt load when the main state is undefined', () => {
-        expect(fErrorIfLoad.shouldLoad(undefined)).toEqual(false)
     })
     it('doesnt loads when the focused on thing is defined', async () => {
         expect(fOKToLoad.shouldLoad({a: "someValue"})).toEqual(false)
@@ -209,7 +197,6 @@ describe("loadIfMarkerChangesFetcher", () => {
     const id = identityOptics<MarkerChangesState>()
     const fetcher = loadIfMarkerChangesFetcher<MarkerChangesState, string>(id.focusQuery('actual'), id.focusQuery('selected'), id.focusQuery('target'), s => ["someUrl", {}], "someFetcher")
     it("should not load if the selected is undefined", () => {
-        expect(fetcher.shouldLoad(undefined)).toEqual(false)
         expect(fetcher.shouldLoad({})).toEqual(false)
         expect(fetcher.shouldLoad({selected: undefined})).toEqual(false)
         expect(fetcher.shouldLoad({actual: undefined, selected: undefined})).toEqual(false)
@@ -233,11 +220,14 @@ describe("loadSelectedFetcher", () => {
 
     const reqFn: ReqFn<TState> = (s: TState | undefined) => ["someUrl", reqInit];
     const f = loadSelectedFetcher(s => [s.selState.selProfile, s.selState.selEntity], entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn)
+    const fignoreerror = loadSelectedFetcher(s => {throw Error('error loading')}, entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, true)
+    const fDontIgnoreerror = loadSelectedFetcher(s => {throw Error('error loading')}, entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, false)
 
 
     it("should have a description", () => {
-        expect(f.description).toEqual("selStateFetcher(holder=DirtyPrism(prism),target=Optional(I.focus?(entityAndName)))")
-        const f2 = loadSelectedFetcher(s => [s.selState.selProfile, s.selState.selEntity], entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, "someDescription")
+        expect(f.description).toEqual("selStateFetcher(holder=DirtyPrism(prism),target=Optional(I.focus?(entityAndName)),ignoreError=undefined)")
+        expect(fignoreerror.description).toEqual("selStateFetcher(holder=DirtyPrism(prism),target=Optional(I.focus?(entityAndName)),ignoreError=true)")
+        const f2 = loadSelectedFetcher(s => [s.selState.selProfile, s.selState.selEntity], entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, false, "someDescription")
         expect(f2.description).toEqual("someDescription")
     })
 
@@ -245,6 +235,12 @@ describe("loadSelectedFetcher", () => {
         expect(f.shouldLoad({selState: {}})).toEqual(false)
         expect(f.shouldLoad({selState: {selEntity: 'someEntity'}})).toEqual(false)
         expect(f.shouldLoad({selState: {selProfile: 'someProfile'}})).toEqual(false)
+    })
+    it("should not load if there is an error in reqFn and the ignoreError is true", () => {
+        expect(fignoreerror.shouldLoad({selState: {}})).toEqual(false)
+    })
+    it("should still throw shouldload  error if there is an error and the ignoreError is true", () => {
+        expect(() => fDontIgnoreerror.shouldLoad({selState: {}})).toThrow('error loading')
     })
 
     it("should load if the tags are  defined, and the target is undefined", () => {
@@ -354,6 +350,34 @@ describe("fetchRadioButton", () => {
             "radioTag": "tag2",
             "selState": {"selRadioTag": "tag2"}
         })
+    })
+})
+
+describe("ifErrorFetcher", () => {
+    let rawError = fetcher<string, string>(s => true, s => ['someUrl', {}, s => (status, json) => {throw Error('msg')}], "loadFalseF");
+    const fFalse = ifErrorFetcher(loadFalseF, (s, status, json, err) => {throw Error('failed')})
+    const fTrue = ifErrorFetcher(loadTrueF, (s, status, json, err) => {throw Error('failed')})
+    const fError = ifErrorFetcher(rawError, (s, status, json, err) => `${s}+${status}+${json}+${err}`)
+
+    it("shouldLoad should act as the old one ", () => {
+        expect(fFalse.shouldLoad("'")).toEqual(false)
+        expect(fTrue.shouldLoad("'")).toEqual(true)
+        expect(fError.shouldLoad("'")).toEqual(true)
+    })
+
+    it("load should act as old if there are no errors", () => {
+        const [init, info, mutate] = (fTrue.load('oldState'))
+        expect(init).toEqual('load url from oldState')
+        expect(info).toEqual({"keepalive": true})
+        expect(mutate("someValue")(200, "loaded")).toEqual('.someValue/200/loaded')
+    })
+
+    it("should return the on error when there was an error", () => {
+        const [init, info, mutate] = (fError.load('oldState'))
+        expect(init).toEqual('someUrl')
+        expect(info).toEqual({})
+        expect(mutate("someValue")(200, "loaded")).toEqual('someValue+200+loaded+Error: msg')
+
     })
 })
 

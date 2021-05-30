@@ -1,13 +1,13 @@
-import {identityOptics, Lens} from "@focuson/lens";
-import {applyFetcher, defaultFetchFn, Fetcher, FetchFn, MutateFn} from "./fetchers";
+import {identityOptics, Lens, Optional} from "@focuson/lens";
+import {applyFetcher, defaultFetchFn, Fetcher, FetchFn} from "./fetchers";
 
 export interface FetcherTree<State> {
-    fetcher: Fetcher<State, any>,
+    fetchers: Fetcher<State, any>[],
     children: FetcherChildLink<State, any>[]
 }
 export interface FetcherChildLink<State, Child> {
-    lens: Lens<State, Child>,
-    child: FetcherTree<Child>
+    optional: Optional<State, Child>,
+    children: FetcherTree<Child>
 }
 const blanks = "                                                       "
 
@@ -16,17 +16,9 @@ export function descriptionOf<T>(ft: FetcherTree<T>, depth?: number): string[] {
     const i = blanks.substr(0, d * 2)
     return [
         `${i}FetcherTree(`,
-        `${i}  ${ft.fetcher.description}`,
-        ...ft.children.flatMap(fcl => [`${i}   ${fcl.lens}`, ...descriptionOf(fcl.child, d + 3)])]
+        ...ft.fetchers.map(f => `${i}  ${f.description}`),
+        ...ft.children.flatMap(fcl => [`${i}   ${fcl.optional}`, ...descriptionOf(fcl.children, d + 3)])]
 }
-
-
-export function foldFetchers<Result>(ft: FetcherTree<any>, foldFn: (acc: Result, v: Fetcher<any, any>, i?: number, depth?: number) => Result, start: Result, i?: number, depth?: number): Result {
-    const num = i ? i : 0
-    const d = depth ? depth : 0
-    return ft.children.reduce<Result>((acc, fcl, i) => foldFetchers(fcl.child, foldFn, acc, d, i), foldFn(start, ft.fetcher, num, d + 1))
-}
-
 
 export interface WouldLoad {
     fetcher: Fetcher<any, any>,
@@ -34,40 +26,51 @@ export interface WouldLoad {
     reqData?: [RequestInfo, RequestInit | undefined]
 }
 
-export function wouldLoad<T>(ft: FetcherTree<T>, state: T | undefined, depth?: number): WouldLoad[] {
-    return foldFetchers<WouldLoad[]>(ft, (acc, fetcher) =>
-        [...acc, fetcher.shouldLoad(state) ? {
-            fetcher,
-            load: true,
-            reqData: [fetcher.load(state)[0], fetcher.load(state)[1]]
-        } : {fetcher, load: false}], [])
+export function foldFetchers<Result>(ft: FetcherTree<any>, stateOptional: Optional<any, any>, foldFn: (acc: Result, v: Fetcher<any, any>, stateOptional: Optional<any, any>, i?: number, depth?: number) => Result, start: Result, i?: number, depth?: number): Result {
+    const d = depth ? depth : 0
+    let withTheseFetchers = ft.fetchers.reduce((acc, f, i) => foldFn(acc, f, stateOptional, i, d), start)
+    let result = ft.children.reduce<Result>((acc, fcl, i) => foldFetchers(fcl.children, stateOptional.chain(fcl.optional), foldFn, acc, i, d + 1), withTheseFetchers);
+    return result
 }
 
+export function wouldLoad<State>(ft: FetcherTree<State>, state: State): WouldLoad[] {
+    return foldFetchers<WouldLoad[]>(ft, identityOptics(), (acc, fetcher, stateOpt, i, depth) => {
+        const localState = stateOpt.getOption(state)
+        let shouldLoad = localState !== undefined && fetcher.shouldLoad(localState);
+        return [...acc,
+            shouldLoad ?
+                {fetcher, load: true, reqData: [fetcher.load(localState)[0], fetcher.load(localState)[1]]} :
+                {fetcher, load: false}]
+    }, [])
+}
 
+const loadGraphChildLink = (fetchFn: FetchFn) => <State, Child>(ps: Promise<State>, g: FetcherChildLink<State, Child>): Promise<State> =>
+    ps.then(ns => {
+        const cs = g.optional.getOption(ns)
+        return cs ? loadTree(g.children, cs, fetchFn).then(nc => nc ? g.optional.set(ns, nc) : undefined) : ns
+    });
 
-
-
-const loadGraphChildLink = (fetchFn: FetchFn) => <State, Child>(ps: Promise<State | undefined>, g: FetcherChildLink<State, Child>): Promise<State | undefined> =>
-    ps.then(ns => ns ? loadTree(g.child, g.lens.get(ns), fetchFn).then(nc => nc ? g.lens.set(ns, nc) : undefined) : undefined);
-
-
-export async function loadTree<State>(fg: FetcherTree<State>, ns: State | undefined, fetchFn?: FetchFn): Promise<State | undefined> {
+export async function loadTree<State>(fg: FetcherTree<State>, ns: State, fetchFn?: FetchFn): Promise<State> {
     const realFetch = fetchFn ? fetchFn : defaultFetchFn
-    const initialValue: State | undefined = await applyFetcher(fg.fetcher, ns, realFetch)
 
+    const initialValue: State = await fg.fetchers.reduce((acc, pf) => acc.then(s => applyFetcher(pf, s, fetchFn)), Promise.resolve(ns))
     return fg.children.reduce<Promise<State | undefined>>(loadGraphChildLink(realFetch), Promise.resolve(initialValue))
-
 }
 
 
 export function fetcherTree<State>(fetcher: Fetcher<State, any>, ...children: FetcherChildLink<State, any>[]): FetcherTree<State> {
-    return ({fetcher, children})
+    return ({fetchers: [fetcher], children})
 }
 
 export function child<State>(fetcher: Fetcher<State, any>, ...children: FetcherChildLink<State, any>[]): FetcherChildLink<State, State> {
-    return ({lens: identityOptics(), child: {fetcher, children}})
+    return ({optional: identityOptics(), children: {fetchers: [fetcher], children}})
 }
-
-export function lensAndChild<State, Child>(lens: Lens<State, Child>, fetcher: Fetcher<Child, any>, ...children: FetcherChildLink<Child, any>[]): FetcherChildLink<State, Child> {
-    return ({lens, child: {fetcher, children}})
+export function children<State>(fetcher: Fetcher<State, any>[], ...children: FetcherChildLink<State, any>[]): FetcherChildLink<State, State> {
+    return ({optional: identityOptics(), children: {fetchers: fetcher, children}})
+}
+export function lensAndChildren<State, Child>(optional: Optional<State, Child>, fetchers: Fetcher<Child, any>[], ...children: FetcherChildLink<Child, any>[]): FetcherChildLink<State, Child> {
+    return ({optional, children: {fetchers, children}})
+}
+export function lensAndChild<State, Child>(optional: Optional<State, Child>, fetcher: Fetcher<Child, any>, ...children: FetcherChildLink<Child, any>[]): FetcherChildLink<State, Child> {
+    return ({optional, children: {fetchers: [fetcher], children}})
 }

@@ -82,6 +82,15 @@ export class Optional<Main, Child> {
         return "Optional(" + this.description + ")"
     }
 }
+export function optional<Main, Child>(getOption: (m: Main) => Child | undefined, setOption: (m: Main, c: Child) => Main | undefined, description?: string) {
+    return new Optional(getOption, setOption, description)
+}
+export function orUndefined<T>(description?: string): Optional<T | undefined, T> {
+    const getOption = (t: T | undefined) => t
+    const setOption = (t: T | undefined, child: T | undefined) => child
+    return optional(getOption, setOption, description)
+}
+
 
 /**
  * Creates a lens with two generics. Lens<Main,Child>. Main is the main 'object' that we start with, and Child is the part of Main that the lens is focuson-ed
@@ -96,7 +105,7 @@ export class Optional<Main, Child> {
 export function lens<Main, Child>(get: (main: Main) => Child, set: (main: Main, newChild: Child) => Main, description?: string): Lens<Main, Child> {
     checkIsFunction(get)
     checkIsFunction(set)
-    return new Lens(get, set, description?description:"lens")
+    return new Lens(get, set, description ? description : "lens")
 }
 
 /** This is the class that represents a Lens<Main,Child> which focuses on Child which is a part of the Main */

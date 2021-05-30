@@ -1,7 +1,7 @@
 /** Mixed into Fetcher when we want to have a component that normally displays the state (which might well be the most common case
  * An example would be 'go get profile' as a fetcher and then have a <Profile... > component that shows it.
  */
-import {DirtyPrism, firstIn2, Lens, Optional} from "@focuson/lens";
+import {DirtyPrism, firstIn2, Optional} from "@focuson/lens";
 
 export interface FetchFn {
     <T>(re: RequestInfo, init?: RequestInit): Promise<[number, T]>
@@ -11,7 +11,7 @@ export const defaultFetchFn = <T>(re: RequestInfo, init?: RequestInit): Promise<
     fetch(re, init).then(r => r.json().then(json => [r.status, json]));
 
 export interface MutateFn<State, T> {
-    (s: State | undefined): (status: number, json: T) => State
+    (s: State): (status: number, json: T) => State
 }
 
 
@@ -27,7 +27,7 @@ export type LoadInfo<State, T> = [RequestInfo, RequestInit | undefined, MutateFn
  * Tis returns an array to allow us to compose fetchers easily
  * */
 export interface LoadFn<State, T> {
-    (newState: State | undefined): LoadInfo<State, T>
+    (newState: State): LoadInfo<State, T>
 }
 
 export interface ReqFn<State> {
@@ -38,7 +38,7 @@ export interface ReqFn<State> {
 /** The fetcher is responsible for modifying state. It is effectively a PartialFunction */
 export interface Fetcher<State, T> {
     /** This works out if we need to load. Typically is a strategy */
-    shouldLoad: (newState: State | undefined) => boolean,
+    shouldLoad: (newState: State) => boolean,
     /** This provides the info that we need to load. The first two parameters can be passed to fetch, and the third is how we process the result.
      * Note that it is hard to guarantee that the json is a T, so you might want to check it     * */
     load: LoadFn<State, T>,
@@ -47,13 +47,13 @@ export interface Fetcher<State, T> {
 }
 
 
-export function fetcher<State, T>(shouldLoad: (ns: State | undefined) => boolean,
+export function fetcher<State, T>(shouldLoad: (ns: State) => boolean,
                                   load: LoadFn<State, T>,
                                   description: string): Fetcher<State, T> {
     return ({shouldLoad, load, description})
 }
 
-export const applyFetcher = <State, T>(fetcher: Fetcher<State, T>, s: State | undefined, fetchFn: (re: RequestInfo, init?: RequestInit) => Promise<[number, T]>): Promise<State | undefined> => {
+export const applyFetcher = <State, T>(fetcher: Fetcher<State, T>, s: State, fetchFn: (re: RequestInfo, init?: RequestInit) => Promise<[number, T]>): Promise<State | undefined> => {
     if (fetcher.shouldLoad(s)) {
         const [req, info, mutate] = fetcher.load(s)
         return fetchFn(req, info).then(([status, json]) => mutate(s)(status, json))
@@ -66,19 +66,16 @@ export function partialFnUsageError<State, T>(f: Fetcher<State, T>) {
 }
 
 export function loadIfMarkerChangesFetcher<State, T>(actualMarker: Optional<State, string>, selectedMarker: Optional<State, string>, target: Optional<State, T>, reqFn: ReqFn<State>, description?: string): Fetcher<State, T> {
-    let shouldLoad = (ns: State | undefined): boolean => {
-        if (ns) {
-            const actual = actualMarker.getOption(ns)
-            const selected = selectedMarker.getOption(ns)
-            return selected != undefined && actual != selected
-        }
-        return false
+    let shouldLoad = (ns: State): boolean => {
+        const actual = actualMarker.getOption(ns)
+        const selected = selectedMarker.getOption(ns)
+        return selected != undefined && actual != selected
     }
+
 
     let result: Fetcher<State, T> = {
         shouldLoad,
-        load: (ns: State | undefined): LoadInfo<State, T> => {
-            if (!ns) throw partialFnUsageError(result)
+        load: (ns: State): LoadInfo<State, T> => {
             const req = reqFn((ns))
             if (!req) throw partialFnUsageError(result)
             const [reqInfo, reqInit] = req
@@ -97,6 +94,23 @@ export function loadIfMarkerChangesFetcher<State, T>(actualMarker: Optional<Stat
     return result
 }
 
+export function ifErrorFetcher<State, T>(fetcher: Fetcher<State, T>, onMutateError: (s: State, status: number, json: string, err: any) => State, description?: string): Fetcher<State, T> {
+    return ({
+        shouldLoad: fetcher.shouldLoad,
+        load(s) {
+            const [reqInit, reqInfo, mutate] = fetcher.load(s)
+            let mutateHandlingErrors = s => (status, json) => {
+                try {
+                    return mutate(s)(status, json)
+                } catch (e) {
+                    return onMutateError(s, status, json, e)
+                }
+            }
+            return [reqInit, reqInfo, mutateHandlingErrors]
+        },
+        description: description ? description : `ifErrorFetcher(${fetcher.description})`
+    })
+}
 
 export function lensFetcher<State, Child, T>(lens: Optional<State, Child>, fetcher: Fetcher<Child, T>, description?: string): Fetcher<State, T> {
     let result: Fetcher<State, T> = ({
@@ -106,10 +120,9 @@ export function lensFetcher<State, Child, T>(lens: Optional<State, Child>, fetch
             return fetcher.shouldLoad(nc)
         },
         load(ns) {
-            if (ns == undefined) throw partialFnUsageError(result)
-            const cs = lens.getOption(ns)
+            const cs: Child | undefined = lens.getOption(ns)
             const [req, info, mutate] = fetcher.load(cs)
-            const mutateFn: MutateFn<State, T> = s => (status, json) => lens.set(ns, mutate(lens.getOption(ns))(status, json))
+            const mutateFn: MutateFn<State, T> = s => (status, json) => lens.set(s, mutate(lens.getOption(s))(status, json))
             return [req, info, mutateFn]
         },
         description: description ? description : "lensFetcher(" + lens + "," + fetcher.description + ")"
@@ -120,8 +133,8 @@ export function lensFetcher<State, Child, T>(lens: Optional<State, Child>, fetch
 
 export function ifEEqualsFetcher<State>(condition: (s: State) => boolean, fetcher: Fetcher<State, any>, description?: string): Fetcher<State, any> {
     return ({
-        shouldLoad: (ns: State | undefined) => ns && condition(ns) && fetcher.shouldLoad(ns),
-        load: (ns: State | undefined) => fetcher.load(ns),
+        shouldLoad: (ns: State) => condition(ns) && fetcher.shouldLoad(ns),
+        load: (ns: State) => fetcher.load(ns),
         description: description ? description : `ifEqualsFetcher(${fetcher.description})`
     });
 }
@@ -132,20 +145,19 @@ export function fetcherWhenUndefined<State, Child>(optional: Optional<State, Chi
                                                    description?: string): Fetcher<State, Child> {
     let result: Fetcher<State, Child> = ({
         shouldLoad: (ns) => {
-            if (!ns) return false
             let nc = optional.getOption(ns);
-            let req = reqFn(ns)
-            return req != undefined && nc == undefined
+            try {
+                let req = reqFn(ns)
+                return req != undefined && nc == undefined
+            } catch (e) {
+                return false
+            }
         },
         load(s) {
-            if (s === undefined) throw partialFnUsageError(result)
             const req = reqFn(s);
             if (req === undefined) throw partialFnUsageError(result)
             const [url, init] = req;
-            let mutate: MutateFn<State, Child> = s => (status, json) => {
-                if (!s) throw partialFnUsageError(result)
-                return optional.set(s, json);
-            }
+            let mutate: MutateFn<State, Child> = s => (status, json) => optional.set(s, json)
             return [url, init, mutate]
         },
         description: description ? description : "fetcherWhenUndefined(" + optional + ")"
@@ -174,17 +186,22 @@ export const loadSelectedFetcher = <State, Holder, T>(tagFn: (s: State) => (stri
                                                       holderPrism: DirtyPrism<Holder, [string [], T]>,
                                                       target: Optional<State, Holder>,
                                                       reqFn: ReqFn<State>,
+                                                      ignoreShouldLoadError?: boolean,
                                                       description?: string): Fetcher<State, T> => {
     let currentTagFn = target.chain(holderPrism).chain(firstIn2()).getOption
     let result: Fetcher<State, T> = {
-        shouldLoad: (s: State | undefined): boolean => {
-            const desiredTags = s ? tagFn(s) : [];
-            const allTagsDefined = areAllDefined(desiredTags)
-            const req = s && reqFn(s)
-            return (s != undefined) && (req != undefined) && allTagsDefined && !arraysEqual(currentTagFn(s), desiredTags);
+        shouldLoad: (s: State): boolean => {
+            try {
+                const desiredTags = s ? tagFn(s) : [];
+                const allTagsDefined = areAllDefined(desiredTags)
+                const req = s && reqFn(s)
+                return (s != undefined) && (req != undefined) && allTagsDefined && !arraysEqual(currentTagFn(s), desiredTags);
+            } catch (e) {
+                if (ignoreShouldLoadError) return false
+                throw e
+            }
         },
-        load: (s: State | undefined) => {
-            if (s == undefined) throw partialFnUsageError(result)
+        load: (s: State) => {
             const desiredTags = tagFn(s)
             if (!areAllDefined(desiredTags)) throw partialFnUsageError(result)
             const req = reqFn(s);
@@ -197,7 +214,7 @@ export const loadSelectedFetcher = <State, Holder, T>(tagFn: (s: State) => (stri
             }
             return [url, info, mutateForHolder];
         },
-        description: description ? description : "selStateFetcher(holder=" + holderPrism + ",target=" + target + ")"
+        description: description ? description : "selStateFetcher(holder=" + holderPrism + ",target=" + target + ",ignoreError=" + ignoreShouldLoadError + ")"
     };
     return result
 };
