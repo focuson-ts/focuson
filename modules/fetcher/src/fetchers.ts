@@ -2,6 +2,7 @@
  * An example would be 'go get profile' as a fetcher and then have a <Profile... > component that shows it.
  */
 import {DirtyPrism, firstIn2, Optional} from "@focuson/lens";
+import {FetcherDebug} from "./setjson";
 
 export interface FetchFn {
     <T>(re: RequestInfo, init?: RequestInit): Promise<[number, T]>
@@ -53,10 +54,18 @@ export function fetcher<State, T>(shouldLoad: (ns: State) => boolean,
     return ({shouldLoad, load, description})
 }
 
-export const applyFetcher = <State, T>(fetcher: Fetcher<State, T>, s: State, fetchFn: (re: RequestInfo, init?: RequestInit) => Promise<[number, T]>): Promise<State | undefined> => {
+export const applyFetcher = <State, T>(fetcher: Fetcher<State, T>, s: State, fetchFn: (re: RequestInfo, init?: RequestInit) => Promise<[number, T]>, debug?:FetcherDebug): Promise<State | undefined> => {
+    const fetcherDebug = debug?.fetcherDebug
+    if (fetcherDebug) console.log("applyFetcher", s)
     if (fetcher.shouldLoad(s)) {
         const [req, info, mutate] = fetcher.load(s)
-        return fetchFn(req, info).then(([status, json]) => mutate(s)(status, json))
+        if (fetcherDebug) console.log("applyFetcher - loading", req, info, mutate)
+        return fetchFn(req, info).then(([status, json]) => {
+            if (fetcherDebug) console.log("applyFetcher - fetched", req, info, status, json)
+            let result = mutate(s)(status, json);
+            if (fetcherDebug) console.log("applyFetcher - result", result)
+            return result
+        })
     }
     return Promise.resolve(s)
 }
@@ -237,15 +246,21 @@ export function arraysEqual<T>(a: T[] | undefined, b: T[] | undefined) {
     return true;
 }
 
+export function fetcherWithHolder<State, Holder, T>(target: Optional<State, Holder>, holder: DirtyPrism<Holder, T>, fetcher: Fetcher<T | undefined, T>, description?: string): Fetcher<State, T> {
+    const targetThenOptional = target.chain(holder)
+    return {
+        shouldLoad: (ns) => fetcher.shouldLoad(targetThenOptional.getOption(ns)),
+        load(ns) {
+            const originalTarget: T | undefined = targetThenOptional.getOption(ns)
+            const [init, info, mutate] = fetcher.load(originalTarget)
+            let result: LoadInfo<State, T> = [init, info, s => (status, t) => {
+                let x = mutate(targetThenOptional.getOption(s))(status, t)
+                return target.set(s, holder.reverseGet(x))
+            }];
+            return result
+        },
+        description: description ? description : `fetcherWithHolder(${target},${holder}, ${fetcher})`
+    }
 
-// export function setJsonForView<State, Element>(fetcher: Fetcher<State>, description: string, onError: (os: State, e: any) => State, fn: (lc: LensState<State, State>) => void): (oldM: undefined | State, m: State) => void {
-//     return (oldM: undefined | State, main: State) => {
-//         let newStateFn = (fs: State) => fn(lensState(fs, state => setJsonForView(fetcher, description, onError, fn)(main, state), description))
-//         try {
-//             newStateFn(main)
-//             if (fetcher.shouldLoad(oldM, main)) fetcher.load(oldM, main).then(newStateFn).catch(e => onError(main, e))
-//         } catch (e) {
-//             newStateFn(onError(main, e))
-//         }
-//     }
-// }
+}
+
