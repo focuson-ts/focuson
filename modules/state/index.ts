@@ -46,7 +46,7 @@ export class LensState<Main, T> {
 
     /** If just 'walking down the json' using field names this is great. The parameter 'fieldName' is a 'key' of the current focused place,
      * and this returns a new context focused on the json under the field name */
-    focusOn<K extends keyof T, Req extends Required<T>>(k: K): LensState<Main, Req[K]>{
+    focusOn<K extends keyof T, Req extends Required<T>>(k: K): LensState<Main, Req[K]> {
         return this.copyWithLens(this.optional.focusQuery(k))
     }
 
@@ -77,15 +77,19 @@ export class LensState<Main, T> {
         this.dangerouslySetMain(this.optional.set(this.main, json))
     }
 
-    /** 'Modify' the stored json. This is identical to `setJson(fn(json())` */
+    /** 'Modify' the stored json. If the json is undefined, then 'nothing happen' (just like a map)` */
     transform(fn: (json: T) => T) {
-        this.setJson(fn(this.json()))
+        const j = this.optional.getOption(this.main)
+        if (j) this.setJson(fn(j))
     }
 
     addSecond<T2>(lens2: Optional<Main, T2>): LensState2<Main, T, T2> {
         return new LensState2(this.main, this.optional, lens2, this.dangerouslySetMain)
     }
 
+    doubleUp(): LensState2<Main,T,T>{
+        return this.addSecond(this.optional)
+    }
 
     useOtherAsWell<T2>(lens: Optional<Main, T2>) {
         let parent = this
@@ -187,7 +191,7 @@ export class LensState2<Main, T1, T2> {
         return new LensState2(this.main, this.lens1.chain(lens), this.lens2, this.dangerouslySetMain)
     }
 
-    focus1On<K extends keyof T1, Req extends Required<T1>>(k: K): LensState2<Main, Req[K],T2> {
+    focus1On<K extends keyof T1, Req extends Required<T1>>(k: K): LensState2<Main, Req[K], T2> {
         // @ts-ignore
         return new LensState2<Main, T1[K], T2>(this.main, this.lens1.focusQuery(k), this.lens2, this.dangerouslySetMain)
     }
@@ -200,11 +204,11 @@ export class LensState2<Main, T1, T2> {
         return getOr(this.lens2, this.main, errorMessageIfNotHere)
     }
 
-    optJson2(): T2|undefined {
+    optJson2(): T2 | undefined {
         return this.lens2.getOption(this.main)
     }
 
-    focus2On<K extends keyof T2, Req extends Required<T2>>(k: K): LensState2<Main, T1,Req[K]> {
+    focus2On<K extends keyof T2, Req extends Required<T2>>(k: K): LensState2<Main, T1, Req[K]> {
         return new LensState2(this.main, this.lens1, this.lens2.focusQuery(k), this.dangerouslySetMain);
     }
 
@@ -255,7 +259,7 @@ export class LensState3<Main, T1, T2, T3> {
         return this.lens1.getOption(this.main)
     }
 
-    focus1On<K extends keyof T1, Req extends Required<T1>>(k: K): LensState3<Main, Req[K],T2,T3> {
+    focus1On<K extends keyof T1, Req extends Required<T1>>(k: K): LensState3<Main, Req[K], T2, T3> {
         return new LensState3(this.main, this.lens1.focusQuery(k), this.lens2, this.lens3, this.dangerouslySetMain)
     }
 
@@ -275,7 +279,7 @@ export class LensState3<Main, T1, T2, T3> {
         return this.lens2.getOption(this.main)
     }
 
-    focus2On<K extends keyof T2, Req extends Required<T2>>(k: K): LensState3<Main, T1,Req[K],T3> {
+    focus2On<K extends keyof T2, Req extends Required<T2>>(k: K): LensState3<Main, T1, Req[K], T3> {
         return new LensState3(this.main, this.lens1, this.lens2.focusQuery(k), this.lens3, this.dangerouslySetMain);
     }
 
@@ -295,8 +299,8 @@ export class LensState3<Main, T1, T2, T3> {
         return this.lens3.getOption(this.main)
     }
 
-    focus3On<K extends keyof T3, Req extends Required<T3>>(k: K): LensState3<Main, T1,T2, Req[K]> {
-            return new LensState3(this.main, this.lens1, this.lens2, this.lens3.focusQuery(k), this.dangerouslySetMain);
+    focus3On<K extends keyof T3, Req extends Required<T3>>(k: K): LensState3<Main, T1, T2, Req[K]> {
+        return new LensState3(this.main, this.lens1, this.lens2, this.lens3.focusQuery(k), this.dangerouslySetMain);
     }
 
     chainLens3<Child>(lens: Lens<T3, Child>) {

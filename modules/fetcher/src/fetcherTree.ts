@@ -1,5 +1,6 @@
 import {identityOptics, Lens, Optional} from "@focuson/lens";
 import {applyFetcher, defaultFetchFn, Fetcher, FetchFn} from "./fetchers";
+import {FetcherDebug} from "./setjson";
 
 export interface FetcherTree<State> {
     fetchers: Fetcher<State, any>[],
@@ -44,16 +45,15 @@ export function wouldLoad<State>(ft: FetcherTree<State>, state: State): WouldLoa
     }, [])
 }
 
-const loadGraphChildLink = (fetchFn: FetchFn) => <State, Child>(ps: Promise<State>, g: FetcherChildLink<State, Child>): Promise<State> =>
+const loadGraphChildLink = (fetchFn: FetchFn, debug?: FetcherDebug) => <State, Child>(ps: Promise<State>, g: FetcherChildLink<State, Child>): Promise<State> =>
     ps.then(ns => {
         const cs = g.optional.getOption(ns)
-        return cs ? loadTree(g.children, cs, fetchFn).then(nc => nc ? g.optional.set(ns, nc) : undefined) : ns
+        return cs ? loadTree(g.children, cs, fetchFn, debug).then(nc => nc ? g.optional.set(ns, nc) : undefined) : ns
     });
 
-export async function loadTree<State>(fg: FetcherTree<State>, ns: State, fetchFn?: FetchFn): Promise<State> {
+export async function loadTree<State>(fg: FetcherTree<State>, ns: State, fetchFn?: FetchFn, debug?: FetcherDebug): Promise<State> {
     const realFetch = fetchFn ? fetchFn : defaultFetchFn
-
-    const initialValue: State = await fg.fetchers.reduce((acc, pf) => acc.then(s => applyFetcher(pf, s, fetchFn)), Promise.resolve(ns))
+    const initialValue: State = await fg.fetchers.reduce((acc, pf) => acc.then(s => applyFetcher(pf, s, fetchFn, debug)), Promise.resolve(ns))
     return fg.children.reduce<Promise<State | undefined>>(loadGraphChildLink(realFetch), Promise.resolve(initialValue))
 }
 
