@@ -91,6 +91,18 @@ export function orUndefined<T>(description?: string): Optional<T | undefined, T>
     return optional(getOption, setOption, description)
 }
 
+export function castIfOptional<T, T1>(cond: (t: T) => boolean, description?: string): Optional<T, T1> {
+    function getOption(t: T): T1 | undefined {
+        // @ts-ignore
+        return cond(t) ? t : undefined
+    }
+
+    function setOption(ignore: T, child: T1): T | undefined {
+        // @ts-ignore
+        return child
+    }
+    return optional(getOption, setOption, description ? description : `castIf`)
+}
 
 /**
  * Creates a lens with two generics. Lens<Main,Child>. Main is the main 'object' that we start with, and Child is the part of Main that the lens is focuson-ed
