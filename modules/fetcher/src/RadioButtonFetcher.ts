@@ -8,7 +8,7 @@ export function radioButtonFetcher<State>(
     whichFetcher: (radioButton: string) => Fetcher<State, any>,
     description?: string
 ): Fetcher<State, any> {
-    let result: Fetcher<State,any > = {
+    let result: Fetcher<State, any> = {
         shouldLoad: ns => {
             if (!ns) return false
             const [desiredTag, f] = desiredFetcher(ns, desiredRadioButton, whichFetcher)
@@ -22,15 +22,14 @@ export function radioButtonFetcher<State>(
             const [tag, f] = desiredFetcher(ns, desiredRadioButton, whichFetcher)
             if (!f) throw partialFnUsageError(result)
             if (!tag) throw partialFnUsageError(result)
-            const [req, init, mutate] = f.load(ns)
-            const mutateThatUpdatesTag: MutateFn<State, any> = s => (status,json) => actualRadioButton.set(mutate(s)(status,json), tag)
-            return [req, init, mutateThatUpdatesTag]
+            const {requestInfo, requestInit, mutate} = f.load(ns)
+            const mutateThatUpdatesTag: MutateFn<State, any> = s => (status, json) => actualRadioButton.set(mutate(s)(status, json), tag)
+            return {requestInfo, requestInit, mutate: mutateThatUpdatesTag}
         },
         description: description ? description : "fetchRadioButton(" + actualRadioButton + ")"
     };
     return result
 }
-
 
 export function desiredFetcher<State, T>(s: State | undefined, tagFn: (s: State) => string | undefined, whichFetcher: (tag: string) => Fetcher<State, any>): [string | undefined, Fetcher<State, any> | undefined] {
     if (!s) return [undefined, undefined]
