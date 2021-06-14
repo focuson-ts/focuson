@@ -1,11 +1,13 @@
-import {applyFetcher, fetchAndMutate, Fetcher, fetcher, fetcherWhenUndefined, fromTaggedFetcher, ifErrorFetcher, lensFetcher, LoadFn, loadIfMarkerChangesFetcher, loadSelectedFetcher, radioButtonFetcher, ReqFn, TaggedFetcher} from "@focuson/fetcher";
+import {applyFetcher, fetchAndMutate, Fetcher, fetcher, fetcherWhenUndefined, fromTaggedFetcher, ifErrorFetcher, lensFetcher, loadDirectly, LoadFn, loadIfMarkerChangesFetcher, loadInfo, loadSelectedFetcher, radioButtonFetcher, ReqFn, TaggedFetcher} from "@focuson/fetcher";
 import {dirtyPrism, identityOptics} from "@focuson/lens";
+
 
 const shouldLoadTrue = <T extends any>(t: T): boolean => true;
 const shouldLoadFalse = <T extends any>(t: T): boolean => false;
 const reqInit: RequestInit = {keepalive: true}
 const loadAddsDot: LoadFn<string, string> = (s: string | undefined) =>
-    [`load url from ${s}`, reqInit, (state) => (status, json) => "." + state + "/" + status + "/" + json]
+    loadInfo(`load url from ${s}`, reqInit, (state) => (status, json) => "." + state + "/" + status + "/" + json)
+
 
 interface AB {
     a?: string,
@@ -15,6 +17,8 @@ interface AB {
 
 let loadTrueF = fetcher<string, string>(shouldLoadTrue, loadAddsDot, "loadTrueF");
 let loadFalseF = fetcher<string, string>(shouldLoadFalse, loadAddsDot, "loadFalseF");
+let useInsteadOfLoad = loadDirectly<string>((s: string) => s + "loaded")
+let loadTrueAndUseInstead = fetcher<string, any>(shouldLoadTrue, s => useInsteadOfLoad, "")
 
 describe("fetcher", () => {
     it("should make a fetcher", () => {
@@ -33,6 +37,9 @@ describe("apply fetcher", () => {
     it("not load when load returns false", async () => {
         expect(await applyFetcher(loadFalseF, "original", myfetch)).toEqual("original")
     })
+    it("uses this instead of load if defined", async () => {
+        expect(await applyFetcher(loadTrueAndUseInstead, "oldstate", myfetch)).toEqual("oldstateloaded")
+    })
 })
 
 describe("lens fetcher ", () => {
@@ -49,14 +56,15 @@ describe("lens fetcher ", () => {
     })
     it.skip("when child  condition is true BUT the place the child is going to be added to is undefined", () => {
         expect(fTrue.shouldLoad({})).toEqual(false) //there is no ab to put the value loaded into
-        const [req, reqInit, mutate] = fTrue.load({ab: {}})
+        // const [req, reqInit, mutate] = fTrue.load({ab: {}})
     })
     it("when child  condition is true", () => {
         let state = {ab: {}};
         expect(fTrue.shouldLoad(state)).toEqual(true)
-        const [req, reqInit, mutate] = fTrue.load({ab: {}})
+        const {requestInfo, requestInit, mutate} = fTrue.load({ab: {}})
         expect(mutate(state)(200, "someValue")).toEqual({"ab": {"a": ".undefined/200/someValue"}})
     })
+
 
 })
 describe("lens fetcher", () => {
@@ -64,9 +72,9 @@ describe("lens fetcher", () => {
         const opticsTo = identityOptics<AB>().focusQuery('ab').focusQuery('a')
         let f: Fetcher<AB, string> = lensFetcher(opticsTo, loadTrueF);
         expect(f.shouldLoad({})).toEqual(true) //would really like this to be false, but don't know how
-        const [req, int, mutate] = f.load({})
-        expect(req).toEqual("load url from undefined")
-        expect(int).toEqual(reqInit)
+        const {requestInfo, requestInit, mutate} = f.load({})
+        expect(requestInfo).toEqual("load url from undefined")
+        expect(requestInit).toEqual(reqInit)
         expect(mutate({})(200, "someNewA")).toEqual({}) //TODO so annoyingly we went to get it... but didn't put it in here... and didn;t throw an error.
     })
     it("when state defined, holder is defined and condition is false", () => {
@@ -79,8 +87,8 @@ describe("lens fetcher", () => {
         let f: Fetcher<AB, string> = lensFetcher(opticsTo, loadTrueF);
         let state = {ab: {}};
         expect(f.shouldLoad(state)).toEqual(true)
-        const [url, init, mutate] = f.load(state)
-        expect(url).toEqual("load url from undefined")
+        const {requestInfo, requestInit, mutate} = f.load(state)
+        expect(requestInfo).toEqual("load url from undefined")
         expect(mutate(state)(200, "newValue")).toEqual({"ab": {"a": ".undefined/200/newValue"}})
     })
     it("when state defined, holder is defined child is defined and coniditon is true", () => {
@@ -88,8 +96,8 @@ describe("lens fetcher", () => {
         let f: Fetcher<AB, string> = lensFetcher(opticsTo, loadTrueF);
         let state = {ab: {a: "a"}};
         expect(f.shouldLoad(state)).toEqual(true)
-        const [url, init, mutate] = f.load(state)
-        expect(url).toEqual("load url from a")
+        const {requestInfo, requestInit, mutate} = f.load(state)
+        expect(requestInfo).toEqual("load url from a")
         expect(mutate(state)(200, "newValue")).toEqual({"ab": {"a": ".a/200/newValue"}})
     })
 })
@@ -112,9 +120,9 @@ describe("fetcherWhenUndefined", () => {
     })
     it('loads when the focused on thing is undefined', async () => {
         expect(fOKToLoad.shouldLoad({})).toEqual(true)
-        const [url, init, mutate] = fOKToLoad.load({})
-        expect(url).toEqual("someUrl")
-        expect(init).toEqual(reqInit)
+        const {requestInfo, requestInit, mutate} = fOKToLoad.load({})
+        expect(requestInfo).toEqual("someUrl")
+        expect(requestInit).toEqual(reqInit)
         expect(mutate({})(200, "someString")).toEqual({
             "a": "someString"
         })
@@ -180,9 +188,9 @@ describe("fetchAndMutate", () => {
         expect(fMutateFalse.shouldLoad).toBe(loadFalseF.shouldLoad)
     })
     it("should load and then mutate", () => {
-        const [url, init, mutate] = fMutateTrue.load("someString")
-        expect(url).toEqual("load url from someString")
-        expect(init).toEqual(reqInit)
+        const {requestInfo, requestInit, mutate} = fMutateTrue.load("someString")
+        expect(requestInfo).toEqual("load url from someString")
+        expect(requestInit).toEqual(reqInit)
         expect(mutate("startState")(200, "loaded")).toEqual(".startState/200/loaded_mut")
     })
 })
@@ -207,9 +215,9 @@ describe("loadIfMarkerChangesFetcher", () => {
     it("should load if the selected and actual are different, and the actual should be updated", () => {
         let state = {actual: "different", selected: "newTag"};
         expect(fetcher.shouldLoad(state)).toEqual(true)
-        const [reqInfo, reqInit, mutate] = fetcher.load(state)
-        expect(reqInfo).toEqual("someUrl")
-        expect(reqInit).toEqual({})
+        const {requestInfo, requestInit, mutate} = fetcher.load(state)
+        expect(requestInfo).toEqual("someUrl")
+        expect(requestInit).toEqual({})
         expect(mutate(state)(200, "targetString")).toEqual({actual: "newTag", selected: "newTag", target: "targetString"})
 
     })
@@ -246,9 +254,9 @@ describe("loadSelectedFetcher", () => {
     it("should load if the tags are  defined, and the target is undefined", () => {
         let startState = {selState: {selEntity: 'someEntity', selProfile: 'someProfile'}};
         expect(f.shouldLoad(startState)).toEqual(true)
-        const [req, init, mutate] = f.load(startState)
-        expect(req).toEqual("someUrl")
-        expect(init).toEqual(reqInit)
+        const {requestInfo, requestInit, mutate} = f.load(startState)
+        expect(requestInfo).toEqual("someUrl")
+        expect(requestInit).toEqual(reqInit)
         expect(mutate(startState)(200, {"desc": "loaded"})).toEqual({
             "entityAndName": {
                 "entity": {"desc": "loaded"},
@@ -276,9 +284,9 @@ describe("loadSelectedFetcher", () => {
             "selState": {"selEntity": "someNewEntity", "selProfile": "someProfile"}
         }
         expect(f.shouldLoad(s)).toEqual(true)
-        const [req, init, mutate] = f.load(s)
-        expect(req).toEqual("someUrl")
-        expect(init).toEqual(reqInit)
+        const {requestInfo, requestInit, mutate} = f.load(s)
+        expect(requestInfo).toEqual("someUrl")
+        expect(requestInit).toEqual(reqInit)
         expect(mutate(s)(200, {"desc": "loaded"})).toEqual({
             "entityAndName": {
                 "entity": {"desc": "loaded"},
@@ -317,9 +325,9 @@ describe("fetchRadioButton", () => {
         expect(f.shouldLoad({selState: {selRadioTag: "doesntexist"}})).toEqual(false)
         let tag1State = {selState: {selRadioTag: "tag1"}};
         expect(f.shouldLoad(tag1State)).toEqual(true)
-        const [url, init, mutate] = f.load(tag1State)
-        expect(url).toEqual("url for 1")
-        expect(init).toEqual(reqInit)
+        const {requestInfo, requestInit, mutate} = f.load(tag1State)
+        expect(requestInfo).toEqual("url for 1")
+        expect(requestInit).toEqual(reqInit)
         expect(mutate(tag1State)(200, {r1: "r1value"})).toEqual({
             "radio": {"r1": "r1value"},
             "radioTag": "tag1",
@@ -330,9 +338,9 @@ describe("fetchRadioButton", () => {
     it("should fetch if the tag is defined, but a different value. It should set 'actualTag'", async () => {
         let state = {selState: {selRadioTag: "tag2"}, radioTag: "tag1", radio: {"r1": "r1value"}};
         expect(f.shouldLoad(state)).toEqual(true)
-        const [url, init, mutate] = f.load(state)
-        expect(url).toEqual("url for 2")
-        expect(init).toEqual(reqInit)
+        const {requestInfo, requestInit, mutate} = f.load(state)
+        expect(requestInfo).toEqual("url for 2")
+        expect(requestInit).toEqual(reqInit)
         expect(mutate(state)(200, {r2: "r2value"})).toEqual({
             "radio": {"r2": "r2value"},
             "radioTag": "tag2",
@@ -342,9 +350,9 @@ describe("fetchRadioButton", () => {
     it("should fetch if the tag is defined, but a different value. Even if the target is empty It should set 'actualTag'", async () => {
         let state = {selState: {selRadioTag: "tag2"}, radioTag: "tag1"};
         expect(f.shouldLoad(state)).toEqual(true)
-        const [url, init, mutate] = f.load(state)
-        expect(url).toEqual("url for 2")
-        expect(init).toEqual(reqInit)
+        const {requestInfo, requestInit, mutate} = f.load(state)
+        expect(requestInfo).toEqual("url for 2")
+        expect(requestInit).toEqual(reqInit)
         expect(mutate(state)(200, {r2: "r2value"})).toEqual({
             "radio": {"r2": "r2value"},
             "radioTag": "tag2",
@@ -354,10 +362,10 @@ describe("fetchRadioButton", () => {
 })
 
 describe("ifErrorFetcher", () => {
-    let rawError = fetcher<string, string>(s => true, s => ['someUrl', {}, s => (status, json) => {throw Error('msg')}], "loadFalseF");
-    const fFalse = ifErrorFetcher(loadFalseF, (s, status, json, err) => {throw Error('failed')})
-    const fTrue = ifErrorFetcher(loadTrueF, (s, status, json, err) => {throw Error('failed')})
-    const fError = ifErrorFetcher(rawError, (s, status, json, err) => `${s}+${status}+${json}+${err}`)
+    let rawError = fetcher<string, string>(s => true, s => {throw Error('msg')}, "loadFalseF");
+    const fFalse = ifErrorFetcher(loadFalseF, () => {throw Error('failed')})
+    const fTrue = ifErrorFetcher(loadTrueF, () => {throw Error('failed')})
+    const fError = ifErrorFetcher(rawError, e => s => `${e}+${s}`)
 
     it("shouldLoad should act as the old one ", () => {
         expect(fFalse.shouldLoad("'")).toEqual(false)
@@ -366,17 +374,21 @@ describe("ifErrorFetcher", () => {
     })
 
     it("load should act as old if there are no errors", () => {
-        const [init, info, mutate] = (fTrue.load('oldState'))
-        expect(init).toEqual('load url from oldState')
-        expect(info).toEqual({"keepalive": true})
+        const {requestInfo, requestInit, mutate, useThisInsteadOfLoad} = (fTrue.load('oldState'))
+        expect(requestInfo).toEqual('load url from oldState')
+        expect(requestInit).toEqual({"keepalive": true})
+        expect(useThisInsteadOfLoad).toEqual(undefined)
         expect(mutate("someValue")(200, "loaded")).toEqual('.someValue/200/loaded')
     })
 
     it("should return the on error when there was an error", () => {
-        const [init, info, mutate] = (fError.load('oldState'))
-        expect(init).toEqual('someUrl')
-        expect(info).toEqual({})
-        expect(mutate("someValue")(200, "loaded")).toEqual('someValue+200+loaded+Error: msg')
+        const {requestInfo, requestInit, mutate, useThisInsteadOfLoad} = (fError.load('oldState'))
+        expect(requestInfo).toEqual('')
+        expect(requestInit).toEqual(undefined)
+        if (useThisInsteadOfLoad)
+            expect(useThisInsteadOfLoad("oldstate")).toEqual("Error: msg+oldstate")
+        else
+            throw Error()
 
     })
 })

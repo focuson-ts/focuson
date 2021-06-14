@@ -24,7 +24,7 @@ export function descriptionOf<T>(ft: FetcherTree<T>, depth?: number): string[] {
 export interface WouldLoad {
     fetcher: Fetcher<any, any>,
     load: boolean,
-    reqData?: [RequestInfo, RequestInit | undefined]
+    reqData?: [RequestInfo, RequestInit | undefined, boolean]
 }
 
 export function foldFetchers<Result>(ft: FetcherTree<any>, stateOptional: Optional<any, any>, foldFn: (acc: Result, v: Fetcher<any, any>, stateOptional: Optional<any, any>, i?: number, depth?: number) => Result, start: Result, i?: number, depth?: number): Result {
@@ -38,10 +38,11 @@ export function wouldLoad<State>(ft: FetcherTree<State>, state: State): WouldLoa
     return foldFetchers<WouldLoad[]>(ft, identityOptics(), (acc, fetcher, stateOpt, i, depth) => {
         const localState = stateOpt.getOption(state)
         let shouldLoad = localState !== undefined && fetcher.shouldLoad(localState);
-        return [...acc,
-            shouldLoad ?
-                {fetcher, load: true, reqData: [fetcher.load(localState)[0], fetcher.load(localState)[1]]} :
-                {fetcher, load: false}]
+        if (shouldLoad) {
+            let {requestInfo, requestInit, useThisInsteadOfLoad} = fetcher.load(localState)
+            return [...acc, {fetcher, load: true, reqData: [requestInfo, requestInit, !!useThisInsteadOfLoad]}]
+        } else
+            return [...acc, {fetcher, load: false}]
     }, [])
 }
 

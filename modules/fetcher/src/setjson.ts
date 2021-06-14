@@ -17,10 +17,10 @@ export function setJsonForFetchers<State, Element>(fetchFn: FetchFn,
                                             onError: (os: State, e: any) => State,
                                             fn: (lc: LensState<State, State>) => void,
                                             mutate: (s: State) => Promise<State>,
-                                            debugOptional?: Optional<State, FetcherDebug>): (s: State) => Promise<State> {
-    return async (main: State): Promise<State> => {
+                                            debugOptional?: Optional<State, FetcherDebug>): (os: State, s: State) => Promise<State> {
+    return async (os: State, main: State): Promise<State> => {
         const debug = debugOptional?.getOption(main)
-        let newStateFn = (fs: State) => fn(lensState(fs, state => setJsonForFetchers(fetchFn, tree, description, onError, fn, mutate, debugOptional)(state), description))
+        let newStateFn = (fs: State) => fn(lensState(fs, state => setJsonForFetchers(fetchFn, tree, description, onError, fn, mutate, debugOptional)(fs,state), description))
         try {
             if (debug?.fetcherDebug) console.log('setJsonForFetchers - start', main)
             if (main) newStateFn(main)
@@ -37,7 +37,8 @@ export function setJsonForFetchers<State, Element>(fetchFn: FetchFn,
             newStateFn(finalState)
             return finalState
         } catch (e) {
-            let newMain = onError(main, e);
+            console.error("An unexpected error occured. Rolling back the state",e)
+            let newMain = onError(os, e);
             newStateFn(newMain)
             return newMain
         }
