@@ -151,7 +151,8 @@ interface TState {
     entityAndName?: EntityAndName,
     profile?: Profile,
     radioTag?: string,
-    radio?: Radio
+    radio?: Radio,
+    msg?: string
 }
 
 interface Radio1 {
@@ -228,14 +229,14 @@ describe("loadSelectedFetcher", () => {
 
     const reqFn: ReqFn<TState> = (s: TState | undefined) => ["someUrl", reqInit];
     const f = loadSelectedFetcher(s => [s.selState.selProfile, s.selState.selEntity], entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn)
-    const fignoreerror = loadSelectedFetcher(s => {throw Error('error loading')}, entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, true)
-    const fDontIgnoreerror = loadSelectedFetcher(s => {throw Error('error loading')}, entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, false)
+    const fignoreerror = loadSelectedFetcher(s => {throw Error('error loading')}, entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, e => s => ({...s, msg: "errorhandled"}))
+    const fDontIgnoreerror = loadSelectedFetcher(s => {throw Error('error loading')}, entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, )
 
 
     it("should have a description", () => {
-        expect(f.description).toEqual("selStateFetcher(holder=DirtyPrism(prism),target=Optional(I.focus?(entityAndName)),ignoreError=undefined)")
-        expect(fignoreerror.description).toEqual("selStateFetcher(holder=DirtyPrism(prism),target=Optional(I.focus?(entityAndName)),ignoreError=true)")
-        const f2 = loadSelectedFetcher(s => [s.selState.selProfile, s.selState.selEntity], entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, false, "someDescription")
+        expect(f.description).toEqual("selStateFetcher(holder=DirtyPrism(prism),target=Optional(I.focus?(entityAndName)),onError=false)")
+        expect(fignoreerror.description).toEqual("selStateFetcher(holder=DirtyPrism(prism),target=Optional(I.focus?(entityAndName)),onError=true)")
+        const f2 = loadSelectedFetcher(s => [s.selState.selProfile, s.selState.selEntity], entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, e => s => ({...s, msg: "errorhandled"}), "someDescription")
         expect(f2.description).toEqual("someDescription")
     })
 
@@ -244,8 +245,13 @@ describe("loadSelectedFetcher", () => {
         expect(f.shouldLoad({selState: {selEntity: 'someEntity'}})).toEqual(false)
         expect(f.shouldLoad({selState: {selProfile: 'someProfile'}})).toEqual(false)
     })
-    it("should not load if there is an error in reqFn and the ignoreError is true", () => {
-        expect(fignoreerror.shouldLoad({selState: {}})).toEqual(false)
+    it("should load if there is an error in reqFn and the onError is defined", () => {
+        let start = {selState: {}};
+        expect(fignoreerror.shouldLoad(start)).toEqual(true)
+        const {requestInfo, requestInit, mutate, useThisInsteadOfLoad} = fignoreerror.load(start)
+        if (useThisInsteadOfLoad)
+            expect(useThisInsteadOfLoad(start)).toEqual({"msg": "errorhandled", "selState": {}})
+        else throw new Error()
     })
     it("should still throw shouldload  error if there is an error and the ignoreError is true", () => {
         expect(() => fDontIgnoreerror.shouldLoad({selState: {}})).toThrow('error loading')

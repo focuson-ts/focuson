@@ -8,8 +8,15 @@ export interface FetchFn {
     <T>(re: RequestInfo, init?: RequestInit): Promise<[number, T]>
 }
 
-export const defaultFetchFn = <T>(re: RequestInfo, init?: RequestInit): Promise<[number, T]> =>
-    fetch(re, init).then(r => r.json().then(json => [r.status, json]));
+export const defaultFetchFn = <T>(re: RequestInfo, init?: RequestInit): Promise<[number, T]> => {
+    if (re === "") throw Error('calling defaultFetchFn with empty string as url')
+    return fetch(re, init).then(r => r.json().then(json => [r.status, json]));
+}
+
+export function loggingFetchFn<T>(re: RequestInfo, init?: RequestInit): Promise<[number, T]> {
+    console.log("fetching from", re, init)
+    return defaultFetchFn(re, init)
+}
 
 export interface MutateFn<State, T> {
     (s: State): (status: number, json: T) => State
@@ -29,8 +36,9 @@ export interface LoadInfo<State, T> {
 }
 export function loadInfo<State, T>(requestInfo: RequestInfo,
                                    requestInit: RequestInit | undefined,
-                                   mutate: MutateFn<State, T>): LoadInfo<State, T> {
-    return {requestInfo, requestInit, mutate}
+                                   mutate: MutateFn<State, T>,
+                                   useThisInsteadOfLoad?: (s: State) => State): LoadInfo<State, T> {
+    return {requestInfo, requestInit, mutate, useThisInsteadOfLoad}
 }
 export function loadDirectly<State>(useThisInsteadOfLoad: (s: State) => State): LoadInfo<State, any> {
     return ({requestInfo: "", mutate: os => (s, j) => os, useThisInsteadOfLoad})
@@ -69,19 +77,29 @@ export function fetcher<State, T>(shouldLoad: (ns: State) => boolean,
 
 export const applyFetcher = <State, T>(fetcher: Fetcher<State, T>, s: State, fetchFn: (re: RequestInfo, init?: RequestInit) => Promise<[number, T]>, debug?: FetcherDebug): Promise<State | undefined> => {
     const fetcherDebug = debug?.fetcherDebug
-    if (fetcherDebug) console.log("applyFetcher", s)
+    if (fetcherDebug) console.log("applyFetcher", fetcher.description, s)
     if (fetcher.shouldLoad(s)) {
         const {requestInfo, requestInit, mutate, useThisInsteadOfLoad} = fetcher.load(s)
         if (fetcherDebug) console.log("applyFetcher - loading", requestInfo, requestInit, mutate, useThisInsteadOfLoad)
-        if (useThisInsteadOfLoad)
-            return Promise.resolve(useThisInsteadOfLoad(s))
+        if (useThisInsteadOfLoad) {
+            if (fetcherDebug) console.log("apply fetcher - using useThisInsteadOfLoad", fetcher.description, useThisInsteadOfLoad, s)
+            let result = useThisInsteadOfLoad(s);
+            if (fetcherDebug) console.log("apply fetcher - result of useThisInsteadOfLoad is", fetcher.description, result)
+            return Promise.resolve(result)
+        } else {
+            if (requestInfo === "") {
+                let message = `applyFetcher - have no useThisInsteadOfLoad, but have empty request string for ${fetcher.description}`;
+                if (fetcherDebug) console.error(message)
+                throw Error(message)
+            }
+        }
         return fetchFn(requestInfo, requestInit).then(([status, json]) => {
             if (fetcherDebug) console.log("applyFetcher - fetched", requestInfo, requestInit, status, json)
             let result = mutate(s)(status, json);
             if (fetcherDebug) console.log("applyFetcher - result", result)
             return result
         })
-    }
+    } else if (fetcherDebug) console.log("didn't load", fetcher.description)
     return Promise.resolve(s)
 }
 
@@ -123,8 +141,7 @@ export function ifErrorFetcher<State, T>(fetcher: Fetcher<State, T>, onError: (e
         shouldLoad: fetcher.shouldLoad,
         load(s) {
             try {
-                const {requestInfo, requestInit, mutate} = fetcher.load(s)
-                return loadInfo(requestInfo, requestInit, mutate)
+                return fetcher.load(s)
             } catch (e) {
                 return loadDirectly(onError(e))
             }
@@ -142,7 +159,7 @@ export function lensFetcher<State, Child, T>(lens: Optional<State, Child>, fetch
         },
         load(ns) {
             const cs: Child | undefined = lens.getOption(ns)
-            const {requestInfo, requestInit, mutate} = fetcher.load(cs)
+            const {requestInfo, requestInit, mutate, useThisInsteadOfLoad} = fetcher.load(cs)
             const mutateFn: MutateFn<State, T> = s => (status, json) => lens.set(s, mutate(lens.getOption(s))(status, json))
             return loadInfo(requestInfo, requestInit, mutateFn)
         },
@@ -190,9 +207,9 @@ export function fetchAndMutate<State, T>(f: Fetcher<State, T>, fn: (s: State) =>
     let result: Fetcher<State, T> = {
         shouldLoad: f.shouldLoad,
         load: s => {
-            const {requestInfo, requestInit, mutate} = f.load(s)
+            const {requestInfo, requestInit, mutate, useThisInsteadOfLoad} = f.load(s)
             const newMutate: MutateFn<State, T> = s => (status, json) => fn(mutate(s)(status, json))
-            return loadInfo(requestInfo, requestInit, newMutate)
+            return loadInfo(requestInfo, requestInit, newMutate, useThisInsteadOfLoad)
         },
         description: description ? description : f.description + ".withMutate"
     }
@@ -269,12 +286,12 @@ export function fetcherWithHolder<State, Holder, T>(target: Optional<State, Hold
         shouldLoad: (ns) => fetcher.shouldLoad(targetThenOptional.getOption(ns)),
         load(ns) {
             const originalTarget: T | undefined = targetThenOptional.getOption(ns)
-            const {requestInfo, requestInit, mutate} = fetcher.load(originalTarget)
-            let result: LoadInfo<State, T> = loadInfo(requestInfo, requestInit, s => (status, t) => {
+            const {requestInfo, requestInit, mutate, useThisInsteadOfLoad} = fetcher.load(originalTarget)
+            let newMutate = (s: State) => (status: number, t: T) => {
                 let x = mutate(targetThenOptional.getOption(s))(status, t)
                 return target.set(s, holder.reverseGet(x))
-            });
-            return result
+            };
+            return {requestInfo, requestInit, mutate: newMutate} //TODO what should we do if 'useThisInsteadOfLoad' is defined
         },
         description: description ? description : `fetcherWithHolder(${target},${holder}, ${fetcher})`
     }
