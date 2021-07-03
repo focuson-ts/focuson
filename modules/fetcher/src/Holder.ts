@@ -1,4 +1,4 @@
-import {iso, Iso} from "@focuson/lens";
+import {dirtyPrism, iso, Iso} from "@focuson/lens";
 
 export interface Holder<T> {
     t: T,
@@ -11,3 +11,4 @@ export function holderIso<T>(description: string): Iso<Holder<T>, [string[], T]>
         description
     )
 }
+
