@@ -19,7 +19,7 @@ function getOr<Main, Child>(optional: Optional<Main, Child>, main: Main, errorMe
     let result = optional.getOption(main)
     if (result == undefined) {
         if (errorMessageIfNotHere) throw errorMessageIfNotHere()
-        throw Error(`Cannot access json as doesn't exist ${optional}\n${JSON.stringify(main, null, 2)}`)
+        throw Error(`Cannot access json as doesn't exist ${optional}}`)
     }
     return result
 
