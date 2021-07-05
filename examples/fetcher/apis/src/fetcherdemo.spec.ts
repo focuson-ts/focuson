@@ -99,7 +99,8 @@ export interface State {
     apiData?: ApiData,
     thing?: Holder<Thing>,
     selState: SelectionState,
-    radioButton?: string
+    radioButton?: string,
+    globalErrorMsg?: any
 }
 
 
@@ -140,7 +141,8 @@ const loadApiF: Fetcher<State, Api> =
         apiDataHolder('H/ApiData'),
         stateL.focusQuery('apiData'),
         loadFromSiteMap((siteMap, sel) => sel.selectedEntity && sel.selectedApi && siteMap[sel.selectedEntity].api[sel.selectedApi]._links.self),
-        false, "loadApiF")
+        s => undefined,
+        e => s => ({...s, globalErrorMsg: e}), "loadApiF")
 
 
 const loadThingF: Fetcher<State, Thing> = ifEEqualsFetcher<State>(s => s.selState.selectedRadioButton == "erd", loadSelectedFetcher<State, Holder<Thing>, Thing>(
@@ -148,7 +150,9 @@ const loadThingF: Fetcher<State, Thing> = ifEEqualsFetcher<State>(s => s.selStat
     holderIso<Thing>('H/Thing'),
     stateL.focusQuery('thing'),
     loadFromSiteMap((siteMap, sel) =>
-        sel.selectedEntity && sel.selectedThing && siteMap[sel.selectedEntity].things[sel.selectedThing].href)),
+        sel.selectedEntity && sel.selectedThing && siteMap[sel.selectedEntity].things[sel.selectedThing].href),
+    s => undefined
+    ),
     'LoadThingF')
 
 let apiDataL: Optional<State, ApiData> = stateL.focusQuery('apiData')
@@ -211,7 +215,7 @@ describe("wouldLoad should provide test friendly means of showing what a fetchTr
     // })
     it("for empty", () => {
         expect(wouldLoad(demoTree, {selState: {}})).toEqual([
-                {fetcher: loadSiteMapF, load: true, reqData: ["someSitemapUrl", {method: "get"},false]},
+                {fetcher: loadSiteMapF, load: true, reqData: ["someSitemapUrl", {method: "get"}, false]},
                 {fetcher: loadThingF, load: false},
                 {fetcher: loadApiF, load: false},
                 {fetcher: loadApiChild, load: false}
@@ -222,7 +226,7 @@ describe("wouldLoad should provide test friendly means of showing what a fetchTr
         expect(wouldLoad(demoTree, {
             selState: {selectedEntity: "be", selectedThing: "t1"}
         })).toEqual([
-                {fetcher: loadSiteMapF, load: true, reqData: ["someSitemapUrl", {method: "get"},false]},
+                {fetcher: loadSiteMapF, load: true, reqData: ["someSitemapUrl", {method: "get"}, false]},
                 {fetcher: loadThingF, load: false},
                 {fetcher: loadApiF, load: false},
                 {fetcher: loadApiChild, load: false}
@@ -257,7 +261,7 @@ describe("wouldLoad should provide test friendly means of showing what a fetchTr
             selState: {selectedEntity: "be", selectedThing: "t1", selectedRadioButton: "erd"}
         })).toEqual([
                 {fetcher: loadSiteMapF, load: false},
-                {fetcher: loadThingF, load: true, reqData: ["/t1/thing", {},false]},
+                {fetcher: loadThingF, load: true, reqData: ["/t1/thing", {}, false]},
                 {fetcher: loadApiF, load: false},
                 {fetcher: loadApiChild, load: false}
             ]
@@ -272,8 +276,8 @@ describe("wouldLoad should provide test friendly means of showing what a fetchTr
         })).toEqual([
                 {fetcher: loadSiteMapF, load: false},
                 {fetcher: loadThingF, load: false},
-                {fetcher: loadApiF, load: true, reqData: ["/be/a1/api", {},false]},
-                {fetcher: loadApiChild, load: true, reqData: ["/be/a1/source", {},false]}
+                {fetcher: loadApiF, load: true, reqData: ["/be/a1/api", {}, false]},
+                {fetcher: loadApiChild, load: true, reqData: ["/be/a1/source", {}, false]}
             ]
         )
     })
@@ -287,7 +291,7 @@ describe("wouldLoad should provide test friendly means of showing what a fetchTr
                 {fetcher: loadSiteMapF, load: false},
                 {fetcher: loadThingF, load: false},
                 {fetcher: loadApiF, load: false},
-                {fetcher: loadApiChild, load: true, reqData: ["/be/a1/source", {},false]}
+                {fetcher: loadApiChild, load: true, reqData: ["/be/a1/source", {}, false]}
             ]
         )
     })
@@ -301,7 +305,7 @@ describe("wouldLoad should provide test friendly means of showing what a fetchTr
                 {fetcher: loadSiteMapF, load: false},
                 {fetcher: loadThingF, load: false},
                 {fetcher: loadApiF, load: false},
-                {fetcher: loadApiChild, load: true, reqData: ["/be/a1/source", {},false]}
+                {fetcher: loadApiChild, load: true, reqData: ["/be/a1/source", {}, false]}
             ]
         )
     })
@@ -335,7 +339,7 @@ describe("wouldLoad should provide test friendly means of showing what a fetchTr
                 {fetcher: loadSiteMapF, load: false},
                 {fetcher: loadThingF, load: false},
                 {fetcher: loadApiF, load: false},
-                {fetcher: loadApiChild, load: true, reqData: ["/be/a1/source", {},false]}
+                {fetcher: loadApiChild, load: true, reqData: ["/be/a1/source", {}, false]}
             ]
         )
     })

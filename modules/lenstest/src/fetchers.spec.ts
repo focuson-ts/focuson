@@ -228,15 +228,15 @@ describe("loadSelectedFetcher", () => {
 
 
     const reqFn: ReqFn<TState> = (s: TState | undefined) => ["someUrl", reqInit];
-    const f = loadSelectedFetcher(s => [s.selState.selProfile, s.selState.selEntity], entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn)
-    const fignoreerror = loadSelectedFetcher(s => {throw Error('error loading')}, entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, e => s => ({...s, msg: "errorhandled"}))
-    const fDontIgnoreerror = loadSelectedFetcher(s => {throw Error('error loading')}, entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, )
+    const f = loadSelectedFetcher(s => [s.selState.selProfile, s.selState.selEntity], entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, s => undefined)
+    const fignoreerror = loadSelectedFetcher(s => {throw Error('error loading')}, entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, s => undefined, e => s => ({...s, msg: "errorhandled"}))
+    const fDontIgnoreerror = loadSelectedFetcher(s => {throw Error('error loading')}, entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, s => undefined)
 
 
     it("should have a description", () => {
         expect(f.description).toEqual("selStateFetcher(holder=DirtyPrism(prism),target=Optional(I.focus?(entityAndName)),onError=false)")
         expect(fignoreerror.description).toEqual("selStateFetcher(holder=DirtyPrism(prism),target=Optional(I.focus?(entityAndName)),onError=true)")
-        const f2 = loadSelectedFetcher(s => [s.selState.selProfile, s.selState.selEntity], entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, e => s => ({...s, msg: "errorhandled"}), "someDescription")
+        const f2 = loadSelectedFetcher(s => [s.selState.selProfile, s.selState.selEntity], entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, s => undefined, e => s => ({...s, msg: "errorhandled"}), "someDescription")
         expect(f2.description).toEqual("someDescription")
     })
 

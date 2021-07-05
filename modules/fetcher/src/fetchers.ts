@@ -224,6 +224,7 @@ export const loadSelectedFetcher = <State, Holder, T>(tagFn: (s: State) => (stri
                                                       holderPrism: DirtyPrism<Holder, [string [], T]>,
                                                       target: Optional<State, Holder>,
                                                       reqFn: ReqFn<State>,
+                                                      onNotFound: (s: State) => Holder | undefined,
                                                       onError?: (e: any) => (s: State) => State,
                                                       description?: string): Fetcher<State, T> => {
     let currentTagFn = target.chain(holderPrism).chain(firstIn2()).getOption
@@ -249,8 +250,13 @@ export const loadSelectedFetcher = <State, Holder, T>(tagFn: (s: State) => (stri
                 const [url, info] = req
                 const mutateForHolder: MutateFn<State, T> = state => (status, json) => {
                     if (!state) throw partialFnUsageError(result)
-                    let newHolder: Holder = holderPrism.reverseGet([desiredTags, json])
-                    return target.set(state, newHolder)
+                    if (status == 404) {
+                        target.set(state, onNotFound(state))
+                    }
+                    else {
+                        let newHolder: Holder = holderPrism.reverseGet([desiredTags, json])
+                        return target.set(state, newHolder)
+                    }
                 }
                 return loadInfo(url, info, mutateForHolder)
             } catch (e) {
