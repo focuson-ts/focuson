@@ -1,4 +1,4 @@
-import {applyFetcher, fetchAndMutate, Fetcher, fetcher, fetcherWhenUndefined, fromTaggedFetcher, ifErrorFetcher, lensFetcher, loadDirectly, LoadFn, loadIfMarkerChangesFetcher, loadInfo, loadSelectedFetcher, radioButtonFetcher, ReqFn, TaggedFetcher} from "@focuson/fetcher";
+import {applyFetcher, fetchAndMutate, Fetcher, fetcher, fetcherWhenUndefined, fromTaggedFetcher, ifErrorFetcher, lensFetcher, loadDirectly, LoadFn, loadIfMarkerChangesFetcher, loadInfo, loadSelectedFetcher, not200MeansError, radioButtonFetcher, ReqFn, TaggedFetcher, Tags} from "@focuson/fetcher";
 import {dirtyPrism, identityOptics} from "@focuson/lens";
 
 
@@ -168,11 +168,11 @@ interface Radio3 {
 }
 
 interface EntityAndName {
-    tags: string[],
+    tags: (string | undefined)[],
     entity: Entity
 }
 
-let entityAndNameI = dirtyPrism<EntityAndName, [string[], Entity]>(en => [en.tags, en.entity], arr => ({
+let entityAndNameI = dirtyPrism<EntityAndName, [Tags, Entity]>(en => [en.tags, en.entity], arr => ({
     tags: arr[0],
     entity: arr[1]
 }))
@@ -228,15 +228,15 @@ describe("loadSelectedFetcher", () => {
 
 
     const reqFn: ReqFn<TState> = (s: TState | undefined) => ["someUrl", reqInit];
-    const f = loadSelectedFetcher(s => [s.selState.selProfile, s.selState.selEntity], entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, s => undefined)
-    const fignoreerror = loadSelectedFetcher(s => {throw Error('error loading')}, entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, s => undefined, e => s => ({...s, msg: "errorhandled"}))
-    const fDontIgnoreerror = loadSelectedFetcher(s => {throw Error('error loading')}, entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, s => undefined)
+    const f = loadSelectedFetcher<TState, EntityAndName, Entity>(s => [s.selState.selProfile, s.selState.selEntity], entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn)
+    const fignoreerror = loadSelectedFetcher<TState, EntityAndName, Entity>(s => {throw Error('error loading')}, entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, not200MeansError, e => s => ({...s, msg: "errorhandled"}))
+    const fDontIgnoreerror = loadSelectedFetcher<TState, EntityAndName, Entity>(s => {throw Error('error loading')}, entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn)
 
 
     it("should have a description", () => {
         expect(f.description).toEqual("selStateFetcher(holder=DirtyPrism(prism),target=Optional(I.focus?(entityAndName)),onError=false)")
         expect(fignoreerror.description).toEqual("selStateFetcher(holder=DirtyPrism(prism),target=Optional(I.focus?(entityAndName)),onError=true)")
-        const f2 = loadSelectedFetcher(s => [s.selState.selProfile, s.selState.selEntity], entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, s => undefined, e => s => ({...s, msg: "errorhandled"}), "someDescription")
+        const f2 = loadSelectedFetcher<TState, EntityAndName, Entity>(s => [s.selState.selProfile, s.selState.selEntity], entityAndNameI, identityOptics<TState>().focusQuery('entityAndName'), reqFn, not200MeansError, e => s => ({...s, msg: "errorhandled"}), "someDescription")
         expect(f2.description).toEqual("someDescription")
     })
 
@@ -300,6 +300,40 @@ describe("loadSelectedFetcher", () => {
             },
             "selState": {"selEntity": "someNewEntity", "selProfile": "someProfile"}
         })
+    })
+
+    it("should handle a 404 if the onNotFound is defined", async () => {
+        let s: TState = {
+            "entityAndName": {
+                "entity": {"desc": "oldDataWillChange"},
+                "tags": ["someProfile", "someEntity"]
+            },
+            "selState": {"selEntity": "someNewEntity", "selProfile": "someProfile"}
+        }
+        const f = loadSelectedFetcher<TState, EntityAndName, Entity>(s => [s.selState.selProfile, s.selState.selEntity], entityAndNameI,
+            identityOptics<TState>().focusQuery('entityAndName'), reqFn,
+            (req, tags: (string | undefined)[], s: TState) => ({entity: {"desc": "notFound"}, tags}))
+        const {requestInfo, requestInit, mutate} = f.load(s)
+        expect(mutate(s)(404, {"desc": "not used"})).toEqual({
+            "entityAndName": {
+                "entity": {"desc": "notFound"},
+                "tags": ["someProfile", "someNewEntity"]
+            },
+            "selState": {"selEntity": "someNewEntity", "selProfile": "someProfile"}
+        })
+
+    })
+    it("should throw an error with a 404 if the onNotFound is not defined", async () => {
+        let s: TState = {
+            "entityAndName": {
+                "entity": {"desc": "oldDataWillChange"},
+                "tags": ["someProfile", "someEntity"]
+            },
+            "selState": {"selEntity": "someNewEntity", "selProfile": "someProfile"}
+        }
+        const {requestInfo, requestInit, mutate} = f.load(s)
+        expect(() => mutate(s)(404, {"desc": "not used"})).toThrow("req someUrl [object Object] caused status code 404")
+
     })
 })
 

@@ -220,13 +220,20 @@ function areAllDefined<T>(arr: (T | undefined)[]): arr is T[] {
     return arr.reduce<boolean>((acc, t) => (t != undefined) && acc, true)
 }
 
-export const loadSelectedFetcher = <State, Holder, T>(tagFn: (s: State) => (string | undefined)[],
-                                                      holderPrism: DirtyPrism<Holder, [string [], T]>,
+export function not200MeansError<State, Holder>(req: [RequestInfo, RequestInit | undefined], tags: (string | undefined)[], s: State, status: number): Holder {
+    throw Error(`req ${req[0]} ${req[1]} caused status code ${status}`)
+}
+
+export type Tags = (string | undefined)[]
+export const loadSelectedFetcher = <State, Holder, T>(tagFn: (s: State) => Tags,
+                                                      holderPrism: DirtyPrism<Holder, [Tags, T]>,
                                                       target: Optional<State, Holder>,
                                                       reqFn: ReqFn<State>,
-                                                      onNotFound: (s: State) => Holder | undefined,
+                                                      not200?: (req: [RequestInfo, RequestInit | undefined], tags: Tags, s: State, status: number) => Holder,
                                                       onError?: (e: any) => (s: State) => State,
                                                       description?: string): Fetcher<State, T> => {
+    let actualOnNotFound: (req: [RequestInfo, RequestInit | undefined], tags: Tags, s: State, status: number) => Holder
+        = not200 ? not200 : not200MeansError
     let currentTagFn = target.chain(holderPrism).chain(firstIn2()).getOption
     let result: Fetcher<State, T> = {
         shouldLoad: (s: State): boolean => {
@@ -243,20 +250,14 @@ export const loadSelectedFetcher = <State, Holder, T>(tagFn: (s: State) => (stri
         },
         load: (s: State) => {
             try {
-                const desiredTags = tagFn(s)
+                const desiredTags: Tags = tagFn(s)
                 if (!areAllDefined(desiredTags)) throw partialFnUsageError(result)
                 const req = reqFn(s);
                 if (!req) throw partialFnUsageError(result)
                 const [url, info] = req
                 const mutateForHolder: MutateFn<State, T> = state => (status, json) => {
                     if (!state) throw partialFnUsageError(result)
-                    if (status == 404) {
-                        target.set(state, onNotFound(state))
-                    }
-                    else {
-                        let newHolder: Holder = holderPrism.reverseGet([desiredTags, json])
-                        return target.set(state, newHolder)
-                    }
+                    return target.set(state, (status < 300) ? holderPrism.reverseGet([desiredTags, json]) : actualOnNotFound(req, desiredTags, state, status))
                 }
                 return loadInfo(url, info, mutateForHolder)
             } catch (e) {
