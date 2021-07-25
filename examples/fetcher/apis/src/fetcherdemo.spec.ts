@@ -1,5 +1,5 @@
 import {dirtyPrism, DirtyPrism, identityOptics, Iso, Lens, Lenses, Optional, orUndefined} from "@focuson/lens";
-import {child, descriptionOf, fetchAndMutate, Fetcher, fetcherTree, FetcherTree, fetcherWhenUndefined, fromTaggedFetcher, Holder, holderIso, ifEEqualsFetcher, lensAndChild, lensAndChildren, loadSelectedFetcher, loadTree, radioButtonFetcher, ReqFn, wouldLoad} from "@focuson/fetcher";
+import {child, descriptionOf, fetchAndMutate, Fetcher, fetcherTree, FetcherTree, fetcherWhenUndefined, fromTaggedFetcher, Holder, holderIso, ifEEqualsFetcher, lensAndChild, lensAndChildren, loadSelectedFetcher, loadTree, radioButtonFetcher, ReqFn, Tags, wouldLoad} from "@focuson/fetcher";
 
 
 export interface SiteMap {
@@ -97,7 +97,7 @@ export interface State {
     sitemap?: SiteMap,
     entity?: Entity,
     apiData?: ApiData,
-    thing?: Holder<Thing>,
+    thing?: Holder<Tags,Thing>,
     selState: SelectionState,
     radioButton?: string,
     globalErrorMsg?: any
@@ -145,9 +145,9 @@ const loadApiF: Fetcher<State, Api> =
         e => s => ({...s, globalErrorMsg: e}), "loadApiF")
 
 
-const loadThingF: Fetcher<State, Thing> = ifEEqualsFetcher<State>(s => s.selState.selectedRadioButton == "erd", loadSelectedFetcher<State, Holder<Thing>, Thing>(
+const loadThingF: Fetcher<State, Thing> = ifEEqualsFetcher<State>(s => s.selState.selectedRadioButton == "erd", loadSelectedFetcher<State, Holder<Tags,Thing>, Thing>(
     s => [s.selState.selectedEntity, s.selState.selectedThing],
-    holderIso<Thing>('H/Thing'),
+    holderIso<Tags,Thing>('H/Thing'),
     stateL.focusQuery('thing'),
     loadFromSiteMap((siteMap, sel) =>
         sel.selectedEntity && sel.selectedThing && siteMap[sel.selectedEntity].things[sel.selectedThing].href),

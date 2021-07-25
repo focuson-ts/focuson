@@ -1,5 +1,6 @@
-import {applyFetcher, fetchAndMutate, Fetcher, fetcher, fetcherWhenUndefined, fromTaggedFetcher, ifErrorFetcher, lensFetcher, loadDirectly, LoadFn, loadIfMarkerChangesFetcher, loadInfo, loadSelectedFetcher, not200MeansError, radioButtonFetcher, ReqFn, TaggedFetcher, Tags} from "@focuson/fetcher";
+import {applyFetcher, fetchAndMutate, Fetcher, fetcher, fetcherWhenUndefined, fromTaggedFetcher, Holder, holderIso, lensFetcher, loadDirectly, LoadFn, loadInfo, loadSelectedFetcher, markerFetcher, radioButtonFetcher, ReqFn, TaggedFetcher, Tags} from "@focuson/fetcher";
 import {dirtyPrism, identityOptics} from "@focuson/lens";
+import {ifErrorFetcher, not200MeansError} from "@focuson/fetcher/dist/src/errorhandling";
 
 
 const shouldLoadTrue = <T extends any>(t: T): boolean => true;
@@ -198,31 +199,41 @@ describe("fetchAndMutate", () => {
 
 describe("loadIfMarkerChangesFetcher", () => {
     interface MarkerChangesState {
-        actual?: string,
-        selected?: string,
-        target?: string
+        desired?: string,
+        target?: Holder<string, string>
     }
 
     const id = identityOptics<MarkerChangesState>()
-    const fetcher = loadIfMarkerChangesFetcher<MarkerChangesState, string>(id.focusQuery('actual'), id.focusQuery('selected'), id.focusQuery('target'), s => ["someUrl", {}], "someFetcher")
-    it("should not load if the selected is undefined", () => {
+    const fetcher = markerFetcher<MarkerChangesState, Holder<string, string>, string, string>(
+        id.focusQuery('desired'),
+        holderIso('holderForMarkerFetcher'),
+        (desired, actual) => desired == actual,
+        id.focusQuery('target'),
+        marker => s => ["someUrlBasedOn" + marker, {}], "someFetcher")
+
+    it("should not load if the desired is undefined", () => {
         expect(fetcher.shouldLoad({})).toEqual(false)
-        expect(fetcher.shouldLoad({selected: undefined})).toEqual(false)
-        expect(fetcher.shouldLoad({actual: undefined, selected: undefined})).toEqual(false)
     })
+
+    it("should  load if the desired is defined and the target undefined", () => {
+        expect(fetcher.shouldLoad({desired: "something"})).toEqual(true)
+    })
+
     it("should not load if the selected and actual are the same", () => {
-        expect(fetcher.shouldLoad({actual: "tag", selected: "tag"})).toEqual(false)
+        expect(fetcher.shouldLoad({desired: "tag", target: {tags: "tag", t: "anything"}})).toEqual(false)
     })
+
     it("should load if the selected and actual are different, and the actual should be updated", () => {
-        let state = {actual: "different", selected: "newTag"};
+        let state = {target: {tags: "different", t: "something"}, desired: "newTag"};
         expect(fetcher.shouldLoad(state)).toEqual(true)
         const {requestInfo, requestInit, mutate} = fetcher.load(state)
-        expect(requestInfo).toEqual("someUrl")
+        expect(requestInfo).toEqual("someUrlBasedOnnewTag")
         expect(requestInit).toEqual({})
-        expect(mutate(state)(200, "targetString")).toEqual({actual: "newTag", selected: "newTag", target: "targetString"})
+        expect(mutate(state)(200, "targetString")).toEqual({target: {tags: "newTag", t: "targetString"}, desired: "newTag"})
 
     })
 })
+
 
 describe("loadSelectedFetcher", () => {
 
