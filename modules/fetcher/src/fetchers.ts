@@ -113,8 +113,6 @@ export function loadIfMarkerChangesFetcher<State, T>(actualMarker: Optional<Stat
         const selected = selectedMarker.getOption(ns)
         return selected != undefined && actual != selected
     }
-
-
     let result: Fetcher<State, T> = {
         shouldLoad,
         load: (ns: State): LoadInfo<State, T> => {
@@ -268,6 +266,9 @@ export const loadSelectedFetcher = <State, Holder, T>(tagFn: (s: State) => Tags,
     };
     return result
 };
+
+
+
 
 
 export const loadFromUrl = <T>(fetchFn?: (input: RequestInfo, init?: RequestInit) => Promise<Response>) =>

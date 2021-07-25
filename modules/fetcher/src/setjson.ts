@@ -5,6 +5,7 @@ import {Optional} from "@focuson/lens";
 
 export interface FetcherDebug {
     fetcherDebug?: boolean,
+    loadTreeDebug?: boolean,
     whatLoad?: boolean
 }
 export function wouldLoadSummary(wouldLoad: WouldLoad[]) {

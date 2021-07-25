@@ -1,6 +1,6 @@
 import {identityOptics, Lens, Optional} from "@focuson/lens";
 import {applyFetcher, defaultFetchFn, Fetcher, FetchFn} from "./fetchers";
-import {FetcherDebug} from "./setjson";
+import {FetcherDebug, wouldLoadSummary} from "./setjson";
 
 export interface FetcherTree<State> {
     fetchers: Fetcher<State, any>[],
@@ -54,8 +54,13 @@ const loadGraphChildLink = (fetchFn: FetchFn, debug?: FetcherDebug) => <State, C
 
 export async function loadTree<State>(fg: FetcherTree<State>, ns: State, fetchFn?: FetchFn, debug?: FetcherDebug): Promise<State> {
     const realFetch = fetchFn ? fetchFn : defaultFetchFn
+    if (debug?.loadTreeDebug) {
+        let w = wouldLoad(fg, ns);
+        console.log("loadTree-state", fg.fetchers.map(f => f.description).join(','), ns)
+        console.log("loadTree-wouldLoad", wouldLoadSummary(w), w)
+    }
     const initialValue: State = await fg.fetchers.reduce((acc, pf) => acc.then(s => applyFetcher(pf, s, fetchFn, debug)), Promise.resolve(ns))
-    return fg.children.reduce<Promise<State | undefined>>(loadGraphChildLink(realFetch), Promise.resolve(initialValue))
+    return fg.children.reduce<Promise<State | undefined>>(loadGraphChildLink(realFetch, debug), Promise.resolve(initialValue))
 }
 
 
