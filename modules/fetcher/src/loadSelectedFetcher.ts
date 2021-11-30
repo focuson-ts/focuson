@@ -57,7 +57,7 @@ export const loadSelectedFetcher = <State, Holder, T>(tagFn: (s: State) => Tags,
                     if (!state) throw partialFnUsageError(result)
                     return target.set(state, (status < 300) ? holderPrism.reverseGet([desiredTags, json]) : actualOnNotFound(req, desiredTags, state, status))
                 }
-                return loadInfo(url, info, mutateForHolder)
+                return loadInfo(url, info, mutateForHolder);
             } catch (e) {
                 return loadDirectly(onError(e))
             }
