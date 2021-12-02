@@ -12,7 +12,7 @@
     ]
   },
   "dependencies": {
-    "@focuson/lens": "0.3.49"
+    "@focuson/lens": "0.3.50"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -44,7 +44,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "0.3.49",
+  "version": "0.3.50",
   "template": "noreact",
   "description": "Showing how lens help in 'normal programming' without any link to react",
   "details": {
