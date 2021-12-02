@@ -1,12 +1,25 @@
 export const identityOptics = <State>(description?: string): Iso<State, State> => new Iso(x => x, x => x, description ? description : "I");
 
+export interface GetOptioner<Main, Child> {
+    getOption: (m: Main) => Child | undefined
+}
+export interface SetOptioner<Main, Child> {
+    setOption: (m: Main, c: Child) => Main | undefined
+}
+export interface Getter<Main, Child> {
+    get: (m: Main) => Child
+}
+export interface Setter<Main, Child> {
+    set: (m: Main, c: Child) => Main
+}
+
 /** An Optional is like a lens, except that it is not guaranteed to 'work'. Specifically if you ask for a child... maybe that child isn't there.
  *
  * This is great for things like 'optional values' which are often written as 'name?: type' in typescript.
  *
  * It is rare that you create one directly. Usually it is created using 'focusQuery' on a lens
  */
-export class Optional<Main, Child> {
+export class Optional<Main, Child> implements GetOptioner<Main, Child>, SetOptioner<Main, Child> {
     getOption: (m: Main) => Child | undefined
     setOption: (m: Main, c: Child) => Main | undefined
     description: string
@@ -121,7 +134,7 @@ export function lens<Main, Child>(get: (main: Main) => Child, set: (main: Main, 
 }
 
 /** This is the class that represents a Lens<Main,Child> which focuses on Child which is a part of the Main */
-export class Lens<Main, Child> extends Optional<Main, Child> {
+export class Lens<Main, Child> extends Optional<Main, Child> implements Getter<Main, Child>, Setter<Main, Child> {
     set: (m: Main, c: Child) => Main
     get: (m: Main) => Child
 
@@ -248,6 +261,8 @@ export class Lenses {
                 return result
             }, `[${n}]`)
     }
+
+    static constant = <Main, Child>(value: Child, description?: string): Lens<Main, Child> => lens(m => value, (m, c) => m, description);
 
     static safeList<T>(): Lens<T[] | undefined, T[]> {
         return lens<T[] | undefined, T[]>(
