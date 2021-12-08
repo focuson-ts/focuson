@@ -77,6 +77,7 @@ export class LensState<Main, T> {
         this.dangerouslySetMain(this.optional.set(this.main, json))
     }
 
+
     /** 'Modify' the stored json. If the json is undefined, then 'nothing happen' (just like a map)` */
     transform(fn: (json: T) => T) {
         const j = this.optional.getOption(this.main)
@@ -87,7 +88,7 @@ export class LensState<Main, T> {
         return new LensState2(this.main, this.optional, lens2, this.dangerouslySetMain)
     }
 
-    doubleUp(): LensState2<Main,T,T>{
+    doubleUp(): LensState2<Main, T, T> {
         return this.addSecond(this.optional)
     }
 

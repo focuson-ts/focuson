@@ -33,6 +33,10 @@ export class Optional<Main, Child> implements GetOptioner<Main, Child>, SetOptio
     set = (m: Main, c: Child): Main => useOrDefault(m)(this.setOption(m, c));
     map = (m: Main, fn: (c: Child) => Child): Main => applyOrDefault(this.getOption(m), c => this.set(m, fn(c)), m)
 
+    /** This is identical to this.setOption(m, undefined) */
+    clearJson(m: Main, msgIfCannot?: string) {
+        return this.setOption(m, undefined)
+    }
 
     /** Allows us to change the focuson-ed child based on it's existing value
      * @fn a function that will be given the old value and will calculate the new
@@ -200,6 +204,7 @@ export class Lens<Main, Child> extends Optional<Main, Child> implements Getter<M
     withDescription(description: string) {
         return new Lens(this.get, this.set, description)
     }
+
 
     toString() {
         return "Lens(" + this.description + ")"

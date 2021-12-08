@@ -1,6 +1,7 @@
 //Copyright (c)2020-2021 Philip Rice. <br />Permission is hereby granted, free of charge, to any person obtaining a copyof this software and associated documentation files (the Software), to dealin the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  <br />The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED AS
 import {identityOptics, Lens, Lenses, transformTwoValues} from "@focuson/lens";
 import {a1b2ca3, dragon, Dragon, dragon2, letnstoca, list123, Stomach} from "./LensFixture";
+import {areAllDefined, arraysEqual} from "../../fetcher";
 
 
 describe("Lens", () => {
@@ -91,10 +92,37 @@ describe("Lens", () => {
         let tx = transformTwoValues(lens1, lens2)(add("+"), add("-"))
 
         it("should transform when both can be set", () => {
-            expect(tx({item1: "one", selected: {item2: "two2"}})).toEqual( {"item1": "one+two2", "selected": {"item2": "one-two2"}})
+            expect(tx({item1: "one", selected: {item2: "two2"}})).toEqual({"item1": "one+two2", "selected": {"item2": "one-two2"}})
         })
 
     })
+})
+
+describe("lens utils", () => {
+    it("should have a arrays equal that returns true if the two parameters are both defined and equal", () => {
+        expect(arraysEqual(undefined, undefined)).toEqual(false)
+        expect(arraysEqual([], undefined)).toEqual(false)
+        expect(arraysEqual(["a"], undefined)).toEqual(false)
+        expect(arraysEqual(undefined, undefined)).toEqual(false)
+        expect(arraysEqual(undefined, [])).toEqual(false)
+        expect(arraysEqual(undefined, ["a"])).toEqual(false)
+        expect(arraysEqual([], ["a"])).toEqual(false)
+        expect(arraysEqual(["b"], ["a"])).toEqual(false)
+        expect(arraysEqual(["b"], [])).toEqual(false)
+        expect(arraysEqual([], [])).toEqual(true)
+        expect(arraysEqual(["a"], ["a"])).toEqual(true)
+        expect(arraysEqual(["a", "b"], ["a", "b"])).toEqual(true)
+    })
+
+    it("should have a areAllDefined that returns true only if the array and its contents are all defined", () => {
+            expect(areAllDefined(undefined)).toEqual(false)
+            expect(areAllDefined([undefined])).toEqual(false)
+            expect(areAllDefined([undefined, "a"])).toEqual(false)
+            expect(areAllDefined(["b", undefined, "a"])).toEqual(false)
+            expect(areAllDefined(["b",  "a"])).toEqual(true)
+        }
+    )
+
 })
 
 interface TestItem2 {
