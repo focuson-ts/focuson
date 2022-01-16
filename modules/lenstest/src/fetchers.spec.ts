@@ -1,6 +1,5 @@
-import {applyFetcher, fetchAndMutate, Fetcher, fetcher, fetcherWhenUndefined, fromTaggedFetcher, Holder, holderIso, lensFetcher, loadDirectly, LoadFn, loadInfo, loadSelectedFetcher, markerFetcher, radioButtonFetcher, ReqFn, TaggedFetcher, Tags} from "@focuson/fetcher";
+import {applyFetcher,ifErrorFetcher, not200MeansError, fetchAndMutate, Fetcher, fetcher, fetcherWhenUndefined, fromTaggedFetcher, Holder, holderIso, lensFetcher, loadDirectly, LoadFn, loadInfo, loadSelectedFetcher, markerFetcher, radioButtonFetcher, ReqFn, TaggedFetcher, Tags} from "@focuson/fetcher";
 import {dirtyPrism, identityOptics} from "@focuson/lens";
-import {ifErrorFetcher, not200MeansError} from "@focuson/fetcher/dist/src/errorhandling";
 
 
 const shouldLoadTrue = <T extends any>(t: T): boolean => true;

@@ -24,10 +24,10 @@ export class Optional<Main, Child> implements GetOptioner<Main, Child>, SetOptio
     setOption: (m: Main, c: Child) => Main | undefined
     description: string
 
-    constructor(getOption: (m: Main) => (Child | undefined), optionalSet: (m: Main, c: Child) => Main | undefined, description: string) {
+    constructor(getOption: (m: Main) => (Child | undefined), optionalSet: (m: Main, c: Child) => Main | undefined, description?: string) {
         this.getOption = getOption;
         this.setOption = optionalSet;
-        this.description = description
+        this.description = description?description:""
     }
 
     set = (m: Main, c: Child): Main => useOrDefault(m)(this.setOption(m, c));
@@ -35,6 +35,7 @@ export class Optional<Main, Child> implements GetOptioner<Main, Child>, SetOptio
 
     /** This is identical to this.setOption(m, undefined) */
     clearJson(m: Main, msgIfCannot?: string) {
+        // @ts-ignore
         return this.setOption(m, undefined)
     }
 
@@ -105,7 +106,7 @@ export function optional<Main, Child>(getOption: (m: Main) => Child | undefined,
 export function orUndefined<T>(description?: string): Optional<T | undefined, T> {
     const getOption = (t: T | undefined) => t
     const setOption = (t: T | undefined, child: T | undefined) => child
-    return optional(getOption, setOption, description)
+    return optional<T|undefined,T>(getOption, setOption, description)
 }
 
 export function castIfOptional<T, T1>(cond: (t: T) => boolean, description?: string): Optional<T, T1> {
