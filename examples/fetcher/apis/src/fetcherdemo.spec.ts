@@ -193,10 +193,10 @@ describe("fetchTree", () => {
         expect(descriptionOf(demoTree)).toEqual([
             "FetcherTree(",
             "  loadSiteMapF.withMutate",
-            "   Optional(undefined)",
+            "   Optional()",
             "      FetcherTree(",
             "        LoadThingF",
-            "   Optional(undefined)",
+            "   Optional()",
             "      FetcherTree(",
             "        loadApiF",
             "         Iso(I)",

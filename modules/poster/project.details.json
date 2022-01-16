@@ -5,7 +5,7 @@
   "details":     {
     "ideify":       true,
     "publish":      true,
-    "links":        ["@focuson/lens"],
+    "links":        ["@focuson/lens", "@focuson/fetcher"],
     "extraDeps":    {},
     "extraDevDeps": {}
   },
