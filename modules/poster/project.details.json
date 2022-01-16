@@ -1,0 +1,13 @@
+{
+  "template":    "noreact",
+  "name":        "@focuson/poster",
+  "description": "This allows for declarative 'posting' ",
+  "details":     {
+    "ideify":       true,
+    "publish":      true,
+    "links":        ["@focuson/lens"],
+    "extraDeps":    {},
+    "extraDevDeps": {}
+  },
+  "test":        true
+}
