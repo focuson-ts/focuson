@@ -1,4 +1,4 @@
-import { post, PostCommand, PostDebug, Posters } from "@focuson/poster";
+import { post, PostCommand, PostDebug, Posters, PostDetails } from "@focuson/poster";
 import { Lenses, Optional } from "@focuson/lens";
 
 
@@ -20,11 +20,17 @@ function urlFn(expected: any): (args: any) => [RequestInfo, RequestInit | undefi
     }
 
 }
+
+const onePostDetails: PostDetails<TestPostState, String, String> = { urlFn: urlFn("args1"), targetLn: identityL.focusQuery('one') }
+const twoPostDetails: PostDetails<TestPostState, String, String> = { urlFn: urlFn("args2"), targetLn: identityL.focusQuery('two') }
+const threePostDetails: PostDetails<TestPostState, String, String> = { urlFn: urlFn("args3"), targetLn: identityL.focusQuery('three') }
+const fourPostDetails: PostDetails<TestPostState, String, String> = { urlFn: urlFn("args4"), targetLn: identityL.focusQuery('four') }
+
 const postDetails: Posters<TestPostState> = {
-    one: { urlFn: urlFn("args1"), targetLn: identityL.focusQuery('one') },
-    two: { urlFn: urlFn("args2"), targetLn: identityL.focusQuery('two') },
-    three: { urlFn: urlFn("args3"), targetLn: identityL.focusQuery('three') },
-    four: { urlFn: urlFn("args4"), targetLn: identityL.focusQuery('four') },
+    one: onePostDetails,
+    two: twoPostDetails,
+    three: threePostDetails,
+    four: fourPostDetails
 }
 
 function testFetchFn(requestInfo: RequestInfo, requestInit: RequestInit | undefined): Promise<[number, any]> {
@@ -48,7 +54,7 @@ let stateIdentityL = Lenses.identity<TestPostState>('TestPostState');
 const postDebugL: Optional<TestPostState, PostDebug> = stateIdentityL.focusQuery('debug')
 const errorL: Optional<TestPostState, string[]> = stateIdentityL.focusQuery('errors')
 
-const poster = post<TestPostState, typeof postDetails>(testFetchFn, postDetails, postCommandsL, () => fail(), postDebugL)
+const poster = post<TestPostState, Posters<TestPostState>>(testFetchFn, postDetails, postCommandsL, () => fail(), postDebugL)
 const errorPoster = post<TestPostState, typeof postDetails>(testNon200FetchFn, postDetails, postCommandsL,
     (s: TestPostState, detail: string, args: any, status: number | undefined, resp: any) =>
         errorL.map(s, oldErrors => [...oldErrors, `${detail},${args} => ${status} + ${resp}`])
@@ -74,7 +80,7 @@ describe("post", () => {
 
     it("should aggreagate successful posts and non200 results, removing existing postcommands", async () => {
         expect(await errorPoster({ ...emptyState, postCommands: fourPostCommands })).toEqual(
-            { ...emptyState, errors: ["two,args2 => 400 + twoRes", "three,args3 => 500 + threeRes","four,args4 => undefined + failed"], "postCommands": [], "one": "oneRes" }
+            { ...emptyState, errors: ["two,args2 => 400 + twoRes", "three,args3 => 500 + threeRes", "four,args4 => undefined + failed"], "postCommands": [], "one": "oneRes" }
         )
     })
 

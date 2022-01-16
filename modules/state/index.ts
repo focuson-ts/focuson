@@ -256,7 +256,7 @@ export class LensState3<Main, T1, T2, T3> {
         return getOr(this.lens1, this.main, errorMessageIfNotThere)
     }
 
-    optJson1(): T1 {
+    optJson1(): T1 | undefined {
         return this.lens1.getOption(this.main)
     }
 
@@ -276,7 +276,7 @@ export class LensState3<Main, T1, T2, T3> {
         return getOr(this.lens2, this.main, errorMessageIfNotThere)
     }
 
-    optJson2(): T2 {
+    optJson2(): T2 | undefined {
         return this.lens2.getOption(this.main)
     }
 
@@ -296,7 +296,7 @@ export class LensState3<Main, T1, T2, T3> {
         return getOr(this.lens3, this.main, errorMessageIfNotThere)
     }
 
-    optJson3(): T3 {
+    optJson3(): T3 | undefined {
         return this.lens3.getOption(this.main)
     }
 
