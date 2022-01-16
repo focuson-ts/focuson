@@ -11,6 +11,5 @@
     ],
     "extraDeps": {},
     "extraDevDeps": {}
-  },
-  "test": false
+  }
 }

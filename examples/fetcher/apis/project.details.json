@@ -6,6 +6,6 @@
     "links": ["@focuson/lens"],
     "extraDeps"   : {},
     "extraDevDeps": {},
-    "test": true
+    "test": false
   }
 }
