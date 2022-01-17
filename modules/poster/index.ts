@@ -2,16 +2,15 @@ import { Optional } from "@focuson/lens";
 import { FetchFn } from "@focuson/fetcher";
 
 
-
 export interface PostDebug {
     postDebug?: boolean
 }
 
 export interface PostDetails<State, Args, Returned, Result> {
     urlFn: (args: Args) => [RequestInfo, RequestInit | undefined],
-    targetLn: Optional<State, Result>,
+    targetLn?: Optional<State, Result>, // if undefined then the result is not added anywhere
     errorFn: ErrorFn<State>,
-    shape: (r: Returned) => Result
+    shape?: (r: Returned) => Result // if undefined then them `Returned`== `Result` and the result is directly used
 }
 
 export interface Posters<State> {
@@ -46,15 +45,16 @@ export const post = <State, Details extends Posters<State>>(
     const statusAndBody = Promise.all(postCommands.map(({ poster, args }) => {
         const { urlFn, targetLn, shape }: PostDetails<State, any, any, any> = postDebug(`poster details for ${poster} with args ${JSON.stringify(args)}`, d[poster])
         const [reqInfo, reqInit] = postDebug("url details for", urlFn(args))
+        const actualShape = shape ? shape : x => x
         return fetchFn(reqInfo, reqInit).then(
-            ([status, body]) => postDebug(`results for ${poster}`, [targetLn, poster, args, status, body, shape(body)]),
+            ([status, body]) => postDebug(`results for ${poster}`, [targetLn, poster, args, status, body, actualShape(body)]),
             error => postDebug(`errorExecuting ${poster}`, [targetLn, poster, args, undefined, error, undefined]),
         )
     }))
     return statusAndBody.then(list => postL.set(list.reduce(
         (acc, [targetLn, poster, args, status, body, result]) => {
             if (status && status / 100 == 2)
-                return targetLn.set(acc, result);
+                return targetLn ? targetLn.set(acc, result) : acc;
             else return d[poster].errorFn(acc, poster, args, status, body)
         }, s), []
     ))

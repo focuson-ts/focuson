@@ -58,12 +58,13 @@ export interface Posters<State> {
 export interface PostDetails<State, Args, Returned,Result> {
     urlFn: (args: Args) => [RequestInfo, RequestInit | undefined],
     shaper: (r: Returned) => Result,
-    targetLn: Optional<State, Result> 
-  
+  errorFn: ErrorFn<State>,
+    targetLn: Optional<State, Result>
 }
 ```
 * `urlFn` the arguments come from PostCommand (i.e. typically the react component that triggers this)
 * `shaper` turns the `Returned` value from the api into `Result`. This is needed because quite often the values returned from the API need to be turned into a message or reshaped
+* `errorFn` what to do if there is an error (either a failed promise, or a non 200 status code)
 * `targetLn` Where to put the returned result
 
 Example
@@ -76,12 +77,15 @@ interface UpdateAccountResult{
     //This is the type that is returned from the api. It might be empty, or it might has a message like 'succeeded'
 }
 //This is the actual configuration of the poster for updateAccountDetails
-const updateAccountDetails: <MainState>(targetLens: Optional<MainState, UpdateAccountResult>) PostDetails<MainState, String, UpdateAccountDetails> = {
-    urlFn: (accountId: string) => [`/someapi/updateAccount/${accountId}`, { method: 'post' }],
-    targetLens
-}
-
+const updateAccountDetails = <MainState>(targetLens: Optional<MainState, UpdateAccountResult>): PostDetails<MainState, String, UpdateAccountDetails, UpdateAccountDetails> => ({
+  urlFn: (accountId: string) => [`/someapi/updateAccount/${accountId}`, { method: 'post' }],
+  errorFn: addDebugErrorMessage(errorLens),
+  shape: s => s,
+  targetLens
+})
 ```
+In this example the data from the API was directly inserted into the state because of `shape: s => s`. Other options include setting a string such as 'succeeded'
+
 
 # Posters
 
