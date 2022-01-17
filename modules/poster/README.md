@@ -20,7 +20,7 @@ The post command has the signature
 ```typescript
 interface PostCommand<State, Details extends Posters<State>, K extends keyof Details> {
     poster: K,
-    args: any  // really want to tie this args... don't know how
+    args: any  
 }
 ```
 
@@ -30,11 +30,15 @@ PostDetails (see below).
 An example that represents a single call to 'updateAccountDetails' could be
 
 ```json lines
-{postCommands: [{poster: "updateAccountDetails", args: {id: 12335, accounDetails: {some: "accountDetails"}}}]}
+{postCommands: [{poster: "updateAccountDetails", args: {id: 12335, accountDetails: {some: "accountDetails"}}}]}
 ```
 
 Note how easy it is now to test the react components. The 'event' that would normally do the side effect, instead just
 updates the state. This is very easy to test without complex mocks, containers or an acceptance environment
+
+From a mental concept point of view this is very similar to 'dispatching' in redux. The only difference is that instead of
+'calling dispatch' (which causes an immediate side effect) this simply writes to the state the parameters that would be sent 
+to the dipatcher. 
 
 # Life cycle
 
@@ -45,7 +49,7 @@ updates the state. This is very easy to test without complex mocks, containers o
   * If the status is a 2xx, 
     * the body is 'shaped' (i.e. turned into a format suitable to go into the state)
     * and added at the location defined by the targetLens (typically this will result in a message, but could hold concrete data that is needed)
-  * If the status isn't 3xx
+  * If the status isn't 2xx
     * The errorFn is called and added to the status (typically this will result in an error message)
 
 
@@ -99,13 +103,17 @@ const allPosters : Posters<MainState> = {
 ```
 At this point `updateAccountDetails` (the key) can be used in a post command with some arguments
 
-
-# Using this
+# Using the Poster
 
 Given a state `MainState` with postCommands in it somewhere (`postCommand` points to them) the following updates the state with the results of the post commands
 
 ```typescript
-const poster = post<MainState, Posters<MainState>>(fetchFn, postDetails, postCommandsL, () => fail(), postDebugL)
+const poster = post<MainState, Posters<MainState>>(fetchFn, postDetails, postCommandsL, postDebugL)
 ```
+* `fetchFn` delegates to `fetch`
+* `postDetails` is the structure shown above that links the names of post commands to the details of how to implement them
+* `postCommandsL` is a lens from the `MainState` to the list of post commands
+* `postDebugL` is an optional lens from the `MainState` to a place where the postDebug data structure can be find. This turns on and off console.log messages about the posting
+
 
 
