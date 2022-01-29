@@ -410,3 +410,6 @@ function copyWithFieldSet<T, K extends keyof T>(t: T, k: K, v: T[K]) {
     result[k] = v
     return result
 }
+export function safeArray <T> (ts:T[] | undefined ){
+    return ts ? ts : []
+}

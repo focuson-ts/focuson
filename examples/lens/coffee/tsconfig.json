@@ -8,6 +8,7 @@
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": true,
+    "jsx": "react-jsx",
     "lib": [
       "es2019","dom"
     ]
