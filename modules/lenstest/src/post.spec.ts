@@ -77,14 +77,14 @@ describe('addDebugErrorMessage', () => {
 
 });
 describe("post", () => {
-    // it("should return a promise of the input state if no post commands", async () => {
-    //     expect(await poster(emptyState)).toEqual(emptyState)
-    // })
-    // it("should aggreagate successful posts, removing existing postcommands ", async () => {
-    //     expect(await poster({ ...emptyState, postCommands: fourPostCommands })).toEqual(
-    //         { ...emptyState, "postCommands": [], "one": "oneRes_1", "two": "twoRes_2", "three": "threeRes_3", "four": "fourRes_4" }
-    //     )
-    // })
+    it("should return a promise of the input state if no post commands", async () => {
+        expect(await poster(emptyState)).toEqual(emptyState)
+    })
+    it("should aggreagate successful posts, removing existing postcommands ", async () => {
+        expect(await poster({ ...emptyState, postCommands: fourPostCommands })).toEqual(
+            { ...emptyState, "postCommands": [], "one": "oneRes_1", "two": "twoRes_2", "three": "threeRes_3", "four": "fourRes_4" }
+        )
+    })
 
     it("should aggreagate successful posts and non200 results, removing existing postcommands", async () => {
         expect(await errorPoster({ ...emptyState, postCommands: fourPostCommands })).toEqual(

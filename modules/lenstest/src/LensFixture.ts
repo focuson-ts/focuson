@@ -10,7 +10,7 @@ export let dragon: Dragon = {body: {chest: {stomach: {contents: ["the adventurer
 export let dragon2: Dragon = {body: {chest: {stomach: {contents: ["the adventurer", "moreGoodness"]}}}}
 export interface Dragon {body: Body}
 export interface Body {chest: Chest}
-export interface Chest {stomach: Stomach}
+export interface Chest {stomach: Stomach, heart?: string}
 export interface Stomach {contents: any []}
 
 export class DragonDomain{
