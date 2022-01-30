@@ -27,5 +27,8 @@
     "src/**/*.tsx",
     "index.ts",
     "index.tsx"
+  ],
+  "exclude": [
+    "dist"
   ]
 }

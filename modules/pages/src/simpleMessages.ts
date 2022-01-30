@@ -1,4 +1,4 @@
-import { identityOptics, Optional } from "@focuson/lens";
+import { Optional } from "@focuson/lens";
 import { LensState } from "@focuson/state";
 
 export interface HasSimpleMessages {

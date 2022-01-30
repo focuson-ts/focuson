@@ -26,7 +26,6 @@ export interface OnePageDetails<S, D, Msgs, MD extends ModalPagesDetails<S>, Con
  * Usually this will be put in a context at the top of the react render chain, and be available to pages underneath.
  * */
 export interface PageConfig<S, D, Msgs, MD extends ModalPagesDetails<S>> {
-
   /** the messages might be anywhere... in the state, in the domain. Each page specifies where the data is*/
   messageLens?: ( s: LensState<S, S>, domainLens: Optional<S, D> ) => LensState<S, Msgs>,
   /** Not all messags are equal. This knows how to display the messages */

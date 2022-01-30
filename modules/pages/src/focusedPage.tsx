@@ -11,7 +11,10 @@ export interface FocusedPage<S extends any, D extends any> {
 }
 
 /** Given a config, a focused page data structure and a lens state (focused on anything...doesn't matter) this will display the main page (and perhaps a modal page on top) */
-export function displayMain<S extends any, D extends any, Msgs, MD extends ModalPagesDetails<S>> ( config: PageConfig<S, D, Msgs, MD>, { title, display }: FocusedPage<S, D>, s: LensState<S, any> ): JSX.Element {
+export function displayMain<S extends any, D extends any, Msgs, MD extends ModalPagesDetails<S>> (
+  config: PageConfig<S, D, Msgs, MD>,
+  { title, display }: FocusedPage<S, D>,
+  s: LensState<S, any> ): JSX.Element {
   const t = title ( s )
   const main = display ( s )
   return addModalPageIfNeeded ( config.modalPageDetails, s, main )

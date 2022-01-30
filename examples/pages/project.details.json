@@ -1,9 +1,9 @@
 {
-  "template"      : "noreact",
+  "template"      : "react",
   "name"          : "@focuson/example_pages",
   "description"   : "A fully featured example project",
   "details": {
-    "links": ["@focuson/pages"],
+    "links": ["@focuson/pages", "@focuson/lens", "@focuson/state"],
     "extraDeps"   : {},
     "extraDevDeps": {},
     "test": false

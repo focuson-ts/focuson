@@ -6,3 +6,4 @@ export * from './src/pageConfig'
 export * from './src/pageSelection'
 export * from './src/simpleMessages';
 export * from './src/preMutate';
+export * from './src/selectedPage';
