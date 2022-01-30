@@ -15,9 +15,11 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "typescript": "^4.1.5",
-    "@focuson/pages": "0.3.57"
+    "@focuson/lens": "0.3.57",
+    "@focuson/state": "0.3.57",
+    "@focuson/fetcher": "0.3.57"
   },
-  "description": "Tests the lens defined in @focuson/lens, the state defined in @focuson/state, and the fetchers in @focuson/fetcher",
+  "description": "Used when we want a simple many page application",
   "devDependencies": {
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
@@ -59,15 +61,16 @@
   },
   "version": "0.3.57",
   "template": "react",
-  "name": "@focuson/lenstest",
+  "name": "@focuson/pages",
   "details": {
     "ideify": true,
     "publish": true,
     "links": [
-      "@focuson/pages"
+      "@focuson/lens",
+      "@focuson/state",
+      "@focuson/fetcher"
     ],
     "extraDeps": {},
-    "extraDevDeps": {},
-    "test": true
+    "extraDevDeps": {}
   }
 }

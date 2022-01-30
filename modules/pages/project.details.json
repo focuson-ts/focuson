@@ -1,0 +1,16 @@
+{
+  "template": "react",
+  "name": "@focuson/pages",
+  "description": "Used when we want a simple many page application",
+  "details": {
+    "ideify": true,
+    "publish": true,
+    "links": [
+      "@focuson/lens",
+      "@focuson/state",
+      "@focuson/fetcher"
+    ],
+    "extraDeps": {},
+    "extraDevDeps": {}
+  }
+}

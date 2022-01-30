@@ -31,7 +31,7 @@
     },
     "tsc":        {
       "description": "runs tsc",
-      "commands":    [{"name": "tsc", "command": "${packageManager} tsc --noEmit false --outDir dist", "status": true}]
+      "commands":    [{"name": "tsc", "command": "tsc --noEmit false --outDir dist", "status": true}]
     },
     "test":       {
       "description": "runs ${packageManager} test",
@@ -94,7 +94,7 @@
       "description":  "does everything for a publish except the actual 'npm publish'",
       "guard":        "${projectDetails.details.publish}",
       "commands":     [
-        {"name": "tsc", "command": "${packageManager} tsc --noEmit false --outDir dist", "status": true},
+        {"name": "tsc", "command": "tsc --noEmit false --outDir dist", "status": true},
         {"name": "pack", "command": "${packageManager} pack", "status": true}
       ],
       "inLinksOrder": true
@@ -103,7 +103,7 @@
       "description":  "publishes the projects to npmjs",
       "guard":        "${projectDetails.details.publish}",
       "commands":     [
-        {"name": "tsc", "command": "${packageManager} tsc --noEmit false --outDir dist", "status": true},
+        {"name": "tsc", "command": "tsc --noEmit false --outDir dist", "status": true},
         {"name": "publish", "command": "${packageManager} publish --access public", "status": true}
       ],
       "inLinksOrder": true
@@ -112,7 +112,7 @@
       "description":  "publishes the projects to npmjs as a public repo",
       "guard":        "${projectDetails.details.publish}",
       "commands":     [
-        {"name": "tsc", "command": "${packageManager} tsc --noEmit false --outDir dist", "status": true},
+        {"name": "tsc", "command": "tsc --noEmit false --outDir dist", "status": true},
         {"name": "publish", "command": "${packageManager} publish --access public", "status": true}
       ],
       "inLinksOrder": true

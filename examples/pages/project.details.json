@@ -1,0 +1,11 @@
+{
+  "template"      : "noreact",
+  "name"          : "@focuson/example_pages",
+  "description"   : "A fully featured example project",
+  "details": {
+    "links": ["@focuson/pages"],
+    "extraDeps"   : {},
+    "extraDevDeps": {},
+    "test": false
+  }
+}
