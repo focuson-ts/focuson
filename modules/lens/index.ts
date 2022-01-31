@@ -1,3 +1,5 @@
+import { apply, applyOrDefault, checkIsFunction, copyWithFieldSet, useOrDefault } from "@focuson/utils";
+
 export const identityOptics = <State> ( description?: string ): Iso<State, State> => new Iso ( x => x, x => x, description ? description : "I" );
 
 export interface GetOptioner<Main, Child> {
@@ -390,29 +392,10 @@ export function nthItem<T> ( n: number ): Optional<T[], T> {
     }, "nth(" + n + ")"
   )
 }
-
 export function firstIn2<T1, T2> (): Optional<[ T1, T2 ], T1> {
   return new Optional ( arr => arr[ 0 ], ( arr, t1 ) => [ t1, arr[ 1 ] ], "firstIn2" )
 }
 
 export function secondIn2<T1, T2> (): Optional<[ T1, T2 ], T2> {
   return new Optional ( arr => arr[ 1 ], ( arr, t2 ) => [ arr[ 0 ], t2 ], "secondIn2" )
-}
-
-
-function checkIsFunction ( functionToCheck: any ) {
-  if ( !(typeof functionToCheck === "function") ) throw Error ( 'getter should be a function, instead is ' + JSON.stringify ( functionToCheck ) )
-}
-
-const apply = <T, T1> ( t: T | undefined, fn: ( t: T ) => T1 ): T1 | undefined => t ? fn ( t ) : undefined;
-const applyOrDefault = <T, T1> ( t: T | undefined, fn: ( t: T ) => T1, def: T1 ): T1 => t ? fn ( t ) : def;
-const useOrDefault = <T> ( def: T ) => ( t: T | undefined ): T => t ? t : def;
-
-function copyWithFieldSet<T, K extends keyof T> ( t: T, k: K, v: T[K] ) {
-  let result = { ...t }
-  result[ k ] = v
-  return result
-}
-export function safeArray<T> ( ts: T[] | undefined ) {
-  return ts ? ts : []
 }

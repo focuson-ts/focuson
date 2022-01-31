@@ -1,8 +1,11 @@
-import {FetchFn} from "./fetchers";
-import {FetcherTree, loadTree, WouldLoad, wouldLoad} from "./fetcherTree";
-import {LensState, lensState} from "@focuson/state";
-import {Optional} from "@focuson/lens";
+import { FetcherTree, loadTree, WouldLoad, wouldLoad } from "./fetcherTree";
+import { LensState, lensState } from "@focuson/state";
+import { Optional } from "@focuson/lens";
+import { FetchFn } from "@focuson/utils";
 
+export interface  HasFetcherDebug{
+    debug?: FetcherDebug
+}
 export interface FetcherDebug {
     fetcherDebug?: boolean,
     loadTreeDebug?: boolean,
@@ -38,7 +41,7 @@ export function setJsonForFetchers<State, Element>(fetchFn: FetchFn,
             newStateFn(finalState)
             return finalState
         } catch (e) {
-            console.error("An unexpected error occured. Rolling back the state",e)
+            console.error("An unexpected error occurred. Rolling back the state",e)
             let newMain = onError(os, e);
             newStateFn(newMain)
             return newMain

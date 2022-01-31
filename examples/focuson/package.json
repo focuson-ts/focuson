@@ -15,9 +15,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "typescript": "^4.1.5",
-    "@focuson/pages": "0.3.59",
-    "@focuson/lens": "0.3.59",
-    "@focuson/state": "0.3.59"
+    "@focuson/focuson": "0.3.61"
   },
   "description": "A fully featured example project",
   "devDependencies": {
@@ -59,14 +57,12 @@
     "test:watch": "npm run test -- --watch",
     "storybook": "start-storybook -p 6006 -s public"
   },
-  "version": "0.3.59",
+  "version": "0.3.61",
   "template": "react",
-  "name": "@focuson/example_pages",
+  "name": "@focuson/example_focuson",
   "details": {
     "links": [
-      "@focuson/pages",
-      "@focuson/lens",
-      "@focuson/state"
+      "@focuson/focuson"
     ],
     "extraDeps": {},
     "extraDevDeps": {},

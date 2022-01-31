@@ -1,6 +1,7 @@
 import { LensProps } from "@focuson/state";
-import { Optional, safeArray } from "@focuson/lens";
+import { Optional } from "@focuson/lens";
 import { PostCommand } from "./posters";
+import { safeArray } from "@focuson/utils";
 
 
 type PostCommandLens<S> = Optional<S, PostCommand<S, any, any> []>

@@ -1,5 +1,5 @@
 import { focusedPageWithExtraState } from "@focuson/pages";
-import { safeArray } from "@focuson/lens";
+import { safeArray } from "@focuson/utils";
 import { LensProps } from "@focuson/state";
 
 export interface HasSearch {

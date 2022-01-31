@@ -1,6 +1,5 @@
 import { Lenses, Optional } from "@focuson/lens";
-import { FetchFn } from "@focuson/fetcher";
-
+import { FetchFn } from "@focuson/utils";
 
 export interface PostDebug {
     postDebug?: boolean

@@ -1,6 +1,7 @@
-import {DirtyPrism, firstIn2, iso, Iso, Optional} from "@focuson/lens";
+import {DirtyPrism,  iso, Iso, Optional} from "@focuson/lens";
 import {Fetcher, loadDirectly, loadInfo, MutateFn, ReqFn} from "./fetchers";
 import {not200MeansError, partialFnUsageError} from "./errorhandling";
+import { firstIn2 } from "@focuson/lens";
 
 export type Tags = (string | undefined)[]
 

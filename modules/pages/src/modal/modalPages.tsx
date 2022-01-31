@@ -50,7 +50,7 @@ export function allModelPageDetails<S extends HasSelectedModalPage, ModalDetails
   })
 }
 
-/** Given a config, a state and a main page, this will work out if a modal page is needed, and if so add it
+/** Given a config.ts, a state and a main page, this will work out if a modal page is needed, and if so add it
  * It returns either the main page, or the main page with modal on top of it*/
 export function addModalPageIfNeeded<S, MD extends ModalPagesDetails<S>> ( allModalPageDetails: AllModalPageDetails<S, MD> | undefined, state: LensState<S, any>, main: JSX.Element ) {
   if ( allModalPageDetails ) {

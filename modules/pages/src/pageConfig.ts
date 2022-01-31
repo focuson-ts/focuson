@@ -43,7 +43,7 @@ export interface PageConfig<S, D, Msgs, MD extends ModalPagesDetails<S>> {
   template?:(p: PageTemplateProps<S, D>) => JSX.Element
 }
 
-/** If the state is using simple messages, and HasSelectedModalPage, this provides a default page config that works in many situations
+/** If the state is using simple messages, and HasSelectedModalPage, this provides a default page config.ts that works in many situations
  * It doesn't have postCommand configuration in it, which is the most common 'add on' */
 export function simpleMessagesPageConfig<S extends HasSimpleMessages & HasSelectedModalPage, D, MD extends ModalPagesDetails<S>> (
   md: MD, loading: ( s: LensState<S, any> ) => JSX.Element ): PageConfig<S, D, SimpleMessages, MD> {

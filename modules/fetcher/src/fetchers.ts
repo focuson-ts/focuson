@@ -1,29 +1,11 @@
 /** Mixed into Fetcher when we want to have a component that normally displays the state (which might well be the most common case
  * An example would be 'go get profile' as a fetcher and then have a <Profile... > component that shows it.
  */
-import {DirtyPrism, firstIn2, Optional} from "@focuson/lens";
-import {FetcherDebug} from "./setjson";
-import {partialFnUsageError} from "./errorhandling";
+import { DirtyPrism, Optional } from "@focuson/lens";
+import { FetcherDebug } from "./setjson";
+import { partialFnUsageError } from "./errorhandling";
+import { FetchFn } from "@focuson/utils";
 
-/** This is a wrapper for the javascript fetch function. The input parameters are the same as for fetch. The output is the statuscode and a T, where T is the expected json type
- *
- * T is probably not meaningful if the status code is not a 2xx
- * */
-export interface FetchFn {
-    (re: RequestInfo, init?: RequestInit): Promise<[number, any]>
-}
-
-/** Normally we would use the defaultFetchFn or the loggingFetchFn */
-export const defaultFetchFn = <T>(re: RequestInfo, init?: RequestInit): Promise<[number, T]> => {
-    if (re === "") throw Error('calling defaultFetchFn with empty string as url')
-    return fetch(re, init).then(r => r.json().then(json => [r.status, json]));
-}
-
-/** Normally we would use the defaultFetchFn or the loggingFetchFn */
-export function loggingFetchFn<T>(re: RequestInfo, init?: RequestInit): Promise<[number, T]> {
-    console.log("fetching from", re, init)
-    return defaultFetchFn(re, init)
-}
 
 /** One of our design principles is that we separate 'what we do' from 'doing it'. This eases testing enormously.
  *
@@ -116,21 +98,20 @@ export const applyFetcher = <State, T>(fetcher: Fetcher<State, T>, s: State, fet
 }
 
 export function lensFetcher<State, Child, T>(lens: Optional<State, Child>, fetcher: Fetcher<Child, T>, description?: string): Fetcher<State, T> {
-    let result: Fetcher<State, T> = ({
-        shouldLoad: (ns) => {
-            if (!ns) return false
-            let nc = lens.getOption(ns);
-            return fetcher.shouldLoad(nc)
+    return ({
+        shouldLoad: ( ns ) => {
+            if ( !ns ) return false
+            let nc = lens.getOption ( ns );
+            return fetcher.shouldLoad ( nc )
         },
-        load(ns) {
-            const cs: Child | undefined = lens.getOption(ns)
-            const {requestInfo, requestInit, mutate, useThisInsteadOfLoad} = fetcher.load(cs)
-            const mutateFn: MutateFn<State, T> = s => (status, json) => lens.set(s, mutate(lens.getOption(s))(status, json))
-            return loadInfo(requestInfo, requestInit, mutateFn)
+        load ( ns ) {
+            const cs: Child | undefined = lens.getOption ( ns )
+            const { requestInfo, requestInit, mutate, useThisInsteadOfLoad } = fetcher.load ( cs )
+            const mutateFn: MutateFn<State, T> = s => ( status, json ) => lens.set ( s, mutate ( lens.getOption ( s ) ) ( status, json ) )
+            return loadInfo ( requestInfo, requestInit, mutateFn )
         },
         description: description ? description : "lensFetcher(" + lens + "," + fetcher.description + ")"
     })
-    return result
 }
 
 
@@ -169,16 +150,15 @@ export function fetcherWhenUndefined<State, Child>(optional: Optional<State, Chi
 }
 
 export function fetchAndMutate<State, T>(f: Fetcher<State, T>, fn: (s: State) => State, description?: string): Fetcher<State, T> {
-    let result: Fetcher<State, T> = {
+    return {
         shouldLoad: f.shouldLoad,
         load: s => {
-            const {requestInfo, requestInit, mutate, useThisInsteadOfLoad} = f.load(s)
-            const newMutate: MutateFn<State, T> = s => (status, json) => fn(mutate(s)(status, json))
-            return loadInfo(requestInfo, requestInit, newMutate, useThisInsteadOfLoad)
+            const { requestInfo, requestInit, mutate, useThisInsteadOfLoad } = f.load ( s )
+            const newMutate: MutateFn<State, T> = s => ( status, json ) => fn ( mutate ( s ) ( status, json ) )
+            return loadInfo ( requestInfo, requestInit, newMutate, useThisInsteadOfLoad )
         },
         description: description ? description : f.description + ".withMutate"
     }
-    return result
 }
 
 export function fetcherWithHolder<State, Holder, T>(target: Optional<State, Holder>, holder: DirtyPrism<Holder, T>, fetcher: Fetcher<T | undefined, T>, description?: string): Fetcher<State, T> {
