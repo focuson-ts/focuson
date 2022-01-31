@@ -1,13 +1,12 @@
+import { LensProps } from "@focuson/state";
+import { identityOptics } from "@focuson/lens";
 import { HasPageSelection } from "@focuson/pages/dist/src/pageSelection";
 import { HasSimpleMessages } from "@focuson/pages/dist/src/simpleMessages";
-import { HasSelectedModalPage, ModalPagesDetails } from "@focuson/pages/dist/src/modalPages";
-import { LensProps } from "@focuson/state";
-import { MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages/dist/src/pageConfig";
+import { HasSelectedModalPage, ModalPagesDetails, MultiPageDetails, SelectedPageDebug, simpleMessagesPageConfig } from "@focuson/pages";
 import { Loading } from "@focuson/pages/dist/src/loading";
-import { identityOptics } from "@focuson/lens";
 
 
-export interface PageSpecState extends HasPageSelection<ModalDetails>, HasSimpleMessages, HasSelectedModalPage {
+export interface PageSpecState extends HasPageSelection<ModalDetails>, HasSimpleMessages, HasSelectedModalPage ,SelectedPageDebug{
   someData?: string,
   modalData?: string
 }

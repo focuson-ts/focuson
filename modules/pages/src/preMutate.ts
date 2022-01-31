@@ -1,7 +1,7 @@
 //** This clears up the state if it is the first time something is called */
 import { PageSelection } from "./pageSelection";
 import { Lens } from "@focuson/lens";
-import { ModalPagesDetails } from "./modalPages";
+import { ModalPagesDetails } from "./modal/modalPages";
 import { MultiPageDetails } from "./pageConfig";
 
 /** if 'first time' is true for a page, this returns a new state mutated with the firstTime false, and the initial state for the domain adjusted if requested by the config

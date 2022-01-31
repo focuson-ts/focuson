@@ -1,8 +1,10 @@
 import { Optional } from "@focuson/lens";
 import { LensProps, LensState } from "@focuson/state";
-import { AllModalPageDetails, allModelPageDetails, HasSelectedModalPage, ModalPagesDetails } from "./modalPages";
+import { AllModalPageDetails, allModelPageDetails, HasSelectedModalPage, ModalPagesDetails } from "./modal/modalPages";
 import { HasSimpleMessages, SimpleMessages, simpleMessagesL } from "./simpleMessages";
 import { FocusedPage } from "./focusedPage";
+import React from "react";
+import { PageTemplateProps } from "./PageTemplate";
 
 export interface MultiPageDetails<S, MD extends ModalPagesDetails<S>> {
   [ name: string ]: OnePageDetails<S, any, any, MD, any>
@@ -34,6 +36,11 @@ export interface PageConfig<S, D, Msgs, MD extends ModalPagesDetails<S>> {
   modalPageDetails?: AllModalPageDetails<S, MD>
   /** a component to display 'loading'. If undefined then */
   loading?: ( ls: LensState<S, any> ) => JSX.Element
+  /** This template wraps the focused page. A template will hold things like navigation, branding, and 'the common stuff' around our page
+   * If the template isn't present then the element in the focused page is shown directly
+   *
+   * A common used for the template is to handle 'loading' */
+  template?:(p: PageTemplateProps<S, D>) => JSX.Element
 }
 
 /** If the state is using simple messages, and HasSelectedModalPage, this provides a default page config that works in many situations
@@ -47,3 +54,9 @@ export function simpleMessagesPageConfig<S extends HasSimpleMessages & HasSelect
   })
 
 }
+
+/** The default context. This gives access to page goodness.
+ * It is sadly not type safe (the problem with using contexts)
+ * It is the job of the application to make this available
+ */
+export const PagesContext = React.createContext<PageConfig<any, any, SimpleMessages, any>> ( {} )

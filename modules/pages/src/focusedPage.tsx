@@ -1,6 +1,8 @@
 import { LensState } from "@focuson/state";
 import { PageConfig } from "./pageConfig";
-import { addModalPageIfNeeded, ModalPagesDetails } from "./modalPages";
+import { addModalPageIfNeeded, ModalPagesDetails } from "./modal/modalPages";
+import { Loading } from "./loading";
+import { DefaultTemplate, PageTemplateProps } from "./PageTemplate";
 
 export interface FocusedPage<S extends any, D extends any> {
   /** This is used for debugging, for putting a header in place, and anything else it's felt a title might be good for */
@@ -13,11 +15,23 @@ export interface FocusedPage<S extends any, D extends any> {
 /** Given a config, a focused page data structure and a lens state (focused on anything...doesn't matter) this will display the main page (and perhaps a modal page on top) */
 export function displayMain<S extends any, D extends any, Msgs, MD extends ModalPagesDetails<S>> (
   config: PageConfig<S, D, Msgs, MD>,
-  { title, display }: FocusedPage<S, D>,
-  s: LensState<S, any> ): JSX.Element {
-  const t = title ( s )
-  const main = display ( s )
-  return addModalPageIfNeeded ( config.modalPageDetails, s, main )
+  focusedPage: FocusedPage<S, D>,
+  s: LensState<S, D> ): JSX.Element {
+  // @ts-ignore
+  const debug = s.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
+  let t = config.template
+  const template: ( p: PageTemplateProps<S, D> ) => JSX.Element = t ? t : DefaultTemplate
+  if ( debug ) console.log ( "displayMain.template 1", template )
+  const loading = config.loading ? config.loading : Loading
+  if ( debug ) console.log ( "displayMain.loading 2", loading )
+  const main = template ( { state: s, focusedPage, loading } )
+  if ( debug ) {
+    console.log ( "displayMain.main 3", main );
+    // console.log ( "displayMain.main-json 4", JSON.stringify ( main ) )
+  }
+  let result =  addModalPageIfNeeded ( config.modalPageDetails, s, main );
+  if ( debug ) console.log ( "SelectedPage.displayMain - exit", result )
+  return result
 }
 
 
@@ -28,7 +42,7 @@ export function displayMain<S extends any, D extends any, Msgs, MD extends Modal
 export const focusedPage = <S extends any, D extends any> ( title: ( d?: D ) => string ) =>
   ( pageFn: ( state: LensState<S, D>, d: D ) => JSX.Element ): FocusedPage<S, D> => ({
     title: s => title ( s.optJson () ),
-    displayLoading: s => !!s.optJson (),
+    displayLoading: s => !s.optJson (),
     display: s => pageFn ( s, s.json () )
   })
 
@@ -53,8 +67,13 @@ export const loadingPage = <S extends any, D extends any> ( title: ( d?: D ) => 
 export const focusedPageWithExtraState = <S extends any, Full extends any, D extends any> ( title: ( d?: Full ) => string ) =>
   ( lensFn: ( lens: LensState<S, Full> ) => LensState<S, D> ) => ( pageFn: ( state: LensState<S, Full>, f: Full, d: D ) => JSX.Element ): FocusedPage<S, Full> => ({
     title: s => title ( s.optJson () ),
-    displayLoading: s => !!lensFn ( s )?.optJson (),
-    display: s => pageFn ( s, s.json (), lensFn ( s )?.json () )
+    displayLoading: s => !s.optJson (),
+    display: s => {
+      console.log ( "focusedPageWithExtraState - enter", s )
+      const result = pageFn ( s, s.json (), lensFn ( s )?.json () )
+      console.log ( "focusedPageWithExtraState -exit", result )
+      return result
+    }
   })
 
 export const loadingPageWithExtraState = <S extends any, Full extends any, D extends any> ( title: ( d?: Full ) => string ) =>

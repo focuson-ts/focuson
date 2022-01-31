@@ -1,4 +1,4 @@
 
-export function Loading(){
-return (<Loading />)
+export function Loading () {
+  return (<p>Loading</p>)
 }

@@ -1,6 +1,7 @@
 import { identityOptics, Optional } from '@focuson/lens';
 import { LensProps, LensState } from '@focuson/state';
 
+
 export interface HasSelectedModalPage {
   currentSelectedModalPage?: string | undefined
 }

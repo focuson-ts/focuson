@@ -1,5 +1,5 @@
 import { focusedPageWithExtraState } from "@focuson/pages";
-import { identityOptics, Optional, safeArray } from "@focuson/lens";
+import { safeArray } from "@focuson/lens";
 import { LensProps } from "@focuson/state";
 
 export interface HasSearch {
@@ -20,5 +20,5 @@ export function SearchQueryModalPage<S> ( { state }: LensProps<S, string> ): JSX
 export function SearchPage<S> () {
   return focusedPageWithExtraState<S, SearchDomain, string[]> ( s => 'Search' ) ( s => s.focusOn ( 'queryResults' ) ) (
     ( state, { query }, queryResults ) =>
-      <ul><input type='text' defaultValue={query}/><br/>{safeArray ( queryResults ).map ( ( r, i ) => <li key={i}>{r}</li> )} </ul> )
+      (<ul><input type='text' defaultValue={query}/><br/>{safeArray ( queryResults ).map ( ( r, i ) => <li key={i}>{r}</li> )} </ul>) )
 }

@@ -1,5 +1,5 @@
 import { LensProps } from "@focuson/state";
-import { ModalPagesDetails } from "./modalPages";
+import { ModalPagesDetails } from "./modal/modalPages";
 import { MultiPageDetails, OnePageDetails } from "./pageConfig";
 
 import { PageSelection } from "./pageSelection";
@@ -8,7 +8,7 @@ import { displayMain } from "./focusedPage";
 import { debuglog } from "util";
 
 export interface SelectedPageDebug {
-  selectedPageDebug?: boolean
+  debug?: { selectedPageDebug?: boolean }
 }
 export interface SelectedPageProps<S, MD extends ModalPagesDetails<S>> extends LensProps<S, S> {
   pages: MultiPageDetails<S, MD>,
@@ -18,7 +18,7 @@ export interface SelectedPageProps<S, MD extends ModalPagesDetails<S>> extends L
 export function SelectedPage<S, MD extends ModalPagesDetails<S>> ( { state, pages, selectedPageL }: SelectedPageProps<S, MD> ) {
   const pageName = selectedPageL.getOption ( state.json () )?.pageName
   // @ts-ignore
-  const debug = state.main?.selectedPageDebug  //basically if S extends SelectedPageDebug..
+  const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
   if ( debug ) console.log ( "SelectedPage.pageName", pageName )
   if ( !pageName ) return (<p>No page selected</p>)
   // @ts-ignore I would like to do this type safe, but I don't know how to do it without getting circular type definitions
@@ -31,10 +31,20 @@ export function SelectedPage<S, MD extends ModalPagesDetails<S>> ( { state, page
     const { config, lens, pageFunction } = page
     const lsForPage = state.chainLens ( lens )
     if ( debug ) console.log ( "SelectedPage.lsForPage", lsForPage )
-    if ( typeof pageFunction === 'function' )  // this is for legacy support
-      return pageFunction ( { state: lsForPage } )
-    else
-      return displayMain ( config, pageFunction, lsForPage )
+    if ( debug ) console.log ( "SelectedPage.pageFunction", pageFunction )
+    if ( typeof pageFunction === 'function' ) {// this is for legacy support
+      if ( debug ) console.log ( "SelectedPage.legacy display" )
+      let main = pageFunction ( { state: lsForPage } );
+      if ( debug ) console.log ( "SelectedPage.legacy result", main )
+      if ( debug ) console.log ( "SelectedPage.legacy result - json", JSON.stringify ( main ) )
+      return main
+    } else {
+      if ( debug ) console.log ( "SelectedPage displayMain" )
+      let main = displayMain ( config, pageFunction, lsForPage );
+      if ( debug ) console.log ( "SelectedPage displayMain result", main )
+      // if ( debug ) console.log ( "SelectedPage displayMain result - json", JSON.stringify ( main ) )
+      return main
+    }
   }
   if ( debug ) console.error ( "SelectedPage.Could not find details for", pageName )
   return (<p>Could not find details for {pageName}</p>)
