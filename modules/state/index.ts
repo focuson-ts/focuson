@@ -99,15 +99,15 @@ export class LensState<Main, T> {
   useOtherAsWell<T2> ( lens: Optional<Main, T2> ) {
     let parent = this
     return new class extends WithTwoLens<Main, T, T2> {
-      setTwoValues ( t: T, t2: T2 ): void {
+      setTwoValues ( t: T|undefined, t2: T2|undefined ): void {
         parent.dangerouslySetMain ( updateTwoValues ( parent.optional, lens ) ( parent.main, t, t2 ) )
       }
 
-      transformTwoValues ( fn1: ( t1: T, t2: T2 ) => T, fn2: ( t1: T, t2: T2 ) => T2 ): void {
+      transformTwoValues ( fn1: ( t1: T, t2: T2 ) => T|undefined, fn2: ( t1: T, t2: T2 ) => T2|undefined ): void {
         parent.dangerouslySetMain ( transformTwoValues ( parent.optional, lens ) ( fn1, fn2 ) ( parent.main ) )
       }
 
-      transformFocused ( fn1: ( t1: T, t2: T2 ) => T ): WithTwoLensAndOneTransformFn<Main, T, T2> {
+      transformFocused ( fn1: ( t1: T, t2: T2 ) => T|undefined ): WithTwoLensAndOneTransformFn<Main, T, T2> {
         return new class extends WithTwoLensAndOneTransformFn<Main, T, T2> {
           andTransformOther ( fn2: ( t1: T, t2: T2 ) => T2 ): void {
             parent.dangerouslySetMain ( transformTwoValues ( parent.optional, lens ) ( fn1, fn2 ) ( parent.main ) )
@@ -195,6 +195,9 @@ export class LensState2<Main, T1, T2> {
   chain1<Child> ( lens: Optional<T1, Child> ) {
     return new LensState2 ( this.main, this.lens1.chain ( lens ), this.lens2, this.dangerouslySetMain )
   }
+  withLens1<Child> ( lens: Optional<Main, Child> ) {
+    return new LensState2 ( this.main, lens, this.lens2, this.dangerouslySetMain )
+  }
 
   focus1On<K extends keyof T1, Req extends Required<T1>> ( k: K ): LensState2<Main, Req[K], T2> {
     // @ts-ignore
@@ -219,6 +222,9 @@ export class LensState2<Main, T1, T2> {
 
   chain2<Child> ( lens: Optional<T2, Child> ) {
     return new LensState2 ( this.main, this.lens1, this.lens2.chain ( lens ), this.dangerouslySetMain )
+  }
+  withLens2<Child> ( lens: Optional<Main, Child> ) {
+    return new LensState2 ( this.main, this.lens1, lens, this.dangerouslySetMain )
   }
 
   setJson ( t1: T1, t2: T2 ) {
@@ -271,6 +277,9 @@ export class LensState3<Main, T1, T2, T3> {
   chain1<Child> ( lens: Lens<T1, Child> ) {
     return new LensState3 ( this.main, this.lens1.chain ( lens ), this.lens2, this.lens3, this.dangerouslySetMain )
   }
+  withLens1<Child> ( lens: Optional<Main, Child> ) {
+    return new LensState3 ( this.main, lens, this.lens2, this.lens3, this.dangerouslySetMain )
+  }
 
   state2 (): LensState<Main, T2> {
     return new LensState<Main, T2> ( this.main, this.dangerouslySetMain, this.lens2 )
@@ -291,6 +300,9 @@ export class LensState3<Main, T1, T2, T3> {
   chain2<Child> ( lens: Optional<T2, Child> ) {
     return new LensState3 ( this.main, this.lens1, this.lens2.chain ( lens ), this.lens3, this.dangerouslySetMain )
   }
+  withLens2<Child> ( lens: Optional<Main, Child> ) {
+    return new LensState3 ( this.main, this.lens1, lens, this.lens3, this.dangerouslySetMain )
+  }
 
   state3 (): LensState<Main, T3> {
     return new LensState<Main, T3> ( this.main, this.dangerouslySetMain, this.lens3 )
@@ -310,6 +322,9 @@ export class LensState3<Main, T1, T2, T3> {
 
   chainLens3<Child> ( lens: Lens<T3, Child> ) {
     return new LensState3 ( this.main, this.lens1, this.lens2, this.lens3.chain ( lens ), this.dangerouslySetMain )
+  }
+  withLens3<Child> ( lens: Optional<Main, Child> ) {
+    return new LensState3 ( this.main, this.lens1, this.lens2, lens, this.dangerouslySetMain )
   }
 
   setJson ( t1: T1, t2: T2, t3: T3 ) {
