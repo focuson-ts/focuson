@@ -1,8 +1,6 @@
-import {DirtyPrism, Optional} from "@focuson/lens";
-import {partialFnUsageError} from "./errorhandling";
-import {Fetcher, loadInfo, LoadInfo, MutateFn, ReqFn} from "./fetchers";
-import {Holder, Tags} from "./loadSelectedFetcher";
-import {isUndefined} from "util";
+import { DirtyPrism, Optional } from "@focuson/lens";
+import { partialFnUsageError } from "./errorhandling";
+import { Fetcher, loadInfo, LoadInfo, MutateFn, ReqFn } from "./fetchers";
 
 /** We compare the actualmarker with the selectedMarker. if they are different we load a T and put it into the target (and update the actual marker
  *

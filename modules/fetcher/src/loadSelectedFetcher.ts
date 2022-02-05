@@ -2,6 +2,7 @@ import {DirtyPrism,  iso, Iso, Optional} from "@focuson/lens";
 import {Fetcher, loadDirectly, loadInfo, MutateFn, ReqFn} from "./fetchers";
 import {not200MeansError, partialFnUsageError} from "./errorhandling";
 import { firstIn2 } from "@focuson/lens";
+import { areAllDefined, arraysEqual } from "@focuson/utils";
 
 export type Tags = (string | undefined)[]
 
@@ -86,20 +87,3 @@ export function holderIso<Marker,T>(description: string): Iso<Holder<Marker,T>, 
         description
     )
 }
-
-export function arraysEqual<T>(a: T[] | undefined, b: T[] | undefined) {
-    if (!(a && b)) return false;
-    if (a === b) return true;
-    if (a.length !== b.length) return false;
-    for (var i = 0; i < a.length; ++i) {
-        if (a[i] !== b[i]) return false;
-    }
-    return true;
-}
-
-
-export function areAllDefined<T>(arr: (T | undefined)[]|undefined): arr is T[] {
-    return arr?arr.reduce<boolean>((acc, t) => (t != undefined) && acc, true):false
-}
-
-

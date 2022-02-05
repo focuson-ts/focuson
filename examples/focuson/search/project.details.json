@@ -1,0 +1,15 @@
+{
+  "template":    "react",
+  "name":        "@focuson/example_focuson",
+  "description": "A fully featured example project",
+  "details":     {
+    "links":        ["@focuson/focuson", "@focuson/fetcher"],
+    "extraDeps":    {},
+    "extraDevDeps": {
+      "jest-pact":                  "^0.9.1",
+      "@pact-foundation/pact":      "^9.17.0",
+      "@pact-foundation/pact-core": "^13.3.0"
+    },
+    "test":         false
+  }
+}

@@ -2,12 +2,14 @@ import { identityOptics } from "@focuson/lens";
 import { allModelPageDetails, HasPageSelection, HasSelectedModalPage, HasSimpleMessages, ModalPagesDetails, MultiPageDetails, pageSelectionlens, SelectedPage, SelectedPageDebug, selectionModalPageL, simpleMessagesPageConfig } from "@focuson/pages";
 import { getElement, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
-import { HasSearch, SearchPage, SearchQueryModalPage } from "./searchPage";
+import {  SearchPage, SearchQueryModalPage } from "./search/searchPage";
 import React from "react";
 import { FocusOnConfig, HasFocusOnDebug, setJsonForFocusOn } from "@focuson/focuson";
 import { FetcherTree } from "@focuson/fetcher";
 import { HasPostCommand, postCommandsL, Posters } from "@focuson/poster";
 import { fetchWithDelay, fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
+import { HasSearch, SearchRequirements } from "./search/fullSearchDomain";
+import { fetchers } from "./fetchers";
 
 
 
@@ -16,7 +18,9 @@ const modals: ModalPagesDetails<FullState> = {
 }
 type Modals = typeof modals
 
-interface FullState extends HasSearch, HasSimpleMessages, HasSelectedModalPage, HasPageSelection<FullState>, HasFocusOnDebug, HasPostCommand<FullState, any> {}
+export interface FullState extends HasSearch, HasSimpleMessages, HasSelectedModalPage, HasPageSelection<FullState>, HasFocusOnDebug, HasPostCommand<FullState, any> {}
+
+
 
 function MyLoading () {
   return <p>Loading</p>
@@ -29,7 +33,6 @@ export const pages: MultiPageDetails<FullState, Modals> = {
 
 export const posters: Posters<FullState> = {}
 
-export const fetchers: FetcherTree<FullState> = { fetchers: [], children: [] }
 
 const config: FocusOnConfig<FullState> = {
   /** How data is sent to/fetched from apis */
@@ -61,7 +64,7 @@ const config: FocusOnConfig<FullState> = {
   posters,
 
   /** The collection of all registered fetchers that will get data from the back end */
-  fetchers
+  fetchers: fetchers()
 }
 
 

@@ -6,7 +6,7 @@
     "examples/state/*",
     "examples/codeondemand/*",
     "examples/fetcher/*",
-    "examples/example_focuson/*",
+    "examples/focuson/*",
     "examples/poster/*"
   ],
   "name": "ts-lens",

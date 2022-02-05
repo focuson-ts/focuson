@@ -1,0 +1,37 @@
+{
+  "consumer": {
+    "name": "Statement"
+  },
+  "provider": {
+    "name": "EAccountsApi"
+  },
+  "interactions": [
+    {
+      "description": "a query for 'phil'",
+      "providerState": "I have a person 'phil'",
+      "request": {
+        "method": "GET",
+        "path": "/api/search",
+        "query": "query=phil"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "query": "phil",
+          "queryResults": [
+            "phil1",
+            "phil2",
+            "phil3"
+          ]
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

@@ -11891,6 +11891,11 @@ jest-mock@^26.6.2:
     "@jest/types" "^26.6.2"
     "@types/node" "*"
 
+jest-pact@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/jest-pact/-/jest-pact-0.9.1.tgz#60c6a77a2bff1d8827c666e6dddd9d699bb5f253"
+  integrity sha512-IfM5mCbtPMR+894Dtbj8rwuM8Oxi/Pc9ecPd/ZrI8N5oCeKzsGjEOAN0RFAma2Pc1Gx+npBc4I3oP+ku+1SvLQ==
+
 jest-pnp-resolver@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/jest-pnp-resolver/-/jest-pnp-resolver-1.2.2.tgz"

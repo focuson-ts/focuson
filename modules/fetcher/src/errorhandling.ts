@@ -1,5 +1,4 @@
-import {Fetcher, loadDirectly, MutateFn} from "./fetchers";
-import {Holder, Tags} from "./loadSelectedFetcher";
+import { Fetcher, loadDirectly } from "./fetchers";
 
 export function ifErrorFetcher<State, T>(fetcher: Fetcher<State, T>, onError: (e: any) => (s: State) => State, description?: string): Fetcher<State, T> {
     return ({
