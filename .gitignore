@@ -44,3 +44,5 @@ out/
 created/
 coverage/
 .session/
+
+.vs/
