@@ -59,6 +59,22 @@
     "storybook": "start-storybook -p 6006 -s public"
   },
   "version": "0.3.62",
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "**/*.stories.*"
+        ],
+        "rules": {
+          "import/no-anonymous-default-export": "off"
+        }
+      }
+    ]
+  },
   "template": "react",
   "name": "@focuson/example_state_cart",
   "details": {

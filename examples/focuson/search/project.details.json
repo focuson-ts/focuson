@@ -5,11 +5,15 @@
   "details":     {
     "links":        ["@focuson/focuson", "@focuson/fetcher"],
     "extraDeps":    {},
+    "port": 3011,
     "extraDevDeps": {
       "jest-pact":                  "^0.9.1",
       "@pact-foundation/pact":      "^9.17.0",
-      "@pact-foundation/pact-core": "^13.3.0"
+      "@pact-foundation/pact-core": "^13.3.0",
+      "node-gyp":                   "^8.4.1"
     },
-    "test":         false
+
+    "test":         false,
+    "packport": 8080
   }
 }

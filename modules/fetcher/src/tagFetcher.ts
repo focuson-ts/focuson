@@ -17,7 +17,7 @@ export interface TagHolder {
   [ name: string ]: Tags;
 }
 
-type OnTagFetchErrorFn<S> = (
+export type OnTagFetchErrorFn<S> = (
   s: S,
   status: number,
   req: any,
@@ -38,16 +38,16 @@ export function onTagFetchError<S> ( errorMessageL: Optional<S, string> ): OnTag
  *
  * Details is things like {statement: Statement, accountPersonalisation: AccountPersonalisation} the data we load from the back end goes here
  */
-export interface CommonTagFetcher<S extends Details, Details> {
+export interface CommonTagFetcher<S> {
   identityL: Iso<S, S>; //An identity lens. Just avoid remaking it
-  mainThingL: Lens<S, keyof Details>; //the name of the main thing being displayed. e.g. statement, accountpersonalisation...
+  mainThingL: Lens<S, string>; //the name of the main thing being displayed. e.g. statement, accountpersonalisation...
   tagHolderL: Optional<S, TagHolder>; //focuses on the tags that record 'the current state' i.e. the ones that were last loaded
   onTagFetchError: OnTagFetchErrorFn<S>; //What to do if there is a problem while fetching
 }
 
 /**S is the state. Details are where we put the resulting data that we fetch (typically a unique place per item fetched), T is the type this fetcher will fetch */
-export interface SpecificTagFetcher<S extends Details, Details, T> extends CommonTagFetcher<S, Details> {
-  tagFetcher ( sf: SpecificTagFetcher<S, Details, T> ): Fetcher<S, T>;
+export interface SpecificTagFetcher<S, T> extends CommonTagFetcher<S> {
+  tagFetcher ( sf: SpecificTagFetcher<S, T> ): Fetcher<S, T>;
   targetLens: Optional<S, T>; //where we put the T
   actualTags: ( s: S ) => Tags; // the tags that say 'if any of these change we need to reload'
   reqFn: ReqFn<S>; // The url and other things needed to load the data
@@ -55,7 +55,7 @@ export interface SpecificTagFetcher<S extends Details, Details, T> extends Commo
   description?: string;
 }
 
-export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPageSelection<Details> & Details, Details> (): CommonTagFetcher<S, Details> {
+export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPageSelection> (): CommonTagFetcher<S> {
   const identityL: Iso<S, S> = Lenses.identity<S> ( 'state' ); //we need the any because of a typescript compiler bug
   // @ts-ignore I don't know why this doesn't compile
   let errorMessageL: Optional<S, string> = identityL.focusQuery ( 'errorMessage' );
@@ -67,38 +67,40 @@ export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPage
   };
 }
 
-export function simpleTagFetcher<S extends Details, Details, K extends keyof Details> (
-  ctf: CommonTagFetcher<S, Details>,
-  pageName: K,
+export function simpleTagFetcher<S, T> (
+  ctf: CommonTagFetcher<S>,
+  pageName: keyof S,
   actualTags: ( s: S ) => Tags,
   reqFn: ReqFn<S>,
   description?: string
 ) {
-  const stf = specify<S, Details, S[K]> ( ctf, pageName.toString (), actualTags, reqFn, ctf.identityL.focusQuery ( pageName ) );
+  // @ts-ignore we tried making this type safe, and the complexties were enormous... lots and lots of generics and horrible error messages
+  let targetLens: Optional<S, T> = ctf.identityL.focusQuery ( pageName );
+  const stf = specify<S, T> ( ctf, pageName.toString (), actualTags, reqFn, targetLens );
   return ifEEqualsFetcher<S> ( ( s ) => ctf.mainThingL.get ( s ) === pageName.toString (), tagFetcher ( stf ), description );
 }
 
-export function stateAndFromApiTagFetcher<S extends Details, Details, Target, K extends keyof Details> (
-  ctf: CommonTagFetcher<S, Details>,
-  pageName: K,
+export function stateAndFromApiTagFetcher<S , Target> (
+  ctf: CommonTagFetcher<S>,
+  pageName: keyof S,
   tagName: string,
   targetL: ( s: Optional<S, S> ) => Optional<S, Target>,
   actualTags: ( s: S ) => Tags,
   reqFn: ReqFn<S>,
   description?: string
 ) {
-  const stf = specify<S, Details, Target> ( ctf, `${pageName}_${tagName}`, actualTags, reqFn, targetL ( ctf.identityL ) );
+  const stf = specify<S, Target> ( ctf, `${pageName}_${tagName}`, actualTags, reqFn, targetL ( ctf.identityL ) );
   return ifEEqualsFetcher<S> ( ( s ) => ctf.mainThingL.get ( s ) === pageName.toString (), tagFetcher ( stf ), description );
 }
 
-function specify<S extends Details, Details, T> (
-  ctf: CommonTagFetcher<S, Details>,
+function specify<S, T> (
+  ctf: CommonTagFetcher<S>,
   tagName: string,
   actualTags: ( s: S ) => Tags,
   reqFn: ReqFn<S>,
   targetLens: Optional<S, T>,
   description?: string
-): SpecificTagFetcher<S, Details, T> {
+): SpecificTagFetcher<S, T> {
   return {
     ...ctf,
     tagFetcher,
@@ -111,7 +113,7 @@ function specify<S extends Details, Details, T> (
   };
 }
 
-export function tagFetcher<S extends Details, Details, T> ( sf: SpecificTagFetcher<S, Details, T> ): Fetcher<S, T> {
+export function tagFetcher<S, T> ( sf: SpecificTagFetcher<S, T> ): Fetcher<S, T> {
   const result: Fetcher<S, T> = {
     shouldLoad ( s: S ) {
       const currentTags = sf.tagLens.getOption ( s );

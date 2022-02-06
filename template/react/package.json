@@ -56,5 +56,21 @@
     "test:watch": "npm run test -- --watch",
     "storybook":  "start-storybook -p 6006 -s public"
   },
-  "version":         "<version>"
+  "version":         "<version>",
+  "eslintConfig":    {
+    "extends":   [
+      "react-app",
+      "react-app/jest"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "**/*.stories.*"
+        ],
+        "rules": {
+          "import/no-anonymous-default-export": "off"
+        }
+      }
+    ]
+  }
 }

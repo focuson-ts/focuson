@@ -18,14 +18,30 @@
         "status": 200,
         "headers": {
         },
-        "body": {
-          "query": "phil",
-          "queryResults": [
-            "phil1",
-            "phil2",
-            "phil3"
-          ]
-        }
+        "body": [
+          "phil1",
+          "phil2",
+          "phil3"
+        ]
+      }
+    },
+    {
+      "description": "a query for 'bob'",
+      "providerState": "I have a person 'bob'",
+      "request": {
+        "method": "GET",
+        "path": "/api/search",
+        "query": "query=bob"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": [
+          "bob1",
+          "bob2",
+          "bob3"
+        ]
       }
     }
   ],

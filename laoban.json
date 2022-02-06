@@ -6,34 +6,34 @@
   "profile":        ".profile",
   "packageManager": "yarn",
   "scripts":        {
-    "log":        {"description": "displays the log file", "commands": ["cat ${log}"]},
-    "link":       {
+    "log":            {"description": "displays the log file", "commands": ["cat ${log}"]},
+    "link":           {
       "description": "call '${packageManager} link' in each project directory",
       "commands":    [
         {"name": "tsc", "command": "tsc --noEmit false --outDir dist", "status": true},
         {"name": "link", "command": "cd dist && ${packageManager} link", "status": true}
       ]
     },
-    "ls":         {"description": "lists all the projects", "commands": ["js:process.cwd()"]},
-    "ls-names":         {"description": "lists all the projects and their nams ", "commands": ["js:`${process.cwd().padEnd(50)} ${projectDetails.name}`"]},
-    "clean":      {"description": "removes the dist directory", "commands": ["rm -rf dist", "rm -f .status", "rm -f .log", "rm -f .profile"]},
-    "lsDist":     {
+    "ls":             {"description": "lists all the projects", "commands": ["js:process.cwd()"]},
+    "ls-names":       {"description": "lists all the projects and their nams ", "commands": ["js:`${process.cwd().padEnd(50)} ${projectDetails.name}`"]},
+    "clean":          {"description": "removes the dist directory", "commands": ["rm -rf dist", "rm -f .status", "rm -f .log", "rm -f .profile"]},
+    "lsDist":         {
       "description": "check that the directory option works", "commands": [
         {"command": "js:process.cwd()", "directory": "dist"},
         {"command": "pwd", "directory": "dist"}
       ]
     },
-    "envCheck":   {
+    "envCheck":       {
       "description": "checks evn",
       "commands":    ["echo Linux: [${PORT}] windows: [%PORT%]"],
       "guard":       "${projectDetails.details.port}",
       "env":         {"PORT": "${projectDetails.details.port}"}
     },
-    "tsc":        {
+    "tsc":            {
       "description": "runs tsc",
       "commands":    [{"name": "tsc", "command": "tsc --noEmit false --outDir dist", "status": true}]
     },
-    "test":       {
+    "test":           {
       "description": "runs ${packageManager} test",
       "guard":       "${projectDetails.details.test}",
       "commands":    [{"name": "test", "command": "${packageManager} test", "status": true}]
@@ -43,11 +43,25 @@
       "guard":       "${projectDetails.details.test}",
       "commands":    ["js:process.cwd()"]
     },
-    "slow":       {
+    "ls-pact":        {
+      "osGuard":     "Windows_NT",
+      "description": "lists the projects with pact files in them",
+      "guard":       "${projectDetails.details.packport}",
+      "commands":    ["echo %PORT%  %cwd%"],
+      "env":         {"PORT": "${projectDetails.details.packport}"}
+    },
+    "runPact":        {
+      "osGuard":     "Windows_NT",
+      "description": "runs the pactserver as a stub",
+      "guard":       "${projectDetails.details.packport}",
+      "commands":    ["docker run -t -p  %PORT%:%PORT% -v \"%cwd%/pact/pacts/:/app/pact/pacts\" pactfoundation/pact-stub-server -p %PORT% -d pact/pacts"],
+      "env":         {"PORT": "${projectDetails.details.packport}"}
+    },
+    "slow":           {
       "description": "prints something, delays 2s, prints something",
       "commands":    ["echo `pwd` 'start'", "sleep 2s", "echo `pwd` 'stop' "]
     },
-    "install":    {
+    "install":        {
       "description":     "does the initial updateConfigFilesFromTemplates/install/link/tsc/test... etc in each project",
       "commands":        [
         "laoban update",
@@ -57,40 +71,40 @@
         {"name": "test", "command": "${packageManager} test", "status": true}
       ], "inLinksOrder": true
     },
-    "ls-ports":   {
+    "ls-ports":       {
       "description": "lists the projects that have a port defined in project.details.json",
       "guard":       "${projectDetails.details.port}",
       "commands":    ["js:process.cwd()"]
     },
-    "start":      {
+    "start":          {
       "description": "${packageManager} start for all projects that have a port defined in project.details.json",
       "guard":       "${projectDetails.details.port}",
       "commands":    ["${packageManager} start"],
       "env":         {"PORT": "${projectDetails.details.port}"}
     },
-    "ls-publish": {
+    "ls-publish":     {
       "description": "lists the projects that can be published",
       "guard":       "${projectDetails.details.publish}",
       "commands":    ["js:process.cwd()"], "inLinksOrder": true
     },
-    "ls-orgcmd":  {
+    "ls-orgcmd":      {
       "description": "lists the projects that have code on demand",
       "guard":       "${projectDetails.details.orgcmd}",
       "commands":    ["js:process.cwd()"]
     },
-    "orgcmd":     {
+    "orgcmd":         {
       "description": "makes the code on demand using orgcmd",
       "guard":       "${projectDetails.details.orgcmd}",
       "commands":    [{"name": "orgcmd", "command": "orgcmd build -f", "status": true}]
     },
-    "ls-ideify":  {
+    "ls-ideify":      {
       "description": "lists the projects that have an ideify setting (used to allow mono repos to work in ide",
       "guard":       "${projectDetails.details.ideify}",
       "commands":    [
         "js:`${process.cwd()} ${projectDetails.name}`"
       ]
     },
-    "pack":       {
+    "pack":           {
       "description":  "does everything for a publish except the actual 'npm publish'",
       "guard":        "${projectDetails.details.publish}",
       "commands":     [
@@ -99,7 +113,7 @@
       ],
       "inLinksOrder": true
     },
-    "publish":    {
+    "publish":        {
       "description":  "publishes the projects to npmjs",
       "guard":        "${projectDetails.details.publish}",
       "commands":     [
@@ -108,7 +122,7 @@
       ],
       "inLinksOrder": true
     },
-    "publish-public":    {
+    "publish-public": {
       "description":  "publishes the projects to npmjs as a public repo",
       "guard":        "${projectDetails.details.publish}",
       "commands":     [

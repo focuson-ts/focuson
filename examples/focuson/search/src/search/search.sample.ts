@@ -4,7 +4,7 @@ import { PostCommand } from "@focuson/poster";
 import { HasPostCommand } from "@focuson/poster/src/posters";
 
 
-export const emptySearchRequirement: SearchRequirements & HasPageSelection<any> & HasPostCommand<any, any> = {
+export const emptySearchRequirement: SearchRequirements & HasPageSelection & HasPostCommand<any, any> = {
   tags: {},
   messages: {},
   pageSelection: { pageName: 'search' },

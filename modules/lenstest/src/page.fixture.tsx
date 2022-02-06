@@ -6,7 +6,7 @@ import { HasSelectedModalPage, ModalPagesDetails, MultiPageDetails, SelectedPage
 import { Loading } from "@focuson/pages/dist/src/loading";
 
 
-export interface PageSpecState extends HasPageSelection<ModalDetails>, HasSimpleMessages, HasSelectedModalPage ,SelectedPageDebug{
+export interface PageSpecState extends HasPageSelection, HasSimpleMessages, HasSelectedModalPage ,SelectedPageDebug{
   someData?: string,
   modalData?: string
 }

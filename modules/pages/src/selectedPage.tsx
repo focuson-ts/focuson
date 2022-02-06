@@ -5,7 +5,6 @@ import { MultiPageDetails, OnePageDetails } from "./pageConfig";
 import { PageSelection } from "./pageSelection";
 import { Optional } from "@focuson/lens";
 import { displayMain } from "./focusedPage";
-import { debuglog } from "util";
 
 export interface HasSelectedPageDebug {
   debug?: SelectedPageDebug
@@ -16,7 +15,7 @@ export interface SelectedPageDebug{
 
 export interface SelectedPageProps<S, MD extends ModalPagesDetails<S>> extends LensProps<S, S> {
   pages: MultiPageDetails<S, MD>,
-  selectedPageL: Optional<S, PageSelection<any>>
+  selectedPageL: Optional<S, PageSelection>
 
 }
 export function SelectedPage<S, MD extends ModalPagesDetails<S>> ( { state, pages, selectedPageL }: SelectedPageProps<S, MD> ) {

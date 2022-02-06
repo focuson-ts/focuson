@@ -18,7 +18,7 @@ const modals: ModalPagesDetails<FullState> = {
 }
 type Modals = typeof modals
 
-export interface FullState extends HasSearch, HasSimpleMessages, HasSelectedModalPage, HasPageSelection<FullState>, HasFocusOnDebug, HasPostCommand<FullState, any> {}
+export interface FullState extends HasSearch, HasSimpleMessages, HasSelectedModalPage, HasPageSelection, HasFocusOnDebug, HasPostCommand<FullState, any> {}
 
 
 
@@ -71,7 +71,7 @@ const config: FocusOnConfig<FullState> = {
 let rootElement = getElement ( "root" );
 console.log ( "set json" )
 let setJson = setJsonForFocusOn ( config, ( s: LensState<FullState, FullState> ): void =>
-  ReactDOM.render ( <SelectedPage state={s} pages={pages} selectedPageL={pageSelectionlens<FullState, any> ()}/>, rootElement ) )
+  ReactDOM.render ( <SelectedPage state={s} pages={pages} selectedPageL={pageSelectionlens<FullState> ()}/>, rootElement ) )
 
 console.log ( "setting json" )
-setJson ( { messages: {}, pageSelection: { pageName: "search" }, search: { query: "", queryResults: [] }, debug: { selectedPageDebug: true, fetcherDebug: true }, postCommands: [] } )
+setJson ( { messages: {}, pageSelection: { pageName: "search" }, search: { query: "phil", queryResults: [] }, debug: { selectedPageDebug: false, fetcherDebug: true }, postCommands: [] } )

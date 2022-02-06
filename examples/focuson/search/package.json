@@ -36,7 +36,8 @@
     "ts-jest": "^26.4.4",
     "jest-pact": "^0.9.1",
     "@pact-foundation/pact": "^9.17.0",
-    "@pact-foundation/pact-core": "^13.3.0"
+    "@pact-foundation/pact-core": "^13.3.0",
+    "node-gyp": "^8.4.1"
   },
   "files": [
     "LICENSE.md",
@@ -62,6 +63,22 @@
     "storybook": "start-storybook -p 6006 -s public"
   },
   "version": "0.3.62",
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "**/*.stories.*"
+        ],
+        "rules": {
+          "import/no-anonymous-default-export": "off"
+        }
+      }
+    ]
+  },
   "template": "react",
   "name": "@focuson/example_focuson",
   "details": {
@@ -73,7 +90,8 @@
     "extraDevDeps": {
       "jest-pact": "^0.9.1",
       "@pact-foundation/pact": "^9.17.0",
-      "@pact-foundation/pact-core": "^13.3.0"
+      "@pact-foundation/pact-core": "^13.3.0",
+      "node-gyp": "^8.4.1"
     },
     "test": false
   }

@@ -1,5 +1,5 @@
 import { FetcherDebug } from "@focuson/fetcher";
-import { SelectedPageDebug } from "@focuson/pages/src/selectedPage";
+import { SelectedPageDebug } from "@focuson/pages";
 
 export interface HasFocusOnDebug{
   debug?: FocusOnDebug

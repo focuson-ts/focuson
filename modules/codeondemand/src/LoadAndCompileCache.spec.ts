@@ -39,7 +39,7 @@ describe("defaultCompiler", () => {
                 compiler("abcdefg")
                 fail("Should have thrown error")
             } catch
-                (e) {
+                (e:any) {
                 console.log('e', e)
                 expect(removeWhiteSpace(e.message)).toEqual(removeWhiteSpace(`Cannot compile abcdefg Results in error ReferenceError: abcdefg is not defined`))
             }

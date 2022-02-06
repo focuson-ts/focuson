@@ -17,7 +17,7 @@ export interface FocusOnConfig<S> {
   onError: ( s: S, e: any ) => S,
 
   /** The lens to the current selected page */
-  pageL: Lens<S, PageSelection<any>>,
+  pageL: Lens<S, PageSelection>,
   /** The list of all registered pages that can be displayed with SelectedPage  */
   pages: MultiPageDetails<S, any>,
 
@@ -35,7 +35,7 @@ export interface FocusOnConfig<S> {
   fetchers: FetcherTree<S>,
 }
 
-function processStartOfPage<S, P extends MultiPageDetails<S, any>> ( state: S, pageL: Lens<S, PageSelection<P>>, pageDetails: P ) {
+function processStartOfPage<S, P extends MultiPageDetails<S, any>> ( state: S, pageL: Lens<S, PageSelection>, pageDetails: P ) {
   // @ts-ignore
   const debug = state.debug?.startOfDebug;
   const { pageName, firstTime } = pageL.get ( state )
