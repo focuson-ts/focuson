@@ -1,10 +1,14 @@
 import { FullSearchDomain, SearchRequirements } from "./fullSearchDomain";
-import { commonFetch, stateAndFromApiTagFetcher } from "@focuson/fetcher";
+import { commonFetch, OnTagFetchErrorFn, stateAndFromApiTagFetcher, Tags, updateTargetTagsAndMessagesOnError } from "@focuson/fetcher";
 import { Optional } from "@focuson/lens";
+import { createSimpleMessage, SimpleMessage } from "@focuson/pages";
+
+
+
 
 export function searchFetcher<S extends SearchRequirements> () {
   return stateAndFromApiTagFetcher<S, string[]> (
-    commonFetch<S> (),
+    commonFetch<S, string[]> ( updateTargetTagsAndMessagesOnError<S, string[]> ( [] ) ),
     'search',
     'search',
     l => {

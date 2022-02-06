@@ -22,16 +22,16 @@ export interface TagFetcherTestFullState {
 }
 
 export const tagFetcherTestStateL = Lenses.identity<HasTagFetcherFullState> ( 'state' )
-export const simpleFetcher = simpleTagFetcher (
-  commonFetch<HasTagFetcherFullState> (),
+export const simpleFetcher = simpleTagFetcher<HasTagFetcherFullState, string> (
+  commonFetch (),
   'target',
   s => [ s.tag1, s.tag2 ],
   ( state: HasTagFetcherFullState ) => [ '/someUrl', { method: 'Options' } ]
 )
 
 export const stateAndFromApiFetcher: Fetcher<HasTagFetcherFullState, string> =
-               stateAndFromApiTagFetcher <HasTagFetcherFullState, string>(
-                 commonFetch<HasTagFetcherFullState> (),
+               stateAndFromApiTagFetcher<HasTagFetcherFullState, string> (
+                 commonFetch (),
                  'fullState',
                  'fullState',
                  l => l.focusQuery ( 'fullState' ).focusQuery ( 'fromApi' ),
