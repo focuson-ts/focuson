@@ -1,4 +1,4 @@
-import { StateForModalAndCopyButtonTest } from "@focuson/lenstest/dist/src/modalAndCopyButton.spec";
+import { StateForModalAndCopyButtonTest } from "@focuson/lenstest";
 import { Story } from "@storybook/react";
 import { SBookProvider } from "./sbookProvider";
 import { ModalAndCopyButton } from "@focuson/pages";

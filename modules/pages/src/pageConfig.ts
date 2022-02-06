@@ -1,7 +1,7 @@
 import { Optional } from "@focuson/lens";
 import { LensProps, LensState } from "@focuson/state";
 import { AllModalPageDetails, allModelPageDetails, HasSelectedModalPage, ModalPagesDetails } from "./modal/modalPages";
-import { HasSimpleMessages, SimpleMessages, simpleMessagesL } from "./simpleMessages";
+import { HasSimpleMessages, SimpleMessage, simpleMessagesL } from "./simpleMessage";
 import { FocusedPage } from "./focusedPage";
 import React from "react";
 import { PageTemplateProps } from "./PageTemplate";
@@ -46,17 +46,16 @@ export interface PageConfig<S, D, Msgs, MD extends ModalPagesDetails<S>> {
 /** If the state is using simple messages, and HasSelectedModalPage, this provides a default page config.ts that works in many situations
  * It doesn't have postCommand configuration in it, which is the most common 'add on' */
 export function simpleMessagesPageConfig<S extends HasSimpleMessages & HasSelectedModalPage, D, MD extends ModalPagesDetails<S>> (
-  md: MD, loading: ( s: LensState<S, any> ) => JSX.Element ): PageConfig<S, D, SimpleMessages, MD> {
+  md: MD, loading: ( s: LensState<S, any> ) => JSX.Element ): PageConfig<S, D, SimpleMessage[], MD> {
   return ({
     modalPageDetails: allModelPageDetails ( md ),
     messageLens: simpleMessagesL<S, D> (),
     loading
   })
-
 }
 
 /** The default context. This gives access to page goodness.
  * It is sadly not type safe (the problem with using contexts)
  * It is the job of the application to make this available
  */
-export const PagesContext = React.createContext<PageConfig<any, any, SimpleMessages, any>> ( {} )
+export const PagesContext = React.createContext<PageConfig<any, any, SimpleMessage[], any>> ( {} )

@@ -1,12 +1,11 @@
 import { FullSearchDomain, SearchRequirements } from "./fullSearchDomain";
 import { HasPageSelection } from "@focuson/pages";
-import { PostCommand } from "@focuson/poster";
 import { HasPostCommand } from "@focuson/poster/src/posters";
 
 
 export const emptySearchRequirement: SearchRequirements & HasPageSelection & HasPostCommand<any, any> = {
   tags: {},
-  messages: {},
+  messages: [],
   pageSelection: { pageName: 'search' },
   postCommands: [],
 }

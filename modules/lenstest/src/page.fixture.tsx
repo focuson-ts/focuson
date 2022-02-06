@@ -1,12 +1,9 @@
 import { LensProps } from "@focuson/state";
 import { identityOptics } from "@focuson/lens";
-import { HasPageSelection } from "@focuson/pages/dist/src/pageSelection";
-import { HasSimpleMessages } from "@focuson/pages/dist/src/simpleMessages";
-import { HasSelectedModalPage, ModalPagesDetails, MultiPageDetails, SelectedPageDebug, simpleMessagesPageConfig } from "@focuson/pages";
-import { Loading } from "@focuson/pages/dist/src/loading";
+import { HasPageSelection, HasSelectedModalPage, HasSimpleMessages, Loading, ModalPagesDetails, MultiPageDetails, PageConfig, SelectedPageDebug, SimpleMessage, simpleMessagesPageConfig } from "@focuson/pages";
 
 
-export interface PageSpecState extends HasPageSelection, HasSimpleMessages, HasSelectedModalPage ,SelectedPageDebug{
+export interface PageSpecState extends HasPageSelection, HasSimpleMessages, HasSelectedModalPage, SelectedPageDebug {
   someData?: string,
   modalData?: string
 }
@@ -25,8 +22,10 @@ export const modalDetails: ModalPagesDetails<PageSpecState> = {
 export type ModalDetails = typeof modalDetails
 
 
-export function pageSpecStateconfig<D> () {
-  return simpleMessagesPageConfig<PageSpecState, D, ModalDetails> ( modalDetails, Loading );
+export function pageSpecStateconfig<D> (): PageConfig<PageSpecState, D, SimpleMessage[], ModalDetails> {
+  // @ts-ignore  There is some crazy thing going on here around SimpleMessage and SimpleMessage[].
+  let pageConfig: PageConfig<PageSpecState, D, SimpleMessage[], ModalDetails> = simpleMessagesPageConfig<PageSpecState, D, ModalDetails> ( modalDetails, Loading );
+  return pageConfig;
 }
 
 export const pageDetails: MultiPageDetails<PageSpecState, ModalDetails> = {

@@ -1,16 +1,14 @@
 import { identityOptics } from "@focuson/lens";
-import { allModelPageDetails, HasPageSelection, HasSelectedModalPage, HasSimpleMessages, ModalPagesDetails, MultiPageDetails, pageSelectionlens, SelectedPage, SelectedPageDebug, selectionModalPageL, simpleMessagesPageConfig } from "@focuson/pages";
+import { allModelPageDetails, HasPageSelection, HasSelectedModalPage, HasSimpleMessages, ModalPagesDetails, MultiPageDetails, pageSelectionlens, SelectedPage, selectionModalPageL, simpleMessagesPageConfig } from "@focuson/pages";
 import { getElement, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
-import {  SearchPage, SearchQueryModalPage } from "./search/searchPage";
+import { SearchPage, SearchQueryModalPage } from "./search/searchPage";
 import React from "react";
 import { FocusOnConfig, HasFocusOnDebug, setJsonForFocusOn } from "@focuson/focuson";
-import { FetcherTree } from "@focuson/fetcher";
 import { HasPostCommand, postCommandsL, Posters } from "@focuson/poster";
 import { fetchWithDelay, fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
-import { HasSearch, SearchRequirements } from "./search/fullSearchDomain";
+import { HasSearch } from "./search/fullSearchDomain";
 import { fetchers } from "./fetchers";
-
 
 
 const modals: ModalPagesDetails<FullState> = {
@@ -74,4 +72,4 @@ let setJson = setJsonForFocusOn ( config, ( s: LensState<FullState, FullState> )
   ReactDOM.render ( <SelectedPage state={s} pages={pages} selectedPageL={pageSelectionlens<FullState> ()}/>, rootElement ) )
 
 console.log ( "setting json" )
-setJson ( { messages: {}, pageSelection: { pageName: "search" }, search: { query: "phil", queryResults: [] }, debug: { selectedPageDebug: false, fetcherDebug: true }, postCommands: [] } )
+setJson ( { messages:[], pageSelection: { pageName: "search" }, search: { query: "phil", queryResults: [] }, debug: { selectedPageDebug: false, fetcherDebug: true }, postCommands: [] } )

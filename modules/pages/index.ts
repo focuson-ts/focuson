@@ -4,7 +4,7 @@ export * from './src/emptyPage'
 export * from './src/modal/modalPages'
 export * from './src/pageConfig'
 export * from './src/pageSelection'
-export * from './src/simpleMessages';
+export * from './src/simpleMessage';
 export * from './src/preMutate';
 export * from './src/selectedPage';
 export * from './src/modal/modalButton';

@@ -1,11 +1,6 @@
-import { focusedPageWithExtraState, HasPageSelection } from "@focuson/pages";
-import { safeArray } from "@focuson/utils";
+import { focusedPageWithExtraState } from "@focuson/pages";
 import { LensProps } from "@focuson/state";
-import { FullSearchDomain, HasSearch, SearchRequirements } from "./fullSearchDomain";
-
-import { commonFetch } from "@focuson/fetcher/dist/src/tagFetcher";
-import { stateAndFromApiTagFetcher } from "@focuson/fetcher";
-import { Optional } from "@focuson/lens";
+import { FullSearchDomain } from "./fullSearchDomain";
 
 
 export function SearchQueryModalPage<S extends any> ( { state }: LensProps<S, string> ): JSX.Element {

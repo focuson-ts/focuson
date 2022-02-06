@@ -1,6 +1,6 @@
 import { Iso, Lens, Lenses, Optional } from '@focuson/lens';
 
-import { HasPageSelection, HasSimpleMessages } from "@focuson/pages";
+import { HasPageSelection, HasSimpleMessages, createSimpleMessage, SimpleMessage } from "@focuson/pages";
 import { areAllDefined, arraysEqual, or } from "@focuson/utils";
 import { Tags } from "./loadSelectedFetcher";
 import { Fetcher, ifEEqualsFetcher, loadInfo, MutateFn, ReqFn } from "./fetchers";
@@ -26,12 +26,9 @@ export type OnTagFetchErrorFn<S> = (
   currentTags?: Tags
 ) => S;
 
-export function onTagFetchError<S> ( errorMessageL: Optional<S, string> ): OnTagFetchErrorFn<S> {
-  return ( s: S, status: number, req: any, response: any, originalTags?: Tags, currentTags?: Tags ) =>
-    errorMessageL.set (
-      s,
-      `Req: ${JSON.stringify ( req )}, Resp: ${JSON.stringify ( response )}, ${status}, ${originalTags}, ${currentTags}`
-    );
+export function onTagFetchError<S> ( errorMessageL: Optional<S, SimpleMessage[]> ): OnTagFetchErrorFn<S> {
+  return ( s: S, status: number, req: any, response: any, originalTags?: Tags, currentTags?: Tags ) => errorMessageL.transform (
+    existing => [ ...existing, createSimpleMessage ( 'error', `Req: ${JSON.stringify ( req )}, Resp: ${JSON.stringify ( response )}, ${status}, ${originalTags}, ${currentTags}` ) ] ) ( s );
 }
 
 /**S is the full state for our application.
@@ -57,8 +54,7 @@ export interface SpecificTagFetcher<S, T> extends CommonTagFetcher<S> {
 
 export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPageSelection> (): CommonTagFetcher<S> {
   const identityL: Iso<S, S> = Lenses.identity<S> ( 'state' ); //we need the any because of a typescript compiler bug
-  // @ts-ignore I don't know why this doesn't compile
-  let errorMessageL: Optional<S, string> = identityL.focusQuery ( 'errorMessage' );
+  let errorMessageL: Optional<S, SimpleMessage[]> = identityL.focusOn ( 'messages' );
   return {
     identityL,
     mainThingL: identityL.focusOn ( 'pageSelection' ).focusOn ( 'pageName' ),
@@ -80,7 +76,7 @@ export function simpleTagFetcher<S, T> (
   return ifEEqualsFetcher<S> ( ( s ) => ctf.mainThingL.get ( s ) === pageName.toString (), tagFetcher ( stf ), description );
 }
 
-export function stateAndFromApiTagFetcher<S , Target> (
+export function stateAndFromApiTagFetcher<S, Target> (
   ctf: CommonTagFetcher<S>,
   pageName: keyof S,
   tagName: string,
