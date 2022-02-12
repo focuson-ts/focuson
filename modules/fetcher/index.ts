@@ -6,3 +6,4 @@ export * from './src/errorhandling';
 export * from './src/markerChangesFetcher';
 export * from './src/setjson';
 export * from './src/tagFetcher';
+export * from './src/tagErrors';

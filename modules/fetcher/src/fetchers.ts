@@ -68,7 +68,7 @@ export function fetcher<State, T> ( shouldLoad: ( ns: State ) => boolean,
 }
 
 /** This will 'do the work of fetching' for a single fetcher. */
-export const applyFetcher = <State, T> ( fetcher: Fetcher<State, T>, s: State, fetchFn: FetchFn, debug?: FetcherDebug ): Promise<State | undefined> => {
+export const applyFetcher = <State, T> ( fetcher: Fetcher<State, T>, s: State, fetchFn: FetchFn, debug?: FetcherDebug ): Promise<State> => {
   const fetcherDebug = debug?.fetcherDebug
   if ( fetcherDebug ) console.log ( "applyFetcher", fetcher.description, s )
   if ( fetcher.shouldLoad ( s ) ) {
@@ -93,7 +93,7 @@ export const applyFetcher = <State, T> ( fetcher: Fetcher<State, T>, s: State, f
       if ( fetcherDebug ) console.log ( "applyFetcher - result", result )
       return result
     }, reject => {
-      if ( fetcherDebug ) console.log ( "applyFetcher - error occured", requestInfo, requestInit,  reject )
+      if ( fetcherDebug ) console.log ( "applyFetcher - error occured", requestInfo, requestInit, reject )
       // @ts-ignore
       let result = mutate ( s ) ( 600, reject ); //600 means 'error' could do this as a 5xx but it wasn't returned, so this gives more info
       if ( fetcherDebug ) console.log ( "applyFetcher - result", result )
@@ -105,30 +105,41 @@ export const applyFetcher = <State, T> ( fetcher: Fetcher<State, T>, s: State, f
 }
 
 export function lensFetcher<State, Child, T> ( lens: Optional<State, Child>, fetcher: Fetcher<Child, T>, description?: string ): Fetcher<State, T> {
-  return ({
+  const result: Fetcher<State, T> = ({
     shouldLoad: ( ns ) => {
       if ( !ns ) return false
       let nc = lens.getOption ( ns );
-      return fetcher.shouldLoad ( nc )
+      return !!nc && fetcher.shouldLoad ( nc )
     },
     load ( ns ) {
       const cs: Child | undefined = lens.getOption ( ns )
+      if ( cs === undefined ) throw partialFnUsageError ( result, ns )
       const { requestInfo, requestInit, mutate, useThisInsteadOfLoad } = fetcher.load ( cs )
-      const mutateFn: MutateFn<State, T> = s => ( status, json ) => lens.set ( s, mutate ( lens.getOption ( s ) ) ( status, json ) )
+      const mutateFn: MutateFn<State, T> = s => ( status, json ) => {
+        const childState = lens.getOption ( s );
+        if ( !childState ) {
+          console.error ( "s", s )
+          console.error ( "childState", childState )
+          throw Error ( `Cannot find the child state` )
+        }
+        return lens.set ( s, mutate ( childState ) ( status, json ) )
+      }
       return loadInfo ( requestInfo, requestInit, mutateFn )
     },
     description: description ? description : "lensFetcher(" + lens + "," + fetcher.description + ")"
   })
+  return result
 }
 
 
-export function ifEEqualsFetcher<State> ( condition: ( s: State ) => boolean, fetcher: Fetcher<State, any>, description?: string ): Fetcher<State, any> {
-  return ({
-    shouldLoad: ( ns: State ) => condition ( ns ) && fetcher.shouldLoad ( ns ),
-    load: ( ns: State ) => fetcher.load ( ns ),
-    description: description ? description : `ifEqualsFetcher(${fetcher.description})`
-  });
-}
+export const condFetcher = <State> ( condition: ( s: State ) => boolean, fetcher: Fetcher<State, any>, description?: string ): Fetcher<State, any> => ({
+  shouldLoad: ( ns: State ) => condition ( ns ) && fetcher.shouldLoad ( ns ),
+  load: ( ns: State ) => fetcher.load ( ns ),
+  description: description ? description : `ifEqualsFetcher(${fetcher.description})`
+});
+
+
+export const ifEEqualsFetcher = condFetcher
 
 
 export function fetcherWhenUndefined<State, Child> ( optional: Optional<State, Child>,
@@ -146,7 +157,7 @@ export function fetcherWhenUndefined<State, Child> ( optional: Optional<State, C
     },
     load ( s ) {
       const req = reqFn ( s );
-      if ( req === undefined ) throw partialFnUsageError ( result )
+      if ( req === undefined ) throw partialFnUsageError ( result, s )
       const [ url, init ] = req;
       let mutate: MutateFn<State, Child> = s => ( status, json ) => optional.set ( s, json )
       return loadInfo ( url, init, mutate )
@@ -176,7 +187,8 @@ export function fetcherWithHolder<State, Holder, T> ( target: Optional<State, Ho
       const originalTarget: T | undefined = targetThenOptional.getOption ( ns )
       const { requestInfo, requestInit, mutate, useThisInsteadOfLoad } = fetcher.load ( originalTarget )
       let newMutate = ( s: State ) => ( status: number, t: T ) => {
-        let x = mutate ( targetThenOptional.getOption ( s ) ) ( status, t )
+        let x: T | undefined = mutate ( targetThenOptional.getOption ( s ) ) ( status, t )
+        if ( !x ) throw Error ( 'result of mutate was undefined' )
         return target.set ( s, holder.reverseGet ( x ) )
       };
       return { requestInfo, requestInit, mutate: newMutate } //TODO what should we do if 'useThisInsteadOfLoad' is defined

@@ -58,24 +58,27 @@ describe("lens fetcher ", () => {
         expect(fTrue.shouldLoad({})).toEqual(false) //there is no ab to put the value loaded into
         // const [req, reqInit, mutate] = fTrue.load({ab: {}})
     })
-    it("when child  condition is true", () => {
+    it("when child  doesnt exist, even if the condition would be true", () => {
         let state = {ab: {}};
-        expect(fTrue.shouldLoad(state)).toEqual(true)
-        const {requestInfo, requestInit, mutate} = fTrue.load({ab: {}})
-        expect(mutate(state)(200, "someValue")).toEqual({"ab": {"a": ".undefined/200/someValue"}})
+        expect(fTrue.shouldLoad(state)).toEqual(false)
     })
 
-
+    it("when child  condition is true", () => {
+        let state = {ab: {a:'something'}};
+        expect(fTrue.shouldLoad(state)).toEqual(true)
+        const {requestInfo, requestInit, mutate} = fTrue.load({ab: {a:''}})
+        expect(mutate(state)(200, "someValue")).toEqual({"ab": {"a": ".something/200/someValue"}})
+    })
 })
 describe("lens fetcher", () => {
     it("when state defined but holder is undefined", () => {
         const opticsTo = identityOptics<AB>().focusQuery('ab').focusQuery('a')
         let f: Fetcher<AB, string> = lensFetcher(opticsTo, loadTrueF);
-        expect(f.shouldLoad({})).toEqual(true) //would really like this to be false, but don't know how
-        const {requestInfo, requestInit, mutate} = f.load({})
-        expect(requestInfo).toEqual("load url from undefined")
-        expect(requestInit).toEqual(reqInit)
-        expect(mutate({})(200, "someNewA")).toEqual({}) //TODO so annoyingly we went to get it... but didn't put it in here... and didn;t throw an error.
+        expect(f.shouldLoad({})).toEqual(false)
+        // const {requestInfo, requestInit, mutate} = f.load({})
+        // expect(requestInfo).toEqual("load url from undefined")
+        // expect(requestInit).toEqual(reqInit)
+        // expect(mutate({})(200, "someNewA")).toEqual({}) //TODO so annoyingly we went to get it... but didn't put it in here... and didn;t throw an error.
     })
     it("when state defined, holder is defined and condition is false", () => {
         const opticsTo = identityOptics<AB>().focusQuery('ab').focusQuery('a')
@@ -86,10 +89,10 @@ describe("lens fetcher", () => {
         const opticsTo = identityOptics<AB>().focusQuery('ab').focusQuery('a')
         let f: Fetcher<AB, string> = lensFetcher(opticsTo, loadTrueF);
         let state = {ab: {}};
-        expect(f.shouldLoad(state)).toEqual(true)
-        const {requestInfo, requestInit, mutate} = f.load(state)
-        expect(requestInfo).toEqual("load url from undefined")
-        expect(mutate(state)(200, "newValue")).toEqual({"ab": {"a": ".undefined/200/newValue"}})
+        expect(f.shouldLoad(state)).toEqual(false)
+        // const {requestInfo, requestInit, mutate} = f.load(state)
+        // expect(requestInfo).toEqual("load url from undefined")
+        // expect(mutate(state)(200, "newValue")).toEqual({"ab": {"a": ".undefined/200/newValue"}})
     })
     it("when state defined, holder is defined child is defined and coniditon is true", () => {
         const opticsTo = identityOptics<AB>().focusQuery('ab').focusQuery('a')

@@ -27,14 +27,21 @@ pactWith ( { consumer: 'Statement', provider: 'EAccountsApi', cors: true }, prov
           body: searchSamplePhil.queryResults
         },
       } )
-      let newState = await loadTree ( fetchers (), { ...emptySearchRequirement, search: { query: "phil" } }, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+      let f = fetchers().fetchers[0]
+
+      let ns = { ...emptySearchRequirement, search: { query: "phil" } };
+      // console.log(f)
+      // console.log('ns',ns)
+      // console.log('wouldLoad',f.shouldLoad(ns))
+      let newState = await loadTree ( fetchers (), ns, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       expect ( newState ).toEqual ( {
         ...emptySearchRequirement,
+        messages: [ { "level": "info", "msg": "phil1,phil2,phil3", "time": "timeForTest" } ],
         search: {
           "query": "phil",
           "queryResults": [ "phil1", "phil2", "phil3" ]
         },
-        tags: { "search_search": [ "phil" ] }
+        tags: { "search": [ "phil" ] }
       } )
     } )
     it ( 'should search for bob', async () => {
@@ -54,11 +61,12 @@ pactWith ( { consumer: 'Statement', provider: 'EAccountsApi', cors: true }, prov
       let newState = await loadTree ( fetchers (), { ...emptySearchRequirement, search: { query: "bob" } }, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       expect ( newState ).toEqual ( {
         ...emptySearchRequirement,
+        messages: [ { "level": "info", "msg": "bob1,bob2,bob3", "time": "timeForTest" } ],
         search: {
           "query": "bob",
           "queryResults": [ "bob1", "bob2", "bob3" ]
         },
-        tags: { "search_search": [ "bob" ] }
+        tags: { "search": [ "bob" ] }
       } )
     } )
   } )

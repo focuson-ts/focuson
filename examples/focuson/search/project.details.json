@@ -13,7 +13,7 @@
       "node-gyp":                   "^8.4.1"
     },
 
-    "test":         false,
+    "test":         true,
     "packport": 8080
   }
 }

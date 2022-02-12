@@ -22,13 +22,13 @@ describe ( "preMutateForPages", () => {
 
   it ( "should clear the firstTime, if firstTime true, and no 'mutate state' effects are present", () => {
     expect ( preMutate ( { pageSelection: { pageName: 'nothing', firstTime: true }, messages: [], someData: "oldData" } ) )
-      .toEqual ( { pageSelection: { pageName: 'nothing', firstTime: false }, messages: {}, someData: "oldData" } )
+      .toEqual ( { pageSelection: { pageName: 'nothing', firstTime: false }, messages: [], someData: "oldData" } )
   } )
 
   it ( "should clear the firstTime, and clear the domain, if firstTime true, and clearAtStart is true", () => {
     expect ( preMutate ( { pageSelection: { pageName: 'clearAtStart', firstTime: true }, messages:[], someData: "oldData" } ) )
       .toEqual ( {
-        "messages": {},
+        "messages":[],
         "pageSelection": {
           "firstTime": false,
           "pageName": "clearAtStart"
@@ -40,7 +40,7 @@ describe ( "preMutateForPages", () => {
     expect ( preMutate ( { pageSelection: { pageName: 'initialValue', firstTime: true }, messages: [] } ) )
       .toEqual ( {
         "pageSelection": { "firstTime": false, "pageName": "initialValue" },
-        "messages": {},
+        "messages": [],
         "someData": "someValue"
       } )
   } )

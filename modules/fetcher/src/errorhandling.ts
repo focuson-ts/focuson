@@ -18,6 +18,7 @@ export function not200MeansError<State, Holder>(req: [RequestInfo, RequestInit |
     throw Error(`req ${req[0]} ${req[1]} caused status code ${status}`)
 }
 
-export function partialFnUsageError<State, T>(f: Fetcher<State, T>) {
+export function partialFnUsageError<State, T>(f: Fetcher<State, T>, s: State) {
+    console.log('partialFnUsageError', s)
     return Error(`Load called for ${f.description}. The shouldLoad should have returned false. This is a programming error`)
 }
