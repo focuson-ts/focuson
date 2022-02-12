@@ -5,7 +5,7 @@ import { areAllDefined, arraysEqual, DateFn, or } from "@focuson/utils";
 import { Tags } from "./loadSelectedFetcher";
 import { Fetcher, ifEEqualsFetcher, loadInfo, MutateFn, ReqFn } from "./fetchers";
 import { partialFnUsageError } from "./errorhandling";
-import { OnTagFetchErrorFn, updateTagsAndMessagesOnError } from "./tagErrors";
+import { defaultErrorMessage, OnTagFetchErrorFn, updateTagsAndMessagesOnError } from "./tagErrors";
 
 
 export interface HasTagHolder {
@@ -48,9 +48,7 @@ export const commonTagFetchProps = <S extends HasSimpleMessages & HasTagHolder &
   let tagHolderL = identityL.focusQuery ( 'tags' );
   return {
     messageL, mainThingL, tagHolderL,
-    onError: onError ? onError : updateTagsAndMessagesOnError ( data => [
-      createSimpleMessage ( 'error', `Failed to fetch data from [${data.info},${data.init}] status ${data.status}`, data.stf.dateFn () )
-    ] ),
+    onError: onError ? onError : updateTagsAndMessagesOnError ( data =>  defaultErrorMessage ( data )  ),
     messagesFromTarget: messagesFromTarget ? messagesFromTarget : () => [],
     dateFn: dateFn ? dateFn : () => new Date ().toISOString ()
   };

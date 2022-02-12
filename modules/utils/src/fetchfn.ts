@@ -20,10 +20,14 @@ export interface FetchFn {
 /** Normally we would use the defaultFetchFn or the loggingFetchFn */
 export const defaultFetchFn = <T> ( re: RequestInfo, init?: RequestInit ): Promise<[ number, T ]> => {
   if ( re === "" ) throw Error ( 'calling defaultFetchFn with empty string as url' )
-  return actualFetch ( re, init ).then ( r => r.ok
-    ? r.json ().then ( json => [ r.status, json ] )
-    : r.text ().then ( text => [ r.status, text ] )
-  );
+  try {
+    return actualFetch ( re, init ).then ( r => r.ok
+      ? r.json ().then ( json => [ r.status, json ] )
+      : r.text ().then ( text => [ r.status, text ] )
+    );
+  } catch ( e: any ) {
+    return Promise.reject ( e )
+  }
 }
 
 /** Normally we would use the defaultFetchFn or the loggingFetchFn */

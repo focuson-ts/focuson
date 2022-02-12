@@ -1,12 +1,20 @@
-import { loadTree } from '@focuson/fetcher'
+import { applyFetcher, loadTree } from '@focuson/fetcher'
 import { pactWith } from "jest-pact";
 import { emptySearchRequirement, searchSampleBob, searchSamplePhil } from "./search.sample";
 import { fetchers } from "../fetchers";
-import { fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
+import { defaultFetchFn, fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
+import { searchFetcher } from "./search.fetcher";
 
 
 describe ( "searchFetcher", () => {
-  it ( "", () => {} )
+  it ( "should handle a 'can't connect' ", async () => {
+    let fetchFn = fetchWithPrefix ( "http://localhost:9999", defaultFetchFn );
+    let s = { ...emptySearchRequirement, search: { query: "bob" } };
+    let fetcher = searchFetcher ();
+    const ns = await applyFetcher ( fetcher, s, fetchFn )
+    expect ( ns.messages ).toEqual ( {} )
+
+  } )
 } )
 
 pactWith ( { consumer: 'Statement', provider: 'EAccountsApi', cors: true }, provider => {
@@ -27,7 +35,7 @@ pactWith ( { consumer: 'Statement', provider: 'EAccountsApi', cors: true }, prov
           body: searchSamplePhil.queryResults
         },
       } )
-      let f = fetchers().fetchers[0]
+      let f = fetchers ().fetchers[ 0 ]
 
       let ns = { ...emptySearchRequirement, search: { query: "phil" } };
       // console.log(f)
@@ -69,5 +77,7 @@ pactWith ( { consumer: 'Statement', provider: 'EAccountsApi', cors: true }, prov
         tags: { "search": [ "bob" ] }
       } )
     } )
+
+
   } )
 } )

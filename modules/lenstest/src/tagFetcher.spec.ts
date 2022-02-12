@@ -1,8 +1,9 @@
 import { Lenses } from '@focuson/lens';
 
 
-import { LoadInfo, MutateFn, tagFetcher } from '@focuson/fetcher';
+import { applyFetcher, LoadInfo, MutateFn, tagFetcher } from '@focuson/fetcher';
 import { emptyTestState, HasTagFetcherFullState, simpleFetcherWithMessages } from "./tagFetcher.fixture";
+import { defaultFetchFn, fetchWithPrefix } from "@focuson/utils";
 
 
 const tagFetcherTestStateL = Lenses.identity<HasTagFetcherFullState> ( 'state' )
@@ -64,6 +65,13 @@ describe ( 'tagFetcher', () => {
     } )
 
   } )
+
+  it ( "should report a 'fail to connect'", async () => {
+    let start = { ...emptyTestState, tag1: 't1', tag2: 't2', tags: {}, debug: { fetcherDebug: true } };
+    const ns = await applyFetcher ( simpleFetcherWithMessages, start, fetchWithPrefix ( "http://localhost:9999", defaultFetchFn ) )
+    expect ( ns.messages ).toEqual ( [ { "level": "error", "msg": "Failed to fetch data from [/someUrl,{\"method\":\"Options\"}] status 600", "time": "timeForTest" } ] )
+  } )
+
 
 } )
 
