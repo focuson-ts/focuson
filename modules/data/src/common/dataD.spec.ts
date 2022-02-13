@@ -1,5 +1,5 @@
 import { AccountIdDD, isDataDd, isRepeatingDd } from "./dataD";
-import { EAccountsSummaryDD, EAccountsSummaryTableDD, EAccountSummaryDD } from "./example.dataD";
+import { EAccountsSummaryDD, EAccountsSummaryTableDD, EAccountSummaryDD } from "../example/example.dataD";
 
 describe("dataDD", () =>{
   it ("should have a isDataDd ", () =>{

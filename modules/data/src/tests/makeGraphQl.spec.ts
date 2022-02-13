@@ -1,7 +1,7 @@
-import { EAccountsSummaryDD, EAccountSummaryDD } from "./example.dataD";
-import { makeGraphQlForDD, makeGraphQlForView } from "./makeGraphQl";
-import { AccountIdDD } from "./dataD";
-import { EAccountsSummaryFetchD, OneEAccountSummaryFetchD } from "./example.fetchD";
+import { EAccountsSummaryDD, EAccountSummaryDD } from "../example/example.dataD";
+import { makeGraphQlForDD, makeGraphQlForView } from "../makeGraphQl";
+import { AccountIdDD } from "../common/dataD";
+import { EAccountsSummaryFetchD, OneEAccountSummaryFetchD } from "../example/example.fetchD";
 
 
 export const x = 1

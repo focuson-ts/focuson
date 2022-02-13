@@ -1,10 +1,11 @@
-import { AccountIdDD, DataD, DateDD, Input, MoneyDD, OneLineStringDD, PrimitiveDD, RepeatingDataD, Table } from "./dataD";
+import { AccountIdDD, DataD, DateDD, MoneyDD, OneLineStringDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
+import { LabelAndInputCD, TableCD } from "../common/componentsD";
 
 
 export const EAccountDisplayTypeDD: PrimitiveDD = {
   name: "EAccountDisplayTypeDD",
   description: "The component that displays an EAccountDisplayType (savings/checking)",
-  display: Input,
+  display: LabelAndInputCD,
   validation: { enum: true, maxLength: 7 },
   enum: { savings: 'Savings', checking: 'Checking' }
   //Note samples come from enum
@@ -14,10 +15,10 @@ export const EAccountSummaryDD: DataD = {
   name: "EAccountSummaryDD",
   description: "This is the summary data about a single EAccount",
   structure: {
-    accountId: { dataDD: AccountIdDD, label: "Account Id" },
+    accountId: { dataDD: AccountIdDD, displayParams: { label: "Account Id" } },
     displayType: { dataDD: EAccountDisplayTypeDD },//No label because it is derivable from the camelCase
     description: { dataDD: OneLineStringDD },
-    frequency: { dataDD: OneLineStringDD, label: "Frequency/Amount" },
+    frequency: { dataDD: OneLineStringDD, displayParams: { label: "Frequency/Amount" } },
   }
 }
 export const EAccountsSummaryTableDD: RepeatingDataD = {
@@ -25,14 +26,15 @@ export const EAccountsSummaryTableDD: RepeatingDataD = {
   paged: false,
   description: "Just the raw EAccountSummaryDD data",
   dataDD: EAccountSummaryDD,
-  display: Table
+  display: TableCD,
+  displayParams: { order: {value:  [ 'accountId', 'displayType', 'description', 'frequency' ] }}
 }
 export const CreatePlanDD: DataD = {
   name: "CreatePlanDD",
   description: "The create plan data (actually just put in one place to allow a test for a structure)",
   structure: {
-    createPlanStart: { label: 'Create Start', dataDD: DateDD },
-    createPlanDate: { ariaLabel: 'The Create Plan Date', dataDD: DateDD },
+    createPlanStart: { displayParams: { label: 'Create Start' }, dataDD: DateDD },
+    createPlanDate: { displayParams: { ariaLabel: 'The Create Plan Date' }, dataDD: DateDD },
     createPlanEnd: { dataDD: DateDD },
   }
 }

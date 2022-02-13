@@ -1,5 +1,5 @@
-import { FetchDD, FetchParams, FetchParamsDD } from "./example.fetchD";
-import { AllDataDD, DataD, isDataDd, isRepeatingDd, PrimitiveDD, RepeatingDataD } from "./dataD";
+import { FetchDD, FetchParams, FetchParamsDD } from "./example/example.fetchD";
+import { AllDataDD, DataD, isDataDd, isRepeatingDd, PrimitiveDD, RepeatingDataD } from "./common/dataD";
 
 const indent = ( ss: string[] ): string[] => ss.map ( s => '  ' + s );
 
