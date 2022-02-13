@@ -1,4 +1,4 @@
-import { Optional } from "@focuson/lens";
+import { Lenses, Optional } from "@focuson/lens";
 import { LensState } from "@focuson/state";
 
 export interface HasSimpleMessages {
@@ -18,8 +18,8 @@ export function createSimpleMessage ( level: SimpleMessageLevel, msg: string, ti
   return { level, msg, time }
 }
 
-
-export function simpleMessagesL<S extends HasSimpleMessages, D> (): ( s: LensState<S, S>, domainLens: Optional<S, D> ) => LensState<S, SimpleMessage[]> {
+export const simpleMessagesL = <S extends HasSimpleMessages> () => Lenses.identity<S> ().focusOn ( 'messages' );
+export function simpleMessagesLFn<S extends HasSimpleMessages, D> (): ( s: LensState<S, S>, domainLens: Optional<S, D> ) => LensState<S, SimpleMessage[]> {
   return ( s, d ) => s.focusOn ( "messages" )
 }
 

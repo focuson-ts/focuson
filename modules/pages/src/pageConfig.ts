@@ -1,7 +1,7 @@
 import { Optional } from "@focuson/lens";
 import { LensProps, LensState } from "@focuson/state";
 import { AllModalPageDetails, allModelPageDetails, HasSelectedModalPage, ModalPagesDetails } from "./modal/modalPages";
-import { HasSimpleMessages, SimpleMessage, simpleMessagesL } from "./simpleMessage";
+import { HasSimpleMessages, SimpleMessage, simpleMessagesLFn } from "./simpleMessage";
 import { FocusedPage } from "./focusedPage";
 import React from "react";
 import { PageTemplateProps } from "./PageTemplate";
@@ -49,7 +49,7 @@ export function simpleMessagesPageConfig<S extends HasSimpleMessages & HasSelect
   md: MD, loading: ( s: LensState<S, any> ) => JSX.Element ): PageConfig<S, D, SimpleMessage[], MD> {
   return ({
     modalPageDetails: allModelPageDetails ( md ),
-    messageLens: simpleMessagesL<S, D> (),
+    messageLens: simpleMessagesLFn<S, D> (),
     loading
   })
 }

@@ -44,7 +44,7 @@ export interface CommonTagFetcherProps<S, T, MSGS> {
 export const commonTagFetchProps = <S extends HasSimpleMessages & HasTagHolder & HasPageSelection, T> ( messagesFromTarget?: ( t: T, date: string ) => SimpleMessage[], dateFn?: () => string ) => ( onError?: OnTagFetchErrorFn<S, T, SimpleMessage> ): CommonTagFetcherProps<S, T, SimpleMessage> => {
   const identityL: Iso<S, S> = Lenses.identity<S> ( 'state' ); //we need the any because of a typescript compiler bug
   const messageL: Optional<S, SimpleMessage[]> = identityL.focusQuery ( 'messages' );
-  let mainThingL = identityL.focusOn ( 'pageSelection' ).focusOn ( 'pageName' );
+  let mainThingL: Lens<S, string> = identityL.focusOn ( 'pageSelection' ).focusOn ( 'pageName' );
   let tagHolderL = identityL.focusQuery ( 'tags' );
   return {
     messageL, mainThingL, tagHolderL,
