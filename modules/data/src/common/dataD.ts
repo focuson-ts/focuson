@@ -63,6 +63,13 @@ export interface EnumDD {
   [ name: string ]: string
 }
 
+export const CustomerIdDD: PrimitiveDD = {
+  name: 'CustomerIdDD',
+  description: "A customer id",
+  display: LabelAndInputCD,
+  validation: { regex: "\d+", maxLength: 7 },
+  samples: [ "003450" ]
+}
 export const AccountIdDD: PrimitiveDD = {
   name: 'AccountIdDD',
   description: "An account id",

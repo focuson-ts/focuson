@@ -1,5 +1,5 @@
 import { EAccountsSummaryDD, EAccountSummaryDD } from "./example.dataD";
-import { AccountIdDD, AllDataDD, DataD, PrimitiveDD } from "../common/dataD";
+import { AccountIdDD, AllDataDD, CustomerIdDD, DataD, PrimitiveDD } from "../common/dataD";
 
 export interface FetchDD<P extends FetchParamsDD> {
   dataDD: AllDataDD;
@@ -16,7 +16,8 @@ export type FetchParams<Type> = {
 };
 
 export const oneAccountSummaryParamsDD = {
-  customerId: AccountIdDD
+  customerId: CustomerIdDD,
+  accountId: AccountIdDD
 }
 export type OneAccountSummaryParamsDD = typeof oneAccountSummaryParamsDD
 export const OneEAccountSummaryFetchD: FetchDD<OneAccountSummaryParamsDD> = {
@@ -24,6 +25,11 @@ export const OneEAccountSummaryFetchD: FetchDD<OneAccountSummaryParamsDD> = {
   params: oneAccountSummaryParamsDD
 }
 
-export const EAccountsSummaryFetchD: FetchDD<NoParams> = {
-  dataDD: EAccountsSummaryDD
+export const summaryParamsDD = {
+  accountId: AccountIdDD
+}
+export type SummaryParamsDD = typeof summaryParamsDD
+export const EAccountsSummaryFetchD: FetchDD<SummaryParamsDD> = {
+  dataDD: EAccountsSummaryDD,
+  params: summaryParamsDD
 }
