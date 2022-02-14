@@ -1,7 +1,8 @@
 import { FetchDD, FetchParams, FetchParamsDD } from "../example/example.fetchD";
-import { AllDataDD, DataD, isDataDd, isRepeatingDd, PrimitiveDD, RepeatingDataD } from "../common/dataD";
+import { AllDataDD, AllDataFolder, DataD, isDataDd, isRepeatingDd, PrimitiveDD, RepeatingDataD } from "../common/dataD";
 
 const indent = ( ss: string[] ): string[] => ss.map ( s => '  ' + s );
+
 
 
 export function makeGraphQlForDataDd ( name: string, d: DataD ): string[] {
@@ -28,6 +29,6 @@ export function makeGraphQlForDD ( name: string, d: AllDataDD ): string[] {
 
 export function makeGraphQlForView<V extends FetchDD<P>, P extends FetchParamsDD> ( name: string, view: FetchDD<P>, params: FetchParams<P> ): string[] {
   const paramsEntries = Object.entries ( params )
-  const paramsString = paramsEntries.length == 0 ? "" : '(' + paramsEntries.map ( ( [ k, v ] ) => `${k}: "${v}"`) +")"
+  const paramsString = paramsEntries.length == 0 ? "" : '(' + paramsEntries.map ( ( [ k, v ] ) => `${k}: "${v}"` ) + ")"
   return makeGraphQlForDD ( name + paramsString, view.dataDD )
 }

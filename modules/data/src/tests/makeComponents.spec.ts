@@ -16,16 +16,16 @@ describe ( " listComponentsIn", () => {
       { dataDD: DateDD, display: LabelAndInputCD, path: [ "createPlan", "createPlanEnd" ] }
     ];
     let actual = listComponentsIn ( EAccountsSummaryDD );
-    expect ( actual.length ).toEqual ( expected.length )
     for ( let i = 0; i < actual.length; i++ ) {
       let a: any = actual[ i ]
       let e: any = expected[ i ]
-      // console.log ( "loop", i )
+      // console.log ( "loop", i , a.dataDD.name, e.dataDD.name)
       expect ( a.dataDD ).toEqual ( e.dataDD )
       expect ( a.display ).toEqual ( e.display )
       expect ( a.displayParams ).toEqual ( e.displayParams )
       expect ( a.path ).toEqual ( e.path )
     }
+    expect ( actual.length ).toEqual ( expected.length )
     expect ( actual ).toEqual ( expected )
   } )
 

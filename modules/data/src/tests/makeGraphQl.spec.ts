@@ -1,5 +1,5 @@
 import { EAccountsSummaryDD, EAccountSummaryDD } from "../example/example.dataD";
-import { makeGraphQlForDD, makeGraphQlForView } from "../codegen/makeGraphQl";
+import { makeGraphQlForDD, makeGraphQlForView } from "../codegen/makeGraphQlQuery";
 import { AccountIdDD } from "../common/dataD";
 import { EAccountsSummaryFetchD, OneEAccountSummaryFetchD } from "../example/example.fetchD";
 

@@ -1,4 +1,4 @@
-import { AllDataDD, AllDataFolder, DataD, foldDataDD, isDataDd, isRepeatingDd, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
+import { AllDataDD, AllDataFlatMap, AllDataFolder, DataD, emptyDataFlatMap, flatMapDD, foldDataDD, isDataDd, isRepeatingDd, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
 import { DisplayCompD, DisplayCompParamD } from "../common/componentsD";
 import { on } from "cluster";
 
@@ -24,21 +24,22 @@ export interface ComponentDisplayParams {
 }
 
 
-export const listComponentsInFolder: AllDataFolder<AllComponentData[]> = {
+export const listComponentsInFolder: AllDataFlatMap<AllComponentData> = {
   stopAtDisplay: true,
-  foldData: ( acc, path, oneDataDD, dataDD ) =>
-    dataDD.display ? [ ...acc, { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display } ] : acc,
-  foldPrim: ( acc, path, oneDataDD, dataDD ) =>
+  ...emptyDataFlatMap (),
+  walkDataStart: ( path: string[], oneDataDD: OneDataDD | undefined, dataDD: DataD ): AllComponentData[] =>
+    dataDD.display ? [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display } ] : [],
+
+  walkPrim: ( path: string[], oneDataDD: OneDataDD | undefined, dataDD: PrimitiveDD ): AllComponentData[] =>
     dataDD.display ?
-      [ ...acc, { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display } ] :
-      [ ...acc, { path, dataDD, error: `Component ${JSON.stringify ( dataDD )} with displayParams [${JSON.stringify ( oneDataDD?.displayParams )}] does not have a display` } ],
-  foldRep: ( acc, path, oneDataDD, dataDD ) =>
-    [ ...acc, { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display } ]
+      [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display } ] :
+      [ { path, dataDD, error: `Component ${JSON.stringify ( dataDD )} with displayParams [${JSON.stringify ( oneDataDD?.displayParams )}] does not have a display` } ],
+
+  walkRepStart: ( path: string[], oneDataDD: OneDataDD | undefined, dataDD: RepeatingDataD ): AllComponentData[] =>
+    [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display } ]
 }
 
-export function listComponentsIn ( dataDD: AllDataDD ): AllComponentData[] {
-  return foldDataDD ( dataDD, [], [], listComponentsInFolder );
-}
+export const listComponentsIn = ( dataDD: AllDataDD ): AllComponentData[] => flatMapDD ( dataDD, listComponentsInFolder );
 
 function addQuote ( s: string | string[] ) {
   if ( Array.isArray ( s ) ) return "{[" + s.map ( x => "'" + x + "'" ) + "]}"
