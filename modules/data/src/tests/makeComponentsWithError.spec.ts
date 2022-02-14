@@ -1,6 +1,6 @@
 import { AccountIdDD, DataD, DateDD, MoneyDD, OneLineStringDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
 import { LabelAndInputCD, TableCD } from "../common/componentsD";
-import { listComponentsIn } from "../common/makeComponents";
+import { listComponentsIn } from "../codegen/makeComponents";
 
 
 export const TheAccountDD: PrimitiveDD = {
@@ -63,7 +63,7 @@ export const TheAccountsSummaryDD: DataD = {
 
 describe ( "validateDataDD", () => {
   it ( "it should list components (warts and all)", () => {
-    expect ( listComponentsIn ( [], {}, TheAccountsSummaryDD ) ).toEqual ( [
+    expect ( listComponentsIn ( TheAccountsSummaryDD ) ).toEqual ( [
       { dataDD: TheSummaryTable, path: [ "eAccountsTable" ] },
       { dataDD: TheSummaryTable2, display: TableCD, path: [ "eAccountsTable2" ] },
       { dataDD: MoneyDD, display: LabelAndInputCD, path: [ "totalMonthlyCost" ] },

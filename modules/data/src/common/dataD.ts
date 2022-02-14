@@ -2,7 +2,7 @@
 
 
 import { DisplayCompD, LabelAndInputCD } from "./componentsD";
-import { ComponentDisplayParams } from "./makeComponents";
+import { ComponentDisplayParams } from "../codegen/makeComponents";
 
 export interface OneDataDD {
   dataDD: AllDataDD;
@@ -15,8 +15,8 @@ export interface ManyDataDD {
 export interface OneDisplayParamDD {
   value: string | string[]
 }
-export interface DisplayParamDD{
-  [name: string]:  OneDisplayParamDD
+export interface DisplayParamDD {
+  [ name: string ]: OneDisplayParamDD
 }
 
 export interface CommonDataDD {
@@ -27,6 +27,7 @@ export interface CommonDataDD {
   comments?: string;
   meta?: any;
   graphQl?: string;
+  tableName?: string;
 
 }
 export interface DataD extends CommonDataDD {
@@ -37,6 +38,7 @@ export interface PrimitiveDD extends CommonDataDD {
   validation: SingleFieldValidationDD;
   samples?: string[];
   enum?: EnumDD;
+  fieldName?: string
 }
 export interface RepeatingDataD extends CommonDataDD {
   paged: boolean;
@@ -48,6 +50,28 @@ export function isRepeatingDd ( d: any ): d is RepeatingDataD {
 }
 
 export type AllDataDD = PrimitiveDD | DataD | RepeatingDataD
+export interface AllDataFolder<Acc> {
+  stopAtDisplay?: boolean,
+  foldPrim: ( acc: Acc, path: string[], oneDataDD: OneDataDD | undefined, dataDD: PrimitiveDD ) => Acc,
+  foldData: ( acc: Acc, path: string[], oneDataDD: OneDataDD | undefined, dataDD: DataD ) => Acc,
+  foldRep: ( acc: Acc, path: string[], oneDataDD: OneDataDD | undefined, dataDD: RepeatingDataD ) => Acc
+}
+
+export function foldDataDD<Acc> ( dataDD: AllDataDD, path: string[], zero: Acc, folder: AllDataFolder<Acc>, oneDataDD?: OneDataDD ): Acc {
+  const { foldPrim, foldData, foldRep, stopAtDisplay } = folder
+  if ( isDataDd ( dataDD ) ) {
+    let withThis: Acc = foldData ( zero, path, oneDataDD, dataDD );
+    if ( dataDD.display && stopAtDisplay ) return withThis
+    return Object.entries ( dataDD.structure ).reduce ( ( acc, [ name, child ] ) => foldDataDD ( child.dataDD, [ ...path, name ], acc, folder, child ), withThis )
+  }
+  if ( isRepeatingDd ( dataDD ) ) {
+    let withThis = foldRep ( zero, path, oneDataDD, dataDD );
+    if ( stopAtDisplay ) return withThis
+    return foldDataDD ( dataDD.dataDD, path, withThis, folder, undefined )
+  }
+  return foldPrim ( zero, path, oneDataDD, dataDD )
+}
+
 
 export function isDataDd ( d: any ): d is DataD {
   return !!d.structure
@@ -107,6 +131,14 @@ export const MoneyDD: any = {
 export const DateDD: PrimitiveDD = {
   name: 'DateDD',
   description: "The primitive representing a date (w/o time)",
+  display: LabelAndInputCD, //or maybe a date picker
+  validation: { regex: "\d+", maxLength: 8 },
+  samples: [ "2020-10-01", '2022-14-01' ]
+}
+
+export const DateTimeDD: PrimitiveDD = {
+  name: 'DateTimeDD',
+  description: "The primitive representing a date (with time)",
   display: LabelAndInputCD, //or maybe a date picker
   validation: { regex: "\d+", maxLength: 8 },
   samples: [ "2020-10-01", '2022-14-01' ]

@@ -1,5 +1,5 @@
 import { EAccountsSummaryDD, EAccountSummaryDD } from "../example/example.dataD";
-import { makeGraphQlForDD, makeGraphQlForView } from "../common/makeGraphQl";
+import { makeGraphQlForDD, makeGraphQlForView } from "../codegen/makeGraphQl";
 import { AccountIdDD } from "../common/dataD";
 import { EAccountsSummaryFetchD, OneEAccountSummaryFetchD } from "../example/example.fetchD";
 
@@ -59,7 +59,7 @@ describe ( "makGraphQlForView", () => {
     ] )
   } )
 
-  it ( "mkae a view without params", () => {
+  it ( "make a view without params", () => {
     expect ( makeGraphQlForView ( 'eAccountsSummary', EAccountsSummaryFetchD, {accountId: 'accid'} ) ).toEqual ( [
       'eAccountsSummary(accountId: "accid"){',
       "    eAccountsTable{",

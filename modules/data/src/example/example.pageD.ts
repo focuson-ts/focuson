@@ -1,26 +1,10 @@
 import { EAccountsSummaryDD } from "./example.dataD";
+import { createPlanRestD, exportAccountsSummaryRestD } from "./example.restD";
+import { PageD } from "../common/pageD";
 
-export const commonParams = {
-  customerId: { commonLens: [ 'customerId' ] },
-  accountId: { commonLens: [ 'accountId' ] },
-}
-
-/** This should fully define the api*/
-const exportAccountsSummaryRestD: any = {
-  params: { ...commonParams },
-  dataDD: EAccountsSummaryDD,
-  url: '/api/accountsSummary?accountId={accountId}&customerId={customerId}',
-  actions: [ 'get' ],
-}
-const createPlanRestD: any = {
-  params: { ...commonParams, createPlanId: { lens: [ 'TBD' ] } },
-  dataDD: 'not sure',
-  url: '/api/createPlan/{createPlanId}?accountId={accountId}&customerId={customerId}',
-  actions: [ 'get', 'create', 'update', 'delete' ],
-}
 
 /** This is the 'bringing it all together */
-export const EAccountsSummaryPD: any = {
+export const EAccountsSummaryPD: PageD = {
   modal: false,
   /** Where we are in the state */
   path: [ 'eAccountsSummary' ],
@@ -34,12 +18,13 @@ export const EAccountsSummaryPD: any = {
   domain: {
     fromApi: { dataDD: EAccountsSummaryDD },
     temp: { dataDD: EAccountsSummaryDD },
-    createPlan: 'TBD'
+    createPlan: { dataDD: EAccountsSummaryDD } //TDB
   },
 
   /** Binds the rest to 'where it takes place'. So we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
   rest: {
     exportAccountsSummary: { rest: exportAccountsSummaryRestD, targetFromPath: 'fromApi', fetcher: true },
+    /** this will probably need to specify 'the current' plan in some way */
     createPlanRestD: { rest: createPlanRestD, targetFromPath: 'createPlan' }
   },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
@@ -49,16 +34,17 @@ export const EAccountsSummaryPD: any = {
     amendExistingPlan: { control: 'ModalButton', modal: 'createPlan', mode: 'edit', mainData: 'fromApi', tempData: 'temp', restOnCommit: { rest: 'createPlanRestD', action: 'update' } },
     deleteExistingPlan: { control: 'RestButton', rest: 'createPlanRestD', action: 'delete', confirm: true },
     refresh: { control: 'RestButton', rest: 'exportAccountsSummary', action: 'get' },
-    requestInfo: { control: 'ModalButton', modal: 'requestInfo' },
+    requestInfo: { control: 'ModalButton', modal: 'requestInfo', mode: 'view', mainData: 'TDB', tempData: 'TBD' },
   }
 }
 
 /** this is a modal window, so it's target is controlled by the caller */
-export const createPlanPD: any = {
+export const createPlanPD: PageD = {
   modal: true,
   /** This page can only view data */
   modes: [ 'view', 'create', 'edit' ],
   /** How we display the page.*/
+// @ts-ignore
   display: { layout: 'TDB', target: [], dataDD: 'Not created yet' },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {

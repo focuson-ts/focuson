@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\modules",
+    "\\modules\\data"
   ],
+  "SelectedNode": "\\modules\\data",
   "PreviewInSolutionExplorer": false
 }

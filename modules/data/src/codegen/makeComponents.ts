@@ -1,5 +1,6 @@
-import { AllDataDD, isDataDd, isRepeatingDd, PrimitiveDD } from "./dataD";
-import { DisplayCompD, DisplayCompParamD } from "./componentsD";
+import { AllDataDD, AllDataFolder, DataD, foldDataDD, isDataDd, isRepeatingDd, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
+import { DisplayCompD, DisplayCompParamD } from "../common/componentsD";
+import { on } from "cluster";
 
 
 export type AllComponentData = ComponentData | ErrorComponentData
@@ -22,15 +23,21 @@ export interface ComponentDisplayParams {
   [ name: string ]: string | string[]
 }
 
-export function listComponentsIn ( path: string[], displayParams: ComponentDisplayParams | undefined, dataDD: AllDataDD ): AllComponentData[] {
-  const { display } = dataDD
-  if ( isDataDd ( dataDD ) )
-    if ( display ) return [ { path, displayParams, dataDD, display } ]
-    else if ( dataDD ) return Object.entries ( dataDD.structure ).flatMap ( ( [ name, child ] ) => listComponentsIn ( [ ...path, name.toString () ], child.displayParams, child.dataDD ) )
-  if ( isRepeatingDd ( dataDD ) ) return [ { path, dataDD, displayParams, display: dataDD.display } ]
-  const p: PrimitiveDD = dataDD
-  if ( display ) return [ { path, displayParams, dataDD, display } ]
-  else return [ { path, dataDD, error: `Component ${JSON.stringify ( dataDD )} with displayParams [${JSON.stringify ( displayParams )}] does not have a display` } ]
+
+export const listComponentsInFolder: AllDataFolder<AllComponentData[]> = {
+  stopAtDisplay: true,
+  foldData: ( acc, path, oneDataDD, dataDD ) =>
+    dataDD.display ? [ ...acc, { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display } ] : acc,
+  foldPrim: ( acc, path, oneDataDD, dataDD ) =>
+    dataDD.display ?
+      [ ...acc, { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display } ] :
+      [ ...acc, { path, dataDD, error: `Component ${JSON.stringify ( dataDD )} with displayParams [${JSON.stringify ( oneDataDD?.displayParams )}] does not have a display` } ],
+  foldRep: ( acc, path, oneDataDD, dataDD ) =>
+    [ ...acc, { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display } ]
+}
+
+export function listComponentsIn ( dataDD: AllDataDD ): AllComponentData[] {
+  return foldDataDD ( dataDD, [], [], listComponentsInFolder );
 }
 
 function addQuote ( s: string | string[] ) {
@@ -42,10 +49,10 @@ export function createOneReact ( { path, dataDD, display, displayParams }: Compo
   const focusOnString = path.map ( v => `.focusOn('${v}')` ).join ( '' )
   const dataDDParamsA: [ string, string ][] = dataDD.displayParams ? Object.entries ( dataDD.displayParams ).map ( ( [ name, o ] ) => [ name, addQuote ( o.value ) ] ) : []
   const defaultParams: [ string, string ][] = Object.entries ( display.params ).flatMap ( ( [ name, param ] ) => {
-    return param.needed === 'defaultToCamelCaseOfName' ? [ [ name, addQuote ( path.slice(-1) + "CC" ) ] ] : []
+    return param.needed === 'defaultToCamelCaseOfName' ? [ [ name, addQuote ( path.slice ( -1 ) + "CC" ) ] ] : []
   } )
   const displayParamsA: [ string, string ][] = displayParams ? Object.entries ( displayParams ).map ( ( [ name, value ] ) => [ name, addQuote ( value ) ] ) : []
-  const fullDisplayParams = Object.entries(Object.fromEntries ( [ ...defaultParams, ...dataDDParamsA, ...displayParamsA ] ))
+  const fullDisplayParams = Object.entries ( Object.fromEntries ( [ ...defaultParams, ...dataDDParamsA, ...displayParamsA ] ) )
   const displayParamsString = fullDisplayParams.map ( ( [ k, v ] ) => `${k}=${v}` ).join ( " " )
   return [ `<${name} state={state${focusOnString}} ${displayParamsString} />` ]
 

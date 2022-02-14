@@ -1,5 +1,6 @@
 import { AccountIdDD, DataD, DateDD, MoneyDD, OneLineStringDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
-import { LabelAndInputCD, TableCD } from "../common/componentsD";
+import { DisplayCompD, LabelAndInputCD, TableCD } from "../common/componentsD";
+import { ComponentData } from "../codegen/makeComponents";
 
 
 export const EAccountDisplayTypeDD: PrimitiveDD = {
@@ -27,8 +28,9 @@ export const EAccountsSummaryTableDD: RepeatingDataD = {
   description: "Just the raw EAccountSummaryDD data",
   dataDD: EAccountSummaryDD,
   display: TableCD,
-  displayParams: { order: {value:  [ 'accountId', 'displayType', 'description', 'frequency' ] }}
+  displayParams: { order: { value: [ 'accountId', 'displayType', 'description', 'frequency' ] } }
 }
+
 export const CreatePlanDD: DataD = {
   name: "CreatePlanDD",
   description: "The create plan data (actually just put in one place to allow a test for a structure)",
@@ -41,6 +43,7 @@ export const CreatePlanDD: DataD = {
 export const EAccountsSummaryDD: DataD = {
   name: "EAccountsSummaryDD",
   description: "This is the summary data about all the EAccounts for a single user",
+  tableName: 'CustomerSUmmaryView',
   structure: {
     eAccountsTable: { dataDD: EAccountsSummaryTableDD },
     totalMonthlyCost: { dataDD: MoneyDD },
