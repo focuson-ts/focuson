@@ -1,5 +1,6 @@
 import { DataD } from "./dataD";
-import { RestD } from "../example/example.restD";
+import { RestD } from "./restD";
+
 
 type PageMode = 'view' | 'create' | 'edit'
 export interface DomainDefnInPage {

@@ -1,4 +1,4 @@
-import { AccountIdDD, DataD, DateDD, MoneyDD, OneLineStringDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
+import { AccountIdDD, DataD, DateDD, MoneyDD, OneLineStringDD, PrimitiveDD, RepeatingDataD, StringDD } from "../common/dataD";
 import { DisplayCompD, LabelAndInputCD, TableCD } from "../common/componentsD";
 import { ComponentData } from "../codegen/makeComponents";
 
@@ -52,3 +52,4 @@ export const EAccountsSummaryDD: DataD = {
     createPlan: { dataDD: CreatePlanDD }
   }
 }
+

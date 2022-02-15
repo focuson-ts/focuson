@@ -1,4 +1,4 @@
-import { AccountIdDD, AllDataFolder, collectDataWalker, findDataDDIn, foldDataDD, isDataDd, isRepeatingDd } from "../common/dataD";
+import { AccountIdDD, AllDataFolder, collectDataWalker, findAllDataDs, findDataDDIn, foldDataDD, isDataDd, isRepeatingDd } from "../common/dataD";
 import { CreatePlanDD, EAccountsSummaryDD, EAccountsSummaryTableDD, EAccountSummaryDD } from "../example/example.dataD";
 import { start } from "repl";
 
@@ -69,6 +69,14 @@ describe ( " findDataDDIn", () => {
   it ( "should find all the DataD", () => {
     expect ( findDataDDIn ( EAccountsSummaryDD ) ).toEqual (
       [ EAccountsSummaryDD, EAccountSummaryDD, CreatePlanDD ] )
+  } )
+} )
+
+describe ( "findAllDataDs", () => {
+  it ( "should find all the dataDs in a list of expressions, removing duplicates", () => {
+    expect ( findAllDataDs ( [ EAccountsSummaryDD, CreatePlanDD, EAccountSummaryDD, CreatePlanDD ] ) ).toEqual ( {
+      EAccountsSummaryDD, CreatePlanDD, EAccountSummaryDD
+    } )
   } )
 
 } )

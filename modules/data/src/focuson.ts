@@ -1,17 +1,10 @@
-import * as path from "path";
-import { Command } from 'commander';
-const program = new Command();
-program
-  .name ( 'string-util' )
-  .description ( 'CLI to some JavaScript string utilities' )
-  .version ( '0.8.0' );
+import { makeGraphQlSchema } from "./codegen/makeGraphQlTypes";
+import { createPlanRestD, exportAccountsSummaryRestD } from "./example/example.restD";
+import fs from "fs";
 
-program.command ( 'createReactComponents' )
-  .description ( 'Makes the react components for each resource' )
-  .option ( '--output <char>', 'where to put the output', 'react/resource'  )
-  .action ( ( str: any ) => {
-    const {output} = str;
-    console.log("CreateReactComponents",str, output)
-  } );
+export function writeToFile ( name: string, contents: string[] ) {
+  fs.writeFileSync ( name, contents.join ( '\n' ) );
+}
 
-program.parse ();
+
+writeToFile ( 'dist/schema.graphql', makeGraphQlSchema ( [ exportAccountsSummaryRestD, createPlanRestD ] ) )

@@ -3,8 +3,6 @@
 
 import { DisplayCompD, LabelAndInputCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeComponents";
-import { on } from "cluster";
-import { start } from "repl";
 
 export interface OneDataDD {
   dataDD: AllDataDD;
@@ -53,6 +51,12 @@ export function isRepeatingDd ( d: any ): d is RepeatingDataD {
 }
 
 export type AllDataDD = PrimitiveDD | DataD | RepeatingDataD
+
+
+export interface NamesAndDataDs {
+  [ name: string ]: DataD
+}
+
 export interface AllDataFolder<Acc> {
   stopAtDisplay?: boolean,
   foldPrim: ( acc: Acc, path: string[], oneDataDD: OneDataDD | undefined, dataDD: PrimitiveDD ) => Acc,
@@ -117,6 +121,14 @@ export function foldDataDD<Acc> ( dataDD: AllDataDD, path: string[], zero: Acc, 
     return foldRep ( acc, path, oneDataDD, dataDD, false )
   }
   return foldPrim ( zero, path, oneDataDD, dataDD )
+}
+
+
+/** Finds and dedups all the unique DataDs in the list. Identity is based on name: so we assume if the name is the same, it's the same object.*/
+export function findAllDataDs ( a: AllDataDD[] ): NamesAndDataDs {
+  var result: NamesAndDataDs = {}
+  a.flatMap ( d => findDataDDIn ( d ) ).forEach ( d => result [ d.name ] = d )
+  return result
 }
 
 
