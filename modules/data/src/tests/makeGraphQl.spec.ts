@@ -1,5 +1,5 @@
 import { makeQueryForRest } from "../codegen/makeGraphQlQuery";
-import { exportAccountsSummaryRestD } from "../example/example.restD";
+import { exportAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
 
 
 describe ( "Making GraphQl from RestD", () => {

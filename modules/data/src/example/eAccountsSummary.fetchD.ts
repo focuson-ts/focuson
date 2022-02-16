@@ -1,4 +1,4 @@
-import { EAccountsSummaryDD, EAccountSummaryDD } from "./example.dataD";
+import { EAccountsSummaryDD, EAccountSummaryDD } from "./eAccountsSummary.dataD";
 import { AccountIdDD, AllDataDD, CustomerIdDD, DataD, PrimitiveDD } from "../common/dataD";
 
 export interface FetchDD<P extends FetchParamsDD> {

@@ -1,6 +1,6 @@
-import { createPlanRestD, exportAccountsSummaryRestD } from "../example/example.restD";
+import { createPlanRestD, exportAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
 import { makeGraphQlSchema, makeQueryOrMutateBlock, makeSchemaBlock } from "../codegen/makeGraphQlTypes";
-import { CreatePlanDD, EAccountsSummaryDD, EAccountsSummaryTableDD, EAccountSummaryDD } from "../example/example.dataD";
+import { CreatePlanDD, EAccountsSummaryDD, EAccountsSummaryTableDD, EAccountSummaryDD } from "../example/eAccountsSummary.dataD";
 
 const rs = [ exportAccountsSummaryRestD, createPlanRestD, exportAccountsSummaryRestD, createPlanRestD ];
 describe ( "makeGraphQlSchema", () => {

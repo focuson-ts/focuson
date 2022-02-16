@@ -1,5 +1,5 @@
-import { CreatePlanDD, EAccountsSummaryDD } from "./example.dataD";
-import { createPlanRestD, exportAccountsSummaryRestD } from "./example.restD";
+import { CreatePlanDD, EAccountsSummaryDD } from "./eAccountsSummary.dataD";
+import { createPlanRestD, exportAccountsSummaryRestD } from "./eAccountsSummary.restD";
 import { PageD } from "../common/pageD";
 
 

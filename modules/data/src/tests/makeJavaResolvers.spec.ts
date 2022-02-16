@@ -1,5 +1,5 @@
 import { makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
-import { createPlanRestD, exportAccountsSummaryRestD } from "../example/example.restD";
+import { createPlanRestD, exportAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
 
 describe ( "makeJavaResolversInterface", () => {
   it ( "should make a java interface", () => {

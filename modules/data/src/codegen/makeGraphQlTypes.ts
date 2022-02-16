@@ -11,7 +11,7 @@ export function makeGraphQlTypeFolder ( { keyword, create, postfix }: RestTypeDe
   }
 }
 
-const rawTypeName = ( d: AllDataDD ): string => isRepeatingDd ( d ) ? rawTypeName ( d.dataDD ) : d.graphQlType ? d.graphQlType : d.name;
+export const rawTypeName = ( d: AllDataDD ): string => isRepeatingDd ( d ) ? rawTypeName ( d.dataDD ) : d.graphQlType ? d.graphQlType : d.name;
 function theType ( d: AllDataDD ): string {
   if ( isDataDd ( d ) ) return rawTypeName ( d ) + "!"
   if ( isRepeatingDd ( d ) ) return "[" + theType ( d.dataDD ) + "]!"

@@ -1,5 +1,5 @@
 import { findMustConstructForRest, flapMapActionDetails } from "../common/restD";
-import { createPlanRestD, exportAccountsSummaryRestD } from "../example/example.restD";
+import { createPlanRestD, exportAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
 
 describe ( "flatMapActionDetails", () => {
   it ( "should work for exportAccountsSummaryRestD", () => {

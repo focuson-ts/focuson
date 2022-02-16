@@ -1,8 +1,8 @@
 import { AccountIdDD, DataD, DateDD, IntegerDD, MoneyDD } from "../common/dataD";
-import { EAccountsSummaryDD, EAccountsSummaryTableDD, EAccountSummaryDD } from "../example/example.dataD";
+import { EAccountsSummaryDD, EAccountsSummaryTableDD, EAccountSummaryDD } from "../example/eAccountsSummary.dataD";
 import { ComponentData, createAllReactCalls, createAllReactComponents, createReactComponent, createReactPageComponent, listComponentsIn } from "../codegen/makeComponents";
 import { LabelAndInputCD, TableCD } from "../common/componentsD";
-import { createPlanPD, EAccountsSummaryPD } from "../example/example.pageD";
+import { createPlanPD, EAccountsSummaryPD } from "../example/eAccountsSummary.pageD";
 
 
 describe ( " listComponentsIn", () => {

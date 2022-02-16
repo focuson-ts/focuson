@@ -1,4 +1,4 @@
-import { CreatePlanDD, EAccountsSummaryDD } from "./example.dataD";
+import { CreatePlanDD, EAccountsSummaryDD } from "./eAccountsSummary.dataD";
 import { RestD } from "../common/restD";
 
 export const commonParams = {

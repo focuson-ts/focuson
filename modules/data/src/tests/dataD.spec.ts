@@ -1,5 +1,5 @@
 import { AccountIdDD, AllDataFolder, collectDataWalker, findAllDataDs, findDataDDIn, foldDataDD, isDataDd, isRepeatingDd } from "../common/dataD";
-import { CreatePlanDD, EAccountsSummaryDD, EAccountsSummaryTableDD, EAccountSummaryDD } from "../example/example.dataD";
+import { CreatePlanDD, EAccountsSummaryDD, EAccountsSummaryTableDD, EAccountSummaryDD } from "../example/eAccountsSummary.dataD";
 import { start } from "repl";
 
 describe ( "dataDD", () => {

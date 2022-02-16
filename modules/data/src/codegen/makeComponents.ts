@@ -2,7 +2,7 @@ import { AllDataDD, AllDataFlatMap, AllDataFolder, DataD, emptyDataFlatMap, flat
 import { DisplayCompD, DisplayCompParamD } from "../common/componentsD";
 import { on } from "cluster";
 import { dataDsIn, PageD } from "../common/pageD";
-import { EAccountsSummaryDD } from "../example/example.dataD";
+import { EAccountsSummaryDD } from "../example/eAccountsSummary.dataD";
 import { indentList } from "./makeGraphQlQuery";
 import { sortedEntries } from "@focuson/utils";
 import { componentName, domainName, pageComponentName } from "./names";
@@ -70,7 +70,7 @@ export function createAllReactCalls ( d: AllComponentData[] ): string[] {
 export function createReactComponent ( dataD: DataD ): string[] {
   const contents = indentList ( indentList ( createAllReactCalls ( listComponentsIn ( dataD ) ) ) )
   return [
-    `function ${componentName ( dataD )}<S>({state}: LensState<S, ${domainName ( dataD )}>){`,
+    `function ${componentName ( dataD )}<S>({state}: LensProps<S, ${domainName ( dataD )}>){`,
     "  return(<>",
     ...contents,
     "</>)",
@@ -80,7 +80,7 @@ export function createReactComponent ( dataD: DataD ): string[] {
 export function createReactPageComponent ( pageD: PageD ): string[] {
   const { dataDD, layout, target } = pageD.display
   return [
-    `function ${pageComponentName ( pageD )}<S>({state}: LensState<S, ${domainName ( dataDD )}>){`,
+    `function ${pageComponentName ( pageD )}<S>({state}: LensProps<S, ${domainName ( dataDD )}>){`,
     `  return (<${layout.name}  details='${layout.details}'>`,
     `   <${componentName ( dataDD )} state={state} />`,
     `   </${layout.name}>)`,

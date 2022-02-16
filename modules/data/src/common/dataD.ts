@@ -35,6 +35,7 @@ export interface DataD extends CommonDataDD {
   structure: ManyDataDD;
 }
 export interface PrimitiveDD extends CommonDataDD {
+  reactType: string,
   label?: string;
   validation: SingleFieldValidationDD;
   samples?: string[];
@@ -148,6 +149,7 @@ export interface EnumDD {
 
 export const CustomerIdDD: PrimitiveDD = {
   name: 'CustomerIdDD',
+  reactType: 'string',
   description: "A customer id",
   display: LabelAndInputCD,
   validation: { regex: "\d+", maxLength: 7 },
@@ -155,6 +157,7 @@ export const CustomerIdDD: PrimitiveDD = {
 }
 export const AccountIdDD: PrimitiveDD = {
   name: 'AccountIdDD',
+  reactType: 'string',
   description: "An account id",
   display: LabelAndInputCD,
   validation: { regex: "\d+", maxLength: 7 },
@@ -162,6 +165,7 @@ export const AccountIdDD: PrimitiveDD = {
 }
 export const StringDD: PrimitiveDD = {
   name: 'StringDD',
+  reactType: 'string',
   description: "The primitive 'string'. A reasonably short list of characters",
   display: LabelAndInputCD,
   validation: { maxLength: 255 }, //Note no regex
@@ -169,6 +173,7 @@ export const StringDD: PrimitiveDD = {
 }
 export const OneLineStringDD: PrimitiveDD = {
   name: 'OneLineStringDD',
+  reactType: 'string',
   description: "A string that fits on a line of text. Probably reasonably long",
   display: LabelAndInputCD,
   validation: { maxLength: 255 }, //Note no regex
@@ -176,6 +181,7 @@ export const OneLineStringDD: PrimitiveDD = {
 }
 export const IntegerDD: PrimitiveDD = {
   name: 'IntegerDD',
+  reactType: 'string',
   description: "The primitive 'Integer'",
   display: LabelAndInputCD,
   validation: { regex: "\d+", maxLength: 255 },
@@ -189,6 +195,7 @@ export const MoneyDD: any = {
 
 export const DateDD: PrimitiveDD = {
   name: 'DateDD',
+  reactType: 'string',
   description: "The primitive representing a date (w/o time)",
   display: LabelAndInputCD, //or maybe a date picker
   validation: { regex: "\d+", maxLength: 8 },
@@ -197,6 +204,7 @@ export const DateDD: PrimitiveDD = {
 
 export const DateTimeDD: PrimitiveDD = {
   name: 'DateTimeDD',
+  reactType: 'string',
   description: "The primitive representing a date (with time)",
   display: LabelAndInputCD, //or maybe a date picker
   validation: { regex: "\d+", maxLength: 8 },

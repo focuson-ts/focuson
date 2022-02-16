@@ -5,6 +5,7 @@ import { listComponentsIn } from "../codegen/makeComponents";
 
 export const TheAccountDD: PrimitiveDD = {
   name: "TheAccountDD",
+  reactType: 'string',
   description: "The component that displays an EAccountDisplayType (savings/checking)",
   display: LabelAndInputCD,
   displayParams: { someUnrecognisedParam: { value: 'who cares' } },

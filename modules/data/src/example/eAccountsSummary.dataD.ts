@@ -5,6 +5,7 @@ import { ComponentData } from "../codegen/makeComponents";
 
 export const EAccountDisplayTypeDD: PrimitiveDD = {
   name: "EAccountDisplayTypeDD",
+  reactType: 'string',
   description: "The component that displays an EAccountDisplayType (savings/checking)",
   display: LabelAndInputCD,
   validation: { enum: true, maxLength: 7 },
