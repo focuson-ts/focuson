@@ -7,6 +7,7 @@ import { createPlanPD, EAccountsSummaryPD } from "./example/eAccountsSummary.pag
 import { makeAllDomainsFor } from "./codegen/makeDomain";
 import { sortedEntries } from "@focuson/utils";
 import { unique } from "./common/restD";
+import { makeAllFetchers } from "./codegen/makeFetchers";
 
 export function writeToFile ( name: string, contents: string[] ) {
   fs.writeFileSync ( name, contents.join ( '\n' ) );
@@ -23,4 +24,5 @@ writeToFile ( 'dist/focus/render.tsx',
   [ 'import { LensProps } from "@focuson/state";', '',
     ...createAllReactComponents ( pages ),
     ...makeAllDomainsFor ( pages ) ] )
-writeToFile ( 'dist/focus/wiring.java', makeAllJavaWiring ( { thePackage: 'wiring', fetcherClass: 'wiring' }, rests ) )
+writeToFile ( 'dist/focus/wiring.java', makeAllJavaWiring ( { thePackage: 'wiring', fetcherClass: 'wiring' , schema: 'someSchema'}, rests ) )
+writeToFile ( 'dist/focus/fetchers.ts', makeAllFetchers ( pages) )

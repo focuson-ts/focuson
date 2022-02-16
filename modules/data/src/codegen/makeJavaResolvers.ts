@@ -1,8 +1,8 @@
-import { findUniqueDataDsAndRestTypeDetails, RestActionDetail, RestD } from "../common/restD";
+import { findUniqueDataDsAndRestTypeDetails, findUniqueDataDsIn, RestActionDetail, RestD } from "../common/restD";
 import { resolverName } from "./makeGraphQlTypes";
 import { dataDsIn, PageD } from "../common/pageD";
 import { sortedEntries } from "@focuson/utils";
-import { DataD } from "../common/dataD";
+import { AllDataDD, DataD, emptyDataFlatMap, flatMapDD } from "../common/dataD";
 import fs from "fs";
 
 
@@ -17,23 +17,44 @@ export function makeJavaResolversInterface ( packageName: string, intName: strin
     '}' ]
 }
 
-export const makeOneJavaWiring = ( [ dd, rad ]: [ DataD, RestActionDetail ] ): string => {
+function makeWiring ( data: string, resolver: string ) {
+  return `.type(newTypeWiring("${data}").dataFetcher("${resolver}", fetchers.${resolver}()))`;
+}
+export const makeOneJavaWiringForQueryAndMutation = ( [ dd, rad ]: [ DataD, RestActionDetail ] ): string => {
   let rName = resolverName ( dd, rad );
   let q = rad.query === 'query' ? 'Query' : 'Mutation'
-  return `.type(newTypeWiring("${q}").dataFetcher("${rName}", fetchers.${rName}()))`
+  return makeWiring ( q, rName )
 };
 
-export function makeJavaWiring ( rs: RestD[] ): string[] {
-  return findUniqueDataDsAndRestTypeDetails ( rs ).map ( makeOneJavaWiring )
+export function makeJavaWiringForQueryAndMutation ( rs: RestD[] ): string[] {
+  return findUniqueDataDsAndRestTypeDetails ( rs ).map ( makeOneJavaWiringForQueryAndMutation )
 }
-interface JavaWiringParams {
+
+export const makeJavaWiringForDataD = ( name: string ) => ( d: AllDataDD ): string[] =>
+  d.resolver ? [ makeWiring ( name, d.resolver ) ] : [];
+
+export function makeJavaWiringForAllDataDs ( rs: RestD[] ): string[] {
+  return rs.flatMap ( r => flatMapDD ( r.dataDD,
+    {
+      ...emptyDataFlatMap (),
+      walkDataStart: ( path, oneDataDD, dataDD ) =>
+        path.length<2 ? [] : [makeWiring ( path[ path.length - 2 ], path[ path.length - 1 ] )],
+      walkPrim: ( path, oneDataDD, dataDD ) =>
+        path.length<2 ? [] : [makeWiring ( path[ path.length - 2 ], path[ path.length - 1 ] )],
+    } ) )
+}
+
+
+export interface JavaWiringParams {
   thePackage: string,
   fetcherClass: string,
+  schema: string
 }
 
 export function makeAllJavaWiring ( params: JavaWiringParams, rs: RestD[] ): string[] {
   const str: string = fs.readFileSync ( 'templates/JavaWiringTemplate.java' ).toString ()
-  return sortedEntries ( { ...params, wiring: makeJavaWiring ( rs ).map ( s => '          ' + s ).join ( '\n' ) } ).reduce (
+  let wiring = [ ...makeJavaWiringForQueryAndMutation ( rs ), ...makeJavaWiringForAllDataDs ( rs ) ]
+  return sortedEntries ( { ...params, wiring: wiring.map ( s => '          ' + s ).join ( '\n' ) } ).reduce (
     ( acc: string, [ name, value ] ) => {
       const regex = new RegExp ( "<" + name + ">", 'g' )
       return acc.replace ( regex, value )

@@ -1,6 +1,6 @@
-import { AccountIdDD, DataD, DateDD, IntegerDD, MoneyDD } from "../common/dataD";
-import { EAccountsSummaryDD, EAccountsSummaryTableDD, EAccountSummaryDD } from "../example/eAccountsSummary.dataD";
-import { ComponentData, createAllReactCalls, createAllReactComponents, createReactComponent, createReactPageComponent, listComponentsIn } from "../codegen/makeComponents";
+import { DateDD, MoneyDD } from "../common/dataD";
+import { EAccountsSummaryDD, EAccountsSummaryTableDD } from "../example/eAccountsSummary.dataD";
+import { createAllReactCalls, createAllReactComponents, createReactComponent, createReactPageComponent, listComponentsIn } from "../codegen/makeComponents";
 import { LabelAndInputCD, TableCD } from "../common/componentsD";
 import { createPlanPD, EAccountsSummaryPD } from "../example/eAccountsSummary.pageD";
 
@@ -9,9 +9,9 @@ describe ( " listComponentsIn", () => {
   it ( "should list the components used to display the ", () => {
     let expected = [
       { dataDD: EAccountsSummaryTableDD, display: TableCD, path: [ "eAccountsTable" ] },
-      { dataDD: MoneyDD, display: LabelAndInputCD, path: [ "totalMonthlyCost" ] },
-      { dataDD: MoneyDD, display: LabelAndInputCD, path: [ "oneAccountBalance" ] },
-      { dataDD: MoneyDD, display: LabelAndInputCD, path: [ "currentAccountBalance" ] },
+      { dataDD: { ...MoneyDD, resolver: 'getTotalMonthlyCost' }, display: LabelAndInputCD, path: [ "totalMonthlyCost" ] },
+      { dataDD: { ...MoneyDD, resolver: 'getOneAccountBalance' }, display: LabelAndInputCD, path: [ "oneAccountBalance" ] },
+      { dataDD: { ...MoneyDD, resolver: 'getCurrentAccountBalance' }, display: LabelAndInputCD, path: [ "currentAccountBalance" ] },
       { dataDD: DateDD, display: LabelAndInputCD, displayParams: { label: 'Create Start' }, path: [ "createPlan", "createPlanStart" ] },
       { dataDD: DateDD, display: LabelAndInputCD, displayParams: { ariaLabel: 'The Create Plan Date' }, path: [ "createPlan", "createPlanDate" ] },
       { dataDD: DateDD, display: LabelAndInputCD, path: [ "createPlan", "createPlanEnd" ] }
@@ -128,7 +128,7 @@ describe ( " listComponentsIn", () => {
       "   <ModalButton id='requestInfo' state={state} mode='view' mainData='TDB' tempData='TBD'   />",
       "   </Layout>)",
       "}"
-    ])
+    ] )
     expect ( createReactPageComponent ( createPlanPD ) ).toEqual ( [
       "function CreatePlanPage<S>({state}: LensProps<S, CreatePlanDDDomain>){",
       "  return (<Layout  details='[3]'>",
@@ -137,7 +137,7 @@ describe ( " listComponentsIn", () => {
       "   <ModalCommitButton id='commit' state={state} />",
       "   </Layout>)",
       "}"
-    ])
+    ] )
   } )
 } )
 

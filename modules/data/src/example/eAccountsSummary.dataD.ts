@@ -18,7 +18,7 @@ export const EAccountSummaryDD: DataD = {
   structure: {
     accountId: { dataDD: AccountIdDD, displayParams: { label: "Account Id" } },
     displayType: { dataDD: EAccountDisplayTypeDD },//No label because it is derivable from the camelCase
-    description: { dataDD: OneLineStringDD },
+    description: { dataDD: { ...OneLineStringDD, resolver: 'getAccountSummaryDescription' } },
     virtualBankSeq: { dataDD: OneLineStringDD },
     total: { dataDD: MoneyDD },
     frequency: { dataDD: OneLineStringDD, displayParams: { label: "Frequency/Amount" } },
@@ -30,7 +30,7 @@ export const EAccountsSummaryTableDD: RepeatingDataD = {
   description: "Just the raw EAccountSummaryDD data",
   dataDD: EAccountSummaryDD,
   display: TableCD,
-  displayParams: { order: { value: [ 'accountId', 'displayType', 'description','virtualBankSeq', 'frequency', 'total' ] } }
+  displayParams: { order: { value: [ 'accountId', 'displayType', 'description', 'virtualBankSeq', 'frequency', 'total' ] } }
 }
 
 export const CreatePlanDD: DataD = {
@@ -48,9 +48,9 @@ export const EAccountsSummaryDD: DataD = {
   // tableName: 'CustomerSUmmaryView',
   structure: {
     eAccountsTable: { dataDD: EAccountsSummaryTableDD },
-    totalMonthlyCost: { dataDD: MoneyDD },
-    oneAccountBalance: { dataDD: MoneyDD },
-    currentAccountBalance: { dataDD: MoneyDD },
+    totalMonthlyCost: { dataDD: { ...MoneyDD, resolver: 'getTotalMonthlyCost' } },
+    oneAccountBalance: { dataDD: { ...MoneyDD, resolver: 'getOneAccountBalance' } },
+    currentAccountBalance: { dataDD: { ...MoneyDD, resolver: 'getCurrentAccountBalance' } },
     createPlan: { dataDD: CreatePlanDD }
   }
 }

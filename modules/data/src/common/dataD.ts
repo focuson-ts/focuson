@@ -26,12 +26,11 @@ export interface CommonDataDD {
   description: string;
   comments?: string;
   meta?: any;
-  graphQl?: string;
   graphQlType?: string;
-  tableName?: string;
-
+  resolver?: string;
 }
 export interface DataD extends CommonDataDD {
+
   structure: ManyDataDD;
 }
 export interface PrimitiveDD extends CommonDataDD {
@@ -104,7 +103,7 @@ export const collectDataWalker: AllDataFlatMap<DataD> = {
   ...emptyDataFlatMap (),
   walkDataStart: ( path, oneDataDD, dataDD ) => [ dataDD ]
 }
-export function findDataDDIn ( a: AllDataDD, stopAtDisplay?: boolean  ): DataD[] {return flatMapDD ( a, {...collectDataWalker, stopAtDisplay} )}
+export function findDataDDIn ( a: AllDataDD, stopAtDisplay?: boolean ): DataD[] {return flatMapDD ( a, { ...collectDataWalker, stopAtDisplay } )}
 
 
 export function foldDataDD<Acc> ( dataDD: AllDataDD, path: string[], zero: Acc, folder: AllDataFolder<Acc>, oneDataDD?: OneDataDD ): Acc {
@@ -128,7 +127,7 @@ export function foldDataDD<Acc> ( dataDD: AllDataDD, path: string[], zero: Acc, 
 /** Finds and dedups all the unique DataDs in the list. Identity is based on name: so we assume if the name is the same, it's the same object.*/
 export function findAllDataDs ( a: AllDataDD[], stopAtDisplay?: boolean ): NamesAndDataDs {
   var result: NamesAndDataDs = {}
-  a.flatMap ( d => findDataDDIn ( d ,stopAtDisplay) ).forEach ( d => result [ d.name ] = d )
+  a.flatMap ( d => findDataDDIn ( d, stopAtDisplay ) ).forEach ( d => result [ d.name ] = d )
   return result
 }
 

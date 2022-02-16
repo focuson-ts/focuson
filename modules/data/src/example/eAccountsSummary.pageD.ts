@@ -22,6 +22,7 @@ export const EAccountsSummaryPD: PageD = {
     createPlan: { dataDD: EAccountsSummaryDD } //TDB
   },
 
+
   /** Binds the rest to 'where it takes place'. So we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
   rest: {
     eAccountsSummary: { rest: eAccountsSummaryRestD, targetFromPath: 'fromApi', fetcher: true },

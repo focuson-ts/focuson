@@ -52,7 +52,7 @@ export interface LayoutD {
   details: string // ok not sure what to do here... so this is just a placeholder
 }
 export interface PageD {
-  name?: string,
+  name: string,
   modal?: boolean,
   path?: string[],
   modes: PageMode[],

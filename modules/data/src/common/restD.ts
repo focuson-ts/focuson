@@ -1,4 +1,4 @@
-import { DataD, findDataDDIn } from "./dataD";
+import { DataD, findAllDataDs, findDataDDIn } from "./dataD";
 import { safeArray } from "@focuson/utils";
 
 type AllLensRestParams = CommonLensRestParam | LensRestParam
@@ -88,6 +88,10 @@ export function findUniqueDataDsAndRestTypeDetails ( rs: RestD[] ): [ DataD, Res
     return x
   } )
   return unique<[ DataD, RestActionDetail ]> ( nonUnique, ( [ dataD, rad ] ) => dataD.name + "," + rad.name )
+}
+
+export function findUniqueDataDsIn ( rs: RestD[] ): DataD[] {
+  return unique ( Object.values ( findAllDataDs ( rs.map ( r => r.dataDD ) ) ), d => d.name )
 }
 
 export function unique<T> ( ts: T[] | undefined, tagFn: ( t: T ) => string ): T[] {

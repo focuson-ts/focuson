@@ -1,4 +1,4 @@
-import { makeAllJavaWiring, makeJavaResolversInterface, makeJavaWiring, makeOneJavaWiring } from "../codegen/makeJavaResolvers";
+import { makeAllJavaWiring, makeJavaResolversInterface, makeJavaWiringForAllDataDs, makeJavaWiringForDataD, makeJavaWiringForQueryAndMutation, makeOneJavaWiringForQueryAndMutation } from "../codegen/makeJavaResolvers";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
 import { CreatePlanDD, EAccountsSummaryDD } from "../example/eAccountsSummary.dataD";
 import { defaultRestAction } from "../common/restD";
@@ -22,28 +22,52 @@ describe ( "makeJavaResolversInterface", () => {
   } )
 } )
 
-describe ( "makeOneJavaWiring", () => {
+describe ( "makeOneJavaWiringForQueryAndMutation", () => {
   it ( "should make the java code for wiring", () => {
-    expect ( makeOneJavaWiring ( [ EAccountsSummaryDD, defaultRestAction.get ] ) ).toEqual ( '.type(newTypeWiring("EAccountsSummaryDD").dataFetcher("getEAccountsSummaryDD", fetchers.getEAccountsSummaryDD()))' )
-    expect ( makeOneJavaWiring ( [ EAccountsSummaryDD, defaultRestAction.list ] ) ).toEqual ( '.type(newTypeWiring("EAccountsSummaryDD").dataFetcher("listEAccountsSummaryDD", fetchers.listEAccountsSummaryDD()))' )
-    expect ( makeOneJavaWiring ( [ CreatePlanDD, defaultRestAction.delete ] ) ).toEqual ( '.type(newTypeWiring("CreatePlanDD").dataFetcher("deleteCreatePlanDD", fetchers.deleteCreatePlanDD()))' )
+    expect ( makeOneJavaWiringForQueryAndMutation ( [ EAccountsSummaryDD, defaultRestAction.get ] ) ).toEqual ( '.type(newTypeWiring("Query").dataFetcher("getEAccountsSummaryDD", fetchers.getEAccountsSummaryDD()))' )
+    expect ( makeOneJavaWiringForQueryAndMutation ( [ EAccountsSummaryDD, defaultRestAction.list ] ) ).toEqual ( '.type(newTypeWiring("Query").dataFetcher("listEAccountsSummaryDD", fetchers.listEAccountsSummaryDD()))' )
+    expect ( makeOneJavaWiringForQueryAndMutation ( [ CreatePlanDD, defaultRestAction.delete ] ) ).toEqual ( '.type(newTypeWiring("Mutation").dataFetcher("deleteCreatePlanDD", fetchers.deleteCreatePlanDD()))' )
   } )
 } )
-describe ( "makeJavaWiring", () => {
+describe ( "makeJavaWiringForQueryAndMutation", () => {
   it ( "should make the java code for wiring", () => {
-    expect ( makeJavaWiring ( [ eAccountsSummaryRestD, createPlanRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      ".type(newTypeWiring('EAccountsSummaryDD').dataFetcher('getEAccountsSummaryDD', fetchers.getEAccountsSummaryDD()))",
-      ".type(newTypeWiring('CreatePlanDD').dataFetcher('getCreatePlanDD', fetchers.getCreatePlanDD()))",
-      ".type(newTypeWiring('CreatePlanDD').dataFetcher('createCreatePlanDD', fetchers.createCreatePlanDD()))",
-      ".type(newTypeWiring('CreatePlanDD').dataFetcher('updateCreatePlanDD', fetchers.updateCreatePlanDD()))",
-      ".type(newTypeWiring('CreatePlanDD').dataFetcher('deleteCreatePlanDD', fetchers.deleteCreatePlanDD()))",
-      ".type(newTypeWiring('CreatePlanDD').dataFetcher('listCreatePlanDD', fetchers.listCreatePlanDD()))"
+    expect ( makeJavaWiringForQueryAndMutation ( [ eAccountsSummaryRestD, createPlanRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+      ".type(newTypeWiring('Query').dataFetcher('getEAccountsSummaryDD', fetchers.getEAccountsSummaryDD()))",
+      ".type(newTypeWiring('Query').dataFetcher('getCreatePlanDD', fetchers.getCreatePlanDD()))",
+      ".type(newTypeWiring('Mutation').dataFetcher('createCreatePlanDD', fetchers.createCreatePlanDD()))",
+      ".type(newTypeWiring('Mutation').dataFetcher('updateCreatePlanDD', fetchers.updateCreatePlanDD()))",
+      ".type(newTypeWiring('Mutation').dataFetcher('deleteCreatePlanDD', fetchers.deleteCreatePlanDD()))",
+      ".type(newTypeWiring('Query').dataFetcher('listCreatePlanDD', fetchers.listCreatePlanDD()))"
     ] )
   } )
 } )
+describe ( "makeJavaWiringForDataD", () => {
+  it ( "should make a wiring if there is a resolver in the DataD", () => {
+    expect ( makeJavaWiringForDataD ( 'name' ) ( EAccountsSummaryDD ) ).toEqual ( [] )
+    expect ( makeJavaWiringForDataD ( 'name' ) ( EAccountsSummaryDD.structure.totalMonthlyCost.dataDD ) ).toEqual ( [
+      ".type(newTypeWiring(\"name\").dataFetcher(\"getTotalMonthlyCost\", fetchers.getTotalMonthlyCost()))"
+    ] )
+  } )
+} )
+describe ( "makeJavaWiringForAllDataDs", () => {
+  it ( "should make a wiring for all the resolvers in the DataDs", () => {
+    expect ( makeJavaWiringForAllDataDs ( [ eAccountsSummaryRestD, createPlanRestD ] ) ).toEqual ( [
+      ".type(newTypeWiring(\"eAccountsTable\").dataFetcher(\"accountId\", fetchers.accountId()))",
+      ".type(newTypeWiring(\"eAccountsTable\").dataFetcher(\"displayType\", fetchers.displayType()))",
+      ".type(newTypeWiring(\"eAccountsTable\").dataFetcher(\"description\", fetchers.description()))",
+      ".type(newTypeWiring(\"eAccountsTable\").dataFetcher(\"virtualBankSeq\", fetchers.virtualBankSeq()))",
+      ".type(newTypeWiring(\"eAccountsTable\").dataFetcher(\"total\", fetchers.total()))",
+      ".type(newTypeWiring(\"eAccountsTable\").dataFetcher(\"frequency\", fetchers.frequency()))",
+      ".type(newTypeWiring(\"createPlan\").dataFetcher(\"createPlanStart\", fetchers.createPlanStart()))",
+      ".type(newTypeWiring(\"createPlan\").dataFetcher(\"createPlanDate\", fetchers.createPlanDate()))",
+      ".type(newTypeWiring(\"createPlan\").dataFetcher(\"createPlanEnd\", fetchers.createPlanEnd()))"
+    ])
+  } )
+} )
+
 describe ( "makeAllJavaWiring", () => {
   it ( "should make a java file which will power a graphql spring boot app", () => {
-    expect ( makeAllJavaWiring ( { thePackage: 'somePackage', fetcherClass: 'someClass' }, [ eAccountsSummaryRestD, createPlanRestD ] ) ).toEqual ([
+    expect ( makeAllJavaWiring ( { thePackage: 'somePackage', fetcherClass: 'someClass', schema: 'someSchema.graphql' }, [ eAccountsSummaryRestD, createPlanRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "package somePackage;",
       "import com.google.common.base.Charsets;",
       "import com.google.common.io.Resources;",
@@ -67,7 +91,7 @@ describe ( "makeAllJavaWiring", () => {
       "    private GraphQL graphQL;",
       "    @PostConstruct",
       "    public void init() throws IOException {",
-      "        URL url = Resources.getResource(<schema>);",
+      "        URL url = Resources.getResource('someSchema.graphql');",
       "        String sdl = Resources.toString(url, Charsets.UTF_8);",
       "        GraphQLSchema graphQLSchema = buildSchema(sdl);",
       "        this.graphQL = GraphQL.newGraphQL(graphQLSchema).build();",
@@ -80,20 +104,29 @@ describe ( "makeAllJavaWiring", () => {
       "    }",
       "    private RuntimeWiring buildWiring() {",
       "        return RuntimeWiring.newRuntimeWiring()",
-      ".type(newTypeWiring(\"EAccountsSummaryDD\").dataFetcher(\"getEAccountsSummaryDD\", fetchers.getEAccountsSummaryDD()))",
-      ".type(newTypeWiring(\"CreatePlanDD\").dataFetcher(\"getCreatePlanDD\", fetchers.getCreatePlanDD()))",
-      ".type(newTypeWiring(\"CreatePlanDD\").dataFetcher(\"createCreatePlanDD\", fetchers.createCreatePlanDD()))",
-      ".type(newTypeWiring(\"CreatePlanDD\").dataFetcher(\"updateCreatePlanDD\", fetchers.updateCreatePlanDD()))",
-      ".type(newTypeWiring(\"CreatePlanDD\").dataFetcher(\"deleteCreatePlanDD\", fetchers.deleteCreatePlanDD()))",
-      ".type(newTypeWiring(\"CreatePlanDD\").dataFetcher(\"listCreatePlanDD\", fetchers.listCreatePlanDD()))",
-      "                .build();",
+      "          .type(newTypeWiring('Query').dataFetcher('getEAccountsSummaryDD', fetchers.getEAccountsSummaryDD()))",
+      "          .type(newTypeWiring('Query').dataFetcher('getCreatePlanDD', fetchers.getCreatePlanDD()))",
+      "          .type(newTypeWiring('Mutation').dataFetcher('createCreatePlanDD', fetchers.createCreatePlanDD()))",
+      "          .type(newTypeWiring('Mutation').dataFetcher('updateCreatePlanDD', fetchers.updateCreatePlanDD()))",
+      "          .type(newTypeWiring('Mutation').dataFetcher('deleteCreatePlanDD', fetchers.deleteCreatePlanDD()))",
+      "          .type(newTypeWiring('Query').dataFetcher('listCreatePlanDD', fetchers.listCreatePlanDD()))",
+      "          .type(newTypeWiring('eAccountsTable').dataFetcher('accountId', fetchers.accountId()))",
+      "          .type(newTypeWiring('eAccountsTable').dataFetcher('displayType', fetchers.displayType()))",
+      "          .type(newTypeWiring('eAccountsTable').dataFetcher('description', fetchers.description()))",
+      "          .type(newTypeWiring('eAccountsTable').dataFetcher('virtualBankSeq', fetchers.virtualBankSeq()))",
+      "          .type(newTypeWiring('eAccountsTable').dataFetcher('total', fetchers.total()))",
+      "          .type(newTypeWiring('eAccountsTable').dataFetcher('frequency', fetchers.frequency()))",
+      "          .type(newTypeWiring('createPlan').dataFetcher('createPlanStart', fetchers.createPlanStart()))",
+      "          .type(newTypeWiring('createPlan').dataFetcher('createPlanDate', fetchers.createPlanDate()))",
+      "          .type(newTypeWiring('createPlan').dataFetcher('createPlanEnd', fetchers.createPlanEnd()))",
+      "          .build();",
       "    }",
       "    @Bean",
       "    public GraphQL graphQL() {",
       "        return graphQL;",
       "    }",
       "}"
-    ] )
+    ])
   } )
 
 } )
