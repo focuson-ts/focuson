@@ -7,15 +7,15 @@ export const commonParams = {
 }
 
 /** This should fully define the api*/
-export const exportAccountsSummaryRestD: RestD = {
+export const eAccountsSummaryRestD: RestD = {
   params: { ...commonParams },
   dataDD: EAccountsSummaryDD,
   url: '/api/accountsSummary?accountId={accountId}&customerId={customerId}',
-  actions: [ 'get'],
+  actions: [ 'get' ],
 }
 export const createPlanRestD: RestD = {
   params: { ...commonParams, createPlanId: { lens: [ 'TBD' ] } },
   dataDD: CreatePlanDD,
   url: '/api/createPlan/{createPlanId}?accountId={accountId}&customerId={customerId}',
-  actions: [ 'get', 'create', 'update', 'delete' , 'create', 'list'],
+  actions: [ 'get', 'create', 'update', 'delete', 'create', 'list' ],
 }

@@ -1,5 +1,5 @@
 import { makeGraphQlSchema } from "./codegen/makeGraphQlTypes";
-import { createPlanRestD, exportAccountsSummaryRestD } from "./example/eAccountsSummary.restD";
+import { createPlanRestD, eAccountsSummaryRestD } from "./example/eAccountsSummary.restD";
 import fs from "fs";
 import { makeJavaResolversInterface } from "./codegen/makeJavaResolvers";
 import { createAllReactComponents, createReactComponent } from "./codegen/makeComponents";

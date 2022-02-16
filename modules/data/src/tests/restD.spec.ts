@@ -1,10 +1,10 @@
 import { findMustConstructForRest, flapMapActionDetails } from "../common/restD";
-import { createPlanRestD, exportAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
+import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
 
 describe ( "flatMapActionDetails", () => {
   it ( "should work for exportAccountsSummaryRestD", () => {
-    const found = flapMapActionDetails ( exportAccountsSummaryRestD, ( r, rt ) => {
-      expect ( r ).toBe ( exportAccountsSummaryRestD )
+    const found = flapMapActionDetails ( eAccountsSummaryRestD, ( r, rt ) => {
+      expect ( r ).toBe ( eAccountsSummaryRestD )
       return [ rt.name ]
     } )
     expect ( found ).toEqual ( [ "get" ] )
@@ -21,7 +21,7 @@ describe ( "flatMapActionDetails", () => {
 
 describe ( "findMustConstructForRest", () => {
   it ( "should find the types that must be constructed", () => {
-    let actual = findMustConstructForRest ( [ exportAccountsSummaryRestD, createPlanRestD, exportAccountsSummaryRestD, createPlanRestD ] );
+    let actual = findMustConstructForRest ( [ eAccountsSummaryRestD, createPlanRestD, eAccountsSummaryRestD, createPlanRestD ] );
     let simpler = { objs: actual.objs.map ( x => x.name ), input: actual.input.map ( x => x.name ), inputWithId: actual.inputWithId.map ( x => x.name ) }
     expect ( simpler ).toEqual ( {
       "input": [ "CreatePlanDD" ],

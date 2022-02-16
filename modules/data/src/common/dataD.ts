@@ -187,7 +187,7 @@ export const IntegerDD: PrimitiveDD = {
   validation: { regex: "\d+", maxLength: 255 },
   samples: [ "This is a one line string", "another one line string" ]
 }
-export const MoneyDD: any = {
+export const MoneyDD: PrimitiveDD = {
   ...IntegerDD,
   description: "The primitive representing an amount of the local currency",
   name: 'IntegerDD'

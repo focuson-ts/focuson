@@ -1,10 +1,12 @@
 import { makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
-import { createPlanRestD, exportAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
+import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
 
 describe ( "makeJavaResolversInterface", () => {
   it ( "should make a java interface", () => {
-    expect ( makeJavaResolversInterface ( 'packName', 'intName', [ exportAccountsSummaryRestD, createPlanRestD ] ) ).toEqual ( [
+    expect ( makeJavaResolversInterface ( 'packName', 'intName', [ eAccountsSummaryRestD, createPlanRestD ] ) ).toEqual ( [
       "package packName;",
+      "",
+      "import graphql.schema.DataFetcher;",
       "",
       "interface intName {",
       "   public DataFetcher getEAccountsSummaryDD();",
@@ -14,6 +16,6 @@ describe ( "makeJavaResolversInterface", () => {
       "   public DataFetcher deleteCreatePlanDD();",
       "   public DataFetcher listCreatePlanDD();",
       "}"
-    ] )
+    ])
   } )
 } )

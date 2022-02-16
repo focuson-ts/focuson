@@ -20,6 +20,8 @@ describe ( "makeDomainFor", () => {
       "  description: string;",
       "  displayType: string;",
       "  frequency: string;",
+      "  total: string;",
+      "  virtualBankSeq: string;",
       "}"
     ] )
     expect ( makeDomainFor ( CreatePlanDD ) ).toEqual ( [
@@ -54,6 +56,8 @@ describe ( "makeAllDomainsFor", () => {
       "  description: string;",
       "  displayType: string;",
       "  frequency: string;",
+      "  total: string;",
+      "  virtualBankSeq: string;",
       "}"
     ] )
 

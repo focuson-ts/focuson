@@ -6,6 +6,7 @@ import { EAccountsSummaryDD } from "../example/eAccountsSummary.dataD";
 import { indentList } from "./makeGraphQlQuery";
 import { sortedEntries } from "@focuson/utils";
 import { componentName, domainName, pageComponentName } from "./names";
+import { makeButtonsFrom } from "./makeButtons";
 
 
 export type AllComponentData = ComponentData | ErrorComponentData
@@ -83,6 +84,7 @@ export function createReactPageComponent ( pageD: PageD ): string[] {
     `function ${pageComponentName ( pageD )}<S>({state}: LensProps<S, ${domainName ( dataDD )}>){`,
     `  return (<${layout.name}  details='${layout.details}'>`,
     `   <${componentName ( dataDD )} state={state} />`,
+    ...indentList ( indentList ( indentList ( makeButtonsFrom ( pageD ) ) ) ),
     `   </${layout.name}>)`,
     "}"
   ]

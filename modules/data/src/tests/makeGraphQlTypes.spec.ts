@@ -1,8 +1,8 @@
-import { createPlanRestD, exportAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
+import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
 import { makeGraphQlSchema, makeQueryOrMutateBlock, makeSchemaBlock } from "../codegen/makeGraphQlTypes";
 import { CreatePlanDD, EAccountsSummaryDD, EAccountsSummaryTableDD, EAccountSummaryDD } from "../example/eAccountsSummary.dataD";
 
-const rs = [ exportAccountsSummaryRestD, createPlanRestD, exportAccountsSummaryRestD, createPlanRestD ];
+const rs = [ eAccountsSummaryRestD, createPlanRestD, eAccountsSummaryRestD, createPlanRestD ];
 describe ( "makeGraphQlSchema", () => {
 
   describe ( "makeQueryOrMutateBlock", () => {
@@ -42,6 +42,8 @@ describe ( "makeGraphQlSchema", () => {
       "  accountId: String!",
       "  displayType: String!",
       "  description: String!",
+      "  virtualBankSeq: String!",
+      "  total: String!",
       "  frequency: String!",
       "}"
     ] )
@@ -82,6 +84,8 @@ describe ( "makeGraphQlSchema", () => {
       "  accountId: String!",
       "  displayType: String!",
       "  description: String!",
+      "  virtualBankSeq: String!",
+      "  total: String!",
       "  frequency: String!",
       "}",
       "input CreatePlanDDInp{",

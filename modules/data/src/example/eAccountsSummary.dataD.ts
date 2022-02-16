@@ -1,6 +1,5 @@
-import { AccountIdDD, DataD, DateDD, MoneyDD, OneLineStringDD, PrimitiveDD, RepeatingDataD, StringDD } from "../common/dataD";
-import { DisplayCompD, LabelAndInputCD, TableCD } from "../common/componentsD";
-import { ComponentData } from "../codegen/makeComponents";
+import { AccountIdDD, DataD, DateDD, MoneyDD, OneLineStringDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
+import { LabelAndInputCD, TableCD } from "../common/componentsD";
 
 
 export const EAccountDisplayTypeDD: PrimitiveDD = {
@@ -20,6 +19,8 @@ export const EAccountSummaryDD: DataD = {
     accountId: { dataDD: AccountIdDD, displayParams: { label: "Account Id" } },
     displayType: { dataDD: EAccountDisplayTypeDD },//No label because it is derivable from the camelCase
     description: { dataDD: OneLineStringDD },
+    virtualBankSeq: { dataDD: OneLineStringDD },
+    total: { dataDD: MoneyDD },
     frequency: { dataDD: OneLineStringDD, displayParams: { label: "Frequency/Amount" } },
   }
 }
@@ -29,7 +30,7 @@ export const EAccountsSummaryTableDD: RepeatingDataD = {
   description: "Just the raw EAccountSummaryDD data",
   dataDD: EAccountSummaryDD,
   display: TableCD,
-  displayParams: { order: { value: [ 'accountId', 'displayType', 'description', 'frequency' ] } }
+  displayParams: { order: { value: [ 'accountId', 'displayType', 'description','virtualBankSeq', 'frequency', 'total' ] } }
 }
 
 export const CreatePlanDD: DataD = {
@@ -38,13 +39,13 @@ export const CreatePlanDD: DataD = {
   structure: {
     createPlanStart: { displayParams: { label: 'Create Start' }, dataDD: DateDD },
     createPlanDate: { displayParams: { ariaLabel: 'The Create Plan Date' }, dataDD: DateDD },
-    createPlanEnd: { dataDD: DateDD },
+    createPlanEnd: { dataDD: DateDD }
   }
 }
 export const EAccountsSummaryDD: DataD = {
   name: "EAccountsSummaryDD",
   description: "This is the summary data about all the EAccounts for a single user",
-  tableName: 'CustomerSUmmaryView',
+  // tableName: 'CustomerSUmmaryView',
   structure: {
     eAccountsTable: { dataDD: EAccountsSummaryTableDD },
     totalMonthlyCost: { dataDD: MoneyDD },

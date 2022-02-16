@@ -1,5 +1,5 @@
 import { CreatePlanDD, EAccountsSummaryDD } from "./eAccountsSummary.dataD";
-import { createPlanRestD, exportAccountsSummaryRestD } from "./eAccountsSummary.restD";
+import { createPlanRestD, eAccountsSummaryRestD } from "./eAccountsSummary.restD";
 import { PageD } from "../common/pageD";
 
 
@@ -7,12 +7,12 @@ import { PageD } from "../common/pageD";
 export const EAccountsSummaryPD: PageD = {
   name: 'EAccountsSummary',
   modal: false,
-  /** Where we are in the state */
+  /** Where we are in the state. We 'could' and maybe should defualt this to name*/
   path: [ 'eAccountsSummary' ],
   /** This page can only view data */
   modes: [ 'view' ],
   /** How we display the page.*/
-  display: { layout: { name: 'Layout', details: '[1][3,3][buttons]' }, target: [ 'fromApi' ], dataDD: EAccountsSummaryDD },
+  display: { layout: { name: 'Layout', details: '[1][3,3][5]' }, target: [ 'fromApi' ], dataDD: EAccountsSummaryDD },
   /** When the page is selected for the first time this is the initial state */
   initialValue: {},
   /** This defines the domain data structures in react*/
@@ -24,7 +24,7 @@ export const EAccountsSummaryPD: PageD = {
 
   /** Binds the rest to 'where it takes place'. So we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
   rest: {
-    exportAccountsSummary: { rest: exportAccountsSummaryRestD, targetFromPath: 'fromApi', fetcher: true },
+    eAccountsSummary: { rest: eAccountsSummaryRestD, targetFromPath: 'fromApi', fetcher: true },
     /** this will probably need to specify 'the current' plan in some way */
     createPlanRestD: { rest: createPlanRestD, targetFromPath: 'createPlan' }
   },

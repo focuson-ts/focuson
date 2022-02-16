@@ -32,6 +32,8 @@ describe ( "dataDD", () => {
       "eAccountsTable,accountId-prim-AccountIdDD{\"label\":\"Account Id\"}",
       "eAccountsTable,displayType-prim-EAccountDisplayTypeDD",
       "eAccountsTable,description-prim-OneLineStringDD",
+      "eAccountsTable,virtualBankSeq-prim-OneLineStringDD",
+      "eAccountsTable,total-prim-IntegerDD",
       "eAccountsTable,frequency-prim-OneLineStringDD{\"label\":\"Frequency/Amount\"}",
       "eAccountsTable-data-EAccountSummaryDDfalse",
       "eAccountsTable-rep-EAccountsSummaryTableDDfalse",
@@ -44,7 +46,7 @@ describe ( "dataDD", () => {
       "createPlan,createPlanEnd-prim-DateDD",
       "createPlan-data-CreatePlanDDfalse",
       "-data-EAccountsSummaryDDfalse"
-    ] )
+    ])
   } )
 
   it ( "should have a foldDataDD with stopAtDisplay (need better test - one with a structure that has a display)", () => {
