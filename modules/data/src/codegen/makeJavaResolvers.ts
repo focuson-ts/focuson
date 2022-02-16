@@ -1,7 +1,6 @@
-import { findUniqueDataDsAndRestTypeDetails, RestActionDetail, RestD } from "../common/restD";
-import {  } from "./makeGraphQlTypes";
-import { sortedEntries } from "@focuson/utils";
-import { AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD } from "../common/dataD";
+import { findUniqueDataDsAndRestTypeDetails, RestD } from "../common/restD";
+import { NameAnd, sortedEntries } from "@focuson/utils";
+import { DataD, emptyDataFlatMap, flatMapDD } from "../common/dataD";
 import fs from "fs";
 import { resolverName } from "./names";
 
@@ -30,16 +29,20 @@ export interface JavaWiringParams {
   schema: string
 }
 
+export function adjustTemplate ( template: string, params: NameAnd<string> ): string [] {
+  let sorted: [ string, string ][] = sortedEntries ( params );
+  return sorted.reduce ( ( acc: string, [ name, value ]: [ string, string ] ) => {
+    const regex = new RegExp ( "<" + name + ">", 'g' )
+    return acc.replace ( regex, value )
+  }, template.replace ( /\r/g, '\n' ) ).split ( '\n' ).filter ( s => s.length > 0 )
+
+}
 
 export function makeAllJavaWiring ( params: JavaWiringParams, rs: RestD[] ): string[] {
   const str: string = fs.readFileSync ( 'templates/JavaWiringTemplate.java' ).toString ()
   let wiring = findResolvers ( rs ).map ( ( [ dataD, resolver ] ) => makeWiring ( dataD.name, resolver ) )
   // let wiring = [ ...makeJavaWiringForQueryAndMutation ( rs ), ...makeJavaWiringForAllDataDs ( rs ) ]
-  return sortedEntries ( { ...params, wiring: wiring.map ( s => '          ' + s ).join ( '\n' ) } ).reduce (
-    ( acc: string, [ name, value ] ) => {
-      const regex = new RegExp ( "<" + name + ">", 'g' )
-      return acc.replace ( regex, value )
-    }, str.replace ( /\r/g, '\n' ) ).split ( '\n' ).filter ( s => s.length > 0 )
+  return adjustTemplate ( str, { ...params, wiring: wiring.map ( s => '          ' + s ).join ( '\n' ) } )
 }
 
 export function findResolvers ( rs: RestD[] ): [ DataD, string ][] {

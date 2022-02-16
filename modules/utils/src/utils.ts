@@ -37,7 +37,7 @@ export function areAllDefined<T> ( arr: (T | undefined)[] | undefined ): arr is 
 }
 
 
-interface NameAnd<T> {
+export interface NameAnd<T> {
   [ name: string ]: T
 }
 export function sortedEntries<T> ( a: NameAnd<T>|undefined ): [ string, T ][] {

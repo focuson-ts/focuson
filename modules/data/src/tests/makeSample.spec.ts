@@ -3,28 +3,31 @@ import { CreatePlanDD, EAccountsSummaryDD, EAccountsSummaryTableDD } from "../ex
 
 describe ( 'makeSample', () => {
   it ( "should make a JSON sample", () => {
-    expect ( makeSample ( CreatePlanDD ) ).toEqual ( {
-      "createPlanDate": "2020-10-01",
-      "createPlanEnd": "2020-10-01",
-      "createPlanStart": "2020-10-01"
+    expect ( makeSample ( CreatePlanDD, 0 ) ).toEqual ( {
+      "createPlanDate": "2022-03-01",
+      "createPlanEnd": "2022-10-01",
+      "createPlanStart": "2022-01-01"
     } )
-    expect ( makeSample ( EAccountsSummaryDD ) ).toEqual ( {
+    expect ( makeSample ( EAccountsSummaryDD, 0 ) ).toEqual ( {
       "createPlan": {
-        "createPlanDate": "2020-10-01",
-        "createPlanEnd": "2020-10-01",
-        "createPlanStart": "2020-10-01"
+        "createPlanDate": "2022-03-01",
+        "createPlanEnd": "2022-10-01",
+        "createPlanStart": "2022-01-01"
       },
-      "currentAccountBalance": "This is a one line string",
-      "eAccountsTable": {
-        "accountId": "1233450",
-        "description": "This is a one line string",
-        "frequency": "This is a one line string",
-        "total": "This is a one line string",
-        "virtualBankSeq": "This is a one line string"
-      },
-      "oneAccountBalance": "This is a one line string",
-      "totalMonthlyCost": "This is a one line string"
-    } )
+      "currentAccountBalance": "12321",
+      "eAccountsTable": [
+        {
+          "accountId": "1233450",
+          "description": "This account has a description",
+          "displayType": "checking",
+          "frequency": "23",
+          "total": "1000",
+          "virtualBankSeq": "seq1"
+        }
+      ],
+      "oneAccountBalance": "9921",
+      "totalMonthlyCost": "1000"
+    })
   } )
 
 } );

@@ -9,11 +9,11 @@ describe ( "makeDomainFor", () => {
       "interface EAccountsSummaryDDDomain{",
       "  createPlan: CreatePlanDDDomain;",
       "  currentAccountBalance: string;",
-      "  eAccountsTable: EAccountSummaryDDDomain;",
+      "  eAccountsTable: EAccountSummaryDDDomain[];",
       "  oneAccountBalance: string;",
       "  totalMonthlyCost: string;",
       "}"
-    ] )
+    ])
     expect ( makeDomainFor ( EAccountSummaryDD ) ).toEqual ( [
       "interface EAccountSummaryDDDomain{",
       "  accountId: string;",
@@ -47,7 +47,7 @@ describe ( "makeAllDomainsFor", () => {
       "interface EAccountsSummaryDDDomain{",
       "  createPlan: CreatePlanDDDomain;",
       "  currentAccountBalance: string;",
-      "  eAccountsTable: EAccountSummaryDDDomain;",
+      "  eAccountsTable: EAccountSummaryDDDomain[];",
       "  oneAccountBalance: string;",
       "  totalMonthlyCost: string;",
       "}",
@@ -59,7 +59,7 @@ describe ( "makeAllDomainsFor", () => {
       "  total: string;",
       "  virtualBankSeq: string;",
       "}"
-    ] )
+    ])
 
   } )
 } )
