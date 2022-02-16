@@ -59,17 +59,17 @@ export interface NamesAndDataDs {
 
 export interface AllDataFolder<Acc> {
   stopAtDisplay?: boolean,
-  foldPrim: ( acc: Acc, path: string[], oneDataDD: OneDataDD | undefined, dataDD: PrimitiveDD ) => Acc,
-  foldData: ( acc: Acc, path: string[], oneDataDD: OneDataDD | undefined, dataDD: DataD, start: boolean ) => Acc,
-  foldRep: ( acc: Acc, path: string[], oneDataDD: OneDataDD | undefined, dataDD: RepeatingDataD, start: boolean ) => Acc
+  foldPrim: ( acc: Acc, path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: PrimitiveDD ) => Acc,
+  foldData: ( acc: Acc, path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: DataD, start: boolean ) => Acc,
+  foldRep: ( acc: Acc, path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: RepeatingDataD, start: boolean ) => Acc
 }
 export interface AllDataFlatMap<Acc> {
   stopAtDisplay?: boolean,
-  walkPrim: ( path: string[], oneDataDD: OneDataDD | undefined, dataDD: PrimitiveDD ) => Acc[],
-  walkDataStart: ( path: string[], oneDataDD: OneDataDD | undefined, dataDD: DataD ) => Acc[],
-  walkDataEnd: ( path: string[], oneDataDD: OneDataDD | undefined, dataDD: DataD ) => Acc[],
-  walkRepStart: ( path: string[], oneDataDD: OneDataDD | undefined, dataDD: RepeatingDataD ) => Acc[]
-  walkRepEnd: ( path: string[], oneDataDD: OneDataDD | undefined, dataDD: RepeatingDataD ) => Acc[]
+  walkPrim: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: PrimitiveDD ) => Acc[],
+  walkDataStart: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: DataD ) => Acc[],
+  walkDataEnd: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: DataD ) => Acc[],
+  walkRepStart: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: RepeatingDataD ) => Acc[]
+  walkRepEnd: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: RepeatingDataD ) => Acc[]
 }
 export function emptyDataFlatMap<Acc> (): AllDataFlatMap<Acc> {
   return ({
@@ -82,45 +82,45 @@ export function emptyDataFlatMap<Acc> (): AllDataFlatMap<Acc> {
 }
 
 export function flatMapDD<Acc> ( dataDD: AllDataDD, map: AllDataFlatMap<Acc> ) {
-  return foldDataDD<Acc[]> ( dataDD, [], [], {
+  return foldDataDD<Acc[]> ( dataDD, [], [], [], {
     stopAtDisplay: map.stopAtDisplay,
-    foldRep: ( acc, path, oneDataDD, dataDD, start ) => {
+    foldRep: ( acc, path, parents, oneDataDD, dataDD, start ) => {
       return [ ...acc, ...start ?
-        map.walkRepStart ( path, oneDataDD, dataDD ) :
-        map.walkRepEnd ( path, oneDataDD, dataDD ) ]
+        map.walkRepStart ( path, parents, oneDataDD, dataDD ) :
+        map.walkRepEnd ( path, parents, oneDataDD, dataDD ) ]
     },
-    foldData: ( acc, path, oneDataDD, dataDD, start ) => {
+    foldData: ( acc, path, parents, oneDataDD, dataDD, start ) => {
       return [ ...acc, ...start ?
-        map.walkDataStart ( path, oneDataDD, dataDD ) :
-        map.walkDataEnd ( path, oneDataDD, dataDD ) ]
+        map.walkDataStart ( path, parents, oneDataDD, dataDD ) :
+        map.walkDataEnd ( path, parents, oneDataDD, dataDD ) ]
     },
-    foldPrim: ( acc, path, oneDataDD, dataDD ) =>
-      [ ...acc, ...map.walkPrim ( path, oneDataDD, dataDD ) ]
+    foldPrim: ( acc, path, parents, oneDataDD, dataDD ) =>
+      [ ...acc, ...map.walkPrim ( path, parents, oneDataDD, dataDD ) ]
   } )
 }
 
 export const collectDataWalker: AllDataFlatMap<DataD> = {
   ...emptyDataFlatMap (),
-  walkDataStart: ( path, oneDataDD, dataDD ) => [ dataDD ]
+  walkDataStart: ( path, parents, oneDataDD, dataDD ) => [ dataDD ]
 }
 export function findDataDDIn ( a: AllDataDD, stopAtDisplay?: boolean ): DataD[] {return flatMapDD ( a, { ...collectDataWalker, stopAtDisplay } )}
 
 
-export function foldDataDD<Acc> ( dataDD: AllDataDD, path: string[], zero: Acc, folder: AllDataFolder<Acc>, oneDataDD?: OneDataDD ): Acc {
+export function foldDataDD<Acc> ( dataDD: AllDataDD, path: string[], parents: DataD[], zero: Acc, folder: AllDataFolder<Acc>, oneDataDD?: OneDataDD ): Acc {
   const { foldPrim, foldData, foldRep, stopAtDisplay } = folder
   if ( isDataDd ( dataDD ) ) {
-    let start: Acc = foldData ( zero, path, oneDataDD, dataDD, true );
-    if ( dataDD.display && stopAtDisplay ) return foldData ( start, path, oneDataDD, dataDD, false );
-    let acc = Object.entries ( dataDD.structure ).reduce ( ( acc, [ name, child ] ) => foldDataDD ( child.dataDD, [ ...path, name ], acc, folder, child ), start );
-    return foldData ( acc, path, oneDataDD, dataDD, false )
+    let start: Acc = foldData ( zero, path, parents, oneDataDD, dataDD, true );
+    if ( dataDD.display && stopAtDisplay ) return foldData ( start, path, parents, oneDataDD, dataDD, false );
+    let acc = Object.entries ( dataDD.structure ).reduce ( ( acc, [ name, child ] ) => foldDataDD ( child.dataDD, [ ...path, name ], [ ...parents, dataDD ], acc, folder, child ), start );
+    return foldData ( acc, path, parents, oneDataDD, dataDD, false )
   }
   if ( isRepeatingDd ( dataDD ) ) {
-    let start = foldRep ( zero, path, oneDataDD, dataDD, true );
-    if ( stopAtDisplay ) return foldRep ( start, path, oneDataDD, dataDD, false )
-    let acc = foldDataDD ( dataDD.dataDD, path, start, folder, undefined );
-    return foldRep ( acc, path, oneDataDD, dataDD, false )
+    let start = foldRep ( zero, path, parents, oneDataDD, dataDD, true );
+    if ( stopAtDisplay ) return foldRep ( start, path, parents, oneDataDD, dataDD, false )
+    let acc = foldDataDD ( dataDD.dataDD, path, parents, start, folder, undefined );
+    return foldRep ( acc, path, parents, oneDataDD, dataDD, false )
   }
-  return foldPrim ( zero, path, oneDataDD, dataDD )
+  return foldPrim ( zero, path, parents, oneDataDD, dataDD )
 }
 
 

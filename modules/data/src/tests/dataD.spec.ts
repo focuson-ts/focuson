@@ -17,15 +17,15 @@ describe ( "dataDD", () => {
   } )
 
   let folder: AllDataFolder<string[]> = {
-    foldPrim: ( acc, path, oneDataDD, p ) =>
+    foldPrim: ( acc, path,parents, oneDataDD, p ) =>
       [ ...acc, path.join ( "," ) + "-prim-" + p.name + (oneDataDD?.displayParams ? JSON.stringify ( oneDataDD?.displayParams ) : "") ],
-    foldRep: ( acc, path, oneDataDD, p, start ) =>
+    foldRep: ( acc, path,parents, oneDataDD, p, start ) =>
       [ ...acc, path.join ( "," ) + "-rep-" + p.name + (oneDataDD?.displayParams ? JSON.stringify ( oneDataDD?.displayParams ) : "") + start ],
-    foldData: ( acc, path, oneDataDD, p, start ) =>
+    foldData: ( acc, path, parents,oneDataDD, p, start ) =>
       [ ...acc, path.join ( "," ) + "-data-" + p.name + (oneDataDD?.displayParams ? JSON.stringify ( oneDataDD?.displayParams ) : "") + start ],
   };
   it ( "should have a foldDataDD", () => {
-    expect ( foldDataDD<string[]> ( EAccountsSummaryDD, [], [], folder ) ).toEqual ( [
+    expect ( foldDataDD<string[]> ( EAccountsSummaryDD, [],  [],[], folder ) ).toEqual ( [
       "-data-EAccountsSummaryDDtrue",
       "eAccountsTable-rep-EAccountsSummaryTableDDtrue",
       "eAccountsTable-data-EAccountSummaryDDtrue",
@@ -50,7 +50,7 @@ describe ( "dataDD", () => {
   } )
 
   it ( "should have a foldDataDD with stopAtDisplay (need better test - one with a structure that has a display)", () => {
-    expect ( foldDataDD<string[]> ( EAccountsSummaryDD, [], [], { ...folder, stopAtDisplay: true } ) ).toEqual ( [
+    expect ( foldDataDD<string[]> ( EAccountsSummaryDD, [], [], [],{ ...folder, stopAtDisplay: true } ) ).toEqual ( [
       "-data-EAccountsSummaryDDtrue",
       "eAccountsTable-rep-EAccountsSummaryTableDDtrue",
       "eAccountsTable-rep-EAccountsSummaryTableDDfalse",

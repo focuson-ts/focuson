@@ -1,7 +1,6 @@
-import { DataD, findAllDataDs, NamesAndDataDs } from "./dataD";
-import { RestD } from "./restD";
+import { DataD, emptyDataFlatMap, findAllDataDs, flatMapDD, NamesAndDataDs } from "./dataD";
+import { defaultRestAction, RestActionDetail, RestD, unique } from "./restD";
 import { sortedEntries } from "@focuson/utils";
-import { ComponentData } from "../codegen/makeComponents";
 import { ModalButton } from "@focuson/pages";
 
 
@@ -69,3 +68,22 @@ export function dataDsIn ( pds: PageD[], stopAtDisplay?: boolean ): NamesAndData
   return findAllDataDs ( pageDataDs, stopAtDisplay )
 }
 
+export function allRestAndActions ( pds: PageD[] ): [ PageD, RestDefnInPageProperties, RestActionDetail ][] {
+  return unique ( pds.flatMap ( pd => {
+    return sortedEntries ( pd.rest ).flatMap ( ( [ name, rdp ] ) => {
+      const y: [ PageD, RestDefnInPageProperties, RestActionDetail ][] = rdp.rest.actions.map ( a => [ pd, rdp, defaultRestAction[ a ] ] )
+      return y
+    } )
+  } ), ( [ p, r, rad ] ) => p.name + "," + r.rest.dataDD.name + "," + rad.name )
+}
+
+// export function allPageDataAndResolvers ( rs: RestD[] ) {
+//   rs.flatMap ( r => flatMapDD ( r.dataDD,
+//     {
+//       ...emptyDataFlatMap (),
+//       walkDataStart: ( path, oparents: DataD[],neDataDD, dataDD ) =>
+//         path.length < 2 ? [] : [ makeWiring ( path[ path.length - 2 ], path[ path.length - 1 ] ) ],
+//       walkPrim: ( path,parents: DataD[], oneDataDD, dataDD ) =>
+//         path.length < 2 ? [] : [ makeWiring ( path[ path.length - 2 ], path[ path.length - 1 ] ) ],
+//     } )
+// }

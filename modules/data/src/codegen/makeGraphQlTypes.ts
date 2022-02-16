@@ -5,9 +5,9 @@ export function makeGraphQlTypeFolder ( { keyword, create, postfix }: RestTypeDe
   return {
     stopAtDisplay: false,
     ...emptyDataFlatMap (),
-    walkDataStart: ( path, oneDataDD, dataDD ) => create ? [ `${keyword} ${dataDD.name}${postfix}{` ] : [],
-    walkPrim: ( path, oneDataDD, dataDD ) => create ? [ `  ${path.slice ( -1 )}: ${dataDD.graphQlType}` ] : [],
-    walkDataEnd: ( path, oneDataDD, dataDD ) => create ? [ '}' ] : []
+    walkDataStart: ( path, parents: DataD[], oneDataDD, dataDD ) => create ? [ `${keyword} ${dataDD.name}${postfix}{` ] : [],
+    walkPrim: ( path, parents: DataD[], oneDataDD, dataDD ) => create ? [ `  ${path.slice ( -1 )}: ${dataDD.graphQlType}` ] : [],
+    walkDataEnd: ( path, parents: DataD[], oneDataDD, dataDD ) => create ? [ '}' ] : []
   }
 }
 

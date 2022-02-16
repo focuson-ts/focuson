@@ -33,15 +33,15 @@ export interface ComponentDisplayParams {
 export const listComponentsInFolder: AllDataFlatMap<AllComponentData> = {
   stopAtDisplay: true,
   ...emptyDataFlatMap (),
-  walkDataStart: ( path: string[], oneDataDD: OneDataDD | undefined, dataDD: DataD ): AllComponentData[] =>
+  walkDataStart: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: DataD ): AllComponentData[] =>
     dataDD.display ? [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display } ] : [],
 
-  walkPrim: ( path: string[], oneDataDD: OneDataDD | undefined, dataDD: PrimitiveDD ): AllComponentData[] =>
+  walkPrim: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: PrimitiveDD ): AllComponentData[] =>
     dataDD.display ?
       [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display } ] :
       [ { path, dataDD, error: `Component ${JSON.stringify ( dataDD )} with displayParams [${JSON.stringify ( oneDataDD?.displayParams )}] does not have a display` } ],
 
-  walkRepStart: ( path: string[], oneDataDD: OneDataDD | undefined, dataDD: RepeatingDataD ): AllComponentData[] =>
+  walkRepStart: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: RepeatingDataD ): AllComponentData[] =>
     [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display } ]
 }
 

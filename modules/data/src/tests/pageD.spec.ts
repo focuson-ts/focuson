@@ -1,4 +1,4 @@
-import { dataDsIn } from "../common/pageD";
+import { allRestAndActions, dataDsIn } from "../common/pageD";
 import { createPlanPD, EAccountsSummaryPD } from "../example/eAccountsSummary.pageD";
 import { sortedEntries } from "@focuson/utils";
 
@@ -28,4 +28,19 @@ describe ( "dataDsIn", () => {
       "EAccountsSummaryDD"
     ] )
   } )
+} )
+
+describe ( "allRestAndActions", () => {
+  it ( "should find the unque rests and actions", () => {
+    expect ( allRestAndActions ( [ EAccountsSummaryPD, createPlanPD, EAccountsSummaryPD, createPlanPD ] ).//
+      map ( ( [ page, rdp, rad ] ) => [ page.name, rdp.rest.dataDD.name, rad.name ] ) ).toEqual ( [
+      [ "EAccountsSummary", "CreatePlanDD", "get" ],
+      [ "EAccountsSummary", "CreatePlanDD", "create" ],
+      [ "EAccountsSummary", "CreatePlanDD", "update" ],
+      [ "EAccountsSummary", "CreatePlanDD", "delete" ],
+      [ "EAccountsSummary", "CreatePlanDD", "list" ],
+      [ "EAccountsSummary", "EAccountsSummaryDD", "get" ]
+    ] )
+  } )
+
 } )

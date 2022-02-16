@@ -1,6 +1,6 @@
 import { DataD } from "../common/dataD";
-import { PageD } from "../common/pageD";
-import { RestDefnInPageProperties } from "../../dist";
+import { PageD, RestDefnInPageProperties } from "../common/pageD";
+
 
 export const domainName = ( d: DataD ): string => d.name + "Domain";
 export const componentName = ( d: DataD ): string => d.name;
