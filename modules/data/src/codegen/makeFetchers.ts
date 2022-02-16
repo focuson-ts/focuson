@@ -10,7 +10,7 @@ export const makeFetcherCode = ( p: PageD ) => ( def: RestDefnInPageProperties )
   const pageName = selectedPage ( p )
   const targetFromPath = def.targetFromPath;
   return [
-    `export function optOutFetcher<S>(getUrlParams: GetUrlParams<S>) {`,
+    `export function ${fetcherName(def)}<S>(getUrlParams: GetUrlParams<S>) {`,
     `  return stateAndFromApiTagFetcherForModal<S, ${hasDomain ( d )}, ${dataType}, '${pageName}'>(`,
     `    commonFetch<S, ${hasDomain ( d )}>(),`,
     `     '${pageName}',`,
@@ -22,10 +22,28 @@ export const makeFetcherCode = ( p: PageD ) => ( def: RestDefnInPageProperties )
 
 };
 
-export const makeFetcher = ( p: PageD ) => ( [ name, def ]: [ string, RestDefnInPageProperties ] ): string[] =>
-  def.fetcher ? makeFetcherCode ( p ) ( def ) : [];
 
+export function findAllFetchers ( ps: PageD[] ): [ PageD, RestDefnInPageProperties ][] {
+  return ps.flatMap ( pd => sortedEntries ( pd.rest ).flatMap ( ( [ name, d ] ) => {
+    let x: [ PageD, RestDefnInPageProperties ][] = d.fetcher ? [ [ pd, d ] ] : []
+    return x
+  } ) )
+}
 
-export function makeAllFetchers ( ps: PageD[] ): string[] {
-  return ps.flatMap ( pd => sortedEntries ( pd.rest ).flatMap ( makeFetcher ( pd ) ) )
+export const makeAllFetchers = ( ps: PageD[] ): string[] => findAllFetchers ( ps ).flatMap ( ( [ pd, rd ] ) => makeFetcherCode ( pd ) ( rd ) );
+
+interface FetcherDataStructureParams {
+  stateName: string,
+  variableName: string,
+  getUrlParamsName: string
+}
+export function makeFetchersDataStructure ( { stateName, variableName,getUrlParamsName }: FetcherDataStructureParams, ps: PageD[] ): string[] {
+  let fetchers = findAllFetchers ( ps );
+  return [
+    `export const ${variableName}: FetcherTree<${stateName}> = {`,
+    `fetchers: [`,
+    ...fetchers.map ( ( [ pd, rd ], i ) => `   ${fetcherName ( rd )}<${stateName}>(${getUrlParamsName})${i == fetchers.length - 1 ? '' : ','}` ),
+    `]}`
+  ]
+
 }

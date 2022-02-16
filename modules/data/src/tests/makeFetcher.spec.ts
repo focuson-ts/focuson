@@ -1,10 +1,10 @@
-import { makeAllFetchers } from "../codegen/makeFetchers";
+import { makeAllFetchers, makeFetchersDataStructure } from "../codegen/makeFetchers";
 import { createPlanPD, EAccountsSummaryPD } from "../example/eAccountsSummary.pageD";
 
 describe ( "makeAllFetchers", () => {
     it ( "should make a fetcher", () => {
       expect ( makeAllFetchers ( [ EAccountsSummaryPD, createPlanPD ] ) ).toEqual ( [
-        "export function optOutFetcher<S>(getUrlParams: GetUrlParams<S>) {",
+        "export function EAccountsSummaryDDFetcher<S>(getUrlParams: GetUrlParams<S>) {",
         "  return stateAndFromApiTagFetcherForModal<S, HasEAccountsSummaryDD, EAccountsSummaryDDDomain, 'EAccountsSummary'>(",
         "    commonFetch<S, HasEAccountsSummaryDD>(),",
         "     'EAccountsSummary',",
@@ -15,6 +15,16 @@ describe ( "makeAllFetchers", () => {
         "}"
       ])
     } )
-
   }
 )
+
+describe ( 'makeFetchersDataStructure', () => {
+  it ( "should record all the fetchers", () => {
+    expect ( makeFetchersDataStructure ( { variableName: 'fetchers', stateName: 'theState',getUrlParamsName: 'getUrlParams' }, [ EAccountsSummaryPD, createPlanPD ] ) ).toEqual ( [
+      "export const fetchers: FetcherTree<theState> = {",
+      "fetchers: [",
+      "   EAccountsSummaryDDFetcher<theState>(getUrlParams)",
+      "]}"
+    ] )
+  } )
+} );
