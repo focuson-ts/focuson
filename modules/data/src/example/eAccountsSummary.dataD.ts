@@ -18,10 +18,10 @@ export const EAccountSummaryDD: DataD = {
   structure: {
     accountId: { dataDD: AccountIdDD, displayParams: { label: "Account Id" } },
     displayType: { dataDD: EAccountDisplayTypeDD },//No label because it is derivable from the camelCase
-    description: { dataDD: { ...OneLineStringDD, resolver: 'getAccountSummaryDescription' } },
-    virtualBankSeq: { dataDD: OneLineStringDD },
-    total: { dataDD: MoneyDD },
-    frequency: { dataDD: OneLineStringDD, displayParams: { label: "Frequency/Amount" } },
+    description: { dataDD: { ...OneLineStringDD, resolver: 'getAccountSummaryDescription' }, sample: [ 'This account has a description' ] },
+    virtualBankSeq: { dataDD: OneLineStringDD, sample: [ 'seq1', 'seq2', 'seq3' ] },
+    total: { dataDD: MoneyDD, sample: [ '1000', '2991' ] },
+    frequency: { dataDD: OneLineStringDD, sample: [ '23' ], displayParams: { label: "Frequency/Amount" } },
   }
 }
 export const EAccountsSummaryTableDD: RepeatingDataD = {
@@ -37,9 +37,9 @@ export const CreatePlanDD: DataD = {
   name: "CreatePlanDD",
   description: "The create plan data (actually just put in one place to allow a test for a structure)",
   structure: {
-    createPlanStart: { displayParams: { label: 'Create Start' }, dataDD: DateDD },
-    createPlanDate: { displayParams: { ariaLabel: 'The Create Plan Date' }, dataDD: DateDD },
-    createPlanEnd: { dataDD: DateDD }
+    createPlanStart: { displayParams: { label: 'Create Start' }, dataDD: DateDD, sample: [ '2022-01-01' ] },
+    createPlanDate: { displayParams: { ariaLabel: 'The Create Plan Date' }, dataDD: DateDD, sample: [ '2022-03-01' ] },
+    createPlanEnd: { dataDD: DateDD, sample: [ '2022-10-01' ] }
   }
 }
 export const EAccountsSummaryDD: DataD = {
@@ -48,9 +48,9 @@ export const EAccountsSummaryDD: DataD = {
   // tableName: 'CustomerSUmmaryView',
   structure: {
     eAccountsTable: { dataDD: EAccountsSummaryTableDD },
-    totalMonthlyCost: { dataDD: { ...MoneyDD, resolver: 'getTotalMonthlyCost' } },
-    oneAccountBalance: { dataDD: { ...MoneyDD, resolver: 'getOneAccountBalance' } },
-    currentAccountBalance: { dataDD: { ...MoneyDD, resolver: 'getCurrentAccountBalance' } },
+    totalMonthlyCost: { dataDD: { ...MoneyDD, resolver: 'getTotalMonthlyCost', samples: [ '1000' ] } },
+    oneAccountBalance: { dataDD: { ...MoneyDD, resolver: 'getOneAccountBalance', samples: [ '9921' ] } },
+    currentAccountBalance: { dataDD: { ...MoneyDD, resolver: 'getCurrentAccountBalance', samples: [ '12321' ] } },
     createPlan: { dataDD: CreatePlanDD }
   }
 }

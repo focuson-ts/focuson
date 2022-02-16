@@ -5,7 +5,7 @@ describe ( "makeAllFetchers", () => {
     it ( "should make a fetcher", () => {
       expect ( makeAllFetchers ( [ EAccountsSummaryPD, createPlanPD ] ) ).toEqual ( [
         "export function EAccountsSummaryDDFetcher<S>(getUrlParams: GetUrlParams<S>) {",
-        "  return stateAndFromApiTagFetcherForModal<S, HasEAccountsSummaryDD, EAccountsSummaryDDDomain, 'EAccountsSummary'>(",
+        "  return stateAndFromApiTagFetcher<S, HasEAccountsSummaryDD, EAccountsSummaryDDDomain, 'EAccountsSummary'>(",
         "    commonFetch<S, HasEAccountsSummaryDD>(),",
         "     'EAccountsSummary',",
         "     'fromApi',",

@@ -7,6 +7,7 @@ import { ComponentDisplayParams } from "../codegen/makeComponents";
 export interface OneDataDD {
   dataDD: AllDataDD;
   displayParams?: ComponentDisplayParams,
+  sample?: string[],
   graphQl?: string, // might be possible to default this which would be cool
 }
 export interface ManyDataDD {
@@ -30,7 +31,6 @@ export interface CommonDataDD {
   resolver?: string;
 }
 export interface DataD extends CommonDataDD {
-
   structure: ManyDataDD;
 }
 export interface PrimitiveDD extends CommonDataDD {

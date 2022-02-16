@@ -8,6 +8,7 @@ import { makeAllDomainsFor } from "./codegen/makeDomain";
 import { sortedEntries } from "@focuson/utils";
 import { unique } from "./common/restD";
 import { makeAllFetchers, makeFetchersDataStructure } from "./codegen/makeFetchers";
+import { makeAllSampleVariables, makeSampleVariable } from "./codegen/makeSample";
 
 export function writeToFile ( name: string, contents: string[] ) {
   fs.writeFileSync ( name, contents.join ( '\n' ) );
@@ -25,4 +26,5 @@ writeToFile ( 'dist/focus/render.tsx',
     ...createAllReactComponents ( pages ),
     ...makeAllDomainsFor ( pages ) ] )
 writeToFile ( 'dist/focus/wiring.java', makeAllJavaWiring ( { thePackage: 'wiring', fetcherClass: 'wiring', schema: 'someSchema' }, rests ) )
-writeToFile ( 'dist/focus/fetchers.ts', [ ...makeAllFetchers ( pages ), ...makeFetchersDataStructure ( { variableName: 'fetchers', stateName: 'FullState' , getUrlParamsName: "getUrLParams"}, pages ) ] )
+writeToFile ( 'dist/focus/fetchers.ts', [ ...makeAllFetchers ( pages ), ...makeFetchersDataStructure ( { variableName: 'fetchers', stateName: 'FullState', getUrlParamsName: "getUrLParams" }, pages ) ] )
+writeToFile ( 'dist/focus/samples.ts', [ ...[ 0, 1, 2 ].flatMap ( i => makeAllSampleVariables ( pages, i ) ), ...makeAllDomainsFor ( pages ) ] )

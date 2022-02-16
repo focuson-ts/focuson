@@ -11,7 +11,7 @@ export const makeFetcherCode = ( p: PageD ) => ( def: RestDefnInPageProperties )
   const targetFromPath = def.targetFromPath;
   return [
     `export function ${fetcherName(def)}<S>(getUrlParams: GetUrlParams<S>) {`,
-    `  return stateAndFromApiTagFetcherForModal<S, ${hasDomain ( d )}, ${dataType}, '${pageName}'>(`,
+    `  return stateAndFromApiTagFetcher<S, ${hasDomain ( d )}, ${dataType}, '${pageName}'>(`,
     `    commonFetch<S, ${hasDomain ( d )}>(),`,
     `     '${pageName}',`,
     `     '${targetFromPath}',`,

@@ -1,5 +1,6 @@
 import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, isDataDd, isRepeatingDd, OneDataDD } from "../common/dataD";
 import { findMustConstructForRest, findUniqueDataDsAndRestTypeDetails, QueryOrMutation, RestActionDetail, RestD, RestTypeDetails } from "../common/restD";
+import { resolverName } from "./names";
 
 export function makeGraphQlTypeFolder ( { keyword, create, postfix }: RestTypeDetails ): AllDataFlatMap<string> {
   return {
@@ -32,10 +33,7 @@ export function makeOutputString ( name: string, { params, query, output, graphQ
   return output.needsBrackets ? "[" + obj + "]!" : obj
 }
 
-export function resolverName ( dataD: DataD, action: RestActionDetail ) {
-  let rawType = rawTypeName ( dataD );
-  return `${action.graphQPrefix}${rawType}${action.graphQlPostfix}`
-}
+
 export const oneQueryMutateLine = ( [ dataD, action ]: [ DataD, RestActionDetail ] ): string => {
   let rawType = rawTypeName ( dataD );
   const paramString = makeParamsString ( action, rawType );

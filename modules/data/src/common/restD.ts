@@ -106,7 +106,3 @@ export function unique<T> ( ts: T[] | undefined, tagFn: ( t: T ) => string ): T[
   } )
   return result
 }
-
-// export function queriesOrMutations ( r: RestD, q: QueryOrMutation ): RestActionDetails[] {
-//   return r.actions.map ( actionDetails ).filter ( a => a.graphQlType == q )
-// }

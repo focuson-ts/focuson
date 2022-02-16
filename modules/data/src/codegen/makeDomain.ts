@@ -11,7 +11,8 @@ export function domainTypeName ( o: AllDataDD ): string {
 }
 
 export function oneDomainLine ( [ name, o ]: [ string, OneDataDD ] ): string {
-  return `  ${name}: ${domainTypeName ( o.dataDD )};`
+  const brackets = isRepeatingDd ( o.dataDD ) ? '[]' : ''
+  return `  ${name}: ${domainTypeName ( o.dataDD )}${brackets};`
 }
 export function makeDomainFor ( d: DataD ): string[] {
   return [ `interface ${domainName ( d )}{`,

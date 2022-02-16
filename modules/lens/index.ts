@@ -226,6 +226,10 @@ export class Lenses {
     return Lenses.identity<Main> ().withDescription ( description )
   }
 
+  static fromPath = <From, To> ( path: string[], description?: string ): Optional<From, To> => {
+    let initialValue: any = Lenses.identity<any> ( description ? description : '' );
+    return path.reduce ( ( acc, p ) => acc.focusQuery ( p ), initialValue )
+  }
   /** Given a main which is an object, with a field name, this returns a lens that goes from the Main to the contents of the field name */
   static field = <Main, K extends keyof Main> ( fieldName: K ): Lens<Main, Main[K]> => lens ( m => m[ fieldName ], ( m, c ) => {
     let result = Object.assign ( {}, m )

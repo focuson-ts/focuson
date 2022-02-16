@@ -1,8 +1,9 @@
 import { findUniqueDataDsAndRestTypeDetails, RestActionDetail, RestD } from "../common/restD";
-import { resolverName } from "./makeGraphQlTypes";
+import {  } from "./makeGraphQlTypes";
 import { sortedEntries } from "@focuson/utils";
 import { AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD } from "../common/dataD";
 import fs from "fs";
+import { resolverName } from "./names";
 
 
 export function makeJavaResolversInterface ( packageName: string, intName: string, rs: RestD[] ): string[] {
@@ -21,20 +22,6 @@ export function makeJavaResolversInterface ( packageName: string, intName: strin
 function makeWiring ( name: string, resolver: string ): string {
   return `.type(newTypeWiring("${name}").dataFetcher("${resolver}", fetchers.${resolver}()))`;
 }
-
-// export const makeJavaWiringForDataD = ( name: string ) => ( d: AllDataDD ): string[] =>
-//   d.resolver ? makeWiring ( d, d.resolver )  : [];
-
-// export function makeJavaWiringForAllDataDs ( rs: RestD[] ): string[] {
-//   return rs.flatMap ( r => flatMapDD ( r.dataDD,
-//     {
-//       ...emptyDataFlatMap (),
-//       walkDataStart: ( path, parents: DataD[], oneDataDD, dataDD ) =>
-//         dataDD.resolver && parents.length > 0 ? [ makeWiring ( parents[ parents.length - 1 ].name, dataDD.resolver ) ] : [],
-//       walkPrim: ( path, parents: DataD[], oneDataDD, dataDD ) =>
-//         dataDD.resolver && parents.length > 0 ? [ makeWiring ( parents[ parents.length - 1 ].name, dataDD.resolver ) ] : [],
-//     } ) )
-// }
 
 
 export interface JavaWiringParams {
