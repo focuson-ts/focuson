@@ -41,5 +41,5 @@ interface NameAnd<T> {
   [ name: string ]: T
 }
 export function sortedEntries<T> ( a: NameAnd<T> ): [ string, T ][] {
-  return Object.entries ( a ).sort ( ( [ n1, v1 ], [ n2, v2 ] ) => n1.localeCompare ( n2 ) )
+  return a ? Object.entries ( a ).sort ( ( [ n1, v1 ], [ n2, v2 ] ) => n1.localeCompare ( n2 ) ) : []
 }

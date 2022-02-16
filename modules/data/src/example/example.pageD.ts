@@ -1,17 +1,18 @@
-import { EAccountsSummaryDD } from "./example.dataD";
+import { CreatePlanDD, EAccountsSummaryDD } from "./example.dataD";
 import { createPlanRestD, exportAccountsSummaryRestD } from "./example.restD";
 import { PageD } from "../common/pageD";
 
 
 /** This is the 'bringing it all together */
 export const EAccountsSummaryPD: PageD = {
+  name: 'EAccountsSummary',
   modal: false,
   /** Where we are in the state */
   path: [ 'eAccountsSummary' ],
   /** This page can only view data */
   modes: [ 'view' ],
   /** How we display the page.*/
-  display: { layout: '', target: [ 'fromApi' ], dataDD: EAccountsSummaryDD },
+  display: { layout: { name: 'Layout', details: '[1][3,3][buttons]' }, target: [ 'fromApi' ], dataDD: EAccountsSummaryDD },
   /** When the page is selected for the first time this is the initial state */
   initialValue: {},
   /** This defines the domain data structures in react*/
@@ -40,15 +41,19 @@ export const EAccountsSummaryPD: PageD = {
 
 /** this is a modal window, so it's target is controlled by the caller */
 export const createPlanPD: PageD = {
+  name: 'CreatePlan',
   modal: true,
   /** This page can only view data */
   modes: [ 'view', 'create', 'edit' ],
   /** How we display the page.*/
-// @ts-ignore
-  display: { layout: 'TDB', target: [], dataDD: 'Not created yet' },
+  display: { layout: { name: 'Layout', details: '[3]' }, target: [], dataDD: CreatePlanDD },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },
     commit: { control: 'ModalCommitButton' }
-  }
+  },
+  //Not sure what to do about these
+  domain: {},
+  initialValue: {},
+  rest: {}
 }

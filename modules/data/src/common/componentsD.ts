@@ -3,7 +3,6 @@ type DisplayCompParamType = 'string' | 'string[]'
 type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName'
 
 export interface OneDisplayCompParamD {
-
   paramType: DisplayCompParamType;
   needed?: ParamNeeded
 }

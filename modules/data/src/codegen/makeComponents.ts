@@ -1,6 +1,11 @@
 import { AllDataDD, AllDataFlatMap, AllDataFolder, DataD, emptyDataFlatMap, flatMapDD, foldDataDD, isDataDd, isRepeatingDd, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
 import { DisplayCompD, DisplayCompParamD } from "../common/componentsD";
 import { on } from "cluster";
+import { dataDsIn, PageD } from "../common/pageD";
+import { EAccountsSummaryDD } from "../example/example.dataD";
+import { indentList } from "./makeGraphQlQuery";
+import { sortedEntries } from "@focuson/utils";
+import { componentName, domainName, pageComponentName } from "./names";
 
 
 export type AllComponentData = ComponentData | ErrorComponentData
@@ -60,4 +65,31 @@ export function createOneReact ( { path, dataDD, display, displayParams }: Compo
 }
 export function createAllReactCalls ( d: AllComponentData[] ): string[] {
   return d.flatMap ( d => isErrorComponentData ( d ) ? [ d.error ] : createOneReact ( d ) )
+}
+
+export function createReactComponent ( dataD: DataD ): string[] {
+  const contents = indentList ( indentList ( createAllReactCalls ( listComponentsIn ( dataD ) ) ) )
+  return [
+    `function ${componentName ( dataD )}<S>({state}: LensState<S, ${domainName ( dataD )}>){`,
+    "  return(<>",
+    ...contents,
+    "</>)",
+    '}'
+  ]
+}
+export function createReactPageComponent ( pageD: PageD ): string[] {
+  const { dataDD, layout, target } = pageD.display
+  return [
+    `function ${pageComponentName ( pageD )}<S>({state}: LensState<S, ${domainName ( dataDD )}>){`,
+    `  return (<${layout.name}  details='${layout.details}'>`,
+    `   <${componentName ( dataDD )} state={state} />`,
+    `   </${layout.name}>)`,
+    "}"
+  ]
+}
+
+export function createAllReactComponents ( pages: PageD[] ): string[] {
+  const dataComponents = sortedEntries ( dataDsIn ( pages, true ) ).flatMap ( ( [ name, dataD ] ) => dataD.display ? [] : createReactComponent ( dataD ) )
+  const pageComponents = pages.flatMap ( createReactPageComponent )
+  return [ ...pageComponents, ...dataComponents ]
 }
