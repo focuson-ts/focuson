@@ -7,7 +7,8 @@ export const paramsForTest: JavaWiringParams = {
   fetcherInterface: "intName",
   schema: "someSchema.graphql",
   thePackage: "packName",
-  wiringClass: "someClass"
+  wiringClass: "someClass",
+  fetcherClass: "fetcherClass"
 }
 describe ( "makeJavaResolversInterface", () => {
   it ( "should make a java interface", () => {

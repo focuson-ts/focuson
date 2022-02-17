@@ -1,19 +1,21 @@
 import { makeFetcherPact } from "../codegen/makePacts";
 import { EAccountsSummaryPD } from "../example/eAccountsSummary.pageD";
+import { paramsForTest } from "./makeJavaResolvers.spec";
+import { defaultRestAction } from "../common/restD";
 
 describe ( "makePacts", () => {
   it ( "should make a pact", () => {
-    const r = EAccountsSummaryPD.rest.eAccountsSummary
-    expect ( makeFetcherPact ( r ) ).toEqual ( [
+
+    expect ( makeFetcherPact ( EAccountsSummaryPD, EAccountsSummaryPD.rest.eAccountsSummary ) ).toEqual ( [
       "pactWith ( { consumer: 'EAccountsSummaryDD', provider: 'EAccountsSummaryDDProvider', cors: true }, provider => {",
-      "  describe ( 'EAccountsSummaryDD', () => {",
-      "    it ( 'should have a get fetcher', async () => {",
+      "  describe ( 'EAccountsSummary', () => {",
+      "    it ( 'should have a get fetcher for EAccountsSummaryDD', async () => {",
       "      await provider.addInteraction ( {",
       "        state: 'default',",
-      "        uponReceiving: 'EAccountsSummaryDD should have a get fetcher',",
+      "        uponReceiving: 'EAccountsSummary should have a get fetcher for EAccountsSummaryDD',",
       "        withRequest: {",
-      "          method: Get',",
-      "          path: '<url>'",
+      "          method: 'GET',",
+      "          path: '/api/accountsSummary?accountId={accountId}&customerId={customerId}'",
       "        },",
       "        willRespondWith: {",
       "          status: 200,",
@@ -27,7 +29,8 @@ describe ( "makePacts", () => {
       "        tags: { eTransfers: [ 'mycid' ] }",
       "      } )",
       "    } )",
-      "  } )"
+      "  } )",
+      "})"
     ] )
   } )
 
