@@ -1,11 +1,11 @@
-import { makeMockFetchers } from "../codegen/makeMockFetchers";
+import { makeAllMockFetchers } from "../codegen/makeMockFetchers";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
 
 
 describe ( "makeMockFetchers", () => {
   it ( "to make a java mock fetcher", () => {
-    expect ( makeMockFetchers ( paramsForTest, [ eAccountsSummaryRestD, createPlanRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeAllMockFetchers ( paramsForTest, [ eAccountsSummaryRestD, createPlanRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "    public DataFetcher getEAccountsSummaryDD() {  return dataFetchingEnvironment -> EAccountsSummaryDDSample0();    }",
       "    public DataFetcher getCreatePlanDD() {  return dataFetchingEnvironment -> CreatePlanDDSample0();    }",
       "    public DataFetcher createCreatePlanDD() {  return dataFetchingEnvironment -> CreatePlanDDSample0();    }",

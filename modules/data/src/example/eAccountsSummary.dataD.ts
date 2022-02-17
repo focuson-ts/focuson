@@ -39,6 +39,7 @@ export const CreatePlanDD: DataD = {
   structure: {
     createPlanStart: { displayParams: { label: 'Create Start' }, dataDD: DateDD, sample: [ '2022-01-01' ] },
     createPlanDate: { displayParams: { ariaLabel: 'The Create Plan Date' }, dataDD: DateDD, sample: [ '2022-03-01' ] },
+    createPlanData: { displayParams: { ariaLabel: 'The Create Plan Data' }, dataDD: MoneyDD },
     createPlanEnd: { dataDD: DateDD, sample: [ '2022-10-01' ] }
   }
 }

@@ -11,6 +11,7 @@ import { makeAllJavaVariableName, makeAllSampleVariables } from "./codegen/makeS
 import { copyFile, templateFile } from "./codegen/toFile";
 import { indentList } from "./codegen/makeGraphQlQuery";
 import { makeAllPacts, makeFetcherPact } from "./codegen/makePacts";
+import { makeAllMockFetchers, makeMockFetcherFor } from "./codegen/makeMockFetchers";
 
 export function writeToFile ( name: string, contents: string[] ) {
   fs.writeFileSync ( name, contents.join ( '\n' ) );
@@ -21,6 +22,7 @@ const javaParams: JavaWiringParams = {
   applicationName: 'ExampleApp',
   fetcherInterface: 'FFetcher',
   wiringClass: 'Wiringx',
+  fetcherClass: 'MockFetchers',
   schema: 'someSchema.graphql',
   sampleClass: 'Sample'
 };
@@ -47,6 +49,8 @@ writeToFile ( `${javaResourcesRoot}/${javaParams.schema}`, makeGraphQlSchema ( r
 writeToFile ( `${javaCodeRoot}/${javaParams.fetcherInterface}.java`, makeJavaResolversInterface ( javaParams, rests ) )
 writeToFile ( `${javaCodeRoot}/${javaParams.wiringClass}.java`, makeAllJavaWiring ( javaParams, rests ) )
 templateFile ( `${javaCodeRoot}/${javaParams.applicationName}.java`, 'templates/JavaApplicationTemplate.java', javaParams )
+templateFile ( `${javaCodeRoot}/${javaParams.fetcherClass}.java`, 'templates/JavaFetcherClassTemplate.java',
+  {...javaParams, content: makeAllMockFetchers(javaParams, rests).join("\n")} )
 templateFile ( `${javaCodeRoot}/${javaParams.sampleClass}.java`, 'templates/JavaSampleTemplate.java',
   { ...javaParams, content: indentList ( makeAllJavaVariableName ( pages, 0 ) ).join ( "\n" ) } )
 

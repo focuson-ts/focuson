@@ -28,6 +28,7 @@ export interface JavaWiringParams {
   applicationName: string,
   fetcherInterface: string;
   wiringClass: string;
+  fetcherClass: string;
   sampleClass: string,
   schema: string;
 }
