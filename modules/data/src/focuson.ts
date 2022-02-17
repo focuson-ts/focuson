@@ -7,14 +7,22 @@ import { makeAllDomainsFor } from "./codegen/makeDomain";
 import { sortedEntries } from "@focuson/utils";
 import { unique } from "./common/restD";
 import { makeAllFetchers, makeFetchersDataStructure } from "./codegen/makeFetchers";
-import { makeAllSampleVariables } from "./codegen/makeSample";
+import { makeAllJavaVariableName, makeAllSampleVariables } from "./codegen/makeSample";
 import { copyFile, templateFile } from "./codegen/toFile";
+import { indentList } from "./codegen/makeGraphQlQuery";
 
 export function writeToFile ( name: string, contents: string[] ) {
   fs.writeFileSync ( name, contents.join ( '\n' ) );
 }
 
-const javaParams: JavaWiringParams = { thePackage: 'focuson.data', fetcherInterface: 'FFetcher', wiringClass: 'Wiringx', schema: 'someSchema.graphql', applicationName: 'ExampleApp' };
+const javaParams: JavaWiringParams = {
+  thePackage: 'focuson.data',
+  applicationName: 'ExampleApp',
+  fetcherInterface: 'FFetcher',
+  wiringClass: 'Wiringx',
+  schema: 'someSchema.graphql',
+  sampleClass: 'Sample'
+};
 let outputRoot = 'dist'
 let javaRoot = outputRoot + "/java"
 let javaAppRoot = outputRoot + "/java/" + javaParams.applicationName
@@ -38,6 +46,8 @@ writeToFile ( `${javaResourcesRoot}/${javaParams.schema}`, makeGraphQlSchema ( r
 writeToFile ( `${javaCodeRoot}/${javaParams.fetcherInterface}.java`, makeJavaResolversInterface ( javaParams, rests ) )
 writeToFile ( `${javaCodeRoot}/${javaParams.wiringClass}.java`, makeAllJavaWiring ( javaParams, rests ) )
 templateFile ( `${javaCodeRoot}/${javaParams.applicationName}.java`, 'templates/JavaApplicationTemplate.java', javaParams )
+templateFile ( `${javaCodeRoot}/${javaParams.sampleClass}.java`, 'templates/JavaSampleTemplate.java',
+  {...javaParams, content: indentList(makeAllJavaVariableName ( pages, 0 )).join("\n") })
 
 writeToFile ( `${tsRoot}/schema.graphql`, makeGraphQlSchema ( rests ) )
 writeToFile ( `${tsRoot}/render.tsx`,

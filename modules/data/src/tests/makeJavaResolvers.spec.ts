@@ -1,14 +1,22 @@
-import { findResolvers, makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
+import { findResolvers, JavaWiringParams, makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
 
+const params: JavaWiringParams = {
+  sampleClass: "sample",
+  applicationName: "SomeApp",
+  fetcherInterface: "intName",
+  schema: "someSchema.graphql",
+  thePackage: "packName",
+  wiringClass: "someClass"
+}
 describe ( "makeJavaResolversInterface", () => {
   it ( "should make a java interface", () => {
-    expect ( makeJavaResolversInterface ( 'packName', 'intName', [ eAccountsSummaryRestD, createPlanRestD ] ) ).toEqual ( [
+    expect ( makeJavaResolversInterface ( params, [ eAccountsSummaryRestD, createPlanRestD ] ) ).toEqual ( [
       "package packName;",
       "",
       "import graphql.schema.DataFetcher;",
       "",
-      "interface intName {",
+      "public interface intName {",
       "   public DataFetcher getEAccountsSummaryDD();",
       "   public DataFetcher getCreatePlanDD();",
       "   public DataFetcher createCreatePlanDD();",
@@ -27,25 +35,26 @@ describe ( "makeJavaResolversInterface", () => {
 
 describe ( "findResolvers", () => {
   it ( "should find the query/mutation and the specifics", () => {
-    expect ( findResolvers ( [ eAccountsSummaryRestD, createPlanRestD ] ).map ( ( [ a, b ] ) => a.name + "/" + b ) ).toEqual ( [
-      "EAccountsSummaryDD/getEAccountsSummaryDD",
-      "CreatePlanDD/getCreatePlanDD",
-      "CreatePlanDD/createCreatePlanDD",
-      "CreatePlanDD/updateCreatePlanDD",
-      "CreatePlanDD/deleteCreatePlanDD",
-      "CreatePlanDD/listCreatePlanDD",
-      "EAccountSummaryDD/getAccountSummaryDescription",
-      "EAccountsSummaryDD/getTotalMonthlyCost",
-      "EAccountsSummaryDD/getOneAccountBalance",
-      "EAccountsSummaryDD/getCurrentAccountBalance"
-    ] )
+    expect ( findResolvers ( [ eAccountsSummaryRestD, createPlanRestD ] ).//
+      map ( ( [ p, output, a, b ] ) => `${p?.name}/${JSON.stringify ( output ).replace ( /"/g, "'" )}/${a.name}/${b}` ) ).toEqual ( [
+      "undefined/{'needsObj':true,'needsPling':true}/EAccountsSummaryDD/getEAccountsSummaryDD",
+      "undefined/{'needsObj':true,'needsPling':true}/CreatePlanDD/getCreatePlanDD",
+      "undefined/{'needsObj':true,'needsPling':true}/CreatePlanDD/createCreatePlanDD",
+      "undefined/{'needsObj':true,'needsPling':true}/CreatePlanDD/updateCreatePlanDD",
+      "undefined/{}/CreatePlanDD/deleteCreatePlanDD",
+      "undefined/{'needsObj':true,'needsBrackets':true,'needsPling':true}/CreatePlanDD/listCreatePlanDD",
+      "EAccountSummaryDD/{}/OneLineStringDD/getAccountSummaryDescription",
+      "EAccountsSummaryDD/{}/IntegerDD/getTotalMonthlyCost",
+      "EAccountsSummaryDD/{}/IntegerDD/getOneAccountBalance",
+      "EAccountsSummaryDD/{}/IntegerDD/getCurrentAccountBalance"
+    ])
   } )
 } )
 
 describe ( "makeAllJavaWiring", () => {
   it ( "should make a java file which will power a graphql spring boot app", () => {
-    expect ( makeAllJavaWiring ( { thePackage: 'somePackage', wiringClass: 'someClass', schema: 'someSchema.graphql' }, [ eAccountsSummaryRestD, createPlanRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "package somePackage;",
+    expect ( makeAllJavaWiring ( params, [ eAccountsSummaryRestD, createPlanRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+      "package packName;",
       "import com.google.common.base.Charsets;",
       "import com.google.common.io.Resources;",
       "import graphql.GraphQL;",
@@ -62,9 +71,9 @@ describe ( "makeAllJavaWiring", () => {
       "import java.net.URL;",
       "import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;",
       "@Component",
-      "public class <class> {",
+      "public class someClass {",
       "    @Autowired",
-      "    someClass fetcher;",
+      "    intName fetchers;",
       "    private GraphQL graphQL;",
       "    @PostConstruct",
       "    public void init() throws IOException {",
@@ -87,10 +96,10 @@ describe ( "makeAllJavaWiring", () => {
       "          .type(newTypeWiring('CreatePlanDD').dataFetcher('updateCreatePlanDD', fetchers.updateCreatePlanDD()))",
       "          .type(newTypeWiring('CreatePlanDD').dataFetcher('deleteCreatePlanDD', fetchers.deleteCreatePlanDD()))",
       "          .type(newTypeWiring('CreatePlanDD').dataFetcher('listCreatePlanDD', fetchers.listCreatePlanDD()))",
-      "          .type(newTypeWiring('EAccountSummaryDD').dataFetcher('getAccountSummaryDescription', fetchers.getAccountSummaryDescription()))",
-      "          .type(newTypeWiring('EAccountsSummaryDD').dataFetcher('getTotalMonthlyCost', fetchers.getTotalMonthlyCost()))",
-      "          .type(newTypeWiring('EAccountsSummaryDD').dataFetcher('getOneAccountBalance', fetchers.getOneAccountBalance()))",
-      "          .type(newTypeWiring('EAccountsSummaryDD').dataFetcher('getCurrentAccountBalance', fetchers.getCurrentAccountBalance()))",
+      "          .type(newTypeWiring('OneLineStringDD').dataFetcher('getAccountSummaryDescription', fetchers.getAccountSummaryDescription()))",
+      "          .type(newTypeWiring('IntegerDD').dataFetcher('getTotalMonthlyCost', fetchers.getTotalMonthlyCost()))",
+      "          .type(newTypeWiring('IntegerDD').dataFetcher('getOneAccountBalance', fetchers.getOneAccountBalance()))",
+      "          .type(newTypeWiring('IntegerDD').dataFetcher('getCurrentAccountBalance', fetchers.getCurrentAccountBalance()))",
       "          .build();",
       "    }",
       "    @Bean",

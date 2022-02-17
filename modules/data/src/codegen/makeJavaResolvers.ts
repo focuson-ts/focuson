@@ -1,12 +1,12 @@
-import { findUniqueDataDsAndRestTypeDetails, RestD } from "../common/restD";
+import { findUniqueDataDsAndRestTypeDetails, RestD, RestOutputDetails } from "../common/restD";
 import { NameAnd, sortedEntries } from "@focuson/utils";
-import { DataD, emptyDataFlatMap, flatMapDD } from "../common/dataD";
+import { AllDataDD, DataD, emptyDataFlatMap, flatMapDD, isDataDd, isRepeatingDd } from "../common/dataD";
 import fs from "fs";
 import { resolverName } from "./names";
 
 
 export function makeJavaResolversInterface ( { thePackage, fetcherInterface }: JavaWiringParams, rs: RestD[] ): string[] {
-  const resolvers = findResolvers ( rs ).map ( ( [ dataD, resolver ] ) => `   public DataFetcher ${resolver}();` )
+  const resolvers = findResolvers ( rs ).map ( ( [ parent, output, dataD, resolver ] ) => `   public DataFetcher ${resolver}();` )
   return [
     `package ${thePackage};`,
     '',
@@ -28,6 +28,7 @@ export interface JavaWiringParams {
   applicationName: string,
   fetcherInterface: string;
   wiringClass: string;
+  sampleClass: string,
   schema: string;
 }
 
@@ -41,21 +42,28 @@ export function adjustTemplate ( template: string, params: NameAnd<string> ): st
 }
 
 export function makeAllJavaWiring ( params: JavaWiringParams, rs: RestD[] ): string[] {
-  let wiring = findResolvers ( rs ).map ( ( [ dataD, resolver ] ) => makeWiring ( dataD.name, resolver ) )
+  let wiring = findResolvers ( rs ).map ( ( [ parent, outputD, dataD, resolver ] ) => makeWiring ( dataD.name, resolver ) )
   // let wiring = [ ...makeJavaWiringForQueryAndMutation ( rs ), ...makeJavaWiringForAllDataDs ( rs ) ]
   const str: string = fs.readFileSync ( 'templates/JavaWiringTemplate.java' ).toString ()
   return adjustTemplate ( str, { ...params, wiring: wiring.map ( s => '          ' + s ).join ( '\n' ) } )
 }
 
-export function findResolvers ( rs: RestD[] ): [ DataD, string ][] {
-  const fromRest: [ DataD, string ][] = findUniqueDataDsAndRestTypeDetails ( rs ).map ( ( [ dataD, rad ] ) => [ dataD, resolverName ( dataD, rad ) ] )
-  const fromSpecifics: [ DataD, string ][] = rs.flatMap ( r => {
-    let y: [ DataD, string ][] = flatMapDD ( r.dataDD, {
+export function findResolvers ( rs: RestD[] ): [ DataD | undefined, RestOutputDetails, AllDataDD, string ][] {
+  const fromRest: [ undefined, RestOutputDetails, DataD, string ][] = findUniqueDataDsAndRestTypeDetails ( rs ).//
+    map ( ( [ dataD, rad ] ) => [ undefined, rad.output, dataD, resolverName ( dataD, rad ) ] )
+
+  function outputDetailsFor ( d: AllDataDD ): RestOutputDetails {
+    if ( isDataDd ( d ) ) return { needsObj: true }
+    if ( isRepeatingDd ( d ) ) return { needsObj: true, needsBrackets: true }
+    return {}
+  }
+  const fromSpecifics: [ DataD, RestOutputDetails, AllDataDD, string ][] = rs.flatMap ( r => {
+    let y: [ DataD, RestOutputDetails, AllDataDD, string ][] = flatMapDD ( r.dataDD, {
       ...emptyDataFlatMap (),
       walkDataStart: ( path, parents: DataD[], oneDataDD, dataDD ) =>
-        dataDD.resolver && parents.length > 0 ? [ [ parents[ parents.length - 1 ], dataDD.resolver ] ] : [],
+        dataDD.resolver && parents.length > 0 ? [ [ parents[ parents.length - 1 ], outputDetailsFor ( dataDD ), dataDD, dataDD.resolver ] ] : [],
       walkPrim: ( path, parents: DataD[], oneDataDD, dataDD ) =>
-        dataDD.resolver && parents.length > 0 ? [ [ parents[ parents.length - 1 ], dataDD.resolver ] ] : [],
+        dataDD.resolver && parents.length > 0 ? [ [ parents[ parents.length - 1 ], outputDetailsFor ( dataDD ), dataDD, dataDD.resolver ] ] : [],
     } )
     return y
   } )
