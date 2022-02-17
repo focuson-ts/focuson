@@ -3,9 +3,7 @@ import { safeArray, sortedEntries } from "@focuson/utils";
 import { Lenses } from "@focuson/lens";
 import { domainName, sampleName } from "./names";
 import { dataDsIn, PageD } from "../common/pageD";
-import { indentList } from "./makeGraphQlQuery";
-import { RestD } from "../common/restD";
-import { JavaWiringParams } from "./makeJavaResolvers";
+import { TSParams } from "./config";
 
 
 const addData = ( start: boolean, path: string[], acc: any, d: DataD ) => start ? Lenses.fromPath ( path ).set ( acc, {} ) : acc;
@@ -34,13 +32,13 @@ export function makeTsSample ( d: DataD, i: number ): any {
 }
 
 
-export function makeSampleVariable ( d: DataD, i: number ): string[] {
-  return [ `const ${sampleName ( d )}${i}: ${domainName ( d )} = `,
+export function makeSampleVariable (params: TSParams,  d: DataD, i: number ): string[] {
+  return [ `export const ${sampleName ( d )}${i}: ${params.domainsFile}.${domainName ( d )} = `,
     ...JSON.stringify ( makeTsSample ( d, i ), null, 2 ).split ( '\n' )
   ]
 }
-export function makeAllSampleVariables ( ps: PageD[], i: number ): string[] {
-  return sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ name, dataD ] ) => makeSampleVariable ( dataD, i ) )
+export function makeAllSampleVariables (params: TSParams, ps: PageD[], i: number ): string[] {
+  return sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ name, dataD ] ) => makeSampleVariable (params, dataD, i ) )
 }
 
 

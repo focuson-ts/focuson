@@ -1,7 +1,15 @@
-import { findResolvers, JavaWiringParams, makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
+import { findResolvers, makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
+import { CombinedParams, JavaWiringParams } from "../codegen/config";
 
-export const paramsForTest: JavaWiringParams = {
+export const paramsForTest: CombinedParams = {
+  commonFile: "common",
+  pageDomainsFile: "pageDomains",
+  domainsFile: "domains",
+  fetchersFile: "fetchers",
+  pactsFile: "pact",
+  samplesFile: "samples",
+  renderFile: "render",
   sampleClass: "sample",
   applicationName: "SomeApp",
   fetcherInterface: "intName",
@@ -48,7 +56,7 @@ describe ( "findResolvers", () => {
       "EAccountsSummaryDD/getString/IntegerDD/getTotalMonthlyCost",
       "EAccountsSummaryDD/getString/IntegerDD/getOneAccountBalance",
       "EAccountsSummaryDD/getString/IntegerDD/getCurrentAccountBalance"
-    ])
+    ] )
   } )
 } )
 
@@ -91,12 +99,12 @@ describe ( "makeAllJavaWiring", () => {
       "    }",
       "    private RuntimeWiring buildWiring() {",
       "        return RuntimeWiring.newRuntimeWiring()",
-      "          .type(newTypeWiring('EAccountsSummaryDD').dataFetcher('getEAccountsSummaryDD', fetchers.getEAccountsSummaryDD()))",
-      "          .type(newTypeWiring('CreatePlanDD').dataFetcher('getCreatePlanDD', fetchers.getCreatePlanDD()))",
-      "          .type(newTypeWiring('CreatePlanDD').dataFetcher('createCreatePlanDD', fetchers.createCreatePlanDD()))",
-      "          .type(newTypeWiring('CreatePlanDD').dataFetcher('updateCreatePlanDD', fetchers.updateCreatePlanDD()))",
-      "          .type(newTypeWiring('CreatePlanDD').dataFetcher('deleteCreatePlanDD', fetchers.deleteCreatePlanDD()))",
-      "          .type(newTypeWiring('CreatePlanDD').dataFetcher('listCreatePlanDD', fetchers.listCreatePlanDD()))",
+      "          .type(newTypeWiring('Query').dataFetcher('getEAccountsSummaryDD', fetchers.getEAccountsSummaryDD()))",
+      "          .type(newTypeWiring('Query').dataFetcher('getCreatePlanDD', fetchers.getCreatePlanDD()))",
+      "          .type(newTypeWiring('Mutation').dataFetcher('createCreatePlanDD', fetchers.createCreatePlanDD()))",
+      "          .type(newTypeWiring('Mutation').dataFetcher('updateCreatePlanDD', fetchers.updateCreatePlanDD()))",
+      "          .type(newTypeWiring('Mutation').dataFetcher('deleteCreatePlanDD', fetchers.deleteCreatePlanDD()))",
+      "          .type(newTypeWiring('Query').dataFetcher('listCreatePlanDD', fetchers.listCreatePlanDD()))",
       "          .type(newTypeWiring('OneLineStringDD').dataFetcher('getAccountSummaryDescription', fetchers.getAccountSummaryDescription()))",
       "          .type(newTypeWiring('IntegerDD').dataFetcher('getTotalMonthlyCost', fetchers.getTotalMonthlyCost()))",
       "          .type(newTypeWiring('IntegerDD').dataFetcher('getOneAccountBalance', fetchers.getOneAccountBalance()))",
@@ -108,7 +116,7 @@ describe ( "makeAllJavaWiring", () => {
       "        return graphQL;",
       "    }",
       "}"
-    ] )
+    ])
   } )
 
 } )

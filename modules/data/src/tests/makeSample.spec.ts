@@ -1,5 +1,6 @@
 import { makeJavaDataSample, makeSampleVariable, makeTsSample } from "../codegen/makeSample";
 import { CreatePlanDD, EAccountsSummaryDD } from "../example/eAccountsSummary.dataD";
+import { paramsForTest } from "./makeJavaResolvers.spec";
 
 
 describe ( 'makeJavaSample', () => {
@@ -50,13 +51,13 @@ describe ( 'makeSample', () => {
 
 describe ( "makeSampleVariable", () => {
   it ( "should attach a sample to a variable", () => {
-    expect ( makeSampleVariable ( CreatePlanDD, 0 ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "const CreatePlanDDSample0: CreatePlanDDDomain = ",
+    expect ( makeSampleVariable ( paramsForTest,CreatePlanDD, 0 ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+      "export const CreatePlanDDSample0: domains.CreatePlanDDDomain = ",
       "{",
       "  'createPlanStart': '2022-01-01',",
       "  'createPlanDate': '2022-03-01',",
       "  'createPlanEnd': '2022-10-01'",
       "}"
-    ] )
+    ])
   } )
 } )

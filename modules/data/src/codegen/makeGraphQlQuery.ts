@@ -1,8 +1,7 @@
 import { AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD } from "../common/dataD";
 import { RestD } from "../common/restD";
+import { indent } from "./codegen";
 
-export const indent = ( path: string[], s: string ): string => ' '.repeat ( path.length * 2 + 2 ) + s;
-export const indentList = ( ss: string[] ): string[] => ss.map ( s => ' ' + s )
 
 
 export const makeQueryFlatMap: AllDataFlatMap<string> = {

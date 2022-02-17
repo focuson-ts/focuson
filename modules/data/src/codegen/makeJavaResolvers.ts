@@ -3,6 +3,7 @@ import { NameAnd, sortedEntries } from "@focuson/utils";
 import { AllDataDD, DataD, emptyDataFlatMap, flatMapDD, isDataDd, isRepeatingDd } from "../common/dataD";
 import fs from "fs";
 import { resolverName } from "./names";
+import { JavaWiringParams } from "./config";
 
 
 export function makeJavaResolversInterface ( { thePackage, fetcherInterface }: JavaWiringParams, rs: RestD[] ): string[] {
@@ -22,16 +23,6 @@ function makeWiring ( name: string, resolver: string ): string {
   return `.type(newTypeWiring("${name}").dataFetcher("${resolver}", fetchers.${resolver}()))`;
 }
 
-
-export interface JavaWiringParams {
-  thePackage: string;
-  applicationName: string,
-  fetcherInterface: string;
-  wiringClass: string;
-  fetcherClass: string;
-  sampleClass: string,
-  schema: string;
-}
 
 export function adjustTemplate ( template: string, params: NameAnd<string> ): string [] {
   let sorted: [ string, string ][] = sortedEntries ( params );

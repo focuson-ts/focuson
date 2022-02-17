@@ -1,8 +1,9 @@
-import { findResolvers, JavaWiringParams } from "./makeJavaResolvers";
+import { findResolvers} from "./makeJavaResolvers";
 import { RestActionDetail, RestD, RestOutputDetails } from "../common/restD";
 import { AllDataDD, DataD } from "../common/dataD";
 import { resolverName, sampleName } from "./names";
 import { selectSample } from "./makeSample";
+import { JavaWiringParams } from "./config";
 
 
 export const makeMockFetcherFor = ( params: JavaWiringParams ) => ( [ parent, action, dataD, resolver ]: [ DataD | undefined, RestActionDetail, AllDataDD, string ] ): string[] => {

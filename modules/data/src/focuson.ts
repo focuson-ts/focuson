@@ -1,64 +1,80 @@
 import { makeGraphQlSchema } from "./codegen/makeGraphQlTypes";
 import fs from "fs";
-import { JavaWiringParams, makeAllJavaWiring, makeJavaResolversInterface } from "./codegen/makeJavaResolvers";
+import { makeAllJavaWiring, makeJavaResolversInterface } from "./codegen/makeJavaResolvers";
 import { createAllReactComponents } from "./codegen/makeComponents";
 import { createPlanPD, EAccountsSummaryPD } from "./example/eAccountsSummary.pageD";
-import { makeAllDomainsFor } from "./codegen/makeDomain";
+import { makeAllDomainsFor, makePageDomainsFor } from "./codegen/makeDomain";
 import { sortedEntries } from "@focuson/utils";
 import { unique } from "./common/restD";
-import { makeAllFetchers, makeFetchersDataStructure } from "./codegen/makeFetchers";
+import { makeAllFetchers, makeFetchersDataStructure, makeFetchersImport } from "./codegen/makeFetchers";
 import { makeAllJavaVariableName, makeAllSampleVariables } from "./codegen/makeSample";
-import { copyFile, templateFile } from "./codegen/toFile";
-import { indentList } from "./codegen/makeGraphQlQuery";
-import { makeAllPacts, makeFetcherPact } from "./codegen/makePacts";
-import { makeAllMockFetchers, makeMockFetcherFor } from "./codegen/makeMockFetchers";
+import { copyFile, copyFiles, templateFile } from "./codegen/toFile";
+import { makeAllPacts } from "./codegen/makePacts";
+import { makeAllMockFetchers } from "./codegen/makeMockFetchers";
+import { CombinedParams } from "./codegen/config";
+import { imports, indentList } from "./codegen/codegen";
 
 export function writeToFile ( name: string, contents: string[] ) {
   fs.writeFileSync ( name, contents.join ( '\n' ) );
 }
 
-const javaParams: JavaWiringParams = {
+const params: CombinedParams = {
+  commonFile: "common",
+  pageDomainsFile: "pageDomains",
+  domainsFile: "domains",
+  fetchersFile: "fetchers",
+  pactsFile: "pact",
+  samplesFile: "samples",
+  renderFile: "render",
+
   thePackage: 'focuson.data',
   applicationName: 'ExampleApp',
   fetcherInterface: 'FFetcher',
-  wiringClass: 'Wiringx',
+  wiringClass: 'Wiring',
   fetcherClass: 'MockFetchers',
   schema: 'someSchema.graphql',
   sampleClass: 'Sample'
 };
 let outputRoot = 'dist'
 let javaRoot = outputRoot + "/java"
-let javaAppRoot = outputRoot + "/java/" + javaParams.applicationName
+let javaAppRoot = outputRoot + "/java/" + params.applicationName
 let javaCodeRoot = javaAppRoot + "/src/main/java/focuson/data"
 let javaResourcesRoot = javaAppRoot + "/src/main/resources"
-let tsRoot = outputRoot + "/ts"
+let tsRoot =  "../datats"
+let tsCode = tsRoot + "/src"
 
-
-let pages = [ EAccountsSummaryPD, createPlanPD ];
-// This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
-let rests = unique ( pages.flatMap ( x => sortedEntries ( x.rest ) ).map ( x => x[ 1 ].rest ), r => r.dataDD.name )
 fs.mkdirSync ( `${outputRoot}`, { recursive: true } )
 fs.mkdirSync ( `${javaCodeRoot}`, { recursive: true } )
 fs.mkdirSync ( `${javaResourcesRoot}`, { recursive: true } )
-fs.mkdirSync ( `${tsRoot}`, { recursive: true } )
+fs.mkdirSync ( `${tsCode}`, { recursive: true } )
 
-copyFile ( `${javaAppRoot}/build.gradle`, 'templates/raw/build.gradle' )
-templateFile ( `${javaAppRoot}/settings.gradle`, 'templates/settings.gradle', javaParams )
-copyFile ( `${javaResourcesRoot}/application.properties`, 'templates/raw/application.properties' )
-writeToFile ( `${javaResourcesRoot}/${javaParams.schema}`, makeGraphQlSchema ( rests ) )
-writeToFile ( `${javaCodeRoot}/${javaParams.fetcherInterface}.java`, makeJavaResolversInterface ( javaParams, rests ) )
-writeToFile ( `${javaCodeRoot}/${javaParams.wiringClass}.java`, makeAllJavaWiring ( javaParams, rests ) )
-templateFile ( `${javaCodeRoot}/${javaParams.applicationName}.java`, 'templates/JavaApplicationTemplate.java', javaParams )
-templateFile ( `${javaCodeRoot}/${javaParams.fetcherClass}.java`, 'templates/JavaFetcherClassTemplate.java',
-  {...javaParams, content: makeAllMockFetchers(javaParams, rests).join("\n")} )
-templateFile ( `${javaCodeRoot}/${javaParams.sampleClass}.java`, 'templates/JavaSampleTemplate.java',
-  { ...javaParams, content: indentList ( makeAllJavaVariableName ( pages, 0 ) ).join ( "\n" ) } )
+let pages = [ EAccountsSummaryPD, createPlanPD ];
 
-writeToFile ( `${tsRoot}/schema.graphql`, makeGraphQlSchema ( rests ) )
-writeToFile ( `${tsRoot}/render.tsx`,
+writeToFile ( `${tsCode}/${params.renderFile}.tsx`,
   [ 'import { LensProps } from "@focuson/state";', '',
     ...createAllReactComponents ( pages ),
     ...makeAllDomainsFor ( pages ) ] )
-writeToFile ( `${tsRoot}/fetchers.ts`, [ ...makeAllFetchers ( pages ), ...makeFetchersDataStructure ( { variableName: 'fetchers', stateName: 'FullState', getUrlParamsName: "getUrLParams" }, pages ) ] )
-writeToFile ( `${tsRoot}/samples.ts`, [ ...[ 0, 1, 2 ].flatMap ( i => makeAllSampleVariables ( pages, i ) ), ...makeAllDomainsFor ( pages ) ] )
-templateFile ( `${tsRoot}/pacts.ts`, 'templates/allPacts.ts', { content: makeAllPacts ( pages ).join ( "\n" ) } )
+writeToFile ( `${tsCode}/${params.pageDomainsFile}.ts`, makePageDomainsFor ( params, pages ) )
+writeToFile ( `${tsCode}/${params.domainsFile}.ts`, makeAllDomainsFor ( pages ) )
+writeToFile ( `${tsCode}/${params.fetchersFile}.ts`, [
+  ...makeFetchersImport ( params ),
+  ...makeAllFetchers ( params, pages ),
+  ...makeFetchersDataStructure ( params, { variableName: 'fetchers', stateName: 'FullState', getUrlParamsName: "getUrLParams" }, pages ) ] )
+writeToFile ( `${tsCode}/${params.samplesFile}.ts`, [ ...imports ( params.domainsFile ), ...[ 0, 1, 2 ].flatMap ( i => makeAllSampleVariables ( params, pages, i ) ) ] )
+templateFile ( `${tsCode}/${params.pactsFile}.ts`, 'templates/allPacts.ts', { content: makeAllPacts ( params, pages ).join ( "\n" ) } )
+copyFiles ( tsRoot, 'templates/raw/ts' ) ( '.env', 'README.md', 'tsconfig.json' )
+templateFile ( `${tsRoot}/package.json`, 'templates/packageTemplate.json', params )
+// This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
+let rests = unique ( pages.flatMap ( x => sortedEntries ( x.rest ) ).map ( x => x[ 1 ].rest ), r => r.dataDD.name )
+
+copyFiles ( javaAppRoot, 'templates/raw/java' ) ( '/build.gradle', 'application.properties' )
+templateFile ( `${javaAppRoot}/settings.gradle`, 'templates/settings.gradle', params )
+writeToFile ( `${javaResourcesRoot}/${params.schema}`, makeGraphQlSchema ( rests ) )
+writeToFile ( `${javaCodeRoot}/${params.fetcherInterface}.java`, makeJavaResolversInterface ( params, rests ) )
+writeToFile ( `${javaCodeRoot}/${params.wiringClass}.java`, makeAllJavaWiring ( params, rests ) )
+templateFile ( `${javaCodeRoot}/${params.applicationName}.java`, 'templates/JavaApplicationTemplate.java', params )
+templateFile ( `${javaCodeRoot}/${params.fetcherClass}.java`, 'templates/JavaFetcherClassTemplate.java',
+  { ...params, content: makeAllMockFetchers ( params, rests ).join ( "\n" ) } )
+templateFile ( `${javaCodeRoot}/${params.sampleClass}.java`, 'templates/JavaSampleTemplate.java',
+  { ...params, content: indentList ( makeAllJavaVariableName ( pages, 0 ) ).join ( "\n" ) } )
+

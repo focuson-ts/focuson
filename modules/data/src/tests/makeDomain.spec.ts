@@ -1,12 +1,13 @@
-import { makeAllDomainsFor, makeDomainFor } from "../codegen/makeDomain";
+import { makeAllDomainsFor, makeDomainFor, makePageDomainsFor } from "../codegen/makeDomain";
 import { CreatePlanDD, EAccountsSummaryDD, EAccountSummaryDD } from "../example/eAccountsSummary.dataD";
 import { createPlanPD, EAccountsSummaryPD } from "../example/eAccountsSummary.pageD";
+import { paramsForTest } from "./makeJavaResolvers.spec";
 
 
 describe ( "makeDomainFor", () => {
   it ( "should create an interface representing the dataD", () => {
     expect ( makeDomainFor ( EAccountsSummaryDD ) ).toEqual ( [
-      "interface EAccountsSummaryDDDomain{",
+      "export interface EAccountsSummaryDDDomain{",
       "  createPlan: CreatePlanDDDomain;",
       "  currentAccountBalance: string;",
       "  eAccountsTable: EAccountSummaryDDDomain[];",
@@ -15,7 +16,7 @@ describe ( "makeDomainFor", () => {
       "}"
     ])
     expect ( makeDomainFor ( EAccountSummaryDD ) ).toEqual ( [
-      "interface EAccountSummaryDDDomain{",
+      "export interface EAccountSummaryDDDomain{",
       "  accountId: string;",
       "  description: string;",
       "  displayType: string;",
@@ -25,7 +26,7 @@ describe ( "makeDomainFor", () => {
       "}"
     ] )
     expect ( makeDomainFor ( CreatePlanDD ) ).toEqual ( [
-      "interface CreatePlanDDDomain{",
+      "export interface CreatePlanDDDomain{",
       "  createPlanDate: string;",
       "  createPlanEnd: string;",
       "  createPlanStart: string;",
@@ -39,19 +40,19 @@ describe ( "makeDomainFor", () => {
 describe ( "makeAllDomainsFor", () => {
   it ( "should make all the interfaces for the apges", () => {
     expect ( makeAllDomainsFor ( [ EAccountsSummaryPD, createPlanPD, EAccountsSummaryPD, createPlanPD ] ) ).toEqual ( [
-      "interface CreatePlanDDDomain{",
+      "export interface CreatePlanDDDomain{",
       "  createPlanDate: string;",
       "  createPlanEnd: string;",
       "  createPlanStart: string;",
       "}",
-      "interface EAccountsSummaryDDDomain{",
+      "export interface EAccountsSummaryDDDomain{",
       "  createPlan: CreatePlanDDDomain;",
       "  currentAccountBalance: string;",
       "  eAccountsTable: EAccountSummaryDDDomain[];",
       "  oneAccountBalance: string;",
       "  totalMonthlyCost: string;",
       "}",
-      "interface EAccountSummaryDDDomain{",
+      "export interface EAccountSummaryDDDomain{",
       "  accountId: string;",
       "  description: string;",
       "  displayType: string;",
@@ -60,6 +61,21 @@ describe ( "makeAllDomainsFor", () => {
       "  virtualBankSeq: string;",
       "}"
     ])
+
+  } )
+} )
+
+describe ( "makePageDomainsFor", () => {
+  it ( " Should make the has, and the page domain", () => {
+    expect ( makePageDomainsFor ( paramsForTest, [ EAccountsSummaryPD, createPlanPD ] ) ).toEqual ( [
+      "import * as domains from './domains';",
+      "export interface HasEAccountsSummaryPageDomain {   eAccountsSummary: EAccountsSummaryPageDomain}",
+      "export interface EAccountsSummaryPageDomain{",
+      " createPlan : domains.EAccountsSummaryDDDomain;",
+      " fromApi : domains.EAccountsSummaryDDDomain;",
+      " temp : domains.EAccountsSummaryDDDomain;",
+      "}"
+    ] )
 
   } )
 } )

@@ -6,7 +6,9 @@ import { defaultRestAction } from "../common/restD";
 describe ( "makePacts", () => {
   it ( "should make a pact", () => {
 
-    expect ( makeFetcherPact ( EAccountsSummaryPD, EAccountsSummaryPD.rest.eAccountsSummary ) ).toEqual ( [
+    expect ( makeFetcherPact (paramsForTest, EAccountsSummaryPD, EAccountsSummaryPD.rest.eAccountsSummary ) ).toEqual ( [
+      "import * as samples from './samples';",
+      "import * as fetchers from './fetchers';",
       "pactWith ( { consumer: 'EAccountsSummaryDD', provider: 'EAccountsSummaryDDProvider', cors: true }, provider => {",
       "  describe ( 'EAccountsSummary', () => {",
       "    it ( 'should have a get fetcher for EAccountsSummaryDD', async () => {",
@@ -19,19 +21,19 @@ describe ( "makePacts", () => {
       "        },",
       "        willRespondWith: {",
       "          status: 200,",
-      "          body: EAccountsSummaryDDSample0",
+      "          body: samples.EAccountsSummaryDDSample0",
       "        },",
       "      } )",
-      "      let newState = await loadTree ( tree, EAccountsSummaryDDSample0, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )",
+      "      let newState = await loadTree ( fetchers.fetchers, samples.EAccountsSummaryDDSample0, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )",
       "      expect ( newState ).toEqual ( {",
-      "        ... EAccountsSummaryDDSample0,",
-      "        fromApi: EAccountsSummaryDDSample0,",
+      "        ... samples.EAccountsSummaryDDSample0,",
+      "        fromApi: samples.EAccountsSummaryDDSample0,",
       "        tags: { eTransfers: [ 'mycid' ] }",
       "      } )",
       "    } )",
       "  } )",
       "})"
-    ] )
+    ])
   } )
 
 } )

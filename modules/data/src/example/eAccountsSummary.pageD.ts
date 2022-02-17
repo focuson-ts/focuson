@@ -6,7 +6,7 @@ import { PageD } from "../common/pageD";
 /** This is the 'bringing it all together */
 export const EAccountsSummaryPD: PageD = {
   name: 'EAccountsSummary',
-  modal: false,
+  pageType: 'MainPage',
   /** Where we are in the state. We 'could' and maybe should defualt this to name*/
   path: [ 'eAccountsSummary' ],
   /** This page can only view data */
@@ -43,7 +43,7 @@ export const EAccountsSummaryPD: PageD = {
 /** this is a modal window, so it's target is controlled by the caller */
 export const createPlanPD: PageD = {
   name: 'CreatePlan',
-  modal: true,
+  pageType: 'ModalPage',
   /** This page can only view data */
   modes: [ 'view', 'create', 'edit' ],
   /** How we display the page.*/

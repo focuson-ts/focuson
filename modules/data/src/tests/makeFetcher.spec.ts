@@ -1,17 +1,18 @@
 import { makeAllFetchers, makeFetchersDataStructure } from "../codegen/makeFetchers";
 import { createPlanPD, EAccountsSummaryPD } from "../example/eAccountsSummary.pageD";
+import { paramsForTest } from "./makeJavaResolvers.spec";
 
 describe ( "makeAllFetchers", () => {
     it ( "should make a fetcher", () => {
-      expect ( makeAllFetchers ( [ EAccountsSummaryPD, createPlanPD ] ) ).toEqual ( [
-        "export function EAccountsSummaryDDFetcher<S>(getUrlParams: GetUrlParams<S>) {",
-        "  return stateAndFromApiTagFetcher<S, HasEAccountsSummaryDD, EAccountsSummaryDDDomain, 'EAccountsSummary'>(",
-        "    commonFetch<S, HasEAccountsSummaryDD>(),",
-        "     'EAccountsSummary',",
+      expect ( makeAllFetchers ( paramsForTest,[ EAccountsSummaryPD, createPlanPD ] ) ).toEqual ( [
+        "export function EAccountsSummaryDDFetcher<S extends pageDomains.HasEAccountsSummaryPageDomain>(getUrlParams:  common.GetUrlParams<S>) {",
+        "  return pageAndTagFetcher<S,  domains.EAccountsSummaryDDDomain, SimpleMessage>(",
+        "    common.commonFetch<S,  domains.EAccountsSummaryDDDomain>(),",
+        "     'eAccountsSummary',",
         "     'fromApi',",
-        "     (s) => (s.focusOn('fromApi'),",
+        "     (s) => s.focusOn('fromApi'),",
         "     (s) => getUrlParams(s, 'accountId', 'customerId'),",
-        "     (s) => [makeUrl<S>('/api/accountsSummary?accountId={accountId}&customerId={customerId})',getUrlParams)(s), undefined]))",
+        "     (s) => [ common.makeUrl<S>('/api/accountsSummary?accountId={accountId}&customerId={customerId})', common.getUrlParams)(s), undefined])",
         "}"
       ])
     } )
@@ -20,11 +21,12 @@ describe ( "makeAllFetchers", () => {
 
 describe ( 'makeFetchersDataStructure', () => {
   it ( "should record all the fetchers", () => {
-    expect ( makeFetchersDataStructure ( { variableName: 'fetchers', stateName: 'theState',getUrlParamsName: 'getUrlParams' }, [ EAccountsSummaryPD, createPlanPD ] ) ).toEqual ( [
-      "export const fetchers: FetcherTree<theState> = {",
+    expect ( makeFetchersDataStructure ( paramsForTest,{ variableName: 'fetchers', stateName: 'theState',getUrlParamsName: 'getUrlParams' }, [ EAccountsSummaryPD, createPlanPD ] ) ).toEqual ( [
+      "export const fetchers: FetcherTree<common.theState> = {",
       "fetchers: [",
-      "   EAccountsSummaryDDFetcher<theState>(getUrlParams)",
-      "]}"
+      "   EAccountsSummaryDDFetcher<common.theState>(common.getUrlParams)",
+      "],",
+      "children: []}"
     ] )
   } )
 } );

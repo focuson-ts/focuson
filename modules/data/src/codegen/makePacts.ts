@@ -4,6 +4,8 @@ import fs from "fs";
 import { NameAnd, sortedEntries } from "@focuson/utils";
 import { sampleName } from "./names";
 import { RestD } from "../common/restD";
+import { TSParams } from "./config";
+import { imports } from "./codegen";
 
 
 interface PactProps extends NameAnd<string> {
@@ -19,9 +21,9 @@ interface PactProps extends NameAnd<string> {
   emptyState: string,
   target: string
 }
-export function makeFetcherPact ( p: PageD, r: RestDefnInPageProperties ): string[] {
+export function makeFetcherPact (params: TSParams, p: PageD, r: RestDefnInPageProperties ): string[] {
   const d = r.rest
-  let body = sampleName ( d.dataDD ) + '0';
+  let body = params.samplesFile + "." + sampleName ( d.dataDD ) + '0';
   const props: PactProps = {
     body,
     consumer: d.dataDD.name,
@@ -33,13 +35,13 @@ export function makeFetcherPact ( p: PageD, r: RestDefnInPageProperties ): strin
     provider: d.dataDD.name + "Provider",
     status: "200",
     target: r.targetFromPath,
-    tree: "tree"
+    tree: `${params.fetchersFile}.fetchers`
   }
   const str: string = fs.readFileSync ( 'templates/onePact.ts' ).toString ()
-  return adjustTemplate ( str, props )
+  return [...imports(params.samplesFile, params.fetchersFile), ...adjustTemplate ( str, props )]
 
 }
 
-export function makeAllPacts ( ps: PageD[] ) : string[]{
-  return allRestAndActions ( ps ).flatMap ( ( [ pd, rd ] ) => rd.fetcher ? makeFetcherPact ( pd, rd ) : [] )
+export function makeAllPacts (params: TSParams,  ps: PageD[] ) : string[]{
+  return allRestAndActions ( ps ).flatMap ( ( [ pd, rd ] ) => rd.fetcher ? makeFetcherPact ( params, pd, rd ) : [] )
 }

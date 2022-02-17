@@ -3,10 +3,11 @@ import { DisplayCompD, DisplayCompParamD } from "../common/componentsD";
 import { on } from "cluster";
 import { dataDsIn, PageD } from "../common/pageD";
 import { EAccountsSummaryDD } from "../example/eAccountsSummary.dataD";
-import { indentList } from "./makeGraphQlQuery";
+
 import { sortedEntries } from "@focuson/utils";
 import { componentName, domainName, pageComponentName } from "./names";
 import { makeButtonsFrom } from "./makeButtons";
+import { indentList } from "./codegen";
 
 
 export type AllComponentData = ComponentData | ErrorComponentData

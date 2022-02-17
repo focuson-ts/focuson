@@ -2,6 +2,7 @@ import { DataD, emptyDataFlatMap, findAllDataDs, flatMapDD, NamesAndDataDs } fro
 import { defaultRestAction, RestActionDetail, RestD, unique } from "./restD";
 import { sortedEntries } from "@focuson/utils";
 import { ModalButton } from "@focuson/pages";
+import { makeHasDomainsFor } from "../codegen/makeDomain";
 
 
 type PageMode = 'view' | 'create' | 'edit'
@@ -50,9 +51,10 @@ export interface LayoutD {
   name: string,
   details: string // ok not sure what to do here... so this is just a placeholder
 }
+export type PageType = 'MainPage' | 'ModalPage'
 export interface PageD {
   name: string,
-  modal?: boolean,
+  pageType: PageType,
   path?: string[],
   modes: PageMode[],
   display: { layout: LayoutD, target: string[], dataDD: DataD },
