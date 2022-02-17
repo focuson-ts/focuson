@@ -19,11 +19,11 @@ import java.net.URL;
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
 
 @Component
-public class <class> {
+public class <wiringClass> {
 
 
     @Autowired
-    <fetcherClass> fetcher;
+    <fetcherInterface> fetchers;
 
     private GraphQL graphQL;
 

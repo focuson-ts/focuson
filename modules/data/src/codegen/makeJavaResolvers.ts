@@ -5,14 +5,14 @@ import fs from "fs";
 import { resolverName } from "./names";
 
 
-export function makeJavaResolversInterface ( packageName: string, intName: string, rs: RestD[] ): string[] {
+export function makeJavaResolversInterface ( { thePackage, fetcherInterface }: JavaWiringParams, rs: RestD[] ): string[] {
   const resolvers = findResolvers ( rs ).map ( ( [ dataD, resolver ] ) => `   public DataFetcher ${resolver}();` )
   return [
-    `package ${packageName};`,
+    `package ${thePackage};`,
     '',
     'import graphql.schema.DataFetcher;',
     '',
-    `interface ${intName} {`,
+    `public interface ${fetcherInterface} {`,
     ...resolvers,
     // ...findUniqueDataDsAndRestTypeDetails ( rs ).flatMap ( ( [ datad, rad ] ) => `   public DataFetcher ${resolverName ( datad, rad )}();` ),
     '}' ]
@@ -24,9 +24,11 @@ function makeWiring ( name: string, resolver: string ): string {
 
 
 export interface JavaWiringParams {
-  thePackage: string,
-  fetcherClass: string,
-  schema: string
+  thePackage: string;
+  applicationName: string,
+  fetcherInterface: string;
+  wiringClass: string;
+  schema: string;
 }
 
 export function adjustTemplate ( template: string, params: NameAnd<string> ): string [] {
@@ -39,9 +41,9 @@ export function adjustTemplate ( template: string, params: NameAnd<string> ): st
 }
 
 export function makeAllJavaWiring ( params: JavaWiringParams, rs: RestD[] ): string[] {
-  const str: string = fs.readFileSync ( 'templates/JavaWiringTemplate.java' ).toString ()
   let wiring = findResolvers ( rs ).map ( ( [ dataD, resolver ] ) => makeWiring ( dataD.name, resolver ) )
   // let wiring = [ ...makeJavaWiringForQueryAndMutation ( rs ), ...makeJavaWiringForAllDataDs ( rs ) ]
+  const str: string = fs.readFileSync ( 'templates/JavaWiringTemplate.java' ).toString ()
   return adjustTemplate ( str, { ...params, wiring: wiring.map ( s => '          ' + s ).join ( '\n' ) } )
 }
 

@@ -44,7 +44,7 @@ describe ( "findResolvers", () => {
 
 describe ( "makeAllJavaWiring", () => {
   it ( "should make a java file which will power a graphql spring boot app", () => {
-    expect ( makeAllJavaWiring ( { thePackage: 'somePackage', fetcherClass: 'someClass', schema: 'someSchema.graphql' }, [ eAccountsSummaryRestD, createPlanRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeAllJavaWiring ( { thePackage: 'somePackage', wiringClass: 'someClass', schema: 'someSchema.graphql' }, [ eAccountsSummaryRestD, createPlanRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "package somePackage;",
       "import com.google.common.base.Charsets;",
       "import com.google.common.io.Resources;",
