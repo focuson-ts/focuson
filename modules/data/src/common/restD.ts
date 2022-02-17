@@ -38,6 +38,7 @@ export interface RestTypeDetails {
 
 export const defaultRestAction: RestTypeDetails = {
   'get': { name: 'get', query: 'query', params: { needsId: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'get', graphQlPostfix: '' },
+  'getString': { name: 'getString', query: 'query', params: { needsId: true }, output: { needsPling: true }, graphQPrefix: 'get', graphQlPostfix: '' }, //special for mocks
   'getOption': { name: 'getoption', query: 'query', params: { needsId: true }, output: { needsObj: true }, graphQPrefix: 'getOption', graphQlPostfix: '' },
   'list': { name: 'list', query: 'query', params: {}, output: { needsObj: true, needsBrackets: true, needsPling: true }, graphQPrefix: 'list', graphQlPostfix: '' },
   'update': { name: 'update', query: 'mutation', params: { needsId: true, needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'update', graphQlPostfix: '' },

@@ -5,12 +5,12 @@ import { CreatePlanDD, EAccountsSummaryDD } from "../example/eAccountsSummary.da
 describe ( 'makeJavaSample', () => {
   it ( "should make a immutable map sample for a simple DataD", () => {
     expect ( makeJavaDataSample ( CreatePlanDD, 0 ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "ImmutableMap.of('createPlanDate','2020-10-01','createPlanEnd','2020-10-01','createPlanStart','2020-10-01'))"
-    ] )
+      "Map.of('createPlanDate','2020-10-01','createPlanEnd','2020-10-01','createPlanStart','2020-10-01')"
+    ])
   } )
   it ( "should make a immutable map sample for a nested DataD", () => {
     expect ( makeJavaDataSample ( EAccountsSummaryDD, 0 ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "ImmutableMap.of('createPlan',ImmutableMap.of('createPlanDate','2020-10-01','createPlanEnd','2020-10-01','createPlanStart','2020-10-01')),'currentAccountBalance','12321','eAccountsTable',Arrays.asList ( ImmutableMap.of('accountId','1233450','description','This is a one line string','displayType','','frequency','This is a one line string','total','This is a one line string','virtualBankSeq','This is a one line string'))),'oneAccountBalance','9921','totalMonthlyCost','1000'))"
+      "Map.of('createPlan',Map.of('createPlanDate','2020-10-01','createPlanEnd','2020-10-01','createPlanStart','2020-10-01'),'currentAccountBalance','12321','eAccountsTable',Arrays.asList ( Map.of('accountId','1233450','description','This is a one line string','displayType','checking','frequency','This is a one line string','total','This is a one line string','virtualBankSeq','This is a one line string')),'oneAccountBalance','9921','totalMonthlyCost','1000')"
     ] )
   } )
 

@@ -10,6 +10,7 @@ import { makeAllFetchers, makeFetchersDataStructure } from "./codegen/makeFetche
 import { makeAllJavaVariableName, makeAllSampleVariables } from "./codegen/makeSample";
 import { copyFile, templateFile } from "./codegen/toFile";
 import { indentList } from "./codegen/makeGraphQlQuery";
+import { makePact } from "./codegen/makePacts";
 
 export function writeToFile ( name: string, contents: string[] ) {
   fs.writeFileSync ( name, contents.join ( '\n' ) );

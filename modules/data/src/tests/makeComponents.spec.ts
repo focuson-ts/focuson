@@ -9,9 +9,9 @@ describe ( " listComponentsIn", () => {
   it ( "should list the components used to display the ", () => {
     let expected = [
       { dataDD: EAccountsSummaryTableDD, display: TableCD, path: [ "eAccountsTable" ] },
-      { dataDD: { ...MoneyDD, resolver: 'getTotalMonthlyCost', samples: [ '1000' ] }, display: LabelAndInputCD, path: [ "totalMonthlyCost" ] },
-      { dataDD: { ...MoneyDD, resolver: 'getOneAccountBalance', samples: [ '9921' ] }, display: LabelAndInputCD, path: [ "oneAccountBalance" ] },
-      { dataDD: { ...MoneyDD, resolver: 'getCurrentAccountBalance', samples:[ "12321"] }, display: LabelAndInputCD, path: [ "currentAccountBalance" ] },
+      { dataDD: { ...MoneyDD, resolver: 'getTotalMonthlyCost', sample: [ '1000' ] }, display: LabelAndInputCD, path: [ "totalMonthlyCost" ] },
+      { dataDD: { ...MoneyDD, resolver: 'getOneAccountBalance', sample: [ '9921' ] }, display: LabelAndInputCD, path: [ "oneAccountBalance" ] },
+      { dataDD: { ...MoneyDD, resolver: 'getCurrentAccountBalance', sample:[ "12321"] }, display: LabelAndInputCD, path: [ "currentAccountBalance" ] },
       { dataDD: DateDD, display: LabelAndInputCD, displayParams: { label: 'Create Start' }, path: [ "createPlan", "createPlanStart" ] },
       { dataDD: DateDD, display: LabelAndInputCD, displayParams: { ariaLabel: 'The Create Plan Date' }, path: [ "createPlan", "createPlanDate" ] },
       { dataDD: DateDD, display: LabelAndInputCD, path: [ "createPlan", "createPlanEnd" ] }

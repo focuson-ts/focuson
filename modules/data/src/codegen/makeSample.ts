@@ -1,4 +1,4 @@
-import { AllDataDD, DataD, foldDataDD, isDataDd, isRepeatingDd, OneDataDD, PrimitiveDD } from "../common/dataD";
+import { AllDataDD, DataD, foldDataDD, HasEnum, HasSample, isDataDd, isRepeatingDd, OneDataDD, PrimitiveDD } from "../common/dataD";
 import { safeArray, sortedEntries } from "@focuson/utils";
 import { Lenses } from "@focuson/lens";
 import { domainName, sampleName } from "./names";
@@ -14,8 +14,14 @@ function safePick ( s: string[] | undefined, i: number ) {
   return sa.length == 0 ? '' : sa[ i % sa.length ]
 }
 
+export function selectSample ( i: number, ...ds: (HasSample | undefined | HasEnum)[] ) {
+  const enums: string[] = safeArray<any> ( ds ).flatMap ( d => sortedEntries ( d?.enum ).map ( x => x[ 0 ] ) )
+  const samples: string[] = safeArray<any> ( ds ).flatMap ( d => d ? safeArray ( d.sample ) : [] )
+  return safePick ( [ ...enums, ...samples ], i )
+}
+
 const addPrimitive = ( acc: any, path: string[], one: OneDataDD | undefined, d: PrimitiveDD, i: number ) =>
-  Lenses.fromPath ( path ).set ( acc, safePick ( [ ...safeArray ( one?.sample ), ...safeArray ( d.samples ), ...sortedEntries ( d.enum ).map ( x => x[ 0 ] ) ], i ) );
+  Lenses.fromPath ( path ).set ( acc, selectSample ( i, one, d ) );
 
 export function makeTsSample ( d: DataD, i: number ): any {
   return foldDataDD<any> ( d, [], [], {}, {
@@ -39,12 +45,12 @@ export function makeAllSampleVariables ( ps: PageD[], i: number ): string[] {
 
 
 export function makeJavaPrimitiveSample ( p: PrimitiveDD, i: number ): string {
-  return `"${safePick ( p.samples, i )}"`
+  return `"${selectSample ( i, p )}"`
 }
 
 export function makeJavaDataSample ( d: DataD, i: number ): string[] {
   const contents: string = sortedEntries ( d.structure ).map ( ( [ name, value ] ) => [ `"${name}"`, ...makeJavaSample ( value.dataDD, i ) ] ).join ( "," )
-  return [ `ImmutableMap.of(${contents}))` ]
+  return [ `Map.of(${contents})` ]
 }
 export function makeJavaSample ( d: AllDataDD, i: number ): string[] {
   if ( isDataDd ( d ) ) return makeJavaDataSample ( d, i )
@@ -52,8 +58,13 @@ export function makeJavaSample ( d: AllDataDD, i: number ): string[] {
   return [ makeJavaPrimitiveSample ( d, i ) ]
 }
 
+export function sampleType ( d: AllDataDD ): string {
+  if ( isDataDd ( d ) ) return 'Map';
+  if ( isRepeatingDd ( d ) ) return 'List<Map>';
+  return 'String';
+}
 export function makeJavaVariableName ( d: AllDataDD, i: number ) {
-  return [ `public static String ${sampleName ( d ) + i} = ${makeJavaSample ( d, i )}` ]
+  return [ `public static ${sampleType ( d )} ${sampleName ( d ) + i} = ${makeJavaSample ( d, i )};` ]
 }
 export function makeAllJavaVariableName ( ps: PageD[], i: number ): string[] {
   return sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ name, dataD ] ) => makeJavaVariableName ( dataD, i ) )

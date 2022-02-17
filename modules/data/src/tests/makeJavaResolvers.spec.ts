@@ -1,7 +1,7 @@
 import { findResolvers, JavaWiringParams, makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
 
-const params: JavaWiringParams = {
+export const paramsForTest: JavaWiringParams = {
   sampleClass: "sample",
   applicationName: "SomeApp",
   fetcherInterface: "intName",
@@ -11,7 +11,7 @@ const params: JavaWiringParams = {
 }
 describe ( "makeJavaResolversInterface", () => {
   it ( "should make a java interface", () => {
-    expect ( makeJavaResolversInterface ( params, [ eAccountsSummaryRestD, createPlanRestD ] ) ).toEqual ( [
+    expect ( makeJavaResolversInterface ( paramsForTest, [ eAccountsSummaryRestD, createPlanRestD ] ) ).toEqual ( [
       "package packName;",
       "",
       "import graphql.schema.DataFetcher;",
@@ -36,24 +36,24 @@ describe ( "makeJavaResolversInterface", () => {
 describe ( "findResolvers", () => {
   it ( "should find the query/mutation and the specifics", () => {
     expect ( findResolvers ( [ eAccountsSummaryRestD, createPlanRestD ] ).//
-      map ( ( [ p, output, a, b ] ) => `${p?.name}/${JSON.stringify ( output ).replace ( /"/g, "'" )}/${a.name}/${b}` ) ).toEqual ( [
-      "undefined/{'needsObj':true,'needsPling':true}/EAccountsSummaryDD/getEAccountsSummaryDD",
-      "undefined/{'needsObj':true,'needsPling':true}/CreatePlanDD/getCreatePlanDD",
-      "undefined/{'needsObj':true,'needsPling':true}/CreatePlanDD/createCreatePlanDD",
-      "undefined/{'needsObj':true,'needsPling':true}/CreatePlanDD/updateCreatePlanDD",
-      "undefined/{}/CreatePlanDD/deleteCreatePlanDD",
-      "undefined/{'needsObj':true,'needsBrackets':true,'needsPling':true}/CreatePlanDD/listCreatePlanDD",
-      "EAccountSummaryDD/{}/OneLineStringDD/getAccountSummaryDescription",
-      "EAccountsSummaryDD/{}/IntegerDD/getTotalMonthlyCost",
-      "EAccountsSummaryDD/{}/IntegerDD/getOneAccountBalance",
-      "EAccountsSummaryDD/{}/IntegerDD/getCurrentAccountBalance"
+      map ( ( [ p, output, a, b ] ) => `${p?.name}/${output.name}/${a.name}/${b}` ) ).toEqual ( [
+      "undefined/get/EAccountsSummaryDD/getEAccountsSummaryDD",
+      "undefined/get/CreatePlanDD/getCreatePlanDD",
+      "undefined/create/CreatePlanDD/createCreatePlanDD",
+      "undefined/update/CreatePlanDD/updateCreatePlanDD",
+      "undefined/delete/CreatePlanDD/deleteCreatePlanDD",
+      "undefined/list/CreatePlanDD/listCreatePlanDD",
+      "EAccountSummaryDD/getString/OneLineStringDD/getAccountSummaryDescription",
+      "EAccountsSummaryDD/getString/IntegerDD/getTotalMonthlyCost",
+      "EAccountsSummaryDD/getString/IntegerDD/getOneAccountBalance",
+      "EAccountsSummaryDD/getString/IntegerDD/getCurrentAccountBalance"
     ])
   } )
 } )
 
 describe ( "makeAllJavaWiring", () => {
   it ( "should make a java file which will power a graphql spring boot app", () => {
-    expect ( makeAllJavaWiring ( params, [ eAccountsSummaryRestD, createPlanRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeAllJavaWiring ( paramsForTest, [ eAccountsSummaryRestD, createPlanRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "package packName;",
       "import com.google.common.base.Charsets;",
       "import com.google.common.io.Resources;",

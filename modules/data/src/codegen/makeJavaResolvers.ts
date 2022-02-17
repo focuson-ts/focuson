@@ -1,4 +1,4 @@
-import { findUniqueDataDsAndRestTypeDetails, RestD, RestOutputDetails } from "../common/restD";
+import { defaultRestAction, findUniqueDataDsAndRestTypeDetails, RestActionDetail, RestD } from "../common/restD";
 import { NameAnd, sortedEntries } from "@focuson/utils";
 import { AllDataDD, DataD, emptyDataFlatMap, flatMapDD, isDataDd, isRepeatingDd } from "../common/dataD";
 import fs from "fs";
@@ -48,22 +48,23 @@ export function makeAllJavaWiring ( params: JavaWiringParams, rs: RestD[] ): str
   return adjustTemplate ( str, { ...params, wiring: wiring.map ( s => '          ' + s ).join ( '\n' ) } )
 }
 
-export function findResolvers ( rs: RestD[] ): [ DataD | undefined, RestOutputDetails, AllDataDD, string ][] {
-  const fromRest: [ undefined, RestOutputDetails, DataD, string ][] = findUniqueDataDsAndRestTypeDetails ( rs ).//
-    map ( ( [ dataD, rad ] ) => [ undefined, rad.output, dataD, resolverName ( dataD, rad ) ] )
+export function findResolvers ( rs: RestD[] ): [ DataD | undefined, RestActionDetail, AllDataDD, string ][] {
+  const fromRest: [ undefined, RestActionDetail, DataD, string ][] = findUniqueDataDsAndRestTypeDetails ( rs ).//
+    map ( ( [ dataD, rad ] ) => [ undefined, rad, dataD, resolverName ( dataD, rad ) ] )
 
-  function outputDetailsFor ( d: AllDataDD ): RestOutputDetails {
-    if ( isDataDd ( d ) ) return { needsObj: true }
-    if ( isRepeatingDd ( d ) ) return { needsObj: true, needsBrackets: true }
-    return {}
+  //this is a bit of fake. Maybe we would be better with more explicit fakes...
+  function restActionDetailFor ( d: AllDataDD ): RestActionDetail {
+    if ( isDataDd ( d ) ) return defaultRestAction.get
+    if ( isRepeatingDd ( d ) ) return defaultRestAction.list
+    return defaultRestAction.getString
   }
-  const fromSpecifics: [ DataD, RestOutputDetails, AllDataDD, string ][] = rs.flatMap ( r => {
-    let y: [ DataD, RestOutputDetails, AllDataDD, string ][] = flatMapDD ( r.dataDD, {
+  const fromSpecifics: [ DataD, RestActionDetail, AllDataDD, string ][] = rs.flatMap ( r => {
+    let y: [ DataD, RestActionDetail, AllDataDD, string ][] = flatMapDD ( r.dataDD, {
       ...emptyDataFlatMap (),
       walkDataStart: ( path, parents: DataD[], oneDataDD, dataDD ) =>
-        dataDD.resolver && parents.length > 0 ? [ [ parents[ parents.length - 1 ], outputDetailsFor ( dataDD ), dataDD, dataDD.resolver ] ] : [],
+        dataDD.resolver && parents.length > 0 ? [ [ parents[ parents.length - 1 ], restActionDetailFor ( dataDD ), dataDD, dataDD.resolver ] ] : [],
       walkPrim: ( path, parents: DataD[], oneDataDD, dataDD ) =>
-        dataDD.resolver && parents.length > 0 ? [ [ parents[ parents.length - 1 ], outputDetailsFor ( dataDD ), dataDD, dataDD.resolver ] ] : [],
+        dataDD.resolver && parents.length > 0 ? [ [ parents[ parents.length - 1 ], restActionDetailFor ( dataDD ), dataDD, dataDD.resolver ] ] : [],
     } )
     return y
   } )

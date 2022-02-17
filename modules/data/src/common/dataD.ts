@@ -3,11 +3,16 @@
 
 import { DisplayCompD, LabelAndInputCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeComponents";
+export interface HasSample{
+  sample?: string[]
+}
+export interface HasEnum{
+  enum?: EnumDD;
+}
 
-export interface OneDataDD {
+export interface OneDataDD  extends HasSample{
   dataDD: AllDataDD;
   displayParams?: ComponentDisplayParams,
-  sample?: string[],
   graphQl?: string, // might be possible to default this which would be cool
 }
 export interface ManyDataDD {
@@ -33,12 +38,10 @@ export interface CommonDataDD {
 export interface DataD extends CommonDataDD {
   structure: ManyDataDD;
 }
-export interface PrimitiveDD extends CommonDataDD {
+export interface PrimitiveDD extends CommonDataDD ,HasSample,HasEnum{
   reactType: string,
   label?: string;
   validation: SingleFieldValidationDD;
-  samples?: string[];
-  enum?: EnumDD;
   fieldName?: string
 }
 export interface RepeatingDataD extends CommonDataDD {
@@ -152,7 +155,7 @@ export const CustomerIdDD: PrimitiveDD = {
   description: "A customer id",
   display: LabelAndInputCD,
   validation: { regex: "\d+", maxLength: 7 },
-  samples: [ "003450" ]
+  sample: [ "003450" ]
 }
 export const AccountIdDD: PrimitiveDD = {
   name: 'AccountIdDD',
@@ -160,7 +163,7 @@ export const AccountIdDD: PrimitiveDD = {
   description: "An account id",
   display: LabelAndInputCD,
   validation: { regex: "\d+", maxLength: 7 },
-  samples: [ "1233450", "3233450", "4333450" ]
+  sample: [ "1233450", "3233450", "4333450" ]
 }
 export const StringDD: PrimitiveDD = {
   name: 'StringDD',
@@ -168,7 +171,7 @@ export const StringDD: PrimitiveDD = {
   description: "The primitive 'string'. A reasonably short list of characters",
   display: LabelAndInputCD,
   validation: { maxLength: 255 }, //Note no regex
-  samples: [ "someString", "anotherString" ]
+  sample: [ "someString", "anotherString" ]
 }
 export const OneLineStringDD: PrimitiveDD = {
   name: 'OneLineStringDD',
@@ -176,7 +179,7 @@ export const OneLineStringDD: PrimitiveDD = {
   description: "A string that fits on a line of text. Probably reasonably long",
   display: LabelAndInputCD,
   validation: { maxLength: 255 }, //Note no regex
-  samples: [ "This is a one line string", "another one line string" ]
+  sample: [ "This is a one line string", "another one line string" ]
 }
 export const IntegerDD: PrimitiveDD = {
   name: 'IntegerDD',
@@ -184,7 +187,7 @@ export const IntegerDD: PrimitiveDD = {
   description: "The primitive 'Integer'",
   display: LabelAndInputCD,
   validation: { regex: "\d+", maxLength: 255 },
-  samples: [ "This is a one line string", "another one line string" ]
+  sample: [ "This is a one line string", "another one line string" ]
 }
 export const MoneyDD: PrimitiveDD = {
   ...IntegerDD,
@@ -198,7 +201,7 @@ export const DateDD: PrimitiveDD = {
   description: "The primitive representing a date (w/o time)",
   display: LabelAndInputCD, //or maybe a date picker
   validation: { regex: "\d+", maxLength: 8 },
-  samples: [ "2020-10-01", '2022-14-01' ]
+  sample: [ "2020-10-01", '2022-14-01' ]
 }
 
 export const DateTimeDD: PrimitiveDD = {
@@ -207,6 +210,6 @@ export const DateTimeDD: PrimitiveDD = {
   description: "The primitive representing a date (with time)",
   display: LabelAndInputCD, //or maybe a date picker
   validation: { regex: "\d+", maxLength: 8 },
-  samples: [ "2020-10-01", '2022-14-01' ]
+  sample: [ "2020-10-01", '2022-14-01' ]
 }
 
