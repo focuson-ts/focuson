@@ -1,10 +1,10 @@
-import { makePact } from "../codegen/makePacts";
+import { makeFetcherPact } from "../codegen/makePacts";
 import { EAccountsSummaryPD } from "../example/eAccountsSummary.pageD";
 
 describe ( "makePacts", () => {
   it ( "should make a pact", () => {
     const r = EAccountsSummaryPD.rest.eAccountsSummary
-    expect ( makePact ( r ) ).toEqual ( [
+    expect ( makeFetcherPact ( r ) ).toEqual ( [
       "pactWith ( { consumer: 'EAccountsSummaryDD', provider: 'EAccountsSummaryDDProvider', cors: true }, provider => {",
       "  describe ( 'EAccountsSummaryDD', () => {",
       "    it ( 'should have a get fetcher', async () => {",

@@ -10,7 +10,7 @@ import { makeAllFetchers, makeFetchersDataStructure } from "./codegen/makeFetche
 import { makeAllJavaVariableName, makeAllSampleVariables } from "./codegen/makeSample";
 import { copyFile, templateFile } from "./codegen/toFile";
 import { indentList } from "./codegen/makeGraphQlQuery";
-import { makePact } from "./codegen/makePacts";
+import { makeAllPacts, makeFetcherPact } from "./codegen/makePacts";
 
 export function writeToFile ( name: string, contents: string[] ) {
   fs.writeFileSync ( name, contents.join ( '\n' ) );
@@ -48,7 +48,7 @@ writeToFile ( `${javaCodeRoot}/${javaParams.fetcherInterface}.java`, makeJavaRes
 writeToFile ( `${javaCodeRoot}/${javaParams.wiringClass}.java`, makeAllJavaWiring ( javaParams, rests ) )
 templateFile ( `${javaCodeRoot}/${javaParams.applicationName}.java`, 'templates/JavaApplicationTemplate.java', javaParams )
 templateFile ( `${javaCodeRoot}/${javaParams.sampleClass}.java`, 'templates/JavaSampleTemplate.java',
-  {...javaParams, content: indentList(makeAllJavaVariableName ( pages, 0 )).join("\n") })
+  { ...javaParams, content: indentList ( makeAllJavaVariableName ( pages, 0 ) ).join ( "\n" ) } )
 
 writeToFile ( `${tsRoot}/schema.graphql`, makeGraphQlSchema ( rests ) )
 writeToFile ( `${tsRoot}/render.tsx`,
@@ -57,3 +57,4 @@ writeToFile ( `${tsRoot}/render.tsx`,
     ...makeAllDomainsFor ( pages ) ] )
 writeToFile ( `${tsRoot}/fetchers.ts`, [ ...makeAllFetchers ( pages ), ...makeFetchersDataStructure ( { variableName: 'fetchers', stateName: 'FullState', getUrlParamsName: "getUrLParams" }, pages ) ] )
 writeToFile ( `${tsRoot}/samples.ts`, [ ...[ 0, 1, 2 ].flatMap ( i => makeAllSampleVariables ( pages, i ) ), ...makeAllDomainsFor ( pages ) ] )
+templateFile ( `${tsRoot}/pacts.ts`, 'templates/allPacts.ts', { content: makeAllPacts ( pages ).join ( "\n" ) } )

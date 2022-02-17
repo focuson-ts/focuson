@@ -6,8 +6,8 @@ pactWith ( { consumer: '<consumer>', provider: '<provider>', cors: true }, provi
         state: 'default',
         uponReceiving: '<description1> <description2>',
         withRequest: {
-          method: <method>',
-          path: '<url>'
+          method: '<method>',
+          path: '<path>'
         },
         willRespondWith: {
           status: <status>,
@@ -22,3 +22,4 @@ pactWith ( { consumer: '<consumer>', provider: '<provider>', cors: true }, provi
       } )
     } )
   } )
+})

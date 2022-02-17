@@ -1,8 +1,9 @@
-import { RestDefnInPageProperties } from "../common/pageD";
+import { allRestAndActions, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { adjustTemplate } from "./makeJavaResolvers";
 import fs from "fs";
-import { NameAnd } from "@focuson/utils";
+import { NameAnd, sortedEntries } from "@focuson/utils";
 import { sampleName } from "./names";
+import { RestD } from "../common/restD";
 
 
 interface PactProps extends NameAnd<string> {
@@ -18,23 +19,27 @@ interface PactProps extends NameAnd<string> {
   emptyState: string,
   target: string
 }
-export function makePact ( r: RestDefnInPageProperties ): string[] {
+export function makeFetcherPact ( p: PageD, r: RestDefnInPageProperties ): string[] {
   const d = r.rest
   let body = sampleName ( d.dataDD ) + '0';
   const props: PactProps = {
     body,
     consumer: d.dataDD.name,
-    description1: d.dataDD.name,
-    description2: "should have a get fetcher",
+    description1: p.name,
+    description2: `should have a get fetcher for ${d.dataDD.name}`,
     emptyState: body,
-    method: "Get",
+    method: "GET",
     path: d.url,
     provider: d.dataDD.name + "Provider",
     status: "200",
     target: r.targetFromPath,
     tree: "tree"
   }
-  const str: string = fs.readFileSync ( 'templates/pact.ts' ).toString ()
+  const str: string = fs.readFileSync ( 'templates/onePact.ts' ).toString ()
   return adjustTemplate ( str, props )
 
+}
+
+export function makeAllPacts ( ps: PageD[] ) : string[]{
+  return allRestAndActions ( ps ).flatMap ( ( [ pd, rd ] ) => rd.fetcher ? makeFetcherPact ( pd, rd ) : [] )
 }
