@@ -43,7 +43,9 @@ export function adjustTemplate ( template: string, params: NameAnd<string> ): st
 }
 
 export function makeAllJavaWiring ( params: JavaWiringParams, rs: RestD[] ): string[] {
-  let wiring = findResolvers ( rs ).map ( ( [ parent, outputD, dataD, resolver ] ) => makeWiring ( dataD.name, resolver ) )
+  let wiring = findResolvers ( rs ).map ( ( [ parent, outputD, dataD, resolver ] ) => {
+    return parent ? makeWiring ( dataD.name, resolver ) : makeWiring ( (outputD.query === 'query' ? 'Query' : 'Mutation'), resolver )
+  } )
   // let wiring = [ ...makeJavaWiringForQueryAndMutation ( rs ), ...makeJavaWiringForAllDataDs ( rs ) ]
   const str: string = fs.readFileSync ( 'templates/JavaWiringTemplate.java' ).toString ()
   return adjustTemplate ( str, { ...params, wiring: wiring.map ( s => '          ' + s ).join ( '\n' ) } )
