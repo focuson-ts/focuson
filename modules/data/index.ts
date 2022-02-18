@@ -1,6 +1,7 @@
 export * from './src/codegen/codegen'
 export * from './src/codegen/config'
 export * from './src/codegen/makeButtons'
+export * from './src/codegen/makeCommon'
 export * from './src/codegen/makeComponents'
 export * from './src/codegen/makeDomain'
 export * from './src/codegen/makeFetchers'

@@ -4,6 +4,14 @@ import { safeArray } from "@focuson/utils";
 type AllLensRestParams = CommonLensRestParam | LensRestParam
 export interface CommonLensRestParam {commonLens: string[]}
 export interface LensRestParam {lens: string[]}
+export function isCommonLens(a: AllLensRestParams): a is CommonLensRestParam{
+  // @ts-ignore
+  return a.commonLens !== undefined
+}
+export function isRestLens(a: AllLensRestParams): a is LensRestParam{
+  // @ts-ignore
+  return a.commonLens !== undefined
+}
 
 export interface RestParams {
   [ name: string ]: AllLensRestParams

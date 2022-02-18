@@ -5,7 +5,7 @@
   "details":     {
     "ideify":       true,
     "publish":      true,
-    "links":        ["@focuson/pages"],
+    "links":        ["@focuson/pages", "@focuson/template"],
     "extraDeps":    {},
     "extraDevDeps": {},
     "test":         true

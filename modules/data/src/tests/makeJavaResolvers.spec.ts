@@ -10,6 +10,7 @@ export const paramsForTest: CombinedParams = {
   pactsFile: "pact",
   samplesFile: "samples",
   renderFile: "render",
+  urlparams: 'commonIds',
   sampleClass: "sample",
   applicationName: "SomeApp",
   fetcherInterface: "intName",
@@ -116,7 +117,7 @@ describe ( "makeAllJavaWiring", () => {
       "        return graphQL;",
       "    }",
       "}"
-    ])
+    ] )
   } )
 
 } )

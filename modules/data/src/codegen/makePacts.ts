@@ -1,5 +1,5 @@
 import { allRestAndActions, PageD, RestDefnInPageProperties } from "../common/pageD";
-import { adjustTemplate } from "./makeJavaResolvers";
+import { applyToTemplate } from "@focuson/template";
 import fs from "fs";
 import { NameAnd, sortedEntries } from "@focuson/utils";
 import { sampleName } from "./names";
@@ -38,7 +38,7 @@ export function makeFetcherPact (params: TSParams, p: PageD, r: RestDefnInPagePr
     tree: `${params.fetchersFile}.fetchers`
   }
   const str: string = fs.readFileSync ( 'templates/onePact.ts' ).toString ()
-  return [...imports(params.samplesFile, params.fetchersFile), ...adjustTemplate ( str, props )]
+  return [...imports(params.samplesFile, params.fetchersFile), ...applyToTemplate ( str, props )]
 
 }
 

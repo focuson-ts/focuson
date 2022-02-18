@@ -4,6 +4,7 @@ import { AllDataDD, DataD, emptyDataFlatMap, flatMapDD, isDataDd, isRepeatingDd 
 import fs from "fs";
 import { resolverName } from "./names";
 import { JavaWiringParams } from "./config";
+import { applyToTemplate } from "@focuson/template";
 
 
 export function makeJavaResolversInterface ( { thePackage, fetcherInterface }: JavaWiringParams, rs: RestD[] ): string[] {
@@ -24,14 +25,7 @@ function makeWiring ( name: string, resolver: string ): string {
 }
 
 
-export function adjustTemplate ( template: string, params: NameAnd<string> ): string [] {
-  let sorted: [ string, string ][] = sortedEntries ( params );
-  return sorted.reduce ( ( acc: string, [ name, value ]: [ string, string ] ) => {
-    const regex = new RegExp ( "<" + name + ">", 'g' )
-    return acc.replace ( regex, value )
-  }, template.replace ( /\r/g, '\n' ) ).split ( '\n' ).filter ( s => s.length > 0 )
 
-}
 
 export function makeAllJavaWiring ( params: JavaWiringParams, rs: RestD[] ): string[] {
   let wiring = findResolvers ( rs ).map ( ( [ parent, outputD, dataD, resolver ] ) => {
@@ -39,7 +33,7 @@ export function makeAllJavaWiring ( params: JavaWiringParams, rs: RestD[] ): str
   } )
   // let wiring = [ ...makeJavaWiringForQueryAndMutation ( rs ), ...makeJavaWiringForAllDataDs ( rs ) ]
   const str: string = fs.readFileSync ( 'templates/JavaWiringTemplate.java' ).toString ()
-  return adjustTemplate ( str, { ...params, wiring: wiring.map ( s => '          ' + s ).join ( '\n' ) } )
+  return applyToTemplate ( str, { ...params, wiring: wiring.map ( s => '          ' + s ).join ( '\n' ) } )
 }
 
 export function findResolvers ( rs: RestD[] ): [ DataD | undefined, RestActionDetail, AllDataDD, string ][] {

@@ -22,7 +22,7 @@ export const makeFetcherCode = ( params: CombinedParams ) => ( p: PageD ) => ( d
     `     '${targetFromPath}',`,
     `     (s) => s.focusOn('${targetFromPath}'),`,
     `     (s) => getUrlParams(s, ${paramsString}),`,
-    `     (s) => [ ${params.commonFile}.makeUrl<S>('${def.rest.url})', ${common}.getUrlParams)(s), undefined])`,
+    `     (s) => [ ${params.commonFile}.makeUrl<S>('${def.rest.url})', getUrlParams)(s), undefined])`,
     '}' ]
 
 };

@@ -12,7 +12,7 @@ describe ( "makeAllFetchers", () => {
         "     'fromApi',",
         "     (s) => s.focusOn('fromApi'),",
         "     (s) => getUrlParams(s, 'accountId', 'customerId'),",
-        "     (s) => [ common.makeUrl<S>('/api/accountsSummary?accountId={accountId}&customerId={customerId})', common.getUrlParams)(s), undefined])",
+        "     (s) => [ common.makeUrl<S>('/api/accountsSummary?accountId={accountId}&customerId={customerId})', getUrlParams)(s), undefined])",
         "}"
       ])
     } )

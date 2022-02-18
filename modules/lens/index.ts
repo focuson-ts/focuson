@@ -15,6 +15,10 @@ export interface Setter<Main, Child> {
   set: ( m: Main, c: Child ) => Main
 }
 
+
+export interface  HasOptional<Main,T>{
+  optional: Optional<Main, T>
+}
 /** An Optional is like a lens, except that it is not guaranteed to 'work'. Specifically if you ask for a child... maybe that child isn't there.
  *
  * This is great for things like 'optional values' which are often written as 'name?: type' in typescript.
