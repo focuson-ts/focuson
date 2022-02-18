@@ -21,6 +21,10 @@ export function safeArray<T> ( ts: T[] | undefined ) {
 }
 
 
+export function beforeSeparator ( separator: string, string: string ) {
+  const index = string.indexOf ( separator )
+  return index < 0 ? string : string.substr ( 0, index )
+}
 export function arraysEqual<T> ( a: T[] | undefined, b: T[] | undefined ) {
   if ( !(a && b) ) return false;
   if ( a === b ) return true;
@@ -40,6 +44,6 @@ export function areAllDefined<T> ( arr: (T | undefined)[] | undefined ): arr is 
 export interface NameAnd<T> {
   [ name: string ]: T
 }
-export function sortedEntries<T> ( a: NameAnd<T>|undefined ): [ string, T ][] {
+export function sortedEntries<T> ( a: NameAnd<T> | undefined ): [ string, T ][] {
   return a ? Object.entries ( a ).sort ( ( [ n1, v1 ], [ n2, v2 ] ) => n1.localeCompare ( n2 ) ) : []
 }

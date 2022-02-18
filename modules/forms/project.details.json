@@ -4,6 +4,7 @@
   "description": "Allows us to define data that is stored in a database, or perhaps an api",
   "details": {
     "ideify": true,
+    "test": true,
     "publish": true,
     "links": [
       "@focuson/utils"

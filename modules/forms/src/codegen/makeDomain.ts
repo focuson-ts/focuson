@@ -37,7 +37,7 @@ export function makePageDomainsFor ( params: TSParams, ps: PageD[] ): string[] {
     ...imports ( domain ),
     ...makeHasDomainsFor ( p ),
     `export interface ${domainForPage ( p )}{`,
-    ...indentList ( sortedEntries ( p.domain ).map ( ( [ name, dd ] ) => `${name} : ${domain}.${domainName ( dd.dataDD )};` ) ),
+    ...indentList ( sortedEntries ( p.domain ).map ( ( [ name, dd ] ) => `${name}?: ${domain}.${domainName ( dd.dataDD )};` ) ),
     '}'
   ] )
 }

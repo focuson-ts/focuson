@@ -20,14 +20,14 @@ export function writeToFile ( name: string, contents: string[] ) {
 }
 
 const params: CombinedParams = {
-  focusOnVersion: "^0.4.5",
+  focusOnVersion: "^0.4.7",
   commonParams: "CommonIds",
   stateName: "FState",
   commonFile: "common",
   pageDomainsFile: "pageDomains",
   domainsFile: "domains",
   fetchersFile: "fetchers",
-  pactsFile: "pact",
+  pactsFile: "pact.spec",
   samplesFile: "samples",
   renderFile: "render",
   urlparams: 'commonIds',
@@ -43,15 +43,19 @@ const params: CombinedParams = {
 let outputRoot = 'dist'
 let javaRoot = outputRoot + "/java"
 let javaAppRoot = outputRoot + "/java/" + params.applicationName
+let javaScriptRoot = javaAppRoot + "/scripts"
 let javaCodeRoot = javaAppRoot + "/src/main/java/focuson/data"
 let javaResourcesRoot = javaAppRoot + "/src/main/resources"
 let tsRoot = "../datats"
+let tsScripts = tsRoot + "/scripts"
 let tsCode = tsRoot + "/src"
 
 fs.mkdirSync ( `${outputRoot}`, { recursive: true } )
 fs.mkdirSync ( `${javaCodeRoot}`, { recursive: true } )
 fs.mkdirSync ( `${javaResourcesRoot}`, { recursive: true } )
+fs.mkdirSync ( `${javaScriptRoot}`, { recursive: true } )
 fs.mkdirSync ( `${tsCode}`, { recursive: true } )
+fs.mkdirSync ( `${tsScripts}`, { recursive: true } )
 
 let pages = [ EAccountsSummaryPD, createPlanPD ];
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
@@ -73,9 +77,13 @@ writeToFile ( `${tsCode}/${params.samplesFile}.ts`, [ ...imports ( params.domain
 templateFile ( `${tsCode}/${params.pactsFile}.ts`, 'templates/allPacts.ts', { content: makeAllPacts ( params, pages ).join ( "\n" ) } )
 copyFiles ( tsRoot, 'templates/raw/ts' ) ( '.env', 'README.md', 'tsconfig.json' )
 templateFile ( `${tsRoot}/package.json`, 'templates/packageTemplate.json', params )
+copyFiles(tsScripts, 'templates/scripts')('makePact.sh','makeJava.sh', 'makeJvmPact.sh', 'template.java', 'ports')
+
+copyFiles(javaScriptRoot, 'templates/scripts')('makeJava.sh', 'makeJvmPact.sh', 'template.java')
 
 copyFiles ( javaAppRoot, 'templates/raw/java' ) ( '/build.gradle', 'application.properties' )
 templateFile ( `${javaAppRoot}/settings.gradle`, 'templates/settings.gradle', params )
+copyFiles ( javaAppRoot, 'templates/raw/java' ) ( '/build.gradle', 'application.properties' )
 writeToFile ( `${javaResourcesRoot}/${params.schema}`, makeGraphQlSchema ( rests ) )
 writeToFile ( `${javaCodeRoot}/${params.fetcherInterface}.java`, makeJavaResolversInterface ( params, rests ) )
 writeToFile ( `${javaCodeRoot}/${params.wiringClass}.java`, makeAllJavaWiring ( params, rests ) )

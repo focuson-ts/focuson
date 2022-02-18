@@ -1,4 +1,4 @@
-import { findMustConstructForRest, flapMapActionDetails } from "../common/restD";
+import { findMustConstructForRest, flapMapActionDetails, makeCommonParamsValueForTest } from "../common/restD";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
 
 describe ( "flatMapActionDetails", () => {
@@ -31,3 +31,11 @@ describe ( "findMustConstructForRest", () => {
   } )
 } )
 
+describe ( "makeCommonParamsValueForTest", () => {
+  it ( "get the values out of the rest params", () => {
+    expect ( makeCommonParamsValueForTest ( eAccountsSummaryRestD ) ).toEqual ( {
+      "accountId": "accId",
+      "customerId": "custId"
+    } )
+  } )
+} )

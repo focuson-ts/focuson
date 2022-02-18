@@ -5,13 +5,13 @@ import { FetcherTree, HasTagHolder, pageAndTagFetcher } from "@focuson/fetcher";
 import { TagOps } from "@focuson/template";
 import { HasPageSelection, HasSimpleMessages, SimpleMessage } from "@focuson/pages";
 export function EAccountsSummaryDDFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection & pageDomains.HasEAccountsSummaryPageDomain>(tagOps: TagOps<S,common.CommonIds>) {
-  return pageAndTagFetcher<S,  domains.EAccountsSummaryDDDomain, SimpleMessage>(
+  return pageAndTagFetcher<S, pageDomains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDDDomain, SimpleMessage>(
     common.commonFetch<S,  domains.EAccountsSummaryDDDomain>(),
      'eAccountsSummary',
      'fromApi',
-     (s) => s.focusOn('fromApi'),
+     (s) => s.focusQuery('fromApi'),
      tagOps.tags('accountId', 'customerId'),
-     tagOps.getReqFor('/api/accountsSummary?{commonQuery}','accountId', 'customerId'))
+     tagOps.getReqFor('/api/accountsSummary?{query}',undefined,'accountId', 'customerId'))
 }
 export const fetchers: FetcherTree<common.FState> = {
 fetchers: [

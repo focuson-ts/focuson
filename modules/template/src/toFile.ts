@@ -2,7 +2,6 @@ import * as fs from "fs";
 import { applyToTemplate } from "./template";
 
 
-
 export function writeToFile ( name: string, contents: string[] ) {
   fs.writeFileSync ( name, contents.join ( '\n' ) )
 }
@@ -11,22 +10,23 @@ export interface DirectorySpec {
   main: string;
   backup: string
 }
-export const copyFiles = ( fromRoot: string, toRoot: string, directorySpec?: DirectorySpec ) => ( ...names: string[] ) => {
-  names.forEach ( n => copyFile ( fromRoot + "/" + n, toRoot + "/" + n, directorySpec ) )
+export const copyFiles = ( toRoot: string, fromRoot: string, directorySpec?: DirectorySpec ) => ( ...names: string[] ) => {
+  // console.log ( 'copyFiles', fromRoot, toRoot, names )
+  names.forEach ( n => copyFile ( toRoot + "/" + n, fromRoot + "/" + n, directorySpec ) )
 };
 export function copyFile ( name: string, from: string, directorySpec?: DirectorySpec ) {
-  const { main, backup } = directorySpec ? directorySpec : { main: ".", backup: "." }
-  const mainPath = main + "/" + from;
+  // console.log ( 'copyFile name to ', name, 'from', from )
+  const { main, backup } = directorySpec ? directorySpec : { main: "", backup: "" }
+  const mainPath = main + from;
   try {
-    fs.copyFileSync ( from, mainPath )
+    // console.log ( '   main copyFile', mainPath, name )
+    fs.copyFileSync ( mainPath, name )
   } catch ( e: any ) {
-    const backupPath = backup + "/" + from;
-    try {
-      fs.copyFileSync ( from, backupPath )
-    } catch ( e: any ) {
-      const extra = mainPath === backupPath ? "" : `And from ${backupPath}`
-      throw Error ( `Failed to copy files. Target [${name}] ${mainPath}${extra}` )
-    }
+    const backupPath = backup + from;
+
+    console.log ( '   main copyFile', backupPath, name )
+    fs.copyFileSync ( backupPath, name )
+
   }
 }
 

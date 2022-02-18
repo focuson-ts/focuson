@@ -5,8 +5,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@focuson/fetcher":  "^0.4.5",
-    "@focuson/template":  "^0.4.5",
+    "@focuson/fetcher":  "^0.4.7",
+    "@focuson/template":  "^0.4.7",
     "@pact-foundation/pact-node": "^10.17.1",
     "b64-to-blob": "^1.2.19",
     "react": "^17.0.2",

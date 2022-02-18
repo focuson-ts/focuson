@@ -29,7 +29,7 @@ public class {wiringClass} {
 
     @PostConstruct
     public void init() throws IOException {
-        URL url = Resources.getResource("<schema>");
+        URL url = Resources.getResource("{schema}");
         String sdl = Resources.toString(url, Charsets.UTF_8);
         GraphQLSchema graphQLSchema = buildSchema(sdl);
         this.graphQL = GraphQL.newGraphQL(graphQLSchema).build();
