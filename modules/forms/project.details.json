@@ -1,0 +1,14 @@
+{
+  "template": "noreact",
+  "name": "@focuson/forms",
+  "description": "Allows us to define data that is stored in a database, or perhaps an api",
+  "details": {
+    "ideify": true,
+    "publish": true,
+    "links": [
+      "@focuson/utils"
+    ],
+    "extraDeps": {},
+    "extraDevDeps": {}
+  }
+}

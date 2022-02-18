@@ -5,10 +5,10 @@ import { createSimpleMessage, SimpleMessage } from "@focuson/pages";
 
 
 /** This is the signature of the function that is executed when an error occurs */
-export type OnTagFetchErrorFn<S, T, MSGS> = ( data: TagMutateData<S, T, MSGS> ) => S
+export type OnTagFetchErrorFn<S, Full, T, MSGS> = ( data: TagMutateData<S, Full, T, MSGS> ) => S
 
 
-export function updateTargetTagsAndMessagesOnError<S, T, MSGS> ( errorMessages: ( data: TagMutateData<S, T, MSGS> ) => MSGS[], targetForValueOnError: T ): OnTagFetchErrorFn<S, T, MSGS> {
+export function updateTargetTagsAndMessagesOnError<S, Full, T, MSGS> ( errorMessages: ( data: TagMutateData<S, Full, T, MSGS> ) => MSGS[], targetForValueOnError: T ): OnTagFetchErrorFn<S, Full, T, MSGS> {
   return ( errorData ) => {
     const { s, stf: { messageL }, currentTags, tagAndTargetLens } = errorData
     const msgs: MSGS[] = errorMessages ( errorData );
@@ -16,7 +16,7 @@ export function updateTargetTagsAndMessagesOnError<S, T, MSGS> ( errorMessages: 
   }
 }
 
-export function updateTagsAndMessagesOnError<S, T, MSGS> ( errorMessages: ( data: TagMutateData<S, T, MSGS> ) => MSGS[] ): OnTagFetchErrorFn<S, T, MSGS> {
+export function updateTagsAndMessagesOnError<S, Full, T, MSGS> ( errorMessages: ( data: TagMutateData<S, Full, T, MSGS> ) => MSGS[] ): OnTagFetchErrorFn<S, Full, T, MSGS> {
   return ( errorData ) => {
     const { s, stf: { messageL }, currentTags, tagL } = errorData
     const msgs: MSGS[] = errorMessages ( errorData );
@@ -33,12 +33,12 @@ export function updateTagsAndMessagesOnError<S, T, MSGS> ( errorMessages: ( data
   }
 }
 
-export function defaultErrorMessage<S, T> ( data: TagMutateData<S, T, SimpleMessage> ): SimpleMessage[] {
-  return [ createSimpleMessage ( 'error', `Failed to fetch data from [${data.info},${JSON.stringify ( data.init )}] status ${data.status}\nResponse ${JSON.stringify(data.response)}}`, data.stf.dateFn () ) ]
+export function defaultErrorMessage<S, Full, T> ( data: TagMutateData<S, Full, T, SimpleMessage> ): SimpleMessage[] {
+  return [ createSimpleMessage ( 'error', `Failed to fetch data from [${data.info},${JSON.stringify ( data.init )}] status ${data.status}\nResponse ${JSON.stringify ( data.response )}}`, data.stf.dateFn () ) ]
 }
 
 /** With this we can process an error or a success. In the event of a success (i.e. status code is 2xxx, then response should be a T */
-export interface TagMutateData<S, T, MSGS> {
+export interface TagMutateData<S, Full, T, MSGS> {
   s: S;
   info: RequestInfo,
   init: RequestInit | undefined,
@@ -49,5 +49,5 @@ export interface TagMutateData<S, T, MSGS> {
   tagAndTargetLens: Optional<S, [ Tags, T ]>;
   originalTags: Tags | undefined;
   currentTags: Tags;
-  stf: SpecificTagFetcherProps<S, T, MSGS>;
+  stf: SpecificTagFetcherProps<S, Full, T, MSGS>;
 }

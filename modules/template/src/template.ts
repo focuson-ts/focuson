@@ -1,9 +1,15 @@
-import { Lens, Optional } from "@focuson/lens";
+import { GetOptioner, Lens, Optional } from "@focuson/lens";
 import { NameAnd, sortedEntries } from "@focuson/utils";
 
 
-export type NameLensFn<Main, T> = ( name: string ) => Optional<Main, any>
+export type NameLensFn<Main, T> = ( name: string ) => GetOptioner<Main, T>
 
+export function addValue<Main, T> ( nL: NameLensFn<Main, T>, name: string, value: T ): NameLensFn<Main, T> {
+  return n => {
+    if ( n === name ) return { getOption: ( a: Main ) => value }
+    return nL ( n )
+  }
+}
 
 export function nameLensFn<S, T extends NameAnd<any>> ( lens: Optional<S, T> ): NameLensFn<S, any> {
   return ( name: string ) => lens.focusQuery ( name )
@@ -32,11 +38,11 @@ export const expand = <Main> ( nameLensFn: NameLensFn<Main, string>, failSilentl
 export function stringOrStringify ( raw: any ): any {
   return (typeof raw === 'object') ? JSON.stringify ( raw ) : (raw === undefined ? '' : raw)
 }
-export function applyToTemplate ( template: string, params: NameAnd<string> ): string [] {
+export function applyToTemplate ( template: string, params: NameAnd<any> ): string [] {
   let sorted: [ string, string ][] = sortedEntries ( params );
   return sorted.reduce ( ( acc: string, [ name, value ]: [ string, string ] ) => {
-    const regex = new RegExp ( "<" + name + ">", 'g' )
-    return acc.replace ( regex, value )
+    const regex = new RegExp ( "{" + name + "}", 'g' )
+    return acc.replace ( regex, stringOrStringify ( value ) )
   }, template.replace ( /\r/g, '\n' ) ).split ( '\n' ).filter ( s => s.length > 0 )
 }
 
@@ -47,7 +53,7 @@ export interface MakeAEqualsBProps {
 }
 
 
-export const queryParamsFor = <Main, Details extends NameAnd<any>> ( lens: Optional<Main, Details>, props: MakeAEqualsBProps ) => (  ...names: (keyof Details)[] ): ( s: Main ) => string =>
+export const queryParamsFor = <Main, Details extends NameAnd<any>> ( lens: Optional<Main, Details>, props: MakeAEqualsBProps ) => ( ...names: (keyof Details)[] ): ( s: Main ) => string =>
   makeAEqualsB<Main> ( nameLensFn ( lens ), props ) ( ...names.map ( x => x.toString () ) );
 
 export const makeAEqualsB = <Main> ( nameLnFn: NameLensFn<Main, any>, { encoder, separator, failSilently }: MakeAEqualsBProps ) => ( ...names: string[] ): ( main: Main ) => string => {

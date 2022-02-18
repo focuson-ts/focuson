@@ -12,8 +12,11 @@ describe ( "searchFetcher", () => {
     let s = { ...emptySearchRequirement, search: { query: "bob" } };
     let fetcher = searchFetcher ();
     const ns = await applyFetcher ( fetcher, s, fetchFn )
-    expect ( ns.messages ).toEqual ( {} )
-
+    expect ( ns.messages ).toEqual ( [ {
+      "level": "error",
+      "msg": "Failed to fetch data from [/api/search?query=bob,undefined] status 600\nResponse {\"message\":\"request to http://localhost:9999/api/search?query=bob failed, reason: connect ECONNREFUSED 127.0.0.1:9999\",\"type\":\"system\",\"errno\":\"ECONNREFUSED\",\"code\":\"ECONNREFUSED\"}}",
+      "time": "timeForTest"
+    } ] )
   } )
 } )
 

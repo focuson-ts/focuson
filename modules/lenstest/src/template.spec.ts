@@ -1,6 +1,5 @@
-import { Lenses } from "@focuson/lens";
-import { expand, expandFor, findTags, findTagsFor, makeAEqualsB, nameLensFn, queryParamsFor, tagOps } from "@focuson/template";
-
+import { GetOptioner, Lenses } from "@focuson/lens";
+import { applyToTemplate, expand, expandFor, findTags, findTagsFor, getUrl, getUrlFor, makeAEqualsB, nameLensFn, queryParamsFor, tagOps } from "@focuson/template";
 
 
 interface TemplateTestState {
@@ -13,15 +12,15 @@ interface TemplateTestState {
 const state: TemplateTestState = { a: "1", b: "2", c: 3, d: { e: "5", f: "6" } }
 const stateNoC: TemplateTestState = { a: "1", b: "2", d: { e: "5", f: "6" } }
 const identity = Lenses.identity<TemplateTestState> ()
-const nLFn = nameLensFn ( identity )
+const nLFn: ( name: string ) => GetOptioner<TemplateTestState, any> = nameLensFn ( identity )
 
 describe ( "nameLensFn", () => {
-  it ( "should return a lens to the correct part of the structure", () => {
+  it ( "should return a getOptioner to the correct part of the structure", () => {
     expect ( nLFn ( 'a' ).getOption ( state ) ).toEqual ( '1' )
     expect ( nLFn ( 'c' ).getOption ( state ) ).toEqual ( 3 )
-    expect ( nLFn ( 'c' ).set ( state, 6 ) ).toEqual ( { "a": "1", "b": "2", "c": 6, "d": { "e": "5", "f": "6" } } )
   } )
 } )
+
 
 const urlFn = expand ( nLFn ) ( "/{a}/{b}?c={c}&d={d}" )
 const urlIllegalNameFn = expand ( nLFn ) ( "/{notKnown}" )
@@ -87,5 +86,35 @@ describe ( "tagOps", () => {
   it ( "smoke test", () => {
     expect ( tagOps ( identity, {} ).tags ( 'a', 'b' ) ( state ) ).toEqual ( [ "1", "2" ] )
     expect ( tagOps ( identity, {} ).queryParam ( 'a', 'b' ) ( state ) ).toEqual ( 'a=1&b=2' )
+  } )
+} )
+
+describe ( "applyToTemplate", () => {
+  it ( "should replace a list of strings which is the input strings modified by the parats", () => {
+    const params = { a: 1, b: 2 }
+    expect ( applyToTemplate ( "a={a}&b={b}", params ) ).toEqual ( [ "a=1&b=2" ] )
+    expect ( applyToTemplate ( "a={a}\nb={b}", params ) ).toEqual ( [ "a=1", "b=2" ] )
+
+  } )
+  it ( "should replace an object with JSON.stringify", () => {
+    const params = { a: 1, b: { c: 1, d: 1 } }
+    expect ( applyToTemplate ( "a={a}&b={b}", params ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [ "a=1&b={'c':1,'d':1}" ] )
+
+  } )
+  it ( "should replace an array with a nice display", () => {
+    const params = { a: 1, b: [ 2, 3 ] }
+    expect ( applyToTemplate ( "a={a}&b={b}", params ) ).toEqual ( [ "a=1&b=[2,3]" ] )
+  } )
+} )
+
+describe ( "getUrl", () => {
+  it ( "it should replace {placeholders} and {query}", () => {
+    expect ( getUrl ( nLFn ) ( "/some/{a}?{query}", 'a', 'b' ) ( state ) ).toEqual ( '/some/1?a=1&b=2' )
+  } )
+} )
+
+describe ( "getUrlFor", () => {
+  it ( "it should replace {placeholders} and {query}", () => {
+    expect ( getUrlFor ( identity ) ( "/some/{a}?{query}", 'a', 'b' ) ( state ) ).toEqual ( '/some/1?a=1&b=2' )
   } )
 } )

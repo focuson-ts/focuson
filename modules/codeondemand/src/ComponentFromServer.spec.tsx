@@ -29,6 +29,7 @@ let state = lensState<MainForTest>({value: "someTestValue", _render: {_self: "so
 
 describe("ComponentFromServer", () => {
     it('renders the component generated from the cache', () => {
+        //now fails because of improvement in react... need to fix
         render(
             <ComponentCacheContext.Provider value={cache}>
                 <ComponentFromServer<MainForTest, MainForTest> state={state}/>

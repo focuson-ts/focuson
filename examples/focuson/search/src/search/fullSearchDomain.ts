@@ -1,7 +1,9 @@
 import { HasPageSelection, HasSimpleMessages } from "@focuson/pages";
 import { HasTagHolder } from "@focuson/fetcher";
 
-export interface SearchRequirements extends HasSearch, HasSimpleMessages, HasTagHolder, HasPageSelection {}
+export interface SearchRequirements extends HasSearch, HasSimpleMessages, HasTagHolder, HasPageSelection {
+
+}
 
 export interface HasSearch {
   search?: FullSearchDomain

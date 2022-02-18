@@ -1,15 +1,16 @@
 import { Tags } from "@focuson/fetcher";
-import { MakeAEqualsBProps, nameLensFn, NameLensFn, queryParamsFor } from "./template";
+import { addValue, expand, makeAEqualsB, MakeAEqualsBProps, nameLensFn, NameLensFn, queryParamsFor } from "./template";
 import { Lens, Optional } from "@focuson/lens";
 
 export interface TagOps<Main, Details> {
   queryParam: ( ...names: (keyof Details)[] ) => ( m: Main ) => string
   tags: ( ...names: (keyof Details)[] ) => ( m: Main ) => Tags
+  getUrlFor: ( url: string, ...names: (keyof Details)[] ) => ( m: Main ) => string,
+  getReqFor: ( url: string, reqInit?: RequestInit, ...names: (keyof Details)[] ) => ( m: Main ) => [ RequestInfo, RequestInit | undefined ]
 }
 
-export function tagOps<Main,Details>(lens: Optional<Main, Details>, props: MakeAEqualsBProps): TagOps<Main, Details>{
-  return {queryParam: queryParamsFor(lens, {}), tags: findTagsFor(lens)}
-
+export function tagOps<Main, Details> ( lens: Optional<Main, Details>, props: MakeAEqualsBProps ): TagOps<Main, Details> {
+  return { queryParam: queryParamsFor ( lens, {} ), tags: findTagsFor ( lens ), getUrlFor: getUrlFor ( lens ), getReqFor: getReqFor ( lens ) }
 }
 
 export const findTagsFor = <Main, Details> ( lens: Optional<Main, Details> ) => ( ...names: (keyof Details)[] ): ( m: Main ) => Tags =>
@@ -18,3 +19,14 @@ export const findTagsFor = <Main, Details> ( lens: Optional<Main, Details> ) => 
 export const findTags = <Main> ( nameFn: NameLensFn<Main, string> ) => ( ...names: string[] ): ( m: Main ) => Tags =>
   main => names.map ( nameFn ).map ( opt => opt.getOption ( main ) )
 
+export const getUrl = <Main> ( nameFn: NameLensFn<Main, any>, encoder?: ( s: string ) => string ) => ( url: string, ...names: string[] ): ( m: Main ) => string => {
+  return main => {
+    const query = makeAEqualsB<Main> ( nameFn, { encoder } ) ( ...names ) ( main )
+    return expand ( addValue ( nameFn, "query", query ) ) ( url, ...names ) ( main )
+  }
+}
+export const getUrlFor = <Main, Details> ( lens: Optional<Main, Details> ) => ( url: string, ...names: (keyof Details)[] ): ( m: Main ) => string =>
+  getUrl ( nameLensFn ( lens ) ) ( url, ...names.map ( n => n.toString () ) )
+
+export const getReqFor = <Main, Details> ( lens: Optional<Main, Details> ) => ( url: string, reqInit?: RequestInit, ...names: (keyof Details)[] ): ( m: Main ) => [ RequestInfo, RequestInit | undefined ] =>
+  m => [ getUrl ( nameLensFn ( lens ) ) ( url, ...names.map ( n => n.toString () ) ) ( m ), reqInit ]

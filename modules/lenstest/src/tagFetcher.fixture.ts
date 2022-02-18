@@ -1,7 +1,7 @@
 import { createSimpleMessage, HasPageSelection, HasSimpleMessages, SimpleMessage } from "@focuson/pages";
-import { commonTagFetchProps, HasTagHolder, pageAndTagFetcher, simpleTagFetcher } from "@focuson/fetcher/dist/src/tagFetcher";
+import { CommonTagFetcherProps, commonTagFetchProps, HasTagHolder, OnTagFetchErrorFn, pageAndTagFetcher, simpleTagFetcher, TagHolder } from "@focuson/fetcher";
 import { Lenses } from "@focuson/lens";
-import { Fetcher } from "@focuson/fetcher/dist/src/fetchers";
+import { Fetcher } from "@focuson/fetcher";
 import { defaultDateFn } from "@focuson/utils";
 
 export interface HasTagFetcherFullState extends HasSimpleMessages, HasTagHolder, HasPageSelection {
@@ -11,7 +11,12 @@ export interface HasTagFetcherFullState extends HasSimpleMessages, HasTagHolder,
   target?: string
 }
 
-export const emptyTestState: HasTagFetcherFullState = {
+export const emptyTestStateWithFullStatePage: HasTagFetcherFullState = {
+  messages: [],
+  pageSelection: { pageName: 'fullState' },
+  tags: {}
+}
+export const emptyTestStateWithTargetPage: HasTagFetcherFullState = {
   messages: [],
   pageSelection: { pageName: 'target' },
   tags: {}
@@ -22,10 +27,12 @@ export interface TagFetcherTestFullState {
   local?: string
 }
 
-const withMessages = commonTagFetchProps<HasTagFetcherFullState, string> ( ( s, date ) => [ createSimpleMessage ( 'info', s, date ) ], defaultDateFn )
+function withMessages<T> () {
+  return commonTagFetchProps<HasTagFetcherFullState, T> ( ( s: T, date ) => [ createSimpleMessage ( 'info', `${s}`, date ) ], defaultDateFn ) ()
+}
 
 export const tagFetcherTestStateL = Lenses.identity<HasTagFetcherFullState> ( 'state' )
-export const simpleFetcherWithMessages = simpleTagFetcher<HasTagFetcherFullState, string> (
+export const simpleFetcherWithMessages = simpleTagFetcher<HasTagFetcherFullState, 'target'> (
   withMessages (),
   'target',
   s => [ s.tag1, s.tag2 ],
@@ -33,11 +40,11 @@ export const simpleFetcherWithMessages = simpleTagFetcher<HasTagFetcherFullState
 )
 
 export const stateAndFromApiFetcher: Fetcher<HasTagFetcherFullState, string> =
-               pageAndTagFetcher<HasTagFetcherFullState, string, SimpleMessage> (
+               pageAndTagFetcher<HasTagFetcherFullState, TagFetcherTestFullState, string, SimpleMessage> (
                  withMessages (),
-                 'target',
+                 'fullState',
                  'tag1',
-                 Lenses.identity<HasTagFetcherFullState> ().focusQuery ( 'fullState' ).focusQuery ( 'fromApi' ),
+                 s => s.focusQuery ( 'fromApi' ),
                  s => [ s.tag1, s.tag2 ],
                  state => [ '/someUrl', { method: 'Options' } ]
                )
