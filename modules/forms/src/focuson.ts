@@ -88,7 +88,7 @@ copyFiles ( javaScriptRoot, 'templates/scripts' ) ( 'makeJava.sh', 'makeJvmPact.
 
 // copyFiles ( javaAppRoot, 'templates/raw/java' ) ( '/build.gradle', 'application.properties' )
 // templateFile ( `${javaAppRoot}/settings.gradle`, 'templates/settings.gradle', params )
-templateFile ( `${javaAppRoot}/mvn.pom`, 'templates/mvnTemplate.pom', params )
+templateFile ( `${javaAppRoot}/pom.xml`, 'templates/mvnTemplate.pom', params )
 copyFiles ( javaAppRoot, 'templates/raw/java' ) ( 'application.properties' )
 copyFiles ( javaAppRoot, 'templates/raw' ) ( '.gitignore' )
 

@@ -11,8 +11,8 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-@RunWith(PactRunner.class) // Say JUnit to run tests with custom Runner
-@Provider("EAccountsSummaryDDProvider") // Set up name of tested provider
+@RunWith(PactRunner.class)
+@Provider("EAccountsSummaryDDProvider")
 @PactFolder("acceptedPacts")
 public class EAccountsSummaryDDProviderProviderPactTest {
 
@@ -21,6 +21,6 @@ public class EAccountsSummaryDDProviderProviderPactTest {
     }
 
     @TestTarget
-    public final Target target = new HttpTarget();
+    public final Target target = new HttpTarget("localhost", 8080);
 
 }

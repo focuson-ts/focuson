@@ -8,7 +8,7 @@ function makeParamsForJava ( r: RestD ) {
 }
 
 function makeGetEndpoint ( params: JavaWiringParams, r: RestD ): string[] {
-  return [ `    @RequestMapping(value="${beforeSeparator ( "?", r.url )}")`,
+  return [ `    @RequestMapping(value="${beforeSeparator ( "?", r.url )}", produces="application/json")`,
     `    public static String Welcome(${makeParamsForJava ( r )}) throws Exception{`,
     `      return new ObjectMapper().writeValueAsString(${params.sampleClass}.${sampleName(r.dataDD)}0);`,
     `    }`,

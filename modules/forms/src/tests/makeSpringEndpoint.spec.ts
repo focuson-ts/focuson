@@ -32,7 +32,7 @@ describe ( "makeSpringEndpoint", () => {
       "  @RestController",
       "  public class CreatePlanDDController {",
       "",
-      "    @RequestMapping(value=\"/api/createPlan/{createPlanId}\")",
+      "    @RequestMapping(value=\"/api/createPlan/{createPlanId}\", produces=\"application/json\")",
       "    public static String Welcome(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{",
       "      return new ObjectMapper().writeValueAsString(sample.CreatePlanDDSample0);",
       "    }",
