@@ -54,7 +54,7 @@ export const defaultRestAction: RestTypeDetails = {
   'delete': { name: 'delete', query: 'mutation', params: { needsId: true }, output: {}, graphQPrefix: 'delete', graphQlPostfix: '' },
 }
 
-type RestAction = 'get' | 'getOption' | 'list' | 'update' | 'create' | 'delete'
+export type RestAction = 'get' | 'getOption' | 'list' | 'update' | 'create' | 'delete'
 
 export interface RestD {
   params: RestParams,
@@ -91,12 +91,12 @@ export function findMustConstructForRest ( rs: RestD[] ): MustConstructForRest {
 export function findDataDsAndRestTypeDetails ( r: RestD ): [ DataD, RestActionDetail ][] {
   return flapMapActionDetails ( r, ( r, rt ) => findDataDDIn ( r.dataDD ).map ( dataD => [ dataD, rt ] ) )
 }
-export function findUniqueDataDsAndRestTypeDetails ( rs: RestD[] ): [ DataD, RestActionDetail ][] {
-  const nonUnique: [ DataD, RestActionDetail ][] = rs.flatMap ( r => {
-    var x: [ DataD, RestActionDetail ][] = r.actions.map ( a => [ r.dataDD, defaultRestAction[ a ] ] )
+export function findUniqueDataDsAndRestTypeDetails ( rs: RestD[] ): [ RestD, RestActionDetail ][] {
+  const nonUnique: [ RestD, RestActionDetail ][] = rs.flatMap ( r => {
+    var x: [ RestD, RestActionDetail ][] = r.actions.map ( a => [ r, defaultRestAction[ a ] ] )
     return x
   } )
-  return unique<[ DataD, RestActionDetail ]> ( nonUnique, ( [ dataD, rad ] ) => dataD.name + "," + rad.name )
+  return unique<[ RestD, RestActionDetail ]> ( nonUnique, ( [ restD, rad ] ) => restD.dataDD.name + "," + rad.name )
 }
 
 export function findUniqueDataDsIn ( rs: RestD[] ): DataD[] {

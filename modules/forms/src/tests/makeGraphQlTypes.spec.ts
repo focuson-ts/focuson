@@ -74,7 +74,7 @@ describe ( "makeGraphQlSchema", () => {
       "  createPlanEnd: String!",
       "}",
       "type EAccountsSummaryDD{",
-      "  eAccountsTable: EAccountSummaryDD!",
+      "  eAccountsTable: [EAccountSummaryDD!]!",
       "  totalMonthlyCost: String!",
       "  oneAccountBalance: String!",
       "  currentAccountBalance: String!",

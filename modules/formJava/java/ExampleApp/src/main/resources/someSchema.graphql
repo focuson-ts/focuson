@@ -1,12 +1,12 @@
 type Query{
-  getCreatePlanDD(id: String!):CreatePlanDD!
-  listCreatePlanDD:[CreatePlanDD!]!
-  getEAccountsSummaryDD(id: String!):EAccountsSummaryDD!
+  getCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!
+  listCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):[CreatePlanDD!]!
+  getEAccountsSummaryDD(accountId: String!, customerId: String!):EAccountsSummaryDD!
 }
 type Mutation{
-  createCreatePlanDD(obj :CreatePlanDDInp):CreatePlanDD!
-  updateCreatePlanDD(id: String!,obj :CreatePlanDDIdAndInp):CreatePlanDD!
-  deleteCreatePlanDD(id: String!):String
+  createCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!
+  updateCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!
+  deleteCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):String
 }
 type CreatePlanDD{
   createPlanStart: String!
@@ -14,7 +14,7 @@ type CreatePlanDD{
   createPlanEnd: String!
 }
 type EAccountsSummaryDD{
-  eAccountsTable: EAccountSummaryDD!
+  eAccountsTable: [EAccountSummaryDD!]!
   totalMonthlyCost: String!
   oneAccountBalance: String!
   currentAccountBalance: String!

@@ -1,6 +1,6 @@
 import { AllDataDD, DataD } from "../common/dataD";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
-import { RestActionDetail, RestD } from "../common/restD";
+import { RestAction, RestActionDetail, RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
 
 
@@ -19,4 +19,4 @@ export const sampleName = ( dataD: AllDataDD ) => dataD.name + "Sample";
 
 export const restControllerName = ( restD: RestD ) => `${restD.dataDD.name}Controller`
 
-export const queryName = ( restD: RestD ): string => restD.dataDD.name
+export const queryName = ( restD: RestD, action: RestAction ): string => action + restD.dataDD.name

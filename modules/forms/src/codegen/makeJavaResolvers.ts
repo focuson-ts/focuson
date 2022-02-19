@@ -38,7 +38,7 @@ export function makeAllJavaWiring ( params: JavaWiringParams, rs: RestD[] ): str
 
 export function findResolvers ( rs: RestD[] ): [ DataD | undefined, RestActionDetail, AllDataDD, string ][] {
   const fromRest: [ undefined, RestActionDetail, DataD, string ][] = findUniqueDataDsAndRestTypeDetails ( rs ).//
-    map ( ( [ dataD, rad ] ) => [ undefined, rad, dataD, resolverName ( dataD, rad ) ] )
+    map ( ( [ restD, rad ] ) => [ undefined, rad, restD.dataDD, resolverName ( restD.dataDD, rad ) ] )
 
   //this is a bit of fake. Maybe we would be better with more explicit fakes...
   function restActionDetailFor ( d: AllDataDD ): RestActionDetail {

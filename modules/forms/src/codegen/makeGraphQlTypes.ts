@@ -1,6 +1,7 @@
 import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, isDataDd, isRepeatingDd, OneDataDD } from "../common/dataD";
-import { findMustConstructForRest, findUniqueDataDsAndRestTypeDetails, QueryOrMutation, RestActionDetail, RestD, RestTypeDetails } from "../common/restD";
+import { findMustConstructForRest, findUniqueDataDsAndRestTypeDetails, QueryOrMutation, RestActionDetail, RestD, RestParams, RestTypeDetails } from "../common/restD";
 import { resolverName } from "./names";
+import { sortedEntries } from "@focuson/utils";
 
 export function makeGraphQlTypeFolder ( { keyword, create, postfix }: RestTypeDetails ): AllDataFlatMap<string> {
   return {
@@ -19,13 +20,15 @@ function theType ( d: AllDataDD ): string {
   return d.graphQlType ? d.graphQlType : 'String!'
 }
 
-export function makeParamsString ( { params, output }: RestActionDetail, rawType: string ) {
-  const idParam = params.needsId ? [ 'id: String!' ] : []
-  const suffix = params.needsId ? 'IdAndInp' : 'Inp'
-  const objParam = params.needsObj ? [ 'obj :' + rawType + suffix ] : []
-  const allParams = [ ...idParam, ...objParam ]
-  return allParams.length === 0 ? '' : "(" + allParams.join ( "," ) + ")";
-}
+// export function makeParamsString ( { params, output }: RestActionDetail, rawType: string ) {
+//
+//
+//   const idParam = params.needsId ? [ 'id: String!' ] : []
+//   const suffix = params.needsId ? 'IdAndInp' : 'Inp'
+//   const objParam = params.needsObj ? [ 'obj :' + rawType + suffix ] : []
+//   const allParams = [ ...idParam, ...objParam ]
+//   return allParams.length === 0 ? '' : "(" + allParams.join ( "," ) + ")";
+// }
 
 
 export function makeOutputString ( name: string, { params, query, output, graphQlPostfix }: RestActionDetail ) {
@@ -34,10 +37,14 @@ export function makeOutputString ( name: string, { params, query, output, graphQ
 }
 
 
-export const oneQueryMutateLine = ( [ dataD, action ]: [ DataD, RestActionDetail ] ): string => {
-  let rawType = rawTypeName ( dataD );
-  const paramString = makeParamsString ( action, rawType );
-  return `  ${resolverName ( dataD, action )}${paramString}:${makeOutputString ( rawType, action )}`;
+export function makeParamsString ( params: RestParams ): string {
+  //later for things like create where we don't know some of the ids these will need to be more clever.
+  return sortedEntries ( params ).map ( ( [ name, p ] ) => `${name}: String!` ).join ( ", " )
+}
+export const oneQueryMutateLine = ( [ restD, action ]: [ RestD, RestActionDetail ] ): string => {
+  let rawType = rawTypeName ( restD.dataDD );
+  const paramString = "("+ makeParamsString ( restD.params ) + ")";
+  return `  ${resolverName ( restD.dataDD, action )}${paramString}:${makeOutputString ( rawType, action )}`;
 }
 
 export const makeSchemaBlockFor = ( [ dataD, rt ]: [ DataD, RestTypeDetails ] ): string[] =>
@@ -52,15 +59,17 @@ export function makeQueryOrMutateBlock ( rs: RestD[], q: QueryOrMutation ): stri
     "}" ]
 }
 
-export const oneSchemaLine = ( suffix: string ) => ( [ name, one ]: [ string, OneDataDD ] ): string => {
+export const oneSchemaLine = ( suffix: string , repeating: boolean) => ( [ name, one ]: [ string, OneDataDD ] ): string => {
   const { dataDD } = one
-  if ( isDataDd ( dataDD ) ) return `  ${name}: ${dataDD.name}${suffix}!`
-  if ( isRepeatingDd ( dataDD ) ) return oneSchemaLine ( suffix ) ( [ name, { ...one, dataDD: dataDD.dataDD } ] )
+
+  if ( isDataDd ( dataDD ) ) return repeating? `  ${name}: [${dataDD.name}${suffix}!]!`:`  ${name}: ${dataDD.name}${suffix}!`
+  if ( isRepeatingDd ( dataDD ) ) return oneSchemaLine ( suffix, true ) ( [ name, { ...one, dataDD: dataDD.dataDD } ] )
   return `  ${name}: String!`
 };
 export const makeSchemaBlock = ( keyword: string, suffix: string ) => ( d: DataD ): string[] => [ `${keyword} ${rawTypeName ( d )}${suffix}{`,
-  ...Object.entries ( d.structure ).map ( oneSchemaLine ( suffix ) ),
+  ...Object.entries ( d.structure ).map ( oneSchemaLine ( suffix, false ) ),
   '}' ];
+
 export const makeGraphQlSchema = ( rs: RestD[] ): string[] => {
   const query = makeQueryOrMutateBlock ( rs, 'query' )
   const mutate = makeQueryOrMutateBlock ( rs, 'mutation' )
@@ -74,28 +83,3 @@ export const makeGraphQlSchema = ( rs: RestD[] ): string[] => {
     ...doOne ( 'input', 'Inp', input ),
     ...doOne ( 'input', 'IdAndInp', inputWithId ) ];
 }
-
-
-// export function makeSchemaForNameAndDataDs ( ds: NamesAndDataDs ): string[] {
-//   return sortedEntries<DataD> ( ds ).flatMap ( ( [ name, d ] ) => makeSchemaForDataD ( d ) )
-// }
-// export function paramDeclarationsToDecl ( r: RestParamDeclarations ) {
-//   if ( r.length === 0 ) return ''
-//   return '(' + r.map ( d => d.name + ': ' + d.graphQlType ).join ( ',' ) + ')'
-// }
-
-
-// export function makeQueryOrMutationEntriesForRestDQuery ( r: RestD, q: QueryOrMutation ): string[] {
-//   return queriesOrMutations ( r, q ).map (
-//     ( { name, graphQPrefix, graphQlPostfix, params } ) =>
-//       graphQPrefix + rawTypeName ( r.dataDD ) + graphQlPostfix + paramDeclarationsToDecl ( params ) )
-//
-// }
-//
-// export function makeDefnInSchemaForRestQueries ( rs: RestD[], q: QueryOrMutation ): string[] {
-//   const keyword = q === 'query' ? 'Query' : 'Mutation'
-//   return [ 'type ' + keyword + "{",
-//     ...rs.flatMap ( r => makeQueryOrMutationEntriesForRestDQuery ( r, q ).map ( s => '  ' + s ) ),
-//     '}'
-//   ]
-

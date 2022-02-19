@@ -1,27 +1,40 @@
-import { AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD } from "../common/dataD";
-import { RestD } from "../common/restD";
-import { indent } from "./codegen";
-import { applyToTemplate } from "@focuson/template";
-import { queryName } from "./names";
-import { asMultilineJavaString } from "@focuson/utils";
+import { AllDataFlatMap, DataD, flatMapDD, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
+import { defaultRestAction, RestAction, RestD } from "../common/restD";
+import { indent, indentList } from "./codegen";
+import { queryName, resolverName } from "./names";
+import { asMultilineJavaString, sortedEntries } from "@focuson/utils";
 
 
-export const makeQueryFlatMap: AllDataFlatMap<string> = {
-  stopAtDisplay: false,
-  ...emptyDataFlatMap (),
-  walkDataStart: ( path, parents: DataD[], oneDataDD, dataDD ) =>
-    [ indent ( path, dataDD.name + "{" ) ],
-  walkDataEnd: ( path, oparents: DataD[], neDataDD, dataDD ) => [ indent ( path, "}" ) ],
-  walkPrim: ( path, onparents: DataD[], eDataDD, dataDD ) => [ indent ( path, path[ path.length - 1 ] ) ],
+const makeQueryFolder: AllDataFlatMap<string> = {
+  walkDataStart ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: DataD ): string[] {
+    return path.length == 0 ? [] : [ indent ( path, path[ path.length - 1 ] + "{" ) ];
+  },
+  walkDataEnd ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: DataD ): string[] {
+    return [ indent ( path, '}' ) ];
+  },
+  walkPrim ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: PrimitiveDD ): string[] {
+    return [ indent ( path, path[ path.length - 1 ] ) ];
+  },
+  walkRepStart ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: RepeatingDataD ): string[] {
+    return [];
+  },
+  walkRepEnd ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: RepeatingDataD ): string[] {
+    return [];
+  },
 }
-
-export function makeQueryForRest ( restD: RestD ): string[] {
-  return [ 'query{', ...flatMapDD<string> ( restD.dataDD, makeQueryFlatMap ), '}' ]
+export function makeQuery ( r: RestD, action: RestAction ): string[] {
+  const paramString = sortedEntries ( r.params ).map ( ( [ name, p ], i ) => `"${name}:" + "\\"" + ${name} + "\\"" ` ).join ( ` + "," + ` )
+  // const paramString = "params"
+  return [ `"{${resolverName ( r.dataDD, defaultRestAction[ action ] )}(\" + ${paramString}+ \"){"+`,
+    ...asMultilineJavaString ( flatMapDD ( r.dataDD, makeQueryFolder ), '      ' ), '+"}";}']
 }
 
 export function makeJavaVariablesForGraphQlQuery ( rs: RestD[] ): string[] {
   return rs.flatMap ( r => {
-    const q = makeQueryForRest
-    return [ `public static  String ${queryName ( r )} = `, ...asMultilineJavaString ( makeQueryForRest ( r ), '     ' ), ";" ]
+    const paramString = sortedEntries ( r.params ).map ( ( [ name, p ], i ) => `String ${name}` ).join ( "," )
+    return r.actions.flatMap ( action => [
+      `public static  String ${queryName ( r, action )}(${paramString}){ `,
+      "   return",
+      ...makeQuery ( r, action )] )
   } )
 }
