@@ -1,21 +1,22 @@
-import { makeJavaDataSample, makeSampleVariable, makeTsSample } from "../codegen/makeSample";
+import { makeJavaVariable, makeSampleVariable, makeTsSample } from "../codegen/makeSample";
 import { CreatePlanDD, EAccountsSummaryDD } from "../example/eAccountsSummary.dataD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
+import { expand } from "@focuson/template";
 
 
-describe ( 'makeJavaSample', () => {
-  it ( "should make a immutable map sample for a simple DataD", () => {
-    expect ( makeJavaDataSample ( CreatePlanDD, 0 ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "Map.of('createPlanDate','2020-10-01','createPlanEnd','2020-10-01','createPlanStart','2020-10-01')"
-    ])
-  } )
-  it ( "should make a immutable map sample for a nested DataD", () => {
-    expect ( makeJavaDataSample ( EAccountsSummaryDD, 0 ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "Map.of('createPlan',Map.of('createPlanDate','2020-10-01','createPlanEnd','2020-10-01','createPlanStart','2020-10-01'),'currentAccountBalance','12321','eAccountsTable',Arrays.asList ( Map.of('accountId','1233450','description','This is a one line string','displayType','checking','frequency','This is a one line string','total','This is a one line string','virtualBankSeq','This is a one line string')),'oneAccountBalance','9921','totalMonthlyCost','1000')"
-    ] )
-  } )
-
-} )
+// describe ( 'makeJavaSample', () => {
+//   it ( "should make a immutable map sample for a simple DataD", () => {
+//     expect ( makeJavaDataSample ( CreatePlanDD, 0 ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+//       "Map.of('createPlanDate','2020-10-01','createPlanEnd','2020-10-01','createPlanStart','2020-10-01')"
+//     ])
+//   } )
+//   it ( "should make a immutable map sample for a nested DataD", () => {
+//     expect ( makeJavaDataSample ( EAccountsSummaryDD, 0 ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+//       "Map.of('createPlan',Map.of('createPlanDate','2020-10-01','createPlanEnd','2020-10-01','createPlanStart','2020-10-01'),'currentAccountBalance','12321','eAccountsTable',Arrays.asList ( Map.of('accountId','1233450','description','This is a one line string','displayType','checking','frequency','This is a one line string','total','This is a one line string','virtualBankSeq','This is a one line string')),'oneAccountBalance','9921','totalMonthlyCost','1000')"
+//     ] )
+//   } )
+//
+// } )
 
 
 describe ( 'makeSample', () => {
@@ -48,6 +49,12 @@ describe ( 'makeSample', () => {
   } )
 
 } );
+
+describe("makeJavaVariable", () =>{
+  it("should create code that parses the sample from the ts sample", () =>{
+    expect(makeJavaVariable(EAccountsSummaryDD, 0)).toEqual([])
+  })
+})
 
 describe ( "makeSampleVariable", () => {
   it ( "should attach a sample to a variable", () => {

@@ -4,6 +4,7 @@ import { Lenses } from "@focuson/lens";
 import { domainName, sampleName } from "./names";
 import { dataDsIn, PageD } from "../common/pageD";
 import { TSParams } from "./config";
+import { indentList } from "./codegen";
 
 
 const addData = ( start: boolean, path: string[], acc: any, d: DataD ) => start ? Lenses.fromPath ( path ).set ( acc, {} ) : acc;
@@ -32,39 +33,30 @@ export function makeTsSample ( d: DataD, i: number ): any {
 }
 
 
-export function makeSampleVariable (params: TSParams,  d: DataD, i: number ): string[] {
+export function makeSampleVariable ( params: TSParams, d: DataD, i: number ): string[] {
   return [ `export const ${sampleName ( d )}${i}: ${params.domainsFile}.${domainName ( d )} = `,
     ...JSON.stringify ( makeTsSample ( d, i ), null, 2 ).split ( '\n' )
   ]
 }
-export function makeAllSampleVariables (params: TSParams, ps: PageD[], i: number ): string[] {
-  return sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ name, dataD ] ) => makeSampleVariable (params, dataD, i ) )
+export function makeAllSampleVariables ( params: TSParams, ps: PageD[], i: number ): string[] {
+  return sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ name, dataD ] ) => makeSampleVariable ( params, dataD, i ) )
 }
 
 
-export function makeJavaPrimitiveSample ( p: PrimitiveDD, i: number ): string {
-  return `"${selectSample ( i, p )}"`
+// export function makeJavaDataSample ( d: DataD, i: number ): string[] {
+//   const contents: string = sortedEntries ( d.structure ).map ( ( [ name, value ] ) => [ `"${name}"`, ...makeJavaSample ( value.dataDD, i ) ] ).join ( "," )
+//   return [ `Map.of(${contents})` ]
+// }
+export function makeJavaSample ( d: DataD, i: number ): string[] {
+  const sample = makeTsSample ( d, i );
+  //yes this could be a lot more efficient
+  return JSON.stringify ( sample, null, 2 ).split ( "\n" ).map ( x => JSON.stringify ( x ) ).join ( "+\n" ).split ( "\n" )
 }
 
-export function makeJavaDataSample ( d: DataD, i: number ): string[] {
-  const contents: string = sortedEntries ( d.structure ).map ( ( [ name, value ] ) => [ `"${name}"`, ...makeJavaSample ( value.dataDD, i ) ] ).join ( "," )
-  return [ `Map.of(${contents})` ]
-}
-export function makeJavaSample ( d: AllDataDD, i: number ): string[] {
-  if ( isDataDd ( d ) ) return makeJavaDataSample ( d, i )
-  if ( isRepeatingDd ( d ) ) return [ `Arrays.asList ( ${makeJavaDataSample ( d.dataDD, i ).join ( ',' )})` ]
-  return [ makeJavaPrimitiveSample ( d, i ) ]
-}
-
-export function sampleType ( d: AllDataDD ): string {
-  if ( isDataDd ( d ) ) return 'Map';
-  if ( isRepeatingDd ( d ) ) return 'List<Map>';
-  return 'String';
-}
-export function makeJavaVariableName ( d: AllDataDD, i: number ) {
-  return [ `public static ${sampleType ( d )} ${sampleName ( d ) + i} = ${makeJavaSample ( d, i )};` ]
+export function makeJavaVariable ( d: DataD, i: number ) {
+  return [ `public static Map ${sampleName ( d ) + i} =  parse.parseMap(`, ...indentList ( indentList ( indentList ( makeJavaSample ( d, i ) ) ) ), ");" ]
 }
 export function makeAllJavaVariableName ( ps: PageD[], i: number ): string[] {
-  return sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ name, dataD ] ) => makeJavaVariableName ( dataD, i ) )
+  return sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ name, dataD ] ) => makeJavaVariable ( dataD, i ) )
 }
 
