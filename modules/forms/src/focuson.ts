@@ -14,6 +14,8 @@ import { makeAllMockFetchers } from "./codegen/makeMockFetchers";
 import { CombinedParams } from "./codegen/config";
 import { imports, indentList } from "./codegen/codegen";
 import { makeCommon, makeFullState, makeCommonParams } from "./codegen/makeCommon";
+import { makeSpringEndpointsFor } from "./codegen/makeSpringEndpoint";
+import { restControllerName } from "./codegen/names";
 
 export function writeToFile ( name: string, contents: string[] ) {
   fs.writeFileSync ( name, contents.join ( '\n' ) );
@@ -78,17 +80,17 @@ writeToFile ( `${tsCode}/${params.samplesFile}.ts`, [ ...imports ( params.domain
 templateFile ( `${tsCode}/${params.pactsFile}.ts`, 'templates/allPacts.ts', { content: makeAllPacts ( params, pages ).join ( "\n" ) } )
 copyFiles ( tsRoot, 'templates/raw/ts' ) ( '.env', 'README.md', 'tsconfig.json' )
 templateFile ( `${tsRoot}/package.json`, 'templates/packageTemplate.json', params )
-copyFiles(tsScripts,  'templates/scripts')('makePact.sh','makeJava.sh', 'makeJvmPact.sh', 'template.java', 'ports')
-copyFiles(tsRoot,  'templates/raw')('.gitignore')
-templateFile ( `${tsScripts}/makePactsAndCopyFirstTime.sh`, 'templates/scripts/makePactsAndCopyFirstTime.sh', {...params, javaRoot: javaAppRoot} )
+copyFiles ( tsScripts, 'templates/scripts' ) ( 'makePact.sh', 'makeJava.sh', 'makeJvmPact.sh', 'template.java', 'ports' )
+copyFiles ( tsRoot, 'templates/raw' ) ( '.gitignore' )
+templateFile ( `${tsScripts}/makePactsAndCopyFirstTime.sh`, 'templates/scripts/makePactsAndCopyFirstTime.sh', { ...params, javaRoot: javaAppRoot } )
 
-copyFiles(javaScriptRoot, 'templates/scripts')('makeJava.sh', 'makeJvmPact.sh', 'template.java')
+copyFiles ( javaScriptRoot, 'templates/scripts' ) ( 'makeJava.sh', 'makeJvmPact.sh', 'template.java' )
 
 // copyFiles ( javaAppRoot, 'templates/raw/java' ) ( '/build.gradle', 'application.properties' )
 // templateFile ( `${javaAppRoot}/settings.gradle`, 'templates/settings.gradle', params )
 templateFile ( `${javaAppRoot}/mvn.pom`, 'templates/mvnTemplate.pom', params )
-copyFiles ( javaAppRoot, 'templates/raw/java' ) (  'application.properties' )
-copyFiles(javaAppRoot,  'templates/raw')('.gitignore')
+copyFiles ( javaAppRoot, 'templates/raw/java' ) ( 'application.properties' )
+copyFiles ( javaAppRoot, 'templates/raw' ) ( '.gitignore' )
 
 writeToFile ( `${javaResourcesRoot}/${params.schema}`, makeGraphQlSchema ( rests ) )
 writeToFile ( `${javaCodeRoot}/${params.fetcherInterface}.java`, makeJavaResolversInterface ( params, rests ) )
@@ -98,4 +100,6 @@ templateFile ( `${javaCodeRoot}/${params.fetcherClass}.java`, 'templates/JavaFet
   { ...params, content: makeAllMockFetchers ( params, rests ).join ( "\n" ) } )
 templateFile ( `${javaCodeRoot}/${params.sampleClass}.java`, 'templates/JavaSampleTemplate.java',
   { ...params, content: indentList ( makeAllJavaVariableName ( pages, 0 ) ).join ( "\n" ) } )
+
+rests.forEach ( rest => writeToFile ( `${javaCodeRoot}/${restControllerName(rest)}.java`, makeSpringEndpointsFor ( params,rest ) ) )
 

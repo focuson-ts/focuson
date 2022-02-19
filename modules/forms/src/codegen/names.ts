@@ -1,6 +1,6 @@
 import { AllDataDD, DataD } from "../common/dataD";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
-import { RestActionDetail } from "../common/restD";
+import { RestActionDetail, RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
 
 
@@ -16,3 +16,5 @@ export function resolverName ( dataD: AllDataDD, action: RestActionDetail ) {
   return `${action.graphQPrefix}${rawType}${action.graphQlPostfix}`
 }
 export const sampleName = ( dataD: AllDataDD ) => dataD.name + "Sample";
+
+export const restControllerName= (restD: RestD) => `${restD.dataDD.name}Controller`
