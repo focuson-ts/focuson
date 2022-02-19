@@ -22,6 +22,13 @@ function makeQueryEndpoint ( params: JavaWiringParams, r: RestD ): string[] {
     `    }`,
     `` ];
 }
+function makeSampleEndpoint ( params: JavaWiringParams, r: RestD ): string[] {
+  return [
+    `  @RequestMapping(value = "${beforeSeparator ( "?", r.url )}/sample", produces = "application/json")`,
+    `    public static String sample${r.dataDD.name}() throws Exception {`,
+    `      return new ObjectMapper().writeValueAsString(Sample.EAccountsSummaryDDSample0);`,
+    `    }` ];
+}
 function makeValidateEndpoint ( params: JavaWiringParams, r: RestD ): string[] {
   return [ `    @RequestMapping(value="${beforeSeparator ( "?", r.url )}/validate", produces="application/json")`,
     `    public String validate${r.dataDD.name}() throws Exception{`,
@@ -34,7 +41,11 @@ function makeValidateEndpoint ( params: JavaWiringParams, r: RestD ): string[] {
 }
 export function makeSpringEndpointsFor ( params: JavaWiringParams, r: RestD ): string[] {
   const endpoints: string[] = r.actions.flatMap ( action => {
-    if ( action === 'get' ) return [ ...makeGetEndpoint ( params, r ), ...makeQueryEndpoint ( params, r ), ...makeValidateEndpoint ( params, r ) ]
+    if ( action === 'get' ) return [
+      ...makeGetEndpoint ( params, r ),
+      ...makeQueryEndpoint ( params, r ),
+      ...makeSampleEndpoint ( params, r ),
+      ...makeValidateEndpoint ( params, r ) ]
     return [ `// Not yet doing action ${action}` ]
   } )
 
