@@ -40,17 +40,18 @@ const params: CombinedParams = {
   schema: 'someSchema.graphql',
   sampleClass: 'Sample'
 };
-let outputRoot = 'dist'
+let outputRoot = '../formJava'
 let javaRoot = outputRoot + "/java"
 let javaAppRoot = outputRoot + "/java/" + params.applicationName
 let javaScriptRoot = javaAppRoot + "/scripts"
 let javaCodeRoot = javaAppRoot + "/src/main/java/focuson/data"
 let javaResourcesRoot = javaAppRoot + "/src/main/resources"
-let tsRoot = "../datats"
+let tsRoot = "../formTs"
 let tsScripts = tsRoot + "/scripts"
 let tsCode = tsRoot + "/src"
 
 fs.mkdirSync ( `${outputRoot}`, { recursive: true } )
+fs.mkdirSync ( `${javaAppRoot}`, { recursive: true } )
 fs.mkdirSync ( `${javaCodeRoot}`, { recursive: true } )
 fs.mkdirSync ( `${javaResourcesRoot}`, { recursive: true } )
 fs.mkdirSync ( `${javaScriptRoot}`, { recursive: true } )
@@ -77,13 +78,18 @@ writeToFile ( `${tsCode}/${params.samplesFile}.ts`, [ ...imports ( params.domain
 templateFile ( `${tsCode}/${params.pactsFile}.ts`, 'templates/allPacts.ts', { content: makeAllPacts ( params, pages ).join ( "\n" ) } )
 copyFiles ( tsRoot, 'templates/raw/ts' ) ( '.env', 'README.md', 'tsconfig.json' )
 templateFile ( `${tsRoot}/package.json`, 'templates/packageTemplate.json', params )
-copyFiles(tsScripts, 'templates/scripts')('makePact.sh','makeJava.sh', 'makeJvmPact.sh', 'template.java', 'ports')
+copyFiles(tsScripts,  'templates/scripts')('makePact.sh','makeJava.sh', 'makeJvmPact.sh', 'template.java', 'ports')
+copyFiles(tsRoot,  'templates/raw')('.gitignore')
+templateFile ( `${tsScripts}/makePactsAndCopyFirstTime.sh`, 'templates/scripts/makePactsAndCopyFirstTime.sh', {...params, javaRoot: javaAppRoot} )
 
 copyFiles(javaScriptRoot, 'templates/scripts')('makeJava.sh', 'makeJvmPact.sh', 'template.java')
 
-copyFiles ( javaAppRoot, 'templates/raw/java' ) ( '/build.gradle', 'application.properties' )
-templateFile ( `${javaAppRoot}/settings.gradle`, 'templates/settings.gradle', params )
-copyFiles ( javaAppRoot, 'templates/raw/java' ) ( '/build.gradle', 'application.properties' )
+// copyFiles ( javaAppRoot, 'templates/raw/java' ) ( '/build.gradle', 'application.properties' )
+// templateFile ( `${javaAppRoot}/settings.gradle`, 'templates/settings.gradle', params )
+templateFile ( `${javaAppRoot}/mvn.pom`, 'templates/mvnTemplate.pom', params )
+copyFiles ( javaAppRoot, 'templates/raw/java' ) (  'application.properties' )
+copyFiles(javaAppRoot,  'templates/raw')('.gitignore')
+
 writeToFile ( `${javaResourcesRoot}/${params.schema}`, makeGraphQlSchema ( rests ) )
 writeToFile ( `${javaCodeRoot}/${params.fetcherInterface}.java`, makeJavaResolversInterface ( params, rests ) )
 writeToFile ( `${javaCodeRoot}/${params.wiringClass}.java`, makeAllJavaWiring ( params, rests ) )

@@ -7,5 +7,7 @@ if [[ "$provider" == *" "* ]]; then echo "Provider [$provider] has space in it. 
 port=$(echo "$provider" | join - "scripts/ports" | awk '{print $2 }')
 if [ "$port" == '' ]; then echo "Add $provider to port"; fi
 mkdir -p res
+#echo "debug making pact [$provider] [$state] [$port]"
+#cat scripts/template.java | sed -e "s/<PROVIDER>/$provider/g" -e "s/<STATE>/$state/g" -e "s/<PORT>/$port/g"
 cat scripts/template.java | sed -e "s/<PROVIDER>/$provider/g" -e "s/<STATE>/$state/g" -e "s/<PORT>/$port/g" > "res/${provider}ProviderPactTest.java"
 

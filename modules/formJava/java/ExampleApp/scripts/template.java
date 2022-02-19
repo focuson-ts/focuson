@@ -1,5 +1,3 @@
-package natwest.hbosp.pact.provider;
-
 
 import au.com.dius.pact.provider.junit.PactRunner;
 import au.com.dius.pact.provider.junit.target.HttpTarget;
@@ -13,8 +11,8 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-@RunWith(PactRunner.class) // Say JUnit to run tests with custom Runner
-@Provider("<PROVIDER>") // Set up name of tested provider
+@RunWith(PactRunner.class)
+@Provider("<PROVIDER>")
 @PactFolder("acceptedPacts")
 public class <PROVIDER>ProviderPactTest {
 

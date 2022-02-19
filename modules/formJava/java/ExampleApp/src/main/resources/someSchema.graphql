@@ -1,0 +1,40 @@
+type Query{
+  getCreatePlanDD(id: String!):CreatePlanDD!
+  listCreatePlanDD:[CreatePlanDD!]!
+  getEAccountsSummaryDD(id: String!):EAccountsSummaryDD!
+}
+type Mutation{
+  createCreatePlanDD(obj :CreatePlanDDInp):CreatePlanDD!
+  updateCreatePlanDD(id: String!,obj :CreatePlanDDIdAndInp):CreatePlanDD!
+  deleteCreatePlanDD(id: String!):String
+}
+type CreatePlanDD{
+  createPlanStart: String!
+  createPlanDate: String!
+  createPlanEnd: String!
+}
+type EAccountsSummaryDD{
+  eAccountsTable: EAccountSummaryDD!
+  totalMonthlyCost: String!
+  oneAccountBalance: String!
+  currentAccountBalance: String!
+  createPlan: CreatePlanDD!
+}
+type EAccountSummaryDD{
+  accountId: String!
+  displayType: String!
+  description: String!
+  virtualBankSeq: String!
+  total: String!
+  frequency: String!
+}
+input CreatePlanDDInp{
+  createPlanStart: String!
+  createPlanDate: String!
+  createPlanEnd: String!
+}
+input CreatePlanDDIdAndInp{
+  createPlanStart: String!
+  createPlanDate: String!
+  createPlanEnd: String!
+}

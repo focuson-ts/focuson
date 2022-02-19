@@ -11,16 +11,16 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-@RunWith(PactRunner.class)
-@Provider("<PROVIDER>")
+@RunWith(PactRunner.class) // Say JUnit to run tests with custom Runner
+@Provider("EAccountsSummaryDDProvider") // Set up name of tested provider
 @PactFolder("acceptedPacts")
-public class <PROVIDER>ProviderPactTest {
+public class EAccountsSummaryDDProviderProviderPactTest {
 
-    @State(value = {<STATE>})
+    @State(value = {"default"})
     public void configureState() {
     }
 
     @TestTarget
-    public final Target target = new HttpTarget(<PORT>);
+    public final Target target = new HttpTarget();
 
 }
