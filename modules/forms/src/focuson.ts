@@ -91,7 +91,7 @@ copyFiles ( javaScriptRoot, 'templates/scripts' ) ( 'makeJava.sh', 'makeJvmPact.
 // templateFile ( `${javaAppRoot}/settings.gradle`, 'templates/settings.gradle', params )
 templateFile ( `${javaAppRoot}/pom.xml`, 'templates/mvnTemplate.pom', params )
 copyFiles ( javaAppRoot, 'templates/raw/java' ) ( 'application.properties' )
-copyFiles ( javaCodeRoot, 'templates/raw/java' ) ( 'SchemaController.java' )
+templateFile ( `${javaCodeRoot}/SchemaController.java`, 'templates/raw/java/SchemaController.java', params )
 copyFiles ( javaAppRoot, 'templates/raw' ) ( '.gitignore' )
 
 writeToFile ( `${javaResourcesRoot}/${params.schema}`, makeGraphQlSchema ( rests ) )
