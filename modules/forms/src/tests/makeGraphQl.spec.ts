@@ -1,5 +1,5 @@
-import { makeQueryForRest } from "../codegen/makeGraphQlQuery";
-import { eAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
+import { makeJavaVariablesForGraphQlQuery, makeQueryForRest } from "../codegen/makeGraphQlQuery";
+import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
 
 
 describe ( "Making GraphQl from RestD", () => {
@@ -25,6 +25,43 @@ describe ( "Making GraphQl from RestD", () => {
       "    }",
       "  }",
       "}"
+    ] )
+  } )
+
+
+  it ( "makeAllQueryForRest - should make java variables", () => {
+    expect ( makeJavaVariablesForGraphQlQuery ( [ eAccountsSummaryRestD, createPlanRestD ] ).map(s=>s.replace(/"/g, "'")) ).toEqual ( [
+      "public static  String EAccountsSummaryDD = ",
+      "     'query{'+",
+      "     '  EAccountsSummaryDD{'+",
+      "     '    EAccountSummaryDD{'+",
+      "     '      accountId'+",
+      "     '      displayType'+",
+      "     '      description'+",
+      "     '      virtualBankSeq'+",
+      "     '      total'+",
+      "     '      frequency'+",
+      "     '    }'+",
+      "     '    totalMonthlyCost'+",
+      "     '    oneAccountBalance'+",
+      "     '    currentAccountBalance'+",
+      "     '    CreatePlanDD{'+",
+      "     '      createPlanStart'+",
+      "     '      createPlanDate'+",
+      "     '      createPlanEnd'+",
+      "     '    }'+",
+      "     '  }'+",
+      "     '}'",
+      ";",
+      "public static  String CreatePlanDD = ",
+      "     'query{'+",
+      "     '  CreatePlanDD{'+",
+      "     '    createPlanStart'+",
+      "     '    createPlanDate'+",
+      "     '    createPlanEnd'+",
+      "     '  }'+",
+      "     '}'",
+      ";"
     ] )
   } )
 } )

@@ -5,6 +5,7 @@ import { domainName, sampleName } from "./names";
 import { dataDsIn, PageD } from "../common/pageD";
 import { TSParams } from "./config";
 import { indentList } from "./codegen";
+import { asMultilineJavaString } from "../../../utils/src/utils";
 
 
 const addData = ( start: boolean, path: string[], acc: any, d: DataD ) => start ? Lenses.fromPath ( path ).set ( acc, {} ) : acc;
@@ -49,12 +50,11 @@ export function makeAllSampleVariables ( params: TSParams, ps: PageD[], i: numbe
 // }
 export function makeJavaSample ( d: DataD, i: number ): string[] {
   const sample = makeTsSample ( d, i );
-  //yes this could be a lot more efficient
-  return JSON.stringify ( sample, null, 2 ).split ( "\n" ).map ( x => JSON.stringify ( x ) ).join ( "+\n" ).split ( "\n" )
+  return asMultilineJavaString ( JSON.stringify ( sample, null, 2 ).split ( "\n" ), '       ' )
 }
 
 export function makeJavaVariable ( d: DataD, i: number ) {
-  return [ `public static Map ${sampleName ( d ) + i} =  parse.parseMap(`, ...indentList ( indentList ( indentList ( makeJavaSample ( d, i ) ) ) ), ");" ]
+  return [ `public static Map ${sampleName ( d ) + i} =  parse.parseMap(`, ...makeJavaSample ( d, i ), ");" ]
 }
 export function makeAllJavaVariableName ( ps: PageD[], i: number ): string[] {
   return sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ name, dataD ] ) => makeJavaVariable ( dataD, i ) )

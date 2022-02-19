@@ -17,4 +17,6 @@ export function resolverName ( dataD: AllDataDD, action: RestActionDetail ) {
 }
 export const sampleName = ( dataD: AllDataDD ) => dataD.name + "Sample";
 
-export const restControllerName= (restD: RestD) => `${restD.dataDD.name}Controller`
+export const restControllerName = ( restD: RestD ) => `${restD.dataDD.name}Controller`
+
+export const queryName = ( restD: RestD ): string => restD.dataDD.name

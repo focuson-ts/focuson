@@ -5,6 +5,7 @@ export interface JavaWiringParams {
   wiringClass: string;
   fetcherClass: string;
   sampleClass: string,
+  queriesClass: string,
   schema: string;
 }
 

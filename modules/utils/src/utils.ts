@@ -21,6 +21,13 @@ export function safeArray<T> ( ts: T[] | undefined ) {
 }
 
 
+export function asMultilineJavaString ( ss: string[], indent?: string ): string[] {
+  const realIndent = indent ? indent : ''
+  const lastPlusIndex = ss.length - 2
+  return ss.map ( ( s, i ) => `${realIndent}${JSON.stringify ( s )}${i <= lastPlusIndex ? "+" : ""}` )
+}
+
+
 export function beforeSeparator ( separator: string, string: string ) {
   const index = string.indexOf ( separator )
   return index < 0 ? string : string.substr ( 0, index )

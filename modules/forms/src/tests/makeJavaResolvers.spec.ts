@@ -18,6 +18,7 @@ export const paramsForTest: CombinedParams = {
   applicationName: "SomeApp",
   fetcherInterface: "intName",
   schema: "someSchema.graphql",
+  queriesClass: "Queries",
   thePackage: "packName",
   wiringClass: "someClass",
   fetcherClass: "fetcherClass"

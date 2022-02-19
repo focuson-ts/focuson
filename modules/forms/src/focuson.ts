@@ -16,6 +16,7 @@ import { imports, indentList } from "./codegen/codegen";
 import { makeCommon, makeFullState, makeCommonParams } from "./codegen/makeCommon";
 import { makeSpringEndpointsFor } from "./codegen/makeSpringEndpoint";
 import { restControllerName } from "./codegen/names";
+import { makeJavaVariablesForGraphQlQuery } from "./codegen/makeGraphQlQuery";
 
 export function writeToFile ( name: string, contents: string[] ) {
   fs.writeFileSync ( name, contents.join ( '\n' ) );
@@ -33,7 +34,7 @@ const params: CombinedParams = {
   samplesFile: "samples",
   renderFile: "render",
   urlparams: 'commonIds',
-
+  queriesClass: 'Queries',
   thePackage: 'focuson.data',
   applicationName: 'ExampleApp',
   fetcherInterface: 'FFetcher',
@@ -100,6 +101,8 @@ templateFile ( `${javaCodeRoot}/${params.fetcherClass}.java`, 'templates/JavaFet
   { ...params, content: makeAllMockFetchers ( params, rests ).join ( "\n" ) } )
 templateFile ( `${javaCodeRoot}/${params.sampleClass}.java`, 'templates/JavaSampleTemplate.java',
   { ...params, content: indentList ( makeAllJavaVariableName ( pages, 0 ) ).join ( "\n" ) } )
+templateFile ( `${javaCodeRoot}/${params.queriesClass}.java`, 'templates/JavaQueryTemplate.java',
+  { ...params, content: indentList ( makeJavaVariablesForGraphQlQuery ( rests ) ).join ( "\n" ) } )
 
-rests.forEach ( rest => writeToFile ( `${javaCodeRoot}/${restControllerName(rest)}.java`, makeSpringEndpointsFor ( params,rest ) ) )
+rests.forEach ( rest => writeToFile ( `${javaCodeRoot}/${restControllerName ( rest )}.java`, makeSpringEndpointsFor ( params, rest ) ) )
 
