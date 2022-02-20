@@ -1,14 +1,9 @@
-import { FState } from "ExampleApp/src/common";
-import * as fetchers from "ExampleApp/src/fetchers";
-import * as common from "ExampleApp/src/common";
+import {emptyState, {stateName} } from "./{commonFile}";
+import * as fetchers from "./fetchers";
 
-const emptyState: FState = {
-  {commonParams}: {commonParamsValue},
-  tags: {},
-  messages: [],
-  pageSelection: { pageName: '{pageName}' },
-  {pageName}:{}
-}
+
+
+
 
 pactWith ( { consumer: '{consumer}', provider: '{provider}', cors: true }, provider => {
   describe ( '{description1}', () => {

@@ -29,7 +29,7 @@ export function displayMain<S extends any, D extends any, Msgs, MD extends Modal
     console.log ( "displayMain.main 3", main );
     // console.log ( "displayMain.main-json 4", JSON.stringify ( main ) )
   }
-  let result =  addModalPageIfNeeded ( config.modalPageDetails, s, main );
+  let result = addModalPageIfNeeded ( config.modalPageDetails, s, main );
   if ( debug ) console.log ( "SelectedPage.displayMain - exit", result )
   return result
 }
@@ -65,19 +65,25 @@ export const loadingPage = <S extends any, D extends any> ( title: ( d?: D ) => 
  */
 
 export const focusedPageWithExtraState = <S extends any, Full extends any, D extends any> ( title: ( d?: Full ) => string ) =>
-  ( lensFn: ( lens: LensState<S, Full> ) => LensState<S, D> ) => ( pageFn: ( state: LensState<S, Full>, f: Full, d: D ) => JSX.Element ): FocusedPage<S, Full> => ({
-    title: s => title ( s.optJson () ),
-    displayLoading: s => !s.optJson (),
-    display: s => {
-      console.log ( "focusedPageWithExtraState - enter", s )
-      const result = pageFn ( s, s.json (), lensFn ( s )?.json () )
-      console.log ( "focusedPageWithExtraState -exit", result )
-      return result
-    }
-  })
+  ( lensFn: ( lens: LensState<S, Full> ) => LensState<S, D>, displayLoading?: ( s: LensState<S, Full> ) => boolean ) => ( pageFn: ( fullState: LensState<S, Full>, state: LensState<S, D>, f: Full, d: D ) => JSX.Element ): FocusedPage<S, Full> => {
+    const realDisplayLoading = displayLoading ? displayLoading : ( s: LensState<S, Full> ) =>lensFn(s).optJson () === undefined
+    return ({
+      title: s => title ( s.optJson () ),
+      displayLoading: realDisplayLoading,
+      display: s => {
+        console.log ( "focusedPageWithExtraState - enter", s )
+        let lensState: LensState<S, D> = lensFn ( s );
+        let domain = lensState?.json ();
+        if ( domain === undefined ) throw Error ( 'something went wrong: The domain is undefined in focusedPageWithExtraState' )
+        const result = pageFn ( s, lensState, s.json (), domain )
+        console.log ( "focusedPageWithExtraState -exit", result )
+        return result
+      }
+    })
+  }
 
 export const loadingPageWithExtraState = <S extends any, Full extends any, D extends any> ( title: ( d?: Full ) => string ) =>
-  ( lensFn: ( lens: LensState<S, Full> ) => LensState<S, D> ) => ( pageFn: ( state: LensState<S, Full>, f: Full, d: D ) => JSX.Element ): ( s: LensState<S, Full> ) => JSX.Element =>
+  ( lensFn: ( lens: LensState<S, Full> ) => LensState<S, D> ) => ( pageFn: ( fullState: LensState<S, Full>, state: LensState<S, D>, f: Full, d: D ) => JSX.Element ): ( s: LensState<S, Full> ) => JSX.Element =>
     s => focusedPageWithExtraState<S, Full, D> ( title ) ( lensFn ) ( pageFn ).display ( s )
 
 

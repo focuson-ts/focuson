@@ -8,16 +8,8 @@ describe ( "makePacts", () => {
 
     expect ( makeFetcherPact (paramsForTest, EAccountsSummaryPD, EAccountsSummaryPD.rest.eAccountsSummary ) ).toEqual ( [
       "import * as samples from './samples';",
-      "import { FState } from \"ExampleApp/src/common\";",
-      "import * as fetchers from \"ExampleApp/src/fetchers\";",
-      "import * as common from \"ExampleApp/src/common\";",
-      "const emptyState: FState = {",
-      "  commonIds: {\"accountId\":\"accId\",\"customerId\":\"custId\"},",
-      "  tags: {},",
-      "  messages: [],",
-      "  pageSelection: { pageName: 'eAccountsSummary' },",
-      "  eAccountsSummary:{}",
-      "}",
+      "import {emptyState, FState } from \"./common\";",
+      "import * as fetchers from \"./fetchers\";",
       "pactWith ( { consumer: 'EAccountsSummaryDD', provider: 'EAccountsSummaryDDProvider', cors: true }, provider => {",
       "  describe ( 'EAccountsSummary', () => {",
       "    it ( 'should have a get fetcher for EAccountsSummaryDD', async () => {",

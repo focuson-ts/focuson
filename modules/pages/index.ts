@@ -9,3 +9,4 @@ export * from './src/preMutate';
 export * from './src/selectedPage';
 export * from './src/modal/modalButton';
 export * from './src/modal/modalAndCopyButton';
+export * from './src/PageTemplate';

@@ -6,6 +6,7 @@ import { sampleName } from "./names";
 import { makeCommonParamsValueForTest, RestD } from "../common/restD";
 import { TSParams } from "./config";
 import { imports } from "./codegen";
+import { makeStateWithSelectedPage } from "./makeCommon";
 
 
 interface PactProps extends NameAnd<string> {
@@ -20,35 +21,43 @@ interface PactProps extends NameAnd<string> {
   tree: string,
   pageName: string,
   target: string,
+  stateName: string,
+  commonFile: string,
   commonParams: string,
   commonParamsValue: string,
   commonParamsTagsValue: string,
 }
-export function makeFetcherPact (params: TSParams, p: PageD, r: RestDefnInPageProperties ): string[] {
+export function makeFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPageProperties ): string[] {
   const d = r.rest
   let body = params.samplesFile + "." + sampleName ( d.dataDD ) + '0';
-  let paramsValueForTest = makeCommonParamsValueForTest(d);
+  let paramsValueForTest = makeCommonParamsValueForTest ( d );
   const props: PactProps = {
     body,
     consumer: d.dataDD.name,
     description1: p.name,
     description2: `should have a get fetcher for ${d.dataDD.name}`,
     method: "GET",
-    path: beforeSeparator("?", d.url),
+    path: beforeSeparator ( "?", d.url ),
     provider: d.dataDD.name + "Provider",
     status: "200",
     tree: `${params.fetchersFile}.fetchers`,
     commonParams: params.commonParams,
-    pageName: p.path.join("."),
-    target: p.display.target.join("."),
-    commonParamsValue: JSON.stringify(paramsValueForTest),
-    commonParamsTagsValue: JSON.stringify(sortedEntries(paramsValueForTest).map(([name, v]) => v ))
+    pageName: p.path.join ( "." ),
+    target: p.display.target.join ( "." ),
+    stateName: params.stateName,
+    commonFile: params.commonFile,
+    commonParamsValue: JSON.stringify ( paramsValueForTest ),
+    commonParamsTagsValue: JSON.stringify ( sortedEntries ( paramsValueForTest ).map ( ( [ name, v ] ) => v ) )
   }
   const str: string = fs.readFileSync ( 'templates/onePact.ts' ).toString ()
-  return [...imports(params.samplesFile), ...applyToTemplate ( str, props )]
+  return [
+    ...imports ( params.samplesFile ),
+    // ...makeStateWithSelectedPage(params, props.commonParamsValue, props.pageName),
+    ...applyToTemplate ( str, props )
+  ]
 
 }
 
-export function makeAllPacts (params: TSParams,  ps: PageD[] ) : string[]{
+export function makeAllPacts ( params: TSParams, ps: PageD[] ): string[] {
   return allRestAndActions ( ps ).flatMap ( ( [ pd, rd ] ) => rd.fetcher ? makeFetcherPact ( params, pd, rd ) : [] )
 }

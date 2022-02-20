@@ -9,8 +9,8 @@ export const componentName = ( d: DataD ): string => d.name;
 export const pageComponentName = ( d: PageD ): string => d.name + "Page";
 export const fetcherName = ( d: RestDefnInPageProperties ): string => d.rest.dataDD.name + "Fetcher";
 export const selectedPage = ( p: PageD ): string => p.name;
-export const hasDomainForPage = ( pd: PageD ): string => "Has" + domainForPage ( pd );
-export const domainForPage = ( pd: PageD ): string => pd.name + "PageDomain"
+export const hasDomainForPage = ( pd: PageD ): string => "Has" + pageDomainName ( pd );
+export const pageDomainName = ( pd: PageD ): string => pd.name + "PageDomain"
 export function resolverName ( dataD: AllDataDD, action: RestActionDetail ) {
   let rawType = rawTypeName ( dataD );
   return `${action.graphQPrefix}${rawType}${action.graphQlPostfix}`

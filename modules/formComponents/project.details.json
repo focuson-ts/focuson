@@ -4,7 +4,7 @@
   "description": "Components that can be used by @focuson/forms",
   "details": {
     "ideify": true,
-    "test": true,
+    "test": false,
     "publish": true,
     "links": [
       "@focuson/state"

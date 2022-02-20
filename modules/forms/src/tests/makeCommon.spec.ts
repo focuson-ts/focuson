@@ -1,13 +1,13 @@
 import { findAllCommonParams, makeFullState, makeCommonParams } from "../codegen/makeCommon";
 import { createPlanPD, EAccountsSummaryPD } from "../example/eAccountsSummary.pageD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
-import { eAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
+import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
 
 
 describe ( "makeFullState", () => {
   it ( 'should make the FullState', () => {
     expect ( makeFullState ( paramsForTest, [ EAccountsSummaryPD, createPlanPD ] ) ).toEqual ( [
-      "export interface FState extends HasSimpleMessages,HasPageSelection,HascommonIds,HasTagHolder,",
+      "export interface FState extends HasSimpleMessages,HasPageSelection,HascommonIds,HasTagHolder,HasSelectedModalPage,HasPostCommand<FState,any>,HasFocusOnDebug,",
       " pageDomains.HasEAccountsSummaryPageDomain",
       "{}"
     ])
@@ -17,7 +17,7 @@ describe ( "makeFullState", () => {
 
 describe ( "findAllCommonParams", () => {
   it ( 'should find all the commons lens in the pages', () => {
-    expect ( findAllCommonParams ( [ eAccountsSummaryRestD ] ) ).toEqual ( [ "accountId", "customerId" ] )
+    expect ( findAllCommonParams ( [ eAccountsSummaryRestD ,createPlanRestD] ) ).toEqual ( [ "accountId", "customerId","createPlanId" ] )
   } )
 
 } )

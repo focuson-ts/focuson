@@ -23,7 +23,7 @@ export function writeToFile ( name: string, contents: string[] ) {
 }
 
 const params: CombinedParams = {
-  focusOnVersion: "^0.4.7",
+  focusOnVersion: "^0.4.12",
   commonParams: "CommonIds",
   stateName: "FState",
   commonFile: "common",
@@ -68,7 +68,7 @@ let pages = [ EAccountsSummaryPD, createPlanPD ];
 let rests = unique ( pages.flatMap ( x => sortedEntries ( x.rest ) ).map ( x => x[ 1 ].rest ), r => r.dataDD.name )
 
 
-writeToFile ( `${tsCode}/${params.renderFile}.tsx`, [ ...imports ( params.domainsFile, params.pageDomainsFile ), ...createAllReactComponents ( pages ) ] )
+writeToFile ( `${tsCode}/${params.renderFile}.tsx`, [ ...imports ( params.domainsFile, params.pageDomainsFile ), ...createAllReactComponents ( params, pages ) ] )
 writeToFile ( `${tsCode}/${params.pageDomainsFile}.ts`, makePageDomainsFor ( params, pages ) )
 writeToFile ( `${tsCode}/${params.domainsFile}.ts`, makeAllDomainsFor ( pages ) )
 writeToFile ( `${tsCode}/${params.commonFile}.ts`, makeCommon ( params, pages, rests ) )
@@ -94,6 +94,7 @@ templateFile ( `${javaAppRoot}/pom.xml`, 'templates/mvnTemplate.pom', params )
 copyFiles ( javaAppRoot, 'templates/raw/java' ) ( 'application.properties' )
 templateFile ( `${javaCodeRoot}/SchemaController.java`, 'templates/raw/java/SchemaController.java', params )
 copyFiles ( javaAppRoot, 'templates/raw' ) ( '.gitignore' )
+copyFiles ( javaCodeRoot, 'templates/raw/java' ) ( 'CorsConfig.java' )
 
 
 writeToFile ( `${javaResourcesRoot}/${params.schema}`, makeGraphQlSchema ( rests ) )

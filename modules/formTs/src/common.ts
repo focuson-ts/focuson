@@ -1,18 +1,18 @@
-import {HasSimpleMessages, SimpleMessage, HasPageSelection} from '@focuson/pages'
-import { LensState } from '@focuson/state';
+import { HasPageSelection, HasSelectedModalPage, HasSimpleMessages, SimpleMessage } from '@focuson/pages'
 import { defaultDateFn } from '@focuson/utils';
 import { commonTagFetchProps, HasTagHolder, OnTagFetchErrorFn } from '@focuson/fetcher';
-import { Lens, Lenses } from '@focuson/lens';
-
-
+import { Lenses } from '@focuson/lens';
 import { tagOps } from '@focuson/template';
+import { HasPostCommand } from '@focuson/poster';
+import { HasFocusOnDebug } from '@focuson/focuson';
 import * as pageDomains from './pageDomains';
-export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,
+export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasSelectedModalPage,HasPostCommand<FState,any>,HasFocusOnDebug,
  pageDomains.HasEAccountsSummaryPageDomain
 {}
 export interface HasCommonIds {CommonIds: CommonIds}
 export type CommonIds = {
 accountId?:string;
+createPlanId?:string;
 customerId?:string;
 }
 export const commonIdLens = Lenses.identity<FState> ().focusOn ( 'CommonIds' )
@@ -22,3 +22,12 @@ export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPage
     ( s, date ) => [], //later do the messaging
     defaultDateFn ) ( onError ) //updateTagsAndMessagesOnError ( defaultErrorMessage )
 }
+export const emptyState: FState = {
+  CommonIds: {"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
+  tags: {},
+  messages: [],
+  pageSelection: { pageName: 'eAccountsSummary' },
+  eAccountsSummary:{},
+  postCommands: [],
+    debug: { selectedPageDebug: true, fetcherDebug: true }
+  }

@@ -5,9 +5,10 @@ import { dataDsIn, PageD } from "../common/pageD";
 import { EAccountsSummaryDD } from "../example/eAccountsSummary.dataD";
 
 import { sortedEntries } from "@focuson/utils";
-import { componentName, domainName, pageComponentName } from "./names";
+import { componentName, pageDomainName, domainName, pageComponentName } from "./names";
 import { makeButtonsFrom } from "./makeButtons";
-import { indentList } from "./codegen";
+import { indentList, noExtension } from "./codegen";
+import { TSParams } from "./config";
 
 
 export type AllComponentData = ComponentData | ErrorComponentData
@@ -79,19 +80,29 @@ export function createReactComponent ( dataD: DataD ): string[] {
     '}'
   ]
 }
+
+
 export function createReactPageComponent ( pageD: PageD ): string[] {
-  const { dataDD, layout, target } = pageD.display
+  if ( pageD.pageType === 'ModalPage' ) return [ `// Not creating modal page for ${pageD.name} yet` ]
+  if ( pageD.pageType === 'MainPage' ) return createReactMainPageComponent ( pageD )
+  throw new Error ( `Unknown page type ${pageD.pageType} in ${pageD.name}` )
+}
+
+export function createReactMainPageComponent ( pageD: PageD ): string[] {
+  const { dataDD, layout } = pageD.display
+  let target = `${pageD.display.target.join ( '.' )}`;
   return [
-    `export function ${pageComponentName ( pageD )}<S>({state}: LensProps<S, ${domainName ( dataDD )}>){`,
+    `export function ${pageComponentName ( pageD )}<S>(){`,
+    `  return focusedPageWithExtraState<S, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}> ( s => '${target}' ) ( s => s.focusOn ( '${target}' ) ) (
+    ( fullState, state ) => {`,
     `  return (<${layout.name}  details='${layout.details}'>`,
     `   <${componentName ( dataDD )} state={state} />`,
     ...indentList ( indentList ( indentList ( makeButtonsFrom ( pageD ) ) ) ),
-    `   </${layout.name}>)`,
-    "}"
+    `   </${layout.name}>)})}`
   ]
 }
 
-export function createAllReactComponents ( pages: PageD[] ): string[] {
+export function createAllReactComponents ( params: TSParams, pages: PageD[] ): string[] {
   const dataComponents = sortedEntries ( dataDsIn ( pages, true ) ).flatMap ( ( [ name, dataD ] ) => dataD.display ? [] : createReactComponent ( dataD ) )
   const pageComponents = pages.flatMap ( createReactPageComponent )
   const imports = [
@@ -100,8 +111,12 @@ export function createAllReactComponents ( pages: PageD[] ): string[] {
     `import { ModalButton, ModalCancelButton, ModalCommitButton } from "./copied/modal";`,
     `import { RestButton } from "./copied/rest";`,
     `import { LabelAndInput } from "./copied/LabelAndInput";`,
-    `import { Table } from "./copied/table";` ,
-
+    `import { focusedPageWithExtraState } from "@focuson/pages";`,
+    `import { Table } from "./copied/table";`,
   ]
-  return [ ...imports, ...pageComponents, ...dataComponents ]
+  let pageDomain = noExtension ( params.pageDomainsFile );
+  let domain = noExtension ( params.domainsFile );
+  const pageDomainsImports = pages.filter ( p => p.pageType === 'MainPage' ).map ( p => `import {${pageDomainName ( p )}} from "./${pageDomain}";` )
+  const domainImports = sortedEntries ( dataDsIn ( pages ) ).map ( ( [ name, d ] ) => `import {${domainName ( d )}} from "./${domain}"` )
+  return [ ...imports, ...pageDomainsImports, ...domainImports, ...pageComponents, ...dataComponents ]
 }

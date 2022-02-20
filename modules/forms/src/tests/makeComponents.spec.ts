@@ -3,6 +3,7 @@ import { EAccountsSummaryDD, EAccountsSummaryTableDD } from "../example/eAccount
 import { createAllReactCalls, createAllReactComponents, createReactComponent, createReactPageComponent, listComponentsIn } from "../codegen/makeComponents";
 import { LabelAndInputCD, TableCD } from "../common/componentsD";
 import { createPlanPD, EAccountsSummaryPD } from "../example/eAccountsSummary.pageD";
+import { paramsForTest } from "./makeJavaResolvers.spec";
 
 
 describe ( " listComponentsIn", () => {
@@ -46,7 +47,7 @@ describe ( " listComponentsIn", () => {
 
   it ( "should createReactComponent", () => {
     expect ( createReactComponent ( EAccountsSummaryDD ) ).toEqual ( [
-      "function EAccountsSummaryDD<S>({state}: LensProps<S, EAccountsSummaryDDDomain>){",
+      "export function EAccountsSummaryDD<S>({state}: LensProps<S, EAccountsSummaryDDDomain>){",
       "  return(<>",
       "  <Table state={state.focusOn('eAccountsTable')} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} />",
       "  <LabelAndInput state={state.focusOn('totalMonthlyCost')} label='totalMonthlyCostCC' />",
@@ -60,8 +61,21 @@ describe ( " listComponentsIn", () => {
     ] )
   } )
   it ( "should createAllReactComponents ", () => {
-    expect ( createAllReactComponents ( [ EAccountsSummaryPD, createPlanPD, EAccountsSummaryPD, createPlanPD ] ) ).toEqual ( [
-      "function EAccountsSummaryPage<S>({state}: LensProps<S, EAccountsSummaryDDDomain>){",
+    expect ( createAllReactComponents ( paramsForTest,[ EAccountsSummaryPD, createPlanPD, EAccountsSummaryPD, createPlanPD ] ) ).toEqual ( [
+      "import { LensProps } from \"@focuson/state\";",
+      "import { Layout } from \"./copied/layout\";",
+      "import { ModalButton, ModalCancelButton, ModalCommitButton } from \"./copied/modal\";",
+      "import { RestButton } from \"./copied/rest\";",
+      "import { LabelAndInput } from \"./copied/LabelAndInput\";",
+      "import { focusedPageWithExtraState } from \"@focuson/pages\";",
+      "import { Table } from \"./copied/table\";",
+      "import {EAccountsSummaryPageDomain} from \"./pageDomains\";",
+      "import {EAccountsSummaryPageDomain} from \"./pageDomains\";",
+      "import {CreatePlanDDDomain} from \"./domains\"",
+      "import {EAccountsSummaryDDDomain} from \"./domains\"",
+      "import {EAccountSummaryDDDomain} from \"./domains\"",
+      "export function EAccountsSummaryPage<S>(){",
+      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'fromApi' ) ( s => s.focusOn ( 'fromApi' ) ) (\n    ( fullState, state ) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
       "   <EAccountsSummaryDD state={state} />",
       "   <ModalButton id='amendExistingPlan' state={state} mode='edit' mainData='fromApi' tempData='temp' rest='createPlanRestD' action='update'  />",
@@ -69,16 +83,10 @@ describe ( " listComponentsIn", () => {
       "   <RestButton id='deleteExistingPlan' state={state} />",
       "   <RestButton id='refresh' state={state} />",
       "   <ModalButton id='requestInfo' state={state} mode='view' mainData='TDB' tempData='TBD'   />",
-      "   </Layout>)",
-      "}",
-      "function CreatePlanPage<S>({state}: LensProps<S, CreatePlanDDDomain>){",
-      "  return (<Layout  details='[3]'>",
-      "   <CreatePlanDD state={state} />",
-      "   <ModalCancelButton id='cancel' state={state} />",
-      "   <ModalCommitButton id='commit' state={state} />",
-      "   </Layout>)",
-      "}",
-      "function EAccountsSummaryPage<S>({state}: LensProps<S, EAccountsSummaryDDDomain>){",
+      "   </Layout>)})}",
+      "// Not creating modal page for CreatePlan yet",
+      "export function EAccountsSummaryPage<S>(){",
+      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'fromApi' ) ( s => s.focusOn ( 'fromApi' ) ) (\n    ( fullState, state ) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
       "   <EAccountsSummaryDD state={state} />",
       "   <ModalButton id='amendExistingPlan' state={state} mode='edit' mainData='fromApi' tempData='temp' rest='createPlanRestD' action='update'  />",
@@ -86,23 +94,16 @@ describe ( " listComponentsIn", () => {
       "   <RestButton id='deleteExistingPlan' state={state} />",
       "   <RestButton id='refresh' state={state} />",
       "   <ModalButton id='requestInfo' state={state} mode='view' mainData='TDB' tempData='TBD'   />",
-      "   </Layout>)",
-      "}",
-      "function CreatePlanPage<S>({state}: LensProps<S, CreatePlanDDDomain>){",
-      "  return (<Layout  details='[3]'>",
-      "   <CreatePlanDD state={state} />",
-      "   <ModalCancelButton id='cancel' state={state} />",
-      "   <ModalCommitButton id='commit' state={state} />",
-      "   </Layout>)",
-      "}",
-      "function CreatePlanDD<S>({state}: LensProps<S, CreatePlanDDDomain>){",
+      "   </Layout>)})}",
+      "// Not creating modal page for CreatePlan yet",
+      "export function CreatePlanDD<S>({state}: LensProps<S, CreatePlanDDDomain>){",
       "  return(<>",
       "  <LabelAndInput state={state.focusOn('createPlanStart')} label='Create Start' />",
       "  <LabelAndInput state={state.focusOn('createPlanDate')} label='createPlanDateCC' ariaLabel='The Create Plan Date' />",
       "  <LabelAndInput state={state.focusOn('createPlanEnd')} label='createPlanEndCC' />",
       "</>)",
       "}",
-      "function EAccountsSummaryDD<S>({state}: LensProps<S, EAccountsSummaryDDDomain>){",
+      "export function EAccountsSummaryDD<S>({state}: LensProps<S, EAccountsSummaryDDDomain>){",
       "  return(<>",
       "  <Table state={state.focusOn('eAccountsTable')} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} />",
       "  <LabelAndInput state={state.focusOn('totalMonthlyCost')} label='totalMonthlyCostCC' />",
@@ -118,7 +119,8 @@ describe ( " listComponentsIn", () => {
 
   it ( "should createReactPageComponent", () => {
     expect ( createReactPageComponent ( EAccountsSummaryPD ) ).toEqual ( [
-      "function EAccountsSummaryPage<S>({state}: LensProps<S, EAccountsSummaryDDDomain>){",
+      "export function EAccountsSummaryPage<S>(){",
+      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'fromApi' ) ( s => s.focusOn ( 'fromApi' ) ) (\n    ( fullState, state ) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
       "   <EAccountsSummaryDD state={state} />",
       "   <ModalButton id='amendExistingPlan' state={state} mode='edit' mainData='fromApi' tempData='temp' rest='createPlanRestD' action='update'  />",
@@ -126,17 +128,10 @@ describe ( " listComponentsIn", () => {
       "   <RestButton id='deleteExistingPlan' state={state} />",
       "   <RestButton id='refresh' state={state} />",
       "   <ModalButton id='requestInfo' state={state} mode='view' mainData='TDB' tempData='TBD'   />",
-      "   </Layout>)",
-      "}"
-    ] )
+      "   </Layout>)})}"
+    ])
     expect ( createReactPageComponent ( createPlanPD ) ).toEqual ( [
-      "function CreatePlanPage<S>({state}: LensProps<S, CreatePlanDDDomain>){",
-      "  return (<Layout  details='[3]'>",
-      "   <CreatePlanDD state={state} />",
-      "   <ModalCancelButton id='cancel' state={state} />",
-      "   <ModalCommitButton id='commit' state={state} />",
-      "   </Layout>)",
-      "}"
+      "// Not creating modal page for CreatePlan yet"
     ] )
   } )
 } )

@@ -1,6 +1,6 @@
 import { safeArray, sortedEntries } from "@focuson/utils";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
-import { domainForPage, domainName, fetcherName, hasDomainForPage, selectedPage } from "./names";
+import { pageDomainName, domainName, fetcherName, hasDomainForPage, selectedPage } from "./names";
 import { CombinedParams, TSParams } from "./config";
 import { imports, noExtension } from "./codegen";
 
@@ -16,7 +16,7 @@ export const makeFetcherCode = ( params: CombinedParams ) => ( p: PageD ) => ( d
   const targetFromPath = def.targetFromPath;
   return [
     `export function ${fetcherName ( def )}<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection & ${pageDomain}.${hasDomainForPage ( p )}>(tagOps: TagOps<S,${params.commonFile}.${params.commonParams}>) {`,
-    `  return pageAndTagFetcher<S, ${pageDomain}.${domainForPage(p)}, ${domain}.${dataType}, SimpleMessage>(`,
+    `  return pageAndTagFetcher<S, ${pageDomain}.${pageDomainName(p)}, ${domain}.${dataType}, SimpleMessage>(`,
     `    ${common}.commonFetch<S,  ${domain}.${dataType}>(),`,
     `     '${safeArray ( p.path ).join ( '.' )}',`,
     `     '${targetFromPath}',`,

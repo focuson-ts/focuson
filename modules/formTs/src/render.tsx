@@ -5,8 +5,15 @@ import { Layout } from "./copied/layout";
 import { ModalButton, ModalCancelButton, ModalCommitButton } from "./copied/modal";
 import { RestButton } from "./copied/rest";
 import { LabelAndInput } from "./copied/LabelAndInput";
+import { focusedPageWithExtraState } from "@focuson/pages";
 import { Table } from "./copied/table";
-export function EAccountsSummaryPage<S>({state}: LensProps<S, EAccountsSummaryDDDomain>){
+import {EAccountsSummaryPageDomain} from "./pageDomains";
+import {CreatePlanDDDomain} from "./domains"
+import {EAccountsSummaryDDDomain} from "./domains"
+import {EAccountSummaryDDDomain} from "./domains"
+export function EAccountsSummaryPage<S>(){
+  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'fromApi' ) ( s => s.focusOn ( 'fromApi' ) ) (
+    ( fullState, state ) => {
   return (<Layout  details='[1][3,3][5]'>
    <EAccountsSummaryDD state={state} />
    <ModalButton id='amendExistingPlan' state={state} mode='edit' mainData='fromApi' tempData='temp' rest='createPlanRestD' action='update'  />
@@ -14,15 +21,8 @@ export function EAccountsSummaryPage<S>({state}: LensProps<S, EAccountsSummaryDD
    <RestButton id='deleteExistingPlan' state={state} />
    <RestButton id='refresh' state={state} />
    <ModalButton id='requestInfo' state={state} mode='view' mainData='TDB' tempData='TBD'   />
-   </Layout>)
-}
-export function CreatePlanPage<S>({state}: LensProps<S, CreatePlanDDDomain>){
-  return (<Layout  details='[3]'>
-   <CreatePlanDD state={state} />
-   <ModalCancelButton id='cancel' state={state} />
-   <ModalCommitButton id='commit' state={state} />
-   </Layout>)
-}
+   </Layout>)})}
+// Not creating modal page for CreatePlan yet
 export function CreatePlanDD<S>({state}: LensProps<S, CreatePlanDDDomain>){
   return(<>
   <LabelAndInput state={state.focusOn('createPlanStart')} label='Create Start' />

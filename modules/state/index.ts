@@ -1,6 +1,6 @@
 //Copyright (c)2020-2021 Philip Rice. <br />Permission is hereby granted, free of charge, to any person obtaining a copyof this software and associated documentation files (the Software), to dealin the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  <br />The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED AS
 
-import { Lens, Lenses, Optional,HasOptional, transformTwoValues, updateTwoValues } from "@focuson/lens";
+import { Lens, Lenses, Optional, HasOptional, transformTwoValues, updateTwoValues } from "@focuson/lens";
 
 
 export interface LensProps<Main, T> {
@@ -25,7 +25,7 @@ function getOr<Main, Child> ( optional: Optional<Main, Child>, main: Main, error
 
 }
 
-export class LensState<Main, T> implements HasOptional<Main,T>{
+export class LensState<Main, T> implements HasOptional<Main, T> {
   /** The full state. This should normally not be called by your code. */
   main: Main
 
@@ -61,13 +61,9 @@ export class LensState<Main, T> implements HasOptional<Main,T>{
   }
 
   /** The json that this context is focused on */
-  json ( errorMessageIfNotHere?: () => string ): T {
-    return getOr ( this.optional, this.main, () => {
-      console.error ( "state.main", this.main );
-      console.error ( "state.optional", this.optional.description, this.optional );
-      return errorMessageIfNotHere ()
-    } )
-  }
+  json = ( errorMessageIfNotHere?: () => string ): T =>
+    getOr ( this.optional, this.main, () =>
+      errorMessageIfNotHere ? errorMessageIfNotHere () : "Trying to get json and it is not present" );
 
   /** The json that this context is focused on */
   optJson (): T | undefined {
@@ -99,15 +95,15 @@ export class LensState<Main, T> implements HasOptional<Main,T>{
   useOtherAsWell<T2> ( lens: Optional<Main, T2> ) {
     let parent = this
     return new class extends WithTwoLens<Main, T, T2> {
-      setTwoValues ( t: T|undefined, t2: T2|undefined ): void {
+      setTwoValues ( t: T | undefined, t2: T2 | undefined ): void {
         parent.dangerouslySetMain ( updateTwoValues ( parent.optional, lens ) ( parent.main, t, t2 ) )
       }
 
-      transformTwoValues ( fn1: ( t1: T, t2: T2 ) => T|undefined, fn2: ( t1: T, t2: T2 ) => T2|undefined ): void {
+      transformTwoValues ( fn1: ( t1: T, t2: T2 ) => T | undefined, fn2: ( t1: T, t2: T2 ) => T2 | undefined ): void {
         parent.dangerouslySetMain ( transformTwoValues ( parent.optional, lens ) ( fn1, fn2 ) ( parent.main ) )
       }
 
-      transformFocused ( fn1: ( t1: T, t2: T2 ) => T|undefined ): WithTwoLensAndOneTransformFn<Main, T, T2> {
+      transformFocused ( fn1: ( t1: T, t2: T2 ) => T | undefined ): WithTwoLensAndOneTransformFn<Main, T, T2> {
         return new class extends WithTwoLensAndOneTransformFn<Main, T, T2> {
           andTransformOther ( fn2: ( t1: T, t2: T2 ) => T2 ): void {
             parent.dangerouslySetMain ( transformTwoValues ( parent.optional, lens ) ( fn1, fn2 ) ( parent.main ) )

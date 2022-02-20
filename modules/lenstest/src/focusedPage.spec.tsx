@@ -23,7 +23,7 @@ describe ( "displayMain / focusedPage", () => {
     expect ( comp.text () ).toEqual ( "*x*!x!Modal y" )
   } )
   it ( "should display loading if no full state", () => {
-    const state = lensState<PageSpecState> ( { ...rootState,modalData: 'y' }, () => {}, 'displayMain / focusedPage' ).focusOn ( 'someData' )
+    const state = lensState<PageSpecState> ( { ...rootState, modalData: 'y' }, () => {}, 'displayMain / focusedPage' ).focusOn ( 'someData' )
     const comp = shallow ( displayMain<PageSpecState, string, SimpleMessage[], ModalDetails> ( pageSpecStateconfig (), page, state ) )
     // expect ( comp.html () ).toEqual ( '' )
     expect ( comp.text () ).toEqual ( "someTitleLoading" )
@@ -44,7 +44,8 @@ describe ( "displayMain / loadingPage (for legacy support) - note that there is 
   } )
 } )
 describe ( "displayMain / focusedPageWithExtraState", () => {
-  const page: FocusedPage<PageSpecState, string> = focusedPageWithExtraState<PageSpecState, string, string> ( s => s ? `*${s}*` : "someTitle" ) ( s => s ) ( ( state, string ) => <div>!{string}!</div> )
+  const page: FocusedPage<PageSpecState, string> = focusedPageWithExtraState<PageSpecState, string, string> ( s => s ? `*${s}*` : "someTitle" ) ( s => s ) (
+    ( fullState, state, string ) => <div>!{string}!</div> )
   it ( "should display just the main page, if no modal page", () => {
     const state = lensState<PageSpecState> ( { ...rootState, someData: 'x', modalData: 'y' }, () => {}, 'displayMain / focusedPage' ).focusOn ( 'someData' )
     const comp = shallow ( displayMain<PageSpecState, string, SimpleMessage[], ModalDetails> ( pageSpecStateconfig (), page, state ) )
@@ -58,7 +59,7 @@ describe ( "displayMain / focusedPageWithExtraState", () => {
 } )
 describe ( "displayMain / loadingPageWithExtraState (for legacy support) - note that there is no modal page support", () => {
   const page: ( s: LensState<PageSpecState, string> ) => JSX.Element =
-          loadingPageWithExtraState<PageSpecState, string, string> ( s => s ? s : "someTitle" ) ( s => s ) ( ( state, string ) => <div>{string}</div> )
+          loadingPageWithExtraState<PageSpecState, string, string> ( s => s ? s : "someTitle" ) ( s => s ) ( ( fullState, state, string ) => <div>{string}</div> )
 
   it ( "should display just the main page, if no modal page", () => {
     const state = lensState<PageSpecState> ( { ...rootState, someData: 'x', modalData: 'y' }, () => {}, 'displayMain / focusedPage' ).focusOn ( 'someData' )

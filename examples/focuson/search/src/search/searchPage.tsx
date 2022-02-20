@@ -37,9 +37,11 @@ function Input<S> ({ id, inputStyle, state, readonly, ariaLabel } : InputProps<S
                 defaultValue={state.optJson()}/>;
 }
 export function SearchPage<S extends any> () {
+  //I think this was the wrong selection of type of page... Because the page shouldn't show 'loading' if the search results aren't set
+  //Need a second example
   return focusedPageWithExtraState<S, FullSearchDomain, string[]> ( s => 'Search' ) ( s => s.focusOn ( 'queryResults' ) ) (
-    ( state, { query }, queryResults ) =>
-      (<ul><Input id='query' state={state.focusOn('query')}/>
+    ( fullState, state, { query }, queryResults ) =>
+      (<ul><Input id='query' state={fullState.focusOn('query')}/>
         <br/><pre>{JSON.stringify(queryResults,null,2)}</pre><br /><br /><br /><pre>{JSON.stringify(state.main,null,2)} </pre></ul>) )
       // (<ul><input type='text' defaultValue={query}/><br/>{safeArray ( queryResults ).map ( ( r, i ) => <li key={i}>{r}</li> )} </ul>) )
 }

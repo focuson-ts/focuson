@@ -14,7 +14,7 @@ export const eAccountsSummaryRestD: RestD = {
   actions: [ 'get' ],
 }
 export const createPlanRestD: RestD = {
-  params: { ...commonParams, createPlanId: { lens: [ 'TBD' ], testValue: 'tbd' } },
+  params: { ...commonParams, createPlanId: { commonLens: [ 'createPlanId' ], testValue: 'tbd' } },
   dataDD: CreatePlanDD,
   url: '/api/createPlan/{createPlanId}?{query}',
   actions: [ 'get', 'create', 'update', 'delete',  'list' ],
