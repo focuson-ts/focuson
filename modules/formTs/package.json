@@ -5,6 +5,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@focuson/pages":  "^0.4.7",
     "@focuson/fetcher":  "^0.4.7",
     "@focuson/template":  "^0.4.7",
     "@pact-foundation/pact-node": "^10.17.1",

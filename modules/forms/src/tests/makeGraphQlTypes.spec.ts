@@ -10,27 +10,27 @@ describe ( "makeGraphQlSchema", () => {
     it ( "should make type Query", () => {
       expect ( makeQueryOrMutateBlock ( rs, 'query' ) ).toEqual ( [
         "type Query{",
-        "  getEAccountsSummaryDD(id: String!):EAccountsSummaryDD!",
-        "  getCreatePlanDD(id: String!):CreatePlanDD!",
-        "  listCreatePlanDD:[CreatePlanDD!]!",
+        "  getEAccountsSummaryDD(accountId: String!, customerId: String!):EAccountsSummaryDD!",
+        "  getCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!",
+        "  listCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):[CreatePlanDD!]!",
         "}"
-      ] )
+      ])
     } )
     it ( "should make type Mutation", () => {
       expect ( makeQueryOrMutateBlock ( rs, 'mutation' ) ).toEqual ( [
         "type Mutation{",
-        "  createCreatePlanDD(obj :CreatePlanDDInp):CreatePlanDD!",
-        "  updateCreatePlanDD(id: String!,obj :CreatePlanDDIdAndInp):CreatePlanDD!",
-        "  deleteCreatePlanDD(id: String!):String",
+        "  createCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!",
+        "  updateCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!",
+        "  deleteCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):String",
         "}"
-      ] )
+      ])
     } )
   } )
 
   it ( "should be able to  makeSchemaBlock", () => {
     expect ( makeSchemaBlock ( 'input', 'xx' ) ( EAccountsSummaryDD ) ).toEqual ( [
       "input EAccountsSummaryDDxx{",
-      "  eAccountsTable: EAccountSummaryDDxx!",
+      "  eAccountsTable: [EAccountSummaryDDxx!]!",
       "  totalMonthlyCost: String!",
       "  oneAccountBalance: String!",
       "  currentAccountBalance: String!",
@@ -59,14 +59,14 @@ describe ( "makeGraphQlSchema", () => {
   it ( "should make a schema from RestDs", () => {
     expect ( makeGraphQlSchema ( rs ) ).toEqual ( [
       "type Query{",
-      "  getEAccountsSummaryDD(id: String!):EAccountsSummaryDD!",
-      "  getCreatePlanDD(id: String!):CreatePlanDD!",
-      "  listCreatePlanDD:[CreatePlanDD!]!",
+      "  getEAccountsSummaryDD(accountId: String!, customerId: String!):EAccountsSummaryDD!",
+      "  getCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!",
+      "  listCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):[CreatePlanDD!]!",
       "}",
       "type Mutation{",
-      "  createCreatePlanDD(obj :CreatePlanDDInp):CreatePlanDD!",
-      "  updateCreatePlanDD(id: String!,obj :CreatePlanDDIdAndInp):CreatePlanDD!",
-      "  deleteCreatePlanDD(id: String!):String",
+      "  createCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!",
+      "  updateCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!",
+      "  deleteCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):String",
       "}",
       "type CreatePlanDD{",
       "  createPlanStart: String!",

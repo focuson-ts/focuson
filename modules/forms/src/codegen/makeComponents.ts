@@ -72,7 +72,7 @@ export function createAllReactCalls ( d: AllComponentData[] ): string[] {
 export function createReactComponent ( dataD: DataD ): string[] {
   const contents = indentList ( indentList ( createAllReactCalls ( listComponentsIn ( dataD ) ) ) )
   return [
-    `function ${componentName ( dataD )}<S>({state}: LensProps<S, ${domainName ( dataD )}>){`,
+    `export function ${componentName ( dataD )}<S>({state}: LensProps<S, ${domainName ( dataD )}>){`,
     "  return(<>",
     ...contents,
     "</>)",
@@ -82,7 +82,7 @@ export function createReactComponent ( dataD: DataD ): string[] {
 export function createReactPageComponent ( pageD: PageD ): string[] {
   const { dataDD, layout, target } = pageD.display
   return [
-    `function ${pageComponentName ( pageD )}<S>({state}: LensProps<S, ${domainName ( dataDD )}>){`,
+    `export function ${pageComponentName ( pageD )}<S>({state}: LensProps<S, ${domainName ( dataDD )}>){`,
     `  return (<${layout.name}  details='${layout.details}'>`,
     `   <${componentName ( dataDD )} state={state} />`,
     ...indentList ( indentList ( indentList ( makeButtonsFrom ( pageD ) ) ) ),
@@ -94,5 +94,14 @@ export function createReactPageComponent ( pageD: PageD ): string[] {
 export function createAllReactComponents ( pages: PageD[] ): string[] {
   const dataComponents = sortedEntries ( dataDsIn ( pages, true ) ).flatMap ( ( [ name, dataD ] ) => dataD.display ? [] : createReactComponent ( dataD ) )
   const pageComponents = pages.flatMap ( createReactPageComponent )
-  return [ ...pageComponents, ...dataComponents ]
+  const imports = [
+    `import { LensProps } from "@focuson/state";`,
+    `import { Layout } from "./copied/layout";`,
+    `import { ModalButton, ModalCancelButton, ModalCommitButton } from "./copied/modal";`,
+    `import { RestButton } from "./copied/rest";`,
+    `import { LabelAndInput } from "./copied/LabelAndInput";`,
+    `import { Table } from "./copied/table";` ,
+
+  ]
+  return [ ...imports, ...pageComponents, ...dataComponents ]
 }

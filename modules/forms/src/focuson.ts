@@ -52,6 +52,7 @@ let javaResourcesRoot = javaAppRoot + "/src/main/resources"
 let tsRoot = "../formTs"
 let tsScripts = tsRoot + "/scripts"
 let tsCode = tsRoot + "/src"
+let tsPublic = tsRoot + "/public"
 
 fs.mkdirSync ( `${outputRoot}`, { recursive: true } )
 fs.mkdirSync ( `${javaAppRoot}`, { recursive: true } )
@@ -60,16 +61,14 @@ fs.mkdirSync ( `${javaResourcesRoot}`, { recursive: true } )
 fs.mkdirSync ( `${javaScriptRoot}`, { recursive: true } )
 fs.mkdirSync ( `${tsCode}`, { recursive: true } )
 fs.mkdirSync ( `${tsScripts}`, { recursive: true } )
+fs.mkdirSync ( `${tsPublic}`, { recursive: true } )
 
 let pages = [ EAccountsSummaryPD, createPlanPD ];
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
 let rests = unique ( pages.flatMap ( x => sortedEntries ( x.rest ) ).map ( x => x[ 1 ].rest ), r => r.dataDD.name )
 
 
-writeToFile ( `${tsCode}/${params.renderFile}.tsx`,
-  [ 'import { LensProps } from "@focuson/state";', '',
-    ...createAllReactComponents ( pages ),
-    ...makeAllDomainsFor ( pages ) ] )
+writeToFile ( `${tsCode}/${params.renderFile}.tsx`, [ ...imports ( params.domainsFile, params.pageDomainsFile ), ...createAllReactComponents ( pages ) ] )
 writeToFile ( `${tsCode}/${params.pageDomainsFile}.ts`, makePageDomainsFor ( params, pages ) )
 writeToFile ( `${tsCode}/${params.domainsFile}.ts`, makeAllDomainsFor ( pages ) )
 writeToFile ( `${tsCode}/${params.commonFile}.ts`, makeCommon ( params, pages, rests ) )
@@ -85,6 +84,8 @@ copyFiles ( tsScripts, 'templates/scripts' ) ( 'makePact.sh', 'makeJava.sh', 'ma
 copyFiles ( tsRoot, 'templates/raw' ) ( '.gitignore' )
 templateFile ( `${tsScripts}/makePactsAndCopyFirstTime.sh`, 'templates/scripts/makePactsAndCopyFirstTime.sh', { ...params, javaRoot: javaAppRoot } )
 
+copyFiles ( tsPublic, 'templates/raw/ts/public' ) ( 'favicon.ico', 'index.css', 'index.html', 'logo192.png', 'logo512.png', 'manifest.json', 'robots.txt' )
+
 copyFiles ( javaScriptRoot, 'templates/scripts' ) ( 'makeJava.sh', 'makeJvmPact.sh', 'template.java' )
 
 // copyFiles ( javaAppRoot, 'templates/raw/java' ) ( '/build.gradle', 'application.properties' )
@@ -93,6 +94,7 @@ templateFile ( `${javaAppRoot}/pom.xml`, 'templates/mvnTemplate.pom', params )
 copyFiles ( javaAppRoot, 'templates/raw/java' ) ( 'application.properties' )
 templateFile ( `${javaCodeRoot}/SchemaController.java`, 'templates/raw/java/SchemaController.java', params )
 copyFiles ( javaAppRoot, 'templates/raw' ) ( '.gitignore' )
+
 
 writeToFile ( `${javaResourcesRoot}/${params.schema}`, makeGraphQlSchema ( rests ) )
 writeToFile ( `${javaCodeRoot}/${params.fetcherInterface}.java`, makeJavaResolversInterface ( params, rests ) )
