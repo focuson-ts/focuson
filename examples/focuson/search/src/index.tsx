@@ -1,14 +1,15 @@
-import { identityOptics } from "@focuson/lens";
-import { allModelPageDetails, HasPageSelection, HasSelectedModalPage, HasSimpleMessages, ModalPagesDetails, MultiPageDetails, pageSelectionlens, SelectedPage, selectionModalPageL, simpleMessagesPageConfig } from "@focuson/pages";
-import { getElement, LensState } from "@focuson/state";
+import { identityOptics, Lens } from "@focuson/lens";
+import { allModelPageDetails, HasPageSelection, HasSelectedModalPage, HasSimpleMessages, ModalPagesDetails, MultiPageDetails, PageSelection, pageSelectionlens, SelectedPage, selectionModalPageL, SelectPage, simpleMessagesPageConfig } from "@focuson/pages";
+import { getElement, LensProps, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
 import { SearchPage, SearchQueryModalPage } from "./search/searchPage";
 import React from "react";
 import { FocusOnConfig, HasFocusOnDebug, setJsonForFocusOn } from "@focuson/focuson";
 import { HasPostCommand, postCommandsL, Posters } from "@focuson/poster";
-import { fetchWithDelay, fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
+import { fetchWithDelay, fetchWithPrefix, loggingFetchFn, sortedEntries } from "@focuson/utils";
 import { HasSearch } from "./search/fullSearchDomain";
 import { fetchers } from "./fetchers";
+
 
 
 const modals: ModalPagesDetails<FullState> = {
@@ -17,7 +18,6 @@ const modals: ModalPagesDetails<FullState> = {
 type Modals = typeof modals
 
 export interface FullState extends HasSearch, HasSimpleMessages, HasSelectedModalPage, HasPageSelection, HasFocusOnDebug, HasPostCommand<FullState, any> {}
-
 
 
 function MyLoading () {
@@ -62,7 +62,7 @@ const config: FocusOnConfig<FullState> = {
   posters,
 
   /** The collection of all registered fetchers that will get data from the back end */
-  fetchers: fetchers()
+  fetchers: fetchers ()
 }
 
 
@@ -72,4 +72,4 @@ let setJson = setJsonForFocusOn ( config, ( s: LensState<FullState, FullState> )
   ReactDOM.render ( <SelectedPage state={s} pages={pages} selectedPageL={pageSelectionlens<FullState> ()}/>, rootElement ) )
 
 console.log ( "setting json" )
-setJson ( { messages:[], pageSelection: { pageName: "search" }, search: { query: "phil", queryResults: [] }, debug: { selectedPageDebug: false, fetcherDebug: true }, postCommands: [] } )
+setJson ( { messages: [], pageSelection: { pageName: "search" }, search: { query: "phil", queryResults: [] }, debug: { selectedPageDebug: false, fetcherDebug: true }, postCommands: [] } )

@@ -34,10 +34,10 @@ describe ( "makeSpringEndpoint", () => {
       "",
       "  @RequestMapping(value = \"/api/accountsSummary/sample\", produces = \"application/json\")",
       "    public static String sampleEAccountsSummaryDD() throws Exception {",
-      "      return new ObjectMapper().writeValueAsString( sample.EAccountsSummaryDDSample0);",
+      "      return new ObjectMapper().writeValueAsString( sample.sampleEAccountsSummaryDD0);",
       "    }",
       "  }"
-    ] )
+    ])
     expect ( makeSpringEndpointsFor ( paramsForTest, createPlanRestD ) ).toEqual ( [
       "package packName;",
       "",
@@ -67,7 +67,7 @@ describe ( "makeSpringEndpoint", () => {
       "",
       "  @RequestMapping(value = \"/api/createPlan/{createPlanId}/sample\", produces = \"application/json\")",
       "    public static String sampleCreatePlanDD() throws Exception {",
-      "      return new ObjectMapper().writeValueAsString( sample.CreatePlanDDSample0);",
+      "      return new ObjectMapper().writeValueAsString( sample.sampleCreatePlanDD0);",
       "    }",
       "// Not yet doing action create",
       "// Not yet doing action update",

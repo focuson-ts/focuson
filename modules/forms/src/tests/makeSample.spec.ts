@@ -75,7 +75,7 @@ describe ( 'makeSample', () => {
 describe ( "makeJavaVariable", () => {
   it ( "should create code that parses the sample from the ts sample", () => {
     expect ( makeJavaVariable ( EAccountsSummaryDD, 0 ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "public static Map EAccountsSummaryDDSample0 =  parse.parseMap(",
+      "public static Map sampleEAccountsSummaryDD0 =  parse.parseMap(",
       "       '{'+",
       "       '  \\'eAccountsTable\\': ['+",
       "       '    {'+",
@@ -104,12 +104,12 @@ describe ( "makeJavaVariable", () => {
 describe ( "makeSampleVariable", () => {
   it ( "should attach a sample to a variable", () => {
     expect ( makeSampleVariable ( paramsForTest, CreatePlanDD, 0 ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "export const CreatePlanDDSample0: domains.CreatePlanDDDomain = ",
+      "export const sampleCreatePlanDD0: domains.CreatePlanDDDomain = ",
       "{",
       "  'createPlanStart': '2022-01-01',",
       "  'createPlanDate': '2022-03-01',",
       "  'createPlanEnd': '2022-10-01'",
       "}"
-    ] )
+    ])
   } )
 } )

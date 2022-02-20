@@ -1,12 +1,12 @@
-import { identityOptics } from "@focuson/lens";
-import { allModelPageDetails, ModalPagesDetails, MultiPageDetails, pageSelectionlens, SelectedPage, selectionModalPageL, simpleMessagesPageConfig } from "@focuson/pages";
+import { identityOptics, Lens } from "@focuson/lens";
+import { allModelPageDetails, ModalPagesDetails, MultiPageDetails, pageSelectionlens, SelectedPage, PageSelection, selectionModalPageL, simpleMessagesPageConfig, SelectPage } from "@focuson/pages";
 import { FocusOnConfig, setJsonForFocusOn } from "@focuson/focuson";
 import { postCommandsL, Posters } from "@focuson/poster";
-import { getElement, LensState, setJsonForFlux } from "@focuson/state";
+import { getElement, LensState, setJsonForFlux, LensProps } from "@focuson/state";
 import ReactDOM from "react-dom";
 import { FState } from "./common";
 import { EAccountsSummaryDD, EAccountsSummaryPage } from "./render";
-import { fetchWithDelay, fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
+import { fetchWithDelay, fetchWithPrefix, loggingFetchFn, sortedEntries } from "@focuson/utils";
 import { fetchers } from "./fetchers";
 import { pages, modals } from "./pages";
 
@@ -60,9 +60,18 @@ const config: FocusOnConfig<FState> = {
 let rootElement = getElement ( "root" );
 
 console.log ( "set json" )
-let setJson = setJsonForFocusOn ( config, ( s: LensState<FState, FState> ): void =>
-  ReactDOM.render ( <SelectedPage state={s} pages={pages} selectedPageL={pageSelectionlens<FState> ()}/>, rootElement ) )
 
-setJson (  {...emptyState,pageSelection: { pageName: 'ETransfer', firstTime: true },} )
+
+let setJson = setJsonForFocusOn ( config, ( s: LensState<FState, FState> ): void =>
+  ReactDOM.render ( <div>
+    <ul>
+      {sortedEntries ( pages ).map ( ( [ name, pd ] ) =>
+        <li key={name}><SelectPage state={s} pageName={name} selectedPageLens={pageSelectionlens<FState> ()}/></li> )}
+    </ul>
+    <SelectedPage state={s} pages={pages} selectedPageL={pageSelectionlens<FState> ()}/>
+    <pre>{JSON.stringify ( s.main, null, 2 )}</pre>
+  </div>, rootElement ) )
+
+setJson ( { ...emptyState, pageSelection: { pageName: 'ETransfer', firstTime: true }, } )
 
 

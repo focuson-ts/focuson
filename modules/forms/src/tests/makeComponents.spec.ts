@@ -75,7 +75,7 @@ describe ( " listComponentsIn", () => {
       "import {EAccountsSummaryDDDomain} from \"./domains\"",
       "import {EAccountSummaryDDDomain} from \"./domains\"",
       "export function EAccountsSummaryPage<S>(){",
-      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'fromApi' ) ( s => s.focusOn ( 'fromApi' ) ) (\n    ( fullState, state ) => {",
+      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'EAccountsSummary' ) ( s => s.focusOn ( 'fromApi' ) ) (\n    ( fullState, state ) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
       "   <EAccountsSummaryDD state={state} />",
       "   <ModalButton id='amendExistingPlan' state={state} mode='edit' mainData='fromApi' tempData='temp' rest='createPlanRestD' action='update'  />",
@@ -86,7 +86,7 @@ describe ( " listComponentsIn", () => {
       "   </Layout>)})}",
       "// Not creating modal page for CreatePlan yet",
       "export function EAccountsSummaryPage<S>(){",
-      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'fromApi' ) ( s => s.focusOn ( 'fromApi' ) ) (\n    ( fullState, state ) => {",
+      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'EAccountsSummary' ) ( s => s.focusOn ( 'fromApi' ) ) (\n    ( fullState, state ) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
       "   <EAccountsSummaryDD state={state} />",
       "   <ModalButton id='amendExistingPlan' state={state} mode='edit' mainData='fromApi' tempData='temp' rest='createPlanRestD' action='update'  />",
@@ -114,13 +114,13 @@ describe ( " listComponentsIn", () => {
       "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanEnd')} label='createPlanEndCC' />",
       "</>)",
       "}"
-    ] )
+    ])
   } )
 
   it ( "should createReactPageComponent", () => {
     expect ( createReactPageComponent ( EAccountsSummaryPD ) ).toEqual ( [
       "export function EAccountsSummaryPage<S>(){",
-      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'fromApi' ) ( s => s.focusOn ( 'fromApi' ) ) (\n    ( fullState, state ) => {",
+      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'EAccountsSummary' ) ( s => s.focusOn ( 'fromApi' ) ) (\n    ( fullState, state ) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
       "   <EAccountsSummaryDD state={state} />",
       "   <ModalButton id='amendExistingPlan' state={state} mode='edit' mainData='fromApi' tempData='temp' rest='createPlanRestD' action='update'  />",
