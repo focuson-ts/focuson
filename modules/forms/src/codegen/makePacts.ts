@@ -6,7 +6,6 @@ import { sampleName } from "./names";
 import { makeCommonParamsValueForTest, RestActionDetail, RestD } from "../common/restD";
 import { TSParams } from "./config";
 import { imports } from "./codegen";
-import { makeStateWithSelectedPage } from "./makeCommon";
 
 
 interface PactProps extends NameAnd<string> {
@@ -27,15 +26,37 @@ interface PactProps extends NameAnd<string> {
   commonParamsValue: string,
   commonParamsTagsValue: string,
 }
-export function makeFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPageProperties , rad: RestActionDetail): string[] {
-  if(rad.name === 'get') return makeGetFetcherPact(params, p, r, rad)
-  return [`//Cannot make fetcher pacts for ${p.name} / ${rad.name}`]
+export function makeFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPageProperties, rad: RestActionDetail ): string[] {
+  const fetcherType = r.fetcher
+  if ( fetcherType == 'get' && rad.name === 'get' ) return makeGetFetcherPact ( params, p, r, rad )
+  if ( fetcherType == 'list' && rad.name === 'list' ) return makeListFetcherPact ( params, p, r, rad )
+  return []
 }
-export function makeGetFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPageProperties , rad: RestActionDetail): string[] {
 
-  const d = r.rest
-  let body = params.samplesFile + "." + sampleName ( d.dataDD ) + '0';
+export function makeGetFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPageProperties, rad: RestActionDetail ): string[] {
+  const props = makePropsForFetcherPact ( p, r.rest, params );
+  const str: string = fs.readFileSync ( 'templates/onePact.ts' ).toString ()
+  return ['//GetFetcher pact test',...applyToTemplate ( str, props )]
+}
+
+//currently no difference.. .but will be once we do the fetchers differently... its about the id of the item
+export function makeListFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPageProperties, rad: RestActionDetail ): string[] {
+  const props = makePropsForFetcherPact ( p, r.rest, params );
+  const str: string = fs.readFileSync ( 'templates/onePact.ts' ).toString ()
+  return ['//ListFetcher pact test',...applyToTemplate ( str, props )]
+}
+
+export function makeAllPacts ( params: TSParams, ps: PageD[] ): string[] {
+  return [
+    ...imports ( params.samplesFile ),
+    `import {emptyState, ${params.stateName} } from "./${params.commonFile}";`,
+    `import * as ${params.fetchersFile} from "./${params.fetchersFile}";`,
+    ...allRestAndActions ( ps ).flatMap ( ( [ pd, rd, rad ] ) => makeFetcherPact ( params, pd, rd, rad ) )
+  ]
+}
+function makePropsForFetcherPact ( p: PageD, d: RestD, params: TSParams ) {
   let paramsValueForTest = makeCommonParamsValueForTest ( d );
+  let body = params.samplesFile + "." + sampleName ( d.dataDD ) + '0';
   const props: PactProps = {
     body,
     consumer: d.dataDD.name,
@@ -54,15 +75,5 @@ export function makeGetFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPa
     commonParamsValue: JSON.stringify ( paramsValueForTest ),
     commonParamsTagsValue: JSON.stringify ( sortedEntries ( paramsValueForTest ).map ( ( [ name, v ] ) => v ) )
   }
-  const str: string = fs.readFileSync ( 'templates/onePact.ts' ).toString ()
-  return applyToTemplate ( str, props )
-}
-
-export function makeAllPacts ( params: TSParams, ps: PageD[] ): string[] {
-  return [
-    ...imports ( params.samplesFile ),
-    `import {emptyState, ${params.stateName} } from "./${params.commonFile}";`,
-    `import * as ${params.fetchersFile} from "./${params.fetchersFile}";`,
-    ...allRestAndActions ( ps ).flatMap ( ( [ pd, rd, rad ] ) => rd.fetcher ? makeFetcherPact ( params, pd, rd , rad) : [] )
-  ]
+  return props;
 }

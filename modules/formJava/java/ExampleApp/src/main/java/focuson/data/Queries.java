@@ -24,21 +24,9 @@ public class Queries{
        "    averageAnnualDrawings"+
        "  }"
  +"}";}
- public static  String createOccupationAndIncome(String customerId){ 
+ public static  String getOccupationAndIncome(String customerId){ 
     return
- "{createOccupationAndIncome(" + "customerId:" + "\"" + customerId + "\"" + "){"+
-       "    typeOfProfession"+
-       "    occupation"+
-       "    customersDescription"+
-       "    businessType"+
-       "    businessName"+
-       "    dateStarted"+
-       "    averageAnnualDrawings"+
-       "  }"
- +"}";}
- public static  String listOccupationAndIncome(String customerId){ 
-    return
- "{listOccupationAndIncome(" + "customerId:" + "\"" + customerId + "\"" + "){"+
+ "{getOccupationAndIncome(" + "customerId:" + "\"" + customerId + "\"" + "){"+
        "    typeOfProfession"+
        "    occupation"+
        "    customersDescription"+

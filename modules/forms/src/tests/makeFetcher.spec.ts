@@ -5,6 +5,7 @@ import { paramsForTest } from "./makeJavaResolvers.spec";
 describe ( "makeAllFetchers", () => {
     it ( "should make a fetcher", () => {
       expect ( makeAllFetchers ( paramsForTest, [ EAccountsSummaryPD, createPlanPD ] ) ).toEqual ( [
+        "//fetcher type get",
         "export function EAccountsSummaryDDFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection & pageDomains.HasEAccountsSummaryPageDomain>(tagOps: TagOps<S,common.commonIds>) {",
         "  return pageAndTagFetcher<S, pageDomains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDDDomain, SimpleMessage>(",
         "    common.commonFetch<S,  domains.EAccountsSummaryDDDomain>(),",

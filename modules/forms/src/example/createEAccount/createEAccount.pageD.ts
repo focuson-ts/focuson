@@ -1,27 +1,28 @@
 import { PageD } from "../../common/pageD";
-import { ETransferDataD } from "./eTransfers.dataD";
-import { eTransferRestD } from "./eTransfers.restD";
+
+import { CreateEAccountDataD } from "./createEAccount.dataD";
+import { createEAccountRestD } from "./createEAccount.restD";
 
 
 /** This is the 'bringing it all together */
-export const ETransferPageD: PageD = {
-  name: 'ETransfer',
-  pageType: 'MainPage',  // this really feels like a modal button
+export const CreateEAccountPageD: PageD = {
+  name: 'CreateEAccount',
+  pageType: 'MainPage',
 
   /** This page can only view data */
   modes: [ 'create' ],
   /** How we display the page.*/
-  display: { layout: { name: 'Layout', details: '[3][1,1,1][1,1][1][3]' }, target: [ 'fromApi' ], dataDD: ETransferDataD },
+  display: { layout: { name: 'Layout', details: '[1][1][1][1]]' }, target: [ 'editing' ], dataDD: CreateEAccountDataD },
   /** When the page is selected for the first time this is the initial state */
-  initialValue: {},
+  initialValue: 'empty',
   /** This defines the domain data structures in react*/
   domain: {
-    fromApi: { dataDD: ETransferDataD }
+    editing: { dataDD: CreateEAccountDataD }
   },
 
   /** Binds the rest to 'where it takes place'. So we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
   rest: {
-    eTransfer: { rest: eTransferRestD, targetFromPath: 'fromApi', fetcher: undefined }
+    eTransfer: { rest: createEAccountRestD, targetFromPath: 'editing', fetcher: undefined }
   },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {

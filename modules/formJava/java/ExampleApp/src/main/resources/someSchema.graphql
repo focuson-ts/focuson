@@ -1,5 +1,5 @@
 type Query{
-  listOccupationAndIncome(customerId: String!):[OccupationAndIncome!]!
+  getOccupationAndIncome(customerId: String!):OccupationAndIncome!
   getCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!
   listCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):[CreatePlanDD!]!
   getEAccountsSummaryDD(accountId: String!, customerId: String!):EAccountsSummaryDD!

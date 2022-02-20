@@ -9,5 +9,5 @@ export const oneOccupationAndIncomeDetails: RestD = {
   params: { ...commonParams },
   dataDD: OccupationAndIncomeDetailsDataD,
   url: '/api/oneOccupationAndIncome?{query}',
-  actions: [ 'create', 'update', 'create', 'list' ]
+  actions: [ 'create', 'update','get' ]
 }

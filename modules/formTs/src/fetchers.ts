@@ -4,6 +4,7 @@ import * as common from './common';
 import { FetcherTree, HasTagHolder, pageAndTagFetcher } from "@focuson/fetcher";
 import { TagOps } from "@focuson/template";
 import { HasPageSelection, HasSimpleMessages, SimpleMessage } from "@focuson/pages";
+//fetcher type list
 export function OccupationAndIncomeFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection & pageDomains.HasOccupationAndIncomeDetailsPageDomain>(tagOps: TagOps<S,common.CommonIds>) {
   return pageAndTagFetcher<S, pageDomains.OccupationAndIncomeDetailsPageDomain, domains.OccupationAndIncomeDomain, SimpleMessage>(
     common.commonFetch<S,  domains.OccupationAndIncomeDomain>(),
@@ -13,6 +14,7 @@ export function OccupationAndIncomeFetcher<S extends  HasSimpleMessages & HasTag
      tagOps.tags('customerId'),
      tagOps.getReqFor('/api/oneOccupationAndIncome?{query}',undefined,'customerId'))
 }
+//fetcher type get
 export function EAccountsSummaryDDFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection & pageDomains.HasEAccountsSummaryPageDomain>(tagOps: TagOps<S,common.CommonIds>) {
   return pageAndTagFetcher<S, pageDomains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDDDomain, SimpleMessage>(
     common.commonFetch<S,  domains.EAccountsSummaryDDDomain>(),

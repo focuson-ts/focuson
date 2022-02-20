@@ -5,7 +5,7 @@ import graphql.schema.DataFetcher;
 public interface FFetcher {
    public DataFetcher createOccupationAndIncome();
    public DataFetcher updateOccupationAndIncome();
-   public DataFetcher listOccupationAndIncome();
+   public DataFetcher getOccupationAndIncome();
    public DataFetcher getCreatePlanDD();
    public DataFetcher createCreatePlanDD();
    public DataFetcher updateCreatePlanDD();

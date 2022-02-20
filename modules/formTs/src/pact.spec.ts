@@ -4,9 +4,7 @@ import { pactWith } from "jest-pact";
 import * as samples from './samples';
 import {emptyState, FState } from "./common";
 import * as fetchers from "./fetchers";
-//Cannot make fetcher pacts for OccupationAndIncomeDetails / create
-//Cannot make fetcher pacts for OccupationAndIncomeDetails / update
-//Cannot make fetcher pacts for OccupationAndIncomeDetails / list
+//GettFetcher pact test
 pactWith ( { consumer: 'EAccountsSummaryDD', provider: 'EAccountsSummaryDDProvider', cors: true }, provider => {
   describe ( 'EAccountsSummary', () => {
     it ( 'should have a get fetcher for EAccountsSummaryDD', async () => {

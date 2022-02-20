@@ -9,10 +9,12 @@ type PageMode = 'view' | 'create' | 'edit'
 export interface DomainDefnInPage {
   [ name: string ]: { dataDD: DataD }
 }
+type FetcherType = 'get' | 'list'
+
 export interface RestDefnInPageProperties {
   rest: RestD,
   targetFromPath: string,
-  fetcher?: boolean
+  fetcher?: FetcherType
 }
 export interface RestDefnInPage {
   [ name: string ]: RestDefnInPageProperties
@@ -61,7 +63,7 @@ export interface PageD {
   pageType: PageType,
   modes: PageMode[],
   display: { layout: LayoutD, target: string[], dataDD: DataD },
-  initialValue: any,
+  initialValue: 'empty' | any,
   domain: DomainDefnInPage,
   rest: RestDefnInPage,
   buttons: ButtonDefnInPage
@@ -82,7 +84,7 @@ export function allRestAndActions ( pds: PageD[] ): [ PageD, RestDefnInPagePrope
   } ), ( [ p, r, rad ] ) => p.name + "," + r.rest.dataDD.name + "," + rad.name )
 }
 
-export function allMainPages(ps: PageD[]): PageD[]{return ps.filter(p => p.pageType === 'MainPage')}
+export function allMainPages ( ps: PageD[] ): PageD[] {return ps.filter ( p => p.pageType === 'MainPage' )}
 
 // export function allPageDataAndResolvers ( rs: RestD[] ) {
 //   rs.flatMap ( r => flatMapDD ( r.dataDD,

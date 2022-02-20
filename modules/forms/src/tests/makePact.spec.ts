@@ -7,6 +7,7 @@ describe ( "makePacts", () => {
   it ( "should make a pact", () => {
 
     expect ( makeFetcherPact (paramsForTest, EAccountsSummaryPD, EAccountsSummaryPD.rest.eAccountsSummary, defaultRestAction.get ) ).toEqual ( [
+      "//GetFetcher pact test",
       "pactWith ( { consumer: 'EAccountsSummaryDD', provider: 'EAccountsSummaryDDProvider', cors: true }, provider => {",
       "  describe ( 'EAccountsSummary', () => {",
       "    it ( 'should have a get fetcher for EAccountsSummaryDD', async () => {",

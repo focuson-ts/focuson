@@ -10,7 +10,7 @@ import java.util.Map;
 public class MockFetchers  implements FFetcher{
      public DataFetcher createOccupationAndIncome() {  return dataFetchingEnvironment -> Sample.OccupationAndIncomeSample0;    }
  public DataFetcher updateOccupationAndIncome() {  return dataFetchingEnvironment -> Sample.OccupationAndIncomeSample0;    }
- public DataFetcher listOccupationAndIncome() {  return dataFetchingEnvironment -> Sample.OccupationAndIncomeSample0;    }
+ public DataFetcher getOccupationAndIncome() {  return dataFetchingEnvironment -> Sample.OccupationAndIncomeSample0;    }
  public DataFetcher getCreatePlanDD() {  return dataFetchingEnvironment -> Sample.CreatePlanDDSample0;    }
  public DataFetcher createCreatePlanDD() {  return dataFetchingEnvironment -> Sample.CreatePlanDDSample0;    }
  public DataFetcher updateCreatePlanDD() {  return dataFetchingEnvironment -> Sample.CreatePlanDDSample0;    }
