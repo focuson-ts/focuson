@@ -3,7 +3,7 @@ import { applyToTemplate } from "@focuson/template";
 import fs from "fs";
 import { beforeSeparator, NameAnd, sortedEntries } from "@focuson/utils";
 import { sampleName } from "./names";
-import { makeCommonParamsValueForTest, RestD } from "../common/restD";
+import { makeCommonParamsValueForTest, RestActionDetail, RestD } from "../common/restD";
 import { TSParams } from "./config";
 import { imports } from "./codegen";
 import { makeStateWithSelectedPage } from "./makeCommon";
@@ -27,7 +27,12 @@ interface PactProps extends NameAnd<string> {
   commonParamsValue: string,
   commonParamsTagsValue: string,
 }
-export function makeFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPageProperties ): string[] {
+export function makeFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPageProperties , rad: RestActionDetail): string[] {
+  if(rad.name === 'get') return makeGetFetcherPact(params, p, r, rad)
+  return [`//Cannot make fetcher pacts for ${p.name} / ${rad.name}`]
+}
+export function makeGetFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPageProperties , rad: RestActionDetail): string[] {
+
   const d = r.rest
   let body = params.samplesFile + "." + sampleName ( d.dataDD ) + '0';
   let paramsValueForTest = makeCommonParamsValueForTest ( d );
@@ -42,7 +47,7 @@ export function makeFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPageP
     status: "200",
     tree: `${params.fetchersFile}.fetchers`,
     commonParams: params.commonParams,
-    pageName: p.path.join ( "." ),
+    pageName: p.name,
     target: p.display.target.join ( "." ),
     stateName: params.stateName,
     commonFile: params.commonFile,
@@ -50,14 +55,14 @@ export function makeFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPageP
     commonParamsTagsValue: JSON.stringify ( sortedEntries ( paramsValueForTest ).map ( ( [ name, v ] ) => v ) )
   }
   const str: string = fs.readFileSync ( 'templates/onePact.ts' ).toString ()
-  return [
-    ...imports ( params.samplesFile ),
-    // ...makeStateWithSelectedPage(params, props.commonParamsValue, props.pageName),
-    ...applyToTemplate ( str, props )
-  ]
-
+  return applyToTemplate ( str, props )
 }
 
 export function makeAllPacts ( params: TSParams, ps: PageD[] ): string[] {
-  return allRestAndActions ( ps ).flatMap ( ( [ pd, rd ] ) => rd.fetcher ? makeFetcherPact ( params, pd, rd ) : [] )
+  return [
+    ...imports ( params.samplesFile ),
+    `import {emptyState, ${params.stateName} } from "./${params.commonFile}";`,
+    `import * as ${params.fetchersFile} from "./${params.fetchersFile}";`,
+    ...allRestAndActions ( ps ).flatMap ( ( [ pd, rd, rad ] ) => rd.fetcher ? makeFetcherPact ( params, pd, rd , rad) : [] )
+  ]
 }

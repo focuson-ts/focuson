@@ -29,7 +29,7 @@ export function makeButtonFrom ( [ name, button ]: [ string, AllButtonsInPage ] 
   if ( isModalButton ( button ) ) return makeModalButtonFrom ( name, button )
   if ( isRestButton ( button ) ) return makeRestButtonFrom ( name, button )
   if ( isModalCloseButton ( button ) ) return makeModalCloseButtonFrom ( name, button )
-  throw new Error ( `Cannot makeButtonFrom ${name} ${button}` )
+  return `<button>${name} of type ${button.control} cannot be create yet</button>`
 }
 export function makeButtonsFrom ( p: PageD ): string[] {
   return sortedEntries ( p.buttons ).map ( makeButtonFrom )

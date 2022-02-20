@@ -1,5 +1,5 @@
 import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
-import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
+import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
 
 

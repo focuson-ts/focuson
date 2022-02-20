@@ -9,6 +9,8 @@ export function noExtension ( name: string ) {
   return name.substr ( 0, int )
 }
 
+export const addStringToEndOfAllButLast = ( ch: string ) => ( ss: string[] ): string[] =>
+  ss.map ( ( s, i ) => i < ss.length - 1 ? s + ch : s );
 
 export const indent = ( path: string[], s: string ): string => ' '.repeat ( path.length * 2 + 2 ) + s;
 export const indentList = ( ss: string[] ): string[] => ss.map ( s => ' ' + s )

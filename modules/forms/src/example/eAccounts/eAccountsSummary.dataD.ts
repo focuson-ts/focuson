@@ -1,5 +1,5 @@
-import { AccountIdDD, DataD, DateDD, MoneyDD, OneLineStringDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
-import { LabelAndInputCD, TableCD } from "../common/componentsD";
+import { AccountIdDD, DataD, DateDD, MoneyDD, OneLineStringDD, PrimitiveDD, RepeatingDataD } from "../../common/dataD";
+import { LabelAndInputCD, TableCD } from "../../common/componentsD";
 
 
 export const EAccountDisplayTypeDD: PrimitiveDD = {

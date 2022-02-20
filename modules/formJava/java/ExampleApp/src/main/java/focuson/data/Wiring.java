@@ -34,12 +34,16 @@ public class Wiring {
     }
     private RuntimeWiring buildWiring() {
         return RuntimeWiring.newRuntimeWiring()
+          .type(newTypeWiring("Mutation").dataFetcher("createOccupationAndIncome", fetchers.createOccupationAndIncome()))
+          .type(newTypeWiring("Mutation").dataFetcher("updateOccupationAndIncome", fetchers.updateOccupationAndIncome()))
+          .type(newTypeWiring("Query").dataFetcher("listOccupationAndIncome", fetchers.listOccupationAndIncome()))
           .type(newTypeWiring("Query").dataFetcher("getCreatePlanDD", fetchers.getCreatePlanDD()))
           .type(newTypeWiring("Mutation").dataFetcher("createCreatePlanDD", fetchers.createCreatePlanDD()))
           .type(newTypeWiring("Mutation").dataFetcher("updateCreatePlanDD", fetchers.updateCreatePlanDD()))
           .type(newTypeWiring("Mutation").dataFetcher("deleteCreatePlanDD", fetchers.deleteCreatePlanDD()))
           .type(newTypeWiring("Query").dataFetcher("listCreatePlanDD", fetchers.listCreatePlanDD()))
           .type(newTypeWiring("Query").dataFetcher("getEAccountsSummaryDD", fetchers.getEAccountsSummaryDD()))
+          .type(newTypeWiring("Mutation").dataFetcher("createETransferDataD", fetchers.createETransferDataD()))
           .type(newTypeWiring("OneLineStringDD").dataFetcher("getAccountSummaryDescription", fetchers.getAccountSummaryDescription()))
           .type(newTypeWiring("IntegerDD").dataFetcher("getTotalMonthlyCost", fetchers.getTotalMonthlyCost()))
           .type(newTypeWiring("IntegerDD").dataFetcher("getOneAccountBalance", fetchers.getOneAccountBalance()))

@@ -18,7 +18,7 @@ export const makeFetcherCode = ( params: CombinedParams ) => ( p: PageD ) => ( d
     `export function ${fetcherName ( def )}<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection & ${pageDomain}.${hasDomainForPage ( p )}>(tagOps: TagOps<S,${params.commonFile}.${params.commonParams}>) {`,
     `  return pageAndTagFetcher<S, ${pageDomain}.${pageDomainName(p)}, ${domain}.${dataType}, SimpleMessage>(`,
     `    ${common}.commonFetch<S,  ${domain}.${dataType}>(),`,
-    `     '${safeArray ( p.path ).join ( '.' )}',`,
+    `     '${p.name}',`,
     `     '${targetFromPath}',`,
     `     (s) => s.focusQuery('${targetFromPath}'),`,
     `     tagOps.tags(${paramsString}),`,

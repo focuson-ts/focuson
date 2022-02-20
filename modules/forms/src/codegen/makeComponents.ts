@@ -2,7 +2,7 @@ import { AllDataDD, AllDataFlatMap, AllDataFolder, DataD, emptyDataFlatMap, flat
 import { DisplayCompD, DisplayCompParamD } from "../common/componentsD";
 import { on } from "cluster";
 import { dataDsIn, PageD } from "../common/pageD";
-import { EAccountsSummaryDD } from "../example/eAccountsSummary.dataD";
+import { EAccountsSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD";
 
 import { sortedEntries } from "@focuson/utils";
 import { componentName, pageDomainName, domainName, pageComponentName } from "./names";

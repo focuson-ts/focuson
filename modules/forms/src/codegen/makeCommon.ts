@@ -1,15 +1,14 @@
-import { PageD } from "../common/pageD";
+import { allMainPages, PageD } from "../common/pageD";
 import { hasDomainForPage } from "./names";
-import { imports, indentList } from "./codegen";
+import { addStringToEndOfAllButLast, imports, indentList } from "./codegen";
 import { TSParams } from "./config";
 import { applyToTemplate } from "@focuson/template";
 import * as fs from "fs";
-import { isCommonLens, makeCommonParamsValueForTest, RestD, unique } from "../common/restD";
+import { isCommonLens, RestD, unique } from "../common/restD";
 import { sortedEntries } from "@focuson/utils";
-import { Tags } from "@focuson/fetcher";
 
-export function makeFullState ( params: TSParams, pd: PageD[] ): string[] {
-  const hasDomains = pd.filter ( x => x.pageType === 'MainPage' ).map ( d => params.pageDomainsFile + "." + hasDomainForPage ( d ) ).join ( ',\n' ).split ( "\n" )
+export function makeFullState ( params: TSParams, pds: PageD[] ): string[] {
+  const hasDomains = addStringToEndOfAllButLast ( ',' ) ( allMainPages ( pds ).map ( d => params.pageDomainsFile + "." + hasDomainForPage ( d ) ) )
   const constant = [ 'HasSimpleMessages', 'HasPageSelection', `Has${params.commonParams}`, 'HasTagHolder', 'HasSelectedModalPage', `HasPostCommand<FState,any>`, 'HasFocusOnDebug' ].join ( ',' )
   return [
     `export interface ${params.stateName} extends ${constant},`,
@@ -28,7 +27,7 @@ export function makeCommon ( params: TSParams, pds: PageD[], rds: RestD[] ): str
     ...imports ( params.pageDomainsFile ),
     ...makeFullState ( params, pds ),
     ...makeCommonParams ( params, rds ),
-    ...makeStateWithSelectedPage ( params, JSON.stringify ( makeCommonParamsValueForTest ( rds[ 0 ] ) ), pds[ 0 ].path.join('.') ) //TODO this should be slicker and aggregated params for example
+    ...makeStateWithSelectedPage ( params, JSON.stringify ( findAllCommonParamsWithSamples ( rds ) ), pds[ 0 ].name ) //TODO this should be slicker and aggregated params for example
   ]
 }
 
@@ -50,6 +49,14 @@ export function makeStateWithSelectedPage ( params: TSParams, commonParamsValue:
 export function findAllCommonParams ( rds: RestD[] ): string[] {
   return unique ( rds.flatMap ( rd => sortedEntries ( rd.params ).flatMap ( ( [ name, lens ] ) => isCommonLens ( lens ) ? lens.commonLens : [] ) ), x => x )
 }
+
+export function findAllCommonParamsWithSamples ( rds: RestD[] ): any {
+  return Object.fromEntries ( rds.flatMap ( rd => {
+    let result: [ string, string ][] = sortedEntries ( rd.params ).flatMap ( ( [ name, lens ] ) => isCommonLens ( lens ) ? [ [ lens.commonLens, lens.testValue ] ] : [] );
+    return result
+  } ) )
+}
+
 
 export function makeCommonParams ( params: TSParams, rds: RestD[] ) {
   const commonParamDefns = findAllCommonParams ( rds ).map ( s => s + "?:string;\n" ).join ( "" )

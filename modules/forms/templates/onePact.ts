@@ -1,10 +1,3 @@
-import {emptyState, {stateName} } from "./{commonFile}";
-import * as fetchers from "./fetchers";
-
-
-
-
-
 pactWith ( { consumer: '{consumer}', provider: '{provider}', cors: true }, provider => {
   describe ( '{description1}', () => {
 
@@ -22,9 +15,10 @@ pactWith ( { consumer: '{consumer}', provider: '{provider}', cors: true }, provi
           body: {body}
         },
       } )
-      let newState = await loadTree ( {tree}, emptyState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+      const firstState: {stateName}  = { ...emptyState, pageSelection: { pageName: '{pageName}' } , {pageName}: { }}
+      let newState = await loadTree ( {tree}, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       expect ( newState ).toEqual ( {
-        ... emptyState,
+        ... firstState,
         {pageName}: {{target}: {body}},
         tags: { {pageName}_{target}:{commonParamsTagsValue} }
       } )

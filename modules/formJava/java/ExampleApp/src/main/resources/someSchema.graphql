@@ -1,12 +1,16 @@
 type Query{
+  listOccupationAndIncome(customerId: String!):[OccupationAndIncome!]!
   getCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!
   listCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):[CreatePlanDD!]!
   getEAccountsSummaryDD(accountId: String!, customerId: String!):EAccountsSummaryDD!
 }
 type Mutation{
+  createOccupationAndIncome(customerId: String!):OccupationAndIncome!
+  updateOccupationAndIncome(customerId: String!):OccupationAndIncome!
   createCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!
   updateCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!
   deleteCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):String
+  createETransferDataD(customerId: String!):ETransferDataD!
 }
 type CreatePlanDD{
   createPlanStart: String!
@@ -28,13 +32,60 @@ type EAccountSummaryDD{
   total: String!
   frequency: String!
 }
+type ETransferDataD{
+  amount: String!
+  dateOfETransfer: String!
+  description: String!
+  fromAccount: String!
+  toAccount: String!
+  type: String!
+  balance: String!
+  notes: String!
+}
+type OccupationAndIncome{
+  typeOfProfession: String!
+  occupation: String!
+  customersDescription: String!
+  businessType: String!
+  businessName: String!
+  dateStarted: String!
+  averageAnnualDrawings: String!
+}
 input CreatePlanDDInp{
   createPlanStart: String!
   createPlanDate: String!
   createPlanEnd: String!
 }
+input ETransferDataDInp{
+  amount: String!
+  dateOfETransfer: String!
+  description: String!
+  fromAccount: String!
+  toAccount: String!
+  type: String!
+  balance: String!
+  notes: String!
+}
+input OccupationAndIncomeInp{
+  typeOfProfession: String!
+  occupation: String!
+  customersDescription: String!
+  businessType: String!
+  businessName: String!
+  dateStarted: String!
+  averageAnnualDrawings: String!
+}
 input CreatePlanDDIdAndInp{
   createPlanStart: String!
   createPlanDate: String!
   createPlanEnd: String!
+}
+input OccupationAndIncomeIdAndInp{
+  typeOfProfession: String!
+  occupation: String!
+  customersDescription: String!
+  businessType: String!
+  businessName: String!
+  dateStarted: String!
+  averageAnnualDrawings: String!
 }

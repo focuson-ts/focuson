@@ -18,3 +18,22 @@ export interface EAccountSummaryDDDomain{
   total: string;
   virtualBankSeq: string;
 }
+export interface ETransferDataDDomain{
+  amount: string;
+  balance: string;
+  dateOfETransfer: string;
+  description: string;
+  fromAccount: string;
+  notes: string;
+  toAccount: string;
+  type: string;
+}
+export interface OccupationAndIncomeDomain{
+  averageAnnualDrawings: string;
+  businessName: string;
+  businessType: string;
+  customersDescription: string;
+  dateStarted: string;
+  occupation: string;
+  typeOfProfession: string;
+}

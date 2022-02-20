@@ -1,6 +1,6 @@
 import { makeAllDomainsFor, makeDomainFor, makePageDomainsFor } from "../codegen/makeDomain";
-import { CreatePlanDD, EAccountsSummaryDD, EAccountSummaryDD } from "../example/eAccountsSummary.dataD";
-import { createPlanPD, EAccountsSummaryPD } from "../example/eAccountsSummary.pageD";
+import { CreatePlanDD, EAccountsSummaryDD, EAccountSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD";
+import { createPlanPD, EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
 
 
@@ -69,7 +69,7 @@ describe ( "makePageDomainsFor", () => {
   it ( " Should make the has, and the page domain", () => {
     expect ( makePageDomainsFor ( paramsForTest, [ EAccountsSummaryPD, createPlanPD ] ) ).toEqual ( [
       "import * as domains from './domains';",
-      "export interface HasEAccountsSummaryPageDomain {   eAccountsSummary?: EAccountsSummaryPageDomain}",
+      "export interface HasEAccountsSummaryPageDomain {   EAccountsSummary?: EAccountsSummaryPageDomain}",
       "export interface EAccountsSummaryPageDomain{",
       " createPlan?: domains.EAccountsSummaryDDDomain;",
       " fromApi?: domains.EAccountsSummaryDDDomain;",

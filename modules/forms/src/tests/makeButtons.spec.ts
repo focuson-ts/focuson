@@ -1,5 +1,5 @@
 import { makeButtonsFrom } from "../codegen/makeButtons";
-import { EAccountsSummaryPD } from "../example/eAccountsSummary.pageD";
+import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 
 
 describe("makeButtons", () =>{

@@ -1,5 +1,53 @@
 package focuson.data;
 public class Queries{
+ public static  String createOccupationAndIncome(String customerId){ 
+    return
+ "{createOccupationAndIncome(" + "customerId:" + "\"" + customerId + "\"" + "){"+
+       "    typeOfProfession"+
+       "    occupation"+
+       "    customersDescription"+
+       "    businessType"+
+       "    businessName"+
+       "    dateStarted"+
+       "    averageAnnualDrawings"+
+       "  }"
+ +"}";}
+ public static  String updateOccupationAndIncome(String customerId){ 
+    return
+ "{updateOccupationAndIncome(" + "customerId:" + "\"" + customerId + "\"" + "){"+
+       "    typeOfProfession"+
+       "    occupation"+
+       "    customersDescription"+
+       "    businessType"+
+       "    businessName"+
+       "    dateStarted"+
+       "    averageAnnualDrawings"+
+       "  }"
+ +"}";}
+ public static  String createOccupationAndIncome(String customerId){ 
+    return
+ "{createOccupationAndIncome(" + "customerId:" + "\"" + customerId + "\"" + "){"+
+       "    typeOfProfession"+
+       "    occupation"+
+       "    customersDescription"+
+       "    businessType"+
+       "    businessName"+
+       "    dateStarted"+
+       "    averageAnnualDrawings"+
+       "  }"
+ +"}";}
+ public static  String listOccupationAndIncome(String customerId){ 
+    return
+ "{listOccupationAndIncome(" + "customerId:" + "\"" + customerId + "\"" + "){"+
+       "    typeOfProfession"+
+       "    occupation"+
+       "    customersDescription"+
+       "    businessType"+
+       "    businessName"+
+       "    dateStarted"+
+       "    averageAnnualDrawings"+
+       "  }"
+ +"}";}
  public static  String getCreatePlanDD(String accountId,String createPlanId,String customerId){ 
     return
  "{getCreatePlanDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "createPlanId:" + "\"" + createPlanId + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
@@ -59,6 +107,19 @@ public class Queries{
        "      createPlanDate"+
        "      createPlanEnd"+
        "    }"+
+       "  }"
+ +"}";}
+ public static  String createETransferDataD(String customerId){ 
+    return
+ "{createETransferDataD(" + "customerId:" + "\"" + customerId + "\"" + "){"+
+       "    amount"+
+       "    dateOfETransfer"+
+       "    description"+
+       "    fromAccount"+
+       "    toAccount"+
+       "    type"+
+       "    balance"+
+       "    notes"+
        "  }"
  +"}";}
 }

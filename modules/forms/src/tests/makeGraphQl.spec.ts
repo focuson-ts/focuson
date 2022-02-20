@@ -1,5 +1,5 @@
 import { makeJavaVariablesForGraphQlQuery, makeQuery } from "../codegen/makeGraphQlQuery";
-import { eAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
+import { eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 
 
 describe ( "Making GraphQl from RestD", () => {

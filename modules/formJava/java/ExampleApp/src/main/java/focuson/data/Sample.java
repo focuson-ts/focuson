@@ -44,4 +44,27 @@ public class Sample{
         "  \"frequency\": \"23\""+
         "}"
  );
+ public static Map ETransferDataDSample0 =  parse.parseMap(
+        "{"+
+        "  \"amount\": \"1233450\","+
+        "  \"dateOfETransfer\": \"2020-10-01\","+
+        "  \"description\": \"Why we are doing this transfer\","+
+        "  \"fromAccount\": \"1233450\","+
+        "  \"toAccount\": \"1233450\","+
+        "  \"type\": \"checking\","+
+        "  \"balance\": \"This is a one line string\","+
+        "  \"notes\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit\""+
+        "}"
+ );
+ public static Map OccupationAndIncomeSample0 =  parse.parseMap(
+        "{"+
+        "  \"typeOfProfession\": \"selfEmployed\","+
+        "  \"occupation\": \"plumber\","+
+        "  \"customersDescription\": \"This is a one line string\","+
+        "  \"businessType\": \"Electrical Technical Support\","+
+        "  \"businessName\": \"This is a one line string\","+
+        "  \"dateStarted\": \"2020-10-01\","+
+        "  \"averageAnnualDrawings\": \"This is a one line string\""+
+        "}"
+ );
 }

@@ -1,14 +1,12 @@
 import { CreatePlanDD, EAccountsSummaryDD } from "./eAccountsSummary.dataD";
 import { createPlanRestD, eAccountsSummaryRestD } from "./eAccountsSummary.restD";
-import { PageD } from "../common/pageD";
+import { PageD } from "../../common/pageD";
 
 
 /** This is the 'bringing it all together */
 export const EAccountsSummaryPD: PageD = {
   name: 'EAccountsSummary',
   pageType: 'MainPage',
-  /** Where we are in the state. We 'could' and maybe should defualt this to name*/
-  path: [ 'eAccountsSummary' ],
   /** This page can only view data */
   modes: [ 'view' ],
   /** How we display the page.*/

@@ -2,7 +2,7 @@ import { makeGraphQlSchema } from "./codegen/makeGraphQlTypes";
 import fs from "fs";
 import { makeAllJavaWiring, makeJavaResolversInterface } from "./codegen/makeJavaResolvers";
 import { createAllReactComponents } from "./codegen/makeComponents";
-import { createPlanPD, EAccountsSummaryPD } from "./example/eAccountsSummary.pageD";
+import { createPlanPD, EAccountsSummaryPD } from "./example/eAccounts/eAccountsSummary.pageD";
 import { makeAllDomainsFor, makePageDomainsFor } from "./codegen/makeDomain";
 import { sortedEntries } from "@focuson/utils";
 import { unique } from "./common/restD";
@@ -17,12 +17,16 @@ import { makeCommon, makeFullState, makeCommonParams } from "./codegen/makeCommo
 import { makeSpringEndpointsFor } from "./codegen/makeSpringEndpoint";
 import { restControllerName } from "./codegen/names";
 import { makeJavaVariablesForGraphQlQuery } from "./codegen/makeGraphQlQuery";
+import { ETransferPageD } from "./example/eTransfers/eTransfers.pageD";
+import { OccupationAndIncomeDetailsPageD } from "./example/occupationAndIncomeDetails/occupationAndIncomeDetails.pageD";
+import { makePages } from "./codegen/makePages";
 
 export function writeToFile ( name: string, contents: string[] ) {
   fs.writeFileSync ( name, contents.join ( '\n' ) );
 }
 
 const params: CombinedParams = {
+  pagesFile: 'pages',
   focusOnVersion: "^0.4.12",
   commonParams: "CommonIds",
   stateName: "FState",
@@ -63,7 +67,7 @@ fs.mkdirSync ( `${tsCode}`, { recursive: true } )
 fs.mkdirSync ( `${tsScripts}`, { recursive: true } )
 fs.mkdirSync ( `${tsPublic}`, { recursive: true } )
 
-let pages = [ EAccountsSummaryPD, createPlanPD ];
+let pages = [ OccupationAndIncomeDetailsPageD, EAccountsSummaryPD, createPlanPD, ETransferPageD ];
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
 let rests = unique ( pages.flatMap ( x => sortedEntries ( x.rest ) ).map ( x => x[ 1 ].rest ), r => r.dataDD.name )
 
@@ -77,6 +81,7 @@ writeToFile ( `${tsCode}/${params.fetchersFile}.ts`, [
   ...makeAllFetchers ( params, pages ),
   ...makeFetchersDataStructure ( params, { variableName: 'fetchers', stateName: params.stateName }, pages ) ] )
 writeToFile ( `${tsCode}/${params.samplesFile}.ts`, [ ...imports ( params.domainsFile ), ...[ 0, 1, 2 ].flatMap ( i => makeAllSampleVariables ( params, pages, i ) ) ] )
+writeToFile ( `${tsCode}/${params.pagesFile}.tsx`, makePages ( params, pages ) )
 templateFile ( `${tsCode}/${params.pactsFile}.ts`, 'templates/allPacts.ts', { content: makeAllPacts ( params, pages ).join ( "\n" ) } )
 copyFiles ( tsRoot, 'templates/raw/ts' ) ( '.env', 'README.md', 'tsconfig.json' )
 templateFile ( `${tsRoot}/package.json`, 'templates/packageTemplate.json', params )

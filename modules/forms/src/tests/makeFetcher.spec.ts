@@ -1,5 +1,5 @@
 import { makeAllFetchers, makeFetchersDataStructure } from "../codegen/makeFetchers";
-import { createPlanPD, EAccountsSummaryPD } from "../example/eAccountsSummary.pageD";
+import { createPlanPD, EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
 
 describe ( "makeAllFetchers", () => {
@@ -8,13 +8,13 @@ describe ( "makeAllFetchers", () => {
         "export function EAccountsSummaryDDFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection & pageDomains.HasEAccountsSummaryPageDomain>(tagOps: TagOps<S,common.commonIds>) {",
         "  return pageAndTagFetcher<S, pageDomains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDDDomain, SimpleMessage>(",
         "    common.commonFetch<S,  domains.EAccountsSummaryDDDomain>(),",
-        "     'eAccountsSummary',",
+        "     'EAccountsSummary',",
         "     'fromApi',",
         "     (s) => s.focusQuery('fromApi'),",
         "     tagOps.tags('accountId', 'customerId'),",
         "     tagOps.getReqFor('/api/accountsSummary?{query}',undefined,'accountId', 'customerId'))",
         "}"
-      ] )
+      ])
     } )
   }
 )

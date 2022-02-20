@@ -1,8 +1,8 @@
 import { DateDD, MoneyDD } from "../common/dataD";
-import { EAccountsSummaryDD, EAccountsSummaryTableDD } from "../example/eAccountsSummary.dataD";
+import { EAccountsSummaryDD, EAccountsSummaryTableDD } from "../example/eAccounts/eAccountsSummary.dataD";
 import { createAllReactCalls, createAllReactComponents, createReactComponent, createReactPageComponent, listComponentsIn } from "../codegen/makeComponents";
 import { LabelAndInputCD, TableCD } from "../common/componentsD";
-import { createPlanPD, EAccountsSummaryPD } from "../example/eAccountsSummary.pageD";
+import { createPlanPD, EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
 
 

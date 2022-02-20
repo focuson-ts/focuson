@@ -2,8 +2,8 @@ import { DataD, findAllDataDs, findDataDDIn } from "./dataD";
 import { safeArray, sortedEntries } from "@focuson/utils";
 
 type AllLensRestParams = CommonLensRestParam | LensRestParam
-export interface CommonLensRestParam {commonLens: string[], testValue: string}
-export interface LensRestParam {lens: string[], testValue: string}
+export interface CommonLensRestParam {commonLens: string, testValue: string}
+export interface LensRestParam {lens: string, testValue: string}
 export function isCommonLens(a: AllLensRestParams): a is CommonLensRestParam{
   // @ts-ignore
   return a.commonLens !== undefined

@@ -181,6 +181,14 @@ export const OneLineStringDD: PrimitiveDD = {
   validation: { maxLength: 255 }, //Note no regex
   sample: [ "This is a one line string", "another one line string" ]
 }
+export const ManyLineStringDD: PrimitiveDD = {
+  name: 'ManyLineStringDD',
+  reactType: 'string',
+  description: "A string that needs many lines and uses a text Area",
+  display: LabelAndInputCD,
+  validation: { },
+  sample: [ "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit" ]
+}
 export const IntegerDD: PrimitiveDD = {
   name: 'IntegerDD',
   reactType: 'string',

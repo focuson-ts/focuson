@@ -17,7 +17,7 @@ export interface RestDefnInPageProperties {
 export interface RestDefnInPage {
   [ name: string ]: RestDefnInPageProperties
 }
-export type AllButtonsInPage = ModalButtonInPage | RestButtonInPage | ModalCloseButton
+export type AllButtonsInPage = ModalButtonInPage | RestButtonInPage | ModalCloseButton | ResetStateButton
 export interface ModalButtonInPage {
   control: 'ModalButton',
   modal: string,
@@ -25,6 +25,10 @@ export interface ModalButtonInPage {
   mainData?: string,
   tempData: string,
   restOnCommit?: { rest: any, action: string }
+}
+export interface ResetStateButton {
+  control: 'ResetStateButton',
+
 }
 export function isModalButton ( b: AllButtonsInPage ): b is ModalButtonInPage {
   return b.control == 'ModalButton'
@@ -55,7 +59,6 @@ export type PageType = 'MainPage' | 'ModalPage'
 export interface PageD {
   name: string,
   pageType: PageType,
-  path?: string[],
   modes: PageMode[],
   display: { layout: LayoutD, target: string[], dataDD: DataD },
   initialValue: any,
@@ -78,6 +81,8 @@ export function allRestAndActions ( pds: PageD[] ): [ PageD, RestDefnInPagePrope
     } )
   } ), ( [ p, r, rad ] ) => p.name + "," + r.rest.dataDD.name + "," + rad.name )
 }
+
+export function allMainPages(ps: PageD[]): PageD[]{return ps.filter(p => p.pageType === 'MainPage')}
 
 // export function allPageDataAndResolvers ( rs: RestD[] ) {
 //   rs.flatMap ( r => flatMapDD ( r.dataDD,

@@ -1,5 +1,5 @@
 import { findResolvers, makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
-import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
+import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { CombinedParams, JavaWiringParams } from "../codegen/config";
 
 export const paramsForTest: CombinedParams = {
@@ -20,6 +20,7 @@ export const paramsForTest: CombinedParams = {
   schema: "someSchema.graphql",
   queriesClass: "Queries",
   thePackage: "packName",
+  pagesFile: 'pages',
   wiringClass: "someClass",
   fetcherClass: "fetcherClass"
 }

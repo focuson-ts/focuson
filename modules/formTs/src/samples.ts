@@ -35,6 +35,27 @@ export const EAccountSummaryDDSample0: domains.EAccountSummaryDDDomain =
   "total": "1000",
   "frequency": "23"
 }
+export const ETransferDataDSample0: domains.ETransferDataDDomain = 
+{
+  "amount": "1233450",
+  "dateOfETransfer": "2020-10-01",
+  "description": "Why we are doing this transfer",
+  "fromAccount": "1233450",
+  "toAccount": "1233450",
+  "type": "checking",
+  "balance": "This is a one line string",
+  "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
+}
+export const OccupationAndIncomeSample0: domains.OccupationAndIncomeDomain = 
+{
+  "typeOfProfession": "selfEmployed",
+  "occupation": "plumber",
+  "customersDescription": "This is a one line string",
+  "businessType": "Electrical Technical Support",
+  "businessName": "This is a one line string",
+  "dateStarted": "2020-10-01",
+  "averageAnnualDrawings": "This is a one line string"
+}
 export const CreatePlanDDSample1: domains.CreatePlanDDDomain = 
 {
   "createPlanStart": "2020-10-01",
@@ -71,6 +92,27 @@ export const EAccountSummaryDDSample1: domains.EAccountSummaryDDDomain =
   "total": "2991",
   "frequency": "This is a one line string"
 }
+export const ETransferDataDSample1: domains.ETransferDataDDomain = 
+{
+  "amount": "3233450",
+  "dateOfETransfer": "2022-14-01",
+  "description": "This is a one line string",
+  "fromAccount": "3233450",
+  "toAccount": "3233450",
+  "type": "savings",
+  "balance": "another one line string",
+  "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
+}
+export const OccupationAndIncomeSample1: domains.OccupationAndIncomeDomain = 
+{
+  "typeOfProfession": "selfEmployed",
+  "occupation": "school teacher",
+  "customersDescription": "another one line string",
+  "businessType": "Electrical Technical Support",
+  "businessName": "another one line string",
+  "dateStarted": "2022-14-01",
+  "averageAnnualDrawings": "another one line string"
+}
 export const CreatePlanDDSample2: domains.CreatePlanDDDomain = 
 {
   "createPlanStart": "2022-14-01",
@@ -106,4 +148,25 @@ export const EAccountSummaryDDSample2: domains.EAccountSummaryDDDomain =
   "virtualBankSeq": "seq3",
   "total": "This is a one line string",
   "frequency": "another one line string"
+}
+export const ETransferDataDSample2: domains.ETransferDataDDomain = 
+{
+  "amount": "4333450",
+  "dateOfETransfer": "2020-10-01",
+  "description": "another one line string",
+  "fromAccount": "4333450",
+  "toAccount": "4333450",
+  "type": "checking",
+  "balance": "This is a one line string",
+  "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
+}
+export const OccupationAndIncomeSample2: domains.OccupationAndIncomeDomain = 
+{
+  "typeOfProfession": "selfEmployed",
+  "occupation": "plumber",
+  "customersDescription": "This is a one line string",
+  "businessType": "Electrical Technical Support",
+  "businessName": "This is a one line string",
+  "dateStarted": "2020-10-01",
+  "averageAnnualDrawings": "This is a one line string"
 }

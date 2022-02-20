@@ -8,28 +8,16 @@ import { FState } from "./common";
 import { EAccountsSummaryDD, EAccountsSummaryPage } from "./render";
 import { fetchWithDelay, fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
 import { fetchers } from "./fetchers";
+import { pages, modals } from "./pages";
 
 
 const emptyState: FState = {
   CommonIds: { "accountId": "accId", "customerId": "custId" },
   tags: {},
   messages: [],
-  pageSelection: { pageName: 'eAccountsSummary', firstTime: true },
-  eAccountsSummary: {},
+  pageSelection: { pageName: 'EAccountsSummary', firstTime: true },
   postCommands: [],
   debug: { selectedPageDebug: true, fetcherDebug: true }
-}
-const modals: ModalPagesDetails<FState> = {}
-type Modals = typeof modals
-
-
-function MyLoading () {
-  return <p>Loading</p>
-}
-const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Modals> ( modals, MyLoading )
-
-export const pages: MultiPageDetails<FState, Modals> = {
-  eAccountsSummary: { config: simpleMessagesConfig, lens: identityOptics<FState> ().focusQuery ( 'eAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: {} }
 }
 
 export const posters: Posters<FState> = {}

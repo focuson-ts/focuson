@@ -1,15 +1,12 @@
 import { makeFetcherPact } from "../codegen/makePacts";
-import { EAccountsSummaryPD } from "../example/eAccountsSummary.pageD";
+import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
 import { defaultRestAction } from "../common/restD";
 
 describe ( "makePacts", () => {
   it ( "should make a pact", () => {
 
-    expect ( makeFetcherPact (paramsForTest, EAccountsSummaryPD, EAccountsSummaryPD.rest.eAccountsSummary ) ).toEqual ( [
-      "import * as samples from './samples';",
-      "import {emptyState, FState } from \"./common\";",
-      "import * as fetchers from \"./fetchers\";",
+    expect ( makeFetcherPact (paramsForTest, EAccountsSummaryPD, EAccountsSummaryPD.rest.eAccountsSummary, defaultRestAction.get ) ).toEqual ( [
       "pactWith ( { consumer: 'EAccountsSummaryDD', provider: 'EAccountsSummaryDDProvider', cors: true }, provider => {",
       "  describe ( 'EAccountsSummary', () => {",
       "    it ( 'should have a get fetcher for EAccountsSummaryDD', async () => {",
@@ -26,11 +23,12 @@ describe ( "makePacts", () => {
       "          body: samples.EAccountsSummaryDDSample0",
       "        },",
       "      } )",
-      "      let newState = await loadTree ( fetchers.fetchers, emptyState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )",
+      "      const firstState: FState  = { ...emptyState, pageSelection: { pageName: 'EAccountsSummary' } , EAccountsSummary: { }}",
+      "      let newState = await loadTree ( fetchers.fetchers, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )",
       "      expect ( newState ).toEqual ( {",
-      "        ... emptyState,",
-      "        eAccountsSummary: {fromApi: samples.EAccountsSummaryDDSample0},",
-      "        tags: { eAccountsSummary_fromApi:[\"accId\",\"custId\"] }",
+      "        ... firstState,",
+      "        EAccountsSummary: {fromApi: samples.EAccountsSummaryDDSample0},",
+      "        tags: { EAccountsSummary_fromApi:[\"accId\",\"custId\"] }",
       "      } )",
       "    } )",
       "  } )",

@@ -27,21 +27,18 @@ export function makeAllDomainsFor ( ps: PageD[] ): string[] {
 
 export function makeHasDomainsFor ( p: PageD ): string[] {
   if ( p.pageType === 'ModalPage' ) return []
-  if ( p.path === undefined || p.path.length > 1 ) throw new Error ( `Don't support multistep paths yet. Page is ${p.name} path is ${JSON.stringify ( p.path )}. le ${safeArray ( p.path ).length}` )
-  if ( p.path === undefined || p.path.length == 0 ) throw new Error ( `Don't support zero length paths yet. Page is ${p.name}` )
-  return [ `export interface ${hasDomainForPage ( p )} {   ${p.path[ 0 ]}?: ${pageDomainName ( p )}}` ]
+  return [ `export interface ${hasDomainForPage ( p )} {   ${p.name}?: ${pageDomainName ( p )}}` ]
 }
-
 
 
 export function makePageDomainsFor ( params: TSParams, ps: PageD[] ): string[] {
   let domain = noExtension ( params.domainsFile );
-  return ps.flatMap ( p => p.pageType === 'ModalPage' ? [] : [
-    ...imports ( domain ),
-    ...makeHasDomainsFor ( p ),
-    `export interface ${pageDomainName ( p )}{`,
-    ...indentList ( sortedEntries ( p.domain ).map ( ( [ name, dd ] ) => `${name}?: ${domain}.${domainName ( dd.dataDD )};` ) ),
-    '}'
-  ] )
+  return [ ...imports ( domain ),
+    ...ps.flatMap ( p => p.pageType === 'ModalPage' ? [] : [
+      ...makeHasDomainsFor ( p ),
+      `export interface ${pageDomainName ( p )}{`,
+      ...indentList ( sortedEntries ( p.domain ).map ( ( [ name, dd ] ) => `${name}?: ${domain}.${domainName ( dd.dataDD )};` ) ),
+      '}'
+    ] ) ]
 }
 

@@ -1,5 +1,5 @@
 import { makeJavaVariable, makeSampleVariable, makeTsSample } from "../codegen/makeSample";
-import { CreatePlanDD, EAccountsSummaryDD } from "../example/eAccountsSummary.dataD";
+import { CreatePlanDD, EAccountsSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
 import { expand } from "@focuson/template";
 

@@ -1,7 +1,7 @@
 import { findAllCommonParams, makeFullState, makeCommonParams } from "../codegen/makeCommon";
-import { createPlanPD, EAccountsSummaryPD } from "../example/eAccountsSummary.pageD";
+import { createPlanPD, EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
-import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccountsSummary.restD";
+import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 
 
 describe ( "makeFullState", () => {

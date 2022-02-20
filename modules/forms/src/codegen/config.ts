@@ -21,6 +21,7 @@ export interface TSParams {
   renderFile: string;
   commonFile: string;
   urlparams: string;
+  pagesFile: string;
 }
 
 export interface CombinedParams extends JavaWiringParams, TSParams {}

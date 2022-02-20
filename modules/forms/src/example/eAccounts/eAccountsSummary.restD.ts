@@ -1,9 +1,9 @@
 import { CreatePlanDD, EAccountsSummaryDD } from "./eAccountsSummary.dataD";
-import { RestD, RestParams } from "../common/restD";
+import { RestD, RestParams } from "../../common/restD";
 
 export const commonParams: RestParams = {
-  customerId: { commonLens: [ 'customerId' ], testValue: 'custId' },
-  accountId: { commonLens: [ 'accountId' ], testValue: "accId" },
+  customerId: { commonLens: 'customerId', testValue: 'custId' },
+  accountId: { commonLens:  'accountId' , testValue: "accId" },
 }
 
 /** This should fully define the api*/
@@ -14,7 +14,7 @@ export const eAccountsSummaryRestD: RestD = {
   actions: [ 'get' ],
 }
 export const createPlanRestD: RestD = {
-  params: { ...commonParams, createPlanId: { commonLens: [ 'createPlanId' ], testValue: 'tbd' } },
+  params: { ...commonParams, createPlanId: { commonLens:  'createPlanId' , testValue: 'tbd' } },
   dataDD: CreatePlanDD,
   url: '/api/createPlan/{createPlanId}?{query}',
   actions: [ 'get', 'create', 'update', 'delete',  'list' ],
