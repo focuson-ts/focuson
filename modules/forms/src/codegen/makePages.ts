@@ -1,13 +1,21 @@
 import { allMainPages, PageD } from "../common/pageD";
 import { TSParams } from "./config";
-import { pageComponentName, pageInState } from "./names";
+import { emptyName, pageComponentName, pageInState } from "./names";
 import { safeArray } from "@focuson/utils";
 import { addStringToEndOfAllButLast } from "./codegen";
+import { makeEmptyData } from "./makeSample";
 
-export const makeMainPage = ( params: TSParams ) => ( p: PageD ): string[] =>
-  p.pageType === 'MainPage' ?
-    [ `    ${p.name}: { config: simpleMessagesConfig, lens: identityOptics<${params.stateName}> ().focusQuery ( '${pageInState(p)}' ), pageFunction: ${pageComponentName ( p )}(), initialValue: ${JSON.stringify ( p.initialValue )} }` ]
+export const makeMainPage = ( params: TSParams ) => ( p: PageD ): string[] => {
+  function makeEmpty () {
+    let result: any = {}
+    result[ p.display.target.join ( "." ) ] = makeEmptyData ( p.display.dataDD )
+    return result
+  }
+  const initialValue = p.initialValue === 'empty' ? makeEmpty () : p.initialValue
+  return p.pageType === 'MainPage' ?
+    [ `    ${p.name}: { config: simpleMessagesConfig, lens: identityOptics<${params.stateName}> ().focusQuery ( '${pageInState ( p )}' ), pageFunction: ${pageComponentName ( p )}(), initialValue: ${JSON.stringify ( initialValue )} }` ]
     : [];
+}
 
 export function makePages ( params: TSParams, ps: PageD[] ): string[] {
 

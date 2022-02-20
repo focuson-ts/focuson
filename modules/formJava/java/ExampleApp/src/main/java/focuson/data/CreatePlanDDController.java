@@ -26,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
   @RequestMapping(value = "/api/createPlan/{createPlanId}/sample", produces = "application/json")
     public static String sampleCreatePlanDD() throws Exception {
-      return new ObjectMapper().writeValueAsString( Sample.CreatePlanDDSample0);
+      return new ObjectMapper().writeValueAsString( Sample.sampleCreatePlanDD0);
     }
 // Not yet doing action create
 // Not yet doing action update

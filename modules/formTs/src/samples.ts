@@ -1,11 +1,11 @@
 import * as domains from './domains';
-export const CreatePlanDDSample0: domains.CreatePlanDDDomain = 
+export const sampleCreatePlanDD0: domains.CreatePlanDDDomain = 
 {
   "createPlanStart": "2022-01-01",
   "createPlanDate": "2022-03-01",
   "createPlanEnd": "2022-10-01"
 }
-export const EAccountsSummaryDDSample0: domains.EAccountsSummaryDDDomain = 
+export const sampleEAccountsSummaryDD0: domains.EAccountsSummaryDDDomain = 
 {
   "eAccountsTable": [
     {
@@ -26,7 +26,7 @@ export const EAccountsSummaryDDSample0: domains.EAccountsSummaryDDDomain =
     "createPlanEnd": "2022-10-01"
   }
 }
-export const EAccountSummaryDDSample0: domains.EAccountSummaryDDDomain = 
+export const sampleEAccountSummaryDD0: domains.EAccountSummaryDDDomain = 
 {
   "accountId": "1233450",
   "displayType": "checking",
@@ -35,7 +35,7 @@ export const EAccountSummaryDDSample0: domains.EAccountSummaryDDDomain =
   "total": "1000",
   "frequency": "23"
 }
-export const ETransferDataDSample0: domains.ETransferDataDDomain = 
+export const sampleETransferDataD0: domains.ETransferDataDDomain = 
 {
   "amount": "1233450",
   "dateOfETransfer": "2020-10-01",
@@ -46,7 +46,7 @@ export const ETransferDataDSample0: domains.ETransferDataDDomain =
   "balance": "This is a one line string",
   "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
 }
-export const OccupationAndIncomeSample0: domains.OccupationAndIncomeDomain = 
+export const sampleOccupationAndIncome0: domains.OccupationAndIncomeDomain = 
 {
   "typeOfProfession": "selfEmployed",
   "occupation": "plumber",
@@ -56,13 +56,13 @@ export const OccupationAndIncomeSample0: domains.OccupationAndIncomeDomain =
   "dateStarted": "2020-10-01",
   "averageAnnualDrawings": "This is a one line string"
 }
-export const CreatePlanDDSample1: domains.CreatePlanDDDomain = 
+export const sampleCreatePlanDD1: domains.CreatePlanDDDomain = 
 {
   "createPlanStart": "2020-10-01",
   "createPlanDate": "2020-10-01",
   "createPlanEnd": "2020-10-01"
 }
-export const EAccountsSummaryDDSample1: domains.EAccountsSummaryDDDomain = 
+export const sampleEAccountsSummaryDD1: domains.EAccountsSummaryDDDomain = 
 {
   "eAccountsTable": [
     {
@@ -83,7 +83,7 @@ export const EAccountsSummaryDDSample1: domains.EAccountsSummaryDDDomain =
     "createPlanEnd": "2020-10-01"
   }
 }
-export const EAccountSummaryDDSample1: domains.EAccountSummaryDDDomain = 
+export const sampleEAccountSummaryDD1: domains.EAccountSummaryDDDomain = 
 {
   "accountId": "3233450",
   "displayType": "savings",
@@ -92,7 +92,7 @@ export const EAccountSummaryDDSample1: domains.EAccountSummaryDDDomain =
   "total": "2991",
   "frequency": "This is a one line string"
 }
-export const ETransferDataDSample1: domains.ETransferDataDDomain = 
+export const sampleETransferDataD1: domains.ETransferDataDDomain = 
 {
   "amount": "3233450",
   "dateOfETransfer": "2022-14-01",
@@ -103,7 +103,7 @@ export const ETransferDataDSample1: domains.ETransferDataDDomain =
   "balance": "another one line string",
   "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
 }
-export const OccupationAndIncomeSample1: domains.OccupationAndIncomeDomain = 
+export const sampleOccupationAndIncome1: domains.OccupationAndIncomeDomain = 
 {
   "typeOfProfession": "selfEmployed",
   "occupation": "school teacher",
@@ -113,13 +113,13 @@ export const OccupationAndIncomeSample1: domains.OccupationAndIncomeDomain =
   "dateStarted": "2022-14-01",
   "averageAnnualDrawings": "another one line string"
 }
-export const CreatePlanDDSample2: domains.CreatePlanDDDomain = 
+export const sampleCreatePlanDD2: domains.CreatePlanDDDomain = 
 {
   "createPlanStart": "2022-14-01",
   "createPlanDate": "2022-14-01",
   "createPlanEnd": "2022-14-01"
 }
-export const EAccountsSummaryDDSample2: domains.EAccountsSummaryDDDomain = 
+export const sampleEAccountsSummaryDD2: domains.EAccountsSummaryDDDomain = 
 {
   "eAccountsTable": [
     {
@@ -140,7 +140,7 @@ export const EAccountsSummaryDDSample2: domains.EAccountsSummaryDDDomain =
     "createPlanEnd": "2022-14-01"
   }
 }
-export const EAccountSummaryDDSample2: domains.EAccountSummaryDDDomain = 
+export const sampleEAccountSummaryDD2: domains.EAccountSummaryDDDomain = 
 {
   "accountId": "4333450",
   "displayType": "checking",
@@ -149,7 +149,7 @@ export const EAccountSummaryDDSample2: domains.EAccountSummaryDDDomain =
   "total": "This is a one line string",
   "frequency": "another one line string"
 }
-export const ETransferDataDSample2: domains.ETransferDataDDomain = 
+export const sampleETransferDataD2: domains.ETransferDataDDomain = 
 {
   "amount": "4333450",
   "dateOfETransfer": "2020-10-01",
@@ -160,7 +160,7 @@ export const ETransferDataDSample2: domains.ETransferDataDDomain =
   "balance": "This is a one line string",
   "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
 }
-export const OccupationAndIncomeSample2: domains.OccupationAndIncomeDomain = 
+export const sampleOccupationAndIncome2: domains.OccupationAndIncomeDomain = 
 {
   "typeOfProfession": "selfEmployed",
   "occupation": "plumber",

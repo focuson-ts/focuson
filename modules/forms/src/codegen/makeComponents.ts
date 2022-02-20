@@ -93,7 +93,7 @@ export function createReactMainPageComponent ( pageD: PageD ): string[] {
   let target = `${pageD.display.target.join ( '.' )}`;
   return [
     `export function ${pageComponentName ( pageD )}<S>(){`,
-    `  return focusedPageWithExtraState<S, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}> ( s => '${target}' ) ( s => s.focusOn ( '${target}' ) ) (
+    `  return focusedPageWithExtraState<S, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}> ( s => '${pageD.name}' ) ( s => s.focusOn ( '${target}' ) ) (
     ( fullState, state ) => {`,
     `  return (<${layout.name}  details='${layout.details}'>`,
     `   <${componentName ( dataDD )} state={state} />`,

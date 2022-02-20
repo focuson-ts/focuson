@@ -13,7 +13,7 @@ export const ETransferPageD: PageD = {
   /** How we display the page.*/
   display: { layout: { name: 'Layout', details: '[3][1,1,1][1,1][1][3]' }, target: [ 'fromApi' ], dataDD: ETransferDataD },
   /** When the page is selected for the first time this is the initial state */
-  initialValue: {},
+  initialValue: 'empty',
   /** This defines the domain data structures in react*/
   domain: {
     fromApi: { dataDD: ETransferDataD }

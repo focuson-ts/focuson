@@ -5,14 +5,14 @@ import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.json.JsonParser;
 public class Sample{
     private static JsonParser parse = new JacksonJsonParser();
- public static Map CreatePlanDDSample0 =  parse.parseMap(
+ public static Map sampleCreatePlanDD0 =  parse.parseMap(
         "{"+
         "  \"createPlanStart\": \"2022-01-01\","+
         "  \"createPlanDate\": \"2022-03-01\","+
         "  \"createPlanEnd\": \"2022-10-01\""+
         "}"
  );
- public static Map EAccountsSummaryDDSample0 =  parse.parseMap(
+ public static Map sampleEAccountsSummaryDD0 =  parse.parseMap(
         "{"+
         "  \"eAccountsTable\": ["+
         "    {"+
@@ -34,7 +34,7 @@ public class Sample{
         "  }"+
         "}"
  );
- public static Map EAccountSummaryDDSample0 =  parse.parseMap(
+ public static Map sampleEAccountSummaryDD0 =  parse.parseMap(
         "{"+
         "  \"accountId\": \"1233450\","+
         "  \"displayType\": \"checking\","+
@@ -44,7 +44,7 @@ public class Sample{
         "  \"frequency\": \"23\""+
         "}"
  );
- public static Map ETransferDataDSample0 =  parse.parseMap(
+ public static Map sampleETransferDataD0 =  parse.parseMap(
         "{"+
         "  \"amount\": \"1233450\","+
         "  \"dateOfETransfer\": \"2020-10-01\","+
@@ -56,7 +56,7 @@ public class Sample{
         "  \"notes\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit\""+
         "}"
  );
- public static Map OccupationAndIncomeSample0 =  parse.parseMap(
+ public static Map sampleOccupationAndIncome0 =  parse.parseMap(
         "{"+
         "  \"typeOfProfession\": \"selfEmployed\","+
         "  \"occupation\": \"plumber\","+

@@ -28,6 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
   @RequestMapping(value = "/api/oneOccupationAndIncome/sample", produces = "application/json")
     public static String sampleOccupationAndIncome() throws Exception {
-      return new ObjectMapper().writeValueAsString( Sample.OccupationAndIncomeSample0);
+      return new ObjectMapper().writeValueAsString( Sample.sampleOccupationAndIncome0);
     }
   }

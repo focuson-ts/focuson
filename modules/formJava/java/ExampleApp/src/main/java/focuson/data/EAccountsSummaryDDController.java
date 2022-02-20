@@ -26,6 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
   @RequestMapping(value = "/api/accountsSummary/sample", produces = "application/json")
     public static String sampleEAccountsSummaryDD() throws Exception {
-      return new ObjectMapper().writeValueAsString( Sample.EAccountsSummaryDDSample0);
+      return new ObjectMapper().writeValueAsString( Sample.sampleEAccountsSummaryDD0);
     }
   }

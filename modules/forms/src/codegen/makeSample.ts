@@ -1,10 +1,10 @@
-import { AllDataDD, DataD, foldDataDD, HasEnum, HasSample, isDataDd, isRepeatingDd, OneDataDD, PrimitiveDD } from "../common/dataD";
+import { AllDataDD, AllDataFlatMap, AllDataFolder, DataD, flatMapDD, foldDataDD, HasEnum, HasSample, isDataDd, isRepeatingDd, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
 import { safeArray, sortedEntries } from "@focuson/utils";
 import { Lenses } from "@focuson/lens";
-import { domainName, sampleName } from "./names";
+import { domainName, emptyName, sampleName } from "./names";
 import { dataDsIn, PageD } from "../common/pageD";
 import { TSParams } from "./config";
-import { indentList } from "./codegen";
+import { indent, indentList } from "./codegen";
 import { asMultilineJavaString } from "../../../utils/src/utils";
 
 
@@ -35,7 +35,8 @@ export function makeTsSample ( d: DataD, i: number ): any {
 
 
 export function makeSampleVariable ( params: TSParams, d: DataD, i: number ): string[] {
-  return [ `export const ${sampleName ( d )}${i}: ${params.domainsFile}.${domainName ( d )} = `,
+  return [
+    `export const ${sampleName ( d )}${i}: ${params.domainsFile}.${domainName ( d )} = `,
     ...JSON.stringify ( makeTsSample ( d, i ), null, 2 ).split ( '\n' )
   ]
 }
@@ -60,3 +61,14 @@ export function makeAllJavaVariableName ( ps: PageD[], i: number ): string[] {
   return sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ name, dataD ] ) => makeJavaVariable ( dataD, i ) )
 }
 
+export function makeEmptyData ( d: AllDataDD ): string[] {
+
+  let folder: AllDataFolder<any> = {
+    stopAtDisplay: false,
+    foldData: ( acc, path, parents, oneDataDD, dataDD, start ) => addData ( start, path, acc, dataDD ),
+    foldRep: ( acc, path, parents, oneDataDD, dataDD, start ) =>
+      start ? acc : Lenses.fromPath ( path ).transform ( child => [ child ] ) ( acc ),
+    foldPrim: ( acc, path, parents, oneDataDD, dataDD ) => Lenses.fromPath ( path ).set ( acc, "" )
+  };
+  return foldDataDD ( d, [], [], [], folder )
+}

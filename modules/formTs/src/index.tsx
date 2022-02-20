@@ -63,6 +63,6 @@ console.log ( "set json" )
 let setJson = setJsonForFocusOn ( config, ( s: LensState<FState, FState> ): void =>
   ReactDOM.render ( <SelectedPage state={s} pages={pages} selectedPageL={pageSelectionlens<FState> ()}/>, rootElement ) )
 
-setJson (  {...emptyState,pageSelection: { pageName: 'OccupationAndIncomeDetails', firstTime: true },} )
+setJson (  {...emptyState,pageSelection: { pageName: 'ETransfer', firstTime: true },} )
 
 

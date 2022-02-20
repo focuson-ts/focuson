@@ -1,7 +1,6 @@
-import { makeJavaVariable, makeSampleVariable, makeTsSample } from "../codegen/makeSample";
+import { makeEmptyData, makeJavaVariable, makeSampleVariable, makeTsSample } from "../codegen/makeSample";
 import { CreatePlanDD, EAccountsSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
-import { expand } from "@focuson/template";
 
 
 // describe ( 'makeJavaSample', () => {
@@ -18,7 +17,30 @@ import { expand } from "@focuson/template";
 //
 // } )
 
-
+describe ( "makeEmptyTs", () => {
+  it ( "should make an empty data structure", () => {
+    expect ( makeEmptyData ( EAccountsSummaryDD ) ).toEqual ( {
+      "createPlan": {
+        "createPlanDate": "",
+        "createPlanEnd": "",
+        "createPlanStart": ""
+      },
+      "currentAccountBalance": "",
+      "eAccountsTable": [
+        {
+          "accountId": "",
+          "description": "",
+          "displayType": "",
+          "frequency": "",
+          "total": "",
+          "virtualBankSeq": ""
+        }
+      ],
+      "oneAccountBalance": "",
+      "totalMonthlyCost": ""
+    } )
+  } )
+} )
 describe ( 'makeSample', () => {
   it ( "should make a JSON sample", () => {
     expect ( makeTsSample ( CreatePlanDD, 0 ) ).toEqual ( {
@@ -50,9 +72,9 @@ describe ( 'makeSample', () => {
 
 } );
 
-describe("makeJavaVariable", () =>{
-  it("should create code that parses the sample from the ts sample", () =>{
-    expect(makeJavaVariable(EAccountsSummaryDD, 0).map(s => s.replace(/"/g,"'"))).toEqual([
+describe ( "makeJavaVariable", () => {
+  it ( "should create code that parses the sample from the ts sample", () => {
+    expect ( makeJavaVariable ( EAccountsSummaryDD, 0 ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "public static Map EAccountsSummaryDDSample0 =  parse.parseMap(",
       "       '{'+",
       "       '  \\'eAccountsTable\\': ['+",
@@ -75,19 +97,19 @@ describe("makeJavaVariable", () =>{
       "       '  }'+",
       "       '}'",
       ");"
-    ])
-  })
-})
+    ] )
+  } )
+} )
 
 describe ( "makeSampleVariable", () => {
   it ( "should attach a sample to a variable", () => {
-    expect ( makeSampleVariable ( paramsForTest,CreatePlanDD, 0 ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeSampleVariable ( paramsForTest, CreatePlanDD, 0 ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export const CreatePlanDDSample0: domains.CreatePlanDDDomain = ",
       "{",
       "  'createPlanStart': '2022-01-01',",
       "  'createPlanDate': '2022-03-01',",
       "  'createPlanEnd': '2022-10-01'",
       "}"
-    ])
+    ] )
   } )
 } )
