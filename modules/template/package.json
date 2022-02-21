@@ -11,9 +11,7 @@
       "not op_mini all"
     ]
   },
-  "dependencies": {
-    "@focuson/template": "0.4.13"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^14.14.7",
     "npm-check-updates": "^10.0.0",
@@ -44,15 +42,13 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "0.4.13",
+  "version": "0.4.14",
   "template": "noreact",
   "description": "Putting the values from lens into strings. For things like urls, or general string substitutio",
   "details": {
     "ideify": true,
     "publish": true,
-    "links": [
-      "@focuson/template"
-    ],
+    "links": [],
     "extraDeps": {},
     "extraDevDeps": {}
   },
