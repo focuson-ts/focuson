@@ -1,4 +1,5 @@
-import { CommonStateProps, PageMode, RestAction } from "./common";
+import { CommonStateProps, RestAction } from "./common";
+import { PageMode } from "@focuson/pages";
 
 
 export interface ModalButtonProps<S> extends CommonStateProps<S, any> {

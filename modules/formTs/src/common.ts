@@ -9,7 +9,8 @@ import * as pageDomains from './pageDomains';
 export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasSelectedModalPage,HasPostCommand<FState,any>,HasFocusOnDebug,
  pageDomains.HasOccupationAndIncomeDetailsPageDomain,
  pageDomains.HasEAccountsSummaryPageDomain,
- pageDomains.HasETransferPageDomain
+ pageDomains.HasETransferPageDomain,
+ pageDomains.HasCreateEAccountPageDomain
 {}
 export interface HasCommonIds {CommonIds: CommonIds}
 export type CommonIds = {
@@ -28,7 +29,7 @@ export const emptyState: FState = {
   CommonIds: {"customerId":"custId","accountId":"accId","createPlanId":"tbd"},
   tags: {},
   messages: [],
-  pageSelection: { pageName: 'OccupationAndIncomeDetails' },
+  pageSelection: { pageName: 'OccupationAndIncomeDetails', firstTime: true, pageMode: 'view' },
   OccupationAndIncomeDetails:{},
   postCommands: [],
     debug: { selectedPageDebug: true, fetcherDebug: true }

@@ -13,12 +13,12 @@ export interface HasTagFetcherFullState extends HasSimpleMessages, HasTagHolder,
 
 export const emptyTestStateWithFullStatePage: HasTagFetcherFullState = {
   messages: [],
-  pageSelection: { pageName: 'fullState' },
+  pageSelection: { pageName: 'fullState', pageMode: 'view' },
   tags: {}
 }
 export const emptyTestStateWithTargetPage: HasTagFetcherFullState = {
   messages: [],
-  pageSelection: { pageName: 'target' },
+  pageSelection: { pageName: 'target' , pageMode: 'view'},
   tags: {}
 }
 

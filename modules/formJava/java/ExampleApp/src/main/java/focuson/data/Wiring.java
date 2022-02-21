@@ -44,6 +44,7 @@ public class Wiring {
           .type(newTypeWiring("Query").dataFetcher("listCreatePlanDD", fetchers.listCreatePlanDD()))
           .type(newTypeWiring("Query").dataFetcher("getEAccountsSummaryDD", fetchers.getEAccountsSummaryDD()))
           .type(newTypeWiring("Mutation").dataFetcher("createETransferDataD", fetchers.createETransferDataD()))
+          .type(newTypeWiring("Mutation").dataFetcher("createCreateEAccountDataDD", fetchers.createCreateEAccountDataDD()))
           .type(newTypeWiring("OneLineStringDD").dataFetcher("getAccountSummaryDescription", fetchers.getAccountSummaryDescription()))
           .type(newTypeWiring("IntegerDD").dataFetcher("getTotalMonthlyCost", fetchers.getTotalMonthlyCost()))
           .type(newTypeWiring("IntegerDD").dataFetcher("getOneAccountBalance", fetchers.getOneAccountBalance()))

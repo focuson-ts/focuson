@@ -11,6 +11,13 @@ type Mutation{
   updateCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!
   deleteCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):String
   createETransferDataD(customerId: String!):ETransferDataD!
+  createCreateEAccountDataDD(accountId: String!, createPlanId: String!, customerId: String!):CreateEAccountDataDD!
+}
+type CreateEAccountDataDD{
+  name: String!
+  type: String!
+  savingsStyle: String!
+  initialAmount: String!
 }
 type CreatePlanDD{
   createPlanStart: String!
@@ -50,6 +57,12 @@ type OccupationAndIncome{
   businessName: String!
   dateStarted: String!
   averageAnnualDrawings: String!
+}
+input CreateEAccountDataDDInp{
+  name: String!
+  type: String!
+  savingsStyle: String!
+  initialAmount: String!
 }
 input CreatePlanDDInp{
   createPlanStart: String!

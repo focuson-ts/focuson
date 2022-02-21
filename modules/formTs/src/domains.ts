@@ -1,3 +1,9 @@
+export interface CreateEAccountDataDDDomain{
+  initialAmount: string;
+  name: string;
+  savingsStyle: string;
+  type: string;
+}
 export interface CreatePlanDDDomain{
   createPlanDate: string;
   createPlanEnd: string;

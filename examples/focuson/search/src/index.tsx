@@ -11,7 +11,6 @@ import { HasSearch } from "./search/fullSearchDomain";
 import { fetchers } from "./fetchers";
 
 
-
 const modals: ModalPagesDetails<FullState> = {
   query: { lens: identityOptics<FullState> ().focusQuery ( 'search' ).focusQuery ( 'query' ), displayModalFn: SearchQueryModalPage }
 }
@@ -72,4 +71,4 @@ let setJson = setJsonForFocusOn ( config, ( s: LensState<FullState, FullState> )
   ReactDOM.render ( <SelectedPage state={s} pages={pages} selectedPageL={pageSelectionlens<FullState> ()}/>, rootElement ) )
 
 console.log ( "setting json" )
-setJson ( { messages: [], pageSelection: { pageName: "search" }, search: { query: "phil", queryResults: [] }, debug: { selectedPageDebug: false, fetcherDebug: true }, postCommands: [] } )
+setJson ( { messages: [], pageSelection: { pageName: "search", pageMode: 'edit' }, search: { query: "phil", queryResults: [] }, debug: { selectedPageDebug: false, fetcherDebug: true }, postCommands: [] } )

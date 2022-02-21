@@ -5,6 +5,14 @@ import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.json.JsonParser;
 public class Sample{
     private static JsonParser parse = new JacksonJsonParser();
+ public static Map sampleCreateEAccountDataDD0 =  parse.parseMap(
+        "{"+
+        "  \"name\": \"This is a one line string\","+
+        "  \"type\": \"checking\","+
+        "  \"savingsStyle\": \"adHoc\","+
+        "  \"initialAmount\": \"This is a one line string\""+
+        "}"
+ );
  public static Map sampleCreatePlanDD0 =  parse.parseMap(
         "{"+
         "  \"createPlanStart\": \"2022-01-01\","+

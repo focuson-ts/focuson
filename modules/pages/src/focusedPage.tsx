@@ -3,20 +3,21 @@ import { PageConfig } from "./pageConfig";
 import { addModalPageIfNeeded, ModalPagesDetails } from "./modal/modalPages";
 import { Loading } from "./loading";
 import { DefaultTemplate, PageTemplateProps } from "./PageTemplate";
+import { PageMode } from "./pageSelection";
 
 export interface FocusedPage<S extends any, D extends any> {
   /** This is used for debugging, for putting a header in place, and anything else it's felt a title might be good for */
   title: ( s: LensState<S, D> ) => string,
   displayLoading: ( s: LensState<S, D> ) => boolean,
   /** this will only be called if display loading is not showing */
-  display: ( s: LensState<S, D> ) => JSX.Element
+  display: ( s: LensState<S, D>, mode: PageMode ) => JSX.Element
 }
 
 /** Given a config.ts, a focused page data structure and a lens state (focused on anything...doesn't matter) this will display the main page (and perhaps a modal page on top) */
 export function displayMain<S extends any, D extends any, Msgs, MD extends ModalPagesDetails<S>> (
   config: PageConfig<S, D, Msgs, MD>,
   focusedPage: FocusedPage<S, D>,
-  s: LensState<S, D> ): JSX.Element {
+  s: LensState<S, D>, pageMode: PageMode ): JSX.Element {
   // @ts-ignore
   const debug = s.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
   let t = config.template
@@ -24,7 +25,7 @@ export function displayMain<S extends any, D extends any, Msgs, MD extends Modal
   if ( debug ) console.log ( "displayMain.template 1", template )
   const loading = config.loading ? config.loading : Loading
   if ( debug ) console.log ( "displayMain.loading 2", loading )
-  const main = template ( { state: s, focusedPage, loading } )
+  const main = template ( { state: s, focusedPage, loading, pageMode } )
   if ( debug ) {
     console.log ( "displayMain.main 3", main );
     // console.log ( "displayMain.main-json 4", JSON.stringify ( main ) )
@@ -40,10 +41,10 @@ export function displayMain<S extends any, D extends any, Msgs, MD extends Modal
  * @param title
  */
 export const focusedPage = <S extends any, D extends any> ( title: ( d?: D ) => string ) =>
-  ( pageFn: ( state: LensState<S, D>, d: D ) => JSX.Element ): FocusedPage<S, D> => ({
+  ( pageFn: ( state: LensState<S, D>, d: D , mode: PageMode) => JSX.Element ): FocusedPage<S, D> => ({
     title: s => title ( s.optJson () ),
     displayLoading: s => !s.optJson (),
-    display: s => pageFn ( s, s.json () )
+    display: ( s, mode ) => pageFn ( s, s.json (), mode )
   })
 
 /** The legacy way of creating a focused Page. It is deprecated and should be replaced with focusedPage
@@ -52,8 +53,8 @@ export const focusedPage = <S extends any, D extends any> ( title: ( d?: D ) => 
  * debugging or reporting
  */
 export const loadingPage = <S extends any, D extends any> ( title: ( d?: D ) => string ) =>
-  ( pageFn: ( state: LensState<S, D>, d: D ) => JSX.Element ): ( s: LensState<S, D> ) => JSX.Element =>
-    s => focusedPage<S, D> ( title ) ( pageFn ).display ( s )
+  ( pageFn: ( state: LensState<S, D>, d: D ) => JSX.Element ): ( s: LensState<S, D>, pageMode: PageMode ) => JSX.Element =>
+    (s, pageMode) => focusedPage<S, D> ( title ) ( pageFn ).display ( s, pageMode )
 
 /** Returns the `FocusedPage` data structure configured for a Focused Page where typically SOME of the data comes from an api, and other is 'local state'
  *
@@ -65,17 +66,17 @@ export const loadingPage = <S extends any, D extends any> ( title: ( d?: D ) => 
  */
 
 export const focusedPageWithExtraState = <S extends any, Full extends any, D extends any> ( title: ( d?: Full ) => string ) =>
-  ( lensFn: ( lens: LensState<S, Full> ) => LensState<S, D>, displayLoading?: ( s: LensState<S, Full> ) => boolean ) => ( pageFn: ( fullState: LensState<S, Full>, state: LensState<S, D>, f: Full, d: D ) => JSX.Element ): FocusedPage<S, Full> => {
-    const realDisplayLoading = displayLoading ? displayLoading : ( s: LensState<S, Full> ) =>lensFn(s).optJson () === undefined
+  ( lensFn: ( lens: LensState<S, Full> ) => LensState<S, D>, displayLoading?: ( s: LensState<S, Full> ) => boolean ) => ( pageFn: ( fullState: LensState<S, Full>, state: LensState<S, D>, f: Full, d: D, mode: PageMode ) => JSX.Element ): FocusedPage<S, Full> => {
+    const realDisplayLoading = displayLoading ? displayLoading : ( s: LensState<S, Full> ) => lensFn ( s ).optJson () === undefined
     return ({
       title: s => title ( s.optJson () ),
       displayLoading: realDisplayLoading,
-      display: s => {
+      display: ( s, pageMode ) => {
         console.log ( "focusedPageWithExtraState - enter", s )
         let lensState: LensState<S, D> = lensFn ( s );
         let domain = lensState?.json ();
         if ( domain === undefined ) throw Error ( 'something went wrong: The domain is undefined in focusedPageWithExtraState' )
-        const result = pageFn ( s, lensState, s.json (), domain )
+        const result = pageFn ( s, lensState, s.json (), domain, pageMode )
         console.log ( "focusedPageWithExtraState -exit", result )
         return result
       }
@@ -83,7 +84,7 @@ export const focusedPageWithExtraState = <S extends any, Full extends any, D ext
   }
 
 export const loadingPageWithExtraState = <S extends any, Full extends any, D extends any> ( title: ( d?: Full ) => string ) =>
-  ( lensFn: ( lens: LensState<S, Full> ) => LensState<S, D> ) => ( pageFn: ( fullState: LensState<S, Full>, state: LensState<S, D>, f: Full, d: D ) => JSX.Element ): ( s: LensState<S, Full> ) => JSX.Element =>
-    s => focusedPageWithExtraState<S, Full, D> ( title ) ( lensFn ) ( pageFn ).display ( s )
+  ( lensFn: ( lens: LensState<S, Full> ) => LensState<S, D> ) => ( pageFn: ( fullState: LensState<S, Full>, state: LensState<S, D>, f: Full, d: D , pageMode: PageMode) => JSX.Element ): ( s: LensState<S, Full> , pageMode: PageMode) => JSX.Element =>
+    (s, pageMode) => focusedPageWithExtraState<S, Full, D> ( title ) ( lensFn ) ( pageFn ).display ( s, pageMode )
 
 

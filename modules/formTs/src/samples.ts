@@ -1,4 +1,11 @@
 import * as domains from './domains';
+export const sampleCreateEAccountDataDD0: domains.CreateEAccountDataDDDomain = 
+{
+  "name": "This is a one line string",
+  "type": "checking",
+  "savingsStyle": "adHoc",
+  "initialAmount": "This is a one line string"
+}
 export const sampleCreatePlanDD0: domains.CreatePlanDDDomain = 
 {
   "createPlanStart": "2022-01-01",
@@ -56,6 +63,13 @@ export const sampleOccupationAndIncome0: domains.OccupationAndIncomeDomain =
   "dateStarted": "2020-10-01",
   "averageAnnualDrawings": "This is a one line string"
 }
+export const sampleCreateEAccountDataDD1: domains.CreateEAccountDataDDDomain = 
+{
+  "name": "another one line string",
+  "type": "savings",
+  "savingsStyle": "payRegular",
+  "initialAmount": "another one line string"
+}
 export const sampleCreatePlanDD1: domains.CreatePlanDDDomain = 
 {
   "createPlanStart": "2020-10-01",
@@ -112,6 +126,13 @@ export const sampleOccupationAndIncome1: domains.OccupationAndIncomeDomain =
   "businessName": "another one line string",
   "dateStarted": "2022-14-01",
   "averageAnnualDrawings": "another one line string"
+}
+export const sampleCreateEAccountDataDD2: domains.CreateEAccountDataDDDomain = 
+{
+  "name": "This is a one line string",
+  "type": "checking",
+  "savingsStyle": "paySettime",
+  "initialAmount": "This is a one line string"
 }
 export const sampleCreatePlanDD2: domains.CreatePlanDDDomain = 
 {

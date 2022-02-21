@@ -9,7 +9,7 @@ import { displayMain } from "./focusedPage";
 export interface HasSelectedPageDebug {
   debug?: SelectedPageDebug
 }
-export interface SelectedPageDebug{
+export interface SelectedPageDebug {
   selectedPageDebug?: boolean
 }
 
@@ -19,7 +19,8 @@ export interface SelectedPageProps<S, MD extends ModalPagesDetails<S>> extends L
 
 }
 export function SelectedPage<S, MD extends ModalPagesDetails<S>> ( { state, pages, selectedPageL }: SelectedPageProps<S, MD> ) {
-  const pageName = selectedPageL.getOption ( state.json () )?.pageName
+  let selectedPageData = selectedPageL.getOption ( state.json () );
+  const pageName = selectedPageData?.pageName
   // @ts-ignore
   const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
   if ( debug ) console.log ( "SelectedPage.pageName", pageName )
@@ -30,7 +31,7 @@ export function SelectedPage<S, MD extends ModalPagesDetails<S>> ( { state, page
     console.log ( "SelectedPage.pages", pages );
     console.log ( "SelectedPage.page", page )
   }
-  if ( page ) {
+  if ( page && selectedPageData ) {
     const { config, lens, pageFunction } = page
     const lsForPage = state.chainLens ( lens )
     if ( debug ) console.log ( "SelectedPage.lsForPage", lsForPage )
@@ -43,7 +44,7 @@ export function SelectedPage<S, MD extends ModalPagesDetails<S>> ( { state, page
       return main
     } else {
       if ( debug ) console.log ( "SelectedPage displayMain" )
-      let main = displayMain ( config, pageFunction, lsForPage );
+      let main = displayMain ( config, pageFunction, lsForPage, selectedPageData.pageMode );
       if ( debug ) console.log ( "SelectedPage displayMain result", main )
       // if ( debug ) console.log ( "SelectedPage displayMain result - json", JSON.stringify ( main ) )
       return main

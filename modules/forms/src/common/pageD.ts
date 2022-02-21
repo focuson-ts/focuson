@@ -1,11 +1,10 @@
 import { DataD, emptyDataFlatMap, findAllDataDs, flatMapDD, NamesAndDataDs } from "./dataD";
 import { defaultRestAction, RestActionDetail, RestD, unique } from "./restD";
 import { sortedEntries } from "@focuson/utils";
-import { ModalButton } from "@focuson/pages";
+import { ModalButton, PageMode } from "@focuson/pages";
 import { makeHasDomainsFor } from "../codegen/makeDomain";
 
 
-type PageMode = 'view' | 'create' | 'edit'
 export interface DomainDefnInPage {
   [ name: string ]: { dataDD: DataD }
 }

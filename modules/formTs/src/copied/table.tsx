@@ -1,8 +1,9 @@
-import { CommonComponentProps, CommonStateProps } from "./common";
+import { CommonStateProps } from "./common";
+import { PageMode } from "@focuson/pages";
 
 
 export interface TableProps<S, T> extends CommonStateProps<S, T[]> {
-  order: (keyof T)[]
+  order: (keyof T)[];
 }
 
 export function Table<S, T> ( { id, order }: TableProps<S, T> ) {

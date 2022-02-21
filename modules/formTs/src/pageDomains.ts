@@ -13,3 +13,7 @@ export interface HasETransferPageDomain {   ETransfer?: ETransferPageDomain}
 export interface ETransferPageDomain{
  fromApi?: domains.ETransferDataDDomain;
 }
+export interface HasCreateEAccountPageDomain {   CreateEAccount?: CreateEAccountPageDomain}
+export interface CreateEAccountPageDomain{
+ editing?: domains.CreateEAccountDataDDDomain;
+}

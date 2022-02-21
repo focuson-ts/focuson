@@ -20,6 +20,7 @@ import { makeJavaVariablesForGraphQlQuery } from "./codegen/makeGraphQlQuery";
 import { ETransferPageD } from "./example/eTransfers/eTransfers.pageD";
 import { OccupationAndIncomeDetailsPageD } from "./example/occupationAndIncomeDetails/occupationAndIncomeDetails.pageD";
 import { makePages } from "./codegen/makePages";
+import { CreateEAccountPageD } from "./example/createEAccount/createEAccount.pageD";
 
 export function writeToFile ( name: string, contents: string[] ) {
   fs.writeFileSync ( name, contents.join ( '\n' ) );
@@ -27,7 +28,7 @@ export function writeToFile ( name: string, contents: string[] ) {
 
 const params: CombinedParams = {
   pagesFile: 'pages',
-  focusOnVersion: "^0.4.12",
+  focusOnVersion: "^0.4.13",
   commonParams: "CommonIds",
   stateName: "FState",
   commonFile: "common",
@@ -67,7 +68,7 @@ fs.mkdirSync ( `${tsCode}`, { recursive: true } )
 fs.mkdirSync ( `${tsScripts}`, { recursive: true } )
 fs.mkdirSync ( `${tsPublic}`, { recursive: true } )
 
-let pages = [ OccupationAndIncomeDetailsPageD, EAccountsSummaryPD, createPlanPD, ETransferPageD ];
+let pages = [ OccupationAndIncomeDetailsPageD, EAccountsSummaryPD, createPlanPD, ETransferPageD,CreateEAccountPageD ];
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
 let rests = unique ( pages.flatMap ( x => sortedEntries ( x.rest ) ).map ( x => x[ 1 ].rest ), r => r.dataDD.name )
 

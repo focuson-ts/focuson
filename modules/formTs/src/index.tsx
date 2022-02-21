@@ -4,21 +4,12 @@ import { FocusOnConfig, setJsonForFocusOn } from "@focuson/focuson";
 import { postCommandsL, Posters } from "@focuson/poster";
 import { getElement, LensState, setJsonForFlux, LensProps } from "@focuson/state";
 import ReactDOM from "react-dom";
-import { FState } from "./common";
+import { emptyState, FState } from "./common";
 import { EAccountsSummaryDD, EAccountsSummaryPage } from "./render";
 import { fetchWithDelay, fetchWithPrefix, loggingFetchFn, sortedEntries } from "@focuson/utils";
 import { fetchers } from "./fetchers";
 import { pages, modals } from "./pages";
 
-
-const emptyState: FState = {
-  CommonIds: { "accountId": "accId", "customerId": "custId" },
-  tags: {},
-  messages: [],
-  pageSelection: { pageName: 'EAccountsSummary', firstTime: true },
-  postCommands: [],
-  debug: { selectedPageDebug: true, fetcherDebug: true }
-}
 
 export const posters: Posters<FState> = {}
 
@@ -65,13 +56,20 @@ console.log ( "set json" )
 let setJson = setJsonForFocusOn ( config, ( s: LensState<FState, FState> ): void =>
   ReactDOM.render ( <div>
     <ul>
+      <li>
+        <button onClick={() => s.copyWithLens ( pageSelectionlens () ).focusOn ( 'pageMode' ).setJson ( 'view' )}>View</button>
+      </li>
+      <li>
+        <button onClick={() => s.copyWithLens ( pageSelectionlens () ).focusOn ( 'pageMode' ).setJson ( 'edit' )}>Edit</button>
+      </li>
+
       {sortedEntries ( pages ).map ( ( [ name, pd ] ) =>
-        <li key={name}><SelectPage state={s} pageName={name} selectedPageLens={pageSelectionlens<FState> ()}/></li> )}
+        <li key={name}><SelectPage state={s} pageName={name} pageMode='edit' selectedPageLens={pageSelectionlens<FState> ()}/></li> )}
     </ul>
     <SelectedPage state={s} pages={pages} selectedPageL={pageSelectionlens<FState> ()}/>
     <pre>{JSON.stringify ( s.main, null, 2 )}</pre>
   </div>, rootElement ) )
 
-setJson ( { ...emptyState, pageSelection: { pageName: 'ETransfer', firstTime: true }, } )
+setJson ( { ...emptyState, pageSelection: { pageName: 'ETransfer', firstTime: true, pageMode: 'edit' }, } )
 
 

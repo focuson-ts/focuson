@@ -1,6 +1,8 @@
 import { allRestAndActions, dataDsIn } from "../common/pageD";
 import { createPlanPD, EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { sortedEntries } from "@focuson/utils";
+import { CreateEAccountDataD } from "../example/createEAccount/createEAccount.dataD";
+import { CreateEAccountPageD } from "../example/createEAccount/createEAccount.pageD";
 
 describe ( "dataDsIn", () => {
   it ( "should find all the DataDs in a list of pages", () => {
@@ -16,7 +18,8 @@ describe ( "dataDsIn", () => {
       "EAccountSummaryDD"
     ] )
   } )
-  it ( "should find all the DataDs in a list of pages", () => {
+
+  it ( "should find all the DataDs in a list of pages when display stopped", () => {
     let list = [ EAccountsSummaryPD, createPlanPD, EAccountsSummaryPD, createPlanPD ];
     const actual = dataDsIn ( list, true )
     const names = sortedEntries ( actual ).map ( ( [ n, v ] ) => {

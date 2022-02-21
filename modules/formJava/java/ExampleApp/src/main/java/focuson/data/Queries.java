@@ -110,4 +110,13 @@ public class Queries{
        "    notes"+
        "  }"
  +"}";}
+ public static  String createCreateEAccountDataDD(String accountId,String createPlanId,String customerId){ 
+    return
+ "{createCreateEAccountDataDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "createPlanId:" + "\"" + createPlanId + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
+       "    name"+
+       "    type"+
+       "    savingsStyle"+
+       "    initialAmount"+
+       "  }"
+ +"}";}
 }

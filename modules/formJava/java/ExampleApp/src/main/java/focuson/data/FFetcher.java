@@ -13,6 +13,7 @@ public interface FFetcher {
    public DataFetcher listCreatePlanDD();
    public DataFetcher getEAccountsSummaryDD();
    public DataFetcher createETransferDataD();
+   public DataFetcher createCreateEAccountDataDD();
    public DataFetcher getAccountSummaryDescription();
    public DataFetcher getTotalMonthlyCost();
    public DataFetcher getOneAccountBalance();

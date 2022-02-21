@@ -10,6 +10,8 @@ import { Table } from "./copied/table";
 import {OccupationAndIncomeDetailsPageDomain} from "./pageDomains";
 import {EAccountsSummaryPageDomain} from "./pageDomains";
 import {ETransferPageDomain} from "./pageDomains";
+import {CreateEAccountPageDomain} from "./pageDomains";
+import {CreateEAccountDataDDDomain} from "./domains"
 import {CreatePlanDDDomain} from "./domains"
 import {EAccountsSummaryDDDomain} from "./domains"
 import {EAccountSummaryDDDomain} from "./domains"
@@ -46,6 +48,23 @@ export function ETransferPage<S>(){
    <RestButton id='eTransfers' state={state} />
    <button>resetAll of type ResetStateButton cannot be create yet</button>
    </Layout>)})}
+export function CreateEAccountPage<S>(){
+  return focusedPageWithExtraState<S, CreateEAccountPageDomain, CreateEAccountDataDDDomain> ( s => 'CreateEAccount' ) ( s => s.focusOn ( 'editing' ) ) (
+    ( fullState, state ) => {
+  return (<Layout  details='[1][1][1][1]]'>
+   <CreateEAccountDataDD state={state} />
+   <button>cancel of type ResetStateButton cannot be create yet</button>
+   <RestButton id='eTransfers' state={state} />
+   <button>resetAll of type ResetStateButton cannot be create yet</button>
+   </Layout>)})}
+export function CreateEAccountDataDD<S>({state}: LensProps<S, CreateEAccountDataDDDomain>){
+  return(<>
+  <LabelAndInput state={state.focusOn('name')} label='nameCC' />
+  <LabelAndInput state={state.focusOn('type')} label='typeCC' />
+  <LabelAndInput state={state.focusOn('savingsStyle')} label='savingsStyleCC' />
+  <LabelAndInput state={state.focusOn('initialAmount')} label='initialAmountCC' />
+</>)
+}
 export function CreatePlanDD<S>({state}: LensProps<S, CreatePlanDDDomain>){
   return(<>
   <LabelAndInput state={state.focusOn('createPlanStart')} label='Create Start' />
