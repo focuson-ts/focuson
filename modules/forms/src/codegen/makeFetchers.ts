@@ -36,7 +36,8 @@ export function findAllFetchers ( ps: PageD[] ): [ PageD, RestDefnInPageProperti
   } ) )
 }
 
-export const makeAllFetchers = ( params: CombinedParams, ps: PageD[] ): string[] => findAllFetchers ( ps ).flatMap ( ( [ pd, rd ] ) => makeFetcherCode ( params ) ( pd ) ( rd ) );
+export const makeAllFetchers = ( params: CombinedParams, ps: PageD[] ): string[] => findAllFetchers ( ps ).flatMap ( ( [ pd, rd ] ) =>
+  makeFetcherCode ( params ) ( pd ) ( rd ) );
 
 interface FetcherDataStructureParams {
   stateName: string,

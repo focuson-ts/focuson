@@ -8,7 +8,7 @@ describe ( "makeGraphQlSchema", () => {
   describe ( "makeQueryOrMutateBlock", () => {
 
     it ( "should make type Query", () => {
-      expect ( makeQueryOrMutateBlock ( rs, 'query' ) ).toEqual ( [
+      expect ( makeQueryOrMutateBlock ( rs, 'Query' ) ).toEqual ( [
         "type Query{",
         "  getEAccountsSummaryDD(accountId: String!, customerId: String!):EAccountsSummaryDD!",
         "  getCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!",
@@ -17,7 +17,7 @@ describe ( "makeGraphQlSchema", () => {
       ])
     } )
     it ( "should make type Mutation", () => {
-      expect ( makeQueryOrMutateBlock ( rs, 'mutation' ) ).toEqual ( [
+      expect ( makeQueryOrMutateBlock ( rs, 'Mutation' ) ).toEqual ( [
         "type Mutation{",
         "  createCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!",
         "  updateCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!",

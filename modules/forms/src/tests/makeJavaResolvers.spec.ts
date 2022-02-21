@@ -113,7 +113,7 @@ describe ( "makeAllJavaWiring", () => {
       "          .type(newTypeWiring('Query').dataFetcher('listCreatePlanDD', fetchers.listCreatePlanDD()))",
       "          .type(newTypeWiring('EAccountSummaryDD').dataFetcher('getAccountSummaryDescription', fetchers.getAccountSummaryDescription()))",
       "          .type(newTypeWiring('EAccountsSummaryDD').dataFetcher('getTotalMonthlyCost', fetchers.getTotalMonthlyCost()))",
-      "          .type(newTypeWiring('EAccountsSummaryDD').dataFetcher('getOneAccountBalance', fetchers.getOneAccountBalance()))",
+      "          .type(newTypeWiring('EAccountsSummaryDD').dataFetcher('sdf', fetchers.getOneAccountBalance()))",
       "          .type(newTypeWiring('EAccountsSummaryDD').dataFetcher('getCurrentAccountBalance', fetchers.getCurrentAccountBalance()))",
       "          .build();",
       "    }",

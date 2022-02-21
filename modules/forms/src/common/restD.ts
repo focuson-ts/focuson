@@ -16,7 +16,7 @@ export function isRestLens(a: AllLensRestParams): a is LensRestParam{
 export interface RestParams {
   [ name: string ]: AllLensRestParams
 }
-export type QueryOrMutation = 'query' | 'mutation'
+export type QueryOrMutation = 'Query' | 'Mutation'
 
 
 export interface RestParamsDetails {
@@ -45,13 +45,13 @@ export interface RestTypeDetails {
 }
 
 export const defaultRestAction: RestTypeDetails = {
-  'get': { name: 'get', query: 'query', params: { needsId: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'get', graphQlPostfix: '' },
-  'getString': { name: 'getString', query: 'query', params: { needsId: true }, output: { needsPling: true }, graphQPrefix: 'get', graphQlPostfix: '' }, //special for mocks
-  'getOption': { name: 'getoption', query: 'query', params: { needsId: true }, output: { needsObj: true }, graphQPrefix: 'getOption', graphQlPostfix: '' },
-  'list': { name: 'list', query: 'query', params: {}, output: { needsObj: true, needsBrackets: true, needsPling: true }, graphQPrefix: 'list', graphQlPostfix: '' },
-  'update': { name: 'update', query: 'mutation', params: { needsId: true, needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'update', graphQlPostfix: '' },
-  'create': { name: 'create', query: 'mutation', params: { needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'create', graphQlPostfix: '' },
-  'delete': { name: 'delete', query: 'mutation', params: { needsId: true }, output: {}, graphQPrefix: 'delete', graphQlPostfix: '' },
+  'get': { name: 'get', query: 'Query', params: { needsId: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'get', graphQlPostfix: '' },
+  'getString': { name: 'getString', query: 'Query', params: { needsId: true }, output: { needsPling: true }, graphQPrefix: 'get', graphQlPostfix: '' }, //special for mocks
+  'getOption': { name: 'getoption', query: 'Query', params: { needsId: true }, output: { needsObj: true }, graphQPrefix: 'getOption', graphQlPostfix: '' },
+  'list': { name: 'list', query: 'Query', params: {}, output: { needsObj: true, needsBrackets: true, needsPling: true }, graphQPrefix: 'list', graphQlPostfix: '' },
+  'update': { name: 'update', query: 'Mutation', params: { needsId: true, needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'update', graphQlPostfix: '' },
+  'create': { name: 'create', query: 'Mutation', params: { needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'create', graphQlPostfix: '' },
+  'delete': { name: 'delete', query: 'Mutation', params: { needsId: true }, output: {}, graphQPrefix: 'delete', graphQlPostfix: '' },
 }
 
 export type RestAction = 'get' | 'getOption' | 'list' | 'update' | 'create' | 'delete'

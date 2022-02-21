@@ -45,10 +45,10 @@ public class Wiring {
           .type(newTypeWiring("Query").dataFetcher("getEAccountsSummaryDD", fetchers.getEAccountsSummaryDD()))
           .type(newTypeWiring("Mutation").dataFetcher("createETransferDataD", fetchers.createETransferDataD()))
           .type(newTypeWiring("Mutation").dataFetcher("createCreateEAccountDataDD", fetchers.createCreateEAccountDataDD()))
-          .type(newTypeWiring("EAccountSummaryDD").dataFetcher("getAccountSummaryDescription", fetchers.getAccountSummaryDescription()))
-          .type(newTypeWiring("EAccountsSummaryDD").dataFetcher("getTotalMonthlyCost", fetchers.getTotalMonthlyCost()))
-          .type(newTypeWiring("EAccountsSummaryDD").dataFetcher("getOneAccountBalance", fetchers.getOneAccountBalance()))
-          .type(newTypeWiring("EAccountsSummaryDD").dataFetcher("getCurrentAccountBalance", fetchers.getCurrentAccountBalance()))
+          .type(newTypeWiring("EAccountSummaryDD").dataFetcher("description", fetchers.getAccountSummaryDescription()))
+          .type(newTypeWiring("EAccountsSummaryDD").dataFetcher("totalMonthlyCost", fetchers.getTotalMonthlyCost()))
+          .type(newTypeWiring("EAccountsSummaryDD").dataFetcher("oneAccountBalance", fetchers.getOneAccountBalance()))
+          .type(newTypeWiring("EAccountsSummaryDD").dataFetcher("currentAccountBalance", fetchers.getCurrentAccountBalance()))
           .build();
     }
     @Bean

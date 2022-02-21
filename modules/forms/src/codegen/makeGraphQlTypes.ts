@@ -52,9 +52,8 @@ export const makeSchemaBlockFor = ( [ dataD, rt ]: [ DataD, RestTypeDetails ] ):
 
 
 export function makeQueryOrMutateBlock ( rs: RestD[], q: QueryOrMutation ): string[] {
-  const keyword = q == 'query' ? 'Query' : "Mutation"
   const lines = findUniqueDataDsAndRestTypeDetails ( rs ).filter ( ( [ d, a ] ) => a.query == q ).map ( oneQueryMutateLine )
-  return [ "type " + keyword + "{",
+  return [ "type " + q + "{",
     ...lines,
     "}" ]
 }
@@ -71,14 +70,14 @@ export const makeSchemaBlock = ( keyword: string, suffix: string ) => ( d: DataD
   '}' ];
 
 export const makeGraphQlSchema = ( rs: RestD[] ): string[] => {
-  const query = makeQueryOrMutateBlock ( rs, 'query' )
-  const mutate = makeQueryOrMutateBlock ( rs, 'mutation' )
+  const query = makeQueryOrMutateBlock ( rs, 'Query' )
+  const mutate = makeQueryOrMutateBlock ( rs, 'Mutation' )
   const { input, objs, inputWithId } = findMustConstructForRest ( rs )
   const doOne = ( keyword: string, suffix: string, ds: DataD[] ): string[] => ds.flatMap ( makeSchemaBlock ( keyword, suffix ) );
 
   return [
-    ...makeQueryOrMutateBlock ( rs, 'query' ),
-    ...makeQueryOrMutateBlock ( rs, 'mutation' ),
+    ...makeQueryOrMutateBlock ( rs, 'Query' ),
+    ...makeQueryOrMutateBlock ( rs, 'Mutation' ),
     ...doOne ( 'type', '', objs ),
     ...doOne ( 'input', 'Inp', input ),
     ...doOne ( 'input', 'IdAndInp', inputWithId ) ];

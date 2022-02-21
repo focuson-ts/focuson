@@ -6,7 +6,7 @@ import { selectSample } from "./makeSample";
 import { JavaWiringParams } from "./config";
 
 
-export const makeMockFetcherFor = ( params: JavaWiringParams ) => ( [ parent, action, dataD, resolver ]: [ DataD | undefined, RestActionDetail, AllDataDD, string ] ): string[] => {
+export const makeMockFetcherFor = ( params: JavaWiringParams ) => ( [ parent, action, dataD, name, resolver ]: [ DataD | undefined, RestActionDetail, AllDataDD, string, string ] ): string[] => {
   if ( parent && !action?.output?.needsObj )
     { // @ts-ignore
       let sample = selectSample ( 0, parent, dataD );
