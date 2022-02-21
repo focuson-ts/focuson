@@ -52,17 +52,17 @@ describe ( "findResolvers", () => {
   it ( "should find the query/mutation and the specifics", () => {
     expect ( findResolvers ( [ eAccountsSummaryRestD, createPlanRestD ] ).//
       map ( ( [ p, output, a, b ] ) => `${p?.name}/${output.name}/${a.name}/${b}` ) ).toEqual ( [
-      "undefined/get/EAccountsSummaryDD/getEAccountsSummaryDD",
-      "undefined/get/CreatePlanDD/getCreatePlanDD",
-      "undefined/create/CreatePlanDD/createCreatePlanDD",
-      "undefined/update/CreatePlanDD/updateCreatePlanDD",
-      "undefined/delete/CreatePlanDD/deleteCreatePlanDD",
-      "undefined/list/CreatePlanDD/listCreatePlanDD",
-      "EAccountSummaryDD/getString/OneLineStringDD/getAccountSummaryDescription",
-      "EAccountsSummaryDD/getString/IntegerDD/getTotalMonthlyCost",
-      "EAccountsSummaryDD/getString/IntegerDD/getOneAccountBalance",
-      "EAccountsSummaryDD/getString/IntegerDD/getCurrentAccountBalance"
-    ] )
+      "undefined/get/EAccountsSummaryDD/EAccountsSummaryDD",
+      "undefined/get/CreatePlanDD/CreatePlanDD",
+      "undefined/create/CreatePlanDD/CreatePlanDD",
+      "undefined/update/CreatePlanDD/CreatePlanDD",
+      "undefined/delete/CreatePlanDD/CreatePlanDD",
+      "undefined/list/CreatePlanDD/CreatePlanDD",
+      "EAccountSummaryDD/getString/OneLineStringDD/description",
+      "EAccountsSummaryDD/getString/IntegerDD/totalMonthlyCost",
+      "EAccountsSummaryDD/getString/IntegerDD/oneAccountBalance",
+      "EAccountsSummaryDD/getString/IntegerDD/currentAccountBalance"
+    ])
   } )
 } )
 
@@ -111,10 +111,10 @@ describe ( "makeAllJavaWiring", () => {
       "          .type(newTypeWiring('Mutation').dataFetcher('updateCreatePlanDD', fetchers.updateCreatePlanDD()))",
       "          .type(newTypeWiring('Mutation').dataFetcher('deleteCreatePlanDD', fetchers.deleteCreatePlanDD()))",
       "          .type(newTypeWiring('Query').dataFetcher('listCreatePlanDD', fetchers.listCreatePlanDD()))",
-      "          .type(newTypeWiring('EAccountSummaryDD').dataFetcher('getAccountSummaryDescription', fetchers.getAccountSummaryDescription()))",
-      "          .type(newTypeWiring('EAccountsSummaryDD').dataFetcher('getTotalMonthlyCost', fetchers.getTotalMonthlyCost()))",
-      "          .type(newTypeWiring('EAccountsSummaryDD').dataFetcher('sdf', fetchers.getOneAccountBalance()))",
-      "          .type(newTypeWiring('EAccountsSummaryDD').dataFetcher('getCurrentAccountBalance', fetchers.getCurrentAccountBalance()))",
+      "          .type(newTypeWiring('EAccountSummaryDD').dataFetcher('description', fetchers.getAccountSummaryDescription()))",
+      "          .type(newTypeWiring('EAccountsSummaryDD').dataFetcher('totalMonthlyCost', fetchers.getTotalMonthlyCost()))",
+      "          .type(newTypeWiring('EAccountsSummaryDD').dataFetcher('oneAccountBalance', fetchers.getOneAccountBalance()))",
+      "          .type(newTypeWiring('EAccountsSummaryDD').dataFetcher('currentAccountBalance', fetchers.getCurrentAccountBalance()))",
       "          .build();",
       "    }",
       "    @Bean",
