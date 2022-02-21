@@ -111,10 +111,10 @@ describe ( "makeAllJavaWiring", () => {
       "          .type(newTypeWiring('Mutation').dataFetcher('updateCreatePlanDD', fetchers.updateCreatePlanDD()))",
       "          .type(newTypeWiring('Mutation').dataFetcher('deleteCreatePlanDD', fetchers.deleteCreatePlanDD()))",
       "          .type(newTypeWiring('Query').dataFetcher('listCreatePlanDD', fetchers.listCreatePlanDD()))",
-      "          .type(newTypeWiring('OneLineStringDD').dataFetcher('getAccountSummaryDescription', fetchers.getAccountSummaryDescription()))",
-      "          .type(newTypeWiring('IntegerDD').dataFetcher('getTotalMonthlyCost', fetchers.getTotalMonthlyCost()))",
-      "          .type(newTypeWiring('IntegerDD').dataFetcher('getOneAccountBalance', fetchers.getOneAccountBalance()))",
-      "          .type(newTypeWiring('IntegerDD').dataFetcher('getCurrentAccountBalance', fetchers.getCurrentAccountBalance()))",
+      "          .type(newTypeWiring('EAccountSummaryDD').dataFetcher('getAccountSummaryDescription', fetchers.getAccountSummaryDescription()))",
+      "          .type(newTypeWiring('EAccountsSummaryDD').dataFetcher('getTotalMonthlyCost', fetchers.getTotalMonthlyCost()))",
+      "          .type(newTypeWiring('EAccountsSummaryDD').dataFetcher('getOneAccountBalance', fetchers.getOneAccountBalance()))",
+      "          .type(newTypeWiring('EAccountsSummaryDD').dataFetcher('getCurrentAccountBalance', fetchers.getCurrentAccountBalance()))",
       "          .build();",
       "    }",
       "    @Bean",
@@ -122,7 +122,7 @@ describe ( "makeAllJavaWiring", () => {
       "        return graphQL;",
       "    }",
       "}"
-    ] )
+    ])
   } )
 
 } )

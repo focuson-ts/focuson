@@ -29,7 +29,7 @@ function makeWiring ( name: string, resolver: string ): string {
 
 export function makeAllJavaWiring ( params: JavaWiringParams, rs: RestD[] ): string[] {
   let wiring = findResolvers ( rs ).map ( ( [ parent, outputD, dataD, resolver ] ) => {
-    return parent ? makeWiring ( dataD.name, resolver ) : makeWiring ( (outputD.query === 'query' ? 'Query' : 'Mutation'), resolver )
+    return parent ? makeWiring ( parent.name, resolver ) : makeWiring ( (outputD.query === 'query' ? 'Query' : 'Mutation'), resolver )
   } )
   // let wiring = [ ...makeJavaWiringForQueryAndMutation ( rs ), ...makeJavaWiringForAllDataDs ( rs ) ]
   const str: string = fs.readFileSync ( 'templates/JavaWiringTemplate.java' ).toString ()
