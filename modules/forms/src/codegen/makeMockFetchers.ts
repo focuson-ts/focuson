@@ -1,24 +1,16 @@
-import { findResolvers} from "./makeJavaResolvers";
-import { RestActionDetail, RestD, RestOutputDetails } from "../common/restD";
-import { AllDataDD, DataD } from "../common/dataD";
-import { resolverName, sampleName } from "./names";
-import { selectSample } from "./makeSample";
+import { findAllResolvers2, ResolverData } from "./makeJavaResolvers";
+import { RestD } from "../common/restD";
 import { JavaWiringParams } from "./config";
+import { safePick } from "@focuson/utils";
 
 
-export const makeMockFetcherFor = ( params: JavaWiringParams ) => ( [ parent, action, dataD, name, resolver ]: [ DataD | undefined, RestActionDetail, AllDataDD, string, string ] ): string[] => {
-  if ( parent && !action?.output?.needsObj )
-    { // @ts-ignore
-      let sample = selectSample ( 0, parent, dataD );
-      return [ `  public DataFetcher ${resolver} (){ return new StaticDataFetcher("${sample}");}` ]
-    }
-  else {
-    return [ ` public DataFetcher ${resolverName ( dataD, action )}() {  return dataFetchingEnvironment -> ${params.sampleClass}.${sampleName ( dataD )}0;    }` ]
-  }
+export const makeMockFetcherFor = ( params: JavaWiringParams ) => ( { isRoot, samplerName, sample, resolver }: ResolverData ): string[] =>
+  isRoot ?
+    [ ` public DataFetcher ${resolver}() {  return dataFetchingEnvironment -> ${params.sampleClass}.${samplerName}0;    }` ]:
+    [ `  public DataFetcher ${resolver} (){ return new StaticDataFetcher(${JSON.stringify ( safePick ( sample, 0 ) )});}` ]
 
-};
 
 export function makeAllMockFetchers ( params: JavaWiringParams, rs: RestD[] ): string[] {
-  return findResolvers ( rs ).flatMap ( makeMockFetcherFor ( params ) )
+  return findAllResolvers2 ( rs ).flatMap ( makeMockFetcherFor ( params ) )
 }
 

@@ -1,6 +1,6 @@
-import { findResolvers, makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
+import { findAllResolvers2, findChildResolvers2, findQueryMutationResolvers2, makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
-import { CombinedParams, JavaWiringParams } from "../codegen/config";
+import { CombinedParams } from "../codegen/config";
 
 export const paramsForTest: CombinedParams = {
   focusOnVersion: "^0.4.5",
@@ -47,24 +47,24 @@ describe ( "makeJavaResolversInterface", () => {
   } )
 } )
 
-
-describe ( "findResolvers", () => {
-  it ( "should find the query/mutation and the specifics", () => {
-    expect ( findResolvers ( [ eAccountsSummaryRestD, createPlanRestD ] ).//
-      map ( ( [ p, output, a, b ] ) => `${p?.name}/${output.name}/${a.name}/${b}` ) ).toEqual ( [
-      "undefined/get/EAccountsSummaryDD/EAccountsSummaryDD",
-      "undefined/get/CreatePlanDD/CreatePlanDD",
-      "undefined/create/CreatePlanDD/CreatePlanDD",
-      "undefined/update/CreatePlanDD/CreatePlanDD",
-      "undefined/delete/CreatePlanDD/CreatePlanDD",
-      "undefined/list/CreatePlanDD/CreatePlanDD",
-      "EAccountSummaryDD/getString/OneLineStringDD/description",
-      "EAccountsSummaryDD/getString/IntegerDD/totalMonthlyCost",
-      "EAccountsSummaryDD/getString/IntegerDD/oneAccountBalance",
-      "EAccountsSummaryDD/getString/IntegerDD/currentAccountBalance"
-    ])
-  } )
-} )
+//
+// describe ( "findResolvers", () => {
+//   it ( "should find the query/mutation and the specifics", () => {
+//     expect ( findResolvers ( [ eAccountsSummaryRestD, createPlanRestD ] ).//
+//       map ( ( [ p, output, a, b ] ) => `${p?.name}/${output.name}/${a.name}/${b}` ) ).toEqual ( [
+//       "undefined/get/EAccountsSummaryDD/EAccountsSummaryDD",
+//       "undefined/get/CreatePlanDD/CreatePlanDD",
+//       "undefined/create/CreatePlanDD/CreatePlanDD",
+//       "undefined/update/CreatePlanDD/CreatePlanDD",
+//       "undefined/delete/CreatePlanDD/CreatePlanDD",
+//       "undefined/list/CreatePlanDD/CreatePlanDD",
+//       "EAccountSummaryDD/getString/OneLineStringDD/description",
+//       "EAccountsSummaryDD/getString/IntegerDD/totalMonthlyCost",
+//       "EAccountsSummaryDD/getString/IntegerDD/oneAccountBalance",
+//       "EAccountsSummaryDD/getString/IntegerDD/currentAccountBalance"
+//     ] )
+//   } )
+// } )
 
 describe ( "makeAllJavaWiring", () => {
   it ( "should make a java file which will power a graphql spring boot app", () => {
@@ -122,7 +122,47 @@ describe ( "makeAllJavaWiring", () => {
       "        return graphQL;",
       "    }",
       "}"
-    ])
+    ] )
+  } )
+
+} )
+
+describe ( "findAllResolvers2", () => {
+  it ( "findResolvers2", () => {
+    expect ( findChildResolvers2 ( [ eAccountsSummaryRestD ] ) ).toEqual ( [
+      { "isRoot": false, "name": "description", "parent": "EAccountSummaryDD", "resolver": "getAccountSummaryDescription", "sample": [ "This account has a description", "This is a one line string", "another one line string" ], "samplerName": "sampleOneLineStringDD" },
+      { "isRoot": false, "name": "totalMonthlyCost", "parent": "EAccountsSummaryDD", "resolver": "getTotalMonthlyCost", "sample": [ "1000" ], "samplerName": "sampleIntegerDD" },
+      { "isRoot": false, "name": "oneAccountBalance", "parent": "EAccountsSummaryDD", "resolver": "getOneAccountBalance", "sample": [ "9921" ], "samplerName": "sampleIntegerDD" },
+      { "isRoot": false, "name": "currentAccountBalance", "parent": "EAccountsSummaryDD", "resolver": "getCurrentAccountBalance", "sample": [ "12321" ], "samplerName": "sampleIntegerDD" }
+    ] )
+  } )
+
+  it ( "findQueryMutationResolvers2", () => {
+    expect ( findQueryMutationResolvers2 ( eAccountsSummaryRestD ) ).toEqual ( [
+      { "isRoot": true, "name": "getEAccountsSummaryDD", "parent": "Query", "resolver": "getEAccountsSummaryDD", "sample": [], "samplerName": "sampleEAccountsSummaryDD" }
+    ] )
+    expect ( findQueryMutationResolvers2 ( createPlanRestD ) ).toEqual ( [
+      { "isRoot": true, "name": "getCreatePlanDD", "parent": "Query", "resolver": "getCreatePlanDD", "sample": [], "samplerName": "sampleCreatePlanDD" },
+      { "isRoot": true, "name": "createCreatePlanDD", "parent": "Mutation", "resolver": "createCreatePlanDD", "sample": [], "samplerName": "sampleCreatePlanDD" },
+      { "isRoot": true, "name": "updateCreatePlanDD", "parent": "Mutation", "resolver": "updateCreatePlanDD", "sample": [], "samplerName": "sampleCreatePlanDD" },
+      { "isRoot": true, "name": "deleteCreatePlanDD", "parent": "Mutation", "resolver": "deleteCreatePlanDD", "sample": [], "samplerName": "sampleCreatePlanDD" },
+      { "isRoot": true, "name": "listCreatePlanDD", "parent": "Query", "resolver": "listCreatePlanDD", "sample": [], "samplerName": "sampleCreatePlanDD" },
+    ] )
+  } )
+
+  it ( "findAllResolvers2", () => {
+    expect ( findAllResolvers2 ( [ eAccountsSummaryRestD, createPlanRestD ] ) ).toEqual ( [
+      { "isRoot": true, "name": "getEAccountsSummaryDD", "parent": "Query", "resolver": "getEAccountsSummaryDD", "sample": [], "samplerName": "sampleEAccountsSummaryDD" },
+      { "isRoot": true, "name": "getCreatePlanDD", "parent": "Query", "resolver": "getCreatePlanDD", "sample": [], "samplerName": "sampleCreatePlanDD" },
+      { "isRoot": true, "name": "createCreatePlanDD", "parent": "Mutation", "resolver": "createCreatePlanDD", "sample": [], "samplerName": "sampleCreatePlanDD" },
+      { "isRoot": true, "name": "updateCreatePlanDD", "parent": "Mutation", "resolver": "updateCreatePlanDD", "sample": [], "samplerName": "sampleCreatePlanDD" },
+      { "isRoot": true, "name": "deleteCreatePlanDD", "parent": "Mutation", "resolver": "deleteCreatePlanDD", "sample": [], "samplerName": "sampleCreatePlanDD" },
+      { "isRoot": true, "name": "listCreatePlanDD", "parent": "Query", "resolver": "listCreatePlanDD", "sample": [], "samplerName": "sampleCreatePlanDD" },
+      { "isRoot": false, "name": "description", "parent": "EAccountSummaryDD", "resolver": "getAccountSummaryDescription", "sample": [ "This account has a description", "This is a one line string", "another one line string" ], "samplerName": "sampleOneLineStringDD" },
+      { "isRoot": false, "name": "totalMonthlyCost", "parent": "EAccountsSummaryDD", "resolver": "getTotalMonthlyCost", "sample": [ "1000" ], "samplerName": "sampleIntegerDD" },
+      { "isRoot": false, "name": "oneAccountBalance", "parent": "EAccountsSummaryDD", "resolver": "getOneAccountBalance", "sample": [ "9921" ], "samplerName": "sampleIntegerDD" },
+      { "isRoot": false, "name": "currentAccountBalance", "parent": "EAccountsSummaryDD", "resolver": "getCurrentAccountBalance", "sample": [ "12321" ], "samplerName": "sampleIntegerDD" }
+    ] )
   } )
 
 } )

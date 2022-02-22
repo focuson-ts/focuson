@@ -19,6 +19,10 @@ export function copyWithFieldSet<T, K extends keyof T> ( t: T, k: K, v: T[K] ) {
 export function safeArray<T> ( ts: T[] | undefined ) {
   return ts ? ts : []
 }
+export function safePick ( s: string[] | undefined, i: number ) {
+  const sa = safeArray ( s )
+  return sa.length == 0 ? '' : sa[ i % sa.length ]
+}
 
 
 export function asMultilineJavaString ( ss: string[], indent?: string ): string[] {

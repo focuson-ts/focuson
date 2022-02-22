@@ -90,6 +90,7 @@ export function ETransferDataD<S>({state}: LensProps<S, ETransferDataDDomain>){
   <LabelAndInput state={state.focusOn('description')} label='descriptionCC' />
   <LabelAndInput state={state.focusOn('fromAccount')} label='fromAccountCC' />
   <LabelAndInput state={state.focusOn('toAccount')} label='toAccountCC' />
+  <LabelAndInput state={state.focusOn('monitoringAccount')} label='monitoringAccountCC' />
   <LabelAndInput state={state.focusOn('type')} label='typeCC' />
   <LabelAndInput state={state.focusOn('balance')} label='balanceCC' />
   <LabelAndInput state={state.focusOn('notes')} label='notesCC' />

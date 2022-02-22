@@ -12,6 +12,7 @@ export const ETransferDataD: DataD = {
     description: { dataDD: OneLineStringDD, sample: [ 'Why we are doing this transfer' ] },
     fromAccount: { dataDD: AccountIdDD },
     toAccount: { dataDD: AccountIdDD },
+    monitoringAccount: { dataDD: AccountIdDD },
     type: { dataDD: EAccountDisplayTypeDD },
     balance: { dataDD: MoneyDD },
     notes: { dataDD: ManyLineStringDD},

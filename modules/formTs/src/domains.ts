@@ -30,6 +30,7 @@ export interface ETransferDataDDomain{
   dateOfETransfer: string;
   description: string;
   fromAccount: string;
+  monitoringAccount: string;
   notes: string;
   toAccount: string;
   type: string;

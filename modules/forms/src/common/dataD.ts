@@ -3,14 +3,23 @@
 
 import { DisplayCompD, LabelAndInputCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeComponents";
-export interface HasSample{
+import { safeArray } from "@focuson/utils";
+import { isPrimitive } from "util";
+
+export interface HasSample {
   sample?: string[]
 }
-export interface HasEnum{
+export interface HasEnum {
   enum?: EnumDD;
 }
 
-export interface OneDataDD  extends HasSample{
+export function sampleFromDataD ( o: OneDataDD | undefined, d: AllDataDD ): string[] {
+  const fromO: string[] = safeArray ( o?.sample )
+  const fromD: string[] = isPrimDd ( d ) ? [ ...safeArray ( d.sample ), ...safeArray ( d.enum ? Object.keys ( d.enum ) : [] ) ] : []
+  return [ ...fromO, ...fromD ]
+}
+
+export interface OneDataDD extends HasSample {
   dataDD: AllDataDD;
   displayParams?: ComponentDisplayParams,
   graphQl?: string, // might be possible to default this which would be cool
@@ -38,7 +47,7 @@ export interface CommonDataDD {
 export interface DataD extends CommonDataDD {
   structure: ManyDataDD;
 }
-export interface PrimitiveDD extends CommonDataDD ,HasSample,HasEnum{
+export interface PrimitiveDD extends CommonDataDD, HasSample, HasEnum {
   reactType: string,
   label?: string;
   validation: SingleFieldValidationDD;
@@ -133,7 +142,9 @@ export function findAllDataDs ( a: AllDataDD[], stopAtDisplay?: boolean ): Names
   a.flatMap ( d => findDataDDIn ( d, stopAtDisplay ) ).forEach ( d => result [ d.name ] = d )
   return result
 }
-
+export function isPrimDd ( d: any ): d is PrimitiveDD {
+  return !isRepeatingDd ( d ) && !isDataDd ( d )
+}
 
 export function isDataDd ( d: any ): d is DataD {
   return !!d.structure
@@ -186,7 +197,7 @@ export const ManyLineStringDD: PrimitiveDD = {
   reactType: 'string',
   description: "A string that needs many lines and uses a text Area",
   display: LabelAndInputCD,
-  validation: { },
+  validation: {},
   sample: [ "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit" ]
 }
 export const IntegerDD: PrimitiveDD = {

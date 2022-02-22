@@ -5,14 +5,10 @@ import { domainName, emptyName, sampleName } from "./names";
 import { dataDsIn, PageD } from "../common/pageD";
 import { TSParams } from "./config";
 import { indent, indentList } from "./codegen";
-import { asMultilineJavaString } from "../../../utils/src/utils";
+import { asMultilineJavaString, safePick } from "@focuson/utils";
 
 
 const addData = ( start: boolean, path: string[], acc: any, d: DataD ) => start ? Lenses.fromPath ( path ).set ( acc, {} ) : acc;
-function safePick ( s: string[] | undefined, i: number ) {
-  const sa = safeArray ( s )
-  return sa.length == 0 ? '' : sa[ i % sa.length ]
-}
 
 export function selectSample ( i: number, ...ds: (HasSample | undefined | HasEnum)[] ) {
   const enums: string[] = safeArray<any> ( ds ).flatMap ( d => sortedEntries ( d?.enum ).map ( x => x[ 0 ] ) )

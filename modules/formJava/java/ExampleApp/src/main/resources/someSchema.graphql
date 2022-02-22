@@ -45,6 +45,7 @@ type ETransferDataD{
   description: String!
   fromAccount: String!
   toAccount: String!
+  monitoringAccount: String!
   type: String!
   balance: String!
   notes: String!
@@ -75,6 +76,7 @@ input ETransferDataDInp{
   description: String!
   fromAccount: String!
   toAccount: String!
+  monitoringAccount: String!
   type: String!
   balance: String!
   notes: String!
