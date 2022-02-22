@@ -2,6 +2,7 @@ import { AllDataDD, DataD } from "../common/dataD";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
 import { RestAction, RestActionDetail, RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
+import { modals } from "ExampleApp/src/modals";
 
 
 export const domainName = ( d: DataD ): string => d.name + "Domain";
@@ -23,3 +24,4 @@ export const restControllerName = ( restD: RestD ) => `${restD.dataDD.name}Contr
 
 export const queryName = ( restD: RestD, action: RestAction ): string => action + restD.dataDD.name
 
+export const modalName = (p: PageD, modal: PageD) => [p.name,modal.name].join("_")

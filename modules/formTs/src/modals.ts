@@ -7,5 +7,5 @@ import { FState } from "./common";
 export type Modals = typeof modals
 const identity = Lenses.identity<FState> ( 'allModalPages' );
 export const modals: ModalPagesDetails<FState> = {
-      EAccountsSummary_CreatePlan: { displayModalFn: CreatePlanDD, lens: identity.focusQuery('EAccountsSummary').focusQuery('temp')}
+      EAccountsSummary_CreatePlan: { displayModalFn: CreatePlanDD, lens: identity.focusQuery('EAccountsSummary').focusQuery('fromApi').focusQuery('createPlan')}
 }

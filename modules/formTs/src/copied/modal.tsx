@@ -1,8 +1,9 @@
 import { CommonStateProps, RestAction } from "./common";
-import { PageMode } from "@focuson/pages";
+import { PageMode, selectionModalPageL } from "@focuson/pages";
 
 
 export interface ModalButtonProps<S> extends CommonStateProps<S, any> {
+  modal: string;
   mode: PageMode;
   mainData?: string;
   tempData?: string;
@@ -11,8 +12,11 @@ export interface ModalButtonProps<S> extends CommonStateProps<S, any> {
   text?: string;
 }
 
-export function ModalButton<S> ( { id }: ModalButtonProps<S> ) {
-  return <button>{id}</button>
+export function ModalButton<S extends any> ( { state, id, text, modal }: ModalButtonProps<S> ): JSX.Element {
+// @ts-ignore
+  const bodge = selectionModalPageL<S> ()
+  return <button id={id} onClick={() => state.copyWithLens ( bodge ).setJson ( modal )}>{text}</button>
+
 }
 
 export function ModalCancelButton<S> ( { id }: CommonStateProps<S, any> ) {

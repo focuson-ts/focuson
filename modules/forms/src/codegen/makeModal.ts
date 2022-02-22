@@ -1,5 +1,5 @@
 import { PageD } from "../common/pageD";
-import { componentName, pageComponentName } from "./names";
+import { componentName, modalName, pageComponentName } from "./names";
 import { safeArray } from "@focuson/utils";
 import { focusQueryFor } from "./codegen";
 import { FState } from "ExampleApp/src/common";
@@ -14,7 +14,7 @@ export interface ModalCreationData {
 
 export function walkModals ( ps: PageD[] ): ModalCreationData[] {
   return ps.filter ( p => p.pageType === 'MainPage' ).flatMap ( p => safeArray ( p.modals ).map ( ( { modal, path } ) =>
-    ({ name: [ p.name, modal.name ].join ( "_" ), path: [ p.name, ...path ], modal }) ) )
+    ({ name: modalName ( p, modal ), path: [ p.name, ...path ], modal }) ) )
 }
 
 export function makeModal ( { name, path, modal }: ModalCreationData ): string[] {

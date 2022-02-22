@@ -21,7 +21,7 @@ export interface RestDefnInPage {
 export type AllButtonsInPage = ModalButtonInPage | RestButtonInPage | ModalCloseButton | ResetStateButton
 export interface ModalButtonInPage {
   control: 'ModalButton',
-  modal: string,
+  modal: PageD,
   mode: PageMode,
   mainData?: string,
   tempData: string,

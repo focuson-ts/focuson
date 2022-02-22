@@ -25,14 +25,14 @@ export function makePages ( params: TSParams, ps: PageD[] ): string[] {
   // import { EAccountsSummaryPage, ETransferPage, OccupationAndIncomeDetailsPage } from "./render";
   return [
     `import { identityOptics } from "@focuson/lens";`,
-    `import { ModalPagesDetails, MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";`,
+    `import { MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";`,
+    `import { modals, Modals } from "./${params.modalsFile}";`,
     `import { ${params.stateName} } from "./${params.commonFile}";`,
     `import { ${allMainPages ( ps ).map ( p => pageComponentName ( p ) ).join ( "," )} } from "./${params.renderFile}";`,
+    '',
     `function MyLoading () {`,
     `      return <p>Loading</p>`,
     `}`,
-    `export const modals: ModalPagesDetails<FState> = {}`,
-    `export type Modals = typeof modals`,
     `const simpleMessagesConfig = simpleMessagesPageConfig<${params.stateName}, string, Modals> ( modals, MyLoading )`,
     `export const pages: MultiPageDetails<${params.stateName}, any> = {`,
     ...addStringToEndOfAllButLast ( "," ) ( ps.flatMap ( makeMainPage ( params ) ) ),

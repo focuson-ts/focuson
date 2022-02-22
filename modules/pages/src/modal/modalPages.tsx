@@ -1,5 +1,6 @@
 import { identityOptics, Optional } from '@focuson/lens';
 import { LensProps, LensState } from '@focuson/state';
+import { Loading } from "../loading";
 
 
 export interface HasSelectedModalPage {
@@ -53,15 +54,25 @@ export function allModelPageDetails<S extends HasSelectedModalPage, ModalDetails
 /** Given a config.ts, a state and a main page, this will work out if a modal page is needed, and if so add it
  * It returns either the main page, or the main page with modal on top of it*/
 export function addModalPageIfNeeded<S, MD extends ModalPagesDetails<S>> ( allModalPageDetails: AllModalPageDetails<S, MD> | undefined, state: LensState<S, any>, main: JSX.Element ) {
+  // @ts-ignore
+  const debug = s.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
+  if ( debug ) console.log ( 'addModalPageIfNeeded' )
   if ( allModalPageDetails ) {
     const { modalPageDetails, modelPageFn, lens } = allModalPageDetails
     const selectedModalPage = lens.getOption ( state.main )
     if ( selectedModalPage ) {
       const oneModalPageDetails = modalPageDetails?.[ selectedModalPage ]
+      if ( debug ) console.log ( 'addModalPageIfNeeded -oneModalPageDetails', oneModalPageDetails )
       if ( oneModalPageDetails ) {
         const modalState: LensState<S, any> = state.copyWithLens ( oneModalPageDetails.lens )
-        const modal: JSX.Element = oneModalPageDetails.displayModalFn ( { state: modalState } )
-        return modelPageFn ( { state, main, modal } )
+        if ( debug ) console.log ( 'addModalPageIfNeeded -modalState', modalState )
+        const empty = modalState.optJson ()
+        if ( debug ) console.log ( 'addModalPageIfNeeded -empty', empty )
+        const modal: JSX.Element = empty ? <Loading/> : oneModalPageDetails.displayModalFn ( { state: modalState } )
+        if ( debug ) console.log ( 'addModalPageIfNeeded -modal', modal )
+        let result = modelPageFn ( { state, main, modal } );
+        if ( debug ) console.log ( 'addModalPageIfNeeded -result', result )
+        return result
       } else throw new Error ( `Illegal modal page ${selectedModalPage}. Legal values are ${Object.keys ( modalPageDetails ).sort ().join ( "," )}` )
     }
   }

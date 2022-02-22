@@ -32,11 +32,11 @@ export function EAccountsSummaryPage<S>(){
     ( fullState, state ) => {
   return (<Layout  details='[1][3,3][5]'>
    <EAccountsSummaryDD state={state} />
-   <ModalButton id='amendExistingPlan' state={state} mode='edit' mainData='fromApi' tempData='temp' rest='createPlanRestD' action='update'  />
-   <ModalButton id='createNewPlan' state={state} mode='create'  tempData='temp' rest='createPlanRestD' action='create'  />
+   <ModalButton id='amendExistingPlan' text='amendExistingPlan' modal = 'EAccountsSummary_CreatePlan' state={state} mode='edit' mainData='fromApi' tempData='temp' rest='createPlanRestD' action='update'  />
+   <ModalButton id='createNewPlan' text='createNewPlan' modal = 'EAccountsSummary_CreatePlan' state={state} mode='create'  tempData='temp' rest='createPlanRestD' action='create'  />
    <RestButton id='deleteExistingPlan' state={state} />
    <RestButton id='refresh' state={state} />
-   <ModalButton id='requestInfo' state={state} mode='view' mainData='TDB' tempData='TBD'   />
+   <ModalButton id='requestInfo' text='requestInfo' modal = 'EAccountsSummary_CreatePlan' state={state} mode='view' mainData='TDB' tempData='TBD'   />
    </Layout>)})}
 export function ETransferPage<S>(){
   return focusedPageWithExtraState<S, ETransferPageDomain, ETransferDataDDomain> ( s => 'ETransfer' ) ( s => s.focusOn('fromApi')) (

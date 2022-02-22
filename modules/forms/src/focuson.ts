@@ -23,6 +23,7 @@ import { makePages } from "./codegen/makePages";
 import { CreateEAccountPageD } from "./example/createEAccount/createEAccount.pageD";
 import { CreatePlanPD } from "./example/eAccounts/createPlanPD";
 import { makeModals } from "./codegen/makeModal";
+import { RestDefnInPageProperties } from "./common/pageD";
 
 export function writeToFile ( name: string, contents: string[] ) {
   fs.writeFileSync ( name, contents.join ( '\n' ) );
@@ -73,7 +74,7 @@ fs.mkdirSync ( `${tsPublic}`, { recursive: true } )
 
 let pages = [ OccupationAndIncomeDetailsPageD, EAccountsSummaryPD, CreatePlanPD, ETransferPageD, CreateEAccountPageD ];
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
-let rests = unique ( pages.flatMap ( x => sortedEntries ( x.rest ) ).map ( x => x[ 1 ].rest ), r => r.dataDD.name )
+let rests = unique ( pages.flatMap ( x => sortedEntries ( x.rest ) ).map ( (x: [string, RestDefnInPageProperties]) => x[ 1 ].rest ), r => r.dataDD.name )
 
 
 writeToFile ( `${tsCode}/${params.renderFile}.tsx`, [ ...imports ( params.domainsFile, params.pageDomainsFile ), ...createAllReactComponents ( params, pages ) ] )

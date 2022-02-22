@@ -71,6 +71,7 @@ let setJson = setJsonForFocusOn ( config, ( s: LensState<FState, FState> ): void
 setJson ( {
   ...emptyState,
   pageSelection: { pageName: 'ETransfer', firstTime: true, pageMode: 'edit' }
+
   // currentSelectedModalPage: 'EAccountsSummary_CreatePlan'
 } )
 

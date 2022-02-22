@@ -46,6 +46,8 @@ export function SelectedPage<S, MD extends ModalPagesDetails<S>> ( { state, page
       if ( debug ) console.log ( "SelectedPage displayMain" )
       let main = displayMain ( config, pageFunction, lsForPage, selectedPageData.pageMode );
       if ( debug ) console.log ( "SelectedPage displayMain result", main )
+      if ( debug ) console.log ( "SelectedPage displayMain lsForPage", lsForPage )
+      if ( debug ) console.log ( "SelectedPage displayMain lsForPage", lsForPage.optJson() )
       // if ( debug ) console.log ( "SelectedPage displayMain result - json", JSON.stringify ( main ) )
       return main
     }

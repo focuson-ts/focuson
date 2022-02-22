@@ -20,7 +20,7 @@ export const EAccountsSummaryPD: PageD = {
     temp: { dataDD: EAccountsSummaryDD },
     createPlan: { dataDD: EAccountsSummaryDD } //TDB
   },
-  modals: [ { modal: CreatePlanPD, path: [ 'temp' ] } ],
+  modals: [ { modal: CreatePlanPD, path: [ 'fromApi' , 'createPlan'] } ],
   /** Binds the rest to 'where it takes place'. So we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
   rest: {
     eAccountsSummary: { rest: eAccountsSummaryRestD, targetFromPath: 'fromApi', fetcher: 'get' },
@@ -29,12 +29,12 @@ export const EAccountsSummaryPD: PageD = {
   },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
-    createNewPlan: { control: 'ModalButton', modal: 'CreatePlan', mode: 'create', tempData: 'temp', restOnCommit: { rest: 'createPlanRestD', action: 'create' } },
+    createNewPlan: { control: 'ModalButton', modal: CreatePlanPD, mode: 'create', tempData: 'temp', restOnCommit: { rest: 'createPlanRestD', action: 'create' } },
     //questions: how do we know which is the existing plan... is there a list? are we an entry in the list? do we need to navigate to it?
-    amendExistingPlan: { control: 'ModalButton', modal: 'createPlan', mode: 'edit', mainData: 'fromApi', tempData: 'temp', restOnCommit: { rest: 'createPlanRestD', action: 'update' } },
+    amendExistingPlan: { control: 'ModalButton', modal: CreatePlanPD, mode: 'edit', mainData: 'fromApi', tempData: 'temp', restOnCommit: { rest: 'createPlanRestD', action: 'update' } },
     deleteExistingPlan: { control: 'RestButton', rest: 'createPlanRestD', action: 'delete', confirm: true },
     refresh: { control: 'RestButton', rest: 'exportAccountsSummary', action: 'get' },
-    requestInfo: { control: 'ModalButton', modal: 'requestInfo', mode: 'view', mainData: 'TDB', tempData: 'TBD' },
+    requestInfo: { control: 'ModalButton', modal:CreatePlanPD, mode: 'view', mainData: 'TDB', tempData: 'TBD' },
   }
 }
 
