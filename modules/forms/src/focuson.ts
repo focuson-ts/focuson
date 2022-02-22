@@ -2,7 +2,7 @@ import { makeGraphQlSchema } from "./codegen/makeGraphQlTypes";
 import fs from "fs";
 import { makeAllJavaWiring, makeJavaResolversInterface } from "./codegen/makeJavaResolvers";
 import { createAllReactComponents } from "./codegen/makeComponents";
-import { createPlanPD, EAccountsSummaryPD } from "./example/eAccounts/eAccountsSummary.pageD";
+import { EAccountsSummaryPD } from "./example/eAccounts/eAccountsSummary.pageD";
 import { makeAllDomainsFor, makePageDomainsFor } from "./codegen/makeDomain";
 import { sortedEntries } from "@focuson/utils";
 import { unique } from "./common/restD";
@@ -21,12 +21,15 @@ import { ETransferPageD } from "./example/eTransfers/eTransfers.pageD";
 import { OccupationAndIncomeDetailsPageD } from "./example/occupationAndIncomeDetails/occupationAndIncomeDetails.pageD";
 import { makePages } from "./codegen/makePages";
 import { CreateEAccountPageD } from "./example/createEAccount/createEAccount.pageD";
+import { CreatePlanPD } from "./example/eAccounts/createPlanPD";
+import { makeModals } from "./codegen/makeModal";
 
 export function writeToFile ( name: string, contents: string[] ) {
   fs.writeFileSync ( name, contents.join ( '\n' ) );
 }
 
 const params: CombinedParams = {
+  modalsFile: "modals",
   pagesFile: 'pages',
   focusOnVersion: "^0.4.13",
   commonParams: "CommonIds",
@@ -68,7 +71,7 @@ fs.mkdirSync ( `${tsCode}`, { recursive: true } )
 fs.mkdirSync ( `${tsScripts}`, { recursive: true } )
 fs.mkdirSync ( `${tsPublic}`, { recursive: true } )
 
-let pages = [ OccupationAndIncomeDetailsPageD, EAccountsSummaryPD, createPlanPD, ETransferPageD,CreateEAccountPageD ];
+let pages = [ OccupationAndIncomeDetailsPageD, EAccountsSummaryPD, CreatePlanPD, ETransferPageD, CreateEAccountPageD ];
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
 let rests = unique ( pages.flatMap ( x => sortedEntries ( x.rest ) ).map ( x => x[ 1 ].rest ), r => r.dataDD.name )
 
@@ -77,6 +80,7 @@ writeToFile ( `${tsCode}/${params.renderFile}.tsx`, [ ...imports ( params.domain
 writeToFile ( `${tsCode}/${params.pageDomainsFile}.ts`, makePageDomainsFor ( params, pages ) )
 writeToFile ( `${tsCode}/${params.domainsFile}.ts`, makeAllDomainsFor ( pages ) )
 writeToFile ( `${tsCode}/${params.commonFile}.ts`, makeCommon ( params, pages, rests ) )
+writeToFile ( `${tsCode}/${params.modalsFile}.ts`, makeModals ( pages ) )
 writeToFile ( `${tsCode}/${params.fetchersFile}.ts`, [
   ...makeFetchersImport ( params ),
   ...makeAllFetchers ( params, pages ),

@@ -1,12 +1,13 @@
 import { findAllCommonParams, makeFullState, makeCommonParams } from "../codegen/makeCommon";
-import { createPlanPD, EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
+import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
+import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 
 
 describe ( "makeFullState", () => {
   it ( 'should make the FullState', () => {
-    expect ( makeFullState ( paramsForTest, [ EAccountsSummaryPD, createPlanPD ] ) ).toEqual ( [
+    expect ( makeFullState ( paramsForTest, [ EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
       "export interface FState extends HasSimpleMessages,HasPageSelection,HascommonIds,HasTagHolder,HasSelectedModalPage,HasPostCommand<FState,any>,HasFocusOnDebug,",
       " pageDomains.HasEAccountsSummaryPageDomain",
       "{}"

@@ -7,7 +7,7 @@ import { EAccountsSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD"
 import { sortedEntries } from "@focuson/utils";
 import { componentName, pageDomainName, domainName, pageComponentName } from "./names";
 import { makeButtonsFrom } from "./makeButtons";
-import { indentList, noExtension } from "./codegen";
+import { focusOnFor, focusQueryFor, indentList, noExtension } from "./codegen";
 import { TSParams } from "./config";
 
 
@@ -83,17 +83,17 @@ export function createReactComponent ( dataD: DataD ): string[] {
 
 
 export function createReactPageComponent ( pageD: PageD ): string[] {
-  if ( pageD.pageType === 'ModalPage' ) return [ `// Not creating modal page for ${pageD.name} yet` ]
   if ( pageD.pageType === 'MainPage' ) return createReactMainPageComponent ( pageD )
+  if ( pageD.pageType === 'ModalPage' ) return []
   throw new Error ( `Unknown page type ${pageD.pageType} in ${pageD.name}` )
 }
 
 export function createReactMainPageComponent ( pageD: PageD ): string[] {
   const { dataDD, layout } = pageD.display
-  let target = `${pageD.display.target.join ( '.' )}`;
+  const focus = focusOnFor ( pageD.display.target );
   return [
     `export function ${pageComponentName ( pageD )}<S>(){`,
-    `  return focusedPageWithExtraState<S, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}> ( s => '${pageD.name}' ) ( s => s.focusOn ( '${target}' ) ) (
+    `  return focusedPageWithExtraState<S, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}> ( s => '${pageD.name}' ) ( s => s${focus}) (
     ( fullState, state ) => {`,
     `  return (<${layout.name}  details='${layout.details}'>`,
     `   <${componentName ( dataDD )} state={state} />`,

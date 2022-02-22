@@ -14,3 +14,5 @@ export const addStringToEndOfAllButLast = ( ch: string ) => ( ss: string[] ): st
 
 export const indent = ( path: string[], s: string ): string => ' '.repeat ( path.length * 2 + 2 ) + s;
 export const indentList = ( ss: string[] ): string[] => ss.map ( s => ' ' + s )
+export const focusQueryFor = (path: string[]) =>path.map ( p => `.focusQuery('${p}')` ).join ( '')
+export const focusOnFor = (path: string[]) =>path.map ( p => `.focusOn('${p}')` ).join ( '')

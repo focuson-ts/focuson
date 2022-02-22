@@ -1,6 +1,6 @@
-import { safeArray, sortedEntries } from "@focuson/utils";
+import { sortedEntries } from "@focuson/utils";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
-import { pageDomainName, domainName, fetcherName, hasDomainForPage, selectedPage } from "./names";
+import { domainName, fetcherName, hasDomainForPage, pageDomainName } from "./names";
 import { CombinedParams, TSParams } from "./config";
 import { imports, noExtension } from "./codegen";
 
@@ -12,7 +12,6 @@ export const makeFetcherCode = ( params: CombinedParams ) => ( p: PageD ) => ( d
   const paramsString = sortedEntries ( def.rest.params ).flatMap ( ( [ name, params ] ) => "'" + name + "'" ).join ( ", " )
   let d = def.rest.dataDD;
   const dataType = domainName ( d )
-  const pageName = selectedPage ( p )
   const targetFromPath = def.targetFromPath;
   return [
     `//fetcher type ${def.fetcher}`,

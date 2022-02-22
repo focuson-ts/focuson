@@ -2,8 +2,9 @@ import { DateDD, MoneyDD } from "../common/dataD";
 import { EAccountsSummaryDD, EAccountsSummaryTableDD } from "../example/eAccounts/eAccountsSummary.dataD";
 import { createAllReactCalls, createAllReactComponents, createReactComponent, createReactPageComponent, listComponentsIn } from "../codegen/makeComponents";
 import { LabelAndInputCD, TableCD } from "../common/componentsD";
-import { createPlanPD, EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
+import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
+import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 
 
 describe ( " listComponentsIn", () => {
@@ -61,7 +62,7 @@ describe ( " listComponentsIn", () => {
     ] )
   } )
   it ( "should createAllReactComponents ", () => {
-    expect ( createAllReactComponents ( paramsForTest,[ EAccountsSummaryPD, createPlanPD, EAccountsSummaryPD, createPlanPD ] ) ).toEqual ( [
+    expect ( createAllReactComponents ( paramsForTest,[ EAccountsSummaryPD, CreatePlanPD, EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
       "import { LensProps } from \"@focuson/state\";",
       "import { Layout } from \"./copied/layout\";",
       "import { ModalButton, ModalCancelButton, ModalCommitButton } from \"./copied/modal\";",
@@ -75,7 +76,7 @@ describe ( " listComponentsIn", () => {
       "import {EAccountsSummaryDDDomain} from \"./domains\"",
       "import {EAccountSummaryDDDomain} from \"./domains\"",
       "export function EAccountsSummaryPage<S>(){",
-      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'EAccountsSummary' ) ( s => s.focusOn ( 'fromApi' ) ) (\n    ( fullState, state ) => {",
+      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state ) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
       "   <EAccountsSummaryDD state={state} />",
       "   <ModalButton id='amendExistingPlan' state={state} mode='edit' mainData='fromApi' tempData='temp' rest='createPlanRestD' action='update'  />",
@@ -84,9 +85,8 @@ describe ( " listComponentsIn", () => {
       "   <RestButton id='refresh' state={state} />",
       "   <ModalButton id='requestInfo' state={state} mode='view' mainData='TDB' tempData='TBD'   />",
       "   </Layout>)})}",
-      "// Not creating modal page for CreatePlan yet",
       "export function EAccountsSummaryPage<S>(){",
-      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'EAccountsSummary' ) ( s => s.focusOn ( 'fromApi' ) ) (\n    ( fullState, state ) => {",
+      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state ) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
       "   <EAccountsSummaryDD state={state} />",
       "   <ModalButton id='amendExistingPlan' state={state} mode='edit' mainData='fromApi' tempData='temp' rest='createPlanRestD' action='update'  />",
@@ -95,7 +95,6 @@ describe ( " listComponentsIn", () => {
       "   <RestButton id='refresh' state={state} />",
       "   <ModalButton id='requestInfo' state={state} mode='view' mainData='TDB' tempData='TBD'   />",
       "   </Layout>)})}",
-      "// Not creating modal page for CreatePlan yet",
       "export function CreatePlanDD<S>({state}: LensProps<S, CreatePlanDDDomain>){",
       "  return(<>",
       "  <LabelAndInput state={state.focusOn('createPlanStart')} label='Create Start' />",
@@ -120,7 +119,7 @@ describe ( " listComponentsIn", () => {
   it ( "should createReactPageComponent", () => {
     expect ( createReactPageComponent ( EAccountsSummaryPD ) ).toEqual ( [
       "export function EAccountsSummaryPage<S>(){",
-      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'EAccountsSummary' ) ( s => s.focusOn ( 'fromApi' ) ) (\n    ( fullState, state ) => {",
+      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state ) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
       "   <EAccountsSummaryDD state={state} />",
       "   <ModalButton id='amendExistingPlan' state={state} mode='edit' mainData='fromApi' tempData='temp' rest='createPlanRestD' action='update'  />",
@@ -130,9 +129,7 @@ describe ( " listComponentsIn", () => {
       "   <ModalButton id='requestInfo' state={state} mode='view' mainData='TDB' tempData='TBD'   />",
       "   </Layout>)})}"
     ])
-    expect ( createReactPageComponent ( createPlanPD ) ).toEqual ( [
-      "// Not creating modal page for CreatePlan yet"
-    ] )
+    expect ( createReactPageComponent ( CreatePlanPD ) ).toEqual ( [    ] )
   } )
 } )
 

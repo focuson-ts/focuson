@@ -1,14 +1,13 @@
-import { identityOptics, Lens } from "@focuson/lens";
-import { allModelPageDetails, ModalPagesDetails, MultiPageDetails, pageSelectionlens, SelectedPage, PageSelection, selectionModalPageL, simpleMessagesPageConfig, SelectPage } from "@focuson/pages";
+import { allModelPageDetails, pageSelectionlens, SelectedPage, selectionModalPageL, SelectPage } from "@focuson/pages";
 import { FocusOnConfig, setJsonForFocusOn } from "@focuson/focuson";
 import { postCommandsL, Posters } from "@focuson/poster";
-import { getElement, LensState, setJsonForFlux, LensProps } from "@focuson/state";
+import { getElement, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
 import { emptyState, FState } from "./common";
-import { EAccountsSummaryDD, EAccountsSummaryPage } from "./render";
 import { fetchWithDelay, fetchWithPrefix, loggingFetchFn, sortedEntries } from "@focuson/utils";
 import { fetchers } from "./fetchers";
-import { pages, modals } from "./pages";
+import { pages } from "./pages";
+import { modals } from "./modals";
 
 
 export const posters: Posters<FState> = {}
@@ -17,7 +16,6 @@ export const posters: Posters<FState> = {}
 const config: FocusOnConfig<FState> = {
   /** How data is sent to/fetched from apis */
   fetchFn: fetchWithDelay ( 2000, fetchWithPrefix ( 'http://localhost:8080', loggingFetchFn ) ),
-
   /**A hook that is called before anything else.  */
   preMutate: ( s: FState ) => s,
   /** A hook that is called after everything else.  */
@@ -64,12 +62,16 @@ let setJson = setJsonForFocusOn ( config, ( s: LensState<FState, FState> ): void
       </li>
 
       {sortedEntries ( pages ).map ( ( [ name, pd ] ) =>
-        <li key={name}><SelectPage state={s} pageName={name} pageMode='edit' selectedPageLens={pageSelectionlens<FState> ()}/></li> )}
+       <li key={name}><SelectPage state={s} pageName={name} pageMode='edit' selectedPageLens={pageSelectionlens<FState> ()}/></li> )}
     </ul>
     <SelectedPage state={s} pages={pages} selectedPageL={pageSelectionlens<FState> ()}/>
     <pre>{JSON.stringify ( s.main, null, 2 )}</pre>
   </div>, rootElement ) )
 
-setJson ( { ...emptyState, pageSelection: { pageName: 'ETransfer', firstTime: true, pageMode: 'edit' }, } )
+setJson ( {
+  ...emptyState,
+  pageSelection: { pageName: 'ETransfer', firstTime: true, pageMode: 'edit' }
+  // currentSelectedModalPage: 'EAccountsSummary_CreatePlan'
+} )
 
 

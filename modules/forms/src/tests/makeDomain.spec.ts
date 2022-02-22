@@ -1,7 +1,8 @@
 import { makeAllDomainsFor, makeDomainFor, makePageDomainsFor } from "../codegen/makeDomain";
 import { CreatePlanDD, EAccountsSummaryDD, EAccountSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD";
-import { createPlanPD, EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
+import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
+import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 
 
 describe ( "makeDomainFor", () => {
@@ -41,7 +42,7 @@ describe ( "makeDomainFor", () => {
 
 describe ( "makeAllDomainsFor", () => {
   it ( "should make all the interfaces for the apges", () => {
-    expect ( makeAllDomainsFor ( [ EAccountsSummaryPD, createPlanPD, EAccountsSummaryPD, createPlanPD ] ) ).toEqual ( [
+    expect ( makeAllDomainsFor ( [ EAccountsSummaryPD, CreatePlanPD, EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
       "export interface CreatePlanDDDomain{",
       "  createPlanDate: string;",
       "  createPlanEnd: string;",
@@ -69,7 +70,7 @@ describe ( "makeAllDomainsFor", () => {
 
 describe ( "makePageDomainsFor", () => {
   it ( " Should make the has, and the page domain", () => {
-    expect ( makePageDomainsFor ( paramsForTest, [ EAccountsSummaryPD, createPlanPD ] ) ).toEqual ( [
+    expect ( makePageDomainsFor ( paramsForTest, [ EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
       "import * as domains from './domains';",
       "export interface HasEAccountsSummaryPageDomain {   EAccountsSummary?: EAccountsSummaryPageDomain}",
       "export interface EAccountsSummaryPageDomain{",

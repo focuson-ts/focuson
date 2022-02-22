@@ -3,6 +3,7 @@ import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAc
 import { CombinedParams } from "../codegen/config";
 
 export const paramsForTest: CombinedParams = {
+  modalsFile: "modals",
   focusOnVersion: "^0.4.5",
   commonParams: "commonIds",
   stateName: "FState",

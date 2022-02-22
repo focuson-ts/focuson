@@ -57,6 +57,10 @@ export interface LayoutD {
   details: string // ok not sure what to do here... so this is just a placeholder
 }
 export type PageType = 'MainPage' | 'ModalPage'
+export interface ModalData{
+  modal: PageD,
+  path: string[]
+}
 export interface PageD {
   name: string,
   pageType: PageType,
@@ -64,6 +68,7 @@ export interface PageD {
   display: { layout: LayoutD, target: string[], dataDD: DataD },
   initialValue: 'empty' | any,
   domain: DomainDefnInPage,
+  modals?: ModalData[],
   rest: RestDefnInPage,
   buttons: ButtonDefnInPage
 }

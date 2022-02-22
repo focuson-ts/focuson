@@ -1,6 +1,7 @@
-import { CreatePlanDD, EAccountsSummaryDD } from "./eAccountsSummary.dataD";
+import { EAccountsSummaryDD } from "./eAccountsSummary.dataD";
 import { createPlanRestD, eAccountsSummaryRestD } from "./eAccountsSummary.restD";
 import { PageD } from "../../common/pageD";
+import { CreatePlanPD } from "./createPlanPD";
 
 
 /** This is the 'bringing it all together */
@@ -19,16 +20,16 @@ export const EAccountsSummaryPD: PageD = {
     temp: { dataDD: EAccountsSummaryDD },
     createPlan: { dataDD: EAccountsSummaryDD } //TDB
   },
-
+  modals: [ { modal: CreatePlanPD, path: [ 'temp' ] } ],
   /** Binds the rest to 'where it takes place'. So we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
   rest: {
     eAccountsSummary: { rest: eAccountsSummaryRestD, targetFromPath: 'fromApi', fetcher: 'get' },
     /** this will probably need to specify 'the current' plan in some way */
-    createPlanRestD: { rest: createPlanRestD, targetFromPath: 'createPlan' }
+    createPlanRestD: { rest: createPlanRestD, targetFromPath: 'CreatePlan' }
   },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
-    createNewPlan: { control: 'ModalButton', modal: 'createPlan', mode: 'create', tempData: 'temp', restOnCommit: { rest: 'createPlanRestD', action: 'create' } },
+    createNewPlan: { control: 'ModalButton', modal: 'CreatePlan', mode: 'create', tempData: 'temp', restOnCommit: { rest: 'createPlanRestD', action: 'create' } },
     //questions: how do we know which is the existing plan... is there a list? are we an entry in the list? do we need to navigate to it?
     amendExistingPlan: { control: 'ModalButton', modal: 'createPlan', mode: 'edit', mainData: 'fromApi', tempData: 'temp', restOnCommit: { rest: 'createPlanRestD', action: 'update' } },
     deleteExistingPlan: { control: 'RestButton', rest: 'createPlanRestD', action: 'delete', confirm: true },
@@ -37,21 +38,3 @@ export const EAccountsSummaryPD: PageD = {
   }
 }
 
-/** this is a modal window, so it's target is controlled by the caller */
-export const createPlanPD: PageD = {
-  name: 'CreatePlan',
-  pageType: 'ModalPage',
-  /** This page can only view data */
-  modes: [ 'view', 'create', 'edit' ],
-  /** How we display the page.*/
-  display: { layout: { name: 'Layout', details: '[3]' }, target: [], dataDD: CreatePlanDD },
-  /** As well as displaying/editing the data we have these buttons. These are passed to layout */
-  buttons: {
-    cancel: { control: 'ModalCancelButton' },
-    commit: { control: 'ModalCommitButton' }
-  },
-  //Not sure what to do about these
-  domain: {},
-  initialValue: {},
-  rest: {}
-}

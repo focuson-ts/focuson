@@ -18,7 +18,7 @@ import {EAccountSummaryDDDomain} from "./domains"
 import {ETransferDataDDomain} from "./domains"
 import {OccupationAndIncomeDomain} from "./domains"
 export function OccupationAndIncomeDetailsPage<S>(){
-  return focusedPageWithExtraState<S, OccupationAndIncomeDetailsPageDomain, OccupationAndIncomeDomain> ( s => 'OccupationAndIncomeDetails' ) ( s => s.focusOn ( 'fromApi' ) ) (
+  return focusedPageWithExtraState<S, OccupationAndIncomeDetailsPageDomain, OccupationAndIncomeDomain> ( s => 'OccupationAndIncomeDetails' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state ) => {
   return (<Layout  details='[1][1][1][1][1][1][1]'>
    <OccupationAndIncome state={state} />
@@ -28,7 +28,7 @@ export function OccupationAndIncomeDetailsPage<S>(){
    <button>prevEntry of type ResetStateButton cannot be create yet</button>
    </Layout>)})}
 export function EAccountsSummaryPage<S>(){
-  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'EAccountsSummary' ) ( s => s.focusOn ( 'fromApi' ) ) (
+  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state ) => {
   return (<Layout  details='[1][3,3][5]'>
    <EAccountsSummaryDD state={state} />
@@ -38,9 +38,8 @@ export function EAccountsSummaryPage<S>(){
    <RestButton id='refresh' state={state} />
    <ModalButton id='requestInfo' state={state} mode='view' mainData='TDB' tempData='TBD'   />
    </Layout>)})}
-// Not creating modal page for CreatePlan yet
 export function ETransferPage<S>(){
-  return focusedPageWithExtraState<S, ETransferPageDomain, ETransferDataDDomain> ( s => 'ETransfer' ) ( s => s.focusOn ( 'fromApi' ) ) (
+  return focusedPageWithExtraState<S, ETransferPageDomain, ETransferDataDDomain> ( s => 'ETransfer' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state ) => {
   return (<Layout  details='[3][1,1,1][1,1][1][3]'>
    <ETransferDataD state={state} />
@@ -49,7 +48,7 @@ export function ETransferPage<S>(){
    <button>resetAll of type ResetStateButton cannot be create yet</button>
    </Layout>)})}
 export function CreateEAccountPage<S>(){
-  return focusedPageWithExtraState<S, CreateEAccountPageDomain, CreateEAccountDataDDDomain> ( s => 'CreateEAccount' ) ( s => s.focusOn ( 'editing' ) ) (
+  return focusedPageWithExtraState<S, CreateEAccountPageDomain, CreateEAccountDataDDDomain> ( s => 'CreateEAccount' ) ( s => s.focusOn('editing')) (
     ( fullState, state ) => {
   return (<Layout  details='[1][1][1][1]]'>
    <CreateEAccountDataDD state={state} />
