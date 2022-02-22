@@ -35,12 +35,12 @@ describe ( " listComponentsIn", () => {
   it ( "should make the react component lists", () => {
     expect ( createAllReactCalls ( listComponentsIn ( EAccountsSummaryDD ) ) ).toEqual ([
       "<Table state={state.focusOn('eAccountsTable')} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} mode={mode} />",
-      "<LabelAndInput state={state.focusOn('totalMonthlyCost')} label='totalMonthlyCostCC' mode={mode} />",
-      "<LabelAndInput state={state.focusOn('oneAccountBalance')} label='oneAccountBalanceCC' mode={mode} />",
-      "<LabelAndInput state={state.focusOn('currentAccountBalance')} label='currentAccountBalanceCC' mode={mode} />",
+      "<LabelAndInput state={state.focusOn('totalMonthlyCost')} label='totalMonthlyCost' mode={mode} />",
+      "<LabelAndInput state={state.focusOn('oneAccountBalance')} label='oneAccountBalance' mode={mode} />",
+      "<LabelAndInput state={state.focusOn('currentAccountBalance')} label='currentAccountBalance' mode={mode} />",
       "<LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanStart')} label='Create Start' mode={mode} />",
-      "<LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanDate')} label='createPlanDateCC' ariaLabel='The Create Plan Date' mode={mode} />",
-      "<LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanEnd')} label='createPlanEndCC' mode={mode} />"
+      "<LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanDate')} label='createPlanDate' ariaLabel='The Create Plan Date' mode={mode} />",
+      "<LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanEnd')} label='createPlanEnd' mode={mode} />"
     ] )
   } )
 
@@ -49,12 +49,12 @@ describe ( " listComponentsIn", () => {
       "export function EAccountsSummaryDD<S>({state,mode}: FocusedProps<S, EAccountsSummaryDDDomain>){",
       "  return(<>",
       "  <Table state={state.focusOn('eAccountsTable')} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('totalMonthlyCost')} label='totalMonthlyCostCC' mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('oneAccountBalance')} label='oneAccountBalanceCC' mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('currentAccountBalance')} label='currentAccountBalanceCC' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('totalMonthlyCost')} label='totalMonthlyCost' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('oneAccountBalance')} label='oneAccountBalance' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('currentAccountBalance')} label='currentAccountBalance' mode={mode} />",
       "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanStart')} label='Create Start' mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanDate')} label='createPlanDateCC' ariaLabel='The Create Plan Date' mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanEnd')} label='createPlanEndCC' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanDate')} label='createPlanDate' ariaLabel='The Create Plan Date' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanEnd')} label='createPlanEnd' mode={mode} />",
       "</>)",
       "}"
     ])
@@ -91,19 +91,19 @@ describe ( " listComponentsIn", () => {
       "export function CreatePlanDD<S>({state,mode}: FocusedProps<S, CreatePlanDDDomain>){",
       "  return(<>",
       "  <LabelAndInput state={state.focusOn('createPlanStart')} label='Create Start' mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('createPlanDate')} label='createPlanDateCC' ariaLabel='The Create Plan Date' mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('createPlanEnd')} label='createPlanEndCC' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('createPlanDate')} label='createPlanDate' ariaLabel='The Create Plan Date' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('createPlanEnd')} label='createPlanEnd' mode={mode} />",
       "</>)",
       "}",
       "export function EAccountsSummaryDD<S>({state,mode}: FocusedProps<S, EAccountsSummaryDDDomain>){",
       "  return(<>",
       "  <Table state={state.focusOn('eAccountsTable')} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('totalMonthlyCost')} label='totalMonthlyCostCC' mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('oneAccountBalance')} label='oneAccountBalanceCC' mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('currentAccountBalance')} label='currentAccountBalanceCC' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('totalMonthlyCost')} label='totalMonthlyCost' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('oneAccountBalance')} label='oneAccountBalance' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('currentAccountBalance')} label='currentAccountBalance' mode={mode} />",
       "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanStart')} label='Create Start' mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanDate')} label='createPlanDateCC' ariaLabel='The Create Plan Date' mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanEnd')} label='createPlanEndCC' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanDate')} label='createPlanDate' ariaLabel='The Create Plan Date' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanEnd')} label='createPlanEnd' mode={mode} />",
       "</>)",
       "}"
     ])
