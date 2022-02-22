@@ -58,7 +58,7 @@ export function createOneReact ( { path, dataDD, display, displayParams }: Compo
   const focusOnString = path.map ( v => `.focusOn('${v}')` ).join ( '' )
   const dataDDParamsA: [ string, string ][] = dataDD.displayParams ? Object.entries ( dataDD.displayParams ).map ( ( [ name, o ] ) => [ name, addQuote ( o.value ) ] ) : []
   const defaultParams: [ string, string ][] = Object.entries ( display.params ).flatMap ( ( [ name, param ] ) => {
-    return param.needed === 'defaultToCamelCaseOfName' ? [ [ name, addQuote ( path.slice ( -1 ) + "CC" ) ] ] : []
+    return param.needed === 'defaultToCamelCaseOfName' ? [ [ name, addQuote ( path.slice ( -1 )+"" ) ] ] : []
   } )
   const displayParamsA: [ string, string ][] = displayParams ? Object.entries ( displayParams ).map ( ( [ name, value ] ) => [ name, addQuote ( value ) ] ) : []
   const fullDisplayParams = Object.entries ( Object.fromEntries ( [ ...defaultParams, ...dataDDParamsA, ...displayParamsA ] ) )

@@ -64,51 +64,51 @@ export function CreateEAccountPage<S>(){
    </Layout>)})}
 export function CreateEAccountDataDD<S>({state,mode}: FocusedProps<S, CreateEAccountDataDDDomain>){
   return(<>
-  <LabelAndInput state={state.focusOn('name')} label='nameCC' mode={mode} />
-  <LabelAndInput state={state.focusOn('type')} label='typeCC' mode={mode} />
-  <LabelAndInput state={state.focusOn('savingsStyle')} label='savingsStyleCC' mode={mode} />
-  <LabelAndInput state={state.focusOn('initialAmount')} label='initialAmountCC' mode={mode} />
+  <LabelAndInput state={state.focusOn('name')} label='name' mode={mode} />
+  <LabelAndInput state={state.focusOn('type')} label='type' mode={mode} />
+  <LabelAndInput state={state.focusOn('savingsStyle')} label='savingsStyle' mode={mode} />
+  <LabelAndInput state={state.focusOn('initialAmount')} label='initialAmount' mode={mode} />
 </>)
 }
 export function CreatePlanDD<S>({state,mode}: FocusedProps<S, CreatePlanDDDomain>){
   return(<>
   <LabelAndInput state={state.focusOn('createPlanStart')} label='Create Start' mode={mode} />
-  <LabelAndInput state={state.focusOn('createPlanDate')} label='createPlanDateCC' ariaLabel='The Create Plan Date' mode={mode} />
-  <LabelAndInput state={state.focusOn('createPlanEnd')} label='createPlanEndCC' mode={mode} />
+  <LabelAndInput state={state.focusOn('createPlanDate')} label='createPlanDate' ariaLabel='The Create Plan Date' mode={mode} />
+  <LabelAndInput state={state.focusOn('createPlanEnd')} label='createPlanEnd' mode={mode} />
 </>)
 }
 export function EAccountsSummaryDD<S>({state,mode}: FocusedProps<S, EAccountsSummaryDDDomain>){
   return(<>
   <Table state={state.focusOn('eAccountsTable')} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} mode={mode} />
-  <LabelAndInput state={state.focusOn('totalMonthlyCost')} label='totalMonthlyCostCC' mode={mode} />
-  <LabelAndInput state={state.focusOn('oneAccountBalance')} label='oneAccountBalanceCC' mode={mode} />
-  <LabelAndInput state={state.focusOn('currentAccountBalance')} label='currentAccountBalanceCC' mode={mode} />
+  <LabelAndInput state={state.focusOn('totalMonthlyCost')} label='totalMonthlyCost' mode={mode} />
+  <LabelAndInput state={state.focusOn('oneAccountBalance')} label='oneAccountBalance' mode={mode} />
+  <LabelAndInput state={state.focusOn('currentAccountBalance')} label='currentAccountBalance' mode={mode} />
   <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanStart')} label='Create Start' mode={mode} />
-  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanDate')} label='createPlanDateCC' ariaLabel='The Create Plan Date' mode={mode} />
-  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanEnd')} label='createPlanEndCC' mode={mode} />
+  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanDate')} label='createPlanDate' ariaLabel='The Create Plan Date' mode={mode} />
+  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanEnd')} label='createPlanEnd' mode={mode} />
 </>)
 }
 export function ETransferDataD<S>({state,mode}: FocusedProps<S, ETransferDataDDomain>){
   return(<>
   <LabelAndInput state={state.focusOn('amount')} label='Account Id' mode={mode} />
-  <LabelAndInput state={state.focusOn('dateOfETransfer')} label='dateOfETransferCC' mode={mode} />
-  <LabelAndInput state={state.focusOn('description')} label='descriptionCC' mode={mode} />
-  <LabelAndInput state={state.focusOn('fromAccount')} label='fromAccountCC' mode={mode} />
-  <LabelAndInput state={state.focusOn('toAccount')} label='toAccountCC' mode={mode} />
-  <LabelAndInput state={state.focusOn('monitoringAccount')} label='monitoringAccountCC' mode={mode} />
-  <LabelAndInput state={state.focusOn('type')} label='typeCC' mode={mode} />
-  <LabelAndInput state={state.focusOn('balance')} label='balanceCC' mode={mode} />
-  <LabelAndInput state={state.focusOn('notes')} label='notesCC' mode={mode} />
+  <LabelAndInput state={state.focusOn('dateOfETransfer')} label='dateOfETransfer' mode={mode} />
+  <LabelAndInput state={state.focusOn('description')} label='description' mode={mode} />
+  <LabelAndInput state={state.focusOn('fromAccount')} label='fromAccount' mode={mode} />
+  <LabelAndInput state={state.focusOn('toAccount')} label='toAccount' mode={mode} />
+  <LabelAndInput state={state.focusOn('monitoringAccount')} label='monitoringAccount' mode={mode} />
+  <LabelAndInput state={state.focusOn('type')} label='type' mode={mode} />
+  <LabelAndInput state={state.focusOn('balance')} label='balance' mode={mode} />
+  <LabelAndInput state={state.focusOn('notes')} label='notes' mode={mode} />
 </>)
 }
 export function OccupationAndIncome<S>({state,mode}: FocusedProps<S, OccupationAndIncomeDomain>){
   return(<>
-  <LabelAndInput state={state.focusOn('typeOfProfession')} label='typeOfProfessionCC' mode={mode} />
-  <LabelAndInput state={state.focusOn('occupation')} label='occupationCC' mode={mode} />
-  <LabelAndInput state={state.focusOn('customersDescription')} label='customersDescriptionCC' mode={mode} />
-  <LabelAndInput state={state.focusOn('businessType')} label='businessTypeCC' mode={mode} />
-  <LabelAndInput state={state.focusOn('businessName')} label='businessNameCC' mode={mode} />
-  <LabelAndInput state={state.focusOn('dateStarted')} label='dateStartedCC' mode={mode} />
-  <LabelAndInput state={state.focusOn('averageAnnualDrawings')} label='averageAnnualDrawingsCC' mode={mode} />
+  <LabelAndInput state={state.focusOn('typeOfProfession')} label='typeOfProfession' mode={mode} />
+  <LabelAndInput state={state.focusOn('occupation')} label='occupation' mode={mode} />
+  <LabelAndInput state={state.focusOn('customersDescription')} label='customersDescription' mode={mode} />
+  <LabelAndInput state={state.focusOn('businessType')} label='businessType' mode={mode} />
+  <LabelAndInput state={state.focusOn('businessName')} label='businessName' mode={mode} />
+  <LabelAndInput state={state.focusOn('dateStarted')} label='dateStarted' mode={mode} />
+  <LabelAndInput state={state.focusOn('averageAnnualDrawings')} label='averageAnnualDrawings' mode={mode} />
 </>)
 }
