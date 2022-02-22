@@ -63,7 +63,7 @@ export function createOneReact ( { path, dataDD, display, displayParams }: Compo
   const displayParamsA: [ string, string ][] = displayParams ? Object.entries ( displayParams ).map ( ( [ name, value ] ) => [ name, addQuote ( value ) ] ) : []
   const fullDisplayParams = Object.entries ( Object.fromEntries ( [ ...defaultParams, ...dataDDParamsA, ...displayParamsA ] ) )
   const displayParamsString = fullDisplayParams.map ( ( [ k, v ] ) => `${k}=${v}` ).join ( " " )
-  return [ `<${name} state={state${focusOnString}} ${displayParamsString} />` ]
+  return [ `<${name} state={state${focusOnString}} ${displayParamsString} mode={mode} />` ]
 
 }
 export function createAllReactCalls ( d: AllComponentData[] ): string[] {
@@ -73,7 +73,7 @@ export function createAllReactCalls ( d: AllComponentData[] ): string[] {
 export function createReactComponent ( dataD: DataD ): string[] {
   const contents = indentList ( indentList ( createAllReactCalls ( listComponentsIn ( dataD ) ) ) )
   return [
-    `export function ${componentName ( dataD )}<S>({state}: LensProps<S, ${domainName ( dataD )}>){`,
+    `export function ${componentName ( dataD )}<S>({state,mode}: FocusedProps<S, ${domainName ( dataD )}>){`,
     "  return(<>",
     ...contents,
     "</>)",
@@ -84,19 +84,30 @@ export function createReactComponent ( dataD: DataD ): string[] {
 
 export function createReactPageComponent ( pageD: PageD ): string[] {
   if ( pageD.pageType === 'MainPage' ) return createReactMainPageComponent ( pageD )
-  if ( pageD.pageType === 'ModalPage' ) return []
+  if ( pageD.pageType === 'ModalPage' ) return createReactModalPageComponent ( pageD )
   throw new Error ( `Unknown page type ${pageD.pageType} in ${pageD.name}` )
 }
 
+export function createReactModalPageComponent ( pageD: PageD ): string[] {
+  const { dataDD, layout } = pageD.display
+  const focus = focusOnFor ( pageD.display.target );
+  return [
+    `export function ${pageComponentName ( pageD )}<S>({state, mode}: FocusedProps<S,${domainName(pageD.display.dataDD)}>){`,
+    `  return (<${layout.name}  details='${layout.details}'>`,
+    `   <${componentName ( dataDD )} state={state}  mode={mode} />`,
+    ...indentList ( indentList ( indentList ( makeButtonsFrom ( pageD ) ) ) ),
+    `   </${layout.name}>)}`
+  ]
+}
 export function createReactMainPageComponent ( pageD: PageD ): string[] {
   const { dataDD, layout } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
   return [
     `export function ${pageComponentName ( pageD )}<S>(){`,
     `  return focusedPageWithExtraState<S, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}> ( s => '${pageD.name}' ) ( s => s${focus}) (
-    ( fullState, state ) => {`,
+    ( fullState, state , full, d, mode) => {`,
     `  return (<${layout.name}  details='${layout.details}'>`,
-    `   <${componentName ( dataDD )} state={state} />`,
+    `   <${componentName ( dataDD )} state={state}  mode={mode} />`,
     ...indentList ( indentList ( indentList ( makeButtonsFrom ( pageD ) ) ) ),
     `   </${layout.name}>)})}`
   ]
@@ -108,11 +119,12 @@ export function createAllReactComponents ( params: TSParams, pages: PageD[] ): s
   const imports = [
     `import { LensProps } from "@focuson/state";`,
     `import { Layout } from "./copied/layout";`,
-    `import { ModalButton, ModalCancelButton, ModalCommitButton } from "./copied/modal";`,
+    `import { ModalButton, ModalCancelButton, ModalCommitButton,ModalAndCopyButton } from "./copied/modal";`,
     `import { RestButton } from "./copied/rest";`,
     `import { LabelAndInput } from "./copied/LabelAndInput";`,
     `import { focusedPageWithExtraState } from "@focuson/pages";`,
     `import { Table } from "./copied/table";`,
+    `import { FocusedProps } from "./${params.commonFile}";`
   ]
   let pageDomain = noExtension ( params.pageDomainsFile );
   let domain = noExtension ( params.domainsFile );

@@ -1,6 +1,6 @@
 import { LensProps } from "@focuson/state";
 import { identityOptics } from "@focuson/lens";
-import { HasPageSelection, HasSelectedModalPage, HasSimpleMessages, Loading, ModalPagesDetails, MultiPageDetails, PageConfig, SelectedPageDebug, SimpleMessage, simpleMessagesPageConfig } from "@focuson/pages";
+import { FocusedProps, HasPageSelection, HasSelectedModalPage, HasSimpleMessages, Loading, ModalPagesDetails, MultiPageDetails, PageConfig, SelectedPageDebug, SimpleMessage, simpleMessagesPageConfig } from "@focuson/pages";
 
 
 export interface PageSpecState extends HasPageSelection, HasSimpleMessages, HasSelectedModalPage, SelectedPageDebug {
@@ -12,12 +12,12 @@ export function DisplayPageSpecState ( { state }: LensProps<PageSpecState, strin
   return <p>Main {state.optJson ()}</p>
 }
 
-export function ModalPageSpecState ( { state }: LensProps<PageSpecState, string> ) {
+export function ModalPageSpecState ( { state }: FocusedProps<PageSpecState, string> ) {
   return <p>Modal {state.optJson ()}</p>
 
 }
 export const modalDetails: ModalPagesDetails<PageSpecState> = {
-  'someModalPage': { lens: identityOptics<PageSpecState> ().focusQuery ( 'modalData' ), displayModalFn: ModalPageSpecState }
+  'someModalPage': { lens: identityOptics<PageSpecState> ().focusQuery ( 'modalData' ), displayModalFn: ModalPageSpecState, mode: 'view' }
 }
 export type ModalDetails = typeof modalDetails
 

@@ -1,10 +1,11 @@
-import { HasPageSelection, HasSelectedModalPage, HasSimpleMessages, SimpleMessage } from '@focuson/pages'
+import { HasPageSelection, HasSelectedModalPage, HasSimpleMessages, SimpleMessage, PageMode } from '@focuson/pages'
 import { defaultDateFn } from '@focuson/utils';
 import { commonTagFetchProps, HasTagHolder, OnTagFetchErrorFn } from '@focuson/fetcher';
 import { Lenses } from '@focuson/lens';
 import { tagOps } from '@focuson/template';
 import { HasPostCommand } from '@focuson/poster';
 import { HasFocusOnDebug } from '@focuson/focuson';
+import { LensProps } from '@focuson/state';
 import * as pageDomains from './pageDomains';
 export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasSelectedModalPage,HasPostCommand<FState,any>,HasFocusOnDebug,
  pageDomains.HasOccupationAndIncomeDetailsPageDomain,
@@ -17,6 +18,9 @@ export type CommonIds = {
 customerId?:string;
 accountId?:string;
 createPlanId?:string;
+}
+export interface FocusedProps<S,D> extends LensProps<S,D>{
+  mode: PageMode;
 }
 export const commonIdLens = Lenses.identity<FState> ().focusOn ( 'CommonIds' )
 export const commonIdOps = tagOps ( commonIdLens, { failSilently: false } )

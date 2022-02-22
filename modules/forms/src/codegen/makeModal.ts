@@ -4,22 +4,24 @@ import { safeArray } from "@focuson/utils";
 import { focusQueryFor } from "./codegen";
 import { FState } from "ExampleApp/src/common";
 import { CreatePlanDD } from "ExampleApp/src/render";
+import { PageMode } from "@focuson/pages";
 
 
 export interface ModalCreationData {
-  name: string,
-  path: string[],
-  modal: PageD
+  name: string;
+  path: string[];
+  modal: PageD;
+  mode: PageMode;
 }
 
 export function walkModals ( ps: PageD[] ): ModalCreationData[] {
   return ps.filter ( p => p.pageType === 'MainPage' ).flatMap ( p => safeArray ( p.modals ).map ( ( { modal, path } ) =>
-    ({ name: modalName ( p, modal ), path: [ p.name, ...path ], modal }) ) )
+    ({ name: modalName ( p, modal ), path: [ p.name, ...path ], modal, mode: 'edit' }) ) )
 }
 
-export function makeModal ( { name, path, modal }: ModalCreationData ): string[] {
+export function makeModal ( { name, path, modal, mode }: ModalCreationData ): string[] {
   const focus = focusQueryFor ( path )
-  return [ `      ${name}: { displayModalFn: ${componentName ( modal.display.dataDD )}, lens: identity${focus}}` ]
+  return [ `      ${name}: { displayModalFn: ${pageComponentName ( modal )}, mode: '${mode}', lens: identity${focus}}` ]
 }
 
 
@@ -28,7 +30,7 @@ export function makeModals ( ps: PageD[] ): string[] {
   return [
     `import { Lenses } from "@focuson/lens";`,
     `import { ModalPagesDetails } from "@focuson/pages";`,
-    `import { ${modals.map ( m => componentName ( m.modal.display.dataDD ) ).join ( "," )} } from "./render";`,
+    `import { ${modals.map ( m => pageComponentName ( m.modal ) ).join ( "," )} } from "./render";`,
     `import { FState } from "./common";`,
     ``,
     ``,

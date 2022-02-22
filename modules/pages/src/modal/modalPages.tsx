@@ -1,6 +1,7 @@
 import { identityOptics, Optional } from '@focuson/lens';
 import { LensProps, LensState } from '@focuson/state';
 import { Loading } from "../loading";
+import { PageMode } from "../pageSelection";
 
 
 export interface HasSelectedModalPage {
@@ -30,7 +31,8 @@ export interface ModalPagesDetails<S> {
 /** How to display a modal page. The lens focuses on the data needed to display the page, the displayModelFn is 'how to display the modal page' */
 export interface OneModalPageDetails<S, ModalPageState> {
   lens: Optional<S, ModalPageState>,
-  displayModalFn: ( props: { state: LensState<S, ModalPageState> } ) => JSX.Element,
+  displayModalFn: ( props: { state: LensState<S, ModalPageState>, mode: PageMode } ) => JSX.Element,
+  mode: PageMode
 }
 interface DisplayMainAndModalPageProps<S> extends LensProps<S, any> {
   main: JSX.Element,
@@ -55,7 +57,7 @@ export function allModelPageDetails<S extends HasSelectedModalPage, ModalDetails
  * It returns either the main page, or the main page with modal on top of it*/
 export function addModalPageIfNeeded<S, MD extends ModalPagesDetails<S>> ( allModalPageDetails: AllModalPageDetails<S, MD> | undefined, state: LensState<S, any>, main: JSX.Element ) {
   // @ts-ignore
-  const debug = s.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
+  const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
   if ( debug ) console.log ( 'addModalPageIfNeeded' )
   if ( allModalPageDetails ) {
     const { modalPageDetails, modelPageFn, lens } = allModalPageDetails
@@ -68,7 +70,7 @@ export function addModalPageIfNeeded<S, MD extends ModalPagesDetails<S>> ( allMo
         if ( debug ) console.log ( 'addModalPageIfNeeded -modalState', modalState )
         const empty = modalState.optJson ()
         if ( debug ) console.log ( 'addModalPageIfNeeded -empty', empty )
-        const modal: JSX.Element = empty ? <Loading/> : oneModalPageDetails.displayModalFn ( { state: modalState } )
+        const modal: JSX.Element = empty ? oneModalPageDetails.displayModalFn ( { state: modalState, mode: oneModalPageDetails.mode } ) : <Loading/>
         if ( debug ) console.log ( 'addModalPageIfNeeded -modal', modal )
         let result = modelPageFn ( { state, main, modal } );
         if ( debug ) console.log ( 'addModalPageIfNeeded -result', result )

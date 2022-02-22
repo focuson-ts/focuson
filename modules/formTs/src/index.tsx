@@ -62,7 +62,7 @@ let setJson = setJsonForFocusOn ( config, ( s: LensState<FState, FState> ): void
       </li>
 
       {sortedEntries ( pages ).map ( ( [ name, pd ] ) =>
-       <li key={name}><SelectPage state={s} pageName={name} pageMode='edit' selectedPageLens={pageSelectionlens<FState> ()}/></li> )}
+       <li key={name}><SelectPage state={s} pageName={name} pageMode='view' selectedPageLens={pageSelectionlens<FState> ()}/></li> )}
     </ul>
     <SelectedPage state={s} pages={pages} selectedPageL={pageSelectionlens<FState> ()}/>
     <pre>{JSON.stringify ( s.main, null, 2 )}</pre>
@@ -70,7 +70,7 @@ let setJson = setJsonForFocusOn ( config, ( s: LensState<FState, FState> ): void
 
 setJson ( {
   ...emptyState,
-  pageSelection: { pageName: 'ETransfer', firstTime: true, pageMode: 'edit' }
+  pageSelection: { pageName: 'ETransfer', firstTime: true, pageMode: 'view' }
 
   // currentSelectedModalPage: 'EAccountsSummary_CreatePlan'
 } )

@@ -16,7 +16,6 @@ export interface ModalAndCopyButtonProps<S, Full, Data> extends  CommonModalButt
 export function ModalAndCopyButton<S, Full, Data> ( { id, text, modal, modalL, from, to }: ModalAndCopyButtonProps<S, Full, Data> ) {
   function onClick () {
     return () => {
-      // dlfk;sdlfk ts-ignore  We want to copy undefined as well as the value
       const fromJson: Data|undefined = from.optJson ()
       if ( modalL ) to.useOtherAsWell ( modalL ).setTwoValues ( fromJson, modal )
       else throw Error ( `Using ModalAndCopyButton  ${text} ${modal} ${from.optional.description} ${to.optional.description} without context` )

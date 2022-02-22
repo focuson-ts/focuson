@@ -18,13 +18,14 @@ export function makeFullState ( params: TSParams, pds: PageD[] ): string[] {
 export function makeCommon ( params: TSParams, pds: PageD[], rds: RestD[] ): string[] {
 
   return [
-    `import { HasPageSelection, HasSelectedModalPage, HasSimpleMessages, SimpleMessage } from '@focuson/pages'`,
+    `import { HasPageSelection, HasSelectedModalPage, HasSimpleMessages, SimpleMessage, PageMode } from '@focuson/pages'`,
     `import { defaultDateFn } from '@focuson/utils';`,
     `import { commonTagFetchProps, HasTagHolder, OnTagFetchErrorFn } from '@focuson/fetcher';`,
     `import { Lenses } from '@focuson/lens';`,
     `import { tagOps } from '@focuson/template';`,
     `import { HasPostCommand } from '@focuson/poster';`,
     `import { HasFocusOnDebug } from '@focuson/focuson';`,
+    `import { LensProps } from '@focuson/state';`,
     ...imports ( params.pageDomainsFile ),
     ...makeFullState ( params, pds ),
     ...makeCommonParams ( params, rds ),

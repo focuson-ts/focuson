@@ -1,9 +1,9 @@
-import { focusedPageWithExtraState } from "@focuson/pages";
+import { focusedPageWithExtraState, FocusedProps } from "@focuson/pages";
 import { LensProps } from "@focuson/state";
 import { FullSearchDomain } from "./fullSearchDomain";
 
 
-export function SearchQueryModalPage<S extends any> ( { state }: LensProps<S, string> ): JSX.Element {
+export function SearchQueryModalPage<S extends any> ( { state }: FocusedProps<S, string> ): JSX.Element {
   return <div><label>Search</label><input type='text' defaultValue={state.optJson ()}/></div>
 }
 

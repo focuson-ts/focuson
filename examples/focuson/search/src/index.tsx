@@ -12,7 +12,7 @@ import { fetchers } from "./fetchers";
 
 
 const modals: ModalPagesDetails<FullState> = {
-  query: { lens: identityOptics<FullState> ().focusQuery ( 'search' ).focusQuery ( 'query' ), displayModalFn: SearchQueryModalPage }
+  query: { lens: identityOptics<FullState> ().focusQuery ( 'search' ).focusQuery ( 'query' ), displayModalFn: SearchQueryModalPage, mode: 'edit' }
 }
 type Modals = typeof modals
 

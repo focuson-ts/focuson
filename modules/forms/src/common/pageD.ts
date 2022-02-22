@@ -18,14 +18,21 @@ export interface RestDefnInPageProperties {
 export interface RestDefnInPage {
   [ name: string ]: RestDefnInPageProperties
 }
-export type AllButtonsInPage = ModalButtonInPage | RestButtonInPage | ModalCloseButton | ResetStateButton
-export interface ModalButtonInPage {
-  control: 'ModalButton',
+export type AllButtonsInPage = ModalButtonInPage | RestButtonInPage | ModalCloseButton | ResetStateButton | ModalAndCopyButtonInPage
+export interface ComonModalButtonInPage {
   modal: PageD,
   mode: PageMode,
-  mainData?: string,
-  tempData: string,
   restOnCommit?: { rest: any, action: string }
+}
+
+export interface ModalButtonInPage extends ComonModalButtonInPage {
+  control: 'ModalButton',
+  createEmpty?: boolean
+}
+export interface ModalAndCopyButtonInPage extends ComonModalButtonInPage {
+  control: 'ModalAndCopyButton',
+  from?: string[],
+  to: string[],
 }
 export interface ResetStateButton {
   control: 'ResetStateButton',
@@ -49,6 +56,9 @@ export interface ModalCloseButton {
 export function isModalCloseButton ( b: AllButtonsInPage ): b is ModalCloseButton {
   return b.control == 'ModalCancelButton' || b.control == 'ModalCommitButton'
 }
+export function isModalAndCopyButton ( b: AllButtonsInPage ): b is ModalAndCopyButtonInPage {
+  return b.control == 'ModalAndCopyButton'
+}
 export interface ButtonDefnInPage {
   [ name: string ]: AllButtonsInPage
 }
@@ -57,7 +67,7 @@ export interface LayoutD {
   details: string // ok not sure what to do here... so this is just a placeholder
 }
 export type PageType = 'MainPage' | 'ModalPage'
-export interface ModalData{
+export interface ModalData {
   modal: PageD,
   path: string[]
 }
@@ -90,13 +100,3 @@ export function allRestAndActions ( pds: PageD[] ): [ PageD, RestDefnInPagePrope
 
 export function allMainPages ( ps: PageD[] ): PageD[] {return ps.filter ( p => p.pageType === 'MainPage' )}
 
-// export function allPageDataAndResolvers ( rs: RestD[] ) {
-//   rs.flatMap ( r => flatMapDD ( r.dataDD,
-//     {
-//       ...emptyDataFlatMap (),
-//       walkDataStart: ( path, oparents: DataD[],neDataDD, dataDD ) =>
-//         path.length < 2 ? [] : [ makeWiring ( path[ path.length - 2 ], path[ path.length - 1 ] ) ],
-//       walkPrim: ( path,parents: DataD[], oneDataDD, dataDD ) =>
-//         path.length < 2 ? [] : [ makeWiring ( path[ path.length - 2 ], path[ path.length - 1 ] ) ],
-//     } )
-// }

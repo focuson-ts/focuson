@@ -1,9 +1,13 @@
-import { LensState } from "@focuson/state";
+import { LensProps, LensState } from "@focuson/state";
 import { PageConfig } from "./pageConfig";
 import { addModalPageIfNeeded, ModalPagesDetails } from "./modal/modalPages";
 import { Loading } from "./loading";
 import { DefaultTemplate, PageTemplateProps } from "./PageTemplate";
 import { PageMode } from "./pageSelection";
+
+export interface FocusedProps<S, D> extends LensProps<S, D> {
+  mode: PageMode
+}
 
 export interface FocusedPage<S extends any, D extends any> {
   /** This is used for debugging, for putting a header in place, and anything else it's felt a title might be good for */
@@ -41,7 +45,7 @@ export function displayMain<S extends any, D extends any, Msgs, MD extends Modal
  * @param title
  */
 export const focusedPage = <S extends any, D extends any> ( title: ( d?: D ) => string ) =>
-  ( pageFn: ( state: LensState<S, D>, d: D , mode: PageMode) => JSX.Element ): FocusedPage<S, D> => ({
+  ( pageFn: ( state: LensState<S, D>, d: D, mode: PageMode ) => JSX.Element ): FocusedPage<S, D> => ({
     title: s => title ( s.optJson () ),
     displayLoading: s => !s.optJson (),
     display: ( s, mode ) => pageFn ( s, s.json (), mode )
@@ -54,7 +58,7 @@ export const focusedPage = <S extends any, D extends any> ( title: ( d?: D ) => 
  */
 export const loadingPage = <S extends any, D extends any> ( title: ( d?: D ) => string ) =>
   ( pageFn: ( state: LensState<S, D>, d: D ) => JSX.Element ): ( s: LensState<S, D>, pageMode: PageMode ) => JSX.Element =>
-    (s, pageMode) => focusedPage<S, D> ( title ) ( pageFn ).display ( s, pageMode )
+    ( s, pageMode ) => focusedPage<S, D> ( title ) ( pageFn ).display ( s, pageMode )
 
 /** Returns the `FocusedPage` data structure configured for a Focused Page where typically SOME of the data comes from an api, and other is 'local state'
  *
@@ -84,7 +88,7 @@ export const focusedPageWithExtraState = <S extends any, Full extends any, D ext
   }
 
 export const loadingPageWithExtraState = <S extends any, Full extends any, D extends any> ( title: ( d?: Full ) => string ) =>
-  ( lensFn: ( lens: LensState<S, Full> ) => LensState<S, D> ) => ( pageFn: ( fullState: LensState<S, Full>, state: LensState<S, D>, f: Full, d: D , pageMode: PageMode) => JSX.Element ): ( s: LensState<S, Full> , pageMode: PageMode) => JSX.Element =>
-    (s, pageMode) => focusedPageWithExtraState<S, Full, D> ( title ) ( lensFn ) ( pageFn ).display ( s, pageMode )
+  ( lensFn: ( lens: LensState<S, Full> ) => LensState<S, D> ) => ( pageFn: ( fullState: LensState<S, Full>, state: LensState<S, D>, f: Full, d: D, pageMode: PageMode ) => JSX.Element ): ( s: LensState<S, Full>, pageMode: PageMode ) => JSX.Element =>
+    ( s, pageMode ) => focusedPageWithExtraState<S, Full, D> ( title ) ( lensFn ) ( pageFn ).display ( s, pageMode )
 
 
