@@ -5,6 +5,7 @@ import {enzymeSetup} from './enzymeAdapterSetup';
 import {mount} from "enzyme";
 import {Cpq, CpqData} from "./Cpq";
 import {lensState} from "@focuson/state";
+import { context, Context } from "./context";
 
 enzymeSetup()
 
@@ -34,7 +35,7 @@ let json: CpqData = {
     }
 }
 
-let state = lensState<CpqData>(json, () => {throw Error("Shouldn't be called")}, 'cpq')
+let state = lensState<CpqData, Context>(json, () => {throw Error("Shouldn't be called")}, 'cpq', context)
 
 describe("Cpq", () => {
 

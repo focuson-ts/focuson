@@ -2,9 +2,10 @@
 import React from "react";
 import {CqpFilter} from "../CpqDomain";
 import {LensProps} from "@focuson/state";
+import { Context } from "../context";
 
 
-export function SimpleFilter<Main>({state}: LensProps<Main, CqpFilter>) {
+export function SimpleFilter<Main>({state}: LensProps<Main, CqpFilter,Context>) {
     const onChange = (event: any) => state.focusOn('selected').setJson(event.target.value);
     let filterJson = state.json();
     let options = filterJson.legalValues.map(o => (<option key={o}>{o}</option>))

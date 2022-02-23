@@ -6,7 +6,7 @@ import { Lens, Optional } from "@focuson/lens";
 import { FetchFn } from "@focuson/utils";
 
 
-export interface FocusOnConfig<S> {
+export interface FocusOnConfig<S, Context> {
   /** How data is sent to/fetched from apis */
   fetchFn: FetchFn,
   /** A hook that is called before anything else.  */
@@ -19,12 +19,12 @@ export interface FocusOnConfig<S> {
   /** The lens to the current selected page */
   pageL: Lens<S, PageSelection>,
   /** The list of all registered pages that can be displayed with SelectedPage  */
-  pages: MultiPageDetails<S, any>,
+  pages: MultiPageDetails<S, any, Context>,
 
   /** The lens to the currently selected modal page*/
-  modalL: Optional<S, string|undefined>
+  modalL: Optional<S, string | undefined>
   /** The list of all registered modal pages   */
-  modals: AllModalPageDetails<S, any>,
+  modals: AllModalPageDetails<S, any, Context>,
 
   /** The lens to the list of PostCommands*/
   postL: Optional<S, PostCommand<S, any, any>[]>,
@@ -35,7 +35,7 @@ export interface FocusOnConfig<S> {
   fetchers: FetcherTree<S>,
 }
 
-function processStartOfPage<S, P extends MultiPageDetails<S, any>> ( state: S, pageL: Lens<S, PageSelection>, pageDetails: P ) {
+function processStartOfPage<S, P extends MultiPageDetails<S, any, Context>, Context> ( state: S, pageL: Lens<S, PageSelection>, pageDetails: P ) {
   // @ts-ignore
   const debug = state.debug?.startOfDebug;
   const { pageName, firstTime } = pageL.get ( state )
@@ -50,12 +50,12 @@ function processStartOfPage<S, P extends MultiPageDetails<S, any>> ( state: S, p
   } else return state;
 }
 
-export function setJsonForFocusOn<C extends FocusOnConfig<S>, S> ( config: C, publish: ( lc: LensState<S, S> ) => void ): ( s: S ) => Promise<S> {
+export function setJsonForFocusOn<C extends FocusOnConfig<S, Context>, S, Context> ( config: C, context: Context, publish: ( lc: LensState<S, S, Context> ) => void ): ( s: S ) => Promise<S> {
   return async ( main: S ): Promise<S> => {
     // @ts-ignore
     const debug = main.debug;
     const { fetchFn, preMutate, postMutate, onError, pages, posters, fetchers, postL, pageL } = config
-    const newStateFn = ( fs: S ) => publish(lensState ( fs, setJsonForFocusOn ( config, publish ), 'setJson' ))
+    const newStateFn = ( fs: S ) => publish ( lensState ( fs, setJsonForFocusOn ( config, context, publish ), 'setJson', context ) )
     try {
       if ( debug?.fetcherDebug ) console.log ( 'setJsonForFetchers - start', main )
       const withPreMutate = preMutate ( main )

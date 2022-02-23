@@ -7,6 +7,7 @@ import {ComponentFromServer, LoadAndCompileCache, MakeComponentFromServer,Compon
 import React from "react";
 import {CpqData} from "./CpqDomain";
 import {Nav} from "@focuson/nav";
+import { context } from "./context";
 
 
 let cache = LoadAndCompileCache.create<MakeComponentFromServer<React.ReactElement>>((s: string) => SHA256(s).toString())
@@ -22,7 +23,7 @@ fetch("created/index.json").then(j => j.json()).then(indexJson => {
     function setJson(cpqData: CpqData) {
         console.log("setJson", cpqData)
         cache.loadFromBlob(cpqData).then(() =>
-            setJsonForFlux('cpq',
+            setJsonForFlux('cpq',context,
                 c => ReactDOM.render(
                     <div>
                         <Nav jsonFiles={jsonFiles} fetch={fetchData} setData={setJson}/>

@@ -2,7 +2,10 @@ import { lensState, LensState } from '@focuson/state';
 import { State, Store } from '@sambego/storybook-state';
 import { ReactNode } from 'react';
 
-type SBookProviderI = <S>( initialState: S, component: ( s: LensState<Store<S>, S> ) => ReactNode ) => JSX.Element;
+type Context = {}
+const context = {}
+
+type SBookProviderI = <S>( initialState: S, component: ( s: LensState<Store<S>, S,Context> ) => ReactNode ) => JSX.Element;
 
 export const SBookProvider: SBookProviderI = ( initialState, component ) => {
   const store = new Store ( initialState );
@@ -15,7 +18,7 @@ export const SBookProvider: SBookProviderI = ( initialState, component ) => {
 ${JSON.stringify ( m.state, null, 2 )}` );
       store.set ( m.state );
     },
-    'SBookProvider'
+    'SBookProvider',context
   );
   return <State store={store}>{component ( s.focusOn ( 'state' ) )}</State>;
 };

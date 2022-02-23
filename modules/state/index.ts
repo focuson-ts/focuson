@@ -3,15 +3,15 @@
 import { Lens, Lenses, Optional, HasOptional, transformTwoValues, updateTwoValues } from "@focuson/lens";
 
 
-export interface LensProps<Main, T> {
-  state: LensState<Main, T>
+export interface LensProps<Main, T, Context> {
+  state: LensState<Main, T, Context>
 }
 
 
-export const lensState = <Main> ( main: Main, setMain: ( m: Main ) => void, description: string ): LensState<Main, Main> =>
-  new LensState ( main, setMain, Lenses.identity<Main> ().withDescription ( description ) );
+export const lensState = <Main, Context> ( main: Main, setMain: ( m: Main ) => void, description: string, context: Context ): LensState<Main, Main, Context> =>
+  new LensState ( main, setMain, Lenses.identity<Main> ().withDescription ( description ), context );
 
-export function defineState<Main, T> ( state: LensState<Main, T | undefined> ): LensState<Main, T> {
+export function defineState<Main, T, Context> ( state: LensState<Main, T | undefined, Context> ): LensState<Main, T, Context> {
   return state.chainLens ( Lenses.define<T> () )
 }
 
@@ -25,9 +25,12 @@ function getOr<Main, Child> ( optional: Optional<Main, Child>, main: Main, error
 
 }
 
-export class LensState<Main, T> implements HasOptional<Main, T> {
+export class LensState<Main, T, Context> implements HasOptional<Main, T> {
   /** The full state. This should normally not be called by your code. */
-  main: Main
+  main: Main;
+
+  /** For dependency injection. Often holds things like 'page config' and/or 'commonly used lens like page selection' */
+  context: Context;
 
   /** This should probably not be called by your code. Normally you will use 'setJson' or 'setFromTwo' (if you need to update two parts at the same time */
   dangerouslySetMain: ( m: Main ) => void
@@ -38,26 +41,27 @@ export class LensState<Main, T> implements HasOptional<Main, T> {
   optional: Optional<Main, T>
 
 
-  constructor ( main: Main, setMain: ( m: Main ) => void, lens: Optional<Main, T> ) {
+  constructor ( main: Main, setMain: ( m: Main ) => void, lens: Optional<Main, T>, context: Context ) {
     this.main = main;
     this.dangerouslySetMain = setMain;
     this.optional = lens
+    this.context = context
   }
 
   /** If just 'walking down the json' using field names this is great. The parameter 'fieldName' is a 'key' of the current focused place,
    * and this returns a new context focused on the json under the field name */
-  focusOn<K extends keyof T, Req extends Required<T>> ( k: K ): LensState<Main, Req[K]> {
+  focusOn<K extends keyof T, Req extends Required<T>> ( k: K ): LensState<Main, Req[K], Context> {
     return this.copyWithLens ( this.optional.focusQuery ( k ) )
   }
 
   /** When we want to focus on something like 'the nth item' then 'withChildLens' is used. This returns a context focused on the block of json under the lens starting from 'here' */
-  chainLens<NewT> ( lens: Optional<T, NewT> ): LensState<Main, NewT> {
-    return new LensState ( this.main, this.dangerouslySetMain, this.optional.chain ( lens ) )
+  chainLens<NewT> ( lens: Optional<T, NewT> ): LensState<Main, NewT, Context> {
+    return new LensState ( this.main, this.dangerouslySetMain, this.optional.chain ( lens ), this.context )
   }
 
   /** When we want to focus on something like 'the nth item' then 'withChildLens' is used. This returns a context focused on the block of json under the lens passed in */
-  copyWithLens<NewT> ( lens: Optional<Main, NewT> ): LensState<Main, NewT> {
-    return new LensState ( this.main, this.dangerouslySetMain, lens )
+  copyWithLens<NewT> ( lens: Optional<Main, NewT> ): LensState<Main, NewT, Context> {
+    return new LensState ( this.main, this.dangerouslySetMain, lens, this.context )
   }
 
   /** The json that this context is focused on */
@@ -84,11 +88,11 @@ export class LensState<Main, T> implements HasOptional<Main, T> {
     if ( j ) this.setJson ( fn ( j ) )
   }
 
-  addSecond<T2> ( lens2: Optional<Main, T2> ): LensState2<Main, T, T2> {
-    return new LensState2 ( this.main, this.optional, lens2, this.dangerouslySetMain )
+  addSecond<T2> ( lens2: Optional<Main, T2> ): LensState2<Main, T, T2, Context> {
+    return new LensState2 ( this.main, this.optional, lens2, this.dangerouslySetMain, this.context )
   }
 
-  doubleUp (): LensState2<Main, T, T> {
+  doubleUp (): LensState2<Main, T, T, Context> {
     return this.addSecond ( this.optional )
   }
 
@@ -127,9 +131,9 @@ export abstract class WithTwoLensAndOneTransformFn<Main, T1, T2> {
   public abstract andTransformOther ( fn2: ( t1: T1, t2: T2 ) => T2 ): void
 }
 
-export let focusOnNth = <Main, T> ( state: LensState<Main, T[]>, n: number ) => state.chainLens ( Lenses.nth ( n ) );
-export let focus1OnNth = <Main, T1, T2> ( state: LensState2<Main, T1[], T2>, n: number ) => state.chain1 ( Lenses.nth ( n ) );
-export let focus2OnNth = <Main, T1, T2> ( state: LensState2<Main, T1, T2[]>, n: number ) => state.chain2 ( Lenses.nth ( n ) );
+export let focusOnNth = <Main, T, Context> ( state: LensState<Main, T[], Context>, n: number ) => state.chainLens ( Lenses.nth ( n ) );
+export let focus1OnNth = <Main, T1, T2, Context> ( state: LensState2<Main, T1[], T2, Context>, n: number ) => state.chain1 ( Lenses.nth ( n ) );
+export let focus2OnNth = <Main, T1, T2, Context> ( state: LensState2<Main, T1, T2[], Context>, n: number ) => state.chain2 ( Lenses.nth ( n ) );
 
 
 /** When using the lens context in a flux pattern (for example with react) if you have a long transformation on the 'main' (for example you call a pricing engine or similar,
@@ -137,10 +141,11 @@ export let focus2OnNth = <Main, T1, T2> ( state: LensState2<Main, T1, T2[]>, n: 
  * @param description Purely for debugging and testing. Will typically be 'root' or the string for the 'Main' type
  * @param fn The function that creates a thing (for example a react component) given a context
  * @param transformJson a function that transforms the main json before it is sent back to the 'fn'
+ * @param context for dependency inject. Carries things like 'commonly used lens'
  */
-export const setJsonWithLongTransformation = <Main> ( description: string, fn: ( lc: LensState<Main, Main> ) => void,
-                                                      transformJson: ( m: Main ) => Promise<Main> = m => Promise.resolve ( m ) ): ( m: Main ) => void =>
-  ( main: Main ) => transformJson ( main ).then ( processedMain => fn ( lensState ( processedMain, setJsonWithLongTransformation ( description, fn, transformJson ), description ) ) )
+export const setJsonWithLongTransformation = <Main, Context> ( description: string, context: Context, fn: ( lc: LensState<Main, Main, Context> ) => void,
+                                                               transformJson: ( m: Main ) => Promise<Main> = m => Promise.resolve ( m ) ): ( m: Main ) => void =>
+  ( main: Main ) => transformJson ( main ).then ( processedMain => fn ( lensState ( processedMain, setJsonWithLongTransformation ( description, context, fn, transformJson ), description, context ) ) )
 
 
 /** This is the simplest 'flux' pattern (for example we use it with react).
@@ -148,8 +153,8 @@ export const setJsonWithLongTransformation = <Main> ( description: string, fn: (
  * @param fn The function that creates a thing (for example a react component) given a context
  */
 
-export function setJsonForFlux<Main, Result> ( description: string, fn: ( lc: LensState<Main, Main> ) => Result ): ( m: Main ) => Result {
-  return ( main: Main ) => fn ( lensState<Main> ( main, setJsonForFlux<Main, Result> ( description, fn ), description ) )
+export function setJsonForFlux<Main, Result, Context> ( description: string, context: Context, fn: ( lc: LensState<Main, Main, Context> ) => Result ): ( m: Main ) => Result {
+  return ( main: Main ) => fn ( lensState<Main, Context> ( main, setJsonForFlux<Main, Result, Context> ( description, context, fn ), description, context ) )
 }
 
 export function getElement ( name: string ): HTMLElement {
@@ -159,25 +164,27 @@ export function getElement ( name: string ): HTMLElement {
 }
 
 
-export class LensState2<Main, T1, T2> {
+export class LensState2<Main, T1, T2, Context> {
   main: Main
   lens1: Optional<Main, T1>
   lens2: Optional<Main, T2>
+  context: Context
   dangerouslySetMain: ( m: Main ) => void
 
-  constructor ( main: Main, lens1: Optional<Main, T1>, lens2: Optional<Main, T2>, dangerouslySetMain: ( m: Main ) => void ) {
+  constructor ( main: Main, lens1: Optional<Main, T1>, lens2: Optional<Main, T2>, dangerouslySetMain: ( m: Main ) => void, context: Context ) {
     this.main = main;
     this.lens1 = lens1;
     this.lens2 = lens2;
     this.dangerouslySetMain = dangerouslySetMain;
+    this.context = context
   }
 
   addThird<T3> ( lens: Lens<Main, T3> ) {
-    return new LensState3<Main, T1, T2, T3> ( this.main, this.lens1, this.lens2, lens, this.dangerouslySetMain )
+    return new LensState3<Main, T1, T2, T3, Context> ( this.main, this.lens1, this.lens2, lens, this.dangerouslySetMain, this.context )
   }
 
-  state1 (): LensState<Main, T1> {
-    return new LensState<Main, T1> ( this.main, this.dangerouslySetMain, this.lens1 )
+  state1 (): LensState<Main, T1, Context> {
+    return new LensState<Main, T1, Context> ( this.main, this.dangerouslySetMain, this.lens1, this.context )
   }
 
   json1 ( errorMessageIfNotHere?: () => string ): T1 {
@@ -189,19 +196,19 @@ export class LensState2<Main, T1, T2> {
   }
 
   chain1<Child> ( lens: Optional<T1, Child> ) {
-    return new LensState2 ( this.main, this.lens1.chain ( lens ), this.lens2, this.dangerouslySetMain )
+    return new LensState2 ( this.main, this.lens1.chain ( lens ), this.lens2, this.dangerouslySetMain, this.context )
   }
   withLens1<Child> ( lens: Optional<Main, Child> ) {
-    return new LensState2 ( this.main, lens, this.lens2, this.dangerouslySetMain )
+    return new LensState2 ( this.main, lens, this.lens2, this.dangerouslySetMain, this.context )
   }
 
-  focus1On<K extends keyof T1, Req extends Required<T1>> ( k: K ): LensState2<Main, Req[K], T2> {
+  focus1On<K extends keyof T1, Req extends Required<T1>> ( k: K ): LensState2<Main, Req[K], T2, Context> {
     // @ts-ignore
-    return new LensState2<Main, T1[K], T2> ( this.main, this.lens1.focusQuery ( k ), this.lens2, this.dangerouslySetMain )
+    return new LensState2<Main, T1[K], T2> ( this.main, this.lens1.focusQuery ( k ), this.lens2, this.dangerouslySetMain, this.context )
   }
 
-  state2 (): LensState<Main, T2> {
-    return new LensState<Main, T2> ( this.main, this.dangerouslySetMain, this.lens2 )
+  state2 (): LensState<Main, T2, Context> {
+    return new LensState<Main, T2, Context> ( this.main, this.dangerouslySetMain, this.lens2, this.context )
   }
 
   json2 ( errorMessageIfNotHere?: () => string ): T2 {
@@ -212,15 +219,15 @@ export class LensState2<Main, T1, T2> {
     return this.lens2.getOption ( this.main )
   }
 
-  focus2On<K extends keyof T2, Req extends Required<T2>> ( k: K ): LensState2<Main, T1, Req[K]> {
-    return new LensState2 ( this.main, this.lens1, this.lens2.focusQuery ( k ), this.dangerouslySetMain );
+  focus2On<K extends keyof T2, Req extends Required<T2>> ( k: K ): LensState2<Main, T1, Req[K], Context> {
+    return new LensState2 ( this.main, this.lens1, this.lens2.focusQuery ( k ), this.dangerouslySetMain, this.context );
   }
 
   chain2<Child> ( lens: Optional<T2, Child> ) {
-    return new LensState2 ( this.main, this.lens1, this.lens2.chain ( lens ), this.dangerouslySetMain )
+    return new LensState2 ( this.main, this.lens1, this.lens2.chain ( lens ), this.dangerouslySetMain, this.context )
   }
   withLens2<Child> ( lens: Optional<Main, Child> ) {
-    return new LensState2 ( this.main, this.lens1, lens, this.dangerouslySetMain )
+    return new LensState2 ( this.main, this.lens1, lens, this.dangerouslySetMain, this.context )
   }
 
   setJson ( t1: T1, t2: T2 ) {
@@ -239,23 +246,25 @@ export class LensState2<Main, T1, T2> {
 
 }
 
-export class LensState3<Main, T1, T2, T3> {
+export class LensState3<Main, T1, T2, T3, Context> {
   main: Main
   lens1: Optional<Main, T1>
   lens2: Optional<Main, T2>
   lens3: Optional<Main, T3>
   dangerouslySetMain: ( m: Main ) => void
+  context: Context
 
-  constructor ( main: Main, lens1: Optional<Main, T1>, lens2: Optional<Main, T2>, lens3: Optional<Main, T3>, dangerouslySetMain: ( m: Main ) => void ) {
+  constructor ( main: Main, lens1: Optional<Main, T1>, lens2: Optional<Main, T2>, lens3: Optional<Main, T3>, dangerouslySetMain: ( m: Main ) => void, context: Context ) {
     this.main = main;
     this.lens1 = lens1;
     this.lens2 = lens2;
     this.lens3 = lens3;
     this.dangerouslySetMain = dangerouslySetMain;
+    this.context = context
   }
 
-  state1 (): LensState<Main, T1> {
-    return new LensState<Main, T1> ( this.main, this.dangerouslySetMain, this.lens1 )
+  state1 (): LensState<Main, T1, Context> {
+    return new LensState<Main, T1, Context> ( this.main, this.dangerouslySetMain, this.lens1, this.context )
   }
 
   json1 ( errorMessageIfNotThere?: () => string ): T1 {
@@ -266,19 +275,19 @@ export class LensState3<Main, T1, T2, T3> {
     return this.lens1.getOption ( this.main )
   }
 
-  focus1On<K extends keyof T1, Req extends Required<T1>> ( k: K ): LensState3<Main, Req[K], T2, T3> {
-    return new LensState3 ( this.main, this.lens1.focusQuery ( k ), this.lens2, this.lens3, this.dangerouslySetMain )
+  focus1On<K extends keyof T1, Req extends Required<T1>> ( k: K ): LensState3<Main, Req[K], T2, T3, Context> {
+    return new LensState3 ( this.main, this.lens1.focusQuery ( k ), this.lens2, this.lens3, this.dangerouslySetMain, this.context )
   }
 
   chain1<Child> ( lens: Lens<T1, Child> ) {
-    return new LensState3 ( this.main, this.lens1.chain ( lens ), this.lens2, this.lens3, this.dangerouslySetMain )
+    return new LensState3 ( this.main, this.lens1.chain ( lens ), this.lens2, this.lens3, this.dangerouslySetMain, this.context )
   }
   withLens1<Child> ( lens: Optional<Main, Child> ) {
-    return new LensState3 ( this.main, lens, this.lens2, this.lens3, this.dangerouslySetMain )
+    return new LensState3 ( this.main, lens, this.lens2, this.lens3, this.dangerouslySetMain, this.context )
   }
 
-  state2 (): LensState<Main, T2> {
-    return new LensState<Main, T2> ( this.main, this.dangerouslySetMain, this.lens2 )
+  state2 (): LensState<Main, T2, Context> {
+    return new LensState<Main, T2, Context> ( this.main, this.dangerouslySetMain, this.lens2, this.context )
   }
 
   json2 ( errorMessageIfNotThere?: () => string ): T2 {
@@ -289,19 +298,19 @@ export class LensState3<Main, T1, T2, T3> {
     return this.lens2.getOption ( this.main )
   }
 
-  focus2On<K extends keyof T2, Req extends Required<T2>> ( k: K ): LensState3<Main, T1, Req[K], T3> {
-    return new LensState3 ( this.main, this.lens1, this.lens2.focusQuery ( k ), this.lens3, this.dangerouslySetMain );
+  focus2On<K extends keyof T2, Req extends Required<T2>> ( k: K ): LensState3<Main, T1, Req[K], T3, Context> {
+    return new LensState3 ( this.main, this.lens1, this.lens2.focusQuery ( k ), this.lens3, this.dangerouslySetMain, this.context );
   }
 
   chain2<Child> ( lens: Optional<T2, Child> ) {
-    return new LensState3 ( this.main, this.lens1, this.lens2.chain ( lens ), this.lens3, this.dangerouslySetMain )
+    return new LensState3 ( this.main, this.lens1, this.lens2.chain ( lens ), this.lens3, this.dangerouslySetMain, this.context )
   }
   withLens2<Child> ( lens: Optional<Main, Child> ) {
-    return new LensState3 ( this.main, this.lens1, lens, this.lens3, this.dangerouslySetMain )
+    return new LensState3 ( this.main, this.lens1, lens, this.lens3, this.dangerouslySetMain, this.context )
   }
 
-  state3 (): LensState<Main, T3> {
-    return new LensState<Main, T3> ( this.main, this.dangerouslySetMain, this.lens3 )
+  state3 (): LensState<Main, T3, Context> {
+    return new LensState<Main, T3, Context> ( this.main, this.dangerouslySetMain, this.lens3, this.context )
   }
 
   json3 ( errorMessageIfNotThere?: () => string ): T3 {
@@ -312,15 +321,15 @@ export class LensState3<Main, T1, T2, T3> {
     return this.lens3.getOption ( this.main )
   }
 
-  focus3On<K extends keyof T3, Req extends Required<T3>> ( k: K ): LensState3<Main, T1, T2, Req[K]> {
-    return new LensState3 ( this.main, this.lens1, this.lens2, this.lens3.focusQuery ( k ), this.dangerouslySetMain );
+  focus3On<K extends keyof T3, Req extends Required<T3>> ( k: K ): LensState3<Main, T1, T2, Req[K], Context> {
+    return new LensState3 ( this.main, this.lens1, this.lens2, this.lens3.focusQuery ( k ), this.dangerouslySetMain, this.context );
   }
 
   chainLens3<Child> ( lens: Lens<T3, Child> ) {
-    return new LensState3 ( this.main, this.lens1, this.lens2, this.lens3.chain ( lens ), this.dangerouslySetMain )
+    return new LensState3 ( this.main, this.lens1, this.lens2, this.lens3.chain ( lens ), this.dangerouslySetMain, this.context )
   }
   withLens3<Child> ( lens: Optional<Main, Child> ) {
-    return new LensState3 ( this.main, this.lens1, this.lens2, lens, this.dangerouslySetMain )
+    return new LensState3 ( this.main, this.lens1, this.lens2, lens, this.dangerouslySetMain, this.context )
   }
 
   setJson ( t1: T1, t2: T2, t3: T3 ) {
@@ -341,7 +350,7 @@ export class LensState3<Main, T1, T2, T3> {
 }
 
 
-export interface LensProps2<Main, T1, T2> {
-  state: LensState2<Main, T1, T2>
+export interface LensProps2<Main, T1, T2, Context> {
+  state: LensState2<Main, T1, T2, Context>
 }
 

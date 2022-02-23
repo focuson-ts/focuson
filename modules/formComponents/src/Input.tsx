@@ -1,11 +1,9 @@
 import { CommonStateProps } from "./common";
-import { PageMode } from "@focuson/pages";
 
 
-export interface InputProps<S> extends CommonStateProps<S, string> {
-  pageMode: PageMode
+export interface InputProps<S, Context> extends CommonStateProps<S, string, Context> {
 }
 
-export function Input<S> ( { pageMode, state }: InputProps<S> ) {
-  return <input type='text' readOnly={pageMode === 'view'} defaultValue={state.json ()}/>
+export function Input<S, Context> ( { mode, state }: InputProps<S, Context> ) {
+  return <input type='text' readOnly={mode === 'view'} defaultValue={state.json ()}/>
 }

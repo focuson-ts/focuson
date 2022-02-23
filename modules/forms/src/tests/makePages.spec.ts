@@ -10,14 +10,14 @@ describe ( "makePages", () => {
       "import { identityOptics } from \"@focuson/lens\";",
       "import { MultiPageDetails, simpleMessagesPageConfig } from \"@focuson/pages\";",
       "import { modals, Modals } from \"./modals\";",
-      "import { FState } from \"./common\";",
+      "import {Context,  FState } from \"./common\";",
       "import { EAccountsSummaryPage } from \"./render\";",
       "",
       "function MyLoading () {",
       "      return <p>Loading</p>",
       "}",
-      "const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Modals> ( modals, MyLoading )",
-      "export const pages: MultiPageDetails<FState, any> = {",
+      "const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Modals,Context> ( modals, MyLoading )",
+      "export const pages: MultiPageDetails<FState, any,Context> = {",
       "    EAccountsSummary: { config: simpleMessagesConfig, lens: identityOptics<FState> ().focusQuery ( 'EAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: {} }",
       "  }"
     ] )

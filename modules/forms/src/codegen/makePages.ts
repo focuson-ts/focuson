@@ -27,14 +27,14 @@ export function makePages ( params: TSParams, ps: PageD[] ): string[] {
     `import { identityOptics } from "@focuson/lens";`,
     `import { MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";`,
     `import { modals, Modals } from "./${params.modalsFile}";`,
-    `import { ${params.stateName} } from "./${params.commonFile}";`,
+    `import {Context,  ${params.stateName} } from "./${params.commonFile}";`,
     `import { ${allMainPages ( ps ).map ( p => pageComponentName ( p ) ).join ( "," )} } from "./${params.renderFile}";`,
     '',
     `function MyLoading () {`,
     `      return <p>Loading</p>`,
     `}`,
-    `const simpleMessagesConfig = simpleMessagesPageConfig<${params.stateName}, string, Modals> ( modals, MyLoading )`,
-    `export const pages: MultiPageDetails<${params.stateName}, any> = {`,
+    `const simpleMessagesConfig = simpleMessagesPageConfig<${params.stateName}, string, Modals,Context> ( modals, MyLoading )`,
+    `export const pages: MultiPageDetails<${params.stateName}, any,Context> = {`,
     ...addStringToEndOfAllButLast ( "," ) ( ps.flatMap ( makeMainPage ( params ) ) ),
     `  }` ]
 }

@@ -6,17 +6,17 @@ import { FocusedPage } from "./focusedPage";
 import React from "react";
 import { PageTemplateProps } from "./PageTemplate";
 
-export interface MultiPageDetails<S, MD extends ModalPagesDetails<S>> {
-  [ name: string ]: OnePageDetails<S, any, any, MD, any>
+export interface MultiPageDetails<S, MD extends ModalPagesDetails<S, Context>, Context> {
+  [ name: string ]: OnePageDetails<S, any, any, MD, any, Context>
 }
 
-type DisplayFn<S, D> = ( props: LensProps<S, D> ) => JSX.Element
-type PageFunctionType<S, D> = FocusedPage<S, D> | DisplayFn<S, D>
+type DisplayFn<S, D, Context> = ( props: LensProps<S, D, Context> ) => JSX.Element
+type PageFunctionType<S, D, Context> = FocusedPage<S, D, Context> | DisplayFn<S, D, Context>
 
-export interface OnePageDetails<S, D, Msgs, MD extends ModalPagesDetails<S>, Config extends PageConfig<S, D, Msgs, MD>> {
+export interface OnePageDetails<S, D, Msgs, MD extends ModalPagesDetails<S, Context>, Config extends PageConfig<S, D, Msgs, MD, Context>, Context> {
   config: Config,
   lens: Optional<S, D>,
-  pageFunction: PageFunctionType<S, D>,
+  pageFunction: PageFunctionType<S, D, Context>,
   clearAtStart?: boolean  // if set then the PageState is reset at the beginning,
   initialValue?: D //If set then this is injected at the beginning. Clear at start overrides this
 }
@@ -27,29 +27,29 @@ export interface OnePageDetails<S, D, Msgs, MD extends ModalPagesDetails<S>, Con
  *
  * Usually this will be put in a context at the top of the react render chain, and be available to pages underneath.
  * */
-export interface PageConfig<S, D, Msgs, MD extends ModalPagesDetails<S>> {
+export interface PageConfig<S, D, Msgs, MD extends ModalPagesDetails<S, Context>, Context> {
   /** the messages might be anywhere... in the state, in the domain. Each page specifies where the data is*/
-  messageLens?: ( s: LensState<S, S>, domainLens: Optional<S, D> ) => LensState<S, Msgs>,
+  messageLens?: ( s: LensState<S, S, Context>, domainLens: Optional<S, D> ) => LensState<S, Msgs, Context>,
   /** Not all messags are equal. This knows how to display the messages */
-  displayMsgs?: ( msgProps: LensProps<S, Msgs> ) => JSX.Element | undefined,
+  displayMsgs?: ( msgProps: LensProps<S, Msgs, Context> ) => JSX.Element | undefined,
   /** What is needed to display model pages */
-  modalPageDetails?: AllModalPageDetails<S, MD>
+  modalPageDetails?: AllModalPageDetails<S, MD, Context>
   /** a component to display 'loading'. If undefined then */
-  loading?: ( ls: LensState<S, any> ) => JSX.Element
+  loading?: ( ls: LensState<S, any, Context> ) => JSX.Element
   /** This template wraps the focused page. A template will hold things like navigation, branding, and 'the common stuff' around our page
    * If the template isn't present then the element in the focused page is shown directly
    *
    * A common used for the template is to handle 'loading' */
-  template?:(p: PageTemplateProps<S, D>) => JSX.Element
+  template?:(p: PageTemplateProps<S, D, Context>) => JSX.Element
 }
 
 /** If the state is using simple messages, and HasSelectedModalPage, this provides a default page config.ts that works in many situations
  * It doesn't have postCommand configuration in it, which is the most common 'add on' */
-export function simpleMessagesPageConfig<S extends HasSimpleMessages & HasSelectedModalPage, D, MD extends ModalPagesDetails<S>> (
-  md: MD, loading: ( s: LensState<S, any> ) => JSX.Element ): PageConfig<S, D, SimpleMessage[], MD> {
+export function simpleMessagesPageConfig<S extends HasSimpleMessages & HasSelectedModalPage, D, MD extends ModalPagesDetails<S, Context>, Context> (
+  md: MD, loading: ( s: LensState<S, any, Context> ) => JSX.Element ): PageConfig<S, D, SimpleMessage[], MD, Context> {
   return ({
     modalPageDetails: allModelPageDetails ( md ),
-    messageLens: simpleMessagesLFn<S, D> (),
+    messageLens: simpleMessagesLFn<S, D,Context> (),
     loading
   })
 }
@@ -58,4 +58,4 @@ export function simpleMessagesPageConfig<S extends HasSimpleMessages & HasSelect
  * It is sadly not type safe (the problem with using contexts)
  * It is the job of the application to make this available
  */
-export const PagesContext = React.createContext<PageConfig<any, any, SimpleMessage[], any>> ( {} )
+export const PagesContext = React.createContext<PageConfig<any, any, SimpleMessage[], any, any>> ( {} )

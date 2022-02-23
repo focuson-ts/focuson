@@ -2,6 +2,7 @@
 import React from "react";
 import {CqpFilter} from "../CpqDomain";
 import {LensProps} from "@focuson/state";
+import { Context } from "../context";
 
 function makeOptions(selected: string | null, values: string[]) {
     let option = (value: string) => (selected === value) ?
@@ -10,7 +11,7 @@ function makeOptions(selected: string | null, values: string[]) {
     return values.map(option)
 }
 
-export function GearboxFilter<Main>({state}: LensProps<Main, CqpFilter>) {
+export function GearboxFilter<Main>({state}: LensProps<Main, CqpFilter,Context>) {
     const onChange = (event: any) => state.focusOn('selected').setJson(event.target.value);
     let filterJson = state.json();
     let options = makeOptions(filterJson.selected, state.json().legalValues);

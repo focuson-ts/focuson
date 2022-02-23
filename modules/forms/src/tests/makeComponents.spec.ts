@@ -35,28 +35,29 @@ describe ( " listComponentsIn", () => {
   it ( "should make the react component lists", () => {
     expect ( createAllReactCalls ( listComponentsIn ( EAccountsSummaryDD ) ) ).toEqual ([
       "<Table state={state.focusOn('eAccountsTable')} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} mode={mode} />",
-      "<LabelAndInput state={state.focusOn('totalMonthlyCost')} label='totalMonthlyCost' mode={mode} />",
-      "<LabelAndInput state={state.focusOn('oneAccountBalance')} label='oneAccountBalance' mode={mode} />",
-      "<LabelAndInput state={state.focusOn('currentAccountBalance')} label='currentAccountBalance' mode={mode} />",
+      "<LabelAndInput state={state.focusOn('totalMonthlyCost')} label='total monthly cost' mode={mode} />",
+      "<LabelAndInput state={state.focusOn('oneAccountBalance')} label='one account balance' mode={mode} />",
+      "<LabelAndInput state={state.focusOn('currentAccountBalance')} label='current account balance' mode={mode} />",
       "<LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanStart')} label='Create Start' mode={mode} />",
-      "<LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanDate')} label='createPlanDate' ariaLabel='The Create Plan Date' mode={mode} />",
-      "<LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanEnd')} label='createPlanEnd' mode={mode} />"
+      "<LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanDate')} label='create plan date' ariaLabel='The Create Plan Date' mode={mode} />",
+      "<LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanEnd')} label='create plan end' mode={mode} />"
     ] )
   } )
 
   it ( "should createReactComponent", () => {
     expect ( createReactComponent ( EAccountsSummaryDD ) ).toEqual ( [
-      "export function EAccountsSummaryDD<S>({state,mode}: FocusedProps<S, EAccountsSummaryDDDomain>){",
+      "export function EAccountsSummaryDD<S,Context>({state,mode}: FocusedProps<S, EAccountsSummaryDDDomain,Context>){",
       "  return(<>",
       "  <Table state={state.focusOn('eAccountsTable')} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('totalMonthlyCost')} label='totalMonthlyCost' mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('oneAccountBalance')} label='oneAccountBalance' mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('currentAccountBalance')} label='currentAccountBalance' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('totalMonthlyCost')} label='total monthly cost' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('oneAccountBalance')} label='one account balance' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('currentAccountBalance')} label='current account balance' mode={mode} />",
       "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanStart')} label='Create Start' mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanDate')} label='createPlanDate' ariaLabel='The Create Plan Date' mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanEnd')} label='createPlanEnd' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanDate')} label='create plan date' ariaLabel='The Create Plan Date' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanEnd')} label='create plan end' mode={mode} />",
       "</>)",
-      "}"
+      "}",
+      ""
     ])
   } )
   it ( "should createAllReactComponents ", () => {
@@ -68,13 +69,14 @@ describe ( " listComponentsIn", () => {
       "import { LabelAndInput } from \"./copied/LabelAndInput\";",
       "import { focusedPageWithExtraState } from \"@focuson/pages\";",
       "import { Table } from \"./copied/table\";",
-      "import { FocusedProps } from \"./common\";",
+      "import { LabelAndRadio, Radio } from \"./copied/Radio\";",
+      "import { Context, FocusedProps } from \"./common\";",
       "import {EAccountsSummaryPageDomain} from \"./pageDomains\";",
       "import {CreatePlanDDDomain} from \"./domains\"",
       "import {EAccountsSummaryDDDomain} from \"./domains\"",
       "import {EAccountSummaryDDDomain} from \"./domains\"",
       "export function EAccountsSummaryPage<S>(){",
-      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
+      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
       "   <EAccountsSummaryDD state={state}  mode={mode} />",
       "   <ModalAndCopyButton id='amendExistingPlan' text='amendExistingPlan' modal = 'EAccountsSummary_CreatePlan' state={state} mode='edit' from={fullState.focusOn('fromApi')} to={fullState.focusOn('temp')} rest='createPlanRestD' action='update'  />",
@@ -82,53 +84,59 @@ describe ( " listComponentsIn", () => {
       "   <RestButton id='deleteExistingPlan' state={state} />",
       "   <RestButton id='refresh' state={state} />",
       "   </Layout>)})}",
-      "export function CreatePlanPage<S>({state, mode}: FocusedProps<S,CreatePlanDDDomain>){",
+      "",
+      "export function CreatePlanPage<S,Context>({state, mode}: FocusedProps<S,CreatePlanDDDomain,Context>){",
       "  return (<Layout  details='[3]'>",
       "   <CreatePlanDD state={state}  mode={mode} />",
       "   <ModalCancelButton id='cancel' state={state} />",
       "   <ModalCommitButton id='commit' state={state} />",
       "   </Layout>)}",
-      "export function CreatePlanDD<S>({state,mode}: FocusedProps<S, CreatePlanDDDomain>){",
+      "",
+      "export function CreatePlanDD<S,Context>({state,mode}: FocusedProps<S, CreatePlanDDDomain,Context>){",
       "  return(<>",
       "  <LabelAndInput state={state.focusOn('createPlanStart')} label='Create Start' mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('createPlanDate')} label='createPlanDate' ariaLabel='The Create Plan Date' mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('createPlanEnd')} label='createPlanEnd' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('createPlanDate')} label='create plan date' ariaLabel='The Create Plan Date' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('createPlanEnd')} label='create plan end' mode={mode} />",
       "</>)",
       "}",
-      "export function EAccountsSummaryDD<S>({state,mode}: FocusedProps<S, EAccountsSummaryDDDomain>){",
+      "",
+      "export function EAccountsSummaryDD<S,Context>({state,mode}: FocusedProps<S, EAccountsSummaryDDDomain,Context>){",
       "  return(<>",
       "  <Table state={state.focusOn('eAccountsTable')} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('totalMonthlyCost')} label='totalMonthlyCost' mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('oneAccountBalance')} label='oneAccountBalance' mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('currentAccountBalance')} label='currentAccountBalance' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('totalMonthlyCost')} label='total monthly cost' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('oneAccountBalance')} label='one account balance' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('currentAccountBalance')} label='current account balance' mode={mode} />",
       "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanStart')} label='Create Start' mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanDate')} label='createPlanDate' ariaLabel='The Create Plan Date' mode={mode} />",
-      "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanEnd')} label='createPlanEnd' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanDate')} label='create plan date' ariaLabel='The Create Plan Date' mode={mode} />",
+      "  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanEnd')} label='create plan end' mode={mode} />",
       "</>)",
-      "}"
+      "}",
+      ""
     ])
   } )
 
   it ( "should createReactPageComponent", () => {
     expect ( createReactPageComponent ( EAccountsSummaryPD ) ).toEqual ( [
       "export function EAccountsSummaryPage<S>(){",
-      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
+      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
       "   <EAccountsSummaryDD state={state}  mode={mode} />",
       "   <ModalAndCopyButton id='amendExistingPlan' text='amendExistingPlan' modal = 'EAccountsSummary_CreatePlan' state={state} mode='edit' from={fullState.focusOn('fromApi')} to={fullState.focusOn('temp')} rest='createPlanRestD' action='update'  />",
       "   <ModalButton id='createNewPlan' text='createNewPlan' modal = 'EAccountsSummary_CreatePlan' state={state} mode='create' createEmpty rest='createPlanRestD' action='create'  />",
       "   <RestButton id='deleteExistingPlan' state={state} />",
       "   <RestButton id='refresh' state={state} />",
-      "   </Layout>)})}"
+      "   </Layout>)})}",
+      ""
     ])
     expect ( createReactPageComponent ( CreatePlanPD ) ).toEqual ( [
-      "export function CreatePlanPage<S>({state, mode}: FocusedProps<S,CreatePlanDDDomain>){",
+      "export function CreatePlanPage<S,Context>({state, mode}: FocusedProps<S,CreatePlanDDDomain,Context>){",
       "  return (<Layout  details='[3]'>",
       "   <CreatePlanDD state={state}  mode={mode} />",
       "   <ModalCancelButton id='cancel' state={state} />",
       "   <ModalCommitButton id='commit' state={state} />",
-      "   </Layout>)}"
-    ] )
+      "   </Layout>)}",
+      ""
+    ])
   } )
 } )
 

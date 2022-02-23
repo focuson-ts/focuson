@@ -8,7 +8,7 @@ import { LabelAndInput } from "./copied/LabelAndInput";
 import { focusedPageWithExtraState } from "@focuson/pages";
 import { Table } from "./copied/table";
 import { LabelAndRadio, Radio } from "./copied/Radio";
-import { FocusedProps } from "./common";
+import { Context, FocusedProps } from "./common";
 import {OccupationAndIncomeDetailsPageDomain} from "./pageDomains";
 import {EAccountsSummaryPageDomain} from "./pageDomains";
 import {ETransferPageDomain} from "./pageDomains";
@@ -20,7 +20,7 @@ import {EAccountSummaryDDDomain} from "./domains"
 import {ETransferDataDDomain} from "./domains"
 import {OccupationAndIncomeDomain} from "./domains"
 export function OccupationAndIncomeDetailsPage<S>(){
-  return focusedPageWithExtraState<S, OccupationAndIncomeDetailsPageDomain, OccupationAndIncomeDomain> ( s => 'OccupationAndIncomeDetails' ) ( s => s.focusOn('fromApi')) (
+  return focusedPageWithExtraState<S, OccupationAndIncomeDetailsPageDomain, OccupationAndIncomeDomain, Context> ( s => 'OccupationAndIncomeDetails' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[1][1][1][1][1][1][1]'>
    <OccupationAndIncome state={state}  mode={mode} />
@@ -31,7 +31,7 @@ export function OccupationAndIncomeDetailsPage<S>(){
    </Layout>)})}
 
 export function EAccountsSummaryPage<S>(){
-  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (
+  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[1][3,3][5]'>
    <EAccountsSummaryDD state={state}  mode={mode} />
@@ -41,7 +41,7 @@ export function EAccountsSummaryPage<S>(){
    <RestButton id='refresh' state={state} />
    </Layout>)})}
 
-export function CreatePlanPage<S>({state, mode}: FocusedProps<S,CreatePlanDDDomain>){
+export function CreatePlanPage<S,Context>({state, mode}: FocusedProps<S,CreatePlanDDDomain,Context>){
   return (<Layout  details='[3]'>
    <CreatePlanDD state={state}  mode={mode} />
    <ModalCancelButton id='cancel' state={state} />
@@ -49,7 +49,7 @@ export function CreatePlanPage<S>({state, mode}: FocusedProps<S,CreatePlanDDDoma
    </Layout>)}
 
 export function ETransferPage<S>(){
-  return focusedPageWithExtraState<S, ETransferPageDomain, ETransferDataDDomain> ( s => 'ETransfer' ) ( s => s.focusOn('fromApi')) (
+  return focusedPageWithExtraState<S, ETransferPageDomain, ETransferDataDDomain, Context> ( s => 'ETransfer' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[3][1,1,1][1,1][1][3]'>
    <ETransferDataD state={state}  mode={mode} />
@@ -59,7 +59,7 @@ export function ETransferPage<S>(){
    </Layout>)})}
 
 export function CreateEAccountPage<S>(){
-  return focusedPageWithExtraState<S, CreateEAccountPageDomain, CreateEAccountDataDDDomain> ( s => 'CreateEAccount' ) ( s => s.focusOn('editing')) (
+  return focusedPageWithExtraState<S, CreateEAccountPageDomain, CreateEAccountDataDDDomain, Context> ( s => 'CreateEAccount' ) ( s => s.focusOn('editing')) (
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[1][1][1][1]]'>
    <CreateEAccountDataDD state={state}  mode={mode} />
@@ -68,7 +68,7 @@ export function CreateEAccountPage<S>(){
    <button>resetAll of type ResetStateButton cannot be create yet</button>
    </Layout>)})}
 
-export function CreateEAccountDataDD<S>({state,mode}: FocusedProps<S, CreateEAccountDataDDDomain>){
+export function CreateEAccountDataDD<S,Context>({state,mode}: FocusedProps<S, CreateEAccountDataDDDomain,Context>){
   return(<>
   <LabelAndInput state={state.focusOn('name')} label='name' mode={mode} />
   <LabelAndRadio state={state.focusOn('type')} label='type' mode={mode} enums={{"savings":"Savings","checking":"Checking"}} />
@@ -77,7 +77,7 @@ export function CreateEAccountDataDD<S>({state,mode}: FocusedProps<S, CreateEAcc
 </>)
 }
 
-export function CreatePlanDD<S>({state,mode}: FocusedProps<S, CreatePlanDDDomain>){
+export function CreatePlanDD<S,Context>({state,mode}: FocusedProps<S, CreatePlanDDDomain,Context>){
   return(<>
   <LabelAndInput state={state.focusOn('createPlanStart')} label='Create Start' mode={mode} />
   <LabelAndInput state={state.focusOn('createPlanDate')} label='create plan date' ariaLabel='The Create Plan Date' mode={mode} />
@@ -85,7 +85,7 @@ export function CreatePlanDD<S>({state,mode}: FocusedProps<S, CreatePlanDDDomain
 </>)
 }
 
-export function EAccountsSummaryDD<S>({state,mode}: FocusedProps<S, EAccountsSummaryDDDomain>){
+export function EAccountsSummaryDD<S,Context>({state,mode}: FocusedProps<S, EAccountsSummaryDDDomain,Context>){
   return(<>
   <Table state={state.focusOn('eAccountsTable')} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} mode={mode} />
   <LabelAndInput state={state.focusOn('totalMonthlyCost')} label='total monthly cost' mode={mode} />
@@ -97,7 +97,7 @@ export function EAccountsSummaryDD<S>({state,mode}: FocusedProps<S, EAccountsSum
 </>)
 }
 
-export function ETransferDataD<S>({state,mode}: FocusedProps<S, ETransferDataDDomain>){
+export function ETransferDataD<S,Context>({state,mode}: FocusedProps<S, ETransferDataDDomain,Context>){
   return(<>
   <LabelAndInput state={state.focusOn('amount')} label='Account Id' mode={mode} />
   <LabelAndInput state={state.focusOn('dateOfETransfer')} label='date of e transfer' mode={mode} />
@@ -111,7 +111,7 @@ export function ETransferDataD<S>({state,mode}: FocusedProps<S, ETransferDataDDo
 </>)
 }
 
-export function OccupationAndIncome<S>({state,mode}: FocusedProps<S, OccupationAndIncomeDomain>){
+export function OccupationAndIncome<S,Context>({state,mode}: FocusedProps<S, OccupationAndIncomeDomain,Context>){
   return(<>
   <LabelAndInput state={state.focusOn('typeOfProfession')} label='type of profession' mode={mode} />
   <LabelAndInput state={state.focusOn('occupation')} label='occupation' mode={mode} />

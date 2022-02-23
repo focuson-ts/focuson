@@ -13,12 +13,12 @@ export interface SelectedPageDebug {
   selectedPageDebug?: boolean
 }
 
-export interface SelectedPageProps<S, MD extends ModalPagesDetails<S>> extends LensProps<S, S> {
-  pages: MultiPageDetails<S, MD>,
+export interface SelectedPageProps<S, MD extends ModalPagesDetails<S, Context>, Context> extends LensProps<S, S, Context> {
+  pages: MultiPageDetails<S, MD, Context>,
   selectedPageL: Optional<S, PageSelection>
 
 }
-export function SelectedPage<S, MD extends ModalPagesDetails<S>> ( { state, pages, selectedPageL }: SelectedPageProps<S, MD> ) {
+export function SelectedPage<S, MD extends ModalPagesDetails<S, Context>, Context> ( { state, pages, selectedPageL }: SelectedPageProps<S, MD, Context> ) {
   let selectedPageData = selectedPageL.getOption ( state.json () );
   const pageName = selectedPageData?.pageName
   // @ts-ignore

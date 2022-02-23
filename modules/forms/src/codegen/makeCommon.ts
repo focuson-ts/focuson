@@ -15,8 +15,13 @@ export function makeFullState ( params: TSParams, pds: PageD[] ): string[] {
     `export interface ${params.stateName} extends ${constant},`,
     ...indentList ( hasDomains ), `{}` ]
 }
-export function makeCommon ( params: TSParams, pds: PageD[], rds: RestD[] ): string[] {
 
+export function makeContext (): string[] {
+  return [ `export type Context = {}`,
+    `export const context: Context = {}` ]
+
+}
+export function makeCommon ( params: TSParams, pds: PageD[], rds: RestD[] ): string[] {
   return [
     `import { HasPageSelection, HasSelectedModalPage, HasSimpleMessages, SimpleMessage, PageMode } from '@focuson/pages'`,
     `import { defaultDateFn } from '@focuson/utils';`,
@@ -27,6 +32,7 @@ export function makeCommon ( params: TSParams, pds: PageD[], rds: RestD[] ): str
     `import { HasFocusOnDebug } from '@focuson/focuson';`,
     `import { LensProps } from '@focuson/state';`,
     ...imports ( params.pageDomainsFile ),
+    ...makeContext (),
     ...makeFullState ( params, pds ),
     ...makeCommonParams ( params, rds ),
     ...makeStateWithSelectedPage ( params, JSON.stringify ( findAllCommonParamsWithSamples ( rds ) ), pds[ 0 ].name ) //TODO this should be slicker and aggregated params for example

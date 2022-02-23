@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import {getElement, LensState, setJsonForFlux} from "@focuson/state";
 import {Nav} from "@focuson/nav";
 import {Cpq, CpqData} from "./Cpq";
+import { Context, context } from "./context";
 
 let rootElement = getElement('root')
 
@@ -11,7 +12,7 @@ let fetchUrl: (url: string) => Promise<CpqData> = (url: string) => fetch(url).th
 
 fetch("json/index.json").then(j => j.json()).then(jsonFiles => {
     console.log("fetched for nav", jsonFiles)
-        let setJson: (m: CpqData) => void = setJsonForFlux('cpq', (s: LensState< CpqData, CpqData>) => {
+        let setJson: (m: CpqData) => void = setJsonForFlux('cpq', context,(s: LensState< CpqData, CpqData, Context>) => {
         console.log("settingJson to", s.json())
         console.log("jsonFiles is", jsonFiles)
         ReactDOM.render(

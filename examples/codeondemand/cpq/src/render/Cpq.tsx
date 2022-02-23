@@ -4,8 +4,9 @@ import {ComponentFromServer} from "@focuson/codeondemand";
 import {Lenses} from "@focuson/lens";
 import {LensProps} from "@focuson/state";
 import {focusOnNth} from "../../../../../modules/state";
+import { Context } from "../context";
 
-export function Cpq<Main>({state}: LensProps<Main, CpqData>) {
+export function Cpq<Main>({state}: LensProps<Main, CpqData,Context>) {
     const filters = state.json().filters.map((f, i) =>
         (<ComponentFromServer key={i} state={focusOnNth(state.focusOn('filters'), i)}/>))
     let price: string = state.json().price.toString()

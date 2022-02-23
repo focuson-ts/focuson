@@ -3,7 +3,7 @@ export interface Has{commonParams} {{commonParams}: {commonParams}}
 export type {commonParams} = {
 {commonParamDefns}
 }
-export interface FocusedProps<S,D> extends LensProps<S,D>{
+export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{
   mode: PageMode;
 }
 

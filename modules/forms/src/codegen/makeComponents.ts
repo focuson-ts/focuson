@@ -74,7 +74,7 @@ export function createAllReactCalls ( d: AllComponentData[] ): string[] {
 export function createReactComponent ( dataD: DataD ): string[] {
   const contents = indentList ( indentList ( createAllReactCalls ( listComponentsIn ( dataD ) ) ) )
   return [
-    `export function ${componentName ( dataD )}<S>({state,mode}: FocusedProps<S, ${domainName ( dataD )}>){`,
+    `export function ${componentName ( dataD )}<S,Context>({state,mode}: FocusedProps<S, ${domainName ( dataD )},Context>){`,
     "  return(<>",
     ...contents,
     "</>)",
@@ -93,7 +93,7 @@ export function createReactModalPageComponent ( pageD: PageD ): string[] {
   const { dataDD, layout } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
   return [
-    `export function ${pageComponentName ( pageD )}<S>({state, mode}: FocusedProps<S,${domainName ( pageD.display.dataDD )}>){`,
+    `export function ${pageComponentName ( pageD )}<S,Context>({state, mode}: FocusedProps<S,${domainName ( pageD.display.dataDD )},Context>){`,
     `  return (<${layout.name}  details='${layout.details}'>`,
     `   <${componentName ( dataDD )} state={state}  mode={mode} />`,
     ...indentList ( indentList ( indentList ( makeButtonsFrom ( pageD ) ) ) ),
@@ -106,7 +106,7 @@ export function createReactMainPageComponent ( pageD: PageD ): string[] {
   const focus = focusOnFor ( pageD.display.target );
   return [
     `export function ${pageComponentName ( pageD )}<S>(){`,
-    `  return focusedPageWithExtraState<S, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}> ( s => '${pageD.name}' ) ( s => s${focus}) (
+    `  return focusedPageWithExtraState<S, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${pageD.name}' ) ( s => s${focus}) (
     ( fullState, state , full, d, mode) => {`,
     `  return (<${layout.name}  details='${layout.details}'>`,
     `   <${componentName ( dataDD )} state={state}  mode={mode} />`,
@@ -128,7 +128,7 @@ export function createAllReactComponents ( params: TSParams, pages: PageD[] ): s
     `import { focusedPageWithExtraState } from "@focuson/pages";`,
     `import { Table } from "./copied/table";`,
     `import { LabelAndRadio, Radio } from "./copied/Radio";`,
-    `import { FocusedProps } from "./${params.commonFile}";`
+    `import { Context, FocusedProps } from "./${params.commonFile}";`
   ]
   let pageDomain = noExtension ( params.pageDomainsFile );
   let domain = noExtension ( params.domainsFile );

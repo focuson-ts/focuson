@@ -12,7 +12,7 @@ interface StateForModalButtonTest extends HasSelectedModalPage {
 
 describe ( "modal button", () => {
   it ( "should render with an id and title", () => {
-    const state = lensState<StateForModalButtonTest> ( {}, ( s: StateForModalButtonTest ) => {}, 'ModalButton' )
+    const state = lensState<StateForModalButtonTest, {}> ( {}, ( s: StateForModalButtonTest ) => {}, 'ModalButton' , {})
     const comp = mount ( <ModalButton text='someTitle' id='someId' state={state} modal={'someModal'} modalL={selectionModalPageL ()}/> )
     const button = comp.find ( "button" )
     expect ( button.text () ).toEqual ( 'someTitle' )
@@ -20,7 +20,7 @@ describe ( "modal button", () => {
   } )
   it ( "should change the state to have a model when clicked", () => {
     var remembered: StateForModalButtonTest = {}
-    const state = lensState<StateForModalButtonTest> ( {}, ( s: StateForModalButtonTest ) => {remembered = s}, 'ModalButton' )
+    const state = lensState<StateForModalButtonTest,{}> ( {}, ( s: StateForModalButtonTest ) => {remembered = s}, 'ModalButton',{} )
     const comp = mount ( <ModalButton text='someTitle' id='someId' state={state} modal={'someModal'} modalL={selectionModalPageL ()}/> )
     const button = comp.find ( "button" )
     button.simulate ( 'click' )

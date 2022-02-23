@@ -10,6 +10,7 @@ import {BoardData, GameData, NoughtOrCross} from "./GameDomain";
 import {Board} from "./render/Board";
 import {Game} from "./render/Game";
 import {Square} from "./render/Square";
+import { context, Context } from "./context";
 
 enzymeSetup()
 
@@ -36,15 +37,15 @@ let gameJson: GameData = {
 function setJson(json: GameData): void {throw new Error('should not be called')}
 
 let cache: any = ''//this isn't used and it's ok if it throws errors as that will indicate test failure
-let state = lensState<GameData>(gameJson, setJson, 'game')
+let state = lensState<GameData, Context>(gameJson, setJson, 'game', context)
 
-function squareContext(state: LensState<GameData, GameData>, n: number): LensState<GameData, NoughtOrCross> {
+function squareContext(state: LensState<GameData, GameData, Context>, n: number): LensState<GameData, NoughtOrCross, Context> {
     return focusOnNth(state.focusOn('_embedded').focusOn('board').focusOn('squares'), n)
 }
 
-function compare<Domain, Main, Data>(wrapper: ShallowWrapper<any, React.Component["state"], React.Component>, state: LensState<Main, Data>, expectedLensDescription: string) {
+function compare<Domain, Main, Data>(wrapper: ShallowWrapper<any, React.Component["state"], React.Component>, state: LensState<Main, Data, Context>, expectedLensDescription: string) {
     let props: any = wrapper.props()
-    let childState: LensState<Main, Data> = props.state
+    let childState: LensState<Main, Data, Context> = props.state
     expect(childState.optional.description).toBe(expectedLensDescription)
     expect(childState.main).toBe(state.main)
     expect(childState.dangerouslySetMain).toBe(state.dangerouslySetMain)

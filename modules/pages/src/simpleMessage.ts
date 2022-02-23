@@ -18,8 +18,8 @@ export function createSimpleMessage ( level: SimpleMessageLevel, msg: string, ti
   return { level, msg, time }
 }
 
-export const simpleMessagesL = <S extends HasSimpleMessages> () => Lenses.identity<S> ().focusOn ( 'messages' );
-export function simpleMessagesLFn<S extends HasSimpleMessages, D> (): ( s: LensState<S, S>, domainLens: Optional<S, D> ) => LensState<S, SimpleMessage[]> {
+export const simpleMessagesL = <S extends HasSimpleMessages, Context> () => Lenses.identity<S> ().focusOn ( 'messages' );
+export function simpleMessagesLFn<S extends HasSimpleMessages, D, Context> (): ( s: LensState<S, S, Context>, domainLens: Optional<S, D> ) => LensState<S, SimpleMessage[], Context> {
   return ( s, d ) => s.focusOn ( "messages" )
 }
 

@@ -1,6 +1,7 @@
 //Copyright (c)2020-2021 Philip Rice. <br />Permission is hereby granted, free of charge, to any person obtaining a copyof this software and associated documentation files (the Software), to dealin the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  <br />The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED AS
 import {Lens, Lenses} from "@focuson/lens";
 import {LensState} from "@focuson/state";
+import { Context } from "./context";
 
 
 export let toInventoryProductsL: Lens<AppData, ProductData[]> = Lenses.build<AppData>('app').focusOn('inventory').focusOn('products')
@@ -32,7 +33,7 @@ function removeItemFromList(list: ProductData[], index: number): ProductData[] {
     return newList
 }
 
-export function removeFromContextAddToList<Main>(context: LensState<Main, ProductData[]>, toAddLens: Lens<Main, ProductData[]>, index: number) {
+export function removeFromContextAddToList<Main>(context: LensState<Main, ProductData[], Context>, toAddLens: Lens<Main, ProductData[]>, index: number) {
     let listThatWillHaveItemRemoved = context.json();
     let item = listThatWillHaveItemRemoved[index]
     let newToremoveList = removeItemFromList(listThatWillHaveItemRemoved, index)

@@ -30,12 +30,12 @@ export function makeModals ( ps: PageD[] ): string[] {
     `import { Lenses } from "@focuson/lens";`,
     `import { ModalPagesDetails } from "@focuson/pages";`,
     `import { ${modals.map ( m => pageComponentName ( m.modal ) ).join ( "," )} } from "./render";`,
-    `import { FState } from "./common";`,
+    `import { Context, FState } from "./common";`,
     ``,
     ``,
     `export type Modals = typeof modals`,
     `const identity = Lenses.identity<FState> ( 'allModalPages' );`,
-    `export const modals: ModalPagesDetails<FState> = {`,
+    `export const modals: ModalPagesDetails<FState,Context> = {`,
     ...modals.flatMap ( makeModal ),
     `}` ]
 }

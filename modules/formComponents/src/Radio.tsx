@@ -1,6 +1,5 @@
 import { NameAnd } from "@focuson/utils";
-import { FocusedProps } from "../common";
-import { Input } from "./Input";
+import { FocusedProps } from "@focuson/pages";
 
 export interface RadioProps<S, Context> extends FocusedProps<S, string, Context> {
   enums: NameAnd<string>;

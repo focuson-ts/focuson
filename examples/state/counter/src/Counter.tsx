@@ -2,8 +2,9 @@
 
 import {LensProps} from "@focuson/state";
 import {CounterData, TwoCounterData} from "./domain";
+import { Context } from "./context";
 
-export function Counter<Main>({state}: LensProps<Main, CounterData>) {
+export function Counter<Main, Context>({state}: LensProps<Main, CounterData, Context>) {
     let value = state.json().value
     let increment = () => state.setJson({value: value + 1})
     let decrement = () => state.setJson({value: value - 1})
@@ -17,7 +18,7 @@ export function Counter<Main>({state}: LensProps<Main, CounterData>) {
     )
 }
 
-export function TwoCounter<Main>({state}: LensProps<Main, TwoCounterData>) {
+export function TwoCounter<Main, Context>({state}: LensProps<Main, TwoCounterData, Context>) {
     return (<div>
         <Counter state={state.focusOn('counterOne')}/>
         <Counter state={state.focusOn('counterTwo')}/>

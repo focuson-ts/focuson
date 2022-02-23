@@ -1,10 +1,10 @@
 //** This clears up the state if it is the first time something is called */
 import { HasPageSelection, HasSimpleMessages, PageMode, pageSelectionlens } from "@focuson/pages";
 import { preMutateForPages } from "@focuson/pages";
-import { ModalDetails, pageDetails, PageDetails, PageSpecState } from "./page.fixture";
+import { Context, ModalDetails, pageDetails, PageDetails, PageSpecState } from "./page.fixture";
 
 
-const preMutate = preMutateForPages<PageSpecState, PageDetails, ModalDetails> ( pageDetails, pageSelectionlens () )
+const preMutate = preMutateForPages<PageSpecState, PageDetails, ModalDetails,Context> ( pageDetails, pageSelectionlens () )
 
 let viewPageMode: PageMode = "view";
 let invalidPageName: HasPageSelection & HasSimpleMessages = { pageSelection: { pageName: 'asd', firstTime: true, pageMode: viewPageMode }, messages: [] };

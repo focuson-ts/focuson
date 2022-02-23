@@ -5,7 +5,7 @@ import { safeArray } from "@focuson/utils";
 
 
 type PostCommandLens<S> = Optional<S, PostCommand<S, any, any> []>
-export interface PostButtonProps<S, D, Args> extends LensProps<S, D> {
+export interface PostButtonProps<S, D, Context, Args> extends LensProps<S, D, Context> {
   id?: string,
   text: string,
   poster: string,
@@ -22,7 +22,7 @@ export interface PostButtonProps<S, D, Args> extends LensProps<S, D> {
  * @param args arguments that will be sent to the poster
  * @param postCommandL a lens that points to the postcommand array. This will often be provided from a context. It must be provided if the onClick is to work.
  */
-export const PostButton = <S, D, Args> ( { id, state, text, poster, args, postCommandL }: PostButtonProps<S, D, Args> ) =>
+export const PostButton = <S, D, Context, Args> ( { id, state, text, poster, args, postCommandL }: PostButtonProps<S, D, Context, Args> ) =>
   <button id={id} onClick={() => {
     if ( postCommandL ) state.dangerouslySetMain ( postCommandL.transform ( existing => [ ...safeArray ( existing ), { poster, args } ] ) ( state.main ) )
     else throw Error ( `Trying to click a post button ${id} ${test} ${poster} without a postCommandL` )

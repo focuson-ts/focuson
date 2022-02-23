@@ -3,20 +3,21 @@ import { FocusOnConfig, setJsonForFocusOn } from "@focuson/focuson";
 import { postCommandsL, Posters } from "@focuson/poster";
 import { getElement, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
-import { emptyState, FState } from "./common";
+import { context, Context, emptyState, FState } from "./common";
 import { fetchWithDelay, fetchWithPrefix, loggingFetchFn, NameAnd, sortedEntries } from "@focuson/utils";
 import { fetchers } from "./fetchers";
 import { pages } from "./pages";
 import { modals } from "./modals";
-import { CreateEAccountPage, EAccountsSummaryPage, ETransferPage, OccupationAndIncomeDetailsPage } from "./render";
+
 
 
 export const posters: Posters<FState> = {}
 
 
-const config: FocusOnConfig<FState> = {
+
+const config: FocusOnConfig<FState, Context> = {
   /** How data is sent to/fetched from apis */
-  fetchFn: fetchWithDelay ( 2000, fetchWithPrefix ( 'http://localhost:8080', loggingFetchFn ) ),
+  fetchFn: fetchWithDelay ( 1000, fetchWithPrefix ( 'http://localhost:8080', loggingFetchFn ) ),
   /**A hook that is called before anything else.  */
   preMutate: ( s: FState ) => s,
   /** A hook that is called after everything else.  */
@@ -59,7 +60,7 @@ const pageModeFor: NameAnd<PageMode> = {
 
 }
 
-let setJson = setJsonForFocusOn ( config, ( s: LensState<FState, FState> ): void =>
+let setJson = setJsonForFocusOn ( config, context, ( s: LensState<FState, FState, Context> ): void =>
   ReactDOM.render ( <div>
     <ul>
       {sortedEntries ( pages ).map ( ( [ name, pd ] ) =>

@@ -1,17 +1,18 @@
-import { identityOptics, Lens } from "@focuson/lens";
-import { allModelPageDetails, HasPageSelection, HasSelectedModalPage, HasSimpleMessages, ModalPagesDetails, MultiPageDetails, PageSelection, pageSelectionlens, SelectedPage, selectionModalPageL, SelectPage, simpleMessagesPageConfig } from "@focuson/pages";
-import { getElement, LensProps, LensState } from "@focuson/state";
+import { identityOptics } from "@focuson/lens";
+import { allModelPageDetails, HasPageSelection, HasSelectedModalPage, HasSimpleMessages, ModalPagesDetails, MultiPageDetails, pageSelectionlens, SelectedPage, selectionModalPageL, simpleMessagesPageConfig } from "@focuson/pages";
+import { getElement, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
 import { SearchPage, SearchQueryModalPage } from "./search/searchPage";
 import React from "react";
 import { FocusOnConfig, HasFocusOnDebug, setJsonForFocusOn } from "@focuson/focuson";
 import { HasPostCommand, postCommandsL, Posters } from "@focuson/poster";
-import { fetchWithDelay, fetchWithPrefix, loggingFetchFn, sortedEntries } from "@focuson/utils";
+import { fetchWithDelay, fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
 import { HasSearch } from "./search/fullSearchDomain";
 import { fetchers } from "./fetchers";
+import { context, Context } from "./context";
 
 
-const modals: ModalPagesDetails<FullState> = {
+const modals: ModalPagesDetails<FullState, Context> = {
   query: { lens: identityOptics<FullState> ().focusQuery ( 'search' ).focusQuery ( 'query' ), displayModalFn: SearchQueryModalPage, mode: 'edit' }
 }
 type Modals = typeof modals
@@ -22,16 +23,16 @@ export interface FullState extends HasSearch, HasSimpleMessages, HasSelectedModa
 function MyLoading () {
   return <p>Loading</p>
 }
-const simpleMessagesConfig = simpleMessagesPageConfig<FullState, string, Modals> ( modals, MyLoading )
+const simpleMessagesConfig = simpleMessagesPageConfig<FullState, string, Modals, Context> ( modals, MyLoading )
 
-export const pages: MultiPageDetails<FullState, Modals> = {
-  search: { config: simpleMessagesConfig, lens: identityOptics<FullState> ().focusQuery ( 'search' ), pageFunction: SearchPage<FullState> (), initialValue: {} }
+export const pages: MultiPageDetails<FullState, Modals, Context> = {
+  search: { config: simpleMessagesConfig, lens: identityOptics<FullState> ().focusQuery ( 'search' ), pageFunction: SearchPage<FullState,Context> (), initialValue: {} }
 }
 
 export const posters: Posters<FullState> = {}
 
 
-const config: FocusOnConfig<FullState> = {
+const config: FocusOnConfig<FullState, Context> = {
   /** How data is sent to/fetched from apis */
   fetchFn: fetchWithDelay ( 2000, fetchWithPrefix ( 'http://localhost:8080', loggingFetchFn ) ),
 
@@ -67,7 +68,7 @@ const config: FocusOnConfig<FullState> = {
 
 let rootElement = getElement ( "root" );
 console.log ( "set json" )
-let setJson = setJsonForFocusOn ( config, ( s: LensState<FullState, FullState> ): void =>
+let setJson = setJsonForFocusOn ( config, context,( s: LensState<FullState, FullState, Context> ): void =>
   ReactDOM.render ( <SelectedPage state={s} pages={pages} selectedPageL={pageSelectionlens<FullState> ()}/>, rootElement ) )
 
 console.log ( "setting json" )

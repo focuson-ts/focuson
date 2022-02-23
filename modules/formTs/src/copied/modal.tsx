@@ -3,7 +3,7 @@ import { PageMode, selectionModalPageL } from "@focuson/pages";
 import { LensState } from "@focuson/state";
 
 
-export interface ModalButtonProps<S, Full> extends CommonStateProps<S, Full> {
+export interface ModalButtonProps<S, Full, Context> extends CommonStateProps<S, Full, Context> {
   modal: string;
   mode: PageMode;
   rest?: string;
@@ -11,23 +11,23 @@ export interface ModalButtonProps<S, Full> extends CommonStateProps<S, Full> {
   text?: string;
   createEmpty?: boolean;
 }
-export interface ModalAndCopyButtonProps<S, Full, D> extends ModalButtonProps<S, Full> {
-  from: LensState<S, D>;
-  to: LensState<S, D>;
+export interface ModalAndCopyButtonProps<S, Full, D, Context> extends ModalButtonProps<S, Full, Context> {
+  from: LensState<S, D, Context>;
+  to: LensState<S, D, Context>;
 }
 
 //   const fromJson: Data|undefined = from.optJson ()
 //       if ( modalL ) to.useOtherAsWell ( modalL ).setTwoValues ( fromJson, modal )
 //       else throw Error ( `Using ModalAndCopyButton  ${text} ${modal} ${from.optional.description} ${to.optional.description} without context` )
 //
-export function ModalButton<S extends any, Full> ( { state, id, text, modal }: ModalButtonProps<S, Full> ): JSX.Element {
+export function ModalButton<S extends any, Full, Context> ( { state, id, text, modal }: ModalButtonProps<S, Full, Context> ): JSX.Element {
   // @ts-ignore
   const bodge = selectionModalPageL<S> ()
   return (<button id={id} onClick={() => state.copyWithLens ( bodge ).setJson ( modal )}>{text}</button>)
 
 }
 
-export function ModalAndCopyButton<S, Full, Data> ( { id, text, modal, from, to }: ModalAndCopyButtonProps<S, Full, Data> ) {
+export function ModalAndCopyButton<S, Full, Data, Context> ( { id, text, modal, from, to }: ModalAndCopyButtonProps<S, Full, Data, Context> ) {
   const bodge = selectionModalPageL<S> ()
   function onClick () {
     return () => {
@@ -39,12 +39,12 @@ export function ModalAndCopyButton<S, Full, Data> ( { id, text, modal, from, to 
 }
 
 
-export function ModalCancelButton<S> ( { id, state }: CommonStateProps<S, any> ) {
+export function ModalCancelButton<S, Context> ( { id, state }: CommonStateProps<S, any, Context> ) {
   const bodge = selectionModalPageL<S> ()
   return <button onClick={() => state.copyWithLens ( bodge ).setJson ( undefined )}>Cancel</button>
 
 }
-export function ModalCommitButton<S> ( { id, state }: CommonStateProps<S, any> ) {
+export function ModalCommitButton<S, Context> ( { id, state }: CommonStateProps<S, any, Context> ) {
   const bodge = selectionModalPageL<S> ()
   return <button onClick={() => state.copyWithLens ( bodge ).setJson ( undefined )}>Commit</button>
 

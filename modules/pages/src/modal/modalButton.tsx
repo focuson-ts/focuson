@@ -10,9 +10,9 @@ export interface CommonModalButtonProps<S> {
 
 }
 
-export interface ModalButtonProps<S> extends LensProps<S, any>, CommonModalButtonProps<S> {
+export interface ModalButtonProps<S, Context> extends LensProps<S, any, Context>, CommonModalButtonProps<S> {
 }
-export function ModalButton<S extends any> ( { state, id, text, modal, modalL }: ModalButtonProps<S> ): JSX.Element {
+export function ModalButton<S extends any, Context> ( { state, id, text, modal, modalL }: ModalButtonProps<S, Context> ): JSX.Element {
   return <button id={id} onClick={() => state.copyWithLens ( modalL ).setJson ( modal )}>{text}</button>
 
 }

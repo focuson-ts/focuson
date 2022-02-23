@@ -30,7 +30,7 @@ describe ( "makeCommonParams", () => {
       "accountId?:string;",
       "customerId?:string;",
       "}",
-      "export interface FocusedProps<S,D> extends LensProps<S,D>{",
+      "export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{",
       "  mode: PageMode;",
       "}",
       "export const commonIdLens = Lenses.identity<FState> ().focusOn ( 'commonIds' )",

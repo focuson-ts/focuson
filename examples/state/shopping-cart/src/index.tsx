@@ -4,6 +4,7 @@ import {Lenses} from "@focuson/lens";
 import {getElement, setJsonWithLongTransformation} from "@focuson/state";
 import ReactDOM from "react-dom";
 import {ShoppingCartApp} from "./components/ShoppingCartApp";
+import { context } from "./context";
 
 let rootElement = getElement('root')
 
@@ -17,7 +18,7 @@ function calculatePrice(appData: AppData) {
     return Promise.resolve(priceLens.set(appData, price.toFixed(2)))
 }
 
-let setJson= setJsonWithLongTransformation( 'game',
+let setJson= setJsonWithLongTransformation( 'game',context,
     s => (ReactDOM.render(<ShoppingCartApp state={s}/>, rootElement)), calculatePrice)
 
 

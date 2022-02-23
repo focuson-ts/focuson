@@ -3,11 +3,12 @@ import React from "react";
 import {ProductData, removeFromContextAddToList} from "../domain";
 import {Lens} from "@focuson/lens";
 import {LensState} from "@focuson/state";
+import { Context } from "../context";
 
 interface ProductProps<Main> {
     addToListLens: Lens<Main, ProductData[]>,
     button: string,
-    state: LensState<Main, ProductData[]>
+    state: LensState<Main, ProductData[], Context>
 }
 
 interface OneProductProps<Main> extends ProductProps<Main> {

@@ -7,6 +7,7 @@ import React from 'react';
 import {Lens} from "@focuson/lens";
 import {LensState} from "@focuson/state";
 import {ProductList} from "./ProductList";
+import { Context } from "../context";
 
 
 /** This would normally be injected by (say) a context. As we are focusing on state management, I've not added to the complexity by doin that */
@@ -14,7 +15,7 @@ function onCheckoutClicked() { console.log("Checkout clicked")}
 
 
 interface CartProps<Main> {
-    state: LensState<Main, CartData>,
+    state: LensState<Main, CartData, Context>,
     addToListLens: Lens<Main, ProductData[]>
 }
 

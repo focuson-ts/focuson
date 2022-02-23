@@ -9,6 +9,6 @@ export interface CommonComponentProps {
 }
 
 
-export interface CommonStateProps<S, T> extends CommonComponentProps {
-  state: LensState<S, T>;
+export interface CommonStateProps<S, T, Context> extends CommonComponentProps {
+  state: LensState<S, T, Context>;
 }

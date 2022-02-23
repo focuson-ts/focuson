@@ -6,13 +6,15 @@ import { Chest, Dragon, dragon } from "./LensFixture";
 
 let initialMain = { ...dragon }
 let setMain = jest.fn ();
-let dragonLS = lensState ( dragon, setMain, "dragon" )
+type Context = 'context'
+const context:Context = 'context'
+let dragonLS = lensState ( dragon, setMain, "dragon", context )
 let chestLS = dragonLS.focusOn ( 'body' ).focusOn ( 'chest' )
 let stomachLS = chestLS.focusOn ( 'stomach' )
 
-function setupForSetMain<Main, T> ( context: LensState<Main, T>, fn: ( context: LensState<Main, T>, setMain: jest.Mock ) => void ) {
+function setupForSetMain<Main, T> ( state: LensState<Main, T, Context>, fn: ( context: LensState<Main, T, Context>, setMain: jest.Mock ) => void ) {
   const setMain = jest.fn ()
-  let newContext: LensState<Main, T> = new LensState ( context.main, setMain, context.optional )
+  let newContext: LensState<Main, T, Context> = new LensState ( state.main, setMain, state.optional, context )
   fn ( newContext, setMain )
 }
 
@@ -22,7 +24,7 @@ function checkSetMainWas<Main> ( setMain: jest.Mock, expected: Main ) {
   expect ( dragon ).toEqual ( initialMain ) //just checking no sideeffects
 }
 
-function checkLensState<T> ( ls: LensState<Dragon, T>, lensDescription: string ) {
+function checkLensState<T> ( ls: LensState<Dragon, T,Context>, lensDescription: string ) {
   expect ( ls.main ).toEqual ( dragon )
   expect ( ls.optional.description ).toEqual ( lensDescription )
   expect ( ls.dangerouslySetMain ).toEqual ( setMain )
@@ -83,9 +85,9 @@ describe ( "lenState2", () => {
 
   it ( "should allow 'chainWithLens1 chainWithLens2", () => {
     setupForSetMain ( dragonLS, ( ls, setMain ) => {
-      const identity = Lenses.identity<Chest>('id')
+      const identity = Lenses.identity<Chest> ( 'id' )
       const ls2 = ls.focusOn ( 'body' ).focusOn ( 'chest' ).doubleUp ()
-        ls2.chain1(identity.focusOn('stomach') ).chain2(identity.focusOn('heart')).setJson ( { contents: [ 'some' ] }, 'thing' )
+      ls2.chain1 ( identity.focusOn ( 'stomach' ) ).chain2 ( identity.focusOn ( 'heart' ) ).setJson ( { contents: [ 'some' ] }, 'thing' )
 
       checkSetMainWas ( setMain, {
         "body": {

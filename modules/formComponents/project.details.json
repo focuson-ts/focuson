@@ -1,6 +1,6 @@
 {
   "template": "noreact",
-  "name": "@focuson/formComponents",
+  "name": "@focuson/form_components",
   "description": "Components that can be used by @focuson/forms",
   "details": {
     "ideify": true,

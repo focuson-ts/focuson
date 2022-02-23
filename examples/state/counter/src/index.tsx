@@ -2,20 +2,21 @@
 import * as React from 'react'
 import ReactDOM from 'react-dom';
 
-import {getElement, setJsonForFlux} from "@focuson/state";
-import {Counter, TwoCounter} from "./Counter";
-import {CounterData, TwoCounterData} from "./domain";
+import { getElement, setJsonForFlux } from "@focuson/state";
+import { Counter, TwoCounter } from "./Counter";
+import { CounterData, TwoCounterData } from "./domain";
+import { context, Context } from "./context";
 
 
-let oneCounterElement = getElement("oneCounter");
-let twoCounterElement = getElement("twoCounter");
+let oneCounterElement = getElement ( "oneCounter" );
+let twoCounterElement = getElement ( "twoCounter" );
 
 
-let setJson1 = setJsonForFlux<CounterData, void>('counter', s => (ReactDOM.render(<Counter state={s}/>, oneCounterElement)))
+let setJson1 = setJsonForFlux<CounterData, void, Context> ( 'counter', context, s => (ReactDOM.render ( <Counter state={s}/>, oneCounterElement )) )
 
-let setJson2 = setJsonForFlux<TwoCounterData, void>('twoCounter', s => (ReactDOM.render(<TwoCounter state={s}/>, twoCounterElement)))
+let setJson2 = setJsonForFlux<TwoCounterData, void, Context> ( 'twoCounter', context, s => (ReactDOM.render ( <TwoCounter state={s}/>, twoCounterElement )) )
 
-setJson1({value: 0})
-setJson2({counterOne: {value: 0}, counterTwo: {value: 0}})
+setJson1 ( { value: 0 } )
+setJson2 ( { counterOne: { value: 0 }, counterTwo: { value: 0 } } )
 
 

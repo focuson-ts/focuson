@@ -8,7 +8,7 @@ import { MultiPageDetails } from "./pageConfig";
  * This is intended to be use used a 'preMutate' in a 'setJson' structure.
  * It should normally be called before fetchers are checked
  */
-export const preMutateForPages = <S, PageDetails extends MultiPageDetails<S, MD>, MD extends ModalPagesDetails<S>> ( pageDetails: PageDetails, pageSelectionlens: Lens<S, PageSelection> ) => ( state: S ): S => {
+export const preMutateForPages = <S, PageDetails extends MultiPageDetails<S, MD, Context>, MD extends ModalPagesDetails<S, Context>, Context> ( pageDetails: PageDetails, pageSelectionlens: Lens<S, PageSelection> ) => ( state: S ): S => {
   const { firstTime, pageName } = pageSelectionlens.get ( state )
   const details = pageDetails[ pageName ]
   if ( !details ) throw new Error ( `Could not find details for ${pageName}. LegalValues are ${Object.keys ( pageDetails ).join ( "," )}` )

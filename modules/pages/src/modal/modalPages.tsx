@@ -17,35 +17,35 @@ export function selectionModalPageL<S extends HasSelectedModalPage> (): Optional
  * @currentSelectedModalPage an object. The names of the fields are the names of the allowed modal pages, the values of which explain how to display the page
  * @modelPageFn How to superimpose the modal page over the main page
  */
-export interface AllModalPageDetails<S, MD extends ModalPagesDetails<S>> {
+export interface AllModalPageDetails<S, MD extends ModalPagesDetails<S, Context>, Context> {
   lens: Optional<S, string | undefined>,
   modalPageDetails: MD,
-  modelPageFn: ( props: DisplayMainAndModalPageProps<S> ) => JSX.Element,
+  modelPageFn: ( props: DisplayMainAndModalPageProps<S, Context> ) => JSX.Element,
 }
 
 /**  The names of the fields are the names of the allowed modal pages, the values of which explain how to display the page */
-export interface ModalPagesDetails<S> {
-  [ name: string ]: OneModalPageDetails<S, any>
+export interface ModalPagesDetails<S, Context> {
+  [ name: string ]: OneModalPageDetails<S, any, Context>
 }
 
 /** How to display a modal page. The lens focuses on the data needed to display the page, the displayModelFn is 'how to display the modal page' */
-export interface OneModalPageDetails<S, ModalPageState> {
+export interface OneModalPageDetails<S, ModalPageState, Context> {
   lens: Optional<S, ModalPageState>,
-  displayModalFn: ( props: { state: LensState<S, ModalPageState>, mode: PageMode } ) => JSX.Element,
+  displayModalFn: ( props: { state: LensState<S, ModalPageState, Context>, mode: PageMode } ) => JSX.Element,
   mode: PageMode
 }
-interface DisplayMainAndModalPageProps<S> extends LensProps<S, any> {
+interface DisplayMainAndModalPageProps<S, Context> extends LensProps<S, any, Context> {
   main: JSX.Element,
   modal: JSX.Element
 }
-export function DisplayMainAndModelPage<S> ( { state, main, modal }: DisplayMainAndModalPageProps<S> ) {
+export function DisplayMainAndModelPage<S, Context> ( { state, main, modal }: DisplayMainAndModalPageProps<S, Context> ) {
   return <div>{main}
     <hr/>
     {modal}</div>
 }
 
 /** Helper method for AllModalPageDetails: provides defaults value for the lens and how to superimpose data */
-export function allModelPageDetails<S extends HasSelectedModalPage, ModalDetails extends ModalPagesDetails<S>> ( modalPageDetails: ModalDetails ): AllModalPageDetails<S, ModalDetails> {
+export function allModelPageDetails<S extends HasSelectedModalPage, ModalDetails extends ModalPagesDetails<S, Context>, Context> ( modalPageDetails: ModalDetails ): AllModalPageDetails<S, ModalDetails, Context> {
   return ({
     modalPageDetails,
     lens: selectionModalPageL<S> (),
@@ -55,7 +55,7 @@ export function allModelPageDetails<S extends HasSelectedModalPage, ModalDetails
 
 /** Given a config.ts, a state and a main page, this will work out if a modal page is needed, and if so add it
  * It returns either the main page, or the main page with modal on top of it*/
-export function addModalPageIfNeeded<S, MD extends ModalPagesDetails<S>> ( allModalPageDetails: AllModalPageDetails<S, MD> | undefined, state: LensState<S, any>, main: JSX.Element ) {
+export function addModalPageIfNeeded<S, MD extends ModalPagesDetails<S, Context>, Context> ( allModalPageDetails: AllModalPageDetails<S, MD, Context> | undefined, state: LensState<S, any, Context>, main: JSX.Element ) {
   // @ts-ignore
   const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
   if ( debug ) console.log ( 'addModalPageIfNeeded' )
@@ -66,7 +66,7 @@ export function addModalPageIfNeeded<S, MD extends ModalPagesDetails<S>> ( allMo
       const oneModalPageDetails = modalPageDetails?.[ selectedModalPage ]
       if ( debug ) console.log ( 'addModalPageIfNeeded -oneModalPageDetails', oneModalPageDetails )
       if ( oneModalPageDetails ) {
-        const modalState: LensState<S, any> = state.copyWithLens ( oneModalPageDetails.lens )
+        const modalState: LensState<S, any, Context> = state.copyWithLens ( oneModalPageDetails.lens )
         if ( debug ) console.log ( 'addModalPageIfNeeded -modalState', modalState )
         const empty = modalState.optJson ()
         if ( debug ) console.log ( 'addModalPageIfNeeded -empty', empty )

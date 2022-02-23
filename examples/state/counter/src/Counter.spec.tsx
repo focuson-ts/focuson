@@ -6,14 +6,15 @@ import {shallow} from "enzyme";
 import {LensState, lensState} from "@focuson/state";
 import {CounterData} from "./domain";
 import {Counter} from "./Counter";
+import { context, Context } from "./context";
 
 
 enzymeSetup()
 let emptyCounter: CounterData = {value: 0}
 
-function setup<T>(json: T, block: (state: LensState<T, T>, remembered: () => T | undefined) => void) {
+function setup<T>(json: T, block: (state: LensState<T, T, Context>, remembered: () => T | undefined) => void) {
     var remembered: T | undefined = undefined
-    let state = lensState<T>(json, (json: T): void => {remembered = json}, 'game')
+    let state = lensState<T, Context>(json, (json: T): void => {remembered = json}, 'game', context)
     block(state, () => remembered)
 }
 describe("Counter", () => {

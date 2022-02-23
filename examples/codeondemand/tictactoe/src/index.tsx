@@ -6,6 +6,7 @@ import {GameContext, GameData, GameDomain, onClickSquare} from "./GameDomain";
 import {getElement} from "@focuson/state";
 import {ComponentCacheContext, ComponentFromServer, LoadAndCompileCache, loadJsonFromUrl, MakeComponentFromServer} from "@focuson/codeondemand";
 import React, {useContext} from "react";
+import { context, Context } from "./context";
 
 let cache = LoadAndCompileCache.create<MakeComponentFromServer<React.ReactElement>>((s: string) => SHA256(s).toString())
 
@@ -19,7 +20,7 @@ window.GameContext = GameContext
 
 function loadJson(url: string) {
     const domain: GameDomain = {loadJson, onClickSquare}
-    return loadJsonFromUrl<GameData>('game', cache, (cache, s) =>
+    return loadJsonFromUrl<GameData, Context>('game', context,cache, (cache, s) =>
         ReactDOM.render(
             <ComponentCacheContext.Provider value={cache}>
                 <GameContext.Provider value={domain}>

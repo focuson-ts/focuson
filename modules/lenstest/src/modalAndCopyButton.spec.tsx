@@ -14,10 +14,12 @@ export interface FullDomainForModalAndCopyButtonTest {
   fromApi?: { someData: string }
 }
 
+type Context = 'context'
+const context = 'context'
 
 describe ( "modal and copy button", () => {
   it ( "should render with an id and title", () => {
-    const state = lensState<StateForModalAndCopyButtonTest> ( {}, ( s: StateForModalAndCopyButtonTest ) => {}, 'ModalAndCopyButton' )
+    const state = lensState<StateForModalAndCopyButtonTest,Context> ( {}, ( s: StateForModalAndCopyButtonTest ) => {}, 'ModalAndCopyButton', context )
     let fullState = state.focusOn ( 'full' );
     const comp = mount ( <ModalAndCopyButton text='someTitle' id='someId'
                                              modalL={selectionModalPageL ()}
@@ -31,7 +33,7 @@ describe ( "modal and copy button", () => {
 
   it ( "should change the state to have a model when clicked", () => {
     var remembered: StateForModalAndCopyButtonTest = {}
-    const state = lensState<StateForModalAndCopyButtonTest> ( { full: { fromApi: { someData: 'someData' } } }, ( s: StateForModalAndCopyButtonTest ) => {remembered = s}, 'ModalAndCopyButton' )
+    const state = lensState<StateForModalAndCopyButtonTest,Context> ( { full: { fromApi: { someData: 'someData' } } }, ( s: StateForModalAndCopyButtonTest ) => {remembered = s}, 'ModalAndCopyButton', context )
     let fullState = state.focusOn ( 'full' );
     const comp = mount ( <ModalAndCopyButton text='someTitle' id='someId'
                                              modalL={selectionModalPageL ()}

@@ -3,7 +3,7 @@ import { LensProps } from "@focuson/state";
 import { FullSearchDomain } from "./fullSearchDomain";
 
 
-export function SearchQueryModalPage<S extends any> ( { state }: FocusedProps<S, string> ): JSX.Element {
+export function SearchQueryModalPage<S extends any, Context> ( { state }: FocusedProps<S, string, Context> ): JSX.Element {
   return <div><label>Search</label><input type='text' defaultValue={state.optJson ()}/></div>
 }
 
@@ -16,7 +16,7 @@ export function textChangedEvent(id: string, fn: (value: string) => void): (e: a
   }
 }
 
-interface InputProps<S> extends LensProps<S, any> {
+interface InputProps<S,Context> extends LensProps<S, any,Context> {
   id: string;
   placeholder?: string,
   inputStyle?: any;
@@ -24,7 +24,7 @@ interface InputProps<S> extends LensProps<S, any> {
   ariaLabel?: string
 }
 
-function Input<S> ({ id, inputStyle, state, readonly, ariaLabel } : InputProps<S>) {
+function Input<S,Context> ({ id, inputStyle, state, readonly, ariaLabel } : InputProps<S,Context>) {
   function onChange(s?: string) {
     if (s) state.setJson(s);
   }
@@ -36,10 +36,10 @@ function Input<S> ({ id, inputStyle, state, readonly, ariaLabel } : InputProps<S
                 aria-label={ariaLabel}
                 defaultValue={state.optJson()}/>;
 }
-export function SearchPage<S extends any> () {
+export function SearchPage<S extends any,Context> () {
   //I think this was the wrong selection of type of page... Because the page shouldn't show 'loading' if the search results aren't set
   //Need a second example
-  return focusedPageWithExtraState<S, FullSearchDomain, string[]> ( s => 'Search' ) ( s => s.focusOn ( 'queryResults' ) ) (
+  return focusedPageWithExtraState<S, FullSearchDomain, string[],Context> ( s => 'Search' ) ( s => s.focusOn ( 'queryResults' ) ) (
     ( fullState, state, { query }, queryResults ) =>
       (<ul><Input id='query' state={fullState.focusOn('query')}/>
         <br/><pre>{JSON.stringify(queryResults,null,2)}</pre><br /><br /><br /><pre>{JSON.stringify(state.main,null,2)} </pre></ul>) )

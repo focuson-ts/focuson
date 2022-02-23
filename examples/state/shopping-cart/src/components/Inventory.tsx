@@ -4,9 +4,10 @@ import React from "react";
 import {ProductList} from "./ProductList";
 import {Lens} from "@focuson/lens";
 import {LensState} from "@focuson/state";
+import { Context } from "../context";
 
 interface InventoryProps<Main> {
-    state: LensState<Main, InventoryData>,
+    state: LensState<Main, InventoryData, Context>,
     addToListLens: Lens<Main, ProductData[]>
 }
 

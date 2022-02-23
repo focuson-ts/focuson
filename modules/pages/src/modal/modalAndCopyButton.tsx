@@ -3,9 +3,9 @@ import { Lens } from "@focuson/lens";
 import { CommonModalButtonProps, ModalButtonProps } from "./modalButton";
 
 
-export interface ModalAndCopyButtonProps<S, Full, Data> extends  CommonModalButtonProps<S> {
-  from: LensState<S, Data>,
-  to: LensState<S, Data>
+export interface ModalAndCopyButtonProps<S, Full, Data, Context> extends  CommonModalButtonProps<S> {
+  from: LensState<S, Data, Context>,
+  to: LensState<S, Data, Context>
 }
 /** This is used when the modal button needs to edit a copy of the data and has such behavior as 'save' and 'cancel'.
  * The data is copied to a temporary place by this button. The modal points to the temporary place
@@ -13,7 +13,7 @@ export interface ModalAndCopyButtonProps<S, Full, Data> extends  CommonModalButt
  *
  * When this is done typically the 'fromApi' data is held in a 'full domain' and the temporary place is under the full
  */
-export function ModalAndCopyButton<S, Full, Data> ( { id, text, modal, modalL, from, to }: ModalAndCopyButtonProps<S, Full, Data> ) {
+export function ModalAndCopyButton<S, Full, Data, Context> ( { id, text, modal, modalL, from, to }: ModalAndCopyButtonProps<S, Full, Data, Context> ) {
   function onClick () {
     return () => {
       const fromJson: Data|undefined = from.optJson ()

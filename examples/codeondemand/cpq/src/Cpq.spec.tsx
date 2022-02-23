@@ -9,6 +9,7 @@ import {lensState, LensState} from "@focuson/state";
 import {CpqData} from "./CpqDomain";
 import {Cpq} from "./render/Cpq";
 import {SimpleFilter} from "./render/SimpleFilter";
+import { Context, context } from "./context";
 
 enzymeSetup()
 let cpqJson: CpqData = {
@@ -42,11 +43,11 @@ let cpqJson: CpqData = {
 
 function setJson(json: CpqData): void {throw new Error('should not be called')}
 
-let state = lensState(cpqJson, setJson, 'cpq')
+let state = lensState(cpqJson, setJson, 'cpq', context)
 
-function compare<Domain, Main, Data>(wrapper: ShallowWrapper<any, React.Component["state"], React.Component>, state: LensState<Main, Data>, expectedLensDescription: string) {
+function compare<Domain, Main, Data>(wrapper: ShallowWrapper<any, React.Component["state"], React.Component>, state: LensState<Main, Data, Context>, expectedLensDescription: string) {
     let props: any = wrapper.props()
-    let childState: LensState<Main, Data> = props.state
+    let childState: LensState<Main, Data, Context> = props.state
     expect(childState.optional.description).toBe(expectedLensDescription)
     expect(childState.main).toBe(state.main)
     expect(childState.dangerouslySetMain).toBe(state.dangerouslySetMain)

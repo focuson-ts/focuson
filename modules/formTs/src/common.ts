@@ -7,6 +7,8 @@ import { HasPostCommand } from '@focuson/poster';
 import { HasFocusOnDebug } from '@focuson/focuson';
 import { LensProps } from '@focuson/state';
 import * as pageDomains from './pageDomains';
+export type Context = {}
+export const context: Context = {}
 export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasSelectedModalPage,HasPostCommand<FState,any>,HasFocusOnDebug,
  pageDomains.HasOccupationAndIncomeDetailsPageDomain,
  pageDomains.HasEAccountsSummaryPageDomain,
@@ -19,7 +21,7 @@ customerId?:string;
 accountId?:string;
 createPlanId?:string;
 }
-export interface FocusedProps<S,D> extends LensProps<S,D>{
+export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{
   mode: PageMode;
 }
 export const commonIdLens = Lenses.identity<FState> ().focusOn ( 'CommonIds' )

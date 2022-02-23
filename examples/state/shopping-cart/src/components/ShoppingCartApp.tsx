@@ -4,8 +4,9 @@ import {AppData, toCartsProductL, toInventoryProductsL} from "../domain";
 import {Cart} from "./Cart";
 import {Inventory} from "./Inventory";
 import {LensProps} from "@focuson/state";
+import { Context } from "../context";
 
-export function ShoppingCartApp({state}: LensProps<AppData,AppData>) {
+export function ShoppingCartApp({state}: LensProps<AppData,AppData, Context>) {
     return (<div>
             <h2>Shopping Cart Example</h2>
             <hr/>
