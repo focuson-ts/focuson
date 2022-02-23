@@ -1,12 +1,12 @@
 import { AccountIdDD, DataD, DateDD, MoneyDD, OneLineStringDD, PrimitiveDD, RepeatingDataD } from "../../common/dataD";
-import { LabelAndInputCD, TableCD } from "../../common/componentsD";
+import { LabelAndInputCD, LabelAndRadioCD, RadioCD, TableCD } from "../../common/componentsD";
 
 
 export const EAccountDisplayTypeDD: PrimitiveDD = {
   name: "EAccountDisplayTypeDD",
   reactType: 'string',
   description: "The component that displays an EAccountDisplayType (savings/checking)",
-  display: LabelAndInputCD,
+  display: LabelAndRadioCD,
   validation: { enum: true, maxLength: 7 },
   enum: { savings: 'Savings', checking: 'Checking' }
   //Note samples come from enum

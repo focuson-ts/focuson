@@ -1,13 +1,14 @@
-import { allModelPageDetails, pageSelectionlens, SelectedPage, selectionModalPageL, SelectPage } from "@focuson/pages";
+import { allModelPageDetails, PageMode, pageSelectionlens, SelectedPage, selectionModalPageL, SelectPage } from "@focuson/pages";
 import { FocusOnConfig, setJsonForFocusOn } from "@focuson/focuson";
 import { postCommandsL, Posters } from "@focuson/poster";
 import { getElement, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
 import { emptyState, FState } from "./common";
-import { fetchWithDelay, fetchWithPrefix, loggingFetchFn, sortedEntries } from "@focuson/utils";
+import { fetchWithDelay, fetchWithPrefix, loggingFetchFn, NameAnd, sortedEntries } from "@focuson/utils";
 import { fetchers } from "./fetchers";
 import { pages } from "./pages";
 import { modals } from "./modals";
+import { CreateEAccountPage, EAccountsSummaryPage, ETransferPage, OccupationAndIncomeDetailsPage } from "./render";
 
 
 export const posters: Posters<FState> = {}
@@ -50,22 +51,22 @@ let rootElement = getElement ( "root" );
 
 console.log ( "set json" )
 
+const pageModeFor: NameAnd<PageMode> = {
+  OccupationAndIncomeDetails: 'view',
+  EAccountsSummary: 'view',
+  ETransfer: 'create',
+  CreateEAccount: 'create'
+
+}
 
 let setJson = setJsonForFocusOn ( config, ( s: LensState<FState, FState> ): void =>
   ReactDOM.render ( <div>
     <ul>
-      <li>
-        <button onClick={() => s.copyWithLens ( pageSelectionlens () ).focusOn ( 'pageMode' ).setJson ( 'view' )}>View</button>
-      </li>
-      <li>
-        <button onClick={() => s.copyWithLens ( pageSelectionlens () ).focusOn ( 'pageMode' ).setJson ( 'edit' )}>Edit</button>
-      </li>
-
       {sortedEntries ( pages ).map ( ( [ name, pd ] ) =>
-       <li key={name}><SelectPage state={s} pageName={name} pageMode='view' selectedPageLens={pageSelectionlens<FState> ()}/></li> )}
+        <li key={name}><SelectPage state={s} pageName={name} pageMode={pageModeFor[ name ]} selectedPageLens={pageSelectionlens<FState> ()}/></li> )}
     </ul>
     <SelectedPage state={s} pages={pages} selectedPageL={pageSelectionlens<FState> ()}/>
-    <pre>{JSON.stringify ( s.main, null, 2 )}</pre>
+    {/*<pre>{JSON.stringify ( s.main, null, 2 )}</pre>*/}
   </div>, rootElement ) )
 
 setJson ( {

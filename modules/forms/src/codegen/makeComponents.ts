@@ -1,15 +1,13 @@
-import { AllDataDD, AllDataFlatMap, AllDataFolder, DataD, emptyDataFlatMap, flatMapDD, foldDataDD, isDataDd, isRepeatingDd, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
-import { DisplayCompD, DisplayCompParamD } from "../common/componentsD";
-import { on } from "cluster";
+import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, isPrimDd, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
+import { DisplayCompD } from "../common/componentsD";
 import { dataDsIn, PageD } from "../common/pageD";
-import { EAccountsSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD";
 
 import { sortedEntries } from "@focuson/utils";
-import { componentName, pageDomainName, domainName, pageComponentName } from "./names";
+import { componentName, domainName, pageComponentName, pageDomainName } from "./names";
 import { makeButtonsFrom } from "./makeButtons";
-import { focusOnFor, focusQueryFor, indentList, noExtension } from "./codegen";
+import { focusOnFor, indentList, noExtension } from "./codegen";
 import { TSParams } from "./config";
-
+import decamelize from 'decamelize';
 
 export type AllComponentData = ComponentData | ErrorComponentData
 export interface ComponentData {
@@ -54,16 +52,19 @@ function addQuote ( s: string | string[] ) {
   return "'" + s + "'"
 }
 export function createOneReact ( { path, dataDD, display, displayParams }: ComponentData ): string[] {
-  const { name, params } = display
+  const { name, params, needsEnums } = display
   const focusOnString = path.map ( v => `.focusOn('${v}')` ).join ( '' )
   const dataDDParamsA: [ string, string ][] = dataDD.displayParams ? Object.entries ( dataDD.displayParams ).map ( ( [ name, o ] ) => [ name, addQuote ( o.value ) ] ) : []
   const defaultParams: [ string, string ][] = Object.entries ( display.params ).flatMap ( ( [ name, param ] ) => {
-    return param.needed === 'defaultToCamelCaseOfName' ? [ [ name, addQuote ( path.slice ( -1 )+"" ) ] ] : []
+    return param.needed === 'defaultToCamelCaseOfName' ? [ [ name, addQuote ( decamelize ( path.slice ( -1 ) + "", ' ' ) ) ] ] : []
   } )
   const displayParamsA: [ string, string ][] = displayParams ? Object.entries ( displayParams ).map ( ( [ name, value ] ) => [ name, addQuote ( value ) ] ) : []
   const fullDisplayParams = Object.entries ( Object.fromEntries ( [ ...defaultParams, ...dataDDParamsA, ...displayParamsA ] ) )
   const displayParamsString = fullDisplayParams.map ( ( [ k, v ] ) => `${k}=${v}` ).join ( " " )
-  return [ `<${name} state={state${focusOnString}} ${displayParamsString} mode={mode} />` ]
+
+  const enums = needsEnums && isPrimDd ( dataDD ) && dataDD.enum ? ` enums={${JSON.stringify ( dataDD.enum )}}` : ""
+
+  return [ `<${name} state={state${focusOnString}} ${displayParamsString} mode={mode}${enums} />` ]
 
 }
 export function createAllReactCalls ( d: AllComponentData[] ): string[] {
@@ -77,7 +78,7 @@ export function createReactComponent ( dataD: DataD ): string[] {
     "  return(<>",
     ...contents,
     "</>)",
-    '}'
+    '}', ''
   ]
 }
 
@@ -92,11 +93,12 @@ export function createReactModalPageComponent ( pageD: PageD ): string[] {
   const { dataDD, layout } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
   return [
-    `export function ${pageComponentName ( pageD )}<S>({state, mode}: FocusedProps<S,${domainName(pageD.display.dataDD)}>){`,
+    `export function ${pageComponentName ( pageD )}<S>({state, mode}: FocusedProps<S,${domainName ( pageD.display.dataDD )}>){`,
     `  return (<${layout.name}  details='${layout.details}'>`,
     `   <${componentName ( dataDD )} state={state}  mode={mode} />`,
     ...indentList ( indentList ( indentList ( makeButtonsFrom ( pageD ) ) ) ),
-    `   </${layout.name}>)}`
+    `   </${layout.name}>)}`,
+    ''
   ]
 }
 export function createReactMainPageComponent ( pageD: PageD ): string[] {
@@ -109,7 +111,8 @@ export function createReactMainPageComponent ( pageD: PageD ): string[] {
     `  return (<${layout.name}  details='${layout.details}'>`,
     `   <${componentName ( dataDD )} state={state}  mode={mode} />`,
     ...indentList ( indentList ( indentList ( makeButtonsFrom ( pageD ) ) ) ),
-    `   </${layout.name}>)})}`
+    `   </${layout.name}>)})}`,
+    ''
   ]
 }
 
@@ -124,6 +127,7 @@ export function createAllReactComponents ( params: TSParams, pages: PageD[] ): s
     `import { LabelAndInput } from "./copied/LabelAndInput";`,
     `import { focusedPageWithExtraState } from "@focuson/pages";`,
     `import { Table } from "./copied/table";`,
+    `import { LabelAndRadio, Radio } from "./copied/Radio";`,
     `import { FocusedProps } from "./${params.commonFile}";`
   ]
   let pageDomain = noExtension ( params.pageDomainsFile );

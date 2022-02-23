@@ -1,9 +1,8 @@
 import { PageD } from "../common/pageD";
-import { componentName, modalName, pageComponentName } from "./names";
+import { modalName, pageComponentName } from "./names";
 import { safeArray } from "@focuson/utils";
 import { focusQueryFor } from "./codegen";
 import { FState } from "ExampleApp/src/common";
-import { CreatePlanDD } from "ExampleApp/src/render";
 import { PageMode } from "@focuson/pages";
 
 

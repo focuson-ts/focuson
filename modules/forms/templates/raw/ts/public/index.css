@@ -9,6 +9,13 @@ ol, ul {
 label {
     width: 180px;
 }
+table {
+    border-collapse: collapse;
+}
+
+.outlined, table, th, td {
+    border: 1px solid;
+}
 
 .board-row:after {
     clear: both;

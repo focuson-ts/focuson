@@ -26,7 +26,6 @@ export const OccupationAndIncomeDetailsPageD: PageD = {
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     addEntry: { control: 'RestButton', rest: 'eTransferRestD', action: 'create', confirm: true },
-    //questions: how do we know which is the existing plan... is there a list? are we an entry in the list? do we need to navigate to it?
     editEntry: { control: 'ResetStateButton' },
     nextEntry: { control: 'ResetStateButton' },
     prevEntry: { control: 'ResetStateButton' }

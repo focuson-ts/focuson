@@ -7,6 +7,7 @@ import { RestButton } from "./copied/rest";
 import { LabelAndInput } from "./copied/LabelAndInput";
 import { focusedPageWithExtraState } from "@focuson/pages";
 import { Table } from "./copied/table";
+import { LabelAndRadio, Radio } from "./copied/Radio";
 import { FocusedProps } from "./common";
 import {OccupationAndIncomeDetailsPageDomain} from "./pageDomains";
 import {EAccountsSummaryPageDomain} from "./pageDomains";
@@ -28,6 +29,7 @@ export function OccupationAndIncomeDetailsPage<S>(){
    <button>nextEntry of type ResetStateButton cannot be create yet</button>
    <button>prevEntry of type ResetStateButton cannot be create yet</button>
    </Layout>)})}
+
 export function EAccountsSummaryPage<S>(){
   return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
@@ -38,12 +40,14 @@ export function EAccountsSummaryPage<S>(){
    <RestButton id='deleteExistingPlan' state={state} />
    <RestButton id='refresh' state={state} />
    </Layout>)})}
+
 export function CreatePlanPage<S>({state, mode}: FocusedProps<S,CreatePlanDDDomain>){
   return (<Layout  details='[3]'>
    <CreatePlanDD state={state}  mode={mode} />
    <ModalCancelButton id='cancel' state={state} />
    <ModalCommitButton id='commit' state={state} />
    </Layout>)}
+
 export function ETransferPage<S>(){
   return focusedPageWithExtraState<S, ETransferPageDomain, ETransferDataDDomain> ( s => 'ETransfer' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
@@ -53,6 +57,7 @@ export function ETransferPage<S>(){
    <RestButton id='eTransfers' state={state} />
    <button>resetAll of type ResetStateButton cannot be create yet</button>
    </Layout>)})}
+
 export function CreateEAccountPage<S>(){
   return focusedPageWithExtraState<S, CreateEAccountPageDomain, CreateEAccountDataDDDomain> ( s => 'CreateEAccount' ) ( s => s.focusOn('editing')) (
     ( fullState, state , full, d, mode) => {
@@ -62,53 +67,58 @@ export function CreateEAccountPage<S>(){
    <RestButton id='eTransfers' state={state} />
    <button>resetAll of type ResetStateButton cannot be create yet</button>
    </Layout>)})}
+
 export function CreateEAccountDataDD<S>({state,mode}: FocusedProps<S, CreateEAccountDataDDDomain>){
   return(<>
   <LabelAndInput state={state.focusOn('name')} label='name' mode={mode} />
-  <LabelAndInput state={state.focusOn('type')} label='type' mode={mode} />
-  <LabelAndInput state={state.focusOn('savingsStyle')} label='savingsStyle' mode={mode} />
-  <LabelAndInput state={state.focusOn('initialAmount')} label='initialAmount' mode={mode} />
+  <LabelAndRadio state={state.focusOn('type')} label='type' mode={mode} enums={{"savings":"Savings","checking":"Checking"}} />
+  <Radio state={state.focusOn('savingsStyle')}  mode={mode} enums={{"adHoc":"Save what you want, when you want it","payRegular":"Pay a regular amount until you reach a target","paySettime":"Pay a regular amount for a set time","targetTime":"Reach a target balance by a set time"}} />
+  <LabelAndInput state={state.focusOn('initialAmount')} label='initial amount' mode={mode} />
 </>)
 }
+
 export function CreatePlanDD<S>({state,mode}: FocusedProps<S, CreatePlanDDDomain>){
   return(<>
   <LabelAndInput state={state.focusOn('createPlanStart')} label='Create Start' mode={mode} />
-  <LabelAndInput state={state.focusOn('createPlanDate')} label='createPlanDate' ariaLabel='The Create Plan Date' mode={mode} />
-  <LabelAndInput state={state.focusOn('createPlanEnd')} label='createPlanEnd' mode={mode} />
+  <LabelAndInput state={state.focusOn('createPlanDate')} label='create plan date' ariaLabel='The Create Plan Date' mode={mode} />
+  <LabelAndInput state={state.focusOn('createPlanEnd')} label='create plan end' mode={mode} />
 </>)
 }
+
 export function EAccountsSummaryDD<S>({state,mode}: FocusedProps<S, EAccountsSummaryDDDomain>){
   return(<>
   <Table state={state.focusOn('eAccountsTable')} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} mode={mode} />
-  <LabelAndInput state={state.focusOn('totalMonthlyCost')} label='totalMonthlyCost' mode={mode} />
-  <LabelAndInput state={state.focusOn('oneAccountBalance')} label='oneAccountBalance' mode={mode} />
-  <LabelAndInput state={state.focusOn('currentAccountBalance')} label='currentAccountBalance' mode={mode} />
+  <LabelAndInput state={state.focusOn('totalMonthlyCost')} label='total monthly cost' mode={mode} />
+  <LabelAndInput state={state.focusOn('oneAccountBalance')} label='one account balance' mode={mode} />
+  <LabelAndInput state={state.focusOn('currentAccountBalance')} label='current account balance' mode={mode} />
   <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanStart')} label='Create Start' mode={mode} />
-  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanDate')} label='createPlanDate' ariaLabel='The Create Plan Date' mode={mode} />
-  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanEnd')} label='createPlanEnd' mode={mode} />
+  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanDate')} label='create plan date' ariaLabel='The Create Plan Date' mode={mode} />
+  <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanEnd')} label='create plan end' mode={mode} />
 </>)
 }
+
 export function ETransferDataD<S>({state,mode}: FocusedProps<S, ETransferDataDDomain>){
   return(<>
   <LabelAndInput state={state.focusOn('amount')} label='Account Id' mode={mode} />
-  <LabelAndInput state={state.focusOn('dateOfETransfer')} label='dateOfETransfer' mode={mode} />
+  <LabelAndInput state={state.focusOn('dateOfETransfer')} label='date of e transfer' mode={mode} />
   <LabelAndInput state={state.focusOn('description')} label='description' mode={mode} />
-  <LabelAndInput state={state.focusOn('fromAccount')} label='fromAccount' mode={mode} />
-  <LabelAndInput state={state.focusOn('toAccount')} label='toAccount' mode={mode} />
-  <LabelAndInput state={state.focusOn('monitoringAccount')} label='monitoringAccount' mode={mode} />
-  <LabelAndInput state={state.focusOn('type')} label='type' mode={mode} />
+  <LabelAndInput state={state.focusOn('fromAccount')} label='from account' mode={mode} />
+  <LabelAndInput state={state.focusOn('toAccount')} label='to account' mode={mode} />
+  <LabelAndInput state={state.focusOn('monitoringAccount')} label='monitoring account' mode={mode} />
+  <LabelAndRadio state={state.focusOn('type')} label='type' mode={mode} enums={{"savings":"Savings","checking":"Checking"}} />
   <LabelAndInput state={state.focusOn('balance')} label='balance' mode={mode} />
   <LabelAndInput state={state.focusOn('notes')} label='notes' mode={mode} />
 </>)
 }
+
 export function OccupationAndIncome<S>({state,mode}: FocusedProps<S, OccupationAndIncomeDomain>){
   return(<>
-  <LabelAndInput state={state.focusOn('typeOfProfession')} label='typeOfProfession' mode={mode} />
+  <LabelAndInput state={state.focusOn('typeOfProfession')} label='type of profession' mode={mode} />
   <LabelAndInput state={state.focusOn('occupation')} label='occupation' mode={mode} />
-  <LabelAndInput state={state.focusOn('customersDescription')} label='customersDescription' mode={mode} />
-  <LabelAndInput state={state.focusOn('businessType')} label='businessType' mode={mode} />
-  <LabelAndInput state={state.focusOn('businessName')} label='businessName' mode={mode} />
-  <LabelAndInput state={state.focusOn('dateStarted')} label='dateStarted' mode={mode} />
-  <LabelAndInput state={state.focusOn('averageAnnualDrawings')} label='averageAnnualDrawings' mode={mode} />
+  <LabelAndInput state={state.focusOn('customersDescription')} label='customers description' mode={mode} />
+  <LabelAndInput state={state.focusOn('businessType')} label='business type' mode={mode} />
+  <LabelAndInput state={state.focusOn('businessName')} label='business name' mode={mode} />
+  <LabelAndInput state={state.focusOn('dateStarted')} label='date started' mode={mode} />
+  <LabelAndInput state={state.focusOn('averageAnnualDrawings')} label='average annual drawings' mode={mode} />
 </>)
 }

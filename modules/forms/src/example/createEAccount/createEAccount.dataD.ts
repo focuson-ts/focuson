@@ -1,12 +1,12 @@
 import { DataD, MoneyDD, OneLineStringDD, PrimitiveDD } from "../../common/dataD";
 import { CreatePlanDD, EAccountDisplayTypeDD, EAccountsSummaryTableDD } from "../eAccounts/eAccountsSummary.dataD";
-import { LabelAndInputCD } from "../../common/componentsD";
+import { LabelAndInputCD, RadioCD } from "../../common/componentsD";
 
 const SavingsStyleDD: PrimitiveDD = {
   name: "SavingsStyleDD",
   reactType: 'string',
   description: "Radio buttons that say how you want to accumulate  money",
-  display: LabelAndInputCD,
+  display: RadioCD,
   validation: { enum: true },
   enum: {
     adHoc: 'Save what you want, when you want it',
