@@ -1,71 +1,49 @@
-import { LensState, lensState } from "@focuson/state";
-import { shallow } from "enzyme";
-import { displayMain, focusedPage, FocusedPage, focusedPageWithExtraState, loadingPage, loadingPageWithExtraState, PageMode } from "@focuson/pages";
-import { ModalDetails, PageSpecState, pageSpecStateconfig,Context,context } from "./page.fixture";
-import { SimpleMessage } from "@focuson/pages";
+import { lensState } from "@focuson/state";
+import { mount, shallow } from "enzyme";
+import { PageMode, SelectedPage } from "@focuson/pages";
+import { context, ContextForTest, emptyState, lensStateWith, PageSpecState, rootState } from "./page.fixture";
 import { enzymeSetup } from "./enzymeAdapterSetup";
 
 
 enzymeSetup ()
 
 let view: PageMode = 'view';
-const rootState = ({ messages: [], pageSelection: { pageName: 'nothing', pageMode: view } })
-describe ( "displayMain / focusedPage", () => {
-  const page: FocusedPage<PageSpecState, string, Context> = focusedPage<PageSpecState, string, Context> ( s => s ? `*${s}*` : "someTitle" ) ( ( state, string ) => <div>!{string}!</div> )
 
-  it ( "should display just the main page, if no modal page", () => {
-    const state = lensState<PageSpecState, Context> ( { ...rootState, someData: 'x', modalData: 'y' }, () => {}, 'displayMain / focusedPage', context ).focusOn ( 'someData' )
-    const comp = shallow ( displayMain<PageSpecState, string, SimpleMessage[], ModalDetails, Context> ( pageSpecStateconfig (), page, state, view ) )
+const nothingDisplayed: PageSpecState = { ...emptyState, messages: [], pageSelection: [ { pageName: 'nothing', pageMode: view } ] };
+
+describe ( "selectedPage", () => {
+  it ( "should display zero pages", () => {
+    const state = lensState<PageSpecState, ContextForTest> ( { ...rootState }, () => {}, 'displayMain / focusedPage', context )
+    const comp = shallow ( <SelectedPage state={state}/> )
     // expect ( comp.html () ).toEqual ( '' )
-    expect ( comp.text () ).toEqual ( "*x*!x!" )
+    expect ( comp.text () ).toEqual ( "" )
   } )
-  it ( "should display  main page, and model, if modal page selected", () => {
-    const state = lensState<PageSpecState, Context> ( { ...rootState, someData: 'x', modalData: 'y', currentSelectedModalPage: 'someModalPage' }, () => {}, 'displayMain / focusedPage', context ).focusOn ( 'someData' )
-    const comp = shallow ( displayMain<PageSpecState, string, SimpleMessage[], ModalDetails, Context> ( pageSpecStateconfig (), page, state, view ) )
-    expect ( comp.text () ).toEqual ( "*x*!x!Modal y" )
+
+  it ( "should display one page", () => {
+    const state = lensStateWith ( () => {}, [ 'firstPage', 'edit' ] )
+    const comp = mount ( <SelectedPage state={state}/> )
+    expect ( comp.text () ).toEqual ( "[firstPageTitle]:firstPage[x]/edit" )
   } )
-  it ( "should display loading if no full state", () => {
-    const state = lensState<PageSpecState, Context> ( { ...rootState, modalData: 'y' }, () => {}, 'displayMain / focusedPage', context ).focusOn ( 'someData' )
-    const comp = shallow ( displayMain<PageSpecState, string, SimpleMessage[], ModalDetails, Context> ( pageSpecStateconfig (), page, state, view ) )
+
+  it ( "should display two pages", () => {
+    const state = lensStateWith ( () => {}, [ 'firstPage', 'edit' ], [ 'secondPage', 'view' ] )
+    const comp = shallow ( <SelectedPage state={state}/> )
     // expect ( comp.html () ).toEqual ( '' )
-    expect ( comp.text () ).toEqual ( "someTitleLoading" )
+    expect ( comp.text () ).toEqual ( "[firstPageTitle]:firstPage[x]/edit[secondPageTitle]:secondPage[x]/view" )
   } )
 
-
-} )
-
-
-describe ( "displayMain / loadingPage (for legacy support) - note that there is no modal page support", () => {
-  const page: ( s: LensState<PageSpecState, string, Context>, pageMode: PageMode ) => JSX.Element =
-          loadingPage<PageSpecState, string, Context> ( s => s ? `*${s}*` : "someTitle" ) ( ( state, string ) => <div>!{string}!</div> )
-
-  it ( "should display just the main page, if no modal page", () => {
-    const state = lensState<PageSpecState,Context> ( { ...rootState, someData: 'x', modalData: 'y' }, () => {}, 'displayMain / focusedPage', context ).focusOn ( 'someData' )
-    const comp = shallow ( page ( state, view ) )
-    expect ( comp.text () ).toEqual ( "!x!" )
+  it ( "should display three pages", () => {
+    const state = lensStateWith ( () => {}, [ 'firstPage', 'edit' ], [ 'secondPage', 'view' ], [ 'modalData', 'edit' ] )
+    const comp = shallow ( <SelectedPage state={state}/> )
+    // expect ( comp.html () ).toEqual ( '' )
+    expect ( comp.text () ).toEqual ( "[firstPageTitle]:firstPage[x]/edit[secondPageTitle]:secondPage[x]/view[modalDataTitle]:modalData[x]/edit" )
   } )
-} )
-describe ( "displayMain / focusedPageWithExtraState", () => {
-  const page: FocusedPage<PageSpecState, string, Context> = focusedPageWithExtraState<PageSpecState, string, string, Context> ( s => s ? `*${s}*` : "someTitle" ) ( s => s ) (
-    ( fullState, state, string ) => <div>!{string}!</div> )
-  it ( "should display just the main page, if no modal page", () => {
-    const state = lensState<PageSpecState, Context> ( { ...rootState, someData: 'x', modalData: 'y' }, () => {}, 'displayMain / focusedPage', context ).focusOn ( 'someData' )
-    const comp = shallow ( displayMain<PageSpecState, string, SimpleMessage[], ModalDetails, Context> ( pageSpecStateconfig (), page, state, view ) )
-    expect ( comp.text () ).toEqual ( "*x*!x!" )
-  } )
-  it ( "should display  main page, and model, if modal page selected", () => {
-    const state = lensState<PageSpecState, Context> ( { ...rootState, someData: 'x', modalData: 'y', currentSelectedModalPage: 'someModalPage' }, () => {}, 'displayMain / focusedPage', context ).focusOn ( 'someData' )
-    const comp = shallow ( displayMain<PageSpecState, string, SimpleMessage[], ModalDetails, Context> ( pageSpecStateconfig (), page, state, view ) )
-    expect ( comp.text () ).toEqual ( "*x*!x!Modal y" )
+
+  it ( "shouldbe using the combine for multiple pages", () => {
+    const state = lensStateWith ( () => {}, [ 'firstPage', 'edit' ], [ 'secondPage', 'view' ], [ 'modalData', 'edit' ] )
+    const comp = shallow ( <SelectedPage state={state}/> )
+    expect ( comp.find ( '#combine' ).length ).toEqual ( 1 )
+
   } )
 } )
-describe ( "displayMain / loadingPageWithExtraState (for legacy support) - note that there is no modal page support", () => {
-  const page: ( s: LensState<PageSpecState, string, Context>, pageMode: PageMode ) => JSX.Element =
-          loadingPageWithExtraState<PageSpecState, string, string, Context> ( s => s ? s : "someTitle" ) ( s => s ) ( ( fullState, state, string ) => <div>{string}</div> )
 
-  it ( "should display just the main page, if no modal page", () => {
-    const state = lensState<PageSpecState, Context> ( { ...rootState, someData: 'x', modalData: 'y' }, () => {}, 'displayMain / focusedPage', context ).focusOn ( 'someData' )
-    const comp = shallow ( page ( state, view ) )
-    expect ( comp.text () ).toEqual ( "x" )
-  } )
-} )

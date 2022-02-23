@@ -1,9 +1,9 @@
-import { LensProps, LensState, LensState2 } from "@focuson/state";
-import { Lens } from "@focuson/lens";
-import { CommonModalButtonProps, ModalButtonProps } from "./modalButton";
+import { LensState } from "@focuson/state";
+import { CommonModalButtonProps } from "./modalButton";
+import { pageAndSet, PageSelectionContext } from "../pageSelection";
 
 
-export interface ModalAndCopyButtonProps<S, Full, Data, Context> extends  CommonModalButtonProps<S> {
+export interface ModalAndCopyButtonProps<S, Data, Context> extends CommonModalButtonProps {
   from: LensState<S, Data, Context>,
   to: LensState<S, Data, Context>
 }
@@ -13,14 +13,7 @@ export interface ModalAndCopyButtonProps<S, Full, Data, Context> extends  Common
  *
  * When this is done typically the 'fromApi' data is held in a 'full domain' and the temporary place is under the full
  */
-export function ModalAndCopyButton<S, Full, Data, Context> ( { id, text, modal, modalL, from, to }: ModalAndCopyButtonProps<S, Full, Data, Context> ) {
-  function onClick () {
-    return () => {
-      const fromJson: Data|undefined = from.optJson ()
-      if ( modalL ) to.useOtherAsWell ( modalL ).setTwoValues ( fromJson, modal )
-      else throw Error ( `Using ModalAndCopyButton  ${text} ${modal} ${from.optional.description} ${to.optional.description} without context` )
-    }
-  }
-  return <button id={id} onClick={onClick ()}>{text}</button>
-
+export function ModalAndCopyButton<S, Data, Context extends PageSelectionContext<S>> ( { id, text, pageMode, modal, from, to }: ModalAndCopyButtonProps<S, Data, Context> ) {
+  const onClick = () => pageAndSet<S, Context, Data> ( from, 'popup', { pageName: modal, firstTime: true, pageMode }, to.optional, from.json () );
+  return <button id={id} onClick={onClick}>{text}</button>
 }

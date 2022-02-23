@@ -1,8 +1,4 @@
 import { LensProps, LensState } from "@focuson/state";
-import { PageConfig } from "./pageConfig";
-import { addModalPageIfNeeded, ModalPagesDetails } from "./modal/modalPages";
-import { Loading } from "./loading";
-import { DefaultTemplate, PageTemplateProps } from "./PageTemplate";
 import { PageMode } from "./pageSelection";
 
 export interface FocusedProps<S, D, Context> extends LensProps<S, D, Context> {
@@ -15,28 +11,6 @@ export interface FocusedPage<S extends any, D extends any, Context> {
   displayLoading: ( s: LensState<S, D, Context> ) => boolean,
   /** this will only be called if display loading is not showing */
   display: ( s: LensState<S, D, Context>, mode: PageMode ) => JSX.Element
-}
-
-/** Given a config.ts, a focused page data structure and a lens state (focused on anything...doesn't matter) this will display the main page (and perhaps a modal page on top) */
-export function displayMain<S extends any, D extends any, Msgs, MD extends ModalPagesDetails<S, Context>, Context> (
-  config: PageConfig<S, D, Msgs, MD, Context>,
-  focusedPage: FocusedPage<S, D, Context>,
-  s: LensState<S, D, Context>, pageMode: PageMode ): JSX.Element {
-  // @ts-ignore
-  const debug = s.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
-  let t = config.template
-  const template: ( p: PageTemplateProps<S, D, Context> ) => JSX.Element = t ? t : DefaultTemplate
-  if ( debug ) console.log ( "displayMain.template 1", template )
-  const loading = config.loading ? config.loading : Loading
-  if ( debug ) console.log ( "displayMain.loading 2", loading )
-  const main = template ( { state: s, focusedPage, loading, pageMode } )
-  if ( debug ) {
-    console.log ( "displayMain.main 3", main );
-    // console.log ( "displayMain.main-json 4", JSON.stringify ( main ) )
-  }
-  let result = addModalPageIfNeeded ( config.modalPageDetails, s, main );
-  if ( debug ) console.log ( "SelectedPage.displayMain - exit", result )
-  return result
 }
 
 

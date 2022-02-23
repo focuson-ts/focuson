@@ -26,5 +26,5 @@ export function simpleMessagesLFn<S extends HasSimpleMessages, D, Context> (): (
 export const mutateStateAddingMessagesFromSource = <S, SOURCE, MSG> ( messageL: Optional<S, SimpleMessage[]>, msgs: ( a: SOURCE ) => SimpleMessage[] ) =>
   ( s: S, api: SOURCE ): S => {
     let simpleMessages = msgs ( api );
-    return simpleMessages.length == 0 ? s : messageL.transform ( existing => [ ...existing, ...simpleMessages ] ) ( s )
+    return simpleMessages.length === 0 ? s : messageL.transform ( existing => [ ...existing, ...simpleMessages ] ) ( s )
   };

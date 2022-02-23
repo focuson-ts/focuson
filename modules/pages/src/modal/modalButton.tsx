@@ -1,18 +1,15 @@
 import { LensProps } from "@focuson/state";
-import { Optional } from "@focuson/lens";
-import { HasSelectedModalPage } from "./modalPages";
+import { HasPageSelectionLens, page, PageMode } from "../pageSelection";
 
-export interface CommonModalButtonProps<S> {
-  modalL: Optional<S, string | undefined>,
+export interface CommonModalButtonProps {
   id?: string,
   text: string,
-  modal?: string
-
+  modal: string,
+  pageMode: PageMode
 }
 
-export interface ModalButtonProps<S, Context> extends LensProps<S, any, Context>, CommonModalButtonProps<S> {
+export interface ModalButtonProps<S, Context> extends LensProps<S, any, Context>, CommonModalButtonProps {
 }
-export function ModalButton<S extends any, Context> ( { state, id, text, modal, modalL }: ModalButtonProps<S, Context> ): JSX.Element {
-  return <button id={id} onClick={() => state.copyWithLens ( modalL ).setJson ( modal )}>{text}</button>
-
+export function ModalButton<S extends any, Context extends HasPageSelectionLens<S>> ( { state, id, text, modal, pageMode }: ModalButtonProps<S, Context> ): JSX.Element {
+  return <button id={id} onClick={() => page ( state, 'popup', { pageName: modal, firstTime: true, pageMode } )}>{text}</button>
 }

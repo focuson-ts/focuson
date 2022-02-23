@@ -1,31 +1,27 @@
-import { MultiPageDetails } from "./pageConfig";
-import { PageMode, PageSelection } from "./pageSelection";
-import { Lens } from "@focuson/lens";
+import { page, PageMode, PageSelectionContext } from "./pageSelection";
 import { LensProps } from "@focuson/state";
 import { sortedEntries } from "@focuson/utils";
-import { ModalPagesDetails } from "./modal/modalPages";
 
 export interface SelectPageProps<S, Context> extends LensProps<S, any, Context> {
-  selectedPageLens: Lens<S, PageSelection>;
+
   pageName: string;
   pageMode: PageMode
 }
-export function SelectPage<S, Context> ( { state, selectedPageLens, pageName, pageMode }: SelectPageProps<S, Context> ) {
-  return <button onClick={() => state.copyWithLens ( selectedPageLens ).setJson ( { pageName, firstTime: true, pageMode } )}>{pageName}</button>
+export function SelectPage<S, Context extends PageSelectionContext<S>> ( { state, pageName, pageMode }: SelectPageProps<S, Context> ) {
+  return <button onClick={() => page ( state, 'select', { pageName, firstTime: true, pageMode } )}>{pageName}</button>
 }
-export interface IndexPageProps<S, Details extends ModalPagesDetails<S, Context>, Context> extends LensProps<S, S, Context> {
-  selectedPageLens: Lens<S, PageSelection>;
-  pages: MultiPageDetails<S, Details, Context>;
+
+export interface IndexPageProps<S, Context extends PageSelectionContext<S>> extends LensProps<S, S, Context> {
   children: JSX.Element | JSX.Element[]
 }
 
 
-export function IndexPage<S, Details extends ModalPagesDetails<S, Context>, Context> ( { pages, state, children, selectedPageLens }: IndexPageProps<S, Details, Context> ) {
+export function IndexPage<S, Context extends PageSelectionContext<S>> ( { state, children }: IndexPageProps<S, Context> ) {
   return (
     <div>
       <ul>
-        {sortedEntries ( pages ).map ( ( [ name, pd ] ) =>
-          <li key={name}><SelectPage state={state} pageName={name} pageMode='edit' selectedPageLens={selectedPageLens}/></li> )}
+        {sortedEntries ( state.context.pages ).map ( ( [ name, pd ] ) =>
+          <li key={name}><SelectPage state={state} pageName={name} pageMode='edit'/></li> )}
       </ul>
       {children}
     </div>)

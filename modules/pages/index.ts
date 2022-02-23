@@ -1,7 +1,6 @@
 export * from './src/focusedPage'
 export * from './src/loading'
 export * from './src/emptyPage'
-export * from './src/modal/modalPages'
 export * from './src/pageConfig'
 export * from './src/pageSelection'
 export * from './src/simpleMessage';

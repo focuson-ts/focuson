@@ -1,39 +1,47 @@
-import { LensProps } from "@focuson/state";
+import { LensProps, lensState } from "@focuson/state";
 import { identityOptics } from "@focuson/lens";
-import { FocusedProps, HasPageSelection, HasSelectedModalPage, HasSimpleMessages, Loading, ModalPagesDetails, MultiPageDetails, PageConfig, SelectedPageDebug, SimpleMessage, simpleMessagesPageConfig } from "@focuson/pages";
+import { focusedPage, FocusedProps, HasPageSelection, HasSelectedPageDebug, HasSimpleMessages, Loading, MultiPageDetails, PageConfig, PageMode, PageSelectionContext, pageSelectionlens, SelectedPageDebug, SimpleMessage, simpleMessagesPageConfig } from "@focuson/pages";
 
 
-export interface PageSpecState extends HasPageSelection, HasSimpleMessages, HasSelectedModalPage, SelectedPageDebug {
+export interface PageSpecState extends HasPageSelection, HasSimpleMessages {
   someData?: string,
   modalData?: string
 }
-export type Context = 'context'
-export const context = 'context'
 
-export function DisplayPageSpecState ( { state }: LensProps<PageSpecState, string,Context> ) {
-  return <p>Main {state.optJson ()}</p>
+export const emptyState: PageSpecState = {
+  pageSelection: [], messages: []
+}
+export const rootState: PageSpecState = { ...emptyState, messages: [], pageSelection: [], someData: 'x', modalData: 'y' };
+export function stateWith ( ...nameAndModes: [ string, PageMode ][] ): PageSpecState {
+  return { ...rootState, pageSelection: nameAndModes.map ( ( [ pageName, pageMode ] ) => ({ pageName, pageMode }) ) }
+}
+export function lensStateWith ( setMain: ( s: PageSpecState ) => void, ...nameAndModes: [ string, PageMode ][] ) {
+  return lensState<PageSpecState, ContextForTest> ( stateWith ( ...nameAndModes ), setMain, 'displayMain / focusedPage', context )
+}
+export interface ContextForTest extends PageSelectionContext<PageSpecState> {
+
 }
 
-export function ModalPageSpecState ( { state }: FocusedProps<PageSpecState, string,Context> ) {
-  return <p>Modal {state.optJson ()}</p>
 
-}
-export const modalDetails: ModalPagesDetails<PageSpecState,Context> = {
-  'someModalPage': { lens: identityOptics<PageSpecState> ().focusQuery ( 'modalData' ), displayModalFn: ModalPageSpecState, mode: 'view' }
-}
-export type ModalDetails = typeof modalDetails
+const DisplayPageSpecState = ( prefix: string ) =>
+  focusedPage<PageSpecState, string, ContextForTest> ( () => `[${prefix}Title]:` ) ( ( s, d, mode ) => (<p>{prefix}[{d}]/{mode}</p>) );
 
-
-export function pageSpecStateconfig<D> (): PageConfig<PageSpecState, D, SimpleMessage[], ModalDetails,Context> {
+export function pageSpecStateConfig<D> (): PageConfig<PageSpecState, D, SimpleMessage[], ContextForTest> {
   // @ts-ignore  There is some crazy thing going on here around SimpleMessage and SimpleMessage[].
-  let pageConfig: PageConfig<PageSpecState, D, SimpleMessage[], ModalDetails> = simpleMessagesPageConfig<PageSpecState, D, ModalDetails> ( modalDetails, Loading );
+  let pageConfig: PageConfig<PageSpecState, D, SimpleMessage[], ModalDetails> = simpleMessagesPageConfig<PageSpecState, D, ModalDetails> ( Loading );
   return pageConfig;
 }
 
-export const pageDetails: MultiPageDetails<PageSpecState, ModalDetails,Context> = {
-  nothing: { config: pageSpecStateconfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'someData' ), pageFunction: DisplayPageSpecState },
-  clearAtStart: { config: pageSpecStateconfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'someData' ), pageFunction: DisplayPageSpecState, clearAtStart: true },
-  initialValue: { config: pageSpecStateconfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'someData' ), pageFunction: DisplayPageSpecState, initialValue: "someValue" },
-  error: { config: pageSpecStateconfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'someData' ), pageFunction: DisplayPageSpecState, clearAtStart: true, initialValue: "someValue" }
+export const pageDetails: MultiPageDetails<PageSpecState, ContextForTest> = {
+  firstPage: { config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'someData' ), pageFunction: DisplayPageSpecState ( 'firstPage' ) },
+  secondPage: { config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'someData' ), pageFunction: DisplayPageSpecState ( 'secondPage' ), clearAtStart: true },
+  modalData: { config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'someData' ), pageFunction: DisplayPageSpecState ( 'modalData' ), initialValue: "someValue" },
+  error: { config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'someData' ), pageFunction: DisplayPageSpecState ( 'error' ), clearAtStart: true, initialValue: "someValue" },
 }
 export type PageDetails = typeof pageDetails
+
+export const context: ContextForTest = {
+  pages: pageDetails,
+  combine: pages => <div id='combine'>{pages.map ( ( p, i ) => <div key={i}>{p}</div> )}</div>,
+  pageSelectionL: pageSelectionlens ()
+}
