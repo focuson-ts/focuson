@@ -16,7 +16,7 @@ export interface Setter<Main, Child> {
 }
 
 
-export interface  HasOptional<Main,T>{
+export interface HasOptional<Main, T> {
   optional: Optional<Main, T>
 }
 /** An Optional is like a lens, except that it is not guaranteed to 'work'. Specifically if you ask for a child... maybe that child isn't there.
@@ -407,3 +407,10 @@ export function firstIn2<T1, T2> (): Optional<[ T1, T2 ], T1> {
 export function secondIn2<T1, T2> (): Optional<[ T1, T2 ], T2> {
   return new Optional ( arr => arr[ 1 ], ( arr, t2 ) => [ arr[ 0 ], t2 ], "secondIn2" )
 }
+
+
+export type Transform<Main, Child> = [ Optional<Main, Child>, ( c: Child ) => Child ]
+export function massTransform<Main> ( main: Main, ...transforms: Transform<Main, any>[] ): Main {
+  return transforms.reduce<Main> ( ( acc, c ) => c[ 0 ].transform ( c[ 1 ] ) ( acc ), main )
+}
+

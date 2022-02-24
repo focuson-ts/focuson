@@ -35,8 +35,8 @@ export function EAccountsSummaryPage<S, Context extends PageSelectionAndPostComm
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[1][3,3][5]'>
    <EAccountsSummaryDD state={state}  mode={mode} />
-   <ModalAndCopyButton id='amendExistingPlan' text='amendExistingPlan' modal = 'EAccountsSummary_CreatePlan' pageMode='edit' from={fullState.focusOn('fromApi')} to={fullState.focusOn('temp')} />
-   <ModalButton id='createNewPlan' text='createNewPlan' modal = 'EAccountsSummary_CreatePlan' state={state} pageMode='create' />
+   <ModalAndCopyButton id='amendExistingPlan' text='amendExistingPlan' modal = 'EAccountsSummary_CreatePlan' pageMode='edit' from={fullState.focusOn('fromApi')} to={fullState.focusOn('temp')}   rest={{"rest":"createPlanRestD","action":"update"}}/>
+   <ModalButton id='createNewPlan' text='createNewPlan' modal = 'EAccountsSummary_CreatePlan' state={state} pageMode='create'  rest={{"rest":"createPlanRestD","action":"create"}} />
    <RestButton id='deleteExistingPlan' state={state} />
    <RestButton id='refresh' state={state} />
    </Layout>)})}

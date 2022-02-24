@@ -1,6 +1,6 @@
 import { LensProps, LensState } from "@focuson/state";
 
-import { PageMode, PageSelection, PageSelectionContext } from "./pageSelection";
+import { currentPageSelection, PageMode, PageSelection, PageSelectionContext } from "./pageSelection";
 import { FocusedPage } from "./focusedPage";
 import { PageConfig } from "./pageConfig";
 import { DefaultTemplate, PageTemplateProps } from "./PageTemplate";
@@ -22,7 +22,7 @@ export function SelectedPage<S, Context extends PageSelectionContext<S>> ( { sta
 function findSelectedPageDetails<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): JSX.Element[] {
   // @ts-ignore
   const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
-  let selectedPageData: PageSelection[] = state.context.pageSelectionL.get ( state.json () );
+  let selectedPageData: PageSelection[] = currentPageSelection ( state );
   if ( debug ) console.log ( 'findSelectedPageDetails', selectedPageData )
   return selectedPageData.map ( findOneSelectedPageDetails ( state ) )
 }

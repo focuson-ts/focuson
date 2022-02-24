@@ -1,8 +1,9 @@
-import { currentPageSelectionTail, PageSelectionContext, popPage, popPageAndSet } from "../pageSelection";
+import { currentPageSelectionTail, PageSelection, PageSelectionContext, popPage } from "../pageSelection";
 
 import { HasPostCommandLens, PostCommand } from "@focuson/poster";
 import { LensProps } from "@focuson/state";
 import { safeArray } from "@focuson/utils";
+import { Transform } from "@focuson/lens";
 
 
 interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Context> {
@@ -10,17 +11,22 @@ interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Con
 }
 
 export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( { state }: ModalCommitCancelButtonProps<S, Context> ) {
-  return <button onClick={() => popPage ( state )}>Cancel</button>
+  return <button onClick={() => state.massTransform(popPage ( state ))}>Cancel</button>
 }
 
 export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasPostCommandLens<S, any>> ( { state }: ModalCommitCancelButtonProps<S, Context> ) {
   function onClick () {
     const lastPage = currentPageSelectionTail ( state )
-    if ( lastPage && lastPage.rest ) {
-      const postCommand: PostCommand<S, any, any> = { poster: lastPage.rest.poster, args: lastPage.rest.args }
-      const newPostCommands = [ ...safeArray(state.context.postCommandsL.getOption( state.main )), postCommand ]
-      popPageAndSet ( state, state.context.postCommandsL, newPostCommands )
-    }
+    let rest = lastPage?.rest;
+    if ( lastPage && rest ) {
+      const r: { rest: string; action: string } = rest
+      const transformers: Transform<S, any>[] = [
+        [ state.context.pageSelectionL, ( ps: PageSelection[] ) => ps.slice ( 0, -1 ) ],
+        [ state.context.postCommandsL, ( ps: PostCommand<S, any, any>[] ) => [ ...safeArray ( ps ), { poster: r.rest, args: r.action } ] ]
+      ]
+      state.massTransform ( ...transformers )
+    } else
+      console.error ( 'ModalCommit button called and bad state.', lastPage )
   }
   return <button onClick={onClick}>Commit</button>
 }

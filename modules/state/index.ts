@@ -1,6 +1,6 @@
 //Copyright (c)2020-2021 Philip Rice. <br />Permission is hereby granted, free of charge, to any person obtaining a copyof this software and associated documentation files (the Software), to dealin the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  <br />The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED AS
 
-import { Lens, Lenses, Optional, HasOptional, transformTwoValues, updateTwoValues } from "@focuson/lens";
+import { HasOptional, Lens, Lenses, massTransform, Optional, Transform, transformTwoValues, updateTwoValues } from "@focuson/lens";
 
 
 export interface LensProps<Main, T, Context> {
@@ -95,6 +95,8 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
   doubleUp (): LensState2<Main, T, T, Context> {
     return this.addSecond ( this.optional )
   }
+
+  massTransform ( ...ts: Transform<Main, any>[] ): void {return this.dangerouslySetMain ( massTransform ( this.main, ...ts ) )}
 
   useOtherAsWell<T2> ( lens: Optional<Main, T2> ) {
     let parent = this

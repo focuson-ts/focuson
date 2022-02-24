@@ -1,6 +1,6 @@
 import { LensState } from "@focuson/state";
-import { CommonModalButtonProps } from "./modalButton";
-import { pageAndSet, PageSelectionContext } from "../pageSelection";
+import { CommonModalButtonProps, transformsForModal } from "./modalButton";
+import { PageSelectionContext } from "../pageSelection";
 
 
 export interface ModalAndCopyButtonProps<S, Data, Context> extends CommonModalButtonProps {
@@ -13,7 +13,11 @@ export interface ModalAndCopyButtonProps<S, Data, Context> extends CommonModalBu
  *
  * When this is done typically the 'fromApi' data is held in a 'full domain' and the temporary place is under the full
  */
-export function ModalAndCopyButton<S, Data, Context extends PageSelectionContext<S>> ( { id, text, pageMode, modal, from, to }: ModalAndCopyButtonProps<S, Data, Context> ) {
-  const onClick = () => pageAndSet<S, Context, Data> ( from, 'popup', { pageName: modal, firstTime: true, pageMode }, to.optional, from.json () );
+export function ModalAndCopyButton<S, Data, Context extends PageSelectionContext<S>> ( props: ModalAndCopyButtonProps<S, Data, Context> ) {
+  const { id, text, from, to } = props
+  const onClick = () => to.massTransform (
+    ...transformsForModal<S, Context> ( from.context, 'popup', props ),
+    [ to.optional, ignore => from.json () ] )
+
   return <button id={id} onClick={onClick}>{text}</button>
 }

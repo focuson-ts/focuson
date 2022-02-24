@@ -1,6 +1,5 @@
-import { AllButtonsInPage, isModalAndCopyButton, isModalButton, isModalCloseButton, isRestButton, ModalAndCopyButtonInPage, ModalButtonInPage, ModalCloseButton, PageD, RestButtonInPage } from "../common/pageD";
+import { AllButtonsInPage, isModalAndCopyButton, isModalButton, isModalCloseButton, isRestButton, ModalAndCopyButtonInPage, ModalButtonInPage, ModalCloseButton, PageD, RestButtonInPage, RestOnCommit } from "../common/pageD";
 import { safeArray, sortedEntries } from "@focuson/utils";
-import { access } from "node:fs/promises";
 import { modalName } from "./names";
 import { focusOnFor } from "./codegen";
 
@@ -11,16 +10,20 @@ function restOnCommitString ( r: { rest: any, action: string } | any ): string {
 function opt ( name: string, p: string | undefined ) {
   return p ? `${name}='${p}'` : ''
 }
+function rest ( rest?: RestOnCommit ): string {
+  return rest ? ` rest={${JSON.stringify ( rest )}}` : ""
+}
+
 function makeModalButtonFrom ( parent: PageD, name: string, button: ModalButtonInPage ): string {
   const { modal, mode, createEmpty, restOnCommit } = button
   const createEmptyString = createEmpty ? "createEmpty" : ""
-  return `<${button.control} id='${name}' text='${name}' modal = '${modalName ( parent, modal )}' state={state} ${opt ( 'pageMode', mode )} />`;
+  return `<${button.control} id='${name}' text='${name}' modal = '${modalName ( parent, modal )}' state={state} ${opt ( 'pageMode', mode )} ${rest(button.restOnCommit)} />`;
 }
 function makeModalAndCopyButtonInPage ( parent: PageD, name: string, button: ModalAndCopyButtonInPage ): string {
   const { modal, mode, from, to, restOnCommit } = button
   const fromString = focusOnFor ( safeArray ( from ) )
   const toString = focusOnFor ( safeArray ( to ) )
-  return `<${button.control} id='${name}' text='${name}' modal = '${modalName ( parent, modal )}' ${opt ( 'pageMode', mode )} from={fullState${fromString}} to={fullState${toString}} />`//${restOnCommitString ( restOnCommit )}  />`;
+  return `<${button.control} id='${name}' text='${name}' modal = '${modalName ( parent, modal )}' ${opt ( 'pageMode', mode )} from={fullState${fromString}} to={fullState${toString}}  ${rest(button.restOnCommit)}/>`//${restOnCommitString ( restOnCommit )}  />`;
 }
 
 

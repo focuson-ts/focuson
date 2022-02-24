@@ -1,5 +1,5 @@
 import { DataD, emptyDataFlatMap, findAllDataDs, flatMapDD, NamesAndDataDs } from "./dataD";
-import { defaultRestAction, RestActionDetail, RestD, unique } from "./restD";
+import { defaultRestAction, RestAction, RestActionDetail, RestD, unique } from "./restD";
 import { sortedEntries } from "@focuson/utils";
 import { ModalButton, PageMode } from "@focuson/pages";
 import { makeHasDomainsFor } from "../codegen/makeDomain";
@@ -19,10 +19,15 @@ export interface RestDefnInPage {
   [ name: string ]: RestDefnInPageProperties
 }
 export type AllButtonsInPage = ModalButtonInPage | RestButtonInPage | ModalCloseButton | ResetStateButton | ModalAndCopyButtonInPage
+export interface RestOnCommit {
+  rest: any,
+  action: RestAction
+}
+
 export interface ComonModalButtonInPage {
   modal: PageD,
   mode: PageMode,
-  restOnCommit?: { rest: any, action: string }
+  restOnCommit?: RestOnCommit
 }
 
 export interface ModalButtonInPage extends ComonModalButtonInPage {
