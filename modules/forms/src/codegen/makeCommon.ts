@@ -7,6 +7,8 @@ import * as fs from "fs";
 import { isCommonLens, RestD, unique } from "../common/restD";
 import { sortedEntries } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
+import { pages } from "ExampleApp/src/pages";
+import { FState } from "ExampleApp/src/common";
 
 export function makeFullState ( params: TSParams, pds: PageD[] ): string[] {
   const hasDomains = addStringToEndOfAllButLast ( ',' ) ( allMainPages ( pds ).map ( d => params.pageDomainsFile + "." + hasDomainForPage ( d ) ) )
@@ -17,9 +19,8 @@ export function makeFullState ( params: TSParams, pds: PageD[] ): string[] {
 }
 
 export function makeContext ( params: TSParams ): string[] {
-  return [ `export type Context = PageSelectionContext<${params.stateName}>`,
-    `export const context: Context = defaultPageSelectionContext ( pages )` ]
-
+  return [ `export type Context = PageSelectionAndPostCommandsContext<${params.stateName}>`,
+    `export const context: Context = defaultPageSelectionAndPostCommandsContext<${params.stateName}> ( pages )` ]
 }
 export function makeCommon ( params: TSParams, pds: PageD[], rds: RestD[] ): string[] {
   return [
@@ -29,7 +30,7 @@ export function makeCommon ( params: TSParams, pds: PageD[], rds: RestD[] ): str
     `import { Lenses } from '@focuson/lens';`,
     `import { HasTagHolder, tagOps } from '@focuson/template';`,
     `import { HasPostCommand } from '@focuson/poster';`,
-    `import { commonTagFetchProps, defaultPageSelectionContext, HasFocusOnDebug } from '@focuson/focuson';`,
+    `import { commonTagFetchProps, defaultPageSelectionAndPostCommandsContext, PageSelectionAndPostCommandsContext, HasFocusOnDebug } from '@focuson/focuson';`,
     `import { LensProps } from '@focuson/state';`,
     `import { pages } from "./pages";`,
     ...imports ( params.pageDomainsFile ),

@@ -4,12 +4,12 @@ import {  OnTagFetchErrorFn } from '@focuson/fetcher';
 import { Lenses } from '@focuson/lens';
 import { HasTagHolder, tagOps } from '@focuson/template';
 import { HasPostCommand } from '@focuson/poster';
-import { commonTagFetchProps, defaultPageSelectionContext, HasFocusOnDebug } from '@focuson/focuson';
+import { commonTagFetchProps, defaultPageSelectionAndPostCommandsContext, PageSelectionAndPostCommandsContext, HasFocusOnDebug } from '@focuson/focuson';
 import { LensProps } from '@focuson/state';
 import { pages } from "./pages";
 import * as pageDomains from './pageDomains';
-export type Context = PageSelectionContext<FState>
-export const context: Context = defaultPageSelectionContext ( pages )
+export type Context = PageSelectionAndPostCommandsContext<FState>
+export const context: Context = defaultPageSelectionAndPostCommandsContext<FState> ( pages )
 export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasPostCommand<FState,any>,HasFocusOnDebug,
  pageDomains.HasOccupationAndIncomeDetailsPageDomain,
  pageDomains.HasEAccountsSummaryPageDomain,

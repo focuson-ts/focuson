@@ -24,7 +24,7 @@ interface StateForModalAndCopyButton extends HasPageSelection {
 
 const Template: Story<ForModalPage> = ( args: ForModalPage ) =>
   SBookProvider<StateForModalAndCopyButton, PageSelectionContext<StateForModalAndCopyButton>> ( { pageSelection: [] },
-    defaultPageSelectionContext<StateForModalAndCopyButton> ( {} ),
+    defaultPageSelectionContext<StateForModalAndCopyButton, PageSelectionContext<StateForModalAndCopyButton>> ( {} ),
     s => (
       <ModalAndCopyButton from={s} to={s} pageMode='edit'                     {...args} />
     ) );

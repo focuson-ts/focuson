@@ -27,11 +27,11 @@ interface StateForModalButton extends HasPageSelection {
 
 
 const Template: Story<ForModalPage> = ( args: ForModalPage ) =>
-  SBookProvider<StateForModalButton,PageSelectionContext<StateForModalButton>> ( { pageSelection:[]},
-    defaultPageSelectionContext<StateForModalButton>({}),
-    s  => (
-    <ModalButton state={s} {...args}/>
-  ) );
+  SBookProvider<StateForModalButton, PageSelectionContext<StateForModalButton>> ( { pageSelection: [] },
+    defaultPageSelectionContext<StateForModalButton, PageSelectionContext<StateForModalButton>> ( {} ),
+    s => (
+      <ModalButton state={s} {...args}/>
+    ) );
 
 
 export const Blank = Template.bind ( {} );

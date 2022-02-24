@@ -1,8 +1,8 @@
 import { HasPageSelection, MultiPageDetails, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages } from "@focuson/pages";
-import { post, PostCommand, Posters } from "@focuson/poster";
+import { HasPostCommand, HasPostCommandLens, post, PostCommand, postCommandsL, Posters } from "@focuson/poster";
 import { FetcherTree, loadTree, wouldLoad, wouldLoadSummary } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
-import { Lens, Optional } from "@focuson/lens";
+import { Lens, Lenses, Optional } from "@focuson/lens";
 import { FetchFn, HasSimpleMessages } from "@focuson/utils";
 import { HasTagHolder } from "@focuson/template";
 
@@ -10,11 +10,20 @@ import { HasTagHolder } from "@focuson/template";
 export function defaultCombine ( pages: JSX.Element[] ) {
   return <div id='combine'>{pages.map ( ( p, i ) => <div key={i}>{p}</div> )}</div>
 }
-export function defaultPageSelectionContext<S extends HasPageSelection> ( pageDetails: MultiPageDetails<S, PageSelectionContext<S>> ): PageSelectionContext<S> {
+export function defaultPageSelectionContext<S extends HasPageSelection, Context extends PageSelectionContext<S>> ( pageDetails: MultiPageDetails<S, Context> ): PageSelectionContext<S> {
   return {
     pages: pageDetails,
     combine: defaultCombine,
     pageSelectionL: pageSelectionlens<S> ()
+  }
+}
+
+export interface PageSelectionAndPostCommandsContext<S> extends PageSelectionContext<S>, HasPostCommandLens<S, any> {
+}
+export function defaultPageSelectionAndPostCommandsContext<S extends HasPageSelection & HasPostCommand<S, any> > ( pageDetails: MultiPageDetails<S, PageSelectionAndPostCommandsContext<S>> ): PageSelectionAndPostCommandsContext<S> {
+  return {
+    ...defaultPageSelectionContext<S, PageSelectionAndPostCommandsContext<S>> ( pageDetails ),
+    postCommandsL: Lenses.identity<S> ().focusOn ( 'postCommands' )
   }
 }
 

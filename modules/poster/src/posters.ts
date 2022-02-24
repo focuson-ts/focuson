@@ -1,4 +1,4 @@
-import { Lenses, Optional } from "@focuson/lens";
+import { Lens, Lenses, Optional } from "@focuson/lens";
 import { FetchFn } from "@focuson/utils";
 
 export interface PostDebug {
@@ -16,6 +16,9 @@ export interface Posters<State> {
     [ name: string ]: PostDetails<State, any, any, any>
 }
 export const postCommandsL = <S extends HasPostCommand<S, any>> () => Lenses.identity<S> ().focusQuery ( 'postCommands' );
+export interface HasPostCommandLens<State, Details extends Posters<State>> {
+    postCommandsL: Optional<State, PostCommand<State, Details, any>[]>
+}
 export interface HasPostCommand<State, Details extends Posters<State>> {
     postCommands: PostCommand<State, Details, any>[]
 }

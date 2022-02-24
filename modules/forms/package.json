@@ -12,7 +12,7 @@
     ]
   },
   "dependencies": {
-    "@focuson/utils": "0.4.17"
+    "@focuson/utils": "0.4.18"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -44,7 +44,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "0.4.17",
+  "version": "0.4.18",
   "template": "noreact",
   "description": "Allows us to define data that is stored in a database, or perhaps an api",
   "details": {
