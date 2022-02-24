@@ -1,4 +1,4 @@
-import { allModelPageDetails, PageMode, pageSelectionlens, SelectedPage, selectionModalPageL, SelectPage } from "@focuson/pages";
+import { IndexPage, PageMode, pageSelectionlens, SelectedPage, SelectPage } from "@focuson/pages";
 import { FocusOnConfig, setJsonForFocusOn } from "@focuson/focuson";
 import { postCommandsL, Posters } from "@focuson/poster";
 import { getElement, LensState } from "@focuson/state";
@@ -7,12 +7,9 @@ import { context, Context, emptyState, FState } from "./common";
 import { fetchWithDelay, fetchWithPrefix, loggingFetchFn, NameAnd, sortedEntries } from "@focuson/utils";
 import { fetchers } from "./fetchers";
 import { pages } from "./pages";
-import { modals } from "./modals";
-
 
 
 export const posters: Posters<FState> = {}
-
 
 
 const config: FocusOnConfig<FState, Context> = {
@@ -33,10 +30,6 @@ const config: FocusOnConfig<FState, Context> = {
   /** The list of all registered pages that can be displayed with SelectedPage  */
   pages,
 
-  /** The lens to the currently selected modal page*/
-  modalL: selectionModalPageL (),
-  /** The list of all registered modal pages   */
-  modals: allModelPageDetails ( modals ),
 
   /** The lens to the list of PostCommands*/
   postL: postCommandsL (),
@@ -62,17 +55,15 @@ const pageModeFor: NameAnd<PageMode> = {
 
 let setJson = setJsonForFocusOn ( config, context, ( s: LensState<FState, FState, Context> ): void =>
   ReactDOM.render ( <div>
-    <ul>
-      {sortedEntries ( pages ).map ( ( [ name, pd ] ) =>
-        <li key={name}><SelectPage state={s} pageName={name} pageMode={pageModeFor[ name ]} selectedPageLens={pageSelectionlens<FState> ()}/></li> )}
-    </ul>
-    <SelectedPage state={s} pages={pages} selectedPageL={pageSelectionlens<FState> ()}/>
-    {/*<pre>{JSON.stringify ( s.main, null, 2 )}</pre>*/}
+    <IndexPage state={s}>
+      <SelectedPage state={s}/>
+    </IndexPage>
+    <pre>{JSON.stringify ( s.main, null, 2 )}</pre>
   </div>, rootElement ) )
 
 setJson ( {
   ...emptyState,
-  pageSelection: { pageName: 'ETransfer', firstTime: true, pageMode: 'view' }
+  pageSelection: [ { pageName: 'ETransfer', firstTime: true, pageMode: 'view' } ]
 
   // currentSelectedModalPage: 'EAccountsSummary_CreatePlan'
 } )

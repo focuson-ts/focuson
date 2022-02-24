@@ -1,15 +1,16 @@
-import { HasPageSelection, HasSelectedModalPage, HasSimpleMessages, SimpleMessage, PageMode } from '@focuson/pages'
-import { defaultDateFn } from '@focuson/utils';
-import { commonTagFetchProps, HasTagHolder, OnTagFetchErrorFn } from '@focuson/fetcher';
+import { HasPageSelection, PageMode ,PageSelectionContext} from '@focuson/pages'
+import { defaultDateFn, HasSimpleMessages, SimpleMessage } from '@focuson/utils';
+import {  OnTagFetchErrorFn } from '@focuson/fetcher';
 import { Lenses } from '@focuson/lens';
-import { tagOps } from '@focuson/template';
+import { HasTagHolder, tagOps } from '@focuson/template';
 import { HasPostCommand } from '@focuson/poster';
-import { HasFocusOnDebug } from '@focuson/focuson';
+import { commonTagFetchProps, defaultPageSelectionContext, HasFocusOnDebug } from '@focuson/focuson';
 import { LensProps } from '@focuson/state';
+import { pages } from "./pages";
 import * as pageDomains from './pageDomains';
-export type Context = {}
-export const context: Context = {}
-export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasSelectedModalPage,HasPostCommand<FState,any>,HasFocusOnDebug,
+export type Context = PageSelectionContext<FState>
+export const context: Context = defaultPageSelectionContext ( pages )
+export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasPostCommand<FState,any>,HasFocusOnDebug,
  pageDomains.HasOccupationAndIncomeDetailsPageDomain,
  pageDomains.HasEAccountsSummaryPageDomain,
  pageDomains.HasETransferPageDomain,
@@ -35,7 +36,7 @@ export const emptyState: FState = {
   CommonIds: {"customerId":"custId","accountId":"accId","createPlanId":"tbd"},
   tags: {},
   messages: [],
-  pageSelection: { pageName: 'OccupationAndIncomeDetails', firstTime: true, pageMode: 'view' },
+  pageSelection: [{ pageName: 'OccupationAndIncomeDetails', firstTime: true, pageMode: 'view' }],
   OccupationAndIncomeDetails:{},
   postCommands: [],
     debug: { selectedPageDebug: true, fetcherDebug: true }

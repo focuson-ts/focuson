@@ -1,33 +1,35 @@
-import { lensState } from "@focuson/state";
 import { mount } from "enzyme";
-import { HasSelectedModalPage, selectionModalPageL } from "@focuson/pages";
-import { enzymeSetup } from "./enzymeAdapterSetup";
 import { ModalButton } from "@focuson/pages";
+import { enzymeSetup } from "./enzymeAdapterSetup";
+import { lensStateWith, rootState } from "./page.fixture";
 
 
 enzymeSetup ()
-interface StateForModalButtonTest extends HasSelectedModalPage {
-
-}
-type Context = 'context'
-const context = 'context'
 
 
 describe ( "modal button", () => {
   it ( "should render with an id and title", () => {
-    const state = lensState<StateForModalButtonTest, Context> ( {}, ( s: StateForModalButtonTest ) => {}, 'ModalButton', context )
-    const comp = mount ( <ModalButton text='someTitle' id='someId' state={state} modal={'someModal'} modalL={selectionModalPageL ()}/> )
+    const state = lensStateWith ( rootState, () => {}, [ 'firstPage', 'view' ] )
+    const comp = mount ( <ModalButton text='someTitle' id='someId' state={state} modal={'someModal'} pageMode='view'/> )
     const button = comp.find ( "button" )
     expect ( button.text () ).toEqual ( 'someTitle' )
 
   } )
 
   it ( "should change the state to have a model when clicked", () => {
-    var remembered: StateForModalButtonTest = {}
-    const state = lensState<StateForModalButtonTest, Context> ( {}, ( s: StateForModalButtonTest ) => {remembered = s}, 'ModalButton', context )
-    const comp = mount ( <ModalButton text='someTitle' id='someId' state={state} modal={'someModal'} modalL={selectionModalPageL ()}/> )
+    var remembered: any = {}
+    const state = lensStateWith ( rootState, ( s ) => {remembered = s}, [ 'firstPage', 'view' ] )
+    const comp = mount ( <ModalButton text='someTitle' id='someId' state={state} modal={'someModal'} pageMode='view'/> )
     const button = comp.find ( "button" )
     button.simulate ( 'click' )
-    expect ( remembered ).toEqual ( { "currentSelectedModalPage": "someModal" } )
+    expect ( remembered ).toEqual ( {
+      "messages": [],
+      "pageSelection": [
+        { "pageMode": "view", "pageName": "firstPage" },
+        { "firstTime": true, "pageMode": "view", "pageName": "someModal" }
+      ],
+      "tags": {},
+      "tempData": "x"
+    } )
   } )
 } )

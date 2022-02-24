@@ -46,10 +46,11 @@ interface FetcherDataStructureParams {
 export function makeFetchersImport ( params: TSParams ): string[] {
   return [
     ...imports ( params.pageDomainsFile, params.domainsFile, params.commonFile ),
-    'import { FetcherTree, HasTagHolder, pageAndTagFetcher } from "@focuson/fetcher";',
-    'import { TagOps } from "@focuson/template";',
-    'import { HasPageSelection, HasSimpleMessages, SimpleMessage } from "@focuson/pages";',
-
+  `import { FetcherTree,  } from "@focuson/fetcher";`,
+  `import { HasTagHolder, TagOps } from "@focuson/template";`,
+  `import { HasPageSelection } from "@focuson/pages";`,
+  `import { HasSimpleMessages, SimpleMessage } from '@focuson/utils';`,
+  `import { pageAndTagFetcher } from "@focuson/focuson";`
   ]
 }
 export function makeFetchersDataStructure ( params: CombinedParams, { stateName, variableName }: FetcherDataStructureParams, ps: PageD[] ): string[] {

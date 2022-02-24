@@ -1,9 +1,7 @@
-import { StateForModalAndCopyButtonTest } from "@focuson/lenstest";
 import { Story } from "@storybook/react";
 import { SBookProvider } from "./sbookProvider";
-import { ModalAndCopyButton } from "@focuson/pages";
-import { identityOptics } from "@focuson/lens";
-import { Store } from "@sambego/storybook-state";
+import { HasPageSelection, ModalAndCopyButton, PageSelectionContext } from "@focuson/pages";
+import { defaultPageSelectionContext } from "@focuson/focuson";
 
 
 export default {
@@ -20,20 +18,16 @@ interface ForModalPage {
   tempSomeData?: string
 
 }
-
-function makeInitialState ( { initialModal, someData, tempSomeData }: ForModalPage ): StateForModalAndCopyButtonTest {
-  return someData ? ({ currentSelectedModalPage: initialModal, full: { tempSomeData, fromApi: { someData } } }) : { currentSelectedModalPage: initialModal, full: { tempSomeData } }
-
+interface StateForModalAndCopyButton extends HasPageSelection {
 
 }
 
 const Template: Story<ForModalPage> = ( args: ForModalPage ) =>
-  SBookProvider<StateForModalAndCopyButtonTest> ( makeInitialState ( args ), ( s ) => (
-    <ModalAndCopyButton from={s.focusOn ( 'full' ).focusOn ( 'fromApi' ).focusOn ( 'someData' )}
-                        to={s.focusOn ( 'full' ).focusOn ( 'tempSomeData' )}
-                        modalL={identityOptics<Store<StateForModalAndCopyButtonTest>> ().focusOn ( 'state' ).focusOn ( 'currentSelectedModalPage' )}
-                        {...args} />
-  ) );
+  SBookProvider<StateForModalAndCopyButton, PageSelectionContext<StateForModalAndCopyButton>> ( { pageSelection: [] },
+    defaultPageSelectionContext<StateForModalAndCopyButton> ( {} ),
+    s => (
+      <ModalAndCopyButton from={s} to={s} pageMode='edit'                     {...args} />
+    ) );
 
 
 export const Blank = Template.bind ( {} );

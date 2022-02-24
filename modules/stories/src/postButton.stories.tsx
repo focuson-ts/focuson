@@ -5,6 +5,8 @@ import Store from "@sambego/storybook-state/Store";
 import { SBookProvider } from "./sbookProvider";
 import { HasPostCommand, PostButton } from "@focuson/poster";
 import { identityOptics } from "@focuson/lens";
+import { HasPageSelection, PageSelectionContext } from "@focuson/pages";
+import { defaultPageSelectionContext } from "@focuson/focuson";
 
 export default {
   component: PostButton,
@@ -18,13 +20,11 @@ interface ForPostButton {
   args?: any
 }
 
-
-interface StateForPostButton extends HasPostCommand<Store<StateForPostButton>, any> {}
+interface StateForPostButton extends HasPostCommand<StateForPostButton, any> {}
 
 const Template: Story<ForPostButton> = ( args: ForPostButton ) =>
-  SBookProvider<StateForPostButton> ( { postCommands: [] }, ( s ) => (
-    <PostButton state={s} {...args} postCommandL={identityOptics<Store<StateForPostButton>> ().focusOn ( 'state' ).focusOn ( 'postCommands' )}/>
-  ) );
+  SBookProvider<StateForPostButton, {}> ( { postCommands: [] }, {},
+    s => <PostButton state={s} {...args} postCommandL={identityOptics<StateForPostButton> ().focusOn ( 'postCommands' )}/> )
 
 
 export const Poster1 = Template.bind ( {} );

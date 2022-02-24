@@ -1,11 +1,10 @@
-import { DirtyPrism, iso, Iso, Optional } from "@focuson/lens";
+import { DirtyPrism, firstIn2, Iso, iso, Optional } from "@focuson/lens";
 import { Fetcher, loadDirectly, loadInfo, MutateFn, ReqFn } from "./fetchers";
 import { not200MeansError, partialFnUsageError } from "./errorhandling";
-import { firstIn2 } from "@focuson/lens";
 import { areAllDefined, arraysEqual } from "@focuson/utils";
-import { on } from "cluster";
+import { Tags } from "@focuson/template";
 
-export type Tags = (string | undefined)[]
+
 
 /** This is one of the more used fetchers: it allows us to have a set of tags (which are usually part of the selection state). In a shopping cart
  * we might have 'department', 'shelf', 'aisle'. If the tags change then the data is loaded by the fetcher. The tags must all be defined for the fetcher to load

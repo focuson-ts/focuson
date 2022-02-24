@@ -1,22 +1,7 @@
 import { Lenses, Optional } from "@focuson/lens";
 import { LensState } from "@focuson/state";
+import { HasSimpleMessages, SimpleMessage } from "@focuson/utils";
 
-export interface HasSimpleMessages {
-  messages: SimpleMessage[]
-}
-
-
-type SimpleMessageLevel = 'error' | 'warning' | 'info'
-/** A simple default messaging system. Often a project will have something more complex */
-export interface SimpleMessage {
-  level: SimpleMessageLevel,
-  msg: string,
-  time: string
-}
-
-export function createSimpleMessage ( level: SimpleMessageLevel, msg: string, time: string): SimpleMessage {
-  return { level, msg, time }
-}
 
 export const simpleMessagesL = <S extends HasSimpleMessages, Context> () => Lenses.identity<S> ().focusOn ( 'messages' );
 export function simpleMessagesLFn<S extends HasSimpleMessages, D, Context> (): ( s: LensState<S, S, Context>, domainLens: Optional<S, D> ) => LensState<S, SimpleMessage[], Context> {

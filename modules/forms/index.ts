@@ -14,7 +14,7 @@ export * from './src/codegen/makePacts'
 export * from './src/codegen/makeSample'
 export * from './src/codegen/names'
 export * from './src/codegen/makePages'
-export * from './src/codegen/makeModal'
+
 
 export * from './src/common/componentsD'
 export * from './src/common/dataD'

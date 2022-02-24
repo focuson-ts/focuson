@@ -1,5 +1,7 @@
-import { HasPageSelection, HasSimpleMessages } from "@focuson/pages";
-import { HasTagHolder } from "@focuson/fetcher";
+import { HasPageSelection } from "@focuson/pages";
+import {  } from "@focuson/fetcher";
+import { HasSimpleMessages } from "@focuson/utils";
+import { HasTagHolder } from "@focuson/template";
 
 export interface SearchRequirements extends HasSearch, HasSimpleMessages, HasTagHolder, HasPageSelection {
 

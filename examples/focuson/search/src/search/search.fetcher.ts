@@ -1,8 +1,7 @@
 import { FullSearchDomain, SearchRequirements } from "./fullSearchDomain";
-import { commonTagFetchProps, defaultErrorMessage, pageAndTagFetcher, updateTagsAndMessagesOnError } from "@focuson/fetcher";
-import { Optional } from "@focuson/lens";
-import { createSimpleMessage, SimpleMessage } from "@focuson/pages";
-import { defaultDateFn } from "@focuson/utils";
+import { defaultErrorMessage, updateTagsAndMessagesOnError } from "@focuson/fetcher";
+import { createSimpleMessage, defaultDateFn, SimpleMessage } from "@focuson/utils";
+import { commonTagFetchProps, pageAndTagFetcher } from "@focuson/focuson";
 
 // function withMessages<S extends HasSimpleMessages & HasTagHolder & HasPageSelection> () {
 //   return commonTagFetchProps<S, string> ( ( s, date ) => [ createSimpleMessage ( 'info', s, date ) ], defaultDateFn );

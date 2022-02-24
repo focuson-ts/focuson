@@ -1,6 +1,5 @@
-import { defaultRestAction, findUniqueDataDsAndRestTypeDetails, RestActionDetail, RestD } from "../common/restD";
-import { NameAnd, sortedEntries } from "@focuson/utils";
-import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, isDataDd, isRepeatingDd, OneDataDD, PrimitiveDD, RepeatingDataD, sampleFromDataD } from "../common/dataD";
+import { defaultRestAction, RestD } from "../common/restD";
+import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, OneDataDD, PrimitiveDD, RepeatingDataD, sampleFromDataD } from "../common/dataD";
 import fs from "fs";
 import { resolverName, sampleName } from "./names";
 import { JavaWiringParams } from "./config";

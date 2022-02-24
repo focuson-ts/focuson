@@ -1,9 +1,10 @@
 import { allMainPages, PageD } from "../common/pageD";
 import { TSParams } from "./config";
-import { emptyName, pageComponentName, pageInState } from "./names";
-import { safeArray } from "@focuson/utils";
-import { addStringToEndOfAllButLast } from "./codegen";
+import { modalName, pageComponentName, pageInState } from "./names";
+import { addStringToEndOfAllButLast, focusQueryFor } from "./codegen";
 import { makeEmptyData } from "./makeSample";
+import { safeArray } from "@focuson/utils";
+
 
 export const makeMainPage = ( params: TSParams ) => ( p: PageD ): string[] => {
   function makeEmpty () {
@@ -13,28 +14,40 @@ export const makeMainPage = ( params: TSParams ) => ( p: PageD ): string[] => {
   }
   const initialValue = p.initialValue === 'empty' ? makeEmpty () : p.initialValue
   return p.pageType === 'MainPage' ?
-    [ `    ${p.name}: { config: simpleMessagesConfig, lens: identityOptics<${params.stateName}> ().focusQuery ( '${pageInState ( p )}' ), pageFunction: ${pageComponentName ( p )}(), initialValue: ${JSON.stringify ( initialValue )} }` ]
+    [ `    ${p.name}: { config: simpleMessagesConfig, lens: identity.focusQuery ( '${pageInState ( p )}' ), pageFunction: ${pageComponentName ( p )}(), initialValue: ${JSON.stringify ( initialValue )} }` ]
     : [];
 }
 
-export function makePages ( params: TSParams, ps: PageD[] ): string[] {
+export interface ModalCreationData {
+  name: string,
+  path: string[],
+  modal: PageD
+}
+export function walkModals ( ps: PageD[] ): ModalCreationData[] {
+  return ps.filter ( p => p.pageType === 'MainPage' ).flatMap ( p => safeArray ( p.modals ).map ( ( { modal, path } ) =>
+    ({ name: modalName ( p, modal ), path: [ p.name, ...path ], modal }) ) )
+}
 
-  //import { identityOptics } from "@focuson/lens";
-  // import { MultiPageDetails } from "@focuson/pages";
-  // import { FState } from "./common";
-  // import { EAccountsSummaryPage, ETransferPage, OccupationAndIncomeDetailsPage } from "./render";
+export const makeModal = ( params: TSParams ) => ( { name, path, modal }: ModalCreationData ): string[] => {
+  const focus = focusQueryFor ( path )
+  return [ `    ${name}: { config: simpleMessagesConfig,  lens: identity${focus},pageFunction: ${params.renderFile}.${pageComponentName ( modal )}(), modal: true}` ]
+};
+
+export function makePages ( params: TSParams, ps: PageD[] ): string[] {
+  const modals = walkModals ( ps );
   return [
     `import { identityOptics } from "@focuson/lens";`,
     `import { MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";`,
-    `import { modals, Modals } from "./${params.modalsFile}";`,
     `import {Context,  ${params.stateName} } from "./${params.commonFile}";`,
+    `import * as render from"./render";`,
     `import { ${allMainPages ( ps ).map ( p => pageComponentName ( p ) ).join ( "," )} } from "./${params.renderFile}";`,
     '',
     `function MyLoading () {`,
     `      return <p>Loading</p>`,
     `}`,
-    `const simpleMessagesConfig = simpleMessagesPageConfig<${params.stateName}, string, Modals,Context> ( modals, MyLoading )`,
-    `export const pages: MultiPageDetails<${params.stateName}, any,Context> = {`,
-    ...addStringToEndOfAllButLast ( "," ) ( ps.flatMap ( makeMainPage ( params ) ) ),
+    `const simpleMessagesConfig = simpleMessagesPageConfig<${params.stateName}, string, Context> (  MyLoading )`,
+    `const identity = identityOptics<FState> ();`,
+    `export const pages: MultiPageDetails<${params.stateName}, Context> = {`,
+    ...addStringToEndOfAllButLast ( "," ) ( [ ...ps.flatMap ( makeMainPage ( params ) ), ...modals.flatMap ( makeModal ( params ) ) ] ),
     `  }` ]
 }

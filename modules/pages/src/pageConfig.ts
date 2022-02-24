@@ -1,8 +1,9 @@
 import { Optional } from "@focuson/lens";
 import { LensProps, LensState } from "@focuson/state";
-import { HasSimpleMessages, SimpleMessage, simpleMessagesLFn } from "./simpleMessage";
+import { simpleMessagesLFn } from "./simpleMessage";
 import { FocusedPage } from "./focusedPage";
 import { PageTemplateProps } from "./PageTemplate";
+import { HasSimpleMessages, SimpleMessage } from "@focuson/utils";
 
 export interface MultiPageDetails<S, Context> {
   [ name: string ]: OnePageDetails<S, any, any, any, Context>
@@ -18,8 +19,9 @@ export interface OnePageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs
   lens: Optional<S, D>,
   pageFunction: PageFunctionType<S, D, Context>,
   clearAtStart?: boolean  // if set then the PageState is reset at the beginning,
-  initialValue?: D //If set then this is injected at the beginning. Clear at start overrides this
-}
+  initialValue?: D, //If set then this is injected at the beginning. Clear at start overrides this
+  modal?: boolean  //if true this is only meant to be used as a modal window
+ }
 
 /** In most applications this will be extended. For example it is quite likely to have a lens from S to the PostCommands added to it if
  * the application uses @focuson/posters.

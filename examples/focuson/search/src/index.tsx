@@ -1,32 +1,28 @@
 import { identityOptics } from "@focuson/lens";
-import { allModelPageDetails, HasPageSelection, HasSelectedModalPage, HasSimpleMessages, ModalPagesDetails, MultiPageDetails, pageSelectionlens, SelectedPage, selectionModalPageL, simpleMessagesPageConfig } from "@focuson/pages";
+import { HasPageSelection, MultiPageDetails, PageSelectionContext, pageSelectionlens, SelectedPage, simpleMessagesPageConfig } from "@focuson/pages";
 import { getElement, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
 import { SearchPage, SearchQueryModalPage } from "./search/searchPage";
 import React from "react";
-import { FocusOnConfig, HasFocusOnDebug, setJsonForFocusOn } from "@focuson/focuson";
+import { defaultPageSelectionContext, FocusOnConfig, HasFocusOnDebug, setJsonForFocusOn } from "@focuson/focuson";
 import { HasPostCommand, postCommandsL, Posters } from "@focuson/poster";
-import { fetchWithDelay, fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
-import { HasSearch } from "./search/fullSearchDomain";
+import { fetchWithDelay, fetchWithPrefix, HasSimpleMessages, loggingFetchFn } from "@focuson/utils";
+import { HasSearch, SearchRequirements } from "./search/fullSearchDomain";
 import { fetchers } from "./fetchers";
-import { context, Context } from "./context";
+import { HasTagHolder } from "@focuson/template";
 
-
-const modals: ModalPagesDetails<FullState, Context> = {
-  query: { lens: identityOptics<FullState> ().focusQuery ( 'search' ).focusQuery ( 'query' ), displayModalFn: SearchQueryModalPage, mode: 'edit' }
-}
-type Modals = typeof modals
-
-export interface FullState extends HasSearch, HasSimpleMessages, HasSelectedModalPage, HasPageSelection, HasFocusOnDebug, HasPostCommand<FullState, any> {}
+type Context = PageSelectionContext<FullState>
+export interface FullState extends SearchRequirements, HasFocusOnDebug, HasPostCommand<FullState, any> {}
 
 
 function MyLoading () {
   return <p>Loading</p>
 }
-const simpleMessagesConfig = simpleMessagesPageConfig<FullState, string, Modals, Context> ( modals, MyLoading )
+const simpleMessagesConfig = simpleMessagesPageConfig<FullState, string, Context> ( MyLoading )
 
-export const pages: MultiPageDetails<FullState, Modals, Context> = {
-  search: { config: simpleMessagesConfig, lens: identityOptics<FullState> ().focusQuery ( 'search' ), pageFunction: SearchPage<FullState,Context> (), initialValue: {} }
+export const pages: MultiPageDetails<FullState, Context> = {
+  search: { config: simpleMessagesConfig, lens: identityOptics<FullState> ().focusQuery ( 'search' ), pageFunction: SearchPage<FullState, Context> (), initialValue: {} },
+  query: { config: simpleMessagesConfig, lens: identityOptics<FullState> ().focusQuery ( 'search' ).focusQuery ( 'query' ), pageFunction: SearchQueryModalPage (), modal: true }
 }
 
 export const posters: Posters<FullState> = {}
@@ -51,11 +47,6 @@ const config: FocusOnConfig<FullState, Context> = {
   /** The list of all registered pages that can be displayed with SelectedPage  */
   pages,
 
-  /** The lens to the currently selected modal page*/
-  modalL: selectionModalPageL (),
-  /** The list of all registered modal pages   */
-  modals: allModelPageDetails ( modals ),
-
   /** The lens to the list of PostCommands*/
   postL: postCommandsL (),
   /** The list of all registered posters that can send data to the back end   */
@@ -64,12 +55,17 @@ const config: FocusOnConfig<FullState, Context> = {
   /** The collection of all registered fetchers that will get data from the back end */
   fetchers: fetchers ()
 }
-
+type Config = typeof config
 
 let rootElement = getElement ( "root" );
 console.log ( "set json" )
-let setJson = setJsonForFocusOn ( config, context,( s: LensState<FullState, FullState, Context> ): void =>
-  ReactDOM.render ( <SelectedPage state={s} pages={pages} selectedPageL={pageSelectionlens<FullState> ()}/>, rootElement ) )
+let setJson = setJsonForFocusOn<Config, FullState, Context> ( config, defaultPageSelectionContext ( pages ), ( s: LensState<FullState, FullState, PageSelectionContext<FullState>> ): void =>
+  ReactDOM.render ( <SelectedPage state={s} />, rootElement ) )
 
 console.log ( "setting json" )
-setJson ( { messages: [], pageSelection: { pageName: "search", pageMode: 'edit' }, search: { query: "phil", queryResults: [] }, debug: { selectedPageDebug: false, fetcherDebug: true }, postCommands: [] } )
+setJson ( { messages: [],
+  tags:{},
+  pageSelection: [ { pageName: "search", pageMode: 'edit' } ],
+  search: { query: "phil", queryResults: [] },
+  debug: { selectedPageDebug: false, fetcherDebug: true },
+  postCommands: [] } )

@@ -74,7 +74,7 @@ export function createAllReactCalls ( d: AllComponentData[] ): string[] {
 export function createReactComponent ( dataD: DataD ): string[] {
   const contents = indentList ( indentList ( createAllReactCalls ( listComponentsIn ( dataD ) ) ) )
   return [
-    `export function ${componentName ( dataD )}<S,Context>({state,mode}: FocusedProps<S, ${domainName ( dataD )},Context>){`,
+    `export function ${componentName ( dataD )}<S, Context extends PageSelectionContext<S>>({state,mode}: FocusedProps<S, ${domainName ( dataD )},Context>){`,
     "  return(<>",
     ...contents,
     "</>)",
@@ -92,12 +92,15 @@ export function createReactPageComponent ( pageD: PageD ): string[] {
 export function createReactModalPageComponent ( pageD: PageD ): string[] {
   const { dataDD, layout } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
+  const domName = domainName ( pageD.display.dataDD );
   return [
-    `export function ${pageComponentName ( pageD )}<S,Context>({state, mode}: FocusedProps<S,${domainName ( pageD.display.dataDD )},Context>){`,
-    `  return (<${layout.name}  details='${layout.details}'>`,
-    `   <${componentName ( dataDD )} state={state}  mode={mode} />`,
+    `export function ${pageComponentName ( pageD )}<S, Context extends PageSelectionContext<S>>(){`,
+    `  return focusedPage<S, ${domName}, Context> ( s => '' ) (`,
+    `     ( state, d, mode ) => {`,
+    `          return (<${layout.name}  details='${layout.details}'>`,
+    `             <${componentName ( dataDD )} state={state}  mode={mode} />`,
     ...indentList ( indentList ( indentList ( makeButtonsFrom ( pageD ) ) ) ),
-    `   </${layout.name}>)}`,
+    `            </${layout.name}>)})}`,
     ''
   ]
 }
@@ -105,7 +108,7 @@ export function createReactMainPageComponent ( pageD: PageD ): string[] {
   const { dataDD, layout } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
   return [
-    `export function ${pageComponentName ( pageD )}<S>(){`,
+    `export function ${pageComponentName ( pageD )}<S, Context extends PageSelectionContext<S>>(){`,
     `  return focusedPageWithExtraState<S, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${pageD.name}' ) ( s => s${focus}) (
     ( fullState, state , full, d, mode) => {`,
     `  return (<${layout.name}  details='${layout.details}'>`,
@@ -122,13 +125,14 @@ export function createAllReactComponents ( params: TSParams, pages: PageD[] ): s
   const imports = [
     `import { LensProps } from "@focuson/state";`,
     `import { Layout } from "./copied/layout";`,
-    `import { ModalButton, ModalCancelButton, ModalCommitButton,ModalAndCopyButton } from "./copied/modal";`,
     `import { RestButton } from "./copied/rest";`,
     `import { LabelAndInput } from "./copied/LabelAndInput";`,
-    `import { focusedPageWithExtraState } from "@focuson/pages";`,
+    `import {  focusedPage, focusedPageWithExtraState, ModalAndCopyButton, ModalButton, PageSelectionContext} from "@focuson/pages";`,
     `import { Table } from "./copied/table";`,
     `import { LabelAndRadio, Radio } from "./copied/Radio";`,
-    `import { Context, FocusedProps } from "./${params.commonFile}";`
+    `import { ModalCancelButton, ModalCommitButton } from "./copied/modal";`,
+    `import { Context, FocusedProps } from "./${params.commonFile}";`,
+
   ]
   let pageDomain = noExtension ( params.pageDomainsFile );
   let domain = noExtension ( params.domainsFile );

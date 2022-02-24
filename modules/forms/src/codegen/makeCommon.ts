@@ -10,29 +10,30 @@ import { PageMode } from "@focuson/pages";
 
 export function makeFullState ( params: TSParams, pds: PageD[] ): string[] {
   const hasDomains = addStringToEndOfAllButLast ( ',' ) ( allMainPages ( pds ).map ( d => params.pageDomainsFile + "." + hasDomainForPage ( d ) ) )
-  const constant = [ 'HasSimpleMessages', 'HasPageSelection', `Has${params.commonParams}`, 'HasTagHolder', 'HasSelectedModalPage', `HasPostCommand<FState,any>`, 'HasFocusOnDebug' ].join ( ',' )
+  const constant = [ 'HasSimpleMessages', 'HasPageSelection', `Has${params.commonParams}`, 'HasTagHolder', `HasPostCommand<FState,any>`, 'HasFocusOnDebug' ].join ( ',' )
   return [
     `export interface ${params.stateName} extends ${constant},`,
     ...indentList ( hasDomains ), `{}` ]
 }
 
-export function makeContext (): string[] {
-  return [ `export type Context = {}`,
-    `export const context: Context = {}` ]
+export function makeContext ( params: TSParams ): string[] {
+  return [ `export type Context = PageSelectionContext<${params.stateName}>`,
+    `export const context: Context = defaultPageSelectionContext ( pages )` ]
 
 }
 export function makeCommon ( params: TSParams, pds: PageD[], rds: RestD[] ): string[] {
   return [
-    `import { HasPageSelection, HasSelectedModalPage, HasSimpleMessages, SimpleMessage, PageMode } from '@focuson/pages'`,
-    `import { defaultDateFn } from '@focuson/utils';`,
-    `import { commonTagFetchProps, HasTagHolder, OnTagFetchErrorFn } from '@focuson/fetcher';`,
+    `import { HasPageSelection, PageMode ,PageSelectionContext} from '@focuson/pages'`,
+    `import { defaultDateFn, HasSimpleMessages, SimpleMessage } from '@focuson/utils';`,
+    `import {  OnTagFetchErrorFn } from '@focuson/fetcher';`,
     `import { Lenses } from '@focuson/lens';`,
-    `import { tagOps } from '@focuson/template';`,
+    `import { HasTagHolder, tagOps } from '@focuson/template';`,
     `import { HasPostCommand } from '@focuson/poster';`,
-    `import { HasFocusOnDebug } from '@focuson/focuson';`,
+    `import { commonTagFetchProps, defaultPageSelectionContext, HasFocusOnDebug } from '@focuson/focuson';`,
     `import { LensProps } from '@focuson/state';`,
+    `import { pages } from "./pages";`,
     ...imports ( params.pageDomainsFile ),
-    ...makeContext (),
+    ...makeContext ( params ),
     ...makeFullState ( params, pds ),
     ...makeCommonParams ( params, rds ),
     ...makeStateWithSelectedPage ( params, JSON.stringify ( findAllCommonParamsWithSamples ( rds ) ), pds[ 0 ].name ) //TODO this should be slicker and aggregated params for example
@@ -46,7 +47,7 @@ export function makeStateWithSelectedPage ( params: TSParams, commonParamsValue:
     `  ${commonParams}: ${commonParamsValue},`,
     `  tags: {},`,
     `  messages: [],`,
-    `  pageSelection: { pageName: '${pageName}', firstTime: true, pageMode: '${pageMode ? pageMode : 'view'}' },`,
+    `  pageSelection: [{ pageName: '${pageName}', firstTime: true, pageMode: '${pageMode ? pageMode : 'view'}' }],`,
     ...pageName ? [ `  ${pageName}:{},` ] : [],
     `  postCommands: [],`,
     `    debug: { selectedPageDebug: true, fetcherDebug: true }`,

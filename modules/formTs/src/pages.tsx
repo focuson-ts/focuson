@@ -1,16 +1,18 @@
 import { identityOptics } from "@focuson/lens";
 import { MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";
-import { modals, Modals } from "./modals";
 import {Context,  FState } from "./common";
+import * as render from"./render";
 import { OccupationAndIncomeDetailsPage,EAccountsSummaryPage,ETransferPage,CreateEAccountPage } from "./render";
 
 function MyLoading () {
       return <p>Loading</p>
 }
-const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Modals,Context> ( modals, MyLoading )
-export const pages: MultiPageDetails<FState, any,Context> = {
-    OccupationAndIncomeDetails: { config: simpleMessagesConfig, lens: identityOptics<FState> ().focusQuery ( 'OccupationAndIncomeDetails' ), pageFunction: OccupationAndIncomeDetailsPage(), initialValue: {} },
-    EAccountsSummary: { config: simpleMessagesConfig, lens: identityOptics<FState> ().focusQuery ( 'EAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: {} },
-    ETransfer: { config: simpleMessagesConfig, lens: identityOptics<FState> ().focusQuery ( 'ETransfer' ), pageFunction: ETransferPage(), initialValue: {"fromApi":{"amount":"","dateOfETransfer":"","description":"","fromAccount":"","toAccount":"","monitoringAccount":"","type":"","balance":"","notes":""}} },
-    CreateEAccount: { config: simpleMessagesConfig, lens: identityOptics<FState> ().focusQuery ( 'CreateEAccount' ), pageFunction: CreateEAccountPage(), initialValue: {"editing":{"name":"","type":"","savingsStyle":"","initialAmount":""}} }
+const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  MyLoading )
+const identity = identityOptics<FState> ();
+export const pages: MultiPageDetails<FState, Context> = {
+    OccupationAndIncomeDetails: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'OccupationAndIncomeDetails' ), pageFunction: OccupationAndIncomeDetailsPage(), initialValue: {} },
+    EAccountsSummary: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'EAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: {} },
+    ETransfer: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'ETransfer' ), pageFunction: ETransferPage(), initialValue: {"fromApi":{"amount":"","dateOfETransfer":"","description":"","fromAccount":"","toAccount":"","monitoringAccount":"","type":"","balance":"","notes":""}} },
+    CreateEAccount: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'CreateEAccount' ), pageFunction: CreateEAccountPage(), initialValue: {"editing":{"name":"","type":"","savingsStyle":"","initialAmount":""}} },
+    EAccountsSummary_CreatePlan: { config: simpleMessagesConfig,  lens: identity.focusQuery('EAccountsSummary').focusQuery('fromApi').focusQuery('createPlan'),pageFunction: render.CreatePlanPage(), modal: true}
   }

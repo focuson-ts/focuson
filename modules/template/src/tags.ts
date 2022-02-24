@@ -1,6 +1,19 @@
-import { Tags } from "@focuson/fetcher";
 import { addValue, expand, makeAEqualsB, MakeAEqualsBProps, nameLensFn, NameLensFn, queryParamsFor } from "./template";
-import { Lens, Optional } from "@focuson/lens";
+import { Optional } from "@focuson/lens";
+
+
+export type Tags = (string | undefined)[]
+
+export interface HasTagHolder {
+  tags: TagHolder
+}
+/** The tags are the 'bits of data' that tell us if we need to load something'
+ * For example a statement needs a customer id. If the customer id changes then we need to fetch the statement data again
+ */
+export interface TagHolder {
+  [ name: string ]: Tags;
+}
+
 
 export interface TagOps<Main, Details> {
   queryParam: ( ...names: (keyof Details)[] ) => ( m: Main ) => string

@@ -8,12 +8,12 @@ import { sortedEntries } from "@focuson/utils";
 import { unique } from "./common/restD";
 import { makeAllFetchers, makeFetchersDataStructure, makeFetchersImport } from "./codegen/makeFetchers";
 import { makeAllJavaVariableName, makeAllSampleVariables } from "./codegen/makeSample";
-import { copyFile, copyFiles, templateFile } from "@focuson/template";
+import { copyFiles, templateFile } from "@focuson/template";
 import { makeAllPacts } from "./codegen/makePacts";
 import { makeAllMockFetchers } from "./codegen/makeMockFetchers";
 import { CombinedParams } from "./codegen/config";
 import { imports, indentList } from "./codegen/codegen";
-import { makeCommon, makeFullState, makeCommonParams } from "./codegen/makeCommon";
+import { makeCommon } from "./codegen/makeCommon";
 import { makeSpringEndpointsFor } from "./codegen/makeSpringEndpoint";
 import { restControllerName } from "./codegen/names";
 import { makeJavaVariablesForGraphQlQuery } from "./codegen/makeGraphQlQuery";
@@ -22,7 +22,6 @@ import { OccupationAndIncomeDetailsPageD } from "./example/occupationAndIncomeDe
 import { makePages } from "./codegen/makePages";
 import { CreateEAccountPageD } from "./example/createEAccount/createEAccount.pageD";
 import { CreatePlanPD } from "./example/eAccounts/createPlanPD";
-import { makeModals } from "./codegen/makeModal";
 import { RestDefnInPageProperties } from "./common/pageD";
 
 export function writeToFile ( name: string, contents: string[] ) {
@@ -30,7 +29,6 @@ export function writeToFile ( name: string, contents: string[] ) {
 }
 
 const params: CombinedParams = {
-  modalsFile: "modals",
   pagesFile: 'pages',
   focusOnVersion: "^0.4.13",
   commonParams: "CommonIds",
@@ -74,14 +72,14 @@ fs.mkdirSync ( `${tsPublic}`, { recursive: true } )
 
 let pages = [ OccupationAndIncomeDetailsPageD, EAccountsSummaryPD, CreatePlanPD, ETransferPageD, CreateEAccountPageD ];
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
-let rests = unique ( pages.flatMap ( x => sortedEntries ( x.rest ) ).map ( (x: [string, RestDefnInPageProperties]) => x[ 1 ].rest ), r => r.dataDD.name )
+let rests = unique ( pages.flatMap ( x => sortedEntries ( x.rest ) ).map ( ( x: [ string, RestDefnInPageProperties ] ) => x[ 1 ].rest ), r => r.dataDD.name )
 
 
 writeToFile ( `${tsCode}/${params.renderFile}.tsx`, [ ...imports ( params.domainsFile, params.pageDomainsFile ), ...createAllReactComponents ( params, pages ) ] )
 writeToFile ( `${tsCode}/${params.pageDomainsFile}.ts`, makePageDomainsFor ( params, pages ) )
 writeToFile ( `${tsCode}/${params.domainsFile}.ts`, makeAllDomainsFor ( pages ) )
 writeToFile ( `${tsCode}/${params.commonFile}.ts`, makeCommon ( params, pages, rests ) )
-writeToFile ( `${tsCode}/${params.modalsFile}.ts`, makeModals ( pages ) )
+
 writeToFile ( `${tsCode}/${params.fetchersFile}.ts`, [
   ...makeFetchersImport ( params ),
   ...makeAllFetchers ( params, pages ),

@@ -2,7 +2,6 @@ import { AllDataDD, DataD } from "../common/dataD";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
 import { RestAction, RestActionDetail, RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
-import { modals } from "ExampleApp/src/modals";
 
 
 export const domainName = ( d: DataD ): string => d.name + "Domain";

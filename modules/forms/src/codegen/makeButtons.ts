@@ -14,13 +14,13 @@ function opt ( name: string, p: string | undefined ) {
 function makeModalButtonFrom ( parent: PageD, name: string, button: ModalButtonInPage ): string {
   const { modal, mode, createEmpty, restOnCommit } = button
   const createEmptyString = createEmpty ? "createEmpty" : ""
-  return `<${button.control} id='${name}' text='${name}' modal = '${modalName ( parent, modal )}' state={state} ${opt ( 'mode', mode )} ${createEmptyString} ${restOnCommitString ( restOnCommit )}  />`;
+  return `<${button.control} id='${name}' text='${name}' modal = '${modalName ( parent, modal )}' state={state} ${opt ( 'pageMode', mode )} />`;
 }
 function makeModalAndCopyButtonInPage ( parent: PageD, name: string, button: ModalAndCopyButtonInPage ): string {
   const { modal, mode, from, to, restOnCommit } = button
-  const fromString = focusOnFor(safeArray(from))
-  const toString = focusOnFor(safeArray(to))
-  return `<${button.control} id='${name}' text='${name}' modal = '${modalName ( parent, modal )}' state={state} ${opt ( 'mode', mode )} from={fullState${fromString}} to={fullState${toString}} ${restOnCommitString ( restOnCommit )}  />`;
+  const fromString = focusOnFor ( safeArray ( from ) )
+  const toString = focusOnFor ( safeArray ( to ) )
+  return `<${button.control} id='${name}' text='${name}' modal = '${modalName ( parent, modal )}' ${opt ( 'pageMode', mode )} from={fullState${fromString}} to={fullState${toString}} />`//${restOnCommitString ( restOnCommit )}  />`;
 }
 
 

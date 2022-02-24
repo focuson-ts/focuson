@@ -21,7 +21,7 @@ pactWith ( { consumer: 'EAccountsSummaryDD', provider: 'EAccountsSummaryDDProvid
           body: samples.sampleEAccountsSummaryDD0
         },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection: { pageName: 'EAccountsSummary', pageMode: 'view' } , EAccountsSummary: { }}
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'EAccountsSummary', pageMode: 'view' }] , EAccountsSummary: { }}
       let newState = await loadTree ( fetchers.fetchers, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       expect ( newState ).toEqual ( {
         ... firstState,
