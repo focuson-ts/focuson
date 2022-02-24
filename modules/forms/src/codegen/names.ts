@@ -1,7 +1,8 @@
 import { AllDataDD, DataD } from "../common/dataD";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
-import { RestAction, RestActionDetail, RestD } from "../common/restD";
+import {  RestActionDetail, RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
+import { RestAction } from "@focuson/utils";
 
 
 export const domainName = ( d: DataD ): string => d.name + "Domain";

@@ -1,5 +1,5 @@
 import { DataD, findAllDataDs, findDataDDIn } from "./dataD";
-import { safeArray, sortedEntries } from "@focuson/utils";
+import { RestAction, safeArray, sortedEntries } from "@focuson/utils";
 
 type AllLensRestParams = CommonLensRestParam | LensRestParam
 export interface CommonLensRestParam {commonLens: string, testValue: string}
@@ -54,7 +54,6 @@ export const defaultRestAction: RestTypeDetails = {
   'delete': { name: 'delete', query: 'Mutation', params: { needsId: true }, output: {}, graphQPrefix: 'delete', graphQlPostfix: '' },
 }
 
-export type RestAction = 'get' | 'getOption' | 'list' | 'update' | 'create' | 'delete'
 
 export interface RestD {
   params: RestParams,

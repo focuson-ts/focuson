@@ -1,8 +1,8 @@
 import { AllDataFlatMap, DataD, flatMapDD, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
-import { defaultRestAction, RestAction, RestD } from "../common/restD";
+import { defaultRestAction,  RestD } from "../common/restD";
 import { indent, indentList } from "./codegen";
 import { queryName, resolverName } from "./names";
-import { asMultilineJavaString, sortedEntries } from "@focuson/utils";
+import { asMultilineJavaString, RestAction, sortedEntries } from "@focuson/utils";
 
 
 const makeQueryFolder: AllDataFlatMap<string> = {
