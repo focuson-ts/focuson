@@ -8,7 +8,7 @@ import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 describe ( "makeFullState", () => {
   it ( 'should make the FullState', () => {
     expect ( makeFullState ( paramsForTest, [ EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
-      "export interface FState extends HasSimpleMessages,HasPageSelection,HascommonIds,HasTagHolder,HasSelectedModalPage,HasPostCommand<FState,any>,HasFocusOnDebug,",
+      "export interface FState extends HasSimpleMessages,HasPageSelection,HascommonIds,HasTagHolder,HasPostCommand<FState,any>,HasFocusOnDebug,",
       " pageDomains.HasEAccountsSummaryPageDomain",
       "{}"
     ])

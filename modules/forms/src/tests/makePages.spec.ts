@@ -9,18 +9,20 @@ describe ( "makePages", () => {
     expect ( makePages ( paramsForTest, [ EAccountsSummaryPD ,CreatePlanPD] ) ).toEqual ( [
       "import { identityOptics } from \"@focuson/lens\";",
       "import { MultiPageDetails, simpleMessagesPageConfig } from \"@focuson/pages\";",
-      "import { modals, Modals } from \"./modals\";",
       "import {Context,  FState } from \"./common\";",
+      "import * as render from\"./render\";",
       "import { EAccountsSummaryPage } from \"./render\";",
       "",
       "function MyLoading () {",
       "      return <p>Loading</p>",
       "}",
-      "const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Modals,Context> ( modals, MyLoading )",
-      "export const pages: MultiPageDetails<FState, any,Context> = {",
-      "    EAccountsSummary: { config: simpleMessagesConfig, lens: identityOptics<FState> ().focusQuery ( 'EAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: {} }",
+      "const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  MyLoading )",
+      "const identity = identityOptics<FState> ();",
+      "export const pages: MultiPageDetails<FState, Context> = {",
+      "    EAccountsSummary: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'EAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: {} },",
+      "    EAccountsSummary_CreatePlan: { config: simpleMessagesConfig,  lens: identity.focusQuery('EAccountsSummary').focusQuery('fromApi').focusQuery('createPlan'),pageFunction: render.CreatePlanPage(), modal: true}",
       "  }"
-    ] )
+    ])
   } )
 
 } )
