@@ -7,7 +7,7 @@ export interface HasEAccountsSummaryPageDomain {   EAccountsSummary?: EAccountsS
 export interface EAccountsSummaryPageDomain{
  createPlan?: domains.EAccountsSummaryDDDomain;
  fromApi?: domains.EAccountsSummaryDDDomain;
- temp?: domains.EAccountsSummaryDDDomain;
+ tempCreatePlan?: domains.CreatePlanDDDomain;
 }
 export interface HasETransferPageDomain {   ETransfer?: ETransferPageDomain}
 export interface ETransferPageDomain{

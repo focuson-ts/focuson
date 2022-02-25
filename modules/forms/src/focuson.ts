@@ -23,6 +23,8 @@ import { makePages } from "./codegen/makePages";
 import { CreateEAccountPageD } from "./example/createEAccount/createEAccount.pageD";
 import { CreatePlanPD } from "./example/eAccounts/createPlanPD";
 import { RestDefnInPageProperties } from "./common/pageD";
+import { makePosters } from "./codegen/makePosters";
+console.log(0)
 
 export function writeToFile ( name: string, contents: string[] ) {
   fs.writeFileSync ( name, contents.join ( '\n' ) );
@@ -37,6 +39,7 @@ const params: CombinedParams = {
   pageDomainsFile: "pageDomains",
   domainsFile: "domains",
   fetchersFile: "fetchers",
+  postersFile: "posters",
   pactsFile: "pact.spec",
   samplesFile: "samples",
   renderFile: "render",
@@ -84,19 +87,25 @@ writeToFile ( `${tsCode}/${params.fetchersFile}.ts`, [
   ...makeFetchersImport ( params ),
   ...makeAllFetchers ( params, pages ),
   ...makeFetchersDataStructure ( params, { variableName: 'fetchers', stateName: params.stateName }, pages ) ] )
+// writeToFile ( `${tsCode}/${params.postersFile}.ts`, makePosters ( rests ) )
+
+console.log(1)
 writeToFile ( `${tsCode}/${params.samplesFile}.ts`, [ ...imports ( params.domainsFile ), ...[ 0, 1, 2 ].flatMap ( i => makeAllSampleVariables ( params, pages, i ) ) ] )
 writeToFile ( `${tsCode}/${params.pagesFile}.tsx`, makePages ( params, pages ) )
+console.log(2)
 templateFile ( `${tsCode}/${params.pactsFile}.ts`, 'templates/allPacts.ts', { content: makeAllPacts ( params, pages ).join ( "\n" ) } )
 copyFiles ( tsRoot, 'templates/raw/ts' ) ( '.env', 'README.md', 'tsconfig.json' )
 templateFile ( `${tsRoot}/package.json`, 'templates/packageTemplate.json', params )
 copyFiles ( tsScripts, 'templates/scripts' ) ( 'makePact.sh', 'makeJava.sh', 'makeJvmPact.sh', 'template.java', 'ports' )
 copyFiles ( tsRoot, 'templates/raw' ) ( '.gitignore' )
 templateFile ( `${tsScripts}/makePactsAndCopyFirstTime.sh`, 'templates/scripts/makePactsAndCopyFirstTime.sh', { ...params, javaRoot: javaAppRoot } )
+console.log(3)
 
 copyFiles ( tsPublic, 'templates/raw/ts/public' ) ( 'favicon.ico', 'index.css', 'index.html', 'logo192.png', 'logo512.png', 'manifest.json', 'robots.txt' )
 
 copyFiles ( javaScriptRoot, 'templates/scripts' ) ( 'makeJava.sh', 'makeJvmPact.sh', 'template.java' )
 
+console.log(4)
 // copyFiles ( javaAppRoot, 'templates/raw/java' ) ( '/build.gradle', 'application.properties' )
 // templateFile ( `${javaAppRoot}/settings.gradle`, 'templates/settings.gradle', params )
 templateFile ( `${javaAppRoot}/pom.xml`, 'templates/mvnTemplate.pom', params )
@@ -105,6 +114,7 @@ templateFile ( `${javaCodeRoot}/SchemaController.java`, 'templates/raw/java/Sche
 copyFiles ( javaAppRoot, 'templates/raw' ) ( '.gitignore' )
 copyFiles ( javaCodeRoot, 'templates/raw/java' ) ( 'CorsConfig.java' )
 
+console.log(5)
 
 writeToFile ( `${javaResourcesRoot}/${params.schema}`, makeGraphQlSchema ( rests ) )
 writeToFile ( `${javaCodeRoot}/${params.fetcherInterface}.java`, makeJavaResolversInterface ( params, rests ) )

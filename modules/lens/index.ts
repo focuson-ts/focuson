@@ -409,8 +409,8 @@ export function secondIn2<T1, T2> (): Optional<[ T1, T2 ], T2> {
 }
 
 
-export type Transform<Main, Child> = [ Optional<Main, Child>, ( c: Child ) => Child ]
+export type Transform<Main, Child> = [ Optional<Main, Child>, ( c: Child | undefined ) => Child ]
 export function massTransform<Main> ( main: Main, ...transforms: Transform<Main, any>[] ): Main {
-  return transforms.reduce<Main> ( ( acc, c ) => c[ 0 ].transform ( c[ 1 ] ) ( acc ), main )
+  return transforms.reduce<Main> ( ( acc, c ) => c[ 0 ].set ( acc, c[ 1 ] ( c[ 0 ].getOption ( acc ) ) ), main )
 }
 

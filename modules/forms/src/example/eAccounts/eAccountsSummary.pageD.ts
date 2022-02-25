@@ -1,4 +1,4 @@
-import { EAccountsSummaryDD } from "./eAccountsSummary.dataD";
+import { CreatePlanDD, EAccountsSummaryDD } from "./eAccountsSummary.dataD";
 import { createPlanRestD, eAccountsSummaryRestD } from "./eAccountsSummary.restD";
 import { PageD } from "../../common/pageD";
 import { CreatePlanPD } from "./createPlanPD";
@@ -17,7 +17,7 @@ export const EAccountsSummaryPD: PageD = {
   /** This defines the domain data structures in react*/
   domain: {
     fromApi: { dataDD: EAccountsSummaryDD },
-    temp: { dataDD: EAccountsSummaryDD },
+    tempCreatePlan: { dataDD: CreatePlanDD },
     createPlan: { dataDD: EAccountsSummaryDD } //TDB
   },
   modals: [ { modal: CreatePlanPD, path: [ 'fromApi', 'createPlan' ] } ],
@@ -28,12 +28,20 @@ export const EAccountsSummaryPD: PageD = {
     createPlanRestD: { rest: createPlanRestD, targetFromPath: 'CreatePlan' }
   },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
-  buttons: {
-    createNewPlan: { control: 'ModalButton', modal: CreatePlanPD, mode: 'create', createEmpty: true, restOnCommit: { rest: 'createPlanRestD', action: 'create' } },
+  buttons: {                                                                      //interestingly these will be type checked in the target system...
+    createNewPlan: {
+      control: 'ModalButton', modal: CreatePlanPD, mode: 'create',
+      to: [ 'tempCreatePlan' ],//not type checked here... should be type checked in target
+      restOnCommit: { rest: 'createPlanRestD', action: 'create', result: 'refresh' }
+    },
     //questions: how do we know which is the existing plan... is there a list? are we an entry in the list? do we need to navigate to it?
-    amendExistingPlan: { control: 'ModalAndCopyButton', modal: CreatePlanPD, mode: 'edit', from: [ 'fromApi' ], to: [ 'temp' ], restOnCommit: { rest: 'createPlanRestD', action: 'update' } },
-    deleteExistingPlan: { control: 'RestButton', rest: 'createPlanRestD', action: 'delete', confirm: true },
-    refresh: { control: 'RestButton', rest: 'exportAccountsSummary', action: 'get' },
+    amendExistingPlan: {
+      control: 'ModalAndCopyButton', modal: CreatePlanPD, mode: 'edit',
+      from: [ 'fromApi', 'createPlan' ], to: [ 'tempCreatePlan' ],
+      restOnCommit: { rest: 'createPlanRestD', action: 'update', result: 'refresh' }
+    },
+    deleteExistingPlan: { control: 'RestButton', rest: 'createPlanRestD', action: 'delete', confirm: true, result: 'refresh'},
+    refresh: { control: 'ResetStateButton'},
     // requestInfo: { control: 'ModalButton', modal: CreatePlanPD, mode: 'view', mainData: 'TDB', tempData: 'TBD' },
   }
 }

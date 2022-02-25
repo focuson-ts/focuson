@@ -2,6 +2,7 @@ import { DataD, findAllDataDs, NamesAndDataDs } from "./dataD";
 import { defaultRestAction, RestActionDetail, RestD, unique } from "./restD";
 import { RestAction, sortedEntries } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
+import { RestResult } from "@focuson/utils";
 
 
 export interface DomainDefnInPage {
@@ -17,27 +18,47 @@ export interface RestDefnInPageProperties {
 export interface RestDefnInPage {
   [ name: string ]: RestDefnInPageProperties
 }
-export type AllButtonsInPage = ModalButtonInPage | RestButtonInPage | ModalCloseButton | ResetStateButton | ModalAndCopyButtonInPage
+export type AllButtonsInPage = ModalButtonInPage | ModalAndCopyButtonInPage | ModalCloseButton |
+  ResetStateButton | RestButtonInPage | ListMarkerNextButtonInPage | ListMarkerPrevButtonInPage
+
+
 export interface RestOnCommit {
   rest: any,
-  action: RestAction
+  action: RestAction,
+  /** What happens when the rest is completed. Currently only 'refresh' which clears the 'main object' triggering a fetch. Later we will be more clever' */
+  result: RestResult
 }
 
-export interface ComonModalButtonInPage {
+export interface CommonModalButtonInPage {
+  control: string;
   modal: PageD,
   mode: PageMode,
   restOnCommit?: RestOnCommit
+  to: string[],
 }
 
-export interface ModalButtonInPage extends ComonModalButtonInPage {
+export interface ModalButtonInPage extends CommonModalButtonInPage {
   control: 'ModalButton',
   createEmpty?: boolean
 }
-export interface ModalAndCopyButtonInPage extends ComonModalButtonInPage {
+export interface ModalAndCopyButtonInPage extends CommonModalButtonInPage {
   control: 'ModalAndCopyButton',
-  from?: string[],
-  to: string[],
+  from: string[]
 }
+
+export interface ListMarkerNextButtonInPage {
+  control: 'ListMarkerNextButton',
+}
+export function isListMarkerNextButton(b: AllButtonsInPage): b is ListMarkerNextButtonInPage{
+  return b.control === 'ListMarkerNextButton'
+}
+export interface ListMarkerPrevButtonInPage {
+  control: 'ListMarkerPrevButton',
+}
+export function isListMarkerPrevButton(b: AllButtonsInPage): b is ListMarkerPrevButtonInPage{
+  return b.control === 'ListMarkerPrevButton'
+}
+
 export interface ResetStateButton {
   control: 'ResetStateButton',
 
@@ -49,7 +70,8 @@ export interface RestButtonInPage {
   control: 'RestButton',
   rest: string,
   action: string,
-  confirm?: boolean
+  confirm?: boolean,
+  result: RestResult
 }
 export function isRestButton ( b: AllButtonsInPage ): b is RestButtonInPage {
   return b.control == 'RestButton'
@@ -63,6 +85,9 @@ export function isModalCloseButton ( b: AllButtonsInPage ): b is ModalCloseButto
 export function isModalAndCopyButton ( b: AllButtonsInPage ): b is ModalAndCopyButtonInPage {
   return b.control == 'ModalAndCopyButton'
 }
+
+
+
 export interface ButtonDefnInPage {
   [ name: string ]: AllButtonsInPage
 }

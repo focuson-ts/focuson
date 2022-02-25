@@ -16,6 +16,8 @@ export const OccupationAndIncomeDetailsPageD: PageD = {
   initialValue: {},
   /** This defines the domain data structures in react*/
   domain: {
+    // currentPage: {listMarker: ['fromApi']} , //means it is a number and it can be used in next/prev. The listMarker points to the list
+                                             //
     fromApi: { dataDD: OccupationAndIncomeDetailsDataD }
   },
 
@@ -25,9 +27,9 @@ export const OccupationAndIncomeDetailsPageD: PageD = {
   },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
-    addEntry: { control: 'RestButton', rest: 'eTransferRestD', action: 'create', confirm: true },
+    addEntry: { control: 'RestButton', rest: 'eTransferRestD',  action: 'create', confirm: true , result: 'refresh'},
     editEntry: { control: 'ResetStateButton' },
-    nextEntry: { control: 'ResetStateButton' },
-    prevEntry: { control: 'ResetStateButton' }
+    nextEntry: { control: 'ListMarkerNextButton' },
+    prevEntry: { control: 'ListMarkerPrevButton' }
   }
 }

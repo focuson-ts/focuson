@@ -20,7 +20,6 @@ export const makeMainPage = ( params: TSParams ) => ( p: PageD ): string[] => {
 
 export interface ModalCreationData {
   name: string,
-  path: string[],
   modal: PageD
 }
 export function walkModals ( ps: PageD[] ): ModalCreationData[] {
@@ -28,9 +27,8 @@ export function walkModals ( ps: PageD[] ): ModalCreationData[] {
     ({ name: modalName ( p, modal ), path: [ p.name, ...path ], modal }) ) )
 }
 
-export const makeModal = ( params: TSParams ) => ( { name, path, modal }: ModalCreationData ): string[] => {
-  const focus = focusQueryFor ( path )
-  return [ `    ${name}: { config: simpleMessagesConfig,  lens: identity${focus},pageFunction: ${params.renderFile}.${pageComponentName ( modal )}(), modal: true}` ]
+export const makeModal = ( params: TSParams ) => ( { name,  modal }: ModalCreationData ): string[] => {
+  return [ `    ${name}: { config: simpleMessagesConfig,  pageFunction: ${params.renderFile}.${pageComponentName ( modal )}(), modal: true}` ]
 };
 
 export function makePages ( params: TSParams, ps: PageD[] ): string[] {

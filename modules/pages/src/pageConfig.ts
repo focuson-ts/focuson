@@ -14,14 +14,29 @@ export interface HasMultiPageDetails<S, Context> {
 type DisplayFn<S, D, Context> = ( props: LensProps<S, D, Context> ) => JSX.Element
 type PageFunctionType<S, D, Context> = FocusedPage<S, D, Context> | DisplayFn<S, D, Context>
 
-export interface OnePageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> {
+export interface CommonPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> {
   config: Config,
-  lens: Optional<S, D>,
   pageFunction: PageFunctionType<S, D, Context>,
   clearAtStart?: boolean  // if set then the PageState is reset at the beginning,
   initialValue?: D, //If set then this is injected at the beginning. Clear at start overrides this
-  modal?: boolean  //if true this is only meant to be used as a modal window
- }
+}
+export type OnePageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> =
+  MainPageDetails<S, D, Msgs, Config, Context> | ModalPageDetails<S, D, Msgs, Config, Context>
+
+export interface MainPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> extends CommonPageDetails<S, D, Msgs, Config, Context> {
+  lens: Optional<S, D>
+}
+export function isMainPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> ( o: OnePageDetails<S, D, Msgs, Config, Context> ): o is MainPageDetails<S, D, Msgs, Config, Context> {
+  // @ts-ignore
+  return !!o.lens
+}
+export interface ModalPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> extends CommonPageDetails<S, D, Msgs, Config, Context> {
+  modal: true
+}
+export function isModalPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> ( o: OnePageDetails<S, D, Msgs, Config, Context> ): o is ModalPageDetails<S, D, Msgs, Config, Context> {
+  // @ts-ignore
+  return !!o.modal
+}
 
 /** In most applications this will be extended. For example it is quite likely to have a lens from S to the PostCommands added to it if
  * the application uses @focuson/posters.

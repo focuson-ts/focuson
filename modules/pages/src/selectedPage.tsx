@@ -2,9 +2,11 @@ import { LensProps, LensState } from "@focuson/state";
 
 import { currentPageSelection, PageMode, PageSelection, PageSelectionContext } from "./pageSelection";
 import { FocusedPage } from "./focusedPage";
-import { PageConfig } from "./pageConfig";
+import { isMainPageDetails, isModalPageDetails, PageConfig } from "./pageConfig";
 import { DefaultTemplate, PageTemplateProps } from "./PageTemplate";
 import { Loading } from "./loading";
+import { Lenses, Optional } from "@focuson/lens";
+import { safeArray } from "@focuson/utils";
 
 export interface HasSelectedPageDebug {
   debug?: SelectedPageDebug
@@ -30,11 +32,12 @@ export const findOneSelectedPageDetails = <S, Context extends PageSelectionConte
   // @ts-ignore
   const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
   const pages = state.context.pages
-  const { pageName, pageMode } = ps
+  const { pageName, pageMode, base } = ps
   const page = pages[ pageName ]
   if ( !page ) throw Error ( `Cannot find page with name ${pageName}, legal Values are [${Object.keys ( pages ).join ( "," )}]` )
-  const { config, lens, pageFunction } = page
-  const lsForPage = state.chainLens ( lens )
+  const { config, pageFunction } = page
+
+  const lsForPage = isMainPageDetails ( page ) ? state.chainLens ( page.lens ) : state.chainLens ( Lenses.fromPath ( safeArray ( base ) ) )
 
   if ( debug ) console.log ( "findOneSelectedPageDetails.pageFunction", pageFunction )
   if ( typeof pageFunction === 'function' ) {// this is for legacy support
