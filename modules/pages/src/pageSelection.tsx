@@ -50,10 +50,11 @@ export function pageSelections<S, Context extends HasPageSelectionLens<S>> ( s: 
  */
 export type PageOps = 'select' | 'popup'
 
-export function applyPageOps ( pageOps: PageOps, pageSelection: PageSelection ): ( s: PageSelection[] ) => PageSelection[] {
-  return ( old: PageSelection[] ) => {
-    if ( pageOps === 'popup' ) return [ ...old, pageSelection ];
-    if ( pageOps === 'select' ) return [ ...old.slice ( 0, -1 ), pageSelection ];
+export function applyPageOps ( pageOps: PageOps, pageSelection: PageSelection ): ( s: PageSelection[] |undefined) => PageSelection[] {
+  return ( old: PageSelection[] |undefined) => {
+    const ps = safeArray(old)
+    if ( pageOps === 'popup' ) return [ ...ps, pageSelection ];
+    if ( pageOps === 'select' ) return [ ...ps.slice ( 0, -1 ), pageSelection ];
     throw new Error ( `Cannot perform pageOps ${pageOps}` )
   }
 }
@@ -62,7 +63,7 @@ export function page<S, Context extends HasPageSelectionLens<S>> ( context: Cont
   return [ context.pageSelectionL, applyPageOps ( pageOps, pageSelection ) ]
 }
 export function popPage<S, Context extends HasPageSelectionLens<S>> ( lensState: LensState<S, any, Context> ): Transform<S, PageSelection[]> {
-  return [ lensState.context.pageSelectionL, ( ps: PageSelection[] ) => ps.slice ( 0, -1 ) ]
+  return [ lensState.context.pageSelectionL,  ps => safeArray(ps).slice ( 0, -1 ) ]
 }
 
 export function currentPageSelection<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ): PageSelection[] {

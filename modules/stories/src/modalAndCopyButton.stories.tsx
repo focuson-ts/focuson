@@ -26,7 +26,7 @@ const Template: Story<ForModalPage> = ( args: ForModalPage ) =>
   SBookProvider<StateForModalAndCopyButton, PageSelectionContext<StateForModalAndCopyButton>> ( { pageSelection: [] },
     defaultPageSelectionContext<StateForModalAndCopyButton, PageSelectionContext<StateForModalAndCopyButton>> ( {} ),
     s => (
-      <ModalAndCopyButton from={s} to={s} pageMode='edit'                     {...args} />
+      <ModalAndCopyButton from={s} to={s} pageMode='edit' base={[ 'some', 'base' ]} {...args} />
     ) );
 
 

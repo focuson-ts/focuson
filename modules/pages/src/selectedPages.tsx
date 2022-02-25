@@ -1,6 +1,7 @@
 import { page, PageMode, PageSelectionContext } from "./pageSelection";
 import { LensProps } from "@focuson/state";
 import { sortedEntries } from "@focuson/utils";
+import { isMainPageDetails } from "./pageConfig";
 
 export interface SelectPageProps<S, Context> extends LensProps<S, any, Context> {
 
@@ -20,7 +21,7 @@ export function IndexPage<S, Context extends PageSelectionContext<S>> ( { state,
   return (
     <div>
       <ul>
-        {sortedEntries ( state.context.pages ).filter ( ( [ name, pd ] ) => !pd.modal ).map ( ( [ name, pd ] ) =>
+        {sortedEntries ( state.context.pages ).filter ( ( [ name, pd ] ) => isMainPageDetails(pd) ).map ( ( [ name, pd ] ) =>
           <li key={name}><SelectPage state={state} pageName={name} pageMode='edit'/></li> )}
       </ul>
       {children}

@@ -2,7 +2,7 @@ import { LensProps, LensState } from "@focuson/state";
 
 import { currentPageSelection, PageMode, PageSelection, PageSelectionContext } from "./pageSelection";
 import { FocusedPage } from "./focusedPage";
-import { isMainPageDetails, isModalPageDetails, PageConfig } from "./pageConfig";
+import { isMainPageDetails, OnePageDetails, PageConfig } from "./pageConfig";
 import { DefaultTemplate, PageTemplateProps } from "./PageTemplate";
 import { Loading } from "./loading";
 import { Lenses, Optional } from "@focuson/lens";
@@ -28,6 +28,10 @@ function findSelectedPageDetails<S, Context extends PageSelectionContext<S>> ( s
   if ( debug ) console.log ( 'findSelectedPageDetails', selectedPageData )
   return selectedPageData.map ( findOneSelectedPageDetails ( state ) )
 }
+
+export function lensForPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> ( page: OnePageDetails<S, D, Msgs, Config, Context>, base?: string[] ): Optional<S, any> {
+  return isMainPageDetails ( page ) ? page.lens : Lenses.fromPath ( safeArray ( base ) )
+}
 export const findOneSelectedPageDetails = <S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ) => ( ps: PageSelection ): JSX.Element => {
   // @ts-ignore
   const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
@@ -37,7 +41,7 @@ export const findOneSelectedPageDetails = <S, Context extends PageSelectionConte
   if ( !page ) throw Error ( `Cannot find page with name ${pageName}, legal Values are [${Object.keys ( pages ).join ( "," )}]` )
   const { config, pageFunction } = page
 
-  const lsForPage = isMainPageDetails ( page ) ? state.chainLens ( page.lens ) : state.chainLens ( Lenses.fromPath ( safeArray ( base ) ) )
+  const lsForPage = state.chainLens ( lensForPageDetails ( page, base ) )
 
   if ( debug ) console.log ( "findOneSelectedPageDetails.pageFunction", pageFunction )
   if ( typeof pageFunction === 'function' ) {// this is for legacy support

@@ -20,7 +20,7 @@ describe ( "makePages", () => {
       "const identity = identityOptics<FState> ();",
       "export const pages: MultiPageDetails<FState, Context> = {",
       "    EAccountsSummary: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'EAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: {} },",
-      "    EAccountsSummary_CreatePlan: { config: simpleMessagesConfig,  lens: identity.focusQuery('EAccountsSummary').focusQuery('fromApi').focusQuery('createPlan'),pageFunction: render.CreatePlanPage(), modal: true}",
+      "    CreatePlan: { config: simpleMessagesConfig,  pageFunction: render.CreatePlanPage(), modal: true}",
       "  }"
     ])
   } )

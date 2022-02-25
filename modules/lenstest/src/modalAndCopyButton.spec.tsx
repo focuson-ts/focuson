@@ -7,17 +7,17 @@ import { ContextForTest, dataDefinedState, lensStateWith, PageSpecState, rootSta
 enzymeSetup ()
 
 
-type Context = 'context'
-const context = 'context'
-
 describe ( "modal and copy button", () => {
+
   it ( "should render with a title", () => {
     const state = lensStateWith ( rootState, () => {}, [ 'firstPage', 'view' ] )
     const comp = mount ( <ModalAndCopyButton id='theId' text='someTitle'
                                              modal={'someModal'}
                                              pageMode='view'
                                              from={state.focusOn ( 'firstPage' )}
-                                             to={state.focusOn ( 'tempData' )}/> )
+                                             to={state.focusOn ( 'tempData' )}
+                                             base={[ 'some', 'base' ]}
+    /> )
     const button = comp.find ( "button" )
     expect ( button.text () ).toEqual ( 'someTitle' )
 
@@ -30,7 +30,8 @@ describe ( "modal and copy button", () => {
                                              modal={'someModal'}
                                              pageMode='view'
                                              from={state.focusOn ( 'firstPage' )}
-                                             to={state.focusOn ( 'tempData' )}/> )
+                                             to={state.focusOn ( 'tempData' )}
+                                             base={[ 'some', 'base' ]}/> )
 
     const button = comp.find ( "button" )
     button.simulate ( 'click' )
@@ -38,7 +39,7 @@ describe ( "modal and copy button", () => {
       "messages": [],
       "pageSelection": [
         { "pageMode": "view", "pageName": "firstPage" },
-        { "firstTime": true, "pageMode": "view", "pageName": "someModal" } ],
+        { "firstTime": true, "pageMode": "view", "pageName": "someModal", "base": [ "some", "base" ] } ],
       "firstPage": "one",
       "secondPage": { "fromApi": "two" },
       "tags": {},
