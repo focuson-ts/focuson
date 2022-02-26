@@ -42,8 +42,8 @@ describe ( 'tagFetcher', () => {
 
   it ( 'should load using the reqFn', () => {
     const loadInfo = simpleFetcherWithMessages.load ( { ...firstPageSelectedState, tag1: 't1', tag2: 't2', tags: {} } )
-    expect ( loadInfo.requestInfo ).toEqual ( '/someUrl' )
-    expect ( loadInfo.requestInit ).toEqual ( { method: 'Options' } )
+    expect ( loadInfo.requestInfo ).toEqual ( '/someUrl/t1/t2/?tag1Id=t1&tag2Id=t2' )
+    expect ( loadInfo.requestInit ).toEqual ( undefined )
     expect ( loadInfo.useThisInsteadOfLoad ).toEqual ( undefined )
   } )
 
@@ -57,7 +57,7 @@ describe ( 'tagFetcher', () => {
     } )
     expect ( mutate ( start ) ( 300, 'someString' ) ).toEqual ( {
       ...firstPageSelectedState,
-      'messages': [ { "level": "error", "msg": "Failed to fetch data from [/someUrl,{\"method\":\"Options\"}] status 300\nResponse \"someString\"}", "time": "timeForTest" } ],
+      'messages': [ { "level": "error", "msg": "Failed to fetch data from [/someUrl/t1/t2/?tag1Id=t1&tag2Id=t2,undefined] status 300\nResponse \"someString\"}", "time": "timeForTest" } ],
       'tag1': 't1', 'tag2': 't2',
       'tags': { 'firstPage': [ 't1', 't2' ] }
     } )
@@ -69,7 +69,7 @@ describe ( 'tagFetcher', () => {
     const ns = await applyFetcher ( simpleFetcherWithMessages, start, fetchWithPrefix ( "http://localhost:9999", defaultFetchFn ) )
     expect ( ns.messages ).toEqual ( [ {
       "level": "error",
-      "msg": "Failed to fetch data from [/someUrl,{\"method\":\"Options\"}] status 600\nResponse {\"message\":\"request to http://localhost:9999/someUrl failed, reason: connect ECONNREFUSED 127.0.0.1:9999\",\"type\":\"system\",\"errno\":\"ECONNREFUSED\",\"code\":\"ECONNREFUSED\"}}",
+      "msg": "Failed to fetch data from [/someUrl/t1/t2/?tag1Id=t1&tag2Id=t2,undefined] status 600\nResponse {\"message\":\"request to http://localhost:9999/someUrl/t1/t2/?tag1Id=t1&tag2Id=t2 failed, reason: connect ECONNREFUSED 127.0.0.1:9999\",\"type\":\"system\",\"errno\":\"ECONNREFUSED\",\"code\":\"ECONNREFUSED\"}}",
       "time": "timeForTest"
     } ] )
   } )

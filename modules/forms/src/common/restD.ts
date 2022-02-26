@@ -2,13 +2,22 @@ import { DataD, findAllDataDs, findDataDDIn } from "./dataD";
 import { RestAction, safeArray, sortedEntries } from "@focuson/utils";
 
 type AllLensRestParams = CommonLensRestParam | LensRestParam
-export interface CommonLensRestParam {commonLens: string, testValue: string}
-export interface LensRestParam {lens: string, testValue: string}
-export function isCommonLens(a: AllLensRestParams): a is CommonLensRestParam{
+
+export interface CommonLensRestParam {
+  commonLens: string,
+  testValue: string,
+  main?: boolean
+}
+export interface LensRestParam {
+  lens: string,
+  testValue: string,
+  main?: boolean
+}
+export function isCommonLens ( a: AllLensRestParams ): a is CommonLensRestParam {
   // @ts-ignore
   return a.commonLens !== undefined
 }
-export function isRestLens(a: AllLensRestParams): a is LensRestParam{
+export function isRestLens ( a: AllLensRestParams ): a is LensRestParam {
   // @ts-ignore
   return a.commonLens !== undefined
 }
@@ -115,7 +124,7 @@ export function unique<T> ( ts: T[] | undefined, tagFn: ( t: T ) => string ): T[
   return result
 }
 
-export function makeCommonParamsValueForTest(r: RestD){
-  return Object.fromEntries(sortedEntries(r.params).map(([name, v]) =>[name, v.testValue]))
+export function makeCommonParamsValueForTest ( r: RestD ) {
+  return Object.fromEntries ( sortedEntries ( r.params ).map ( ( [ name, v ] ) => [ name, v.testValue ] ) )
 
 }

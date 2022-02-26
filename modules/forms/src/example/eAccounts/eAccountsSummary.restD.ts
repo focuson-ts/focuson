@@ -2,7 +2,7 @@ import { CreatePlanDD, EAccountsSummaryDD } from "./eAccountsSummary.dataD";
 import { RestD, RestParams } from "../../common/restD";
 
 export const commonParams: RestParams = {
-  customerId: { commonLens: 'customerId', testValue: 'custId' },
+  customerId: { commonLens: 'customerId', testValue: 'custId', main: true },
   accountId: { commonLens:  'accountId' , testValue: "accId" },
 }
 

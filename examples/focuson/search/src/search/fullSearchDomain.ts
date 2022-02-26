@@ -4,7 +4,6 @@ import { HasSimpleMessages } from "@focuson/utils";
 import { HasTagHolder } from "@focuson/template";
 
 export interface SearchRequirements extends HasSearch, HasSimpleMessages, HasTagHolder, HasPageSelection {
-
 }
 
 export interface HasSearch {

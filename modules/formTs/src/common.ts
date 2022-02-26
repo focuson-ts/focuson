@@ -1,8 +1,8 @@
 import { HasPageSelection, PageMode ,PageSelectionContext} from '@focuson/pages'
 import { defaultDateFn, HasSimpleMessages, SimpleMessage } from '@focuson/utils';
 import {  OnTagFetchErrorFn } from '@focuson/fetcher';
-import { Lenses } from '@focuson/lens';
-import { HasTagHolder, tagOps } from '@focuson/template';
+import { identityOptics } from '@focuson/lens';
+import { HasTagHolder, NameAndLens } from '@focuson/template';
 import { HasPostCommand } from '@focuson/poster';
 import { commonTagFetchProps, defaultPageSelectionAndPostCommandsContext, PageSelectionAndPostCommandsContext, HasFocusOnDebug } from '@focuson/focuson';
 import { LensProps } from '@focuson/state';
@@ -22,11 +22,16 @@ customerId?:string;
 accountId?:string;
 createPlanId?:string;
 }
+export const identityL = identityOptics<FState> ();
+export const commonIdsL = identityL.focusQuery('CommonIds');
+export const commonIds: NameAndLens<FState> = {
+   customerId: commonIdsL.focusQuery('customerId'),
+   accountId: commonIdsL.focusQuery('accountId'),
+   createPlanId: commonIdsL.focusQuery('createPlanId')
+}
 export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{
   mode: PageMode;
 }
-export const commonIdLens = Lenses.identity<FState> ().focusOn ( 'CommonIds' )
-export const commonIdOps = tagOps ( commonIdLens, { failSilently: false } )
 export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPageSelection, T> ( onError?: OnTagFetchErrorFn<S, any, T, SimpleMessage> ) {
   return commonTagFetchProps<S, T> (
     ( s, date ) => [], //later do the messaging

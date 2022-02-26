@@ -1,5 +1,5 @@
 import { GetOptioner, Lenses } from "@focuson/lens";
-import { applyToTemplate, expand, expandFor, findTags, findTagsFor, getUrl, getUrlFor, makeAEqualsB, nameLensFn, queryParamsFor, tagOps } from "@focuson/template";
+import { applyToTemplate, expand, nameLensFn } from "@focuson/template";
 
 
 interface TemplateTestState {
@@ -44,50 +44,7 @@ describe ( "expand", () => {
   }
 )
 
-describe ( "expandFor ", () => {
-  it ( "check happy path", () => {
-    expect ( expandFor ( identity ) ( "/{a}/{b}/{c}", 'a', 'b', 'c' ) ( state ) ).toEqual ( '/1/2/3' )
-  } )
-} )
 
-describe ( "queryParamsFor ", () => {
-  it ( "should work on blocks", () => {
-    expect ( queryParamsFor ( identity, {} ) ( 'a', "b" ) ( state ) ).toEqual ( 'a=1&b=2' )
-  } )
-} )
-describe ( "makeAEqualsB ", () => {
-  it ( "should return an a equals b ", () => {
-    expect ( makeAEqualsB ( nameLensFn ( identity ), {} ) ( 'a', 'b', 'c', 'd' ) ( state ).replace ( /"/g, "'" ) ).//
-      toEqual ( "a=1&b=2&c=3&d={'e':'5','f':'6'}" )
-    expect ( makeAEqualsB ( nameLensFn ( identity ), { separator: "*" } ) ( 'a', 'b', 'c', 'd' ) ( state ).replace ( /"/g, "'" ) ).//
-      toEqual ( "a=1*b=2*c=3*d={'e':'5','f':'6'}" )
-    expect ( makeAEqualsB ( nameLensFn ( identity ), { encoder: s => '<' + s + '>' } ) ( 'a', 'b', 'c', 'd' ) ( state ).replace ( /"/g, "'" ) ).//
-      toEqual ( "a=<1>&b=<2>&c=<3>&d=<[object Object]>" )
-  } )
-  it ( "should handle not found ", () => {
-    expect ( () => makeAEqualsB ( nameLensFn ( identity ), {} ) ( 'a', 'not in', 'c', 'd' ) ( state ) ).//
-      toThrow ( "Could not find [not in] in makeAEqualsB. All names are a.not in.c.d" )
-    expect ( makeAEqualsB ( nameLensFn ( identity ), { failSilently: true } ) ( 'a', 'not in', 'c', 'd' ) ( state ).replace ( /"/g, "'" ) ).//
-      toEqual ( "a=1&not in=&c=3&d={'e':'5','f':'6'}" )
-  } )
-
-} )
-
-describe ( "findTags", () => {
-  it ( 'should find tags', () => {
-    expect ( findTags ( nameLensFn ( identity ) ) ( 'a', 'b', 'c' ) ( state ) ).toEqual ( [ "1", "2", 3 ] )
-    expect ( findTags ( nameLensFn ( identity ) ) ( 'a', 'b', 'c' ) ( stateNoC ) ).toEqual ( [ "1", "2", undefined ] )
-    expect ( findTagsFor<TemplateTestState, TemplateTestState> ( identity ) ( 'a', 'b', 'c' ) ( stateNoC ) ).toEqual ( [ "1", "2", undefined ] )
-
-  } )
-} )
-
-describe ( "tagOps", () => {
-  it ( "smoke test", () => {
-    expect ( tagOps ( identity, {} ).tags ( 'a', 'b' ) ( state ) ).toEqual ( [ "1", "2" ] )
-    expect ( tagOps ( identity, {} ).queryParam ( 'a', 'b' ) ( state ) ).toEqual ( 'a=1&b=2' )
-  } )
-} )
 
 describe ( "applyToTemplate", () => {
   it ( "should replace a list of strings which is the input strings modified by the parats", () => {
@@ -104,17 +61,5 @@ describe ( "applyToTemplate", () => {
   it ( "should replace an array with a nice display", () => {
     const params = { a: 1, b: [ 2, 3 ] }
     expect ( applyToTemplate ( "a={a}&b={b}", params ) ).toEqual ( [ "a=1&b=[2,3]" ] )
-  } )
-} )
-
-describe ( "getUrl", () => {
-  it ( "it should replace {placeholders} and {query}", () => {
-    expect ( getUrl ( nLFn ) ( "/some/{a}?{query}", 'a', 'b' ) ( state ) ).toEqual ( '/some/1?a=1&b=2' )
-  } )
-} )
-
-describe ( "getUrlFor", () => {
-  it ( "it should replace {placeholders} and {query}", () => {
-    expect ( getUrlFor ( identity ) ( "/some/{a}?{query}", 'a', 'b' ) ( state ) ).toEqual ( '/some/1?a=1&b=2' )
   } )
 } )

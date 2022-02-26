@@ -4,17 +4,21 @@ import { emptySearchRequirement, searchSampleBob, searchSamplePhil } from "./sea
 import { fetchers } from "../fetchers";
 import { defaultFetchFn, fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
 import { searchFetcher } from "./search.fetcher";
+import { Lenses } from "@focuson/lens";
+import { expand } from "@focuson/template";
 
 
 describe ( "searchFetcher", () => {
   it ( "should handle a 'can't connect' ", async () => {
     let fetchFn = fetchWithPrefix ( "http://localhost:9999", defaultFetchFn );
     let s = { ...emptySearchRequirement, search: { query: "bob" } };
-    let fetcher = searchFetcher ();
+    let fetcher = searchFetcher ( Lenses.identity<typeof s> ().focusQuery ( 'search' ) );
+    expect( fetcher.shouldLoad(s)).toEqual(true)
     const ns = await applyFetcher ( fetcher, s, fetchFn )
+    // expect(ns).toEqual('')
     expect ( ns.messages ).toEqual ( [ {
       "level": "error",
-      "msg": "Failed to fetch data from [/api/search?query=bob,undefined] status 600\nResponse {\"message\":\"request to http://localhost:9999/api/search?query=bob failed, reason: connect ECONNREFUSED 127.0.0.1:9999\",\"type\":\"system\",\"errno\":\"ECONNREFUSED\",\"code\":\"ECONNREFUSED\"}}",
+      "msg": "Failed to fetch data from [/api/search?search=bob,undefined] status 600\nResponse {\"message\":\"request to http://localhost:9999/api/search?search=bob failed, reason: connect ECONNREFUSED 127.0.0.1:9999\",\"type\":\"system\",\"errno\":\"ECONNREFUSED\",\"code\":\"ECONNREFUSED\"}}",
       "time": "timeForTest"
     } ] )
   } )
@@ -31,7 +35,7 @@ pactWith ( { consumer: 'Statement', provider: 'EAccountsApi', cors: true }, prov
         withRequest: {
           method: 'GET',
           path: '/api/search',
-          query: { query: "phil" }
+          query: { search: "phil" }
         },
         willRespondWith: {
           status: 200,
@@ -62,7 +66,7 @@ pactWith ( { consumer: 'Statement', provider: 'EAccountsApi', cors: true }, prov
         withRequest: {
           method: 'GET',
           path: '/api/search',
-          query: { query: "bob" }
+          query: { search: "bob" }
         },
         willRespondWith: {
           status: 200,

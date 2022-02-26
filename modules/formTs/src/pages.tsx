@@ -14,5 +14,5 @@ export const pages: MultiPageDetails<FState, Context> = {
     EAccountsSummary: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'EAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: {} },
     ETransfer: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'ETransfer' ), pageFunction: ETransferPage(), initialValue: {"fromApi":{"amount":"","dateOfETransfer":"","description":"","fromAccount":"","toAccount":"","monitoringAccount":"","type":"","balance":"","notes":""}} },
     CreateEAccount: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'CreateEAccount' ), pageFunction: CreateEAccountPage(), initialValue: {"editing":{"name":"","type":"","savingsStyle":"","initialAmount":""}} },
-    EAccountsSummary_CreatePlan: { config: simpleMessagesConfig,  pageFunction: render.CreatePlanPage(), modal: true}
+    CreatePlan: { config: simpleMessagesConfig,  pageFunction: render.CreatePlanPage(), modal: true}
   }

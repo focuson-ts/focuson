@@ -1,28 +1,33 @@
-
-import { Lenses } from "@focuson/lens";
-import { createSimpleMessage, defaultDateFn, SimpleMessage } from "@focuson/utils";
-import { PageSpecState, SecondPageDomain } from "./page.fixture";
+import { identityOptics, Lenses } from "@focuson/lens";
+import { createSimpleMessage, defaultDateFn } from "@focuson/utils";
+import { PageSpecState } from "./page.fixture";
 import { commonTagFetchProps, pageAndTagFetcher, simpleTagFetcher } from "@focuson/focuson/dist/src/tagFetcher";
 import { Fetcher } from "@focuson/fetcher";
+import { NameAndLens } from "@focuson/template";
 
 function withMessages<T> () {
   return commonTagFetchProps<PageSpecState, T> ( ( s: T, date ) => [ createSimpleMessage ( 'info', `${s}`, date ) ], defaultDateFn ) ()
 }
 
 export const tagFetcherTestStateL = Lenses.identity<PageSpecState> ( 'state' )
-export const simpleFetcherWithMessages = simpleTagFetcher<PageSpecState, 'firstPage'> (
+export const commonLens: NameAndLens<PageSpecState> = {
+  tag1Id: identityOptics<PageSpecState> ().focusQuery ( 'tag1' ),
+  tag2Id: identityOptics<PageSpecState> ().focusQuery ( 'tag2' )
+}
+export const simpleFetcherWithMessages: Fetcher<PageSpecState, string> = simpleTagFetcher (
   withMessages (),
   'firstPage',
-  s => [ s.tag1, s.tag2 ],
-  ( state: PageSpecState ) => [ '/someUrl', { method: 'Options' } ]
+  Lenses.identity<PageSpecState> ().focusQuery ( 'firstPage' ), commonLens, {},
+  [ 'tag1Id', 'tag2Id' ], [], '/someUrl/{tag1Id}/{tag2Id}/?{query}'
 )
 
 export const stateAndFromApiFetcher: Fetcher<PageSpecState, string> =
-               pageAndTagFetcher<PageSpecState, SecondPageDomain, string, SimpleMessage> (
+               pageAndTagFetcher (
                  withMessages (),
                  'secondPage',
                  'tag1',
+                 Lenses.identity<PageSpecState> ().focusQuery ( 'secondPage' ),
+                 commonLens, {}, [ 'tag1Id', 'tag2Id' ], [],
                  s => s.focusQuery ( 'fromApi' ),
-                 s => [ s.tag1, s.tag2 ],
-                 state => [ '/someUrl', { method: 'Options' } ]
+                 '/someUrl?{query}'
                )

@@ -39,8 +39,8 @@ describe ( 'tagFetcher', () => {
 
   it ( 'should load using the reqFn', () => {
     const loadInfo: LoadInfo<PageSpecState, string> = stateAndFromApiFetcher.load ( { ...secondPageSelectedState, tag1: 't1', tag2: 't2', tags: {}, secondPage: {} } )
-    expect ( loadInfo.requestInfo ).toEqual ( '/someUrl' )
-    expect ( loadInfo.requestInit ).toEqual ( { method: 'Options' } )
+    expect ( loadInfo.requestInfo ).toEqual ( '/someUrl?tag1Id=t1&tag2Id=t2' )
+    expect ( loadInfo.requestInit ).toEqual ( undefined )
     expect ( loadInfo.useThisInsteadOfLoad ).toEqual ( undefined )
   } )
 
@@ -60,7 +60,7 @@ describe ( 'tagFetcher', () => {
       ...secondPageSelectedState,
       "messages": [ {
         "level": "error",
-        "msg": "Failed to fetch data from [/someUrl,{\"method\":\"Options\"}] status 300\nResponse \"someString\"}",
+        "msg": "Failed to fetch data from [/someUrl?tag1Id=t1&tag2Id=t2,undefined] status 300\nResponse \"someString\"}",
         "time": "timeForTest"
       } ],
       "secondPage": { "fromApi": "someLocal" },

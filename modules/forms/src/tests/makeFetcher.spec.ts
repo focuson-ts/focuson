@@ -5,16 +5,15 @@ import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 
 describe ( "makeAllFetchers", () => {
     it ( "should make a fetcher", () => {
-      expect ( makeAllFetchers ( paramsForTest, [ EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
+      expect ( makeAllFetchers ( paramsForTest, [ EAccountsSummaryPD, CreatePlanPD ] ).map(s => s.replace(/"/g, "'")) ).toEqual ( [
         "//fetcher type get",
-        "export function EAccountsSummaryDDFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection & pageDomains.HasEAccountsSummaryPageDomain>(tagOps: TagOps<S,common.commonIds>) {",
+        "export function EAccountsSummaryDDFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<S, pageDomains.EAccountsSummaryPageDomain>,commonIds: NameAndLens<S>) {",
         "  return pageAndTagFetcher<S, pageDomains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDDDomain, SimpleMessage>(",
         "    common.commonFetch<S,  domains.EAccountsSummaryDDDomain>(),",
         "     'EAccountsSummary',",
-        "     'fromApi',",
+        "     'fromApi', fdLens, commonIds, {},['accountId'],['customerId'],",
         "     (s) => s.focusQuery('fromApi'),",
-        "     tagOps.tags('accountId', 'customerId'),",
-        "     tagOps.getReqFor('/api/accountsSummary?{query}',undefined,'accountId', 'customerId'))",
+        "     '/api/accountsSummary?{query}')",
         "}"
       ])
     } )
@@ -26,9 +25,9 @@ describe ( 'makeFetchersDataStructure', () => {
     expect ( makeFetchersDataStructure ( paramsForTest, { variableName: 'fetchers', stateName: 'theState' }, [ EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
       "export const fetchers: FetcherTree<common.theState> = {",
       "fetchers: [",
-      "   EAccountsSummaryDDFetcher<common.theState>(common.commonIdOps)",
+      "    EAccountsSummaryDDFetcher<common.theState> ( identityL.focusQuery ( 'EAccountsSummary' ), commonIds )",
       "],",
       "children: []}"
-    ] )
+    ])
   } )
 } );

@@ -2,28 +2,44 @@ import { sortedEntries } from "@focuson/utils";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
 import { domainName, fetcherName, hasDomainForPage, pageDomainName } from "./names";
 import { CombinedParams, TSParams } from "./config";
-import { imports, noExtension } from "./codegen";
+import { addStringToEndOfAllButLast, imports, noExtension } from "./codegen";
 
 
 export const makeFetcherCode = ( params: CombinedParams ) => ( p: PageD ) => ( def: RestDefnInPageProperties ): string[] => {
   const pageDomain = noExtension ( params.pageDomainsFile )
   const domain = noExtension ( params.domainsFile )
   const common = noExtension ( params.commonFile )
-  const paramsString = sortedEntries ( def.rest.params ).flatMap ( ( [ name, params ] ) => "'" + name + "'" ).join ( ", " )
   let d = def.rest.dataDD;
+
   const dataType = domainName ( d )
   const targetFromPath = def.targetFromPath;
+  const ids = sortedEntries ( def.rest.params ).filter ( t => !t[ 1 ].main ).map ( ( [ name, value ] ) => name )
+  const resourceIds = sortedEntries ( def.rest.params ).filter ( t => t[ 1 ].main ).map ( ( [ name, value ] ) => name )
+
   return [
     `//fetcher type ${def.fetcher}`,
-    `export function ${fetcherName ( def )}<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection & ${pageDomain}.${hasDomainForPage ( p )}>(tagOps: TagOps<S,${params.commonFile}.${params.commonParams}>) {`,
+    `export function ${fetcherName ( def )}<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<S, ${pageDomain}.${pageDomainName ( p )}>,commonIds: NameAndLens<S>) {`,
     `  return pageAndTagFetcher<S, ${pageDomain}.${pageDomainName ( p )}, ${domain}.${dataType}, SimpleMessage>(`,
     `    ${common}.commonFetch<S,  ${domain}.${dataType}>(),`,
     `     '${p.name}',`,
-    `     '${targetFromPath}',`,
+    `     '${targetFromPath}', fdLens, commonIds, {},${JSON.stringify(ids)},${JSON.stringify(resourceIds)},`,
     `     (s) => s.focusQuery('${targetFromPath}'),`,
-    `     tagOps.tags(${paramsString}),`,
-    `     tagOps.getReqFor('${def.rest.url}',undefined,${paramsString}))`,
+    `     '${def.rest.url}')`,
+
+    //
+    // `     (s) => s.focusQuery('${targetFromPath}'),`,
+    // `     tagOps.tags(${paramsString}),`,
+    // `     tagOps.getReqFor('${def.rest.url}',undefined,${paramsString}))`,
     '}' ]
+
+  // export function EAccountsSummaryDDFetcher<S extends HasSimpleMessages & HasTagHolder & HasPageSelection & pageDomains.HasEAccountsSummaryPageDomain> ( fdLens: Optional<S, pageDomains.EAccountsSummaryPageDomain>, commonIds: NameAndLens<S> ) {
+  //   return pageAndTagFetcher<S, pageDomains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDDDomain, SimpleMessage> (
+  //     common.commonFetch<S, domains.EAccountsSummaryDDDomain> (),
+  //     'EAccountsSummary', 'fromApi', fdLens, commonIds, {}, [ 'customerId' ], [ 'accountId' ],
+  //     ( s ) => s.focusQuery ( 'fromApi' ),
+  //     '/api/accountsSummary?{query}' )
+  // }
+
 
 };
 
@@ -46,11 +62,14 @@ interface FetcherDataStructureParams {
 export function makeFetchersImport ( params: TSParams ): string[] {
   return [
     ...imports ( params.pageDomainsFile, params.domainsFile, params.commonFile ),
-  `import { FetcherTree,  } from "@focuson/fetcher";`,
-  `import { HasTagHolder, TagOps } from "@focuson/template";`,
-  `import { HasPageSelection } from "@focuson/pages";`,
-  `import { HasSimpleMessages, SimpleMessage } from '@focuson/utils';`,
-  `import { pageAndTagFetcher } from "@focuson/focuson";`
+    `import { FetcherTree,  } from "@focuson/fetcher";`,
+    `import { HasTagHolder, NameAndLens } from "@focuson/template";`,
+    `import { HasPageSelection } from "@focuson/pages";`,
+    `import { HasSimpleMessages, SimpleMessage } from '@focuson/utils';`,
+    `import { pageAndTagFetcher } from "@focuson/focuson";`,
+    `import { commonIds, identityL } from './${params.commonFile}';`,
+    `import { Optional } from '@focuson/lens';`
+
   ]
 }
 export function makeFetchersDataStructure ( params: CombinedParams, { stateName, variableName }: FetcherDataStructureParams, ps: PageD[] ): string[] {
@@ -59,7 +78,8 @@ export function makeFetchersDataStructure ( params: CombinedParams, { stateName,
   return [
     `export const ${variableName}: FetcherTree<${params.commonFile}.${stateName}> = {`,
     `fetchers: [`,
-    ...fetchers.map ( ( [ pd, rd ], i ) => `   ${fetcherName ( rd )}<${common}.${stateName}>(${common}.commonIdOps)${i == fetchers.length - 1 ? '' : ','}` ),
+    ...addStringToEndOfAllButLast ( ',' ) ( fetchers.map ( ( [ pd, rd ], i ) =>
+      `    ${fetcherName ( rd )}<${params.commonFile}.${stateName}> ( identityL.focusQuery ( '${pd.name}' ), commonIds )` ) ),
     `],`,
     'children: []}',
   ]

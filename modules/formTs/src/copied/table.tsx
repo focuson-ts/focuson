@@ -1,14 +1,13 @@
 import { CommonStateProps } from "./common";
-import { PageMode } from "@focuson/pages";
-import { safeArray } from "@focuson/utils";
-import decamelize from 'decamelize';
+import { decamelize, safeArray } from "@focuson/utils";
+
 
 export interface TableProps<S, T, Context> extends CommonStateProps<S, T[], Context> {
   order: (keyof T)[];
 }
 
 export function Table<S, T, Context> ( { id, order, state }: TableProps<S, T, Context> ) {
-  const orderJsx = order.map ( o => <th key={o.toString ()} id={`header-${0})}`}>{decamelize(o.toString(), {separator:' '})}</th> )
+  const orderJsx = order.map ( o => <th key={o.toString ()} id={`header-${0})}`}>{decamelize ( o.toString (), ' ' )}</th> )
   const json: T[] = safeArray ( state.optJson () )
   return <table>
     <thead>{orderJsx}</thead>

@@ -1,24 +1,24 @@
-import { GetOptioner, Lens, Optional } from "@focuson/lens";
+import { GetOptioner, Optional } from "@focuson/lens";
 import { NameAnd, sortedEntries } from "@focuson/utils";
 
 
-export type NameLensFn<Main, T> = ( name: string ) => GetOptioner<Main, T>
+export type GetNameFn<Main, T> = ( name: string ) => GetOptioner<Main, T>
 
-export function addValue<Main, T> ( nL: NameLensFn<Main, T>, name: string, value: T ): NameLensFn<Main, T> {
+export function addValue<Main, T> ( nL: GetNameFn<Main, T>, name: string, value: T ): GetNameFn<Main, T> {
   return n => {
     if ( n === name ) return { getOption: ( a: Main ) => value }
     return nL ( n )
   }
 }
 
-export function nameLensFn<S, T extends NameAnd<any>> ( lens: Optional<S, T> ): NameLensFn<S, any> {
+export function nameLensFn<S, T extends NameAnd<any>> ( lens: Optional<S, T> ): GetNameFn<S, any> {
   return ( name: string ) => lens.focusQuery ( name )
 }
 
-export const expandFor = <Main, Details extends NameAnd<any>> ( lens: Lens<Main, Details> ) => ( template: string, ...names: (keyof Details)[] ): ( s: Main ) => string =>
-  expand ( nameLensFn ( lens ) ) ( template, ...names.map ( x => x.toString () ) );
-
-export const expand = <Main> ( nameLensFn: NameLensFn<Main, string>, failSilently?: boolean ) => ( template: string, ...names: string[] ): ( s: Main ) => string => {
+// export const expandFor = <Main, Details extends NameAnd<any>> ( lens: Lens<Main, Details> ) => ( template: string, ...names: (keyof Details)[] ): ( s: Main ) => string =>
+//   expand ( nameLensFn ( lens ) ) ( template  );
+//
+export const expand = <Main> ( nameLensFn: GetNameFn<Main, string>, failSilently?: boolean ) => ( template: string ): ( s: Main ) => string => {
   return s => template.replace ( /({[^}]*})/g, nameAndBrackets => {
     const name = nameAndBrackets.substr ( 1, nameAndBrackets.length - 2 )
     let lens = nameLensFn ( name );
@@ -46,26 +46,3 @@ export function applyToTemplate ( template: string, params: NameAnd<any> ): stri
   }, template.replace ( /\r/g, '\n' ) ).split ( '\n' ).filter ( s => s.length > 0 )
 }
 
-export interface MakeAEqualsBProps {
-  failSilently?: boolean,
-  separator?: string,
-  encoder?: ( s: string | undefined ) => string
-}
-
-
-export const queryParamsFor = <Main, Details extends NameAnd<any>> ( lens: Optional<Main, Details>, props: MakeAEqualsBProps ) => ( ...names: (keyof Details)[] ): ( s: Main ) => string =>
-  makeAEqualsB<Main> ( nameLensFn ( lens ), props ) ( ...names.map ( x => x.toString () ) );
-
-export const makeAEqualsB = <Main> ( nameLnFn: NameLensFn<Main, any>, { encoder, separator, failSilently }: MakeAEqualsBProps ) => ( ...names: string[] ): ( main: Main ) => string => {
-  const realEncoder = encoder ? encoder : stringOrStringify
-  const realSeparator = separator ? separator : '&'
-  return main => {
-    return names.map ( name => {
-        const value = nameLnFn ( name ).getOption ( main )
-        if ( value || failSilently ) return name + '=' + realEncoder ( value )
-        throw new Error ( `Could not find [${name}] in makeAEqualsB. All names are ${names.join ( "." )}` )
-      }
-    ).join ( realSeparator )
-  }
-
-};

@@ -12,7 +12,7 @@
       "request": {
         "method": "GET",
         "path": "/api/search",
-        "query": "query=phil"
+        "query": "search=phil"
       },
       "response": {
         "status": 200,
@@ -31,7 +31,7 @@
       "request": {
         "method": "GET",
         "path": "/api/search",
-        "query": "query=bob"
+        "query": "search=bob"
       },
       "response": {
         "status": 200,
