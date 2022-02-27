@@ -37,7 +37,8 @@ export class Optional<Main, Child> implements GetOptioner<Main, Child>, SetOptio
   }
 
   set = ( m: Main, c: Child ): Main => useOrDefault ( m ) ( this.setOption ( m, c ) );
-  map = ( m: Main, fn: ( c: Child ) => Child ): Main => applyOrDefault ( this.getOption ( m ), c => this.set ( m, fn ( c ) ), m )
+  map = ( m: Main, fn: ( c: Child | undefined ) => Child ): Main => this.set ( m, fn ( this.getOption ( m ) ) )
+  mapDefined = ( m: Main, fn: ( c: Child ) => Child ): Main => applyOrDefault ( this.getOption ( m ), c => this.set ( m, fn ( c ) ), m )
 
   /** This is identical to this.setOption(m, undefined) */
   clearJson ( m: Main, msgIfCannot?: string ) {
@@ -87,7 +88,8 @@ export class Optional<Main, Child> implements GetOptioner<Main, Child>, SetOptio
       m => apply ( this.getOption ( m ), ( c: Child ) => apply ( other.getOption ( m ), nc => [ c, nc ] ) ),
       ( m, newChild ) => {
         let [ nc, noc ] = newChild
-        return this.set ( other.set ( m, noc ), nc )
+        let m1 = other.set ( m, noc );
+        return this.set ( m1, nc )
       },
       "combine(" + this.description + "," + other.description + ")"
     )

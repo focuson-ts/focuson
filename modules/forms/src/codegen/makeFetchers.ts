@@ -3,6 +3,7 @@ import { PageD, RestDefnInPageProperties } from "../common/pageD";
 import { domainName, fetcherName, hasDomainForPage, pageDomainName } from "./names";
 import { CombinedParams, TSParams } from "./config";
 import { addStringToEndOfAllButLast, imports, noExtension } from "./codegen";
+import { OccupationAndIncomeDetailsPageDomain } from "ExampleApp/src/pageDomains";
 
 
 export const makeFetcherCode = ( params: CombinedParams ) => ( p: PageD ) => ( def: RestDefnInPageProperties ): string[] => {
@@ -23,7 +24,7 @@ export const makeFetcherCode = ( params: CombinedParams ) => ( p: PageD ) => ( d
     `    ${common}.commonFetch<S,  ${domain}.${dataType}>(),`,
     `     '${p.name}',`,
     `     '${targetFromPath}', fdLens, commonIds, {},${JSON.stringify(ids)},${JSON.stringify(resourceIds)},`,
-    `     (s) => s.focusQuery('${targetFromPath}'),`,
+    `      Lenses.identity< ${pageDomain}.${pageDomainName ( p )}> ().focusQuery ( '${targetFromPath}' ),`,
     `     '${def.rest.url}')`,
 
     //
@@ -68,7 +69,7 @@ export function makeFetchersImport ( params: TSParams ): string[] {
     `import { HasSimpleMessages, SimpleMessage } from '@focuson/utils';`,
     `import { pageAndTagFetcher } from "@focuson/focuson";`,
     `import { commonIds, identityL } from './${params.commonFile}';`,
-    `import { Optional } from '@focuson/lens';`
+    `import { Optional, Lenses } from '@focuson/lens';`
 
   ]
 }

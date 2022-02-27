@@ -1,5 +1,5 @@
 import { Lens, Lenses, Optional } from "@focuson/lens";
-import { FetchFn } from "@focuson/utils";
+import { FetchFn, safeArray } from "@focuson/utils";
 
 export interface PostDebug {
     postDebug?: boolean
@@ -35,7 +35,7 @@ const debugAnd = ( debug?: boolean ) => <T> ( msg: string, value: T ) => {
 type ErrorFn<State> = ( s: State, detail: string, args: any, status: number | undefined, resp: any ) => State
 export function addDebugErrorMessage<State> ( errorMessageL: Optional<State, string[]> ): ErrorFn<State> {
     return ( s: State, detail: string, args: any, status: number | undefined, resp: any ) =>
-      errorMessageL.map ( s, oldErrors => [ ...oldErrors, `${detail} ${JSON.stringify ( args )} Status(${status}) Resp: ${resp})` ] )
+      errorMessageL.map ( s, oldErrors => [ ...safeArray(oldErrors), `${detail} ${JSON.stringify ( args )} Status(${status}) Resp: ${resp})` ] )
 
 }
 export const post = <State, Details extends Posters<State>> (

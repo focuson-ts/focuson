@@ -7,14 +7,14 @@ import { HasPageSelection } from "@focuson/pages";
 import { HasSimpleMessages, SimpleMessage } from '@focuson/utils';
 import { pageAndTagFetcher } from "@focuson/focuson";
 import { commonIds, identityL } from './common';
-import { Optional } from '@focuson/lens';
+import { Optional, Lenses } from '@focuson/lens';
 //fetcher type list
 export function OccupationAndIncomeFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<S, pageDomains.OccupationAndIncomeDetailsPageDomain>,commonIds: NameAndLens<S>) {
   return pageAndTagFetcher<S, pageDomains.OccupationAndIncomeDetailsPageDomain, domains.OccupationAndIncomeDomain, SimpleMessage>(
     common.commonFetch<S,  domains.OccupationAndIncomeDomain>(),
      'OccupationAndIncomeDetails',
      'fromApi', fdLens, commonIds, {},["customerId"],[],
-     (s) => s.focusQuery('fromApi'),
+      Lenses.identity< pageDomains.OccupationAndIncomeDetailsPageDomain> ().focusQuery ( 'fromApi' ),
      '/api/oneOccupationAndIncome?{query}')
 }
 //fetcher type get
@@ -23,7 +23,7 @@ export function EAccountsSummaryDDFetcher<S extends  HasSimpleMessages & HasTagH
     common.commonFetch<S,  domains.EAccountsSummaryDDDomain>(),
      'EAccountsSummary',
      'fromApi', fdLens, commonIds, {},["accountId"],["customerId"],
-     (s) => s.focusQuery('fromApi'),
+      Lenses.identity< pageDomains.EAccountsSummaryPageDomain> ().focusQuery ( 'fromApi' ),
      '/api/accountsSummary?{query}')
 }
 export const fetchers: FetcherTree<common.FState> = {

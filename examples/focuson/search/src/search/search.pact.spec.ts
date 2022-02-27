@@ -2,20 +2,18 @@ import { applyFetcher, loadTree } from '@focuson/fetcher'
 import { pactWith } from "jest-pact";
 import { emptySearchRequirement, searchSampleBob, searchSamplePhil } from "./search.sample";
 import { fetchers } from "../fetchers";
-import { defaultFetchFn, fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
+import { defaultFetchFn, fetchWithPrefix, loggingFetchFn, testDateFn } from "@focuson/utils";
 import { searchFetcher } from "./search.fetcher";
 import { Lenses } from "@focuson/lens";
-import { expand } from "@focuson/template";
 
 
 describe ( "searchFetcher", () => {
   it ( "should handle a 'can't connect' ", async () => {
     let fetchFn = fetchWithPrefix ( "http://localhost:9999", defaultFetchFn );
     let s = { ...emptySearchRequirement, search: { query: "bob" } };
-    let fetcher = searchFetcher ( Lenses.identity<typeof s> ().focusQuery ( 'search' ) );
-    expect( fetcher.shouldLoad(s)).toEqual(true)
+    let fetcher = searchFetcher ( Lenses.identity<typeof s> ().focusQuery ( 'search' ), testDateFn );
+    expect ( fetcher.shouldLoad ( s ) ).toEqual ( true )
     const ns = await applyFetcher ( fetcher, s, fetchFn )
-    // expect(ns).toEqual('')
     expect ( ns.messages ).toEqual ( [ {
       "level": "error",
       "msg": "Failed to fetch data from [/api/search?search=bob,undefined] status 600\nResponse {\"message\":\"request to http://localhost:9999/api/search?search=bob failed, reason: connect ECONNREFUSED 127.0.0.1:9999\",\"type\":\"system\",\"errno\":\"ECONNREFUSED\",\"code\":\"ECONNREFUSED\"}}",
@@ -42,13 +40,10 @@ pactWith ( { consumer: 'Statement', provider: 'EAccountsApi', cors: true }, prov
           body: searchSamplePhil.queryResults
         },
       } )
-      let f = fetchers ().fetchers[ 0 ]
+      // let f = fetchers (testDateFn).fetchers[ 0 ]
 
       let ns = { ...emptySearchRequirement, search: { query: "phil" } };
-      // console.log(f)
-      // console.log('ns',ns)
-      // console.log('wouldLoad',f.shouldLoad(ns))
-      let newState = await loadTree ( fetchers (), ns, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+      let newState = await loadTree ( fetchers ( testDateFn ), ns, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       expect ( newState ).toEqual ( {
         ...emptySearchRequirement,
         messages: [ { "level": "info", "msg": "phil1,phil2,phil3", "time": "timeForTest" } ],
@@ -73,7 +68,7 @@ pactWith ( { consumer: 'Statement', provider: 'EAccountsApi', cors: true }, prov
           body: searchSampleBob.queryResults
         },
       } )
-      let newState = await loadTree ( fetchers (), { ...emptySearchRequirement, search: { query: "bob" } }, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+      let newState = await loadTree ( fetchers ( testDateFn ), { ...emptySearchRequirement, search: { query: "bob" } }, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       expect ( newState ).toEqual ( {
         ...emptySearchRequirement,
         messages: [ { "level": "info", "msg": "bob1,bob2,bob3", "time": "timeForTest" } ],

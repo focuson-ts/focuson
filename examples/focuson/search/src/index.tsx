@@ -6,7 +6,7 @@ import { SearchPage, SearchQueryModalPage } from "./search/searchPage";
 import React from "react";
 import { defaultPageSelectionContext, FocusOnConfig, HasFocusOnDebug, setJsonForFocusOn } from "@focuson/focuson";
 import { HasPostCommand, postCommandsL, Posters } from "@focuson/poster";
-import { fetchWithDelay, fetchWithPrefix, HasSimpleMessages, loggingFetchFn } from "@focuson/utils";
+import { defaultDateFn, fetchWithDelay, fetchWithPrefix, HasSimpleMessages, loggingFetchFn } from "@focuson/utils";
 import { HasSearch, SearchRequirements } from "./search/fullSearchDomain";
 import { fetchers } from "./fetchers";
 import { HasTagHolder } from "@focuson/template";
@@ -53,7 +53,7 @@ const config: FocusOnConfig<FullState, Context> = {
   posters,
 
   /** The collection of all registered fetchers that will get data from the back end */
-  fetchers: fetchers ()
+  fetchers: fetchers (defaultDateFn)
 }
 type Config = typeof config
 

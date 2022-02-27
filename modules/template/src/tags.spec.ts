@@ -1,5 +1,5 @@
 import { nameToLens, reqFor, tags, url, UrlConfig } from "./tags";
-import { Lenses } from "@focuson/lens";
+import { identityOptics, Lenses } from "@focuson/lens";
 
 interface ChildTagTestState {
   c?: string
@@ -28,7 +28,7 @@ let identityChild = Lenses.identity<ChildTagTestState> ();
   cd: { aId: identityState.focusQuery ( 'a' ), bId: identityState.focusQuery ( 'b' ) },
   fdd: { cId: identityChild.focusQuery ( 'c' ), dId: identityChild.focusQuery ( 'd' ) },
   fdLens: identityState.focusQuery ( 'child' ),
-  dLens: identityState.focusQuery ( 'child' ).focusQuery ( 'data' ),
+  dLens: identityOptics<ChildTagTestState>() .focusQuery ( 'data' ),
   ids: [ "aId", "bId", "cId" ],
   resourceId: [ "dId" ]
 

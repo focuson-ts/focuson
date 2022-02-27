@@ -8,6 +8,7 @@ export const emptySearchRequirement: SearchRequirements & HasPageSelection & Has
   messages: [],
   pageSelection: [ { pageName: 'search', pageMode: 'view' } ],
   postCommands: [],
+  // debug:{tagFetcherDebug: true}
 }
 
 export const searchSamplePhil: FullSearchDomain = {

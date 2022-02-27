@@ -12,7 +12,7 @@ describe ( "makeAllFetchers", () => {
         "    common.commonFetch<S,  domains.EAccountsSummaryDDDomain>(),",
         "     'EAccountsSummary',",
         "     'fromApi', fdLens, commonIds, {},['accountId'],['customerId'],",
-        "     (s) => s.focusQuery('fromApi'),",
+        "      Lenses.identity< pageDomains.EAccountsSummaryPageDomain> ().focusQuery ( 'fromApi' ),",
         "     '/api/accountsSummary?{query}')",
         "}"
       ])

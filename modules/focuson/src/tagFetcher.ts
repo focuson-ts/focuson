@@ -69,7 +69,7 @@ export interface SpecificTagFetcherProps<S, FD, D, MSGS> extends CommonTagFetche
   fdd: NameAndLens<FD>;
   fdLens: Optional<S, FD>
   /** Where we put the T */
-  dLens: Optional<S, D>,
+  dLens: Optional<FD, D>,
   resourceId: string [];
   ids: string []
   /** A default description is created if this isn't provided */
@@ -86,13 +86,13 @@ export function pageAndTagFetcher<S, Full, T, MSGS> (
   cd: NameAndLens<S>, fdd: NameAndLens<Full>,
   ids: string[],
   resourceId: string[],
-  targetLFn: ( lens: Optional<S, Full> ) => Optional<S, T>,
+  dLens: Optional<Full, T>,
   url: string,
   description?: string
 ): Fetcher<S, T> {
   // @ts-ignore ... I don't know how to get the type system to accept this.  I want to say that 'Full' is S[pagename] but doing that makes the usage of this code not as nice.
   // The problem now is that S[pageName] might not be Full
-  const urlConfig: UrlConfig<S, Full, T> = { cd, fdd, ids: ids.map ( s => s.toString () ), resourceId: resourceId.map ( s => s.toString ()), dLens: targetLFn ( fdLens ), fdLens }
+  const urlConfig: UrlConfig<S, Full, T> = { cd, fdd, ids: ids.map ( s => s.toString () ), resourceId: resourceId.map ( s => s.toString () ), dLens, fdLens }
 
   const stf: SpecificTagFetcherProps<S, Full, T, MSGS> = { ...ctf, ...urlConfig, url, tagName, pageName, description: description ? description : `pageAndTagFetcher(${pageName},${tagName}})` };
   function selected ( s: S, pageName: any ) {
@@ -110,7 +110,7 @@ export function simpleTagFetcher<S extends HasSimpleMessages, FD> (
   fdLens: Optional<S, FD>,
   cd: NameAndLens<S>, fdd: NameAndLens<FD>,
   ids: string[],
-  resourceId:string[],
+  resourceId: string[],
   url: string,
   description?: string ) {
   return pageAndTagFetcher<S, FD, FD, SimpleMessage> ( ctf,
@@ -118,7 +118,7 @@ export function simpleTagFetcher<S extends HasSimpleMessages, FD> (
     undefined,
     fdLens,
     cd, fdd, ids, resourceId,
-    l => l,
+    Lenses.identity (),
     url,
     description )
 }
@@ -131,11 +131,12 @@ export function tagFetcher<S, Full, T, MSGS> ( stf: SpecificTagFetcherProps<S, F
   const identity = Lenses.identity<S> ()
   const { tagHolderL, fdLens, dLens, messageL, messagesFromTarget, onError } = stf
   const tagL = makeTagLens ( tagHolderL, stf.pageName, stf.tagName )
+  let targetLens = fdLens.chain ( dLens );
   const result: Fetcher<S, T> = {
     shouldLoad ( s: S ) {
       const currentTags = tagL.getOption ( s );
       let desiredTags = tagOps.tags ( stf, 'get' ) ( s );
-      let target = dLens.getOption ( s );
+      let target = targetLens.getOption ( s );
       let tagsDifferent = !arraysEqual ( desiredTags, currentTags );
       let result = areAllDefined ( desiredTags ) && (tagsDifferent || target === undefined);
       // @ts-ignore
@@ -153,9 +154,9 @@ export function tagFetcher<S, Full, T, MSGS> ( stf: SpecificTagFetcherProps<S, F
       const mutateForHolder: MutateFn<S, T> = ( state ) => ( status, response ) => {
         if ( debug ) console.log ( 'tagFetcher.load.mutate', status, response )
         if ( !state ) throw partialFnUsageError ( result, s );
-        const tagAndTargetLens: Optional<S, [ Tags, T ]> = tagL.combine ( dLens );
+        const tagAndTargetLens: Optional<S, [ Tags, T ]> = tagL.combine ( targetLens );
         if ( status < 300 ) {
-          if ( debug ) console.log ( 'tagFetcher.load.mutate', status, response )
+          if ( debug ) console.log ( 'tagFetcher.load.mutate', tagAndTargetLens.description, status, response )
           let resultWithoutMessages: S | undefined = tagAndTargetLens.setOption ( state, [ currentTags, response ] );
           if ( !resultWithoutMessages ) { console.error ( `Unexpected problem seting response and tags in state. ${this.description}` )}
           let messages = messagesFromTarget ( response, stf.dateFn () );

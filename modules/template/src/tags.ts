@@ -25,6 +25,13 @@ export interface NameAndLens<S> {
   [ name: string ]: Optional<S, any>
 }
 
+export interface UrlConfigWithoutFdLens<S, FD, D> {
+  cd: NameAndLens<S>;
+  fdd: NameAndLens<FD>;
+  dLens: Optional<FD, D>;
+  resourceId: string [];
+  ids: string []
+}
 
 /**
  * @param cd the common id details (where in state are things like applicationr ef, client ref... shared across multiple pages
@@ -33,11 +40,11 @@ export interface NameAndLens<S> {
  * @param resourceId.
  * @params ids. The data we need to send with every request
  */
-export interface UrlConfig<S, FD, D> {
+export interface UrlConfig<S, FD, D> extends UrlConfigWithoutFdLens<S, FD, D> {
   cd: NameAndLens<S>;
   fdd: NameAndLens<FD>;
   fdLens: Optional<S, FD>;
-  dLens: Optional<S, D>;
+  dLens: Optional<FD, D>;
   resourceId: string [];
   ids: string []
 }
@@ -53,7 +60,7 @@ export interface TagOps {
 
 export const tags: TagOpsFn<Tags> = ( urlConfig, restAction ) => <S> ( s ) => {
   const names = needsId ( restAction ) ? [ ...urlConfig.resourceId, ...urlConfig.ids ] : urlConfig.ids
-  return names.map ( onePart ( urlConfig, { failSilently: true } ) ( s, restAction ) )
+  return names.map ( onePart ( urlConfig, { failSilently: true } ) ( s, restAction ) ).sort()
 };
 export function nameToLens<S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, restAction: RestAction ): GetNameFn<S, any> {
   return ( name: string ) => {
@@ -82,7 +89,7 @@ export const bodyFor: TagOpsFn<RequestInit | undefined> =
                  const method = methodFor ( restAction )
                  if ( restAction === 'get' || restAction === 'getOption' || restAction === 'list' ) return undefined
                  if ( restAction === 'delete' ) return { method }
-                 const body: any = urlConfig.dLens.getOption ( s )
+                 const body: any = urlConfig.fdLens.chain ( urlConfig.dLens ).getOption ( s )
                  if ( body ) return { method, body }
                  throw new Error ( `Cannot execute restAction ${restAction} because the data object is empty\n${JSON.stringify ( s )}` )
                }
