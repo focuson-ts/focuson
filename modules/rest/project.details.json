@@ -1,0 +1,13 @@
+{
+  "template":    "noreact",
+  "name":        "@focuson/rest",
+  "description": "This allows for declarative 'rest actions'. Get/Update/Create... ",
+  "details":     {
+    "ideify":       true,
+    "publish":      true,
+    "links":        ["@focuson/lens", "@focuson/fetcher"],
+    "extraDeps":    {},
+    "extraDevDeps": {}
+  },
+  "test":        true
+}

@@ -1,12 +1,12 @@
 import { identityOptics, Lenses } from "@focuson/lens";
-import { createSimpleMessage, defaultDateFn } from "@focuson/utils";
+import { createSimpleMessage, testDateFn } from "@focuson/utils";
 import { PageSpecState } from "./page.fixture";
-import { commonTagFetchProps, pageAndTagFetcher, simpleTagFetcher } from "@focuson/focuson/dist/src/tagFetcher";
+import { commonTagFetchProps, pageAndTagFetcher, simpleTagFetcher } from "@focuson/focuson";
 import { Fetcher } from "@focuson/fetcher";
 import { NameAndLens } from "@focuson/template";
 
 function withMessages<T> () {
-  return commonTagFetchProps<PageSpecState, T> ( ( s: T, date ) => [ createSimpleMessage ( 'info', `${s}`, date ) ], defaultDateFn ) ()
+  return commonTagFetchProps<PageSpecState, T> ( ( s: T, date ) => [ createSimpleMessage ( 'info', `${s}`, date ) ], testDateFn ) ()
 }
 
 export const tagFetcherTestStateL = Lenses.identity<PageSpecState> ( 'state' )
