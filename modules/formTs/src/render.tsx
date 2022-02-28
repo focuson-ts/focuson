@@ -1,5 +1,6 @@
 import * as domains from './domains';
 import * as pageDomains from './pageDomains';
+import * as empty from './empty';
 import { LensProps } from "@focuson/state";
 import { Layout } from "./copied/layout";
 import { RestButton } from "./copied/rest";
@@ -13,6 +14,9 @@ import {OccupationAndIncomeDetailsPageDomain} from "./pageDomains";
 import {EAccountsSummaryPageDomain} from "./pageDomains";
 import {ETransferPageDomain} from "./pageDomains";
 import {CreateEAccountPageDomain} from "./pageDomains";
+import {ChequeCreditbooksPageDomain} from "./pageDomains";
+import {ChequeCreditbooksDDDomain} from "./domains"
+import {ChequeCreditbooksHistoryLineDDDomain} from "./domains"
 import {CreateEAccountDataDDDomain} from "./domains"
 import {CreatePlanDDDomain} from "./domains"
 import {EAccountsSummaryDDDomain} from "./domains"
@@ -35,8 +39,8 @@ export function EAccountsSummaryPage<S, Context extends PageSelectionAndRestComm
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[1][3,3][5]'>
    <EAccountsSummaryDD state={state}  mode={mode} />
-   <ModalAndCopyButton id='amendExistingPlan' text='amendExistingPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={["EAccountsSummary","tempCreatePlan"]}  from={fullState.focusOn('fromApi').focusOn('createPlan')}   pageMode='edit'  rest={{"rest":"EAccountsSummary_CreatePlanDDRestDetails","action":"update","result":"refresh"}} />
-   <ModalButton id='createNewPlan' text='createNewPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={["EAccountsSummary","tempCreatePlan"]}   pageMode='create'  rest={{"rest":"EAccountsSummary_CreatePlanDDRestDetails","action":"create","result":"refresh"}} />
+   <ModalAndCopyButton id='amendExistingPlan' text='amendExistingPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={["EAccountsSummary","tempCreatePlan"]}  from={fullState.focusOn('fromApi').focusOn('createPlan')}   pageMode='edit'  rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"update","path":["tempCreatePlan"]}} />
+   <ModalButton id='createNewPlan' text='createNewPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={["EAccountsSummary","tempCreatePlan"]}   pageMode='create'  rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"create","path":["tempCreatePlan"]}} />
    <RestButton id='deleteExistingPlan' state={state} />
    <button>refresh of type ResetStateButton cannot be create yet</button>
    </Layout>)})}
@@ -70,6 +74,39 @@ export function CreateEAccountPage<S, Context extends PageSelectionAndRestComman
    <button>resetAll of type ResetStateButton cannot be create yet</button>
    </Layout>)})}
 
+export function ChequeCreditbooksPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){
+  return focusedPageWithExtraState<S, ChequeCreditbooksPageDomain, ChequeCreditbooksDDDomain, Context> ( s => 'ChequeCreditbooks' ) ( s => s.focusOn('fromApi')) (
+    ( fullState, state , full, d, mode) => {
+  return (<Layout  details='[1][2][2]'>
+   <ChequeCreditbooksDD state={state}  mode={mode} />
+   <button>chequeBook of type ResetStateButton cannot be create yet</button>
+   <ModalButton id='orderNewBook' text='orderNewBook' modal = 'OrderChequeBookOrPayingInModal'  to={fullState.focusOn('tempCreatePlan')} base={["ChequeCreditbooks","tempCreatePlan"]} createEmpty={empty.emptyChequeCreditbooksHistoryLineDD}  pageMode='create'  rest={{"name":"ChequeCreditbooks_ChequeCreditbooksDDRestDetails","restAction":"create","path":["tempCreatePlan"]}} />
+   <button>payingInBook of type ResetStateButton cannot be create yet</button>
+   </Layout>)})}
+
+export function OrderChequeBookOrPayingInModalPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){
+  return focusedPage<S, ChequeCreditbooksHistoryLineDDDomain, Context> ( s => '' ) (
+     ( state, d, mode ) => {
+          return (<Layout  details='[3]'>
+             <ChequeCreditbooksHistoryLineDD state={state}  mode={mode} />
+   <ModalCancelButton id='cancel' state={state} />
+   <ModalCommitButton id='commit' state={state} />
+            </Layout>)})}
+
+export function ChequeCreditbooksDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, ChequeCreditbooksDDDomain,Context>){
+  return(<>
+  <Table state={state.focusOn('history')} order={['serialNumber','howOrdered','dateOrder']} mode={mode} />
+</>)
+}
+
+export function ChequeCreditbooksHistoryLineDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, ChequeCreditbooksHistoryLineDDDomain,Context>){
+  return(<>
+  <LabelAndInput state={state.focusOn('serialNumber')} label='serial number' mode={mode} />
+  <LabelAndInput state={state.focusOn('howOrdered')} label='how ordered' mode={mode} />
+  <LabelAndInput state={state.focusOn('dateOrder')} label='date order' mode={mode} />
+</>)
+}
+
 export function CreateEAccountDataDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, CreateEAccountDataDDDomain,Context>){
   return(<>
   <LabelAndInput state={state.focusOn('name')} label='name' mode={mode} />
@@ -96,6 +133,17 @@ export function EAccountsSummaryDD<S, Context extends PageSelectionAndRestComman
   <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanStart')} label='Create Start' mode={mode} />
   <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanDate')} label='create plan date' ariaLabel='The Create Plan Date' mode={mode} />
   <LabelAndInput state={state.focusOn('createPlan').focusOn('createPlanEnd')} label='create plan end' mode={mode} />
+</>)
+}
+
+export function EAccountSummaryDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, EAccountSummaryDDDomain,Context>){
+  return(<>
+  <LabelAndInput state={state.focusOn('accountId')} label='Account Id' mode={mode} />
+  <LabelAndRadio state={state.focusOn('displayType')} label='display type' mode={mode} enums={{"savings":"Savings","checking":"Checking"}} />
+  <LabelAndInput state={state.focusOn('description')} label='description' mode={mode} />
+  <LabelAndInput state={state.focusOn('virtualBankSeq')} label='virtual bank seq' mode={mode} />
+  <LabelAndInput state={state.focusOn('total')} label='total' mode={mode} />
+  <LabelAndInput state={state.focusOn('frequency')} label='Frequency/Amount' mode={mode} />
 </>)
 }
 

@@ -14,6 +14,8 @@ public interface FFetcher {
    public DataFetcher getEAccountsSummaryDD();
    public DataFetcher createETransferDataD();
    public DataFetcher createCreateEAccountDataDD();
+   public DataFetcher getChequeCreditbooksDD();
+   public DataFetcher createChequeCreditbooksDD();
    public DataFetcher getAccountSummaryDescription();
    public DataFetcher getTotalMonthlyCost();
    public DataFetcher getOneAccountBalance();

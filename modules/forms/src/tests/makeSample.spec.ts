@@ -21,9 +21,9 @@ describe ( "makeEmptyTs", () => {
   it ( "should make an empty data structure", () => {
     expect ( makeEmptyData ( EAccountsSummaryDD ) ).toEqual ( {
       "createPlan": {
-        "createPlanDate": "",
-        "createPlanEnd": "",
-        "createPlanStart": ""
+        "createPlanDate": "2022-1-1",
+        "createPlanEnd": "2022-1-1",
+        "createPlanStart": "2022-1-1"
       },
       "currentAccountBalance": "",
       "eAccountsTable": [

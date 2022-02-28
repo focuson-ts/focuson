@@ -1,4 +1,20 @@
 import * as domains from './domains';
+export const sampleChequeCreditbooksDD0: domains.ChequeCreditbooksDDDomain = 
+{
+  "history": [
+    {
+      "serialNumber": "0937453",
+      "howOrdered": "Manually",
+      "dateOrder": "2022-10-01"
+    }
+  ]
+}
+export const sampleChequeCreditbooksHistoryLineDD0: domains.ChequeCreditbooksHistoryLineDDDomain = 
+{
+  "serialNumber": "0937453",
+  "howOrdered": "Manually",
+  "dateOrder": "2022-10-01"
+}
 export const sampleCreateEAccountDataDD0: domains.CreateEAccountDataDDDomain = 
 {
   "name": "This is a one line string",
@@ -64,6 +80,22 @@ export const sampleOccupationAndIncome0: domains.OccupationAndIncomeDomain =
   "dateStarted": "2020-10-01",
   "averageAnnualDrawings": "This is a one line string"
 }
+export const sampleChequeCreditbooksDD1: domains.ChequeCreditbooksDDDomain = 
+{
+  "history": [
+    {
+      "serialNumber": "This is a one line string",
+      "howOrdered": "This is a one line string",
+      "dateOrder": "2020-10-01"
+    }
+  ]
+}
+export const sampleChequeCreditbooksHistoryLineDD1: domains.ChequeCreditbooksHistoryLineDDDomain = 
+{
+  "serialNumber": "This is a one line string",
+  "howOrdered": "This is a one line string",
+  "dateOrder": "2020-10-01"
+}
 export const sampleCreateEAccountDataDD1: domains.CreateEAccountDataDDDomain = 
 {
   "name": "another one line string",
@@ -128,6 +160,22 @@ export const sampleOccupationAndIncome1: domains.OccupationAndIncomeDomain =
   "businessName": "another one line string",
   "dateStarted": "2022-14-01",
   "averageAnnualDrawings": "another one line string"
+}
+export const sampleChequeCreditbooksDD2: domains.ChequeCreditbooksDDDomain = 
+{
+  "history": [
+    {
+      "serialNumber": "another one line string",
+      "howOrdered": "another one line string",
+      "dateOrder": "2022-14-01"
+    }
+  ]
+}
+export const sampleChequeCreditbooksHistoryLineDD2: domains.ChequeCreditbooksHistoryLineDDDomain = 
+{
+  "serialNumber": "another one line string",
+  "howOrdered": "another one line string",
+  "dateOrder": "2022-14-01"
 }
 export const sampleCreateEAccountDataDD2: domains.CreateEAccountDataDDDomain = 
 {

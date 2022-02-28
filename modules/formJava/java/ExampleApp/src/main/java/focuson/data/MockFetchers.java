@@ -19,6 +19,8 @@ public class MockFetchers  implements FFetcher{
  public DataFetcher getEAccountsSummaryDD() {  return dataFetchingEnvironment -> Sample.sampleEAccountsSummaryDD0;    }
  public DataFetcher createETransferDataD() {  return dataFetchingEnvironment -> Sample.sampleETransferDataD0;    }
  public DataFetcher createCreateEAccountDataDD() {  return dataFetchingEnvironment -> Sample.sampleCreateEAccountDataDD0;    }
+ public DataFetcher getChequeCreditbooksDD() {  return dataFetchingEnvironment -> Sample.sampleChequeCreditbooksDD0;    }
+ public DataFetcher createChequeCreditbooksDD() {  return dataFetchingEnvironment -> Sample.sampleChequeCreditbooksDD0;    }
   public DataFetcher getAccountSummaryDescription (){ return new StaticDataFetcher("This account has a description");}
   public DataFetcher getTotalMonthlyCost (){ return new StaticDataFetcher("1000");}
   public DataFetcher getOneAccountBalance (){ return new StaticDataFetcher("9921");}

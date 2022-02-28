@@ -1,4 +1,4 @@
-import { DataD, findAllDataDs, NamesAndDataDs } from "./dataD";
+import { AllDataDD, DataD, findAllDataDs, NamesAndDataDs } from "./dataD";
 import { defaultRestAction, RestActionDetail, RestD, unique } from "./restD";
 import { RestAction, sortedEntries } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
@@ -6,7 +6,7 @@ import { RestResult } from "@focuson/utils";
 
 
 export interface DomainDefnInPage {
-  [ name: string ]: { dataDD: DataD }
+  [ name: string ]: { dataDD: AllDataDD }
 }
 type FetcherType = 'get' | 'list'
 
@@ -26,7 +26,8 @@ export interface RestOnCommit {
   rest: any,
   action: RestAction,
   /** What happens when the rest is completed. Currently only 'refresh' which clears the 'main object' triggering a fetch. Later we will be more clever' */
-  result: RestResult
+  result: RestResult;
+  target: string[];
 }
 
 export interface CommonModalButtonInPage {
@@ -39,7 +40,7 @@ export interface CommonModalButtonInPage {
 
 export interface ModalButtonInPage extends CommonModalButtonInPage {
   control: 'ModalButton',
-  createEmpty?: boolean
+  createEmpty?:DataD
 }
 export interface ModalAndCopyButtonInPage extends CommonModalButtonInPage {
   control: 'ModalAndCopyButton',

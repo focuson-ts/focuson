@@ -1,7 +1,9 @@
 import { AllButtonsInPage, CommonModalButtonInPage, isListMarkerNextButton, isListMarkerPrevButton, isModalAndCopyButton, isModalButton, isModalCloseButton, isRestButton, ModalAndCopyButtonInPage, ModalButtonInPage, ModalCloseButton, PageD, RestButtonInPage, RestOnCommit } from "../common/pageD";
 import { safeArray, sortedEntries } from "@focuson/utils";
-import { modalName, restDetailsName } from "./names";
+import { emptyName, modalName, restDetailsName } from "./names";
 import { focusOnFor } from "./codegen";
+import { RestCommand } from "@focuson/rest";
+import { TSParams } from "./config";
 
 
 function restOnCommitString ( r: { rest: any, action: string } | any ): string {
@@ -10,8 +12,9 @@ function restOnCommitString ( r: { rest: any, action: string } | any ): string {
 function opt ( name: string, p: string | undefined ) {
   return p ? `${name}='${p}'` : ''
 }
+
 function rest ( parent: PageD, rest?: RestOnCommit ): string {
-  const actualRestOnCommet = { ...rest, rest: restDetailsName ( parent, rest.rest ) }
+  const actualRestOnCommet: RestCommand = { name: restDetailsName ( parent, rest.rest ), restAction: rest.action, path: safeArray ( rest.target ) }
   return rest ? ` rest={${JSON.stringify ( actualRestOnCommet )}}` : ""
 }
 
@@ -22,10 +25,10 @@ function makeCommonModalButton ( parent: PageD, name: string, button: CommonModa
 
 }
 
-function makeModalButtonInPage ( parent: PageD, name: string, button: ModalButtonInPage ): string {
+function makeModalButtonInPage ( params: TSParams, parent: PageD, name: string, button: ModalButtonInPage ): string {
   const { modal, mode, createEmpty, restOnCommit } = button
-  const createEmptyString = createEmpty ? "createEmpty" : ""
-  return makeCommonModalButton ( parent, name, button, `` )
+  const createEmptyString = createEmpty ? `createEmpty={${params.emptyFile}.${emptyName ( createEmpty )}}` : ""
+  return makeCommonModalButton ( parent, name, button, createEmptyString )
   // return `<${button.control} id='${name}' text='${name}' modal = '${modalName ( parent, modal )}' state={state} ${opt ( 'pageMode', mode )} ${rest ( button.restOnCommit )} />`;
 }
 function makeModalAndCopyButtonInPage ( parent: PageD, name: string, button: ModalAndCopyButtonInPage ): string {
@@ -50,8 +53,8 @@ function makeRestButtonFrom ( name: string, button: RestButtonInPage ): string {
 function makeModalCloseButtonFrom ( name: string, button: ModalCloseButton ): string {
   return `<${button.control} id='${name}' state={state} />`;
 }
-export const makeButtonFrom = ( parent: PageD ) => ( [ name, button ]: [ string, AllButtonsInPage ] ): string => {
-  if ( isModalButton ( button ) ) return makeModalButtonInPage ( parent, name, button )
+export const makeButtonFrom = ( params: TSParams ) => ( parent: PageD ) => ( [ name, button ]: [ string, AllButtonsInPage ] ): string => {
+  if ( isModalButton ( button ) ) return makeModalButtonInPage ( params, parent, name, button )
   if ( isModalAndCopyButton ( button ) ) return makeModalAndCopyButtonInPage ( parent, name, button )
   if ( isRestButton ( button ) ) return makeRestButtonFrom ( name, button )
   if ( isModalCloseButton ( button ) ) return makeModalCloseButtonFrom ( name, button )
@@ -60,7 +63,7 @@ export const makeButtonFrom = ( parent: PageD ) => ( [ name, button ]: [ string,
   if ( isListMarkerNextButton ( button ) ) return makeListMarkerNextButton ()
   return `<button>${name} of type ${button.control} cannot be create yet</button>`
 };
-export function makeButtonsFrom ( p: PageD ): string[] {
-  return sortedEntries ( p.buttons ).map ( makeButtonFrom ( p ) )
+export function makeButtonsFrom ( params: TSParams, p: PageD ): string[] {
+  return sortedEntries ( p.buttons ).map ( makeButtonFrom ( params ) ( p ) )
 
 }

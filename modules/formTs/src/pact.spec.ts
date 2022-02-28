@@ -31,3 +31,30 @@ pactWith ( { consumer: 'EAccountsSummaryDD', provider: 'EAccountsSummaryDDProvid
     } )
   } )
 })
+//GetFetcher pact test
+pactWith ( { consumer: 'ChequeCreditbooksDD', provider: 'ChequeCreditbooksDDProvider', cors: true }, provider => {
+  describe ( 'ChequeCreditbooks', () => {
+    it ( 'should have a get fetcher for ChequeCreditbooksDD', async () => {
+      await provider.addInteraction ( {
+        state: 'default',
+        uponReceiving: 'ChequeCreditbooks should have a get fetcher for ChequeCreditbooksDD',
+        withRequest: {
+          method: 'GET',
+          path: '/api/chequeCreditBooks',
+          query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"}
+        },
+        willRespondWith: {
+          status: 200,
+          body: samples.sampleChequeCreditbooksDD0
+        },
+      } )
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'ChequeCreditbooks', pageMode: 'view' }] , ChequeCreditbooks: { }}
+      let newState = await loadTree ( fetchers.fetchers, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+      expect ( newState ).toEqual ( {
+        ... firstState,
+        ChequeCreditbooks: {fromApi: samples.sampleChequeCreditbooksDD0},
+        tags: { ChequeCreditbooks_fromApi:["accId","appref","brandRef","custId"] }
+      } )
+    } )
+  } )
+})

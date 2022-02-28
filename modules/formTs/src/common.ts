@@ -14,20 +14,25 @@ export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,
  pageDomains.HasOccupationAndIncomeDetailsPageDomain,
  pageDomains.HasEAccountsSummaryPageDomain,
  pageDomains.HasETransferPageDomain,
- pageDomains.HasCreateEAccountPageDomain
+ pageDomains.HasCreateEAccountPageDomain,
+ pageDomains.HasChequeCreditbooksPageDomain
 {}
 export interface HasCommonIds {CommonIds: CommonIds}
 export type CommonIds = {
 customerId?:string;
 accountId?:string;
 createPlanId?:string;
+applRef?:string;
+brandRef?:string;
 }
 export const identityL = identityOptics<FState> ();
 export const commonIdsL = identityL.focusQuery('CommonIds');
 export const commonIds: NameAndLens<FState> = {
    customerId: commonIdsL.focusQuery('customerId'),
    accountId: commonIdsL.focusQuery('accountId'),
-   createPlanId: commonIdsL.focusQuery('createPlanId')
+   createPlanId: commonIdsL.focusQuery('createPlanId'),
+   applRef: commonIdsL.focusQuery('applRef'),
+   brandRef: commonIdsL.focusQuery('brandRef')
 }
 export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{
   mode: PageMode;
@@ -38,7 +43,7 @@ export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPage
     defaultDateFn ) ( onError ) //updateTagsAndMessagesOnError ( defaultErrorMessage )
 }
 export const emptyState: FState = {
-  CommonIds: {"customerId":"custId","accountId":"accId","createPlanId":"tbd"},
+  CommonIds: {"customerId":"custId","accountId":"accId","createPlanId":"tbd","applRef":"appref","brandRef":"brandRef"},
   tags: {},
   messages: [],
   pageSelection: [{ pageName: 'OccupationAndIncomeDetails', firstTime: true, pageMode: 'view' }],

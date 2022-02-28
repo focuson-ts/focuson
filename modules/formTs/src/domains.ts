@@ -1,3 +1,11 @@
+export interface ChequeCreditbooksDDDomain{
+  history: ChequeCreditbooksHistoryLineDDDomain[];
+}
+export interface ChequeCreditbooksHistoryLineDDDomain{
+  dateOrder: string;
+  howOrdered: string;
+  serialNumber: string;
+}
 export interface CreateEAccountDataDDDomain{
   initialAmount: string;
   name: string;

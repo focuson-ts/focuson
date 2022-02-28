@@ -57,14 +57,17 @@ export function makeAllJavaVariableName ( ps: PageD[], i: number ): string[] {
   return sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ name, dataD ] ) => makeJavaVariable ( dataD, i ) )
 }
 
+export function makeAllEmptyData ( ps: PageD[] ): string[] {
+  return sortedEntries ( dataDsIn ( ps, false ) ).flatMap ( ( [ name, dd ] ) =>
+    [`export const ${emptyName(dd) } =`, ...indentList(JSON.stringify ( makeEmptyData ( dd ), null, 2 ).split ( "\n" )) ])
+}
 export function makeEmptyData ( d: AllDataDD ): string[] {
-
   let folder: AllDataFolder<any> = {
     stopAtDisplay: false,
     foldData: ( acc, path, parents, oneDataDD, dataDD, start ) => addData ( start, path, acc, dataDD ),
     foldRep: ( acc, path, parents, oneDataDD, dataDD, start ) =>
       start ? acc : Lenses.fromPath ( path ).transform ( child => [ child ] ) ( acc ),
-    foldPrim: ( acc, path, parents, oneDataDD, dataDD ) => Lenses.fromPath ( path ).set ( acc, "" )
+    foldPrim: ( acc, path, parents, oneDataDD, dataDD ) => Lenses.fromPath ( path ).set ( acc, dataDD.emptyValue?dataDD.emptyValue:'' )
   };
   return foldDataDD ( d, [], [], [], folder )
 }

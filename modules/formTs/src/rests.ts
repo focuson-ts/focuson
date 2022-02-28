@@ -66,11 +66,24 @@ export function CreateEAccount_CreateEAccountDataDDRestDetails<S> ( cd: NameAndL
   }
 }
 
+export function ChequeCreditbooks_ChequeCreditbooksDDRestDetails<S> ( cd: NameAndLens<S>, dateFn: DateFn  ): OneRestDetails<S, pageDomains.ChequeCreditbooksPageDomain, domains.ChequeCreditbooksDDDomain, SimpleMessage> {
+  const fdd: NameAndLens<pageDomains.ChequeCreditbooksPageDomain> = {}
+  return {
+    dLens: Lenses.identity<pageDomains.ChequeCreditbooksPageDomain>().focusQuery('fromApi'),
+    cd, fdd,
+    ids: ["accountId","applRef","brandRef","customerId"],
+    resourceId:  [],
+    messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
+    url: "/api/chequeCreditBooks?{query}"
+  }
+}
+
 export const restDetails: RestDetails<FState, SimpleMessage> = {
    OccupationAndIncomeDetails_OccupationAndIncomeRestDetails: OccupationAndIncomeDetails_OccupationAndIncomeRestDetails(commonIds, defaultDateFn),
    EAccountsSummary_CreatePlanDDRestDetails: EAccountsSummary_CreatePlanDDRestDetails(commonIds, defaultDateFn),
    EAccountsSummary_EAccountsSummaryDDRestDetails: EAccountsSummary_EAccountsSummaryDDRestDetails(commonIds, defaultDateFn),
    ETransfer_ETransferDataDRestDetails: ETransfer_ETransferDataDRestDetails(commonIds, defaultDateFn),
-   CreateEAccount_CreateEAccountDataDDRestDetails: CreateEAccount_CreateEAccountDataDDRestDetails(commonIds, defaultDateFn)
+   CreateEAccount_CreateEAccountDataDDRestDetails: CreateEAccount_CreateEAccountDataDDRestDetails(commonIds, defaultDateFn),
+   ChequeCreditbooks_ChequeCreditbooksDDRestDetails: ChequeCreditbooks_ChequeCreditbooksDDRestDetails(commonIds, defaultDateFn)
 
 }

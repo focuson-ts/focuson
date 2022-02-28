@@ -1,12 +1,9 @@
-import { findIds, RestD } from "../common/restD";
-import { CreatePlanDDDomain } from "ExampleApp/src/domains";
+import { findIds } from "../common/restD";
 import { domainName, pageDomainName, restDetailsName } from "./names";
 import { TSParams } from "./config";
-import { PageD, RestDefnInPage, RestDefnInPageProperties } from "../common/pageD";
+import { PageD, RestDefnInPageProperties } from "../common/pageD";
 import { sortedEntries } from "@focuson/utils";
 import { addStringToEndOfAllButLast, focusQueryFor } from "./codegen";
-import { commonIds, FState } from "ExampleApp/src/common";
-import { oneRestDetails } from "ExampleApp/src/posters";
 
 
 export const makeRest = ( params: TSParams, p: PageD ) => ( r: RestDefnInPageProperties ): string[] => {

@@ -13,6 +13,7 @@ export const paramsForTest: CombinedParams = {
   restsFile: "rests",
   pactsFile: "pact",
   samplesFile: "samples",
+  emptyFile: "empty",
   renderFile: "render",
   urlparams: 'commonIds',
   sampleClass: "sample",

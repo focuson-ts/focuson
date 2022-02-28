@@ -26,9 +26,19 @@ export function EAccountsSummaryDDFetcher<S extends  HasSimpleMessages & HasTagH
       Lenses.identity< pageDomains.EAccountsSummaryPageDomain> ().focusQuery ( 'fromApi' ),
      '/api/accountsSummary?{query}')
 }
+//fetcher type get
+export function ChequeCreditbooksDDFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<S, pageDomains.ChequeCreditbooksPageDomain>,commonIds: NameAndLens<S>) {
+  return pageAndTagFetcher<S, pageDomains.ChequeCreditbooksPageDomain, domains.ChequeCreditbooksDDDomain, SimpleMessage>(
+    common.commonFetch<S,  domains.ChequeCreditbooksDDDomain>(),
+     'ChequeCreditbooks',
+     'fromApi', fdLens, commonIds, {},["accountId","applRef","brandRef","customerId"],[],
+      Lenses.identity< pageDomains.ChequeCreditbooksPageDomain> ().focusQuery ( 'fromApi' ),
+     '/api/chequeCreditBooks?{query}')
+}
 export const fetchers: FetcherTree<common.FState> = {
 fetchers: [
     OccupationAndIncomeFetcher<common.FState> ( identityL.focusQuery ( 'OccupationAndIncomeDetails' ), commonIds ),
-    EAccountsSummaryDDFetcher<common.FState> ( identityL.focusQuery ( 'EAccountsSummary' ), commonIds )
+    EAccountsSummaryDDFetcher<common.FState> ( identityL.focusQuery ( 'EAccountsSummary' ), commonIds ),
+    ChequeCreditbooksDDFetcher<common.FState> ( identityL.focusQuery ( 'ChequeCreditbooks' ), commonIds )
 ],
 children: []}

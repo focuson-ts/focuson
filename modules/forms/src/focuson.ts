@@ -7,7 +7,7 @@ import { makeAllDomainsFor, makePageDomainsFor } from "./codegen/makeDomain";
 import { sortedEntries } from "@focuson/utils";
 import { unique } from "./common/restD";
 import { makeAllFetchers, makeFetchersDataStructure, makeFetchersImport } from "./codegen/makeFetchers";
-import { makeAllJavaVariableName, makeAllSampleVariables } from "./codegen/makeSample";
+import { makeAllEmptyData, makeAllJavaVariableName, makeAllSampleVariables, makeEmptyData } from "./codegen/makeSample";
 import { copyFiles, templateFile } from "@focuson/template";
 import { makeAllPacts } from "./codegen/makePacts";
 import { makeAllMockFetchers } from "./codegen/makeMockFetchers";
@@ -24,6 +24,7 @@ import { CreateEAccountPageD } from "./example/createEAccount/createEAccount.pag
 import { CreatePlanPD } from "./example/eAccounts/createPlanPD";
 import { RestDefnInPageProperties } from "./common/pageD";
 import { makeRest, makeRests } from "./codegen/makeRests";
+import { ChequeCreditbooksPD, OrderChequeBookOrPayingInModalPD } from "./example/chequeCreditBooks/chequeCreditBooks.pageD";
 
 console.log ( 0 )
 
@@ -43,6 +44,7 @@ const params: CombinedParams = {
   restsFile: "rests",
   pactsFile: "pact.spec",
   samplesFile: "samples",
+  emptyFile: "empty",
   renderFile: "render",
   urlparams: 'commonIds',
   queriesClass: 'Queries',
@@ -74,12 +76,12 @@ fs.mkdirSync ( `${tsCode}`, { recursive: true } )
 fs.mkdirSync ( `${tsScripts}`, { recursive: true } )
 fs.mkdirSync ( `${tsPublic}`, { recursive: true } )
 
-let pages = [ OccupationAndIncomeDetailsPageD, EAccountsSummaryPD, CreatePlanPD, ETransferPageD, CreateEAccountPageD ];
+let pages = [ OccupationAndIncomeDetailsPageD, EAccountsSummaryPD, CreatePlanPD, ETransferPageD, CreateEAccountPageD, ChequeCreditbooksPD, OrderChequeBookOrPayingInModalPD ];
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
 let rests = unique ( pages.flatMap ( x => sortedEntries ( x.rest ) ).map ( ( x: [ string, RestDefnInPageProperties ] ) => x[ 1 ].rest ), r => r.dataDD.name )
 
 
-writeToFile ( `${tsCode}/${params.renderFile}.tsx`, [ ...imports ( params.domainsFile, params.pageDomainsFile ), ...createAllReactComponents ( params, pages ) ] )
+writeToFile ( `${tsCode}/${params.renderFile}.tsx`, [ ...imports ( params.domainsFile, params.pageDomainsFile , params.emptyFile), ...createAllReactComponents ( params, pages ) ] )
 writeToFile ( `${tsCode}/${params.pageDomainsFile}.ts`, makePageDomainsFor ( params, pages ) )
 writeToFile ( `${tsCode}/${params.domainsFile}.ts`, makeAllDomainsFor ( pages ) )
 writeToFile ( `${tsCode}/${params.commonFile}.ts`, makeCommon ( params, pages, rests ) )
@@ -92,6 +94,7 @@ writeToFile ( `${tsCode}/${params.restsFile}.ts`, makeRests ( params, pages ) )
 
 console.log ( 1 )
 writeToFile ( `${tsCode}/${params.samplesFile}.ts`, [ ...imports ( params.domainsFile ), ...[ 0, 1, 2 ].flatMap ( i => makeAllSampleVariables ( params, pages, i ) ) ] )
+writeToFile ( `${tsCode}/${params.emptyFile}.ts`, [ ...imports ( params.domainsFile ), ...makeAllEmptyData ( pages ) ] )
 writeToFile ( `${tsCode}/${params.pagesFile}.tsx`, makePages ( params, pages ) )
 console.log ( 2 )
 templateFile ( `${tsCode}/${params.pactsFile}.ts`, 'templates/allPacts.ts', { content: makeAllPacts ( params, pages ).join ( "\n" ) } )

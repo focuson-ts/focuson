@@ -5,6 +5,24 @@ import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.json.JsonParser;
 public class Sample{
     private static JsonParser parse = new JacksonJsonParser();
+ public static Map sampleChequeCreditbooksDD0 =  parse.parseMap(
+        "{"+
+        "  \"history\": ["+
+        "    {"+
+        "      \"serialNumber\": \"0937453\","+
+        "      \"howOrdered\": \"Manually\","+
+        "      \"dateOrder\": \"2022-10-01\""+
+        "    }"+
+        "  ]"+
+        "}"
+ );
+ public static Map sampleChequeCreditbooksHistoryLineDD0 =  parse.parseMap(
+        "{"+
+        "  \"serialNumber\": \"0937453\","+
+        "  \"howOrdered\": \"Manually\","+
+        "  \"dateOrder\": \"2022-10-01\""+
+        "}"
+ );
  public static Map sampleCreateEAccountDataDD0 =  parse.parseMap(
         "{"+
         "  \"name\": \"This is a one line string\","+

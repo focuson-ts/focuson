@@ -48,7 +48,7 @@ describe ( "modalCommit", () => {
     var remembered: any = {}
     const state = lensStateWith ( rootState, ( s ) => {remembered = s},
       [ 'firstPage', 'view', undefined ],
-      [ 'secondPage', 'view', { rest: 'someRest', action: 'update', result: 'refresh' } ],
+      [ 'secondPage', 'view', { name: 'someRest', restAction: 'update', path: [] } ],
     )
 
     const comp = mount ( <ModalCommitButton id='someId' state={state}/> )
@@ -57,7 +57,7 @@ describe ( "modalCommit", () => {
     expect ( remembered ).toEqual ( {
       "messages": [],
       "pageSelection": [ { "pageMode": "view", "pageName": "firstPage" } ],
-      "restCommands": [ { "args": "update", "poster": "someRest" } ],
+      "restCommands": [ { "name": "someRest", "path": [], "restAction": "update" } ],
       "tags": {},
       "tempData": "x"
     } )
@@ -78,7 +78,7 @@ describe ( "modalCanel", () => {
     var remembered: any = {}
     const state = lensStateWith ( rootState, ( s ) => {remembered = s},
       [ 'firstPage', 'view', undefined ],
-      [ 'secondPage', 'view', { rest: 'someRest', action: 'update', result: 'refresh' } ],
+      [ 'secondPage', 'view', { name: 'someRest', restAction: 'update', path: [] } ],
     )
 
     const comp = mount ( <ModalCancelButton id='someId' state={state}/> )

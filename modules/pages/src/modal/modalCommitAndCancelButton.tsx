@@ -18,7 +18,7 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
     const lastPage = currentPageSelectionTail ( state )
     let rest = lastPage?.rest;
     if ( lastPage && rest ) {
-      const r: { rest: string; action: string } = rest
+      const r: RestCommand = rest
       const transformers: Transform<S, any>[] = [
         [ state.context.pageSelectionL, ( ps: PageSelection[] ) => ps.slice ( 0, -1 ) ],
         [ state.context.restL, ( ps: RestCommand[] ) => [ ...safeArray ( ps ), r ] ]

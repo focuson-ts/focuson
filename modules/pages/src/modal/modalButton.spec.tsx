@@ -7,7 +7,7 @@ import { HasPageSelection, PageSelectionContext, pageSelectionlens } from "../pa
 
 enzymeSetup ()
 interface StateForModalButtonTest extends HasPageSelection {
-
+  data?: string
 }
 
 const context: PageSelectionContext<StateForModalButtonTest> = {
@@ -35,6 +35,21 @@ describe ( "modal button", () => {
     const comp = mount ( <ModalButton text='someTitle' id='someId' to={state} modal={'someModal'} base={[]} pageMode='edit'/> )
     const button = comp.find ( "button" )
     button.simulate ( 'click' )
-    expect ( remembered ).toEqual ( { "pageSelection": [ { "firstTime": true, "pageMode": "edit", "pageName": "someModal" } ] } )
+    expect ( remembered ).toEqual ( { "pageSelection": [ { "firstTime": true, "pageMode": "edit", "pageName": "someModal", "base": [] } ] } )
+  } )
+
+  it ( "should create an empty if needed when clicked", () => {
+    var remembered: any = {}
+    const state: LensState<StateForModalButtonTest, StateForModalButtonTest, PageSelectionContext<StateForModalButtonTest>> =
+            lensState<StateForModalButtonTest, PageSelectionContext<StateForModalButtonTest>> (
+              { pageSelection: [] }, ( s: StateForModalButtonTest ) => {remembered = s}, 'ModalButton', context )
+    const comp = mount ( <ModalButton text='someTitle' id='someId' to={state.focusOn ( 'data' )} modal={'someModal'} base={[]} pageMode='edit' createEmpty='someData'/> )
+    const button = comp.find ( "button" )
+    button.simulate ( 'click' )
+    expect ( remembered ).toEqual ( {
+      "data": "someData",
+      "pageSelection": [ { "base": [], "firstTime": true, "pageMode": "edit", "pageName": "someModal" } ]
+    } )
+
   } )
 } )

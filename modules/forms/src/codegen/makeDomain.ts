@@ -1,4 +1,4 @@
-import { AllDataDD, DataD, isDataDd, isRepeatingDd, OneDataDD } from "../common/dataD";
+import { AllDataDD, DataD, isDataDd, isPrimDd, isRepeatingDd, OneDataDD } from "../common/dataD";
 import { pageDomainName, domainName, hasDomainForPage } from "./names";
 import { safeArray, sortedEntries } from "@focuson/utils";
 import { dataDsIn, PageD } from "../common/pageD";
@@ -30,6 +30,12 @@ export function makeHasDomainsFor ( p: PageD ): string[] {
   return [ `export interface ${hasDomainForPage ( p )} {   ${p.name}?: ${pageDomainName ( p )}}` ]
 }
 
+export function typeNameFor( params: TSParams, d: AllDataDD): string{
+  if (isPrimDd(d)) return d.reactType
+  if (isRepeatingDd(d)) return typeNameFor(params, d.dataDD)+ "[]"
+  return `${params.domainsFile}.${domainName(d)}`
+
+}
 
 export function makePageDomainsFor ( params: TSParams, ps: PageD[] ): string[] {
   let domain = noExtension ( params.domainsFile );
@@ -37,7 +43,7 @@ export function makePageDomainsFor ( params: TSParams, ps: PageD[] ): string[] {
     ...ps.flatMap ( p => p.pageType === 'ModalPage' ? [] : [
       ...makeHasDomainsFor ( p ),
       `export interface ${pageDomainName ( p )}{`,
-      ...indentList ( sortedEntries ( p.domain ).map ( ( [ name, dd ] ) => `${name}?: ${domain}.${domainName ( dd.dataDD )};` ) ),
+      ...indentList ( sortedEntries ( p.domain ).map ( ( [ name, dd ] ) => `${name}?:${typeNameFor ( params, dd.dataDD )};` ) ),
       '}'
     ] ) ]
 }

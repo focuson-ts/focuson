@@ -1,10 +1,10 @@
 import { lensState } from "@focuson/state";
 import { identityOptics } from "@focuson/lens";
-import { focusedPage, HasPageSelection, Loading, MultiPageDetails, PageConfig, PageMode, RestForModal, simpleMessagesPageConfig } from "@focuson/pages";
+import { focusedPage, HasPageSelection, Loading, MultiPageDetails, PageConfig, PageMode,  simpleMessagesPageConfig } from "@focuson/pages";
 import { HasSimpleMessages, SimpleMessage } from "@focuson/utils";
 import { defaultPageSelectionAndRestCommandsContext, PageSelectionAndRestCommandsContext } from "@focuson/focuson";
 import { HasTagHolder } from "@focuson/template";
-import { HasRestCommands } from "@focuson/rest";
+import { HasRestCommands, RestCommand } from "@focuson/rest";
 
 
 export interface PageSpecState extends HasPageSelection, HasSimpleMessages, HasTagHolder, HasRestCommands {
@@ -29,13 +29,13 @@ export const firstPageWithFirstTime: PageSpecState = stateWithFirstTimes ( rootS
 export const secondPageSelectedState = stateWith ( rootState, [ 'secondPage', 'view', undefined ] )
 export const invalidPageState = stateWith ( rootState, [ 'unknownpage', 'view', undefined ] )
 
-export function stateWith ( main: PageSpecState, ...nameAndModes: [ string, PageMode, RestForModal | undefined ][] ): PageSpecState {
+export function stateWith ( main: PageSpecState, ...nameAndModes: [ string, PageMode, RestCommand | undefined ][] ): PageSpecState {
   return { ...main, pageSelection: nameAndModes.map ( ( [ pageName, pageMode, rest ] ) => ({ pageName, pageMode, rest }) ) }
 }
-export function stateWithFirstTimes ( main: PageSpecState, ...nameAndModes: [ string, PageMode, RestForModal | undefined ][] ): PageSpecState {
+export function stateWithFirstTimes ( main: PageSpecState, ...nameAndModes: [ string, PageMode, RestCommand | undefined ][] ): PageSpecState {
   return { ...main, pageSelection: nameAndModes.map ( ( [ pageName, pageMode, rest ] ) => ({ pageName, pageMode, firstTime: true, rest }) ) }
 }
-export function lensStateWith ( main: PageSpecState, setMain: ( s: PageSpecState ) => void, ...nameAndModes: [ string, PageMode, RestForModal | undefined ][] ) {
+export function lensStateWith ( main: PageSpecState, setMain: ( s: PageSpecState ) => void, ...nameAndModes: [ string, PageMode, RestCommand | undefined ][] ) {
   return lensState<PageSpecState, ContextForTest> ( stateWith ( main, ...nameAndModes ), setMain, 'displayMain / focusedPage', context )
 }
 

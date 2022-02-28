@@ -120,4 +120,24 @@ public class Queries{
        "    initialAmount"+
        "  }"
  +"}";}
+ public static  String getChequeCreditbooksDD(String accountId,String applRef,String brandRef,String customerId){ 
+    return
+ "{getChequeCreditbooksDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "applRef:" + "\"" + applRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
+       "    history{"+
+       "      serialNumber"+
+       "      howOrdered"+
+       "      dateOrder"+
+       "    }"+
+       "  }"
+ +"}";}
+ public static  String createChequeCreditbooksDD(String accountId,String applRef,String brandRef,String customerId){ 
+    return
+ "{createChequeCreditbooksDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "applRef:" + "\"" + applRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
+       "    history{"+
+       "      serialNumber"+
+       "      howOrdered"+
+       "      dateOrder"+
+       "    }"+
+       "  }"
+ +"}";}
 }

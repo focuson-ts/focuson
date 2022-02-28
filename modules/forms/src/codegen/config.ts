@@ -19,6 +19,7 @@ export interface TSParams {
   restsFile: string;
   pactsFile: string;
   samplesFile: string;
+  emptyFile: string;
   renderFile: string;
   commonFile: string;
   urlparams: string;

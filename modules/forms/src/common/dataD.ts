@@ -47,8 +47,10 @@ export interface CommonDataDD {
 export interface DataD extends CommonDataDD {
   structure: ManyDataDD;
 }
+export type ReactType = 'string' | 'string[]'
 export interface PrimitiveDD extends CommonDataDD, HasSample, HasEnum {
-  reactType: string,
+  reactType: ReactType,
+  emptyValue?: string;
   label?: string;
   validation: SingleFieldValidationDD;
   fieldName?: string
@@ -217,6 +219,7 @@ export const MoneyDD: PrimitiveDD = {
 export const DateDD: PrimitiveDD = {
   name: 'DateDD',
   reactType: 'string',
+  emptyValue: '2022-1-1',
   description: "The primitive representing a date (w/o time)",
   display: LabelAndInputCD, //or maybe a date picker
   validation: { regex: "\d+", maxLength: 8 },

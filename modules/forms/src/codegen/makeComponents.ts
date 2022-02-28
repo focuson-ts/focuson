@@ -2,12 +2,12 @@ import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, isPrimDd
 import { DisplayCompD } from "../common/componentsD";
 import { dataDsIn, PageD } from "../common/pageD";
 
-import { sortedEntries } from "@focuson/utils";
+import { decamelize, sortedEntries } from "@focuson/utils";
 import { componentName, domainName, pageComponentName, pageDomainName } from "./names";
 import { makeButtonsFrom } from "./makeButtons";
 import { focusOnFor, indentList, noExtension } from "./codegen";
 import { TSParams } from "./config";
-import decamelize from 'decamelize';
+
 
 export type AllComponentData = ComponentData | ErrorComponentData
 export interface ComponentData {
@@ -83,13 +83,13 @@ export function createReactComponent ( dataD: DataD ): string[] {
 }
 
 
-export function createReactPageComponent ( pageD: PageD ): string[] {
-  if ( pageD.pageType === 'MainPage' ) return createReactMainPageComponent ( pageD )
-  if ( pageD.pageType === 'ModalPage' ) return createReactModalPageComponent ( pageD )
+export const createReactPageComponent = ( params: TSParams, pageD: PageD ): string[] => {
+  if ( pageD.pageType === 'MainPage' ) return createReactMainPageComponent ( params, pageD )
+  if ( pageD.pageType === 'ModalPage' ) return createReactModalPageComponent ( params, pageD )
   throw new Error ( `Unknown page type ${pageD.pageType} in ${pageD.name}` )
-}
+};
 
-export function createReactModalPageComponent ( pageD: PageD ): string[] {
+export function createReactModalPageComponent ( params: TSParams, pageD: PageD ): string[] {
   const { dataDD, layout } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
   const domName = domainName ( pageD.display.dataDD );
@@ -99,12 +99,12 @@ export function createReactModalPageComponent ( pageD: PageD ): string[] {
     `     ( state, d, mode ) => {`,
     `          return (<${layout.name}  details='${layout.details}'>`,
     `             <${componentName ( dataDD )} state={state}  mode={mode} />`,
-    ...indentList ( indentList ( indentList ( makeButtonsFrom ( pageD ) ) ) ),
+    ...indentList ( indentList ( indentList ( makeButtonsFrom ( params, pageD ) ) ) ),
     `            </${layout.name}>)})}`,
     ''
   ]
 }
-export function createReactMainPageComponent ( pageD: PageD ): string[] {
+export function createReactMainPageComponent ( params: TSParams, pageD: PageD ): string[] {
   const { dataDD, layout } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
   return [
@@ -113,21 +113,21 @@ export function createReactMainPageComponent ( pageD: PageD ): string[] {
     ( fullState, state , full, d, mode) => {`,
     `  return (<${layout.name}  details='${layout.details}'>`,
     `   <${componentName ( dataDD )} state={state}  mode={mode} />`,
-    ...indentList ( indentList ( indentList ( makeButtonsFrom ( pageD ) ) ) ),
+    ...indentList ( indentList ( indentList ( makeButtonsFrom ( params, pageD ) ) ) ),
     `   </${layout.name}>)})}`,
     ''
   ]
 }
 
 export function createAllReactComponents ( params: TSParams, pages: PageD[] ): string[] {
-  const dataComponents = sortedEntries ( dataDsIn ( pages, true ) ).flatMap ( ( [ name, dataD ] ) => dataD.display ? [] : createReactComponent ( dataD ) )
-  const pageComponents = pages.flatMap ( createReactPageComponent )
+  const dataComponents = sortedEntries ( dataDsIn ( pages, false ) ).flatMap ( ( [ name, dataD ] ) => dataD.display ? [] : createReactComponent ( dataD ) )
+  const pageComponents = pages.flatMap ( p => createReactPageComponent ( params, p ) )
   const imports = [
     `import { LensProps } from "@focuson/state";`,
     `import { Layout } from "./copied/layout";`,
     `import { RestButton } from "./copied/rest";`,
     `import { LabelAndInput } from "./copied/LabelAndInput";`,
-  `import { PageSelectionAndRestCommandsContext } from '@focuson/focuson';`,
+    `import { PageSelectionAndRestCommandsContext } from '@focuson/focuson';`,
     `import {  focusedPage, focusedPageWithExtraState, ModalAndCopyButton, ModalButton, ModalCancelButton, ModalCommitButton} from "@focuson/pages";`,
     `import { Table } from "./copied/table";`,
     `import { LabelAndRadio, Radio } from "./copied/Radio";`,
