@@ -2,19 +2,15 @@ import { LensState } from "@focuson/state";
 import { HasPageSelectionLens, page, PageMode, PageOps } from "../pageSelection";
 import { Transform } from "@focuson/lens";
 import { RestResult } from "@focuson/utils";
+import { RestCommand } from "@focuson/rest";
 
-export interface RestForModal {
-  rest: string;
-  action: string;
-  result: RestResult;
-}
 
 export interface CommonModalButtonProps<S, Data, Context> {
   id?: string,
   text: string,
   modal: string,
   pageMode: PageMode,
-  rest?: RestForModal,
+  rest?: RestCommand,
   to: LensState<S, Data, Context>
   base: string[]
 }

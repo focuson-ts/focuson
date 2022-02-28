@@ -1,6 +1,4 @@
 import { currentPageSelectionTail, PageSelection, PageSelectionContext, popPage } from "../pageSelection";
-
-import { PostCommand } from "@focuson/poster";
 import { LensProps } from "@focuson/state";
 import { safeArray } from "@focuson/utils";
 import { Transform } from "@focuson/lens";
@@ -23,7 +21,7 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
       const r: { rest: string; action: string } = rest
       const transformers: Transform<S, any>[] = [
         [ state.context.pageSelectionL, ( ps: PageSelection[] ) => ps.slice ( 0, -1 ) ],
-        [ state.context.restL, ( ps: RestCommand[] ) => [ ...safeArray ( ps ), { poster: r.rest, args: r.action } ] ]
+        [ state.context.restL, ( ps: RestCommand[] ) => [ ...safeArray ( ps ), r ] ]
       ]
       state.massTransform ( ...transformers )
     } else

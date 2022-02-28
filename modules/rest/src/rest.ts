@@ -45,9 +45,13 @@ export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]> ) => 
 export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Details,
                                                                          restL: Optional<S, RestCommand[]>,
                                                                          s: S ): [ OneRestDetails<S, any, any, any>, RequestInfo, RequestInit | undefined, string[] ][] {
+  // @ts-ignore
+  const debug = s.debug?.restDebug
   const commands = safeArray ( restL.getOption ( s ) )
   return commands.map ( ( { name, restAction, path } ) => {
     const one: OneRestDetails<S, any, any, MSGS> = d[ name ]
+    if(debug) console.log("restReq-one", name, one)
+    if (!one) throw new Error(`Cannot find page details for ${name} ${restAction}. Legal values are ${Object.keys(d).sort()}`)
     return [ one, ...reqFor ( { ...one, fdLens: Lenses.fromPath ( path ) }, restAction ) ( s ) ( one.url ), path ]
   } )
 }
@@ -63,16 +67,23 @@ export function processAllRestResults<S, MSGSs> ( messageL: Optional<S, MSGSs[]>
   let res = restL.set ( withResults, [] );
   return res
 }
+
 export async function rest<S, MSGS> (
   fetchFn: FetchFn,
   d: RestDetails<S, MSGS>,
   messageL: Optional<S, MSGS[]>,
   restL: Optional<S, RestCommand[]>,
   s: S ): Promise<S> {
+  // @ts-ignore
+  const debug = s.debug?.restDebug
   const commands = restL.getOption ( s )
+  if (debug)console.log("rest-commands", commands)
   if ( !commands || commands.length == 0 ) return Promise.resolve ( s )
   const requests = restReq ( d, restL, s )
+  if (debug)console.log("rest-requests", requests)
   const results = await massFetch ( fetchFn, requests )
+  if (debug)console.log("rest-results", results)
   const result = processAllRestResults<S, MSGS> ( messageL, restL, results, s );
+  if (debug)console.log("rest-result", result)
   return result
 }

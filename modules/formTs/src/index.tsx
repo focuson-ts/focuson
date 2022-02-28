@@ -61,7 +61,10 @@ let setJson = setJsonForFocusOn<FState, Context, SimpleMessage> ( config, contex
 
 setJson ( {
   ...emptyState,
-  pageSelection: [ { pageName: 'ETransfer', firstTime: true, pageMode: 'view' } ]
+  pageSelection: [ { pageName: 'ETransfer', firstTime: true, pageMode: 'view' } ],
+
+// @ts-ignore
+  debug: { restDebug: true }
 
   // currentSelectedModalPage: 'EAccountsSummary_CreatePlan'
 } )

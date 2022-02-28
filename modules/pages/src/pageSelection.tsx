@@ -1,8 +1,8 @@
 import { identityOptics, Lens, Optional, Transform } from "@focuson/lens";
 import { LensState } from "@focuson/state";
 import { HasMultiPageDetails } from "./pageConfig";
-import { RestAction, safeArray } from "@focuson/utils";
-import { RestForModal } from "./modal/modalButton";
+import { safeArray } from "@focuson/utils";
+import { RestCommand } from "@focuson/rest";
 
 
 export type PageMode = 'view' | 'create' | 'edit'
@@ -28,7 +28,7 @@ export interface PageSelection {
   firstTime?: boolean;
   pageMode: PageMode;
   onClose?: PageOnClose;
-  rest?: RestForModal,
+  rest?: RestCommand,
   //This is a lens description. A path that should be the lens to the root of the data. This overrides the lens in the page description if it is present
   // Right now it is just a list of strings. Later it might include 'the nth item' etc */
   base?: string[]
