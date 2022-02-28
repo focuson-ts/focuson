@@ -2,6 +2,7 @@ import { PageD } from "../../common/pageD";
 
 import { CreateEAccountDataD } from "./createEAccount.dataD";
 import { createEAccountRestD } from "./createEAccount.restD";
+import { eTransferRestD } from "../eTransfers/eTransfers.restD";
 
 
 /** This is the 'bringing it all together */
@@ -26,7 +27,7 @@ export const CreateEAccountPageD: PageD = {
   },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
-    eTransfers: { control: 'RestButton', rest: 'eTransferRestD', action: 'create', confirm: true, result: 'refresh' },
+    eTransfers: { control: 'RestButton', rest: eTransferRestD, action: 'create', confirm: true, result: 'refresh' },
     //questions: how do we know which is the existing plan... is there a list? are we an entry in the list? do we need to navigate to it?
     resetAll: { control: 'ResetStateButton' },
     cancel: { control: 'ResetStateButton' }

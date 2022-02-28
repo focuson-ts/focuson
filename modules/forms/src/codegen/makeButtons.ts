@@ -1,6 +1,6 @@
 import { AllButtonsInPage, CommonModalButtonInPage, isListMarkerNextButton, isListMarkerPrevButton, isModalAndCopyButton, isModalButton, isModalCloseButton, isRestButton, ModalAndCopyButtonInPage, ModalButtonInPage, ModalCloseButton, PageD, RestButtonInPage, RestOnCommit } from "../common/pageD";
 import { safeArray, sortedEntries } from "@focuson/utils";
-import { modalName } from "./names";
+import { modalName, restDetailsName } from "./names";
 import { focusOnFor } from "./codegen";
 
 
@@ -10,15 +10,15 @@ function restOnCommitString ( r: { rest: any, action: string } | any ): string {
 function opt ( name: string, p: string | undefined ) {
   return p ? `${name}='${p}'` : ''
 }
-function rest ( rest?: RestOnCommit ): string {
-  return rest ? ` rest={${JSON.stringify ( rest )}}` : ""
+function rest ( parent: PageD, rest?: RestOnCommit ): string {
+  const actualRestOnCommet = { ...rest, rest: restDetailsName ( parent, rest.rest ) }
+  return rest ? ` rest={${JSON.stringify ( actualRestOnCommet )}}` : ""
 }
 
 function makeCommonModalButton ( parent: PageD, name: string, button: CommonModalButtonInPage, extras: string ): string {
   const { modal, mode, restOnCommit, to } = button
   const toString = focusOnFor ( safeArray ( to ) )
-
-  return `<${button.control} id='${name}' text='${name}' modal = '${modalName ( parent, modal )}'  to={fullState${toString}} base={${JSON.stringify ( [ parent.name, ...to ] )}} ${extras}  ${opt ( 'pageMode', mode )} ${rest ( button.restOnCommit )} />`;
+  return `<${button.control} id='${name}' text='${name}' modal = '${modalName ( parent, modal )}'  to={fullState${toString}} base={${JSON.stringify ( [ parent.name, ...to ] )}} ${extras}  ${opt ( 'pageMode', mode )} ${rest ( parent, button.restOnCommit )} />`;
 
 }
 

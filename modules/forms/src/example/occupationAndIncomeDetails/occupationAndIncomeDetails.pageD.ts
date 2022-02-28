@@ -1,6 +1,7 @@
 import { PageD } from "../../common/pageD";
 import { OccupationAndIncomeDetailsDataD } from "./occupationAndIncomeDetails.dataD";
 import { oneOccupationAndIncomeDetails } from "./occupationAndIncomeDetails.restD";
+import { eTransferRestD } from "../eTransfers/eTransfers.restD";
 
 
 /** This is the 'bringing it all together */
@@ -27,7 +28,7 @@ export const OccupationAndIncomeDetailsPageD: PageD = {
   },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
-    addEntry: { control: 'RestButton', rest: 'eTransferRestD',  action: 'create', confirm: true , result: 'refresh'},
+    addEntry: { control: 'RestButton', rest: eTransferRestD,  action: 'create', confirm: true , result: 'refresh'},
     editEntry: { control: 'ResetStateButton' },
     nextEntry: { control: 'ListMarkerNextButton' },
     prevEntry: { control: 'ListMarkerPrevButton' }

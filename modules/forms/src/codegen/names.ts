@@ -25,4 +25,6 @@ export const restControllerName = ( restD: RestD ) => `${restD.dataDD.name}Contr
 export const queryName = ( restD: RestD, action: RestAction ): string => action + restD.dataDD.name
 
 export const modalName = ( p: PageD, modal: PageD ) => modal.name
-export const restDetailsName = ( p: PageD, r: RestD ) => p.name + "_" + r.dataDD.name + "RestDetails"
+export const restDetailsName = ( p: PageD, r: RestD | string ) =>
+  p.name + "_" + (typeof r === 'object' ? r.dataDD.name : r) + "RestDetails"
+

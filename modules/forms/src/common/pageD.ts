@@ -68,7 +68,7 @@ export function isModalButton ( b: AllButtonsInPage ): b is ModalButtonInPage {
 }
 export interface RestButtonInPage {
   control: 'RestButton',
-  rest: string,
+  rest: RestD,
   action: string,
   confirm?: boolean,
   result: RestResult
