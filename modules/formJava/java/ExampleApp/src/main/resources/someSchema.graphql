@@ -35,6 +35,7 @@ type CreatePlanDD{
   createPlanEnd: String!
 }
 type EAccountsSummaryDD{
+  useEStatements: String!
   eAccountsTable: [EAccountSummaryDD!]!
   totalMonthlyCost: String!
   oneAccountBalance: String!

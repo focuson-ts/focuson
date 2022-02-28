@@ -1,0 +1,38 @@
+{
+  "consumer": {
+    "name": "ChequeCreditbooksDD"
+  },
+  "provider": {
+    "name": "ChequeCreditbooksDDProvider"
+  },
+  "interactions": [
+    {
+      "description": "ChequeCreditbooks should have a get fetcher for ChequeCreditbooksDD",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/chequeCreditBooks",
+        "query": "accountId=accId&applRef=appref&brandRef=brandRef&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "history": [
+            {
+              "serialNumber": 937453,
+              "howOrdered": "Manually",
+              "dateOrder": "2022-10-01"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

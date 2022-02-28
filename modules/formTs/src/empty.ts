@@ -1,64 +1,65 @@
 import * as domains from './domains';
-export const emptyChequeCreditbooksDD =
+export const emptyChequeCreditbooksDD:domains.ChequeCreditbooksDDDomain =
  {
    "history": [
      {
-       "serialNumber": "",
+       "serialNumber": 0,
        "howOrdered": "",
        "dateOrder": "2022-1-1"
      }
    ]
  }
-export const emptyChequeCreditbooksHistoryLineDD =
+export const emptyChequeCreditbooksHistoryLineDD:domains.ChequeCreditbooksHistoryLineDDDomain =
  {
-   "serialNumber": "",
+   "serialNumber": 0,
    "howOrdered": "",
    "dateOrder": "2022-1-1"
  }
-export const emptyCreateEAccountDataDD =
+export const emptyCreateEAccountDataDD:domains.CreateEAccountDataDDDomain =
  {
    "name": "",
-   "type": "",
-   "savingsStyle": "",
-   "initialAmount": ""
+   "type": "savings",
+   "savingsStyle": "adhoc",
+   "initialAmount": 0
  }
-export const emptyCreatePlanDD =
+export const emptyCreatePlanDD:domains.CreatePlanDDDomain =
  {
    "createPlanStart": "2022-1-1",
    "createPlanDate": "2022-1-1",
    "createPlanEnd": "2022-1-1"
  }
-export const emptyEAccountsSummaryDD =
+export const emptyEAccountsSummaryDD:domains.EAccountsSummaryDDDomain =
  {
+   "useEStatements": false,
    "eAccountsTable": [
      {
        "accountId": "",
-       "displayType": "",
+       "displayType": "savings",
        "description": "",
        "virtualBankSeq": "",
-       "total": "",
+       "total": 0,
        "frequency": ""
      }
    ],
-   "totalMonthlyCost": "",
-   "oneAccountBalance": "",
-   "currentAccountBalance": "",
+   "totalMonthlyCost": 0,
+   "oneAccountBalance": 0,
+   "currentAccountBalance": 0,
    "createPlan": {
      "createPlanStart": "2022-1-1",
      "createPlanDate": "2022-1-1",
      "createPlanEnd": "2022-1-1"
    }
  }
-export const emptyEAccountSummaryDD =
+export const emptyEAccountSummaryDD:domains.EAccountSummaryDDDomain =
  {
    "accountId": "",
-   "displayType": "",
+   "displayType": "savings",
    "description": "",
    "virtualBankSeq": "",
-   "total": "",
+   "total": 0,
    "frequency": ""
  }
-export const emptyETransferDataD =
+export const emptyETransferDataD:domains.ETransferDataDDomain =
  {
    "amount": "",
    "dateOfETransfer": "2022-1-1",
@@ -66,17 +67,17 @@ export const emptyETransferDataD =
    "fromAccount": "",
    "toAccount": "",
    "monitoringAccount": "",
-   "type": "",
-   "balance": "",
+   "type": "savings",
+   "balance": 0,
    "notes": ""
  }
-export const emptyOccupationAndIncome =
+export const emptyOccupationAndIncome:domains.OccupationAndIncomeDomain =
  {
-   "typeOfProfession": "",
+   "typeOfProfession": "selfEmployed",
    "occupation": "",
    "customersDescription": "",
    "businessType": "",
    "businessName": "",
    "dateStarted": "2022-1-1",
-   "averageAnnualDrawings": ""
+   "averageAnnualDrawings": 0
  }

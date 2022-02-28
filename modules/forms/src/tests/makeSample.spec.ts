@@ -25,20 +25,21 @@ describe ( "makeEmptyTs", () => {
         "createPlanEnd": "2022-1-1",
         "createPlanStart": "2022-1-1"
       },
-      "currentAccountBalance": "",
+      "currentAccountBalance": 0,
       "eAccountsTable": [
         {
           "accountId": "",
           "description": "",
-          "displayType": "",
+          "displayType": "savings",
           "frequency": "",
-          "total": "",
+          "total": 0,
           "virtualBankSeq": ""
         }
       ],
-      "oneAccountBalance": "",
-      "totalMonthlyCost": ""
-    } )
+      "oneAccountBalance": 0,
+      "totalMonthlyCost": 0,
+      "useEStatements": false
+    })
   } )
 } )
 describe ( 'makeSample', () => {
@@ -54,20 +55,21 @@ describe ( 'makeSample', () => {
         "createPlanEnd": "2022-10-01",
         "createPlanStart": "2022-01-01"
       },
-      "currentAccountBalance": "12321",
+      "currentAccountBalance": 12321,
       "eAccountsTable": [
         {
           "accountId": "1233450",
           "description": "This account has a description",
           "displayType": "checking",
           "frequency": "23",
-          "total": "1000",
+          "total": 1000,
           "virtualBankSeq": "seq1"
         }
       ],
-      "oneAccountBalance": "9921",
-      "totalMonthlyCost": "1000"
-    } )
+      "oneAccountBalance": 9921,
+      "totalMonthlyCost": 1000,
+      "useEStatements": true
+    })
   } )
 
 } );
@@ -77,19 +79,20 @@ describe ( "makeJavaVariable", () => {
     expect ( makeJavaVariable ( EAccountsSummaryDD, 0 ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "public static Map sampleEAccountsSummaryDD0 =  parse.parseMap(",
       "       '{'+",
+      "       '  \\'useEStatements\\': true,'+",
       "       '  \\'eAccountsTable\\': ['+",
       "       '    {'+",
       "       '      \\'accountId\\': \\'1233450\\','+",
       "       '      \\'displayType\\': \\'checking\\','+",
       "       '      \\'description\\': \\'This account has a description\\','+",
       "       '      \\'virtualBankSeq\\': \\'seq1\\','+",
-      "       '      \\'total\\': \\'1000\\','+",
+      "       '      \\'total\\': 1000,'+",
       "       '      \\'frequency\\': \\'23\\''+",
       "       '    }'+",
       "       '  ],'+",
-      "       '  \\'totalMonthlyCost\\': \\'1000\\','+",
-      "       '  \\'oneAccountBalance\\': \\'9921\\','+",
-      "       '  \\'currentAccountBalance\\': \\'12321\\','+",
+      "       '  \\'totalMonthlyCost\\': 1000,'+",
+      "       '  \\'oneAccountBalance\\': 9921,'+",
+      "       '  \\'currentAccountBalance\\': 12321,'+",
       "       '  \\'createPlan\\': {'+",
       "       '    \\'createPlanStart\\': \\'2022-01-01\\','+",
       "       '    \\'createPlanDate\\': \\'2022-03-01\\','+",

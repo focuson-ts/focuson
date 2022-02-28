@@ -30,6 +30,7 @@ describe ( "makeGraphQlSchema", () => {
   it ( "should be able to  makeSchemaBlock", () => {
     expect ( makeSchemaBlock ( 'input', 'xx' ) ( EAccountsSummaryDD ) ).toEqual ( [
       "input EAccountsSummaryDDxx{",
+      "  useEStatements: String!",
       "  eAccountsTable: [EAccountSummaryDDxx!]!",
       "  totalMonthlyCost: String!",
       "  oneAccountBalance: String!",
@@ -74,6 +75,7 @@ describe ( "makeGraphQlSchema", () => {
       "  createPlanEnd: String!",
       "}",
       "type EAccountsSummaryDD{",
+      "  useEStatements: String!",
       "  eAccountsTable: [EAccountSummaryDD!]!",
       "  totalMonthlyCost: String!",
       "  oneAccountBalance: String!",

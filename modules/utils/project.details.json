@@ -6,7 +6,7 @@
     "ideify": true,
     "publish": true,
     "links": [],
-    "extraDeps": {},
+    "extraDeps": {"node-fetch": "2.6.1"},
     "extraDevDeps": {}
   },
   "test": false

@@ -4,10 +4,10 @@ export interface ChequeCreditbooksDDDomain{
 export interface ChequeCreditbooksHistoryLineDDDomain{
   dateOrder: string;
   howOrdered: string;
-  serialNumber: string;
+  serialNumber: number;
 }
 export interface CreateEAccountDataDDDomain{
-  initialAmount: string;
+  initialAmount: number;
   name: string;
   savingsStyle: string;
   type: string;
@@ -19,22 +19,23 @@ export interface CreatePlanDDDomain{
 }
 export interface EAccountsSummaryDDDomain{
   createPlan: CreatePlanDDDomain;
-  currentAccountBalance: string;
+  currentAccountBalance: number;
   eAccountsTable: EAccountSummaryDDDomain[];
-  oneAccountBalance: string;
-  totalMonthlyCost: string;
+  oneAccountBalance: number;
+  totalMonthlyCost: number;
+  useEStatements: boolean;
 }
 export interface EAccountSummaryDDDomain{
   accountId: string;
   description: string;
   displayType: string;
   frequency: string;
-  total: string;
+  total: number;
   virtualBankSeq: string;
 }
 export interface ETransferDataDDomain{
   amount: string;
-  balance: string;
+  balance: number;
   dateOfETransfer: string;
   description: string;
   fromAccount: string;
@@ -44,7 +45,7 @@ export interface ETransferDataDDomain{
   type: string;
 }
 export interface OccupationAndIncomeDomain{
-  averageAnnualDrawings: string;
+  averageAnnualDrawings: number;
   businessName: string;
   businessType: string;
   customersDescription: string;

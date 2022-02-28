@@ -43,7 +43,7 @@ export function makeParamsString ( params: RestParams ): string {
 }
 export const oneQueryMutateLine = ( [ restD, action ]: [ RestD, RestActionDetail ] ): string => {
   let rawType = rawTypeName ( restD.dataDD );
-  const paramString = "("+ makeParamsString ( restD.params ) + ")";
+  const paramString = "(" + makeParamsString ( restD.params ) + ")";
   return `  ${resolverName ( restD.dataDD, action )}${paramString}:${makeOutputString ( rawType, action )}`;
 }
 
@@ -53,15 +53,13 @@ export const makeSchemaBlockFor = ( [ dataD, rt ]: [ DataD, RestTypeDetails ] ):
 
 export function makeQueryOrMutateBlock ( rs: RestD[], q: QueryOrMutation ): string[] {
   const lines = findUniqueDataDsAndRestTypeDetails ( rs ).filter ( ( [ d, a ] ) => a.query == q ).map ( oneQueryMutateLine )
-  return [ "type " + q + "{",
-    ...lines,
-    "}" ]
+  return lines.length === 0 ? [] : [ "type " + q + "{", ...lines, "}" ]
 }
 
-export const oneSchemaLine = ( suffix: string , repeating: boolean) => ( [ name, one ]: [ string, OneDataDD ] ): string => {
+export const oneSchemaLine = ( suffix: string, repeating: boolean ) => ( [ name, one ]: [ string, OneDataDD ] ): string => {
   const { dataDD } = one
 
-  if ( isDataDd ( dataDD ) ) return repeating? `  ${name}: [${dataDD.name}${suffix}!]!`:`  ${name}: ${dataDD.name}${suffix}!`
+  if ( isDataDd ( dataDD ) ) return repeating ? `  ${name}: [${dataDD.name}${suffix}!]!` : `  ${name}: ${dataDD.name}${suffix}!`
   if ( isRepeatingDd ( dataDD ) ) return oneSchemaLine ( suffix, true ) ( [ name, { ...one, dataDD: dataDD.dataDD } ] )
   return `  ${name}: String!`
 };

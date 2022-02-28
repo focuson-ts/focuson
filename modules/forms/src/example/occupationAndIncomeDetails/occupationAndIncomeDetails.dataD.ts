@@ -1,28 +1,30 @@
-import { AccountIdDD, DataD, DateDD, ManyLineStringDD, MoneyDD, OneLineStringDD, PrimitiveDD, RepeatingDataD } from "../../common/dataD";
-import { LabelAndInputCD, TableCD } from "../../common/componentsD";
-import { EAccountDisplayTypeDD } from "../eAccounts/eAccountsSummary.dataD";
+import { DataD, DateDD, MoneyDD, OneLineStringDD, StringPrimitiveDD } from "../../common/dataD";
+import { LabelAndStringInputCD } from "../../common/componentsD";
 
-export const TypeOfProfessionDD: PrimitiveDD = {
+export const TypeOfProfessionDD: StringPrimitiveDD = {
   name: 'TypeOfProfessionDD',
   reactType: 'string',
+  emptyValue: "selfEmployed",
   description: "What type of profession are you (self employed/employed/...)",
-  display: LabelAndInputCD,
+  display: LabelAndStringInputCD,
   validation: { regex: "\d+", maxLength: 7 },
   enum: { selfEmployed: 'selfEmployed' }
 }
-export const OccupationDD: PrimitiveDD = {
+export const OccupationDD: StringPrimitiveDD = {
   name: 'OccupationDD',
+  emptyValue: '',
   reactType: 'string',
   description: "Your occupation (plumber/school teacher/...)",
-  display: LabelAndInputCD,
+  display: LabelAndStringInputCD,
   validation: {},
   sample: [ 'plumber', 'school teacher' ]
 }
-export const BusinessTypeDD: PrimitiveDD = {
+export const BusinessTypeDD: StringPrimitiveDD = {
   name: 'BusinessTypeDD',
   reactType: 'string',
+  emptyValue: '',
   description: "What kind of business type ",
-  display: LabelAndInputCD,
+  display: LabelAndStringInputCD,
   validation: {},
   sample: [ 'Electrical Technical Support' ]
 }

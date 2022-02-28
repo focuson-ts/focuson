@@ -19,7 +19,7 @@ export interface CreateEAccountPageDomain{
 }
 export interface HasChequeCreditbooksPageDomain {   ChequeCreditbooks?: ChequeCreditbooksPageDomain}
 export interface ChequeCreditbooksPageDomain{
- chequeBookOrPayingIn?:string;
+ chequeBookOrPayingIn?:number;
  fromApi?:domains.ChequeCreditbooksDDDomain;
  tempCreatePlan?:domains.ChequeCreditbooksHistoryLineDDDomain;
 }

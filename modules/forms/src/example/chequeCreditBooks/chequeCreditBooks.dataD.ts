@@ -1,12 +1,12 @@
-import { AccountIdDD, DataD, DateDD, IntegerDD, MoneyDD, OneLineStringDD, PrimitiveDD, RepeatingDataD } from "../../common/dataD";
-import { LabelAndInputCD, LabelAndRadioCD, RadioCD, TableCD } from "../../common/componentsD";
+import { DataD, DateDD, IntegerDD, OneLineStringDD, RepeatingDataD } from "../../common/dataD";
+import { TableCD } from "../../common/componentsD";
 
 
 export const ChequeCreditbooksHistoryLineDD: DataD = {
   name: "ChequeCreditbooksHistoryLineDD",
   description: "The create plan data (actually just put in one place to allow a test for a structure)",
   structure: {
-    serialNumber: {  dataDD: IntegerDD, sample: [ '0937453' ] },
+    serialNumber: { dataDD: { ...IntegerDD, sample: [ 937453 ] } },
     howOrdered: { dataDD: OneLineStringDD, sample: [ 'Manually' ] },
     dateOrder: { dataDD: DateDD, sample: [ '2022-10-01' ] }
   }
@@ -17,7 +17,7 @@ export const ChequeCreditbooksHistoryDD: RepeatingDataD = {
   description: "The history of how cheque and credit books have been ordered",
   dataDD: ChequeCreditbooksHistoryLineDD,
   display: TableCD,
-  displayParams: { order: { value: [ 'serialNumber', 'howOrdered', 'dateOrder'] } }
+  displayParams: { order: { value: [ 'serialNumber', 'howOrdered', 'dateOrder' ] } }
 }
 export const ChequeCreditbooksDD: DataD = {
   name: "ChequeCreditbooksDD",

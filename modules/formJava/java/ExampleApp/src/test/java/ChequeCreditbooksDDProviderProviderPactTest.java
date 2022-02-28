@@ -9,9 +9,9 @@ import au.com.dius.pact.provider.junitsupport.target.TestTarget;
 import org.junit.runner.RunWith;
 
 @RunWith(PactRunner.class)
-@Provider("EAccountsSummaryDDProvider")
+@Provider("ChequeCreditbooksDDProvider")
 @PactFolder("acceptedPacts")
-public class EAccountsSummaryDDProviderProviderPactTest {
+public class ChequeCreditbooksDDProviderProviderPactTest {
 
     @State(value = {"default"})
     public void configureState() {

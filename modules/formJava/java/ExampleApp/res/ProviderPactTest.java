@@ -6,14 +6,17 @@ import au.com.dius.pact.provider.junitsupport.State;
 import au.com.dius.pact.provider.junitsupport.loader.PactFolder;
 import au.com.dius.pact.provider.junitsupport.target.Target;
 import au.com.dius.pact.provider.junitsupport.target.TestTarget;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(PactRunner.class)
-@Provider("EAccountsSummaryDDProvider")
+@Provider("")
 @PactFolder("acceptedPacts")
-public class EAccountsSummaryDDProviderProviderPactTest {
+public class ProviderPactTest {
 
-    @State(value = {"default"})
+    @State(value = {""})
     public void configureState() {
     }
 

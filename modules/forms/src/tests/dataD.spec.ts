@@ -27,6 +27,7 @@ describe ( "dataDD", () => {
   it ( "should have a foldDataDD", () => {
     expect ( foldDataDD<string[]> ( EAccountsSummaryDD, [],  [],[], folder ) ).toEqual ( [
       "-data-EAccountsSummaryDDtrue",
+      "useEStatements-prim-IntegerDD",
       "eAccountsTable-rep-EAccountsSummaryTableDDtrue",
       "eAccountsTable-data-EAccountSummaryDDtrue",
       "eAccountsTable,accountId-prim-AccountIdDD{\"label\":\"Account Id\"}",
@@ -52,6 +53,7 @@ describe ( "dataDD", () => {
   it ( "should have a foldDataDD with stopAtDisplay (need better test - one with a structure that has a display)", () => {
     expect ( foldDataDD<string[]> ( EAccountsSummaryDD, [], [], [],{ ...folder, stopAtDisplay: true } ) ).toEqual ( [
       "-data-EAccountsSummaryDDtrue",
+      "useEStatements-prim-IntegerDD",
       "eAccountsTable-rep-EAccountsSummaryTableDDtrue",
       "eAccountsTable-rep-EAccountsSummaryTableDDfalse",
       "totalMonthlyCost-prim-IntegerDD",

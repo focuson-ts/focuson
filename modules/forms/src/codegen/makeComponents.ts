@@ -7,6 +7,7 @@ import { componentName, domainName, pageComponentName, pageDomainName } from "./
 import { makeButtonsFrom } from "./makeButtons";
 import { focusOnFor, indentList, noExtension } from "./codegen";
 import { TSParams } from "./config";
+import { unique } from "../common/restD";
 
 
 export type AllComponentData = ComponentData | ErrorComponentData
@@ -126,11 +127,8 @@ export function createAllReactComponents ( params: TSParams, pages: PageD[] ): s
     `import { LensProps } from "@focuson/state";`,
     `import { Layout } from "./copied/layout";`,
     `import { RestButton } from "./copied/rest";`,
-    `import { LabelAndInput } from "./copied/LabelAndInput";`,
     `import { PageSelectionAndRestCommandsContext } from '@focuson/focuson';`,
     `import {  focusedPage, focusedPageWithExtraState, ModalAndCopyButton, ModalButton, ModalCancelButton, ModalCommitButton} from "@focuson/pages";`,
-    `import { Table } from "./copied/table";`,
-    `import { LabelAndRadio, Radio } from "./copied/Radio";`,
     `import { Context, FocusedProps } from "./${params.commonFile}";`,
 
   ]
@@ -138,5 +136,11 @@ export function createAllReactComponents ( params: TSParams, pages: PageD[] ): s
   let domain = noExtension ( params.domainsFile );
   const pageDomainsImports = pages.filter ( p => p.pageType === 'MainPage' ).map ( p => `import {${pageDomainName ( p )}} from "./${pageDomain}";` )
   const domainImports = sortedEntries ( dataDsIn ( pages ) ).map ( ( [ name, d ] ) => `import {${domainName ( d )}} from "./${domain}"` )
-  return [ ...imports, ...pageDomainsImports, ...domainImports, ...pageComponents, ...dataComponents ]
+  return [ ...imports, ...makeComponentImports ( pages ), ...pageDomainsImports, ...domainImports, ...pageComponents, ...dataComponents ]
+}
+
+
+export function makeComponentImports ( ps: PageD[] ): string[] {
+  let allItemsWithDisplay: DisplayCompD[] = sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ d, n ] ) => sortedEntries ( n.structure ).map ( a => a[ 1 ].dataDD ) ).filter ( d => d.display ).map ( d => d.display );
+  return unique ( allItemsWithDisplay, d => `${d.import}/${d.name}` ).map ( d => `import { ${d.name} } from '${d.import}';` )
 }

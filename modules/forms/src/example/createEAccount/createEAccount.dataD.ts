@@ -1,9 +1,10 @@
-import { DataD, MoneyDD, OneLineStringDD, PrimitiveDD } from "../../common/dataD";
-import { CreatePlanDD, EAccountDisplayTypeDD, EAccountsSummaryTableDD } from "../eAccounts/eAccountsSummary.dataD";
-import { LabelAndInputCD, RadioCD } from "../../common/componentsD";
+import { DataD, MoneyDD, OneLineStringDD, StringPrimitiveDD } from "../../common/dataD";
+import { EAccountDisplayTypeDD } from "../eAccounts/eAccountsSummary.dataD";
+import { RadioCD } from "../../common/componentsD";
 
-const SavingsStyleDD: PrimitiveDD = {
+const SavingsStyleDD: StringPrimitiveDD = {
   name: "SavingsStyleDD",
+  emptyValue: "adhoc",
   reactType: 'string',
   description: "Radio buttons that say how you want to accumulate  money",
   display: RadioCD,

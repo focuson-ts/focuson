@@ -1,8 +1,9 @@
-import { AccountIdDD, DataD, DateDD, MoneyDD, OneLineStringDD, PrimitiveDD, RepeatingDataD } from "../../common/dataD";
-import { LabelAndInputCD, LabelAndRadioCD, RadioCD, TableCD } from "../../common/componentsD";
+import { AccountIdDD, BooleanDD, DataD, DateDD, MoneyDD, OneLineStringDD, RepeatingDataD, StringPrimitiveDD } from "../../common/dataD";
+import { LabelAndRadioCD, TableCD } from "../../common/componentsD";
 
 
-export const EAccountDisplayTypeDD: PrimitiveDD = {
+export const EAccountDisplayTypeDD: StringPrimitiveDD = {
+  emptyValue: "savings",
   name: "EAccountDisplayTypeDD",
   reactType: 'string',
   description: "The component that displays an EAccountDisplayType (savings/checking)",
@@ -20,7 +21,7 @@ export const EAccountSummaryDD: DataD = {
     displayType: { dataDD: EAccountDisplayTypeDD },//No label because it is derivable from the camelCase
     description: { dataDD: { ...OneLineStringDD, resolver: 'getAccountSummaryDescription' }, sample: [ 'This account has a description' ] },
     virtualBankSeq: { dataDD: OneLineStringDD, sample: [ 'seq1', 'seq2', 'seq3' ] },
-    total: { dataDD: MoneyDD, sample: [ '1000', '2991' ] },
+    total: { dataDD: { ...MoneyDD, sample: [ 1000, 2991 ] } },
     frequency: { dataDD: OneLineStringDD, sample: [ '23' ], displayParams: { label: "Frequency/Amount" } },
   }
 }
@@ -47,10 +48,11 @@ export const EAccountsSummaryDD: DataD = {
   description: "This is the summary data about all the EAccounts for a single user",
   // tableName: 'CustomerSUmmaryView',
   structure: {
+    useEStatements: { dataDD: BooleanDD },
     eAccountsTable: { dataDD: EAccountsSummaryTableDD },
-    totalMonthlyCost: { dataDD: { ...MoneyDD, resolver: 'getTotalMonthlyCost', sample: [ '1000' ] } },
-    oneAccountBalance: { dataDD: { ...MoneyDD, resolver: 'getOneAccountBalance', sample: [ '9921' ] } },
-    currentAccountBalance: { dataDD: { ...MoneyDD, resolver: 'getCurrentAccountBalance', sample: [ '12321' ] } },
+    totalMonthlyCost: { dataDD: { ...MoneyDD, resolver: 'getTotalMonthlyCost', sample: [ 1000 ] } },
+    oneAccountBalance: { dataDD: { ...MoneyDD, resolver: 'getOneAccountBalance', sample: [ 9921 ] } },
+    currentAccountBalance: { dataDD: { ...MoneyDD, resolver: 'getCurrentAccountBalance', sample: [ 12321 ] } },
     createPlan: { dataDD: CreatePlanDD }
   }
 }

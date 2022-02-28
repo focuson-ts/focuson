@@ -6,6 +6,7 @@ describe ( "Making GraphQl from RestD", () => {
   it ( "should be possible to make a query ", () => {
     expect ( makeQuery ( eAccountsSummaryRestD, 'get' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "'{getEAccountsSummaryDD(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\'' + '){'+",
+      "      '    useEStatements'+",
       "      '    eAccountsTable{'+",
       "      '      accountId'+",
       "      '      displayType'+",
@@ -32,7 +33,9 @@ describe ( "Making GraphQl from RestD", () => {
     expect ( makeJavaVariablesForGraphQlQuery ( [ eAccountsSummaryRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "public static  String getEAccountsSummaryDD(String accountId,String customerId){ ",
       "   return",
+
       "'{getEAccountsSummaryDD(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\'' + '){'+",
+      "      '    useEStatements'+",
       "      '    eAccountsTable{'+",
       "      '      accountId'+",
       "      '      displayType'+",

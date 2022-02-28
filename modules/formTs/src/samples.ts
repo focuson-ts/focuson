@@ -3,7 +3,7 @@ export const sampleChequeCreditbooksDD0: domains.ChequeCreditbooksDDDomain =
 {
   "history": [
     {
-      "serialNumber": "0937453",
+      "serialNumber": 937453,
       "howOrdered": "Manually",
       "dateOrder": "2022-10-01"
     }
@@ -11,7 +11,7 @@ export const sampleChequeCreditbooksDD0: domains.ChequeCreditbooksDDDomain =
 }
 export const sampleChequeCreditbooksHistoryLineDD0: domains.ChequeCreditbooksHistoryLineDDDomain = 
 {
-  "serialNumber": "0937453",
+  "serialNumber": 937453,
   "howOrdered": "Manually",
   "dateOrder": "2022-10-01"
 }
@@ -20,7 +20,7 @@ export const sampleCreateEAccountDataDD0: domains.CreateEAccountDataDDDomain =
   "name": "This is a one line string",
   "type": "checking",
   "savingsStyle": "adHoc",
-  "initialAmount": "This is a one line string"
+  "initialAmount": 123
 }
 export const sampleCreatePlanDD0: domains.CreatePlanDDDomain = 
 {
@@ -30,19 +30,20 @@ export const sampleCreatePlanDD0: domains.CreatePlanDDDomain =
 }
 export const sampleEAccountsSummaryDD0: domains.EAccountsSummaryDDDomain = 
 {
+  "useEStatements": true,
   "eAccountsTable": [
     {
       "accountId": "1233450",
       "displayType": "checking",
       "description": "This account has a description",
       "virtualBankSeq": "seq1",
-      "total": "1000",
+      "total": 1000,
       "frequency": "23"
     }
   ],
-  "totalMonthlyCost": "1000",
-  "oneAccountBalance": "9921",
-  "currentAccountBalance": "12321",
+  "totalMonthlyCost": 1000,
+  "oneAccountBalance": 9921,
+  "currentAccountBalance": 12321,
   "createPlan": {
     "createPlanStart": "2022-01-01",
     "createPlanDate": "2022-03-01",
@@ -55,7 +56,7 @@ export const sampleEAccountSummaryDD0: domains.EAccountSummaryDDDomain =
   "displayType": "checking",
   "description": "This account has a description",
   "virtualBankSeq": "seq1",
-  "total": "1000",
+  "total": 1000,
   "frequency": "23"
 }
 export const sampleETransferDataD0: domains.ETransferDataDDomain = 
@@ -67,7 +68,7 @@ export const sampleETransferDataD0: domains.ETransferDataDDomain =
   "toAccount": "1233450",
   "monitoringAccount": "1233450",
   "type": "checking",
-  "balance": "This is a one line string",
+  "balance": 123,
   "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
 }
 export const sampleOccupationAndIncome0: domains.OccupationAndIncomeDomain = 
@@ -78,13 +79,13 @@ export const sampleOccupationAndIncome0: domains.OccupationAndIncomeDomain =
   "businessType": "Electrical Technical Support",
   "businessName": "This is a one line string",
   "dateStarted": "2020-10-01",
-  "averageAnnualDrawings": "This is a one line string"
+  "averageAnnualDrawings": 123
 }
 export const sampleChequeCreditbooksDD1: domains.ChequeCreditbooksDDDomain = 
 {
   "history": [
     {
-      "serialNumber": "This is a one line string",
+      "serialNumber": 937453,
       "howOrdered": "This is a one line string",
       "dateOrder": "2020-10-01"
     }
@@ -92,7 +93,7 @@ export const sampleChequeCreditbooksDD1: domains.ChequeCreditbooksDDDomain =
 }
 export const sampleChequeCreditbooksHistoryLineDD1: domains.ChequeCreditbooksHistoryLineDDDomain = 
 {
-  "serialNumber": "This is a one line string",
+  "serialNumber": 937453,
   "howOrdered": "This is a one line string",
   "dateOrder": "2020-10-01"
 }
@@ -101,7 +102,7 @@ export const sampleCreateEAccountDataDD1: domains.CreateEAccountDataDDDomain =
   "name": "another one line string",
   "type": "savings",
   "savingsStyle": "payRegular",
-  "initialAmount": "another one line string"
+  "initialAmount": 456
 }
 export const sampleCreatePlanDD1: domains.CreatePlanDDDomain = 
 {
@@ -111,19 +112,20 @@ export const sampleCreatePlanDD1: domains.CreatePlanDDDomain =
 }
 export const sampleEAccountsSummaryDD1: domains.EAccountsSummaryDDDomain = 
 {
+  "useEStatements": false,
   "eAccountsTable": [
     {
       "accountId": "3233450",
       "displayType": "savings",
       "description": "This is a one line string",
       "virtualBankSeq": "seq2",
-      "total": "2991",
+      "total": 2991,
       "frequency": "This is a one line string"
     }
   ],
-  "totalMonthlyCost": "1000",
-  "oneAccountBalance": "9921",
-  "currentAccountBalance": "12321",
+  "totalMonthlyCost": 1000,
+  "oneAccountBalance": 9921,
+  "currentAccountBalance": 12321,
   "createPlan": {
     "createPlanStart": "2020-10-01",
     "createPlanDate": "2020-10-01",
@@ -136,7 +138,7 @@ export const sampleEAccountSummaryDD1: domains.EAccountSummaryDDDomain =
   "displayType": "savings",
   "description": "This is a one line string",
   "virtualBankSeq": "seq2",
-  "total": "2991",
+  "total": 2991,
   "frequency": "This is a one line string"
 }
 export const sampleETransferDataD1: domains.ETransferDataDDomain = 
@@ -148,7 +150,7 @@ export const sampleETransferDataD1: domains.ETransferDataDDomain =
   "toAccount": "3233450",
   "monitoringAccount": "3233450",
   "type": "savings",
-  "balance": "another one line string",
+  "balance": 456,
   "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
 }
 export const sampleOccupationAndIncome1: domains.OccupationAndIncomeDomain = 
@@ -159,13 +161,13 @@ export const sampleOccupationAndIncome1: domains.OccupationAndIncomeDomain =
   "businessType": "Electrical Technical Support",
   "businessName": "another one line string",
   "dateStarted": "2022-14-01",
-  "averageAnnualDrawings": "another one line string"
+  "averageAnnualDrawings": 456
 }
 export const sampleChequeCreditbooksDD2: domains.ChequeCreditbooksDDDomain = 
 {
   "history": [
     {
-      "serialNumber": "another one line string",
+      "serialNumber": 937453,
       "howOrdered": "another one line string",
       "dateOrder": "2022-14-01"
     }
@@ -173,7 +175,7 @@ export const sampleChequeCreditbooksDD2: domains.ChequeCreditbooksDDDomain =
 }
 export const sampleChequeCreditbooksHistoryLineDD2: domains.ChequeCreditbooksHistoryLineDDDomain = 
 {
-  "serialNumber": "another one line string",
+  "serialNumber": 937453,
   "howOrdered": "another one line string",
   "dateOrder": "2022-14-01"
 }
@@ -182,7 +184,7 @@ export const sampleCreateEAccountDataDD2: domains.CreateEAccountDataDDDomain =
   "name": "This is a one line string",
   "type": "checking",
   "savingsStyle": "paySettime",
-  "initialAmount": "This is a one line string"
+  "initialAmount": 123
 }
 export const sampleCreatePlanDD2: domains.CreatePlanDDDomain = 
 {
@@ -192,19 +194,20 @@ export const sampleCreatePlanDD2: domains.CreatePlanDDDomain =
 }
 export const sampleEAccountsSummaryDD2: domains.EAccountsSummaryDDDomain = 
 {
+  "useEStatements": true,
   "eAccountsTable": [
     {
       "accountId": "4333450",
       "displayType": "checking",
       "description": "another one line string",
       "virtualBankSeq": "seq3",
-      "total": "This is a one line string",
+      "total": 1000,
       "frequency": "another one line string"
     }
   ],
-  "totalMonthlyCost": "1000",
-  "oneAccountBalance": "9921",
-  "currentAccountBalance": "12321",
+  "totalMonthlyCost": 1000,
+  "oneAccountBalance": 9921,
+  "currentAccountBalance": 12321,
   "createPlan": {
     "createPlanStart": "2022-14-01",
     "createPlanDate": "2022-14-01",
@@ -217,7 +220,7 @@ export const sampleEAccountSummaryDD2: domains.EAccountSummaryDDDomain =
   "displayType": "checking",
   "description": "another one line string",
   "virtualBankSeq": "seq3",
-  "total": "This is a one line string",
+  "total": 1000,
   "frequency": "another one line string"
 }
 export const sampleETransferDataD2: domains.ETransferDataDDomain = 
@@ -229,7 +232,7 @@ export const sampleETransferDataD2: domains.ETransferDataDDomain =
   "toAccount": "4333450",
   "monitoringAccount": "4333450",
   "type": "checking",
-  "balance": "This is a one line string",
+  "balance": 123,
   "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
 }
 export const sampleOccupationAndIncome2: domains.OccupationAndIncomeDomain = 
@@ -240,5 +243,5 @@ export const sampleOccupationAndIncome2: domains.OccupationAndIncomeDomain =
   "businessType": "Electrical Technical Support",
   "businessName": "This is a one line string",
   "dateStarted": "2020-10-01",
-  "averageAnnualDrawings": "This is a one line string"
+  "averageAnnualDrawings": 123
 }

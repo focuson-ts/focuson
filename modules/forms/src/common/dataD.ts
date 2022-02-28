@@ -1,13 +1,13 @@
 //Common Data Definitions
 
 
-import { DisplayCompD, LabelAndInputCD } from "./componentsD";
+import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndNumberInputCD, LabelAndStringInputCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeComponents";
 import { safeArray } from "@focuson/utils";
 import { isPrimitive } from "util";
 
-export interface HasSample {
-  sample?: string[]
+export interface HasSample<T> {
+  sample?: T[]
 }
 export interface HasEnum {
   enum?: EnumDD;
@@ -15,11 +15,11 @@ export interface HasEnum {
 
 export function sampleFromDataD ( o: OneDataDD | undefined, d: AllDataDD ): string[] {
   const fromO: string[] = safeArray ( o?.sample )
-  const fromD: string[] = isPrimDd ( d ) ? [ ...safeArray ( d.sample ), ...safeArray ( d.enum ? Object.keys ( d.enum ) : [] ) ] : []
+  const fromD: string[] = isPrimDd ( d ) ? [ ...safeArray<any> ( d.sample ).map ( ( t: any ) =>t  ), ...safeArray ( d.enum ? Object.keys ( d.enum ) : [] ) ] : []
   return [ ...fromO, ...fromD ]
 }
 
-export interface OneDataDD extends HasSample {
+export interface OneDataDD extends HasSample<string> {
   dataDD: AllDataDD;
   displayParams?: ComponentDisplayParams,
   graphQl?: string, // might be possible to default this which would be cool
@@ -47,14 +47,30 @@ export interface CommonDataDD {
 export interface DataD extends CommonDataDD {
   structure: ManyDataDD;
 }
-export type ReactType = 'string' | 'string[]'
-export interface PrimitiveDD extends CommonDataDD, HasSample, HasEnum {
-  reactType: ReactType,
-  emptyValue?: string;
+
+export interface CommonPrimitiveDD<T> extends CommonDataDD, HasSample<T>, HasEnum {
+  emptyValue: T;
   label?: string;
+  display: DisplayCompD;
   validation: SingleFieldValidationDD;
   fieldName?: string
 }
+
+export interface StringPrimitiveDD extends CommonPrimitiveDD<string> {
+  reactType: 'string';
+
+
+}
+export interface BooleanPrimitiveDD extends CommonPrimitiveDD<boolean> {
+  reactType: 'boolean';
+  emptyValue: false
+}
+export interface NumberPrimitiveDD extends CommonPrimitiveDD<number> {
+  reactType: 'number';
+  emptyValue: 0
+}
+export type PrimitiveDD = StringPrimitiveDD | BooleanPrimitiveDD | NumberPrimitiveDD
+
 export interface RepeatingDataD extends CommonDataDD {
   paged: boolean;
   display: DisplayCompD; // mandatory for a repeating
@@ -162,66 +178,80 @@ export interface EnumDD {
   [ name: string ]: string
 }
 
-export const CustomerIdDD: PrimitiveDD = {
+export const CustomerIdDD: StringPrimitiveDD = {
+  emptyValue: "",
+  reactType: "string",
   name: 'CustomerIdDD',
-  reactType: 'string',
   description: "A customer id",
-  display: LabelAndInputCD,
+  display: LabelAndStringInputCD,
   validation: { regex: "\d+", maxLength: 7 },
   sample: [ "003450" ]
 }
-export const AccountIdDD: PrimitiveDD = {
+export const AccountIdDD: StringPrimitiveDD = {
   name: 'AccountIdDD',
+  emptyValue: "",
   reactType: 'string',
   description: "An account id",
-  display: LabelAndInputCD,
+  display: LabelAndStringInputCD,
   validation: { regex: "\d+", maxLength: 7 },
   sample: [ "1233450", "3233450", "4333450" ]
 }
 export const StringDD: PrimitiveDD = {
   name: 'StringDD',
+  emptyValue: "",
   reactType: 'string',
   description: "The primitive 'string'. A reasonably short list of characters",
-  display: LabelAndInputCD,
+  display: LabelAndStringInputCD,
   validation: { maxLength: 255 }, //Note no regex
   sample: [ "someString", "anotherString" ]
 }
 export const OneLineStringDD: PrimitiveDD = {
+  emptyValue: "",
   name: 'OneLineStringDD',
   reactType: 'string',
   description: "A string that fits on a line of text. Probably reasonably long",
-  display: LabelAndInputCD,
+  display: LabelAndStringInputCD,
   validation: { maxLength: 255 }, //Note no regex
   sample: [ "This is a one line string", "another one line string" ]
 }
 export const ManyLineStringDD: PrimitiveDD = {
+  emptyValue: "",
   name: 'ManyLineStringDD',
   reactType: 'string',
   description: "A string that needs many lines and uses a text Area",
-  display: LabelAndInputCD,
+  display: LabelAndStringInputCD,
   validation: {},
   sample: [ "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit" ]
 }
-export const IntegerDD: PrimitiveDD = {
+export const IntegerDD: NumberPrimitiveDD = {
   name: 'IntegerDD',
-  reactType: 'string',
+  emptyValue: 0,
+  reactType: 'number',
   description: "The primitive 'Integer'",
-  display: LabelAndInputCD,
+  display: LabelAndNumberInputCD,
   validation: { regex: "\d+", maxLength: 255 },
-  sample: [ "This is a one line string", "another one line string" ]
+  sample: [ 123, 456 ]
 }
-export const MoneyDD: PrimitiveDD = {
+export const MoneyDD: NumberPrimitiveDD = {
   ...IntegerDD,
   description: "The primitive representing an amount of the local currency",
   name: 'IntegerDD'
 }
-
-export const DateDD: PrimitiveDD = {
+export const BooleanDD: PrimitiveDD = {
+  name: 'IntegerDD',
+  emptyValue: false,
+  reactType: 'boolean',
+  description: "The primitive 'Boolean'",
+  display: LabelAndCheckboxInputCD,
+  validation: { regex: "\d+", maxLength: 255 },
+  sample: [ true, false ]
+}
+export const DateDD: StringPrimitiveDD = {
   name: 'DateDD',
   reactType: 'string',
   emptyValue: '2022-1-1',
   description: "The primitive representing a date (w/o time)",
-  display: LabelAndInputCD, //or maybe a date picker
+  display: LabelAndStringInputCD, //or maybe a date picker
   validation: { regex: "\d+", maxLength: 8 },
   sample: [ "2020-10-01", '2022-14-01' ]
 }
@@ -229,9 +259,10 @@ export const DateDD: PrimitiveDD = {
 export const DateTimeDD: PrimitiveDD = {
   name: 'DateTimeDD',
   reactType: 'string',
+  emptyValue: '2022-1-1T00:00:00',
   description: "The primitive representing a date (with time)",
-  display: LabelAndInputCD, //or maybe a date picker
-  validation: { regex: "\d+", maxLength: 8 },
-  sample: [ "2020-10-01", '2022-14-01' ]
+  display: LabelAndStringInputCD, //or maybe a date picker
+  validation: { regex: "\d+", maxLength: 20 },
+  sample: [ "2020-10-01T06:30:00", '2022-14-01T14:30:00' ]
 }
 

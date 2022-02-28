@@ -10,10 +10,11 @@ describe ( "makeDomainFor", () => {
     expect ( makeDomainFor ( EAccountsSummaryDD ) ).toEqual ( [
       "export interface EAccountsSummaryDDDomain{",
       "  createPlan: CreatePlanDDDomain;",
-      "  currentAccountBalance: string;",
+      "  currentAccountBalance: number;",
       "  eAccountsTable: EAccountSummaryDDDomain[];",
-      "  oneAccountBalance: string;",
-      "  totalMonthlyCost: string;",
+      "  oneAccountBalance: number;",
+      "  totalMonthlyCost: number;",
+      "  useEStatements: boolean;",
       "}"
     ])
     expect ( makeDomainFor ( EAccountSummaryDD ) ).toEqual ( [
@@ -22,7 +23,7 @@ describe ( "makeDomainFor", () => {
       "  description: string;",
       "  displayType: string;",
       "  frequency: string;",
-      "  total: string;",
+      "  total: number;",
       "  virtualBankSeq: string;",
       "}"
     ] )
@@ -50,17 +51,18 @@ describe ( "makeAllDomainsFor", () => {
       "}",
       "export interface EAccountsSummaryDDDomain{",
       "  createPlan: CreatePlanDDDomain;",
-      "  currentAccountBalance: string;",
+      "  currentAccountBalance: number;",
       "  eAccountsTable: EAccountSummaryDDDomain[];",
-      "  oneAccountBalance: string;",
-      "  totalMonthlyCost: string;",
+      "  oneAccountBalance: number;",
+      "  totalMonthlyCost: number;",
+      "  useEStatements: boolean;",
       "}",
       "export interface EAccountSummaryDDDomain{",
       "  accountId: string;",
       "  description: string;",
       "  displayType: string;",
       "  frequency: string;",
-      "  total: string;",
+      "  total: number;",
       "  virtualBankSeq: string;",
       "}"
     ])
@@ -74,9 +76,9 @@ describe ( "makePageDomainsFor", () => {
       "import * as domains from './domains';",
       "export interface HasEAccountsSummaryPageDomain {   EAccountsSummary?: EAccountsSummaryPageDomain}",
       "export interface EAccountsSummaryPageDomain{",
-      " createPlan?: domains.EAccountsSummaryDDDomain;",
-      " fromApi?: domains.EAccountsSummaryDDDomain;",
-      " tempCreatePlan?: domains.CreatePlanDDDomain;",
+      " createPlan?:domains.EAccountsSummaryDDDomain;",
+      " fromApi?:domains.EAccountsSummaryDDDomain;",
+      " tempCreatePlan?:domains.CreatePlanDDDomain;",
       "}"
     ])
 

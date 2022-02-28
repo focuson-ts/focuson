@@ -10,7 +10,7 @@ import { asMultilineJavaString, safePick } from "@focuson/utils";
 
 const addData = ( start: boolean, path: string[], acc: any, d: DataD ) => start ? Lenses.fromPath ( path ).set ( acc, {} ) : acc;
 
-export function selectSample ( i: number, ...ds: (HasSample | undefined | HasEnum)[] ) {
+export function selectSample ( i: number, ...ds: (HasSample<any> | undefined | HasEnum)[] ) {
   const enums: string[] = safeArray<any> ( ds ).flatMap ( d => sortedEntries ( d?.enum ).map ( x => x[ 0 ] ) )
   const samples: string[] = safeArray<any> ( ds ).flatMap ( d => d ? safeArray ( d.sample ) : [] )
   return safePick ( [ ...enums, ...samples ], i )
@@ -57,9 +57,9 @@ export function makeAllJavaVariableName ( ps: PageD[], i: number ): string[] {
   return sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ name, dataD ] ) => makeJavaVariable ( dataD, i ) )
 }
 
-export function makeAllEmptyData ( ps: PageD[] ): string[] {
+export function makeAllEmptyData ( params: TSParams, ps: PageD[] ): string[] {
   return sortedEntries ( dataDsIn ( ps, false ) ).flatMap ( ( [ name, dd ] ) =>
-    [`export const ${emptyName(dd) } =`, ...indentList(JSON.stringify ( makeEmptyData ( dd ), null, 2 ).split ( "\n" )) ])
+    [ `export const ${emptyName ( dd )}:${params.domainsFile}.${domainName( dd )} =`, ...indentList ( JSON.stringify ( makeEmptyData ( dd ), null, 2 ).split ( "\n" ) ) ] )
 }
 export function makeEmptyData ( d: AllDataDD ): string[] {
   let folder: AllDataFolder<any> = {
@@ -67,7 +67,7 @@ export function makeEmptyData ( d: AllDataDD ): string[] {
     foldData: ( acc, path, parents, oneDataDD, dataDD, start ) => addData ( start, path, acc, dataDD ),
     foldRep: ( acc, path, parents, oneDataDD, dataDD, start ) =>
       start ? acc : Lenses.fromPath ( path ).transform ( child => [ child ] ) ( acc ),
-    foldPrim: ( acc, path, parents, oneDataDD, dataDD ) => Lenses.fromPath ( path ).set ( acc, dataDD.emptyValue?dataDD.emptyValue:'' )
+    foldPrim: ( acc, path, parents, oneDataDD, dataDD ) => Lenses.fromPath ( path ).set ( acc, dataDD.emptyValue ? dataDD.emptyValue : dataDD.emptyValue )
   };
   return foldDataDD ( d, [], [], [], folder )
 }

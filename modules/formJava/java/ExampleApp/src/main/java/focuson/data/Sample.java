@@ -9,7 +9,7 @@ public class Sample{
         "{"+
         "  \"history\": ["+
         "    {"+
-        "      \"serialNumber\": \"0937453\","+
+        "      \"serialNumber\": 937453,"+
         "      \"howOrdered\": \"Manually\","+
         "      \"dateOrder\": \"2022-10-01\""+
         "    }"+
@@ -18,7 +18,7 @@ public class Sample{
  );
  public static Map sampleChequeCreditbooksHistoryLineDD0 =  parse.parseMap(
         "{"+
-        "  \"serialNumber\": \"0937453\","+
+        "  \"serialNumber\": 937453,"+
         "  \"howOrdered\": \"Manually\","+
         "  \"dateOrder\": \"2022-10-01\""+
         "}"
@@ -28,7 +28,7 @@ public class Sample{
         "  \"name\": \"This is a one line string\","+
         "  \"type\": \"checking\","+
         "  \"savingsStyle\": \"adHoc\","+
-        "  \"initialAmount\": \"This is a one line string\""+
+        "  \"initialAmount\": 123"+
         "}"
  );
  public static Map sampleCreatePlanDD0 =  parse.parseMap(
@@ -40,19 +40,20 @@ public class Sample{
  );
  public static Map sampleEAccountsSummaryDD0 =  parse.parseMap(
         "{"+
+        "  \"useEStatements\": true,"+
         "  \"eAccountsTable\": ["+
         "    {"+
         "      \"accountId\": \"1233450\","+
         "      \"displayType\": \"checking\","+
         "      \"description\": \"This account has a description\","+
         "      \"virtualBankSeq\": \"seq1\","+
-        "      \"total\": \"1000\","+
+        "      \"total\": 1000,"+
         "      \"frequency\": \"23\""+
         "    }"+
         "  ],"+
-        "  \"totalMonthlyCost\": \"1000\","+
-        "  \"oneAccountBalance\": \"9921\","+
-        "  \"currentAccountBalance\": \"12321\","+
+        "  \"totalMonthlyCost\": 1000,"+
+        "  \"oneAccountBalance\": 9921,"+
+        "  \"currentAccountBalance\": 12321,"+
         "  \"createPlan\": {"+
         "    \"createPlanStart\": \"2022-01-01\","+
         "    \"createPlanDate\": \"2022-03-01\","+
@@ -66,7 +67,7 @@ public class Sample{
         "  \"displayType\": \"checking\","+
         "  \"description\": \"This account has a description\","+
         "  \"virtualBankSeq\": \"seq1\","+
-        "  \"total\": \"1000\","+
+        "  \"total\": 1000,"+
         "  \"frequency\": \"23\""+
         "}"
  );
@@ -79,7 +80,7 @@ public class Sample{
         "  \"toAccount\": \"1233450\","+
         "  \"monitoringAccount\": \"1233450\","+
         "  \"type\": \"checking\","+
-        "  \"balance\": \"This is a one line string\","+
+        "  \"balance\": 123,"+
         "  \"notes\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit\""+
         "}"
  );
@@ -91,7 +92,7 @@ public class Sample{
         "  \"businessType\": \"Electrical Technical Support\","+
         "  \"businessName\": \"This is a one line string\","+
         "  \"dateStarted\": \"2020-10-01\","+
-        "  \"averageAnnualDrawings\": \"This is a one line string\""+
+        "  \"averageAnnualDrawings\": 123"+
         "}"
  );
 }

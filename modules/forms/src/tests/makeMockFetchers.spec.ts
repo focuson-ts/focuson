@@ -13,9 +13,9 @@ describe ( "makeMockFetchers", () => {
       " public DataFetcher deleteCreatePlanDD() {  return dataFetchingEnvironment -> sample.sampleCreatePlanDD0;    }",
       " public DataFetcher listCreatePlanDD() {  return dataFetchingEnvironment -> sample.sampleCreatePlanDD0;    }",
       "  public DataFetcher getAccountSummaryDescription (){ return new StaticDataFetcher('This account has a description');}",
-      "  public DataFetcher getTotalMonthlyCost (){ return new StaticDataFetcher('1000');}",
-      "  public DataFetcher getOneAccountBalance (){ return new StaticDataFetcher('9921');}",
-      "  public DataFetcher getCurrentAccountBalance (){ return new StaticDataFetcher('12321');}"
+      "  public DataFetcher getTotalMonthlyCost (){ return new StaticDataFetcher(1000);}",
+      "  public DataFetcher getOneAccountBalance (){ return new StaticDataFetcher(9921);}",
+      "  public DataFetcher getCurrentAccountBalance (){ return new StaticDataFetcher(12321);}"
     ])
   } )
 } )

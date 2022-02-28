@@ -1,13 +1,14 @@
-import { AccountIdDD, DataD, DateDD, MoneyDD, OneLineStringDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
-import { LabelAndInputCD, TableCD } from "../common/componentsD";
+import { AccountIdDD, DataD, DateDD, MoneyDD, OneLineStringDD, PrimitiveDD, RepeatingDataD, StringPrimitiveDD } from "../common/dataD";
+import { LabelAndNumberInputCD, LabelAndStringInputCD, TableCD } from "../common/componentsD";
 import { listComponentsIn } from "../codegen/makeComponents";
 
 
-export const TheAccountDD: PrimitiveDD = {
+export const TheAccountDD: StringPrimitiveDD = {
   name: "TheAccountDD",
   reactType: 'string',
+  emptyValue: '',
   description: "The component that displays an EAccountDisplayType (savings/checking)",
-  display: LabelAndInputCD,
+  display: LabelAndStringInputCD,
   displayParams: { someUnrecognisedParam: { value: 'who cares' } },
   validation: { enum: true, maxLength: 7 },
   enum: { savings: 'Savings', checking: 'Checking' }
@@ -67,12 +68,12 @@ describe ( "validateDataDD", () => {
     expect ( listComponentsIn ( TheAccountsSummaryDD ) ).toEqual ( [
       { dataDD: TheSummaryTable, path: [ "eAccountsTable" ] },
       { dataDD: TheSummaryTable2, display: TableCD, path: [ "eAccountsTable2" ] },
-      { dataDD: MoneyDD, display: LabelAndInputCD, path: [ "totalMonthlyCost" ] },
-      { dataDD: MoneyDD, display: LabelAndInputCD, path: [ "oneAccountBalance" ] },
-      { dataDD: MoneyDD, display: LabelAndInputCD, path: [ "currentAccountBalance" ] },
-      { dataDD: DateDD, display: LabelAndInputCD, displayParams: { label: 'Create Start', junk: 'someValue' }, path: [ "createPlan", "createPlanStart" ] },
-      { dataDD: DateDD, display: LabelAndInputCD, displayParams: { ariaLabel: [ 'The Create Plan Date' ] }, path: [ "createPlan", "createPlanDate" ] },
-      { dataDD: DateDD, display: LabelAndInputCD, path: [ "createPlan", "createPlanEnd" ] }
+      { dataDD: MoneyDD, display: LabelAndNumberInputCD, path: [ "totalMonthlyCost" ] },
+      { dataDD: MoneyDD, display: LabelAndNumberInputCD, path: [ "oneAccountBalance" ] },
+      { dataDD: MoneyDD, display: LabelAndNumberInputCD, path: [ "currentAccountBalance" ] },
+      { dataDD: DateDD, display: LabelAndStringInputCD, displayParams: { label: 'Create Start', junk: 'someValue' }, path: [ "createPlan", "createPlanStart" ] },
+      { dataDD: DateDD, display: LabelAndStringInputCD, displayParams: { ariaLabel: [ 'The Create Plan Date' ] }, path: [ "createPlan", "createPlanDate" ] },
+      { dataDD: DateDD, display: LabelAndStringInputCD, path: [ "createPlan", "createPlanEnd" ] }
     ] )
   } )
 } )

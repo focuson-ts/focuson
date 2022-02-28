@@ -1,5 +1,4 @@
-import { AccountIdDD, DataD, DateDD, ManyLineStringDD, MoneyDD, OneLineStringDD, PrimitiveDD, RepeatingDataD } from "../../common/dataD";
-import { LabelAndInputCD, TableCD } from "../../common/componentsD";
+import { AccountIdDD, DataD, DateDD, ManyLineStringDD, MoneyDD, OneLineStringDD } from "../../common/dataD";
 import { EAccountDisplayTypeDD } from "../eAccounts/eAccountsSummary.dataD";
 
 

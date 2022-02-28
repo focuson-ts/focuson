@@ -79,6 +79,7 @@ public class Queries{
  public static  String getEAccountsSummaryDD(String accountId,String customerId){ 
     return
  "{getEAccountsSummaryDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
+       "    useEStatements"+
        "    eAccountsTable{"+
        "      accountId"+
        "      displayType"+

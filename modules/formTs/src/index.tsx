@@ -9,8 +9,6 @@ import { fetchers } from "./fetchers";
 import { pages } from "./pages";
 import { restL } from "@focuson/rest";
 import { restDetails } from "./rests";
-
-
 const config: FocusOnConfig<FState, Context, SimpleMessage> = {
   /** How data is sent to/fetched from apis */
   fetchFn: fetchWithDelay ( 1000, fetchWithPrefix ( 'http://localhost:8080', loggingFetchFn ) ),
@@ -23,13 +21,10 @@ const config: FocusOnConfig<FState, Context, SimpleMessage> = {
     console.error ( e );
     return s;
   },
-
   /** The lens to the current selected page */
   pageL: pageSelectionlens (),
   /** The list of all registered pages that can be displayed with SelectedPage  */
   pages,
-
-
   /** The list of all registered posters that can send data to the back end   */
   /** The collection of all registered fetchers that will get data from the back end */
   fetchers,
@@ -37,36 +32,25 @@ const config: FocusOnConfig<FState, Context, SimpleMessage> = {
   restL: restL (),
   restDetails: restDetails
 }
-
-
 let rootElement = getElement ( "root" );
-
 console.log ( "set json" )
-
 const pageModeFor: NameAnd<PageMode> = {
   OccupationAndIncomeDetails: 'view',
   EAccountsSummary: 'view',
   ETransfer: 'create',
   CreateEAccount: 'create'
-
 }
-
 let setJson = setJsonForFocusOn<FState, Context, SimpleMessage> ( config, context, ( s: LensState<FState, FState, Context> ): void =>
   ReactDOM.render ( <div>
     <IndexPage state={s}>
-      <SelectedPage state={s}/>
-    </IndexPage>
-    <pre>{JSON.stringify ( s.main, null, 2 )}</pre>
-  </div>, rootElement ) )
-
+  <SelectedPage state={s}/>
+</IndexPage>
+<pre>{JSON.stringify ( s.main, null, 2 )}</pre>
+</div>, rootElement ) )
 setJson ( {
   ...emptyState,
-  pageSelection: [ { pageName: 'ETransfer', firstTime: true, pageMode: 'view' } ],
-
+  pageSelection: [ { pageName: 'OccupationAndIncomeDetails', firstTime: true, pageMode: 'view' } ],
 // @ts-ignore
   debug: { restDebug: true }
-
   // currentSelectedModalPage: 'EAccountsSummary_CreatePlan'
 } )
-
-
