@@ -3,14 +3,14 @@ import { defaultDateFn, HasSimpleMessages, SimpleMessage } from '@focuson/utils'
 import {  OnTagFetchErrorFn } from '@focuson/fetcher';
 import { identityOptics } from '@focuson/lens';
 import { HasTagHolder, NameAndLens } from '@focuson/template';
-import { HasPostCommand } from '@focuson/poster';
-import { commonTagFetchProps, defaultPageSelectionAndPostCommandsContext, PageSelectionAndPostCommandsContext, HasFocusOnDebug } from '@focuson/focuson';
+ import { HasRestCommands } from '@focuson/rest'
+import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, PageSelectionAndRestCommandsContext, HasFocusOnDebug } from '@focuson/focuson';
 import { LensProps } from '@focuson/state';
 import { pages } from "./pages";
 import * as pageDomains from './pageDomains';
-export type Context = PageSelectionAndPostCommandsContext<FState>
-export const context: Context = defaultPageSelectionAndPostCommandsContext<FState> ( pages )
-export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasPostCommand<FState,any>,HasFocusOnDebug,
+export type Context = PageSelectionAndRestCommandsContext<FState>
+export const context: Context = defaultPageSelectionAndRestCommandsContext<FState> ( pages )
+export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,
  pageDomains.HasOccupationAndIncomeDetailsPageDomain,
  pageDomains.HasEAccountsSummaryPageDomain,
  pageDomains.HasETransferPageDomain,
@@ -43,6 +43,6 @@ export const emptyState: FState = {
   messages: [],
   pageSelection: [{ pageName: 'OccupationAndIncomeDetails', firstTime: true, pageMode: 'view' }],
   OccupationAndIncomeDetails:{},
-  postCommands: [],
+  restCommands: [],
     debug: { selectedPageDebug: true, fetcherDebug: true }
   }

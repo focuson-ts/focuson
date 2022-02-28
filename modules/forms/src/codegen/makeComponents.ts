@@ -74,7 +74,7 @@ export function createAllReactCalls ( d: AllComponentData[] ): string[] {
 export function createReactComponent ( dataD: DataD ): string[] {
   const contents = indentList ( indentList ( createAllReactCalls ( listComponentsIn ( dataD ) ) ) )
   return [
-    `export function ${componentName ( dataD )}<S, Context extends PageSelectionAndPostCommandsContext<S>>({state,mode}: FocusedProps<S, ${domainName ( dataD )},Context>){`,
+    `export function ${componentName ( dataD )}<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, ${domainName ( dataD )},Context>){`,
     "  return(<>",
     ...contents,
     "</>)",
@@ -94,7 +94,7 @@ export function createReactModalPageComponent ( pageD: PageD ): string[] {
   const focus = focusOnFor ( pageD.display.target );
   const domName = domainName ( pageD.display.dataDD );
   return [
-    `export function ${pageComponentName ( pageD )}<S, Context extends PageSelectionAndPostCommandsContext<S>>(){`,
+    `export function ${pageComponentName ( pageD )}<S, Context extends PageSelectionAndRestCommandsContext<S>>(){`,
     `  return focusedPage<S, ${domName}, Context> ( s => '' ) (`,
     `     ( state, d, mode ) => {`,
     `          return (<${layout.name}  details='${layout.details}'>`,
@@ -108,7 +108,7 @@ export function createReactMainPageComponent ( pageD: PageD ): string[] {
   const { dataDD, layout } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
   return [
-    `export function ${pageComponentName ( pageD )}<S, Context extends PageSelectionAndPostCommandsContext<S>>(){`,
+    `export function ${pageComponentName ( pageD )}<S, Context extends PageSelectionAndRestCommandsContext<S>>(){`,
     `  return focusedPageWithExtraState<S, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${pageD.name}' ) ( s => s${focus}) (
     ( fullState, state , full, d, mode) => {`,
     `  return (<${layout.name}  details='${layout.details}'>`,
@@ -127,7 +127,7 @@ export function createAllReactComponents ( params: TSParams, pages: PageD[] ): s
     `import { Layout } from "./copied/layout";`,
     `import { RestButton } from "./copied/rest";`,
     `import { LabelAndInput } from "./copied/LabelAndInput";`,
-  `import { PageSelectionAndPostCommandsContext } from '@focuson/focuson';`,
+  `import { PageSelectionAndRestCommandsContext } from '@focuson/focuson';`,
     `import {  focusedPage, focusedPageWithExtraState, ModalAndCopyButton, ModalButton, ModalCancelButton, ModalCommitButton} from "@focuson/pages";`,
     `import { Table } from "./copied/table";`,
     `import { LabelAndRadio, Radio } from "./copied/Radio";`,

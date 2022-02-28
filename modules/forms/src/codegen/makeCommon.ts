@@ -10,15 +10,15 @@ import { PageMode } from "@focuson/pages";
 
 export function makeFullState ( params: TSParams, pds: PageD[] ): string[] {
   const hasDomains = addStringToEndOfAllButLast ( ',' ) ( allMainPages ( pds ).map ( d => params.pageDomainsFile + "." + hasDomainForPage ( d ) ) )
-  const constant = [ 'HasSimpleMessages', 'HasPageSelection', `Has${params.commonParams}`, 'HasTagHolder', `HasPostCommand<FState,any>`, 'HasFocusOnDebug' ].join ( ',' )
+  const constant = [ 'HasSimpleMessages', 'HasPageSelection', `Has${params.commonParams}`, 'HasTagHolder', `HasRestCommands`, 'HasFocusOnDebug' ].join ( ',' )
   return [
     `export interface ${params.stateName} extends ${constant},`,
     ...indentList ( hasDomains ), `{}` ]
 }
 
 export function makeContext ( params: TSParams ): string[] {
-  return [ `export type Context = PageSelectionAndPostCommandsContext<${params.stateName}>`,
-    `export const context: Context = defaultPageSelectionAndPostCommandsContext<${params.stateName}> ( pages )` ]
+  return [ `export type Context = PageSelectionAndRestCommandsContext<${params.stateName}>`,
+    `export const context: Context = defaultPageSelectionAndRestCommandsContext<${params.stateName}> ( pages )` ]
 }
 export function makeCommon ( params: TSParams, pds: PageD[], rds: RestD[] ): string[] {
   return [
@@ -27,8 +27,8 @@ export function makeCommon ( params: TSParams, pds: PageD[], rds: RestD[] ): str
     `import {  OnTagFetchErrorFn } from '@focuson/fetcher';`,
     `import { identityOptics } from '@focuson/lens';`,
     `import { HasTagHolder, NameAndLens } from '@focuson/template';`,
-    `import { HasPostCommand } from '@focuson/poster';`,
-    `import { commonTagFetchProps, defaultPageSelectionAndPostCommandsContext, PageSelectionAndPostCommandsContext, HasFocusOnDebug } from '@focuson/focuson';`,
+    ` import { HasRestCommands } from '@focuson/rest'`,
+    `import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, PageSelectionAndRestCommandsContext, HasFocusOnDebug } from '@focuson/focuson';`,
     `import { LensProps } from '@focuson/state';`,
     `import { pages } from "./pages";`,
     ...imports ( params.pageDomainsFile ),
@@ -48,7 +48,7 @@ export function makeStateWithSelectedPage ( params: TSParams, commonParamsValue:
     `  messages: [],`,
     `  pageSelection: [{ pageName: '${pageName}', firstTime: true, pageMode: '${pageMode ? pageMode : 'view'}' }],`,
     ...pageName ? [ `  ${pageName}:{},` ] : [],
-    `  postCommands: [],`,
+    `  restCommands: [],`,
     `    debug: { selectedPageDebug: true, fetcherDebug: true }`,
     `  }`
   ]

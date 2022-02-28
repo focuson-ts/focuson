@@ -1,9 +1,10 @@
 import { currentPageSelectionTail, PageSelection, PageSelectionContext, popPage } from "../pageSelection";
 
-import { HasPostCommandLens, PostCommand } from "@focuson/poster";
+import { PostCommand } from "@focuson/poster";
 import { LensProps } from "@focuson/state";
 import { safeArray } from "@focuson/utils";
 import { Transform } from "@focuson/lens";
+import { HasRestCommandL, RestCommand } from "@focuson/rest";
 
 
 interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Context> {
@@ -14,7 +15,7 @@ export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( 
   return <button onClick={() => state.massTransform(popPage ( state ))}>Cancel</button>
 }
 
-export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasPostCommandLens<S, any>> ( { state }: ModalCommitCancelButtonProps<S, Context> ) {
+export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S>> ( { state }: ModalCommitCancelButtonProps<S, Context> ) {
   function onClick () {
     const lastPage = currentPageSelectionTail ( state )
     let rest = lastPage?.rest;
@@ -22,7 +23,7 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
       const r: { rest: string; action: string } = rest
       const transformers: Transform<S, any>[] = [
         [ state.context.pageSelectionL, ( ps: PageSelection[] ) => ps.slice ( 0, -1 ) ],
-        [ state.context.postCommandsL, ( ps: PostCommand<S, any, any>[] ) => [ ...safeArray ( ps ), { poster: r.rest, args: r.action } ] ]
+        [ state.context.restL, ( ps: RestCommand[] ) => [ ...safeArray ( ps ), { poster: r.rest, args: r.action } ] ]
       ]
       state.massTransform ( ...transformers )
     } else

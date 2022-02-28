@@ -4,7 +4,7 @@ import { LensProps } from "@focuson/state";
 import { Layout } from "./copied/layout";
 import { RestButton } from "./copied/rest";
 import { LabelAndInput } from "./copied/LabelAndInput";
-import { PageSelectionAndPostCommandsContext } from '@focuson/focuson';
+import { PageSelectionAndRestCommandsContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState, ModalAndCopyButton, ModalButton, ModalCancelButton, ModalCommitButton} from "@focuson/pages";
 import { Table } from "./copied/table";
 import { LabelAndRadio, Radio } from "./copied/Radio";
@@ -19,7 +19,7 @@ import {EAccountsSummaryDDDomain} from "./domains"
 import {EAccountSummaryDDDomain} from "./domains"
 import {ETransferDataDDomain} from "./domains"
 import {OccupationAndIncomeDomain} from "./domains"
-export function OccupationAndIncomeDetailsPage<S, Context extends PageSelectionAndPostCommandsContext<S>>(){
+export function OccupationAndIncomeDetailsPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){
   return focusedPageWithExtraState<S, OccupationAndIncomeDetailsPageDomain, OccupationAndIncomeDomain, Context> ( s => 'OccupationAndIncomeDetails' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[1][1][1][1][1][1][1]'>
@@ -30,7 +30,7 @@ export function OccupationAndIncomeDetailsPage<S, Context extends PageSelectionA
    <button>Prev</button>
    </Layout>)})}
 
-export function EAccountsSummaryPage<S, Context extends PageSelectionAndPostCommandsContext<S>>(){
+export function EAccountsSummaryPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){
   return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[1][3,3][5]'>
@@ -41,7 +41,7 @@ export function EAccountsSummaryPage<S, Context extends PageSelectionAndPostComm
    <button>refresh of type ResetStateButton cannot be create yet</button>
    </Layout>)})}
 
-export function CreatePlanPage<S, Context extends PageSelectionAndPostCommandsContext<S>>(){
+export function CreatePlanPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){
   return focusedPage<S, CreatePlanDDDomain, Context> ( s => '' ) (
      ( state, d, mode ) => {
           return (<Layout  details='[3]'>
@@ -50,7 +50,7 @@ export function CreatePlanPage<S, Context extends PageSelectionAndPostCommandsCo
    <ModalCommitButton id='commit' state={state} />
             </Layout>)})}
 
-export function ETransferPage<S, Context extends PageSelectionAndPostCommandsContext<S>>(){
+export function ETransferPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){
   return focusedPageWithExtraState<S, ETransferPageDomain, ETransferDataDDomain, Context> ( s => 'ETransfer' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[3][1,1,1][1,1][1][3]'>
@@ -60,7 +60,7 @@ export function ETransferPage<S, Context extends PageSelectionAndPostCommandsCon
    <button>resetAll of type ResetStateButton cannot be create yet</button>
    </Layout>)})}
 
-export function CreateEAccountPage<S, Context extends PageSelectionAndPostCommandsContext<S>>(){
+export function CreateEAccountPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){
   return focusedPageWithExtraState<S, CreateEAccountPageDomain, CreateEAccountDataDDDomain, Context> ( s => 'CreateEAccount' ) ( s => s.focusOn('editing')) (
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[1][1][1][1]]'>
@@ -70,7 +70,7 @@ export function CreateEAccountPage<S, Context extends PageSelectionAndPostComman
    <button>resetAll of type ResetStateButton cannot be create yet</button>
    </Layout>)})}
 
-export function CreateEAccountDataDD<S, Context extends PageSelectionAndPostCommandsContext<S>>({state,mode}: FocusedProps<S, CreateEAccountDataDDDomain,Context>){
+export function CreateEAccountDataDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, CreateEAccountDataDDDomain,Context>){
   return(<>
   <LabelAndInput state={state.focusOn('name')} label='name' mode={mode} />
   <LabelAndRadio state={state.focusOn('type')} label='type' mode={mode} enums={{"savings":"Savings","checking":"Checking"}} />
@@ -79,7 +79,7 @@ export function CreateEAccountDataDD<S, Context extends PageSelectionAndPostComm
 </>)
 }
 
-export function CreatePlanDD<S, Context extends PageSelectionAndPostCommandsContext<S>>({state,mode}: FocusedProps<S, CreatePlanDDDomain,Context>){
+export function CreatePlanDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, CreatePlanDDDomain,Context>){
   return(<>
   <LabelAndInput state={state.focusOn('createPlanStart')} label='Create Start' mode={mode} />
   <LabelAndInput state={state.focusOn('createPlanDate')} label='create plan date' ariaLabel='The Create Plan Date' mode={mode} />
@@ -87,7 +87,7 @@ export function CreatePlanDD<S, Context extends PageSelectionAndPostCommandsCont
 </>)
 }
 
-export function EAccountsSummaryDD<S, Context extends PageSelectionAndPostCommandsContext<S>>({state,mode}: FocusedProps<S, EAccountsSummaryDDDomain,Context>){
+export function EAccountsSummaryDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, EAccountsSummaryDDDomain,Context>){
   return(<>
   <Table state={state.focusOn('eAccountsTable')} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} mode={mode} />
   <LabelAndInput state={state.focusOn('totalMonthlyCost')} label='total monthly cost' mode={mode} />
@@ -99,7 +99,7 @@ export function EAccountsSummaryDD<S, Context extends PageSelectionAndPostComman
 </>)
 }
 
-export function ETransferDataD<S, Context extends PageSelectionAndPostCommandsContext<S>>({state,mode}: FocusedProps<S, ETransferDataDDomain,Context>){
+export function ETransferDataD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, ETransferDataDDomain,Context>){
   return(<>
   <LabelAndInput state={state.focusOn('amount')} label='Account Id' mode={mode} />
   <LabelAndInput state={state.focusOn('dateOfETransfer')} label='date of e transfer' mode={mode} />
@@ -113,7 +113,7 @@ export function ETransferDataD<S, Context extends PageSelectionAndPostCommandsCo
 </>)
 }
 
-export function OccupationAndIncome<S, Context extends PageSelectionAndPostCommandsContext<S>>({state,mode}: FocusedProps<S, OccupationAndIncomeDomain,Context>){
+export function OccupationAndIncome<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, OccupationAndIncomeDomain,Context>){
   return(<>
   <LabelAndInput state={state.focusOn('typeOfProfession')} label='type of profession' mode={mode} />
   <LabelAndInput state={state.focusOn('occupation')} label='occupation' mode={mode} />

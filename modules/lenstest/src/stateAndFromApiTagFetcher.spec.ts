@@ -51,6 +51,7 @@ describe ( 'tagFetcher', () => {
     expect ( mutate ( start ) ( 200, 'someString' ) ).toEqual ( {
       "messages": [ { "level": "info", "msg": "someString", "time": "timeForTest" } ],
       "pageSelection": [ { "pageMode": "view", "pageName": "secondPage" } ],
+      "restCommands": [],
       "secondPage": { "fromApi": "someString" },
       "tag1": "t1", "tag2": "t2",
       "tags": { "secondPage_tag1": [ "t1", "t2" ] },
@@ -64,6 +65,7 @@ describe ( 'tagFetcher', () => {
         "time": "timeForTest"
       } ],
       "secondPage": { "fromApi": "someLocal" },
+      "restCommands": [],
       "tag1": "t1",
       "tag2": "t2",
       "tags": { "secondPage_tag1": [ "t1", "t2" ] }

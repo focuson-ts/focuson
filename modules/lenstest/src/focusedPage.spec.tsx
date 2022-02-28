@@ -20,33 +20,33 @@ describe ( "selectedPage", () => {
   } )
 
   it ( "should display one page", () => {
-    const state = lensStateWith ( dataDefinedState, () => {}, [ 'firstPage', 'edit' ] )
+    const state = lensStateWith ( dataDefinedState, () => {}, [ 'firstPage', 'edit' ,undefined] )
     const comp = mount ( <SelectedPage state={state}/> )
     expect ( comp.text () ).toEqual ( "[firstPageTitle]:firstPage[one]/edit" )
   } )
 
   it ( "should display two pages", () => {
-    const state = lensStateWith ( dataDefinedState, () => {}, [ 'firstPage', 'edit' ], [ 'secondPage', 'view' ] )
+    const state = lensStateWith ( dataDefinedState, () => {}, [ 'firstPage', 'edit',undefined ], [ 'secondPage', 'view' ,undefined] )
     const comp = shallow ( <SelectedPage state={state}/> )
     // expect ( comp.html () ).toEqual ( '' )
     expect ( comp.text () ).toEqual ( "[firstPageTitle]:firstPage[one]/edit[secondPageTitle]:secondPage[two]/view" )
   } )
 
   it ( "should display three pages", () => {
-    const state = lensStateWith ( dataDefinedState, () => {}, [ 'firstPage', 'edit' ], [ 'secondPage', 'view' ], [ 'modalData', 'edit' ] )
+    const state = lensStateWith ( dataDefinedState, () => {}, [ 'firstPage', 'edit',undefined ], [ 'secondPage', 'view',undefined ], [ 'modalData', 'edit',undefined ] )
     const comp = shallow ( <SelectedPage state={state}/> )
     // expect ( comp.html () ).toEqual ( '' )
     expect ( comp.text () ).toEqual ( "[firstPageTitle]:firstPage[one]/edit[secondPageTitle]:secondPage[two]/view[modalDataTitle]:modalData[x]/edit" )
   } )
 
   it ( "shouldbe using the combine for multiple pages", () => {
-    const state = lensStateWith ( dataDefinedState, () => {}, [ 'firstPage', 'edit' ], [ 'secondPage', 'view' ], [ 'modalData', 'edit' ] )
+    const state = lensStateWith ( dataDefinedState, () => {}, [ 'firstPage', 'edit',undefined ], [ 'secondPage', 'view',undefined ], [ 'modalData', 'edit' ,undefined] )
     const comp = shallow ( <SelectedPage state={state}/> )
     expect ( comp.find ( '#combine' ).length ).toEqual ( 1 )
 
   } )
   it ( "display loading when no data", () => {
-    const state = lensStateWith ( rootState, () => {}, [ 'firstPage', 'edit' ], [ 'secondPage', 'view' ], [ 'modalData', 'edit' ] )
+    const state = lensStateWith ( rootState, () => {}, [ 'firstPage', 'edit',undefined ], [ 'secondPage', 'view' ,undefined], [ 'modalData', 'edit',undefined ] )
     const comp = shallow ( <SelectedPage state={state}/> )
     expect ( comp.text () ).toEqual ( "[firstPageTitle]:Loading[secondPageTitle]:Loading[modalDataTitle]:modalData[x]/edit" )
 

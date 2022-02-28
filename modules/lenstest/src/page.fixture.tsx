@@ -1,12 +1,13 @@
 import { lensState } from "@focuson/state";
 import { identityOptics } from "@focuson/lens";
-import { focusedPage, HasPageSelection, Loading, MultiPageDetails, PageConfig, PageMode, PageSelectionContext, simpleMessagesPageConfig } from "@focuson/pages";
+import { focusedPage, HasPageSelection, Loading, MultiPageDetails, PageConfig, PageMode, RestForModal, simpleMessagesPageConfig } from "@focuson/pages";
 import { HasSimpleMessages, SimpleMessage } from "@focuson/utils";
-import { defaultPageSelectionContext } from "@focuson/focuson";
+import { defaultPageSelectionAndRestCommandsContext, PageSelectionAndRestCommandsContext } from "@focuson/focuson";
 import { HasTagHolder } from "@focuson/template";
+import { HasRestCommands } from "@focuson/rest";
 
 
-export interface PageSpecState extends HasPageSelection, HasSimpleMessages, HasTagHolder {
+export interface PageSpecState extends HasPageSelection, HasSimpleMessages, HasTagHolder, HasRestCommands {
   tag1?: string,
   tag2?: string,
   tempData?: string,
@@ -19,28 +20,26 @@ export interface SecondPageDomain {
 }
 
 export const emptyState: PageSpecState = {
-  pageSelection: [], messages: [], tags: {}
+  pageSelection: [], messages: [], tags: {}, restCommands: []
 }
 export const rootState: PageSpecState = { ...emptyState, messages: [], pageSelection: [], tempData: 'x' };
 export const dataDefinedState: PageSpecState = { ...emptyState, firstPage: 'one', secondPage: { fromApi: 'two' }, messages: [], pageSelection: [], tempData: 'x' };
-export const firstPageSelectedState = stateWith ( rootState, [ 'firstPage', 'view' ] )
-export const firstPageWithFirstTime: PageSpecState = stateWithFirstTimes ( rootState, [ 'firstPage', 'view' ] )
-export const secondPageSelectedState = stateWith ( rootState, [ 'secondPage', 'view' ] )
-export const invalidPageState = stateWith ( rootState, [ 'unknownpage', 'view' ] )
+export const firstPageSelectedState = stateWith ( rootState, [ 'firstPage', 'view', undefined ] )
+export const firstPageWithFirstTime: PageSpecState = stateWithFirstTimes ( rootState, [ 'firstPage', 'view', undefined ] )
+export const secondPageSelectedState = stateWith ( rootState, [ 'secondPage', 'view', undefined ] )
+export const invalidPageState = stateWith ( rootState, [ 'unknownpage', 'view', undefined ] )
 
-export function stateWith ( main: PageSpecState, ...nameAndModes: [ string, PageMode ][] ): PageSpecState {
-  return { ...main, pageSelection: nameAndModes.map ( ( [ pageName, pageMode ] ) => ({ pageName, pageMode }) ) }
+export function stateWith ( main: PageSpecState, ...nameAndModes: [ string, PageMode, RestForModal | undefined ][] ): PageSpecState {
+  return { ...main, pageSelection: nameAndModes.map ( ( [ pageName, pageMode, rest ] ) => ({ pageName, pageMode, rest }) ) }
 }
-export function stateWithFirstTimes ( main: PageSpecState, ...nameAndModes: [ string, PageMode ][] ): PageSpecState {
-  return { ...main, pageSelection: nameAndModes.map ( ( [ pageName, pageMode ] ) => ({ pageName, pageMode , firstTime: true}) ) }
+export function stateWithFirstTimes ( main: PageSpecState, ...nameAndModes: [ string, PageMode, RestForModal | undefined ][] ): PageSpecState {
+  return { ...main, pageSelection: nameAndModes.map ( ( [ pageName, pageMode, rest ] ) => ({ pageName, pageMode, firstTime: true, rest }) ) }
 }
-export function lensStateWith ( main: PageSpecState, setMain: ( s: PageSpecState ) => void, ...nameAndModes: [ string, PageMode ][] ) {
+export function lensStateWith ( main: PageSpecState, setMain: ( s: PageSpecState ) => void, ...nameAndModes: [ string, PageMode, RestForModal | undefined ][] ) {
   return lensState<PageSpecState, ContextForTest> ( stateWith ( main, ...nameAndModes ), setMain, 'displayMain / focusedPage', context )
 }
 
-export interface ContextForTest extends PageSelectionContext<PageSpecState> {
-
-}
+export type ContextForTest = PageSelectionAndRestCommandsContext<PageSpecState>
 
 
 const DisplayPageSpecState = ( prefix: string ) =>
@@ -62,4 +61,4 @@ export const pageDetails: MultiPageDetails<PageSpecState, ContextForTest> = {
 }
 export type PageDetails = typeof pageDetails
 
-export const context: ContextForTest = defaultPageSelectionContext(pageDetails)
+export const context: ContextForTest = defaultPageSelectionAndRestCommandsContext<PageSpecState> ( pageDetails )

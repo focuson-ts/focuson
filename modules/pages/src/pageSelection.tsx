@@ -1,7 +1,8 @@
 import { identityOptics, Lens, Optional, Transform } from "@focuson/lens";
 import { LensState } from "@focuson/state";
 import { HasMultiPageDetails } from "./pageConfig";
-import { safeArray } from "@focuson/utils";
+import { RestAction, safeArray } from "@focuson/utils";
+import { RestForModal } from "./modal/modalButton";
 
 
 export type PageMode = 'view' | 'create' | 'edit'
@@ -21,12 +22,13 @@ export interface PageOnClose {
   onCloseHandler: string;//
   onCloseParams: any; //
 }
+
 export interface PageSelection {
   pageName: string;
   firstTime?: boolean;
   pageMode: PageMode;
   onClose?: PageOnClose;
-  rest?: { rest: string, action: string },
+  rest?: RestForModal,
   //This is a lens description. A path that should be the lens to the root of the data. This overrides the lens in the page description if it is present
   // Right now it is just a list of strings. Later it might include 'the nth item' etc */
   base?: string[]
@@ -50,9 +52,9 @@ export function pageSelections<S, Context extends HasPageSelectionLens<S>> ( s: 
  */
 export type PageOps = 'select' | 'popup'
 
-export function applyPageOps ( pageOps: PageOps, pageSelection: PageSelection ): ( s: PageSelection[] |undefined) => PageSelection[] {
-  return ( old: PageSelection[] |undefined) => {
-    const ps = safeArray(old)
+export function applyPageOps ( pageOps: PageOps, pageSelection: PageSelection ): ( s: PageSelection[] | undefined ) => PageSelection[] {
+  return ( old: PageSelection[] | undefined ) => {
+    const ps = safeArray ( old )
     if ( pageOps === 'popup' ) return [ ...ps, pageSelection ];
     if ( pageOps === 'select' ) return [ ...ps.slice ( 0, -1 ), pageSelection ];
     throw new Error ( `Cannot perform pageOps ${pageOps}` )
@@ -63,11 +65,11 @@ export function page<S, Context extends HasPageSelectionLens<S>> ( context: Cont
   return [ context.pageSelectionL, applyPageOps ( pageOps, pageSelection ) ]
 }
 export function popPage<S, Context extends HasPageSelectionLens<S>> ( lensState: LensState<S, any, Context> ): Transform<S, PageSelection[]> {
-  return [ lensState.context.pageSelectionL,  ps => safeArray(ps).slice ( 0, -1 ) ]
+  return [ lensState.context.pageSelectionL, ps => safeArray ( ps ).slice ( 0, -1 ) ]
 }
 
 export function currentPageSelection<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ): PageSelection[] {
-  return safeArray(state.context.pageSelectionL.getOption ( state.main ))
+  return safeArray ( state.context.pageSelectionL.getOption ( state.main ) )
 }
 export function currentPageSelectionTail<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ): PageSelection {
   return pageSelections ( state ).slice ( -1 )?.[ 0 ]

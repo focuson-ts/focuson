@@ -10,7 +10,7 @@ enzymeSetup ()
 describe ( "modal and copy button", () => {
 
   it ( "should render with a title", () => {
-    const state = lensStateWith ( rootState, () => {}, [ 'firstPage', 'view' ] )
+    const state = lensStateWith ( rootState, () => {}, [ 'firstPage', 'view' ,undefined] )
     const comp = mount ( <ModalAndCopyButton id='theId' text='someTitle'
                                              modal={'someModal'}
                                              pageMode='view'
@@ -25,7 +25,7 @@ describe ( "modal and copy button", () => {
 
   it ( "should change the state to have a model when clicked", () => {
     var remembered: any = {}
-    const state: LensState<PageSpecState, PageSpecState, ContextForTest> = lensStateWith ( dataDefinedState, s => {remembered = s}, [ 'firstPage', 'view' ] );
+    const state: LensState<PageSpecState, PageSpecState, ContextForTest> = lensStateWith ( dataDefinedState, s => {remembered = s}, [ 'firstPage', 'view',undefined ] );
     const comp = mount ( <ModalAndCopyButton id='someId' text='someTitle'
                                              modal={'someModal'}
                                              pageMode='view'
@@ -41,6 +41,7 @@ describe ( "modal and copy button", () => {
         { "pageMode": "view", "pageName": "firstPage" },
         { "firstTime": true, "pageMode": "view", "pageName": "someModal", "base": [ "some", "base" ] } ],
       "firstPage": "one",
+      restCommands:[],
       "secondPage": { "fromApi": "two" },
       "tags": {},
       "tempData": "one"

@@ -21,6 +21,9 @@ export interface RestCommand {
 export interface HasRestCommands {
   restCommands: RestCommand[]
 }
+export interface HasRestCommandL<C> {
+  restL: Optional<C, RestCommand[]>
+}
 export function restL<S extends HasRestCommands> () {
   return identityOptics<S> ().focusQuery ( 'restCommands' )
 }

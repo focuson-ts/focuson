@@ -5,6 +5,7 @@ import { lensState, LensState } from "@focuson/state";
 import { Lens, Lenses, Optional } from "@focuson/lens";
 import { FetchFn, HasSimpleMessages } from "@focuson/utils";
 import { HasTagHolder } from "@focuson/template";
+import { HasRestCommandL, HasRestCommands } from "@focuson/rest";
 
 
 export function defaultCombine ( pages: JSX.Element[] ) {
@@ -24,6 +25,14 @@ export function defaultPageSelectionAndPostCommandsContext<S extends HasPageSele
   return {
     ...defaultPageSelectionContext<S, PageSelectionAndPostCommandsContext<S>> ( pageDetails ),
     postCommandsL: Lenses.identity<S> ().focusOn ( 'postCommands' )
+  }
+}
+export interface PageSelectionAndRestCommandsContext<S> extends PageSelectionContext<S>, HasRestCommandL<S> {
+}
+export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSelection & HasRestCommands > ( pageDetails: MultiPageDetails<S, PageSelectionAndRestCommandsContext<S>> ): PageSelectionAndRestCommandsContext<S> {
+  return {
+    ...defaultPageSelectionContext<S, PageSelectionAndRestCommandsContext<S>> ( pageDetails ),
+    restL: Lenses.identity<S> ().focusOn ( 'restCommands' )
   }
 }
 
