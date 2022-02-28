@@ -1,6 +1,6 @@
 import { AllDataDD, DataD } from "../common/dataD";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
-import {  RestActionDetail, RestD } from "../common/restD";
+import { RestActionDetail, RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
 import { RestAction } from "@focuson/utils";
 
@@ -24,4 +24,5 @@ export const restControllerName = ( restD: RestD ) => `${restD.dataDD.name}Contr
 
 export const queryName = ( restD: RestD, action: RestAction ): string => action + restD.dataDD.name
 
-export const modalName = (p: PageD, modal: PageD) => modal.name
+export const modalName = ( p: PageD, modal: PageD ) => modal.name
+export const restDetailsName = ( p: PageD, r: RestD ) => p.name + "_" + r.dataDD.name + "RestDetails"

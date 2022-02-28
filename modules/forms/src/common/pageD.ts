@@ -12,7 +12,7 @@ type FetcherType = 'get' | 'list'
 
 export interface RestDefnInPageProperties {
   rest: RestD,
-  targetFromPath: string,
+  targetFromPath: string[],
   fetcher?: FetcherType
 }
 export interface RestDefnInPage {

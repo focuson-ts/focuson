@@ -128,3 +128,10 @@ export function makeCommonParamsValueForTest ( r: RestD ) {
   return Object.fromEntries ( sortedEntries ( r.params ).map ( ( [ name, v ] ) => [ name, v.testValue ] ) )
 
 }
+
+export function findIds(rest: RestD){
+  const ids = sortedEntries ( rest.params ).filter ( t => !t[ 1 ].main ).map ( ( [ name, value ] ) => name )
+  const resourceIds = sortedEntries ( rest.params ).filter ( t => t[ 1 ].main ).map ( ( [ name, value ] ) => name )
+  return [ids, resourceIds]
+
+}

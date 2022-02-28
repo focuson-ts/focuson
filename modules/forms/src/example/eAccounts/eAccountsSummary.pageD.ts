@@ -23,9 +23,9 @@ export const EAccountsSummaryPD: PageD = {
   modals: [ { modal: CreatePlanPD, path: [ 'fromApi', 'createPlan' ] } ],
   /** Binds the rest to 'where it takes place'. So we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
   rest: {
-    eAccountsSummary: { rest: eAccountsSummaryRestD, targetFromPath: 'fromApi', fetcher: 'get' },
+    eAccountsSummary: { rest: eAccountsSummaryRestD, targetFromPath: ['fromApi'], fetcher: 'get' },
     /** this will probably need to specify 'the current' plan in some way */
-    createPlanRestD: { rest: createPlanRestD, targetFromPath: 'CreatePlan' }
+    createPlanRestD: { rest: createPlanRestD, targetFromPath: ['tempCreatePlan'] }
   },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {                                                                      //interestingly these will be type checked in the target system...

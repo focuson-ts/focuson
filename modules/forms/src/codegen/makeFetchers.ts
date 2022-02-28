@@ -1,9 +1,9 @@
 import { sortedEntries } from "@focuson/utils";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
-import { domainName, fetcherName, hasDomainForPage, pageDomainName } from "./names";
+import { domainName, fetcherName, pageDomainName } from "./names";
 import { CombinedParams, TSParams } from "./config";
 import { addStringToEndOfAllButLast, imports, noExtension } from "./codegen";
-import { OccupationAndIncomeDetailsPageDomain } from "ExampleApp/src/pageDomains";
+import { findIds } from "../common/restD";
 
 
 export const makeFetcherCode = ( params: CombinedParams ) => ( p: PageD ) => ( def: RestDefnInPageProperties ): string[] => {
@@ -14,8 +14,7 @@ export const makeFetcherCode = ( params: CombinedParams ) => ( p: PageD ) => ( d
 
   const dataType = domainName ( d )
   const targetFromPath = def.targetFromPath;
-  const ids = sortedEntries ( def.rest.params ).filter ( t => !t[ 1 ].main ).map ( ( [ name, value ] ) => name )
-  const resourceIds = sortedEntries ( def.rest.params ).filter ( t => t[ 1 ].main ).map ( ( [ name, value ] ) => name )
+  const [ ids, resourceIds ] = findIds ( def.rest )
 
   return [
     `//fetcher type ${def.fetcher}`,
@@ -23,7 +22,7 @@ export const makeFetcherCode = ( params: CombinedParams ) => ( p: PageD ) => ( d
     `  return pageAndTagFetcher<S, ${pageDomain}.${pageDomainName ( p )}, ${domain}.${dataType}, SimpleMessage>(`,
     `    ${common}.commonFetch<S,  ${domain}.${dataType}>(),`,
     `     '${p.name}',`,
-    `     '${targetFromPath}', fdLens, commonIds, {},${JSON.stringify(ids)},${JSON.stringify(resourceIds)},`,
+    `     '${targetFromPath}', fdLens, commonIds, {},${JSON.stringify ( ids )},${JSON.stringify ( resourceIds )},`,
     `      Lenses.identity< ${pageDomain}.${pageDomainName ( p )}> ().focusQuery ( '${targetFromPath}' ),`,
     `     '${def.rest.url}')`,
 

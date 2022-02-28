@@ -10,7 +10,7 @@ export const paramsForTest: CombinedParams = {
   pageDomainsFile: "pageDomains",
   domainsFile: "domains",
   fetchersFile: "fetchers",
-  postersFile: "posters",
+  restsFile: "rests",
   pactsFile: "pact",
   samplesFile: "samples",
   renderFile: "render",

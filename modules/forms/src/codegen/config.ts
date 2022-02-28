@@ -16,7 +16,7 @@ export interface TSParams {
   pageDomainsFile: string;
   domainsFile: string;
   fetchersFile: string;
-  postersFile: string;
+  restsFile: string;
   pactsFile: string;
   samplesFile: string;
   renderFile: string;
