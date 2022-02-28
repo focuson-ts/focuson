@@ -3,9 +3,9 @@ import { LabelAndRadioCD, TableCD } from "../../common/componentsD";
 
 
 export const EAccountDisplayTypeDD: StringPrimitiveDD = {
+  ...OneLineStringDD,
   emptyValue: "savings",
   name: "EAccountDisplayTypeDD",
-  reactType: 'string',
   description: "The component that displays an EAccountDisplayType (savings/checking)",
   display: LabelAndRadioCD,
   validation: { enum: true, maxLength: 7 },

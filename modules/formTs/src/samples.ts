@@ -155,7 +155,7 @@ export const sampleETransferDataD1: domains.ETransferDataDDomain =
 }
 export const sampleOccupationAndIncome1: domains.OccupationAndIncomeDomain = 
 {
-  "typeOfProfession": "selfEmployed",
+  "typeOfProfession": "This is a one line string",
   "occupation": "school teacher",
   "customersDescription": "another one line string",
   "businessType": "Electrical Technical Support",
@@ -182,7 +182,7 @@ export const sampleChequeCreditbooksHistoryLineDD2: domains.ChequeCreditbooksHis
 export const sampleCreateEAccountDataDD2: domains.CreateEAccountDataDDDomain = 
 {
   "name": "This is a one line string",
-  "type": "checking",
+  "type": "This is a one line string",
   "savingsStyle": "paySettime",
   "initialAmount": 123
 }
@@ -198,7 +198,7 @@ export const sampleEAccountsSummaryDD2: domains.EAccountsSummaryDDDomain =
   "eAccountsTable": [
     {
       "accountId": "4333450",
-      "displayType": "checking",
+      "displayType": "This is a one line string",
       "description": "another one line string",
       "virtualBankSeq": "seq3",
       "total": 1000,
@@ -217,7 +217,7 @@ export const sampleEAccountsSummaryDD2: domains.EAccountsSummaryDDDomain =
 export const sampleEAccountSummaryDD2: domains.EAccountSummaryDDDomain = 
 {
   "accountId": "4333450",
-  "displayType": "checking",
+  "displayType": "This is a one line string",
   "description": "another one line string",
   "virtualBankSeq": "seq3",
   "total": 1000,
@@ -231,13 +231,13 @@ export const sampleETransferDataD2: domains.ETransferDataDDomain =
   "fromAccount": "4333450",
   "toAccount": "4333450",
   "monitoringAccount": "4333450",
-  "type": "checking",
+  "type": "This is a one line string",
   "balance": 123,
   "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
 }
 export const sampleOccupationAndIncome2: domains.OccupationAndIncomeDomain = 
 {
-  "typeOfProfession": "selfEmployed",
+  "typeOfProfession": "another one line string",
   "occupation": "plumber",
   "customersDescription": "This is a one line string",
   "businessType": "Electrical Technical Support",

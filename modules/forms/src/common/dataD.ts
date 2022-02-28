@@ -53,21 +53,24 @@ export interface CommonPrimitiveDD<T> extends CommonDataDD, HasSample<T>, HasEnu
   label?: string;
   display: DisplayCompD;
   validation: SingleFieldValidationDD;
-  fieldName?: string
+  fieldName?: string;
+  graphQlType: string;
 }
 
 export interface StringPrimitiveDD extends CommonPrimitiveDD<string> {
   reactType: 'string';
-
+  graphQlType: 'String'
 
 }
 export interface BooleanPrimitiveDD extends CommonPrimitiveDD<boolean> {
   reactType: 'boolean';
   emptyValue: false
+  graphQlType: 'Boolean'
 }
 export interface NumberPrimitiveDD extends CommonPrimitiveDD<number> {
   reactType: 'number';
-  emptyValue: 0
+  emptyValue: number;
+  graphQlType: 'Int' | 'Float'
 }
 export type PrimitiveDD = StringPrimitiveDD | BooleanPrimitiveDD | NumberPrimitiveDD
 
@@ -181,6 +184,7 @@ export interface EnumDD {
 export const CustomerIdDD: StringPrimitiveDD = {
   emptyValue: "",
   reactType: "string",
+  graphQlType: 'String',
   name: 'CustomerIdDD',
   description: "A customer id",
   display: LabelAndStringInputCD,
@@ -190,34 +194,38 @@ export const CustomerIdDD: StringPrimitiveDD = {
 export const AccountIdDD: StringPrimitiveDD = {
   name: 'AccountIdDD',
   emptyValue: "",
+  graphQlType: 'String',
   reactType: 'string',
   description: "An account id",
   display: LabelAndStringInputCD,
   validation: { regex: "\d+", maxLength: 7 },
   sample: [ "1233450", "3233450", "4333450" ]
 }
-export const StringDD: PrimitiveDD = {
+export const StringDD: StringPrimitiveDD = {
   name: 'StringDD',
   emptyValue: "",
+  graphQlType: 'String',
   reactType: 'string',
   description: "The primitive 'string'. A reasonably short list of characters",
   display: LabelAndStringInputCD,
   validation: { maxLength: 255 }, //Note no regex
   sample: [ "someString", "anotherString" ]
 }
-export const OneLineStringDD: PrimitiveDD = {
+export const OneLineStringDD: StringPrimitiveDD = {
   emptyValue: "",
   name: 'OneLineStringDD',
   reactType: 'string',
+  graphQlType: 'String',
   description: "A string that fits on a line of text. Probably reasonably long",
   display: LabelAndStringInputCD,
   validation: { maxLength: 255 }, //Note no regex
   sample: [ "This is a one line string", "another one line string" ]
 }
-export const ManyLineStringDD: PrimitiveDD = {
+export const ManyLineStringDD: StringPrimitiveDD = {
   emptyValue: "",
   name: 'ManyLineStringDD',
   reactType: 'string',
+  graphQlType: 'String',
   description: "A string that needs many lines and uses a text Area",
   display: LabelAndStringInputCD,
   validation: {},
@@ -226,6 +234,7 @@ export const ManyLineStringDD: PrimitiveDD = {
 export const IntegerDD: NumberPrimitiveDD = {
   name: 'IntegerDD',
   emptyValue: 0,
+  graphQlType: 'Int',
   reactType: 'number',
   description: "The primitive 'Integer'",
   display: LabelAndNumberInputCD,
@@ -240,6 +249,7 @@ export const MoneyDD: NumberPrimitiveDD = {
 export const BooleanDD: PrimitiveDD = {
   name: 'IntegerDD',
   emptyValue: false,
+  graphQlType: 'Boolean',
   reactType: 'boolean',
   description: "The primitive 'Boolean'",
   display: LabelAndCheckboxInputCD,
@@ -249,6 +259,7 @@ export const BooleanDD: PrimitiveDD = {
 export const DateDD: StringPrimitiveDD = {
   name: 'DateDD',
   reactType: 'string',
+  graphQlType: 'String',
   emptyValue: '2022-1-1',
   description: "The primitive representing a date (w/o time)",
   display: LabelAndStringInputCD, //or maybe a date picker
@@ -259,6 +270,7 @@ export const DateDD: StringPrimitiveDD = {
 export const DateTimeDD: PrimitiveDD = {
   name: 'DateTimeDD',
   reactType: 'string',
+  graphQlType: 'String',
   emptyValue: '2022-1-1T00:00:00',
   description: "The primitive representing a date (with time)",
   display: LabelAndStringInputCD, //or maybe a date picker

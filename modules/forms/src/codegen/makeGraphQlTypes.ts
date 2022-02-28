@@ -58,10 +58,9 @@ export function makeQueryOrMutateBlock ( rs: RestD[], q: QueryOrMutation ): stri
 
 export const oneSchemaLine = ( suffix: string, repeating: boolean ) => ( [ name, one ]: [ string, OneDataDD ] ): string => {
   const { dataDD } = one
-
   if ( isDataDd ( dataDD ) ) return repeating ? `  ${name}: [${dataDD.name}${suffix}!]!` : `  ${name}: ${dataDD.name}${suffix}!`
   if ( isRepeatingDd ( dataDD ) ) return oneSchemaLine ( suffix, true ) ( [ name, { ...one, dataDD: dataDD.dataDD } ] )
-  return `  ${name}: String!`
+  return `  ${name}: ${dataDD.graphQlType}!`
 };
 export const makeSchemaBlock = ( keyword: string, suffix: string ) => ( d: DataD ): string[] => [ `${keyword} ${rawTypeName ( d )}${suffix}{`,
   ...Object.entries ( d.structure ).map ( oneSchemaLine ( suffix, false ) ),

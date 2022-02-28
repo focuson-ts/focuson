@@ -3,9 +3,9 @@ import { EAccountDisplayTypeDD } from "../eAccounts/eAccountsSummary.dataD";
 import { RadioCD } from "../../common/componentsD";
 
 const SavingsStyleDD: StringPrimitiveDD = {
+  ...OneLineStringDD,
   name: "SavingsStyleDD",
   emptyValue: "adhoc",
-  reactType: 'string',
   description: "Radio buttons that say how you want to accumulate  money",
   display: RadioCD,
   validation: { enum: true },
