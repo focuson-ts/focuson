@@ -1,5 +1,5 @@
 {
-  "template": "noreact",
+  "template": "forms",
   "name": "@focuson/forms",
   "description": "Allows us to define data that is stored in a database, or perhaps an api",
   "details": {

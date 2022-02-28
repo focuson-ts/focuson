@@ -2,7 +2,7 @@ import { allMainPages, PageD } from "../common/pageD";
 import { hasDomainForPage } from "./names";
 import { addStringToEndOfAllButLast, imports, indentList } from "./codegen";
 import { TSParams } from "./config";
-import { applyToTemplate } from "@focuson/template";
+import { applyToTemplate, DirectorySpec, loadFile } from "@focuson/template";
 import * as fs from "fs";
 import { isCommonLens, RestD, unique } from "../common/restD";
 import { sortedEntries } from "@focuson/utils";
@@ -20,7 +20,7 @@ export function makeContext ( params: TSParams ): string[] {
   return [ `export type Context = PageSelectionAndRestCommandsContext<${params.stateName}>`,
     `export const context: Context = defaultPageSelectionAndRestCommandsContext<${params.stateName}> ( pages )` ]
 }
-export function makeCommon ( params: TSParams, pds: PageD[], rds: RestD[] ): string[] {
+export function makeCommon ( params: TSParams, pds: PageD[], rds: RestD[] , directorySpec: DirectorySpec): string[] {
   return [
     `import { HasPageSelection, PageMode ,PageSelectionContext} from '@focuson/pages'`,
     `import { defaultDateFn, HasSimpleMessages, SimpleMessage } from '@focuson/utils';`,
@@ -34,7 +34,7 @@ export function makeCommon ( params: TSParams, pds: PageD[], rds: RestD[] ): str
     ...imports ( params.pageDomainsFile ),
     ...makeContext ( params ),
     ...makeFullState ( params, pds ),
-    ...makeCommonParams ( params, rds ),
+    ...makeCommonParams ( params, rds, directorySpec ),
     ...makeStateWithSelectedPage ( params, JSON.stringify ( findAllCommonParamsWithSamples ( rds ) ), pds[ 0 ].name ) //TODO this should be slicker and aggregated params for example
   ]
 }
@@ -66,10 +66,10 @@ export function findAllCommonParamsWithSamples ( rds: RestD[] ): any {
 }
 
 
-export function makeCommonParams ( params: TSParams, rds: RestD[] ) {
+export function makeCommonParams ( params: TSParams, rds: RestD[] , directorySpec: DirectorySpec) {
   let commonParams = findAllCommonParams ( rds );
   const commonParamDefns = commonParams.map ( s => s + "?:string;\n" ).join ( "" )
   const commonParamNameAndLens = commonParams.map ( s => `   ${s}: commonIdsL.focusQuery('${s}')` ).join ( ",\n" )
-  return applyToTemplate ( fs.readFileSync ( 'templates/commonTemplate.ts' ).toString (), { ...params, commonParamDefns, commonParamNameAndLens } )
+  return applyToTemplate ( loadFile('templates/commonTemplate.ts',directorySpec ).toString (), { ...params, commonParamDefns, commonParamNameAndLens } )
 
 }

@@ -11,20 +11,20 @@ describe ( "makeFullState", () => {
       "export interface FState extends HasSimpleMessages,HasPageSelection,HascommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,",
       " pageDomains.HasEAccountsSummaryPageDomain",
       "{}"
-    ])
+    ] )
   } )
 
 } )
 
 describe ( "findAllCommonParams", () => {
   it ( 'should find all the commons lens in the pages', () => {
-    expect ( findAllCommonParams ( [ eAccountsSummaryRestD ,createPlanRestD] ) ).toEqual ( [ "accountId", "customerId","createPlanId" ] )
+    expect ( findAllCommonParams ( [ eAccountsSummaryRestD, createPlanRestD ] ) ).toEqual ( [ "accountId", "customerId", "createPlanId" ] )
   } )
 
 } )
 describe ( "makeCommonParams", () => {
   it ( 'should make the code around "GetUrlParams"', () => {
-    expect ( makeCommonParams ( paramsForTest, [ eAccountsSummaryRestD ] ) ).toEqual ( [
+    expect ( makeCommonParams ( paramsForTest, [ eAccountsSummaryRestD ], { main: '.', backup: '.' } ) ).toEqual ( [
       "export interface HascommonIds {commonIds: commonIds}",
       "export type commonIds = {",
       "accountId?:string;",
@@ -44,7 +44,7 @@ describe ( "makeCommonParams", () => {
       "    ( s, date ) => [], //later do the messaging",
       "    defaultDateFn ) ( onError ) //updateTagsAndMessagesOnError ( defaultErrorMessage )",
       "}"
-    ])
+    ] )
   } )
 
 } )

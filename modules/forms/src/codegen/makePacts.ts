@@ -1,5 +1,5 @@
 import { allRestAndActions, PageD, RestDefnInPageProperties } from "../common/pageD";
-import { applyToTemplate } from "@focuson/template";
+import { applyToTemplate, DirectorySpec, loadFile } from "@focuson/template";
 import fs from "fs";
 import { beforeSeparator, NameAnd, sortedEntries } from "@focuson/utils";
 import { sampleName } from "./names";
@@ -26,32 +26,32 @@ interface PactProps extends NameAnd<string> {
   commonParamsValue: string,
   commonParamsTagsValue: string,
 }
-export function makeFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPageProperties, rad: RestActionDetail ): string[] {
+export function makeFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPageProperties, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
   const fetcherType = r.fetcher
-  if ( fetcherType == 'get' && rad.name === 'get' ) return makeGetFetcherPact ( params, p, r, rad )
-  if ( fetcherType == 'list' && rad.name === 'list' ) return makeListFetcherPact ( params, p, r, rad )
+  if ( fetcherType == 'get' && rad.name === 'get' ) return makeGetFetcherPact ( params, p, r, rad, directorySpec )
+  if ( fetcherType == 'list' && rad.name === 'list' ) return makeListFetcherPact ( params, p, r, rad, directorySpec )
   return []
 }
 
-export function makeGetFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPageProperties, rad: RestActionDetail ): string[] {
+export function makeGetFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPageProperties, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
   const props = makePropsForFetcherPact ( p, r.rest, params );
-  const str: string = fs.readFileSync ( 'templates/onePact.ts' ).toString ()
-  return ['//GetFetcher pact test',...applyToTemplate ( str, props )]
+  const str: string = loadFile ( 'templates/onePact.ts', directorySpec ).toString ()
+  return [ '//GetFetcher pact test', ...applyToTemplate ( str, props ) ]
 }
 
 //currently no difference.. .but will be once we do the fetchers differently... its about the id of the item
-export function makeListFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPageProperties, rad: RestActionDetail ): string[] {
+export function makeListFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPageProperties, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
   const props = makePropsForFetcherPact ( p, r.rest, params );
-  const str: string = fs.readFileSync ( 'templates/onePact.ts' ).toString ()
-  return ['//ListFetcher pact test',...applyToTemplate ( str, props )]
+  const str: string = loadFile ( 'templates/onePact.ts', directorySpec ).toString ()
+  return [ '//ListFetcher pact test', ...applyToTemplate ( str, props ) ]
 }
 
-export function makeAllPacts ( params: TSParams, ps: PageD[] ): string[] {
+export function makeAllPacts ( params: TSParams, ps: PageD[], directorySpec: DirectorySpec ): string[] {
   return [
     ...imports ( params.samplesFile ),
     `import {emptyState, ${params.stateName} } from "./${params.commonFile}";`,
     `import * as ${params.fetchersFile} from "./${params.fetchersFile}";`,
-    ...allRestAndActions ( ps ).flatMap ( ( [ pd, rd, rad ] ) => makeFetcherPact ( params, pd, rd, rad ) )
+    ...allRestAndActions ( ps ).flatMap ( ( [ pd, rd, rad ] ) => makeFetcherPact ( params, pd, rd, rad, directorySpec ) )
   ]
 }
 function makePropsForFetcherPact ( p: PageD, d: RestD, params: TSParams ) {

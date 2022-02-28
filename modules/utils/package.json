@@ -11,7 +11,9 @@
       "not op_mini all"
     ]
   },
-  "dependencies": {"node-fetch": "2.6.1"},
+  "dependencies": {
+    "node-fetch": "2.6.1"
+  },
   "devDependencies": {
     "@types/node": "^14.14.7",
     "npm-check-updates": "^10.0.0",
@@ -42,16 +44,18 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "0.4.21",
+  "version": "0.4.26",
   "template": "noreact",
+  "name": "@focuson/utils",
   "description": "Common utilities for the @focuson project",
   "details": {
     "ideify": true,
     "publish": true,
     "links": [],
-    "extraDeps": {},
+    "extraDeps": {
+      "node-fetch": "2.6.1"
+    },
     "extraDevDeps": {}
   },
-  "test": false,
-  "name": "@focuson/utils"
+  "test": false
 }

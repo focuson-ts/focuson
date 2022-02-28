@@ -6,7 +6,7 @@ import { defaultRestAction } from "../common/restD";
 describe ( "makePacts", () => {
   it ( "should make a pact", () => {
 
-    expect ( makeFetcherPact (paramsForTest, EAccountsSummaryPD, EAccountsSummaryPD.rest.eAccountsSummary, defaultRestAction.get ) ).toEqual ( [
+    expect ( makeFetcherPact ( paramsForTest, EAccountsSummaryPD, EAccountsSummaryPD.rest.eAccountsSummary, defaultRestAction.get, { main: '.', backup: '.' } ) ).toEqual ( [
       "//GetFetcher pact test",
       "pactWith ( { consumer: 'EAccountsSummaryDD', provider: 'EAccountsSummaryDDProvider', cors: true }, provider => {",
       "  describe ( 'EAccountsSummary', () => {",
@@ -34,6 +34,6 @@ describe ( "makePacts", () => {
       "    } )",
       "  } )",
       "})"
-    ])
+    ] )
   } )
 } )

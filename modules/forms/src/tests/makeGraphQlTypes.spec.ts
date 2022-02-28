@@ -30,11 +30,11 @@ describe ( "makeGraphQlSchema", () => {
   it ( "should be able to  makeSchemaBlock", () => {
     expect ( makeSchemaBlock ( 'input', 'xx' ) ( EAccountsSummaryDD ) ).toEqual ( [
       "input EAccountsSummaryDDxx{",
-      "  useEStatements: String!",
+      "  useEStatements: Boolean!",
       "  eAccountsTable: [EAccountSummaryDDxx!]!",
-      "  totalMonthlyCost: String!",
-      "  oneAccountBalance: String!",
-      "  currentAccountBalance: String!",
+      "  totalMonthlyCost: Int!",
+      "  oneAccountBalance: Int!",
+      "  currentAccountBalance: Int!",
       "  createPlan: CreatePlanDDxx!",
       "}"
     ] )
@@ -44,7 +44,7 @@ describe ( "makeGraphQlSchema", () => {
       "  displayType: String!",
       "  description: String!",
       "  virtualBankSeq: String!",
-      "  total: String!",
+      "  total: Int!",
       "  frequency: String!",
       "}"
     ] )
@@ -75,11 +75,11 @@ describe ( "makeGraphQlSchema", () => {
       "  createPlanEnd: String!",
       "}",
       "type EAccountsSummaryDD{",
-      "  useEStatements: String!",
+      "  useEStatements: Boolean!",
       "  eAccountsTable: [EAccountSummaryDD!]!",
-      "  totalMonthlyCost: String!",
-      "  oneAccountBalance: String!",
-      "  currentAccountBalance: String!",
+      "  totalMonthlyCost: Int!",
+      "  oneAccountBalance: Int!",
+      "  currentAccountBalance: Int!",
       "  createPlan: CreatePlanDD!",
       "}",
       "type EAccountSummaryDD{",
@@ -87,7 +87,7 @@ describe ( "makeGraphQlSchema", () => {
       "  displayType: String!",
       "  description: String!",
       "  virtualBankSeq: String!",
-      "  total: String!",
+      "  total: Int!",
       "  frequency: String!",
       "}",
       "input CreatePlanDDInp{",

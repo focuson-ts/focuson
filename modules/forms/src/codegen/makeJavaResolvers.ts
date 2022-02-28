@@ -1,9 +1,8 @@
 import { defaultRestAction, RestD } from "../common/restD";
 import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, OneDataDD, PrimitiveDD, RepeatingDataD, sampleFromDataD } from "../common/dataD";
-import fs from "fs";
 import { resolverName, sampleName } from "./names";
 import { JavaWiringParams } from "./config";
-import { applyToTemplate } from "@focuson/template";
+import { applyToTemplate, DirectorySpec, loadFile } from "@focuson/template";
 
 
 export function makeJavaResolversInterface ( { thePackage, fetcherInterface }: JavaWiringParams, rs: RestD[] ): string[] {
@@ -24,7 +23,7 @@ function makeWiring ( parentName: string, resolver: string, name: string ): stri
 }
 
 
-export function makeAllJavaWiring ( params: JavaWiringParams, rs: RestD[] ): string[] {
+export function makeAllJavaWiring ( params: JavaWiringParams, rs: RestD[], directorySpec: DirectorySpec ): string[] {
   let wiring = findAllResolvers2 ( rs ).map ( ( { parent, resolver, name, sample } ) => makeWiring ( parent, resolver, name ) )
 
 
@@ -34,7 +33,7 @@ export function makeAllJavaWiring ( params: JavaWiringParams, rs: RestD[] ): str
 //     makeWiring ( outputD.query, resolver, resolver )
 // } )
 // let wiring = [ ...makeJavaWiringForQueryAndMutation ( rs ), ...makeJavaWiringForAllDataDs ( rs ) ]
-  const str: string = fs.readFileSync ( 'templates/JavaWiringTemplate.java' ).toString ()
+  const str: string = loadFile ( 'templates/JavaWiringTemplate.java', directorySpec ).toString ()
   return applyToTemplate ( str, { ...params, wiring: wiring.map ( s => '          ' + s ).join ( '\n' ) } )
 }
 

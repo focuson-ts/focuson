@@ -70,7 +70,7 @@ describe ( "makeJavaResolversInterface", () => {
 
 describe ( "makeAllJavaWiring", () => {
   it ( "should make a java file which will power a graphql spring boot app", () => {
-    expect ( makeAllJavaWiring ( paramsForTest, [ eAccountsSummaryRestD, createPlanRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeAllJavaWiring ( paramsForTest, [ eAccountsSummaryRestD, createPlanRestD ], { main: '.', backup: '.' } ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "package packName;",
       "import com.google.common.base.Charsets;",
       "import com.google.common.io.Resources;",

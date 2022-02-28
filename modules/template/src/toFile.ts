@@ -16,13 +16,13 @@ export const copyFiles = ( toRoot: string, fromRoot: string, directorySpec?: Dir
 };
 export function copyFile ( name: string, from: string, directorySpec?: DirectorySpec ) {
   // console.log ( 'copyFile name to ', name, 'from', from )
-  const { main, backup } = directorySpec ? directorySpec : { main: "", backup: "" }
-  const mainPath = main + from;
+  const { main, backup } = directorySpec ? directorySpec : { main: ".", backup: "." }
+  const mainPath = main +"/" + from;
   try {
     // console.log ( '   main copyFile', mainPath, name )
     fs.copyFileSync ( mainPath, name )
   } catch ( e: any ) {
-    const backupPath = backup + from;
+    const backupPath = backup + "/"+ from;
 
     console.log ( '   main copyFile', backupPath, name )
     fs.copyFileSync ( backupPath, name )
