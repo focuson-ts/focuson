@@ -1,18 +1,17 @@
-import { IndexPage, PageMode, pageSelectionlens, SelectedPage, SelectPage } from "@focuson/pages";
+import { IndexPage, PageMode, pageSelectionlens, SelectedPage, SelectPage, simpleMessagesL } from "@focuson/pages";
 import { FocusOnConfig, setJsonForFocusOn } from "@focuson/focuson";
 import { postCommandsL, Posters } from "@focuson/poster";
 import { getElement, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
 import { context, Context, emptyState, FState } from "./common";
-import { fetchWithDelay, fetchWithPrefix, loggingFetchFn, NameAnd, sortedEntries } from "@focuson/utils";
+import { fetchWithDelay, fetchWithPrefix, loggingFetchFn, NameAnd, SimpleMessage, sortedEntries } from "@focuson/utils";
 import { fetchers } from "./fetchers";
 import { pages } from "./pages";
+import { restL } from "@focuson/rest";
+import { restDetails } from "./rests";
 
 
-export const posters: Posters<FState> = {}
-
-
-const config: FocusOnConfig<FState, Context> = {
+const config: FocusOnConfig<FState, Context, SimpleMessage> = {
   /** How data is sent to/fetched from apis */
   fetchFn: fetchWithDelay ( 1000, fetchWithPrefix ( 'http://localhost:8080', loggingFetchFn ) ),
   /**A hook that is called before anything else.  */
@@ -22,7 +21,7 @@ const config: FocusOnConfig<FState, Context> = {
   /** A last ditch error handler  */
   onError: ( s: FState, e: any ) => {
     console.error ( e );
-    return s
+    return s;
   },
 
   /** The lens to the current selected page */
@@ -31,13 +30,12 @@ const config: FocusOnConfig<FState, Context> = {
   pages,
 
 
-  /** The lens to the list of PostCommands*/
-  postL: postCommandsL (),
   /** The list of all registered posters that can send data to the back end   */
-  posters,
-
   /** The collection of all registered fetchers that will get data from the back end */
-  fetchers
+  fetchers,
+  messageL: simpleMessagesL (),
+  restL: restL (),
+  restDetails: restDetails
 }
 
 
@@ -53,7 +51,7 @@ const pageModeFor: NameAnd<PageMode> = {
 
 }
 
-let setJson = setJsonForFocusOn ( config, context, ( s: LensState<FState, FState, Context> ): void =>
+let setJson = setJsonForFocusOn<FState, Context, SimpleMessage> ( config, context, ( s: LensState<FState, FState, Context> ): void =>
   ReactDOM.render ( <div>
     <IndexPage state={s}>
       <SelectedPage state={s}/>

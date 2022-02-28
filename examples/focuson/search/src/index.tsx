@@ -1,18 +1,19 @@
 import { identityOptics } from "@focuson/lens";
-import { HasPageSelection, MultiPageDetails, PageSelectionContext, pageSelectionlens, SelectedPage, simpleMessagesPageConfig } from "@focuson/pages";
+import { HasPageSelection, MultiPageDetails, PageSelectionContext, pageSelectionlens, SelectedPage, simpleMessagesL, simpleMessagesPageConfig } from "@focuson/pages";
 import { getElement, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
 import { SearchPage, SearchQueryModalPage } from "./search/searchPage";
 import React from "react";
 import { defaultPageSelectionContext, FocusOnConfig, HasFocusOnDebug, setJsonForFocusOn } from "@focuson/focuson";
 import { HasPostCommand, postCommandsL, Posters } from "@focuson/poster";
-import { defaultDateFn, fetchWithDelay, fetchWithPrefix, HasSimpleMessages, loggingFetchFn } from "@focuson/utils";
+import { defaultDateFn, fetchWithDelay, fetchWithPrefix, HasSimpleMessages, loggingFetchFn, SimpleMessage } from "@focuson/utils";
 import { HasSearch, SearchRequirements } from "./search/fullSearchDomain";
 import { fetchers } from "./fetchers";
 import { HasTagHolder } from "@focuson/template";
+import { HasRestCommands, RestDetails, restL } from "@focuson/rest";
 
 type Context = PageSelectionContext<FullState>
-export interface FullState extends SearchRequirements, HasFocusOnDebug, HasPostCommand<FullState, any> {}
+export interface FullState extends SearchRequirements, HasFocusOnDebug, HasRestCommands {}
 
 
 function MyLoading () {
@@ -25,13 +26,13 @@ export const pages: MultiPageDetails<FullState, Context> = {
   query: { config: simpleMessagesConfig, lens: identityOptics<FullState> ().focusQuery ( 'search' ).focusQuery ( 'query' ), pageFunction: SearchQueryModalPage (), modal: true }
 }
 
-export const posters: Posters<FullState> = {}
+export const restDetails: RestDetails<FullState, SimpleMessage> = {}
 
 
-const config: FocusOnConfig<FullState, Context> = {
+const config: FocusOnConfig<FullState, Context, SimpleMessage> = {
   /** How data is sent to/fetched from apis */
   fetchFn: fetchWithDelay ( 2000, fetchWithPrefix ( 'http://localhost:8080', loggingFetchFn ) ),
-
+  messageL: simpleMessagesL (),
   /**A hook that is called before anything else.  */
   preMutate: ( s: FullState ) => s,
   /** A hook that is called after everything else.  */
@@ -47,25 +48,27 @@ const config: FocusOnConfig<FullState, Context> = {
   /** The list of all registered pages that can be displayed with SelectedPage  */
   pages,
 
-  /** The lens to the list of PostCommands*/
-  postL: postCommandsL (),
-  /** The list of all registered posters that can send data to the back end   */
-  posters,
+  /** The lens to the list of RestCommands*/
+  restL: restL (),
+  /** The list of all registered rest commands that can send/get data to/from the back end   */
+  restDetails,
 
   /** The collection of all registered fetchers that will get data from the back end */
-  fetchers: fetchers (defaultDateFn)
+  fetchers: fetchers ( defaultDateFn )
 }
 type Config = typeof config
 
 let rootElement = getElement ( "root" );
 console.log ( "set json" )
-let setJson = setJsonForFocusOn<Config, FullState, Context> ( config, defaultPageSelectionContext ( pages ), ( s: LensState<FullState, FullState, PageSelectionContext<FullState>> ): void =>
-  ReactDOM.render ( <SelectedPage state={s} />, rootElement ) )
+let setJson = setJsonForFocusOn<FullState, Context, SimpleMessage> ( config, defaultPageSelectionContext ( pages ), ( s: LensState<FullState, FullState, PageSelectionContext<FullState>> ): void =>
+  ReactDOM.render ( <SelectedPage state={s}/>, rootElement ) )
 
 console.log ( "setting json" )
-setJson ( { messages: [],
-  tags:{},
+setJson ( {
+  messages: [],
+  tags: {},
   pageSelection: [ { pageName: "search", pageMode: 'edit' } ],
   search: { query: "phil", queryResults: [] },
   debug: { selectedPageDebug: false, fetcherDebug: true },
-  postCommands: [] } )
+  restCommands: []
+} )

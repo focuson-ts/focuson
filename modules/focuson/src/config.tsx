@@ -5,7 +5,7 @@ import { lensState, LensState } from "@focuson/state";
 import { Lens, Lenses, Optional } from "@focuson/lens";
 import { FetchFn, HasSimpleMessages } from "@focuson/utils";
 import { HasTagHolder } from "@focuson/template";
-import { HasRestCommandL, HasRestCommands } from "@focuson/rest";
+import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestDetails } from "@focuson/rest";
 
 
 export function defaultCombine ( pages: JSX.Element[] ) {
@@ -21,7 +21,7 @@ export function defaultPageSelectionContext<S extends HasPageSelection, Context 
 
 export interface PageSelectionAndPostCommandsContext<S> extends PageSelectionContext<S>, HasPostCommandLens<S, any> {
 }
-export function defaultPageSelectionAndPostCommandsContext<S extends HasPageSelection & HasPostCommand<S, any> > ( pageDetails: MultiPageDetails<S, PageSelectionAndPostCommandsContext<S>> ): PageSelectionAndPostCommandsContext<S> {
+export function defaultPageSelectionAndPostCommandsContext<S extends HasPageSelection & HasPostCommand<S, any>> ( pageDetails: MultiPageDetails<S, PageSelectionAndPostCommandsContext<S>> ): PageSelectionAndPostCommandsContext<S> {
   return {
     ...defaultPageSelectionContext<S, PageSelectionAndPostCommandsContext<S>> ( pageDetails ),
     postCommandsL: Lenses.identity<S> ().focusOn ( 'postCommands' )
@@ -29,7 +29,7 @@ export function defaultPageSelectionAndPostCommandsContext<S extends HasPageSele
 }
 export interface PageSelectionAndRestCommandsContext<S> extends PageSelectionContext<S>, HasRestCommandL<S> {
 }
-export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSelection & HasRestCommands > ( pageDetails: MultiPageDetails<S, PageSelectionAndRestCommandsContext<S>> ): PageSelectionAndRestCommandsContext<S> {
+export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSelection & HasRestCommands> ( pageDetails: MultiPageDetails<S, PageSelectionAndRestCommandsContext<S>> ): PageSelectionAndRestCommandsContext<S> {
   return {
     ...defaultPageSelectionContext<S, PageSelectionAndRestCommandsContext<S>> ( pageDetails ),
     restL: Lenses.identity<S> ().focusOn ( 'restCommands' )
@@ -37,7 +37,7 @@ export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSele
 }
 
 
-export interface FocusOnConfig<S, Context> {
+export interface FocusOnConfig<S, Context, MSGs> {
   /** How data is sent to/fetched from apis */
   fetchFn: FetchFn,
   /** A hook that is called before anything else.  */
@@ -52,39 +52,41 @@ export interface FocusOnConfig<S, Context> {
   /** The list of all registered pages that can be displayed with SelectedPage  */
   pages: MultiPageDetails<S, Context>,
 
+  messageL: Optional<S, MSGs[]>;
+
 
   /** The lens to the list of PostCommands*/
-  postL: Optional<S, PostCommand<S, any, any>[]>,
+  restL: Optional<S, RestCommand[]>,
   /** The list of all registered posters that can send data to the back end   */
-  posters: Posters<S>,
+  restDetails: RestDetails<S, MSGs>,
 
   /** The collection of all registered fetchers that will get data from the back end */
   fetchers: FetcherTree<S>,
 }
 
 
-export function setJsonForFocusOn<C extends FocusOnConfig<S, Context>, S, Context extends PageSelectionContext<S>> ( config: C, context: Context, publish: ( lc: LensState<S, S, Context> ) => void ): ( s: S ) => Promise<S> {
+export function setJsonForFocusOn< S, Context extends PageSelectionContext<S>, MSGs> ( config: FocusOnConfig<S, Context, MSGs>, context: Context, publish: ( lc: LensState<S, S, Context> ) => void ): ( s: S ) => Promise<S> {
   return async ( main: S ): Promise<S> => {
     // @ts-ignore
     const debug = main.debug;
-    const { fetchFn, preMutate, postMutate, onError, pages, posters, fetchers, postL, pageL } = config
+    const { fetchFn, preMutate, postMutate, onError, pages, restDetails, fetchers, restL, pageL, messageL } = config
     const newStateFn = ( fs: S ) => publish ( lensState ( fs, setJsonForFocusOn ( config, context, publish ), 'setJson', context ) )
     try {
       if ( debug?.fetcherDebug ) console.log ( 'setJsonForFetchers - start', main )
       const withPreMutate = preMutate ( main )
       const firstPageProcesses: S = preMutateForPages<S, Context> ( context ) ( withPreMutate )
       if ( debug?.fetcherDebug ) console.log ( 'setJsonForFetchers - after premutate', firstPageProcesses )
-      const afterPost = await post ( fetchFn, posters, postL ) ( firstPageProcesses )
-      if ( debug?.fetcherDebug || debug?.postDebug ) console.log ( 'setJsonForFetchers - after post', afterPost )
-      if ( afterPost ) newStateFn ( afterPost )
-      if ( debug?.fetcherDebug || debug?.postDebug ) console.log ( 'setJsonForFetchers - newStateFn', afterPost )
+      const afterRest = await rest ( fetchFn, restDetails, messageL, restL, firstPageProcesses )
+      if ( debug?.fetcherDebug || debug?.postDebug ) console.log ( 'setJsonForFetchers - afterRest', afterRest )
+      if ( afterRest ) newStateFn ( afterRest )
+      if ( debug?.fetcherDebug || debug?.postDebug ) console.log ( 'setJsonForFetchers - newStateFn', afterRest )
       if ( debug?.whatLoad ) {
-        let w = wouldLoad ( fetchers, afterPost );
+        let w = wouldLoad ( fetchers, afterRest );
         console.log ( "wouldLoad", wouldLoadSummary ( w ), w )
       }
-      let newMain = await loadTree ( fetchers, afterPost, fetchFn, debug )
+      let newMain = await loadTree ( fetchers, afterRest, fetchFn, debug )
         .then ( s => s ? s : onError ( s, Error ( 'could not load tree' ) ) )
-        .catch ( e => onError ( afterPost, e ) )
+        .catch ( e => onError ( afterRest, e ) )
       if ( debug?.fetcherDebug ) console.log ( 'setJsonForFetchers - after load', newMain )
       let finalState = await postMutate ( newMain )
       if ( debug?.fetcherDebug ) console.log ( 'setJsonForFetchers - final', finalState )
