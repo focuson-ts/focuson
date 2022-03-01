@@ -33,7 +33,7 @@ describe ( " listComponentsIn", () => {
 //   } )
 
   it ( "should make the react component lists", () => {
-    expect ( createAllReactCalls ( listComponentsIn ( EAccountsSummaryDD ) ) ).toEqual ([
+    expect ( createAllReactCalls ( listComponentsIn ( EAccountsSummaryDD ) ) ).toEqual ( [
       "<LabelAndCheckboxInput state={state.focusOn('useEStatements')} label='use e statements' mode={mode} />",
       "<Table state={state.focusOn('eAccountsTable')} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} mode={mode} />",
       "<LabelAndNumberInput state={state.focusOn('totalMonthlyCost')} label='total monthly cost' mode={mode} />",
@@ -46,7 +46,7 @@ describe ( " listComponentsIn", () => {
   } )
 
   it ( "should createReactComponent", () => {
-    expect ( createReactComponent ( EAccountsSummaryDD ) ).toEqual ([
+    expect ( createReactComponent ( EAccountsSummaryDD ) ).toEqual ( [
       "export function EAccountsSummaryDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, EAccountsSummaryDDDomain,Context>){",
       "  return(<>",
       "  <LabelAndCheckboxInput state={state.focusOn('useEStatements')} label='use e statements' mode={mode} />",
@@ -60,10 +60,10 @@ describe ( " listComponentsIn", () => {
       "</>)",
       "}",
       ""
-    ])
+    ] )
   } )
   it ( "should createAllReactComponents ", () => {
-    expect ( createAllReactComponents ( paramsForTest,[ EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
+    expect ( createAllReactComponents ( paramsForTest, [ EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
       "import { LensProps } from \"@focuson/state\";",
       "import { Layout } from \"./copied/layout\";",
       "import { RestButton } from \"./copied/rest\";",
@@ -94,8 +94,8 @@ describe ( " listComponentsIn", () => {
       "     ( state, d, mode ) => {",
       "          return (<Layout  details='[3]'>",
       "             <CreatePlanDD state={state}  mode={mode} />",
-      "   <ModalCancelButton id='cancel' state={state} />",
-      "   <ModalCommitButton id='commit' state={state} />",
+      "             <ModalCancelButton id='cancel' state={state} />",
+      "             <ModalCommitButton id='commit' state={state} />",
       "            </Layout>)})}",
       "",
       "export function CreatePlanDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, CreatePlanDDDomain,Context>){",
@@ -130,11 +130,11 @@ describe ( " listComponentsIn", () => {
       "</>)",
       "}",
       ""
-    ])
+    ] )
   } )
 
   it ( "should createReactPageComponent", () => {
-    expect ( createReactPageComponent (paramsForTest, EAccountsSummaryPD ) ).toEqual ( [
+    expect ( createReactPageComponent ( paramsForTest, EAccountsSummaryPD ) ).toEqual ( [
       "export function EAccountsSummaryPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){",
       "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
@@ -145,15 +145,15 @@ describe ( " listComponentsIn", () => {
       "   <button>refresh of type ResetStateButton cannot be create yet</button>",
       "   </Layout>)})}",
       ""
-    ])
-    expect ( createReactPageComponent ( paramsForTest,CreatePlanPD ) ).toEqual ( [
+    ] )
+    expect ( createReactPageComponent ( paramsForTest, CreatePlanPD ) ).toEqual ( [
       "export function CreatePlanPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){",
       "  return focusedPage<S, CreatePlanDDDomain, Context> ( s => '' ) (",
       "     ( state, d, mode ) => {",
       "          return (<Layout  details='[3]'>",
       "             <CreatePlanDD state={state}  mode={mode} />",
-      "   <ModalCancelButton id='cancel' state={state} />",
-      "   <ModalCommitButton id='commit' state={state} />",
+      "             <ModalCancelButton id='cancel' state={state} />",
+      "             <ModalCommitButton id='commit' state={state} />",
       "            </Layout>)})}",
       ""
     ])

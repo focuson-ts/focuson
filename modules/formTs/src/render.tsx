@@ -53,8 +53,8 @@ export function CreatePlanPage<S, Context extends PageSelectionAndRestCommandsCo
      ( state, d, mode ) => {
           return (<Layout  details='[3]'>
              <CreatePlanDD state={state}  mode={mode} />
-   <ModalCancelButton id='cancel' state={state} />
-   <ModalCommitButton id='commit' state={state} />
+             <ModalCancelButton id='cancel' state={state} />
+             <ModalCommitButton id='commit' state={state} />
             </Layout>)})}
 
 export function ETransferPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){
@@ -92,8 +92,8 @@ export function OrderChequeBookOrPayingInModalPage<S, Context extends PageSelect
      ( state, d, mode ) => {
           return (<Layout  details='[3]'>
              <ChequeCreditbooksHistoryLineDD state={state}  mode={mode} />
-   <ModalCancelButton id='cancel' state={state} />
-   <ModalCommitButton id='commit' state={state} />
+             <ModalCancelButton id='cancel' state={state} />
+             <ModalCommitButton id='commit' state={state} />
             </Layout>)})}
 
 export function ChequeCreditbooksDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, ChequeCreditbooksDDDomain,Context>){

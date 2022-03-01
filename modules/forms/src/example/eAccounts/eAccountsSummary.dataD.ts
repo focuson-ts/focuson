@@ -34,7 +34,7 @@ export const EAccountsSummaryTableDD: RepeatingDataD = {
   displayParams: { order: { value: [ 'accountId', 'displayType', 'description', 'virtualBankSeq', 'frequency', 'total' ] } }
 }
 
-export const CreatePlanDD: DataD = {
+export const CreatePlanDD : DataD= {
   name: "CreatePlanDD",
   description: "The create plan data (actually just put in one place to allow a test for a structure)",
   structure: {

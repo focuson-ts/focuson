@@ -51,13 +51,12 @@ function makeRestButtonFrom ( name: string, button: RestButtonInPage ): string {
   return `<${button.control} id='${name}' state={state} />`;
 }
 function makeModalCloseButtonFrom ( name: string, button: ModalCloseButton ): string {
-  return `<${button.control} id='${name}' state={state} />`;
+  return `          <${button.control} id='${name}' state={state} />`;
 }
 export const makeButtonFrom = ( params: TSParams ) => ( parent: PageD ) => ( [ name, button ]: [ string, AllButtonsInPage ] ): string => {
   if ( isModalButton ( button ) ) return makeModalButtonInPage ( params, parent, name, button )
   if ( isModalAndCopyButton ( button ) ) return makeModalAndCopyButtonInPage ( parent, name, button )
   if ( isRestButton ( button ) ) return makeRestButtonFrom ( name, button )
-  if ( isModalCloseButton ( button ) ) return makeModalCloseButtonFrom ( name, button )
   if ( isModalCloseButton ( button ) ) return makeModalCloseButtonFrom ( name, button )
   if ( isListMarkerPrevButton ( button ) ) return makeListMarkerPrevButton ()
   if ( isListMarkerNextButton ( button ) ) return makeListMarkerNextButton ()
