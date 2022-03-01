@@ -7,7 +7,9 @@
     "test": true,
     "publish": true,
     "links": [
-      "@focuson/utils"
+      "@focuson/utils",
+      "@focuson/files",
+      "@focuson/focuson"
     ],
     "extraDeps": {},
     "extraDevDeps": {}

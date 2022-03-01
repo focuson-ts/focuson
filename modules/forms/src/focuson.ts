@@ -8,14 +8,14 @@ import { sortedEntries } from "@focuson/utils";
 import { unique } from "./common/restD";
 import { makeAllFetchers, makeFetchersDataStructure, makeFetchersImport } from "./codegen/makeFetchers";
 import { makeAllEmptyData, makeAllJavaVariableName, makeAllSampleVariables } from "./codegen/makeSample";
-import { copyFiles, DirectorySpec, templateFile } from "@focuson/template";
+import { copyFiles, DirectorySpec, templateFile } from "@focuson/files";
 import { makeAllPacts } from "./codegen/makePacts";
 import { makeAllMockFetchers } from "./codegen/makeMockFetchers";
 import { CombinedParams } from "./codegen/config";
 import { imports, indentList } from "./codegen/codegen";
 import { makeCommon } from "./codegen/makeCommon";
 import { makeSpringEndpointsFor } from "./codegen/makeSpringEndpoint";
-import { restControllerName } from "./codegen/names";
+import { restControllerName, storybookFileName } from "./codegen/names";
 import { makeJavaVariablesForGraphQlQuery } from "./codegen/makeGraphQlQuery";
 import { ETransferPageD } from "./example/eTransfers/eTransfers.pageD";
 import { OccupationAndIncomeDetailsPageD } from "./example/occupationAndIncomeDetails/occupationAndIncomeDetails.pageD";
@@ -25,6 +25,7 @@ import { CreatePlanPD } from "./example/eAccounts/createPlanPD";
 import { RestDefnInPageProperties } from "./common/pageD";
 import { makeRests } from "./codegen/makeRests";
 import { ChequeCreditbooksPD, OrderChequeBookOrPayingInModalPD } from "./example/chequeCreditBooks/chequeCreditBooks.pageD";
+import { makeOneStory } from "./codegen/makeStories";
 
 console.log ( 0 )
 
@@ -34,7 +35,7 @@ export function writeToFile ( name: string, contents: string[] ) {
 
 const params: CombinedParams = {
   pagesFile: 'pages',
-  focusOnVersion: "^0.4.13",
+  focusOnVersion: "^0.4.26",
   commonParams: "CommonIds",
   stateName: "FState",
   commonFile: "common",
@@ -109,6 +110,9 @@ copyFiles ( tsScripts, 'templates/scripts', directorySpec ) ( 'makePact.sh', 'ma
 copyFiles ( tsRoot, 'templates/raw', directorySpec ) ( '.gitignore' )
 templateFile ( `${tsScripts}/makePactsAndCopyFirstTime.sh`, 'templates/scripts/makePactsAndCopyFirstTime.sh', { ...params, javaRoot: javaAppRoot }, directorySpec )
 console.log ( 3 )
+pages.forEach ( p => writeToFile ( `${tsCode}/${storybookFileName ( p )}`, makeOneStory ( params, p ) ) )
+
+console.log ( 'stories' )
 
 copyFiles ( tsPublic, 'templates/raw/ts/public', directorySpec ) ( 'favicon.ico', 'index.css', 'index.html', 'logo192.png', 'logo512.png', 'manifest.json', 'robots.txt' )
 

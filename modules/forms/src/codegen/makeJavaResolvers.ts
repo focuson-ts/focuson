@@ -2,7 +2,8 @@ import { defaultRestAction, RestD } from "../common/restD";
 import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, OneDataDD, PrimitiveDD, RepeatingDataD, sampleFromDataD } from "../common/dataD";
 import { resolverName, sampleName } from "./names";
 import { JavaWiringParams } from "./config";
-import { applyToTemplate, DirectorySpec, loadFile } from "@focuson/template";
+import { applyToTemplate } from "@focuson/template";
+import { DirectorySpec, loadFile } from "@focuson/files";
 
 
 export function makeJavaResolversInterface ( { thePackage, fetcherInterface }: JavaWiringParams, rs: RestD[] ): string[] {

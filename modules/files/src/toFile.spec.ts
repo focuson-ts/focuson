@@ -1,4 +1,4 @@
-import { DirectorySpec, loadFile } from "./toFile";
+import { DirectorySpec, loadFile } from "../index";
 
 const spec: DirectorySpec = { main: "templates", backup: "templates/backupTemplates" }
 describe ( "loadFile", () => {

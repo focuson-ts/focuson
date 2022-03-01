@@ -1,8 +1,10 @@
-import * as fs from "fs";
-import { applyToTemplate } from "./template";
+import { applyToTemplate } from "@focuson/template";
 
+
+const fs = require ( 'fs' )//Why comment: because things like story book die if we have this as an import
 
 export function writeToFile ( name: string, contents: string[] ) {
+
   fs.writeFileSync ( name, contents.join ( '\n' ) )
 }
 
@@ -17,12 +19,12 @@ export const copyFiles = ( toRoot: string, fromRoot: string, directorySpec?: Dir
 export function copyFile ( name: string, from: string, directorySpec?: DirectorySpec ) {
   // console.log ( 'copyFile name to ', name, 'from', from )
   const { main, backup } = directorySpec ? directorySpec : { main: ".", backup: "." }
-  const mainPath = main +"/" + from;
+  const mainPath = main + "/" + from;
   try {
     // console.log ( '   main copyFile', mainPath, name )
     fs.copyFileSync ( mainPath, name )
   } catch ( e: any ) {
-    const backupPath = backup + "/"+ from;
+    const backupPath = backup + "/" + from;
 
     console.log ( '   main copyFile', backupPath, name )
     fs.copyFileSync ( backupPath, name )
@@ -31,6 +33,7 @@ export function copyFile ( name: string, from: string, directorySpec?: Directory
 }
 
 export function loadFile ( inputName: string, directorySpec?: DirectorySpec ): string {
+  const fs = require ( 'fs' )//Why comment: because things like story book die if we have this as an import
   const { main, backup } = directorySpec ? directorySpec : { main: ".", backup: "." }
   const mainPath = main + "/" + inputName;
   try {

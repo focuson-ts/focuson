@@ -26,5 +26,6 @@ export const queryName = ( restD: RestD, action: RestAction ): string => action 
 
 export const modalName = ( p: PageD, modal: PageD ) => modal.name
 export const restDetailsName = ( p: PageD, r: RestD ) =>
-  p.name + "_" + r.dataDD.name  + "RestDetails"
+  p.name + "_" + r.dataDD.name + "RestDetails"
+export const storybookFileName = ( pd: PageD ): string => `stories/${pd.name}.stories.ts`;
 

@@ -1,5 +1,6 @@
 import { allRestAndActions, PageD, RestDefnInPageProperties } from "../common/pageD";
-import { applyToTemplate, DirectorySpec, loadFile } from "@focuson/template";
+import { applyToTemplate } from "@focuson/template";
+import {  DirectorySpec, loadFile } from "@focuson/files";
 import fs from "fs";
 import { beforeSeparator, NameAnd, sortedEntries } from "@focuson/utils";
 import { sampleName } from "./names";
