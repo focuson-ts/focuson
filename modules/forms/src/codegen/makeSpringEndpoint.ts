@@ -1,7 +1,7 @@
 import { RestD, RestParams } from "../common/restD";
-import { queryName, restControllerName, sampleName } from "./names";
+import { endPointName, queryName, restControllerName, sampleName } from "./names";
 import { JavaWiringParams } from "./config";
-import { beforeSeparator, sortedEntries } from "@focuson/utils";
+import { beforeSeparator, RestAction, sortedEntries } from "@focuson/utils";
 import { indentList } from "./codegen";
 
 function makeParamsForJava ( r: RestD ) {
@@ -11,16 +11,31 @@ function paramsForQuery ( r: RestParams ): string {
   return sortedEntries ( r ).map ( ( [ name, param ] ) => name ).join ( ", " )
 }
 
-function makeGetEndpoint ( params: JavaWiringParams, r: RestD ): string[] {
-  return [ `    @RequestMapping(value="${beforeSeparator ( "?", r.url )}", produces="application/json")`,
-    `    public String get${r.dataDD.name}(${makeParamsForJava ( r )}) throws Exception{`,
-    `       Map data = (Map) graphQL.execute(${params.queriesClass}.${queryName ( r, 'get' )}(${paramsForQuery ( r.params )})).toSpecification().get("data");`,
-    `       return new ObjectMapper().writeValueAsString(data.get("${queryName ( r, 'get' )}"));`,
+function mappingAnnotation ( restAction: RestAction ) {
+  if ( restAction === 'get' ) return 'GetMapping'
+  if ( restAction === 'update' ) return 'PutMapping'
+  if ( restAction === 'list' ) return 'GetMapping'
+  if ( restAction === 'create' ) return 'PostMapping'
+  if ( restAction === 'delete' ) return 'DeleteMapping'
+  throw new Error ( `unknown rest action ${restAction} for mappingAnnotation` )
+}
+function postFixForEndpoint ( r: RestD, restAction: RestAction ) {
+  return restAction === 'list' ? "/list" : ""
+}
+function makeGetEndpoint ( params: JavaWiringParams, r: RestD, restAction: RestAction ): string[] {
+  return [
+    `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( r, restAction )}", produces="application/json")`,
+    `    public String ${endPointName ( r, restAction )}(${makeParamsForJava ( r )}) throws Exception{`,
+    `       Map data = (Map) graphQL.execute(${params.queriesClass}.${queryName ( r, restAction )}(${paramsForQuery ( r.params )})).toSpecification().get("data");`,
+    `       return new ObjectMapper().writeValueAsString(data.get("${queryName ( r, restAction )}"));`,
     `    }`,
     `` ];
 }
-function makeQueryEndpoint ( params: JavaWiringParams, r: RestD ): string[] {
-  return [ `    @RequestMapping(value="${beforeSeparator ( "?", r.url )}/query", produces="application/json")`,
+
+
+function makeQueryEndpoint ( params: JavaWiringParams, r: RestD, restAction: RestAction ): string[] {
+  return [
+    `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( r, restAction )}/query", produces="application/json")`,
     `    public String query${r.dataDD.name}(${makeParamsForJava ( r )}) throws Exception{`,
     `       return ${params.queriesClass}.${queryName ( r, 'get' )}(${paramsForQuery ( r.params )});`,
     `    }`,
@@ -29,27 +44,18 @@ function makeQueryEndpoint ( params: JavaWiringParams, r: RestD ): string[] {
 }
 function makeSampleEndpoint ( params: JavaWiringParams, r: RestD ): string[] {
   return [
-    `  @RequestMapping(value = "${beforeSeparator ( "?", r.url )}/sample", produces = "application/json")`,
+    `  @${mappingAnnotation ( 'get' )}(value = "${beforeSeparator ( "?", r.url )}/sample", produces = "application/json")`,
     `    public static String sample${r.dataDD.name}() throws Exception {`,
-    `      return new ObjectMapper().writeValueAsString( ${params.sampleClass}.${sampleName ( r.dataDD)}0);`,
+    `      return new ObjectMapper().writeValueAsString( ${params.sampleClass}.${sampleName ( r.dataDD )}0);`,
     `    }` ];
 }
 export function makeSpringEndpointsFor ( params: JavaWiringParams, r: RestD ): string[] {
-  const endpoints: string[] = r.actions.flatMap ( action => {
-    if ( action === 'get' ) return [
-      ...makeGetEndpoint ( params, r ),
-      ...makeQueryEndpoint ( params, r ),
-      ...makeSampleEndpoint ( params, r ) ]
-    return [ `// Not yet doing action ${action}` ]
-  } )
-
+  const endpoints: string[] = r.actions.flatMap ( action => makeGetEndpoint ( params, r, action ) )
   return [
     `package ${params.thePackage};`,
     '',
     'import com.fasterxml.jackson.databind.ObjectMapper;',
-    `import org.springframework.web.bind.annotation.RequestMapping;`,
-    "import org.springframework.web.bind.annotation.RequestParam;",
-    `import org.springframework.web.bind.annotation.RestController;`,
+    `import org.springframework.web.bind.annotation.*;`,
     `import java.util.Map;`,
     `import graphql.GraphQL;`,
     `import org.springframework.beans.factory.annotation.Autowired;`,
@@ -60,5 +66,7 @@ export function makeSpringEndpointsFor ( params: JavaWiringParams, r: RestD ): s
     ...indentList ( [ `@Autowired`,
       `public GraphQL graphQL;`, ] ),
     ...endpoints,
+    ...makeQueryEndpoint ( params, r, 'get' ),
+    ...makeSampleEndpoint ( params, r ),
     `  }` ]
 }

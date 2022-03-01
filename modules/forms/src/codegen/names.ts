@@ -23,6 +23,7 @@ export const emptyName = ( dataD: AllDataDD ) => "empty" + dataD.name;
 export const restControllerName = ( restD: RestD ) => `${restD.dataDD.name}Controller`
 
 export const queryName = ( restD: RestD, action: RestAction ): string => action + restD.dataDD.name
+export const endPointName = ( restD: RestD, action: RestAction ): string => action + restD.dataDD.name
 
 export const modalName = ( p: PageD, modal: PageD ) => modal.name
 export const restDetailsName = ( p: PageD, r: RestD ) =>

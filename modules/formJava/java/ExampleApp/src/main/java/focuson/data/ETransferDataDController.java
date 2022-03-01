@@ -1,9 +1,7 @@
 package focuson.data;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import graphql.GraphQL;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,5 +11,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 
  @Autowired
  public GraphQL graphQL;
-// Not yet doing action create
+    @PostMapping(value="/api/eTransfers", produces="application/json")
+    public String createETransferDataD(@RequestParam String customerId) throws Exception{
+       Map data = (Map) graphQL.execute(Queries.createETransferDataD(customerId)).toSpecification().get("data");
+       return new ObjectMapper().writeValueAsString(data.get("createETransferDataD"));
+    }
+
+    @GetMapping(value="/api/eTransfers/query", produces="application/json")
+    public String queryETransferDataD(@RequestParam String customerId) throws Exception{
+       return Queries.getETransferDataD(customerId);
+    }
+
+  @GetMapping(value = "/api/eTransfers/sample", produces = "application/json")
+    public static String sampleETransferDataD() throws Exception {
+      return new ObjectMapper().writeValueAsString( Sample.sampleETransferDataD0);
+    }
   }
