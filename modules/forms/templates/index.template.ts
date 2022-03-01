@@ -9,6 +9,8 @@ import { fetchers } from "./{fetchersFile}";
 import { pages } from "./{pagesFile}";
 import { restL } from "@focuson/rest";
 import { restDetails } from "./{restsFile}";
+import { DebugState } from "@focuson/focuson";
+import { commonIds } from "../../formTs/src/common";
 
 
 const config: FocusOnConfig<{stateName}, Context, SimpleMessage> = {
@@ -56,7 +58,7 @@ let setJson = setJsonForFocusOn<{stateName}, Context, SimpleMessage> ( config, c
     <IndexPage state={s}>
   <SelectedPage state={s}/>
 </IndexPage>
-<pre>{JSON.stringify ( s.main, null, 2 )}</pre>
+<DebugState state={s} config={config} commonIds={commonIds} />
 </div>, rootElement ) )
 
 setJson ( {

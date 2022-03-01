@@ -50,9 +50,21 @@ export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Deta
   const commands = safeArray ( restL.getOption ( s ) )
   return commands.map ( ( { name, restAction, path } ) => {
     const one: OneRestDetails<S, any, any, MSGS> = d[ name ]
-    if(debug) console.log("restReq-one", name, one)
-    if (!one) throw new Error(`Cannot find page details for ${name} ${restAction}. Legal values are ${Object.keys(d).sort()}`)
-    return [ one, ...reqFor ( { ...one, fdLens: Lenses.fromPath ( path ) }, restAction ) ( s ) ( one.url ), path ]
+    if ( debug ) console.log ( "restReq-onex", name, path, one )
+    if ( !one ) throw new Error ( `Cannot find page details for ${name} ${restAction}. Legal values are ${Object.keys ( d ).sort ()}` )
+    try {
+      let fdLens = Lenses.fromPath ( path );
+      if ( debug ) {
+        console.log ( "restReq-fdLens", fdLens.description, fdLens )
+        console.log ( "restReq-dLens", one.dLens.description, one.dLens );
+      }
+      let request = reqFor ( { ...one, fdLens }, restAction ) ( s ) ( one.url );
+      if ( debug ) console.log ( "restReq-req", request )
+      return [ one, ...request, path ]
+    } catch ( e: any ) {
+      console.error ( `error making details for ${name}`, e )
+      throw e
+    }
   } )
 }
 
@@ -77,13 +89,13 @@ export async function rest<S, MSGS> (
   // @ts-ignore
   const debug = s.debug?.restDebug
   const commands = restL.getOption ( s )
-  if (debug)console.log("rest-commands", commands)
+  if ( debug ) console.log ( "rest-commands", commands )
   if ( !commands || commands.length == 0 ) return Promise.resolve ( s )
   const requests = restReq ( d, restL, s )
-  if (debug)console.log("rest-requests", requests)
+  if ( debug ) console.log ( "rest-requests", requests )
   const results = await massFetch ( fetchFn, requests )
-  if (debug)console.log("rest-results", results)
+  if ( debug ) console.log ( "rest-results", results )
   const result = processAllRestResults<S, MSGS> ( messageL, restL, results, s );
-  if (debug)console.log("rest-result", result)
+  if ( debug ) console.log ( "rest-result", result )
   return result
 }

@@ -9,6 +9,8 @@ import { fetchers } from "./fetchers";
 import { pages } from "./pages";
 import { restL } from "@focuson/rest";
 import { restDetails } from "./rests";
+import { DebugState } from "@focuson/focuson";
+import { commonIds } from "../../formTs/src/common";
 const config: FocusOnConfig<FState, Context, SimpleMessage> = {
   /** How data is sent to/fetched from apis */
   fetchFn: fetchWithDelay ( 1000, fetchWithPrefix ( 'http://localhost:8080', loggingFetchFn ) ),
@@ -45,7 +47,7 @@ let setJson = setJsonForFocusOn<FState, Context, SimpleMessage> ( config, contex
     <IndexPage state={s}>
   <SelectedPage state={s}/>
 </IndexPage>
-<pre>{JSON.stringify ( s.main, null, 2 )}</pre>
+<DebugState state={s} config={config} commonIds={commonIds} />
 </div>, rootElement ) )
 setJson ( {
   ...emptyState,

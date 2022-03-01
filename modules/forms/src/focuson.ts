@@ -8,7 +8,7 @@ import { sortedEntries } from "@focuson/utils";
 import { unique } from "./common/restD";
 import { makeAllFetchers, makeFetchersDataStructure, makeFetchersImport } from "./codegen/makeFetchers";
 import { makeAllEmptyData, makeAllJavaVariableName, makeAllSampleVariables } from "./codegen/makeSample";
-import { copyFiles, DirectorySpec, templateFile } from "@focuson/files";
+import { copyFiles, DirectorySpec, loadFile, templateFile } from "@focuson/files";
 import { makeAllPacts } from "./codegen/makePacts";
 import { makeAllMockFetchers } from "./codegen/makeMockFetchers";
 import { CombinedParams } from "./codegen/config";
@@ -33,9 +33,11 @@ export function writeToFile ( name: string, contents: string[] ) {
   fs.writeFileSync ( name, contents.join ( '\n' ) );
 }
 
+const focusOnVersion: string = JSON.parse ( loadFile ( 'package.json' ) ).version
+console.log("focusOnVersion", focusOnVersion)
 const params: CombinedParams = {
   pagesFile: 'pages',
-  focusOnVersion: "^0.4.27",
+  focusOnVersion,
   commonParams: "CommonIds",
   stateName: "FState",
   commonFile: "common",

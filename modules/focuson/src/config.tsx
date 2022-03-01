@@ -64,8 +64,8 @@ export interface FocusOnConfig<S, Context, MSGs> {
   fetchers: FetcherTree<S>,
 }
 
-export var useRest: boolean = false
-export function setJsonForFocusOn< S, Context extends PageSelectionContext<S>, MSGs> ( config: FocusOnConfig<S, Context, MSGs>, context: Context, publish: ( lc: LensState<S, S, Context> ) => void ): ( s: S ) => Promise<S> {
+
+export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MSGs> ( config: FocusOnConfig<S, Context, MSGs>, context: Context, publish: ( lc: LensState<S, S, Context> ) => void ): ( s: S ) => Promise<S> {
   return async ( main: S ): Promise<S> => {
     // @ts-ignore
     const debug = main.debug;
@@ -76,7 +76,7 @@ export function setJsonForFocusOn< S, Context extends PageSelectionContext<S>, M
       const withPreMutate = preMutate ( main )
       const firstPageProcesses: S = preMutateForPages<S, Context> ( context ) ( withPreMutate )
       if ( debug?.fetcherDebug ) console.log ( 'setJsonForFetchers - after premutate', firstPageProcesses )
-      const afterRest = useRest? await rest ( fetchFn, restDetails, messageL, restL, firstPageProcesses ): await Promise.resolve(firstPageProcesses)
+      const afterRest = await rest ( fetchFn, restDetails, messageL, restL, firstPageProcesses )
       if ( debug?.fetcherDebug || debug?.postDebug ) console.log ( 'setJsonForFetchers - afterRest', afterRest )
       if ( afterRest ) newStateFn ( afterRest )
       if ( debug?.fetcherDebug || debug?.postDebug ) console.log ( 'setJsonForFetchers - newStateFn', afterRest )
