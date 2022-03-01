@@ -35,7 +35,7 @@ export function writeToFile ( name: string, contents: string[] ) {
 
 const params: CombinedParams = {
   pagesFile: 'pages',
-  focusOnVersion: "^0.4.26",
+  focusOnVersion: "^0.4.27",
   commonParams: "CommonIds",
   stateName: "FState",
   commonFile: "common",
@@ -66,6 +66,8 @@ let javaResourcesRoot = javaAppRoot + "/src/main/resources"
 let tsRoot = "../formTs"
 let tsScripts = tsRoot + "/scripts"
 let tsCode = tsRoot + "/src"
+let tsStory = tsRoot + "/src/stories"
+let tsStoryBook = tsRoot + "/.storybook"
 let tsPublic = tsRoot + "/public"
 
 fs.mkdirSync ( `${outputRoot}`, { recursive: true } )
@@ -76,6 +78,8 @@ fs.mkdirSync ( `${javaScriptRoot}`, { recursive: true } )
 fs.mkdirSync ( `${tsCode}`, { recursive: true } )
 fs.mkdirSync ( `${tsScripts}`, { recursive: true } )
 fs.mkdirSync ( `${tsPublic}`, { recursive: true } )
+fs.mkdirSync ( `${tsStory}`, { recursive: true } )
+fs.mkdirSync ( `${tsStoryBook}`, { recursive: true } )
 
 const directorySpec: DirectorySpec = {
   main: '.',
@@ -110,7 +114,8 @@ copyFiles ( tsScripts, 'templates/scripts', directorySpec ) ( 'makePact.sh', 'ma
 copyFiles ( tsRoot, 'templates/raw', directorySpec ) ( '.gitignore' )
 templateFile ( `${tsScripts}/makePactsAndCopyFirstTime.sh`, 'templates/scripts/makePactsAndCopyFirstTime.sh', { ...params, javaRoot: javaAppRoot }, directorySpec )
 console.log ( 3 )
-pages.forEach ( p => writeToFile ( `${tsCode}/${storybookFileName ( p )}`, makeOneStory ( params, p ) ) )
+pages.forEach ( p => writeToFile ( `${tsStory}/${storybookFileName ( p )}`, makeOneStory ( params, p ) ) )
+copyFiles ( tsStoryBook, 'templates/raw/ts/stories', directorySpec ) ( 'main.js', 'preview.js', 'preview-head.html' )
 
 console.log ( 'stories' )
 

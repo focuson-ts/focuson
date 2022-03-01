@@ -12,8 +12,7 @@
     ]
   },
   "dependencies": {
-    "@focuson/lens": "0.4.30",
-    "@focuson/fetcher": "0.4.30"
+    "@focuson/template": "0.4.30"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -47,17 +46,16 @@
   },
   "version": "0.4.30",
   "template": "noreact",
-  "description": "This allows for declarative 'posting' ",
+  "description": "File manipulation: loading/saving",
   "details": {
     "ideify": true,
     "publish": true,
     "links": [
-      "@focuson/lens",
-      "@focuson/fetcher"
+      "@focuson/template"
     ],
     "extraDeps": {},
     "extraDevDeps": {}
   },
-  "test": true,
-  "name": "@focuson/poster"
+  "test": false,
+  "name": "@focuson/files"
 }
