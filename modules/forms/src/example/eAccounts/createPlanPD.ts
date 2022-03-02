@@ -1,8 +1,9 @@
 import { PageD } from "../../common/pageD";
 import { CreatePlanDD } from "./eAccountsSummary.dataD";
+import { AllButtonsInPage } from "../../buttons/allButtons";
 
 /** this is a modal window, so it's target is controlled by the caller */
-export const CreatePlanPD: PageD = {
+export const CreatePlanPD: PageD<AllButtonsInPage> = {
   name: 'CreatePlan',
   pageType: 'ModalPage',
   /** This page can only view data */

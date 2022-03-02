@@ -27,27 +27,27 @@ interface PactProps extends NameAnd<string> {
   commonParamsValue: string,
   commonParamsTagsValue: string,
 }
-export function makeFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPageProperties, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
+export function makeFetcherPact  <B>( params: TSParams, p: PageD <B>, r: RestDefnInPageProperties, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
   const fetcherType = r.fetcher
   if ( fetcherType == 'get' && rad.name === 'get' ) return makeGetFetcherPact ( params, p, r, rad, directorySpec )
   if ( fetcherType == 'list' && rad.name === 'list' ) return makeListFetcherPact ( params, p, r, rad, directorySpec )
   return []
 }
 
-export function makeGetFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPageProperties, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
+export function makeGetFetcherPact <B> ( params: TSParams, p: PageD <B>, r: RestDefnInPageProperties, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
   const props = makePropsForFetcherPact ( p, r.rest, params );
   const str: string = loadFile ( 'templates/onePact.ts', directorySpec ).toString ()
   return [ '//GetFetcher pact test', ...applyToTemplate ( str, props ) ]
 }
 
 //currently no difference.. .but will be once we do the fetchers differently... its about the id of the item
-export function makeListFetcherPact ( params: TSParams, p: PageD, r: RestDefnInPageProperties, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
+export function makeListFetcherPact <B> ( params: TSParams, p: PageD <B>, r: RestDefnInPageProperties, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
   const props = makePropsForFetcherPact ( p, r.rest, params );
   const str: string = loadFile ( 'templates/onePact.ts', directorySpec ).toString ()
   return [ '//ListFetcher pact test', ...applyToTemplate ( str, props ) ]
 }
 
-export function makeAllPacts ( params: TSParams, ps: PageD[], directorySpec: DirectorySpec ): string[] {
+export function makeAllPacts <B> ( params: TSParams, ps: PageD <B>[], directorySpec: DirectorySpec ): string[] {
   return [
     ...imports ( params.samplesFile ),
     `import {emptyState, ${params.stateName} } from "./${params.commonFile}";`,
@@ -55,7 +55,7 @@ export function makeAllPacts ( params: TSParams, ps: PageD[], directorySpec: Dir
     ...allRestAndActions ( ps ).flatMap ( ( [ pd, rd, rad ] ) => makeFetcherPact ( params, pd, rd, rad, directorySpec ) )
   ]
 }
-function makePropsForFetcherPact ( p: PageD, d: RestD, params: TSParams ) {
+function makePropsForFetcherPact  <B>( p: PageD <B>, d: RestD, params: TSParams ) {
   let paramsValueForTest = makeCommonParamsValueForTest ( d );
   let body = params.samplesFile + "." + sampleName ( d.dataDD ) + '0';
   const props: PactProps = {

@@ -6,7 +6,7 @@ import { makeEmptyData } from "./makeSample";
 import { safeArray } from "@focuson/utils";
 
 
-export const makeMainPage = ( params: TSParams ) => ( p: PageD ): string[] => {
+export const makeMainPage = ( params: TSParams ) => <B> ( p: PageD <B> ): string[] => {
   function makeEmpty () {
     let result: any = {}
     result[ p.display.target.join ( "." ) ] = makeEmptyData ( p.display.dataDD )
@@ -18,20 +18,20 @@ export const makeMainPage = ( params: TSParams ) => ( p: PageD ): string[] => {
     : [];
 }
 
-export interface ModalCreationData {
+export interface ModalCreationData  <B>{
   name: string,
-  modal: PageD
+  modal: PageD <B>
 }
-export function walkModals ( ps: PageD[] ): ModalCreationData[] {
+export function walkModals <B> ( ps: PageD <B>[] ): ModalCreationData <B>[] {
   return ps.filter ( p => p.pageType === 'MainPage' ).flatMap ( p => safeArray ( p.modals ).map ( ( { modal, path } ) =>
     ({ name: modalName ( p, modal ), path: [ p.name, ...path ], modal }) ) )
 }
 
-export const makeModal = ( params: TSParams ) => ( { name,  modal }: ModalCreationData ): string[] => {
+export const makeModal = ( params: TSParams ) => <B> ( { name,  modal }: ModalCreationData <B> ): string[] => {
   return [ `    ${name}: { config: simpleMessagesConfig,  pageFunction: ${params.renderFile}.${pageComponentName ( modal )}(), modal: true}` ]
 };
 
-export function makePages ( params: TSParams, ps: PageD[] ): string[] {
+export function makePages <B> ( params: TSParams, ps: PageD <B>[] ): string[] {
   const modals = walkModals ( ps );
   return [
     `import { identityOptics } from "@focuson/lens";`,

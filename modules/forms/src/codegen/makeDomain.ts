@@ -21,11 +21,11 @@ export function makeDomainFor ( d: DataD ): string[] {
     ...sortedEntries ( d.structure ).map ( oneDomainLine ),
     '}' ]
 }
-export function makeAllDomainsFor ( ps: PageD[] ): string[] {
+export function makeAllDomainsFor <B> ( ps: PageD <B>[] ): string[] {
   return sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ name, dataD ] ) => makeDomainFor ( dataD ) )
 }
 
-export function makeHasDomainsFor ( p: PageD ): string[] {
+export function makeHasDomainsFor <B> ( p: PageD <B> ): string[] {
   if ( p.pageType === 'ModalPage' ) return []
   return [ `export interface ${hasDomainForPage ( p )} {   ${p.name}?: ${pageDomainName ( p )}}` ]
 }
@@ -37,7 +37,7 @@ export function typeNameFor( params: TSParams, d: AllDataDD): string{
 
 }
 
-export function makePageDomainsFor ( params: TSParams, ps: PageD[] ): string[] {
+export function makePageDomainsFor <B> ( params: TSParams, ps: PageD <B>[] ): string[] {
   let domain = noExtension ( params.domainsFile );
   return [ ...imports ( domain ),
     ...ps.flatMap ( p => p.pageType === 'ModalPage' ? [] : [

@@ -85,13 +85,13 @@ export function createReactComponent ( dataD: DataD ): string[] {
 }
 
 
-export const createReactPageComponent = ( params: TSParams, transformButtons: MakeButton, pageD: PageD ): string[] => {
+export const createReactPageComponent = <B> ( params: TSParams, transformButtons: MakeButton, pageD: PageD <B> ): string[] => {
   if ( pageD.pageType === 'MainPage' ) return createReactMainPageComponent ( params, transformButtons, pageD )
   if ( pageD.pageType === 'ModalPage' ) return createReactModalPageComponent ( params, transformButtons, pageD )
   throw new Error ( `Unknown page type ${pageD.pageType} in ${pageD.name}` )
 };
 
-export function createReactModalPageComponent ( params: TSParams, transformButtons: MakeButton, pageD: PageD ): string[] {
+export function createReactModalPageComponent  <B>( params: TSParams, transformButtons: MakeButton, pageD: PageD <B> ): string[] {
   const { dataDD, layout } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
   const domName = domainName ( pageD.display.dataDD );
@@ -106,7 +106,7 @@ export function createReactModalPageComponent ( params: TSParams, transformButto
     ''
   ]
 }
-export function createReactMainPageComponent ( params: TSParams, transformButtons: MakeButton, pageD: PageD ): string[] {
+export function createReactMainPageComponent <B> ( params: TSParams, transformButtons: MakeButton, pageD: PageD <B> ): string[] {
   const { dataDD, layout } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
   return [
@@ -121,7 +121,7 @@ export function createReactMainPageComponent ( params: TSParams, transformButton
   ]
 }
 
-export function createAllReactComponents ( params: TSParams, transformButtons: MakeButton, pages: PageD[] ): string[] {
+export function createAllReactComponents <B> ( params: TSParams, transformButtons: MakeButton, pages: PageD <B>[] ): string[] {
   const dataComponents = sortedEntries ( dataDsIn ( pages, false ) ).flatMap ( ( [ name, dataD ] ) => dataD.display ? [] : createReactComponent ( dataD ) )
   const pageComponents = pages.flatMap ( p => createReactPageComponent ( params, transformButtons, p ) )
   const imports = [
@@ -141,7 +141,7 @@ export function createAllReactComponents ( params: TSParams, transformButtons: M
 }
 
 
-export function makeComponentImports ( ps: PageD[] ): string[] {
+export function makeComponentImports <B> ( ps: PageD <B>[] ): string[] {
   let allItemsWithDisplay: DisplayCompD[] = sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ d, n ] ) => sortedEntries ( n.structure ).map ( a => a[ 1 ].dataDD ) ).filter ( d => d.display ).map ( d => d.display );
   return unique ( allItemsWithDisplay, d => `${d.import}/${d.name}` ).map ( d => `import { ${d.name} } from '${d.import}';` )
 }

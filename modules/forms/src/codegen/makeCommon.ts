@@ -8,7 +8,7 @@ import { isCommonLens, RestD, unique } from "../common/restD";
 import { sortedEntries } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
 
-export function makeFullState ( params: TSParams, pds: PageD[] ): string[] {
+export function makeFullState  <B>( params: TSParams, pds: PageD <B>[] ): string[] {
   const hasDomains = addStringToEndOfAllButLast ( ',' ) ( allMainPages ( pds ).map ( d => params.pageDomainsFile + "." + hasDomainForPage ( d ) ) )
   const constant = [ 'HasSimpleMessages', 'HasPageSelection', `Has${params.commonParams}`, 'HasTagHolder', `HasRestCommands`, 'HasFocusOnDebug' ].join ( ',' )
   return [
@@ -20,7 +20,7 @@ export function makeContext ( params: TSParams ): string[] {
   return [ `export type Context = PageSelectionAndRestCommandsContext<${params.stateName}>`,
     `export const context: Context = defaultPageSelectionAndRestCommandsContext<${params.stateName}> ( pages )` ]
 }
-export function makeCommon ( params: TSParams, pds: PageD[], rds: RestD[] , directorySpec: DirectorySpec): string[] {
+export function makeCommon <B> ( params: TSParams, pds: PageD <B>[], rds: RestD[] , directorySpec: DirectorySpec): string[] {
   return [
     `import { HasPageSelection, PageMode ,PageSelectionContext} from '@focuson/pages'`,
     `import { defaultDateFn, HasSimpleMessages, SimpleMessage } from '@focuson/utils';`,

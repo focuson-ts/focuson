@@ -36,7 +36,7 @@ export function makeSampleVariable ( params: TSParams, d: DataD, i: number ): st
     ...JSON.stringify ( makeTsSample ( d, i ), null, 2 ).split ( '\n' )
   ]
 }
-export function makeAllSampleVariables ( params: TSParams, ps: PageD[], i: number ): string[] {
+export function makeAllSampleVariables <B> ( params: TSParams, ps: PageD <B>[], i: number ): string[] {
   return sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ name, dataD ] ) => makeSampleVariable ( params, dataD, i ) )
 }
 
@@ -53,11 +53,11 @@ export function makeJavaSample ( d: DataD, i: number ): string[] {
 export function makeJavaVariable ( d: DataD, i: number ) {
   return [ `public static Map ${sampleName ( d ) + i} =  parse.parseMap(`, ...makeJavaSample ( d, i ), ");" ]
 }
-export function makeAllJavaVariableName ( ps: PageD[], i: number ): string[] {
+export function makeAllJavaVariableName <B> ( ps: PageD <B>[], i: number ): string[] {
   return sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ name, dataD ] ) => makeJavaVariable ( dataD, i ) )
 }
 
-export function makeAllEmptyData ( params: TSParams, ps: PageD[] ): string[] {
+export function makeAllEmptyData  <B>( params: TSParams, ps: PageD <B>[] ): string[] {
   return sortedEntries ( dataDsIn ( ps, false ) ).flatMap ( ( [ name, dd ] ) =>
     [ `export const ${emptyName ( dd )}:${params.domainsFile}.${domainName( dd )} =`, ...indentList ( JSON.stringify ( makeEmptyData ( dd ), null, 2 ).split ( "\n" ) ) ] )
 }

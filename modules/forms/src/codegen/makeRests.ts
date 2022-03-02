@@ -6,7 +6,7 @@ import { sortedEntries } from "@focuson/utils";
 import { addStringToEndOfAllButLast, focusQueryFor } from "./codegen";
 
 
-export const makeRest = ( params: TSParams, p: PageD ) => ( r: RestDefnInPageProperties ): string[] => {
+export const makeRest = <B> ( params: TSParams, p: PageD <B> ) => ( r: RestDefnInPageProperties ): string[] => {
   const [ ids, resourceIds ] = findIds ( r.rest )
   let pageDomain = `${params.pageDomainsFile}.${pageDomainName ( p )}`;
   return [
@@ -36,7 +36,7 @@ export function makeRestImports (params: TSParams) {
     `` ]
 }
 
-export function makeRestDetails ( params: TSParams, ps: PageD[] ): string[] {
+export function makeRestDetails <B> ( params: TSParams, ps: PageD <B>[] ): string[] {
   return [
     `export const restDetails: RestDetails<${params.stateName}, SimpleMessage> = {`,
     ...addStringToEndOfAllButLast ( "," ) ( ps.flatMap ( pd => sortedEntries ( pd.rest ).flatMap ( ( [ name, rd ] ) =>
@@ -45,7 +45,7 @@ export function makeRestDetails ( params: TSParams, ps: PageD[] ): string[] {
     `}`, '' ]
 }
 
-export function makeRests ( params: TSParams, ps: PageD[] ): string[] {
+export function makeRests <B> ( params: TSParams, ps: PageD <B>[] ): string[] {
   return [ ...makeRestImports (params),
     ...ps.flatMap ( pd => sortedEntries ( pd.rest ).flatMap ( ( [ name, rd ] ) => makeRest ( params, pd ) ( rd ) ) ),
     ...makeRestDetails ( params, ps ) ]

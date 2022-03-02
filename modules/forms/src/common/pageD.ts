@@ -38,36 +38,36 @@ export interface LayoutD {
   details: string // ok not sure what to do here... so this is just a placeholder
 }
 export type PageType = 'MainPage' | 'ModalPage'
-export interface ModalData {
-  modal: PageD,
+export interface ModalData<B> {
+  modal: PageD<B>,
   path: string[]
 }
-export interface PageD {
+export interface PageD<Buttons> {
   name: string,
   pageType: PageType,
   modes: PageMode[],
   display: { layout: LayoutD, target: string[], dataDD: DataD },
   initialValue: 'empty' | any,
   domain: DomainDefnInPage,
-  modals?: ModalData[],
+  modals?: ModalData<Buttons>[],
   rest: RestDefnInPage,
   buttons: ButtonDefnInPage
 }
 
 
-export function dataDsIn ( pds: PageD[], stopAtDisplay?: boolean ): NamesAndDataDs {
+export function dataDsIn <B>( pds: PageD<B>[], stopAtDisplay?: boolean ): NamesAndDataDs {
   const pageDataDs = pds.flatMap ( pd => sortedEntries ( pd.rest ).map ( ( [ na, restPD ]: [ string, RestDefnInPageProperties ] ) => restPD.rest.dataDD ) )
   return findAllDataDs ( pageDataDs, stopAtDisplay )
 }
 
-export function allRestAndActions ( pds: PageD[] ): [ PageD, RestDefnInPageProperties, RestActionDetail ][] {
+export function allRestAndActions<B> ( pds: PageD<B>[] ): [ PageD<B>, RestDefnInPageProperties, RestActionDetail ][] {
   return unique ( pds.flatMap ( pd => {
     return sortedEntries ( pd.rest ).flatMap ( ( [ name, rdp ] ) => {
-      const y: [ PageD, RestDefnInPageProperties, RestActionDetail ][] = rdp.rest.actions.map ( a => [ pd, rdp, defaultRestAction[ a ] ] )
+      const y: [ PageD<B>, RestDefnInPageProperties, RestActionDetail ][] = rdp.rest.actions.map ( a => [ pd, rdp, defaultRestAction[ a ] ] )
       return y
     } )
   } ), ( [ p, r, rad ] ) => p.name + "," + r.rest.dataDD.name + "," + rad.name )
 }
 
-export function allMainPages ( ps: PageD[] ): PageD[] {return ps.filter ( p => p.pageType === 'MainPage' )}
+export function allMainPages<B> ( ps: PageD<B>[] ): PageD<B>[] {return ps.filter ( p => p.pageType === 'MainPage' )}
 

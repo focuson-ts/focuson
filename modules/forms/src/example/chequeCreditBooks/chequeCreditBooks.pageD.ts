@@ -3,9 +3,10 @@ import { ChequeCreditbooksDD, ChequeCreditbooksHistoryLineDD } from "./chequeCre
 import { chequeCreditBooksRestD } from "./chequeCreditBooks.restD";
 import { CreatePlanPD } from "../eAccounts/createPlanPD";
 import { IntegerDD, PrimitiveDD } from "../../common/dataD";
+import { AllButtonsInPage } from "../../buttons/allButtons";
 
 
-export const OrderChequeBookOrPayingInModalPD: PageD = {
+export const OrderChequeBookOrPayingInModalPD: PageD<AllButtonsInPage> = {
   name: 'OrderChequeBookOrPayingInModal',
   pageType: 'ModalPage',
   /** This page can only view data */
@@ -31,7 +32,7 @@ export const CheckBookOrPayingInDD: PrimitiveDD = {
 }
 
 /** This is the 'bringing it all together */
-export const ChequeCreditbooksPD: PageD = {
+export const ChequeCreditbooksPD: PageD<AllButtonsInPage> = {
   name: 'ChequeCreditbooks',
   pageType: 'MainPage',
   /** This page can only view data */
