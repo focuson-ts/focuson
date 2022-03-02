@@ -32,6 +32,7 @@ export const EAccountsSummaryPD :PageD<AllButtonsInPage>= {
   buttons: {                                                                      //interestingly these will be type checked in the target system...
     createNewPlan: {
       control: 'ModalButton', modal: CreatePlanPD, mode: 'create',
+      createEmpty: CreatePlanDD,
       to: [ 'tempCreatePlan' ],//not type checked here... should be type checked in target
       restOnCommit: { rest: createPlanRestD, action: 'create', result: 'refresh', target: [ 'EAccountsSummary' ] }
     },

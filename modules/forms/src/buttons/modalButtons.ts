@@ -43,7 +43,8 @@ export interface ModalButtonInPage extends CommonModalButtonInPage {
 const makeModalButtonInPage: ButtonCreator<ModalButtonInPage> = ( { params, parent, name, button } ) => {
   const { modal, mode, createEmpty, restOnCommit } = button
   const createEmptyString = createEmpty ? `createEmpty={${params.emptyFile}.${emptyName ( createEmpty )}}` : ""
-  return makeCommonModalButton ( parent, name, button, createEmptyString )
+  let result = makeCommonModalButton ( parent, name, button, createEmptyString );
+  return result
 }
 
 export const makeModalButtons: MakeButton = {
