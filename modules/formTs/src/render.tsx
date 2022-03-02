@@ -32,9 +32,9 @@ export function OccupationAndIncomeDetailsPage<S, Context extends PageSelectionA
   return (<Layout  details='[1][1][1][1][1][1][1]'>
    <OccupationAndIncome state={state}  mode={mode} />
    <RestButton id='addEntry' state={state} />
-   <button>editEntry of type ResetStateButton cannot be create yet</button>
-   <button>Next</button>
-   <button>Prev</button>
+   <button>editEntry of type ResetStateButton cannot be created yet</button>
+             <button id='nextEntry' title='Next' />
+             <button id='prevEntry' title='Prev' />
    </Layout>)})}
 
 export function EAccountsSummaryPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){
@@ -45,7 +45,7 @@ export function EAccountsSummaryPage<S, Context extends PageSelectionAndRestComm
    <ModalAndCopyButton id='amendExistingPlan' text='amendExistingPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={["EAccountsSummary","tempCreatePlan"]}  from={fullState.focusOn('fromApi').focusOn('createPlan')}   pageMode='edit'  rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"update","path":["EAccountsSummary"]}} />
    <ModalButton id='createNewPlan' text='createNewPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={["EAccountsSummary","tempCreatePlan"]}   pageMode='create'  rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"create","path":["EAccountsSummary"]}} />
    <RestButton id='deleteExistingPlan' state={state} />
-   <button>refresh of type ResetStateButton cannot be create yet</button>
+   <button>refresh of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 
 export function CreatePlanPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){
@@ -62,9 +62,9 @@ export function ETransferPage<S, Context extends PageSelectionAndRestCommandsCon
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[3][1,1,1][1,1][1][3]'>
    <ETransferDataD state={state}  mode={mode} />
-   <button>cancel of type ResetStateButton cannot be create yet</button>
+   <button>cancel of type ResetStateButton cannot be created yet</button>
    <RestButton id='eTransfers' state={state} />
-   <button>resetAll of type ResetStateButton cannot be create yet</button>
+   <button>resetAll of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 
 export function CreateEAccountPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){
@@ -72,9 +72,9 @@ export function CreateEAccountPage<S, Context extends PageSelectionAndRestComman
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[1][1][1][1]]'>
    <CreateEAccountDataDD state={state}  mode={mode} />
-   <button>cancel of type ResetStateButton cannot be create yet</button>
+   <button>cancel of type ResetStateButton cannot be created yet</button>
    <RestButton id='eTransfers' state={state} />
-   <button>resetAll of type ResetStateButton cannot be create yet</button>
+   <button>resetAll of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 
 export function ChequeCreditbooksPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){
@@ -82,9 +82,9 @@ export function ChequeCreditbooksPage<S, Context extends PageSelectionAndRestCom
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[1][2][2]'>
    <ChequeCreditbooksDD state={state}  mode={mode} />
-   <button>chequeBook of type ResetStateButton cannot be create yet</button>
+   <button>chequeBook of type ResetStateButton cannot be created yet</button>
    <ModalButton id='orderNewBook' text='orderNewBook' modal = 'OrderChequeBookOrPayingInModal'  to={fullState.focusOn('tempCreatePlan')} base={["ChequeCreditbooks","tempCreatePlan"]} createEmpty={empty.emptyChequeCreditbooksHistoryLineDD}  pageMode='create'  rest={{"name":"ChequeCreditbooks_ChequeCreditbooksDDRestDetails","restAction":"create","path":["tempCreatePlan"]}} />
-   <button>payingInBook of type ResetStateButton cannot be create yet</button>
+   <button>payingInBook of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 
 export function OrderChequeBookOrPayingInModalPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){

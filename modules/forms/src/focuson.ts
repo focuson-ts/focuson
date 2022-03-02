@@ -26,6 +26,7 @@ import { RestDefnInPageProperties } from "./common/pageD";
 import { makeRests } from "./codegen/makeRests";
 import { ChequeCreditbooksPD, OrderChequeBookOrPayingInModalPD } from "./example/chequeCreditBooks/chequeCreditBooks.pageD";
 import { makeOneStory } from "./codegen/makeStories";
+import { transformButtons } from "./buttons/allButtons";
 
 console.log ( 0 )
 
@@ -92,7 +93,7 @@ let pages = [ OccupationAndIncomeDetailsPageD, EAccountsSummaryPD, CreatePlanPD,
 let rests = unique ( pages.flatMap ( x => sortedEntries ( x.rest ) ).map ( ( x: [ string, RestDefnInPageProperties ] ) => x[ 1 ].rest ), r => r.dataDD.name )
 
 
-writeToFile ( `${tsCode}/${params.renderFile}.tsx`, [ ...imports ( params.domainsFile, params.pageDomainsFile, params.emptyFile ), ...createAllReactComponents ( params, pages ) ] )
+writeToFile ( `${tsCode}/${params.renderFile}.tsx`, [ ...imports ( params.domainsFile, params.pageDomainsFile, params.emptyFile ), ...createAllReactComponents ( params, transformButtons,pages ) ] )
 writeToFile ( `${tsCode}/${params.pageDomainsFile}.ts`, makePageDomainsFor ( params, pages ) )
 writeToFile ( `${tsCode}/${params.domainsFile}.ts`, makeAllDomainsFor ( pages ) )
 writeToFile ( `${tsCode}/${params.commonFile}.ts`, makeCommon ( params, pages, rests, directorySpec ) )

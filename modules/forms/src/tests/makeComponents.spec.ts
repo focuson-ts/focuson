@@ -5,6 +5,7 @@ import { LabelAndNumberInputCD, LabelAndStringInputCD, TableCD } from "../common
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
 import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
+import { transformButtons } from "../buttons/allButtons";
 
 //
 describe ( " listComponentsIn", () => {
@@ -63,7 +64,7 @@ describe ( " listComponentsIn", () => {
     ] )
   } )
   it ( "should createAllReactComponents ", () => {
-    expect ( createAllReactComponents ( paramsForTest, [ EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
+    expect ( createAllReactComponents ( paramsForTest, transformButtons,[ EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
       "import { LensProps } from \"@focuson/state\";",
       "import { Layout } from \"./copied/layout\";",
       "import { RestButton } from \"./copied/rest\";",
@@ -86,7 +87,7 @@ describe ( " listComponentsIn", () => {
       "   <ModalAndCopyButton id='amendExistingPlan' text='amendExistingPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={[\"EAccountsSummary\",\"tempCreatePlan\"]}  from={fullState.focusOn('fromApi').focusOn('createPlan')}   pageMode='edit'  rest={{\"name\":\"EAccountsSummary_CreatePlanDDRestDetails\",\"restAction\":\"update\",\"path\":[\"EAccountsSummary\"]}} />",
       "   <ModalButton id='createNewPlan' text='createNewPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={[\"EAccountsSummary\",\"tempCreatePlan\"]}   pageMode='create'  rest={{\"name\":\"EAccountsSummary_CreatePlanDDRestDetails\",\"restAction\":\"create\",\"path\":[\"EAccountsSummary\"]}} />",
       "   <RestButton id='deleteExistingPlan' state={state} />",
-      "   <button>refresh of type ResetStateButton cannot be create yet</button>",
+      "   <button>refresh of type ResetStateButton cannot be created yet</button>",
       "   </Layout>)})}",
       "",
       "export function CreatePlanPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){",
@@ -134,7 +135,7 @@ describe ( " listComponentsIn", () => {
   } )
 
   it ( "should createReactPageComponent", () => {
-    expect ( createReactPageComponent ( paramsForTest, EAccountsSummaryPD ) ).toEqual ( [
+    expect ( createReactPageComponent ( paramsForTest, transformButtons,EAccountsSummaryPD ) ).toEqual ( [
       "export function EAccountsSummaryPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){",
       "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
@@ -142,11 +143,11 @@ describe ( " listComponentsIn", () => {
       "   <ModalAndCopyButton id='amendExistingPlan' text='amendExistingPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={[\"EAccountsSummary\",\"tempCreatePlan\"]}  from={fullState.focusOn('fromApi').focusOn('createPlan')}   pageMode='edit'  rest={{\"name\":\"EAccountsSummary_CreatePlanDDRestDetails\",\"restAction\":\"update\",\"path\":[\"EAccountsSummary\"]}} />",
       "   <ModalButton id='createNewPlan' text='createNewPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={[\"EAccountsSummary\",\"tempCreatePlan\"]}   pageMode='create'  rest={{\"name\":\"EAccountsSummary_CreatePlanDDRestDetails\",\"restAction\":\"create\",\"path\":[\"EAccountsSummary\"]}} />",
       "   <RestButton id='deleteExistingPlan' state={state} />",
-      "   <button>refresh of type ResetStateButton cannot be create yet</button>",
+      "   <button>refresh of type ResetStateButton cannot be created yet</button>",
       "   </Layout>)})}",
       ""
     ] )
-    expect ( createReactPageComponent ( paramsForTest, CreatePlanPD ) ).toEqual ( [
+    expect ( createReactPageComponent ( paramsForTest,transformButtons, CreatePlanPD ) ).toEqual ( [
       "export function CreatePlanPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){",
       "  return focusedPage<S, CreatePlanDDDomain, Context> ( s => '' ) (",
       "     ( state, d, mode ) => {",
