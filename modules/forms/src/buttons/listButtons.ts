@@ -9,8 +9,6 @@ export interface ListMarkerPrevButtonInPage {
 }
 
 export const makeListMarkerButtons: MakeButton = {
-  ListMarkerNextButton: params => parent => ( [ name, button ] ) =>
-    `          <button id='${name}' title='Next' />`,
-  ListMarkerPrevButton: params => parent => ( [ name, button ] ) =>
-    `          <button id='${name}' title='Prev' />`,
+  ListMarkerNextButton: ( { params, parent, name, button } ) => `          <button id='${name}' title='Next' />`,
+  ListMarkerPrevButton: ( { params, parent, name, button } ) => `          <button id='${name}' title='Prev' />`,
 }

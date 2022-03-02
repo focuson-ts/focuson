@@ -10,4 +10,4 @@ export interface RestButtonInPage {
   result: RestResult
 }
 export const makeRestButtonFrom: ButtonCreator<RestButtonInPage> =
-               params => parent => ( [ name, button ] ) => `<${button.control} id='${name}' state={state} />`
+               ( { params, parent, name, button } )=> `<${button.control} id='${name}' state={state} />`

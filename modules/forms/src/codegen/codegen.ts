@@ -21,13 +21,12 @@ export const addStringToEndOfAllButLast = ( ch: string ) => ( ss: string[] ): st
 
 export const indent = ( path: string[], s: string ): string => ' '.repeat ( path.length * 2 + 2 ) + s;
 export const indentList = ( ss: string[] ): string[] => ss.map ( s => ' ' + s )
-export const focusQueryFor = (path: string[]) =>path.map ( p => `.focusQuery('${p}')` ).join ( '')
-export const focusOnFor = (path: string[]) =>path.map ( p => `.focusOn('${p}')` ).join ( '')
+export const focusQueryFor = ( path: string[] ) => path.map ( p => `.focusQuery('${p}')` ).join ( '' )
+export const focusOnFor = ( path: string[] ) => path.map ( p => `.focusOn('${p}')` ).join ( '' )
 
 
 export function opt ( name: string, p: string | undefined ) {
   return p ? `${name}='${p}'` : ''
 }
-export const makeSimpleButton: ButtonCreator<ModalButtonInPage> =
-               params => parent => ( [ name, button ] ) => `          <${button.control} id='${name}' state={state} />`;
+export const makeSimpleButton: ButtonCreator<ModalButtonInPage> = ( { name, button } ) => `          <${button.control} id='${name}' state={state} />`;
 

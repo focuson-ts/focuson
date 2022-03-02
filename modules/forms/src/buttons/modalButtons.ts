@@ -33,14 +33,14 @@ export interface ModalAndCopyButtonInPage extends CommonModalButtonInPage {
   from: string[]
 }
 const makeModalAndCopyButtonInPage: ButtonCreator<ModalAndCopyButtonInPage> =
-        params => parent => ( [ name, button ] ) =>
+        ( { params, parent, name, button } ) =>
           makeCommonModalButton ( parent, name, button, ` from={fullState${(focusOnFor ( safeArray ( button.from ) ))}} ` )
 
 export interface ModalButtonInPage extends CommonModalButtonInPage {
   control: 'ModalButton',
   createEmpty?: DataD
 }
-const makeModalButtonInPage: ButtonCreator<ModalButtonInPage> = params => parent => ( [ name, button ] ) => {
+const makeModalButtonInPage: ButtonCreator<ModalButtonInPage> = ( { params, parent, name, button } ) => {
   const { modal, mode, createEmpty, restOnCommit } = button
   const createEmptyString = createEmpty ? `createEmpty={${params.emptyFile}.${emptyName ( createEmpty )}}` : ""
   return makeCommonModalButton ( parent, name, button, createEmptyString )
