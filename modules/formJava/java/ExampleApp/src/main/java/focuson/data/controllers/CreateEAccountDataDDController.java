@@ -1,8 +1,10 @@
-package focuson.data;
+package focuson.data.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import focuson.data.Sample;
+import focuson.data.queries.CreateEAccountDataDDQueries;
 import graphql.GraphQL;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,12 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
  public GraphQL graphQL;
     @PostMapping(value="/api/createEAccount/{createPlanId}", produces="application/json")
     public ResponseEntity createCreateEAccountDataDD(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       return Results.result(graphQL,Queries.createCreateEAccountDataDD(accountId, customerId), "createCreateEAccountDataDD");
+       return Results.result(graphQL,CreateEAccountDataDDQueries.createCreateEAccountDataDD(accountId, customerId), "createCreateEAccountDataDD");
     }
 
     @PostMapping(value="/api/createEAccount/{createPlanId}/query", produces="application/json")
     public String querycreateCreateEAccountDataDD(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       return Queries.createCreateEAccountDataDD(accountId, customerId);
+       return CreateEAccountDataDDQueries.createCreateEAccountDataDD(accountId, customerId);
     }
 
   @GetMapping(value = "/api/createEAccount/{createPlanId}/sample", produces = "application/json")

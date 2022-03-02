@@ -17,13 +17,13 @@ import java.io.IOException;
 import java.net.URL;
 
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
+{imports}
+
 
 @Component
 public class {wiringClass} {
 
-
-    @Autowired
-    {fetcherInterface} fetchers;
+{fetchers}
 
     private GraphQL graphQL;
 

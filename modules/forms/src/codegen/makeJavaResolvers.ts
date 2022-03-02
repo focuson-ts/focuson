@@ -1,33 +1,42 @@
 import { defaultRestAction, RestD } from "../common/restD";
 import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, OneDataDD, PrimitiveDD, RepeatingDataD, sampleFromDataD } from "../common/dataD";
-import { resolverName, sampleName } from "./names";
+import { fetcherInterfaceName, fetcherVariableName, resolverName, sampleName } from "./names";
 import { JavaWiringParams } from "./config";
 import { applyToTemplate } from "@focuson/template";
 import { DirectorySpec, loadFile } from "@focuson/files";
 
 
-export function makeJavaResolversInterface ( { thePackage, fetcherInterface }: JavaWiringParams, rs: RestD[] ): string[] {
-  const resolvers = findAllResolvers2 ( rs ).map ( ( { resolver } ) => `   public DataFetcher ${resolver}();` )
+export function makeJavaResolversInterface ( params: JavaWiringParams, restD: RestD ): string[] {
+  const { thePackage } = params
+  const resolvers = findAllResolvers ( [ restD ] ).map ( ( { resolver } ) => `   public DataFetcher ${resolver}();` )
   return [
-    `package ${thePackage};`,
+    `package ${thePackage}.${params.fetcherPackage};`,
     '',
     'import graphql.schema.DataFetcher;',
     '',
-    `public interface ${fetcherInterface} {`,
+    `public interface ${fetcherInterfaceName ( params, restD )} {`,
     ...resolvers,
-    // ...findUniqueDataDsAndRestTypeDetails ( rs ).flatMap ( ( [ datad, rad ] ) => `   public DataFetcher ${resolverName ( datad, rad )}();` ),
+    // ...findUniqueDataDsAndRestTypeDetails ( restD ).flatMap ( ( [ datad, rad ] ) => `   public DataFetcher ${resolverName ( datad, rad )}();` ),
     '}' ]
 }
 
-function makeWiring ( parentName: string, resolver: string, name: string ): string {
-  return `.type(newTypeWiring("${parentName}").dataFetcher("${name}", fetchers.${resolver}()))`;
+function makeWiring ( varName: string, parentName: string, resolver: string, name: string ): string {
+  return `.type(newTypeWiring("${parentName}").dataFetcher("${name}", ${varName}.${resolver}()))`;
 }
 
 
 export function makeAllJavaWiring ( params: JavaWiringParams, rs: RestD[], directorySpec: DirectorySpec ): string[] {
-  let wiring = findAllResolvers2 ( rs ).map ( ( { parent, resolver, name, sample } ) => makeWiring ( parent, resolver, name ) )
+  let imports = rs.map ( r => `import ${params.thePackage}.${params.fetcherPackage}.${fetcherInterfaceName ( params, r )};` )
+  let wiring: string[] = rs.flatMap ( r => findAllResolversFor ( r ).map ( ( { parent, resolver, name, sample } ) =>
+    makeWiring ( fetcherVariableName ( params, r ), parent, resolver, name ) ) )
+  let fetchers = rs.flatMap ( r => [ `@Autowired`, `${fetcherInterfaceName ( params, r )} ${fetcherVariableName ( params, r )};` ] )
   const str: string = loadFile ( 'templates/JavaWiringTemplate.java', directorySpec ).toString ()
-  return applyToTemplate ( str, { ...params, wiring: wiring.map ( s => '          ' + s ).join ( '\n' ) } )
+  return applyToTemplate ( str, {
+    ...params,
+    imports: imports.join ( '\n' ),
+    fetchers: fetchers.map ( s => '      ' + s ).join ( '\n' ),
+    wiring: wiring.map ( s => '          ' + s ).join ( '\n' )
+  } )
 }
 
 
@@ -44,7 +53,7 @@ export interface ResolverData {
   /** Values that represent a sample. Will only be present for a field */
   sample: string[];
 }
-export function findQueryMutationResolvers2 ( r: RestD ): ResolverData[] {
+export function findQueryMutationResolvers ( r: RestD ): ResolverData[] {
   return r.actions.map ( a => {
     const rad = defaultRestAction[ a ];
     let name = resolverName ( r.dataDD, rad );
@@ -52,7 +61,7 @@ export function findQueryMutationResolvers2 ( r: RestD ): ResolverData[] {
   } )
 }
 
-export function findChildResolvers2 ( rs: RestD[] ): ResolverData[] {
+export function findChildResolvers ( restD: RestD ): ResolverData[] {
   function rData<D extends AllDataDD> ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: D ): ResolverData[] {
     return parents.length > 0 && dataDD.resolver ? [ {
       isRoot: false,
@@ -75,10 +84,12 @@ export function findChildResolvers2 ( rs: RestD[] ): ResolverData[] {
       return rData ( path, parents, oneDataDD, dataDD )
     },
   }
-  return rs.flatMap ( r => flatMapDD ( r.dataDD, mapper ) )
+  return flatMapDD ( restD.dataDD, mapper )
 
 }
-
-export function findAllResolvers2 ( rs: RestD[] ): ResolverData[] {
-  return [ ...rs.flatMap ( findQueryMutationResolvers2 ), ...findChildResolvers2 ( rs ) ]
+export function findAllResolversFor ( r: RestD ): ResolverData[] {
+  return [ ...findQueryMutationResolvers ( r ), ...findChildResolvers ( r ) ]
+}
+export function findAllResolvers ( rs: RestD[] ): ResolverData[] {
+  return [ ...rs.flatMap ( findQueryMutationResolvers ), ...rs.flatMap ( findChildResolvers ) ]
 }

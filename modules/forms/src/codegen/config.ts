@@ -1,11 +1,14 @@
 export interface JavaWiringParams {
   thePackage: string;
   applicationName: string,
+  fetcherPackage: string;
+  controllerPackage: string;
+  mockFetcherPackage: string;
   fetcherInterface: string;
   wiringClass: string;
   fetcherClass: string;
   sampleClass: string,
-  queriesClass: string,
+  queriesPackage: string,
   schema: string;
 }
 

@@ -8,7 +8,7 @@ import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 describe ( "makeFullState", () => {
   it ( 'should make the FullState', () => {
     expect ( makeFullState ( paramsForTest, [ EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
-      "export interface FState extends HasSimpleMessages,HasPageSelection,HascommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,",
+      "export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,",
       " pageDomains.HasEAccountsSummaryPageDomain",
       "{}"
     ] )
@@ -25,8 +25,8 @@ describe ( "findAllCommonParams", () => {
 describe ( "makeCommonParams", () => {
   it ( 'should make the code around "GetUrlParams"', () => {
     expect ( makeCommonParams ( paramsForTest, [ eAccountsSummaryRestD ], { main: '.', backup: '.' } ) ).toEqual ( [
-      "export interface HascommonIds {commonIds: commonIds}",
-      "export type commonIds = {",
+      "export interface HasCommonIds {CommonIds: CommonIds}",
+      "export type CommonIds = {",
       "accountId?:string;",
       "customerId?:string;",
       "}",

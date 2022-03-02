@@ -3,13 +3,13 @@ import { PageD, RestDefnInPageProperties } from "../common/pageD";
 import { RestActionDetail, RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
 import { RestAction } from "@focuson/utils";
+import { JavaWiringParams } from "./config";
 
 
 export const domainName = ( d: DataD ): string => d.name + "Domain";
 export const componentName = ( d: DataD ): string => d.name;
 export const pageInState = <B> ( p: PageD <B> ): string => p.name
 export const pageComponentName =  <B>( d: PageD <B> ): string => d.name + "Page";
-export const fetcherName = ( d: RestDefnInPageProperties ): string => d.rest.dataDD.name + "Fetcher";
 // export const pageComponent = ( p: PageD ): string => p.name;
 export const hasDomainForPage = <B> ( pd: PageD <B> ): string => "Has" + pageDomainName ( pd );
 export const pageDomainName =  <B>( pd: PageD <B> ): string => pd.name + "PageDomain"
@@ -29,4 +29,9 @@ export const modalName = <B> ( p: PageD <B>, modal: PageD<B> ) => modal.name
 export const restDetailsName = <B> ( p: PageD<B>, r: RestD ) =>
   p.name + "_" + r.dataDD.name + "RestDetails"
 export const storybookFileName = <B> ( pd: PageD<B> ): string => `${pd.name}.stories.ts`;
+export const fetcherName = ( d: RestDefnInPageProperties ): string => d.rest.dataDD.name + "Fetcher";
+export const fetcherInterfaceName = ( params: JavaWiringParams,r: RestD): string => `${r.dataDD.name}${params.fetcherInterface}`;
+export const fetcherVariableName = ( params: JavaWiringParams,r: RestD): string => `_${r.dataDD.name}${params.fetcherInterface}`;
+export const mockFetcherClassName = ( params: JavaWiringParams,r: RestD): string => `${r.dataDD.name}${params.fetcherInterface}Mock`;
+export const queryClassName = ( params: JavaWiringParams,r: RestD): string => `${r.dataDD.name}Queries`;
 

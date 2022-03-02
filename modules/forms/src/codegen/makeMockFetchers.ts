@@ -1,4 +1,4 @@
-import { findAllResolvers2, ResolverData } from "./makeJavaResolvers";
+import { findAllResolvers, ResolverData } from "./makeJavaResolvers";
 import { RestD } from "../common/restD";
 import { JavaWiringParams } from "./config";
 import { safePick } from "@focuson/utils";
@@ -11,6 +11,6 @@ export const makeMockFetcherFor = ( params: JavaWiringParams ) => ( { isRoot, sa
 
 
 export function makeAllMockFetchers ( params: JavaWiringParams, rs: RestD[] ): string[] {
-  return findAllResolvers2 ( rs ).flatMap ( makeMockFetcherFor ( params ) )
+  return findAllResolvers ( rs ).flatMap ( makeMockFetcherFor ( params ) )
 }
 

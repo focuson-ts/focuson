@@ -1,5 +1,5 @@
 import { RestD, RestParams } from "../common/restD";
-import { endPointName, queryName, restControllerName, sampleName } from "./names";
+import { endPointName, queryClassName, queryName, restControllerName, sampleName } from "./names";
 import { JavaWiringParams } from "./config";
 import { beforeSeparator, RestAction, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction, indentList } from "./codegen";
@@ -27,7 +27,7 @@ function makeEndpoint ( params: JavaWiringParams, r: RestD, restAction: RestActi
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( r, restAction )}", produces="application/json")`,
     `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
-    `       return Results.result(graphQL,${params.queriesClass}.${queryName ( r, restAction )}(${paramsForQuery ( r.params, restAction )}), "${queryName ( r, restAction )}");`,
+    `       return Results.result(graphQL,${queryClassName(params,r)}.${queryName ( r, restAction )}(${paramsForQuery ( r.params, restAction )}), "${queryName ( r, restAction )}");`,
     `    }`,
     `` ];
 }
@@ -37,7 +37,7 @@ function makeQueryEndpoint ( params: JavaWiringParams, r: RestD, restAction: Res
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( r, restAction )}/query", produces="application/json")`,
     `    public String query${queryName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
-    `       return ${params.queriesClass}.${queryName ( r, restAction )}(${paramsForQuery ( r.params, restAction )});`,
+    `       return ${queryClassName(params,r)}.${queryName ( r, restAction )}(${paramsForQuery ( r.params, restAction )});`,
     `    }`,
     `` ];
 
@@ -53,11 +53,13 @@ export function makeSpringEndpointsFor ( params: JavaWiringParams, r: RestD ): s
   const endpoints: string[] = r.actions.flatMap ( action => makeEndpoint ( params, r, action ) )
   const queries: string[] = r.actions.flatMap ( action => makeQueryEndpoint ( params, r, action ) )
   return [
-    `package ${params.thePackage};`,
+    `package ${params.thePackage}.${params.controllerPackage};`,
     '',
     'import com.fasterxml.jackson.databind.ObjectMapper;',
     `import org.springframework.http.ResponseEntity;`,
     `import org.springframework.web.bind.annotation.*;`,
+    `import focuson.data.Sample;`,
+    `import focuson.data.${params.queriesPackage}.${queryClassName(params,r)};`,
     `import graphql.GraphQL;`,
     `import org.springframework.beans.factory.annotation.Autowired;`,
     '',

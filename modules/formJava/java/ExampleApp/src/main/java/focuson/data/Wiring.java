@@ -14,10 +14,26 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URL;
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
+import focuson.data.fetchers.OccupationAndIncomeFFetcher;
+import focuson.data.fetchers.CreatePlanDDFFetcher;
+import focuson.data.fetchers.EAccountsSummaryDDFFetcher;
+import focuson.data.fetchers.ETransferDataDFFetcher;
+import focuson.data.fetchers.CreateEAccountDataDDFFetcher;
+import focuson.data.fetchers.ChequeCreditbooksDDFFetcher;
 @Component
 public class Wiring {
-    @Autowired
-    FFetcher fetchers;
+      @Autowired
+      OccupationAndIncomeFFetcher _OccupationAndIncomeFFetcher;
+      @Autowired
+      CreatePlanDDFFetcher _CreatePlanDDFFetcher;
+      @Autowired
+      EAccountsSummaryDDFFetcher _EAccountsSummaryDDFFetcher;
+      @Autowired
+      ETransferDataDFFetcher _ETransferDataDFFetcher;
+      @Autowired
+      CreateEAccountDataDDFFetcher _CreateEAccountDataDDFFetcher;
+      @Autowired
+      ChequeCreditbooksDDFFetcher _ChequeCreditbooksDDFFetcher;
     private GraphQL graphQL;
     @PostConstruct
     public void init() throws IOException {
@@ -34,23 +50,23 @@ public class Wiring {
     }
     private RuntimeWiring buildWiring() {
         return RuntimeWiring.newRuntimeWiring()
-          .type(newTypeWiring("Mutation").dataFetcher("createOccupationAndIncome", fetchers.createOccupationAndIncome()))
-          .type(newTypeWiring("Mutation").dataFetcher("updateOccupationAndIncome", fetchers.updateOccupationAndIncome()))
-          .type(newTypeWiring("Query").dataFetcher("getOccupationAndIncome", fetchers.getOccupationAndIncome()))
-          .type(newTypeWiring("Query").dataFetcher("getCreatePlanDD", fetchers.getCreatePlanDD()))
-          .type(newTypeWiring("Mutation").dataFetcher("createCreatePlanDD", fetchers.createCreatePlanDD()))
-          .type(newTypeWiring("Mutation").dataFetcher("updateCreatePlanDD", fetchers.updateCreatePlanDD()))
-          .type(newTypeWiring("Mutation").dataFetcher("deleteCreatePlanDD", fetchers.deleteCreatePlanDD()))
-          .type(newTypeWiring("Query").dataFetcher("listCreatePlanDD", fetchers.listCreatePlanDD()))
-          .type(newTypeWiring("Query").dataFetcher("getEAccountsSummaryDD", fetchers.getEAccountsSummaryDD()))
-          .type(newTypeWiring("Mutation").dataFetcher("createETransferDataD", fetchers.createETransferDataD()))
-          .type(newTypeWiring("Mutation").dataFetcher("createCreateEAccountDataDD", fetchers.createCreateEAccountDataDD()))
-          .type(newTypeWiring("Query").dataFetcher("getChequeCreditbooksDD", fetchers.getChequeCreditbooksDD()))
-          .type(newTypeWiring("Mutation").dataFetcher("createChequeCreditbooksDD", fetchers.createChequeCreditbooksDD()))
-          .type(newTypeWiring("EAccountSummaryDD").dataFetcher("description", fetchers.getAccountSummaryDescription()))
-          .type(newTypeWiring("EAccountsSummaryDD").dataFetcher("totalMonthlyCost", fetchers.getTotalMonthlyCost()))
-          .type(newTypeWiring("EAccountsSummaryDD").dataFetcher("oneAccountBalance", fetchers.getOneAccountBalance()))
-          .type(newTypeWiring("EAccountsSummaryDD").dataFetcher("currentAccountBalance", fetchers.getCurrentAccountBalance()))
+          .type(newTypeWiring("Mutation").dataFetcher("createOccupationAndIncome", _OccupationAndIncomeFFetcher.createOccupationAndIncome()))
+          .type(newTypeWiring("Mutation").dataFetcher("updateOccupationAndIncome", _OccupationAndIncomeFFetcher.updateOccupationAndIncome()))
+          .type(newTypeWiring("Query").dataFetcher("getOccupationAndIncome", _OccupationAndIncomeFFetcher.getOccupationAndIncome()))
+          .type(newTypeWiring("Query").dataFetcher("getCreatePlanDD", _CreatePlanDDFFetcher.getCreatePlanDD()))
+          .type(newTypeWiring("Mutation").dataFetcher("createCreatePlanDD", _CreatePlanDDFFetcher.createCreatePlanDD()))
+          .type(newTypeWiring("Mutation").dataFetcher("updateCreatePlanDD", _CreatePlanDDFFetcher.updateCreatePlanDD()))
+          .type(newTypeWiring("Mutation").dataFetcher("deleteCreatePlanDD", _CreatePlanDDFFetcher.deleteCreatePlanDD()))
+          .type(newTypeWiring("Query").dataFetcher("listCreatePlanDD", _CreatePlanDDFFetcher.listCreatePlanDD()))
+          .type(newTypeWiring("Query").dataFetcher("getEAccountsSummaryDD", _EAccountsSummaryDDFFetcher.getEAccountsSummaryDD()))
+          .type(newTypeWiring("EAccountSummaryDD").dataFetcher("description", _EAccountsSummaryDDFFetcher.getAccountSummaryDescription()))
+          .type(newTypeWiring("EAccountsSummaryDD").dataFetcher("totalMonthlyCost", _EAccountsSummaryDDFFetcher.getTotalMonthlyCost()))
+          .type(newTypeWiring("EAccountsSummaryDD").dataFetcher("oneAccountBalance", _EAccountsSummaryDDFFetcher.getOneAccountBalance()))
+          .type(newTypeWiring("EAccountsSummaryDD").dataFetcher("currentAccountBalance", _EAccountsSummaryDDFFetcher.getCurrentAccountBalance()))
+          .type(newTypeWiring("Mutation").dataFetcher("createETransferDataD", _ETransferDataDFFetcher.createETransferDataD()))
+          .type(newTypeWiring("Mutation").dataFetcher("createCreateEAccountDataDD", _CreateEAccountDataDDFFetcher.createCreateEAccountDataDD()))
+          .type(newTypeWiring("Query").dataFetcher("getChequeCreditbooksDD", _ChequeCreditbooksDDFFetcher.getChequeCreditbooksDD()))
+          .type(newTypeWiring("Mutation").dataFetcher("createChequeCreditbooksDD", _ChequeCreditbooksDDFFetcher.createChequeCreditbooksDD()))
           .build();
     }
     @Bean

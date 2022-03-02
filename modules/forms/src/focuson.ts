@@ -15,7 +15,7 @@ import { CombinedParams } from "./codegen/config";
 import { imports, indentList } from "./codegen/codegen";
 import { makeCommon } from "./codegen/makeCommon";
 import { makeSpringEndpointsFor } from "./codegen/makeSpringEndpoint";
-import { restControllerName, storybookFileName } from "./codegen/names";
+import { fetcherInterfaceName, mockFetcherClassName, queryClassName, restControllerName, storybookFileName } from "./codegen/names";
 import { makeJavaVariablesForGraphQlQuery } from "./codegen/makeGraphQlQuery";
 import { ETransferPageD } from "./example/eTransfers/eTransfers.pageD";
 import { OccupationAndIncomeDetailsPageD } from "./example/occupationAndIncomeDetails/occupationAndIncomeDetails.pageD";
@@ -35,8 +35,8 @@ export function writeToFile ( name: string, contents: string[] ) {
 }
 
 const focusOnVersion: string = JSON.parse ( loadFile ( 'package.json' ) ).version
-console.log("focusOnVersion", focusOnVersion)
-const params: CombinedParams = {
+console.log ( "focusOnVersion", focusOnVersion )
+export const params: CombinedParams = {
   pagesFile: 'pages',
   focusOnVersion,
   commonParams: "CommonIds",
@@ -45,15 +45,18 @@ const params: CombinedParams = {
   pageDomainsFile: "pageDomains",
   domainsFile: "domains",
   fetchersFile: "fetchers",
+  mockFetcherPackage: "mockfetchers",
+  controllerPackage: "controllers",
   restsFile: "rests",
   pactsFile: "pact.spec",
   samplesFile: "samples",
   emptyFile: "empty",
   renderFile: "render",
   urlparams: 'commonIds',
-  queriesClass: 'Queries',
+  queriesPackage: 'queries',
   thePackage: 'focuson.data',
   applicationName: 'ExampleApp',
+  fetcherPackage: 'fetchers',
   fetcherInterface: 'FFetcher',
   wiringClass: 'Wiring',
   fetcherClass: 'MockFetchers',
@@ -66,6 +69,10 @@ let javaAppRoot = outputRoot + "/java/" + params.applicationName
 let javaScriptRoot = javaAppRoot + "/scripts"
 let javaCodeRoot = javaAppRoot + "/src/main/java/focuson/data"
 let javaResourcesRoot = javaAppRoot + "/src/main/resources"
+let javaFetcherRoot = javaCodeRoot + "/" + params.fetcherPackage
+let javaControllerRoot = javaCodeRoot + "/" + params.controllerPackage
+let javaMockFetcherRoot = javaCodeRoot + "/" + params.mockFetcherPackage
+let javaQueriesPackages = javaCodeRoot + "/" + params.queriesPackage
 let tsRoot = "../formTs"
 let tsScripts = tsRoot + "/scripts"
 let tsCode = tsRoot + "/src"
@@ -78,6 +85,11 @@ fs.mkdirSync ( `${javaAppRoot}`, { recursive: true } )
 fs.mkdirSync ( `${javaCodeRoot}`, { recursive: true } )
 fs.mkdirSync ( `${javaResourcesRoot}`, { recursive: true } )
 fs.mkdirSync ( `${javaScriptRoot}`, { recursive: true } )
+fs.mkdirSync ( `${javaFetcherRoot}`, { recursive: true } )
+fs.mkdirSync ( `${javaMockFetcherRoot}`, { recursive: true } )
+fs.mkdirSync ( `${javaControllerRoot}`, { recursive: true } )
+fs.mkdirSync ( `${javaQueriesPackages}`, { recursive: true } )
+
 fs.mkdirSync ( `${tsCode}`, { recursive: true } )
 fs.mkdirSync ( `${tsScripts}`, { recursive: true } )
 fs.mkdirSync ( `${tsPublic}`, { recursive: true } )
@@ -93,7 +105,7 @@ let pages = [ OccupationAndIncomeDetailsPageD, EAccountsSummaryPD, CreatePlanPD,
 let rests = unique ( pages.flatMap ( x => sortedEntries ( x.rest ) ).map ( ( x: [ string, RestDefnInPageProperties ] ) => x[ 1 ].rest ), r => r.dataDD.name )
 
 
-writeToFile ( `${tsCode}/${params.renderFile}.tsx`, [ ...imports ( params.domainsFile, params.pageDomainsFile, params.emptyFile ), ...createAllReactComponents ( params, transformButtons,pages ) ] )
+writeToFile ( `${tsCode}/${params.renderFile}.tsx`, [ ...imports ( params.domainsFile, params.pageDomainsFile, params.emptyFile ), ...createAllReactComponents ( params, transformButtons, pages ) ] )
 writeToFile ( `${tsCode}/${params.pageDomainsFile}.ts`, makePageDomainsFor ( params, pages ) )
 writeToFile ( `${tsCode}/${params.domainsFile}.ts`, makeAllDomainsFor ( pages ) )
 writeToFile ( `${tsCode}/${params.commonFile}.ts`, makeCommon ( params, pages, rests, directorySpec ) )
@@ -132,22 +144,34 @@ console.log ( 4 )
 templateFile ( `${javaAppRoot}/pom.xml`, 'templates/mvnTemplate.pom', params, directorySpec )
 copyFiles ( javaAppRoot, 'templates/raw/java', directorySpec ) ( 'application.properties' )
 templateFile ( `${javaCodeRoot}/SchemaController.java`, 'templates/raw/java/SchemaController.java', params, directorySpec )
+templateFile ( `${javaControllerRoot}/Results.java`, 'templates/Results.java', params, directorySpec )
 copyFiles ( javaAppRoot, 'templates/raw', directorySpec ) ( '.gitignore' )
 copyFiles ( javaCodeRoot, 'templates/raw/java', directorySpec ) ( 'CorsConfig.java' )
-copyFiles ( javaCodeRoot, 'templates/raw/java', directorySpec ) ( 'Results.java' )
 
 console.log ( 5 )
 
 writeToFile ( `${javaResourcesRoot}/${params.schema}`, makeGraphQlSchema ( rests ) )
-writeToFile ( `${javaCodeRoot}/${params.fetcherInterface}.java`, makeJavaResolversInterface ( params, rests ) )
+rests.forEach ( rest =>
+  writeToFile ( `${javaCodeRoot}/${params.fetcherPackage}/${fetcherInterfaceName ( params, rest )}.java`, makeJavaResolversInterface ( params, rest ) )
+)
 writeToFile ( `${javaCodeRoot}/${params.wiringClass}.java`, makeAllJavaWiring ( params, rests, directorySpec ) )
 templateFile ( `${javaCodeRoot}/${params.applicationName}.java`, 'templates/JavaApplicationTemplate.java', params, directorySpec )
-templateFile ( `${javaCodeRoot}/${params.fetcherClass}.java`, 'templates/JavaFetcherClassTemplate.java',
-  { ...params, content: makeAllMockFetchers ( params, rests ).join ( "\n" ) }, directorySpec )
+rests.forEach ( restD => templateFile ( `${javaMockFetcherRoot}/${mockFetcherClassName ( params, restD )}.java`, 'templates/JavaFetcherClassTemplate.java',
+  {
+    ...params,
+    fetcherInterface: fetcherInterfaceName ( params, restD ),
+    fetcherClass: mockFetcherClassName ( params, restD ),
+    thePackage: params.thePackage + "." + params.mockFetcherPackage,
+    content: makeAllMockFetchers ( params, [ restD ] ).join ( "\n" )
+  }, directorySpec ) )
 templateFile ( `${javaCodeRoot}/${params.sampleClass}.java`, 'templates/JavaSampleTemplate.java',
   { ...params, content: indentList ( makeAllJavaVariableName ( pages, 0 ) ).join ( "\n" ) }, directorySpec )
-templateFile ( `${javaCodeRoot}/${params.queriesClass}.java`, 'templates/JavaQueryTemplate.java',
-  { ...params, content: indentList ( makeJavaVariablesForGraphQlQuery ( rests ) ).join ( "\n" ) }, directorySpec )
+rests.forEach ( r => templateFile ( `${javaQueriesPackages}/${queryClassName ( params, r )}.java`, 'templates/JavaQueryTemplate.java',
+  {
+    ...params,
+    queriesClass: queryClassName(params,r),
+    content: indentList ( makeJavaVariablesForGraphQlQuery ( [r] ) ).join ( "\n" )
+  }, directorySpec ) )
 
-rests.forEach ( rest => writeToFile ( `${javaCodeRoot}/${restControllerName ( rest )}.java`, makeSpringEndpointsFor ( params, rest ) ) )
+rests.forEach ( rest => writeToFile ( `${javaControllerRoot}/${restControllerName ( rest )}.java`, makeSpringEndpointsFor ( params, rest ) ) )
 
