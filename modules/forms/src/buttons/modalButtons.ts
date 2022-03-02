@@ -9,17 +9,17 @@ import { RestCommand } from "@focuson/rest";
 
 export interface CommonModalButtonInPage {
   control: string;
-  modal: PageD <any>,
+  modal: PageD<any>,
   mode: PageMode,
   restOnCommit?: RestOnCommit
   to: string[],
 }
-export function restForButton  <B>( parent: PageD <B>, rest?: RestOnCommit ): string {
+export function restForButton<B> ( parent: PageD<B>, rest?: RestOnCommit ): string {
   const actualRestOnCommet: RestCommand = { name: restDetailsName ( parent, rest.rest ), restAction: rest.action, path: safeArray ( rest.target ) }
   return rest ? ` rest={${JSON.stringify ( actualRestOnCommet )}}` : ""
 }
 
-function makeCommonModalButton  <B>( parent: PageD <B>, name: string, button: CommonModalButtonInPage, extras: string ): string {
+function makeCommonModalButton<B> ( parent: PageD<B>, name: string, button: CommonModalButtonInPage, extras: string ): string {
   const { modal, mode, restOnCommit, to } = button
   const toString = focusOnFor ( safeArray ( to ) )
   return `<${button.control} id='${name}' text='${name}' modal = '${modalName ( parent, modal )}'  ` +
@@ -41,10 +41,9 @@ export interface ModalButtonInPage extends CommonModalButtonInPage {
   createEmpty?: DataD
 }
 const makeModalButtonInPage: ButtonCreator<ModalButtonInPage> = ( { params, parent, name, button } ) => {
-  const { modal, mode, createEmpty, restOnCommit } = button
+  const { createEmpty } = button
   const createEmptyString = createEmpty ? `createEmpty={${params.emptyFile}.${emptyName ( createEmpty )}}` : ""
-  let result = makeCommonModalButton ( parent, name, button, createEmptyString );
-  return result
+  return makeCommonModalButton ( parent, name, button, createEmptyString )
 }
 
 export const makeModalButtons: MakeButton = {

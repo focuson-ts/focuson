@@ -36,41 +36,41 @@ public class Queries{
        "    averageAnnualDrawings"+
        "  }"
  +"}";}
- public static  String getCreatePlanDD(String accountId,String createPlanId,String customerId){ 
+ public static  String getCreatePlanDD(String accountId,String customerId){ 
     return
- "{getCreatePlanDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "createPlanId:" + "\"" + createPlanId + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
+ "{getCreatePlanDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
        "    createPlanStart"+
        "    createPlanDate"+
        "    createPlanEnd"+
        "  }"
  +"}";}
- public static  String createCreatePlanDD(String accountId,String createPlanId,String customerId){ 
+ public static  String createCreatePlanDD(String accountId,String customerId){ 
     return
- "{createCreatePlanDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "createPlanId:" + "\"" + createPlanId + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
+ "{createCreatePlanDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
        "    createPlanStart"+
        "    createPlanDate"+
        "    createPlanEnd"+
        "  }"
  +"}";}
- public static  String updateCreatePlanDD(String accountId,String createPlanId,String customerId){ 
+ public static  String updateCreatePlanDD(String accountId,String customerId){ 
     return
- "{updateCreatePlanDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "createPlanId:" + "\"" + createPlanId + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
+ "{updateCreatePlanDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
        "    createPlanStart"+
        "    createPlanDate"+
        "    createPlanEnd"+
        "  }"
  +"}";}
- public static  String deleteCreatePlanDD(String accountId,String createPlanId,String customerId){ 
+ public static  String deleteCreatePlanDD(String accountId,String customerId){ 
     return
- "{deleteCreatePlanDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "createPlanId:" + "\"" + createPlanId + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
+ "{deleteCreatePlanDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
        "    createPlanStart"+
        "    createPlanDate"+
        "    createPlanEnd"+
        "  }"
  +"}";}
- public static  String listCreatePlanDD(String accountId,String createPlanId,String customerId){ 
+ public static  String listCreatePlanDD(String accountId,String customerId){ 
     return
- "{listCreatePlanDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "createPlanId:" + "\"" + createPlanId + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
+ "{listCreatePlanDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
        "    createPlanStart"+
        "    createPlanDate"+
        "    createPlanEnd"+

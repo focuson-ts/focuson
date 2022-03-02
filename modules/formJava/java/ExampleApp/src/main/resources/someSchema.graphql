@@ -1,16 +1,16 @@
 type Query{
   getOccupationAndIncome(customerId: String!):OccupationAndIncome!
-  getCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!
-  listCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):[CreatePlanDD!]!
+  getCreatePlanDD(accountId: String!, customerId: String!):CreatePlanDD!
+  listCreatePlanDD(accountId: String!, customerId: String!):[CreatePlanDD!]!
   getEAccountsSummaryDD(accountId: String!, customerId: String!):EAccountsSummaryDD!
   getChequeCreditbooksDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!):ChequeCreditbooksDD!
 }
 type Mutation{
   createOccupationAndIncome(customerId: String!):OccupationAndIncome!
   updateOccupationAndIncome(customerId: String!):OccupationAndIncome!
-  createCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!
-  updateCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!
-  deleteCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):String
+  createCreatePlanDD(accountId: String!, customerId: String!):CreatePlanDD!
+  updateCreatePlanDD(accountId: String!, customerId: String!):CreatePlanDD!
+  deleteCreatePlanDD(accountId: String!, customerId: String!):String
   createETransferDataD(customerId: String!):ETransferDataD!
   createCreateEAccountDataDD(accountId: String!, createPlanId: String!, customerId: String!):CreateEAccountDataDD!
   createChequeCreditbooksDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!):ChequeCreditbooksDD!

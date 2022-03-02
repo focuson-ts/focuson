@@ -24,9 +24,9 @@ export function EAccountsSummary_CreatePlanDDRestDetails<S> ( cd: NameAndLens<S>
     dLens: Lenses.identity<pageDomains.EAccountsSummaryPageDomain>().focusQuery('tempCreatePlan'),
     cd, fdd,
     ids: ["accountId","customerId"],
-    resourceId:  ["createPlanId"],
+    resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/createPlan/{createPlanId}?{query}"
+    url: "/api/createPlan?{query}"
   }
 }
 
