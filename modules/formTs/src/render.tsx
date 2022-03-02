@@ -30,70 +30,70 @@ export function OccupationAndIncomeDetailsPage<S, Context extends PageSelectionA
   return focusedPageWithExtraState<S, OccupationAndIncomeDetailsPageDomain, OccupationAndIncomeDomain, Context> ( s => 'OccupationAndIncomeDetails' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[1][1][1][1][1][1][1]'>
-   <OccupationAndIncome state={state}  mode={mode} />
-   <RestButton id='addEntry' state={state} />
-   <button>editEntry of type ResetStateButton cannot be created yet</button>
-             <button id='nextEntry' title='Next' />
-             <button id='prevEntry' title='Prev' />
+     <OccupationAndIncome state={state}  mode={mode} />
+     <RestButton id='addEntry' state={state} />
+     <button>editEntry of type ResetStateButton cannot be created yet</button>
+     <button id='nextEntry' title='Next' />
+     <button id='prevEntry' title='Prev' />
    </Layout>)})}
 
 export function EAccountsSummaryPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){
   return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[1][3,3][5]'>
-   <EAccountsSummaryDD state={state}  mode={mode} />
-   <ModalAndCopyButton id='amendExistingPlan' text='amendExistingPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={["EAccountsSummary","tempCreatePlan"]}  from={fullState.focusOn('fromApi').focusOn('createPlan')}   pageMode='edit'  rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"update","path":["EAccountsSummary"]}} />
-   <ModalButton id='createNewPlan' text='createNewPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={["EAccountsSummary","tempCreatePlan"]}   pageMode='create'  rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"create","path":["EAccountsSummary"]}} />
-   <RestButton id='deleteExistingPlan' state={state} />
-   <button>refresh of type ResetStateButton cannot be created yet</button>
+     <EAccountsSummaryDD state={state}  mode={mode} />
+     <ModalAndCopyButton id='amendExistingPlan' text='amendExistingPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={["EAccountsSummary","tempCreatePlan"]}  from={fullState.focusOn('fromApi').focusOn('createPlan')}   pageMode='edit'  rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"update","path":["EAccountsSummary"]}} />
+     <ModalButton id='createNewPlan' text='createNewPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={["EAccountsSummary","tempCreatePlan"]}   pageMode='create'  rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"create","path":["EAccountsSummary"]}} />
+     <RestButton id='deleteExistingPlan' state={state} />
+     <button>refresh of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 
 export function CreatePlanPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){
   return focusedPage<S, CreatePlanDDDomain, Context> ( s => '' ) (
      ( state, d, mode ) => {
           return (<Layout  details='[3]'>
-             <CreatePlanDD state={state}  mode={mode} />
-             <ModalCancelButton id='cancel' state={state} />
-             <ModalCommitButton id='commit' state={state} />
+               <CreatePlanDD state={state}  mode={mode} />
+               <ModalCancelButton id='cancel' state={state} />
+               <ModalCommitButton id='commit' state={state} />
             </Layout>)})}
 
 export function ETransferPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){
   return focusedPageWithExtraState<S, ETransferPageDomain, ETransferDataDDomain, Context> ( s => 'ETransfer' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[3][1,1,1][1,1][1][3]'>
-   <ETransferDataD state={state}  mode={mode} />
-   <button>cancel of type ResetStateButton cannot be created yet</button>
-   <RestButton id='eTransfers' state={state} />
-   <button>resetAll of type ResetStateButton cannot be created yet</button>
+     <ETransferDataD state={state}  mode={mode} />
+     <button>cancel of type ResetStateButton cannot be created yet</button>
+     <RestButton id='eTransfers' state={state} />
+     <button>resetAll of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 
 export function CreateEAccountPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){
   return focusedPageWithExtraState<S, CreateEAccountPageDomain, CreateEAccountDataDDDomain, Context> ( s => 'CreateEAccount' ) ( s => s.focusOn('editing')) (
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[1][1][1][1]]'>
-   <CreateEAccountDataDD state={state}  mode={mode} />
-   <button>cancel of type ResetStateButton cannot be created yet</button>
-   <RestButton id='eTransfers' state={state} />
-   <button>resetAll of type ResetStateButton cannot be created yet</button>
+     <CreateEAccountDataDD state={state}  mode={mode} />
+     <button>cancel of type ResetStateButton cannot be created yet</button>
+     <RestButton id='eTransfers' state={state} />
+     <button>resetAll of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 
 export function ChequeCreditbooksPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){
   return focusedPageWithExtraState<S, ChequeCreditbooksPageDomain, ChequeCreditbooksDDDomain, Context> ( s => 'ChequeCreditbooks' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[1][2][2]'>
-   <ChequeCreditbooksDD state={state}  mode={mode} />
-   <button>chequeBook of type ResetStateButton cannot be created yet</button>
-   <ModalButton id='orderNewBook' text='orderNewBook' modal = 'OrderChequeBookOrPayingInModal'  to={fullState.focusOn('tempCreatePlan')} base={["ChequeCreditbooks","tempCreatePlan"]} createEmpty={empty.emptyChequeCreditbooksHistoryLineDD}  pageMode='create'  rest={{"name":"ChequeCreditbooks_ChequeCreditbooksDDRestDetails","restAction":"create","path":["tempCreatePlan"]}} />
-   <button>payingInBook of type ResetStateButton cannot be created yet</button>
+     <ChequeCreditbooksDD state={state}  mode={mode} />
+     <button>chequeBook of type ResetStateButton cannot be created yet</button>
+     <ModalButton id='orderNewBook' text='orderNewBook' modal = 'OrderChequeBookOrPayingInModal'  to={fullState.focusOn('tempCreatePlan')} base={["ChequeCreditbooks","tempCreatePlan"]} createEmpty={empty.emptyChequeCreditbooksHistoryLineDD}  pageMode='create'  rest={{"name":"ChequeCreditbooks_ChequeCreditbooksDDRestDetails","restAction":"create","path":["tempCreatePlan"]}} />
+     <button>payingInBook of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 
 export function OrderChequeBookOrPayingInModalPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){
   return focusedPage<S, ChequeCreditbooksHistoryLineDDDomain, Context> ( s => '' ) (
      ( state, d, mode ) => {
           return (<Layout  details='[3]'>
-             <ChequeCreditbooksHistoryLineDD state={state}  mode={mode} />
-             <ModalCancelButton id='cancel' state={state} />
-             <ModalCommitButton id='commit' state={state} />
+               <ChequeCreditbooksHistoryLineDD state={state}  mode={mode} />
+               <ModalCancelButton id='cancel' state={state} />
+               <ModalCommitButton id='commit' state={state} />
             </Layout>)})}
 
 export function ChequeCreditbooksDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, ChequeCreditbooksDDDomain,Context>){

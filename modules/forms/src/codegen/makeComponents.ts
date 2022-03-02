@@ -100,7 +100,7 @@ export function createReactModalPageComponent ( params: TSParams, transformButto
     `  return focusedPage<S, ${domName}, Context> ( s => '' ) (`,
     `     ( state, d, mode ) => {`,
     `          return (<${layout.name}  details='${layout.details}'>`,
-    `             <${componentName ( dataDD )} state={state}  mode={mode} />`,
+    `               <${componentName ( dataDD )} state={state}  mode={mode} />`,
     ...indentList ( indentList ( indentList ( makeButtonsFrom ( params, transformButtons, pageD ) ) ) ),
     `            </${layout.name}>)})}`,
     ''
@@ -114,7 +114,7 @@ export function createReactMainPageComponent ( params: TSParams, transformButton
     `  return focusedPageWithExtraState<S, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${pageD.name}' ) ( s => s${focus}) (
     ( fullState, state , full, d, mode) => {`,
     `  return (<${layout.name}  details='${layout.details}'>`,
-    `   <${componentName ( dataDD )} state={state}  mode={mode} />`,
+    `     <${componentName ( dataDD )} state={state}  mode={mode} />`,
     ...indentList ( indentList ( indentList ( makeButtonsFrom ( params, transformButtons, pageD ) ) ) ),
     `   </${layout.name}>)})}`,
     ''

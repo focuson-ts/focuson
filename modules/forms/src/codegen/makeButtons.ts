@@ -2,6 +2,7 @@ import { PageD } from "../common/pageD";
 import { NameAnd, sortedEntries } from "@focuson/utils";
 import { TSParams } from "./config";
 import { ButtonD } from "../buttons/allButtons";
+import { indentList } from "./codegen";
 
 interface CreateButtonData<B> {
   params: TSParams,
@@ -19,5 +20,5 @@ export const makeButtonFrom = ( maker: MakeButton ) => ( params: TSParams ) => (
 };
 
 export function makeButtonsFrom ( params: TSParams, maker: MakeButton, p: PageD ): string[] {
-  return sortedEntries ( p.buttons ).map ( makeButtonFrom ( maker ) ( params ) ( p ) )
+  return indentList(indentList(sortedEntries ( p.buttons ).map ( makeButtonFrom ( maker ) ( params ) ( p ) )))
 }

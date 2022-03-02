@@ -83,20 +83,20 @@ describe ( " listComponentsIn", () => {
       "export function EAccountsSummaryPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){",
       "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
-      "   <EAccountsSummaryDD state={state}  mode={mode} />",
-      "   <ModalAndCopyButton id='amendExistingPlan' text='amendExistingPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={[\"EAccountsSummary\",\"tempCreatePlan\"]}  from={fullState.focusOn('fromApi').focusOn('createPlan')}   pageMode='edit'  rest={{\"name\":\"EAccountsSummary_CreatePlanDDRestDetails\",\"restAction\":\"update\",\"path\":[\"EAccountsSummary\"]}} />",
-      "   <ModalButton id='createNewPlan' text='createNewPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={[\"EAccountsSummary\",\"tempCreatePlan\"]}   pageMode='create'  rest={{\"name\":\"EAccountsSummary_CreatePlanDDRestDetails\",\"restAction\":\"create\",\"path\":[\"EAccountsSummary\"]}} />",
-      "   <RestButton id='deleteExistingPlan' state={state} />",
-      "   <button>refresh of type ResetStateButton cannot be created yet</button>",
+      "     <EAccountsSummaryDD state={state}  mode={mode} />",
+      "     <ModalAndCopyButton id='amendExistingPlan' text='amendExistingPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={[\"EAccountsSummary\",\"tempCreatePlan\"]}  from={fullState.focusOn('fromApi').focusOn('createPlan')}   pageMode='edit'  rest={{\"name\":\"EAccountsSummary_CreatePlanDDRestDetails\",\"restAction\":\"update\",\"path\":[\"EAccountsSummary\"]}} />",
+      "     <ModalButton id='createNewPlan' text='createNewPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={[\"EAccountsSummary\",\"tempCreatePlan\"]}   pageMode='create'  rest={{\"name\":\"EAccountsSummary_CreatePlanDDRestDetails\",\"restAction\":\"create\",\"path\":[\"EAccountsSummary\"]}} />",
+      "     <RestButton id='deleteExistingPlan' state={state} />",
+      "     <button>refresh of type ResetStateButton cannot be created yet</button>",
       "   </Layout>)})}",
       "",
       "export function CreatePlanPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){",
       "  return focusedPage<S, CreatePlanDDDomain, Context> ( s => '' ) (",
       "     ( state, d, mode ) => {",
       "          return (<Layout  details='[3]'>",
-      "             <CreatePlanDD state={state}  mode={mode} />",
-      "             <ModalCancelButton id='cancel' state={state} />",
-      "             <ModalCommitButton id='commit' state={state} />",
+      "               <CreatePlanDD state={state}  mode={mode} />",
+      "               <ModalCancelButton id='cancel' state={state} />",
+      "               <ModalCommitButton id='commit' state={state} />",
       "            </Layout>)})}",
       "",
       "export function CreatePlanDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, CreatePlanDDDomain,Context>){",
@@ -131,7 +131,7 @@ describe ( " listComponentsIn", () => {
       "</>)",
       "}",
       ""
-    ] )
+    ])
   } )
 
   it ( "should createReactPageComponent", () => {
@@ -139,22 +139,22 @@ describe ( " listComponentsIn", () => {
       "export function EAccountsSummaryPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){",
       "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
-      "   <EAccountsSummaryDD state={state}  mode={mode} />",
-      "   <ModalAndCopyButton id='amendExistingPlan' text='amendExistingPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={[\"EAccountsSummary\",\"tempCreatePlan\"]}  from={fullState.focusOn('fromApi').focusOn('createPlan')}   pageMode='edit'  rest={{\"name\":\"EAccountsSummary_CreatePlanDDRestDetails\",\"restAction\":\"update\",\"path\":[\"EAccountsSummary\"]}} />",
-      "   <ModalButton id='createNewPlan' text='createNewPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={[\"EAccountsSummary\",\"tempCreatePlan\"]}   pageMode='create'  rest={{\"name\":\"EAccountsSummary_CreatePlanDDRestDetails\",\"restAction\":\"create\",\"path\":[\"EAccountsSummary\"]}} />",
-      "   <RestButton id='deleteExistingPlan' state={state} />",
-      "   <button>refresh of type ResetStateButton cannot be created yet</button>",
+      "     <EAccountsSummaryDD state={state}  mode={mode} />",
+      "     <ModalAndCopyButton id='amendExistingPlan' text='amendExistingPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={[\"EAccountsSummary\",\"tempCreatePlan\"]}  from={fullState.focusOn('fromApi').focusOn('createPlan')}   pageMode='edit'  rest={{\"name\":\"EAccountsSummary_CreatePlanDDRestDetails\",\"restAction\":\"update\",\"path\":[\"EAccountsSummary\"]}} />",
+      "     <ModalButton id='createNewPlan' text='createNewPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={[\"EAccountsSummary\",\"tempCreatePlan\"]}   pageMode='create'  rest={{\"name\":\"EAccountsSummary_CreatePlanDDRestDetails\",\"restAction\":\"create\",\"path\":[\"EAccountsSummary\"]}} />",
+      "     <RestButton id='deleteExistingPlan' state={state} />",
+      "     <button>refresh of type ResetStateButton cannot be created yet</button>",
       "   </Layout>)})}",
       ""
-    ] )
+    ])
     expect ( createReactPageComponent ( paramsForTest,transformButtons, CreatePlanPD ) ).toEqual ( [
       "export function CreatePlanPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){",
       "  return focusedPage<S, CreatePlanDDDomain, Context> ( s => '' ) (",
       "     ( state, d, mode ) => {",
       "          return (<Layout  details='[3]'>",
-      "             <CreatePlanDD state={state}  mode={mode} />",
-      "             <ModalCancelButton id='cancel' state={state} />",
-      "             <ModalCommitButton id='commit' state={state} />",
+      "               <CreatePlanDD state={state}  mode={mode} />",
+      "               <ModalCancelButton id='cancel' state={state} />",
+      "               <ModalCommitButton id='commit' state={state} />",
       "            </Layout>)})}",
       ""
     ])
