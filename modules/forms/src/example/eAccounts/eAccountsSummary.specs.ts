@@ -14,7 +14,17 @@ const eAccountsSummarySD: any = {
     },
     actions: [
       { pagesAre: [ EAccountsSummaryPD ] },
-      { fetcher: { rest: eAccountsSummaryRestD, status: 200, response: { data: EAccountsSummaryDD, sample: 0 } } },
+      {
+        fetcher: {
+          rest: eAccountsSummaryRestD, status: 200, response: { data: EAccountsSummaryDD, sample: 0 },
+          backend: [
+            // this is particularly awesome because it jumps onto the server and validates that when we get this query we generate these queries
+            //but even better we know what the resulting data is going to look like, so we have a contract test for api to oracle
+            { sql: '', params: [] },
+            { call: '', params: [] },
+          ]
+        },
+      },
       { dataIs: { lens: [ 'EAccountsSummaryPD', 'fromApi' ], value: { sample: 0 } } },
       { button: EAccountsSummaryPD.buttons.createNewPlan },
       { pagesAre: [ EAccountsSummaryPD, CreateEAccountPageD ] },
@@ -24,7 +34,13 @@ const eAccountsSummarySD: any = {
       { set: { input: CreatePlanDD.structure.createPlanEnd, value: '2022-10-15' } },
       { modalButton: 'commit' },
       { pageDataIs: { lens: [ 'fromApi' ], sample: 0, with: { lens: [], data: {} } } },
-      { restIs: {} },
+      {
+        restIs: {},
+        backend: [
+          { sql: '', params: [] },
+          { call: '', params: [] },
+        ]
+      },
       { processRest: { url: '', info: '', status: 200, response: {} } },
       { pageDataIs: { lens: [ 'fromApi' ], sample: 0, with: { lens: [], data: {} } } },
     ]

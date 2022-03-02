@@ -22,8 +22,8 @@ export function sampleFromDataD ( o: OneDataDD | undefined, d: AllDataDD ): stri
 export interface OneDataDD extends HasSample<string> {
   dataDD: AllDataDD;
   displayParams?: ComponentDisplayParams,
-  graphQl?: string, // might be possible to default this which would be cool
-}
+  field?: string, // defaults to the name. if it exists this says which field to use
+  }
 export interface ManyDataDD {
   [ name: string ]: OneDataDD
 }
