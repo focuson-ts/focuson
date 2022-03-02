@@ -1,8 +1,8 @@
 package focuson.data;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.Map;
 import graphql.GraphQL;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  @Autowired
  public GraphQL graphQL;
     @GetMapping(value="/api/accountsSummary", produces="application/json")
-    public String getEAccountsSummaryDD(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
+    public ResponseEntity getEAccountsSummaryDD(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
        return Results.result(graphQL,Queries.getEAccountsSummaryDD(accountId, customerId), "getEAccountsSummaryDD");
     }
 

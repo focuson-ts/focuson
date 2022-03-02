@@ -1,8 +1,8 @@
 package focuson.data;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.Map;
 import graphql.GraphQL;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  @Autowired
  public GraphQL graphQL;
     @PostMapping(value="/api/eTransfers", produces="application/json")
-    public String createETransferDataD(@RequestParam String customerId) throws Exception{
+    public ResponseEntity createETransferDataD(@RequestParam String customerId) throws Exception{
        return Results.result(graphQL,Queries.createETransferDataD(customerId), "createETransferDataD");
     }
 

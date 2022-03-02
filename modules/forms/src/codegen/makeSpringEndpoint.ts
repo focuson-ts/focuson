@@ -26,7 +26,7 @@ function postFixForEndpoint ( r: RestD, restAction: RestAction ) {
 function makeEndpoint ( params: JavaWiringParams, r: RestD, restAction: RestAction ): string[] {
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( r, restAction )}", produces="application/json")`,
-    `    public String ${endPointName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
+    `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
     `       return Results.result(graphQL,${params.queriesClass}.${queryName ( r, restAction )}(${paramsForQuery ( r.params, restAction )}), "${queryName ( r, restAction )}");`,
     `    }`,
     `` ];
@@ -56,8 +56,8 @@ export function makeSpringEndpointsFor ( params: JavaWiringParams, r: RestD ): s
     `package ${params.thePackage};`,
     '',
     'import com.fasterxml.jackson.databind.ObjectMapper;',
+    `import org.springframework.http.ResponseEntity;`,
     `import org.springframework.web.bind.annotation.*;`,
-    `import java.util.Map;`,
     `import graphql.GraphQL;`,
     `import org.springframework.beans.factory.annotation.Autowired;`,
     '',

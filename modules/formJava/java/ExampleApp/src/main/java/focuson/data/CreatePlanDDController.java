@@ -1,8 +1,8 @@
 package focuson.data;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.Map;
 import graphql.GraphQL;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,27 +12,27 @@ import org.springframework.beans.factory.annotation.Autowired;
  @Autowired
  public GraphQL graphQL;
     @GetMapping(value="/api/createPlan/{createPlanId}", produces="application/json")
-    public String getCreatePlanDD(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{
+    public ResponseEntity getCreatePlanDD(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{
        return Results.result(graphQL,Queries.getCreatePlanDD(accountId, createPlanId, customerId), "getCreatePlanDD");
     }
 
     @PostMapping(value="/api/createPlan/{createPlanId}", produces="application/json")
-    public String createCreatePlanDD(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
+    public ResponseEntity createCreatePlanDD(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
        return Results.result(graphQL,Queries.createCreatePlanDD(accountId, customerId), "createCreatePlanDD");
     }
 
     @PutMapping(value="/api/createPlan/{createPlanId}", produces="application/json")
-    public String updateCreatePlanDD(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{
+    public ResponseEntity updateCreatePlanDD(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{
        return Results.result(graphQL,Queries.updateCreatePlanDD(accountId, createPlanId, customerId), "updateCreatePlanDD");
     }
 
     @DeleteMapping(value="/api/createPlan/{createPlanId}", produces="application/json")
-    public String deleteCreatePlanDD(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{
+    public ResponseEntity deleteCreatePlanDD(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{
        return Results.result(graphQL,Queries.deleteCreatePlanDD(accountId, createPlanId, customerId), "deleteCreatePlanDD");
     }
 
     @GetMapping(value="/api/createPlan/{createPlanId}/list", produces="application/json")
-    public String listCreatePlanDD(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
+    public ResponseEntity listCreatePlanDD(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
        return Results.result(graphQL,Queries.listCreatePlanDD(accountId, customerId), "listCreatePlanDD");
     }
 
