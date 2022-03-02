@@ -13,12 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
  public GraphQL graphQL;
     @GetMapping(value="/api/accountsSummary", produces="application/json")
     public String getEAccountsSummaryDD(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       Map data = (Map) graphQL.execute(Queries.getEAccountsSummaryDD(accountId, customerId)).toSpecification().get("data");
-       return new ObjectMapper().writeValueAsString(data.get("getEAccountsSummaryDD"));
+       return Results.result(graphQL,Queries.getEAccountsSummaryDD(accountId, customerId), "getEAccountsSummaryDD");
     }
 
     @GetMapping(value="/api/accountsSummary/query", produces="application/json")
-    public String queryEAccountsSummaryDD(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
+    public String querygetEAccountsSummaryDD(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
        return Queries.getEAccountsSummaryDD(accountId, customerId);
     }
 

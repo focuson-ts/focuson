@@ -12,14 +12,14 @@ describe ( "makeGraphQlSchema", () => {
         "type Query{",
         "  getEAccountsSummaryDD(accountId: String!, customerId: String!):EAccountsSummaryDD!",
         "  getCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!",
-        "  listCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):[CreatePlanDD!]!",
+        "  listCreatePlanDD(accountId: String!, customerId: String!):[CreatePlanDD!]!",
         "}"
       ])
     } )
     it ( "should make type Mutation", () => {
       expect ( makeQueryOrMutateBlock ( rs, 'Mutation' ) ).toEqual ( [
         "type Mutation{",
-        "  createCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!",
+        "  createCreatePlanDD(accountId: String!, customerId: String!):CreatePlanDD!",
         "  updateCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!",
         "  deleteCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):String",
         "}"
@@ -62,10 +62,10 @@ describe ( "makeGraphQlSchema", () => {
       "type Query{",
       "  getEAccountsSummaryDD(accountId: String!, customerId: String!):EAccountsSummaryDD!",
       "  getCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!",
-      "  listCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):[CreatePlanDD!]!",
+      "  listCreatePlanDD(accountId: String!, customerId: String!):[CreatePlanDD!]!",
       "}",
       "type Mutation{",
-      "  createCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!",
+      "  createCreatePlanDD(accountId: String!, customerId: String!):CreatePlanDD!",
       "  updateCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!",
       "  deleteCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):String",
       "}",

@@ -1,7 +1,8 @@
 import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, isDataDd, isRepeatingDd, OneDataDD } from "../common/dataD";
 import { findMustConstructForRest, findUniqueDataDsAndRestTypeDetails, QueryOrMutation, RestActionDetail, RestD, RestParams, RestTypeDetails } from "../common/restD";
 import { resolverName } from "./names";
-import { sortedEntries } from "@focuson/utils";
+import { RestAction, sortedEntries } from "@focuson/utils";
+import { filterParamsByRestAction } from "./codegen";
 
 export function makeGraphQlTypeFolder ( { keyword, create, postfix }: RestTypeDetails ): AllDataFlatMap<string> {
   return {
@@ -37,13 +38,13 @@ export function makeOutputString ( name: string, { params, query, output, graphQ
 }
 
 
-export function makeParamsString ( params: RestParams ): string {
+export const makeParamsString = ( restAction: RestAction ) => ( params: RestParams ): string => {
   //later for things like create where we don't know some of the ids these will need to be more clever.
-  return sortedEntries ( params ).map ( ( [ name, p ] ) => `${name}: String!` ).join ( ", " )
-}
-export const oneQueryMutateLine = ( [ restD, action ]: [ RestD, RestActionDetail ] ): string => {
+  return sortedEntries ( params ).filter (  filterParamsByRestAction ( restAction )  ).map ( ( [ name, p ] ) => `${name}: String!` ).join ( ", " )
+};
+export const oneQueryMutateLine = ( [ restD, a, action ]: [ RestD, RestAction, RestActionDetail ] ): string => {
   let rawType = rawTypeName ( restD.dataDD );
-  const paramString = "(" + makeParamsString ( restD.params ) + ")";
+  const paramString = "(" + makeParamsString ( a ) ( restD.params ) + ")";
   return `  ${resolverName ( restD.dataDD, action )}${paramString}:${makeOutputString ( rawType, action )}`;
 }
 
@@ -52,7 +53,7 @@ export const makeSchemaBlockFor = ( [ dataD, rt ]: [ DataD, RestTypeDetails ] ):
 
 
 export function makeQueryOrMutateBlock ( rs: RestD[], q: QueryOrMutation ): string[] {
-  const lines = findUniqueDataDsAndRestTypeDetails ( rs ).filter ( ( [ d, a ] ) => a.query == q ).map ( oneQueryMutateLine )
+  const lines = findUniqueDataDsAndRestTypeDetails ( rs ).filter ( ( [ d, a, rad ] ) => rad.query == q ).map ( oneQueryMutateLine )
   return lines.length === 0 ? [] : [ "type " + q + "{", ...lines, "}" ]
 }
 

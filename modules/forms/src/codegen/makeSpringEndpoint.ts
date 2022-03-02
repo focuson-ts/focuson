@@ -2,13 +2,14 @@ import { RestD, RestParams } from "../common/restD";
 import { endPointName, queryName, restControllerName, sampleName } from "./names";
 import { JavaWiringParams } from "./config";
 import { beforeSeparator, RestAction, sortedEntries } from "@focuson/utils";
-import { indentList } from "./codegen";
+import { filterParamsByRestAction, indentList } from "./codegen";
 
-function makeParamsForJava ( r: RestD ) {
-  return sortedEntries ( r.params ).map ( (( [ name, param ] ) => `@RequestParam String ${name}`) ).join ( ", " )
+
+export function makeParamsForJava ( r: RestD, restAction: RestAction ): string {
+  return sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) ).map ( (( [ name, param ] ) => `@RequestParam String ${name}`) ).join ( ", " )
 }
-function paramsForQuery ( r: RestParams ): string {
-  return sortedEntries ( r ).map ( ( [ name, param ] ) => name ).join ( ", " )
+function paramsForQuery ( r: RestParams, restAction: RestAction ): string {
+  return sortedEntries ( r ).filter ( filterParamsByRestAction ( restAction ) ).map ( ( [ name, param ] ) => name ).join ( ", " )
 }
 
 function mappingAnnotation ( restAction: RestAction ) {
@@ -22,12 +23,11 @@ function mappingAnnotation ( restAction: RestAction ) {
 function postFixForEndpoint ( r: RestD, restAction: RestAction ) {
   return restAction === 'list' ? "/list" : ""
 }
-function makeGetEndpoint ( params: JavaWiringParams, r: RestD, restAction: RestAction ): string[] {
+function makeEndpoint ( params: JavaWiringParams, r: RestD, restAction: RestAction ): string[] {
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( r, restAction )}", produces="application/json")`,
-    `    public String ${endPointName ( r, restAction )}(${makeParamsForJava ( r )}) throws Exception{`,
-    `       Map data = (Map) graphQL.execute(${params.queriesClass}.${queryName ( r, restAction )}(${paramsForQuery ( r.params )})).toSpecification().get("data");`,
-    `       return new ObjectMapper().writeValueAsString(data.get("${queryName ( r, restAction )}"));`,
+    `    public String ${endPointName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
+    `       return Results.result(graphQL,${params.queriesClass}.${queryName ( r, restAction )}(${paramsForQuery ( r.params, restAction )}), "${queryName ( r, restAction )}");`,
     `    }`,
     `` ];
 }
@@ -36,8 +36,8 @@ function makeGetEndpoint ( params: JavaWiringParams, r: RestD, restAction: RestA
 function makeQueryEndpoint ( params: JavaWiringParams, r: RestD, restAction: RestAction ): string[] {
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( r, restAction )}/query", produces="application/json")`,
-    `    public String query${r.dataDD.name}(${makeParamsForJava ( r )}) throws Exception{`,
-    `       return ${params.queriesClass}.${queryName ( r, 'get' )}(${paramsForQuery ( r.params )});`,
+    `    public String query${queryName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
+    `       return ${params.queriesClass}.${queryName ( r, restAction )}(${paramsForQuery ( r.params, restAction )});`,
     `    }`,
     `` ];
 
@@ -50,7 +50,8 @@ function makeSampleEndpoint ( params: JavaWiringParams, r: RestD ): string[] {
     `    }` ];
 }
 export function makeSpringEndpointsFor ( params: JavaWiringParams, r: RestD ): string[] {
-  const endpoints: string[] = r.actions.flatMap ( action => makeGetEndpoint ( params, r, action ) )
+  const endpoints: string[] = r.actions.flatMap ( action => makeEndpoint ( params, r, action ) )
+  const queries: string[] = r.actions.flatMap ( action => makeQueryEndpoint ( params, r, action ) )
   return [
     `package ${params.thePackage};`,
     '',
@@ -66,7 +67,7 @@ export function makeSpringEndpointsFor ( params: JavaWiringParams, r: RestD ): s
     ...indentList ( [ `@Autowired`,
       `public GraphQL graphQL;`, ] ),
     ...endpoints,
-    ...makeQueryEndpoint ( params, r, 'get' ),
+    ...queries,
     ...makeSampleEndpoint ( params, r ),
     `  }` ]
 }

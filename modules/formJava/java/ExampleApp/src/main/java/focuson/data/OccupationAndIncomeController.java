@@ -13,24 +13,31 @@ import org.springframework.beans.factory.annotation.Autowired;
  public GraphQL graphQL;
     @PostMapping(value="/api/oneOccupationAndIncome", produces="application/json")
     public String createOccupationAndIncome(@RequestParam String customerId) throws Exception{
-       Map data = (Map) graphQL.execute(Queries.createOccupationAndIncome(customerId)).toSpecification().get("data");
-       return new ObjectMapper().writeValueAsString(data.get("createOccupationAndIncome"));
+       return Results.result(graphQL,Queries.createOccupationAndIncome(customerId), "createOccupationAndIncome");
     }
 
     @PutMapping(value="/api/oneOccupationAndIncome", produces="application/json")
     public String updateOccupationAndIncome(@RequestParam String customerId) throws Exception{
-       Map data = (Map) graphQL.execute(Queries.updateOccupationAndIncome(customerId)).toSpecification().get("data");
-       return new ObjectMapper().writeValueAsString(data.get("updateOccupationAndIncome"));
+       return Results.result(graphQL,Queries.updateOccupationAndIncome(customerId), "updateOccupationAndIncome");
     }
 
     @GetMapping(value="/api/oneOccupationAndIncome", produces="application/json")
     public String getOccupationAndIncome(@RequestParam String customerId) throws Exception{
-       Map data = (Map) graphQL.execute(Queries.getOccupationAndIncome(customerId)).toSpecification().get("data");
-       return new ObjectMapper().writeValueAsString(data.get("getOccupationAndIncome"));
+       return Results.result(graphQL,Queries.getOccupationAndIncome(customerId), "getOccupationAndIncome");
+    }
+
+    @PostMapping(value="/api/oneOccupationAndIncome/query", produces="application/json")
+    public String querycreateOccupationAndIncome(@RequestParam String customerId) throws Exception{
+       return Queries.createOccupationAndIncome(customerId);
+    }
+
+    @PutMapping(value="/api/oneOccupationAndIncome/query", produces="application/json")
+    public String queryupdateOccupationAndIncome(@RequestParam String customerId) throws Exception{
+       return Queries.updateOccupationAndIncome(customerId);
     }
 
     @GetMapping(value="/api/oneOccupationAndIncome/query", produces="application/json")
-    public String queryOccupationAndIncome(@RequestParam String customerId) throws Exception{
+    public String querygetOccupationAndIncome(@RequestParam String customerId) throws Exception{
        return Queries.getOccupationAndIncome(customerId);
     }
 

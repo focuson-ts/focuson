@@ -1,7 +1,7 @@
 import { DataD, findAllDataDs, findDataDDIn } from "./dataD";
 import { RestAction, safeArray, sortedEntries } from "@focuson/utils";
 
-type AllLensRestParams = CommonLensRestParam | LensRestParam
+export type AllLensRestParams = CommonLensRestParam | LensRestParam
 
 export interface CommonLensRestParam {
   commonLens: string,
@@ -99,12 +99,12 @@ export function findMustConstructForRest ( rs: RestD[] ): MustConstructForRest {
 export function findDataDsAndRestTypeDetails ( r: RestD ): [ DataD, RestActionDetail ][] {
   return flapMapActionDetails ( r, ( r, rt ) => findDataDDIn ( r.dataDD ).map ( dataD => [ dataD, rt ] ) )
 }
-export function findUniqueDataDsAndRestTypeDetails ( rs: RestD[] ): [ RestD, RestActionDetail ][] {
-  const nonUnique: [ RestD, RestActionDetail ][] = rs.flatMap ( r => {
-    var x: [ RestD, RestActionDetail ][] = r.actions.map ( a => [ r, defaultRestAction[ a ] ] )
+export function findUniqueDataDsAndRestTypeDetails ( rs: RestD[] ): [ RestD, RestAction, RestActionDetail ][] {
+  const nonUnique: [ RestD, RestAction, RestActionDetail ][] = rs.flatMap ( r => {
+    var x: [ RestD, RestAction, RestActionDetail ][] = r.actions.map ( a => [ r, a, defaultRestAction[ a ] ] )
     return x
   } )
-  return unique<[ RestD, RestActionDetail ]> ( nonUnique, ( [ restD, rad ] ) => restD.dataDD.name + "," + rad.name )
+  return unique<[ RestD, RestAction, RestActionDetail ]> ( nonUnique, ( [ restD, a, rad ] ) => restD.dataDD.name + "," + a )
 }
 
 export function findUniqueDataDsIn ( rs: RestD[] ): DataD[] {
@@ -129,9 +129,9 @@ export function makeCommonParamsValueForTest ( r: RestD ) {
 
 }
 
-export function findIds(rest: RestD){
+export function findIds ( rest: RestD ) {
   const ids = sortedEntries ( rest.params ).filter ( t => !t[ 1 ].main ).map ( ( [ name, value ] ) => name )
   const resourceIds = sortedEntries ( rest.params ).filter ( t => t[ 1 ].main ).map ( ( [ name, value ] ) => name )
-  return [ids, resourceIds]
+  return [ ids, resourceIds ]
 
 }

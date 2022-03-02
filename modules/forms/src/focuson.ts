@@ -134,6 +134,7 @@ copyFiles ( javaAppRoot, 'templates/raw/java', directorySpec ) ( 'application.pr
 templateFile ( `${javaCodeRoot}/SchemaController.java`, 'templates/raw/java/SchemaController.java', params, directorySpec )
 copyFiles ( javaAppRoot, 'templates/raw', directorySpec ) ( '.gitignore' )
 copyFiles ( javaCodeRoot, 'templates/raw/java', directorySpec ) ( 'CorsConfig.java' )
+copyFiles ( javaCodeRoot, 'templates/raw/java', directorySpec ) ( 'Results.java' )
 
 console.log ( 5 )
 

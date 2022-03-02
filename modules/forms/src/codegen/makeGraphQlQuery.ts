@@ -1,6 +1,6 @@
 import { AllDataFlatMap, DataD, flatMapDD, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
-import { defaultRestAction,  RestD } from "../common/restD";
-import { indent, indentList } from "./codegen";
+import { defaultRestAction, RestD } from "../common/restD";
+import { filterParamsByRestAction, indent, indentList } from "./codegen";
 import { queryName, resolverName } from "./names";
 import { asMultilineJavaString, RestAction, sortedEntries } from "@focuson/utils";
 
@@ -23,18 +23,20 @@ const makeQueryFolder: AllDataFlatMap<string> = {
   },
 }
 export function makeQuery ( r: RestD, action: RestAction ): string[] {
-  const paramString = sortedEntries ( r.params ).map ( ( [ name, p ], i ) => `"${name}:" + "\\"" + ${name} + "\\"" ` ).join ( ` + "," + ` )
-  // const paramString = "params"
-  return [ `"{${resolverName ( r.dataDD, defaultRestAction[ action ] )}(\" + ${paramString}+ \"){"+`,
-    ...asMultilineJavaString ( flatMapDD ( r.dataDD, makeQueryFolder ), '      ' ), '+"}";}']
+  const paramString = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( action ) ).map ( ( [ name, p ], i ) => `"${name}:" + "\\"" + ${name} + "\\"" ` ).join ( ` + "," + ` )
+  const prefix = defaultRestAction[action].query.toLowerCase()
+  return [ `"${prefix}{${resolverName ( r.dataDD, defaultRestAction[ action ] )}(\" + ${paramString}+ \"){"+`,
+    ...asMultilineJavaString ( flatMapDD ( r.dataDD, makeQueryFolder ), '      ' ), '+"}";}' ]
 }
 
 export function makeJavaVariablesForGraphQlQuery ( rs: RestD[] ): string[] {
   return rs.flatMap ( r => {
-    const paramString = sortedEntries ( r.params ).map ( ( [ name, p ], i ) => `String ${name}` ).join ( "," )
-    return r.actions.flatMap ( action => [
-      `public static  String ${queryName ( r, action )}(${paramString}){ `,
-      "   return",
-      ...makeQuery ( r, action )] )
+    return r.actions.flatMap ( action => {
+      const paramString = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( action ) ).map ( ( [ name, p ], i ) => `String ${name}` ).join ( "," )
+      return [
+        `public static  String ${queryName ( r, action )}(${paramString}){ `,
+        "   return",
+        ...makeQuery ( r, action ) ];
+    } )
   } )
 }

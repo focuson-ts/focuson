@@ -1,9 +1,10 @@
 import { PageD, RestOnCommit } from "../common/pageD";
 import { RestCommand } from "@focuson/rest";
 import { restDetailsName } from "./names";
-import { safeArray } from "@focuson/utils";
+import { RestAction, safeArray } from "@focuson/utils";
 import { ButtonCreator } from "./makeButtons";
 import { ModalButtonInPage } from "../buttons/modalButtons";
+import { AllLensRestParams } from "../common/restD";
 
 export const imports = ( ...names: string[] ): string[] => names.map ( name => {
   const s = noExtension ( name )
@@ -28,5 +29,7 @@ export const focusOnFor = ( path: string[] ) => path.map ( p => `.focusOn('${p}'
 export function opt ( name: string, p: string | undefined ) {
   return p ? `${name}='${p}'` : ''
 }
-export const makeSimpleButton: ButtonCreator<ModalButtonInPage> = ( { name, button } ) => `          <${button.control} id='${name}' state={state} />`;
+export const makeSimpleButton: ButtonCreator<ModalButtonInPage> = ( { name, button } ) =>
+  `          <${button.control} id='${name}' state={state} />`;
 
+export const filterParamsByRestAction = ( restAction: RestAction) =>( [name,param]: [string,AllLensRestParams] ) => restAction === 'list' || restAction === 'create' ? !param.main : true
