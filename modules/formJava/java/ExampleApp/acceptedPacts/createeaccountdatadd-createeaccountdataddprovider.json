@@ -1,0 +1,36 @@
+{
+  "consumer": {
+    "name": "CreateEAccountDataDD"
+  },
+  "provider": {
+    "name": "CreateEAccountDataDDProvider"
+  },
+  "interactions": [
+    {
+      "description": "CreateEAccount should have a create rest for CreateEAccountDataDD",
+      "providerState": "default",
+      "request": {
+        "method": "POST",
+        "path": "/api/createEAccount/tbd",
+        "query": "accountId=accId&customerId=custId",
+        "body": "{\"name\":\"This is a one line string\",\"type\":\"checking\",\"savingsStyle\":\"adHoc\",\"initialAmount\":123}"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "name": "This is a one line string",
+          "type": "checking",
+          "savingsStyle": "adHoc",
+          "initialAmount": 123
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

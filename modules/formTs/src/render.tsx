@@ -12,7 +12,7 @@ import { LabelAndStringInput } from './copied/LabelAndInput';
 import { LabelAndNumberInput } from './copied/LabelAndInput';
 import { Radio } from './copied/Radio';
 import { LabelAndRadio } from './copied/Radio';
-import { LabelAndCheckboxInput } from './copied/LabelAndInput';
+
 import {OccupationAndIncomeDetailsPageDomain} from "./pageDomains";
 import {EAccountsSummaryPageDomain} from "./pageDomains";
 import {ETransferPageDomain} from "./pageDomains";
@@ -129,7 +129,6 @@ export function CreatePlanDD<S, Context extends PageSelectionAndRestCommandsCont
 
 export function EAccountsSummaryDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, EAccountsSummaryDDDomain,Context>){
   return(<>
-  <LabelAndCheckboxInput state={state.focusOn('useEStatements')} label='use e statements' mode={mode} />
   <Table state={state.focusOn('eAccountsTable')} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} mode={mode} />
   <LabelAndNumberInput state={state.focusOn('totalMonthlyCost')} label='total monthly cost' mode={mode} />
   <LabelAndNumberInput state={state.focusOn('oneAccountBalance')} label='one account balance' mode={mode} />

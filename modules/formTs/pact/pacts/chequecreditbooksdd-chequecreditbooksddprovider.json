@@ -28,6 +28,53 @@
           ]
         }
       }
+    },
+    {
+      "description": "ChequeCreditbooks should have a get rest for ChequeCreditbooksDD",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/chequeCreditBooks",
+        "query": "accountId=accId&applRef=appref&brandRef=brandRef&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "history": [
+            {
+              "serialNumber": 937453,
+              "howOrdered": "Manually",
+              "dateOrder": "2022-10-01"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "ChequeCreditbooks should have a create rest for ChequeCreditbooksDD",
+      "providerState": "default",
+      "request": {
+        "method": "POST",
+        "path": "/api/chequeCreditBooks",
+        "query": "accountId=accId&applRef=appref&brandRef=brandRef&customerId=custId",
+        "body": "{\"history\":[{\"serialNumber\":937453,\"howOrdered\":\"Manually\",\"dateOrder\":\"2022-10-01\"}]}"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "history": [
+            {
+              "serialNumber": 937453,
+              "howOrdered": "Manually",
+              "dateOrder": "2022-10-01"
+            }
+          ]
+        }
+      }
     }
   ],
   "metadata": {

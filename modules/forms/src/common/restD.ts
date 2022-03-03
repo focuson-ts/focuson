@@ -1,5 +1,6 @@
 import { DataD, findAllDataDs, findDataDDIn } from "./dataD";
 import { RestAction, safeArray, sortedEntries } from "@focuson/utils";
+import { filterParamsByRestAction } from "../codegen/codegen";
 
 export type AllLensRestParams = CommonLensRestParam | LensRestParam
 
@@ -125,8 +126,8 @@ export function unique<T> ( ts: T[] | undefined, tagFn: ( t: T ) => string ): T[
   return result
 }
 
-export function makeCommonParamsValueForTest ( r: RestD ) {
-  return Object.fromEntries ( sortedEntries ( r.params ).map ( ( [ name, v ] ) => [ name, v.testValue ] ) )
+export function makeCommonParamsValueForTest ( r: RestD, restAction: RestAction ) {
+  return Object.fromEntries ( sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) ).map ( ( [ name, v ] ) => [ name, v.testValue ] ) )
 
 }
 

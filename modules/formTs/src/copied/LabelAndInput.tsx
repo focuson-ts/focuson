@@ -1,65 +1,36 @@
 import { CommonStateProps } from "./common";
-import { PageMode } from "@focuson/pages";
-import { CheckboxInput, NumberInput, StringInput } from "./Input";
-import { LensState } from "@focuson/state";
-
+import {
+  Input,
+} from "./Input";
+import {Label} from "./Label";
+import React from "react";
+import {BooleanTransformer, NumberTransformer, StringTransformer} from "./transformers";
 
 export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T, Context> {
   label?: string;
+  defaultValue?: string | number
+  value?: string | number
 }
 
-export function LabelAndStringInput<S, Context> ( { label, state, mode }: LabelAndInputProps<S, string, Context> ) {
-  return <div><label>{label}</label><StringInput state={state} mode={mode}/></div>
-}
-export function LabelAndNumberInput<S, Context> ( { label, state, mode }: LabelAndInputProps<S, number, Context> ) {
-  return <div><label>{label}</label><NumberInput state={state} mode={mode}/></div>
-}
-export function LabelAndCheckboxInput<S, Context> ( { label, state, mode }: LabelAndInputProps<S, boolean, Context> ) {
-  return <div><label>{label}</label><CheckboxInput state={state} mode={mode}/></div>
+export interface TransformerProps<T> {
+  transformer: ( s: string ) => T,
+  type: string
 }
 
-//
-// function onClick<S, Context, T> ( state: LensState<S, string, Context>, transformer: ( s: string ) => T ) {
-//   return ( e: MouseEvent ) => state.setJson ( transformer ( e.target.value ) )
-// }
-//
-// const InputPrim = <T extends any> ( tProps: TransformerProps<T> ) => {
-//   const { transformer, type } = tProps
-//   return <S, Context> ( { state, mode }: LabelAndInputProps<S, string, Context> ) =>
-//     <input type={type} onClick={( e ) => onClick ( state, transformer )}/>
-// }
-//
-//
-// const LabelAndTInputPrim2 = <T extends any> ( tProps: TransformerProps<T> ) =>
-//   <S, Context> ( props: LabelAndInputProps<S, string, Context> ) =>
-//     <div><label>{props.label}</label>{InputPrim ( tProps ) ( props )}</div>;
-//
-// export interface TransformerProps<T> {
-//   transformer: ( s: string ) => T,
-//   type: string
-// }
-//
-// const StringTransformer: TransformerProps<string> = { transformer: s => s, type: 'text' }
-// const IntTransformer: TransformerProps<number> = { transformer: s => Number ( s ), type: 'text' }
-// const BooleanTransformer: TransformerProps<boolean> = { transformer: s => s === 'true', type: 'text' }
-//
-// const LabelAndString = LabelAndTInputPrim2<string> ( StringTransformer )
-// const LabelAndNumber = LabelAndTInputPrim2<number> ( IntTransformer )
-// const LabelAndBoolean = LabelAndTInputPrim2<boolean> ( BooleanTransformer )
-//
-// const InputString = InputPrim<string> ( StringTransformer )
-// const InputNumber = InputPrim<number> ( IntTransformer )
-// const InputBoolean = InputPrim<boolean> ( BooleanTransformer )
-//
-//
-//
-//
-//
-//
-//
-//
+const LabelAndTInput = <T extends any> ( tProps: TransformerProps<T> ) =>
+    <S, Context> ( props: LabelAndInputProps<S, T, Context> ) =>
+        <div><Label htmlFor={props.name} label={props.label}/>{Input ( tProps ) ( props )}</div>;
 
+const LabelAndInputString = LabelAndTInput<string> ( StringTransformer )
+const LabelAndInputNumber = LabelAndTInput<number> ( NumberTransformer )
+const LabelAndInputBoolean = LabelAndTInput<boolean> ( BooleanTransformer )
 
-
-
-
+export function LabelAndStringInput<S, Context> ( { mode, state, ariaLabel, id, label, name}: LabelAndInputProps<S, string, Context> ) {
+  return <LabelAndInputString name={name} defaultValue={state.optJson()} id={id} state={state} mode={mode} ariaLabel={ariaLabel} label={label}/>
+}
+export function LabelAndNumberInput<S, Context> ( { mode, state, ariaLabel, id, label, name}: LabelAndInputProps<S, number, Context> ) {
+  return <LabelAndInputNumber name={name} defaultValue={state.optJson()} id={id} state={state} mode={mode} ariaLabel={ariaLabel} label={label}/>
+}
+export function LabelAndBooleanInput<S, Context> ( { mode, state, ariaLabel, id, label, name}: LabelAndInputProps<S, boolean, Context> ) {
+  return <LabelAndInputBoolean name={name} id={id} state={state} mode={mode} ariaLabel={ariaLabel} label={label}/>
+}

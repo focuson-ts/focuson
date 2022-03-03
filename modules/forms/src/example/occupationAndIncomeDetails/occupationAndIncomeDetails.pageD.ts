@@ -5,6 +5,8 @@ import { eTransferRestD } from "../eTransfers/eTransfers.restD";
 import { AllButtonsInPage } from "../../buttons/allButtons";
 
 
+
+
 /** This is the 'bringing it all together */
 export const OccupationAndIncomeDetailsPageD: PageD<AllButtonsInPage> = {
   name: 'OccupationAndIncomeDetails',
@@ -18,8 +20,7 @@ export const OccupationAndIncomeDetailsPageD: PageD<AllButtonsInPage> = {
   initialValue: {},
   /** This defines the domain data structures in react*/
   domain: {
-    // currentPage: {listMarker: ['fromApi']} , //means it is a number and it can be used in next/prev. The listMarker points to the list
-                                             //
+    // currentPage: {listMarker: ['fromApi']} , //means it is a number and it can be used in next/prev. The listMarker points to the list//
     fromApi: { dataDD: OccupationAndIncomeDetailsDataD }
   },
 

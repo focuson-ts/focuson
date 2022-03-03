@@ -32,8 +32,15 @@ describe ( "findMustConstructForRest", () => {
 } )
 
 describe ( "makeCommonParamsValueForTest", () => {
-  it ( "get the values out of the rest params", () => {
-    expect ( makeCommonParamsValueForTest ( eAccountsSummaryRestD ) ).toEqual ( {
+  it ( "get the values out of the rest params - for a get", () => {
+    expect ( makeCommonParamsValueForTest ( createPlanRestD, 'get' ) ).toEqual ( {
+      "accountId": "accId",
+      "createPlanId": "tbd",
+      "customerId": "custId"
+    } )
+  } )
+  it ( "get the values out of the rest params - for a create (no primary id)", () => {
+    expect ( makeCommonParamsValueForTest ( createPlanRestD, 'create' ) ).toEqual ( {
       "accountId": "accId",
       "customerId": "custId"
     } )

@@ -3,7 +3,7 @@
 
 import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndNumberInputCD, LabelAndStringInputCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeComponents";
-import { safeArray } from "@focuson/utils";
+import { NameAnd, safeArray } from "@focuson/utils";
 import { isPrimitive } from "util";
 
 export interface HasSample<T> {
@@ -15,7 +15,7 @@ export interface HasEnum {
 
 export function sampleFromDataD ( o: OneDataDD | undefined, d: AllDataDD ): string[] {
   const fromO: string[] = safeArray ( o?.sample )
-  const fromD: string[] = isPrimDd ( d ) ? [ ...safeArray<any> ( d.sample ).map ( ( t: any ) =>t  ), ...safeArray ( d.enum ? Object.keys ( d.enum ) : [] ) ] : []
+  const fromD: string[] = isPrimDd ( d ) ? [ ...safeArray<any> ( d.sample ).map ( ( t: any ) => t ), ...safeArray ( d.enum ? Object.keys ( d.enum ) : [] ) ] : []
   return [ ...fromO, ...fromD ]
 }
 
@@ -23,7 +23,7 @@ export interface OneDataDD extends HasSample<string> {
   dataDD: AllDataDD;
   displayParams?: ComponentDisplayParams,
   field?: string, // defaults to the name. if it exists this says which field to use
-  }
+}
 export interface ManyDataDD {
   [ name: string ]: OneDataDD
 }
@@ -41,6 +41,7 @@ export interface CommonDataDD {
   description: string;
   comments?: string;
   meta?: any;
+  state?: NameAnd<string[]>
   graphQlType?: string;
   resolver?: string;
 }

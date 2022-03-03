@@ -1,16 +1,44 @@
 import { CommonStateProps } from "./common";
-import { PageMode } from "@focuson/pages";
-
+import {LensState} from "@focuson/state";
+import React from "react";
+import {TransformerProps} from "./LabelAndInput";
+import {BooleanTransformer, NumberTransformer, StringTransformer} from "./transformers";
+import {NameAnd} from "@focuson/utils";
 
 export interface InputProps<S, T, Context> extends CommonStateProps<S, T, Context> {
+  defaultValue?: string | number
+  value?: string | number
+  enums?: NameAnd<string>
 }
 
-export function StringInput<S, Context> ( { mode, state }: InputProps<S, string, Context> ) {
-  return <input type='text' readOnly={mode === 'view'} defaultValue={state.json ()}/>
+function onChange<S, Context, T> ( state: LensState<S, T, Context>, transformer: ( s: string ) => T, e: React.ChangeEvent<HTMLInputElement> ) {
+  state.setJson ( transformer ( e.target.value ) )
 }
-export function NumberInput<S, Context> ( { mode, state }: InputProps<S, number, Context> ) {
-  return <input type='text' readOnly={mode === 'view'} defaultValue={state.json ()}/>
+
+export const Input = <T extends any> ( tProps: TransformerProps<T> ) => {
+  const { transformer, type } = tProps
+  return <S, Context> ( { state, mode, id, name, ariaLabel, defaultValue, value }: InputProps<S, T, Context> ) =>
+      <input type={type}
+             id={id}
+             readOnly= {mode === 'view'}
+             name={name}
+             value={value}
+             aria-label={ariaLabel}
+             defaultValue={defaultValue}
+             onChange={(e) => onChange(state, transformer, e)}
+      />
 }
-export function CheckboxInput<S, Context> ( { mode, state }: InputProps<S, boolean, Context> ) {
-  return <input type='checkbox' readOnly={mode === 'view'} checked={state.json ()}/>
+
+const InputString = Input<string> ( StringTransformer )
+const InputNumber = Input<number> ( NumberTransformer )
+const InputBoolean = Input<boolean> ( BooleanTransformer )
+
+export function StringInput<S, Context> ( { mode, state, ariaLabel, id, name, defaultValue}: InputProps<S, string, Context> ) {
+  return <InputString value={state.optJson()} name={name} id={id} state={state} mode={mode} ariaLabel={ariaLabel} defaultValue={defaultValue}/>
+}
+export function NumberInput<S, Context> ( { mode, state, ariaLabel, id, name, defaultValue }: InputProps<S, number, Context> ) {
+  return <InputNumber value={state.optJson()} name={name} id={id} state={state} mode={mode} ariaLabel={ariaLabel} defaultValue={defaultValue}/>
+}
+export function CheckboxInput<S, Context> ( { mode, state, ariaLabel, id, name }: InputProps<S, boolean, Context> ) {
+  return <InputBoolean name={name} id={id} state={state} mode={mode} ariaLabel={ariaLabel}/>
 }
