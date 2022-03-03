@@ -28,6 +28,7 @@ import { ChequeCreditbooksPD, OrderChequeBookOrPayingInModalPD } from "../exampl
 import { makeOneStory } from "../codegen/makeStories";
 import { transformButtons } from "../buttons/allButtons";
 
+let pages = [ OccupationAndIncomeDetailsPageD, EAccountsSummaryPD, CreatePlanPD, ETransferPageD, CreateEAccountPageD, ChequeCreditbooksPD, OrderChequeBookOrPayingInModalPD ];
 console.log ( 0 )
 
 export function writeToFile ( name: string, contents: string[] ) {
@@ -100,7 +101,6 @@ const directorySpec: DirectorySpec = {
   main: '.',
   backup: 'node_modules/@focuson/forms'
 }
-let pages = [ OccupationAndIncomeDetailsPageD, EAccountsSummaryPD, CreatePlanPD, ETransferPageD, CreateEAccountPageD, ChequeCreditbooksPD, OrderChequeBookOrPayingInModalPD ];
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
 let rests = unique ( pages.flatMap ( x => sortedEntries ( x.rest ) ).map ( ( x: [ string, RestDefnInPageProperties ] ) => x[ 1 ].rest ), r => r.dataDD.name )
 
