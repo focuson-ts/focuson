@@ -1,15 +1,14 @@
 import { allRestAndActions, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { applyToTemplate } from "@focuson/template";
-import {  DirectorySpec, loadFile } from "@focuson/files";
-import fs from "fs";
-import { beforeSeparator, NameAnd, sortedEntries } from "@focuson/utils";
+import { DirectorySpec, loadFile } from "@focuson/files";
+import { beforeSeparator, NameAnd, RestAction, sortedEntries } from "@focuson/utils";
 import { sampleName } from "./names";
-import { makeCommonParamsValueForTest, RestActionDetail, RestD } from "../common/restD";
+import { defaultRestAction, makeCommonParamsValueForTest, RestActionDetail, RestD } from "../common/restD";
 import { TSParams } from "./config";
 import { imports } from "./codegen";
 
 
-interface PactProps extends NameAnd<string> {
+interface CommonPactProps extends NameAnd<string> {
   consumer: string,
   provider: string,
   description1: string,
@@ -18,7 +17,6 @@ interface PactProps extends NameAnd<string> {
   path: string, // what about queries?
   status: string,
   body: string,
-  tree: string,
   pageName: string,
   target: string,
   stateName: string,
@@ -27,47 +25,63 @@ interface PactProps extends NameAnd<string> {
   commonParamsValue: string,
   commonParamsTagsValue: string,
 }
-export function makeFetcherPact  <B>( params: TSParams, p: PageD <B>, r: RestDefnInPageProperties, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
+interface FetcherPactProps extends CommonPactProps {
+  tree: string,
+}
+interface RestPactProps extends CommonPactProps {
+  restDetails: string,
+}
+export function makeFetcherPact<B> ( params: TSParams, p: PageD<B>, r: RestDefnInPageProperties, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
   const fetcherType = r.fetcher
   if ( fetcherType == 'get' && rad.name === 'get' ) return makeGetFetcherPact ( params, p, r, rad, directorySpec )
   if ( fetcherType == 'list' && rad.name === 'list' ) return makeListFetcherPact ( params, p, r, rad, directorySpec )
   return []
 }
 
-export function makeGetFetcherPact <B> ( params: TSParams, p: PageD <B>, r: RestDefnInPageProperties, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
+export function makeGetFetcherPact<B> ( params: TSParams, p: PageD<B>, r: RestDefnInPageProperties, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
   const props = makePropsForFetcherPact ( p, r.rest, params );
-  const str: string = loadFile ( 'templates/onePact.ts', directorySpec ).toString ()
+  const str: string = loadFile ( 'templates/oneFetcherPact.ts', directorySpec ).toString ()
   return [ '//GetFetcher pact test', ...applyToTemplate ( str, props ) ]
 }
 
 //currently no difference.. .but will be once we do the fetchers differently... its about the id of the item
-export function makeListFetcherPact <B> ( params: TSParams, p: PageD <B>, r: RestDefnInPageProperties, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
+export function makeListFetcherPact<B> ( params: TSParams, p: PageD<B>, r: RestDefnInPageProperties, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
   const props = makePropsForFetcherPact ( p, r.rest, params );
-  const str: string = loadFile ( 'templates/onePact.ts', directorySpec ).toString ()
+  const str: string = loadFile ( 'templates/oneFetcherPact.ts', directorySpec ).toString ()
   return [ '//ListFetcher pact test', ...applyToTemplate ( str, props ) ]
 }
 
-export function makeAllPacts <B> ( params: TSParams, ps: PageD <B>[], directorySpec: DirectorySpec ): string[] {
+export function makeRestPacts<B> ( params: TSParams, p: PageD<B>, r: RestDefnInPageProperties, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
+  const props = makePropsForRestPact ( p, r.rest, rad.name, params );
+  const str: string = loadFile ( 'templates/oneRestPact.ts', directorySpec ).toString ()
+  return [ `//Rest ${rad.name} pact test`, ...applyToTemplate ( str, props ) ]
+}
+
+export function makeAllPacts<B> ( params: TSParams, ps: PageD<B>[], directorySpec: DirectorySpec ): string[] {
   return [
     ...imports ( params.samplesFile ),
     `import {emptyState, ${params.stateName} } from "./${params.commonFile}";`,
     `import * as ${params.fetchersFile} from "./${params.fetchersFile}";`,
-    ...allRestAndActions ( ps ).flatMap ( ( [ pd, rd, rad ] ) => makeFetcherPact ( params, pd, rd, rad, directorySpec ) )
+    ...allRestAndActions ( ps ).flatMap ( ( [ pd, rd, rad ] ) => [
+      ...makeFetcherPact ( params, pd, rd, rad, directorySpec ),
+      ...makeRestPacts ( params, pd, rd, rad, directorySpec ),
+    ] )
   ]
 }
-function makePropsForFetcherPact  <B>( p: PageD <B>, d: RestD, params: TSParams ) {
+
+
+function makeCommonPropsForPact<B> ( p: PageD<B>, d: RestD, params: TSParams, restAction: RestAction , description2: string) {
   let paramsValueForTest = makeCommonParamsValueForTest ( d );
   let body = params.samplesFile + "." + sampleName ( d.dataDD ) + '0';
-  const props: PactProps = {
+  const props: CommonPactProps = {
     body,
     consumer: d.dataDD.name,
     description1: p.name,
-    description2: `should have a get fetcher for ${d.dataDD.name}`,
-    method: "GET",
+    description2,
+    method: defaultRestAction[ restAction ].method.toUpperCase (),
     path: beforeSeparator ( "?", d.url ),
     provider: d.dataDD.name + "Provider",
     status: "200",
-    tree: `${params.fetchersFile}.fetchers`,
     commonParams: params.commonParams,
     pageName: p.name,
     target: p.display.target.join ( "." ),
@@ -77,4 +91,12 @@ function makePropsForFetcherPact  <B>( p: PageD <B>, d: RestD, params: TSParams 
     commonParamsTagsValue: JSON.stringify ( sortedEntries ( paramsValueForTest ).map ( ( [ name, v ] ) => v ) )
   }
   return props;
+}
+
+function makePropsForFetcherPact<B> ( p: PageD<B>, d: RestD, params: TSParams ): FetcherPactProps {
+  return { ...makeCommonPropsForPact ( p, d, params, 'get',`should have a get fetcher for ${d.dataDD.name}` ), tree: `${params.fetchersFile}.fetchers` }
+}
+
+function makePropsForRestPact<B> ( p: PageD<B>, d: RestD, restAction: RestAction, params: TSParams ): RestPactProps {
+  return { ...makeCommonPropsForPact ( p, d, params, restAction,`should have a ${restAction} rest for ${d.dataDD.name}` ), restDetails: `${params.restsFile}.restDetails` }
 }
