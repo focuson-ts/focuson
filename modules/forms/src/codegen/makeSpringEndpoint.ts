@@ -1,4 +1,4 @@
-import { RestD, RestParams } from "../common/restD";
+import { defaultRestAction, RestD, RestParams } from "../common/restD";
 import { endPointName, queryClassName, queryName, restControllerName, sampleName } from "./names";
 import { JavaWiringParams } from "./config";
 import { beforeSeparator, RestAction, sortedEntries } from "@focuson/utils";
@@ -6,10 +6,12 @@ import { filterParamsByRestAction, indentList } from "./codegen";
 
 
 export function makeParamsForJava ( r: RestD, restAction: RestAction ): string {
-  return sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) ).map ( (( [ name, param ] ) => `@RequestParam String ${name}`) ).join ( ", " )
+  const requestParam = defaultRestAction[ restAction ].params.needsObj ? ", @RequestBody String body" : ""
+  return sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) ).map ( (( [ name, param ] ) => `@RequestParam String ${name}`) ).join ( ", " )+requestParam
 }
 function paramsForQuery ( r: RestParams, restAction: RestAction ): string {
-  return sortedEntries ( r ).filter ( filterParamsByRestAction ( restAction ) ).map ( ( [ name, param ] ) => name ).join ( ", " )
+  const objParam = defaultRestAction[ restAction ].params.needsObj ? ",  Transform.removeQuoteFromProperties(body)" : ""
+  return sortedEntries ( r ).filter ( filterParamsByRestAction ( restAction ) ).map ( ( [ name, param ] ) => name ).join ( ", " )+objParam
 }
 
 function mappingAnnotation ( restAction: RestAction ) {
@@ -27,7 +29,7 @@ function makeEndpoint ( params: JavaWiringParams, r: RestD, restAction: RestActi
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( r, restAction )}", produces="application/json")`,
     `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
-    `       return Results.result(graphQL,${queryClassName(params,r)}.${queryName ( r, restAction )}(${paramsForQuery ( r.params, restAction )}), "${queryName ( r, restAction )}");`,
+    `       return Transform.result(graphQL,${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( r.params, restAction )}), "${queryName ( r, restAction )}");`,
     `    }`,
     `` ];
 }
@@ -37,7 +39,7 @@ function makeQueryEndpoint ( params: JavaWiringParams, r: RestD, restAction: Res
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( r, restAction )}/query", produces="application/json")`,
     `    public String query${queryName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
-    `       return ${queryClassName(params,r)}.${queryName ( r, restAction )}(${paramsForQuery ( r.params, restAction )});`,
+    `       return ${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( r.params, restAction )});`,
     `    }`,
     `` ];
 
@@ -59,7 +61,7 @@ export function makeSpringEndpointsFor ( params: JavaWiringParams, r: RestD ): s
     `import org.springframework.http.ResponseEntity;`,
     `import org.springframework.web.bind.annotation.*;`,
     `import focuson.data.Sample;`,
-    `import focuson.data.${params.queriesPackage}.${queryClassName(params,r)};`,
+    `import focuson.data.${params.queriesPackage}.${queryClassName ( params, r )};`,
     `import graphql.GraphQL;`,
     `import org.springframework.beans.factory.annotation.Autowired;`,
     '',

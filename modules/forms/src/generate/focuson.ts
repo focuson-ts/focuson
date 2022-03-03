@@ -1,32 +1,32 @@
-import { makeGraphQlSchema } from "./codegen/makeGraphQlTypes";
+import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
 import fs from "fs";
-import { makeAllJavaWiring, makeJavaResolversInterface } from "./codegen/makeJavaResolvers";
-import { createAllReactComponents } from "./codegen/makeComponents";
-import { EAccountsSummaryPD } from "./example/eAccounts/eAccountsSummary.pageD";
-import { makeAllDomainsFor, makePageDomainsFor } from "./codegen/makeDomain";
+import { makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
+import { createAllReactComponents } from "../codegen/makeComponents";
+import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
+import { makeAllDomainsFor, makePageDomainsFor } from "../codegen/makeDomain";
 import { sortedEntries } from "@focuson/utils";
-import { unique } from "./common/restD";
-import { makeAllFetchers, makeFetchersDataStructure, makeFetchersImport } from "./codegen/makeFetchers";
-import { makeAllEmptyData, makeAllJavaVariableName, makeAllSampleVariables } from "./codegen/makeSample";
+import { unique } from "../common/restD";
+import { makeAllFetchers, makeFetchersDataStructure, makeFetchersImport } from "../codegen/makeFetchers";
+import { makeAllEmptyData, makeAllJavaVariableName, makeAllSampleVariables } from "../codegen/makeSample";
 import { copyFiles, DirectorySpec, loadFile, templateFile } from "@focuson/files";
-import { makeAllPacts } from "./codegen/makePacts";
-import { makeAllMockFetchers } from "./codegen/makeMockFetchers";
-import { CombinedParams } from "./codegen/config";
-import { imports, indentList } from "./codegen/codegen";
-import { makeCommon } from "./codegen/makeCommon";
-import { makeSpringEndpointsFor } from "./codegen/makeSpringEndpoint";
-import { fetcherInterfaceName, mockFetcherClassName, queryClassName, restControllerName, storybookFileName } from "./codegen/names";
-import { makeJavaVariablesForGraphQlQuery } from "./codegen/makeGraphQlQuery";
-import { ETransferPageD } from "./example/eTransfers/eTransfers.pageD";
-import { OccupationAndIncomeDetailsPageD } from "./example/occupationAndIncomeDetails/occupationAndIncomeDetails.pageD";
-import { makePages } from "./codegen/makePages";
-import { CreateEAccountPageD } from "./example/createEAccount/createEAccount.pageD";
-import { CreatePlanPD } from "./example/eAccounts/createPlanPD";
-import { RestDefnInPageProperties } from "./common/pageD";
-import { makeRests } from "./codegen/makeRests";
-import { ChequeCreditbooksPD, OrderChequeBookOrPayingInModalPD } from "./example/chequeCreditBooks/chequeCreditBooks.pageD";
-import { makeOneStory } from "./codegen/makeStories";
-import { transformButtons } from "./buttons/allButtons";
+import { makeAllPacts } from "../codegen/makePacts";
+import { makeAllMockFetchers } from "../codegen/makeMockFetchers";
+import { CombinedParams } from "../codegen/config";
+import { imports, indentList } from "../codegen/codegen";
+import { makeCommon } from "../codegen/makeCommon";
+import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
+import { fetcherInterfaceName, mockFetcherClassName, queryClassName, restControllerName, storybookFileName } from "../codegen/names";
+import { makeJavaVariablesForGraphQlQuery } from "../codegen/makeGraphQlQuery";
+import { ETransferPageD } from "../example/eTransfers/eTransfers.pageD";
+import { OccupationAndIncomeDetailsPageD } from "../example/occupationAndIncomeDetails/occupationAndIncomeDetails.pageD";
+import { makePages } from "../codegen/makePages";
+import { CreateEAccountPageD } from "../example/createEAccount/createEAccount.pageD";
+import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
+import { RestDefnInPageProperties } from "../common/pageD";
+import { makeRests } from "../codegen/makeRests";
+import { ChequeCreditbooksPD, OrderChequeBookOrPayingInModalPD } from "../example/chequeCreditBooks/chequeCreditBooks.pageD";
+import { makeOneStory } from "../codegen/makeStories";
+import { transformButtons } from "../buttons/allButtons";
 
 console.log ( 0 )
 
@@ -144,7 +144,7 @@ console.log ( 4 )
 templateFile ( `${javaAppRoot}/pom.xml`, 'templates/mvnTemplate.pom', params, directorySpec )
 copyFiles ( javaAppRoot, 'templates/raw/java', directorySpec ) ( 'application.properties' )
 templateFile ( `${javaCodeRoot}/SchemaController.java`, 'templates/raw/java/SchemaController.java', params, directorySpec )
-templateFile ( `${javaControllerRoot}/Results.java`, 'templates/Results.java', params, directorySpec )
+templateFile ( `${javaControllerRoot}/Transform.java`, 'templates/Transform.java', params, directorySpec )
 copyFiles ( javaAppRoot, 'templates/raw', directorySpec ) ( '.gitignore' )
 copyFiles ( javaCodeRoot, 'templates/raw/java', directorySpec ) ( 'CorsConfig.java' )
 

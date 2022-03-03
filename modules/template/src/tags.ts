@@ -60,7 +60,7 @@ export interface TagOps {
 
 export const tags: TagOpsFn<Tags> = ( urlConfig, restAction ) => <S> ( s ) => {
   const names = needsId ( restAction ) ? [ ...urlConfig.resourceId, ...urlConfig.ids ] : urlConfig.ids
-  return names.map ( onePart ( urlConfig, { failSilently: true } ) ( s, restAction ) ).sort()
+  return names.map ( onePart ( urlConfig, { failSilently: true } ) ( s, restAction ) ).sort ()
 };
 export function nameToLens<S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, restAction: RestAction ): GetNameFn<S, any> {
   return ( name: string ) => {
@@ -90,7 +90,10 @@ export const bodyFor: TagOpsFn<RequestInit | undefined> =
                  if ( restAction === 'get' || restAction === 'getOption' || restAction === 'list' ) return undefined
                  if ( restAction === 'delete' ) return { method }
                  const body: any = urlConfig.fdLens.chain ( urlConfig.dLens ).getOption ( s )
-                 if ( body ) return { method, body }
+                 if ( body ) {
+                   console.log ( "made body for ", body )
+                   return { method, body: JSON.stringify ( body ) }
+                 }
                  throw new Error ( `Cannot execute restAction ${restAction} because the data object is empty\n${JSON.stringify ( s )}` )
                }
 

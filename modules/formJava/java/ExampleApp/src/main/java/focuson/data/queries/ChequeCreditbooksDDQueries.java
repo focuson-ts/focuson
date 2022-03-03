@@ -10,9 +10,9 @@ public class ChequeCreditbooksDDQueries{
        "    }"+
        "  }"
  +"}";}
- public static  String createChequeCreditbooksDD(String accountId,String applRef,String brandRef,String customerId){ 
+ public static  String createChequeCreditbooksDD(String accountId,String applRef,String brandRef,String customerId, String obj){ 
     return
- "mutation{createChequeCreditbooksDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "applRef:" + "\"" + applRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
+ "mutation{createChequeCreditbooksDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "applRef:" + "\"" + applRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "customerId:" + "\"" + customerId + "\""  +  ", obj:" + obj + "){"+
        "    history{"+
        "      serialNumber"+
        "      howOrdered"+

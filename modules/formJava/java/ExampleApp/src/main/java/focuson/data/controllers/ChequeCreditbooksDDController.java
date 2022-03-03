@@ -15,12 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
  public GraphQL graphQL;
     @GetMapping(value="/api/chequeCreditBooks", produces="application/json")
     public ResponseEntity getChequeCreditbooksDD(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId) throws Exception{
-       return Results.result(graphQL,ChequeCreditbooksDDQueries.getChequeCreditbooksDD(accountId, applRef, brandRef, customerId), "getChequeCreditbooksDD");
+       return Transform.result(graphQL,ChequeCreditbooksDDQueries.getChequeCreditbooksDD(accountId, applRef, brandRef, customerId), "getChequeCreditbooksDD");
     }
 
     @PostMapping(value="/api/chequeCreditBooks", produces="application/json")
-    public ResponseEntity createChequeCreditbooksDD(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId) throws Exception{
-       return Results.result(graphQL,ChequeCreditbooksDDQueries.createChequeCreditbooksDD(accountId, applRef, brandRef, customerId), "createChequeCreditbooksDD");
+    public ResponseEntity createChequeCreditbooksDD(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId, @RequestBody String body) throws Exception{
+       return Transform.result(graphQL,ChequeCreditbooksDDQueries.createChequeCreditbooksDD(accountId, applRef, brandRef, customerId,  Transform.removeQuoteFromProperties(body)), "createChequeCreditbooksDD");
     }
 
     @GetMapping(value="/api/chequeCreditBooks/query", produces="application/json")
@@ -29,8 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
     }
 
     @PostMapping(value="/api/chequeCreditBooks/query", produces="application/json")
-    public String querycreateChequeCreditbooksDD(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId) throws Exception{
-       return ChequeCreditbooksDDQueries.createChequeCreditbooksDD(accountId, applRef, brandRef, customerId);
+    public String querycreateChequeCreditbooksDD(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId, @RequestBody String body) throws Exception{
+       return ChequeCreditbooksDDQueries.createChequeCreditbooksDD(accountId, applRef, brandRef, customerId,  Transform.removeQuoteFromProperties(body));
     }
 
   @GetMapping(value = "/api/chequeCreditBooks/sample", produces = "application/json")

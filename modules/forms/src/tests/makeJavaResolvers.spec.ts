@@ -1,9 +1,35 @@
 import { findAllResolvers, findChildResolvers, findQueryMutationResolvers, makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { CombinedParams } from "../codegen/config";
-import { params } from "../focuson";
+import { params } from "../generate/focuson";
 
-export const paramsForTest: CombinedParams = params;
+export const paramsForTest: CombinedParams =  {
+  pagesFile: 'pages',
+  focusOnVersion: "someFocusOnVersion",
+  commonParams: "CommonIds",
+  stateName: "FState",
+  commonFile: "common",
+  pageDomainsFile: "pageDomains",
+  domainsFile: "domains",
+  fetchersFile: "fetchers",
+  mockFetcherPackage: "mockfetchers",
+  controllerPackage: "controllers",
+  restsFile: "rests",
+  pactsFile: "pact.spec",
+  samplesFile: "samples",
+  emptyFile: "empty",
+  renderFile: "render",
+  urlparams: 'commonIds',
+  queriesPackage: 'queries',
+  thePackage: 'focuson.data',
+  applicationName: 'ExampleApp',
+  fetcherPackage: 'fetchers',
+  fetcherInterface: 'FFetcher',
+  wiringClass: 'Wiring',
+  fetcherClass: 'MockFetchers',
+  schema: 'someSchema.graphql',
+  sampleClass: 'Sample'
+};
 
 describe ( "makeJavaResolversInterface", () => {
   it ( "should make a java interface", () => {

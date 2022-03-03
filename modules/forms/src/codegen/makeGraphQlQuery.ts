@@ -24,8 +24,9 @@ const makeQueryFolder: AllDataFlatMap<string> = {
 }
 export function makeQuery ( r: RestD, action: RestAction ): string[] {
   const paramString = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( action ) ).map ( ( [ name, p ], i ) => `"${name}:" + "\\"" + ${name} + "\\"" ` ).join ( ` + "," + ` )
-  const prefix = defaultRestAction[action].query.toLowerCase()
-  return [ `"${prefix}{${resolverName ( r.dataDD, defaultRestAction[ action ] )}(\" + ${paramString}+ \"){"+`,
+  const objParamString = defaultRestAction[ action ].params.needsObj ? ` +  ", obj:" + obj ` : ""
+  const prefix = defaultRestAction[ action ].query.toLowerCase ()
+  return [ `"${prefix}{${resolverName ( r.dataDD, defaultRestAction[ action ] )}(\" + ${paramString}${objParamString}+ \"){"+`,
     ...asMultilineJavaString ( flatMapDD ( r.dataDD, makeQueryFolder ), '      ' ), '+"}";}' ]
 }
 
@@ -33,8 +34,9 @@ export function makeJavaVariablesForGraphQlQuery ( rs: RestD[] ): string[] {
   return rs.flatMap ( r => {
     return r.actions.flatMap ( action => {
       const paramString = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( action ) ).map ( ( [ name, p ], i ) => `String ${name}` ).join ( "," )
+      const objParamString = defaultRestAction[ action ].params.needsObj ? `, String obj` : ""
       return [
-        `public static  String ${queryName ( r, action )}(${paramString}){ `,
+        `public static  String ${queryName ( r, action )}(${paramString}${objParamString}){ `,
         "   return",
         ...makeQuery ( r, action ) ];
     } )

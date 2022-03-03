@@ -6,14 +6,14 @@ type Query{
   getChequeCreditbooksDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!):ChequeCreditbooksDD!
 }
 type Mutation{
-  createOccupationAndIncome(customerId: String!):OccupationAndIncome!
-  updateOccupationAndIncome(customerId: String!):OccupationAndIncome!
-  createCreatePlanDD(accountId: String!, customerId: String!):CreatePlanDD!
-  updateCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!
+  createOccupationAndIncome(customerId: String!,obj: OccupationAndIncomeInp!):OccupationAndIncome!
+  updateOccupationAndIncome(customerId: String!,obj: OccupationAndIncomeInp!):OccupationAndIncome!
+  createCreatePlanDD(accountId: String!, customerId: String!,obj: CreatePlanDDInp!):CreatePlanDD!
+  updateCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanDDInp!):CreatePlanDD!
   deleteCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):String
-  createETransferDataD(customerId: String!):ETransferDataD!
-  createCreateEAccountDataDD(accountId: String!, customerId: String!):CreateEAccountDataDD!
-  createChequeCreditbooksDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!):ChequeCreditbooksDD!
+  createETransferDataD(customerId: String!,obj: ETransferDataDInp!):ETransferDataD!
+  createCreateEAccountDataDD(accountId: String!, customerId: String!,obj: CreateEAccountDataDDInp!):CreateEAccountDataDD!
+  createChequeCreditbooksDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!,obj: ChequeCreditbooksDDInp!):ChequeCreditbooksDD!
 }
 type ChequeCreditbooksDD{
   history: [ChequeCreditbooksHistoryLineDD!]!
@@ -101,20 +101,6 @@ input ETransferDataDInp{
   notes: String!
 }
 input OccupationAndIncomeInp{
-  typeOfProfession: String!
-  occupation: String!
-  customersDescription: String!
-  businessType: String!
-  businessName: String!
-  dateStarted: String!
-  averageAnnualDrawings: Int!
-}
-input CreatePlanDDIdAndInp{
-  createPlanStart: String!
-  createPlanDate: String!
-  createPlanEnd: String!
-}
-input OccupationAndIncomeIdAndInp{
   typeOfProfession: String!
   occupation: String!
   customersDescription: String!

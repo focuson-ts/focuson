@@ -1,8 +1,8 @@
 package focuson.data.queries;
 public class OccupationAndIncomeQueries{
- public static  String createOccupationAndIncome(String customerId){ 
+ public static  String createOccupationAndIncome(String customerId, String obj){ 
     return
- "mutation{createOccupationAndIncome(" + "customerId:" + "\"" + customerId + "\"" + "){"+
+ "mutation{createOccupationAndIncome(" + "customerId:" + "\"" + customerId + "\""  +  ", obj:" + obj + "){"+
        "    typeOfProfession"+
        "    occupation"+
        "    customersDescription"+
@@ -12,9 +12,9 @@ public class OccupationAndIncomeQueries{
        "    averageAnnualDrawings"+
        "  }"
  +"}";}
- public static  String updateOccupationAndIncome(String customerId){ 
+ public static  String updateOccupationAndIncome(String customerId, String obj){ 
     return
- "mutation{updateOccupationAndIncome(" + "customerId:" + "\"" + customerId + "\"" + "){"+
+ "mutation{updateOccupationAndIncome(" + "customerId:" + "\"" + customerId + "\""  +  ", obj:" + obj + "){"+
        "    typeOfProfession"+
        "    occupation"+
        "    customersDescription"+

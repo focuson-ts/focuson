@@ -14,13 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
  @Autowired
  public GraphQL graphQL;
     @PostMapping(value="/api/createEAccount/{createPlanId}", produces="application/json")
-    public ResponseEntity createCreateEAccountDataDD(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       return Results.result(graphQL,CreateEAccountDataDDQueries.createCreateEAccountDataDD(accountId, customerId), "createCreateEAccountDataDD");
+    public ResponseEntity createCreateEAccountDataDD(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{
+       return Transform.result(graphQL,CreateEAccountDataDDQueries.createCreateEAccountDataDD(accountId, customerId,  Transform.removeQuoteFromProperties(body)), "createCreateEAccountDataDD");
     }
 
     @PostMapping(value="/api/createEAccount/{createPlanId}/query", produces="application/json")
-    public String querycreateCreateEAccountDataDD(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       return CreateEAccountDataDDQueries.createCreateEAccountDataDD(accountId, customerId);
+    public String querycreateCreateEAccountDataDD(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{
+       return CreateEAccountDataDDQueries.createCreateEAccountDataDD(accountId, customerId,  Transform.removeQuoteFromProperties(body));
     }
 
   @GetMapping(value = "/api/createEAccount/{createPlanId}/sample", produces = "application/json")

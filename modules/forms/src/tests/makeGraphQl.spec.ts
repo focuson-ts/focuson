@@ -49,13 +49,13 @@ describe ( "Making GraphQl from RestD", () => {
   } )
   it ( "should include the 'mutation' params in a update", () => {
     expect ( makeQuery ( createPlanRestD, 'update' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "'mutation{updateCreatePlanDD(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'createPlanId:' + '\\'' + createPlanId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\'' + '){'+",
+      "'mutation{updateCreatePlanDD(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'createPlanId:' + '\\'' + createPlanId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\''  +  ', obj:' + obj + '){'+",
       "      '    createPlanStart'+",
       "      '    createPlanDate'+",
       "      '    createPlanEnd'+",
       "      '  }'",
       "+'}';}"
-    ] )
+    ])
   } )
 
 

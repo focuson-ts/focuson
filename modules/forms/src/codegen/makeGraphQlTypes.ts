@@ -40,11 +40,16 @@ export function makeOutputString ( name: string, { params, query, output, graphQ
 
 export const makeParamsString = ( restAction: RestAction ) => ( params: RestParams ): string => {
   //later for things like create where we don't know some of the ids these will need to be more clever.
-  return sortedEntries ( params ).filter (  filterParamsByRestAction ( restAction )  ).map ( ( [ name, p ] ) => `${name}: String!` ).join ( ", " )
+  return sortedEntries ( params ).filter ( filterParamsByRestAction ( restAction ) ).map ( ( [ name, p ] ) => `${name}: String!` ).join ( ", " )
 };
+function extraParam ( restD: RestD, action: RestActionDetail ) {
+  const prefix = ",obj: "
+  if ( action.params.needsObj ) return prefix + restD.dataDD.name + "Inp!"
+  return ""
+}
 export const oneQueryMutateLine = ( [ restD, a, action ]: [ RestD, RestAction, RestActionDetail ] ): string => {
   let rawType = rawTypeName ( restD.dataDD );
-  const paramString = "(" + makeParamsString ( a ) ( restD.params ) + ")";
+  const paramString = "(" + makeParamsString ( a ) ( restD.params ) + extraParam ( restD, action ) + ")";
   return `  ${resolverName ( restD.dataDD, action )}${paramString}:${makeOutputString ( rawType, action )}`;
 }
 
@@ -77,6 +82,7 @@ export const makeGraphQlSchema = ( rs: RestD[] ): string[] => {
     ...makeQueryOrMutateBlock ( rs, 'Query' ),
     ...makeQueryOrMutateBlock ( rs, 'Mutation' ),
     ...doOne ( 'type', '', objs ),
-    ...doOne ( 'input', 'Inp', input ),
-    ...doOne ( 'input', 'IdAndInp', inputWithId ) ];
+    ...doOne ( 'input', 'Inp', input )
+    // ...doOne ( 'input', 'IdAndInp', inputWithId )
+  ];
 }

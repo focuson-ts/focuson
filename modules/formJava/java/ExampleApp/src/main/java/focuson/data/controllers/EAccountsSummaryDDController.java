@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  public GraphQL graphQL;
     @GetMapping(value="/api/accountsSummary", produces="application/json")
     public ResponseEntity getEAccountsSummaryDD(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       return Results.result(graphQL,EAccountsSummaryDDQueries.getEAccountsSummaryDD(accountId, customerId), "getEAccountsSummaryDD");
+       return Transform.result(graphQL,EAccountsSummaryDDQueries.getEAccountsSummaryDD(accountId, customerId), "getEAccountsSummaryDD");
     }
 
     @GetMapping(value="/api/accountsSummary/query", produces="application/json")
