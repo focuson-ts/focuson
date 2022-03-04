@@ -10,7 +10,8 @@ export interface CommonModalButtonInPage {
   control: string;
   modal: PageD<any>,
   mode: PageMode,
-  restOnCommit?: RestOnCommit
+  restOnCommit?: RestOnCommit,
+  copyOnClose?: string[]
   to: string[],
 }
 export function restForButton<B> ( parent: PageD<B>, rest?: RestOnCommit ): string {
@@ -20,9 +21,10 @@ export function restForButton<B> ( parent: PageD<B>, rest?: RestOnCommit ): stri
 function makeCommonModalButton<B> ( parent: PageD<B>, name: string, button: CommonModalButtonInPage, extras: string ): string {
   const { modal, mode, restOnCommit, to } = button
   const toString = focusOnFor ( safeArray ( to ) )
+  const copyOnCloseString = button.copyOnClose ? `copyOnClose={${JSON.stringify ( button.copyOnClose )}}` : ''
   return `<${button.control} id='${name}' text='${name}' modal = '${modalName ( parent, modal )}'  ` +
     `to={fullState${toString}} base={${JSON.stringify ( [ parent.name, ...to ] )}} ` +
-    `${extras}  ${opt ( 'pageMode', mode )} ${restForButton ( parent, button.restOnCommit )} />`;
+    `${extras}  ${opt ( 'pageMode', mode )} ${copyOnCloseString} ${restForButton ( parent, button.restOnCommit )} />`;
 }
 
 

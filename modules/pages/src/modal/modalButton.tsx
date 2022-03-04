@@ -10,6 +10,7 @@ export interface CommonModalButtonProps<S, Data, Context> {
   modal: string,
   pageMode: PageMode,
   rest?: RestCommand,
+  copyOnClose?: string[],
   to: LensState<S, Data, Context>
   base: string[],
   createEmpty?: Data
@@ -17,11 +18,8 @@ export interface CommonModalButtonProps<S, Data, Context> {
 
 export interface ModalButtonProps<S, Data, Context> extends CommonModalButtonProps<S, Data, Context> {
 }
-export function transformsForModal<S, Data, Context extends HasPageSelectionLens<S>> ( c: Context, pageOps: PageOps, { base, modal, pageMode, rest }: CommonModalButtonProps<S, Data, Context> ): Transform<S, any> [] {
-  return rest ?
-    [ page<S, Context> ( c, pageOps, { pageName: modal, firstTime: true, pageMode, rest, base } ) ] :
-    [ page<S, Context> ( c, pageOps, { pageName: modal, firstTime: true, pageMode, base } ) ]
-
+export function transformsForModal<S, Data, Context extends HasPageSelectionLens<S>> ( c: Context, pageOps: PageOps, { base, modal, pageMode, rest, copyOnClose }: CommonModalButtonProps<S, Data, Context> ): Transform<S, any> [] {
+  return [ page<S, Context> ( c, pageOps, { pageName: modal, firstTime: true, pageMode, rest, base, copyOnClose } ) ]
 }
 
 export function transformsForEmpty<S, Data, Context> ( { createEmpty, to }: ModalButtonProps<S, Data, Context> ): Transform<S, Data>[] {

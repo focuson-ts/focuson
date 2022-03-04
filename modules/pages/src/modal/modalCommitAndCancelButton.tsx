@@ -1,7 +1,7 @@
 import { currentPageSelectionTail, PageSelection, PageSelectionContext, popPage } from "../pageSelection";
 import { LensProps } from "@focuson/state";
 import { safeArray } from "@focuson/utils";
-import { Transform } from "@focuson/lens";
+import { Lenses, Transform } from "@focuson/lens";
 import { HasRestCommandL, RestCommand } from "@focuson/rest";
 
 
@@ -16,11 +16,17 @@ export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( 
 export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S>> ( { state }: ModalCommitCancelButtonProps<S, Context> ) {
   function onClick () {
     const lastPage = currentPageSelectionTail ( state )
-    let rest = lastPage?.rest;
+    const rest = lastPage?.rest;
+    const copyOnClose = lastPage?.copyOnClose
     const pageTransformer: Transform<S, any> = [ state.context.pageSelectionL, ( ps: PageSelection[] ) => ps.slice ( 0, -1 ) ]
     const restTransformers: Transform<S, any>[] = rest ? [ [ state.context.restL, ( ps: RestCommand[] ) => [ ...safeArray ( ps ), rest ] ] ] : []
+    const copyOnCloseTransforms: Transform<S, any>[] = copyOnClose ? [ [ Lenses.fromPath ( copyOnClose ), ( old: any ) => {
+      const fromLens = Lenses.fromPath ( safeArray ( lastPage.base ) )
+      console.log ( 'copyOnCLose', fromLens.description, '===>', copyOnClose )
+      return fromLens.getOption ( state.main )
+    } ] ] : []
     if ( lastPage ) {
-      state.massTransform ( pageTransformer, ...restTransformers )
+      state.massTransform ( pageTransformer, ...restTransformers, ...copyOnCloseTransforms )
     } else
       console.error ( 'ModalCommit button called and bad state.', lastPage )
   }
