@@ -1,4 +1,4 @@
-import { currentPageSelectionTail, PageSelection, PageSelectionContext, popPage } from "../pageSelection";
+import { currentPageSelectionTail, mainPage, PageSelection, PageSelectionContext, popPage } from "../pageSelection";
 import { LensProps } from "@focuson/state";
 import { safeArray } from "@focuson/utils";
 import { Lenses, Transform } from "@focuson/lens";
@@ -15,13 +15,15 @@ export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( 
 
 export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S>> ( { state }: ModalCommitCancelButtonProps<S, Context> ) {
   function onClick () {
+    const firstPage: PageSelection = mainPage ( state )
     const lastPage = currentPageSelectionTail ( state )
     const rest = lastPage?.rest;
     const copyOnClose = lastPage?.copyOnClose
+
     const pageTransformer: Transform<S, any> = [ state.context.pageSelectionL, ( ps: PageSelection[] ) => ps.slice ( 0, -1 ) ]
     const restTransformers: Transform<S, any>[] = rest ? [ [ state.context.restL, ( ps: RestCommand[] ) => [ ...safeArray ( ps ), rest ] ] ] : []
-    const copyOnCloseTransforms: Transform<S, any>[] = copyOnClose ? [ [ Lenses.fromPath ( copyOnClose ), ( old: any ) => {
-      const fromLens = Lenses.fromPath ( safeArray ( lastPage.base ) )
+    const copyOnCloseTransforms: Transform<S, any>[] = copyOnClose ? [ [ Lenses.fromPath ( [ firstPage.pageName, ...copyOnClose ] ), ( old: any ) => {
+      const fromLens = Lenses.fromPath ( [firstPage.pageName,...safeArray ( lastPage.focusOn )] )
       console.log ( 'copyOnCLose', fromLens.description, '===>', copyOnClose )
       return fromLens.getOption ( state.main )
     } ] ] : []

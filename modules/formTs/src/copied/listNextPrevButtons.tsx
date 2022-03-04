@@ -14,6 +14,7 @@ export function ListNextButton<S, C> ( { id, title, value, list }: ListButtonPro
   const disabled = index !== undefined && index >= listSize - 1
   return <button id={id} disabled={disabled} onClick={() => value.setJson ( i + 1 )}>{title} </button>
 }
+
 export function ListPrevButton<S, C> ( { id, title, value, list }: ListButtonProps<S, C> ) {
   const index = value.optJson ()
   const i = index ? index : 0

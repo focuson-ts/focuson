@@ -36,12 +36,12 @@ export const findOneSelectedPageDetails = <S, Context extends PageSelectionConte
   // @ts-ignore
   const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
   const pages = state.context.pages
-  const { pageName, pageMode, base } = ps
+  const { pageName, pageMode, focusOn } = ps
   const page = pages[ pageName ]
   if ( !page ) throw Error ( `Cannot find page with name ${pageName}, legal Values are [${Object.keys ( pages ).join ( "," )}]` )
   const { config, pageFunction } = page
 
-  const lsForPage = state.chainLens ( lensForPageDetails ( page, base ) )
+  const lsForPage = state.chainLens ( lensForPageDetails ( page, focusOn ) )
 
   if ( debug ) console.log ( "findOneSelectedPageDetails.pageFunction", pageFunction )
   if ( typeof pageFunction === 'function' ) {// this is for legacy support

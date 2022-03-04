@@ -1,18 +1,12 @@
-import { GetOptioner, Optional } from "@focuson/lens";
+import { GetNameFn } from "@focuson/lens";
 import { NameAnd, sortedEntries } from "@focuson/utils";
 
-
-export type GetNameFn<Main, T> = ( name: string ) => GetOptioner<Main, T>
 
 export function addValue<Main, T> ( nL: GetNameFn<Main, T>, name: string, value: T ): GetNameFn<Main, T> {
   return n => {
     if ( n === name ) return { getOption: ( a: Main ) => value }
     return nL ( n )
   }
-}
-
-export function nameLensFn<S, T extends NameAnd<any>> ( lens: Optional<S, T> ): GetNameFn<S, any> {
-  return ( name: string ) => lens.focusQuery ( name )
 }
 
 // export const expandFor = <Main, Details extends NameAnd<any>> ( lens: Lens<Main, Details> ) => ( template: string, ...names: (keyof Details)[] ): ( s: Main ) => string =>

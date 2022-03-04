@@ -69,7 +69,10 @@ export class Optional<Main, Child> implements GetOptioner<Main, Child>, SetOptio
   focusQuery<K extends keyof Child, Req extends Required<Child>> ( k: K ): Optional<Main, Req[K]> {
     return new Optional<Main, Req[K]> (
       // @ts-ignore
-      m => apply ( this.getOption ( m ), c => c[ k ] ), ( m, v ) => apply ( this.getOption ( m ), c => this.set ( m, copyWithFieldSet ( c, k, v ) ) ),
+      m => apply ( this.getOption ( m ), c => c[ k ] ),
+      ( m, v ) => apply ( this.getOption ( m ),
+        c => this.set ( m,
+          copyWithFieldSet ( c, k, v ) ) ),
       this.description + ".focus?(" + k + ")" )
   }
 
@@ -172,7 +175,9 @@ export class Lens<Main, Child> extends Optional<Main, Child> implements Getter<M
   focusOn<K extends keyof Child> ( k: K ): Lens<Main, Child[K]> {
     return new Lens<Main, Child[K]> (
       ( m ) => this.get ( m )[ k ],
-      ( m, c ) => this.set ( m, copyWithFieldSet ( this.get ( m ), k, c ) ),
+      ( m, c ) => this.set ( m,
+        copyWithFieldSet (
+          this.get ( m ), k, c ) ),
       this.description + ".focusOn(" + k + ")" )
   }
 
@@ -188,8 +193,11 @@ export class Lens<Main, Child> extends Optional<Main, Child> implements Getter<M
   focusWithDefault<K extends keyof Child, Req extends Required<Child>> ( k: K, def: Child[K] ): Lens<Main, Req[K]> {
     // @ts-ignore
     return new Lens<Main, Required<Child[K]>> ( ( m: Main ) => useOrDefault ( def ) ( this.get ( m )[ k ] ),
-      // @ts-ignore
-      ( m, v ) => this.set ( m, copyWithFieldSet ( this.get ( m ), k, v ) ),
+      ( m, v ) =>
+        this.set ( m,
+          copyWithFieldSet (
+            // @ts-ignore
+            this.get ( m ), k, v ) ),
       this.description + ".focusWithDefault(" + k + ")" )
   }
 
@@ -237,9 +245,11 @@ export class Lenses {
     let initialValue: any = Lenses.identity<any> ( description ? description : '' );
     return path.reduce ( ( acc, p ) => acc.focusQuery ( p ), initialValue )
   }
-  static fromPathWith = <From, To> ( ref: NameAnd<Optional<From, number>> ) => ( path: string[], description?: string ): Optional<From, To> => {
+  static fromPathWith = <From, To> ( ref: GetNameFn<From, number> ) => ( path: string[], description?: string ): Optional<From, To> => {
     let initialValue: any = Lenses.identity<any> ( description ? description : '' );
     return path.reduce ( ( acc, p ) => {
+      if ( p === '[last]' ) return acc.chain ( Lenses.last () );
+      if ( p === '[next]' ) return acc.chain ( Lenses.next () );
       const matchRef = /^{([a-z0-9]+)}$/g.exec ( p )
       if ( matchRef ) return Lenses.chainNthRef ( acc, ref, matchRef[ 1 ] )
       const matchNum = /^\[([0-9]+)]$/g.exec ( p )
@@ -274,7 +284,23 @@ export class Lenses {
       },
       ( main, child ) => child )
   }
-
+  /** This returns a lens from an array of T to the last item of the array */
+  static last<T> (): Lens<T[], T> {
+    return lens<T[], T> ( ts => ts?.[ ts?.length - 1 ],
+      ( ts, t ) => {
+        let result = [ ...ts ]
+        result[ ts.length - 1 ] = t;
+        return result;
+      }, '[last]' )
+  }
+  /** This returns a lens from an array of T to the next item of the array */
+  static next<T> (): Lens<T[], T> {
+    return lens<T[], T> ( ts => undefined, ( ts, t ) => {
+      let result = [ ...ts ]
+      result[ ts.length ] = t;
+      return result;
+    }, '[next]' )
+  }
 
   /** This returns a lens from an array of T to the nth member of the array */
   static nth<T> ( n: number ): Lens<T[], T> {
@@ -294,21 +320,14 @@ export class Lenses {
       }, `[${n}]` )
   }
 
-  static chainNthRef<From, T> ( lens: Optional<From, T[]>, lookup: NameAnd<Optional<From, number>>, name: string, description?: string ): Optional<From, T> {
+  static chainNthRef<From, T> ( lens: Optional<From, T[]>, lookup: GetNameFn<From, number>, name: string, description?: string ): Optional<From, T> {
     if ( !lookup ) throw new Error ( 'lookup must not be undefined' )
     function findIndex ( f: From ): number {
-      const opt: Optional<From, number> = lookup[ name ]
-      if ( !opt ) throw new Error ( `nthRef of [${name}] doesn't exist. Legal names are ${Object.keys ( lookup ).sort ()}` )
+      const opt = lookup ( name )
+      if ( !opt ) throw new Error ( `nthRef of [${name}] doesn't exist.` )
       const index = opt.getOption ( f )
       if ( index === undefined || index < 0 ) throw new Error ( `nthRef of ${name} maps to ${index} in ${JSON.stringify ( f )}` )
       return index;
-    }
-    function findArrayAndCheckIndex ( f: From, index: number ): T[] | undefined {
-      const array = lens.getOption ( f )
-      if ( array )
-        if ( index >= array.length ) throw new Error ( `nthRef of ${name} maps to ${index} which is too big (> ${array.length})` )
-        else
-          return array
     }
     const getter = ( f: From ) => (lens.getOption ( f ))?.[ findIndex ( f ) ];
     function setter ( f: From, t: T ): From {
@@ -455,6 +474,25 @@ export function secondIn2<T1, T2> (): Optional<[ T1, T2 ], T2> {
 
 export type Transform<Main, Child> = [ Optional<Main, Child>, ( c: Child | undefined ) => Child ]
 export function massTransform<Main> ( main: Main, ...transforms: Transform<Main, any>[] ): Main {
-  return transforms.reduce<Main> ( ( acc, c ) => c[ 0 ].set ( acc, c[ 1 ] ( c[ 0 ].getOption ( acc ) ) ), main )
+  return transforms.reduce<Main> ( ( acc, [ o, fn ] ) => {
+    let result = o.setOption ( acc, fn ( o.getOption ( acc ) ) );
+    if ( result === undefined ) throw new Error ( `Cannot transform ${o.description}` )
+    return result;
+  }, main )
 }
 
+export function nameLensFn<S, T extends NameAnd<any>> ( lens: Optional<S, T> ): GetNameFn<S, any> {
+  return ( name: string ) => lens.focusQuery ( name )
+}
+export function asGetNameFn<S, T> ( nl: NameAndLens<S> ): GetNameFn<S, T> {
+  return name => {
+    const l = nl[ name ]
+    if ( l === undefined ) throw new Error ( `Cannot find lens for name ${name}` )
+    return l
+  }
+}
+
+export type GetNameFn<Main, T> = ( name: string ) => GetOptioner<Main, T>
+export interface NameAndLens<S> {
+  [ name: string ]: Optional<S, any>
+}

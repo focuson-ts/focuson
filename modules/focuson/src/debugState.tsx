@@ -1,10 +1,10 @@
 import { LensProps } from "@focuson/state";
 import { HasPageSelection, HasPageSelectionLens, isMainPageDetails } from "@focuson/pages";
-import { HasTagHolder, NameAndLens } from "@focuson/template";
+import { HasTagHolder } from "@focuson/template";
 import { HasSimpleMessages, safeArray, SimpleMessage, sortedEntries } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands } from "@focuson/rest";
 import { FocusOnConfig } from "./config";
-import { Lenses } from "@focuson/lens";
+import { Lenses, NameAndLens } from "@focuson/lens";
 
 
 export function Tags<S extends HasPageSelection & HasTagHolder & HasSimpleMessages & HasRestCommands,
@@ -48,11 +48,11 @@ function PagesData<S extends HasPageSelection & HasTagHolder & HasSimpleMessages
       <tbody>{pages.map ( ( p, index ) => {
         const page = pages[ index ]
         const pageDetails = config.pages[ page.pageName ]
-        const lens = isMainPageDetails ( pageDetails ) ? pageDetails.lens : Lenses.fromPath ( safeArray ( page.base ) )
+        const lens = isMainPageDetails ( pageDetails ) ? pageDetails.lens : Lenses.fromPath ( safeArray ( page.focusOn ) )
         const title = isMainPageDetails ( pageDetails ) ? "Main" : "Modal"
         const pageData = lens.getOption ( state.main )
         return <tr>
-          <td>{title} {page.pageName} - {safeArray ( page.base )}</td>
+          <td>{title} {page.pageName} - {safeArray ( page.focusOn )}</td>
           <td>{lens?.description}</td>
           <td>
             <pre>{JSON.stringify ( pageData, null, 2 )}</pre>

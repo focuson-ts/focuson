@@ -38,6 +38,7 @@ export function OccupationAndIncomeSummaryPage<S, Context extends PageSelectionA
      <ModalButton id='addEntry' text='addEntry' modal = 'OccupationIncomeModalPD'  to={fullState.focusOn('temp')} base={["OccupationAndIncomeSummary","temp"]} createEmpty={empty.emptyOccupationIncomeDetailsDD}  pageMode='create' copyOnClose={["here"]}  />
      <ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />
      <ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />
+     <ModalButton id='view' text='view' modal = 'OccupationIncomeModalPD'  to={fullState.focusOn('temp')} base={["OccupationAndIncomeSummary","temp"]}   pageMode='view'   />
    </Layout>)})}
 
 export function OccupationIncomeModalPDPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){
@@ -192,7 +193,7 @@ export function OccupationIncomeDetailsDD<S, Context extends PageSelectionAndRes
 const areYouGuard = state.chainLens(Lenses.fromPath(["areYou"])).optJson();console.log('areYouGuard', areYouGuard)
   return(<>
   <LabelAndStringInput state={state.focusOn('areYou')} label='are you' mode={mode} />
-  <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('currentEmployment')} label='current employment' mode={mode} /></Guard>
+  <Guard value={areYouGuard} cond={["E","S"]}><LabelAndStringInput state={state.focusOn('currentEmployment')} label='current employment' mode={mode} /></Guard>
   <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('occupation')} label='occupation' mode={mode} /></Guard>
   <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('customerDescription')} label='customer description' mode={mode} /></Guard>
   <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('ownShareOfTheCompany')} label='own share of the company' mode={mode} /></Guard>

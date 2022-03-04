@@ -1,11 +1,11 @@
-import { Iso, Lens, Lenses, Optional } from '@focuson/lens';
+import { Iso, Lens, Lenses, NameAndLens, Optional } from '@focuson/lens';
 
 // import { createSimpleMessage, HasPageSelection, HasSimpleMessages, PageSelection, SimpleMessage } from "@focuson/pages";
 import { areAllDefined, arraysEqual, DateFn, HasSimpleMessages, or, SimpleMessage } from "@focuson/utils";
 
 import { defaultErrorMessage, Fetcher, ifEEqualsFetcher, loadInfo, MutateFn, OnTagFetchErrorFn, updateTagsAndMessagesOnError } from "@focuson/fetcher";
 import { partialFnUsageError } from "@focuson/fetcher/dist/src/errorhandling";
-import { HasTagHolder, NameAndLens, TagHolder, tagOps, Tags, UrlConfig } from "@focuson/template";
+import { HasTagHolder,  TagHolder, tagOps, Tags, UrlConfig } from "@focuson/template";
 import { HasPageSelection, PageSelection } from "@focuson/pages";
 
 

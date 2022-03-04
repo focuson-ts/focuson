@@ -78,7 +78,14 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
    *
    * Very often the LensContext is being used in a flux pattern (for example with react) and this method will cause other things to happen (like re-rendering) */
   setJson ( json: T ) {
-    this.dangerouslySetMain ( this.optional.set ( this.main, json ) )
+    const result = this.optional.setOption ( this.main, json );
+    if ( result === undefined ) {
+      console.log ( "failure in setJson- main", this.main )
+      console.log ( "failure in setJson- lens", this.optional.description )
+      console.log ( "failure in setJson- json", json )
+      throw new Error ( `Tried and failed to set Json. Lens is ${this.optional.description} json ${JSON.stringify(json)}` )
+    }
+    this.dangerouslySetMain ( result )
   }
 
 

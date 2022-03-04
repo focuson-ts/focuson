@@ -7,7 +7,7 @@ import { Chest, Dragon, dragon } from "./LensFixture";
 let initialMain = { ...dragon }
 let setMain = jest.fn ();
 type Context = 'context'
-const context:Context = 'context'
+const context: Context = 'context'
 let dragonLS = lensState ( dragon, setMain, "dragon", context )
 let chestLS = dragonLS.focusOn ( 'body' ).focusOn ( 'chest' )
 let stomachLS = chestLS.focusOn ( 'stomach' )
@@ -24,7 +24,7 @@ function checkSetMainWas<Main> ( setMain: jest.Mock, expected: Main ) {
   expect ( dragon ).toEqual ( initialMain ) //just checking no sideeffects
 }
 
-function checkLensState<T> ( ls: LensState<Dragon, T,Context>, lensDescription: string ) {
+function checkLensState<T> ( ls: LensState<Dragon, T, Context>, lensDescription: string ) {
   expect ( ls.main ).toEqual ( dragon )
   expect ( ls.optional.description ).toEqual ( lensDescription )
   expect ( ls.dangerouslySetMain ).toEqual ( setMain )
@@ -37,6 +37,15 @@ describe ( "LensState", () => {
   it ( "should have json equal to the focus of the  lens", () => {
     expect ( dragonLS.json () ).toEqual ( dragon )
     expect ( chestLS.json () ).toEqual ( dragon.body.chest )
+  } )
+  it ( "should have a setJson that throws errors when it can't create", () => {
+    // @ts-ignore
+    const empty: Dragon = {}
+
+    let dragonLS = lensState ( empty, d => {}, "dragon", context )
+    let ls = dragonLS.focusOn ( 'body' ).focusOn ( 'chest' ).focusOn ( 'stomach' ).focusOn ( 'contents' )
+
+    expect ( () => ls.setJson ( [ 1, 2, 3 ] ) ).toThrow ( 'Tried and failed to set Json. Lens is dragon.focus?(body).focus?(chest).focus?(stomach).focus?(contents) json [1,2,3]' )
   } )
 
   it ( "with Lens should ignore the parent lens", () => {

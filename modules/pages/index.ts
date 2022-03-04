@@ -9,5 +9,4 @@ export * from './src/selectedPage';
 export * from './src/selectedPages'
 export * from './src/simpleMessage';
 export * from './src/modal/modalButton';
-export * from './src/modal/modalAndCopyButton';
 export * from './src/modal/modalCommitAndCancelButton';

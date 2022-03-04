@@ -1,7 +1,6 @@
 import { createSimpleMessage, FetchFn, HasSimpleMessages, SimpleMessage, testDateFn } from "@focuson/utils";
 import { HasRestCommands, massFetch, OneRestDetails, rest, RestCommand, RestDetails, restL, restReq } from "./rest";
-import { identityOptics } from "@focuson/lens";
-import { NameAndLens } from "@focuson/template";
+import { identityOptics, NameAndLens } from "@focuson/lens";
 
 interface HasFullDomainForTest {
   fullDomain?: FullDomainForTest

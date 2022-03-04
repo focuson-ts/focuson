@@ -1,5 +1,5 @@
-import { expand, GetNameFn } from "./template";
-import { Optional } from "@focuson/lens";
+import { expand } from "./template";
+import { GetNameFn, NameAndLens, Optional } from "@focuson/lens";
 import { RestAction } from "@focuson/utils";
 
 
@@ -20,9 +20,6 @@ export interface TagHolder {
  */
 export interface HasCommonIdDetails<S> {
   commonIdDetails: NameAndLens<S>
-}
-export interface NameAndLens<S> {
-  [ name: string ]: Optional<S, any>
 }
 
 export interface UrlConfigWithoutFdLens<S, FD, D> {

@@ -7,6 +7,7 @@ export function checkIsFunction ( functionToCheck: any ) {
 }
 
 export const apply = <T, T1> ( t: T | undefined, fn: ( t: T ) => T1 ): T1 | undefined => t ? fn ( t ) : undefined;
+
 export const applyOrDefault = <T, T1> ( t: T | undefined, fn: ( t: T ) => T1, def: T1 ): T1 => t ? fn ( t ) : def;
 export const useOrDefault = <T> ( def: T ) => ( t: T | undefined ): T => t ? t : def;
 

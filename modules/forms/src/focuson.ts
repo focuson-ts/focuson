@@ -29,7 +29,12 @@ import { makeOneStory } from "./codegen/makeStories";
 import { transformButtons } from "./buttons/allButtons";
 import { OccupationAndIncomeSummaryPD, occupationIncomeModalPD } from "./example/occupationAndIncomeDetails/occupationAndIncome.pageD";
 
-let pages = [ OccupationAndIncomeSummaryPD,occupationIncomeModalPD, EAccountsSummaryPD, CreatePlanPD, ETransferPageD, CreateEAccountPageD, ChequeCreditbooksPD, OrderChequeBookOrPayingInModalPD ];
+let pages = [ OccupationAndIncomeSummaryPD,occupationIncomeModalPD,
+  EAccountsSummaryPD, CreatePlanPD, ETransferPageD,
+  CreateEAccountPageD,
+  ChequeCreditbooksPD,
+  OrderChequeBookOrPayingInModalPD ];
+
 console.log ( 0 )
 
 export function writeToFile ( name: string, contents: string[] ) {

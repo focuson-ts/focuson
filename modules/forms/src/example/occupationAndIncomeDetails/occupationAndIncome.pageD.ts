@@ -42,11 +42,16 @@ export const OccupationAndIncomeSummaryPD: PageD<AllButtonsInPage> = {
     fromApi: { dataDD: occupationAndIncomeDetailsDD },
     temp: { dataDD: occupationIncomeDetailsDD },
   },
+
+
   /** Binds the rest to 'where it takes place'. So we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
   rest: {
-    occupationAndIncomeRD: { rest: occupationAndIncomeRD, targetFromPath: [ 'fromApi' ], fetcher: 'get' },
+    occupationAndIncomeRD: { rest: occupationAndIncomeRD, targetFromPath: [ 'fromApi' ], fetcher: 'get'}
   },
+
+
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
+  // lists: {}//?
   buttons: {                                                                      //interestingly these will be type checked in the target system...
     nextOccupation: { control: 'ListNextButton', value: [ 'selectedItem' ], list: [ 'fromApi', 'customerOccupationIncomeDetails' ] },
     prevOccupation: { control: 'ListPrevButton', value: [ 'selectedItem' ], list: [ 'fromApi', 'customerOccupationIncomeDetails' ] },
@@ -58,6 +63,14 @@ export const OccupationAndIncomeSummaryPD: PageD<AllButtonsInPage> = {
       copyOnClose: [ 'here' ]
       // restOnCommit: { rest: occupationAndIncomeRD, action: 'update', result: 'refresh', target: [ '' ] }
     },
+    view: {
+      control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'view',
+      // createEmpty: occupationIncomeDetailsDD,
+      to: [  'temp' ]
+      // mutateOnClose:[{ type: 'addToEndOfList',  value: [ 'selectedItem' ], list: [ 'fromApi', 'customerOccupationIncomeDetails' ]} ]
+      // restOnCommit: { rest: occupationAndIncomeRD, action: 'update', result: 'refresh', target: [ '' ] }
+    },
+
     //questions: how do we know which is the existing plan... is there a list? are we an entry in the list? do we need to navigate to it?
     // amendEntry: {
     //     control: 'ModalAndCopyButton', modal: CreatePlanPD, mode: 'edit',

@@ -104,14 +104,14 @@ public class Sample{
         "      \"annualSalaryBeforeDeduction\": 123,"+
         "      \"annualIncomeExcludingRent\": 123,"+
         "      \"regularCommissionBonus\": 123,"+
-        "      \"dateOfEmploymentStart\": \"someString\","+
+        "      \"dateOfEmploymentStart\": \"2020-10-01\","+
         "      \"otherSourceOfIncome\": \"N\","+
         "      \"createdBy\": \"someString\","+
         "      \"createdDate\": \"2020-10-01\","+
         "      \"employerName\": \"someString\","+
         "      \"whatTypeOfBusiness\": \"someString\","+
         "      \"whatNameBusiness\": \"someString\","+
-        "      \"establishedYear\": \"someString\","+
+        "      \"establishedYear\": \"2020-10-01\","+
         "      \"annualDrawing3Yrs\": 123,"+
         "      \"empStartDate\": \"2020-10-01\","+
         "      \"empEndDate\": \"2020-10-01\","+
@@ -137,14 +137,14 @@ public class Sample{
         "  \"annualSalaryBeforeDeduction\": 123,"+
         "  \"annualIncomeExcludingRent\": 123,"+
         "  \"regularCommissionBonus\": 123,"+
-        "  \"dateOfEmploymentStart\": \"someString\","+
+        "  \"dateOfEmploymentStart\": \"2020-10-01\","+
         "  \"otherSourceOfIncome\": \"N\","+
         "  \"createdBy\": \"someString\","+
         "  \"createdDate\": \"2020-10-01\","+
         "  \"employerName\": \"someString\","+
         "  \"whatTypeOfBusiness\": \"someString\","+
         "  \"whatNameBusiness\": \"someString\","+
-        "  \"establishedYear\": \"someString\","+
+        "  \"establishedYear\": \"2020-10-01\","+
         "  \"annualDrawing3Yrs\": 123,"+
         "  \"empStartDate\": \"2020-10-01\","+
         "  \"empEndDate\": \"2020-10-01\","+

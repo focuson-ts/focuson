@@ -16,12 +16,12 @@ function premutateOnePage<S, Context extends PageSelectionContext<S>> ( c: Conte
   const lens = c.pageSelectionL.chain ( Lenses.nth ( i ) )
   const pageSelection = lens.getOption ( s )
   if ( !pageSelection ) throw Error ( `software error: Somehow failing to get a page Selection ${i} ${JSON.stringify ( s )}` )
-  const { firstTime, pageName, base } = pageSelection
+  const { firstTime, pageName, focusOn } = pageSelection
   let pageDetails = c.pages;
   const details = pageDetails[ pageName ]
   if ( !details ) throw new Error ( `Could not find details for ${pageName}. LegalValues are ${Object.keys ( pageDetails ).join ( "," )}` )
   if ( firstTime ) {
-    const dataLens: Optional<S, any> = lensForPageDetails ( details, base )
+    const dataLens: Optional<S, any> = lensForPageDetails ( details, focusOn )
     let firstTimeLens = lens.focusOn ( 'firstTime' );
     if ( details.clearAtStart && details.initialValue ) throw new Error ( `page ${pageName} has both clear at start and initialValue set` )
     if ( details.clearAtStart )

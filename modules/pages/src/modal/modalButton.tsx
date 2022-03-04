@@ -1,34 +1,37 @@
 import { LensState } from "@focuson/state";
-import { HasPageSelectionLens, page, PageMode, PageOps } from "../pageSelection";
-import { Transform } from "@focuson/lens";
+import { HasPageSelectionLens, page, PageMode } from "../pageSelection";
+import { Lenses, Transform } from "@focuson/lens";
 import { RestCommand } from "@focuson/rest";
+import { safeArray } from "@focuson/utils";
 
 
-export interface CommonModalButtonProps<S, Data, Context> {
+export interface ModalButtonProps<S, Context> {
   id?: string,
   text: string,
   modal: string,
+  state: LensState<S, any, Context>
+  focusOn: string[],
   pageMode: PageMode,
+
   rest?: RestCommand,
+  createEmpty?: any
+  copyFrom?: string[],
   copyOnClose?: string[],
-  to: LensState<S, Data, Context>
-  base: string[],
-  createEmpty?: Data
 }
 
-export interface ModalButtonProps<S, Data, Context> extends CommonModalButtonProps<S, Data, Context> {
-}
-export function transformsForModal<S, Data, Context extends HasPageSelectionLens<S>> ( c: Context, pageOps: PageOps, { base, modal, pageMode, rest, copyOnClose }: CommonModalButtonProps<S, Data, Context> ): Transform<S, any> [] {
-  return [ page<S, Context> ( c, pageOps, { pageName: modal, firstTime: true, pageMode, rest, base, copyOnClose } ) ]
-}
 
-export function transformsForEmpty<S, Data, Context> ( { createEmpty, to }: ModalButtonProps<S, Data, Context> ): Transform<S, Data>[] {
-  return createEmpty ?
-    [ [ to.optional, ( ignore: Data | undefined ) => createEmpty ] ] :
-    []
-}
-
-export function ModalButton<S extends any, Data, Context extends HasPageSelectionLens<S>> ( props: ModalButtonProps<S, Data, Context> ): JSX.Element {
-  const { to, id, text } = props
-  return <button id={id} onClick={() => to.massTransform ( ...transformsForEmpty ( props ), ...transformsForModal<S, Data, Context> ( to.context, 'popup', props ) )}>{text}</button>
+export function ModalButton<S extends any, Context extends HasPageSelectionLens<S>> ( props: ModalButtonProps<S, Context> ): JSX.Element {
+  const { id, text } = props
+  let onClick = () => {
+    const { state, copyFrom, modal, pageMode, rest, focusOn, copyOnClose, createEmpty } = props
+    const focusOnL = state.optional.chain ( Lenses.fromPath ( focusOn ) );
+    const copyFromL = state.optional.chain ( Lenses.fromPath ( safeArray ( copyFrom ) ) );
+    const copyTx: Transform<S, any>[] = copyFrom ? [ [ focusOnL, ignore => copyFromL.getOption ( state.main ) ] ] : [];
+    const emptyTx: Transform<S, any>[] = createEmpty ? [ [ focusOnL, ignore => createEmpty ] ] : [];
+    state.massTransform (
+      page<S, Context> ( state.context, 'popup', { pageName: modal, firstTime: true, pageMode, rest, focusOn: focusOn, copyOnClose } ),
+      ...emptyTx,
+      ...copyTx );
+  };
+  return <button id={id} onClick={onClick}>{text}</button>
 }

@@ -43,6 +43,12 @@ export const CreatePlanDD: DataD = {
     createPlanEnd: { dataDD: DateDD, sample: [ '2022-10-01' ] }
   }
 }
+
+export const oneAccountBalanceResolver: any = {
+  name: 'totalMonthlyCost',
+get: { kicks: 'name', params: []},
+put: {sql: 'select {vars} from {table} where {query}', params: []}
+}
 export const EAccountsSummaryDD: DataD = {
   name: "EAccountsSummaryDD",
   description: "This is the summary data about all the EAccounts for a single user",

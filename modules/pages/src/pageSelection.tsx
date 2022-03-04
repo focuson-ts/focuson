@@ -32,7 +32,7 @@ export interface PageSelection {
   copyOnClose?: string[],
   //This is a lens description. A path that should be the lens to the root of the data. This overrides the lens in the page description if it is present
   // Right now it is just a list of strings. Later it might include 'the nth item' etc */
-  base?: string[]
+  focusOn?: string[]
 }
 export interface HasPageSelection {
   pageSelection: PageSelection[]
@@ -75,7 +75,11 @@ export function currentPageSelection<S, Context extends HasPageSelectionLens<S>>
 export function currentPageSelectionTail<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ): PageSelection {
   return pageSelections ( state ).slice ( -1 )?.[ 0 ]
 }
+export function mainPage<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ): PageSelection {
+  return pageSelections ( state )?.[ 0 ]
+}
 
 export function pageSelectionlens<S extends HasPageSelection> (): Lens<S, PageSelection[]> {
   return identityOptics<S> ( 'state' ).focusOn ( 'pageSelection' )
 }
+

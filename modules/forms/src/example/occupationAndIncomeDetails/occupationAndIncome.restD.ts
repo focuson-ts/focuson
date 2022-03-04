@@ -8,11 +8,11 @@ export const commonParams: RestParams = {
     brandRef: { commonLens: 'brandRef', testValue: 'brandRef'},
     accountSeq: { commonLens: 'accountSeq', testValue: 'accountSeq' },
     applicationRef: { commonLens: 'applicationRef', testValue: 'applicationRef' },
-
 }
+
 /** This should fully define the api*/
 export const occupationAndIncomeRD: RestD = {
-    params: { ...commonParams},
+    params: commonParams,
     dataDD: occupationAndIncomeDetailsDD,
     url: '/customer/occupation/v2/occupationIncomeDetails?{query}',
     actions: [ 'get' ],

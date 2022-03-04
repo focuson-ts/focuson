@@ -22,7 +22,7 @@ describe ( "modal button", () => {
     const state: LensState<StateForModalButtonTest, HasPageSelection, PageSelectionContext<StateForModalButtonTest>> =
             lensState<StateForModalButtonTest, PageSelectionContext<StateForModalButtonTest>> (
               { pageSelection: [] }, ( s: StateForModalButtonTest ) => {}, 'ModalButton', context )
-    const comp = mount ( <ModalButton text='someTitle' id='someId' to={state} modal={'someModal'} base={[]} pageMode='view'/> )
+    const comp = mount ( <ModalButton text='someTitle' id='someId' state={state} modal={'someModal'} focusOn={[]} pageMode='view'/> )
     const button = comp.find ( "button" )
     expect ( button.text () ).toEqual ( 'someTitle' )
 
@@ -32,7 +32,7 @@ describe ( "modal button", () => {
     const state: LensState<StateForModalButtonTest, HasPageSelection, PageSelectionContext<StateForModalButtonTest>> =
             lensState<StateForModalButtonTest, PageSelectionContext<StateForModalButtonTest>> (
               { pageSelection: [] }, ( s: StateForModalButtonTest ) => {remembered = s}, 'ModalButton', context )
-    const comp = mount ( <ModalButton text='someTitle' id='someId' to={state} modal={'someModal'} base={[]} pageMode='edit'/> )
+    const comp = mount ( <ModalButton text='someTitle' id='someId' state={state} modal={'someModal'} focusOn={[]} pageMode='edit'/> )
     const button = comp.find ( "button" )
     button.simulate ( 'click' )
     expect ( remembered ).toEqual ( { "pageSelection": [ { "firstTime": true, "pageMode": "edit", "pageName": "someModal", "base": [] } ] } )
@@ -43,7 +43,7 @@ describe ( "modal button", () => {
     const state: LensState<StateForModalButtonTest, StateForModalButtonTest, PageSelectionContext<StateForModalButtonTest>> =
             lensState<StateForModalButtonTest, PageSelectionContext<StateForModalButtonTest>> (
               { pageSelection: [] }, ( s: StateForModalButtonTest ) => {remembered = s}, 'ModalButton', context )
-    const comp = mount ( <ModalButton text='someTitle' id='someId' to={state.focusOn ( 'data' )} modal={'someModal'} base={[]} pageMode='edit' createEmpty='someData'/> )
+    const comp = mount ( <ModalButton text='someTitle' id='someId' state={state.focusOn ( 'data' )} modal={'someModal'} focusOn={[]} pageMode='edit' createEmpty='someData'/> )
     const button = comp.find ( "button" )
     button.simulate ( 'click' )
     expect ( remembered ).toEqual ( {

@@ -33,7 +33,7 @@ describe ( "Lens", () => {
 
 
   describe ( "lens composition", () => {
-    expect ( letnstoca.getOption( a1b2ca3 ) ).toEqual ( 3 )
+    expect ( letnstoca.getOption ( a1b2ca3 ) ).toEqual ( 3 )
     expect ( letnstoca.set ( a1b2ca3, 9 ) ).toEqual ( { a: 1, b: 2, c: { a: 9 } } )
     expect ( letnstoca.transform ( old => {
       expect ( old ).toEqual ( 3 );
@@ -53,6 +53,20 @@ describe ( "Lens", () => {
     } )
     it ( 'should have a nice description', () => {
       expect ( dragonStomachL.description ).toEqual ( "dragon.focusOn(body).focusOn(chest).focusOn(stomach)" )
+    } )
+  } )
+  describe ( "lens.last", () => {
+    let abc = [ 'a', 'b', 'c' ];
+    it ( "should access the last item", () => {
+      expect ( Lenses.last ().getOption ( abc ) ).toEqual ( 'c' )
+      expect ( Lenses.last ().setOption ( abc, 'd' ) ).toEqual ( [ 'a', 'b', 'd' ] )
+    } )
+  } )
+  describe ( "lens.next", () => {
+    let abc = [ 'a', 'b', 'c' ];
+    it ( "should access the last item", () => {
+      expect ( Lenses.next ().getOption ( abc ) ).toEqual ( undefined )
+      expect ( Lenses.next ().setOption ( abc, 'd' ) ).toEqual ( [ 'a', 'b', 'c', 'd' ] )
     } )
   } )
   describe ( "lens.nth", () => {
@@ -88,10 +102,10 @@ describe ( "Lens", () => {
 
   describe ( "map", () => {
     it ( "should pass existing value to a fn and use the result", () => {
-      expect ( letnstoca.map ( a1b2ca3, old => old + 1 ) ).toEqual ( {"a": 1, "b": 2, "c": {"a": 4}} )
+      expect ( letnstoca.map ( a1b2ca3, old => old + 1 ) ).toEqual ( { "a": 1, "b": 2, "c": { "a": 4 } } )
     } )
     it ( "should work even if the original was undefined", () => {
-        expect ( letnstoca.map ( {...a1b2ca3,c:undefined}, old => 4 ) ).toEqual ( { "a": 1, "b": 2, "c": { "a": 4 } } )
+        expect ( letnstoca.map ( { ...a1b2ca3, c: undefined }, old => 4 ) ).toEqual ( { "a": 1, "b": 2, "c": { "a": 4 } } )
       }
     )
 

@@ -30,7 +30,7 @@ const Template: Story<ForModalPage> = ( args: ForModalPage ) =>
   SBookProvider<StateForModalButton, PageSelectionContext<StateForModalButton>> ( { pageSelection: [] },
     defaultPageSelectionContext<StateForModalButton, PageSelectionContext<StateForModalButton>> ( {} ),
     s => (
-      <ModalButton to={s} base={[ 'some', 'base' ]}{...args}/>
+      <ModalButton state={s} focusOn={[ 'some', 'base' ]}{...args}/>
     ) );
 
 
