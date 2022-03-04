@@ -2,13 +2,14 @@ import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, isPrimDd
 import { DisplayCompD } from "../common/componentsD";
 import { dataDsIn, PageD } from "../common/pageD";
 
-import { decamelize, sortedEntries } from "@focuson/utils";
-import { componentName, domainName, pageComponentName, pageDomainName } from "./names";
+import { decamelize, NameAnd, safeArray, sortedEntries } from "@focuson/utils";
+import { componentName, domainName, guardName, pageComponentName, pageDomainName } from "./names";
 import { MakeButton, makeButtonsFrom } from "./makeButtons";
 import { focusOnFor, indentList, noExtension } from "./codegen";
 import { TSParams } from "./config";
 import { unique } from "../common/restD";
 import { transformButtons } from "../buttons/allButtons";
+import { on } from "cluster";
 
 
 export type AllComponentData = ComponentData | ErrorComponentData
@@ -16,6 +17,7 @@ export interface ComponentData {
   path: string[];
   dataDD: AllDataDD;
   display: DisplayCompD;
+  guard?: NameAnd<string[]>;
   displayParams?: ComponentDisplayParams
 }
 export interface ErrorComponentData {
@@ -36,15 +38,15 @@ export const listComponentsInFolder: AllDataFlatMap<AllComponentData> = {
   stopAtDisplay: true,
   ...emptyDataFlatMap (),
   walkDataStart: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: DataD ): AllComponentData[] =>
-    dataDD.display ? [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display } ] : [],
+    dataDD.display ? [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display, guard: oneDataDD.guard } ] : [],
 
   walkPrim: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: PrimitiveDD ): AllComponentData[] =>
     dataDD.display ?
-      [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display } ] :
+      [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display, guard: oneDataDD.guard } ] :
       [ { path, dataDD, error: `Component ${JSON.stringify ( dataDD )} with displayParams [${JSON.stringify ( oneDataDD?.displayParams )}] does not have a display` } ],
 
   walkRepStart: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: RepeatingDataD ): AllComponentData[] =>
-    [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display } ]
+    [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display, guard: oneDataDD.guard } ]
 }
 
 export const listComponentsIn = ( dataDD: AllDataDD ): AllComponentData[] => flatMapDD ( dataDD, listComponentsInFolder );
@@ -53,7 +55,7 @@ function addQuote ( s: string | string[] ) {
   if ( Array.isArray ( s ) ) return "{[" + s.map ( x => "'" + x + "'" ) + "]}"
   return "'" + s + "'"
 }
-export function createOneReact ( { path, dataDD, display, displayParams }: ComponentData ): string[] {
+export function createOneReact ( { path, dataDD, display, displayParams, guard }: ComponentData ): string[] {
   const { name, params, needsEnums } = display
   const focusOnString = path.map ( v => `.focusOn('${v}')` ).join ( '' )
   const dataDDParamsA: [ string, string ][] = dataDD.displayParams ? Object.entries ( dataDD.displayParams ).map ( ( [ name, o ] ) => [ name, addQuote ( o.value ) ] ) : []
@@ -65,8 +67,11 @@ export function createOneReact ( { path, dataDD, display, displayParams }: Compo
   const displayParamsString = fullDisplayParams.map ( ( [ k, v ] ) => `${k}=${v}` ).join ( " " )
 
   const enums = needsEnums && isPrimDd ( dataDD ) && dataDD.enum ? ` enums={${JSON.stringify ( dataDD.enum )}}` : ""
+  const guardPrefix = guard ? sortedEntries ( guard ).map ( ( [ n, guard ] ) =>
+    `<Guard value={${guardName ( n )}} cond={${JSON.stringify ( guard )}}>` ) : ''
+  const guardPostfix = guard ? sortedEntries ( guard ).map ( ( [ n, guard ] ) => `</Guard>` ) : ''
 
-  return [ `<${name} state={state${focusOnString}} ${displayParamsString} mode={mode}${enums} />` ]
+  return [ `${guardPrefix}<${name} state={state${focusOnString}} ${displayParamsString} mode={mode}${enums} />${guardPostfix}` ]
 
 }
 export function createAllReactCalls ( d: AllComponentData[] ): string[] {
@@ -75,8 +80,11 @@ export function createAllReactCalls ( d: AllComponentData[] ): string[] {
 
 export function createReactComponent ( dataD: DataD ): string[] {
   const contents = indentList ( indentList ( createAllReactCalls ( listComponentsIn ( dataD ) ) ) )
+  const guardStrings = sortedEntries ( dataD.guards ).map ( ( [ name, guard ] ) =>
+    `const ${guardName ( name )} = state.chainLens(Lenses.fromPath(${JSON.stringify ( guard.pathFromHere )})).optJson();console.log('${guardName ( name )}', ${guardName ( name )})` )
   return [
     `export function ${componentName ( dataD )}<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, ${domainName ( dataD )},Context>){`,
+    ...guardStrings,
     "  return(<>",
     ...contents,
     "</>)",
@@ -131,7 +139,8 @@ export function createAllReactComponents<B> ( params: TSParams, transformButtons
     `import { PageSelectionAndRestCommandsContext } from '@focuson/focuson';`,
     `import {  focusedPage, focusedPageWithExtraState, ModalAndCopyButton, ModalButton, ModalCancelButton, ModalCommitButton} from "@focuson/pages";`,
     `import { Context, FocusedProps } from "./${params.commonFile}";`,
-
+    `import { Lenses } from '@focuson/lens';`,
+    `import { Guard } from "./copied/guard";`
   ]
   let pageDomain = noExtension ( params.pageDomainsFile );
   let domain = noExtension ( params.domainsFile );

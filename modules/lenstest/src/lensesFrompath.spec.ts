@@ -54,6 +54,6 @@ describe ( "nthRef", () => {
     expect ( lens.setOption ( four, 9 ) ).toEqual ( { a: { n: 4, b: { c: [ 1, 2, 3, 4, 9 ] } } } )
     expect ( lens.setOption ( ten, 9 ) ).toEqual ( { a: { n: 10, b: { c: [ 1, 2, 3, 4, 5, undefined, undefined, undefined, undefined, undefined, 9 ] } } } )
 
-    expect ( lens.description ).toEqual ( 'I.focusOn(a).focus?(b).focus?(c).[n]' )
+    expect ( lens.description ).toEqual ( 'I.focusOn(a).focus?(b).focus?(c).{n}' )
   } )
 } )

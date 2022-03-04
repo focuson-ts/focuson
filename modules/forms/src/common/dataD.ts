@@ -5,6 +5,7 @@ import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndNumberInputCD, LabelAndS
 import { ComponentDisplayParams } from "../codegen/makeComponents";
 import { NameAnd, safeArray } from "@focuson/utils";
 import { isPrimitive } from "util";
+import { customerStatusDD } from "../example/occupationAndIncomeDetails/occupationAndIncome.dataD";
 
 export interface HasSample<T> {
   sample?: T[]
@@ -21,6 +22,7 @@ export function sampleFromDataD ( o: OneDataDD | undefined, d: AllDataDD ): stri
 
 export interface OneDataDD extends HasSample<string> {
   dataDD: AllDataDD;
+  guard?: NameAnd<string[]>
   displayParams?: ComponentDisplayParams,
   field?: string, // defaults to the name. if it exists this says which field to use
 }
@@ -34,6 +36,7 @@ export interface DisplayParamDD {
   [ name: string ]: OneDisplayParamDD
 }
 
+
 export interface CommonDataDD {
   name: string;
   display?: DisplayCompD;
@@ -41,11 +44,18 @@ export interface CommonDataDD {
   description: string;
   comments?: string;
   meta?: any;
-  state?: NameAnd<string[]>
   graphQlType?: string;
   resolver?: string;
+  guard?: NameAnd<string[]>
 }
+export interface LocalVariableGuard {
+  pathFromHere: string[],
+  values: NameAnd<any>
+}
+export type Guard = LocalVariableGuard
+
 export interface DataD extends CommonDataDD {
+  guards?: NameAnd<Guard>,
   structure: ManyDataDD;
 }
 

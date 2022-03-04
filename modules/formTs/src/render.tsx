@@ -7,6 +7,8 @@ import { RestButton } from "./copied/rest";
 import { PageSelectionAndRestCommandsContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState, ModalAndCopyButton, ModalButton, ModalCancelButton, ModalCommitButton} from "@focuson/pages";
 import { Context, FocusedProps } from "./common";
+import { Lenses } from '@focuson/lens';
+import { Guard } from "./copied/guard";
 import { Table } from './copied/table';
 import { LabelAndStringInput } from './copied/LabelAndInput';
 import { LabelAndNumberInput } from './copied/LabelAndInput';
@@ -186,15 +188,16 @@ export function OccupationAndIncomeDetailsDD<S, Context extends PageSelectionAnd
 }
 
 export function OccupationIncomeDetailsDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, OccupationIncomeDetailsDDDomain,Context>){
+const areYouGuard = state.chainLens(Lenses.fromPath(["areYou"])).optJson();console.log('areYouGuard', areYouGuard)
   return(<>
   <LabelAndStringInput state={state.focusOn('areYou')} label='are you' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('currentEmployment')} label='current employment' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('occupation')} label='occupation' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('customerDescription')} label='customer description' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('ownShareOfTheCompany')} label='own share of the company' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('owningSharesPct')} label='owning shares pct' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('workFor')} label='work for' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('employmentType')} label='employment type' mode={mode} />
+  <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('currentEmployment')} label='current employment' mode={mode} /></Guard>
+  <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('occupation')} label='occupation' mode={mode} /></Guard>
+  <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('customerDescription')} label='customer description' mode={mode} /></Guard>
+  <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('ownShareOfTheCompany')} label='own share of the company' mode={mode} /></Guard>
+  <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('owningSharesPct')} label='owning shares pct' mode={mode} /></Guard>
+  <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('workFor')} label='work for' mode={mode} /></Guard>
+  <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('employmentType')} label='employment type' mode={mode} /></Guard>
   <LabelAndNumberInput state={state.focusOn('annualSalaryBeforeDeduction')} label='annual salary before deduction' mode={mode} />
   <LabelAndNumberInput state={state.focusOn('annualIncomeExcludingRent')} label='annual income excluding rent' mode={mode} />
   <LabelAndNumberInput state={state.focusOn('regularCommissionBonus')} label='regular commission bonus' mode={mode} />

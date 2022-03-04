@@ -6,6 +6,7 @@ import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD"
 import { paramsForTest } from "./makeJavaResolvers.spec";
 import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 import { transformButtons } from "../buttons/allButtons";
+import { occupationIncomeDetailsDD } from "../example/occupationAndIncomeDetails/occupationAndIncome.dataD";
 
 //
 describe ( " listComponentsIn", () => {
@@ -64,13 +65,15 @@ describe ( " listComponentsIn", () => {
     ] )
   } )
   it ( "should createAllReactComponents ", () => {
-    expect ( createAllReactComponents ( paramsForTest, transformButtons,[ EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
+    expect ( createAllReactComponents ( paramsForTest, transformButtons, [ EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
       "import { LensProps } from \"@focuson/state\";",
       "import { Layout } from \"./copied/layout\";",
       "import { RestButton } from \"./copied/rest\";",
       "import { PageSelectionAndRestCommandsContext } from '@focuson/focuson';",
       "import {  focusedPage, focusedPageWithExtraState, ModalAndCopyButton, ModalButton, ModalCancelButton, ModalCommitButton} from \"@focuson/pages\";",
       "import { Context, FocusedProps } from \"./common\";",
+      "import { Lenses } from '@focuson/lens';",
+      "import { Guard } from \"./copied/guard\";",
       "import { LabelAndStringInput } from './copied/LabelAndInput';",
       "import { LabelAndNumberInput } from './copied/LabelAndInput';",
       "import { Table } from './copied/table';",
@@ -131,11 +134,11 @@ describe ( " listComponentsIn", () => {
       "</>)",
       "}",
       ""
-    ])
+    ] )
   } )
 
   it ( "should createReactPageComponent", () => {
-    expect ( createReactPageComponent ( paramsForTest, transformButtons,EAccountsSummaryPD ) ).toEqual ( [
+    expect ( createReactPageComponent ( paramsForTest, transformButtons, EAccountsSummaryPD ) ).toEqual ( [
       "export function EAccountsSummaryPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){",
       "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
@@ -146,8 +149,8 @@ describe ( " listComponentsIn", () => {
       "     <button>refresh of type ResetStateButton cannot be created yet</button>",
       "   </Layout>)})}",
       ""
-    ])
-    expect ( createReactPageComponent ( paramsForTest,transformButtons, CreatePlanPD ) ).toEqual ( [
+    ] )
+    expect ( createReactPageComponent ( paramsForTest, transformButtons, CreatePlanPD ) ).toEqual ( [
       "export function CreatePlanPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){",
       "  return focusedPage<S, CreatePlanDDDomain, Context> ( s => '' ) (",
       "     ( state, d, mode ) => {",
@@ -157,7 +160,19 @@ describe ( " listComponentsIn", () => {
       "               <ModalCommitButton id='commit' state={state} />",
       "            </Layout>)})}",
       ""
-    ])
+    ] )
+  } )
+} )
+
+describe ( "makeComponentWithGuard", () => {
+  it ( "should make guard variables", () => {
+    expect ( createReactComponent ( occupationIncomeDetailsDD ).slice ( 0, 5 ).map ( r => r.replace ( /"/g, "'" ) ) ).toEqual ( [
+      "export function OccupationIncomeDetailsDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, OccupationIncomeDetailsDDDomain,Context>){",
+      "const areYouGuard = state.chainLens(Lenses.fromPath(['areYou'])).optJson();console.log('areYouGuard', areYouGuard)",
+      "  return(<>",
+      "  <LabelAndStringInput state={state.focusOn('areYou')} label='are you' mode={mode} />",
+      "  <Guard value={areYouGuard} cond={['E']}><LabelAndStringInput state={state.focusOn('currentEmployment')} label='current employment' mode={mode} /></Guard>"
+    ] )
   } )
 } )
 
