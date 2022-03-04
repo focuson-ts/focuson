@@ -11,7 +11,7 @@ import * as pageDomains from './pageDomains';
 export type Context = PageSelectionAndRestCommandsContext<FState>
 export const context: Context = defaultPageSelectionAndRestCommandsContext<FState> ( pages )
 export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,
- pageDomains.HasOccupationAndIncomeDetailsPageDomain,
+ pageDomains.HasOccupationAndIncomeSummaryPageDomain,
  pageDomains.HasEAccountsSummaryPageDomain,
  pageDomains.HasETransferPageDomain,
  pageDomains.HasCreateEAccountPageDomain,
@@ -19,20 +19,28 @@ export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,
 {}
 export interface HasCommonIds {CommonIds: CommonIds}
 export type CommonIds = {
-customerId?:string;
+accountSeq?:string;
+applicationRef?:string;
+brandRef?:string;
+vbAccountSeq?:string;
+vbAccountType?:string;
 accountId?:string;
 createPlanId?:string;
+customerId?:string;
 applRef?:string;
-brandRef?:string;
 }
 export const identityL = identityOptics<FState> ();
 export const commonIdsL = identityL.focusQuery('CommonIds');
 export const commonIds: NameAndLens<FState> = {
-   customerId: commonIdsL.focusQuery('customerId'),
+   accountSeq: commonIdsL.focusQuery('accountSeq'),
+   applicationRef: commonIdsL.focusQuery('applicationRef'),
+   brandRef: commonIdsL.focusQuery('brandRef'),
+   vbAccountSeq: commonIdsL.focusQuery('vbAccountSeq'),
+   vbAccountType: commonIdsL.focusQuery('vbAccountType'),
    accountId: commonIdsL.focusQuery('accountId'),
    createPlanId: commonIdsL.focusQuery('createPlanId'),
-   applRef: commonIdsL.focusQuery('applRef'),
-   brandRef: commonIdsL.focusQuery('brandRef')
+   customerId: commonIdsL.focusQuery('customerId'),
+   applRef: commonIdsL.focusQuery('applRef')
 }
 export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{
   mode: PageMode;
@@ -43,11 +51,11 @@ export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPage
     defaultDateFn ) ( onError ) //updateTagsAndMessagesOnError ( defaultErrorMessage )
 }
 export const emptyState: FState = {
-  CommonIds: {"customerId":"custId","accountId":"accId","createPlanId":"tbd","applRef":"appref","brandRef":"brandRef"},
+  CommonIds: {"accountSeq":"accountSeq","applicationRef":"applicationRef","brandRef":"brandRef","vbAccountSeq":"vbAccountSeq","vbAccountType":"vbAccountType","accountId":"accId","createPlanId":"tbd","customerId":"custId","applRef":"appref"},
   tags: {},
   messages: [],
-  pageSelection: [{ pageName: 'OccupationAndIncomeDetails', firstTime: true, pageMode: 'view' }],
-  OccupationAndIncomeDetails:{},
+  pageSelection: [{ pageName: 'OccupationAndIncomeSummary', firstTime: true, pageMode: 'view' }],
+  OccupationAndIncomeSummary:{},
   restCommands: [],
     debug: { selectedPageDebug: true, fetcherDebug: true }
   }

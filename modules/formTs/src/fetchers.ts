@@ -8,14 +8,14 @@ import { HasSimpleMessages, SimpleMessage } from '@focuson/utils';
 import { pageAndTagFetcher } from "@focuson/focuson";
 import { commonIds, identityL } from './common';
 import { Optional, Lenses } from '@focuson/lens';
-//fetcher type list
-export function OccupationAndIncomeFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<S, pageDomains.OccupationAndIncomeDetailsPageDomain>,commonIds: NameAndLens<S>) {
-  return pageAndTagFetcher<S, pageDomains.OccupationAndIncomeDetailsPageDomain, domains.OccupationAndIncomeDomain, SimpleMessage>(
-    common.commonFetch<S,  domains.OccupationAndIncomeDomain>(),
-     'OccupationAndIncomeDetails',
-     'fromApi', fdLens, commonIds, {},["customerId"],[],
-      Lenses.identity< pageDomains.OccupationAndIncomeDetailsPageDomain> ().focusQuery ( 'fromApi' ),
-     '/api/oneOccupationAndIncome?{query}')
+//fetcher type get
+export function OccupationAndIncomeDetailsDDFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<S, pageDomains.OccupationAndIncomeSummaryPageDomain>,commonIds: NameAndLens<S>) {
+  return pageAndTagFetcher<S, pageDomains.OccupationAndIncomeSummaryPageDomain, domains.OccupationAndIncomeDetailsDDDomain, SimpleMessage>(
+    common.commonFetch<S,  domains.OccupationAndIncomeDetailsDDDomain>(),
+     'OccupationAndIncomeSummary',
+     'fromApi', fdLens, commonIds, {},["accountSeq","applicationRef","brandRef","vbAccountSeq","vbAccountType"],[],
+      Lenses.identity< pageDomains.OccupationAndIncomeSummaryPageDomain> ().focusQuery ( 'fromApi' ),
+     '/customer/occupation/v2/occupationIncomeDetails?{query}')
 }
 //fetcher type get
 export function EAccountsSummaryDDFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<S, pageDomains.EAccountsSummaryPageDomain>,commonIds: NameAndLens<S>) {
@@ -37,7 +37,7 @@ export function ChequeCreditbooksDDFetcher<S extends  HasSimpleMessages & HasTag
 }
 export const fetchers: FetcherTree<common.FState> = {
 fetchers: [
-    OccupationAndIncomeFetcher<common.FState> ( identityL.focusQuery ( 'OccupationAndIncomeDetails' ), commonIds ),
+    OccupationAndIncomeDetailsDDFetcher<common.FState> ( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ),
     EAccountsSummaryDDFetcher<common.FState> ( identityL.focusQuery ( 'EAccountsSummary' ), commonIds ),
     ChequeCreditbooksDDFetcher<common.FState> ( identityL.focusQuery ( 'ChequeCreditbooks' ), commonIds )
 ],

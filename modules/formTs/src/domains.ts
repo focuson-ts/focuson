@@ -44,12 +44,40 @@ export interface ETransferDataDDomain{
   toAccount: string;
   type: string;
 }
-export interface OccupationAndIncomeDomain{
-  averageAnnualDrawings: number;
-  businessName: string;
-  businessType: string;
-  customersDescription: string;
-  dateStarted: string;
+export interface OccupationAndIncomeDetailsDDDomain{
+  customerOccupationIncomeDetails: OccupationIncomeDetailsDDDomain[];
+  jointClientRef: number;
+  jointCustomerName: string;
+  mainClientRef: number;
+  mainCustomerName: string;
+  regulatoryReport: string;
+}
+export interface OccupationIncomeDetailsDDDomain{
+  accountantAppRoleSeq: number;
+  annualDrawing3Yrs: number;
+  annualIncomeExcludingRent: number;
+  annualSalaryBeforeDeduction: number;
+  areYou: string;
+  createdBy: string;
+  createdDate: string;
+  currentEmployment: string;
+  customerDescription: string;
+  dateOfEmploymentStart: string;
+  empAppRoleSeq: number;
+  empEmploymentSeq: number;
+  empEndDate: string;
+  employerName: string;
+  employmentType: string;
+  empStartDate: string;
+  establishedYear: string;
   occupation: string;
-  typeOfProfession: string;
+  occupationCategory: string;
+  otherSourceOfIncome: string;
+  owningSharesPct: string;
+  ownShareOfTheCompany: string;
+  regularCommissionBonus: number;
+  sePositionHeld: string;
+  whatNameBusiness: string;
+  whatTypeOfBusiness: string;
+  workFor: string;
 }

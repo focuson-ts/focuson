@@ -71,15 +71,74 @@ export const sampleETransferDataD0: domains.ETransferDataDDomain =
   "balance": 123,
   "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
 }
-export const sampleOccupationAndIncome0: domains.OccupationAndIncomeDomain = 
+export const sampleOccupationAndIncomeDetailsDD0: domains.OccupationAndIncomeDetailsDDDomain = 
 {
-  "typeOfProfession": "selfEmployed",
-  "occupation": "plumber",
-  "customersDescription": "This is a one line string",
-  "businessType": "Electrical Technical Support",
-  "businessName": "This is a one line string",
-  "dateStarted": "2020-10-01",
-  "averageAnnualDrawings": 123
+  "regulatoryReport": "someString",
+  "mainCustomerName": "someString",
+  "jointCustomerName": "someString",
+  "mainClientRef": 123,
+  "jointClientRef": 123,
+  "customerOccupationIncomeDetails": [
+    {
+      "areYou": "C",
+      "currentEmployment": "N",
+      "occupation": "someString",
+      "customerDescription": "someString",
+      "ownShareOfTheCompany": "N",
+      "owningSharesPct": "N",
+      "workFor": "someString",
+      "employmentType": "1",
+      "annualSalaryBeforeDeduction": 123,
+      "annualIncomeExcludingRent": 123,
+      "regularCommissionBonus": 123,
+      "dateOfEmploymentStart": "someString",
+      "otherSourceOfIncome": "N",
+      "createdBy": "someString",
+      "createdDate": "2020-10-01",
+      "employerName": "someString",
+      "whatTypeOfBusiness": "someString",
+      "whatNameBusiness": "someString",
+      "establishedYear": "someString",
+      "annualDrawing3Yrs": 123,
+      "empStartDate": "2020-10-01",
+      "empEndDate": "2020-10-01",
+      "sePositionHeld": "someString",
+      "occupationCategory": "someString",
+      "empEmploymentSeq": 123,
+      "empAppRoleSeq": 123,
+      "accountantAppRoleSeq": 123
+    }
+  ]
+}
+export const sampleOccupationIncomeDetailsDD0: domains.OccupationIncomeDetailsDDDomain = 
+{
+  "areYou": "C",
+  "currentEmployment": "N",
+  "occupation": "someString",
+  "customerDescription": "someString",
+  "ownShareOfTheCompany": "N",
+  "owningSharesPct": "N",
+  "workFor": "someString",
+  "employmentType": "1",
+  "annualSalaryBeforeDeduction": 123,
+  "annualIncomeExcludingRent": 123,
+  "regularCommissionBonus": 123,
+  "dateOfEmploymentStart": "someString",
+  "otherSourceOfIncome": "N",
+  "createdBy": "someString",
+  "createdDate": "2020-10-01",
+  "employerName": "someString",
+  "whatTypeOfBusiness": "someString",
+  "whatNameBusiness": "someString",
+  "establishedYear": "someString",
+  "annualDrawing3Yrs": 123,
+  "empStartDate": "2020-10-01",
+  "empEndDate": "2020-10-01",
+  "sePositionHeld": "someString",
+  "occupationCategory": "someString",
+  "empEmploymentSeq": 123,
+  "empAppRoleSeq": 123,
+  "accountantAppRoleSeq": 123
 }
 export const sampleChequeCreditbooksDD1: domains.ChequeCreditbooksDDDomain = 
 {
@@ -153,15 +212,74 @@ export const sampleETransferDataD1: domains.ETransferDataDDomain =
   "balance": 456,
   "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
 }
-export const sampleOccupationAndIncome1: domains.OccupationAndIncomeDomain = 
+export const sampleOccupationAndIncomeDetailsDD1: domains.OccupationAndIncomeDetailsDDDomain = 
 {
-  "typeOfProfession": "This is a one line string",
-  "occupation": "school teacher",
-  "customersDescription": "another one line string",
-  "businessType": "Electrical Technical Support",
-  "businessName": "another one line string",
-  "dateStarted": "2022-14-01",
-  "averageAnnualDrawings": 456
+  "regulatoryReport": "anotherString",
+  "mainCustomerName": "anotherString",
+  "jointCustomerName": "anotherString",
+  "mainClientRef": 456,
+  "jointClientRef": 456,
+  "customerOccupationIncomeDetails": [
+    {
+      "areYou": "E",
+      "currentEmployment": "Y",
+      "occupation": "anotherString",
+      "customerDescription": "anotherString",
+      "ownShareOfTheCompany": "Y",
+      "owningSharesPct": "Y",
+      "workFor": "anotherString",
+      "employmentType": "2",
+      "annualSalaryBeforeDeduction": 456,
+      "annualIncomeExcludingRent": 456,
+      "regularCommissionBonus": 456,
+      "dateOfEmploymentStart": "anotherString",
+      "otherSourceOfIncome": "Y",
+      "createdBy": "anotherString",
+      "createdDate": "2022-14-01",
+      "employerName": "anotherString",
+      "whatTypeOfBusiness": "anotherString",
+      "whatNameBusiness": "anotherString",
+      "establishedYear": "anotherString",
+      "annualDrawing3Yrs": 456,
+      "empStartDate": "2022-14-01",
+      "empEndDate": "2022-14-01",
+      "sePositionHeld": "anotherString",
+      "occupationCategory": "anotherString",
+      "empEmploymentSeq": 456,
+      "empAppRoleSeq": 456,
+      "accountantAppRoleSeq": 456
+    }
+  ]
+}
+export const sampleOccupationIncomeDetailsDD1: domains.OccupationIncomeDetailsDDDomain = 
+{
+  "areYou": "E",
+  "currentEmployment": "Y",
+  "occupation": "anotherString",
+  "customerDescription": "anotherString",
+  "ownShareOfTheCompany": "Y",
+  "owningSharesPct": "Y",
+  "workFor": "anotherString",
+  "employmentType": "2",
+  "annualSalaryBeforeDeduction": 456,
+  "annualIncomeExcludingRent": 456,
+  "regularCommissionBonus": 456,
+  "dateOfEmploymentStart": "anotherString",
+  "otherSourceOfIncome": "Y",
+  "createdBy": "anotherString",
+  "createdDate": "2022-14-01",
+  "employerName": "anotherString",
+  "whatTypeOfBusiness": "anotherString",
+  "whatNameBusiness": "anotherString",
+  "establishedYear": "anotherString",
+  "annualDrawing3Yrs": 456,
+  "empStartDate": "2022-14-01",
+  "empEndDate": "2022-14-01",
+  "sePositionHeld": "anotherString",
+  "occupationCategory": "anotherString",
+  "empEmploymentSeq": 456,
+  "empAppRoleSeq": 456,
+  "accountantAppRoleSeq": 456
 }
 export const sampleChequeCreditbooksDD2: domains.ChequeCreditbooksDDDomain = 
 {
@@ -235,13 +353,72 @@ export const sampleETransferDataD2: domains.ETransferDataDDomain =
   "balance": 123,
   "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
 }
-export const sampleOccupationAndIncome2: domains.OccupationAndIncomeDomain = 
+export const sampleOccupationAndIncomeDetailsDD2: domains.OccupationAndIncomeDetailsDDDomain = 
 {
-  "typeOfProfession": "another one line string",
-  "occupation": "plumber",
-  "customersDescription": "This is a one line string",
-  "businessType": "Electrical Technical Support",
-  "businessName": "This is a one line string",
-  "dateStarted": "2020-10-01",
-  "averageAnnualDrawings": 123
+  "regulatoryReport": "someString",
+  "mainCustomerName": "someString",
+  "jointCustomerName": "someString",
+  "mainClientRef": 123,
+  "jointClientRef": 123,
+  "customerOccupationIncomeDetails": [
+    {
+      "areYou": "H",
+      "currentEmployment": "This is a one line string",
+      "occupation": "someString",
+      "customerDescription": "someString",
+      "ownShareOfTheCompany": "This is a one line string",
+      "owningSharesPct": "This is a one line string",
+      "workFor": "someString",
+      "employmentType": "3",
+      "annualSalaryBeforeDeduction": 123,
+      "annualIncomeExcludingRent": 123,
+      "regularCommissionBonus": 123,
+      "dateOfEmploymentStart": "someString",
+      "otherSourceOfIncome": "This is a one line string",
+      "createdBy": "someString",
+      "createdDate": "2020-10-01",
+      "employerName": "someString",
+      "whatTypeOfBusiness": "someString",
+      "whatNameBusiness": "someString",
+      "establishedYear": "someString",
+      "annualDrawing3Yrs": 123,
+      "empStartDate": "2020-10-01",
+      "empEndDate": "2020-10-01",
+      "sePositionHeld": "someString",
+      "occupationCategory": "someString",
+      "empEmploymentSeq": 123,
+      "empAppRoleSeq": 123,
+      "accountantAppRoleSeq": 123
+    }
+  ]
+}
+export const sampleOccupationIncomeDetailsDD2: domains.OccupationIncomeDetailsDDDomain = 
+{
+  "areYou": "H",
+  "currentEmployment": "This is a one line string",
+  "occupation": "someString",
+  "customerDescription": "someString",
+  "ownShareOfTheCompany": "This is a one line string",
+  "owningSharesPct": "This is a one line string",
+  "workFor": "someString",
+  "employmentType": "3",
+  "annualSalaryBeforeDeduction": 123,
+  "annualIncomeExcludingRent": 123,
+  "regularCommissionBonus": 123,
+  "dateOfEmploymentStart": "someString",
+  "otherSourceOfIncome": "This is a one line string",
+  "createdBy": "someString",
+  "createdDate": "2020-10-01",
+  "employerName": "someString",
+  "whatTypeOfBusiness": "someString",
+  "whatNameBusiness": "someString",
+  "establishedYear": "someString",
+  "annualDrawing3Yrs": 123,
+  "empStartDate": "2020-10-01",
+  "empEndDate": "2020-10-01",
+  "sePositionHeld": "someString",
+  "occupationCategory": "someString",
+  "empEmploymentSeq": 123,
+  "empAppRoleSeq": 123,
+  "accountantAppRoleSeq": 123
 }

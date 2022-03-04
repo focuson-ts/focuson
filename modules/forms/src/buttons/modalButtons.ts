@@ -5,7 +5,6 @@ import { PageMode } from "@focuson/pages";
 import { ButtonCreator, MakeButton } from "../codegen/makeButtons";
 import { focusOnFor, opt } from "../codegen/codegen";
 import { emptyName, modalName, restDetailsName } from "../codegen/names";
-import { RestCommand } from "@focuson/rest";
 
 export interface CommonModalButtonInPage {
   control: string;
@@ -15,8 +14,7 @@ export interface CommonModalButtonInPage {
   to: string[],
 }
 export function restForButton<B> ( parent: PageD<B>, rest?: RestOnCommit ): string {
-  const actualRestOnCommet: RestCommand = { name: restDetailsName ( parent, rest.rest ), restAction: rest.action, path: safeArray ( rest.target ) }
-  return rest ? ` rest={${JSON.stringify ( actualRestOnCommet )}}` : ""
+  return rest ? ` rest={${JSON.stringify ( { name: restDetailsName ( parent, rest.rest ), restAction: rest.action, path: safeArray ( rest.target ) } )}}` : ""
 }
 
 function makeCommonModalButton<B> ( parent: PageD<B>, name: string, button: CommonModalButtonInPage, extras: string ): string {

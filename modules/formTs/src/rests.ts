@@ -6,15 +6,15 @@ import { createSimpleMessage, DateFn, defaultDateFn, SimpleMessage } from "@focu
 import { Lenses } from "@focuson/lens"
 import { commonIds, FState } from "./common";
 
-export function OccupationAndIncomeDetails_OccupationAndIncomeRestDetails<S> ( cd: NameAndLens<S>, dateFn: DateFn  ): OneRestDetails<S, pageDomains.OccupationAndIncomeDetailsPageDomain, domains.OccupationAndIncomeDomain, SimpleMessage> {
-  const fdd: NameAndLens<pageDomains.OccupationAndIncomeDetailsPageDomain> = {}
+export function OccupationAndIncomeSummary_OccupationAndIncomeDetailsDDRestDetails<S> ( cd: NameAndLens<S>, dateFn: DateFn  ): OneRestDetails<S, pageDomains.OccupationAndIncomeSummaryPageDomain, domains.OccupationAndIncomeDetailsDDDomain, SimpleMessage> {
+  const fdd: NameAndLens<pageDomains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
-    dLens: Lenses.identity<pageDomains.OccupationAndIncomeDetailsPageDomain>().focusQuery('fromApi'),
+    dLens: Lenses.identity<pageDomains.OccupationAndIncomeSummaryPageDomain>().focusQuery('fromApi'),
     cd, fdd,
-    ids: ["customerId"],
+    ids: ["accountSeq","applicationRef","brandRef","vbAccountSeq","vbAccountType"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/oneOccupationAndIncome?{query}"
+    url: "/customer/occupation/v2/occupationIncomeDetails?{query}"
   }
 }
 
@@ -79,7 +79,7 @@ export function ChequeCreditbooks_ChequeCreditbooksDDRestDetails<S> ( cd: NameAn
 }
 
 export const restDetails: RestDetails<FState, SimpleMessage> = {
-   OccupationAndIncomeDetails_OccupationAndIncomeRestDetails: OccupationAndIncomeDetails_OccupationAndIncomeRestDetails(commonIds, defaultDateFn),
+   OccupationAndIncomeSummary_OccupationAndIncomeDetailsDDRestDetails: OccupationAndIncomeSummary_OccupationAndIncomeDetailsDDRestDetails(commonIds, defaultDateFn),
    EAccountsSummary_CreatePlanDDRestDetails: EAccountsSummary_CreatePlanDDRestDetails(commonIds, defaultDateFn),
    EAccountsSummary_EAccountsSummaryDDRestDetails: EAccountsSummary_EAccountsSummaryDDRestDetails(commonIds, defaultDateFn),
    ETransfer_ETransferDataDRestDetails: ETransfer_ETransferDataDRestDetails(commonIds, defaultDateFn),

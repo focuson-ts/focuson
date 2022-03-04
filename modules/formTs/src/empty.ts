@@ -71,13 +71,72 @@ export const emptyETransferDataD:domains.ETransferDataDDomain =
    "balance": 0,
    "notes": ""
  }
-export const emptyOccupationAndIncome:domains.OccupationAndIncomeDomain =
+export const emptyOccupationAndIncomeDetailsDD:domains.OccupationAndIncomeDetailsDDDomain =
  {
-   "typeOfProfession": "selfEmployed",
+   "regulatoryReport": "",
+   "mainCustomerName": "",
+   "jointCustomerName": "",
+   "mainClientRef": 0,
+   "jointClientRef": 0,
+   "customerOccupationIncomeDetails": [
+     {
+       "areYou": "",
+       "currentEmployment": "",
+       "occupation": "",
+       "customerDescription": "",
+       "ownShareOfTheCompany": "",
+       "owningSharesPct": "",
+       "workFor": "",
+       "employmentType": "",
+       "annualSalaryBeforeDeduction": 0,
+       "annualIncomeExcludingRent": 0,
+       "regularCommissionBonus": 0,
+       "dateOfEmploymentStart": "",
+       "otherSourceOfIncome": "",
+       "createdBy": "",
+       "createdDate": "2022-1-1",
+       "employerName": "",
+       "whatTypeOfBusiness": "",
+       "whatNameBusiness": "",
+       "establishedYear": "",
+       "annualDrawing3Yrs": 0,
+       "empStartDate": "2022-1-1",
+       "empEndDate": "2022-1-1",
+       "sePositionHeld": "",
+       "occupationCategory": "",
+       "empEmploymentSeq": 0,
+       "empAppRoleSeq": 0,
+       "accountantAppRoleSeq": 0
+     }
+   ]
+ }
+export const emptyOccupationIncomeDetailsDD:domains.OccupationIncomeDetailsDDDomain =
+ {
+   "areYou": "",
+   "currentEmployment": "",
    "occupation": "",
-   "customersDescription": "",
-   "businessType": "",
-   "businessName": "",
-   "dateStarted": "2022-1-1",
-   "averageAnnualDrawings": 0
+   "customerDescription": "",
+   "ownShareOfTheCompany": "",
+   "owningSharesPct": "",
+   "workFor": "",
+   "employmentType": "",
+   "annualSalaryBeforeDeduction": 0,
+   "annualIncomeExcludingRent": 0,
+   "regularCommissionBonus": 0,
+   "dateOfEmploymentStart": "",
+   "otherSourceOfIncome": "",
+   "createdBy": "",
+   "createdDate": "2022-1-1",
+   "employerName": "",
+   "whatTypeOfBusiness": "",
+   "whatNameBusiness": "",
+   "establishedYear": "",
+   "annualDrawing3Yrs": 0,
+   "empStartDate": "2022-1-1",
+   "empEndDate": "2022-1-1",
+   "sePositionHeld": "",
+   "occupationCategory": "",
+   "empEmploymentSeq": 0,
+   "empAppRoleSeq": 0,
+   "accountantAppRoleSeq": 0
  }

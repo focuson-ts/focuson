@@ -18,7 +18,7 @@ import { makeSpringEndpointsFor } from "./codegen/makeSpringEndpoint";
 import { fetcherInterfaceName, mockFetcherClassName, queryClassName, restControllerName, storybookFileName } from "./codegen/names";
 import { makeJavaVariablesForGraphQlQuery } from "./codegen/makeGraphQlQuery";
 import { ETransferPageD } from "./example/eTransfers/eTransfers.pageD";
-import { OccupationAndIncomeDetailsPageD } from "./example/occupationAndIncomeDetails/occupationAndIncomeDetails.pageD";
+
 import { makePages } from "./codegen/makePages";
 import { CreateEAccountPageD } from "./example/createEAccount/createEAccount.pageD";
 import { CreatePlanPD } from "./example/eAccounts/createPlanPD";
@@ -27,8 +27,9 @@ import { makeRests } from "./codegen/makeRests";
 import { ChequeCreditbooksPD, OrderChequeBookOrPayingInModalPD } from "./example/chequeCreditBooks/chequeCreditBooks.pageD";
 import { makeOneStory } from "./codegen/makeStories";
 import { transformButtons } from "./buttons/allButtons";
+import { OccupationAndIncomeSummaryPD, occupationIncomeModalPD } from "./example/occupationAndIncomeDetails/occupationAndIncome.pageD";
 
-let pages = [ OccupationAndIncomeDetailsPageD, EAccountsSummaryPD, CreatePlanPD, ETransferPageD, CreateEAccountPageD, ChequeCreditbooksPD, OrderChequeBookOrPayingInModalPD ];
+let pages = [ OccupationAndIncomeSummaryPD,occupationIncomeModalPD, EAccountsSummaryPD, CreatePlanPD, ETransferPageD, CreateEAccountPageD, ChequeCreditbooksPD, OrderChequeBookOrPayingInModalPD ];
 console.log ( 0 )
 
 export function writeToFile ( name: string, contents: string[] ) {

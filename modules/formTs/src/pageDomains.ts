@@ -1,7 +1,9 @@
 import * as domains from './domains';
-export interface HasOccupationAndIncomeDetailsPageDomain {   OccupationAndIncomeDetails?: OccupationAndIncomeDetailsPageDomain}
-export interface OccupationAndIncomeDetailsPageDomain{
- fromApi?:domains.OccupationAndIncomeDomain;
+export interface HasOccupationAndIncomeSummaryPageDomain {   OccupationAndIncomeSummary?: OccupationAndIncomeSummaryPageDomain}
+export interface OccupationAndIncomeSummaryPageDomain{
+ fromApi?:domains.OccupationAndIncomeDetailsDDDomain;
+ selectedItem?:number;
+ temp?:domains.OccupationIncomeDetailsDDDomain;
 }
 export interface HasEAccountsSummaryPageDomain {   EAccountsSummary?: EAccountsSummaryPageDomain}
 export interface EAccountsSummaryPageDomain{

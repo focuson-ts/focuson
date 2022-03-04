@@ -1,7 +1,6 @@
 import { LensState } from "@focuson/state";
 import { HasPageSelectionLens, page, PageMode, PageOps } from "../pageSelection";
 import { Transform } from "@focuson/lens";
-import { RestResult } from "@focuson/utils";
 import { RestCommand } from "@focuson/rest";
 
 
