@@ -48,13 +48,9 @@ export const OccupationAndIncomeSummaryPD: PageD<AllButtonsInPage> = {
   },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {                                                                      //interestingly these will be type checked in the target system...
-    nextOccupation: {
-      control: 'ListMarkerNextButton',
-    },
+    nextOccupation: { control: 'ListNextButton', value: [ 'selectedItem' ], list: [ 'fromApi', 'customerOccupationIncomeDetails' ] },
+    prevOccupation: { control: 'ListPrevButton', value: [ 'selectedItem' ], list: [ 'fromApi', 'customerOccupationIncomeDetails' ] },
     //questions: how do we know which is the existing plan... is there a list? are we an entry in the list? do we need to navigate to it?
-    previousOccupation: {
-      control: 'ListMarkerPrevButton',
-    },
     addEntry: {
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'create',
       createEmpty: occupationIncomeDetailsDD,

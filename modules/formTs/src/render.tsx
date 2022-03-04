@@ -4,6 +4,7 @@ import * as empty from './empty';
 import { LensProps } from "@focuson/state";
 import { Layout } from "./copied/layout";
 import { RestButton } from "./copied/rest";
+import { ListNextButton, ListPrevButton } from "./copied/listNextPrevButtons";
 import { PageSelectionAndRestCommandsContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState, ModalAndCopyButton, ModalButton, ModalCancelButton, ModalCommitButton} from "@focuson/pages";
 import { Context, FocusedProps } from "./common";
@@ -35,8 +36,8 @@ export function OccupationAndIncomeSummaryPage<S, Context extends PageSelectionA
   return (<Layout  details='[1][3,3][5]'>
      <OccupationAndIncomeDetailsDD state={state}  mode={mode} />
      <ModalButton id='addEntry' text='addEntry' modal = 'OccupationIncomeModalPD'  to={fullState.focusOn('temp')} base={["OccupationAndIncomeSummary","temp"]} createEmpty={empty.emptyOccupationIncomeDetailsDD}  pageMode='create' copyOnClose={["here"]}  />
-     <button id='nextOccupation' title='Next' />
-     <button id='previousOccupation' title='Prev' />
+     <ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />
+     <ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />
    </Layout>)})}
 
 export function OccupationIncomeModalPDPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){

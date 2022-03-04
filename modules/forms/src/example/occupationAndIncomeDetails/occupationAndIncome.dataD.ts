@@ -168,7 +168,7 @@ export const occupationIncomeDetailsDD: DataD = {
     guards:{areYou: {pathFromHere: ['areYou'], values: customerStatusDD.enum}},
     structure: {
         areYou: {dataDD: customerStatusDD},
-        currentEmployment: {dataDD: yesNoDD, guard: {areYou: ['E']}},
+        currentEmployment: {dataDD: yesNoDD, guard: {areYou: ['E', 'S']}},
         occupation: {dataDD: StringDD, guard: {areYou: ['E']}},
         customerDescription: {dataDD: StringDD, guard: {areYou: ['E']}},
         ownShareOfTheCompany: {dataDD: yesNoDD, guard: {areYou: ['E']}},

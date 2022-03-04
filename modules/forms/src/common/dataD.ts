@@ -50,7 +50,7 @@ export interface CommonDataDD {
 }
 export interface LocalVariableGuard {
   pathFromHere: string[],
-  values: NameAnd<any>
+  values: NameAnd<any> | undefined
 }
 export type Guard = LocalVariableGuard
 
