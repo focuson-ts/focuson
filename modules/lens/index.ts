@@ -1,4 +1,4 @@
-import { apply, applyOrDefault, checkIsFunction, copyWithFieldSet, useOrDefault } from "@focuson/utils";
+import { apply, applyOrDefault, checkIsFunction, copyWithFieldSet, NameAnd, useOrDefault } from "@focuson/utils";
 
 export const identityOptics = <State> ( description?: string ): Iso<State, State> => new Iso ( x => x, x => x, description ? description : "I" );
 
@@ -225,6 +225,7 @@ export class Lens<Main, Child> extends Optional<Main, Child> implements Getter<M
  *
  * This class will be removed and replaced with just 'plain functions'
  * */
+
 export class Lenses {
 
   /** This is a the normal way to generate lens. It create a link that goes from Main to itself */
@@ -236,6 +237,45 @@ export class Lenses {
     let initialValue: any = Lenses.identity<any> ( description ? description : '' );
     return path.reduce ( ( acc, p ) => acc.focusQuery ( p ), initialValue )
   }
+  static fromPathWith = <From, To> ( ref: NameAnd<Optional<From, number>> ) => ( path: string[], description?: string ): Optional<From, To> => {
+    let initialValue: any = Lenses.identity<any> ( description ? description : '' );
+    return path.reduce ( ( acc, p ) => {
+      const match = /^x([a-z0-9]+)x$/g .exec(p  )
+      if ( match ===null ) return acc.focusQuery ( p );
+      return Lenses.chainNthRef ( acc, ref, match[ 1 ] )
+    }, initialValue )
+    // const getFrom = ( f: From ) => ( name: string ): number | undefined => {return ref[ name ]?.getOption ( f )};
+    // const reverse = path.reverse ();
+    // const getter: ( f: From ) => To = f => {
+    //   return path.reduce<any> ( ( acc, p ) => {
+    //     const match: RegExpMatchArray = p.match ( squareNameRexex )
+    //     if ( match.length === 0 ) return acc?.[ p ];
+    //     if ( !Array.isArray ( acc ) ) throw Error ( `fromPathWith(${path}) at ${p} and is not an array. It is ${acc}` )
+    //     const index = ref[ match[ 1 ] ].getOption ( f )
+    //     if ( !index || index < 0 ) throw Error ( `fromPathWith(${path}) at ${p} and is not an array. Index was ${index}` )
+    //     return acc[ index ]
+    //   }, f )
+    // }
+    // const setter: ( f: From, t: To ) => From = ( f, t ) => {
+    //   reverse.reduce<any> ( ( acc, p ) => {
+    //     const match: RegExpMatchArray = p.match ( squareNameRexex )
+    //     if ( match.length === 0 ) return copyWithFieldSet ( acc, p, acc?.[ p ];
+    //     if ( !Array.isArray ( acc ) ) throw Error ( `fromPathWith(${path}) at ${p} and is not an array. It is ${acc}` )
+    //     const index = ref[ match[ 1 ] ].getOption ( f )
+    //     if ( !index || index < 0 ) throw Error ( `fromPathWith(${path}) at ${p} and is not an array. Index was ${index}` )
+    //     return acc[ index ]
+    //
+    //   }, t )
+    //   //   if ( match.length === 0 ) return acc?.[ p ];
+    //   //   if ( !Array.isArray ( acc ) ) throw Error ( `fromPathWith(${path}) at ${p} and is not an array. It is ${acc}` )
+    //   // const index = ref[ match[ 1 ] ].getOption ( f )
+    //   // if ( !index || index < 0 ) throw Error ( `fromPathWith(${path}) at ${p} and is not an array. Index was ${index}` )
+    //   // return acc[ index ]
+    //
+    // }
+  }
+
+
   /** Given a main which is an object, with a field name, this returns a lens that goes from the Main to the contents of the field name */
   static field = <Main, K extends keyof Main> ( fieldName: K ): Lens<Main, Main[K]> => lens ( m => m[ fieldName ], ( m, c ) => {
     let result = Object.assign ( {}, m )
@@ -279,6 +319,34 @@ export class Lenses {
         return result
       }, `[${n}]` )
   }
+
+  static chainNthRef<From, T> ( lens: Optional<From, T[]>, lookup: NameAnd<Optional<From, number>>, name: string, description?: string ): Optional<From, T> {
+    if ( !lookup ) throw new Error ( 'lookup must not be undefined' )
+    function findIndex ( f: From ): number {
+      const opt: Optional<From, number> = lookup[ name ]
+      if ( !opt ) throw new Error ( `nthRef of [${name}] doesn't exist. Legal names are ${Object.keys ( lookup ).sort ()}` )
+      const index = opt.getOption ( f )
+      if ( index === undefined || index < 0 ) throw new Error ( `nthRef of ${name} maps to ${index} in ${JSON.stringify ( f )}` )
+      return index;
+    }
+    function findArrayAndCheckIndex ( f: From, index: number ): T[] | undefined {
+      const array = lens.getOption ( f )
+      if ( array )
+        if ( index >= array.length ) throw new Error ( `nthRef of ${name} maps to ${index} which is too big (> ${array.length})` )
+        else
+          return array
+    }
+    const getter = ( f: From ) => (lens.getOption ( f ))?.[ findIndex ( f ) ];
+    function setter ( f: From, t: T ): From {
+      const index = findIndex ( f )
+      const array = lens.getOption ( f )
+      const res = [ ...array ]
+      res[ index ] = t
+      return lens.set ( f, res )
+    }
+    return new Lens<From, T> ( getter, setter, description ? description : `${lens.description}.[${name}]` )
+  }
+
 
   static constant = <Main, Child> ( value: Child, description?: string ): Lens<Main, Child> => lens ( m => value, ( m, c ) => m, description );
 
