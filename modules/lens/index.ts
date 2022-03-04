@@ -240,39 +240,13 @@ export class Lenses {
   static fromPathWith = <From, To> ( ref: NameAnd<Optional<From, number>> ) => ( path: string[], description?: string ): Optional<From, To> => {
     let initialValue: any = Lenses.identity<any> ( description ? description : '' );
     return path.reduce ( ( acc, p ) => {
-      const match = /^x([a-z0-9]+)x$/g .exec(p  )
-      if ( match ===null ) return acc.focusQuery ( p );
-      return Lenses.chainNthRef ( acc, ref, match[ 1 ] )
+      const matchRef = /^{([a-z0-9]+)}$/g.exec ( p )
+      if ( matchRef ) return Lenses.chainNthRef ( acc, ref, matchRef[ 1 ] )
+      const matchNum = /^\[([0-9]+)]$/g.exec ( p )
+      if ( matchNum ) return acc.chain ( Lenses.nth ( Number.parseInt ( matchNum[ 1 ] ) ) )
+      return acc.focusQuery ( p );
     }, initialValue )
-    // const getFrom = ( f: From ) => ( name: string ): number | undefined => {return ref[ name ]?.getOption ( f )};
-    // const reverse = path.reverse ();
-    // const getter: ( f: From ) => To = f => {
-    //   return path.reduce<any> ( ( acc, p ) => {
-    //     const match: RegExpMatchArray = p.match ( squareNameRexex )
-    //     if ( match.length === 0 ) return acc?.[ p ];
-    //     if ( !Array.isArray ( acc ) ) throw Error ( `fromPathWith(${path}) at ${p} and is not an array. It is ${acc}` )
-    //     const index = ref[ match[ 1 ] ].getOption ( f )
-    //     if ( !index || index < 0 ) throw Error ( `fromPathWith(${path}) at ${p} and is not an array. Index was ${index}` )
-    //     return acc[ index ]
-    //   }, f )
-    // }
-    // const setter: ( f: From, t: To ) => From = ( f, t ) => {
-    //   reverse.reduce<any> ( ( acc, p ) => {
-    //     const match: RegExpMatchArray = p.match ( squareNameRexex )
-    //     if ( match.length === 0 ) return copyWithFieldSet ( acc, p, acc?.[ p ];
-    //     if ( !Array.isArray ( acc ) ) throw Error ( `fromPathWith(${path}) at ${p} and is not an array. It is ${acc}` )
-    //     const index = ref[ match[ 1 ] ].getOption ( f )
-    //     if ( !index || index < 0 ) throw Error ( `fromPathWith(${path}) at ${p} and is not an array. Index was ${index}` )
-    //     return acc[ index ]
-    //
-    //   }, t )
-    //   //   if ( match.length === 0 ) return acc?.[ p ];
-    //   //   if ( !Array.isArray ( acc ) ) throw Error ( `fromPathWith(${path}) at ${p} and is not an array. It is ${acc}` )
-    //   // const index = ref[ match[ 1 ] ].getOption ( f )
-    //   // if ( !index || index < 0 ) throw Error ( `fromPathWith(${path}) at ${p} and is not an array. Index was ${index}` )
-    //   // return acc[ index ]
-    //
-    // }
+
   }
 
 
@@ -344,7 +318,7 @@ export class Lenses {
       res[ index ] = t
       return lens.set ( f, res )
     }
-    return new Lens<From, T> ( getter, setter, description ? description : `${lens.description}.[${name}]` )
+    return new Lens<From, T> ( getter, setter, description ? description : `${lens.description}.{${name}}` )
   }
 
 
