@@ -1,0 +1,119 @@
+{
+  "consumer": {
+    "name": "OccupationAndIncomeDetailsDD"
+  },
+  "provider": {
+    "name": "OccupationAndIncomeDetailsDDProvider"
+  },
+  "interactions": [
+    {
+      "description": "OccupationAndIncomeSummary should have a get fetcher for OccupationAndIncomeDetailsDD",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/customer/occupation/v2/occupationIncomeDetails",
+        "query": "accountSeq=accountSeq&applicationRef=applicationRef&brandRef=brandRef&vbAccountSeq=vbAccountSeq&vbAccountType=vbAccountType"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "regulatoryReport": "someString",
+          "mainCustomerName": "someString",
+          "jointCustomerName": "someString",
+          "mainClientRef": 123,
+          "jointClientRef": 123,
+          "customerOccupationIncomeDetails": [
+            {
+              "areYou": "C",
+              "currentEmployment": "N",
+              "occupation": "someString",
+              "customerDescription": "someString",
+              "ownShareOfTheCompany": "N",
+              "owningSharesPct": "N",
+              "workFor": "someString",
+              "employmentType": "1",
+              "annualSalaryBeforeDeduction": 123,
+              "annualIncomeExcludingRent": 123,
+              "regularCommissionBonus": 123,
+              "dateOfEmploymentStart": "someString",
+              "otherSourceOfIncome": "N",
+              "createdBy": "someString",
+              "createdDate": "2020-10-01",
+              "employerName": "someString",
+              "whatTypeOfBusiness": "someString",
+              "whatNameBusiness": "someString",
+              "establishedYear": "someString",
+              "annualDrawing3Yrs": 123,
+              "empStartDate": "2020-10-01",
+              "empEndDate": "2020-10-01",
+              "sePositionHeld": "someString",
+              "occupationCategory": "someString",
+              "empEmploymentSeq": 123,
+              "empAppRoleSeq": 123,
+              "accountantAppRoleSeq": 123
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "OccupationAndIncomeSummary should have a get rest for OccupationAndIncomeDetailsDD",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/customer/occupation/v2/occupationIncomeDetails",
+        "query": "accountSeq=accountSeq&applicationRef=applicationRef&brandRef=brandRef&vbAccountSeq=vbAccountSeq&vbAccountType=vbAccountType"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "regulatoryReport": "someString",
+          "mainCustomerName": "someString",
+          "jointCustomerName": "someString",
+          "mainClientRef": 123,
+          "jointClientRef": 123,
+          "customerOccupationIncomeDetails": [
+            {
+              "areYou": "C",
+              "currentEmployment": "N",
+              "occupation": "someString",
+              "customerDescription": "someString",
+              "ownShareOfTheCompany": "N",
+              "owningSharesPct": "N",
+              "workFor": "someString",
+              "employmentType": "1",
+              "annualSalaryBeforeDeduction": 123,
+              "annualIncomeExcludingRent": 123,
+              "regularCommissionBonus": 123,
+              "dateOfEmploymentStart": "someString",
+              "otherSourceOfIncome": "N",
+              "createdBy": "someString",
+              "createdDate": "2020-10-01",
+              "employerName": "someString",
+              "whatTypeOfBusiness": "someString",
+              "whatNameBusiness": "someString",
+              "establishedYear": "someString",
+              "annualDrawing3Yrs": 123,
+              "empStartDate": "2020-10-01",
+              "empEndDate": "2020-10-01",
+              "sePositionHeld": "someString",
+              "occupationCategory": "someString",
+              "empEmploymentSeq": 123,
+              "empAppRoleSeq": 123,
+              "accountantAppRoleSeq": 123
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}
