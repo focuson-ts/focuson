@@ -26,7 +26,7 @@ const LabelAndInputNumber = LabelAndTInput<number> ( NumberTransformer )
 const LabelAndInputBoolean = LabelAndTInput<boolean> ( BooleanTransformer )
 
 export function LabelAndStringInput<S, Context> ( { mode, state, ariaLabel, id, label, name}: LabelAndInputProps<S, string, Context> ) {
-  return <LabelAndInputString name={name} defaultValue={state.optJson()} id={id} state={state} mode={mode} ariaLabel={ariaLabel} label={label}/>
+  return <LabelAndInputString name={name} value={state.optJson()} id={id} state={state} mode={mode} ariaLabel={ariaLabel} label={label}/>
 }
 export function LabelAndNumberInput<S, Context> ( { mode, state, ariaLabel, id, label, name}: LabelAndInputProps<S, number, Context> ) {
   return <LabelAndInputNumber name={name} defaultValue={state.optJson()} id={id} state={state} mode={mode} ariaLabel={ariaLabel} label={label}/>

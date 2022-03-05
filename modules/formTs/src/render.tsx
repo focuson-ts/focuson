@@ -6,7 +6,7 @@ import { Layout } from "./copied/layout";
 import { RestButton } from "./copied/rest";
 import { ListNextButton, ListPrevButton } from "./copied/listNextPrevButtons";
 import { PageSelectionAndRestCommandsContext } from '@focuson/focuson';
-import {  focusedPage, focusedPageWithExtraState,  ModalButton, ModalCancelButton, ModalCommitButton} from "@focuson/pages";
+import {  focusedPage, focusedPageWithExtraState,  ModalButton, ModalCancelButton, ModalCommitButton, fullState,pageState} from "@focuson/pages";
 import { Context, FocusedProps } from "./common";
 import { Lenses } from '@focuson/lens';
 import { Guard } from "./copied/guard";
@@ -16,6 +16,7 @@ import { LabelAndNumberInput } from './copied/LabelAndInput';
 import { Radio } from './copied/Radio';
 import { LabelAndRadio } from './copied/Radio';
 import { LabelAndBooleanInput } from './copied/LabelAndInput';
+import { SelectedItem } from './copied/table';
 import {OccupationAndIncomeSummaryPageDomain} from "./pageDomains";
 import {EAccountsSummaryPageDomain} from "./pageDomains";
 import {ETransferPageDomain} from "./pageDomains";
@@ -185,7 +186,7 @@ export function OccupationAndIncomeDetailsDD<S, Context extends PageSelectionAnd
   <LabelAndStringInput state={state.focusOn('jointCustomerName')} label='joint customer name' mode={mode} />
   <LabelAndNumberInput state={state.focusOn('mainClientRef')} label='main client ref' mode={mode} />
   <LabelAndNumberInput state={state.focusOn('jointClientRef')} label='joint client ref' mode={mode} />
-  <Table state={state.focusOn('customerOccupationIncomeDetails')} order={['areYou','occupation']} mode={mode} />
+  <SelectedItem state={state.focusOn('customerOccupationIncomeDetails')} index={pageState(state).focusOn('selectedItem').json()} display={OccupationIncomeDetailsDD} mode={mode} />
 </>)
 }
 

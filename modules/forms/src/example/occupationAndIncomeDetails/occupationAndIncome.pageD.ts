@@ -62,9 +62,8 @@ export const OccupationAndIncomeSummaryPD: PageD<AllButtonsInPage> = {
       createEmpty: occupationIncomeDetailsDD,
       setToLengthOnClose : {variable: ['selectedItem'],array:['fromApi','customerOccupationIncomeDetails']},
       copyOnClose: [ 'fromApi','customerOccupationIncomeDetails','[append]' ]
-      // restOnCommit: { rest: occupationAndIncomeRD, action: 'update', result: 'refresh', target: [ '' ] }
     },
-    edit: {
+       edit: {
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'edit',
       focusOn: [  'temp' ],
 

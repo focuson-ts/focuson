@@ -1,7 +1,7 @@
 import { DateDD, MoneyDD } from "../common/dataD";
 import { EAccountsSummaryDD, EAccountsSummaryTableDD } from "../example/eAccounts/eAccountsSummary.dataD";
-import { createAllReactCalls, createAllReactComponents, createReactComponent, createReactPageComponent, listComponentsIn } from "../codegen/makeComponents";
-import { LabelAndNumberInputCD, LabelAndStringInputCD, TableCD } from "../common/componentsD";
+import { createAllReactCalls, createAllReactComponents, createReactComponent, createReactPageComponent, listComponentsIn, processParam } from "../codegen/makeComponents";
+import { DisplayCompParamType, LabelAndNumberInputCD, LabelAndStringInputCD, TableCD } from "../common/componentsD";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
 import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
@@ -11,7 +11,7 @@ import { occupationIncomeDetailsDD } from "../example/occupationAndIncomeDetails
 //
 describe ( " listComponentsIn", () => {
   it ( "should make the react component lists", () => {
-    expect ( createAllReactCalls ( listComponentsIn ( EAccountsSummaryDD ) ) ).toEqual ( [
+    expect ( createAllReactCalls ( listComponentsIn ( EAccountsSummaryDD ) ).map(s=>s.replace(/"/g,"'")) ).toEqual ( [
       "<LabelAndBooleanInput state={state.focusOn('useEStatements')} label='use e statements' mode={mode} />",
       "<Table state={state.focusOn('eAccountsTable')} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} mode={mode} />",
       "<LabelAndNumberInput state={state.focusOn('totalMonthlyCost')} label='total monthly cost' mode={mode} />",
@@ -24,7 +24,7 @@ describe ( " listComponentsIn", () => {
   } )
 
   it ( "should createReactComponent", () => {
-    expect ( createReactComponent ( EAccountsSummaryDD ) ).toEqual ( [
+    expect ( createReactComponent ( EAccountsSummaryDD ).map(s=>s.replace(/"/g,"'")) ).toEqual ( [
       "export function EAccountsSummaryDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, EAccountsSummaryDDDomain,Context>){",
       "  return(<>",
       "  <LabelAndBooleanInput state={state.focusOn('useEStatements')} label='use e statements' mode={mode} />",
@@ -41,31 +41,31 @@ describe ( " listComponentsIn", () => {
     ] )
   } )
   it ( "should createAllReactComponents ", () => {
-    expect ( createAllReactComponents ( paramsForTest, transformButtons, [ EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ([
-      "import { LensProps } from \"@focuson/state\";",
-      "import { Layout } from \"./copied/layout\";",
-      "import { RestButton } from \"./copied/rest\";",
-      "import { ListNextButton, ListPrevButton } from \"./copied/listNextPrevButtons\";",
+    expect ( createAllReactComponents ( paramsForTest, transformButtons, [ EAccountsSummaryPD, CreatePlanPD ] ) .map(s=>s.replace(/"/g,"'")) ).toEqual ( [
+      "import { LensProps } from '@focuson/state';",
+      "import { Layout } from './copied/layout';",
+      "import { RestButton } from './copied/rest';",
+      "import { ListNextButton, ListPrevButton } from './copied/listNextPrevButtons';",
       "import { PageSelectionAndRestCommandsContext } from '@focuson/focuson';",
-      "import {  focusedPage, focusedPageWithExtraState,  ModalButton, ModalCancelButton, ModalCommitButton} from \"@focuson/pages\";",
-      "import { Context, FocusedProps } from \"./common\";",
+      "import {  focusedPage, focusedPageWithExtraState,  ModalButton, ModalCancelButton, ModalCommitButton, fullState,pageState} from '@focuson/pages';",
+      "import { Context, FocusedProps } from './common';",
       "import { Lenses } from '@focuson/lens';",
-      "import { Guard } from \"./copied/guard\";",
+      "import { Guard } from './copied/guard';",
       "import { LabelAndStringInput } from './copied/LabelAndInput';",
       "import { LabelAndNumberInput } from './copied/LabelAndInput';",
       "import { Table } from './copied/table';",
       "import { LabelAndBooleanInput } from './copied/LabelAndInput';",
       "import { LabelAndRadio } from './copied/Radio';",
-      "import {EAccountsSummaryPageDomain} from \"./pageDomains\";",
-      "import {CreatePlanDDDomain} from \"./domains\"",
-      "import {EAccountsSummaryDDDomain} from \"./domains\"",
-      "import {EAccountSummaryDDDomain} from \"./domains\"",
+      "import {EAccountsSummaryPageDomain} from './pageDomains';",
+      "import {CreatePlanDDDomain} from './domains'",
+      "import {EAccountsSummaryDDDomain} from './domains'",
+      "import {EAccountSummaryDDDomain} from './domains'",
       "export function EAccountsSummaryPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){",
       "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
       "     <EAccountsSummaryDD state={state}  mode={mode} />",
-      "     <ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  focusOn={[\"EAccountsSummary\",\"tempCreatePlan\"]} copyFrom={[\"EAccountsSummary\",\"fromApi\",\"createPlan\"]}    pageMode='edit'   rest={{\"name\":\"EAccountsSummary_CreatePlanDDRestDetails\",\"restAction\":\"update\",\"path\":[\"EAccountsSummary\"]}} />",
-      "     <ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  focusOn={[\"EAccountsSummary\",\"tempCreatePlan\"]}  createEmpty={empty.emptyCreatePlanDD}   pageMode='create'   rest={{\"name\":\"EAccountsSummary_CreatePlanDDRestDetails\",\"restAction\":\"create\",\"path\":[\"EAccountsSummary\"]}} />",
+      "     <ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  focusOn={['EAccountsSummary','tempCreatePlan']} copyFrom={['EAccountsSummary','fromApi','createPlan']}    pageMode='edit'   rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'update','path':['EAccountsSummary']}} />",
+      "     <ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  focusOn={['EAccountsSummary','tempCreatePlan']}  createEmpty={empty.emptyCreatePlanDD}   pageMode='create'   rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'create','path':['EAccountsSummary']}} />",
       "     <RestButton id='deleteExistingPlan' state={state} />",
       "     <button>refresh of type ResetStateButton cannot be created yet</button>",
       "   </Layout>)})}",
@@ -103,7 +103,7 @@ describe ( " listComponentsIn", () => {
       "export function EAccountSummaryDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, EAccountSummaryDDDomain,Context>){",
       "  return(<>",
       "  <LabelAndStringInput state={state.focusOn('accountId')} label='Account Id' mode={mode} />",
-      "  <LabelAndRadio state={state.focusOn('displayType')} label='display type' mode={mode} enums={{\"savings\":\"Savings\",\"checking\":\"Checking\"}} />",
+      "  <LabelAndRadio state={state.focusOn('displayType')} label='display type' mode={mode} enums={{'savings':'Savings','checking':'Checking'}} />",
       "  <LabelAndStringInput state={state.focusOn('description')} label='description' mode={mode} />",
       "  <LabelAndStringInput state={state.focusOn('virtualBankSeq')} label='virtual bank seq' mode={mode} />",
       "  <LabelAndNumberInput state={state.focusOn('total')} label='total' mode={mode} />",
@@ -111,23 +111,23 @@ describe ( " listComponentsIn", () => {
       "</>)",
       "}",
       ""
-    ] )
+    ])
   } )
 
   it ( "should createReactPageComponent", () => {
-    expect ( createReactPageComponent ( paramsForTest, transformButtons, EAccountsSummaryPD ) ).toEqual ([
+    expect ( createReactPageComponent ( paramsForTest, transformButtons, EAccountsSummaryPD ) .map(s=>s.replace(/"/g,"'")) ).toEqual ( [
       "export function EAccountsSummaryPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){",
       "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
       "     <EAccountsSummaryDD state={state}  mode={mode} />",
-      "     <ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  focusOn={[\"EAccountsSummary\",\"tempCreatePlan\"]} copyFrom={[\"EAccountsSummary\",\"fromApi\",\"createPlan\"]}    pageMode='edit'   rest={{\"name\":\"EAccountsSummary_CreatePlanDDRestDetails\",\"restAction\":\"update\",\"path\":[\"EAccountsSummary\"]}} />",
-      "     <ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  focusOn={[\"EAccountsSummary\",\"tempCreatePlan\"]}  createEmpty={empty.emptyCreatePlanDD}   pageMode='create'   rest={{\"name\":\"EAccountsSummary_CreatePlanDDRestDetails\",\"restAction\":\"create\",\"path\":[\"EAccountsSummary\"]}} />",
+      "     <ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  focusOn={['EAccountsSummary','tempCreatePlan']} copyFrom={['EAccountsSummary','fromApi','createPlan']}    pageMode='edit'   rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'update','path':['EAccountsSummary']}} />",
+      "     <ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  focusOn={['EAccountsSummary','tempCreatePlan']}  createEmpty={empty.emptyCreatePlanDD}   pageMode='create'   rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'create','path':['EAccountsSummary']}} />",
       "     <RestButton id='deleteExistingPlan' state={state} />",
       "     <button>refresh of type ResetStateButton cannot be created yet</button>",
       "   </Layout>)})}",
       ""
-    ])
-    expect ( createReactPageComponent ( paramsForTest, transformButtons, CreatePlanPD ) ).toEqual ( [
+    ] )
+    expect ( createReactPageComponent ( paramsForTest, transformButtons, CreatePlanPD ).map(s=>s.replace(/"/g,"'"))  ).toEqual ( [
       "export function CreatePlanPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){",
       "  return focusedPage<S, CreatePlanDDDomain, Context> ( s => '' ) (",
       "     ( state, d, mode ) => {",
@@ -153,3 +153,38 @@ describe ( "makeComponentWithGuard", () => {
   } )
 } )
 
+
+describe ( "make components - the different parameter types", () => {
+  function makeParam ( theType: DisplayCompParamType, val: string | string[] ) {
+    return processParam ( [ 'some', 'path' ], EAccountsSummaryDD, { ...LabelAndStringInputCD, params: { p1: { paramType: theType, needed: 'no' } } } ) ( 'p1', val );
+  }
+  it ( "should create paramtype object", () => {
+    expect ( makeParam ( 'object', 'obj' ) ).toEqual ( '{obj}' )
+  } )
+  it ( "should create paramtype string", () => {
+    expect ( makeParam ( 'string', 'obj' ) ).toEqual ( "'obj'" )
+  } )
+  it ( "should create paramtype string[]", () => {
+    expect ( makeParam ( 'string[]', [ 'a', 'b' ] ).replace ( /"/g, "'" ) ).toEqual ( "{['a','b']}" )
+  } )
+  it ( "should create paramtype state", () => {
+    expect ( makeParam ( 'state', [ 'a', 'b' ] ).replace ( /"/g, "'" ) ).toEqual ( "{state.focusOn('a').focusOn('b')}" )
+  } )
+  it ( "should create paramtype stateValue", () => {
+    expect ( makeParam ( 'stateValue', [ 'a', 'b' ] ).replace ( /"/g, "'" ) ).toEqual ( "{state.focusOn('a').focusOn('b').json()}" )
+  } )
+  it ( "should create paramtype pageState", () => {
+    expect ( makeParam ( 'pageState', [ 'a', 'b' ] ).replace ( /"/g, "'" ) ).toEqual ( "{pageState(state).focusOn('a').focusOn('b')}" )
+  } )
+  it ( "should create paramtype pageStateValue", () => {
+    expect ( makeParam ( 'pageStateValue', [ 'a', 'b' ] ).replace ( /"/g, "'" ) ).toEqual ( "{pageState(state).focusOn('a').focusOn('b').json()}" )
+  } )
+  it ( "should create paramtype fullState", () => {
+    expect ( makeParam ( 'fullState', [ 'a', 'b' ] ).replace ( /"/g, "'" ) ).toEqual ( "{fullState(state).focusOn('a').focusOn('b')}" )
+  } )
+  it ( "should create paramtype fullStateValue", () => {
+    expect ( makeParam ( 'fullStateValue', [ 'a', 'b' ] ).replace ( /"/g, "'" ) ).toEqual ( "{fullState(state).focusOn('a').focusOn('b').json()}" )
+  } )
+
+
+} )

@@ -1,5 +1,5 @@
 import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, isPrimDd, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
-import { DisplayCompD } from "../common/componentsD";
+import { DisplayCompD, DisplayCompParamD, OneDisplayCompParamD } from "../common/componentsD";
 import { dataDsIn, PageD } from "../common/pageD";
 
 import { decamelize, NameAnd, safeArray, sortedEntries } from "@focuson/utils";
@@ -51,18 +51,42 @@ export const listComponentsInFolder: AllDataFlatMap<AllComponentData> = {
 
 export const listComponentsIn = ( dataDD: AllDataDD ): AllComponentData[] => flatMapDD ( dataDD, listComponentsInFolder );
 
-function addQuote ( s: string | string[] ) {
-  if ( Array.isArray ( s ) ) return "{[" + s.map ( x => "'" + x + "'" ) + "]}"
-  return "'" + s + "'"
-}
-export function createOneReact ( { path, dataDD, display, displayParams, guard }: ComponentData ): string[] {
+export const processParam = ( path: string[], dataDD: AllDataDD, dcd: DisplayCompD ) => ( name: string, s: string | string[] ) => {
+  const dcdType: OneDisplayCompParamD = dcd.params[ name ]
+  function errorPrefix () {return `Component ${dataDD.name} for ${path} has a display component ${dcd.name} and sets a param ${name} `}
+  if ( dcdType === undefined ) throw new Error ( `${errorPrefix ()}. Legal values are ${sortedEntries ( dcd.params ).map ( t => t[ 0 ] ).join ( ',' )}` )
+  function processStringParam () {return "'" + s + "'"}
+  function processObjectParam () {return "{" + s + "}"}
+  function processStringArrayParam () {
+    if ( Array.isArray ( s ) ) return`{${JSON.stringify(s)}}`; else
+      throw new Error ( `${errorPrefix ()} needs to be a string[]` )
+  }
+  function processState ( prefix: string, postFix: string ) {
+    if ( Array.isArray ( s ) ) return `{${prefix}${focusOnFor ( s )}${postFix}}`; else
+      throw new Error ( `${errorPrefix ()} needs to be a string[]` )
+  }
+  if ( dcdType.paramType === 'string' ) return processStringParam ()
+  if ( dcdType.paramType === 'object' ) return processObjectParam ()
+  if ( dcdType.paramType === 'string[]' ) return processStringArrayParam ()
+  if ( dcdType.paramType === 'fullState' ) return processState ( 'fullState(state)', '' )
+  if ( dcdType.paramType === 'pageState' ) return processState ( 'pageState(state)', '' )
+  if ( dcdType.paramType === 'state' ) return processState ( 'state', '' )
+  if ( dcdType.paramType === 'fullStateValue' ) return processState ( 'fullState(state)', '.json()' )
+  if ( dcdType.paramType === 'pageStateValue' ) return processState ( 'pageState(state)', '.json()' )
+  if ( dcdType.paramType === 'stateValue' ) return processState ( 'state', '.json()' )
+  throw new Error ( `${errorPrefix ()} with type ${dcdType.paramType} which can't be processed` )
+};
+
+
+export function createOneReact<B> ( { path, dataDD, display, displayParams, guard }: ComponentData ): string[] {
   const { name, params, needsEnums } = display
   const focusOnString = path.map ( v => `.focusOn('${v}')` ).join ( '' )
-  const dataDDParamsA: [ string, string ][] = dataDD.displayParams ? Object.entries ( dataDD.displayParams ).map ( ( [ name, o ] ) => [ name, addQuote ( o.value ) ] ) : []
+  const processOneParam = processParam ( path, dataDD, display )
+  const dataDDParamsA: [ string, string ][] = dataDD.displayParams ? Object.entries ( dataDD.displayParams ).map ( ( [ name, o ] ) => [ name, processOneParam ( name, o.value ) ] ) : []
   const defaultParams: [ string, string ][] = Object.entries ( display.params ).flatMap ( ( [ name, param ] ) => {
-    return param.needed === 'defaultToCamelCaseOfName' ? [ [ name, addQuote ( decamelize ( path.slice ( -1 ) + "", ' ' ) ) ] ] : []
+    return param?.needed === 'defaultToCamelCaseOfName' ? [ [ name, processOneParam ( name, decamelize ( path.slice ( -1 ) + "", ' ' ) ) ] ] : []
   } )
-  const displayParamsA: [ string, string ][] = displayParams ? Object.entries ( displayParams ).map ( ( [ name, value ] ) => [ name, addQuote ( value ) ] ) : []
+  const displayParamsA: [ string, string ][] = displayParams ? Object.entries ( displayParams ).map ( ( [ name, value ] ) => [ name, processOneParam ( name, value ) ] ) : []
   const fullDisplayParams = Object.entries ( Object.fromEntries ( [ ...defaultParams, ...dataDDParamsA, ...displayParamsA ] ) )
   const displayParamsString = fullDisplayParams.map ( ( [ k, v ] ) => `${k}=${v}` ).join ( " " )
 
@@ -138,7 +162,7 @@ export function createAllReactComponents<B> ( params: TSParams, transformButtons
     `import { RestButton } from "./copied/rest";`,
     `import { ListNextButton, ListPrevButton } from "./copied/listNextPrevButtons";`,
     `import { PageSelectionAndRestCommandsContext } from '@focuson/focuson';`,
-    `import {  focusedPage, focusedPageWithExtraState,  ModalButton, ModalCancelButton, ModalCommitButton} from "@focuson/pages";`,
+    `import {  focusedPage, focusedPageWithExtraState,  ModalButton, ModalCancelButton, ModalCommitButton, fullState,pageState} from "@focuson/pages";`,
     `import { Context, FocusedProps } from "./${params.commonFile}";`,
     `import { Lenses } from '@focuson/lens';`,
     `import { Guard } from "./copied/guard";`
@@ -146,7 +170,7 @@ export function createAllReactComponents<B> ( params: TSParams, transformButtons
   let pageDomain = noExtension ( params.pageDomainsFile );
   let domain = noExtension ( params.domainsFile );
   const pageDomainsImports = pages.filter ( p => p.pageType === 'MainPage' ).map ( p => `import {${pageDomainName ( p )}} from "./${pageDomain}";` )
-  const domainImports = sortedEntries ( dataDsIn ( pages ) ).map ( ( [ name, d ] ) => `import {${domainName ( d )}} from "./${domain}"` )
+  const domainImports = sortedEntries ( dataDsIn ( pages ) ).map ( ( [ name, dataD ] ) => `import {${domainName ( dataD )}} from "./${domain}"` )
   return [ ...imports, ...makeComponentImports ( pages ), ...pageDomainsImports, ...domainImports, ...pageComponents, ...dataComponents ]
 }
 

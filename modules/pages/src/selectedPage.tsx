@@ -1,6 +1,6 @@
 import { LensProps, LensState } from "@focuson/state";
 
-import { currentPageSelection, PageMode, PageSelection, PageSelectionContext } from "./pageSelection";
+import { currentPageSelection, HasPageSelectionLens, mainPage, PageMode, PageSelection, PageSelectionContext } from "./pageSelection";
 import { FocusedPage } from "./focusedPage";
 import { isMainPageDetails, OnePageDetails, PageConfig } from "./pageConfig";
 import { DefaultTemplate, PageTemplateProps } from "./PageTemplate";
@@ -29,6 +29,16 @@ function findSelectedPageDetails<S, Context extends PageSelectionContext<S>> ( s
   return selectedPageData.map ( findOneSelectedPageDetails ( state ) )
 }
 
+export function fullState<S, T, C> ( ls: LensState<S, T, C> ): LensState<S, S, C> {
+  return ls.copyWithLens ( Lenses.identity () )
+}
+export function pageState<S, T, C extends HasPageSelectionLens<S>> ( ls: LensState<S, T, C> ): LensState<S, any, C> {
+  let ps = mainPage ( ls )
+  if ( !ps ) throw new Error ( 'no selected page' )
+  // @ts-ignore
+  return fullState ( ls ).focusOn ( ps.pageName )
+}
+
 export function lensForPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> ( page: OnePageDetails<S, D, Msgs, Config, Context>, base?: string[] ): Optional<S, any> {
   return isMainPageDetails ( page ) ? page.lens : Lenses.fromPath ( safeArray ( base ) )
 }
@@ -41,7 +51,7 @@ export const findOneSelectedPageDetails = <S, Context extends PageSelectionConte
   if ( !page ) throw Error ( `Cannot find page with name ${pageName}, legal Values are [${Object.keys ( pages ).join ( "," )}]` )
   const { config, pageFunction } = page
 
-  const lsForPage = state.copyWithLens( lensForPageDetails ( page, focusOn ) )
+  const lsForPage = state.copyWithLens ( lensForPageDetails ( page, focusOn ) )
 
   if ( debug ) console.log ( "findOneSelectedPageDetails.pageFunction", pageFunction )
   if ( typeof pageFunction === 'function' ) {// this is for legacy support

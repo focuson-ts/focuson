@@ -29,7 +29,6 @@ export interface RestOnCommit {
 }
 
 
-
 export interface ButtonDefnInPage {
   [ name: string ]: AllButtonsInPage
 }

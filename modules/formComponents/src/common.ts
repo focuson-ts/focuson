@@ -4,8 +4,9 @@ import { PageMode } from "@focuson/pages";
 
 export interface CommonComponentProps {
   id?: string;
+  name?: string;
   ariaLabel?: string;
-  mode?: PageMode
+  mode?: PageMode;
 }
 
 

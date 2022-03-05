@@ -1,7 +1,8 @@
 import { ContactTitle, CustomerStatus, EmploymentType, HowOften, YesNo } from "./occupationAndIncome.domain";
 import { DataD, DateDD, IntegerDD, MoneyDD, OneLineStringDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
-import { CurrentSelectedItem, DisplayCompD, TableCD } from "../../common/componentsD";
+import { SelectedItemCD, DisplayCompD, TableCD } from "../../common/componentsD";
 import { ComponentData } from "../../codegen/makeComponents";
+import { OccupationIncomeDetailsDD } from "ExampleApp/src/render";
 
 
 /* ---------------- OTHER SOURCES OF INCOME START ---------------- */
@@ -200,10 +201,10 @@ export const occupationIncomeDetailsDD: DataD = {
 
 export const customerOccupationIncomeDetailsDD: RepeatingDataD = {
     paged: false,
-    display: TableCD, // TODO create a component that does not display nothing
+    display: SelectedItemCD, // TODO create a component that does not display nothing
     name: "CustomerOccupationIncomeDetailsDD",
     description: "This is a summary customer occupations data",
-    displayParams: { order: { value: [ 'areYou', 'occupation' ] } },
+    displayParams: { index: { value: [ 'selectedItem' ] }, display: {value: occupationIncomeDetailsDD.name} },
     dataDD: occupationIncomeDetailsDD
 }
 export const occupationAndIncomeDetailsDD: DataD = {
