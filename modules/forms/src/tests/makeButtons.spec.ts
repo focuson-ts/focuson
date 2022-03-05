@@ -8,17 +8,18 @@ import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncomeDeta
 describe ( "makeButtons", () => {
   it ( "should generate a tsx line using that button", () => {
     expect ( makeButtonsFrom ( paramsForTest, transformButtons, EAccountsSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "  <ModalAndCopyButton id='amendExistingPlan' text='amendExistingPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={['EAccountsSummary','tempCreatePlan']}  from={fullState.focusOn('fromApi').focusOn('createPlan')}   pageMode='edit'   rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'update','path':['EAccountsSummary']}} />",
-      "  <ModalButton id='createNewPlan' text='createNewPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={['EAccountsSummary','tempCreatePlan']} createEmpty={empty.emptyCreatePlanDD}  pageMode='create'   rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'create','path':['EAccountsSummary']}} />",
+      "  <ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  focusOn={['EAccountsSummary','tempCreatePlan']} copyFrom={['EAccountsSummary','fromApi','createPlan']}    pageMode='edit'   rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'update','path':['EAccountsSummary']}} />",
+      "  <ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  focusOn={['EAccountsSummary','tempCreatePlan']}  createEmpty={empty.emptyCreatePlanDD}   pageMode='create'   rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'create','path':['EAccountsSummary']}} />",
       "  <RestButton id='deleteExistingPlan' state={state} />",
       "  <button>refresh of type ResetStateButton cannot be created yet</button>"
     ])
   } )
   it ("should create modal buttons with copy on close", () =>{
     expect ( makeButtonsFrom ( paramsForTest, transformButtons, OccupationAndIncomeSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "  <ModalButton id='addEntry' text='addEntry' modal = 'OccupationIncomeModalPD'  to={fullState.focusOn('temp')} base={['OccupationAndIncomeSummary','temp']} createEmpty={empty.emptyOccupationIncomeDetailsDD}  pageMode='create' copyOnClose={['here']}  />",
-      "  <button id='nextOccupation' title='Next' />",
-      "  <button id='previousOccupation' title='Prev' />"
+      "  <ModalButton id='addEntry' text='addEntry'  state={state} modal = 'OccupationIncomeModalPD'  focusOn={['OccupationAndIncomeSummary','temp']}  copyOnClose={['OccupationAndIncomeSummary','fromApi','customerOccupationIncomeDetails','[append]']}createEmpty={empty.emptyOccupationIncomeDetailsDD}  setToLengthOnClose={{'array':['OccupationAndIncomeSummary','fromApi','customerOccupationIncomeDetails'],'variable':['OccupationAndIncomeSummary','selectedItem']}} pageMode='create'   />",
+      "  <ModalButton id='edit' text='edit'  state={state} modal = 'OccupationIncomeModalPD'  focusOn={['OccupationAndIncomeSummary','temp']} copyFrom={['OccupationAndIncomeSummary','fromApi','customerOccupationIncomeDetails','{selectedItem}']} copyOnClose={['OccupationAndIncomeSummary','fromApi','customerOccupationIncomeDetails','{selectedItem}']}   pageMode='edit'   />",
+      "  <ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />",
+      "  <ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />"
     ])
   })
 
