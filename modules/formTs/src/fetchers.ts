@@ -2,12 +2,12 @@ import * as pageDomains from './pageDomains';
 import * as domains from './domains';
 import * as common from './common';
 import { FetcherTree,  } from "@focuson/fetcher";
-import { HasTagHolder, NameAndLens } from "@focuson/template";
+import { HasTagHolder } from "@focuson/template";
 import { HasPageSelection } from "@focuson/pages";
 import { HasSimpleMessages, SimpleMessage } from '@focuson/utils';
 import { pageAndTagFetcher } from "@focuson/focuson";
 import { commonIds, identityL } from './common';
-import { Optional, Lenses } from '@focuson/lens';
+import { Optional, Lenses, NameAndLens} from '@focuson/lens';
 //fetcher type get
 export function OccupationAndIncomeDetailsDDFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<S, pageDomains.OccupationAndIncomeSummaryPageDomain>,commonIds: NameAndLens<S>) {
   return pageAndTagFetcher<S, pageDomains.OccupationAndIncomeSummaryPageDomain, domains.OccupationAndIncomeDetailsDDDomain, SimpleMessage>(

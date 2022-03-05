@@ -250,7 +250,7 @@ export class Lenses {
     return path.reduce ( ( acc, p ) => {
       if ( p === '[last]' ) return acc.chain ( Lenses.last () );
       if ( p === '[append]' ) return acc.chain ( Lenses.append () );
-      const matchRef = /^{([a-z0-9]+)}$/g.exec ( p )
+      const matchRef = /^{([a-zA-Z0-9]+)}$/g.exec ( p )
       if ( matchRef ) return Lenses.chainNthRef ( acc, ref, matchRef[ 1 ] )
       const matchNum = /^\[([0-9]+)]$/g.exec ( p )
       if ( matchNum ) return acc.chain ( Lenses.nth ( Number.parseInt ( matchNum[ 1 ] ) ) )

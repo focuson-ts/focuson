@@ -1,9 +1,8 @@
 import { OneRestDetails, RestDetails } from "@focuson/rest"
-import { NameAndLens } from "@focuson/template"
 import * as pageDomains from "./pageDomains"
 import * as domains from "./domains"
 import { createSimpleMessage, DateFn, defaultDateFn, SimpleMessage } from "@focuson/utils"
-import { Lenses } from "@focuson/lens"
+import { Lenses, NameAndLens} from "@focuson/lens"
 import { commonIds, FState } from "./common";
 
 export function OccupationAndIncomeSummary_OccupationAndIncomeDetailsDDRestDetails<S> ( cd: NameAndLens<S>, dateFn: DateFn  ): OneRestDetails<S, pageDomains.OccupationAndIncomeSummaryPageDomain, domains.OccupationAndIncomeDetailsDDDomain, SimpleMessage> {

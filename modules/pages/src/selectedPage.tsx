@@ -41,7 +41,7 @@ export const findOneSelectedPageDetails = <S, Context extends PageSelectionConte
   if ( !page ) throw Error ( `Cannot find page with name ${pageName}, legal Values are [${Object.keys ( pages ).join ( "," )}]` )
   const { config, pageFunction } = page
 
-  const lsForPage = state.chainLens ( lensForPageDetails ( page, focusOn ) )
+  const lsForPage = state.copyWithLens( lensForPageDetails ( page, focusOn ) )
 
   if ( debug ) console.log ( "findOneSelectedPageDetails.pageFunction", pageFunction )
   if ( typeof pageFunction === 'function' ) {// this is for legacy support

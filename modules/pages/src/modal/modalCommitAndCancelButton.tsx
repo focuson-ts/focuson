@@ -1,4 +1,4 @@
-import { currentPageSelectionTail, mainPage, PageSelection, PageSelectionContext, popPage } from "../pageSelection";
+import { currentPageSelectionTail, mainPage, PageSelection, PageSelectionContext, popPage, refFromFirstPage } from "../pageSelection";
 import { LensProps } from "@focuson/state";
 import { safeArray } from "@focuson/utils";
 import { GetNameFn, Lenses, Transform } from "@focuson/lens";
@@ -19,17 +19,32 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
     const lastPage = currentPageSelectionTail ( state )
     const rest = lastPage?.rest;
     const copyOnClose = lastPage?.copyOnClose
-    const ref: GetNameFn<S, any> = name => Lenses.fromPath ( [ firstPage.pageName, name ] )
+    const lookup = ( name: string ) => refFromFirstPage ( state.context.pageSelectionL ) ( name ).getOption ( state.main );
+    const fromPath = Lenses.fromPathWith<S, any> ( lookup )
+    const fromLens = fromPath ( safeArray ( lastPage.focusOn ) )
+
+    const setToLengthOnCloseArrayL = fromPath ( safeArray ( lastPage?.setToLengthOnClose?.array ) )
+    const setToLengthOnCloseVariableL = fromPath ( safeArray ( lastPage?.setToLengthOnClose?.variable ) )
+    const setToLengthOnCloseTx: Transform<S, any>[] = lastPage?.setToLengthOnClose ?
+      [ [ setToLengthOnCloseVariableL, () => {
+        let length = setToLengthOnCloseArrayL.getOption ( state.main )?.length;
+        console.log ( 'setToLengthOnCloseTx', 'array', setToLengthOnCloseArrayL.description, 'var', setToLengthOnCloseVariableL.description, length )
+        return length;
+      } ] ] : []
 
     const pageTransformer: Transform<S, any> = [ state.context.pageSelectionL, ( ps: PageSelection[] ) => ps.slice ( 0, -1 ) ]
     const restTransformers: Transform<S, any>[] = rest ? [ [ state.context.restL, ( ps: RestCommand[] ) => [ ...safeArray ( ps ), rest ] ] ] : []
-    const copyOnCloseTransforms: Transform<S, any>[] = copyOnClose ? [ [ Lenses.fromPathWith<S, any> ( ref ) ( [ firstPage.pageName, ...copyOnClose ] ), ( old: any ) => {
-      const fromLens = Lenses.fromPath ( [ firstPage.pageName, ...safeArray ( lastPage.focusOn ) ] )
-      console.log ( 'copyOnCLose', fromLens.description, '===>', copyOnClose )
-      return fromLens.getOption ( state.main )
-    } ] ] : []
+
+    const copyOnCloseTransforms: Transform<S, any>[] =
+            copyOnClose ? [
+              [ fromPath ( copyOnClose ),
+                ( old: any ) => {
+                  console.log ( 'copyOnCLose', fromLens.description, '===>', copyOnClose, fromPath ( copyOnClose ).description )
+                  return fromLens.getOption ( state.main )
+                } ] ] : []
+
     if ( lastPage ) {
-      state.massTransform ( pageTransformer, ...restTransformers, ...copyOnCloseTransforms )
+      state.massTransform ( pageTransformer, ...restTransformers, ...copyOnCloseTransforms, ...setToLengthOnCloseTx )
     } else
       console.error ( 'ModalCommit button called and bad state.', lastPage )
   }

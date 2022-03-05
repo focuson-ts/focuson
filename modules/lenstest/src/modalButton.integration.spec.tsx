@@ -274,5 +274,5 @@ it ( "should create empty, then copy back with a rest command", () => {
     "restCommands": [ { "name": "restName", "path": [ "some", "path" ], "restAction": "update" } ]
   } )
 } )
-describe ( "with nested lists of data", () => {
-} )
+// describe ( "with nested lists of data", () => {
+// } )

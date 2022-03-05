@@ -27,11 +27,10 @@ export const makeRest = <B> ( params: TSParams, p: PageD <B> ) => ( r: RestDefnI
 export function makeRestImports (params: TSParams) {
   return [
     `import { OneRestDetails, RestDetails } from "@focuson/rest"`,
-    `import { NameAndLens } from "@focuson/template"`,
     `import * as pageDomains from "./pageDomains"`,
     `import * as domains from "./domains"`,
     `import { createSimpleMessage, DateFn, defaultDateFn, SimpleMessage } from "@focuson/utils"`,
-    `import { Lenses } from "@focuson/lens"`,
+    `import { Lenses, NameAndLens} from "@focuson/lens"`,
     `import { commonIds, ${params.stateName} } from "./${params.commonFile}";`,
     `` ]
 }

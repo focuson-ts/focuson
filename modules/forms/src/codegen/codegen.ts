@@ -29,6 +29,10 @@ export const focusOnFor = ( path: string[] ) => path.map ( p => `.focusOn('${p}'
 export function opt ( name: string, p: string | undefined ) {
   return p ? `${name}='${p}'` : ''
 }
+
+export function optT<T> ( name: string, p: T | undefined ) {
+  return p ? `${name}={${JSON.stringify(p)}}` : ''
+}
 export const makeSimpleButton: ButtonCreator<ModalButtonInPage> = ( { name, button } ) =>
   `          <${button.control} id='${name}' state={state} />`;
 

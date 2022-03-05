@@ -63,12 +63,12 @@ export function makeFetchersImport ( params: TSParams ): string[] {
   return [
     ...imports ( params.pageDomainsFile, params.domainsFile, params.commonFile ),
     `import { FetcherTree,  } from "@focuson/fetcher";`,
-    `import { HasTagHolder, NameAndLens } from "@focuson/template";`,
+    `import { HasTagHolder } from "@focuson/template";`,
     `import { HasPageSelection } from "@focuson/pages";`,
     `import { HasSimpleMessages, SimpleMessage } from '@focuson/utils';`,
     `import { pageAndTagFetcher } from "@focuson/focuson";`,
     `import { commonIds, identityL } from './${params.commonFile}';`,
-    `import { Optional, Lenses } from '@focuson/lens';`
+    `import { Optional, Lenses, NameAndLens} from '@focuson/lens';`
 
   ]
 }

@@ -59,7 +59,7 @@ export const ChequeCreditbooksPD: PageD<AllButtonsInPage> = {
     payingInBook: { control: 'ResetStateButton' },//, target: ['checkBookOrPayingInBook'], value : 'payingIn'},
     orderNewBook: {
       control: 'ModalButton', modal: OrderChequeBookOrPayingInModalPD, mode: 'create',
-      to: [ 'tempCreatePlan' ],//not type checked here... should be type checked in target
+      focusOn: [ 'tempCreatePlan' ],//not type checked here... should be type checked in target
       createEmpty: ChequeCreditbooksHistoryLineDD,
       restOnCommit: { rest: chequeCreditBooksRestD, action: 'create', result: 'refresh', target: [ 'tempCreatePlan' ] }
     }

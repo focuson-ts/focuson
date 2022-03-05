@@ -58,17 +58,18 @@ export const OccupationAndIncomeSummaryPD: PageD<AllButtonsInPage> = {
     //questions: how do we know which is the existing plan... is there a list? are we an entry in the list? do we need to navigate to it?
     addEntry: {
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'create',
+      focusOn: [ 'temp' ],
       createEmpty: occupationIncomeDetailsDD,
-      to: [ 'temp' ],
-      copyOnClose: [ 'here' ]
+      setToLengthOnClose : {variable: ['selectedItem'],array:['fromApi','customerOccupationIncomeDetails']},
+      copyOnClose: [ 'fromApi','customerOccupationIncomeDetails','[append]' ]
       // restOnCommit: { rest: occupationAndIncomeRD, action: 'update', result: 'refresh', target: [ '' ] }
     },
-    view: {
-      control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'view',
-      // createEmpty: occupationIncomeDetailsDD,
-      to: [  'temp' ]
-      // mutateOnClose:[{ type: 'addToEndOfList',  value: [ 'selectedItem' ], list: [ 'fromApi', 'customerOccupationIncomeDetails' ]} ]
-      // restOnCommit: { rest: occupationAndIncomeRD, action: 'update', result: 'refresh', target: [ '' ] }
+    edit: {
+      control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'edit',
+      focusOn: [  'temp' ],
+
+      copyFrom: ['fromApi','customerOccupationIncomeDetails','{selectedItem}'],
+      copyOnClose: [ 'fromApi','customerOccupationIncomeDetails','{selectedItem}' ]
     },
 
     //questions: how do we know which is the existing plan... is there a list? are we an entry in the list? do we need to navigate to it?

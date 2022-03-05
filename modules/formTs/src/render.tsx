@@ -6,7 +6,7 @@ import { Layout } from "./copied/layout";
 import { RestButton } from "./copied/rest";
 import { ListNextButton, ListPrevButton } from "./copied/listNextPrevButtons";
 import { PageSelectionAndRestCommandsContext } from '@focuson/focuson';
-import {  focusedPage, focusedPageWithExtraState, ModalAndCopyButton, ModalButton, ModalCancelButton, ModalCommitButton} from "@focuson/pages";
+import {  focusedPage, focusedPageWithExtraState,  ModalButton, ModalCancelButton, ModalCommitButton} from "@focuson/pages";
 import { Context, FocusedProps } from "./common";
 import { Lenses } from '@focuson/lens';
 import { Guard } from "./copied/guard";
@@ -35,10 +35,10 @@ export function OccupationAndIncomeSummaryPage<S, Context extends PageSelectionA
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[1][3,3][5]'>
      <OccupationAndIncomeDetailsDD state={state}  mode={mode} />
-     <ModalButton id='addEntry' text='addEntry' modal = 'OccupationIncomeModalPD'  to={fullState.focusOn('temp')} base={["OccupationAndIncomeSummary","temp"]} createEmpty={empty.emptyOccupationIncomeDetailsDD}  pageMode='create' copyOnClose={["here"]}  />
+     <ModalButton id='addEntry' text='addEntry'  state={state} modal = 'OccupationIncomeModalPD'  focusOn={["OccupationAndIncomeSummary","temp"]}  copyOnClose={["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails","[append]"]}createEmpty={empty.emptyOccupationIncomeDetailsDD}  setToLengthOnClose={{"array":["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails"],"variable":["OccupationAndIncomeSummary","selectedItem"]}} pageMode='create'   />
+     <ModalButton id='edit' text='edit'  state={state} modal = 'OccupationIncomeModalPD'  focusOn={["OccupationAndIncomeSummary","temp"]} copyFrom={["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails","{selectedItem}"]} copyOnClose={["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails","{selectedItem}"]}   pageMode='edit'   />
      <ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />
      <ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />
-     <ModalButton id='view' text='view' modal = 'OccupationIncomeModalPD'  to={fullState.focusOn('temp')} base={["OccupationAndIncomeSummary","temp"]}   pageMode='view'   />
    </Layout>)})}
 
 export function OccupationIncomeModalPDPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){
@@ -55,8 +55,8 @@ export function EAccountsSummaryPage<S, Context extends PageSelectionAndRestComm
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[1][3,3][5]'>
      <EAccountsSummaryDD state={state}  mode={mode} />
-     <ModalAndCopyButton id='amendExistingPlan' text='amendExistingPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={["EAccountsSummary","tempCreatePlan"]}  from={fullState.focusOn('fromApi').focusOn('createPlan')}   pageMode='edit'   rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"update","path":["EAccountsSummary"]}} />
-     <ModalButton id='createNewPlan' text='createNewPlan' modal = 'CreatePlan'  to={fullState.focusOn('tempCreatePlan')} base={["EAccountsSummary","tempCreatePlan"]} createEmpty={empty.emptyCreatePlanDD}  pageMode='create'   rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"create","path":["EAccountsSummary"]}} />
+     <ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  focusOn={["EAccountsSummary","tempCreatePlan"]} copyFrom={["EAccountsSummary","fromApi","createPlan"]}    pageMode='edit'   rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"update","path":["EAccountsSummary"]}} />
+     <ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  focusOn={["EAccountsSummary","tempCreatePlan"]}  createEmpty={empty.emptyCreatePlanDD}   pageMode='create'   rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"create","path":["EAccountsSummary"]}} />
      <RestButton id='deleteExistingPlan' state={state} />
      <button>refresh of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
@@ -96,7 +96,7 @@ export function ChequeCreditbooksPage<S, Context extends PageSelectionAndRestCom
   return (<Layout  details='[1][2][2]'>
      <ChequeCreditbooksDD state={state}  mode={mode} />
      <button>chequeBook of type ResetStateButton cannot be created yet</button>
-     <ModalButton id='orderNewBook' text='orderNewBook' modal = 'OrderChequeBookOrPayingInModal'  to={fullState.focusOn('tempCreatePlan')} base={["ChequeCreditbooks","tempCreatePlan"]} createEmpty={empty.emptyChequeCreditbooksHistoryLineDD}  pageMode='create'   rest={{"name":"ChequeCreditbooks_ChequeCreditbooksDDRestDetails","restAction":"create","path":["tempCreatePlan"]}} />
+     <ModalButton id='orderNewBook' text='orderNewBook'  state={state} modal = 'OrderChequeBookOrPayingInModal'  focusOn={["ChequeCreditbooks","tempCreatePlan"]}  createEmpty={empty.emptyChequeCreditbooksHistoryLineDD}   pageMode='create'   rest={{"name":"ChequeCreditbooks_ChequeCreditbooksDDRestDetails","restAction":"create","path":["tempCreatePlan"]}} />
      <button>payingInBook of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 
