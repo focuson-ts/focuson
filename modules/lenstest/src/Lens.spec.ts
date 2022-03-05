@@ -62,11 +62,11 @@ describe ( "Lens", () => {
       expect ( Lenses.last ().setOption ( abc, 'd' ) ).toEqual ( [ 'a', 'b', 'd' ] )
     } )
   } )
-  describe ( "lens.next", () => {
+  describe ( "lens.append", () => {
     let abc = [ 'a', 'b', 'c' ];
     it ( "should access the last item", () => {
-      expect ( Lenses.next ().getOption ( abc ) ).toEqual ( undefined )
-      expect ( Lenses.next ().setOption ( abc, 'd' ) ).toEqual ( [ 'a', 'b', 'c', 'd' ] )
+      expect ( Lenses.append ().getOption ( abc ) ).toEqual ( undefined )
+      expect ( Lenses.append ().setOption ( abc, 'd' ) ).toEqual ( [ 'a', 'b', 'c', 'd' ] )
     } )
   } )
   describe ( "lens.nth", () => {

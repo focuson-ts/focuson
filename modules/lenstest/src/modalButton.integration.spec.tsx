@@ -224,9 +224,9 @@ describe ( "with lists of data", () => {
   it ( "should copy from {index}", () => {
     var remembered: any = {}
     const button = displayAndGetButton ( listS, s => remembered = s, state =>
-      <ModalButton text='someTitle' id='someId' state={state} copyFrom={[ 'list', ' {index}' ]} focusOn={[ 'temp' ]} modal={'someModal'} pageMode='view'/> )
+      <ModalButton text='someTitle' id='someId' state={state} copyFrom={[ 'list', '{index}' ]} focusOn={[ 'temp' ]} modal={'someModal'} pageMode='view'/> )
     button.simulate ( 'click' )
-    expect ( remembered.mainPage.temp ).toEqual ( { data: '2' } )
+    expect ( remembered.mainPage.temp ).toEqual ( { data: '1' } )
   } )
 
 } )

@@ -1,4 +1,4 @@
-import { identityOptics, Lens, Optional, Transform } from "@focuson/lens";
+import { GetNameFn, identityOptics, Lens, Lenses, Optional, Transform } from "@focuson/lens";
 import { LensState } from "@focuson/state";
 import { HasMultiPageDetails } from "./pageConfig";
 import { safeArray } from "@focuson/utils";
@@ -83,3 +83,13 @@ export function pageSelectionlens<S extends HasPageSelection> (): Lens<S, PageSe
   return identityOptics<S> ( 'state' ).focusOn ( 'pageSelection' )
 }
 
+export function refFromFirstPage<S> ( l: Optional<S, PageSelection[]> ): GetNameFn<S, any> {
+  return name => ({
+    getOption: ( s: S ) => {
+      const p = l.getOption ( s )?.[ 0 ]?.pageName
+      if ( p ) return Lenses.fromPath ( [ p, name ] ).getOption ( s )
+      return undefined
+    }
+  })
+
+}

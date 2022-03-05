@@ -245,18 +245,17 @@ export class Lenses {
     let initialValue: any = Lenses.identity<any> ( description ? description : '' );
     return path.reduce ( ( acc, p ) => acc.focusQuery ( p ), initialValue )
   }
-  static fromPathWith = <From, To> ( ref: GetNameFn<From, number> ) => ( path: string[], description?: string ): Optional<From, To> => {
+  static fromPathWith = <From, To> ( ref: ( name: string ) => any ) => ( path: string[], description?: string ): Optional<From, To> => {
     let initialValue: any = Lenses.identity<any> ( description ? description : '' );
     return path.reduce ( ( acc, p ) => {
       if ( p === '[last]' ) return acc.chain ( Lenses.last () );
-      if ( p === '[next]' ) return acc.chain ( Lenses.next () );
+      if ( p === '[append]' ) return acc.chain ( Lenses.append () );
       const matchRef = /^{([a-z0-9]+)}$/g.exec ( p )
       if ( matchRef ) return Lenses.chainNthRef ( acc, ref, matchRef[ 1 ] )
       const matchNum = /^\[([0-9]+)]$/g.exec ( p )
       if ( matchNum ) return acc.chain ( Lenses.nth ( Number.parseInt ( matchNum[ 1 ] ) ) )
       return acc.focusQuery ( p );
     }, initialValue )
-
   }
 
 
@@ -294,12 +293,12 @@ export class Lenses {
       }, '[last]' )
   }
   /** This returns a lens from an array of T to the next item of the array */
-  static next<T> (): Lens<T[], T> {
+  static append<T> (): Lens<T[], T> {
     return lens<T[], T> ( ts => undefined, ( ts, t ) => {
       let result = [ ...ts ]
       result[ ts.length ] = t;
       return result;
-    }, '[next]' )
+    }, '[append]' )
   }
 
   /** This returns a lens from an array of T to the nth member of the array */
@@ -320,13 +319,13 @@ export class Lenses {
       }, `[${n}]` )
   }
 
-  static chainNthRef<From, T> ( lens: Optional<From, T[]>, lookup: GetNameFn<From, number>, name: string, description?: string ): Optional<From, T> {
+  static chainNthRef<From, T> ( lens: Optional<From, T[]>, lookup: ( name: string ) => any, name: string, description?: string ): Optional<From, T> {
     if ( !lookup ) throw new Error ( 'lookup must not be undefined' )
     function findIndex ( f: From ): number {
-      const opt = lookup ( name )
-      if ( !opt ) throw new Error ( `nthRef of [${name}] doesn't exist.` )
-      const index = opt.getOption ( f )
-      if ( index === undefined || index < 0 ) throw new Error ( `nthRef of ${name} maps to ${index} in ${JSON.stringify ( f )}` )
+      const index = lookup ( name )
+      if ( index === undefined ) throw new Error ( `nthRef of [${name}] doesn't exist.` )
+      if ( typeof index !== 'number' ) throw new Error ( `nthRef of [${name}] has type ${typeof index} which is not a number. Value is ${index}.` )
+      if ( index < 0 ) throw new Error ( `nthRef of ${name} maps to ${index} in ${JSON.stringify ( f )}` )
       return index;
     }
     const getter = ( f: From ) => (lens.getOption ( f ))?.[ findIndex ( f ) ];

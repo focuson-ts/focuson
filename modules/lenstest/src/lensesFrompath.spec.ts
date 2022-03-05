@@ -1,5 +1,4 @@
-import { NameAnd } from "@focuson/utils";
-import { asGetNameFn, Lenses, Optional } from "@focuson/lens";
+import { Lenses } from "@focuson/lens";
 
 interface StateForLensPath {
   a: {
@@ -9,64 +8,51 @@ interface StateForLensPath {
     }
   }
 }
-const lookup: NameAnd<Optional<StateForLensPath, number>> = { n: Lenses.identity<StateForLensPath> ().focusOn ( 'a' ).focusQuery ( 'n' ) }
+// const lookup: NameAnd<Optional<StateForLensPath, number>> = { n: Lenses.identity<StateForLensPath> ().focusOn ( 'a' ).focusQuery ( 'n' ) }
 const zero: StateForLensPath = { a: { n: 0, b: { c: [ 1, 2, 3, 4, 5, ] } } }
-const two: StateForLensPath = { a: { n: 2, b: { c: [ 1, 2, 3, 4, 5, ] } } }
-const four: StateForLensPath = { a: { n: 4, b: { c: [ 1, 2, 3, 4, 5, ] } } }
-const ten: StateForLensPath = { a: { n: 10, b: { c: [ 1, 2, 3, 4, 5, ] } } }
-const minus1: StateForLensPath = { a: { n: -1, b: { c: [ 1, 2, 3, 4, 5, ] } } }
+const other: StateForLensPath = { a: { n: 10, b: { c: [ 11, 12, 13, 14, 15, ] } } }
 const abcL = Lenses.identity<StateForLensPath> ().focusOn ( 'a' ).focusQuery ( 'b' ).focusQuery ( 'c' )
 
+function lookup ( name: string ) {
+  expect ( name ).toEqual ( 'n' )
+  return 3
+}
 describe ( "lenses.fromPathFor", () => {
   it ( "should return a lens interpreting {n} as 'find the look up for n and get the value from there", () => {
-    const lens = Lenses.fromPathWith <StateForLensPath, number> ( asGetNameFn ( lookup ) ) ( [ 'a', 'b', 'c', '{n}' ] )
+    const lens = Lenses.fromPathWith <StateForLensPath, number> ( lookup ) ( [ 'a', 'b', 'c', '{n}' ] )
+    expect ( lens.getOption ( zero ) ).toEqual ( 4 )
+    expect ( lens.setOption ( zero, 9 ) ).toEqual ( { a: { n: 0, b: { c: [ 1, 2, 3, 9, 5 ] } } } )
+
+    expect ( lens.getOption ( other ) ).toEqual ( 14 )
+    expect ( lens.setOption ( other, 9 ) ).toEqual ( { a: { n: 10, b: { c: [ 11, 12, 13, 9, 15 ] } } } )
+
     expect ( lens.description ).toEqual ( 'I.focus?(a).focus?(b).focus?(c).{n}' )
-    expect ( lens.getOption ( zero ) ).toEqual ( 1 )
-    expect ( lens.getOption ( two ) ).toEqual ( 3 )
-    expect ( lens.getOption ( four ) ).toEqual ( 5 )
-    expect ( lens.getOption ( ten ) ).toEqual ( undefined )
-
-    expect ( lens.setOption ( zero, 9 ) ).toEqual ( { a: { n: 0, b: { c: [ 9, 2, 3, 4, 5 ] } } } )
-    expect ( lens.setOption ( two, 9 ) ).toEqual ( { a: { n: 2, b: { c: [ 1, 2, 9, 4, 5 ] } } } )
-    expect ( lens.setOption ( four, 9 ) ).toEqual ( { a: { n: 4, b: { c: [ 1, 2, 3, 4, 9 ] } } } )
-    expect ( lens.setOption ( ten, 9 ) ).toEqual ( { a: { n: 10, b: { c: [ 1, 2, 3, 4, 5, undefined, undefined, undefined, undefined, undefined, 9 ] } } } )
-
   } )
   it ( "should return a lens interpreting [2] as 'find the nth item", () => {
-    const lens = Lenses.fromPathWith <StateForLensPath, number> ( asGetNameFn ( lookup ) ) ( [ 'a', 'b', 'c', '[2]' ] )
-    expect ( lens.description ).toEqual ( 'I.focus?(a).focus?(b).focus?(c).chain([2])' )
+    const lens = Lenses.fromPathWith <StateForLensPath, number> ( lookup ) ( [ 'a', 'b', 'c', '[2]' ] )
     expect ( lens.getOption ( zero ) ).toEqual ( 3 )
-
     expect ( lens.setOption ( zero, 9 ) ).toEqual ( { a: { n: 0, b: { c: [ 1, 2, 9, 4, 5 ] } } } )
+    expect ( lens.description ).toEqual ( 'I.focus?(a).focus?(b).focus?(c).chain([2])' )
   } )
   it ( "should return a lens interpreting [last] as 'find the last", () => {
-    const lens = Lenses.fromPathWith <StateForLensPath, number> ( asGetNameFn ( lookup ) ) ( [ 'a', 'b', 'c', '[last]' ] )
-    expect ( lens.description ).toEqual ( 'I.focus?(a).focus?(b).focus?(c).chain([last])' )
+    const lens = Lenses.fromPathWith <StateForLensPath, number> ( lookup ) ( [ 'a', 'b', 'c', '[last]' ] )
     expect ( lens.getOption ( zero ) ).toEqual ( 5 )
-
     expect ( lens.setOption ( zero, 9 ) ).toEqual ( { a: { n: 0, b: { c: [ 1, 2, 3, 4, 9 ] } } } )
+    expect ( lens.description ).toEqual ( 'I.focus?(a).focus?(b).focus?(c).chain([last])' )
   } )
-  it ( "should return a lens interpreting [next] as 'find the next item in the array", () => {
-    const lens = Lenses.fromPathWith <StateForLensPath, number> ( asGetNameFn ( lookup ) ) ( [ 'a', 'b', 'c', '[next]' ] )
-    expect ( lens.description ).toEqual ( 'I.focus?(a).focus?(b).focus?(c).chain([next])' )
+  it ( "should return a lens interpreting [append] as 'find the next item in the array", () => {
+    const lens = Lenses.fromPathWith <StateForLensPath, number> ( lookup ) ( [ 'a', 'b', 'c', '[append]' ] )
     expect ( lens.getOption ( zero ) ).toEqual ( undefined )
     expect ( lens.setOption ( zero, 9 ) ).toEqual ( { a: { n: 0, b: { c: [ 1, 2, 3, 4, 5, 9 ] } } } )
+    expect ( lens.description ).toEqual ( 'I.focus?(a).focus?(b).focus?(c).chain([append])' )
   } )
 } )
 
 describe ( "nthRef", () => {
-  it ( "hwould return a lens into the nth item of an array, where N is controlled by data", () => {
-    const lens = Lenses.chainNthRef ( abcL, asGetNameFn ( lookup ), 'n' )
-    expect ( lens.getOption ( zero ) ).toEqual ( 1 )
-    expect ( lens.getOption ( two ) ).toEqual ( 3 )
-    expect ( lens.getOption ( four ) ).toEqual ( 5 )
-    expect ( lens.getOption ( ten ) ).toEqual ( undefined )
-
-    expect ( lens.setOption ( zero, 9 ) ).toEqual ( { a: { n: 0, b: { c: [ 9, 2, 3, 4, 5 ] } } } )
-    expect ( lens.setOption ( two, 9 ) ).toEqual ( { a: { n: 2, b: { c: [ 1, 2, 9, 4, 5 ] } } } )
-    expect ( lens.setOption ( four, 9 ) ).toEqual ( { a: { n: 4, b: { c: [ 1, 2, 3, 4, 9 ] } } } )
-    expect ( lens.setOption ( ten, 9 ) ).toEqual ( { a: { n: 10, b: { c: [ 1, 2, 3, 4, 5, undefined, undefined, undefined, undefined, undefined, 9 ] } } } )
-
+  it ( "should return a lens into the nth item of an array, where where the nth comes from some function", () => {
+    const lens = Lenses.chainNthRef ( abcL, lookup, 'n' )
+    expect ( lens.getOption ( other ) ).toEqual ( 14 )
+    expect ( lens.setOption ( other, 9 ) ).toEqual ( { a: { n: 10, b: { c: [ 11, 12, 13, 9, 15 ] } } } )
     expect ( lens.description ).toEqual ( 'I.focusOn(a).focus?(b).focus?(c).{n}' )
   } )
 } )
