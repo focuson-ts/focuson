@@ -18,7 +18,7 @@ export interface SetJsonReasonForComponent {
 export function reasonFor ( component: string, event: SetJsonReasonEvent, id?: string, comment?: string ): SetJsonReasonForComponent {
   return ({ component, id, event, comment })
 }
-export const lensState = <Main, Context> ( main: Main, setMain: ( m: Main ) => void, description: string, context: Context ): LensState<Main, Main, Context> =>
+export const lensState = <Main, Context> ( main: Main, setMain: ( m: Main, reason: any ) => void, description: string, context: Context ): LensState<Main, Main, Context> =>
   new LensState ( main, setMain, Lenses.identity<Main> ().withDescription ( description ), context );
 
 export function defineState<Main, T, Context> ( state: LensState<Main, T | undefined, Context> ): LensState<Main, T, Context> {
