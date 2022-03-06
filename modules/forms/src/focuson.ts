@@ -5,7 +5,7 @@ import { CreateEAccountPageD } from "./example/createEAccount/createEAccount.pag
 import { CreatePlanPD } from "./example/eAccounts/createPlanPD";
 import { ChequeCreditbooksPD, OrderChequeBookOrPayingInModalPD } from "./example/chequeCreditBooks/chequeCreditBooks.pageD";
 import { OccupationAndIncomeSummaryPD, occupationIncomeModalPD } from "./example/occupationAndIncomeDetails/occupationAndIncome.pageD";
-import { generate } from "./generate";
+import { generate } from "./makeFiles/generate";
 
 let pages = [ OccupationAndIncomeSummaryPD, occupationIncomeModalPD,
   EAccountsSummaryPD, CreatePlanPD, ETransferPageD,

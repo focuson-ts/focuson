@@ -69,6 +69,6 @@ setJson ( {
   debug: { restDebug: true }
 
   // currentSelectedModalPage: 'EAccountsSummary_CreatePlan'
-} )
+}, 'initial')
 
 

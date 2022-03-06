@@ -1,4 +1,4 @@
-package a.b;
+package focuson.data;
 
 import au.com.dius.pact.provider.junit.PactRunner;
 import au.com.dius.pact.provider.junit.target.HttpTarget;
@@ -13,9 +13,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(PactRunner.class)
-@Provider("ChequeCreditbooksDDProvider")
+@Provider("CreatePlanDDProvider")
 @PactFolder("acceptedPacts")
-public class ChequeCreditbooksDDProviderProviderPactTest {
+public class CreatePlanDDProviderProviderPactTest {
 
     @State(value = {"default"})
     public void configureState() {

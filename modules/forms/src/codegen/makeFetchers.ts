@@ -6,7 +6,7 @@ import { addStringToEndOfAllButLast, imports, noExtension } from "./codegen";
 import { findIds } from "../common/restD";
 
 
-export const makeFetcherCode = ( params: CombinedParams ) => <B> ( p: PageD<B> ) => ( def: RestDefnInPageProperties ): string[] => {
+export const makeFetcherCode = ( params: TSParams ) => <B> ( p: PageD<B> ) => ( def: RestDefnInPageProperties ): string[] => {
   const pageDomain = noExtension ( params.pageDomainsFile )
   const domain = noExtension ( params.domainsFile )
   const common = noExtension ( params.commonFile )
@@ -51,7 +51,7 @@ export function findAllFetchers<B> ( ps: PageD<B>[] ): [ PageD<B>, RestDefnInPag
   } ) )
 }
 
-export const makeAllFetchers = <B> ( params: CombinedParams, ps: PageD<B>[] ): string[] => findAllFetchers ( ps ).flatMap ( ( [ pd, rd ] ) =>
+export const makeAllFetchers = <B> ( params: TSParams, ps: PageD<B>[] ): string[] => findAllFetchers ( ps ).flatMap ( ( [ pd, rd ] ) =>
   makeFetcherCode ( params ) ( pd ) ( rd ) );
 
 interface FetcherDataStructureParams {
@@ -72,7 +72,7 @@ export function makeFetchersImport ( params: TSParams ): string[] {
 
   ]
 }
-export function makeFetchersDataStructure<B> ( params: CombinedParams, { stateName, variableName }: FetcherDataStructureParams, ps: PageD<B>[] ): string[] {
+export function makeFetchersDataStructure<B> ( params: TSParams, { stateName, variableName }: FetcherDataStructureParams, ps: PageD<B>[] ): string[] {
   let fetchers = findAllFetchers ( ps );
   const common = noExtension ( params.commonFile )
   return [

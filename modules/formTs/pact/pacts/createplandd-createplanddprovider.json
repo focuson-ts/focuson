@@ -26,6 +26,26 @@
       }
     },
     {
+      "description": "EAccountsSummary should have a create rest for CreatePlanDD",
+      "providerState": "default",
+      "request": {
+        "method": "POST",
+        "path": "/api/createPlan/tbd",
+        "query": "accountId=accId&customerId=custId",
+        "body": "{\"createPlanStart\":\"2022-01-01\",\"createPlanDate\":\"2022-03-01\",\"createPlanEnd\":\"2022-10-01\"}"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "createPlanStart": "2022-01-01",
+          "createPlanDate": "2022-03-01",
+          "createPlanEnd": "2022-10-01"
+        }
+      }
+    },
+    {
       "description": "EAccountsSummary should have a update rest for CreatePlanDD",
       "providerState": "default",
       "request": {
@@ -52,26 +72,6 @@
         "method": "DELETE",
         "path": "/api/createPlan/tbd",
         "query": "accountId=accId&createPlanId=tbd&customerId=custId"
-      },
-      "response": {
-        "status": 200,
-        "headers": {
-        },
-        "body": {
-          "createPlanStart": "2022-01-01",
-          "createPlanDate": "2022-03-01",
-          "createPlanEnd": "2022-10-01"
-        }
-      }
-    },
-    {
-      "description": "EAccountsSummary should have a create rest for CreatePlanDD",
-      "providerState": "default",
-      "request": {
-        "method": "POST",
-        "path": "/api/createPlan/tbd",
-        "query": "accountId=accId&customerId=custId",
-        "body": "{\"createPlanStart\":\"2022-01-01\",\"createPlanDate\":\"2022-03-01\",\"createPlanEnd\":\"2022-10-01\"}"
       },
       "response": {
         "status": 200,

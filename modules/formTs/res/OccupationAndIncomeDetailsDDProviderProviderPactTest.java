@@ -1,4 +1,3 @@
-package a.b;
 
 import au.com.dius.pact.provider.junit.PactRunner;
 import au.com.dius.pact.provider.junit.target.HttpTarget;
@@ -13,9 +12,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(PactRunner.class)
-@Provider("ETransferDataDProvider")
+@Provider("OccupationAndIncomeDetailsDDProvider")
 @PactFolder("acceptedPacts")
-public class ETransferDataDProviderProviderPactTest {
+public class OccupationAndIncomeDetailsDDProviderProviderPactTest {
 
     @State(value = {"default"})
     public void configureState() {
