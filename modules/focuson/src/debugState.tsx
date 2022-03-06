@@ -1,4 +1,4 @@
-import { LensProps } from "@focuson/state";
+import { isMassTransformReason, isSetJsonReason, LensProps, MassTransformReason, SetJsonReason } from "@focuson/state";
 import { HasPageSelection, HasPageSelectionLens, isMainPageDetails } from "@focuson/pages";
 import { HasTagHolder } from "@focuson/template";
 import { HasSimpleMessages, safeArray, SimpleMessage, sortedEntries } from "@focuson/utils";
@@ -63,13 +63,51 @@ function PagesData<S extends HasPageSelection & HasTagHolder & HasSimpleMessages
   </div>
 }
 
+interface TracingProps<R> {
+  reason: R
+}
+export function MassTransformTracing ( { reason }: TracingProps<MassTransformReason> ) {
+  return <tr>
+    <td>
+      <pre>{JSON.stringify ( reason.reason, null, 2 )} </pre>
+    </td>
+    <td>
+      <ul>{reason.txLens.map ( ( [ lens, json ], i ) => <li key={lens}><b>{lens}</b><br/>
+        <pre>{JSON.stringify ( json, null, 2 )}</pre>
+      </li> )}</ul>
+    </td>
+  </tr>
+}
+export function SetJsonTracing ( { reason }: TracingProps<SetJsonReason> ) {
+  return <tr>
+    <td>
+      <pre>{JSON.stringify ( reason.reason, null, 2 )} </pre>
+    </td>
+    <td><b>{reason.lens}</b>
+      <pre>{JSON.stringify ( reason.json, null, 2 )}</pre>
+    </td>
+  </tr>
+}
+export function OneTracing ( reason: any ) {
+  if ( reason ) {
+    let r = reason.reason
+    if ( isSetJsonReason ( r ) ) return <SetJsonTracing reason={r}/>
+    if ( isMassTransformReason ( r ) ) return <MassTransformTracing reason={r}/>
+  }
+  return <tr>
+    <td colSpan={2}>{JSON.stringify ( reason, )}</td>
+  </tr>
+}
+
 export function Tracing<S, C> ( { state }: LensProps<S, any, C> ) {
   return <div><h3>Tracing</h3>
-    <ul>
-      {state.copyWithLens ( traceL<S> () ).optJsonOr ( [] ).map ( ( r, i ) => <li key={i}>{JSON.stringify ( r )}</li> )}
-    </ul>
+    <table>
+      <tbody>
+      {state.copyWithLens ( traceL<S> () ).optJsonOr ( [] ).map ( ( r, i ) =>
+        <OneTracing key={i} reason={r}/> )}
+      </tbody>
+    </table>
   </div>
-
 }
 
 interface DebugProps<S, Context> extends LensProps<S, any, Context> {
@@ -84,6 +122,8 @@ export function DebugState<S extends HasPageSelection & HasTagHolder & HasSimple
   return <div>
     <hr/>
     <h1>Debug</h1>
+    <Tracing state={state}/>
+    <hr/>
     <h3>State</h3>
     <table>
       <tbody>
@@ -96,11 +136,9 @@ export function DebugState<S extends HasPageSelection & HasTagHolder & HasSimple
         <td><Messages state={state}/></td>
         <td colSpan={2}><CommonIds {...props}/></td>
       </tr>
-      <tr>
-        <td><Tracing state={state}/></td>
-      </tr>
       </tbody>
     </table>
+    <hr/>
     <PagesData {...props} />
     <hr/>
     <h3>Context</h3>

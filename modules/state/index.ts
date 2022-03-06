@@ -35,6 +35,22 @@ function getOr<Main, Child> ( optional: Optional<Main, Child>, main: Main, error
 
 }
 
+export interface SetJsonReason {
+  reason: any;
+  json: any;
+  lens: string;
+}
+export function isSetJsonReason ( reason: any ): reason is SetJsonReason {
+  return reason.reason !== undefined && reason.json !== undefined && reason.lens !== undefined
+}
+export interface MassTransformReason {
+  reason: any;
+  txLens: [ string, any ] []; // the description of the lens and the value that will be put there.
+}
+export function isMassTransformReason ( reason: any ): reason is MassTransformReason {
+  return reason.reason !== undefined && reason.txLens !== undefined// && Array.isArray ( reason.txLens )
+}
+
 export class LensState<Main, T, Context> implements HasOptional<Main, T> {
   /** The full state. This should normally not be called by your code. */
   main: Main;
@@ -100,7 +116,8 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
       console.log ( "failure in setJson- json", json )
       throw new Error ( `Tried and failed to set Json. Lens is ${this.optional.description} json ${JSON.stringify ( json )}` )
     }
-    this.dangerouslySetMain ( result, reason )
+    const r: SetJsonReason = { reason, json, lens: this.optional.description }
+    this.dangerouslySetMain ( result, r )
   }
 
 
@@ -119,7 +136,14 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
   }
 
   massTransform ( reason: any ): ( ...ts: Transform<Main, any>[] ) => void {
-    return ( ...ts: Transform<Main, any>[] ) => this.dangerouslySetMain ( massTransform ( this.main, ...ts ), reason );
+    return ( ...ts: Transform<Main, any>[] ) => {
+      const r: MassTransformReason = ({
+        reason,
+        txLens: ts.map ( t => [ t[ 0 ].description, t[1](t[ 0 ].getOption ( this.main )) ] )
+      })
+      const newMain = ts.reduce ( ( acc, tx, i ) => tx[ 0 ].setOption ( acc, r.txLens[ i ][ 1 ] ), this.main )
+      this.dangerouslySetMain (newMain, r );
+    }
   }
 
   useOtherAsWell<T2> ( lens: Optional<Main, T2> ) {
