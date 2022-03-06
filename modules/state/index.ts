@@ -118,7 +118,9 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
     return this.addSecond ( this.optional )
   }
 
-  massTransform ( reason: any, ...ts: Transform<Main, any>[] ): void {return this.dangerouslySetMain ( massTransform ( this.main, ...ts ), reason )}
+  massTransform ( reason: any ): ( ...ts: Transform<Main, any>[] ) => void {
+    return ( ...ts: Transform<Main, any>[] ) => this.dangerouslySetMain ( massTransform ( this.main, ...ts ), reason );
+  }
 
   useOtherAsWell<T2> ( lens: Optional<Main, T2> ) {
     let parent = this

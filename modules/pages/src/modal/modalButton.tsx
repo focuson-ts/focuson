@@ -1,4 +1,4 @@
-import { LensState } from "@focuson/state";
+import { LensState, reasonFor } from "@focuson/state";
 import { HasPageSelectionLens, page, PageMode, refFromFirstPage, SetToLengthOnClose } from "../pageSelection";
 import { Lenses, Transform } from "@focuson/lens";
 import { RestCommand } from "@focuson/rest";
@@ -32,7 +32,7 @@ export function ModalButton<S extends any, Context extends HasPageSelectionLens<
     const copyFromL = fromPath ( safeArray ( copyFrom ) );
     const copyTx: Transform<S, any>[] = copyFrom ? [ [ focusOnL, ignore => copyFromL.getOption ( state.main ) ] ] : [];
     const emptyTx: Transform<S, any>[] = createEmpty ? [ [ focusOnL, ignore => createEmpty ] ] : [];
-    state.massTransform (
+    state.massTransform (reasonFor('ModalButton', 'onClick', id))(
       page<S, Context> ( state.context, 'popup', { pageName: modal, firstTime: true, pageMode, rest, focusOn: focusOn, copyOnClose, setToLengthOnClose } ),
       ...emptyTx,
       ...copyTx );

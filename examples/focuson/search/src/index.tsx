@@ -71,4 +71,4 @@ setJson ( {
   search: { query: "phil", queryResults: [] },
   debug: { selectedPageDebug: false, fetcherDebug: true },
   restCommands: []
-} )
+} , 'initialState')

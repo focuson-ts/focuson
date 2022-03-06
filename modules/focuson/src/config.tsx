@@ -1,10 +1,9 @@
 import { HasPageSelection, MultiPageDetails, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages } from "@focuson/pages";
-import { HasPostCommand, HasPostCommandLens, post, PostCommand, postCommandsL, Posters } from "@focuson/poster";
+import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
 import { FetcherTree, loadTree, wouldLoad, wouldLoadSummary } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
 import { Lens, Lenses, Optional } from "@focuson/lens";
-import { FetchFn, HasSimpleMessages } from "@focuson/utils";
-import { HasTagHolder } from "@focuson/template";
+import { FetchFn } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestDetails } from "@focuson/rest";
 
 
@@ -64,16 +63,21 @@ export interface FocusOnConfig<S, Context, MSGs> {
   fetchers: FetcherTree<S>,
 }
 
-
-export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MSGs> ( config: FocusOnConfig<S, Context, MSGs>, context: Context, publish: ( lc: LensState<S, S, Context> ) => void ): ( s: S ) => Promise<S> {
-  return async ( main: S ): Promise<S> => {
+export function traceL<S> () {
+  return Lenses.fromPath<S, string[]> ( [ 'trace' ] );
+}
+export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MSGs> ( config: FocusOnConfig<S, Context, MSGs>, context: Context, publish: ( lc: LensState<S, S, Context> ) => void ): ( s: S, reason: any ) => Promise<S> {
+  return async ( main: S, reason: any ): Promise<S> => {
+    console.log ( 'setJsonForFocusOn', reason )
     // @ts-ignore
     const debug = main.debug;
+    const withDebug = debug ? traceL<S> ().transform ( old => [ ...old ? old : [], reason ] ) ( main ) : main
     const { fetchFn, preMutate, postMutate, onError, pages, restDetails, fetchers, restL, pageL, messageL } = config
     const newStateFn = ( fs: S ) => publish ( lensState ( fs, setJsonForFocusOn ( config, context, publish ), 'setJson', context ) )
     try {
       if ( debug?.fetcherDebug ) console.log ( 'setJsonForFetchers - start', main )
-      const withPreMutate = preMutate ( main )
+      if ( debug?.fetcherDebug ) console.log ( 'setJsonForFetchers - withDebug', withDebug )
+      const withPreMutate = preMutate ( withDebug )
       const firstPageProcesses: S = preMutateForPages<S, Context> ( context ) ( withPreMutate )
       if ( debug?.fetcherDebug ) console.log ( 'setJsonForFetchers - after premutate', firstPageProcesses )
       const afterRest = await rest ( fetchFn, restDetails, messageL, restL, firstPageProcesses )

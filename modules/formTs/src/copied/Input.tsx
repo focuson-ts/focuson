@@ -1,5 +1,5 @@
 import { CommonStateProps } from "./common";
-import {LensState} from "@focuson/state";
+import {LensState, reasonFor} from "@focuson/state";
 import React from "react";
 import {TransformerProps} from "./LabelAndInput";
 import {BooleanTransformer, NumberTransformer, StringTransformer} from "./transformers";
@@ -11,22 +11,22 @@ export interface InputProps<S, T, Context> extends CommonStateProps<S, T, Contex
   enums?: NameAnd<string>
 }
 
-function onChange<S, Context, T> ( state: LensState<S, T, Context>, transformer: ( s: string ) => T, e: React.ChangeEvent<HTMLInputElement> ) {
-  state.setJson ( transformer ( e.target.value ) )
-}
-
 export const Input = <T extends any> ( tProps: TransformerProps<T> ) => {
   const { transformer, type } = tProps
-  return <S, Context> ( { state, mode, id, name, ariaLabel, defaultValue, value }: InputProps<S, T, Context> ) =>
-      <input type={type}
-             id={id}
-             readOnly= {mode === 'view'}
-             name={name}
-             value={value}
-             aria-label={ariaLabel}
-             defaultValue={defaultValue}
-             onChange={(e) => onChange(state, transformer, e)}
-      />
+  return <S, Context> ( { state, mode, id, name, ariaLabel, defaultValue, value }: InputProps<S, T, Context> ) => {
+    function onChange ( transformer: ( s: string ) => T, e: React.ChangeEvent<HTMLInputElement> ) {
+      state.setJson ( transformer ( e.target.value ), reasonFor ( 'Input', 'onChange', id ) )
+    }
+    return <input type={type}
+                  id={id}
+                  readOnly={mode === 'view'}
+                  name={name}
+                  value={value}
+                  aria-label={ariaLabel}
+                  defaultValue={defaultValue}
+                  onChange={( e ) => onChange ( transformer, e )}
+    />
+  }
 }
 
 const InputString = Input<string> ( StringTransformer )

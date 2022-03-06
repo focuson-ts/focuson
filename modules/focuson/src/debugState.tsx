@@ -3,7 +3,7 @@ import { HasPageSelection, HasPageSelectionLens, isMainPageDetails } from "@focu
 import { HasTagHolder } from "@focuson/template";
 import { HasSimpleMessages, safeArray, SimpleMessage, sortedEntries } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands } from "@focuson/rest";
-import { FocusOnConfig } from "./config";
+import { FocusOnConfig, traceL } from "./config";
 import { Lenses, NameAndLens } from "@focuson/lens";
 
 
@@ -36,7 +36,7 @@ export function Messages<S extends HasPageSelection & HasTagHolder & HasSimpleMe
 }
 export function CommonIds<S extends HasPageSelection & HasTagHolder & HasSimpleMessages & HasRestCommands,
   C extends HasPageSelectionLens<S> & HasRestCommandL<S>> ( { state, config, commonIds }: DebugProps<S, C> ) {
-  return <ul>{sortedEntries ( commonIds ).map ( ( [ n, l ] ) => <li>{n}: {l.getOption ( state.main )}</li> )}</ul>
+  return <ul>{sortedEntries ( commonIds ).map ( ( [ n, l ] ) => <li key={n}>{n}: {l.getOption ( state.main )}</li> )}</ul>
 }
 
 function PagesData<S extends HasPageSelection & HasTagHolder & HasSimpleMessages & HasRestCommands,
@@ -51,7 +51,7 @@ function PagesData<S extends HasPageSelection & HasTagHolder & HasSimpleMessages
         const lens = isMainPageDetails ( pageDetails ) ? pageDetails.lens : Lenses.fromPath ( safeArray ( page.focusOn ) )
         const title = isMainPageDetails ( pageDetails ) ? "Main" : "Modal"
         const pageData = lens.getOption ( state.main )
-        return <tr>
+        return <tr key={index}>
           <td>{title} {page.pageName} - {safeArray ( page.focusOn )}</td>
           <td>{lens?.description}</td>
           <td>
@@ -61,6 +61,15 @@ function PagesData<S extends HasPageSelection & HasTagHolder & HasSimpleMessages
       } )}</tbody>
     </table>
   </div>
+}
+
+export function Tracing<S, C> ( { state }: LensProps<S, any, C> ) {
+  return <div><h3>Tracing</h3>
+    <ul>
+      {state.copyWithLens ( traceL<S> () ).optJsonOr ( [] ).map ( ( r, i ) => <li key={i}>{JSON.stringify ( r )}</li> )}
+    </ul>
+  </div>
+
 }
 
 interface DebugProps<S, Context> extends LensProps<S, any, Context> {
@@ -85,9 +94,10 @@ export function DebugState<S extends HasPageSelection & HasTagHolder & HasSimple
       </tr>
       <tr>
         <td><Messages state={state}/></td>
-        <td  colSpan={2}><CommonIds {...props}/></td>
+        <td colSpan={2}><CommonIds {...props}/></td>
       </tr>
       <tr>
+        <td><Tracing state={state}/></td>
       </tr>
       </tbody>
     </table>

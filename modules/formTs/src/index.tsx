@@ -11,6 +11,7 @@ import { restL } from "@focuson/rest";
 import { restDetails } from "./rests";
 import { DebugState } from "@focuson/focuson";
 import { commonIds } from "../../formTs/src/common";
+
 const config: FocusOnConfig<FState, Context, SimpleMessage> = {
   /** How data is sent to/fetched from apis */
   fetchFn: fetchWithDelay ( 1000, fetchWithPrefix ( 'http://localhost:8080', loggingFetchFn ) ),
@@ -45,14 +46,14 @@ const pageModeFor: NameAnd<PageMode> = {
 let setJson = setJsonForFocusOn<FState, Context, SimpleMessage> ( config, context, ( s: LensState<FState, FState, Context> ): void =>
   ReactDOM.render ( <div>
     <IndexPage state={s}>
-  <SelectedPage state={s}/>
-</IndexPage>
-<DebugState state={s} config={config} commonIds={commonIds} />
-</div>, rootElement ) )
+      <SelectedPage state={s}/>
+    </IndexPage>
+    <DebugState state={s} config={config} commonIds={commonIds}/>
+  </div>, rootElement ) )
 setJson ( {
   ...emptyState,
   pageSelection: [ { pageName: 'OccupationAndIncomeSummary', firstTime: true, pageMode: 'view' } ],
 // @ts-ignore
   debug: { restDebug: true }
   // currentSelectedModalPage: 'EAccountsSummary_CreatePlan'
-} )
+}, 'initialState' )
