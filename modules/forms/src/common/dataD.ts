@@ -4,8 +4,6 @@
 import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndNumberInputCD, LabelAndStringInputCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeComponents";
 import { NameAnd, safeArray } from "@focuson/utils";
-import { isPrimitive } from "util";
-import { customerStatusDD } from "../example/occupationAndIncomeDetails/occupationAndIncome.dataD";
 
 export interface HasSample<T> {
   sample?: T[]

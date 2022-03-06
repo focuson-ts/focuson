@@ -1,7 +1,6 @@
 import { findAllResolvers, findChildResolvers, findQueryMutationResolvers, makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { CombinedParams } from "../codegen/config";
-import { params } from "../focuson";
 
 export const paramsForTest: CombinedParams =  {
   pagesFile: 'pages',

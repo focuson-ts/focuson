@@ -4,7 +4,7 @@ import { Iso, Lens, Lenses, NameAndLens, Optional } from '@focuson/lens';
 import { areAllDefined, arraysEqual, DateFn, HasSimpleMessages, or, SimpleMessage } from "@focuson/utils";
 
 import { defaultErrorMessage, Fetcher, ifEEqualsFetcher, loadInfo, MutateFn, OnTagFetchErrorFn, updateTagsAndMessagesOnError } from "@focuson/fetcher";
-import { partialFnUsageError } from "@focuson/fetcher/dist/src/errorhandling";
+import { partialFnUsageError } from "@focuson/fetcher";
 import { HasTagHolder,  TagHolder, tagOps, Tags, UrlConfig } from "@focuson/template";
 import { HasPageSelection, PageSelection } from "@focuson/pages";
 

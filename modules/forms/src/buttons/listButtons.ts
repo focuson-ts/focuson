@@ -1,5 +1,5 @@
 import { ButtonCreator, MakeButton } from "../codegen/makeButtons";
-import { focusOnFor, focusQueryFor, makeSimpleButton } from "../codegen/codegen";
+import { focusOnFor } from "../codegen/codegen";
 
 export interface CommonListButtonInPage {
   /** the path to the value from the root of this page's domain */

@@ -1,11 +1,9 @@
-import { HasPageSelection, pageSelectionlens } from "@focuson/pages/dist/src/pageSelection";
+import { HasPageSelection, ModalButton, ModalCommitButton, pageSelectionlens } from "@focuson/pages";
 import { HasRestCommands, restL } from "@focuson/rest";
 import { lensState, LensState } from "@focuson/state";
 import { shallow } from "enzyme";
-import { ModalButton } from "@focuson/pages/dist/src/modal/modalButton";
-import { enzymeSetup } from "@focuson/pages/dist/src/enzymeAdapterSetup";
-import { ModalCommitButton } from "@focuson/pages/dist/src/modal/modalCommitAndCancelButton";
 import { PageSelectionAndRestCommandsContext } from "@focuson/focuson";
+import { enzymeSetup } from "./enzymeAdapterSetup";
 
 enzymeSetup ()
 

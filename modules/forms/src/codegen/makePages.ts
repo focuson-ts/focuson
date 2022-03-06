@@ -1,7 +1,7 @@
 import { allMainPages, PageD } from "../common/pageD";
 import { TSParams } from "./config";
 import { modalName, pageComponentName, pageInState } from "./names";
-import { addStringToEndOfAllButLast, focusQueryFor } from "./codegen";
+import { addStringToEndOfAllButLast } from "./codegen";
 import { makeEmptyData } from "./makeSample";
 import { safeArray } from "@focuson/utils";
 

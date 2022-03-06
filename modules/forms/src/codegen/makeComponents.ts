@@ -1,15 +1,13 @@
 import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, isPrimDd, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
-import { DisplayCompD, DisplayCompParamD, OneDisplayCompParamD } from "../common/componentsD";
+import { DisplayCompD, OneDisplayCompParamD } from "../common/componentsD";
 import { dataDsIn, PageD } from "../common/pageD";
 
-import { decamelize, NameAnd, safeArray, sortedEntries } from "@focuson/utils";
+import { decamelize, NameAnd, sortedEntries } from "@focuson/utils";
 import { componentName, domainName, guardName, pageComponentName, pageDomainName } from "./names";
 import { MakeButton, makeButtonsFrom } from "./makeButtons";
 import { focusOnFor, indentList, noExtension } from "./codegen";
 import { TSParams } from "./config";
 import { unique } from "../common/restD";
-import { transformButtons } from "../buttons/allButtons";
-import { on } from "cluster";
 
 
 export type AllComponentData = ComponentData | ErrorComponentData
@@ -63,7 +61,7 @@ export const processParam = ( path: string[], dataDD: AllDataDD, dcd: DisplayCom
   }
   function processState ( prefix: string, postFix: string ) {
     if ( Array.isArray ( s ) ) return `{${prefix}${focusOnFor ( s )}${postFix}}`; else
-      throw new Error ( `${errorPrefix ()} needs to be a string[]` )
+      throw new Error ( `${errorPrefix ()} needs to be a string[]. Actually is ${typeof s}, with value ${JSON.stringify(s)}` )
   }
   if ( dcdType.paramType === 'string' ) return processStringParam ()
   if ( dcdType.paramType === 'object' ) return processObjectParam ()

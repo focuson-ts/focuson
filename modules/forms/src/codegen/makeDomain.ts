@@ -1,6 +1,6 @@
 import { AllDataDD, DataD, isDataDd, isPrimDd, isRepeatingDd, OneDataDD } from "../common/dataD";
-import { pageDomainName, domainName, hasDomainForPage } from "./names";
-import { safeArray, sortedEntries } from "@focuson/utils";
+import { domainName, hasDomainForPage, pageDomainName } from "./names";
+import { sortedEntries } from "@focuson/utils";
 import { dataDsIn, PageD } from "../common/pageD";
 import { TSParams } from "./config";
 import { imports, indentList, noExtension } from "./codegen";

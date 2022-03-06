@@ -112,7 +112,7 @@ export function OrderChequeBookOrPayingInModalPage<S, Context extends PageSelect
 
 export function ChequeCreditbooksDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, ChequeCreditbooksDDDomain,Context>){
   return(<>
-  <Table state={state.focusOn('history')} order={['serialNumber','howOrdered','dateOrder']} mode={mode} />
+  <Table state={state.focusOn('history')} order={["serialNumber","howOrdered","dateOrder"]} mode={mode} />
 </>)
 }
 
@@ -144,7 +144,7 @@ export function CreatePlanDD<S, Context extends PageSelectionAndRestCommandsCont
 export function EAccountsSummaryDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, EAccountsSummaryDDDomain,Context>){
   return(<>
   <LabelAndBooleanInput state={state.focusOn('useEStatements')} label='use e statements' mode={mode} />
-  <Table state={state.focusOn('eAccountsTable')} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} mode={mode} />
+  <Table state={state.focusOn('eAccountsTable')} order={["accountId","displayType","description","virtualBankSeq","frequency","total"]} mode={mode} />
   <LabelAndNumberInput state={state.focusOn('totalMonthlyCost')} label='total monthly cost' mode={mode} />
   <LabelAndNumberInput state={state.focusOn('oneAccountBalance')} label='one account balance' mode={mode} />
   <LabelAndNumberInput state={state.focusOn('currentAccountBalance')} label='current account balance' mode={mode} />

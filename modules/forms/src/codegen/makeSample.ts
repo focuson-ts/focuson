@@ -1,11 +1,10 @@
-import { AllDataDD, AllDataFlatMap, AllDataFolder, DataD, flatMapDD, foldDataDD, HasEnum, HasSample, isDataDd, isRepeatingDd, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
-import { safeArray, sortedEntries } from "@focuson/utils";
+import { AllDataDD, AllDataFolder, DataD, foldDataDD, HasEnum, HasSample, OneDataDD, PrimitiveDD } from "../common/dataD";
+import { asMultilineJavaString, safeArray, safePick, sortedEntries } from "@focuson/utils";
 import { Lenses } from "@focuson/lens";
 import { domainName, emptyName, sampleName } from "./names";
 import { dataDsIn, PageD } from "../common/pageD";
 import { TSParams } from "./config";
-import { indent, indentList } from "./codegen";
-import { asMultilineJavaString, safePick } from "@focuson/utils";
+import { indentList } from "./codegen";
 
 
 const addData = ( start: boolean, path: string[], acc: any, d: DataD ) => start ? Lenses.fromPath ( path ).set ( acc, {} ) : acc;

@@ -3,7 +3,7 @@ import { hasDomainForPage } from "./names";
 import { addStringToEndOfAllButLast, imports, indentList } from "./codegen";
 import { TSParams } from "./config";
 import { applyToTemplate } from "@focuson/template";
-import {  DirectorySpec, loadFile } from "@focuson/files";
+import { DirectorySpec, loadFile } from "@focuson/files";
 import { isCommonLens, RestD, unique } from "../common/restD";
 import { sortedEntries } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";

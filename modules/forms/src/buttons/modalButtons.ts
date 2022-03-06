@@ -3,7 +3,7 @@ import { safeArray } from "@focuson/utils";
 import { PageD, RestOnCommit } from "../common/pageD";
 import { PageMode, SetToLengthOnClose } from "@focuson/pages";
 import { ButtonCreator, MakeButton } from "../codegen/makeButtons";
-import { focusOnFor, opt, optT } from "../codegen/codegen";
+import { opt, optT } from "../codegen/codegen";
 import { emptyName, modalName, restDetailsName } from "../codegen/names";
 
 export interface CommonModalButtonInPage {

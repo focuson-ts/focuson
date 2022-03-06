@@ -1,8 +1,6 @@
 import { ContactTitle, CustomerStatus, EmploymentType, HowOften, YesNo } from "./occupationAndIncome.domain";
 import { DataD, DateDD, IntegerDD, MoneyDD, OneLineStringDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
-import { SelectedItemCD, DisplayCompD, TableCD } from "../../common/componentsD";
-import { ComponentData } from "../../codegen/makeComponents";
-import { OccupationIncomeDetailsDD } from "ExampleApp/src/render";
+import { DisplayCompD, SelectedItemCD, TableCD } from "../../common/componentsD";
 
 
 /* ---------------- OTHER SOURCES OF INCOME START ---------------- */

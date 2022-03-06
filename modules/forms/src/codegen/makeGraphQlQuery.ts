@@ -1,6 +1,6 @@
 import { AllDataFlatMap, DataD, flatMapDD, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
 import { defaultRestAction, RestD } from "../common/restD";
-import { filterParamsByRestAction, indent, indentList } from "./codegen";
+import { filterParamsByRestAction, indent } from "./codegen";
 import { queryName, resolverName } from "./names";
 import { asMultilineJavaString, RestAction, sortedEntries } from "@focuson/utils";
 

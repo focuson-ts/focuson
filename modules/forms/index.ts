@@ -18,7 +18,9 @@ export * from './src/codegen/names'
 export * from './src/codegen/makePages'
 
 
+export * from './src/buttons/allButtons'
 export * from './src/common/componentsD'
 export * from './src/common/dataD'
 export * from './src/common/restD'
 export * from './src/common/pageD'
+export * from './src/generate'
