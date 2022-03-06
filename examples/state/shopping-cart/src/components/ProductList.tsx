@@ -2,7 +2,7 @@
 import React from "react";
 import {ProductData, removeFromContextAddToList} from "../domain";
 import {Lens} from "@focuson/lens";
-import {LensState} from "@focuson/state";
+import { LensState, reasonFor } from "@focuson/state";
 import { Context } from "../context";
 
 interface ProductProps<Main> {
@@ -12,6 +12,7 @@ interface ProductProps<Main> {
 }
 
 interface OneProductProps<Main> extends ProductProps<Main> {
+    id?: string;
     index: number,
 }
 export function ProductList<Main>({addToListLens, button, state}: ProductProps<Main>) {
@@ -21,10 +22,10 @@ export function ProductList<Main>({addToListLens, button, state}: ProductProps<M
     </div>);
 }
 
-export function OneProduct<Main>({addToListLens, button, state, index}: OneProductProps<Main>) {
+export function OneProduct<Main>({addToListLens,id, button, state, index}: OneProductProps<Main>) {
     let p = state.json()[index]
-    let onClick = (() => removeFromContextAddToList<Main>(state, addToListLens, index))
+    let onClick = (() => removeFromContextAddToList<Main>(state, addToListLens, index, reasonFor('OneProduct', 'onClick', id)))
     return (<div style={{marginBottom: 20}}>{p.title} - &#36;{p.price}{p.quantity ? ` x ${p.quantity}` : null}
-        <button onClick={onClick}> {button}</button>
+        <button id={id} onClick={onClick}> {button}</button>
     </div>)
 }

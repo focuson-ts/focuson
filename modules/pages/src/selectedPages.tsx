@@ -1,15 +1,15 @@
 import { page, PageMode, PageSelectionContext } from "./pageSelection";
-import { LensProps } from "@focuson/state";
+import { LensProps, reasonFor } from "@focuson/state";
 import { sortedEntries } from "@focuson/utils";
 import { isMainPageDetails } from "./pageConfig";
 
 export interface SelectPageProps<S, Context> extends LensProps<S, any, Context> {
-
+  id?: string
   pageName: string;
   pageMode: PageMode
 }
-export function SelectPage<S, Context extends PageSelectionContext<S>> ( { state, pageName, pageMode }: SelectPageProps<S, Context> ) {
-  return <button onClick={() => state.massTransform ( page ( state.context, 'select', { pageName, firstTime: true, pageMode } ) )}>{pageName}</button>
+export function SelectPage<S, Context extends PageSelectionContext<S>> ( { id, state, pageName, pageMode }: SelectPageProps<S, Context> ) {
+  return <button onClick={() => state.massTransform ( reasonFor ( 'SelectPage', 'onClick', id ), page ( state.context, 'select', { pageName, firstTime: true, pageMode } ) )}>{pageName}</button>
 }
 
 export interface IndexPageProps<S, Context extends PageSelectionContext<S>> extends LensProps<S, S, Context> {
@@ -21,7 +21,7 @@ export function IndexPage<S, Context extends PageSelectionContext<S>> ( { state,
   return (
     <div>
       <ul>
-        {sortedEntries ( state.context.pages ).filter ( ( [ name, pd ] ) => isMainPageDetails(pd) ).map ( ( [ name, pd ] ) =>
+        {sortedEntries ( state.context.pages ).filter ( ( [ name, pd ] ) => isMainPageDetails ( pd ) ).map ( ( [ name, pd ] ) =>
           <li key={name}><SelectPage state={state} pageName={name} pageMode='edit'/></li> )}
       </ul>
       {children}

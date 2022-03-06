@@ -97,9 +97,7 @@ export function createOneReact<B> ( { path, dataDD, display, displayParams, guar
   const guardPrefix = guard ? sortedEntries ( guard ).map ( ( [ n, guard ] ) =>
     `<Guard value={${guardName ( n )}} cond={${JSON.stringify ( guard )}}>` ) : ''
   const guardPostfix = guard ? sortedEntries ( guard ).map ( ( [ n, guard ] ) => `</Guard>` ) : ''
-
   return [ `${guardPrefix}<${name} ${displayParamsString} />${guardPostfix}` ]
-
 }
 export function createAllReactCalls ( d: AllComponentData[] ): string[] {
   return d.flatMap ( d => isErrorComponentData ( d ) ? [ d.error ] : createOneReact ( d ) )

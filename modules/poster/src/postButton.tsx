@@ -1,4 +1,4 @@
-import { LensProps } from "@focuson/state";
+import { LensProps, reasonFor } from "@focuson/state";
 import { Optional } from "@focuson/lens";
 import { PostCommand } from "./posters";
 import { safeArray } from "@focuson/utils";
@@ -24,7 +24,7 @@ export interface PostButtonProps<S, D, Context, Args> extends LensProps<S, D, Co
  */
 export const PostButton = <S, D, Context, Args> ( { id, state, text, poster, args, postCommandL }: PostButtonProps<S, D, Context, Args> ) =>
   <button id={id} onClick={() => {
-    if ( postCommandL ) state.dangerouslySetMain ( postCommandL.transform ( existing => [ ...safeArray ( existing ), { poster, args } ] ) ( state.main ) )
+    if ( postCommandL ) state.dangerouslySetMain ( postCommandL.transform ( existing => [ ...safeArray ( existing ), { poster, args } ] ) ( state.main), reasonFor ( 'PostButton', 'onClick', id )  )
     else throw Error ( `Trying to click a post button ${id} ${test} ${poster} without a postCommandL` )
   }}>{text}</button>
 

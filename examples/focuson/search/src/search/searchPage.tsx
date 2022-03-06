@@ -1,5 +1,5 @@
 import { focusedPage, focusedPageWithExtraState } from "@focuson/pages";
-import { LensProps } from "@focuson/state";
+import { LensProps, reasonFor } from "@focuson/state";
 import { FullSearchDomain } from "./fullSearchDomain";
 
 
@@ -27,7 +27,7 @@ interface InputProps<S, Context> extends LensProps<S, any, Context> {
 
 function Input<S, Context> ( { id, inputStyle, state, readonly, ariaLabel }: InputProps<S, Context> ) {
   function onChange ( s?: string ) {
-    if ( s ) state.setJson ( s );
+    if ( s ) state.setJson ( s ,reasonFor('Input', 'textChanged',id));
   }
   console.log ( "Input", state.optJson () )
   return <input id={id} type="text" style={inputStyle}

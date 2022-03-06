@@ -7,7 +7,17 @@ export interface LensProps<Main, T, Context> {
   state: LensState<Main, T, Context>
 }
 
-
+type SetJsonReasonEvent = 'onClick' | 'onChange' | 'textChanged'
+/** The reason we changed the json if it was a component event */
+export interface SetJsonReasonForComponent {
+  component?: string;
+  id?: string;
+  event: SetJsonReasonEvent
+  comment?: string;
+}
+export function reasonFor ( component: string, event: SetJsonReasonEvent, id?: string, comment?: string ): SetJsonReasonForComponent {
+  return ({ component, id, event, comment })
+}
 export const lensState = <Main, Context> ( main: Main, setMain: ( m: Main ) => void, description: string, context: Context ): LensState<Main, Main, Context> =>
   new LensState ( main, setMain, Lenses.identity<Main> ().withDescription ( description ), context );
 
@@ -33,7 +43,7 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
   context: Context;
 
   /** This should probably not be called by your code. Normally you will use 'setJson' or 'setFromTwo' (if you need to update two parts at the same time */
-  dangerouslySetMain: ( m: Main ) => void
+  dangerouslySetMain: ( m: Main, reason: any ) => void
 
   /** This is focused on the thing we are interested it. The 'optional' means that 'maybe the json isn't there...
    * for example if we walk down a data structure and there is a field 'x | undefined' then perhaps x isn't there. But we still
@@ -41,7 +51,7 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
   optional: Optional<Main, T>
 
 
-  constructor ( main: Main, setMain: ( m: Main ) => void, lens: Optional<Main, T>, context: Context ) {
+  constructor ( main: Main, setMain: ( m: Main, reason: any ) => void, lens: Optional<Main, T>, context: Context ) {
     this.main = main;
     this.dangerouslySetMain = setMain;
     this.optional = lens
@@ -73,26 +83,31 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
   optJson (): T | undefined {
     return this.optional.getOption ( this.main )
   }
+  /** The json that this context is focused on */
+  optJsonOr ( t: T ): T | undefined {
+    let result = this.optional.getOption ( this.main );
+    return result ? result : t
+  }
 
   /** How we edit the json that this is focused on: we call setJson and that will make a new main json with the bit passed in placing the json that we are focused on
    *
    * Very often the LensContext is being used in a flux pattern (for example with react) and this method will cause other things to happen (like re-rendering) */
-  setJson ( json: T ) {
+  setJson ( json: T, reason: any ) {
     const result = this.optional.setOption ( this.main, json );
     if ( result === undefined ) {
       console.log ( "failure in setJson- main", this.main )
       console.log ( "failure in setJson- lens", this.optional.description )
       console.log ( "failure in setJson- json", json )
-      throw new Error ( `Tried and failed to set Json. Lens is ${this.optional.description} json ${JSON.stringify(json)}` )
+      throw new Error ( `Tried and failed to set Json. Lens is ${this.optional.description} json ${JSON.stringify ( json )}` )
     }
-    this.dangerouslySetMain ( result )
+    this.dangerouslySetMain ( result, reason )
   }
 
 
   /** 'Modify' the stored json. If the json is undefined, then 'nothing happen' (just like a map)` */
-  transform ( fn: ( json: T ) => T ) {
+  transform ( fn: ( json: T ) => T, reason: any ) {
     const j = this.optional.getOption ( this.main )
-    if ( j ) this.setJson ( fn ( j ) )
+    if ( j ) this.setJson ( fn ( j ), reason )
   }
 
   addSecond<T2> ( lens2: Optional<Main, T2> ): LensState2<Main, T, T2, Context> {
@@ -103,23 +118,23 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
     return this.addSecond ( this.optional )
   }
 
-  massTransform ( ...ts: Transform<Main, any>[] ): void {return this.dangerouslySetMain ( massTransform ( this.main, ...ts ) )}
+  massTransform ( reason: any, ...ts: Transform<Main, any>[] ): void {return this.dangerouslySetMain ( massTransform ( this.main, ...ts ), reason )}
 
   useOtherAsWell<T2> ( lens: Optional<Main, T2> ) {
     let parent = this
     return new class extends WithTwoLens<Main, T, T2> {
-      setTwoValues ( t: T | undefined, t2: T2 | undefined ): void {
-        parent.dangerouslySetMain ( updateTwoValues ( parent.optional, lens ) ( parent.main, t, t2 ) )
+      setTwoValues ( t: T | undefined, t2: T2 | undefined, reason: any ): void {
+        parent.dangerouslySetMain ( updateTwoValues ( parent.optional, lens ) ( parent.main, t, t2 ), reason )
       }
 
-      transformTwoValues ( fn1: ( t1: T, t2: T2 ) => T | undefined, fn2: ( t1: T, t2: T2 ) => T2 | undefined ): void {
-        parent.dangerouslySetMain ( transformTwoValues ( parent.optional, lens ) ( fn1, fn2 ) ( parent.main ) )
+      transformTwoValues ( fn1: ( t1: T, t2: T2 ) => T | undefined, fn2: ( t1: T, t2: T2 ) => T2 | undefined, reason: any ): void {
+        parent.dangerouslySetMain ( transformTwoValues ( parent.optional, lens ) ( fn1, fn2 ) ( parent.main ), reason )
       }
 
       transformFocused ( fn1: ( t1: T, t2: T2 ) => T | undefined ): WithTwoLensAndOneTransformFn<Main, T, T2> {
         return new class extends WithTwoLensAndOneTransformFn<Main, T, T2> {
-          andTransformOther ( fn2: ( t1: T, t2: T2 ) => T2 ): void {
-            parent.dangerouslySetMain ( transformTwoValues ( parent.optional, lens ) ( fn1, fn2 ) ( parent.main ) )
+          andTransformOther ( fn2: ( t1: T, t2: T2 ) => T2, reason: any ): void {
+            parent.dangerouslySetMain ( transformTwoValues ( parent.optional, lens ) ( fn1, fn2 ) ( parent.main ), reason )
           }
         }
       }
@@ -129,15 +144,15 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
 }
 
 export abstract class WithTwoLens<Main, T1, T2> {
-  public abstract setTwoValues ( t1: T1, t2: T2 ): void
+  public abstract setTwoValues ( t1: T1, t2: T2, reason: any ): void
 
-  public abstract transformTwoValues ( fn1: ( t1: T1, t2: T2 ) => T1, fn2: ( t1: T1, t2: T2 ) => T2 ): void
+  public abstract transformTwoValues ( fn1: ( t1: T1, t2: T2 ) => T1, fn2: ( t1: T1, t2: T2 ) => T2, reason: any ): void
 
-  public abstract transformFocused ( fn1: ( t1: T1, t2: T2 ) => T1 ): WithTwoLensAndOneTransformFn<Main, T1, T2>
+  public abstract transformFocused ( fn1: ( t1: T1, t2: T2 ) => T1, reason: any ): WithTwoLensAndOneTransformFn<Main, T1, T2>
 }
 
 export abstract class WithTwoLensAndOneTransformFn<Main, T1, T2> {
-  public abstract andTransformOther ( fn2: ( t1: T1, t2: T2 ) => T2 ): void
+  public abstract andTransformOther ( fn2: ( t1: T1, t2: T2 ) => T2, reason: any ): void
 }
 
 export let focusOnNth = <Main, T, Context> ( state: LensState<Main, T[], Context>, n: number ) => state.chainLens ( Lenses.nth ( n ) );
@@ -178,9 +193,9 @@ export class LensState2<Main, T1, T2, Context> {
   lens1: Optional<Main, T1>
   lens2: Optional<Main, T2>
   context: Context
-  dangerouslySetMain: ( m: Main ) => void
+  dangerouslySetMain: ( m: Main, reason: any ) => void
 
-  constructor ( main: Main, lens1: Optional<Main, T1>, lens2: Optional<Main, T2>, dangerouslySetMain: ( m: Main ) => void, context: Context ) {
+  constructor ( main: Main, lens1: Optional<Main, T1>, lens2: Optional<Main, T2>, dangerouslySetMain: ( m: Main, reason: any ) => void, context: Context ) {
     this.main = main;
     this.lens1 = lens1;
     this.lens2 = lens2;
@@ -239,18 +254,18 @@ export class LensState2<Main, T1, T2, Context> {
     return new LensState2 ( this.main, this.lens1, lens, this.dangerouslySetMain, this.context )
   }
 
-  setJson ( t1: T1, t2: T2 ) {
-    this.dangerouslySetMain ( this.lens2.set ( this.lens1.set ( this.main, t1 ), t2 ) )
+  setJson ( t1: T1, t2: T2, reason: any ) {
+    this.dangerouslySetMain ( this.lens2.set ( this.lens1.set ( this.main, t1 ), t2 ), reason )
   }
 
-  transformJson ( fn1: ( t1: T1 ) => T1, fn2: ( t2: T2 ) => T2 ) {
-    this.dangerouslySetMain ( this.lens1.transform ( fn1 ) ( this.lens2.transform ( fn2 ) ( this.main ) ) )
+  transformJson ( fn1: ( t1: T1 ) => T1, fn2: ( t2: T2 ) => T2, reason: any ) {
+    this.dangerouslySetMain ( this.lens1.transform ( fn1 ) ( this.lens2.transform ( fn2 ) ( this.main ) ), reason )
   }
 
-  transformJson2 ( fn1: ( t1: T1, t2: T2 ) => T1, fn2: ( t1: T1, t2: T2 ) => T2, errorMessageIfNotThere?: () => string ) {
+  transformJson2 ( fn1: ( t1: T1, t2: T2 ) => T1, fn2: ( t1: T1, t2: T2 ) => T2, reason: any, errorMessageIfNotThere?: () => string ) {
     let t1 = getOr ( this.lens1, this.main, errorMessageIfNotThere );
     let t2 = getOr ( this.lens2, this.main, errorMessageIfNotThere )
-    this.dangerouslySetMain ( this.lens1.set ( this.lens2.set ( this.main, fn2 ( t1, t2 ) ), fn1 ( t1, t2 ) ) )
+    this.dangerouslySetMain ( this.lens1.set ( this.lens2.set ( this.main, fn2 ( t1, t2 ) ), fn1 ( t1, t2 ) ), reason )
   }
 
 }
@@ -260,10 +275,10 @@ export class LensState3<Main, T1, T2, T3, Context> {
   lens1: Optional<Main, T1>
   lens2: Optional<Main, T2>
   lens3: Optional<Main, T3>
-  dangerouslySetMain: ( m: Main ) => void
+  dangerouslySetMain: ( m: Main, reason: any ) => void
   context: Context
 
-  constructor ( main: Main, lens1: Optional<Main, T1>, lens2: Optional<Main, T2>, lens3: Optional<Main, T3>, dangerouslySetMain: ( m: Main ) => void, context: Context ) {
+  constructor ( main: Main, lens1: Optional<Main, T1>, lens2: Optional<Main, T2>, lens3: Optional<Main, T3>, dangerouslySetMain: ( m: Main, reason: any ) => void, context: Context ) {
     this.main = main;
     this.lens1 = lens1;
     this.lens2 = lens2;
@@ -341,19 +356,19 @@ export class LensState3<Main, T1, T2, T3, Context> {
     return new LensState3 ( this.main, this.lens1, this.lens2, lens, this.dangerouslySetMain, this.context )
   }
 
-  setJson ( t1: T1, t2: T2, t3: T3 ) {
-    this.dangerouslySetMain ( this.lens3.set ( this.lens2.set ( this.lens1.set ( this.main, t1 ), t2 ), t3 ) )
+  setJson ( t1: T1, t2: T2, t3: T3, reason: any ) {
+    this.dangerouslySetMain ( this.lens3.set ( this.lens2.set ( this.lens1.set ( this.main, t1 ), t2 ), t3 ), reason )
   }
 
-  transformJson ( fn1: ( t1: T1 ) => T1, fn2: ( t2: T2 ) => T2, fn3: ( t3: T3 ) => T3 ) {
-    this.dangerouslySetMain ( this.lens1.transform ( fn1 ) ( this.lens2.transform ( fn2 ) ( this.lens3.transform ( fn3 ) ( this.main ) ) ) )
+  transformJson ( fn1: ( t1: T1 ) => T1, fn2: ( t2: T2 ) => T2, fn3: ( t3: T3 ) => T3, reason: any ) {
+    this.dangerouslySetMain ( this.lens1.transform ( fn1 ) ( this.lens2.transform ( fn2 ) ( this.lens3.transform ( fn3 ) ( this.main ) ) ), reason )
   }
 
-  transformJson3 ( fn1: ( t1: T1, t2: T2, t3: T3 ) => T1, fn2: ( t1: T1, t2: T2, t3: T3 ) => T2, fn3: ( t1: T1, t2: T2, t3: T3 ) => T3, errorMessageIfNotThere?: () => string ) {
+  transformJson3 ( fn1: ( t1: T1, t2: T2, t3: T3 ) => T1, fn2: ( t1: T1, t2: T2, t3: T3 ) => T2, fn3: ( t1: T1, t2: T2, t3: T3 ) => T3, reason: any, errorMessageIfNotThere?: () => string ) {
     let t1 = getOr ( this.lens1, this.main, errorMessageIfNotThere )
     let t2 = getOr ( this.lens2, this.main, errorMessageIfNotThere )
     let t3 = getOr ( this.lens3, this.main, errorMessageIfNotThere )
-    this.dangerouslySetMain ( this.lens1.set ( this.lens2.set ( this.lens3.set ( this.main, fn3 ( t1, t2, t3 ) ), fn2 ( t1, t2, t3 ) ), fn1 ( t1, t2, t3 ) ) )
+    this.dangerouslySetMain ( this.lens1.set ( this.lens2.set ( this.lens3.set ( this.main, fn3 ( t1, t2, t3 ) ), fn2 ( t1, t2, t3 ) ), fn1 ( t1, t2, t3 ) ), reason )
   }
 
 }
