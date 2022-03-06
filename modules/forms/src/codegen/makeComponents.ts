@@ -50,18 +50,18 @@ export const listComponentsInFolder: AllDataFlatMap<AllComponentData> = {
 export const listComponentsIn = ( dataDD: AllDataDD ): AllComponentData[] => flatMapDD ( dataDD, listComponentsInFolder );
 
 export const processParam = ( path: string[], dataDD: AllDataDD, dcd: DisplayCompD ) => ( name: string, s: string | string[] ) => {
-  const dcdType: OneDisplayCompParamD = dcd.params[ name ]
+  const dcdType: OneDisplayCompParamD<any> = dcd.params[ name ]
   function errorPrefix () {return `Component ${dataDD.name} for ${path} has a display component ${dcd.name} and sets a param ${name} `}
   if ( dcdType === undefined ) throw new Error ( `${errorPrefix ()}. Legal values are ${sortedEntries ( dcd.params ).map ( t => t[ 0 ] ).join ( ',' )}` )
   function processStringParam () {return "'" + s + "'"}
   function processObjectParam () {return "{" + s + "}"}
   function processStringArrayParam () {
-    if ( Array.isArray ( s ) ) return`{${JSON.stringify(s)}}`; else
+    if ( Array.isArray ( s ) ) return `{${JSON.stringify ( s )}}`; else
       throw new Error ( `${errorPrefix ()} needs to be a string[]` )
   }
   function processState ( prefix: string, postFix: string ) {
     if ( Array.isArray ( s ) ) return `{${prefix}${focusOnFor ( s )}${postFix}}`; else
-      throw new Error ( `${errorPrefix ()} needs to be a string[]. Actually is ${typeof s}, with value ${JSON.stringify(s)}` )
+      throw new Error ( `${errorPrefix ()} needs to be a string[]. Actually is ${typeof s}, with value ${JSON.stringify ( s )}` )
   }
   if ( dcdType.paramType === 'string' ) return processStringParam ()
   if ( dcdType.paramType === 'object' ) return processObjectParam ()
@@ -77,23 +77,28 @@ export const processParam = ( path: string[], dataDD: AllDataDD, dcd: DisplayCom
 
 
 export function createOneReact<B> ( { path, dataDD, display, displayParams, guard }: ComponentData ): string[] {
-  const { name, params, needsEnums } = display
-  const focusOnString = path.map ( v => `.focusOn('${v}')` ).join ( '' )
+  const { name, params } = display
   const processOneParam = processParam ( path, dataDD, display )
   const dataDDParamsA: [ string, string ][] = dataDD.displayParams ? Object.entries ( dataDD.displayParams ).map ( ( [ name, o ] ) => [ name, processOneParam ( name, o.value ) ] ) : []
   const defaultParams: [ string, string ][] = Object.entries ( display.params ).flatMap ( ( [ name, param ] ) => {
-    return param?.needed === 'defaultToCamelCaseOfName' ? [ [ name, processOneParam ( name, decamelize ( path.slice ( -1 ) + "", ' ' ) ) ] ] : []
+    if ( param?.default ) return [ [ name, processOneParam ( name, param.default ) ] ]
+    if ( param?.needed === 'defaultToCamelCaseOfName' ) return [ [ name, processOneParam ( name, decamelize ( path.slice ( -1 ) + "", ' ' ) ) ] ]
+    if ( param?.needed === 'defaultToPath' ) return [ [ name, processOneParam ( name, path ) ] ]
+    if ( param?.needed === 'defaultToEnum' )
+      if ( isPrimDd ( dataDD ) && dataDD.enum ) return [ [ name, "{" + JSON.stringify ( dataDD.enum ) + "}" ] ]
+      else
+        throw new Error ( `Component ${dataDD.name} for ${path} has a display component ${display.name} and sets a param ${name}. Requires enums, but no enums have been defined` )
+    return []
   } )
   const displayParamsA: [ string, string ][] = displayParams ? Object.entries ( displayParams ).map ( ( [ name, value ] ) => [ name, processOneParam ( name, value ) ] ) : []
   const fullDisplayParams = Object.entries ( Object.fromEntries ( [ ...defaultParams, ...dataDDParamsA, ...displayParamsA ] ) )
   const displayParamsString = fullDisplayParams.map ( ( [ k, v ] ) => `${k}=${v}` ).join ( " " )
 
-  const enums = needsEnums && isPrimDd ( dataDD ) && dataDD.enum ? ` enums={${JSON.stringify ( dataDD.enum )}}` : ""
   const guardPrefix = guard ? sortedEntries ( guard ).map ( ( [ n, guard ] ) =>
     `<Guard value={${guardName ( n )}} cond={${JSON.stringify ( guard )}}>` ) : ''
   const guardPostfix = guard ? sortedEntries ( guard ).map ( ( [ n, guard ] ) => `</Guard>` ) : ''
 
-  return [ `${guardPrefix}<${name} state={state${focusOnString}} ${displayParamsString} mode={mode}${enums} />${guardPostfix}` ]
+  return [ `${guardPrefix}<${name} ${displayParamsString} />${guardPostfix}` ]
 
 }
 export function createAllReactCalls ( d: AllComponentData[] ): string[] {

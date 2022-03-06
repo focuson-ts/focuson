@@ -112,113 +112,113 @@ export function OrderChequeBookOrPayingInModalPage<S, Context extends PageSelect
 
 export function ChequeCreditbooksDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, ChequeCreditbooksDDDomain,Context>){
   return(<>
-  <Table state={state.focusOn('history')} order={["serialNumber","howOrdered","dateOrder"]} mode={mode} />
+  <Table state={state.focusOn('history')} mode={mode} order={["serialNumber","howOrdered","dateOrder"]} />
 </>)
 }
 
 export function ChequeCreditbooksHistoryLineDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, ChequeCreditbooksHistoryLineDDDomain,Context>){
   return(<>
-  <LabelAndNumberInput state={state.focusOn('serialNumber')} label='serial number' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('howOrdered')} label='how ordered' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('dateOrder')} label='date order' mode={mode} />
+  <LabelAndNumberInput state={state.focusOn('serialNumber')} mode={mode} label='serial number' />
+  <LabelAndStringInput state={state.focusOn('howOrdered')} mode={mode} label='how ordered' />
+  <LabelAndStringInput state={state.focusOn('dateOrder')} mode={mode} label='date order' />
 </>)
 }
 
 export function CreateEAccountDataDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, CreateEAccountDataDDDomain,Context>){
   return(<>
-  <LabelAndStringInput state={state.focusOn('name')} label='name' mode={mode} />
-  <LabelAndRadio state={state.focusOn('type')} label='type' mode={mode} enums={{"savings":"Savings","checking":"Checking"}} />
-  <Radio state={state.focusOn('savingsStyle')}  mode={mode} enums={{"adHoc":"Save what you want, when you want it","payRegular":"Pay a regular amount until you reach a target","paySettime":"Pay a regular amount for a set time","targetTime":"Reach a target balance by a set time"}} />
-  <LabelAndNumberInput state={state.focusOn('initialAmount')} label='initial amount' mode={mode} />
+  <LabelAndStringInput state={state.focusOn('name')} mode={mode} label='name' />
+  <LabelAndRadio state={state.focusOn('type')} mode={mode} label='type' enums={{"savings":"Savings","checking":"Checking"}} />
+  <Radio state={state.focusOn('savingsStyle')} mode={mode} enums={{"adHoc":"Save what you want, when you want it","payRegular":"Pay a regular amount until you reach a target","paySettime":"Pay a regular amount for a set time","targetTime":"Reach a target balance by a set time"}} />
+  <LabelAndNumberInput state={state.focusOn('initialAmount')} mode={mode} label='initial amount' />
 </>)
 }
 
 export function CreatePlanDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, CreatePlanDDDomain,Context>){
   return(<>
-  <LabelAndStringInput state={state.focusOn('createPlanStart')} label='Create Start' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('createPlanDate')} label='create plan date' ariaLabel='The Create Plan Date' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('createPlanEnd')} label='create plan end' mode={mode} />
+  <LabelAndStringInput state={state.focusOn('createPlanStart')} mode={mode} label='Create Start' />
+  <LabelAndStringInput state={state.focusOn('createPlanDate')} mode={mode} label='create plan date' ariaLabel='The Create Plan Date' />
+  <LabelAndStringInput state={state.focusOn('createPlanEnd')} mode={mode} label='create plan end' />
 </>)
 }
 
 export function EAccountsSummaryDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, EAccountsSummaryDDDomain,Context>){
   return(<>
-  <LabelAndBooleanInput state={state.focusOn('useEStatements')} label='use e statements' mode={mode} />
-  <Table state={state.focusOn('eAccountsTable')} order={["accountId","displayType","description","virtualBankSeq","frequency","total"]} mode={mode} />
-  <LabelAndNumberInput state={state.focusOn('totalMonthlyCost')} label='total monthly cost' mode={mode} />
-  <LabelAndNumberInput state={state.focusOn('oneAccountBalance')} label='one account balance' mode={mode} />
-  <LabelAndNumberInput state={state.focusOn('currentAccountBalance')} label='current account balance' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('createPlan').focusOn('createPlanStart')} label='Create Start' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('createPlan').focusOn('createPlanDate')} label='create plan date' ariaLabel='The Create Plan Date' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('createPlan').focusOn('createPlanEnd')} label='create plan end' mode={mode} />
+  <LabelAndBooleanInput state={state.focusOn('useEStatements')} mode={mode} label='use e statements' />
+  <Table state={state.focusOn('eAccountsTable')} mode={mode} order={["accountId","displayType","description","virtualBankSeq","frequency","total"]} />
+  <LabelAndNumberInput state={state.focusOn('totalMonthlyCost')} mode={mode} label='total monthly cost' />
+  <LabelAndNumberInput state={state.focusOn('oneAccountBalance')} mode={mode} label='one account balance' />
+  <LabelAndNumberInput state={state.focusOn('currentAccountBalance')} mode={mode} label='current account balance' />
+  <LabelAndStringInput state={state.focusOn('createPlan').focusOn('createPlanStart')} mode={mode} label='Create Start' />
+  <LabelAndStringInput state={state.focusOn('createPlan').focusOn('createPlanDate')} mode={mode} label='create plan date' ariaLabel='The Create Plan Date' />
+  <LabelAndStringInput state={state.focusOn('createPlan').focusOn('createPlanEnd')} mode={mode} label='create plan end' />
 </>)
 }
 
 export function EAccountSummaryDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, EAccountSummaryDDDomain,Context>){
   return(<>
-  <LabelAndStringInput state={state.focusOn('accountId')} label='Account Id' mode={mode} />
-  <LabelAndRadio state={state.focusOn('displayType')} label='display type' mode={mode} enums={{"savings":"Savings","checking":"Checking"}} />
-  <LabelAndStringInput state={state.focusOn('description')} label='description' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('virtualBankSeq')} label='virtual bank seq' mode={mode} />
-  <LabelAndNumberInput state={state.focusOn('total')} label='total' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('frequency')} label='Frequency/Amount' mode={mode} />
+  <LabelAndStringInput state={state.focusOn('accountId')} mode={mode} label='Account Id' />
+  <LabelAndRadio state={state.focusOn('displayType')} mode={mode} label='display type' enums={{"savings":"Savings","checking":"Checking"}} />
+  <LabelAndStringInput state={state.focusOn('description')} mode={mode} label='description' />
+  <LabelAndStringInput state={state.focusOn('virtualBankSeq')} mode={mode} label='virtual bank seq' />
+  <LabelAndNumberInput state={state.focusOn('total')} mode={mode} label='total' />
+  <LabelAndStringInput state={state.focusOn('frequency')} mode={mode} label='Frequency/Amount' />
 </>)
 }
 
 export function ETransferDataD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, ETransferDataDDomain,Context>){
   return(<>
-  <LabelAndStringInput state={state.focusOn('amount')} label='Account Id' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('dateOfETransfer')} label='date of e transfer' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('description')} label='description' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('fromAccount')} label='from account' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('toAccount')} label='to account' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('monitoringAccount')} label='monitoring account' mode={mode} />
-  <LabelAndRadio state={state.focusOn('type')} label='type' mode={mode} enums={{"savings":"Savings","checking":"Checking"}} />
-  <LabelAndNumberInput state={state.focusOn('balance')} label='balance' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('notes')} label='notes' mode={mode} />
+  <LabelAndStringInput state={state.focusOn('amount')} mode={mode} label='Account Id' />
+  <LabelAndStringInput state={state.focusOn('dateOfETransfer')} mode={mode} label='date of e transfer' />
+  <LabelAndStringInput state={state.focusOn('description')} mode={mode} label='description' />
+  <LabelAndStringInput state={state.focusOn('fromAccount')} mode={mode} label='from account' />
+  <LabelAndStringInput state={state.focusOn('toAccount')} mode={mode} label='to account' />
+  <LabelAndStringInput state={state.focusOn('monitoringAccount')} mode={mode} label='monitoring account' />
+  <LabelAndRadio state={state.focusOn('type')} mode={mode} label='type' enums={{"savings":"Savings","checking":"Checking"}} />
+  <LabelAndNumberInput state={state.focusOn('balance')} mode={mode} label='balance' />
+  <LabelAndStringInput state={state.focusOn('notes')} mode={mode} label='notes' />
 </>)
 }
 
 export function OccupationAndIncomeDetailsDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, OccupationAndIncomeDetailsDDDomain,Context>){
   return(<>
-  <LabelAndStringInput state={state.focusOn('regulatoryReport')} label='regulatory report' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('mainCustomerName')} label='main customer name' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('jointCustomerName')} label='joint customer name' mode={mode} />
-  <LabelAndNumberInput state={state.focusOn('mainClientRef')} label='main client ref' mode={mode} />
-  <LabelAndNumberInput state={state.focusOn('jointClientRef')} label='joint client ref' mode={mode} />
-  <SelectedItem state={state.focusOn('customerOccupationIncomeDetails')} index={pageState(state).focusOn('selectedItem').json()} display={OccupationIncomeDetailsDD} mode={mode} />
+  <LabelAndStringInput state={state.focusOn('regulatoryReport')} mode={mode} label='regulatory report' />
+  <LabelAndStringInput state={state.focusOn('mainCustomerName')} mode={mode} label='main customer name' />
+  <LabelAndStringInput state={state.focusOn('jointCustomerName')} mode={mode} label='joint customer name' />
+  <LabelAndNumberInput state={state.focusOn('mainClientRef')} mode={mode} label='main client ref' />
+  <LabelAndNumberInput state={state.focusOn('jointClientRef')} mode={mode} label='joint client ref' />
+  <SelectedItem state={state.focusOn('customerOccupationIncomeDetails')} mode={mode} index={pageState(state).focusOn('selectedItem').json()} display={OccupationIncomeDetailsDD} />
 </>)
 }
 
 export function OccupationIncomeDetailsDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, OccupationIncomeDetailsDDDomain,Context>){
 const areYouGuard = state.chainLens(Lenses.fromPath(["areYou"])).optJson();console.log('areYouGuard', areYouGuard)
   return(<>
-  <LabelAndStringInput state={state.focusOn('areYou')} label='are you' mode={mode} />
-  <Guard value={areYouGuard} cond={["E","S"]}><LabelAndStringInput state={state.focusOn('currentEmployment')} label='current employment' mode={mode} /></Guard>
-  <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('occupation')} label='occupation' mode={mode} /></Guard>
-  <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('customerDescription')} label='customer description' mode={mode} /></Guard>
-  <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('ownShareOfTheCompany')} label='own share of the company' mode={mode} /></Guard>
-  <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('owningSharesPct')} label='owning shares pct' mode={mode} /></Guard>
-  <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('workFor')} label='work for' mode={mode} /></Guard>
-  <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('employmentType')} label='employment type' mode={mode} /></Guard>
-  <LabelAndNumberInput state={state.focusOn('annualSalaryBeforeDeduction')} label='annual salary before deduction' mode={mode} />
-  <LabelAndNumberInput state={state.focusOn('annualIncomeExcludingRent')} label='annual income excluding rent' mode={mode} />
-  <LabelAndNumberInput state={state.focusOn('regularCommissionBonus')} label='regular commission bonus' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('dateOfEmploymentStart')} label='date of employment start' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('otherSourceOfIncome')} label='other source of income' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('createdBy')} label='created by' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('createdDate')} label='created date' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('employerName')} label='employer name' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('whatTypeOfBusiness')} label='what type of business' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('whatNameBusiness')} label='what name business' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('establishedYear')} label='established year' mode={mode} />
-  <LabelAndNumberInput state={state.focusOn('annualDrawing3Yrs')} label='annual drawing3 yrs' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('empStartDate')} label='emp start date' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('empEndDate')} label='emp end date' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('sePositionHeld')} label='se position held' mode={mode} />
-  <LabelAndStringInput state={state.focusOn('occupationCategory')} label='occupation category' mode={mode} />
-  <LabelAndNumberInput state={state.focusOn('empEmploymentSeq')} label='emp employment seq' mode={mode} />
-  <LabelAndNumberInput state={state.focusOn('empAppRoleSeq')} label='emp app role seq' mode={mode} />
-  <LabelAndNumberInput state={state.focusOn('accountantAppRoleSeq')} label='accountant app role seq' mode={mode} />
+  <LabelAndStringInput state={state.focusOn('areYou')} mode={mode} label='are you' />
+  <Guard value={areYouGuard} cond={["E","S"]}><LabelAndStringInput state={state.focusOn('currentEmployment')} mode={mode} label='current employment' /></Guard>
+  <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('occupation')} mode={mode} label='occupation' /></Guard>
+  <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('customerDescription')} mode={mode} label='customer description' /></Guard>
+  <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('ownShareOfTheCompany')} mode={mode} label='own share of the company' /></Guard>
+  <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('owningSharesPct')} mode={mode} label='owning shares pct' /></Guard>
+  <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('workFor')} mode={mode} label='work for' /></Guard>
+  <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput state={state.focusOn('employmentType')} mode={mode} label='employment type' /></Guard>
+  <LabelAndNumberInput state={state.focusOn('annualSalaryBeforeDeduction')} mode={mode} label='annual salary before deduction' />
+  <LabelAndNumberInput state={state.focusOn('annualIncomeExcludingRent')} mode={mode} label='annual income excluding rent' />
+  <LabelAndNumberInput state={state.focusOn('regularCommissionBonus')} mode={mode} label='regular commission bonus' />
+  <LabelAndStringInput state={state.focusOn('dateOfEmploymentStart')} mode={mode} label='date of employment start' />
+  <LabelAndStringInput state={state.focusOn('otherSourceOfIncome')} mode={mode} label='other source of income' />
+  <LabelAndStringInput state={state.focusOn('createdBy')} mode={mode} label='created by' />
+  <LabelAndStringInput state={state.focusOn('createdDate')} mode={mode} label='created date' />
+  <LabelAndStringInput state={state.focusOn('employerName')} mode={mode} label='employer name' />
+  <LabelAndStringInput state={state.focusOn('whatTypeOfBusiness')} mode={mode} label='what type of business' />
+  <LabelAndStringInput state={state.focusOn('whatNameBusiness')} mode={mode} label='what name business' />
+  <LabelAndStringInput state={state.focusOn('establishedYear')} mode={mode} label='established year' />
+  <LabelAndNumberInput state={state.focusOn('annualDrawing3Yrs')} mode={mode} label='annual drawing3 yrs' />
+  <LabelAndStringInput state={state.focusOn('empStartDate')} mode={mode} label='emp start date' />
+  <LabelAndStringInput state={state.focusOn('empEndDate')} mode={mode} label='emp end date' />
+  <LabelAndStringInput state={state.focusOn('sePositionHeld')} mode={mode} label='se position held' />
+  <LabelAndStringInput state={state.focusOn('occupationCategory')} mode={mode} label='occupation category' />
+  <LabelAndNumberInput state={state.focusOn('empEmploymentSeq')} mode={mode} label='emp employment seq' />
+  <LabelAndNumberInput state={state.focusOn('empAppRoleSeq')} mode={mode} label='emp app role seq' />
+  <LabelAndNumberInput state={state.focusOn('accountantAppRoleSeq')} mode={mode} label='accountant app role seq' />
 </>)
 }
