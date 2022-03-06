@@ -20,14 +20,15 @@ export function Table<S, T, Context> ( { id, order, state }: TableProps<S, T, Co
 }
 
 export interface SelectedItemProps<FS, S, T, Context> extends LensProps<S, T[], Context> {
+  id: string;
   index: number;//LensState<FS, number, Context>;
   mode: PageMode;
   label?: string;
-  display: ( { state, mode }: { state: LensState<S, T, Context>, mode: PageMode } ) => JSX.Element
+  display: ( { state, mode }: { state: LensState<S, T, Context>, mode: PageMode, id: string } ) => JSX.Element
 }
-export function SelectedItem<FS, S, T, Context> ( { index, state, display, mode }: SelectedItemProps<FS, S, T, Context> ) {
+export function SelectedItem<FS, S, T, Context> ( { id, index, state, display, mode }: SelectedItemProps<FS, S, T, Context> ) {
   let newState = state.chainLens ( Lenses.nth ( index ) );
   console.log ( "SelectedItem", index, newState.optional.description, newState.optJson () )
   const Display = display
-  return <Display state={newState} mode={mode}/>
+  return <Display id={id} state={newState} mode={mode}/>
 }

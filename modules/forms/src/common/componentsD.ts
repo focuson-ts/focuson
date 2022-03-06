@@ -6,7 +6,7 @@
  * */
 export type DisplayCompParamType = 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'string[]'
 
-type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum'
+type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id'
 
 export interface OneDisplayCompParamD<T> {
   paramType: DisplayCompParamType;
@@ -23,6 +23,7 @@ export interface DisplayCompD {
   params: DisplayCompParamD;
 }
 export const commonParams: DisplayCompParamD = {
+  id: { paramType: 'object', needed: 'id' }, //object because it is calculated
   state: { paramType: 'state', needed: 'defaultToPath' },
   mode: { paramType: 'object', needed: 'no', default: 'mode' },
   ariaLabel: { paramType: 'string', needed: 'no' },

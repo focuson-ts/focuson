@@ -44,6 +44,7 @@ export const commonIds: NameAndLens<FState> = {
 }
 export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{
   mode: PageMode;
+  id: string;
 }
 export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPageSelection, T> ( onError?: OnTagFetchErrorFn<S, any, T, SimpleMessage> ) {
   return commonTagFetchProps<S, T> (

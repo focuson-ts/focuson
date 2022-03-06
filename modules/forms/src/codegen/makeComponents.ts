@@ -84,6 +84,7 @@ export function createOneReact<B> ( { path, dataDD, display, displayParams, guar
     if ( param?.default ) return [ [ name, processOneParam ( name, param.default ) ] ]
     if ( param?.needed === 'defaultToCamelCaseOfName' ) return [ [ name, processOneParam ( name, decamelize ( path.slice ( -1 ) + "", ' ' ) ) ] ]
     if ( param?.needed === 'defaultToPath' ) return [ [ name, processOneParam ( name, path ) ] ]
+    if ( param?.needed === 'id' ) return [ [ name, processOneParam ( name, '`${id}.' + path.join ( "." ) + '`' ) ] ]
     if ( param?.needed === 'defaultToEnum' )
       if ( isPrimDd ( dataDD ) && dataDD.enum ) return [ [ name, "{" + JSON.stringify ( dataDD.enum ) + "}" ] ]
       else
@@ -108,7 +109,7 @@ export function createReactComponent ( dataD: DataD ): string[] {
   const guardStrings = sortedEntries ( dataD.guards ).map ( ( [ name, guard ] ) =>
     `const ${guardName ( name )} = state.chainLens(Lenses.fromPath(${JSON.stringify ( guard.pathFromHere )})).optJson();console.log('${guardName ( name )}', ${guardName ( name )})` )
   return [
-    `export function ${componentName ( dataD )}<S, Context extends PageSelectionAndRestCommandsContext<S>>({state,mode}: FocusedProps<S, ${domainName ( dataD )},Context>){`,
+    `export function ${componentName ( dataD )}<S, Context extends PageSelectionAndRestCommandsContext<S>>({id,state,mode}: FocusedProps<S, ${domainName ( dataD )},Context>){`,
     ...guardStrings,
     "  return(<>",
     ...contents,
@@ -133,7 +134,7 @@ export function createReactModalPageComponent<B> ( params: TSParams, transformBu
     `  return focusedPage<S, ${domName}, Context> ( s => '' ) (`,
     `     ( state, d, mode ) => {`,
     `          return (<${layout.name}  details='${layout.details}'>`,
-    `               <${componentName ( dataDD )} state={state}  mode={mode} />`,
+    `               <${componentName ( dataDD )} id='root' state={state}  mode={mode} />`,
     ...indentList ( indentList ( indentList ( makeButtonsFrom ( params, transformButtons, pageD ) ) ) ),
     `            </${layout.name}>)})}`,
     ''
@@ -147,7 +148,7 @@ export function createReactMainPageComponent<B> ( params: TSParams, transformBut
     `  return focusedPageWithExtraState<S, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${pageD.name}' ) ( s => s${focus}) (
     ( fullState, state , full, d, mode) => {`,
     `  return (<${layout.name}  details='${layout.details}'>`,
-    `     <${componentName ( dataDD )} state={state}  mode={mode} />`,
+    `     <${componentName ( dataDD )} id='root' state={state}  mode={mode} />`,
     ...indentList ( indentList ( indentList ( makeButtonsFrom ( params, transformButtons, pageD ) ) ) ),
     `   </${layout.name}>)})}`,
     ''
