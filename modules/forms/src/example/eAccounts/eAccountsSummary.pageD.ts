@@ -6,7 +6,7 @@ import { AllButtonsInPage } from "../../buttons/allButtons";
 
 
 /** This is the 'bringing it all together */
-export const EAccountsSummaryPD :PageD<AllButtonsInPage>= {
+export const EAccountsSummaryPD: PageD<AllButtonsInPage> = {
   name: 'EAccountsSummary',
   pageType: 'MainPage',
   /** This page can only view data */
@@ -43,7 +43,7 @@ export const EAccountsSummaryPD :PageD<AllButtonsInPage>= {
       copyFrom: [ 'fromApi', 'createPlan' ],
       restOnCommit: { rest: createPlanRestD, action: 'update', result: 'refresh', target: [ 'EAccountsSummary' ] }
     },
-    deleteExistingPlan: { control: 'RestButton', rest: createPlanRestD, action: 'delete', confirm: true, result: 'refresh' },
+    deleteExistingPlan: { control: 'RestButton', rest: createPlanRestD, action: 'delete', confirm: true, result: 'refresh', path: [ 'EAccountsSummary', 'fromApi' ] },
     refresh: { control: 'ResetStateButton' },
     // requestInfo: { control: 'ModalButton', modal: CreatePlanPD, mode: 'view', mainData: 'TDB', tempData: 'TBD' },
   }

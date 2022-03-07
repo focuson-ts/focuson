@@ -66,7 +66,7 @@ describe ( " listComponentsIn", () => {
       "     <EAccountsSummaryDD id='root' state={state}  mode={mode} />",
       "     <ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  focusOn={['EAccountsSummary','tempCreatePlan']} copyFrom={['EAccountsSummary','fromApi','createPlan']}    pageMode='edit'   rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'update','path':['EAccountsSummary']}} />",
       "     <ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  focusOn={['EAccountsSummary','tempCreatePlan']}  createEmpty={empty.emptyCreatePlanDD}   pageMode='create'   rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'create','path':['EAccountsSummary']}} />",
-      "     <RestButton id='deleteExistingPlan' state={state} />",
+      "     <RestButton  id='deleteExistingPlan'   name='deleteExistingPlan' action='delete' path={['EAccountsSummary','fromApi']} state={state}rest='EAccountsSummary_CreatePlanDDRestDetails' confirm={true} />",
       "     <button>refresh of type ResetStateButton cannot be created yet</button>",
       "   </Layout>)})}",
       "",
@@ -115,14 +115,14 @@ describe ( " listComponentsIn", () => {
   } )
 
   it ( "should createReactPageComponent", () => {
-    expect ( createReactPageComponent ( paramsForTest, transformButtons, EAccountsSummaryPD ) .map(s=>s.replace(/"/g,"'")) ).toEqual ( [
+    expect ( createReactPageComponent ( paramsForTest, transformButtons, EAccountsSummaryPD ) .map(s=>s.replace(/"/g,"'")) ).toEqual ([
       "export function EAccountsSummaryPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){",
       "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
       "     <EAccountsSummaryDD id='root' state={state}  mode={mode} />",
       "     <ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  focusOn={['EAccountsSummary','tempCreatePlan']} copyFrom={['EAccountsSummary','fromApi','createPlan']}    pageMode='edit'   rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'update','path':['EAccountsSummary']}} />",
       "     <ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  focusOn={['EAccountsSummary','tempCreatePlan']}  createEmpty={empty.emptyCreatePlanDD}   pageMode='create'   rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'create','path':['EAccountsSummary']}} />",
-      "     <RestButton id='deleteExistingPlan' state={state} />",
+      "     <RestButton  id='deleteExistingPlan'   name='deleteExistingPlan' action='delete' path={['EAccountsSummary','fromApi']} state={state}rest='EAccountsSummary_CreatePlanDDRestDetails' confirm={true} />",
       "     <button>refresh of type ResetStateButton cannot be created yet</button>",
       "   </Layout>)})}",
       ""

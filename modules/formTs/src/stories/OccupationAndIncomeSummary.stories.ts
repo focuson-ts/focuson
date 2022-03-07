@@ -19,8 +19,9 @@ interface StoryState {
    pageMode: PageMode
 }
  
+const initial = {"selectedItem":0}
 const Template: Story<StoryState> = ( args: StoryState ) =>
-   SBookProvider<FState, Context> ( { ...emptyState, OccupationAndIncomeSummary: { fromApi: args.domain } },//NOTE currently stories only work if the target depth is 1
+   SBookProvider<FState, Context> ( { ...emptyState, OccupationAndIncomeSummary: { ...initial, fromApi: args.domain } },//NOTE currently stories only work if the target depth is 1
      defaultPageSelectionAndRestCommandsContext<FState> ( pages ),
      s => findOneSelectedPageDetails ( s ) ( { pageName: 'OccupationAndIncomeSummary', pageMode:args.pageMode} ) );
  
