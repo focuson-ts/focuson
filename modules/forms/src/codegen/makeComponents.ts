@@ -104,8 +104,8 @@ export function createOneReact<B> ( { path, dataDD, display, displayParams, guar
   const displayParamsString = fullDisplayParams.map ( ( [ k, v ] ) => `${k}=${v}` ).join ( " " )
 
   const guardPrefix = guard ? sortedEntries ( guard ).map ( ( [ n, guard ] ) =>
-    `<Guard value={${guardName ( n )}} cond={${JSON.stringify ( guard )}}>` ) : ''
-  const guardPostfix = guard ? sortedEntries ( guard ).map ( ( [ n, guard ] ) => `</Guard>` ) : ''
+    `<Guard value={${guardName ( n )}} cond={${JSON.stringify ( guard )}}>` ).join ( '' ) : ''
+  const guardPostfix = guard ? sortedEntries ( guard ).map ( ( [ n, guard ] ) => `</Guard>` ).join ( '' ) : ''
   return [ `${guardPrefix}<${name} ${displayParamsString} />${guardPostfix}` ]
 }
 export function createAllReactCalls ( d: AllComponentData[] ): string[] {

@@ -26,7 +26,7 @@ export enum ContactTitle {
 export const CustomerStatus = {
     E: 'Employed',
     S: 'Self Employed',
-    C: 'Currently noy earning',
+    C: 'Currently not earning',
     R: 'Retired',
     T: 'Student',
     U: 'Unknown',

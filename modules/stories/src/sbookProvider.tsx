@@ -8,16 +8,17 @@ import { StateObject } from "@sambego/storybook-state/Store";
 
 export function SBookProvider<S extends StateObject, Context> ( initialState: S, context: Context, component: ( s: LensState<S, S, Context> ) => ReactNode ) {
   const store = new Store<S> ( initialState );
-  function makeState () {
+  function makeState (s:S) {
     return lensState<S, Context> (
-      store.state,
+      s,
       ( m ) => {
         console.log ( 'state change', `${JSON.stringify ( store.state, null, 2 )}===>${JSON.stringify ( m.state, null, 2 )}` );
-        store.set ( m.state );
+        store.set (m);
       },
       'SBookProvider',
       context
     )
   }
-  return <State store={store}>{component ( makeState () )}</State>;
+
+  return <State store={store}>{s=>component ( makeState(s) )}</State>;
 };
