@@ -198,22 +198,22 @@ export const occupationIncomeDetailsDD: DataD = {
 }
 
 export const customerOccupationIncomeDetailsDD: RepeatingDataD = {
-    paged: false,
-    display: SelectedItemCD, // TODO create a component that does not display nothing
-    name: "CustomerOccupationIncomeDetailsDD",
-    description: "This is a summary customer occupations data",
-    displayParams: { index: { value: [ 'selectedItem' ] }, display: {value: occupationIncomeDetailsDD.name} },
-    dataDD: occupationIncomeDetailsDD
+  paged: false,
+  display: SelectedItemCD, // TODO create a component that does not display nothing
+  name: "CustomerOccupationIncomeDetailsDD",
+  description: "This is a summary customer occupations data",
+  displayParams: { index: { value: [ 'selectedItem' ] }, display: { value: occupationIncomeDetailsDD.name } },
+  dataDD: occupationIncomeDetailsDD
 }
 export const occupationAndIncomeDetailsDD: DataD = {
   name: 'OccupationAndIncomeDetailsDD',
   description: 'This is a summary about occupation and income details data',
   structure: {
-    regulatoryReport: { dataDD: StringDD },
+    regulatoryReport: { dataDD: StringDD, hidden: true },
     mainCustomerName: { dataDD: StringDD },
-    jointCustomerName: { dataDD: StringDD },
-    mainClientRef: { dataDD: IntegerDD },
-    jointClientRef: { dataDD: IntegerDD },
+    jointCustomerName: { dataDD: StringDD, hidden: true },
+    mainClientRef: { dataDD: IntegerDD, hidden: true },
+    jointClientRef: { dataDD: IntegerDD, hidden: true },
     customerOccupationIncomeDetails: { dataDD: customerOccupationIncomeDetailsDD }
   }
 }

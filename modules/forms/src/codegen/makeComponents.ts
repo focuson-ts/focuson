@@ -15,6 +15,7 @@ export interface ComponentData {
   path: string[];
   dataDD: AllDataDD;
   display: DisplayCompD;
+  hidden?: boolean;
   guard?: NameAnd<string[]>;
   displayParams?: ComponentDisplayParams
 }
@@ -22,6 +23,11 @@ export interface ErrorComponentData {
   path: string[];
   error: string;
 }
+export function isComponentData ( d: AllComponentData ): d is ComponentData {
+  // @ts-ignore
+  return d.error === undefined
+}
+
 export function isErrorComponentData ( d: AllComponentData ): d is ErrorComponentData {
   // @ts-ignore
   return d.error !== undefined
@@ -36,15 +42,15 @@ export const listComponentsInFolder: AllDataFlatMap<AllComponentData> = {
   stopAtDisplay: true,
   ...emptyDataFlatMap (),
   walkDataStart: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: DataD ): AllComponentData[] =>
-    dataDD.display ? [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display, guard: oneDataDD.guard } ] : [],
+    dataDD.display ? [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display, hidden: oneDataDD.hidden, guard: oneDataDD.guard } ] : [],
 
   walkPrim: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: PrimitiveDD ): AllComponentData[] =>
     dataDD.display ?
-      [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display, guard: oneDataDD.guard } ] :
+      [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display, hidden: oneDataDD.hidden, guard: oneDataDD.guard } ] :
       [ { path, dataDD, error: `Component ${JSON.stringify ( dataDD )} with displayParams [${JSON.stringify ( oneDataDD?.displayParams )}] does not have a display` } ],
 
   walkRepStart: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: RepeatingDataD ): AllComponentData[] =>
-    [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display, guard: oneDataDD.guard } ]
+    [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display, hidden: oneDataDD.hidden, guard: oneDataDD.guard } ]
 }
 
 export const listComponentsIn = ( dataDD: AllDataDD ): AllComponentData[] => flatMapDD ( dataDD, listComponentsInFolder );
@@ -101,7 +107,7 @@ export function createOneReact<B> ( { path, dataDD, display, displayParams, guar
   return [ `${guardPrefix}<${name} ${displayParamsString} />${guardPostfix}` ]
 }
 export function createAllReactCalls ( d: AllComponentData[] ): string[] {
-  return d.flatMap ( d => isErrorComponentData ( d ) ? [ d.error ] : createOneReact ( d ) )
+  return d.filter ( ds => isComponentData ( ds ) && !ds.hidden ).flatMap ( d => isErrorComponentData ( d ) ? [ d.error ] : createOneReact ( d ) )
 }
 
 export function createReactComponent ( dataD: DataD ): string[] {

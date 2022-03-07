@@ -181,11 +181,7 @@ export function ETransferDataD<S, Context extends PageSelectionAndRestCommandsCo
 
 export function OccupationAndIncomeDetailsDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({id,state,mode}: FocusedProps<S, OccupationAndIncomeDetailsDDDomain,Context>){
   return(<>
-  <LabelAndStringInput id={`${id}.regulatoryReport`} state={state.focusOn('regulatoryReport')} mode={mode} label='regulatory report' />
   <LabelAndStringInput id={`${id}.mainCustomerName`} state={state.focusOn('mainCustomerName')} mode={mode} label='main customer name' />
-  <LabelAndStringInput id={`${id}.jointCustomerName`} state={state.focusOn('jointCustomerName')} mode={mode} label='joint customer name' />
-  <LabelAndNumberInput id={`${id}.mainClientRef`} state={state.focusOn('mainClientRef')} mode={mode} label='main client ref' />
-  <LabelAndNumberInput id={`${id}.jointClientRef`} state={state.focusOn('jointClientRef')} mode={mode} label='joint client ref' />
   <SelectedItem id={`${id}.customerOccupationIncomeDetails`} state={state.focusOn('customerOccupationIncomeDetails')} mode={mode} index={pageState(state).focusOn('selectedItem').json()} display={OccupationIncomeDetailsDD} />
 </>)
 }

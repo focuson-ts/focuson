@@ -20,6 +20,7 @@ export function sampleFromDataD ( o: OneDataDD | undefined, d: AllDataDD ): stri
 
 export interface OneDataDD extends HasSample<string> {
   dataDD: AllDataDD;
+  hidden?: boolean;
   guard?: NameAnd<string[]>
   displayParams?: ComponentDisplayParams,
   field?: string, // defaults to the name. if it exists this says which field to use
