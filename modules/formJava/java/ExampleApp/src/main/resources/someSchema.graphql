@@ -6,6 +6,7 @@ type Query{
   getChequeCreditbooksDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!):ChequeCreditbooksDD!
 }
 type Mutation{
+  updateOccupationAndIncomeDetailsDD(accountSeq: String!, applicationRef: String!, brandRef: String!, vbAccountSeq: String!, vbAccountType: String!,obj: OccupationAndIncomeDetailsDDInp!):OccupationAndIncomeDetailsDD!
   createCreatePlanDD(accountId: String!, customerId: String!,obj: CreatePlanDDInp!):CreatePlanDD!
   updateCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanDDInp!):CreatePlanDD!
   deleteCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):String
@@ -41,7 +42,7 @@ type EAccountsSummaryDD{
   createPlan: CreatePlanDD!
 }
 type EAccountSummaryDD{
-  accountId: String!
+  accountId: Int!
   displayType: String!
   description: String!
   virtualBankSeq: String!
@@ -49,12 +50,12 @@ type EAccountSummaryDD{
   frequency: String!
 }
 type ETransferDataD{
-  amount: String!
+  account: Int!
   dateOfETransfer: String!
   description: String!
-  fromAccount: String!
-  toAccount: String!
-  monitoringAccount: String!
+  fromAccount: Int!
+  toAccount: Int!
+  monitoringAccount: Int!
   type: String!
   balance: Int!
   notes: String!
@@ -116,13 +117,50 @@ input CreatePlanDDInp{
   createPlanEnd: String!
 }
 input ETransferDataDInp{
-  amount: String!
+  account: Int!
   dateOfETransfer: String!
   description: String!
-  fromAccount: String!
-  toAccount: String!
-  monitoringAccount: String!
+  fromAccount: Int!
+  toAccount: Int!
+  monitoringAccount: Int!
   type: String!
   balance: Int!
   notes: String!
+}
+input OccupationAndIncomeDetailsDDInp{
+  regulatoryReport: String!
+  mainCustomerName: String!
+  jointCustomerName: String!
+  mainClientRef: Int!
+  jointClientRef: Int!
+  customerOccupationIncomeDetails: [OccupationIncomeDetailsDDInp!]!
+}
+input OccupationIncomeDetailsDDInp{
+  areYou: String!
+  currentEmployment: String!
+  occupation: String!
+  customerDescription: String!
+  ownShareOfTheCompany: String!
+  owningSharesPct: String!
+  workFor: String!
+  employmentType: String!
+  annualSalaryBeforeDeduction: Int!
+  annualIncomeExcludingRent: Int!
+  regularCommissionBonus: Int!
+  dateOfEmploymentStart: String!
+  otherSourceOfIncome: String!
+  createdBy: String!
+  createdDate: String!
+  employerName: String!
+  whatTypeOfBusiness: String!
+  whatNameBusiness: String!
+  establishedYear: String!
+  annualDrawing3Yrs: Int!
+  empStartDate: String!
+  empEndDate: String!
+  sePositionHeld: String!
+  occupationCategory: String!
+  empEmploymentSeq: Int!
+  empAppRoleSeq: Int!
+  accountantAppRoleSeq: Int!
 }

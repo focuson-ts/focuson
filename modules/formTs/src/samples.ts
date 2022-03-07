@@ -33,7 +33,7 @@ export const sampleEAccountsSummaryDD0: domains.EAccountsSummaryDDDomain =
   "useEStatements": true,
   "eAccountsTable": [
     {
-      "accountId": "1233450",
+      "accountId": 1233450,
       "displayType": "checking",
       "description": "This account has a description",
       "virtualBankSeq": "seq1",
@@ -52,7 +52,7 @@ export const sampleEAccountsSummaryDD0: domains.EAccountsSummaryDDDomain =
 }
 export const sampleEAccountSummaryDD0: domains.EAccountSummaryDDDomain = 
 {
-  "accountId": "1233450",
+  "accountId": 1233450,
   "displayType": "checking",
   "description": "This account has a description",
   "virtualBankSeq": "seq1",
@@ -61,12 +61,12 @@ export const sampleEAccountSummaryDD0: domains.EAccountSummaryDDDomain =
 }
 export const sampleETransferDataD0: domains.ETransferDataDDomain = 
 {
-  "amount": "1233450",
+  "account": 1233450,
   "dateOfETransfer": "2020-10-01",
   "description": "Why we are doing this transfer",
-  "fromAccount": "1233450",
-  "toAccount": "1233450",
-  "monitoringAccount": "1233450",
+  "fromAccount": 1233450,
+  "toAccount": 1233450,
+  "monitoringAccount": 1233450,
   "type": "checking",
   "balance": 123,
   "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
@@ -174,7 +174,7 @@ export const sampleEAccountsSummaryDD1: domains.EAccountsSummaryDDDomain =
   "useEStatements": false,
   "eAccountsTable": [
     {
-      "accountId": "3233450",
+      "accountId": 3233450,
       "displayType": "savings",
       "description": "This is a one line string",
       "virtualBankSeq": "seq2",
@@ -193,7 +193,7 @@ export const sampleEAccountsSummaryDD1: domains.EAccountsSummaryDDDomain =
 }
 export const sampleEAccountSummaryDD1: domains.EAccountSummaryDDDomain = 
 {
-  "accountId": "3233450",
+  "accountId": 3233450,
   "displayType": "savings",
   "description": "This is a one line string",
   "virtualBankSeq": "seq2",
@@ -202,12 +202,12 @@ export const sampleEAccountSummaryDD1: domains.EAccountSummaryDDDomain =
 }
 export const sampleETransferDataD1: domains.ETransferDataDDomain = 
 {
-  "amount": "3233450",
+  "account": 3233450,
   "dateOfETransfer": "2022-14-01",
   "description": "This is a one line string",
-  "fromAccount": "3233450",
-  "toAccount": "3233450",
-  "monitoringAccount": "3233450",
+  "fromAccount": 3233450,
+  "toAccount": 3233450,
+  "monitoringAccount": 3233450,
   "type": "savings",
   "balance": 456,
   "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
@@ -315,7 +315,7 @@ export const sampleEAccountsSummaryDD2: domains.EAccountsSummaryDDDomain =
   "useEStatements": true,
   "eAccountsTable": [
     {
-      "accountId": "4333450",
+      "accountId": 4333450,
       "displayType": "This is a one line string",
       "description": "another one line string",
       "virtualBankSeq": "seq3",
@@ -334,7 +334,7 @@ export const sampleEAccountsSummaryDD2: domains.EAccountsSummaryDDDomain =
 }
 export const sampleEAccountSummaryDD2: domains.EAccountSummaryDDDomain = 
 {
-  "accountId": "4333450",
+  "accountId": 4333450,
   "displayType": "This is a one line string",
   "description": "another one line string",
   "virtualBankSeq": "seq3",
@@ -343,12 +343,12 @@ export const sampleEAccountSummaryDD2: domains.EAccountSummaryDDDomain =
 }
 export const sampleETransferDataD2: domains.ETransferDataDDomain = 
 {
-  "amount": "4333450",
+  "account": 4333450,
   "dateOfETransfer": "2020-10-01",
   "description": "another one line string",
-  "fromAccount": "4333450",
-  "toAccount": "4333450",
-  "monitoringAccount": "4333450",
+  "fromAccount": 4333450,
+  "toAccount": 4333450,
+  "monitoringAccount": 4333450,
   "type": "This is a one line string",
   "balance": 123,
   "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"

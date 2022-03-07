@@ -33,7 +33,7 @@ export const emptyEAccountsSummaryDD:domains.EAccountsSummaryDDDomain =
    "useEStatements": false,
    "eAccountsTable": [
      {
-       "accountId": "",
+       "accountId": 0,
        "displayType": "savings",
        "description": "",
        "virtualBankSeq": "",
@@ -52,7 +52,7 @@ export const emptyEAccountsSummaryDD:domains.EAccountsSummaryDDDomain =
  }
 export const emptyEAccountSummaryDD:domains.EAccountSummaryDDDomain =
  {
-   "accountId": "",
+   "accountId": 0,
    "displayType": "savings",
    "description": "",
    "virtualBankSeq": "",
@@ -61,12 +61,12 @@ export const emptyEAccountSummaryDD:domains.EAccountSummaryDDDomain =
  }
 export const emptyETransferDataD:domains.ETransferDataDDomain =
  {
-   "amount": "",
+   "account": 0,
    "dateOfETransfer": "2022-1-1",
    "description": "",
-   "fromAccount": "",
-   "toAccount": "",
-   "monitoringAccount": "",
+   "fromAccount": 0,
+   "toAccount": 0,
+   "monitoringAccount": 0,
    "type": "savings",
    "balance": 0,
    "notes": ""

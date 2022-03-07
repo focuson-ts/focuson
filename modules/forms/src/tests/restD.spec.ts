@@ -22,14 +22,15 @@ describe ( "flatMapActionDetails", () => {
 describe ( "findMustConstructForRest", () => {
   it ( "should find the types that must be constructed", () => {
     let actual = findMustConstructForRest ( [ eAccountsSummaryRestD, createPlanRestD, eAccountsSummaryRestD, createPlanRestD ] );
-    let simpler = { objs: actual.objs.map ( x => x.name ), input: actual.input.map ( x => x.name ), inputWithId: actual.inputWithId.map ( x => x.name ) }
+    let simpler = { objs: actual.objs.map ( x => x.name ), input: actual.input.map ( x => x.name ) }
     expect ( simpler ).toEqual ( {
       "input": [ "CreatePlanDD" ],
-      "inputWithId": [ "CreatePlanDD" ],
       "objs": [ "CreatePlanDD", "EAccountsSummaryDD", "EAccountSummaryDD" ]
     } )
   } )
 } )
+
+
 
 describe ( "makeCommonParamsValueForTest", () => {
   it ( "get the values out of the rest params - for a get", () => {

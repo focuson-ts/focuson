@@ -43,7 +43,7 @@ public class Sample{
         "  \"useEStatements\": true,"+
         "  \"eAccountsTable\": ["+
         "    {"+
-        "      \"accountId\": \"1233450\","+
+        "      \"accountId\": 1233450,"+
         "      \"displayType\": \"checking\","+
         "      \"description\": \"This account has a description\","+
         "      \"virtualBankSeq\": \"seq1\","+
@@ -63,7 +63,7 @@ public class Sample{
  );
  public static Map sampleEAccountSummaryDD0 =  parse.parseMap(
         "{"+
-        "  \"accountId\": \"1233450\","+
+        "  \"accountId\": 1233450,"+
         "  \"displayType\": \"checking\","+
         "  \"description\": \"This account has a description\","+
         "  \"virtualBankSeq\": \"seq1\","+
@@ -73,12 +73,12 @@ public class Sample{
  );
  public static Map sampleETransferDataD0 =  parse.parseMap(
         "{"+
-        "  \"amount\": \"1233450\","+
+        "  \"account\": 1233450,"+
         "  \"dateOfETransfer\": \"2020-10-01\","+
         "  \"description\": \"Why we are doing this transfer\","+
-        "  \"fromAccount\": \"1233450\","+
-        "  \"toAccount\": \"1233450\","+
-        "  \"monitoringAccount\": \"1233450\","+
+        "  \"fromAccount\": 1233450,"+
+        "  \"toAccount\": 1233450,"+
+        "  \"monitoringAccount\": 1233450,"+
         "  \"type\": \"checking\","+
         "  \"balance\": 123,"+
         "  \"notes\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit\""+

@@ -26,7 +26,7 @@ export interface EAccountsSummaryDDDomain{
   useEStatements: boolean;
 }
 export interface EAccountSummaryDDDomain{
-  accountId: string;
+  accountId: number;
   description: string;
   displayType: string;
   frequency: string;
@@ -34,14 +34,14 @@ export interface EAccountSummaryDDDomain{
   virtualBankSeq: string;
 }
 export interface ETransferDataDDomain{
-  amount: string;
+  account: number;
   balance: number;
   dateOfETransfer: string;
   description: string;
-  fromAccount: string;
-  monitoringAccount: string;
+  fromAccount: number;
+  monitoringAccount: number;
   notes: string;
-  toAccount: string;
+  toAccount: number;
   type: string;
 }
 export interface OccupationAndIncomeDetailsDDDomain{

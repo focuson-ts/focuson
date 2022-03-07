@@ -10,7 +10,6 @@ export const frequencyDD: StringPrimitiveDD = {
   name: 'FrequencyDD',
   description: "Income frequency",
   // display: DropDownCD,
-  validation: {}, //Note no regex
   enum: HowOften
 }
 export const otherIncomeResponseDD: DataD = {
@@ -83,7 +82,6 @@ export const contactTitleDD: StringPrimitiveDD = {
   name: 'ContactTitleDD',
   description: "contact title to address with",
   // display: DropDownCD,
-  validation: {}, //Note no regex
   enum: ContactTitle
 }
 export const accountDetailsDD: DataD = {
@@ -143,7 +141,6 @@ export const yesNoDD: StringPrimitiveDD = {
   name: 'YesNoDD',
   description: "yes/no enum",
   // display: DropDownCD,
-  validation: {}, //Note no regex
   enum: YesNo
 }
 export const customerStatusDD: StringPrimitiveDD = {
@@ -151,7 +148,7 @@ export const customerStatusDD: StringPrimitiveDD = {
   name: 'CustomerStatusDD',
   description: "Customer status enum",
   // display: DropDownCD,
-  validation: {}, //Note no regex
+
   enum: CustomerStatus
 }
 export const employmentTypeDD: StringPrimitiveDD = {
@@ -159,7 +156,6 @@ export const employmentTypeDD: StringPrimitiveDD = {
   name: 'EmploymentTypeDD',
   description: "Employment contract type",
   // display: DropDownCD,
-  validation: {}, //Note no regex
   enum: EmploymentType
 }
 export const occupationIncomeDetailsDD: DataD = {

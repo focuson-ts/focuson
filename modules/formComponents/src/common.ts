@@ -7,7 +7,17 @@ export interface CommonComponentProps {
   name?: string;
   ariaLabel?: string;
   mode?: PageMode;
+  required?: boolean;
 }
+export interface StringValidations {
+  minlength?: number;
+  maxlength?: number;
+}
+export interface NumberValidations {
+  min?: number;
+  max?: number;
+}
+export interface BooleanValidations {}
 
 
 export interface CommonStateProps<S, T, Context> extends CommonComponentProps {

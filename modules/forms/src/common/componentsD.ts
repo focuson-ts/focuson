@@ -4,7 +4,7 @@
  * string and string[] are just the types
  *
  * */
-export type DisplayCompParamType = 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'string[]'
+export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'string[]'
 
 type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam'
 
@@ -28,18 +28,30 @@ export const commonParams: DisplayCompParamD = {
   mode: { paramType: 'object', needed: 'no', default: 'mode' },
   ariaLabel: { paramType: 'string', needed: 'no' },
 }
+
+
+export const stringValidationParams: DisplayCompParamD = {
+  required: { paramType: 'boolean', needed: 'no', default: true },
+  minlength: { paramType: 'object', needed: 'no' },
+  maxlength: { paramType: 'object', needed: 'no' },
+}
+export const intValidationParams: DisplayCompParamD = {
+  required: { paramType: 'boolean', needed: 'no', default: true },
+  min: { paramType: 'object', needed: 'no' },
+  max: { paramType: 'object', needed: 'no' },
+}
 export const commonParamsWithLabel: DisplayCompParamD = {
   ...commonParams,
   label: { paramType: 'string', needed: 'defaultToCamelCaseOfName' },
 }
 export const LabelAndStringInputCD: DisplayCompD = {
   import: "./copied/LabelAndInput", name: "LabelAndStringInput",
-  params: commonParamsWithLabel
+  params: { ...commonParamsWithLabel, ...stringValidationParams }
 }
 
 export const LabelAndNumberInputCD: DisplayCompD = {
   import: "./copied/LabelAndInput", name: "LabelAndNumberInput",
-  params: commonParamsWithLabel
+  params: { ...commonParamsWithLabel, ...intValidationParams }
 }
 
 export const LabelAndCheckboxInputCD: DisplayCompD = {

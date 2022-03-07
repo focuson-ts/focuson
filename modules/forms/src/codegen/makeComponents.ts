@@ -55,7 +55,7 @@ export const listComponentsInFolder: AllDataFlatMap<AllComponentData> = {
 
 export const listComponentsIn = ( dataDD: AllDataDD ): AllComponentData[] => flatMapDD ( dataDD, listComponentsInFolder );
 
-export const processParam = ( path: string[], dataDD: AllDataDD, dcd: DisplayCompD ) => ( name: string, s: string | string[] ) => {
+export const processParam = ( path: string[], dataDD: AllDataDD, dcd: DisplayCompD ) => ( name: string, s: number | string | string[] ) => {
   const dcdType: OneDisplayCompParamD<any> = dcd.params[ name ]
   function errorPrefix () {return `Component ${dataDD.name} for ${path} has a display component ${dcd.name} and sets a param ${name} `}
   if ( dcdType === undefined ) throw new Error ( `${errorPrefix ()}. Legal values are ${sortedEntries ( dcd.params ).map ( t => t[ 0 ] ).join ( ',' )}` )
@@ -69,7 +69,9 @@ export const processParam = ( path: string[], dataDD: AllDataDD, dcd: DisplayCom
     if ( Array.isArray ( s ) ) return `{${prefix}${focusOnFor ( s )}${postFix}}`; else
       throw new Error ( `${errorPrefix ()} needs to be a string[]. Actually is ${typeof s}, with value ${JSON.stringify ( s )}` )
   }
+
   if ( dcdType.paramType === 'string' ) return processStringParam ()
+  if ( dcdType.paramType === 'boolean' ) return processObjectParam ()
   if ( dcdType.paramType === 'object' ) return processObjectParam ()
   if ( dcdType.paramType === 'string[]' ) return processStringArrayParam ()
   if ( dcdType.paramType === 'fullState' ) return processState ( 'fullState(state)', '' )

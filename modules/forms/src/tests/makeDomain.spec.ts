@@ -19,14 +19,14 @@ describe ( "makeDomainFor", () => {
     ])
     expect ( makeDomainFor ( EAccountSummaryDD ) ).toEqual ( [
       "export interface EAccountSummaryDDDomain{",
-      "  accountId: string;",
+      "  accountId: number;",
       "  description: string;",
       "  displayType: string;",
       "  frequency: string;",
       "  total: number;",
       "  virtualBankSeq: string;",
       "}"
-    ] )
+    ])
     expect ( makeDomainFor ( CreatePlanDD ) ).toEqual ( [
       "export interface CreatePlanDDDomain{",
       "  createPlanDate: string;",
@@ -58,7 +58,7 @@ describe ( "makeAllDomainsFor", () => {
       "  useEStatements: boolean;",
       "}",
       "export interface EAccountSummaryDDDomain{",
-      "  accountId: string;",
+      "  accountId: number;",
       "  description: string;",
       "  displayType: string;",
       "  frequency: string;",

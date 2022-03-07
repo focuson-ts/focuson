@@ -19,7 +19,7 @@ interface StoryState {
    pageMode: PageMode
 }
  
-const initial = {}
+const initial = {"fromApi":{}}
 const Template: Story<StoryState> = ( args: StoryState ) =>
    SBookProvider<FState, Context> ( { ...emptyState, ETransfer: { ...initial, fromApi: args.domain } },//NOTE currently stories only work if the target depth is 1
      defaultPageSelectionAndRestCommandsContext<FState> ( pages ),

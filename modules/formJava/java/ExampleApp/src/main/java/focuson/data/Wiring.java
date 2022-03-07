@@ -51,6 +51,7 @@ public class Wiring {
     private RuntimeWiring buildWiring() {
         return RuntimeWiring.newRuntimeWiring()
           .type(newTypeWiring("Query").dataFetcher("getOccupationAndIncomeDetailsDD", _OccupationAndIncomeDetailsDDFFetcher.getOccupationAndIncomeDetailsDD()))
+          .type(newTypeWiring("Mutation").dataFetcher("updateOccupationAndIncomeDetailsDD", _OccupationAndIncomeDetailsDDFFetcher.updateOccupationAndIncomeDetailsDD()))
           .type(newTypeWiring("Query").dataFetcher("getCreatePlanDD", _CreatePlanDDFFetcher.getCreatePlanDD()))
           .type(newTypeWiring("Mutation").dataFetcher("createCreatePlanDD", _CreatePlanDDFFetcher.createCreatePlanDD()))
           .type(newTypeWiring("Mutation").dataFetcher("updateCreatePlanDD", _CreatePlanDDFFetcher.updateCreatePlanDD()))

@@ -75,7 +75,7 @@ export const makeSchemaBlock = ( keyword: string, suffix: string ) => ( d: DataD
 export const makeGraphQlSchema = ( rs: RestD[] ): string[] => {
   const query = makeQueryOrMutateBlock ( rs, 'Query' )
   const mutate = makeQueryOrMutateBlock ( rs, 'Mutation' )
-  const { input, objs, inputWithId } = findMustConstructForRest ( rs )
+  const { input, objs } = findMustConstructForRest ( rs )
   const doOne = ( keyword: string, suffix: string, ds: DataD[] ): string[] => ds.flatMap ( makeSchemaBlock ( keyword, suffix ) );
 
   return [

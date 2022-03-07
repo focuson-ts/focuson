@@ -40,7 +40,7 @@ describe ( "makeGraphQlSchema", () => {
     ] )
     expect ( makeSchemaBlock ( 'input', 'xx' ) ( EAccountSummaryDD ) ).toEqual ( [
       "input EAccountSummaryDDxx{",
-      "  accountId: String!",
+      "  accountId: Int!",
       "  displayType: String!",
       "  description: String!",
       "  virtualBankSeq: String!",
@@ -83,7 +83,7 @@ describe ( "makeGraphQlSchema", () => {
       "  createPlan: CreatePlanDD!",
       "}",
       "type EAccountSummaryDD{",
-      "  accountId: String!",
+      "  accountId: Int!",
       "  displayType: String!",
       "  description: String!",
       "  virtualBankSeq: String!",
@@ -95,6 +95,6 @@ describe ( "makeGraphQlSchema", () => {
       "  createPlanDate: String!",
       "  createPlanEnd: String!",
       "}"
-    ] )
+    ])
   } )
 } )

@@ -15,6 +15,6 @@ export const occupationAndIncomeRD: RestD = {
     params: commonParams,
     dataDD: occupationAndIncomeDetailsDD,
     url: '/customer/occupation/v2/occupationIncomeDetails?{query}',
-    actions: [ 'get' ],
+    actions: [ 'get' , "update"],
 }
 

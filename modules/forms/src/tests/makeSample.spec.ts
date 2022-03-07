@@ -28,7 +28,7 @@ describe ( "makeEmptyTs", () => {
       "currentAccountBalance": 0,
       "eAccountsTable": [
         {
-          "accountId": "",
+          "accountId": 0,
           "description": "",
           "displayType": "savings",
           "frequency": "",
@@ -39,7 +39,7 @@ describe ( "makeEmptyTs", () => {
       "oneAccountBalance": 0,
       "totalMonthlyCost": 0,
       "useEStatements": false
-    })
+    } )
   } )
 } )
 describe ( 'makeSample', () => {
@@ -58,7 +58,7 @@ describe ( 'makeSample', () => {
       "currentAccountBalance": 12321,
       "eAccountsTable": [
         {
-          "accountId": "1233450",
+          "accountId": 1233450,
           "description": "This account has a description",
           "displayType": "checking",
           "frequency": "23",
@@ -69,7 +69,7 @@ describe ( 'makeSample', () => {
       "oneAccountBalance": 9921,
       "totalMonthlyCost": 1000,
       "useEStatements": true
-    })
+    } )
   } )
 
 } );
@@ -82,7 +82,7 @@ describe ( "makeJavaVariable", () => {
       "       '  \\'useEStatements\\': true,'+",
       "       '  \\'eAccountsTable\\': ['+",
       "       '    {'+",
-      "       '      \\'accountId\\': \\'1233450\\','+",
+      "       '      \\'accountId\\': 1233450,'+",
       "       '      \\'displayType\\': \\'checking\\','+",
       "       '      \\'description\\': \\'This account has a description\\','+",
       "       '      \\'virtualBankSeq\\': \\'seq1\\','+",
@@ -113,6 +113,6 @@ describe ( "makeSampleVariable", () => {
       "  'createPlanDate': '2022-03-01',",
       "  'createPlanEnd': '2022-10-01'",
       "}"
-    ])
+    ] )
   } )
 } )

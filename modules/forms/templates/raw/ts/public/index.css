@@ -20,3 +20,9 @@ table {
 .status {
     margin-bottom: 10px;
 }
+input:invalid {
+    background: #ffdddd;
+}
+input:valid{
+    background:#ddffdd;
+}

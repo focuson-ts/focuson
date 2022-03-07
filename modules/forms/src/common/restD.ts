@@ -83,19 +83,19 @@ export function flapMapActionDetails<Acc> ( r: RestD, fn: ( r: RestD, rt: RestAc
 export interface MustConstructForRest {
   objs: DataD[],
   input: DataD[],
-  inputWithId: DataD[]
+  // inputWithId: DataD[]
 }
 
 export function findMustConstructForRest ( rs: RestD[] ): MustConstructForRest {
   const objs = new Set<DataD> ()
   const input = new Set<DataD> ()
-  const inputWithId = new Set<DataD> ()
+  // const inputWithId = new Set<DataD> ()
   rs.flatMap ( findDataDsAndRestTypeDetails ).forEach ( ( [ d, rt ] ) => {
-    if ( rt.params.needsObj ) if ( rt.params.needsId ) inputWithId.add ( d ); else input.add ( d )
+    if ( rt.params.needsObj ) if ( rt.params.needsId ) input.add ( d ); else input.add ( d )
     if ( rt.output.needsObj ) objs.add ( d )
   } )
   function ordered ( ds: Set<DataD> ) {return [ ...ds ].sort ( ( a, b ) => a.name.localeCompare ( b.name ) )}
-  return { objs: ordered ( objs ), input: ordered ( input ), inputWithId: ordered ( inputWithId ) }
+  return { objs: ordered ( objs ), input: ordered ( input )}
 }
 
 export function findDataDsAndRestTypeDetails ( r: RestD ): [ DataD, RestActionDetail ][] {

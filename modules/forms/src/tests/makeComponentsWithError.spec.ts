@@ -9,7 +9,6 @@ export const TheAccountDD: StringPrimitiveDD = {
   description: "The component that displays an EAccountDisplayType (savings/checking)",
   display: LabelAndStringInputCD,
   displayParams: { someUnrecognisedParam: { value: 'who cares' } },
-  validation: { enum: true, maxLength: 7 },
   enum: { savings: 'Savings', checking: 'Checking' }
   //Note samples come from enum
 }

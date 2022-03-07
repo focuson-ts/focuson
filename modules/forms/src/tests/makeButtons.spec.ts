@@ -10,7 +10,7 @@ describe ( "makeButtons", () => {
     expect ( makeButtonsFrom ( paramsForTest, transformButtons, EAccountsSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
       "  <ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  focusOn={['EAccountsSummary','tempCreatePlan']} copyFrom={['EAccountsSummary','fromApi','createPlan']}    pageMode='edit'   rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'update','path':['EAccountsSummary']}} />",
       "  <ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  focusOn={['EAccountsSummary','tempCreatePlan']}  createEmpty={empty.emptyCreatePlanDD}   pageMode='create'   rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'create','path':['EAccountsSummary']}} />",
-      "  <RestButton  id='deleteExistingPlan'   name='deleteExistingPlan' action='delete' path={['EAccountsSummary','fromApi']} state={state}rest='EAccountsSummary_CreatePlanDDRestDetails' confirm={true} />",
+      "  <RestButton  id='deleteExistingPlan'   name='deleteExistingPlan' action='delete' path={['EAccountsSummary','fromApi']} state={state} rest='EAccountsSummary_CreatePlanDDRestDetails' confirm={true} />",
       "  <button>refresh of type ResetStateButton cannot be created yet</button>"
     ])
   } )

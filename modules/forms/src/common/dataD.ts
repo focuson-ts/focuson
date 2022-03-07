@@ -29,7 +29,7 @@ export interface ManyDataDD {
   [ name: string ]: OneDataDD
 }
 export interface OneDisplayParamDD {
-  value: string | string[]
+  value: number | string | string[]
 }
 export interface DisplayParamDD {
   [ name: string ]: OneDisplayParamDD
@@ -62,7 +62,6 @@ export interface CommonPrimitiveDD<T> extends CommonDataDD, HasSample<T>, HasEnu
   emptyValue: T;
   label?: string;
   display: DisplayCompD;
-  validation: SingleFieldValidationDD;
   fieldName?: string;
   graphQlType: string;
 }
@@ -181,74 +180,75 @@ export function isDataDd ( d: any ): d is DataD {
   return !!d.structure
 }
 
-export interface SingleFieldValidationDD {
-  regex?: string,
-  minLength?: number;
-  maxLength?: number;
-  enum?: boolean,
-}
 export interface EnumDD {
   [ name: string ]: string
 }
 
-export const CustomerIdDD: StringPrimitiveDD = {
-  emptyValue: "",
-  reactType: "string",
-  graphQlType: 'String',
-  name: 'CustomerIdDD',
-  description: "A customer id",
-  display: LabelAndStringInputCD,
-  validation: { regex: "\d+", maxLength: 7 },
-  sample: [ "003450" ]
-}
-export const AccountIdDD: StringPrimitiveDD = {
-  name: 'AccountIdDD',
-  emptyValue: "",
-  graphQlType: 'String',
-  reactType: 'string',
-  description: "An account id",
-  display: LabelAndStringInputCD,
-  validation: { regex: "\d+", maxLength: 7 },
-  sample: [ "1233450", "3233450", "4333450" ]
-}
-export const StringDD: StringPrimitiveDD = {
-  name: 'StringDD',
-  emptyValue: "",
-  graphQlType: 'String',
-  reactType: 'string',
-  description: "The primitive 'string'. A reasonably short list of characters",
-  display: LabelAndStringInputCD,
-  validation: { maxLength: 255 }, //Note no regex
-  sample: [ "someString", "anotherString" ]
-}
-export const OneLineStringDD: StringPrimitiveDD = {
-  emptyValue: "",
-  name: 'OneLineStringDD',
+interface StringPrimDD {
+  emptyValue: string;
   reactType: 'string',
   graphQlType: 'String',
-  description: "A string that fits on a line of text. Probably reasonably long",
-  display: LabelAndStringInputCD,
-  validation: { maxLength: 255 }, //Note no regex
-  sample: [ "This is a one line string", "another one line string" ]
 }
-export const ManyLineStringDD: StringPrimitiveDD = {
+export const stringPrimDD: StringPrimDD = {
   emptyValue: "",
-  name: 'ManyLineStringDD',
   reactType: 'string',
   graphQlType: 'String',
-  description: "A string that needs many lines and uses a text Area",
-  display: LabelAndStringInputCD,
-  validation: {},
-  sample: [ "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit" ]
 }
-export const IntegerDD: NumberPrimitiveDD = {
+interface NumberPrimDD {
+  name: 'IntegerDD',
+  emptyValue: number,
+  graphQlType: 'Int',
+  reactType: 'number'
+}
+export const numberPrimDD: NumberPrimDD = {
   name: 'IntegerDD',
   emptyValue: 0,
   graphQlType: 'Int',
-  reactType: 'number',
+  reactType: 'number'
+}
+
+export const CustomerIdDD: StringPrimitiveDD = {
+  ...stringPrimDD,
+  name: 'CustomerIdDD',
+  description: "A customer id",
+  display: LabelAndStringInputCD,
+  sample: [ "003450" ]
+}
+export const AccountIdDD: NumberPrimitiveDD = {
+  ...numberPrimDD,
+  name: 'AccountIdDD',
+  description: "An account id",
+  display: LabelAndNumberInputCD,
+  displayParams: { min: { value: 10000000 }, max: { value: 99999999 } },
+  sample: [ 1233450, 3233450, 4333450 ]
+}
+export const StringDD: StringPrimitiveDD = {
+  ...stringPrimDD,
+  name: 'StringDD',
+  description: "The primitive 'string'. A reasonably short list of characters",
+  display: LabelAndStringInputCD,
+  sample: [ "someString", "anotherString" ]
+}
+export const OneLineStringDD: StringPrimitiveDD = {
+  ...stringPrimDD,
+  name: 'OneLineStringDD',
+  graphQlType: 'String',
+  description: "A string that fits on a line of text. Probably reasonably long",
+  display: LabelAndStringInputCD,
+  sample: [ "This is a one line string", "another one line string" ]
+}
+export const ManyLineStringDD: StringPrimitiveDD = {
+  ...stringPrimDD,
+  name: 'ManyLineStringDD',
+  description: "A string that needs many lines and uses a text Area",
+  display: LabelAndStringInputCD,
+  sample: [ "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit" ]
+}
+export const IntegerDD: NumberPrimitiveDD = {
+...numberPrimDD,
+  name: 'IntegerDD',
   description: "The primitive 'Integer'",
   display: LabelAndNumberInputCD,
-  validation: { regex: "\d+", maxLength: 255 },
   sample: [ 123, 456 ]
 }
 export const MoneyDD: NumberPrimitiveDD = {
@@ -257,34 +257,29 @@ export const MoneyDD: NumberPrimitiveDD = {
   name: 'IntegerDD'
 }
 export const BooleanDD: PrimitiveDD = {
-  name: 'IntegerDD',
+  name: 'BooleanDD',
   emptyValue: false,
   graphQlType: 'Boolean',
   reactType: 'boolean',
   description: "The primitive 'Boolean'",
   display: LabelAndCheckboxInputCD,
-  validation: { regex: "\d+", maxLength: 255 },
   sample: [ true, false ]
 }
 export const DateDD: StringPrimitiveDD = {
+  ...stringPrimDD,
   name: 'DateDD',
-  reactType: 'string',
-  graphQlType: 'String',
   emptyValue: '2022-1-1',
   description: "The primitive representing a date (w/o time)",
   display: LabelAndStringInputCD, //or maybe a date picker
-  validation: { regex: "\d+", maxLength: 8 },
   sample: [ "2020-10-01", '2022-14-01' ]
 }
 
 export const DateTimeDD: PrimitiveDD = {
+  ...stringPrimDD,
   name: 'DateTimeDD',
-  reactType: 'string',
-  graphQlType: 'String',
   emptyValue: '2022-1-1T00:00:00',
   description: "The primitive representing a date (with time)",
   display: LabelAndStringInputCD, //or maybe a date picker
-  validation: { regex: "\d+", maxLength: 20 },
   sample: [ "2020-10-01T06:30:00", '2022-14-01T14:30:00' ]
 }
 

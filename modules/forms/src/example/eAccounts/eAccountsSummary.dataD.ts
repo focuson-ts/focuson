@@ -8,7 +8,6 @@ export const EAccountDisplayTypeDD: StringPrimitiveDD = {
   name: "EAccountDisplayTypeDD",
   description: "The component that displays an EAccountDisplayType (savings/checking)",
   display: LabelAndRadioCD,
-  validation: { enum: true, maxLength: 7 },
   enum: { savings: 'Savings', checking: 'Checking' }
   //Note samples come from enum
 }

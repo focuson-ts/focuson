@@ -8,7 +8,6 @@ const SavingsStyleDD: StringPrimitiveDD = {
   emptyValue: "adhoc",
   description: "Radio buttons that say how you want to accumulate  money",
   display: RadioCD,
-  validation: { enum: true },
   enum: {
     adHoc: 'Save what you want, when you want it',
     payRegular: 'Pay a regular amount until you reach a target',
