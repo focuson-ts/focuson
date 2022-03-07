@@ -1,9 +1,9 @@
-import { HasPageSelection, MultiPageDetails, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages } from "@focuson/pages";
-import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
-import { FetcherTree, loadTree, wouldLoad, wouldLoadSummary } from "@focuson/fetcher";
+import { HasPageSelection, lensForPageDetails, MultiPageDetails, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages } from "@focuson/pages";
+import { HasPostCommand, HasPostCommandLens, PostCommand } from "@focuson/poster";
+import { Fetcher, FetcherTree, LoadInfo, loadTree, WouldLoad, wouldLoad, wouldLoadSummary } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
-import { Lens, Lenses, Optional } from "@focuson/lens";
-import { FetchFn } from "@focuson/utils";
+import { Lens, Lenses, massTransform, Optional, Transform } from "@focuson/lens";
+import { FetchFn, safeArray } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestDetails } from "@focuson/rest";
 
 
@@ -66,6 +66,7 @@ export interface FocusOnConfig<S, Context, MSGs> {
 export function traceL<S> () {
   return Lenses.fromPath<S, string[]> ( [ 'trace' ] );
 }
+
 export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MSGs> ( config: FocusOnConfig<S, Context, MSGs>, context: Context, publish: ( lc: LensState<S, S, Context> ) => void ): ( s: S, reason: any ) => Promise<S> {
   return async ( main: S, reason: any ): Promise<S> => {
     console.log ( 'setJsonForFocusOn', reason )

@@ -1,0 +1,75 @@
+//Target interfaces...we want to refactor to these
+export interface OneFetcherForFocusOnResultsT<S, T> {
+  fetcher: Fetcher<S, T>;
+  loadInfo: LoadInfo<S, T>;
+  res: Promise<[ number, T ]>
+}
+export interface OneFetcherGeneration<S> {
+  gen: OneFetcherForFocusOnResultsT<S, any>[]
+  nextGen: Promise<OneFetcherGeneration<S>> | undefined
+}
+export interface RestForFocusOnResultsT<S, T> {
+  command: PostCommand<S, any, any>;
+  txs: Promise<Transform<S, T>[]>
+}
+export interface JsonForFocusOnResultsT<S> {
+  start: S;
+  reason: any;
+  /** Recording reason, but not recording the results of the fetchers/rest */
+  debugTx: Transform<S, any>;
+  /** The changes to the page selections because 'it is a new page'. */
+  newPageTxs: Transform<S, any | undefined>[];
+  /** This is the state after the newPageTxs were applied, and the one used to calculate the fetcher/rest. It's also the state that we render while waiting */
+  stateForRest: S
+  rest: RestForFocusOnResultsT<S, any>[]
+  stateForFetchers
+  fetchers: OneFetcherGeneration<S>;
+}
+
+function calculateNewPageTxs<S, Context extends PageSelectionContext<S>, MSGs> ( config: FocusOnConfig<S, Context, MSGs>, c: Context, s: S ): Transform<S, any | undefined>[] {
+  let pageDetails = c.pages;
+  return safeArray ( c.pageSelectionL.getOption ( s ) ).flatMap ( ( ps, i ) => {
+    const { firstTime, pageName, focusOn } = ps
+    const details = pageDetails[ pageName ]
+    if ( !details ) throw new Error ( `Could not find details for ${pageName}. LegalValues are ${Object.keys ( pageDetails ).join ( "," )}` )
+    if ( firstTime ) {
+      const dataLens: Optional<S, any> = lensForPageDetails ( details, focusOn )
+      let firstTimeLens = c.pageSelectionL.chain ( Lenses.nth ( i ) ).focusOn ( 'firstTime' );
+      const firstTimeTx: Transform<S, any> = [ firstTimeLens, () => false ]
+      if ( details.clearAtStart && details.initialValue ) throw new Error ( `page ${pageName} has both clear at start and initialValue set` )
+      if ( details.clearAtStart ) return [ firstTimeTx, [ dataLens, () => undefined ] ]
+      if ( details.initialValue ) return [ firstTimeTx, [ dataLens, () => details.initialValue ] ]
+      return [ firstTimeTx ]
+    } else return []
+  } )
+}
+//TODO Redo to allow for generations... that's interesting... But doable...needs thought...
+export const calculateFetcherTxs = <S, Context extends PageSelectionContext<S>, MSGs> ( config: FocusOnConfig<S, Context, MSGs>, s: S ): OneFetcherGeneration<S> => {
+  let ws: WouldLoad[] = wouldLoad ( config.fetchers, s );
+  const gen = ws.filter ( w => w.load ).map ( w => {
+    let fetcher = w.fetcher;
+    const loadInfo: LoadInfo<S, any> = fetcher.load ( s )
+    const res = config.fetchFn ( loadInfo.requestInfo, loadInfo.requestInit )
+    return { fetcher, res, loadInfo }
+  } )
+  return { gen, nextGen: undefined } // currently throwing away the next generation data
+}
+
+export const workOutWhatToDo = <S, Context extends PageSelectionContext<S>, MSGs> ( config: FocusOnConfig<S, Context, MSGs>, context: Context, publish: ( lc: LensState<S, S, Context> ) => void ) =>
+  ( s: S, reason: any ): JsonForFocusOnResultsT<S> => {
+    let newPageTxs: Transform<S, any>[] = calculateNewPageTxs ( config, context, s );
+    let debugTx: Transform<S, any> = [ traceL (), old => [ ...old ? old : [], reason ] ];
+    const stateForRest = massTransform ( s, ...newPageTxs, debugTx )
+    let rest: RestForFocusOnResultsT<S, any>[] = calculateRestTxs ( config, context, s );
+    Promise.all(rest.flatMap(r => r.txs)).then(txs => massTransform(stateForRest, ...txs))
+    const stateForFetchers = massTransform(stateForRest, rest.flatMap()
+    const fetchers = calculateFetcherTxs ( config, stateForFetchers );
+    return ({
+      start: s,
+      reason, debugTx, newPageTxs,
+      stateForRest,
+      rest,
+      stateForFetchers,
+      fetchers
+    })
+  }
