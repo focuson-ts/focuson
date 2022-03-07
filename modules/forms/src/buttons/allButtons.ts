@@ -1,9 +1,9 @@
 import { makeModalButtons, ModalButtonInPage } from "./modalButtons";
 import { ResetStateButton } from "./stateButtons";
 import { ListNextButtonInPage, ListPrevButtonInPage, makeListMarkerButtons } from "./listButtons";
-import { makeRestButtonFrom, RestButtonInPage } from "./restButtons";
 import { MakeButton } from "../codegen/makeButtons";
 import { makeModalCloseButtons, ModalCloseButton } from "./modalCloseButtons";
+import { makeRestButtons, RestButtonInPage } from "./restButton";
 
 
 export interface ButtonD {
@@ -16,6 +16,6 @@ export const transformButtons: MakeButton = {
   ...makeModalButtons,
   ...makeModalCloseButtons,
   ...makeListMarkerButtons,
-  RestButton: makeRestButtonFrom
+  ...makeRestButtons
 }
 

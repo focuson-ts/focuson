@@ -58,7 +58,7 @@ export function EAccountsSummaryPage<S, Context extends PageSelectionAndRestComm
      <EAccountsSummaryDD id='root' state={state}  mode={mode} />
      <ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  focusOn={["EAccountsSummary","tempCreatePlan"]} copyFrom={["EAccountsSummary","fromApi","createPlan"]}    pageMode='edit'   rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"update","path":["EAccountsSummary"]}} />
      <ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  focusOn={["EAccountsSummary","tempCreatePlan"]}  createEmpty={empty.emptyCreatePlanDD}   pageMode='create'   rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"create","path":["EAccountsSummary"]}} />
-     <RestButton id='deleteExistingPlan' state={state} />
+     <RestButton  id='deleteExistingPlan'   name='deleteExistingPlan' action='delete' state={state}rest='EAccountsSummary_CreatePlanDDRestDetails' confirm={true} />
      <button>refresh of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 
@@ -77,7 +77,7 @@ export function ETransferPage<S, Context extends PageSelectionAndRestCommandsCon
   return (<Layout  details='[3][1,1,1][1,1][1][3]'>
      <ETransferDataD id='root' state={state}  mode={mode} />
      <button>cancel of type ResetStateButton cannot be created yet</button>
-     <RestButton id='eTransfers' state={state} />
+     <RestButton  id='eTransfers'   name='eTransfers' action='create' state={state}rest='ETransfer_ETransferDataDRestDetails' confirm={true} />
      <button>resetAll of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 
@@ -87,7 +87,7 @@ export function CreateEAccountPage<S, Context extends PageSelectionAndRestComman
   return (<Layout  details='[1][1][1][1]]'>
      <CreateEAccountDataDD id='root' state={state}  mode={mode} />
      <button>cancel of type ResetStateButton cannot be created yet</button>
-     <RestButton id='eTransfers' state={state} />
+     <RestButton  id='eTransfers'   name='eTransfers' action='create' state={state}rest='CreateEAccount_ETransferDataDRestDetails' confirm={true} />
      <button>resetAll of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 
