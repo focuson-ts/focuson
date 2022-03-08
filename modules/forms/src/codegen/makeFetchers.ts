@@ -1,8 +1,8 @@
 import { sortedEntries } from "@focuson/utils";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
 import { domainName, fetcherName, pageDomainName } from "./names";
-import { CombinedParams, TSParams } from "./config";
-import { addStringToEndOfAllButLast, imports, noExtension } from "./codegen";
+import { TSParams } from "./config";
+import { addStringToEndOfAllButLast, importsDot, importsDotDot, noExtension } from "./codegen";
 import { findIds } from "../common/restD";
 
 
@@ -18,29 +18,14 @@ export const makeFetcherCode = ( params: TSParams ) => <B> ( p: PageD<B> ) => ( 
 
   return [
     `//fetcher type ${def.fetcher}`,
-    `export function ${fetcherName ( def )}<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<S, ${pageDomain}.${pageDomainName ( p )}>,commonIds: NameAndLens<S>) {`,
-    `  return pageAndTagFetcher<S, ${pageDomain}.${pageDomainName ( p )}, ${domain}.${dataType}, SimpleMessage>(`,
+    `export function ${fetcherName ( def )}<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<S, ${domain}.${pageDomainName ( p )}>,commonIds: NameAndLens<S>) {`,
+    `  return pageAndTagFetcher<S, ${domain}.${pageDomainName ( p )}, ${domain}.${dataType}, SimpleMessage>(`,
     `    ${common}.commonFetch<S,  ${domain}.${dataType}>(),`,
     `     '${p.name}',`,
     `     '${targetFromPath}', fdLens, commonIds, {},${JSON.stringify ( ids )},${JSON.stringify ( resourceIds )},`,
-    `      Lenses.identity< ${pageDomain}.${pageDomainName ( p )}> ().focusQuery ( '${targetFromPath}' ),`,
+    `      Lenses.identity< ${domain}.${pageDomainName ( p )}> ().focusQuery ( '${targetFromPath}' ),`,
     `     '${def.rest.url}')`,
-
-    //
-    // `     (s) => s.focusQuery('${targetFromPath}'),`,
-    // `     tagOps.tags(${paramsString}),`,
-    // `     tagOps.getReqFor('${def.rest.url}',undefined,${paramsString}))`,
     '}' ]
-
-  // export function EAccountsSummaryDDFetcher<S extends HasSimpleMessages & HasTagHolder & HasPageSelection & pageDomains.HasEAccountsSummaryPageDomain> ( fdLens: Optional<S, pageDomains.EAccountsSummaryPageDomain>, commonIds: NameAndLens<S> ) {
-  //   return pageAndTagFetcher<S, pageDomains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDDDomain, SimpleMessage> (
-  //     common.commonFetch<S, domains.EAccountsSummaryDDDomain> (),
-  //     'EAccountsSummary', 'fromApi', fdLens, commonIds, {}, [ 'customerId' ], [ 'accountId' ],
-  //     ( s ) => s.focusQuery ( 'fromApi' ),
-  //     '/api/accountsSummary?{query}' )
-  // }
-
-
 };
 
 
@@ -59,9 +44,25 @@ interface FetcherDataStructureParams {
   variableName: string
 }
 
-export function makeFetchersImport ( params: TSParams ): string[] {
+export function makeFetchersImport<B> ( params: TSParams ): string[] {
   return [
-    ...imports ( params.pageDomainsFile, params.domainsFile, params.commonFile ),
+    ...importsDotDot ( params.commonFile ),
+    ...importsDot ( params.domainsFile ),
+
+    `import { HasTagHolder } from "@focuson/template";`,
+    `import { HasPageSelection } from "@focuson/pages";`,
+    `import { HasSimpleMessages, SimpleMessage } from '@focuson/utils';`,
+    `import { pageAndTagFetcher } from "@focuson/focuson";`,
+    `import { Optional, Lenses, NameAndLens} from '@focuson/lens';`
+
+  ]
+}
+export function makeFetcherDataStructureImport<B> ( params: TSParams, pages: PageD<B>[] ): string[] {
+  let fetchers = findAllFetchers ( pages );
+  const fetcherImports = fetchers.map ( ( [ page, prop ] ) => `import { ${fetcherName ( prop )} } from './${page.name}/${params.fetchersFile}';` )
+  return [
+    ...importsDot ( params.commonFile ),
+    ...fetcherImports,
     `import { FetcherTree,  } from "@focuson/fetcher";`,
     `import { HasTagHolder } from "@focuson/template";`,
     `import { HasPageSelection } from "@focuson/pages";`,

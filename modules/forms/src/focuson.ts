@@ -6,6 +6,7 @@ import { CreatePlanPD } from "./example/eAccounts/createPlanPD";
 import { ChequeCreditbooksPD, OrderChequeBookOrPayingInModalPD } from "./example/chequeCreditBooks/chequeCreditBooks.pageD";
 import { OccupationAndIncomeSummaryPD, occupationIncomeModalPD } from "./example/occupationAndIncomeDetails/occupationAndIncome.pageD";
 import { generate } from "./makeFiles/generate";
+import *  as fse from "fs-extra";
 
 let pages = [ OccupationAndIncomeSummaryPD, occupationIncomeModalPD,
   EAccountsSummaryPD, CreatePlanPD, ETransferPageD,
@@ -17,4 +18,7 @@ let tsRoot = "../formTs"
 const focusOnVersion: string = JSON.parse ( loadFile ( 'package.json' ) ).version
 
 generate ( javaOutputRoot, tsRoot, focusOnVersion ) ( pages )
+
+fse.copySync ('../formComponents/src', tsRoot + "/src/copied")
+
 

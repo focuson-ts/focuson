@@ -16,11 +16,9 @@ export const Input = <T extends any> ( tProps: TransformerProps<T> ) => {
   const { transformer, type } = tProps
   return <S, P, Props extends InputProps<S, T, Context> & P, Context> ( props: Props ) => {
     const { state, mode, id, name, ariaLabel, defaultValue } = props
-    function onChange ( transformer: ( s: string ) => T, e: React.ChangeEvent<HTMLInputElement> ) {
-      state.setJson ( transformer ( e.target.value ), reasonFor ( 'Input', 'onChange', id ) )
-    }
-    return <input type={type} {...props} value={`${state.optJsonOr ( tProps.default )}`} readOnly={mode === 'view'} onChange={( e ) => onChange ( transformer, e )}
-    />
+    const onChange = ( transformer: ( s: string ) => T, e: React.ChangeEvent<HTMLInputElement> ) =>
+      state.setJson ( transformer ( e.target.value ), reasonFor ( 'Input', 'onChange', id ) );
+    return <input type={type} {...props} value={`${state.optJsonOr ( tProps.default )}`} readOnly={mode === 'view'} onChange={( e ) => onChange ( transformer, e )}/>
   }
 }
 
@@ -28,6 +26,3 @@ export const InputString = Input<string> ( StringTransformer )
 export const InputNumber = Input<number> ( NumberTransformer )
 export const InputBoolean = Input<boolean> ( BooleanTransformer )
 
-// export function StringInput<S, Context> ( { mode, state, ariaLabel, id, name, defaultValue }: InputProps<S, string, Context> ) {
-//   return <InputString value={state.optJson ()} name={name} id={id} state={state} mode={mode} ariaLabel={ariaLabel} defaultValue={defaultValue}/>
-// }

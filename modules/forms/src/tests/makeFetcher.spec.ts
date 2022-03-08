@@ -7,12 +7,12 @@ describe ( "makeAllFetchers", () => {
     it ( "should make a fetcher", () => {
       expect ( makeAllFetchers ( paramsForTest, [ EAccountsSummaryPD, CreatePlanPD ] ).map(s => s.replace(/"/g, "'")) ).toEqual ( [
         "//fetcher type get",
-        "export function EAccountsSummaryDDFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<S, pageDomains.EAccountsSummaryPageDomain>,commonIds: NameAndLens<S>) {",
-        "  return pageAndTagFetcher<S, pageDomains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDDDomain, SimpleMessage>(",
+        "export function EAccountsSummaryDDFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<S, domains.EAccountsSummaryPageDomain>,commonIds: NameAndLens<S>) {",
+        "  return pageAndTagFetcher<S, domains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDDDomain, SimpleMessage>(",
         "    common.commonFetch<S,  domains.EAccountsSummaryDDDomain>(),",
         "     'EAccountsSummary',",
         "     'fromApi', fdLens, commonIds, {},['accountId'],['customerId'],",
-        "      Lenses.identity< pageDomains.EAccountsSummaryPageDomain> ().focusQuery ( 'fromApi' ),",
+        "      Lenses.identity< domains.EAccountsSummaryPageDomain> ().focusQuery ( 'fromApi' ),",
         "     '/api/accountsSummary?{query}')",
         "}"
       ])

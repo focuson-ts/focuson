@@ -1,26 +1,6 @@
-import { copyFiles, DirectorySpec, templateFile, writeToFile } from "@focuson/files";
+import { DirectorySpec } from "@focuson/files";
 import { CombinedParams } from "../codegen/config";
-import fs from "fs";
-import { unique } from "../common/restD";
-import { sortedEntries } from "@focuson/utils";
-import { PageD, RestDefnInPageProperties } from "../common/pageD";
-import { imports, indentList } from "../codegen/codegen";
-import { createAllReactComponents } from "../codegen/makeComponents";
-import { transformButtons } from "../buttons/allButtons";
-import { makeAllDomainsFor, makePageDomainsFor } from "../codegen/makeDomain";
-import { makeCommon } from "../codegen/makeCommon";
-import { makeAllFetchers, makeFetchersDataStructure, makeFetchersImport } from "../codegen/makeFetchers";
-import { makeRests } from "../codegen/makeRests";
-import { makeAllEmptyData, makeAllJavaVariableName, makeAllSampleVariables } from "../codegen/makeSample";
-import { makePages } from "../codegen/makePages";
-import { makeAllPacts } from "../codegen/makePacts";
-import { fetcherInterfaceName, mockFetcherClassName, queryClassName, restControllerName, storybookFileName } from "../codegen/names";
-import { makeOneStory } from "../codegen/makeStories";
-import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
-import { makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
-import { makeAllMockFetchers } from "../codegen/makeMockFetchers";
-import { makeJavaVariablesForGraphQlQuery } from "../codegen/makeGraphQlQuery";
-import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
+import { PageD } from "../common/pageD";
 import { makeJavaFiles } from "./makeJavaFiles";
 import { makeTsFiles } from "./makeTsFiles";
 

@@ -3,7 +3,7 @@ import { opt } from "../codegen/codegen";
 
 
 const makeValidationDebugButton: ButtonCreator<ValidationButtonInPage> = {
-  import: "./copied/ValidationButton",
+  import: "../copied/ValidationButton",
   makeButton:
     ( { params, parent, name, button } ) => {
       return `<ValidationButton  ${opt ( 'id', name )}   ${opt ( 'name', name )}  />`

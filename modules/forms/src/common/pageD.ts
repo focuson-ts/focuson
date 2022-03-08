@@ -41,11 +41,16 @@ export interface ModalData<B> {
   modal: PageD<B>,
   path: string[]
 }
+
+export function hasDomains<B> ( p: PageD<B> ) {
+  return p.pageType === 'MainPage'
+}
+
 export interface PageD<Buttons> {
   name: string,
   pageType: PageType,
   modes: PageMode[],
-  display: { layout: LayoutD, target: string[], dataDD: DataD },
+  display: { layout: LayoutD, target: string[], dataDD: DataD, importFrom?: string },
   initialValue: 'empty' | any,
   domain: DomainDefnInPage,
   modals?: ModalData<Buttons>[],
@@ -54,7 +59,7 @@ export interface PageD<Buttons> {
 }
 
 
-export function dataDsIn <B>( pds: PageD<B>[], stopAtDisplay?: boolean ): NamesAndDataDs {
+export function dataDsIn<B> ( pds: PageD<B>[], stopAtDisplay?: boolean ): NamesAndDataDs {
   const pageDataDs = pds.flatMap ( pd => sortedEntries ( pd.rest ).map ( ( [ na, restPD ]: [ string, RestDefnInPageProperties ] ) => restPD.rest.dataDD ) )
   return findAllDataDs ( pageDataDs, stopAtDisplay )
 }

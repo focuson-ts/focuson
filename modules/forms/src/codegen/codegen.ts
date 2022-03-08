@@ -3,9 +3,13 @@ import { ButtonCreator } from "./makeButtons";
 import { ModalButtonInPage } from "../buttons/modalButtons";
 import { AllLensRestParams } from "../common/restD";
 
-export const imports = ( ...names: string[] ): string[] => names.map ( name => {
+export const importsDot = ( ...names: string[] ): string[] => names.map ( name => {
   const s = noExtension ( name )
   return `import * as ${s} from './${s}';`
+} );
+export const importsDotDot = ( ...names: string[] ): string[] => names.map ( name => {
+  const s = noExtension ( name )
+  return `import * as ${s} from '../${s}';`
 } );
 
 export function noExtension ( name: string ) {

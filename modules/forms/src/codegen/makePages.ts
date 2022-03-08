@@ -28,17 +28,18 @@ export function walkModals <B> ( ps: PageD <B>[] ): ModalCreationData <B>[] {
 }
 
 export const makeModal = ( params: TSParams ) => <B> ( { name,  modal }: ModalCreationData <B> ): string[] => {
-  return [ `    ${name}: { config: simpleMessagesConfig,  pageFunction: ${params.renderFile}.${pageComponentName ( modal )}(), modal: true}` ]
+  return [ `    ${name}: { config: simpleMessagesConfig,  pageFunction: ${pageComponentName ( modal )}(), modal: true}` ]
 };
 
 export function makePages <B> ( params: TSParams, ps: PageD <B>[] ): string[] {
   const modals = walkModals ( ps );
+  const renderImports = ps.map( p => `import { ${pageComponentName(p)} } from './${p.name}/${params.renderFile}';`)
   return [
     `import { identityOptics } from "@focuson/lens";`,
     `import { MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";`,
     `import {Context,  ${params.stateName} } from "./${params.commonFile}";`,
-    `import * as render from"./render";`,
-    `import { ${allMainPages ( ps ).map ( p => pageComponentName ( p ) ).join ( "," )} } from "./${params.renderFile}";`,
+    ...renderImports,
+    // `import { ${allMainPages ( ps ).map ( p => pageComponentName ( p ) ).join ( "," )} } from "./${params.renderFile}";`,
     '',
     `function MyLoading () {`,
     `      return <p>Loading</p>`,

@@ -24,7 +24,9 @@
     "@testing-library/user-event": "^12.2.0",
     "@types/jest": "^26.0.15",
     "jest": "^26.6.0",
-    "ts-jest": "^26.4.4"
+    "ts-jest": "^26.4.4",
+    "fs-extra": "^10.0.1",
+    "@types/fs-extra": "^9.0.13"
   },
   "files": [
     "LICENSE.md",
@@ -63,7 +65,10 @@
       "@focuson/focuson"
     ],
     "extraDeps": {},
-    "extraDevDeps": {}
+    "extraDevDeps": {
+      "fs-extra": "^10.0.1",
+      "@types/fs-extra": "^9.0.13"
+    }
   },
   "name": "@focuson/forms"
 }

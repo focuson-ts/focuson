@@ -16,14 +16,14 @@ export interface ListPrevButtonInPage extends CommonListButtonInPage {
 }
 
 const ListNextButton: ButtonCreator<ListNextButtonInPage> = {
-  import: "./copied/listNextPrevButtons",
+  import: "../copied/listNextPrevButtons",
   makeButton: ( { params, parent, name, button } ) =>
     `<ListNextButton id='${name}' title='Next' list={fullState${focusOnFor ( button.list )}} value={fullState${focusOnFor ( button.value )}} />`
 }
 
 
 const ListPrevButton: ButtonCreator<ListPrevButtonInPage> = {
-  import: "./copied/listNextPrevButtons",
+  import: "../copied/listNextPrevButtons",
   makeButton: ( { params, parent, name, button } ) =>
     `<ListPrevButton id='${name}' title='Prev' list={fullState${focusOnFor ( button.list )}} value={fullState${focusOnFor ( button.value )}} />`
 }

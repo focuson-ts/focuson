@@ -9,7 +9,7 @@ export const CreatePlanPD: PageD<AllButtonsInPage> = {
   /** This page can only view data */
   modes: [ 'view', 'create', 'edit' ],
   /** How we display the page.*/
-  display: { layout: { name: 'Layout', details: '[3]' }, target: [], dataDD: CreatePlanDD },
+  display: { layout: { name: 'Layout', details: '[3]' }, target: [], dataDD: CreatePlanDD , importFrom: '../EAccountsSummary'},
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },

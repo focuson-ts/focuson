@@ -9,9 +9,9 @@ describe ( "makeFullState", () => {
   it ( 'should make the FullState', () => {
     expect ( makeFullState ( paramsForTest, [ EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
       "export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,",
-      " pageDomains.HasEAccountsSummaryPageDomain",
+      " HasEAccountsSummaryPageDomain",
       "{}"
-    ] )
+    ])
   } )
 
 } )

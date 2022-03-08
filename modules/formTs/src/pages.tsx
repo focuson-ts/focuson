@@ -1,8 +1,14 @@
 import { identityOptics } from "@focuson/lens";
 import { MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";
 import {Context,  FState } from "./common";
-import * as render from"./render";
-import { OccupationAndIncomeSummaryPage,EAccountsSummaryPage,ETransferPage,CreateEAccountPage,ChequeCreditbooksPage } from "./render";
+import { OccupationAndIncomeSummaryPage } from './OccupationAndIncomeSummary/render';
+import { OccupationIncomeModalPDPage } from './OccupationIncomeModalPD/render';
+import { EAccountsSummaryPage } from './EAccountsSummary/render';
+import { CreatePlanPage } from './CreatePlan/render';
+import { ETransferPage } from './ETransfer/render';
+import { CreateEAccountPage } from './CreateEAccount/render';
+import { ChequeCreditbooksPage } from './ChequeCreditbooks/render';
+import { OrderChequeBookOrPayingInModalPage } from './OrderChequeBookOrPayingInModal/render';
 
 function MyLoading () {
       return <p>Loading</p>
@@ -15,7 +21,7 @@ export const pages: MultiPageDetails<FState, Context> = {
     ETransfer: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'ETransfer' ), pageFunction: ETransferPage(), initialValue: {"fromApi":{}} },
     CreateEAccount: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'CreateEAccount' ), pageFunction: CreateEAccountPage(), initialValue: {} },
     ChequeCreditbooks: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'ChequeCreditbooks' ), pageFunction: ChequeCreditbooksPage(), initialValue: {} },
-    OccupationIncomeModalPD: { config: simpleMessagesConfig,  pageFunction: render.OccupationIncomeModalPDPage(), modal: true},
-    CreatePlan: { config: simpleMessagesConfig,  pageFunction: render.CreatePlanPage(), modal: true},
-    OrderChequeBookOrPayingInModal: { config: simpleMessagesConfig,  pageFunction: render.OrderChequeBookOrPayingInModalPage(), modal: true}
+    OccupationIncomeModalPD: { config: simpleMessagesConfig,  pageFunction: OccupationIncomeModalPDPage(), modal: true},
+    CreatePlan: { config: simpleMessagesConfig,  pageFunction: CreatePlanPage(), modal: true},
+    OrderChequeBookOrPayingInModal: { config: simpleMessagesConfig,  pageFunction: OrderChequeBookOrPayingInModalPage(), modal: true}
   }

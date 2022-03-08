@@ -6,7 +6,7 @@ export const ChequeCreditbooksHistoryLineDD: DataD = {
   name: "ChequeCreditbooksHistoryLineDD",
   description: "The create plan data (actually just put in one place to allow a test for a structure)",
   structure: {
-    serialNumber: { dataDD: { ...IntegerDD, sample: [ 937453 ] } },
+    serialNumber: { dataDD: { ...IntegerDD, sample: [ 937453 ] } ,},
     howOrdered: { dataDD: OneLineStringDD, sample: [ 'Manually' ] },
     dateOrder: { dataDD: DateDD, sample: [ '2022-10-01' ] }
   }

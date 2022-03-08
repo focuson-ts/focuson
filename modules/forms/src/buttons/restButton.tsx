@@ -7,7 +7,7 @@ import { restDetailsName } from "../codegen/names";
 
 
 const makeRestButton: ButtonCreator<RestButtonInPage> = {
-  import: './copied/rest',
+  import: '../copied/rest',
   makeButton: ( { params, parent, name, button } ) => {
     const { rest, action, confirm, result, path } = button
     return `<RestButton  ${opt ( 'id', name )}   ${opt ( 'name', name )} ${opt ( 'action', action )} ${optT ( 'path', path )} state={state} ${opt ( 'rest', restDetailsName ( parent, rest ) )} ${optT ( 'confirm', confirm )} />`

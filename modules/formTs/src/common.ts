@@ -7,15 +7,19 @@ import { HasTagHolder } from '@focuson/template';
 import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusOnContext, HasFocusOnDebug } from '@focuson/focuson';
 import { LensProps } from '@focuson/state';
 import { pages } from "./pages";
-import * as pageDomains from './pageDomains';
+import { HasOccupationAndIncomeSummaryPageDomain } from './OccupationAndIncomeSummary/domains';
+import { HasEAccountsSummaryPageDomain } from './EAccountsSummary/domains';
+import { HasETransferPageDomain } from './ETransfer/domains';
+import { HasCreateEAccountPageDomain } from './CreateEAccount/domains';
+import { HasChequeCreditbooksPageDomain } from './ChequeCreditbooks/domains';
 export type Context = FocusOnContext<FState>
 export const context: Context = defaultPageSelectionAndRestCommandsContext<FState> ( pages )
 export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,
- pageDomains.HasOccupationAndIncomeSummaryPageDomain,
- pageDomains.HasEAccountsSummaryPageDomain,
- pageDomains.HasETransferPageDomain,
- pageDomains.HasCreateEAccountPageDomain,
- pageDomains.HasChequeCreditbooksPageDomain
+ HasOccupationAndIncomeSummaryPageDomain,
+ HasEAccountsSummaryPageDomain,
+ HasETransferPageDomain,
+ HasCreateEAccountPageDomain,
+ HasChequeCreditbooksPageDomain
 {}
 export interface HasCommonIds {CommonIds: CommonIds}
 export type CommonIds = {

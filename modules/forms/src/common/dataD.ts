@@ -2,8 +2,8 @@
 
 
 import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndNumberInputCD, LabelAndStringInputCD } from "./componentsD";
-import { ComponentDisplayParams } from "../codegen/makeComponents";
-import { NameAnd, RestAction, safeArray } from "@focuson/utils";
+import { ComponentDisplayParams } from "../codegen/makeRender";
+import { NameAnd, safeArray } from "@focuson/utils";
 
 export interface HasSample<T> {
   sample?: T[]

@@ -45,25 +45,25 @@ export const commonParamsWithLabel: DisplayCompParamD = {
   label: { paramType: 'string', needed: 'defaultToCamelCaseOfName' },
 }
 export const LabelAndStringInputCD: DisplayCompD = {
-  import: "./copied/LabelAndInput", name: "LabelAndStringInput",
+  import: "../copied/LabelAndInput", name: "LabelAndStringInput",
   params: { ...commonParamsWithLabel, ...stringValidationParams }
 }
 
 export const LabelAndNumberInputCD: DisplayCompD = {
-  import: "./copied/LabelAndInput", name: "LabelAndNumberInput",
+  import: "../copied/LabelAndInput", name: "LabelAndNumberInput",
   params: { ...commonParamsWithLabel, ...intValidationParams }
 }
 
 export const LabelAndCheckboxInputCD: DisplayCompD = {
-  import: "./copied/LabelAndInput", name: "LabelAndBooleanInput",
+  import: "../copied/LabelAndInput", name: "LabelAndBooleanInput",
   params: commonParamsWithLabel
 }
 export const TableCD: DisplayCompD = {
-  import: "./copied/table", name: "Table",
+  import: "../copied/table", name: "Table",
   params: { ...commonParams, order: { paramType: 'string[]', needed: 'yes' } }
 }
 export const SelectedItemCD: DisplayCompD = {
-  import: "./copied/table",
+  import: "../copied/table",
   name: "SelectedItem",
   params: {
     ...commonParams,
@@ -75,12 +75,12 @@ export const SelectedItemCD: DisplayCompD = {
 export const enumParams: DisplayCompParamD = { enums: { needed: 'defaultToEnum', paramType: 'object' } }
 
 export const RadioCD: DisplayCompD = {
-  import: "./copied/Radio",
+  import: "../copied/Radio",
   name: "Radio",
   params: { ...commonParams, ...enumParams }
 }
 export const LabelAndRadioCD: DisplayCompD = {
-  import: "./copied/Radio",
+  import: "../copied/Radio",
   name: "LabelAndRadio",
   params: { ...commonParamsWithLabel, ...enumParams }
 }
