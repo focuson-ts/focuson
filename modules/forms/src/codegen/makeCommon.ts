@@ -1,5 +1,5 @@
 import { allMainPages, PageD } from "../common/pageD";
-import { hasDomainForPage, pageDomainName } from "./names";
+import { domainsFileName, hasDomainForPage, pageDomainName } from "./names";
 import { addStringToEndOfAllButLast, importsDotDot, indentList } from "./codegen";
 import { TSParams } from "./config";
 import { applyToTemplate } from "@focuson/template";
@@ -21,7 +21,7 @@ export function makeContext ( params: TSParams ): string[] {
     `export const context: Context = defaultPageSelectionAndRestCommandsContext<${params.stateName}> ( pages )` ]
 }
 export function makeCommon<B> ( params: TSParams, pds: PageD<B>[], rds: RestD[], directorySpec: DirectorySpec ): string[] {
-  const pageDomainsImport: string[] = pds.filter ( p => p.pageType === 'MainPage' ).map ( p => `import { ${hasDomainForPage ( p )} } from './${p.name}/${params.domainsFile}';` )
+  const pageDomainsImport: string[] = pds.filter ( p => p.pageType === 'MainPage' ).map ( p => `import { ${hasDomainForPage ( p )} } from '${domainsFileName('.', params, p)}';` )
   return [
     `import { HasPageSelection, PageMode ,PageSelectionContext} from '@focuson/pages'`,
     `import { defaultDateFn, HasSimpleMessages, SimpleMessage } from '@focuson/utils';`,

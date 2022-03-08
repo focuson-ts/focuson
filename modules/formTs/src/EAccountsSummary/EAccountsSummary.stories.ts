@@ -4,10 +4,10 @@ import { SBookProvider } from "@focuson/stories";
 import { defaultPageSelectionAndRestCommandsContext } from "@focuson/focuson";
 import { Context, emptyState, FState } from "../common";
 import { pages } from "../pages";
-import * as render  from "./render";
-import * as domain  from "./domains";
-import * as samples  from "./samples";
-import * as empty from "./empty";
+import * as render  from "../EAccountsSummary/EAccountsSummary.render";
+import * as domain  from "../EAccountsSummary/EAccountsSummary.domains";
+import * as samples  from "../EAccountsSummary/EAccountsSummary.samples";
+import * as empty from "../EAccountsSummary/EAccountsSummary.empty";
  
 export default {
    component: render.EAccountsSummaryPage,

@@ -1,5 +1,5 @@
 import { findIds, unique } from "../common/restD";
-import { domainName, pageDomainName, restDetailsName } from "./names";
+import { domainName, domainsFileName, pageDomainName, restDetailsName, restFileName } from "./names";
 import { TSParams } from "./config";
 import { allRestAndActions, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { sortedEntries } from "@focuson/utils";
@@ -24,10 +24,10 @@ export const makeRest = <B> ( params: TSParams, p: PageD<B> ) => ( r: RestDefnIn
     ``,
   ]
 };
-export function makeRestImports ( params: TSParams ) {
+export function makeRestImports<B> ( params: TSParams, p: PageD<B> ) {
   return [
     `import { OneRestDetails } from "@focuson/rest"`,
-    `import * as domains from "./domains"`,
+    `import * as domains from "${domainsFileName ( '..', params, p )}"`,
     `import { createSimpleMessage, DateFn, defaultDateFn, SimpleMessage } from "@focuson/utils"`,
     `import { Lenses, NameAndLens} from "@focuson/lens"`,
     `` ]
@@ -40,7 +40,7 @@ export function makeRestDetailsPage<B> ( params: TSParams, ps: PageD<B>[] ): str
     `import { Lenses, NameAndLens} from "@focuson/lens"`,
     `import { ${params.stateName} , commonIds} from "./${params.commonFile}";`,
     `` ]
-  const imp = unique ( allRestAndActions ( ps ).map ( ( [ pd, rd, rad ] ) => `import { ${restDetailsName ( pd, rd.rest )} } from './${pd.name}/${params.restsFile}';` ), x => x );
+  const imp = unique ( allRestAndActions ( ps ).map ( ( [ pd, rd, rad ] ) => `import { ${restDetailsName ( pd, rd.rest )} } from '${restFileName ( '.', params, pd )}';` ), x => x );
 
   return [ ...imports, ...imp, ...makeRestDetails ( params, ps ) ]
 }
@@ -53,8 +53,8 @@ export function makeRestDetails<B> ( params: TSParams, ps: PageD<B>[] ): string[
     `}`, '' ]
 }
 
-export function makeRests<B> ( params: TSParams, ps: PageD<B>[] ): string[] {
-  let rests = ps.flatMap ( pd => sortedEntries ( pd.rest ).flatMap ( ( [ name, rd ] ) => makeRest ( params, pd ) ( rd ) ) );
-  let imports = rests.length > 0 ? makeRestImports ( params ) : []
+export function makeRests<B> ( params: TSParams, pd: PageD<B> ): string[] {
+  let rests = sortedEntries ( pd.rest ).flatMap ( ( [ name, rd ] ) => makeRest ( params, pd ) ( rd ) );
+  let imports = rests.length > 0 ? makeRestImports ( params, pd ) : []
   return [ ...imports, ...rests ]
 }

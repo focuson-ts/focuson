@@ -4,10 +4,10 @@ import { SBookProvider } from "@focuson/stories";
 import { defaultPageSelectionAndRestCommandsContext } from "@focuson/focuson";
 import { Context, emptyState, FState } from "../common";
 import { pages } from "../pages";
-import * as render  from "./render";
-import * as domain  from "./domains";
-import * as samples  from "./samples";
-import * as empty from "./empty";
+import * as render  from "../ETransfer/ETransfer.render";
+import * as domain  from "../ETransfer/ETransfer.domains";
+import * as samples  from "../ETransfer/ETransfer.samples";
+import * as empty from "../ETransfer/ETransfer.empty";
  
 export default {
    component: render.ETransferPage,

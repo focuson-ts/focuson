@@ -1,6 +1,6 @@
 import { sortedEntries } from "@focuson/utils";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
-import { domainName, fetcherName, pageDomainName } from "./names";
+import { domainName, domainsFileName, fetcherFileName, fetcherName, pageDomainName } from "./names";
 import { TSParams } from "./config";
 import { addStringToEndOfAllButLast, importsDot, importsDotDot, noExtension } from "./codegen";
 import { findIds } from "../common/restD";
@@ -44,11 +44,10 @@ interface FetcherDataStructureParams {
   variableName: string
 }
 
-export function makeFetchersImport<B> ( params: TSParams ): string[] {
+export function makeFetchersImport<B> ( params: TSParams, p: PageD<B> ): string[] {
   return [
     ...importsDotDot ( params.commonFile ),
-    ...importsDot ( params.domainsFile ),
-
+    `import * as domains from '${domainsFileName ( '..', params, p )}'`,
     `import { HasTagHolder } from "@focuson/template";`,
     `import { HasPageSelection } from "@focuson/pages";`,
     `import { HasSimpleMessages, SimpleMessage } from '@focuson/utils';`,
@@ -59,7 +58,7 @@ export function makeFetchersImport<B> ( params: TSParams ): string[] {
 }
 export function makeFetcherDataStructureImport<B> ( params: TSParams, pages: PageD<B>[] ): string[] {
   let fetchers = findAllFetchers ( pages );
-  const fetcherImports = fetchers.map ( ( [ page, prop ] ) => `import { ${fetcherName ( prop )} } from './${page.name}/${params.fetchersFile}';` )
+  const fetcherImports = fetchers.map ( ( [ page, prop ] ) => `import { ${fetcherName ( prop )} } from '${fetcherFileName ( '.', params, page )}';` )
   return [
     ...importsDot ( params.commonFile ),
     ...fetcherImports,

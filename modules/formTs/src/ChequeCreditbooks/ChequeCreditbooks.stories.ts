@@ -4,10 +4,10 @@ import { SBookProvider } from "@focuson/stories";
 import { defaultPageSelectionAndRestCommandsContext } from "@focuson/focuson";
 import { Context, emptyState, FState } from "../common";
 import { pages } from "../pages";
-import * as render  from "./render";
-import * as domain  from "./domains";
-import * as samples  from "./samples";
-import * as empty from "./empty";
+import * as render  from "../ChequeCreditbooks/ChequeCreditbooks.render";
+import * as domain  from "../ChequeCreditbooks/ChequeCreditbooks.domains";
+import * as samples  from "../ChequeCreditbooks/ChequeCreditbooks.samples";
+import * as empty from "../ChequeCreditbooks/ChequeCreditbooks.empty";
  
 export default {
    component: render.ChequeCreditbooksPage,

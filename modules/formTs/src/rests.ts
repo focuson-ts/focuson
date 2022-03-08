@@ -3,12 +3,12 @@ import { createSimpleMessage, DateFn, defaultDateFn, SimpleMessage } from "@focu
 import { Lenses, NameAndLens} from "@focuson/lens"
 import { FState , commonIds} from "./common";
 
-import { OccupationAndIncomeSummary_OccupationAndIncomeDetailsDDRestDetails } from './OccupationAndIncomeSummary/rests';
-import { EAccountsSummary_CreatePlanDDRestDetails } from './EAccountsSummary/rests';
-import { EAccountsSummary_EAccountsSummaryDDRestDetails } from './EAccountsSummary/rests';
-import { ETransfer_ETransferDataDRestDetails } from './ETransfer/rests';
-import { CreateEAccount_CreateEAccountDataDDRestDetails } from './CreateEAccount/rests';
-import { ChequeCreditbooks_ChequeCreditbooksDDRestDetails } from './ChequeCreditbooks/rests';
+import { OccupationAndIncomeSummary_OccupationAndIncomeDetailsDDRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
+import { EAccountsSummary_CreatePlanDDRestDetails } from './EAccountsSummary/EAccountsSummary.rests';
+import { EAccountsSummary_EAccountsSummaryDDRestDetails } from './EAccountsSummary/EAccountsSummary.rests';
+import { ETransfer_ETransferDataDRestDetails } from './ETransfer/ETransfer.rests';
+import { CreateEAccount_CreateEAccountDataDDRestDetails } from './CreateEAccount/CreateEAccount.rests';
+import { ChequeCreditbooks_ChequeCreditbooksDDRestDetails } from './ChequeCreditbooks/ChequeCreditbooks.rests';
 export const restDetails: RestDetails<FState, SimpleMessage> = {
    OccupationAndIncomeSummary_OccupationAndIncomeDetailsDDRestDetails: OccupationAndIncomeSummary_OccupationAndIncomeDetailsDDRestDetails(commonIds, defaultDateFn),
    EAccountsSummary_CreatePlanDDRestDetails: EAccountsSummary_CreatePlanDDRestDetails(commonIds, defaultDateFn),

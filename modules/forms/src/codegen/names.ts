@@ -3,7 +3,8 @@ import { PageD, RestDefnInPageProperties } from "../common/pageD";
 import { RestActionDetail, RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
 import { RestAction } from "@focuson/utils";
-import { JavaWiringParams } from "./config";
+import { JavaWiringParams, TSParams } from "./config";
+import { post } from "@focuson/poster";
 
 export const guardName = ( s: string ) => s + "Guard"
 export const domainName = ( d: DataD ): string => d.name + "Domain";
@@ -28,10 +29,21 @@ export const endPointName = ( restD: RestD, action: RestAction ): string => acti
 export const modalName = <B> ( p: PageD<B>, modal: PageD<B> ) => modal.name
 export const restDetailsName = <B> ( p: PageD<B>, r: RestD ) =>
   p.name + "_" + r.dataDD.name + "RestDetails"
-export const storybookFileName = <B> ( pd: PageD<B> ): string => `${pd.name}.stories.ts`;
 export const fetcherName = ( d: RestDefnInPageProperties ): string => d.rest.dataDD.name + "Fetcher";
 export const fetcherInterfaceName = ( params: JavaWiringParams, r: RestD ): string => `${r.dataDD.name}${params.fetcherInterface}`;
 export const fetcherVariableName = ( params: JavaWiringParams, r: RestD ): string => `_${r.dataDD.name}${params.fetcherInterface}`;
 export const mockFetcherClassName = ( params: JavaWiringParams, r: RestD ): string => `${r.dataDD.name}${params.fetcherInterface}Mock`;
 export const queryClassName = ( params: JavaWiringParams, r: RestD ): string => `${r.dataDD.name}Queries`;
 
+
+export const someFileName = <B> ( root: string, pd: PageD<B>, postfix: string ): string => `${root}/${pd.name}/${pd.name}.${postfix}`;
+export const modalImportFromFileName = <B> ( root: string, p: PageD<B>, suffix: string ): string => `${root}/${p.display.importFrom}/${p.display.importFrom}.${suffix}`
+
+export const storybookFileName = <B> ( root: string, params: TSParams, pd: PageD<B> ): string => someFileName ( root, pd, `stories` );
+export const renderFileName = <B> ( root: string, params: TSParams, pd: PageD<B> ): string => someFileName ( root, pd, params.renderFile );
+export const domainsFileName = <B> ( root: string, params: TSParams, pd: PageD<B> ): string => someFileName ( root, pd, params.domainsFile );
+export const emptyFileName = <B> ( root: string, params: TSParams, pd: PageD<B> ): string => someFileName ( root, pd, params.emptyFile );
+export const pactFileName = <B> ( root: string, params: TSParams, pd: PageD<B> ): string => someFileName ( root, pd, params.pactsFile );
+export const samplesFileName = <B> ( root: string, params: TSParams, pd: PageD<B> ): string => someFileName ( root, pd, params.samplesFile );
+export const restFileName = <B> ( root: string, params: TSParams, pd: PageD<B> ): string => someFileName ( root, pd, params.restsFile );
+export const fetcherFileName = <B> ( root: string, params: TSParams, pd: PageD<B> ): string => someFileName ( root, pd, params.fetchersFile );

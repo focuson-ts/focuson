@@ -14,7 +14,7 @@ import { makeRestDetailsPage, makeRests } from "../codegen/makeRests";
 import { makeAllEmptyData, makeAllSampleVariables } from "../codegen/makeSample";
 import { makePages } from "../codegen/makePages";
 import { makeAllPacts } from "../codegen/makePacts";
-import { storybookFileName } from "../codegen/names";
+import { domainsFileName, emptyFileName, fetcherFileName, pactFileName, renderFileName, restFileName, samplesFileName, storybookFileName } from "../codegen/names";
 import { makeOneStory } from "../codegen/makeStories";
 
 export const makeTsFiles = ( tsRoot: string, params: TSParams, directorySpec: DirectorySpec ) => <B> ( pages: PageD<B>[] ) => {
@@ -34,31 +34,34 @@ export const makeTsFiles = ( tsRoot: string, params: TSParams, directorySpec: Di
     const tsPage = `${tsCode}/${p.name}`
     fs.mkdirSync ( tsPage, { recursive: true } )
 
-    writeToFile ( `${tsPage}/${params.renderFile}.tsx`, createRenderPage ( params, transformButtons, p  ) )
+    writeToFile ( renderFileName ( tsCode, params, p ) + ".tsx",
+      createRenderPage ( params, transformButtons, p ) )
 
     if ( hasDomains ( p ) ) {
-      writeToFile ( `${tsPage}/${params.domainsFile}.ts`, [
+      writeToFile ( domainsFileName ( tsCode, params, p ) + ".ts", [
         ...makePageDomainsFor ( params, [ p ] ),
         ...makeAllDomainsFor ( [ p ] ) ] )
 
-      writeToFile ( `${tsPage}/${params.samplesFile}.ts`, [
-        ...importsDot ( params.domainsFile ),
+      writeToFile ( samplesFileName ( tsCode, params, p ) + ".ts", [
+        `import * as domains from '${domainsFileName ( '..', params, p )}'`, '',
         ...([ 0, 1, 2 ].flatMap ( i => makeAllSampleVariables ( params, [ p ], i ) )) ] )
 
-      writeToFile ( `${tsPage}/${params.emptyFile}.ts`, [
-        ...importsDot ( params.domainsFile ),
+      writeToFile ( emptyFileName ( tsCode, params, p ) + ".ts", [
+        `import * as domains from '${domainsFileName ( '..', params, p )}'`, '',
         ...makeAllEmptyData ( params, [ p ] ) ] )
 
-      writeToFile ( `${tsPage}/${params.fetchersFile}.ts`, [
-        ...makeFetchersImport ( params ),
+      writeToFile ( fetcherFileName ( tsCode, params, p ) + ".ts", [
+        ...makeFetchersImport ( params, p ),
         ...(makeAllFetchers ( params, [ p ] )) ] )
 
-      writeToFile ( `${tsPage}/${params.restsFile}.ts`, makeRests ( params, [ p ] ) )
-      writeToFile ( `${tsPage}/${storybookFileName ( p )}`, makeOneStory ( params, p ) )
+      writeToFile ( restFileName ( tsCode, params, p ) + ".ts", makeRests ( params, p ) )
+      writeToFile ( storybookFileName ( tsCode, params, p ) + '.ts', makeOneStory ( params, p ) )
 
     }
 
-    if ( Object.keys ( p.rest ).length > 0 ) templateFile ( `${tsPage}/${params.pactsFile}.ts`, 'templates/allPacts.ts', { content: makeAllPacts ( params, [ p ], directorySpec ).join ( "\n" ) }, directorySpec )
+    if ( Object.keys ( p.rest ).length > 0 )
+      templateFile ( pactFileName ( tsCode, params, p ) + ".ts", 'templates/allPacts.ts',
+        { content: makeAllPacts ( params, p, directorySpec ).join ( "\n" ) }, directorySpec )
 
   } )
 

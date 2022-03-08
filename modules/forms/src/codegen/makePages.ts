@@ -1,6 +1,6 @@
 import { allMainPages, PageD } from "../common/pageD";
 import { TSParams } from "./config";
-import { modalName, pageComponentName, pageInState } from "./names";
+import { modalName, pageComponentName, pageInState, renderFileName } from "./names";
 import { addStringToEndOfAllButLast } from "./codegen";
 import { makeEmptyData } from "./makeSample";
 import { safeArray } from "@focuson/utils";
@@ -33,7 +33,7 @@ export const makeModal = ( params: TSParams ) => <B> ( { name,  modal }: ModalCr
 
 export function makePages <B> ( params: TSParams, ps: PageD <B>[] ): string[] {
   const modals = walkModals ( ps );
-  const renderImports = ps.map( p => `import { ${pageComponentName(p)} } from './${p.name}/${params.renderFile}';`)
+  const renderImports = ps.map( p => `import { ${pageComponentName(p)} } from '${renderFileName('.', params,p)}';`)
   return [
     `import { identityOptics } from "@focuson/lens";`,
     `import { MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";`,

@@ -1,14 +1,14 @@
 import { identityOptics } from "@focuson/lens";
 import { MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";
 import {Context,  FState } from "./common";
-import { OccupationAndIncomeSummaryPage } from './OccupationAndIncomeSummary/render';
-import { OccupationIncomeModalPDPage } from './OccupationIncomeModalPD/render';
-import { EAccountsSummaryPage } from './EAccountsSummary/render';
-import { CreatePlanPage } from './CreatePlan/render';
-import { ETransferPage } from './ETransfer/render';
-import { CreateEAccountPage } from './CreateEAccount/render';
-import { ChequeCreditbooksPage } from './ChequeCreditbooks/render';
-import { OrderChequeBookOrPayingInModalPage } from './OrderChequeBookOrPayingInModal/render';
+import { OccupationAndIncomeSummaryPage } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.render';
+import { OccupationIncomeModalPDPage } from './OccupationIncomeModalPD/OccupationIncomeModalPD.render';
+import { EAccountsSummaryPage } from './EAccountsSummary/EAccountsSummary.render';
+import { CreatePlanPage } from './CreatePlan/CreatePlan.render';
+import { ETransferPage } from './ETransfer/ETransfer.render';
+import { CreateEAccountPage } from './CreateEAccount/CreateEAccount.render';
+import { ChequeCreditbooksPage } from './ChequeCreditbooks/ChequeCreditbooks.render';
+import { OrderChequeBookOrPayingInModalPage } from './OrderChequeBookOrPayingInModal/OrderChequeBookOrPayingInModal.render';
 
 function MyLoading () {
       return <p>Loading</p>

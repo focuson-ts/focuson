@@ -3,7 +3,7 @@ import { DisplayCompD, OneDisplayCompParamD } from "../common/componentsD";
 import { dataDsIn, hasDomains, PageD } from "../common/pageD";
 
 import { decamelize, NameAnd, sortedEntries } from "@focuson/utils";
-import { componentName, domainName, guardName, pageComponentName, pageDomainName } from "./names";
+import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, pageComponentName, pageDomainName } from "./names";
 import { MakeButton, makeButtonsFrom } from "./makeButtons";
 import { focusOnFor, importsDot, indentList, noExtension } from "./codegen";
 import { TSParams } from "./config";
@@ -165,8 +165,11 @@ export function createReactMainPageComponent<B> ( params: TSParams, transformBut
 }
 
 export function createRenderPage<B> ( params: TSParams, transformButtons: MakeButton, p: PageD<B> ): string[] {
-  const imports = hasDomains ( p ) ? [ ...importsDot ( params.domainsFile ), ...importsDot ( params.emptyFile ) ] : []
-  return [ ...imports, ...createAllReactComponents ( params, transformButtons, [ p ] ) ]
+  const imports = hasDomains ( p ) ? [
+    `import * as domain from '${domainsFileName ( '..', params, p )}';`,
+    `import * as empty from '${emptyFileName ( '..', params, p )}';` ] : []
+  return [ ...imports,
+    ...createAllReactComponents ( params, transformButtons, [ p ] ) ]
 }
 
 export function createAllReactComponents<B> ( params: TSParams, transformButtons: MakeButton, pages: PageD<B>[] ): string[] {
@@ -183,10 +186,10 @@ export function createAllReactComponents<B> ( params: TSParams, transformButtons
   ]
   let pageDomain = noExtension ( params.pageDomainsFile );
   let domain = noExtension ( params.domainsFile );
-  const pageDomainsImports = pages.filter ( p => p.pageType === 'MainPage' ).map ( p => `import {${pageDomainName ( p )}} from "./${domain}";` )
-  const domainImports = sortedEntries ( dataDsIn ( pages ) ).map ( ( [ name, dataD ] ) => `import {${domainName ( dataD )}} from "./${domain}"` )
-  const modalDomainImports = pages.filter ( p => p.display.importFrom ).map ( p => `import {${domainName ( p.display.dataDD )}} from '${p.display.importFrom}/${params.domainsFile}'` )
-  const modalRenderImports = pages.filter ( p => p.display.importFrom ).map ( p => `import {${componentName ( p.display.dataDD )}} from '${p.display.importFrom}/${params.renderFile}'` )
+  const pageDomainsImports = pages.filter ( p => p.pageType === 'MainPage' ).map ( p => `import {${pageDomainName ( p )}} from "${domainsFileName ( '..', params, p )}";` )
+  const domainImports = pages.flatMap ( p => sortedEntries ( dataDsIn ( [ p ] ) ).map ( ( [ name, dataD ] ) => `import {${domainName ( dataD )}} from "${domainsFileName ( '..', params, p )}"` ) )
+  const modalDomainImports = pages.filter ( p => p.display.importFrom ).map ( p => `import {${domainName ( p.display.dataDD )}} from '${modalImportFromFileName('..', p, params.domainsFile)}'` )
+  const modalRenderImports = pages.filter ( p => p.display.importFrom ).map ( p => `import {${componentName ( p.display.dataDD )}} from '${modalImportFromFileName('..', p, params.renderFile)}'` )
   return [ ...imports, ...modalDomainImports, ...modalRenderImports, ...makeComponentImports ( pages ), ...makeButtonImports ( transformButtons ), ...pageDomainsImports, ...domainImports, ...pageComponents, ...dataComponents ]
 }
 

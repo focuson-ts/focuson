@@ -2,10 +2,9 @@ import { allRestAndActions, PageD, RestDefnInPageProperties } from "../common/pa
 import { applyToTemplate } from "@focuson/template";
 import { DirectorySpec, loadFile } from "@focuson/files";
 import { beforeSeparator, NameAnd, RestAction, sortedEntries } from "@focuson/utils";
-import { restDetailsName, sampleName } from "./names";
+import { restDetailsName, sampleName, samplesFileName } from "./names";
 import { defaultRestAction, makeCommonParamsValueForTest, RestActionDetail, RestD } from "../common/restD";
 import { TSParams } from "./config";
-import { importsDot } from "./codegen";
 
 
 interface CommonPactProps extends NameAnd<string> {
@@ -61,14 +60,13 @@ export function makeRestPacts<B> ( params: TSParams, p: PageD<B>, r: RestDefnInP
   return [ `//Rest ${rad.name} pact test`, ...applyToTemplate ( str, { ...params, ...props } ) ]
 }
 
-export function makeAllPacts<B> ( params: TSParams, ps: PageD<B>[], directorySpec: DirectorySpec ): string[] {
-  let allRestAndActions1 = allRestAndActions ( ps );
+export function makeAllPacts<B> ( params: TSParams, p: PageD<B>, directorySpec: DirectorySpec ): string[] {
   return [
-    ...importsDot ( params.samplesFile ),
+    `import * as samples from '${samplesFileName ( '..', params, p )}'`,
     `import {emptyState, ${params.stateName} } from "../${params.commonFile}";`,
     `import * as ${params.fetchersFile} from "../${params.fetchersFile}";`,
     `import * as ${params.restsFile} from "../${params.restsFile}";`,
-    ...allRestAndActions1.flatMap ( ( [ pd, rd, rad ] ) => [
+    ...allRestAndActions ( [ p ] ).flatMap ( ( [ pd, rd, rad ] ) => [
       ...makeFetcherPact ( params, pd, rd, rad, directorySpec ),
       ...makeRestPacts ( params, pd, rd, rad, directorySpec ),
     ] )

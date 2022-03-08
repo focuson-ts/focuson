@@ -1,6 +1,6 @@
 import { PageD } from "../common/pageD";
 import { TSParams } from "./config";
-import { domainName, emptyName, pageComponentName, sampleName } from "./names";
+import { domainName, domainsFileName, emptyFileName, emptyName, pageComponentName, renderFileName, sampleName, samplesFileName } from "./names";
 
 
 export function makeOneStory <B> ( params: TSParams, p: PageD <B> ): string[] {
@@ -19,10 +19,10 @@ export function makeOneMainStory <B> ( params: TSParams, p: PageD <B> ): string[
     `import { defaultPageSelectionAndRestCommandsContext } from "@focuson/focuson";`,
     `import { Context, emptyState, ${params.stateName} } from "../common";`,
     `import { pages } from "../pages";`,
-    `import * as render  from "./render";`,
-    `import * as domain  from "./domains";`,
-    `import * as samples  from "./${params.samplesFile}";`,
-    `import * as empty from "./${params.emptyFile}";`,
+    `import * as render  from "${renderFileName('..',params,p)}";`,
+    `import * as domain  from "${domainsFileName('..',params,p)}";`,
+    `import * as samples  from "${samplesFileName('..',params,p)}";`,
+    `import * as empty from "${emptyFileName('..',params,p)}";`,
     ` `,
     `export default {`,
     `   component: render.${pageComponentName ( p )},`,

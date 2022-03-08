@@ -1,7 +1,7 @@
 import * as common from './common';
-import { OccupationAndIncomeDetailsDDFetcher } from './OccupationAndIncomeSummary/fetchers';
-import { EAccountsSummaryDDFetcher } from './EAccountsSummary/fetchers';
-import { ChequeCreditbooksDDFetcher } from './ChequeCreditbooks/fetchers';
+import { OccupationAndIncomeDetailsDDFetcher } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.fetchers';
+import { EAccountsSummaryDDFetcher } from './EAccountsSummary/EAccountsSummary.fetchers';
+import { ChequeCreditbooksDDFetcher } from './ChequeCreditbooks/ChequeCreditbooks.fetchers';
 import { FetcherTree,  } from "@focuson/fetcher";
 import { HasTagHolder } from "@focuson/template";
 import { HasPageSelection } from "@focuson/pages";
