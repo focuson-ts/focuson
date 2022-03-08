@@ -1,15 +1,14 @@
-import { focusPageClassName, HasPageSelection, lensForPageDetails, MultiPageDetails, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages } from "@focuson/pages";
-import { HasPostCommand, HasPostCommandLens, PostCommand } from "@focuson/poster";
-import { Fetcher, FetcherTree, LoadInfo, loadTree, WouldLoad, wouldLoad, wouldLoadSummary } from "@focuson/fetcher";
+import { focusPageClassName, HasPageSelection, HasSimpleMessageL, MultiPageDetails, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages, simpleMessagesL } from "@focuson/pages";
+import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
+import { FetcherTree, loadTree, wouldLoad, wouldLoadSummary } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
-import { Lens, Lenses, massTransform, Optional, Transform } from "@focuson/lens";
-import { FetchFn, safeArray } from "@focuson/utils";
+import { Lens, Lenses, Optional } from "@focuson/lens";
+import { FetchFn, HasSimpleMessages } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestDetails } from "@focuson/rest";
 
 
-
 export function defaultCombine ( pages: JSX.Element[] ) {
-  return <div className='combine'>{pages.map ( ( p, i ) => <div className={focusPageClassName}  key={i}>{p}</div> )}</div>
+  return <div className='combine'>{pages.map ( ( p, i ) => <div className={focusPageClassName} key={i}>{p}</div> )}</div>
 }
 export function defaultPageSelectionContext<S extends HasPageSelection, Context extends PageSelectionContext<S>> ( pageDetails: MultiPageDetails<S, Context> ): PageSelectionContext<S> {
   return {
@@ -27,12 +26,15 @@ export function defaultPageSelectionAndPostCommandsContext<S extends HasPageSele
     postCommandsL: Lenses.identity<S> ().focusOn ( 'postCommands' )
   }
 }
-export interface PageSelectionAndRestCommandsContext<S> extends PageSelectionContext<S>, HasRestCommandL<S> {
+
+export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S> {
 }
-export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSelection & HasRestCommands> ( pageDetails: MultiPageDetails<S, PageSelectionAndRestCommandsContext<S>> ): PageSelectionAndRestCommandsContext<S> {
+export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSelection & HasRestCommands & HasSimpleMessages> ( pageDetails: MultiPageDetails<S, FocusOnContext<S>> ):
+  FocusOnContext<S> {
   return {
-    ...defaultPageSelectionContext<S, PageSelectionAndRestCommandsContext<S>> ( pageDetails ),
-    restL: Lenses.identity<S> ().focusOn ( 'restCommands' )
+    ...defaultPageSelectionContext<S, FocusOnContext<S>> ( pageDetails ),
+    restL: Lenses.identity<S> ().focusOn ( 'restCommands' ),
+    simpleMessagesL: simpleMessagesL ()
   }
 }
 

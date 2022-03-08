@@ -1,9 +1,10 @@
-import { HasPageSelection, ModalButton, ModalCommitButton, pageSelectionlens } from "@focuson/pages";
+import { HasPageSelection, ModalButton, ModalCommitButton, pageSelectionlens, simpleMessagesL } from "@focuson/pages";
 import { HasRestCommands, restL } from "@focuson/rest";
 import { lensState, LensState } from "@focuson/state";
 import { shallow } from "enzyme";
-import { PageSelectionAndRestCommandsContext } from "@focuson/focuson";
+import { FocusOnContext } from "@focuson/focuson";
 import { enzymeSetup } from "./enzymeAdapterSetup";
+import { SimpleMessage } from "@focuson/utils";
 
 enzymeSetup ()
 
@@ -24,9 +25,11 @@ interface PageData {
 }
 
 export interface ModalButtonStateForTest extends HasPageSelection, HasRestCommands {
+  messages: SimpleMessage[],
   mainPage: PageData
 }
 const emptyS: ModalButtonStateForTest = {
+  messages:[],
   pageSelection: [ { "pageName": "mainPage", "pageMode": "view" } ],
   restCommands: [],
   mainPage: {}
@@ -50,11 +53,12 @@ const listS: ModalButtonStateForTest = {
     list: [ { data: '0' }, { data: '1' }, { data: '2' } ]
   }
 }
-type Context = PageSelectionAndRestCommandsContext<ModalButtonStateForTest>
+type Context = FocusOnContext<ModalButtonStateForTest>
 const context: Context = {
   restL: restL<ModalButtonStateForTest> (),
   combine: ( pages: JSX.Element[] ): JSX.Element => <div>{pages}</div>,
   pageSelectionL: pageSelectionlens (),
+  simpleMessagesL: simpleMessagesL(),
   pages: {}
 
 }

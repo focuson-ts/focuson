@@ -1,14 +1,16 @@
 import { currentPageSelectionTail, mainPage, PageSelection, PageSelectionContext, popPage, refFromFirstPage } from "../pageSelection";
 import { LensProps, reasonFor } from "@focuson/state";
-import { safeArray } from "@focuson/utils";
-import { GetNameFn, Lenses, Transform } from "@focuson/lens";
+import { createSimpleMessage, DateFn, safeArray } from "@focuson/utils";
+import { Lenses, Transform } from "@focuson/lens";
 import { HasRestCommandL, RestCommand } from "@focuson/rest";
 import { findValidityDetails, isValidToCommit } from "../validity";
 import { focusPageClassName } from "../PageTemplate";
+import { HasSimpleMessageL } from "../simpleMessage";
 
 
 interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Context> {
-  id: string
+  id: string;
+  dateFn?: DateFn
 }
 
 export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( { id, state }: ModalCommitCancelButtonProps<S, Context> ) {
@@ -16,13 +18,16 @@ export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( 
 }
 
 
-export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S>> ( { state, id }: ModalCommitCancelButtonProps<S, Context> ) {
+export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S>> ( { state, id, dateFn }: ModalCommitCancelButtonProps<S, Context> ) {
   function onClick () {
     console.log ( 'validationOnCommit', findValidityDetails ( focusPageClassName ) )
     console.log ( 'isValidToCommit', isValidToCommit ( focusPageClassName ) )
     if ( !isValidToCommit ( focusPageClassName ) ) {
-      console.error ( "Cannot commit\n" + findValidityDetails ( focusPageClassName ).filter ( t => !t[ 1 ] ).join ( "\n" ) )
-      //probably add these to messages
+      const message = "Cannot commit. Validation errors on\n" + findValidityDetails ( focusPageClassName ).filter ( t => !t[ 1 ] ).map ( t => t[ 0 ] ).join ( "\n" );
+      console.error ( message )
+      const realDateFn = dateFn ? dateFn : () => new Date ().toISOString ()
+      state.copyWithLens ( state.context.simpleMessagesL ).transform ( msgs => [ ...safeArray ( msgs ),
+        createSimpleMessage ( 'warning', message, realDateFn () ) ], reasonFor ( 'ModalCommitButton', 'onClick', id, 'Validation failed' ) )
       return
     }
     const firstPage: PageSelection = mainPage ( state )

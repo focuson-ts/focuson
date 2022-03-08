@@ -2,7 +2,7 @@ import { lensState } from "@focuson/state";
 import { identityOptics } from "@focuson/lens";
 import { focusedPage, HasPageSelection, Loading, MultiPageDetails, PageConfig, PageMode,  simpleMessagesPageConfig } from "@focuson/pages";
 import { HasSimpleMessages, SimpleMessage } from "@focuson/utils";
-import { defaultPageSelectionAndRestCommandsContext, PageSelectionAndRestCommandsContext } from "@focuson/focuson";
+import { defaultPageSelectionAndRestCommandsContext, FocusOnContext } from "@focuson/focuson";
 import { HasTagHolder } from "@focuson/template";
 import { HasRestCommands, RestCommand } from "@focuson/rest";
 
@@ -39,7 +39,7 @@ export function lensStateWith ( main: PageSpecState, setMain: ( s: PageSpecState
   return lensState<PageSpecState, ContextForTest> ( stateWith ( main, ...nameAndModes ), setMain, 'displayMain / focusedPage', context )
 }
 
-export type ContextForTest = PageSelectionAndRestCommandsContext<PageSpecState>
+export type ContextForTest = FocusOnContext<PageSpecState>
 
 
 const DisplayPageSpecState = ( prefix: string ) =>

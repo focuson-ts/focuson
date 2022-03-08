@@ -117,7 +117,7 @@ export function createReactComponent ( dataD: DataD ): string[] {
   const guardStrings = sortedEntries ( dataD.guards ).map ( ( [ name, guard ] ) =>
     `const ${guardName ( name )} = state.chainLens(Lenses.fromPath(${JSON.stringify ( guard.pathFromHere )})).optJson();console.log('${guardName ( name )}', ${guardName ( name )})` )
   return [
-    `export function ${componentName ( dataD )}<S, Context extends PageSelectionAndRestCommandsContext<S>>({id,state,mode}: FocusedProps<S, ${domainName ( dataD )},Context>){`,
+    `export function ${componentName ( dataD )}<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, ${domainName ( dataD )},Context>){`,
     ...guardStrings,
     "  return(<>",
     ...contents,
@@ -138,7 +138,7 @@ export function createReactModalPageComponent<B> ( params: TSParams, transformBu
   const focus = focusOnFor ( pageD.display.target );
   const domName = domainName ( pageD.display.dataDD );
   return [
-    `export function ${pageComponentName ( pageD )}<S, Context extends PageSelectionAndRestCommandsContext<S>>(){`,
+    `export function ${pageComponentName ( pageD )}<S, Context extends FocusOnContext<S>>(){`,
     `  return focusedPage<S, ${domName}, Context> ( s => '' ) (`,
     `     ( state, d, mode ) => {`,
     `          return (<${layout.name}  details='${layout.details}'>`,
@@ -152,7 +152,7 @@ export function createReactMainPageComponent<B> ( params: TSParams, transformBut
   const { dataDD, layout } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
   return [
-    `export function ${pageComponentName ( pageD )}<S, Context extends PageSelectionAndRestCommandsContext<S>>(){`,
+    `export function ${pageComponentName ( pageD )}<S, Context extends FocusOnContext<S>>(){`,
     `  return focusedPageWithExtraState<S, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${pageD.name}' ) ( s => s${focus}) (
     ( fullState, state , full, d, mode) => {`,
     `  return (<${layout.name}  details='${layout.details}'>`,
@@ -172,7 +172,7 @@ export function createAllReactComponents<B> ( params: TSParams, transformButtons
     `import { RestButton } from "./copied/rest";`,
     `import { ListNextButton, ListPrevButton } from "./copied/listNextPrevButtons";`,
     `import { ValidationButton } from "./copied/ValidationButton";`,
-    `import { PageSelectionAndRestCommandsContext } from '@focuson/focuson';`,
+    `import { FocusOnContext } from '@focuson/focuson';`,
     `import {  focusedPage, focusedPageWithExtraState,  ModalButton, ModalCancelButton, ModalCommitButton, fullState,pageState} from "@focuson/pages";`,
     `import { Context, FocusedProps } from "./${params.commonFile}";`,
     `import { Lenses } from '@focuson/lens';`,
