@@ -3,18 +3,27 @@ import { LensProps, reasonFor } from "@focuson/state";
 import { safeArray } from "@focuson/utils";
 import { GetNameFn, Lenses, Transform } from "@focuson/lens";
 import { HasRestCommandL, RestCommand } from "@focuson/rest";
+import { findValidityDetails, isValidToCommit } from "../validity";
 
 
 interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Context> {
   id: string
 }
 
-export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( {id, state }: ModalCommitCancelButtonProps<S, Context> ) {
-  return <button onClick={() => state.massTransform (reasonFor('ModalCancelButton', 'onClick', id))( popPage ( state ) )}>Cancel</button>
+export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( { id, state }: ModalCommitCancelButtonProps<S, Context> ) {
+  return <button onClick={() => state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) )}>Cancel</button>
 }
 
-export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S>> ( { state,id}: ModalCommitCancelButtonProps<S, Context> ) {
+const pageHolderClassName = 'focus-page'
+export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S>> ( { state, id }: ModalCommitCancelButtonProps<S, Context> ) {
   function onClick () {
+    console.log('validationOnCommit', findValidityDetails(pageHolderClassName))
+    console.log('isValidToCommit', isValidToCommit(pageHolderClassName))
+    if ( !isValidToCommit ( pageHolderClassName ) ) {
+      console.error( "Cannot commit\n" + findValidityDetails ( pageHolderClassName ).join ( "\n" ) )
+      //probably add these to messages
+      return
+    }
     const firstPage: PageSelection = mainPage ( state )
     const lastPage = currentPageSelectionTail ( state )
     const rest = lastPage?.rest;
@@ -44,7 +53,7 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
                 } ] ] : []
 
     if ( lastPage ) {
-      state.massTransform (reasonFor('ModalCommit', 'onClick', id))( pageTransformer, ...restTransformers, ...copyOnCloseTransforms, ...setToLengthOnCloseTx )
+      state.massTransform ( reasonFor ( 'ModalCommit', 'onClick', id ) ) ( pageTransformer, ...restTransformers, ...copyOnCloseTransforms, ...setToLengthOnCloseTx )
     } else
       console.error ( 'ModalCommit button called and bad state.', lastPage )
   }

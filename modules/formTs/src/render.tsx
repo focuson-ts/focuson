@@ -5,6 +5,7 @@ import { LensProps } from "@focuson/state";
 import { Layout } from "./copied/layout";
 import { RestButton } from "./copied/rest";
 import { ListNextButton, ListPrevButton } from "./copied/listNextPrevButtons";
+import { ValidationButton } from "./copied/ValidationButton";
 import { PageSelectionAndRestCommandsContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState,  ModalButton, ModalCancelButton, ModalCommitButton, fullState,pageState} from "@focuson/pages";
 import { Context, FocusedProps } from "./common";
@@ -49,6 +50,7 @@ export function OccupationIncomeModalPDPage<S, Context extends PageSelectionAndR
                <OccupationIncomeDetailsDD id='root' state={state}  mode={mode} />
                <ModalCancelButton id='cancel' state={state} />
                <ModalCommitButton id='commit' state={state} />
+     <ValidationButton  id='validate'   name='validate'  />
             </Layout>)})}
 
 export function EAccountsSummaryPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){

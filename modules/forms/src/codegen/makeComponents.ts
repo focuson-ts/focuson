@@ -171,6 +171,7 @@ export function createAllReactComponents<B> ( params: TSParams, transformButtons
     `import { Layout } from "./copied/layout";`,
     `import { RestButton } from "./copied/rest";`,
     `import { ListNextButton, ListPrevButton } from "./copied/listNextPrevButtons";`,
+  `import { ValidationButton } from "./copied/ValidationButton";`,
     `import { PageSelectionAndRestCommandsContext } from '@focuson/focuson';`,
     `import {  focusedPage, focusedPageWithExtraState,  ModalButton, ModalCancelButton, ModalCommitButton, fullState,pageState} from "@focuson/pages";`,
     `import { Context, FocusedProps } from "./${params.commonFile}";`,

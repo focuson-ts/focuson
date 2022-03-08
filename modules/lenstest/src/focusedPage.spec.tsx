@@ -42,7 +42,7 @@ describe ( "selectedPage", () => {
   it ( "shouldbe using the combine for multiple pages", () => {
     const state = lensStateWith ( dataDefinedState, () => {}, [ 'firstPage', 'edit',undefined ], [ 'secondPage', 'view',undefined ], [ 'modalData', 'edit' ,undefined] )
     const comp = shallow ( <SelectedPage state={state}/> )
-    expect ( comp.find ( '#combine' ).length ).toEqual ( 1 )
+    expect ( comp.find ( '.combine' ).length ).toEqual ( 1 )
 
   } )
   it ( "display loading when no data", () => {

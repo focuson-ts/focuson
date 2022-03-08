@@ -4,6 +4,7 @@ export interface OccupationAndIncomeSummaryPageDomain{
  fromApi?:domains.OccupationAndIncomeDetailsDDDomain;
  selectedItem?:number;
  temp?:domains.OccupationIncomeDetailsDDDomain;
+ validationDebug?:boolean;
 }
 export interface HasEAccountsSummaryPageDomain {   EAccountsSummary?: EAccountsSummaryPageDomain}
 export interface EAccountsSummaryPageDomain{

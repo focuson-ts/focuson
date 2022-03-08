@@ -4,18 +4,20 @@ import { ListNextButtonInPage, ListPrevButtonInPage, makeListMarkerButtons } fro
 import { MakeButton } from "../codegen/makeButtons";
 import { makeModalCloseButtons, ModalCloseButton } from "./modalCloseButtons";
 import { makeRestButtons, RestButtonInPage } from "./restButton";
+import { makeValidationButtons, ValidationButtonInPage } from "./ValidationDebugButton";
 
 
 export interface ButtonD {
   control: string
 }
 export type AllButtonsInPage = ModalButtonInPage | ModalCloseButton |
-  ResetStateButton | RestButtonInPage | ListNextButtonInPage | ListPrevButtonInPage
+  ResetStateButton | RestButtonInPage | ListNextButtonInPage | ListPrevButtonInPage | ValidationButtonInPage
 
 export const transformButtons: MakeButton = {
   ...makeModalButtons,
   ...makeModalCloseButtons,
   ...makeListMarkerButtons,
-  ...makeRestButtons
+  ...makeRestButtons,
+  ...makeValidationButtons
 }
 

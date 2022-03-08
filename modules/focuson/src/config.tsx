@@ -8,7 +8,7 @@ import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestDetails } from
 
 
 export function defaultCombine ( pages: JSX.Element[] ) {
-  return <div id='combine'>{pages.map ( ( p, i ) => <div key={i}>{p}</div> )}</div>
+  return <div className='combine'>{pages.map ( ( p, i ) => <div className='focus-page' key={i}>{p}</div> )}</div>
 }
 export function defaultPageSelectionContext<S extends HasPageSelection, Context extends PageSelectionContext<S>> ( pageDetails: MultiPageDetails<S, Context> ): PageSelectionContext<S> {
   return {

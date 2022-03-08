@@ -3,7 +3,7 @@ import { occupationAndIncomeDetailsDD, occupationIncomeDetailsDD } from "./occup
 import { occupationAndIncomeRD } from "./occupationAndIncome.restD";
 import { PageD } from "../../common/pageD";
 import { AllButtonsInPage } from "../../buttons/allButtons";
-import { IntegerDD } from "../../common/dataD";
+import { BooleanDD, IntegerDD } from "../../common/dataD";
 
 export const occupationIncomeModalPD: PageD<AllButtonsInPage> = {
   name: 'OccupationIncomeModalPD',
@@ -15,7 +15,8 @@ export const occupationIncomeModalPD: PageD<AllButtonsInPage> = {
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },
-    commit: { control: 'ModalCommitButton' }
+    commit: { control: 'ModalCommitButton' },
+    validate: { control: 'ValidationButton' }
   },
   //Not sure what to do about these
   domain: {},
@@ -39,6 +40,7 @@ export const OccupationAndIncomeSummaryPD: PageD<AllButtonsInPage> = {
   /** This defines the domain data structures in react*/
   domain: {
     selectedItem: { dataDD: IntegerDD },
+    validationDebug: { dataDD: BooleanDD },
     fromApi: { dataDD: occupationAndIncomeDetailsDD },
     temp: { dataDD: occupationIncomeDetailsDD },
   },
@@ -46,7 +48,7 @@ export const OccupationAndIncomeSummaryPD: PageD<AllButtonsInPage> = {
 
   /** Binds the rest to 'where it takes place'. So we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
   rest: {
-    occupationAndIncomeRD: { rest: occupationAndIncomeRD, targetFromPath: [ 'fromApi' ], fetcher: 'get'}
+    occupationAndIncomeRD: { rest: occupationAndIncomeRD, targetFromPath: [ 'fromApi' ], fetcher: 'get' }
   },
 
 
@@ -60,15 +62,15 @@ export const OccupationAndIncomeSummaryPD: PageD<AllButtonsInPage> = {
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'create',
       focusOn: [ 'temp' ],
       createEmpty: occupationIncomeDetailsDD,
-      setToLengthOnClose : {variable: ['selectedItem'],array:['fromApi','customerOccupationIncomeDetails']},
-      copyOnClose: [ 'fromApi','customerOccupationIncomeDetails','[append]' ]
+      setToLengthOnClose: { variable: [ 'selectedItem' ], array: [ 'fromApi', 'customerOccupationIncomeDetails' ] },
+      copyOnClose: [ 'fromApi', 'customerOccupationIncomeDetails', '[append]' ]
     },
-       edit: {
+    edit: {
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'edit',
-      focusOn: [  'temp' ],
+      focusOn: [ 'temp' ],
 
-      copyFrom: ['fromApi','customerOccupationIncomeDetails','{selectedItem}'],
-      copyOnClose: [ 'fromApi','customerOccupationIncomeDetails','{selectedItem}' ]
+      copyFrom: [ 'fromApi', 'customerOccupationIncomeDetails', '{selectedItem}' ],
+      copyOnClose: [ 'fromApi', 'customerOccupationIncomeDetails', '{selectedItem}' ]
     },
 
     //questions: how do we know which is the existing plan... is there a list? are we an entry in the list? do we need to navigate to it?
