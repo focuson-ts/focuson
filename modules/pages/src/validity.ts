@@ -1,3 +1,4 @@
+
 export function findValidityDetails ( pageHolderClass: string ): [ string, boolean ][] {
   const allPages = document.getElementsByClassName ( pageHolderClass )
   const thisPage = allPages.item ( allPages.length - 1 )

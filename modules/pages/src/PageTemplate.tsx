@@ -8,6 +8,7 @@ export interface PageTemplateProps<S, D, Context> extends LensProps<S, D, Contex
   focusedPage: FocusedPage<S, D, Context>
   pageMode: PageMode
 }
+export const focusPageClassName = 'focus-page'
 
 /** A sample template that shows the title, and 'loading' if 'D' isn't present */
 export function DefaultTemplate<S extends any, D extends any, Msgs, Context> ( { state, loading, focusedPage, pageMode }: PageTemplateProps<S, D, Context> ): JSX.Element {

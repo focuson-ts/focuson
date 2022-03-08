@@ -4,6 +4,7 @@ import { safeArray } from "@focuson/utils";
 import { GetNameFn, Lenses, Transform } from "@focuson/lens";
 import { HasRestCommandL, RestCommand } from "@focuson/rest";
 import { findValidityDetails, isValidToCommit } from "../validity";
+import { focusPageClassName } from "../PageTemplate";
 
 
 interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Context> {
@@ -14,13 +15,13 @@ export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( 
   return <button onClick={() => state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) )}>Cancel</button>
 }
 
-const pageHolderClassName = 'focus-page'
+
 export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S>> ( { state, id }: ModalCommitCancelButtonProps<S, Context> ) {
   function onClick () {
-    console.log('validationOnCommit', findValidityDetails(pageHolderClassName))
-    console.log('isValidToCommit', isValidToCommit(pageHolderClassName))
-    if ( !isValidToCommit ( pageHolderClassName ) ) {
-      console.error( "Cannot commit\n" + findValidityDetails ( pageHolderClassName ).join ( "\n" ) )
+    console.log ( 'validationOnCommit', findValidityDetails ( focusPageClassName ) )
+    console.log ( 'isValidToCommit', isValidToCommit ( focusPageClassName ) )
+    if ( !isValidToCommit ( focusPageClassName ) ) {
+      console.error ( "Cannot commit\n" + findValidityDetails ( focusPageClassName ).filter ( t => !t[ 1 ] ).join ( "\n" ) )
       //probably add these to messages
       return
     }
