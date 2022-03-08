@@ -1,8 +1,7 @@
 import { AllDataDD, DataD, findAllDataDs, NamesAndDataDs } from "./dataD";
 import { defaultRestAction, RestActionDetail, RestD, unique } from "./restD";
-import { RestAction, sortedEntries } from "@focuson/utils";
+import { RestAction, RestResult, sortedEntries } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
-import { RestResult } from "@focuson/utils";
 import { AllButtonsInPage } from "../buttons/allButtons";
 
 
@@ -42,13 +41,14 @@ export interface ModalData<B> {
   path: string[]
 }
 
-export function hasDomains<B> ( p: PageD<B> ) {
+export function isMainPage<B> ( p: PageD<B> ): p is MainPageD<B> {
   return p.pageType === 'MainPage'
 }
+export type PageD<Buttons> = MainPageD<Buttons> | ModalPageD<Buttons>
 
-export interface PageD<Buttons> {
+export interface MainPageD<Buttons> {
+  pageType: 'MainPage',
   name: string,
-  pageType: PageType,
   modes: PageMode[],
   display: { layout: LayoutD, target: string[], dataDD: DataD, importFrom?: string },
   initialValue: 'empty' | any,
@@ -57,16 +57,23 @@ export interface PageD<Buttons> {
   rest: RestDefnInPage,
   buttons: ButtonDefnInPage
 }
+export interface ModalPageD<Buttons> {
+  pageType: 'ModalPage',
+  name: string,
+  modes: PageMode[],
+  display: { layout: LayoutD, target: string[], dataDD: DataD, importFrom?: string },
+  buttons: ButtonDefnInPage
+}
 
 
 export function dataDsIn<B> ( pds: PageD<B>[], stopAtDisplay?: boolean ): NamesAndDataDs {
-  const pageDataDs = pds.flatMap ( pd => sortedEntries ( pd.rest ).map ( ( [ na, restPD ]: [ string, RestDefnInPageProperties ] ) => restPD.rest.dataDD ) )
+  const pageDataDs = pds.flatMap ( pd => (isMainPage ( pd ) ? sortedEntries ( pd.rest ) : []).map ( ( [ na, restPD ]: [ string, RestDefnInPageProperties ] ) => restPD.rest.dataDD ) )
   return findAllDataDs ( pageDataDs, stopAtDisplay )
 }
 
 export function allRestAndActions<B> ( pds: PageD<B>[] ): [ PageD<B>, RestDefnInPageProperties, RestActionDetail ][] {
   return unique ( pds.flatMap ( pd => {
-    return sortedEntries ( pd.rest ).flatMap ( ( [ name, rdp ] ) => {
+    return (isMainPage ( pd ) ? sortedEntries ( pd.rest ) : []).flatMap ( ( [ name, rdp ] ) => {
       const y: [ PageD<B>, RestDefnInPageProperties, RestActionDetail ][] = rdp.rest.actions.map ( a => [ pd, rdp, defaultRestAction[ a ] ] )
       return y
     } )

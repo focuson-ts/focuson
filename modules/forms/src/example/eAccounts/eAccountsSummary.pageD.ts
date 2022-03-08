@@ -1,12 +1,12 @@
 import { CreatePlanDD, EAccountsSummaryDD } from "./eAccountsSummary.dataD";
 import { createPlanRestD, eAccountsSummaryRestD } from "./eAccountsSummary.restD";
-import { PageD } from "../../common/pageD";
+import { MainPageD, PageD } from "../../common/pageD";
 import { CreatePlanPD } from "./createPlanPD";
 import { AllButtonsInPage } from "../../buttons/allButtons";
 
 
 /** This is the 'bringing it all together */
-export const EAccountsSummaryPD: PageD<AllButtonsInPage> = {
+export const EAccountsSummaryPD: MainPageD<AllButtonsInPage> = {
   name: 'EAccountsSummary',
   pageType: 'MainPage',
   /** This page can only view data */

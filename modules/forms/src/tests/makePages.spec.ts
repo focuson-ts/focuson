@@ -10,8 +10,8 @@ describe ( "makePages", () => {
       "import { identityOptics } from \"@focuson/lens\";",
       "import { MultiPageDetails, simpleMessagesPageConfig } from \"@focuson/pages\";",
       "import {Context,  FState } from \"./common\";",
-      "import * as render from\"./render\";",
-      "import { EAccountsSummaryPage } from \"./render\";",
+      "import { EAccountsSummaryPage } from './EAccountsSummary/EAccountsSummary.render';",
+      "import { CreatePlanPage } from './CreatePlan/CreatePlan.render';",
       "",
       "function MyLoading () {",
       "      return <p>Loading</p>",
@@ -20,7 +20,7 @@ describe ( "makePages", () => {
       "const identity = identityOptics<FState> ();",
       "export const pages: MultiPageDetails<FState, Context> = {",
       "    EAccountsSummary: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'EAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: {} },",
-      "    CreatePlan: { config: simpleMessagesConfig,  pageFunction: render.CreatePlanPage(), modal: true}",
+      "    CreatePlan: { config: simpleMessagesConfig,  pageFunction: CreatePlanPage(), modal: true}",
       "  }"
     ])
   } )

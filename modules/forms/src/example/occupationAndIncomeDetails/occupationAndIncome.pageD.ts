@@ -1,31 +1,28 @@
 import { occupationAndIncomeDetailsDD, occupationIncomeDetailsDD } from "./occupationAndIncome.dataD";
 
 import { occupationAndIncomeRD } from "./occupationAndIncome.restD";
-import { PageD } from "../../common/pageD";
+import { MainPageD, ModalPageD, PageD } from "../../common/pageD";
 import { AllButtonsInPage } from "../../buttons/allButtons";
 import { BooleanDD, IntegerDD } from "../../common/dataD";
 
-export const occupationIncomeModalPD: PageD<AllButtonsInPage> = {
+export const occupationIncomeModalPD: ModalPageD<AllButtonsInPage> = {
   name: 'OccupationIncomeModalPD',
   pageType: 'ModalPage',
   /** This page can only view data */
   modes: [ 'view', 'create', 'edit' ],
   /** How we display the page.*/
-  display: { layout: { name: 'Layout', details: '[3]' }, target: [], dataDD: occupationIncomeDetailsDD , importFrom: 'OccupationAndIncomeSummary' },
+  display: { layout: { name: 'Layout', details: '[3]' }, target: [], dataDD: occupationIncomeDetailsDD, importFrom: 'OccupationAndIncomeSummary' },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },
     commit: { control: 'ModalCommitButton', validate: true },
     validate: { control: 'ValidationButton' }
   },
-  //Not sure what to do about these
-  domain: {},
-  initialValue: {},
-  rest: {}
+
 }
 
 /** This is the 'bringing it all together */
-export const OccupationAndIncomeSummaryPD: PageD<AllButtonsInPage> = {
+export const OccupationAndIncomeSummaryPD: MainPageD<AllButtonsInPage> = {
   name: 'OccupationAndIncomeSummary',
   pageType: 'MainPage',
   /** This page can only view data */
@@ -73,11 +70,5 @@ export const OccupationAndIncomeSummaryPD: PageD<AllButtonsInPage> = {
       copyOnClose: [ 'fromApi', 'customerOccupationIncomeDetails', '{selectedItem}' ]
     },
 
-    //questions: how do we know which is the existing plan... is there a list? are we an entry in the list? do we need to navigate to it?
-    // amendEntry: {
-    //     control: 'ModalAndCopyButton', modal: CreatePlanPD, mode: 'edit',
-    //     from: [ 'fromApi', 'createPlan' ], to: [ 'tempCreatePlan' ],
-    //     restOnCommit: { rest: createPlanRestD, action: 'update', result: 'refresh', target: [ 'EAccountsSummary' ] }
-    // },
   }
 }

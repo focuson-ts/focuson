@@ -1,7 +1,7 @@
 import { findIds, unique } from "../common/restD";
 import { domainName, domainsFileName, pageDomainName, restDetailsName, restFileName } from "./names";
 import { TSParams } from "./config";
-import { allRestAndActions, PageD, RestDefnInPageProperties } from "../common/pageD";
+import { allRestAndActions, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { sortedEntries } from "@focuson/utils";
 import { addStringToEndOfAllButLast, focusQueryFor } from "./codegen";
 
@@ -47,13 +47,13 @@ export function makeRestDetailsPage<B> ( params: TSParams, ps: PageD<B>[] ): str
 export function makeRestDetails<B> ( params: TSParams, ps: PageD<B>[] ): string[] {
   return [
     `export const restDetails: RestDetails<${params.stateName}, SimpleMessage> = {`,
-    ...addStringToEndOfAllButLast ( "," ) ( ps.flatMap ( pd => sortedEntries ( pd.rest ).flatMap ( ( [ name, rd ] ) =>
+    ...addStringToEndOfAllButLast ( "," ) ( ps.flatMap ( pd => (isMainPage ( pd ) ? sortedEntries ( pd.rest ) : []).flatMap ( ( [ name, rd ] ) =>
       `   ${restDetailsName ( pd, rd.rest )}: ${restDetailsName ( pd, rd.rest )}(commonIds, defaultDateFn)` ) ) ),
     ``,
     `}`, '' ]
 }
 
-export function makeRests<B> ( params: TSParams, pd: PageD<B> ): string[] {
+export function makeRests<B> ( params: TSParams, pd: MainPageD<B> ): string[] {
   let rests = sortedEntries ( pd.rest ).flatMap ( ( [ name, rd ] ) => makeRest ( params, pd ) ( rd ) );
   let imports = rests.length > 0 ? makeRestImports ( params, pd ) : []
   return [ ...imports, ...rests ]

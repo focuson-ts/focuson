@@ -1,9 +1,9 @@
-import { PageD } from "../../common/pageD";
+import { ModalPageD } from "../../common/pageD";
 import { CreatePlanDD } from "./eAccountsSummary.dataD";
 import { AllButtonsInPage } from "../../buttons/allButtons";
 
 /** this is a modal window, so it's target is controlled by the caller */
-export const CreatePlanPD: PageD<AllButtonsInPage> = {
+export const CreatePlanPD: ModalPageD<AllButtonsInPage> = {
   name: 'CreatePlan',
   pageType: 'ModalPage',
   /** This page can only view data */
@@ -15,8 +15,4 @@ export const CreatePlanPD: PageD<AllButtonsInPage> = {
     cancel: { control: 'ModalCancelButton' },
     commit: { control: 'ModalCommitButton' }
   },
-  //Not sure what to do about these
-  domain: {},
-  initialValue: {},
-  rest: {}
 }

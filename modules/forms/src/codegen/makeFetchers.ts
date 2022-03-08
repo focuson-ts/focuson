@@ -1,5 +1,5 @@
 import { sortedEntries } from "@focuson/utils";
-import { PageD, RestDefnInPageProperties } from "../common/pageD";
+import { isMainPage, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { domainName, domainsFileName, fetcherFileName, fetcherName, pageDomainName } from "./names";
 import { TSParams } from "./config";
 import { addStringToEndOfAllButLast, importsDot, importsDotDot, noExtension } from "./codegen";
@@ -30,7 +30,7 @@ export const makeFetcherCode = ( params: TSParams ) => <B> ( p: PageD<B> ) => ( 
 
 
 export function findAllFetchers<B> ( ps: PageD<B>[] ): [ PageD<B>, RestDefnInPageProperties ][] {
-  return ps.flatMap ( pd => sortedEntries ( pd.rest ).flatMap ( ( [ name, d ] ) => {
+  return ps.flatMap ( pd => (isMainPage ( pd ) ? sortedEntries ( pd.rest ) : []).flatMap ( ( [ name, d ] ) => {
     let x: [ PageD<B>, RestDefnInPageProperties ][] = d.fetcher ? [ [ pd, d ] ] : []
     return x
   } ) )

@@ -1,4 +1,4 @@
-import { PageD } from "../../common/pageD";
+import { MainPageD, ModalPageD, PageD } from "../../common/pageD";
 import { ChequeCreditbooksDD, ChequeCreditbooksHistoryLineDD } from "./chequeCreditBooks.dataD";
 import { chequeCreditBooksRestD } from "./chequeCreditBooks.restD";
 import { CreatePlanPD } from "../eAccounts/createPlanPD";
@@ -6,7 +6,7 @@ import { IntegerDD, PrimitiveDD } from "../../common/dataD";
 import { AllButtonsInPage } from "../../buttons/allButtons";
 
 
-export const OrderChequeBookOrPayingInModalPD: PageD<AllButtonsInPage> = {
+export const OrderChequeBookOrPayingInModalPD: ModalPageD<AllButtonsInPage> = {
   name: 'OrderChequeBookOrPayingInModal',
   pageType: 'ModalPage',
   /** This page can only view data */
@@ -17,11 +17,7 @@ export const OrderChequeBookOrPayingInModalPD: PageD<AllButtonsInPage> = {
   buttons: {
     cancel: { control: 'ModalCancelButton' },
     commit: { control: 'ModalCommitButton' }
-  },
-  //Not sure what to do about these
-  domain: {},
-  initialValue: {},
-  rest: {}
+  }
 }
 
 export const CheckBookOrPayingInDD: PrimitiveDD = {
@@ -32,7 +28,7 @@ export const CheckBookOrPayingInDD: PrimitiveDD = {
 }
 
 /** This is the 'bringing it all together */
-export const ChequeCreditbooksPD: PageD<AllButtonsInPage> = {
+export const ChequeCreditbooksPD: MainPageD<AllButtonsInPage> = {
   name: 'ChequeCreditbooks',
   pageType: 'MainPage',
   /** This page can only view data */

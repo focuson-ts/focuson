@@ -1,4 +1,4 @@
-import { PageD } from "../common/pageD";
+import { MainPageD, PageD } from "../common/pageD";
 import { TSParams } from "./config";
 import { domainName, domainsFileName, emptyFileName, emptyName, pageComponentName, renderFileName, sampleName, samplesFileName } from "./names";
 
@@ -6,12 +6,13 @@ import { domainName, domainsFileName, emptyFileName, emptyName, pageComponentNam
 export function makeOneStory <B> ( params: TSParams, p: PageD <B> ): string[] {
   if ( p.pageType === 'MainPage' ) return makeOneMainStory ( params, p )
   if ( p.pageType === 'ModalPage' ) return makeOneModalStory ( params, p )
+  // @ts-ignore
   throw new Error ( `Don't know how to make a story for page ${p.name} of type ${p.pageType}` )
 }
 export function makeOneModalStory <B> ( params: TSParams, p: PageD <B> ): string[] {
   return [ `export const x=1 // modal stories not yet supported ` ]
 }
-export function makeOneMainStory <B> ( params: TSParams, p: PageD <B> ): string[] {
+export function makeOneMainStory <B> ( params: TSParams, p: MainPageD <B> ): string[] {
   return [
     `import { Story } from "@storybook/react";`,
     `import { findOneSelectedPageDetails, PageMode } from "@focuson/pages";`,

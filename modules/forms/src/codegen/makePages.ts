@@ -1,4 +1,4 @@
-import { allMainPages, PageD } from "../common/pageD";
+import { isMainPage, MainPageD, PageD } from "../common/pageD";
 import { TSParams } from "./config";
 import { modalName, pageComponentName, pageInState, renderFileName } from "./names";
 import { addStringToEndOfAllButLast } from "./codegen";
@@ -6,7 +6,7 @@ import { makeEmptyData } from "./makeSample";
 import { safeArray } from "@focuson/utils";
 
 
-export const makeMainPage = ( params: TSParams ) => <B> ( p: PageD <B> ): string[] => {
+export const makeMainPage = ( params: TSParams ) => <B> ( p: MainPageD<B> ): string[] => {
   function makeEmpty () {
     let result: any = {}
     result[ p.display.target.join ( "." ) ] = makeEmptyData ( p.display.dataDD )
@@ -18,22 +18,22 @@ export const makeMainPage = ( params: TSParams ) => <B> ( p: PageD <B> ): string
     : [];
 }
 
-export interface ModalCreationData  <B>{
+export interface ModalCreationData<B> {
   name: string,
-  modal: PageD <B>
+  modal: PageD<B>
 }
-export function walkModals <B> ( ps: PageD <B>[] ): ModalCreationData <B>[] {
-  return ps.filter ( p => p.pageType === 'MainPage' ).flatMap ( p => safeArray ( p.modals ).map ( ( { modal, path } ) =>
+export function walkModals<B> ( ps: PageD<B>[] ): ModalCreationData<B>[] {
+  return ps.flatMap ( p => (isMainPage ( p ) ? safeArray ( p.modals ) : []).map ( ( { modal, path } ) =>
     ({ name: modalName ( p, modal ), path: [ p.name, ...path ], modal }) ) )
 }
 
-export const makeModal = ( params: TSParams ) => <B> ( { name,  modal }: ModalCreationData <B> ): string[] => {
+export const makeModal = ( params: TSParams ) => <B> ( { name, modal }: ModalCreationData<B> ): string[] => {
   return [ `    ${name}: { config: simpleMessagesConfig,  pageFunction: ${pageComponentName ( modal )}(), modal: true}` ]
 };
 
-export function makePages <B> ( params: TSParams, ps: PageD <B>[] ): string[] {
+export function makePages<B> ( params: TSParams, ps: PageD<B>[] ): string[] {
   const modals = walkModals ( ps );
-  const renderImports = ps.map( p => `import { ${pageComponentName(p)} } from '${renderFileName('.', params,p)}';`)
+  const renderImports = ps.map ( p => `import { ${pageComponentName ( p )} } from '${renderFileName ( '.', params, p )}';` )
   return [
     `import { identityOptics } from "@focuson/lens";`,
     `import { MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";`,

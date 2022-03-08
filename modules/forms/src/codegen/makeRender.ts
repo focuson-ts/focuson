@@ -1,14 +1,13 @@
 import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, isPrimDd, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
 import { DisplayCompD, OneDisplayCompParamD } from "../common/componentsD";
-import { dataDsIn, hasDomains, PageD } from "../common/pageD";
+import { dataDsIn, isMainPage, PageD } from "../common/pageD";
 
 import { decamelize, NameAnd, sortedEntries } from "@focuson/utils";
 import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, pageComponentName, pageDomainName } from "./names";
 import { MakeButton, makeButtonsFrom } from "./makeButtons";
-import { focusOnFor, importsDot, indentList, noExtension } from "./codegen";
+import { focusOnFor, indentList, noExtension } from "./codegen";
 import { TSParams } from "./config";
 import { unique } from "../common/restD";
-import { transformButtons } from "../buttons/allButtons";
 
 
 export type AllComponentData = ComponentData | ErrorComponentData
@@ -131,6 +130,7 @@ export function createReactComponent ( dataD: DataD ): string[] {
 export const createReactPageComponent = <B> ( params: TSParams, transformButtons: MakeButton, pageD: PageD<B> ): string[] => {
   if ( pageD.pageType === 'MainPage' ) return createReactMainPageComponent ( params, transformButtons, pageD )
   if ( pageD.pageType === 'ModalPage' ) return createReactModalPageComponent ( params, transformButtons, pageD )
+  // @ts-ignore
   throw new Error ( `Unknown page type ${pageD.pageType} in ${pageD.name}` )
 };
 
@@ -165,7 +165,7 @@ export function createReactMainPageComponent<B> ( params: TSParams, transformBut
 }
 
 export function createRenderPage<B> ( params: TSParams, transformButtons: MakeButton, p: PageD<B> ): string[] {
-  const imports = hasDomains ( p ) ? [
+  const imports = isMainPage ( p ) ? [
     `import * as domain from '${domainsFileName ( '..', params, p )}';`,
     `import * as empty from '${emptyFileName ( '..', params, p )}';` ] : []
   return [ ...imports,

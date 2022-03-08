@@ -3,8 +3,7 @@ import { TSParams } from "../codegen/config";
 import fs from "fs";
 import { unique } from "../common/restD";
 import { sortedEntries } from "@focuson/utils";
-import { hasDomains, PageD, RestDefnInPageProperties } from "../common/pageD";
-import { importsDot } from "../codegen/codegen";
+import { isMainPage, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { createRenderPage } from "../codegen/makeRender";
 import { transformButtons } from "../buttons/allButtons";
 import { makeAllDomainsFor, makePageDomainsFor } from "../codegen/makeDomain";
@@ -37,7 +36,7 @@ export const makeTsFiles = ( tsRoot: string, params: TSParams, directorySpec: Di
     writeToFile ( renderFileName ( tsCode, params, p ) + ".tsx",
       createRenderPage ( params, transformButtons, p ) )
 
-    if ( hasDomains ( p ) ) {
+    if ( isMainPage ( p ) ) {
       writeToFile ( domainsFileName ( tsCode, params, p ) + ".ts", [
         ...makePageDomainsFor ( params, [ p ] ),
         ...makeAllDomainsFor ( [ p ] ) ] )
@@ -57,11 +56,11 @@ export const makeTsFiles = ( tsRoot: string, params: TSParams, directorySpec: Di
       writeToFile ( restFileName ( tsCode, params, p ) + ".ts", makeRests ( params, p ) )
       writeToFile ( storybookFileName ( tsCode, params, p ) + '.ts', makeOneStory ( params, p ) )
 
+      if ( Object.keys ( p.rest ).length > 0 )
+        templateFile ( pactFileName ( tsCode, params, p ) + ".ts", 'templates/allPacts.ts',
+          { content: makeAllPacts ( params, p, directorySpec ).join ( "\n" ) }, directorySpec )
     }
 
-    if ( Object.keys ( p.rest ).length > 0 )
-      templateFile ( pactFileName ( tsCode, params, p ) + ".ts", 'templates/allPacts.ts',
-        { content: makeAllPacts ( params, p, directorySpec ).join ( "\n" ) }, directorySpec )
 
   } )
 
@@ -70,7 +69,7 @@ export const makeTsFiles = ( tsRoot: string, params: TSParams, directorySpec: Di
     ...makeFetchersDataStructure ( params, { variableName: 'fetchers', stateName: params.stateName }, pages ) ] )
 
   writeToFile ( `${tsCode}/${params.restsFile}.ts`, makeRestDetailsPage ( params, pages ) )
-  const rests = unique ( pages.flatMap ( x => sortedEntries ( x.rest ) ).map ( ( x: [ string, RestDefnInPageProperties ] ) => x[ 1 ].rest ), r => r.dataDD.name )
+  const rests = unique ( pages.flatMap ( pd => isMainPage ( pd ) ? sortedEntries ( pd.rest ).map ( ( x: [ string, RestDefnInPageProperties ] ) => x[ 1 ].rest ) : [] ), r => r.dataDD.name )
 
   writeToFile ( `${tsCode}/${params.commonFile}.ts`, makeCommon ( params, pages, rests, directorySpec ) )
   writeToFile ( `${tsCode}/${params.pagesFile}.tsx`, makePages ( params, pages ) )
