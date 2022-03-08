@@ -2,7 +2,7 @@ import { makeModalButtons, ModalButtonInPage } from "./modalButtons";
 import { ResetStateButton } from "./stateButtons";
 import { ListNextButtonInPage, ListPrevButtonInPage, makeListMarkerButtons } from "./listButtons";
 import { MakeButton } from "../codegen/makeButtons";
-import { makeModalCloseButtons, ModalCloseButton } from "./modalCloseButtons";
+import { makeModalCloseButtons, ModalCancelButtonInPage, ModalCommitButtonInPage } from "./modalCloseButtons";
 import { makeRestButtons, RestButtonInPage } from "./restButton";
 import { makeValidationButtons, ValidationButtonInPage } from "./ValidationDebugButton";
 
@@ -10,7 +10,7 @@ import { makeValidationButtons, ValidationButtonInPage } from "./ValidationDebug
 export interface ButtonD {
   control: string
 }
-export type AllButtonsInPage = ModalButtonInPage | ModalCloseButton |
+export type AllButtonsInPage = ModalButtonInPage | ModalCancelButtonInPage | ModalCommitButtonInPage |
   ResetStateButton | RestButtonInPage | ListNextButtonInPage | ListPrevButtonInPage | ValidationButtonInPage
 
 export const transformButtons: MakeButton = {

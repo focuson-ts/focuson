@@ -26,7 +26,7 @@ describe ( " listComponentsIn", () => {
 
   it ( "should createReactComponent", () => {
     expect ( createReactComponent ( EAccountsSummaryDD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "export function EAccountsSummaryDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({id,state,mode}: FocusedProps<S, EAccountsSummaryDDDomain,Context>){",
+      "export function EAccountsSummaryDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, EAccountsSummaryDDDomain,Context>){",
       "  return(<>",
       "  <LabelAndBooleanInput id={`${id}.useEStatements`} state={state.focusOn('useEStatements')} mode={mode} label='use e statements' />",
       "  <Table id={`${id}.eAccountsTable`} state={state.focusOn('eAccountsTable')} mode={mode} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} />",
@@ -45,11 +45,8 @@ describe ( " listComponentsIn", () => {
     expect ( createAllReactComponents ( paramsForTest, transformButtons, [ EAccountsSummaryPD, CreatePlanPD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "import { LensProps } from '@focuson/state';",
       "import { Layout } from './copied/layout';",
-      "import { RestButton } from './copied/rest';",
-      "import { ListNextButton, ListPrevButton } from './copied/listNextPrevButtons';",
-      "import { ValidationButton } from './copied/ValidationButton';",
-      "import { PageSelectionAndRestCommandsContext } from '@focuson/focuson';",
-      "import {  focusedPage, focusedPageWithExtraState,  ModalButton, ModalCancelButton, ModalCommitButton, fullState,pageState} from '@focuson/pages';",
+      "import { FocusOnContext } from '@focuson/focuson';",
+      "import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from '@focuson/pages';",
       "import { Context, FocusedProps } from './common';",
       "import { Lenses } from '@focuson/lens';",
       "import { Guard } from './copied/guard';",
@@ -58,11 +55,18 @@ describe ( " listComponentsIn", () => {
       "import { Table } from './copied/table';",
       "import { LabelAndBooleanInput } from './copied/LabelAndInput';",
       "import { LabelAndRadio } from './copied/Radio';",
+      "import {ListNextButton} from './copied/listNextPrevButtons';",
+      "import {ListPrevButton} from './copied/listNextPrevButtons';",
+      "import {ModalButton} from '@focuson/pages';",
+      "import {ModalCancelButton} from '@focuson/pages';",
+      "import {ModalCommitButton} from '@focuson/pages';",
+      "import {RestButton} from './copied/rest';",
+      "import {ValidationButton} from './copied/ValidationButton';",
       "import {EAccountsSummaryPageDomain} from './pageDomains';",
       "import {CreatePlanDDDomain} from './domains'",
       "import {EAccountsSummaryDDDomain} from './domains'",
       "import {EAccountSummaryDDDomain} from './domains'",
-      "export function EAccountsSummaryPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){",
+      "export function EAccountsSummaryPage<S, Context extends FocusOnContext<S>>(){",
       "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
       "     <EAccountsSummaryDD id='root' state={state}  mode={mode} />",
@@ -72,16 +76,16 @@ describe ( " listComponentsIn", () => {
       "     <button>refresh of type ResetStateButton cannot be created yet</button>",
       "   </Layout>)})}",
       "",
-      "export function CreatePlanPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){",
+      "export function CreatePlanPage<S, Context extends FocusOnContext<S>>(){",
       "  return focusedPage<S, CreatePlanDDDomain, Context> ( s => '' ) (",
       "     ( state, d, mode ) => {",
       "          return (<Layout  details='[3]'>",
       "               <CreatePlanDD id='root' state={state}  mode={mode} />",
       "               <ModalCancelButton id='cancel' state={state} />",
-      "               <ModalCommitButton id='commit' state={state} />",
+      "               <ModalCommitButton id='commit'  state={state} />",
       "            </Layout>)})}",
       "",
-      "export function CreatePlanDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({id,state,mode}: FocusedProps<S, CreatePlanDDDomain,Context>){",
+      "export function CreatePlanDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, CreatePlanDDDomain,Context>){",
       "  return(<>",
       "  <LabelAndStringInput id={`${id}.createPlanStart`} state={state.focusOn('createPlanStart')} mode={mode} label='Create Start' required={true} />",
       "  <LabelAndStringInput id={`${id}.createPlanDate`} state={state.focusOn('createPlanDate')} mode={mode} label='create plan date' required={true} ariaLabel='The Create Plan Date' />",
@@ -89,7 +93,7 @@ describe ( " listComponentsIn", () => {
       "</>)",
       "}",
       "",
-      "export function EAccountsSummaryDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({id,state,mode}: FocusedProps<S, EAccountsSummaryDDDomain,Context>){",
+      "export function EAccountsSummaryDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, EAccountsSummaryDDDomain,Context>){",
       "  return(<>",
       "  <LabelAndBooleanInput id={`${id}.useEStatements`} state={state.focusOn('useEStatements')} mode={mode} label='use e statements' />",
       "  <Table id={`${id}.eAccountsTable`} state={state.focusOn('eAccountsTable')} mode={mode} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} />",
@@ -102,7 +106,7 @@ describe ( " listComponentsIn", () => {
       "</>)",
       "}",
       "",
-      "export function EAccountSummaryDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({id,state,mode}: FocusedProps<S, EAccountSummaryDDDomain,Context>){",
+      "export function EAccountSummaryDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, EAccountSummaryDDDomain,Context>){",
       "  return(<>",
       "  <LabelAndNumberInput id={`${id}.accountId`} state={state.focusOn('accountId')} mode={mode} label='Account Id' required={true} min={10000000} max={99999999} />",
       "  <LabelAndRadio id={`${id}.displayType`} state={state.focusOn('displayType')} mode={mode} label='display type' enums={{'savings':'Savings','checking':'Checking'}} />",
@@ -118,7 +122,7 @@ describe ( " listComponentsIn", () => {
 
   it ( "should createReactPageComponent", () => {
     expect ( createReactPageComponent ( paramsForTest, transformButtons, EAccountsSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "export function EAccountsSummaryPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){",
+      "export function EAccountsSummaryPage<S, Context extends FocusOnContext<S>>(){",
       "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
       "     <EAccountsSummaryDD id='root' state={state}  mode={mode} />",
@@ -130,23 +134,23 @@ describe ( " listComponentsIn", () => {
       ""
     ])
     expect ( createReactPageComponent ( paramsForTest, transformButtons, CreatePlanPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "export function CreatePlanPage<S, Context extends PageSelectionAndRestCommandsContext<S>>(){",
+      "export function CreatePlanPage<S, Context extends FocusOnContext<S>>(){",
       "  return focusedPage<S, CreatePlanDDDomain, Context> ( s => '' ) (",
       "     ( state, d, mode ) => {",
       "          return (<Layout  details='[3]'>",
       "               <CreatePlanDD id='root' state={state}  mode={mode} />",
       "               <ModalCancelButton id='cancel' state={state} />",
-      "               <ModalCommitButton id='commit' state={state} />",
+      "               <ModalCommitButton id='commit'  state={state} />",
       "            </Layout>)})}",
       ""
-    ] )
+    ])
   } )
 } )
 
 describe ( "makeComponentWithGuard", () => {
   it ( "should make guard variables", () => {
     expect ( createReactComponent ( occupationIncomeDetailsDD ).slice ( 0, 5 ).map ( r => r.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "export function OccupationIncomeDetailsDD<S, Context extends PageSelectionAndRestCommandsContext<S>>({id,state,mode}: FocusedProps<S, OccupationIncomeDetailsDDDomain,Context>){",
+      "export function OccupationIncomeDetailsDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, OccupationIncomeDetailsDDDomain,Context>){",
       "const areYouGuard = state.chainLens(Lenses.fromPath(['areYou'])).optJson();console.log('areYouGuard', areYouGuard)",
       "  return(<>",
       "  <LabelAndStringInput id={`${id}.areYou`} state={state.focusOn('areYou')} mode={mode} label='are you' required={true} />",

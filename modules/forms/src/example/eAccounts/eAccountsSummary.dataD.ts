@@ -37,7 +37,7 @@ export const CreatePlanDD: DataD = {
   name: "CreatePlanDD",
   description: "The create plan data (actually just put in one place to allow a test for a structure)",
   structure: {
-    createPlanStart: { displayParams: { label: 'Create Start' , required: false}, dataDD: DateDD, sample: [ '2022-01-01' ] },
+    createPlanStart: { displayParams: { label: 'Create Start' }, dataDD: DateDD, sample: [ '2022-01-01' ] },
     createPlanDate: { displayParams: { ariaLabel: 'The Create Plan Date' }, dataDD: DateDD, sample: [ '2022-03-01' ] },
     createPlanEnd: { dataDD: DateDD, sample: [ '2022-10-01' ] }
   }
@@ -45,15 +45,15 @@ export const CreatePlanDD: DataD = {
 
 export const oneAccountBalanceResolver: any = {
   name: 'totalMonthlyCost',
-get: { kicks: 'name', params: []},
-put: {sql: 'select {vars} from {table} where {query}', params: []}
+  get: { kicks: 'name', params: [] },
+  put: { sql: 'select {vars} from {table} where {query}', params: [] }
 }
 export const EAccountsSummaryDD: DataD = {
   name: "EAccountsSummaryDD",
   description: "This is the summary data about all the EAccounts for a single user",
   // tableName: 'CustomerSUmmaryView',
   structure: {
-    useEStatements: { dataDD: BooleanDD},
+    useEStatements: { dataDD: BooleanDD },
     eAccountsTable: { dataDD: EAccountsSummaryTableDD },
     totalMonthlyCost: { dataDD: { ...MoneyDD, resolver: 'getTotalMonthlyCost', sample: [ 1000 ] } },
     oneAccountBalance: { dataDD: { ...MoneyDD, resolver: 'getOneAccountBalance', sample: [ 9921 ] } },

@@ -29,7 +29,7 @@ export interface ModalButtonStateForTest extends HasPageSelection, HasRestComman
   mainPage: PageData
 }
 const emptyS: ModalButtonStateForTest = {
-  messages:[],
+  messages: [],
   pageSelection: [ { "pageName": "mainPage", "pageMode": "view" } ],
   restCommands: [],
   mainPage: {}
@@ -58,7 +58,7 @@ const context: Context = {
   restL: restL<ModalButtonStateForTest> (),
   combine: ( pages: JSX.Element[] ): JSX.Element => <div>{pages}</div>,
   pageSelectionL: pageSelectionlens (),
-  simpleMessagesL: simpleMessagesL(),
+  simpleMessagesL: simpleMessagesL (),
   pages: {}
 
 }
@@ -77,6 +77,7 @@ describe ( "modal buttons", () => {
         <ModalButton text='someTitle' id='someId' state={state} copyFrom={[ 'mainPage', 'child' ]} focusOn={[ 'mainPage', 'temp' ]} modal={'someModal'} pageMode='view'/> )
       button.simulate ( 'click' )
       expect ( remembered ).toEqual ( {
+        messages: [],
         mainPage: {
           "child": { "data": "a" },
           "temp": { "data": "a" }
@@ -91,6 +92,7 @@ describe ( "modal buttons", () => {
         <ModalButton text='someTitle' id='someId' state={state} createEmpty={{ data: 'data' }} focusOn={[ 'mainPage', 'temp' ]} modal={'someModal'} pageMode='view'/> )
       button.simulate ( 'click' )
       expect ( remembered ).toEqual ( {
+        messages: [],
         "pageSelection": [ { "pageName": "mainPage", "pageMode": "view" }, { "focusOn": [ 'mainPage', 'temp' ], "firstTime": true, "pageMode": "view", "pageName": "someModal" } ],
         "restCommands": [],
         mainPage: { "temp": { "data": "data" } }
@@ -102,6 +104,7 @@ describe ( "modal buttons", () => {
         <ModalButton text='someTitle' id='someId' state={state} focusOn={[ 'mainPage', 'temp' ]} createEmpty={{ data: 'data' }} modal={'someModal'} copyOnClose={[ 'mainPage', 'data' ]} pageMode='view'/> )
         .simulate ( 'click' )
       expect ( remembered ).toEqual ( {
+        messages: [],
         "pageSelection": [ { "pageName": "mainPage", "pageMode": "view" }, { "focusOn": [ 'mainPage', 'temp' ], "firstTime": true, "pageMode": "view", "pageName": "someModal", copyOnClose: [ 'mainPage', 'data' ] } ],
         "restCommands": [],
         mainPage: { "temp": { "data": "data" } }
@@ -110,6 +113,7 @@ describe ( "modal buttons", () => {
       var remembered1: any = {}
       displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> ).simulate ( 'click' )
       expect ( remembered1 ).toEqual ( {
+        messages: [],
         "mainPage": { "temp": { "data": "data" }, "data": { "data": "data" } },
         "pageSelection": [ { "pageMode": "view", "pageName": "mainPage" } ],
         "restCommands": []
@@ -121,6 +125,7 @@ describe ( "modal buttons", () => {
         <ModalButton text='someTitle' id='someId' state={state} focusOn={[ 'mainPage', 'temp' ]} createEmpty={{ data: 'data' }} rest={{ name: 'restName', restAction: 'update', path: [ 'some', 'path' ] }} modal={'someModal'} copyOnClose={[ 'mainPage', 'data' ]} pageMode='view'/> )
         .simulate ( 'click' )
       expect ( remembered ).toEqual ( {
+        messages: [],
         "pageSelection": [
           { "pageName": "mainPage", "pageMode": "view" },
           { "focusOn": [ 'mainPage', 'temp' ], rest: { name: 'restName', restAction: 'update', path: [ 'some', 'path' ] }, "firstTime": true, "pageMode": "view", "pageName": "someModal", copyOnClose: [ 'mainPage', 'data' ] } ],
@@ -131,6 +136,7 @@ describe ( "modal buttons", () => {
       var remembered1: any = {}
       displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> ).simulate ( 'click' )
       expect ( remembered1 ).toEqual ( {
+        messages: [],
         "mainPage": { "temp": { "data": "data" }, "data": { "data": "data" } },
         "pageSelection": [ { "pageMode": "view", "pageName": "mainPage" } ],
         "restCommands": [ { "name": "restName", "path": [ "some", "path" ], "restAction": "update" } ]
@@ -147,6 +153,7 @@ describe ( "with nested child", () => {
       <ModalButton text='someTitle' id='someId' state={state} copyFrom={[ 'mainPage', 'nested', 'child' ]} focusOn={[ 'mainPage', 'temp' ]} modal={'someModal'} pageMode='view'/> )
     button.simulate ( 'click' )
     expect ( remembered ).toEqual ( {
+      messages: [],
       mainPage: {
         nested: { "child": { "data": "a" } },
         "temp": { "data": "a" }
@@ -161,6 +168,7 @@ describe ( "with nested child", () => {
       <ModalButton text='someTitle' id='someId' state={state} focusOn={[ 'mainPage', 'temp' ]} createEmpty={{ data: 'data' }} modal={'someModal'} copyOnClose={[ 'mainPage', 'nested', 'data' ]} pageMode='view'/> )
       .simulate ( 'click' )
     expect ( remembered ).toEqual ( {
+      messages: [],
       "pageSelection": [ { "pageName": "mainPage", "pageMode": "view" }, { "focusOn": [ 'mainPage', 'temp' ], "firstTime": true, "pageMode": "view", "pageName": "someModal", copyOnClose: [ 'mainPage', 'nested', 'data' ] } ],
       "restCommands": [],
       mainPage: { "temp": { "data": "data" }, nested: {} }
@@ -169,6 +177,7 @@ describe ( "with nested child", () => {
     var remembered1: any = {}
     displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> ).simulate ( 'click' )
     expect ( remembered1 ).toEqual ( {
+      messages: [],
       "mainPage": { "temp": { "data": "data" }, nested: { "data": { "data": "data" } } },
       "pageSelection": [ { "pageMode": "view", "pageName": "mainPage" } ],
       "restCommands": []
@@ -182,6 +191,7 @@ describe ( "with nested child", () => {
                    modal={'someModal'} copyOnClose={[ 'mainPage', 'nested', 'data' ]} pageMode='view'/> )
       .simulate ( 'click' )
     expect ( remembered ).toEqual ( {
+      messages: [],
       "pageSelection": [
         { "pageName": "mainPage", "pageMode": "view" },
         { "focusOn": [ 'mainPage', 'temp' ], rest: { name: 'restName', restAction: 'update', path: [ 'some', 'path' ] }, "firstTime": true, "pageMode": "view", "pageName": "someModal", copyOnClose: [ 'mainPage', 'nested', 'data' ] } ],
@@ -192,6 +202,7 @@ describe ( "with nested child", () => {
     var remembered1: any = {}
     displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> ).simulate ( 'click' )
     expect ( remembered1 ).toEqual ( {
+      messages:[],
       "mainPage": { "temp": { "data": "data" }, nested: { "data": { "data": "data" } } },
       "pageSelection": [ { "pageMode": "view", "pageName": "mainPage" } ],
       "restCommands": [ { "name": "restName", "path": [ "some", "path" ], "restAction": "update" } ]
@@ -207,6 +218,7 @@ describe ( "with lists of data", () => {
       <ModalButton text='someTitle' id='someId' state={state} copyFrom={[ 'mainPage', 'list', '[1]' ]} focusOn={[ 'mainPage', 'temp' ]} modal={'someModal'} pageMode='view'/> )
     button.simulate ( 'click' )
     expect ( remembered ).toEqual ( {
+      messages: [],
       mainPage: {
         "index": 1,
         list: [ { data: '0' }, { data: '1' }, { data: '2' } ],
@@ -240,6 +252,7 @@ it ( "should create empty, then copy back", () => {
     <ModalButton text='someTitle' id='someId' state={state} focusOn={[ 'mainPage', 'temp' ]} createEmpty={{ data: 'data' }} modal={'someModal'} copyOnClose={[ 'mainPage', 'nested', 'data' ]} pageMode='view'/> )
     .simulate ( 'click' )
   expect ( remembered ).toEqual ( {
+    messages: [],
     "pageSelection": [ { "pageName": "mainPage", "pageMode": "view" }, { "focusOn": [ 'mainPage', 'temp' ], "firstTime": true, "pageMode": "view", "pageName": "someModal", copyOnClose: [ 'mainPage', 'nested', 'data' ] } ],
     "restCommands": [],
     mainPage: { "temp": { "data": "data" }, nested: {} }
@@ -248,6 +261,7 @@ it ( "should create empty, then copy back", () => {
   var remembered1: any = {}
   displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> ).simulate ( 'click' )
   expect ( remembered1 ).toEqual ( {
+    messages: [],
     "mainPage": { "temp": { "data": "data" }, nested: { "data": { "data": "data" } } },
     "pageSelection": [ { "pageMode": "view", "pageName": "mainPage" } ],
     "restCommands": []
@@ -257,13 +271,14 @@ it ( "should create empty, then copy back", () => {
 it ( "should create empty, then copy back with a rest command", () => {
   var remembered: any = {}
   displayAndGetButton ( emptyNestedS, s => remembered = s, state =>
-    <ModalButton text='someTitle' id='someId' state={state} focusOn={['mainPage',  'temp' ]} createEmpty={{ data: 'data' }} rest={{ name: 'restName', restAction: 'update', path: [ 'some', 'path' ] }}
-                 modal={'someModal'} copyOnClose={['mainPage',  'nested', 'data' ]} pageMode='view'/> )
+    <ModalButton text='someTitle' id='someId' state={state} focusOn={[ 'mainPage', 'temp' ]} createEmpty={{ data: 'data' }} rest={{ name: 'restName', restAction: 'update', path: [ 'some', 'path' ] }}
+                 modal={'someModal'} copyOnClose={[ 'mainPage', 'nested', 'data' ]} pageMode='view'/> )
     .simulate ( 'click' )
   expect ( remembered ).toEqual ( {
+    messages: [],
     "pageSelection": [
       { "pageName": "mainPage", "pageMode": "view" },
-      { "focusOn": ['mainPage',  'temp' ], rest: { name: 'restName', restAction: 'update', path: [ 'some', 'path' ] }, "firstTime": true, "pageMode": "view", "pageName": "someModal", copyOnClose: [ 'mainPage', 'nested', 'data' ] } ],
+      { "focusOn": [ 'mainPage', 'temp' ], rest: { name: 'restName', restAction: 'update', path: [ 'some', 'path' ] }, "firstTime": true, "pageMode": "view", "pageName": "someModal", copyOnClose: [ 'mainPage', 'nested', 'data' ] } ],
     "restCommands": [],
     mainPage: { "temp": { "data": "data" }, nested: {} }
   } )
@@ -271,6 +286,7 @@ it ( "should create empty, then copy back with a rest command", () => {
   var remembered1: any = {}
   displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> ).simulate ( 'click' )
   expect ( remembered1 ).toEqual ( {
+    messages: [],
     "mainPage": { "temp": { "data": "data" }, nested: { "data": { "data": "data" } } },
     "pageSelection": [ { "pageMode": "view", "pageName": "mainPage" } ],
     "restCommands": [ { "name": "restName", "path": [ "some", "path" ], "restAction": "update" } ]

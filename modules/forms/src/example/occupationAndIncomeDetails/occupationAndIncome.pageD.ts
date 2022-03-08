@@ -15,7 +15,7 @@ export const occupationIncomeModalPD: PageD<AllButtonsInPage> = {
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },
-    commit: { control: 'ModalCommitButton' },
+    commit: { control: 'ModalCommitButton', validate: true },
     validate: { control: 'ValidationButton' }
   },
   //Not sure what to do about these

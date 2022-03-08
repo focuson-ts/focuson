@@ -24,6 +24,7 @@ export interface RestButtonInPage {
   action: RestAction;
   path: string[],
   confirm?: boolean;
-  result?: RestResult
+  result?: RestResult;
+  validate?:boolean;
 }
 

@@ -53,7 +53,7 @@ export function OccupationIncomeModalPDPage<S, Context extends FocusOnContext<S>
           return (<Layout  details='[3]'>
                <OccupationIncomeDetailsDD id='root' state={state}  mode={mode} />
                <ModalCancelButton id='cancel' state={state} />
-               <ModalCommitButton id='commit' state={state} />
+               <ModalCommitButton id='commit' validate={true} state={state} />
      <ValidationButton  id='validate'   name='validate'  />
             </Layout>)})}
 
@@ -74,7 +74,7 @@ export function CreatePlanPage<S, Context extends FocusOnContext<S>>(){
           return (<Layout  details='[3]'>
                <CreatePlanDD id='root' state={state}  mode={mode} />
                <ModalCancelButton id='cancel' state={state} />
-               <ModalCommitButton id='commit' state={state} />
+               <ModalCommitButton id='commit'  state={state} />
             </Layout>)})}
 
 export function ETransferPage<S, Context extends FocusOnContext<S>>(){
@@ -113,7 +113,7 @@ export function OrderChequeBookOrPayingInModalPage<S, Context extends FocusOnCon
           return (<Layout  details='[3]'>
                <ChequeCreditbooksHistoryLineDD id='root' state={state}  mode={mode} />
                <ModalCancelButton id='cancel' state={state} />
-               <ModalCommitButton id='commit' state={state} />
+               <ModalCommitButton id='commit'  state={state} />
             </Layout>)})}
 
 export function ChequeCreditbooksDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, ChequeCreditbooksDDDomain,Context>){
