@@ -34,7 +34,7 @@ export function isErrorComponentData ( d: AllComponentData ): d is ErrorComponen
 }
 
 export interface ComponentDisplayParams {
-  [ name: string ]: boolean| string | string[]
+  [ name: string ]: boolean | string | string[]
 }
 
 
@@ -55,7 +55,7 @@ export const listComponentsInFolder: AllDataFlatMap<AllComponentData> = {
 
 export const listComponentsIn = ( dataDD: AllDataDD ): AllComponentData[] => flatMapDD ( dataDD, listComponentsInFolder );
 
-export const processParam = ( path: string[], dataDD: AllDataDD, dcd: DisplayCompD ) => ( name: string, s: number | string | string[]| boolean ) => {
+export const processParam = ( path: string[], dataDD: AllDataDD, dcd: DisplayCompD ) => ( name: string, s: number | string | string[] | boolean ) => {
   const dcdType: OneDisplayCompParamD<any> = dcd.params[ name ]
   function errorPrefix () {return `Component ${dataDD.name} for ${path} has a display component ${dcd.name} and sets a param ${name} `}
   if ( dcdType === undefined ) throw new Error ( `${errorPrefix ()}. Legal values are ${sortedEntries ( dcd.params ).map ( t => t[ 0 ] ).join ( ',' )}` )
@@ -169,11 +169,8 @@ export function createAllReactComponents<B> ( params: TSParams, transformButtons
   const imports = [
     `import { LensProps } from "@focuson/state";`,
     `import { Layout } from "./copied/layout";`,
-    `import { RestButton } from "./copied/rest";`,
-    `import { ListNextButton, ListPrevButton } from "./copied/listNextPrevButtons";`,
-    `import { ValidationButton } from "./copied/ValidationButton";`,
     `import { FocusOnContext } from '@focuson/focuson';`,
-    `import {  focusedPage, focusedPageWithExtraState,  ModalButton, ModalCancelButton, ModalCommitButton, fullState,pageState} from "@focuson/pages";`,
+    `import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from "@focuson/pages";`,
     `import { Context, FocusedProps } from "./${params.commonFile}";`,
     `import { Lenses } from '@focuson/lens';`,
     `import { Guard } from "./copied/guard";`
@@ -182,11 +179,14 @@ export function createAllReactComponents<B> ( params: TSParams, transformButtons
   let domain = noExtension ( params.domainsFile );
   const pageDomainsImports = pages.filter ( p => p.pageType === 'MainPage' ).map ( p => `import {${pageDomainName ( p )}} from "./${pageDomain}";` )
   const domainImports = sortedEntries ( dataDsIn ( pages ) ).map ( ( [ name, dataD ] ) => `import {${domainName ( dataD )}} from "./${domain}"` )
-  return [ ...imports, ...makeComponentImports ( pages ), ...pageDomainsImports, ...domainImports, ...pageComponents, ...dataComponents ]
+  return [ ...imports, ...makeComponentImports ( pages ), ...makeButtonImports ( transformButtons ), ...pageDomainsImports, ...domainImports, ...pageComponents, ...dataComponents ]
 }
 
 
 export function makeComponentImports<B> ( ps: PageD<B>[] ): string[] {
   let allItemsWithDisplay: DisplayCompD[] = sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ d, n ] ) => sortedEntries ( n.structure ).map ( a => a[ 1 ].dataDD ) ).filter ( d => d.display ).map ( d => d.display );
   return unique ( allItemsWithDisplay, d => `${d.import}/${d.name}` ).map ( d => `import { ${d.name} } from '${d.import}';` )
+}
+export function makeButtonImports ( transformButtons: MakeButton ): string[] {
+  return unique ( sortedEntries ( transformButtons ).map ( ( [ name, creator ] ) => `import {${name}} from '${creator.import}';` ), x => x )
 }

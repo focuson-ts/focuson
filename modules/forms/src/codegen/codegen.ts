@@ -28,9 +28,11 @@ export function opt ( name: string, p: string | undefined ) {
 }
 
 export function optT<T> ( name: string, p: T | undefined ) {
-  return p ? `${name}={${JSON.stringify(p)}}` : ''
+  return p ? `${name}={${JSON.stringify ( p )}}` : ''
 }
-export const makeSimpleButton: ButtonCreator<ModalButtonInPage> = ( { name, button } ) =>
-  `          <${button.control} id='${name}' state={state} />`;
-
-export const filterParamsByRestAction = ( restAction: RestAction) =>( [name,param]: [string,AllLensRestParams] ) => restAction === 'list' || restAction === 'create' ? !param.main : true
+export const makeSimpleButton: ( imp: string ) => ButtonCreator<ModalButtonInPage> = imp => ({
+  import: imp,
+  makeButton: ( { name, button } ) =>
+    `          <${button.control} id='${name}' state={state} />`
+})
+export const filterParamsByRestAction = ( restAction: RestAction ) => ( [ name, param ]: [ string, AllLensRestParams ] ) => restAction === 'list' || restAction === 'create' ? !param.main : true
