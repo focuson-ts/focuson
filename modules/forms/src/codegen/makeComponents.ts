@@ -34,7 +34,7 @@ export function isErrorComponentData ( d: AllComponentData ): d is ErrorComponen
 }
 
 export interface ComponentDisplayParams {
-  [ name: string ]: string | string[]
+  [ name: string ]: boolean| string | string[]
 }
 
 
@@ -55,7 +55,7 @@ export const listComponentsInFolder: AllDataFlatMap<AllComponentData> = {
 
 export const listComponentsIn = ( dataDD: AllDataDD ): AllComponentData[] => flatMapDD ( dataDD, listComponentsInFolder );
 
-export const processParam = ( path: string[], dataDD: AllDataDD, dcd: DisplayCompD ) => ( name: string, s: number | string | string[] ) => {
+export const processParam = ( path: string[], dataDD: AllDataDD, dcd: DisplayCompD ) => ( name: string, s: number | string | string[]| boolean ) => {
   const dcdType: OneDisplayCompParamD<any> = dcd.params[ name ]
   function errorPrefix () {return `Component ${dataDD.name} for ${path} has a display component ${dcd.name} and sets a param ${name} `}
   if ( dcdType === undefined ) throw new Error ( `${errorPrefix ()}. Legal values are ${sortedEntries ( dcd.params ).map ( t => t[ 0 ] ).join ( ',' )}` )
@@ -171,7 +171,7 @@ export function createAllReactComponents<B> ( params: TSParams, transformButtons
     `import { Layout } from "./copied/layout";`,
     `import { RestButton } from "./copied/rest";`,
     `import { ListNextButton, ListPrevButton } from "./copied/listNextPrevButtons";`,
-  `import { ValidationButton } from "./copied/ValidationButton";`,
+    `import { ValidationButton } from "./copied/ValidationButton";`,
     `import { PageSelectionAndRestCommandsContext } from '@focuson/focuson';`,
     `import {  focusedPage, focusedPageWithExtraState,  ModalButton, ModalCancelButton, ModalCommitButton, fullState,pageState} from "@focuson/pages";`,
     `import { Context, FocusedProps } from "./${params.commonFile}";`,

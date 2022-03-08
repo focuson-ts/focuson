@@ -29,7 +29,7 @@ export interface ManyDataDD {
   [ name: string ]: OneDataDD
 }
 export interface OneDisplayParamDD {
-  value: number | string | string[]
+  value: boolean| number | string | string[]
 }
 export interface DisplayParamDD {
   [ name: string ]: OneDisplayParamDD
@@ -219,7 +219,7 @@ export const AccountIdDD: NumberPrimitiveDD = {
   name: 'AccountIdDD',
   description: "An account id",
   display: LabelAndNumberInputCD,
-  displayParams: { min: { value: 10000000 }, max: { value: 99999999 } },
+  displayParams: { min: { value: 10000000 }, max: { value: 99999999 }},
   sample: [ 1233450, 3233450, 4333450 ]
 }
 export const StringDD: StringPrimitiveDD = {
