@@ -8,6 +8,7 @@ import { emptyName, modalName, restDetailsName } from "../codegen/names";
 
 export interface CommonModalButtonInPage {
   control: string;
+  text?: string;
   modal: PageD<any>,
   mode: PageMode,
   restOnCommit?: RestOnCommit,
@@ -32,14 +33,14 @@ const makeModalButtonInPage: ButtonCreator<ModalButtonInPage> = {
   import: "@focuson/pages",
   makeButton:
     ( { params, parent, name, button } ) => {
-      const { modal, mode, restOnCommit, focusOn, copyFrom, createEmpty, copyOnClose, setToLengthOnClose } = button
+      const { modal, mode, restOnCommit, focusOn, copyFrom, createEmpty, copyOnClose, setToLengthOnClose, text } = button
       const createEmptyString = createEmpty ? `createEmpty={${params.emptyFile}.${emptyName ( createEmpty )}}` : ""
 
       const focusOnArray = [ parent.name, ...focusOn ]
       const copyOnCloseArray = copyOnClose ? [ parent.name, ...copyOnClose ] : undefined
       const copyFromArray = copyFrom ? [ parent.name, ...copyFrom ] : undefined
       const actualSetToLengthOnClose = setToLengthOnClose ? { array: [ parent.name, ...setToLengthOnClose.array ], variable: [ parent.name, ...setToLengthOnClose.variable ] } : undefined
-      return `<${button.control} id='${name}' text='${name}'  state={state} modal = '${modalName ( parent, modal )}'  ` +
+      return `<${button.control} id='${name}' text='${text ? text : name}'  state={state} modal = '${modalName ( parent, modal )}'  ` +
         `${optT ( 'focusOn', focusOnArray )} ${optT ( 'copyFrom', copyFromArray )} ${optT ( 'copyOnClose', copyOnCloseArray )}` +
         `${createEmptyString}  ${optT ( 'setToLengthOnClose', actualSetToLengthOnClose )} ${opt ( 'pageMode', mode )}  ${restForButton ( parent, restOnCommit )} />`;
 

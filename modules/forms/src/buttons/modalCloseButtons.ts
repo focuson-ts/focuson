@@ -5,7 +5,8 @@ import { ModalButtonInPage } from "./modalButtons";
 
 export interface ModalCommitButtonInPage {
   control: 'ModalCommitButton'
-  validate?: boolean
+  validate?: boolean;
+  text?: string
 }
 export interface ModalCancelButtonInPage {
   control: 'ModalCancelButton'
@@ -15,7 +16,7 @@ export interface ModalCancelButtonInPage {
 export const makeModalCommitButton: ButtonCreator<ModalCommitButtonInPage> = ({
   import: "@focuson/pages",
   makeButton: ( { name, button } ) =>
-    `          <ModalCommitButton id='${name}' ${optT ( 'validate', button.validate )} state={state} />`
+    `          <ModalCommitButton id='${button.text ? button.text : name}' ${optT ( 'validate', button.validate )} state={state} />`
 })
 
 export const makeModalCloseButtons: MakeButton = {

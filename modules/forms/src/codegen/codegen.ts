@@ -37,6 +37,6 @@ export function optT<T> ( name: string, p: T | undefined ) {
 export const makeSimpleButton: ( imp: string ) => ButtonCreator<ModalButtonInPage> = imp => ({
   import: imp,
   makeButton: ( { name, button } ) =>
-    `          <${button.control} id='${name}' state={state} />`
+    `          <${button.control} id='${button.text ? button.text : name}' state={state} />`
 })
 export const filterParamsByRestAction = ( restAction: RestAction ) => ( [ name, param ]: [ string, AllLensRestParams ] ) => restAction === 'list' || restAction === 'create' ? !param.main : true
