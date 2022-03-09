@@ -17,11 +17,11 @@ export interface ButtonCreator<Button> {
 
 export interface MakeButton extends NameAnd<ButtonCreator<any>> {}
 
-export const makeButtonFrom = ( maker: MakeButton ) => ( params: TSParams ) => <B> ( parent: PageD<B> ) => <Button extends ButtonD> ( [ name, button ]: [ string, Button ] ): string => {
+export const makeButtonFrom =<B extends ButtonD> ( maker: MakeButton ) => ( params: TSParams ) =>  ( parent: PageD<B> ) => ( [ name, button ]: [ string, B ] ): string => {
   const createButton = maker[ button.control ]
   return createButton ? createButton.makeButton ( { params, parent, name, button } ) : `<button>${name} of type ${button.control} cannot be created yet</button>`
 };
 
-export function makeButtonsFrom<B> ( params: TSParams, maker: MakeButton, p: PageD<B> ): string[] {
-  return indentList ( indentList ( sortedEntries ( p.buttons ).map ( makeButtonFrom ( maker ) ( params ) ( p ) ) ) )
+export function makeButtonsFrom<B extends ButtonD> ( params: TSParams, maker: MakeButton, p: PageD<B> ): string[] {
+  return indentList ( indentList ( sortedEntries ( p.buttons ).map ( makeButtonFrom <B>( maker ) ( params ) ( p ) ) ) )
 }

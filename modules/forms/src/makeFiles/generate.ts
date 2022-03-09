@@ -3,8 +3,9 @@ import { CombinedParams } from "../codegen/config";
 import { PageD } from "../common/pageD";
 import { makeJavaFiles } from "./makeJavaFiles";
 import { makeTsFiles } from "./makeTsFiles";
+import { ButtonD } from "../buttons/allButtons";
 
-export const generate = ( javaOutputRoot: string, tsRoot: string, focusOnVersion: string ) => <B> ( pages: PageD<B>[] ) => {
+export const generate = ( javaOutputRoot: string, tsRoot: string, focusOnVersion: string ) => <B extends ButtonD> ( pages: PageD<B>[] ) => {
   const params: CombinedParams = {
     pagesFile: 'pages',
     focusOnVersion,

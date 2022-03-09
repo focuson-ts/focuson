@@ -28,8 +28,8 @@ export interface RestOnCommit {
 }
 
 
-export interface ButtonDefnInPage {
-  [ name: string ]: AllButtonsInPage
+export interface ButtonDefnInPage<B> {
+  [ name: string ]: B
 }
 export interface LayoutD {
   name: string,
@@ -58,14 +58,14 @@ export interface MainPageD<Buttons> {
   domain: DomainDefnInPage,
   modals?: ModalData<Buttons>[],
   rest: RestDefnInPage,
-  buttons: ButtonDefnInPage
+  buttons: ButtonDefnInPage<Buttons>
 }
 export interface ModalPageD<Buttons> {
   pageType: 'ModalPage',
   name: string,
   modes: PageMode[],
   display: { layout: LayoutD, target: string[], dataDD: DataD, importFrom: string },
-  buttons: ButtonDefnInPage
+  buttons: ButtonDefnInPage<Buttons>
 }
 
 

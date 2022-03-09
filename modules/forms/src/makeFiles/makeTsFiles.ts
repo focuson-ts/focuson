@@ -5,7 +5,7 @@ import { unique } from "../common/restD";
 import { sortedEntries } from "@focuson/utils";
 import { isMainPage, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { createRenderPage } from "../codegen/makeRender";
-import { transformButtons } from "../buttons/allButtons";
+import { ButtonD, transformButtons } from "../buttons/allButtons";
 import { makeAllDomainsFor, makePageDomainsFor } from "../codegen/makeDomain";
 import { makeCommon } from "../codegen/makeCommon";
 import { makeAllFetchers, makeFetcherDataStructureImport, makeFetchersDataStructure, makeFetchersImport } from "../codegen/makeFetchers";
@@ -16,7 +16,7 @@ import { makeAllPacts } from "../codegen/makePacts";
 import { domainsFileName, emptyFileName, fetcherFileName, pactFileName, renderFileName, restFileName, samplesFileName, storybookFileName } from "../codegen/names";
 import { makeOneStory } from "../codegen/makeStories";
 
-export const makeTsFiles = ( tsRoot: string, params: TSParams, directorySpec: DirectorySpec ) => <B> ( pages: PageD<B>[] ) => {
+export const makeTsFiles = ( tsRoot: string, params: TSParams, directorySpec: DirectorySpec ) => <B extends ButtonD> ( pages: PageD<B>[] ) => {
   console.log ( "focusOnVersion", params.focusOnVersion )
 
   const tsScripts = tsRoot + "/scripts"

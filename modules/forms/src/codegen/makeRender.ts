@@ -8,6 +8,7 @@ import { MakeButton, makeButtonsFrom } from "./makeButtons";
 import { focusOnFor, indentList, noExtension } from "./codegen";
 import { TSParams } from "./config";
 import { unique } from "../common/restD";
+import { ButtonD } from "../buttons/allButtons";
 
 
 export type AllComponentData = ComponentData | ErrorComponentData
@@ -127,14 +128,14 @@ export function createReactComponent ( dataD: DataD ): string[] {
 }
 
 
-export const createReactPageComponent = <B> ( params: TSParams, transformButtons: MakeButton, pageD: PageD<B> ): string[] => {
+export const createReactPageComponent = <B extends ButtonD> ( params: TSParams, transformButtons: MakeButton, pageD: PageD<B> ): string[] => {
   if ( pageD.pageType === 'MainPage' ) return createReactMainPageComponent ( params, transformButtons, pageD )
   if ( pageD.pageType === 'ModalPage' ) return createReactModalPageComponent ( params, transformButtons, pageD )
   // @ts-ignore
   throw new Error ( `Unknown page type ${pageD.pageType} in ${pageD.name}` )
 };
 
-export function createReactModalPageComponent<B> ( params: TSParams, transformButtons: MakeButton, pageD: PageD<B> ): string[] {
+export function createReactModalPageComponent<B extends ButtonD> ( params: TSParams, transformButtons: MakeButton, pageD: PageD<B> ): string[] {
   const { dataDD, layout } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
   const domName = domainName ( pageD.display.dataDD );
@@ -144,12 +145,12 @@ export function createReactModalPageComponent<B> ( params: TSParams, transformBu
     `     ( state, d, mode ) => {`,
     `          return (<${layout.name}  details='${layout.details}'>`,
     `               <${componentName ( dataDD )} id='root' state={state}  mode={mode} />`,
-    ...indentList ( indentList ( indentList ( makeButtonsFrom ( params, transformButtons, pageD ) ) ) ),
+    ...indentList ( indentList ( indentList ( makeButtonsFrom<B> ( params, transformButtons, pageD ) ) ) ),
     `            </${layout.name}>)})}`,
     ''
   ]
 }
-export function createReactMainPageComponent<B> ( params: TSParams, transformButtons: MakeButton, pageD: PageD<B> ): string[] {
+export function createReactMainPageComponent<B extends ButtonD> ( params: TSParams, transformButtons: MakeButton, pageD: PageD<B> ): string[] {
   const { dataDD, layout } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
   return [
@@ -164,7 +165,7 @@ export function createReactMainPageComponent<B> ( params: TSParams, transformBut
   ]
 }
 
-export function createRenderPage<B> ( params: TSParams, transformButtons: MakeButton, p: PageD<B> ): string[] {
+export function createRenderPage<B extends ButtonD> ( params: TSParams, transformButtons: MakeButton, p: PageD<B> ): string[] {
   const imports = isMainPage ( p ) ? [
     `import * as domain from '${domainsFileName ( '..', params, p )}';`,
     `import * as empty from '${emptyFileName ( '..', params, p )}';` ] : []
@@ -172,7 +173,7 @@ export function createRenderPage<B> ( params: TSParams, transformButtons: MakeBu
     ...createAllReactComponents ( params, transformButtons, [ p ] ) ]
 }
 
-export function createAllReactComponents<B> ( params: TSParams, transformButtons: MakeButton, pages: PageD<B>[] ): string[] {
+export function createAllReactComponents<B extends ButtonD> ( params: TSParams, transformButtons: MakeButton, pages: PageD<B>[] ): string[] {
   const dataComponents = sortedEntries ( dataDsIn ( pages, false ) ).flatMap ( ( [ name, dataD ] ) => dataD.display ? [] : createReactComponent ( dataD ) )
   const pageComponents = pages.flatMap ( p => createReactPageComponent ( params, transformButtons, p ) )
   const imports = [

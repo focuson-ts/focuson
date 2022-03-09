@@ -1,6 +1,6 @@
 import { DataD } from "../common/dataD";
 import { safeArray } from "@focuson/utils";
-import { PageD, RestOnCommit } from "../common/pageD";
+import { ButtonDefnInPage, PageD, RestOnCommit } from "../common/pageD";
 import { PageMode, SetToLengthOnClose } from "@focuson/pages";
 import { ButtonCreator, MakeButton } from "../codegen/makeButtons";
 import { opt, optT } from "../codegen/codegen";
@@ -21,6 +21,9 @@ export function restForButton<B> ( parent: PageD<B>, rest?: RestOnCommit ): stri
   return rest ? ` rest={${JSON.stringify ( { name: restDetailsName ( parent, rest.rest ), restAction: rest.action, path: safeArray ( rest.target ) } )}}` : ""
 }
 
+export function isModalButtonInPage ( m: any ): m is ModalButtonInPage {
+  return m.control === 'ModalButton'
+}
 export interface ModalButtonInPage extends CommonModalButtonInPage {
   control: 'ModalButton',
   createEmpty?: DataD
