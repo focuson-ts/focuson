@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
   @RestController
   public class OccupationAndIncomeDetailsDDController {
 
- @Autowired
- public GraphQL graphQL;
+  @Autowired
+  public GraphQL graphQL;
     @GetMapping(value="/customer/occupation/v2/occupationIncomeDetails", produces="application/json")
     public ResponseEntity getOccupationAndIncomeDetailsDD(@RequestParam String accountSeq, @RequestParam String applicationRef, @RequestParam String brandRef, @RequestParam String vbAccountSeq, @RequestParam String vbAccountType) throws Exception{
        return Transform.result(graphQL,OccupationAndIncomeDetailsDDQueries.getOccupationAndIncomeDetailsDD(accountSeq, applicationRef, brandRef, vbAccountSeq, vbAccountType), "getOccupationAndIncomeDetailsDD");

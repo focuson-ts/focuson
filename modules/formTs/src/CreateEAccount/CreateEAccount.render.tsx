@@ -25,16 +25,16 @@ export function CreateEAccountPage<S, Context extends FocusOnContext<S>>(){
     ( fullState, state , full, d, mode) => {
   return (<Layout  details='[1][1][1][1]]'>
      <CreateEAccountDataDD id='root' state={state}  mode={mode} />
-     <button>cancel of type ResetStateButton cannot be created yet</button>
-     <RestButton  id='createEAccounts'   name='createEAccounts' action='create' path={["CreateEAccount","editing"]} state={state} rest='CreateEAccount_ETransferDataDRestDetails' confirm={true} />
-     <button>resetAll of type ResetStateButton cannot be created yet</button>
+          <button>cancel of type ResetStateButton cannot be created yet</button>
+          <RestButton  id='createEAccounts'   name='createEAccounts' action='create' path={["CreateEAccount","editing"]} state={state} rest='CreateEAccount_ETransferDataDRestDetails' confirm={true} />
+          <button>resetAll of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 
 export function CreateEAccountDataDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, CreateEAccountDataDDDomain,Context>){
   return(<>
-  <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='name' required={true} />
-  <LabelAndRadio id={`${id}.type`} state={state.focusOn('type')} mode={mode} label='type' enums={{"savings":"Savings","checking":"Checking"}} />
-  <Radio id={`${id}.savingsStyle`} state={state.focusOn('savingsStyle')} mode={mode} enums={{"adHoc":"Save what you want, when you want it","payRegular":"Pay a regular amount until you reach a target","paySettime":"Pay a regular amount for a set time","targetTime":"Reach a target balance by a set time"}} />
-  <LabelAndNumberInput id={`${id}.initialAmount`} state={state.focusOn('initialAmount')} mode={mode} label='initial amount' required={true} />
+    <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='name' required={true} />
+    <LabelAndRadio id={`${id}.type`} state={state.focusOn('type')} mode={mode} label='type' enums={{"savings":"Savings","checking":"Checking"}} />
+    <Radio id={`${id}.savingsStyle`} state={state.focusOn('savingsStyle')} mode={mode} enums={{"adHoc":"Save what you want, when you want it","payRegular":"Pay a regular amount until you reach a target","paySettime":"Pay a regular amount for a set time","targetTime":"Reach a target balance by a set time"}} />
+    <LabelAndNumberInput id={`${id}.initialAmount`} state={state.focusOn('initialAmount')} mode={mode} label='initial amount' required={true} />
 </>)
 }

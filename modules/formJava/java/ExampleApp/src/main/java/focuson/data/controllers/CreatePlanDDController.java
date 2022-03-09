@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
   @RestController
   public class CreatePlanDDController {
 
- @Autowired
- public GraphQL graphQL;
+  @Autowired
+  public GraphQL graphQL;
     @GetMapping(value="/api/createPlan/{createPlanId}", produces="application/json")
     public ResponseEntity getCreatePlanDD(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{
        return Transform.result(graphQL,CreatePlanDDQueries.getCreatePlanDD(accountId, createPlanId, customerId), "getCreatePlanDD");

@@ -38,7 +38,6 @@ export function typeNameFor ( params: TSParams, d: AllDataDD ): string {
 }
 
 export function makePageDomainsFor<B> ( params: TSParams, ps: PageD<B>[] ): string[] {
-  let domain = noExtension ( params.domainsFile );
   return [
     ...ps.flatMap ( p => p.pageType === 'ModalPage' ? [] : [
       ...makeHasDomainsFor ( p ),

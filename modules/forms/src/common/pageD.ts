@@ -1,4 +1,4 @@
-import { AllDataDD, DataD, findAllDataDs, NamesAndDataDs } from "./dataD";
+import { AllDataDD, DataD, findAllDataDs, isDataDd, NamesAndDataDs } from "./dataD";
 import { defaultRestAction, RestActionDetail, RestD, unique } from "./restD";
 import { RestAction, RestResult, sortedEntries } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
@@ -53,7 +53,7 @@ export interface MainPageD<Buttons> {
   pageType: 'MainPage',
   name: string,
   modes: PageMode[],
-  display: { layout: LayoutD, target: string[], dataDD: DataD},
+  display: { layout: LayoutD, target: string[], dataDD: DataD },
   initialValue: 'empty' | any,
   domain: DomainDefnInPage,
   modals?: ModalData<Buttons>[],
@@ -70,8 +70,10 @@ export interface ModalPageD<Buttons> {
 
 
 export function dataDsIn<B> ( pds: PageD<B>[], stopAtDisplay?: boolean ): NamesAndDataDs {
-  const pageDataDs = pds.flatMap ( pd => (isMainPage ( pd ) ? sortedEntries ( pd.rest ) : []).map ( ( [ na, restPD ]: [ string, RestDefnInPageProperties ] ) => restPD.rest.dataDD ) )
-  return findAllDataDs ( pageDataDs, stopAtDisplay )
+  const pageDataDs: DataD[] = pds.flatMap ( pd => (isMainPage ( pd ) ? sortedEntries ( pd.rest ) : []).map ( ( [ na, restPD ]: [ string, RestDefnInPageProperties ] ) => restPD.rest.dataDD ) )
+  const domainDataDs: DataD[] = pds.flatMap ( pd => (isMainPage ( pd ) ? sortedEntries ( pd.domain ) : []) )
+    .flatMap ( ( [ name, domain ] ) => isDataDd ( domain.dataDD ) ? [ domain.dataDD ] : [] )
+  return findAllDataDs ( [...pageDataDs, ...domainDataDs], stopAtDisplay )
 }
 
 export function allRestAndActions<B> ( pds: PageD<B>[] ): [ PageD<B>, RestDefnInPageProperties, RestActionDetail ][] {

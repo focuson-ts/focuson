@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.URL;
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
 import focuson.data.fetchers.OccupationAndIncomeDetailsDDFFetcher;
+import focuson.data.fetchers.OtherIncomeResponseDDFFetcher;
 import focuson.data.fetchers.CreatePlanDDFFetcher;
 import focuson.data.fetchers.EAccountsSummaryDDFFetcher;
 import focuson.data.fetchers.ETransferDataDFFetcher;
@@ -24,6 +25,8 @@ import focuson.data.fetchers.ChequeCreditbooksDDFFetcher;
 public class Wiring {
       @Autowired
       OccupationAndIncomeDetailsDDFFetcher _OccupationAndIncomeDetailsDDFFetcher;
+      @Autowired
+      OtherIncomeResponseDDFFetcher _OtherIncomeResponseDDFFetcher;
       @Autowired
       CreatePlanDDFFetcher _CreatePlanDDFFetcher;
       @Autowired
@@ -52,6 +55,7 @@ public class Wiring {
         return RuntimeWiring.newRuntimeWiring()
           .type(newTypeWiring("Query").dataFetcher("getOccupationAndIncomeDetailsDD", _OccupationAndIncomeDetailsDDFFetcher.getOccupationAndIncomeDetailsDD()))
           .type(newTypeWiring("Mutation").dataFetcher("updateOccupationAndIncomeDetailsDD", _OccupationAndIncomeDetailsDDFFetcher.updateOccupationAndIncomeDetailsDD()))
+          .type(newTypeWiring("Query").dataFetcher("getOtherIncomeResponseDD", _OtherIncomeResponseDDFFetcher.getOtherIncomeResponseDD()))
           .type(newTypeWiring("Query").dataFetcher("getCreatePlanDD", _CreatePlanDDFFetcher.getCreatePlanDD()))
           .type(newTypeWiring("Mutation").dataFetcher("createCreatePlanDD", _CreatePlanDDFFetcher.createCreatePlanDD()))
           .type(newTypeWiring("Mutation").dataFetcher("updateCreatePlanDD", _CreatePlanDDFFetcher.updateCreatePlanDD()))

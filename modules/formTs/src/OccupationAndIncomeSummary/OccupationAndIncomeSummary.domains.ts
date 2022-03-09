@@ -1,10 +1,11 @@
 export interface HasOccupationAndIncomeSummaryPageDomain {   OccupationAndIncomeSummary?: OccupationAndIncomeSummaryPageDomain}
 
 export interface OccupationAndIncomeSummaryPageDomain{
- fromApi?:OccupationAndIncomeDetailsDDDomain;
- selectedItem?:number;
- temp?:OccupationIncomeDetailsDDDomain;
- validationDebug?:boolean;
+  fromApi?:OccupationAndIncomeDetailsDDDomain;
+  other?:OtherIncomeResponseDDDomain;
+  selectedItem?:number;
+  temp?:OccupationIncomeDetailsDDDomain;
+  validationDebug?:boolean;
 }
 
 export interface OccupationAndIncomeDetailsDDDomain{
@@ -44,4 +45,11 @@ export interface OccupationIncomeDetailsDDDomain{
   whatNameBusiness: string;
   whatTypeOfBusiness: string;
   workFor: string;
+}
+
+export interface OtherIncomeResponseDDDomain{
+  amount: number;
+  clientOtherIncomeSeq: string;
+  incomeFreqRef: string;
+  otherIncomeType: string;
 }

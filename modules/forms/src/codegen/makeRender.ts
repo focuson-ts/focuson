@@ -141,7 +141,7 @@ export function createReactModalPageComponent<B extends ButtonD> ( params: TSPar
   const domName = domainName ( pageD.display.dataDD );
   return [
     `export function ${pageComponentName ( pageD )}<S, Context extends FocusOnContext<S>>(){`,
-    `  return focusedPage<S, ${domName}, Context> ( s => '' ) (`,
+    `  return focusedPage<S, ${domName}, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page`,
     `     ( state, d, mode ) => {`,
     `          return (<${layout.name}  details='${layout.details}'>`,
     `               <${componentName ( dataDD )} id='root' state={state}  mode={mode} />`,
@@ -189,7 +189,9 @@ export function createAllReactComponents<B extends ButtonD> ( params: TSParams, 
   let domain = noExtension ( params.domainsFile );
   const pageDomainsImports = pages.filter ( p => p.pageType === 'MainPage' ).map ( p => `import {${pageDomainName ( p )}} from "${domainsFileName ( '..', params, p )}";` )
   const domainImports = pages.flatMap ( p => sortedEntries ( dataDsIn ( [ p ] ) ).map ( ( [ name, dataD ] ) => `import {${domainName ( dataD )}} from "${domainsFileName ( '..', params, p )}"` ) )
-  const modalDomainImports = pages.flatMap ( p => isModalPage ( p ) ? [ `import {${domainName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', p, params.domainsFile )}'` ] : [] )
+  const modalDomainImports = pages.flatMap ( p => isModalPage ( p ) ? [
+    `//if there is an error message here... did you set the importFrom on this modal correctly, and also check that the PageD links to this DataD in a domain or rest block`,
+    `import {${domainName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', p, params.domainsFile )}'; ` ] : [] )
   const modalRenderImports = pages.flatMap ( p => isModalPage ( p ) ? [ `import {${componentName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', p, params.renderFile )}'` ] : [] )
   return [ ...imports, ...modalDomainImports, ...modalRenderImports, ...makeComponentImports ( pages ), ...makeButtonImports ( transformButtons ), ...pageDomainsImports, ...domainImports, ...pageComponents, ...dataComponents ]
 }

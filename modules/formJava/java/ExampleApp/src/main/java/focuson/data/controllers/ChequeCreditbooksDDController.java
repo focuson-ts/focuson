@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
   @RestController
   public class ChequeCreditbooksDDController {
 
- @Autowired
- public GraphQL graphQL;
+  @Autowired
+  public GraphQL graphQL;
     @GetMapping(value="/api/chequeCreditBooks", produces="application/json")
     public ResponseEntity getChequeCreditbooksDD(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId) throws Exception{
        return Transform.result(graphQL,ChequeCreditbooksDDQueries.getChequeCreditbooksDD(accountId, applRef, brandRef, customerId), "getChequeCreditbooksDD");

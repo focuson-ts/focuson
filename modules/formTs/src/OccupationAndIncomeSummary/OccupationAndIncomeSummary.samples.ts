@@ -69,6 +69,13 @@ export const sampleOccupationIncomeDetailsDD0: domains.OccupationIncomeDetailsDD
   "empAppRoleSeq": 123,
   "accountantAppRoleSeq": 123
 }
+export const sampleOtherIncomeResponseDD0: domains.OtherIncomeResponseDDDomain = 
+{
+  "clientOtherIncomeSeq": "someString",
+  "otherIncomeType": "someString",
+  "incomeFreqRef": "1",
+  "amount": 123
+}
 export const sampleOccupationAndIncomeDetailsDD1: domains.OccupationAndIncomeDetailsDDDomain = 
 {
   "regulatoryReport": "anotherString",
@@ -138,6 +145,13 @@ export const sampleOccupationIncomeDetailsDD1: domains.OccupationIncomeDetailsDD
   "empAppRoleSeq": 456,
   "accountantAppRoleSeq": 456
 }
+export const sampleOtherIncomeResponseDD1: domains.OtherIncomeResponseDDDomain = 
+{
+  "clientOtherIncomeSeq": "anotherString",
+  "otherIncomeType": "anotherString",
+  "incomeFreqRef": "2",
+  "amount": 456
+}
 export const sampleOccupationAndIncomeDetailsDD2: domains.OccupationAndIncomeDetailsDDDomain = 
 {
   "regulatoryReport": "someString",
@@ -206,4 +220,11 @@ export const sampleOccupationIncomeDetailsDD2: domains.OccupationIncomeDetailsDD
   "empEmploymentSeq": 123,
   "empAppRoleSeq": 123,
   "accountantAppRoleSeq": 123
+}
+export const sampleOtherIncomeResponseDD2: domains.OtherIncomeResponseDDDomain = 
+{
+  "clientOtherIncomeSeq": "someString",
+  "otherIncomeType": "someString",
+  "incomeFreqRef": "3",
+  "amount": 123
 }

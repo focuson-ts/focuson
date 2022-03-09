@@ -1,7 +1,7 @@
 export interface HasCreateEAccountPageDomain {   CreateEAccount?: CreateEAccountPageDomain}
 
 export interface CreateEAccountPageDomain{
- editing?:CreateEAccountDataDDDomain;
+  editing?:CreateEAccountDataDDDomain;
 }
 
 export interface CreateEAccountDataDDDomain{

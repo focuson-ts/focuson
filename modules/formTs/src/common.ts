@@ -15,11 +15,11 @@ import { HasChequeCreditbooksPageDomain } from './ChequeCreditbooks/ChequeCredit
 export type Context = FocusOnContext<FState>
 export const context: Context = defaultPageSelectionAndRestCommandsContext<FState> ( pages )
 export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,
- HasOccupationAndIncomeSummaryPageDomain,
- HasEAccountsSummaryPageDomain,
- HasETransferPageDomain,
- HasCreateEAccountPageDomain,
- HasChequeCreditbooksPageDomain
+  HasOccupationAndIncomeSummaryPageDomain,
+  HasEAccountsSummaryPageDomain,
+  HasETransferPageDomain,
+  HasCreateEAccountPageDomain,
+  HasChequeCreditbooksPageDomain
 {}
 export interface HasCommonIds {CommonIds: CommonIds}
 export type CommonIds = {

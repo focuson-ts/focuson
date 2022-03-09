@@ -103,3 +103,37 @@ pactWith ( { consumer: 'OccupationAndIncomeDetailsDD', provider: 'OccupationAndI
     } )
   } )
 })
+//Rest get pact test
+pactWith ( { consumer: 'OtherIncomeResponseDD', provider: 'OtherIncomeResponseDDProvider', cors: true }, provider => {
+  describe ( 'OccupationAndIncomeSummary', () => {
+    it ( 'should have a get rest for OtherIncomeResponseDD', async () => {
+      const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OtherIncomeResponseDDRestDetails', restAction: 'get', path: [ 'OccupationAndIncomeSummary' ] }
+      const firstState: FState = {
+        ...emptyState, restCommands: [ restCommand ],
+      OccupationAndIncomeSummary:{},
+        pageSelection: [ { pageName: 'OccupationAndIncomeSummary', pageMode: 'view' } ]
+      }
+      const url = applyToTemplate('/customer/occupation/v2/otherIncome', firstState.CommonIds).join('')
+      await provider.addInteraction ( {
+        state: 'default',
+        uponReceiving: 'OccupationAndIncomeSummary should have a get rest for OtherIncomeResponseDD',
+        withRequest: {
+          method: 'GET',
+          path: url,
+          query:{"accountSeq":"accountSeq","applicationRef":"applicationRef","brandRef":"brandRef","vbAccountSeq":"vbAccountSeq","vbAccountType":"vbAccountType"}
+          //no body for get
+        },
+        willRespondWith: {
+          status: 200,
+          body: samples.sampleOtherIncomeResponseDD0
+        },
+      } )
+      //export declare function rest<S, MSGS>(fetchFn: FetchFn, d: RestDetails<S, MSGS>, messageL: Optional<S, MSGS[]>, restL: Optional<S, RestCommand[]>, s: S): Promise<S>;
+      let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
+      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), firstState )
+      expect ( { ...newState, messages: []}).toEqual ( { ...firstState, restCommands: [], OccupationAndIncomeSummary: { other: samples.sampleOtherIncomeResponseDD0} } )
+      expect ( newState.messages.length ).toEqual ( 1 )
+      expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+    } )
+  } )
+})

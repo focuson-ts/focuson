@@ -81,9 +81,9 @@ describe ( "makePageDomainsFor", () => {
       "export interface HasEAccountsSummaryPageDomain {   EAccountsSummary?: EAccountsSummaryPageDomain}",
       "",
       "export interface EAccountsSummaryPageDomain{",
-      " createPlan?:EAccountsSummaryDDDomain;",
-      " fromApi?:EAccountsSummaryDDDomain;",
-      " tempCreatePlan?:CreatePlanDDDomain;",
+      "  createPlan?:EAccountsSummaryDDDomain;",
+      "  fromApi?:EAccountsSummaryDDDomain;",
+      "  tempCreatePlan?:CreatePlanDDDomain;",
       "}",
       ""
     ])

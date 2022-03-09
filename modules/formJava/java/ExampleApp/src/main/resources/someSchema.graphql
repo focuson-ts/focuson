@@ -1,5 +1,6 @@
 type Query{
   getOccupationAndIncomeDetailsDD(accountSeq: String!, applicationRef: String!, brandRef: String!, vbAccountSeq: String!, vbAccountType: String!):OccupationAndIncomeDetailsDD!
+  getOtherIncomeResponseDD(accountSeq: String!, applicationRef: String!, brandRef: String!, vbAccountSeq: String!, vbAccountType: String!):OtherIncomeResponseDD!
   getCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!
   listCreatePlanDD(accountId: String!, customerId: String!):[CreatePlanDD!]!
   getEAccountsSummaryDD(accountId: String!, customerId: String!):EAccountsSummaryDD!
@@ -96,6 +97,12 @@ type OccupationIncomeDetailsDD{
   empEmploymentSeq: Int!
   empAppRoleSeq: Int!
   accountantAppRoleSeq: Int!
+}
+type OtherIncomeResponseDD{
+  clientOtherIncomeSeq: String!
+  otherIncomeType: String!
+  incomeFreqRef: String!
+  amount: Int!
 }
 input ChequeCreditbooksDDInp{
   history: [ChequeCreditbooksHistoryLineDDInp!]!

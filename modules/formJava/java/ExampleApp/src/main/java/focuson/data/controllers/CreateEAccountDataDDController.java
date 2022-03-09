@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
   @RestController
   public class CreateEAccountDataDDController {
 
- @Autowired
- public GraphQL graphQL;
+  @Autowired
+  public GraphQL graphQL;
     @PostMapping(value="/api/createEAccount/{createPlanId}", produces="application/json")
     public ResponseEntity createCreateEAccountDataDD(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{
        return Transform.result(graphQL,CreateEAccountDataDDQueries.createCreateEAccountDataDD(accountId, customerId,  Transform.removeQuoteFromProperties(body)), "createCreateEAccountDataDD");

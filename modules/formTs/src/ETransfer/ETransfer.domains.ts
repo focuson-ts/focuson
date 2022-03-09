@@ -1,7 +1,7 @@
 export interface HasETransferPageDomain {   ETransfer?: ETransferPageDomain}
 
 export interface ETransferPageDomain{
- fromApi?:ETransferDataDDomain;
+  fromApi?:ETransferDataDDomain;
 }
 
 export interface ETransferDataDDomain{

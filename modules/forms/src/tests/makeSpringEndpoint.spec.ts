@@ -27,8 +27,8 @@ describe ( "makeSpringEndpoint", () => {
       "  @RestController",
       "  public class EAccountsSummaryDDController {",
       "",
-      " @Autowired",
-      " public GraphQL graphQL;",
+      "  @Autowired",
+      "  public GraphQL graphQL;",
       "    @GetMapping(value=\"/api/accountsSummary\", produces=\"application/json\")",
       "    public ResponseEntity getEAccountsSummaryDD(@RequestParam String accountId, @RequestParam String customerId) throws Exception{",
       "       return Transform.result(graphQL,EAccountsSummaryDDQueries.getEAccountsSummaryDD(accountId, customerId), \"getEAccountsSummaryDD\");",
@@ -61,8 +61,8 @@ describe ( "makeSpringEndpoint", () => {
       "  @RestController",
       "  public class CreatePlanDDController {",
       "",
-      " @Autowired",
-      " public GraphQL graphQL;",
+      "  @Autowired",
+      "  public GraphQL graphQL;",
       "    @GetMapping(value=\"/api/createPlan/{createPlanId}\", produces=\"application/json\")",
       "    public ResponseEntity getCreatePlanDD(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{",
       "       return Transform.result(graphQL,CreatePlanDDQueries.getCreatePlanDD(accountId, createPlanId, customerId), \"getCreatePlanDD\");",
@@ -118,7 +118,7 @@ describe ( "makeSpringEndpoint", () => {
       "      return new ObjectMapper().writeValueAsString( Sample.sampleCreatePlanDD0);",
       "    }",
       "  }"
-    ] )
+    ])
   } )
 
 } )

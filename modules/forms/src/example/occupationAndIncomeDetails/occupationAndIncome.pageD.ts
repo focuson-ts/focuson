@@ -26,7 +26,7 @@ export const otherSourcesOfIncomeModalPD: ModalPageD<AllButtonsInPage> = {
 
   modes: [ 'edit' ],
   /** How we display the page.*/
-  display: { layout: { name: 'Layout', details: '[3]' }, target: [], dataDD: otherIncomeResponseDD, importFrom: 'OccupationAndIncomeSummaryPD' },
+  display: { layout: { name: 'Layout', details: '[3]' }, target: [], dataDD: otherIncomeResponseDD, importFrom: 'OccupationAndIncomeSummary' },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },

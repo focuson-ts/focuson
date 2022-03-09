@@ -1,9 +1,9 @@
 export interface HasChequeCreditbooksPageDomain {   ChequeCreditbooks?: ChequeCreditbooksPageDomain}
 
 export interface ChequeCreditbooksPageDomain{
- chequeBookOrPayingIn?:number;
- fromApi?:ChequeCreditbooksDDDomain;
- tempCreatePlan?:ChequeCreditbooksHistoryLineDDDomain;
+  chequeBookOrPayingIn?:number;
+  fromApi?:ChequeCreditbooksDDDomain;
+  tempCreatePlan?:ChequeCreditbooksHistoryLineDDDomain;
 }
 
 export interface ChequeCreditbooksDDDomain{
