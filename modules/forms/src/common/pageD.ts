@@ -73,8 +73,9 @@ export function dataDsIn<B> ( pds: PageD<B>[], stopAtDisplay?: boolean ): NamesA
   const pageDataDs: DataD[] = pds.flatMap ( pd => (isMainPage ( pd ) ? sortedEntries ( pd.rest ) : []).map ( ( [ na, restPD ]: [ string, RestDefnInPageProperties ] ) => restPD.rest.dataDD ) )
   const domainDataDs: DataD[] = pds.flatMap ( pd => (isMainPage ( pd ) ? sortedEntries ( pd.domain ) : []) )
     .flatMap ( ( [ name, domain ] ) => isDataDd ( domain.dataDD ) ? [ domain.dataDD ] : [] )
-  return findAllDataDs ( [...pageDataDs, ...domainDataDs], stopAtDisplay )
+  return findAllDataDs ( [ ...pageDataDs, ...domainDataDs ], stopAtDisplay )
 }
+
 
 export function allRestAndActions<B> ( pds: PageD<B>[] ): [ PageD<B>, RestDefnInPageProperties, RestActionDetail ][] {
   return unique ( pds.flatMap ( pd => {
@@ -85,5 +86,8 @@ export function allRestAndActions<B> ( pds: PageD<B>[] ): [ PageD<B>, RestDefnIn
   } ), ( [ p, r, rad ] ) => p.name + "," + r.rest.dataDD.name + "," + rad.name )
 }
 
-export function allMainPages<B> ( ps: PageD<B>[] ): PageD<B>[] {return ps.filter ( p => p.pageType === 'MainPage' )}
+
+export function allMainPages<B> ( pds: PageD<B>[] ): MainPageD<B>[] {
+  return pds.flatMap ( pd => isMainPage ( pd ) ? [ pd ] : [] )
+}
 

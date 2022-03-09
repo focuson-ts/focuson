@@ -1,4 +1,4 @@
-import { isMainPage, MainPageD, PageD } from "../common/pageD";
+import { dataDsIn, isMainPage, MainPageD, PageD } from "../common/pageD";
 import { indentList } from "../codegen/codegen";
 import { safeArray, sortedEntries } from "@focuson/utils";
 import { findAllDataDs } from "../common/dataD";
@@ -40,7 +40,7 @@ function criticalSummary<B> ( p: PageD<B>, ds: ReportDetails[] ): string[] {
 
 function makeReportInfo<B> ( p: PageD<B> ): ReportInfo {
   return {
-    generatedDomainNames: sortedEntries ( findAllDataDs ( [ p.display.dataDD ], false ) ).map ( ( [ name, d ] ) => d.name )
+    generatedDomainNames: sortedEntries ( dataDsIn ( [ p ], false ) ).map ( ( [ name, d ] ) => d.name )
   }
 }
 export interface Report<B> {
