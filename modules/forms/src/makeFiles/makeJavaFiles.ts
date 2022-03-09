@@ -13,7 +13,7 @@ import { makeAllMockFetchers } from "../codegen/makeMockFetchers";
 import { makeJavaVariablesForGraphQlQuery } from "../codegen/makeGraphQlQuery";
 import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
 
-export const makeJavaFiles = ( javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B> ( pages: PageD<B>[] ) => {
+export const makeJavaFiles = ( javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B,G> ( pages: PageD<B,G>[] ) => {
 
   let javaRoot = javaOutputRoot + "/java"
   let javaAppRoot = javaOutputRoot + "/java/" + params.applicationName
@@ -36,7 +36,7 @@ export const makeJavaFiles = ( javaOutputRoot: string, params: JavaWiringParams,
   fs.mkdirSync ( `${javaQueriesPackages}`, { recursive: true } )
 
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
-  let rests = unique ( pages.flatMap ( x => (isMainPage ( x ) ? sortedEntries ( x.rest ) : []) ).map ( ( x: [ string, RestDefnInPageProperties ] ) => x[ 1 ].rest ), r => r.dataDD.name )
+  let rests = unique ( pages.flatMap ( x => (isMainPage ( x ) ? sortedEntries ( x.rest ) : []) ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest ), r => r.dataDD.name )
   copyFiles ( javaScriptRoot, 'templates/scripts', directorySpec ) ( 'makeJava.sh', 'makeJvmPact.sh', 'template.java' )
 
   templateFile ( `${javaAppRoot}/pom.xml`, 'templates/mvnTemplate.pom', params, directorySpec )

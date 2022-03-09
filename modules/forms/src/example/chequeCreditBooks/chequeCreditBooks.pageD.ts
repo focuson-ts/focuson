@@ -1,12 +1,10 @@
-import { MainPageD, ModalPageD, PageD } from "../../common/pageD";
 import { ChequeCreditbooksDD, ChequeCreditbooksHistoryLineDD } from "./chequeCreditBooks.dataD";
 import { chequeCreditBooksRestD } from "./chequeCreditBooks.restD";
-import { CreatePlanPD } from "../eAccounts/createPlanPD";
 import { IntegerDD, PrimitiveDD } from "../../common/dataD";
-import { AllButtonsInPage } from "../../buttons/allButtons";
+import { ExampleMainPage, ExampleModalPage } from "../common";
 
 
-export const OrderChequeBookOrPayingInModalPD: ModalPageD<AllButtonsInPage> = {
+export const OrderChequeBookOrPayingInModalPD: ExampleModalPage = {
   name: 'OrderChequeBookOrPayingInModal',
   pageType: 'ModalPage',
   /** This page can only view data */
@@ -28,7 +26,7 @@ export const CheckBookOrPayingInDD: PrimitiveDD = {
 }
 
 /** This is the 'bringing it all together */
-export const ChequeCreditbooksPD: MainPageD<AllButtonsInPage> = {
+export const ChequeCreditbooksPD: ExampleMainPage = {
   name: 'ChequeCreditbooks',
   pageType: 'MainPage',
   /** This page can only view data */
@@ -41,7 +39,7 @@ export const ChequeCreditbooksPD: MainPageD<AllButtonsInPage> = {
   domain: {
     fromApi: { dataDD: ChequeCreditbooksDD },
     tempCreatePlan: { dataDD: ChequeCreditbooksHistoryLineDD },
-    chequeBookOrPayingIn: {dataDD: CheckBookOrPayingInDD}
+    chequeBookOrPayingIn: { dataDD: CheckBookOrPayingInDD }
     // tempData: ChequeCreditbooksHistoryLineDD
   },
   modals: [ { modal: OrderChequeBookOrPayingInModalPD, path: [ 'tempCreatePlan' ] } ],

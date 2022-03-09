@@ -34,7 +34,7 @@ export function opt ( name: string, p: string | undefined ) {
 export function optT<T> ( name: string, p: T | undefined ) {
   return p ? `${name}={${JSON.stringify ( p )}}` : ''
 }
-export const makeSimpleButton: ( imp: string ) => ButtonCreator<ModalButtonInPage> = imp => ({
+export const makeSimpleButton: <G> ( imp: string ) => ButtonCreator<ModalButtonInPage<G>, G> = imp => ({
   import: imp,
   makeButton: ( { name, button } ) =>
     `          <${button.control} id='${button.text ? button.text : name}' state={state} />`

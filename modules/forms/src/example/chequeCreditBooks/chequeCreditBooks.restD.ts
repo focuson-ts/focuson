@@ -1,5 +1,6 @@
 import { RestD, RestParams } from "../../common/restD";
 import { ChequeCreditbooksDD, ChequeCreditbooksHistoryLineDD } from "./chequeCreditBooks.dataD";
+import { AllGuards } from "../../buttons/guardButton";
 
 export const commonParams: RestParams = {
   brandRef: { commonLens: 'brandRef', testValue: 'brandRef'},
@@ -9,7 +10,7 @@ export const commonParams: RestParams = {
 }
 
 /** This should fully define the api*/
-export const chequeCreditBooksRestD: RestD = {
+export const chequeCreditBooksRestD: RestD<AllGuards> = {
   params: commonParams,
   dataDD: ChequeCreditbooksDD,
   url: '/api/chequeCreditBooks?{query}', //or maybe accountId={accountId}&customerId={customerId}

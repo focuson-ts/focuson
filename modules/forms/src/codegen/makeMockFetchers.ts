@@ -10,7 +10,7 @@ export const makeMockFetcherFor = ( params: JavaWiringParams ) => ( { isRoot, sa
     [ `  public DataFetcher ${resolver} (){ return new StaticDataFetcher(${JSON.stringify ( safePick ( sample, 0 ) )});}` ]
 
 
-export function makeAllMockFetchers ( params: JavaWiringParams, rs: RestD[] ): string[] {
+export function makeAllMockFetchers <G> ( params: JavaWiringParams, rs: RestD <G>[] ): string[] {
   return findAllResolvers ( rs ).flatMap ( makeMockFetcherFor ( params ) )
 }
 

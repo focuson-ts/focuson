@@ -1,27 +1,51 @@
 import { PageD } from "../common/pageD";
 import { NameAnd, sortedEntries } from "@focuson/utils";
 import { TSParams } from "./config";
-import { ButtonD } from "../buttons/allButtons";
+import { ButtonD, ButtonWithControl, isButtonWithControl } from "../buttons/allButtons";
 import { indentList } from "./codegen";
+import { GuardWithCondition, isGuardButton, MakeGuard } from "../buttons/guardButton";
+import { guardName } from "./names";
 
-interface CreateButtonData<B> {
+interface CreateButtonData<B, G> {
   params: TSParams,
-  parent: PageD<B>,
+  parent: PageD<B, G>,
   name: string;
   button: B
 }
-export interface ButtonCreator<Button> {
+export interface ButtonCreator<B, G> {
   import: string;
-  makeButton: ( data: CreateButtonData<Button> ) => string;
+  makeButton: ( data: CreateButtonData<B, G> ) => string;
 }
 
-export interface MakeButton extends NameAnd<ButtonCreator<any>> {}
+export interface MakeButton<G> extends NameAnd<ButtonCreator<any, G>> {}
 
-export const makeButtonFrom =<B extends ButtonD> ( maker: MakeButton ) => ( params: TSParams ) =>  ( parent: PageD<B> ) => ( [ name, button ]: [ string, B ] ): string => {
+
+const makeControlButton = <B, G> ( maker: MakeButton<G> ) => ( params: TSParams ) => ( parent: PageD<B, G> ) => ( [ name, button ]: [ string, ButtonWithControl ] ): string => {
   const createButton = maker[ button.control ]
   return createButton ? createButton.makeButton ( { params, parent, name, button } ) : `<button>${name} of type ${button.control} cannot be created yet</button>`
+}
+export const makeButtonFrom = <B extends ButtonD, G> ( makeGuard: MakeGuard<G>, maker: MakeButton<G> ) => ( params: TSParams ) => ( parent: PageD<B, G> ) => ( [ name, button ]: [ string, B ] ): string => {
+  if ( isButtonWithControl ( button ) ) return makeControlButton ( maker ) ( params ) ( parent ) ( [ name, button ] )
+  if ( isGuardButton ( button ) ) {
+    const realButton = button.guard
+    if ( isButtonWithControl ( realButton ) )
+      return `<GuardButton cond={${guardName ( name )}}>` + makeControlButton ( maker ) ( params ) ( parent ) ( [ name, realButton ] ) + "</GuardButton>"
+  }
+  throw Error ( `Don't know how to process button ${name} ${JSON.stringify ( button )}` )
 };
 
-export function makeButtonsFrom<B extends ButtonD> ( params: TSParams, maker: MakeButton, p: PageD<B> ): string[] {
-  return indentList ( indentList ( sortedEntries ( p.buttons ).map ( makeButtonFrom <B>( maker ) ( params ) ( p ) ) ) )
+const makeButtonGuardVariableFrom = <B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, maker: MakeGuard<G>, p: PageD<B, G> ) => ( [ name, button ]: [ string, B ] ): string[] => {
+  if ( isGuardButton<B, G> ( button ) ) {
+    const guardCreator = maker[ button.by.condition ]
+    if ( !guardCreator ) throw Error ( `Don't know how to makeButtonGuardVariableFrom(${name},${button.by.condition} in page ${p.name}` )
+    return [ guardCreator.makeGuardVariable ( name, button.by ) ]
+  }
+  return []
+};
+
+export function makeGuardButtonVariables<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, p: PageD<B, G> ): string[] {
+  return sortedEntries ( p.buttons ).flatMap ( makeButtonGuardVariableFrom ( params, makeGuard, p ) )
+}
+export function makeButtonsFrom<B extends ButtonD, G> ( params: TSParams, makeGuard: MakeGuard<G>, makeButton: MakeButton<G>, p: PageD<B, G> ): string[] {
+  return indentList ( indentList ( sortedEntries ( p.buttons ).map ( makeButtonFrom<B, G> ( makeGuard, makeButton ) ( params ) ( p ) ) ) )
 }

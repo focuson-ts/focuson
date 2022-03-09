@@ -1,6 +1,7 @@
 import { DataD, MoneyDD, OneLineStringDD, StringPrimitiveDD } from "../../common/dataD";
 import { EAccountDisplayTypeDD } from "../eAccounts/eAccountsSummary.dataD";
 import { RadioCD } from "../../common/componentsD";
+import { AllGuards } from "../../buttons/guardButton";
 
 const SavingsStyleDD: StringPrimitiveDD = {
   ...OneLineStringDD,
@@ -15,7 +16,7 @@ const SavingsStyleDD: StringPrimitiveDD = {
     targetTime: 'Reach a target balance by a set time',
   }
 }
-export const CreateEAccountDataD: DataD = {
+export const CreateEAccountDataD: DataD<AllGuards> = {
   name: "CreateEAccountDataDD",
   description: "Let's make an eaccount together",
   structure: {

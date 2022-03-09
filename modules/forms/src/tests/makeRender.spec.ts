@@ -1,13 +1,12 @@
-import { DateDD, MoneyDD } from "../common/dataD";
-import { EAccountsSummaryDD, EAccountsSummaryTableDD } from "../example/eAccounts/eAccountsSummary.dataD";
-import { createAllReactCalls, createAllReactComponents, createOneReact, createReactComponent, createReactPageComponent, listComponentsIn, processParam } from "../codegen/makeRender";
-import { DisplayCompParamType, LabelAndNumberInputCD, LabelAndStringInputCD, TableCD } from "../common/componentsD";
+import { EAccountsSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD";
+import { createAllReactCalls, createAllReactComponents, createReactComponent, createReactPageComponent, listComponentsIn, processParam } from "../codegen/makeRender";
+import { DisplayCompParamType, LabelAndStringInputCD } from "../common/componentsD";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
 import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
-import { transformButtons } from "../buttons/allButtons";
+import { makeButtons } from "../buttons/allButtons";
 import { occupationIncomeDetailsDD } from "../example/occupationAndIncomeDetails/occupationAndIncome.dataD";
-import { ETransferDataD } from "../example/eTransfers/eTransfers.dataD";
+import { AllGuardCreator } from "../buttons/guardButton";
 
 //
 describe ( " listComponentsIn", () => {
@@ -25,7 +24,7 @@ describe ( " listComponentsIn", () => {
   } )
 
   it ( "should createReactComponent", () => {
-    expect ( createReactComponent ( EAccountsSummaryDD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( createReactComponent ( AllGuardCreator ) ( EAccountsSummaryDD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function EAccountsSummaryDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, EAccountsSummaryDDDomain,Context>){",
       "  return(<>",
       "    <LabelAndBooleanInput id={`${id}.useEStatements`} state={state.focusOn('useEStatements')} mode={mode} label='use e statements' />",
@@ -42,7 +41,7 @@ describe ( " listComponentsIn", () => {
     ] )
   } )
   it ( "should createAllReactComponents ", () => {
-    expect ( createAllReactComponents ( paramsForTest, transformButtons, [ EAccountsSummaryPD, CreatePlanPD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( createAllReactComponents ( paramsForTest, AllGuardCreator, makeButtons (), [ EAccountsSummaryPD, CreatePlanPD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "import { LensProps } from '@focuson/state';",
       "import { Layout } from '../copied/layout';",
       "import { FocusOnContext } from '@focuson/focuson';",
@@ -120,11 +119,11 @@ describe ( " listComponentsIn", () => {
       "</>)",
       "}",
       ""
-    ])
+    ] )
   } )
 
   it ( "should createReactPageComponent", () => {
-    expect ( createReactPageComponent ( paramsForTest, transformButtons, EAccountsSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), EAccountsSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function EAccountsSummaryPage<S, Context extends FocusOnContext<S>>(){",
       "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
       "  return (<Layout  details='[1][3,3][5]'>",
@@ -135,8 +134,8 @@ describe ( " listComponentsIn", () => {
       "          <button>refresh of type ResetStateButton cannot be created yet</button>",
       "   </Layout>)})}",
       ""
-    ])
-    expect ( createReactPageComponent ( paramsForTest, transformButtons, CreatePlanPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    ] )
+    expect ( createReactPageComponent ( paramsForTest,AllGuardCreator, makeButtons (), CreatePlanPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function CreatePlanPage<S, Context extends FocusOnContext<S>>(){",
       "  return focusedPage<S, CreatePlanDDDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page",
       "     ( state, d, mode ) => {",
@@ -146,19 +145,19 @@ describe ( " listComponentsIn", () => {
       "                    <ModalCommitButton id='commit'  state={state} />",
       "            </Layout>)})}",
       ""
-    ])
+    ] )
   } )
 } )
 
 describe ( "makeComponentWithGuard", () => {
   it ( "should make guard variables", () => {
-    expect ( createReactComponent ( occupationIncomeDetailsDD ).slice ( 0, 5 ).map ( r => r.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( createReactComponent ( AllGuardCreator ) ( occupationIncomeDetailsDD ).slice ( 0, 5 ).map ( r => r.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function OccupationIncomeDetailsDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, OccupationIncomeDetailsDDDomain,Context>){",
-      "const areYouGuard = state.chainLens(Lenses.fromPath(['areYou'])).optJson();console.log('areYouGuard', areYouGuard)",
+      "const areYouGuard = state.chainLens(Lenses.fromPath(['areYou'])).optJsonOr([]);",
       "  return(<>",
       "    <LabelAndStringInput id={`${id}.areYou`} state={state.focusOn('areYou')} mode={mode} label='are you' required={true} />",
       "    <Guard value={areYouGuard} cond={['E','S']}><LabelAndStringInput id={`${id}.currentEmployment`} state={state.focusOn('currentEmployment')} mode={mode} label='current employment' required={true} /></Guard>"
-    ])
+    ] )
   } )
 } )
 

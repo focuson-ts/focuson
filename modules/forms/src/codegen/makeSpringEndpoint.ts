@@ -5,7 +5,7 @@ import { beforeSeparator, RestAction, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction, indentList } from "./codegen";
 
 
-export function makeParamsForJava ( r: RestD, restAction: RestAction ): string {
+export function makeParamsForJava<G> ( r: RestD<G>, restAction: RestAction ): string {
   const requestParam = defaultRestAction[ restAction ].params.needsObj ? ", @RequestBody String body" : ""
   return sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) ).map ( (( [ name, param ] ) => `@RequestParam String ${name}`) ).join ( ", " )+requestParam
 }
@@ -22,10 +22,10 @@ function mappingAnnotation ( restAction: RestAction ) {
   if ( restAction === 'delete' ) return 'DeleteMapping'
   throw new Error ( `unknown rest action ${restAction} for mappingAnnotation` )
 }
-function postFixForEndpoint ( r: RestD, restAction: RestAction ) {
+function postFixForEndpoint <G>( r: RestD<G>, restAction: RestAction ) {
   return restAction === 'list' ? "/list" : ""
 }
-function makeEndpoint ( params: JavaWiringParams, r: RestD, restAction: RestAction ): string[] {
+function makeEndpoint<G> ( params: JavaWiringParams, r: RestD<G>, restAction: RestAction ): string[] {
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( r, restAction )}", produces="application/json")`,
     `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
@@ -35,7 +35,7 @@ function makeEndpoint ( params: JavaWiringParams, r: RestD, restAction: RestActi
 }
 
 
-function makeQueryEndpoint ( params: JavaWiringParams, r: RestD, restAction: RestAction ): string[] {
+function makeQueryEndpoint<G> ( params: JavaWiringParams, r: RestD<G>, restAction: RestAction ): string[] {
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( r, restAction )}/query", produces="application/json")`,
     `    public String query${queryName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
@@ -44,14 +44,14 @@ function makeQueryEndpoint ( params: JavaWiringParams, r: RestD, restAction: Res
     `` ];
 
 }
-function makeSampleEndpoint ( params: JavaWiringParams, r: RestD ): string[] {
+function makeSampleEndpoint<G> ( params: JavaWiringParams, r: RestD<G> ): string[] {
   return [
     `  @${mappingAnnotation ( 'get' )}(value = "${beforeSeparator ( "?", r.url )}/sample", produces = "application/json")`,
     `    public static String sample${r.dataDD.name}() throws Exception {`,
     `      return new ObjectMapper().writeValueAsString( ${params.sampleClass}.${sampleName ( r.dataDD )}0);`,
     `    }` ];
 }
-export function makeSpringEndpointsFor ( params: JavaWiringParams, r: RestD ): string[] {
+export function makeSpringEndpointsFor<G>( params: JavaWiringParams, r: RestD<G> ): string[] {
   const endpoints: string[] = r.actions.flatMap ( action => makeEndpoint ( params, r, action ) )
   const queries: string[] = r.actions.flatMap ( action => makeQueryEndpoint ( params, r, action ) )
   return [

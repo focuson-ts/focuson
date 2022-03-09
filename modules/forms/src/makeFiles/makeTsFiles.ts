@@ -5,7 +5,7 @@ import { unique } from "../common/restD";
 import { sortedEntries } from "@focuson/utils";
 import { isMainPage, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { createRenderPage } from "../codegen/makeRender";
-import { ButtonD, transformButtons } from "../buttons/allButtons";
+import { ButtonD, makeButtons } from "../buttons/allButtons";
 import { makeAllDomainsFor, makePageDomainsFor } from "../codegen/makeDomain";
 import { makeCommon } from "../codegen/makeCommon";
 import { makeAllFetchers, makeFetcherDataStructureImport, makeFetchersDataStructure, makeFetchersImport } from "../codegen/makeFetchers";
@@ -15,8 +15,10 @@ import { makePages } from "../codegen/makePages";
 import { makeAllPacts } from "../codegen/makePacts";
 import { domainsFileName, emptyFileName, fetcherFileName, pactFileName, renderFileName, restFileName, samplesFileName, storybookFileName } from "../codegen/names";
 import { makeOneStory } from "../codegen/makeStories";
+import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
+import { MakeButton } from "../codegen/makeButtons";
 
-export const makeTsFiles = ( tsRoot: string, params: TSParams, directorySpec: DirectorySpec ) => <B extends ButtonD> ( pages: PageD<B>[] ) => {
+export const makeTsFiles = <G extends GuardWithCondition> ( tsRoot: string, params: TSParams, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G>, directorySpec: DirectorySpec ) => <B extends ButtonD> ( pages: PageD<B, G>[] ) => {
   console.log ( "focusOnVersion", params.focusOnVersion )
 
   const tsScripts = tsRoot + "/scripts"
@@ -29,12 +31,13 @@ export const makeTsFiles = ( tsRoot: string, params: TSParams, directorySpec: Di
   fs.mkdirSync ( `${tsScripts}`, { recursive: true } )
   fs.mkdirSync ( `${tsPublic}`, { recursive: true } )
   fs.mkdirSync ( `${tsStoryBook}`, { recursive: true } )
+
   pages.forEach ( p => {
     const tsPage = `${tsCode}/${p.name}`
     fs.mkdirSync ( tsPage, { recursive: true } )
 
     writeToFile ( renderFileName ( tsCode, params, p ) + ".tsx",
-      createRenderPage ( params, transformButtons, p ) )
+      createRenderPage ( params, makeGuards, makeButtons, p ) )
 
     if ( isMainPage ( p ) ) {
       writeToFile ( domainsFileName ( tsCode, params, p ) + ".ts", [
@@ -69,7 +72,7 @@ export const makeTsFiles = ( tsRoot: string, params: TSParams, directorySpec: Di
     ...makeFetchersDataStructure ( params, { variableName: 'fetchers', stateName: params.stateName }, pages ) ] )
 
   writeToFile ( `${tsCode}/${params.restsFile}.ts`, makeRestDetailsPage ( params, pages ) )
-  const rests = unique ( pages.flatMap ( pd => isMainPage ( pd ) ? sortedEntries ( pd.rest ).map ( ( x: [ string, RestDefnInPageProperties ] ) => x[ 1 ].rest ) : [] ), r => r.dataDD.name )
+  const rests = unique ( pages.flatMap ( pd => isMainPage ( pd ) ? sortedEntries ( pd.rest ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest ) : [] ), r => r.dataDD.name )
 
   writeToFile ( `${tsCode}/${params.commonFile}.ts`, makeCommon ( params, pages, rests, directorySpec ) )
   writeToFile ( `${tsCode}/${params.pagesFile}.tsx`, makePages ( params, pages ) )

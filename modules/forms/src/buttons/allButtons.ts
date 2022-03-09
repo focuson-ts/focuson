@@ -5,19 +5,29 @@ import { MakeButton } from "../codegen/makeButtons";
 import { makeModalCloseButtons, ModalCancelButtonInPage, ModalCommitButtonInPage } from "./modalCloseButtons";
 import { makeRestButtons, RestButtonInPage } from "./restButton";
 import { makeValidationButtons, ValidationButtonInPage } from "./ValidationDebugButton";
+import { AllGuards, GuardButtonInPage } from "./guardButton";
 
-
-export interface ButtonD {
+export interface ButtonWithControl {
   control: string
-}
-export type AllButtonsInPage = ModalButtonInPage | ModalCancelButtonInPage | ModalCommitButtonInPage |
-  ResetStateButton | RestButtonInPage | ListNextButtonInPage | ListPrevButtonInPage | ValidationButtonInPage
 
-export const transformButtons: MakeButton = {
-  ...makeModalButtons,
-  ...makeModalCloseButtons,
-  ...makeListMarkerButtons,
-  ...makeRestButtons,
-  ...makeValidationButtons
+}
+export function isButtonWithControl ( b: any ): b is ButtonWithControl {
+  return b.control !== undefined
+}
+export type ButtonD = ButtonWithControl | GuardButtonInPage<any, any>
+
+export type RawButtons<G> = ModalButtonInPage<G> | ModalCancelButtonInPage | ModalCommitButtonInPage |
+  ResetStateButton | RestButtonInPage<G> | ListNextButtonInPage | ListPrevButtonInPage | ValidationButtonInPage;
+
+export type AllButtonsInPage<G> = RawButtons<G> | GuardButtonInPage<RawButtons<G>, G>
+
+export function makeButtons<G> (): MakeButton<G> {
+  return {
+    ...makeModalButtons (),
+    ...makeModalCloseButtons (),
+    ...makeListMarkerButtons (),
+    ...makeRestButtons (),
+    ...makeValidationButtons ()
+  }
 }
 

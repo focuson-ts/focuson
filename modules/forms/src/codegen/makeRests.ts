@@ -6,7 +6,7 @@ import { sortedEntries } from "@focuson/utils";
 import { addStringToEndOfAllButLast, focusQueryFor } from "./codegen";
 
 
-export const makeRest = <B> ( params: TSParams, p: PageD<B> ) => ( r: RestDefnInPageProperties ): string[] => {
+export const makeRest = <B,G> ( params: TSParams, p: PageD<B,G> ) => ( r: RestDefnInPageProperties<G> ): string[] => {
   const [ ids, resourceIds ] = findIds ( r.rest )
   let pageDomain = `${params.domainsFile}.${pageDomainName ( p )}`;
   return [
@@ -24,7 +24,7 @@ export const makeRest = <B> ( params: TSParams, p: PageD<B> ) => ( r: RestDefnIn
     ``,
   ]
 };
-export function makeRestImports<B> ( params: TSParams, p: PageD<B> ) {
+export function makeRestImports<B,G> ( params: TSParams, p: PageD<B,G> ) {
   return [
     `import { OneRestDetails } from "@focuson/rest"`,
     `import * as domains from "${domainsFileName ( '..', params, p )}"`,
@@ -33,7 +33,7 @@ export function makeRestImports<B> ( params: TSParams, p: PageD<B> ) {
     `` ]
 }
 
-export function makeRestDetailsPage<B> ( params: TSParams, ps: PageD<B>[] ): string[] {
+export function makeRestDetailsPage<B,G> ( params: TSParams, ps: PageD<B,G>[] ): string[] {
   const imports = [
     `import { RestDetails, OneRestDetails } from "@focuson/rest"`,
     `import { createSimpleMessage, DateFn, defaultDateFn, SimpleMessage } from "@focuson/utils"`,
@@ -44,7 +44,7 @@ export function makeRestDetailsPage<B> ( params: TSParams, ps: PageD<B>[] ): str
 
   return [ ...imports, ...imp, ...makeRestDetails ( params, ps ) ]
 }
-export function makeRestDetails<B> ( params: TSParams, ps: PageD<B>[] ): string[] {
+export function makeRestDetails<B,G> ( params: TSParams, ps: PageD<B,G>[] ): string[] {
   return [
     `export const restDetails: RestDetails<${params.stateName}, SimpleMessage> = {`,
     ...addStringToEndOfAllButLast ( "," ) ( ps.flatMap ( pd => (isMainPage ( pd ) ? sortedEntries ( pd.rest ) : []).flatMap ( ( [ name, rd ] ) =>
@@ -53,7 +53,7 @@ export function makeRestDetails<B> ( params: TSParams, ps: PageD<B>[] ): string[
     `}`, '' ]
 }
 
-export function makeRests<B> ( params: TSParams, pd: MainPageD<B> ): string[] {
+export function makeRests<B,G> ( params: TSParams, pd: MainPageD<B,G> ): string[] {
   let rests = sortedEntries ( pd.rest ).flatMap ( ( [ name, rd ] ) => makeRest ( params, pd ) ( rd ) );
   let imports = rests.length > 0 ? makeRestImports ( params, pd ) : []
   return [ ...imports, ...rests ]

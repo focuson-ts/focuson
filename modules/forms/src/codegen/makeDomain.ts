@@ -3,41 +3,41 @@ import { domainName, hasDomainForPage, pageDomainName } from "./names";
 import { sortedEntries } from "@focuson/utils";
 import { dataDsIn, PageD } from "../common/pageD";
 import { TSParams } from "./config";
-import { indentList, noExtension } from "./codegen";
+import { indentList } from "./codegen";
 
-export function domainTypeName ( o: AllDataDD ): string {
+export function domainTypeName<G> ( o: AllDataDD<G> ): string {
   if ( isDataDd ( o ) ) return domainName ( o )
   if ( isRepeatingDd ( o ) ) return domainTypeName ( o.dataDD )
   return o.reactType
 }
 
-export function oneDomainLine ( [ name, o ]: [ string, OneDataDD ] ): string {
+export function oneDomainLine <G>( [ name, o ]: [ string, OneDataDD<G>] ): string {
   const brackets = isRepeatingDd ( o.dataDD ) ? '[]' : ''
   return `  ${name}: ${domainTypeName ( o.dataDD )}${brackets};`
 }
-export function makeDomainFor ( d: DataD ): string[] {
+export function makeDomainFor <G>( d: DataD<G> ): string[] {
   return [
     `export interface ${domainName ( d )}{`,
     ...sortedEntries ( d.structure ).map ( oneDomainLine ),
     '}', '' ]
 }
-export function makeAllDomainsFor<B> ( ps: PageD<B>[] ): string[] {
+export function makeAllDomainsFor<B,G> ( ps: PageD<B,G>[] ): string[] {
   return sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ name, dataD ] ) => makeDomainFor ( dataD ) )
 }
 
-export function makeHasDomainsFor<B> ( p: PageD<B> ): string[] {
+export function makeHasDomainsFor<B,G> ( p: PageD<B,G> ): string[] {
   if ( p.pageType === 'ModalPage' ) return []
   return [ `export interface ${hasDomainForPage ( p )} {   ${p.name}?: ${pageDomainName ( p )}}`, '' ]
 }
 
-export function typeNameFor ( params: TSParams, d: AllDataDD ): string {
+export function typeNameFor<G> ( params: TSParams, d: AllDataDD<G> ): string {
   if ( isPrimDd ( d ) ) return d.reactType
   if ( isRepeatingDd ( d ) ) return typeNameFor ( params, d.dataDD ) + "[]"
   return domainName ( d )
 
 }
 
-export function makePageDomainsFor<B> ( params: TSParams, ps: PageD<B>[] ): string[] {
+export function makePageDomainsFor<B,G> ( params: TSParams, ps: PageD<B,G>[] ): string[] {
   return [
     ...ps.flatMap ( p => p.pageType === 'ModalPage' ? [] : [
       ...makeHasDomainsFor ( p ),

@@ -4,6 +4,7 @@
 import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndNumberInputCD, LabelAndStringInputCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeRender";
 import { NameAnd, safeArray } from "@focuson/utils";
+import { Guards } from "../buttons/guardButton";
 
 export interface HasSample<T> {
   sample?: T[]
@@ -12,24 +13,24 @@ export interface HasEnum {
   enum?: EnumDD;
 }
 
-export function sampleFromDataD ( o: OneDataDD | undefined, d: AllDataDD ): string[] {
+export function sampleFromDataD<G> ( o: OneDataDD<G> | undefined, d: AllDataDD<G> ): string[] {
   const fromO: string[] = safeArray ( o?.sample )
   const fromD: string[] = isPrimDd ( d ) ? [ ...safeArray<any> ( d.sample ).map ( ( t: any ) => t ), ...safeArray ( d.enum ? Object.keys ( d.enum ) : [] ) ] : []
   return [ ...fromO, ...fromD ]
 }
 
-export interface OneDataDD extends HasSample<string> {
-  dataDD: AllDataDD;
+export interface OneDataDD<G> extends HasSample<string> {
+  dataDD: AllDataDD<G>;
   hidden?: boolean;
   guard?: NameAnd<string[]>
   displayParams?: ComponentDisplayParams,
   field?: string, // defaults to the name. if it exists this says which field to use
 }
-export interface ManyDataDD {
-  [ name: string ]: OneDataDD
+export interface ManyDataDD<G> {
+  [ name: string ]: OneDataDD<G>
 }
 export interface OneDisplayParamDD {
-  value: boolean| number | string | string[]
+  value: boolean | number | string | string[]
 }
 export interface DisplayParamDD {
   [ name: string ]: OneDisplayParamDD
@@ -47,15 +48,10 @@ export interface CommonDataDD {
   resolver?: string;
   guard?: NameAnd<string[]>
 }
-export interface LocalVariableGuard {
-  pathFromHere: string[],
-  values: NameAnd<any> | undefined
-}
-export type Guard = LocalVariableGuard
 
-export interface DataD extends CommonDataDD {
-  guards?: NameAnd<Guard>,
-  structure: ManyDataDD;
+export interface DataD<G> extends CommonDataDD {
+  guards?: Guards<G>;
+  structure: ManyDataDD<G>;
 }
 
 export interface CommonPrimitiveDD<T> extends CommonDataDD, HasSample<T>, HasEnum {
@@ -83,37 +79,37 @@ export interface NumberPrimitiveDD extends CommonPrimitiveDD<number> {
 }
 export type PrimitiveDD = StringPrimitiveDD | BooleanPrimitiveDD | NumberPrimitiveDD
 
-export interface RepeatingDataD extends CommonDataDD {
+export interface RepeatingDataD<G> extends CommonDataDD {
   paged: boolean;
   display: DisplayCompD; // mandatory for a repeating
-  dataDD: DataD;
+  dataDD: DataD<G>;
 }
-export function isRepeatingDd ( d: any ): d is RepeatingDataD {
+export function isRepeatingDd<G> ( d: any ): d is RepeatingDataD<G> {
   return d.paged !== undefined
 }
 
-export type AllDataDD = PrimitiveDD | DataD | RepeatingDataD
+export type AllDataDD<G> = PrimitiveDD | DataD<G> | RepeatingDataD<G>
 
 
-export interface NamesAndDataDs {
-  [ name: string ]: DataD
+export interface NamesAndDataDs<G> {
+  [ name: string ]: DataD<G>
 }
 
-export interface AllDataFolder<Acc> {
+export interface AllDataFolder<Acc, G> {
   stopAtDisplay?: boolean,
-  foldPrim: ( acc: Acc, path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: PrimitiveDD ) => Acc,
-  foldData: ( acc: Acc, path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: DataD, start: boolean ) => Acc,
-  foldRep: ( acc: Acc, path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: RepeatingDataD, start: boolean ) => Acc
+  foldPrim: ( acc: Acc, path: string[], parents: DataD<G>[], oneDataDD: OneDataDD<G> | undefined, dataDD: PrimitiveDD ) => Acc,
+  foldData: ( acc: Acc, path: string[], parents: DataD<G>[], oneDataDD: OneDataDD<G> | undefined, dataDD: DataD<G>, start: boolean ) => Acc,
+  foldRep: ( acc: Acc, path: string[], parents: DataD<G>[], oneDataDD: OneDataDD<G> | undefined, dataDD: RepeatingDataD<G>, start: boolean ) => Acc
 }
-export interface AllDataFlatMap<Acc> {
+export interface AllDataFlatMap<Acc, G> {
   stopAtDisplay?: boolean,
-  walkPrim: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: PrimitiveDD ) => Acc[],
-  walkDataStart: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: DataD ) => Acc[],
-  walkDataEnd: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: DataD ) => Acc[],
-  walkRepStart: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: RepeatingDataD ) => Acc[]
-  walkRepEnd: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: RepeatingDataD ) => Acc[]
+  walkPrim: ( path: string[], parents: DataD<G>[], oneDataDD: OneDataDD<G> | undefined, dataDD: PrimitiveDD ) => Acc[],
+  walkDataStart: ( path: string[], parents: DataD<G>[], oneDataDD: OneDataDD<G> | undefined, dataDD: DataD<G> ) => Acc[],
+  walkDataEnd: ( path: string[], parents: DataD<G>[], oneDataDD: OneDataDD<G> | undefined, dataDD: DataD<G> ) => Acc[],
+  walkRepStart: ( path: string[], parents: DataD<G>[], oneDataDD: OneDataDD<G> | undefined, dataDD: RepeatingDataD<G> ) => Acc[]
+  walkRepEnd: ( path: string[], parents: DataD<G>[], oneDataDD: OneDataDD<G> | undefined, dataDD: RepeatingDataD<G> ) => Acc[]
 }
-export function emptyDataFlatMap<Acc> (): AllDataFlatMap<Acc> {
+export function emptyDataFlatMap<Acc, G> (): AllDataFlatMap<Acc, G> {
   return ({
     walkPrim: () => [],
     walkDataStart: () => [],
@@ -123,8 +119,8 @@ export function emptyDataFlatMap<Acc> (): AllDataFlatMap<Acc> {
   })
 }
 
-export function flatMapDD<Acc> ( dataDD: AllDataDD, map: AllDataFlatMap<Acc> ) {
-  return foldDataDD<Acc[]> ( dataDD, [], [], [], {
+export function flatMapDD<Acc, G> ( dataDD: AllDataDD<G>, map: AllDataFlatMap<Acc, G> ) {
+  return foldDataDD<Acc[], G> ( dataDD, [], [], [], {
     stopAtDisplay: map.stopAtDisplay,
     foldRep: ( acc, path, parents, oneDataDD, dataDD, start ) => {
       return [ ...acc, ...start ?
@@ -141,14 +137,16 @@ export function flatMapDD<Acc> ( dataDD: AllDataDD, map: AllDataFlatMap<Acc> ) {
   } )
 }
 
-export const collectDataWalker: AllDataFlatMap<DataD> = {
-  ...emptyDataFlatMap (),
-  walkDataStart: ( path, parents, oneDataDD, dataDD ) => [ dataDD ]
+export function collectDataWalker<G> (): AllDataFlatMap<DataD<G>, G> {
+  return ({
+    ...emptyDataFlatMap (),
+    walkDataStart: ( path, parents, oneDataDD, dataDD ) => [ dataDD ]
+  })
 }
-export function findDataDDIn ( a: AllDataDD, stopAtDisplay?: boolean ): DataD[] {return flatMapDD ( a, { ...collectDataWalker, stopAtDisplay } )}
+export function findDataDDIn<G> ( a: AllDataDD<G>, stopAtDisplay?: boolean ): DataD<G>[] {return flatMapDD ( a, { ...collectDataWalker(), stopAtDisplay } )}
 
 
-export function foldDataDD<Acc> ( dataDD: AllDataDD, path: string[], parents: DataD[], zero: Acc, folder: AllDataFolder<Acc>, oneDataDD?: OneDataDD ): Acc {
+export function foldDataDD<Acc, G> ( dataDD: AllDataDD<G>, path: string[], parents: DataD<G>[], zero: Acc, folder: AllDataFolder<Acc, G>, oneDataDD?: OneDataDD<G> ): Acc {
   const { foldPrim, foldData, foldRep, stopAtDisplay } = folder
   if ( isDataDd ( dataDD ) ) {
     let start: Acc = foldData ( zero, path, parents, oneDataDD, dataDD, true );
@@ -167,8 +165,8 @@ export function foldDataDD<Acc> ( dataDD: AllDataDD, path: string[], parents: Da
 
 
 /** Finds and dedups all the unique DataDs in the list. Identity is based on name: so we assume if the name is the same, it's the same object.*/
-export function findAllDataDs ( a: AllDataDD[], stopAtDisplay?: boolean ): NamesAndDataDs {
-  var result: NamesAndDataDs = {}
+export function findAllDataDs<G> ( a: AllDataDD<G>[], stopAtDisplay?: boolean ): NamesAndDataDs<G> {
+  var result: NamesAndDataDs<G> = {}
   a.flatMap ( d => findDataDDIn ( d, stopAtDisplay ) ).forEach ( d => result [ d.name ] = d )
   return result
 }
@@ -178,7 +176,7 @@ export function isPrimDd ( d: any ): d is PrimitiveDD {
   return !isRepeatingDd ( d ) && !isDataDd ( d )
 }
 
-export function isDataDd ( d: any ): d is DataD {
+export function isDataDd<G> ( d: any ): d is DataD<G> {
   return !!d.structure
 }
 
@@ -221,7 +219,7 @@ export const AccountIdDD: NumberPrimitiveDD = {
   name: 'AccountIdDD',
   description: "An account id",
   display: LabelAndNumberInputCD,
-  displayParams: { min: { value: 10000000 }, max: { value: 99999999 }},
+  displayParams: { min: { value: 10000000 }, max: { value: 99999999 } },
   sample: [ 1233450, 3233450, 4333450 ]
 }
 export const StringDD: StringPrimitiveDD = {
@@ -247,7 +245,7 @@ export const ManyLineStringDD: StringPrimitiveDD = {
   sample: [ "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit" ]
 }
 export const IntegerDD: NumberPrimitiveDD = {
-...numberPrimDD,
+  ...numberPrimDD,
   name: 'IntegerDD',
   description: "The primitive 'Integer'",
   display: LabelAndNumberInputCD,

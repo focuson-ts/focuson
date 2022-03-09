@@ -1,8 +1,9 @@
 import { DataD, DateDD, IntegerDD, OneLineStringDD, RepeatingDataD } from "../../common/dataD";
 import { TableCD } from "../../common/componentsD";
+import { AllGuards } from "../../buttons/guardButton";
 
 
-export const ChequeCreditbooksHistoryLineDD: DataD = {
+export const ChequeCreditbooksHistoryLineDD: DataD<AllGuards> = {
   name: "ChequeCreditbooksHistoryLineDD",
   description: "The create plan data (actually just put in one place to allow a test for a structure)",
   structure: {
@@ -11,7 +12,7 @@ export const ChequeCreditbooksHistoryLineDD: DataD = {
     dateOrder: { dataDD: DateDD, sample: [ '2022-10-01' ] }
   }
 }
-export const ChequeCreditbooksHistoryDD: RepeatingDataD = {
+export const ChequeCreditbooksHistoryDD: RepeatingDataD<AllGuards> = {
   name: "ChequeCreditbooksHistoryDD",
   paged: false,
   description: "The history of how cheque and credit books have been ordered",
@@ -19,7 +20,7 @@ export const ChequeCreditbooksHistoryDD: RepeatingDataD = {
   display: TableCD,
   displayParams: { order: { value: [ 'serialNumber', 'howOrdered', 'dateOrder' ] } }
 }
-export const ChequeCreditbooksDD: DataD = {
+export const ChequeCreditbooksDD: DataD<AllGuards> = {
   name: "ChequeCreditbooksDD",
   description: "This is the main object for the Cheque and Credit books form",
   structure: {

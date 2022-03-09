@@ -1,6 +1,7 @@
 import { AccountIdDD, AllDataFolder, collectDataWalker, findAllDataDs, findDataDDIn, foldDataDD, isDataDd, isRepeatingDd } from "../common/dataD";
 import { CreatePlanDD, EAccountsSummaryDD, EAccountsSummaryTableDD, EAccountSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD";
 import { start } from "repl";
+import { AllGuards, Guards } from "../buttons/guardButton";
 
 describe ( "dataDD", () => {
   it ( "should have a isDataDd ", () => {
@@ -16,7 +17,7 @@ describe ( "dataDD", () => {
     expect ( isRepeatingDd ( AccountIdDD ) ).toEqual ( false )
   } )
 
-  let folder: AllDataFolder<string[]> = {
+  let folder: AllDataFolder<string[],AllGuards> = {
     foldPrim: ( acc, path,parents, oneDataDD, p ) =>
       [ ...acc, path.join ( "," ) + "-prim-" + p.name + (oneDataDD?.displayParams ? JSON.stringify ( oneDataDD?.displayParams ) : "") ],
     foldRep: ( acc, path,parents, oneDataDD, p, start ) =>
@@ -25,7 +26,7 @@ describe ( "dataDD", () => {
       [ ...acc, path.join ( "," ) + "-data-" + p.name + (oneDataDD?.displayParams ? JSON.stringify ( oneDataDD?.displayParams ) : "") + start ],
   };
   it ( "should have a foldDataDD", () => {
-    expect ( foldDataDD<string[]> ( EAccountsSummaryDD, [],  [],[], folder ) ).toEqual ( [
+    expect ( foldDataDD<string[],AllGuards> ( EAccountsSummaryDD, [],  [],[], folder ) ).toEqual ( [
       "-data-EAccountsSummaryDDtrue",
       "useEStatements-prim-BooleanDD",
       "eAccountsTable-rep-EAccountsSummaryTableDDtrue",
@@ -51,7 +52,7 @@ describe ( "dataDD", () => {
   } )
 
   it ( "should have a foldDataDD with stopAtDisplay (need better test - one with a structure that has a display)", () => {
-    expect ( foldDataDD<string[]> ( EAccountsSummaryDD, [], [], [],{ ...folder, stopAtDisplay: true } ) ).toEqual ( [
+    expect ( foldDataDD<string[],AllGuards> ( EAccountsSummaryDD, [], [], [],{ ...folder, stopAtDisplay: true } ) ).toEqual ( [
       "-data-EAccountsSummaryDDtrue",
       "useEStatements-prim-BooleanDD",
       "eAccountsTable-rep-EAccountsSummaryTableDDtrue",

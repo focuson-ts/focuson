@@ -4,10 +4,12 @@ import { CreateEAccountDataD } from "./createEAccount.dataD";
 import { createEAccountRestD } from "./createEAccount.restD";
 import { eTransferRestD } from "../eTransfers/eTransfers.restD";
 import { AllButtonsInPage } from "../../buttons/allButtons";
+import { AllGuards } from "../../buttons/guardButton";
+import { ExampleMainPage } from "../common";
 
 
 /** This is the 'bringing it all together */
-export const CreateEAccountPageD: MainPageD<AllButtonsInPage> = {
+export const CreateEAccountPageD: ExampleMainPage= {
   name: 'CreateEAccount',
   pageType: 'MainPage',
 

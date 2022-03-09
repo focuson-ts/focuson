@@ -4,17 +4,18 @@ import { dataDsIn, isMainPage, isModalPage, PageD } from "../common/pageD";
 
 import { decamelize, NameAnd, sortedEntries } from "@focuson/utils";
 import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, pageComponentName, pageDomainName } from "./names";
-import { MakeButton, makeButtonsFrom } from "./makeButtons";
+import { MakeButton, makeButtonsFrom, makeGuardButtonVariables } from "./makeButtons";
 import { focusOnFor, indentList, noExtension } from "./codegen";
 import { TSParams } from "./config";
 import { unique } from "../common/restD";
 import { ButtonD } from "../buttons/allButtons";
+import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 
 
-export type AllComponentData = ComponentData | ErrorComponentData
-export interface ComponentData {
+export type AllComponentData<G> = ComponentData<G> | ErrorComponentData
+export interface ComponentData<G> {
   path: string[];
-  dataDD: AllDataDD;
+  dataDD: AllDataDD<G>;
   display: DisplayCompD;
   hidden?: boolean;
   guard?: NameAnd<string[]>;
@@ -24,12 +25,12 @@ export interface ErrorComponentData {
   path: string[];
   error: string;
 }
-export function isComponentData ( d: AllComponentData ): d is ComponentData {
+export function isComponentData<G> ( d: AllComponentData<G> ): d is ComponentData<G> {
   // @ts-ignore
   return d.error === undefined
 }
 
-export function isErrorComponentData ( d: AllComponentData ): d is ErrorComponentData {
+export function isErrorComponentData<G> ( d: AllComponentData<G> ): d is ErrorComponentData {
   // @ts-ignore
   return d.error !== undefined
 }
@@ -39,24 +40,26 @@ export interface ComponentDisplayParams {
 }
 
 
-export const listComponentsInFolder: AllDataFlatMap<AllComponentData> = {
-  stopAtDisplay: true,
-  ...emptyDataFlatMap (),
-  walkDataStart: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: DataD ): AllComponentData[] =>
-    dataDD.display ? [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display, hidden: oneDataDD.hidden, guard: oneDataDD.guard } ] : [],
+export function listComponentsInFolder<G> (): AllDataFlatMap<AllComponentData<G>, G> {
+  return {
+    stopAtDisplay: true,
+    ...emptyDataFlatMap (),
+    walkDataStart: ( path: string[], parents: DataD<G>[], oneDataDD: OneDataDD<G> | undefined, dataDD: DataD<G> ): AllComponentData<G>[] =>
+      dataDD.display ? [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display, hidden: oneDataDD.hidden, guard: oneDataDD.guard } ] : [],
 
-  walkPrim: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: PrimitiveDD ): AllComponentData[] =>
-    dataDD.display ?
-      [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display, hidden: oneDataDD.hidden, guard: oneDataDD.guard } ] :
-      [ { path, dataDD, error: `Component ${JSON.stringify ( dataDD )} with displayParams [${JSON.stringify ( oneDataDD?.displayParams )}] does not have a display` } ],
+    walkPrim: ( path: string[], parents: DataD<G>[], oneDataDD: OneDataDD<G> | undefined, dataDD: PrimitiveDD ): AllComponentData<G>[] =>
+      dataDD.display ?
+        [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display, hidden: oneDataDD.hidden, guard: oneDataDD.guard } ] :
+        [ { path, dataDD, error: `Component ${JSON.stringify ( dataDD )} with displayParams [${JSON.stringify ( oneDataDD?.displayParams )}] does not have a display` } ],
 
-  walkRepStart: ( path: string[], parents: DataD[], oneDataDD: OneDataDD | undefined, dataDD: RepeatingDataD ): AllComponentData[] =>
-    [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display, hidden: oneDataDD.hidden, guard: oneDataDD.guard } ]
+    walkRepStart: ( path: string[], parents: DataD<G>[], oneDataDD: OneDataDD<G> | undefined, dataDD: RepeatingDataD<G> ): AllComponentData<G>[] =>
+      [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display, hidden: oneDataDD.hidden, guard: oneDataDD.guard } ]
+  }
 }
 
-export const listComponentsIn = ( dataDD: AllDataDD ): AllComponentData[] => flatMapDD ( dataDD, listComponentsInFolder );
+export const listComponentsIn = <G> ( dataDD: AllDataDD<G> ): AllComponentData<G>[] => flatMapDD ( dataDD, listComponentsInFolder () );
 
-export const processParam = ( path: string[], dataDD: AllDataDD, dcd: DisplayCompD ) => ( name: string, s: number | string | string[] | boolean ) => {
+export const processParam = <G> ( path: string[], dataDD: AllDataDD<G>, dcd: DisplayCompD ) => ( name: string, s: number | string | string[] | boolean ) => {
   const dcdType: OneDisplayCompParamD<any> = dcd.params[ name ]
   function errorPrefix () {return `Component ${dataDD.name} for ${path} has a display component ${dcd.name} and sets a param ${name} `}
   if ( dcdType === undefined ) throw new Error ( `${errorPrefix ()}. Legal values are ${sortedEntries ( dcd.params ).map ( t => t[ 0 ] ).join ( ',' )}` )
@@ -85,7 +88,7 @@ export const processParam = ( path: string[], dataDD: AllDataDD, dcd: DisplayCom
 };
 
 
-export function createOneReact<B> ( { path, dataDD, display, displayParams, guard }: ComponentData ): string[] {
+export function createOneReact<B, G> ( { path, dataDD, display, displayParams, guard }: ComponentData<G> ): string[] {
   const { name, params } = display
   const processOneParam = processParam ( path, dataDD, display )
   const dataDDParamsA: [ string, string ][] = dataDD.displayParams ? Object.entries ( dataDD.displayParams ).map ( ( [ name, o ] ) => [ name, processOneParam ( name, o.value ) ] ) : []
@@ -109,14 +112,18 @@ export function createOneReact<B> ( { path, dataDD, display, displayParams, guar
   const guardPostfix = guard ? sortedEntries ( guard ).map ( ( [ n, guard ] ) => `</Guard>` ).join ( '' ) : ''
   return [ `${guardPrefix}<${name} ${displayParamsString} />${guardPostfix}` ]
 }
-export function createAllReactCalls ( d: AllComponentData[] ): string[] {
+export function createAllReactCalls<G> ( d: AllComponentData<G>[] ): string[] {
   return d.filter ( ds => isComponentData ( ds ) && !ds.hidden ).flatMap ( d => isErrorComponentData ( d ) ? [ d.error ] : createOneReact ( d ) )
 }
 
-export function createReactComponent ( dataD: DataD ): string[] {
+export const createReactComponent = <G extends GuardWithCondition> ( makeGuard: MakeGuard<G> ) => ( dataD: DataD<G> ): string[] => {
   const contents = indentList ( indentList ( createAllReactCalls ( listComponentsIn ( dataD ) ) ) )
-  const guardStrings = sortedEntries ( dataD.guards ).map ( ( [ name, guard ] ) =>
-    `const ${guardName ( name )} = state.chainLens(Lenses.fromPath(${JSON.stringify ( guard.pathFromHere )})).optJson();console.log('${guardName ( name )}', ${guardName ( name )})` )
+  const guardStrings = sortedEntries ( dataD.guards ).map ( ( [ name, guard ] ) => {
+    const maker = makeGuard[ guard.condition ]
+    if ( !maker ) throw new Error ( `Don't know how to process guard with name ${name}: ${JSON.stringify ( guard )}` )
+    return maker.makeGuardVariable ( name, guard )
+    // return `const ${guardName ( name )} = state.chainLens(Lenses.fromPath(${JSON.stringify ( guard.pathFromHere )})).optJson();console.log('${guardName ( name )}', ${guardName ( name )})`;
+  } )
   return [
     `export function ${componentName ( dataD )}<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, ${domainName ( dataD )},Context>){`,
     ...guardStrings,
@@ -125,17 +132,17 @@ export function createReactComponent ( dataD: DataD ): string[] {
     "</>)",
     '}', ''
   ]
-}
+};
 
 
-export const createReactPageComponent = <B extends ButtonD> ( params: TSParams, transformButtons: MakeButton, pageD: PageD<B> ): string[] => {
-  if ( pageD.pageType === 'MainPage' ) return createReactMainPageComponent ( params, transformButtons, pageD )
-  if ( pageD.pageType === 'ModalPage' ) return createReactModalPageComponent ( params, transformButtons, pageD )
+export const createReactPageComponent = <B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButtons: MakeButton<G>, pageD: PageD<B, G> ): string[] => {
+  if ( pageD.pageType === 'MainPage' ) return createReactMainPageComponent ( params, makeGuard, makeButtons, pageD )
+  if ( pageD.pageType === 'ModalPage' ) return createReactModalPageComponent ( params, makeGuard, makeButtons, pageD )
   // @ts-ignore
   throw new Error ( `Unknown page type ${pageD.pageType} in ${pageD.name}` )
 };
 
-export function createReactModalPageComponent<B extends ButtonD> ( params: TSParams, transformButtons: MakeButton, pageD: PageD<B> ): string[] {
+export function createReactModalPageComponent<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButton: MakeButton<G>, pageD: PageD<B, G> ): string[] {
   const { dataDD, layout } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
   const domName = domainName ( pageD.display.dataDD );
@@ -143,39 +150,41 @@ export function createReactModalPageComponent<B extends ButtonD> ( params: TSPar
     `export function ${pageComponentName ( pageD )}<S, Context extends FocusOnContext<S>>(){`,
     `  return focusedPage<S, ${domName}, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page`,
     `     ( state, d, mode ) => {`,
+    ...makeGuardButtonVariables ( params, makeGuard, pageD ),
     `          return (<${layout.name}  details='${layout.details}'>`,
     `               <${componentName ( dataDD )} id='root' state={state}  mode={mode} />`,
-    ...indentList ( indentList ( indentList ( makeButtonsFrom<B> ( params, transformButtons, pageD ) ) ) ),
+    ...indentList ( indentList ( indentList ( makeButtonsFrom<B, G> ( params, makeGuard, makeButton, pageD ) ) ) ),
     `            </${layout.name}>)})}`,
     ''
   ]
 }
-export function createReactMainPageComponent<B extends ButtonD> ( params: TSParams, transformButtons: MakeButton, pageD: PageD<B> ): string[] {
+export function createReactMainPageComponent<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButtons: MakeButton<G>, pageD: PageD<B, G> ): string[] {
   const { dataDD, layout } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
   return [
     `export function ${pageComponentName ( pageD )}<S, Context extends FocusOnContext<S>>(){`,
     `  return focusedPageWithExtraState<S, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${pageD.name}' ) ( s => s${focus}) (
     ( fullState, state , full, d, mode) => {`,
+    ...makeGuardButtonVariables ( params, makeGuard, pageD ),
     `  return (<${layout.name}  details='${layout.details}'>`,
     `     <${componentName ( dataDD )} id='root' state={state}  mode={mode} />`,
-    ...indentList ( indentList ( indentList ( makeButtonsFrom ( params, transformButtons, pageD ) ) ) ),
+    ...indentList ( indentList ( indentList ( makeButtonsFrom ( params, makeGuard, makeButtons, pageD ) ) ) ),
     `   </${layout.name}>)})}`,
     ''
   ]
 }
 
-export function createRenderPage<B extends ButtonD> ( params: TSParams, transformButtons: MakeButton, p: PageD<B> ): string[] {
+export function createRenderPage<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, transformButtons: MakeButton<G>, p: PageD<B, G> ): string[] {
   const imports = isMainPage ( p ) ? [
     `import * as domain from '${domainsFileName ( '..', params, p )}';`,
     `import * as empty from '${emptyFileName ( '..', params, p )}';` ] : []
   return [ ...imports,
-    ...createAllReactComponents ( params, transformButtons, [ p ] ) ]
+    ...createAllReactComponents ( params, makeGuard, transformButtons, [ p ] ) ]
 }
 
-export function createAllReactComponents<B extends ButtonD> ( params: TSParams, transformButtons: MakeButton, pages: PageD<B>[] ): string[] {
-  const dataComponents = sortedEntries ( dataDsIn ( pages, false ) ).flatMap ( ( [ name, dataD ] ) => dataD.display ? [] : createReactComponent ( dataD ) )
-  const pageComponents = pages.flatMap ( p => createReactPageComponent ( params, transformButtons, p ) )
+export function createAllReactComponents<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButton: MakeButton<G>, pages: PageD<B, G>[] ): string[] {
+  const dataComponents = sortedEntries ( dataDsIn ( pages, false ) ).flatMap ( ( [ name, dataD ] ) => dataD.display ? [] : createReactComponent ( makeGuard ) ( dataD ) )
+  const pageComponents = pages.flatMap ( p => createReactPageComponent ( params, makeGuard, makeButton, p ) )
   const imports = [
     `import { LensProps } from "@focuson/state";`,
     `import { Layout } from "../copied/layout";`,
@@ -193,15 +202,15 @@ export function createAllReactComponents<B extends ButtonD> ( params: TSParams, 
     `//if there is an error message here... did you set the importFrom on this modal correctly, and also check that the PageD links to this DataD in a domain or rest block`,
     `import {${domainName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', p, params.domainsFile )}'; ` ] : [] )
   const modalRenderImports = pages.flatMap ( p => isModalPage ( p ) ? [ `import {${componentName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', p, params.renderFile )}'` ] : [] )
-  return [ ...imports, ...modalDomainImports, ...modalRenderImports, ...makeComponentImports ( pages ), ...makeButtonImports ( transformButtons ), ...pageDomainsImports, ...domainImports, ...pageComponents, ...dataComponents ]
+  return [ ...imports, ...modalDomainImports, ...modalRenderImports, ...makeComponentImports ( pages ), ...makeButtonImports ( makeButton ), ...pageDomainsImports, ...domainImports, ...pageComponents, ...dataComponents ]
 }
 
 
-export function makeComponentImports<B> ( ps: PageD<B>[] ): string[] {
+export function makeComponentImports<B, G> ( ps: PageD<B, G>[] ): string[] {
   let allItemsWithDisplay: DisplayCompD[] = sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ d, n ] ) => sortedEntries ( n.structure ).map ( a => a[ 1 ].dataDD ) ).filter ( d => d.display ).map ( d => d.display );
   let fromPageDisplay: DisplayCompD[] = ps.flatMap ( p => p.display.dataDD.display ? [ p.display.dataDD.display ] : [] )
   return unique ( [ ...allItemsWithDisplay, ...fromPageDisplay ], d => `${d.import}/${d.name}` ).map ( d => `import { ${d.name} } from '${d.import}';` )
 }
-export function makeButtonImports ( transformButtons: MakeButton ): string[] {
+export function makeButtonImports<B, G> ( transformButtons: MakeButton<G> ): string[] {
   return unique ( sortedEntries ( transformButtons ).map ( ( [ name, creator ] ) => `import {${name}} from '${creator.import}';` ), x => x )
 }

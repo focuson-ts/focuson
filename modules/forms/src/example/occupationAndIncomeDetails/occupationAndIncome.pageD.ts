@@ -1,11 +1,10 @@
 import { occupationAndIncomeDetailsDD, occupationIncomeDetailsDD, otherIncomeResponseDD } from "./occupationAndIncome.dataD";
 
 import { occupationAndIncomeRD, otherIncomeRD } from "./occupationAndIncome.restD";
-import { MainPageD, ModalPageD, PageD } from "../../common/pageD";
-import { AllButtonsInPage } from "../../buttons/allButtons";
 import { BooleanDD, IntegerDD } from "../../common/dataD";
+import { ExampleMainPage, ExampleModalPage } from "../common";
 
-export const occupationIncomeModalPD: ModalPageD<AllButtonsInPage> = {
+export const occupationIncomeModalPD: ExampleModalPage = {
   name: 'OccupationIncomeModalPD',
   pageType: 'ModalPage',
   /** This page can only view data */
@@ -20,7 +19,7 @@ export const occupationIncomeModalPD: ModalPageD<AllButtonsInPage> = {
   },
 
 }
-export const otherSourcesOfIncomeModalPD: ModalPageD<AllButtonsInPage> = {
+export const otherSourcesOfIncomeModalPD: ExampleModalPage = {
   name: 'OtherSourcesOfIncomeModalPD',
   pageType: 'ModalPage',
 
@@ -36,7 +35,7 @@ export const otherSourcesOfIncomeModalPD: ModalPageD<AllButtonsInPage> = {
 
 
 /** This is the 'bringing it all together */
-export const OccupationAndIncomeSummaryPD: MainPageD<AllButtonsInPage> = {
+export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
   name: 'OccupationAndIncomeSummary',
   pageType: 'MainPage',
   /** This page can only view data */
@@ -54,22 +53,26 @@ export const OccupationAndIncomeSummaryPD: MainPageD<AllButtonsInPage> = {
     validationDebug: { dataDD: BooleanDD },
     fromApi: { dataDD: occupationAndIncomeDetailsDD },
     temp: { dataDD: occupationIncomeDetailsDD },
-    other: {dataDD: otherIncomeResponseDD}
+    other: { dataDD: otherIncomeResponseDD }
   },
-
 
   /** Binds the rest to 'where it takes place'. S we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
   rest: {
     occupationAndIncomeRD: { rest: occupationAndIncomeRD, targetFromPath: [ 'fromApi' ], fetcher: 'get' },
-    otherIncomeRD: {rest: otherIncomeRD, targetFromPath: ['other']}
+    otherIncomeRD: { rest: otherIncomeRD, targetFromPath: [ 'other' ] }
   },
-
 
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   // lists: {}//?
   buttons: {                                                                      //interestingly these will be type checked in the target system...
-    nextOccupation: { control: 'ListNextButton', value: [ 'selectedItem' ], list: [ 'fromApi', 'customerOccupationIncomeDetails' ] },
-    prevOccupation: { control: 'ListPrevButton', value: [ 'selectedItem' ], list: [ 'fromApi', 'customerOccupationIncomeDetails' ] },
+    nextOccupation: {
+      by: { condition: '<arrayEnd', arrayPath: [ 'fromApi', 'customerOccupationIncomeDetails' ], varPath: [ 'selectedItem' ] },
+      guard: { control: 'ListNextButton', value: [ 'selectedItem' ], list: [ 'fromApi', 'customerOccupationIncomeDetails' ] }
+    },
+    prevOccupation: {
+      by: { condition: '>0', path: [ 'selectedItem' ] },
+      guard: { control: 'ListPrevButton', value: [ 'selectedItem' ], list: [ 'fromApi', 'customerOccupationIncomeDetails' ] }
+    },
     //questions: how do we know which is the existing plan... is there a list? are we an entry in the list? do we need to navigate to it?
     addEntry: {
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'create',
@@ -81,7 +84,6 @@ export const OccupationAndIncomeSummaryPD: MainPageD<AllButtonsInPage> = {
     edit: {
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'edit',
       focusOn: [ 'temp' ],
-
       copyFrom: [ 'fromApi', 'customerOccupationIncomeDetails', '{selectedItem}' ],
       copyOnClose: [ 'fromApi', 'customerOccupationIncomeDetails', '{selectedItem}' ]
     },

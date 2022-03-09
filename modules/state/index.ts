@@ -100,7 +100,7 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
     return this.optional.getOption ( this.main )
   }
   /** The json that this context is focused on */
-  optJsonOr ( t: T ): T | undefined {
+  optJsonOr ( t: T ): T {
     let result = this.optional.getOption ( this.main );
     return result ? result : t
   }
@@ -139,10 +139,10 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
     return ( ...ts: Transform<Main, any>[] ) => {
       const r: MassTransformReason = ({
         reason,
-        txLens: ts.map ( t => [ t[ 0 ].description, t[1](t[ 0 ].getOption ( this.main )) ] )
+        txLens: ts.map ( t => [ t[ 0 ].description, t[ 1 ] ( t[ 0 ].getOption ( this.main ) ) ] )
       })
       const newMain = ts.reduce ( ( acc, tx, i ) => tx[ 0 ].setOption ( acc, r.txLens[ i ][ 1 ] ), this.main )
-      this.dangerouslySetMain (newMain, r );
+      this.dangerouslySetMain ( newMain, r );
     }
   }
 

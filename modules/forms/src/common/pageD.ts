@@ -5,18 +5,18 @@ import { PageMode } from "@focuson/pages";
 import { AllButtonsInPage } from "../buttons/allButtons";
 
 
-export interface DomainDefnInPage {
-  [ name: string ]: { dataDD: AllDataDD }
+export interface DomainDefnInPage<G> {
+  [ name: string ]: { dataDD: AllDataDD<G> }
 }
 type FetcherType = 'get' | 'list'
 
-export interface RestDefnInPageProperties {
-  rest: RestD,
+export interface RestDefnInPageProperties<G> {
+  rest: RestD<G>,
   targetFromPath: string[],
   fetcher?: FetcherType
 }
-export interface RestDefnInPage {
-  [ name: string ]: RestDefnInPageProperties
+export interface RestDefnInPage<G> {
+  [ name: string ]: RestDefnInPageProperties<G>
 }
 
 export interface RestOnCommit {
@@ -36,58 +36,58 @@ export interface LayoutD {
   details: string // ok not sure what to do here... so this is just a placeholder
 }
 export type PageType = 'MainPage' | 'ModalPage'
-export interface ModalData<B> {
-  modal: PageD<B>,
+export interface ModalData<B, G> {
+  modal: PageD<B, G>,
   path: string[]
 }
 
-export function isMainPage<B> ( p: PageD<B> ): p is MainPageD<B> {
+export function isMainPage<B, G> ( p: PageD<B, G> ): p is MainPageD<B, G> {
   return p.pageType === 'MainPage'
 }
-export function isModalPage<B> ( p: PageD<B> ): p is ModalPageD<B> {
+export function isModalPage<B, G> ( p: PageD<B, G> ): p is ModalPageD<B, G> {
   return p.pageType === 'ModalPage'
 }
-export type PageD<Buttons> = MainPageD<Buttons> | ModalPageD<Buttons>
+export type PageD<Buttons, G> = MainPageD<Buttons, G> | ModalPageD<Buttons, G>
 
-export interface MainPageD<Buttons> {
+export interface MainPageD<Buttons, G> {
   pageType: 'MainPage',
   name: string,
   modes: PageMode[],
-  display: { layout: LayoutD, target: string[], dataDD: DataD },
+  display: { layout: LayoutD, target: string[], dataDD: DataD<G> },
   initialValue: 'empty' | any,
-  domain: DomainDefnInPage,
-  modals?: ModalData<Buttons>[],
-  rest: RestDefnInPage,
+  domain: DomainDefnInPage<G>,
+  modals?: ModalData<Buttons,G>[],
+  rest: RestDefnInPage<G>,
   buttons: ButtonDefnInPage<Buttons>
 }
-export interface ModalPageD<Buttons> {
+export interface ModalPageD<Buttons, G> {
   pageType: 'ModalPage',
   name: string,
   modes: PageMode[],
-  display: { layout: LayoutD, target: string[], dataDD: DataD, importFrom: string },
+  display: { layout: LayoutD, target: string[], dataDD: DataD<G>, importFrom: string },
   buttons: ButtonDefnInPage<Buttons>
 }
 
 
-export function dataDsIn<B> ( pds: PageD<B>[], stopAtDisplay?: boolean ): NamesAndDataDs {
-  const pageDataDs: DataD[] = pds.flatMap ( pd => (isMainPage ( pd ) ? sortedEntries ( pd.rest ) : []).map ( ( [ na, restPD ]: [ string, RestDefnInPageProperties ] ) => restPD.rest.dataDD ) )
-  const domainDataDs: DataD[] = pds.flatMap ( pd => (isMainPage ( pd ) ? sortedEntries ( pd.domain ) : []) )
+export function dataDsIn<B, G> ( pds: PageD<B, G>[], stopAtDisplay?: boolean ): NamesAndDataDs<G> {
+  const pageDataDs: DataD<G>[] = pds.flatMap ( pd => (isMainPage ( pd ) ? sortedEntries ( pd.rest ) : []).map ( ( [ na, restPD ]: [ string, RestDefnInPageProperties<G> ] ) => restPD.rest.dataDD ) )
+  const domainDataDs: DataD<G>[] = pds.flatMap ( pd => (isMainPage ( pd ) ? sortedEntries ( pd.domain ) : []) )
     .flatMap ( ( [ name, domain ] ) => isDataDd ( domain.dataDD ) ? [ domain.dataDD ] : [] )
   return findAllDataDs ( [ ...pageDataDs, ...domainDataDs ], stopAtDisplay )
 }
 
 
-export function allRestAndActions<B> ( pds: PageD<B>[] ): [ PageD<B>, RestDefnInPageProperties, RestActionDetail ][] {
+export function allRestAndActions<B,G> ( pds: PageD<B,G>[] ): [ PageD<B,G>, RestDefnInPageProperties<G>, RestActionDetail ][] {
   return unique ( pds.flatMap ( pd => {
     return (isMainPage ( pd ) ? sortedEntries ( pd.rest ) : []).flatMap ( ( [ name, rdp ] ) => {
-      const y: [ PageD<B>, RestDefnInPageProperties, RestActionDetail ][] = rdp.rest.actions.map ( a => [ pd, rdp, defaultRestAction[ a ] ] )
+      const y: [ PageD<B,G>, RestDefnInPageProperties<G>, RestActionDetail ][] = rdp.rest.actions.map ( a => [ pd, rdp, defaultRestAction[ a ] ] )
       return y
     } )
   } ), ( [ p, r, rad ] ) => p.name + "," + r.rest.dataDD.name + "," + rad.name )
 }
 
 
-export function allMainPages<B> ( pds: PageD<B>[] ): MainPageD<B>[] {
+export function allMainPages<B,G> ( pds: PageD<B,G>[] ): MainPageD<B,G>[] {
   return pds.flatMap ( pd => isMainPage ( pd ) ? [ pd ] : [] )
 }
 

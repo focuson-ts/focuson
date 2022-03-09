@@ -11,14 +11,14 @@ export const commonParams: RestParams = {
 }
 
 /** This should fully define the api*/
-export const occupationAndIncomeRD: RestD = {
+export const occupationAndIncomeRD: RestD<any> = {
     params: commonParams,
     dataDD: occupationAndIncomeDetailsDD,
     url: '/customer/occupation/v2/occupationIncomeDetails?{query}',
     actions: [ 'get' , "update"],
 }
 
-export const otherIncomeRD: RestD = {
+export const otherIncomeRD: RestD<any> = {
     params: { ...commonParams},
     dataDD: otherIncomeResponseDD,
     url: '/customer/occupation/v2/otherIncome?{query}',

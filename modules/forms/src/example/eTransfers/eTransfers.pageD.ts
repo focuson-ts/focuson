@@ -2,10 +2,12 @@ import { PageD } from "../../common/pageD";
 import { ETransferDataD } from "./eTransfers.dataD";
 import { eTransferRestD } from "./eTransfers.restD";
 import { AllButtonsInPage } from "../../buttons/allButtons";
+import { AllGuards } from "../../buttons/guardButton";
+import { ExampleMainPage, ExampleModalPage } from "../common";
 
 
 /** This is the 'bringing it all together */
-export const ETransferPageD: PageD<AllButtonsInPage> = {
+export const ETransferPageD:ExampleMainPage = {
   name: 'ETransfer',
   pageType: 'MainPage',  // this really feels like a modal button
 

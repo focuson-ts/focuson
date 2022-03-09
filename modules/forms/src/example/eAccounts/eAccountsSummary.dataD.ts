@@ -1,5 +1,6 @@
 import { AccountIdDD, BooleanDD, DataD, DateDD, MoneyDD, OneLineStringDD, RepeatingDataD, StringPrimitiveDD } from "../../common/dataD";
 import { LabelAndRadioCD, TableCD } from "../../common/componentsD";
+import { AllGuards } from "../../buttons/guardButton";
 
 
 export const EAccountDisplayTypeDD: StringPrimitiveDD = {
@@ -12,7 +13,7 @@ export const EAccountDisplayTypeDD: StringPrimitiveDD = {
   //Note samples come from enum
 }
 
-export const EAccountSummaryDD: DataD = {
+export const EAccountSummaryDD: DataD<AllGuards> = {
   name: "EAccountSummaryDD",
   description: "This is the summary data about a single EAccount",
   structure: {
@@ -24,7 +25,7 @@ export const EAccountSummaryDD: DataD = {
     frequency: { dataDD: OneLineStringDD, sample: [ '23' ], displayParams: { label: "Frequency/Amount" } },
   }
 }
-export const EAccountsSummaryTableDD: RepeatingDataD = {
+export const EAccountsSummaryTableDD: RepeatingDataD <AllGuards> = {
   name: "EAccountsSummaryTableDD",
   paged: false,
   description: "Just the raw EAccountSummaryDD data",
@@ -33,7 +34,7 @@ export const EAccountsSummaryTableDD: RepeatingDataD = {
   displayParams: { order: { value: [ 'accountId', 'displayType', 'description', 'virtualBankSeq', 'frequency', 'total' ] } }
 }
 
-export const CreatePlanDD: DataD = {
+export const CreatePlanDD: DataD<AllGuards> = {
   name: "CreatePlanDD",
   description: "The create plan data (actually just put in one place to allow a test for a structure)",
   structure: {
@@ -48,7 +49,7 @@ export const oneAccountBalanceResolver: any = {
   get: { kicks: 'name', params: [] },
   put: { sql: 'select {vars} from {table} where {query}', params: [] }
 }
-export const EAccountsSummaryDD: DataD = {
+export const EAccountsSummaryDD: DataD<AllGuards> = {
   name: "EAccountsSummaryDD",
   description: "This is the summary data about all the EAccounts for a single user",
   // tableName: 'CustomerSUmmaryView',

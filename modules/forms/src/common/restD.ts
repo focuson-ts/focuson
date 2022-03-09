@@ -66,50 +66,50 @@ export const defaultRestAction: RestTypeDetails = {
 }
 
 
-export interface RestD {
+export interface RestD<G> {
   params: RestParams,
-  dataDD: DataD,
+  dataDD: DataD<G>,
   url: string,
   actions: RestAction[]
 }
 
 export const actionDetail = ( r: RestAction ): RestActionDetail => defaultRestAction[ r ];
-export const actionDetails = ( r: RestD ): RestActionDetail[] => r.actions.map ( actionDetail );
+export const actionDetails = <G>( r: RestD <G>): RestActionDetail[] => r.actions.map ( actionDetail );
 
-export function flapMapActionDetails<Acc> ( r: RestD, fn: ( r: RestD, rt: RestActionDetail ) => Acc[] ): Acc[] {
+export function flapMapActionDetails<Acc,G> ( r: RestD<G>, fn: ( r: RestD<G>, rt: RestActionDetail ) => Acc[] ): Acc[] {
   return actionDetails ( r ).flatMap ( rt => fn ( r, rt ) )
 }
 
-export interface MustConstructForRest {
-  objs: DataD[],
-  input: DataD[],
+export interface MustConstructForRest<G> {
+  objs: DataD<G>[],
+  input: DataD<G>[],
   // inputWithId: DataD[]
 }
 
-export function findMustConstructForRest ( rs: RestD[] ): MustConstructForRest {
-  const objs = new Set<DataD> ()
-  const input = new Set<DataD> ()
+export function findMustConstructForRest<G> ( rs: RestD<G>[] ): MustConstructForRest<G> {
+  const objs = new Set<DataD<G>> ()
+  const input = new Set<DataD<G>> ()
   // const inputWithId = new Set<DataD> ()
   rs.flatMap ( findDataDsAndRestTypeDetails ).forEach ( ( [ d, rt ] ) => {
     if ( rt.params.needsObj ) if ( rt.params.needsId ) input.add ( d ); else input.add ( d )
     if ( rt.output.needsObj ) objs.add ( d )
   } )
-  function ordered ( ds: Set<DataD> ) {return [ ...ds ].sort ( ( a, b ) => a.name.localeCompare ( b.name ) )}
+  function ordered ( ds: Set<DataD<G>> ) {return [ ...ds ].sort ( ( a, b ) => a.name.localeCompare ( b.name ) )}
   return { objs: ordered ( objs ), input: ordered ( input )}
 }
 
-export function findDataDsAndRestTypeDetails ( r: RestD ): [ DataD, RestActionDetail ][] {
+export function findDataDsAndRestTypeDetails<G> ( r: RestD<G> ): [ DataD<G>, RestActionDetail ][] {
   return flapMapActionDetails ( r, ( r, rt ) => findDataDDIn ( r.dataDD ).map ( dataD => [ dataD, rt ] ) )
 }
-export function findUniqueDataDsAndRestTypeDetails ( rs: RestD[] ): [ RestD, RestAction, RestActionDetail ][] {
-  const nonUnique: [ RestD, RestAction, RestActionDetail ][] = rs.flatMap ( r => {
-    var x: [ RestD, RestAction, RestActionDetail ][] = r.actions.map ( a => [ r, a, defaultRestAction[ a ] ] )
+export function findUniqueDataDsAndRestTypeDetails<G> ( rs: RestD<G>[] ): [ RestD<G>, RestAction, RestActionDetail ][] {
+  const nonUnique: [ RestD<G>, RestAction, RestActionDetail ][] = rs.flatMap ( r => {
+    var x: [ RestD<G>, RestAction, RestActionDetail ][] = r.actions.map ( a => [ r, a, defaultRestAction[ a ] ] )
     return x
   } )
-  return unique<[ RestD, RestAction, RestActionDetail ]> ( nonUnique, ( [ restD, a, rad ] ) => restD.dataDD.name + "," + a )
+  return unique<[ RestD<G>, RestAction, RestActionDetail ]> ( nonUnique, ( [ restD, a, rad ] ) => restD.dataDD.name + "," + a )
 }
 
-export function findUniqueDataDsIn ( rs: RestD[] ): DataD[] {
+export function findUniqueDataDsIn<G> ( rs: RestD<G>[] ): DataD<G>[] {
   return unique ( Object.values ( findAllDataDs ( rs.map ( r => r.dataDD ) ) ), d => d.name )
 }
 
@@ -126,12 +126,12 @@ export function unique<T> ( ts: T[] | undefined, tagFn: ( t: T ) => string ): T[
   return result
 }
 
-export function makeCommonParamsValueForTest ( r: RestD, restAction: RestAction ) {
+export function makeCommonParamsValueForTest<G> ( r: RestD<G>, restAction: RestAction ) {
   return Object.fromEntries ( sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) ).map ( ( [ name, v ] ) => [ name, v.testValue ] ) )
 
 }
 
-export function findIds ( rest: RestD ) {
+export function findIds<G> ( rest: RestD<G>) {
   const ids = sortedEntries ( rest.params ).filter ( t => !t[ 1 ].main ).map ( ( [ name, value ] ) => name )
   const resourceIds = sortedEntries ( rest.params ).filter ( t => t[ 1 ].main ).map ( ( [ name, value ] ) => name )
   return [ ids, resourceIds ]

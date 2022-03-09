@@ -6,25 +6,27 @@ import { opt, optT } from "../codegen/codegen";
 import { restDetailsName } from "../codegen/names";
 
 
-const makeRestButton: ButtonCreator<RestButtonInPage> = {
-  import: '../copied/rest',
-  makeButton: ( { params, parent, name, button } ) => {
-    const { rest, action, confirm, result, path } = button
-    return `<RestButton  ${opt ( 'id', name )}   ${opt ( 'name', name )} ${opt ( 'action', action )} ${optT ( 'path', path )} state={state} ${opt ( 'rest', restDetailsName ( parent, rest ) )} ${optT ( 'confirm', confirm )} />`
+function makeRestButton<B extends RestButtonInPage<G>, G> (): ButtonCreator<RestButtonInPage<G>, G> {
+  return {
+    import: '../copied/rest',
+    makeButton: ( { params, parent, name, button } ) => {
+      const { rest, action, confirm, result, path } = button
+      return `<RestButton  ${opt ( 'id', name )}   ${opt ( 'name', name )} ${opt ( 'action', action )} ${optT ( 'path', path )} state={state} ${opt ( 'rest', restDetailsName ( parent, rest ) )} ${optT ( 'confirm', confirm )} />`
+    }
   }
 }
 
-export const makeRestButtons: MakeButton = {
-  RestButton: makeRestButton,
+export function makeRestButtons<G> (): MakeButton<G> {
+  return { RestButton: makeRestButton () }
 }
 
-export interface RestButtonInPage {
+export interface RestButtonInPage<G> {
   control: 'RestButton';
-  rest: RestD;
+  rest: RestD<G>;
   action: RestAction;
   path: string[],
   confirm?: boolean;
   result?: RestResult;
-  validate?:boolean;
+  validate?: boolean;
 }
 

@@ -1,8 +1,9 @@
 import { AccountIdDD, DataD, DateDD, ManyLineStringDD, MoneyDD, OneLineStringDD } from "../../common/dataD";
 import { EAccountDisplayTypeDD } from "../eAccounts/eAccountsSummary.dataD";
+import { AllGuards } from "../../buttons/guardButton";
 
 
-export const ETransferDataD: DataD = {
+export const ETransferDataD: DataD<AllGuards> = {
   name: "ETransferDataD",
   description: "Allows us to make an etransfer",
   structure: {

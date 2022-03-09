@@ -6,7 +6,7 @@ import { makeEmptyData } from "./makeSample";
 import { safeArray } from "@focuson/utils";
 
 
-export const makeMainPage = ( params: TSParams ) => <B> ( p: MainPageD<B> ): string[] => {
+export const makeMainPage =<G> ( params: TSParams ) => <B> ( p: MainPageD<B,G> ): string[] => {
   function makeEmpty () {
     let result: any = {}
     result[ p.display.target.join ( "." ) ] = makeEmptyData ( p.display.dataDD )
@@ -18,20 +18,20 @@ export const makeMainPage = ( params: TSParams ) => <B> ( p: MainPageD<B> ): str
     : [];
 }
 
-export interface ModalCreationData<B> {
+export interface ModalCreationData<B,G> {
   name: string,
-  modal: PageD<B>
+  modal: PageD<B,G>
 }
-export function walkModals<B> ( ps: PageD<B>[] ): ModalCreationData<B>[] {
+export function walkModals<B,G> ( ps: PageD<B,G>[] ): ModalCreationData<B,G>[] {
   return ps.flatMap ( p => (isMainPage ( p ) ? safeArray ( p.modals ) : []).map ( ( { modal, path } ) =>
     ({ name: modalName ( p, modal ), path: [ p.name, ...path ], modal }) ) )
 }
 
-export const makeModal = ( params: TSParams ) => <B> ( { name, modal }: ModalCreationData<B> ): string[] => {
+export const makeModal =<G> ( params: TSParams ) => <B> ( { name, modal }: ModalCreationData<B,G> ): string[] => {
   return [ `    ${name}: { config: simpleMessagesConfig,  pageFunction: ${pageComponentName ( modal )}(), modal: true}` ]
 };
 
-export function makePages<B> ( params: TSParams, ps: PageD<B>[] ): string[] {
+export function makePages<B,G> ( params: TSParams, ps: PageD<B,G>[] ): string[] {
   const modals = walkModals ( ps );
   const renderImports = ps.map ( p => `import { ${pageComponentName ( p )} } from '${renderFileName ( '.', params, p )}';` )
   return [

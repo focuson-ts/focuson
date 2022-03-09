@@ -1,6 +1,7 @@
 import { AccountIdDD, DataD, DateDD, MoneyDD, OneLineStringDD, PrimitiveDD, RepeatingDataD, StringPrimitiveDD } from "../common/dataD";
 import { LabelAndNumberInputCD, LabelAndStringInputCD, TableCD } from "../common/componentsD";
 import { listComponentsIn } from "../codegen/makeRender";
+import { AllGuards } from "../buttons/guardButton";
 
 
 export const TheAccountDD: StringPrimitiveDD = {
@@ -13,7 +14,7 @@ export const TheAccountDD: StringPrimitiveDD = {
   //Note samples come from enum
 }
 
-export const TheAccountSummaryDD: DataD = {
+export const TheAccountSummaryDD: DataD<AllGuards> = {
   name: "TheAccountSummaryDD",
   description: "This is the summary data about a single EAccount",
   structure: {
@@ -31,7 +32,7 @@ export const TheSummaryTable: RepeatingDataD = {
   dataDD: TheAccountSummaryDD,
   displayParams: { order: { value: [ 'accountId', 'displayType', 'description', 'frequency' ] } }
 }
-export const TheSummaryTable2: RepeatingDataD = {
+export const TheSummaryTable2: RepeatingDataD <AllGuards> = {
   name: "TheSummaryTable2",
   paged: false,
   description: "Just the raw EAccountSummaryDD data - missing params",
@@ -39,7 +40,7 @@ export const TheSummaryTable2: RepeatingDataD = {
   display: TableCD,
   displayParams: {}
 }
-export const TheCreatePlanDD: DataD = {
+export const TheCreatePlanDD: DataD <AllGuards> = {
   name: "CreatePlanDD",
   description: "The create plan data (actually just put in one place to allow a test for a structure)",
   structure: {
@@ -48,7 +49,7 @@ export const TheCreatePlanDD: DataD = {
     createPlanEnd: { dataDD: DateDD },
   }
 }
-export const TheAccountsSummaryDD: DataD = {
+export const TheAccountsSummaryDD: DataD <AllGuards> = {
   name: "EAccountsSummaryDD",
   description: "This is the summary data about all the EAccounts for a single user",
   structure: {

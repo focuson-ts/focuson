@@ -1,6 +1,5 @@
 import { ButtonCreator, MakeButton } from "../codegen/makeButtons";
 import { makeSimpleButton, optT } from "../codegen/codegen";
-import { ModalButtonInPage } from "./modalButtons";
 
 
 export interface ModalCommitButtonInPage {
@@ -13,14 +12,18 @@ export interface ModalCancelButtonInPage {
 }
 
 
-export const makeModalCommitButton: ButtonCreator<ModalCommitButtonInPage> = ({
-  import: "@focuson/pages",
-  makeButton: ( { name, button } ) =>
-    `          <ModalCommitButton id='${button.text ? button.text : name}' ${optT ( 'validate', button.validate )} state={state} />`
-})
+export function makeModalCommitButton<B extends ModalCommitButtonInPage, G> (): ButtonCreator<B, G> {
+  return ({
+    import: "@focuson/pages",
+    makeButton: ( { name, button } ) =>
+      `          <ModalCommitButton id='${button.text ? button.text : name}' ${optT ( 'validate', button.validate )} state={state} />`
+  })
+}
 
-export const makeModalCloseButtons: MakeButton = {
-  ModalCancelButton: makeSimpleButton ( "@focuson/pages" ),
-  ModalCommitButton: makeModalCommitButton
+export function makeModalCloseButtons<G> (): MakeButton<G> {
+  return {
+    ModalCancelButton: makeSimpleButton ( "@focuson/pages" ),
+    ModalCommitButton: makeModalCommitButton ()
+  }
 }
 

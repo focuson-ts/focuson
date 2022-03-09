@@ -6,10 +6,10 @@ import { ButtonCreator, MakeButton } from "../codegen/makeButtons";
 import { opt, optT } from "../codegen/codegen";
 import { emptyName, modalName, restDetailsName } from "../codegen/names";
 
-export interface CommonModalButtonInPage {
+export interface CommonModalButtonInPage<G> {
   control: string;
   text?: string;
-  modal: PageD<any>,
+  modal: PageD<any, G>,
   mode: PageMode,
   restOnCommit?: RestOnCommit,
   copyOnClose?: string[]
@@ -18,37 +18,39 @@ export interface CommonModalButtonInPage {
   setToLengthOnClose?: SetToLengthOnClose
 }
 
-export function restForButton<B> ( parent: PageD<B>, rest?: RestOnCommit ): string {
+export function restForButton<B, G> ( parent: PageD<B, G>, rest?: RestOnCommit ): string {
   return rest ? ` rest={${JSON.stringify ( { name: restDetailsName ( parent, rest.rest ), restAction: rest.action, path: safeArray ( rest.target ) } )}}` : ""
 }
 
-export function isModalButtonInPage ( m: any ): m is ModalButtonInPage {
+export function isModalButtonInPage<G> ( m: any ): m is ModalButtonInPage<G> {
   return m.control === 'ModalButton'
 }
-export interface ModalButtonInPage extends CommonModalButtonInPage {
+export interface ModalButtonInPage<G> extends CommonModalButtonInPage<G> {
   control: 'ModalButton',
-  createEmpty?: DataD
+  createEmpty?: DataD<G>
 }
-const makeModalButtonInPage: ButtonCreator<ModalButtonInPage> = {
-  import: "@focuson/pages",
-  makeButton:
-    ( { params, parent, name, button } ) => {
-      const { modal, mode, restOnCommit, focusOn, copyFrom, createEmpty, copyOnClose, setToLengthOnClose, text } = button
-      const createEmptyString = createEmpty ? `createEmpty={${params.emptyFile}.${emptyName ( createEmpty )}}` : ""
+function makeModalButtonInPage<G> (): ButtonCreator<ModalButtonInPage<G>, G> {
+  return {
+    import: "@focuson/pages",
+    makeButton:
+      ( { params, parent, name, button } ) => {
+        const { modal, mode, restOnCommit, focusOn, copyFrom, createEmpty, copyOnClose, setToLengthOnClose, text } = button
+        const createEmptyString = createEmpty ? `createEmpty={${params.emptyFile}.${emptyName ( createEmpty )}}` : ""
 
-      const focusOnArray = [ parent.name, ...focusOn ]
-      const copyOnCloseArray = copyOnClose ? [ parent.name, ...copyOnClose ] : undefined
-      const copyFromArray = copyFrom ? [ parent.name, ...copyFrom ] : undefined
-      const actualSetToLengthOnClose = setToLengthOnClose ? { array: [ parent.name, ...setToLengthOnClose.array ], variable: [ parent.name, ...setToLengthOnClose.variable ] } : undefined
-      return `<${button.control} id='${name}' text='${text ? text : name}'  state={state} modal = '${modalName ( parent, modal )}'  ` +
-        `${optT ( 'focusOn', focusOnArray )} ${optT ( 'copyFrom', copyFromArray )} ${optT ( 'copyOnClose', copyOnCloseArray )}` +
-        `${createEmptyString}  ${optT ( 'setToLengthOnClose', actualSetToLengthOnClose )} ${opt ( 'pageMode', mode )}  ${restForButton ( parent, restOnCommit )} />`;
+        const focusOnArray = [ parent.name, ...focusOn ]
+        const copyOnCloseArray = copyOnClose ? [ parent.name, ...copyOnClose ] : undefined
+        const copyFromArray = copyFrom ? [ parent.name, ...copyFrom ] : undefined
+        const actualSetToLengthOnClose = setToLengthOnClose ? { array: [ parent.name, ...setToLengthOnClose.array ], variable: [ parent.name, ...setToLengthOnClose.variable ] } : undefined
+        return `<${button.control} id='${name}' text='${text ? text : name}'  state={state} modal = '${modalName ( parent, modal )}'  ` +
+          `${optT ( 'focusOn', focusOnArray )} ${optT ( 'copyFrom', copyFromArray )} ${optT ( 'copyOnClose', copyOnCloseArray )}` +
+          `${createEmptyString}  ${optT ( 'setToLengthOnClose', actualSetToLengthOnClose )} ${opt ( 'pageMode', mode )}  ${restForButton ( parent, restOnCommit )} />`;
 
-    }
+      }
+  }
 }
 
-export const makeModalButtons: MakeButton = {
-  ModalButton: makeModalButtonInPage,
+export function makeModalButtons<G> (): MakeButton<G> {
+  return { ModalButton: makeModalButtonInPage<G> (), }
 }
 
 

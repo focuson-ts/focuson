@@ -3,9 +3,11 @@ import { CombinedParams } from "../codegen/config";
 import { PageD } from "../common/pageD";
 import { makeJavaFiles } from "./makeJavaFiles";
 import { makeTsFiles } from "./makeTsFiles";
-import { ButtonD } from "../buttons/allButtons";
+import { ButtonD, makeButtons } from "../buttons/allButtons";
+import { AllGuardCreator, AllGuards, GuardWithCondition, MakeGuard } from "../buttons/guardButton";
+import { MakeButton } from "../codegen/makeButtons";
 
-export const generate = ( javaOutputRoot: string, tsRoot: string, focusOnVersion: string ) => <B extends ButtonD> ( pages: PageD<B>[] ) => {
+export const generate = <G extends GuardWithCondition> ( javaOutputRoot: string, tsRoot: string, focusOnVersion: string, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G> ) => <B extends ButtonD> ( pages: PageD<B, G>[] ) => {
   const params: CombinedParams = {
     pagesFile: 'pages',
     focusOnVersion,
@@ -41,6 +43,6 @@ export const generate = ( javaOutputRoot: string, tsRoot: string, focusOnVersion
     backup: 'node_modules/@focuson/forms'
   }
 
-  makeJavaFiles ( javaOutputRoot, params, directorySpec )(pages)
-  makeTsFiles ( tsRoot, params, directorySpec )(pages)
+  makeJavaFiles ( javaOutputRoot, params, directorySpec ) ( pages )
+  makeTsFiles<G> ( tsRoot, params, makeGuards, makeButtons, directorySpec ) ( pages )
 };
