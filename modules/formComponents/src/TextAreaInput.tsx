@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {CommonStateProps} from "./common";
 import { reasonFor } from "@focuson/state";
 

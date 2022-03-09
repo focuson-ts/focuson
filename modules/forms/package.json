@@ -12,9 +12,9 @@
     ]
   },
   "dependencies": {
-    "@focuson/utils": "0.4.52",
-    "@focuson/files": "0.4.52",
-    "@focuson/focuson": "0.4.52"
+    "@focuson/utils": "0.4.54",
+    "@focuson/files": "0.4.54",
+    "@focuson/focuson": "0.4.54"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -24,9 +24,7 @@
     "@testing-library/user-event": "^12.2.0",
     "@types/jest": "^26.0.15",
     "jest": "^26.6.0",
-    "ts-jest": "^26.4.4",
-    "fs-extra": "^10.0.1",
-    "@types/fs-extra": "^9.0.13"
+    "ts-jest": "^26.4.4"
   },
   "files": [
     "LICENSE.md",
@@ -49,7 +47,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "0.4.52",
+  "version": "0.4.54",
   "bin": {
     "focuson": "dist/src/focuson.js"
   },
@@ -65,10 +63,7 @@
       "@focuson/focuson"
     ],
     "extraDeps": {},
-    "extraDevDeps": {
-      "fs-extra": "^10.0.1",
-      "@types/fs-extra": "^9.0.13"
-    }
+    "extraDevDeps": {}
   },
   "name": "@focuson/forms"
 }

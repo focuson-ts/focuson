@@ -12,7 +12,7 @@
     ]
   },
   "dependencies": {
-    "@focuson/lens": "0.4.52"
+    "@focuson/lens": "0.4.54"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -44,7 +44,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "0.4.52",
+  "version": "0.4.54",
   "template": "noreact",
   "description": "A relatively complex example of fetchers showing",
   "details": {

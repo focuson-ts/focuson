@@ -44,13 +44,16 @@ export interface ModalData<B> {
 export function isMainPage<B> ( p: PageD<B> ): p is MainPageD<B> {
   return p.pageType === 'MainPage'
 }
+export function isModalPage<B> ( p: PageD<B> ): p is ModalPageD<B> {
+  return p.pageType === 'ModalPage'
+}
 export type PageD<Buttons> = MainPageD<Buttons> | ModalPageD<Buttons>
 
 export interface MainPageD<Buttons> {
   pageType: 'MainPage',
   name: string,
   modes: PageMode[],
-  display: { layout: LayoutD, target: string[], dataDD: DataD, importFrom?: string },
+  display: { layout: LayoutD, target: string[], dataDD: DataD},
   initialValue: 'empty' | any,
   domain: DomainDefnInPage,
   modals?: ModalData<Buttons>[],
@@ -61,7 +64,7 @@ export interface ModalPageD<Buttons> {
   pageType: 'ModalPage',
   name: string,
   modes: PageMode[],
-  display: { layout: LayoutD, target: string[], dataDD: DataD, importFrom?: string },
+  display: { layout: LayoutD, target: string[], dataDD: DataD, importFrom: string },
   buttons: ButtonDefnInPage
 }
 

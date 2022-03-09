@@ -1,6 +1,6 @@
 import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, isPrimDd, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
 import { DisplayCompD, OneDisplayCompParamD } from "../common/componentsD";
-import { dataDsIn, isMainPage, PageD } from "../common/pageD";
+import { dataDsIn, isMainPage, isModalPage, PageD } from "../common/pageD";
 
 import { decamelize, NameAnd, sortedEntries } from "@focuson/utils";
 import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, pageComponentName, pageDomainName } from "./names";
@@ -188,8 +188,8 @@ export function createAllReactComponents<B> ( params: TSParams, transformButtons
   let domain = noExtension ( params.domainsFile );
   const pageDomainsImports = pages.filter ( p => p.pageType === 'MainPage' ).map ( p => `import {${pageDomainName ( p )}} from "${domainsFileName ( '..', params, p )}";` )
   const domainImports = pages.flatMap ( p => sortedEntries ( dataDsIn ( [ p ] ) ).map ( ( [ name, dataD ] ) => `import {${domainName ( dataD )}} from "${domainsFileName ( '..', params, p )}"` ) )
-  const modalDomainImports = pages.filter ( p => p.display.importFrom ).map ( p => `import {${domainName ( p.display.dataDD )}} from '${modalImportFromFileName('..', p, params.domainsFile)}'` )
-  const modalRenderImports = pages.filter ( p => p.display.importFrom ).map ( p => `import {${componentName ( p.display.dataDD )}} from '${modalImportFromFileName('..', p, params.renderFile)}'` )
+  const modalDomainImports = pages.flatMap ( p => isModalPage ( p ) ? [ `import {${domainName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', p, params.domainsFile )}'` ] : [] )
+  const modalRenderImports = pages.flatMap ( p => isModalPage ( p ) ? [ `import {${componentName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', p, params.renderFile )}'` ] : [] )
   return [ ...imports, ...modalDomainImports, ...modalRenderImports, ...makeComponentImports ( pages ), ...makeButtonImports ( transformButtons ), ...pageDomainsImports, ...domainImports, ...pageComponents, ...dataComponents ]
 }
 

@@ -1,10 +1,9 @@
 import { AllDataDD, DataD } from "../common/dataD";
-import { PageD, RestDefnInPageProperties } from "../common/pageD";
+import { ModalPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { RestActionDetail, RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
 import { RestAction } from "@focuson/utils";
 import { JavaWiringParams, TSParams } from "./config";
-import { post } from "@focuson/poster";
 
 export const guardName = ( s: string ) => s + "Guard"
 export const domainName = ( d: DataD ): string => d.name + "Domain";
@@ -37,7 +36,7 @@ export const queryClassName = ( params: JavaWiringParams, r: RestD ): string => 
 
 
 export const someFileName = <B> ( root: string, pd: PageD<B>, postfix: string ): string => `${root}/${pd.name}/${pd.name}.${postfix}`;
-export const modalImportFromFileName = <B> ( root: string, p: PageD<B>, suffix: string ): string => `${root}/${p.display.importFrom}/${p.display.importFrom}.${suffix}`
+export const modalImportFromFileName = <B> ( root: string, p: ModalPageD<B>, suffix: string ): string => `${root}/${p.display.importFrom}/${p.display.importFrom}.${suffix}`
 
 export const storybookFileName = <B> ( root: string, params: TSParams, pd: PageD<B> ): string => someFileName ( root, pd, `stories` );
 export const renderFileName = <B> ( root: string, params: TSParams, pd: PageD<B> ): string => someFileName ( root, pd, params.renderFile );
