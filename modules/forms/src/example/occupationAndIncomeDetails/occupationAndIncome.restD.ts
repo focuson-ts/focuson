@@ -1,5 +1,5 @@
 
-import { occupationAndIncomeDetailsDD } from "./occupationAndIncome.dataD";
+import { occupationAndIncomeDetailsDD, otherIncomeResponseDD } from "./occupationAndIncome.dataD";
 import { RestD, RestParams } from "../../common/restD";
 
 export const commonParams: RestParams = {
@@ -16,5 +16,12 @@ export const occupationAndIncomeRD: RestD = {
     dataDD: occupationAndIncomeDetailsDD,
     url: '/customer/occupation/v2/occupationIncomeDetails?{query}',
     actions: [ 'get' , "update"],
+}
+
+export const otherIncomeRD: RestD = {
+    params: { ...commonParams},
+    dataDD: otherIncomeResponseDD,
+    url: '/customer/occupation/v2/otherIncome?{query}',
+    actions: [ 'get' ],
 }
 

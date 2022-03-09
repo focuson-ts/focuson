@@ -1,6 +1,6 @@
-import { occupationAndIncomeDetailsDD, occupationIncomeDetailsDD } from "./occupationAndIncome.dataD";
+import { occupationAndIncomeDetailsDD, occupationIncomeDetailsDD, otherIncomeResponseDD } from "./occupationAndIncome.dataD";
 
-import { occupationAndIncomeRD } from "./occupationAndIncome.restD";
+import { occupationAndIncomeRD, otherIncomeRD } from "./occupationAndIncome.restD";
 import { MainPageD, ModalPageD, PageD } from "../../common/pageD";
 import { AllButtonsInPage } from "../../buttons/allButtons";
 import { BooleanDD, IntegerDD } from "../../common/dataD";
@@ -20,6 +20,20 @@ export const occupationIncomeModalPD: ModalPageD<AllButtonsInPage> = {
   },
 
 }
+export const otherSourcesOfIncomeModalPD: ModalPageD<AllButtonsInPage> = {
+  name: 'OtherSourcesOfIncomeModalPD',
+  pageType: 'ModalPage',
+
+  modes: [ 'edit' ],
+  /** How we display the page.*/
+  display: { layout: { name: 'Layout', details: '[3]' }, target: [], dataDD: otherIncomeResponseDD, importFrom: 'OccupationAndIncomeSummaryPD' },
+  /** As well as displaying/editing the data we have these buttons. These are passed to layout */
+  buttons: {
+    cancel: { control: 'ModalCancelButton' },
+    commit: { control: 'ModalCommitButton' }
+  },
+}
+
 
 /** This is the 'bringing it all together */
 export const OccupationAndIncomeSummaryPD: MainPageD<AllButtonsInPage> = {
@@ -40,12 +54,14 @@ export const OccupationAndIncomeSummaryPD: MainPageD<AllButtonsInPage> = {
     validationDebug: { dataDD: BooleanDD },
     fromApi: { dataDD: occupationAndIncomeDetailsDD },
     temp: { dataDD: occupationIncomeDetailsDD },
+    other: {dataDD: otherIncomeResponseDD}
   },
 
 
-  /** Binds the rest to 'where it takes place'. So we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
+  /** Binds the rest to 'where it takes place'. S we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
   rest: {
-    occupationAndIncomeRD: { rest: occupationAndIncomeRD, targetFromPath: [ 'fromApi' ], fetcher: 'get' }
+    occupationAndIncomeRD: { rest: occupationAndIncomeRD, targetFromPath: [ 'fromApi' ], fetcher: 'get' },
+    otherIncomeRD: {rest: otherIncomeRD, targetFromPath: ['other']}
   },
 
 
