@@ -19,7 +19,7 @@ function format<B> ( p: PageD<B>, ds: ReportDetails[] ): string[] {
     return [ name, ...indentList ( d.general ) ];
   } )
   const name = `${p.name} - ${p.pageType}`;
-  return [ name, '='.repeat ( name.length ), ...indentList ( mainReport ) ];
+  return [ name, '='.repeat ( name.length ), ...indentList ( mainReport ), '' ];
 }
 
 
