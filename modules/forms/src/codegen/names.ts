@@ -7,7 +7,7 @@ import { JavaWiringParams, TSParams } from "./config";
 
 export const guardName = ( s: string ) => s + "Guard"
 export const domainName = ( d: DataD ): string => d.name + "Domain";
-export const componentName = ( d: DataD ): string => d.name;
+export const componentName = ( d: DataD ): string => d.display? d.display.name : d.name;
 export const pageInState = <B> ( p: PageD<B> ): string => p.name
 export const pageComponentName = <B> ( d: PageD<B> ): string => d.name + "Page";
 // export const pageComponent = ( p: PageD ): string => p.name;

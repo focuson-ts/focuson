@@ -15,9 +15,9 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "typescript": "^4.1.5",
-    "@focuson/lens": "0.4.54",
-    "@focuson/state": "0.4.54",
-    "@focuson/fetcher": "0.4.54"
+    "@focuson/lens": "0.4.56",
+    "@focuson/state": "0.4.56",
+    "@focuson/fetcher": "0.4.56"
   },
   "description": "Used when we want a simple many page application",
   "devDependencies": {
@@ -59,7 +59,7 @@
     "test:watch": "npm run test -- --watch",
     "storybook": "start-storybook -p 6006 -s public"
   },
-  "version": "0.4.54",
+  "version": "0.4.56",
   "eslintConfig": {
     "extends": [
       "react-app",

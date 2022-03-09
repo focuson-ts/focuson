@@ -8,17 +8,11 @@ import { OccupationAndIncomeSummaryPD, occupationIncomeModalPD } from "./example
 import { generate } from "./makeFiles/generate";
 import *  as fse from "fs-extra";
 
-let pages = [ OccupationAndIncomeSummaryPD, occupationIncomeModalPD,
+export const generatedPages = [ OccupationAndIncomeSummaryPD, occupationIncomeModalPD,
   EAccountsSummaryPD, CreatePlanPD, ETransferPageD,
   CreateEAccountPageD,
   ChequeCreditbooksPD,
   OrderChequeBookOrPayingInModalPD ];
-let javaOutputRoot = '../formJava'
-let tsRoot = "../formTs"
-const focusOnVersion: string = JSON.parse ( loadFile ( 'package.json' ) ).version
-
-generate ( javaOutputRoot, tsRoot, focusOnVersion ) ( pages )
-
-fse.copySync ('../formComponents/src', tsRoot + "/src/copied")
-
-
+export const javaOutputRoot = '../formJava'
+export const tsRoot = "../formTs"
+export const focusOnVersion: string = JSON.parse ( loadFile ( 'package.json' ) ).version

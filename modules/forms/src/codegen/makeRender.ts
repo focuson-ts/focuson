@@ -196,7 +196,8 @@ export function createAllReactComponents<B> ( params: TSParams, transformButtons
 
 export function makeComponentImports<B> ( ps: PageD<B>[] ): string[] {
   let allItemsWithDisplay: DisplayCompD[] = sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ d, n ] ) => sortedEntries ( n.structure ).map ( a => a[ 1 ].dataDD ) ).filter ( d => d.display ).map ( d => d.display );
-  return unique ( allItemsWithDisplay, d => `${d.import}/${d.name}` ).map ( d => `import { ${d.name} } from '${d.import}';` )
+  let fromPageDisplay: DisplayCompD[] = ps.flatMap ( p => p.display.dataDD.display ? [ p.display.dataDD.display ] : [] )
+  return unique ( [ ...allItemsWithDisplay, ...fromPageDisplay ], d => `${d.import}/${d.name}` ).map ( d => `import { ${d.name} } from '${d.import}';` )
 }
 export function makeButtonImports ( transformButtons: MakeButton ): string[] {
   return unique ( sortedEntries ( transformButtons ).map ( ( [ name, creator ] ) => `import {${name}} from '${creator.import}';` ), x => x )

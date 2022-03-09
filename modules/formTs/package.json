@@ -5,8 +5,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@focuson/focuson":  "0.4.54",
-	"@focuson/stories":  "0.4.54",
+    "@focuson/focuson":  "0.4.55",
+	"@focuson/stories":  "0.4.55",
     "@pact-foundation/pact-node": "^10.17.1",
     "decamelize": "^6.0.0",
     "b64-to-blob": "^1.2.19",

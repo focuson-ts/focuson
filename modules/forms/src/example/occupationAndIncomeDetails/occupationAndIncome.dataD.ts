@@ -1,6 +1,6 @@
 import { ContactTitle, CustomerStatus, EmploymentType, HowOften, YesNo } from "./occupationAndIncome.domain";
 import { DataD, DateDD, IntegerDD, MoneyDD, OneLineStringDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
-import { DisplayCompD, SelectedItemCD, TableCD } from "../../common/componentsD";
+import { DisplayCompD, LabelAndStringInputCD, SelectedItemCD, TableCD } from "../../common/componentsD";
 
 
 /* ---------------- OTHER SOURCES OF INCOME START ---------------- */
@@ -204,6 +204,7 @@ export const customerOccupationIncomeDetailsDD: RepeatingDataD = {
 export const occupationAndIncomeDetailsDD: DataD = {
   name: 'OccupationAndIncomeDetailsDD',
   description: 'This is a summary about occupation and income details data',
+
   structure: {
     regulatoryReport: { dataDD: StringDD, hidden: true },
     mainCustomerName: { dataDD: StringDD },
