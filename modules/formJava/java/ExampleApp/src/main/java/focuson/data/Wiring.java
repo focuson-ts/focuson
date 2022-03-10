@@ -20,7 +20,7 @@ import focuson.data.fetchers.CreatePlanDDFFetcher;
 import focuson.data.fetchers.EAccountsSummaryDDFFetcher;
 import focuson.data.fetchers.ETransferDataDFFetcher;
 import focuson.data.fetchers.CreateEAccountDataDDFFetcher;
-import focuson.data.fetchers.ChequeCreditbooksDDFFetcher;
+import focuson.data.fetchers.ChequeCreditbooksHistoryDDFFetcher;
 @Component
 public class Wiring {
       @Autowired
@@ -36,7 +36,7 @@ public class Wiring {
       @Autowired
       CreateEAccountDataDDFFetcher _CreateEAccountDataDDFFetcher;
       @Autowired
-      ChequeCreditbooksDDFFetcher _ChequeCreditbooksDDFFetcher;
+      ChequeCreditbooksHistoryDDFFetcher _ChequeCreditbooksHistoryDDFFetcher;
     private GraphQL graphQL;
     @PostConstruct
     public void init() throws IOException {
@@ -68,8 +68,8 @@ public class Wiring {
           .type(newTypeWiring("EAccountsSummaryDD").dataFetcher("currentAccountBalance", _EAccountsSummaryDDFFetcher.getCurrentAccountBalance()))
           .type(newTypeWiring("Mutation").dataFetcher("createETransferDataD", _ETransferDataDFFetcher.createETransferDataD()))
           .type(newTypeWiring("Mutation").dataFetcher("createCreateEAccountDataDD", _CreateEAccountDataDDFFetcher.createCreateEAccountDataDD()))
-          .type(newTypeWiring("Query").dataFetcher("getChequeCreditbooksDD", _ChequeCreditbooksDDFFetcher.getChequeCreditbooksDD()))
-          .type(newTypeWiring("Mutation").dataFetcher("createChequeCreditbooksDD", _ChequeCreditbooksDDFFetcher.createChequeCreditbooksDD()))
+          .type(newTypeWiring("Query").dataFetcher("getChequeCreditbooksHistoryLineDD", _ChequeCreditbooksHistoryDDFFetcher.getChequeCreditbooksHistoryLineDD()))
+          .type(newTypeWiring("Mutation").dataFetcher("createChequeCreditbooksHistoryLineDD", _ChequeCreditbooksHistoryDDFFetcher.createChequeCreditbooksHistoryLineDD()))
           .build();
     }
     @Bean

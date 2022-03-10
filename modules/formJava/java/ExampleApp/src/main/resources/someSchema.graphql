@@ -4,7 +4,7 @@ type Query{
   getCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!
   listCreatePlanDD(accountId: String!, customerId: String!):[CreatePlanDD!]!
   getEAccountsSummaryDD(accountId: String!, customerId: String!):EAccountsSummaryDD!
-  getChequeCreditbooksDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!):ChequeCreditbooksDD!
+  getChequeCreditbooksHistoryLineDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!):ChequeCreditbooksHistoryLineDD!
 }
 type Mutation{
   updateOccupationAndIncomeDetailsDD(accountSeq: String!, applicationRef: String!, brandRef: String!, vbAccountSeq: String!, vbAccountType: String!,obj: OccupationAndIncomeDetailsDDInp!):OccupationAndIncomeDetailsDD!
@@ -13,10 +13,12 @@ type Mutation{
   deleteCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):String
   createETransferDataD(customerId: String!,obj: ETransferDataDInp!):ETransferDataD!
   createCreateEAccountDataDD(accountId: String!, customerId: String!,obj: CreateEAccountDataDDInp!):CreateEAccountDataDD!
-  createChequeCreditbooksDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!,obj: ChequeCreditbooksDDInp!):ChequeCreditbooksDD!
+  createChequeCreditbooksHistoryLineDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!,obj: ChequeCreditbooksHistoryDDInp!):ChequeCreditbooksHistoryLineDD!
 }
-type ChequeCreditbooksDD{
-  history: [ChequeCreditbooksHistoryLineDD!]!
+type ChequeCreditbooksHistoryDD{
+  serialNumber: Int!
+  howOrdered: String!
+  dateOrder: String!
 }
 type ChequeCreditbooksHistoryLineDD{
   serialNumber: Int!
@@ -34,6 +36,35 @@ type CreatePlanDD{
   createPlanDate: String!
   createPlanEnd: String!
 }
+type CustomerOccupationIncomeDetailsDD{
+  areYou: String!
+  currentEmployment: String!
+  occupation: String!
+  customerDescription: String!
+  ownShareOfTheCompany: String!
+  owningSharesPct: String!
+  workFor: String!
+  employmentType: String!
+  annualSalaryBeforeDeduction: Int!
+  annualIncomeExcludingRent: Int!
+  regularCommissionBonus: Int!
+  dateOfEmploymentStart: String!
+  otherSourceOfIncome: String!
+  createdBy: String!
+  createdDate: String!
+  employerName: String!
+  whatTypeOfBusiness: String!
+  whatNameBusiness: String!
+  establishedYear: String!
+  annualDrawing3Yrs: Int!
+  empStartDate: String!
+  empEndDate: String!
+  sePositionHeld: String!
+  occupationCategory: String!
+  empEmploymentSeq: Int!
+  empAppRoleSeq: Int!
+  accountantAppRoleSeq: Int!
+}
 type EAccountsSummaryDD{
   useEStatements: Boolean!
   eAccountsTable: [EAccountSummaryDD!]!
@@ -41,6 +72,14 @@ type EAccountsSummaryDD{
   oneAccountBalance: Int!
   currentAccountBalance: Int!
   createPlan: CreatePlanDD!
+}
+type EAccountsSummaryTableDD{
+  accountId: Int!
+  displayType: String!
+  description: String!
+  virtualBankSeq: String!
+  total: Int!
+  frequency: String!
 }
 type EAccountSummaryDD{
   accountId: Int!
@@ -104,8 +143,10 @@ type OtherIncomeResponseDD{
   incomeFreqRef: String!
   amount: Int!
 }
-input ChequeCreditbooksDDInp{
-  history: [ChequeCreditbooksHistoryLineDDInp!]!
+input ChequeCreditbooksHistoryDDInp{
+  serialNumber: Int!
+  howOrdered: String!
+  dateOrder: String!
 }
 input ChequeCreditbooksHistoryLineDDInp{
   serialNumber: Int!
@@ -122,6 +163,35 @@ input CreatePlanDDInp{
   createPlanStart: String!
   createPlanDate: String!
   createPlanEnd: String!
+}
+input CustomerOccupationIncomeDetailsDDInp{
+  areYou: String!
+  currentEmployment: String!
+  occupation: String!
+  customerDescription: String!
+  ownShareOfTheCompany: String!
+  owningSharesPct: String!
+  workFor: String!
+  employmentType: String!
+  annualSalaryBeforeDeduction: Int!
+  annualIncomeExcludingRent: Int!
+  regularCommissionBonus: Int!
+  dateOfEmploymentStart: String!
+  otherSourceOfIncome: String!
+  createdBy: String!
+  createdDate: String!
+  employerName: String!
+  whatTypeOfBusiness: String!
+  whatNameBusiness: String!
+  establishedYear: String!
+  annualDrawing3Yrs: Int!
+  empStartDate: String!
+  empEndDate: String!
+  sePositionHeld: String!
+  occupationCategory: String!
+  empEmploymentSeq: Int!
+  empAppRoleSeq: Int!
+  accountantAppRoleSeq: Int!
 }
 input ETransferDataDInp{
   account: Int!

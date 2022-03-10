@@ -89,11 +89,21 @@ export function isRepeatingDd<G> ( d: any ): d is RepeatingDataD<G> {
   return d.paged !== undefined
 }
 
+export type CompDataDD<G> = DataD<G> | RepeatingDataD<G>
+export function isComdDD<G> ( d: any ): d is CompDataD<G> {
+  return isDataDd ( d ) || isRepeatingDd ( d )
+}
+export function compDataDIn<G> ( c: CompDataD<G> ): DataD<G> {
+  if ( isDataDd ( c ) ) return c
+  if ( isRepeatingDd ( c ) ) return c.dataDD
+  throw new Error ( `Don't know how to find compDataDIn ${c}` )
+}
+
 export type AllDataDD<G> = PrimitiveDD | DataD<G> | RepeatingDataD<G>
 
 
 export interface NamesAndDataDs<G> {
-  [ name: string ]: DataD<G>
+  [ name: string ]: CompDataD<G>
 }
 
 export interface AllDataFolder<Acc, G> {
@@ -138,13 +148,14 @@ export function flatMapDD<Acc, G> ( dataDD: AllDataDD<G>, map: AllDataFlatMap<Ac
   } )
 }
 
-export function collectDataWalker<G> (): AllDataFlatMap<DataD<G>, G> {
+export function collectDataWalker<G> (): AllDataFlatMap<CompDataD<G>, G> {
   return ({
     ...emptyDataFlatMap (),
+    walkRepStart:  ( path, parents, oneDataDD, dataDD ) => [ dataDD ],
     walkDataStart: ( path, parents, oneDataDD, dataDD ) => [ dataDD ]
   })
 }
-export function findDataDDIn<G> ( a: AllDataDD<G>, stopAtDisplay?: boolean ): DataD<G>[] {return flatMapDD ( a, { ...collectDataWalker(), stopAtDisplay } )}
+export function findDataDDIn<G> ( a: AllDataDD<G>, stopAtDisplay?: boolean ): CompDataD<G>[] {return flatMapDD ( a, { ...collectDataWalker(), stopAtDisplay } )}
 
 
 export function foldDataDD<Acc, G> ( dataDD: AllDataDD<G>, path: string[], parents: DataD<G>[], zero: Acc, folder: AllDataFolder<Acc, G>, oneDataDD?: OneDataDD<G> ): Acc {

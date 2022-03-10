@@ -8,12 +8,14 @@ import { OccupationAndIncomeSummaryPD, occupationIncomeModalPD, otherSourcesOfIn
 import { generate } from "./makeFiles/generate";
 import *  as fse from "fs-extra";
 
-export const generatedPages = [ OccupationAndIncomeSummaryPD, occupationIncomeModalPD,
-  // otherSourcesOfIncomeModalPD,
+export const generatedPages = [
+  OccupationAndIncomeSummaryPD, occupationIncomeModalPD,
+  otherSourcesOfIncomeModalPD,
   EAccountsSummaryPD, CreatePlanPD, ETransferPageD,
   CreateEAccountPageD,
   ChequeCreditbooksPD,
-  OrderChequeBookOrPayingInModalPD ];
+  OrderChequeBookOrPayingInModalPD
+];
 export const javaOutputRoot = '../formJava'
 export const tsRoot = "../formTs"
 export const focusOnVersion: string = JSON.parse ( loadFile ( 'package.json' ) ).version

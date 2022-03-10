@@ -1,4 +1,4 @@
-import { makeAllDomainsFor, makeDomainFor, makePageDomainsFor } from "../codegen/makeDomain";
+import { makeAllDomainsFor, makeDomainForDataD, makePageDomainsFor } from "../codegen/makeDomain";
 import { CreatePlanDD, EAccountsSummaryDD, EAccountSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
@@ -7,7 +7,7 @@ import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 
 describe ( "makeDomainFor", () => {
   it ( "should create an interface representing the dataD", () => {
-    expect ( makeDomainFor ( EAccountsSummaryDD ) ).toEqual ( [
+    expect ( makeDomainForDataD ( EAccountsSummaryDD ) ).toEqual ( [
       "export interface EAccountsSummaryDDDomain{",
       "  createPlan: CreatePlanDDDomain;",
       "  currentAccountBalance: number;",
@@ -18,7 +18,7 @@ describe ( "makeDomainFor", () => {
       "}",
       ""
     ])
-    expect ( makeDomainFor ( EAccountSummaryDD ) ).toEqual ( [
+    expect ( makeDomainForDataD ( EAccountSummaryDD ) ).toEqual ( [
       "export interface EAccountSummaryDDDomain{",
       "  accountId: number;",
       "  description: string;",
@@ -29,7 +29,7 @@ describe ( "makeDomainFor", () => {
       "}",
       ""
     ])
-    expect ( makeDomainFor ( CreatePlanDD ) ).toEqual ( [
+    expect ( makeDomainForDataD ( CreatePlanDD ) ).toEqual ( [
       "export interface CreatePlanDDDomain{",
       "  createPlanDate: string;",
       "  createPlanEnd: string;",

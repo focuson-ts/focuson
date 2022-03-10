@@ -1,4 +1,4 @@
-import { AllDataDD, DataD } from "../common/dataD";
+import { AllDataDD, CompDataD, DataD, isDataDd, isRepeatingDd } from "../common/dataD";
 import { ModalPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { RestActionDetail, RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
@@ -6,8 +6,8 @@ import { RestAction } from "@focuson/utils";
 import { JavaWiringParams, TSParams } from "./config";
 
 export const guardName = ( s: string ) => s + "Guard"
-export const domainName = <G>( d: DataD<G> ): string => d.name + "Domain";
-export const componentName = <G>( d: DataD <G>): string => d.display? d.display.name : d.name;
+export const domainName = <G>( d: CompDataD<G> ): string => d.name + "Domain";
+export const componentName = <G>( d: CompDataD <G>): string => d.display? d.display.name : d.name;
 export const pageInState = <B,G> ( p: PageD<B,G> ): string => p.name
 export const pageComponentName = <B,G> ( d: PageD<B,G> ): string => d.name + "Page";
 // export const pageComponent = ( p: PageD ): string => p.name;

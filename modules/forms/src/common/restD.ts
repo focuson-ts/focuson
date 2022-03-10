@@ -1,4 +1,4 @@
-import { CompDataD, DataD, findAllDataDs, findDataDDIn } from "./dataD";
+import { CompDataD, DataD, findAllDataDs, findDataDDIn, isDataDd } from "./dataD";
 import { RestAction, safeArray, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction } from "../codegen/codegen";
 
@@ -68,37 +68,39 @@ export const defaultRestAction: RestTypeDetails = {
 
 export interface RestD<G> {
   params: RestParams,
-  dataDD: DataD<G>,
+  dataDD: CompDataD<G>,
   url: string,
   actions: RestAction[]
 }
 
 export const actionDetail = ( r: RestAction ): RestActionDetail => defaultRestAction[ r ];
-export const actionDetails = <G>( r: RestD <G>): RestActionDetail[] => r.actions.map ( actionDetail );
+export const actionDetails = <G> ( r: RestD<G> ): RestActionDetail[] => r.actions.map ( actionDetail );
 
-export function flapMapActionDetails<Acc,G> ( r: RestD<G>, fn: ( r: RestD<G>, rt: RestActionDetail ) => Acc[] ): Acc[] {
+export function flapMapActionDetails<Acc, G> ( r: RestD<G>, fn: ( r: RestD<G>, rt: RestActionDetail ) => Acc[] ): Acc[] {
   return actionDetails ( r ).flatMap ( rt => fn ( r, rt ) )
 }
 
 export interface MustConstructForRest<G> {
-  objs: DataD<G>[],
-  input: DataD<G>[],
+  objs: CompDataD<G>[],
+  input: CompDataD<G>[],
   // inputWithId: DataD[]
 }
 
 export function findMustConstructForRest<G> ( rs: RestD<G>[] ): MustConstructForRest<G> {
-  const objs = new Set<DataD<G>> ()
-  const input = new Set<DataD<G>> ()
+  const objs = new Set<CompDataD<G>> ()
+  const input = new Set<CompDataD<G>> ()
   // const inputWithId = new Set<DataD> ()
   rs.flatMap ( findDataDsAndRestTypeDetails ).forEach ( ( [ d, rt ] ) => {
-    if ( rt.params.needsObj ) if ( rt.params.needsId ) input.add ( d ); else input.add ( d )
-    if ( rt.output.needsObj ) objs.add ( d )
+
+      if ( rt.params.needsObj ) if ( rt.params.needsId ) input.add ( d ); else input.add ( d )
+      if ( rt.output.needsObj ) objs.add ( d )
+
   } )
-  function ordered ( ds: Set<DataD<G>> ) {return [ ...ds ].sort ( ( a, b ) => a.name.localeCompare ( b.name ) )}
-  return { objs: ordered ( objs ), input: ordered ( input )}
+  function ordered ( ds: Set<CompDataD<G>> ) {return [ ...ds ].sort ( ( a, b ) => a.name.localeCompare ( b.name ) )}
+  return { objs: ordered ( objs ), input: ordered ( input ) }
 }
 
-export function findDataDsAndRestTypeDetails<G> ( r: RestD<G> ): [ DataD<G>, RestActionDetail ][] {
+export function findDataDsAndRestTypeDetails<G> ( r: RestD<G> ): [ CompDataD<G>, RestActionDetail ][] {
   return flapMapActionDetails ( r, ( r, rt ) => findDataDDIn ( r.dataDD ).map ( dataD => [ dataD, rt ] ) )
 }
 export function findUniqueDataDsAndRestTypeDetails<G> ( rs: RestD<G>[] ): [ RestD<G>, RestAction, RestActionDetail ][] {
@@ -109,7 +111,7 @@ export function findUniqueDataDsAndRestTypeDetails<G> ( rs: RestD<G>[] ): [ Rest
   return unique<[ RestD<G>, RestAction, RestActionDetail ]> ( nonUnique, ( [ restD, a, rad ] ) => restD.dataDD.name + "," + a )
 }
 
-export function findUniqueDataDsIn<G> ( rs: RestD<G>[] ): DataD<G>[] {
+export function findUniqueDataDsIn<G> ( rs: RestD<G>[] ): CompDataD<G>[] {
   return unique ( Object.values ( findAllDataDs ( rs.map ( r => r.dataDD ) ) ), d => d.name )
 }
 
@@ -131,7 +133,7 @@ export function makeCommonParamsValueForTest<G> ( r: RestD<G>, restAction: RestA
 
 }
 
-export function findIds<G> ( rest: RestD<G>) {
+export function findIds<G> ( rest: RestD<G> ) {
   const ids = sortedEntries ( rest.params ).filter ( t => !t[ 1 ].main ).map ( ( [ name, value ] ) => name )
   const resourceIds = sortedEntries ( rest.params ).filter ( t => t[ 1 ].main ).map ( ( [ name, value ] ) => name )
   return [ ids, resourceIds ]

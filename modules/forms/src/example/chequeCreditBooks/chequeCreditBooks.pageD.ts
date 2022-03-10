@@ -1,4 +1,4 @@
-import { ChequeCreditbooksDD, ChequeCreditbooksHistoryLineDD } from "./chequeCreditBooks.dataD";
+import { ChequeCreditbooksDD, ChequeCreditbooksHistoryDD, ChequeCreditbooksHistoryLineDD } from "./chequeCreditBooks.dataD";
 import { chequeCreditBooksRestD } from "./chequeCreditBooks.restD";
 import { IntegerDD, PrimitiveDD } from "../../common/dataD";
 import { ExampleMainPage, ExampleModalPage } from "../common";
@@ -38,6 +38,7 @@ export const ChequeCreditbooksPD: ExampleMainPage = {
   /** This defines the domain data structures in react*/
   domain: {
     fromApi: { dataDD: ChequeCreditbooksDD },
+    temp: { dataDD: ChequeCreditbooksHistoryDD },
     tempCreatePlan: { dataDD: ChequeCreditbooksHistoryLineDD },
     chequeBookOrPayingIn: { dataDD: CheckBookOrPayingInDD }
     // tempData: ChequeCreditbooksHistoryLineDD
@@ -45,7 +46,7 @@ export const ChequeCreditbooksPD: ExampleMainPage = {
   modals: [ { modal: OrderChequeBookOrPayingInModalPD, path: [ 'tempCreatePlan' ] } ],
   /** Binds the rest to 'where it takes place'. So we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
   rest: {
-    chequeCreditBooks: { rest: chequeCreditBooksRestD, targetFromPath: [ 'fromApi' ], fetcher: 'get' }
+    chequeCreditBooks: { rest: chequeCreditBooksRestD, targetFromPath: [ 'temp' ], fetcher: 'get' }
   },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {                                                                      //interestingly these will be type checked in the target system...

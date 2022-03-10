@@ -1,4 +1,4 @@
-import { AllDataDD, DataD, findAllDataDs, isDataDd, NamesAndDataDs } from "./dataD";
+import { AllDataDD, CompDataD, DataD, findAllDataDs, isDataDd, NamesAndDataDs } from "./dataD";
 import { defaultRestAction, RestActionDetail, RestD, unique } from "./restD";
 import { RestAction, RestResult, sortedEntries } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
@@ -71,11 +71,15 @@ export interface ModalPageD<Buttons, G> {
 
 export function dataDsIn<B, G> ( pds: PageD<B, G>[], stopAtDisplay?: boolean ): NamesAndDataDs<G> {
   let mainPages = allMainPages ( pds );
-  const pageDataDs: DataD<G>[] = mainPages.flatMap ( pd => sortedEntries ( pd.rest )
+  const pageDataDs: CompDataD<G>[] = mainPages.flatMap ( pd => sortedEntries ( pd.rest )
     .map ( ( [ na, restPD ]: [ string, RestDefnInPageProperties<G> ] ) => restPD.rest.dataDD ) )
+  pageDataDs.forEach ( d => console.log ( 'pageDataD - rest', d.name ) )
   const domainDataDs: DataD<G>[] = mainPages.flatMap ( pd => sortedEntries ( pd.domain ) )
     .flatMap ( ( [ name, domain ] ) => isDataDd ( domain.dataDD ) ? [ domain.dataDD ] : [] )
-  return findAllDataDs ( [ ...pageDataDs, ...domainDataDs ], stopAtDisplay )
+  pageDataDs.forEach ( d => console.log ( 'domainDataDs ', d.name ) )
+  let result = findAllDataDs ( [ ...pageDataDs, ...domainDataDs ], stopAtDisplay );
+  sortedEntries ( result ).forEach ( ( [ n, d ] ) => console.log ( "result", n, d.name ) )
+  return result
 }
 
 

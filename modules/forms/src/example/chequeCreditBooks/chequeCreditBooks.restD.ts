@@ -12,7 +12,7 @@ export const commonParams: RestParams = {
 /** This should fully define the api*/
 export const chequeCreditBooksRestD: RestD<AllGuards> = {
   params: commonParams,
-  dataDD: ChequeCreditbooksDD,
+  dataDD: ChequeCreditbooksHistoryDD,
   url: '/api/chequeCreditBooks?{query}', //or maybe accountId={accountId}&customerId={customerId}
   actions: [ 'get' , 'create'],
 }

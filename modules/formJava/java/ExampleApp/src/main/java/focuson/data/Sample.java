@@ -16,6 +16,15 @@ public class Sample{
          "  ]"+
          "}"
   );
+  public static Map sampleChequeCreditbooksHistoryDD0 =  parse.parseMap(
+         "["+
+         "  {"+
+         "    \"serialNumber\": 937453,"+
+         "    \"howOrdered\": \"Manually\","+
+         "    \"dateOrder\": \"2022-10-01\""+
+         "  }"+
+         "]"
+  );
   public static Map sampleChequeCreditbooksHistoryLineDD0 =  parse.parseMap(
          "{"+
          "  \"serialNumber\": 937453,"+
@@ -37,6 +46,39 @@ public class Sample{
          "  \"createPlanDate\": \"2022-03-01\","+
          "  \"createPlanEnd\": \"2022-10-01\""+
          "}"
+  );
+  public static Map sampleCustomerOccupationIncomeDetailsDD0 =  parse.parseMap(
+         "["+
+         "  {"+
+         "    \"areYou\": \"C\","+
+         "    \"currentEmployment\": \"N\","+
+         "    \"occupation\": \"someString\","+
+         "    \"customerDescription\": \"someString\","+
+         "    \"ownShareOfTheCompany\": \"N\","+
+         "    \"owningSharesPct\": \"N\","+
+         "    \"workFor\": \"someString\","+
+         "    \"employmentType\": \"1\","+
+         "    \"annualSalaryBeforeDeduction\": 123,"+
+         "    \"annualIncomeExcludingRent\": 123,"+
+         "    \"regularCommissionBonus\": 123,"+
+         "    \"dateOfEmploymentStart\": \"2020-10-01\","+
+         "    \"otherSourceOfIncome\": \"N\","+
+         "    \"createdBy\": \"someString\","+
+         "    \"createdDate\": \"2020-10-01\","+
+         "    \"employerName\": \"someString\","+
+         "    \"whatTypeOfBusiness\": \"someString\","+
+         "    \"whatNameBusiness\": \"someString\","+
+         "    \"establishedYear\": \"2020-10-01\","+
+         "    \"annualDrawing3Yrs\": 123,"+
+         "    \"empStartDate\": \"2020-10-01\","+
+         "    \"empEndDate\": \"2020-10-01\","+
+         "    \"sePositionHeld\": \"someString\","+
+         "    \"occupationCategory\": \"someString\","+
+         "    \"empEmploymentSeq\": 123,"+
+         "    \"empAppRoleSeq\": 123,"+
+         "    \"accountantAppRoleSeq\": 123"+
+         "  }"+
+         "]"
   );
   public static Map sampleEAccountsSummaryDD0 =  parse.parseMap(
          "{"+
@@ -60,6 +102,18 @@ public class Sample{
          "    \"createPlanEnd\": \"2022-10-01\""+
          "  }"+
          "}"
+  );
+  public static Map sampleEAccountsSummaryTableDD0 =  parse.parseMap(
+         "["+
+         "  {"+
+         "    \"accountId\": 1233450,"+
+         "    \"displayType\": \"checking\","+
+         "    \"description\": \"This account has a description\","+
+         "    \"virtualBankSeq\": \"seq1\","+
+         "    \"total\": 1000,"+
+         "    \"frequency\": \"23\""+
+         "  }"+
+         "]"
   );
   public static Map sampleEAccountSummaryDD0 =  parse.parseMap(
          "{"+

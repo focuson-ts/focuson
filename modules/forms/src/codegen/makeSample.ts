@@ -1,4 +1,4 @@
-import { AllDataDD, AllDataFolder, DataD, foldDataDD, HasEnum, HasSample, OneDataDD, PrimitiveDD } from "../common/dataD";
+import { AllDataDD, AllDataFolder, CompDataD, DataD, foldDataDD, HasEnum, HasSample, OneDataDD, PrimitiveDD } from "../common/dataD";
 import { asMultilineJavaString, safeArray, safePick, sortedEntries } from "@focuson/utils";
 import { Lenses } from "@focuson/lens";
 import { domainName, emptyName, sampleName } from "./names";
@@ -18,7 +18,7 @@ export function selectSample ( i: number, ...ds: (HasSample<any> | undefined | H
 const addPrimitive =<G> ( acc: any, path: string[], one: OneDataDD<G> | undefined, d: PrimitiveDD, i: number ) =>
   Lenses.fromPath ( path ).set ( acc, selectSample ( i, one, d ) );
 
-export function makeTsSample <G>( d: DataD<G>, i: number ): any {
+export function makeTsSample <G>( d: CompDataD<G>, i: number ): any {
   return foldDataDD<any,G> ( d, [], [], {}, {
     stopAtDisplay: false,
     foldData: ( acc, path, parents, oneDataDD, dataDD, start ) => addData ( start, path, acc, dataDD ),
@@ -29,7 +29,7 @@ export function makeTsSample <G>( d: DataD<G>, i: number ): any {
 }
 
 
-export function makeSampleVariable<G> ( params: TSParams, d: DataD<G>, i: number ): string[] {
+export function makeSampleVariable<G> ( params: TSParams, d: CompDataD<G>, i: number ): string[] {
   return [
     `export const ${sampleName ( d )}${i}: ${params.domainsFile}.${domainName ( d )} = `,
     ...JSON.stringify ( makeTsSample ( d, i ), null, 2 ).split ( '\n' )
@@ -44,12 +44,12 @@ export function makeAllSampleVariables <B,G> ( params: TSParams, ps: PageD <B,G>
 //   const contents: string = sortedEntries ( d.structure ).map ( ( [ name, value ] ) => [ `"${name}"`, ...makeJavaSample ( value.dataDD, i ) ] ).join ( "," )
 //   return [ `Map.of(${contents})` ]
 // }
-export function makeJavaSample <G>( d: DataD<G>, i: number ): string[] {
+export function makeJavaSample <G>( d: CompDataD<G>, i: number ): string[] {
   const sample = makeTsSample ( d, i );
   return asMultilineJavaString ( JSON.stringify ( sample, null, 2 ).split ( "\n" ), '       ' )
 }
 
-export function makeJavaVariable<G> ( d: DataD<G>, i: number ) {
+export function makeJavaVariable<G> ( d: CompDataD<G>, i: number ) {
   return [ `public static Map ${sampleName ( d ) + i} =  parse.parseMap(`, ...makeJavaSample ( d, i ), ");" ]
 }
 export function makeAllJavaVariableName <B,G> ( ps: PageD <B,G>[], i: number ): string[] {

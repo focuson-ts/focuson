@@ -1,4 +1,4 @@
-import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, isPrimDd, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
+import { AllDataDD, AllDataFlatMap, CompDataD, DataD, emptyDataFlatMap, flatMapDD, isDataDd, isPrimDd, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
 import { DisplayCompD, OneDisplayCompParamD } from "../common/componentsD";
 import { dataDsIn, isMainPage, isModalPage, PageD } from "../common/pageD";
 
@@ -116,14 +116,14 @@ export function createAllReactCalls<G> ( d: AllComponentData<G>[] ): string[] {
   return d.filter ( ds => isComponentData ( ds ) && !ds.hidden ).flatMap ( d => isErrorComponentData ( d ) ? [ d.error ] : createOneReact ( d ) )
 }
 
-export const createReactComponent = <G extends GuardWithCondition> ( makeGuard: MakeGuard<G> ) => ( dataD: DataD<G> ): string[] => {
+export const createReactComponent = <G extends GuardWithCondition> ( makeGuard: MakeGuard<G> ) => ( dataD: CompDataD<G> ): string[] => {
   const contents = indentList ( indentList ( createAllReactCalls ( listComponentsIn ( dataD ) ) ) )
-  const guardStrings = sortedEntries ( dataD.guards ).map ( ( [ name, guard ] ) => {
+  const guardStrings = isDataDd ( dataD ) ? sortedEntries ( dataD.guards ).map ( ( [ name, guard ] ) => {
     const maker = makeGuard[ guard.condition ]
     if ( !maker ) throw new Error ( `Don't know how to process guard with name ${name}: ${JSON.stringify ( guard )}` )
     return maker.makeGuardVariable ( name, guard )
     // return `const ${guardName ( name )} = state.chainLens(Lenses.fromPath(${JSON.stringify ( guard.pathFromHere )})).optJson();console.log('${guardName ( name )}', ${guardName ( name )})`;
-  } )
+  } ) : []
   return [
     `export function ${componentName ( dataD )}<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, ${domainName ( dataD )},Context>){`,
     ...guardStrings,
@@ -208,7 +208,7 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
 
 
 export function makeComponentImports<B, G> ( ps: PageD<B, G>[] ): string[] {
-  let allItemsWithDisplay: DisplayCompD[] = sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ d, n ] ) => sortedEntries ( n.structure ).map ( a => a[ 1 ].dataDD ) ).filter ( d => d.display ).map ( d => d.display );
+  let allItemsWithDisplay: DisplayCompD[] = sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ d, n ] ) => isDataDd ( n ) ? sortedEntries ( n.structure ).map ( a => a[ 1 ].dataDD ) : [] ).filter ( d => d.display ).map ( d => d.display );
   let fromPageDisplay: DisplayCompD[] = ps.flatMap ( p => p.display.dataDD.display ? [ p.display.dataDD.display ] : [] )
   return unique ( [ ...allItemsWithDisplay, ...fromPageDisplay ], d => `${d.import}/${d.name}` ).map ( d => `import { ${d.name} } from '${d.import}';` )
 }
