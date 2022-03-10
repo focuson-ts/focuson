@@ -53,6 +53,7 @@ export interface DataD<G> extends CommonDataDD {
   guards?: Guards<G>;
   structure: ManyDataDD<G>;
 }
+export type CompDataD<G> = DataD<G>| RepeatingDataD<G>
 
 export interface CommonPrimitiveDD<T> extends CommonDataDD, HasSample<T>, HasEnum {
   emptyValue: T;

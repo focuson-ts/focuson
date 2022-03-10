@@ -56,7 +56,7 @@ export interface MainPageD<Buttons, G> {
   display: { layout: LayoutD, target: string[], dataDD: DataD<G> },
   initialValue: 'empty' | any,
   domain: DomainDefnInPage<G>,
-  modals?: ModalData<Buttons,G>[],
+  modals?: ModalData<Buttons, G>[],
   rest: RestDefnInPage<G>,
   buttons: ButtonDefnInPage<Buttons>
 }
@@ -70,24 +70,26 @@ export interface ModalPageD<Buttons, G> {
 
 
 export function dataDsIn<B, G> ( pds: PageD<B, G>[], stopAtDisplay?: boolean ): NamesAndDataDs<G> {
-  const pageDataDs: DataD<G>[] = pds.flatMap ( pd => (isMainPage ( pd ) ? sortedEntries ( pd.rest ) : []).map ( ( [ na, restPD ]: [ string, RestDefnInPageProperties<G> ] ) => restPD.rest.dataDD ) )
-  const domainDataDs: DataD<G>[] = pds.flatMap ( pd => (isMainPage ( pd ) ? sortedEntries ( pd.domain ) : []) )
+  let mainPages = allMainPages ( pds );
+  const pageDataDs: DataD<G>[] = mainPages.flatMap ( pd => sortedEntries ( pd.rest )
+    .map ( ( [ na, restPD ]: [ string, RestDefnInPageProperties<G> ] ) => restPD.rest.dataDD ) )
+  const domainDataDs: DataD<G>[] = mainPages.flatMap ( pd => sortedEntries ( pd.domain ) )
     .flatMap ( ( [ name, domain ] ) => isDataDd ( domain.dataDD ) ? [ domain.dataDD ] : [] )
   return findAllDataDs ( [ ...pageDataDs, ...domainDataDs ], stopAtDisplay )
 }
 
 
-export function allRestAndActions<B,G> ( pds: PageD<B,G>[] ): [ PageD<B,G>, RestDefnInPageProperties<G>, RestActionDetail ][] {
-  return unique ( pds.flatMap ( pd => {
-    return (isMainPage ( pd ) ? sortedEntries ( pd.rest ) : []).flatMap ( ( [ name, rdp ] ) => {
-      const y: [ PageD<B,G>, RestDefnInPageProperties<G>, RestActionDetail ][] = rdp.rest.actions.map ( a => [ pd, rdp, defaultRestAction[ a ] ] )
+export function allRestAndActions<B, G> ( pds: PageD<B, G>[] ): [ PageD<B, G>, RestDefnInPageProperties<G>, RestActionDetail ][] {
+  return unique ( allMainPages ( pds ).flatMap ( pd => {
+    return sortedEntries ( pd.rest ).flatMap ( ( [ name, rdp ] ) => {
+      const y: [ PageD<B, G>, RestDefnInPageProperties<G>, RestActionDetail ][] = rdp.rest.actions.map ( a => [ pd, rdp, defaultRestAction[ a ] ] )
       return y
     } )
   } ), ( [ p, r, rad ] ) => p.name + "," + r.rest.dataDD.name + "," + rad.name )
 }
 
 
-export function allMainPages<B,G> ( pds: PageD<B,G>[] ): MainPageD<B,G>[] {
-  return pds.flatMap ( pd => isMainPage ( pd ) ? [ pd ] : [] )
+export function allMainPages<B, G> ( pds: PageD<B, G>[] ): MainPageD<B, G>[] {
+  return pds.filter ( isMainPage )
 }
 

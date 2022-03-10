@@ -1,5 +1,5 @@
 import { RestD, RestParams } from "../../common/restD";
-import { ChequeCreditbooksDD, ChequeCreditbooksHistoryLineDD } from "./chequeCreditBooks.dataD";
+import { ChequeCreditbooksDD, ChequeCreditbooksHistoryDD, ChequeCreditbooksHistoryLineDD } from "./chequeCreditBooks.dataD";
 import { AllGuards } from "../../buttons/guardButton";
 
 export const commonParams: RestParams = {

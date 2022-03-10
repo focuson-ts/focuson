@@ -1,4 +1,4 @@
-import { DataD, findAllDataDs, findDataDDIn } from "./dataD";
+import { CompDataD, DataD, findAllDataDs, findDataDDIn } from "./dataD";
 import { RestAction, safeArray, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction } from "../codegen/codegen";
 
