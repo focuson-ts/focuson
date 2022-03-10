@@ -7,6 +7,7 @@ import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 import { makeButtons } from "../buttons/allButtons";
 import { occupationIncomeDetailsDD } from "../example/occupationAndIncomeDetails/occupationAndIncome.dataD";
 import { AllGuardCreator } from "../buttons/guardButton";
+import { RepeatingLinePageD, RepeatingPageD } from "../example/repeating/repeating.pageD";
 
 //
 describe ( " listComponentsIn", () => {
@@ -41,7 +42,7 @@ describe ( " listComponentsIn", () => {
     ] )
   } )
   it ( "should createAllReactComponents ", () => {
-    expect ( createAllReactComponents ( paramsForTest, AllGuardCreator, makeButtons (), [ EAccountsSummaryPD, CreatePlanPD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( createAllReactComponents ( paramsForTest, AllGuardCreator, makeButtons (), [ EAccountsSummaryPD, CreatePlanPD , RepeatingPageD, RepeatingLinePageD] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "import { LensProps } from '@focuson/state';",
       "import { Layout } from '../copied/layout';",
       "import { FocusOnContext } from '@focuson/focuson';",
@@ -49,9 +50,13 @@ describe ( " listComponentsIn", () => {
       "import { Context, FocusedProps } from '../common';",
       "import { Lenses } from '@focuson/lens';",
       "import { Guard } from '../copied/guard';",
+      "import { GuardButton } from '../copied/GuardButton';",
       "//if there is an error message here... did you set the importFrom on this modal correctly, and also check that the PageD links to this DataD in a domain or rest block",
       "import {CreatePlanDDDomain} from '../EAccountsSummary/EAccountsSummary.domains'; ",
+      "//if there is an error message here... did you set the importFrom on this modal correctly, and also check that the PageD links to this DataD in a domain or rest block",
+      "import {RepeatingLineDomain} from '../Repeating/Repeating.domains'; ",
       "import {CreatePlanDD} from '../EAccountsSummary/EAccountsSummary.render'",
+      "import {RepeatingLine} from '../Repeating/Repeating.render'",
       "import { LabelAndStringInput } from '../copied/LabelAndInput';",
       "import { LabelAndNumberInput } from '../copied/LabelAndInput';",
       "import { Table } from '../copied/table';",
@@ -65,13 +70,18 @@ describe ( " listComponentsIn", () => {
       "import {RestButton} from '../copied/rest';",
       "import {ValidationButton} from '../copied/ValidationButton';",
       "import {EAccountsSummaryPageDomain} from '../EAccountsSummary/EAccountsSummary.domains';",
+      "import {RepeatingPageDomain} from '../Repeating/Repeating.domains';",
       "import {CreatePlanDDDomain} from '../EAccountsSummary/EAccountsSummary.domains'",
       "import {EAccountsSummaryDDDomain} from '../EAccountsSummary/EAccountsSummary.domains'",
+      "import {EAccountsSummaryTableDDDomain} from '../EAccountsSummary/EAccountsSummary.domains'",
       "import {EAccountSummaryDDDomain} from '../EAccountsSummary/EAccountsSummary.domains'",
+      "import {RepeatingLineDomain} from '../Repeating/Repeating.domains'",
+      "import {RepeatingWholeDataDomain} from '../Repeating/Repeating.domains'",
       "export function EAccountsSummaryPage<S, Context extends FocusOnContext<S>>(){",
       "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
+      "  const id='root';",
       "  return (<Layout  details='[1][3,3][5]'>",
-      "     <EAccountsSummaryDD id='root' state={state}  mode={mode} />",
+      "          <EAccountsSummaryDD id={`${id}`} state={state} mode={mode} />",
       "          <ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  focusOn={['EAccountsSummary','tempCreatePlan']} copyFrom={['EAccountsSummary','fromApi','createPlan']}    pageMode='edit'   rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'update','path':['EAccountsSummary']}} />",
       "          <ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  focusOn={['EAccountsSummary','tempCreatePlan']}  createEmpty={empty.emptyCreatePlanDD}   pageMode='create'   rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'create','path':['EAccountsSummary']}} />",
       "          <RestButton  id='deleteExistingPlan'   name='deleteExistingPlan' action='delete' path={['EAccountsSummary','fromApi']} state={state} rest='EAccountsSummary_CreatePlanDDRestDetails' confirm={true} />",
@@ -81,10 +91,34 @@ describe ( " listComponentsIn", () => {
       "export function CreatePlanPage<S, Context extends FocusOnContext<S>>(){",
       "  return focusedPage<S, CreatePlanDDDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page",
       "     ( state, d, mode ) => {",
+      "          const id='root';",
       "          return (<Layout  details='[3]'>",
-      "               <CreatePlanDD id='root' state={state}  mode={mode} />",
-      "                    <ModalCancelButton id='cancel' state={state} />",
-      "                    <ModalCommitButton id='commit'  state={state} />",
+      "              <CreatePlanDD id={`${id}`} state={state} mode={mode} />",
+      "              <ModalCancelButton id='cancel' state={state} />",
+      "              <ModalCommitButton id='commit'  state={state} />",
+      "            </Layout>)})}",
+      "",
+      "export function RepeatingPage<S, Context extends FocusOnContext<S>>(){",
+      "  return focusedPageWithExtraState<S, RepeatingPageDomain, RepeatingWholeDataDomain, Context> ( s => 'Repeating' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
+      "const nextOccupationGuard =  pageState(state).chainLens<number>(Lenses.fromPath(['selectedItem'])).optJsonOr(0) <  pageState(state).chainLens<string[]>(Lenses.fromPath(['fromApi'])).optJsonOr([]).length - 1",
+      "const prevOccupationGuard = pageState(state).chainLens<number>(Lenses.fromPath(['selectedItem'])).optJsonOr(0) >0",
+      "  const id='root';",
+      "  return (<Layout  details='[1][3]'>",
+      "          <Table id={`${id}`} state={state} mode={mode} order={['name','age']} />",
+      "          <ModalButton id='addEntry' text='addEntry'  state={state} modal = 'RepeatingLine'  focusOn={['Repeating','temp']}  copyOnClose={['Repeating','fromApi','[append]']}createEmpty={empty.emptyRepeatingLine}  setToLengthOnClose={{'array':['Repeating','fromApi'],'variable':['Repeating','selectedItem']}} pageMode='create'   />",
+      "          <ModalButton id='edit' text='edit'  state={state} modal = 'RepeatingLine'  focusOn={['Repeating','temp']} copyFrom={['Repeating','fromApi','{selectedItem}']} copyOnClose={['Repeating','fromApi','{selectedItem}']}   pageMode='edit'   />",
+      "          <GuardButton cond={nextOccupationGuard}><ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi')} value={fullState.focusOn('selectedItem')} /></GuardButton>",
+      "          <GuardButton cond={prevOccupationGuard}><ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi')} value={fullState.focusOn('selectedItem')} /></GuardButton>",
+      "   </Layout>)})}",
+      "",
+      "export function RepeatingLinePage<S, Context extends FocusOnContext<S>>(){",
+      "  return focusedPage<S, RepeatingLineDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page",
+      "     ( state, d, mode ) => {",
+      "          const id='root';",
+      "          return (<Layout  details='[2][2]'>",
+      "              <RepeatingLine id={`${id}`} state={state} mode={mode} />",
+      "              <ModalCancelButton id='cancel' state={state} />",
+      "              <ModalCommitButton id='commit'  state={state} />",
       "            </Layout>)})}",
       "",
       "export function CreatePlanDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, CreatePlanDDDomain,Context>){",
@@ -118,34 +152,43 @@ describe ( " listComponentsIn", () => {
       "    <LabelAndStringInput id={`${id}.frequency`} state={state.focusOn('frequency')} mode={mode} label='Frequency/Amount' required={true} />",
       "</>)",
       "}",
+      "",
+      "export function RepeatingLine<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, RepeatingLineDomain,Context>){",
+      "  return(<>",
+      "    <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='name' required={true} />",
+      "    <LabelAndNumberInput id={`${id}.age`} state={state.focusOn('age')} mode={mode} label='age' required={true} />",
+      "</>)",
+      "}",
       ""
-    ] )
+    ])
   } )
 
   it ( "should createReactPageComponent", () => {
     expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), EAccountsSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function EAccountsSummaryPage<S, Context extends FocusOnContext<S>>(){",
       "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
+      "  const id='root';",
       "  return (<Layout  details='[1][3,3][5]'>",
-      "     <EAccountsSummaryDD id='root' state={state}  mode={mode} />",
+      "          <EAccountsSummaryDD id={`${id}`} state={state} mode={mode} />",
       "          <ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  focusOn={['EAccountsSummary','tempCreatePlan']} copyFrom={['EAccountsSummary','fromApi','createPlan']}    pageMode='edit'   rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'update','path':['EAccountsSummary']}} />",
       "          <ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  focusOn={['EAccountsSummary','tempCreatePlan']}  createEmpty={empty.emptyCreatePlanDD}   pageMode='create'   rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'create','path':['EAccountsSummary']}} />",
       "          <RestButton  id='deleteExistingPlan'   name='deleteExistingPlan' action='delete' path={['EAccountsSummary','fromApi']} state={state} rest='EAccountsSummary_CreatePlanDDRestDetails' confirm={true} />",
       "          <button>refresh of type ResetStateButton cannot be created yet</button>",
       "   </Layout>)})}",
       ""
-    ] )
-    expect ( createReactPageComponent ( paramsForTest,AllGuardCreator, makeButtons (), CreatePlanPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    ])
+    expect ( createReactPageComponent ( paramsForTest,AllGuardCreator, makeButtons (), CreatePlanPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
       "export function CreatePlanPage<S, Context extends FocusOnContext<S>>(){",
       "  return focusedPage<S, CreatePlanDDDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page",
       "     ( state, d, mode ) => {",
+      "          const id='root';",
       "          return (<Layout  details='[3]'>",
-      "               <CreatePlanDD id='root' state={state}  mode={mode} />",
-      "                    <ModalCancelButton id='cancel' state={state} />",
-      "                    <ModalCommitButton id='commit'  state={state} />",
+      "              <CreatePlanDD id={`${id}`} state={state} mode={mode} />",
+      "              <ModalCancelButton id='cancel' state={state} />",
+      "              <ModalCommitButton id='commit'  state={state} />",
       "            </Layout>)})}",
       ""
-    ] )
+    ])
   } )
 } )
 

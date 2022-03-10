@@ -8,12 +8,12 @@ import { AllButtonsInPage } from "../buttons/allButtons";
 export interface DomainDefnInPage<G> {
   [ name: string ]: { dataDD: AllDataDD<G> }
 }
-type FetcherType = 'get' | 'list'
+
 
 export interface RestDefnInPageProperties<G> {
   rest: RestD<G>,
   targetFromPath: string[],
-  fetcher?: FetcherType
+  fetcher?: boolean
 }
 export interface RestDefnInPage<G> {
   [ name: string ]: RestDefnInPageProperties<G>

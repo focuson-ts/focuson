@@ -1,6 +1,7 @@
 import { findAllResolvers, findChildResolvers, findQueryMutationResolvers, makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { CombinedParams } from "../codegen/config";
+import { repeatingRestRD } from "../example/repeating/repeating.restD";
 
 export const paramsForTest: CombinedParams =  {
   pagesFile: 'pages',
@@ -51,7 +52,7 @@ describe ( "makeJavaResolversInterface", () => {
 
 describe ( "makeAllJavaWiring", () => {
   it ( "should make a java file which will power a graphql spring boot app", () => {
-    expect ( makeAllJavaWiring ( paramsForTest, [ eAccountsSummaryRestD, createPlanRestD ], { main: '.', backup: '.' } ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeAllJavaWiring ( paramsForTest, [ eAccountsSummaryRestD, createPlanRestD,repeatingRestRD ], { main: '.', backup: '.' } ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "package focuson.data;",
       "import com.google.common.base.Charsets;",
       "import com.google.common.io.Resources;",
@@ -70,12 +71,15 @@ describe ( "makeAllJavaWiring", () => {
       "import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;",
       "import focuson.data.fetchers.EAccountsSummaryDDFFetcher;",
       "import focuson.data.fetchers.CreatePlanDDFFetcher;",
+      "import focuson.data.fetchers.RepeatingWholeDataFFetcher;",
       "@Component",
       "public class Wiring {",
       "      @Autowired",
       "      EAccountsSummaryDDFFetcher _EAccountsSummaryDDFFetcher;",
       "      @Autowired",
       "      CreatePlanDDFFetcher _CreatePlanDDFFetcher;",
+      "      @Autowired",
+      "      RepeatingWholeDataFFetcher _RepeatingWholeDataFFetcher;",
       "    private GraphQL graphQL;",
       "    @PostConstruct",
       "    public void init() throws IOException {",
@@ -102,6 +106,8 @@ describe ( "makeAllJavaWiring", () => {
       "          .type(newTypeWiring('Mutation').dataFetcher('updateCreatePlanDD', _CreatePlanDDFFetcher.updateCreatePlanDD()))",
       "          .type(newTypeWiring('Mutation').dataFetcher('deleteCreatePlanDD', _CreatePlanDDFFetcher.deleteCreatePlanDD()))",
       "          .type(newTypeWiring('Query').dataFetcher('listCreatePlanDD', _CreatePlanDDFFetcher.listCreatePlanDD()))",
+      "          .type(newTypeWiring('Mutation').dataFetcher('createRepeatingLine', _RepeatingWholeDataFFetcher.createRepeatingLine()))",
+      "          .type(newTypeWiring('Query').dataFetcher('getRepeatingLine', _RepeatingWholeDataFFetcher.getRepeatingLine()))",
       "          .build();",
       "    }",
       "    @Bean",
@@ -109,8 +115,10 @@ describe ( "makeAllJavaWiring", () => {
       "        return graphQL;",
       "    }",
       "}"
-    ] )
+    ])
   } )
+
+
 
 } )
 
@@ -151,5 +159,26 @@ describe ( "findAllResolvers2", () => {
       { "isRoot": false, "name": "currentAccountBalance", "parent": "EAccountsSummaryDD", "resolver": "getCurrentAccountBalance", "sample": [ 12321 ], "samplerName": "sampleIntegerDD" }
     ] )
   } )
+
+  it ("should make a resolver for repeating", () =>{
+    expect (findAllResolvers([repeatingRestRD])).toEqual([
+      {
+        "isRoot": true,
+        "name": "createRepeatingLine",
+        "parent": "Mutation",
+        "resolver": "createRepeatingLine",
+        "sample": [],
+        "samplerName": "sampleRepeatingWholeData"
+      },
+      {
+        "isRoot": true,
+        "name": "getRepeatingLine",
+        "parent": "Query",
+        "resolver": "getRepeatingLine",
+        "sample": [],
+        "samplerName": "sampleRepeatingWholeData"
+      }
+    ])
+  })
 
 } )

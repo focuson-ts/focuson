@@ -1,6 +1,8 @@
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { makeGraphQlSchema, makeQueryOrMutateBlock, makeSchemaBlock } from "../codegen/makeGraphQlTypes";
 import { CreatePlanDD, EAccountsSummaryDD, EAccountsSummaryTableDD, EAccountSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD";
+import { RepeatingPageD } from "../example/repeating/repeating.pageD";
+import { repeatingRestRD } from "../example/repeating/repeating.restD";
 
 const rs = [ eAccountsSummaryRestD, createPlanRestD, eAccountsSummaryRestD, createPlanRestD ];
 describe ( "makeGraphQlSchema", () => {
@@ -14,7 +16,7 @@ describe ( "makeGraphQlSchema", () => {
         "  getCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!",
         "  listCreatePlanDD(accountId: String!, customerId: String!):[CreatePlanDD!]!",
         "}"
-      ])
+      ] )
     } )
     it ( "should make type Mutation", () => {
       expect ( makeQueryOrMutateBlock ( rs, 'Mutation' ) ).toEqual ( [
@@ -23,7 +25,7 @@ describe ( "makeGraphQlSchema", () => {
         "  updateCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanDDInp!):CreatePlanDD!",
         "  deleteCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):String",
         "}"
-      ])
+      ] )
     } )
   } )
 
@@ -95,12 +97,26 @@ describe ( "makeGraphQlSchema", () => {
       "  createPlanDate: String!",
       "  createPlanEnd: String!",
       "}"
-    ])
+    ] )
   } )
 
-  it ("should make a schema for something with a repeating block in the fetcher", () =>{
+  it ( "should make a schema for something with a repeating block in the fetcher", () => {
+    expect ( makeGraphQlSchema ( [ repeatingRestRD ] ) ).toEqual ( [
+      "type Query{",
+      "  getRepeatingLine(customerId: String!):[RepeatingLine!]!",
+      "}",
+      "type Mutation{",
+      "  createRepeatingLine(customerId: String!,obj: [RepeatingLineInp!]!):[RepeatingLine!]!",
+      "}",
+      "type RepeatingLine{",
+      "  name: String!",
+      "  age: Int!",
+      "}",
+      "input RepeatingLineInp{",
+      "  name: String!",
+      "  age: Int!",
+      "}"
+    ] )
 
-
-
-  })
+  } )
 } )

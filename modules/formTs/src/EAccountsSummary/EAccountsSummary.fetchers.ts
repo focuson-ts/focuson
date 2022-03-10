@@ -5,7 +5,7 @@ import { HasPageSelection } from "@focuson/pages";
 import { HasSimpleMessages, SimpleMessage } from '@focuson/utils';
 import { pageAndTagFetcher } from "@focuson/focuson";
 import { Optional, Lenses, NameAndLens} from '@focuson/lens';
-//fetcher type get
+//fetcher type true
 export function EAccountsSummaryDDFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<S, domains.EAccountsSummaryPageDomain>,commonIds: NameAndLens<S>) {
   return pageAndTagFetcher<S, domains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDDDomain, SimpleMessage>(
     common.commonFetch<S,  domains.EAccountsSummaryDDDomain>(),

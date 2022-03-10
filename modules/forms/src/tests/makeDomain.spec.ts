@@ -3,6 +3,7 @@ import { CreatePlanDD, EAccountsSummaryDD, EAccountSummaryDD } from "../example/
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
 import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
+import { RepeatingLinePageD, RepeatingPageD } from "../example/repeating/repeating.pageD";
 
 
 describe ( "makeDomainFor", () => {
@@ -17,7 +18,7 @@ describe ( "makeDomainFor", () => {
       "  useEStatements: boolean;",
       "}",
       ""
-    ])
+    ] )
     expect ( makeDomainForDataD ( EAccountSummaryDD ) ).toEqual ( [
       "export interface EAccountSummaryDDDomain{",
       "  accountId: number;",
@@ -28,17 +29,16 @@ describe ( "makeDomainFor", () => {
       "  virtualBankSeq: string;",
       "}",
       ""
-    ])
+    ] )
     expect ( makeDomainForDataD ( CreatePlanDD ) ).toEqual ( [
       "export interface CreatePlanDDDomain{",
       "  createPlanDate: string;",
       "  createPlanEnd: string;",
       "  createPlanStart: string;",
-      "}",''
+      "}", ''
     ] )
 
   } )
-
 
 
 } )
@@ -61,6 +61,8 @@ describe ( "makeAllDomainsFor", () => {
       "  useEStatements: boolean;",
       "}",
       "",
+      "export type EAccountsSummaryTableDDDomain = EAccountSummaryDDDomain[]",
+      "",
       "export interface EAccountSummaryDDDomain{",
       "  accountId: number;",
       "  description: string;",
@@ -70,7 +72,7 @@ describe ( "makeAllDomainsFor", () => {
       "  virtualBankSeq: string;",
       "}",
       ""
-    ])
+    ] )
 
   } )
 } )
@@ -86,7 +88,36 @@ describe ( "makePageDomainsFor", () => {
       "  tempCreatePlan?:CreatePlanDDDomain;",
       "}",
       ""
-    ])
+    ] )
 
+  } )
+} )
+
+describe ( "make for repeating", () => {
+  it ( "should make domains", () => {
+    expect ( makeAllDomainsFor ( [ RepeatingPageD, RepeatingLinePageD ] ) ).toEqual ( [
+      "export interface RepeatingLineDomain{",
+      "  age: number;",
+      "  name: string;",
+      "}",
+      "",
+      "export type RepeatingWholeDataDomain = RepeatingLineDomain[]",
+      ""
+    ] )
+
+  } )
+
+
+  it ( "should make pageDomains", () => {
+    expect ( makePageDomainsFor ( paramsForTest, [ RepeatingPageD, RepeatingLinePageD ] ) ).toEqual ( [
+      "export interface HasRepeatingPageDomain {   Repeating?: RepeatingPageDomain}",
+      "",
+      "export interface RepeatingPageDomain{",
+      "  fromApi?:RepeatingLineDomain[];",
+      "  selectedItem?:number;",
+      "  temp?:RepeatingLineDomain;",
+      "}",
+      ""
+    ] )
   } )
 } )

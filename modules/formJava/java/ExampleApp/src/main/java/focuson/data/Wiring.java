@@ -20,7 +20,7 @@ import focuson.data.fetchers.CreatePlanDDFFetcher;
 import focuson.data.fetchers.EAccountsSummaryDDFFetcher;
 import focuson.data.fetchers.ETransferDataDFFetcher;
 import focuson.data.fetchers.CreateEAccountDataDDFFetcher;
-import focuson.data.fetchers.ChequeCreditbooksHistoryDDFFetcher;
+import focuson.data.fetchers.ChequeCreditbooksDDFFetcher;
 import focuson.data.fetchers.RepeatingWholeDataFFetcher;
 @Component
 public class Wiring {
@@ -37,7 +37,7 @@ public class Wiring {
       @Autowired
       CreateEAccountDataDDFFetcher _CreateEAccountDataDDFFetcher;
       @Autowired
-      ChequeCreditbooksHistoryDDFFetcher _ChequeCreditbooksHistoryDDFFetcher;
+      ChequeCreditbooksDDFFetcher _ChequeCreditbooksDDFFetcher;
       @Autowired
       RepeatingWholeDataFFetcher _RepeatingWholeDataFFetcher;
     private GraphQL graphQL;
@@ -71,8 +71,8 @@ public class Wiring {
           .type(newTypeWiring("EAccountsSummaryDD").dataFetcher("currentAccountBalance", _EAccountsSummaryDDFFetcher.getCurrentAccountBalance()))
           .type(newTypeWiring("Mutation").dataFetcher("createETransferDataD", _ETransferDataDFFetcher.createETransferDataD()))
           .type(newTypeWiring("Mutation").dataFetcher("createCreateEAccountDataDD", _CreateEAccountDataDDFFetcher.createCreateEAccountDataDD()))
-          .type(newTypeWiring("Query").dataFetcher("getChequeCreditbooksHistoryLineDD", _ChequeCreditbooksHistoryDDFFetcher.getChequeCreditbooksHistoryLineDD()))
-          .type(newTypeWiring("Mutation").dataFetcher("createChequeCreditbooksHistoryLineDD", _ChequeCreditbooksHistoryDDFFetcher.createChequeCreditbooksHistoryLineDD()))
+          .type(newTypeWiring("Query").dataFetcher("getChequeCreditbooksDD", _ChequeCreditbooksDDFFetcher.getChequeCreditbooksDD()))
+          .type(newTypeWiring("Mutation").dataFetcher("createChequeCreditbooksDD", _ChequeCreditbooksDDFFetcher.createChequeCreditbooksDD()))
           .type(newTypeWiring("Mutation").dataFetcher("createRepeatingLine", _RepeatingWholeDataFFetcher.createRepeatingLine()))
           .type(newTypeWiring("Query").dataFetcher("getRepeatingLine", _RepeatingWholeDataFFetcher.getRepeatingLine()))
           .build();

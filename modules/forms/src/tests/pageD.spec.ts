@@ -16,8 +16,9 @@ describe ( "dataDsIn", () => {
     expect ( names ).toEqual ( [
       "CreatePlanDD",
       "EAccountsSummaryDD",
+      "EAccountsSummaryTableDD",
       "EAccountSummaryDD"
-    ] )
+    ])
   } )
 
   it ( "should find all the DataDs in a list of pages when display stopped", () => {
@@ -29,8 +30,9 @@ describe ( "dataDsIn", () => {
     } )
     expect ( names ).toEqual ( [
       "CreatePlanDD",
-      "EAccountsSummaryDD"
-    ] )
+      "EAccountsSummaryDD",
+      "EAccountsSummaryTableDD"
+    ])
   } )
 } )
 

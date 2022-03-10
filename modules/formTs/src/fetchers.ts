@@ -1,7 +1,8 @@
 import * as common from './common';
 import { OccupationAndIncomeDetailsDDFetcher } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.fetchers';
 import { EAccountsSummaryDDFetcher } from './EAccountsSummary/EAccountsSummary.fetchers';
-import { ChequeCreditbooksHistoryDDFetcher } from './ChequeCreditbooks/ChequeCreditbooks.fetchers';
+import { CreateEAccountDataDDFetcher } from './CreateEAccount/CreateEAccount.fetchers';
+import { ChequeCreditbooksDDFetcher } from './ChequeCreditbooks/ChequeCreditbooks.fetchers';
 import { RepeatingWholeDataFetcher } from './Repeating/Repeating.fetchers';
 import { FetcherTree,  } from "@focuson/fetcher";
 import { HasTagHolder } from "@focuson/template";
@@ -14,7 +15,8 @@ export const fetchers: FetcherTree<common.FState> = {
 fetchers: [
     OccupationAndIncomeDetailsDDFetcher<common.FState> ( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ),
     EAccountsSummaryDDFetcher<common.FState> ( identityL.focusQuery ( 'EAccountsSummary' ), commonIds ),
-    ChequeCreditbooksHistoryDDFetcher<common.FState> ( identityL.focusQuery ( 'ChequeCreditbooks' ), commonIds ),
+    CreateEAccountDataDDFetcher<common.FState> ( identityL.focusQuery ( 'CreateEAccount' ), commonIds ),
+    ChequeCreditbooksDDFetcher<common.FState> ( identityL.focusQuery ( 'ChequeCreditbooks' ), commonIds ),
     RepeatingWholeDataFetcher<common.FState> ( identityL.focusQuery ( 'Repeating' ), commonIds )
 ],
 children: []}

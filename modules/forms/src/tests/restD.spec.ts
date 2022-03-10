@@ -14,7 +14,7 @@ describe ( "flatMapActionDetails", () => {
       expect ( r ).toBe ( createPlanRestD )
       return [ rt.name ]
     } )
-    expect ( found ).toEqual ( [ "get", "create", "update", "delete",  "list" ] )
+    expect ( found ).toEqual ( [ "get", "create", "update", "delete", "list" ] )
   } )
 
 } )
@@ -25,11 +25,10 @@ describe ( "findMustConstructForRest", () => {
     let simpler = { objs: actual.objs.map ( x => x.name ), input: actual.input.map ( x => x.name ) }
     expect ( simpler ).toEqual ( {
       "input": [ "CreatePlanDD" ],
-      "objs": [ "CreatePlanDD", "EAccountsSummaryDD", "EAccountSummaryDD" ]
+      "objs": [ "CreatePlanDD", "EAccountsSummaryDD", "EAccountsSummaryTableDD", "EAccountSummaryDD" ]
     } )
   } )
 } )
-
 
 
 describe ( "makeCommonParamsValueForTest", () => {

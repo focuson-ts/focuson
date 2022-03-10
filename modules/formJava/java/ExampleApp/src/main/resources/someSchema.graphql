@@ -4,7 +4,7 @@ type Query{
   getCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!
   listCreatePlanDD(accountId: String!, customerId: String!):[CreatePlanDD!]!
   getEAccountsSummaryDD(accountId: String!, customerId: String!):EAccountsSummaryDD!
-  getChequeCreditbooksHistoryLineDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!):[ChequeCreditbooksHistoryLineDD!]!
+  getChequeCreditbooksDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!):ChequeCreditbooksDD!
   getRepeatingLine(customerId: String!):[RepeatingLine!]!
 }
 type Mutation{
@@ -14,8 +14,11 @@ type Mutation{
   deleteCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):String
   createETransferDataD(customerId: String!,obj: ETransferDataDInp!):ETransferDataD!
   createCreateEAccountDataDD(accountId: String!, customerId: String!,obj: CreateEAccountDataDDInp!):CreateEAccountDataDD!
-  createChequeCreditbooksHistoryLineDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!,obj: [ChequeCreditbooksHistoryLineDDInp!]!):[ChequeCreditbooksHistoryLineDD!]!
+  createChequeCreditbooksDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!,obj: ChequeCreditbooksDDInp!):ChequeCreditbooksDD!
   createRepeatingLine(customerId: String!,obj: [RepeatingLineInp!]!):[RepeatingLine!]!
+}
+type ChequeCreditbooksDD{
+  history: [ChequeCreditbooksHistoryLineDD!]!
 }
 type ChequeCreditbooksHistoryLineDD{
   serialNumber: Int!
@@ -106,6 +109,9 @@ type OtherIncomeResponseDD{
 type RepeatingLine{
   name: String!
   age: Int!
+}
+input ChequeCreditbooksDDInp{
+  history: [ChequeCreditbooksHistoryLineDDInp!]!
 }
 input ChequeCreditbooksHistoryLineDDInp{
   serialNumber: Int!

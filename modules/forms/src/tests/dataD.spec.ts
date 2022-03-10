@@ -73,14 +73,14 @@ describe ( "dataDD", () => {
 describe ( " findDataDDIn", () => {
   it ( "should find all the DataD", () => {
     expect ( findDataDDIn ( EAccountsSummaryDD ) ).toEqual (
-      [ EAccountsSummaryDD, EAccountSummaryDD, CreatePlanDD ] )
+      [ EAccountsSummaryDD, EAccountsSummaryTableDD,EAccountSummaryDD, CreatePlanDD ] )
   } )
 } )
 
 describe ( "findAllDataDs", () => {
   it ( "should find all the dataDs in a list of expressions, removing duplicates", () => {
     expect ( findAllDataDs ( [ EAccountsSummaryDD, CreatePlanDD, EAccountSummaryDD, CreatePlanDD ] ) ).toEqual ( {
-      EAccountsSummaryDD, CreatePlanDD, EAccountSummaryDD
+      EAccountsSummaryDD,EAccountsSummaryTableDD, CreatePlanDD, EAccountSummaryDD
     } )
   } )
 
