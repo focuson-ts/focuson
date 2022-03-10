@@ -32,9 +32,10 @@ function theType<G> ( d: AllDataDD<G> ): string {
 // }
 
 
-export function makeOutputString ( name: string, { params, query, output, graphQlPostfix }: RestActionDetail ) {
+export function makeOutputString ( name: string, needExtrabrackets: boolean,{ params, query, output, graphQlPostfix }: RestActionDetail ) {
   const obj = output.needsObj ? (name + (output.needsPling ? "!" : "")) : 'String'; // this String is probably the id
-  return output.needsBrackets ? "[" + obj + "]!" : obj
+  const raw =  output.needsBrackets ? "[" + obj + "]!" : obj
+  return needExtrabrackets?  "[" + raw + "]!" : raw
 }
 
 
@@ -44,13 +45,18 @@ export const makeParamsString = ( restAction: RestAction ) => ( params: RestPara
 };
 function extraParam<G> ( restD: RestD<G>, action: RestActionDetail ) {
   const prefix = ",obj: "
-  if ( action.params.needsObj ) return prefix + restD.dataDD.name + "Inp!"
+  if ( action.params.needsObj ) {
+    if ( isDataDd ( restD.dataDD ) ) return prefix + restD.dataDD.name + "Inp!"
+    if ( isRepeatingDd ( restD.dataDD ) ) return  prefix + "[" +restD.dataDD.dataDD.name + "Inp!]!"
+    throw new Error ( `Don't know how to make extra param ${restD.dataDD}` )
+  }
   return ""
 }
 export const oneQueryMutateLine = <G> ( [ restD, a, action ]: [ RestD<G>, RestAction, RestActionDetail ] ): string => {
   let rawType = rawTypeName ( restD.dataDD );
   const paramString = "(" + makeParamsString ( a ) ( restD.params ) + extraParam ( restD, action ) + ")";
-  return `  ${resolverName ( restD.dataDD, action )}${paramString}:${makeOutputString ( rawType, action )}`;
+  const needExtrabrackets = isRepeatingDd(restD.dataDD)
+  return `  ${resolverName ( restD.dataDD, action )}${paramString}:${makeOutputString ( rawType, needExtrabrackets, action )}`;
 }
 
 export const makeSchemaBlockFor = <G> ( [ dataD, rt ]: [ DataD<G>, RestTypeDetails ] ): string[] =>
@@ -69,10 +75,11 @@ export const oneSchemaLine = <G> ( suffix: string, repeating: boolean ) => ( [ n
   return `  ${name}: ${dataDD.graphQlType}!`
 };
 export const makeSchemaBlock = <G> ( keyword: string, suffix: string ) => ( d: CompDataD<G> ): string[] => {
-  // if ( isDataDd ( d ) )
+  if ( isDataDd ( d ) )
     return [ `${keyword} ${d.name}${suffix}{`,
-    ...Object.entries ( compDataDIn(d).structure ).map ( oneSchemaLine ( suffix, false ) ),
-    '}' ];
+      ...Object.entries ( compDataDIn ( d ).structure ).map ( oneSchemaLine ( suffix, false ) ),
+      '}' ];
+  return []
   // if ( isRepeatingDd ( d ) ) return [ 'repeating goes here' ]
   // throw new Error ( `Don't know how to make schema block for ${d}` )
 };

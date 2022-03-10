@@ -19,9 +19,10 @@ import {ValidationButton} from '../copied/ValidationButton';
 export function OccupationIncomeModalPDPage<S, Context extends FocusOnContext<S>>(){
   return focusedPage<S, OccupationIncomeDetailsDDDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
      ( state, d, mode ) => {
+          const id='root';
           return (<Layout  details='[3]'>
-               <OccupationIncomeDetailsDD id='root' state={state}  mode={mode} />
-                    <ModalCancelButton id='cancel' state={state} />
-                    <ModalCommitButton id='commit' validate={true} state={state} />
-          <ValidationButton  id='validate'   name='validate'  />
+              <OccupationIncomeDetailsDD id={`${id}`} state={state} mode={mode} />
+              <ModalCancelButton id='cancel' state={state} />
+              <ModalCommitButton id='commit' validate={true} state={state} />
+    <ValidationButton  id='validate'   name='validate'  />
             </Layout>)})}

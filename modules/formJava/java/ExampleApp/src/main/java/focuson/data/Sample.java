@@ -218,4 +218,18 @@ public class Sample{
          "  \"amount\": 123"+
          "}"
   );
+  public static Map sampleRepeatingLine0 =  parse.parseMap(
+         "{"+
+         "  \"name\": \"This is a one line string\","+
+         "  \"age\": 123"+
+         "}"
+  );
+  public static List sampleRepeatingWholeData0 =  parse.parseList(
+         "["+
+         "  {"+
+         "    \"name\": \"This is a one line string\","+
+         "    \"age\": 123"+
+         "  }"+
+         "]"
+  );
 }

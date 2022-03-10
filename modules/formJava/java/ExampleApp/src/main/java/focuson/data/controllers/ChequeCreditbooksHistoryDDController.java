@@ -15,22 +15,22 @@ import org.springframework.beans.factory.annotation.Autowired;
   public GraphQL graphQL;
     @GetMapping(value="/api/chequeCreditBooks", produces="application/json")
     public ResponseEntity getChequeCreditbooksHistoryDD(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL,ChequeCreditbooksHistoryDDQueries.getChequeCreditbooksHistoryDD(accountId, applRef, brandRef, customerId), "getChequeCreditbooksHistoryDD");
+       return Transform.result(graphQL,ChequeCreditbooksHistoryDDQueries.getChequeCreditbooksHistoryLineDD(accountId, applRef, brandRef, customerId), "getChequeCreditbooksHistoryLineDD");
     }
 
     @PostMapping(value="/api/chequeCreditBooks", produces="application/json")
     public ResponseEntity createChequeCreditbooksHistoryDD(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL,ChequeCreditbooksHistoryDDQueries.createChequeCreditbooksHistoryDD(accountId, applRef, brandRef, customerId,  Transform.removeQuoteFromProperties(body)), "createChequeCreditbooksHistoryDD");
+       return Transform.result(graphQL,ChequeCreditbooksHistoryDDQueries.createChequeCreditbooksHistoryLineDD(accountId, applRef, brandRef, customerId,  Transform.removeQuoteFromProperties(body)), "createChequeCreditbooksHistoryLineDD");
     }
 
     @GetMapping(value="/api/chequeCreditBooks/query", produces="application/json")
-    public String querygetChequeCreditbooksHistoryDD(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId) throws Exception{
-       return ChequeCreditbooksHistoryDDQueries.getChequeCreditbooksHistoryDD(accountId, applRef, brandRef, customerId);
+    public String querygetChequeCreditbooksHistoryLineDD(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId) throws Exception{
+       return ChequeCreditbooksHistoryDDQueries.getChequeCreditbooksHistoryLineDD(accountId, applRef, brandRef, customerId);
     }
 
     @PostMapping(value="/api/chequeCreditBooks/query", produces="application/json")
-    public String querycreateChequeCreditbooksHistoryDD(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId, @RequestBody String body) throws Exception{
-       return ChequeCreditbooksHistoryDDQueries.createChequeCreditbooksHistoryDD(accountId, applRef, brandRef, customerId,  Transform.removeQuoteFromProperties(body));
+    public String querycreateChequeCreditbooksHistoryLineDD(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId, @RequestBody String body) throws Exception{
+       return ChequeCreditbooksHistoryDDQueries.createChequeCreditbooksHistoryLineDD(accountId, applRef, brandRef, customerId,  Transform.removeQuoteFromProperties(body));
     }
 
   @GetMapping(value = "/api/chequeCreditBooks/sample", produces = "application/json")

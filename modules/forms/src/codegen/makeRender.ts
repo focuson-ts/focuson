@@ -1,5 +1,5 @@
 import { AllDataDD, AllDataFlatMap, CompDataD, DataD, emptyDataFlatMap, flatMapDD, isDataDd, isPrimDd, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
-import { DisplayCompD, OneDisplayCompParamD } from "../common/componentsD";
+import { commonParams, DisplayCompD, OneDisplayCompParamD } from "../common/componentsD";
 import { dataDsIn, isMainPage, isModalPage, PageD } from "../common/pageD";
 
 import { decamelize, NameAnd, sortedEntries } from "@focuson/utils";
@@ -20,6 +20,11 @@ export interface ComponentData<G> {
   hidden?: boolean;
   guard?: NameAnd<string[]>;
   displayParams?: ComponentDisplayParams
+}
+function componentDataForPage<G> ( d: CompDataD<G> ): ComponentData<G> {
+  const display = { import: '', name: d.display?.name ? d.display.name : d.name, params: d.display?.params ? d.display.params : commonParams };
+  return { dataDD: d, display, path: [] }
+
 }
 export interface ErrorComponentData {
   path: string[];
@@ -96,7 +101,10 @@ export function createOneReact<B, G> ( { path, dataDD, display, displayParams, g
     if ( param?.default ) return [ [ name, processOneParam ( name, param.default ) ] ]
     if ( param?.needed === 'defaultToCamelCaseOfName' ) return [ [ name, processOneParam ( name, decamelize ( path.slice ( -1 ) + "", ' ' ) ) ] ]
     if ( param?.needed === 'defaultToPath' ) return [ [ name, processOneParam ( name, path ) ] ]
-    if ( param?.needed === 'id' ) return [ [ name, processOneParam ( name, '`${id}.' + path.join ( "." ) + '`' ) ] ]
+    if ( param?.needed === 'id' ) {
+      const dot = path.length > 0 ? '.' : ''
+      return [ [ name, processOneParam ( name, '`${id}' + dot + path.join ( "." ) + '`' ) ] ]
+    }
     if ( param?.needed === 'defaultToEnum' )
       if ( isPrimDd ( dataDD ) && dataDD.enum ) return [ [ name, "{" + JSON.stringify ( dataDD.enum ) + "}" ] ]
       else
@@ -142,7 +150,7 @@ export const createReactPageComponent = <B extends ButtonD, G extends GuardWithC
   throw new Error ( `Unknown page type ${pageD.pageType} in ${pageD.name}` )
 };
 
-export function createReactModalPageComponent<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButton: MakeButton<G>, pageD: PageD<B, G> ): string[] {
+export function createReactModalPageComponent<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButtons: MakeButton<G>, pageD: PageD<B, G> ): string[] {
   const { dataDD, layout } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
   const domName = domainName ( pageD.display.dataDD );
@@ -151,9 +159,11 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
     `  return focusedPage<S, ${domName}, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page`,
     `     ( state, d, mode ) => {`,
     ...makeGuardButtonVariables ( params, makeGuard, pageD ),
+    `          const id='root';`,
     `          return (<${layout.name}  details='${layout.details}'>`,
-    `               <${componentName ( dataDD )} id='root' state={state}  mode={mode} />`,
-    ...indentList ( indentList ( indentList ( makeButtonsFrom<B, G> ( params, makeGuard, makeButton, pageD ) ) ) ),
+    ...indentList ( indentList ( indentList ( indentList ( indentList ( (indentList ( indentList ( [
+      ...createAllReactCalls ( [ componentDataForPage ( pageD.display.dataDD ) ] ) ] ) )) ) ) ) ) ),
+    ...makeButtonsFrom ( params, makeGuard, makeButtons, pageD ),
     `            </${layout.name}>)})}`,
     ''
   ]
@@ -166,9 +176,11 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
     `  return focusedPageWithExtraState<S, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${pageD.name}' ) ( s => s${focus}) (
     ( fullState, state , full, d, mode) => {`,
     ...makeGuardButtonVariables ( params, makeGuard, pageD ),
+    `  const id='root';`,
     `  return (<${layout.name}  details='${layout.details}'>`,
-    `     <${componentName ( dataDD )} id='root' state={state}  mode={mode} />`,
-    ...indentList ( indentList ( indentList ( makeButtonsFrom ( params, makeGuard, makeButtons, pageD ) ) ) ),
+    ...indentList ( indentList ( indentList ( [
+      ...indentList ( indentList ( createAllReactCalls ( [ componentDataForPage ( pageD.display.dataDD ) ] ) ) ),
+      ...makeButtonsFrom ( params, makeGuard, makeButtons, pageD ) ] ) ) ),
     `   </${layout.name}>)})}`,
     ''
   ]

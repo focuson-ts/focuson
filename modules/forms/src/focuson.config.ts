@@ -7,6 +7,7 @@ import { ChequeCreditbooksPD, OrderChequeBookOrPayingInModalPD } from "./example
 import { OccupationAndIncomeSummaryPD, occupationIncomeModalPD, otherSourcesOfIncomeModalPD } from "./example/occupationAndIncomeDetails/occupationAndIncome.pageD";
 import { generate } from "./makeFiles/generate";
 import *  as fse from "fs-extra";
+import { RepeatingLinePageD, RepeatingPageD } from "./example/repeating/repeating.pageD";
 
 export const generatedPages = [
   OccupationAndIncomeSummaryPD, occupationIncomeModalPD,
@@ -14,7 +15,8 @@ export const generatedPages = [
   EAccountsSummaryPD, CreatePlanPD, ETransferPageD,
   CreateEAccountPageD,
   ChequeCreditbooksPD,
-  OrderChequeBookOrPayingInModalPD
+  OrderChequeBookOrPayingInModalPD, RepeatingLinePageD, RepeatingPageD
+
 ];
 export const javaOutputRoot = '../formJava'
 export const tsRoot = "../formTs"

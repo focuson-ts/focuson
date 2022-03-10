@@ -28,8 +28,9 @@ import {EAccountSummaryDDDomain} from "../EAccountsSummary/EAccountsSummary.doma
 export function EAccountsSummaryPage<S, Context extends FocusOnContext<S>>(){
   return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
+  const id='root';
   return (<Layout  details='[1][3,3][5]'>
-     <EAccountsSummaryDD id='root' state={state}  mode={mode} />
+          <EAccountsSummaryDD id={`${id}`} state={state} mode={mode} />
           <ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  focusOn={["EAccountsSummary","tempCreatePlan"]} copyFrom={["EAccountsSummary","fromApi","createPlan"]}    pageMode='edit'   rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"update","path":["EAccountsSummary"]}} />
           <ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  focusOn={["EAccountsSummary","tempCreatePlan"]}  createEmpty={empty.emptyCreatePlanDD}   pageMode='create'   rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"create","path":["EAccountsSummary"]}} />
           <RestButton  id='deleteExistingPlan'   name='deleteExistingPlan' action='delete' path={["EAccountsSummary","fromApi"]} state={state} rest='EAccountsSummary_CreatePlanDDRestDetails' confirm={true} />

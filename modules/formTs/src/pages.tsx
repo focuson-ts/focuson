@@ -10,6 +10,8 @@ import { ETransferPage } from './ETransfer/ETransfer.render';
 import { CreateEAccountPage } from './CreateEAccount/CreateEAccount.render';
 import { ChequeCreditbooksPage } from './ChequeCreditbooks/ChequeCreditbooks.render';
 import { OrderChequeBookOrPayingInModalPage } from './OrderChequeBookOrPayingInModal/OrderChequeBookOrPayingInModal.render';
+import { RepeatingLinePage } from './RepeatingLine/RepeatingLine.render';
+import { RepeatingPage } from './Repeating/Repeating.render';
 
 function MyLoading () {
       return <p>Loading</p>
@@ -22,7 +24,9 @@ export const pages: MultiPageDetails<FState, Context> = {
     ETransfer: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'ETransfer' ), pageFunction: ETransferPage(), initialValue: {"fromApi":{}} },
     CreateEAccount: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'CreateEAccount' ), pageFunction: CreateEAccountPage(), initialValue: {} },
     ChequeCreditbooks: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'ChequeCreditbooks' ), pageFunction: ChequeCreditbooksPage(), initialValue: {} },
+    Repeating: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'Repeating' ), pageFunction: RepeatingPage(), initialValue: {} },
     OccupationIncomeModalPD: { config: simpleMessagesConfig,  pageFunction: OccupationIncomeModalPDPage(), modal: true},
     CreatePlan: { config: simpleMessagesConfig,  pageFunction: CreatePlanPage(), modal: true},
-    OrderChequeBookOrPayingInModal: { config: simpleMessagesConfig,  pageFunction: OrderChequeBookOrPayingInModalPage(), modal: true}
+    OrderChequeBookOrPayingInModal: { config: simpleMessagesConfig,  pageFunction: OrderChequeBookOrPayingInModalPage(), modal: true},
+    RepeatingLine: { config: simpleMessagesConfig,  pageFunction: RepeatingLinePage(), modal: true}
   }

@@ -3,7 +3,7 @@ import { JavaWiringParams } from "../codegen/config";
 import fs from "fs";
 import { unique } from "../common/restD";
 import { sortedEntries } from "@focuson/utils";
-import { isMainPage, PageD, RestDefnInPageProperties } from "../common/pageD";
+import { allMainPages, isMainPage, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
 import { fetcherInterfaceName, mockFetcherClassName, queryClassName, restControllerName } from "../codegen/names";
@@ -13,7 +13,7 @@ import { makeAllMockFetchers } from "../codegen/makeMockFetchers";
 import { makeJavaVariablesForGraphQlQuery } from "../codegen/makeGraphQlQuery";
 import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
 
-export const makeJavaFiles = ( javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B,G> ( pages: PageD<B,G>[] ) => {
+export const makeJavaFiles = ( javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
 
   let javaRoot = javaOutputRoot + "/java"
   let javaAppRoot = javaOutputRoot + "/java/" + params.applicationName
@@ -36,7 +36,18 @@ export const makeJavaFiles = ( javaOutputRoot: string, params: JavaWiringParams,
   fs.mkdirSync ( `${javaQueriesPackages}`, { recursive: true } )
 
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
-  let rests = unique ( pages.flatMap ( x => (isMainPage ( x ) ? sortedEntries ( x.rest ) : []) ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest ), r => r.dataDD.name )
+  console.log ( 'pages', pages.map ( p => p.name ) )
+  console.log ( 'mainpages', allMainPages ( pages ).map ( p => p.name ) )
+  let raw = allMainPages ( pages ).flatMap ( x => {
+    console.log ( 'processing', x.name, Object.keys ( x.rest ) )
+    return sortedEntries ( x.rest );
+  } ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => {
+    console.log ( '    and', x[ 0 ], x[ 1 ].rest.dataDD.name )
+    return x[ 1 ].rest;
+  } );
+  console.log ( 'raw', raw.map ( p => p.dataDD.name ) )
+  let rests = unique ( raw, r => r.dataDD.name )
+  console.log ( 'rests', rests.map ( r => r.dataDD.name ) )
   copyFiles ( javaScriptRoot, 'templates/scripts', directorySpec ) ( 'makeJava.sh', 'makeJvmPact.sh', 'template.java' )
 
   templateFile ( `${javaAppRoot}/pom.xml`, 'templates/mvnTemplate.pom', params, directorySpec )

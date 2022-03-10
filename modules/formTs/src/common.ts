@@ -12,6 +12,7 @@ import { HasEAccountsSummaryPageDomain } from './EAccountsSummary/EAccountsSumma
 import { HasETransferPageDomain } from './ETransfer/ETransfer.domains';
 import { HasCreateEAccountPageDomain } from './CreateEAccount/CreateEAccount.domains';
 import { HasChequeCreditbooksPageDomain } from './ChequeCreditbooks/ChequeCreditbooks.domains';
+import { HasRepeatingPageDomain } from './Repeating/Repeating.domains';
 export type Context = FocusOnContext<FState>
 export const context: Context = defaultPageSelectionAndRestCommandsContext<FState> ( pages )
 export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,
@@ -19,7 +20,8 @@ export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,
   HasEAccountsSummaryPageDomain,
   HasETransferPageDomain,
   HasCreateEAccountPageDomain,
-  HasChequeCreditbooksPageDomain
+  HasChequeCreditbooksPageDomain,
+  HasRepeatingPageDomain
 {}
 export interface HasCommonIds {CommonIds: CommonIds}
 export type CommonIds = {

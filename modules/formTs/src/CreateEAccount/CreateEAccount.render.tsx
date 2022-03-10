@@ -24,8 +24,9 @@ import {CreateEAccountDataDDDomain} from "../CreateEAccount/CreateEAccount.domai
 export function CreateEAccountPage<S, Context extends FocusOnContext<S>>(){
   return focusedPageWithExtraState<S, CreateEAccountPageDomain, CreateEAccountDataDDDomain, Context> ( s => 'CreateEAccount' ) ( s => s.focusOn('editing')) (
     ( fullState, state , full, d, mode) => {
+  const id='root';
   return (<Layout  details='[1][1][1][1]]'>
-     <CreateEAccountDataDD id='root' state={state}  mode={mode} />
+          <CreateEAccountDataDD id={`${id}`} state={state} mode={mode} />
           <button>cancel of type ResetStateButton cannot be created yet</button>
           <RestButton  id='createEAccounts'   name='createEAccounts' action='create' path={["CreateEAccount","editing"]} state={state} rest='CreateEAccount_ETransferDataDRestDetails' confirm={true} />
           <button>resetAll of type ResetStateButton cannot be created yet</button>

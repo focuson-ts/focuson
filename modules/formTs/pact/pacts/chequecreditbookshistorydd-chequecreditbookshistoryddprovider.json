@@ -48,6 +48,27 @@
           }
         ]
       }
+    },
+    {
+      "description": "ChequeCreditbooks should have a get fetcher for ChequeCreditbooksHistoryDD",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/chequeCreditBooks",
+        "query": "accountId=accId&applRef=appref&brandRef=brandRef&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": [
+          {
+            "serialNumber": 937453,
+            "howOrdered": "Manually",
+            "dateOrder": "2022-10-01"
+          }
+        ]
+      }
     }
   ],
   "metadata": {

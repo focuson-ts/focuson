@@ -25,8 +25,9 @@ import {ChequeCreditbooksHistoryLineDDDomain} from "../ChequeCreditbooks/ChequeC
 export function ChequeCreditbooksPage<S, Context extends FocusOnContext<S>>(){
   return focusedPageWithExtraState<S, ChequeCreditbooksPageDomain, ChequeCreditbooksDDDomain, Context> ( s => 'ChequeCreditbooks' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
+  const id='root';
   return (<Layout  details='[1][2][2]'>
-     <ChequeCreditbooksDD id='root' state={state}  mode={mode} />
+          <ChequeCreditbooksDD id={`${id}`} state={state} mode={mode} />
           <button>chequeBook of type ResetStateButton cannot be created yet</button>
           <ModalButton id='orderNewBook' text='orderNewBook'  state={state} modal = 'OrderChequeBookOrPayingInModal'  focusOn={["ChequeCreditbooks","tempCreatePlan"]}  createEmpty={empty.emptyChequeCreditbooksHistoryLineDD}   pageMode='create'   rest={{"name":"ChequeCreditbooks_ChequeCreditbooksHistoryDDRestDetails","restAction":"create","path":["tempCreatePlan"]}} />
           <button>payingInBook of type ResetStateButton cannot be created yet</button>

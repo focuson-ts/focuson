@@ -53,7 +53,7 @@ export interface MainPageD<Buttons, G> {
   pageType: 'MainPage',
   name: string,
   modes: PageMode[],
-  display: { layout: LayoutD, target: string[], dataDD: DataD<G> },
+  display: { layout: LayoutD, target: string[], dataDD: CompDataD<G> },
   initialValue: 'empty' | any,
   domain: DomainDefnInPage<G>,
   modals?: ModalData<Buttons, G>[],
@@ -73,12 +73,12 @@ export function dataDsIn<B, G> ( pds: PageD<B, G>[], stopAtDisplay?: boolean ): 
   let mainPages = allMainPages ( pds );
   const pageDataDs: CompDataD<G>[] = mainPages.flatMap ( pd => sortedEntries ( pd.rest )
     .map ( ( [ na, restPD ]: [ string, RestDefnInPageProperties<G> ] ) => restPD.rest.dataDD ) )
-  pageDataDs.forEach ( d => console.log ( 'pageDataD - rest', d.name ) )
+  // pageDataDs.forEach ( d => console.log ( 'pageDataD - rest', d.name ) )
   const domainDataDs: DataD<G>[] = mainPages.flatMap ( pd => sortedEntries ( pd.domain ) )
     .flatMap ( ( [ name, domain ] ) => isDataDd ( domain.dataDD ) ? [ domain.dataDD ] : [] )
-  pageDataDs.forEach ( d => console.log ( 'domainDataDs ', d.name ) )
+  // pageDataDs.forEach ( d => console.log ( 'domainDataDs ', d.name ) )
   let result = findAllDataDs ( [ ...pageDataDs, ...domainDataDs ], stopAtDisplay );
-  sortedEntries ( result ).forEach ( ( [ n, d ] ) => console.log ( "result", n, d.name ) )
+  // sortedEntries ( result ).forEach ( ( [ n, d ] ) => console.log ( "result", n, d.name ) )
   return result
 }
 

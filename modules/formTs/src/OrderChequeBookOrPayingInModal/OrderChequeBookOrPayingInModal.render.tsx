@@ -19,8 +19,9 @@ import {ValidationButton} from '../copied/ValidationButton';
 export function OrderChequeBookOrPayingInModalPage<S, Context extends FocusOnContext<S>>(){
   return focusedPage<S, ChequeCreditbooksHistoryLineDDDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
      ( state, d, mode ) => {
+          const id='root';
           return (<Layout  details='[3]'>
-               <ChequeCreditbooksHistoryLineDD id='root' state={state}  mode={mode} />
-                    <ModalCancelButton id='cancel' state={state} />
-                    <ModalCommitButton id='commit'  state={state} />
+              <ChequeCreditbooksHistoryLineDD id={`${id}`} state={state} mode={mode} />
+              <ModalCancelButton id='cancel' state={state} />
+              <ModalCommitButton id='commit'  state={state} />
             </Layout>)})}

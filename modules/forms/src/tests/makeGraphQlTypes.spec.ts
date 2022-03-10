@@ -97,4 +97,10 @@ describe ( "makeGraphQlSchema", () => {
       "}"
     ])
   } )
+
+  it ("should make a schema for something with a repeating block in the fetcher", () =>{
+
+
+
+  })
 } )
