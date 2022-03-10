@@ -1,4 +1,4 @@
-import { AllDataDD, AllDataFolder, CompDataD, DataD, foldDataDD, HasEnum, HasSample, OneDataDD, PrimitiveDD } from "../common/dataD";
+import { AllDataDD, AllDataFolder, CompDataD, DataD, foldDataDD, HasEnum, HasSample, isDataDd, isRepeatingDd, OneDataDD, PrimitiveDD } from "../common/dataD";
 import { asMultilineJavaString, safeArray, safePick, sortedEntries } from "@focuson/utils";
 import { Lenses } from "@focuson/lens";
 import { domainName, emptyName, sampleName } from "./names";
@@ -49,8 +49,11 @@ export function makeJavaSample <G>( d: CompDataD<G>, i: number ): string[] {
   return asMultilineJavaString ( JSON.stringify ( sample, null, 2 ).split ( "\n" ), '       ' )
 }
 
-export function makeJavaVariable<G> ( d: CompDataD<G>, i: number ) {
+export function makeJavaVariable<G> ( d: CompDataD<G>, i: number ) : string[]{
+  if (isDataDd(d))
   return [ `public static Map ${sampleName ( d ) + i} =  parse.parseMap(`, ...makeJavaSample ( d, i ), ");" ]
+  if (isRepeatingDd((d)))
+  return [ `public static List ${sampleName ( d ) + i} =  parse.parseList(`, ...makeJavaSample ( d, i ), ");" ]
 }
 export function makeAllJavaVariableName <B,G> ( ps: PageD <B,G>[], i: number ): string[] {
   return sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ name, dataD ] ) => makeJavaVariable ( dataD, i ) )

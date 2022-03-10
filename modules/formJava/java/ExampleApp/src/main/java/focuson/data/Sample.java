@@ -1,6 +1,7 @@
 package focuson.data;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.List;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.json.JsonParser;
 public class Sample{
@@ -16,7 +17,7 @@ public class Sample{
          "  ]"+
          "}"
   );
-  public static Map sampleChequeCreditbooksHistoryDD0 =  parse.parseMap(
+  public static List sampleChequeCreditbooksHistoryDD0 =  parse.parseList(
          "["+
          "  {"+
          "    \"serialNumber\": 937453,"+
@@ -47,7 +48,7 @@ public class Sample{
          "  \"createPlanEnd\": \"2022-10-01\""+
          "}"
   );
-  public static Map sampleCustomerOccupationIncomeDetailsDD0 =  parse.parseMap(
+  public static List sampleCustomerOccupationIncomeDetailsDD0 =  parse.parseList(
          "["+
          "  {"+
          "    \"areYou\": \"C\","+
@@ -103,7 +104,7 @@ public class Sample{
          "  }"+
          "}"
   );
-  public static Map sampleEAccountsSummaryTableDD0 =  parse.parseMap(
+  public static List sampleEAccountsSummaryTableDD0 =  parse.parseList(
          "["+
          "  {"+
          "    \"accountId\": 1233450,"+
