@@ -1,0 +1,191 @@
+type Query{
+  getOccupationAndIncomeDetailsDD(accountSeq: String!, applicationRef: String!, brandRef: String!, vbAccountSeq: String!, vbAccountType: String!):OccupationAndIncomeDetailsDD!
+  getOtherIncomeResponseDD(accountSeq: String!, applicationRef: String!, brandRef: String!, vbAccountSeq: String!, vbAccountType: String!):OtherIncomeResponseDD!
+  getCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!
+  listCreatePlanDD(accountId: String!, customerId: String!):[CreatePlanDD!]!
+  getEAccountsSummaryDD(accountId: String!, customerId: String!):EAccountsSummaryDD!
+  getCreateEAccountDataDD(accountId: String!, createPlanId: String!, customerId: String!):CreateEAccountDataDD!
+  getChequeCreditbooksDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!):ChequeCreditbooksDD!
+  getRepeatingLine(customerId: String!):[RepeatingLine!]!
+  getpostCodeDataLine(customerId: String!):[postCodeDataLine!]!
+}
+type Mutation{
+  updateOccupationAndIncomeDetailsDD(accountSeq: String!, applicationRef: String!, brandRef: String!, vbAccountSeq: String!, vbAccountType: String!,obj: OccupationAndIncomeDetailsDDInp!):OccupationAndIncomeDetailsDD!
+  createCreatePlanDD(accountId: String!, customerId: String!,obj: CreatePlanDDInp!):CreatePlanDD!
+  updateCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanDDInp!):CreatePlanDD!
+  deleteCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):String
+  createETransferDataD(customerId: String!,obj: ETransferDataDInp!):ETransferDataD!
+  createCreateEAccountDataDD(accountId: String!, customerId: String!,obj: CreateEAccountDataDDInp!):CreateEAccountDataDD!
+  createChequeCreditbooksDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!,obj: ChequeCreditbooksDDInp!):ChequeCreditbooksDD!
+  createRepeatingLine(customerId: String!,obj: [RepeatingLineInp!]!):[RepeatingLine!]!
+}
+type ChequeCreditbooksDD{
+  history: [ChequeCreditbooksHistoryLineDD!]!
+}
+type ChequeCreditbooksHistoryLineDD{
+  serialNumber: Int!
+  howOrdered: String!
+  dateOrder: String!
+}
+type CreateEAccountDataDD{
+  name: String!
+  type: String!
+  savingsStyle: String!
+  initialAmount: Int!
+}
+type CreatePlanDD{
+  createPlanStart: String!
+  createPlanDate: String!
+  createPlanEnd: String!
+}
+type EAccountsSummaryDD{
+  useEStatements: Boolean!
+  eAccountsTable: [EAccountSummaryDD!]!
+  totalMonthlyCost: Int!
+  oneAccountBalance: Int!
+  currentAccountBalance: Int!
+  createPlan: CreatePlanDD!
+}
+type EAccountSummaryDD{
+  accountId: Int!
+  displayType: String!
+  description: String!
+  virtualBankSeq: String!
+  total: Int!
+  frequency: String!
+}
+type ETransferDataD{
+  account: Int!
+  dateOfETransfer: String!
+  description: String!
+  fromAccount: Int!
+  toAccount: Int!
+  monitoringAccount: Int!
+  type: String!
+  balance: Int!
+  notes: String!
+}
+type OccupationAndIncomeDetailsDD{
+  regulatoryReport: String!
+  mainCustomerName: String!
+  jointCustomerName: String!
+  mainClientRef: Int!
+  jointClientRef: Int!
+  customerOccupationIncomeDetails: [OccupationIncomeDetailsDD!]!
+}
+type OccupationIncomeDetailsDD{
+  areYou: String!
+  currentEmployment: String!
+  occupation: String!
+  customerDescription: String!
+  ownShareOfTheCompany: String!
+  owningSharesPct: String!
+  workFor: String!
+  employmentType: String!
+  annualSalaryBeforeDeduction: Int!
+  annualIncomeExcludingRent: Int!
+  regularCommissionBonus: Int!
+  dateOfEmploymentStart: String!
+  otherSourceOfIncome: String!
+  createdBy: String!
+  createdDate: String!
+  employerName: String!
+  whatTypeOfBusiness: String!
+  whatNameBusiness: String!
+  establishedYear: String!
+  annualDrawing3Yrs: Int!
+  empStartDate: String!
+  empEndDate: String!
+  sePositionHeld: String!
+  occupationCategory: String!
+  empEmploymentSeq: Int!
+  empAppRoleSeq: Int!
+  accountantAppRoleSeq: Int!
+}
+type OtherIncomeResponseDD{
+  clientOtherIncomeSeq: String!
+  otherIncomeType: String!
+  incomeFreqRef: String!
+  amount: Int!
+}
+type postCodeDataLine{
+  line1: String!
+  line2: String!
+  line3: String!
+  line4: String!
+}
+type RepeatingLine{
+  name: String!
+  age: Int!
+}
+input ChequeCreditbooksDDInp{
+  history: [ChequeCreditbooksHistoryLineDDInp!]!
+}
+input ChequeCreditbooksHistoryLineDDInp{
+  serialNumber: Int!
+  howOrdered: String!
+  dateOrder: String!
+}
+input CreateEAccountDataDDInp{
+  name: String!
+  type: String!
+  savingsStyle: String!
+  initialAmount: Int!
+}
+input CreatePlanDDInp{
+  createPlanStart: String!
+  createPlanDate: String!
+  createPlanEnd: String!
+}
+input ETransferDataDInp{
+  account: Int!
+  dateOfETransfer: String!
+  description: String!
+  fromAccount: Int!
+  toAccount: Int!
+  monitoringAccount: Int!
+  type: String!
+  balance: Int!
+  notes: String!
+}
+input OccupationAndIncomeDetailsDDInp{
+  regulatoryReport: String!
+  mainCustomerName: String!
+  jointCustomerName: String!
+  mainClientRef: Int!
+  jointClientRef: Int!
+  customerOccupationIncomeDetails: [OccupationIncomeDetailsDDInp!]!
+}
+input OccupationIncomeDetailsDDInp{
+  areYou: String!
+  currentEmployment: String!
+  occupation: String!
+  customerDescription: String!
+  ownShareOfTheCompany: String!
+  owningSharesPct: String!
+  workFor: String!
+  employmentType: String!
+  annualSalaryBeforeDeduction: Int!
+  annualIncomeExcludingRent: Int!
+  regularCommissionBonus: Int!
+  dateOfEmploymentStart: String!
+  otherSourceOfIncome: String!
+  createdBy: String!
+  createdDate: String!
+  employerName: String!
+  whatTypeOfBusiness: String!
+  whatNameBusiness: String!
+  establishedYear: String!
+  annualDrawing3Yrs: Int!
+  empStartDate: String!
+  empEndDate: String!
+  sePositionHeld: String!
+  occupationCategory: String!
+  empEmploymentSeq: Int!
+  empAppRoleSeq: Int!
+  accountantAppRoleSeq: Int!
+}
+input RepeatingLineInp{
+  name: String!
+  age: Int!
+}
