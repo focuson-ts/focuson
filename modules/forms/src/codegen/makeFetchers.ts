@@ -2,7 +2,7 @@ import { sortedEntries } from "@focuson/utils";
 import { isMainPage, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { domainName, domainsFileName, fetcherFileName, fetcherName, pageDomainName } from "./names";
 import { TSParams } from "./config";
-import { addStringToEndOfAllButLast, importsDot, importsDotDot, noExtension } from "./codegen";
+import { addStringToEndOfAllButLast, focusQueryFor, importsDot, importsDotDot, noExtension } from "./codegen";
 import { findIds } from "../common/restD";
 
 
@@ -22,8 +22,8 @@ export const makeFetcherCode = ( params: TSParams ) => <B,G> ( p: PageD<B,G> ) =
     `  return pageAndTagFetcher<S, ${domain}.${pageDomainName ( p )}, ${domain}.${dataType}, SimpleMessage>(`,
     `    ${common}.commonFetch<S,  ${domain}.${dataType}>(),`,
     `     '${p.name}',`,
-    `     '${targetFromPath}', fdLens, commonIds, {},${JSON.stringify ( ids )},${JSON.stringify ( resourceIds )},`,
-    `      Lenses.identity< ${domain}.${pageDomainName ( p )}> ().focusQuery ( '${targetFromPath}' ),`,
+    `     '${targetFromPath.join("_")}', fdLens, commonIds, {},${JSON.stringify ( ids )},${JSON.stringify ( resourceIds )},`,
+    `      Lenses.identity< ${domain}.${pageDomainName ( p )}> ()${focusQueryFor(targetFromPath)},`,
     `     '${def.rest.url}')`,
     '}' ]
 };

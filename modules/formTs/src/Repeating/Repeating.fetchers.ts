@@ -11,6 +11,6 @@ export function RepeatingWholeDataFetcher<S extends  HasSimpleMessages & HasTagH
     common.commonFetch<S,  domains.RepeatingWholeDataDomain>(),
      'Repeating',
      'fromApi', fdLens, commonIds, {},["customerId"],[],
-      Lenses.identity< domains.RepeatingPageDomain> ().focusQuery ( 'fromApi' ),
+      Lenses.identity< domains.RepeatingPageDomain> ().focusQuery('fromApi'),
      '/api/repeating?{query}')
 }

@@ -1,12 +1,7 @@
-import { DataD, OneLineStringDD, RepeatingDataD } from "../../common/dataD";
-import { AllGuards } from "../../buttons/guardButton";
-import { TableCD } from "../../common/componentsD";
 import { ExampleMainPage, ExampleModalPage } from "../common";
 import { nameAndAddressDataD, postCodeSearchDataD } from "./addressSearch.dataD";
 import { Layout } from "@focuson/form_components";
 import { postcodeRestD } from "./addressSearch.restD";
-import { occupationIncomeDetailsDD } from "../occupationAndIncomeDetails/occupationAndIncome.dataD";
-import { occupationIncomeModalPD } from "../occupationAndIncomeDetails/occupationAndIncome.pageD";
 
 export const PostCodeModalPage: ExampleModalPage = {
   name: "PostCodeSearch",
@@ -31,7 +26,7 @@ export const PostCodeMainPage: ExampleMainPage = {
   modals: [ { modal: PostCodeModalPage, path: [ 'postcode' ] } ],
   modes: [ 'edit' ],
   rest: {
-    postcode: { rest: postcodeRestD, targetFromPath: [ 'postcode', 'search' ], fetcher: true }
+    postcode: { rest: postcodeRestD, targetFromPath: [ 'postcode', 'searchResults' ], fetcher: true }
   },
   buttons: {
     search: {

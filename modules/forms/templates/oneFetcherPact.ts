@@ -19,8 +19,8 @@ pactWith ( { consumer: '{consumer}', provider: '{provider}', cors: true }, provi
       let newState = await loadTree ( {tree}, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       expect ( newState ).toEqual ( {
         ... firstState,
-        {pageName}: {{target}: {body}},
-        tags: { {pageName}_{target}:{commonParamsTagsValue} }
+        {pageName}: {{target}: {body}{closeTarget},
+        tags: { {pageName}_{tag}:{commonParamsTagsValue}}
       } )
     } )
   } )

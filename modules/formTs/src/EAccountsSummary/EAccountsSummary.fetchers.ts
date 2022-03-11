@@ -11,6 +11,6 @@ export function EAccountsSummaryDDFetcher<S extends  HasSimpleMessages & HasTagH
     common.commonFetch<S,  domains.EAccountsSummaryDDDomain>(),
      'EAccountsSummary',
      'fromApi', fdLens, commonIds, {},["accountId"],["customerId"],
-      Lenses.identity< domains.EAccountsSummaryPageDomain> ().focusQuery ( 'fromApi' ),
+      Lenses.identity< domains.EAccountsSummaryPageDomain> ().focusQuery('fromApi'),
      '/api/accountsSummary?{query}')
 }

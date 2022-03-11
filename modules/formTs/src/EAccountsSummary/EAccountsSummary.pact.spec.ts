@@ -200,7 +200,7 @@ pactWith ( { consumer: 'EAccountsSummaryDD', provider: 'EAccountsSummaryDDProvid
       expect ( newState ).toEqual ( {
         ... firstState,
         EAccountsSummary: {fromApi: samples.sampleEAccountsSummaryDD0},
-        tags: { EAccountsSummary_fromApi:["accId","custId"] }
+        tags: { EAccountsSummary_fromApi:["accId","custId"]}
       } )
     } )
   } )

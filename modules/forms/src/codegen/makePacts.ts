@@ -18,6 +18,7 @@ interface CommonPactProps extends NameAnd<string> {
   body: string,
   pageName: string,
   target: string,
+  closeTarget: string,
   stateName: string,
   commonFile: string,
   commonParams: string,
@@ -25,6 +26,7 @@ interface CommonPactProps extends NameAnd<string> {
   commonParamsTagsValue: string,
 }
 interface FetcherPactProps extends CommonPactProps {
+  tag: string,
   tree: string,
 }
 interface RestPactProps extends CommonPactProps {
@@ -41,7 +43,7 @@ export function makeFetcherPact<B, G> ( params: TSParams, p: PageD<B, G>, r: Res
 }
 
 export function makeGetFetcherPact<B, G> ( params: TSParams, p: PageD<B, G>, r: RestDefnInPageProperties<G>, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
-  const props = makePropsForFetcherPact ( p, r.rest, params );
+  const props = makePropsForFetcherPact ( p, r.rest, params, r.targetFromPath );
   const str: string = loadFile ( 'templates/oneFetcherPact.ts', directorySpec ).toString ()
   return [ '//GetFetcher pact test', ...applyToTemplate ( str, props ) ]
 }
@@ -65,8 +67,13 @@ export function makeAllPacts<B, G> ( params: TSParams, p: PageD<B, G>, directory
   ]
 }
 
-
-function makeCommonPropsForPact<B, G> ( p: PageD<B, G>, d: RestD<G>, params: TSParams, restAction: RestAction, description2: string ) {
+export function makeTargetFor ( path: string[] ) {
+  return path.join ( ":{" )
+}
+export function closeTargetFor ( path: string[] ) {
+  return '}'.repeat ( path.length )
+}
+function makeCommonPropsForPact<B, G> ( p: PageD<B, G>, d: RestD<G>, params: TSParams, path: string[], restAction: RestAction, description2: string ) {
   let paramsValueForTest = makeCommonParamsValueForTest ( d, restAction );
   let body = params.samplesFile + "." + sampleName ( d.dataDD ) + '0';
   const props: CommonPactProps = {
@@ -80,30 +87,37 @@ function makeCommonPropsForPact<B, G> ( p: PageD<B, G>, d: RestD<G>, params: TSP
     status: "200",
     commonParams: params.commonParams,
     pageName: p.name,
-    target: p.display.target.join ( "." ),
+    target: makeTargetFor ( path ), //except this is wrong
+    closeTarget: closeTargetFor ( path ),
     stateName: params.stateName,
     commonFile: params.commonFile,
     commonParamsValue: JSON.stringify ( paramsValueForTest ),
     commonParamsTagsValue: JSON.stringify ( sortedEntries ( paramsValueForTest ).map ( ( [ name, v ] ) => v ) )
-  }
+  } //     {pageName}: {{target}: {body}},
   return props;
 }
 
-function makePropsForFetcherPact<B, G> ( p: PageD<B, G>, d: RestD<G>, params: TSParams ): FetcherPactProps {
-  return { ...makeCommonPropsForPact ( p, d, params, 'get', `should have a get fetcher for ${d.dataDD.name}` ), tree: `${params.fetchersFile}.fetchers` }
+function makePropsForFetcherPact<B, G> ( p: PageD<B, G>, d: RestD<G>, params: TSParams, path: string[] ): FetcherPactProps {
+  return {
+    ...makeCommonPropsForPact ( p, d, params, path, 'get', `should have a get fetcher for ${d.dataDD.name}` ),
+    tag: path.join ( "_" ), tree: `${params.fetchersFile}.fetchers`
+  }
 }
 
 function makePropsForRestPact<B, G> ( p: PageD<B, G>, r: RestDefnInPageProperties<G>, restAction: RestAction, params: TSParams ): RestPactProps {
-  const target = r.targetFromPath.join ( "." )
-  let props = makeCommonPropsForPact ( p, r.rest, params, restAction, `should have a ${restAction} rest for ${r.rest.dataDD.name}` );
+
+  let props = makeCommonPropsForPact ( p, r.rest, params, r.targetFromPath, restAction, `should have a ${restAction} rest for ${r.rest.dataDD.name}` );
   let sample = sampleName ( r.rest.dataDD ) + "0"
+  let target = makeTargetFor ( r.targetFromPath );
+  let closeTarget = closeTargetFor ( r.targetFromPath );
   return {
     ...props,
     restDetails: `${params.restsFile}.restDetails`,
     restDetailsName: restDetailsName ( p, r.rest ),
-    object: defaultRestAction[ restAction ].params.needsObj ? `${props.pageName}: { ${target}:${params.samplesFile}.${sampleName ( r.rest.dataDD ) + "0"} }` : `${props.pageName}:{}`,
+    object: defaultRestAction[ restAction ].params.needsObj ? `${props.pageName}: { ${target}:${params.samplesFile}.${sampleName ( r.rest.dataDD ) + "0"} ${closeTarget}` : `${props.pageName}:{}`,
     sample,
-    target,
+    target: target,
+    closeTarget: closeTarget,
     requestObject: defaultRestAction[ restAction ].params.needsObj ? `,body: JSON.stringify(${params.samplesFile}.${sample})` : `//no body for ${restAction}`,
     action: restAction
   }

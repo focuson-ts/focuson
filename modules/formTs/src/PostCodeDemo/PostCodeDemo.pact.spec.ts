@@ -29,8 +29,8 @@ pactWith ( { consumer: 'PostCodeData', provider: 'PostCodeDataProvider', cors: t
       let newState = await loadTree ( fetchers.fetchers, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       expect ( newState ).toEqual ( {
         ... firstState,
-        PostCodeDemo: {main: samples.samplePostCodeData0},
-        tags: { PostCodeDemo_main:["custId"] }
+        PostCodeDemo: {postcode:{searchResults: samples.samplePostCodeData0}},
+        tags: { PostCodeDemo_postcode_searchResults:["custId"]}
       } )
     } )
   } )
@@ -63,7 +63,7 @@ pactWith ( { consumer: 'PostCodeData', provider: 'PostCodeDataProvider', cors: t
       //export declare function rest<S, MSGS>(fetchFn: FetchFn, d: RestDetails<S, MSGS>, messageL: Optional<S, MSGS[]>, restL: Optional<S, RestCommand[]>, s: S): Promise<S>;
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), firstState )
-      expect ( { ...newState, messages: []}).toEqual ( { ...firstState, restCommands: [], PostCodeDemo: { postcode.search: samples.samplePostCodeData0} } )
+      expect ( { ...newState, messages: []}).toEqual ( { ...firstState, restCommands: [], PostCodeDemo: { postcode:{searchResults: samples.samplePostCodeData0}} } )
       expect ( newState.messages.length ).toEqual ( 1 )
       expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
     } )

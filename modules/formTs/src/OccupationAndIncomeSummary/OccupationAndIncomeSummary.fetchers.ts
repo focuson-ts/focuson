@@ -11,6 +11,6 @@ export function OccupationAndIncomeDetailsDDFetcher<S extends  HasSimpleMessages
     common.commonFetch<S,  domains.OccupationAndIncomeDetailsDDDomain>(),
      'OccupationAndIncomeSummary',
      'fromApi', fdLens, commonIds, {},["accountSeq","applicationRef","brandRef","vbAccountSeq","vbAccountType"],[],
-      Lenses.identity< domains.OccupationAndIncomeSummaryPageDomain> ().focusQuery ( 'fromApi' ),
+      Lenses.identity< domains.OccupationAndIncomeSummaryPageDomain> ().focusQuery('fromApi'),
      '/customer/occupation/v2/occupationIncomeDetails?{query}')
 }

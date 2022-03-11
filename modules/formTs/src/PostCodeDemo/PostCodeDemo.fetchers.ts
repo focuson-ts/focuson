@@ -10,7 +10,7 @@ export function PostCodeDataFetcher<S extends  HasSimpleMessages & HasTagHolder 
   return pageAndTagFetcher<S, domains.PostCodeDemoPageDomain, domains.PostCodeDataDomain, SimpleMessage>(
     common.commonFetch<S,  domains.PostCodeDataDomain>(),
      'PostCodeDemo',
-     'postcode,search', fdLens, commonIds, {},["customerId"],[],
-      Lenses.identity< domains.PostCodeDemoPageDomain> ().focusQuery ( 'postcode,search' ),
+     'postcode_searchResults', fdLens, commonIds, {},["customerId"],[],
+      Lenses.identity< domains.PostCodeDemoPageDomain> ().focusQuery('postcode').focusQuery('searchResults'),
      '/api/postCode?{query}')
 }

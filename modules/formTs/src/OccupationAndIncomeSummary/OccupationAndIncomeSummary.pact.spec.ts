@@ -30,7 +30,7 @@ pactWith ( { consumer: 'OccupationAndIncomeDetailsDD', provider: 'OccupationAndI
       expect ( newState ).toEqual ( {
         ... firstState,
         OccupationAndIncomeSummary: {fromApi: samples.sampleOccupationAndIncomeDetailsDD0},
-        tags: { OccupationAndIncomeSummary_fromApi:["accountSeq","applicationRef","brandRef","vbAccountSeq","vbAccountType"] }
+        tags: { OccupationAndIncomeSummary_fromApi:["accountSeq","applicationRef","brandRef","vbAccountSeq","vbAccountType"]}
       } )
     } )
   } )

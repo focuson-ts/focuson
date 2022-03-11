@@ -30,7 +30,7 @@ pactWith ( { consumer: 'ChequeCreditbooksDD', provider: 'ChequeCreditbooksDDProv
       expect ( newState ).toEqual ( {
         ... firstState,
         ChequeCreditbooks: {fromApi: samples.sampleChequeCreditbooksDD0},
-        tags: { ChequeCreditbooks_fromApi:["accId","appref","brandRef","custId"] }
+        tags: { ChequeCreditbooks_fromApi:["accId","appref","brandRef","custId"]}
       } )
     } )
   } )

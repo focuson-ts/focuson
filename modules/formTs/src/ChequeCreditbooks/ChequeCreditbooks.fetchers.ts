@@ -11,6 +11,6 @@ export function ChequeCreditbooksDDFetcher<S extends  HasSimpleMessages & HasTag
     common.commonFetch<S,  domains.ChequeCreditbooksDDDomain>(),
      'ChequeCreditbooks',
      'fromApi', fdLens, commonIds, {},["accountId","applRef","brandRef","customerId"],[],
-      Lenses.identity< domains.ChequeCreditbooksPageDomain> ().focusQuery ( 'fromApi' ),
+      Lenses.identity< domains.ChequeCreditbooksPageDomain> ().focusQuery('fromApi'),
      '/api/chequeCreditBooks?{query}')
 }

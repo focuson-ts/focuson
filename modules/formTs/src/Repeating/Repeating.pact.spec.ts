@@ -64,7 +64,7 @@ pactWith ( { consumer: 'RepeatingWholeData', provider: 'RepeatingWholeDataProvid
       expect ( newState ).toEqual ( {
         ... firstState,
         Repeating: {fromApi: samples.sampleRepeatingWholeData0},
-        tags: { Repeating_fromApi:["custId"] }
+        tags: { Repeating_fromApi:["custId"]}
       } )
     } )
   } )

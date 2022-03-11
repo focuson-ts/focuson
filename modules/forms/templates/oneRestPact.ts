@@ -26,7 +26,7 @@ pactWith ( { consumer: '{consumer}', provider: '{provider}', cors: true }, provi
       //export declare function rest<S, MSGS>(fetchFn: FetchFn, d: RestDetails<S, MSGS>, messageL: Optional<S, MSGS[]>, restL: Optional<S, RestCommand[]>, s: S): Promise<S>;
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, {restsFile}.restDetails, simpleMessagesL(), restL(), firstState )
-      expect ( { ...newState, messages: []}).toEqual ( { ...firstState, restCommands: [], {pageName}: { {target}: samples.{sample}} } )
+      expect ( { ...newState, messages: []}).toEqual ( { ...firstState, restCommands: [], {pageName}: { {target}: samples.{sample}{closeTarget} } )
       expect ( newState.messages.length ).toEqual ( 1 )
       expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
 

@@ -6,7 +6,7 @@ import { Lenses, NameAndLens} from "@focuson/lens"
 export function PostCodeDemo_PostCodeDataRestDetails<S> ( cd: NameAndLens<S>, dateFn: DateFn  ): OneRestDetails<S, domains.PostCodeDemoPageDomain, domains.PostCodeDataDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.PostCodeDemoPageDomain> = {}
   return {
-    dLens: Lenses.identity<domains.PostCodeDemoPageDomain>().focusQuery('postcode').focusQuery('search'),
+    dLens: Lenses.identity<domains.PostCodeDemoPageDomain>().focusQuery('postcode').focusQuery('searchResults'),
     cd, fdd,
     ids: ["customerId"],
     resourceId:  [],
