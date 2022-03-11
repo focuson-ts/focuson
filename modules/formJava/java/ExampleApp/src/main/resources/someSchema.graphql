@@ -4,6 +4,7 @@ type Query{
   getCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!
   listCreatePlanDD(accountId: String!, customerId: String!):[CreatePlanDD!]!
   getEAccountsSummaryDD(accountId: String!, customerId: String!):EAccountsSummaryDD!
+  getCreateEAccountDataDD(accountId: String!, createPlanId: String!, customerId: String!):CreateEAccountDataDD!
   getChequeCreditbooksDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!):ChequeCreditbooksDD!
   getRepeatingLine(customerId: String!):[RepeatingLine!]!
 }

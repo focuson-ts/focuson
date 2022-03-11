@@ -4,7 +4,7 @@ import { LensProps } from "@focuson/state";
 import { Layout } from "../copied/layout";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from "@focuson/pages";
-import { Context, FocusedProps } from "../common";
+import { Context, FocusedProps, FState } from "../common";
 import { Lenses } from '@focuson/lens';
 import { Guard } from "../copied/guard";
 import { GuardButton } from "../copied/GuardButton";
@@ -21,11 +21,11 @@ import {ValidationButton} from '../copied/ValidationButton';
 import {RepeatingPageDomain} from "../Repeating/Repeating.domains";
 import {RepeatingLineDomain} from "../Repeating/Repeating.domains"
 import {RepeatingWholeDataDomain} from "../Repeating/Repeating.domains"
-export function RepeatingPage<S, Context extends FocusOnContext<S>>(){
-  return focusedPageWithExtraState<S, RepeatingPageDomain, RepeatingWholeDataDomain, Context> ( s => 'Repeating' ) ( s => s.focusOn('fromApi')) (
+export function RepeatingPage(){
+  return focusedPageWithExtraState<FState, RepeatingPageDomain, RepeatingWholeDataDomain, Context> ( s => 'Repeating' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
-const nextOccupationGuard =  pageState(state).chainLens<number>(Lenses.fromPath(["selectedItem"])).optJsonOr(0) <  pageState(state).chainLens<string[]>(Lenses.fromPath(["fromApi"])).optJsonOr([]).length - 1
-const prevOccupationGuard = pageState(state).chainLens<number>(Lenses.fromPath(["selectedItem"])).optJsonOr(0) >0
+const nextOccupationGuard =  pageState(state)().chainLens<number>(Lenses.fromPath(["selectedItem"])).optJsonOr(0) <  pageState(state)().chainLens<string[]>(Lenses.fromPath(["fromApi"])).optJsonOr([]).length - 1
+const prevOccupationGuard = pageState(state)().chainLens<number>(Lenses.fromPath(["selectedItem"])).optJsonOr(0) >0
   const id='root';
   return (<Layout  details='[1][3]'>
           <Table id={`${id}`} state={state} mode={mode} order={["name","age"]} />
@@ -35,7 +35,7 @@ const prevOccupationGuard = pageState(state).chainLens<number>(Lenses.fromPath([
           <GuardButton cond={prevOccupationGuard}><ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi')} value={fullState.focusOn('selectedItem')} /></GuardButton>
    </Layout>)})}
 
-export function RepeatingLine<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, RepeatingLineDomain,Context>){
+export function RepeatingLine({id,state,mode}: FocusedProps<FState, RepeatingLineDomain,Context>){
   return(<>
     <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='name' required={true} />
     <LabelAndNumberInput id={`${id}.age`} state={state.focusOn('age')} mode={mode} label='age' required={true} />

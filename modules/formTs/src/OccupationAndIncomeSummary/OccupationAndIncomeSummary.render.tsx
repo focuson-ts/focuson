@@ -4,7 +4,7 @@ import { LensProps } from "@focuson/state";
 import { Layout } from "../copied/layout";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from "@focuson/pages";
-import { Context, FocusedProps } from "../common";
+import { Context, FocusedProps, FState } from "../common";
 import { Lenses } from '@focuson/lens';
 import { Guard } from "../copied/guard";
 import { GuardButton } from "../copied/GuardButton";
@@ -26,11 +26,11 @@ import {OccupationAndIncomeDetailsDDDomain} from "../OccupationAndIncomeSummary/
 import {OccupationDescriptionResponseDDDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 import {OccupationIncomeDetailsDDDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 import {OtherIncomeResponseDDDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
-export function OccupationAndIncomeSummaryPage<S, Context extends FocusOnContext<S>>(){
-  return focusedPageWithExtraState<S, OccupationAndIncomeSummaryPageDomain, OccupationAndIncomeDetailsDDDomain, Context> ( s => 'OccupationAndIncomeSummary' ) ( s => s.focusOn('fromApi')) (
+export function OccupationAndIncomeSummaryPage(){
+  return focusedPageWithExtraState<FState, OccupationAndIncomeSummaryPageDomain, OccupationAndIncomeDetailsDDDomain, Context> ( s => 'OccupationAndIncomeSummary' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
-const nextOccupationGuard =  pageState(state).chainLens<number>(Lenses.fromPath(["selectedItem"])).optJsonOr(0) <  pageState(state).chainLens<string[]>(Lenses.fromPath(["fromApi","customerOccupationIncomeDetails"])).optJsonOr([]).length - 1
-const prevOccupationGuard = pageState(state).chainLens<number>(Lenses.fromPath(["selectedItem"])).optJsonOr(0) >0
+const nextOccupationGuard =  pageState(state)().chainLens<number>(Lenses.fromPath(["selectedItem"])).optJsonOr(0) <  pageState(state)().chainLens<string[]>(Lenses.fromPath(["fromApi","customerOccupationIncomeDetails"])).optJsonOr([]).length - 1
+const prevOccupationGuard = pageState(state)().chainLens<number>(Lenses.fromPath(["selectedItem"])).optJsonOr(0) >0
   const id='root';
   return (<Layout  details='[1][3,3][5]'>
           <OccupationAndIncomeDetailsDD id={`${id}`} state={state} mode={mode} />
@@ -40,19 +40,19 @@ const prevOccupationGuard = pageState(state).chainLens<number>(Lenses.fromPath([
           <GuardButton cond={prevOccupationGuard}><ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} /></GuardButton>
    </Layout>)})}
 
-export function OccupationAndIncomeDetailsDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, OccupationAndIncomeDetailsDDDomain,Context>){
+export function OccupationAndIncomeDetailsDD({id,state,mode}: FocusedProps<FState, OccupationAndIncomeDetailsDDDomain,Context>){
   return(<>
     <LabelAndStringInput id={`${id}.mainCustomerName`} state={state.focusOn('mainCustomerName')} mode={mode} label='main customer name' required={true} />
-    <SelectedItem id={`${id}.customerOccupationIncomeDetails`} state={state.focusOn('customerOccupationIncomeDetails')} mode={mode} index={pageState(state).focusOn('selectedItem').json()} display={OccupationIncomeDetailsDD} />
+    <SelectedItem id={`${id}.customerOccupationIncomeDetails`} state={state.focusOn('customerOccupationIncomeDetails')} mode={mode} index={pageState(state)<any>().focusOn('selectedItem').json()} display={OccupationIncomeDetailsDD} />
 </>)
 }
 
-export function OccupationDescriptionResponseDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, OccupationDescriptionResponseDDDomain,Context>){
+export function OccupationDescriptionResponseDD({id,state,mode}: FocusedProps<FState, OccupationDescriptionResponseDDDomain,Context>){
   return(<>
 </>)
 }
 
-export function OccupationIncomeDetailsDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, OccupationIncomeDetailsDDDomain,Context>){
+export function OccupationIncomeDetailsDD({id,state,mode}: FocusedProps<FState, OccupationIncomeDetailsDDDomain,Context>){
 const areYouGuard = state.chainLens(Lenses.fromPath(["areYou"])).optJsonOr([]);
   return(<>
     <LabelAndStringInput id={`${id}.areYou`} state={state.focusOn('areYou')} mode={mode} label='are you' required={true} />
@@ -85,7 +85,7 @@ const areYouGuard = state.chainLens(Lenses.fromPath(["areYou"])).optJsonOr([]);
 </>)
 }
 
-export function OtherIncomeResponseDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, OtherIncomeResponseDDDomain,Context>){
+export function OtherIncomeResponseDD({id,state,mode}: FocusedProps<FState, OtherIncomeResponseDDDomain,Context>){
   return(<>
     <LabelAndStringInput id={`${id}.clientOtherIncomeSeq`} state={state.focusOn('clientOtherIncomeSeq')} mode={mode} label='client other income seq' required={true} />
     <LabelAndStringInput id={`${id}.otherIncomeType`} state={state.focusOn('otherIncomeType')} mode={mode} label='other income type' required={true} />

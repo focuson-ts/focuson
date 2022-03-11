@@ -4,7 +4,7 @@ import { LensProps } from "@focuson/state";
 import { Layout } from "../copied/layout";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from "@focuson/pages";
-import { Context, FocusedProps } from "../common";
+import { Context, FocusedProps, FState } from "../common";
 import { Lenses } from '@focuson/lens';
 import { Guard } from "../copied/guard";
 import { GuardButton } from "../copied/GuardButton";
@@ -22,8 +22,8 @@ import {ChequeCreditbooksPageDomain} from "../ChequeCreditbooks/ChequeCreditbook
 import {ChequeCreditbooksDDDomain} from "../ChequeCreditbooks/ChequeCreditbooks.domains"
 import {ChequeCreditbooksHistoryDDDomain} from "../ChequeCreditbooks/ChequeCreditbooks.domains"
 import {ChequeCreditbooksHistoryLineDDDomain} from "../ChequeCreditbooks/ChequeCreditbooks.domains"
-export function ChequeCreditbooksPage<S, Context extends FocusOnContext<S>>(){
-  return focusedPageWithExtraState<S, ChequeCreditbooksPageDomain, ChequeCreditbooksDDDomain, Context> ( s => 'ChequeCreditbooks' ) ( s => s.focusOn('fromApi')) (
+export function ChequeCreditbooksPage(){
+  return focusedPageWithExtraState<FState, ChequeCreditbooksPageDomain, ChequeCreditbooksDDDomain, Context> ( s => 'ChequeCreditbooks' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
   const id='root';
   return (<Layout  details='[1][2][2]'>
@@ -33,13 +33,13 @@ export function ChequeCreditbooksPage<S, Context extends FocusOnContext<S>>(){
           <button>payingInBook of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 
-export function ChequeCreditbooksDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, ChequeCreditbooksDDDomain,Context>){
+export function ChequeCreditbooksDD({id,state,mode}: FocusedProps<FState, ChequeCreditbooksDDDomain,Context>){
   return(<>
     <Table id={`${id}.history`} state={state.focusOn('history')} mode={mode} order={["serialNumber","howOrdered","dateOrder"]} />
 </>)
 }
 
-export function ChequeCreditbooksHistoryLineDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, ChequeCreditbooksHistoryLineDDDomain,Context>){
+export function ChequeCreditbooksHistoryLineDD({id,state,mode}: FocusedProps<FState, ChequeCreditbooksHistoryLineDDDomain,Context>){
   return(<>
     <LabelAndNumberInput id={`${id}.serialNumber`} state={state.focusOn('serialNumber')} mode={mode} label='serial number' required={true} />
     <LabelAndStringInput id={`${id}.howOrdered`} state={state.focusOn('howOrdered')} mode={mode} label='how ordered' required={true} />

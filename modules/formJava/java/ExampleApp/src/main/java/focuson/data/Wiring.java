@@ -71,6 +71,7 @@ public class Wiring {
           .type(newTypeWiring("EAccountsSummaryDD").dataFetcher("currentAccountBalance", _EAccountsSummaryDDFFetcher.getCurrentAccountBalance()))
           .type(newTypeWiring("Mutation").dataFetcher("createETransferDataD", _ETransferDataDFFetcher.createETransferDataD()))
           .type(newTypeWiring("Mutation").dataFetcher("createCreateEAccountDataDD", _CreateEAccountDataDDFFetcher.createCreateEAccountDataDD()))
+          .type(newTypeWiring("Query").dataFetcher("getCreateEAccountDataDD", _CreateEAccountDataDDFFetcher.getCreateEAccountDataDD()))
           .type(newTypeWiring("Query").dataFetcher("getChequeCreditbooksDD", _ChequeCreditbooksDDFFetcher.getChequeCreditbooksDD()))
           .type(newTypeWiring("Mutation").dataFetcher("createChequeCreditbooksDD", _ChequeCreditbooksDDFFetcher.createChequeCreditbooksDD()))
           .type(newTypeWiring("Mutation").dataFetcher("createRepeatingLine", _RepeatingWholeDataFFetcher.createRepeatingLine()))

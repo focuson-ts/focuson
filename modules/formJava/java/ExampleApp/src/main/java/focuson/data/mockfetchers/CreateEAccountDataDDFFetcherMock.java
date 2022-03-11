@@ -11,4 +11,5 @@ import java.util.Map;
 @Component
 public class CreateEAccountDataDDFFetcherMock  implements CreateEAccountDataDDFFetcher{
  public DataFetcher createCreateEAccountDataDD() {  return dataFetchingEnvironment -> Sample.sampleCreateEAccountDataDD0;    }
+ public DataFetcher getCreateEAccountDataDD() {  return dataFetchingEnvironment -> Sample.sampleCreateEAccountDataDD0;    }
 }

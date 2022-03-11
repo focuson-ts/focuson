@@ -19,7 +19,7 @@ interface StoryState {
    pageMode: PageMode
 }
  
-const initial = {}
+const initial = empty.emptyCreateEAccountDataDD
 const Template: Story<StoryState> = ( args: StoryState ) =>
    SBookProvider<FState, Context> ( { ...emptyState, CreateEAccount: { ...initial, editing: args.domain } },//NOTE currently stories only work if the target depth is 1
      defaultPageSelectionAndRestCommandsContext<FState> ( pages ),

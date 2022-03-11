@@ -9,4 +9,13 @@ public class CreateEAccountDataDDQueries{
         "    initialAmount"+
         "  }"
   +"}";}
+  public static  String getCreateEAccountDataDD(String accountId,String createPlanId,String customerId){ 
+     return
+  "query{getCreateEAccountDataDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "createPlanId:" + "\"" + createPlanId + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
+        "    name"+
+        "    type"+
+        "    savingsStyle"+
+        "    initialAmount"+
+        "  }"
+  +"}";}
 }

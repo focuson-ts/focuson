@@ -6,5 +6,5 @@ export const createEAccountRestD: RestD<any> = {
   params: { ...commonParams, createPlanId: { commonLens: 'createPlanId', testValue: 'tbd', main: true } },
   dataDD: CreateEAccountDataD,
   url: '/api/createEAccount/{createPlanId}?{query}',
-  actions: [ 'create' ],
+  actions: [ 'create', 'get' ],
 }

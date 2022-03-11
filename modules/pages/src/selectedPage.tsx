@@ -32,12 +32,13 @@ function findSelectedPageDetails<S, Context extends PageSelectionContext<S>> ( s
 export function fullState<S, T, C> ( ls: LensState<S, T, C> ): LensState<S, S, C> {
   return ls.copyWithLens ( Lenses.identity () )
 }
-export function pageState<S, T, C extends HasPageSelectionLens<S>> ( ls: LensState<S, T, C> ): LensState<S, any, C> {
+export const pageState = <S, T, C extends HasPageSelectionLens<S>> ( ls: LensState<S, T, C> ) => <D extends any> (): LensState<S, D, C> => {
   let ps = mainPage ( ls )
   if ( !ps ) throw new Error ( 'no selected page' )
   // @ts-ignore
-  return fullState ( ls ).focusOn ( ps.pageName )
-}
+  let newState: LensState<S, any, C> = fullState ( ls ).focusOn ( ps.pageName );
+  return newState
+};
 
 export function lensForPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> ( page: OnePageDetails<S, D, Msgs, Config, Context>, base?: string[] ): Optional<S, any> {
   return isMainPageDetails ( page ) ? page.lens : Lenses.fromPath ( safeArray ( base ) )

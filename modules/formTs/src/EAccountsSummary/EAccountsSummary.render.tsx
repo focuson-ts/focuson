@@ -4,7 +4,7 @@ import { LensProps } from "@focuson/state";
 import { Layout } from "../copied/layout";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from "@focuson/pages";
-import { Context, FocusedProps } from "../common";
+import { Context, FocusedProps, FState } from "../common";
 import { Lenses } from '@focuson/lens';
 import { Guard } from "../copied/guard";
 import { GuardButton } from "../copied/GuardButton";
@@ -25,8 +25,8 @@ import {CreatePlanDDDomain} from "../EAccountsSummary/EAccountsSummary.domains"
 import {EAccountsSummaryDDDomain} from "../EAccountsSummary/EAccountsSummary.domains"
 import {EAccountsSummaryTableDDDomain} from "../EAccountsSummary/EAccountsSummary.domains"
 import {EAccountSummaryDDDomain} from "../EAccountsSummary/EAccountsSummary.domains"
-export function EAccountsSummaryPage<S, Context extends FocusOnContext<S>>(){
-  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (
+export function EAccountsSummaryPage(){
+  return focusedPageWithExtraState<FState, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
   const id='root';
   return (<Layout  details='[1][3,3][5]'>
@@ -37,7 +37,7 @@ export function EAccountsSummaryPage<S, Context extends FocusOnContext<S>>(){
           <button>refresh of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 
-export function CreatePlanDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, CreatePlanDDDomain,Context>){
+export function CreatePlanDD({id,state,mode}: FocusedProps<FState, CreatePlanDDDomain,Context>){
   return(<>
     <LabelAndStringInput id={`${id}.createPlanStart`} state={state.focusOn('createPlanStart')} mode={mode} label='Create Start' required={true} />
     <LabelAndStringInput id={`${id}.createPlanDate`} state={state.focusOn('createPlanDate')} mode={mode} label='create plan date' required={true} ariaLabel='The Create Plan Date' />
@@ -45,7 +45,7 @@ export function CreatePlanDD<S, Context extends FocusOnContext<S>>({id,state,mod
 </>)
 }
 
-export function EAccountsSummaryDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, EAccountsSummaryDDDomain,Context>){
+export function EAccountsSummaryDD({id,state,mode}: FocusedProps<FState, EAccountsSummaryDDDomain,Context>){
   return(<>
     <LabelAndBooleanInput id={`${id}.useEStatements`} state={state.focusOn('useEStatements')} mode={mode} label='use e statements' />
     <Table id={`${id}.eAccountsTable`} state={state.focusOn('eAccountsTable')} mode={mode} order={["accountId","displayType","description","virtualBankSeq","frequency","total"]} />
@@ -58,7 +58,7 @@ export function EAccountsSummaryDD<S, Context extends FocusOnContext<S>>({id,sta
 </>)
 }
 
-export function EAccountSummaryDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, EAccountSummaryDDDomain,Context>){
+export function EAccountSummaryDD({id,state,mode}: FocusedProps<FState, EAccountSummaryDDDomain,Context>){
   return(<>
     <LabelAndNumberInput id={`${id}.accountId`} state={state.focusOn('accountId')} mode={mode} label='Account Id' required={true} min={10000000} max={99999999} />
     <LabelAndRadio id={`${id}.displayType`} state={state.focusOn('displayType')} mode={mode} label='display type' enums={{"savings":"Savings","checking":"Checking"}} />

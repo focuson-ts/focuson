@@ -13,12 +13,12 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
   ">0": {
     imports: [],
     makeGuardVariable: ( name, guard: LocalVariableMoreThanZero ) =>
-      `const ${guardName ( name )} = pageState(state).chainLens<number>(Lenses.fromPath(${JSON.stringify ( guard.path )})).optJsonOr(0) >0`
+      `const ${guardName ( name )} = pageState(state)().chainLens<number>(Lenses.fromPath(${JSON.stringify ( guard.path )})).optJsonOr(0) >0`
   },
   "<arrayEnd": {
     imports: [],
     makeGuardVariable: ( name, guard: LocalVariableLessThanLengthMinusOne ) =>
-      `const ${guardName ( name )} =  pageState(state).chainLens<number>(Lenses.fromPath(${JSON.stringify ( guard.varPath )})).optJsonOr(0) <  pageState(state).chainLens<string[]>(Lenses.fromPath(${JSON.stringify ( guard.arrayPath )})).optJsonOr([]).length - 1`
+      `const ${guardName ( name )} =  pageState(state)().chainLens<number>(Lenses.fromPath(${JSON.stringify ( guard.varPath )})).optJsonOr(0) <  pageState(state)().chainLens<string[]>(Lenses.fromPath(${JSON.stringify ( guard.arrayPath )})).optJsonOr([]).length - 1`
   }
 }
 export interface GuardWithCondition {

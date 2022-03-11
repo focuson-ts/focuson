@@ -26,7 +26,7 @@ describe ( " listComponentsIn", () => {
   } )
 
   it ( "should createReactComponent", () => {
-    expect ( createReactComponent ( AllGuardCreator ) ( EAccountsSummaryDD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( createReactComponent (paramsForTest, AllGuardCreator ) ( EAccountsSummaryDD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function EAccountsSummaryDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, EAccountsSummaryDDDomain,Context>){",
       "  return(<>",
       "    <LabelAndBooleanInput id={`${id}.useEStatements`} state={state.focusOn('useEStatements')} mode={mode} label='use e statements' />",
@@ -228,7 +228,7 @@ describe ( " listComponentsIn", () => {
 
 describe ( "makeComponentWithGuard", () => {
   it ( "should make guard variables", () => {
-    expect ( createReactComponent ( AllGuardCreator ) ( occupationIncomeDetailsDD ).slice ( 0, 5 ).map ( r => r.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( createReactComponent (paramsForTest, AllGuardCreator ) ( occupationIncomeDetailsDD ).slice ( 0, 5 ).map ( r => r.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function OccupationIncomeDetailsDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, OccupationIncomeDetailsDDDomain,Context>){",
       "const areYouGuard = state.chainLens(Lenses.fromPath(['areYou'])).optJsonOr([]);",
       "  return(<>",

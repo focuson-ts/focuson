@@ -4,7 +4,7 @@ import { LensProps } from "@focuson/state";
 import { Layout } from "../copied/layout";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from "@focuson/pages";
-import { Context, FocusedProps } from "../common";
+import { Context, FocusedProps, FState } from "../common";
 import { Lenses } from '@focuson/lens';
 import { Guard } from "../copied/guard";
 import { GuardButton } from "../copied/GuardButton";
@@ -21,8 +21,8 @@ import {RestButton} from '../copied/rest';
 import {ValidationButton} from '../copied/ValidationButton';
 import {CreateEAccountPageDomain} from "../CreateEAccount/CreateEAccount.domains";
 import {CreateEAccountDataDDDomain} from "../CreateEAccount/CreateEAccount.domains"
-export function CreateEAccountPage<S, Context extends FocusOnContext<S>>(){
-  return focusedPageWithExtraState<S, CreateEAccountPageDomain, CreateEAccountDataDDDomain, Context> ( s => 'CreateEAccount' ) ( s => s.focusOn('editing')) (
+export function CreateEAccountPage(){
+  return focusedPageWithExtraState<FState, CreateEAccountPageDomain, CreateEAccountDataDDDomain, Context> ( s => 'CreateEAccount' ) ( s => s.focusOn('editing')) (
     ( fullState, state , full, d, mode) => {
   const id='root';
   return (<Layout  details='[1][1][1][1]]'>
@@ -32,7 +32,7 @@ export function CreateEAccountPage<S, Context extends FocusOnContext<S>>(){
           <button>resetAll of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 
-export function CreateEAccountDataDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, CreateEAccountDataDDDomain,Context>){
+export function CreateEAccountDataDD({id,state,mode}: FocusedProps<FState, CreateEAccountDataDDDomain,Context>){
   return(<>
     <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='name' required={true} />
     <LabelAndRadio id={`${id}.type`} state={state.focusOn('type')} mode={mode} label='type' enums={{"savings":"Savings","checking":"Checking"}} />

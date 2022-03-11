@@ -26,6 +26,26 @@
           "initialAmount": 123
         }
       }
+    },
+    {
+      "description": "CreateEAccount should have a get rest for CreateEAccountDataDD",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/createEAccount/tbd",
+        "query": "accountId=accId&createPlanId=tbd&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "name": "This is a one line string",
+          "type": "checking",
+          "savingsStyle": "adHoc",
+          "initialAmount": 123
+        }
+      }
     }
   ],
   "metadata": {

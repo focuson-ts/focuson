@@ -4,7 +4,7 @@ import { LensProps } from "@focuson/state";
 import { Layout } from "../copied/layout";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from "@focuson/pages";
-import { Context, FocusedProps } from "../common";
+import { Context, FocusedProps, FState } from "../common";
 import { Lenses } from '@focuson/lens';
 import { Guard } from "../copied/guard";
 import { GuardButton } from "../copied/GuardButton";
@@ -20,8 +20,8 @@ import {RestButton} from '../copied/rest';
 import {ValidationButton} from '../copied/ValidationButton';
 import {ETransferPageDomain} from "../ETransfer/ETransfer.domains";
 import {ETransferDataDDomain} from "../ETransfer/ETransfer.domains"
-export function ETransferPage<S, Context extends FocusOnContext<S>>(){
-  return focusedPageWithExtraState<S, ETransferPageDomain, ETransferDataDDomain, Context> ( s => 'ETransfer' ) ( s => s.focusOn('fromApi')) (
+export function ETransferPage(){
+  return focusedPageWithExtraState<FState, ETransferPageDomain, ETransferDataDDomain, Context> ( s => 'ETransfer' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
   const id='root';
   return (<Layout  details='[3][1,1,1][1,1][1][3]'>
@@ -31,7 +31,7 @@ export function ETransferPage<S, Context extends FocusOnContext<S>>(){
           <button>resetAll of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 
-export function ETransferDataD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, ETransferDataDDomain,Context>){
+export function ETransferDataD({id,state,mode}: FocusedProps<FState, ETransferDataDDomain,Context>){
   return(<>
     <LabelAndNumberInput id={`${id}.account`} state={state.focusOn('account')} mode={mode} label='Account Id' required={true} min={10000000} max={99999999} />
     <LabelAndStringInput id={`${id}.dateOfETransfer`} state={state.focusOn('dateOfETransfer')} mode={mode} label='date of e transfer' required={true} />
