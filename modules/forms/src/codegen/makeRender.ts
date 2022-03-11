@@ -214,7 +214,8 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
   const modalDomainImports = pages.flatMap ( p => isModalPage ( p ) ? [
     `//if there is an error message here... did you set the importFrom on this modal correctly, and also check that the PageD links to this DataD in a domain or rest block`,
     `import {${domainName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', p, params.domainsFile )}'; ` ] : [] )
-  const modalRenderImports = pages.flatMap ( p => isModalPage ( p ) ? [ `import {${componentName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', p, params.renderFile )}'` ] : [] )
+  const modalRenderImports = pages.flatMap ( p => (isModalPage ( p ) && !p.display.dataDD.display) ? [
+    `import {${componentName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', p, params.renderFile )}'` ] : [] )
   return [ ...imports, ...modalDomainImports, ...modalRenderImports, ...makeComponentImports ( pages ), ...makeButtonImports ( makeButton ), ...pageDomainsImports, ...domainImports, ...pageComponents, ...dataComponents ]
 }
 

@@ -8,9 +8,10 @@ import { Context, FocusedProps } from "../common";
 import { Lenses } from '@focuson/lens';
 import { Guard } from "../copied/guard";
 import { GuardButton } from "../copied/GuardButton";
+import { ListItemsCD } from '../copied/listItems';
+import { LabelAndStringInput } from '../copied/LabelAndInput';
 import { SelectedItem } from '../copied/table';
 import { LabelAndNumberInput } from '../copied/LabelAndInput';
-import { LabelAndStringInput } from '../copied/LabelAndInput';
 import {ListNextButton} from '../copied/listNextPrevButtons';
 import {ListPrevButton} from '../copied/listNextPrevButtons';
 import {ModalButton} from '@focuson/pages';
@@ -20,7 +21,9 @@ import {RestButton} from '../copied/rest';
 import {ValidationButton} from '../copied/ValidationButton';
 import {OccupationAndIncomeSummaryPageDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains";
 import {CustomerOccupationIncomeDetailsDDDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
+import {ListOccupationsDDDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 import {OccupationAndIncomeDetailsDDDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
+import {OccupationDescriptionResponseDDDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 import {OccupationIncomeDetailsDDDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 import {OtherIncomeResponseDDDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 export function OccupationAndIncomeSummaryPage<S, Context extends FocusOnContext<S>>(){
@@ -41,6 +44,11 @@ export function OccupationAndIncomeDetailsDD<S, Context extends FocusOnContext<S
   return(<>
     <LabelAndStringInput id={`${id}.mainCustomerName`} state={state.focusOn('mainCustomerName')} mode={mode} label='main customer name' required={true} />
     <SelectedItem id={`${id}.customerOccupationIncomeDetails`} state={state.focusOn('customerOccupationIncomeDetails')} mode={mode} index={pageState(state).focusOn('selectedItem').json()} display={OccupationIncomeDetailsDD} />
+</>)
+}
+
+export function OccupationDescriptionResponseDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, OccupationDescriptionResponseDDDomain,Context>){
+  return(<>
 </>)
 }
 

@@ -3,35 +3,20 @@ import * as domains from '../OccupationAndIncomeSummary/OccupationAndIncomeSumma
 export const sampleCustomerOccupationIncomeDetailsDD0: domains.CustomerOccupationIncomeDetailsDDDomain = 
 [
   {
-    "areYou": "C",
-    "currentEmployment": "N",
-    "occupation": "someString",
-    "customerDescription": "someString",
-    "ownShareOfTheCompany": "N",
-    "owningSharesPct": "N",
-    "workFor": "someString",
-    "employmentType": "1",
-    "annualSalaryBeforeDeduction": 123,
-    "annualIncomeExcludingRent": 123,
-    "regularCommissionBonus": 123,
-    "dateOfEmploymentStart": "2020-10-01",
-    "otherSourceOfIncome": "N",
-    "createdBy": "someString",
-    "createdDate": "2020-10-01",
-    "employerName": "someString",
-    "whatTypeOfBusiness": "someString",
-    "whatNameBusiness": "someString",
-    "establishedYear": "2020-10-01",
-    "annualDrawing3Yrs": 123,
-    "empStartDate": "2020-10-01",
-    "empEndDate": "2020-10-01",
-    "sePositionHeld": "someString",
-    "occupationCategory": "someString",
-    "empEmploymentSeq": 123,
-    "empAppRoleSeq": 123,
-    "accountantAppRoleSeq": 123
+    "descTypeValue": "someString",
+    "descTypeName": "someString"
   }
 ]
+export const sampleListOccupationsDD0: domains.ListOccupationsDDDomain = 
+{
+  "searchField": "someString",
+  "occupationsList": [
+    {
+      "descTypeValue": "someString",
+      "descTypeName": "someString"
+    }
+  ]
+}
 export const sampleOccupationAndIncomeDetailsDD0: domains.OccupationAndIncomeDetailsDDDomain = 
 {
   "regulatoryReport": "someString",
@@ -70,6 +55,11 @@ export const sampleOccupationAndIncomeDetailsDD0: domains.OccupationAndIncomeDet
       "accountantAppRoleSeq": 123
     }
   ]
+}
+export const sampleOccupationDescriptionResponseDD0: domains.OccupationDescriptionResponseDDDomain = 
+{
+  "descTypeValue": "someString",
+  "descTypeName": "someString"
 }
 export const sampleOccupationIncomeDetailsDD0: domains.OccupationIncomeDetailsDDDomain = 
 {
@@ -111,35 +101,20 @@ export const sampleOtherIncomeResponseDD0: domains.OtherIncomeResponseDDDomain =
 export const sampleCustomerOccupationIncomeDetailsDD1: domains.CustomerOccupationIncomeDetailsDDDomain = 
 [
   {
-    "areYou": "E",
-    "currentEmployment": "Y",
-    "occupation": "anotherString",
-    "customerDescription": "anotherString",
-    "ownShareOfTheCompany": "Y",
-    "owningSharesPct": "Y",
-    "workFor": "anotherString",
-    "employmentType": "2",
-    "annualSalaryBeforeDeduction": 456,
-    "annualIncomeExcludingRent": 456,
-    "regularCommissionBonus": 456,
-    "dateOfEmploymentStart": "2022-14-01",
-    "otherSourceOfIncome": "Y",
-    "createdBy": "anotherString",
-    "createdDate": "2022-14-01",
-    "employerName": "anotherString",
-    "whatTypeOfBusiness": "anotherString",
-    "whatNameBusiness": "anotherString",
-    "establishedYear": "2022-14-01",
-    "annualDrawing3Yrs": 456,
-    "empStartDate": "2022-14-01",
-    "empEndDate": "2022-14-01",
-    "sePositionHeld": "anotherString",
-    "occupationCategory": "anotherString",
-    "empEmploymentSeq": 456,
-    "empAppRoleSeq": 456,
-    "accountantAppRoleSeq": 456
+    "descTypeValue": "anotherString",
+    "descTypeName": "anotherString"
   }
 ]
+export const sampleListOccupationsDD1: domains.ListOccupationsDDDomain = 
+{
+  "searchField": "anotherString",
+  "occupationsList": [
+    {
+      "descTypeValue": "anotherString",
+      "descTypeName": "anotherString"
+    }
+  ]
+}
 export const sampleOccupationAndIncomeDetailsDD1: domains.OccupationAndIncomeDetailsDDDomain = 
 {
   "regulatoryReport": "anotherString",
@@ -178,6 +153,11 @@ export const sampleOccupationAndIncomeDetailsDD1: domains.OccupationAndIncomeDet
       "accountantAppRoleSeq": 456
     }
   ]
+}
+export const sampleOccupationDescriptionResponseDD1: domains.OccupationDescriptionResponseDDDomain = 
+{
+  "descTypeValue": "anotherString",
+  "descTypeName": "anotherString"
 }
 export const sampleOccupationIncomeDetailsDD1: domains.OccupationIncomeDetailsDDDomain = 
 {
@@ -219,35 +199,20 @@ export const sampleOtherIncomeResponseDD1: domains.OtherIncomeResponseDDDomain =
 export const sampleCustomerOccupationIncomeDetailsDD2: domains.CustomerOccupationIncomeDetailsDDDomain = 
 [
   {
-    "areYou": "H",
-    "currentEmployment": "This is a one line string",
-    "occupation": "someString",
-    "customerDescription": "someString",
-    "ownShareOfTheCompany": "This is a one line string",
-    "owningSharesPct": "This is a one line string",
-    "workFor": "someString",
-    "employmentType": "3",
-    "annualSalaryBeforeDeduction": 123,
-    "annualIncomeExcludingRent": 123,
-    "regularCommissionBonus": 123,
-    "dateOfEmploymentStart": "2020-10-01",
-    "otherSourceOfIncome": "This is a one line string",
-    "createdBy": "someString",
-    "createdDate": "2020-10-01",
-    "employerName": "someString",
-    "whatTypeOfBusiness": "someString",
-    "whatNameBusiness": "someString",
-    "establishedYear": "2020-10-01",
-    "annualDrawing3Yrs": 123,
-    "empStartDate": "2020-10-01",
-    "empEndDate": "2020-10-01",
-    "sePositionHeld": "someString",
-    "occupationCategory": "someString",
-    "empEmploymentSeq": 123,
-    "empAppRoleSeq": 123,
-    "accountantAppRoleSeq": 123
+    "descTypeValue": "someString",
+    "descTypeName": "someString"
   }
 ]
+export const sampleListOccupationsDD2: domains.ListOccupationsDDDomain = 
+{
+  "searchField": "someString",
+  "occupationsList": [
+    {
+      "descTypeValue": "someString",
+      "descTypeName": "someString"
+    }
+  ]
+}
 export const sampleOccupationAndIncomeDetailsDD2: domains.OccupationAndIncomeDetailsDDDomain = 
 {
   "regulatoryReport": "someString",
@@ -286,6 +251,11 @@ export const sampleOccupationAndIncomeDetailsDD2: domains.OccupationAndIncomeDet
       "accountantAppRoleSeq": 123
     }
   ]
+}
+export const sampleOccupationDescriptionResponseDD2: domains.OccupationDescriptionResponseDDDomain = 
+{
+  "descTypeValue": "someString",
+  "descTypeName": "someString"
 }
 export const sampleOccupationIncomeDetailsDD2: domains.OccupationIncomeDetailsDDDomain = 
 {

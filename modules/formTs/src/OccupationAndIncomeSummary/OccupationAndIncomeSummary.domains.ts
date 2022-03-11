@@ -3,12 +3,18 @@ export interface HasOccupationAndIncomeSummaryPageDomain {   OccupationAndIncome
 export interface OccupationAndIncomeSummaryPageDomain{
   fromApi?:OccupationAndIncomeDetailsDDDomain;
   other?:OtherIncomeResponseDDDomain;
+  searchList?:ListOccupationsDDDomain;
   selectedItem?:number;
   temp?:OccupationIncomeDetailsDDDomain;
   validationDebug?:boolean;
 }
 
-export type CustomerOccupationIncomeDetailsDDDomain = OccupationIncomeDetailsDDDomain[]
+export type CustomerOccupationIncomeDetailsDDDomain = OccupationDescriptionResponseDDDomain[]
+
+export interface ListOccupationsDDDomain{
+  occupationsList: OccupationDescriptionResponseDDDomain[];
+  searchField: string;
+}
 
 export interface OccupationAndIncomeDetailsDDDomain{
   customerOccupationIncomeDetails: OccupationIncomeDetailsDDDomain[];
@@ -17,6 +23,11 @@ export interface OccupationAndIncomeDetailsDDDomain{
   mainClientRef: number;
   mainCustomerName: string;
   regulatoryReport: string;
+}
+
+export interface OccupationDescriptionResponseDDDomain{
+  descTypeName: string;
+  descTypeValue: string;
 }
 
 export interface OccupationIncomeDetailsDDDomain{

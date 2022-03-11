@@ -4,6 +4,7 @@ import {Context,  FState } from "./common";
 import { OccupationAndIncomeSummaryPage } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.render';
 import { OccupationIncomeModalPDPage } from './OccupationIncomeModalPD/OccupationIncomeModalPD.render';
 import { OtherSourcesOfIncomeModalPDPage } from './OtherSourcesOfIncomeModalPD/OtherSourcesOfIncomeModalPD.render';
+import { ListOccupationsModalPage } from './ListOccupationsModal/ListOccupationsModal.render';
 import { EAccountsSummaryPage } from './EAccountsSummary/EAccountsSummary.render';
 import { CreatePlanPage } from './CreatePlan/CreatePlan.render';
 import { ETransferPage } from './ETransfer/ETransfer.render';
@@ -26,6 +27,7 @@ export const pages: MultiPageDetails<FState, Context> = {
     ChequeCreditbooks: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'ChequeCreditbooks' ), pageFunction: ChequeCreditbooksPage(), initialValue: {} },
     Repeating: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'Repeating' ), pageFunction: RepeatingPage(), initialValue: {} },
     OccupationIncomeModalPD: { config: simpleMessagesConfig,  pageFunction: OccupationIncomeModalPDPage(), modal: true},
+    ListOccupationsModal: { config: simpleMessagesConfig,  pageFunction: ListOccupationsModalPage(), modal: true},
     CreatePlan: { config: simpleMessagesConfig,  pageFunction: CreatePlanPage(), modal: true},
     OrderChequeBookOrPayingInModal: { config: simpleMessagesConfig,  pageFunction: OrderChequeBookOrPayingInModalPage(), modal: true},
     RepeatingLine: { config: simpleMessagesConfig,  pageFunction: RepeatingLinePage(), modal: true}

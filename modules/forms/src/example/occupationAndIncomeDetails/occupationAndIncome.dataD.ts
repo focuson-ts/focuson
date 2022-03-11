@@ -1,6 +1,6 @@
 import { ContactTitle, CustomerStatus, EmploymentType, HowOften, YesNo } from "./occupationAndIncome.domain";
 import { DataD, DateDD, IntegerDD, MoneyDD, OneLineStringDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
-import { DisplayCompD, LabelAndStringInputCD, SelectedItemCD, TableCD } from "../../common/componentsD";
+import { commonParams, DisplayCompD, LabelAndStringInputCD, SelectedItemCD, TableCD } from "../../common/componentsD";
 import { AllGuards } from "../../buttons/guardButton";
 
 
@@ -231,4 +231,42 @@ export const occupationAndIncomeSummaryDD: DataD <AllGuards> = {
 /* ---------------- OCCUPATION AND INCOME SUMMARY END ---------------- */
 
 
+export const occupationDescriptionResponseDD: DataD<AllGuards>  = {
+  name: 'OccupationDescriptionResponseDD',
+  description: 'This is a summary about occupation description dropdown',
+  structure: {
+    descTypeValue: { dataDD: StringDD, hidden: true },
+    descTypeName: { dataDD: StringDD, hidden: true },
+  }
+}
+
+export const ListItemsCD: DisplayCompD = {
+  import: '../copied/listItems',
+  name: "ListItemsCD",
+  params: {
+    ...commonParams,
+  }
+}
+export const SearchListCD: DisplayCompD = {
+  import: '../copied/searchList',
+  name: "SearchList",
+  params: { ...commonParams }
+}
+
+export const occupationsListDD: RepeatingDataD<AllGuards> = {
+  paged: false,
+  display: ListItemsCD,
+  name: "CustomerOccupationIncomeDetailsDD",
+  description: "This is a list of all the occupations",
+  dataDD: occupationDescriptionResponseDD
+}
+export const listOccupationsDD:  DataD <AllGuards> = {
+  name: "ListOccupationsDD",
+  description: "This is the search occupation popup",
+  display: SearchListCD,
+  structure: {
+    searchField: { dataDD: StringDD , displayParams: { label: 'Search: ' }},
+    occupationsList: { dataDD: occupationsListDD }
+  },
+}
 

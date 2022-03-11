@@ -51,33 +51,8 @@ public class Sample{
   public static List sampleCustomerOccupationIncomeDetailsDD0 =  parse.parseList(
          "["+
          "  {"+
-         "    \"areYou\": \"C\","+
-         "    \"currentEmployment\": \"N\","+
-         "    \"occupation\": \"someString\","+
-         "    \"customerDescription\": \"someString\","+
-         "    \"ownShareOfTheCompany\": \"N\","+
-         "    \"owningSharesPct\": \"N\","+
-         "    \"workFor\": \"someString\","+
-         "    \"employmentType\": \"1\","+
-         "    \"annualSalaryBeforeDeduction\": 123,"+
-         "    \"annualIncomeExcludingRent\": 123,"+
-         "    \"regularCommissionBonus\": 123,"+
-         "    \"dateOfEmploymentStart\": \"2020-10-01\","+
-         "    \"otherSourceOfIncome\": \"N\","+
-         "    \"createdBy\": \"someString\","+
-         "    \"createdDate\": \"2020-10-01\","+
-         "    \"employerName\": \"someString\","+
-         "    \"whatTypeOfBusiness\": \"someString\","+
-         "    \"whatNameBusiness\": \"someString\","+
-         "    \"establishedYear\": \"2020-10-01\","+
-         "    \"annualDrawing3Yrs\": 123,"+
-         "    \"empStartDate\": \"2020-10-01\","+
-         "    \"empEndDate\": \"2020-10-01\","+
-         "    \"sePositionHeld\": \"someString\","+
-         "    \"occupationCategory\": \"someString\","+
-         "    \"empEmploymentSeq\": 123,"+
-         "    \"empAppRoleSeq\": 123,"+
-         "    \"accountantAppRoleSeq\": 123"+
+         "    \"descTypeValue\": \"someString\","+
+         "    \"descTypeName\": \"someString\""+
          "  }"+
          "]"
   );
@@ -139,6 +114,17 @@ public class Sample{
          "  \"notes\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit\""+
          "}"
   );
+  public static Map sampleListOccupationsDD0 =  parse.parseMap(
+         "{"+
+         "  \"searchField\": \"someString\","+
+         "  \"occupationsList\": ["+
+         "    {"+
+         "      \"descTypeValue\": \"someString\","+
+         "      \"descTypeName\": \"someString\""+
+         "    }"+
+         "  ]"+
+         "}"
+  );
   public static Map sampleOccupationAndIncomeDetailsDD0 =  parse.parseMap(
          "{"+
          "  \"regulatoryReport\": \"someString\","+
@@ -177,6 +163,12 @@ public class Sample{
          "      \"accountantAppRoleSeq\": 123"+
          "    }"+
          "  ]"+
+         "}"
+  );
+  public static Map sampleOccupationDescriptionResponseDD0 =  parse.parseMap(
+         "{"+
+         "  \"descTypeValue\": \"someString\","+
+         "  \"descTypeName\": \"someString\""+
          "}"
   );
   public static Map sampleOccupationIncomeDetailsDD0 =  parse.parseMap(
