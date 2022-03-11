@@ -2,7 +2,7 @@ import { ButtonD } from "./allButtons";
 import { NameAnd } from "@focuson/utils";
 import { guardName } from "../codegen/names";
 
-export type AllGuards = LocalVariableGuard | LocalVariableMoreThanZero | LocalVariableLessThanLengthMinusOne
+export type AllGuards = LocalVariableGuard | LocalVariableMoreThanZero | LocalVariableLessThanLengthMinusOne | LocalVariableValueEquals<any>
 
 export const AllGuardCreator: MakeGuard<AllGuards> = {
   in: {
@@ -10,6 +10,12 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
     makeGuardVariable: ( name, guard: LocalVariableGuard ) =>
       `const ${guardName ( name )} = state.chainLens(Lenses.fromPath(${JSON.stringify ( guard.path )})).optJsonOr([]);`
   },
+  equals: {
+    imports: [],
+    makeGuardVariable: ( name, guard: LocalVariableValueEquals<any> ) =>
+      `const ${guardName ( name )} = state.chainLens(Lenses.fromPath(${JSON.stringify ( guard.path )})).json() === ${guard.value};`
+  },
+
   ">0": {
     imports: [],
     makeGuardVariable: ( name, guard: LocalVariableMoreThanZero ) =>
@@ -43,6 +49,13 @@ export interface LocalVariableGuard {
 export interface LocalVariableMoreThanZero {
   condition: '>0'
   path: string[]
+}
+export interface LocalVariableValueEquals<T> {
+  condition: 'equals';
+  path: string[];
+  value: T
+
+
 }
 export interface LocalVariableLessThanLengthMinusOne {
   condition: '<arrayEnd'

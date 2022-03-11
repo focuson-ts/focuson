@@ -8,14 +8,16 @@ import { listOccupationsModalPD, OccupationAndIncomeSummaryPD, occupationIncomeM
 import { generate } from "./makeFiles/generate";
 import *  as fse from "fs-extra";
 import { RepeatingLinePageD, RepeatingPageD } from "./example/repeating/repeating.pageD";
+import { PostCodeMainPage, PostCodeModalPage } from "./example/addressSearch/addressSearch.pageD";
 
 export const generatedPages = [
   OccupationAndIncomeSummaryPD, occupationIncomeModalPD,
-  otherSourcesOfIncomeModalPD,listOccupationsModalPD,
+  otherSourcesOfIncomeModalPD, listOccupationsModalPD,
   EAccountsSummaryPD, CreatePlanPD, ETransferPageD,
   CreateEAccountPageD,
   ChequeCreditbooksPD,
-  OrderChequeBookOrPayingInModalPD, RepeatingLinePageD, RepeatingPageD
+  OrderChequeBookOrPayingInModalPD, RepeatingLinePageD, RepeatingPageD,
+  PostCodeMainPage,PostCodeModalPage
 
 ];
 export const javaOutputRoot = '../formJava'
