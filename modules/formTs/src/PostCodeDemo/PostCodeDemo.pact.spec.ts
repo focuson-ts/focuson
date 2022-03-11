@@ -8,6 +8,7 @@ import * as samples from '../PostCodeDemo/PostCodeDemo.samples'
 import {emptyState, FState } from "../common";
 import * as fetchers from "../fetchers";
 import * as rests from "../rests";
+describe("",() =>it("",()=>{}))
 //GetFetcher pact test
 pactWith ( { consumer: 'PostCodeData', provider: 'PostCodeDataProvider', cors: true }, provider => {
   describe ( 'PostCodeDemo', () => {

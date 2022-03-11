@@ -38,14 +38,15 @@ describe ( "LensState", () => {
     expect ( dragonLS.json () ).toEqual ( dragon )
     expect ( chestLS.json () ).toEqual ( dragon.body.chest )
   } )
-  it ( "should have a setJson that throws errors when it can't create", () => {
+  it ( "should have a setJson that creates even when parent isn't there", () => {
     // @ts-ignore
     const empty: Dragon = {}
-
-    let dragonLS = lensState ( empty, d => {}, "dragon", context )
+    var remembered: any = {}
+    let dragonLS = lensState ( empty, d => remembered = d, "dragon", context )
     let ls = dragonLS.focusOn ( 'body' ).focusOn ( 'chest' ).focusOn ( 'stomach' ).focusOn ( 'contents' )
+    ls.setJson ( [ 1, 2, 3 ], 'someReason' )
+    expect ( remembered ).toEqual ( { "body": { "chest": { "stomach": { "contents": [ 1, 2, 3 ] } } } } )
 
-    expect ( () => ls.setJson ( [ 1, 2, 3 ] , 'someReason') ).toThrow ( 'Tried and failed to set Json. Lens is dragon.focus?(body).focus?(chest).focus?(stomach).focus?(contents) json [1,2,3]' )
   } )
 
   it ( "with Lens should ignore the parent lens", () => {
@@ -79,7 +80,7 @@ describe ( "lenState2", () => {
   it ( "should update two lens simultaneously", () => {
     setupForSetMain ( dragonLS, ( ls, setMain ) => {
       const ls2 = ls.focusOn ( 'body' ).focusOn ( 'chest' ).doubleUp ().focus1On ( 'stomach' ).focus2On ( 'heart' )
-      ls2.setJson ( { contents: [ 'some' ] }, 'thing' , 'someReason')
+      ls2.setJson ( { contents: [ 'some' ] }, 'thing', 'someReason' )
 
       checkSetMainWas ( setMain, {
         "body": {
@@ -96,7 +97,7 @@ describe ( "lenState2", () => {
     setupForSetMain ( dragonLS, ( ls, setMain ) => {
       const identity = Lenses.identity<Chest> ( 'id' )
       const ls2 = ls.focusOn ( 'body' ).focusOn ( 'chest' ).doubleUp ()
-      ls2.chain1 ( identity.focusOn ( 'stomach' ) ).chain2 ( identity.focusOn ( 'heart' ) ).setJson ( { contents: [ 'some' ] }, 'thing' , 'reason')
+      ls2.chain1 ( identity.focusOn ( 'stomach' ) ).chain2 ( identity.focusOn ( 'heart' ) ).setJson ( { contents: [ 'some' ] }, 'thing', 'reason' )
 
       checkSetMainWas ( setMain, {
         "body": {

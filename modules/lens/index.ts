@@ -70,9 +70,11 @@ export class Optional<Main, Child> implements GetOptioner<Main, Child>, SetOptio
     return new Optional<Main, Req[K]> (
       // @ts-ignore
       m => apply ( this.getOption ( m ), c => c[ k ] ),
-      ( m, v ) => apply ( this.getOption ( m ),
-        c => this.set ( m,
-          copyWithFieldSet ( c, k, v ) ) ),
+      ( m, v ) => {
+        let child = this.getOption ( m );
+        let result = this.setOption ( m, copyWithFieldSet ( child, k, v ) );
+        return result;
+      },
       this.description + ".focus?(" + k + ")" )
   }
 
@@ -91,8 +93,8 @@ export class Optional<Main, Child> implements GetOptioner<Main, Child>, SetOptio
       m => apply ( this.getOption ( m ), ( c: Child ) => apply ( other.getOption ( m ), nc => [ c, nc ] ) ),
       ( m, newChild ) => {
         let [ nc, noc ] = newChild
-        let m1 = other.set ( m, noc );
-        return this.set ( m1, nc )
+        let m1 = other.setOption ( m, noc );
+        return m1 && this.setOption ( m1, nc )
       },
       "combine(" + this.description + "," + other.description + ")"
     )

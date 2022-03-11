@@ -2,39 +2,40 @@ import { makeFetcherPact, makeRestPacts } from "../codegen/makePacts";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
 import { defaultRestAction } from "../common/restD";
+import { PostCodeMainPage } from "../example/addressSearch/addressSearch.pageD";
 
 describe ( "makePacts", () => {
   it ( "should make a pact", () => {
 
-    expect ( makeFetcherPact ( paramsForTest, EAccountsSummaryPD, EAccountsSummaryPD.rest.eAccountsSummary, defaultRestAction.get, { main: '.', backup: '.' } ) ).toEqual ( [
+    expect ( makeFetcherPact ( paramsForTest, PostCodeMainPage, PostCodeMainPage.rest.postcode, defaultRestAction.get, { main: '.', backup: '.' } ) ).toEqual ([
       "//GetFetcher pact test",
-      "pactWith ( { consumer: 'EAccountsSummaryDD', provider: 'EAccountsSummaryDDProvider', cors: true }, provider => {",
-      "  describe ( 'EAccountsSummary', () => {",
-      "    it ( 'should have a get fetcher for EAccountsSummaryDD', async () => {",
+      "pactWith ( { consumer: 'PostCodeData', provider: 'PostCodeDataProvider', cors: true }, provider => {",
+      "  describe ( 'PostCodeDemo', () => {",
+      "    it ( 'should have a get fetcher for PostCodeData', async () => {",
       "      await provider.addInteraction ( {",
       "        state: 'default',",
-      "        uponReceiving: 'EAccountsSummary should have a get fetcher for EAccountsSummaryDD',",
+      "        uponReceiving: 'PostCodeDemo should have a get fetcher for PostCodeData',",
       "        withRequest: {",
       "          method: 'GET',",
-      "          path: '/api/accountsSummary',",
-      "          query:{\"accountId\":\"accId\",\"customerId\":\"custId\"}",
+      "          path: '/api/postCode',",
+      "          query:{\"customerId\":\"custId\"}",
       "        },",
       "        willRespondWith: {",
       "          status: 200,",
-      "          body: samples.sampleEAccountsSummaryDD0",
+      "          body: samples.samplePostCodeData0",
       "        },",
       "      } )",
-      "      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'EAccountsSummary', pageMode: 'view' }] , EAccountsSummary: { }}",
+      "      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'PostCodeDemo', pageMode: 'view' }] , PostCodeDemo: { }}",
       "      let newState = await loadTree ( fetchers.fetchers, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )",
       "      expect ( newState ).toEqual ( {",
       "        ... firstState,",
-      "        EAccountsSummary: {fromApi: samples.sampleEAccountsSummaryDD0},",
-      "        tags: { EAccountsSummary_fromApi:[\"accId\",\"custId\"] }",
+      "        PostCodeDemo: {postcode:{searchResults: samples.samplePostCodeData0}},",
+      "        tags: { PostCodeDemo_postcode_searchResults:[\"custId\"]}",
       "      } )",
       "    } )",
       "  } )",
       "})"
-    ] )
+    ])
   } )
   it ( "make a rest pact for get", () => {
     expect ( makeRestPacts ( paramsForTest, EAccountsSummaryPD, EAccountsSummaryPD.rest.createPlanRestD, defaultRestAction.get, { main: '.', backup: '.' } ) ).toEqual ( [

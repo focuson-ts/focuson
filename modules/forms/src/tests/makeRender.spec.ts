@@ -27,7 +27,7 @@ describe ( " listComponentsIn", () => {
 
   it ( "should createReactComponent", () => {
     expect ( createReactComponent (paramsForTest, AllGuardCreator ) ( EAccountsSummaryDD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "export function EAccountsSummaryDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, EAccountsSummaryDDDomain,Context>){",
+      "export function EAccountsSummaryDD({id,state,mode}: FocusedProps<FState, EAccountsSummaryDDDomain,Context>){",
       "  return(<>",
       "    <LabelAndBooleanInput id={`${id}.useEStatements`} state={state.focusOn('useEStatements')} mode={mode} label='use e statements' />",
       "    <Table id={`${id}.eAccountsTable`} state={state.focusOn('eAccountsTable')} mode={mode} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} />",
@@ -40,7 +40,7 @@ describe ( " listComponentsIn", () => {
       "</>)",
       "}",
       ""
-    ] )
+    ])
   } )
   it ( "should createAllReactComponents ", () => {
     expect ( createAllReactComponents ( paramsForTest, AllGuardCreator, makeButtons (), [ EAccountsSummaryPD, CreatePlanPD , RepeatingPageD, RepeatingLinePageD] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
@@ -48,7 +48,7 @@ describe ( " listComponentsIn", () => {
       "import { Layout } from '../copied/layout';",
       "import { FocusOnContext } from '@focuson/focuson';",
       "import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from '@focuson/pages';",
-      "import { Context, FocusedProps } from '../common';",
+      "import { Context, FocusedProps, FState } from '../common';",
       "import { Lenses } from '@focuson/lens';",
       "import { Guard } from '../copied/guard';",
       "import { GuardButton } from '../copied/GuardButton';",
@@ -78,8 +78,8 @@ describe ( " listComponentsIn", () => {
       "import {EAccountSummaryDDDomain} from '../EAccountsSummary/EAccountsSummary.domains'",
       "import {RepeatingLineDomain} from '../Repeating/Repeating.domains'",
       "import {RepeatingWholeDataDomain} from '../Repeating/Repeating.domains'",
-      "export function EAccountsSummaryPage<S, Context extends FocusOnContext<S>>(){",
-      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
+      "export function EAccountsSummaryPage(){",
+      "  return focusedPageWithExtraState<FState, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
       "  const id='root';",
       "  return (<Layout  details='[1][3,3][5]'>",
       "          <EAccountsSummaryDD id={`${id}`} state={state} mode={mode} />",
@@ -89,8 +89,8 @@ describe ( " listComponentsIn", () => {
       "          <button>refresh of type ResetStateButton cannot be created yet</button>",
       "   </Layout>)})}",
       "",
-      "export function CreatePlanPage<S, Context extends FocusOnContext<S>>(){",
-      "  return focusedPage<S, CreatePlanDDDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page",
+      "export function CreatePlanPage(){",
+      "  return focusedPage<FState, CreatePlanDDDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page",
       "     ( state, d, mode ) => {",
       "          const id='root';",
       "          return (<Layout  details='[3]'>",
@@ -99,10 +99,10 @@ describe ( " listComponentsIn", () => {
       "              <ModalCommitButton id='commit'  state={state} />",
       "            </Layout>)})}",
       "",
-      "export function RepeatingPage<S, Context extends FocusOnContext<S>>(){",
-      "  return focusedPageWithExtraState<S, RepeatingPageDomain, RepeatingWholeDataDomain, Context> ( s => 'Repeating' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
-      "const nextOccupationGuard =  pageState(state).chainLens<number>(Lenses.fromPath(['selectedItem'])).optJsonOr(0) <  pageState(state).chainLens<string[]>(Lenses.fromPath(['fromApi'])).optJsonOr([]).length - 1",
-      "const prevOccupationGuard = pageState(state).chainLens<number>(Lenses.fromPath(['selectedItem'])).optJsonOr(0) >0",
+      "export function RepeatingPage(){",
+      "  return focusedPageWithExtraState<FState, RepeatingPageDomain, RepeatingWholeDataDomain, Context> ( s => 'Repeating' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
+      "const nextOccupationGuard =  pageState(state)().chainLens<number>(Lenses.fromPath(['selectedItem'])).optJsonOr(0) <  pageState(state)().chainLens<string[]>(Lenses.fromPath(['fromApi'])).optJsonOr([]).length - 1",
+      "const prevOccupationGuard = pageState(state)().chainLens<number>(Lenses.fromPath(['selectedItem'])).optJsonOr(0) >0",
       "  const id='root';",
       "  return (<Layout  details='[1][3]'>",
       "          <Table id={`${id}`} state={state} mode={mode} order={['name','age']} />",
@@ -112,8 +112,8 @@ describe ( " listComponentsIn", () => {
       "          <GuardButton cond={prevOccupationGuard}><ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi')} value={fullState.focusOn('selectedItem')} /></GuardButton>",
       "   </Layout>)})}",
       "",
-      "export function RepeatingLinePage<S, Context extends FocusOnContext<S>>(){",
-      "  return focusedPage<S, RepeatingLineDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page",
+      "export function RepeatingLinePage(){",
+      "  return focusedPage<FState, RepeatingLineDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page",
       "     ( state, d, mode ) => {",
       "          const id='root';",
       "          return (<Layout  details='[2][2]'>",
@@ -122,7 +122,7 @@ describe ( " listComponentsIn", () => {
       "              <ModalCommitButton id='commit'  state={state} />",
       "            </Layout>)})}",
       "",
-      "export function CreatePlanDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, CreatePlanDDDomain,Context>){",
+      "export function CreatePlanDD({id,state,mode}: FocusedProps<FState, CreatePlanDDDomain,Context>){",
       "  return(<>",
       "    <LabelAndStringInput id={`${id}.createPlanStart`} state={state.focusOn('createPlanStart')} mode={mode} label='Create Start' required={true} />",
       "    <LabelAndStringInput id={`${id}.createPlanDate`} state={state.focusOn('createPlanDate')} mode={mode} label='create plan date' required={true} ariaLabel='The Create Plan Date' />",
@@ -130,7 +130,7 @@ describe ( " listComponentsIn", () => {
       "</>)",
       "}",
       "",
-      "export function EAccountsSummaryDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, EAccountsSummaryDDDomain,Context>){",
+      "export function EAccountsSummaryDD({id,state,mode}: FocusedProps<FState, EAccountsSummaryDDDomain,Context>){",
       "  return(<>",
       "    <LabelAndBooleanInput id={`${id}.useEStatements`} state={state.focusOn('useEStatements')} mode={mode} label='use e statements' />",
       "    <Table id={`${id}.eAccountsTable`} state={state.focusOn('eAccountsTable')} mode={mode} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} />",
@@ -143,7 +143,7 @@ describe ( " listComponentsIn", () => {
       "</>)",
       "}",
       "",
-      "export function EAccountSummaryDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, EAccountSummaryDDDomain,Context>){",
+      "export function EAccountSummaryDD({id,state,mode}: FocusedProps<FState, EAccountSummaryDDDomain,Context>){",
       "  return(<>",
       "    <LabelAndNumberInput id={`${id}.accountId`} state={state.focusOn('accountId')} mode={mode} label='Account Id' required={true} min={10000000} max={99999999} />",
       "    <LabelAndRadio id={`${id}.displayType`} state={state.focusOn('displayType')} mode={mode} label='display type' enums={{'savings':'Savings','checking':'Checking'}} />",
@@ -154,7 +154,7 @@ describe ( " listComponentsIn", () => {
       "</>)",
       "}",
       "",
-      "export function RepeatingLine<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, RepeatingLineDomain,Context>){",
+      "export function RepeatingLine({id,state,mode}: FocusedProps<FState, RepeatingLineDomain,Context>){",
       "  return(<>",
       "    <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='name' required={true} />",
       "    <LabelAndNumberInput id={`${id}.age`} state={state.focusOn('age')} mode={mode} label='age' required={true} />",
@@ -170,7 +170,7 @@ describe ( " listComponentsIn", () => {
       "import { Layout } from '../copied/layout';",
       "import { FocusOnContext } from '@focuson/focuson';",
       "import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from '@focuson/pages';",
-      "import { Context, FocusedProps } from '../common';",
+      "import { Context, FocusedProps, FState } from '../common';",
       "import { Lenses } from '@focuson/lens';",
       "import { Guard } from '../copied/guard';",
       "import { GuardButton } from '../copied/GuardButton';",
@@ -184,8 +184,8 @@ describe ( " listComponentsIn", () => {
       "import {ModalCommitButton} from '@focuson/pages';",
       "import {RestButton} from '../copied/rest';",
       "import {ValidationButton} from '../copied/ValidationButton';",
-      "export function ListOccupationsModalPage<S, Context extends FocusOnContext<S>>(){",
-      "  return focusedPage<S, ListOccupationsDDDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page",
+      "export function ListOccupationsModalPage(){",
+      "  return focusedPage<FState, ListOccupationsDDDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page",
       "     ( state, d, mode ) => {",
       "          const id='root';",
       "          return (<Layout  details='[3]'>",
@@ -199,8 +199,8 @@ describe ( " listComponentsIn", () => {
 
   it ( "should createReactPageComponent", () => {
     expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), EAccountsSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "export function EAccountsSummaryPage<S, Context extends FocusOnContext<S>>(){",
-      "  return focusedPageWithExtraState<S, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
+      "export function EAccountsSummaryPage(){",
+      "  return focusedPageWithExtraState<FState, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
       "  const id='root';",
       "  return (<Layout  details='[1][3,3][5]'>",
       "          <EAccountsSummaryDD id={`${id}`} state={state} mode={mode} />",
@@ -212,8 +212,8 @@ describe ( " listComponentsIn", () => {
       ""
     ])
     expect ( createReactPageComponent ( paramsForTest,AllGuardCreator, makeButtons (), CreatePlanPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
-      "export function CreatePlanPage<S, Context extends FocusOnContext<S>>(){",
-      "  return focusedPage<S, CreatePlanDDDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page",
+      "export function CreatePlanPage(){",
+      "  return focusedPage<FState, CreatePlanDDDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page",
       "     ( state, d, mode ) => {",
       "          const id='root';",
       "          return (<Layout  details='[3]'>",
@@ -229,7 +229,7 @@ describe ( " listComponentsIn", () => {
 describe ( "makeComponentWithGuard", () => {
   it ( "should make guard variables", () => {
     expect ( createReactComponent (paramsForTest, AllGuardCreator ) ( occupationIncomeDetailsDD ).slice ( 0, 5 ).map ( r => r.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "export function OccupationIncomeDetailsDD<S, Context extends FocusOnContext<S>>({id,state,mode}: FocusedProps<S, OccupationIncomeDetailsDDDomain,Context>){",
+      "export function OccupationIncomeDetailsDD({id,state,mode}: FocusedProps<FState, OccupationIncomeDetailsDDDomain,Context>){",
       "const areYouGuard = state.chainLens(Lenses.fromPath(['areYou'])).optJsonOr([]);",
       "  return(<>",
       "    <LabelAndStringInput id={`${id}.areYou`} state={state.focusOn('areYou')} mode={mode} label='are you' required={true} />",
@@ -261,10 +261,10 @@ describe ( "make components - the different parameter types", () => {
     expect ( makeParam ( 'stateValue', [ 'a', 'b' ] ).replace ( /"/g, "'" ) ).toEqual ( "{state.focusOn('a').focusOn('b').json()}" )
   } )
   it ( "should create paramtype pageState", () => {
-    expect ( makeParam ( 'pageState', [ 'a', 'b' ] ).replace ( /"/g, "'" ) ).toEqual ( "{pageState(state).focusOn('a').focusOn('b')}" )
+    expect ( makeParam ( 'pageState', [ 'a', 'b' ] ).replace ( /"/g, "'" ) ).toEqual ( "{pageState(state)<any>().focusOn('a').focusOn('b')}" )
   } )
   it ( "should create paramtype pageStateValue", () => {
-    expect ( makeParam ( 'pageStateValue', [ 'a', 'b' ] ).replace ( /"/g, "'" ) ).toEqual ( "{pageState(state).focusOn('a').focusOn('b').json()}" )
+    expect ( makeParam ( 'pageStateValue', [ 'a', 'b' ] ).replace ( /"/g, "'" ) ).toEqual ( "{pageState(state)<any>().focusOn('a').focusOn('b').json()}" )
   } )
   it ( "should create paramtype fullState", () => {
     expect ( makeParam ( 'fullState', [ 'a', 'b' ] ).replace ( /"/g, "'" ) ).toEqual ( "{fullState(state).focusOn('a').focusOn('b')}" )
