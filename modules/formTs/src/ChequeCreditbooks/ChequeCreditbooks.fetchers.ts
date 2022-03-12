@@ -8,11 +8,11 @@ import { FState } from "../common";
 import { Optional, Lenses, NameAndLens} from '@focuson/lens';
 //fetcher type true
 export function ChequeCreditbooksDDFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<FState, domains.ChequeCreditbooksPageDomain>,commonIds: NameAndLens<FState>) {
-  const ids = {...commonIds}
+  const localIds = {}
   return pageAndTagFetcher<FState, domains.ChequeCreditbooksPageDomain, domains.ChequeCreditbooksDDDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.ChequeCreditbooksDDDomain>(),
      'ChequeCreditbooks',
-     'fromApi', fdLens, ids, {},["accountId","applRef","brandRef","customerId"],[],
+     'fromApi', fdLens, commonIds, localIds,["accountId","applRef","brandRef","customerId"],[],
       Lenses.identity< domains.ChequeCreditbooksPageDomain> ().focusQuery('fromApi'),
      '/api/chequeCreditBooks?{query}')
 }

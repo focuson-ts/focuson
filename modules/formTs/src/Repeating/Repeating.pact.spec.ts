@@ -11,7 +11,7 @@ import * as fetchers from "../fetchers";
 import * as rests from "../rests";
 //Rest create pact test
 pactWith ( { consumer: 'RepeatingWholeData', provider: 'RepeatingWholeDataProvider', cors: true }, provider => {
-  describe ( 'Repeating', () => {
+  describe ( 'Repeating - rest create', () => {
     it ( 'should have a create rest for RepeatingWholeData', async () => {
       const restCommand: RestCommand = { name: 'Repeating_RepeatingWholeDataRestDetails', restAction: 'create', path: [ 'Repeating' ] }
       const firstState: FState = {
@@ -34,10 +34,14 @@ pactWith ( { consumer: 'RepeatingWholeData', provider: 'RepeatingWholeDataProvid
           body: samples.sampleRepeatingWholeData0
         },
       } )
-      //export declare function rest<S, MSGS>(fetchFn: FetchFn, d: RestDetails<S, MSGS>, messageL: Optional<S, MSGS[]>, restL: Optional<S, RestCommand[]>, s: S): Promise<S>;
+      const ids = {
+      }
+      const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), firstState )
-      expect ( { ...newState, messages: []}).toEqual ( { ...firstState, restCommands: [], Repeating: { fromApi: samples.sampleRepeatingWholeData0} } )
+      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+      const rawExpected:any = { ...firstState, restCommands: [], Repeating: { fromApi: samples.sampleRepeatingWholeData0} }
+      const expected = massTransform(rawExpected,)
+      expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
       expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
     } )
@@ -45,7 +49,7 @@ pactWith ( { consumer: 'RepeatingWholeData', provider: 'RepeatingWholeDataProvid
 })
 //GetFetcher pact test
 pactWith ( { consumer: 'RepeatingWholeData', provider: 'RepeatingWholeDataProvider', cors: true }, provider => {
-  describe ( 'Repeating', () => {
+  describe ( 'Repeating - fetcher', () => {
     it ( 'should have a get fetcher for RepeatingWholeData', async () => {
       await provider.addInteraction ( {
         state: 'default',
@@ -60,23 +64,24 @@ pactWith ( { consumer: 'RepeatingWholeData', provider: 'RepeatingWholeDataProvid
           body: samples.sampleRepeatingWholeData0
         },
       } )
-      const ids = {postcode: Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('search')}
-const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'Repeating', pageMode: 'view' }] , Repeating: { }}
-const withIds = massTransform(firstState,)
-let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
-let expectedRaw: any = {
-  ... firstState,
-   Repeating: {fromApi:samples.sampleRepeatingWholeData0},
-  tags: { Repeating_fromApi:["custId"]}
-};
-const expected = massTransform(expectedRaw,)
-expect ( newState ).toEqual ( expected )
+      const ids = {
+      }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'Repeating', pageMode: 'view' }] , Repeating: { }}
+      const withIds = massTransform(firstState,)
+      let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+      let expectedRaw: any = {
+        ... firstState,
+         Repeating: {fromApi:samples.sampleRepeatingWholeData0},
+        tags: { Repeating_fromApi:["custId"]}
+      };
+      const expected = massTransform(expectedRaw,)
+      expect ( newState ).toEqual ( expected )
     } )
   } )
 })
 //Rest get pact test
 pactWith ( { consumer: 'RepeatingWholeData', provider: 'RepeatingWholeDataProvider', cors: true }, provider => {
-  describe ( 'Repeating', () => {
+  describe ( 'Repeating - rest get', () => {
     it ( 'should have a get rest for RepeatingWholeData', async () => {
       const restCommand: RestCommand = { name: 'Repeating_RepeatingWholeDataRestDetails', restAction: 'get', path: [ 'Repeating' ] }
       const firstState: FState = {
@@ -99,10 +104,14 @@ pactWith ( { consumer: 'RepeatingWholeData', provider: 'RepeatingWholeDataProvid
           body: samples.sampleRepeatingWholeData0
         },
       } )
-      //export declare function rest<S, MSGS>(fetchFn: FetchFn, d: RestDetails<S, MSGS>, messageL: Optional<S, MSGS[]>, restL: Optional<S, RestCommand[]>, s: S): Promise<S>;
+      const ids = {
+      }
+      const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), firstState )
-      expect ( { ...newState, messages: []}).toEqual ( { ...firstState, restCommands: [], Repeating: { fromApi: samples.sampleRepeatingWholeData0} } )
+      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+      const rawExpected:any = { ...firstState, restCommands: [], Repeating: { fromApi: samples.sampleRepeatingWholeData0} }
+      const expected = massTransform(rawExpected,)
+      expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
       expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
     } )

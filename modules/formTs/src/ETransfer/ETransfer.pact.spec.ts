@@ -11,7 +11,7 @@ import * as fetchers from "../fetchers";
 import * as rests from "../rests";
 //Rest create pact test
 pactWith ( { consumer: 'ETransferDataD', provider: 'ETransferDataDProvider', cors: true }, provider => {
-  describe ( 'ETransfer', () => {
+  describe ( 'ETransfer - rest create', () => {
     it ( 'should have a create rest for ETransferDataD', async () => {
       const restCommand: RestCommand = { name: 'ETransfer_ETransferDataDRestDetails', restAction: 'create', path: [ 'ETransfer' ] }
       const firstState: FState = {
@@ -34,10 +34,14 @@ pactWith ( { consumer: 'ETransferDataD', provider: 'ETransferDataDProvider', cor
           body: samples.sampleETransferDataD0
         },
       } )
-      //export declare function rest<S, MSGS>(fetchFn: FetchFn, d: RestDetails<S, MSGS>, messageL: Optional<S, MSGS[]>, restL: Optional<S, RestCommand[]>, s: S): Promise<S>;
+      const ids = {
+      }
+      const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), firstState )
-      expect ( { ...newState, messages: []}).toEqual ( { ...firstState, restCommands: [], ETransfer: { fromApi: samples.sampleETransferDataD0} } )
+      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+      const rawExpected:any = { ...firstState, restCommands: [], ETransfer: { fromApi: samples.sampleETransferDataD0} }
+      const expected = massTransform(rawExpected,)
+      expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
       expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
     } )

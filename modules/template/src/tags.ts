@@ -95,7 +95,8 @@ export const bodyFor: TagOpsFn<RequestInit | undefined> =
                }
 
 export const reqFor: TagOpsFn<( url: string ) => [ RequestInfo, RequestInit | undefined ]> =
-               ( urlConfig, restAction ) => <S> ( s ) => u => [ url ( urlConfig, restAction ) ( s ) ( u ), bodyFor ( urlConfig, restAction ) ( s ) ]
+               ( urlConfig, restAction ) => <S> ( s ) =>
+                   u => [ url ( urlConfig, restAction ) ( s ) ( u ), bodyFor ( urlConfig, restAction ) ( s ) ]
 
 export const tagOps: TagOps = ({ tags, reqFor });
 

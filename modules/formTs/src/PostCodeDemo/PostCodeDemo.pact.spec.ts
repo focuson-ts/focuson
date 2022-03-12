@@ -11,7 +11,7 @@ import * as fetchers from "../fetchers";
 import * as rests from "../rests";
 //GetFetcher pact test
 pactWith ( { consumer: 'PostCodeData', provider: 'PostCodeDataProvider', cors: true }, provider => {
-  describe ( 'PostCodeDemo', () => {
+  describe ( 'PostCodeDemo - fetcher', () => {
     it ( 'should have a get fetcher for PostCodeData', async () => {
       await provider.addInteraction ( {
         state: 'default',
@@ -26,23 +26,25 @@ pactWith ( { consumer: 'PostCodeData', provider: 'PostCodeDataProvider', cors: t
           body: samples.samplePostCodeData0
         },
       } )
-      const ids = {postcode: Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('search')}
-const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'PostCodeDemo', pageMode: 'view' }] , PostCodeDemo: { }}
-const withIds = massTransform(firstState,[ids.postcode, () =>"LW12 4RG"])
-let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
-let expectedRaw: any = {
-  ... firstState,
-   PostCodeDemo: {postcode:{searchResults:samples.samplePostCodeData0}},
-  tags: { PostCodeDemo_postcode_searchResults:["LW12 4RG"]}
-};
-const expected = massTransform(expectedRaw,[ids.postcode, () =>"LW12 4RG"])
-expect ( newState ).toEqual ( expected )
+      const ids = {
+        postcode: Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('search')
+      }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'PostCodeDemo', pageMode: 'view' }] , PostCodeDemo: { }}
+      const withIds = massTransform(firstState,[ids.postcode, () =>"LW12 4RG"])
+      let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+      let expectedRaw: any = {
+        ... firstState,
+         PostCodeDemo: {postcode:{searchResults:samples.samplePostCodeData0}},
+        tags: { PostCodeDemo_postcode_searchResults:["LW12 4RG"]}
+      };
+      const expected = massTransform(expectedRaw,[ids.postcode, () =>"LW12 4RG"])
+      expect ( newState ).toEqual ( expected )
     } )
   } )
 })
 //Rest get pact test
 pactWith ( { consumer: 'PostCodeData', provider: 'PostCodeDataProvider', cors: true }, provider => {
-  describe ( 'PostCodeDemo', () => {
+  describe ( 'PostCodeDemo - rest get', () => {
     it ( 'should have a get rest for PostCodeData', async () => {
       const restCommand: RestCommand = { name: 'PostCodeDemo_PostCodeDataRestDetails', restAction: 'get', path: [ 'PostCodeDemo' ] }
       const firstState: FState = {
@@ -65,10 +67,15 @@ pactWith ( { consumer: 'PostCodeData', provider: 'PostCodeDataProvider', cors: t
           body: samples.samplePostCodeData0
         },
       } )
-      //export declare function rest<S, MSGS>(fetchFn: FetchFn, d: RestDetails<S, MSGS>, messageL: Optional<S, MSGS[]>, restL: Optional<S, RestCommand[]>, s: S): Promise<S>;
+      const ids = {
+        postcode: Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('search')
+      }
+      const withIds = massTransform(firstState,[ids.postcode, () =>"LW12 4RG"])
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), firstState )
-      expect ( { ...newState, messages: []}).toEqual ( { ...firstState, restCommands: [], PostCodeDemo: { postcode:{searchResults: samples.samplePostCodeData0}} } )
+      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+      const rawExpected:any = { ...firstState, restCommands: [], PostCodeDemo: { postcode:{searchResults: samples.samplePostCodeData0}} }
+      const expected = massTransform(rawExpected,[ids.postcode, () =>"LW12 4RG"])
+      expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
       expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
     } )

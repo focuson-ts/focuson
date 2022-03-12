@@ -1,5 +1,5 @@
 pactWith ( { consumer: '{consumer}', provider: '{provider}', cors: true }, provider => {
-  describe ( '{description1}', () => {
+  describe ( '{description1} - fetcher', () => {
 
     it ( '{description2}', async () => {
       await provider.addInteraction ( {
@@ -15,7 +15,7 @@ pactWith ( { consumer: '{consumer}', provider: '{provider}', cors: true }, provi
           body: {body}
         },
       } )
-      {content}
+{content}
     } )
   } )
 })

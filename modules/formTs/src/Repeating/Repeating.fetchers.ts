@@ -8,11 +8,11 @@ import { FState } from "../common";
 import { Optional, Lenses, NameAndLens} from '@focuson/lens';
 //fetcher type true
 export function RepeatingWholeDataFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<FState, domains.RepeatingPageDomain>,commonIds: NameAndLens<FState>) {
-  const ids = {...commonIds}
+  const localIds = {}
   return pageAndTagFetcher<FState, domains.RepeatingPageDomain, domains.RepeatingWholeDataDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.RepeatingWholeDataDomain>(),
      'Repeating',
-     'fromApi', fdLens, ids, {},["customerId"],[],
+     'fromApi', fdLens, commonIds, localIds,["customerId"],[],
       Lenses.identity< domains.RepeatingPageDomain> ().focusQuery('fromApi'),
      '/api/repeating?{query}')
 }

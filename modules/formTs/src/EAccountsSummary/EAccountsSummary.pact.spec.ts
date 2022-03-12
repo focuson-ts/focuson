@@ -9,9 +9,10 @@ import * as samples from '../EAccountsSummary/EAccountsSummary.samples'
 import {emptyState, FState } from "../common";
 import * as fetchers from "../fetchers";
 import * as rests from "../rests";
+describe("", () =>{it("", () =>{})})
 //Rest get pact test
 pactWith ( { consumer: 'CreatePlanDD', provider: 'CreatePlanDDProvider', cors: true }, provider => {
-  describe ( 'EAccountsSummary', () => {
+  describe ( 'EAccountsSummary - rest get', () => {
     it ( 'should have a get rest for CreatePlanDD', async () => {
       const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanDDRestDetails', restAction: 'get', path: [ 'EAccountsSummary' ] }
       const firstState: FState = {
@@ -34,10 +35,14 @@ pactWith ( { consumer: 'CreatePlanDD', provider: 'CreatePlanDDProvider', cors: t
           body: samples.sampleCreatePlanDD0
         },
       } )
-      //export declare function rest<S, MSGS>(fetchFn: FetchFn, d: RestDetails<S, MSGS>, messageL: Optional<S, MSGS[]>, restL: Optional<S, RestCommand[]>, s: S): Promise<S>;
+      const ids = {
+      }
+      const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), firstState )
-      expect ( { ...newState, messages: []}).toEqual ( { ...firstState, restCommands: [], EAccountsSummary: { tempCreatePlan: samples.sampleCreatePlanDD0} } )
+      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+      const rawExpected:any = { ...firstState, restCommands: [], EAccountsSummary: { tempCreatePlan: samples.sampleCreatePlanDD0} }
+      const expected = massTransform(rawExpected,)
+      expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
       expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
     } )
@@ -45,7 +50,7 @@ pactWith ( { consumer: 'CreatePlanDD', provider: 'CreatePlanDDProvider', cors: t
 })
 //Rest create pact test
 pactWith ( { consumer: 'CreatePlanDD', provider: 'CreatePlanDDProvider', cors: true }, provider => {
-  describe ( 'EAccountsSummary', () => {
+  describe ( 'EAccountsSummary - rest create', () => {
     it ( 'should have a create rest for CreatePlanDD', async () => {
       const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanDDRestDetails', restAction: 'create', path: [ 'EAccountsSummary' ] }
       const firstState: FState = {
@@ -68,10 +73,14 @@ pactWith ( { consumer: 'CreatePlanDD', provider: 'CreatePlanDDProvider', cors: t
           body: samples.sampleCreatePlanDD0
         },
       } )
-      //export declare function rest<S, MSGS>(fetchFn: FetchFn, d: RestDetails<S, MSGS>, messageL: Optional<S, MSGS[]>, restL: Optional<S, RestCommand[]>, s: S): Promise<S>;
+      const ids = {
+      }
+      const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), firstState )
-      expect ( { ...newState, messages: []}).toEqual ( { ...firstState, restCommands: [], EAccountsSummary: { tempCreatePlan: samples.sampleCreatePlanDD0} } )
+      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+      const rawExpected:any = { ...firstState, restCommands: [], EAccountsSummary: { tempCreatePlan: samples.sampleCreatePlanDD0} }
+      const expected = massTransform(rawExpected,)
+      expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
       expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
     } )
@@ -79,7 +88,7 @@ pactWith ( { consumer: 'CreatePlanDD', provider: 'CreatePlanDDProvider', cors: t
 })
 //Rest update pact test
 pactWith ( { consumer: 'CreatePlanDD', provider: 'CreatePlanDDProvider', cors: true }, provider => {
-  describe ( 'EAccountsSummary', () => {
+  describe ( 'EAccountsSummary - rest update', () => {
     it ( 'should have a update rest for CreatePlanDD', async () => {
       const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanDDRestDetails', restAction: 'update', path: [ 'EAccountsSummary' ] }
       const firstState: FState = {
@@ -102,10 +111,14 @@ pactWith ( { consumer: 'CreatePlanDD', provider: 'CreatePlanDDProvider', cors: t
           body: samples.sampleCreatePlanDD0
         },
       } )
-      //export declare function rest<S, MSGS>(fetchFn: FetchFn, d: RestDetails<S, MSGS>, messageL: Optional<S, MSGS[]>, restL: Optional<S, RestCommand[]>, s: S): Promise<S>;
+      const ids = {
+      }
+      const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), firstState )
-      expect ( { ...newState, messages: []}).toEqual ( { ...firstState, restCommands: [], EAccountsSummary: { tempCreatePlan: samples.sampleCreatePlanDD0} } )
+      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+      const rawExpected:any = { ...firstState, restCommands: [], EAccountsSummary: { tempCreatePlan: samples.sampleCreatePlanDD0} }
+      const expected = massTransform(rawExpected,)
+      expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
       expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
     } )
@@ -113,7 +126,7 @@ pactWith ( { consumer: 'CreatePlanDD', provider: 'CreatePlanDDProvider', cors: t
 })
 //Rest delete pact test
 pactWith ( { consumer: 'CreatePlanDD', provider: 'CreatePlanDDProvider', cors: true }, provider => {
-  describe ( 'EAccountsSummary', () => {
+  describe ( 'EAccountsSummary - rest delete', () => {
     it ( 'should have a delete rest for CreatePlanDD', async () => {
       const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanDDRestDetails', restAction: 'delete', path: [ 'EAccountsSummary' ] }
       const firstState: FState = {
@@ -136,10 +149,14 @@ pactWith ( { consumer: 'CreatePlanDD', provider: 'CreatePlanDDProvider', cors: t
           body: samples.sampleCreatePlanDD0
         },
       } )
-      //export declare function rest<S, MSGS>(fetchFn: FetchFn, d: RestDetails<S, MSGS>, messageL: Optional<S, MSGS[]>, restL: Optional<S, RestCommand[]>, s: S): Promise<S>;
+      const ids = {
+      }
+      const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), firstState )
-      expect ( { ...newState, messages: []}).toEqual ( { ...firstState, restCommands: [], EAccountsSummary: { tempCreatePlan: samples.sampleCreatePlanDD0} } )
+      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+      const rawExpected:any = { ...firstState, restCommands: [], EAccountsSummary: { tempCreatePlan: samples.sampleCreatePlanDD0} }
+      const expected = massTransform(rawExpected,)
+      expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
       expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
     } )
@@ -147,7 +164,7 @@ pactWith ( { consumer: 'CreatePlanDD', provider: 'CreatePlanDDProvider', cors: t
 })
 //Rest list pact test
 pactWith ( { consumer: 'CreatePlanDD', provider: 'CreatePlanDDProvider', cors: true }, provider => {
-  describe ( 'EAccountsSummary', () => {
+  describe ( 'EAccountsSummary - rest list', () => {
     it ( 'should have a list rest for CreatePlanDD', async () => {
       const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanDDRestDetails', restAction: 'list', path: [ 'EAccountsSummary' ] }
       const firstState: FState = {
@@ -170,10 +187,14 @@ pactWith ( { consumer: 'CreatePlanDD', provider: 'CreatePlanDDProvider', cors: t
           body: samples.sampleCreatePlanDD0
         },
       } )
-      //export declare function rest<S, MSGS>(fetchFn: FetchFn, d: RestDetails<S, MSGS>, messageL: Optional<S, MSGS[]>, restL: Optional<S, RestCommand[]>, s: S): Promise<S>;
+      const ids = {
+      }
+      const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), firstState )
-      expect ( { ...newState, messages: []}).toEqual ( { ...firstState, restCommands: [], EAccountsSummary: { tempCreatePlan: samples.sampleCreatePlanDD0} } )
+      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+      const rawExpected:any = { ...firstState, restCommands: [], EAccountsSummary: { tempCreatePlan: samples.sampleCreatePlanDD0} }
+      const expected = massTransform(rawExpected,)
+      expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
       expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
     } )
@@ -181,7 +202,7 @@ pactWith ( { consumer: 'CreatePlanDD', provider: 'CreatePlanDDProvider', cors: t
 })
 //GetFetcher pact test
 pactWith ( { consumer: 'EAccountsSummaryDD', provider: 'EAccountsSummaryDDProvider', cors: true }, provider => {
-  describe ( 'EAccountsSummary', () => {
+  describe ( 'EAccountsSummary - fetcher', () => {
     it ( 'should have a get fetcher for EAccountsSummaryDD', async () => {
       await provider.addInteraction ( {
         state: 'default',
@@ -196,23 +217,24 @@ pactWith ( { consumer: 'EAccountsSummaryDD', provider: 'EAccountsSummaryDDProvid
           body: samples.sampleEAccountsSummaryDD0
         },
       } )
-      const ids = {postcode: Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('search')}
-const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'EAccountsSummary', pageMode: 'view' }] , EAccountsSummary: { }}
-const withIds = massTransform(firstState,)
-let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
-let expectedRaw: any = {
-  ... firstState,
-   EAccountsSummary: {fromApi:samples.sampleEAccountsSummaryDD0},
-  tags: { EAccountsSummary_fromApi:["accId","custId"]}
-};
-const expected = massTransform(expectedRaw,)
-expect ( newState ).toEqual ( expected )
+      const ids = {
+      }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'EAccountsSummary', pageMode: 'view' }] , EAccountsSummary: { }}
+      const withIds = massTransform(firstState,)
+      let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+      let expectedRaw: any = {
+        ... firstState,
+         EAccountsSummary: {fromApi:samples.sampleEAccountsSummaryDD0},
+        tags: { EAccountsSummary_fromApi:["accId","custId"]}
+      };
+      const expected = massTransform(expectedRaw,)
+      expect ( newState ).toEqual ( expected )
     } )
   } )
 })
 //Rest get pact test
 pactWith ( { consumer: 'EAccountsSummaryDD', provider: 'EAccountsSummaryDDProvider', cors: true }, provider => {
-  describe ( 'EAccountsSummary', () => {
+  describe ( 'EAccountsSummary - rest get', () => {
     it ( 'should have a get rest for EAccountsSummaryDD', async () => {
       const restCommand: RestCommand = { name: 'EAccountsSummary_EAccountsSummaryDDRestDetails', restAction: 'get', path: [ 'EAccountsSummary' ] }
       const firstState: FState = {
@@ -235,10 +257,14 @@ pactWith ( { consumer: 'EAccountsSummaryDD', provider: 'EAccountsSummaryDDProvid
           body: samples.sampleEAccountsSummaryDD0
         },
       } )
-      //export declare function rest<S, MSGS>(fetchFn: FetchFn, d: RestDetails<S, MSGS>, messageL: Optional<S, MSGS[]>, restL: Optional<S, RestCommand[]>, s: S): Promise<S>;
+      const ids = {
+      }
+      const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), firstState )
-      expect ( { ...newState, messages: []}).toEqual ( { ...firstState, restCommands: [], EAccountsSummary: { fromApi: samples.sampleEAccountsSummaryDD0} } )
+      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+      const rawExpected:any = { ...firstState, restCommands: [], EAccountsSummary: { fromApi: samples.sampleEAccountsSummaryDD0} }
+      const expected = massTransform(rawExpected,)
+      expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
       expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
     } )

@@ -1,5 +1,5 @@
 pactWith ( { consumer: '{consumer}', provider: '{provider}', cors: true }, provider => {
-  describe ( '{description1}', () => {
+  describe ( '{description1} - rest {action}', () => {
 
     it ( '{description2}', async () => {
       const restCommand: RestCommand = { name: '{restDetailsName}', restAction: '{action}', path: [ '{pageName}' ] }
@@ -23,10 +23,12 @@ pactWith ( { consumer: '{consumer}', provider: '{provider}', cors: true }, provi
           body: {body}
         },
       } )
-      //export declare function rest<S, MSGS>(fetchFn: FetchFn, d: RestDetails<S, MSGS>, messageL: Optional<S, MSGS[]>, restL: Optional<S, RestCommand[]>, s: S): Promise<S>;
+{content}
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, {restsFile}.restDetails, simpleMessagesL(), restL(), firstState )
-      expect ( { ...newState, messages: []}).toEqual ( { ...firstState, restCommands: [], {pageName}: { {target}: samples.{sample}{closeTarget} } )
+      let newState = await rest ( fetchFn, {restsFile}.restDetails, simpleMessagesL(), restL(), withIds )
+      const rawExpected:any = { ...firstState, restCommands: [], {pageName}: { {target}: samples.{sample}{closeTarget} }
+      {expected}
+      expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
       expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
 

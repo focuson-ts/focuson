@@ -8,11 +8,11 @@ import { FState } from "../common";
 import { Optional, Lenses, NameAndLens} from '@focuson/lens';
 //fetcher type true
 export function PostCodeDataFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<FState, domains.PostCodeDemoPageDomain>,commonIds: NameAndLens<FState>) {
-  const ids = {...commonIds,postcode: Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('search')}
+  const localIds = {postcode: Lenses.identity< domains.PostCodeDemoPageDomain>().focusQuery('postcode').focusQuery('search')}
   return pageAndTagFetcher<FState, domains.PostCodeDemoPageDomain, domains.PostCodeDataDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.PostCodeDataDomain>(),
      'PostCodeDemo',
-     'postcode_searchResults', fdLens, ids, {},["postcode"],[],
+     'postcode_searchResults', fdLens, commonIds, localIds,["postcode"],[],
       Lenses.identity< domains.PostCodeDemoPageDomain> ().focusQuery('postcode').focusQuery('searchResults'),
      '/api/postCode?{query}')
 }
