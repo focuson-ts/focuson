@@ -25,14 +25,14 @@ const makeControlButton = <B, G> ( maker: MakeButton<G> ) => ( params: TSParams 
   return createButton ? createButton.makeButton ( { params, parent, name, button } ) : `<button>${name} of type ${button.control} cannot be created yet</button>`
 }
 export const makeButtonFrom = <B extends ButtonD, G> ( makeGuard: MakeGuard<G>, maker: MakeButton<G> ) => ( params: TSParams ) => ( parent: PageD<B, G> ) => ( [ name, button ]: [ string, B ] ): string => {
-  if ( isButtonWithControl ( button ) ) return makeControlButton ( maker ) ( params ) ( parent ) ( [ name, button ] )
-  if ( isGuardButton ( button ) ) {
-    const realButton = button.guard
-    if ( isButtonWithControl ( realButton ) )
-      return `<GuardButton cond={${guardName ( name )}}>` + makeControlButton ( maker ) ( params ) ( parent ) ( [ name, realButton ] ) + "</GuardButton>"
-  }
-  throw Error ( `Don't know how to process button ${name} ${JSON.stringify ( button )}` )
-};
+         if ( isButtonWithControl ( button ) ) return makeControlButton ( maker ) ( params ) ( parent ) ( [ name, button ] )
+         if ( isGuardButton ( button ) ) {
+           const realButton = button.guard
+           return `<GuardButton cond={${guardName ( name )}}>` + makeButtonFrom ( makeGuard, maker ) ( params ) ( parent ) ( [ name, realButton ] ) + "</GuardButton>"
+         }
+         throw Error ( `Don't know how to process button ${name} ${JSON.stringify ( button )}` )
+       }
+;
 
 const makeButtonGuardVariableFrom = <B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, maker: MakeGuard<G>, p: PageD<B, G> ) => ( [ name, button ]: [ string, B ] ): string[] => {
   if ( isGuardButton<B, G> ( button ) ) {

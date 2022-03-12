@@ -29,12 +29,15 @@ import {OtherIncomeResponseDDDomain} from "../OccupationAndIncomeSummary/Occupat
 export function OccupationAndIncomeSummaryPage(){
   return focusedPageWithExtraState<FState, OccupationAndIncomeSummaryPageDomain, OccupationAndIncomeDetailsDDDomain, Context> ( s => 'OccupationAndIncomeSummary' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
+const addEntryGuard = pageState(state)().chainLens<number>(Lenses.fromPath(["selectedItem"])).optJsonOr(0) >0
 const nextOccupationGuard =  pageState(state)().chainLens<number>(Lenses.fromPath(["selectedItem"])).optJsonOr(0) <  pageState(state)().chainLens<string[]>(Lenses.fromPath(["fromApi","customerOccupationIncomeDetails"])).optJsonOr([]).length - 1
 const prevOccupationGuard = pageState(state)().chainLens<number>(Lenses.fromPath(["selectedItem"])).optJsonOr(0) >0
   const id='root';
   return (<Layout  details='[1][3,3][5]'>
           <OccupationAndIncomeDetailsDD id={`${id}`} state={state} mode={mode} />
-          <ModalButton id='addEntry' text='addEntry'  state={state} modal = 'OccupationIncomeModalPD'  focusOn={["OccupationAndIncomeSummary","temp"]}  copyOnClose={["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails","[append]"]}createEmpty={empty.emptyOccupationIncomeDetailsDD}  setToLengthOnClose={{"array":["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails"],"variable":["OccupationAndIncomeSummary","selectedItem"]}} pageMode='create'   />
+          <GuardButton cond={addEntryGuard}><GuardButton cond={addEntryGuard}>
+            <ModalButton id='addEntry' text='addEntry'  state={state} modal = 'OccupationIncomeModalPD'
+                         focusOn={["OccupationAndIncomeSummary","temp"]}  copyOnClose={["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails","[append]"]}createEmpty={empty.emptyOccupationIncomeDetailsDD}  setToLengthOnClose={{"array":["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails"],"variable":["OccupationAndIncomeSummary","selectedItem"]}} pageMode='create'   /></GuardButton></GuardButton>
           <ModalButton id='edit' text='edit'  state={state} modal = 'OccupationIncomeModalPD'  focusOn={["OccupationAndIncomeSummary","temp"]} copyFrom={["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails","{selectedItem}"]} copyOnClose={["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails","{selectedItem}"]}   pageMode='edit'   />
           <GuardButton cond={nextOccupationGuard}><ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} /></GuardButton>
           <GuardButton cond={prevOccupationGuard}><ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} /></GuardButton>

@@ -85,16 +85,22 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
       guard: { control: 'ListNextButton', value: [ 'selectedItem' ], list: [ 'fromApi', 'customerOccupationIncomeDetails' ] }
     },
     prevOccupation: {
-      by: { condition: '>0', path: [ 'selectedItem' ] },
-      guard: { control: 'ListPrevButton', value: [ 'selectedItem' ], list: [ 'fromApi', 'customerOccupationIncomeDetails' ] }
+      guard: { control: 'ListPrevButton', value: [ 'selectedItem' ], list: [ 'fromApi', 'customerOccupationIncomeDetails' ] },
+      by: { condition: '>0', path: [ 'selectedItem' ] }
     },
     //questions: how do we know which is the existing plan... is there a list? are we an entry in the list? do we need to navigate to it?
     addEntry: {
-      control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'create',
-      focusOn: [ 'temp' ],
-      createEmpty: occupationIncomeDetailsDD,
-      setToLengthOnClose: { variable: [ 'selectedItem' ], array: [ 'fromApi', 'customerOccupationIncomeDetails' ] },
-      copyOnClose: [ 'fromApi', 'customerOccupationIncomeDetails', '[append]' ]
+      guard: {
+        guard: {
+          control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'create',
+          focusOn: [ 'temp' ],
+          createEmpty: occupationIncomeDetailsDD,
+          setToLengthOnClose: { variable: [ 'selectedItem' ], array: [ 'fromApi', 'customerOccupationIncomeDetails' ] },
+          copyOnClose: [ 'fromApi', 'customerOccupationIncomeDetails', '[append]' ]
+        },
+        by: { condition: '>0', path: [ 'selectedItem' ] },
+      },
+      by: { condition: '>0', path: [ 'selectedItem' ] },
     },
     edit: {
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'edit',
