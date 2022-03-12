@@ -3,6 +3,7 @@ import * as domains from "../ChequeCreditbooks/ChequeCreditbooks.domains"
 import { createSimpleMessage, DateFn, defaultDateFn, SimpleMessage } from "@focuson/utils"
 import { Lenses, NameAndLens} from "@focuson/lens"
 
+import { FState } from "../common"
 export function ChequeCreditbooks_ChequeCreditbooksDDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.ChequeCreditbooksPageDomain, domains.ChequeCreditbooksDDDomain, SimpleMessage> {
   const paramNameToLens = {...cd,postcode: Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('search')}
   const fdd: NameAndLens<domains.ChequeCreditbooksPageDomain> = {}

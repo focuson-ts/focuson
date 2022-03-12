@@ -3,6 +3,7 @@ import * as domains from "../EAccountsSummary/EAccountsSummary.domains"
 import { createSimpleMessage, DateFn, defaultDateFn, SimpleMessage } from "@focuson/utils"
 import { Lenses, NameAndLens} from "@focuson/lens"
 
+import { FState } from "../common"
 export function EAccountsSummary_CreatePlanDDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.CreatePlanDDDomain, SimpleMessage> {
   const paramNameToLens = {...cd,postcode: Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('search')}
   const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}

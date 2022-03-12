@@ -3,6 +3,7 @@ import * as domains from "../OccupationAndIncomeSummary/OccupationAndIncomeSumma
 import { createSimpleMessage, DateFn, defaultDateFn, SimpleMessage } from "@focuson/utils"
 import { Lenses, NameAndLens} from "@focuson/lens"
 
+import { FState } from "../common"
 export function OccupationAndIncomeSummary_OccupationAndIncomeDetailsDDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.OccupationAndIncomeDetailsDDDomain, SimpleMessage> {
   const paramNameToLens = {...cd,postcode: Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('search')}
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}

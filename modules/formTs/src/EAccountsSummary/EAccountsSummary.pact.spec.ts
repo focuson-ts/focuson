@@ -9,7 +9,6 @@ import * as samples from '../EAccountsSummary/EAccountsSummary.samples'
 import {emptyState, FState } from "../common";
 import * as fetchers from "../fetchers";
 import * as rests from "../rests";
-describe("", () =>{it("", () =>{})})
 //Rest get pact test
 pactWith ( { consumer: 'CreatePlanDD', provider: 'CreatePlanDDProvider', cors: true }, provider => {
   describe ( 'EAccountsSummary - rest get', () => {

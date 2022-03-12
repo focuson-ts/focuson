@@ -63,5 +63,5 @@ export function makeRestDetails<B, G> ( params: TSParams, ps: PageD<B, G>[] ): s
 export function makeRests<B, G> ( params: TSParams, pd: MainPageD<B, G> ): string[] {
   let rests = sortedEntries ( pd.rest ).flatMap ( ( [ name, rd ] ) => makeRest ( params, pd ) ( rd ) );
   let imports = rests.length > 0 ? makeRestImports ( params, pd ) : []
-  return [ ...imports, ...rests ]
+  return [ ...imports,`import { ${params.stateName} } from "../common"`, ...rests ]
 }
