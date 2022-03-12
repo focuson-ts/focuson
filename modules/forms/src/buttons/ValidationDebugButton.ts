@@ -7,7 +7,7 @@ function makeValidationDebugButton<G> (): ButtonCreator<ValidationButtonInPage, 
     import: "../copied/ValidationButton",
     makeButton:
       ( { params, parent, name, button } ) => {
-        return `<ValidationButton  ${opt ( 'id', name )}   ${opt ( 'name', name )}  />`
+        return [`<ValidationButton  ${opt ( 'id', name )}   ${opt ( 'name', name )}  />`]
       }
   }
 }

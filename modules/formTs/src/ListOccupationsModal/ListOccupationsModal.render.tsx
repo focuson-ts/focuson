@@ -21,7 +21,7 @@ export function ListOccupationsModalPage(){
      ( state, d, mode ) => {
           const id='root';
           return (<Layout  details='[3]'>
-              <SearchList id={`${id}`} state={state} mode={mode} />
+          <SearchList id={`${id}`} state={state} mode={mode} />
               <ModalCancelButton id='cancel' state={state} />
               <ModalCommitButton id='commit'  state={state} />
             </Layout>)})}

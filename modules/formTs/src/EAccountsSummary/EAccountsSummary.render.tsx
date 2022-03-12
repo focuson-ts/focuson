@@ -31,9 +31,26 @@ export function EAccountsSummaryPage(){
   const id='root';
   return (<Layout  details='[1][3,3][5]'>
           <EAccountsSummaryDD id={`${id}`} state={state} mode={mode} />
-          <ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  focusOn={["EAccountsSummary","tempCreatePlan"]} copyFrom={["EAccountsSummary","fromApi","createPlan"]}    pageMode='edit'   rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"update","path":["EAccountsSummary"]}} />
-          <ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  focusOn={["EAccountsSummary","tempCreatePlan"]}  createEmpty={empty.emptyCreatePlanDD}   pageMode='create'   rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"create","path":["EAccountsSummary"]}} />
-          <RestButton  id='deleteExistingPlan'   name='deleteExistingPlan' action='delete' path={["EAccountsSummary","fromApi"]} state={state} rest='EAccountsSummary_CreatePlanDDRestDetails' confirm={true} />
+          <ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  
+            pageMode='edit'
+            focusOn={["EAccountsSummary","tempCreatePlan"]}
+            copyFrom={["EAccountsSummary","fromApi","createPlan"]}
+             rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"update","path":["EAccountsSummary"]}}
+          />
+          <ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  
+            pageMode='create'
+            focusOn={["EAccountsSummary","tempCreatePlan"]}
+            createEmpty={empty.emptyCreatePlanDD}
+             rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"create","path":["EAccountsSummary"]}}
+          />
+          <RestButton state={state}
+          id='deleteExistingPlan'
+          name='deleteExistingPlan'
+          action='delete'
+          path={["EAccountsSummary","fromApi"]}
+          rest='EAccountsSummary_CreatePlanDDRestDetails'
+          confirm={true}
+           />
           <button>refresh of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 

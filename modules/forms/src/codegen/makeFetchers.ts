@@ -20,7 +20,7 @@ export const makeFetcherCode = ( params: TSParams ) => <B, G> ( p: PageD<B, G> )
   const lensVariableString = `  const localIds = {` + localLens.join ( "," ) + "}"
   return [
     `//fetcher type ${def.fetcher}`,
-    `export function ${fetcherName ( def )}<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<${params.stateName}, ${domain}.${pageDomainName ( p )}>,commonIds: NameAndLens<${params.stateName}>) {`,
+    `export function ${fetcherName ( def )}(fdLens:Optional<${params.stateName}, ${domain}.${pageDomainName ( p )}>,commonIds: NameAndLens<${params.stateName}>) {`,
     lensVariableString,
     `  return pageAndTagFetcher<${params.stateName}, ${domain}.${pageDomainName ( p )}, ${domain}.${dataType}, SimpleMessage>(`,
     `    ${common}.commonFetch<${params.stateName},  ${domain}.${dataType}>(),`,
@@ -83,7 +83,7 @@ export function makeFetchersDataStructure<B, G> ( params: TSParams, { stateName,
     `export const ${variableName}: FetcherTree<${params.commonFile}.${stateName}> = {`,
     `fetchers: [`,
     ...addStringToEndOfAllButLast ( ',' ) ( fetchers.map ( ( [ pd, rd ], i ) =>
-      `    ${fetcherName ( rd )}<${params.commonFile}.${stateName}> ( identityL.focusQuery ( '${pd.name}' ), commonIds )` ) ),
+      `    ${fetcherName ( rd )}( identityL.focusQuery ( '${pd.name}' ), commonIds )` ) ),
     `],`,
     'children: []}',
   ]

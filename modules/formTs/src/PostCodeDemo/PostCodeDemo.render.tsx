@@ -28,7 +28,11 @@ export function PostCodeDemoPage(){
   const id='root';
   return (<Layout  details=''>
           <PostCodeMainPage id={`${id}`} state={state} mode={mode} />
-          <ModalButton id='search' text='search'  state={state} modal = 'PostCodeSearch'  focusOn={["PostCodeDemo","postcode"]}  createEmpty={empty.emptyPostCodeSearch}   pageMode='edit'   />
+          <ModalButton id='search' text='search'  state={state} modal = 'PostCodeSearch'  
+            pageMode='edit'
+            focusOn={["PostCodeDemo","postcode"]}
+            createEmpty={empty.emptyPostCodeSearch}
+          />
    </Layout>)})}
 
 export function postCodeDataLine({id,state,mode}: FocusedProps<FState, postCodeDataLineDomain,Context>){

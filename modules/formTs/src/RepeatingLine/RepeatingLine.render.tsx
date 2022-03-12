@@ -21,7 +21,7 @@ export function RepeatingLinePage(){
      ( state, d, mode ) => {
           const id='root';
           return (<Layout  details='[2][2]'>
-              <RepeatingLine id={`${id}`} state={state} mode={mode} />
+          <RepeatingLine id={`${id}`} state={state} mode={mode} />
               <ModalCancelButton id='cancel' state={state} />
               <ModalCommitButton id='commit'  state={state} />
             </Layout>)})}

@@ -28,15 +28,15 @@ export const focusOnFor = ( path: string[] ) => path.map ( p => `.focusOn('${p}'
 
 
 export function opt ( name: string, p: string | undefined ) {
-  return p ? `${name}='${p}'` : ''
+  return p ? [ `${name}='${p}'` ] : []
 }
 
 export function optT<T> ( name: string, p: T | undefined ) {
-  return p ? `${name}={${JSON.stringify ( p )}}` : ''
+  return p ? [ `${name}={${JSON.stringify ( p )}}` ] : []
 }
 export const makeSimpleButton: <G> ( imp: string ) => ButtonCreator<ModalButtonInPage<G>, G> = imp => ({
   import: imp,
   makeButton: ( { name, button } ) =>
-    `          <${button.control} id='${button.text ? button.text : name}' state={state} />`
+    [ `<${button.control} id='${button.text ? button.text : name}' state={state} />` ]
 })
 export const filterParamsByRestAction = ( restAction: RestAction ) => ( [ name, param ]: [ string, AllLensRestParams ] ) => restAction === 'list' || restAction === 'create' ? !param.main : true

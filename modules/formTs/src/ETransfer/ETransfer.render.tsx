@@ -27,7 +27,14 @@ export function ETransferPage(){
   return (<Layout  details='[3][1,1,1][1,1][1][3]'>
           <ETransferDataD id={`${id}`} state={state} mode={mode} />
           <button>cancel of type ResetStateButton cannot be created yet</button>
-          <RestButton  id='eTransfers'   name='eTransfers' action='create' path={["ETransfer"]} state={state} rest='ETransfer_ETransferDataDRestDetails' confirm={true} />
+          <RestButton state={state}
+          id='eTransfers'
+          name='eTransfers'
+          action='create'
+          path={["ETransfer"]}
+          rest='ETransfer_ETransferDataDRestDetails'
+          confirm={true}
+           />
           <button>resetAll of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 

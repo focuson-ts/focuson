@@ -10,11 +10,12 @@ describe ( "makeAllFetchers", () => {
     it ( "should make a fetcher", () => {
       expect ( makeAllFetchers ( paramsForTest, [ EAccountsSummaryPD, CreatePlanPD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
         "//fetcher type true",
-        "export function EAccountsSummaryDDFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<S, domains.EAccountsSummaryPageDomain>,commonIds: NameAndLens<S>) {",
-        "  return pageAndTagFetcher<S, domains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDDDomain, SimpleMessage>(",
-        "    common.commonFetch<S,  domains.EAccountsSummaryDDDomain>(),",
+        "export function EAccountsSummaryDDFetcher(fdLens:Optional<FState, domains.EAccountsSummaryPageDomain>,commonIds: NameAndLens<FState>) {",
+        "  const localIds = {}",
+        "  return pageAndTagFetcher<FState, domains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDDDomain, SimpleMessage>(",
+        "    common.commonFetch<FState,  domains.EAccountsSummaryDDDomain>(),",
         "     'EAccountsSummary',",
-        "     'fromApi', fdLens, commonIds, {},['accountId'],['customerId'],",
+        "     'fromApi', fdLens, commonIds, localIds,['accountId'],['customerId'],",
         "      Lenses.identity< domains.EAccountsSummaryPageDomain> ().focusQuery('fromApi'),",
         "     '/api/accountsSummary?{query}')",
         "}"
@@ -23,24 +24,26 @@ describe ( "makeAllFetchers", () => {
     it ( "should make a fetcher for a repeating", () => {
       expect ( makeAllFetchers ( paramsForTest, [ RepeatingPageD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
         "//fetcher type true",
-        "export function RepeatingWholeDataFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<S, domains.RepeatingPageDomain>,commonIds: NameAndLens<S>) {",
-        "  return pageAndTagFetcher<S, domains.RepeatingPageDomain, domains.RepeatingWholeDataDomain, SimpleMessage>(",
-        "    common.commonFetch<S,  domains.RepeatingWholeDataDomain>(),",
+        "export function RepeatingWholeDataFetcher(fdLens:Optional<FState, domains.RepeatingPageDomain>,commonIds: NameAndLens<FState>) {",
+        "  const localIds = {}",
+        "  return pageAndTagFetcher<FState, domains.RepeatingPageDomain, domains.RepeatingWholeDataDomain, SimpleMessage>(",
+        "    common.commonFetch<FState,  domains.RepeatingWholeDataDomain>(),",
         "     'Repeating',",
-        "     'fromApi', fdLens, commonIds, {},['customerId'],[],",
+        "     'fromApi', fdLens, commonIds, localIds,['customerId'],[],",
         "      Lenses.identity< domains.RepeatingPageDomain> ().focusQuery('fromApi'),",
         "     '/api/repeating?{query}')",
         "}"
-      ] )
+      ])
     } )
     it ( "make a fetcher for address/postcode which has a nested target", () => {
       expect ( makeAllFetchers ( paramsForTest, [ PostCodeMainPage ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
         "//fetcher type true",
-        "export function PostCodeDataFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<S, domains.PostCodeDemoPageDomain>,commonIds: NameAndLens<S>) {",
-        "  return pageAndTagFetcher<S, domains.PostCodeDemoPageDomain, domains.PostCodeDataDomain, SimpleMessage>(",
-        "    common.commonFetch<S,  domains.PostCodeDataDomain>(),",
+        "export function PostCodeDataFetcher(fdLens:Optional<FState, domains.PostCodeDemoPageDomain>,commonIds: NameAndLens<FState>) {",
+        "  const localIds = {postcode: Lenses.identity< domains.PostCodeDemoPageDomain>().focusQuery('postcode').focusQuery('search')}",
+        "  return pageAndTagFetcher<FState, domains.PostCodeDemoPageDomain, domains.PostCodeDataDomain, SimpleMessage>(",
+        "    common.commonFetch<FState,  domains.PostCodeDataDomain>(),",
         "     'PostCodeDemo',",
-        "     'postcode_searchResults', fdLens, commonIds, {},['postcode'],[],",
+        "     'postcode_searchResults', fdLens, commonIds, localIds,['postcode'],[],",
         "      Lenses.identity< domains.PostCodeDemoPageDomain> ().focusQuery('postcode').focusQuery('searchResults'),",
         "     '/api/postCode?{query}')",
         "}"
@@ -54,7 +57,7 @@ describe ( 'makeFetchersDataStructure', () => {
     expect ( makeFetchersDataStructure ( paramsForTest, { variableName: 'fetchers', stateName: 'theState' }, [ EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
       "export const fetchers: FetcherTree<common.theState> = {",
       "fetchers: [",
-      "    EAccountsSummaryDDFetcher<common.theState> ( identityL.focusQuery ( 'EAccountsSummary' ), commonIds )",
+      "    EAccountsSummaryDDFetcher( identityL.focusQuery ( 'EAccountsSummary' ), commonIds )",
       "],",
       "children: []}"
     ] )

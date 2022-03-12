@@ -29,10 +29,25 @@ const prevOccupationGuard = pageState(state)().chainLens<number>(Lenses.fromPath
   const id='root';
   return (<Layout  details='[1][3]'>
           <Table id={`${id}`} state={state} mode={mode} order={["name","age"]} />
-          <ModalButton id='addEntry' text='addEntry'  state={state} modal = 'RepeatingLine'  focusOn={["Repeating","temp"]}  copyOnClose={["Repeating","fromApi","[append]"]}createEmpty={empty.emptyRepeatingLine}  setToLengthOnClose={{"array":["Repeating","fromApi"],"variable":["Repeating","selectedItem"]}} pageMode='create'   />
-          <ModalButton id='edit' text='edit'  state={state} modal = 'RepeatingLine'  focusOn={["Repeating","temp"]} copyFrom={["Repeating","fromApi","{selectedItem}"]} copyOnClose={["Repeating","fromApi","{selectedItem}"]}   pageMode='edit'   />
-          <GuardButton cond={nextOccupationGuard}><ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi')} value={fullState.focusOn('selectedItem')} /></GuardButton>
-          <GuardButton cond={prevOccupationGuard}><ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi')} value={fullState.focusOn('selectedItem')} /></GuardButton>
+          <ModalButton id='addEntry' text='addEntry'  state={state} modal = 'RepeatingLine'  
+            pageMode='create'
+            focusOn={["Repeating","temp"]}
+            copyOnClose={["Repeating","fromApi","[append]"]}
+            createEmpty={empty.emptyRepeatingLine}
+            setToLengthOnClose={{"array":["Repeating","fromApi"],"variable":["Repeating","selectedItem"]}}
+          />
+          <ModalButton id='edit' text='edit'  state={state} modal = 'RepeatingLine'  
+            pageMode='edit'
+            focusOn={["Repeating","temp"]}
+            copyFrom={["Repeating","fromApi","{selectedItem}"]}
+            copyOnClose={["Repeating","fromApi","{selectedItem}"]}
+          />
+          <GuardButton cond={nextOccupationGuard}>
+            <ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi')} value={fullState.focusOn('selectedItem')} />
+          </GuardButton>
+          <GuardButton cond={prevOccupationGuard}>
+            <ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi')} value={fullState.focusOn('selectedItem')} />
+          </GuardButton>
    </Layout>)})}
 
 export function RepeatingLine({id,state,mode}: FocusedProps<FState, RepeatingLineDomain,Context>){

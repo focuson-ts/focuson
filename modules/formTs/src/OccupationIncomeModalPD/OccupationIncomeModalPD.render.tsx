@@ -21,8 +21,8 @@ export function OccupationIncomeModalPDPage(){
      ( state, d, mode ) => {
           const id='root';
           return (<Layout  details='[3]'>
-              <OccupationIncomeDetailsDD id={`${id}`} state={state} mode={mode} />
+          <OccupationIncomeDetailsDD id={`${id}`} state={state} mode={mode} />
               <ModalCancelButton id='cancel' state={state} />
-              <ModalCommitButton id='commit' validate={true} state={state} />
-    <ValidationButton  id='validate'   name='validate'  />
+              <ModalCommitButton id='commit' validate={true}  state={state} />
+              <ValidationButton  id='validate'   name='validate'  />
             </Layout>)})}

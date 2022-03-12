@@ -14,21 +14,23 @@ interface CreateButtonData<B, G> {
 }
 export interface ButtonCreator<B, G> {
   import: string;
-  makeButton: ( data: CreateButtonData<B, G> ) => string;
+  makeButton: ( data: CreateButtonData<B, G> ) => string[];
 }
 
 export interface MakeButton<G> extends NameAnd<ButtonCreator<any, G>> {}
 
 
-const makeControlButton = <B, G> ( maker: MakeButton<G> ) => ( params: TSParams ) => ( parent: PageD<B, G> ) => ( [ name, button ]: [ string, ButtonWithControl ] ): string => {
+const makeControlButton = <B, G> ( maker: MakeButton<G> ) => ( params: TSParams ) => ( parent: PageD<B, G> ) => ( [ name, button ]: [ string, ButtonWithControl ] ): string[] => {
   const createButton = maker[ button.control ]
-  return createButton ? createButton.makeButton ( { params, parent, name, button } ) : `<button>${name} of type ${button.control} cannot be created yet</button>`
+  return createButton ? createButton.makeButton ( { params, parent, name, button } ) : [ `<button>${name} of type ${button.control} cannot be created yet</button>` ]
 }
-export const makeButtonFrom = <B extends ButtonD, G> ( makeGuard: MakeGuard<G>, maker: MakeButton<G> ) => ( params: TSParams ) => ( parent: PageD<B, G> ) => ( [ name, button ]: [ string, B ] ): string => {
-         if ( isButtonWithControl ( button ) ) return makeControlButton ( maker ) ( params ) ( parent ) ( [ name, button ] )
-         if ( isGuardButton ( button ) ) {
-           const realButton = button.guard
-           return `<GuardButton cond={${guardName ( name )}}>` + makeButtonFrom ( makeGuard, maker ) ( params ) ( parent ) ( [ name, realButton ] ) + "</GuardButton>"
+export const makeButtonFrom = <B extends ButtonD, G> ( makeGuard: MakeGuard<G>, maker: MakeButton<G> ) => ( params: TSParams ) => ( parent: PageD<B, G> ) => ( [ name, button ]: [ string, B ] ): string[] => {
+         if ( isButtonWithControl ( button ) )
+           return makeControlButton ( maker ) ( params ) ( parent ) ( [ name, button ] )
+         if ( isGuardButton<B, G> ( button ) ) {
+           return [ `<GuardButton cond={${guardName ( name )}}>`,
+             ...indentList ( makeButtonFrom ( makeGuard, maker ) ( params ) ( parent ) ( [ name, button.guard ] ) ),
+             "</GuardButton>" ]
          }
          throw Error ( `Don't know how to process button ${name} ${JSON.stringify ( button )}` )
        }
@@ -47,5 +49,5 @@ export function makeGuardButtonVariables<B extends ButtonD, G extends GuardWithC
   return sortedEntries ( p.buttons ).flatMap ( makeButtonGuardVariableFrom ( params, makeGuard, p ) )
 }
 export function makeButtonsFrom<B extends ButtonD, G> ( params: TSParams, makeGuard: MakeGuard<G>, makeButton: MakeButton<G>, p: PageD<B, G> ): string[] {
-  return indentList ( indentList ( sortedEntries ( p.buttons ).map ( makeButtonFrom<B, G> ( makeGuard, makeButton ) ( params ) ( p ) ) ) )
+  return indentList ( indentList ( sortedEntries ( p.buttons ).flatMap ( makeButtonFrom<B, G> ( makeGuard, makeButton ) ( params ) ( p ) ) ) )
 }

@@ -28,7 +28,14 @@ export function CreateEAccountPage(){
   return (<Layout  details='[1][1][1][1]]'>
           <CreateEAccountDataDD id={`${id}`} state={state} mode={mode} />
           <button>cancel of type ResetStateButton cannot be created yet</button>
-          <RestButton  id='createEAccounts'   name='createEAccounts' action='create' path={["CreateEAccount","editing"]} state={state} rest='CreateEAccount_ETransferDataDRestDetails' confirm={true} />
+          <RestButton state={state}
+          id='createEAccounts'
+          name='createEAccounts'
+          action='create'
+          path={["CreateEAccount","editing"]}
+          rest='CreateEAccount_ETransferDataDRestDetails'
+          confirm={true}
+           />
           <button>resetAll of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 

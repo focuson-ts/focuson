@@ -21,7 +21,7 @@ export function OtherSourcesOfIncomeModalPDPage(){
      ( state, d, mode ) => {
           const id='root';
           return (<Layout  details='[3]'>
-              <OtherIncomeResponseDD id={`${id}`} state={state} mode={mode} />
+          <OtherIncomeResponseDD id={`${id}`} state={state} mode={mode} />
               <ModalCancelButton id='cancel' state={state} />
               <ModalCommitButton id='commit'  state={state} />
             </Layout>)})}

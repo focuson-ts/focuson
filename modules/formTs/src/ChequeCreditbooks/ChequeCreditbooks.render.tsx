@@ -29,7 +29,12 @@ export function ChequeCreditbooksPage(){
   return (<Layout  details='[1][2][2]'>
           <ChequeCreditbooksDD id={`${id}`} state={state} mode={mode} />
           <button>chequeBook of type ResetStateButton cannot be created yet</button>
-          <ModalButton id='orderNewBook' text='orderNewBook'  state={state} modal = 'OrderChequeBookOrPayingInModal'  focusOn={["ChequeCreditbooks","tempCreatePlan"]}  createEmpty={empty.emptyChequeCreditbooksHistoryLineDD}   pageMode='create'   rest={{"name":"ChequeCreditbooks_ChequeCreditbooksDDRestDetails","restAction":"create","path":["tempCreatePlan"]}} />
+          <ModalButton id='orderNewBook' text='orderNewBook'  state={state} modal = 'OrderChequeBookOrPayingInModal'  
+            pageMode='create'
+            focusOn={["ChequeCreditbooks","tempCreatePlan"]}
+            createEmpty={empty.emptyChequeCreditbooksHistoryLineDD}
+             rest={{"name":"ChequeCreditbooks_ChequeCreditbooksDDRestDetails","restAction":"create","path":["tempCreatePlan"]}}
+          />
           <button>payingInBook of type ResetStateButton cannot be created yet</button>
    </Layout>)})}
 

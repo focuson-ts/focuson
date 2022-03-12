@@ -21,7 +21,7 @@ export function CreatePlanPage(){
      ( state, d, mode ) => {
           const id='root';
           return (<Layout  details='[3]'>
-              <CreatePlanDD id={`${id}`} state={state} mode={mode} />
+          <CreatePlanDD id={`${id}`} state={state} mode={mode} />
               <ModalCancelButton id='cancel' state={state} />
               <ModalCommitButton id='commit'  state={state} />
             </Layout>)})}

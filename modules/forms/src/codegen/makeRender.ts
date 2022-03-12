@@ -124,7 +124,7 @@ export function createAllReactCalls<G> ( d: AllComponentData<G>[] ): string[] {
   return d.filter ( ds => isComponentData ( ds ) && !ds.hidden ).flatMap ( d => isErrorComponentData ( d ) ? [ d.error ] : createOneReact ( d ) )
 }
 
-export const createReactComponent = <G extends GuardWithCondition> ( params: TSParams,makeGuard: MakeGuard<G> ) => ( dataD: CompDataD<G> ): string[] => {
+export const createReactComponent = <G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G> ) => ( dataD: CompDataD<G> ): string[] => {
   const contents = indentList ( indentList ( createAllReactCalls ( listComponentsIn ( dataD ) ) ) )
   const guardStrings = isDataDd ( dataD ) ? sortedEntries ( dataD.guards ).map ( ( [ name, guard ] ) => {
     const maker = makeGuard[ guard.condition ]
@@ -161,9 +161,10 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
     ...makeGuardButtonVariables ( params, makeGuard, pageD ),
     `          const id='root';`,
     `          return (<${layout.name}  details='${layout.details}'>`,
-    ...indentList ( indentList ( indentList ( indentList ( indentList ( (indentList ( indentList ( [
-      ...createAllReactCalls ( [ componentDataForPage ( pageD.display.dataDD ) ] ) ] ) )) ) ) ) ) ),
-    ...makeButtonsFrom ( params, makeGuard, makeButtons, pageD ),
+    ...(indentList ( indentList ( indentList ( indentList ( indentList ( [
+      ...createAllReactCalls ( [ componentDataForPage ( pageD.display.dataDD ) ] ),
+      ...makeButtonsFrom ( params, makeGuard, makeButtons, pageD )
+    ] ) ) ) ) )),
     `            </${layout.name}>)})}`,
     ''
   ]
@@ -195,7 +196,7 @@ export function createRenderPage<B extends ButtonD, G extends GuardWithCondition
 }
 
 export function createAllReactComponents<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButton: MakeButton<G>, pages: PageD<B, G>[] ): string[] {
-  const dataComponents = sortedEntries ( dataDsIn ( pages, false ) ).flatMap ( ( [ name, dataD ] ) => dataD.display ? [] : createReactComponent (params, makeGuard ) ( dataD ) )
+  const dataComponents = sortedEntries ( dataDsIn ( pages, false ) ).flatMap ( ( [ name, dataD ] ) => dataD.display ? [] : createReactComponent ( params, makeGuard ) ( dataD ) )
   const pageComponents = pages.flatMap ( p => createReactPageComponent ( params, makeGuard, makeButton, p ) )
   const imports = [
     `import { LensProps } from "@focuson/state";`,

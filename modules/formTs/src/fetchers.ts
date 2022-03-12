@@ -13,10 +13,10 @@ import { commonIds, identityL } from './common';
 import { Optional, Lenses, NameAndLens} from '@focuson/lens';
 export const fetchers: FetcherTree<common.FState> = {
 fetchers: [
-    OccupationAndIncomeDetailsDDFetcher<common.FState> ( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ),
-    EAccountsSummaryDDFetcher<common.FState> ( identityL.focusQuery ( 'EAccountsSummary' ), commonIds ),
-    ChequeCreditbooksDDFetcher<common.FState> ( identityL.focusQuery ( 'ChequeCreditbooks' ), commonIds ),
-    RepeatingWholeDataFetcher<common.FState> ( identityL.focusQuery ( 'Repeating' ), commonIds ),
-    PostCodeDataFetcher<common.FState> ( identityL.focusQuery ( 'PostCodeDemo' ), commonIds )
+    OccupationAndIncomeDetailsDDFetcher( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ),
+    EAccountsSummaryDDFetcher( identityL.focusQuery ( 'EAccountsSummary' ), commonIds ),
+    ChequeCreditbooksDDFetcher( identityL.focusQuery ( 'ChequeCreditbooks' ), commonIds ),
+    RepeatingWholeDataFetcher( identityL.focusQuery ( 'Repeating' ), commonIds ),
+    PostCodeDataFetcher( identityL.focusQuery ( 'PostCodeDemo' ), commonIds )
 ],
 children: []}

@@ -21,7 +21,7 @@ export function OrderChequeBookOrPayingInModalPage(){
      ( state, d, mode ) => {
           const id='root';
           return (<Layout  details='[3]'>
-              <ChequeCreditbooksHistoryLineDD id={`${id}`} state={state} mode={mode} />
+          <ChequeCreditbooksHistoryLineDD id={`${id}`} state={state} mode={mode} />
               <ModalCancelButton id='cancel' state={state} />
               <ModalCommitButton id='commit'  state={state} />
             </Layout>)})}

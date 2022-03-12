@@ -16,7 +16,7 @@ export function makeModalCommitButton<B extends ModalCommitButtonInPage, G> (): 
   return ({
     import: "@focuson/pages",
     makeButton: ( { name, button } ) =>
-      `          <ModalCommitButton id='${button.text ? button.text : name}' ${optT ( 'validate', button.validate )} state={state} />`
+      [ [ `<ModalCommitButton id='${button.text ? button.text : name}'`, ...optT ( 'validate', button.validate ), ` state={state} />` ].join ( ' ' ) ]
   })
 }
 

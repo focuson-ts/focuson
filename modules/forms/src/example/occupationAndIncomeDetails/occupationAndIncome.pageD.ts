@@ -80,9 +80,11 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   // lists: {}//?
   buttons: {                                                                      //interestingly these will be type checked in the target system...
-    nextOccupation: {
+    nextOccupation: { //demoing nested guards. Sure its the same condition... but the code generation is what is being tested
       by: { condition: '<arrayEnd', arrayPath: [ 'fromApi', 'customerOccupationIncomeDetails' ], varPath: [ 'selectedItem' ] },
-      guard: { control: 'ListNextButton', value: [ 'selectedItem' ], list: [ 'fromApi', 'customerOccupationIncomeDetails' ] }
+      guard: {
+        by: { condition: '<arrayEnd', arrayPath: [ 'fromApi', 'customerOccupationIncomeDetails' ], varPath: [ 'selectedItem' ] }, guard: { control: 'ListNextButton', value: [ 'selectedItem' ], list: [ 'fromApi', 'customerOccupationIncomeDetails' ] }
+      }
     },
     prevOccupation: {
       guard: { control: 'ListPrevButton', value: [ 'selectedItem' ], list: [ 'fromApi', 'customerOccupationIncomeDetails' ] },
@@ -90,17 +92,12 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
     },
     //questions: how do we know which is the existing plan... is there a list? are we an entry in the list? do we need to navigate to it?
     addEntry: {
-      guard: {
-        guard: {
-          control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'create',
-          focusOn: [ 'temp' ],
-          createEmpty: occupationIncomeDetailsDD,
-          setToLengthOnClose: { variable: [ 'selectedItem' ], array: [ 'fromApi', 'customerOccupationIncomeDetails' ] },
-          copyOnClose: [ 'fromApi', 'customerOccupationIncomeDetails', '[append]' ]
-        },
-        by: { condition: '>0', path: [ 'selectedItem' ] },
-      },
-      by: { condition: '>0', path: [ 'selectedItem' ] },
+
+      control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'create',
+      focusOn: [ 'temp' ],
+      createEmpty: occupationIncomeDetailsDD,
+      setToLengthOnClose: { variable: [ 'selectedItem' ], array: [ 'fromApi', 'customerOccupationIncomeDetails' ] },
+      copyOnClose: [ 'fromApi', 'customerOccupationIncomeDetails', '[append]' ]
     },
     edit: {
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'edit',
