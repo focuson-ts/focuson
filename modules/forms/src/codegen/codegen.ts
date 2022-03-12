@@ -20,6 +20,12 @@ export function noExtension ( name: string ) {
 
 export const addStringToEndOfAllButLast = ( ch: string ) => ( ss: string[] ): string[] =>
   ss.map ( ( s, i ) => i < ss.length - 1 ? s + ch : s );
+export const addStringToStartOfFirst = ( str: string ) => ( ss: string[] ): string[] =>
+  ss.map ( ( s, i ) => i === 0 ? str + s : s );
+export const addStringToEndOfList = ( str: string ) => ( ss: string[] ): string[] =>
+  ss.map ( ( s, i ) => i === ss.length - 1 ? s + str : s );
+export const addBrackets = ( strOpen: string , strClose) => ( ss: string[] ): string[] =>
+  addStringToStartOfFirst(strOpen)(addStringToEndOfList(strClose)(ss))
 
 export const indent = ( path: string[], s: string ): string => ' '.repeat ( path.length * 2 + 2 ) + s;
 export const indentList = ( ss: string[] ): string[] => ss.map ( s => '  ' + s )

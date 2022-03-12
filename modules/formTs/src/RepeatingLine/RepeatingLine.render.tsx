@@ -20,8 +20,10 @@ export function RepeatingLinePage(){
   return focusedPage<FState, RepeatingLineDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
      ( state, d, mode ) => {
           const id='root';
+const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,
+    commit:<ModalCommitButton id='commit'  state={state} />,}
           return (<Layout  details='[2][2]'>
           <RepeatingLine id={`${id}`} state={state} mode={mode} />
-              <ModalCancelButton id='cancel' state={state} />
-              <ModalCommitButton id='commit'  state={state} />
+          { buttons.cancel } 
+          { buttons.commit } 
             </Layout>)})}

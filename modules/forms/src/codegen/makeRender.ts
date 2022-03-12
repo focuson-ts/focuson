@@ -4,7 +4,7 @@ import { dataDsIn, isMainPage, isModalPage, PageD } from "../common/pageD";
 
 import { decamelize, NameAnd, sortedEntries } from "@focuson/utils";
 import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, pageComponentName, pageDomainName } from "./names";
-import { MakeButton, makeButtonsFrom, makeGuardButtonVariables } from "./makeButtons";
+import { addButtonsFromVariables, MakeButton, makeButtonsFrom, makeButtonsVariable, makeGuardButtonVariables } from "./makeButtons";
 import { focusOnFor, indentList, noExtension } from "./codegen";
 import { TSParams } from "./config";
 import { unique } from "../common/restD";
@@ -160,10 +160,11 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
     `     ( state, d, mode ) => {`,
     ...makeGuardButtonVariables ( params, makeGuard, pageD ),
     `          const id='root';`,
+    ...makeButtonsVariable ( params, makeGuard, makeButtons, pageD ),
     `          return (<${layout.name}  details='${layout.details}'>`,
     ...(indentList ( indentList ( indentList ( indentList ( indentList ( [
       ...createAllReactCalls ( [ componentDataForPage ( pageD.display.dataDD ) ] ),
-      ...makeButtonsFrom ( params, makeGuard, makeButtons, pageD )
+      ...addButtonsFromVariables ( pageD )
     ] ) ) ) ) )),
     `            </${layout.name}>)})}`,
     ''
@@ -178,10 +179,13 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
     ( fullState, state , full, d, mode) => {`,
     ...makeGuardButtonVariables ( params, makeGuard, pageD ),
     `  const id='root';`,
+    ...makeButtonsVariable ( params, makeGuard, makeButtons, pageD ),
+    '',
     `  return (<${layout.name}  details='${layout.details}'>`,
     ...indentList ( indentList ( indentList ( [
-      ...indentList ( indentList ( createAllReactCalls ( [ componentDataForPage ( pageD.display.dataDD ) ] ) ) ),
-      ...makeButtonsFrom ( params, makeGuard, makeButtons, pageD ) ] ) ) ),
+      ...indentList ( indentList ( createAllReactCalls ( [ componentDataForPage ( pageD.display.dataDD ), ] ) ) ),
+      ...addButtonsFromVariables ( pageD )
+    ] ) ) ),
     `   </${layout.name}>)})}`,
     ''
   ]

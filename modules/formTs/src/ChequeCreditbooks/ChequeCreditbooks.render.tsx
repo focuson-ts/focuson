@@ -26,16 +26,20 @@ export function ChequeCreditbooksPage(){
   return focusedPageWithExtraState<FState, ChequeCreditbooksPageDomain, ChequeCreditbooksDDDomain, Context> ( s => 'ChequeCreditbooks' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
   const id='root';
+const buttons =    {chequeBook:<button>chequeBook of type ResetStateButton cannot be created yet</button>,
+    orderNewBook:<ModalButton id='orderNewBook' text='orderNewBook'  state={state} modal = 'OrderChequeBookOrPayingInModal'  
+      pageMode='create'
+      focusOn={["ChequeCreditbooks","tempCreatePlan"]}
+      createEmpty={empty.emptyChequeCreditbooksHistoryLineDD}
+       rest={{"name":"ChequeCreditbooks_ChequeCreditbooksDDRestDetails","restAction":"create","path":["tempCreatePlan"]}}
+    />,
+    payingInBook:<button>payingInBook of type ResetStateButton cannot be created yet</button>,}
+
   return (<Layout  details='[1][2][2]'>
           <ChequeCreditbooksDD id={`${id}`} state={state} mode={mode} />
-          <button>chequeBook of type ResetStateButton cannot be created yet</button>
-          <ModalButton id='orderNewBook' text='orderNewBook'  state={state} modal = 'OrderChequeBookOrPayingInModal'  
-            pageMode='create'
-            focusOn={["ChequeCreditbooks","tempCreatePlan"]}
-            createEmpty={empty.emptyChequeCreditbooksHistoryLineDD}
-             rest={{"name":"ChequeCreditbooks_ChequeCreditbooksDDRestDetails","restAction":"create","path":["tempCreatePlan"]}}
-          />
-          <button>payingInBook of type ResetStateButton cannot be created yet</button>
+      { buttons.chequeBook } 
+      { buttons.payingInBook } 
+      { buttons.orderNewBook } 
    </Layout>)})}
 
 export function ChequeCreditbooksDD({id,state,mode}: FocusedProps<FState, ChequeCreditbooksDDDomain,Context>){

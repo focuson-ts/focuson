@@ -20,9 +20,12 @@ export function OccupationIncomeModalPDPage(){
   return focusedPage<FState, OccupationIncomeDetailsDDDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
      ( state, d, mode ) => {
           const id='root';
+const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,
+    commit:<ModalCommitButton id='commit' validate={true}  state={state} />,
+    validate:<ValidationButton  id='validate'   name='validate'  />,}
           return (<Layout  details='[3]'>
           <OccupationIncomeDetailsDD id={`${id}`} state={state} mode={mode} />
-              <ModalCancelButton id='cancel' state={state} />
-              <ModalCommitButton id='commit' validate={true}  state={state} />
-              <ValidationButton  id='validate'   name='validate'  />
+          { buttons.cancel } 
+          { buttons.commit } 
+          { buttons.validate } 
             </Layout>)})}
