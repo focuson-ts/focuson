@@ -24,7 +24,7 @@ export function makeCommon<B,G> ( params: TSParams, pds: PageD<B,G>[], rds: Rest
   const pageDomainsImport: string[] = pds.filter ( p => p.pageType === 'MainPage' ).map ( p => `import { ${hasDomainForPage ( p )} } from '${domainsFileName('.', params, p)}';` )
   return [
     `import { HasPageSelection, PageMode ,PageSelectionContext} from '@focuson/pages'`,
-    `import { defaultDateFn, HasSimpleMessages, SimpleMessage } from '@focuson/utils';`,
+    `import { defaultDateFn, HasSimpleMessages, SimpleMessage, NameAnd } from '@focuson/utils';`,
     `import {  OnTagFetchErrorFn } from '@focuson/fetcher';`,
     `import { identityOptics,NameAndLens } from '@focuson/lens';`,
     `import { HasTagHolder } from '@focuson/template';`,

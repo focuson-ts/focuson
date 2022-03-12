@@ -24,25 +24,25 @@ export function ETransferPage(){
   return focusedPageWithExtraState<FState, ETransferPageDomain, ETransferDataDDomain, Context> ( s => 'ETransfer' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
   const id='root';
-const buttons =    {cancel:<button>cancel of type ResetStateButton cannot be created yet</button>,
-    eTransfers:<RestButton state={state}
-    id='eTransfers'
-    name='eTransfers'
-    action='create'
-    path={["ETransfer"]}
-    rest='ETransfer_ETransferDataDRestDetails'
-    confirm={true}
-     />,
-    resetAll:<button>resetAll of type ResetStateButton cannot be created yet</button>,}
+  const buttons =    {cancel:<button>cancel of type ResetStateButton cannot be created yet</button>,
+      eTransfers:<RestButton state={state}
+      id='eTransfers'
+      name='eTransfers'
+      action='create'
+      path={["ETransfer"]}
+      rest='ETransfer_ETransferDataDRestDetails'
+      confirm={true}
+       />,
+      resetAll:<button>resetAll of type ResetStateButton cannot be created yet</button>,}
 
   return (<Layout  details='[3][1,1,1][1,1][1][3]'>
-          <ETransferDataD id={`${id}`} state={state} mode={mode} />
+          <ETransferDataD id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.eTransfers } 
       { buttons.resetAll } 
       { buttons.cancel } 
    </Layout>)})}
 
-export function ETransferDataD({id,state,mode}: FocusedProps<FState, ETransferDataDDomain,Context>){
+export function ETransferDataD({id,state,mode,buttons}: FocusedProps<FState, ETransferDataDDomain,Context>){
   return(<>
     <LabelAndNumberInput id={`${id}.account`} state={state.focusOn('account')} mode={mode} label='Account Id' required={true} min={10000000} max={99999999} />
     <LabelAndStringInput id={`${id}.dateOfETransfer`} state={state.focusOn('dateOfETransfer')} mode={mode} label='date of e transfer' required={true} />

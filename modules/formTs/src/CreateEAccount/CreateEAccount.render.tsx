@@ -25,25 +25,25 @@ export function CreateEAccountPage(){
   return focusedPageWithExtraState<FState, CreateEAccountPageDomain, CreateEAccountDataDDDomain, Context> ( s => 'CreateEAccount' ) ( s => s.focusOn('editing')) (
     ( fullState, state , full, d, mode) => {
   const id='root';
-const buttons =    {cancel:<button>cancel of type ResetStateButton cannot be created yet</button>,
-    createEAccounts:<RestButton state={state}
-    id='createEAccounts'
-    name='createEAccounts'
-    action='create'
-    path={["CreateEAccount","editing"]}
-    rest='CreateEAccount_ETransferDataDRestDetails'
-    confirm={true}
-     />,
-    resetAll:<button>resetAll of type ResetStateButton cannot be created yet</button>,}
+  const buttons =    {cancel:<button>cancel of type ResetStateButton cannot be created yet</button>,
+      createEAccounts:<RestButton state={state}
+      id='createEAccounts'
+      name='createEAccounts'
+      action='create'
+      path={["CreateEAccount","editing"]}
+      rest='CreateEAccount_ETransferDataDRestDetails'
+      confirm={true}
+       />,
+      resetAll:<button>resetAll of type ResetStateButton cannot be created yet</button>,}
 
   return (<Layout  details='[1][1][1][1]]'>
-          <CreateEAccountDataDD id={`${id}`} state={state} mode={mode} />
+          <CreateEAccountDataDD id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.createEAccounts } 
       { buttons.resetAll } 
       { buttons.cancel } 
    </Layout>)})}
 
-export function CreateEAccountDataDD({id,state,mode}: FocusedProps<FState, CreateEAccountDataDDDomain,Context>){
+export function CreateEAccountDataDD({id,state,mode,buttons}: FocusedProps<FState, CreateEAccountDataDDDomain,Context>){
   return(<>
     <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='name' required={true} />
     <LabelAndRadio id={`${id}.type`} state={state.focusOn('type')} mode={mode} label='type' enums={{"savings":"Savings","checking":"Checking"}} />

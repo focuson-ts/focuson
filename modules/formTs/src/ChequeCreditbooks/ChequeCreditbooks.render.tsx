@@ -26,29 +26,29 @@ export function ChequeCreditbooksPage(){
   return focusedPageWithExtraState<FState, ChequeCreditbooksPageDomain, ChequeCreditbooksDDDomain, Context> ( s => 'ChequeCreditbooks' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
   const id='root';
-const buttons =    {chequeBook:<button>chequeBook of type ResetStateButton cannot be created yet</button>,
-    orderNewBook:<ModalButton id='orderNewBook' text='orderNewBook'  state={state} modal = 'OrderChequeBookOrPayingInModal'  
-      pageMode='create'
-      focusOn={["ChequeCreditbooks","tempCreatePlan"]}
-      createEmpty={empty.emptyChequeCreditbooksHistoryLineDD}
-       rest={{"name":"ChequeCreditbooks_ChequeCreditbooksDDRestDetails","restAction":"create","path":["tempCreatePlan"]}}
-    />,
-    payingInBook:<button>payingInBook of type ResetStateButton cannot be created yet</button>,}
+  const buttons =    {chequeBook:<button>chequeBook of type ResetStateButton cannot be created yet</button>,
+      orderNewBook:<ModalButton id='orderNewBook' text='orderNewBook'  state={state} modal = 'OrderChequeBookOrPayingInModal'  
+        pageMode='create'
+        focusOn={["ChequeCreditbooks","tempCreatePlan"]}
+        createEmpty={empty.emptyChequeCreditbooksHistoryLineDD}
+         rest={{"name":"ChequeCreditbooks_ChequeCreditbooksDDRestDetails","restAction":"create","path":["tempCreatePlan"]}}
+      />,
+      payingInBook:<button>payingInBook of type ResetStateButton cannot be created yet</button>,}
 
   return (<Layout  details='[1][2][2]'>
-          <ChequeCreditbooksDD id={`${id}`} state={state} mode={mode} />
+          <ChequeCreditbooksDD id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.chequeBook } 
       { buttons.payingInBook } 
       { buttons.orderNewBook } 
    </Layout>)})}
 
-export function ChequeCreditbooksDD({id,state,mode}: FocusedProps<FState, ChequeCreditbooksDDDomain,Context>){
+export function ChequeCreditbooksDD({id,state,mode,buttons}: FocusedProps<FState, ChequeCreditbooksDDDomain,Context>){
   return(<>
     <Table id={`${id}.history`} state={state.focusOn('history')} mode={mode} order={["serialNumber","howOrdered","dateOrder"]} />
 </>)
 }
 
-export function ChequeCreditbooksHistoryLineDD({id,state,mode}: FocusedProps<FState, ChequeCreditbooksHistoryLineDDDomain,Context>){
+export function ChequeCreditbooksHistoryLineDD({id,state,mode,buttons}: FocusedProps<FState, ChequeCreditbooksHistoryLineDDDomain,Context>){
   return(<>
     <LabelAndNumberInput id={`${id}.serialNumber`} state={state.focusOn('serialNumber')} mode={mode} label='serial number' required={true} />
     <LabelAndStringInput id={`${id}.howOrdered`} state={state.focusOn('howOrdered')} mode={mode} label='how ordered' required={true} />

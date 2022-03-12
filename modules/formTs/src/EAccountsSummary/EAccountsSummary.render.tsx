@@ -29,37 +29,37 @@ export function EAccountsSummaryPage(){
   return focusedPageWithExtraState<FState, EAccountsSummaryPageDomain, EAccountsSummaryDDDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
   const id='root';
-const buttons =    {amendExistingPlan:<ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  
-      pageMode='edit'
-      focusOn={["EAccountsSummary","tempCreatePlan"]}
-      copyFrom={["EAccountsSummary","fromApi","createPlan"]}
-       rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"update","path":["EAccountsSummary"]}}
-    />,
-    createNewPlan:<ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  
-      pageMode='create'
-      focusOn={["EAccountsSummary","tempCreatePlan"]}
-      createEmpty={empty.emptyCreatePlanDD}
-       rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"create","path":["EAccountsSummary"]}}
-    />,
-    deleteExistingPlan:<RestButton state={state}
-    id='deleteExistingPlan'
-    name='deleteExistingPlan'
-    action='delete'
-    path={["EAccountsSummary","fromApi"]}
-    rest='EAccountsSummary_CreatePlanDDRestDetails'
-    confirm={true}
-     />,
-    refresh:<button>refresh of type ResetStateButton cannot be created yet</button>,}
+  const buttons =    {amendExistingPlan:<ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  
+        pageMode='edit'
+        focusOn={["EAccountsSummary","tempCreatePlan"]}
+        copyFrom={["EAccountsSummary","fromApi","createPlan"]}
+         rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"update","path":["EAccountsSummary"]}}
+      />,
+      createNewPlan:<ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  
+        pageMode='create'
+        focusOn={["EAccountsSummary","tempCreatePlan"]}
+        createEmpty={empty.emptyCreatePlanDD}
+         rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"create","path":["EAccountsSummary"]}}
+      />,
+      deleteExistingPlan:<RestButton state={state}
+      id='deleteExistingPlan'
+      name='deleteExistingPlan'
+      action='delete'
+      path={["EAccountsSummary","fromApi"]}
+      rest='EAccountsSummary_CreatePlanDDRestDetails'
+      confirm={true}
+       />,
+      refresh:<button>refresh of type ResetStateButton cannot be created yet</button>,}
 
   return (<Layout  details='[1][3,3][5]'>
-          <EAccountsSummaryDD id={`${id}`} state={state} mode={mode} />
+          <EAccountsSummaryDD id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.createNewPlan } 
       { buttons.amendExistingPlan } 
       { buttons.deleteExistingPlan } 
       { buttons.refresh } 
    </Layout>)})}
 
-export function CreatePlanDD({id,state,mode}: FocusedProps<FState, CreatePlanDDDomain,Context>){
+export function CreatePlanDD({id,state,mode,buttons}: FocusedProps<FState, CreatePlanDDDomain,Context>){
   return(<>
     <LabelAndStringInput id={`${id}.createPlanStart`} state={state.focusOn('createPlanStart')} mode={mode} label='Create Start' required={true} />
     <LabelAndStringInput id={`${id}.createPlanDate`} state={state.focusOn('createPlanDate')} mode={mode} label='create plan date' required={true} ariaLabel='The Create Plan Date' />
@@ -67,7 +67,7 @@ export function CreatePlanDD({id,state,mode}: FocusedProps<FState, CreatePlanDDD
 </>)
 }
 
-export function EAccountsSummaryDD({id,state,mode}: FocusedProps<FState, EAccountsSummaryDDDomain,Context>){
+export function EAccountsSummaryDD({id,state,mode,buttons}: FocusedProps<FState, EAccountsSummaryDDDomain,Context>){
   return(<>
     <LabelAndBooleanInput id={`${id}.useEStatements`} state={state.focusOn('useEStatements')} mode={mode} label='use e statements' />
     <Table id={`${id}.eAccountsTable`} state={state.focusOn('eAccountsTable')} mode={mode} order={["accountId","displayType","description","virtualBankSeq","frequency","total"]} />
@@ -80,7 +80,7 @@ export function EAccountsSummaryDD({id,state,mode}: FocusedProps<FState, EAccoun
 </>)
 }
 
-export function EAccountSummaryDD({id,state,mode}: FocusedProps<FState, EAccountSummaryDDDomain,Context>){
+export function EAccountSummaryDD({id,state,mode,buttons}: FocusedProps<FState, EAccountSummaryDDDomain,Context>){
   return(<>
     <LabelAndNumberInput id={`${id}.accountId`} state={state.focusOn('accountId')} mode={mode} label='Account Id' required={true} min={10000000} max={99999999} />
     <LabelAndRadio id={`${id}.displayType`} state={state.focusOn('displayType')} mode={mode} label='display type' enums={{"savings":"Savings","checking":"Checking"}} />

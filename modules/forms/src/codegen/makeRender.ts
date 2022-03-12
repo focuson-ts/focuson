@@ -101,6 +101,7 @@ export function createOneReact<B, G> ( { path, dataDD, display, displayParams, g
     if ( param?.default ) return [ [ name, processOneParam ( name, param.default ) ] ]
     if ( param?.needed === 'defaultToCamelCaseOfName' ) return [ [ name, processOneParam ( name, decamelize ( path.slice ( -1 ) + "", ' ' ) ) ] ]
     if ( param?.needed === 'defaultToPath' ) return [ [ name, processOneParam ( name, path ) ] ]
+    if ( param?.needed === 'defaultToButtons' ) return [ [ name, processOneParam ( name, 'buttons' ) ] ]
     if ( param?.needed === 'id' ) {
       const dot = path.length > 0 ? '.' : ''
       return [ [ name, processOneParam ( name, '`${id}' + dot + path.join ( "." ) + '`' ) ] ]
@@ -118,7 +119,8 @@ export function createOneReact<B, G> ( { path, dataDD, display, displayParams, g
   const guardPrefix = guard ? sortedEntries ( guard ).map ( ( [ n, guard ] ) =>
     `<Guard value={${guardName ( n )}} cond={${JSON.stringify ( guard )}}>` ).join ( '' ) : ''
   const guardPostfix = guard ? sortedEntries ( guard ).map ( ( [ n, guard ] ) => `</Guard>` ).join ( '' ) : ''
-  return [ `${guardPrefix}<${name} ${displayParamsString} />${guardPostfix}` ]
+  const buttons = isDataDd(dataDD) && !dataDD.display ? 'buttons={buttons} ': ''
+  return [ `${guardPrefix}<${name} ${displayParamsString} ${buttons}/>${guardPostfix}` ]
 }
 export function createAllReactCalls<G> ( d: AllComponentData<G>[] ): string[] {
   return d.filter ( ds => isComponentData ( ds ) && !ds.hidden ).flatMap ( d => isErrorComponentData ( d ) ? [ d.error ] : createOneReact ( d ) )
@@ -133,7 +135,7 @@ export const createReactComponent = <G extends GuardWithCondition> ( params: TSP
     // return `const ${guardName ( name )} = state.chainLens(Lenses.fromPath(${JSON.stringify ( guard.pathFromHere )})).optJson();console.log('${guardName ( name )}', ${guardName ( name )})`;
   } ) : []
   return [
-    `export function ${componentName ( dataD )}({id,state,mode}: FocusedProps<${params.stateName}, ${domainName ( dataD )},Context>){`,
+    `export function ${componentName ( dataD )}({id,state,mode,buttons}: FocusedProps<${params.stateName}, ${domainName ( dataD )},Context>){`,
     ...guardStrings,
     "  return(<>",
     ...contents,
@@ -177,9 +179,9 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
     `export function ${pageComponentName ( pageD )}(){`,
     `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${pageD.name}' ) ( s => s${focus}) (
     ( fullState, state , full, d, mode) => {`,
-    ...makeGuardButtonVariables ( params, makeGuard, pageD ),
+    ...indentList(makeGuardButtonVariables ( params, makeGuard, pageD )),
     `  const id='root';`,
-    ...makeButtonsVariable ( params, makeGuard, makeButtons, pageD ),
+    ...indentList(makeButtonsVariable ( params, makeGuard, makeButtons, pageD )),
     '',
     `  return (<${layout.name}  details='${layout.details}'>`,
     ...indentList ( indentList ( indentList ( [

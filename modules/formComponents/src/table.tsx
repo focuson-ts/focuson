@@ -1,5 +1,5 @@
 import { CommonStateProps } from "./common";
-import { decamelize, safeArray } from "@focuson/utils";
+import { decamelize, NameAnd, safeArray } from "@focuson/utils";
 import { LensProps, LensState } from "@focuson/state";
 import { Lenses } from "@focuson/lens";
 import { PageMode } from "@focuson/pages";
@@ -24,10 +24,11 @@ export interface SelectedItemProps<FS, S, T, Context> extends LensProps<S, T[], 
   mode: PageMode;
   id: string;
   label?: string;
-  display: ( { state, mode, id }: { state: LensState<S, T, Context>, mode: PageMode , id: string} ) => JSX.Element
+  buttons: NameAnd<JSX.Element>
+  display: ( { state, mode, id ,buttons}: { state: LensState<S, T, Context>, mode: PageMode , id: string, buttons: NameAnd<JSX.Element>} ) => JSX.Element
 }
-export function SelectedItem<FS, S, T, Context> ( { index, state, display, mode, id}: SelectedItemProps<FS, S, T, Context> ) {
+export function SelectedItem<FS, S, T, Context> ( { index, state, display, mode, id, buttons}: SelectedItemProps<FS, S, T, Context> ) {
   let newState = state.chainLens ( Lenses.nth ( index ) );
   console.log ( "SelectedItem", index, newState.optional.description, newState.optJson () )
-  return display ( {state: newState, mode , id})
+  return display ( {state: newState, mode , id, buttons})
 }

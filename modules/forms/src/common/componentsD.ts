@@ -6,7 +6,7 @@
  * */
 export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'string[]'
 
-type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam'
+type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons'
 
 export interface OneDisplayCompParamD<T> {
   paramType: DisplayCompParamType;
@@ -68,7 +68,8 @@ export const SelectedItemCD: DisplayCompD = {
   params: {
     ...commonParams,
     index: { paramType: 'pageStateValue', needed: 'yes' },
-    display: { paramType: 'object', needed: 'yes' }
+    display: { paramType: 'object', needed: 'yes' },
+    buttons: { paramType: 'object', needed: 'defaultToButtons' }
   }
 }
 

@@ -23,7 +23,7 @@ export function CreatePlanPage(){
 const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,
     commit:<ModalCommitButton id='commit'  state={state} />,}
           return (<Layout  details='[3]'>
-          <CreatePlanDD id={`${id}`} state={state} mode={mode} />
+          <CreatePlanDD id={`${id}`} state={state} mode={mode} buttons={buttons} />
           { buttons.cancel } 
           { buttons.commit } 
             </Layout>)})}

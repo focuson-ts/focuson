@@ -23,7 +23,7 @@ export function OrderChequeBookOrPayingInModalPage(){
 const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,
     commit:<ModalCommitButton id='commit'  state={state} />,}
           return (<Layout  details='[3]'>
-          <ChequeCreditbooksHistoryLineDD id={`${id}`} state={state} mode={mode} />
+          <ChequeCreditbooksHistoryLineDD id={`${id}`} state={state} mode={mode} buttons={buttons} />
           { buttons.cancel } 
           { buttons.commit } 
             </Layout>)})}

@@ -23,7 +23,7 @@ export function PostCodeSearchPage(){
 const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,
     commit:<ModalCommitButton id='commit'  state={state} />,}
           return (<Layout  details=''>
-          <PostCodeSearch id={`${id}`} state={state} mode={mode} />
+          <PostCodeSearch id={`${id}`} state={state} mode={mode} buttons={buttons} />
           { buttons.cancel } 
           { buttons.commit } 
             </Layout>)})}

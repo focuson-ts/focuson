@@ -39,6 +39,7 @@ describe ( "makeCommonParams", () => {
       "export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{",
       "  mode: PageMode;",
       "  id: string;",
+      "  buttons: NameAnd<JSX.Element>",
       "}",
       "export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPageSelection, T> ( onError?: OnTagFetchErrorFn<S, any, T, SimpleMessage> ) {",
       "  return commonTagFetchProps<S, T> (",

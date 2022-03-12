@@ -29,52 +29,52 @@ import {OtherIncomeResponseDDDomain} from "../OccupationAndIncomeSummary/Occupat
 export function OccupationAndIncomeSummaryPage(){
   return focusedPageWithExtraState<FState, OccupationAndIncomeSummaryPageDomain, OccupationAndIncomeDetailsDDDomain, Context> ( s => 'OccupationAndIncomeSummary' ) ( s => s.focusOn('fromApi')) (
     ( fullState, state , full, d, mode) => {
-const nextOccupationGuard =  pageState(state)().chainLens<number>(Lenses.fromPath(["selectedItem"])).optJsonOr(0) <  pageState(state)().chainLens<string[]>(Lenses.fromPath(["fromApi","customerOccupationIncomeDetails"])).optJsonOr([]).length - 1
-const prevOccupationGuard = pageState(state)().chainLens<number>(Lenses.fromPath(["selectedItem"])).optJsonOr(0) >0
+  const nextOccupationGuard =  pageState(state)().chainLens<number>(Lenses.fromPath(["selectedItem"])).optJsonOr(0) <  pageState(state)().chainLens<string[]>(Lenses.fromPath(["fromApi","customerOccupationIncomeDetails"])).optJsonOr([]).length - 1
+  const prevOccupationGuard = pageState(state)().chainLens<number>(Lenses.fromPath(["selectedItem"])).optJsonOr(0) >0
   const id='root';
-const buttons =    {addEntry:<ModalButton id='addEntry' text='addEntry'  state={state} modal = 'OccupationIncomeModalPD'  
-      pageMode='create'
-      focusOn={["OccupationAndIncomeSummary","temp"]}
-      copyOnClose={["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails","[append]"]}
-      createEmpty={empty.emptyOccupationIncomeDetailsDD}
-      setToLengthOnClose={{"array":["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails"],"variable":["OccupationAndIncomeSummary","selectedItem"]}}
-    />,
-    edit:<ModalButton id='edit' text='edit'  state={state} modal = 'OccupationIncomeModalPD'  
-      pageMode='edit'
-      focusOn={["OccupationAndIncomeSummary","temp"]}
-      copyFrom={["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails","{selectedItem}"]}
-      copyOnClose={["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails","{selectedItem}"]}
-    />,
-    nextOccupation:<GuardButton cond={nextOccupationGuard}>
-      <GuardButton cond={nextOccupationGuard}>
-        <ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />
-      </GuardButton>
-    </GuardButton>,
-    prevOccupation:<GuardButton cond={prevOccupationGuard}>
-      <ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />
-    </GuardButton>,}
+  const buttons =    {addEntry:<ModalButton id='addEntry' text='addEntry'  state={state} modal = 'OccupationIncomeModalPD'  
+        pageMode='create'
+        focusOn={["OccupationAndIncomeSummary","temp"]}
+        copyOnClose={["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails","[append]"]}
+        createEmpty={empty.emptyOccupationIncomeDetailsDD}
+        setToLengthOnClose={{"array":["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails"],"variable":["OccupationAndIncomeSummary","selectedItem"]}}
+      />,
+      edit:<ModalButton id='edit' text='edit'  state={state} modal = 'OccupationIncomeModalPD'  
+        pageMode='edit'
+        focusOn={["OccupationAndIncomeSummary","temp"]}
+        copyFrom={["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails","{selectedItem}"]}
+        copyOnClose={["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails","{selectedItem}"]}
+      />,
+      nextOccupation:<GuardButton cond={nextOccupationGuard}>
+        <GuardButton cond={nextOccupationGuard}>
+          <ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />
+        </GuardButton>
+      </GuardButton>,
+      prevOccupation:<GuardButton cond={prevOccupationGuard}>
+        <ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />
+      </GuardButton>,}
 
   return (<Layout  details='[1][3,3][5]'>
-          <OccupationAndIncomeDetailsDD id={`${id}`} state={state} mode={mode} />
+          <OccupationAndIncomeDetailsDD id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.nextOccupation } 
       { buttons.prevOccupation } 
       { buttons.addEntry } 
       { buttons.edit } 
    </Layout>)})}
 
-export function OccupationAndIncomeDetailsDD({id,state,mode}: FocusedProps<FState, OccupationAndIncomeDetailsDDDomain,Context>){
+export function OccupationAndIncomeDetailsDD({id,state,mode,buttons}: FocusedProps<FState, OccupationAndIncomeDetailsDDDomain,Context>){
   return(<>
     <LabelAndStringInput id={`${id}.mainCustomerName`} state={state.focusOn('mainCustomerName')} mode={mode} label='main customer name' required={true} />
-    <SelectedItem id={`${id}.customerOccupationIncomeDetails`} state={state.focusOn('customerOccupationIncomeDetails')} mode={mode} index={pageState(state)<any>().focusOn('selectedItem').json()} display={OccupationIncomeDetailsDD} />
+    <SelectedItem id={`${id}.customerOccupationIncomeDetails`} state={state.focusOn('customerOccupationIncomeDetails')} mode={mode} buttons={buttons} index={pageState(state)<any>().focusOn('selectedItem').json()} display={OccupationIncomeDetailsDD} />
 </>)
 }
 
-export function OccupationDescriptionResponseDD({id,state,mode}: FocusedProps<FState, OccupationDescriptionResponseDDDomain,Context>){
+export function OccupationDescriptionResponseDD({id,state,mode,buttons}: FocusedProps<FState, OccupationDescriptionResponseDDDomain,Context>){
   return(<>
 </>)
 }
 
-export function OccupationIncomeDetailsDD({id,state,mode}: FocusedProps<FState, OccupationIncomeDetailsDDDomain,Context>){
+export function OccupationIncomeDetailsDD({id,state,mode,buttons}: FocusedProps<FState, OccupationIncomeDetailsDDDomain,Context>){
 const areYouGuard = state.chainLens(Lenses.fromPath(["areYou"])).optJsonOr([]);
   return(<>
     <LabelAndStringInput id={`${id}.areYou`} state={state.focusOn('areYou')} mode={mode} label='are you' required={true} />
@@ -107,7 +107,7 @@ const areYouGuard = state.chainLens(Lenses.fromPath(["areYou"])).optJsonOr([]);
 </>)
 }
 
-export function OtherIncomeResponseDD({id,state,mode}: FocusedProps<FState, OtherIncomeResponseDDDomain,Context>){
+export function OtherIncomeResponseDD({id,state,mode,buttons}: FocusedProps<FState, OtherIncomeResponseDDDomain,Context>){
   return(<>
     <LabelAndStringInput id={`${id}.clientOtherIncomeSeq`} state={state.focusOn('clientOtherIncomeSeq')} mode={mode} label='client other income seq' required={true} />
     <LabelAndStringInput id={`${id}.otherIncomeType`} state={state.focusOn('otherIncomeType')} mode={mode} label='other income type' required={true} />

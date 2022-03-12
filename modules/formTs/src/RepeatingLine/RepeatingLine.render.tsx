@@ -23,7 +23,7 @@ export function RepeatingLinePage(){
 const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,
     commit:<ModalCommitButton id='commit'  state={state} />,}
           return (<Layout  details='[2][2]'>
-          <RepeatingLine id={`${id}`} state={state} mode={mode} />
+          <RepeatingLine id={`${id}`} state={state} mode={mode} buttons={buttons} />
           { buttons.cancel } 
           { buttons.commit } 
             </Layout>)})}

@@ -1,5 +1,5 @@
 import { HasPageSelection, PageMode ,PageSelectionContext} from '@focuson/pages'
-import { defaultDateFn, HasSimpleMessages, SimpleMessage } from '@focuson/utils';
+import { defaultDateFn, HasSimpleMessages, SimpleMessage, NameAnd } from '@focuson/utils';
 import {  OnTagFetchErrorFn } from '@focuson/fetcher';
 import { identityOptics,NameAndLens } from '@focuson/lens';
 import { HasTagHolder } from '@focuson/template';
@@ -53,6 +53,7 @@ export const commonIds: NameAndLens<FState> = {
 export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{
   mode: PageMode;
   id: string;
+  buttons: NameAnd<JSX.Element>
 }
 export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPageSelection, T> ( onError?: OnTagFetchErrorFn<S, any, T, SimpleMessage> ) {
   return commonTagFetchProps<S, T> (

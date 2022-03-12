@@ -26,18 +26,18 @@ export function PostCodeDemoPage(){
   return focusedPageWithExtraState<FState, PostCodeDemoPageDomain, PostCodeMainPageDomain, Context> ( s => 'PostCodeDemo' ) ( s => s.focusOn('main')) (
     ( fullState, state , full, d, mode) => {
   const id='root';
-const buttons =    {search:<ModalButton id='search' text='search'  state={state} modal = 'PostCodeSearch'  
-      pageMode='edit'
-      focusOn={["PostCodeDemo","postcode"]}
-      createEmpty={empty.emptyPostCodeSearch}
-    />,}
+  const buttons =    {search:<ModalButton id='search' text='search'  state={state} modal = 'PostCodeSearch'  
+        pageMode='edit'
+        focusOn={["PostCodeDemo","postcode"]}
+        createEmpty={empty.emptyPostCodeSearch}
+      />,}
 
   return (<Layout  details=''>
-          <PostCodeMainPage id={`${id}`} state={state} mode={mode} />
+          <PostCodeMainPage id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.search } 
    </Layout>)})}
 
-export function postCodeDataLine({id,state,mode}: FocusedProps<FState, postCodeDataLineDomain,Context>){
+export function postCodeDataLine({id,state,mode,buttons}: FocusedProps<FState, postCodeDataLineDomain,Context>){
   return(<>
     <LabelAndStringInput id={`${id}.line1`} state={state.focusOn('line1')} mode={mode} label='line1' required={true} />
     <LabelAndStringInput id={`${id}.line2`} state={state.focusOn('line2')} mode={mode} label='line2' required={true} />
@@ -46,7 +46,7 @@ export function postCodeDataLine({id,state,mode}: FocusedProps<FState, postCodeD
 </>)
 }
 
-export function PostCodeMainPage({id,state,mode}: FocusedProps<FState, PostCodeMainPageDomain,Context>){
+export function PostCodeMainPage({id,state,mode,buttons}: FocusedProps<FState, PostCodeMainPageDomain,Context>){
   return(<>
     <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='name' required={true} />
     <LabelAndStringInput id={`${id}.line1`} state={state.focusOn('line1')} mode={mode} label='line1' required={true} />
@@ -57,7 +57,7 @@ export function PostCodeMainPage({id,state,mode}: FocusedProps<FState, PostCodeM
 </>)
 }
 
-export function PostCodeSearch({id,state,mode}: FocusedProps<FState, PostCodeSearchDomain,Context>){
+export function PostCodeSearch({id,state,mode,buttons}: FocusedProps<FState, PostCodeSearchDomain,Context>){
   return(<>
     <LabelAndStringInput id={`${id}.search`} state={state.focusOn('search')} mode={mode} label='search' required={true} />
     <Table id={`${id}.searchResults`} state={state.focusOn('searchResults')} mode={mode} order={["line1","line2","line3","line4"]} />
