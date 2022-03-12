@@ -10,17 +10,18 @@ export interface CommonLensRestParam {
   main?: boolean
 }
 export interface LensRestParam {
-  lens: string,
+  lens: string[],
   testValue: string,
   main?: boolean
 }
+
 export function isCommonLens ( a: AllLensRestParams ): a is CommonLensRestParam {
   // @ts-ignore
   return a.commonLens !== undefined
 }
 export function isRestLens ( a: AllLensRestParams ): a is LensRestParam {
   // @ts-ignore
-  return a.commonLens !== undefined
+  return a.lens !== undefined
 }
 
 export interface RestParams {
@@ -92,8 +93,8 @@ export function findMustConstructForRest<G> ( rs: RestD<G>[] ): MustConstructFor
   // const inputWithId = new Set<DataD> ()
   rs.flatMap ( findDataDsAndRestTypeDetails ).forEach ( ( [ d, rt ] ) => {
 
-      if ( rt.params.needsObj ) if ( rt.params.needsId ) input.add ( d ); else input.add ( d )
-      if ( rt.output.needsObj ) objs.add ( d )
+    if ( rt.params.needsObj ) if ( rt.params.needsId ) input.add ( d ); else input.add ( d )
+    if ( rt.output.needsObj ) objs.add ( d )
 
   } )
   function ordered ( ds: Set<CompDataD<G>> ) {return [ ...ds ].sort ( ( a, b ) => a.name.localeCompare ( b.name ) )}

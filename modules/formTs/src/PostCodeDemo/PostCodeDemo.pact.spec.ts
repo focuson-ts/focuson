@@ -4,11 +4,11 @@ import { pactWith } from "jest-pact";
 import { rest, RestCommand, restL } from "@focuson/rest";
 import { simpleMessagesL } from "@focuson/pages";
 import { applyToTemplate } from "@focuson/template";
+import { Lenses, massTransform } from "@focuson/lens";
 import * as samples from '../PostCodeDemo/PostCodeDemo.samples'
 import {emptyState, FState } from "../common";
 import * as fetchers from "../fetchers";
 import * as rests from "../rests";
-describe("",() =>it("",()=>{}))
 //GetFetcher pact test
 pactWith ( { consumer: 'PostCodeData', provider: 'PostCodeDataProvider', cors: true }, provider => {
   describe ( 'PostCodeDemo', () => {
@@ -19,20 +19,24 @@ pactWith ( { consumer: 'PostCodeData', provider: 'PostCodeDataProvider', cors: t
         withRequest: {
           method: 'GET',
           path: '/api/postCode',
-          query:{"customerId":"custId"}
+          query:{"postcode":"LW12 4RG"}
         },
         willRespondWith: {
           status: 200,
           body: samples.samplePostCodeData0
         },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'PostCodeDemo', pageMode: 'view' }] , PostCodeDemo: { }}
-      let newState = await loadTree ( fetchers.fetchers, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
-      expect ( newState ).toEqual ( {
-        ... firstState,
-        PostCodeDemo: {postcode:{searchResults: samples.samplePostCodeData0}},
-        tags: { PostCodeDemo_postcode_searchResults:["custId"]}
-      } )
+      const ids = {postcode: Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('search')}
+const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'PostCodeDemo', pageMode: 'view' }] , PostCodeDemo: { }}
+const withIds = massTransform(firstState,[ids.postcode, () =>"LW12 4RG"])
+let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+let expectedRaw: any = {
+  ... firstState,
+   PostCodeDemo: {postcode:{searchResults:samples.samplePostCodeData0}},
+  tags: { PostCodeDemo_postcode_searchResults:["LW12 4RG"]}
+};
+const expected = massTransform(expectedRaw,[ids.postcode, () =>"LW12 4RG"])
+expect ( newState ).toEqual ( expected )
     } )
   } )
 })
@@ -53,7 +57,7 @@ pactWith ( { consumer: 'PostCodeData', provider: 'PostCodeDataProvider', cors: t
         withRequest: {
           method: 'GET',
           path: url,
-          query:{"customerId":"custId"}
+          query:{"postcode":"LW12 4RG"}
           //no body for get
         },
         willRespondWith: {

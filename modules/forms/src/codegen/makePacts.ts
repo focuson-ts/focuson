@@ -3,8 +3,12 @@ import { applyToTemplate } from "@focuson/template";
 import { DirectorySpec, loadFile } from "@focuson/files";
 import { beforeSeparator, NameAnd, RestAction, sortedEntries } from "@focuson/utils";
 import { restDetailsName, sampleName, samplesFileName } from "./names";
-import { defaultRestAction, makeCommonParamsValueForTest, RestActionDetail, RestD } from "../common/restD";
+import { defaultRestAction, isRestLens, LensRestParam, makeCommonParamsValueForTest, RestActionDetail, RestD } from "../common/restD";
 import { TSParams } from "./config";
+import { focusQueryFor } from "./codegen";
+import { emptyState, FState } from "ExampleApp/src/common";
+import * as fetchers from "ExampleApp/src/fetchers";
+import * as samples from "ExampleApp/src/PostCodeDemo/PostCodeDemo.samples";
 
 
 interface CommonPactProps extends NameAnd<string> {
@@ -26,8 +30,7 @@ interface CommonPactProps extends NameAnd<string> {
   commonParamsTagsValue: string,
 }
 interface FetcherPactProps extends CommonPactProps {
-  tag: string,
-  tree: string,
+  content: string;
 }
 interface RestPactProps extends CommonPactProps {
   restDetails: string;
@@ -43,6 +46,14 @@ export function makeFetcherPact<B, G> ( params: TSParams, p: PageD<B, G>, r: Res
 }
 
 export function makeGetFetcherPact<B, G> ( params: TSParams, p: PageD<B, G>, r: RestDefnInPageProperties<G>, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
+  //  const locals: [ string, LensRestParam ][] = sortedEntries ( def.rest.params ).flatMap ( ( [ n, l ] ) => isRestLens ( l ) ? [ [ n, l ] ] : [] )
+  //   const localLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: Lenses.identity<${params.stateName}>().focusQuery('${p.name}')${focusQueryFor ( l.lens )}` )
+  //   const lensVariableString = [ `  const ids = {...commonIds`, ...localLens ].join ( "," ) + "}"
+  //   const lensTransformString = locals.map ( ( [ n, l ] ) => `[ids.${n}, () =>"${l.testValue}"])` )
+  //   const comma = locals.length === 0 ? '' : ','
+  //           `   const withIds = massTransform(firstState${comma}${lensTransformString})`,
+  //         `   const expected = massTransform(expectedRaw${comma}${lensTransformString})`,
+
   const props = makePropsForFetcherPact ( p, r.rest, params, r.targetFromPath );
   const str: string = loadFile ( 'templates/oneFetcherPact.ts', directorySpec ).toString ()
   return [ '//GetFetcher pact test', ...applyToTemplate ( str, props ) ]
@@ -87,7 +98,7 @@ function makeCommonPropsForPact<B, G> ( p: PageD<B, G>, d: RestD<G>, params: TSP
     status: "200",
     commonParams: params.commonParams,
     pageName: p.name,
-    target: makeTargetFor ( path ), //except this is wrong
+    target: makeTargetFor ( path ),
     closeTarget: closeTargetFor ( path ),
     stateName: params.stateName,
     commonFile: params.commonFile,
@@ -98,9 +109,37 @@ function makeCommonPropsForPact<B, G> ( p: PageD<B, G>, d: RestD<G>, params: TSP
 }
 
 function makePropsForFetcherPact<B, G> ( p: PageD<B, G>, d: RestD<G>, params: TSParams, path: string[] ): FetcherPactProps {
+  const locals: [ string, LensRestParam ][] = sortedEntries ( d.params ).flatMap ( ( [ n, l ] ) => isRestLens ( l ) ? [ [ n, l ] ] : [] )
+  const localLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: Lenses.identity<${params.stateName}>().focusQuery('${p.name}')${focusQueryFor ( l.lens )}` )
+  const lensVariableString = [ `  const ids = {...commonIds`, ...localLens ].join ( "," ) + "}"
+  const lensTransformString = locals.map ( ( [ n, l ] ) => `[ids.${n}, () =>"${l.testValue}"]` )
+  const tag = [ p.name, ...path ].join ( "_" )
+  let commonPactProps = makeCommonPropsForPact ( p, d, params, path, 'get', `should have a get fetcher for ${d.dataDD.name}` );
+
+  const content: string[] = [
+    `const ids = {postcode: Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('search')}`,
+    `const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: '${p.name}', pageMode: 'view' }] , ${p.name}: { }}`,
+    `const withIds = massTransform(firstState,${lensTransformString})`,
+    `let newState = await loadTree ( ${params.fetchersFile}.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )`,
+    `let expectedRaw: any = {`,
+    `  ... firstState,`,
+    `   ${p.name}: {${commonPactProps.target}:${commonPactProps.body}${commonPactProps.closeTarget},`,
+    `  tags: { ${tag}:${commonPactProps.commonParamsTagsValue}}`,
+    `};`,
+    `const expected = massTransform(expectedRaw,${lensTransformString})`,
+    `expect ( newState ).toEqual ( expected )`,
+  ]
+// const firstState: {stateName}  = { ...emptyState, pageSelection:[{ pageName: '{pageName}', pageMode: 'view' }] , {pageName}: { }}
+//       let newState = await loadTree ( {tree}, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+//       expect ( newState ).toEqual ( {
+//         ... firstState,
+//         {pageName}: {{target}: {body}{closeTarget},
+//         tags: { {pageName}_{tag}:{commonParamsTagsValue}}
   return {
-    ...makeCommonPropsForPact ( p, d, params, path, 'get', `should have a get fetcher for ${d.dataDD.name}` ),
-    tag: path.join ( "_" ), tree: `${params.fetchersFile}.fetchers`
+    ...commonPactProps,
+    content: content.join ( "\n" )
+    // tag: path.join ( "_" ),
+    // tree: `${params.fetchersFile}.fetchers`
   }
 }
 

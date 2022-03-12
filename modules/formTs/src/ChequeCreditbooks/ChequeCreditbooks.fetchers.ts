@@ -4,13 +4,15 @@ import { HasTagHolder } from "@focuson/template";
 import { HasPageSelection } from "@focuson/pages";
 import { HasSimpleMessages, SimpleMessage } from '@focuson/utils';
 import { pageAndTagFetcher } from "@focuson/focuson";
+import { FState } from "../common";
 import { Optional, Lenses, NameAndLens} from '@focuson/lens';
 //fetcher type true
-export function ChequeCreditbooksDDFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<S, domains.ChequeCreditbooksPageDomain>,commonIds: NameAndLens<S>) {
-  return pageAndTagFetcher<S, domains.ChequeCreditbooksPageDomain, domains.ChequeCreditbooksDDDomain, SimpleMessage>(
-    common.commonFetch<S,  domains.ChequeCreditbooksDDDomain>(),
+export function ChequeCreditbooksDDFetcher<S extends  HasSimpleMessages & HasTagHolder & HasPageSelection>(fdLens:Optional<FState, domains.ChequeCreditbooksPageDomain>,commonIds: NameAndLens<FState>) {
+  const ids = {...commonIds}
+  return pageAndTagFetcher<FState, domains.ChequeCreditbooksPageDomain, domains.ChequeCreditbooksDDDomain, SimpleMessage>(
+    common.commonFetch<FState,  domains.ChequeCreditbooksDDDomain>(),
      'ChequeCreditbooks',
-     'fromApi', fdLens, commonIds, {},["accountId","applRef","brandRef","customerId"],[],
+     'fromApi', fdLens, ids, {},["accountId","applRef","brandRef","customerId"],[],
       Lenses.identity< domains.ChequeCreditbooksPageDomain> ().focusQuery('fromApi'),
      '/api/chequeCreditBooks?{query}')
 }

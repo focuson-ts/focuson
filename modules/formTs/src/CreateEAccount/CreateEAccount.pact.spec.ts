@@ -4,6 +4,7 @@ import { pactWith } from "jest-pact";
 import { rest, RestCommand, restL } from "@focuson/rest";
 import { simpleMessagesL } from "@focuson/pages";
 import { applyToTemplate } from "@focuson/template";
+import { Lenses, massTransform } from "@focuson/lens";
 import * as samples from '../CreateEAccount/CreateEAccount.samples'
 import {emptyState, FState } from "../common";
 import * as fetchers from "../fetchers";

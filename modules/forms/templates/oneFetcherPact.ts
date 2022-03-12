@@ -15,13 +15,7 @@ pactWith ( { consumer: '{consumer}', provider: '{provider}', cors: true }, provi
           body: {body}
         },
       } )
-      const firstState: {stateName}  = { ...emptyState, pageSelection:[{ pageName: '{pageName}', pageMode: 'view' }] , {pageName}: { }}
-      let newState = await loadTree ( {tree}, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
-      expect ( newState ).toEqual ( {
-        ... firstState,
-        {pageName}: {{target}: {body}{closeTarget},
-        tags: { {pageName}_{tag}:{commonParamsTagsValue}}
-      } )
+      {content}
     } )
   } )
 })

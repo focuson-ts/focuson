@@ -4,6 +4,7 @@ import { pactWith } from "jest-pact";
 import { rest, RestCommand, restL } from "@focuson/rest";
 import { simpleMessagesL } from "@focuson/pages";
 import { applyToTemplate } from "@focuson/template";
+import { Lenses, massTransform } from "@focuson/lens";
 import * as samples from '../Repeating/Repeating.samples'
 import {emptyState, FState } from "../common";
 import * as fetchers from "../fetchers";
@@ -59,13 +60,17 @@ pactWith ( { consumer: 'RepeatingWholeData', provider: 'RepeatingWholeDataProvid
           body: samples.sampleRepeatingWholeData0
         },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'Repeating', pageMode: 'view' }] , Repeating: { }}
-      let newState = await loadTree ( fetchers.fetchers, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
-      expect ( newState ).toEqual ( {
-        ... firstState,
-        Repeating: {fromApi: samples.sampleRepeatingWholeData0},
-        tags: { Repeating_fromApi:["custId"]}
-      } )
+      const ids = {postcode: Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('search')}
+const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'Repeating', pageMode: 'view' }] , Repeating: { }}
+const withIds = massTransform(firstState,)
+let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+let expectedRaw: any = {
+  ... firstState,
+   Repeating: {fromApi:samples.sampleRepeatingWholeData0},
+  tags: { Repeating_fromApi:["custId"]}
+};
+const expected = massTransform(expectedRaw,)
+expect ( newState ).toEqual ( expected )
     } )
   } )
 })

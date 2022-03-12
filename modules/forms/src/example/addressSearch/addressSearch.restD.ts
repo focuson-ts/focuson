@@ -10,7 +10,7 @@ import { commonParams } from "../repeating/repeating.restD";
 import { PostCodeMainPage } from "./addressSearch.pageD";
 
 export const postcodeParams: RestParams = {
-  customerId: { commonLens: 'customerId', testValue: 'custId' }
+  postcode: { lens: [ 'postcode', 'search' ], testValue: 'LW12 4RG' }
 }
 
 /** This should fully define the api*/

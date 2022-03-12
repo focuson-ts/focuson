@@ -34,7 +34,7 @@
       "request": {
         "method": "GET",
         "path": "/api/postCode",
-        "query": "customerId=custId"
+        "query": "postcode=LW12+4RG"
       },
       "response": {
         "status": 200,

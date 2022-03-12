@@ -96,7 +96,8 @@ export function pageAndTagFetcher<S, Full, T, MSGS> (
 
   const stf: SpecificTagFetcherProps<S, Full, T, MSGS> = { ...ctf, ...urlConfig, url, tagName, pageName, description: description ? description : `pageAndTagFetcher(${pageName},${tagName}})` };
   function selected ( s: S, pageName: any ) {
-    let found = ctf.mainThingL.get ( s ).find ( p => p.pageName === pageName );
+    let pageSelections = ctf.mainThingL.get ( s );
+    let found = pageSelections.find ( p => p.pageName === pageName );
     let result = found !== undefined;
     return result
   }

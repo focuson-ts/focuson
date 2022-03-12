@@ -1,8 +1,8 @@
 package focuson.data.queries;
 public class PostCodeDataQueries{
-  public static  String getpostCodeDataLine(String customerId){ 
+  public static  String getpostCodeDataLine(String postcode){ 
      return
-  "query{getpostCodeDataLine(" + "customerId:" + "\"" + customerId + "\"" + "){"+
+  "query{getpostCodeDataLine(" + "postcode:" + "\"" + postcode + "\"" + "){"+
         "    line1"+
         "    line2"+
         "    line3"+

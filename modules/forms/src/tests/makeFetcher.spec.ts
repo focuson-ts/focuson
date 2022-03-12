@@ -40,7 +40,7 @@ describe ( "makeAllFetchers", () => {
         "  return pageAndTagFetcher<S, domains.PostCodeDemoPageDomain, domains.PostCodeDataDomain, SimpleMessage>(",
         "    common.commonFetch<S,  domains.PostCodeDataDomain>(),",
         "     'PostCodeDemo',",
-        "     'postcode_searchResults', fdLens, commonIds, {},['customerId'],[],",
+        "     'postcode_searchResults', fdLens, commonIds, {},['postcode'],[],",
         "      Lenses.identity< domains.PostCodeDemoPageDomain> ().focusQuery('postcode').focusQuery('searchResults'),",
         "     '/api/postCode?{query}')",
         "}"

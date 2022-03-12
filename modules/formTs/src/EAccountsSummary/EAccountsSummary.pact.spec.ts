@@ -4,6 +4,7 @@ import { pactWith } from "jest-pact";
 import { rest, RestCommand, restL } from "@focuson/rest";
 import { simpleMessagesL } from "@focuson/pages";
 import { applyToTemplate } from "@focuson/template";
+import { Lenses, massTransform } from "@focuson/lens";
 import * as samples from '../EAccountsSummary/EAccountsSummary.samples'
 import {emptyState, FState } from "../common";
 import * as fetchers from "../fetchers";
@@ -195,13 +196,17 @@ pactWith ( { consumer: 'EAccountsSummaryDD', provider: 'EAccountsSummaryDDProvid
           body: samples.sampleEAccountsSummaryDD0
         },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'EAccountsSummary', pageMode: 'view' }] , EAccountsSummary: { }}
-      let newState = await loadTree ( fetchers.fetchers, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
-      expect ( newState ).toEqual ( {
-        ... firstState,
-        EAccountsSummary: {fromApi: samples.sampleEAccountsSummaryDD0},
-        tags: { EAccountsSummary_fromApi:["accId","custId"]}
-      } )
+      const ids = {postcode: Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('search')}
+const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'EAccountsSummary', pageMode: 'view' }] , EAccountsSummary: { }}
+const withIds = massTransform(firstState,)
+let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+let expectedRaw: any = {
+  ... firstState,
+   EAccountsSummary: {fromApi:samples.sampleEAccountsSummaryDD0},
+  tags: { EAccountsSummary_fromApi:["accId","custId"]}
+};
+const expected = massTransform(expectedRaw,)
+expect ( newState ).toEqual ( expected )
     } )
   } )
 })

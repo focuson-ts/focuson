@@ -14,13 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
   @Autowired
   public GraphQL graphQL;
     @GetMapping(value="/api/postCode", produces="application/json")
-    public ResponseEntity getPostCodeData(@RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL,PostCodeDataQueries.getpostCodeDataLine(customerId), "getpostCodeDataLine");
+    public ResponseEntity getPostCodeData(@RequestParam String postcode) throws Exception{
+       return Transform.result(graphQL,PostCodeDataQueries.getpostCodeDataLine(postcode), "getpostCodeDataLine");
     }
 
     @GetMapping(value="/api/postCode/query", produces="application/json")
-    public String querygetpostCodeDataLine(@RequestParam String customerId) throws Exception{
-       return PostCodeDataQueries.getpostCodeDataLine(customerId);
+    public String querygetpostCodeDataLine(@RequestParam String postcode) throws Exception{
+       return PostCodeDataQueries.getpostCodeDataLine(postcode);
     }
 
   @GetMapping(value = "/api/postCode/sample", produces = "application/json")

@@ -4,6 +4,7 @@ import { pactWith } from "jest-pact";
 import { rest, RestCommand, restL } from "@focuson/rest";
 import { simpleMessagesL } from "@focuson/pages";
 import { applyToTemplate } from "@focuson/template";
+import { Lenses, massTransform } from "@focuson/lens";
 import * as samples from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.samples'
 import {emptyState, FState } from "../common";
 import * as fetchers from "../fetchers";
@@ -25,13 +26,17 @@ pactWith ( { consumer: 'OccupationAndIncomeDetailsDD', provider: 'OccupationAndI
           body: samples.sampleOccupationAndIncomeDetailsDD0
         },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }] , OccupationAndIncomeSummary: { }}
-      let newState = await loadTree ( fetchers.fetchers, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
-      expect ( newState ).toEqual ( {
-        ... firstState,
-        OccupationAndIncomeSummary: {fromApi: samples.sampleOccupationAndIncomeDetailsDD0},
-        tags: { OccupationAndIncomeSummary_fromApi:["accountSeq","applicationRef","brandRef","vbAccountSeq","vbAccountType"]}
-      } )
+      const ids = {postcode: Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('search')}
+const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }] , OccupationAndIncomeSummary: { }}
+const withIds = massTransform(firstState,)
+let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+let expectedRaw: any = {
+  ... firstState,
+   OccupationAndIncomeSummary: {fromApi:samples.sampleOccupationAndIncomeDetailsDD0},
+  tags: { OccupationAndIncomeSummary_fromApi:["accountSeq","applicationRef","brandRef","vbAccountSeq","vbAccountType"]}
+};
+const expected = massTransform(expectedRaw,)
+expect ( newState ).toEqual ( expected )
     } )
   } )
 })

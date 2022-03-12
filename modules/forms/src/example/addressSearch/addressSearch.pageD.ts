@@ -22,7 +22,7 @@ export const PostCodeMainPage: ExampleMainPage = {
     main: { dataDD: nameAndAddressDataD },
     postcode: { dataDD: postCodeSearchDataD }
   },
-  initialValue: { main: {}, postcode: {} },
+  initialValue: { main: {}, postcode: {search: ''} },
   modals: [ { modal: PostCodeModalPage, path: [ 'postcode' ] } ],
   modes: [ 'edit' ],
   rest: {
