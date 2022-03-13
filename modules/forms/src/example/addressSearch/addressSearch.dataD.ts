@@ -3,7 +3,7 @@ import { AllGuards } from "../../buttons/guardButton";
 import { TableCD } from "../../common/componentsD";
 
 export const postCodeDataLineD: DataD<AllGuards> = {
-  name: "postCodeDataLine",
+  name: "PostCodeDataLine",
   description: "",
   structure: {
     line1: { dataDD: OneLineStringDD },
@@ -28,7 +28,8 @@ export const postCodeSearchDataD: DataD<AllGuards> = {
   description: "The post code search example: type postcode get results",
   structure: {
     search: { dataDD: OneLineStringDD, sample: [ 'LS21 3EY' ] },
-    searchResults: { dataDD: postCodeSearchResponse }
+    searchResults: { dataDD: postCodeSearchResponse },
+    addressResults: {dataDD: postCodeDataLineD}
   }
 }
 

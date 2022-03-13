@@ -7,7 +7,7 @@ type Query{
   getCreateEAccountDataDD(accountId: String!, createPlanId: String!, customerId: String!):CreateEAccountDataDD!
   getChequeCreditbooksDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!):ChequeCreditbooksDD!
   getRepeatingLine(customerId: String!):[RepeatingLine!]!
-  getpostCodeDataLine(postcode: String!):[postCodeDataLine!]!
+  getPostCodeDataLine(postcode: String!):[PostCodeDataLine!]!
 }
 type Mutation{
   updateOccupationAndIncomeDetailsDD(accountSeq: String!, applicationRef: String!, brandRef: String!, vbAccountSeq: String!, vbAccountType: String!,obj: OccupationAndIncomeDetailsDDInp!):OccupationAndIncomeDetailsDD!
@@ -108,7 +108,7 @@ type OtherIncomeResponseDD{
   incomeFreqRef: String!
   amount: Int!
 }
-type postCodeDataLine{
+type PostCodeDataLine{
   line1: String!
   line2: String!
   line3: String!

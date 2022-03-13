@@ -22,7 +22,7 @@ export const PostCodeMainPage: ExampleMainPage = {
     main: { dataDD: nameAndAddressDataD },
     postcode: { dataDD: postCodeSearchDataD }
   },
-  initialValue: { main: {}, postcode: { search: '', searchResults: [] } },
+  initialValue: { main: {}, postcode: { search: '', searchResults: [], addressResults: { line1: 'a', line2: 'b', line3: 'c', line4: 'd' } } },
   modals: [ { modal: PostCodeModalPage, path: [ 'postcode' ] } ],
   modes: [ 'edit' ],
   rest: {
@@ -33,7 +33,14 @@ export const PostCodeMainPage: ExampleMainPage = {
     search: {
       control: 'ModalButton', modal: PostCodeModalPage, mode: 'edit',
       focusOn: [ 'postcode' ],
-      createEmpty: postCodeSearchDataD,
+      copy: { from: [ 'main', 'postcode' ], to: [ 'postcode', 'search' ] },
+      copyOnClose: [
+        { from: [ 'postcode', 'addressResults', 'line1' ], to: [ 'main', 'line1' ] },
+        { from: [ 'postcode', 'addressResults', 'line2' ], to: [ 'main', 'line2' ] },
+        { from: [ 'postcode', 'addressResults', 'line3' ], to: [ 'main', 'line3' ] },
+        { from: [ 'postcode', 'addressResults', 'line4' ], to: [ 'main', 'line4' ] },
+        { from: [ 'postcode', 'search' ], to: [ 'main', 'postcode' ] },
+      ]
     },
   },
 }

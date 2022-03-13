@@ -10,5 +10,5 @@ import java.util.List;
 import java.util.Map;
 @Component
 public class PostCodeDataFFetcherMock  implements PostCodeDataFFetcher{
- public DataFetcher getpostCodeDataLine() {  return dataFetchingEnvironment -> Sample.samplePostCodeData0;    }
+ public DataFetcher getPostCodeDataLine() {  return dataFetchingEnvironment -> Sample.samplePostCodeData0;    }
 }

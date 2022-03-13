@@ -5,9 +5,9 @@ export interface PostCodeDemoPageDomain{
   postcode?:PostCodeSearchDomain;
 }
 
-export type PostCodeDataDomain = postCodeDataLineDomain[]
+export type PostCodeDataDomain = PostCodeDataLineDomain[]
 
-export interface postCodeDataLineDomain{
+export interface PostCodeDataLineDomain{
   line1: string;
   line2: string;
   line3: string;
@@ -24,6 +24,7 @@ export interface PostCodeMainPageDomain{
 }
 
 export interface PostCodeSearchDomain{
+  addressResults: PostCodeDataLineDomain;
   search: string;
-  searchResults: postCodeDataLineDomain[];
+  searchResults: PostCodeDataLineDomain[];
 }

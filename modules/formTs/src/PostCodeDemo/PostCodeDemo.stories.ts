@@ -19,7 +19,7 @@ interface StoryState {
    pageMode: PageMode
 }
  
-const initial = {"main":{},"postcode":{"search":"","searchResults":[]}}
+const initial = {"main":{},"postcode":{"search":"","searchResults":[],"addressResults":{"line1":"a","line2":"b","line3":"c","line4":"d"}}}
 const Template: Story<StoryState> = ( args: StoryState ) =>
    SBookProvider<FState, Context> ( { ...emptyState, PostCodeDemo: { ...initial, main: args.domain } },//NOTE currently stories only work if the target depth is 1
      defaultPageSelectionAndRestCommandsContext<FState> ( pages ),

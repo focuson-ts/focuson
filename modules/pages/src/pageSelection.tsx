@@ -26,13 +26,17 @@ export interface SetToLengthOnClose{
   array:string[],
   variable: string[]
 }
+export interface CopyDetails {
+  from?: string[];
+  to?: string[]
+}
 export interface PageSelection {
   pageName: string;
   firstTime?: boolean;
   pageMode: PageMode;
   onClose?: PageOnClose;
   rest?: RestCommand,
-  copyOnClose?: string[],
+  copyOnClose?: CopyDetails[],
   //This is a lens description. A path that should be the lens to the root of the data. This overrides the lens in the page description if it is present
   // Right now it is just a list of strings. Later it might include 'the nth item' etc */
   focusOn?: string[],

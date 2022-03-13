@@ -15,12 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
   public GraphQL graphQL;
     @GetMapping(value="/api/postCode", produces="application/json")
     public ResponseEntity getPostCodeData(@RequestParam String postcode) throws Exception{
-       return Transform.result(graphQL,PostCodeDataQueries.getpostCodeDataLine(postcode), "getpostCodeDataLine");
+       return Transform.result(graphQL,PostCodeDataQueries.getPostCodeDataLine(postcode), "getPostCodeDataLine");
     }
 
     @GetMapping(value="/api/postCode/query", produces="application/json")
-    public String querygetpostCodeDataLine(@RequestParam String postcode) throws Exception{
-       return PostCodeDataQueries.getpostCodeDataLine(postcode);
+    public String querygetPostCodeDataLine(@RequestParam String postcode) throws Exception{
+       return PostCodeDataQueries.getPostCodeDataLine(postcode);
     }
 
   @GetMapping(value = "/api/postCode/sample", produces = "application/json")

@@ -3,5 +3,5 @@ package focuson.data.fetchers;
 import graphql.schema.DataFetcher;
 
 public interface PostCodeDataFFetcher {
-   public DataFetcher getpostCodeDataLine();
+   public DataFetcher getPostCodeDataLine();
 }

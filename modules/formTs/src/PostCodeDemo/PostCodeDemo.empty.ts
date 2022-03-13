@@ -9,7 +9,7 @@ export const emptyPostCodeData:domains.PostCodeDataDomain =
       "line4": ""
     }
   ]
-export const emptypostCodeDataLine:domains.postCodeDataLineDomain =
+export const emptyPostCodeDataLine:domains.PostCodeDataLineDomain =
   {
     "line1": "",
     "line2": "",
@@ -35,5 +35,11 @@ export const emptyPostCodeSearch:domains.PostCodeSearchDomain =
         "line3": "",
         "line4": ""
       }
-    ]
+    ],
+    "addressResults": {
+      "line1": "",
+      "line2": "",
+      "line3": "",
+      "line4": ""
+    }
   }

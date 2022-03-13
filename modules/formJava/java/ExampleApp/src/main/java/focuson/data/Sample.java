@@ -220,7 +220,7 @@ public class Sample{
          "  }"+
          "]"
   );
-  public static Map samplepostCodeDataLine0 =  parse.parseMap(
+  public static Map samplePostCodeDataLine0 =  parse.parseMap(
          "{"+
          "  \"line1\": \"This is a one line string\","+
          "  \"line2\": \"This is a one line string\","+
@@ -248,7 +248,13 @@ public class Sample{
          "      \"line3\": \"This is a one line string\","+
          "      \"line4\": \"This is a one line string\""+
          "    }"+
-         "  ]"+
+         "  ],"+
+         "  \"addressResults\": {"+
+         "    \"line1\": \"This is a one line string\","+
+         "    \"line2\": \"This is a one line string\","+
+         "    \"line3\": \"This is a one line string\","+
+         "    \"line4\": \"This is a one line string\""+
+         "  }"+
          "}"
   );
   public static Map sampleRepeatingLine0 =  parse.parseMap(

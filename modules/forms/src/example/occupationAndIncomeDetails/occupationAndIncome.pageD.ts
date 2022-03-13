@@ -97,13 +97,13 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
       focusOn: [ 'temp' ],
       createEmpty: occupationIncomeDetailsDD,
       setToLengthOnClose: { variable: [ 'selectedItem' ], array: [ 'fromApi', 'customerOccupationIncomeDetails' ] },
-      copyOnClose: [ 'fromApi', 'customerOccupationIncomeDetails', '[append]' ]
+      copyOnClose: {to: [ 'fromApi', 'customerOccupationIncomeDetails', '[append]' ]}
     },
     edit: {
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'edit',
       focusOn: [ 'temp' ],
-      copyFrom: [ 'fromApi', 'customerOccupationIncomeDetails', '{selectedItem}' ],
-      copyOnClose: [ 'fromApi', 'customerOccupationIncomeDetails', '{selectedItem}' ]
+      copy: {from: [ 'fromApi', 'customerOccupationIncomeDetails', '{selectedItem}' ]},
+      copyOnClose: [{to: [ 'fromApi', 'customerOccupationIncomeDetails', '{selectedItem}' ]}]
     },
 
   }

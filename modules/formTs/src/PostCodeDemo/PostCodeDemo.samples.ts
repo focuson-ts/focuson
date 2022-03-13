@@ -9,7 +9,7 @@ export const samplePostCodeData0: domains.PostCodeDataDomain =
     "line4": "This is a one line string"
   }
 ]
-export const samplepostCodeDataLine0: domains.postCodeDataLineDomain = 
+export const samplePostCodeDataLine0: domains.PostCodeDataLineDomain = 
 {
   "line1": "This is a one line string",
   "line2": "This is a one line string",
@@ -35,7 +35,13 @@ export const samplePostCodeSearch0: domains.PostCodeSearchDomain =
       "line3": "This is a one line string",
       "line4": "This is a one line string"
     }
-  ]
+  ],
+  "addressResults": {
+    "line1": "This is a one line string",
+    "line2": "This is a one line string",
+    "line3": "This is a one line string",
+    "line4": "This is a one line string"
+  }
 }
 export const samplePostCodeData1: domains.PostCodeDataDomain = 
 [
@@ -46,7 +52,7 @@ export const samplePostCodeData1: domains.PostCodeDataDomain =
     "line4": "another one line string"
   }
 ]
-export const samplepostCodeDataLine1: domains.postCodeDataLineDomain = 
+export const samplePostCodeDataLine1: domains.PostCodeDataLineDomain = 
 {
   "line1": "another one line string",
   "line2": "another one line string",
@@ -72,7 +78,13 @@ export const samplePostCodeSearch1: domains.PostCodeSearchDomain =
       "line3": "another one line string",
       "line4": "another one line string"
     }
-  ]
+  ],
+  "addressResults": {
+    "line1": "another one line string",
+    "line2": "another one line string",
+    "line3": "another one line string",
+    "line4": "another one line string"
+  }
 }
 export const samplePostCodeData2: domains.PostCodeDataDomain = 
 [
@@ -83,7 +95,7 @@ export const samplePostCodeData2: domains.PostCodeDataDomain =
     "line4": "This is a one line string"
   }
 ]
-export const samplepostCodeDataLine2: domains.postCodeDataLineDomain = 
+export const samplePostCodeDataLine2: domains.PostCodeDataLineDomain = 
 {
   "line1": "This is a one line string",
   "line2": "This is a one line string",
@@ -109,5 +121,11 @@ export const samplePostCodeSearch2: domains.PostCodeSearchDomain =
       "line3": "This is a one line string",
       "line4": "This is a one line string"
     }
-  ]
+  ],
+  "addressResults": {
+    "line1": "This is a one line string",
+    "line2": "This is a one line string",
+    "line3": "This is a one line string",
+    "line4": "This is a one line string"
+  }
 }

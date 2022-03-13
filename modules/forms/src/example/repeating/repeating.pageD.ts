@@ -46,13 +46,13 @@ export const RepeatingPageD: ExampleMainPage = {
       focusOn: [ 'temp' ],
       createEmpty: RepeatingLineDataD,
       setToLengthOnClose: { variable: selectedItemPath, array: fromApiPath },
-      copyOnClose: [ ...fromApiPath, '[append]' ]
+      copyOnClose: {to: [ ...fromApiPath, '[append]' ]}
     },
     edit: {
       control: 'ModalButton', modal: RepeatingLinePageD, mode: 'edit',
       focusOn: [ 'temp' ],
-      copyFrom: [ ...fromApiPath, '{selectedItem}' ],
-      copyOnClose: [ ...fromApiPath, '{selectedItem}' ]
+      copy: [{from: [ ...fromApiPath, '{selectedItem}' ]}],
+      copyOnClose: {to: [ ...fromApiPath, '{selectedItem}' ]}
     },
     nextOccupation: {
       by: { condition: '<arrayEnd', arrayPath: fromApiPath, varPath: selectedItemPath },

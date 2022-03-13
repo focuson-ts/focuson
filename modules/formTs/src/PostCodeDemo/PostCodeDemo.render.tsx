@@ -18,7 +18,7 @@ import {RestButton} from '../copied/rest';
 import {ValidationButton} from '../copied/ValidationButton';
 import {PostCodeDemoPageDomain} from "../PostCodeDemo/PostCodeDemo.domains";
 import {PostCodeDataDomain} from "../PostCodeDemo/PostCodeDemo.domains"
-import {postCodeDataLineDomain} from "../PostCodeDemo/PostCodeDemo.domains"
+import {PostCodeDataLineDomain} from "../PostCodeDemo/PostCodeDemo.domains"
 import {PostCodeMainPageDomain} from "../PostCodeDemo/PostCodeDemo.domains"
 import {PostCodeSearchDomain} from "../PostCodeDemo/PostCodeDemo.domains"
 export function PostCodeDemoPage(){
@@ -28,7 +28,8 @@ export function PostCodeDemoPage(){
   const buttons =    {search:<ModalButton id='search' text='search'  state={state} modal = 'PostCodeSearch'  
         pageMode='edit'
         focusOn={["PostCodeDemo","postcode"]}
-        createEmpty={empty.emptyPostCodeSearch}
+        copy={[{"from":["PostCodeDemo","main","postcode"],"to":["PostCodeDemo","postcode","search"]}]}
+        copyOnClose={[{"from":["PostCodeDemo","postcode","addressResults","line1"],"to":["PostCodeDemo","main","line1"]},{"from":["PostCodeDemo","postcode","addressResults","line2"],"to":["PostCodeDemo","main","line2"]},{"from":["PostCodeDemo","postcode","addressResults","line3"],"to":["PostCodeDemo","main","line3"]},{"from":["PostCodeDemo","postcode","addressResults","line4"],"to":["PostCodeDemo","main","line4"]},{"from":["PostCodeDemo","postcode","search"],"to":["PostCodeDemo","main","postcode"]}]}
       />,}
 
       return <div className='mainPage'>
@@ -36,7 +37,7 @@ export function PostCodeDemoPage(){
           <PostCodeMainPage id={`${id}`} state={state} mode={mode} buttons={buttons} />
       </div>})}
 
-export function postCodeDataLine({id,state,mode,buttons}: FocusedProps<FState, postCodeDataLineDomain,Context>){
+export function PostCodeDataLine({id,state,mode,buttons}: FocusedProps<FState, PostCodeDataLineDomain,Context>){
   return <>
      {/*{"path":["line1"],"dataDD":"OneLineStringDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"buttons":{"paramType":"object","needed":"defaultToButtons"},"button":{"paramType":"string","needed":"no"},"required":{"paramType":"boolean","needed":"no","default":true},"pattern":{"paramType":"string","needed":"no"},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndStringInput id={`${id}.line1`} state={state.focusOn('line1')} mode={mode} label='line1' buttons={buttons} required={true} />
@@ -72,5 +73,7 @@ export function PostCodeSearch({id,state,mode,buttons}: FocusedProps<FState, Pos
     <LabelAndStringInput id={`${id}.search`} state={state.focusOn('search')} mode={mode} label='search' buttons={buttons} required={true} />
      {/*{"path":["searchResults"],"dataDD":"PostCodeData","display":{"import":"","name":"Table","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"order":{"paramType":"string[]","needed":"yes"}}}}*/}
     <Table id={`${id}.searchResults`} state={state.focusOn('searchResults')} mode={mode} order={["line1","line2","line3","line4"]} />
+     {/*{"path":["addressResults"],"dataDD":"PostCodeDataLine","display":{"import":"","name":"PostCodeDataLine","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}}}*/}
+    <PostCodeDataLine id={`${id}.addressResults`} state={state.focusOn('addressResults')} mode={mode} buttons={buttons} />
 </>
 }

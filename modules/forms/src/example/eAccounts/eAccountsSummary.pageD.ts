@@ -42,7 +42,7 @@ export const EAccountsSummaryPD:ExampleMainPage = {
     amendExistingPlan: {
       control: 'ModalButton', modal: CreatePlanPD, mode: 'edit',
       focusOn: [ 'tempCreatePlan' ],
-      copyFrom: [ 'fromApi', 'createPlan' ],
+      copy: {from: [ 'fromApi', 'createPlan' ]},
       restOnCommit: { rest: createPlanRestD, action: 'update', result: 'refresh', target: [ 'EAccountsSummary' ] }
     },
     deleteExistingPlan: { control: 'RestButton', rest: createPlanRestD, action: 'delete', confirm: true, result: 'refresh', path: [ 'EAccountsSummary', 'fromApi' ] },

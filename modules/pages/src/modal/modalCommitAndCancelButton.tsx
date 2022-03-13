@@ -29,7 +29,7 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
     const copyOnClose = lastPage?.copyOnClose
     const lookup = ( name: string ) => refFromFirstPage ( state.context.pageSelectionL ) ( name ).getOption ( state.main );
     const fromPath = Lenses.fromPathWith<S, any> ( lookup )
-    const fromLens = fromPath ( safeArray ( lastPage.focusOn ) )
+    const focusLens = fromPath ( safeArray ( lastPage.focusOn ) )
 
     const setToLengthOnCloseArrayL = fromPath ( safeArray ( lastPage?.setToLengthOnClose?.array ) )
     const setToLengthOnCloseVariableL = fromPath ( safeArray ( lastPage?.setToLengthOnClose?.variable ) )
@@ -43,20 +43,13 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
     const pageTransformer: Transform<S, any> = [ state.context.pageSelectionL, ( ps: PageSelection[] ) => ps.slice ( 0, -1 ) ]
     const restTransformers: Transform<S, any>[] = rest ? [ [ state.context.restL, ( ps: RestCommand[] ) => [ ...safeArray ( ps ), rest ] ] ] : []
 
-    const copyOnCloseTransforms: Transform<S, any>[] =
-            copyOnClose ? [
-              [ fromPath ( copyOnClose ),
-                ( old: any ) => {
-                  console.log ( 'copyOnCLose', fromLens.description, '===>', copyOnClose, fromPath ( copyOnClose ).description )
-                  return fromLens.getOption ( state.main )
-                } ] ] : []
-
+    const copyOnCloseTxs: Transform<S, any>[] = safeArray ( copyOnClose ).map ( ( { from, to } ) =>
+      [ to ? fromPath ( to ) : focusLens, () => (from ? fromPath ( from ) : focusLens).getOption ( state.main ) ] )
     if ( lastPage ) {
-      state.massTransform ( reasonFor ( 'ModalCommit', 'onClick', id ) ) ( pageTransformer, ...restTransformers, ...copyOnCloseTransforms, ...setToLengthOnCloseTx )
+      state.massTransform ( reasonFor ( 'ModalCommit', 'onClick', id ) ) ( pageTransformer, ...restTransformers, ...copyOnCloseTxs, ...setToLengthOnCloseTx )
     } else
       console.error ( 'ModalCommit button called and bad state.', lastPage )
   }
-
 
   return <button onClick={onClick}>Commit</button>
 }
