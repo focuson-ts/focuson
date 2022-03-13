@@ -41,7 +41,7 @@ export function isErrorComponentData<G> ( d: AllComponentData<G> ): d is ErrorCo
 }
 
 export interface ComponentDisplayParams {
-  [ name: string ]: boolean | string | string[]
+  [ name: string ]: boolean | string | string[] | number
 }
 
 

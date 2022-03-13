@@ -29,10 +29,10 @@ export const PostCodeMainPage: ExampleMainPage = {
     postcode: { rest: postcodeRestD, targetFromPath: [ 'postcode', 'searchResults' ], fetcher: true }
   },
   buttons: {
-    search: {
-      control: 'ModalButton', modal: PostCodeModalPage, mode: 'edit',
-      focusOn: [ 'postcode' ],
-      createEmpty: postCodeSearchDataD,
-    },
+    // search: {
+    //   control: 'ModalButton', modal: PostCodeModalPage, mode: 'edit',
+    //   focusOn: [ 'postcode' ],
+    //   createEmpty: postCodeSearchDataD,
+    // },
   },
 }

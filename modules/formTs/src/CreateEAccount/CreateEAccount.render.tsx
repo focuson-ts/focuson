@@ -26,12 +26,12 @@ export function CreateEAccountPage(){
   const id='root';
   const buttons =    {cancel:<button>cancel of type ResetStateButton cannot be created yet</button>,
       createEAccounts:<RestButton state={state}
-      id='createEAccounts'
-      name='createEAccounts'
-      action='create'
-      path={["CreateEAccount","editing"]}
-      rest='CreateEAccount_ETransferDataDRestDetails'
-      confirm={true}
+        id='createEAccounts'
+        name='createEAccounts'
+        action='create'
+        path={["CreateEAccount","editing"]}
+        rest='CreateEAccount_ETransferDataDRestDetails'
+        confirm={true}
        />,
       resetAll:<button>resetAll of type ResetStateButton cannot be created yet</button>,}
 
@@ -45,7 +45,7 @@ export function CreateEAccountPage(){
 
 export function CreateEAccountDataDD({id,state,mode,buttons}: FocusedProps<FState, CreateEAccountDataDDDomain,Context>){
   return <>
-     {/*{"path":["name"],"dataDD":"OneLineStringDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
+     {/*{"path":["name"],"dataDD":"OneLineStringDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"pattern":{"paramType":"string","needed":"no"},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='name' required={true} />
      {/*{"path":["type"],"dataDD":"EAccountDisplayTypeDD","display":{"import":"../copied/Radio","name":"LabelAndRadio","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"enums":{"needed":"defaultToEnum","paramType":"object"}}}}*/}
     <LabelAndRadio id={`${id}.type`} state={state.focusOn('type')} mode={mode} label='type' enums={{"savings":"Savings","checking":"Checking"}} />

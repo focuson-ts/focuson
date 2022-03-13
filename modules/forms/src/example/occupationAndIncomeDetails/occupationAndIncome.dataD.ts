@@ -171,7 +171,7 @@ export const occupationIncomeDetailsDD: DataD<AllGuards> = {
     customerDescription: { dataDD: StringDD, guard: { areYou: [ 'E' ] } },
     ownShareOfTheCompany: { dataDD: yesNoDD, guard: { areYou: [ 'E' ] } },
     owningSharesPct: { dataDD: yesNoDD, guard: { areYou: [ 'E' ] } },
-    workFor: { dataDD: StringDD, guard: { areYou: [ 'E' ] } },
+    workFor: { dataDD: StringDD, guard: { areYou: [ 'E' ]} },
     employmentType: { dataDD: employmentTypeDD, guard: { areYou: [ 'E' ] } },
     annualSalaryBeforeDeduction: { dataDD: IntegerDD },
     annualIncomeExcludingRent: { dataDD: MoneyDD },

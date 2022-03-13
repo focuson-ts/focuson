@@ -4,23 +4,19 @@ import { TSParams } from "./config";
 import { allRestAndActions, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { sortedEntries } from "@focuson/utils";
 import { addStringToEndOfAllButLast, focusQueryFor } from "./codegen";
-import { Lenses } from "@focuson/lens";
 
 
 export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( r: RestDefnInPageProperties<G> ): string[] => {
   const [ ids, resourceIds ] = findIds ( r.rest )
   let pageDomain = `${params.domainsFile}.${pageDomainName ( p )}`;
   const locals: [ string, LensRestParam ][] = sortedEntries ( r.rest.params ).flatMap ( ( [ n, l ] ) => isRestLens ( l ) ? [ [ n, l ] ] : [] )
-  const localLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: Lenses.identity< ${pageDomain}>()${focusQueryFor ( l.lens )}` )
-  const lensVariableString = `  const localIds = {` + localLens.join ( "," ) + "}"
+  const fddLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: Lenses.identity< ${pageDomain}>()${focusQueryFor ( l.lens )}` )
   return [
     `export function ${restDetailsName ( p, r.rest )} ( cd: NameAndLens<${params.stateName}>, dateFn: DateFn  ): OneRestDetails<${params.stateName}, ${pageDomain}, ${params.domainsFile}.${domainName ( r.rest.dataDD )}, SimpleMessage> {`,
-    `  const paramNameToLens = {...cd,postcode: Lenses.identity<${params.stateName}>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('search')}`,
-    `  const fdd: NameAndLens<${pageDomain}> = {}`,
-    lensVariableString,
+    `  const fdd: NameAndLens<${pageDomain}> = {` + fddLens.join ( "," ) + "}",
     `  return {`,
     `    dLens: Lenses.identity<${pageDomain}>()${focusQueryFor ( r.targetFromPath )},`, //    dLens: Lenses.identity <pageDomains.EAccountsSummaryPageDomain> ().focusQuery ( 'tempCreatePlan' ),
-    `    cd: paramNameToLens, fdd,`,
+    `    cd, fdd,`,
     `    ids: ${JSON.stringify ( ids )},`,
     `    resourceId:  ${JSON.stringify ( resourceIds )},`,
     "    messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],",

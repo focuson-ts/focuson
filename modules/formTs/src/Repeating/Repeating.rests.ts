@@ -5,12 +5,10 @@ import { Lenses, NameAndLens} from "@focuson/lens"
 
 import { FState } from "../common"
 export function Repeating_RepeatingWholeDataRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.RepeatingPageDomain, domains.RepeatingWholeDataDomain, SimpleMessage> {
-  const paramNameToLens = {...cd,postcode: Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('search')}
   const fdd: NameAndLens<domains.RepeatingPageDomain> = {}
-  const localIds = {}
   return {
     dLens: Lenses.identity<domains.RepeatingPageDomain>().focusQuery('fromApi'),
-    cd: paramNameToLens, fdd,
+    cd, fdd,
     ids: ["customerId"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],

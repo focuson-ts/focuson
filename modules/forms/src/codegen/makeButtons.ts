@@ -49,6 +49,7 @@ export function makeGuardButtonVariables<B extends ButtonD, G extends GuardWithC
   return sortedEntries ( p.buttons ).flatMap ( makeButtonGuardVariableFrom ( params, makeGuard, p ) )
 }
 export function makeButtonsFrom<B extends ButtonD, G> ( params: TSParams, makeGuard: MakeGuard<G>, makeButton: MakeButton<G>, p: PageD<B, G> ): string[] {
+  if ( Object.keys ( p.buttons ).length === 0 ) return [ '{}' ]
   return indentList ( indentList ( addBrackets ( `{`, '}' ) ( sortedEntries ( p.buttons ).flatMap ( ( [ name, button ] ) =>
     addBrackets ( `${name}:`, ',' ) ( makeButtonFrom<B, G> ( makeGuard, makeButton ) ( params ) ( p ) ( [ name, button ] ) ) ) ) ) )
 }

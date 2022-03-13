@@ -21,7 +21,7 @@ export interface SimpleDisplayComp {
   import: string;
   name: string;
 }
-export interface DisplayCompD extends SimpleDisplayComp{
+export interface DisplayCompD extends SimpleDisplayComp {
   params: DisplayCompParamD;
 }
 export const commonParams: DisplayCompParamD = {
@@ -34,6 +34,7 @@ export const commonParams: DisplayCompParamD = {
 
 export const stringValidationParams: DisplayCompParamD = {
   required: { paramType: 'boolean', needed: 'no', default: true },
+  pattern: { paramType: 'string', needed: 'no' },
   minlength: { paramType: 'object', needed: 'no' },
   maxlength: { paramType: 'object', needed: 'no' },
 }

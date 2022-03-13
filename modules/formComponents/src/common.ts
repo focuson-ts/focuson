@@ -12,6 +12,7 @@ export interface CommonComponentProps {
 export interface StringValidations {
   minlength?: number;
   maxlength?: number;
+  pattern?: string;
 }
 export interface NumberValidations {
   min?: number;
