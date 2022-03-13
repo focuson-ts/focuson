@@ -22,7 +22,11 @@ export function Radio<S, T, Context> ( { state, mode, enums, ariaLabel, id }: Ra
 
 export interface LabelAndRadioProps<S, T, Context> extends RadioProps<S, T, Context> {
   label: string;
+  buttons: NameAnd<JSX.Element>;
+  button?: string;
+
 }
-export function LabelAndRadio<S, T, Context> ( { state, mode, enums, label, name, ariaLabel, id }: LabelAndRadioProps<S, string, Context> ) {
-  return <div><Label htmlFor={name} label={label}/><span><Radio id={id} state={state} mode={mode} enums={enums} ariaLabel={ariaLabel}/></span></div>
+export function LabelAndRadio<S, T, Context> ( props: LabelAndRadioProps<S, string, Context> ) {
+  const { label, name } = props
+  return <div><Label htmlFor={name} label={label}/><span><Radio {...props}/></span></div>
 }

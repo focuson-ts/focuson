@@ -46,6 +46,8 @@ export const intValidationParams: DisplayCompParamD = {
 export const commonParamsWithLabel: DisplayCompParamD = {
   ...commonParams,
   label: { paramType: 'string', needed: 'defaultToCamelCaseOfName' },
+  buttons: { paramType: 'object', needed: 'defaultToButtons' },
+  button: { paramType: 'string', needed: 'no' }
 }
 export const LabelAndStringInputCD: DisplayCompD = {
   import: "../copied/LabelAndInput", name: "LabelAndStringInput",
