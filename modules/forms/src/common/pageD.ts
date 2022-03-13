@@ -54,6 +54,8 @@ export interface MainPageD<Buttons, G> {
   domain: DomainDefnInPage<G>,
   modals?: ModalData<Buttons, G>[],
   rest: RestDefnInPage<G>,
+  /** The names and order of the visible buttons. If not populated uses definition order */
+  buttonOrder?:string[];
   buttons: ButtonDefnInPage<Buttons>
 }
 export interface ModalPageD<Buttons, G> {
@@ -61,6 +63,7 @@ export interface ModalPageD<Buttons, G> {
   name: string,
   modes: PageMode[],
   display: {target: string[], dataDD: DataD<G>, importFrom: string },
+  buttonOrder?:string[];
   buttons: ButtonDefnInPage<Buttons>
 }
 

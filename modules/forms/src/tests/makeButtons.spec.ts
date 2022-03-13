@@ -22,12 +22,12 @@ describe ( "makeButtons", () => {
       "       rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'create','path':['EAccountsSummary']}}",
       "    />,",
       "    deleteExistingPlan:<RestButton state={state}",
-      "    id='deleteExistingPlan'",
-      "    name='deleteExistingPlan'",
-      "    action='delete'",
-      "    path={['EAccountsSummary','fromApi']}",
-      "    rest='EAccountsSummary_CreatePlanDDRestDetails'",
-      "    confirm={true}",
+      "      id='deleteExistingPlan'",
+      "      name='deleteExistingPlan'",
+      "      action='delete'",
+      "      path={['EAccountsSummary','fromApi']}",
+      "      rest='EAccountsSummary_CreatePlanDDRestDetails'",
+      "      confirm={true}",
       "     />,",
       "    refresh:<button>refresh of type ResetStateButton cannot be created yet</button>,}"
     ] )

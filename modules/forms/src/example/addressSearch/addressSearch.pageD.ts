@@ -28,11 +28,12 @@ export const PostCodeMainPage: ExampleMainPage = {
   rest: {
     postcode: { rest: postcodeRestD, targetFromPath: [ 'postcode', 'searchResults' ], fetcher: true }
   },
+  buttonOrder: [],//hide the search button
   buttons: {
-    // search: {
-    //   control: 'ModalButton', modal: PostCodeModalPage, mode: 'edit',
-    //   focusOn: [ 'postcode' ],
-    //   createEmpty: postCodeSearchDataD,
-    // },
+    search: {
+      control: 'ModalButton', modal: PostCodeModalPage, mode: 'edit',
+      focusOn: [ 'postcode' ],
+      createEmpty: postCodeSearchDataD,
+    },
   },
 }

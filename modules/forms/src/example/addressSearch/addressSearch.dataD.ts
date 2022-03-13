@@ -38,6 +38,6 @@ export const nameAndAddressDataD: DataD<AllGuards> = {
   structure: {
     name: { dataDD: OneLineStringDD },
     ...postCodeDataLineD.structure,
-    postcode: { dataDD: OneLineStringDD }
+    postcode: { dataDD: OneLineStringDD, displayParams: {button: 'search'} }
   }
 }
