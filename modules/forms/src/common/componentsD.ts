@@ -65,7 +65,12 @@ export const LabelAndCheckboxInputCD: DisplayCompD = {
 }
 export const TableCD: DisplayCompD = {
   import: "../copied/table", name: "Table",
-  params: { ...commonParams, order: { paramType: 'string[]', needed: 'yes' } }
+  params: {
+    ...commonParams,
+    order: { paramType: 'string[]', needed: 'yes' },
+    copySelectedIndexTo: { paramType: 'pageState', needed: 'no' },
+    copySelectedItemTo: { paramType: 'pageState', needed: 'no' }
+  }
 }
 export const SelectedItemCD: DisplayCompD = {
   import: "../copied/table",

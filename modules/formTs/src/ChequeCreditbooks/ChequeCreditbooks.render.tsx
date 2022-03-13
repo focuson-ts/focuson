@@ -44,7 +44,7 @@ export function ChequeCreditbooksPage(){
 
 export function ChequeCreditbooksDD({id,state,mode,buttons}: FocusedProps<FState, ChequeCreditbooksDDDomain,Context>){
   return <>
-     {/*{"path":["history"],"dataDD":"ChequeCreditbooksHistoryDD","display":{"import":"","name":"Table","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"order":{"paramType":"string[]","needed":"yes"}}}}*/}
+     {/*{"path":["history"],"dataDD":"ChequeCreditbooksHistoryDD","display":{"import":"","name":"Table","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"order":{"paramType":"string[]","needed":"yes"},"copySelectedIndexTo":{"paramType":"pageState","needed":"no"},"copySelectedItemTo":{"paramType":"pageState","needed":"no"}}}}*/}
     <Table id={`${id}.history`} state={state.focusOn('history')} mode={mode} order={["serialNumber","howOrdered","dateOrder"]} />
 </>
 }

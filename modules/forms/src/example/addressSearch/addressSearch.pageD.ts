@@ -2,6 +2,7 @@ import { ExampleMainPage, ExampleModalPage } from "../common";
 import { nameAndAddressDataD, postCodeSearchDataD } from "./addressSearch.dataD";
 import { Layout } from "@focuson/form_components";
 import { postcodeRestD } from "./addressSearch.restD";
+import { IntegerDD } from "../../common/dataD";
 
 export const PostCodeModalPage: ExampleModalPage = {
   name: "PostCodeSearch",
@@ -20,7 +21,8 @@ export const PostCodeMainPage: ExampleMainPage = {
   display: { dataDD: nameAndAddressDataD, target: [ 'main' ] },
   domain: {
     main: { dataDD: nameAndAddressDataD },
-    postcode: { dataDD: postCodeSearchDataD }
+    postcode: { dataDD: postCodeSearchDataD },
+    selectedPostcodeIndex: { dataDD: IntegerDD },
   },
   initialValue: { main: {}, postcode: { search: '', searchResults: [], addressResults: { line1: 'a', line2: 'b', line3: 'c', line4: 'd' } } },
   modals: [ { modal: PostCodeModalPage, path: [ 'postcode' ] } ],

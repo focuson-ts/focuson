@@ -3,6 +3,7 @@ export interface HasPostCodeDemoPageDomain {   PostCodeDemo?: PostCodeDemoPageDo
 export interface PostCodeDemoPageDomain{
   main?:PostCodeMainPageDomain;
   postcode?:PostCodeSearchDomain;
+  selectedPostcodeIndex?:number;
 }
 
 export type PostCodeDataDomain = PostCodeDataLineDomain[]

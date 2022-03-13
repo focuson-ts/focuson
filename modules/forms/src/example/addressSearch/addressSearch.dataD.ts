@@ -6,10 +6,10 @@ export const postCodeDataLineD: DataD<AllGuards> = {
   name: "PostCodeDataLine",
   description: "",
   structure: {
-    line1: { dataDD: OneLineStringDD },
-    line2: { dataDD: OneLineStringDD },
-    line3: { dataDD: OneLineStringDD },
-    line4: { dataDD: OneLineStringDD }
+    line1: { dataDD: OneLineStringDD, sample: [ '4 Privet drive', '27 Throughput Lane' ] },
+    line2: { dataDD: OneLineStringDD, sample: [ 'Little Whinging', 'Woodfield' ] },
+    line3: { dataDD: OneLineStringDD, sample: [ 'Surrey', '' ] },
+    line4: { dataDD: OneLineStringDD, sample: [ 'England', 'Ireland' ] }
   }
 }
 
@@ -20,7 +20,10 @@ export const postCodeSearchResponse: RepeatingDataD<AllGuards> = {
   dataDD: postCodeDataLineD,
   paged: false,
   display: TableCD,
-  displayParams: { order: { value: [ 'line1', 'line2', 'line3', 'line4' ] } }
+  displayParams: {
+    order: { value: [ 'line1', 'line2', 'line3', 'line4' ] },
+    copySelectedItemTo: { value: [ 'postcode', 'addressResults' ] }
+  }
 }
 
 export const postCodeSearchDataD: DataD<AllGuards> = {
@@ -29,7 +32,7 @@ export const postCodeSearchDataD: DataD<AllGuards> = {
   structure: {
     search: { dataDD: OneLineStringDD, sample: [ 'LS21 3EY' ] },
     searchResults: { dataDD: postCodeSearchResponse },
-    addressResults: {dataDD: postCodeDataLineD}
+    addressResults: { dataDD: postCodeDataLineD }
   }
 }
 
@@ -39,6 +42,6 @@ export const nameAndAddressDataD: DataD<AllGuards> = {
   structure: {
     name: { dataDD: OneLineStringDD },
     ...postCodeDataLineD.structure,
-    postcode: { dataDD: OneLineStringDD, displayParams: {button: 'search'} }
+    postcode: { dataDD: OneLineStringDD, displayParams: { button: 'search' } }
   }
 }

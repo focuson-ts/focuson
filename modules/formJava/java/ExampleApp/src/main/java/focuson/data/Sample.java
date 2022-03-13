@@ -213,28 +213,28 @@ public class Sample{
   public static List samplePostCodeData0 =  parse.parseList(
          "["+
          "  {"+
-         "    \"line1\": \"This is a one line string\","+
-         "    \"line2\": \"This is a one line string\","+
-         "    \"line3\": \"This is a one line string\","+
-         "    \"line4\": \"This is a one line string\""+
+         "    \"line1\": \"4 Privet drive\","+
+         "    \"line2\": \"Little Whinging\","+
+         "    \"line3\": \"Surrey\","+
+         "    \"line4\": \"England\""+
          "  }"+
          "]"
   );
   public static Map samplePostCodeDataLine0 =  parse.parseMap(
          "{"+
-         "  \"line1\": \"This is a one line string\","+
-         "  \"line2\": \"This is a one line string\","+
-         "  \"line3\": \"This is a one line string\","+
-         "  \"line4\": \"This is a one line string\""+
+         "  \"line1\": \"4 Privet drive\","+
+         "  \"line2\": \"Little Whinging\","+
+         "  \"line3\": \"Surrey\","+
+         "  \"line4\": \"England\""+
          "}"
   );
   public static Map samplePostCodeMainPage0 =  parse.parseMap(
          "{"+
          "  \"name\": \"This is a one line string\","+
-         "  \"line1\": \"This is a one line string\","+
-         "  \"line2\": \"This is a one line string\","+
-         "  \"line3\": \"This is a one line string\","+
-         "  \"line4\": \"This is a one line string\","+
+         "  \"line1\": \"4 Privet drive\","+
+         "  \"line2\": \"Little Whinging\","+
+         "  \"line3\": \"Surrey\","+
+         "  \"line4\": \"England\","+
          "  \"postcode\": \"This is a one line string\""+
          "}"
   );
@@ -243,17 +243,17 @@ public class Sample{
          "  \"search\": \"LS21 3EY\","+
          "  \"searchResults\": ["+
          "    {"+
-         "      \"line1\": \"This is a one line string\","+
-         "      \"line2\": \"This is a one line string\","+
-         "      \"line3\": \"This is a one line string\","+
-         "      \"line4\": \"This is a one line string\""+
+         "      \"line1\": \"4 Privet drive\","+
+         "      \"line2\": \"Little Whinging\","+
+         "      \"line3\": \"Surrey\","+
+         "      \"line4\": \"England\""+
          "    }"+
          "  ],"+
          "  \"addressResults\": {"+
-         "    \"line1\": \"This is a one line string\","+
-         "    \"line2\": \"This is a one line string\","+
-         "    \"line3\": \"This is a one line string\","+
-         "    \"line4\": \"This is a one line string\""+
+         "    \"line1\": \"4 Privet drive\","+
+         "    \"line2\": \"Little Whinging\","+
+         "    \"line3\": \"Surrey\","+
+         "    \"line4\": \"England\""+
          "  }"+
          "}"
   );

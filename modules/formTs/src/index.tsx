@@ -13,7 +13,7 @@ import { DebugState } from "@focuson/focuson";
 import { commonIds } from "../../formTs/src/common";
 const config: FocusOnConfig<FState, Context, SimpleMessage> = {
   /** How data is sent to/fetched from apis */
-  fetchFn: fetchWithDelay ( 1000, fetchWithPrefix ( 'http://localhost:8080', loggingFetchFn ) ),
+  fetchFn: fetchWithDelay ( 1, fetchWithPrefix ( 'http://localhost:8080', loggingFetchFn ) ),
   /**A hook that is called before anything else.  */
   preMutate: ( s: FState ) => s,
   /** A hook that is called after everything else.  */
