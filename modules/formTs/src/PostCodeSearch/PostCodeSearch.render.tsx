@@ -23,6 +23,7 @@ export function PostCodeSearchPage(){
 const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,
     commit:<ModalCommitButton id='commit'  state={state} />,}
           return (<Layout  details=''>
+           {/*{"dataDD":"PostCodeSearch","display":{"import":"","name":"PostCodeSearch","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <PostCodeSearch id={`${id}`} state={state} mode={mode} buttons={buttons} />
           { buttons.cancel } 
           { buttons.commit } 

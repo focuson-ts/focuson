@@ -23,6 +23,7 @@ export function RepeatingLinePage(){
 const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,
     commit:<ModalCommitButton id='commit'  state={state} />,}
           return (<Layout  details='[2][2]'>
+           {/*{"dataDD":"RepeatingLine","display":{"import":"","name":"RepeatingLine","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <RepeatingLine id={`${id}`} state={state} mode={mode} buttons={buttons} />
           { buttons.cancel } 
           { buttons.commit } 

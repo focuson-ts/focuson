@@ -5,7 +5,6 @@ import { allRestAndActions, isMainPage, MainPageD, PageD, RestDefnInPageProperti
 import { sortedEntries } from "@focuson/utils";
 import { addStringToEndOfAllButLast, focusQueryFor } from "./codegen";
 import { Lenses } from "@focuson/lens";
-import { FState } from "ExampleApp/src/common";
 
 
 export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( r: RestDefnInPageProperties<G> ): string[] => {

@@ -24,6 +24,7 @@ const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,
     commit:<ModalCommitButton id='commit' validate={true}  state={state} />,
     validate:<ValidationButton  id='validate'   name='validate'  />,}
           return (<Layout  details='[3]'>
+           {/*{"dataDD":"OccupationIncomeDetailsDD","display":{"import":"","name":"OccupationIncomeDetailsDD","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <OccupationIncomeDetailsDD id={`${id}`} state={state} mode={mode} buttons={buttons} />
           { buttons.cancel } 
           { buttons.commit } 

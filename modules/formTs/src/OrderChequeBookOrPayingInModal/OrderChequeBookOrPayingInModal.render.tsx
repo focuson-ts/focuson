@@ -23,6 +23,7 @@ export function OrderChequeBookOrPayingInModalPage(){
 const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,
     commit:<ModalCommitButton id='commit'  state={state} />,}
           return (<Layout  details='[3]'>
+           {/*{"dataDD":"ChequeCreditbooksHistoryLineDD","display":{"import":"","name":"ChequeCreditbooksHistoryLineDD","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <ChequeCreditbooksHistoryLineDD id={`${id}`} state={state} mode={mode} buttons={buttons} />
           { buttons.cancel } 
           { buttons.commit } 

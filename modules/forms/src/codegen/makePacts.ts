@@ -6,10 +6,6 @@ import { restDetailsName, sampleName, samplesFileName } from "./names";
 import { defaultRestAction, isRestLens, LensRestParam, makeCommonParamsValueForTest, RestActionDetail, RestD } from "../common/restD";
 import { TSParams } from "./config";
 import { focusQueryFor, indentList } from "./codegen";
-import { emptyState, FState } from "ExampleApp/src/common";
-import * as fetchers from "ExampleApp/src/fetchers";
-import * as samples from "ExampleApp/src/PostCodeDemo/PostCodeDemo.samples";
-import * as rests from "ExampleApp/src/rests";
 
 
 interface CommonPactProps extends NameAnd<string> {

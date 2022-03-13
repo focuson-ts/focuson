@@ -23,6 +23,7 @@ export function ListOccupationsModalPage(){
 const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,
     commit:<ModalCommitButton id='commit'  state={state} />,}
           return (<Layout  details='[3]'>
+           {/*{"dataDD":"ListOccupationsDD","display":{"import":"","name":"SearchList","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <SearchList id={`${id}`} state={state} mode={mode} />
           { buttons.cancel } 
           { buttons.commit } 

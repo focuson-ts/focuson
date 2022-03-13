@@ -1,4 +1,4 @@
-import { AllDataDD, AllDataFlatMap, CompDataD, DataD, emptyDataFlatMap, flatMapDD, isDataDd, isPrimDd, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
+import { AllDataDD, AllDataFlatMap, CompDataD, DataD, emptyDataFlatMap, flatMapDD, isDataDd, isPrimDd, isRepeatingDd, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
 import { commonParams, DisplayCompD, OneDisplayCompParamD } from "../common/componentsD";
 import { dataDsIn, isMainPage, isModalPage, PageD } from "../common/pageD";
 
@@ -45,24 +45,31 @@ export interface ComponentDisplayParams {
 }
 
 
-export function listComponentsInFolder<G> (): AllDataFlatMap<AllComponentData<G>, G> {
-  return {
-    stopAtDisplay: true,
-    ...emptyDataFlatMap (),
-    walkDataStart: ( path: string[], parents: DataD<G>[], oneDataDD: OneDataDD<G> | undefined, dataDD: DataD<G> ): AllComponentData<G>[] =>
-      dataDD.display ? [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display, hidden: oneDataDD.hidden, guard: oneDataDD.guard } ] : [],
+export const listComponentsIn = <G> ( dataDD: CompDataD<G> ): AllComponentData<G>[] => {
+  if ( isRepeatingDd ( dataDD ) ) return [] //for now
+  if ( isPrimDd ( dataDD ) ) throw  Error ( 'Showing a primitive... do we want this? I guess why not... might be a string. For now an error' );
 
-    walkPrim: ( path: string[], parents: DataD<G>[], oneDataDD: OneDataDD<G> | undefined, dataDD: PrimitiveDD ): AllComponentData<G>[] =>
-      dataDD.display ?
-        [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display, hidden: oneDataDD.hidden, guard: oneDataDD.guard } ] :
-        [ { path, dataDD, error: `Component ${JSON.stringify ( dataDD )} with displayParams [${JSON.stringify ( oneDataDD?.displayParams )}] does not have a display` } ],
+  return Object.entries ( dataDD.structure ).map ( ( [ n, oneDataDD ] ) => {
+    const child = oneDataDD.dataDD
+    if ( isPrimDd ( child ) ) {
+      const c: AllComponentData<G> = {
+        displayParams: oneDataDD.displayParams,
+        path: [ n ],
+        dataDD: child,
+        display: child.display,
+        hidden: oneDataDD.hidden,
+        guard: oneDataDD.guard
+      }
+      return c
+    }
+    const c = componentDataForPage ( child )
+    delete c.path
+    return { path: [ n ], ...c } //just to get format nice on o/p
 
-    walkRepStart: ( path: string[], parents: DataD<G>[], oneDataDD: OneDataDD<G> | undefined, dataDD: RepeatingDataD<G> ): AllComponentData<G>[] =>
-      [ { path, displayParams: oneDataDD?.displayParams, dataDD, display: dataDD.display, hidden: oneDataDD.hidden, guard: oneDataDD.guard } ]
-  }
-}
+  } )
 
-export const listComponentsIn = <G> ( dataDD: AllDataDD<G> ): AllComponentData<G>[] => flatMapDD ( dataDD, listComponentsInFolder () );
+  // return flatMapDD ( dataDD, listComponentsInFolder () );
+};
 
 export const processParam = <G> ( path: string[], dataDD: AllDataDD<G>, dcd: DisplayCompD ) => ( name: string, s: number | string | string[] | boolean ) => {
   const dcdType: OneDisplayCompParamD<any> = dcd.params[ name ]
@@ -119,11 +126,14 @@ export function createOneReact<B, G> ( { path, dataDD, display, displayParams, g
   const guardPrefix = guard ? sortedEntries ( guard ).map ( ( [ n, guard ] ) =>
     `<Guard value={${guardName ( n )}} cond={${JSON.stringify ( guard )}}>` ).join ( '' ) : ''
   const guardPostfix = guard ? sortedEntries ( guard ).map ( ( [ n, guard ] ) => `</Guard>` ).join ( '' ) : ''
-  const buttons = isDataDd(dataDD) && !dataDD.display ? 'buttons={buttons} ': ''
+  const buttons = isDataDd ( dataDD ) && !dataDD.display ? 'buttons={buttons} ' : ''
   return [ `${guardPrefix}<${name} ${displayParamsString} ${buttons}/>${guardPostfix}` ]
 }
 export function createAllReactCalls<G> ( d: AllComponentData<G>[] ): string[] {
-  return d.filter ( ds => isComponentData ( ds ) && !ds.hidden ).flatMap ( d => isErrorComponentData ( d ) ? [ d.error ] : createOneReact ( d ) )
+  return d.filter ( ds => isComponentData ( ds ) && !ds.hidden ).flatMap ( d => {
+    const comment = isComponentData ( d ) ? [ " {/*" + JSON.stringify ( { ...d, dataDD: d.dataDD?.name } ) + '*/}' ] : []
+    return isErrorComponentData ( d ) ? [ d.error ] : [ ...comment, ...createOneReact ( d ) ];
+  } )
 }
 
 export const createReactComponent = <G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G> ) => ( dataD: CompDataD<G> ): string[] => {
@@ -179,9 +189,9 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
     `export function ${pageComponentName ( pageD )}(){`,
     `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${pageD.name}' ) ( s => s${focus}) (
     ( fullState, state , full, d, mode) => {`,
-    ...indentList(makeGuardButtonVariables ( params, makeGuard, pageD )),
+    ...indentList ( makeGuardButtonVariables ( params, makeGuard, pageD ) ),
     `  const id='root';`,
-    ...indentList(makeButtonsVariable ( params, makeGuard, makeButtons, pageD )),
+    ...indentList ( makeButtonsVariable ( params, makeGuard, makeButtons, pageD ) ),
     '',
     `  return (<${layout.name}  details='${layout.details}'>`,
     ...indentList ( indentList ( indentList ( [
