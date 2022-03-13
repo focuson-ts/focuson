@@ -1,10 +1,10 @@
-import { AllDataDD, AllDataFlatMap, CompDataD, DataD, emptyDataFlatMap, flatMapDD, isDataDd, isPrimDd, isRepeatingDd, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
-import { commonParams, DisplayCompD, OneDisplayCompParamD } from "../common/componentsD";
+import { AllDataDD, CompDataD, isDataDd, isPrimDd, isRepeatingDd } from "../common/dataD";
+import { commonParams, DisplayCompD, OneDisplayCompParamD, SimpleDisplayComp } from "../common/componentsD";
 import { dataDsIn, isMainPage, isModalPage, PageD } from "../common/pageD";
 
 import { decamelize, NameAnd, sortedEntries } from "@focuson/utils";
 import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, pageComponentName, pageDomainName } from "./names";
-import { addButtonsFromVariables, MakeButton, makeButtonsFrom, makeButtonsVariable, makeGuardButtonVariables } from "./makeButtons";
+import { addButtonsFromVariables, MakeButton, makeButtonsVariable, makeGuardButtonVariables } from "./makeButtons";
 import { focusOnFor, indentList, noExtension } from "./codegen";
 import { TSParams } from "./config";
 import { unique } from "../common/restD";
@@ -132,7 +132,10 @@ export function createOneReact<B, G> ( { path, dataDD, display, displayParams, g
 export function createAllReactCalls<G> ( d: AllComponentData<G>[] ): string[] {
   return d.filter ( ds => isComponentData ( ds ) && !ds.hidden ).flatMap ( d => {
     const comment = isComponentData ( d ) ? [ " {/*" + JSON.stringify ( { ...d, dataDD: d.dataDD?.name } ) + '*/}' ] : []
-    return isErrorComponentData ( d ) ? [ d.error ] : [ ...comment, ...createOneReact ( d ) ];
+    if ( isErrorComponentData ( d ) ) return [ d.error ]
+    const comp = [ ...comment, ...createOneReact ( d ) ]
+    return comp
+    // return layout ? [ `<${layout.name}  details='${layout.details}'>`, ...comp, `</${layout.name}>)})}` ] : comp;
   } )
 }
 
@@ -144,12 +147,15 @@ export const createReactComponent = <G extends GuardWithCondition> ( params: TSP
     return maker.makeGuardVariable ( name, guard )
     // return `const ${guardName ( name )} = state.chainLens(Lenses.fromPath(${JSON.stringify ( guard.pathFromHere )})).optJson();console.log('${guardName ( name )}', ${guardName ( name )})`;
   } ) : []
+  const layout = dataD.layout
+  const layoutPrefixString = layout ? `<${layout.component.name} ${Object.entries ( layout.params ).map ( ( [ n, v ] ) => `${n}='${v}'` )}>` : '<>'
+  const layoutPostfixString = layout ? `</${layout.component.name}>` : '</>'
   return [
     `export function ${componentName ( dataD )}({id,state,mode,buttons}: FocusedProps<${params.stateName}, ${domainName ( dataD )},Context>){`,
     ...guardStrings,
-    "  return(<>",
+    `  return ${layoutPrefixString}`,
     ...contents,
-    "</>)",
+    layoutPostfixString,
     '}', ''
   ]
 };
@@ -163,27 +169,26 @@ export const createReactPageComponent = <B extends ButtonD, G extends GuardWithC
 };
 
 export function createReactModalPageComponent<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButtons: MakeButton<G>, pageD: PageD<B, G> ): string[] {
-  const { dataDD, layout } = pageD.display
+  const { dataDD } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
   const domName = domainName ( pageD.display.dataDD );
   return [
     `export function ${pageComponentName ( pageD )}(){`,
     `  return focusedPage<${params.stateName}, ${domName}, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page`,
     `     ( state, d, mode ) => {`,
-    ...makeGuardButtonVariables ( params, makeGuard, pageD ),
-    `          const id='root';`,
-    ...makeButtonsVariable ( params, makeGuard, makeButtons, pageD ),
-    `          return (<${layout.name}  details='${layout.details}'>`,
     ...(indentList ( indentList ( indentList ( indentList ( indentList ( [
+      ...makeGuardButtonVariables ( params, makeGuard, pageD ),
+      `const id='root';`,
+      ...makeButtonsVariable ( params, makeGuard, makeButtons, pageD ),
+      `return <div className='modalPage'>`,
       ...createAllReactCalls ( [ componentDataForPage ( pageD.display.dataDD ) ] ),
-      ...addButtonsFromVariables ( pageD )
+      ...addButtonsFromVariables ( pageD ),
+      `</div>})}`
     ] ) ) ) ) )),
-    `            </${layout.name}>)})}`,
-    ''
   ]
 }
 export function createReactMainPageComponent<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButtons: MakeButton<G>, pageD: PageD<B, G> ): string[] {
-  const { dataDD, layout } = pageD.display
+  const { dataDD } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
   return [
     `export function ${pageComponentName ( pageD )}(){`,
@@ -193,12 +198,12 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
     `  const id='root';`,
     ...indentList ( makeButtonsVariable ( params, makeGuard, makeButtons, pageD ) ),
     '',
-    `  return (<${layout.name}  details='${layout.details}'>`,
     ...indentList ( indentList ( indentList ( [
+      `return <div className='mainPage'>`,
       ...indentList ( indentList ( createAllReactCalls ( [ componentDataForPage ( pageD.display.dataDD ), ] ) ) ),
-      ...addButtonsFromVariables ( pageD )
+      ...addButtonsFromVariables ( pageD ),
+      `</div>})}`
     ] ) ) ),
-    `   </${layout.name}>)})}`,
     ''
   ]
 }
@@ -216,7 +221,6 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
   const pageComponents = pages.flatMap ( p => createReactPageComponent ( params, makeGuard, makeButton, p ) )
   const imports = [
     `import { LensProps } from "@focuson/state";`,
-    `import { Layout } from "../copied/layout";`,
     `import { FocusOnContext } from '@focuson/focuson';`,
     `import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from "@focuson/pages";`,
     `import { Context, FocusedProps, ${params.stateName} } from "../${params.commonFile}";`,
@@ -238,9 +242,11 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
 
 
 export function makeComponentImports<B, G> ( ps: PageD<B, G>[] ): string[] {
-  let allItemsWithDisplay: DisplayCompD[] = sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ d, n ] ) => isDataDd ( n ) ? sortedEntries ( n.structure ).map ( a => a[ 1 ].dataDD ) : [] ).filter ( d => d.display ).map ( d => d.display );
-  let fromPageDisplay: DisplayCompD[] = ps.flatMap ( p => p.display.dataDD.display ? [ p.display.dataDD.display ] : [] )
-  return unique ( [ ...allItemsWithDisplay, ...fromPageDisplay ], d => `${d.import}/${d.name}` ).map ( d => `import { ${d.name} } from '${d.import}';` )
+  let dataDs = sortedEntries ( dataDsIn ( ps ) );
+  let allItemsWithDisplay: SimpleDisplayComp[] = dataDs.flatMap ( ( [ d, n ] ) => isDataDd ( n ) ? sortedEntries ( n.structure ).map ( a => a[ 1 ].dataDD ) : [] ).filter ( d => d.display ).map ( d => d.display );
+  let allLayouts: SimpleDisplayComp[] = dataDs.flatMap ( ( [ n, dataD ] ) => dataD.layout ? [ dataD.layout.component ] : [] )
+  let fromPageDisplay: SimpleDisplayComp[] = ps.flatMap ( p => p.display.dataDD.display ? [ p.display.dataDD.display ] : [] )
+  return unique ( [ ...allItemsWithDisplay, ...fromPageDisplay, ...allLayouts ], d => `${d.import}/${d.name}` ).map ( d => `import { ${d.name} } from '${d.import}';` )
 }
 export function makeButtonImports<B, G> ( transformButtons: MakeButton<G> ): string[] {
   return unique ( sortedEntries ( transformButtons ).map ( ( [ name, creator ] ) => `import {${name}} from '${creator.import}';` ), x => x )

@@ -1,6 +1,6 @@
 import { ContactTitle, CustomerStatus, EmploymentType, HowOften, YesNo } from "./occupationAndIncome.domain";
 import { DataD, DateDD, IntegerDD, MoneyDD, OneLineStringDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
-import { commonParams, DisplayCompD, LabelAndStringInputCD, SelectedItemCD, TableCD } from "../../common/componentsD";
+import { commonParams, DisplayCompD, LabelAndStringInputCD, LayoutCd, SelectedItemCD, TableCD } from "../../common/componentsD";
 import { AllGuards } from "../../buttons/guardButton";
 
 
@@ -23,7 +23,7 @@ export const otherIncomeResponseDD: DataD<AllGuards> = {
     amount: { dataDD: IntegerDD }
   }
 }
-export const otherSourcesOfIncomeDataDD: RepeatingDataD <AllGuards> = {
+export const otherSourcesOfIncomeDataDD: RepeatingDataD<AllGuards> = {
   paged: false,
   display: TableCD,
   name: "OtherIncomeDataDD",
@@ -34,7 +34,7 @@ export const otherSourcesOfIncomeDataDD: RepeatingDataD <AllGuards> = {
 /* ---------------- OTHER SOURCES OF INCOME END ---------------- */
 
 /* ---------------- SELF EMPLOYED ADDITIONAL INFORMATION START ---------------- */
-export const businessDetailsDD: DataD <AllGuards> = {
+export const businessDetailsDD: DataD<AllGuards> = {
   name: 'BusinessDetailsDD',
   description: 'This is a summary about business details data',
   structure: {
@@ -101,7 +101,7 @@ export const accountDetailsDD: DataD<AllGuards> = {
     telephone: { dataDD: StringDD }
   }
 }
-export const selfEmployedAdditionalInformationDD: DataD <AllGuards> = {
+export const selfEmployedAdditionalInformationDD: DataD<AllGuards> = {
   name: 'SelfEmployedAdditionalInformationDD',
   description: 'This is a summary about self employed additional information data',
   structure: {
@@ -163,6 +163,7 @@ export const occupationIncomeDetailsDD: DataD<AllGuards> = {
   name: "OccupationIncomeDetailsDD",
   description: "This is a summary about occupation income details data of a single occupation",
   guards: { areYou: { condition: 'in', path: [ 'areYou' ], values: customerStatusDD.enum } },
+  layout: { component: LayoutCd, params: { details: '[1][3,3][5]' } },
   structure: {
     areYou: { dataDD: customerStatusDD },
     currentEmployment: { dataDD: yesNoDD, guard: { areYou: [ 'E', 'S' ] } },
@@ -205,7 +206,6 @@ export const customerOccupationIncomeDetailsDD: RepeatingDataD<AllGuards> = {
 export const occupationAndIncomeDetailsDD: DataD<AllGuards> = {
   name: 'OccupationAndIncomeDetailsDD',
   description: 'This is a summary about occupation and income details data',
-
   structure: {
     regulatoryReport: { dataDD: StringDD, hidden: true },
     mainCustomerName: { dataDD: StringDD },
@@ -218,7 +218,7 @@ export const occupationAndIncomeDetailsDD: DataD<AllGuards> = {
 /* ---------------- OCCUPATION AND INCOME DETAILS END ---------------- */
 
 /* ---------------- OCCUPATION AND INCOME SUMMARY START ---------------- */
-export const occupationAndIncomeSummaryDD: DataD <AllGuards> = {
+export const occupationAndIncomeSummaryDD: DataD<AllGuards> = {
   name: "OccupationAndIncomeSummaryDD",
   description: "This is the summary data about all the occupation and income details for a single user",
   structure: {
@@ -231,7 +231,7 @@ export const occupationAndIncomeSummaryDD: DataD <AllGuards> = {
 /* ---------------- OCCUPATION AND INCOME SUMMARY END ---------------- */
 
 
-export const occupationDescriptionResponseDD: DataD<AllGuards>  = {
+export const occupationDescriptionResponseDD: DataD<AllGuards> = {
   name: 'OccupationDescriptionResponseDD',
   description: 'This is a summary about occupation description dropdown',
   structure: {
@@ -260,12 +260,12 @@ export const occupationsListDD: RepeatingDataD<AllGuards> = {
   description: "This is a list of all the occupations",
   dataDD: occupationDescriptionResponseDD
 }
-export const listOccupationsDD:  DataD <AllGuards> = {
+export const listOccupationsDD: DataD<AllGuards> = {
   name: "ListOccupationsDD",
   description: "This is the search occupation popup",
   display: SearchListCD,
   structure: {
-    searchField: { dataDD: StringDD , displayParams: { label: 'Search: ' }},
+    searchField: { dataDD: StringDD, displayParams: { label: 'Search: ' } },
     occupationsList: { dataDD: occupationsListDD }
   },
 }

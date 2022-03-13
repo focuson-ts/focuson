@@ -2,7 +2,6 @@ import { AllDataDD, CompDataD, DataD, findAllDataDs, isDataDd, NamesAndDataDs } 
 import { defaultRestAction, RestActionDetail, RestD, unique } from "./restD";
 import { RestAction, RestResult, sortedEntries } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
-import { AllButtonsInPage } from "../buttons/allButtons";
 
 
 export interface DomainDefnInPage<G> {
@@ -31,10 +30,7 @@ export interface RestOnCommit {
 export interface ButtonDefnInPage<B> {
   [ name: string ]: B
 }
-export interface LayoutD {
-  name: string,
-  details: string // ok not sure what to do here... so this is just a placeholder
-}
+
 export type PageType = 'MainPage' | 'ModalPage'
 export interface ModalData<B, G> {
   modal: PageD<B, G>,
@@ -53,7 +49,7 @@ export interface MainPageD<Buttons, G> {
   pageType: 'MainPage',
   name: string,
   modes: PageMode[],
-  display: { layout: LayoutD, target: string[], dataDD: CompDataD<G> },
+  display: {  target: string[], dataDD: CompDataD<G> },
   initialValue: 'empty' | any,
   domain: DomainDefnInPage<G>,
   modals?: ModalData<Buttons, G>[],
@@ -64,7 +60,7 @@ export interface ModalPageD<Buttons, G> {
   pageType: 'ModalPage',
   name: string,
   modes: PageMode[],
-  display: { layout: LayoutD, target: string[], dataDD: DataD<G>, importFrom: string },
+  display: {target: string[], dataDD: DataD<G>, importFrom: string },
   buttons: ButtonDefnInPage<Buttons>
 }
 

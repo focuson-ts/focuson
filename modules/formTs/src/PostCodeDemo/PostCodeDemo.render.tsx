@@ -1,7 +1,6 @@
 import * as domain from '../PostCodeDemo/PostCodeDemo.domains';
 import * as empty from '../PostCodeDemo/PostCodeDemo.empty';
 import { LensProps } from "@focuson/state";
-import { Layout } from "../copied/layout";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from "@focuson/pages";
 import { Context, FocusedProps, FState } from "../common";
@@ -32,14 +31,14 @@ export function PostCodeDemoPage(){
         createEmpty={empty.emptyPostCodeSearch}
       />,}
 
-  return (<Layout  details=''>
+      return <div className='mainPage'>
            {/*{"dataDD":"PostCodeMainPage","display":{"import":"","name":"PostCodeMainPage","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <PostCodeMainPage id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.search } 
-   </Layout>)})}
+      </div>})}
 
 export function postCodeDataLine({id,state,mode,buttons}: FocusedProps<FState, postCodeDataLineDomain,Context>){
-  return(<>
+  return <>
      {/*{"path":["line1"],"dataDD":"OneLineStringDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndStringInput id={`${id}.line1`} state={state.focusOn('line1')} mode={mode} label='line1' required={true} />
      {/*{"path":["line2"],"dataDD":"OneLineStringDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
@@ -48,11 +47,11 @@ export function postCodeDataLine({id,state,mode,buttons}: FocusedProps<FState, p
     <LabelAndStringInput id={`${id}.line3`} state={state.focusOn('line3')} mode={mode} label='line3' required={true} />
      {/*{"path":["line4"],"dataDD":"OneLineStringDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndStringInput id={`${id}.line4`} state={state.focusOn('line4')} mode={mode} label='line4' required={true} />
-</>)
+</>
 }
 
 export function PostCodeMainPage({id,state,mode,buttons}: FocusedProps<FState, PostCodeMainPageDomain,Context>){
-  return(<>
+  return <>
      {/*{"path":["name"],"dataDD":"OneLineStringDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='name' required={true} />
      {/*{"path":["line1"],"dataDD":"OneLineStringDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
@@ -65,14 +64,14 @@ export function PostCodeMainPage({id,state,mode,buttons}: FocusedProps<FState, P
     <LabelAndStringInput id={`${id}.line4`} state={state.focusOn('line4')} mode={mode} label='line4' required={true} />
      {/*{"path":["postcode"],"dataDD":"OneLineStringDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndStringInput id={`${id}.postcode`} state={state.focusOn('postcode')} mode={mode} label='postcode' required={true} />
-</>)
+</>
 }
 
 export function PostCodeSearch({id,state,mode,buttons}: FocusedProps<FState, PostCodeSearchDomain,Context>){
-  return(<>
+  return <>
      {/*{"path":["search"],"dataDD":"OneLineStringDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndStringInput id={`${id}.search`} state={state.focusOn('search')} mode={mode} label='search' required={true} />
      {/*{"path":["searchResults"],"dataDD":"PostCodeData","display":{"import":"","name":"Table","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"order":{"paramType":"string[]","needed":"yes"}}}}*/}
     <Table id={`${id}.searchResults`} state={state.focusOn('searchResults')} mode={mode} order={["line1","line2","line3","line4"]} />
-</>)
+</>
 }

@@ -1,5 +1,4 @@
 import { LensProps } from "@focuson/state";
-import { Layout } from "../copied/layout";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from "@focuson/pages";
 import { Context, FocusedProps, FState } from "../common";
@@ -20,13 +19,13 @@ export function OccupationIncomeModalPDPage(){
   return focusedPage<FState, OccupationIncomeDetailsDDDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
      ( state, d, mode ) => {
           const id='root';
-const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,
-    commit:<ModalCommitButton id='commit' validate={true}  state={state} />,
-    validate:<ValidationButton  id='validate'   name='validate'  />,}
-          return (<Layout  details='[3]'>
+          const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,
+              commit:<ModalCommitButton id='commit' validate={true}  state={state} />,
+              validate:<ValidationButton  id='validate'   name='validate'  />,}
+          return <div className='modalPage'>
            {/*{"dataDD":"OccupationIncomeDetailsDD","display":{"import":"","name":"OccupationIncomeDetailsDD","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <OccupationIncomeDetailsDD id={`${id}`} state={state} mode={mode} buttons={buttons} />
           { buttons.cancel } 
           { buttons.commit } 
           { buttons.validate } 
-            </Layout>)})}
+          </div>})}

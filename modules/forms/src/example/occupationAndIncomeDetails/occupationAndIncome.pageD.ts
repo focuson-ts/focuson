@@ -10,7 +10,7 @@ export const occupationIncomeModalPD: ExampleModalPage = {
   /** This page can only view data */
   modes: [ 'view', 'create', 'edit' ],
   /** How we display the page.*/
-  display: { layout: { name: 'Layout', details: '[3]' }, target: [], dataDD: occupationIncomeDetailsDD, importFrom: 'OccupationAndIncomeSummary' },
+  display: {target: [], dataDD: occupationIncomeDetailsDD, importFrom: 'OccupationAndIncomeSummary' },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -25,7 +25,7 @@ export const otherSourcesOfIncomeModalPD: ExampleModalPage = {
 
   modes: [ 'edit' ],
   /** How we display the page.*/
-  display: { layout: { name: 'Layout', details: '[3]' }, target: [], dataDD: otherIncomeResponseDD, importFrom: 'OccupationAndIncomeSummary' },
+  display: {  target: [], dataDD: otherIncomeResponseDD, importFrom: 'OccupationAndIncomeSummary' },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -37,7 +37,7 @@ export const listOccupationsModalPD: ExampleModalPage = {
   pageType: 'ModalPage',
   modes: [ 'edit' ],
   /** How we display the page.*/
-  display: { layout: { name: 'Layout', details: '[3]' }, target: [], dataDD: listOccupationsDD, importFrom: 'OccupationAndIncomeSummary' },
+  display: { target: [], dataDD: listOccupationsDD, importFrom: 'OccupationAndIncomeSummary' },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -55,7 +55,7 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
   modals: [
     { modal: occupationIncomeModalPD, path: [] },
     { modal: listOccupationsModalPD, path: [] } ], // TODO square brackets
-  display: { layout: { name: 'Layout', details: '[1][3,3][5]' }, target: [ 'fromApi' ], dataDD: occupationAndIncomeDetailsDD },
+  display: {target: [ 'fromApi' ], dataDD: occupationAndIncomeDetailsDD },
   /** When the page is selected for the first time this is the initial state */
   initialValue: {
     selectedItem: 0

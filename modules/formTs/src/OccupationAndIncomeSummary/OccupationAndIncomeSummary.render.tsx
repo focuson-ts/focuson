@@ -1,7 +1,6 @@
 import * as domain from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains';
 import * as empty from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.empty';
 import { LensProps } from "@focuson/state";
-import { Layout } from "../copied/layout";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from "@focuson/pages";
 import { Context, FocusedProps, FState } from "../common";
@@ -12,6 +11,7 @@ import { ListItemsCD } from '../copied/listItems';
 import { LabelAndStringInput } from '../copied/LabelAndInput';
 import { SelectedItem } from '../copied/table';
 import { LabelAndNumberInput } from '../copied/LabelAndInput';
+import { Layout } from '../copied/layout';
 import {ListNextButton} from '../copied/listNextPrevButtons';
 import {ListPrevButton} from '../copied/listNextPrevButtons';
 import {ModalButton} from '@focuson/pages';
@@ -54,32 +54,32 @@ export function OccupationAndIncomeSummaryPage(){
         <ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />
       </GuardButton>,}
 
-  return (<Layout  details='[1][3,3][5]'>
+      return <div className='mainPage'>
            {/*{"dataDD":"OccupationAndIncomeDetailsDD","display":{"import":"","name":"OccupationAndIncomeDetailsDD","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <OccupationAndIncomeDetailsDD id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.nextOccupation } 
       { buttons.prevOccupation } 
       { buttons.addEntry } 
       { buttons.edit } 
-   </Layout>)})}
+      </div>})}
 
 export function OccupationAndIncomeDetailsDD({id,state,mode,buttons}: FocusedProps<FState, OccupationAndIncomeDetailsDDDomain,Context>){
-  return(<>
+  return <>
      {/*{"path":["mainCustomerName"],"dataDD":"StringDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndStringInput id={`${id}.mainCustomerName`} state={state.focusOn('mainCustomerName')} mode={mode} label='main customer name' required={true} />
      {/*{"path":["customerOccupationIncomeDetails"],"dataDD":"CustomerOccupationIncomeDetailsDD","display":{"import":"","name":"SelectedItem","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"index":{"paramType":"pageStateValue","needed":"yes"},"display":{"paramType":"object","needed":"yes"},"buttons":{"paramType":"object","needed":"defaultToButtons"}}}}*/}
     <SelectedItem id={`${id}.customerOccupationIncomeDetails`} state={state.focusOn('customerOccupationIncomeDetails')} mode={mode} buttons={buttons} index={pageState(state)<any>().focusOn('selectedItem').json()} display={OccupationIncomeDetailsDD} />
-</>)
+</>
 }
 
 export function OccupationDescriptionResponseDD({id,state,mode,buttons}: FocusedProps<FState, OccupationDescriptionResponseDDDomain,Context>){
-  return(<>
-</>)
+  return <>
+</>
 }
 
 export function OccupationIncomeDetailsDD({id,state,mode,buttons}: FocusedProps<FState, OccupationIncomeDetailsDDDomain,Context>){
 const areYouGuard = state.chainLens(Lenses.fromPath(["areYou"])).optJsonOr([]);
-  return(<>
+  return <Layout details='[1][3,3][5]'>
      {/*{"path":["areYou"],"dataDD":"CustomerStatusDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndStringInput id={`${id}.areYou`} state={state.focusOn('areYou')} mode={mode} label='are you' required={true} />
      {/*{"path":["currentEmployment"],"dataDD":"YesNoDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}},"guard":{"areYou":["E","S"]}}*/}
@@ -134,11 +134,11 @@ const areYouGuard = state.chainLens(Lenses.fromPath(["areYou"])).optJsonOr([]);
     <LabelAndNumberInput id={`${id}.empAppRoleSeq`} state={state.focusOn('empAppRoleSeq')} mode={mode} label='emp app role seq' required={true} />
      {/*{"path":["accountantAppRoleSeq"],"dataDD":"IntegerDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndNumberInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"min":{"paramType":"object","needed":"no"},"max":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndNumberInput id={`${id}.accountantAppRoleSeq`} state={state.focusOn('accountantAppRoleSeq')} mode={mode} label='accountant app role seq' required={true} />
-</>)
+</Layout>
 }
 
 export function OtherIncomeResponseDD({id,state,mode,buttons}: FocusedProps<FState, OtherIncomeResponseDDDomain,Context>){
-  return(<>
+  return <>
      {/*{"path":["clientOtherIncomeSeq"],"dataDD":"StringDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndStringInput id={`${id}.clientOtherIncomeSeq`} state={state.focusOn('clientOtherIncomeSeq')} mode={mode} label='client other income seq' required={true} />
      {/*{"path":["otherIncomeType"],"dataDD":"StringDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
@@ -147,5 +147,5 @@ export function OtherIncomeResponseDD({id,state,mode,buttons}: FocusedProps<FSta
     <LabelAndStringInput id={`${id}.incomeFreqRef`} state={state.focusOn('incomeFreqRef')} mode={mode} label='income freq ref' required={true} />
      {/*{"path":["amount"],"dataDD":"IntegerDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndNumberInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"min":{"paramType":"object","needed":"no"},"max":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndNumberInput id={`${id}.amount`} state={state.focusOn('amount')} mode={mode} label='amount' required={true} />
-</>)
+</>
 }

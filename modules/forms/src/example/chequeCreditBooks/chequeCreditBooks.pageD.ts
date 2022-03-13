@@ -10,7 +10,7 @@ export const OrderChequeBookOrPayingInModalPD: ExampleModalPage = {
   /** This page can only view data */
   modes: [ 'create' ],
   /** How we display the page.*/
-  display: { layout: { name: 'Layout', details: '[3]' }, target: [], dataDD: ChequeCreditbooksHistoryLineDD, importFrom: 'ChequeCreditbooks' },
+  display: {  target: [], dataDD: ChequeCreditbooksHistoryLineDD, importFrom: 'ChequeCreditbooks' },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -32,7 +32,7 @@ export const ChequeCreditbooksPD: ExampleMainPage = {
   /** This page can only view data */
   modes: [ 'view' ],
   /** How we display the page.*/
-  display: { layout: { name: 'Layout', details: '[1][2][2]' }, target: [ 'fromApi' ], dataDD: ChequeCreditbooksDD },
+  display: { target: [ 'fromApi' ], dataDD: ChequeCreditbooksDD },
   /** When the page is selected for the first time this is the initial state */
   initialValue: {},
   /** This defines the domain data structures in react*/

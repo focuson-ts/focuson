@@ -1,5 +1,4 @@
 import { LensProps } from "@focuson/state";
-import { Layout } from "../copied/layout";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from "@focuson/pages";
 import { Context, FocusedProps, FState } from "../common";
@@ -20,11 +19,11 @@ export function ListOccupationsModalPage(){
   return focusedPage<FState, ListOccupationsDDDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
      ( state, d, mode ) => {
           const id='root';
-const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,
-    commit:<ModalCommitButton id='commit'  state={state} />,}
-          return (<Layout  details='[3]'>
+          const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,
+              commit:<ModalCommitButton id='commit'  state={state} />,}
+          return <div className='modalPage'>
            {/*{"dataDD":"ListOccupationsDD","display":{"import":"","name":"SearchList","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <SearchList id={`${id}`} state={state} mode={mode} />
           { buttons.cancel } 
           { buttons.commit } 
-            </Layout>)})}
+          </div>})}

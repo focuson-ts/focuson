@@ -16,7 +16,7 @@ export const CreateEAccountPageD: ExampleMainPage= {
   /** This page can only view data */
   modes: [ 'create' ],
   /** How we display the page.*/
-  display: { layout: { name: 'Layout', details: '[1][1][1][1]]' }, target: [ 'editing' ], dataDD: CreateEAccountDataD },
+  display: { target: [ 'editing' ], dataDD: CreateEAccountDataD },
   /** When the page is selected for the first time this is the initial state */
   initialValue: 'empty',
   /** This defines the domain data structures in react*/

@@ -1,7 +1,6 @@
 import * as domain from '../ETransfer/ETransfer.domains';
 import * as empty from '../ETransfer/ETransfer.empty';
 import { LensProps } from "@focuson/state";
-import { Layout } from "../copied/layout";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from "@focuson/pages";
 import { Context, FocusedProps, FState } from "../common";
@@ -11,6 +10,7 @@ import { GuardButton } from "../copied/GuardButton";
 import { LabelAndNumberInput } from '../copied/LabelAndInput';
 import { LabelAndStringInput } from '../copied/LabelAndInput';
 import { LabelAndRadio } from '../copied/Radio';
+import { Layout } from '../copied/layout';
 import {ListNextButton} from '../copied/listNextPrevButtons';
 import {ListPrevButton} from '../copied/listNextPrevButtons';
 import {ModalButton} from '@focuson/pages';
@@ -35,16 +35,16 @@ export function ETransferPage(){
        />,
       resetAll:<button>resetAll of type ResetStateButton cannot be created yet</button>,}
 
-  return (<Layout  details='[3][1,1,1][1,1][1][3]'>
+      return <div className='mainPage'>
            {/*{"dataDD":"ETransferDataD","display":{"import":"","name":"ETransferDataD","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <ETransferDataD id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.eTransfers } 
       { buttons.resetAll } 
       { buttons.cancel } 
-   </Layout>)})}
+      </div>})}
 
 export function ETransferDataD({id,state,mode,buttons}: FocusedProps<FState, ETransferDataDDomain,Context>){
-  return(<>
+  return <Layout details='[1][3,3]'>
      {/*{"displayParams":{"label":"Account Id"},"path":["account"],"dataDD":"AccountIdDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndNumberInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"min":{"paramType":"object","needed":"no"},"max":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndNumberInput id={`${id}.account`} state={state.focusOn('account')} mode={mode} label='Account Id' required={true} min={10000000} max={99999999} />
      {/*{"path":["dateOfETransfer"],"dataDD":"DateDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
@@ -63,5 +63,5 @@ export function ETransferDataD({id,state,mode,buttons}: FocusedProps<FState, ETr
     <LabelAndNumberInput id={`${id}.balance`} state={state.focusOn('balance')} mode={mode} label='balance' required={true} />
      {/*{"path":["notes"],"dataDD":"ManyLineStringDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndStringInput id={`${id}.notes`} state={state.focusOn('notes')} mode={mode} label='notes' required={true} />
-</>)
+</Layout>
 }

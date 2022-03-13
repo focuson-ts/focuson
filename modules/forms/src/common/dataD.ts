@@ -1,10 +1,11 @@
 //Common Data Definitions
 
 
-import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndNumberInputCD, LabelAndStringInputCD } from "./componentsD";
+import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndNumberInputCD, LabelAndStringInputCD, SimpleDisplayComp } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeRender";
 import { NameAnd, safeArray } from "@focuson/utils";
 import { Guards } from "../buttons/guardButton";
+
 
 export interface HasSample<T> {
   sample?: T[]
@@ -38,6 +39,7 @@ export interface DisplayParamDD {
 
 
 export interface CommonDataDD {
+  layout?: { component: SimpleDisplayComp, params?: NameAnd<string> },
   name: string;
   display?: DisplayCompD;
   displayParams?: DisplayParamDD
@@ -53,7 +55,7 @@ export interface DataD<G> extends CommonDataDD {
   guards?: Guards<G>;
   structure: ManyDataDD<G>;
 }
-export type CompDataD<G> = DataD<G>| RepeatingDataD<G>
+export type CompDataD<G> = DataD<G> | RepeatingDataD<G>
 
 export interface CommonPrimitiveDD<T> extends CommonDataDD, HasSample<T>, HasEnum {
   emptyValue: T;
@@ -151,11 +153,11 @@ export function flatMapDD<Acc, G> ( dataDD: AllDataDD<G>, map: AllDataFlatMap<Ac
 export function collectDataWalker<G> (): AllDataFlatMap<CompDataD<G>, G> {
   return ({
     ...emptyDataFlatMap (),
-    walkRepStart:  ( path, parents, oneDataDD, dataDD ) => [ dataDD ],
+    walkRepStart: ( path, parents, oneDataDD, dataDD ) => [ dataDD ],
     walkDataStart: ( path, parents, oneDataDD, dataDD ) => [ dataDD ]
   })
 }
-export function findDataDDIn<G> ( a: AllDataDD<G>, stopAtDisplay?: boolean ): CompDataD<G>[] {return flatMapDD ( a, { ...collectDataWalker(), stopAtDisplay } )}
+export function findDataDDIn<G> ( a: AllDataDD<G>, stopAtDisplay?: boolean ): CompDataD<G>[] {return flatMapDD ( a, { ...collectDataWalker (), stopAtDisplay } )}
 
 
 export function foldDataDD<Acc, G> ( dataDD: AllDataDD<G>, path: string[], parents: DataD<G>[], zero: Acc, folder: AllDataFolder<Acc, G>, oneDataDD?: OneDataDD<G> ): Acc {

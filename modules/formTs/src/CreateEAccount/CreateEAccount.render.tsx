@@ -1,7 +1,6 @@
 import * as domain from '../CreateEAccount/CreateEAccount.domains';
 import * as empty from '../CreateEAccount/CreateEAccount.empty';
 import { LensProps } from "@focuson/state";
-import { Layout } from "../copied/layout";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from "@focuson/pages";
 import { Context, FocusedProps, FState } from "../common";
@@ -36,16 +35,16 @@ export function CreateEAccountPage(){
        />,
       resetAll:<button>resetAll of type ResetStateButton cannot be created yet</button>,}
 
-  return (<Layout  details='[1][1][1][1]]'>
+      return <div className='mainPage'>
            {/*{"dataDD":"CreateEAccountDataDD","display":{"import":"","name":"CreateEAccountDataDD","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <CreateEAccountDataDD id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.createEAccounts } 
       { buttons.resetAll } 
       { buttons.cancel } 
-   </Layout>)})}
+      </div>})}
 
 export function CreateEAccountDataDD({id,state,mode,buttons}: FocusedProps<FState, CreateEAccountDataDDDomain,Context>){
-  return(<>
+  return <>
      {/*{"path":["name"],"dataDD":"OneLineStringDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='name' required={true} />
      {/*{"path":["type"],"dataDD":"EAccountDisplayTypeDD","display":{"import":"../copied/Radio","name":"LabelAndRadio","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"enums":{"needed":"defaultToEnum","paramType":"object"}}}}*/}
@@ -54,5 +53,5 @@ export function CreateEAccountDataDD({id,state,mode,buttons}: FocusedProps<FStat
     <Radio id={`${id}.savingsStyle`} state={state.focusOn('savingsStyle')} mode={mode} enums={{"adHoc":"Save what you want, when you want it","payRegular":"Pay a regular amount until you reach a target","paySettime":"Pay a regular amount for a set time","targetTime":"Reach a target balance by a set time"}} />
      {/*{"path":["initialAmount"],"dataDD":"IntegerDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndNumberInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"min":{"paramType":"object","needed":"no"},"max":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndNumberInput id={`${id}.initialAmount`} state={state.focusOn('initialAmount')} mode={mode} label='initial amount' required={true} />
-</>)
+</>
 }

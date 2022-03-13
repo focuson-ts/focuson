@@ -17,9 +17,11 @@ export interface OneDisplayCompParamD<T> {
 export interface DisplayCompParamD {
   [ name: string ]: OneDisplayCompParamD<any>
 }
-export interface DisplayCompD {
+export interface SimpleDisplayComp {
   import: string;
   name: string;
+}
+export interface DisplayCompD extends SimpleDisplayComp{
   params: DisplayCompParamD;
 }
 export const commonParams: DisplayCompParamD = {
@@ -72,6 +74,11 @@ export const SelectedItemCD: DisplayCompD = {
     buttons: { paramType: 'object', needed: 'defaultToButtons' }
   }
 }
+export const LayoutCd: SimpleDisplayComp = {
+  import: "../copied/layout",
+  name: "Layout",
+}
+
 
 export const enumParams: DisplayCompParamD = { enums: { needed: 'defaultToEnum', paramType: 'object' } }
 

@@ -7,7 +7,7 @@ import { occupationIncomeModalPD } from "../occupationAndIncomeDetails/occupatio
 export const RepeatingLinePageD: ExampleModalPage = {
   name: "RepeatingLine",
   pageType: "ModalPage",
-  display: { layout: { name: 'Layout', details: '[2][2]' }, target: [ 'temp' ], dataDD: RepeatingLineDataD, importFrom: 'Repeating' },
+  display: {target: [ 'temp' ], dataDD: RepeatingLineDataD, importFrom: 'Repeating' },
   modes: [ 'create', 'edit' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -24,7 +24,7 @@ export const RepeatingPageD: ExampleMainPage = {
   /** This page can only view data */
   modes: [ 'view' ],
   /** How we display the page.*/
-  display: { layout: { name: 'Layout', details: '[1][3]' }, target: fromApiPath, dataDD: RepeatingWholeDataD },
+  display: { target: fromApiPath, dataDD: RepeatingWholeDataD },
   /** When the page is selected for the first time this is the initial state */
   initialValue: {},
   /** This defines the domain data structures in react*/

@@ -14,7 +14,7 @@ export const EAccountsSummaryPD:ExampleMainPage = {
   /** This page can only view data */
   modes: [ 'view' ],
   /** How we display the page.*/
-  display: { layout: { name: 'Layout', details: '[1][3,3][5]' }, target: [ 'fromApi' ], dataDD: EAccountsSummaryDD },
+  display: {target: [ 'fromApi' ], dataDD: EAccountsSummaryDD },
   /** When the page is selected for the first time this is the initial state */
   initialValue: {},
   /** This defines the domain data structures in react*/

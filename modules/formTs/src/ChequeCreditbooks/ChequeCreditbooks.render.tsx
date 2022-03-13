@@ -1,7 +1,6 @@
 import * as domain from '../ChequeCreditbooks/ChequeCreditbooks.domains';
 import * as empty from '../ChequeCreditbooks/ChequeCreditbooks.empty';
 import { LensProps } from "@focuson/state";
-import { Layout } from "../copied/layout";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from "@focuson/pages";
 import { Context, FocusedProps, FState } from "../common";
@@ -35,28 +34,28 @@ export function ChequeCreditbooksPage(){
       />,
       payingInBook:<button>payingInBook of type ResetStateButton cannot be created yet</button>,}
 
-  return (<Layout  details='[1][2][2]'>
+      return <div className='mainPage'>
            {/*{"dataDD":"ChequeCreditbooksDD","display":{"import":"","name":"ChequeCreditbooksDD","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <ChequeCreditbooksDD id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.chequeBook } 
       { buttons.payingInBook } 
       { buttons.orderNewBook } 
-   </Layout>)})}
+      </div>})}
 
 export function ChequeCreditbooksDD({id,state,mode,buttons}: FocusedProps<FState, ChequeCreditbooksDDDomain,Context>){
-  return(<>
+  return <>
      {/*{"path":["history"],"dataDD":"ChequeCreditbooksHistoryDD","display":{"import":"","name":"Table","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"order":{"paramType":"string[]","needed":"yes"}}}}*/}
     <Table id={`${id}.history`} state={state.focusOn('history')} mode={mode} order={["serialNumber","howOrdered","dateOrder"]} />
-</>)
+</>
 }
 
 export function ChequeCreditbooksHistoryLineDD({id,state,mode,buttons}: FocusedProps<FState, ChequeCreditbooksHistoryLineDDDomain,Context>){
-  return(<>
+  return <>
      {/*{"path":["serialNumber"],"dataDD":"IntegerDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndNumberInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"min":{"paramType":"object","needed":"no"},"max":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndNumberInput id={`${id}.serialNumber`} state={state.focusOn('serialNumber')} mode={mode} label='serial number' required={true} />
      {/*{"path":["howOrdered"],"dataDD":"OneLineStringDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndStringInput id={`${id}.howOrdered`} state={state.focusOn('howOrdered')} mode={mode} label='how ordered' required={true} />
      {/*{"path":["dateOrder"],"dataDD":"DateDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"required":{"paramType":"boolean","needed":"no","default":true},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndStringInput id={`${id}.dateOrder`} state={state.focusOn('dateOrder')} mode={mode} label='date order' required={true} />
-</>)
+</>
 }
