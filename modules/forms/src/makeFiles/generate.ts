@@ -6,8 +6,9 @@ import { makeTsFiles } from "./makeTsFiles";
 import { ButtonD, makeButtons } from "../buttons/allButtons";
 import { AllGuardCreator, AllGuards, GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { MakeButton } from "../codegen/makeButtons";
+import { AppConfig } from "../focuson.config";
 
-export const generate = <G extends GuardWithCondition> ( javaOutputRoot: string, tsRoot: string, focusOnVersion: string, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G> ) => <B extends ButtonD> ( pages: PageD<B, G>[] ) => {
+export const generate = <G extends GuardWithCondition> ( appConfig: AppConfig, javaOutputRoot: string, tsRoot: string, focusOnVersion: string, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G> ) => <B extends ButtonD> ( pages: PageD<B, G>[] ) => {
   const params: CombinedParams = {
     pagesFile: 'pages',
     focusOnVersion,
@@ -44,6 +45,6 @@ export const generate = <G extends GuardWithCondition> ( javaOutputRoot: string,
     backup: 'node_modules/@focuson/forms'
   }
 
-  makeJavaFiles ( javaOutputRoot, params, directorySpec ) ( pages )
-  makeTsFiles<G> ( tsRoot, params, makeGuards, makeButtons, directorySpec ) ( pages )
+  makeJavaFiles (appConfig, javaOutputRoot, params, directorySpec ) ( pages )
+  makeTsFiles<G> (appConfig, tsRoot, params, makeGuards, makeButtons, directorySpec ) ( pages )
 };

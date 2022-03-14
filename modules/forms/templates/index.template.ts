@@ -10,12 +10,12 @@ import { pages } from "./{pagesFile}";
 import { restL } from "@focuson/rest";
 import { restDetails } from "./{restsFile}";
 import { DebugState } from "@focuson/focuson";
-import { commonIds } from "../../formTs/src/common";
+import { commonIds } from "./common";
 
 
 const config: FocusOnConfig<{stateName}, Context, SimpleMessage> = {
   /** How data is sent to/fetched from apis */
-  fetchFn: fetchWithDelay ( 1, fetchWithPrefix ( 'http://localhost:8080', loggingFetchFn ) ),
+  fetchFn: {fetch},
   /**A hook that is called before anything else.  */
   preMutate: ( s: FState ) => s,
   /** A hook that is called after everything else.  */
@@ -66,7 +66,7 @@ setJson ( {
   pageSelection: [ { pageName: '{firstPage}', firstTime: true, pageMode: 'view' } ],
 
 // @ts-ignore
-  debug: { restDebug: true }
+  debug: {debug}
 
   // currentSelectedModalPage: 'EAccountsSummary_CreatePlan'
 }, 'initial')

@@ -27,8 +27,8 @@ describe ( "makeCommonParams", () => {
     expect ( makeCommonParams ( paramsForTest, [ eAccountsSummaryRestD ], { main: '.', backup: '.' } ) ).toEqual ( [
       "export interface HasCommonIds {CommonIds: CommonIds}",
       "export type CommonIds = {",
-      "accountId?:string;",
-      "customerId?:string;",
+      "  accountId?:string;",
+      "  customerId?:string;",
       "}",
       "export const identityL = identityOptics<FState> ();",
       "export const commonIdsL = identityL.focusQuery('CommonIds');",

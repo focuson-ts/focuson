@@ -7,6 +7,7 @@ import { DirectorySpec, loadFile } from "@focuson/files";
 import { isCommonLens, RestD, unique } from "../common/restD";
 import { sortedEntries } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
+import { AppConfig } from "../focuson.config";
 
 export function makeFullState<B, G> ( params: TSParams, pds: PageD<B, G>[] ): string[] {
   const hasDomains = addStringToEndOfAllButLast ( ',' ) ( allMainPages ( pds ).map ( d => hasDomainForPage ( d ) ) )
@@ -16,19 +17,19 @@ export function makeFullState<B, G> ( params: TSParams, pds: PageD<B, G>[] ): st
     ...indentList ( hasDomains ), `{}` ]
 }
 
-export function makeContext ( params: TSParams ): string[] {
+export function makeContext ( appConfig: AppConfig,params: TSParams ): string[] {
   // return [
   //   `export const context: Context = defaultPageSelectionAndRestCommandsContext<${params.stateName}> ( pages )` ]
 
   return [
     `export type Context = FocusOnContext<${params.stateName}>`,
     `export const context: Context = {`,
-    `...defaultPageSelectionAndRestCommandsContext<FState> ( pages ),`,
-    `combine: MyCombined`,
+    `   ...defaultPageSelectionAndRestCommandsContext<FState> ( pages ),`,
+    `   combine: ${appConfig.combine.name}`,
     `}` ]
 
 }
-export function makeCommon<B, G> ( params: TSParams, pds: PageD<B, G>[], rds: RestD<G>[], directorySpec: DirectorySpec ): string[] {
+export function makeCommon<B, G> (appConfig: AppConfig, params: TSParams, pds: PageD<B, G>[], rds: RestD<G>[], directorySpec: DirectorySpec ): string[] {
   const pageDomainsImport: string[] = pds.filter ( p => p.pageType === 'MainPage' ).map ( p => `import { ${hasDomainForPage ( p )} } from '${domainsFileName ( '.', params, p )}';` )
   return [
     `import { HasPageSelection, PageMode ,PageSelectionContext} from '@focuson/pages'`,
@@ -40,9 +41,10 @@ export function makeCommon<B, G> ( params: TSParams, pds: PageD<B, G>[], rds: Re
     `import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusOnContext, HasFocusOnDebug } from '@focuson/focuson';`,
     `import { LensProps } from '@focuson/state';`,
     `import { pages } from "./pages";`,
-    `import { MyCombined } from "./copied/MyCombined";`,
+    `import { ${appConfig.combine.name} } from "${appConfig.combine.import}";`,
     ...pageDomainsImport,
-    ...makeContext ( params ),
+    '',
+    ...makeContext ( appConfig,params ),
     ...makeFullState ( params, pds ),
     ...makeCommonParams ( params, rds, directorySpec ),
     ...makeStateWithSelectedPage ( params, JSON.stringify ( findAllCommonParamsWithSamples ( rds ) ), pds[ 0 ].name ) //TODO this should be slicker and aggregated params for example
@@ -78,8 +80,7 @@ export function findAllCommonParamsWithSamples<G> ( rds: RestD<G>[] ): any {
 
 export function makeCommonParams<G> ( params: TSParams, rds: RestD<G>[], directorySpec: DirectorySpec ) {
   let commonParams = findAllCommonParams ( rds );
-  const commonParamDefns = commonParams.map ( s => s + "?:string;\n" ).join ( "" )
+  const commonParamDefns = commonParams.map ( s => '  '+  s + "?:string;\n" ).join ( "" )
   const commonParamNameAndLens = commonParams.map ( s => `   ${s}: commonIdsL.focusQuery('${s}')` ).join ( ",\n" )
   return applyToTemplate ( loadFile ( 'templates/commonTemplate.ts', directorySpec ).toString (), { ...params, commonParamDefns, commonParamNameAndLens } )
-
 }

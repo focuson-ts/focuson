@@ -15,10 +15,11 @@ import { HasCreateEAccountPageDomain } from './CreateEAccount/CreateEAccount.dom
 import { HasChequeCreditbooksPageDomain } from './ChequeCreditbooks/ChequeCreditbooks.domains';
 import { HasRepeatingPageDomain } from './Repeating/Repeating.domains';
 import { HasPostCodeDemoPageDomain } from './PostCodeDemo/PostCodeDemo.domains';
+
 export type Context = FocusOnContext<FState>
 export const context: Context = {
-...defaultPageSelectionAndRestCommandsContext<FState> ( pages ),
-combine: MyCombined
+   ...defaultPageSelectionAndRestCommandsContext<FState> ( pages ),
+   combine: MyCombined
 }
 export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,
   HasOccupationAndIncomeSummaryPageDomain,
@@ -31,15 +32,15 @@ export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,
 {}
 export interface HasCommonIds {CommonIds: CommonIds}
 export type CommonIds = {
-accountSeq?:string;
-applicationRef?:string;
-brandRef?:string;
-vbAccountSeq?:string;
-vbAccountType?:string;
-accountId?:string;
-createPlanId?:string;
-customerId?:string;
-applRef?:string;
+  accountSeq?:string;
+  applicationRef?:string;
+  brandRef?:string;
+  vbAccountSeq?:string;
+  vbAccountType?:string;
+  accountId?:string;
+  createPlanId?:string;
+  customerId?:string;
+  applRef?:string;
 }
 export const identityL = identityOptics<FState> ();
 export const commonIdsL = identityL.focusQuery('CommonIds');

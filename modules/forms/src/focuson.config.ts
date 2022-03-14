@@ -9,6 +9,7 @@ import { generate } from "./makeFiles/generate";
 import *  as fse from "fs-extra";
 import { RepeatingLinePageD, RepeatingPageD } from "./example/repeating/repeating.pageD";
 import { PostCodeMainPage, PostCodeModalPage } from "./example/addressSearch/addressSearch.pageD";
+import { SimpleDisplayComp } from "./common/componentsD";
 
 export const generatedPages = [
   OccupationAndIncomeSummaryPD, occupationIncomeModalPD,
@@ -17,25 +18,24 @@ export const generatedPages = [
   CreateEAccountPageD,
   ChequeCreditbooksPD,
   OrderChequeBookOrPayingInModalPD, RepeatingLinePageD, RepeatingPageD,
-  PostCodeMainPage,PostCodeModalPage
+  PostCodeMainPage, PostCodeModalPage
 
 ];
 export const javaOutputRoot = '../formJava'
 export const tsRoot = "../formTs"
 export const focusOnVersion: string = JSON.parse ( loadFile ( 'package.json' ) ).version
 
-// const testAppConfig ={
-//   fetchPort: 8080,
-//     host: 'localhost',
-//     delay: 1000,
-//     log: true
-//   },
-//   combine: MyCombineCD, // just the name and the imports in the CD
-//   debug: {fetcherDebug: true, postDebug: true, Debug: true}
-// }
+const MyCombineCD: SimpleDisplayComp = { import: "./copied/MyCombined", name: "MyCombined" }
 
-const prodAppConfig ={
-  port: 8080,
-  host:'localhost',
-
+export interface AppConfig {
+  fetch: string;
+  combine: SimpleDisplayComp;
+  debug: any
 }
+
+export const devAppConfig = {
+  fetch: "fetchWithDelay ( 1, fetchWithPrefix ( 'http://localhost:8080', loggingFetchFn ) )",
+  combine: MyCombineCD,
+  debug: { fetcherDebug: true, postDebug: true, Debug: true }
+}
+

@@ -13,8 +13,9 @@ import { makeAllMockFetchers } from "../codegen/makeMockFetchers";
 import { makeJavaVariablesForGraphQlQuery } from "../codegen/makeGraphQlQuery";
 import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
 import { makeDbFile } from "../codegen/makeDb";
+import { AppConfig } from "../focuson.config";
 
-export const makeJavaFiles = ( javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
+export const makeJavaFiles = ( appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
 
   const javaRoot = javaOutputRoot + "/java"
   const javaAppRoot = javaOutputRoot + "/java/" + params.applicationName

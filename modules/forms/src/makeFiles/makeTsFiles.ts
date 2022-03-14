@@ -17,8 +17,9 @@ import { domainsFileName, emptyFileName, fetcherFileName, pactFileName, renderFi
 import { makeOneStory } from "../codegen/makeStories";
 import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { MakeButton } from "../codegen/makeButtons";
+import { AppConfig } from "../focuson.config";
 
-export const makeTsFiles = <G extends GuardWithCondition> ( tsRoot: string, params: TSParams, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G>, directorySpec: DirectorySpec ) => <B extends ButtonD> ( pages: PageD<B, G>[] ) => {
+export const makeTsFiles = <G extends GuardWithCondition> ( appConfig: AppConfig, tsRoot: string, params: TSParams, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G>, directorySpec: DirectorySpec ) => <B extends ButtonD> ( pages: PageD<B, G>[] ) => {
   console.log ( "focusOnVersion", params.focusOnVersion )
 
   const tsScripts = tsRoot + "/scripts"
@@ -74,11 +75,11 @@ export const makeTsFiles = <G extends GuardWithCondition> ( tsRoot: string, para
   writeToFile ( `${tsCode}/${params.restsFile}.ts`, makeRestDetailsPage ( params, pages ) )
   const rests = unique ( pages.flatMap ( pd => isMainPage ( pd ) ? sortedEntries ( pd.rest ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest ) : [] ), r => r.dataDD.name )
 
-  writeToFile ( `${tsCode}/${params.commonFile}.ts`, makeCommon ( params, pages, rests, directorySpec ) )
+  writeToFile ( `${tsCode}/${params.commonFile}.ts`, makeCommon ( appConfig, params, pages, rests, directorySpec ) )
   writeToFile ( `${tsCode}/${params.pagesFile}.tsx`, makePages ( params, pages ) )
 
 
-  templateFile ( `${tsCode}/index.tsx`, 'templates/index.template.ts', { ...params, firstPage: pages[ 0 ].name, fetchDebug: true }, directorySpec )
+  templateFile ( `${tsCode}/index.tsx`, 'templates/index.template.ts', { ...params, firstPage: pages[ 0 ].name, fetch: appConfig.fetch, debug: JSON.stringify ( appConfig.debug ) }, directorySpec )
   copyFiles ( tsRoot, 'templates/raw/ts', directorySpec ) ( '.env', 'README.md', 'tsconfig.json' )
   templateFile ( `${tsRoot}/package.json`, 'templates/packageTemplate.json', params, directorySpec )
   copyFiles ( tsScripts, 'templates/scripts', directorySpec ) ( 'makePact.sh', 'makeJava.sh', 'makeJvmPact.sh', 'template.java', 'ports' )
