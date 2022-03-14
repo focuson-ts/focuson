@@ -127,9 +127,9 @@ describe ( "findAllResolvers2", () => {
   it ( "findResolvers2", () => {
     expect ( findChildResolvers ( eAccountsSummaryRestD ) ).toEqual ( [
       { "isRoot": false, "name": "description", "parent": "EAccountSummaryDD", "resolver": "getAccountSummaryDescription", "sample": [ "This account has a description", "This is a one line string", "another one line string" ], "samplerName": "sampleOneLineStringDD" },
-      { "isRoot": false, "name": "totalMonthlyCost", "parent": "EAccountsSummaryDD", "resolver": "getTotalMonthlyCost", "sample": [ 1000 ], "samplerName": "sampleIntegerDD" },
-      { "isRoot": false, "name": "oneAccountBalance", "parent": "EAccountsSummaryDD", "resolver": "getOneAccountBalance", "sample": [ 9921 ], "samplerName": "sampleIntegerDD" },
-      { "isRoot": false, "name": "currentAccountBalance", "parent": "EAccountsSummaryDD", "resolver": "getCurrentAccountBalance", "sample": [ 12321 ], "samplerName": "sampleIntegerDD" }
+      { "isRoot": false, "name": "totalMonthlyCost", "parent": "EAccountsSummaryDD", "resolver": "getTotalMonthlyCost", "sample": [ 1000 ], "samplerName": "sampleMoneyDD" },
+      { "isRoot": false, "name": "oneAccountBalance", "parent": "EAccountsSummaryDD", "resolver": "getOneAccountBalance", "sample": [ 9921 ], "samplerName": "sampleMoneyDD" },
+      { "isRoot": false, "name": "currentAccountBalance", "parent": "EAccountsSummaryDD", "resolver": "getCurrentAccountBalance", "sample": [ 12321 ], "samplerName": "sampleMoneyDD" }
     ] )
   } )
 
@@ -155,9 +155,9 @@ describe ( "findAllResolvers2", () => {
       { "isRoot": true, "name": "deleteCreatePlanDD", "parent": "Mutation", "resolver": "deleteCreatePlanDD", "sample": [], "samplerName": "sampleCreatePlanDD" },
       { "isRoot": true, "name": "listCreatePlanDD", "parent": "Query", "resolver": "listCreatePlanDD", "sample": [], "samplerName": "sampleCreatePlanDD" },
       { "isRoot": false, "name": "description", "parent": "EAccountSummaryDD", "resolver": "getAccountSummaryDescription", "sample": [ "This account has a description", "This is a one line string", "another one line string" ], "samplerName": "sampleOneLineStringDD" },
-      { "isRoot": false, "name": "totalMonthlyCost", "parent": "EAccountsSummaryDD", "resolver": "getTotalMonthlyCost", "sample": [ 1000 ], "samplerName": "sampleIntegerDD" },
-      { "isRoot": false, "name": "oneAccountBalance", "parent": "EAccountsSummaryDD", "resolver": "getOneAccountBalance", "sample": [ 9921 ], "samplerName": "sampleIntegerDD" },
-      { "isRoot": false, "name": "currentAccountBalance", "parent": "EAccountsSummaryDD", "resolver": "getCurrentAccountBalance", "sample": [ 12321 ], "samplerName": "sampleIntegerDD" }
+      { "isRoot": false, "name": "totalMonthlyCost", "parent": "EAccountsSummaryDD", "resolver": "getTotalMonthlyCost", "sample": [ 1000 ], "samplerName": "sampleMoneyDD" },
+      { "isRoot": false, "name": "oneAccountBalance", "parent": "EAccountsSummaryDD", "resolver": "getOneAccountBalance", "sample": [ 9921 ], "samplerName": "sampleMoneyDD" },
+      { "isRoot": false, "name": "currentAccountBalance", "parent": "EAccountsSummaryDD", "resolver": "getCurrentAccountBalance", "sample": [ 12321 ], "samplerName": "sampleMoneyDD" }
     ] )
   } )
 

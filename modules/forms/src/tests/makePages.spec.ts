@@ -24,10 +24,10 @@ describe ( "makePages", () => {
       "const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  MyLoading )",
       "const identity = identityOptics<FState> ();",
       "export const pages: MultiPageDetails<FState, Context> = {",
-      "    EAccountsSummary: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'EAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: {} },",
-      "    Repeating: { config: simpleMessagesConfig, lens: identity.focusQuery ( 'Repeating' ), pageFunction: RepeatingPage(), initialValue: {} },",
-      "    CreatePlan: { config: simpleMessagesConfig,  pageFunction: CreatePlanPage(), modal: true},",
-      "    RepeatingLine: { config: simpleMessagesConfig,  pageFunction: RepeatingLinePage(), modal: true}",
+      "    EAccountsSummary: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'EAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: {} },",
+      "    Repeating: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'Repeating' ), pageFunction: RepeatingPage(), initialValue: {} },",
+      "    CreatePlan: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: CreatePlanPage(), modal: true},",
+      "    RepeatingLine: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: RepeatingLinePage(), modal: true}",
       "  }"
     ])
   } )
