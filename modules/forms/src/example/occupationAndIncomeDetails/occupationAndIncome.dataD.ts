@@ -163,10 +163,10 @@ export const occupationIncomeDetailsDD: DataD<AllGuards> = {
   name: "OccupationIncomeDetailsDD",
   description: "This is a summary about occupation income details data of a single occupation",
   guards: { areYou: { condition: 'in', path: [ 'areYou' ], values: customerStatusDD.enum } },
-  layout: { component: LayoutCd, params: { details: '[1][3,3][5]' } },
+  layout: { component: LayoutCd, params: { details: '[[1],[3,3],[5]]' } },
   structure: {
     areYou: { dataDD: customerStatusDD },
-    currentEmployment: { dataDD: yesNoDD, guard: { areYou: [ 'E', 'S' ] } },
+    currentEmployment: { dataDD: yesNoDD, field: "", guard: { areYou: [ 'E', 'S' ] } },
     occupation: { dataDD: StringDD, guard: { areYou: [ 'E' ] } },
     customerDescription: { dataDD: StringDD, guard: { areYou: [ 'E' ] } },
     ownShareOfTheCompany: { dataDD: yesNoDD, guard: { areYou: [ 'E' ] } },

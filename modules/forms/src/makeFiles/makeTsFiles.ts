@@ -78,7 +78,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( tsRoot: string, para
   writeToFile ( `${tsCode}/${params.pagesFile}.tsx`, makePages ( params, pages ) )
 
 
-  templateFile ( `${tsCode}/index.tsx`, 'templates/index.template.ts', { ...params, firstPage: pages[ 0 ].name }, directorySpec )
+  templateFile ( `${tsCode}/index.tsx`, 'templates/index.template.ts', { ...params, firstPage: pages[ 0 ].name, fetchDebug: true }, directorySpec )
   copyFiles ( tsRoot, 'templates/raw/ts', directorySpec ) ( '.env', 'README.md', 'tsconfig.json' )
   templateFile ( `${tsRoot}/package.json`, 'templates/packageTemplate.json', params, directorySpec )
   copyFiles ( tsScripts, 'templates/scripts', directorySpec ) ( 'makePact.sh', 'makeJava.sh', 'makeJvmPact.sh', 'template.java', 'ports' )

@@ -7,6 +7,7 @@ import { HasTagHolder } from '@focuson/template';
 import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusOnContext, HasFocusOnDebug } from '@focuson/focuson';
 import { LensProps } from '@focuson/state';
 import { pages } from "./pages";
+import { MyCombined } from "./copied/MyCombined";
 import { HasOccupationAndIncomeSummaryPageDomain } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains';
 import { HasEAccountsSummaryPageDomain } from './EAccountsSummary/EAccountsSummary.domains';
 import { HasETransferPageDomain } from './ETransfer/ETransfer.domains';
@@ -15,7 +16,10 @@ import { HasChequeCreditbooksPageDomain } from './ChequeCreditbooks/ChequeCredit
 import { HasRepeatingPageDomain } from './Repeating/Repeating.domains';
 import { HasPostCodeDemoPageDomain } from './PostCodeDemo/PostCodeDemo.domains';
 export type Context = FocusOnContext<FState>
-export const context: Context = defaultPageSelectionAndRestCommandsContext<FState> ( pages )
+export const context: Context = {
+...defaultPageSelectionAndRestCommandsContext<FState> ( pages ),
+combine: MyCombined
+}
 export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,
   HasOccupationAndIncomeSummaryPageDomain,
   HasEAccountsSummaryPageDomain,

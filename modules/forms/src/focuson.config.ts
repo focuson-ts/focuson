@@ -23,3 +23,19 @@ export const generatedPages = [
 export const javaOutputRoot = '../formJava'
 export const tsRoot = "../formTs"
 export const focusOnVersion: string = JSON.parse ( loadFile ( 'package.json' ) ).version
+
+// const testAppConfig ={
+//   fetchPort: 8080,
+//     host: 'localhost',
+//     delay: 1000,
+//     log: true
+//   },
+//   combine: MyCombineCD, // just the name and the imports in the CD
+//   debug: {fetcherDebug: true, postDebug: true, Debug: true}
+// }
+
+const prodAppConfig ={
+  port: 8080,
+  host:'localhost',
+
+}

@@ -290,10 +290,10 @@ describe ( "makeComponentWithGuard", () => {
     expect ( createReactComponent ( paramsForTest, AllGuardCreator ) ( occupationIncomeDetailsDD ).slice ( 0, 5 ).map ( r => r.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function OccupationIncomeDetailsDD({id,state,mode,buttons}: FocusedProps<FState, OccupationIncomeDetailsDDDomain,Context>){",
       "const areYouGuard = state.chainLens(Lenses.fromPath(['areYou'])).optJsonOr([]);",
-      "  return <Layout details='[1][3,3][5]'>",
+      "  return <Layout details='[[1],[3,3],[5]]'>",
       "     {/*{'path':['areYou'],'dataDD':'CustomerStatusDD','display':{'import':'../copied/LabelAndInput','name':'LabelAndStringInput','params':{'id':{'paramType':'object','needed':'id'},'state':{'paramType':'state','needed':'defaultToPath'},'mode':{'paramType':'object','needed':'no','default':'mode'},'ariaLabel':{'paramType':'string','needed':'no'},'label':{'paramType':'string','needed':'defaultToCamelCaseOfName'},'buttons':{'paramType':'object','needed':'defaultToButtons'},'button':{'paramType':'string','needed':'no'},'required':{'paramType':'boolean','needed':'no','default':true},'pattern':{'paramType':'string','needed':'no'},'minlength':{'paramType':'object','needed':'no'},'maxlength':{'paramType':'object','needed':'no'}}}}*/}",
       "    <LabelAndStringInput id={`${id}.areYou`} state={state.focusOn('areYou')} mode={mode} label='are you' buttons={buttons} required={true} />"
-    ] )
+    ])
   } )
 } )
 

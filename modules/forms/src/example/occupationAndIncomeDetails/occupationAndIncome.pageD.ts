@@ -92,7 +92,6 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
     },
     //questions: how do we know which is the existing plan... is there a list? are we an entry in the list? do we need to navigate to it?
     addEntry: {
-
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'create',
       focusOn: [ 'temp' ],
       createEmpty: occupationIncomeDetailsDD,
