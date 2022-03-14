@@ -9,6 +9,7 @@ export interface JavaWiringParams {
   fetcherClass: string;
   sampleClass: string,
   queriesPackage: string,
+  dbPackage: string,
   schema: string;
 }
 

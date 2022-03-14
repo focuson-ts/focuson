@@ -33,7 +33,8 @@ export const generate = <G extends GuardWithCondition> ( javaOutputRoot: string,
     wiringClass: 'Wiring',
     fetcherClass: 'MockFetchers',
     schema: 'someSchema.graphql',
-    sampleClass: 'Sample'
+    sampleClass: 'Sample',
+    dbPackage: 'db'
   };
 
   console.log ( 0 )

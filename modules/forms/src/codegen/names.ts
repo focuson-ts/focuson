@@ -1,4 +1,4 @@
-import { AllDataDD, CompDataD, compDataDIn, DataD, isDataDd, isRepeatingDd } from "../common/dataD";
+import { AllDataDD, CompDataD, compDataDIn } from "../common/dataD";
 import { ModalPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { RestActionDetail, RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
@@ -33,6 +33,13 @@ export const fetcherInterfaceName = <G> ( params: JavaWiringParams, r: RestD<G> 
 export const fetcherVariableName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `_${r.dataDD.name}${params.fetcherInterface}`;
 export const mockFetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${r.dataDD.name}${params.fetcherInterface}Mock`;
 export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${r.dataDD.name}Queries`;
+
+export const javaDbFileName = <B, G> ( params: JavaWiringParams, p: PageD<B, G> ): string => `${p.name}Db`;
+
+
+export const dbMapname = <G> ( d: CompDataD<G> ) => d.name
+export const dbMapMakerProcname = <G> ( d: CompDataD<G> ) => `make${d.name}`
+export const allMapsName = <B, G> ( p: PageD<B, G> ) => `All${p.name}Maps`
 
 
 export const someFileName = <B, G> ( root: string, pd: PageD<B, G>, postfix: string ): string => `${root}/${pd.name}/${pd.name}.${postfix}`;

@@ -28,7 +28,8 @@ export const paramsForTest: CombinedParams =  {
   wiringClass: 'Wiring',
   fetcherClass: 'MockFetchers',
   schema: 'someSchema.graphql',
-  sampleClass: 'Sample'
+  sampleClass: 'Sample',
+  dbPackage: 'db'
 };
 
 describe ( "makeJavaResolversInterface", () => {

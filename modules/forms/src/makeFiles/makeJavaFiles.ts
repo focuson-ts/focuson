@@ -6,12 +6,13 @@ import { sortedEntries } from "@focuson/utils";
 import { allMainPages, isMainPage, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
-import { fetcherInterfaceName, mockFetcherClassName, queryClassName, restControllerName } from "../codegen/names";
+import { fetcherInterfaceName, javaDbFileName, mockFetcherClassName, queryClassName, restControllerName } from "../codegen/names";
 import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
 import { makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
 import { makeAllMockFetchers } from "../codegen/makeMockFetchers";
 import { makeJavaVariablesForGraphQlQuery } from "../codegen/makeGraphQlQuery";
 import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
+import { makeDbFile } from "../codegen/makeDb";
 
 export const makeJavaFiles = ( javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
 
@@ -24,6 +25,7 @@ export const makeJavaFiles = ( javaOutputRoot: string, params: JavaWiringParams,
   const javaControllerRoot = javaCodeRoot + "/" + params.controllerPackage
   const javaMockFetcherRoot = javaCodeRoot + "/" + params.mockFetcherPackage
   const javaQueriesPackages = javaCodeRoot + "/" + params.queriesPackage
+  const javaDbPackages = javaCodeRoot + "/" + params.dbPackage
 
   fs.mkdirSync ( `${javaOutputRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaAppRoot}`, { recursive: true } )
@@ -34,6 +36,7 @@ export const makeJavaFiles = ( javaOutputRoot: string, params: JavaWiringParams,
   fs.mkdirSync ( `${javaMockFetcherRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaControllerRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaQueriesPackages}`, { recursive: true } )
+  fs.mkdirSync ( `${javaDbPackages}`, { recursive: true } )
 
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
   const raw = allMainPages ( pages ).flatMap ( x => sortedEntries ( x.rest ) ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest );
@@ -48,6 +51,11 @@ export const makeJavaFiles = ( javaOutputRoot: string, params: JavaWiringParams,
   copyFiles ( javaCodeRoot, 'templates/raw/java', directorySpec ) ( 'CorsConfig.java' )
 
   console.log ( 5 )
+
+  allMainPages ( pages ).forEach ( p => {
+    console.log ( p.name )
+    writeToFile ( `${javaDbPackages}/${javaDbFileName ( params, p )}.java`, makeDbFile ( params, p ) );
+  } )
 
   writeToFile ( `${javaResourcesRoot}/${params.schema}`, makeGraphQlSchema ( rests ) )
   rests.forEach ( rest =>

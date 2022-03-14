@@ -25,6 +25,7 @@ export interface OneDataDD<G> extends HasSample<string> {
   hidden?: boolean;
   guard?: NameAnd<string[]>
   displayParams?: ComponentDisplayParams,
+  alias?: string, //Will be used to resolve name mismatches in sql queries. Not needed if there are no mismatches
   field?: string, // defaults to the name. if it exists this says which field to use
 }
 export interface ManyDataDD<G> {
@@ -61,8 +62,8 @@ export interface CommonPrimitiveDD<T> extends CommonDataDD, HasSample<T>, HasEnu
   emptyValue: T;
   label?: string;
   display: DisplayCompD;
-  fieldName?: string;
   graphQlType: string;
+  rsGetter: string;
 }
 
 export interface StringPrimitiveDD extends CommonPrimitiveDD<string> {
@@ -200,25 +201,29 @@ export interface EnumDD {
 
 interface StringPrimDD {
   emptyValue: string;
-  reactType: 'string',
-  graphQlType: 'String',
+  reactType: 'string';
+  graphQlType: 'String';
+  rsGetter: 'getString';
 }
 export const stringPrimDD: StringPrimDD = {
   emptyValue: "",
   reactType: 'string',
   graphQlType: 'String',
+  rsGetter: 'getString'
 }
 interface NumberPrimDD {
   name: 'IntegerDD',
   emptyValue: number,
   graphQlType: 'Int',
-  reactType: 'number'
+  reactType: 'number',
+  rsGetter: 'getInt'
 }
 export const numberPrimDD: NumberPrimDD = {
   name: 'IntegerDD',
   emptyValue: 0,
   graphQlType: 'Int',
-  reactType: 'number'
+  reactType: 'number',
+  rsGetter: 'getInt'
 }
 
 export const CustomerIdDD: StringPrimitiveDD = {
@@ -271,6 +276,7 @@ export const MoneyDD: NumberPrimitiveDD = {
   name: 'IntegerDD'
 }
 export const BooleanDD: PrimitiveDD = {
+  rsGetter: "getBoolean",
   name: 'BooleanDD',
   emptyValue: false,
   graphQlType: 'Boolean',
