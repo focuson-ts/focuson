@@ -22,8 +22,8 @@ function MyLoading () {
 const simpleMessagesConfig = simpleMessagesPageConfig<FullState, string, Context> ( MyLoading )
 
 export const pages: MultiPageDetails<FullState, Context> = {
-  search: { config: simpleMessagesConfig, lens: identityOptics<FullState> ().focusQuery ( 'search' ), pageFunction: SearchPage<FullState, Context> (), initialValue: {} },
-  query: { config: simpleMessagesConfig, lens: identityOptics<FullState> ().focusQuery ( 'search' ).focusQuery ( 'query' ), pageFunction: SearchQueryModalPage (), modal: true }
+  search: { pageType: "MainPage", config: simpleMessagesConfig, lens: identityOptics<FullState> ().focusQuery ( 'search' ), pageFunction: SearchPage<FullState, Context> (), initialValue: {} },
+  query: { pageType: "ModalPage", config: simpleMessagesConfig, pageFunction: SearchQueryModalPage () }
 }
 
 export const restDetails: RestDetails<FullState, SimpleMessage> = {}
@@ -71,4 +71,4 @@ setJson ( {
   search: { query: "phil", queryResults: [] },
   debug: { selectedPageDebug: false, fetcherDebug: true },
   restCommands: []
-} , 'initialState')
+}, 'initialState' )

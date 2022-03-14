@@ -1,4 +1,4 @@
-import { focusPageClassName, HasPageSelection, HasSimpleMessageL, MultiPageDetails, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages, simpleMessagesL } from "@focuson/pages";
+import { focusPageClassName, HasPageSelection, HasSimpleMessageL, MultiPageDetails, PageDetailsForCombine, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages, simpleMessagesL } from "@focuson/pages";
 import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
 import { FetcherTree, loadTree, wouldLoad, wouldLoadSummary } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
@@ -7,8 +7,8 @@ import { FetchFn, HasSimpleMessages } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestDetails } from "@focuson/rest";
 
 
-export function defaultCombine ( pages: JSX.Element[] ) {
-  return <div className='combine'>{pages.map ( ( p, i ) => <div className={focusPageClassName} key={i}>{p}</div> )}</div>
+export function defaultCombine ( pages: PageDetailsForCombine[] ) {
+  return <div className='combine'>{pages.map ( ( p, i ) => <div className={focusPageClassName} key={i}>{p.element}</div> )}</div>
 }
 export function defaultPageSelectionContext<S extends HasPageSelection, Context extends PageSelectionContext<S>> ( pageDetails: MultiPageDetails<S, Context> ): PageSelectionContext<S> {
   return {

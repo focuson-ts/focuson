@@ -31,7 +31,6 @@ export function isMainPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Ms
   return o.pageType === 'MainPage'
 }
 export interface ModalPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> extends CommonPageDetails<S, D, Msgs, Config, Context> {
-  modal: true
   pageType: 'ModalPopup' | 'ModalPage'
 }
 export function isModalPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> ( o: OnePageDetails<S, D, Msgs, Config, Context> ): o is ModalPageDetails<S, D, Msgs, Config, Context> {

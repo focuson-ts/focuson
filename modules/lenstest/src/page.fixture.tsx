@@ -52,12 +52,12 @@ export function pageSpecStateConfig<D> (): PageConfig<PageSpecState, D, SimpleMe
 }
 
 export const pageDetails: MultiPageDetails<PageSpecState, ContextForTest> = {
-  firstPage: { config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'firstPage' ), pageFunction: DisplayPageSpecState ( 'firstPage' ) },
-  clearAtStart: { config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'firstPage' ), pageFunction: DisplayPageSpecState ( 'firstPage' ), clearAtStart: true },
-  init: { config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'firstPage' ), pageFunction: DisplayPageSpecState ( 'firstPage' ), initialValue: "Initial Value" },
-  secondPage: { config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'secondPage' ).focusQuery ( 'fromApi' ), pageFunction: DisplayPageSpecState ( 'secondPage' ), clearAtStart: true },
-  modalData: { config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'tempData' ), pageFunction: DisplayPageSpecState ( 'modalData' ), initialValue: "someValue" },
-  error: { config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'tempData' ), pageFunction: DisplayPageSpecState ( 'error' ), clearAtStart: true, initialValue: "someValue" },
+  firstPage: {  pageType: 'MainPage',config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'firstPage' ), pageFunction: DisplayPageSpecState ( 'firstPage' ) },
+  clearAtStart: { pageType: 'MainPage',config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'firstPage' ), pageFunction: DisplayPageSpecState ( 'firstPage' ), clearAtStart: true },
+  init: { pageType: 'MainPage',config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'firstPage' ), pageFunction: DisplayPageSpecState ( 'firstPage' ), initialValue: "Initial Value" },
+  secondPage: {pageType: 'MainPage', config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'secondPage' ).focusQuery ( 'fromApi' ), pageFunction: DisplayPageSpecState ( 'secondPage' ), clearAtStart: true },
+  modalData: { pageType: 'MainPage',config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'tempData' ), pageFunction: DisplayPageSpecState ( 'modalData' ), initialValue: "someValue" },
+  error: {pageType: 'MainPage', config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'tempData' ), pageFunction: DisplayPageSpecState ( 'error' ), clearAtStart: true, initialValue: "someValue" },
 }
 export type PageDetails = typeof pageDetails
 

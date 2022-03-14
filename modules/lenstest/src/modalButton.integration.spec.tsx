@@ -1,4 +1,4 @@
-import { HasPageSelection, ModalButton, ModalCommitButton, pageSelectionlens, simpleMessagesL } from "@focuson/pages";
+import { HasPageSelection, ModalButton, ModalCommitButton, PageDetailsForCombine, pageSelectionlens, simpleMessagesL } from "@focuson/pages";
 import { HasRestCommands, restL } from "@focuson/rest";
 import { lensState, LensState } from "@focuson/state";
 import { shallow } from "enzyme";
@@ -56,7 +56,7 @@ const listS: ModalButtonStateForTest = {
 type Context = FocusOnContext<ModalButtonStateForTest>
 const context: Context = {
   restL: restL<ModalButtonStateForTest> (),
-  combine: ( pages: JSX.Element[] ): JSX.Element => <div>{pages}</div>,
+  combine: ( pages: PageDetailsForCombine[] ): JSX.Element => <div>{pages.map ( p => p.element )}</div>,
   pageSelectionL: pageSelectionlens (),
   simpleMessagesL: simpleMessagesL (),
   pages: {}
