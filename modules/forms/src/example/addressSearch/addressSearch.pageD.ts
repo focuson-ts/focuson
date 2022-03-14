@@ -35,13 +35,13 @@ export const PostCodeMainPage: ExampleMainPage = {
     search: {
       control: 'ModalButton', modal: PostCodeModalPage, mode: 'edit',
       focusOn: [ 'postcode' ],
-      copy: { from: [ 'main', 'postcode' ], to: [ 'postcode', 'search' ] },
+      copy: { from: [ '{basePage}', 'main', 'postcode' ], to: [ '{basePage}', 'postcode', 'search' ] },
       copyOnClose: [
-        { from: [ 'postcode', 'addressResults', 'line1' ], to: [ 'main', 'line1' ] },
-        { from: [ 'postcode', 'addressResults', 'line2' ], to: [ 'main', 'line2' ] },
-        { from: [ 'postcode', 'addressResults', 'line3' ], to: [ 'main', 'line3' ] },
-        { from: [ 'postcode', 'addressResults', 'line4' ], to: [ 'main', 'line4' ] },
-        { from: [ 'postcode', 'search' ], to: [ 'main', 'postcode' ] },
+        { from: [ '{basePage}', 'postcode', 'addressResults', 'line1' ], to: [  '{basePage}','main', 'line1' ] },
+        { from: [ '{basePage}', 'postcode', 'addressResults', 'line2' ], to: [ '{basePage}', 'main', 'line2' ] },
+        { from: [ '{basePage}', 'postcode', 'addressResults', 'line3' ], to: [ '{basePage}', 'main', 'line3' ] },
+        { from: [ '{basePage}', 'postcode', 'addressResults', 'line4' ], to: [ '{basePage}', 'main', 'line4' ] },
+        { from: [ '{basePage}', 'postcode', 'search' ], to: [ '{basePage}', 'main', 'postcode' ] },
       ]
     },
   },

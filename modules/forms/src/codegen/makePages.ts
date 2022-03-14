@@ -28,7 +28,7 @@ export function walkModals<B,G> ( ps: PageD<B,G>[] ): ModalCreationData<B,G>[] {
 }
 
 export const makeModal =<G> ( params: TSParams ) => <B> ( { name, modal }: ModalCreationData<B,G> ): string[] => {
-  return [ `    ${name}: {pageType: '${modal.pageType}',  config: simpleMessagesConfig,  pageFunction: ${pageComponentName ( modal )}(), modal: true}` ]
+  return [ `    ${name}: {pageType: '${modal.pageType}',  config: simpleMessagesConfig,  pageFunction: ${pageComponentName ( modal )}()}` ]
 };
 
 export function makePages<B,G> ( params: TSParams, ps: PageD<B,G>[] ): string[] {

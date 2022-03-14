@@ -28,8 +28,8 @@ export function PostCodeDemoPage(){
   const buttons =    {search:<ModalButton id='search' text='search'  state={state} modal = 'PostCodeSearch'  
         pageMode='edit'
         focusOn={["PostCodeDemo","postcode"]}
-        copy={[{"from":["PostCodeDemo","main","postcode"],"to":["PostCodeDemo","postcode","search"]}]}
-        copyOnClose={[{"from":["PostCodeDemo","postcode","addressResults","line1"],"to":["PostCodeDemo","main","line1"]},{"from":["PostCodeDemo","postcode","addressResults","line2"],"to":["PostCodeDemo","main","line2"]},{"from":["PostCodeDemo","postcode","addressResults","line3"],"to":["PostCodeDemo","main","line3"]},{"from":["PostCodeDemo","postcode","addressResults","line4"],"to":["PostCodeDemo","main","line4"]},{"from":["PostCodeDemo","postcode","search"],"to":["PostCodeDemo","main","postcode"]}]}
+        copy={[{"from":["{basePage}","main","postcode"],"to":["{basePage}","postcode","search"]}]}
+        copyOnClose={[{"from":["{basePage}","postcode","addressResults","line1"],"to":["{basePage}","main","line1"]},{"from":["{basePage}","postcode","addressResults","line2"],"to":["{basePage}","main","line2"]},{"from":["{basePage}","postcode","addressResults","line3"],"to":["{basePage}","main","line3"]},{"from":["{basePage}","postcode","addressResults","line4"],"to":["{basePage}","main","line4"]},{"from":["{basePage}","postcode","search"],"to":["{basePage}","main","postcode"]}]}
       />,}
 
       return <div className='mainPage'>

@@ -11,13 +11,13 @@ describe ( "makeButtons", () => {
     expect ( makeButtonsFrom ( paramsForTest,AllGuardCreator, makeButtons (), EAccountsSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
       "    {amendExistingPlan:<ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  ",
       "      pageMode='edit'",
-      "      focusOn={['EAccountsSummary','tempCreatePlan']}",
-      "      copy={[{'from':['EAccountsSummary','fromApi','createPlan']}]}",
+      "      focusOn={['EAccountsSummary','{basePage}','tempCreatePlan']}",
+      "      copy={[{'from':['{basePage}','fromApi','createPlan']}]}",
       "       rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'update','path':['EAccountsSummary']}}",
       "    />,",
       "    createNewPlan:<ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  ",
       "      pageMode='create'",
-      "      focusOn={['EAccountsSummary','tempCreatePlan']}",
+      "      focusOn={['EAccountsSummary','{basePage}','tempCreatePlan']}",
       "      createEmpty={empty.emptyCreatePlanDD}",
       "       rest={{'name':'EAccountsSummary_CreatePlanDDRestDetails','restAction':'create','path':['EAccountsSummary']}}",
       "    />,",
@@ -30,22 +30,22 @@ describe ( "makeButtons", () => {
       "      confirm={true}",
       "     />,",
       "    refresh:<button>refresh of type ResetStateButton cannot be created yet</button>,}"
-    ] )
+    ])
   } )
   it ( "should create modal buttons with copy on close", () => {
     expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator,makeButtons (), OccupationAndIncomeSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "    {addEntry:<ModalButton id='addEntry' text='addEntry'  state={state} modal = 'OccupationIncomeModalPD'  ",
       "      pageMode='create'",
-      "      focusOn={['OccupationAndIncomeSummary','temp']}",
-      "      copyOnClose={[{'to':['OccupationAndIncomeSummary','fromApi','customerOccupationIncomeDetails','[append]']}]}",
+      "      focusOn={['OccupationAndIncomeSummary','{basePage}','temp']}",
+      "      copyOnClose={[{'to':['{basePage}','fromApi','customerOccupationIncomeDetails','[append]']}]}",
       "      createEmpty={empty.emptyOccupationIncomeDetailsDD}",
-      "      setToLengthOnClose={{'array':['OccupationAndIncomeSummary','fromApi','customerOccupationIncomeDetails'],'variable':['OccupationAndIncomeSummary','selectedItem']}}",
+      "      setToLengthOnClose={{'array':['fromApi','customerOccupationIncomeDetails'],'variable':['selectedItem']}}",
       "    />,",
       "    edit:<ModalButton id='edit' text='edit'  state={state} modal = 'OccupationIncomeModalPD'  ",
       "      pageMode='edit'",
-      "      focusOn={['OccupationAndIncomeSummary','temp']}",
-      "      copy={[{'from':['OccupationAndIncomeSummary','fromApi','customerOccupationIncomeDetails','{selectedItem}']}]}",
-      "      copyOnClose={[{'to':['OccupationAndIncomeSummary','fromApi','customerOccupationIncomeDetails','{selectedItem}']}]}",
+      "      focusOn={['OccupationAndIncomeSummary','{basePage}','temp']}",
+      "      copy={[{'from':['fromApi','customerOccupationIncomeDetails','{selectedItem}']}]}",
+      "      copyOnClose={[{'to':['fromApi','customerOccupationIncomeDetails','{selectedItem}']}]}",
       "    />,",
       "    nextOccupation:<GuardButton cond={nextOccupationGuard}>",
       "      <GuardButton cond={nextOccupationGuard}>",
@@ -55,7 +55,7 @@ describe ( "makeButtons", () => {
       "    prevOccupation:<GuardButton cond={prevOccupationGuard}>",
       "      <ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />",
       "    </GuardButton>,}"
-    ] )
+    ])
   } )
 
 } )

@@ -29,7 +29,7 @@ export function ETransferPage(){
         id='eTransfers'
         name='eTransfers'
         action='create'
-        path={["ETransfer"]}
+        path={["{basePage}","fromApi"]}
         rest='ETransfer_ETransferDataDRestDetails'
         confirm={true}
        />,

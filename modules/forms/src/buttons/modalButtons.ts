@@ -30,12 +30,7 @@ export interface ModalButtonInPage<G> extends CommonModalButtonInPage<G> {
   control: 'ModalButton',
   createEmpty?: DataD<G>
 }
-const addToStart = ( parent: string ) => ( copy: CopyDetails ) => {
-  const result: CopyDetails = {}
-  if ( copy.from ) result.from = [ parent, ...copy.from ]
-  if ( copy.to ) result.to = [ parent, ...copy.to ]
-  return result
-};
+
 function singleToList<T> ( ts: T | T[] ): T[] {
   if ( Array.isArray ( ts ) ) return ts
   return [ ts ]
@@ -49,9 +44,9 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalButtonInPage<G>, G> {
         const createEmptyString = createEmpty ? [ `createEmpty={${params.emptyFile}.${emptyName ( createEmpty )}}` ] : []
 
         const focusOnArray = [ parent.name, ...focusOn ]
-        const copyOnCloseArray = copyOnClose ? singleToList ( copyOnClose ).map ( addToStart ( parent.name ) ) : undefined
-        const copyFromArray = copy ? singleToList ( copy ).map ( addToStart ( parent.name ) ) : undefined
-        const actualSetToLengthOnClose = setToLengthOnClose ? { array: [ parent.name, ...setToLengthOnClose.array ], variable: [ parent.name, ...setToLengthOnClose.variable ] } : undefined
+        const copyOnCloseArray = copyOnClose ? singleToList ( copyOnClose ) : undefined
+        const copyFromArray = copy ? singleToList ( copy ) : undefined
+        const actualSetToLengthOnClose = setToLengthOnClose ? { array: [...setToLengthOnClose.array ], variable: [ ...setToLengthOnClose.variable ] } : undefined
         return [ `<${button.control} id='${name}' text='${text ? text : name}'  state={state} modal = '${modalName ( parent, modal )}'  `,
           ...indentList ( [
             ...opt ( 'pageMode', mode ),

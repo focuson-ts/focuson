@@ -10,7 +10,7 @@ export const OrderChequeBookOrPayingInModalPD: ExampleModalPage = {
   /** This page can only view data */
   modes: [ 'create' ],
   /** How we display the page.*/
-  display: {  target: [], dataDD: ChequeCreditbooksHistoryLineDD, importFrom: 'ChequeCreditbooks' },
+  display: { target: [], dataDD: ChequeCreditbooksHistoryLineDD, importFrom: 'ChequeCreditbooks' },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -54,7 +54,7 @@ export const ChequeCreditbooksPD: ExampleMainPage = {
     payingInBook: { control: 'ResetStateButton' },//, target: ['checkBookOrPayingInBook'], value : 'payingIn'},
     orderNewBook: {
       control: 'ModalButton', modal: OrderChequeBookOrPayingInModalPD, mode: 'create',
-      focusOn: [ 'tempCreatePlan' ],//not type checked here... should be type checked in target
+      focusOn: [ '{basePage}', 'tempCreatePlan' ],//not type checked here... should be type checked in target
       createEmpty: ChequeCreditbooksHistoryLineDD,
       restOnCommit: { rest: chequeCreditBooksRestD, action: 'create', result: 'refresh', target: [ 'tempCreatePlan' ] }
     }

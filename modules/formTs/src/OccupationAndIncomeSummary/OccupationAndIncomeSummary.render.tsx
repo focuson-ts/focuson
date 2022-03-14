@@ -34,16 +34,16 @@ export function OccupationAndIncomeSummaryPage(){
   const id='root';
   const buttons =    {addEntry:<ModalButton id='addEntry' text='addEntry'  state={state} modal = 'OccupationIncomeModalPD'  
         pageMode='create'
-        focusOn={["OccupationAndIncomeSummary","temp"]}
-        copyOnClose={[{"to":["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails","[append]"]}]}
+        focusOn={["OccupationAndIncomeSummary","{basePage}","temp"]}
+        copyOnClose={[{"to":["{basePage}","fromApi","customerOccupationIncomeDetails","[append]"]}]}
         createEmpty={empty.emptyOccupationIncomeDetailsDD}
-        setToLengthOnClose={{"array":["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails"],"variable":["OccupationAndIncomeSummary","selectedItem"]}}
+        setToLengthOnClose={{"array":["fromApi","customerOccupationIncomeDetails"],"variable":["selectedItem"]}}
       />,
       edit:<ModalButton id='edit' text='edit'  state={state} modal = 'OccupationIncomeModalPD'  
         pageMode='edit'
-        focusOn={["OccupationAndIncomeSummary","temp"]}
-        copy={[{"from":["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails","{selectedItem}"]}]}
-        copyOnClose={[{"to":["OccupationAndIncomeSummary","fromApi","customerOccupationIncomeDetails","{selectedItem}"]}]}
+        focusOn={["OccupationAndIncomeSummary","{basePage}","temp"]}
+        copy={[{"from":["fromApi","customerOccupationIncomeDetails","{selectedItem}"]}]}
+        copyOnClose={[{"to":["fromApi","customerOccupationIncomeDetails","{selectedItem}"]}]}
       />,
       nextOccupation:<GuardButton cond={nextOccupationGuard}>
         <GuardButton cond={nextOccupationGuard}>

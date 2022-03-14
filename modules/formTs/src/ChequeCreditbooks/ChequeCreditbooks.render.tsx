@@ -28,7 +28,7 @@ export function ChequeCreditbooksPage(){
   const buttons =    {chequeBook:<button>chequeBook of type ResetStateButton cannot be created yet</button>,
       orderNewBook:<ModalButton id='orderNewBook' text='orderNewBook'  state={state} modal = 'OrderChequeBookOrPayingInModal'  
         pageMode='create'
-        focusOn={["ChequeCreditbooks","tempCreatePlan"]}
+        focusOn={["ChequeCreditbooks","{basePage}","tempCreatePlan"]}
         createEmpty={empty.emptyChequeCreditbooksHistoryLineDD}
          rest={{"name":"ChequeCreditbooks_ChequeCreditbooksDDRestDetails","restAction":"create","path":["tempCreatePlan"]}}
       />,

@@ -30,13 +30,13 @@ export function EAccountsSummaryPage(){
   const id='root';
   const buttons =    {amendExistingPlan:<ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  
         pageMode='edit'
-        focusOn={["EAccountsSummary","tempCreatePlan"]}
-        copy={[{"from":["EAccountsSummary","fromApi","createPlan"]}]}
+        focusOn={["EAccountsSummary","{basePage}","tempCreatePlan"]}
+        copy={[{"from":["{basePage}","fromApi","createPlan"]}]}
          rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"update","path":["EAccountsSummary"]}}
       />,
       createNewPlan:<ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  
         pageMode='create'
-        focusOn={["EAccountsSummary","tempCreatePlan"]}
+        focusOn={["EAccountsSummary","{basePage}","tempCreatePlan"]}
         createEmpty={empty.emptyCreatePlanDD}
          rest={{"name":"EAccountsSummary_CreatePlanDDRestDetails","restAction":"create","path":["EAccountsSummary"]}}
       />,

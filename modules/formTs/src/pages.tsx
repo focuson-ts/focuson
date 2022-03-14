@@ -29,10 +29,10 @@ export const pages: MultiPageDetails<FState, Context> = {
     ChequeCreditbooks: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'ChequeCreditbooks' ), pageFunction: ChequeCreditbooksPage(), initialValue: {} },
     Repeating: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'Repeating' ), pageFunction: RepeatingPage(), initialValue: {} },
     PostCodeDemo: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'PostCodeDemo' ), pageFunction: PostCodeDemoPage(), initialValue: {"main":{},"postcode":{"search":"","searchResults":[],"addressResults":{"line1":"","line2":"","line3":"","line4":""}}} },
-    OccupationIncomeModalPD: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: OccupationIncomeModalPDPage(), modal: true},
-    ListOccupationsModal: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: ListOccupationsModalPage(), modal: true},
-    CreatePlan: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: CreatePlanPage(), modal: true},
-    OrderChequeBookOrPayingInModal: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: OrderChequeBookOrPayingInModalPage(), modal: true},
-    RepeatingLine: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: RepeatingLinePage(), modal: true},
-    PostCodeSearch: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: PostCodeSearchPage(), modal: true}
+    OccupationIncomeModalPD: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: OccupationIncomeModalPDPage()},
+    ListOccupationsModal: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: ListOccupationsModalPage()},
+    CreatePlan: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: CreatePlanPage()},
+    OrderChequeBookOrPayingInModal: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: OrderChequeBookOrPayingInModalPage()},
+    RepeatingLine: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: RepeatingLinePage()},
+    PostCodeSearch: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: PostCodeSearchPage()}
   }

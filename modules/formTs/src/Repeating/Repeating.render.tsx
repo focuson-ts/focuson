@@ -29,15 +29,15 @@ export function RepeatingPage(){
   const buttons =    {addEntry:<ModalButton id='addEntry' text='addEntry'  state={state} modal = 'RepeatingLine'  
         pageMode='create'
         focusOn={["Repeating","temp"]}
-        copyOnClose={[{"to":["Repeating","fromApi","[append]"]}]}
+        copyOnClose={[{"to":["fromApi","[append]"]}]}
         createEmpty={empty.emptyRepeatingLine}
-        setToLengthOnClose={{"array":["Repeating","fromApi"],"variable":["Repeating","selectedItem"]}}
+        setToLengthOnClose={{"array":["fromApi"],"variable":["selectedItem"]}}
       />,
       edit:<ModalButton id='edit' text='edit'  state={state} modal = 'RepeatingLine'  
         pageMode='edit'
         focusOn={["Repeating","temp"]}
-        copy={[{"from":["Repeating","fromApi","{selectedItem}"]}]}
-        copyOnClose={[{"to":["Repeating","fromApi","{selectedItem}"]}]}
+        copy={[{"from":["fromApi","{selectedItem}"]}]}
+        copyOnClose={[{"to":["fromApi","{selectedItem}"]}]}
       />,
       nextOccupation:<GuardButton cond={nextOccupationGuard}>
         <ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi')} value={fullState.focusOn('selectedItem')} />

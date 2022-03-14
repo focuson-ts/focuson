@@ -35,14 +35,14 @@ export const EAccountsSummaryPD:ExampleMainPage = {
     createNewPlan: {
       control: 'ModalButton', modal: CreatePlanPD, mode: 'create',
       createEmpty: CreatePlanDD,
-      focusOn: [ 'tempCreatePlan' ],//not type checked here... should be type checked in target
+      focusOn: ['{basePage}', 'tempCreatePlan' ],//not type checked here... should be type checked in target
       restOnCommit: { rest: createPlanRestD, action: 'create', result: 'refresh', target: [ 'EAccountsSummary' ] }
     },
     //questions: how do we know which is the existing plan... is there a list? are we an entry in the list? do we need to navigate to it?
     amendExistingPlan: {
       control: 'ModalButton', modal: CreatePlanPD, mode: 'edit',
-      focusOn: [ 'tempCreatePlan' ],
-      copy: {from: [ 'fromApi', 'createPlan' ]},
+      focusOn: [ '{basePage}','tempCreatePlan' ],
+      copy: {from: [ '{basePage}','fromApi', 'createPlan' ]},
       restOnCommit: { rest: createPlanRestD, action: 'update', result: 'refresh', target: [ 'EAccountsSummary' ] }
     },
     deleteExistingPlan: { control: 'RestButton', rest: createPlanRestD, action: 'delete', confirm: true, result: 'refresh', path: [ 'EAccountsSummary', 'fromApi' ] },

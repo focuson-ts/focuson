@@ -1,15 +1,13 @@
 import { identityOptics } from "@focuson/lens";
-import { HasPageSelection, MultiPageDetails, PageSelectionContext, pageSelectionlens, SelectedPage, simpleMessagesL, simpleMessagesPageConfig } from "@focuson/pages";
+import { MultiPageDetails, PageSelectionContext, pageSelectionlens, SelectedPage, simpleMessagesL, simpleMessagesPageConfig } from "@focuson/pages";
 import { getElement, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
 import { SearchPage, SearchQueryModalPage } from "./search/searchPage";
 import React from "react";
 import { defaultPageSelectionContext, FocusOnConfig, HasFocusOnDebug, setJsonForFocusOn } from "@focuson/focuson";
-import { HasPostCommand, postCommandsL, Posters } from "@focuson/poster";
-import { defaultDateFn, fetchWithDelay, fetchWithPrefix, HasSimpleMessages, loggingFetchFn, SimpleMessage } from "@focuson/utils";
-import { HasSearch, SearchRequirements } from "./search/fullSearchDomain";
+import { defaultDateFn, fetchWithDelay, fetchWithPrefix, loggingFetchFn, SimpleMessage } from "@focuson/utils";
+import { SearchRequirements } from "./search/fullSearchDomain";
 import { fetchers } from "./fetchers";
-import { HasTagHolder } from "@focuson/template";
 import { HasRestCommands, RestDetails, restL } from "@focuson/rest";
 
 type Context = PageSelectionContext<FullState>

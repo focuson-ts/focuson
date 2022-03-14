@@ -62,6 +62,23 @@ export function pageSelections<S, Context extends HasPageSelectionLens<S>> ( s: 
  */
 export type PageOps = 'select' | 'popup'
 
+function getPageName<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ) {
+  let json = state.context.pageSelectionL.getOption ( state.main );
+  let result = json?.[ 0 ]?.pageName;
+  if ( result === undefined ) throw new Error ( 'Cannot get first page name' + JSON.stringify ( json ) )
+  return result;
+}
+export function replaceBasePath<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context>, path: string[] ) {
+  return path.map ( p => p === '{basePage}' ? getPageName ( state ) : p )
+}
+
+export function fromPathFor<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ): ( path: string[], description?: string ) => Optional<S, any> {
+  const lookup = ( name: string ) => refFromFirstPage ( state.context.pageSelectionL ) ( name ).getOption ( state.main );
+  const fromPath = Lenses.fromPathWith<S, any> ( lookup )
+  return ( path, d ) => fromPath ( replaceBasePath ( state,path ), d );
+}
+
+
 export function applyPageOps ( pageOps: PageOps, pageSelection: PageSelection ): ( s: PageSelection[] | undefined ) => PageSelection[] {
   return ( old: PageSelection[] | undefined ) => {
     const ps = safeArray ( old )

@@ -1,4 +1,4 @@
-import { currentPageSelectionTail, mainPage, PageSelection, PageSelectionContext, popPage, refFromFirstPage } from "../pageSelection";
+import { currentPageSelectionTail, fromPathFor, mainPage, PageSelection, PageSelectionContext, popPage, refFromFirstPage } from "../pageSelection";
 import { LensProps, reasonFor } from "@focuson/state";
 import { DateFn, safeArray } from "@focuson/utils";
 import { Lenses, Transform } from "@focuson/lens";
@@ -27,8 +27,7 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
     const lastPage = currentPageSelectionTail ( state )
     const rest = lastPage?.rest;
     const copyOnClose = lastPage?.copyOnClose
-    const lookup = ( name: string ) => refFromFirstPage ( state.context.pageSelectionL ) ( name ).getOption ( state.main );
-    const fromPath = Lenses.fromPathWith<S, any> ( lookup )
+    const fromPath = fromPathFor ( state );
     const focusLens = fromPath ( safeArray ( lastPage.focusOn ) )
 
     const setToLengthOnCloseArrayL = fromPath ( safeArray ( lastPage?.setToLengthOnClose?.array ) )
