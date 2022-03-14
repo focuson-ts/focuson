@@ -24,18 +24,18 @@ export type OnePageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Con
   MainPageDetails<S, D, Msgs, Config, Context> | ModalPageDetails<S, D, Msgs, Config, Context>
 
 export interface MainPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> extends CommonPageDetails<S, D, Msgs, Config, Context> {
-  lens: Optional<S, D>
+  lens: Optional<S, D>;
+  pageType: 'MainPage'
 }
 export function isMainPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> ( o: OnePageDetails<S, D, Msgs, Config, Context> ): o is MainPageDetails<S, D, Msgs, Config, Context> {
-  // @ts-ignore
-  return !!o.lens
+  return o.pageType === 'MainPage'
 }
 export interface ModalPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> extends CommonPageDetails<S, D, Msgs, Config, Context> {
   modal: true
+  pageType: 'ModalPopup' | 'ModalPage'
 }
 export function isModalPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> ( o: OnePageDetails<S, D, Msgs, Config, Context> ): o is ModalPageDetails<S, D, Msgs, Config, Context> {
-  // @ts-ignore
-  return !!o.modal
+  return o.pageType === 'ModalPage' || o.pageType === 'ModalPopup'
 }
 
 /** In most applications this will be extended. For example it is quite likely to have a lens from S to the PostCommands added to it if

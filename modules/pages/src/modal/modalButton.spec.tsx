@@ -4,6 +4,7 @@ import { enzymeSetup } from "../enzymeAdapterSetup";
 
 import { ModalButton } from "./modalButton";
 import { HasPageSelection, PageSelectionContext, pageSelectionlens } from "../pageSelection";
+import { PageDetailsForCombine } from "../selectedPage";
 
 enzymeSetup ()
 interface StateForModalButtonTest extends HasPageSelection {
@@ -11,7 +12,7 @@ interface StateForModalButtonTest extends HasPageSelection {
 }
 
 const context: PageSelectionContext<StateForModalButtonTest> = {
-  combine: ( pages: JSX.Element[] ): JSX.Element => <div>{pages}</div>,
+  combine: ( pages: PageDetailsForCombine[] ): JSX.Element => <div>{pages.map ( c => c.element )}</div>,
   pageSelectionL: pageSelectionlens (),
   pages: {}
 

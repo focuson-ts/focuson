@@ -17,11 +17,16 @@ export interface SelectedPageDebug {
 
 export function SelectedPage<S, Context extends PageSelectionContext<S>> ( { state }: LensProps<S, any, Context> ) {
   let combine = state.context.combine;
-  let pages = findSelectedPageDetails ( state );
+  let pages: PageDetailsForCombine[] = findSelectedPageDetails ( state );
   return combine ? combine ( pages ) : <div>{pages}</div>
 }
 
-function findSelectedPageDetails<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): JSX.Element[] {
+export interface PageDetailsForCombine {
+  pageType?: string;
+  element: JSX.Element;
+}
+
+function findSelectedPageDetails<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): PageDetailsForCombine[] {
   // @ts-ignore
   const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
   let selectedPageData: PageSelection[] = currentPageSelection ( state );
@@ -43,33 +48,34 @@ export const pageState = <S, T, C extends HasPageSelectionLens<S>> ( ls: LensSta
 export function lensForPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> ( page: OnePageDetails<S, D, Msgs, Config, Context>, base?: string[] ): Optional<S, any> {
   return isMainPageDetails ( page ) ? page.lens : Lenses.fromPath ( safeArray ( base ) )
 }
-export const findOneSelectedPageDetails = <S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ) => ( ps: PageSelection ): JSX.Element => {
+export const findOneSelectedPageDetails = <S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ) => ( ps: PageSelection ): PageDetailsForCombine => {
   // @ts-ignore
   const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
   const pages = state.context.pages
   const { pageName, pageMode, focusOn } = ps
   const page = pages[ pageName ]
   if ( !page ) throw Error ( `Cannot find page with name ${pageName}, legal Values are [${Object.keys ( pages ).join ( "," )}]` )
-  const { config, pageFunction } = page
+  const { config, pageFunction, pageType } = page
 
   const lsForPage = state.copyWithLens ( lensForPageDetails ( page, focusOn ) )
 
   if ( debug ) console.log ( "findOneSelectedPageDetails.pageFunction", pageFunction )
   if ( typeof pageFunction === 'function' ) {// this is for legacy support
     if ( debug ) console.log ( "findOneSelectedPageDetails.legacy display" )
-    let main = pageFunction ( { state: lsForPage } );
-    if ( debug ) console.log ( "findOneSelectedPageDetails.legacy result", main )
-    if ( debug ) console.log ( "findOneSelectedPageDetails.legacy result - json", JSON.stringify ( main ) )
-    return main
-  } else return displayOne ( config, pageFunction, lsForPage, pageMode );
+    let element = pageFunction ( { state: lsForPage } );
+    if ( debug ) console.log ( "findOneSelectedPageDetails.legacy result", element )
+    if ( debug ) console.log ( "findOneSelectedPageDetails.legacy result - json", JSON.stringify ( element ) )
+    return { element, pageType }
+  } else return displayOne ( config, pageType, pageFunction, lsForPage, pageMode );
 };
 
 
 /** Given a config.ts, a focused page data structure and a lens state (focused on anything...doesn't matter) this will display a page */
 export function displayOne<S extends any, D extends any, Msgs, Context> (
   config: PageConfig<S, D, Msgs, Context>,
+  pageType: string | undefined,
   focusedPage: FocusedPage<S, D, Context>,
-  s: LensState<S, D, Context>, pageMode: PageMode ): JSX.Element {
+  s: LensState<S, D, Context>, pageMode: PageMode ): PageDetailsForCombine {
   // @ts-ignore
   const debug = s.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
   let t = config.template
@@ -77,8 +83,8 @@ export function displayOne<S extends any, D extends any, Msgs, Context> (
   if ( debug ) console.log ( "displayMain.template 1", template )
   const loading = config.loading ? config.loading : Loading
   if ( debug ) console.log ( "displayMain.loading 2", loading )
-  const result = template ( { state: s, focusedPage, loading, pageMode } )
-  if ( debug ) console.log ( "displayMain.result 3", result );
-  return result
+  const element = template ( { state: s, focusedPage, loading, pageMode } )
+  if ( debug ) console.log ( "displayMain.element 3", element );
+  return { element, pageType }
 }
 

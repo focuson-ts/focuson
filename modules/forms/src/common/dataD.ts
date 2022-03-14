@@ -273,7 +273,7 @@ export const IntegerDD: NumberPrimitiveDD = {
 export const MoneyDD: NumberPrimitiveDD = {
   ...IntegerDD,
   description: "The primitive representing an amount of the local currency",
-  name: 'IntegerDD'
+  name: 'MoneyDD'
 }
 export const BooleanDD: PrimitiveDD = {
   rsGetter: "getBoolean",

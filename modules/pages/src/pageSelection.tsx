@@ -3,6 +3,7 @@ import { LensState } from "@focuson/state";
 import { HasMultiPageDetails } from "./pageConfig";
 import { safeArray } from "@focuson/utils";
 import { RestCommand } from "@focuson/rest";
+import { PageDetailsForCombine } from "./selectedPage";
 
 
 export type PageMode = 'view' | 'create' | 'edit'
@@ -22,8 +23,8 @@ export interface PageOnClose {
   onCloseHandler: string;//
   onCloseParams: any; //
 }
-export interface SetToLengthOnClose{
-  array:string[],
+export interface SetToLengthOnClose {
+  array: string[],
   variable: string[]
 }
 export interface CopyDetails {
@@ -49,7 +50,7 @@ export interface HasPageSelectionLens<S> {
   pageSelectionL: Optional<S, PageSelection[]>
 }
 export interface PageSelectionContext<S> extends HasPageSelectionLens<S>, HasMultiPageDetails<S, any> {
-  combine: ( pages: JSX.Element[] ) => JSX.Element
+  combine: ( pages: PageDetailsForCombine[] ) => JSX.Element
 }
 
 
