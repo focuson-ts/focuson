@@ -10,28 +10,28 @@ import {emptyState, FState } from "../common";
 import * as fetchers from "../fetchers";
 import * as rests from "../rests";
 //Rest create pact test
-pactWith ( { consumer: 'CreateEAccountDataDD', provider: 'CreateEAccountDataDDProvider', cors: true }, provider => {
+pactWith ( { consumer: 'CreateEAccountData', provider: 'CreateEAccountDataProvider', cors: true }, provider => {
   describe ( 'CreateEAccount - rest create', () => {
-    it ( 'should have a create rest for CreateEAccountDataDD', async () => {
-      const restCommand: RestCommand = { name: 'CreateEAccount_CreateEAccountDataDDRestDetails', restAction: 'create', path: [ 'CreateEAccount' ] }
+    it ( 'should have a create rest for CreateEAccountData', async () => {
+      const restCommand: RestCommand = { name: 'CreateEAccount_CreateEAccountDataRestDetails', restAction: 'create', path: [ 'CreateEAccount' ] }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
-      CreateEAccount: { editing:samples.sampleCreateEAccountDataDD0 },
+      CreateEAccount: { editing:samples.sampleCreateEAccountData0 },
         pageSelection: [ { pageName: 'CreateEAccount', pageMode: 'view' } ]
       }
       const url = applyToTemplate('/api/createEAccount/{createPlanId}', firstState.CommonIds).join('')
       await provider.addInteraction ( {
         state: 'default',
-        uponReceiving: 'CreateEAccount should have a create rest for CreateEAccountDataDD',
+        uponReceiving: 'CreateEAccount should have a create rest for CreateEAccountData',
         withRequest: {
           method: 'POST',
           path: url,
           query:{"accountId":"accId","customerId":"custId"}
-          ,body: JSON.stringify(samples.sampleCreateEAccountDataDD0)
+          ,body: JSON.stringify(samples.sampleCreateEAccountData0)
         },
         willRespondWith: {
           status: 200,
-          body: samples.sampleCreateEAccountDataDD0
+          body: samples.sampleCreateEAccountData0
         },
       } )
       const ids = {
@@ -39,7 +39,7 @@ pactWith ( { consumer: 'CreateEAccountDataDD', provider: 'CreateEAccountDataDDPr
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], CreateEAccount: { editing: samples.sampleCreateEAccountDataDD0} }
+      const rawExpected:any = { ...firstState, restCommands: [], CreateEAccount: { editing: samples.sampleCreateEAccountData0} }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
@@ -48,10 +48,10 @@ pactWith ( { consumer: 'CreateEAccountDataDD', provider: 'CreateEAccountDataDDPr
   } )
 })
 //Rest get pact test
-pactWith ( { consumer: 'CreateEAccountDataDD', provider: 'CreateEAccountDataDDProvider', cors: true }, provider => {
+pactWith ( { consumer: 'CreateEAccountData', provider: 'CreateEAccountDataProvider', cors: true }, provider => {
   describe ( 'CreateEAccount - rest get', () => {
-    it ( 'should have a get rest for CreateEAccountDataDD', async () => {
-      const restCommand: RestCommand = { name: 'CreateEAccount_CreateEAccountDataDDRestDetails', restAction: 'get', path: [ 'CreateEAccount' ] }
+    it ( 'should have a get rest for CreateEAccountData', async () => {
+      const restCommand: RestCommand = { name: 'CreateEAccount_CreateEAccountDataRestDetails', restAction: 'get', path: [ 'CreateEAccount' ] }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       CreateEAccount:{},
@@ -60,7 +60,7 @@ pactWith ( { consumer: 'CreateEAccountDataDD', provider: 'CreateEAccountDataDDPr
       const url = applyToTemplate('/api/createEAccount/{createPlanId}', firstState.CommonIds).join('')
       await provider.addInteraction ( {
         state: 'default',
-        uponReceiving: 'CreateEAccount should have a get rest for CreateEAccountDataDD',
+        uponReceiving: 'CreateEAccount should have a get rest for CreateEAccountData',
         withRequest: {
           method: 'GET',
           path: url,
@@ -69,7 +69,7 @@ pactWith ( { consumer: 'CreateEAccountDataDD', provider: 'CreateEAccountDataDDPr
         },
         willRespondWith: {
           status: 200,
-          body: samples.sampleCreateEAccountDataDD0
+          body: samples.sampleCreateEAccountData0
         },
       } )
       const ids = {
@@ -77,7 +77,7 @@ pactWith ( { consumer: 'CreateEAccountDataDD', provider: 'CreateEAccountDataDDPr
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], CreateEAccount: { editing: samples.sampleCreateEAccountDataDD0} }
+      const rawExpected:any = { ...firstState, restCommands: [], CreateEAccount: { editing: samples.sampleCreateEAccountData0} }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )

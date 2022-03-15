@@ -5,7 +5,7 @@ import { BooleanDD, IntegerDD } from "../../common/dataD";
 import { ExampleMainPage, ExampleModalPage } from "../common";
 
 export const occupationIncomeModalPD: ExampleModalPage = {
-  name: 'OccupationIncomeModalPD',
+  name: 'OccupationIncomeModal',
   pageType: 'ModalPage',
   /** This page can only view data */
   modes: [ 'view', 'create', 'edit' ],
@@ -20,7 +20,7 @@ export const occupationIncomeModalPD: ExampleModalPage = {
 
 }
 export const otherSourcesOfIncomeModalPD: ExampleModalPage = {
-  name: 'OtherSourcesOfIncomeModalPD',
+  name: 'OtherSourcesOfIncomeModaD',
   pageType: 'ModalPage',
 
   modes: [ 'edit' ],

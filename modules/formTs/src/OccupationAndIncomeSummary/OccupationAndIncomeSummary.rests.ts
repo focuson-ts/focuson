@@ -4,7 +4,7 @@ import { createSimpleMessage, DateFn, defaultDateFn, SimpleMessage } from "@focu
 import { Lenses, NameAndLens} from "@focuson/lens"
 
 import { FState } from "../common"
-export function OccupationAndIncomeSummary_OccupationAndIncomeDetailsDDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.OccupationAndIncomeDetailsDDDomain, SimpleMessage> {
+export function OccupationAndIncomeSummary_OccupationAndIncomeDetailsRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.OccupationAndIncomeDetailsDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'),
@@ -17,7 +17,7 @@ export function OccupationAndIncomeSummary_OccupationAndIncomeDetailsDDRestDetai
   }
 }
 
-export function OccupationAndIncomeSummary_OtherIncomeResponseDDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.OtherIncomeResponseDDDomain, SimpleMessage> {
+export function OccupationAndIncomeSummary_OtherIncomeResponseRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.OtherIncomeResponseDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'),

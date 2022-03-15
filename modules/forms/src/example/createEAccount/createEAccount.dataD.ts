@@ -5,7 +5,7 @@ import { AllGuards } from "../../buttons/guardButton";
 
 const SavingsStyleDD: StringPrimitiveDD = {
   ...OneLineStringDD,
-  name: "SavingsStyleDD",
+  name: "SavingsStyle",
   emptyValue: "adhoc",
   description: "Radio buttons that say how you want to accumulate  money",
   display: RadioCD,
@@ -17,7 +17,7 @@ const SavingsStyleDD: StringPrimitiveDD = {
   }
 }
 export const CreateEAccountDataD: DataD<AllGuards> = {
-  name: "CreateEAccountDataDD",
+  name: "CreateEAccountData",
   description: "Let's make an eaccount together",
   structure: {
     name: { dataDD: OneLineStringDD },

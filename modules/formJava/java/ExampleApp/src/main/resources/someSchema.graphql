@@ -1,53 +1,53 @@
 type Query{
-  getOccupationAndIncomeDetailsDD(accountSeq: String!, applicationRef: String!, brandRef: String!, vbAccountSeq: String!, vbAccountType: String!):OccupationAndIncomeDetailsDD!
-  getOtherIncomeResponseDD(accountSeq: String!, applicationRef: String!, brandRef: String!, vbAccountSeq: String!, vbAccountType: String!):OtherIncomeResponseDD!
-  getCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!
-  listCreatePlanDD(accountId: String!, customerId: String!):[CreatePlanDD!]!
-  getEAccountsSummaryDD(accountId: String!, customerId: String!):EAccountsSummaryDD!
-  getCreateEAccountDataDD(accountId: String!, createPlanId: String!, customerId: String!):CreateEAccountDataDD!
-  getChequeCreditbooksDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!):ChequeCreditbooksDD!
+  getOccupationAndIncomeDetails(accountSeq: String!, applicationRef: String!, brandRef: String!, vbAccountSeq: String!, vbAccountType: String!):OccupationAndIncomeDetails!
+  getOtherIncomeResponse(accountSeq: String!, applicationRef: String!, brandRef: String!, vbAccountSeq: String!, vbAccountType: String!):OtherIncomeResponse!
+  getCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):CreatePlan!
+  listCreatePlan(accountId: String!, customerId: String!):[CreatePlan!]!
+  getEAccountsSummary(accountId: String!, customerId: String!):EAccountsSummary!
+  getCreateEAccountData(accountId: String!, createPlanId: String!, customerId: String!):CreateEAccountData!
+  getChequeCreditbooks(accountId: String!, applRef: String!, brandRef: String!, customerId: String!):ChequeCreditbooks!
   getRepeatingLine(customerId: String!):[RepeatingLine!]!
   getPostCodeDataLine(postcode: String!):[PostCodeDataLine!]!
 }
 type Mutation{
-  updateOccupationAndIncomeDetailsDD(accountSeq: String!, applicationRef: String!, brandRef: String!, vbAccountSeq: String!, vbAccountType: String!,obj: OccupationAndIncomeDetailsDDInp!):OccupationAndIncomeDetailsDD!
-  createCreatePlanDD(accountId: String!, customerId: String!,obj: CreatePlanDDInp!):CreatePlanDD!
-  updateCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanDDInp!):CreatePlanDD!
-  deleteCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):String
+  updateOccupationAndIncomeDetails(accountSeq: String!, applicationRef: String!, brandRef: String!, vbAccountSeq: String!, vbAccountType: String!,obj: OccupationAndIncomeDetailsInp!):OccupationAndIncomeDetails!
+  createCreatePlan(accountId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!
+  updateCreatePlan(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!
+  deleteCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):String
   createETransferDataD(customerId: String!,obj: ETransferDataDInp!):ETransferDataD!
-  createCreateEAccountDataDD(accountId: String!, customerId: String!,obj: CreateEAccountDataDDInp!):CreateEAccountDataDD!
-  createChequeCreditbooksDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!,obj: ChequeCreditbooksDDInp!):ChequeCreditbooksDD!
+  createCreateEAccountData(accountId: String!, customerId: String!,obj: CreateEAccountDataInp!):CreateEAccountData!
+  createChequeCreditbooks(accountId: String!, applRef: String!, brandRef: String!, customerId: String!,obj: ChequeCreditbooksInp!):ChequeCreditbooks!
   createRepeatingLine(customerId: String!,obj: [RepeatingLineInp!]!):[RepeatingLine!]!
   createPostCodeMainPage(,obj: PostCodeMainPageInp!):PostCodeMainPage!
 }
-type ChequeCreditbooksDD{
-  history: [ChequeCreditbooksHistoryLineDD!]!
+type ChequeCreditbooks{
+  history: [ChequeCreditbooksHistoryLine!]!
 }
-type ChequeCreditbooksHistoryLineDD{
+type ChequeCreditbooksHistoryLine{
   serialNumber: Int!
   howOrdered: String!
   dateOrder: String!
 }
-type CreateEAccountDataDD{
+type CreateEAccountData{
   name: String!
   type: String!
   savingsStyle: String!
   initialAmount: Int!
 }
-type CreatePlanDD{
+type CreatePlan{
   createPlanStart: String!
   createPlanDate: String!
   createPlanEnd: String!
 }
-type EAccountsSummaryDD{
+type EAccountsSummary{
   useEStatements: Boolean!
-  eAccountsTable: [EAccountSummaryDD!]!
+  eAccountsTable: [EAccountSummary!]!
   totalMonthlyCost: Int!
   oneAccountBalance: Int!
   currentAccountBalance: Int!
-  createPlan: CreatePlanDD!
+  createPlan: CreatePlan!
 }
-type EAccountSummaryDD{
+type EAccountSummary{
   accountId: Int!
   displayType: String!
   description: String!
@@ -66,15 +66,15 @@ type ETransferDataD{
   balance: Int!
   notes: String!
 }
-type OccupationAndIncomeDetailsDD{
+type OccupationAndIncomeDetails{
   regulatoryReport: String!
   mainCustomerName: String!
   jointCustomerName: String!
   mainClientRef: Int!
   jointClientRef: Int!
-  customerOccupationIncomeDetails: [OccupationIncomeDetailsDD!]!
+  customerOccupationIncomeDetails: [OccupationIncomeDetails!]!
 }
-type OccupationIncomeDetailsDD{
+type OccupationIncomeDetails{
   areYou: String!
   currentEmployment: String!
   occupation: String!
@@ -103,7 +103,7 @@ type OccupationIncomeDetailsDD{
   empAppRoleSeq: Int!
   accountantAppRoleSeq: Int!
 }
-type OtherIncomeResponseDD{
+type OtherIncomeResponse{
   clientOtherIncomeSeq: String!
   otherIncomeType: String!
   incomeFreqRef: String!
@@ -127,21 +127,21 @@ type RepeatingLine{
   name: String!
   age: Int!
 }
-input ChequeCreditbooksDDInp{
-  history: [ChequeCreditbooksHistoryLineDDInp!]!
+input ChequeCreditbooksInp{
+  history: [ChequeCreditbooksHistoryLineInp!]!
 }
-input ChequeCreditbooksHistoryLineDDInp{
+input ChequeCreditbooksHistoryLineInp{
   serialNumber: Int!
   howOrdered: String!
   dateOrder: String!
 }
-input CreateEAccountDataDDInp{
+input CreateEAccountDataInp{
   name: String!
   type: String!
   savingsStyle: String!
   initialAmount: Int!
 }
-input CreatePlanDDInp{
+input CreatePlanInp{
   createPlanStart: String!
   createPlanDate: String!
   createPlanEnd: String!
@@ -157,15 +157,15 @@ input ETransferDataDInp{
   balance: Int!
   notes: String!
 }
-input OccupationAndIncomeDetailsDDInp{
+input OccupationAndIncomeDetailsInp{
   regulatoryReport: String!
   mainCustomerName: String!
   jointCustomerName: String!
   mainClientRef: Int!
   jointClientRef: Int!
-  customerOccupationIncomeDetails: [OccupationIncomeDetailsDDInp!]!
+  customerOccupationIncomeDetails: [OccupationIncomeDetailsInp!]!
 }
-input OccupationIncomeDetailsDDInp{
+input OccupationIncomeDetailsInp{
   areYou: String!
   currentEmployment: String!
   occupation: String!

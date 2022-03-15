@@ -1,12 +1,12 @@
 import * as domains from '../EAccountsSummary/EAccountsSummary.domains'
 
-export const sampleCreatePlanDD0: domains.CreatePlanDDDomain = 
+export const sampleCreatePlan0: domains.CreatePlanDomain = 
 {
   "createPlanStart": "2022-01-01",
   "createPlanDate": "2022-03-01",
   "createPlanEnd": "2022-10-01"
 }
-export const sampleEAccountsSummaryDD0: domains.EAccountsSummaryDDDomain = 
+export const sampleEAccountsSummary0: domains.EAccountsSummaryDomain = 
 {
   "useEStatements": true,
   "eAccountsTable": [
@@ -28,7 +28,7 @@ export const sampleEAccountsSummaryDD0: domains.EAccountsSummaryDDDomain =
     "createPlanEnd": "2022-10-01"
   }
 }
-export const sampleEAccountsSummaryTableDD0: domains.EAccountsSummaryTableDDDomain = 
+export const sampleEAccountsSummaryTable0: domains.EAccountsSummaryTableDomain = 
 [
   {
     "accountId": 1233450,
@@ -39,7 +39,7 @@ export const sampleEAccountsSummaryTableDD0: domains.EAccountsSummaryTableDDDoma
     "frequency": "23"
   }
 ]
-export const sampleEAccountSummaryDD0: domains.EAccountSummaryDDDomain = 
+export const sampleEAccountSummary0: domains.EAccountSummaryDomain = 
 {
   "accountId": 1233450,
   "displayType": "checking",
@@ -48,13 +48,13 @@ export const sampleEAccountSummaryDD0: domains.EAccountSummaryDDDomain =
   "total": 1000,
   "frequency": "23"
 }
-export const sampleCreatePlanDD1: domains.CreatePlanDDDomain = 
+export const sampleCreatePlan1: domains.CreatePlanDomain = 
 {
   "createPlanStart": "2020-10-01",
   "createPlanDate": "2020-10-01",
   "createPlanEnd": "2020-10-01"
 }
-export const sampleEAccountsSummaryDD1: domains.EAccountsSummaryDDDomain = 
+export const sampleEAccountsSummary1: domains.EAccountsSummaryDomain = 
 {
   "useEStatements": false,
   "eAccountsTable": [
@@ -76,7 +76,7 @@ export const sampleEAccountsSummaryDD1: domains.EAccountsSummaryDDDomain =
     "createPlanEnd": "2020-10-01"
   }
 }
-export const sampleEAccountsSummaryTableDD1: domains.EAccountsSummaryTableDDDomain = 
+export const sampleEAccountsSummaryTable1: domains.EAccountsSummaryTableDomain = 
 [
   {
     "accountId": 3233450,
@@ -87,7 +87,7 @@ export const sampleEAccountsSummaryTableDD1: domains.EAccountsSummaryTableDDDoma
     "frequency": "This is a one line string"
   }
 ]
-export const sampleEAccountSummaryDD1: domains.EAccountSummaryDDDomain = 
+export const sampleEAccountSummary1: domains.EAccountSummaryDomain = 
 {
   "accountId": 3233450,
   "displayType": "savings",
@@ -96,13 +96,13 @@ export const sampleEAccountSummaryDD1: domains.EAccountSummaryDDDomain =
   "total": 2991,
   "frequency": "This is a one line string"
 }
-export const sampleCreatePlanDD2: domains.CreatePlanDDDomain = 
+export const sampleCreatePlan2: domains.CreatePlanDomain = 
 {
   "createPlanStart": "2022-14-01",
   "createPlanDate": "2022-14-01",
   "createPlanEnd": "2022-14-01"
 }
-export const sampleEAccountsSummaryDD2: domains.EAccountsSummaryDDDomain = 
+export const sampleEAccountsSummary2: domains.EAccountsSummaryDomain = 
 {
   "useEStatements": true,
   "eAccountsTable": [
@@ -124,7 +124,7 @@ export const sampleEAccountsSummaryDD2: domains.EAccountsSummaryDDDomain =
     "createPlanEnd": "2022-14-01"
   }
 }
-export const sampleEAccountsSummaryTableDD2: domains.EAccountsSummaryTableDDDomain = 
+export const sampleEAccountsSummaryTable2: domains.EAccountsSummaryTableDomain = 
 [
   {
     "accountId": 4333450,
@@ -135,7 +135,7 @@ export const sampleEAccountsSummaryTableDD2: domains.EAccountsSummaryTableDDDoma
     "frequency": "another one line string"
   }
 ]
-export const sampleEAccountSummaryDD2: domains.EAccountSummaryDDDomain = 
+export const sampleEAccountSummary2: domains.EAccountSummaryDomain = 
 {
   "accountId": 4333450,
   "displayType": "This is a one line string",

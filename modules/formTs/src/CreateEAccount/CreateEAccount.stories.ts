@@ -15,11 +15,11 @@ export default {
 }
  
 interface StoryState {
-   domain: domain.CreateEAccountDataDDDomain
+   domain: domain.CreateEAccountDataDomain
    pageMode: PageMode
 }
  
-const initial = empty.emptyCreateEAccountDataDD
+const initial = empty.emptyCreateEAccountData
 const Template: Story<StoryState> = ( args: StoryState ) =>
    SBookProvider<FState, Context> ( { ...emptyState, CreateEAccount: { ...initial, editing: args.domain } },//NOTE currently stories only work if the target depth is 1
      context,
@@ -28,17 +28,17 @@ const Template: Story<StoryState> = ( args: StoryState ) =>
  
 export const View = Template.bind ( {} );
 View.args = {
-   domain: samples.sampleCreateEAccountDataDD0,
+   domain: samples.sampleCreateEAccountData0,
    pageMode: 'view'
 };
 export const Edit = Template.bind ( {} );
  Edit.args = {
-   domain: samples.sampleCreateEAccountDataDD0,
+   domain: samples.sampleCreateEAccountData0,
    pageMode: 'edit'
 };
  
 export const Empty = Template.bind ( {} );
 Empty.args = {
-   domain: empty.emptyCreateEAccountDataDD,
+   domain: empty.emptyCreateEAccountData,
    pageMode: 'create'
 };

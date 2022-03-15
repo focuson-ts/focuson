@@ -1,13 +1,13 @@
 import * as domains from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains'
 
-export const emptyCustomerOccupationIncomeDetailsDD:domains.CustomerOccupationIncomeDetailsDDDomain =
+export const emptyCustomerOccupationIncomeDetails:domains.CustomerOccupationIncomeDetailsDomain =
   [
     {
       "descTypeValue": "",
       "descTypeName": ""
     }
   ]
-export const emptyListOccupationsDD:domains.ListOccupationsDDDomain =
+export const emptyListOccupations:domains.ListOccupationsDomain =
   {
     "searchField": "",
     "occupationsList": [
@@ -17,7 +17,7 @@ export const emptyListOccupationsDD:domains.ListOccupationsDDDomain =
       }
     ]
   }
-export const emptyOccupationAndIncomeDetailsDD:domains.OccupationAndIncomeDetailsDDDomain =
+export const emptyOccupationAndIncomeDetails:domains.OccupationAndIncomeDetailsDomain =
   {
     "regulatoryReport": "",
     "mainCustomerName": "",
@@ -56,12 +56,12 @@ export const emptyOccupationAndIncomeDetailsDD:domains.OccupationAndIncomeDetail
       }
     ]
   }
-export const emptyOccupationDescriptionResponseDD:domains.OccupationDescriptionResponseDDDomain =
+export const emptyOccupationDescriptionResponse:domains.OccupationDescriptionResponseDomain =
   {
     "descTypeValue": "",
     "descTypeName": ""
   }
-export const emptyOccupationIncomeDetailsDD:domains.OccupationIncomeDetailsDDDomain =
+export const emptyOccupationIncomeDetails:domains.OccupationIncomeDetailsDomain =
   {
     "areYou": "",
     "currentEmployment": "",
@@ -91,7 +91,7 @@ export const emptyOccupationIncomeDetailsDD:domains.OccupationIncomeDetailsDDDom
     "empAppRoleSeq": 0,
     "accountantAppRoleSeq": 0
   }
-export const emptyOtherIncomeResponseDD:domains.OtherIncomeResponseDDDomain =
+export const emptyOtherIncomeResponse:domains.OtherIncomeResponseDomain =
   {
     "clientOtherIncomeSeq": "",
     "otherIncomeType": "",

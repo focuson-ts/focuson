@@ -1,7 +1,7 @@
 import * as common from './common';
-import { OccupationAndIncomeDetailsDDFetcher } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.fetchers';
-import { EAccountsSummaryDDFetcher } from './EAccountsSummary/EAccountsSummary.fetchers';
-import { ChequeCreditbooksDDFetcher } from './ChequeCreditbooks/ChequeCreditbooks.fetchers';
+import { OccupationAndIncomeDetailsFetcher } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.fetchers';
+import { EAccountsSummaryFetcher } from './EAccountsSummary/EAccountsSummary.fetchers';
+import { ChequeCreditbooksFetcher } from './ChequeCreditbooks/ChequeCreditbooks.fetchers';
 import { RepeatingWholeDataFetcher } from './Repeating/Repeating.fetchers';
 import { PostCodeDataFetcher } from './PostCodeDemo/PostCodeDemo.fetchers';
 import { FetcherTree,  } from "@focuson/fetcher";
@@ -13,9 +13,9 @@ import { commonIds, identityL } from './common';
 import { Optional, Lenses, NameAndLens} from '@focuson/lens';
 export const fetchers: FetcherTree<common.FState> = {
 fetchers: [
-    OccupationAndIncomeDetailsDDFetcher( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ),
-    EAccountsSummaryDDFetcher( identityL.focusQuery ( 'EAccountsSummary' ), commonIds ),
-    ChequeCreditbooksDDFetcher( identityL.focusQuery ( 'ChequeCreditbooks' ), commonIds ),
+    OccupationAndIncomeDetailsFetcher( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ),
+    EAccountsSummaryFetcher( identityL.focusQuery ( 'EAccountsSummary' ), commonIds ),
+    ChequeCreditbooksFetcher( identityL.focusQuery ( 'ChequeCreditbooks' ), commonIds ),
     RepeatingWholeDataFetcher( identityL.focusQuery ( 'Repeating' ), commonIds ),
     PostCodeDataFetcher( identityL.focusQuery ( 'PostCodeDemo' ), commonIds )
 ],

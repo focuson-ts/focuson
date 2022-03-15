@@ -6,7 +6,7 @@ import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.json.JsonParser;
 public class Sample{
     private static JsonParser parse = new JacksonJsonParser();
-  public static Map sampleChequeCreditbooksDD0 =  parse.parseMap(
+  public static Map sampleChequeCreditbooks0 =  parse.parseMap(
          "{"+
          "  \"history\": ["+
          "    {"+
@@ -17,7 +17,7 @@ public class Sample{
          "  ]"+
          "}"
   );
-  public static List sampleChequeCreditbooksHistoryDD0 =  parse.parseList(
+  public static List sampleChequeCreditbooksHistory0 =  parse.parseList(
          "["+
          "  {"+
          "    \"serialNumber\": 937453,"+
@@ -26,14 +26,14 @@ public class Sample{
          "  }"+
          "]"
   );
-  public static Map sampleChequeCreditbooksHistoryLineDD0 =  parse.parseMap(
+  public static Map sampleChequeCreditbooksHistoryLine0 =  parse.parseMap(
          "{"+
          "  \"serialNumber\": 937453,"+
          "  \"howOrdered\": \"Manually\","+
          "  \"dateOrder\": \"2022-10-01\""+
          "}"
   );
-  public static Map sampleCreateEAccountDataDD0 =  parse.parseMap(
+  public static Map sampleCreateEAccountData0 =  parse.parseMap(
          "{"+
          "  \"name\": \"This is a one line string\","+
          "  \"type\": \"checking\","+
@@ -41,14 +41,14 @@ public class Sample{
          "  \"initialAmount\": 123"+
          "}"
   );
-  public static Map sampleCreatePlanDD0 =  parse.parseMap(
+  public static Map sampleCreatePlan0 =  parse.parseMap(
          "{"+
          "  \"createPlanStart\": \"2022-01-01\","+
          "  \"createPlanDate\": \"2022-03-01\","+
          "  \"createPlanEnd\": \"2022-10-01\""+
          "}"
   );
-  public static List sampleCustomerOccupationIncomeDetailsDD0 =  parse.parseList(
+  public static List sampleCustomerOccupationIncomeDetails0 =  parse.parseList(
          "["+
          "  {"+
          "    \"descTypeValue\": \"someString\","+
@@ -56,7 +56,7 @@ public class Sample{
          "  }"+
          "]"
   );
-  public static Map sampleEAccountsSummaryDD0 =  parse.parseMap(
+  public static Map sampleEAccountsSummary0 =  parse.parseMap(
          "{"+
          "  \"useEStatements\": true,"+
          "  \"eAccountsTable\": ["+
@@ -79,7 +79,7 @@ public class Sample{
          "  }"+
          "}"
   );
-  public static List sampleEAccountsSummaryTableDD0 =  parse.parseList(
+  public static List sampleEAccountsSummaryTable0 =  parse.parseList(
          "["+
          "  {"+
          "    \"accountId\": 1233450,"+
@@ -91,7 +91,7 @@ public class Sample{
          "  }"+
          "]"
   );
-  public static Map sampleEAccountSummaryDD0 =  parse.parseMap(
+  public static Map sampleEAccountSummary0 =  parse.parseMap(
          "{"+
          "  \"accountId\": 1233450,"+
          "  \"displayType\": \"checking\","+
@@ -114,7 +114,7 @@ public class Sample{
          "  \"notes\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit\""+
          "}"
   );
-  public static Map sampleListOccupationsDD0 =  parse.parseMap(
+  public static Map sampleListOccupations0 =  parse.parseMap(
          "{"+
          "  \"searchField\": \"someString\","+
          "  \"occupationsList\": ["+
@@ -125,7 +125,7 @@ public class Sample{
          "  ]"+
          "}"
   );
-  public static Map sampleOccupationAndIncomeDetailsDD0 =  parse.parseMap(
+  public static Map sampleOccupationAndIncomeDetails0 =  parse.parseMap(
          "{"+
          "  \"regulatoryReport\": \"someString\","+
          "  \"mainCustomerName\": \"someString\","+
@@ -165,13 +165,13 @@ public class Sample{
          "  ]"+
          "}"
   );
-  public static Map sampleOccupationDescriptionResponseDD0 =  parse.parseMap(
+  public static Map sampleOccupationDescriptionResponse0 =  parse.parseMap(
          "{"+
          "  \"descTypeValue\": \"someString\","+
          "  \"descTypeName\": \"someString\""+
          "}"
   );
-  public static Map sampleOccupationIncomeDetailsDD0 =  parse.parseMap(
+  public static Map sampleOccupationIncomeDetails0 =  parse.parseMap(
          "{"+
          "  \"areYou\": \"C\","+
          "  \"currentEmployment\": \"N\","+
@@ -202,7 +202,7 @@ public class Sample{
          "  \"accountantAppRoleSeq\": 123"+
          "}"
   );
-  public static Map sampleOtherIncomeResponseDD0 =  parse.parseMap(
+  public static Map sampleOtherIncomeResponse0 =  parse.parseMap(
          "{"+
          "  \"clientOtherIncomeSeq\": \"someString\","+
          "  \"otherIncomeType\": \"someString\","+

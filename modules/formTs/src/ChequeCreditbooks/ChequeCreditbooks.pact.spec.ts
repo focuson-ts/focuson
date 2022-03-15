@@ -10,12 +10,12 @@ import {emptyState, FState } from "../common";
 import * as fetchers from "../fetchers";
 import * as rests from "../rests";
 //GetFetcher pact test
-pactWith ( { consumer: 'ChequeCreditbooksDD', provider: 'ChequeCreditbooksDDProvider', cors: true }, provider => {
+pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider', cors: true }, provider => {
   describe ( 'ChequeCreditbooks - fetcher', () => {
-    it ( 'should have a get fetcher for ChequeCreditbooksDD', async () => {
+    it ( 'should have a get fetcher for ChequeCreditbooks', async () => {
       await provider.addInteraction ( {
         state: 'default',
-        uponReceiving: 'ChequeCreditbooks should have a get fetcher for ChequeCreditbooksDD',
+        uponReceiving: 'ChequeCreditbooks should have a get fetcher for ChequeCreditbooks',
         withRequest: {
           method: 'GET',
           path: '/api/chequeCreditBooks',
@@ -23,7 +23,7 @@ pactWith ( { consumer: 'ChequeCreditbooksDD', provider: 'ChequeCreditbooksDDProv
         },
         willRespondWith: {
           status: 200,
-          body: samples.sampleChequeCreditbooksDD0
+          body: samples.sampleChequeCreditbooks0
         },
       } )
       const ids = {
@@ -33,7 +33,7 @@ pactWith ( { consumer: 'ChequeCreditbooksDD', provider: 'ChequeCreditbooksDDProv
       let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
-         ChequeCreditbooks: {fromApi:samples.sampleChequeCreditbooksDD0},
+         ChequeCreditbooks: {fromApi:samples.sampleChequeCreditbooks0},
         tags: { ChequeCreditbooks_fromApi:["accId","appref","brandRef","custId"]}
       };
       const expected = massTransform(expectedRaw,)
@@ -42,10 +42,10 @@ pactWith ( { consumer: 'ChequeCreditbooksDD', provider: 'ChequeCreditbooksDDProv
   } )
 })
 //Rest get pact test
-pactWith ( { consumer: 'ChequeCreditbooksDD', provider: 'ChequeCreditbooksDDProvider', cors: true }, provider => {
+pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider', cors: true }, provider => {
   describe ( 'ChequeCreditbooks - rest get', () => {
-    it ( 'should have a get rest for ChequeCreditbooksDD', async () => {
-      const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksDDRestDetails', restAction: 'get', path: [ 'ChequeCreditbooks' ] }
+    it ( 'should have a get rest for ChequeCreditbooks', async () => {
+      const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksRestDetails', restAction: 'get', path: [ 'ChequeCreditbooks' ] }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       ChequeCreditbooks:{},
@@ -54,7 +54,7 @@ pactWith ( { consumer: 'ChequeCreditbooksDD', provider: 'ChequeCreditbooksDDProv
       const url = applyToTemplate('/api/chequeCreditBooks', firstState.CommonIds).join('')
       await provider.addInteraction ( {
         state: 'default',
-        uponReceiving: 'ChequeCreditbooks should have a get rest for ChequeCreditbooksDD',
+        uponReceiving: 'ChequeCreditbooks should have a get rest for ChequeCreditbooks',
         withRequest: {
           method: 'GET',
           path: url,
@@ -63,7 +63,7 @@ pactWith ( { consumer: 'ChequeCreditbooksDD', provider: 'ChequeCreditbooksDDProv
         },
         willRespondWith: {
           status: 200,
-          body: samples.sampleChequeCreditbooksDD0
+          body: samples.sampleChequeCreditbooks0
         },
       } )
       const ids = {
@@ -71,7 +71,7 @@ pactWith ( { consumer: 'ChequeCreditbooksDD', provider: 'ChequeCreditbooksDDProv
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], ChequeCreditbooks: { fromApi: samples.sampleChequeCreditbooksDD0} }
+      const rawExpected:any = { ...firstState, restCommands: [], ChequeCreditbooks: { fromApi: samples.sampleChequeCreditbooks0} }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
@@ -80,28 +80,28 @@ pactWith ( { consumer: 'ChequeCreditbooksDD', provider: 'ChequeCreditbooksDDProv
   } )
 })
 //Rest create pact test
-pactWith ( { consumer: 'ChequeCreditbooksDD', provider: 'ChequeCreditbooksDDProvider', cors: true }, provider => {
+pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider', cors: true }, provider => {
   describe ( 'ChequeCreditbooks - rest create', () => {
-    it ( 'should have a create rest for ChequeCreditbooksDD', async () => {
-      const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksDDRestDetails', restAction: 'create', path: [ 'ChequeCreditbooks' ] }
+    it ( 'should have a create rest for ChequeCreditbooks', async () => {
+      const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksRestDetails', restAction: 'create', path: [ 'ChequeCreditbooks' ] }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
-      ChequeCreditbooks: { fromApi:samples.sampleChequeCreditbooksDD0 },
+      ChequeCreditbooks: { fromApi:samples.sampleChequeCreditbooks0 },
         pageSelection: [ { pageName: 'ChequeCreditbooks', pageMode: 'view' } ]
       }
       const url = applyToTemplate('/api/chequeCreditBooks', firstState.CommonIds).join('')
       await provider.addInteraction ( {
         state: 'default',
-        uponReceiving: 'ChequeCreditbooks should have a create rest for ChequeCreditbooksDD',
+        uponReceiving: 'ChequeCreditbooks should have a create rest for ChequeCreditbooks',
         withRequest: {
           method: 'POST',
           path: url,
           query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"}
-          ,body: JSON.stringify(samples.sampleChequeCreditbooksDD0)
+          ,body: JSON.stringify(samples.sampleChequeCreditbooks0)
         },
         willRespondWith: {
           status: 200,
-          body: samples.sampleChequeCreditbooksDD0
+          body: samples.sampleChequeCreditbooks0
         },
       } )
       const ids = {
@@ -109,7 +109,7 @@ pactWith ( { consumer: 'ChequeCreditbooksDD', provider: 'ChequeCreditbooksDDProv
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], ChequeCreditbooks: { fromApi: samples.sampleChequeCreditbooksDD0} }
+      const rawExpected:any = { ...firstState, restCommands: [], ChequeCreditbooks: { fromApi: samples.sampleChequeCreditbooks0} }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )

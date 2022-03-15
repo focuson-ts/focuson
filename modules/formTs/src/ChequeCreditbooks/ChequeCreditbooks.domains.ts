@@ -2,18 +2,18 @@ export interface HasChequeCreditbooksPageDomain {   ChequeCreditbooks?: ChequeCr
 
 export interface ChequeCreditbooksPageDomain{
   chequeBookOrPayingIn?:number;
-  fromApi?:ChequeCreditbooksDDDomain;
-  temp?:ChequeCreditbooksHistoryLineDDDomain[];
-  tempCreatePlan?:ChequeCreditbooksHistoryLineDDDomain;
+  fromApi?:ChequeCreditbooksDomain;
+  temp?:ChequeCreditbooksHistoryLineDomain[];
+  tempCreatePlan?:ChequeCreditbooksHistoryLineDomain;
 }
 
-export interface ChequeCreditbooksDDDomain{
-  history: ChequeCreditbooksHistoryLineDDDomain[];
+export interface ChequeCreditbooksDomain{
+  history: ChequeCreditbooksHistoryLineDomain[];
 }
 
-export type ChequeCreditbooksHistoryDDDomain = ChequeCreditbooksHistoryLineDDDomain[]
+export type ChequeCreditbooksHistoryDomain = ChequeCreditbooksHistoryLineDomain[]
 
-export interface ChequeCreditbooksHistoryLineDDDomain{
+export interface ChequeCreditbooksHistoryLineDomain{
   dateOrder: string;
   howOrdered: string;
   serialNumber: number;

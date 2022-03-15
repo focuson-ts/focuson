@@ -6,7 +6,7 @@ import { AllGuards } from "../../buttons/guardButton";
 export const EAccountDisplayTypeDD: StringPrimitiveDD = {
   ...OneLineStringDD,
   emptyValue: "savings",
-  name: "EAccountDisplayTypeDD",
+  name: "EAccountDisplayType",
   description: "The component that displays an EAccountDisplayType (savings/checking)",
   display: LabelAndRadioCD,
   enum: { savings: 'Savings', checking: 'Checking' }
@@ -14,7 +14,7 @@ export const EAccountDisplayTypeDD: StringPrimitiveDD = {
 }
 
 export const EAccountSummaryDD: DataD<AllGuards> = {
-  name: "EAccountSummaryDD",
+  name: "EAccountSummary",
   description: "This is the summary data about a single EAccount",
   structure: {
     accountId: { dataDD: AccountIdDD, displayParams: { label: "Account Id" } },
@@ -26,7 +26,7 @@ export const EAccountSummaryDD: DataD<AllGuards> = {
   }
 }
 export const EAccountsSummaryTableDD: RepeatingDataD <AllGuards> = {
-  name: "EAccountsSummaryTableDD",
+  name: "EAccountsSummaryTable",
   paged: false,
   description: "Just the raw EAccountSummaryDD data",
   dataDD: EAccountSummaryDD,
@@ -35,7 +35,7 @@ export const EAccountsSummaryTableDD: RepeatingDataD <AllGuards> = {
 }
 
 export const CreatePlanDD: DataD<AllGuards> = {
-  name: "CreatePlanDD",
+  name: "CreatePlan",
   description: "The create plan data (actually just put in one place to allow a test for a structure)",
   structure: {
     createPlanStart: { displayParams: { label: 'Create Start' }, dataDD: DateDD, sample: [ '2022-01-01' ] },
@@ -50,7 +50,7 @@ export const oneAccountBalanceResolver: any = {
   put: { sql: 'select {vars} from {table} where {query}', params: [] }
 }
 export const EAccountsSummaryDD: DataD<AllGuards> = {
-  name: "EAccountsSummaryDD",
+  name: "EAccountsSummary",
   description: "This is the summary data about all the EAccounts for a single user",
   // tableName: 'CustomerSUmmaryView',
   structure: {

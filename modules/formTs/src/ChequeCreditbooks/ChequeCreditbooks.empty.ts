@@ -1,6 +1,6 @@
 import * as domains from '../ChequeCreditbooks/ChequeCreditbooks.domains'
 
-export const emptyChequeCreditbooksDD:domains.ChequeCreditbooksDDDomain =
+export const emptyChequeCreditbooks:domains.ChequeCreditbooksDomain =
   {
     "history": [
       {
@@ -10,7 +10,7 @@ export const emptyChequeCreditbooksDD:domains.ChequeCreditbooksDDDomain =
       }
     ]
   }
-export const emptyChequeCreditbooksHistoryDD:domains.ChequeCreditbooksHistoryDDDomain =
+export const emptyChequeCreditbooksHistory:domains.ChequeCreditbooksHistoryDomain =
   [
     {
       "serialNumber": 0,
@@ -18,7 +18,7 @@ export const emptyChequeCreditbooksHistoryDD:domains.ChequeCreditbooksHistoryDDD
       "dateOrder": "2022-1-1"
     }
   ]
-export const emptyChequeCreditbooksHistoryLineDD:domains.ChequeCreditbooksHistoryLineDDDomain =
+export const emptyChequeCreditbooksHistoryLine:domains.ChequeCreditbooksHistoryLineDomain =
   {
     "serialNumber": 0,
     "howOrdered": "",

@@ -7,12 +7,12 @@ import java.util.Map;
 
 public class CreateEAccountDb{
   public static class AllCreateEAccountMaps{
-    public final Map<String,Object> CreateEAccountDataDD = new HashMap<>();
+    public final Map<String,Object> CreateEAccountData = new HashMap<>();
   }
-  public void makeCreateEAccountDataDD(AllCreateEAccountMaps maps, ResultSet rs) throws SQLException {
-    maps.CreateEAccountDataDD.put("name", rs.getString("name"));
-    maps.CreateEAccountDataDD.put("type", rs.getString("type"));
-    maps.CreateEAccountDataDD.put("savingsStyle", rs.getString("savingsStyle"));
-    maps.CreateEAccountDataDD.put("initialAmount", rs.getInt("initialAmount"));
+  public void makeCreateEAccountData(AllCreateEAccountMaps maps, ResultSet rs) throws SQLException {
+    maps.CreateEAccountData.put("name", rs.getString("name"));
+    maps.CreateEAccountData.put("type", rs.getString("type"));
+    maps.CreateEAccountData.put("savingsStyle", rs.getString("savingsStyle"));
+    maps.CreateEAccountData.put("initialAmount", rs.getInt("initialAmount"));
   }
 }

@@ -1,23 +1,23 @@
 export interface HasOccupationAndIncomeSummaryPageDomain {   OccupationAndIncomeSummary?: OccupationAndIncomeSummaryPageDomain}
 
 export interface OccupationAndIncomeSummaryPageDomain{
-  fromApi?:OccupationAndIncomeDetailsDDDomain;
-  other?:OtherIncomeResponseDDDomain;
-  searchList?:ListOccupationsDDDomain;
+  fromApi?:OccupationAndIncomeDetailsDomain;
+  other?:OtherIncomeResponseDomain;
+  searchList?:ListOccupationsDomain;
   selectedItem?:number;
-  temp?:OccupationIncomeDetailsDDDomain;
+  temp?:OccupationIncomeDetailsDomain;
   validationDebug?:boolean;
 }
 
-export type CustomerOccupationIncomeDetailsDDDomain = OccupationDescriptionResponseDDDomain[]
+export type CustomerOccupationIncomeDetailsDomain = OccupationDescriptionResponseDomain[]
 
-export interface ListOccupationsDDDomain{
-  occupationsList: OccupationDescriptionResponseDDDomain[];
+export interface ListOccupationsDomain{
+  occupationsList: OccupationDescriptionResponseDomain[];
   searchField: string;
 }
 
-export interface OccupationAndIncomeDetailsDDDomain{
-  customerOccupationIncomeDetails: OccupationIncomeDetailsDDDomain[];
+export interface OccupationAndIncomeDetailsDomain{
+  customerOccupationIncomeDetails: OccupationIncomeDetailsDomain[];
   jointClientRef: number;
   jointCustomerName: string;
   mainClientRef: number;
@@ -25,12 +25,12 @@ export interface OccupationAndIncomeDetailsDDDomain{
   regulatoryReport: string;
 }
 
-export interface OccupationDescriptionResponseDDDomain{
+export interface OccupationDescriptionResponseDomain{
   descTypeName: string;
   descTypeValue: string;
 }
 
-export interface OccupationIncomeDetailsDDDomain{
+export interface OccupationIncomeDetailsDomain{
   accountantAppRoleSeq: number;
   annualDrawing3Yrs: number;
   annualIncomeExcludingRent: number;
@@ -60,7 +60,7 @@ export interface OccupationIncomeDetailsDDDomain{
   workFor: string;
 }
 
-export interface OtherIncomeResponseDDDomain{
+export interface OtherIncomeResponseDomain{
   amount: number;
   clientOtherIncomeSeq: string;
   incomeFreqRef: string;

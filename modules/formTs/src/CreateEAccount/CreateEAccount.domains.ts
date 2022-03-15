@@ -1,10 +1,10 @@
 export interface HasCreateEAccountPageDomain {   CreateEAccount?: CreateEAccountPageDomain}
 
 export interface CreateEAccountPageDomain{
-  editing?:CreateEAccountDataDDDomain;
+  editing?:CreateEAccountDataDomain;
 }
 
-export interface CreateEAccountDataDDDomain{
+export interface CreateEAccountDataDomain{
   initialAmount: number;
   name: string;
   savingsStyle: string;

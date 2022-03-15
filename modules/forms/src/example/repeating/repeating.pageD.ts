@@ -15,7 +15,8 @@ export const RepeatingLinePageD: ExampleModalPage = {
   }
 }
 export const selectedItemPath = [ 'selectedItem' ]
-export const fromApiPath = [ 'fromApi' ]
+export const fromApiPath = ['fromApi' ]
+export const basePageToApiPath = [ '{basePage}',...fromApiPath ]
 /** This is the 'bringing it all together */
 export const RepeatingPageD: ExampleMainPage = {
   name: 'Repeating',
@@ -46,21 +47,21 @@ export const RepeatingPageD: ExampleMainPage = {
       focusOn: [ 'temp' ],
       createEmpty: RepeatingLineDataD,
       setToLengthOnClose: { variable: selectedItemPath, array: fromApiPath },
-      copyOnClose: {to: [ ...fromApiPath, '[append]' ]}
+      copyOnClose: {to: [ ...basePageToApiPath, '[append]' ]}
     },
     edit: {
       control: 'ModalButton', modal: RepeatingLinePageD, mode: 'edit',
       focusOn: [ 'temp' ],
-      copy: [{from: [ ...fromApiPath, '{selectedItem}' ]}],
-      copyOnClose: {to: [ ...fromApiPath, '{selectedItem}' ]}
-    },
-    nextOccupation: {
-      by: { condition: '<arrayEnd', arrayPath: fromApiPath, varPath: selectedItemPath },
-      guard: { control: 'ListNextButton', value: selectedItemPath, list: fromApiPath }
+      copy: [{from: [ ...basePageToApiPath, '{selectedItem}' ]}],
+      copyOnClose: {to: [ ...basePageToApiPath, '{selectedItem}' ]}
     },
     prevOccupation: {
       by: { condition: '>0', path: selectedItemPath },
       guard: { control: 'ListPrevButton', value: selectedItemPath, list: fromApiPath }
+    },
+    nextOccupation: {
+      by: { condition: '<arrayEnd', arrayPath: fromApiPath, varPath: selectedItemPath },
+      guard: { control: 'ListNextButton', value: selectedItemPath, list: fromApiPath }
     },
   }
 }

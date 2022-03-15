@@ -1,12 +1,12 @@
 import * as domains from '../EAccountsSummary/EAccountsSummary.domains'
 
-export const emptyCreatePlanDD:domains.CreatePlanDDDomain =
+export const emptyCreatePlan:domains.CreatePlanDomain =
   {
     "createPlanStart": "2022-1-1",
     "createPlanDate": "2022-1-1",
     "createPlanEnd": "2022-1-1"
   }
-export const emptyEAccountsSummaryDD:domains.EAccountsSummaryDDDomain =
+export const emptyEAccountsSummary:domains.EAccountsSummaryDomain =
   {
     "useEStatements": false,
     "eAccountsTable": [
@@ -28,7 +28,7 @@ export const emptyEAccountsSummaryDD:domains.EAccountsSummaryDDDomain =
       "createPlanEnd": "2022-1-1"
     }
   }
-export const emptyEAccountsSummaryTableDD:domains.EAccountsSummaryTableDDDomain =
+export const emptyEAccountsSummaryTable:domains.EAccountsSummaryTableDomain =
   [
     {
       "accountId": 0,
@@ -39,7 +39,7 @@ export const emptyEAccountsSummaryTableDD:domains.EAccountsSummaryTableDDDomain 
       "frequency": ""
     }
   ]
-export const emptyEAccountSummaryDD:domains.EAccountSummaryDDDomain =
+export const emptyEAccountSummary:domains.EAccountSummaryDomain =
   {
     "accountId": 0,
     "displayType": "savings",

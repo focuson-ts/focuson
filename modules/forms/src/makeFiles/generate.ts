@@ -1,14 +1,17 @@
 import { DirectorySpec } from "@focuson/files";
 import { CombinedParams } from "../codegen/config";
-import { PageD } from "../common/pageD";
+import { MainPageD, PageD } from "../common/pageD";
 import { makeJavaFiles } from "./makeJavaFiles";
 import { makeTsFiles } from "./makeTsFiles";
 import { ButtonD, makeButtons } from "../buttons/allButtons";
 import { AllGuardCreator, AllGuards, GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { MakeButton } from "../codegen/makeButtons";
 import { AppConfig } from "../focuson.config";
+import { validate } from "./validateModel";
+import { unique } from "../common/restD";
+import { safeArray } from "@focuson/utils";
 
-export const generate = <G extends GuardWithCondition> ( appConfig: AppConfig, javaOutputRoot: string, tsRoot: string, focusOnVersion: string, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G> ) => <B extends ButtonD> ( pages: PageD<B, G>[] ) => {
+export const generate = <G extends GuardWithCondition> ( appConfig: AppConfig, javaOutputRoot: string, tsRoot: string, focusOnVersion: string, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G> ) => <B extends ButtonD> ( pages: MainPageD<B, G>[] ) => {
   const params: CombinedParams = {
     pagesFile: 'pages',
     focusOnVersion,
@@ -45,6 +48,9 @@ export const generate = <G extends GuardWithCondition> ( appConfig: AppConfig, j
     backup: 'node_modules/@focuson/forms'
   }
 
-  makeJavaFiles (appConfig, javaOutputRoot, params, directorySpec ) ( pages )
-  makeTsFiles<G> (appConfig, tsRoot, params, makeGuards, makeButtons, directorySpec ) ( pages )
+  validate ( pages )
+  const fullPages = unique ( pages.flatMap ( p => [ p, ...safeArray(p.modals).map ( m => m.modal ) ] ), p => p.name )
+
+  makeJavaFiles ( appConfig, javaOutputRoot, params, directorySpec ) ( fullPages )
+  makeTsFiles<G> ( appConfig, tsRoot, params, makeGuards, makeButtons, directorySpec ) ( fullPages )
 };

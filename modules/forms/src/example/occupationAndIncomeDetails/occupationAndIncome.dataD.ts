@@ -8,13 +8,13 @@ import { AllGuards } from "../../buttons/guardButton";
 export const frequencyDD: StringPrimitiveDD = {
   ...OneLineStringDD,
   sample: [ 'Annual', 'Monthly' ],
-  name: 'FrequencyDD',
+  name: 'Frequency',
   description: "Income frequency",
   // display: DropDownCD,
   enum: HowOften
 }
 export const otherIncomeResponseDD: DataD<AllGuards> = {
-  name: "OtherIncomeResponseDD",
+  name: "OtherIncomeResponse",
   description: "This is a summary about other income data of a single record",
   structure: {
     clientOtherIncomeSeq: { dataDD: StringDD },
@@ -26,7 +26,7 @@ export const otherIncomeResponseDD: DataD<AllGuards> = {
 export const otherSourcesOfIncomeDataDD: RepeatingDataD<AllGuards> = {
   paged: false,
   display: TableCD,
-  name: "OtherIncomeDataDD",
+  name: "OtherIncomeData",
   description: "This is a summary about other income data",
   displayParams: { order: { value: [ 'otherIncomeType', 'incomeFreqRef', 'amount' ] } },
   dataDD: otherIncomeResponseDD
@@ -35,7 +35,7 @@ export const otherSourcesOfIncomeDataDD: RepeatingDataD<AllGuards> = {
 
 /* ---------------- SELF EMPLOYED ADDITIONAL INFORMATION START ---------------- */
 export const businessDetailsDD: DataD<AllGuards> = {
-  name: 'BusinessDetailsDD',
+  name: 'BusinessDetails',
   description: 'This is a summary about business details data',
   structure: {
     applicantName: { dataDD: StringDD },
@@ -48,7 +48,7 @@ export const businessDetailsDD: DataD<AllGuards> = {
   }
 }
 export const businessFinancialDetailsDD: DataD<AllGuards> = {
-  name: 'BusinessFinancialDetailsDD',
+  name: 'BusinessFinancialDetails',
   description: 'This is a summary about business financial details data',
   structure: {
     turnoverLastYear: { dataDD: StringDD },
@@ -64,14 +64,14 @@ export const businessFinancialDetailsDD: DataD<AllGuards> = {
   }
 }
 export const detailsOfNonRecurringItemsDD: DataD<AllGuards> = {
-  name: 'DetailsOfNonRecurringItemsDD',
+  name: 'DetailsOfNonRecurringItems',
   description: 'This is a summary about details of non-recurring items data',
   structure: {
     nonRecurringItems: { dataDD: StringDD }
   }
 }
 export const detailsOfReevaluationOfAssetsDD: DataD<AllGuards> = {
-  name: 'DetailsOfReevaluationOfAssetsDD',
+  name: 'DetailsOfReevaluationOfAssets',
   description: 'This is a summary about details of reevaluations of assets data',
   structure: {
     revaluationOfAssets: { dataDD: StringDD }
@@ -80,13 +80,13 @@ export const detailsOfReevaluationOfAssetsDD: DataD<AllGuards> = {
 export const contactTitleDD: StringPrimitiveDD = {
   ...OneLineStringDD,
   sample: [ 'Mr', 'Mrs' ],
-  name: 'ContactTitleDD',
+  name: 'ContactTitle',
   description: "contact title to address with",
   // display: DropDownCD,
   enum: ContactTitle
 }
 export const accountDetailsDD: DataD<AllGuards> = {
-  name: 'AccountDetailsDD',
+  name: 'AccountDetails',
   description: 'This is a summary about account details data',
   structure: {
     contactTitle: { dataDD: contactTitleDD },
@@ -102,7 +102,7 @@ export const accountDetailsDD: DataD<AllGuards> = {
   }
 }
 export const selfEmployedAdditionalInformationDD: DataD<AllGuards> = {
-  name: 'SelfEmployedAdditionalInformationDD',
+  name: 'SelfEmployedAdditionalInformation',
   description: 'This is a summary about self employed additional information data',
   structure: {
     businessDetails: { dataDD: businessDetailsDD },
@@ -116,7 +116,7 @@ export const selfEmployedAdditionalInformationDD: DataD<AllGuards> = {
 
 /* ---------------- EMPLOYED ADDITIONAL INFORMATION START ---------------- */
 export const employmentAdditionalInformationDD: DataD<AllGuards> = {
-  name: 'EmployedAdditionalInformationDD',
+  name: 'EmployedAdditionalInformation',
   description: 'This is a summary about employed additional information data',
   structure: {
     applicantName: { dataDD: StringDD },
@@ -139,14 +139,14 @@ export const occupationDetailsPageCD: DisplayCompD = {
 
 export const yesNoDD: StringPrimitiveDD = {
   ...OneLineStringDD,
-  name: 'YesNoDD',
+  name: 'YesNo',
   description: "yes/no enum",
   // display: DropDownCD,
   enum: YesNo
 }
 export const customerStatusDD: StringPrimitiveDD = {
   ...OneLineStringDD,
-  name: 'CustomerStatusDD',
+  name: 'CustomerStatus',
   description: "Customer status enum",
   // display: DropDownCD,
 
@@ -154,13 +154,13 @@ export const customerStatusDD: StringPrimitiveDD = {
 }
 export const employmentTypeDD: StringPrimitiveDD = {
   ...OneLineStringDD,
-  name: 'EmploymentTypeDD',
+  name: 'EmploymentType',
   description: "Employment contract type",
   // display: DropDownCD,
   enum: EmploymentType
 }
 export const occupationIncomeDetailsDD: DataD<AllGuards> = {
-  name: "OccupationIncomeDetailsDD",
+  name: "OccupationIncomeDetails",
   description: "This is a summary about occupation income details data of a single occupation",
   guards: { areYou: { condition: 'in', path: [ 'areYou' ], values: customerStatusDD.enum } },
   layout: { component: LayoutCd, params: { details: '[[1],[3,3],[5]]' } },
@@ -196,15 +196,15 @@ export const occupationIncomeDetailsDD: DataD<AllGuards> = {
 }
 
 export const customerOccupationIncomeDetailsDD: RepeatingDataD<AllGuards> = {
+  name: "CustomerOccupationIncomeDetails",
   paged: false,
   display: SelectedItemCD, // TODO create a component that does not display nothing
-  name: "CustomerOccupationIncomeDetailsDD",
   description: "This is a summary customer occupations data",
   displayParams: { index: { value: [ 'selectedItem' ] }, display: { value: occupationIncomeDetailsDD.name } },
   dataDD: occupationIncomeDetailsDD
 }
 export const occupationAndIncomeDetailsDD: DataD<AllGuards> = {
-  name: 'OccupationAndIncomeDetailsDD',
+  name: 'OccupationAndIncomeDetails',
   description: 'This is a summary about occupation and income details data',
   structure: {
     regulatoryReport: { dataDD: StringDD, hidden: true },
@@ -219,7 +219,7 @@ export const occupationAndIncomeDetailsDD: DataD<AllGuards> = {
 
 /* ---------------- OCCUPATION AND INCOME SUMMARY START ---------------- */
 export const occupationAndIncomeSummaryDD: DataD<AllGuards> = {
-  name: "OccupationAndIncomeSummaryDD",
+  name: "OccupationAndIncomeSummary",
   description: "This is the summary data about all the occupation and income details for a single user",
   structure: {
     occupationAndIncomeDetails: { dataDD: occupationAndIncomeDetailsDD },
@@ -232,7 +232,7 @@ export const occupationAndIncomeSummaryDD: DataD<AllGuards> = {
 
 
 export const occupationDescriptionResponseDD: DataD<AllGuards> = {
-  name: 'OccupationDescriptionResponseDD',
+  name: 'OccupationDescriptionResponse',
   description: 'This is a summary about occupation description dropdown',
   structure: {
     descTypeValue: { dataDD: StringDD, hidden: true },
@@ -256,12 +256,12 @@ export const SearchListCD: DisplayCompD = {
 export const occupationsListDD: RepeatingDataD<AllGuards> = {
   paged: false,
   display: ListItemsCD,
-  name: "CustomerOccupationIncomeDetailsDD",
+  name: "CustomerOccupationIncomeDetails",
   description: "This is a list of all the occupations",
   dataDD: occupationDescriptionResponseDD
 }
 export const listOccupationsDD: DataD<AllGuards> = {
-  name: "ListOccupationsDD",
+  name: "ListOccupations",
   description: "This is the search occupation popup",
   display: SearchListCD,
   structure: {

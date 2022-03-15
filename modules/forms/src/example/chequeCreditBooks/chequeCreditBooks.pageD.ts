@@ -21,7 +21,7 @@ export const OrderChequeBookOrPayingInModalPD: ExampleModalPage = {
 export const CheckBookOrPayingInDD: PrimitiveDD = {
   ...IntegerDD,
   description: "The primitive representing an amount of the local currency",
-  name: 'CheckBookOrPayingInDD',
+  name: 'CheckBookOrPayingIn',
   enum: { payingInBook: 'Paying In Book', chequeBook: 'Cheque Book' }
 }
 

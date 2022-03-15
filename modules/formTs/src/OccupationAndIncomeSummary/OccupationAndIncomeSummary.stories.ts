@@ -15,7 +15,7 @@ export default {
 }
  
 interface StoryState {
-   domain: domain.OccupationAndIncomeDetailsDDDomain
+   domain: domain.OccupationAndIncomeDetailsDomain
    pageMode: PageMode
 }
  
@@ -28,17 +28,17 @@ const Template: Story<StoryState> = ( args: StoryState ) =>
  
 export const View = Template.bind ( {} );
 View.args = {
-   domain: samples.sampleOccupationAndIncomeDetailsDD0,
+   domain: samples.sampleOccupationAndIncomeDetails0,
    pageMode: 'view'
 };
 export const Edit = Template.bind ( {} );
  Edit.args = {
-   domain: samples.sampleOccupationAndIncomeDetailsDD0,
+   domain: samples.sampleOccupationAndIncomeDetails0,
    pageMode: 'edit'
 };
  
 export const Empty = Template.bind ( {} );
 Empty.args = {
-   domain: empty.emptyOccupationAndIncomeDetailsDD,
+   domain: empty.emptyOccupationAndIncomeDetails,
    pageMode: 'create'
 };

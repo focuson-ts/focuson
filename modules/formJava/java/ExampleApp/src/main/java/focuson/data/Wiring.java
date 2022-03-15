@@ -14,32 +14,32 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URL;
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
-import focuson.data.fetchers.OccupationAndIncomeDetailsDDFFetcher;
-import focuson.data.fetchers.OtherIncomeResponseDDFFetcher;
-import focuson.data.fetchers.CreatePlanDDFFetcher;
-import focuson.data.fetchers.EAccountsSummaryDDFFetcher;
+import focuson.data.fetchers.OccupationAndIncomeDetailsFFetcher;
+import focuson.data.fetchers.OtherIncomeResponseFFetcher;
+import focuson.data.fetchers.CreatePlanFFetcher;
+import focuson.data.fetchers.EAccountsSummaryFFetcher;
 import focuson.data.fetchers.ETransferDataDFFetcher;
-import focuson.data.fetchers.CreateEAccountDataDDFFetcher;
-import focuson.data.fetchers.ChequeCreditbooksDDFFetcher;
+import focuson.data.fetchers.CreateEAccountDataFFetcher;
+import focuson.data.fetchers.ChequeCreditbooksFFetcher;
 import focuson.data.fetchers.RepeatingWholeDataFFetcher;
 import focuson.data.fetchers.PostCodeMainPageFFetcher;
 import focuson.data.fetchers.PostCodeDataFFetcher;
 @Component
 public class Wiring {
       @Autowired
-      OccupationAndIncomeDetailsDDFFetcher _OccupationAndIncomeDetailsDDFFetcher;
+      OccupationAndIncomeDetailsFFetcher _OccupationAndIncomeDetailsFFetcher;
       @Autowired
-      OtherIncomeResponseDDFFetcher _OtherIncomeResponseDDFFetcher;
+      OtherIncomeResponseFFetcher _OtherIncomeResponseFFetcher;
       @Autowired
-      CreatePlanDDFFetcher _CreatePlanDDFFetcher;
+      CreatePlanFFetcher _CreatePlanFFetcher;
       @Autowired
-      EAccountsSummaryDDFFetcher _EAccountsSummaryDDFFetcher;
+      EAccountsSummaryFFetcher _EAccountsSummaryFFetcher;
       @Autowired
       ETransferDataDFFetcher _ETransferDataDFFetcher;
       @Autowired
-      CreateEAccountDataDDFFetcher _CreateEAccountDataDDFFetcher;
+      CreateEAccountDataFFetcher _CreateEAccountDataFFetcher;
       @Autowired
-      ChequeCreditbooksDDFFetcher _ChequeCreditbooksDDFFetcher;
+      ChequeCreditbooksFFetcher _ChequeCreditbooksFFetcher;
       @Autowired
       RepeatingWholeDataFFetcher _RepeatingWholeDataFFetcher;
       @Autowired
@@ -62,24 +62,24 @@ public class Wiring {
     }
     private RuntimeWiring buildWiring() {
         return RuntimeWiring.newRuntimeWiring()
-          .type(newTypeWiring("Query").dataFetcher("getOccupationAndIncomeDetailsDD", _OccupationAndIncomeDetailsDDFFetcher.getOccupationAndIncomeDetailsDD()))
-          .type(newTypeWiring("Mutation").dataFetcher("updateOccupationAndIncomeDetailsDD", _OccupationAndIncomeDetailsDDFFetcher.updateOccupationAndIncomeDetailsDD()))
-          .type(newTypeWiring("Query").dataFetcher("getOtherIncomeResponseDD", _OtherIncomeResponseDDFFetcher.getOtherIncomeResponseDD()))
-          .type(newTypeWiring("Query").dataFetcher("getCreatePlanDD", _CreatePlanDDFFetcher.getCreatePlanDD()))
-          .type(newTypeWiring("Mutation").dataFetcher("createCreatePlanDD", _CreatePlanDDFFetcher.createCreatePlanDD()))
-          .type(newTypeWiring("Mutation").dataFetcher("updateCreatePlanDD", _CreatePlanDDFFetcher.updateCreatePlanDD()))
-          .type(newTypeWiring("Mutation").dataFetcher("deleteCreatePlanDD", _CreatePlanDDFFetcher.deleteCreatePlanDD()))
-          .type(newTypeWiring("Query").dataFetcher("listCreatePlanDD", _CreatePlanDDFFetcher.listCreatePlanDD()))
-          .type(newTypeWiring("Query").dataFetcher("getEAccountsSummaryDD", _EAccountsSummaryDDFFetcher.getEAccountsSummaryDD()))
-          .type(newTypeWiring("EAccountSummaryDD").dataFetcher("description", _EAccountsSummaryDDFFetcher.getAccountSummaryDescription()))
-          .type(newTypeWiring("EAccountsSummaryDD").dataFetcher("totalMonthlyCost", _EAccountsSummaryDDFFetcher.getTotalMonthlyCost()))
-          .type(newTypeWiring("EAccountsSummaryDD").dataFetcher("oneAccountBalance", _EAccountsSummaryDDFFetcher.getOneAccountBalance()))
-          .type(newTypeWiring("EAccountsSummaryDD").dataFetcher("currentAccountBalance", _EAccountsSummaryDDFFetcher.getCurrentAccountBalance()))
+          .type(newTypeWiring("Query").dataFetcher("getOccupationAndIncomeDetails", _OccupationAndIncomeDetailsFFetcher.getOccupationAndIncomeDetails()))
+          .type(newTypeWiring("Mutation").dataFetcher("updateOccupationAndIncomeDetails", _OccupationAndIncomeDetailsFFetcher.updateOccupationAndIncomeDetails()))
+          .type(newTypeWiring("Query").dataFetcher("getOtherIncomeResponse", _OtherIncomeResponseFFetcher.getOtherIncomeResponse()))
+          .type(newTypeWiring("Query").dataFetcher("getCreatePlan", _CreatePlanFFetcher.getCreatePlan()))
+          .type(newTypeWiring("Mutation").dataFetcher("createCreatePlan", _CreatePlanFFetcher.createCreatePlan()))
+          .type(newTypeWiring("Mutation").dataFetcher("updateCreatePlan", _CreatePlanFFetcher.updateCreatePlan()))
+          .type(newTypeWiring("Mutation").dataFetcher("deleteCreatePlan", _CreatePlanFFetcher.deleteCreatePlan()))
+          .type(newTypeWiring("Query").dataFetcher("listCreatePlan", _CreatePlanFFetcher.listCreatePlan()))
+          .type(newTypeWiring("Query").dataFetcher("getEAccountsSummary", _EAccountsSummaryFFetcher.getEAccountsSummary()))
+          .type(newTypeWiring("EAccountSummary").dataFetcher("description", _EAccountsSummaryFFetcher.getAccountSummaryDescription()))
+          .type(newTypeWiring("EAccountsSummary").dataFetcher("totalMonthlyCost", _EAccountsSummaryFFetcher.getTotalMonthlyCost()))
+          .type(newTypeWiring("EAccountsSummary").dataFetcher("oneAccountBalance", _EAccountsSummaryFFetcher.getOneAccountBalance()))
+          .type(newTypeWiring("EAccountsSummary").dataFetcher("currentAccountBalance", _EAccountsSummaryFFetcher.getCurrentAccountBalance()))
           .type(newTypeWiring("Mutation").dataFetcher("createETransferDataD", _ETransferDataDFFetcher.createETransferDataD()))
-          .type(newTypeWiring("Mutation").dataFetcher("createCreateEAccountDataDD", _CreateEAccountDataDDFFetcher.createCreateEAccountDataDD()))
-          .type(newTypeWiring("Query").dataFetcher("getCreateEAccountDataDD", _CreateEAccountDataDDFFetcher.getCreateEAccountDataDD()))
-          .type(newTypeWiring("Query").dataFetcher("getChequeCreditbooksDD", _ChequeCreditbooksDDFFetcher.getChequeCreditbooksDD()))
-          .type(newTypeWiring("Mutation").dataFetcher("createChequeCreditbooksDD", _ChequeCreditbooksDDFFetcher.createChequeCreditbooksDD()))
+          .type(newTypeWiring("Mutation").dataFetcher("createCreateEAccountData", _CreateEAccountDataFFetcher.createCreateEAccountData()))
+          .type(newTypeWiring("Query").dataFetcher("getCreateEAccountData", _CreateEAccountDataFFetcher.getCreateEAccountData()))
+          .type(newTypeWiring("Query").dataFetcher("getChequeCreditbooks", _ChequeCreditbooksFFetcher.getChequeCreditbooks()))
+          .type(newTypeWiring("Mutation").dataFetcher("createChequeCreditbooks", _ChequeCreditbooksFFetcher.createChequeCreditbooks()))
           .type(newTypeWiring("Mutation").dataFetcher("createRepeatingLine", _RepeatingWholeDataFFetcher.createRepeatingLine()))
           .type(newTypeWiring("Query").dataFetcher("getRepeatingLine", _RepeatingWholeDataFFetcher.getRepeatingLine()))
           .type(newTypeWiring("Mutation").dataFetcher("createPostCodeMainPage", _PostCodeMainPageFFetcher.createPostCodeMainPage()))

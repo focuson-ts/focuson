@@ -7,10 +7,10 @@ import { pageAndTagFetcher } from "@focuson/focuson";
 import { FState } from "../common";
 import { Optional, Lenses, NameAndLens} from '@focuson/lens';
 //fetcher type true
-export function OccupationAndIncomeDetailsDDFetcher(fdLens:Optional<FState, domains.OccupationAndIncomeSummaryPageDomain>,commonIds: NameAndLens<FState>) {
+export function OccupationAndIncomeDetailsFetcher(fdLens:Optional<FState, domains.OccupationAndIncomeSummaryPageDomain>,commonIds: NameAndLens<FState>) {
   const localIds = {}
-  return pageAndTagFetcher<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.OccupationAndIncomeDetailsDDDomain, SimpleMessage>(
-    common.commonFetch<FState,  domains.OccupationAndIncomeDetailsDDDomain>(),
+  return pageAndTagFetcher<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.OccupationAndIncomeDetailsDomain, SimpleMessage>(
+    common.commonFetch<FState,  domains.OccupationAndIncomeDetailsDomain>(),
      'OccupationAndIncomeSummary',
      'fromApi', fdLens, commonIds, localIds,["accountSeq","applicationRef","brandRef","vbAccountSeq","vbAccountType"],[],
       Lenses.identity< domains.OccupationAndIncomeSummaryPageDomain> ().focusQuery('fromApi'),

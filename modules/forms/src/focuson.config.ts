@@ -10,17 +10,18 @@ import *  as fse from "fs-extra";
 import { RepeatingLinePageD, RepeatingPageD } from "./example/repeating/repeating.pageD";
 import { PostCodeMainPage, PostCodeModalPage } from "./example/addressSearch/addressSearch.pageD";
 import { SimpleDisplayComp } from "./common/componentsD";
+import { MainPageD } from "./common/pageD";
+import { ExampleMainPage } from "./example/common";
 
-export const generatedPages = [
-  OccupationAndIncomeSummaryPD, occupationIncomeModalPD,
-  otherSourcesOfIncomeModalPD, listOccupationsModalPD,
-  EAccountsSummaryPD, CreatePlanPD, ETransferPageD,
+export const generatedPages: ExampleMainPage[] = [
+  OccupationAndIncomeSummaryPD,
+  EAccountsSummaryPD,
+  ETransferPageD,
   CreateEAccountPageD,
   ChequeCreditbooksPD,
-  OrderChequeBookOrPayingInModalPD, RepeatingLinePageD, RepeatingPageD,
-  PostCodeMainPage, PostCodeModalPage
+  RepeatingPageD,
+  PostCodeMainPage ];
 
-];
 export const javaOutputRoot = '../formJava'
 export const tsRoot = "../formTs"
 export const focusOnVersion: string = JSON.parse ( loadFile ( 'package.json' ) ).version

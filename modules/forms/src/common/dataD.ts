@@ -212,14 +212,12 @@ export const stringPrimDD: StringPrimDD = {
   rsGetter: 'getString'
 }
 interface NumberPrimDD {
-  name: 'IntegerDD',
   emptyValue: number,
   graphQlType: 'Int',
   reactType: 'number',
   rsGetter: 'getInt'
 }
 export const numberPrimDD: NumberPrimDD = {
-  name: 'IntegerDD',
   emptyValue: 0,
   graphQlType: 'Int',
   reactType: 'number',
@@ -228,14 +226,14 @@ export const numberPrimDD: NumberPrimDD = {
 
 export const CustomerIdDD: StringPrimitiveDD = {
   ...stringPrimDD,
-  name: 'CustomerIdDD',
+  name: 'CustomerId',
   description: "A customer id",
   display: LabelAndStringInputCD,
   sample: [ "003450" ]
 }
 export const AccountIdDD: NumberPrimitiveDD = {
   ...numberPrimDD,
-  name: 'AccountIdDD',
+  name: 'AccountId',
   description: "An account id",
   display: LabelAndNumberInputCD,
   displayParams: { min: { value: 10000000 }, max: { value: 99999999 } },
@@ -243,14 +241,14 @@ export const AccountIdDD: NumberPrimitiveDD = {
 }
 export const StringDD: StringPrimitiveDD = {
   ...stringPrimDD,
-  name: 'StringDD',
+  name: 'String',
   description: "The primitive 'string'. A reasonably short list of characters",
   display: LabelAndStringInputCD,
   sample: [ "someString", "anotherString" ]
 }
 export const OneLineStringDD: StringPrimitiveDD = {
   ...stringPrimDD,
-  name: 'OneLineStringDD',
+  name: 'OneLineString',
   graphQlType: 'String',
   description: "A string that fits on a line of text. Probably reasonably long",
   display: LabelAndStringInputCD,
@@ -258,14 +256,14 @@ export const OneLineStringDD: StringPrimitiveDD = {
 }
 export const ManyLineStringDD: StringPrimitiveDD = {
   ...stringPrimDD,
-  name: 'ManyLineStringDD',
+  name: 'ManyLineString',
   description: "A string that needs many lines and uses a text Area",
   display: LabelAndStringInputCD,
   sample: [ "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit" ]
 }
 export const IntegerDD: NumberPrimitiveDD = {
   ...numberPrimDD,
-  name: 'IntegerDD',
+  name: 'Integer',
   description: "The primitive 'Integer'",
   display: LabelAndNumberInputCD,
   sample: [ 123, 456 ]
@@ -273,11 +271,11 @@ export const IntegerDD: NumberPrimitiveDD = {
 export const MoneyDD: NumberPrimitiveDD = {
   ...IntegerDD,
   description: "The primitive representing an amount of the local currency",
-  name: 'MoneyDD'
+  name: 'Money'
 }
 export const BooleanDD: PrimitiveDD = {
   rsGetter: "getBoolean",
-  name: 'BooleanDD',
+  name: 'Boolean',
   emptyValue: false,
   graphQlType: 'Boolean',
   reactType: 'boolean',
@@ -287,7 +285,7 @@ export const BooleanDD: PrimitiveDD = {
 }
 export const DateDD: StringPrimitiveDD = {
   ...stringPrimDD,
-  name: 'DateDD',
+  name: 'Date',
   emptyValue: '2022-1-1',
   description: "The primitive representing a date (w/o time)",
   display: LabelAndStringInputCD, //or maybe a date picker
@@ -296,7 +294,7 @@ export const DateDD: StringPrimitiveDD = {
 
 export const DateTimeDD: PrimitiveDD = {
   ...stringPrimDD,
-  name: 'DateTimeDD',
+  name: 'DateTime',
   emptyValue: '2022-1-1T00:00:00',
   description: "The primitive representing a date (with time)",
   display: LabelAndStringInputCD, //or maybe a date picker

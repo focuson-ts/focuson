@@ -4,7 +4,7 @@ import { createSimpleMessage, DateFn, defaultDateFn, SimpleMessage } from "@focu
 import { Lenses, NameAndLens} from "@focuson/lens"
 
 import { FState } from "../common"
-export function EAccountsSummary_CreatePlanDDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.CreatePlanDDDomain, SimpleMessage> {
+export function EAccountsSummary_CreatePlanRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.CreatePlanDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('EAccountsSummary'),
@@ -17,7 +17,7 @@ export function EAccountsSummary_CreatePlanDDRestDetails ( cd: NameAndLens<FStat
   }
 }
 
-export function EAccountsSummary_EAccountsSummaryDDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDDDomain, SimpleMessage> {
+export function EAccountsSummary_EAccountsSummaryRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('EAccountsSummary'),

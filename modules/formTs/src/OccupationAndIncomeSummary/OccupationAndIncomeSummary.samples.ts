@@ -1,13 +1,13 @@
 import * as domains from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains'
 
-export const sampleCustomerOccupationIncomeDetailsDD0: domains.CustomerOccupationIncomeDetailsDDDomain = 
+export const sampleCustomerOccupationIncomeDetails0: domains.CustomerOccupationIncomeDetailsDomain = 
 [
   {
     "descTypeValue": "someString",
     "descTypeName": "someString"
   }
 ]
-export const sampleListOccupationsDD0: domains.ListOccupationsDDDomain = 
+export const sampleListOccupations0: domains.ListOccupationsDomain = 
 {
   "searchField": "someString",
   "occupationsList": [
@@ -17,7 +17,7 @@ export const sampleListOccupationsDD0: domains.ListOccupationsDDDomain =
     }
   ]
 }
-export const sampleOccupationAndIncomeDetailsDD0: domains.OccupationAndIncomeDetailsDDDomain = 
+export const sampleOccupationAndIncomeDetails0: domains.OccupationAndIncomeDetailsDomain = 
 {
   "regulatoryReport": "someString",
   "mainCustomerName": "someString",
@@ -56,12 +56,12 @@ export const sampleOccupationAndIncomeDetailsDD0: domains.OccupationAndIncomeDet
     }
   ]
 }
-export const sampleOccupationDescriptionResponseDD0: domains.OccupationDescriptionResponseDDDomain = 
+export const sampleOccupationDescriptionResponse0: domains.OccupationDescriptionResponseDomain = 
 {
   "descTypeValue": "someString",
   "descTypeName": "someString"
 }
-export const sampleOccupationIncomeDetailsDD0: domains.OccupationIncomeDetailsDDDomain = 
+export const sampleOccupationIncomeDetails0: domains.OccupationIncomeDetailsDomain = 
 {
   "areYou": "C",
   "currentEmployment": "N",
@@ -91,21 +91,21 @@ export const sampleOccupationIncomeDetailsDD0: domains.OccupationIncomeDetailsDD
   "empAppRoleSeq": 123,
   "accountantAppRoleSeq": 123
 }
-export const sampleOtherIncomeResponseDD0: domains.OtherIncomeResponseDDDomain = 
+export const sampleOtherIncomeResponse0: domains.OtherIncomeResponseDomain = 
 {
   "clientOtherIncomeSeq": "someString",
   "otherIncomeType": "someString",
   "incomeFreqRef": "1",
   "amount": 123
 }
-export const sampleCustomerOccupationIncomeDetailsDD1: domains.CustomerOccupationIncomeDetailsDDDomain = 
+export const sampleCustomerOccupationIncomeDetails1: domains.CustomerOccupationIncomeDetailsDomain = 
 [
   {
     "descTypeValue": "anotherString",
     "descTypeName": "anotherString"
   }
 ]
-export const sampleListOccupationsDD1: domains.ListOccupationsDDDomain = 
+export const sampleListOccupations1: domains.ListOccupationsDomain = 
 {
   "searchField": "anotherString",
   "occupationsList": [
@@ -115,7 +115,7 @@ export const sampleListOccupationsDD1: domains.ListOccupationsDDDomain =
     }
   ]
 }
-export const sampleOccupationAndIncomeDetailsDD1: domains.OccupationAndIncomeDetailsDDDomain = 
+export const sampleOccupationAndIncomeDetails1: domains.OccupationAndIncomeDetailsDomain = 
 {
   "regulatoryReport": "anotherString",
   "mainCustomerName": "anotherString",
@@ -154,12 +154,12 @@ export const sampleOccupationAndIncomeDetailsDD1: domains.OccupationAndIncomeDet
     }
   ]
 }
-export const sampleOccupationDescriptionResponseDD1: domains.OccupationDescriptionResponseDDDomain = 
+export const sampleOccupationDescriptionResponse1: domains.OccupationDescriptionResponseDomain = 
 {
   "descTypeValue": "anotherString",
   "descTypeName": "anotherString"
 }
-export const sampleOccupationIncomeDetailsDD1: domains.OccupationIncomeDetailsDDDomain = 
+export const sampleOccupationIncomeDetails1: domains.OccupationIncomeDetailsDomain = 
 {
   "areYou": "E",
   "currentEmployment": "Y",
@@ -189,21 +189,21 @@ export const sampleOccupationIncomeDetailsDD1: domains.OccupationIncomeDetailsDD
   "empAppRoleSeq": 456,
   "accountantAppRoleSeq": 456
 }
-export const sampleOtherIncomeResponseDD1: domains.OtherIncomeResponseDDDomain = 
+export const sampleOtherIncomeResponse1: domains.OtherIncomeResponseDomain = 
 {
   "clientOtherIncomeSeq": "anotherString",
   "otherIncomeType": "anotherString",
   "incomeFreqRef": "2",
   "amount": 456
 }
-export const sampleCustomerOccupationIncomeDetailsDD2: domains.CustomerOccupationIncomeDetailsDDDomain = 
+export const sampleCustomerOccupationIncomeDetails2: domains.CustomerOccupationIncomeDetailsDomain = 
 [
   {
     "descTypeValue": "someString",
     "descTypeName": "someString"
   }
 ]
-export const sampleListOccupationsDD2: domains.ListOccupationsDDDomain = 
+export const sampleListOccupations2: domains.ListOccupationsDomain = 
 {
   "searchField": "someString",
   "occupationsList": [
@@ -213,7 +213,7 @@ export const sampleListOccupationsDD2: domains.ListOccupationsDDDomain =
     }
   ]
 }
-export const sampleOccupationAndIncomeDetailsDD2: domains.OccupationAndIncomeDetailsDDDomain = 
+export const sampleOccupationAndIncomeDetails2: domains.OccupationAndIncomeDetailsDomain = 
 {
   "regulatoryReport": "someString",
   "mainCustomerName": "someString",
@@ -252,12 +252,12 @@ export const sampleOccupationAndIncomeDetailsDD2: domains.OccupationAndIncomeDet
     }
   ]
 }
-export const sampleOccupationDescriptionResponseDD2: domains.OccupationDescriptionResponseDDDomain = 
+export const sampleOccupationDescriptionResponse2: domains.OccupationDescriptionResponseDomain = 
 {
   "descTypeValue": "someString",
   "descTypeName": "someString"
 }
-export const sampleOccupationIncomeDetailsDD2: domains.OccupationIncomeDetailsDDDomain = 
+export const sampleOccupationIncomeDetails2: domains.OccupationIncomeDetailsDomain = 
 {
   "areYou": "H",
   "currentEmployment": "This is a one line string",
@@ -287,7 +287,7 @@ export const sampleOccupationIncomeDetailsDD2: domains.OccupationIncomeDetailsDD
   "empAppRoleSeq": 123,
   "accountantAppRoleSeq": 123
 }
-export const sampleOtherIncomeResponseDD2: domains.OtherIncomeResponseDDDomain = 
+export const sampleOtherIncomeResponse2: domains.OtherIncomeResponseDomain = 
 {
   "clientOtherIncomeSeq": "someString",
   "otherIncomeType": "someString",

@@ -4,7 +4,7 @@ import { AllGuards } from "../../buttons/guardButton";
 
 
 export const ChequeCreditbooksHistoryLineDD: DataD<AllGuards> = {
-  name: "ChequeCreditbooksHistoryLineDD",
+  name: "ChequeCreditbooksHistoryLine",
   description: "The create plan data (actually just put in one place to allow a test for a structure)",
   structure: {
     serialNumber: { dataDD: { ...IntegerDD, sample: [ 937453 ] } ,},
@@ -13,7 +13,7 @@ export const ChequeCreditbooksHistoryLineDD: DataD<AllGuards> = {
   }
 }
 export const ChequeCreditbooksHistoryDD: RepeatingDataD<AllGuards> = {
-  name: "ChequeCreditbooksHistoryDD",
+  name: "ChequeCreditbooksHistory",
   paged: false,
   description: "The history of how cheque and credit books have been ordered",
   dataDD: ChequeCreditbooksHistoryLineDD,
@@ -21,7 +21,7 @@ export const ChequeCreditbooksHistoryDD: RepeatingDataD<AllGuards> = {
   displayParams: { order: { value: [ 'serialNumber', 'howOrdered', 'dateOrder' ] } }
 }
 export const ChequeCreditbooksDD: DataD<AllGuards> = {
-  name: "ChequeCreditbooksDD",
+  name: "ChequeCreditbooks",
   description: "This is the main object for the Cheque and Credit books form",
   structure: {
     history: { dataDD: ChequeCreditbooksHistoryDD }

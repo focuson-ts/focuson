@@ -1,29 +1,29 @@
 export interface HasEAccountsSummaryPageDomain {   EAccountsSummary?: EAccountsSummaryPageDomain}
 
 export interface EAccountsSummaryPageDomain{
-  createPlan?:EAccountsSummaryDDDomain;
-  fromApi?:EAccountsSummaryDDDomain;
-  tempCreatePlan?:CreatePlanDDDomain;
+  createPlan?:EAccountsSummaryDomain;
+  fromApi?:EAccountsSummaryDomain;
+  tempCreatePlan?:CreatePlanDomain;
 }
 
-export interface CreatePlanDDDomain{
+export interface CreatePlanDomain{
   createPlanDate: string;
   createPlanEnd: string;
   createPlanStart: string;
 }
 
-export interface EAccountsSummaryDDDomain{
-  createPlan: CreatePlanDDDomain;
+export interface EAccountsSummaryDomain{
+  createPlan: CreatePlanDomain;
   currentAccountBalance: number;
-  eAccountsTable: EAccountSummaryDDDomain[];
+  eAccountsTable: EAccountSummaryDomain[];
   oneAccountBalance: number;
   totalMonthlyCost: number;
   useEStatements: boolean;
 }
 
-export type EAccountsSummaryTableDDDomain = EAccountSummaryDDDomain[]
+export type EAccountsSummaryTableDomain = EAccountSummaryDomain[]
 
-export interface EAccountSummaryDDDomain{
+export interface EAccountSummaryDomain{
   accountId: number;
   description: string;
   displayType: string;

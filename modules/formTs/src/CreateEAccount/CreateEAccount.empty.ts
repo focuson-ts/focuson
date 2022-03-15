@@ -1,6 +1,6 @@
 import * as domains from '../CreateEAccount/CreateEAccount.domains'
 
-export const emptyCreateEAccountDataDD:domains.CreateEAccountDataDDDomain =
+export const emptyCreateEAccountData:domains.CreateEAccountDataDomain =
   {
     "name": "",
     "type": "savings",

@@ -29,15 +29,15 @@ export function RepeatingPage(){
   const buttons =    {addEntry:<ModalButton id='addEntry' text='addEntry'  state={state} modal = 'RepeatingLine'  
         pageMode='create'
         focusOn={["Repeating","temp"]}
-        copyOnClose={[{"to":["fromApi","[append]"]}]}
+        copyOnClose={[{"to":["{basePage}","fromApi","[append]"]}]}
         createEmpty={empty.emptyRepeatingLine}
         setToLengthOnClose={{"array":["fromApi"],"variable":["selectedItem"]}}
       />,
       edit:<ModalButton id='edit' text='edit'  state={state} modal = 'RepeatingLine'  
         pageMode='edit'
         focusOn={["Repeating","temp"]}
-        copy={[{"from":["fromApi","{selectedItem}"]}]}
-        copyOnClose={[{"to":["fromApi","{selectedItem}"]}]}
+        copy={[{"from":["{basePage}","fromApi","{selectedItem}"]}]}
+        copyOnClose={[{"to":["{basePage}","fromApi","{selectedItem}"]}]}
       />,
       nextOccupation:<GuardButton cond={nextOccupationGuard}>
         <ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi')} value={fullState.focusOn('selectedItem')} />
@@ -51,15 +51,15 @@ export function RepeatingPage(){
           <Table id={`${id}`} state={state} mode={mode} order={["name","age"]} />
       { buttons.addEntry } 
       { buttons.edit } 
-      { buttons.nextOccupation } 
       { buttons.prevOccupation } 
+      { buttons.nextOccupation } 
       </div>})}
 
 export function RepeatingLine({id,state,mode,buttons}: FocusedProps<FState, RepeatingLineDomain,Context>){
   return <>
-     {/*{"path":["name"],"dataDD":"OneLineStringDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"buttons":{"paramType":"object","needed":"defaultToButtons"},"button":{"paramType":"string","needed":"no"},"required":{"paramType":"boolean","needed":"no","default":true},"pattern":{"paramType":"string","needed":"no"},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
+     {/*{"path":["name"],"dataDD":"OneLineString","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"buttons":{"paramType":"object","needed":"defaultToButtons"},"button":{"paramType":"string","needed":"no"},"required":{"paramType":"boolean","needed":"no","default":true},"pattern":{"paramType":"string","needed":"no"},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='name' buttons={buttons} required={true} />
-     {/*{"path":["age"],"dataDD":"IntegerDD","display":{"import":"../copied/LabelAndInput","name":"LabelAndNumberInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"buttons":{"paramType":"object","needed":"defaultToButtons"},"button":{"paramType":"string","needed":"no"},"required":{"paramType":"boolean","needed":"no","default":true},"min":{"paramType":"object","needed":"no"},"max":{"paramType":"object","needed":"no"}}}}*/}
+     {/*{"path":["age"],"dataDD":"Integer","display":{"import":"../copied/LabelAndInput","name":"LabelAndNumberInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"buttons":{"paramType":"object","needed":"defaultToButtons"},"button":{"paramType":"string","needed":"no"},"required":{"paramType":"boolean","needed":"no","default":true},"min":{"paramType":"object","needed":"no"},"max":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndNumberInput id={`${id}.age`} state={state.focusOn('age')} mode={mode} label='age' buttons={buttons} required={true} />
 </>
 }

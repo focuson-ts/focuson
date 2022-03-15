@@ -10,12 +10,12 @@ import {emptyState, FState } from "../common";
 import * as fetchers from "../fetchers";
 import * as rests from "../rests";
 //GetFetcher pact test
-pactWith ( { consumer: 'OccupationAndIncomeDetailsDD', provider: 'OccupationAndIncomeDetailsDDProvider', cors: true }, provider => {
+pactWith ( { consumer: 'OccupationAndIncomeDetails', provider: 'OccupationAndIncomeDetailsProvider', cors: true }, provider => {
   describe ( 'OccupationAndIncomeSummary - fetcher', () => {
-    it ( 'should have a get fetcher for OccupationAndIncomeDetailsDD', async () => {
+    it ( 'should have a get fetcher for OccupationAndIncomeDetails', async () => {
       await provider.addInteraction ( {
         state: 'default',
-        uponReceiving: 'OccupationAndIncomeSummary should have a get fetcher for OccupationAndIncomeDetailsDD',
+        uponReceiving: 'OccupationAndIncomeSummary should have a get fetcher for OccupationAndIncomeDetails',
         withRequest: {
           method: 'GET',
           path: '/customer/occupation/v2/occupationIncomeDetails',
@@ -23,7 +23,7 @@ pactWith ( { consumer: 'OccupationAndIncomeDetailsDD', provider: 'OccupationAndI
         },
         willRespondWith: {
           status: 200,
-          body: samples.sampleOccupationAndIncomeDetailsDD0
+          body: samples.sampleOccupationAndIncomeDetails0
         },
       } )
       const ids = {
@@ -33,7 +33,7 @@ pactWith ( { consumer: 'OccupationAndIncomeDetailsDD', provider: 'OccupationAndI
       let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
-         OccupationAndIncomeSummary: {fromApi:samples.sampleOccupationAndIncomeDetailsDD0},
+         OccupationAndIncomeSummary: {fromApi:samples.sampleOccupationAndIncomeDetails0},
         tags: { OccupationAndIncomeSummary_fromApi:["accountSeq","applicationRef","brandRef","vbAccountSeq","vbAccountType"]}
       };
       const expected = massTransform(expectedRaw,)
@@ -42,10 +42,10 @@ pactWith ( { consumer: 'OccupationAndIncomeDetailsDD', provider: 'OccupationAndI
   } )
 })
 //Rest get pact test
-pactWith ( { consumer: 'OccupationAndIncomeDetailsDD', provider: 'OccupationAndIncomeDetailsDDProvider', cors: true }, provider => {
+pactWith ( { consumer: 'OccupationAndIncomeDetails', provider: 'OccupationAndIncomeDetailsProvider', cors: true }, provider => {
   describe ( 'OccupationAndIncomeSummary - rest get', () => {
-    it ( 'should have a get rest for OccupationAndIncomeDetailsDD', async () => {
-      const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OccupationAndIncomeDetailsDDRestDetails', restAction: 'get', path: [ 'OccupationAndIncomeSummary' ] }
+    it ( 'should have a get rest for OccupationAndIncomeDetails', async () => {
+      const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OccupationAndIncomeDetailsRestDetails', restAction: 'get', path: [ 'OccupationAndIncomeSummary' ] }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       OccupationAndIncomeSummary:{},
@@ -54,7 +54,7 @@ pactWith ( { consumer: 'OccupationAndIncomeDetailsDD', provider: 'OccupationAndI
       const url = applyToTemplate('/customer/occupation/v2/occupationIncomeDetails', firstState.CommonIds).join('')
       await provider.addInteraction ( {
         state: 'default',
-        uponReceiving: 'OccupationAndIncomeSummary should have a get rest for OccupationAndIncomeDetailsDD',
+        uponReceiving: 'OccupationAndIncomeSummary should have a get rest for OccupationAndIncomeDetails',
         withRequest: {
           method: 'GET',
           path: url,
@@ -63,7 +63,7 @@ pactWith ( { consumer: 'OccupationAndIncomeDetailsDD', provider: 'OccupationAndI
         },
         willRespondWith: {
           status: 200,
-          body: samples.sampleOccupationAndIncomeDetailsDD0
+          body: samples.sampleOccupationAndIncomeDetails0
         },
       } )
       const ids = {
@@ -71,7 +71,7 @@ pactWith ( { consumer: 'OccupationAndIncomeDetailsDD', provider: 'OccupationAndI
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], OccupationAndIncomeSummary: { fromApi: samples.sampleOccupationAndIncomeDetailsDD0} }
+      const rawExpected:any = { ...firstState, restCommands: [], OccupationAndIncomeSummary: { fromApi: samples.sampleOccupationAndIncomeDetails0} }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
@@ -80,28 +80,28 @@ pactWith ( { consumer: 'OccupationAndIncomeDetailsDD', provider: 'OccupationAndI
   } )
 })
 //Rest update pact test
-pactWith ( { consumer: 'OccupationAndIncomeDetailsDD', provider: 'OccupationAndIncomeDetailsDDProvider', cors: true }, provider => {
+pactWith ( { consumer: 'OccupationAndIncomeDetails', provider: 'OccupationAndIncomeDetailsProvider', cors: true }, provider => {
   describe ( 'OccupationAndIncomeSummary - rest update', () => {
-    it ( 'should have a update rest for OccupationAndIncomeDetailsDD', async () => {
-      const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OccupationAndIncomeDetailsDDRestDetails', restAction: 'update', path: [ 'OccupationAndIncomeSummary' ] }
+    it ( 'should have a update rest for OccupationAndIncomeDetails', async () => {
+      const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OccupationAndIncomeDetailsRestDetails', restAction: 'update', path: [ 'OccupationAndIncomeSummary' ] }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
-      OccupationAndIncomeSummary: { fromApi:samples.sampleOccupationAndIncomeDetailsDD0 },
+      OccupationAndIncomeSummary: { fromApi:samples.sampleOccupationAndIncomeDetails0 },
         pageSelection: [ { pageName: 'OccupationAndIncomeSummary', pageMode: 'view' } ]
       }
       const url = applyToTemplate('/customer/occupation/v2/occupationIncomeDetails', firstState.CommonIds).join('')
       await provider.addInteraction ( {
         state: 'default',
-        uponReceiving: 'OccupationAndIncomeSummary should have a update rest for OccupationAndIncomeDetailsDD',
+        uponReceiving: 'OccupationAndIncomeSummary should have a update rest for OccupationAndIncomeDetails',
         withRequest: {
           method: 'PUT',
           path: url,
           query:{"accountSeq":"accountSeq","applicationRef":"applicationRef","brandRef":"brandRef","vbAccountSeq":"vbAccountSeq","vbAccountType":"vbAccountType"}
-          ,body: JSON.stringify(samples.sampleOccupationAndIncomeDetailsDD0)
+          ,body: JSON.stringify(samples.sampleOccupationAndIncomeDetails0)
         },
         willRespondWith: {
           status: 200,
-          body: samples.sampleOccupationAndIncomeDetailsDD0
+          body: samples.sampleOccupationAndIncomeDetails0
         },
       } )
       const ids = {
@@ -109,7 +109,7 @@ pactWith ( { consumer: 'OccupationAndIncomeDetailsDD', provider: 'OccupationAndI
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], OccupationAndIncomeSummary: { fromApi: samples.sampleOccupationAndIncomeDetailsDD0} }
+      const rawExpected:any = { ...firstState, restCommands: [], OccupationAndIncomeSummary: { fromApi: samples.sampleOccupationAndIncomeDetails0} }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
@@ -118,10 +118,10 @@ pactWith ( { consumer: 'OccupationAndIncomeDetailsDD', provider: 'OccupationAndI
   } )
 })
 //Rest get pact test
-pactWith ( { consumer: 'OtherIncomeResponseDD', provider: 'OtherIncomeResponseDDProvider', cors: true }, provider => {
+pactWith ( { consumer: 'OtherIncomeResponse', provider: 'OtherIncomeResponseProvider', cors: true }, provider => {
   describe ( 'OccupationAndIncomeSummary - rest get', () => {
-    it ( 'should have a get rest for OtherIncomeResponseDD', async () => {
-      const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OtherIncomeResponseDDRestDetails', restAction: 'get', path: [ 'OccupationAndIncomeSummary' ] }
+    it ( 'should have a get rest for OtherIncomeResponse', async () => {
+      const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OtherIncomeResponseRestDetails', restAction: 'get', path: [ 'OccupationAndIncomeSummary' ] }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       OccupationAndIncomeSummary:{},
@@ -130,7 +130,7 @@ pactWith ( { consumer: 'OtherIncomeResponseDD', provider: 'OtherIncomeResponseDD
       const url = applyToTemplate('/customer/occupation/v2/otherIncome', firstState.CommonIds).join('')
       await provider.addInteraction ( {
         state: 'default',
-        uponReceiving: 'OccupationAndIncomeSummary should have a get rest for OtherIncomeResponseDD',
+        uponReceiving: 'OccupationAndIncomeSummary should have a get rest for OtherIncomeResponse',
         withRequest: {
           method: 'GET',
           path: url,
@@ -139,7 +139,7 @@ pactWith ( { consumer: 'OtherIncomeResponseDD', provider: 'OtherIncomeResponseDD
         },
         willRespondWith: {
           status: 200,
-          body: samples.sampleOtherIncomeResponseDD0
+          body: samples.sampleOtherIncomeResponse0
         },
       } )
       const ids = {
@@ -147,7 +147,7 @@ pactWith ( { consumer: 'OtherIncomeResponseDD', provider: 'OtherIncomeResponseDD
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], OccupationAndIncomeSummary: { other: samples.sampleOtherIncomeResponseDD0} }
+      const rawExpected:any = { ...firstState, restCommands: [], OccupationAndIncomeSummary: { other: samples.sampleOtherIncomeResponse0} }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )

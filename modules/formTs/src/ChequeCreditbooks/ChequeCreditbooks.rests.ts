@@ -4,7 +4,7 @@ import { createSimpleMessage, DateFn, defaultDateFn, SimpleMessage } from "@focu
 import { Lenses, NameAndLens} from "@focuson/lens"
 
 import { FState } from "../common"
-export function ChequeCreditbooks_ChequeCreditbooksDDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.ChequeCreditbooksPageDomain, domains.ChequeCreditbooksDDDomain, SimpleMessage> {
+export function ChequeCreditbooks_ChequeCreditbooksRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.ChequeCreditbooksPageDomain, domains.ChequeCreditbooksDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.ChequeCreditbooksPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('ChequeCreditbooks'),

@@ -1,6 +1,6 @@
 import * as domains from '../ChequeCreditbooks/ChequeCreditbooks.domains'
 
-export const sampleChequeCreditbooksDD0: domains.ChequeCreditbooksDDDomain = 
+export const sampleChequeCreditbooks0: domains.ChequeCreditbooksDomain = 
 {
   "history": [
     {
@@ -10,7 +10,7 @@ export const sampleChequeCreditbooksDD0: domains.ChequeCreditbooksDDDomain =
     }
   ]
 }
-export const sampleChequeCreditbooksHistoryDD0: domains.ChequeCreditbooksHistoryDDDomain = 
+export const sampleChequeCreditbooksHistory0: domains.ChequeCreditbooksHistoryDomain = 
 [
   {
     "serialNumber": 937453,
@@ -18,13 +18,13 @@ export const sampleChequeCreditbooksHistoryDD0: domains.ChequeCreditbooksHistory
     "dateOrder": "2022-10-01"
   }
 ]
-export const sampleChequeCreditbooksHistoryLineDD0: domains.ChequeCreditbooksHistoryLineDDDomain = 
+export const sampleChequeCreditbooksHistoryLine0: domains.ChequeCreditbooksHistoryLineDomain = 
 {
   "serialNumber": 937453,
   "howOrdered": "Manually",
   "dateOrder": "2022-10-01"
 }
-export const sampleChequeCreditbooksDD1: domains.ChequeCreditbooksDDDomain = 
+export const sampleChequeCreditbooks1: domains.ChequeCreditbooksDomain = 
 {
   "history": [
     {
@@ -34,7 +34,7 @@ export const sampleChequeCreditbooksDD1: domains.ChequeCreditbooksDDDomain =
     }
   ]
 }
-export const sampleChequeCreditbooksHistoryDD1: domains.ChequeCreditbooksHistoryDDDomain = 
+export const sampleChequeCreditbooksHistory1: domains.ChequeCreditbooksHistoryDomain = 
 [
   {
     "serialNumber": 937453,
@@ -42,13 +42,13 @@ export const sampleChequeCreditbooksHistoryDD1: domains.ChequeCreditbooksHistory
     "dateOrder": "2020-10-01"
   }
 ]
-export const sampleChequeCreditbooksHistoryLineDD1: domains.ChequeCreditbooksHistoryLineDDDomain = 
+export const sampleChequeCreditbooksHistoryLine1: domains.ChequeCreditbooksHistoryLineDomain = 
 {
   "serialNumber": 937453,
   "howOrdered": "This is a one line string",
   "dateOrder": "2020-10-01"
 }
-export const sampleChequeCreditbooksDD2: domains.ChequeCreditbooksDDDomain = 
+export const sampleChequeCreditbooks2: domains.ChequeCreditbooksDomain = 
 {
   "history": [
     {
@@ -58,7 +58,7 @@ export const sampleChequeCreditbooksDD2: domains.ChequeCreditbooksDDDomain =
     }
   ]
 }
-export const sampleChequeCreditbooksHistoryDD2: domains.ChequeCreditbooksHistoryDDDomain = 
+export const sampleChequeCreditbooksHistory2: domains.ChequeCreditbooksHistoryDomain = 
 [
   {
     "serialNumber": 937453,
@@ -66,7 +66,7 @@ export const sampleChequeCreditbooksHistoryDD2: domains.ChequeCreditbooksHistory
     "dateOrder": "2022-14-01"
   }
 ]
-export const sampleChequeCreditbooksHistoryLineDD2: domains.ChequeCreditbooksHistoryLineDDDomain = 
+export const sampleChequeCreditbooksHistoryLine2: domains.ChequeCreditbooksHistoryLineDomain = 
 {
   "serialNumber": 937453,
   "howOrdered": "another one line string",
