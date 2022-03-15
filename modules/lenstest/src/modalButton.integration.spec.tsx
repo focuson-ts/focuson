@@ -141,7 +141,7 @@ describe ( "modal buttons", () => {
           {
             "copyOnClose": [ { "to": [ "mainPage", "data" ] } ],
             "firstTime": true, "focusOn": [ "mainPage", "temp" ], "pageMode": "view", "pageName": "someModal",
-            "rest": { "name": "restName", "path": [ "some", "path" ], "restAction": "update" }
+            "rest": { "name": "restName", "restAction": "update" }
           }
         ],
         "restCommands": []
@@ -153,7 +153,7 @@ describe ( "modal buttons", () => {
         messages: [],
         "mainPage": { "temp": { "data": "data" }, "data": { "data": "data" } },
         "pageSelection": [ { "pageMode": "view", "pageName": "mainPage" } ],
-        "restCommands": [ { "name": "restName", "path": [ "some", "path" ], "restAction": "update" } ]
+        "restCommands": [ { "name": "restName","restAction": "update" } ]
       } )
     } )
   } )
@@ -214,7 +214,7 @@ describe ( "with nested child", () => {
       "pageSelection": [
         { "pageName": "mainPage", "pageMode": "view" },
         {
-          "focusOn": [ 'mainPage', 'temp' ], rest: { name: 'restName', restAction: 'update', path: [ 'some', 'path' ] }, "firstTime": true, "pageMode": "view", "pageName": "someModal",
+          "focusOn": [ 'mainPage', 'temp' ], rest: { name: 'restName', restAction: 'update' }, "firstTime": true, "pageMode": "view", "pageName": "someModal",
           copyOnClose: [ { "to": [ "mainPage", "nested", "data" ] } ]
         } ],
       "restCommands": [],
@@ -227,7 +227,7 @@ describe ( "with nested child", () => {
       messages: [],
       "mainPage": { "temp": { "data": "data" }, nested: { "data": { "data": "data" } } },
       "pageSelection": [ { "pageMode": "view", "pageName": "mainPage" } ],
-      "restCommands": [ { "name": "restName", "path": [ "some", "path" ], "restAction": "update" } ]
+      "restCommands": [ { "name": "restName", "restAction": "update" } ]
     } )
   } )
 } )
@@ -310,7 +310,7 @@ it ( "should create empty, then copy back with a rest command", () => {
     "pageSelection": [
       { "pageName": "mainPage", "pageMode": "view" },
       {
-        "focusOn": [ 'mainPage', 'temp' ], rest: { name: 'restName', restAction: 'update', path: [ 'some', 'path' ] }, "firstTime": true, "pageMode": "view", "pageName": "someModal",
+        "focusOn": [ 'mainPage', 'temp' ], rest: { name: 'restName', restAction: 'update' }, "firstTime": true, "pageMode": "view", "pageName": "someModal",
         copyOnClose: [ { "to": [ "mainPage", "nested", "data" ] } ]
       } ],
     "restCommands": [],
@@ -323,7 +323,7 @@ it ( "should create empty, then copy back with a rest command", () => {
     messages: [],
     "mainPage": { "temp": { "data": "data" }, nested: { "data": { "data": "data" } } },
     "pageSelection": [ { "pageMode": "view", "pageName": "mainPage" } ],
-    "restCommands": [ { "name": "restName", "path": [ "some", "path" ], "restAction": "update" } ]
+    "restCommands": [ { "name": "restName",  "restAction": "update" } ]
   } )
 } )
 // describe ( "with nested lists of data", () => {

@@ -11,6 +11,7 @@ describe ( "makeRest", () => {
       "export function EAccountsSummary_EAccountsSummaryDDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDDDomain, SimpleMessage> {",
       "  const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}",
       "  return {",
+      "    fdLens: Lenses.identity<FState>().focusQuery('EAccountsSummary'),",
       "    dLens: Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('fromApi'),",
       "    cd, fdd,",
       "    ids: ['accountId'],",
@@ -27,6 +28,7 @@ describe ( "makeRest", () => {
       "export function EAccountsSummary_CreatePlanDDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.CreatePlanDDDomain, SimpleMessage> {",
       "  const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}",
       "  return {",
+      "    fdLens: Lenses.identity<FState>().focusQuery('EAccountsSummary'),",
       "    dLens: Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('tempCreatePlan'),",
       "    cd, fdd,",
       "    ids: ['accountId','customerId'],",
@@ -44,6 +46,7 @@ describe ( "makeRest", () => {
       "export function Repeating_RepeatingWholeDataRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.RepeatingPageDomain, domains.RepeatingWholeDataDomain, SimpleMessage> {",
       "  const fdd: NameAndLens<domains.RepeatingPageDomain> = {}",
       "  return {",
+      "    fdLens: Lenses.identity<FState>().focusQuery('Repeating'),",
       "    dLens: Lenses.identity<domains.RepeatingPageDomain>().focusQuery('fromApi'),",
       "    cd, fdd,",
       "    ids: ['customerId'],",
@@ -56,11 +59,6 @@ describe ( "makeRest", () => {
     ])
 
   } )
-
-  it ( "should create rest where we use {basePage}", () => {
-    expect ( makeRest ( paramsForTest, PostCodeMainPage ) ( PostCodeMainPage.rest.repeating ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [])
-
-  } )
-
+  
 
 } )

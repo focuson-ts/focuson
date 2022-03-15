@@ -50,7 +50,7 @@ describe ( "Making GraphQl from RestD", () => {
   } )
   it ( "should include the 'mutation' params in a update", () => {
     expect ( makeQuery ( createPlanRestD, 'update' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "'mutation{updateCreatePlanDD(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'createPlanId:' + '\\'' + createPlanId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\''  +  ', obj:' + obj + '){'+",
+      "'mutation{updateCreatePlanDD(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'createPlanId:' + '\\'' + createPlanId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\''  + ', obj:' + obj + '){'+",
       "      '    createPlanStart'+",
       "      '    createPlanDate'+",
       "      '    createPlanEnd'+",
@@ -89,7 +89,19 @@ describe ( "Making GraphQl from RestD", () => {
   } )
 
   it ("should make a query with no params", () =>{
-    expect ( makeJavaVariablesForGraphQlQuery ( [ addressRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [])
+    expect ( makeJavaVariablesForGraphQlQuery ( [ addressRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+      "public static  String createPostCodeMainPage(String obj){ ",
+      "   return",
+      "'mutation{createPostCodeMainPage(' +  ' obj:' + obj + '){'+",
+      "      '    name'+",
+      "      '    line1'+",
+      "      '    line2'+",
+      "      '    line3'+",
+      "      '    line4'+",
+      "      '    postcode'+",
+      "      '  }'",
+      "+'}';}"
+    ])
 
   })
 
