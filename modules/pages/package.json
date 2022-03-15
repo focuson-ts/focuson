@@ -12,10 +12,10 @@
     ]
   },
   "dependencies": {
-    "@focuson/lens": "0.4.77",
-    "@focuson/state": "0.4.77",
-    "@focuson/fetcher": "0.4.77",
-    "@focuson/rest": "0.4.77"
+    "@focuson/lens": "0.4.78",
+    "@focuson/state": "0.4.78",
+    "@focuson/fetcher": "0.4.78",
+    "@focuson/rest": "0.4.78"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -47,7 +47,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "0.4.77",
+  "version": "0.4.78",
   "template": "noreact",
   "description": "Used when we want a simple many page application",
   "details": {
