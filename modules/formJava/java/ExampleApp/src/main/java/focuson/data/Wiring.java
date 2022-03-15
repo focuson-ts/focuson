@@ -22,6 +22,7 @@ import focuson.data.fetchers.ETransferDataDFFetcher;
 import focuson.data.fetchers.CreateEAccountDataDDFFetcher;
 import focuson.data.fetchers.ChequeCreditbooksDDFFetcher;
 import focuson.data.fetchers.RepeatingWholeDataFFetcher;
+import focuson.data.fetchers.PostCodeMainPageFFetcher;
 import focuson.data.fetchers.PostCodeDataFFetcher;
 @Component
 public class Wiring {
@@ -41,6 +42,8 @@ public class Wiring {
       ChequeCreditbooksDDFFetcher _ChequeCreditbooksDDFFetcher;
       @Autowired
       RepeatingWholeDataFFetcher _RepeatingWholeDataFFetcher;
+      @Autowired
+      PostCodeMainPageFFetcher _PostCodeMainPageFFetcher;
       @Autowired
       PostCodeDataFFetcher _PostCodeDataFFetcher;
     private GraphQL graphQL;
@@ -79,6 +82,7 @@ public class Wiring {
           .type(newTypeWiring("Mutation").dataFetcher("createChequeCreditbooksDD", _ChequeCreditbooksDDFFetcher.createChequeCreditbooksDD()))
           .type(newTypeWiring("Mutation").dataFetcher("createRepeatingLine", _RepeatingWholeDataFFetcher.createRepeatingLine()))
           .type(newTypeWiring("Query").dataFetcher("getRepeatingLine", _RepeatingWholeDataFFetcher.getRepeatingLine()))
+          .type(newTypeWiring("Mutation").dataFetcher("createPostCodeMainPage", _PostCodeMainPageFFetcher.createPostCodeMainPage()))
           .type(newTypeWiring("Query").dataFetcher("getPostCodeDataLine", _PostCodeDataFFetcher.getPostCodeDataLine()))
           .build();
     }

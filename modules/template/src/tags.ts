@@ -22,13 +22,6 @@ export interface HasCommonIdDetails<S> {
   commonIdDetails: NameAndLens<S>
 }
 
-export interface UrlConfigWithoutFdLens<S, FD, D> {
-  cd: NameAndLens<S>;
-  fdd: NameAndLens<FD>;
-  dLens: Optional<FD, D>;
-  resourceId: string [];
-  ids: string []
-}
 
 /**
  * @param cd the common id details (where in state are things like applicationr ef, client ref... shared across multiple pages
@@ -37,7 +30,7 @@ export interface UrlConfigWithoutFdLens<S, FD, D> {
  * @param resourceId.
  * @params ids. The data we need to send with every request
  */
-export interface UrlConfig<S, FD, D> extends UrlConfigWithoutFdLens<S, FD, D> {
+export interface UrlConfig<S, FD, D> {
   cd: NameAndLens<S>;
   fdd: NameAndLens<FD>;
   fdLens: Optional<S, FD>;
@@ -86,12 +79,13 @@ export const bodyFor: TagOpsFn<RequestInit | undefined> =
                  const method = methodFor ( restAction )
                  if ( restAction === 'get' || restAction === 'getOption' || restAction === 'list' ) return undefined
                  if ( restAction === 'delete' ) return { method }
-                 const body: any = urlConfig.fdLens.chain ( urlConfig.dLens ).getOption ( s )
+                 let bodyL = urlConfig.fdLens.chain ( urlConfig.dLens );
+                 const body: any = bodyL.getOption ( s )
                  if ( body ) {
                    console.log ( "made body for ", body )
                    return { method, body: JSON.stringify ( body ) }
                  }
-                 throw new Error ( `Cannot execute restAction ${restAction} because the data object is empty\n${JSON.stringify ( s )}` )
+                 throw new Error ( `Cannot execute restAction ${restAction}, using the data at [${bodyL.description}] because the data object is empty\n${JSON.stringify ( s )}` )
                }
 
 export const reqFor: TagOpsFn<( url: string ) => [ RequestInfo, RequestInit | undefined ]> =

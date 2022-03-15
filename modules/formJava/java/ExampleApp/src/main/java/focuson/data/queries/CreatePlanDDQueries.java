@@ -10,7 +10,7 @@ public class CreatePlanDDQueries{
   +"}";}
   public static  String createCreatePlanDD(String accountId,String customerId, String obj){ 
      return
-  "mutation{createCreatePlanDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "customerId:" + "\"" + customerId + "\""  +  ", obj:" + obj + "){"+
+  "mutation{createCreatePlanDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "customerId:" + "\"" + customerId + "\""  + ", obj:" + obj + "){"+
         "    createPlanStart"+
         "    createPlanDate"+
         "    createPlanEnd"+
@@ -18,7 +18,7 @@ public class CreatePlanDDQueries{
   +"}";}
   public static  String updateCreatePlanDD(String accountId,String createPlanId,String customerId, String obj){ 
      return
-  "mutation{updateCreatePlanDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "createPlanId:" + "\"" + createPlanId + "\""  + "," + "customerId:" + "\"" + customerId + "\""  +  ", obj:" + obj + "){"+
+  "mutation{updateCreatePlanDD(" + "accountId:" + "\"" + accountId + "\""  + "," + "createPlanId:" + "\"" + createPlanId + "\""  + "," + "customerId:" + "\"" + customerId + "\""  + ", obj:" + obj + "){"+
         "    createPlanStart"+
         "    createPlanDate"+
         "    createPlanEnd"+

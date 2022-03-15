@@ -29,7 +29,7 @@ const fdd = {
 }
 function oneRestDetails<S extends HasFullDomainForTest> ( cd: NameAndLens<S>, fdd: NameAndLens<FullDomainForTest> ): OneRestDetails<S, FullDomainForTest, string, SimpleMessage> {
   return {
-    // fdLens: identityOptics<S> ().focusQuery ( 'fullDomain' ),
+    fdLens: identityOptics<S> ().focusQuery ( 'fullDomain' ),
     dLens: identityOptics<FullDomainForTest> ().focusQuery ( 'fromApi' ),
     cd,
     fdd,
@@ -52,19 +52,19 @@ describe ( "restReq", () => {
     expect ( restReq ( restDetails, restL (), emptyRestState ) ).toEqual ( [] )
   } )
   it ( "it should turn post commands in the state into fetch requests - one", () => {
-    const results = restReq ( restDetails, restL (), withRestCommand ( emptyRestState, { restAction: 'list', name: 'one', path: [] } ) );
+    const results = restReq ( restDetails, restL (), withRestCommand ( emptyRestState, { restAction: 'list', name: 'one' } ) );
     expect ( results.map ( a => [ a[ 0 ].url, a[ 1 ], a[ 2 ] ] ) ).toEqual ( [
       [ "/some/url/{token}?{query}", "/some/url/someToken?token=someToken", undefined ]
     ] )
   } )
   it ( "it should turn post commands in the state into fetch requests - three", () => {
     let results = restReq ( restDetails, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
-      { restAction: 'get', name: 'one', path: [ 'fullDomain' ] },
-      { restAction: 'create', name: 'one', path: [ 'fullDomain' ] },
-      { restAction: 'getOption', name: 'one', path: [ 'fullDomain' ] },
-      { restAction: 'delete', name: 'one', path: [ 'fullDomain' ] },
-      { restAction: 'update', name: 'one', path: [ 'fullDomain' ] },
-      { restAction: 'list', name: 'one', path: [ 'fullDomain' ] },
+      { restAction: 'get', name: 'one' },
+      { restAction: 'create', name: 'one' },
+      { restAction: 'getOption', name: 'one' },
+      { restAction: 'delete', name: 'one'},
+      { restAction: 'update', name: 'one' },
+      { restAction: 'list', name: 'one' },
     ) );
     expect ( results.map ( a => [ a[ 1 ], a[ 2 ] ] ) ).toEqual ( [
       [ "/some/url/someToken?token=someToken&id=someId", undefined ],
@@ -80,7 +80,7 @@ const mockFetch: FetchFn = ( url, info ) => info?.method === 'delete' ? Promise.
 describe ( "massFetch", () => {
   it ( "should get the results from the fetch ", async () => {
     expect ( await massFetch ( mockFetch, [] ) ).toEqual ( [] )
-    expect ( await massFetch ( mockFetch, [ [ 'cargo1', '/one', undefined, [ 'fullDomain' ] ], [ 'cargo2', '/one', { method: 'delete' }, [ 'fullDomain' ] ], [ 'cargo3', '/one', undefined, [ 'fullDomain' ] ] ] ) ).toEqual ( [
+    expect ( await massFetch ( mockFetch, [ [ 'cargo1', '/one', undefined ], [ 'cargo2', '/one', { method: 'delete' } ], [ 'cargo3', '/one', undefined ] ] ) ).toEqual ( [
       { "one": "cargo1", "result": "from/one", "status": 200, "path": [ "fullDomain" ] },
       { "one": "cargo2", "result": "deleteWentWrong", "path": [ "fullDomain" ] },
       { "one": "cargo3", "result": "from/one", "status": 200, "path": [ "fullDomain" ] }
@@ -91,12 +91,12 @@ describe ( "massFetch", () => {
 describe ( "rest", () => {
   it ( "should fetch the results and put them into the state, removing the rest commands", async () => {
     const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, simpleMessageL, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
-      { restAction: 'get', name: 'one', path: [ 'fullDomain' ] },
-      { restAction: 'create', name: 'one', path: [ 'fullDomain' ] },
-      { restAction: 'getOption', name: 'one', path: [ 'fullDomain' ] },
-      { restAction: 'delete', name: 'one', path: [ 'fullDomain' ] },
-      { restAction: 'update', name: 'one', path: [ 'fullDomain' ] },
-      { restAction: 'list', name: 'one', path: [ 'fullDomain' ] },
+      { restAction: 'get', name: 'one' },
+      { restAction: 'create', name: 'one'},
+      { restAction: 'getOption', name: 'one' },
+      { restAction: 'delete', name: 'one' },
+      { restAction: 'update', name: 'one' },
+      { restAction: 'list', name: 'one' },
     ) );
     expect ( result ).toEqual ( {
       "fullDomain": {

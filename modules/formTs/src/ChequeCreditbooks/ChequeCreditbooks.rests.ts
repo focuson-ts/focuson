@@ -7,6 +7,7 @@ import { FState } from "../common"
 export function ChequeCreditbooks_ChequeCreditbooksDDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.ChequeCreditbooksPageDomain, domains.ChequeCreditbooksDDDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.ChequeCreditbooksPageDomain> = {}
   return {
+    fdLens: Lenses.identity<FState>().focusQuery('ChequeCreditbooks'),
     dLens: Lenses.identity<domains.ChequeCreditbooksPageDomain>().focusQuery('fromApi'),
     cd, fdd,
     ids: ["accountId","applRef","brandRef","customerId"],

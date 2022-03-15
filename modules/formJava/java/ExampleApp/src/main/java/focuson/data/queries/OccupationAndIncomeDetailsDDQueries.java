@@ -41,7 +41,7 @@ public class OccupationAndIncomeDetailsDDQueries{
   +"}";}
   public static  String updateOccupationAndIncomeDetailsDD(String accountSeq,String applicationRef,String brandRef,String vbAccountSeq,String vbAccountType, String obj){ 
      return
-  "mutation{updateOccupationAndIncomeDetailsDD(" + "accountSeq:" + "\"" + accountSeq + "\""  + "," + "applicationRef:" + "\"" + applicationRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "vbAccountSeq:" + "\"" + vbAccountSeq + "\""  + "," + "vbAccountType:" + "\"" + vbAccountType + "\""  +  ", obj:" + obj + "){"+
+  "mutation{updateOccupationAndIncomeDetailsDD(" + "accountSeq:" + "\"" + accountSeq + "\""  + "," + "applicationRef:" + "\"" + applicationRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "vbAccountSeq:" + "\"" + vbAccountSeq + "\""  + "," + "vbAccountType:" + "\"" + vbAccountType + "\""  + ", obj:" + obj + "){"+
         "    regulatoryReport"+
         "    mainCustomerName"+
         "    jointCustomerName"+

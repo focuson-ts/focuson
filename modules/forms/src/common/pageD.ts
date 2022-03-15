@@ -23,7 +23,6 @@ export interface RestOnCommit {
   action: RestAction,
   /** What happens when the rest is completed. Currently only 'refresh' which clears the 'main object' triggering a fetch. Later we will be more clever' */
   result: RestResult;
-  target: string[];
 }
 
 
@@ -31,7 +30,7 @@ export interface ButtonDefnInPage<B> {
   [ name: string ]: B
 }
 
-export type PageType = 'MainPage' | 'ModalPage'
+export type PageType = 'MainPage' | 'ModalPage' | 'ModalPopup'
 export interface ModalData<B, G> {
   modal: PageD<B, G>,
   path: string[]
@@ -41,7 +40,7 @@ export function isMainPage<B, G> ( p: PageD<B, G> ): p is MainPageD<B, G> {
   return p.pageType === 'MainPage'
 }
 export function isModalPage<B, G> ( p: PageD<B, G> ): p is ModalPageD<B, G> {
-  return p.pageType === 'ModalPage'
+  return p.pageType === 'ModalPage' || p.pageType === 'ModalPopup'
 }
 export type PageD<Buttons, G> = MainPageD<Buttons, G> | ModalPageD<Buttons, G>
 
@@ -59,7 +58,7 @@ export interface MainPageD<Buttons, G> {
   buttons: ButtonDefnInPage<Buttons>
 }
 export interface ModalPageD<Buttons, G> {
-  pageType: 'ModalPage',
+  pageType: 'ModalPage' | 'ModalPopup',
   name: string,
   modes: PageMode[],
   display: {target: string[], dataDD: DataD<G>, importFrom: string },

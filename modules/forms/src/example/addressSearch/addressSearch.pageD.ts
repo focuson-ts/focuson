@@ -27,7 +27,8 @@ export const PostCodeMainPage: ExampleMainPage = {
   modals: [ { modal: PostCodeModalPage, path: [ 'postcode' ] } ],
   modes: [ 'edit' ],
   rest: {
-    postcode: { rest: postcodeRestD, targetFromPath: [ 'postcode', 'searchResults' ], fetcher: true }
+    postcode: { rest: postcodeRestD, targetFromPath: [ 'postcode', 'searchResults' ] , fetcher: true},
+    address: { rest: addressRestD, targetFromPath: [  'main' ] }
   },
   buttonOrder: ['save'],//hide the search button
   buttons: {
@@ -44,7 +45,7 @@ export const PostCodeMainPage: ExampleMainPage = {
       ]
     },
     save: {
-      control: 'RestButton', rest: addressRestD, action: 'create', path: [ '{basePage}','main' ]
+      control: 'RestButton', rest: addressRestD, action: 'create', validate: false
     }
   }
 }

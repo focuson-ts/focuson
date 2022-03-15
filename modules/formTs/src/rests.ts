@@ -11,6 +11,7 @@ import { ETransfer_ETransferDataDRestDetails } from './ETransfer/ETransfer.rests
 import { CreateEAccount_CreateEAccountDataDDRestDetails } from './CreateEAccount/CreateEAccount.rests';
 import { ChequeCreditbooks_ChequeCreditbooksDDRestDetails } from './ChequeCreditbooks/ChequeCreditbooks.rests';
 import { Repeating_RepeatingWholeDataRestDetails } from './Repeating/Repeating.rests';
+import { PostCodeDemo_PostCodeMainPageRestDetails } from './PostCodeDemo/PostCodeDemo.rests';
 import { PostCodeDemo_PostCodeDataRestDetails } from './PostCodeDemo/PostCodeDemo.rests';
 export const restDetails: RestDetails<FState, SimpleMessage> = {
    OccupationAndIncomeSummary_OccupationAndIncomeDetailsDDRestDetails: OccupationAndIncomeSummary_OccupationAndIncomeDetailsDDRestDetails(commonIds, defaultDateFn),
@@ -21,6 +22,7 @@ export const restDetails: RestDetails<FState, SimpleMessage> = {
    CreateEAccount_CreateEAccountDataDDRestDetails: CreateEAccount_CreateEAccountDataDDRestDetails(commonIds, defaultDateFn),
    ChequeCreditbooks_ChequeCreditbooksDDRestDetails: ChequeCreditbooks_ChequeCreditbooksDDRestDetails(commonIds, defaultDateFn),
    Repeating_RepeatingWholeDataRestDetails: Repeating_RepeatingWholeDataRestDetails(commonIds, defaultDateFn),
+   PostCodeDemo_PostCodeMainPageRestDetails: PostCodeDemo_PostCodeMainPageRestDetails(commonIds, defaultDateFn),
    PostCodeDemo_PostCodeDataRestDetails: PostCodeDemo_PostCodeDataRestDetails(commonIds, defaultDateFn)
 
 }

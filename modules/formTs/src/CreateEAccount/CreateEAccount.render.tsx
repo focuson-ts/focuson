@@ -29,7 +29,6 @@ export function CreateEAccountPage(){
         id='createEAccounts'
         name='createEAccounts'
         action='create'
-        path={["{basePage}","editing"]}
         rest='CreateEAccount_ETransferDataDRestDetails'
         confirm={true}
        />,

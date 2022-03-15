@@ -7,6 +7,7 @@ import { FState } from "../common"
 export function CreateEAccount_CreateEAccountDataDDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.CreateEAccountPageDomain, domains.CreateEAccountDataDDDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.CreateEAccountPageDomain> = {}
   return {
+    fdLens: Lenses.identity<FState>().focusQuery('CreateEAccount'),
     dLens: Lenses.identity<domains.CreateEAccountPageDomain>().focusQuery('editing'),
     cd, fdd,
     ids: ["accountId","customerId"],

@@ -7,6 +7,7 @@ import { FState } from "../common"
 export function OccupationAndIncomeSummary_OccupationAndIncomeDetailsDDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.OccupationAndIncomeDetailsDDDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
+    fdLens: Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'),
     dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('fromApi'),
     cd, fdd,
     ids: ["accountSeq","applicationRef","brandRef","vbAccountSeq","vbAccountType"],
@@ -19,6 +20,7 @@ export function OccupationAndIncomeSummary_OccupationAndIncomeDetailsDDRestDetai
 export function OccupationAndIncomeSummary_OtherIncomeResponseDDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.OtherIncomeResponseDDDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
+    fdLens: Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'),
     dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('other'),
     cd, fdd,
     ids: ["accountSeq","applicationRef","brandRef","vbAccountSeq","vbAccountType"],

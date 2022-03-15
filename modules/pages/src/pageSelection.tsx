@@ -77,7 +77,7 @@ export function fromPathFor<S, Context extends HasPageSelectionLens<S>> ( state:
   const fromPath = Lenses.fromPathWith<S, any> ( lookup )
   return ( path, d ) => fromPath ( replaceBasePath ( state, path ), d );
 }
-export function replaceBasePathWithKnownPage ( pageName:string, path: string[] ) : string[]{
+export function replaceBasePageWithKnownPage ( pageName:string, path: string[] ) : string[]{
   return path.map ( part => part === '{basePage}' ? pageName : part )
 }
 

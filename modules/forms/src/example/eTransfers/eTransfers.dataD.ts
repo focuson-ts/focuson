@@ -7,7 +7,7 @@ import { LayoutCd } from "../../common/componentsD";
 export const ETransferDataD: DataD<AllGuards> = {
   name: "ETransferDataD",
   description: "Allows us to make an etransfer",
-  layout: { component: LayoutCd, params: { details:'[[1],[3,3]]'} },
+  layout: { component: LayoutCd, params: { details:'[[1],[3,3],[1,1]]'} },
   structure: {
     account: { dataDD: AccountIdDD, displayParams: { label: "Account Id" , min: 0} },
     dateOfETransfer: { dataDD: DateDD },

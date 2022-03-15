@@ -7,6 +7,7 @@ import { FState } from "../common"
 export function ETransfer_ETransferDataDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.ETransferPageDomain, domains.ETransferDataDDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.ETransferPageDomain> = {}
   return {
+    fdLens: Lenses.identity<FState>().focusQuery('ETransfer'),
     dLens: Lenses.identity<domains.ETransferPageDomain>().focusQuery('fromApi'),
     cd, fdd,
     ids: ["customerId"],

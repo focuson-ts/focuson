@@ -1,7 +1,7 @@
 import { AllDataDD, DataD, isDataDd, isPrimDd, isRepeatingDd, OneDataDD, RepeatingDataD } from "../common/dataD";
 import { domainName, hasDomainForPage, pageDomainName } from "./names";
 import { sortedEntries } from "@focuson/utils";
-import { dataDsIn, PageD } from "../common/pageD";
+import { dataDsIn, isModalPage, PageD } from "../common/pageD";
 import { TSParams } from "./config";
 import { indentList } from "./codegen";
 
@@ -47,7 +47,7 @@ export function typeNameFor<G> ( params: TSParams, d: AllDataDD<G> ): string {
 
 export function makePageDomainsFor<B, G> ( params: TSParams, ps: PageD<B, G>[] ): string[] {
   return [
-    ...ps.flatMap ( p => p.pageType === 'ModalPage' ? [] : [
+    ...ps.flatMap ( p => isModalPage ( p ) ? [] : [
       ...makeHasDomainsFor ( p ),
       `export interface ${pageDomainName ( p )}{`,
       ...indentList ( sortedEntries ( p.domain ).map ( ( [ name, dd ] ) => `${name}?:${typeNameFor ( params, dd.dataDD )};` ) ),

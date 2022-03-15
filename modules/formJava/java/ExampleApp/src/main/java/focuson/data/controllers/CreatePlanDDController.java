@@ -20,12 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
     @PostMapping(value="/api/createPlan/{createPlanId}", produces="application/json")
     public ResponseEntity createCreatePlanDD(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL,CreatePlanDDQueries.createCreatePlanDD(accountId, customerId,  Transform.removeQuoteFromProperties(body)), "createCreatePlanDD");
+       return Transform.result(graphQL,CreatePlanDDQueries.createCreatePlanDD(accountId, customerId,   Transform.removeQuoteFromProperties(body)), "createCreatePlanDD");
     }
 
     @PutMapping(value="/api/createPlan/{createPlanId}", produces="application/json")
     public ResponseEntity updateCreatePlanDD(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL,CreatePlanDDQueries.updateCreatePlanDD(accountId, createPlanId, customerId,  Transform.removeQuoteFromProperties(body)), "updateCreatePlanDD");
+       return Transform.result(graphQL,CreatePlanDDQueries.updateCreatePlanDD(accountId, createPlanId, customerId,   Transform.removeQuoteFromProperties(body)), "updateCreatePlanDD");
     }
 
     @DeleteMapping(value="/api/createPlan/{createPlanId}", produces="application/json")
@@ -45,12 +45,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
     @PostMapping(value="/api/createPlan/{createPlanId}/query", produces="application/json")
     public String querycreateCreatePlanDD(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{
-       return CreatePlanDDQueries.createCreatePlanDD(accountId, customerId,  Transform.removeQuoteFromProperties(body));
+       return CreatePlanDDQueries.createCreatePlanDD(accountId, customerId,   Transform.removeQuoteFromProperties(body));
     }
 
     @PutMapping(value="/api/createPlan/{createPlanId}/query", produces="application/json")
     public String queryupdateCreatePlanDD(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId, @RequestBody String body) throws Exception{
-       return CreatePlanDDQueries.updateCreatePlanDD(accountId, createPlanId, customerId,  Transform.removeQuoteFromProperties(body));
+       return CreatePlanDDQueries.updateCreatePlanDD(accountId, createPlanId, customerId,   Transform.removeQuoteFromProperties(body));
     }
 
     @DeleteMapping(value="/api/createPlan/{createPlanId}/query", produces="application/json")

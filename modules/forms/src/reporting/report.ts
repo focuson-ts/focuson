@@ -95,7 +95,7 @@ export function makeButtonsReport<B extends ButtonD, G extends GuardWithConditio
   return { part: 'buttons', general, critical: [] };
 }
 function modalButtonData<G> ( button: ModalButtonInPage<G>, guardedBy: string ): string[] {
-  const restOnCommit = button.restOnCommit ? [ `RestOnCommit: ${button.restOnCommit.rest.url}/${button.restOnCommit.action} to ${JSON.stringify ( button.restOnCommit.target )}` ] : []
+  const restOnCommit = button.restOnCommit ? [ `RestOnCommit: ${button.restOnCommit.rest.url}/${button.restOnCommit.action}` ] : []
   const copyOnClose = button.copyOnClose ? [ `Copy on close ${JSON.stringify ( button.copyOnClose )} ` ] : []
   const from = button.copy ? [ `Copy from ${JSON.stringify ( button.copy )}` ] : []
   const empty = button.createEmpty ? [ `Initialised as empty` ] : []

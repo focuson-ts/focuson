@@ -25,9 +25,12 @@ function makeQueryFolder<G> (): AllDataFlatMap<string, G> {
   }
 }
 
-export function makeQuery <G>( r: RestD <G>, action: RestAction ): string[] {
-  const paramString = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( action ) ).map ( ( [ name, p ], i ) => `"${name}:" + "\\"" + ${name} + "\\"" ` ).join ( ` + "," + ` )
-  const objParamString = defaultRestAction[ action ].params.needsObj ? ` +  ", obj:" + obj ` : ""
+export function makeQuery<G> ( r: RestD<G>, action: RestAction ): string[] {
+  let params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( action ) );
+  const paramString = params.map ( ( [ name, p ], i ) => `"${name}:" + "\\"" + ${name} + "\\"" ` ).join ( ` + "," + ` )
+  const comma = params.length===0?'': ','
+  const plus = params.length===0?'': '+ '
+  const objParamString = defaultRestAction[ action ].params.needsObj ? ` ${plus}"${comma} obj:" + obj ` : ""
   const prefix = defaultRestAction[ action ].query.toLowerCase ()
   return [ `"${prefix}{${resolverName ( r.dataDD, defaultRestAction[ action ] )}(\" + ${paramString}${objParamString}+ \"){"+`,
     ...asMultilineJavaString ( flatMapDD ( r.dataDD, makeQueryFolder() ), '      ' ), '+"}";}' ]
@@ -36,8 +39,11 @@ export function makeQuery <G>( r: RestD <G>, action: RestAction ): string[] {
 export function makeJavaVariablesForGraphQlQuery <G> ( rs: RestD <G>[] ): string[] {
   return rs.flatMap ( r => {
     return r.actions.flatMap ( action => {
-      const paramString = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( action ) ).map ( ( [ name, p ], i ) => `String ${name}` ).join ( "," )
-      const objParamString = defaultRestAction[ action ].params.needsObj ? `, String obj` : ""
+      let params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( action ) );
+      const paramString = params.map ( ( [ name, p ], i ) => `String ${name}` ).join ( "," )
+      let zeroParams = paramString.length===0;
+      const comma = zeroParams? '': ', '
+      const objParamString = defaultRestAction[ action ].params.needsObj ? `${comma}String obj` : ""
       return [
         `public static  String ${queryName ( r, action )}(${paramString}${objParamString}){ `,
         "   return",

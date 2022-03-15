@@ -1,5 +1,6 @@
 import { makeJavaVariablesForGraphQlQuery, makeQuery } from "../codegen/makeGraphQlQuery";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
+import { addressRestD } from "../example/addressSearch/addressSearch.restD";
 
 
 describe ( "Making GraphQl from RestD", () => {
@@ -86,4 +87,10 @@ describe ( "Making GraphQl from RestD", () => {
       "+'}';}"
     ] )
   } )
+
+  it ("should make a query with no params", () =>{
+    expect ( makeJavaVariablesForGraphQlQuery ( [ addressRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [])
+
+  })
+
 } )

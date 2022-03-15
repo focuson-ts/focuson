@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
     @PutMapping(value="/customer/occupation/v2/occupationIncomeDetails", produces="application/json")
     public ResponseEntity updateOccupationAndIncomeDetailsDD(@RequestParam String accountSeq, @RequestParam String applicationRef, @RequestParam String brandRef, @RequestParam String vbAccountSeq, @RequestParam String vbAccountType, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL,OccupationAndIncomeDetailsDDQueries.updateOccupationAndIncomeDetailsDD(accountSeq, applicationRef, brandRef, vbAccountSeq, vbAccountType,  Transform.removeQuoteFromProperties(body)), "updateOccupationAndIncomeDetailsDD");
+       return Transform.result(graphQL,OccupationAndIncomeDetailsDDQueries.updateOccupationAndIncomeDetailsDD(accountSeq, applicationRef, brandRef, vbAccountSeq, vbAccountType,   Transform.removeQuoteFromProperties(body)), "updateOccupationAndIncomeDetailsDD");
     }
 
     @GetMapping(value="/customer/occupation/v2/occupationIncomeDetails/query", produces="application/json")
@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
     @PutMapping(value="/customer/occupation/v2/occupationIncomeDetails/query", produces="application/json")
     public String queryupdateOccupationAndIncomeDetailsDD(@RequestParam String accountSeq, @RequestParam String applicationRef, @RequestParam String brandRef, @RequestParam String vbAccountSeq, @RequestParam String vbAccountType, @RequestBody String body) throws Exception{
-       return OccupationAndIncomeDetailsDDQueries.updateOccupationAndIncomeDetailsDD(accountSeq, applicationRef, brandRef, vbAccountSeq, vbAccountType,  Transform.removeQuoteFromProperties(body));
+       return OccupationAndIncomeDetailsDDQueries.updateOccupationAndIncomeDetailsDD(accountSeq, applicationRef, brandRef, vbAccountSeq, vbAccountType,   Transform.removeQuoteFromProperties(body));
     }
 
   @GetMapping(value = "/customer/occupation/v2/occupationIncomeDetails/sample", produces = "application/json")

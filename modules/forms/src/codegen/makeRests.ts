@@ -4,6 +4,7 @@ import { TSParams } from "./config";
 import { allRestAndActions, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { sortedEntries } from "@focuson/utils";
 import { addStringToEndOfAllButLast, focusQueryFor } from "./codegen";
+import { replaceBasePageWithKnownPage } from "@focuson/pages";
 
 
 export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( r: RestDefnInPageProperties<G> ): string[] => {
@@ -15,7 +16,8 @@ export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( r: Rest
     `export function ${restDetailsName ( p, r.rest )} ( cd: NameAndLens<${params.stateName}>, dateFn: DateFn  ): OneRestDetails<${params.stateName}, ${pageDomain}, ${params.domainsFile}.${domainName ( r.rest.dataDD )}, SimpleMessage> {`,
     `  const fdd: NameAndLens<${pageDomain}> = {` + fddLens.join ( "," ) + "}",
     `  return {`,
-    `    dLens: Lenses.identity<${pageDomain}>()${focusQueryFor ( r.targetFromPath )},`, //    dLens: Lenses.identity <pageDomains.EAccountsSummaryPageDomain> ().focusQuery ( 'tempCreatePlan' ),
+    `    fdLens: Lenses.identity<${params.stateName}>().focusQuery('${p.name}'),`,
+    `    dLens: Lenses.identity<${pageDomain}>()${focusQueryFor ( replaceBasePageWithKnownPage ( p.name, r.targetFromPath ) )},`, //    dLens: Lenses.identity <pageDomains.EAccountsSummaryPageDomain> ().focusQuery ( 'tempCreatePlan' ),
     `    cd, fdd,`,
     `    ids: ${JSON.stringify ( ids )},`,
     `    resourceId:  ${JSON.stringify ( resourceIds )},`,
@@ -58,5 +60,5 @@ export function makeRestDetails<B, G> ( params: TSParams, ps: PageD<B, G>[] ): s
 export function makeRests<B, G> ( params: TSParams, pd: MainPageD<B, G> ): string[] {
   let rests = sortedEntries ( pd.rest ).flatMap ( ( [ name, rd ] ) => makeRest ( params, pd ) ( rd ) );
   let imports = rests.length > 0 ? makeRestImports ( params, pd ) : []
-  return [ ...imports,`import { ${params.stateName} } from "../common"`, ...rests ]
+  return [ ...imports, `import { ${params.stateName} } from "../common"`, ...rests ]
 }

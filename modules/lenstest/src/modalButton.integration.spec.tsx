@@ -130,10 +130,7 @@ describe ( "modal buttons", () => {
       displayAndGetButton ( emptyS, s => remembered = s, state =>
         <ModalButton text='someTitle' id='someId' state={state}
                      focusOn={[ 'mainPage', 'temp' ]} createEmpty={{ data: 'data' }}
-                     rest={{
-                       name: 'restName', restAction: 'update',
-                       path: [ 'some', 'path' ]
-                     }} modal={'someModal'}
+                     rest={{ name: 'restName', restAction: 'update' }} modal={'someModal'}
                      copyOnClose={[ { to: [ 'mainPage', 'data' ] } ]} pageMode='view'/> )
         .simulate ( 'click' )
       expect ( remembered ).toEqual ( {
@@ -209,7 +206,7 @@ describe ( "with nested child", () => {
   it ( "should create empty, then copy back with a rest command", () => {
     var remembered: any = {}
     displayAndGetButton ( emptyNestedS, s => remembered = s, state =>
-      <ModalButton text='someTitle' id='someId' state={state} focusOn={[ 'mainPage', 'temp' ]} createEmpty={{ data: 'data' }} rest={{ name: 'restName', restAction: 'update', path: [ 'some', 'path' ] }}
+      <ModalButton text='someTitle' id='someId' state={state} focusOn={[ 'mainPage', 'temp' ]} createEmpty={{ data: 'data' }} rest={{ name: 'restName', restAction: 'update' }}
                    modal={'someModal'} copyOnClose={[ { to: [ 'mainPage', 'nested', 'data' ] } ]} pageMode='view'/> )
       .simulate ( 'click' )
     expect ( remembered ).toEqual ( {
@@ -305,7 +302,7 @@ it ( "should create empty, then copy back", () => {
 it ( "should create empty, then copy back with a rest command", () => {
   var remembered: any = {}
   displayAndGetButton ( emptyNestedS, s => remembered = s, state =>
-    <ModalButton text='someTitle' id='someId' state={state} focusOn={[ 'mainPage', 'temp' ]} createEmpty={{ data: 'data' }} rest={{ name: 'restName', restAction: 'update', path: [ 'some', 'path' ] }}
+    <ModalButton text='someTitle' id='someId' state={state} focusOn={[ 'mainPage', 'temp' ]} createEmpty={{ data: 'data' }} rest={{ name: 'restName', restAction: 'update' }}
                  modal={'someModal'} copyOnClose={[ { to: [ 'mainPage', 'nested', 'data' ] } ]} pageMode='view'/> )
     .simulate ( 'click' )
   expect ( remembered ).toEqual ( {

@@ -1,10 +1,8 @@
 import { makeRest } from "../codegen/makeRests";
-import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
-import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
-import { RepeatingLinePageD, RepeatingPageD } from "../example/repeating/repeating.pageD";
-import { repeatingRestRD } from "../example/repeating/repeating.restD";
+import { RepeatingPageD } from "../example/repeating/repeating.pageD";
+import { PostCodeMainPage } from "../example/addressSearch/addressSearch.pageD";
 
 
 describe ( "makeRest", () => {
@@ -58,5 +56,11 @@ describe ( "makeRest", () => {
     ])
 
   } )
+
+  it ( "should create rest where we use {basePage}", () => {
+    expect ( makeRest ( paramsForTest, PostCodeMainPage ) ( PostCodeMainPage.rest.repeating ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [])
+
+  } )
+
 
 } )

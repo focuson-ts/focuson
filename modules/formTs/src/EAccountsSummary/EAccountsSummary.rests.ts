@@ -7,6 +7,7 @@ import { FState } from "../common"
 export function EAccountsSummary_CreatePlanDDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.CreatePlanDDDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}
   return {
+    fdLens: Lenses.identity<FState>().focusQuery('EAccountsSummary'),
     dLens: Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('tempCreatePlan'),
     cd, fdd,
     ids: ["accountId","customerId"],
@@ -19,6 +20,7 @@ export function EAccountsSummary_CreatePlanDDRestDetails ( cd: NameAndLens<FStat
 export function EAccountsSummary_EAccountsSummaryDDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDDDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}
   return {
+    fdLens: Lenses.identity<FState>().focusQuery('EAccountsSummary'),
     dLens: Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('fromApi'),
     cd, fdd,
     ids: ["accountId"],

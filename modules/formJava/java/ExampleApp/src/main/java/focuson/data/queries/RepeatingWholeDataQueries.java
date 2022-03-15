@@ -2,7 +2,7 @@ package focuson.data.queries;
 public class RepeatingWholeDataQueries{
   public static  String createRepeatingLine(String customerId, String obj){ 
      return
-  "mutation{createRepeatingLine(" + "customerId:" + "\"" + customerId + "\""  +  ", obj:" + obj + "){"+
+  "mutation{createRepeatingLine(" + "customerId:" + "\"" + customerId + "\""  + ", obj:" + obj + "){"+
         "    name"+
         "    age"+
         "  }"

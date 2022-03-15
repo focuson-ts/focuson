@@ -25,7 +25,14 @@ export function PostCodeDemoPage(){
   return focusedPageWithExtraState<FState, PostCodeDemoPageDomain, PostCodeMainPageDomain, Context> ( s => 'PostCodeDemo' ) ( s => s.focusOn('main')) (
     ( fullState, state , full, d, mode) => {
   const id='root';
-  const buttons =    {search:<ModalButton id='search' text='search'  state={state} modal = 'PostCodeSearch'  
+  const buttons =    {save:<RestButton state={state}
+        id='save'
+        name='save'
+        action='create'
+        validate={false}
+        rest='PostCodeDemo_PostCodeMainPageRestDetails'
+       />,
+      search:<ModalButton id='search' text='search'  state={state} modal = 'PostCodeSearch'  
         pageMode='edit'
         focusOn={["PostCodeDemo","postcode"]}
         copy={[{"from":["{basePage}","main","postcode"],"to":["{basePage}","postcode","search"]}]}
@@ -35,6 +42,7 @@ export function PostCodeDemoPage(){
       return <div className='mainPage'>
            {/*{"dataDD":"PostCodeMainPage","display":{"import":"","name":"PostCodeMainPage","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <PostCodeMainPage id={`${id}`} state={state} mode={mode} buttons={buttons} />
+      { buttons.save } 
       </div>})}
 
 export function PostCodeDataLine({id,state,mode,buttons}: FocusedProps<FState, PostCodeDataLineDomain,Context>){

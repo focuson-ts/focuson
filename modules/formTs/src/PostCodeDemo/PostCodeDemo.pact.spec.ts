@@ -9,6 +9,44 @@ import * as samples from '../PostCodeDemo/PostCodeDemo.samples'
 import {emptyState, FState } from "../common";
 import * as fetchers from "../fetchers";
 import * as rests from "../rests";
+//Rest create pact test
+pactWith ( { consumer: 'PostCodeMainPage', provider: 'PostCodeMainPageProvider', cors: true }, provider => {
+  describe ( 'PostCodeDemo - rest create', () => {
+    it ( 'should have a create rest for PostCodeMainPage', async () => {
+      const restCommand: RestCommand = { name: 'PostCodeDemo_PostCodeMainPageRestDetails', restAction: 'create', path: [ 'PostCodeDemo' ] }
+      const firstState: FState = {
+        ...emptyState, restCommands: [ restCommand ],
+      PostCodeDemo: { main:samples.samplePostCodeMainPage0 },
+        pageSelection: [ { pageName: 'PostCodeDemo', pageMode: 'view' } ]
+      }
+      const url = applyToTemplate('/api/address', firstState.CommonIds).join('')
+      await provider.addInteraction ( {
+        state: 'default',
+        uponReceiving: 'PostCodeDemo should have a create rest for PostCodeMainPage',
+        withRequest: {
+          method: 'POST',
+          path: url,
+          query:{}
+          ,body: JSON.stringify(samples.samplePostCodeMainPage0)
+        },
+        willRespondWith: {
+          status: 200,
+          body: samples.samplePostCodeMainPage0
+        },
+      } )
+      const ids = {
+      }
+      const withIds = massTransform(firstState,)
+      let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
+      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+      const rawExpected:any = { ...firstState, restCommands: [], PostCodeDemo: { main: samples.samplePostCodeMainPage0} }
+      const expected = massTransform(rawExpected,)
+      expect ( { ...newState, messages: []}).toEqual ( expected )
+      expect ( newState.messages.length ).toEqual ( 1 )
+      expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+    } )
+  } )
+})
 //GetFetcher pact test
 pactWith ( { consumer: 'PostCodeData', provider: 'PostCodeDataProvider', cors: true }, provider => {
   describe ( 'PostCodeDemo - fetcher', () => {

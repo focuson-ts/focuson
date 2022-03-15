@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
     @PostMapping(value="/api/chequeCreditBooks", produces="application/json")
     public ResponseEntity createChequeCreditbooksDD(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL,ChequeCreditbooksDDQueries.createChequeCreditbooksDD(accountId, applRef, brandRef, customerId,  Transform.removeQuoteFromProperties(body)), "createChequeCreditbooksDD");
+       return Transform.result(graphQL,ChequeCreditbooksDDQueries.createChequeCreditbooksDD(accountId, applRef, brandRef, customerId,   Transform.removeQuoteFromProperties(body)), "createChequeCreditbooksDD");
     }
 
     @GetMapping(value="/api/chequeCreditBooks/query", produces="application/json")
@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
     @PostMapping(value="/api/chequeCreditBooks/query", produces="application/json")
     public String querycreateChequeCreditbooksDD(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId, @RequestBody String body) throws Exception{
-       return ChequeCreditbooksDDQueries.createChequeCreditbooksDD(accountId, applRef, brandRef, customerId,  Transform.removeQuoteFromProperties(body));
+       return ChequeCreditbooksDDQueries.createChequeCreditbooksDD(accountId, applRef, brandRef, customerId,   Transform.removeQuoteFromProperties(body));
     }
 
   @GetMapping(value = "/api/chequeCreditBooks/sample", produces = "application/json")

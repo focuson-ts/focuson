@@ -18,6 +18,7 @@ type Mutation{
   createCreateEAccountDataDD(accountId: String!, customerId: String!,obj: CreateEAccountDataDDInp!):CreateEAccountDataDD!
   createChequeCreditbooksDD(accountId: String!, applRef: String!, brandRef: String!, customerId: String!,obj: ChequeCreditbooksDDInp!):ChequeCreditbooksDD!
   createRepeatingLine(customerId: String!,obj: [RepeatingLineInp!]!):[RepeatingLine!]!
+  createPostCodeMainPage(,obj: PostCodeMainPageInp!):PostCodeMainPage!
 }
 type ChequeCreditbooksDD{
   history: [ChequeCreditbooksHistoryLineDD!]!
@@ -114,6 +115,14 @@ type PostCodeDataLine{
   line3: String!
   line4: String!
 }
+type PostCodeMainPage{
+  name: String!
+  line1: String!
+  line2: String!
+  line3: String!
+  line4: String!
+  postcode: String!
+}
 type RepeatingLine{
   name: String!
   age: Int!
@@ -184,6 +193,14 @@ input OccupationIncomeDetailsDDInp{
   empEmploymentSeq: Int!
   empAppRoleSeq: Int!
   accountantAppRoleSeq: Int!
+}
+input PostCodeMainPageInp{
+  name: String!
+  line1: String!
+  line2: String!
+  line3: String!
+  line4: String!
+  postcode: String!
 }
 input RepeatingLineInp{
   name: String!

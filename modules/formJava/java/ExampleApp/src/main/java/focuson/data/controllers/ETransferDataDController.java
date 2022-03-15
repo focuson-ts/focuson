@@ -15,12 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
   public GraphQL graphQL;
     @PostMapping(value="/api/eTransfers", produces="application/json")
     public ResponseEntity createETransferDataD(@RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL,ETransferDataDQueries.createETransferDataD(customerId,  Transform.removeQuoteFromProperties(body)), "createETransferDataD");
+       return Transform.result(graphQL,ETransferDataDQueries.createETransferDataD(customerId,   Transform.removeQuoteFromProperties(body)), "createETransferDataD");
     }
 
     @PostMapping(value="/api/eTransfers/query", produces="application/json")
     public String querycreateETransferDataD(@RequestParam String customerId, @RequestBody String body) throws Exception{
-       return ETransferDataDQueries.createETransferDataD(customerId,  Transform.removeQuoteFromProperties(body));
+       return ETransferDataDQueries.createETransferDataD(customerId,   Transform.removeQuoteFromProperties(body));
     }
 
   @GetMapping(value = "/api/eTransfers/sample", produces = "application/json")

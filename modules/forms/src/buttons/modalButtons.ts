@@ -20,7 +20,7 @@ export interface CommonModalButtonInPage<G> {
 }
 
 export function restForButton<B, G> ( parent: PageD<B, G>, rest?: RestOnCommit ): string[] {
-  return rest ? [ ` rest={${JSON.stringify ( { name: restDetailsName ( parent, rest.rest ), restAction: rest.action, path: safeArray ( rest.target ) } )}}` ] : []
+  return rest ? [ ` rest={${JSON.stringify ( { name: restDetailsName ( parent, rest.rest ), restAction: rest.action } )}}` ] : []
 }
 
 export function isModalButtonInPage<G> ( m: any ): m is ModalButtonInPage<G> {
@@ -46,7 +46,7 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalButtonInPage<G>, G> {
         const focusOnArray = [ parent.name, ...focusOn ]
         const copyOnCloseArray = copyOnClose ? singleToList ( copyOnClose ) : undefined
         const copyFromArray = copy ? singleToList ( copy ) : undefined
-        const actualSetToLengthOnClose = setToLengthOnClose ? { array: [...setToLengthOnClose.array ], variable: [ ...setToLengthOnClose.variable ] } : undefined
+        const actualSetToLengthOnClose = setToLengthOnClose ? { array: [ ...setToLengthOnClose.array ], variable: [ ...setToLengthOnClose.variable ] } : undefined
         return [ `<${button.control} id='${name}' text='${text ? text : name}'  state={state} modal = '${modalName ( parent, modal )}'  `,
           ...indentList ( [
             ...opt ( 'pageMode', mode ),

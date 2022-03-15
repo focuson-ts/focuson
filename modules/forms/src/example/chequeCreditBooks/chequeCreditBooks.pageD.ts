@@ -56,7 +56,7 @@ export const ChequeCreditbooksPD: ExampleMainPage = {
       control: 'ModalButton', modal: OrderChequeBookOrPayingInModalPD, mode: 'create',
       focusOn: [ '{basePage}', 'tempCreatePlan' ],//not type checked here... should be type checked in target
       createEmpty: ChequeCreditbooksHistoryLineDD,
-      restOnCommit: { rest: chequeCreditBooksRestD, action: 'create', result: 'refresh', target: [ 'tempCreatePlan' ] }
+      restOnCommit: { rest: chequeCreditBooksRestD, action: 'create', result: 'refresh' }
     }
   }
 }

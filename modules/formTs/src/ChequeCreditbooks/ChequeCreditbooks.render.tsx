@@ -30,7 +30,7 @@ export function ChequeCreditbooksPage(){
         pageMode='create'
         focusOn={["ChequeCreditbooks","{basePage}","tempCreatePlan"]}
         createEmpty={empty.emptyChequeCreditbooksHistoryLineDD}
-         rest={{"name":"ChequeCreditbooks_ChequeCreditbooksDDRestDetails","restAction":"create","path":["tempCreatePlan"]}}
+         rest={{"name":"ChequeCreditbooks_ChequeCreditbooksDDRestDetails","restAction":"create"}}
       />,
       payingInBook:<button>payingInBook of type ResetStateButton cannot be created yet</button>,}
 

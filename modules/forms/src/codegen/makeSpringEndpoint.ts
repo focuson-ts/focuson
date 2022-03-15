@@ -5,13 +5,22 @@ import { beforeSeparator, RestAction, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction, indentList } from "./codegen";
 
 
+function makeCommaIfHaveParams<G> ( r: RestD<G>, restAction: RestAction) {
+  const params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
+  return params.length === 0 ? '' : ', '
+}
+
 export function makeParamsForJava<G> ( r: RestD<G>, restAction: RestAction ): string {
-  const requestParam = defaultRestAction[ restAction ].params.needsObj ? ", @RequestBody String body" : ""
-  return sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) ).map ( (( [ name, param ] ) => `@RequestParam String ${name}`) ).join ( ", " )+requestParam
+  const params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
+  const  comma  = makeCommaIfHaveParams ( r, restAction );
+  const requestParam = defaultRestAction[ restAction ].params.needsObj ? `${comma}@RequestBody String body` : ""
+  return params.map ( (( [ name, param ] ) => `@RequestParam String ${name}`) ).join ( ", " )+requestParam
 }
 function paramsForQuery ( r: RestParams, restAction: RestAction ): string {
-  const objParam = defaultRestAction[ restAction ].params.needsObj ? ",  Transform.removeQuoteFromProperties(body)" : ""
-  return sortedEntries ( r ).filter ( filterParamsByRestAction ( restAction ) ).map ( ( [ name, param ] ) => name ).join ( ", " )+objParam
+  let params = sortedEntries ( r ).filter ( filterParamsByRestAction ( restAction ) );
+  const comma =params.length===0?'':', '
+  const objParam = defaultRestAction[ restAction ].params.needsObj ? `${comma}  Transform.removeQuoteFromProperties(body)` : ""
+  return params.map ( ( [ name, param ] ) => name ).join ( ", " )+objParam
 }
 
 function mappingAnnotation ( restAction: RestAction ) {
