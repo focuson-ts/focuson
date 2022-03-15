@@ -8,7 +8,7 @@ import { PostCodeMainPage } from "../example/addressSearch/addressSearch.pageD";
 describe ( "makeRest", () => {
   it ( "should create posters for a restD with one action", () => {
     expect ( makeRest ( paramsForTest, EAccountsSummaryPD ) ( EAccountsSummaryPD.rest.eAccountsSummary ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "export function EAccountsSummary_EAccountsSummaryDDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDDDomain, SimpleMessage> {",
+      "export function EAccountsSummary_EAccountsSummaryRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDomain, SimpleMessage> {",
       "  const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}",
       "  return {",
       "    fdLens: Lenses.identity<FState>().focusQuery('EAccountsSummary'),",
@@ -25,7 +25,7 @@ describe ( "makeRest", () => {
   } )
   it ( "should create posters for a restD with many actions", () => {
     expect ( makeRest ( paramsForTest, EAccountsSummaryPD ) ( EAccountsSummaryPD.rest.createPlanRestD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "export function EAccountsSummary_CreatePlanDDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.CreatePlanDDDomain, SimpleMessage> {",
+      "export function EAccountsSummary_CreatePlanRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.CreatePlanDomain, SimpleMessage> {",
       "  const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}",
       "  return {",
       "    fdLens: Lenses.identity<FState>().focusQuery('EAccountsSummary'),",
@@ -59,6 +59,6 @@ describe ( "makeRest", () => {
     ])
 
   } )
-  
+
 
 } )

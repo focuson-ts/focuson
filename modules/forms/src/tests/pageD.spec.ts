@@ -14,10 +14,10 @@ describe ( "dataDsIn", () => {
       return n
     } )
     expect ( names ).toEqual ( [
-      "CreatePlanDD",
-      "EAccountsSummaryDD",
-      "EAccountsSummaryTableDD",
-      "EAccountSummaryDD"
+      "CreatePlan",
+      "EAccountsSummary",
+      "EAccountsSummaryTable",
+      "EAccountSummary"
     ])
   } )
 
@@ -29,9 +29,9 @@ describe ( "dataDsIn", () => {
       return n
     } )
     expect ( names ).toEqual ( [
-      "CreatePlanDD",
-      "EAccountsSummaryDD",
-      "EAccountsSummaryTableDD"
+      "CreatePlan",
+      "EAccountsSummary",
+      "EAccountsSummaryTable"
     ])
   } )
 } )
@@ -39,13 +39,14 @@ describe ( "dataDsIn", () => {
 describe ( "allRestAndActions", () => {
   it ( "should find the unque rests and actions", () => {
     expect ( allRestAndActions ( [ EAccountsSummaryPD, CreatePlanPD, EAccountsSummaryPD, CreatePlanPD ] ).//
-      map ( ( [ page, rdp, rad ] ) => [ page.name, rdp.rest.dataDD.name, rad.name ] ) ).toEqual ( [
-      [ "EAccountsSummary", "CreatePlanDD", "get" ],
-      [ "EAccountsSummary", "CreatePlanDD", "create" ],
-      [ "EAccountsSummary", "CreatePlanDD", "update" ],
-      [ "EAccountsSummary", "CreatePlanDD", "delete" ],
-      [ "EAccountsSummary", "CreatePlanDD", "list" ],
-      [ "EAccountsSummary", "EAccountsSummaryDD", "get" ]
+      map ( ( [ page, rdp, rad ] ) =>
+        [ page.name, rdp.rest.dataDD.name, rad.name ] ) ).toEqual ( [
+      [ "EAccountsSummary", "CreatePlan", "get" ],
+      [ "EAccountsSummary", "CreatePlan", "create" ],
+      [ "EAccountsSummary", "CreatePlan", "update" ],
+      [ "EAccountsSummary", "CreatePlan", "delete" ],
+      [ "EAccountsSummary", "CreatePlan", "list" ],
+      [ "EAccountsSummary", "EAccountsSummary", "get" ]
     ] )
   } )
 

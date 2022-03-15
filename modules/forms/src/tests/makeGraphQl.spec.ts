@@ -6,7 +6,7 @@ import { addressRestD } from "../example/addressSearch/addressSearch.restD";
 describe ( "Making GraphQl from RestD", () => {
   it ( "should be possible to make a query ", () => {
     expect ( makeQuery ( eAccountsSummaryRestD, 'get' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "'query{getEAccountsSummaryDD(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\'' + '){'+",
+      "'query{getEAccountsSummary(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\'' + '){'+",
       "      '    useEStatements'+",
       "      '    eAccountsTable{'+",
       "      '      accountId'+",
@@ -30,7 +30,7 @@ describe ( "Making GraphQl from RestD", () => {
   } )
   it ( "should include the 'main' params in a get", () => {
     expect ( makeQuery ( createPlanRestD, 'get' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "'query{getCreatePlanDD(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'createPlanId:' + '\\'' + createPlanId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\'' + '){'+",
+      "'query{getCreatePlan(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'createPlanId:' + '\\'' + createPlanId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\'' + '){'+",
       "      '    createPlanStart'+",
       "      '    createPlanDate'+",
       "      '    createPlanEnd'+",
@@ -40,7 +40,7 @@ describe ( "Making GraphQl from RestD", () => {
   } )
   it ( "should ignore the 'main' params in a list", () => {
     expect ( makeQuery ( createPlanRestD, 'list' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "'query{listCreatePlanDD(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\'' + '){'+",
+      "'query{listCreatePlan(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\'' + '){'+",
       "      '    createPlanStart'+",
       "      '    createPlanDate'+",
       "      '    createPlanEnd'+",
@@ -50,7 +50,7 @@ describe ( "Making GraphQl from RestD", () => {
   } )
   it ( "should include the 'mutation' params in a update", () => {
     expect ( makeQuery ( createPlanRestD, 'update' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "'mutation{updateCreatePlanDD(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'createPlanId:' + '\\'' + createPlanId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\''  + ', obj:' + obj + '){'+",
+      "'mutation{updateCreatePlan(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'createPlanId:' + '\\'' + createPlanId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\''  + ', obj:' + obj + '){'+",
       "      '    createPlanStart'+",
       "      '    createPlanDate'+",
       "      '    createPlanEnd'+",
@@ -62,10 +62,10 @@ describe ( "Making GraphQl from RestD", () => {
 
   it ( "makeAllQueryForRest - should make java variables", () => {
     expect ( makeJavaVariablesForGraphQlQuery ( [ eAccountsSummaryRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "public static  String getEAccountsSummaryDD(String accountId,String customerId){ ",
+      "public static  String getEAccountsSummary(String accountId,String customerId){ ",
       "   return",
 
-      "'query{getEAccountsSummaryDD(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\'' + '){'+",
+      "'query{getEAccountsSummary(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\'' + '){'+",
       "      '    useEStatements'+",
       "      '    eAccountsTable{'+",
       "      '      accountId'+",

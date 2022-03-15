@@ -12,18 +12,18 @@ describe ( "makeGraphQlSchema", () => {
     it ( "should make type Query", () => {
       expect ( makeQueryOrMutateBlock ( rs, 'Query' ) ).toEqual ( [
         "type Query{",
-        "  getEAccountsSummaryDD(accountId: String!, customerId: String!):EAccountsSummaryDD!",
-        "  getCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!",
-        "  listCreatePlanDD(accountId: String!, customerId: String!):[CreatePlanDD!]!",
+        "  getEAccountsSummary(accountId: String!, customerId: String!):EAccountsSummary!",
+        "  getCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):CreatePlan!",
+        "  listCreatePlan(accountId: String!, customerId: String!):[CreatePlan!]!",
         "}"
       ] )
     } )
     it ( "should make type Mutation", () => {
       expect ( makeQueryOrMutateBlock ( rs, 'Mutation' ) ).toEqual ( [
         "type Mutation{",
-        "  createCreatePlanDD(accountId: String!, customerId: String!,obj: CreatePlanDDInp!):CreatePlanDD!",
-        "  updateCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanDDInp!):CreatePlanDD!",
-        "  deleteCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):String",
+        "  createCreatePlan(accountId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!",
+        "  updateCreatePlan(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!",
+        "  deleteCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):String",
         "}"
       ] )
     } )
@@ -31,17 +31,17 @@ describe ( "makeGraphQlSchema", () => {
 
   it ( "should be able to  makeSchemaBlock", () => {
     expect ( makeSchemaBlock ( 'input', 'xx' ) ( EAccountsSummaryDD ) ).toEqual ( [
-      "input EAccountsSummaryDDxx{",
+      "input EAccountsSummaryxx{",
       "  useEStatements: Boolean!",
-      "  eAccountsTable: [EAccountSummaryDDxx!]!",
+      "  eAccountsTable: [EAccountSummaryxx!]!",
       "  totalMonthlyCost: Int!",
       "  oneAccountBalance: Int!",
       "  currentAccountBalance: Int!",
-      "  createPlan: CreatePlanDDxx!",
+      "  createPlan: CreatePlanxx!",
       "}"
     ] )
     expect ( makeSchemaBlock ( 'input', 'xx' ) ( EAccountSummaryDD ) ).toEqual ( [
-      "input EAccountSummaryDDxx{",
+      "input EAccountSummaryxx{",
       "  accountId: Int!",
       "  displayType: String!",
       "  description: String!",
@@ -51,7 +51,7 @@ describe ( "makeGraphQlSchema", () => {
       "}"
     ] )
     expect ( makeSchemaBlock ( 'input', 'xx' ) ( CreatePlanDD ) ).toEqual ( [
-      "input CreatePlanDDxx{",
+      "input CreatePlanxx{",
       "  createPlanStart: String!",
       "  createPlanDate: String!",
       "  createPlanEnd: String!",
@@ -62,29 +62,29 @@ describe ( "makeGraphQlSchema", () => {
   it ( "should make a schema from RestDs", () => {
     expect ( makeGraphQlSchema ( rs ) ).toEqual ( [
       "type Query{",
-      "  getEAccountsSummaryDD(accountId: String!, customerId: String!):EAccountsSummaryDD!",
-      "  getCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):CreatePlanDD!",
-      "  listCreatePlanDD(accountId: String!, customerId: String!):[CreatePlanDD!]!",
+      "  getEAccountsSummary(accountId: String!, customerId: String!):EAccountsSummary!",
+      "  getCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):CreatePlan!",
+      "  listCreatePlan(accountId: String!, customerId: String!):[CreatePlan!]!",
       "}",
       "type Mutation{",
-      "  createCreatePlanDD(accountId: String!, customerId: String!,obj: CreatePlanDDInp!):CreatePlanDD!",
-      "  updateCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanDDInp!):CreatePlanDD!",
-      "  deleteCreatePlanDD(accountId: String!, createPlanId: String!, customerId: String!):String",
+      "  createCreatePlan(accountId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!",
+      "  updateCreatePlan(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!",
+      "  deleteCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):String",
       "}",
-      "type CreatePlanDD{",
+      "type CreatePlan{",
       "  createPlanStart: String!",
       "  createPlanDate: String!",
       "  createPlanEnd: String!",
       "}",
-      "type EAccountsSummaryDD{",
+      "type EAccountsSummary{",
       "  useEStatements: Boolean!",
-      "  eAccountsTable: [EAccountSummaryDD!]!",
+      "  eAccountsTable: [EAccountSummary!]!",
       "  totalMonthlyCost: Int!",
       "  oneAccountBalance: Int!",
       "  currentAccountBalance: Int!",
-      "  createPlan: CreatePlanDD!",
+      "  createPlan: CreatePlan!",
       "}",
-      "type EAccountSummaryDD{",
+      "type EAccountSummary{",
       "  accountId: Int!",
       "  displayType: String!",
       "  description: String!",
@@ -92,7 +92,7 @@ describe ( "makeGraphQlSchema", () => {
       "  total: Int!",
       "  frequency: String!",
       "}",
-      "input CreatePlanDDInp{",
+      "input CreatePlanInp{",
       "  createPlanStart: String!",
       "  createPlanDate: String!",
       "  createPlanEnd: String!",

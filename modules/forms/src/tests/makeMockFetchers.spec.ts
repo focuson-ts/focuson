@@ -7,12 +7,12 @@ import { repeatingRestRD } from "../example/repeating/repeating.restD";
 describe ( "makeMockFetchers", () => {
   it ( "to make a java mock fetcher", () => {
     expect ( makeAllMockFetchers ( paramsForTest, [ eAccountsSummaryRestD, createPlanRestD , repeatingRestRD] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      " public DataFetcher getEAccountsSummaryDD() {  return dataFetchingEnvironment -> Sample.sampleEAccountsSummaryDD0;    }",
-      " public DataFetcher getCreatePlanDD() {  return dataFetchingEnvironment -> Sample.sampleCreatePlanDD0;    }",
-      " public DataFetcher createCreatePlanDD() {  return dataFetchingEnvironment -> Sample.sampleCreatePlanDD0;    }",
-      " public DataFetcher updateCreatePlanDD() {  return dataFetchingEnvironment -> Sample.sampleCreatePlanDD0;    }",
-      " public DataFetcher deleteCreatePlanDD() {  return dataFetchingEnvironment -> Sample.sampleCreatePlanDD0;    }",
-      " public DataFetcher listCreatePlanDD() {  return dataFetchingEnvironment -> Sample.sampleCreatePlanDD0;    }",
+      " public DataFetcher getEAccountsSummary() {  return dataFetchingEnvironment -> Sample.sampleEAccountsSummary0;    }",
+      " public DataFetcher getCreatePlan() {  return dataFetchingEnvironment -> Sample.sampleCreatePlan0;    }",
+      " public DataFetcher createCreatePlan() {  return dataFetchingEnvironment -> Sample.sampleCreatePlan0;    }",
+      " public DataFetcher updateCreatePlan() {  return dataFetchingEnvironment -> Sample.sampleCreatePlan0;    }",
+      " public DataFetcher deleteCreatePlan() {  return dataFetchingEnvironment -> Sample.sampleCreatePlan0;    }",
+      " public DataFetcher listCreatePlan() {  return dataFetchingEnvironment -> Sample.sampleCreatePlan0;    }",
       " public DataFetcher createRepeatingLine() {  return dataFetchingEnvironment -> Sample.sampleRepeatingWholeData0;    }",
       " public DataFetcher getRepeatingLine() {  return dataFetchingEnvironment -> Sample.sampleRepeatingWholeData0;    }",
       "  public DataFetcher getAccountSummaryDescription (){ return new StaticDataFetcher('This account has a description');}",
