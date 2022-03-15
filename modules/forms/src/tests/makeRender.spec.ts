@@ -331,6 +331,4 @@ describe ( "make components - the different parameter types", () => {
   it ( "should create paramtype fullStateValue", () => {
     expect ( makeParam ( 'fullStateValue', [ 'a', 'b' ] ).replace ( /"/g, "'" ) ).toEqual ( "{fullState(state).focusOn('a').focusOn('b').json()}" )
   } )
-
-
 } )

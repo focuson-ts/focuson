@@ -1,8 +1,8 @@
 import { focusPageClassName, PageDetailsForCombine } from "@focuson/pages";
-import { PageType } from "@focuson/forms";
+
 
 interface FocusedPageData{
-    type: PageType;
+    type: string;
     page: JSX.Element;
     mouseCorrds?: [number,number]
 }

@@ -1,5 +1,5 @@
 {
-  "template": "react",
+  "template": "noreact",
   "name": "@focuson/pages",
   "description": "Used when we want a simple many page application",
   "details": {
@@ -8,7 +8,8 @@
     "links": [
       "@focuson/lens",
       "@focuson/state",
-      "@focuson/fetcher"
+      "@focuson/fetcher",
+      "@focuson/rest"
     ],
     "extraDeps": {},
     "extraDevDeps": {}
