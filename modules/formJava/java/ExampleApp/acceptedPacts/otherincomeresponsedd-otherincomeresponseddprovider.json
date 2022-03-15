@@ -1,0 +1,35 @@
+{
+  "consumer": {
+    "name": "OtherIncomeResponseDD"
+  },
+  "provider": {
+    "name": "OtherIncomeResponseDDProvider"
+  },
+  "interactions": [
+    {
+      "description": "OccupationAndIncomeSummary should have a get rest for OtherIncomeResponseDD",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/customer/occupation/v2/otherIncome",
+        "query": "accountSeq=accountSeq&applicationRef=applicationRef&brandRef=brandRef&vbAccountSeq=vbAccountSeq&vbAccountType=vbAccountType"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "clientOtherIncomeSeq": "someString",
+          "otherIncomeType": "someString",
+          "incomeFreqRef": "1",
+          "amount": 123
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

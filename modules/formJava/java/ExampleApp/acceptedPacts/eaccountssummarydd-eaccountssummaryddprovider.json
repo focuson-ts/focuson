@@ -22,7 +22,7 @@
           "useEStatements": true,
           "eAccountsTable": [
             {
-              "accountId": "1233450",
+              "accountId": 1233450,
               "displayType": "checking",
               "description": "This account has a description",
               "virtualBankSeq": "seq1",
@@ -57,7 +57,7 @@
           "useEStatements": true,
           "eAccountsTable": [
             {
-              "accountId": "1233450",
+              "accountId": 1233450,
               "displayType": "checking",
               "description": "This account has a description",
               "virtualBankSeq": "seq1",

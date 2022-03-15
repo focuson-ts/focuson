@@ -1,0 +1,76 @@
+{
+  "consumer": {
+    "name": "RepeatingWholeData"
+  },
+  "provider": {
+    "name": "RepeatingWholeDataProvider"
+  },
+  "interactions": [
+    {
+      "description": "Repeating should have a get fetcher for RepeatingWholeData",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/repeating",
+        "query": "customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": [
+          {
+            "name": "This is a one line string",
+            "age": 123
+          }
+        ]
+      }
+    },
+    {
+      "description": "Repeating should have a get rest for RepeatingWholeData",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/repeating",
+        "query": "customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": [
+          {
+            "name": "This is a one line string",
+            "age": 123
+          }
+        ]
+      }
+    },
+    {
+      "description": "Repeating should have a create rest for RepeatingWholeData",
+      "providerState": "default",
+      "request": {
+        "method": "POST",
+        "path": "/api/repeating",
+        "query": "customerId=custId",
+        "body": "[{\"name\":\"This is a one line string\",\"age\":123}]"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": [
+          {
+            "name": "This is a one line string",
+            "age": 123
+          }
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

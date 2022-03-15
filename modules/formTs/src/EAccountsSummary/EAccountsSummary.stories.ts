@@ -2,7 +2,7 @@ import { Story } from "@storybook/react";
 import { findOneSelectedPageDetails, PageMode } from "@focuson/pages";
 import { SBookProvider } from "@focuson/stories";
 import { defaultPageSelectionAndRestCommandsContext } from "@focuson/focuson";
-import { Context, emptyState, FState } from "../common";
+import { context, Context, emptyState, FState } from "../common";
 import { pages } from "../pages";
 import * as render  from "../EAccountsSummary/EAccountsSummary.render";
 import * as domain  from "../EAccountsSummary/EAccountsSummary.domains";
@@ -22,8 +22,8 @@ interface StoryState {
 const initial = {}
 const Template: Story<StoryState> = ( args: StoryState ) =>
    SBookProvider<FState, Context> ( { ...emptyState, EAccountsSummary: { ...initial, fromApi: args.domain } },//NOTE currently stories only work if the target depth is 1
-     defaultPageSelectionAndRestCommandsContext<FState> ( pages ),
-     s => findOneSelectedPageDetails ( s ) ( { pageName: 'EAccountsSummary', pageMode:args.pageMode} ) );
+     context,
+     s => findOneSelectedPageDetails ( s ) ( { pageName: 'EAccountsSummary', pageMode:args.pageMode} ).element );
  
  
 export const View = Template.bind ( {} );
