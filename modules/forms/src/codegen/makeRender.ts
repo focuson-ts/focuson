@@ -139,6 +139,11 @@ export function createAllReactCalls<G> ( d: AllComponentData<G>[] ): string[] {
   } )
 }
 
+function makeLayoutPrefixPostFix ( layout: { component: SimpleDisplayComp, params?: NameAnd<string> } | undefined, defaultOpen: string, defaultClose: string ) {
+  const layoutPrefixString = layout ? `<${layout.component.name} ${Object.entries ( layout.params ).map ( ( [ n, v ] ) => `${n}='${v}'` )}>` : defaultOpen
+  const layoutPostfixString = layout ? `</${layout.component.name}>` : defaultClose
+  return { layoutPrefixString, layoutPostfixString };
+}
 export const createReactComponent = <G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G> ) => ( dataD: CompDataD<G> ): string[] => {
   const contents = indentList ( indentList ( createAllReactCalls ( listComponentsIn ( dataD ) ) ) )
   const guardStrings = isDataDd ( dataD ) ? sortedEntries ( dataD.guards ).map ( ( [ name, guard ] ) => {
@@ -148,8 +153,7 @@ export const createReactComponent = <G extends GuardWithCondition> ( params: TSP
     // return `const ${guardName ( name )} = state.chainLens(Lenses.fromPath(${JSON.stringify ( guard.pathFromHere )})).optJson();console.log('${guardName ( name )}', ${guardName ( name )})`;
   } ) : []
   const layout = dataD.layout
-  const layoutPrefixString = layout ? `<${layout.component.name} ${Object.entries ( layout.params ).map ( ( [ n, v ] ) => `${n}='${v}'` )}>` : '<>'
-  const layoutPostfixString = layout ? `</${layout.component.name}>` : '</>'
+  const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( layout, '<>', '</>' );
   return [
     `export function ${componentName ( dataD )}({id,state,mode,buttons}: FocusedProps<${params.stateName}, ${domainName ( dataD )},Context>){`,
     ...guardStrings,
@@ -162,8 +166,8 @@ export const createReactComponent = <G extends GuardWithCondition> ( params: TSP
 
 
 export const createReactPageComponent = <B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButtons: MakeButton<G>, pageD: PageD<B, G> ): string[] => {
-  if ( pageD.pageType === 'MainPage' ) return createReactMainPageComponent ( params, makeGuard, makeButtons, pageD )
-  if ( pageD.pageType === 'ModalPage' ) return createReactModalPageComponent ( params, makeGuard, makeButtons, pageD )
+  if ( isMainPage ( pageD ) ) return createReactMainPageComponent ( params, makeGuard, makeButtons, pageD )
+  if ( isModalPage ( pageD ) ) return createReactModalPageComponent ( params, makeGuard, makeButtons, pageD )
   // @ts-ignore
   throw new Error ( `Unknown page type ${pageD.pageType} in ${pageD.name}` )
 };
@@ -172,6 +176,8 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
   const { dataDD } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
   const domName = domainName ( pageD.display.dataDD );
+  const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( pageD.layout, "<div className='modalPage'>", '</div>' );
+
   return [
     `export function ${pageComponentName ( pageD )}(){`,
     `  return focusedPage<${params.stateName}, ${domName}, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page`,
@@ -180,16 +186,17 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
       ...makeGuardButtonVariables ( params, makeGuard, pageD ),
       `const id='root';`,
       ...makeButtonsVariable ( params, makeGuard, makeButtons, pageD ),
-      `return <div className='modalPage'>`,
+      `return ${layoutPrefixString}`,
       ...createAllReactCalls ( [ componentDataForPage ( pageD.display.dataDD ) ] ),
       ...addButtonsFromVariables ( pageD ),
-      `</div>})}`
+      `${layoutPostfixString}})}`
     ] ) ) ) ) )),
   ]
 }
 export function createReactMainPageComponent<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButtons: MakeButton<G>, pageD: PageD<B, G> ): string[] {
   const { dataDD } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
+  const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( pageD.layout, "<div className='mainPage'>", '</div>' );
   return [
     `export function ${pageComponentName ( pageD )}(){`,
     `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${pageD.name}' ) ( s => s${focus}) (
@@ -199,10 +206,10 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
     ...indentList ( makeButtonsVariable ( params, makeGuard, makeButtons, pageD ) ),
     '',
     ...indentList ( indentList ( indentList ( [
-      `return <div className='mainPage'>`,
+      `return ${layoutPrefixString}`,
       ...indentList ( indentList ( createAllReactCalls ( [ componentDataForPage ( pageD.display.dataDD ), ] ) ) ),
       ...addButtonsFromVariables ( pageD ),
-      `</div>})}`
+      `${layoutPostfixString}})}`
     ] ) ) ),
     ''
   ]

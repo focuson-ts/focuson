@@ -1,7 +1,6 @@
 import { Story } from "@storybook/react";
-import { findOneSelectedPageDetails, PageMode } from "@focuson/pages";
+import { findOneSelectedPageDetails, PageMode, PageSelection } from "@focuson/pages";
 import { SBookProvider } from "@focuson/stories";
-import { defaultPageSelectionAndRestCommandsContext } from "@focuson/focuson";
 import { context, Context, emptyState, FState } from "../common";
 import { pages } from "../pages";
 import * as render  from "../ChequeCreditbooks/ChequeCreditbooks.render";
@@ -25,7 +24,7 @@ const Template: Story<StoryState> = ( args: StoryState ) =>{
   const startState: FState = { ...emptyState, pageSelection: [ pageSelection ( args.pageMode ) ] }
   return SBookProvider<FState, Context> ( { ...startState, ChequeCreditbooks: { ...initial, fromApi: args.domain } },//NOTE currently stories only work if the target depth is 1
      context,
-     s => findOneSelectedPageDetails ( s ) ( pageSelection: pageSelection(args.pageMode) ).element );}
+     s => findOneSelectedPageDetails ( s ) (pageSelection(args.pageMode)).element );}
  
  
 export const View = Template.bind ( {} );

@@ -1,11 +1,11 @@
-import { MainPageD, PageD } from "../common/pageD";
+import { isMainPage, isModalPage, MainPageD, PageD } from "../common/pageD";
 import { TSParams } from "./config";
 import { domainName, domainsFileName, emptyFileName, emptyName, pageComponentName, renderFileName, sampleName, samplesFileName } from "./names";
 
 
 export function makeOneStory<B, G> ( params: TSParams, p: PageD<B, G> ): string[] {
-  if ( p.pageType === 'MainPage' ) return makeOneMainStory ( params, p )
-  if ( p.pageType === 'ModalPage' ) return makeOneModalStory ( params, p )
+  if ( isMainPage ( p ) ) return makeOneMainStory ( params, p )
+  if ( isModalPage ( p ) ) return makeOneModalStory ( params, p )
   // @ts-ignore
   throw new Error ( `Don't know how to make a story for page ${p.name} of type ${p.pageType}` )
 }
@@ -15,9 +15,8 @@ export function makeOneModalStory<B, G> ( params: TSParams, p: PageD<B, G> ): st
 export function makeOneMainStory<B, G> ( params: TSParams, p: MainPageD<B, G> ): string[] {
   return [
     `import { Story } from "@storybook/react";`,
-    `import { findOneSelectedPageDetails, PageMode } from "@focuson/pages";`,
+    `import { findOneSelectedPageDetails, PageMode, PageSelection } from "@focuson/pages";`,
     `import { SBookProvider } from "@focuson/stories";`,
-    `import { defaultPageSelectionAndRestCommandsContext } from "@focuson/focuson";`,
     `import { context, Context, emptyState, ${params.stateName} } from "../common";`,
     `import { pages } from "../pages";`,
     `import * as render  from "${renderFileName ( '..', params, p )}";`,
@@ -36,12 +35,12 @@ export function makeOneMainStory<B, G> ( params: TSParams, p: MainPageD<B, G> ):
     `}`,
     ` `,
     p.initialValue === 'empty' ? `const initial = ${params.emptyFile}.${emptyName ( p.display.dataDD )}` : `const initial = ${JSON.stringify ( p.initialValue )}`,
-   `function pageSelection ( pageMode: PageMode ): PageSelection { return { pageName: '${p.name}', pageMode}}`,
+    `function pageSelection ( pageMode: PageMode ): PageSelection { return { pageName: '${p.name}', pageMode}}`,
     `const Template: Story<StoryState> = ( args: StoryState ) =>{`,
     `  const startState: FState = { ...emptyState, pageSelection: [ pageSelection ( args.pageMode ) ] }`,
     `  return SBookProvider<${params.stateName}, Context> ( { ...startState, ${p.name}: { ...initial, ${p.display.target[ 0 ]}: args.domain } },//NOTE currently stories only work if the target depth is 1`,
     `     context,`,
-    `     s => findOneSelectedPageDetails ( s ) ( pageSelection: pageSelection(args.pageMode) ).element );}`,
+    `     s => findOneSelectedPageDetails ( s ) (pageSelection(args.pageMode)).element );}`,
     ` `,
     ` `,
     `export const View = Template.bind ( {} );`,

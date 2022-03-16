@@ -1,7 +1,8 @@
 import { AllDataDD, CompDataD, DataD, findAllDataDs, isDataDd, NamesAndDataDs } from "./dataD";
 import { defaultRestAction, RestActionDetail, RestD, unique } from "./restD";
-import { RestAction, RestResult, sortedEntries } from "@focuson/utils";
+import { NameAnd, RestAction, RestResult, sortedEntries } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
+import { DisplayCompD, SimpleDisplayComp } from "./componentsD";
 
 
 export interface DomainDefnInPage<G> {
@@ -55,7 +56,9 @@ export interface MainPageD<Buttons, G> {
   rest: RestDefnInPage<G>,
   /** The names and order of the visible buttons. If not populated uses definition order */
   buttonOrder?:string[];
-  buttons: ButtonDefnInPage<Buttons>
+  buttons: ButtonDefnInPage<Buttons>;
+  layout?: { component: DisplayCompD};
+
 }
 export interface ModalPageD<Buttons, G> {
   pageType: 'ModalPage' | 'ModalPopup',
@@ -63,7 +66,8 @@ export interface ModalPageD<Buttons, G> {
   modes: PageMode[],
   display: {target: string[], dataDD: DataD<G>, importFrom: string },
   buttonOrder?:string[];
-  buttons: ButtonDefnInPage<Buttons>
+  buttons: ButtonDefnInPage<Buttons>;
+  layout?: { component: DisplayCompD};
 }
 
 
