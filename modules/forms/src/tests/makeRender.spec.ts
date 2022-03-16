@@ -9,6 +9,7 @@ import { occupationIncomeDetailsDD } from "../example/occupationAndIncomeDetails
 import { AllGuardCreator } from "../buttons/guardButton";
 import { RepeatingLinePageD, RepeatingPageD } from "../example/repeating/repeating.pageD";
 import { listOccupationsModalPD } from "../example/occupationAndIncomeDetails/occupationAndIncome.pageD";
+import { PostCodeMainPage } from "../example/addressSearch/addressSearch.pageD";
 
 //
 describe ( " listComponentsIn", () => {
@@ -282,12 +283,16 @@ describe ( " listComponentsIn", () => {
       "          </div>})}"
     ] )
   } )
+  it ( "should create a page with a Layout", () => {
+    expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [] )
+  } )
+
 } )
 
 describe ( "makeComponentWithGuard", () => {
   it ( "should make guard variables", () => {
     expect ( createReactComponent ( paramsForTest, AllGuardCreator ) ( occupationIncomeDetailsDD ).slice ( 0, 5 ).map ( r => r.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "export function OccupationIncomeDetails({id,state,mode,buttons}: FocusedProps<FState, OccupationIncomeDetailsDomain,Context>){",
+      "export function OccupationIncomeDetails({id,state,mode,buttons}: FocusedProps<FStaFPostCodeDemote, OccupationIncomeDetailsDomain,Context>){",
       "const areYouGuard = state.chainLens(Lenses.fromPath(['areYou'])).optJsonOr([]);",
       "  return <Layout details='[[1],[3,3],[5]]'>",
       "     {/*{'path':['areYou'],'dataDD':'CustomerStatus','display':{'import':'../copied/LabelAndInput','name':'LabelAndStringInput','params':{'id':{'paramType':'object','needed':'id'},'state':{'paramType':'state','needed':'defaultToPath'},'mode':{'paramType':'object','needed':'no','default':'mode'},'ariaLabel':{'paramType':'string','needed':'no'},'label':{'paramType':'string','needed':'defaultToCamelCaseOfName'},'buttons':{'paramType':'object','needed':'defaultToButtons'},'button':{'paramType':'string','needed':'no'},'required':{'paramType':'boolean','needed':'no','default':true},'pattern':{'paramType':'string','needed':'no'},'minlength':{'paramType':'object','needed':'no'},'maxlength':{'paramType':'object','needed':'no'}}}}*/}",

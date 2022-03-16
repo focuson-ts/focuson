@@ -1,4 +1,4 @@
-import { AllDataDD, CompDataD, DataD, findAllDataDs, isDataDd, NamesAndDataDs } from "./dataD";
+import { AllDataDD, CompDataD, DataD, findAllDataDs, HasLayout, isDataDd, NamesAndDataDs } from "./dataD";
 import { defaultRestAction, RestActionDetail, RestD, unique } from "./restD";
 import { NameAnd, RestAction, RestResult, sortedEntries } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
@@ -45,29 +45,28 @@ export function isModalPage<B, G> ( p: PageD<B, G> ): p is ModalPageD<B, G> {
 }
 export type PageD<Buttons, G> = MainPageD<Buttons, G> | ModalPageD<Buttons, G>
 
-export interface MainPageD<Buttons, G> {
+export interface MainPageD<Buttons, G> extends HasLayout {
   pageType: 'MainPage',
   name: string,
   modes: PageMode[],
-  display: {  target: string[], dataDD: CompDataD<G> },
+  display: { target: string[], dataDD: CompDataD<G> },
   initialValue: 'empty' | any,
   domain: DomainDefnInPage<G>,
   modals?: ModalData<Buttons, G>[],
   rest: RestDefnInPage<G>,
   /** The names and order of the visible buttons. If not populated uses definition order */
-  buttonOrder?:string[];
+  buttonOrder?: string[];
   buttons: ButtonDefnInPage<Buttons>;
-  layout?: { component: DisplayCompD};
+
 
 }
-export interface ModalPageD<Buttons, G> {
+export interface ModalPageD<Buttons, G> extends HasLayout {
   pageType: 'ModalPage' | 'ModalPopup',
   name: string,
   modes: PageMode[],
-  display: {target: string[], dataDD: DataD<G>, importFrom: string },
-  buttonOrder?:string[];
+  display: { target: string[], dataDD: DataD<G>, importFrom: string },
+  buttonOrder?: string[];
   buttons: ButtonDefnInPage<Buttons>;
-  layout?: { component: DisplayCompD};
 }
 
 

@@ -34,7 +34,7 @@ export function ETransferPage(){
        />,
       resetAll:<button>resetAll of type ResetStateButton cannot be created yet</button>,}
 
-      return <div className='mainPage'>
+      return <div className='modalPage'>
            {/*{"dataDD":"ETransferDataD","display":{"import":"","name":"ETransferDataD","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <ETransferDataD id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.eTransfers } 

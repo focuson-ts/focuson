@@ -21,6 +21,7 @@ import {PostCodeDataDomain} from "../PostCodeDemo/PostCodeDemo.domains"
 import {PostCodeDataLineDomain} from "../PostCodeDemo/PostCodeDemo.domains"
 import {PostCodeMainPageDomain} from "../PostCodeDemo/PostCodeDemo.domains"
 import {PostCodeSearchDomain} from "../PostCodeDemo/PostCodeDemo.domains"
+import { HideButtonsLayout } from '../copied/HideButtons';
 export function PostCodeDemoPage(){
   return focusedPageWithExtraState<FState, PostCodeDemoPageDomain, PostCodeMainPageDomain, Context> ( s => 'PostCodeDemo' ) ( s => s.focusOn('main')) (
     ( fullState, state , full, d, mode) => {
@@ -39,11 +40,11 @@ export function PostCodeDemoPage(){
         copyOnClose={[{"from":["{basePage}","postcode","addressResults","line1"],"to":["{basePage}","main","line1"]},{"from":["{basePage}","postcode","addressResults","line2"],"to":["{basePage}","main","line2"]},{"from":["{basePage}","postcode","addressResults","line3"],"to":["{basePage}","main","line3"]},{"from":["{basePage}","postcode","addressResults","line4"],"to":["{basePage}","main","line4"]},{"from":["{basePage}","postcode","search"],"to":["{basePage}","main","postcode"]}]}
       />,}
 
-      return <div className='mainPage'>
+      return <HideButtonsLayout buttons={buttons} hide={[]}>
            {/*{"dataDD":"PostCodeMainPage","display":{"import":"","name":"PostCodeMainPage","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <PostCodeMainPage id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.save } 
-      </div>})}
+      </HideButtonsLayout>})}
 
 export function PostCodeDataLine({id,state,mode,buttons}: FocusedProps<FState, PostCodeDataLineDomain,Context>){
   return <>

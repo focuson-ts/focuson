@@ -46,7 +46,7 @@ export function RepeatingPage(){
         <ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi')} value={fullState.focusOn('selectedItem')} />
       </GuardButton>,}
 
-      return <div className='mainPage'>
+      return <div className='modalPage'>
            {/*{"dataDD":"RepeatingWholeData","display":{"import":"","name":"Table","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"order":{"paramType":"string[]","needed":"yes"},"copySelectedIndexTo":{"paramType":"pageState","needed":"no"},"copySelectedItemTo":{"paramType":"pageState","needed":"no"}}},"path":[]}*/}
           <Table id={`${id}`} state={state} mode={mode} order={["name","age"]} />
       { buttons.addEntry } 

@@ -34,7 +34,7 @@ export function ChequeCreditbooksPage(){
       />,
       payingInBook:<button>payingInBook of type ResetStateButton cannot be created yet</button>,}
 
-      return <div className='mainPage'>
+      return <div className='modalPage'>
            {/*{"dataDD":"ChequeCreditbooks","display":{"import":"","name":"ChequeCreditbooks","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <ChequeCreditbooks id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.chequeBook } 

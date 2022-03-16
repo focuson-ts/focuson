@@ -82,9 +82,10 @@ export const SelectedItemCD: DisplayCompD = {
     buttons: { paramType: 'object', needed: 'defaultToButtons' }
   }
 }
-export const LayoutCd: SimpleDisplayComp = {
+export const LayoutCd: DisplayCompD = {
+  params: { details: { paramType: 'string', needed: 'yes' } },
   import: "../copied/layout",
-  name: "Layout",
+  name: "Layout"
 }
 
 

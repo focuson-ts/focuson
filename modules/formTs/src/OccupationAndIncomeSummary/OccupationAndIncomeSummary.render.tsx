@@ -54,7 +54,7 @@ export function OccupationAndIncomeSummaryPage(){
         <ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />
       </GuardButton>,}
 
-      return <div className='mainPage'>
+      return <div className='modalPage'>
            {/*{"dataDD":"OccupationAndIncomeDetails","display":{"import":"","name":"OccupationAndIncomeDetails","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <OccupationAndIncomeDetails id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.nextOccupation } 

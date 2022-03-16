@@ -38,9 +38,11 @@ export interface DisplayParamDD {
   [ name: string ]: OneDisplayParamDD
 }
 
+export interface HasLayout {
+  layout?: { component: DisplayCompD, displayParams?: DisplayParamDD },
+}
 
-export interface CommonDataDD {
-  layout?: { component: SimpleDisplayComp, params?: NameAnd<string> },
+export interface CommonDataDD extends HasLayout{
   name: string;
   display?: DisplayCompD;
   displayParams?: DisplayParamDD
