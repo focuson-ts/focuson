@@ -1,4 +1,4 @@
-import { makeAllFetchers, makeFetchersDataStructure } from "../codegen/makeFetchers";
+import { makeAllFetchers, makeFetchersDataStructure } from "../codegen/makeTSFetchers";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
 import { CreatePlanPD } from "../example/eAccounts/createPlanPD";

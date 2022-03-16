@@ -5,11 +5,12 @@ import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD"
 import { paramsForTest } from "./makeJavaResolvers.spec";
 import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 import { makeButtons } from "../buttons/allButtons";
-import { occupationIncomeDetailsDD } from "../example/occupationAndIncomeDetails/occupationAndIncome.dataD";
+
 import { AllGuardCreator } from "../buttons/guardButton";
 import { RepeatingLinePageD, RepeatingPageD } from "../example/repeating/repeating.pageD";
-import { listOccupationsModalPD } from "../example/occupationAndIncomeDetails/occupationAndIncome.pageD";
 import { PostCodeMainPage } from "../example/addressSearch/addressSearch.pageD";
+import { listOccupationsModalPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
+import { oneOccupationIncomeDetailsDD } from "../example/occupationAndIncome/occupationAndIncome.dataD";
 
 //
 describe ( " listComponentsIn", () => {
@@ -231,7 +232,7 @@ describe ( " listComponentsIn", () => {
       "</>",
       "}",
       ""
-    ] )
+    ])
   } )
 
   it ( "should createAllReactComponents for a modal page that define a display on the data", () => {
@@ -245,7 +246,7 @@ describe ( " listComponentsIn", () => {
       "import { GuardButton } from '../copied/GuardButton';",
       "//if there is an error message here... did you set the importFrom on this modal correctly, and also check that the PageD links to this DataD in a domain or rest block",
       "import {ListOccupationsDomain} from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains'; ",
-      "import { SearchList } from '../copied/searchList';",
+      "import { SearchListItemsCD } from '../copied/SearchListItems';",
       "import {ListNextButton} from '../copied/listNextPrevButtons';",
       "import {ListPrevButton} from '../copied/listNextPrevButtons';",
       "import {ModalButton} from '@focuson/pages';",
@@ -260,8 +261,8 @@ describe ( " listComponentsIn", () => {
       "          const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,",
       "              commit:<ModalCommitButton id='commit'  state={state} />,}",
       "          return <div className='modalPage'>",
-      "           {/*{'dataDD':'ListOccupations','display':{'import':'','name':'SearchList','params':{'id':{'paramType':'object','needed':'id'},'state':{'paramType':'state','needed':'defaultToPath'},'mode':{'paramType':'object','needed':'no','default':'mode'},'ariaLabel':{'paramType':'string','needed':'no'}}},'path':[]}*/}",
-      "          <SearchList id={`${id}`} state={state} mode={mode} />",
+      "           {/*{'dataDD':'ListOccupations','display':{'import':'','name':'SearchListItemsCD','params':{'id':{'paramType':'object','needed':'id'},'state':{'paramType':'state','needed':'defaultToPath'},'mode':{'paramType':'object','needed':'no','default':'mode'},'ariaLabel':{'paramType':'string','needed':'no'},'title':{'paramType':'string','needed':'yes'},'children':{'paramType':'object','needed':'no'}}},'path':[]}*/}",
+      "          <SearchListItemsCD id={`${id}`} state={state} mode={mode} title='Search for occupations' />",
       "          { buttons.cancel } ",
       "          { buttons.commit } ",
       "          </div>})}"
@@ -284,19 +285,44 @@ describe ( " listComponentsIn", () => {
     ] )
   } )
   it ( "should create a page with a Layout", () => {
-    expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [] )
+    expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+      "export function PostCodeDemoPage(){",
+      "  return focusedPageWithExtraState<FState, PostCodeDemoPageDomain, PostCodeMainPageDomain, Context> ( s => 'PostCodeDemo' ) ( s => s.focusOn('main')) (\n    ( fullState, state , full, d, mode) => {",
+      "  const id='root';",
+      "  const buttons =    {save:<RestButton state={state}",
+      "        id='save'",
+      "        name='save'",
+      "        action='create'",
+      "        validate={false}",
+      "        rest='PostCodeDemo_PostCodeMainPageRestDetails'",
+      "       />,",
+      "      search:<ModalButton id='search' text='search'  state={state} modal = 'PostCodeSearch'  ",
+      "        pageMode='edit'",
+      "        focusOn={['PostCodeDemo','postcode']}",
+      "        copy={[{'from':['{basePage}','main','postcode'],'to':['{basePage}','postcode','search']}]}",
+      "        copyOnClose={[{'from':['{basePage}','postcode','addressResults','line1'],'to':['{basePage}','main','line1']},{'from':['{basePage}','postcode','addressResults','line2'],'to':['{basePage}','main','line2']},{'from':['{basePage}','postcode','addressResults','line3'],'to':['{basePage}','main','line3']},{'from':['{basePage}','postcode','addressResults','line4'],'to':['{basePage}','main','line4']},{'from':['{basePage}','postcode','search'],'to':['{basePage}','main','postcode']}]}",
+      "      />,}",
+      "",
+      "      return <HideButtonsLayout buttons={buttons} hide={['search']}>",
+      "           {/*{'dataDD':'PostCodeMainPage','display':{'import':'','name':'PostCodeMainPage','params':{'id':{'paramType':'object','needed':'id'},'state':{'paramType':'state','needed':'defaultToPath'},'mode':{'paramType':'object','needed':'no','default':'mode'},'ariaLabel':{'paramType':'string','needed':'no'}}},'path':[]}*/}",
+      "          <PostCodeMainPage id={`${id}`} state={state} mode={mode} buttons={buttons} />",
+      "      { buttons.search } ",
+      "      { buttons.save } ",
+      "      </HideButtonsLayout>})}",
+      ""
+    ] )
   } )
 
 } )
 
 describe ( "makeComponentWithGuard", () => {
   it ( "should make guard variables", () => {
-    expect ( createReactComponent ( paramsForTest, AllGuardCreator ) ( occupationIncomeDetailsDD ).slice ( 0, 5 ).map ( r => r.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "export function OccupationIncomeDetails({id,state,mode,buttons}: FocusedProps<FStaFPostCodeDemote, OccupationIncomeDetailsDomain,Context>){",
+    expect ( createReactComponent ( paramsForTest, AllGuardCreator ) ( oneOccupationIncomeDetailsDD ).slice ( 0, 5 ).map ( r => r.replace ( /"/g, "'" ) ) ).toEqual ( [
+      "export function OneOccupationIncomeDetails({id,state,mode,buttons}: FocusedProps<FState, OneOccupationIncomeDetailsDomain,Context>){",
       "const areYouGuard = state.chainLens(Lenses.fromPath(['areYou'])).optJsonOr([]);",
-      "  return <Layout details='[[1],[3,3],[5]]'>",
-      "     {/*{'path':['areYou'],'dataDD':'CustomerStatus','display':{'import':'../copied/LabelAndInput','name':'LabelAndStringInput','params':{'id':{'paramType':'object','needed':'id'},'state':{'paramType':'state','needed':'defaultToPath'},'mode':{'paramType':'object','needed':'no','default':'mode'},'ariaLabel':{'paramType':'string','needed':'no'},'label':{'paramType':'string','needed':'defaultToCamelCaseOfName'},'buttons':{'paramType':'object','needed':'defaultToButtons'},'button':{'paramType':'string','needed':'no'},'required':{'paramType':'boolean','needed':'no','default':true},'pattern':{'paramType':'string','needed':'no'},'minlength':{'paramType':'object','needed':'no'},'maxlength':{'paramType':'object','needed':'no'}}}}*/}",
-      "    <LabelAndStringInput id={`${id}.areYou`} state={state.focusOn('areYou')} mode={mode} label='are you' buttons={buttons} required={true} />"
+      "const employmentTypeGuard = state.chainLens(Lenses.fromPath(['employmentType'])).optJsonOr([]);",
+      "const otherSourceOfIncomeGuard = state.chainLens(Lenses.fromPath(['otherSourceOfIncome'])).optJsonOr([]);",
+      "const owningSharesPctGuard = state.chainLens(Lenses.fromPath(['owningSharesPct'])).optJsonOr([]);"
     ] )
   } )
 } )

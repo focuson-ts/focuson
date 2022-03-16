@@ -1,6 +1,5 @@
 import { CommonStateProps } from "./common";
-import { LensState, reasonFor } from "@focuson/state";
-import React from "react";
+import { reasonFor } from "@focuson/state";
 import { TransformerProps } from "./LabelAndInput";
 import { BooleanTransformer, NumberTransformer, StringTransformer } from "./transformers";
 import { NameAnd } from "@focuson/utils";

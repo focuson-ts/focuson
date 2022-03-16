@@ -1,4 +1,4 @@
-import { findValidityDetails, focusPageClassName } from "@focuson/pages";
+import { findValidityDetails } from "@focuson/pages";
 
 
 export interface ValidationButtonProps<S, C> {
@@ -10,7 +10,7 @@ export function ValidationButton<S, C> ( { id, name }: ValidationButtonProps<S, 
 
 
   function onClick () {
-    const validity = findValidityDetails ( focusPageClassName )
+    const validity = findValidityDetails ( ' focus-page' )
     const content = document.getElementById ( `${id}-result` )
     console.log ( 'content', content )
     if ( content ) {

@@ -1,7 +1,6 @@
 import { BooleanValidations, CommonStateProps, NumberValidations, StringValidations } from "./common";
 import { Input, } from "./Input";
 import { Label } from "./Label";
-import React from "react";
 import { BooleanTransformer, NumberTransformer, StringTransformer } from "./transformers";
 import { NameAnd } from "@focuson/utils";
 import { ButtonFromPage } from "./buttonFromPage";

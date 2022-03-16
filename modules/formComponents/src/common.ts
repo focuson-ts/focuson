@@ -3,7 +3,7 @@ import { PageMode } from "@focuson/pages";
 
 
 export interface CommonComponentProps {
-  id: string;
+  id?: string;
   name?: string;
   ariaLabel?: string;
   mode?: PageMode;
@@ -12,7 +12,6 @@ export interface CommonComponentProps {
 export interface StringValidations {
   minlength?: number;
   maxlength?: number;
-  pattern?: string;
 }
 export interface NumberValidations {
   min?: number;

@@ -2,9 +2,10 @@ import { makeButtonsFrom } from "../codegen/makeButtons";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
 import { makeButtons } from "../buttons/allButtons";
-import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncomeDetails/occupationAndIncome.pageD";
+
 import { AllGuardCreator } from "../buttons/guardButton";
 import { PostCodeMainPage } from "../example/addressSearch/addressSearch.pageD";
+import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
 
 
 describe ( "makeButtons", () => {
@@ -36,25 +37,37 @@ describe ( "makeButtons", () => {
     expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator, makeButtons (), OccupationAndIncomeSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "    {addEntry:<ModalButton id='addEntry' text='addEntry'  state={state} modal = 'OccupationIncomeModal'  ",
       "      pageMode='create'",
-      "      focusOn={['OccupationAndIncomeSummary','{basePage}','temp']}",
+      "      focusOn={['OccupationAndIncomeSummary','temp']}",
       "      copyOnClose={[{'to':['{basePage}','fromApi','customerOccupationIncomeDetails','[append]']}]}",
-      "      createEmpty={empty.emptyOccupationIncomeDetails}",
+      "      createEmpty={empty.emptyOneOccupationIncomeDetails}",
       "      setToLengthOnClose={{'array':['fromApi','customerOccupationIncomeDetails'],'variable':['selectedItem']}}",
+      "    />,",
+      "    additionalInfo:<ModalButton id='additionalInfo' text='additionalInfo'  state={state} modal = 'AdditionalInformationModal'  ",
+      "      pageMode='edit'",
+      "      focusOn={['OccupationAndIncomeSummary','additionalInformation']}",
+      "    />,",
+      "    businessDetails:<ModalButton id='businessDetails' text='businessDetails'  state={state} modal = 'BusinessDetailsModal'  ",
+      "      pageMode='edit'",
+      "      focusOn={['OccupationAndIncomeSummary','businessDetails']}",
       "    />,",
       "    edit:<ModalButton id='edit' text='edit'  state={state} modal = 'OccupationIncomeModal'  ",
       "      pageMode='edit'",
-      "      focusOn={['OccupationAndIncomeSummary','{basePage}','temp']}",
-      "      copy={[{'from':['fromApi','customerOccupationIncomeDetails','{selectedItem}']}]}",
-      "      copyOnClose={[{'to':['fromApi','customerOccupationIncomeDetails','{selectedItem}']}]}",
+      "      focusOn={['OccupationAndIncomeSummary','temp']}",
+      "      copy={[{'from':['{basePage}','fromApi','customerOccupationIncomeDetails','{selectedItem}']}]}",
+      "      copyOnClose={[{'to':['{basePage}','fromApi','customerOccupationIncomeDetails','{selectedItem}']}]}",
       "    />,",
-      "    nextOccupation:<GuardButton cond={nextOccupationGuard}>",
-      "      <GuardButton cond={nextOccupationGuard}>",
-      "        <ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />",
-      "      </GuardButton>",
-      "    </GuardButton>,",
-      "    prevOccupation:<GuardButton cond={prevOccupationGuard}>",
-      "      <ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />",
-      "    </GuardButton>,}"
+      "    list:<ModalButton id='list' text='list'  state={state} modal = 'ListOccupationsModal'  ",
+      "      pageMode='edit'",
+      "      focusOn={['OccupationAndIncomeSummary','searchList']}",
+      "      copy={[{'from':['{basePage}','fromApi','customerOccupationIncomeDetails','{selectedItem}','occupation']}]}",
+      "      copyOnClose={[{'to':['{basePage}','fromApi','customerOccupationIncomeDetails','{selectedItem}','occupation']}]}",
+      "    />,",
+      "    nextOccupation:<ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />,",
+      "    otherSourcesOfIncome:<ModalButton id='otherSourcesOfIncome' text='otherSourcesOfIncome'  state={state} modal = 'OtherSourcesOfIncomeModal'  ",
+      "      pageMode='edit'",
+      "      focusOn={['OccupationAndIncomeSummary','otherSourcesOfIncome']}",
+      "    />,",
+      "    prevOccupation:<ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />,}"
     ] )
   } )
 

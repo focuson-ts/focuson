@@ -2,7 +2,6 @@ import { ExampleMainPage, ExampleModalPage } from "../common";
 import { RepeatingLineDataD, RepeatingWholeDataD } from "./repeating.dataD";
 import { repeatingRestRD } from "./repeating.restD";
 import { IntegerDD } from "../../common/dataD";
-import { occupationIncomeModalPD } from "../occupationAndIncomeDetails/occupationAndIncome.pageD";
 
 export const RepeatingLinePageD: ExampleModalPage = {
   name: "RepeatingLine",

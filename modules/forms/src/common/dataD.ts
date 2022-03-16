@@ -54,6 +54,7 @@ export interface CommonDataDD extends HasLayout{
   guard?: NameAnd<string[]>
 }
 
+
 export interface DataD<G> extends CommonDataDD {
   guards?: Guards<G>;
   structure: ManyDataDD<G>;

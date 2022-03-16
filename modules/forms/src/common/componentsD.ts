@@ -101,3 +101,16 @@ export const LabelAndRadioCD: DisplayCompD = {
   name: "LabelAndRadio",
   params: { ...commonParamsWithLabel, ...enumParams }
 }
+
+
+export const OptionalCD: DisplayCompD = {
+  import: '../copied/Optional/Optional',
+  name: "Optional",
+  params: { ...commonParamsWithLabel }
+}
+
+export const LabelAndDropDownCD: DisplayCompD = {
+  import: '../copied/Dropdown/LabelAndDropdown',
+  name: "LabelAndDropdown",
+  params: { ...commonParamsWithLabel, ...enumParams }
+}

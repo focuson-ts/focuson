@@ -1,7 +1,5 @@
-import React from 'react';
-import { LensProps } from '@focuson/state';
-import {TextareaInput} from "./TextAreaInput";
-import {CommonStateProps} from "./common";
+import { TextareaInput } from "./TextAreaInput";
+import { CommonStateProps } from "./common";
 
 export interface TextAreaProps<S, T, Context> extends CommonStateProps<S, T, Context> {
     maxLength?: number;

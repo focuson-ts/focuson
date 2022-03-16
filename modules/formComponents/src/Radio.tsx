@@ -1,5 +1,4 @@
 import { NameAnd } from "@focuson/utils";
-import React from "react";
 import { CommonStateProps } from "./common";
 import { Label } from "./Label";
 import { reasonFor } from "@focuson/state";
