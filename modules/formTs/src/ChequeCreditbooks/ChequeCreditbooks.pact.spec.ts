@@ -45,7 +45,7 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
 pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider', cors: true }, provider => {
   describe ( 'ChequeCreditbooks - rest get', () => {
     it ( 'should have a get rest for ChequeCreditbooks', async () => {
-      const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksRestDetails', restAction: 'get', path: [ 'ChequeCreditbooks' ] }
+      const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksRestDetails', restAction: 'get' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       ChequeCreditbooks:{},
@@ -83,7 +83,7 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
 pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider', cors: true }, provider => {
   describe ( 'ChequeCreditbooks - rest create', () => {
     it ( 'should have a create rest for ChequeCreditbooks', async () => {
-      const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksRestDetails', restAction: 'create', path: [ 'ChequeCreditbooks' ] }
+      const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksRestDetails', restAction: 'create' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       ChequeCreditbooks: { fromApi:samples.sampleChequeCreditbooks0 },

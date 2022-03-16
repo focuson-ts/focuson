@@ -45,7 +45,7 @@ pactWith ( { consumer: 'OccupationAndIncomeDetails', provider: 'OccupationAndInc
 pactWith ( { consumer: 'OccupationAndIncomeDetails', provider: 'OccupationAndIncomeDetailsProvider', cors: true }, provider => {
   describe ( 'OccupationAndIncomeSummary - rest get', () => {
     it ( 'should have a get rest for OccupationAndIncomeDetails', async () => {
-      const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OccupationAndIncomeDetailsRestDetails', restAction: 'get', path: [ 'OccupationAndIncomeSummary' ] }
+      const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OccupationAndIncomeDetailsRestDetails', restAction: 'get' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       OccupationAndIncomeSummary:{},
@@ -83,7 +83,7 @@ pactWith ( { consumer: 'OccupationAndIncomeDetails', provider: 'OccupationAndInc
 pactWith ( { consumer: 'OccupationAndIncomeDetails', provider: 'OccupationAndIncomeDetailsProvider', cors: true }, provider => {
   describe ( 'OccupationAndIncomeSummary - rest update', () => {
     it ( 'should have a update rest for OccupationAndIncomeDetails', async () => {
-      const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OccupationAndIncomeDetailsRestDetails', restAction: 'update', path: [ 'OccupationAndIncomeSummary' ] }
+      const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OccupationAndIncomeDetailsRestDetails', restAction: 'update' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       OccupationAndIncomeSummary: { fromApi:samples.sampleOccupationAndIncomeDetails0 },
@@ -121,7 +121,7 @@ pactWith ( { consumer: 'OccupationAndIncomeDetails', provider: 'OccupationAndInc
 pactWith ( { consumer: 'OtherIncomeResponse', provider: 'OtherIncomeResponseProvider', cors: true }, provider => {
   describe ( 'OccupationAndIncomeSummary - rest get', () => {
     it ( 'should have a get rest for OtherIncomeResponse', async () => {
-      const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OtherIncomeResponseRestDetails', restAction: 'get', path: [ 'OccupationAndIncomeSummary' ] }
+      const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OtherIncomeResponseRestDetails', restAction: 'get' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       OccupationAndIncomeSummary:{},

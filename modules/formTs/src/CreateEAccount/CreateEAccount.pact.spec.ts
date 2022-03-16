@@ -13,7 +13,7 @@ import * as rests from "../rests";
 pactWith ( { consumer: 'CreateEAccountData', provider: 'CreateEAccountDataProvider', cors: true }, provider => {
   describe ( 'CreateEAccount - rest create', () => {
     it ( 'should have a create rest for CreateEAccountData', async () => {
-      const restCommand: RestCommand = { name: 'CreateEAccount_CreateEAccountDataRestDetails', restAction: 'create', path: [ 'CreateEAccount' ] }
+      const restCommand: RestCommand = { name: 'CreateEAccount_CreateEAccountDataRestDetails', restAction: 'create' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       CreateEAccount: { editing:samples.sampleCreateEAccountData0 },
@@ -51,7 +51,7 @@ pactWith ( { consumer: 'CreateEAccountData', provider: 'CreateEAccountDataProvid
 pactWith ( { consumer: 'CreateEAccountData', provider: 'CreateEAccountDataProvider', cors: true }, provider => {
   describe ( 'CreateEAccount - rest get', () => {
     it ( 'should have a get rest for CreateEAccountData', async () => {
-      const restCommand: RestCommand = { name: 'CreateEAccount_CreateEAccountDataRestDetails', restAction: 'get', path: [ 'CreateEAccount' ] }
+      const restCommand: RestCommand = { name: 'CreateEAccount_CreateEAccountDataRestDetails', restAction: 'get' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       CreateEAccount:{},

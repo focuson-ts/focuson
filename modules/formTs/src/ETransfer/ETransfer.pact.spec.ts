@@ -13,7 +13,7 @@ import * as rests from "../rests";
 pactWith ( { consumer: 'ETransferDataD', provider: 'ETransferDataDProvider', cors: true }, provider => {
   describe ( 'ETransfer - rest create', () => {
     it ( 'should have a create rest for ETransferDataD', async () => {
-      const restCommand: RestCommand = { name: 'ETransfer_ETransferDataDRestDetails', restAction: 'create', path: [ 'ETransfer' ] }
+      const restCommand: RestCommand = { name: 'ETransfer_ETransferDataDRestDetails', restAction: 'create' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       ETransfer: { fromApi:samples.sampleETransferDataD0 },

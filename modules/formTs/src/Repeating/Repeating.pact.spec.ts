@@ -13,7 +13,7 @@ import * as rests from "../rests";
 pactWith ( { consumer: 'RepeatingWholeData', provider: 'RepeatingWholeDataProvider', cors: true }, provider => {
   describe ( 'Repeating - rest create', () => {
     it ( 'should have a create rest for RepeatingWholeData', async () => {
-      const restCommand: RestCommand = { name: 'Repeating_RepeatingWholeDataRestDetails', restAction: 'create', path: [ 'Repeating' ] }
+      const restCommand: RestCommand = { name: 'Repeating_RepeatingWholeDataRestDetails', restAction: 'create' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       Repeating: { fromApi:samples.sampleRepeatingWholeData0 },
@@ -83,7 +83,7 @@ pactWith ( { consumer: 'RepeatingWholeData', provider: 'RepeatingWholeDataProvid
 pactWith ( { consumer: 'RepeatingWholeData', provider: 'RepeatingWholeDataProvider', cors: true }, provider => {
   describe ( 'Repeating - rest get', () => {
     it ( 'should have a get rest for RepeatingWholeData', async () => {
-      const restCommand: RestCommand = { name: 'Repeating_RepeatingWholeDataRestDetails', restAction: 'get', path: [ 'Repeating' ] }
+      const restCommand: RestCommand = { name: 'Repeating_RepeatingWholeDataRestDetails', restAction: 'get' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       Repeating:{},

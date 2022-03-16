@@ -13,7 +13,7 @@ import * as rests from "../rests";
 pactWith ( { consumer: 'CreatePlan', provider: 'CreatePlanProvider', cors: true }, provider => {
   describe ( 'EAccountsSummary - rest get', () => {
     it ( 'should have a get rest for CreatePlan', async () => {
-      const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'get', path: [ 'EAccountsSummary' ] }
+      const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'get' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       EAccountsSummary:{},
@@ -51,7 +51,7 @@ pactWith ( { consumer: 'CreatePlan', provider: 'CreatePlanProvider', cors: true 
 pactWith ( { consumer: 'CreatePlan', provider: 'CreatePlanProvider', cors: true }, provider => {
   describe ( 'EAccountsSummary - rest create', () => {
     it ( 'should have a create rest for CreatePlan', async () => {
-      const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'create', path: [ 'EAccountsSummary' ] }
+      const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'create' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       EAccountsSummary: { tempCreatePlan:samples.sampleCreatePlan0 },
@@ -89,7 +89,7 @@ pactWith ( { consumer: 'CreatePlan', provider: 'CreatePlanProvider', cors: true 
 pactWith ( { consumer: 'CreatePlan', provider: 'CreatePlanProvider', cors: true }, provider => {
   describe ( 'EAccountsSummary - rest update', () => {
     it ( 'should have a update rest for CreatePlan', async () => {
-      const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'update', path: [ 'EAccountsSummary' ] }
+      const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'update' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       EAccountsSummary: { tempCreatePlan:samples.sampleCreatePlan0 },
@@ -127,7 +127,7 @@ pactWith ( { consumer: 'CreatePlan', provider: 'CreatePlanProvider', cors: true 
 pactWith ( { consumer: 'CreatePlan', provider: 'CreatePlanProvider', cors: true }, provider => {
   describe ( 'EAccountsSummary - rest delete', () => {
     it ( 'should have a delete rest for CreatePlan', async () => {
-      const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'delete', path: [ 'EAccountsSummary' ] }
+      const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'delete' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       EAccountsSummary:{},
@@ -165,7 +165,7 @@ pactWith ( { consumer: 'CreatePlan', provider: 'CreatePlanProvider', cors: true 
 pactWith ( { consumer: 'CreatePlan', provider: 'CreatePlanProvider', cors: true }, provider => {
   describe ( 'EAccountsSummary - rest list', () => {
     it ( 'should have a list rest for CreatePlan', async () => {
-      const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'list', path: [ 'EAccountsSummary' ] }
+      const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'list' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       EAccountsSummary:{},
@@ -235,7 +235,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
 pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider', cors: true }, provider => {
   describe ( 'EAccountsSummary - rest get', () => {
     it ( 'should have a get rest for EAccountsSummary', async () => {
-      const restCommand: RestCommand = { name: 'EAccountsSummary_EAccountsSummaryRestDetails', restAction: 'get', path: [ 'EAccountsSummary' ] }
+      const restCommand: RestCommand = { name: 'EAccountsSummary_EAccountsSummaryRestDetails', restAction: 'get' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       EAccountsSummary:{},

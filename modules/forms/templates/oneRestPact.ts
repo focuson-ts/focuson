@@ -2,7 +2,7 @@ pactWith ( { consumer: '{consumer}', provider: '{provider}', cors: true }, provi
   describe ( '{description1} - rest {action}', () => {
 
     it ( '{description2}', async () => {
-      const restCommand: RestCommand = { name: '{restDetailsName}', restAction: '{action}', path: [ '{pageName}' ] }
+      const restCommand: RestCommand = { name: '{restDetailsName}', restAction: '{action}' }
       const firstState: {stateName} = {
         ...emptyState, restCommands: [ restCommand ],
       {object},

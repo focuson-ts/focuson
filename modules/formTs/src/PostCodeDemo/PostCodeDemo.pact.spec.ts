@@ -13,7 +13,7 @@ import * as rests from "../rests";
 pactWith ( { consumer: 'PostCodeMainPage', provider: 'PostCodeMainPageProvider', cors: true }, provider => {
   describe ( 'PostCodeDemo - rest create', () => {
     it ( 'should have a create rest for PostCodeMainPage', async () => {
-      const restCommand: RestCommand = { name: 'PostCodeDemo_PostCodeMainPageRestDetails', restAction: 'create', path: [ 'PostCodeDemo' ] }
+      const restCommand: RestCommand = { name: 'PostCodeDemo_PostCodeMainPageRestDetails', restAction: 'create' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       PostCodeDemo: { main:samples.samplePostCodeMainPage0 },
@@ -84,7 +84,7 @@ pactWith ( { consumer: 'PostCodeData', provider: 'PostCodeDataProvider', cors: t
 pactWith ( { consumer: 'PostCodeData', provider: 'PostCodeDataProvider', cors: true }, provider => {
   describe ( 'PostCodeDemo - rest get', () => {
     it ( 'should have a get rest for PostCodeData', async () => {
-      const restCommand: RestCommand = { name: 'PostCodeDemo_PostCodeDataRestDetails', restAction: 'get', path: [ 'PostCodeDemo' ] }
+      const restCommand: RestCommand = { name: 'PostCodeDemo_PostCodeDataRestDetails', restAction: 'get' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
       PostCodeDemo:{},
