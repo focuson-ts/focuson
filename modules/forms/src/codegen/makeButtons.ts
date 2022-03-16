@@ -59,7 +59,7 @@ export function makeButtonsVariable<B extends ButtonD, G> ( params: TSParams, ma
 }
 
 export function addButtonsFromVariables<B extends ButtonD, G> ( p: PageD<any, any> ): string[] {
-  let keys = p.buttonOrder ? p.buttonOrder : Object.keys ( p.buttons );
+  let keys =Object.keys ( p.buttons );
   return keys.map ( name => `{ buttons.${name} } ` )
 
 }

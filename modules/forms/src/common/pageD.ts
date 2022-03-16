@@ -65,7 +65,6 @@ export interface ModalPageD<Buttons, G> extends HasLayout {
   name: string,
   modes: PageMode[],
   display: { target: string[], dataDD: DataD<G>, importFrom: string },
-  buttonOrder?: string[];
   buttons: ButtonDefnInPage<Buttons>;
 }
 
