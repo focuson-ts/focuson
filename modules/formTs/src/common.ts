@@ -8,6 +8,7 @@ import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusO
 import { LensProps } from '@focuson/state';
 import { pages } from "./pages";
 import { MyCombined } from "./copied/MyCombined";
+import { HasAccountOverviewPageDomain } from './AccountOverview/AccountOverview.domains';
 import { HasOccupationAndIncomeSummaryPageDomain } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains';
 import { HasEAccountsSummaryPageDomain } from './EAccountsSummary/EAccountsSummary.domains';
 import { HasETransferPageDomain } from './ETransfer/ETransfer.domains';
@@ -22,6 +23,7 @@ export const context: Context = {
    combine: MyCombined
 }
 export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,
+  HasAccountOverviewPageDomain,
   HasOccupationAndIncomeSummaryPageDomain,
   HasEAccountsSummaryPageDomain,
   HasETransferPageDomain,
@@ -32,8 +34,8 @@ export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,
 {}
 export interface HasCommonIds {CommonIds: CommonIds}
 export type CommonIds = {
-  customerId?:string;
   accountId?:string;
+  customerId?:string;
   createPlanId?:string;
   applRef?:string;
   brandRef?:string;
@@ -41,8 +43,8 @@ export type CommonIds = {
 export const identityL = identityOptics<FState> ();
 export const commonIdsL = identityL.focusQuery('CommonIds');
 export const commonIds: NameAndLens<FState> = {
-   customerId: commonIdsL.focusQuery('customerId'),
    accountId: commonIdsL.focusQuery('accountId'),
+   customerId: commonIdsL.focusQuery('customerId'),
    createPlanId: commonIdsL.focusQuery('createPlanId'),
    applRef: commonIdsL.focusQuery('applRef'),
    brandRef: commonIdsL.focusQuery('brandRef')
@@ -58,11 +60,11 @@ export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPage
     defaultDateFn ) ( onError ) //updateTagsAndMessagesOnError ( defaultErrorMessage )
 }
 export const emptyState: FState = {
-  CommonIds: {"customerId":"custId","accountId":"accId","createPlanId":"tbd","applRef":"appref","brandRef":"brandRef"},
+  CommonIds: {"accountId":"accId","customerId":"custId","createPlanId":"tbd","applRef":"appref","brandRef":"brandRef"},
   tags: {},
   messages: [],
-  pageSelection: [{ pageName: 'OccupationAndIncomeSummary', firstTime: true, pageMode: 'view' }],
-  OccupationAndIncomeSummary:{},
+  pageSelection: [{ pageName: 'AccountOverview', firstTime: true, pageMode: 'view' }],
+  AccountOverview:{},
   restCommands: [],
     debug: { selectedPageDebug: true, fetcherDebug: true }
   }

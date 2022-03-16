@@ -34,7 +34,7 @@ export function CreateEAccountPage(){
        />,
       resetAll:<button>resetAll of type ResetStateButton cannot be created yet</button>,}
 
-      return <div className='modalPage'>
+      return <div className='mainPage'>
            {/*{"dataDD":"CreateEAccountData","display":{"import":"","name":"CreateEAccountData","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <CreateEAccountData id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.createEAccounts } 

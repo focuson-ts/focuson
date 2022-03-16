@@ -8,8 +8,10 @@ import { PostCodeMainPage } from "./example/addressSearch/addressSearch.pageD";
 import { SimpleDisplayComp } from "./common/componentsD";
 import { ExampleMainPage } from "./example/common";
 import { OccupationAndIncomeSummaryPD } from "./example/occupationAndIncome/occupationAndIncome.pageD";
+import { AccountOverviewMainPage } from "./example/accountOverview/accountOverview.pageD";
 
 export const generatedPages: ExampleMainPage[] = [
+  AccountOverviewMainPage,
   OccupationAndIncomeSummaryPD,
   EAccountsSummaryPD,
   ETransferPageD,
@@ -33,6 +35,6 @@ export interface AppConfig {
 export const devAppConfig = {
   fetch: "fetchWithDelay ( 1, fetchWithPrefix ( 'http://localhost:8080', loggingFetchFn ) )",
   combine: MyCombineCD,
-  debug: { fetcherDebug: true, postDebug: true, Debug: true }
+  debug: { fetcherDebug: true, postDebug: true, Debug: true ,selectedPageDebug: true}
 }
 

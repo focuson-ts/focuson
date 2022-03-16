@@ -35,7 +35,7 @@ export function PostCodeDemoPage(){
        />,
       search:<ModalButton id='search' text='search'  state={state} modal = 'PostCodeSearch'  
         pageMode='edit'
-        focusOn={["PostCodeDemo","postcode"]}
+        focusOn={["{basePage}","postcode"]}
         copy={[{"from":["{basePage}","main","postcode"],"to":["{basePage}","postcode","search"]}]}
         copyOnClose={[{"from":["{basePage}","postcode","addressResults","line1"],"to":["{basePage}","main","line1"]},{"from":["{basePage}","postcode","addressResults","line2"],"to":["{basePage}","main","line2"]},{"from":["{basePage}","postcode","addressResults","line3"],"to":["{basePage}","main","line3"]},{"from":["{basePage}","postcode","addressResults","line4"],"to":["{basePage}","main","line4"]},{"from":["{basePage}","postcode","search"],"to":["{basePage}","main","postcode"]}]}
       />,}

@@ -43,7 +43,7 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalButtonInPage<G>, G> {
         const { modal, mode, restOnCommit, focusOn, copy, createEmpty, copyOnClose, setToLengthOnClose, text } = button
         const createEmptyString = createEmpty ? [ `createEmpty={${params.emptyFile}.${emptyName ( createEmpty )}}` ] : []
 
-        const focusOnArray = [ parent.name, ...focusOn ]
+        const focusOnArray = [ '{basePage}', ...focusOn ]
         const copyOnCloseArray = copyOnClose ? singleToList ( copyOnClose ) : undefined
         const copyFromArray = copy ? singleToList ( copy ) : undefined
         const actualSetToLengthOnClose = setToLengthOnClose ? { array: [ ...setToLengthOnClose.array ], variable: [ ...setToLengthOnClose.variable ] } : undefined

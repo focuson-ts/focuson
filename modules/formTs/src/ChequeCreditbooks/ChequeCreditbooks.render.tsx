@@ -28,13 +28,13 @@ export function ChequeCreditbooksPage(){
   const buttons =    {chequeBook:<button>chequeBook of type ResetStateButton cannot be created yet</button>,
       orderNewBook:<ModalButton id='orderNewBook' text='orderNewBook'  state={state} modal = 'OrderChequeBookOrPayingInModal'  
         pageMode='create'
-        focusOn={["ChequeCreditbooks","{basePage}","tempCreatePlan"]}
+        focusOn={["{basePage}","{basePage}","tempCreatePlan"]}
         createEmpty={empty.emptyChequeCreditbooksHistoryLine}
          rest={{"name":"ChequeCreditbooks_ChequeCreditbooksRestDetails","restAction":"create"}}
       />,
       payingInBook:<button>payingInBook of type ResetStateButton cannot be created yet</button>,}
 
-      return <div className='modalPage'>
+      return <div className='mainPage'>
            {/*{"dataDD":"ChequeCreditbooks","display":{"import":"","name":"ChequeCreditbooks","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <ChequeCreditbooks id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.chequeBook } 

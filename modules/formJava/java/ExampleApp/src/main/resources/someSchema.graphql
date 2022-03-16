@@ -1,4 +1,10 @@
 type Query{
+  getAccountAllFlags(accountId: String!, customerId: String!):AccountAllFlags!
+  getArrearsDetails(accountId: String!, customerId: String!, startDate: String!):ArrearsDetails!
+  getAccountOverviewHistory(accountId: String!, customerId: String!):AccountOverviewHistory!
+  getAccountOverviewExcessInfo(accountId: String!, customerId: String!):AccountOverviewExcessInfo!
+  getAccountOverview(accountId: String!, customerId: String!):AccountOverview!
+  getAccountOverviewReason(accountId: String!, customerId: String!):AccountOverviewReason!
   getAdditionalInformation(customerId: String!):AdditionalInformation!
   getBusinessDetailsMain(customerId: String!):BusinessDetailsMain!
   getDropdowns(customerId: String!):Dropdowns!
@@ -23,6 +29,9 @@ type Mutation{
   createRepeatingLine(customerId: String!,obj: [RepeatingLineInp!]!):[RepeatingLine!]!
   createPostCodeMainPage(,obj: PostCodeMainPageInp!):PostCodeMainPage!
 }
+type AccountAllFlags{
+  flags: [OccountOneFlag!]!
+}
 type AccountDetails{
   contactTitle: String!
   contactForename: String!
@@ -35,6 +44,41 @@ type AccountDetails{
   postcode: String!
   telephone: String!
 }
+type AccountOverview{
+  score: Int!
+  accountType: String!
+  drawDownDate: String!
+  repaymentDate: String!
+  propertyValue: Int!
+  mul: Int!
+  drawDownAmount: Int!
+  criteria: [AccountOverviewCriteriaLine!]!
+  zFlagSet: String!
+  excessSixMonths: Int!
+  bouncedDDs12Months: Int!
+  unpaidCardOrMisuseItems: Int!
+}
+type AccountOverviewCriteriaLine{
+  criteria: String!
+}
+type AccountOverviewExcessHistoryLine{
+  start: String!
+  end: String!
+  consecutiveDays: Int!
+}
+type AccountOverviewExcessInfo{
+  dayOfCurrentExcess: Int!
+  currentExcessOnAccount: Int!
+  currentPctExcess: Int!
+  dateOfLastCapitalization: String!
+  dateOfLastExcessFulfillment: String!
+}
+type AccountOverviewHistory{
+  history: [AccountOverviewExcessHistoryLine!]!
+}
+type AccountOverviewReason{
+  reason: String!
+}
 type AdditionalInformation{
   applicantName: String!
   employerName: String!
@@ -43,6 +87,20 @@ type AdditionalInformation{
   addressLine3: String!
   addressLine4: String!
   postcode: String!
+}
+type ArrearsDetails{
+  history: [ArrearsDetailsLine!]!
+}
+type ArrearsDetailsLine{
+  collectionsDate: String!
+  creditedDate: String!
+  minPayment: Int!
+  contractualAmount: Int!
+  paymentType: String!
+  paymentReceived: Int!
+  shortfall: Int!
+  arrearsTotal: Int!
+  missedPayments: Int!
 }
 type BusinessDetails{
   applicantName: String!
@@ -142,6 +200,10 @@ type FrequenciesResponse{
   frequencyId: Int!
   frequencyDescription: String!
   annualMultiple: Int!
+}
+type OccountOneFlag{
+  flagName: String!
+  flagValue: Boolean!
 }
 type OccupationAndIncomeFullDomain{
   mainCustomerName: String!

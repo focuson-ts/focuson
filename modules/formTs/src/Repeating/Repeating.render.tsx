@@ -28,14 +28,14 @@ export function RepeatingPage(){
   const id='root';
   const buttons =    {addEntry:<ModalButton id='addEntry' text='addEntry'  state={state} modal = 'RepeatingLine'  
         pageMode='create'
-        focusOn={["Repeating","temp"]}
+        focusOn={["{basePage}","temp"]}
         copyOnClose={[{"to":["{basePage}","fromApi","[append]"]}]}
         createEmpty={empty.emptyRepeatingLine}
         setToLengthOnClose={{"array":["fromApi"],"variable":["selectedItem"]}}
       />,
       edit:<ModalButton id='edit' text='edit'  state={state} modal = 'RepeatingLine'  
         pageMode='edit'
-        focusOn={["Repeating","temp"]}
+        focusOn={["{basePage}","temp"]}
         copy={[{"from":["{basePage}","fromApi","{selectedItem}"]}]}
         copyOnClose={[{"to":["{basePage}","fromApi","{selectedItem}"]}]}
       />,
@@ -46,7 +46,7 @@ export function RepeatingPage(){
         <ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi')} value={fullState.focusOn('selectedItem')} />
       </GuardButton>,}
 
-      return <div className='modalPage'>
+      return <div className='mainPage'>
            {/*{"dataDD":"RepeatingWholeData","display":{"import":"","name":"Table","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"order":{"paramType":"string[]","needed":"yes"},"copySelectedIndexTo":{"paramType":"pageState","needed":"no"},"copySelectedItemTo":{"paramType":"pageState","needed":"no"}}},"path":[]}*/}
           <Table id={`${id}`} state={state} mode={mode} order={["name","age"]} />
       { buttons.addEntry } 

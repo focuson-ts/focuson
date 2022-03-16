@@ -1,3 +1,5 @@
+import { numberPrimDD, NumberPrimitiveDD, stringPrimDD, StringPrimitiveDD } from "../common/dataD";
+import { LabelAndDropDownCD, LabelAndNumberInputCD } from "../common/componentsD";
 
 export enum ContactTitle {
   X = '',
@@ -55,3 +57,21 @@ export const HowOften = {
   5: 'Fortnightly',
   6: 'Weekly'
 }
+
+export const NatNumDd: NumberPrimitiveDD = {
+  ...numberPrimDD,
+  name: 'NaturalNumber',
+  description: "A positive integer",
+  display: LabelAndNumberInputCD,
+  displayParams: { min: { value: 0 } },
+  sample: [123, 456]
+}
+
+export const PaymentTypeDd: StringPrimitiveDD = {
+  ...stringPrimDD,
+  name: 'PaymentType',
+  description: "A payment type",
+  display: LabelAndDropDownCD,
+  enum: {dd: 'DD', ddResubmit: "DD Resubmit"}
+}
+

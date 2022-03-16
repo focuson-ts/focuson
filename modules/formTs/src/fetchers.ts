@@ -1,4 +1,10 @@
 import * as common from './common';
+import { AccountAllFlagsFetcher } from './AccountOverview/AccountOverview.fetchers';
+import { ArrearsDetailsFetcher } from './AccountOverview/AccountOverview.fetchers';
+import { AccountOverviewHistoryFetcher } from './AccountOverview/AccountOverview.fetchers';
+import { AccountOverviewExcessInfoFetcher } from './AccountOverview/AccountOverview.fetchers';
+import { AccountOverviewFetcher } from './AccountOverview/AccountOverview.fetchers';
+import { AccountOverviewReasonFetcher } from './AccountOverview/AccountOverview.fetchers';
 import { AdditionalInformationFetcher } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.fetchers';
 import { BusinessDetailsMainFetcher } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.fetchers';
 import { DropdownsFetcher } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.fetchers';
@@ -17,6 +23,12 @@ import { commonIds, identityL } from './common';
 import { Optional, Lenses, NameAndLens} from '@focuson/lens';
 export const fetchers: FetcherTree<common.FState> = {
 fetchers: [
+    AccountAllFlagsFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
+    ArrearsDetailsFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
+    AccountOverviewHistoryFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
+    AccountOverviewExcessInfoFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
+    AccountOverviewFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
+    AccountOverviewReasonFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
     AdditionalInformationFetcher( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ),
     BusinessDetailsMainFetcher( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ),
     DropdownsFetcher( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ),

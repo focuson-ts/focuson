@@ -6,6 +6,24 @@ import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.json.JsonParser;
 public class Sample{
     private static JsonParser parse = new JacksonJsonParser();
+  public static Map sampleAccountAllFlags0 =  parse.parseMap(
+         "{"+
+         "  \"flags\": ["+
+         "    {"+
+         "      \"flagName\": \"Terrorist\","+
+         "      \"flagValue\": true"+
+         "    }"+
+         "  ]"+
+         "}"
+  );
+  public static List sampleAccountAllFlagsList0 =  parse.parseList(
+         "["+
+         "  {"+
+         "    \"flagName\": \"Terrorist\","+
+         "    \"flagValue\": true"+
+         "  }"+
+         "]"
+  );
   public static Map sampleAccountDetails0 =  parse.parseMap(
          "{"+
          "  \"contactTitle\": \"BARON\","+
@@ -20,6 +38,79 @@ public class Sample{
          "  \"telephone\": \"224567\""+
          "}"
   );
+  public static Map sampleAccountOverview0 =  parse.parseMap(
+         "{"+
+         "  \"score\": 123,"+
+         "  \"accountType\": \"checking\","+
+         "  \"drawDownDate\": \"2020-10-01\","+
+         "  \"repaymentDate\": \"2020-10-01\","+
+         "  \"propertyValue\": 220000,"+
+         "  \"mul\": 173750,"+
+         "  \"drawDownAmount\": 90007,"+
+         "  \"criteria\": ["+
+         "    {"+
+         "      \"criteria\": \"Account Management\""+
+         "    }"+
+         "  ],"+
+         "  \"zFlagSet\": \"N\","+
+         "  \"excessSixMonths\": 123,"+
+         "  \"bouncedDDs12Months\": 123,"+
+         "  \"unpaidCardOrMisuseItems\": 123"+
+         "}"
+  );
+  public static List sampleAccountOverviewCriteria0 =  parse.parseList(
+         "["+
+         "  {"+
+         "    \"criteria\": \"Account Management\""+
+         "  }"+
+         "]"
+  );
+  public static Map sampleAccountOverviewCriteriaLine0 =  parse.parseMap(
+         "{"+
+         "  \"criteria\": \"Account Management\""+
+         "}"
+  );
+  public static Map sampleAccountOverviewExcessHistoryLine0 =  parse.parseMap(
+         "{"+
+         "  \"start\": \"2020-10-01\","+
+         "  \"end\": \"2020-10-01\","+
+         "  \"consecutiveDays\": 123"+
+         "}"
+  );
+  public static Map sampleAccountOverviewExcessInfo0 =  parse.parseMap(
+         "{"+
+         "  \"dayOfCurrentExcess\": 123,"+
+         "  \"currentExcessOnAccount\": 123,"+
+         "  \"currentPctExcess\": 123,"+
+         "  \"dateOfLastCapitalization\": \"2020-10-01\","+
+         "  \"dateOfLastExcessFulfillment\": \"2020-10-01\""+
+         "}"
+  );
+  public static List sampleAccountOverviewExcessLines0 =  parse.parseList(
+         "["+
+         "  {"+
+         "    \"start\": \"2020-10-01\","+
+         "    \"end\": \"2020-10-01\","+
+         "    \"consecutiveDays\": 123"+
+         "  }"+
+         "]"
+  );
+  public static Map sampleAccountOverviewHistory0 =  parse.parseMap(
+         "{"+
+         "  \"history\": ["+
+         "    {"+
+         "      \"start\": \"2020-10-01\","+
+         "      \"end\": \"2020-10-01\","+
+         "      \"consecutiveDays\": 123"+
+         "    }"+
+         "  ]"+
+         "}"
+  );
+  public static Map sampleAccountOverviewReason0 =  parse.parseMap(
+         "{"+
+         "  \"reason\": \"Really good reason\""+
+         "}"
+  );
   public static Map sampleAdditionalInformation0 =  parse.parseMap(
          "{"+
          "  \"applicantName\": \"Mr XXXXXXXXXX ABCD Fred Bloggs\","+
@@ -30,6 +121,51 @@ public class Sample{
          "  \"addressLine4\": \"Norfolkkk\","+
          "  \"postcode\": \"PLXYZ\""+
          "}"
+  );
+  public static Map sampleArrearsDetails0 =  parse.parseMap(
+         "{"+
+         "  \"history\": ["+
+         "    {"+
+         "      \"collectionsDate\": \"2020-10-01\","+
+         "      \"creditedDate\": \"2020-10-01\","+
+         "      \"minPayment\": 123,"+
+         "      \"contractualAmount\": 123,"+
+         "      \"paymentType\": \"dd\","+
+         "      \"paymentReceived\": 123,"+
+         "      \"shortfall\": 123,"+
+         "      \"arrearsTotal\": 123,"+
+         "      \"missedPayments\": 123"+
+         "    }"+
+         "  ]"+
+         "}"
+  );
+  public static Map sampleArrearsDetailsLine0 =  parse.parseMap(
+         "{"+
+         "  \"collectionsDate\": \"2020-10-01\","+
+         "  \"creditedDate\": \"2020-10-01\","+
+         "  \"minPayment\": 123,"+
+         "  \"contractualAmount\": 123,"+
+         "  \"paymentType\": \"dd\","+
+         "  \"paymentReceived\": 123,"+
+         "  \"shortfall\": 123,"+
+         "  \"arrearsTotal\": 123,"+
+         "  \"missedPayments\": 123"+
+         "}"
+  );
+  public static List sampleArrearsDetailsLines0 =  parse.parseList(
+         "["+
+         "  {"+
+         "    \"collectionsDate\": \"2020-10-01\","+
+         "    \"creditedDate\": \"2020-10-01\","+
+         "    \"minPayment\": 123,"+
+         "    \"contractualAmount\": 123,"+
+         "    \"paymentType\": \"dd\","+
+         "    \"paymentReceived\": 123,"+
+         "    \"shortfall\": 123,"+
+         "    \"arrearsTotal\": 123,"+
+         "    \"missedPayments\": 123"+
+         "  }"+
+         "]"
   );
   public static Map sampleBusinessDetails0 =  parse.parseMap(
          "{"+
@@ -290,6 +426,12 @@ public class Sample{
          "      \"descTypeName\": \"someString\""+
          "    }"+
          "  ]"+
+         "}"
+  );
+  public static Map sampleOccountOneFlag0 =  parse.parseMap(
+         "{"+
+         "  \"flagName\": \"Terrorist\","+
+         "  \"flagValue\": true"+
          "}"
   );
   public static Map sampleOccupationAndIncomeFullDomain0 =  parse.parseMap(

@@ -23,13 +23,13 @@ export function OccupationIncomeModalPage(){
               commit:<ModalCommitButton id='commit'  state={state} />,
               list:<ModalButton id='list' text='list'  state={state} modal = 'ListOccupationsModal'  
                 pageMode='edit'
-                focusOn={["OccupationIncomeModal","searchList"]}
+                focusOn={["{basePage}","searchList"]}
                 copy={[{"from":["{basePage}","fromApi","customerOccupationIncomeDetails","{selectedItem}","occupation"]}]}
                 copyOnClose={[{"to":["{basePage}","fromApi","customerOccupationIncomeDetails","{selectedItem}","occupation"]}]}
               />,
               otherSourcesOfIncome:<ModalButton id='otherSourcesOfIncome' text='otherSourcesOfIncome'  state={state} modal = 'OtherSourcesOfIncomeModal'  
                 pageMode='edit'
-                focusOn={["OccupationIncomeModal","otherSourcesOfIncome"]}
+                focusOn={["{basePage}","otherSourcesOfIncome"]}
               />,}
           return <div className='modalPage'>
            {/*{"dataDD":"OneOccupationIncomeDetails","display":{"import":"","name":"OneOccupationIncomeDetails","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}

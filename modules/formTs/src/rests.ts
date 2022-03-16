@@ -3,6 +3,12 @@ import { createSimpleMessage, DateFn, defaultDateFn, SimpleMessage } from "@focu
 import { Lenses, NameAndLens} from "@focuson/lens"
 import { FState , commonIds} from "./common";
 
+import { AccountOverview_AccountAllFlagsRestDetails } from './AccountOverview/AccountOverview.rests';
+import { AccountOverview_ArrearsDetailsRestDetails } from './AccountOverview/AccountOverview.rests';
+import { AccountOverview_AccountOverviewHistoryRestDetails } from './AccountOverview/AccountOverview.rests';
+import { AccountOverview_AccountOverviewExcessInfoRestDetails } from './AccountOverview/AccountOverview.rests';
+import { AccountOverview_AccountOverviewRestDetails } from './AccountOverview/AccountOverview.rests';
+import { AccountOverview_AccountOverviewReasonRestDetails } from './AccountOverview/AccountOverview.rests';
 import { OccupationAndIncomeSummary_AdditionalInformationRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
 import { OccupationAndIncomeSummary_BusinessDetailsMainRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
 import { OccupationAndIncomeSummary_DropdownsRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
@@ -17,6 +23,12 @@ import { Repeating_RepeatingWholeDataRestDetails } from './Repeating/Repeating.r
 import { PostCodeDemo_PostCodeMainPageRestDetails } from './PostCodeDemo/PostCodeDemo.rests';
 import { PostCodeDemo_PostCodeDataRestDetails } from './PostCodeDemo/PostCodeDemo.rests';
 export const restDetails: RestDetails<FState, SimpleMessage> = {
+   AccountOverview_AccountAllFlagsRestDetails: AccountOverview_AccountAllFlagsRestDetails(commonIds, defaultDateFn),
+   AccountOverview_ArrearsDetailsRestDetails: AccountOverview_ArrearsDetailsRestDetails(commonIds, defaultDateFn),
+   AccountOverview_AccountOverviewHistoryRestDetails: AccountOverview_AccountOverviewHistoryRestDetails(commonIds, defaultDateFn),
+   AccountOverview_AccountOverviewExcessInfoRestDetails: AccountOverview_AccountOverviewExcessInfoRestDetails(commonIds, defaultDateFn),
+   AccountOverview_AccountOverviewRestDetails: AccountOverview_AccountOverviewRestDetails(commonIds, defaultDateFn),
+   AccountOverview_AccountOverviewReasonRestDetails: AccountOverview_AccountOverviewReasonRestDetails(commonIds, defaultDateFn),
    OccupationAndIncomeSummary_AdditionalInformationRestDetails: OccupationAndIncomeSummary_AdditionalInformationRestDetails(commonIds, defaultDateFn),
    OccupationAndIncomeSummary_BusinessDetailsMainRestDetails: OccupationAndIncomeSummary_BusinessDetailsMainRestDetails(commonIds, defaultDateFn),
    OccupationAndIncomeSummary_DropdownsRestDetails: OccupationAndIncomeSummary_DropdownsRestDetails(commonIds, defaultDateFn),

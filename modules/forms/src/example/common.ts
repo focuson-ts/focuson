@@ -8,6 +8,6 @@ export type ExampleButtons = AllButtonsInPage<AllGuards>
 
 export type ExampleMainPage = MainPageD<ExampleButtons, AllGuards>
 export type ExampleModalPage = ModalPageD<ExampleButtons, AllGuards>
-export type ExampleRest = RestD<AllGuards>
+export type ExampleRestD = RestD<AllGuards>
 export type ExampleDataD = DataD<AllGuards>
 export type ExampleRepeatingD = RepeatingDataD<AllGuards>

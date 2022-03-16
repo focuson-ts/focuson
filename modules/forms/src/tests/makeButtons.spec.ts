@@ -13,13 +13,13 @@ describe ( "makeButtons", () => {
     expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator, makeButtons (), EAccountsSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "    {amendExistingPlan:<ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  ",
       "      pageMode='edit'",
-      "      focusOn={['EAccountsSummary','{basePage}','tempCreatePlan']}",
+      "      focusOn={['{basePage}','{basePage}','tempCreatePlan']}",
       "      copy={[{'from':['{basePage}','fromApi','createPlan']}]}",
       "       rest={{'name':'EAccountsSummary_CreatePlanRestDetails','restAction':'update'}}",
       "    />,",
       "    createNewPlan:<ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  ",
       "      pageMode='create'",
-      "      focusOn={['EAccountsSummary','{basePage}','tempCreatePlan']}",
+      "      focusOn={['{basePage}','{basePage}','tempCreatePlan']}",
       "      createEmpty={empty.emptyCreatePlan}",
       "       rest={{'name':'EAccountsSummary_CreatePlanRestDetails','restAction':'create'}}",
       "    />,",
@@ -31,44 +31,44 @@ describe ( "makeButtons", () => {
       "      confirm={true}",
       "     />,",
       "    refresh:<button>refresh of type ResetStateButton cannot be created yet</button>,}"
-    ] )
+    ])
   } )
   it ( "should create modal buttons with copy on close", () => {
     expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator, makeButtons (), OccupationAndIncomeSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "    {addEntry:<ModalButton id='addEntry' text='addEntry'  state={state} modal = 'OccupationIncomeModal'  ",
       "      pageMode='create'",
-      "      focusOn={['OccupationAndIncomeSummary','temp']}",
+      "      focusOn={['{basePage}','temp']}",
       "      copyOnClose={[{'to':['{basePage}','fromApi','customerOccupationIncomeDetails','[append]']}]}",
       "      createEmpty={empty.emptyOneOccupationIncomeDetails}",
       "      setToLengthOnClose={{'array':['fromApi','customerOccupationIncomeDetails'],'variable':['selectedItem']}}",
       "    />,",
       "    additionalInfo:<ModalButton id='additionalInfo' text='additionalInfo'  state={state} modal = 'AdditionalInformationModal'  ",
       "      pageMode='edit'",
-      "      focusOn={['OccupationAndIncomeSummary','additionalInformation']}",
+      "      focusOn={['{basePage}','additionalInformation']}",
       "    />,",
       "    businessDetails:<ModalButton id='businessDetails' text='businessDetails'  state={state} modal = 'BusinessDetailsModal'  ",
       "      pageMode='edit'",
-      "      focusOn={['OccupationAndIncomeSummary','businessDetails']}",
+      "      focusOn={['{basePage}','businessDetails']}",
       "    />,",
       "    edit:<ModalButton id='edit' text='edit'  state={state} modal = 'OccupationIncomeModal'  ",
       "      pageMode='edit'",
-      "      focusOn={['OccupationAndIncomeSummary','temp']}",
+      "      focusOn={['{basePage}','temp']}",
       "      copy={[{'from':['{basePage}','fromApi','customerOccupationIncomeDetails','{selectedItem}']}]}",
       "      copyOnClose={[{'to':['{basePage}','fromApi','customerOccupationIncomeDetails','{selectedItem}']}]}",
       "    />,",
       "    list:<ModalButton id='list' text='list'  state={state} modal = 'ListOccupationsModal'  ",
       "      pageMode='edit'",
-      "      focusOn={['OccupationAndIncomeSummary','searchList']}",
+      "      focusOn={['{basePage}','searchList']}",
       "      copy={[{'from':['{basePage}','fromApi','customerOccupationIncomeDetails','{selectedItem}','occupation']}]}",
       "      copyOnClose={[{'to':['{basePage}','fromApi','customerOccupationIncomeDetails','{selectedItem}','occupation']}]}",
       "    />,",
       "    nextOccupation:<ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />,",
       "    otherSourcesOfIncome:<ModalButton id='otherSourcesOfIncome' text='otherSourcesOfIncome'  state={state} modal = 'OtherSourcesOfIncomeModal'  ",
       "      pageMode='edit'",
-      "      focusOn={['OccupationAndIncomeSummary','otherSourcesOfIncome']}",
+      "      focusOn={['{basePage}','otherSourcesOfIncome']}",
       "    />,",
       "    prevOccupation:<ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />,}"
-    ] )
+    ])
   } )
 
   it ( "should render a postcode button", () => {
@@ -82,11 +82,11 @@ describe ( "makeButtons", () => {
       "     />,",
       "    search:<ModalButton id='search' text='search'  state={state} modal = 'PostCodeSearch'  ",
       "      pageMode='edit'",
-      "      focusOn={['PostCodeDemo','postcode']}",
+      "      focusOn={['{basePage}','postcode']}",
       "      copy={[{'from':['{basePage}','main','postcode'],'to':['{basePage}','postcode','search']}]}",
       "      copyOnClose={[{'from':['{basePage}','postcode','addressResults','line1'],'to':['{basePage}','main','line1']},{'from':['{basePage}','postcode','addressResults','line2'],'to':['{basePage}','main','line2']},{'from':['{basePage}','postcode','addressResults','line3'],'to':['{basePage}','main','line3']},{'from':['{basePage}','postcode','addressResults','line4'],'to':['{basePage}','main','line4']},{'from':['{basePage}','postcode','search'],'to':['{basePage}','main','postcode']}]}",
       "    />,}"
-    ] )
+    ])
   } )
 
 } )

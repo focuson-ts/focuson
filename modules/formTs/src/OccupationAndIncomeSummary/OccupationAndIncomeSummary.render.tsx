@@ -44,39 +44,39 @@ export function OccupationAndIncomeSummaryPage(){
   const id='root';
   const buttons =    {addEntry:<ModalButton id='addEntry' text='addEntry'  state={state} modal = 'OccupationIncomeModal'  
         pageMode='create'
-        focusOn={["OccupationAndIncomeSummary","temp"]}
+        focusOn={["{basePage}","temp"]}
         copyOnClose={[{"to":["{basePage}","fromApi","customerOccupationIncomeDetails","[append]"]}]}
         createEmpty={empty.emptyOneOccupationIncomeDetails}
         setToLengthOnClose={{"array":["fromApi","customerOccupationIncomeDetails"],"variable":["selectedItem"]}}
       />,
       additionalInfo:<ModalButton id='additionalInfo' text='additionalInfo'  state={state} modal = 'AdditionalInformationModal'  
         pageMode='edit'
-        focusOn={["OccupationAndIncomeSummary","additionalInformation"]}
+        focusOn={["{basePage}","additionalInformation"]}
       />,
       businessDetails:<ModalButton id='businessDetails' text='businessDetails'  state={state} modal = 'BusinessDetailsModal'  
         pageMode='edit'
-        focusOn={["OccupationAndIncomeSummary","businessDetails"]}
+        focusOn={["{basePage}","businessDetails"]}
       />,
       edit:<ModalButton id='edit' text='edit'  state={state} modal = 'OccupationIncomeModal'  
         pageMode='edit'
-        focusOn={["OccupationAndIncomeSummary","temp"]}
+        focusOn={["{basePage}","temp"]}
         copy={[{"from":["{basePage}","fromApi","customerOccupationIncomeDetails","{selectedItem}"]}]}
         copyOnClose={[{"to":["{basePage}","fromApi","customerOccupationIncomeDetails","{selectedItem}"]}]}
       />,
       list:<ModalButton id='list' text='list'  state={state} modal = 'ListOccupationsModal'  
         pageMode='edit'
-        focusOn={["OccupationAndIncomeSummary","searchList"]}
+        focusOn={["{basePage}","searchList"]}
         copy={[{"from":["{basePage}","fromApi","customerOccupationIncomeDetails","{selectedItem}","occupation"]}]}
         copyOnClose={[{"to":["{basePage}","fromApi","customerOccupationIncomeDetails","{selectedItem}","occupation"]}]}
       />,
       nextOccupation:<ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />,
       otherSourcesOfIncome:<ModalButton id='otherSourcesOfIncome' text='otherSourcesOfIncome'  state={state} modal = 'OtherSourcesOfIncomeModal'  
         pageMode='edit'
-        focusOn={["OccupationAndIncomeSummary","otherSourcesOfIncome"]}
+        focusOn={["{basePage}","otherSourcesOfIncome"]}
       />,
       prevOccupation:<ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />,}
 
-      return <div className='modalPage'>
+      return <div className='mainPage'>
            {/*{"dataDD":"OccupationAndIncomeFullDomain","display":{"import":"","name":"OccupationAndIncomeFullDomain","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <OccupationAndIncomeFullDomain id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.nextOccupation } 

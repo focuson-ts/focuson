@@ -51,8 +51,8 @@ let setJson = setJsonForFocusOn<FState, Context, SimpleMessage> ( config, contex
 </div>, rootElement ) )
 setJson ( {
   ...emptyState,
-  pageSelection: [ { pageName: 'OccupationAndIncomeSummary', firstTime: true, pageMode: 'view' } ],
+  pageSelection: [ { pageName: 'AccountOverview', firstTime: true, pageMode: 'view' } ],
 // @ts-ignore
-  debug: {"fetcherDebug":true,"postDebug":true,"Debug":true}
+  debug: {"fetcherDebug":true,"postDebug":true,"Debug":true,"selectedPageDebug":true}
   // currentSelectedModalPage: 'EAccountsSummary_CreatePlan'
 }, 'initial')

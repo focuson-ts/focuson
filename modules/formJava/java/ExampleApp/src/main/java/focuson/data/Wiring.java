@@ -14,6 +14,12 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URL;
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
+import focuson.data.fetchers.AccountAllFlagsFFetcher;
+import focuson.data.fetchers.ArrearsDetailsFFetcher;
+import focuson.data.fetchers.AccountOverviewHistoryFFetcher;
+import focuson.data.fetchers.AccountOverviewExcessInfoFFetcher;
+import focuson.data.fetchers.AccountOverviewFFetcher;
+import focuson.data.fetchers.AccountOverviewReasonFFetcher;
 import focuson.data.fetchers.AdditionalInformationFFetcher;
 import focuson.data.fetchers.BusinessDetailsMainFFetcher;
 import focuson.data.fetchers.DropdownsFFetcher;
@@ -29,6 +35,18 @@ import focuson.data.fetchers.PostCodeMainPageFFetcher;
 import focuson.data.fetchers.PostCodeDataFFetcher;
 @Component
 public class Wiring {
+      @Autowired
+      AccountAllFlagsFFetcher _AccountAllFlagsFFetcher;
+      @Autowired
+      ArrearsDetailsFFetcher _ArrearsDetailsFFetcher;
+      @Autowired
+      AccountOverviewHistoryFFetcher _AccountOverviewHistoryFFetcher;
+      @Autowired
+      AccountOverviewExcessInfoFFetcher _AccountOverviewExcessInfoFFetcher;
+      @Autowired
+      AccountOverviewFFetcher _AccountOverviewFFetcher;
+      @Autowired
+      AccountOverviewReasonFFetcher _AccountOverviewReasonFFetcher;
       @Autowired
       AdditionalInformationFFetcher _AdditionalInformationFFetcher;
       @Autowired
@@ -71,6 +89,12 @@ public class Wiring {
     }
     private RuntimeWiring buildWiring() {
         return RuntimeWiring.newRuntimeWiring()
+          .type(newTypeWiring("Query").dataFetcher("getAccountAllFlags", _AccountAllFlagsFFetcher.getAccountAllFlags()))
+          .type(newTypeWiring("Query").dataFetcher("getArrearsDetails", _ArrearsDetailsFFetcher.getArrearsDetails()))
+          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewHistory", _AccountOverviewHistoryFFetcher.getAccountOverviewHistory()))
+          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewExcessInfo", _AccountOverviewExcessInfoFFetcher.getAccountOverviewExcessInfo()))
+          .type(newTypeWiring("Query").dataFetcher("getAccountOverview", _AccountOverviewFFetcher.getAccountOverview()))
+          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewReason", _AccountOverviewReasonFFetcher.getAccountOverviewReason()))
           .type(newTypeWiring("Query").dataFetcher("getAdditionalInformation", _AdditionalInformationFFetcher.getAdditionalInformation()))
           .type(newTypeWiring("Query").dataFetcher("getBusinessDetailsMain", _BusinessDetailsMainFFetcher.getBusinessDetailsMain()))
           .type(newTypeWiring("Query").dataFetcher("getDropdowns", _DropdownsFFetcher.getDropdowns()))

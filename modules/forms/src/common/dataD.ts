@@ -42,7 +42,7 @@ export interface HasLayout {
   layout?: { component: DisplayCompD, displayParams?: DisplayParamDD },
 }
 
-export interface CommonDataDD extends HasLayout{
+export interface CommonDataDD extends HasLayout {
   name: string;
   display?: DisplayCompD;
   displayParams?: DisplayParamDD
@@ -269,6 +269,15 @@ export const IntegerDD: NumberPrimitiveDD = {
   name: 'Integer',
   description: "The primitive 'Integer'",
   display: LabelAndNumberInputCD,
+  sample: [ 123, 456 ]
+}
+
+export const NatNumDd: NumberPrimitiveDD = {
+  ...numberPrimDD,
+  name: 'NaturalNumber',
+  description: "A positive integer",
+  display: LabelAndNumberInputCD,
+  displayParams: { min: { value: 0 } },
   sample: [ 123, 456 ]
 }
 export const MoneyDD: NumberPrimitiveDD = {

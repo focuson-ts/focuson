@@ -1,6 +1,12 @@
 import { identityOptics } from "@focuson/lens";
 import { MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";
 import {Context,  FState } from "./common";
+import { AccountOverviewPage } from './AccountOverview/AccountOverview.render';
+import { ExcessInfoSearchPage } from './ExcessInfoSearch/ExcessInfoSearch.render';
+import { ReasonPage } from './Reason/Reason.render';
+import { ExcessHistoryPage } from './ExcessHistory/ExcessHistory.render';
+import { ArrearsDetailsPage } from './ArrearsDetails/ArrearsDetails.render';
+import { AccountFlagsPage } from './AccountFlags/AccountFlags.render';
 import { OccupationAndIncomeSummaryPage } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.render';
 import { OccupationIncomeModalPage } from './OccupationIncomeModal/OccupationIncomeModal.render';
 import { AdditionalInformationModalPage } from './AdditionalInformationModal/AdditionalInformationModal.render';
@@ -24,6 +30,7 @@ function MyLoading () {
 const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  MyLoading )
 const identity = identityOptics<FState> ();
 export const pages: MultiPageDetails<FState, Context> = {
+    AccountOverview: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'AccountOverview' ), pageFunction: AccountOverviewPage(), initialValue: {} },
     OccupationAndIncomeSummary: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'OccupationAndIncomeSummary' ), pageFunction: OccupationAndIncomeSummaryPage(), initialValue: {"selectedItem":0} },
     EAccountsSummary: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'EAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: {} },
     ETransfer: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'ETransfer' ), pageFunction: ETransferPage(), initialValue: {"fromApi":{}} },
@@ -31,6 +38,11 @@ export const pages: MultiPageDetails<FState, Context> = {
     ChequeCreditbooks: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'ChequeCreditbooks' ), pageFunction: ChequeCreditbooksPage(), initialValue: {} },
     Repeating: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'Repeating' ), pageFunction: RepeatingPage(), initialValue: {} },
     PostCodeDemo: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'PostCodeDemo' ), pageFunction: PostCodeDemoPage(), initialValue: {"main":{},"postcode":{"search":"","searchResults":[],"addressResults":{"line1":"","line2":"","line3":"","line4":""}}} },
+    ExcessInfoSearch: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: ExcessInfoSearchPage()},
+    Reason: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: ReasonPage()},
+    ExcessHistory: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: ExcessHistoryPage()},
+    ArrearsDetails: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: ArrearsDetailsPage()},
+    AccountFlags: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: AccountFlagsPage()},
     OccupationIncomeModal: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: OccupationIncomeModalPage()},
     AdditionalInformationModal: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: AdditionalInformationModalPage()},
     BusinessDetailsModal: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: BusinessDetailsModalPage()},
