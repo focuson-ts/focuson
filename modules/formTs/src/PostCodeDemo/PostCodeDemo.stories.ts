@@ -20,10 +20,12 @@ interface StoryState {
 }
  
 const initial = {"main":{},"postcode":{"search":"","searchResults":[],"addressResults":{"line1":"","line2":"","line3":"","line4":""}}}
-const Template: Story<StoryState> = ( args: StoryState ) =>
-   SBookProvider<FState, Context> ( { ...emptyState, PostCodeDemo: { ...initial, main: args.domain } },//NOTE currently stories only work if the target depth is 1
+function pageSelection ( pageMode: PageMode ): PageSelection { return { pageName: 'PostCodeDemo', pageMode}}
+const Template: Story<StoryState> = ( args: StoryState ) =>{
+  const startState: FState = { ...emptyState, pageSelection: [ pageSelection ( args.pageMode ) ] }
+  return SBookProvider<FState, Context> ( { ...startState, PostCodeDemo: { ...initial, main: args.domain } },//NOTE currently stories only work if the target depth is 1
      context,
-     s => findOneSelectedPageDetails ( s ) ( { pageName: 'PostCodeDemo', pageMode:args.pageMode} ).element );
+     s => findOneSelectedPageDetails ( s ) ( pageSelection: pageSelection(args.pageMode) ).element );}
  
  
 export const View = Template.bind ( {} );

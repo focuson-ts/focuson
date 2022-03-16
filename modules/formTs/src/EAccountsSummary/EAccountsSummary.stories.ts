@@ -20,10 +20,12 @@ interface StoryState {
 }
  
 const initial = {}
-const Template: Story<StoryState> = ( args: StoryState ) =>
-   SBookProvider<FState, Context> ( { ...emptyState, EAccountsSummary: { ...initial, fromApi: args.domain } },//NOTE currently stories only work if the target depth is 1
+function pageSelection ( pageMode: PageMode ): PageSelection { return { pageName: 'EAccountsSummary', pageMode}}
+const Template: Story<StoryState> = ( args: StoryState ) =>{
+  const startState: FState = { ...emptyState, pageSelection: [ pageSelection ( args.pageMode ) ] }
+  return SBookProvider<FState, Context> ( { ...startState, EAccountsSummary: { ...initial, fromApi: args.domain } },//NOTE currently stories only work if the target depth is 1
      context,
-     s => findOneSelectedPageDetails ( s ) ( { pageName: 'EAccountsSummary', pageMode:args.pageMode} ).element );
+     s => findOneSelectedPageDetails ( s ) ( pageSelection: pageSelection(args.pageMode) ).element );}
  
  
 export const View = Template.bind ( {} );
