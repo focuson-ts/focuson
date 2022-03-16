@@ -1,4 +1,4 @@
-import { AllDataDD, CompDataD, isDataDd, isPrimDd, isRepeatingDd } from "../common/dataD";
+import { AllDataDD, CompDataD, DataD, DisplayParamDD, isDataDd, isPrimDd, isRepeatingDd } from "../common/dataD";
 import { commonParams, DisplayCompD, OneDisplayCompParamD, SimpleDisplayComp } from "../common/componentsD";
 import { dataDsIn, isMainPage, isModalPage, PageD } from "../common/pageD";
 
@@ -71,9 +71,9 @@ export const listComponentsIn = <G> ( dataDD: CompDataD<G> ): AllComponentData<G
   // return flatMapDD ( dataDD, listComponentsInFolder () );
 };
 
-export const processParam = <G> ( path: string[], dataDD: AllDataDD<G>, dcd: DisplayCompD ) => ( name: string, s: number | string | string[] | boolean ) => {
+export const processParam = <G> ( errorPrefix: string, dcd: DisplayCompD ) => ( name: string, s: number | string | string[] | boolean ) => {
   const dcdType: OneDisplayCompParamD<any> = dcd.params[ name ]
-  function errorPrefix () {return `Component ${dataDD.name} for ${path} has a display component ${dcd.name} and sets a param ${name} `}
+  function errorPrefix () {return `Component ${errorPrefix ()} has a display component ${dcd.name} and sets a param ${name} `}
   if ( dcdType === undefined ) throw new Error ( `${errorPrefix ()}. Legal values are ${sortedEntries ( dcd.params ).map ( t => t[ 0 ] ).join ( ',' )}` )
   function processStringParam () {return "'" + s + "'"}
   function processObjectParam () {return "{" + s + "}"}
@@ -100,10 +100,10 @@ export const processParam = <G> ( path: string[], dataDD: AllDataDD<G>, dcd: Dis
 };
 
 
-export function createOneReact<B, G> ( { path, dataDD, display, displayParams, guard }: ComponentData<G> ): string[] {
-  const { name, params } = display
-  const processOneParam = processParam ( path, dataDD, display )
-  const dataDDParamsA: [ string, string ][] = dataDD.displayParams ? Object.entries ( dataDD.displayParams ).map ( ( [ name, o ] ) => [ name, processOneParam ( name, o.value ) ] ) : []
+function makeParams<G> ( errorPrefix: string, path: string[], optEnum: NameAnd<String> | undefined, display: DisplayCompD, definingParams: DisplayParamDD | undefined, displayParams: ComponentDisplayParams ) {
+  const processOneParam = processParam ( errorPrefix, display )
+  const dataDDParams: [ string, string ][] = definingParams ? Object.entries ( definingParams )
+    .map ( ( [ name, o ] ) => [ name, processOneParam ( name, o.value ) ] ) : []
   const defaultParams: [ string, string ][] = Object.entries ( display.params ).flatMap ( ( [ name, param ] ) => {
     if ( param?.default ) return [ [ name, processOneParam ( name, param.default ) ] ]
     if ( param?.needed === 'defaultToCamelCaseOfName' ) return [ [ name, processOneParam ( name, decamelize ( path.slice ( -1 ) + "", ' ' ) ) ] ]
@@ -114,13 +114,20 @@ export function createOneReact<B, G> ( { path, dataDD, display, displayParams, g
       return [ [ name, processOneParam ( name, '`${id}' + dot + path.join ( "." ) + '`' ) ] ]
     }
     if ( param?.needed === 'defaultToEnum' )
-      if ( isPrimDd ( dataDD ) && dataDD.enum ) return [ [ name, "{" + JSON.stringify ( dataDD.enum ) + "}" ] ]
+      if ( optEnum ) return [ [ name, "{" + JSON.stringify ( optEnum ) + "}" ] ]
       else
-        throw new Error ( `Component ${dataDD.name} for ${path} has a display component ${display.name} and sets a param ${name}. Requires enums, but no enums have been defined` )
+        throw new Error ( `errorPrefix for ${path} has a display component ${display.name} and sets a param ${name}. Requires enums, but no enums have been defined` )
     return []
   } )
   const displayParamsA: [ string, string ][] = displayParams ? Object.entries ( displayParams ).map ( ( [ name, value ] ) => [ name, processOneParam ( name, value ) ] ) : []
-  const fullDisplayParams = Object.entries ( Object.fromEntries ( [ ...defaultParams, ...dataDDParamsA, ...displayParamsA ] ) )
+  const fullDisplayParams = Object.entries ( Object.fromEntries ( [ ...defaultParams, ...dataDDParams, ...displayParamsA ] ) )
+  return fullDisplayParams;
+}
+export function createOneReact<B, G> ( { path, dataDD, display, displayParams, guard }: ComponentData<G> ): string[] {
+  const { name, params } = display
+  const fullDisplayParams = makeParams ( `Datad ${dataDD.name} with path ${JSON.stringify ( path )}`, path,
+    isPrimDd ( dataDD ) && dataDD.enum, display, dataDD.displayParams, displayParams );
+
   const displayParamsString = fullDisplayParams.map ( ( [ k, v ] ) => `${k}=${v}` ).join ( " " )
 
   const guardPrefix = guard ? sortedEntries ( guard ).map ( ( [ n, guard ] ) =>

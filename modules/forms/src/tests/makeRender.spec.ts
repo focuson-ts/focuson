@@ -26,7 +26,7 @@ describe ( " listComponentsIn", () => {
       "<LabelAndNumberInput id={`${id}.currentAccountBalance`} state={state.focusOn('currentAccountBalance')} mode={mode} label='current account balance' buttons={buttons} required={true} />",
       " {/*{'path':['createPlan'],'dataDD':'CreatePlan','display':{'import':'','name':'CreatePlan','params':{'id':{'paramType':'object','needed':'id'},'state':{'paramType':'state','needed':'defaultToPath'},'mode':{'paramType':'object','needed':'no','default':'mode'},'ariaLabel':{'paramType':'string','needed':'no'}}}}*/}",
       "<CreatePlan id={`${id}.createPlan`} state={state.focusOn('createPlan')} mode={mode} buttons={buttons} />"
-    ])
+    ] )
   } )
 
   it ( "should createReactComponent", () => {
@@ -48,7 +48,7 @@ describe ( " listComponentsIn", () => {
       "</>",
       "}",
       ""
-    ])
+    ] )
   } )
   it ( "should createAllReactComponents ", () => {
     expect ( createAllReactComponents ( paramsForTest, AllGuardCreator, makeButtons (), [ EAccountsSummaryPD, CreatePlanPD, RepeatingPageD, RepeatingLinePageD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
@@ -230,7 +230,7 @@ describe ( " listComponentsIn", () => {
       "</>",
       "}",
       ""
-    ])
+    ] )
   } )
 
   it ( "should createAllReactComponents for a modal page that define a display on the data", () => {
@@ -292,13 +292,13 @@ describe ( "makeComponentWithGuard", () => {
       "  return <Layout details='[[1],[3,3],[5]]'>",
       "     {/*{'path':['areYou'],'dataDD':'CustomerStatus','display':{'import':'../copied/LabelAndInput','name':'LabelAndStringInput','params':{'id':{'paramType':'object','needed':'id'},'state':{'paramType':'state','needed':'defaultToPath'},'mode':{'paramType':'object','needed':'no','default':'mode'},'ariaLabel':{'paramType':'string','needed':'no'},'label':{'paramType':'string','needed':'defaultToCamelCaseOfName'},'buttons':{'paramType':'object','needed':'defaultToButtons'},'button':{'paramType':'string','needed':'no'},'required':{'paramType':'boolean','needed':'no','default':true},'pattern':{'paramType':'string','needed':'no'},'minlength':{'paramType':'object','needed':'no'},'maxlength':{'paramType':'object','needed':'no'}}}}*/}",
       "    <LabelAndStringInput id={`${id}.areYou`} state={state.focusOn('areYou')} mode={mode} label='are you' buttons={buttons} required={true} />"
-    ])
+    ] )
   } )
 } )
 
 describe ( "make components - the different parameter types", () => {
   function makeParam ( theType: DisplayCompParamType, val: string | string[] ) {
-    return processParam ( [ 'some', 'path' ], EAccountsSummaryDD, { ...LabelAndStringInputCD, params: { p1: { paramType: theType, needed: 'no' } } } ) ( 'p1', val );
+    return processParam ( 'errorPrefix', { ...LabelAndStringInputCD, params: { p1: { paramType: theType, needed: 'no' } } } ) ( 'p1', val );
   }
   it ( "should create paramtype object", () => {
     expect ( makeParam ( 'object', 'obj' ) ).toEqual ( '{obj}' )
