@@ -21,8 +21,8 @@ export const postCodeSearchResponse: RepeatingDataD<AllGuards> = {
   paged: false,
   display: TableCD,
   displayParams: {
-    order: { value: [ 'line1', 'line2', 'line3', 'line4' ] },
-    copySelectedItemTo: { value: [ 'postcode', 'addressResults' ] }
+    order: [ 'line1', 'line2', 'line3', 'line4' ] ,
+    copySelectedItemTo: [ 'postcode', 'addressResults' ]
   }
 }
 

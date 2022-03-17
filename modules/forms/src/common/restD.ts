@@ -1,6 +1,7 @@
 import { CompDataD, DataD, findAllDataDs, findDataDDIn, isDataDd } from "./dataD";
 import { RestAction, safeArray, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction } from "../codegen/codegen";
+import { ResolverD } from "./resolverD";
 
 export type AllLensRestParams = CommonLensRestParam | LensRestParam
 
@@ -71,7 +72,8 @@ export interface RestD<G> {
   params: RestParams,
   dataDD: CompDataD<G>,
   url: string,
-  actions: RestAction[]
+  actions: RestAction[];
+  resolver?: ResolverD
 }
 
 export const actionDetail = ( r: RestAction ): RestActionDetail => defaultRestAction[ r ];

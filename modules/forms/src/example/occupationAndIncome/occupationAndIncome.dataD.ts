@@ -104,7 +104,7 @@ export const customerOccupationIncomeDetailsDD: ExampleRepeatingD = {
   display: SelectedItemCD,
   name: "CustomerOccupationIncomeDetails",
   description: "This is a summary customer occupations data",
-  displayParams: { index: { value: [ 'selectedItem' ] }, display: { value: oneOccupationIncomeDetailsDD.name } },
+  displayParams: { index: [ 'selectedItem' ] , display: oneOccupationIncomeDetailsDD.name },
   dataDD: oneOccupationIncomeDetailsDD
 }
 
@@ -182,7 +182,7 @@ export const occupationsListDD: ExampleRepeatingD = {
   paged: false,
   display: TableCD,
   name: "OccupationsList",
-  displayParams: { order: { value: [ 'descTypeName' ] } },
+  displayParams: { order: [ 'descTypeName' ] },
   description: "This is a list of all the occupations",
   dataDD: occupationDescriptionResponseDD
 }
@@ -199,7 +199,7 @@ export const listOccupationsDD: ExampleDataD = {
   description: "This is the search occupation popup",
   display: SearchListCD,
   // displayParams: { children: { value: occupationsListDD.name }, title: { value: 'Search for occupations' } },
-  displayParams: { title: { value: 'Search for occupations' } },
+  displayParams: { title: 'Search for occupations' },
   structure: {
     occupationsList: { dataDD: occupationsListDD }
   },

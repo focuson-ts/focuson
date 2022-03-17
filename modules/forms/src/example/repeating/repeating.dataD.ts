@@ -17,5 +17,5 @@ export const RepeatingWholeDataD: RepeatingDataD<AllGuards> = {
   dataDD: RepeatingLineDataD,
   display: TableCD,
   paged: false,
-  displayParams: { order: { value: [ 'name', 'age' ] } }
+  displayParams: { order: [ 'name', 'age' ] }
 }

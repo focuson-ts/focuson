@@ -33,7 +33,7 @@ export const PostCodeMainPage: ExampleMainPage = {
     address: { rest: addressRestD, targetFromPath: [ 'main' ] }
   },
   buttonOrder: [ 'save' ],//hide the search button
-  layout: { component: HideButtonsCD, displayParams: { hide: { value: [ 'search' ] } } },
+  layout: { component: HideButtonsCD, displayParams: { hide: [ 'search' ] }  },
   buttons: {
     search: {
       control: 'ModalButton', modal: PostCodeModalPage, mode: 'edit',

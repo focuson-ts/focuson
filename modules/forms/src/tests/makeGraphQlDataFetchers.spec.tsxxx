@@ -1,0 +1,173 @@
+import { findParentChildCompDataLinks, makeGraphQlResultMaps } from "../codegen/makeGraphQlDataFetchers.tsxxx";
+import { occupationAndIncomeFullDomainDD } from "../example/occupationAndIncome/occupationAndIncome.dataD";
+
+
+describe ( "findParentChildLinks", () => {
+  it ( "it find parent child links  of the comp datas when not stopping at resolvers", () => {
+    expect ( findParentChildCompDataLinks ( occupationAndIncomeFullDomainDD, {} )
+      .map ( ( [ p, c ] ) => [ p.name, c.name ] ) ).toEqual ( [
+      [ "OccupationAndIncomeFullDomain", "CustomerOccupationIncomeDetails" ],
+      [ "CustomerOccupationIncomeDetails", "OneOccupationIncomeDetails" ]
+    ] )
+  } )
+
+  it ( "it find parent child links  of the comp datas when  stopping at resolvers", () => {
+    expect ( findParentChildCompDataLinks ( occupationAndIncomeFullDomainDD, { stopAtResolvers: true } )
+      .map ( ( [ p, c ] ) => [ p.name, c.name ] ) ).toEqual ( [
+      [ "OccupationAndIncomeFullDomain", "CustomerOccupationIncomeDetails" ],
+      [ "CustomerOccupationIncomeDetails", "OneOccupationIncomeDetails" ]
+    ] )
+  } )
+  it ( "it find parent child links  including primitives, stopping at resolvers", () => {
+    expect ( findParentChildCompDataLinks ( occupationAndIncomeFullDomainDD, { stopAtResolvers: true, includePrimitives: true } )
+      .map ( ( [ p, c ] ) => [ p.name, c.name ] ) ).toEqual ( [
+      [
+        "OccupationAndIncomeFullDomain",
+        "String"
+      ],
+      [
+        "OccupationAndIncomeFullDomain",
+        "String"
+      ],
+      [
+        "OccupationAndIncomeFullDomain",
+        "Integer"
+      ],
+      [
+        "OccupationAndIncomeFullDomain",
+        "Integer"
+      ],
+      [
+        "OccupationAndIncomeFullDomain",
+        "CustomerOccupationIncomeDetails"
+      ],
+      [
+        "CustomerOccupationIncomeDetails",
+        "OneOccupationIncomeDetails"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "CustomerStatus"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "String"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "String"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "YesNo"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "YesNo"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "String"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "Integer"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "Integer"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "Integer"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "String"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "String"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "String"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "Integer"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "EmploymentType"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "Date"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "Date"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "String"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "YesNo"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "String"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "Date"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "String"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "String"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "String"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "Integer"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "Integer"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "Integer"
+      ],
+      [
+        "OneOccupationIncomeDetails",
+        "YesNo"
+      ]
+    ])
+  } )
+} )
+
+describe ( "makeGraphQlResultMaps", () => {
+    it ( "should generate the java code for the maps structure ", () => {
+      expect ( makeGraphQlResultMaps ( 'someName', findParentChildCompDataLinks ( occupationAndIncomeFullDomainDD, { includePrimitives: false, stopAtResolvers: false } ) ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+        "public static class someName {",
+        "  public final Map OccupationAndIncomeFullDomain = new HashMap();",
+        "  public final Map CustomerOccupationIncomeDetails = new HashMap();",
+        "  public final Map OneOccupationIncomeDetails = new HashMap();",
+        "  OccupationAndIncomeFullDomain.put('CustomerOccupationIncomeDetails', CustomerOccupationIncomeDetails);",
+        "  CustomerOccupationIncomeDetails.put('OneOccupationIncomeDetails', OneOccupationIncomeDetails);",
+        "}"
+      ] )
+    } )
+  }
+)

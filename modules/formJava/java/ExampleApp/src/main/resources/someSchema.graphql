@@ -30,7 +30,7 @@ type Mutation{
   createPostCodeMainPage(,obj: PostCodeMainPageInp!):PostCodeMainPage!
 }
 type AccountAllFlags{
-  flags: [OccountOneFlag!]!
+  flags: [AccountOneFlag!]!
 }
 type AccountDetails{
   contactTitle: String!
@@ -43,6 +43,10 @@ type AccountDetails{
   addressLine4: String!
   postcode: String!
   telephone: String!
+}
+type AccountOneFlag{
+  flagName: String!
+  flagValue: Boolean!
 }
 type AccountOverview{
   score: Int!
@@ -200,10 +204,6 @@ type FrequenciesResponse{
   frequencyId: Int!
   frequencyDescription: String!
   annualMultiple: Int!
-}
-type OccountOneFlag{
-  flagName: String!
-  flagValue: Boolean!
 }
 type OccupationAndIncomeFullDomain{
   mainCustomerName: String!

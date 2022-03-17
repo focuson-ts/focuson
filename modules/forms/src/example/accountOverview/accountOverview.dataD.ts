@@ -8,7 +8,7 @@ import { commonParams, DisplayCompD, LayoutCd, TableCD } from "../../common/comp
 
 
 const accountOneFlagDD: ExampleDataD = {
-  name: "OccountOneFlag",
+  name: "AccountOneFlag",
   description: "One flag from the backend, with the 'type' so that we know how to display",
   structure: {
     flagName: { dataDD: OneLineStringDD, sample: [ 'Terrorist', 'MI6 wanted list' ] },
@@ -19,7 +19,7 @@ const accountOneFlagDD: ExampleDataD = {
 export const accountAllFlagsDD: ExampleRepeatingD = {
   name: "AccountAllFlagsList", description: "", paged: false,
   display: TableCD,
-  displayParams: { order: { value: [ "flagName", "flagValue" ] } },
+  displayParams: { order: [ "flagName", "flagValue" ] },
   dataDD: accountOneFlagDD,
 }
 
@@ -51,7 +51,7 @@ const arrearsDetailsLineDataD: ExampleDataD = {
 export const arrearsDetailsLinesDataD: ExampleRepeatingD = {
   name: "ArrearsDetailsLines", description: "", paged: false,
   display: TableCD,
-  displayParams: { order: { value: [ "collectionsDate", "creditedDate", "minPayment", "contractualAmount", "paymentType", "paymentReceived", "shortfall", "arrearsTotal", "missedPayments" ] } },
+  displayParams: { order: [ "collectionsDate", "creditedDate", "minPayment", "contractualAmount", "paymentType", "paymentReceived", "shortfall", "arrearsTotal", "missedPayments" ] },
   dataDD: arrearsDetailsLineDataD,
 }
 
@@ -78,8 +78,8 @@ export const accountOverviewExcessHistoryLinesDataD: ExampleRepeatingD = {
   name: "AccountOverviewExcessLines", description: "", paged: false,
   display: TableCD,
   displayParams: {
-    order: { value: [ "start", "end", "consecutiveDays" ] },
-    copySelectedItemTo: { value: [ 'currentSelectedExcessHistory' ] }
+    order: [ "start", "end", "consecutiveDays" ],
+    copySelectedItemTo: [ 'currentSelectedExcessHistory' ]
   },
   dataDD: accountOverviewExcessHistoryLineDataD,
 }
@@ -111,7 +111,7 @@ const accountOverviewCriteriaLineDataD: ExampleDataD = {
 const accountOverviewCriteriaDataD: ExampleRepeatingD = {
   name: "AccountOverviewCriteria", description: "", paged: false,
   display: TableCD,
-  displayParams: { order: { value: [ "criteria" ] } },
+  displayParams: { order: [ "criteria" ] },
   dataDD: accountOverviewCriteriaLineDataD
 }
 
@@ -125,7 +125,7 @@ export const UnpaidCardOrMisuseItemsCD: DisplayCompD = {
 export const accountOverviewDataD: ExampleDataD = {
   name: "AccountOverview",
   description: "Account overview data definition",
-  layout: { component: LayoutCd, displayParams: { details: { value: '[[3,3],[20]]' } } },
+  layout: { component: LayoutCd, displayParams: { details: '[[3,3],[20]]' } },
   structure: {
     score: { dataDD: IntegerDD },
     accountType: { dataDD: EAccountDisplayTypeDD },
@@ -136,7 +136,7 @@ export const accountOverviewDataD: ExampleDataD = {
     //@ts-ignore
     mul: { dataDD: MoneyDD, sample: [ 173750 ] },
     //@ts-ignore
-    drawDownAmount: { dataDD: MoneyDD, sample: [ 90007 ], alias: '', field: 'ddamnt' },
+    drawDownAmount: { dataDD: MoneyDD, sample: [ 90007 ], table: '', field: 'ddamnt' },
     criteria: { dataDD: accountOverviewCriteriaDataD },
     zFlagSet: { dataDD: yesNoDD, displayParams: { button: "reason" } },
     excessSixMonths: { dataDD: IntegerDD, displayParams: { button: "excessHistory" } },

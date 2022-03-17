@@ -38,6 +38,12 @@ public class Sample{
          "  \"telephone\": \"224567\""+
          "}"
   );
+  public static Map sampleAccountOneFlag0 =  parse.parseMap(
+         "{"+
+         "  \"flagName\": \"Terrorist\","+
+         "  \"flagValue\": true"+
+         "}"
+  );
   public static Map sampleAccountOverview0 =  parse.parseMap(
          "{"+
          "  \"score\": 123,"+
@@ -426,12 +432,6 @@ public class Sample{
          "      \"descTypeName\": \"someString\""+
          "    }"+
          "  ]"+
-         "}"
-  );
-  public static Map sampleOccountOneFlag0 =  parse.parseMap(
-         "{"+
-         "  \"flagName\": \"Terrorist\","+
-         "  \"flagValue\": true"+
          "}"
   );
   public static Map sampleOccupationAndIncomeFullDomain0 =  parse.parseMap(

@@ -6,6 +6,7 @@ import { indentList } from "./codegen";
 import { JavaWiringParams } from "./config";
 import { unique } from "../common/restD";
 import { on } from "cluster";
+import { isTableAndField } from "../common/resolverD";
 
 export function makeMaps<G> ( dataD: DataD<G> ): string[] {
   const folder: AllDataFlatMap<string, G> = {
@@ -21,9 +22,13 @@ export function makeMaps<G> ( dataD: DataD<G> ): string[] {
 }
 
 function aliasAndFieldName<G> ( name: string, oneDataDD: OneDataDD<G> ): string {
-  const alias = oneDataDD.alias ? (oneDataDD.alias + '.') : ''
-  const field = oneDataDD.field ? oneDataDD.field : name
-  return alias + field
+  if ( oneDataDD.db ) {
+    if ( isTableAndField ( oneDataDD.db ) ) {
+      const { table: table, field } = oneDataDD.db
+      return table + field
+    } else return oneDataDD.db
+  }
+  return name
 }
 
 interface PopulateMapAcc {

@@ -5,6 +5,7 @@ import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndNumberInputCD, LabelAndS
 import { ComponentDisplayParams } from "../codegen/makeRender";
 import { NameAnd, safeArray } from "@focuson/utils";
 import { Guards } from "../buttons/guardButton";
+import { DBTable, DbValues } from "./resolverD";
 
 
 export interface HasSample<T> {
@@ -25,17 +26,14 @@ export interface OneDataDD<G> extends HasSample<string> {
   hidden?: boolean;
   guard?: NameAnd<string[]>
   displayParams?: ComponentDisplayParams,
-  alias?: string, //Will be used to resolve name mismatches in sql queries. Not needed if there are no mismatches
-  field?: string, // defaults to the name. if it exists this says which field to use
+  db?: DbValues
 }
 export interface ManyDataDD<G> {
   [ name: string ]: OneDataDD<G>
 }
-export interface OneDisplayParamDD {
-  value: boolean | number | string | string[]
-}
+
 export interface DisplayParamDD {
-  [ name: string ]: OneDisplayParamDD
+  [ name: string ]: boolean | number | string | string[]
 }
 
 export interface HasLayout {
@@ -58,6 +56,7 @@ export interface CommonDataDD extends HasLayout {
 export interface DataD<G> extends CommonDataDD {
   guards?: Guards<G>;
   structure: ManyDataDD<G>;
+  table?: DBTable;
 }
 export type CompDataD<G> = DataD<G> | RepeatingDataD<G>
 
@@ -239,7 +238,7 @@ export const AccountIdDD: NumberPrimitiveDD = {
   name: 'AccountId',
   description: "An account id",
   display: LabelAndNumberInputCD,
-  displayParams: { min: { value: 10000000 }, max: { value: 99999999 } },
+  displayParams: { min: 10000000, max: 99999999 },
   sample: [ 1233450, 3233450, 4333450 ]
 }
 export const StringDD: StringPrimitiveDD = {
@@ -277,7 +276,7 @@ export const NatNumDd: NumberPrimitiveDD = {
   name: 'NaturalNumber',
   description: "A positive integer",
   display: LabelAndNumberInputCD,
-  displayParams: { min: { value: 0 } },
+  displayParams: { min: 0 },
   sample: [ 123, 456 ]
 }
 export const MoneyDD: NumberPrimitiveDD = {

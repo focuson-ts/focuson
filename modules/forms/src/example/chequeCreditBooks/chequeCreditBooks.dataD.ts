@@ -18,7 +18,7 @@ export const ChequeCreditbooksHistoryDD: RepeatingDataD<AllGuards> = {
   description: "The history of how cheque and credit books have been ordered",
   dataDD: ChequeCreditbooksHistoryLineDD,
   display: TableCD,
-  displayParams: { order: { value: [ 'serialNumber', 'howOrdered', 'dateOrder' ] } }
+  displayParams: { order: [ 'serialNumber', 'howOrdered', 'dateOrder' ] }
 }
 export const ChequeCreditbooksDD: DataD<AllGuards> = {
   name: "ChequeCreditbooks",

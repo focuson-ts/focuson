@@ -30,7 +30,7 @@ export const otherSourcesOfIncomeDataDD: ExampleRepeatingD = {
     display: TableCD,
     name: "OtherIncomeData",
     description: "This is a summary about other income data",
-    displayParams: { order: { value: [ 'otherIncomeType', 'incomeFreqRef', 'amount' ] } },
+    displayParams: { order: [ 'otherIncomeType', 'incomeFreqRef', 'amount' ] },
     dataDD: otherIncomeResponseDD
 
 }

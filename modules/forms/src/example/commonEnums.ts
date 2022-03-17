@@ -63,7 +63,7 @@ export const NatNumDd: NumberPrimitiveDD = {
   name: 'NaturalNumber',
   description: "A positive integer",
   display: LabelAndNumberInputCD,
-  displayParams: { min: { value: 0 } },
+  displayParams: { min: 0 } ,
   sample: [123, 456]
 }
 

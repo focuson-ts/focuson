@@ -105,7 +105,7 @@ export const processParam = <G> ( errorPrefix: string, dcd: DisplayCompD ) => ( 
 function makeParams<G> ( errorPrefix: string, path: string[], optEnum: NameAnd<String> | undefined, display: DisplayCompD, definingParams: DisplayParamDD | undefined, displayParams: ComponentDisplayParams ) {
   const processOneParam = processParam ( errorPrefix, display )
   const dataDDParams: [ string, string ][] = definingParams ? Object.entries ( definingParams )
-    .map ( ( [ name, o ] ) => [ name, processOneParam ( name, o.value ) ] ) : []
+    .map ( ( [ name, value ] ) => [ name, processOneParam ( name, value ) ] ) : []
   const defaultParams: [ string, string ][] = Object.entries ( display.params ).flatMap ( ( [ name, param ] ) => {
     if ( param?.default ) return [ [ name, processOneParam ( name, param.default ) ] ]
     if ( param?.needed === 'defaultToCamelCaseOfName' ) return [ [ name, processOneParam ( name, decamelize ( path.slice ( -1 ) + "", ' ' ) ) ] ]

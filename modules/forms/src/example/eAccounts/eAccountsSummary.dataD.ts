@@ -31,7 +31,7 @@ export const EAccountsSummaryTableDD: RepeatingDataD <AllGuards> = {
   description: "Just the raw EAccountSummaryDD data",
   dataDD: EAccountSummaryDD,
   display: TableCD,
-  displayParams: { order: { value: [ 'accountId', 'displayType', 'description', 'virtualBankSeq', 'frequency', 'total' ] } }
+  displayParams: { order: [ 'accountId', 'displayType', 'description', 'virtualBankSeq', 'frequency', 'total' ] }
 }
 
 export const CreatePlanDD: DataD<AllGuards> = {

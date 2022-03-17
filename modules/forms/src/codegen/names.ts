@@ -37,7 +37,7 @@ export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): str
 export const javaDbFileName = <B, G> ( params: JavaWiringParams, p: PageD<B, G> ): string => `${p.name}Db`;
 
 
-export const dbMapname = <G> ( d: CompDataD<G> ) => d.name
+export const dbMapname = <G> ( d: AllDataDD<G> ) => d.name
 export const dbMapMakerProcname = <G> ( d: CompDataD<G> ) => `make${d.name}`
 export const allMapsName = <B, G> ( p: PageD<B, G> ) => `All${p.name}Maps`
 
