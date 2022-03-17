@@ -1,5 +1,8 @@
 import { NameAnd, RestAction } from "@focuson/utils";
 import { AllDataDD, CompDataD, isDataDd, isPrimDd, isRepeatingDd, OneDataDD } from "./dataD";
+import { SqlGetDetails, SqlResolverD } from "../example/jointAccount/jointAccount.restD";
+import { RestD } from "./restD";
+import { rest } from "@focuson/rest";
 
 export interface ResolverTree {
   main: ResolverD;
@@ -8,7 +11,6 @@ export interface ResolverTree {
 }
 
 export type ResolverD = SqlResolverD | 'not defined yet'
-export type ResolverOrDb = ResolverD | DbValues
 
 export interface TableAndField {
   table: DBTable;
@@ -43,14 +45,6 @@ export interface DBTable {
   audit: AuditDetails
 }
 
-export interface SqlResolverD {
-  /** he key is the alias and the value is the table name
-   * The tablename needs to match names in the DataD. The same table can be in multiple times*/
-  tables: NameAnd<String>
-  /* The hand coded where clause. It's unclear what we do about paging and stuff */
-  where: string;
-}
-
 /** This is 'are you a resolver or a data. As we add more types than sql resolver, we'll need this */
 export const isResolver = isSqlResolverD
 
@@ -59,16 +53,31 @@ export function isSqlResolverD ( r: ResolverD ): r is SqlResolverD {
   return r.sql !== undefined
 }
 
+export interface FoundParentChildLink<G> {
+  parent: CompDataD<G>;
+  /** If missing the parent will be a repeating block */
+  oneDataD?: OneDataDD<G>;
+  child: CompDataD<G>;
+}
 
-export function findParentChildCompDataLinks<G> ( d: CompDataD<G> ): [ CompDataD<G>, CompDataD<G> ][] {
-  function makeLinksForChild ( d: CompDataD<G> ): [ CompDataD<G>, CompDataD<G> ][] {
-    if ( isRepeatingDd ( d ) ) return makeParentChildrenStopping ( d, d.dataDD )
-    if ( isDataDd ( d ) ) return Object.entries ( d.structure ).flatMap ( ( [ name, data ] ) => makeParentChildrenStopping ( d, data.dataDD ) )
+export function findParentChildCompDataLinks<G> ( d: CompDataD<G> ): FoundParentChildLink<G>[] {
+  function makeLinksForChild ( d: CompDataD<G> ): FoundParentChildLink<G>[] {
+    // console.log('makeLinksForChild', d.name)
+    if ( isRepeatingDd ( d ) ) return makeLinksForParentChild ( d, undefined, d.dataDD )
+    if ( isDataDd ( d ) ) return Object.entries ( d.structure ).flatMap ( ( [ name, data ] ) => makeLinksForParentChild ( d, data, data.dataDD ) )
     throw Error ( `Cannot process dataD ${d}` )
   }
-  function makeParentChildrenStopping ( parent: CompDataD<G>, child: AllDataDD<G> ): [ CompDataD<G>, CompDataD<G> ][] {
+  function makeLinksForParentChild ( parent: CompDataD<G>, oneDataD: OneDataDD<G> | undefined, child: AllDataDD<G> ): FoundParentChildLink<G>[] {
+    // console.log('makeLinksForParentChild', parent.name, child.name)
     if ( isPrimDd ( child ) ) return []
-    return [ [ parent, child ], ...makeLinksForChild ( d ) ]
+    return [ { parent, oneDataD, child }, ...makeLinksForChild ( child ) ]
   }
   return makeLinksForChild ( d )
+}
+
+export function findAliasMap<G>(s: SqlGetDetails, main: CompDataD<G>){
+  const result = new Map()
+  result.set('main', main.)
+  s.sql.forEach(({data, aliases})=>)
+
 }
