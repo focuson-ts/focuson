@@ -1,7 +1,7 @@
 import { GetNameFn, identityOptics, Lens, Lenses, Optional, Transform } from "@focuson/lens";
 import { LensState } from "@focuson/state";
-import { HasMultiPageDetails } from "./pageConfig";
-import { safeArray } from "@focuson/utils";
+import { HasMultiPageDetails, isMainPageDetails } from "./pageConfig";
+import { NameAnd, safeArray } from "@focuson/utils";
 import { RestCommand } from "@focuson/rest";
 import { PageDetailsForCombine } from "./selectedPage";
 
@@ -120,4 +120,35 @@ export function refFromFirstPage<S> ( l: Optional<S, PageSelection[]> ): GetName
     }
   })
 
+}
+
+export function lookUpFromPathFor<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ) {
+  return ( name: string ) => refFromFirstPage ( state.context.pageSelectionL ) ( name ).getOption ( state.main );
+}
+
+
+function firstPagePath<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): Optional<S, any> | undefined {
+  let pageSelection = mainPage ( state );
+  if ( pageSelection === undefined ) return undefined
+  const { pageName, focusOn } = pageSelection
+  if ( focusOn !== undefined ) throw Error ( 'Main page should only have a lens not a focusOn' )
+  const page = state.context.pages[ pageName ]
+  if ( page === undefined ) throw Error ( `Main Page is ${pageName} and it cannot be found.\nLegal values are ${Object.keys ( state.context.pages )}` )
+  if ( !isMainPageDetails ( page ) ) throw Error ( `Main page ${pageName} has details which aren't a main page${JSON.stringify ( page )}` )
+  return page.lens
+}
+export function newStateFromPath<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): ( path: string ) => LensState<S, any, Context> {
+  return ( path ) => state.copyWithLens ( fromPathGivenState ( state ) ( path ) )
+}
+export function fromPathGivenState<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): ( path: string, description?: string ) => Optional<S, any> {
+  const lookup = lookUpFromPathFor ( state )
+  let firstPage = firstPagePath ( state );
+  let firstPageLink = firstPage !== undefined ? { '~/': firstPage } : {}
+  const prefixToLens: NameAnd<Optional<S, any>> = {
+    ...firstPageLink,
+    '': state.optional,
+    '/': Lenses.identity (),
+
+  }
+  return Lenses.fromPathStringFor<S, any> ( prefixToLens )
 }
