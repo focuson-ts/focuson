@@ -237,8 +237,20 @@ export function findFieldsFor ( { fields, aliasMap, wheres }: SqlData ) {
     throw Error ( `Error findFields for\n${simplifyAliasAndWhere ( { aliases: aliasMap, where: wheres } )}` )
   }
 }
+export function findTableAlias ( { aliasMap }: SqlData ) {
+  let result = Object.entries ( aliasMap ).map ( ( [ n, t ] ) => `${t.table.name} ${n}` ).join ( "," );
+  return result
+}
 export function makeSqlFor ( sqlData: SqlData ) {
-  return `select ${findFieldsFor ( sqlData )}`
+  let rawWhere = `where ${sqlData.wheres.ids.join ( " and " )}`;
+  return [ `select ${findFieldsFor ( sqlData )}`,
+    `from ${findTableAlias ( sqlData )}`,
+    rawWhere.replace ( /(\[(.*)])/g, f => {
+      const name = f.slice ( 1, -1 )
+      const found = Object.entries ( sqlData.aliasMap ).find ( ( [ n, t ] ) => t.name === name )
+      if ( !found ) throw Error ( `Cannot replace ${f} in ${rawWhere}. Name not known` )
+      return found[ 0 ];
+    } ) ]
 }
 
 export function simplifyAliasMap ( a: NameAnd<DBTableAndMaybeName> ) {

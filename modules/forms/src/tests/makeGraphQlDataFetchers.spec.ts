@@ -1,4 +1,4 @@
-import { DBTableAndMaybeName, DBTableAndName, findAliasMapFor, findFieldsFor, findFieldsNeededFor, findParentChildAndAliases, findParentChildCompDataLinks, findRoots, findTableNameOrAliasInAliasMap, findWheresFor, isDbTableAndName, makeSqlDataFor, makeSqlFor, simplifyAliasAndWhere, simplifyAliasMap } from "../common/resolverD";
+import { DBTableAndMaybeName, DBTableAndName, findAliasMapFor, findFieldsFor, findFieldsNeededFor, findParentChildAndAliases, findParentChildCompDataLinks, findRoots, findTableAlias, findTableNameOrAliasInAliasMap, findWheresFor, isDbTableAndName, makeSqlDataFor, makeSqlFor, simplifyAliasAndWhere, simplifyAliasMap } from "../common/resolverD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { AliasAndWhere, fieldsInWhere, jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
 import { NameAnd, sortedEntries } from "@focuson/utils";
@@ -44,7 +44,7 @@ describe ( "findParentChildLinks", () => {
       "JointAccount joint JointAccountCustomer JointAccountCustomer {'account':'ACC_TBL','joint':'cust.'CUST_TBL','jointName':'NAME_TBL'} Wheres: {'ids':['account.id=<query.accountId>','account.joint=joint.id','jointName.id = account.joint'],'other':[]}",
       "JointAccountCustomer addresses JointAccountAddresses JointAccountAddresses {'account':'ACC_TBL','address':'ADD_TBL','joint':'cust.'CUST_TBL','jointName':'NAME_TBL'} Wheres: {'ids':['account.id=<query.accountId>','account.joint=joint.id','jointName.id = account.joint','address.id=[cust].id'],'other':[]}",
       "JointAccountAddresses undefined undefined JointAccountAddress {'account':'ACC_TBL','address':'ADD_TBL','joint':'cust.'CUST_TBL','jointName':'NAME_TBL'} Wheres: {'ids':['account.id=<query.accountId>','account.joint=joint.id','jointName.id = account.joint','address.id=[cust].id'],'other':[]}"
-    ])
+    ] )
 
   } )
 
@@ -55,7 +55,7 @@ describe ( "findParentChildLinks", () => {
       " JointAccount {'account':'ACC_TBL'} Wheres: {'ids':['account.id=<query.accountId>']}",
       " JointAccountAddresses {'account':'ACC_TBL','address':'ADD_TBL','main':'cust.'CUST_TBL','mainName':'NAME_TBL'} Wheres: {'ids':['account.id=<query.accountId>','account.main=main.id','mainName.id = account.main','address.id=[cust].id'],'other':[]}",
       " JointAccountAddresses {'account':'ACC_TBL','address':'ADD_TBL','joint':'cust.'CUST_TBL','jointName':'NAME_TBL'} Wheres: {'ids':['account.id=<query.accountId>','account.joint=joint.id','jointName.id = account.joint','address.id=[cust].id'],'other':[]}"
-    ])
+    ] )
   } )
   it ( "should find the alias maps - start at main  stop at repeats, include primitives", () => {
     expect ( findParentChildAndAliases ( { stopAtRepeat: true, includePrimitives: true }, JointAccountDd, sqlG ).map ( ( { parent, nameAndOneDataDD, child, aliasAndWhere } ) =>
@@ -89,7 +89,7 @@ describe ( "findParentChildLinks", () => {
         "JointAccountAddress line1 OneLineString OneLineString {'account':'ACC_TBL','address':'ADD_TBL','joint':'cust.'CUST_TBL','jointName':'NAME_TBL'} Wheres: {'ids':['account.id=<query.accountId>']}",
         "JointAccountAddress line2 OneLineString OneLineString {'account':'ACC_TBL','address':'ADD_TBL','joint':'cust.'CUST_TBL','jointName':'NAME_TBL'} Wheres: {'ids':['account.id=<query.accountId>']}"
       ]
-    ])
+    ] )
   } )
 } )
 
@@ -191,13 +191,34 @@ describe ( "findFieldsFor", () => {
     ] )
   } )
 } )
+describe ( "findTableAliasFor", () => {
+  it ( "should prepare the table/alias for sql", () => {
+    expect ( findRoots ( JointAccountDd, sqlG ).map ( root => makeSqlDataFor ( root, sqlG ) ).map ( findTableAlias ) ).toEqual ( [
+      "ACC_TBL account,CUST_TBL main,NAME_TBL mainName,CUST_TBL joint,NAME_TBL jointName",
+      "ACC_TBL account,CUST_TBL main,NAME_TBL mainName,ADD_TBL address",
+      "ACC_TBL account,CUST_TBL joint,NAME_TBL jointName,ADD_TBL address"
+    ] )
+  } )
+} )
 describe ( "makeSql", () => {
   it ( "should generate actual sql", () => {
     expect ( findRoots ( JointAccountDd, sqlG ).map ( root => makeSqlDataFor ( root, sqlG ) ).map ( makeSqlFor ) ).toEqual ( [
-      "select account.blnc,mainName.zzname,account.id,account.main,main.id,mainName.id,account.joint,joint.id,jointName.id",
-      "select address.zzline1,address.zzline2,account.id,account.main,main.id,mainName.id,address.id",
-      "select address.zzline1,address.zzline2,account.id,account.joint,joint.id,jointName.id,address.id"
-    ] )
+      [
+        "select account.blnc,mainName.zzname,account.id,account.main,main.id,mainName.id,account.joint,joint.id,jointName.id",
+        "from ACC_TBL account,CUST_TBL main,NAME_TBL mainName,CUST_TBL joint,NAME_TBL jointName",
+        "where account.id=<query.accountId> and account.main=main.id and mainName.id = account.main and account.joint=joint.id and jointName.id = account.joint"
+      ],
+      [
+        "select address.zzline1,address.zzline2,account.id,account.main,main.id,mainName.id,address.id",
+        "from ACC_TBL account,CUST_TBL main,NAME_TBL mainName,ADD_TBL address",
+        "where account.id=<query.accountId> and account.main=main.id and mainName.id = account.main and address.id=main.id"
+      ],
+      [
+        "select address.zzline1,address.zzline2,account.id,account.joint,joint.id,jointName.id,address.id",
+        "from ACC_TBL account,CUST_TBL joint,NAME_TBL jointName,ADD_TBL address",
+        "where account.id=<query.accountId> and account.joint=joint.id and jointName.id = account.joint and address.id=joint.id"
+      ]
+    ])
   } )
 } )
 
