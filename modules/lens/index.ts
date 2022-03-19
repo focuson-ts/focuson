@@ -229,7 +229,16 @@ export class Lens<Main, Child> extends Optional<Main, Child> implements Getter<M
     return "Lens(" + this.description + ")"
   }
 }
-
+export function tokenisePath ( p: string ): string[] {
+  if ( p === '' ) return [ '' ]
+  const matchPrefix = /[^0-9a-zA-Z$]*/g.exec ( p )
+  const prefix = matchPrefix ? matchPrefix[ 0 ] : ''
+  const rest = p.slice ( prefix.length )
+  const hidingSpecialCharsInSquarebrackets = rest.replace ( /(\[[^[]*])/g, f => f.replace ( /~/g, '@' ).replace ( /\//g, '#' ) )
+  const realString = hidingSpecialCharsInSquarebrackets.replace ( /\[/g, '/[' ).replace ( /{/g, '/{' )
+  let split = realString.split ( "/" ).map ( p => p.replace ( /@/g, '~' ).replace ( /#/g, '/' ) ).filter ( p => p.length > 0 );
+  return [ prefix, ...split ]
+}
 
 /** A factory class that allows us to create new Lens. Every method on it is static, so you would never create one of these
  *
@@ -247,6 +256,13 @@ export class Lenses {
     let initialValue: any = Lenses.identity<any> ( description ? description : '' );
     return path.reduce ( ( acc, p ) => acc.focusQuery ( p ), initialValue )
   }
+
+  static fromPathStringFor<S, To> ( prefixToLens: NameAnd<Optional<S, any>> ): ( path: string, description?: string ) => Optional<S, any> {
+    const f = fromPathWith<S, To> ( prefixToLens )
+    return ( path: string, description?: string ) => f ( tokenisePath ( path ), description ? description : `[${path}]` )
+
+  }
+
   static fromPathWith = <From, To> ( ref: ( name: string ) => any ) => ( path: string[], description?: string ): Optional<From, To> => {
     let initialValue: any = Lenses.identity<any> ( description ? description : '' );
     return path.reduce ( ( acc, p ) => {
@@ -320,6 +336,20 @@ export class Lenses {
         return result
       }, `[${n}]` )
   }
+  static chainNthFromOptionalFn<From, To, NewTo> ( lens: Optional<From, To>, newToFnL: ( f: From ) => Optional<To, NewTo>, newFragDescription: string ): Optional<From, NewTo> {
+    const getter = ( f: From ): NewTo => {
+      const l = newToFnL ( f )
+      const to = lens.getOption ( f )
+      return to && l.getOption ( to )
+    }
+    const setter = ( f: From, newTo: NewTo ): From => {
+      const l = newToFnL ( f )
+      const to = lens.getOption ( f )
+      const toPrime = to && l.set ( to, newTo )
+      return toPrime && lens.set ( f, toPrime )
+    }
+    return new Optional<From, NewTo> ( getter, setter, lens.description + ".chainNthFrom(" + newFragDescription + ')' )
+  }
 
   static chainNthRef<From, T> ( lens: Optional<From, T[]>, lookup: ( name: string ) => any, name: string, description?: string ): Optional<From, T> {
     if ( !lookup ) throw new Error ( 'lookup must not be undefined' )
@@ -351,6 +381,25 @@ export class Lenses {
       'removeUndefined'
     )
   }
+}
+
+export const fromPathWith = <From, To> ( prefixToLens: NameAnd<Optional<From, any>> ) => ( path: string[], description?: string ): Optional<From, To> => {
+  if ( path.length === 0 ) throw Error ( 'Cannot have an empty path for fromPathWith' )
+  const initialValue = prefixToLens[ path[ 0 ] ]
+  if ( initialValue === undefined ) throw Error ( `Path has prefix '${path[ 0 ]}'. Full path is ${JSON.stringify ( path )}. Legal values are ${JSON.stringify ( Object.keys ( prefixToLens ) )}` )
+  return path.slice ( 1 ).reduce ( ( acc, p ) => {
+    const matchNum = /^\[([0-9]+)]$/g.exec ( p )
+    if ( matchNum ) return acc.chain ( Lenses.nth ( Number.parseInt ( matchNum[ 1 ] ) ) )
+    const matchRef = /^\[([a-zA-Z0-9/~$]+)]$/g.exec ( p )
+    if ( matchRef ) {
+      const match = matchRef[ 1 ]
+      if ( match === '$last' ) return acc.chain ( Lenses.last () );
+      if ( match === '$append' ) return acc.chain ( Lenses.append () );
+      let l = Lenses.fromPathStringFor ( prefixToLens ) ( matchRef[ 1 ] );
+      return Lenses.chainNthFromOptionalFn ( acc, s => Lenses.nth ( l.getOption ( s ) ), `[${matchRef[ 1 ]}]` )
+    }
+    return acc.focusQuery ( p );
+  }, initialValue )
 }
 
 
