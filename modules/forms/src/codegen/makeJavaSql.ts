@@ -6,14 +6,6 @@ import { Lenses } from "@focuson/lens";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { addStringToEndOfAllButLast, indentList } from "./codegen";
 
-
-// export interface ResolverTree {
-//   main: ResolverD;
-//   dataD: CompDataD<any>;
-//   children: ResolverTree[]
-// }
-
-
 export interface TableAndField {
   table: DBTable;
   field: string;
@@ -30,7 +22,7 @@ export function tableAndFieldFrom<G> ( parent: DataD<G>, db: DbValues ): TableAn
 }
 
 export function mergeWhere ( acc: Where, w: Where ) {return ({ ids: [ ...acc.ids, ...w.ids ], other: [ ...safeArray ( acc.other ), ...safeArray ( w.other ) ] })}
-export function fieldsInWhere ( w: Where ): [ string, string ] [] {
+export function fieldsInWhere ( aliasMap: NameAnd<DBTableAndName>, w: Where ): TableAndFieldAndAliasData<any> [] {
   return w.ids.flatMap ( idEquals => {
     let result = idEquals.split ( '=' );
     if ( result.length != 2 ) throw Error ( `Erroneous id ${idEquals} has parts separated by equals of  ${result.length}, which should just be 2` )
@@ -38,13 +30,37 @@ export function fieldsInWhere ( w: Where ): [ string, string ] [] {
   } ).filter ( ( [ id, r ] ) => !r.match ( /^<[^>]*>$/g ) )
     .map ( ( [ idEquals, x ] ) => {
       let result = x.trim ();
-      let match = result.match ( /^[A-Za-z0-9.[\]]*$/ )
-      if ( !match ) throw Error ( `Erroneous id ${idEquals} has non alphabetic characters in it (${x})` )
       return [ idEquals, result ];
-    } ).map ( ( [ idEquals, x ] ) => {
+    } ).flatMap ( ( [ idEquals, x ] ) => {
       const parts = x.split ( "." )
       if ( parts.length != 2 ) throw Error ( `Erroneous id [${idEquals}] part [${x}] is not in form a.b` )
-      return [ parts[ 0 ], parts[ 1 ] ]
+      const [ alias, fieldName ] = parts
+      let dbTableAndName = aliasMap[ alias ];
+      const makeTableAndField = ( db: DBTableAndName ) => ({ table: db.table, fieldData: { fieldName, reactType: 'number', rsGetter: 'getInt' } });
+      if ( dbTableAndName !== undefined ) {
+        let match = x.match ( /^[A-Za-z0-9.[\]]*$/ )
+        if ( !match ) throw Error ( `Erroneous id ${idEquals} has non alphabetic characters in it (${x})` )
+        return { ...makeTableAndField ( dbTableAndName ), alias };
+      }
+      const bracketMatch = alias.match ( /^\[(.*)]/ )
+      if ( bracketMatch ) {
+        const tableName = bracketMatch[ 1 ]
+        const found = Object.entries ( aliasMap )
+          .filter ( ( [ name, db ] ) =>
+            db.name === tableName )
+          .map ( t => t[ 1 ] )
+        if ( found.length > 0 )
+          {
+            let map = found.map ( makeTableAndField );
+            let result = map.flatMap ( t =>
+              addAlias ( aliasMap, t,tableName ) );
+            return result
+          }
+        return []
+        throw Error ( `Alias name is ${alias} which is really a table name. Not found. LegalNames are ${Object.values ( aliasMap ).map ( t => t.name )} \n ${JSON.stringify ( aliasMap )}` )
+      }
+      return []
+      throw Error ( `Alias name ${alias} in where ${JSON.stringify ( w )} cannot be identified. Legal values are ${Object.entries ( aliasMap )}` )
     } )
 }
 
@@ -232,20 +248,33 @@ export const findAliasAndTableNameOrAliasInAliasMap = ( aliasMap: NameAnd<DBTabl
     if ( errorIfNotFound ) throw Error ( `Don't now how to find the alias for the tablename ${table}\nLegal names are ${Object.keys ( aliasMap )}` )
     return []
   };
-export const findAliasDotFieldName = ( aliasMap: NameAnd<DBTableAndName> ) => ( tf: [ string, string ] ): string => {
-  const [ [ alias, t, name ] ] = findAliasAndTableNameOrAliasInAliasMap ( aliasMap, true ) ( tf )
-  return `${alias}.${name}`
-};
+// export const findAliasDotFieldName = ( aliasMap: NameAnd<DBTableAndName> ) => ( tf: TableAndFieldData<any> ): string => {
+//   const [ [ alias, t, name ] ] = findAliasAndTableNameOrAliasInAliasMap ( aliasMap, true ) ( tf )
+//   return `${alias}.${name}`
+// };
 
-export function findFieldsFor ( { fields, aliasMap, wheres }: SqlData ) {
+function addAlias ( aliasMap: NameAnd<DBTableAndName>, f: TableAndFieldData<any>, name: string ): TableAndFieldAndAliasData<any>[] {
+  return Object.entries ( aliasMap ).filter ( ( [ alias, t ] ) =>
+    t.name === name ).map ( tf => ({ ...f, alias: tf[ 0 ] }) );
+}
+export function findFieldsFor ( { fields, aliasMap, wheres }: SqlData ): TableAndFieldAndAliasData<any>[] {
   try {
-    const fromWhere: [ string, string ][] = fieldsInWhere ( wheres )
-    let fromFields: [ string, string ][] = fields.map ( tf => [ tf.table.name, tf.fieldData.fieldName ] );
-    return unique ( [ ...fromFields, ...fromWhere ].map ( findAliasDotFieldName ( aliasMap ) ), x => x ).join ( ',' )
+    const fromWhere: TableAndFieldAndAliasData<any>[] = fieldsInWhere ( aliasMap, wheres )
+    const fromFields: TableAndFieldAndAliasData<any>[] = fields.flatMap ( f => {
+      return addAlias ( aliasMap, f , f.fieldData.fieldName)
+    } )
+    return [ ...fromFields, ...fromWhere ]
   } catch ( e: any ) {
     console.error ( e )
     throw Error ( `Error findFields for\n${simplifyAliasAndWhere ( { aliases: aliasMap, where: wheres } )}` )
   }
+}
+export function findFieldsStringFor ( sqlData: SqlData ) {
+  return findFieldsFor ( sqlData ).map ( tf => `${tf.alias}.${tf.fieldData.fieldName}` )
+  // let simpleTableName = Object.entries ( sqlData.aliasMap ).flatMap ( ( [ alias, t ] ) =>
+  //   sqlData.fields.filter ( tf => tf.table.name === t.name ).map ( tf => `${alias}.${tf.fieldData.fieldName}` ) );
+  // return simpleTableName.join ( ',' )
+  // return unique ( findFieldsFor ( sqlData ).map ( findAliasDotFieldName ( sqlData.aliasMap ) ), x => x )
 }
 export function findTableAlias ( { aliasMap }: SqlData ) {
   let result = Object.entries ( aliasMap ).map ( ( [ n, t ] ) => `${t.table.name} ${n}` ).join ( "," );
@@ -253,7 +282,7 @@ export function findTableAlias ( { aliasMap }: SqlData ) {
 }
 export function makeGetSqlFor ( sqlData: SqlData ) {
   let rawWhere = `where ${sqlData.wheres.ids.join ( " and " )}`;
-  return [ `select ${findFieldsFor ( sqlData )}`,
+  return [ `select ${findFieldsStringFor ( sqlData )}`,
     `from ${findTableAlias ( sqlData )}`,
     rawWhere.replace ( /(\[(.*)])/g, f => {
       const name = f.slice ( 1, -1 )
@@ -265,7 +294,8 @@ export function makeGetSqlFor ( sqlData: SqlData ) {
 
 
 export function simplifyAliasMap ( a: NameAnd<DBTableAndMaybeName> ) {
-  return JSON.stringify ( Object.fromEntries ( sortedEntries ( a ).map ( ( [ name, t ] ) => [ name, isDbTableAndName ( t ) ? t.name + ".'" + t.table?.name : t?.name ] ) ) ).replace ( /"/g, "'" )
+  return JSON.stringify ( Object.fromEntries ( sortedEntries ( a ).map ( ( [ name, t ] ) =>
+    [ name, isDbTableAndName ( t ) ? t.name + ".'" + t.table?.name : t?.name ] ) ) ).replace ( /"/g, "'" )
 }
 
 export function simplifyAliasAndWhere ( aliasAndWhere: AliasAndWhere ) {
@@ -275,11 +305,16 @@ export function simplifyAliasAndWhere ( aliasAndWhere: AliasAndWhere ) {
 interface FieldData<G> {
   fieldName: string;
   rsGetter: string;
-  reactType: string
+  reactType: string;
 }
 interface TableAndFieldData<G> {
   table: DBTable;
   fieldData: FieldData<G>
+}
+interface TableAndFieldAndAliasData<G> extends TableAndFieldData<G> {
+  table: DBTable;
+  fieldData: FieldData<G>
+  alias: string;
 }
 interface TableAndFieldsData<G> {
   table: DBTable;
@@ -300,7 +335,10 @@ export function simplifyTableAndFieldsData<G> ( t: TableAndFieldsData<G> ) {
   return `${t.table.name} => ${t.fieldData.map ( fd => `${fd.fieldName}:${fd.reactType}` ).join ( ',' )}`
 }
 export function simplifyTableAndFieldDataArray<G> ( ts: TableAndFieldData<G>[] ) {
-  return ts.map ( t => `${t.table.name} =>${t.fieldData.fieldName}` )
+  return unique ( ts.map ( t => `${t.table.name} =>${t.fieldData.fieldName}` ), t => t )
+}
+export function simplifyTableAndFieldAndAliasDataArray<G> ( ts: TableAndFieldAndAliasData<G>[] ) {
+  return unique ( ts.map ( t => `${t.table.name} ${t.alias} =>${t.fieldData.fieldName}` ), t => t )
 }
 
 
@@ -323,19 +361,14 @@ function foldTableAndFieldData<G> ( tableAndFields: TableAndFieldData<G>[] ): Ta
   const tables = unique ( tableAndFields.map ( t => t.table ), t => t.name )
   return tables.map ( t => ({ table: t, fieldData: unique ( tableAndFields.filter ( tf => tf.table.name == t.name ).map ( tf => tf.fieldData ), fd => fd.fieldName ) }) )
 }
-export function findTableAndFieldsForSql<G> ( sqlG: SqlGetDetails ): TableAndFieldData<G>[] {
+export function findTableAndFieldsForSqlGetDetails<G> ( sqlG: SqlGetDetails ): TableAndFieldData<G>[] {
   function findTableAndFieldsIn ( { aliases, where }: AliasAndWhere ): TableAndFieldData<G>[] {
     const combinedWithRootAliasMap: NameAnd<DBTableAndMaybeName> = { ...sqlG.aliases, ...aliases }
-    const aliasMap: NameAnd<DBTableAndName> = Object.fromEntries ( Object.entries ( combinedWithRootAliasMap ).map ( ( [ n, m ] ) => [ n, isDbTableAndName ( m ) ? m : { table: m, name: m.name } ] ) )
-    const tableNameAndValue: [ string, string ][] = fieldsInWhere ( where )
-    return tableNameAndValue.flatMap ( ( [ t, f ] ) => {
-      let aliasTableAndFieldName = findAliasAndTableNameOrAliasInAliasMap ( aliasMap, false ) ( [ t, f ] );
-      if ( aliasTableAndFieldName.length === 0 ) return []
-      let [ [ alias, table, fieldName ] ] = aliasTableAndFieldName;
-      const fieldData: FieldData<G> = { fieldName, rsGetter: 'getInteger', reactType: 'number' }
-      let result: TableAndFieldData<G> = { table, fieldData };
-      return [ result ]
-    } )
+    const aliasMap: NameAnd<DBTableAndName> = Object.fromEntries ( Object.entries ( combinedWithRootAliasMap )
+      .map ( ( [ n, m ] ) => [ n, isDbTableAndName ( m ) ? m : { table: m, name: m.name } ] ) )
+    const result: TableAndFieldData<any>[] = fieldsInWhere ( aliasMap, where )
+    return result
+
   }
   const fromSqlGRoot: TableAndFieldData<G>[] = findTableAndFieldsIn ( sqlG )
   const fromSql = sqlG.sql.flatMap ( findTableAndFieldsIn )
@@ -344,7 +377,7 @@ export function findTableAndFieldsForSql<G> ( sqlG: SqlGetDetails ): TableAndFie
 }
 
 export function findTableAndFields<G> ( dataD: DataD<G>, sqlG: SqlGetDetails ) {
-  return foldTableAndFieldData ( [ ...findTableAndFieldsForSql ( sqlG ), ...findTableAndFieldsIn ( dataD ) ] )
+  return foldTableAndFieldData ( [ ...findTableAndFieldsForSqlGetDetails ( sqlG ), ...findTableAndFieldsIn ( dataD ) ] )
 }
 
 export function makeCreateTableSql<G> ( dataD: CompDataD<G>, sqlG: SqlGetDetails ): string[] {

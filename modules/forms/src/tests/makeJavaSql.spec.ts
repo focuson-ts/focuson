@@ -3,7 +3,9 @@ import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
 import { NameAnd } from "@focuson/utils";
 import { accountT, customerT } from "../example/database/tableNames";
-import { fieldsInWhere, findAliasDotFieldName, findAliasMapFor, findFieldsFor, findFieldsNeededFor, findParentChildAndAliases, findParentChildCompDataLinks, findRoots, findTableAlias, findTableAndFields, findTableAndFieldsForSql, findTableAndFieldsIn, findWheresFor, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, simplifyAliasAndWhere, simplifyAliasMap, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, walkRoots } from "../codegen/makeJavaSql";
+import { fieldsInWhere, findAliasMapFor, findFieldsFor, findFieldsNeededFor, findParentChildAndAliases, findParentChildCompDataLinks, findRoots, findTableAlias, findTableAndFields, findTableAndFieldsForSqlGetDetails, findTableAndFieldsIn, findWheresFor, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, simplifyAliasAndWhere, simplifyAliasMap, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, SqlRoot, walkRoots } from "../codegen/makeJavaSql";
+import { JointAccountPageD } from "../example/jointAccount/jointAccount.pageD";
+import { unique } from "../common/restD";
 
 // @ts-ignore
 const sqlG = jointAccountRestD.resolver.get;
@@ -154,52 +156,92 @@ describe ( "makeSqlDataFor", () => {
   } )
 } )
 describe ( "fieldsInWhere", () => {
+  let roots = findRoots ( JointAccountDd, sqlG );
+  const sqlDataRoot = makeSqlDataFor ( roots, sqlG )
+  const allRoots: SqlRoot[] = [ roots, ...roots.children ]
+  const allData = allRoots.map ( r => makeSqlDataFor ( r, sqlG ) )
+  it ( "should have a set up alias map - just checking test setup", () => {
+    expect ( allData.map ( r => simplifyAliasMap ( r.aliasMap ) ) ).toEqual ( [
+      "{'account':'ACC_TBL.'ACC_TBL','joint':'cust.'CUST_TBL','jointName':'NAME_TBL.'NAME_TBL','main':'cust.'CUST_TBL','mainName':'NAME_TBL.'NAME_TBL'}",
+      "{'account':'ACC_TBL.'ACC_TBL','address':'ADD_TBL.'ADD_TBL','main':'cust.'CUST_TBL','mainName':'NAME_TBL.'NAME_TBL'}",
+      "{'account':'ACC_TBL.'ACC_TBL','address':'ADD_TBL.'ADD_TBL','joint':'cust.'CUST_TBL','jointName':'NAME_TBL.'NAME_TBL'}"
+    ] )
+  } )
   it ( 'should return the two sides of the equal from the ids', () => {
-    expect ( fieldsInWhere ( { ids: [ 'a.one=b.two ', 'a.x= b.y ' ], other: [ 'ssdgjkflkgj&()^*76' ] } ) ).toEqual ( [
-      [ "a", "one" ],
-      [ "b", "two" ],
-      [ "a", "x" ],
-      [ "b", "y" ]
+    expect ( allData.map ( d => simplifyTableAndFieldAndAliasDataArray ( fieldsInWhere ( d.aliasMap,
+      { ids: [ 'account.one = mainName.two ', 'jointName.x= main.y ' ], other: [ 'ssdgjkflkgj&()^*76' ] } ) ) ) ).toEqual ( [
+      [ "ACC_TBL account =>one", "NAME_TBL mainName =>two", "NAME_TBL jointName =>x", "CUST_TBL main =>y" ],
+      [ "ACC_TBL account =>one", "NAME_TBL mainName =>two", "CUST_TBL main =>y" ],
+      [ "ACC_TBL account =>one", "NAME_TBL jointName =>x" ]
+    ] )
+  } )
+  it ( 'should allow data in the form of [cust].. which is a table name not an alias', () => {
+    expect ( allData.map ( d => simplifyTableAndFieldAndAliasDataArray ( fieldsInWhere ( d.aliasMap,
+      { ids: [ '[cust].one = [ACC_TBL].two ' ] } ) ) ) ).toEqual ( [
+      [ "CUST_TBL main =>one", "CUST_TBL joint =>one", "ACC_TBL account =>two" ],
+      [ "CUST_TBL main =>one", "ACC_TBL account =>two" ],
+      [ "CUST_TBL joint =>one", "ACC_TBL account =>two" ]
     ] )
   } )
   it ( 'should ignores <> in ids', () => {
-    expect ( fieldsInWhere ( { ids: [ 'a.one=b.two', 'a.x=<accountId>' ], other: [ 'ssdgjkflkgj&()^*76' ] } ) ).toEqual ( [
-      [ "a", "one" ],
-      [ "b", "two" ],
-      [ "a", "x" ]
+    expect ( allData.map ( d => simplifyTableAndFieldAndAliasDataArray ( fieldsInWhere ( d.aliasMap,
+      { ids: [ 'account.one=jointName.two', 'mainName.x=<accountId>' ], other: [ 'ssdgjkflkgj&()^*76' ] } ) ) ) ).toEqual ( [
+      [ "ACC_TBL account =>one", "NAME_TBL jointName =>two", "NAME_TBL mainName =>x" ],
+      [ "ACC_TBL account =>one", "NAME_TBL mainName =>x" ],
+      [ "ACC_TBL account =>one", "NAME_TBL jointName =>two" ]
     ] )
   } )
-  it ( 'should throw an error if the ids are malformed', () => {
-    expect ( () => fieldsInWhere ( { ids: [ 'one two', 'a.x=<accountId>' ] } ) ).toThrow ( 'Erroneous id one two has parts separated by equals of  1, which should just be 2' )
-    expect ( () => fieldsInWhere ( { ids: [ 'one = two = three', 'a.x=<accountId>' ] } ) ).toThrow ( 'Erroneous id one = two = three has parts separated by equals of  3, which should just be 2' )
-    expect ( () => fieldsInWhere ( { ids: [ 'on*()e = two = thre&*e', 'a.x=<accountId>' ] } ) ).toThrow ( 'Erroneous id on*()e = two = thre&*e has parts separated by equals of  3, which should just be 2' )
+  it ( 'should throw an error if the ids have aliases that are not in the map', () => {
+    expect ( () => fieldsInWhere ( sqlDataRoot.aliasMap, { ids: [ 'one two', 'a.x=<accountId>' ] } ) ).toThrow ( 'Erroneous id one two has parts separated by equals of  1, which should just be 2' )
+    expect ( () => fieldsInWhere ( sqlDataRoot.aliasMap, { ids: [ 'one = two = three', 'a.x=<accountId>' ] } ) ).toThrow ( 'Erroneous id one = two = three has parts separated by equals of  3, which should just be 2' )
+    expect ( () => fieldsInWhere ( sqlDataRoot.aliasMap, { ids: [ 'on*()e = two = thre&*e', 'a.x=<accountId>' ] } ) ).toThrow ( 'Erroneous id on*()e = two = thre&*e has parts separated by equals of  3, which should just be 2' )
   } )
 
 } )
-describe ( "findTableNameOrAliasInAliasMap", () => {
-  const aliasMap: NameAnd<DBTableAndName> = {
-    aliasForAccount: { table: accountT, name: 'someName' },
-    main: { table: customerT, name: 'cust' },
-
-  }
-  it ( "should replace tablenames/field with alias.field when there is a table", () => {
-    expect ( findAliasDotFieldName ( aliasMap ) ( [ accountT.name, 'someField' ] ) ).toEqual ( 'aliasForAccount.someField' )
-  } )
-  it ( "should replace leave the alias alone if the alias exists", () => {
-    expect ( findAliasDotFieldName ( aliasMap ) ( [ 'aliasForAccount', 'someField' ] ) )
-      .toEqual ( 'aliasForAccount.someField' )
-  } )
-  it ( "should replace [alias] with the correct alias: based on the table name", () => {
-    expect ( findAliasDotFieldName ( aliasMap ) ( [ '[cust]', 'someField' ] ) )
-      .toEqual ( 'main.someField' )
-  } )
-} )
+// describe ( "findTableNameOrAliasInAliasMap", () => {
+//   const aliasMap: NameAnd<DBTableAndName> = {
+//     aliasForAccount: { table: accountT, name: 'someName' },
+//     main: { table: customerT, name: 'cust' },
+//
+//   }
+//   it ( "should replace tablenames/field with alias.field when there is a table", () => {
+//     expect ( findAliasDotFieldName ( aliasMap ) ( [ accountT.name, 'someField' ] ) ).toEqual ( 'aliasForAccount.someField' )
+//   } )
+//   it ( "should replace leave the alias alone if the alias exists", () => {
+//     expect ( findAliasDotFieldName ( aliasMap ) ( [ 'aliasForAccount', 'someField' ] ) )
+//       .toEqual ( 'aliasForAccount.someField' )
+//   } )
+//   it ( "should replace [alias] with the correct alias: based on the table name", () => {
+//     expect ( findAliasDotFieldName ( aliasMap ) ( [ '[cust]', 'someField' ] ) )
+//       .toEqual ( 'main.someField' )
+//   } )
+// } )
 describe ( "findFieldsFor", () => {
   it ( "should prepare the fields for sql", () => {
-    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root => makeSqlDataFor ( root, sqlG ) ).map ( findFieldsFor ) ).toEqual ( [
-      "account.blnc,mainName.zzname,account.id,account.main,main.id,mainName.id,account.joint,joint.id,jointName.id",
-      "address.zzline1,address.zzline2,account.id,account.main,main.id,mainName.id,address.id",
-      "address.zzline1,address.zzline2,account.id,account.joint,joint.id,jointName.id,address.id"
+    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root => makeSqlDataFor ( root, sqlG ) ).map ( findFieldsFor ).map ( simplifyTableAndFieldAndAliasDataArray ) ).toEqual ( [
+      [
+        "ACC_TBL account =>id",
+        "ACC_TBL account =>main",
+        "CUST_TBL main =>id",
+        "NAME_TBL mainName =>id",
+        "ACC_TBL account =>joint",
+        "CUST_TBL joint =>id",
+        "NAME_TBL jointName =>id"
+      ],
+      [
+        "ACC_TBL account =>id",
+        "ACC_TBL account =>main",
+        "CUST_TBL main =>id",
+        "NAME_TBL mainName =>id",
+        "ADD_TBL address =>id"
+      ],
+      [
+        "ACC_TBL account =>id",
+        "ACC_TBL account =>joint",
+        "CUST_TBL joint =>id",
+        "NAME_TBL jointName =>id",
+        "ADD_TBL address =>id"
+      ]
     ] )
   } )
 } )
@@ -216,21 +258,21 @@ describe ( "makeGetSqlFor", () => {
   it ( "should generate actual sql", () => {
     expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root => makeSqlDataFor ( root, sqlG ) ).map ( makeGetSqlFor ) ).toEqual ( [
       [
-        "select account.blnc,mainName.zzname,account.id,account.main,main.id,mainName.id,account.joint,joint.id,jointName.id",
+        "select account.id,account.main,main.id,mainName.id,account.main,account.joint,joint.id,jointName.id,account.joint",
         "from ACC_TBL account,CUST_TBL main,NAME_TBL mainName,CUST_TBL joint,NAME_TBL jointName",
         "where account.id=<query.accountId> and account.main=main.id and mainName.id = account.main and account.joint=joint.id and jointName.id = account.joint"
       ],
       [
-        "select address.zzline1,address.zzline2,account.id,account.main,main.id,mainName.id,address.id",
+        "select account.id,account.main,main.id,mainName.id,account.main,address.id,main.id",
         "from ACC_TBL account,CUST_TBL main,NAME_TBL mainName,ADD_TBL address",
         "where account.id=<query.accountId> and account.main=main.id and mainName.id = account.main and address.id=main.id"
       ],
       [
-        "select address.zzline1,address.zzline2,account.id,account.joint,joint.id,jointName.id,address.id",
+        "select account.id,account.joint,joint.id,jointName.id,account.joint,address.id,joint.id",
         "from ACC_TBL account,CUST_TBL joint,NAME_TBL jointName,ADD_TBL address",
         "where account.id=<query.accountId> and account.joint=joint.id and jointName.id = account.joint and address.id=joint.id"
       ]
-    ] )
+    ])
   } )
 } )
 
@@ -241,20 +283,13 @@ describe ( "findTableAndFields", () => {
       "ACC_TBL =>blnc",
       "NAME_TBL =>zzname",
       "ADD_TBL =>zzline1",
-      "ADD_TBL =>zzline2",
-      "NAME_TBL =>zzname",
-      "ADD_TBL =>zzline1",
       "ADD_TBL =>zzline2"
     ] )
   } )
   it ( "findTableAndFieldsForSql(sqlG) should find all the table and field data that are used in the sqlG", () => {
-    expect ( simplifyTableAndFieldDataArray ( findTableAndFieldsForSql ( sqlG ) ) ).toEqual ( [
+    expect ( simplifyTableAndFieldDataArray ( findTableAndFieldsForSqlGetDetails ( sqlG ) ) ).toEqual ( [
       "ACC_TBL =>id",
       "ACC_TBL =>main",
-      "CUST_TBL =>id",
-      "NAME_TBL =>id",
-      "ACC_TBL =>main",
-      "ACC_TBL =>joint",
       "CUST_TBL =>id",
       "NAME_TBL =>id",
       "ACC_TBL =>joint",
