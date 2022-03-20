@@ -1,6 +1,6 @@
-import { AllDataDD, AllDataFlatMap, CompDataD, DataD, emptyDataFlatMap, flatMapDD, isDataDd, isPrimDd, isRepeatingDd, OneDataDD } from "../common/dataD";
+import { AllDataDD, AllDataFlatMap, CompDataD, DataD, emptyDataFlatMap, flatMapDD, isDataDd, isPrimDd, isRepeatingDd, OneDataDD, PrimitiveDD } from "../common/dataD";
 import { NameAnd, safeArray, sortedEntries } from "@focuson/utils";
-import { RestD, unique } from "../common/restD";
+import { unique } from "../common/restD";
 import { AliasAndWhere, DBTable, DBTableAndMaybeName, DBTableAndName, GetSqlFromDataDDetails, isDbTableAndName, SqlGetDetails, Where } from "../common/resolverD";
 import { Lenses } from "@focuson/lens";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
@@ -164,16 +164,18 @@ export function walkRoots<X> ( sqlRoot: SqlRoot, fn: ( sqlRoot: SqlRoot ) => X )
   return [ fn ( sqlRoot ), ...sqlRoot.children.flatMap ( child => walkRoots ( child, fn ) ) ]
 }
 
-function findTableAndField ( parent: CompDataD<any>, name: string, db: string | TableAndField | undefined ): TableAndField {
+function findTableAndField ( parent: CompDataD<any>, [ name, oneDataD ]: [ string, OneDataDD<any> ], prim: PrimitiveDD ): TableAndFieldData<any> {
+  let db = oneDataD.db;
   if ( !isDataDd ( parent ) ) throw new Error ( `Trying to findField in ${parent.name} which isn't a DataD. db is ${JSON.stringify ( db )}` )
-  if ( isTableAndField ( db ) ) return db
-  if ( parent.table ) return { table: parent.table, field: db ? db : name }
+  const raw = { reactType: prim.reactType, rsGetter: prim.rsGetter }
+  if ( isTableAndField ( db ) ) return { table: db.table, fieldData: { fieldName: db.field, ...raw } }
+  if ( parent.table ) return { table: parent.table, fieldData: { fieldName: db ? db : name, ...raw } }
   throw Error ( `In ${parent.name} ${name}. Have  db field ${db} but not table in parent` )
 }
 
-export function findFieldsNeededFor ( sqlRoot: SqlRoot ): TableAndField[] {
-  const folder: ParentChildFoldFn<TableAndField[]> = ( acc, parent, nameAndOneDataD, child ) =>
-    isPrimDd ( child ) ? [ ...acc, findTableAndField ( parent, nameAndOneDataD[ 0 ], nameAndOneDataD[ 1 ].db ) ] : acc
+export function findFieldsNeededFor ( sqlRoot: SqlRoot ): TableAndFieldData<any>[] {
+  const folder: ParentChildFoldFn<TableAndFieldData<any>[]> = ( acc, parent, nameAndOneDataD, child ) =>
+    isPrimDd ( child ) ? [ ...acc, findTableAndField ( parent, nameAndOneDataD, child ) ] : acc
   return walkParentChildCompDataLinks ( { stopAtRepeat: true, includePrimitives: true }, sqlRoot.data, folder, [] )
 }
 
@@ -201,7 +203,7 @@ export function findWheresFor ( sqlRoot: SqlRoot, sqlG: SqlGetDetails ): Where {
 
 export interface SqlData {
   /** Alias name, fieldname, as */
-  fields: TableAndField[];
+  fields: TableAndFieldData<any>[];
   aliasMap: NameAnd<DBTableAndName>;
   wheres: Where
 }
@@ -230,7 +232,7 @@ export const findAliasAndTableNameOrAliasInAliasMap = ( aliasMap: NameAnd<DBTabl
     if ( errorIfNotFound ) throw Error ( `Don't now how to find the alias for the tablename ${table}\nLegal names are ${Object.keys ( aliasMap )}` )
     return []
   };
-export const findTableNameOrAliasInAliasMapString = ( aliasMap: NameAnd<DBTableAndName> ) => ( tf: [ string, string ] ): string => {
+export const findAliasDotFieldName = ( aliasMap: NameAnd<DBTableAndName> ) => ( tf: [ string, string ] ): string => {
   const [ [ alias, t, name ] ] = findAliasAndTableNameOrAliasInAliasMap ( aliasMap, true ) ( tf )
   return `${alias}.${name}`
 };
@@ -238,8 +240,8 @@ export const findTableNameOrAliasInAliasMapString = ( aliasMap: NameAnd<DBTableA
 export function findFieldsFor ( { fields, aliasMap, wheres }: SqlData ) {
   try {
     const fromWhere: [ string, string ][] = fieldsInWhere ( wheres )
-    let fromFields: [ string, string ][] = fields.map ( tf => [ tf.table.name, tf.field ] );
-    return unique ( [ ...fromFields, ...fromWhere ].map ( findTableNameOrAliasInAliasMapString ( aliasMap ) ), x => x ).join ( ',' )
+    let fromFields: [ string, string ][] = fields.map ( tf => [ tf.table.name, tf.fieldData.fieldName ] );
+    return unique ( [ ...fromFields, ...fromWhere ].map ( findAliasDotFieldName ( aliasMap ) ), x => x ).join ( ',' )
   } catch ( e: any ) {
     console.error ( e )
     throw Error ( `Error findFields for\n${simplifyAliasAndWhere ( { aliases: aliasMap, where: wheres } )}` )
