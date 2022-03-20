@@ -1,0 +1,73 @@
+{
+  "consumer": {
+    "name": "ArrearsDetails"
+  },
+  "provider": {
+    "name": "ArrearsDetailsProvider"
+  },
+  "interactions": [
+    {
+      "description": "AccountOverview should have a get fetcher for ArrearsDetails",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/arrearsDetails",
+        "query": "accountId=accId&customerId=custId&startDate=2020-01-20"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "history": [
+            {
+              "collectionsDate": "2020-10-01",
+              "creditedDate": "2020-10-01",
+              "minPayment": 123,
+              "contractualAmount": 123,
+              "paymentType": "dd",
+              "paymentReceived": 123,
+              "shortfall": 123,
+              "arrearsTotal": 123,
+              "missedPayments": 123
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "AccountOverview should have a get rest for ArrearsDetails",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/arrearsDetails",
+        "query": "accountId=accId&customerId=custId&startDate=2020-01-20"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "history": [
+            {
+              "collectionsDate": "2020-10-01",
+              "creditedDate": "2020-10-01",
+              "minPayment": 123,
+              "contractualAmount": 123,
+              "paymentType": "dd",
+              "paymentReceived": 123,
+              "shortfall": 123,
+              "arrearsTotal": 123,
+              "missedPayments": 123
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

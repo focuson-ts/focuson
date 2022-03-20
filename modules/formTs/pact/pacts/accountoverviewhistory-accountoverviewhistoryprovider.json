@@ -1,0 +1,61 @@
+{
+  "consumer": {
+    "name": "AccountOverviewHistory"
+  },
+  "provider": {
+    "name": "AccountOverviewHistoryProvider"
+  },
+  "interactions": [
+    {
+      "description": "AccountOverview should have a get fetcher for AccountOverviewHistory",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/excessHistory",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "history": [
+            {
+              "start": "2020-10-01",
+              "end": "2020-10-01",
+              "consecutiveDays": 123
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "AccountOverview should have a get rest for AccountOverviewHistory",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/excessHistory",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "history": [
+            {
+              "start": "2020-10-01",
+              "end": "2020-10-01",
+              "consecutiveDays": 123
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}
