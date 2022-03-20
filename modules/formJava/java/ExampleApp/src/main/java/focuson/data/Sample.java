@@ -424,6 +424,54 @@ public class Sample{
          "  \"annualMultiple\": 123"+
          "}"
   );
+  public static Map sampleJointAccount0 =  parse.parseMap(
+         "{"+
+         "  \"balance\": 123,"+
+         "  \"main\": {"+
+         "    \"name\": \"Fred Bloggs\","+
+         "    \"addresses\": ["+
+         "      {"+
+         "        \"line1\": \"This is a one line string\","+
+         "        \"line2\": \"This is a one line string\""+
+         "      }"+
+         "    ]"+
+         "  },"+
+         "  \"joint\": {"+
+         "    \"name\": \"Fred Bloggs\","+
+         "    \"addresses\": ["+
+         "      {"+
+         "        \"line1\": \"This is a one line string\","+
+         "        \"line2\": \"This is a one line string\""+
+         "      }"+
+         "    ]"+
+         "  }"+
+         "}"
+  );
+  public static Map sampleJointAccountAddress0 =  parse.parseMap(
+         "{"+
+         "  \"line1\": \"This is a one line string\","+
+         "  \"line2\": \"This is a one line string\""+
+         "}"
+  );
+  public static List sampleJointAccountAddresses0 =  parse.parseList(
+         "["+
+         "  {"+
+         "    \"line1\": \"This is a one line string\","+
+         "    \"line2\": \"This is a one line string\""+
+         "  }"+
+         "]"
+  );
+  public static Map sampleJointAccountCustomer0 =  parse.parseMap(
+         "{"+
+         "  \"name\": \"Fred Bloggs\","+
+         "  \"addresses\": ["+
+         "    {"+
+         "      \"line1\": \"This is a one line string\","+
+         "      \"line2\": \"This is a one line string\""+
+         "    }"+
+         "  ]"+
+         "}"
+  );
   public static Map sampleListOccupations0 =  parse.parseMap(
          "{"+
          "  \"occupationsList\": ["+

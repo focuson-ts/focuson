@@ -3,7 +3,7 @@ import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
 import { NameAnd } from "@focuson/utils";
 import { accountT, customerT } from "../example/database/tableNames";
-import { fieldsInWhere, findAliasMapFor, findFieldsFor, findFieldsNeededFor, findParentChildAndAliases, findParentChildCompDataLinks, findRoots, findTableAlias, findTableNameOrAliasInAliasMap, findWheresFor, makeSqlDataFor, makeSqlFor, simplifyAliasAndWhere, simplifyAliasMap, walkRoots } from "../codegen/makeJavaSql";
+import { fieldsInWhere, findAliasMapFor, findFieldsFor, findFieldsNeededFor, findParentChildAndAliases, findParentChildCompDataLinks, findRoots, findTableAlias, findTableAndFields, findTableAndFieldsForSql, findTableAndFieldsIn, findTableNameOrAliasInAliasMapString, findWheresFor, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, simplifyAliasAndWhere, simplifyAliasMap, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, walkRoots } from "../codegen/makeJavaSql";
 
 // @ts-ignore
 const sqlG = jointAccountRestD.resolver.get;
@@ -174,14 +174,14 @@ describe ( "findTableNameOrAliasInAliasMap", () => {
 
   }
   it ( "should replace tablenames/field with alias.field when there is a table", () => {
-    expect ( findTableNameOrAliasInAliasMap ( aliasMap ) ( [ accountT.name, 'someField' ] ) ).toEqual ( 'aliasForAccount.someField' )
+    expect ( findTableNameOrAliasInAliasMapString ( aliasMap ) ( [ accountT.name, 'someField' ] ) ).toEqual ( 'aliasForAccount.someField' )
   } )
   it ( "should replace leave the alias alone if the alias exists", () => {
-    expect ( findTableNameOrAliasInAliasMap ( aliasMap ) ( [ 'aliasForAccount', 'someField' ] ) )
+    expect ( findTableNameOrAliasInAliasMapString ( aliasMap ) ( [ 'aliasForAccount', 'someField' ] ) )
       .toEqual ( 'aliasForAccount.someField' )
   } )
   it ( "should replace [alias] with the correct alias: based on the table name", () => {
-    expect ( findTableNameOrAliasInAliasMap ( aliasMap ) ( [ '[cust]', 'someField' ] ) )
+    expect ( findTableNameOrAliasInAliasMapString ( aliasMap ) ( [ '[cust]', 'someField' ] ) )
       .toEqual ( 'main.someField' )
   } )
 } )
@@ -203,9 +203,9 @@ describe ( "findTableAliasFor", () => {
     ] )
   } )
 } )
-describe ( "makeSql", () => {
+describe ( "makeGetSqlFor", () => {
   it ( "should generate actual sql", () => {
-    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root => makeSqlDataFor ( root, sqlG ) ).map ( makeSqlFor ) ).toEqual ( [
+    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root => makeSqlDataFor ( root, sqlG ) ).map ( makeGetSqlFor ) ).toEqual ( [
       [
         "select account.blnc,mainName.zzname,account.id,account.main,main.id,mainName.id,account.joint,joint.id,jointName.id",
         "from ACC_TBL account,CUST_TBL main,NAME_TBL mainName,CUST_TBL joint,NAME_TBL jointName",
@@ -221,6 +221,72 @@ describe ( "makeSql", () => {
         "from ACC_TBL account,CUST_TBL joint,NAME_TBL jointName,ADD_TBL address",
         "where account.id=<query.accountId> and account.joint=joint.id and jointName.id = account.joint and address.id=joint.id"
       ]
+    ] )
+  } )
+} )
+
+
+describe ( "findTableAndFields", () => {
+  it ( "findTableAndFieldsIn(CompDataD) should find all the table and field data that are used by the CompDataD", () => {
+    expect ( simplifyTableAndFieldDataArray ( findTableAndFieldsIn ( JointAccountDd ) ) ).toEqual ( [
+      "ACC_TBL =>blnc",
+      "NAME_TBL =>zzname",
+      "ADD_TBL =>zzline1",
+      "ADD_TBL =>zzline2",
+      "NAME_TBL =>zzname",
+      "ADD_TBL =>zzline1",
+      "ADD_TBL =>zzline2"
+    ] )
+  } )
+  it ( "findTableAndFieldsForSql(sqlG) should find all the table and field data that are used in the sqlG", () => {
+    expect ( simplifyTableAndFieldDataArray ( findTableAndFieldsForSql ( sqlG ) ) ).toEqual ( [
+      "ACC_TBL =>id",
+      "ACC_TBL =>main",
+      "CUST_TBL =>id",
+      "NAME_TBL =>id",
+      "ACC_TBL =>main",
+      "ACC_TBL =>joint",
+      "CUST_TBL =>id",
+      "NAME_TBL =>id",
+      "ACC_TBL =>joint",
+      "ADD_TBL =>id"
+    ] )
+  } )
+  it ( "findTableAndFields(dataD sqlG) should find all the table and field data that are used in the dataD and  sqlG", () => {
+    expect ( findTableAndFields ( JointAccountDd, sqlG ).map ( simplifyTableAndFieldsData ) ).toEqual ( [
+      "ACC_TBL => id:number,main:number,joint:number,blnc:number",
+      "CUST_TBL => id:number",
+      "NAME_TBL => id:number,zzname:string",
+      "ADD_TBL => id:number,zzline1:string,zzline2:string"
+    ] )
+  } )
+} )
+
+describe ( "makeCreate", () => {
+  it ( "should make 'create table' sql", () => {
+    expect ( makeCreateTableSql ( JointAccountDd, sqlG ) ).toEqual ( [
+      "create table ACC_TBL(",
+      "  id integer,",
+      "  main integer,",
+      "  joint integer,",
+      "  blnc integer",
+      ")",
+      "",
+      "create table CUST_TBL(",
+      "  id integer",
+      ")",
+      "",
+      "create table NAME_TBL(",
+      "  id integer,",
+      "  zzname varchar(256)",
+      ")",
+      "",
+      "create table ADD_TBL(",
+      "  id integer,",
+      "  zzline1 varchar(256),",
+      "  zzline2 varchar(256)",
+      ")",
+      ""
     ] )
   } )
 } )

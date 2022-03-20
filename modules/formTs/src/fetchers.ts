@@ -5,6 +5,7 @@ import { AccountOverviewHistoryFetcher } from './AccountOverview/AccountOverview
 import { AccountOverviewExcessInfoFetcher } from './AccountOverview/AccountOverview.fetchers';
 import { AccountOverviewFetcher } from './AccountOverview/AccountOverview.fetchers';
 import { AccountOverviewReasonFetcher } from './AccountOverview/AccountOverview.fetchers';
+import { JointAccountFetcher } from './JointAccount/JointAccount.fetchers';
 import { AdditionalInformationFetcher } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.fetchers';
 import { BusinessDetailsMainFetcher } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.fetchers';
 import { DropdownsFetcher } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.fetchers';
@@ -29,6 +30,7 @@ fetchers: [
     AccountOverviewExcessInfoFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
     AccountOverviewFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
     AccountOverviewReasonFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
+    JointAccountFetcher( identityL.focusQuery ( 'JointAccount' ), commonIds ),
     AdditionalInformationFetcher( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ),
     BusinessDetailsMainFetcher( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ),
     DropdownsFetcher( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ),

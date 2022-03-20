@@ -9,6 +9,7 @@ import { LensProps } from '@focuson/state';
 import { pages } from "./pages";
 import { MyCombined } from "./copied/MyCombined";
 import { HasAccountOverviewPageDomain } from './AccountOverview/AccountOverview.domains';
+import { HasJointAccountPageDomain } from './JointAccount/JointAccount.domains';
 import { HasOccupationAndIncomeSummaryPageDomain } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains';
 import { HasEAccountsSummaryPageDomain } from './EAccountsSummary/EAccountsSummary.domains';
 import { HasETransferPageDomain } from './ETransfer/ETransfer.domains';
@@ -24,6 +25,7 @@ export const context: Context = {
 }
 export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,
   HasAccountOverviewPageDomain,
+  HasJointAccountPageDomain,
   HasOccupationAndIncomeSummaryPageDomain,
   HasEAccountsSummaryPageDomain,
   HasETransferPageDomain,

@@ -20,6 +20,7 @@ import focuson.data.fetchers.AccountOverviewHistoryFFetcher;
 import focuson.data.fetchers.AccountOverviewExcessInfoFFetcher;
 import focuson.data.fetchers.AccountOverviewFFetcher;
 import focuson.data.fetchers.AccountOverviewReasonFFetcher;
+import focuson.data.fetchers.JointAccountFFetcher;
 import focuson.data.fetchers.AdditionalInformationFFetcher;
 import focuson.data.fetchers.BusinessDetailsMainFFetcher;
 import focuson.data.fetchers.DropdownsFFetcher;
@@ -47,6 +48,8 @@ public class Wiring {
       AccountOverviewFFetcher _AccountOverviewFFetcher;
       @Autowired
       AccountOverviewReasonFFetcher _AccountOverviewReasonFFetcher;
+      @Autowired
+      JointAccountFFetcher _JointAccountFFetcher;
       @Autowired
       AdditionalInformationFFetcher _AdditionalInformationFFetcher;
       @Autowired
@@ -95,6 +98,7 @@ public class Wiring {
           .type(newTypeWiring("Query").dataFetcher("getAccountOverviewExcessInfo", _AccountOverviewExcessInfoFFetcher.getAccountOverviewExcessInfo()))
           .type(newTypeWiring("Query").dataFetcher("getAccountOverview", _AccountOverviewFFetcher.getAccountOverview()))
           .type(newTypeWiring("Query").dataFetcher("getAccountOverviewReason", _AccountOverviewReasonFFetcher.getAccountOverviewReason()))
+          .type(newTypeWiring("Query").dataFetcher("getJointAccount", _JointAccountFFetcher.getJointAccount()))
           .type(newTypeWiring("Query").dataFetcher("getAdditionalInformation", _AdditionalInformationFFetcher.getAdditionalInformation()))
           .type(newTypeWiring("Query").dataFetcher("getBusinessDetailsMain", _BusinessDetailsMainFFetcher.getBusinessDetailsMain()))
           .type(newTypeWiring("Query").dataFetcher("getDropdowns", _DropdownsFFetcher.getDropdowns()))

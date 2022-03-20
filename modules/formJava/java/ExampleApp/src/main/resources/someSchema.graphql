@@ -5,6 +5,7 @@ type Query{
   getAccountOverviewExcessInfo(accountId: String!, customerId: String!):AccountOverviewExcessInfo!
   getAccountOverview(accountId: String!, customerId: String!):AccountOverview!
   getAccountOverviewReason(accountId: String!, customerId: String!):AccountOverviewReason!
+  getJointAccount(customerId: String!):JointAccount!
   getAdditionalInformation(customerId: String!):AdditionalInformation!
   getBusinessDetailsMain(customerId: String!):BusinessDetailsMain!
   getDropdowns(customerId: String!):Dropdowns!
@@ -204,6 +205,19 @@ type FrequenciesResponse{
   frequencyId: Int!
   frequencyDescription: String!
   annualMultiple: Int!
+}
+type JointAccount{
+  balance: Int!
+  main: JointAccountCustomer!
+  joint: JointAccountCustomer!
+}
+type JointAccountAddress{
+  line1: String!
+  line2: String!
+}
+type JointAccountCustomer{
+  name: String!
+  addresses: [JointAccountAddress!]!
 }
 type OccupationAndIncomeFullDomain{
   mainCustomerName: String!

@@ -3,10 +3,10 @@ import { JavaWiringParams } from "../codegen/config";
 import fs from "fs";
 import { unique } from "../common/restD";
 import { sortedEntries } from "@focuson/utils";
-import { allMainPages, isMainPage, PageD, RestDefnInPageProperties } from "../common/pageD";
+import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
-import { fetcherInterfaceName, javaDbFileName, mockFetcherClassName, queryClassName, restControllerName } from "../codegen/names";
+import { fetcherInterfaceName, javaDbFileName, javaSqlCreateTableSqlName, javaSqlReadSqlName, mockFetcherClassName, queryClassName, restControllerName } from "../codegen/names";
 import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
 import { makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
 import { makeAllMockFetchers } from "../codegen/makeMockFetchers";
@@ -14,6 +14,9 @@ import { makeJavaVariablesForGraphQlQuery } from "../codegen/makeGraphQlQuery";
 import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
 import { makeDbFile } from "../codegen/makeDb";
 import { AppConfig } from "../focuson.config";
+import { findRoots, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, walkRoots } from "../codegen/makeJavaSql";
+import { isSqlResolverD } from "../common/resolverD";
+import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 
 export const makeJavaFiles = ( appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
 
@@ -27,6 +30,7 @@ export const makeJavaFiles = ( appConfig: AppConfig, javaOutputRoot: string, par
   const javaMockFetcherRoot = javaCodeRoot + "/" + params.mockFetcherPackage
   const javaQueriesPackages = javaCodeRoot + "/" + params.queriesPackage
   const javaDbPackages = javaCodeRoot + "/" + params.dbPackage
+  const javaSql = javaResourcesRoot + "/" + params.sqlDirectory
 
   fs.mkdirSync ( `${javaOutputRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaAppRoot}`, { recursive: true } )
@@ -38,6 +42,7 @@ export const makeJavaFiles = ( appConfig: AppConfig, javaOutputRoot: string, par
   fs.mkdirSync ( `${javaControllerRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaQueriesPackages}`, { recursive: true } )
   fs.mkdirSync ( `${javaDbPackages}`, { recursive: true } )
+  fs.mkdirSync ( `${javaSql}`, { recursive: true } )
 
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
   const raw = allMainPages ( pages ).flatMap ( x => sortedEntries ( x.rest ) ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest );
@@ -51,7 +56,6 @@ export const makeJavaFiles = ( appConfig: AppConfig, javaOutputRoot: string, par
   copyFiles ( javaAppRoot, 'templates/raw', directorySpec ) ( '.gitignore' )
   copyFiles ( javaCodeRoot, 'templates/raw/java', directorySpec ) ( 'CorsConfig.java' )
 
-  console.log ( 5 )
 
   allMainPages ( pages ).forEach ( p => {
     console.log ( p.name )
@@ -82,4 +86,21 @@ export const makeJavaFiles = ( appConfig: AppConfig, javaOutputRoot: string, par
     }, directorySpec ) )
 
   rests.forEach ( rest => writeToFile ( `${javaControllerRoot}/${restControllerName ( rest )}.java`, makeSpringEndpointsFor ( params, rest ) ) )
+
+  rests.forEach ( rest => {
+    if ( isSqlResolverD ( rest.resolver ) ) {
+      let sqlG = rest.resolver.get;
+      if ( sqlG ) {
+        console.log ( 'sqlG', rest.dataDD.name )
+
+        writeToFile ( `${javaSql}/${javaSqlCreateTableSqlName ( rest )}`, makeCreateTableSql ( rest.dataDD, sqlG ) )
+        const sqlRoots = findRoots ( JointAccountDd, sqlG );
+        const sqlData = walkRoots ( sqlRoots, r => makeSqlDataFor ( r, sqlG ) )
+        const makeSql = sqlData.flatMap ( makeGetSqlFor )
+        writeToFile ( `${javaSql}/${javaSqlReadSqlName ( rest )}`, makeSql )
+
+      }
+    }
+  } )
+
 };

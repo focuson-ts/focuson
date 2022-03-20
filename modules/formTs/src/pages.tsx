@@ -7,6 +7,7 @@ import { ReasonPage } from './Reason/Reason.render';
 import { ExcessHistoryPage } from './ExcessHistory/ExcessHistory.render';
 import { ArrearsDetailsPage } from './ArrearsDetails/ArrearsDetails.render';
 import { AccountFlagsPage } from './AccountFlags/AccountFlags.render';
+import { JointAccountPage } from './JointAccount/JointAccount.render';
 import { OccupationAndIncomeSummaryPage } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.render';
 import { OccupationIncomeModalPage } from './OccupationIncomeModal/OccupationIncomeModal.render';
 import { AdditionalInformationModalPage } from './AdditionalInformationModal/AdditionalInformationModal.render';
@@ -31,6 +32,7 @@ const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (
 const identity = identityOptics<FState> ();
 export const pages: MultiPageDetails<FState, Context> = {
     AccountOverview: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'AccountOverview' ), pageFunction: AccountOverviewPage(), initialValue: {} },
+    JointAccount: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'JointAccount' ), pageFunction: JointAccountPage(), initialValue: {} },
     OccupationAndIncomeSummary: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'OccupationAndIncomeSummary' ), pageFunction: OccupationAndIncomeSummaryPage(), initialValue: {"selectedItem":0} },
     EAccountsSummary: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'EAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: {} },
     ETransfer: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'ETransfer' ), pageFunction: ETransferPage(), initialValue: {"fromApi":{}} },

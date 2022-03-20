@@ -10,6 +10,7 @@ export interface JavaWiringParams {
   sampleClass: string,
   queriesPackage: string,
   dbPackage: string,
+  sqlDirectory: string,
   schema: string;
 }
 

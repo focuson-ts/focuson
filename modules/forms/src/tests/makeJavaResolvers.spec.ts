@@ -29,7 +29,8 @@ export const paramsForTest: CombinedParams =  {
   fetcherClass: 'MockFetchers',
   schema: 'someSchema.graphql',
   sampleClass: 'Sample',
-  dbPackage: 'db'
+  dbPackage: 'db',
+  sqlDirectory: 'sql'
 };
 
 describe ( "makeJavaResolversInterface", () => {

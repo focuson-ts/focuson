@@ -1,10 +1,10 @@
 import { DirectorySpec } from "@focuson/files";
 import { CombinedParams } from "../codegen/config";
-import { MainPageD, PageD } from "../common/pageD";
+import { MainPageD } from "../common/pageD";
 import { makeJavaFiles } from "./makeJavaFiles";
 import { makeTsFiles } from "./makeTsFiles";
-import { ButtonD, makeButtons } from "../buttons/allButtons";
-import { AllGuardCreator, AllGuards, GuardWithCondition, MakeGuard } from "../buttons/guardButton";
+import { ButtonD } from "../buttons/allButtons";
+import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { MakeButton } from "../codegen/makeButtons";
 import { AppConfig } from "../focuson.config";
 import { validate } from "./validateModel";
@@ -38,7 +38,8 @@ export const generate = <G extends GuardWithCondition> ( appConfig: AppConfig, j
     fetcherClass: 'MockFetchers',
     schema: 'someSchema.graphql',
     sampleClass: 'Sample',
-    dbPackage: 'db'
+    dbPackage: 'db',
+    sqlDirectory: 'sql'
   };
 
   console.log ( 0 )

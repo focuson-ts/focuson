@@ -94,6 +94,10 @@ export interface RepeatingDataD<G> extends CommonDataDD {
 export function isRepeatingDd<G> ( d: any ): d is RepeatingDataD<G> {
   return d.paged !== undefined
 }
+export function allRepeatindDs<G>(d: AllDataDD<G>[]): RepeatingDataD<G>[]{
+  // @ts-ignore
+  return d.filter(isRepeatingDd)
+}
 
 export type CompDataDD<G> = DataD<G> | RepeatingDataD<G>
 export function isComdDD<G> ( d: any ): d is CompDataD<G> {

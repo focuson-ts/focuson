@@ -47,7 +47,7 @@ export interface SqlResolverD {
 }
 export function isSqlResolverD ( r: ResolverD ): r is SqlResolverD {
   // @ts-ignore
-  return r.get !== undefined
+  return r?.get !== undefined
 }
 
 export interface Where {
