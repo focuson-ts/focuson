@@ -1,7 +1,8 @@
-import { CompDataD, DataD, findAllDataDs, findDataDDIn, isDataDd } from "./dataD";
+import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
 import { RestAction, safeArray, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction } from "../codegen/codegen";
 import { ResolverD } from "./resolverD";
+
 
 export type AllLensRestParams = CommonLensRestParam | LensRestParam
 

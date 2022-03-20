@@ -5,7 +5,8 @@ import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndNumberInputCD, LabelAndS
 import { ComponentDisplayParams } from "../codegen/makeRender";
 import { NameAnd, safeArray } from "@focuson/utils";
 import { Guards } from "../buttons/guardButton";
-import { DBTable, DbValues } from "./resolverD";
+import { DBTable } from "./resolverD";
+import { DbValues } from "../codegen/makeJavaSql";
 
 
 export interface HasSample<T> {

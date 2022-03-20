@@ -6,7 +6,8 @@ import { indentList } from "./codegen";
 import { JavaWiringParams } from "./config";
 import { unique } from "../common/restD";
 import { on } from "cluster";
-import { isTableAndField } from "../common/resolverD";
+import { isTableAndField } from "./makeJavaSql";
+
 
 export function makeMaps<G> ( dataD: DataD<G> ): string[] {
   const folder: AllDataFlatMap<string, G> = {

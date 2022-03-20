@@ -1,8 +1,9 @@
-import { DBTableAndMaybeName, DBTableAndName, findAliasMapFor, findFieldsFor, findFieldsNeededFor, findParentChildAndAliases, findParentChildCompDataLinks, findRoots, findTableAlias, findTableNameOrAliasInAliasMap, findWheresFor, isDbTableAndName, makeSqlDataFor, makeSqlFor, simplifyAliasAndWhere, simplifyAliasMap } from "../common/resolverD";
+import { DBTableAndName } from "../common/resolverD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
-import { AliasAndWhere, fieldsInWhere, jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
-import { NameAnd, sortedEntries } from "@focuson/utils";
-import { accountT, customerT, nameT } from "../example/database/tableNames";
+import {  jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
+import { NameAnd } from "@focuson/utils";
+import { accountT, customerT } from "../example/database/tableNames";
+import { fieldsInWhere, findAliasMapFor, findFieldsFor, findFieldsNeededFor, findParentChildAndAliases, findParentChildCompDataLinks, findRoots, findTableAlias, findTableNameOrAliasInAliasMap, findWheresFor, makeSqlDataFor, makeSqlFor, simplifyAliasAndWhere, simplifyAliasMap } from "../codegen/makeJavaSql";
 
 // @ts-ignore
 const sqlG = jointAccountRestD.resolver.get;
@@ -222,29 +223,3 @@ describe ( "makeSql", () => {
   } )
 } )
 
-
-//
-// describe ( "findSqlFragmentsAndAliasMap", () => {
-//   it ( "should find the clumps of sql that can be grouped together and their alias map ", () => {
-//     let resolver = jointAccountRestD.resolver;
-//     if ( !isSqlResolverD ( resolver ) ) throw new Error ();
-//     expect ( findSqlFragmentsAndAliasMap ( JointAccountDd, resolver.get ) ).toEqual ( [] )
-//
-//   } )
-// } )
-
-
-// describe ( "makeGraphQlResultMaps", () => {
-//     it ( "should generate the java code for the maps structure ", () => {
-//       expect ( makeGraphQlResultMaps ( 'someName', findParentChildCompDataLinks ( occupationAndIncomeFullDomainDD, { includePrimitives: false, stopAtResolvers: false } ) ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-//         "public static class someName {",
-//         "  public final Map OccupationAndIncomeFullDomain = new HashMap();",
-//         "  public final Map CustomerOccupationIncomeDetails = new HashMap();",
-//         "  public final Map OneOccupationIncomeDetails = new HashMap();",
-//         "  OccupationAndIncomeFullDomain.put('CustomerOccupationIncomeDetails', CustomerOccupationIncomeDetails);",
-//         "  CustomerOccupationIncomeDetails.put('OneOccupationIncomeDetails', OneOccupationIncomeDetails);",
-//         "}"
-//       ] )
-//     } )
-//   }
-// )
