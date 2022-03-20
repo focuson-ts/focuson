@@ -23,7 +23,6 @@ export function isTableAndField ( d: DbValues ): d is TableAndField {
 export type DbValues = string | TableAndField
 
 
-
 export function mergeWhere ( acc: Where, w: Where ) {return ({ ids: [ ...acc.ids, ...w.ids ], other: [ ...safeArray ( acc.other ), ...safeArray ( w.other ) ] })}
 export function fieldsInWhere ( w: Where ): [ string, string ] [] {
   return w.ids.flatMap ( idEquals => {
@@ -59,6 +58,7 @@ export interface FoundParentChildLink {
 
 export interface FoundParentChildProps {
   stopAtRepeat?: boolean;
+  stopWithRepeatAsChild?: boolean;
   includePrimitives?: boolean;
 }
 
@@ -80,7 +80,7 @@ export interface FoundChildAliasAndWhere extends FoundParentChildLink {
 
 export type ParentChildFoldFn<Acc> = ( acc: Acc, parent: CompDataD<any>, nameAndOneDataD: [ string, OneDataDD<any> ] | undefined, child: AllDataDD<any> ) => Acc
 
-export function walkParentChildCompDataLinks<Acc> ( { stopAtRepeat, includePrimitives }: FoundParentChildProps, d: CompDataD<any>, folder: ParentChildFoldFn<Acc>, zero: Acc ) {
+export function walkParentChildCompDataLinks<Acc> ( { stopAtRepeat, includePrimitives , stopWithRepeatAsChild}: FoundParentChildProps, d: CompDataD<any>, folder: ParentChildFoldFn<Acc>, zero: Acc ) {
   function makeLinksForChild ( acc: Acc, d: AllDataDD<any> ): Acc {
     if ( isPrimDd ( d ) ) return acc;
     if ( isRepeatingDd ( d ) ) return makeLinksForParentChild ( acc, d, undefined, d.dataDD )
@@ -90,14 +90,16 @@ export function walkParentChildCompDataLinks<Acc> ( { stopAtRepeat, includePrimi
   function makeLinksForParentChild ( acc: Acc, parent: CompDataD<any>, nameAndOneDataD: [ string, OneDataDD<any> ] | undefined, child: AllDataDD<any> ): Acc {
     if ( stopAtRepeat && isRepeatingDd ( child ) ) return acc;
     if ( isPrimDd ( child ) && !includePrimitives ) return acc
-    return makeLinksForChild ( folder ( acc, parent, nameAndOneDataD, child ), child )
+    const newAcc = folder ( acc, parent, nameAndOneDataD, child );
+    if (stopWithRepeatAsChild && isRepeatingDd(child)) return newAcc
+    return makeLinksForChild ( newAcc, child )
   }
   return makeLinksForChild ( zero, d )
 }
 
 export type ParentChildAliasMapFoldFn<Acc> = ( acc: Acc, parent: CompDataD<any>, nameAndOneDataDD: [ string, OneDataDD<any> ] | undefined, child: AllDataDD<any>, aliasMap: NameAnd<DBTableAndMaybeName>, where: Where, getSqlFromDataDDetails: GetSqlFromDataDDetails ) => Acc
 
-export function walkParentChildCompDataLinksWithAliasMapAndWhere<Acc> ( { stopAtRepeat, includePrimitives }: FoundParentChildProps, d: CompDataD<any>, sqlG: SqlGetDetails, folder: ParentChildAliasMapFoldFn<Acc>, zero: Acc, initialAliasMap?: NameAnd<DBTableAndMaybeName> ) {
+export function walkParentChildCompDataLinksWithAliasMapAndWhere<Acc> ( { stopAtRepeat, stopWithRepeatAsChild,includePrimitives }: FoundParentChildProps, d: CompDataD<any>, sqlG: SqlGetDetails, folder: ParentChildAliasMapFoldFn<Acc>, zero: Acc, initialAliasMap?: NameAnd<DBTableAndMaybeName> ) {
   function makeLinksForChild ( acc: Acc, d: AllDataDD<any>, aliasMap: NameAnd<DBTableAndMaybeName>, oldWhere: Where ): Acc {
     if ( isRepeatingDd ( d ) ) return makeLinksForParentChild ( acc, d, undefined, d.dataDD, aliasMap, oldWhere )
     if ( isDataDd ( d ) ) return Object.entries ( d.structure ).reduce ( ( acc, [ name, data ] ) =>
@@ -112,6 +114,7 @@ export function walkParentChildCompDataLinksWithAliasMapAndWhere<Acc> ( { stopAt
     const aliasMap: NameAnd<DBTableAndMaybeName> = found ? { ...oldAliasMap, ...found.aliases } : oldAliasMap
     const newWhere = found ? mergeWhere ( oldWhere, found.where ) : oldWhere
     const newAcc = folder ( acc, parent, nameAndOneDataDD, child, aliasMap, newWhere, found );
+    if ( stopAtRepeat && isRepeatingDd ( child ) ) return acc;
     return makeLinksForChild ( newAcc, child, aliasMap, newWhere )
   }
   return makeLinksForChild ( zero, d, initialAliasMap ? initialAliasMap : sqlG.aliases, sqlG.where )
@@ -135,12 +138,24 @@ export interface SqlRoot {
   /** The aliases we have accumulated to get to the sql root */
   aliases: NameAnd<DBTableAndMaybeName>;
   /** The wheres we have accumulated to get to the sql root */
-  where: Where
+  where: Where;
+  children: SqlRoot[]
 }
-export function findRoots ( d: CompDataD<any>, sqlG: SqlGetDetails ): SqlRoot[] {
-  const children: SqlRoot[] = findParentChildAndAliases ( {}, d, sqlG ).filter ( ( { parent } ) => isRepeatingDd ( parent ) )
-    .map ( ( { parent, aliasAndWhere } ) => ({ data: parent, aliases: aliasAndWhere.aliases, where: aliasAndWhere.where }) );
-  return [ { data: d, aliases: sqlG.aliases, where: sqlG.where }, ...children ]
+export function findRoots ( d: CompDataD<any>, sqlG: SqlGetDetails ): SqlRoot {
+  function findChild ( data: CompDataD<any>, aliases: NameAnd<DBTableAndMaybeName>, where: Where ) {
+    let foundChildAliasAndWheres = findParentChildAndAliases ( { stopWithRepeatAsChild: true }, data, sqlG );
+    const children: SqlRoot[] = foundChildAliasAndWheres
+      .flatMap ( ( { child, aliasAndWhere } ) =>
+        isRepeatingDd ( child ) ?
+          [ findChild ( child, aliasAndWhere.aliases, aliasAndWhere.where ) ] : [] );
+    return { data, aliases, where, children }
+  }
+  return findChild ( d, sqlG.aliases, sqlG.where )
+}
+
+
+export function walkRoots<X> ( sqlRoot: SqlRoot, fn: ( sqlRoot: SqlRoot ) => X ): X[] {
+  return [ fn ( sqlRoot ), ...sqlRoot.children.flatMap ( child => walkRoots ( child, fn ) ) ]
 }
 
 export interface TableNameAndRef {

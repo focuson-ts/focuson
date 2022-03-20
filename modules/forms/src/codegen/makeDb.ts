@@ -1,11 +1,9 @@
 import { dataDsIn, MainPageD, PageD } from "../common/pageD";
-import { AllDataFlatMap, CompDataD, compDataDIn, DataD, emptyDataFlatMap, findAllDataDs, flatMapDD, isDataDd, isPrimDd, isRepeatingDd, NamesAndDataDs, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
+import { AllDataFlatMap, CompDataD, DataD, emptyDataFlatMap, flatMapDD, isPrimDd, isRepeatingDd, NamesAndDataDs, OneDataDD, RepeatingDataD } from "../common/dataD";
 import { allMapsName, dbMapMakerProcname, dbMapname, javaDbFileName } from "./names";
 import { sortedEntries } from "@focuson/utils";
 import { indentList } from "./codegen";
 import { JavaWiringParams } from "./config";
-import { unique } from "../common/restD";
-import { on } from "cluster";
 import { isTableAndField } from "./makeJavaSql";
 
 

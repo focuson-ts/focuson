@@ -1,9 +1,9 @@
 import { DBTableAndName } from "../common/resolverD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
-import {  jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
+import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
 import { NameAnd } from "@focuson/utils";
 import { accountT, customerT } from "../example/database/tableNames";
-import { fieldsInWhere, findAliasMapFor, findFieldsFor, findFieldsNeededFor, findParentChildAndAliases, findParentChildCompDataLinks, findRoots, findTableAlias, findTableNameOrAliasInAliasMap, findWheresFor, makeSqlDataFor, makeSqlFor, simplifyAliasAndWhere, simplifyAliasMap } from "../codegen/makeJavaSql";
+import { fieldsInWhere, findAliasMapFor, findFieldsFor, findFieldsNeededFor, findParentChildAndAliases, findParentChildCompDataLinks, findRoots, findTableAlias, findTableNameOrAliasInAliasMap, findWheresFor, makeSqlDataFor, makeSqlFor, simplifyAliasAndWhere, simplifyAliasMap, walkRoots } from "../codegen/makeJavaSql";
 
 // @ts-ignore
 const sqlG = jointAccountRestD.resolver.get;
@@ -22,7 +22,9 @@ describe ( "findParentChildLinks", () => {
     ] )
   } )
   it ( "it find parent child links  for each sql root", () => {
-    expect ( findRoots ( JointAccountDd, sqlG ).map ( root =>
+    const sqlRoot = findRoots ( JointAccountDd, sqlG );
+    expect ( sqlRoot.children.length == 2 )
+    expect ( walkRoots ( sqlRoot, root =>
       findParentChildCompDataLinks ( { stopAtRepeat: true }, root.data )
         .map ( ( { parent, nameAndOneDataDD, child } ) =>
           `${parent.name}, ${nameAndOneDataDD?.[ 0 ]}, ${nameAndOneDataDD?.[ 1 ].dataDD?.name}, ${child.name} ` ) ) ).toEqual ( [
@@ -51,7 +53,7 @@ describe ( "findParentChildLinks", () => {
 
 
   it ( "should findRoots", () => {
-    expect ( findRoots ( JointAccountDd, sqlG ).map ( ( root ) =>
+    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root =>
       ` ${root.data.name} ${simplifyAliasAndWhere ( root )}` ) ).toEqual ( [
       " JointAccount {'account':'ACC_TBL'} Wheres: {'ids':['account.id=<query.accountId>']}",
       " JointAccountAddresses {'account':'ACC_TBL','address':'ADD_TBL','main':'cust.'CUST_TBL','mainName':'NAME_TBL'} Wheres: {'ids':['account.id=<query.accountId>','account.main=main.id','mainName.id = account.main','address.id=[cust].id'],'other':[]}",
@@ -69,7 +71,7 @@ describe ( "findParentChildLinks", () => {
     ] )
   } )
   it ( "should find the alias maps - for each child root, include primitives, stop at repeats", () => {
-    expect ( findRoots ( JointAccountDd, sqlG ).map ( ( { data, aliases } ) =>
+    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), ( { data, aliases } ) =>
       findParentChildAndAliases ( { stopAtRepeat: true, includePrimitives: true }, data, sqlG, aliases )
         .map ( ( { parent, nameAndOneDataDD, child, aliasAndWhere } ) =>
           `${parent.name} ${nameAndOneDataDD?.[ 0 ]} ${nameAndOneDataDD?.[ 1 ]?.dataDD?.name} ${child.name} ${simplifyAliasAndWhere ( aliasAndWhere )}` ) ) ).toEqual ( [
@@ -96,7 +98,7 @@ describe ( "findParentChildLinks", () => {
 
 describe ( "find findFieldsNeededFor", () => {
   it ( "should returns the fields needed by the data under a sql root until the next sql root", () => {
-    expect ( findRoots ( JointAccountDd, sqlG ).map ( findFieldsNeededFor )
+    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), findFieldsNeededFor )
       .map ( list => list.map ( ( { table, field } ) => `${table.name}.${field}` ) ) )
       .toEqual ( [
         [ "ACC_TBL.blnc", "NAME_TBL.zzname", "NAME_TBL.zzname" ],
@@ -108,7 +110,7 @@ describe ( "find findFieldsNeededFor", () => {
 
 describe ( "findAliasMapFor", () => {
   it ( "should make aliasMaps for each root", () => {
-    expect ( findRoots ( JointAccountDd, sqlG ).map ( root =>
+    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root =>
       Object.entries ( findAliasMapFor ( root, sqlG ) ).map ( ( [ n, d ] ) =>
         `${n} => {${d.name},${d.table.name}}` ).join ( ',' ) ) ).toEqual ( [
       "account => {ACC_TBL,ACC_TBL},main => {cust,CUST_TBL},mainName => {NAME_TBL,NAME_TBL},joint => {cust,CUST_TBL},jointName => {NAME_TBL,NAME_TBL}",
@@ -120,7 +122,7 @@ describe ( "findAliasMapFor", () => {
 } )
 describe ( "findWheresFor", () => {
   it ( "should make wheres for each root", () => {
-    expect ( findRoots ( JointAccountDd, sqlG ).map ( root =>
+    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root =>
       findWheresFor ( root, sqlG ) ).map ( w => JSON.stringify ( w ).replace ( /"/g, "'" ) ) ).toEqual ( [
       "{'ids':['account.id=<query.accountId>','account.main=main.id','mainName.id = account.main','account.joint=joint.id','jointName.id = account.joint'],'other':[]}",
       "{'ids':['account.id=<query.accountId>','account.main=main.id','mainName.id = account.main','address.id=[cust].id'],'other':[]}",
@@ -132,7 +134,7 @@ describe ( "findWheresFor", () => {
 
 describe ( "makeSqlDataFor", () => {
   it ( "should make sql data for each root", () => {
-    expect ( findRoots ( JointAccountDd, sqlG ).map ( root =>
+    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root =>
       makeSqlDataFor ( root, sqlG ) ).map ( ( { fields, wheres, aliasMap } ) =>
       `${fields.map ( ( { table, field } ) => `${table.name}.${field}` )}, Wheres: ${JSON.stringify ( wheres )},  Aliases:${simplifyAliasMap ( aliasMap )}` )
       .map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
@@ -185,7 +187,7 @@ describe ( "findTableNameOrAliasInAliasMap", () => {
 } )
 describe ( "findFieldsFor", () => {
   it ( "should prepare the fields for sql", () => {
-    expect ( findRoots ( JointAccountDd, sqlG ).map ( root => makeSqlDataFor ( root, sqlG ) ).map ( findFieldsFor ) ).toEqual ( [
+    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root => makeSqlDataFor ( root, sqlG ) ).map ( findFieldsFor ) ).toEqual ( [
       "account.blnc,mainName.zzname,account.id,account.main,main.id,mainName.id,account.joint,joint.id,jointName.id",
       "address.zzline1,address.zzline2,account.id,account.main,main.id,mainName.id,address.id",
       "address.zzline1,address.zzline2,account.id,account.joint,joint.id,jointName.id,address.id"
@@ -194,7 +196,7 @@ describe ( "findFieldsFor", () => {
 } )
 describe ( "findTableAliasFor", () => {
   it ( "should prepare the table/alias for sql", () => {
-    expect ( findRoots ( JointAccountDd, sqlG ).map ( root => makeSqlDataFor ( root, sqlG ) ).map ( findTableAlias ) ).toEqual ( [
+    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root => makeSqlDataFor ( root, sqlG ) ).map ( findTableAlias ) ).toEqual ( [
       "ACC_TBL account,CUST_TBL main,NAME_TBL mainName,CUST_TBL joint,NAME_TBL jointName",
       "ACC_TBL account,CUST_TBL main,NAME_TBL mainName,ADD_TBL address",
       "ACC_TBL account,CUST_TBL joint,NAME_TBL jointName,ADD_TBL address"
@@ -203,7 +205,7 @@ describe ( "findTableAliasFor", () => {
 } )
 describe ( "makeSql", () => {
   it ( "should generate actual sql", () => {
-    expect ( findRoots ( JointAccountDd, sqlG ).map ( root => makeSqlDataFor ( root, sqlG ) ).map ( makeSqlFor ) ).toEqual ( [
+    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root => makeSqlDataFor ( root, sqlG ) ).map ( makeSqlFor ) ).toEqual ( [
       [
         "select account.blnc,mainName.zzname,account.id,account.main,main.id,mainName.id,account.joint,joint.id,jointName.id",
         "from ACC_TBL account,CUST_TBL main,NAME_TBL mainName,CUST_TBL joint,NAME_TBL jointName",
@@ -219,7 +221,7 @@ describe ( "makeSql", () => {
         "from ACC_TBL account,CUST_TBL joint,NAME_TBL jointName,ADD_TBL address",
         "where account.id=<query.accountId> and account.joint=joint.id and jointName.id = account.joint and address.id=joint.id"
       ]
-    ])
+    ] )
   } )
 } )
 
