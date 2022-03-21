@@ -65,7 +65,7 @@ export const defaultRestAction: RestTypeDetails = {
   'list': { name: 'list', method: 'GET', query: 'Query', params: {}, output: { needsObj: true, needsBrackets: true, needsPling: true }, graphQPrefix: 'list', graphQlPostfix: '' },
   'update': { name: 'update', method: 'PUT', query: 'Mutation', params: { needsId: true, needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'update', graphQlPostfix: '' },
   'create': { name: 'create', method: 'POST', query: 'Mutation', params: { needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'create', graphQlPostfix: '' },
-  'delete': { name: 'delete', method: 'DELETE', query: 'Mutation', params: { needsId: true }, output: {}, graphQPrefix: 'delete', graphQlPostfix: '' },
+  'delete': { name: 'delete', method: 'DELETE', query: 'Mutation', params: { needsId: true }, output: {needsObj: true}, graphQPrefix: 'delete', graphQlPostfix: '' },
 }
 
 

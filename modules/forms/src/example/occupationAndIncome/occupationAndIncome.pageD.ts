@@ -6,6 +6,7 @@ import { otherIncomeResponseDD } from "./otherSourcesOfIncome/otherSourcesOfInco
 import { businessDetailsMainDD } from "./businessDetails/businessDetails.dataD";
 import { ExampleMainPage, ExampleModalPage } from "../common";
 import { IntegerDD } from "../../common/dataD";
+import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 
 export const listOccupationsModalPD: ExampleModalPage = {
   name: 'ListOccupationsModal',
@@ -125,6 +126,7 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
     otherSourcesOfIncomeRD: { rest: otherIncomeRD, targetFromPath: [ 'otherSourcesOfIncome' ], fetcher: true }
   },
 
+  layout: {component: HideButtonsCD, displayParams: {hide:['otherSourcesOfIncome', 'list']}},
   buttons: {
     nextOccupation: { control: 'ListNextButton', value: [ 'selectedItem' ], list: [ 'fromApi', 'customerOccupationIncomeDetails' ] },
     prevOccupation: { control: 'ListPrevButton', value: [ 'selectedItem' ], list: [ 'fromApi', 'customerOccupationIncomeDetails' ] },

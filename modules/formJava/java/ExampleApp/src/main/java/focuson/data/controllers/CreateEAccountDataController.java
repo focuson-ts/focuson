@@ -7,6 +7,8 @@ import focuson.data.Sample;
 import focuson.data.queries.CreateEAccountDataQueries;
 import graphql.GraphQL;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import java.util.Map;
 
   @RestController
   public class CreateEAccountDataController {
@@ -15,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
   public GraphQL graphQL;
     @PostMapping(value="/api/createEAccount/{createPlanId}", produces="application/json")
     public ResponseEntity createCreateEAccountData(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL,CreateEAccountDataQueries.createCreateEAccountData(accountId, customerId,   Transform.removeQuoteFromProperties(body)), "createCreateEAccountData");
+       return Transform.result(graphQL,CreateEAccountDataQueries.createCreateEAccountData(accountId, customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "createCreateEAccountData");
     }
 
     @GetMapping(value="/api/createEAccount/{createPlanId}", produces="application/json")
@@ -25,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
     @PostMapping(value="/api/createEAccount/{createPlanId}/query", produces="application/json")
     public String querycreateCreateEAccountData(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{
-       return CreateEAccountDataQueries.createCreateEAccountData(accountId, customerId,   Transform.removeQuoteFromProperties(body));
+       return CreateEAccountDataQueries.createCreateEAccountData(accountId, customerId,   Transform.removeQuoteFromProperties(body, Map.class));
     }
 
     @GetMapping(value="/api/createEAccount/{createPlanId}/query", produces="application/json")

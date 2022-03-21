@@ -7,6 +7,8 @@ import focuson.data.Sample;
 import focuson.data.queries.OccupationAndIncomeFullDomainQueries;
 import graphql.GraphQL;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import java.util.Map;
 
   @RestController
   public class OccupationAndIncomeFullDomainController {
@@ -20,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
     @PutMapping(value="/customer/occupation/v2/occupationIncomeDetails", produces="application/json")
     public ResponseEntity updateOccupationAndIncomeFullDomain(@RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL,OccupationAndIncomeFullDomainQueries.updateOccupationAndIncomeFullDomain(customerId,   Transform.removeQuoteFromProperties(body)), "updateOccupationAndIncomeFullDomain");
+       return Transform.result(graphQL,OccupationAndIncomeFullDomainQueries.updateOccupationAndIncomeFullDomain(customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateOccupationAndIncomeFullDomain");
     }
 
     @GetMapping(value="/customer/occupation/v2/occupationIncomeDetails/query", produces="application/json")
@@ -30,7 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
     @PutMapping(value="/customer/occupation/v2/occupationIncomeDetails/query", produces="application/json")
     public String queryupdateOccupationAndIncomeFullDomain(@RequestParam String customerId, @RequestBody String body) throws Exception{
-       return OccupationAndIncomeFullDomainQueries.updateOccupationAndIncomeFullDomain(customerId,   Transform.removeQuoteFromProperties(body));
+       return OccupationAndIncomeFullDomainQueries.updateOccupationAndIncomeFullDomain(customerId,   Transform.removeQuoteFromProperties(body, Map.class));
     }
 
   @GetMapping(value = "/customer/occupation/v2/occupationIncomeDetails/sample", produces = "application/json")

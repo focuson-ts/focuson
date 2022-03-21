@@ -20,6 +20,7 @@ import {ModalCommitButton} from '@focuson/pages';
 import {RestButton} from '../copied/rest';
 import {ValidationButton} from '../copied/ValidationButton';
 import {OccupationAndIncomeSummaryPageDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains";
+import { HideButtonsLayout } from '../copied/hideButtons';
 import {AccountDetailsDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 import {AdditionalInformationDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 import {BusinessDetailsDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
@@ -76,7 +77,7 @@ export function OccupationAndIncomeSummaryPage(){
       />,
       prevOccupation:<ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />,}
 
-      return <div className='mainPage'>
+      return <HideButtonsLayout buttons={buttons} hide={["otherSourcesOfIncome","list"]}>
            {/*{"dataDD":"OccupationAndIncomeFullDomain","display":{"import":"","name":"OccupationAndIncomeFullDomain","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <OccupationAndIncomeFullDomain id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.nextOccupation } 
@@ -87,7 +88,7 @@ export function OccupationAndIncomeSummaryPage(){
       { buttons.businessDetails } 
       { buttons.otherSourcesOfIncome } 
       { buttons.list } 
-      </div>})}
+      </HideButtonsLayout>})}
 
 export function AccountDetails({id,state,mode,buttons}: FocusedProps<FState, AccountDetailsDomain,Context>){
   return <>

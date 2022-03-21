@@ -1,13 +1,13 @@
 {
   "consumer": {
-    "name": "CreatePlanDD"
+    "name": "CreatePlan"
   },
   "provider": {
-    "name": "CreatePlanDDProvider"
+    "name": "CreatePlanProvider"
   },
   "interactions": [
     {
-      "description": "EAccountsSummary should have a get rest for CreatePlanDD",
+      "description": "EAccountsSummary should have a get rest for CreatePlan",
       "providerState": "default",
       "request": {
         "method": "GET",
@@ -26,7 +26,7 @@
       }
     },
     {
-      "description": "EAccountsSummary should have a create rest for CreatePlanDD",
+      "description": "EAccountsSummary should have a create rest for CreatePlan",
       "providerState": "default",
       "request": {
         "method": "POST",
@@ -46,7 +46,7 @@
       }
     },
     {
-      "description": "EAccountsSummary should have a update rest for CreatePlanDD",
+      "description": "EAccountsSummary should have a update rest for CreatePlan",
       "providerState": "default",
       "request": {
         "method": "PUT",
@@ -66,7 +66,7 @@
       }
     },
     {
-      "description": "EAccountsSummary should have a delete rest for CreatePlanDD",
+      "description": "EAccountsSummary should have a delete rest for CreatePlan",
       "providerState": "default",
       "request": {
         "method": "DELETE",
@@ -85,7 +85,7 @@
       }
     },
     {
-      "description": "EAccountsSummary should have a list rest for CreatePlanDD",
+      "description": "EAccountsSummary should have a list rest for CreatePlan",
       "providerState": "default",
       "request": {
         "method": "GET",

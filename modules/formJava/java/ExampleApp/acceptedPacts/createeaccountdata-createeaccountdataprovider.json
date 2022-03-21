@@ -1,13 +1,13 @@
 {
   "consumer": {
-    "name": "CreateEAccountDataDD"
+    "name": "CreateEAccountData"
   },
   "provider": {
-    "name": "CreateEAccountDataDDProvider"
+    "name": "CreateEAccountDataProvider"
   },
   "interactions": [
     {
-      "description": "CreateEAccount should have a create rest for CreateEAccountDataDD",
+      "description": "CreateEAccount should have a create rest for CreateEAccountData",
       "providerState": "default",
       "request": {
         "method": "POST",
@@ -28,7 +28,7 @@
       }
     },
     {
-      "description": "CreateEAccount should have a get rest for CreateEAccountDataDD",
+      "description": "CreateEAccount should have a get rest for CreateEAccountData",
       "providerState": "default",
       "request": {
         "method": "GET",

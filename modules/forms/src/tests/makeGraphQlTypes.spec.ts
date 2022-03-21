@@ -23,7 +23,7 @@ describe ( "makeGraphQlSchema", () => {
         "type Mutation{",
         "  createCreatePlan(accountId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!",
         "  updateCreatePlan(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!",
-        "  deleteCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):String",
+        "  deleteCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):CreatePlan",
         "}"
       ] )
     } )
@@ -69,7 +69,7 @@ describe ( "makeGraphQlSchema", () => {
       "type Mutation{",
       "  createCreatePlan(accountId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!",
       "  updateCreatePlan(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!",
-      "  deleteCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):String",
+      "  deleteCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):CreatePlan",
       "}",
       "type CreatePlan{",
       "  createPlanStart: String!",

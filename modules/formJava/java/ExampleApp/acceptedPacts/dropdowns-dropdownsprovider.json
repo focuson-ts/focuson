@@ -1,0 +1,81 @@
+{
+  "consumer": {
+    "name": "Dropdowns"
+  },
+  "provider": {
+    "name": "DropdownsProvider"
+  },
+  "interactions": [
+    {
+      "description": "OccupationAndIncomeSummary should have a get fetcher for Dropdowns",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/customer/occupation/v2/occupationDetails",
+        "query": "customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "occupationDescriptionResponse": {
+            "descTypeValue": "someString",
+            "descTypeName": "someString"
+          },
+          "employmentStatus": {
+            "employmentName": "someString",
+            "employmentValue": "someString"
+          },
+          "contractTypesResponse": {
+            "contractTypeId": 123,
+            "description": "someString"
+          },
+          "frequenciesResponse": {
+            "frequencyId": 123,
+            "frequencyDescription": "someString",
+            "annualMultiple": 123
+          }
+        }
+      }
+    },
+    {
+      "description": "OccupationAndIncomeSummary should have a get rest for Dropdowns",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/customer/occupation/v2/occupationDetails",
+        "query": "customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "occupationDescriptionResponse": {
+            "descTypeValue": "someString",
+            "descTypeName": "someString"
+          },
+          "employmentStatus": {
+            "employmentName": "someString",
+            "employmentValue": "someString"
+          },
+          "contractTypesResponse": {
+            "contractTypeId": 123,
+            "description": "someString"
+          },
+          "frequenciesResponse": {
+            "frequencyId": 123,
+            "frequencyDescription": "someString",
+            "annualMultiple": 123
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

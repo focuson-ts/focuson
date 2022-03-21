@@ -7,6 +7,25 @@
   },
   "interactions": [
     {
+      "description": "EAccountsSummary should have a list rest for CreatePlan",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/createPlan/tbd",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "createPlanStart": "2022-01-01",
+          "createPlanDate": "2022-03-01",
+          "createPlanEnd": "2022-10-01"
+        }
+      }
+    },
+    {
       "description": "EAccountsSummary should have a get rest for CreatePlan",
       "providerState": "default",
       "request": {
@@ -72,25 +91,6 @@
         "method": "DELETE",
         "path": "/api/createPlan/tbd",
         "query": "accountId=accId&createPlanId=tbd&customerId=custId"
-      },
-      "response": {
-        "status": 200,
-        "headers": {
-        },
-        "body": {
-          "createPlanStart": "2022-01-01",
-          "createPlanDate": "2022-03-01",
-          "createPlanEnd": "2022-10-01"
-        }
-      }
-    },
-    {
-      "description": "EAccountsSummary should have a list rest for CreatePlan",
-      "providerState": "default",
-      "request": {
-        "method": "GET",
-        "path": "/api/createPlan/tbd",
-        "query": "accountId=accId&customerId=custId"
       },
       "response": {
         "status": 200,

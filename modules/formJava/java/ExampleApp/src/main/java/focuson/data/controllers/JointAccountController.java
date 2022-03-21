@@ -7,6 +7,8 @@ import focuson.data.Sample;
 import focuson.data.queries.JointAccountQueries;
 import graphql.GraphQL;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import java.util.Map;
 
   @RestController
   public class JointAccountController {

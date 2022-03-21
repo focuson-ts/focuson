@@ -1,13 +1,13 @@
 {
   "consumer": {
-    "name": "EAccountsSummaryDD"
+    "name": "EAccountsSummary"
   },
   "provider": {
-    "name": "EAccountsSummaryDDProvider"
+    "name": "EAccountsSummaryProvider"
   },
   "interactions": [
     {
-      "description": "EAccountsSummary should have a get fetcher for EAccountsSummaryDD",
+      "description": "EAccountsSummary should have a get fetcher for EAccountsSummary",
       "providerState": "default",
       "request": {
         "method": "GET",
@@ -42,7 +42,7 @@
       }
     },
     {
-      "description": "EAccountsSummary should have a get rest for EAccountsSummaryDD",
+      "description": "EAccountsSummary should have a get rest for EAccountsSummary",
       "providerState": "default",
       "request": {
         "method": "GET",

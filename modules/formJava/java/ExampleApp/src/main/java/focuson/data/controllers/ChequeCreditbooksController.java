@@ -7,6 +7,8 @@ import focuson.data.Sample;
 import focuson.data.queries.ChequeCreditbooksQueries;
 import graphql.GraphQL;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import java.util.Map;
 
   @RestController
   public class ChequeCreditbooksController {
@@ -20,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
     @PostMapping(value="/api/chequeCreditBooks", produces="application/json")
     public ResponseEntity createChequeCreditbooks(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL,ChequeCreditbooksQueries.createChequeCreditbooks(accountId, applRef, brandRef, customerId,   Transform.removeQuoteFromProperties(body)), "createChequeCreditbooks");
+       return Transform.result(graphQL,ChequeCreditbooksQueries.createChequeCreditbooks(accountId, applRef, brandRef, customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "createChequeCreditbooks");
     }
 
     @GetMapping(value="/api/chequeCreditBooks/query", produces="application/json")
@@ -30,7 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
     @PostMapping(value="/api/chequeCreditBooks/query", produces="application/json")
     public String querycreateChequeCreditbooks(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId, @RequestBody String body) throws Exception{
-       return ChequeCreditbooksQueries.createChequeCreditbooks(accountId, applRef, brandRef, customerId,   Transform.removeQuoteFromProperties(body));
+       return ChequeCreditbooksQueries.createChequeCreditbooks(accountId, applRef, brandRef, customerId,   Transform.removeQuoteFromProperties(body, Map.class));
     }
 
   @GetMapping(value = "/api/chequeCreditBooks/sample", produces = "application/json")

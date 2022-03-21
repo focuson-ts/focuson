@@ -36,8 +36,8 @@ public class Transform {
     public static ObjectWriter prettyPrinter = mapper.writerWithDefaultPrettyPrinter();
     public static Pattern pattern = Pattern.compile("(?m)^\\s*\"([^\"]+)\"");
 
-    public static String removeQuoteFromProperties(String json) throws IOException {
-        String pretty = prettyPrinter.writeValueAsString(mapper.readValue(json, Map.class));
+    public static String removeQuoteFromProperties(String json, Class clazz) throws IOException {
+        String pretty = prettyPrinter.writeValueAsString(mapper.readValue(json, clazz));
         return pattern.matcher(pretty).replaceAll(r -> r.group(1));
     }
 }

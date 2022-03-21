@@ -3,24 +3,26 @@ import { endPointName, queryClassName, queryName, restControllerName, sampleName
 import { JavaWiringParams } from "./config";
 import { beforeSeparator, RestAction, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction, indentList } from "./codegen";
+import { isRepeatingDd } from "../common/dataD";
 
 
-function makeCommaIfHaveParams<G> ( r: RestD<G>, restAction: RestAction) {
+function makeCommaIfHaveParams<G> ( r: RestD<G>, restAction: RestAction ) {
   const params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
   return params.length === 0 ? '' : ', '
 }
 
 export function makeParamsForJava<G> ( r: RestD<G>, restAction: RestAction ): string {
   const params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
-  const  comma  = makeCommaIfHaveParams ( r, restAction );
+  const comma = makeCommaIfHaveParams ( r, restAction );
   const requestParam = defaultRestAction[ restAction ].params.needsObj ? `${comma}@RequestBody String body` : ""
-  return params.map ( (( [ name, param ] ) => `@RequestParam String ${name}`) ).join ( ", " )+requestParam
+  return params.map ( (( [ name, param ] ) => `@RequestParam String ${name}`) ).join ( ", " ) + requestParam
 }
-function paramsForQuery ( r: RestParams, restAction: RestAction ): string {
-  let params = sortedEntries ( r ).filter ( filterParamsByRestAction ( restAction ) );
-  const comma =params.length===0?'':', '
-  const objParam = defaultRestAction[ restAction ].params.needsObj ? `${comma}  Transform.removeQuoteFromProperties(body)` : ""
-  return params.map ( ( [ name, param ] ) => name ).join ( ", " )+objParam
+function paramsForQuery<G> ( r: RestD<G>, restAction: RestAction ): string {
+  const clazz = isRepeatingDd ( r.dataDD ) ? 'List' : 'Map'
+  let params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
+  const comma = params.length === 0 ? '' : ', '
+  const objParam = defaultRestAction[ restAction ].params.needsObj ? `${comma}  Transform.removeQuoteFromProperties(body, ${clazz}.class)` : ""
+  return params.map ( ( [ name, param ] ) => name ).join ( ", " ) + objParam
 }
 
 function mappingAnnotation ( restAction: RestAction ) {
@@ -31,14 +33,15 @@ function mappingAnnotation ( restAction: RestAction ) {
   if ( restAction === 'delete' ) return 'DeleteMapping'
   throw new Error ( `unknown rest action ${restAction} for mappingAnnotation` )
 }
-function postFixForEndpoint <G>( r: RestD<G>, restAction: RestAction ) {
+function postFixForEndpoint<G> ( r: RestD<G>, restAction: RestAction ) {
   return restAction === 'list' ? "/list" : ""
 }
 function makeEndpoint<G> ( params: JavaWiringParams, r: RestD<G>, restAction: RestAction ): string[] {
+
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( r, restAction )}", produces="application/json")`,
     `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
-    `       return Transform.result(graphQL,${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( r.params, restAction )}), "${queryName ( r, restAction )}");`,
+    `       return Transform.result(graphQL,${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( r, restAction )}), "${queryName ( r, restAction )}");`,
     `    }`,
     `` ];
 }
@@ -48,7 +51,7 @@ function makeQueryEndpoint<G> ( params: JavaWiringParams, r: RestD<G>, restActio
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( r, restAction )}/query", produces="application/json")`,
     `    public String query${queryName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
-    `       return ${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( r.params, restAction )});`,
+    `       return ${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( r, restAction )});`,
     `    }`,
     `` ];
 
@@ -60,7 +63,7 @@ function makeSampleEndpoint<G> ( params: JavaWiringParams, r: RestD<G> ): string
     `      return new ObjectMapper().writeValueAsString( ${params.sampleClass}.${sampleName ( r.dataDD )}0);`,
     `    }` ];
 }
-export function makeSpringEndpointsFor<G>( params: JavaWiringParams, r: RestD<G> ): string[] {
+export function makeSpringEndpointsFor<G> ( params: JavaWiringParams, r: RestD<G> ): string[] {
   const endpoints: string[] = r.actions.flatMap ( action => makeEndpoint ( params, r, action ) )
   const queries: string[] = r.actions.flatMap ( action => makeQueryEndpoint ( params, r, action ) )
   return [
@@ -73,6 +76,8 @@ export function makeSpringEndpointsFor<G>( params: JavaWiringParams, r: RestD<G>
     `import focuson.data.${params.queriesPackage}.${queryClassName ( params, r )};`,
     `import graphql.GraphQL;`,
     `import org.springframework.beans.factory.annotation.Autowired;`,
+    `import java.util.List;`,
+    `import java.util.Map;`,
     '',
     `  @RestController`,
     `  public class ${restControllerName ( r )} {`,

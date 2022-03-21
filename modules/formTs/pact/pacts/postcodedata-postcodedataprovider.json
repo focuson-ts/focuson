@@ -7,7 +7,7 @@
   },
   "interactions": [
     {
-      "description": "PostCodeDemo should have a get rest for PostCodeData",
+      "description": "PostCodeDemo should have a get fetcher for PostCodeData",
       "providerState": "default",
       "request": {
         "method": "GET",
@@ -29,7 +29,7 @@
       }
     },
     {
-      "description": "PostCodeDemo should have a get fetcher for PostCodeData",
+      "description": "PostCodeDemo should have a get rest for PostCodeData",
       "providerState": "default",
       "request": {
         "method": "GET",

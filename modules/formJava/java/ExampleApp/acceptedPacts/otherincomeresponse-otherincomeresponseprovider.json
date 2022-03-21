@@ -1,0 +1,55 @@
+{
+  "consumer": {
+    "name": "OtherIncomeResponse"
+  },
+  "provider": {
+    "name": "OtherIncomeResponseProvider"
+  },
+  "interactions": [
+    {
+      "description": "OccupationAndIncomeSummary should have a get fetcher for OtherIncomeResponse",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/customer/occupation/v2/otherIncome",
+        "query": "customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "clientOtherIncomeSeq": "someString",
+          "otherIncomeType": "someString",
+          "incomeFreqRef": "0",
+          "amount": 123
+        }
+      }
+    },
+    {
+      "description": "OccupationAndIncomeSummary should have a get rest for OtherIncomeResponse",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/customer/occupation/v2/otherIncome",
+        "query": "customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "clientOtherIncomeSeq": "someString",
+          "otherIncomeType": "someString",
+          "incomeFreqRef": "0",
+          "amount": 123
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

@@ -1,13 +1,13 @@
 {
   "consumer": {
-    "name": "ChequeCreditbooksDD"
+    "name": "ChequeCreditbooks"
   },
   "provider": {
-    "name": "ChequeCreditbooksDDProvider"
+    "name": "ChequeCreditbooksProvider"
   },
   "interactions": [
     {
-      "description": "ChequeCreditbooks should have a get fetcher for ChequeCreditbooksDD",
+      "description": "ChequeCreditbooks should have a get fetcher for ChequeCreditbooks",
       "providerState": "default",
       "request": {
         "method": "GET",
@@ -30,7 +30,7 @@
       }
     },
     {
-      "description": "ChequeCreditbooks should have a get rest for ChequeCreditbooksDD",
+      "description": "ChequeCreditbooks should have a get rest for ChequeCreditbooks",
       "providerState": "default",
       "request": {
         "method": "GET",
@@ -53,7 +53,7 @@
       }
     },
     {
-      "description": "ChequeCreditbooks should have a create rest for ChequeCreditbooksDD",
+      "description": "ChequeCreditbooks should have a create rest for ChequeCreditbooks",
       "providerState": "default",
       "request": {
         "method": "POST",
