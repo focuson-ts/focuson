@@ -140,7 +140,7 @@ export function createOneReact<B, G> ( pageD: PageD<B, G>, { path, dataDD, displ
 }
 export function createAllReactCalls<B, G> ( p: PageD<B, G>, d: AllComponentData<G>[] ): string[] {
   return d.filter ( ds => isComponentData ( ds ) && !ds.hidden ).flatMap ( d => {
-    const comment = isComponentData ( d ) ? [ " {/*" + JSON.stringify ( { ...d, dataDD: d.dataDD?.name } ) + '*/}' ] : []
+    const comment = []//isComponentData ( d ) ? [ " {/*" + JSON.stringify ( { ...d, dataDD: d.dataDD?.name } ) + '*/}' ] : []
     if ( isErrorComponentData ( d ) ) return [ d.error ]
     const comp = [ ...comment, ...createOneReact ( p, d ) ]
     return comp
