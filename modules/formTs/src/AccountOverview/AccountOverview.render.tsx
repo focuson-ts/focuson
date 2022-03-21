@@ -23,6 +23,7 @@ import {ModalCommitButton} from '@focuson/pages';
 import {RestButton} from '../copied/rest';
 import {ValidationButton} from '../copied/ValidationButton';
 import {AccountOverviewPageDomain} from "../AccountOverview/AccountOverview.domains";
+import { HideButtonsLayout } from '../copied/hideButtons';
 import {AccountAllFlagsDomain} from "../AccountOverview/AccountOverview.domains"
 import {AccountAllFlagsListDomain} from "../AccountOverview/AccountOverview.domains"
 import {AccountOneFlagDomain} from "../AccountOverview/AccountOverview.domains"
@@ -60,14 +61,14 @@ export function AccountOverviewPage(){
         focusOn={["{basePage}","reason"]}
       />,}
 
-      return <div className='mainPage'>
+      return <HideButtonsLayout buttons={buttons} hide={["excessHistory","reason"]}>
            {/*{"dataDD":"AccountOverview","display":{"import":"","name":"AccountOverview","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
           <AccountOverview id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.excessInfo } 
       { buttons.reason } 
       { buttons.excessHistory } 
       { buttons.flags } 
-      </div>})}
+      </HideButtonsLayout>})}
 
 export function AccountAllFlags({id,state,mode,buttons}: FocusedProps<FState, AccountAllFlagsDomain,Context>){
   return <>

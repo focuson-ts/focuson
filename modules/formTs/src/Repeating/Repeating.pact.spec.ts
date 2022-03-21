@@ -1,14 +1,15 @@
 import { fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
-import { loadTree,wouldLoad } from "@focuson/fetcher";
+import { loadTree,wouldLoad,FetcherTree } from "@focuson/fetcher";
 import { pactWith } from "jest-pact";
 import { rest, RestCommand, restL } from "@focuson/rest";
 import { simpleMessagesL } from "@focuson/pages";
 import { applyToTemplate } from "@focuson/template";
 import { Lenses, massTransform } from "@focuson/lens";
 import * as samples from '../Repeating/Repeating.samples'
-import {emptyState, FState } from "../common";
-import * as fetchers from "../fetchers";
+import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
+import {RepeatingWholeDataFetcher} from './Repeating.fetchers'
+describe("To support manually running the tests", () =>{it ("should support Repeating", () =>{})})
 //Rest create pact test
 pactWith ( { consumer: 'RepeatingWholeData', provider: 'RepeatingWholeDataProvider', cors: true }, provider => {
   describe ( 'Repeating - rest create', () => {
@@ -68,7 +69,8 @@ pactWith ( { consumer: 'RepeatingWholeData', provider: 'RepeatingWholeDataProvid
       }
       const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'Repeating', pageMode: 'view' }] , Repeating: { }}
       const withIds = massTransform(firstState,)
-      let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+       const f: FetcherTree<FState> = { fetchers: [ RepeatingWholeDataFetcher ( identityL.focusQuery ( 'Repeating' ), commonIds ) ], children: [] }
+      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
          Repeating: {fromApi:samples.sampleRepeatingWholeData0},

@@ -12,7 +12,7 @@
       "request": {
         "method": "GET",
         "path": "/api/accountOverview/arrearsDetails",
-        "query": "accountId=accId&customerId=custId&startDate=2020-01-20"
+        "query": "startDate=2020-01-20&accountId=accId&customerId=custId"
       },
       "response": {
         "status": 200,
@@ -41,7 +41,7 @@
       "request": {
         "method": "GET",
         "path": "/api/accountOverview/arrearsDetails",
-        "query": "accountId=accId&customerId=custId&startDate=2020-01-20"
+        "query": "startDate=2020-01-20&accountId=accId&customerId=custId"
       },
       "response": {
         "status": 200,

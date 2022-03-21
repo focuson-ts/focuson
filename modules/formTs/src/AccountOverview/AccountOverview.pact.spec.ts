@@ -1,14 +1,20 @@
 import { fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
-import { loadTree,wouldLoad } from "@focuson/fetcher";
+import { loadTree,wouldLoad,FetcherTree } from "@focuson/fetcher";
 import { pactWith } from "jest-pact";
 import { rest, RestCommand, restL } from "@focuson/rest";
 import { simpleMessagesL } from "@focuson/pages";
 import { applyToTemplate } from "@focuson/template";
 import { Lenses, massTransform } from "@focuson/lens";
 import * as samples from '../AccountOverview/AccountOverview.samples'
-import {emptyState, FState } from "../common";
-import * as fetchers from "../fetchers";
+import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
+import {AccountAllFlagsFetcher} from './AccountOverview.fetchers'
+import {ArrearsDetailsFetcher} from './AccountOverview.fetchers'
+import {AccountOverviewHistoryFetcher} from './AccountOverview.fetchers'
+import {AccountOverviewExcessInfoFetcher} from './AccountOverview.fetchers'
+import {AccountOverviewFetcher} from './AccountOverview.fetchers'
+import {AccountOverviewReasonFetcher} from './AccountOverview.fetchers'
+describe("To support manually running the tests", () =>{it ("should support AccountOverview", () =>{})})
 //GetFetcher pact test
 pactWith ( { consumer: 'AccountAllFlags', provider: 'AccountAllFlagsProvider', cors: true }, provider => {
   describe ( 'AccountOverview - fetcher', () => {
@@ -30,7 +36,8 @@ pactWith ( { consumer: 'AccountAllFlags', provider: 'AccountAllFlagsProvider', c
       }
       const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }] , AccountOverview: { }}
       const withIds = massTransform(firstState,)
-      let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+       const f: FetcherTree<FState> = { fetchers: [ AccountAllFlagsFetcher ( identityL.focusQuery ( 'AccountOverview' ), commonIds ) ], children: [] }
+      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
          AccountOverview: {accountFlags:samples.sampleAccountAllFlags0},
@@ -89,7 +96,7 @@ pactWith ( { consumer: 'ArrearsDetails', provider: 'ArrearsDetailsProvider', cor
         withRequest: {
           method: 'GET',
           path: '/api/accountOverview/arrearsDetails',
-          query:{"accountId":"accId","customerId":"custId","startDate":"2020-01-20"}
+          query:{"startDate":"2020-01-20","accountId":"accId","customerId":"custId"}
         },
         willRespondWith: {
           status: 200,
@@ -101,11 +108,12 @@ pactWith ( { consumer: 'ArrearsDetails', provider: 'ArrearsDetailsProvider', cor
       }
       const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }] , AccountOverview: { }}
       const withIds = massTransform(firstState,[ids.startDate, () =>"2020-01-20"])
-      let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+       const f: FetcherTree<FState> = { fetchers: [ ArrearsDetailsFetcher ( identityL.focusQuery ( 'AccountOverview' ), commonIds ) ], children: [] }
+      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
          AccountOverview: {arrearsDetails:samples.sampleArrearsDetails0},
-        tags: { AccountOverview_arrearsDetails:["accId","custId","2020-01-20"]}
+        tags: { AccountOverview_arrearsDetails:["2020-01-20","accId","custId"]}
       };
       const expected = massTransform(expectedRaw,[ids.startDate, () =>"2020-01-20"])
       expect ( newState ).toEqual ( expected )
@@ -129,7 +137,7 @@ pactWith ( { consumer: 'ArrearsDetails', provider: 'ArrearsDetailsProvider', cor
         withRequest: {
           method: 'GET',
           path: url,
-          query:{"accountId":"accId","customerId":"custId","startDate":"2020-01-20"}
+          query:{"startDate":"2020-01-20","accountId":"accId","customerId":"custId"}
           //no body for get
         },
         willRespondWith: {
@@ -172,7 +180,8 @@ pactWith ( { consumer: 'AccountOverviewHistory', provider: 'AccountOverviewHisto
       }
       const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }] , AccountOverview: { }}
       const withIds = massTransform(firstState,)
-      let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+       const f: FetcherTree<FState> = { fetchers: [ AccountOverviewHistoryFetcher ( identityL.focusQuery ( 'AccountOverview' ), commonIds ) ], children: [] }
+      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
          AccountOverview: {excessHistory:samples.sampleAccountOverviewHistory0},
@@ -242,7 +251,8 @@ pactWith ( { consumer: 'AccountOverviewExcessInfo', provider: 'AccountOverviewEx
       }
       const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }] , AccountOverview: { }}
       const withIds = massTransform(firstState,)
-      let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+       const f: FetcherTree<FState> = { fetchers: [ AccountOverviewExcessInfoFetcher ( identityL.focusQuery ( 'AccountOverview' ), commonIds ) ], children: [] }
+      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
          AccountOverview: {excessInfo:samples.sampleAccountOverviewExcessInfo0},
@@ -312,7 +322,8 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
       }
       const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }] , AccountOverview: { }}
       const withIds = massTransform(firstState,)
-      let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+       const f: FetcherTree<FState> = { fetchers: [ AccountOverviewFetcher ( identityL.focusQuery ( 'AccountOverview' ), commonIds ) ], children: [] }
+      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
          AccountOverview: {main:samples.sampleAccountOverview0},
@@ -382,7 +393,8 @@ pactWith ( { consumer: 'AccountOverviewReason', provider: 'AccountOverviewReason
       }
       const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }] , AccountOverview: { }}
       const withIds = massTransform(firstState,)
-      let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+       const f: FetcherTree<FState> = { fetchers: [ AccountOverviewReasonFetcher ( identityL.focusQuery ( 'AccountOverview' ), commonIds ) ], children: [] }
+      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
          AccountOverview: {reason:samples.sampleAccountOverviewReason0},

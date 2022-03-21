@@ -1,14 +1,16 @@
 import { fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
-import { loadTree,wouldLoad } from "@focuson/fetcher";
+import { loadTree,wouldLoad,FetcherTree } from "@focuson/fetcher";
 import { pactWith } from "jest-pact";
 import { rest, RestCommand, restL } from "@focuson/rest";
 import { simpleMessagesL } from "@focuson/pages";
 import { applyToTemplate } from "@focuson/template";
 import { Lenses, massTransform } from "@focuson/lens";
 import * as samples from '../PostCodeDemo/PostCodeDemo.samples'
-import {emptyState, FState } from "../common";
-import * as fetchers from "../fetchers";
+import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
+import {PostCodeMainPageFetcher} from './PostCodeDemo.fetchers'
+import {PostCodeDataFetcher} from './PostCodeDemo.fetchers'
+describe("To support manually running the tests", () =>{it ("should support PostCodeDemo", () =>{})})
 //Rest create pact test
 pactWith ( { consumer: 'PostCodeMainPage', provider: 'PostCodeMainPageProvider', cors: true }, provider => {
   describe ( 'PostCodeDemo - rest create', () => {
@@ -69,7 +71,8 @@ pactWith ( { consumer: 'PostCodeData', provider: 'PostCodeDataProvider', cors: t
       }
       const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'PostCodeDemo', pageMode: 'view' }] , PostCodeDemo: { }}
       const withIds = massTransform(firstState,[ids.postcode, () =>"LW12 4RG"])
-      let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+       const f: FetcherTree<FState> = { fetchers: [ PostCodeDataFetcher ( identityL.focusQuery ( 'PostCodeDemo' ), commonIds ) ], children: [] }
+      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
          PostCodeDemo: {postcode:{searchResults:samples.samplePostCodeData0}},

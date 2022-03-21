@@ -133,7 +133,9 @@ export function unique<T> ( ts: T[] | undefined, tagFn: ( t: T ) => string ): T[
 }
 
 export function makeCommonParamsValueForTest<G> ( r: RestD<G>, restAction: RestAction ) {
-  return Object.fromEntries ( sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) ).map ( ( [ name, v ] ) => [ name, v.testValue ] ) )
+  let visibleParams = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
+  const paramsInCorrectOrder = [...visibleParams.filter(([name,p]) => isRestLens(p)), ...visibleParams.filter(([name,p]) => !isRestLens(p))]
+  return Object.fromEntries(paramsInCorrectOrder.map ( ( [ name, v ] ) => [ name, v.testValue ] ))
 
 }
 

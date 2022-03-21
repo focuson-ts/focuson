@@ -1,6 +1,7 @@
 import { ExampleMainPage, ExampleModalPage } from "../common";
 import { accountAllFlagsDataDD, accountOverviewDataD, accountOverviewExcessHistoryDataD, accountOverviewExcessHistoryLineDataD, accountOverviewExcessInfoDataD, accountOverviewReasonDataD, arrearsDetailsDataD } from "./accountOverview.dataD";
 import { accountFlagsRestDD, accountOverviewExcessHistoryRestD, accountOverviewExcessInfoRestD, accountOverviewReasonRestD, accountOverviewRestD, arrearsDetailsRestD } from "./accountOverview.restD";
+import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 
 export const ArrearsDetailsModalPage: ExampleModalPage = {
   name: "ArrearsDetails",
@@ -84,6 +85,7 @@ export const AccountOverviewMainPage: ExampleMainPage = {
     arrearsDetails: { rest: arrearsDetailsRestD, targetFromPath: [ 'arrearsDetails' ], fetcher: true },
     accountFlags: { rest: accountFlagsRestDD, targetFromPath: [ 'accountFlags' ], fetcher: true },
   },
+  layout: {component: HideButtonsCD, displayParams: {hide:['excessHistory','reason']}},
   buttons: {
     excessInfo: {
       control: 'ModalButton', modal: ExcessInfoModalPage, mode: 'view',

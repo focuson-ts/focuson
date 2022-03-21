@@ -1,14 +1,19 @@
 import { fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
-import { loadTree,wouldLoad } from "@focuson/fetcher";
+import { loadTree,wouldLoad,FetcherTree } from "@focuson/fetcher";
 import { pactWith } from "jest-pact";
 import { rest, RestCommand, restL } from "@focuson/rest";
 import { simpleMessagesL } from "@focuson/pages";
 import { applyToTemplate } from "@focuson/template";
 import { Lenses, massTransform } from "@focuson/lens";
 import * as samples from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.samples'
-import {emptyState, FState } from "../common";
-import * as fetchers from "../fetchers";
+import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
+import {AdditionalInformationFetcher} from './OccupationAndIncomeSummary.fetchers'
+import {BusinessDetailsMainFetcher} from './OccupationAndIncomeSummary.fetchers'
+import {DropdownsFetcher} from './OccupationAndIncomeSummary.fetchers'
+import {OccupationAndIncomeFullDomainFetcher} from './OccupationAndIncomeSummary.fetchers'
+import {OtherIncomeResponseFetcher} from './OccupationAndIncomeSummary.fetchers'
+describe("To support manually running the tests", () =>{it ("should support OccupationAndIncomeSummary", () =>{})})
 //GetFetcher pact test
 pactWith ( { consumer: 'AdditionalInformation', provider: 'AdditionalInformationProvider', cors: true }, provider => {
   describe ( 'OccupationAndIncomeSummary - fetcher', () => {
@@ -30,7 +35,8 @@ pactWith ( { consumer: 'AdditionalInformation', provider: 'AdditionalInformation
       }
       const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }] , OccupationAndIncomeSummary: { }}
       const withIds = massTransform(firstState,)
-      let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+       const f: FetcherTree<FState> = { fetchers: [ AdditionalInformationFetcher ( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ) ], children: [] }
+      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
          OccupationAndIncomeSummary: {additionalInformation:samples.sampleAdditionalInformation0},
@@ -100,7 +106,8 @@ pactWith ( { consumer: 'BusinessDetailsMain', provider: 'BusinessDetailsMainProv
       }
       const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }] , OccupationAndIncomeSummary: { }}
       const withIds = massTransform(firstState,)
-      let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+       const f: FetcherTree<FState> = { fetchers: [ BusinessDetailsMainFetcher ( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ) ], children: [] }
+      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
          OccupationAndIncomeSummary: {businessDetails:samples.sampleBusinessDetailsMain0},
@@ -170,7 +177,8 @@ pactWith ( { consumer: 'Dropdowns', provider: 'DropdownsProvider', cors: true },
       }
       const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }] , OccupationAndIncomeSummary: { }}
       const withIds = massTransform(firstState,)
-      let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+       const f: FetcherTree<FState> = { fetchers: [ DropdownsFetcher ( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ) ], children: [] }
+      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
          OccupationAndIncomeSummary: {dropdowns:samples.sampleDropdowns0},
@@ -240,7 +248,8 @@ pactWith ( { consumer: 'OccupationAndIncomeFullDomain', provider: 'OccupationAnd
       }
       const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }] , OccupationAndIncomeSummary: { }}
       const withIds = massTransform(firstState,)
-      let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+       const f: FetcherTree<FState> = { fetchers: [ OccupationAndIncomeFullDomainFetcher ( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ) ], children: [] }
+      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
          OccupationAndIncomeSummary: {fromApi:samples.sampleOccupationAndIncomeFullDomain0},
@@ -348,7 +357,8 @@ pactWith ( { consumer: 'OtherIncomeResponse', provider: 'OtherIncomeResponseProv
       }
       const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }] , OccupationAndIncomeSummary: { }}
       const withIds = massTransform(firstState,)
-      let newState = await loadTree ( fetchers.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+       const f: FetcherTree<FState> = { fetchers: [ OtherIncomeResponseFetcher ( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ) ], children: [] }
+      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
          OccupationAndIncomeSummary: {otherSourcesOfIncome:samples.sampleOtherIncomeResponse0},

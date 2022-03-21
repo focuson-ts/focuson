@@ -1,8 +1,8 @@
-import { allRestAndActions, PageD, RestDefnInPageProperties } from "../common/pageD";
+import { allRestAndActions, isMainPage, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { applyToTemplate } from "@focuson/template";
 import { DirectorySpec, loadFile } from "@focuson/files";
 import { beforeSeparator, NameAnd, RestAction, sortedEntries } from "@focuson/utils";
-import { restDetailsName, sampleName, samplesFileName } from "./names";
+import { fetcherFileName, fetcherName, restDetailsName, sampleName, samplesFileName } from "./names";
 import { defaultRestAction, isRestLens, LensRestParam, makeCommonParamsValueForTest, RestActionDetail, RestD } from "../common/restD";
 import { TSParams } from "./config";
 import { focusQueryFor, indentList } from "./codegen";
@@ -44,8 +44,8 @@ export function makeFetcherPact<B, G> ( params: TSParams, p: PageD<B, G>, r: Res
   return []
 }
 
-export function makeGetFetcherPact<B, G> ( params: TSParams, p: PageD<B, G>, r: RestDefnInPageProperties<G>, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
-  const props = makePropsForFetcherPact ( p, r.rest, params, r.targetFromPath );
+export function makeGetFetcherPact<B, G> ( params: TSParams, p: PageD<B, G>, defn: RestDefnInPageProperties<G>, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
+  const props = makePropsForFetcherPact ( p, defn, defn.rest, params, defn.targetFromPath );
   const str: string = loadFile ( 'templates/oneFetcherPact.ts', directorySpec ).toString ()
   return [ '//GetFetcher pact test', ...applyToTemplate ( str, props ) ]
 }
@@ -56,12 +56,18 @@ export function makeRestPacts<B, G> ( params: TSParams, p: PageD<B, G>, r: RestD
   return [ `//Rest ${rad.name} pact test`, ...applyToTemplate ( str, { ...params, ...props } ) ]
 }
 
+function makeFetcherImports<B, G> ( params: TSParams, p: PageD<B, G> ): string[] {
+  if ( !isMainPage ( p ) ) return [];
+  return sortedEntries ( p.rest ).map ( ( [ name, defn ] ) => `import {${fetcherName ( defn )}} from './${p.name}.fetchers'` )
+}
 export function makeAllPacts<B, G> ( params: TSParams, p: PageD<B, G>, directorySpec: DirectorySpec ): string[] {
   return [
     `import * as samples from '${samplesFileName ( '..', params, p )}'`,
-    `import {emptyState, ${params.stateName} } from "../${params.commonFile}";`,
-    `import * as ${params.fetchersFile} from "../${params.fetchersFile}";`,
+    `import {emptyState, ${params.stateName} , commonIds, identityL } from "../${params.commonFile}";`,
     `import * as ${params.restsFile} from "../${params.restsFile}";`,
+    ...makeFetcherImports ( params, p ),
+    ``,
+    `describe("To support manually running the tests", () =>{it ("should support ${p.name}", () =>{})})`,
     ...allRestAndActions ( [ p ] ).flatMap ( ( [ pd, rd, rad ] ) => [
       ...makeFetcherPact ( params, pd, rd, rad, directorySpec ),
       ...makeRestPacts ( params, pd, rd, rad, directorySpec ),
@@ -94,23 +100,24 @@ function makeCommonPropsForPact<B, G> ( p: PageD<B, G>, d: RestD<G>, params: TSP
     stateName: params.stateName,
     commonFile: params.commonFile,
     commonParamsValue: JSON.stringify ( paramsValueForTest ),
-    commonParamsTagsValue: JSON.stringify ( sortedEntries ( paramsValueForTest ).map ( ( [ name, v ] ) => v ) )
+    commonParamsTagsValue: JSON.stringify ( Object.entries ( paramsValueForTest ).map ( ( [ name, v ] ) => v )  )
   } //     {pageName}: {{target}: {body}},
   return props;
 }
 
-function makePropsForFetcherPact<B, G> ( p: PageD<B, G>, d: RestD<G>, params: TSParams, path: string[] ): FetcherPactProps {
+function makePropsForFetcherPact<B, G> ( p: PageD<B, G>, defn: RestDefnInPageProperties<G>, d: RestD<G>, params: TSParams, path: string[] ): FetcherPactProps {
   const locals: [ string, LensRestParam ][] = sortedEntries ( d.params ).flatMap ( ( [ n, l ] ) => isRestLens ( l ) ? [ [ n, l ] ] : [] )
   const localLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: Lenses.identity<${params.stateName}>().focusQuery('${p.name}')${focusQueryFor ( l.lens )}` )
   const lensTransformString = locals.map ( ( [ n, l ] ) => `[ids.${n}, () =>"${l.testValue}"]` )
   const tag = [ p.name, ...path ].join ( "_" )
   let commonPactProps = makeCommonPropsForPact ( p, d, params, path, 'get', `should have a get fetcher for ${d.dataDD.name}` );
 
-  const content: string[] =  indentList( indentList(indentList([
+  const content: string[] = indentList ( indentList ( indentList ( [
     `const ids = {`, ...indentList ( localLens ), '}',
     `const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: '${p.name}', pageMode: 'view' }] , ${p.name}: { }}`,
     `const withIds = massTransform(firstState,${lensTransformString})`,
-    `let newState = await loadTree ( ${params.fetchersFile}.fetchers, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )`,
+    ` const f: FetcherTree<${params.stateName}> = { fetchers: [ ${fetcherName ( defn )} ( identityL.focusQuery ( '${p.name}' ), commonIds ) ], children: [] }`,
+    `let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )`,
     `let expectedRaw: any = {`,
     `  ... firstState,`,
     `   ${p.name}: {${commonPactProps.target}:${commonPactProps.body}${commonPactProps.closeTarget},`,
@@ -118,7 +125,7 @@ function makePropsForFetcherPact<B, G> ( p: PageD<B, G>, d: RestD<G>, params: TS
     `};`,
     `const expected = massTransform(expectedRaw,${lensTransformString})`,
     `expect ( newState ).toEqual ( expected )`,
-  ])))
+  ] ) ) )
   return {
     ...commonPactProps,
     content: content.join ( "\n" )
@@ -135,9 +142,9 @@ function makePropsForRestPact<B, G> ( p: PageD<B, G>, r: RestDefnInPagePropertie
   const lensTransformString = locals.map ( ( [ n, l ] ) => `[ids.${n}, () =>"${l.testValue}"]` )
   const localLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: Lenses.identity<${params.stateName}>().focusQuery('${p.name}')${focusQueryFor ( l.lens )}` )
 
-  let content = indentList( indentList(indentList([
+  let content = indentList ( indentList ( indentList ( [
     `const ids = {`, ...indentList ( localLens ), '}',
-    `const withIds = massTransform(firstState,${lensTransformString})`, ]))).join ( "\n" )
+    `const withIds = massTransform(firstState,${lensTransformString})`, ] ) ) ).join ( "\n" )
   let expected = `const expected = massTransform(rawExpected,${lensTransformString})`;
   return {
     ...props,
