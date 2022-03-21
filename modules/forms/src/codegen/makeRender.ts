@@ -144,7 +144,6 @@ export function createAllReactCalls<G> ( d: AllComponentData<G>[] ): string[] {
     if ( isErrorComponentData ( d ) ) return [ d.error ]
     const comp = [ ...comment, ...createOneReact ( d ) ]
     return comp
-    // return layout ? [ `<${layout.name}  details='${layout.details}'>`, ...comp, `</${layout.name}>)})}` ] : comp;
   } )
 }
 
@@ -163,7 +162,6 @@ export const createReactComponent = <G extends GuardWithCondition> ( params: TSP
     const maker = makeGuard[ guard.condition ]
     if ( !maker ) throw new Error ( `Don't know how to process guard with name ${name}: ${JSON.stringify ( guard )}` )
     return maker.makeGuardVariable ( name, guard )
-    // return `const ${guardName ( name )} = state.chainLens(Lenses.fromPath(${JSON.stringify ( guard.pathFromHere )})).optJson();console.log('${guardName ( name )}', ${guardName ( name )})`;
   } ) : []
   const layout = dataD.layout
   const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( `createReactComponent-layout ${dataD.name}`, [], dataD, '<>', '</>' );

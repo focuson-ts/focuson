@@ -9,7 +9,6 @@ import { SimpleDisplayComp } from "./common/componentsD";
 import { ExampleMainPage } from "./example/common";
 import { OccupationAndIncomeSummaryPD } from "./example/occupationAndIncome/occupationAndIncome.pageD";
 import { AccountOverviewMainPage } from "./example/accountOverview/accountOverview.pageD";
-import { JointAccountDd } from "./example/jointAccount/jointAccount.dataD";
 import { JointAccountPageD } from "./example/jointAccount/jointAccount.pageD";
 
 export const generatedPages: ExampleMainPage[] = [

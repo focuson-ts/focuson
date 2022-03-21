@@ -83,7 +83,7 @@ export const SelectedItemCD: DisplayCompD = {
   }
 }
 export const LayoutCd: DisplayCompD = {
-  params: { details: { paramType: 'string', needed: 'yes' } },
+  params: { details: { paramType: 'string', needed: 'yes' }, title: {paramType: 'string', needed: 'no'} },
   import: "../copied/layout",
   name: "Layout"
 }

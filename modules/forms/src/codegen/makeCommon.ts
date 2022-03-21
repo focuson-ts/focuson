@@ -17,7 +17,7 @@ export function makeFullState<B, G> ( params: TSParams, pds: PageD<B, G>[] ): st
     ...indentList ( hasDomains ), `{}` ]
 }
 
-export function makeContext ( appConfig: AppConfig,params: TSParams ): string[] {
+export function makeContext ( appConfig: AppConfig, params: TSParams ): string[] {
   // return [
   //   `export const context: Context = defaultPageSelectionAndRestCommandsContext<${params.stateName}> ( pages )` ]
 
@@ -29,8 +29,9 @@ export function makeContext ( appConfig: AppConfig,params: TSParams ): string[] 
     `}` ]
 
 }
-export function makeCommon<B, G> (appConfig: AppConfig, params: TSParams, pds: PageD<B, G>[], rds: RestD<G>[], directorySpec: DirectorySpec ): string[] {
+export function makeCommon<B, G> ( appConfig: AppConfig, params: TSParams, pds: PageD<B, G>[], rds: RestD<G>[], directorySpec: DirectorySpec ): string[] {
   const pageDomainsImport: string[] = pds.filter ( p => p.pageType === 'MainPage' ).map ( p => `import { ${hasDomainForPage ( p )} } from '${domainsFileName ( '.', params, p )}';` )
+  let paramsWithSamples = findAllCommonParamsWithSamples ( pds, rds );
   return [
     `import { HasPageSelection, PageMode ,PageSelectionContext} from '@focuson/pages'`,
     `import { defaultDateFn, HasSimpleMessages, SimpleMessage, NameAnd } from '@focuson/utils';`,
@@ -44,10 +45,10 @@ export function makeCommon<B, G> (appConfig: AppConfig, params: TSParams, pds: P
     `import { ${appConfig.combine.name} } from "${appConfig.combine.import}";`,
     ...pageDomainsImport,
     '',
-    ...makeContext ( appConfig,params ),
+    ...makeContext ( appConfig, params ),
     ...makeFullState ( params, pds ),
-    ...makeCommonParams ( params, rds, directorySpec ),
-    ...makeStateWithSelectedPage ( params, JSON.stringify ( findAllCommonParamsWithSamples ( rds ) ), pds[ 0 ].name ) //TODO this should be slicker and aggregated params for example
+    ...makeCommonParams ( params, pds, rds, directorySpec ),
+    ...makeStateWithSelectedPage ( params, JSON.stringify ( paramsWithSamples ), pds[ 0 ].name ) //TODO this should be slicker and aggregated params for example
   ]
 }
 
@@ -66,21 +67,29 @@ export function makeStateWithSelectedPage ( params: TSParams, commonParamsValue:
   ]
 }
 
-export function findAllCommonParams<G> ( rds: RestD<G>[] ): string[] {
-  return unique ( rds.flatMap ( rd => sortedEntries ( rd.params ).flatMap ( ( [ name, lens ] ) => isCommonLens ( lens ) ? lens.commonLens : [] ) ), x => x )
+export function findAllCommonParams<B, G> ( pds: PageD<B, G>[], rds: RestD<G>[] ): string[] {
+  let fromRests = rds.flatMap ( rd => sortedEntries ( rd.params ).flatMap ( ( [ name, lens ] ) => isCommonLens ( lens ) ? lens.commonLens : [] ) );
+  const fromPages = allMainPages ( pds ).flatMap ( p => sortedEntries ( p.commonParams ).map ( ( [ n, l ] ) => l.commonLens ) )
+  return unique ( [ ...fromRests, ...fromPages ], x => x ).sort ()
 }
 
-export function findAllCommonParamsWithSamples<G> ( rds: RestD<G>[] ): any {
-  return Object.fromEntries ( rds.flatMap ( rd => {
+export function findAllCommonParamsWithSamples<B, G> ( pages: PageD<B, G>[], rds: RestD<G>[] ): any {
+  let fromParams: [ string, string ][] = rds.flatMap ( rd => {
     let result: [ string, string ][] = sortedEntries ( rd.params ).flatMap ( ( [ name, lens ] ) => isCommonLens ( lens ) ? [ [ lens.commonLens, lens.testValue ] ] : [] );
     return result
+  } )
+  const fromPages: [ string, string ][] = allMainPages ( pages ).flatMap ( p => sortedEntries ( p.commonParams ).map ( ( [ n, lens ] ) => {
+    let result: [ string, string ] = [ lens.commonLens, lens.testValue ];
+    return result;
   } ) )
+
+  const result = unique ( [ ...fromParams, ...fromPages ].sort ( ( l, r ) => l[ 0 ].localeCompare ( l[ 1 ] ) ), x => x[ 0 ] )
+  return Object.fromEntries ( result )
 }
 
-
-export function makeCommonParams<G> ( params: TSParams, rds: RestD<G>[], directorySpec: DirectorySpec ) {
-  let commonParams = findAllCommonParams ( rds );
-  const commonParamDefns = commonParams.map ( s => '  '+  s + "?:string;\n" ).join ( "" )
+export function makeCommonParams<B, G> ( params: TSParams, pages: PageD<B, G>[], rds: RestD<G>[], directorySpec: DirectorySpec ) {
+  let commonParams: string[] = findAllCommonParams ( pages, rds );
+  const commonParamDefns = commonParams.map ( s => '  ' + s + "?:string;\n" ).join ( "" )
   const commonParamNameAndLens = commonParams.map ( s => `   ${s}: commonIdsL.focusQuery('${s}')` ).join ( ",\n" )
   return applyToTemplate ( loadFile ( 'templates/commonTemplate.ts', directorySpec ).toString (), { ...params, commonParamDefns, commonParamNameAndLens } )
 }

@@ -1,5 +1,5 @@
 import { AllDataDD, CompDataD, DataD, findAllDataDs, HasLayout, isDataDd, NamesAndDataDs } from "./dataD";
-import { defaultRestAction, RestActionDetail, RestD, unique } from "./restD";
+import { CommonLensRestParam, defaultRestAction, RestActionDetail, RestD, unique } from "./restD";
 import { NameAnd, RestAction, RestResult, sortedEntries } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
 import { DisplayCompD, SimpleDisplayComp } from "./componentsD";
@@ -47,6 +47,7 @@ export type PageD<Buttons, G> = MainPageD<Buttons, G> | ModalPageD<Buttons, G>
 
 export interface MainPageD<Buttons, G> extends HasLayout {
   pageType: 'MainPage',
+  commonParams?: NameAnd<CommonLensRestParam>,
   name: string,
   modes: PageMode[],
   display: { target: string[], dataDD: CompDataD<G> },
