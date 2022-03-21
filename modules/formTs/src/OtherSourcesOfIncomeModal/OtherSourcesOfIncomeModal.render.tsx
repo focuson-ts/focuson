@@ -14,6 +14,7 @@ import {ModalButton} from '@focuson/pages';
 import {ModalCancelButton} from '@focuson/pages';
 import {ModalCommitButton} from '@focuson/pages';
 import {RestButton} from '../copied/rest';
+import {ToggleButton} from '../copied/ToggleButton';
 import {ValidationButton} from '../copied/ValidationButton';
 export function OtherSourcesOfIncomeModalPage(){
   return focusedPage<FState, OtherIncomeResponseDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
@@ -21,9 +22,8 @@ export function OtherSourcesOfIncomeModalPage(){
           const id='root';
           const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,
               commit:<ModalCommitButton id='commit'  state={state} />,}
-          return <div className='modalPage'>
-           {/*{"dataDD":"OtherIncomeResponse","display":{"import":"","name":"OtherIncomeResponse","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
+          return <>
           <OtherIncomeResponse id={`${id}`} state={state} mode={mode} buttons={buttons} />
           { buttons.cancel } 
           { buttons.commit } 
-          </div>})}
+          </>})}

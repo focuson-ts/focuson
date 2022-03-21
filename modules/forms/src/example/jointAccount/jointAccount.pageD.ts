@@ -1,6 +1,7 @@
 import { ExampleMainPage } from "../common";
 import { JointAccountDd } from "./jointAccount.dataD";
 import { jointAccountRestD } from "./jointAccount.restD";
+import { BooleanDD } from "../../common/dataD";
 
 export const JointAccountPageD: ExampleMainPage = {
   name: 'JointAccount',
@@ -11,10 +12,11 @@ export const JointAccountPageD: ExampleMainPage = {
   /** How we display the page.*/
   display: { target: [ 'fromApi' ], dataDD: JointAccountDd },
   /** When the page is selected for the first time this is the initial state */
-  initialValue: {},
+  initialValue: {joint: false},
   /** This defines the domain data structures in react*/
   domain: {
     fromApi: { dataDD: JointAccountDd },
+    joint: { dataDD: BooleanDD }
   },
   modals: [],
 
@@ -22,5 +24,7 @@ export const JointAccountPageD: ExampleMainPage = {
   rest: {
     repeating: { rest: jointAccountRestD, targetFromPath: [ 'fromApi' ], fetcher: true }
   },
-  buttons: {}
+  buttons: {
+    toggle: { control: 'ToggleButton', value: [ 'joint' ], buttonText: 'Toggle [{~/joint}]' }
+  }
 }

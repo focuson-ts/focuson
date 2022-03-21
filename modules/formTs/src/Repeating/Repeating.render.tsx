@@ -16,6 +16,7 @@ import {ModalButton} from '@focuson/pages';
 import {ModalCancelButton} from '@focuson/pages';
 import {ModalCommitButton} from '@focuson/pages';
 import {RestButton} from '../copied/rest';
+import {ToggleButton} from '../copied/ToggleButton';
 import {ValidationButton} from '../copied/ValidationButton';
 import {RepeatingPageDomain} from "../Repeating/Repeating.domains";
 import {RepeatingLineDomain} from "../Repeating/Repeating.domains"
@@ -46,20 +47,17 @@ export function RepeatingPage(){
         <ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi')} value={fullState.focusOn('selectedItem')} />
       </GuardButton>,}
 
-      return <div className='mainPage'>
-           {/*{"dataDD":"RepeatingWholeData","display":{"import":"","name":"Table","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"order":{"paramType":"string[]","needed":"yes"},"copySelectedIndexTo":{"paramType":"pageState","needed":"no"},"copySelectedItemTo":{"paramType":"pageState","needed":"no"}}},"path":[]}*/}
+      return <>
           <Table id={`${id}`} state={state} mode={mode} order={["name","age"]} />
       { buttons.addEntry } 
       { buttons.edit } 
       { buttons.prevOccupation } 
       { buttons.nextOccupation } 
-      </div>})}
+      </>})}
 
 export function RepeatingLine({id,state,mode,buttons}: FocusedProps<FState, RepeatingLineDomain,Context>){
   return <>
-     {/*{"path":["name"],"dataDD":"OneLineString","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"allButtons":{"paramType":"object","needed":"defaultToButtons"},"buttons":{"paramType":"string[]","needed":"no"},"required":{"paramType":"boolean","needed":"no","default":true},"pattern":{"paramType":"string","needed":"no"},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='name' allButtons={buttons} required={true} />
-     {/*{"path":["age"],"dataDD":"Integer","display":{"import":"../copied/LabelAndInput","name":"LabelAndNumberInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"allButtons":{"paramType":"object","needed":"defaultToButtons"},"buttons":{"paramType":"string[]","needed":"no"},"required":{"paramType":"boolean","needed":"no","default":true},"min":{"paramType":"object","needed":"no"},"max":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndNumberInput id={`${id}.age`} state={state.focusOn('age')} mode={mode} label='age' allButtons={buttons} required={true} />
 </>
 }

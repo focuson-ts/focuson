@@ -4,6 +4,7 @@ import { CommonStateProps } from "../common";
 import { Label } from "../Label";
 import { ButtonFromPage } from "../buttonFromPage";
 import { makeButtons } from "../LabelAndInput";
+import { FocusOnContext } from "@focuson/focuson";
 
 
 export interface LabelAndDropdownProps<S, T, Context> extends CommonStateProps<S, T, Context> {
@@ -13,12 +14,12 @@ export interface LabelAndDropdownProps<S, T, Context> extends CommonStateProps<S
   buttons?: string[]
 }
 
-export function LabelAndDropdown<S, T, Context> ( props: LabelAndDropdownProps<S, string, Context> ) {
+export function LabelAndDropdown<S, T, Context  extends FocusOnContext<S>> ( props: LabelAndDropdownProps<S, string, Context> ) {
   const { enums, state, ariaLabel, id, mode, label, name, buttons } = props
   console.log ( Object.entries ( enums ) )
   console.log ( enums[ state.json () ] )
   return (<div>
-      <Label htmlFor={name} label={label}/>
+      <Label state={state} htmlFor={name} label={label}/>
       <select style={{ height: '32px' }} disabled={mode === 'view'} id={id} aria-label={ariaLabel} onChange={( e ) =>
         state.setJson ( e.target.value, reasonFor ( 'LabelAndDropdown', 'onChange', id ) )}>
         {

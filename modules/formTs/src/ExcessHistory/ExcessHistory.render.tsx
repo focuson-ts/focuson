@@ -14,6 +14,7 @@ import {ModalButton} from '@focuson/pages';
 import {ModalCancelButton} from '@focuson/pages';
 import {ModalCommitButton} from '@focuson/pages';
 import {RestButton} from '../copied/rest';
+import {ToggleButton} from '../copied/ToggleButton';
 import {ValidationButton} from '../copied/ValidationButton';
 export function ExcessHistoryPage(){
   return focusedPage<FState, AccountOverviewHistoryDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
@@ -25,10 +26,9 @@ export function ExcessHistoryPage(){
                 pageMode='view'
                 focusOn={["{basePage}","arrearsDetails"]}
               />,}
-          return <div className='modalPage'>
-           {/*{"dataDD":"AccountOverviewHistory","display":{"import":"","name":"AccountOverviewHistory","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
+          return <>
           <AccountOverviewHistory id={`${id}`} state={state} mode={mode} buttons={buttons} />
           { buttons.cancel } 
           { buttons.commit } 
           { buttons.details } 
-          </div>})}
+          </>})}

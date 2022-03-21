@@ -18,7 +18,7 @@ interface StoryState {
    pageMode: PageMode
 }
  
-const initial = {}
+const initial = {"joint":false}
 function pageSelection ( pageMode: PageMode ): PageSelection { return { pageName: 'JointAccount', pageMode}}
 const Template: Story<StoryState> = ( args: StoryState ) =>{
   const startState: FState = { ...emptyState, pageSelection: [ pageSelection ( args.pageMode ) ] }

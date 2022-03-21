@@ -14,6 +14,7 @@ import {ModalButton} from '@focuson/pages';
 import {ModalCancelButton} from '@focuson/pages';
 import {ModalCommitButton} from '@focuson/pages';
 import {RestButton} from '../copied/rest';
+import {ToggleButton} from '../copied/ToggleButton';
 import {ValidationButton} from '../copied/ValidationButton';
 export function OccupationIncomeModalPage(){
   return focusedPage<FState, OneOccupationIncomeDetailsDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
@@ -31,11 +32,10 @@ export function OccupationIncomeModalPage(){
                 pageMode='edit'
                 focusOn={["{basePage}","otherSourcesOfIncome"]}
               />,}
-          return <div className='modalPage'>
-           {/*{"dataDD":"OneOccupationIncomeDetails","display":{"import":"","name":"OneOccupationIncomeDetails","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
+          return <>
           <OneOccupationIncomeDetails id={`${id}`} state={state} mode={mode} buttons={buttons} />
           { buttons.cancel } 
           { buttons.commit } 
           { buttons.list } 
           { buttons.otherSourcesOfIncome } 
-          </div>})}
+          </>})}

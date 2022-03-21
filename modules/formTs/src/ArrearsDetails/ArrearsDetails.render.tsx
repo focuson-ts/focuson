@@ -14,14 +14,14 @@ import {ModalButton} from '@focuson/pages';
 import {ModalCancelButton} from '@focuson/pages';
 import {ModalCommitButton} from '@focuson/pages';
 import {RestButton} from '../copied/rest';
+import {ToggleButton} from '../copied/ToggleButton';
 import {ValidationButton} from '../copied/ValidationButton';
 export function ArrearsDetailsPage(){
   return focusedPage<FState, ArrearsDetailsDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
      ( state, d, mode ) => {
           const id='root';
           const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,}
-          return <div className='modalPage'>
-           {/*{"dataDD":"ArrearsDetails","display":{"import":"","name":"ArrearsDetails","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
+          return <>
           <ArrearsDetails id={`${id}`} state={state} mode={mode} buttons={buttons} />
           { buttons.cancel } 
-          </div>})}
+          </>})}

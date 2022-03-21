@@ -17,6 +17,7 @@ import {ModalButton} from '@focuson/pages';
 import {ModalCancelButton} from '@focuson/pages';
 import {ModalCommitButton} from '@focuson/pages';
 import {RestButton} from '../copied/rest';
+import {ToggleButton} from '../copied/ToggleButton';
 import {ValidationButton} from '../copied/ValidationButton';
 import {CreateEAccountPageDomain} from "../CreateEAccount/CreateEAccount.domains";
 import {CreateEAccountDataDomain} from "../CreateEAccount/CreateEAccount.domains"
@@ -34,23 +35,18 @@ export function CreateEAccountPage(){
        />,
       resetAll:<button>resetAll of type ResetStateButton cannot be created yet</button>,}
 
-      return <div className='mainPage'>
-           {/*{"dataDD":"CreateEAccountData","display":{"import":"","name":"CreateEAccountData","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"}}},"path":[]}*/}
+      return <>
           <CreateEAccountData id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.createEAccounts } 
       { buttons.resetAll } 
       { buttons.cancel } 
-      </div>})}
+      </>})}
 
 export function CreateEAccountData({id,state,mode,buttons}: FocusedProps<FState, CreateEAccountDataDomain,Context>){
   return <>
-     {/*{"path":["name"],"dataDD":"OneLineString","display":{"import":"../copied/LabelAndInput","name":"LabelAndStringInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"allButtons":{"paramType":"object","needed":"defaultToButtons"},"buttons":{"paramType":"string[]","needed":"no"},"required":{"paramType":"boolean","needed":"no","default":true},"pattern":{"paramType":"string","needed":"no"},"minlength":{"paramType":"object","needed":"no"},"maxlength":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='name' allButtons={buttons} required={true} />
-     {/*{"path":["type"],"dataDD":"EAccountDisplayType","display":{"import":"../copied/Radio","name":"LabelAndRadio","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"allButtons":{"paramType":"object","needed":"defaultToButtons"},"buttons":{"paramType":"string[]","needed":"no"},"enums":{"needed":"defaultToEnum","paramType":"object"}}}}*/}
     <LabelAndRadio id={`${id}.type`} state={state.focusOn('type')} mode={mode} label='type' allButtons={buttons} enums={{"savings":"Savings","checking":"Checking"}} />
-     {/*{"path":["savingsStyle"],"dataDD":"SavingsStyle","display":{"import":"../copied/Radio","name":"Radio","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"enums":{"needed":"defaultToEnum","paramType":"object"}}}}*/}
     <Radio id={`${id}.savingsStyle`} state={state.focusOn('savingsStyle')} mode={mode} enums={{"adHoc":"Save what you want, when you want it","payRegular":"Pay a regular amount until you reach a target","paySettime":"Pay a regular amount for a set time","targetTime":"Reach a target balance by a set time"}} />
-     {/*{"path":["initialAmount"],"dataDD":"Money","display":{"import":"../copied/LabelAndInput","name":"LabelAndNumberInput","params":{"id":{"paramType":"object","needed":"id"},"state":{"paramType":"state","needed":"defaultToPath"},"mode":{"paramType":"object","needed":"no","default":"mode"},"ariaLabel":{"paramType":"string","needed":"no"},"label":{"paramType":"string","needed":"defaultToCamelCaseOfName"},"allButtons":{"paramType":"object","needed":"defaultToButtons"},"buttons":{"paramType":"string[]","needed":"no"},"required":{"paramType":"boolean","needed":"no","default":true},"min":{"paramType":"object","needed":"no"},"max":{"paramType":"object","needed":"no"}}}}*/}
     <LabelAndNumberInput id={`${id}.initialAmount`} state={state.focusOn('initialAmount')} mode={mode} label='initial amount' allButtons={buttons} required={true} />
 </>
 }
