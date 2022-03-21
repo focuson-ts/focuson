@@ -17,16 +17,29 @@ export function AccountOverview_AccountAllFlagsRestDetails ( cd: NameAndLens<FSt
   }
 }
 
-export function AccountOverview_ArrearsDetailsRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.ArrearsDetailsDomain, SimpleMessage> {
+export function currentAccountOverview_ArrearsDetailsRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.ArrearsDetailsDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {startDate: Lenses.identity< domains.AccountOverviewPageDomain>().focusQuery('currentSelectedExcessHistory').focusQuery('start')}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
-    dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('arrearsDetails'),
+    dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('arrearsDetailsCurrent'),
     cd, fdd,
     ids: ["accountId","customerId","startDate"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/accountOverview/arrearsDetails?{query}"
+    url: "/api/accountOverview/arrearsDetails/current?{query}"
+  }
+}
+
+export function previousAccountOverview_ArrearsDetailsRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.ArrearsDetailsDomain, SimpleMessage> {
+  const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {startDate: Lenses.identity< domains.AccountOverviewPageDomain>().focusQuery('currentSelectedExcessHistory').focusQuery('start')}
+  return {
+    fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
+    dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('arrearsDetailsPrevious'),
+    cd, fdd,
+    ids: ["accountId","customerId","startDate"],
+    resourceId:  [],
+    messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
+    url: "/api/accountOverview/arrearsDetails/previous?{query}"
   }
 }
 

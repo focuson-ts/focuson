@@ -18,9 +18,8 @@ export function copyWithFieldSet<T, K extends keyof T> ( t: T, k: K, v: T[K] ) {
   result[ k ] = v
   return result
 }
-export function safeArray<T> ( ts: T[] | undefined ) {
-  return ts ? ts : []
-}
+export function safeArray<T> ( ts: T[] | undefined ) {  return ts ? ts : []}
+export function safeString ( s: string | undefined ) {  return s ? s : ''}
 export function safePick ( s: string[] | undefined, i: number ) {
   const sa = safeArray ( s )
   return sa.length == 0 ? '' : sa[ i % sa.length ]

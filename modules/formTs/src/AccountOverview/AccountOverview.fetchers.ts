@@ -17,14 +17,24 @@ export function AccountAllFlagsFetcher(fdLens:Optional<FState, domains.AccountOv
      '/api/accountOverview/flags?{query}')
 }
 //fetcher type true
-export function ArrearsDetailsFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
+export function currentArrearsDetailsFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
   const localIds = {startDate: Lenses.identity< domains.AccountOverviewPageDomain>().focusQuery('currentSelectedExcessHistory').focusQuery('start')}
   return pageAndTagFetcher<FState, domains.AccountOverviewPageDomain, domains.ArrearsDetailsDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.ArrearsDetailsDomain>(),
      'AccountOverview',
-     'arrearsDetails', fdLens, commonIds, localIds,["accountId","customerId","startDate"],[],
-      Lenses.identity< domains.AccountOverviewPageDomain> ().focusQuery('arrearsDetails'),
-     '/api/accountOverview/arrearsDetails?{query}')
+     'arrearsDetailsCurrent', fdLens, commonIds, localIds,["accountId","customerId","startDate"],[],
+      Lenses.identity< domains.AccountOverviewPageDomain> ().focusQuery('arrearsDetailsCurrent'),
+     '/api/accountOverview/arrearsDetails/current?{query}')
+}
+//fetcher type true
+export function previousArrearsDetailsFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
+  const localIds = {startDate: Lenses.identity< domains.AccountOverviewPageDomain>().focusQuery('currentSelectedExcessHistory').focusQuery('start')}
+  return pageAndTagFetcher<FState, domains.AccountOverviewPageDomain, domains.ArrearsDetailsDomain, SimpleMessage>(
+    common.commonFetch<FState,  domains.ArrearsDetailsDomain>(),
+     'AccountOverview',
+     'arrearsDetailsPrevious', fdLens, commonIds, localIds,["accountId","customerId","startDate"],[],
+      Lenses.identity< domains.AccountOverviewPageDomain> ().focusQuery('arrearsDetailsPrevious'),
+     '/api/accountOverview/arrearsDetails/previous?{query}')
 }
 //fetcher type true
 export function AccountOverviewHistoryFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {

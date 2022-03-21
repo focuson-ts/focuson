@@ -1,6 +1,6 @@
 import { AllDataDD, CompDataD, DataD, findAllDataDs, HasLayout, isDataDd, NamesAndDataDs } from "./dataD";
 import { CommonLensRestParam, defaultRestAction, RestActionDetail, RestD, unique } from "./restD";
-import { NameAnd, RestAction, RestResult, sortedEntries } from "@focuson/utils";
+import { NameAnd, RestAction, RestResult, safeString, sortedEntries } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
 import { DisplayCompD, SimpleDisplayComp } from "./componentsD";
 
@@ -90,7 +90,7 @@ export function allRestAndActions<B, G> ( pds: PageD<B, G>[] ): [ PageD<B, G>, R
       const y: [ PageD<B, G>, RestDefnInPageProperties<G>, RestActionDetail ][] = rdp.rest.actions.map ( a => [ pd, rdp, defaultRestAction[ a ] ] )
       return y
     } )
-  } ), ( [ p, r, rad ] ) => p.name + "," + r.rest.dataDD.name + "," + rad.name )
+  } ), ( [ p, r, rad ] ) => safeString ( r.rest.namePrefix ) + p.name + "," + r.rest.dataDD.name + "," + rad.name )
 }
 
 

@@ -4,7 +4,8 @@ import { Lenses, NameAndLens} from "@focuson/lens"
 import { FState , commonIds} from "./common";
 
 import { AccountOverview_AccountAllFlagsRestDetails } from './AccountOverview/AccountOverview.rests';
-import { AccountOverview_ArrearsDetailsRestDetails } from './AccountOverview/AccountOverview.rests';
+import { currentAccountOverview_ArrearsDetailsRestDetails } from './AccountOverview/AccountOverview.rests';
+import { previousAccountOverview_ArrearsDetailsRestDetails } from './AccountOverview/AccountOverview.rests';
 import { AccountOverview_AccountOverviewHistoryRestDetails } from './AccountOverview/AccountOverview.rests';
 import { AccountOverview_AccountOverviewExcessInfoRestDetails } from './AccountOverview/AccountOverview.rests';
 import { AccountOverview_AccountOverviewRestDetails } from './AccountOverview/AccountOverview.rests';
@@ -25,7 +26,8 @@ import { PostCodeDemo_PostCodeMainPageRestDetails } from './PostCodeDemo/PostCod
 import { PostCodeDemo_PostCodeDataRestDetails } from './PostCodeDemo/PostCodeDemo.rests';
 export const restDetails: RestDetails<FState, SimpleMessage> = {
    AccountOverview_AccountAllFlagsRestDetails: AccountOverview_AccountAllFlagsRestDetails(commonIds, defaultDateFn),
-   AccountOverview_ArrearsDetailsRestDetails: AccountOverview_ArrearsDetailsRestDetails(commonIds, defaultDateFn),
+   currentAccountOverview_ArrearsDetailsRestDetails: currentAccountOverview_ArrearsDetailsRestDetails(commonIds, defaultDateFn),
+   previousAccountOverview_ArrearsDetailsRestDetails: previousAccountOverview_ArrearsDetailsRestDetails(commonIds, defaultDateFn),
    AccountOverview_AccountOverviewHistoryRestDetails: AccountOverview_AccountOverviewHistoryRestDetails(commonIds, defaultDateFn),
    AccountOverview_AccountOverviewExcessInfoRestDetails: AccountOverview_AccountOverviewExcessInfoRestDetails(commonIds, defaultDateFn),
    AccountOverview_AccountOverviewRestDetails: AccountOverview_AccountOverviewRestDetails(commonIds, defaultDateFn),

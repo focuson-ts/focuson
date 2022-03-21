@@ -1,6 +1,6 @@
 import { ExampleMainPage, ExampleModalPage } from "../common";
 import { accountAllFlagsDataDD, accountOverviewDataD, accountOverviewExcessHistoryDataD, accountOverviewExcessHistoryLineDataD, accountOverviewExcessInfoDataD, accountOverviewReasonDataD, arrearsDetailsDataD } from "./accountOverview.dataD";
-import { accountFlagsRestDD, accountOverviewExcessHistoryRestD, accountOverviewExcessInfoRestD, accountOverviewReasonRestD, accountOverviewRestD, arrearsDetailsRestD } from "./accountOverview.restD";
+import { accountFlagsRestDD, accountOverviewExcessHistoryRestD, accountOverviewExcessInfoRestD, accountOverviewReasonRestD, accountOverviewRestD, arrearsDetailsCurrentRestD, arrearsDetailsPreviousRestD } from "./accountOverview.restD";
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 
 export const ArrearsDetailsModalPage: ExampleModalPage = {
@@ -55,6 +55,7 @@ export const AccountFlagsModalPage: ExampleModalPage = {
     commit: { control: 'ModalCommitButton' }
   },
 }
+
 export const AccountOverviewMainPage: ExampleMainPage = {
   name: "AccountOverview",
   pageType: "MainPage",
@@ -65,7 +66,8 @@ export const AccountOverviewMainPage: ExampleMainPage = {
     reason: { dataDD: accountOverviewReasonDataD },
     excessHistory: { dataDD: accountOverviewExcessHistoryDataD },
     currentSelectedExcessHistory: { dataDD: accountOverviewExcessHistoryLineDataD },
-    arrearsDetails: { dataDD: arrearsDetailsDataD },
+    arrearsDetailsCurrent: { dataDD: arrearsDetailsDataD },
+    arrearsDetailsPrevious: { dataDD: arrearsDetailsDataD },
     accountFlags: { dataDD: accountAllFlagsDataDD }, //the rest code gets the account flags and puts it here
     editingAccountFlags: { dataDD: accountAllFlagsDataDD } //when we open the modal window we copy it here
   },
@@ -82,10 +84,11 @@ export const AccountOverviewMainPage: ExampleMainPage = {
     excessInfo: { rest: accountOverviewExcessInfoRestD, targetFromPath: [ 'excessInfo' ], fetcher: true },
     reason: { rest: accountOverviewReasonRestD, targetFromPath: [ 'reason' ], fetcher: true },
     excessHistory: { rest: accountOverviewExcessHistoryRestD, targetFromPath: [ 'excessHistory' ], fetcher: true },
-    arrearsDetails: { rest: arrearsDetailsRestD, targetFromPath: [ 'arrearsDetails' ], fetcher: true },
-    accountFlags: { rest: accountFlagsRestDD, targetFromPath: [ 'accountFlags' ], fetcher: true },
+    arrearsDetailsCurrent: { rest: arrearsDetailsCurrentRestD, targetFromPath: [ 'arrearsDetailsCurrent' ], fetcher: true },
+    arrearsDetailsPrevious: { rest: arrearsDetailsPreviousRestD, targetFromPath: [ 'arrearsDetailsPrevious' ], fetcher: true },
+    accountFlags: { rest: accountFlagsRestDD, targetFromPath: [ 'accountFlags' ], fetcher: true }
   },
-  layout: {component: HideButtonsCD, displayParams: {hide:['excessHistory','reason']}},
+  layout: { component: HideButtonsCD, displayParams: { hide: [ 'excessHistory', 'reason' ] } },
   buttons: {
     excessInfo: {
       control: 'ModalButton', modal: ExcessInfoModalPage, mode: 'view',

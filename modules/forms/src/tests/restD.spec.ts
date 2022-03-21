@@ -1,6 +1,7 @@
 import { findMustConstructForRest, flapMapActionDetails, makeCommonParamsValueForTest } from "../common/restD";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
-import { accountOverviewRestD, arrearsDetailsRestD } from "../example/accountOverview/accountOverview.restD";
+import { arrearsDetailsCurrentRestD } from "../example/accountOverview/accountOverview.restD";
+
 
 describe ( "flatMapActionDetails", () => {
   it ( "should work for exportAccountsSummaryRestD", () => {
@@ -48,7 +49,7 @@ describe ( "makeCommonParamsValueForTest", () => {
   } )
 
   it ( "should ensure the common lens come last, as that is what happens 'in the real'", () => {
-    expect ( JSON.stringify ( makeCommonParamsValueForTest ( arrearsDetailsRestD, 'get' ) ).replace ( /"/g, "'" ) ).toEqual (
+    expect ( JSON.stringify ( makeCommonParamsValueForTest ( arrearsDetailsCurrentRestD, 'get' ) ).replace ( /"/g, "'" ) ).toEqual (
       "{'startDate':'2020-01-20','accountId':'accId','customerId':'custId'}" )
   } )
 } )

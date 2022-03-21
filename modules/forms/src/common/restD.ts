@@ -70,6 +70,8 @@ export const defaultRestAction: RestTypeDetails = {
 
 
 export interface RestD<G> {
+  /** Only used for dedupping when the dataDd is repeated */
+  namePrefix?: string;
   params: RestParams,
   dataDD: CompDataD<G>,
   url: string,

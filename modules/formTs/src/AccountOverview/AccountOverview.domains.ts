@@ -2,7 +2,8 @@ export interface HasAccountOverviewPageDomain {   AccountOverview?: AccountOverv
 
 export interface AccountOverviewPageDomain{
   accountFlags?:AccountAllFlagsDomain;
-  arrearsDetails?:ArrearsDetailsDomain;
+  arrearsDetailsCurrent?:ArrearsDetailsDomain;
+  arrearsDetailsPrevious?:ArrearsDetailsDomain;
   currentSelectedExcessHistory?:AccountOverviewExcessHistoryLineDomain;
   editingAccountFlags?:AccountAllFlagsDomain;
   excessHistory?:AccountOverviewHistoryDomain;

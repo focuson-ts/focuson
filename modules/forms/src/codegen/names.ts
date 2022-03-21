@@ -2,7 +2,7 @@ import { AllDataDD, CompDataD, compDataDIn } from "../common/dataD";
 import { ModalPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { RestActionDetail, RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
-import { RestAction } from "@focuson/utils";
+import { RestAction, safeString } from "@focuson/utils";
 import { JavaWiringParams, TSParams } from "./config";
 
 export const guardName = ( s: string ) => s + "Guard"
@@ -28,9 +28,8 @@ export const queryName = <G> ( restD: RestD<G>, action: RestAction ): string => 
 export const endPointName = <G> ( restD: RestD<G>, action: RestAction ): string => action + restD.dataDD.name
 
 export const modalName = <B, G> ( p: PageD<B, G>, modal: PageD<B, G> ) => modal.name
-export const restDetailsName = <B, G> ( p: PageD<B, G>, r: RestD<G> ) =>
-  p.name + "_" + r.dataDD.name + "RestDetails"
-export const fetcherName = <G> ( d: RestDefnInPageProperties<G> ): string => d.rest.dataDD.name + "Fetcher";
+export const restDetailsName = <B, G> ( p: PageD<B, G>, r: RestD<G> ) => safeString ( r.namePrefix ) + p.name + "_" + r.dataDD.name + "RestDetails"
+export const fetcherName = <G> ( d: RestDefnInPageProperties<G> ): string => safeString ( d.rest.namePrefix ) + d.rest.dataDD.name + "Fetcher";
 export const fetcherInterfaceName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${r.dataDD.name}${params.fetcherInterface}`;
 export const fetcherVariableName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `_${r.dataDD.name}${params.fetcherInterface}`;
 export const mockFetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${r.dataDD.name}${params.fetcherInterface}Mock`;
