@@ -189,7 +189,7 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
   const { dataDD } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
   const domName = domainName ( pageD.display.dataDD );
-  const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( `createReactModalPageComponent-layout ${pageD.name}`, [], pageD, "<div className='modalPage'>", '</div>' );
+  const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( `createReactModalPageComponent-layout ${pageD.name}`, [], pageD, "<>", '</>' );
 
   return [
     `export function ${pageComponentName ( pageD )}(){`,
@@ -210,7 +210,7 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
   const { dataDD } = pageD.display
   const focus = focusOnFor ( pageD.display.target );
   let errorPrefix: string = `createReactMainPageComponent-layout ${pageD.name}`;
-  const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( errorPrefix, [], pageD, "<div className='mainPage'>", '</div>' );
+  const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( errorPrefix, [], pageD, `<>`, '</>' );
   return [
     `export function ${pageComponentName ( pageD )}(){`,
     `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${pageD.name}' ) ( s => s${focus}) (
