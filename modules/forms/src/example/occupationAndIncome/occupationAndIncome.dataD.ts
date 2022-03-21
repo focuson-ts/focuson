@@ -57,7 +57,7 @@ export const oneOccupationIncomeDetailsDD: ExampleDataD = {
   },
   structure: {
     areYou: { dataDD: customerStatusDD, displayParams: { label: "Are you... " } },
-    occupation: { dataDD: StringDD, displayParams: { label: "What is your occupation? ", button: 'list' }, guard: { areYou: [ 'E', 'S' ] } },
+    occupation: { dataDD: StringDD, displayParams: { label: "What is your occupation? ", buttons: ['list'] }, guard: { areYou: [ 'E', 'S' ] } },
     customerDescription: { dataDD: StringDD, displayParams: { label: "Customers description: " }, guard: { areYou: [ 'E', 'S' ] } },
     ownShareOfTheCompany: { dataDD: yesNoDD, displayParams: { label: "Do you own a share of the company? " }, guard: { areYou: [ 'E' ] } },
     owningSharesPct: { dataDD: yesNoDD, displayParams: { label: "Is this 20% or more of it? " }, guard: { areYou: [ 'E' ], ownShareOfTheCompany: [ 'Y' ] } },
@@ -84,7 +84,7 @@ export const oneOccupationIncomeDetailsDD: ExampleDataD = {
     // TODO This needs to be displayed if regulatoryReport is Y
     // netMonthlyIncome: { dataDD: StringDD, displayParams: { label: "What is your net monthly income: " }, guard: { areYou: [ 'E', 'S' ] } },
 
-    otherSourceOfIncome: { dataDD: yesNoDD, displayParams: { label: "Do you have another sources of income (e.g. rental income) ? ", button: 'otherSourcesOfIncome' }, },
+    otherSourceOfIncome: { dataDD: yesNoDD, displayParams: { label: "Do you have another sources of income (e.g. rental income) ? ", buttons: ['otherSourcesOfIncome'] }, },
 
     createdBy: { dataDD: StringDD, displayParams: { label: "Entry created by: " }, hidden: true },
     createdDate: { dataDD: DateDD, displayParams: { label: "on " }, hidden: true },

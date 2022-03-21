@@ -3,13 +3,14 @@ import { reasonFor } from "@focuson/state";
 import { CommonStateProps } from "../common";
 import { Label } from "../Label";
 import { ButtonFromPage } from "../buttonFromPage";
+import { makeButtons } from "../LabelAndInput";
 
 
 export interface LabelAndDropdownProps<S, T, Context> extends CommonStateProps<S, T, Context> {
   label: string;
   enums: NameAnd<string>;
-  buttons: NameAnd<JSX.Element>;
-  button?: string
+  allButtons: NameAnd<JSX.Element>;
+  buttons?: string[]
 }
 
 export function LabelAndDropdown<S, T, Context> ( props: LabelAndDropdownProps<S, string, Context> ) {
@@ -18,14 +19,13 @@ export function LabelAndDropdown<S, T, Context> ( props: LabelAndDropdownProps<S
   console.log ( enums[ state.json () ] )
   return (<div>
       <Label htmlFor={name} label={label}/>
-      <select style={{ height: '32px' }}  disabled={mode === 'view'} id={id} aria-label={ariaLabel} onChange={( e ) =>
+      <select style={{ height: '32px' }} disabled={mode === 'view'} id={id} aria-label={ariaLabel} onChange={( e ) =>
         state.setJson ( e.target.value, reasonFor ( 'LabelAndDropdown', 'onChange', id ) )}>
         {
           Object.entries ( enums ).map ( ( [ name, value ], key ) => (
             <option selected={value === enums[ state.json () ]} key={key} value={name}>{value}</option>
           ) )}
-      </select>
-      <ButtonFromPage button={props.button} buttons={props.buttons}/>
+      </select>{makeButtons ( props.allButtons, props.buttons )}
     </div>
   )
 }

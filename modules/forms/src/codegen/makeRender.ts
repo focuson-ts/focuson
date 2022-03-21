@@ -75,7 +75,7 @@ export const processParam = <G> ( errorPrefix: string, dcd: DisplayCompD ) => ( 
   if ( dcd.params === undefined ) throw Error ( `${errorPrefix} Trying to get data for param ${name}, but no params have been defined` )
   const dcdType: OneDisplayCompParamD<any> | undefined = dcd.params[ name ]
   if ( dcdType === undefined ) throw Error ( `${errorPrefix}  param '${name}' not found in ${JSON.stringify ( Object.keys ( dcd.params ).sort () )}` )
-  const fullErrorPrefix= ` ${errorPrefix } has a display component ${dcd.name} and sets a param ${name} `
+  const fullErrorPrefix = ` ${errorPrefix} has a display component ${dcd.name} and sets a param ${name} `
   if ( dcdType === undefined ) throw new Error ( `${fullErrorPrefix}. Legal values are ${sortedEntries ( dcd.params ).map ( t => t[ 0 ] ).join ( ',' )}` )
   function processStringParam () {return "'" + s + "'"}
   function processObjectParam () {return "{" + s + "}"}
@@ -125,9 +125,9 @@ function makeParams<G> ( errorPrefix: string, path: string[], optEnum: NameAnd<S
   const fullDisplayParams = Object.entries ( Object.fromEntries ( [ ...defaultParams, ...dataDDParams, ...displayParamsA ] ) )
   return fullDisplayParams;
 }
-export function createOneReact<B, G> ( { path, dataDD, display, displayParams, guard }: ComponentData<G> ): string[] {
+export function createOneReact<B, G> ( pageD: PageD<B, G>, { path, dataDD, display, displayParams, guard }: ComponentData<G> ): string[] {
   const { name, params } = display
-  const fullDisplayParams = makeParams ( `Datad ${dataDD.name} with path ${JSON.stringify ( path )}`, path,
+  const fullDisplayParams = makeParams ( `Page ${pageD.name}, Datad ${dataDD.name} with path ${JSON.stringify ( path )}`, path,
     isPrimDd ( dataDD ) && dataDD.enum, display, dataDD.displayParams, displayParams );
 
   const displayParamsString = fullDisplayParams.map ( ( [ k, v ] ) => `${k}=${v}` ).join ( " " )
@@ -138,11 +138,11 @@ export function createOneReact<B, G> ( { path, dataDD, display, displayParams, g
   const buttons = isDataDd ( dataDD ) && !dataDD.display ? 'buttons={buttons} ' : ''
   return [ `${guardPrefix}<${name} ${displayParamsString} ${buttons}/>${guardPostfix}` ]
 }
-export function createAllReactCalls<G> ( d: AllComponentData<G>[] ): string[] {
+export function createAllReactCalls<B, G> ( p: PageD<B, G>, d: AllComponentData<G>[] ): string[] {
   return d.filter ( ds => isComponentData ( ds ) && !ds.hidden ).flatMap ( d => {
     const comment = isComponentData ( d ) ? [ " {/*" + JSON.stringify ( { ...d, dataDD: d.dataDD?.name } ) + '*/}' ] : []
     if ( isErrorComponentData ( d ) ) return [ d.error ]
-    const comp = [ ...comment, ...createOneReact ( d ) ]
+    const comp = [ ...comment, ...createOneReact ( p, d ) ]
     return comp
   } )
 }
@@ -151,13 +151,13 @@ function makeLayoutPrefixPostFix ( errorPrefix: string, path: string[], hasLayou
   if ( hasLayout.layout ) {
     const { component, displayParams } = hasLayout.layout
     const params = makeParams ( errorPrefix, path, undefined, component, displayParams, {} )
-    const layoutPrefixString = `<${component.name} ${ params .map ( ( [ n, v ] ) => `${n}=${v}` ).join(' ')}>`
+    const layoutPrefixString = `<${component.name} ${params.map ( ( [ n, v ] ) => `${n}=${v}` ).join ( ' ' )}>`
     const layoutPostfixString = `</${component.name}>`
     return { layoutPrefixString, layoutPostfixString };
   } else return { layoutPrefixString: defaultOpen, layoutPostfixString: defaultClose }
 }
-export const createReactComponent = <G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G> ) => ( dataD: CompDataD<G> ): string[] => {
-  const contents = indentList ( indentList ( createAllReactCalls ( listComponentsIn ( dataD ) ) ) )
+export const createReactComponent = <B, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, page: PageD<B, G> ) => ( dataD: CompDataD<G> ): string[] => {
+  const contents = indentList ( indentList ( createAllReactCalls ( page, listComponentsIn ( dataD ) ) ) )
   const guardStrings = isDataDd ( dataD ) ? sortedEntries ( dataD.guards ).map ( ( [ name, guard ] ) => {
     const maker = makeGuard[ guard.condition ]
     if ( !maker ) throw new Error ( `Don't know how to process guard with name ${name}: ${JSON.stringify ( guard )}` )
@@ -198,7 +198,7 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
       `const id='root';`,
       ...makeButtonsVariable ( params, makeGuard, makeButtons, pageD ),
       `return ${layoutPrefixString}`,
-      ...createAllReactCalls ( [ componentDataForPage ( pageD.display.dataDD ) ] ),
+      ...createAllReactCalls ( pageD, [ componentDataForPage ( pageD.display.dataDD ) ] ),
       ...addButtonsFromVariables ( pageD ),
       `${layoutPostfixString}})}`
     ] ) ) ) ) )),
@@ -219,7 +219,7 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
     '',
     ...indentList ( indentList ( indentList ( [
       `return ${layoutPrefixString}`,
-      ...indentList ( indentList ( createAllReactCalls ( [ componentDataForPage ( pageD.display.dataDD ), ] ) ) ),
+      ...indentList ( indentList ( createAllReactCalls ( pageD, [ componentDataForPage ( pageD.display.dataDD ), ] ) ) ),
       ...addButtonsFromVariables ( pageD ),
       `${layoutPostfixString}})}`
     ] ) ) ),
@@ -232,11 +232,12 @@ export function createRenderPage<B extends ButtonD, G extends GuardWithCondition
     `import * as domain from '${domainsFileName ( '..', params, p )}';`,
     `import * as empty from '${emptyFileName ( '..', params, p )}';` ] : []
   return [ ...imports,
-    ...createAllReactComponents ( params, makeGuard, transformButtons, [ p ] ) ]
+    ...createAllReactComponents ( params, makeGuard, transformButtons, p ) ]
 }
 
-export function createAllReactComponents<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButton: MakeButton<G>, pages: PageD<B, G>[] ): string[] {
-  const dataComponents = sortedEntries ( dataDsIn ( pages, false ) ).flatMap ( ( [ name, dataD ] ) => dataD.display ? [] : createReactComponent ( params, makeGuard ) ( dataD ) )
+export function createAllReactComponents<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButton: MakeButton<G>, page: PageD<B, G> ): string[] {
+  const pages = [ page ]
+  const dataComponents = sortedEntries ( dataDsIn ( pages, false ) ).flatMap ( ( [ name, dataD ] ) => dataD.display ? [] : createReactComponent ( params, makeGuard, page ) ( dataD ) )
   const pageComponents = pages.flatMap ( p => createReactPageComponent ( params, makeGuard, makeButton, p ) )
   const imports = [
     `import { LensProps } from "@focuson/state";`,
@@ -256,8 +257,8 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
     `import {${domainName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', p, params.domainsFile )}'; ` ] : [] )
   const modalRenderImports = pages.flatMap ( p => (isModalPage ( p ) && !p.display.dataDD.display) ? [
     `import {${componentName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', p, params.renderFile )}'` ] : [] )
-  const pageLayoutImports = pages.flatMap(p => p.layout? [`import { ${p.layout.component.name} } from '${p.layout.component.import}';`] : [])
-  return [ ...imports, ...modalDomainImports, ...modalRenderImports, ...makeComponentImports ( pages ), ...makeButtonImports ( makeButton ), ...pageDomainsImports,...pageLayoutImports, ...domainImports, ...pageComponents, ...dataComponents ]
+  const pageLayoutImports = pages.flatMap ( p => p.layout ? [ `import { ${p.layout.component.name} } from '${p.layout.component.import}';` ] : [] )
+  return [ ...imports, ...modalDomainImports, ...modalRenderImports, ...makeComponentImports ( pages ), ...makeButtonImports ( makeButton ), ...pageDomainsImports, ...pageLayoutImports, ...domainImports, ...pageComponents, ...dataComponents ]
 }
 
 

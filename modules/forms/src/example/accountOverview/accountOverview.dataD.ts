@@ -138,8 +138,8 @@ export const accountOverviewDataD: ExampleDataD = {
     //@ts-ignore
     drawDownAmount: { dataDD: MoneyDD, sample: [ 90007 ], table: '', field: 'ddamnt' },
     criteria: { dataDD: accountOverviewCriteriaDataD },
-    zFlagSet: { dataDD: yesNoDD, displayParams: { button: "reason" } },
-    excessSixMonths: { dataDD: IntegerDD, displayParams: { button: "excessHistory" } },
+    zFlagSet: { dataDD: yesNoDD, displayParams: { buttons: ["reason"] } },
+    excessSixMonths: { dataDD: IntegerDD, displayParams: { buttons: ["excessHistory"] } },
     bouncedDDs12Months: { dataDD: IntegerDD },
     unpaidCardOrMisuseItems: { dataDD: { ...IntegerDD, display: UnpaidCardOrMisuseItemsCD } }
   }

@@ -2,15 +2,15 @@ import { BooleanValidations, CommonStateProps, NumberValidations, StringValidati
 import { Input, } from "./Input";
 import { Label } from "./Label";
 import { BooleanTransformer, NumberTransformer, StringTransformer } from "./transformers";
-import { NameAnd } from "@focuson/utils";
+import { NameAnd, safeArray } from "@focuson/utils";
 import { ButtonFromPage } from "./buttonFromPage";
 
 export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T, Context> {
   label?: string;
   defaultValue?: string | number
   value?: string | number;
-  buttons: NameAnd<JSX.Element>;
-  button?: string
+  allButtons: NameAnd<JSX.Element>;
+  buttons?: string[]
 }
 
 export interface TransformerProps<T> {
@@ -18,12 +18,13 @@ export interface TransformerProps<T> {
   type: string;
   default: T;
 }
+export function makeButtons ( allButtons: NameAnd<JSX.Element>, buttons?: string[] ) {return safeArray ( buttons ).map ( ( b, i ) => <ButtonFromPage key={b} button={b} buttons={allButtons}/> )}
 
 const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> ) =>
   <S, Context> ( props: LabelAndInputProps<S, T, Context> & P ) => {
     const label = <Label htmlFor={props.name} label={props.label}/>;
     const input = Input ( tProps )<S, P, LabelAndInputProps<S, T, Context> & P, Context> ( props );
-    return < div className='labelValueButton'> {label}{input} <ButtonFromPage button={props.button} buttons={props.buttons}/></div>
+    return < div className='labelValueButton'> {label}{input}{makeButtons ( props.allButtons, props.buttons )}</div>
   }
 
 export const LabelAndStringInput = LabelAndTInput<string, StringValidations> ( StringTransformer )

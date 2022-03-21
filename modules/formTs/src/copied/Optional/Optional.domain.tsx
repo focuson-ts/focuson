@@ -3,5 +3,5 @@ import { NameAnd } from "@focuson/utils";
 
 export interface OptionalProps<S, T, Context> extends CommonStateProps<S, T, Context> {
   label?: string;
-  buttons: NameAnd<JSX.Element>;
+  allButtons: NameAnd<JSX.Element>;
 }

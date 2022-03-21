@@ -21,9 +21,8 @@ export function Radio<S, T, Context> ( { state, mode, enums, ariaLabel, id }: Ra
 
 export interface LabelAndRadioProps<S, T, Context> extends RadioProps<S, T, Context> {
   label: string;
-  buttons: NameAnd<JSX.Element>;
-  button?: string;
-
+  allButtons: NameAnd<JSX.Element>;
+  buttons?: string[];
 }
 export function LabelAndRadio<S, T, Context> ( props: LabelAndRadioProps<S, string, Context> ) {
   const { label, name } = props
