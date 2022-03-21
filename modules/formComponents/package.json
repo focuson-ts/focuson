@@ -12,7 +12,8 @@
     ]
   },
   "dependencies": {
-    "@focuson/state": "0.4.88"
+    "@focuson/state": "0.4.88",
+    "@focuson/pages": "0.4.88"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -52,7 +53,8 @@
     "test": false,
     "publish": true,
     "links": [
-      "@focuson/state"
+      "@focuson/state",
+      "@focuson/pages"
     ],
     "extraDeps": {},
     "extraDevDeps": {}

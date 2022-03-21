@@ -1,7 +1,12 @@
-export interface LabelProps<S, T, Context> {
-    label?: string,
-    htmlFor?: string
+import { LensProps } from "@focuson/state";
+import { FocusOnContext, replaceTextUsingPath } from "@focuson/focuson";
+
+
+export interface LabelProps<S, Context extends FocusOnContext<S>> extends LensProps<S, any, Context> {
+  label?: string,
+  htmlFor?: string
 }
-export function Label<S, Context> ( { label, htmlFor }: LabelProps<S, string, Context> ) {
-    return <label htmlFor={htmlFor}>{label}</label>
+
+export function Label<S, Context extends FocusOnContext<S>> ( { state, label, htmlFor }: LabelProps<S, Context> ) {
+  return <label htmlFor={htmlFor}>{replaceTextUsingPath ( state, label )}</label>
 }

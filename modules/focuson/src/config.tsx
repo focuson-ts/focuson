@@ -27,8 +27,7 @@ export function defaultPageSelectionAndPostCommandsContext<S extends HasPageSele
   }
 }
 
-export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S> {
-}
+export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S> {}
 export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSelection & HasRestCommands & HasSimpleMessages> ( pageDetails: MultiPageDetails<S, FocusOnContext<S>> ):
   FocusOnContext<S> {
   return {
@@ -108,4 +107,6 @@ export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MS
     }
   }
 }
+
+
 

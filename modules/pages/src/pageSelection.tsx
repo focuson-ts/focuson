@@ -152,3 +152,4 @@ export function fromPathGivenState<S, Context extends PageSelectionContext<S>> (
   }
   return Lenses.fromPathStringFor<S, any> ( prefixToLens )
 }
+

@@ -7,7 +7,8 @@
     "test": false,
     "publish": true,
     "links": [
-      "@focuson/state"
+      "@focuson/state",
+      "@focuson/pages"
     ],
     "extraDeps": {},
     "extraDevDeps": {}

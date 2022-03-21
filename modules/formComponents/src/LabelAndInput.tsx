@@ -4,6 +4,7 @@ import { Label } from "./Label";
 import { BooleanTransformer, NumberTransformer, StringTransformer } from "./transformers";
 import { NameAnd, safeArray } from "@focuson/utils";
 import { ButtonFromPage } from "./buttonFromPage";
+import { FocusOnContext } from "@focuson/focuson";
 
 export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T, Context> {
   label?: string;
@@ -21,8 +22,8 @@ export interface TransformerProps<T> {
 export function makeButtons ( allButtons: NameAnd<JSX.Element>, buttons?: string[] ) {return safeArray ( buttons ).map ( ( b, i ) => <ButtonFromPage key={b} button={b} buttons={allButtons}/> )}
 
 const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> ) =>
-  <S, Context> ( props: LabelAndInputProps<S, T, Context> & P ) => {
-    const label = <Label htmlFor={props.name} label={props.label}/>;
+  <S, Context extends FocusOnContext<S>> ( props: LabelAndInputProps<S, T, Context> & P ) => {
+    const label = <Label state={props.state} htmlFor={props.name} label={props.label}/>;
     const input = Input ( tProps )<S, P, LabelAndInputProps<S, T, Context> & P, Context> ( props );
     return < div className='labelValueButton'> {label}{input}{makeButtons ( props.allButtons, props.buttons )}</div>
   }
