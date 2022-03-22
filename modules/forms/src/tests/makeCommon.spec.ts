@@ -33,7 +33,7 @@ describe ( "makeCommon", () => {
       "import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusOnContext, HasFocusOnDebug } from '@focuson/focuson';",
       "import { LensProps } from '@focuson/state';",
       "import { pages } from './pages';",
-      "import { MyCombined } from './copied/MyCombined';",
+      "import { MyCombined } from './formComponents/myCombined';",
       "import { HasEAccountsSummaryPageDomain } from './EAccountsSummary/EAccountsSummary.domains';",
       "import { HasOccupationAndIncomeSummaryPageDomain } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains';",
       "",

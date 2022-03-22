@@ -1,10 +1,12 @@
-
-import { dropdownsDD, occupationAndIncomeFullDomainDD } from "./occupationAndIncome.dataD";
+import { RestD } from "@focuson/forms";
+import {
+  dropdownsDD,
+  occupationAndIncomeFullDomainDD,
+} from "./occupationAndIncome.dataD";
 import { additionalInformationDD } from "./additionalInformation/additionalInformation.dataD";
 import { businessDetailsMainDD } from "./businessDetails/businessDetails.dataD";
 import { otherIncomeResponseDD } from "./otherSourcesOfIncome/otherSourcesOfIncome.dataD";
-import { commonParams } from "../eTransfers/eTransfers.restD";
-import { RestD } from "../../common/restD";
+import {commonParams} from "../repeating/repeating.restD";
 
 /** This should fully define the api*/
 export const occupationAndIncomeRD: RestD<any> = {

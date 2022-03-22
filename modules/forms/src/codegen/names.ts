@@ -2,7 +2,7 @@ import { AllDataDD, CompDataD, compDataDIn } from "../common/dataD";
 import { ModalPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { RestActionDetail, RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
-import { RestAction, safeString } from "@focuson/utils";
+import {RestAction, safeString} from "@focuson/utils";
 import { JavaWiringParams, TSParams } from "./config";
 
 export const guardName = ( s: string ) => s + "Guard"

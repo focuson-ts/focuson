@@ -6,9 +6,6 @@ body {
 ol, ul {
     padding-left: 30px;
 }
-label {
-    width: 180px;
-}
 table {
     border-collapse: collapse;
 }
@@ -21,6 +18,10 @@ table {
     margin-bottom: 10px;
 }
 
+input {
+    font-size: revert;
+}
+
 input.view {
     border: none;
     text-decoration: none;
@@ -28,21 +29,22 @@ input.view {
 }
 input:invalid {
     background: #ffdddd;
+    border: 1px solid red;
 }
 input:valid{
-    background:#ddffdd;
+    background: none;
 }
 
 #container {
-    position: relative;
-    width: auto;
     height: 1024px;
+    display: block;
+    width: 100%
 }
 
 button {
+    min-width: 50px;
     background-color: white;
     color: black;
-    border: 2px solid #008CBA;
     padding: 1px 2px;
     text-align: center;
     text-decoration: none;
@@ -52,7 +54,7 @@ button {
 }
 
 button:hover {
-    background-color: #008CBA;
+    background-color: lightgrey;
 }
 
 button:disabled {
@@ -74,21 +76,101 @@ button:disabled {
     gap: 15px
 }
 
-.modalPage {
-    border: 1px solid black;
-    padding: 20px;
-    background: whitesmoke;
-    position: absolute;
+table {
+    border-collapse: collapse;
     width: 100%;
-    top: 120px;
 }
 
-.overlay {
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:hover {background-color: lightgray;}
+
+.labelDropdownButton {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.labelDropdown {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.labelValue {
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+}
+
+.labelValueButton {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+label {
+    width: 350px;
+}
+
+select {
+    height: 30px;
+}
+
+.modalPopup {
     position: fixed;
-    top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(128,128,128,0.5);
-    display: none;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.1);
+    transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+}
+
+.modalPopup-content {
+    position: absolute;
+    top: 40%;
+    left: 20%;
+    padding: 20px;
+    background-color: white;
+}
+
+.close-button:hover {
+    background-color: darkgray;
+}
+
+.show-modal {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1.0);
+    transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
+}
+
+#container {
+    position: relative;
+    width: 1024px;
+}
+
+#modalPage {
+    position: absolute;
+    top: 130px;
+    background-color: white;
+    width: 100%;
+    height: 100%
+}
+
+.modalPageContainer {
+    position: absolute;
+    top: 50px
 }

@@ -1,11 +1,7 @@
 /* ---------------- OTHER SOURCES OF INCOME START ---------------- */
-
-
-import { IntegerDD, OneLineStringDD, StringDD, StringPrimitiveDD } from "../../../common/dataD";
-import { LabelAndDropDownCD, TableCD } from "../../../common/componentsD";
-
-import { ExampleDataD, ExampleRepeatingD } from "../../common";
-import { HowOften } from "../../commonEnums";
+import {IntegerDD, LabelAndDropDownCD, OneLineStringDD, StringDD, StringPrimitiveDD, TableCD} from "@focuson/forms";
+import {HowOften} from "@focuson/form_components";
+import {ExampleDataD, ExampleRepeatingD} from "../../common";
 
 export const frequencyDD: StringPrimitiveDD = {
     ...OneLineStringDD,
@@ -30,7 +26,7 @@ export const otherSourcesOfIncomeDataDD: ExampleRepeatingD = {
     display: TableCD,
     name: "OtherIncomeData",
     description: "This is a summary about other income data",
-    displayParams: { order: [ 'otherIncomeType', 'incomeFreqRef', 'amount' ] },
+    displayParams: { order: [ 'otherIncomeType', 'incomeFreqRef', 'amount' ]  },
     dataDD: otherIncomeResponseDD
 
 }

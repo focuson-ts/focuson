@@ -1,8 +1,7 @@
 /* ---------------- ADDITIONAL INFORMATION START ---------------- */
-
+import {LayoutCd, StringDD} from "@focuson/forms";
 import { ExampleDataD } from "../../common";
-import { additionalInformationSample } from "./additionalInformation.sample";
-import { StringDD } from "../../../common/dataD";
+import {additionalInformationSample} from "./additionalInformation.sample";
 
 export const additionalInformationDD: ExampleDataD = {
     name: 'AdditionalInformation',

@@ -1,11 +1,9 @@
 /* ---------------- BUSINESS DETAILS START ---------------- */
+import {LabelAndDropDownCD, OneLineStringDD, StringDD, StringPrimitiveDD} from "@focuson/forms";
 
 import { businessDetailsSample } from "./businessDetails.sample";
 import { ExampleDataD } from "../../common";
-import { LabelAndDropDownCD } from "../../../common/componentsD";
-import { ContactTitle } from "../../commonEnums";
-import { OneLineStringDD, StringDD, StringPrimitiveDD } from "../../../common/dataD";
-
+import {ContactTitle} from "@focuson/form_components";
 
 export const businessDetailsDD: ExampleDataD = {
     name: 'BusinessDetails',

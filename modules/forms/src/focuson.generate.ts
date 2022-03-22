@@ -7,6 +7,6 @@ import { makeButtons } from "./buttons/allButtons";
 
 generate (devAppConfig, javaOutputRoot, tsRoot, focusOnVersion, AllGuardCreator, makeButtons () ) ( generatedPages )
 
-fse.copySync ( '../formComponents/src', tsRoot + "/src/copied" )
+fse.copySync ( '../formComponents/src', tsRoot + "/src/formComponents" )
 
 
