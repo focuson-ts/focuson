@@ -1,4 +1,4 @@
-import {ContactTitle} from "@focuson/form_components";
+import { ContactTitle } from "../../commonEnums";
 
 export const businessDetailsSample = {
     businessDetails: {

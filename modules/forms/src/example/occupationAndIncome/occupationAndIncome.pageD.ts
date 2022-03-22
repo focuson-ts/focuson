@@ -1,24 +1,12 @@
-import { BooleanDD, IntegerDD, MainPageD, ModalPageD, PageD } from "@focuson/forms";
-import { AllButtonsInPage } from "@focuson/forms/dist";
-import {
-  dropdownsDD, listOccupationsDD,
-  occupationAndIncomeFullDomainDD,
-  oneOccupationIncomeDetailsDD
-} from "./occupationAndIncome.dataD";
-import {
-  additionalInfoRD,
-  businessDetailsRD,
-  dropdownsRD,
-  occupationAndIncomeRD,
-  otherIncomeRD
-} from "./occupationAndIncome.restD";
+
+import { dropdownsDD, listOccupationsDD, occupationAndIncomeFullDomainDD, oneOccupationIncomeDetailsDD } from "./occupationAndIncome.dataD";
+import { additionalInfoRD, businessDetailsRD, dropdownsRD, occupationAndIncomeRD, otherIncomeRD } from "./occupationAndIncome.restD";
 import { additionalInformationDD } from "./additionalInformation/additionalInformation.dataD";
 import { otherIncomeResponseDD } from "./otherSourcesOfIncome/otherSourcesOfIncome.dataD";
 import { businessDetailsMainDD } from "./businessDetails/businessDetails.dataD";
 import { ExampleMainPage, ExampleModalPage } from "../common";
-import { PostCodeModalPage } from "../addressSearch/addressSearch.pageD";
-import { postcodeRestD } from "../addressSearch/addressSearch.restD";
-import { HideButtonsCD } from "@focuson/forms/dist/src/buttons/hideButtonsCD";
+import { BooleanDD, IntegerDD } from "../../common/dataD";
+import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 
 export const listOccupationsModalPD: ExampleModalPage = {
   name: 'ListOccupationsModal',

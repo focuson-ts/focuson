@@ -11,7 +11,7 @@
       "providerState": "default",
       "request": {
         "method": "GET",
-        "path": "/api/accountOverview/arrearsDetails",
+        "path": "/api/accountOverview/arrearsDetails/previous",
         "query": "startDate=2020-01-20&accountId=accId&customerId=custId"
       },
       "response": {
@@ -40,7 +40,7 @@
       "providerState": "default",
       "request": {
         "method": "GET",
-        "path": "/api/accountOverview/arrearsDetails",
+        "path": "/api/accountOverview/arrearsDetails/previous",
         "query": "startDate=2020-01-20&accountId=accId&customerId=custId"
       },
       "response": {

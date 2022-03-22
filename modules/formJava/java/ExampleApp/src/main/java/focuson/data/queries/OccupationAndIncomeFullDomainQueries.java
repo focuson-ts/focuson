@@ -14,6 +14,9 @@ public class OccupationAndIncomeFullDomainQueries{
         "      ownShareOfTheCompany"+
         "      owningSharesPct"+
         "      workFor"+
+        "      employmentType"+
+        "      empStartDate"+
+        "      empEndDate"+
         "      annualSalaryBeforeDeduction"+
         "      annualIncomeExcludingRent"+
         "      regularCommissionBonus"+
@@ -21,10 +24,6 @@ public class OccupationAndIncomeFullDomainQueries{
         "      whatNameBusiness"+
         "      establishedYear"+
         "      annualDrawing3Yrs"+
-        "      employmentType"+
-        "      empStartDate"+
-        "      empEndDate"+
-        "      dateOfEmploymentStart"+
         "      otherSourceOfIncome"+
         "      createdBy"+
         "      createdDate"+
@@ -52,6 +51,9 @@ public class OccupationAndIncomeFullDomainQueries{
         "      ownShareOfTheCompany"+
         "      owningSharesPct"+
         "      workFor"+
+        "      employmentType"+
+        "      empStartDate"+
+        "      empEndDate"+
         "      annualSalaryBeforeDeduction"+
         "      annualIncomeExcludingRent"+
         "      regularCommissionBonus"+
@@ -59,10 +61,6 @@ public class OccupationAndIncomeFullDomainQueries{
         "      whatNameBusiness"+
         "      establishedYear"+
         "      annualDrawing3Yrs"+
-        "      employmentType"+
-        "      empStartDate"+
-        "      empEndDate"+
-        "      dateOfEmploymentStart"+
         "      otherSourceOfIncome"+
         "      createdBy"+
         "      createdDate"+

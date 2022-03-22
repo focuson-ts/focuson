@@ -22,7 +22,7 @@ public class OccupationAndIncomeSummaryDb{
     public final Map<String,Object> ListOccupations = new HashMap<>();
     public final Map<String,Object> OccupationAndIncomeFullDomain = new HashMap<>();
     public final Map<String,Object> OccupationDescriptionResponse = new HashMap<>();
-    public final Map<String,Object> OccupationsList = new HashMap<>();
+    public final Map<String,Object> OccupationsListData = new HashMap<>();
     public final Map<String,Object> OneOccupationIncomeDetails = new HashMap<>();
     public final Map<String,Object> OtherIncomeResponse = new HashMap<>();
   }
@@ -94,6 +94,8 @@ public class OccupationAndIncomeSummaryDb{
     maps.FrequenciesResponse.put("annualMultiple", rs.getInt("annualMultiple"));
   }
   public void makeListOccupations(AllOccupationAndIncomeSummaryMaps maps, ResultSet rs) throws SQLException {
+    maps.ListOccupations.put("search", rs.getString("search"));
+    maps.ListOccupations.put("selectedOccupationName", rs.getString("selectedOccupationName"));
   }
   public void makeOccupationAndIncomeFullDomain(AllOccupationAndIncomeSummaryMaps maps, ResultSet rs) throws SQLException {
     maps.OccupationAndIncomeFullDomain.put("mainCustomerName", rs.getString("mainCustomerName"));
@@ -105,7 +107,7 @@ public class OccupationAndIncomeSummaryDb{
     maps.OccupationDescriptionResponse.put("descTypeValue", rs.getString("descTypeValue"));
     maps.OccupationDescriptionResponse.put("descTypeName", rs.getString("descTypeName"));
   }
-  public void makeOccupationsList(AllOccupationAndIncomeSummaryMaps maps, ResultSet rs) throws SQLException {
+  public void makeOccupationsListData(AllOccupationAndIncomeSummaryMaps maps, ResultSet rs) throws SQLException {
   }
   public void makeOneOccupationIncomeDetails(AllOccupationAndIncomeSummaryMaps maps, ResultSet rs) throws SQLException {
     maps.OneOccupationIncomeDetails.put("areYou", rs.getString("areYou"));
@@ -114,6 +116,9 @@ public class OccupationAndIncomeSummaryDb{
     maps.OneOccupationIncomeDetails.put("ownShareOfTheCompany", rs.getString("ownShareOfTheCompany"));
     maps.OneOccupationIncomeDetails.put("owningSharesPct", rs.getString("owningSharesPct"));
     maps.OneOccupationIncomeDetails.put("workFor", rs.getString("workFor"));
+    maps.OneOccupationIncomeDetails.put("employmentType", rs.getString("employmentType"));
+    maps.OneOccupationIncomeDetails.put("empStartDate", rs.getString("empStartDate"));
+    maps.OneOccupationIncomeDetails.put("empEndDate", rs.getString("empEndDate"));
     maps.OneOccupationIncomeDetails.put("annualSalaryBeforeDeduction", rs.getInt("annualSalaryBeforeDeduction"));
     maps.OneOccupationIncomeDetails.put("annualIncomeExcludingRent", rs.getInt("annualIncomeExcludingRent"));
     maps.OneOccupationIncomeDetails.put("regularCommissionBonus", rs.getInt("regularCommissionBonus"));
@@ -121,10 +126,6 @@ public class OccupationAndIncomeSummaryDb{
     maps.OneOccupationIncomeDetails.put("whatNameBusiness", rs.getString("whatNameBusiness"));
     maps.OneOccupationIncomeDetails.put("establishedYear", rs.getString("establishedYear"));
     maps.OneOccupationIncomeDetails.put("annualDrawing3Yrs", rs.getInt("annualDrawing3Yrs"));
-    maps.OneOccupationIncomeDetails.put("employmentType", rs.getString("employmentType"));
-    maps.OneOccupationIncomeDetails.put("empStartDate", rs.getString("empStartDate"));
-    maps.OneOccupationIncomeDetails.put("empEndDate", rs.getString("empEndDate"));
-    maps.OneOccupationIncomeDetails.put("dateOfEmploymentStart", rs.getString("dateOfEmploymentStart"));
     maps.OneOccupationIncomeDetails.put("otherSourceOfIncome", rs.getString("otherSourceOfIncome"));
     maps.OneOccupationIncomeDetails.put("createdBy", rs.getString("createdBy"));
     maps.OneOccupationIncomeDetails.put("createdDate", rs.getString("createdDate"));

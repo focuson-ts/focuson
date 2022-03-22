@@ -1,22 +1,11 @@
-import {
-  commonParams,
-  commonParamsWithLabel,
-  DateDD,
-  DisplayCompD,
-  IntegerDD, LabelAndDropDownCD, LayoutCd,
-  OneLineStringDD,
-  StringDD,
-  StringPrimitiveDD,
-  TableCD,
-} from "@focuson/forms";
-
 import { additionalInformationDD } from "./additionalInformation/additionalInformation.dataD";
 import { businessDetailsMainDD } from "./businessDetails/businessDetails.dataD";
-import { frequencyDD, otherSourcesOfIncomeDataDD } from "./otherSourcesOfIncome/otherSourcesOfIncome.dataD";
+import { otherSourcesOfIncomeDataDD } from "./otherSourcesOfIncome/otherSourcesOfIncome.dataD";
 import { occupationAndIncomeSample } from "./occupationAndIncome.sample";
-import {postCodeDataLineD, postCodeSearchResponse} from "../addressSearch/addressSearch.dataD";
-import {CustomerStatus, EmploymentType, YesNo} from "@focuson/form_components";
-import {ExampleDataD, ExampleRepeatingD} from "../common";
+import { CustomerStatus, EmploymentType, YesNo } from "@focuson/form_components";
+import { ExampleDataD, ExampleRepeatingD } from "../common";
+import { DateDD, IntegerDD, OneLineStringDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
+import { commonParams, DisplayCompD, LabelAndDropDownCD, LayoutCd, TableCD } from "../../common/componentsD";
 
 const labelAndDropdownContainerStyle = {
   display: 'flex',

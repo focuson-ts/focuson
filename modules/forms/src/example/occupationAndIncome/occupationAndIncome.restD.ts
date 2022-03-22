@@ -1,4 +1,4 @@
-import { RestD } from "@focuson/forms";
+
 import {
   dropdownsDD,
   occupationAndIncomeFullDomainDD,
@@ -7,6 +7,7 @@ import { additionalInformationDD } from "./additionalInformation/additionalInfor
 import { businessDetailsMainDD } from "./businessDetails/businessDetails.dataD";
 import { otherIncomeResponseDD } from "./otherSourcesOfIncome/otherSourcesOfIncome.dataD";
 import {commonParams} from "../repeating/repeating.restD";
+import { RestD } from "../../common/restD";
 
 /** This should fully define the api*/
 export const occupationAndIncomeRD: RestD<any> = {
