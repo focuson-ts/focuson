@@ -68,7 +68,7 @@ export interface SqlGetDetails extends AliasAndWhere {
   sql: GetSqlFromDataDDetails[]
 }
 export interface GetSqlFromDataDDetails extends AliasAndWhere {
-  data: OneDataDD<any>;
+  dataD: OneDataDD<any>;
   aliases: NameAnd<DBTableAndMaybeName>;
   where: Where
 }

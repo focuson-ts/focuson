@@ -28,7 +28,7 @@ export const queryName = <G> ( restD: RestD<G>, action: RestAction ): string => 
 export const endPointName = <G> ( restD: RestD<G>, action: RestAction ): string => action + restD.dataDD.name
 
 export const modalName = <B, G> ( p: PageD<B, G>, modal: PageD<B, G> ) => modal.name
-export const restDetailsName = <B, G> ( p: PageD<B, G>, r: RestD<G> ) => safeString ( r.namePrefix ) + p.name + "_" + r.dataDD.name + "RestDetails"
+export const restDetailsName = <B, G> ( p: PageD<B, G>,restName: string, r: RestD<G> ) => safeString ( r.namePrefix ) + p.name + "_" + r.dataDD.name + "RestDetails"
 export const fetcherName = <G> ( d: RestDefnInPageProperties<G> ): string => safeString ( d.rest.namePrefix ) + d.rest.dataDD.name + "Fetcher";
 export const fetcherInterfaceName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${r.dataDD.name}${params.fetcherInterface}`;
 export const fetcherVariableName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `_${r.dataDD.name}${params.fetcherInterface}`;

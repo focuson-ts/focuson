@@ -30,7 +30,7 @@ export function CreateEAccountPage(){
         id='createEAccounts'
         name='createEAccounts'
         action='create'
-        rest='CreateEAccount_ETransferDataDRestDetails'
+        rest='CreateEAccount_CreateEAccountDataRestDetails'
         confirm={true}
        />,
       resetAll:<button>resetAll of type ResetStateButton cannot be created yet</button>,}

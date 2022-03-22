@@ -156,10 +156,11 @@ describe ( "makeSqlDataFor", () => {
   } )
 } )
 describe ( "fieldsInWhere", () => {
-  let roots = findRoots ( JointAccountDd, sqlG );
-  const sqlDataRoot = makeSqlDataFor ( roots, sqlG )
-  const allRoots: SqlRoot[] = [ roots, ...roots.children ]
+  let root = findRoots ( JointAccountDd, sqlG );
+  const sqlDataRoot = makeSqlDataFor ( root, sqlG )
+  const allRoots: SqlRoot[] = [ root, ...root.children ]
   const allData = allRoots.map ( r => makeSqlDataFor ( r, sqlG ) )
+
   it ( "should have a set up alias map - just checking test setup", () => {
     expect ( allData.map ( r => simplifyAliasMap ( r.aliasMap ) ) ).toEqual ( [
       "{'account':'ACC_TBL.'ACC_TBL','joint':'cust.'CUST_TBL','jointName':'NAME_TBL.'NAME_TBL','main':'cust.'CUST_TBL','mainName':'NAME_TBL.'NAME_TBL'}",

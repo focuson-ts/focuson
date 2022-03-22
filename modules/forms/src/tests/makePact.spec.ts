@@ -45,7 +45,7 @@ describe ( "makePacts", () => {
     ])
   } )
   it ( "make a rest pact for get", () => {
-    expect ( makeRestPacts ( paramsForTest, EAccountsSummaryPD, EAccountsSummaryPD.rest.createPlanRestD, defaultRestAction.get, { main: '.', backup: '.' } ) ).toEqual ( [
+    expect ( makeRestPacts ( paramsForTest, EAccountsSummaryPD, 'someRestName', EAccountsSummaryPD.rest.createPlanRestD, defaultRestAction.get, { main: '.', backup: '.' } ) ).toEqual ( [
       "//Rest get pact test",
       "pactWith ( { consumer: 'CreatePlan', provider: 'CreatePlanProvider', cors: true }, provider => {",
       "  describe ( 'EAccountsSummary - rest get', () => {",
@@ -88,7 +88,7 @@ describe ( "makePacts", () => {
 
   } )
   it ( "make a rest pact for create", () => {
-    expect ( makeRestPacts ( paramsForTest, EAccountsSummaryPD, EAccountsSummaryPD.rest.createPlanRestD, defaultRestAction.create, { main: '.', backup: '.' } ) ).toEqual ( [
+    expect ( makeRestPacts ( paramsForTest, EAccountsSummaryPD, 'someRestName', EAccountsSummaryPD.rest.createPlanRestD, defaultRestAction.create, { main: '.', backup: '.' } ) ).toEqual ( [
       "//Rest create pact test",
       "pactWith ( { consumer: 'CreatePlan', provider: 'CreatePlanProvider', cors: true }, provider => {",
       "  describe ( 'EAccountsSummary - rest create', () => {",
@@ -130,7 +130,7 @@ describe ( "makePacts", () => {
     ] )
   } )
   it ( "make a rest pact for update", () => {
-    expect ( makeRestPacts ( paramsForTest, EAccountsSummaryPD, EAccountsSummaryPD.rest.createPlanRestD, defaultRestAction.update, { main: '.', backup: '.' } ) ).toEqual ( [
+    expect ( makeRestPacts ( paramsForTest, EAccountsSummaryPD,'someRestName',  EAccountsSummaryPD.rest.createPlanRestD, defaultRestAction.update, { main: '.', backup: '.' } ) ).toEqual ( [
       "//Rest update pact test",
       "pactWith ( { consumer: 'CreatePlan', provider: 'CreatePlanProvider', cors: true }, provider => {",
       "  describe ( 'EAccountsSummary - rest update', () => {",

@@ -18,7 +18,7 @@ describe ( "dataDsIn", () => {
       "EAccountsSummary",
       "EAccountsSummaryTable",
       "EAccountSummary"
-    ])
+    ] )
   } )
 
   it ( "should find all the DataDs in a list of pages when display stopped", () => {
@@ -32,22 +32,22 @@ describe ( "dataDsIn", () => {
       "CreatePlan",
       "EAccountsSummary",
       "EAccountsSummaryTable"
-    ])
+    ] )
   } )
 } )
 
 describe ( "allRestAndActions", () => {
   it ( "should find the unque rests and actions", () => {
     expect ( allRestAndActions ( [ EAccountsSummaryPD, CreatePlanPD, EAccountsSummaryPD, CreatePlanPD ] ).//
-      map ( ( [ page, rdp, rad ] ) =>
-        [ page.name, rdp.rest.dataDD.name, rad.name ] ) ).toEqual ( [
-      [ "EAccountsSummary", "CreatePlan", "get" ],
-      [ "EAccountsSummary", "CreatePlan", "create" ],
-      [ "EAccountsSummary", "CreatePlan", "update" ],
-      [ "EAccountsSummary", "CreatePlan", "delete" ],
-      [ "EAccountsSummary", "CreatePlan", "list" ],
-      [ "EAccountsSummary", "EAccountsSummary", "get" ]
-    ] )
+      map ( ( [ page, restName, rdp, rad ] ) =>
+        JSON.stringify ( [ page.name, restName, rdp.rest.dataDD.name, rad.name ] ).replace ( /"/g, "'" ) ) ).toEqual ( [
+      "['EAccountsSummary','createPlanRestD','CreatePlan','get']",
+      "['EAccountsSummary','createPlanRestD','CreatePlan','create']",
+      "['EAccountsSummary','createPlanRestD','CreatePlan','update']",
+      "['EAccountsSummary','createPlanRestD','CreatePlan','delete']",
+      "['EAccountsSummary','createPlanRestD','CreatePlan','list']",
+      "['EAccountsSummary','eAccountsSummary','EAccountsSummary','get']"
+    ])
   } )
 
 } )

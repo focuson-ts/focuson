@@ -65,7 +65,7 @@ export function fieldsInWhere ( aliasMap: NameAnd<DBTableAndName>, w: Where ): T
 }
 
 export function findGetSqlFromDataDDetails ( get: SqlGetDetails, d: CompDataD<any> ): AliasAndWhere {
-  const found: GetSqlFromDataDDetails | undefined = get.sql.find ( s => s.data.dataDD === d )
+  const found: GetSqlFromDataDDetails | undefined = get.sql.find ( s => s.dataD.dataDD === d )
   return found ? found : { aliases: get.aliases, where: get.where }
 }
 
@@ -132,7 +132,7 @@ export function walkParentChildCompDataLinksWithAliasMapAndWhere<Acc> ( { stopAt
   function makeLinksForParentChild ( acc: Acc, parent: CompDataD<any>, nameAndOneDataDD: [ string, OneDataDD<any> ] | undefined, child: AllDataDD<any>, oldAliasMap: NameAnd<DBTableAndMaybeName>, oldWhere: Where ): Acc {
     if ( isPrimDd ( child ) && !includePrimitives ) return acc
     if ( stopAtRepeat && isRepeatingDd ( child ) ) return acc;
-    const found: GetSqlFromDataDDetails | undefined = sqlG.sql.find ( ( { data, aliases } ) => data === nameAndOneDataDD?.[ 1 ] );
+    const found: GetSqlFromDataDDetails | undefined = sqlG.sql.find ( ( { dataD, aliases } ) => dataD === nameAndOneDataDD?.[ 1 ] );
     const aliasMap: NameAnd<DBTableAndMaybeName> = found ? { ...oldAliasMap, ...found.aliases } : oldAliasMap
     const newWhere = found ? mergeWhere ( oldWhere, found.where ) : oldWhere
     const newAcc = folder ( acc, parent, nameAndOneDataDD, child, aliasMap, newWhere, found );
@@ -209,7 +209,7 @@ export function findAliasMapFor ( sqlRoot: SqlRoot, sqlG: SqlGetDetails ): NameA
 export function findWheresFor ( sqlRoot: SqlRoot, sqlG: SqlGetDetails ): Where {
   const { data } = sqlRoot
   const wheres = findParentChildCompDataLinks ( { stopAtRepeat: true }, data ).flatMap ( ( { nameAndOneDataDD } ) => {
-    const found: GetSqlFromDataDDetails | undefined = sqlG.sql.find ( ( { data, aliases } ) => data === nameAndOneDataDD?.[ 1 ] );
+    const found: GetSqlFromDataDDetails | undefined = sqlG.sql.find ( ( { dataD, aliases } ) => dataD === nameAndOneDataDD?.[ 1 ] );
     return found ? [ found.where ] : []
   } )
   const allWheres = [ sqlRoot.where, ...wheres ];
@@ -261,7 +261,8 @@ export function findFieldsFor ( { fields, aliasMap, wheres }: SqlData ): TableAn
   try {
     const fromWhere: TableAndFieldAndAliasData<any>[] = fieldsInWhere ( aliasMap, wheres )
     const fromFields: TableAndFieldAndAliasData<any>[] = fields.flatMap ( f => {
-      return addAlias ( aliasMap, f , f.fieldData.fieldName)
+      let alias = addAlias ( aliasMap, f , f.fieldData.fieldName);
+      return alias
     } )
     return [ ...fromFields, ...fromWhere ]
   } catch ( e: any ) {

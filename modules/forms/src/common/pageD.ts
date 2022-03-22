@@ -20,7 +20,7 @@ export interface RestDefnInPage<G> {
 }
 
 export interface RestOnCommit {
-  rest: any,
+  restName: string,
   action: RestAction,
   /** What happens when the rest is completed. Currently only 'refresh' which clears the 'main object' triggering a fetch. Later we will be more clever' */
   result: RestResult;
@@ -84,13 +84,13 @@ export function dataDsIn<B, G> ( pds: PageD<B, G>[], stopAtDisplay?: boolean ): 
 }
 
 
-export function allRestAndActions<B, G> ( pds: PageD<B, G>[] ): [ PageD<B, G>, RestDefnInPageProperties<G>, RestActionDetail ][] {
+export function allRestAndActions<B, G> ( pds: PageD<B, G>[] ): [ PageD<B, G>, string, RestDefnInPageProperties<G>, RestActionDetail ][] {
   return unique ( allMainPages ( pds ).flatMap ( pd => {
     return sortedEntries ( pd.rest ).flatMap ( ( [ name, rdp ] ) => {
-      const y: [ PageD<B, G>, RestDefnInPageProperties<G>, RestActionDetail ][] = rdp.rest.actions.map ( a => [ pd, rdp, defaultRestAction[ a ] ] )
+      const y: [ PageD<B, G>, string, RestDefnInPageProperties<G>, RestActionDetail ][] = rdp.rest.actions.map ( a => [ pd, name, rdp, defaultRestAction[ a ] ] )
       return y
     } )
-  } ), ( [ p, r, rad ] ) => safeString ( r.rest.namePrefix ) + p.name + "," + r.rest.dataDD.name + "," + rad.name )
+  } ), ( [ p, name, r, rad ] ) => safeString ( r.rest.namePrefix ) + name + p.name + "," + r.rest.dataDD.name + "," + rad.name )
 }
 
 
