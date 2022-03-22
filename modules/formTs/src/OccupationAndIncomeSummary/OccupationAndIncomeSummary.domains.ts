@@ -5,6 +5,7 @@ export interface OccupationAndIncomeSummaryPageDomain{
   businessDetails?:BusinessDetailsMainDomain;
   dropdowns?:DropdownsDomain;
   fromApi?:OccupationAndIncomeFullDomainDomain;
+  mainOrJoint?:boolean;
   otherSourcesOfIncome?:OtherIncomeResponseDomain;
   searchList?:ListOccupationsDomain;
   selectedItem?:number;
@@ -99,7 +100,9 @@ export interface FrequenciesResponseDomain{
 }
 
 export interface ListOccupationsDomain{
-  occupationsList: OccupationDescriptionResponseDomain[];
+  search: string;
+  searchResults: OccupationDescriptionResponseDomain[];
+  selectedOccupationName: string;
 }
 
 export interface OccupationAndIncomeFullDomainDomain{
@@ -115,7 +118,7 @@ export interface OccupationDescriptionResponseDomain{
   descTypeValue: string;
 }
 
-export type OccupationsListDomain = OccupationDescriptionResponseDomain[]
+export type OccupationsListDataDomain = OccupationDescriptionResponseDomain[]
 
 export interface OneOccupationIncomeDetailsDomain{
   accountantAppRoleSeq: number;
@@ -127,7 +130,6 @@ export interface OneOccupationIncomeDetailsDomain{
   createdDate: string;
   currentEmployment: string;
   customerDescription: string;
-  dateOfEmploymentStart: string;
   empAppRoleSeq: number;
   empEmploymentSeq: number;
   empEndDate: string;

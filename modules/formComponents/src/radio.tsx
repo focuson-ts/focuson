@@ -1,6 +1,6 @@
 import { NameAnd } from "@focuson/utils";
 import { CommonStateProps } from "./common";
-import { Label } from "./Label";
+import { Label } from "./label";
 import { reasonFor } from "@focuson/state";
 import { FocusOnContext } from "@focuson/focuson";
 

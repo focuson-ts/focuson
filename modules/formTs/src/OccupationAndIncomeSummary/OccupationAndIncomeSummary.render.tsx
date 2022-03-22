@@ -5,23 +5,24 @@ import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from "@focuson/pages";
 import { Context, FocusedProps, FState } from "../common";
 import { Lenses } from '@focuson/lens';
-import { Guard } from "../copied/guard";
-import { GuardButton } from "../copied/GuardButton";
-import { LabelAndStringInput } from '../copied/LabelAndInput';
-import { LabelAndDropdown } from '../copied/Dropdown/LabelAndDropdown';
-import { LabelAndNumberInput } from '../copied/LabelAndInput';
-import { Table } from '../copied/table';
-import { SelectedItem } from '../copied/table';
-import {ListNextButton} from '../copied/listNextPrevButtons';
-import {ListPrevButton} from '../copied/listNextPrevButtons';
+import { Guard } from "../formComponents/guard";
+import { GuardButton } from "../formComponents/guardButton";
+import { LabelAndStringInput } from '../formComponents/labelAndInput';
+import { LabelAndDropdown } from '../formComponents/labelAndDropdown';
+import { LabelAndNumberInput } from '../formComponents/labelAndInput';
+import { Table } from '../formComponents/table';
+import { SelectedItem } from '../formComponents/table';
+import { Layout } from '../formComponents/layout';
+import {ListNextButton} from '../formComponents/listNextPrevButtons';
+import {ListPrevButton} from '../formComponents/listNextPrevButtons';
 import {ModalButton} from '@focuson/pages';
 import {ModalCancelButton} from '@focuson/pages';
 import {ModalCommitButton} from '@focuson/pages';
-import {RestButton} from '../copied/rest';
-import {ToggleButton} from '../copied/ToggleButton';
-import {ValidationButton} from '../copied/ValidationButton';
+import {RestButton} from '../formComponents/rest';
+import {ToggleButton} from '../formComponents/toggleButton';
+import {ValidationButton} from '../formComponents/validationButton';
 import {OccupationAndIncomeSummaryPageDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains";
-import { HideButtonsLayout } from '../copied/hideButtons';
+import { HideButtonsLayout } from '../formComponents/hideButtons';
 import {AccountDetailsDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 import {AdditionalInformationDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 import {BusinessDetailsDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
@@ -37,7 +38,7 @@ import {FrequenciesResponseDomain} from "../OccupationAndIncomeSummary/Occupatio
 import {ListOccupationsDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 import {OccupationAndIncomeFullDomainDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 import {OccupationDescriptionResponseDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
-import {OccupationsListDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
+import {OccupationsListDataDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 import {OneOccupationIncomeDetailsDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 import {OtherIncomeResponseDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 export function OccupationAndIncomeSummaryPage(){
@@ -67,10 +68,14 @@ export function OccupationAndIncomeSummaryPage(){
       />,
       list:<ModalButton id='list' text='list'  state={state} modal = 'ListOccupationsModal'  
         pageMode='edit'
-        focusOn={["{basePage}","searchList"]}
-        copy={[{"from":["{basePage}","fromApi","customerOccupationIncomeDetails","{selectedItem}","occupation"]}]}
-        copyOnClose={[{"to":["{basePage}","fromApi","customerOccupationIncomeDetails","{selectedItem}","occupation"]}]}
+        focusOn={["{basePage}","occupation"]}
+        copy={[{"from":["{basePage}","fromApi","customerOccupationIncomeDetails","{selectedItem}","occupation"],"to":["{basePage}","occupation","search"]},{"from":["{basePage}","fromApi","customerOccupationIncomeDetails","{selectedItem}","occupation"],"to":["{basePage}","occupation","selectedOccupationName"]}]}
+        copyOnClose={[{"from":["{basePage}","occupation","selectedOccupationName"],"to":["{basePage}","fromApi","customerOccupationIncomeDetails","{selectedItem}","occupation"]}]}
       />,
+      mainOrJoint:<ToggleButton state={fullState.focusOn('mainOrJoint')}
+        id='mainOrJoint'
+        buttonText='Showing {~/mainOrJoint|Main|Joint}'
+         />,
       nextOccupation:<ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />,
       otherSourcesOfIncome:<ModalButton id='otherSourcesOfIncome' text='otherSourcesOfIncome'  state={state} modal = 'OtherSourcesOfIncomeModal'  
         pageMode='edit'
@@ -78,8 +83,9 @@ export function OccupationAndIncomeSummaryPage(){
       />,
       prevOccupation:<ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />,}
 
-      return <HideButtonsLayout buttons={buttons} hide={["otherSourcesOfIncome","list"]}>
+      return <HideButtonsLayout buttons={buttons} hide={["additionalInfo","businessDetails","otherSourcesOfIncome","list"]}>
           <OccupationAndIncomeFullDomain id={`${id}`} state={state} mode={mode} buttons={buttons} />
+      { buttons.mainOrJoint } 
       { buttons.nextOccupation } 
       { buttons.prevOccupation } 
       { buttons.addEntry } 
@@ -190,15 +196,24 @@ export function FrequenciesResponse({id,state,mode,buttons}: FocusedProps<FState
 </>
 }
 
+export function ListOccupations({id,state,mode,buttons}: FocusedProps<FState, ListOccupationsDomain,Context>){
+  return <>
+    <LabelAndStringInput id={`${id}.search`} state={state.focusOn('search')} mode={mode} label='search' allButtons={buttons} required={true} />
+    <Table id={`${id}.searchResults`} state={state.focusOn('searchResults')} mode={mode} order={["descTypeName"]} copySelectedItemTo={pageState(state)<any>().focusOn('{basePage}').focusOn('fromApi').focusOn('customerOccupationIncomeDetails').focusOn('{selectedItem}').focusOn('occupation')} />
+</>
+}
+
 export function OccupationAndIncomeFullDomain({id,state,mode,buttons}: FocusedProps<FState, OccupationAndIncomeFullDomainDomain,Context>){
   return <>
     <LabelAndStringInput id={`${id}.mainCustomerName`} state={state.focusOn('mainCustomerName')} mode={mode} label='main customer name' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.jointCustomerName`} state={state.focusOn('jointCustomerName')} mode={mode} label='joint customer name' allButtons={buttons} required={true} />
     <SelectedItem id={`${id}.customerOccupationIncomeDetails`} state={state.focusOn('customerOccupationIncomeDetails')} mode={mode} buttons={buttons} index={pageState(state)<any>().focusOn('selectedItem').json()} display={OneOccupationIncomeDetails} />
 </>
 }
 
 export function OccupationDescriptionResponse({id,state,mode,buttons}: FocusedProps<FState, OccupationDescriptionResponseDomain,Context>){
   return <>
+    <LabelAndStringInput id={`${id}.descTypeName`} state={state.focusOn('descTypeName')} mode={mode} label='desc type name' allButtons={buttons} required={true} />
 </>
 }
 
@@ -208,26 +223,27 @@ const employmentTypeGuard = state.chainLens(Lenses.fromPath(["employmentType"]))
 const otherSourceOfIncomeGuard = state.chainLens(Lenses.fromPath(["otherSourceOfIncome"])).optJsonOr([]);
 const owningSharesPctGuard = state.chainLens(Lenses.fromPath(["owningSharesPct"])).optJsonOr([]);
 const ownShareOfTheCompanyGuard = state.chainLens(Lenses.fromPath(["ownShareOfTheCompany"])).optJsonOr([]);
-  return <>
-    <LabelAndDropdown id={`${id}.areYou`} state={state.focusOn('areYou')} mode={mode} label='Are you... ' allButtons={buttons} enums={{"X":"","E":"Employed","S":"Self Employed","C":"Currently not earning","R":"Retired","T":"Student","U":"Unknown","H":"Home Family Responsibilities"}} />
-    <Guard value={areYouGuard} cond={["E","S"]}><LabelAndStringInput id={`${id}.occupation`} state={state.focusOn('occupation')} mode={mode} label='What is your occupation? ' allButtons={buttons} required={true} buttons={["list"]} /></Guard>
+  return <Layout details='[[30]]' title='Current employment details - '>
+    <LabelAndDropdown id={`${id}.areYou`} state={state.focusOn('areYou')} mode={mode} label='Are {~/mainOrJoint|you|they}... ' allButtons={buttons} enums={{"X":"","E":"Employed","S":"Self Employed","C":"Currently not earning","R":"Retired","T":"Student","U":"Unknown","H":"Home Family Responsibilities"}} />
+    <Guard value={areYouGuard} cond={["E","S"]}><LabelAndStringInput id={`${id}.occupation`} state={state.focusOn('occupation')} mode={mode} label='What is {~/mainOrJoint|your|their} occupation? ' allButtons={buttons} required={true} buttons={["list"]} /></Guard>
     <Guard value={areYouGuard} cond={["E","S"]}><LabelAndStringInput id={`${id}.customerDescription`} state={state.focusOn('customerDescription')} mode={mode} label='Customers description: ' allButtons={buttons} required={true} /></Guard>
-    <Guard value={areYouGuard} cond={["E"]}><LabelAndDropdown id={`${id}.ownShareOfTheCompany`} state={state.focusOn('ownShareOfTheCompany')} mode={mode} label='Do you own a share of the company? ' allButtons={buttons} enums={{"X":"","N":"No","Y":"Yes"}} /></Guard>
+    <Guard value={areYouGuard} cond={["E"]}><LabelAndDropdown id={`${id}.ownShareOfTheCompany`} state={state.focusOn('ownShareOfTheCompany')} mode={mode} label='Do {~/mainOrJoint|you|they} own a share of the company? ' allButtons={buttons} enums={{"X":"","N":"No","Y":"Yes"}} /></Guard>
     <Guard value={areYouGuard} cond={["E"]}><Guard value={ownShareOfTheCompanyGuard} cond={["Y"]}><LabelAndDropdown id={`${id}.owningSharesPct`} state={state.focusOn('owningSharesPct')} mode={mode} label='Is this 20% or more of it? ' allButtons={buttons} enums={{"X":"","N":"No","Y":"Yes"}} /></Guard></Guard>
-    <Guard value={areYouGuard} cond={["E"]}><LabelAndStringInput id={`${id}.workFor`} state={state.focusOn('workFor')} mode={mode} label='Who do you work for? ' allButtons={buttons} required={true} /></Guard>
-    <Guard value={areYouGuard} cond={["E"]}><Guard value={owningSharesPctGuard} cond={["N"]}><LabelAndNumberInput id={`${id}.annualSalaryBeforeDeduction`} state={state.focusOn('annualSalaryBeforeDeduction')} mode={mode} label='What is your annual salary? (before deductions) ' allButtons={buttons} required={true} /></Guard></Guard>
-    <Guard value={areYouGuard} cond={["E"]}><Guard value={owningSharesPctGuard} cond={["N"]}><LabelAndNumberInput id={`${id}.annualIncomeExcludingRent`} state={state.focusOn('annualIncomeExcludingRent')} mode={mode} label='Do you have any other guaranteed annual income? (excluding rent) ' allButtons={buttons} required={true} /></Guard></Guard>
-    <Guard value={areYouGuard} cond={["E"]}><Guard value={owningSharesPctGuard} cond={["N"]}><LabelAndNumberInput id={`${id}.regularCommissionBonus`} state={state.focusOn('regularCommissionBonus')} mode={mode} label='Do you have any regular commission, bonus or overtime? ' allButtons={buttons} required={true} /></Guard></Guard>
+    <Guard value={areYouGuard} cond={["E"]}><Guard value={owningSharesPctGuard} cond={["N"]}><LabelAndStringInput id={`${id}.workFor`} state={state.focusOn('workFor')} mode={mode} label='Who do {~/mainOrJoint|you|they} work for? ' allButtons={buttons} required={true} /></Guard></Guard>
+    <Guard value={areYouGuard} cond={["E"]}><Guard value={owningSharesPctGuard} cond={["N"]}><LabelAndDropdown id={`${id}.employmentType`} state={state.focusOn('employmentType')} mode={mode} label='Is this employment... ' allButtons={buttons} enums={{"0":"","1":"Permanent","2":"Temporary","3":"Contract"}} /></Guard></Guard>
+    <Guard value={areYouGuard} cond={["E"]}><Guard value={employmentTypeGuard} cond={["1"]}><LabelAndStringInput id={`${id}.empStartDate`} state={state.focusOn('empStartDate')} mode={mode} label='When did this employment start? (mm/yyyy) ' allButtons={buttons} required={true} /></Guard></Guard>
+    <Guard value={areYouGuard} cond={["E"]}><Guard value={employmentTypeGuard} cond={["2","3"]}><LabelAndStringInput id={`${id}.empEndDate`} state={state.focusOn('empEndDate')} mode={mode} label='When will it finish? (mm/yyyy) ' allButtons={buttons} required={true} /></Guard></Guard>
+    <Guard value={areYouGuard} cond={["E"]}><Guard value={owningSharesPctGuard} cond={["N"]}><LabelAndNumberInput id={`${id}.annualSalaryBeforeDeduction`} state={state.focusOn('annualSalaryBeforeDeduction')} mode={mode} label='What is {~/mainOrJoint|your|their} annual salary? (before deductions) ' allButtons={buttons} required={true} /></Guard></Guard>
+    <Guard value={areYouGuard} cond={["E"]}><Guard value={owningSharesPctGuard} cond={["N"]}><LabelAndNumberInput id={`${id}.annualIncomeExcludingRent`} state={state.focusOn('annualIncomeExcludingRent')} mode={mode} label='Do {~/mainOrJoint|you|they} have any other guaranteed annual income? (excluding rent) ' allButtons={buttons} required={true} /></Guard></Guard>
+    <Guard value={areYouGuard} cond={["E"]}><Guard value={owningSharesPctGuard} cond={["N"]}><LabelAndNumberInput id={`${id}.regularCommissionBonus`} state={state.focusOn('regularCommissionBonus')} mode={mode} label='Do {~/mainOrJoint|you|they} have any regular commission, bonus or overtime? ' allButtons={buttons} required={true} /></Guard></Guard>
     <Guard value={areYouGuard} cond={["E","S"]}><Guard value={owningSharesPctGuard} cond={["Y"]}><LabelAndStringInput id={`${id}.whatTypeOfBusiness`} state={state.focusOn('whatTypeOfBusiness')} mode={mode} label='What type of business is it? ' allButtons={buttons} required={true} /></Guard></Guard>
     <Guard value={areYouGuard} cond={["E","S"]}><Guard value={owningSharesPctGuard} cond={["Y"]}><LabelAndStringInput id={`${id}.whatNameBusiness`} state={state.focusOn('whatNameBusiness')} mode={mode} label='What is its name: ' allButtons={buttons} required={true} /></Guard></Guard>
     <Guard value={areYouGuard} cond={["E","S"]}><Guard value={owningSharesPctGuard} cond={["Y"]}><LabelAndStringInput id={`${id}.establishedYear`} state={state.focusOn('establishedYear')} mode={mode} label='When was it established? (MM/YYYY) ' allButtons={buttons} required={true} /></Guard></Guard>
-    <Guard value={areYouGuard} cond={["E","S"]}><Guard value={owningSharesPctGuard} cond={["Y"]}><LabelAndNumberInput id={`${id}.annualDrawing3Yrs`} state={state.focusOn('annualDrawing3Yrs')} mode={mode} label='What are your average annual drawings over the past 3 years? ' allButtons={buttons} required={true} /></Guard></Guard>
-    <Guard value={areYouGuard} cond={["E"]}><Guard value={owningSharesPctGuard} cond={["N"]}><LabelAndDropdown id={`${id}.employmentType`} state={state.focusOn('employmentType')} mode={mode} label='Is this employment... ' allButtons={buttons} enums={{"0":"","1":"Permanent","2":"Temporary","3":"Contract"}} /></Guard></Guard>
-    <Guard value={areYouGuard} cond={["E"]}><Guard value={employmentTypeGuard} cond={["1"]}><LabelAndStringInput id={`${id}.empStartDate`} state={state.focusOn('empStartDate')} mode={mode} label='When did the contract start? (mm/yyyy) ' allButtons={buttons} required={true} /></Guard></Guard>
-    <Guard value={areYouGuard} cond={["E"]}><Guard value={employmentTypeGuard} cond={["2","3"]}><LabelAndStringInput id={`${id}.empEndDate`} state={state.focusOn('empEndDate')} mode={mode} label='When will it finish? (mm/yyyy) ' allButtons={buttons} required={true} /></Guard></Guard>
-    <Guard value={areYouGuard} cond={["E"]}><Guard value={employmentTypeGuard} cond={["2","3"]}><Guard value={owningSharesPctGuard} cond={["N"]}><LabelAndStringInput id={`${id}.dateOfEmploymentStart`} state={state.focusOn('dateOfEmploymentStart')} mode={mode} label='When did this employment start? (mm/yyyy) ' allButtons={buttons} required={true} /></Guard></Guard></Guard>
-    <LabelAndDropdown id={`${id}.otherSourceOfIncome`} state={state.focusOn('otherSourceOfIncome')} mode={mode} label='Do you have another sources of income (e.g. rental income) ? ' allButtons={buttons} enums={{"X":"","N":"No","Y":"Yes"}} buttons={["otherSourcesOfIncome"]} />
-</>
+    <Guard value={areYouGuard} cond={["E","S"]}><Guard value={owningSharesPctGuard} cond={["Y"]}><LabelAndNumberInput id={`${id}.annualDrawing3Yrs`} state={state.focusOn('annualDrawing3Yrs')} mode={mode} label='What are {~/mainOrJoint|your|their} average annual drawings over the past 3 years? ' allButtons={buttons} required={true} /></Guard></Guard>
+    <LabelAndDropdown id={`${id}.otherSourceOfIncome`} state={state.focusOn('otherSourceOfIncome')} mode={mode} label='Do {~/mainOrJoint|you|they} have another sources of income (e.g. rental income) ? ' allButtons={buttons} enums={{"X":"","N":"No","Y":"Yes"}} buttons={["otherSourcesOfIncome"]} />
+    <LabelAndStringInput id={`${id}.createdBy`} state={state.focusOn('createdBy')} mode={mode} label='Entry created by: ' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.createdDate`} state={state.focusOn('createdDate')} mode={mode} label='on ' allButtons={buttons} required={true} />
+</Layout>
 }
 
 export function OtherIncomeResponse({id,state,mode,buttons}: FocusedProps<FState, OtherIncomeResponseDomain,Context>){

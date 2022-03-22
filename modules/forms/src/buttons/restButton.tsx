@@ -9,7 +9,7 @@ import { isMainPage } from "../common/pageD";
 
 function makeRestButton<B extends RestButtonInPage<G>, G> (): ButtonCreator<RestButtonInPage<G>, G> {
   return {
-    import: '../copied/rest',
+    import: '../formComponents/rest',
     makeButton: ( { params, parent, name, button } ) => {
       const { action, confirm, restName, result, validate } = button
       if ( !isMainPage ( parent ) ) throw new Error ( 'Currently rest buttons are only valid on main pages' ) //Note: this is just for 'how do we specify them'

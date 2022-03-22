@@ -1,9 +1,12 @@
 
-import { dropdownsDD, occupationAndIncomeFullDomainDD } from "./occupationAndIncome.dataD";
+import {
+  dropdownsDD,
+  occupationAndIncomeFullDomainDD,
+} from "./occupationAndIncome.dataD";
 import { additionalInformationDD } from "./additionalInformation/additionalInformation.dataD";
 import { businessDetailsMainDD } from "./businessDetails/businessDetails.dataD";
 import { otherIncomeResponseDD } from "./otherSourcesOfIncome/otherSourcesOfIncome.dataD";
-import { commonParams } from "../eTransfers/eTransfers.restD";
+import {commonParams} from "../repeating/repeating.restD";
 import { RestD } from "../../common/restD";
 
 /** This should fully define the api*/
