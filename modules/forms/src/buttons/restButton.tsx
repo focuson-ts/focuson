@@ -8,7 +8,7 @@ import { replaceBasePageWithKnownPage } from "@focuson/pages";
 
 function makeRestButton<B extends RestButtonInPage<G>, G> (): ButtonCreator<RestButtonInPage<G>, G> {
   return {
-    import: '../copied/rest',
+    import: '../formComponents/rest',
     makeButton: ( { params, parent, name, button } ) => {
       const { rest, action, confirm, result, validate } = button
       return [ `<RestButton state={state}`,

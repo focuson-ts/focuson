@@ -1,5 +1,4 @@
-import { HowOften } from "../../commonEnums";
-
+import {HowOften} from "@focuson/form_components";
 
 export const otherSourcesOfIncomeSample = {
     otherIncomeResponse: [

@@ -197,15 +197,15 @@ public class Sample{
          "  },"+
          "  \"businessFinancialDetails\": {"+
          "    \"turnoverLastYear\": \"10,000\","+
-         "    \"turnoverPenultimateYear\": \"10,000\","+
-         "    \"netProfitLastYear\": \"10,000\","+
-         "    \"netProfitPenultimateYear\": \"10,000\","+
-         "    \"drawingsLastYear\": \"10,000\","+
-         "    \"drawingsPenultimateYear\": \"10,000\","+
-         "    \"dividendsLastYear\": \"10,000\","+
-         "    \"dividendsPenultimateYear\": \"10,000\","+
-         "    \"netAssetsLastYear\": \"10,000\","+
-         "    \"netAssetsPenultimateYear\": \"10,000\""+
+         "    \"turnoverPenultimateYear\": \"11,000\","+
+         "    \"netProfitLastYear\": \"12,000\","+
+         "    \"netProfitPenultimateYear\": \"9,000\","+
+         "    \"drawingsLastYear\": \"13,000\","+
+         "    \"drawingsPenultimateYear\": \"100,000\","+
+         "    \"dividendsLastYear\": \"15,000\","+
+         "    \"dividendsPenultimateYear\": \"3,000\","+
+         "    \"netAssetsLastYear\": \"1,000\","+
+         "    \"netAssetsPenultimateYear\": \"2,000\""+
          "  },"+
          "  \"detailsOfNonRecurringItems\": {"+
          "    \"nonRecurringItems\": \"Not Available\""+
@@ -230,15 +230,15 @@ public class Sample{
   public static Map sampleBusinessFinancialDetails0 =  parse.parseMap(
          "{"+
          "  \"turnoverLastYear\": \"10,000\","+
-         "  \"turnoverPenultimateYear\": \"10,000\","+
-         "  \"netProfitLastYear\": \"10,000\","+
-         "  \"netProfitPenultimateYear\": \"10,000\","+
-         "  \"drawingsLastYear\": \"10,000\","+
-         "  \"drawingsPenultimateYear\": \"10,000\","+
-         "  \"dividendsLastYear\": \"10,000\","+
-         "  \"dividendsPenultimateYear\": \"10,000\","+
-         "  \"netAssetsLastYear\": \"10,000\","+
-         "  \"netAssetsPenultimateYear\": \"10,000\""+
+         "  \"turnoverPenultimateYear\": \"11,000\","+
+         "  \"netProfitLastYear\": \"12,000\","+
+         "  \"netProfitPenultimateYear\": \"9,000\","+
+         "  \"drawingsLastYear\": \"13,000\","+
+         "  \"drawingsPenultimateYear\": \"100,000\","+
+         "  \"dividendsLastYear\": \"15,000\","+
+         "  \"dividendsPenultimateYear\": \"3,000\","+
+         "  \"netAssetsLastYear\": \"1,000\","+
+         "  \"netAssetsPenultimateYear\": \"2,000\""+
          "}"
   );
   public static Map sampleChequeCreditbooks0 =  parse.parseMap(
@@ -293,31 +293,30 @@ public class Sample{
          "["+
          "  {"+
          "    \"areYou\": \"C\","+
-         "    \"occupation\": \"someString\","+
-         "    \"customerDescription\": \"someString\","+
+         "    \"occupation\": \"W045\","+
+         "    \"customerDescription\": \"XXXXXXXXX\","+
          "    \"ownShareOfTheCompany\": \"N\","+
          "    \"owningSharesPct\": \"N\","+
-         "    \"workFor\": \"someString\","+
-         "    \"annualSalaryBeforeDeduction\": 123,"+
-         "    \"annualIncomeExcludingRent\": 123,"+
-         "    \"regularCommissionBonus\": 123,"+
-         "    \"whatTypeOfBusiness\": \"someString\","+
-         "    \"whatNameBusiness\": \"someString\","+
-         "    \"establishedYear\": \"someString\","+
-         "    \"annualDrawing3Yrs\": 123,"+
+         "    \"workFor\": \"S.C. Bosch S.R.L.\","+
          "    \"employmentType\": \"0\","+
-         "    \"empStartDate\": \"2020-10-01\","+
-         "    \"empEndDate\": \"2020-10-01\","+
-         "    \"dateOfEmploymentStart\": \"someString\","+
+         "    \"empStartDate\": \"10/2002\","+
+         "    \"empEndDate\": \"10/2003\","+
+         "    \"annualSalaryBeforeDeduction\": 20315,"+
+         "    \"annualIncomeExcludingRent\": 13255,"+
+         "    \"regularCommissionBonus\": 500,"+
+         "    \"whatTypeOfBusiness\": \"Electrical Technical Support\","+
+         "    \"whatNameBusiness\": \"XXXXXXXXX\","+
+         "    \"establishedYear\": \"2006-04-01T00:00:00.000+01:00\","+
+         "    \"annualDrawing3Yrs\": 100000,"+
          "    \"otherSourceOfIncome\": \"N\","+
-         "    \"createdBy\": \"someString\","+
-         "    \"createdDate\": \"2020-10-01\","+
-         "    \"employerName\": \"someString\","+
-         "    \"sePositionHeld\": \"someString\","+
-         "    \"occupationCategory\": \"someString\","+
-         "    \"empEmploymentSeq\": 123,"+
-         "    \"empAppRoleSeq\": 123,"+
-         "    \"accountantAppRoleSeq\": 123,"+
+         "    \"createdBy\": \"Seras Alin\","+
+         "    \"createdDate\": \"2007-07-03T10:52:27.000+01:00\","+
+         "    \"employerName\": \"My employer name\","+
+         "    \"sePositionHeld\": \"DIR\","+
+         "    \"occupationCategory\": \"SK\","+
+         "    \"empEmploymentSeq\": 999999,"+
+         "    \"empAppRoleSeq\": 14648851,"+
+         "    \"accountantAppRoleSeq\": 14648851,"+
          "    \"currentEmployment\": \"N\""+
          "  }"+
          "]"
@@ -335,8 +334,8 @@ public class Sample{
   public static Map sampleDropdowns0 =  parse.parseMap(
          "{"+
          "  \"occupationDescriptionResponse\": {"+
-         "    \"descTypeValue\": \"someString\","+
-         "    \"descTypeName\": \"someString\""+
+         "    \"descTypeValue\": \"W54\","+
+         "    \"descTypeName\": \"Engineer\""+
          "  },"+
          "  \"employmentStatus\": {"+
          "    \"employmentName\": \"someString\","+
@@ -474,10 +473,12 @@ public class Sample{
   );
   public static Map sampleListOccupations0 =  parse.parseMap(
          "{"+
-         "  \"occupationsList\": ["+
+         "  \"search\": \"Hair dresser\","+
+         "  \"selectedOccupationName\": \"someString\","+
+         "  \"searchResults\": ["+
          "    {"+
-         "      \"descTypeValue\": \"someString\","+
-         "      \"descTypeName\": \"someString\""+
+         "      \"descTypeValue\": \"W54\","+
+         "      \"descTypeName\": \"Engineer\""+
          "    }"+
          "  ]"+
          "}"
@@ -485,37 +486,36 @@ public class Sample{
   public static Map sampleOccupationAndIncomeFullDomain0 =  parse.parseMap(
          "{"+
          "  \"mainCustomerName\": \"Mr XXXXXXXXXX J ABCD Fred Bloggs\","+
-         "  \"jointCustomerName\": \"\","+
+         "  \"jointCustomerName\": \"Mrs XXXXXXXXXX J ABCD Fred Bloggs\","+
          "  \"mainClientRef\": 13606326,"+
          "  \"jointClientRef\": -1,"+
          "  \"customerOccupationIncomeDetails\": ["+
          "    {"+
          "      \"areYou\": \"C\","+
-         "      \"occupation\": \"someString\","+
-         "      \"customerDescription\": \"someString\","+
+         "      \"occupation\": \"W045\","+
+         "      \"customerDescription\": \"XXXXXXXXX\","+
          "      \"ownShareOfTheCompany\": \"N\","+
          "      \"owningSharesPct\": \"N\","+
-         "      \"workFor\": \"someString\","+
-         "      \"annualSalaryBeforeDeduction\": 123,"+
-         "      \"annualIncomeExcludingRent\": 123,"+
-         "      \"regularCommissionBonus\": 123,"+
-         "      \"whatTypeOfBusiness\": \"someString\","+
-         "      \"whatNameBusiness\": \"someString\","+
-         "      \"establishedYear\": \"someString\","+
-         "      \"annualDrawing3Yrs\": 123,"+
+         "      \"workFor\": \"S.C. Bosch S.R.L.\","+
          "      \"employmentType\": \"0\","+
-         "      \"empStartDate\": \"2020-10-01\","+
-         "      \"empEndDate\": \"2020-10-01\","+
-         "      \"dateOfEmploymentStart\": \"someString\","+
+         "      \"empStartDate\": \"10/2002\","+
+         "      \"empEndDate\": \"10/2003\","+
+         "      \"annualSalaryBeforeDeduction\": 20315,"+
+         "      \"annualIncomeExcludingRent\": 13255,"+
+         "      \"regularCommissionBonus\": 500,"+
+         "      \"whatTypeOfBusiness\": \"Electrical Technical Support\","+
+         "      \"whatNameBusiness\": \"XXXXXXXXX\","+
+         "      \"establishedYear\": \"2006-04-01T00:00:00.000+01:00\","+
+         "      \"annualDrawing3Yrs\": 100000,"+
          "      \"otherSourceOfIncome\": \"N\","+
-         "      \"createdBy\": \"someString\","+
-         "      \"createdDate\": \"2020-10-01\","+
-         "      \"employerName\": \"someString\","+
-         "      \"sePositionHeld\": \"someString\","+
-         "      \"occupationCategory\": \"someString\","+
-         "      \"empEmploymentSeq\": 123,"+
-         "      \"empAppRoleSeq\": 123,"+
-         "      \"accountantAppRoleSeq\": 123,"+
+         "      \"createdBy\": \"Seras Alin\","+
+         "      \"createdDate\": \"2007-07-03T10:52:27.000+01:00\","+
+         "      \"employerName\": \"My employer name\","+
+         "      \"sePositionHeld\": \"DIR\","+
+         "      \"occupationCategory\": \"SK\","+
+         "      \"empEmploymentSeq\": 999999,"+
+         "      \"empAppRoleSeq\": 14648851,"+
+         "      \"accountantAppRoleSeq\": 14648851,"+
          "      \"currentEmployment\": \"N\""+
          "    }"+
          "  ]"+
@@ -523,46 +523,45 @@ public class Sample{
   );
   public static Map sampleOccupationDescriptionResponse0 =  parse.parseMap(
          "{"+
-         "  \"descTypeValue\": \"someString\","+
-         "  \"descTypeName\": \"someString\""+
+         "  \"descTypeValue\": \"W54\","+
+         "  \"descTypeName\": \"Engineer\""+
          "}"
   );
-  public static List sampleOccupationsList0 =  parse.parseList(
+  public static List sampleOccupationsListData0 =  parse.parseList(
          "["+
          "  {"+
-         "    \"descTypeValue\": \"someString\","+
-         "    \"descTypeName\": \"someString\""+
+         "    \"descTypeValue\": \"W54\","+
+         "    \"descTypeName\": \"Engineer\""+
          "  }"+
          "]"
   );
   public static Map sampleOneOccupationIncomeDetails0 =  parse.parseMap(
          "{"+
          "  \"areYou\": \"C\","+
-         "  \"occupation\": \"someString\","+
-         "  \"customerDescription\": \"someString\","+
+         "  \"occupation\": \"W045\","+
+         "  \"customerDescription\": \"XXXXXXXXX\","+
          "  \"ownShareOfTheCompany\": \"N\","+
          "  \"owningSharesPct\": \"N\","+
-         "  \"workFor\": \"someString\","+
-         "  \"annualSalaryBeforeDeduction\": 123,"+
-         "  \"annualIncomeExcludingRent\": 123,"+
-         "  \"regularCommissionBonus\": 123,"+
-         "  \"whatTypeOfBusiness\": \"someString\","+
-         "  \"whatNameBusiness\": \"someString\","+
-         "  \"establishedYear\": \"someString\","+
-         "  \"annualDrawing3Yrs\": 123,"+
+         "  \"workFor\": \"S.C. Bosch S.R.L.\","+
          "  \"employmentType\": \"0\","+
-         "  \"empStartDate\": \"2020-10-01\","+
-         "  \"empEndDate\": \"2020-10-01\","+
-         "  \"dateOfEmploymentStart\": \"someString\","+
+         "  \"empStartDate\": \"10/2002\","+
+         "  \"empEndDate\": \"10/2003\","+
+         "  \"annualSalaryBeforeDeduction\": 20315,"+
+         "  \"annualIncomeExcludingRent\": 13255,"+
+         "  \"regularCommissionBonus\": 500,"+
+         "  \"whatTypeOfBusiness\": \"Electrical Technical Support\","+
+         "  \"whatNameBusiness\": \"XXXXXXXXX\","+
+         "  \"establishedYear\": \"2006-04-01T00:00:00.000+01:00\","+
+         "  \"annualDrawing3Yrs\": 100000,"+
          "  \"otherSourceOfIncome\": \"N\","+
-         "  \"createdBy\": \"someString\","+
-         "  \"createdDate\": \"2020-10-01\","+
-         "  \"employerName\": \"someString\","+
-         "  \"sePositionHeld\": \"someString\","+
-         "  \"occupationCategory\": \"someString\","+
-         "  \"empEmploymentSeq\": 123,"+
-         "  \"empAppRoleSeq\": 123,"+
-         "  \"accountantAppRoleSeq\": 123,"+
+         "  \"createdBy\": \"Seras Alin\","+
+         "  \"createdDate\": \"2007-07-03T10:52:27.000+01:00\","+
+         "  \"employerName\": \"My employer name\","+
+         "  \"sePositionHeld\": \"DIR\","+
+         "  \"occupationCategory\": \"SK\","+
+         "  \"empEmploymentSeq\": 999999,"+
+         "  \"empAppRoleSeq\": 14648851,"+
+         "  \"accountantAppRoleSeq\": 14648851,"+
          "  \"currentEmployment\": \"N\""+
          "}"
   );

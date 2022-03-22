@@ -18,7 +18,7 @@ interface StoryState {
    pageMode: PageMode
 }
  
-const initial = {"selectedItem":0}
+const initial = {"selectedItem":0,"occupation":{"search":"","selectedOccupationName":"","searchResults":[]},"mainOrJoint":false}
 function pageSelection ( pageMode: PageMode ): PageSelection { return { pageName: 'OccupationAndIncomeSummary', pageMode}}
 const Template: Story<StoryState> = ( args: StoryState ) =>{
   const startState: FState = { ...emptyState, pageSelection: [ pageSelection ( args.pageMode ) ] }

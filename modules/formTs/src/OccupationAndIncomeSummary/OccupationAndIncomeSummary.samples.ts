@@ -46,15 +46,15 @@ export const sampleBusinessDetailsMain0: domains.BusinessDetailsMainDomain =
   },
   "businessFinancialDetails": {
     "turnoverLastYear": "10,000",
-    "turnoverPenultimateYear": "10,000",
-    "netProfitLastYear": "10,000",
-    "netProfitPenultimateYear": "10,000",
-    "drawingsLastYear": "10,000",
-    "drawingsPenultimateYear": "10,000",
-    "dividendsLastYear": "10,000",
-    "dividendsPenultimateYear": "10,000",
-    "netAssetsLastYear": "10,000",
-    "netAssetsPenultimateYear": "10,000"
+    "turnoverPenultimateYear": "11,000",
+    "netProfitLastYear": "12,000",
+    "netProfitPenultimateYear": "9,000",
+    "drawingsLastYear": "13,000",
+    "drawingsPenultimateYear": "100,000",
+    "dividendsLastYear": "15,000",
+    "dividendsPenultimateYear": "3,000",
+    "netAssetsLastYear": "1,000",
+    "netAssetsPenultimateYear": "2,000"
   },
   "detailsOfNonRecurringItems": {
     "nonRecurringItems": "Not Available"
@@ -78,15 +78,15 @@ export const sampleBusinessDetailsMain0: domains.BusinessDetailsMainDomain =
 export const sampleBusinessFinancialDetails0: domains.BusinessFinancialDetailsDomain = 
 {
   "turnoverLastYear": "10,000",
-  "turnoverPenultimateYear": "10,000",
-  "netProfitLastYear": "10,000",
-  "netProfitPenultimateYear": "10,000",
-  "drawingsLastYear": "10,000",
-  "drawingsPenultimateYear": "10,000",
-  "dividendsLastYear": "10,000",
-  "dividendsPenultimateYear": "10,000",
-  "netAssetsLastYear": "10,000",
-  "netAssetsPenultimateYear": "10,000"
+  "turnoverPenultimateYear": "11,000",
+  "netProfitLastYear": "12,000",
+  "netProfitPenultimateYear": "9,000",
+  "drawingsLastYear": "13,000",
+  "drawingsPenultimateYear": "100,000",
+  "dividendsLastYear": "15,000",
+  "dividendsPenultimateYear": "3,000",
+  "netAssetsLastYear": "1,000",
+  "netAssetsPenultimateYear": "2,000"
 }
 export const sampleContractTypesResponse0: domains.ContractTypesResponseDomain = 
 {
@@ -97,31 +97,30 @@ export const sampleCustomerOccupationIncomeDetails0: domains.CustomerOccupationI
 [
   {
     "areYou": "C",
-    "occupation": "someString",
-    "customerDescription": "someString",
+    "occupation": "W045",
+    "customerDescription": "XXXXXXXXX",
     "ownShareOfTheCompany": "N",
     "owningSharesPct": "N",
-    "workFor": "someString",
-    "annualSalaryBeforeDeduction": 123,
-    "annualIncomeExcludingRent": 123,
-    "regularCommissionBonus": 123,
-    "whatTypeOfBusiness": "someString",
-    "whatNameBusiness": "someString",
-    "establishedYear": "someString",
-    "annualDrawing3Yrs": 123,
+    "workFor": "S.C. Bosch S.R.L.",
     "employmentType": "0",
-    "empStartDate": "2020-10-01",
-    "empEndDate": "2020-10-01",
-    "dateOfEmploymentStart": "someString",
+    "empStartDate": "10/2002",
+    "empEndDate": "10/2003",
+    "annualSalaryBeforeDeduction": 20315,
+    "annualIncomeExcludingRent": 13255,
+    "regularCommissionBonus": 500,
+    "whatTypeOfBusiness": "Electrical Technical Support",
+    "whatNameBusiness": "XXXXXXXXX",
+    "establishedYear": "2006-04-01T00:00:00.000+01:00",
+    "annualDrawing3Yrs": 100000,
     "otherSourceOfIncome": "N",
-    "createdBy": "someString",
-    "createdDate": "2020-10-01",
-    "employerName": "someString",
-    "sePositionHeld": "someString",
-    "occupationCategory": "someString",
-    "empEmploymentSeq": 123,
-    "empAppRoleSeq": 123,
-    "accountantAppRoleSeq": 123,
+    "createdBy": "Seras Alin",
+    "createdDate": "2007-07-03T10:52:27.000+01:00",
+    "employerName": "My employer name",
+    "sePositionHeld": "DIR",
+    "occupationCategory": "SK",
+    "empEmploymentSeq": 999999,
+    "empAppRoleSeq": 14648851,
+    "accountantAppRoleSeq": 14648851,
     "currentEmployment": "N"
   }
 ]
@@ -136,8 +135,8 @@ export const sampleDetailsOfReevaluationOfAssets0: domains.DetailsOfReevaluation
 export const sampleDropdowns0: domains.DropdownsDomain = 
 {
   "occupationDescriptionResponse": {
-    "descTypeValue": "someString",
-    "descTypeName": "someString"
+    "descTypeValue": "W54",
+    "descTypeName": "Engineer"
   },
   "employmentStatus": {
     "employmentName": "someString",
@@ -166,91 +165,91 @@ export const sampleFrequenciesResponse0: domains.FrequenciesResponseDomain =
 }
 export const sampleListOccupations0: domains.ListOccupationsDomain = 
 {
-  "occupationsList": [
+  "search": "Hair dresser",
+  "selectedOccupationName": "someString",
+  "searchResults": [
     {
-      "descTypeValue": "someString",
-      "descTypeName": "someString"
+      "descTypeValue": "W54",
+      "descTypeName": "Engineer"
     }
   ]
 }
 export const sampleOccupationAndIncomeFullDomain0: domains.OccupationAndIncomeFullDomainDomain = 
 {
   "mainCustomerName": "Mr XXXXXXXXXX J ABCD Fred Bloggs",
-  "jointCustomerName": "",
+  "jointCustomerName": "Mrs XXXXXXXXXX J ABCD Fred Bloggs",
   "mainClientRef": 13606326,
   "jointClientRef": -1,
   "customerOccupationIncomeDetails": [
     {
       "areYou": "C",
-      "occupation": "someString",
-      "customerDescription": "someString",
+      "occupation": "W045",
+      "customerDescription": "XXXXXXXXX",
       "ownShareOfTheCompany": "N",
       "owningSharesPct": "N",
-      "workFor": "someString",
-      "annualSalaryBeforeDeduction": 123,
-      "annualIncomeExcludingRent": 123,
-      "regularCommissionBonus": 123,
-      "whatTypeOfBusiness": "someString",
-      "whatNameBusiness": "someString",
-      "establishedYear": "someString",
-      "annualDrawing3Yrs": 123,
+      "workFor": "S.C. Bosch S.R.L.",
       "employmentType": "0",
-      "empStartDate": "2020-10-01",
-      "empEndDate": "2020-10-01",
-      "dateOfEmploymentStart": "someString",
+      "empStartDate": "10/2002",
+      "empEndDate": "10/2003",
+      "annualSalaryBeforeDeduction": 20315,
+      "annualIncomeExcludingRent": 13255,
+      "regularCommissionBonus": 500,
+      "whatTypeOfBusiness": "Electrical Technical Support",
+      "whatNameBusiness": "XXXXXXXXX",
+      "establishedYear": "2006-04-01T00:00:00.000+01:00",
+      "annualDrawing3Yrs": 100000,
       "otherSourceOfIncome": "N",
-      "createdBy": "someString",
-      "createdDate": "2020-10-01",
-      "employerName": "someString",
-      "sePositionHeld": "someString",
-      "occupationCategory": "someString",
-      "empEmploymentSeq": 123,
-      "empAppRoleSeq": 123,
-      "accountantAppRoleSeq": 123,
+      "createdBy": "Seras Alin",
+      "createdDate": "2007-07-03T10:52:27.000+01:00",
+      "employerName": "My employer name",
+      "sePositionHeld": "DIR",
+      "occupationCategory": "SK",
+      "empEmploymentSeq": 999999,
+      "empAppRoleSeq": 14648851,
+      "accountantAppRoleSeq": 14648851,
       "currentEmployment": "N"
     }
   ]
 }
 export const sampleOccupationDescriptionResponse0: domains.OccupationDescriptionResponseDomain = 
 {
-  "descTypeValue": "someString",
-  "descTypeName": "someString"
+  "descTypeValue": "W54",
+  "descTypeName": "Engineer"
 }
-export const sampleOccupationsList0: domains.OccupationsListDomain = 
+export const sampleOccupationsListData0: domains.OccupationsListDataDomain = 
 [
   {
-    "descTypeValue": "someString",
-    "descTypeName": "someString"
+    "descTypeValue": "W54",
+    "descTypeName": "Engineer"
   }
 ]
 export const sampleOneOccupationIncomeDetails0: domains.OneOccupationIncomeDetailsDomain = 
 {
   "areYou": "C",
-  "occupation": "someString",
-  "customerDescription": "someString",
+  "occupation": "W045",
+  "customerDescription": "XXXXXXXXX",
   "ownShareOfTheCompany": "N",
   "owningSharesPct": "N",
-  "workFor": "someString",
-  "annualSalaryBeforeDeduction": 123,
-  "annualIncomeExcludingRent": 123,
-  "regularCommissionBonus": 123,
-  "whatTypeOfBusiness": "someString",
-  "whatNameBusiness": "someString",
-  "establishedYear": "someString",
-  "annualDrawing3Yrs": 123,
+  "workFor": "S.C. Bosch S.R.L.",
   "employmentType": "0",
-  "empStartDate": "2020-10-01",
-  "empEndDate": "2020-10-01",
-  "dateOfEmploymentStart": "someString",
+  "empStartDate": "10/2002",
+  "empEndDate": "10/2003",
+  "annualSalaryBeforeDeduction": 20315,
+  "annualIncomeExcludingRent": 13255,
+  "regularCommissionBonus": 500,
+  "whatTypeOfBusiness": "Electrical Technical Support",
+  "whatNameBusiness": "XXXXXXXXX",
+  "establishedYear": "2006-04-01T00:00:00.000+01:00",
+  "annualDrawing3Yrs": 100000,
   "otherSourceOfIncome": "N",
-  "createdBy": "someString",
-  "createdDate": "2020-10-01",
-  "employerName": "someString",
-  "sePositionHeld": "someString",
-  "occupationCategory": "someString",
-  "empEmploymentSeq": 123,
-  "empAppRoleSeq": 123,
-  "accountantAppRoleSeq": 123,
+  "createdBy": "Seras Alin",
+  "createdDate": "2007-07-03T10:52:27.000+01:00",
+  "employerName": "My employer name",
+  "sePositionHeld": "DIR",
+  "occupationCategory": "SK",
+  "empEmploymentSeq": 999999,
+  "empAppRoleSeq": 14648851,
+  "accountantAppRoleSeq": 14648851,
   "currentEmployment": "N"
 }
 export const sampleOtherIncomeResponse0: domains.OtherIncomeResponseDomain = 
@@ -357,31 +356,30 @@ export const sampleCustomerOccupationIncomeDetails1: domains.CustomerOccupationI
 [
   {
     "areYou": "E",
-    "occupation": "anotherString",
-    "customerDescription": "anotherString",
+    "occupation": "someString",
+    "customerDescription": "someString",
     "ownShareOfTheCompany": "X",
     "owningSharesPct": "X",
-    "workFor": "anotherString",
-    "annualSalaryBeforeDeduction": 456,
-    "annualIncomeExcludingRent": 456,
-    "regularCommissionBonus": 456,
-    "whatTypeOfBusiness": "anotherString",
-    "whatNameBusiness": "anotherString",
-    "establishedYear": "anotherString",
-    "annualDrawing3Yrs": 456,
+    "workFor": "someString",
     "employmentType": "1",
-    "empStartDate": "2022-14-01",
-    "empEndDate": "2022-14-01",
-    "dateOfEmploymentStart": "anotherString",
+    "empStartDate": "2020-10-01",
+    "empEndDate": "2020-10-01",
+    "annualSalaryBeforeDeduction": 123,
+    "annualIncomeExcludingRent": 123,
+    "regularCommissionBonus": 123,
+    "whatTypeOfBusiness": "someString",
+    "whatNameBusiness": "someString",
+    "establishedYear": "someString",
+    "annualDrawing3Yrs": 123,
     "otherSourceOfIncome": "X",
-    "createdBy": "anotherString",
-    "createdDate": "2022-14-01",
-    "employerName": "anotherString",
-    "sePositionHeld": "anotherString",
-    "occupationCategory": "anotherString",
-    "empEmploymentSeq": 456,
-    "empAppRoleSeq": 456,
-    "accountantAppRoleSeq": 456,
+    "createdBy": "someString",
+    "createdDate": "2020-10-01",
+    "employerName": "someString",
+    "sePositionHeld": "someString",
+    "occupationCategory": "someString",
+    "empEmploymentSeq": 123,
+    "empAppRoleSeq": 123,
+    "accountantAppRoleSeq": 123,
     "currentEmployment": "X"
   }
 ]
@@ -396,8 +394,8 @@ export const sampleDetailsOfReevaluationOfAssets1: domains.DetailsOfReevaluation
 export const sampleDropdowns1: domains.DropdownsDomain = 
 {
   "occupationDescriptionResponse": {
-    "descTypeValue": "anotherString",
-    "descTypeName": "anotherString"
+    "descTypeValue": "someString",
+    "descTypeName": "someString"
   },
   "employmentStatus": {
     "employmentName": "anotherString",
@@ -426,10 +424,12 @@ export const sampleFrequenciesResponse1: domains.FrequenciesResponseDomain =
 }
 export const sampleListOccupations1: domains.ListOccupationsDomain = 
 {
-  "occupationsList": [
+  "search": "This is a one line string",
+  "selectedOccupationName": "anotherString",
+  "searchResults": [
     {
-      "descTypeValue": "anotherString",
-      "descTypeName": "anotherString"
+      "descTypeValue": "someString",
+      "descTypeName": "someString"
     }
   ]
 }
@@ -442,75 +442,73 @@ export const sampleOccupationAndIncomeFullDomain1: domains.OccupationAndIncomeFu
   "customerOccupationIncomeDetails": [
     {
       "areYou": "E",
-      "occupation": "anotherString",
-      "customerDescription": "anotherString",
+      "occupation": "someString",
+      "customerDescription": "someString",
       "ownShareOfTheCompany": "X",
       "owningSharesPct": "X",
-      "workFor": "anotherString",
-      "annualSalaryBeforeDeduction": 456,
-      "annualIncomeExcludingRent": 456,
-      "regularCommissionBonus": 456,
-      "whatTypeOfBusiness": "anotherString",
-      "whatNameBusiness": "anotherString",
-      "establishedYear": "anotherString",
-      "annualDrawing3Yrs": 456,
+      "workFor": "someString",
       "employmentType": "1",
-      "empStartDate": "2022-14-01",
-      "empEndDate": "2022-14-01",
-      "dateOfEmploymentStart": "anotherString",
+      "empStartDate": "2020-10-01",
+      "empEndDate": "2020-10-01",
+      "annualSalaryBeforeDeduction": 123,
+      "annualIncomeExcludingRent": 123,
+      "regularCommissionBonus": 123,
+      "whatTypeOfBusiness": "someString",
+      "whatNameBusiness": "someString",
+      "establishedYear": "someString",
+      "annualDrawing3Yrs": 123,
       "otherSourceOfIncome": "X",
-      "createdBy": "anotherString",
-      "createdDate": "2022-14-01",
-      "employerName": "anotherString",
-      "sePositionHeld": "anotherString",
-      "occupationCategory": "anotherString",
-      "empEmploymentSeq": 456,
-      "empAppRoleSeq": 456,
-      "accountantAppRoleSeq": 456,
+      "createdBy": "someString",
+      "createdDate": "2020-10-01",
+      "employerName": "someString",
+      "sePositionHeld": "someString",
+      "occupationCategory": "someString",
+      "empEmploymentSeq": 123,
+      "empAppRoleSeq": 123,
+      "accountantAppRoleSeq": 123,
       "currentEmployment": "X"
     }
   ]
 }
 export const sampleOccupationDescriptionResponse1: domains.OccupationDescriptionResponseDomain = 
 {
-  "descTypeValue": "anotherString",
-  "descTypeName": "anotherString"
+  "descTypeValue": "someString",
+  "descTypeName": "someString"
 }
-export const sampleOccupationsList1: domains.OccupationsListDomain = 
+export const sampleOccupationsListData1: domains.OccupationsListDataDomain = 
 [
   {
-    "descTypeValue": "anotherString",
-    "descTypeName": "anotherString"
+    "descTypeValue": "someString",
+    "descTypeName": "someString"
   }
 ]
 export const sampleOneOccupationIncomeDetails1: domains.OneOccupationIncomeDetailsDomain = 
 {
   "areYou": "E",
-  "occupation": "anotherString",
-  "customerDescription": "anotherString",
+  "occupation": "someString",
+  "customerDescription": "someString",
   "ownShareOfTheCompany": "X",
   "owningSharesPct": "X",
-  "workFor": "anotherString",
-  "annualSalaryBeforeDeduction": 456,
-  "annualIncomeExcludingRent": 456,
-  "regularCommissionBonus": 456,
-  "whatTypeOfBusiness": "anotherString",
-  "whatNameBusiness": "anotherString",
-  "establishedYear": "anotherString",
-  "annualDrawing3Yrs": 456,
+  "workFor": "someString",
   "employmentType": "1",
-  "empStartDate": "2022-14-01",
-  "empEndDate": "2022-14-01",
-  "dateOfEmploymentStart": "anotherString",
+  "empStartDate": "2020-10-01",
+  "empEndDate": "2020-10-01",
+  "annualSalaryBeforeDeduction": 123,
+  "annualIncomeExcludingRent": 123,
+  "regularCommissionBonus": 123,
+  "whatTypeOfBusiness": "someString",
+  "whatNameBusiness": "someString",
+  "establishedYear": "someString",
+  "annualDrawing3Yrs": 123,
   "otherSourceOfIncome": "X",
-  "createdBy": "anotherString",
-  "createdDate": "2022-14-01",
-  "employerName": "anotherString",
-  "sePositionHeld": "anotherString",
-  "occupationCategory": "anotherString",
-  "empEmploymentSeq": 456,
-  "empAppRoleSeq": 456,
-  "accountantAppRoleSeq": 456,
+  "createdBy": "someString",
+  "createdDate": "2020-10-01",
+  "employerName": "someString",
+  "sePositionHeld": "someString",
+  "occupationCategory": "someString",
+  "empEmploymentSeq": 123,
+  "empAppRoleSeq": 123,
+  "accountantAppRoleSeq": 123,
   "currentEmployment": "X"
 }
 export const sampleOtherIncomeResponse1: domains.OtherIncomeResponseDomain = 
@@ -617,31 +615,30 @@ export const sampleCustomerOccupationIncomeDetails2: domains.CustomerOccupationI
 [
   {
     "areYou": "H",
-    "occupation": "someString",
-    "customerDescription": "someString",
+    "occupation": "anotherString",
+    "customerDescription": "anotherString",
     "ownShareOfTheCompany": "Y",
     "owningSharesPct": "Y",
-    "workFor": "someString",
-    "annualSalaryBeforeDeduction": 123,
-    "annualIncomeExcludingRent": 123,
-    "regularCommissionBonus": 123,
-    "whatTypeOfBusiness": "someString",
-    "whatNameBusiness": "someString",
-    "establishedYear": "someString",
-    "annualDrawing3Yrs": 123,
+    "workFor": "anotherString",
     "employmentType": "2",
-    "empStartDate": "2020-10-01",
-    "empEndDate": "2020-10-01",
-    "dateOfEmploymentStart": "someString",
+    "empStartDate": "2022-14-01",
+    "empEndDate": "2022-14-01",
+    "annualSalaryBeforeDeduction": 456,
+    "annualIncomeExcludingRent": 456,
+    "regularCommissionBonus": 456,
+    "whatTypeOfBusiness": "anotherString",
+    "whatNameBusiness": "anotherString",
+    "establishedYear": "anotherString",
+    "annualDrawing3Yrs": 456,
     "otherSourceOfIncome": "Y",
-    "createdBy": "someString",
-    "createdDate": "2020-10-01",
-    "employerName": "someString",
-    "sePositionHeld": "someString",
-    "occupationCategory": "someString",
-    "empEmploymentSeq": 123,
-    "empAppRoleSeq": 123,
-    "accountantAppRoleSeq": 123,
+    "createdBy": "anotherString",
+    "createdDate": "2022-14-01",
+    "employerName": "anotherString",
+    "sePositionHeld": "anotherString",
+    "occupationCategory": "anotherString",
+    "empEmploymentSeq": 456,
+    "empAppRoleSeq": 456,
+    "accountantAppRoleSeq": 456,
     "currentEmployment": "Y"
   }
 ]
@@ -656,8 +653,8 @@ export const sampleDetailsOfReevaluationOfAssets2: domains.DetailsOfReevaluation
 export const sampleDropdowns2: domains.DropdownsDomain = 
 {
   "occupationDescriptionResponse": {
-    "descTypeValue": "someString",
-    "descTypeName": "someString"
+    "descTypeValue": "anotherString",
+    "descTypeName": "anotherString"
   },
   "employmentStatus": {
     "employmentName": "someString",
@@ -686,10 +683,12 @@ export const sampleFrequenciesResponse2: domains.FrequenciesResponseDomain =
 }
 export const sampleListOccupations2: domains.ListOccupationsDomain = 
 {
-  "occupationsList": [
+  "search": "another one line string",
+  "selectedOccupationName": "someString",
+  "searchResults": [
     {
-      "descTypeValue": "someString",
-      "descTypeName": "someString"
+      "descTypeValue": "anotherString",
+      "descTypeName": "anotherString"
     }
   ]
 }
@@ -702,75 +701,73 @@ export const sampleOccupationAndIncomeFullDomain2: domains.OccupationAndIncomeFu
   "customerOccupationIncomeDetails": [
     {
       "areYou": "H",
-      "occupation": "someString",
-      "customerDescription": "someString",
+      "occupation": "anotherString",
+      "customerDescription": "anotherString",
       "ownShareOfTheCompany": "Y",
       "owningSharesPct": "Y",
-      "workFor": "someString",
-      "annualSalaryBeforeDeduction": 123,
-      "annualIncomeExcludingRent": 123,
-      "regularCommissionBonus": 123,
-      "whatTypeOfBusiness": "someString",
-      "whatNameBusiness": "someString",
-      "establishedYear": "someString",
-      "annualDrawing3Yrs": 123,
+      "workFor": "anotherString",
       "employmentType": "2",
-      "empStartDate": "2020-10-01",
-      "empEndDate": "2020-10-01",
-      "dateOfEmploymentStart": "someString",
+      "empStartDate": "2022-14-01",
+      "empEndDate": "2022-14-01",
+      "annualSalaryBeforeDeduction": 456,
+      "annualIncomeExcludingRent": 456,
+      "regularCommissionBonus": 456,
+      "whatTypeOfBusiness": "anotherString",
+      "whatNameBusiness": "anotherString",
+      "establishedYear": "anotherString",
+      "annualDrawing3Yrs": 456,
       "otherSourceOfIncome": "Y",
-      "createdBy": "someString",
-      "createdDate": "2020-10-01",
-      "employerName": "someString",
-      "sePositionHeld": "someString",
-      "occupationCategory": "someString",
-      "empEmploymentSeq": 123,
-      "empAppRoleSeq": 123,
-      "accountantAppRoleSeq": 123,
+      "createdBy": "anotherString",
+      "createdDate": "2022-14-01",
+      "employerName": "anotherString",
+      "sePositionHeld": "anotherString",
+      "occupationCategory": "anotherString",
+      "empEmploymentSeq": 456,
+      "empAppRoleSeq": 456,
+      "accountantAppRoleSeq": 456,
       "currentEmployment": "Y"
     }
   ]
 }
 export const sampleOccupationDescriptionResponse2: domains.OccupationDescriptionResponseDomain = 
 {
-  "descTypeValue": "someString",
-  "descTypeName": "someString"
+  "descTypeValue": "anotherString",
+  "descTypeName": "anotherString"
 }
-export const sampleOccupationsList2: domains.OccupationsListDomain = 
+export const sampleOccupationsListData2: domains.OccupationsListDataDomain = 
 [
   {
-    "descTypeValue": "someString",
-    "descTypeName": "someString"
+    "descTypeValue": "anotherString",
+    "descTypeName": "anotherString"
   }
 ]
 export const sampleOneOccupationIncomeDetails2: domains.OneOccupationIncomeDetailsDomain = 
 {
   "areYou": "H",
-  "occupation": "someString",
-  "customerDescription": "someString",
+  "occupation": "anotherString",
+  "customerDescription": "anotherString",
   "ownShareOfTheCompany": "Y",
   "owningSharesPct": "Y",
-  "workFor": "someString",
-  "annualSalaryBeforeDeduction": 123,
-  "annualIncomeExcludingRent": 123,
-  "regularCommissionBonus": 123,
-  "whatTypeOfBusiness": "someString",
-  "whatNameBusiness": "someString",
-  "establishedYear": "someString",
-  "annualDrawing3Yrs": 123,
+  "workFor": "anotherString",
   "employmentType": "2",
-  "empStartDate": "2020-10-01",
-  "empEndDate": "2020-10-01",
-  "dateOfEmploymentStart": "someString",
+  "empStartDate": "2022-14-01",
+  "empEndDate": "2022-14-01",
+  "annualSalaryBeforeDeduction": 456,
+  "annualIncomeExcludingRent": 456,
+  "regularCommissionBonus": 456,
+  "whatTypeOfBusiness": "anotherString",
+  "whatNameBusiness": "anotherString",
+  "establishedYear": "anotherString",
+  "annualDrawing3Yrs": 456,
   "otherSourceOfIncome": "Y",
-  "createdBy": "someString",
-  "createdDate": "2020-10-01",
-  "employerName": "someString",
-  "sePositionHeld": "someString",
-  "occupationCategory": "someString",
-  "empEmploymentSeq": 123,
-  "empAppRoleSeq": 123,
-  "accountantAppRoleSeq": 123,
+  "createdBy": "anotherString",
+  "createdDate": "2022-14-01",
+  "employerName": "anotherString",
+  "sePositionHeld": "anotherString",
+  "occupationCategory": "anotherString",
+  "empEmploymentSeq": 456,
+  "empAppRoleSeq": 456,
+  "accountantAppRoleSeq": 456,
   "currentEmployment": "Y"
 }
 export const sampleOtherIncomeResponse2: domains.OtherIncomeResponseDomain = 

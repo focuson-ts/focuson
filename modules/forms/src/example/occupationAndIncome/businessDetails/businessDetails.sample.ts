@@ -1,6 +1,5 @@
 import { ContactTitle } from "../../commonEnums";
 
-
 export const businessDetailsSample = {
     businessDetails: {
         applicantName: 'Mr XXXXXXXXXX ABCD Fred Bloggs',
@@ -13,15 +12,15 @@ export const businessDetailsSample = {
     },
     businessFinancialDetails: {
         turnoverLastYear: '10,000',
-            turnoverPenultimateYear: '10,000',
-            netProfitLastYear: '10,000',
-            netProfitPenultimateYear: '10,000',
-            drawingsLastYear: '10,000',
-            drawingsPenultimateYear: '10,000',
-            dividendsLastYear: '10,000',
-            dividendsPenultimateYear: '10,000',
-            netAssetsLastYear: '10,000',
-            netAssetsPenultimateYear: '10,000'
+            turnoverPenultimateYear: '11,000',
+            netProfitLastYear: '12,000',
+            netProfitPenultimateYear: '9,000',
+            drawingsLastYear: '13,000',
+            drawingsPenultimateYear: '100,000',
+            dividendsLastYear: '15,000',
+            dividendsPenultimateYear: '3,000',
+            netAssetsLastYear: '1,000',
+            netAssetsPenultimateYear: '2,000'
     },
     detailsOfNonRecurringItems: {
         nonRecurringItems: 'Not Available'

@@ -1,3 +1,4 @@
+import { LensState, reasonFor } from "@focuson/state";
 import { findValidityDetails } from "@focuson/pages";
 
 

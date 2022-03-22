@@ -1,11 +1,12 @@
 /* ---------------- BUSINESS DETAILS START ---------------- */
 
+
 import { businessDetailsSample } from "./businessDetails.sample";
 import { ExampleDataD } from "../../common";
+
+import { OneLineStringDD, StringDD, StringPrimitiveDD } from "../../../common/dataD";
 import { LabelAndDropDownCD } from "../../../common/componentsD";
 import { ContactTitle } from "../../commonEnums";
-import { OneLineStringDD, StringDD, StringPrimitiveDD } from "../../../common/dataD";
-
 
 export const businessDetailsDD: ExampleDataD = {
     name: 'BusinessDetails',

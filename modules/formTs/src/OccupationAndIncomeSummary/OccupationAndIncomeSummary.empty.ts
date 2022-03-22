@@ -102,6 +102,9 @@ export const emptyCustomerOccupationIncomeDetails:domains.CustomerOccupationInco
       "ownShareOfTheCompany": "",
       "owningSharesPct": "",
       "workFor": "",
+      "employmentType": "",
+      "empStartDate": "2022-1-1",
+      "empEndDate": "2022-1-1",
       "annualSalaryBeforeDeduction": 0,
       "annualIncomeExcludingRent": 0,
       "regularCommissionBonus": 0,
@@ -109,10 +112,6 @@ export const emptyCustomerOccupationIncomeDetails:domains.CustomerOccupationInco
       "whatNameBusiness": "",
       "establishedYear": "",
       "annualDrawing3Yrs": 0,
-      "employmentType": "",
-      "empStartDate": "2022-1-1",
-      "empEndDate": "2022-1-1",
-      "dateOfEmploymentStart": "",
       "otherSourceOfIncome": "",
       "createdBy": "",
       "createdDate": "2022-1-1",
@@ -166,7 +165,9 @@ export const emptyFrequenciesResponse:domains.FrequenciesResponseDomain =
   }
 export const emptyListOccupations:domains.ListOccupationsDomain =
   {
-    "occupationsList": [
+    "search": "",
+    "selectedOccupationName": "",
+    "searchResults": [
       {
         "descTypeValue": "",
         "descTypeName": ""
@@ -187,6 +188,9 @@ export const emptyOccupationAndIncomeFullDomain:domains.OccupationAndIncomeFullD
         "ownShareOfTheCompany": "",
         "owningSharesPct": "",
         "workFor": "",
+        "employmentType": "",
+        "empStartDate": "2022-1-1",
+        "empEndDate": "2022-1-1",
         "annualSalaryBeforeDeduction": 0,
         "annualIncomeExcludingRent": 0,
         "regularCommissionBonus": 0,
@@ -194,10 +198,6 @@ export const emptyOccupationAndIncomeFullDomain:domains.OccupationAndIncomeFullD
         "whatNameBusiness": "",
         "establishedYear": "",
         "annualDrawing3Yrs": 0,
-        "employmentType": "",
-        "empStartDate": "2022-1-1",
-        "empEndDate": "2022-1-1",
-        "dateOfEmploymentStart": "",
         "otherSourceOfIncome": "",
         "createdBy": "",
         "createdDate": "2022-1-1",
@@ -216,7 +216,7 @@ export const emptyOccupationDescriptionResponse:domains.OccupationDescriptionRes
     "descTypeValue": "",
     "descTypeName": ""
   }
-export const emptyOccupationsList:domains.OccupationsListDomain =
+export const emptyOccupationsListData:domains.OccupationsListDataDomain =
   [
     {
       "descTypeValue": "",
@@ -231,6 +231,9 @@ export const emptyOneOccupationIncomeDetails:domains.OneOccupationIncomeDetailsD
     "ownShareOfTheCompany": "",
     "owningSharesPct": "",
     "workFor": "",
+    "employmentType": "",
+    "empStartDate": "2022-1-1",
+    "empEndDate": "2022-1-1",
     "annualSalaryBeforeDeduction": 0,
     "annualIncomeExcludingRent": 0,
     "regularCommissionBonus": 0,
@@ -238,10 +241,6 @@ export const emptyOneOccupationIncomeDetails:domains.OneOccupationIncomeDetailsD
     "whatNameBusiness": "",
     "establishedYear": "",
     "annualDrawing3Yrs": 0,
-    "employmentType": "",
-    "empStartDate": "2022-1-1",
-    "empEndDate": "2022-1-1",
-    "dateOfEmploymentStart": "",
     "otherSourceOfIncome": "",
     "createdBy": "",
     "createdDate": "2022-1-1",

@@ -237,6 +237,9 @@ type OneOccupationIncomeDetails{
   ownShareOfTheCompany: String!
   owningSharesPct: String!
   workFor: String!
+  employmentType: String!
+  empStartDate: String!
+  empEndDate: String!
   annualSalaryBeforeDeduction: Int!
   annualIncomeExcludingRent: Int!
   regularCommissionBonus: Int!
@@ -244,10 +247,6 @@ type OneOccupationIncomeDetails{
   whatNameBusiness: String!
   establishedYear: String!
   annualDrawing3Yrs: Int!
-  employmentType: String!
-  empStartDate: String!
-  empEndDate: String!
-  dateOfEmploymentStart: String!
   otherSourceOfIncome: String!
   createdBy: String!
   createdDate: String!
@@ -327,6 +326,9 @@ input OneOccupationIncomeDetailsInp{
   ownShareOfTheCompany: String!
   owningSharesPct: String!
   workFor: String!
+  employmentType: String!
+  empStartDate: String!
+  empEndDate: String!
   annualSalaryBeforeDeduction: Int!
   annualIncomeExcludingRent: Int!
   regularCommissionBonus: Int!
@@ -334,10 +336,6 @@ input OneOccupationIncomeDetailsInp{
   whatNameBusiness: String!
   establishedYear: String!
   annualDrawing3Yrs: Int!
-  employmentType: String!
-  empStartDate: String!
-  empEndDate: String!
-  dateOfEmploymentStart: String!
   otherSourceOfIncome: String!
   createdBy: String!
   createdDate: String!

@@ -1,4 +1,4 @@
-import { CommonStateProps } from "../common";
+import { CommonStateProps } from "./common";
 import { reasonFor } from "@focuson/state";
 
 
