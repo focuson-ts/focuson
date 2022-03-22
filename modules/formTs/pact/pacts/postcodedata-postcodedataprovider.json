@@ -1,0 +1,59 @@
+{
+  "consumer": {
+    "name": "PostCodeData"
+  },
+  "provider": {
+    "name": "PostCodeDataProvider"
+  },
+  "interactions": [
+    {
+      "description": "PostCodeDemo should have a get fetcher for PostCodeData",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/postCode",
+        "query": "postcode=LW12+4RG"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": [
+          {
+            "line1": "4 Privet drive",
+            "line2": "Little Whinging",
+            "line3": "Surrey",
+            "line4": "England"
+          }
+        ]
+      }
+    },
+    {
+      "description": "PostCodeDemo should have a get rest for PostCodeData",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/postCode",
+        "query": "postcode=LW12+4RG"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": [
+          {
+            "line1": "4 Privet drive",
+            "line2": "Little Whinging",
+            "line3": "Surrey",
+            "line4": "England"
+          }
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

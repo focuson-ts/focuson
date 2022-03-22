@@ -1,0 +1,59 @@
+{
+  "consumer": {
+    "name": "AccountAllFlags"
+  },
+  "provider": {
+    "name": "AccountAllFlagsProvider"
+  },
+  "interactions": [
+    {
+      "description": "AccountOverview should have a get fetcher for AccountAllFlags",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/flags",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "flags": [
+            {
+              "flagName": "Terrorist",
+              "flagValue": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "AccountOverview should have a get rest for AccountAllFlags",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/flags",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "flags": [
+            {
+              "flagName": "Terrorist",
+              "flagValue": true
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

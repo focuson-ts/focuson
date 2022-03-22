@@ -1,0 +1,79 @@
+package focuson.data.queries;
+public class OccupationAndIncomeFullDomainQueries{
+  public static  String getOccupationAndIncomeFullDomain(String customerId){ 
+     return
+  "query{getOccupationAndIncomeFullDomain(" + "customerId:" + "\"" + customerId + "\"" + "){"+
+        "    mainCustomerName"+
+        "    jointCustomerName"+
+        "    mainClientRef"+
+        "    jointClientRef"+
+        "    customerOccupationIncomeDetails{"+
+        "      areYou"+
+        "      occupation"+
+        "      customerDescription"+
+        "      ownShareOfTheCompany"+
+        "      owningSharesPct"+
+        "      workFor"+
+        "      annualSalaryBeforeDeduction"+
+        "      annualIncomeExcludingRent"+
+        "      regularCommissionBonus"+
+        "      whatTypeOfBusiness"+
+        "      whatNameBusiness"+
+        "      establishedYear"+
+        "      annualDrawing3Yrs"+
+        "      employmentType"+
+        "      empStartDate"+
+        "      empEndDate"+
+        "      dateOfEmploymentStart"+
+        "      otherSourceOfIncome"+
+        "      createdBy"+
+        "      createdDate"+
+        "      employerName"+
+        "      sePositionHeld"+
+        "      occupationCategory"+
+        "      empEmploymentSeq"+
+        "      empAppRoleSeq"+
+        "      accountantAppRoleSeq"+
+        "      currentEmployment"+
+        "    }"+
+        "  }"
+  +"}";}
+  public static  String updateOccupationAndIncomeFullDomain(String customerId, String obj){ 
+     return
+  "mutation{updateOccupationAndIncomeFullDomain(" + "customerId:" + "\"" + customerId + "\""  + ", obj:" + obj + "){"+
+        "    mainCustomerName"+
+        "    jointCustomerName"+
+        "    mainClientRef"+
+        "    jointClientRef"+
+        "    customerOccupationIncomeDetails{"+
+        "      areYou"+
+        "      occupation"+
+        "      customerDescription"+
+        "      ownShareOfTheCompany"+
+        "      owningSharesPct"+
+        "      workFor"+
+        "      annualSalaryBeforeDeduction"+
+        "      annualIncomeExcludingRent"+
+        "      regularCommissionBonus"+
+        "      whatTypeOfBusiness"+
+        "      whatNameBusiness"+
+        "      establishedYear"+
+        "      annualDrawing3Yrs"+
+        "      employmentType"+
+        "      empStartDate"+
+        "      empEndDate"+
+        "      dateOfEmploymentStart"+
+        "      otherSourceOfIncome"+
+        "      createdBy"+
+        "      createdDate"+
+        "      employerName"+
+        "      sePositionHeld"+
+        "      occupationCategory"+
+        "      empEmploymentSeq"+
+        "      empAppRoleSeq"+
+        "      accountantAppRoleSeq"+
+        "      currentEmployment"+
+        "    }"+
+        "  }"
+  +"}";}
+}

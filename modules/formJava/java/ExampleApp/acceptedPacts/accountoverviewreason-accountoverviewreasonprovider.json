@@ -1,0 +1,49 @@
+{
+  "consumer": {
+    "name": "AccountOverviewReason"
+  },
+  "provider": {
+    "name": "AccountOverviewReasonProvider"
+  },
+  "interactions": [
+    {
+      "description": "AccountOverview should have a get fetcher for AccountOverviewReason",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/reason",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "reason": "Really good reason"
+        }
+      }
+    },
+    {
+      "description": "AccountOverview should have a get rest for AccountOverviewReason",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/reason",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "reason": "Really good reason"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}
