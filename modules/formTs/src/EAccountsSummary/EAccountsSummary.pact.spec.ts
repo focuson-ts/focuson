@@ -8,7 +8,6 @@ import { Lenses, massTransform } from "@focuson/lens";
 import * as samples from '../EAccountsSummary/EAccountsSummary.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
-import {CreatePlanFetcher} from './EAccountsSummary.fetchers'
 import {EAccountsSummaryFetcher} from './EAccountsSummary.fetchers'
 describe("To support manually running the tests", () =>{it ("should support EAccountsSummary", () =>{})})
 //Rest get pact test
