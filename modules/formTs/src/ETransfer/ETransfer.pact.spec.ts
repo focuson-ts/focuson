@@ -8,7 +8,6 @@ import { Lenses, massTransform } from "@focuson/lens";
 import * as samples from '../ETransfer/ETransfer.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
-import {ETransferDataDFetcher} from './ETransfer.fetchers'
 describe("To support manually running the tests", () =>{it ("should support ETransfer", () =>{})})
 //Rest create pact test
 pactWith ( { consumer: 'ETransferDataD', provider: 'ETransferDataDProvider', cors: true }, provider => {

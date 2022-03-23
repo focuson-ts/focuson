@@ -104,7 +104,7 @@ export const LabelAndRadioCD: DisplayCompD = {
 
 
 export const OptionalCD: DisplayCompD = {
-  import: '../formComponents/Optional/optional',
+  import: '../formComponents/optional',
   name: "Optional",
   params: { ...commonParamsWithLabel }
 }
