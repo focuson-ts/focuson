@@ -5,6 +5,8 @@ import { AliasAndWhere, DBTable, DBTableAndMaybeName, DBTableAndName, GetSqlFrom
 import { Lenses } from "@focuson/lens";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { addStringToEndOfAllButLast, indentList } from "./codegen";
+import { PageD, RestDefnInPageProperties } from "../common/pageD";
+import { allMapsName } from "./names";
 
 export interface TableAndField {
   table: DBTable;
@@ -160,16 +162,18 @@ export interface SqlRoot {
   aliases: NameAnd<DBTableAndMaybeName>;
   /** The wheres we have accumulated to get to the sql root */
   where: Where;
-  children: SqlRoot[]
+  children: SqlRoot[];
+  /** These include repeat as child */
+  foundChildAliasAndWheres: FoundChildAliasAndWhere[];
 }
 export function findRoots ( d: CompDataD<any>, sqlG: SqlGetDetails ): SqlRoot {
   function findChild ( data: CompDataD<any>, aliases: NameAnd<DBTableAndMaybeName>, where: Where ) {
-    let foundChildAliasAndWheres = findParentChildAndAliases ( { stopWithRepeatAsChild: true }, data, sqlG );
+    let foundChildAliasAndWheres: FoundChildAliasAndWhere[] = findParentChildAndAliases ( { stopWithRepeatAsChild: true }, data, sqlG );
     const children: SqlRoot[] = foundChildAliasAndWheres
       .flatMap ( ( { child, aliasAndWhere } ) =>
         isRepeatingDd ( child ) ?
           [ findChild ( child, aliasAndWhere.aliases, aliasAndWhere.where ) ] : [] );
-    return { data, aliases, where, children }
+    return { data, aliases, where, children, foundChildAliasAndWheres }
   }
   return findChild ( d, sqlG.aliases, sqlG.where )
 }
@@ -220,14 +224,15 @@ export interface SqlData {
   /** Alias name, fieldname, as */
   fields: TableAndFieldData<any>[];
   aliasMap: NameAnd<DBTableAndName>;
-  wheres: Where
+  wheres: Where;
+  foundChildAliasAndWheres: FoundChildAliasAndWhere[];
 }
 
 export function makeSqlDataFor ( sqlRoot: SqlRoot, sqlG: SqlGetDetails ): SqlData {
   const fields = findFieldsNeededFor ( sqlRoot )
   const aliasMap: NameAnd<DBTableAndName> = findAliasMapFor ( sqlRoot, sqlG )
   const wheres = findWheresFor ( sqlRoot, sqlG )
-  return { fields, aliasMap, wheres }
+  return { fields, aliasMap, wheres, foundChildAliasAndWheres: sqlRoot.foundChildAliasAndWheres }
 }
 
 /** returns [alias,table,field] */
@@ -391,4 +396,50 @@ export function makeCreateTableSql<G> ( dataD: CompDataD<G>, sqlG: SqlGetDetails
       ...indentList ( addStringToEndOfAllButLast ( ',' ) ( tf.fieldData.map ( fd => `${fd.fieldName} ${reactTypeToSqlType ( fd.reactType )}` ) ) ),
       `)`, '' ]
   )
+}
+
+//public class JointZero {
+//     public static class AllJointAccountMaps {
+//         public final Map<String, Object> account = new HashMap<>();  // ----------- this will be the root
+//         public final Map<String, Object> main = new HashMap<>();
+//         public final Map<String, Object> mainName = new HashMap<>();
+//         public final Map<String, Object> joint = new HashMap<>();
+//         public final Map<String, Object> jointName = new HashMap<>();
+//
+//         public void makeJointAccount(ResultSet rs, List<Joint0> joint0s, List<Joint1> joint1s) throws SQLException {
+//             account.put("blnc//the json name", rs.getInt("account_blnc"));
+//             mainName.put("zzname", rs.getInt("mainName_zzname"));
+//             jointName.put("zzname", rs.getInt("jointName_zzname"));
+//             account.put("id", rs.getInt("account_id"));
+//             main.put("id", rs.getInt("main_id"));
+//             account.put("joint", rs.getInt("account_joint"));
+//             joint.put("id", rs.getInt("jointName_id"));
+//
+//             account.put("main", main);
+//             account.put("mainName", mainName);
+//             account.put("joint", joint);
+//             account.put("jointName", jointName);
+//             main.put("address", joint0s.stream().map(j -> j.address))
+//             joint.put("address", joint1s.stream().map(j -> j.address))
+//
+//         }
+//     }
+
+
+export function makeAggregateMapsFor<B, G> ( p: PageD<B, G>, restName: string, defn: RestDefnInPageProperties<G> , aliasMap: NameAnd<DBTableAndName>) {
+  const foundChildAliasAndWheres: FoundParentChildLink[] = findParentChildCompDataLinks ( { includePrimitives: true, stopWithRepeatAsChild: true }, defn.rest.dataDD )
+  return [
+    `public class ${allMapsName ( p, 'root' )} {`,
+    ...indentList ( foundChildAliasAndWheres.flatMap ( ( { parent, child,  nameAndOneDataDD } ) => {
+        let nameDD = nameAndOneDataDD?.[ 1 ];
+        if ( parent && nameAndOneDataDD && isPrimDd ( nameDD.dataDD ) ) {
+          const found: TableAndFieldData<G> = findTableAndField ( parent, nameAndOneDataDD, nameDD.dataDD )
+           addAlias(aliasMap, found, found.table.name) .map(x => x);
+          return [ `${addedAlias}.put("${nameAndOneDataDD[ 0 ]}", rs.getInt("mainName_zzname"));` ]
+        } else
+          return []
+      }
+    ) ),
+    '}'
+  ]
 }

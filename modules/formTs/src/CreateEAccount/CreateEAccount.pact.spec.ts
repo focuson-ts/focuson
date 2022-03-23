@@ -8,6 +8,7 @@ import { Lenses, massTransform } from "@focuson/lens";
 import * as samples from '../CreateEAccount/CreateEAccount.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
+import {CreateEAccountDataFetcher} from './CreateEAccount.fetchers'
 describe("To support manually running the tests", () =>{it ("should support CreateEAccount", () =>{})})
 //Rest create pact test
 pactWith ( { consumer: 'CreateEAccountData', provider: 'CreateEAccountDataProvider', cors: true }, provider => {

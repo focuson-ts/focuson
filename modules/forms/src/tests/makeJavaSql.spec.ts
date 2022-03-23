@@ -3,7 +3,7 @@ import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
 import { NameAnd } from "@focuson/utils";
 import { accountT, customerT } from "../example/database/tableNames";
-import { fieldsInWhere, findAliasMapFor, findFieldsFor, findFieldsNeededFor, findParentChildAndAliases, findParentChildCompDataLinks, findRoots, findTableAlias, findTableAndFields, findTableAndFieldsForSqlGetDetails, findTableAndFieldsIn, findWheresFor, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, simplifyAliasAndWhere, simplifyAliasMap, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, SqlRoot, walkRoots } from "../codegen/makeJavaSql";
+import { fieldsInWhere, findAliasMapFor, findFieldsFor, findFieldsNeededFor, findParentChildAndAliases, findParentChildCompDataLinks, findRoots, findTableAlias, findTableAndFields, findTableAndFieldsForSqlGetDetails, findTableAndFieldsIn, findWheresFor, makeAggregateMapsFor, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, simplifyAliasAndWhere, simplifyAliasMap, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, SqlRoot, walkRoots } from "../codegen/makeJavaSql";
 import { JointAccountPageD } from "../example/jointAccount/jointAccount.pageD";
 import { unique } from "../common/restD";
 
@@ -262,7 +262,7 @@ describe ( "makeGetSqlFor", () => {
         "from ACC_TBL account,CUST_TBL joint,NAME_TBL jointName,ADD_TBL address",
         "where account.id=<query.accountId> and account.joint=joint.id and jointName.id = account.joint and address.id=joint.id"
       ]
-    ])
+    ] )
   } )
 } )
 
@@ -325,6 +325,14 @@ describe ( "makeCreate", () => {
   } )
 } )
 
+describe ( "makeAggMaps", () => {
+  it ( "should make the aggregate map classes", () => {
+    const root = findRoots ( JointAccountDd, sqlG )
+    expect ( makeAggregateMapsFor ( JointAccountPageD, 'fromApi', JointAccountPageD.rest.fromApi, root.foundChildAliasAndWheres ) ).toEqual ( [] )
+
+  } )
+
+} )
 
 // describe("makeResultMapsFor", () =>{
 // it ('should make a class full of maps for each sql root.', () =>{
