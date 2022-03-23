@@ -20,7 +20,7 @@ export interface CommonPageDetails<S, D, Msgs, Config extends PageConfig<S, D, M
   pageFunction: PageFunctionType<S, D, Context>,
   clearAtStart?: boolean  // if set then the PageState is reset at the beginning,
   initialValue?: D, //If set then this is injected at the beginning. Clear at start overrides this
-  pageMode?: PageMode
+  pageMode?: PageMode;
 }
 export type OnePageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> =
   MainPageDetails<S, D, Msgs, Config, Context> | ModalPageDetails<S, D, Msgs, Config, Context>
