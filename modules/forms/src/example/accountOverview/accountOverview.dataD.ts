@@ -116,7 +116,7 @@ const accountOverviewCriteriaDataD: ExampleRepeatingD = {
 }
 
 export const UnpaidCardOrMisuseItemsCD: DisplayCompD = {
-  import: "../formComponents/unpaidCardOrMisuseItems",
+  import: "@focuson/form_components",
   name: "UnpaidCardOrMisuseItems",
   params: { ...commonParams, id: { paramType: 'object', needed: 'id' } }
 

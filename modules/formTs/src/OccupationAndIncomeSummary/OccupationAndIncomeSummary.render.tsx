@@ -5,24 +5,24 @@ import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from "@focuson/pages";
 import { Context, FocusedProps, FState } from "../common";
 import { Lenses } from '@focuson/lens';
-import { Guard } from "../formComponents/guard";
-import { GuardButton } from "../formComponents/guardButton";
-import { LabelAndStringInput } from '../formComponents/labelAndInput';
-import { LabelAndDropdown } from '../formComponents/labelAndDropdown';
-import { LabelAndNumberInput } from '../formComponents/labelAndInput';
-import { Table } from '../formComponents/table';
-import { SelectedItem } from '../formComponents/table';
-import { Layout } from '../formComponents/layout';
-import {ListNextButton} from '../formComponents/listNextPrevButtons';
-import {ListPrevButton} from '../formComponents/listNextPrevButtons';
+import { Guard } from "@focuson/form_components";
+import { GuardButton } from "@focuson/form_components";
+import { LabelAndStringInput } from '@focuson/form_components';
+import { LabelAndDropdown } from '@focuson/form_components';
+import { LabelAndNumberInput } from '@focuson/form_components';
+import { Table } from '@focuson/form_components';
+import { SelectedItem } from '@focuson/form_components';
+import { Layout } from '@focuson/form_components';
+import {ListNextButton} from '@focuson/form_components';
+import {ListPrevButton} from '@focuson/form_components';
 import {ModalButton} from '@focuson/pages';
 import {ModalCancelButton} from '@focuson/pages';
 import {ModalCommitButton} from '@focuson/pages';
-import {RestButton} from '../formComponents/rest';
-import {ToggleButton} from '../formComponents/toggleButton';
-import {ValidationButton} from '../formComponents/validationButton';
+import {RestButton} from '@focuson/form_components';
+import {ToggleButton} from '@focuson/form_components';
+import {ValidationButton} from '@focuson/form_components';
 import {OccupationAndIncomeSummaryPageDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains";
-import { HideButtonsLayout } from '../formComponents/hideButtons';
+import { HideButtonsLayout } from '@focuson/form_components';
 import {AccountDetailsDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 import {AdditionalInformationDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 import {BusinessDetailsDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
