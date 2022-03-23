@@ -12,9 +12,9 @@
     ]
   },
   "dependencies": {
-    "@focuson/utils": "0.4.90",
-    "@focuson/files": "0.4.90",
-    "@focuson/focuson": "0.4.90"
+    "@focuson/utils": "0.4.94",
+    "@focuson/files": "0.4.94",
+    "@focuson/focuson": "0.4.94"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -47,7 +47,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "0.4.90",
+  "version": "0.4.94",
   "bin": {
     "focuson": "dist/src/focuson.js"
   },

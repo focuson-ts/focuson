@@ -2315,13 +2315,6 @@
     "@focuson/lens" "0.4.90"
     "@focuson/state" "0.4.90"
 
-"@focuson/files@0.4.90":
-  version "0.4.90"
-  resolved "https://registry.yarnpkg.com/@focuson/files/-/files-0.4.90.tgz#dd22dc170f8219d9490a9fcc817b8fcd65bcf119"
-  integrity sha512-Q3cfeo/T3jix0lzqMN3PAerhCX6mnCPAyeRoypEtWNAqpHGQqFi4Ti75vSl4u+MszsBwRYKcYspRTpF2AAOAYg==
-  dependencies:
-    "@focuson/template" "0.4.90"
-
 "@focuson/focuson@0.4.90":
   version "0.4.90"
   resolved "https://registry.yarnpkg.com/@focuson/focuson/-/focuson-0.4.90.tgz#46efb4d9aa4d4c7fbbbd374ef34c10decc27bf33"
@@ -2332,14 +2325,6 @@
     "@focuson/poster" "0.4.90"
     "@focuson/rest" "0.4.90"
     "@focuson/template" "0.4.90"
-
-"@focuson/form_components@0.4.89":
-  version "0.4.89"
-  resolved "https://registry.yarnpkg.com/@focuson/form_components/-/form_components-0.4.89.tgz#e5334cf0732eb60dea46f64fce9b56944d35b6f2"
-  integrity sha512-b7qIqJUK3izUSJfWcus7/DkoqlanknanSxpl68kStHzv8y2X8/ApEiMpT2+GWq23M7LIBmG4j2hsosJoQFVwMw==
-  dependencies:
-    "@focuson/pages" "0.4.89"
-    "@focuson/state" "0.4.89"
 
 "@focuson/lens@0.4.90":
   version "0.4.90"
