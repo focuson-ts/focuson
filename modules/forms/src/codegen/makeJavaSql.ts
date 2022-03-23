@@ -49,13 +49,12 @@ export function fieldsInWhere ( aliasMap: NameAnd<DBTableAndName>, w: Where ): T
           .filter ( ( [ name, db ] ) =>
             db.name === tableName )
           .map ( t => t[ 1 ] )
-        if ( found.length > 0 )
-          {
-            let map = found.map ( makeTableAndField );
-            let result = map.flatMap ( t =>
-              addAlias ( aliasMap, t,tableName ) );
-            return result
-          }
+        if ( found.length > 0 ) {
+          let map = found.map ( makeTableAndField );
+          let result = map.flatMap ( t =>
+            addAlias ( aliasMap, t, tableName ) );
+          return result
+        }
         return []
         throw Error ( `Alias name is ${alias} which is really a table name. Not found. LegalNames are ${Object.values ( aliasMap ).map ( t => t.name )} \n ${JSON.stringify ( aliasMap )}` )
       }
@@ -261,7 +260,7 @@ export function findFieldsFor ( { fields, aliasMap, wheres }: SqlData ): TableAn
   try {
     const fromWhere: TableAndFieldAndAliasData<any>[] = fieldsInWhere ( aliasMap, wheres )
     const fromFields: TableAndFieldAndAliasData<any>[] = fields.flatMap ( f => {
-      let alias = addAlias ( aliasMap, f , f.fieldData.fieldName);
+      let alias = addAlias ( aliasMap, f, f.table.name );
       return alias
     } )
     return [ ...fromFields, ...fromWhere ]
@@ -271,7 +270,7 @@ export function findFieldsFor ( { fields, aliasMap, wheres }: SqlData ): TableAn
   }
 }
 export function findFieldsStringFor ( sqlData: SqlData ) {
-  return findFieldsFor ( sqlData ).map ( tf => `${tf.alias}.${tf.fieldData.fieldName}` )
+  return unique ( findFieldsFor ( sqlData ).map ( tf => `${tf.alias}.${tf.fieldData.fieldName} as ${tf.alias}_${tf.fieldData.fieldName}` ), s => s )
   // let simpleTableName = Object.entries ( sqlData.aliasMap ).flatMap ( ( [ alias, t ] ) =>
   //   sqlData.fields.filter ( tf => tf.table.name === t.name ).map ( tf => `${alias}.${tf.fieldData.fieldName}` ) );
   // return simpleTableName.join ( ',' )

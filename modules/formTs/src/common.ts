@@ -41,6 +41,7 @@ export type CommonIds = {
   brandRef?:string;
   createPlanId?:string;
   customerId?:string;
+  usersRole?:string;
 }
 export const identityL = identityOptics<FState> ();
 export const commonIdsL = identityL.focusQuery('CommonIds');
@@ -49,7 +50,8 @@ export const commonIds: NameAndLens<FState> = {
    applRef: commonIdsL.focusQuery('applRef'),
    brandRef: commonIdsL.focusQuery('brandRef'),
    createPlanId: commonIdsL.focusQuery('createPlanId'),
-   customerId: commonIdsL.focusQuery('customerId')
+   customerId: commonIdsL.focusQuery('customerId'),
+   usersRole: commonIdsL.focusQuery('usersRole')
 }
 export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{
   mode: PageMode;
@@ -62,7 +64,7 @@ export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPage
     defaultDateFn ) ( onError ) //updateTagsAndMessagesOnError ( defaultErrorMessage )
 }
 export const emptyState: FState = {
-  CommonIds: {"applRef":"appref","createPlanId":"tbd","accountId":"accId","customerId":"custId","brandRef":"brandRef"},
+  CommonIds: {"applRef":"appref","createPlanId":"tbd","accountId":"accId","customerId":"custId","brandRef":"brandRef","usersRole":"user"},
   tags: {},
   messages: [],
   pageSelection: [{ pageName: 'AccountOverview', firstTime: true, pageMode: 'view' }],

@@ -6,12 +6,7 @@
     "ideify": true,
     "publish": true,
     "links": [
-      "@focuson/poster",
-      "@focuson/rest",
-      "@focuson/pages",
-      "@focuson/template",
-      "@focuson/fetcher"
-    ],
+      "@focuson/focuson"],
     "extraDeps": {},
     "extraDevDeps": {}
   }

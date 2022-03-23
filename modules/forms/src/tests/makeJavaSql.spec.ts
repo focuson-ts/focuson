@@ -199,28 +199,13 @@ describe ( "fieldsInWhere", () => {
   } )
 
 } )
-// describe ( "findTableNameOrAliasInAliasMap", () => {
-//   const aliasMap: NameAnd<DBTableAndName> = {
-//     aliasForAccount: { table: accountT, name: 'someName' },
-//     main: { table: customerT, name: 'cust' },
-//
-//   }
-//   it ( "should replace tablenames/field with alias.field when there is a table", () => {
-//     expect ( findAliasDotFieldName ( aliasMap ) ( [ accountT.name, 'someField' ] ) ).toEqual ( 'aliasForAccount.someField' )
-//   } )
-//   it ( "should replace leave the alias alone if the alias exists", () => {
-//     expect ( findAliasDotFieldName ( aliasMap ) ( [ 'aliasForAccount', 'someField' ] ) )
-//       .toEqual ( 'aliasForAccount.someField' )
-//   } )
-//   it ( "should replace [alias] with the correct alias: based on the table name", () => {
-//     expect ( findAliasDotFieldName ( aliasMap ) ( [ '[cust]', 'someField' ] ) )
-//       .toEqual ( 'main.someField' )
-//   } )
-// } )
 describe ( "findFieldsFor", () => {
   it ( "should prepare the fields for sql", () => {
     expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root => makeSqlDataFor ( root, sqlG ) ).map ( findFieldsFor ).map ( simplifyTableAndFieldAndAliasDataArray ) ).toEqual ( [
       [
+        "ACC_TBL account =>blnc",
+        "NAME_TBL mainName =>zzname",
+        "NAME_TBL jointName =>zzname",
         "ACC_TBL account =>id",
         "ACC_TBL account =>main",
         "CUST_TBL main =>id",
@@ -230,6 +215,8 @@ describe ( "findFieldsFor", () => {
         "NAME_TBL jointName =>id"
       ],
       [
+        "ADD_TBL address =>zzline1",
+        "ADD_TBL address =>zzline2",
         "ACC_TBL account =>id",
         "ACC_TBL account =>main",
         "CUST_TBL main =>id",
@@ -237,6 +224,8 @@ describe ( "findFieldsFor", () => {
         "ADD_TBL address =>id"
       ],
       [
+        "ADD_TBL address =>zzline1",
+        "ADD_TBL address =>zzline2",
         "ACC_TBL account =>id",
         "ACC_TBL account =>joint",
         "CUST_TBL joint =>id",
@@ -259,17 +248,17 @@ describe ( "makeGetSqlFor", () => {
   it ( "should generate actual sql", () => {
     expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root => makeSqlDataFor ( root, sqlG ) ).map ( makeGetSqlFor ) ).toEqual ( [
       [
-        "select account.id,account.main,main.id,mainName.id,account.main,account.joint,joint.id,jointName.id,account.joint",
+        "select account.blnc,mainName.zzname,jointName.zzname,account.id,account.main,main.id,mainName.id,account.joint,joint.id,jointName.id",
         "from ACC_TBL account,CUST_TBL main,NAME_TBL mainName,CUST_TBL joint,NAME_TBL jointName",
         "where account.id=<query.accountId> and account.main=main.id and mainName.id = account.main and account.joint=joint.id and jointName.id = account.joint"
       ],
       [
-        "select account.id,account.main,main.id,mainName.id,account.main,address.id,main.id",
+        "select address.zzline1,address.zzline2,account.id,account.main,main.id,mainName.id,address.id",
         "from ACC_TBL account,CUST_TBL main,NAME_TBL mainName,ADD_TBL address",
         "where account.id=<query.accountId> and account.main=main.id and mainName.id = account.main and address.id=main.id"
       ],
       [
-        "select account.id,account.joint,joint.id,jointName.id,account.joint,address.id,joint.id",
+        "select address.zzline1,address.zzline2,account.id,account.joint,joint.id,jointName.id,address.id",
         "from ACC_TBL account,CUST_TBL joint,NAME_TBL jointName,ADD_TBL address",
         "where account.id=<query.accountId> and account.joint=joint.id and jointName.id = account.joint and address.id=joint.id"
       ]
