@@ -27,8 +27,6 @@ export type OnePageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Con
 export interface MainPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> extends CommonPageDetails<S, D, Msgs, Config, Context> {
   lens: Optional<S, D>;
   pageType: 'MainPage';
-  pageMode: PageMode;
-
 }
 export function isMainPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> ( o: OnePageDetails<S, D, Msgs, Config, Context> ): o is MainPageDetails<S, D, Msgs, Config, Context> {
   return o.pageType === 'MainPage'

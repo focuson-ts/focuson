@@ -46,11 +46,11 @@ const accToMaps = ( acc: PopulateMapAcc[] ) => ( name: string ): string[] => acc
 
 export const populateMaps = <B, G> ( pageD: PageD<B, G>, dataDs: NamesAndDataDs<G> ): string[] => {
   return sortedEntries ( dataDs ).flatMap ( ( [ n, d ] ) =>
-    [ `public void ${dbMapMakerProcname ( d )}(${allMapsName ( pageD )} maps, ResultSet rs) throws SQLException {`,
+    [ `public void ${dbMapMakerProcname ( d )}(${allMapsName ( pageD, '' )} maps, ResultSet rs) throws SQLException {`,
       ...indentList ( findMapsFor ( d ) ), "}" ] )
 };
 export const makeAllMaps = <B, G> ( pageD: PageD<B, G>, dataDs: NamesAndDataDs<G> ): string[] => {
-  return [ `public static class ${allMapsName ( pageD )}{`, ...indentList ( sortedEntries ( dataDs ).flatMap ( ( [ n, d ] ) => `public final Map<String,Object> ${dbMapname ( d )} = new HashMap<>();` ) ), '}' ]
+  return [ `public static class ${allMapsName ( pageD, '' )}{`, ...indentList ( sortedEntries ( dataDs ).flatMap ( ( [ n, d ] ) => `public final Map<String,Object> ${dbMapname ( d )} = new HashMap<>();` ) ), '}' ]
 }
 
 export function makeDbFile<B, G> ( params: JavaWiringParams, pageD: MainPageD<B, G> ): string [] {

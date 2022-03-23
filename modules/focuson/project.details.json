@@ -6,7 +6,7 @@
     "ideify": true,
     "publish": true,
     "links": [
-      "@focuson/focuson"],
+      "@focuson/pages"],
     "extraDeps": {},
     "extraDevDeps": {}
   }

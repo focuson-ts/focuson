@@ -24,6 +24,8 @@ export function tableAndFieldFrom<G> ( parent: DataD<G>, db: DbValues ): TableAn
 }
 
 export function mergeWhere ( acc: Where, w: Where ) {return ({ ids: [ ...acc.ids, ...w.ids ], other: [ ...safeArray ( acc.other ), ...safeArray ( w.other ) ] })}
+
+
 export function fieldsInWhere ( aliasMap: NameAnd<DBTableAndName>, w: Where ): TableAndFieldAndAliasData<any> [] {
   return w.ids.flatMap ( idEquals => {
     let result = idEquals.split ( '=' );
@@ -426,20 +428,27 @@ export function makeCreateTableSql<G> ( dataD: CompDataD<G>, sqlG: SqlGetDetails
 //     }
 
 
-export function makeAggregateMapsFor<B, G> ( p: PageD<B, G>, restName: string, defn: RestDefnInPageProperties<G> , aliasMap: NameAnd<DBTableAndName>) {
-  const foundChildAliasAndWheres: FoundParentChildLink[] = findParentChildCompDataLinks ( { includePrimitives: true, stopWithRepeatAsChild: true }, defn.rest.dataDD )
+export function findAggMapPutStatementsFromPrimitives ( foundChildAliasAndWheres: FoundParentChildLink[], aliasMap: NameAnd<DBTableAndName> ) {
+  return unique ( foundChildAliasAndWheres.flatMap ( ( { parent, child, nameAndOneDataDD } ) => {
+    let nameDD = nameAndOneDataDD?.[ 1 ];
+    if ( parent && nameAndOneDataDD && isPrimDd ( nameDD.dataDD ) ) {
+      const found: TableAndFieldData<any> = findTableAndField ( parent, nameAndOneDataDD, nameDD.dataDD )
+      return addAlias ( aliasMap, found, found.table.name ).map ( x => `${x.alias}.put("${nameAndOneDataDD[ 0 ]}", rs.getInt("${x.alias}_${x.fieldData.fieldName}"));` )
+    } else return []
+  } ), x => x )
+}
+export function findAggMapPutStatementsFromWheres ( wheres: Where, aliasMap: NameAnd<DBTableAndName> ) {
+  return unique ( fieldsInWhere ( aliasMap, wheres ).map ( ( { alias, fieldData, table } ) =>
+    `${alias}.put("${fieldData.fieldName}", rs.${fieldData.rsGetter}(${fieldData.fieldName}));` ), x => x )
+
+}
+export function makeAggregateMapsFor<B, G> ( p: PageD<B, G>, restName: string, sqlData: SqlData ) {
+  const { aliasMap, wheres } = sqlData
+  const foundChildAliasAndWheres: FoundParentChildLink[] = findParentChildCompDataLinks ( { includePrimitives: true, stopWithRepeatAsChild: true }, sqlData.foundChildAliasAndWheres[ 0 ].parent )
   return [
     `public class ${allMapsName ( p, 'root' )} {`,
-    ...indentList ( foundChildAliasAndWheres.flatMap ( ( { parent, child,  nameAndOneDataDD } ) => {
-        let nameDD = nameAndOneDataDD?.[ 1 ];
-        if ( parent && nameAndOneDataDD && isPrimDd ( nameDD.dataDD ) ) {
-          const found: TableAndFieldData<G> = findTableAndField ( parent, nameAndOneDataDD, nameDD.dataDD )
-           addAlias(aliasMap, found, found.table.name) .map(x => x);
-          return [ `${addedAlias}.put("${nameAndOneDataDD[ 0 ]}", rs.getInt("mainName_zzname"));` ]
-        } else
-          return []
-      }
-    ) ),
+    ...indentList ( unique ( [ ...findAggMapPutStatementsFromPrimitives ( foundChildAliasAndWheres, aliasMap ),
+      ...findAggMapPutStatementsFromWheres ( wheres, aliasMap ) ], x => x ) ),
     '}'
   ]
 }

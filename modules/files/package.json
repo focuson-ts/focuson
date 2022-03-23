@@ -12,7 +12,7 @@
     ]
   },
   "dependencies": {
-    "@focuson/template": "0.4.94"
+    "@focuson/template": "0.4.95"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -44,7 +44,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "0.4.94",
+  "version": "0.4.95",
   "template": "noreact",
   "description": "File manipulation: loading/saving",
   "details": {
