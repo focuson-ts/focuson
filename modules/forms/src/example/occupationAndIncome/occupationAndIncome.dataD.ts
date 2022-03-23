@@ -6,7 +6,6 @@ import { CustomerStatus, EmploymentType, YesNo } from "@focuson/form_components"
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 import { DateDD, IntegerDD, OneLineStringDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
 import { commonParams, DisplayCompD, LabelAndDropDownCD, LayoutCd, TableCD } from "../../common/componentsD";
-import componentsD_1 from "../../../dist/src/common/componentsD";
 
 const labelAndDropdownContainerStyle = {
   display: 'flex',
@@ -126,7 +125,7 @@ export const occupationAndIncomeFullDomainDD: ExampleDataD = {
   name: 'OccupationAndIncomeFullDomain',
   description: 'This is a summary about occupation and income details data',
   structure: {
-    mainCustomerName: { dataDD: { ...StringDD, display: LabelCD, displayParams: { label: "{~/mainCustomerName}" }  }, sample: [ occupationAndIncomeSample.mainCustomerName ] },
+    mainCustomerName: { dataDD: StringDD, sample: [ occupationAndIncomeSample.mainCustomerName ] },
     jointCustomerName: { dataDD: StringDD, sample: [ occupationAndIncomeSample.jointCustomerName ] },
     // @ts-ignore
     mainClientRef: { dataDD: IntegerDD, hidden: true, sample: [ occupationAndIncomeSample.mainClientRef ] },
