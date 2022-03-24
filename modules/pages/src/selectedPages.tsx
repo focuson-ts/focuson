@@ -9,7 +9,7 @@ export interface SelectPageProps<S, Context> extends LensProps<S, any, Context> 
   pageMode: PageMode
 }
 export function SelectPage<S, Context extends PageSelectionContext<S>> ( { id, state, pageName, pageMode }: SelectPageProps<S, Context> ) {
-  return <button onClick={() => state.massTransform ( reasonFor ( 'SelectPage', 'onClick', id ) ) ( page ( state.context, 'select', { pageName, firstTime: true, pageMode } ) )}>{pageName}</button>
+  return <button id={id} onClick={() => state.massTransform ( reasonFor ( 'SelectPage', 'onClick', id ) ) ( page ( state.context, 'select', { pageName, firstTime: true, pageMode } ) )}>{pageName}</button>
 }
 
 export interface IndexPageProps<S, Context extends PageSelectionContext<S>> extends LensProps<S, S, Context> {

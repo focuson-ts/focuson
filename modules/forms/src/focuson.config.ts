@@ -26,7 +26,7 @@ export const javaOutputRoot = '../formJava'
 export const tsRoot = "../formTs"
 export const focusOnVersion: string = JSON.parse ( loadFile ( 'package.json' ) ).version
 
-const MyCombineCD: SimpleDisplayComp = { import: "./formComponents/myCombined", name: "MyCombined" }
+const MyCombineCD: SimpleDisplayComp = { import: "@focuson/form_components", name: "MyCombined" }
 
 export interface AppConfig {
   fetch: string;

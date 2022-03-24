@@ -8,7 +8,7 @@ import { replaceBasePageWithKnownPage } from "@focuson/pages";
 
 function makeToggleButton<B extends ToggleButtonInPage<G>, G> (): ButtonCreator<ToggleButtonInPage<G>, G> {
   return {
-    import: '../formComponents/toggleButton',
+    import: '@focuson/form_components',
     makeButton: ( { params, parent, name, button } ) => {
       const { value, buttonText } = button
       return [ `<ToggleButton state={fullState${focusOnFor ( value )}}`,

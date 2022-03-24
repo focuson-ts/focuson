@@ -49,7 +49,7 @@ export function arraysEqual<T> ( a: T[] | undefined, b: T[] | undefined ) {
 
 
 export function areAllDefined<T> ( arr: (T | undefined)[] | undefined ): arr is T[] {
-  return arr ? arr.reduce<boolean> ( ( acc, t ) => (t != undefined) && acc, true ) : false
+  return arr ? arr.reduce<boolean> ( ( acc, t ) => (t !== undefined) && acc, true ) : false
 }
 
 

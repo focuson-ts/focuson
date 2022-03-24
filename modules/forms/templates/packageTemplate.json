@@ -7,6 +7,7 @@
   "dependencies": {
     "@focuson/focuson":  "{focusOnVersion}",
 	"@focuson/stories":  "{focusOnVersion}",
+	"@focuson/form_components":  "{focusOnVersion}",
     "@pact-foundation/pact-node": "^10.17.1",
     "decamelize": "^6.0.0",
     "b64-to-blob": "^1.2.19",

@@ -88,6 +88,7 @@ export const businessDetailsModalPD: ExampleModalPage = {
 export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
   name: 'OccupationAndIncomeSummary',
   pageType: 'MainPage',
+  commonParams: { role: { commonLens: 'usersRole', testValue: 'user' } },
   /** This page can only view data */
   modes: [ 'view', 'edit', 'create' ],
   /** How we display the page.*/

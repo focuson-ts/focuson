@@ -4,7 +4,7 @@ import { opt } from "../codegen/codegen";
 
 function makeValidationDebugButton<G> (): ButtonCreator<ValidationButtonInPage, G> {
   return {
-    import: "../formComponents/validationButton",
+    import: "@focuson/form_components",
     makeButton:
       ( { params, parent, name, button } ) => {
         return [`<ValidationButton  ${opt ( 'id', name )}   ${opt ( 'name', name )}  />`]

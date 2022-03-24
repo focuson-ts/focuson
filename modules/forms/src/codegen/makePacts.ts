@@ -2,7 +2,7 @@ import { allRestAndActions, isMainPage, PageD, RestDefnInPageProperties } from "
 import { applyToTemplate } from "@focuson/template";
 import { DirectorySpec, loadFile } from "@focuson/files";
 import { beforeSeparator, NameAnd, RestAction, sortedEntries } from "@focuson/utils";
-import { fetcherFileName, fetcherName, restDetailsName, sampleName, samplesFileName } from "./names";
+import { fetcherName, restDetailsName, sampleName, samplesFileName } from "./names";
 import { defaultRestAction, isRestLens, LensRestParam, makeCommonParamsValueForTest, RestActionDetail, RestD } from "../common/restD";
 import { TSParams } from "./config";
 import { focusQueryFor, indentList } from "./codegen";
@@ -50,8 +50,8 @@ export function makeGetFetcherPact<B, G> ( params: TSParams, p: PageD<B, G>, def
   return [ '//GetFetcher pact test', ...applyToTemplate ( str, props ) ]
 }
 
-export function makeRestPacts<B, G> ( params: TSParams, p: PageD<B, G>, r: RestDefnInPageProperties<G>, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
-  const props = makePropsForRestPact ( p, r, rad.name, params );
+export function makeRestPacts<B, G> ( params: TSParams, p: PageD<B, G>, restName: string, r: RestDefnInPageProperties<G>, rad: RestActionDetail, directorySpec: DirectorySpec ): string[] {
+  const props = makePropsForRestPact ( p, restName, r, rad.name, params );
   const str: string = loadFile ( 'templates/oneRestPact.ts', directorySpec ).toString ()
   return [ `//Rest ${rad.name} pact test`, ...applyToTemplate ( str, { ...params, ...props } ) ]
 }
@@ -68,9 +68,9 @@ export function makeAllPacts<B, G> ( params: TSParams, p: PageD<B, G>, directory
     ...makeFetcherImports ( params, p ),
     ``,
     `describe("To support manually running the tests", () =>{it ("should support ${p.name}", () =>{})})`,
-    ...allRestAndActions ( [ p ] ).flatMap ( ( [ pd, rd, rad ] ) => [
+    ...allRestAndActions ( [ p ] ).flatMap ( ( [ pd, restName, rd, rad ] ) => [
       ...makeFetcherPact ( params, pd, rd, rad, directorySpec ),
-      ...makeRestPacts ( params, pd, rd, rad, directorySpec ),
+      ...makeRestPacts ( params, pd, restName, rd, rad, directorySpec ),
     ] )
   ]
 }
@@ -100,7 +100,7 @@ function makeCommonPropsForPact<B, G> ( p: PageD<B, G>, d: RestD<G>, params: TSP
     stateName: params.stateName,
     commonFile: params.commonFile,
     commonParamsValue: JSON.stringify ( paramsValueForTest ),
-    commonParamsTagsValue: JSON.stringify ( Object.entries ( paramsValueForTest ).map ( ( [ name, v ] ) => v )  )
+    commonParamsTagsValue: JSON.stringify ( Object.entries ( paramsValueForTest ).map ( ( [ name, v ] ) => v ) )
   } //     {pageName}: {{target}: {body}},
   return props;
 }
@@ -132,7 +132,7 @@ function makePropsForFetcherPact<B, G> ( p: PageD<B, G>, defn: RestDefnInPagePro
   }
 }
 
-function makePropsForRestPact<B, G> ( p: PageD<B, G>, r: RestDefnInPageProperties<G>, restAction: RestAction, params: TSParams ): RestPactProps {
+function makePropsForRestPact<B, G> ( p: PageD<B, G>, restName: string, r: RestDefnInPageProperties<G>, restAction: RestAction, params: TSParams ): RestPactProps {
 
   let props = makeCommonPropsForPact ( p, r.rest, params, r.targetFromPath, restAction, `should have a ${restAction} rest for ${r.rest.dataDD.name}` );
   let sample = sampleName ( r.rest.dataDD ) + "0"
@@ -149,7 +149,7 @@ function makePropsForRestPact<B, G> ( p: PageD<B, G>, r: RestDefnInPagePropertie
   return {
     ...props,
     restDetails: `${params.restsFile}.restDetails`,
-    restDetailsName: restDetailsName ( p, r.rest ),
+    restDetailsName: restDetailsName ( p, restName, r.rest ),
     object: defaultRestAction[ restAction ].params.needsObj ? `${props.pageName}: { ${target}:${params.samplesFile}.${sampleName ( r.rest.dataDD ) + "0"} ${closeTarget}` : `${props.pageName}:{}`,
     sample,
     content,

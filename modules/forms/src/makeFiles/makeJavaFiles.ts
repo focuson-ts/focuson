@@ -6,15 +6,14 @@ import { sortedEntries } from "@focuson/utils";
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
-import { fetcherInterfaceName, javaDbFileName, javaSqlCreateTableSqlName, javaSqlReadSqlName, mockFetcherClassName, queryClassName, restControllerName } from "../codegen/names";
+import { allMapsName, fetcherInterfaceName, javaSqlCreateTableSqlName, javaSqlReadSqlName, mockFetcherClassName, queryClassName, restControllerName } from "../codegen/names";
 import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
 import { makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
 import { makeAllMockFetchers } from "../codegen/makeMockFetchers";
 import { makeJavaVariablesForGraphQlQuery } from "../codegen/makeGraphQlQuery";
 import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
-import { makeDbFile } from "../codegen/makeDb";
 import { AppConfig } from "../focuson.config";
-import { findRoots, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, walkRoots } from "../codegen/makeJavaSql";
+import { findSqlRoot, makeAggregateMapsFor, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, walkRoots, walkSqlData } from "../codegen/makeJavaSql";
 import { isSqlResolverD } from "../common/resolverD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 
@@ -58,8 +57,17 @@ export const makeJavaFiles = ( appConfig: AppConfig, javaOutputRoot: string, par
 
 
   allMainPages ( pages ).forEach ( p => {
-    console.log ( p.name )
-    writeToFile ( `${javaDbPackages}/${javaDbFileName ( params, p )}.java`, makeDbFile ( params, p ) );
+    sortedEntries ( p.rest ).forEach ( ( [ restName, defn ] ) => {
+      let resolver = defn.rest.resolver;
+      if ( isSqlResolverD ( resolver ) ) {
+        const getSql = resolver.get
+        if ( getSql ) {
+          const sqlData = makeSqlDataFor ( findSqlRoot ( defn.rest.dataDD, getSql ), getSql )
+          walkSqlData ( sqlData, restName, ( sd, suffix ) =>
+            writeToFile ( `${javaDbPackages}/${allMapsName ( p, suffix )}.java`, makeAggregateMapsFor (params, p, suffix, sd ) ) );
+        }
+      }
+    } )
   } )
 
   writeToFile ( `${javaResourcesRoot}/${params.schema}`, makeGraphQlSchema ( rests ) )
@@ -94,7 +102,7 @@ export const makeJavaFiles = ( appConfig: AppConfig, javaOutputRoot: string, par
         console.log ( 'sqlG', rest.dataDD.name )
 
         writeToFile ( `${javaSql}/${javaSqlCreateTableSqlName ( rest )}`, makeCreateTableSql ( rest.dataDD, sqlG ) )
-        const sqlRoots = findRoots ( JointAccountDd, sqlG );
+        const sqlRoots = findSqlRoot ( JointAccountDd, sqlG );
         const sqlData = walkRoots ( sqlRoots, r => makeSqlDataFor ( r, sqlG ) )
         const makeSql = sqlData.flatMap ( makeGetSqlFor )
         writeToFile ( `${javaSql}/${javaSqlReadSqlName ( rest )}`, makeSql )

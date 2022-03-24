@@ -1,6 +1,6 @@
 import { DataD } from "../common/dataD";
-import { safeArray } from "@focuson/utils";
-import { PageD, RestOnCommit } from "../common/pageD";
+import { safeArray, sortedEntries } from "@focuson/utils";
+import { isMainPage, PageD, RestOnCommit } from "../common/pageD";
 import { CopyDetails, PageMode, SetToLengthOnClose } from "@focuson/pages";
 import { ButtonCreator, MakeButton } from "../codegen/makeButtons";
 import { indentList, opt, optT } from "../codegen/codegen";
@@ -20,7 +20,11 @@ export interface CommonModalButtonInPage<G> {
 }
 
 export function restForButton<B, G> ( parent: PageD<B, G>, rest?: RestOnCommit ): string[] {
-  return rest ? [ ` rest={${JSON.stringify ( { name: restDetailsName ( parent, rest.rest ), restAction: rest.action } )}}` ] : []
+  if ( !rest ) return []
+  if ( !isMainPage ( parent ) ) throw new Error ( `Cannot have a rest for button on a page that isn't a main page at the moment. Page is ${parent.name}. Rest is ${JSON.stringify ( rest )}` )
+  const rd = parent.rest[ rest.restName ]
+  if ( !rd ) throw new Error ( `Illegal rest name ${rest.restName} on page ${parent.name}. Legal values are ${Object.values ( parent.rest )}` )
+  return [ ` rest={${JSON.stringify ( { name: restDetailsName ( parent, rest.restName, rd.rest ), restAction: rest.action } )}}` ]
 }
 
 export function isModalButtonInPage<G> ( m: any ): m is ModalButtonInPage<G> {

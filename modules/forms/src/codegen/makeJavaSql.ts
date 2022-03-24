@@ -5,6 +5,9 @@ import { AliasAndWhere, DBTable, DBTableAndMaybeName, DBTableAndName, GetSqlFrom
 import { Lenses } from "@focuson/lens";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { addStringToEndOfAllButLast, indentList } from "./codegen";
+import { PageD, RestDefnInPageProperties } from "../common/pageD";
+import { allMapsName, sqlDataSuffixFor } from "./names";
+import { JavaWiringParams } from "./config";
 
 export interface TableAndField {
   table: DBTable;
@@ -22,6 +25,8 @@ export function tableAndFieldFrom<G> ( parent: DataD<G>, db: DbValues ): TableAn
 }
 
 export function mergeWhere ( acc: Where, w: Where ) {return ({ ids: [ ...acc.ids, ...w.ids ], other: [ ...safeArray ( acc.other ), ...safeArray ( w.other ) ] })}
+
+
 export function fieldsInWhere ( aliasMap: NameAnd<DBTableAndName>, w: Where ): TableAndFieldAndAliasData<any> [] {
   return w.ids.flatMap ( idEquals => {
     let result = idEquals.split ( '=' );
@@ -49,13 +54,12 @@ export function fieldsInWhere ( aliasMap: NameAnd<DBTableAndName>, w: Where ): T
           .filter ( ( [ name, db ] ) =>
             db.name === tableName )
           .map ( t => t[ 1 ] )
-        if ( found.length > 0 )
-          {
-            let map = found.map ( makeTableAndField );
-            let result = map.flatMap ( t =>
-              addAlias ( aliasMap, t,tableName ) );
-            return result
-          }
+        if ( found.length > 0 ) {
+          let map = found.map ( makeTableAndField );
+          let result = map.flatMap ( t =>
+            addAlias ( aliasMap, t, tableName ) );
+          return result
+        }
         return []
         throw Error ( `Alias name is ${alias} which is really a table name. Not found. LegalNames are ${Object.values ( aliasMap ).map ( t => t.name )} \n ${JSON.stringify ( aliasMap )}` )
       }
@@ -65,7 +69,7 @@ export function fieldsInWhere ( aliasMap: NameAnd<DBTableAndName>, w: Where ): T
 }
 
 export function findGetSqlFromDataDDetails ( get: SqlGetDetails, d: CompDataD<any> ): AliasAndWhere {
-  const found: GetSqlFromDataDDetails | undefined = get.sql.find ( s => s.data.dataDD === d )
+  const found: GetSqlFromDataDDetails | undefined = get.sql.find ( s => s.dataD.dataDD === d )
   return found ? found : { aliases: get.aliases, where: get.where }
 }
 
@@ -132,7 +136,7 @@ export function walkParentChildCompDataLinksWithAliasMapAndWhere<Acc> ( { stopAt
   function makeLinksForParentChild ( acc: Acc, parent: CompDataD<any>, nameAndOneDataDD: [ string, OneDataDD<any> ] | undefined, child: AllDataDD<any>, oldAliasMap: NameAnd<DBTableAndMaybeName>, oldWhere: Where ): Acc {
     if ( isPrimDd ( child ) && !includePrimitives ) return acc
     if ( stopAtRepeat && isRepeatingDd ( child ) ) return acc;
-    const found: GetSqlFromDataDDetails | undefined = sqlG.sql.find ( ( { data, aliases } ) => data === nameAndOneDataDD?.[ 1 ] );
+    const found: GetSqlFromDataDDetails | undefined = sqlG.sql.find ( ( { dataD, aliases } ) => dataD === nameAndOneDataDD?.[ 1 ] );
     const aliasMap: NameAnd<DBTableAndMaybeName> = found ? { ...oldAliasMap, ...found.aliases } : oldAliasMap
     const newWhere = found ? mergeWhere ( oldWhere, found.where ) : oldWhere
     const newAcc = folder ( acc, parent, nameAndOneDataDD, child, aliasMap, newWhere, found );
@@ -161,16 +165,18 @@ export interface SqlRoot {
   aliases: NameAnd<DBTableAndMaybeName>;
   /** The wheres we have accumulated to get to the sql root */
   where: Where;
-  children: SqlRoot[]
+  children: SqlRoot[];
+  /** These include repeat as child */
+  foundChildAliasAndWheres: FoundChildAliasAndWhere[];
 }
-export function findRoots ( d: CompDataD<any>, sqlG: SqlGetDetails ): SqlRoot {
+export function findSqlRoot ( d: CompDataD<any>, sqlG: SqlGetDetails ): SqlRoot {
   function findChild ( data: CompDataD<any>, aliases: NameAnd<DBTableAndMaybeName>, where: Where ) {
-    let foundChildAliasAndWheres = findParentChildAndAliases ( { stopWithRepeatAsChild: true }, data, sqlG );
+    let foundChildAliasAndWheres: FoundChildAliasAndWhere[] = findParentChildAndAliases ( { stopWithRepeatAsChild: true }, data, sqlG );
     const children: SqlRoot[] = foundChildAliasAndWheres
       .flatMap ( ( { child, aliasAndWhere } ) =>
         isRepeatingDd ( child ) ?
           [ findChild ( child, aliasAndWhere.aliases, aliasAndWhere.where ) ] : [] );
-    return { data, aliases, where, children }
+    return { data, aliases, where, children, foundChildAliasAndWheres }
   }
   return findChild ( d, sqlG.aliases, sqlG.where )
 }
@@ -209,7 +215,7 @@ export function findAliasMapFor ( sqlRoot: SqlRoot, sqlG: SqlGetDetails ): NameA
 export function findWheresFor ( sqlRoot: SqlRoot, sqlG: SqlGetDetails ): Where {
   const { data } = sqlRoot
   const wheres = findParentChildCompDataLinks ( { stopAtRepeat: true }, data ).flatMap ( ( { nameAndOneDataDD } ) => {
-    const found: GetSqlFromDataDDetails | undefined = sqlG.sql.find ( ( { data, aliases } ) => data === nameAndOneDataDD?.[ 1 ] );
+    const found: GetSqlFromDataDDetails | undefined = sqlG.sql.find ( ( { dataD, aliases } ) => dataD === nameAndOneDataDD?.[ 1 ] );
     return found ? [ found.where ] : []
   } )
   const allWheres = [ sqlRoot.where, ...wheres ];
@@ -221,14 +227,20 @@ export interface SqlData {
   /** Alias name, fieldname, as */
   fields: TableAndFieldData<any>[];
   aliasMap: NameAnd<DBTableAndName>;
-  wheres: Where
+  wheres: Where;
+  foundChildAliasAndWheres: FoundChildAliasAndWhere[];
+  children: SqlData[]
 }
 
 export function makeSqlDataFor ( sqlRoot: SqlRoot, sqlG: SqlGetDetails ): SqlData {
   const fields = findFieldsNeededFor ( sqlRoot )
   const aliasMap: NameAnd<DBTableAndName> = findAliasMapFor ( sqlRoot, sqlG )
   const wheres = findWheresFor ( sqlRoot, sqlG )
-  return { fields, aliasMap, wheres }
+  return { fields, aliasMap, wheres, foundChildAliasAndWheres: sqlRoot.foundChildAliasAndWheres, children: sqlRoot.children.map ( c => makeSqlDataFor ( c, sqlG ) ) }
+}
+
+export function walkSqlData<X> ( sqlData: SqlData, suffix: string, fn: ( s: SqlData, path: string ) => X ): X[] {
+  return [ fn ( sqlData, suffix ), ...sqlData.children.flatMap ( ( c, i ) => walkSqlData ( c, sqlDataSuffixFor ( suffix, i ), fn ) ) ]
 }
 
 /** returns [alias,table,field] */
@@ -261,7 +273,8 @@ export function findFieldsFor ( { fields, aliasMap, wheres }: SqlData ): TableAn
   try {
     const fromWhere: TableAndFieldAndAliasData<any>[] = fieldsInWhere ( aliasMap, wheres )
     const fromFields: TableAndFieldAndAliasData<any>[] = fields.flatMap ( f => {
-      return addAlias ( aliasMap, f , f.fieldData.fieldName)
+      let alias = addAlias ( aliasMap, f, f.table.name );
+      return alias
     } )
     return [ ...fromFields, ...fromWhere ]
   } catch ( e: any ) {
@@ -270,7 +283,7 @@ export function findFieldsFor ( { fields, aliasMap, wheres }: SqlData ): TableAn
   }
 }
 export function findFieldsStringFor ( sqlData: SqlData ) {
-  return findFieldsFor ( sqlData ).map ( tf => `${tf.alias}.${tf.fieldData.fieldName}` )
+  return unique ( findFieldsFor ( sqlData ).map ( tf => `${tf.alias}.${tf.fieldData.fieldName} as ${tf.alias}_${tf.fieldData.fieldName}` ), s => s )
   // let simpleTableName = Object.entries ( sqlData.aliasMap ).flatMap ( ( [ alias, t ] ) =>
   //   sqlData.fields.filter ( tf => tf.table.name === t.name ).map ( tf => `${alias}.${tf.fieldData.fieldName}` ) );
   // return simpleTableName.join ( ',' )
@@ -391,4 +404,54 @@ export function makeCreateTableSql<G> ( dataD: CompDataD<G>, sqlG: SqlGetDetails
       ...indentList ( addStringToEndOfAllButLast ( ',' ) ( tf.fieldData.map ( fd => `${fd.fieldName} ${reactTypeToSqlType ( fd.reactType )}` ) ) ),
       `)`, '' ]
   )
+}
+
+export function findAggMapPutStatementsFromPrimitives ( foundChildAliasAndWheres: FoundParentChildLink[], aliasMap: NameAnd<DBTableAndName> ) {
+  return unique ( foundChildAliasAndWheres.flatMap ( ( { parent, child, nameAndOneDataDD } ) => {
+    let nameDD = nameAndOneDataDD?.[ 1 ];
+    if ( parent && nameAndOneDataDD && isPrimDd ( nameDD.dataDD ) ) {
+      const found: TableAndFieldData<any> = findTableAndField ( parent, nameAndOneDataDD, nameDD.dataDD )
+      return addAlias ( aliasMap, found, found.table.name ).map ( x => `${x.alias}.put("${nameAndOneDataDD[ 0 ]}", rs.getInt("${x.alias}_${x.fieldData.fieldName}"));` )
+    } else return []
+  } ), x => x )
+}
+export function findAggMapPutStatementsFromWheres ( wheres: Where, aliasMap: NameAnd<DBTableAndName> ) {
+  return unique ( fieldsInWhere ( aliasMap, wheres ).map ( ( { alias, fieldData, table } ) =>
+    `${alias}.put("${fieldData.fieldName}", rs.${fieldData.rsGetter}("${alias}_${fieldData.fieldName}"));` ), x => x )
+
+}
+
+function findAggMapLinking ( suffix: string, sqlData: SqlData, foundChildAliasAndWheres: FoundParentChildLink[] ) {
+  let repeatingChildren = foundChildAliasAndWheres.filter ( d => isRepeatingDd ( d.child ) );
+  if ( repeatingChildren.length != sqlData.children.length ) return `Size mismatch Repeating Children${repeatingChildren.length}, ${sqlData.children.length}`
+  return repeatingChildren.map ( ( repeatingChild, i ) => {
+    const found = sqlData.children[ i ]
+    let sqlDataParent = found.foundChildAliasAndWheres[ 0 ];
+    //how do we know the linking alias?
+    return `found: ${i} - ${repeatingChild.child.name} - ${sqlDataParent.parent.name} - ${repeatingChild}`;
+  } )
+}
+export function makeAggregateMapsFor<B, G> ( params: JavaWiringParams, p: PageD<B, G>, suffix: string, sqlData: SqlData ) {
+  const { aliasMap, wheres } = sqlData
+  const foundChildAliasAndWheres: FoundParentChildLink[] = findParentChildCompDataLinks ( { includePrimitives: true, stopWithRepeatAsChild: true }, sqlData.foundChildAliasAndWheres[ 0 ].parent )
+  let aggMapsName = allMapsName ( p, suffix );
+  const children = sqlData.children.map ( ( cData, i ) => `List<${allMapsName ( p, sqlDataSuffixFor ( suffix, i ) )}> aggMap${i}s` ).join ( ', ' )
+  const comma = children.length === 0 ? '' : ', '
+  return [
+    `package ${params.thePackage}.${params.dbPackage};`,
+    `import java.sql.ResultSet;`,
+    `import java.sql.SQLException;`,
+    `import java.util.HashMap;`,
+    `import java.util.List;`,
+    `import java.util.Map;`,
+    '',
+    `public class ${aggMapsName} {`,
+    ...indentList ( [ ...Object.entries ( aliasMap ).map ( ( [ name, td ] ) => `Map ${name} = new HashMap();` ),
+      `public ${aggMapsName}(ResultSet rs${comma}${children}) throws SQLException {`,
+      ...indentList ( unique ( [ ...findAggMapPutStatementsFromPrimitives ( foundChildAliasAndWheres, aliasMap ),
+        ...findAggMapPutStatementsFromWheres ( wheres, aliasMap ) ], x => x ) ),
+      ...findAggMapLinking ( suffix, sqlData, foundChildAliasAndWheres ),
+      '}' ] ),
+    '}'
+  ]
 }

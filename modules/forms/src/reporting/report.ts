@@ -89,13 +89,13 @@ export function makeButtonsReport<B extends ButtonD, G extends GuardWithConditio
     const actualButton = isGuardButton ( button ) ? button.guard : button
     const guardedString = isGuardButton ( button ) ? ` guarded by [${button.by.condition}]` : ``
     if ( isModalButtonInPage ( actualButton ) ) return modalButtonData ( actualButton, guardedString )
-    if (isButtonWithControl(actualButton))return [ `${name.padEnd ( 12 )} ${actualButton.control}${guardedString}` ]
-    return [`Unknown button Page ${page.name} Button ${name} ${JSON.stringify(button)} `]
+    if ( isButtonWithControl ( actualButton ) ) return [ `${name.padEnd ( 12 )} ${actualButton.control}${guardedString}` ]
+    return [ `Unknown button Page ${page.name} Button ${name} ${JSON.stringify ( button )} ` ]
   } )
   return { part: 'buttons', general, critical: [] };
 }
 function modalButtonData<G> ( button: ModalButtonInPage<G>, guardedBy: string ): string[] {
-  const restOnCommit = button.restOnCommit ? [ `RestOnCommit: ${button.restOnCommit.rest.url}/${button.restOnCommit.action}` ] : []
+  const restOnCommit = button.restOnCommit ? [ `RestOnCommit: ${button.restOnCommit.restName}/${button.restOnCommit.action}` ] : []
   const copyOnClose = button.copyOnClose ? [ `Copy on close ${JSON.stringify ( button.copyOnClose )} ` ] : []
   const from = button.copy ? [ `Copy from ${JSON.stringify ( button.copy )}` ] : []
   const empty = button.createEmpty ? [ `Initialised as empty` ] : []

@@ -37,7 +37,7 @@ export const employmentTypeDD: StringPrimitiveDD = {
 }
 
 export const SelectedItemCD: DisplayCompD = {
-  import: '../formComponents/table',
+  import: '@focuson/form_components',
   name: "SelectedItem",
   params: {
     ...commonParams,
@@ -184,7 +184,7 @@ export const dropdownsDD: ExampleDataD = {
 
 /* ---------------- OCCUPATIONS LIST START ---------------- */
 export const ListItemsCD: DisplayCompD = {
-  import: '../formComponents/listItems',
+  import: '@focuson/form_components',
   name: "ListItemsCD",
   params: {
     ...commonParams,

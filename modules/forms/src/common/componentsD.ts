@@ -50,21 +50,21 @@ export const commonParamsWithLabel: DisplayCompParamD = {
   buttons: { paramType: 'string[]', needed: 'no' }
 }
 export const LabelAndStringInputCD: DisplayCompD = {
-  import: "../formComponents/labelAndInput", name: "LabelAndStringInput",
+  import: "@focuson/form_components", name: "LabelAndStringInput",
   params: { ...commonParamsWithLabel, ...stringValidationParams }
 }
 
 export const LabelAndNumberInputCD: DisplayCompD = {
-  import: "../formComponents/labelAndInput", name: "LabelAndNumberInput",
+  import: "@focuson/form_components", name: "LabelAndNumberInput",
   params: { ...commonParamsWithLabel, ...intValidationParams }
 }
 
 export const LabelAndCheckboxInputCD: DisplayCompD = {
-  import: "../formComponents/labelAndInput", name: "LabelAndBooleanInput",
+  import: "@focuson/form_components", name: "LabelAndBooleanInput",
   params: commonParamsWithLabel
 }
 export const TableCD: DisplayCompD = {
-  import: "../formComponents/table", name: "Table",
+  import: "@focuson/form_components", name: "Table",
   params: {
     ...commonParams,
     order: { paramType: 'string[]', needed: 'yes' },
@@ -73,7 +73,7 @@ export const TableCD: DisplayCompD = {
   }
 }
 export const SelectedItemCD: DisplayCompD = {
-  import: "../formComponents/table",
+  import: "@focuson/form_components",
   name: "SelectedItem",
   params: {
     ...commonParams,
@@ -84,7 +84,7 @@ export const SelectedItemCD: DisplayCompD = {
 }
 export const LayoutCd: DisplayCompD = {
   params: { details: { paramType: 'string', needed: 'yes' }, title: {paramType: 'string', needed: 'no'} },
-  import: "../formComponents/layout",
+  import: "@focuson/form_components",
   name: "Layout"
 }
 
@@ -92,25 +92,25 @@ export const LayoutCd: DisplayCompD = {
 export const enumParams: DisplayCompParamD = { enums: { needed: 'defaultToEnum', paramType: 'object' } }
 
 export const RadioCD: DisplayCompD = {
-  import: "../formComponents/radio",
+  import: "@focuson/form_components",
   name: "Radio",
   params: { ...commonParams, ...enumParams }
 }
 export const LabelAndRadioCD: DisplayCompD = {
-  import: "../formComponents/radio",
+  import: "@focuson/form_components",
   name: "LabelAndRadio",
   params: { ...commonParamsWithLabel, ...enumParams }
 }
 
 
 export const OptionalCD: DisplayCompD = {
-  import: '../formComponents/Optional/optional',
+  import: '@focuson/form_components',
   name: "Optional",
   params: { ...commonParamsWithLabel }
 }
 
 export const LabelAndDropDownCD: DisplayCompD = {
-  import: '../formComponents/labelAndDropdown',
+  import: '@focuson/form_components',
   name: "LabelAndDropdown",
   params: { ...commonParamsWithLabel, ...enumParams }
 }

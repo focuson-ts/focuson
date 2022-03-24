@@ -28,7 +28,7 @@ export const queryName = <G> ( restD: RestD<G>, action: RestAction ): string => 
 export const endPointName = <G> ( restD: RestD<G>, action: RestAction ): string => action + restD.dataDD.name
 
 export const modalName = <B, G> ( p: PageD<B, G>, modal: PageD<B, G> ) => modal.name
-export const restDetailsName = <B, G> ( p: PageD<B, G>, r: RestD<G> ) => safeString ( r.namePrefix ) + p.name + "_" + r.dataDD.name + "RestDetails"
+export const restDetailsName = <B, G> ( p: PageD<B, G>,restName: string, r: RestD<G> ) => safeString ( r.namePrefix ) + p.name + "_" + r.dataDD.name + "RestDetails"
 export const fetcherName = <G> ( d: RestDefnInPageProperties<G> ): string => safeString ( d.rest.namePrefix ) + d.rest.dataDD.name + "Fetcher";
 export const fetcherInterfaceName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${r.dataDD.name}${params.fetcherInterface}`;
 export const fetcherVariableName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `_${r.dataDD.name}${params.fetcherInterface}`;
@@ -36,11 +36,12 @@ export const mockFetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G> 
 export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${r.dataDD.name}Queries`;
 
 export const javaDbFileName = <B, G> ( params: JavaWiringParams, p: PageD<B, G> ): string => `${p.name}Db`;
+export const sqlDataSuffixFor = ( suffix: string, i: number): string => suffix + "_" + i
 
 
 export const dbMapname = <G> ( d: AllDataDD<G> ) => d.name
 export const dbMapMakerProcname = <G> ( d: CompDataD<G> ) => `make${d.name}`
-export const allMapsName = <B, G> ( p: PageD<B, G> ) => `All${p.name}Maps`
+export const allMapsName = <B, G> ( p: PageD<B, G> , suffix: string) => `All${p.name}_${suffix}_Maps`
 
 
 export const someFileName = <B, G> ( root: string, pd: PageD<B, G>, postfix: string ): string => `${root}/${pd.name}/${pd.name}.${postfix}`;

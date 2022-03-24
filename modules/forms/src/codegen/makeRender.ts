@@ -245,8 +245,8 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
     `import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from "@focuson/pages";`,
     `import { Context, FocusedProps, ${params.stateName} } from "../${params.commonFile}";`,
     `import { Lenses } from '@focuson/lens';`,
-    `import { Guard } from "../formComponents/guard";`,
-    `import { GuardButton } from "../formComponents/guardButton";`
+    `import { Guard } from "@focuson/form_components";`,
+    `import { GuardButton } from "@focuson/form_components";`
   ]
   let pageDomain = noExtension ( params.pageDomainsFile );
   let domain = noExtension ( params.domainsFile );

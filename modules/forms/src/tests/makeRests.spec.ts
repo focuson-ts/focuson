@@ -7,7 +7,7 @@ import { PostCodeMainPage } from "../example/addressSearch/addressSearch.pageD";
 
 describe ( "makeRest", () => {
   it ( "should create posters for a restD with one action", () => {
-    expect ( makeRest ( paramsForTest, EAccountsSummaryPD ) ( EAccountsSummaryPD.rest.eAccountsSummary ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeRest ( paramsForTest, EAccountsSummaryPD ) ( 'eAccountsSummary', EAccountsSummaryPD.rest.eAccountsSummary ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function EAccountsSummary_EAccountsSummaryRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDomain, SimpleMessage> {",
       "  const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}",
       "  return {",
@@ -24,7 +24,7 @@ describe ( "makeRest", () => {
     ])
   } )
   it ( "should create posters for a restD with many actions", () => {
-    expect ( makeRest ( paramsForTest, EAccountsSummaryPD ) ( EAccountsSummaryPD.rest.createPlanRestD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeRest ( paramsForTest, EAccountsSummaryPD ) ('eAccountsSummary',  EAccountsSummaryPD.rest.createPlanRestD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function EAccountsSummary_CreatePlanRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.CreatePlanDomain, SimpleMessage> {",
       "  const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}",
       "  return {",
@@ -42,7 +42,7 @@ describe ( "makeRest", () => {
   } )
 
   it ( "should create rest for a repeating restD", () => {
-    expect ( makeRest ( paramsForTest, RepeatingPageD ) ( RepeatingPageD.rest.repeating ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeRest ( paramsForTest, RepeatingPageD ) ( 'repeating', RepeatingPageD.rest.repeating ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function Repeating_RepeatingWholeDataRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.RepeatingPageDomain, domains.RepeatingWholeDataDomain, SimpleMessage> {",
       "  const fdd: NameAndLens<domains.RepeatingPageDomain> = {}",
       "  return {",

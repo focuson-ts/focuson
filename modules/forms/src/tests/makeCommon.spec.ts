@@ -1,10 +1,9 @@
-import { findAllCommonParams, makeFullState, makeCommonParams, makeStateWithSelectedPage, makeCommon } from "../codegen/makeCommon";
+import { findAllCommonParams, makeCommon, makeCommonParams, makeFullState } from "../codegen/makeCommon";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
-import { makeEmptyData } from "../codegen/makeSample";
 import { devAppConfig } from "../focuson.config";
 import { occupationAndIncomeRD } from "../example/occupationAndIncome/occupationAndIncome.restD";
 
@@ -33,7 +32,7 @@ describe ( "makeCommon", () => {
       "import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusOnContext, HasFocusOnDebug } from '@focuson/focuson';",
       "import { LensProps } from '@focuson/state';",
       "import { pages } from './pages';",
-      "import { MyCombined } from './formComponents/myCombined';",
+      "import { MyCombined } from '@focuson/form_components';",
       "import { HasEAccountsSummaryPageDomain } from './EAccountsSummary/EAccountsSummary.domains';",
       "import { HasOccupationAndIncomeSummaryPageDomain } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains';",
       "",

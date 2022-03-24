@@ -13,6 +13,6 @@
       "es2019", "dom"
     ]
   },
-  "include":         ["src/**/*.ts", "index.ts"],
+  "include":          ["src/**/*.ts", "src/**/*.tsx", "index.ts", "index.tsx"],
   "exclude":         ["dist", "node_modules"]
 }

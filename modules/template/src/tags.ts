@@ -90,7 +90,7 @@ export const bodyFor: TagOpsFn<RequestInit | undefined> =
 
 export const reqFor: TagOpsFn<( url: string ) => [ RequestInfo, RequestInit | undefined ]> =
                ( urlConfig, restAction ) => <S> ( s ) =>
-                   u => [ url ( urlConfig, restAction ) ( s ) ( u ), bodyFor ( urlConfig, restAction ) ( s ) ]
+                 u => [ url ( urlConfig, restAction ) ( s ) ( u ), bodyFor ( urlConfig, restAction ) ( s ) ]
 
 export const tagOps: TagOps = ({ tags, reqFor });
 
@@ -102,7 +102,7 @@ export const makeAEqualsB = <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, { encod
     const names = needsId ( restAction ) ? [ ...urlConfig.ids, ...urlConfig.resourceId ] : urlConfig.ids
     return names.map ( name => {
         const value = nameLnFn ( name ).getOption ( main )
-        if ( value || failSilently ) return name + '=' + realEncoder ( value )
+        if ( value !==undefined || failSilently ) return name + '=' + realEncoder ( value )
         throw new Error ( `Could not find [${name}] in makeAEqualsB. All names are ${names.join ( "." )}` )
       }
     ).join ( realSeparator )
@@ -121,7 +121,7 @@ export const onePart = <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, props: MakeA
   const { cd, fdd, fdLens } = urlConfig
   if ( name === 'query' ) return makeAEqualsB ( urlConfig, props ) ( s, restAction )
   const fromFd = from ( fdd, name, fdLens.getOption ( s ) )
-  return fromFd ? fromFd : from ( cd, name, s )
+  return fromFd !== undefined ? fromFd : from ( cd, name, s )
 }
 
 
