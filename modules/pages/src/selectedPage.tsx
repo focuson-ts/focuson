@@ -18,7 +18,7 @@ export interface SelectedPageDebug {
 export function SelectedPage<S, Context extends PageSelectionContext<S>> ( { state }: LensProps<S, any, Context> ) {
   let combine = state.context.combine;
   let pages: PageDetailsForCombine[] = findSelectedPageDetails ( state );
-  return combine ? combine ( pages ) : <div>{pages}</div>
+  return combine ? combine (  pages ) : <div>{pages}</div>
 }
 
 export interface PageDetailsForCombine {

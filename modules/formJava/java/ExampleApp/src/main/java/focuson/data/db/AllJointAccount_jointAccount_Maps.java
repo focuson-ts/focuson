@@ -22,7 +22,7 @@ public class AllJointAccount_jointAccount_Maps {
     account.put("joint", rs.getInt("account_joint"));
     joint.put("id", rs.getInt("joint_id"));
     jointName.put("id", rs.getInt("jointName_id"));
-  found: 0 - JointAccountAddresses - JointAccountAddresses
-  found: 1 - JointAccountAddresses - JointAccountAddresses
+  //found: 0 - JointAccountAddresses - JointAccountAddresses - [object Object]
+  //found: 1 - JointAccountAddresses - JointAccountAddresses - [object Object]
   }
 }

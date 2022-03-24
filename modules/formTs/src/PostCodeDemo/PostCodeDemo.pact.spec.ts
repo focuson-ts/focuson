@@ -8,7 +8,6 @@ import { Lenses, massTransform } from "@focuson/lens";
 import * as samples from '../PostCodeDemo/PostCodeDemo.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
-import {PostCodeMainPageFetcher} from './PostCodeDemo.fetchers'
 import {PostCodeDataFetcher} from './PostCodeDemo.fetchers'
 describe("To support manually running the tests", () =>{it ("should support PostCodeDemo", () =>{})})
 //Rest create pact test

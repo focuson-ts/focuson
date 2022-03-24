@@ -428,7 +428,7 @@ function findAggMapLinking ( suffix: string, sqlData: SqlData, foundChildAliasAn
     const found = sqlData.children[ i ]
     let sqlDataParent = found.foundChildAliasAndWheres[ 0 ];
     //how do we know the linking alias?
-    return `found: ${i} - ${repeatingChild.child.name} - ${sqlDataParent.parent.name} - ${repeatingChild}`;
+    return `//found: ${i} - ${repeatingChild.child.name} - ${sqlDataParent.parent.name} - ${repeatingChild}`;
   } )
 }
 export function makeAggregateMapsFor<B, G> ( params: JavaWiringParams, p: PageD<B, G>, suffix: string, sqlData: SqlData ) {

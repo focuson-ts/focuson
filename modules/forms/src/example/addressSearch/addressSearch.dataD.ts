@@ -1,6 +1,6 @@
 import { DataD, OneLineStringDD, RepeatingDataD } from "../../common/dataD";
 import { AllGuards } from "../../buttons/guardButton";
-import { TableCD } from "../../common/componentsD";
+import { LayoutCd, TableCD } from "../../common/componentsD";
 
 export const postCodeDataLineD: DataD<AllGuards> = {
   name: "PostCodeDataLine",
@@ -21,7 +21,7 @@ export const postCodeSearchResponse: RepeatingDataD<AllGuards> = {
   paged: false,
   display: TableCD,
   displayParams: {
-    order: [ 'line1', 'line2', 'line3', 'line4' ] ,
+    order: [ 'line1', 'line2', 'line3', 'line4' ],
     copySelectedItemTo: [ 'postcode', 'addressResults' ]
   }
 }
@@ -42,6 +42,6 @@ export const nameAndAddressDataD: DataD<AllGuards> = {
   structure: {
     name: { dataDD: OneLineStringDD },
     ...postCodeDataLineD.structure,
-    postcode: { dataDD: OneLineStringDD, displayParams: { buttons: ['search'] } }
+    postcode: { dataDD: OneLineStringDD, displayParams: { buttons: [ 'search' ] } }
   }
 }

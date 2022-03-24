@@ -58,7 +58,7 @@ export function makeRestPacts<B, G> ( params: TSParams, p: PageD<B, G>, restName
 
 function makeFetcherImports<B, G> ( params: TSParams, p: PageD<B, G> ): string[] {
   if ( !isMainPage ( p ) ) return [];
-  return sortedEntries ( p.rest ).map ( ( [ name, defn ] ) => `import {${fetcherName ( defn )}} from './${p.name}.fetchers'` )
+  return sortedEntries ( p.rest ).filter ( ( [ name, defn ] ) => defn.fetcher ).map ( ( [ name, defn ] ) => `import {${fetcherName ( defn )}} from './${p.name}.fetchers'` )
 }
 export function makeAllPacts<B, G> ( params: TSParams, p: PageD<B, G>, directorySpec: DirectorySpec ): string[] {
   return [
