@@ -56,6 +56,7 @@ export const LabelAndStringInputCD: DisplayCompD = {
 
 export const LabelAndNumberInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndNumberInput",
+
   params: { ...commonParamsWithLabel, ...intValidationParams }
 }
 
