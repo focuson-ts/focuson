@@ -56,7 +56,7 @@ export function makeRestPacts<B, G> ( params: TSParams, p: PageD<B, G>, restName
   return [ `//Rest ${rad.name} pact test`, ...applyToTemplate ( str, { ...params, ...props } ) ]
 }
 
-function makeFetcherImports<B, G> ( params: TSParams, p: PageD<B, G> ): string[] {
+export function makeFetcherImports<B, G> ( params: TSParams, p: PageD<B, G> ): string[] {
   if ( !isMainPage ( p ) ) return [];
   return sortedEntries ( p.rest ).filter ( ( [ name, defn ] ) => defn.fetcher ).map ( ( [ name, defn ] ) => `import {${fetcherName ( defn )}} from './${p.name}.fetchers'` )
 }

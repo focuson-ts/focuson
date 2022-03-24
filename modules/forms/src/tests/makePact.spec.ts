@@ -1,4 +1,4 @@
-import { makeFetcherPact, makeRestPacts } from "../codegen/makePacts";
+import { makeFetcherImports, makeFetcherPact, makeRestPacts } from "../codegen/makePacts";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
 import { defaultRestAction } from "../common/restD";
@@ -7,7 +7,7 @@ import { PostCodeMainPage } from "../example/addressSearch/addressSearch.pageD";
 describe ( "makePacts", () => {
   it ( "should make a pact", () => {
 
-    expect ( makeFetcherPact ( paramsForTest, PostCodeMainPage, PostCodeMainPage.rest.postcode, defaultRestAction.get, { main: '.', backup: '.' } ) ).toEqual ([
+    expect ( makeFetcherPact ( paramsForTest, PostCodeMainPage, PostCodeMainPage.rest.postcode, defaultRestAction.get, { main: '.', backup: '.' } ) ).toEqual ( [
       "//GetFetcher pact test",
       "pactWith ( { consumer: 'PostCodeData', provider: 'PostCodeDataProvider', cors: true }, provider => {",
       "  describe ( 'PostCodeDemo - fetcher', () => {",
@@ -42,7 +42,7 @@ describe ( "makePacts", () => {
       "    } )",
       "  } )",
       "})"
-    ])
+    ] )
   } )
   it ( "make a rest pact for get", () => {
     expect ( makeRestPacts ( paramsForTest, EAccountsSummaryPD, 'someRestName', EAccountsSummaryPD.rest.createPlanRestD, defaultRestAction.get, { main: '.', backup: '.' } ) ).toEqual ( [
@@ -84,7 +84,7 @@ describe ( "makePacts", () => {
       "    } )",
       "  } )",
       "})"
-    ])
+    ] )
 
   } )
   it ( "make a rest pact for create", () => {
@@ -130,7 +130,7 @@ describe ( "makePacts", () => {
     ] )
   } )
   it ( "make a rest pact for update", () => {
-    expect ( makeRestPacts ( paramsForTest, EAccountsSummaryPD,'someRestName',  EAccountsSummaryPD.rest.createPlanRestD, defaultRestAction.update, { main: '.', backup: '.' } ) ).toEqual ( [
+    expect ( makeRestPacts ( paramsForTest, EAccountsSummaryPD, 'someRestName', EAccountsSummaryPD.rest.createPlanRestD, defaultRestAction.update, { main: '.', backup: '.' } ) ).toEqual ( [
       "//Rest update pact test",
       "pactWith ( { consumer: 'CreatePlan', provider: 'CreatePlanProvider', cors: true }, provider => {",
       "  describe ( 'EAccountsSummary - rest update', () => {",
@@ -169,6 +169,12 @@ describe ( "makePacts", () => {
       "    } )",
       "  } )",
       "})"
+    ] )
+  } )
+
+  it ( "should make imports, skipping when 'fetcher: false'in rest defn", () => {
+    expect ( makeFetcherImports ( paramsForTest, PostCodeMainPage ) ).toEqual ( [
+      "import {PostCodeDataFetcher} from './PostCodeDemo.fetchers'"
     ] )
   } )
 } )
