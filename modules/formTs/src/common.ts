@@ -7,7 +7,7 @@ import { HasTagHolder } from '@focuson/template';
 import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusOnContext, HasFocusOnDebug } from '@focuson/focuson';
 import { LensProps } from '@focuson/state';
 import { pages } from "./pages";
-import { MyCombined } from "./formComponents/myCombined";
+import { MyCombined } from "@focuson/form_components";
 import { HasAccountOverviewPageDomain } from './AccountOverview/AccountOverview.domains';
 import { HasJointAccountPageDomain } from './JointAccount/JointAccount.domains';
 import { HasOccupationAndIncomeSummaryPageDomain } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains';

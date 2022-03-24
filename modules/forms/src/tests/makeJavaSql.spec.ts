@@ -3,9 +3,10 @@ import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
 import { NameAnd } from "@focuson/utils";
 import { accountT, customerT } from "../example/database/tableNames";
-import { fieldsInWhere, findAggMapPutStatementsFromPrimitives, findAggMapPutStatementsFromWheres, findAliasMapFor, findFieldsFor, findFieldsNeededFor, findParentChildAndAliases, findParentChildCompDataLinks, findRoots, findTableAlias, findTableAndFields, findTableAndFieldsForSqlGetDetails, findTableAndFieldsIn, findWheresFor, FoundParentChildLink, makeAggregateMapsFor, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, simplifyAliasAndWhere, simplifyAliasMap, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, SqlRoot, walkRoots } from "../codegen/makeJavaSql";
+import { fieldsInWhere, findAggMapPutStatementsFromPrimitives, findAggMapPutStatementsFromWheres, findAliasMapFor, findFieldsFor, findFieldsNeededFor, findParentChildAndAliases, findParentChildCompDataLinks, findSqlRoot, findTableAlias, findTableAndFields, findTableAndFieldsForSqlGetDetails, findTableAndFieldsIn, findWheresFor, FoundParentChildLink, makeAggregateMapsFor, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, simplifyAliasAndWhere, simplifyAliasMap, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, SqlRoot, walkRoots, walkSqlData } from "../codegen/makeJavaSql";
 import { JointAccountPageD } from "../example/jointAccount/jointAccount.pageD";
 import { unique } from "../common/restD";
+import { paramsForTest } from "./makeJavaResolvers.spec";
 
 // @ts-ignore
 const sqlG = jointAccountRestD.resolver.get;
@@ -24,7 +25,7 @@ describe ( "findParentChildLinks", () => {
     ] )
   } )
   it ( "it find parent child links  for each sql root", () => {
-    const sqlRoot = findRoots ( JointAccountDd, sqlG );
+    const sqlRoot = findSqlRoot ( JointAccountDd, sqlG );
     expect ( sqlRoot.children.length == 2 )
     expect ( walkRoots ( sqlRoot, root =>
       findParentChildCompDataLinks ( { stopAtRepeat: true }, root.data )
@@ -55,7 +56,7 @@ describe ( "findParentChildLinks", () => {
 
 
   it ( "should findRoots", () => {
-    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root =>
+    expect ( walkRoots ( findSqlRoot ( JointAccountDd, sqlG ), root =>
       ` ${root.data.name} ${simplifyAliasAndWhere ( root )}` ) ).toEqual ( [
       " JointAccount {'account':'ACC_TBL'} Wheres: {'ids':['account.id=<query.accountId>']}",
       " JointAccountAddresses {'account':'ACC_TBL','address':'ADD_TBL','main':'cust.'CUST_TBL','mainName':'NAME_TBL'} Wheres: {'ids':['account.id=<query.accountId>','account.main=main.id','mainName.id = account.main','address.id=[cust].id'],'other':[]}",
@@ -73,7 +74,7 @@ describe ( "findParentChildLinks", () => {
     ] )
   } )
   it ( "should find the alias maps - for each child root, include primitives, stop at repeats", () => {
-    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), ( { data, aliases } ) =>
+    expect ( walkRoots ( findSqlRoot ( JointAccountDd, sqlG ), ( { data, aliases } ) =>
       findParentChildAndAliases ( { stopAtRepeat: true, includePrimitives: true }, data, sqlG, aliases )
         .map ( ( { parent, nameAndOneDataDD, child, aliasAndWhere } ) =>
           `${parent.name} ${nameAndOneDataDD?.[ 0 ]} ${nameAndOneDataDD?.[ 1 ]?.dataDD?.name} ${child.name} ${simplifyAliasAndWhere ( aliasAndWhere )}` ) ) ).toEqual ( [
@@ -100,7 +101,7 @@ describe ( "findParentChildLinks", () => {
 
 describe ( "find findFieldsNeededFor", () => {
   it ( "should returns the fields needed by the data under a sql root until the next sql root", () => {
-    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), findFieldsNeededFor )
+    expect ( walkRoots ( findSqlRoot ( JointAccountDd, sqlG ), findFieldsNeededFor )
       .map ( list => list.map ( ( { table, fieldData } ) => `${table.name}.${JSON.stringify ( fieldData ).replace ( /"/g, "'" )}` ) ) ).toEqual ( [
       [
         "ACC_TBL.{'fieldName':'blnc','reactType':'number','rsGetter':'getInt'}",
@@ -121,7 +122,7 @@ describe ( "find findFieldsNeededFor", () => {
 
 describe ( "findAliasMapFor", () => {
   it ( "should make aliasMaps for each root", () => {
-    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root =>
+    expect ( walkRoots ( findSqlRoot ( JointAccountDd, sqlG ), root =>
       Object.entries ( findAliasMapFor ( root, sqlG ) ).map ( ( [ n, d ] ) =>
         `${n} => {${d.name},${d.table.name}}` ).join ( ',' ) ) ).toEqual ( [
       "account => {ACC_TBL,ACC_TBL},main => {cust,CUST_TBL},mainName => {NAME_TBL,NAME_TBL},joint => {cust,CUST_TBL},jointName => {NAME_TBL,NAME_TBL}",
@@ -133,7 +134,7 @@ describe ( "findAliasMapFor", () => {
 } )
 describe ( "findWheresFor", () => {
   it ( "should make wheres for each root", () => {
-    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root =>
+    expect ( walkRoots ( findSqlRoot ( JointAccountDd, sqlG ), root =>
       findWheresFor ( root, sqlG ) ).map ( w => JSON.stringify ( w ).replace ( /"/g, "'" ) ) ).toEqual ( [
       "{'ids':['account.id=<query.accountId>','account.main=main.id','mainName.id = account.main','account.joint=joint.id','jointName.id = account.joint'],'other':[]}",
       "{'ids':['account.id=<query.accountId>','account.main=main.id','mainName.id = account.main','address.id=[cust].id'],'other':[]}",
@@ -145,7 +146,7 @@ describe ( "findWheresFor", () => {
 
 describe ( "makeSqlDataFor", () => {
   it ( "should make sql data for each root", () => {
-    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root =>
+    expect ( walkRoots ( findSqlRoot ( JointAccountDd, sqlG ), root =>
       makeSqlDataFor ( root, sqlG ) ).map ( ( { fields, wheres, aliasMap } ) =>
       `${fields.map ( ( { table, fieldData } ) => `${table.name}.${fieldData.fieldName}` )}, Wheres: ${JSON.stringify ( wheres )},  Aliases:${simplifyAliasMap ( aliasMap )}` )
       .map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
@@ -156,7 +157,7 @@ describe ( "makeSqlDataFor", () => {
   } )
 } )
 describe ( "fieldsInWhere", () => {
-  let root = findRoots ( JointAccountDd, sqlG );
+  let root = findSqlRoot ( JointAccountDd, sqlG );
   const sqlDataRoot = makeSqlDataFor ( root, sqlG )
   const allRoots: SqlRoot[] = [ root, ...root.children ]
   const allData = allRoots.map ( r => makeSqlDataFor ( r, sqlG ) )
@@ -201,7 +202,7 @@ describe ( "fieldsInWhere", () => {
 } )
 describe ( "findFieldsFor", () => {
   it ( "should prepare the fields for sql", () => {
-    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root => makeSqlDataFor ( root, sqlG ) ).map ( findFieldsFor ).map ( simplifyTableAndFieldAndAliasDataArray ) ).toEqual ( [
+    expect ( walkRoots ( findSqlRoot ( JointAccountDd, sqlG ), root => makeSqlDataFor ( root, sqlG ) ).map ( findFieldsFor ).map ( simplifyTableAndFieldAndAliasDataArray ) ).toEqual ( [
       [
         "ACC_TBL account =>blnc",
         "NAME_TBL mainName =>zzname",
@@ -237,7 +238,7 @@ describe ( "findFieldsFor", () => {
 } )
 describe ( "findTableAliasFor", () => {
   it ( "should prepare the table/alias for sql", () => {
-    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root => makeSqlDataFor ( root, sqlG ) ).map ( findTableAlias ) ).toEqual ( [
+    expect ( walkRoots ( findSqlRoot ( JointAccountDd, sqlG ), root => makeSqlDataFor ( root, sqlG ) ).map ( findTableAlias ) ).toEqual ( [
       "ACC_TBL account,CUST_TBL main,NAME_TBL mainName,CUST_TBL joint,NAME_TBL jointName",
       "ACC_TBL account,CUST_TBL main,NAME_TBL mainName,ADD_TBL address",
       "ACC_TBL account,CUST_TBL joint,NAME_TBL jointName,ADD_TBL address"
@@ -246,7 +247,7 @@ describe ( "findTableAliasFor", () => {
 } )
 describe ( "makeGetSqlFor", () => {
   it ( "should generate actual sql", () => {
-    expect ( walkRoots ( findRoots ( JointAccountDd, sqlG ), root => makeSqlDataFor ( root, sqlG ) ).map ( makeGetSqlFor ) ).toEqual ( [
+    expect ( walkRoots ( findSqlRoot ( JointAccountDd, sqlG ), root => makeSqlDataFor ( root, sqlG ) ).map ( makeGetSqlFor ) ).toEqual ( [
       [
         "select account.blnc as account_blnc,mainName.zzname as mainName_zzname,jointName.zzname as jointName_zzname,account.id as account_id,account.main as account_main,main.id as main_id,mainName.id as mainName_id,account.joint as account_joint,joint.id as joint_id,jointName.id as jointName_id",
         "from ACC_TBL account,CUST_TBL main,NAME_TBL mainName,CUST_TBL joint,NAME_TBL jointName",
@@ -262,7 +263,7 @@ describe ( "makeGetSqlFor", () => {
         "from ACC_TBL account,CUST_TBL joint,NAME_TBL jointName,ADD_TBL address",
         "where account.id=<query.accountId> and account.joint=joint.id and jointName.id = account.joint and address.id=joint.id"
       ]
-    ])
+    ] )
   } )
 } )
 
@@ -326,11 +327,11 @@ describe ( "makeCreate", () => {
 } )
 
 describe ( "makeAggMaps", () => {
-  const datas = walkRoots ( findRoots ( JointAccountDd, sqlG ), root => makeSqlDataFor ( root, sqlG ) )
+  const data = makeSqlDataFor ( findSqlRoot ( JointAccountDd, sqlG ), sqlG )
 
 
   it ( "should findAggMapPutStatementsFromPrimitives", () => {
-    expect ( datas.map ( data => {
+    expect ( walkSqlData ( data, '_s', ( data, suffix ) => {
       const foundChildAliasAndWheres: FoundParentChildLink[] = findParentChildCompDataLinks ( { includePrimitives: true, stopWithRepeatAsChild: true }, data.foundChildAliasAndWheres[ 0 ].parent )
       return findAggMapPutStatementsFromPrimitives ( foundChildAliasAndWheres, data.aliasMap ).map ( s => s.replace ( /"/g, "'" ) );
     } ) ).toEqual ( [
@@ -350,71 +351,113 @@ describe ( "makeAggMaps", () => {
     ] )
   } )
   it ( "should findAggMapPutStatementsFromWheres", () => {
-    expect ( datas.map ( data => findAggMapPutStatementsFromWheres ( data.wheres, data.aliasMap ).map ( s => s.replace ( /"/g, "'" ) ) ) ).toEqual ( [
+    expect ( walkSqlData ( data, '_s', ( data, suffix ) => findAggMapPutStatementsFromWheres ( data.wheres, data.aliasMap ).map ( s => s.replace ( /"/g, "'" ) ) ) ).toEqual ( [
       [
-        "account.put('id', rs.getInt(id));",
-        "account.put('main', rs.getInt(main));",
-        "main.put('id', rs.getInt(id));",
-        "mainName.put('id', rs.getInt(id));",
-        "account.put('joint', rs.getInt(joint));",
-        "joint.put('id', rs.getInt(id));",
-        "jointName.put('id', rs.getInt(id));"
+        "account.put('id', rs.getInt('account_id'));",
+        "account.put('main', rs.getInt('account_main'));",
+        "main.put('id', rs.getInt('main_id'));",
+        "mainName.put('id', rs.getInt('mainName_id'));",
+        "account.put('joint', rs.getInt('account_joint'));",
+        "joint.put('id', rs.getInt('joint_id'));",
+        "jointName.put('id', rs.getInt('jointName_id'));"
       ],
       [
-        "account.put('id', rs.getInt(id));",
-        "account.put('main', rs.getInt(main));",
-        "main.put('id', rs.getInt(id));",
-        "mainName.put('id', rs.getInt(id));",
-        "address.put('id', rs.getInt(id));"
+        "account.put('id', rs.getInt('account_id'));",
+        "account.put('main', rs.getInt('account_main'));",
+        "main.put('id', rs.getInt('main_id'));",
+        "mainName.put('id', rs.getInt('mainName_id'));",
+        "address.put('id', rs.getInt('address_id'));"
       ],
       [
-        "account.put('id', rs.getInt(id));",
-        "account.put('joint', rs.getInt(joint));",
-        "joint.put('id', rs.getInt(id));",
-        "jointName.put('id', rs.getInt(id));",
-        "address.put('id', rs.getInt(id));"
-      ]
-    ] )
-  } )
-  it ( "should make the aggregate map classes", () => {
-    expect ( datas.map ( data => makeAggregateMapsFor ( JointAccountPageD, 'fromApi', data ).map ( s => s.replace ( /"/g, "'" ) ) ) ).toEqual ( [
-      [
-        "public class AllJointAccountMaps {",
-        "  account.put('balance', rs.getInt('account_blnc'));",
-        "  mainName.put('name', rs.getInt('mainName_zzname'));",
-        "  jointName.put('name', rs.getInt('jointName_zzname'));",
-        "  account.put('id', rs.getInt(id));",
-        "  account.put('main', rs.getInt(main));",
-        "  main.put('id', rs.getInt(id));",
-        "  mainName.put('id', rs.getInt(id));",
-        "  account.put('joint', rs.getInt(joint));",
-        "  joint.put('id', rs.getInt(id));",
-        "  jointName.put('id', rs.getInt(id));",
-        "}"
-      ],
-      [
-        "public class AllJointAccountMaps {",
-        "  address.put('line1', rs.getInt('address_zzline1'));",
-        "  address.put('line2', rs.getInt('address_zzline2'));",
-        "  account.put('id', rs.getInt(id));",
-        "  account.put('main', rs.getInt(main));",
-        "  main.put('id', rs.getInt(id));",
-        "  mainName.put('id', rs.getInt(id));",
-        "  address.put('id', rs.getInt(id));",
-        "}"
-      ],
-      [
-        "public class AllJointAccountMaps {",
-        "  address.put('line1', rs.getInt('address_zzline1'));",
-        "  address.put('line2', rs.getInt('address_zzline2'));",
-        "  account.put('id', rs.getInt(id));",
-        "  account.put('joint', rs.getInt(joint));",
-        "  joint.put('id', rs.getInt(id));",
-        "  jointName.put('id', rs.getInt(id));",
-        "  address.put('id', rs.getInt(id));",
-        "}"
+        "account.put('id', rs.getInt('account_id'));",
+        "account.put('joint', rs.getInt('account_joint'));",
+        "joint.put('id', rs.getInt('joint_id'));",
+        "jointName.put('id', rs.getInt('jointName_id'));",
+        "address.put('id', rs.getInt('address_id'));"
       ]
     ])
+  } )
+  it ( "should make the aggregate map classes", () => {
+    expect ( walkSqlData ( data, '_s', ( data, suffix ) => makeAggregateMapsFor ( paramsForTest, JointAccountPageD, suffix, data ).map ( s => s.replace ( /"/g, "'" ) ) ) ).toEqual ( [
+      [
+        "package focuson.data.db;",
+        "import java.sql.ResultSet;",
+        "import java.sql.SQLException;",
+        "import java.util.HashMap;",
+        "import java.util.List;",
+        "import java.util.Map;",
+        "",
+        "public class AllJointAccount__s_Maps {",
+        "  Map account = new HashMap();",
+        "  Map main = new HashMap();",
+        "  Map mainName = new HashMap();",
+        "  Map joint = new HashMap();",
+        "  Map jointName = new HashMap();",
+        "  public AllJointAccount__s_Maps(ResultSet rs, List<AllJointAccount__s_0_Maps> aggMap0s, List<AllJointAccount__s_1_Maps> aggMap1s) throws SQLException {",
+        "    account.put('balance', rs.getInt('account_blnc'));",
+        "    mainName.put('name', rs.getInt('mainName_zzname'));",
+        "    jointName.put('name', rs.getInt('jointName_zzname'));",
+        "    account.put('id', rs.getInt('account_id'));",
+        "    account.put('main', rs.getInt('account_main'));",
+        "    main.put('id', rs.getInt('main_id'));",
+        "    mainName.put('id', rs.getInt('mainName_id'));",
+        "    account.put('joint', rs.getInt('account_joint'));",
+        "    joint.put('id', rs.getInt('joint_id'));",
+        "    jointName.put('id', rs.getInt('jointName_id'));",
+        "  found: 0 - JointAccountAddresses - JointAccountAddresses - [object Object]",
+        "  found: 1 - JointAccountAddresses - JointAccountAddresses - [object Object]",
+        "  }",
+        "}"
+      ],
+      [
+        "package focuson.data.db;",
+        "import java.sql.ResultSet;",
+        "import java.sql.SQLException;",
+        "import java.util.HashMap;",
+        "import java.util.List;",
+        "import java.util.Map;",
+        "",
+        "public class AllJointAccount__s_0_Maps {",
+        "  Map account = new HashMap();",
+        "  Map main = new HashMap();",
+        "  Map mainName = new HashMap();",
+        "  Map address = new HashMap();",
+        "  public AllJointAccount__s_0_Maps(ResultSet rs) throws SQLException {",
+        "    address.put('line1', rs.getInt('address_zzline1'));",
+        "    address.put('line2', rs.getInt('address_zzline2'));",
+        "    account.put('id', rs.getInt('account_id'));",
+        "    account.put('main', rs.getInt('account_main'));",
+        "    main.put('id', rs.getInt('main_id'));",
+        "    mainName.put('id', rs.getInt('mainName_id'));",
+        "    address.put('id', rs.getInt('address_id'));",
+        "  }",
+        "}"
+      ],
+      [
+        "package focuson.data.db;",
+        "import java.sql.ResultSet;",
+        "import java.sql.SQLException;",
+        "import java.util.HashMap;",
+        "import java.util.List;",
+        "import java.util.Map;",
+        "",
+        "public class AllJointAccount__s_1_Maps {",
+        "  Map account = new HashMap();",
+        "  Map joint = new HashMap();",
+        "  Map jointName = new HashMap();",
+        "  Map address = new HashMap();",
+        "  public AllJointAccount__s_1_Maps(ResultSet rs) throws SQLException {",
+        "    address.put('line1', rs.getInt('address_zzline1'));",
+        "    address.put('line2', rs.getInt('address_zzline2'));",
+        "    account.put('id', rs.getInt('account_id'));",
+        "    account.put('joint', rs.getInt('account_joint'));",
+        "    joint.put('id', rs.getInt('joint_id'));",
+        "    jointName.put('id', rs.getInt('jointName_id'));",
+        "    address.put('id', rs.getInt('address_id'));",
+        "  }",
+        "}"
+      ]
+    ] )
   } )
 
 } )

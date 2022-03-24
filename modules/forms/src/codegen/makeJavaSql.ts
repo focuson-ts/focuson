@@ -6,7 +6,8 @@ import { Lenses } from "@focuson/lens";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { addStringToEndOfAllButLast, indentList } from "./codegen";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
-import { allMapsName } from "./names";
+import { allMapsName, sqlDataSuffixFor } from "./names";
+import { JavaWiringParams } from "./config";
 
 export interface TableAndField {
   table: DBTable;
@@ -168,7 +169,7 @@ export interface SqlRoot {
   /** These include repeat as child */
   foundChildAliasAndWheres: FoundChildAliasAndWhere[];
 }
-export function findRoots ( d: CompDataD<any>, sqlG: SqlGetDetails ): SqlRoot {
+export function findSqlRoot ( d: CompDataD<any>, sqlG: SqlGetDetails ): SqlRoot {
   function findChild ( data: CompDataD<any>, aliases: NameAnd<DBTableAndMaybeName>, where: Where ) {
     let foundChildAliasAndWheres: FoundChildAliasAndWhere[] = findParentChildAndAliases ( { stopWithRepeatAsChild: true }, data, sqlG );
     const children: SqlRoot[] = foundChildAliasAndWheres
@@ -228,13 +229,18 @@ export interface SqlData {
   aliasMap: NameAnd<DBTableAndName>;
   wheres: Where;
   foundChildAliasAndWheres: FoundChildAliasAndWhere[];
+  children: SqlData[]
 }
 
 export function makeSqlDataFor ( sqlRoot: SqlRoot, sqlG: SqlGetDetails ): SqlData {
   const fields = findFieldsNeededFor ( sqlRoot )
   const aliasMap: NameAnd<DBTableAndName> = findAliasMapFor ( sqlRoot, sqlG )
   const wheres = findWheresFor ( sqlRoot, sqlG )
-  return { fields, aliasMap, wheres, foundChildAliasAndWheres: sqlRoot.foundChildAliasAndWheres }
+  return { fields, aliasMap, wheres, foundChildAliasAndWheres: sqlRoot.foundChildAliasAndWheres, children: sqlRoot.children.map ( c => makeSqlDataFor ( c, sqlG ) ) }
+}
+
+export function walkSqlData<X> ( sqlData: SqlData, suffix: string, fn: ( s: SqlData, path: string ) => X ): X[] {
+  return [ fn ( sqlData, suffix ), ...sqlData.children.flatMap ( ( c, i ) => walkSqlData ( c, sqlDataSuffixFor ( suffix, i ), fn ) ) ]
 }
 
 /** returns [alias,table,field] */
@@ -400,34 +406,6 @@ export function makeCreateTableSql<G> ( dataD: CompDataD<G>, sqlG: SqlGetDetails
   )
 }
 
-//public class JointZero {
-//     public static class AllJointAccountMaps {
-//         public final Map<String, Object> account = new HashMap<>();  // ----------- this will be the root
-//         public final Map<String, Object> main = new HashMap<>();
-//         public final Map<String, Object> mainName = new HashMap<>();
-//         public final Map<String, Object> joint = new HashMap<>();
-//         public final Map<String, Object> jointName = new HashMap<>();
-//
-//         public void makeJointAccount(ResultSet rs, List<Joint0> joint0s, List<Joint1> joint1s) throws SQLException {
-//             account.put("blnc//the json name", rs.getInt("account_blnc"));
-//             mainName.put("zzname", rs.getInt("mainName_zzname"));
-//             jointName.put("zzname", rs.getInt("jointName_zzname"));
-//             account.put("id", rs.getInt("account_id"));
-//             main.put("id", rs.getInt("main_id"));
-//             account.put("joint", rs.getInt("account_joint"));
-//             joint.put("id", rs.getInt("jointName_id"));
-//
-//             account.put("main", main);
-//             account.put("mainName", mainName);
-//             account.put("joint", joint);
-//             account.put("jointName", jointName);
-//             main.put("address", joint0s.stream().map(j -> j.address))
-//             joint.put("address", joint1s.stream().map(j -> j.address))
-//
-//         }
-//     }
-
-
 export function findAggMapPutStatementsFromPrimitives ( foundChildAliasAndWheres: FoundParentChildLink[], aliasMap: NameAnd<DBTableAndName> ) {
   return unique ( foundChildAliasAndWheres.flatMap ( ( { parent, child, nameAndOneDataDD } ) => {
     let nameDD = nameAndOneDataDD?.[ 1 ];
@@ -439,16 +417,41 @@ export function findAggMapPutStatementsFromPrimitives ( foundChildAliasAndWheres
 }
 export function findAggMapPutStatementsFromWheres ( wheres: Where, aliasMap: NameAnd<DBTableAndName> ) {
   return unique ( fieldsInWhere ( aliasMap, wheres ).map ( ( { alias, fieldData, table } ) =>
-    `${alias}.put("${fieldData.fieldName}", rs.${fieldData.rsGetter}(${fieldData.fieldName}));` ), x => x )
+    `${alias}.put("${fieldData.fieldName}", rs.${fieldData.rsGetter}("${alias}_${fieldData.fieldName}"));` ), x => x )
 
 }
-export function makeAggregateMapsFor<B, G> ( p: PageD<B, G>, restName: string, sqlData: SqlData ) {
+
+function findAggMapLinking ( suffix: string, sqlData: SqlData, foundChildAliasAndWheres: FoundParentChildLink[] ) {
+  let repeatingChildren = foundChildAliasAndWheres.filter ( d => isRepeatingDd ( d.child ) );
+  if ( repeatingChildren.length != sqlData.children.length ) return `Size mismatch Repeating Children${repeatingChildren.length}, ${sqlData.children.length}`
+  return repeatingChildren.map ( ( repeatingChild, i ) => {
+    const found = sqlData.children[ i ]
+    let sqlDataParent = found.foundChildAliasAndWheres[ 0 ];
+    //how do we know the linking alias?
+    return `found: ${i} - ${repeatingChild.child.name} - ${sqlDataParent.parent.name} - ${repeatingChild}`;
+  } )
+}
+export function makeAggregateMapsFor<B, G> ( params: JavaWiringParams, p: PageD<B, G>, suffix: string, sqlData: SqlData ) {
   const { aliasMap, wheres } = sqlData
   const foundChildAliasAndWheres: FoundParentChildLink[] = findParentChildCompDataLinks ( { includePrimitives: true, stopWithRepeatAsChild: true }, sqlData.foundChildAliasAndWheres[ 0 ].parent )
+  let aggMapsName = allMapsName ( p, suffix );
+  const children = sqlData.children.map ( ( cData, i ) => `List<${allMapsName ( p, sqlDataSuffixFor ( suffix, i ) )}> aggMap${i}s` ).join ( ', ' )
+  const comma = children.length === 0 ? '' : ', '
   return [
-    `public class ${allMapsName ( p, 'root' )} {`,
-    ...indentList ( unique ( [ ...findAggMapPutStatementsFromPrimitives ( foundChildAliasAndWheres, aliasMap ),
-      ...findAggMapPutStatementsFromWheres ( wheres, aliasMap ) ], x => x ) ),
+    `package ${params.thePackage}.${params.dbPackage};`,
+    `import java.sql.ResultSet;`,
+    `import java.sql.SQLException;`,
+    `import java.util.HashMap;`,
+    `import java.util.List;`,
+    `import java.util.Map;`,
+    '',
+    `public class ${aggMapsName} {`,
+    ...indentList ( [ ...Object.entries ( aliasMap ).map ( ( [ name, td ] ) => `Map ${name} = new HashMap();` ),
+      `public ${aggMapsName}(ResultSet rs${comma}${children}) throws SQLException {`,
+      ...indentList ( unique ( [ ...findAggMapPutStatementsFromPrimitives ( foundChildAliasAndWheres, aliasMap ),
+        ...findAggMapPutStatementsFromWheres ( wheres, aliasMap ) ], x => x ) ),
+      ...findAggMapLinking ( suffix, sqlData, foundChildAliasAndWheres ),
+      '}' ] ),
     '}'
   ]
 }

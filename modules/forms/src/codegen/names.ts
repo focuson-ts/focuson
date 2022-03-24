@@ -36,11 +36,12 @@ export const mockFetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G> 
 export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${r.dataDD.name}Queries`;
 
 export const javaDbFileName = <B, G> ( params: JavaWiringParams, p: PageD<B, G> ): string => `${p.name}Db`;
+export const sqlDataSuffixFor = ( suffix: string, i: number): string => suffix + "_" + i
 
 
 export const dbMapname = <G> ( d: AllDataDD<G> ) => d.name
 export const dbMapMakerProcname = <G> ( d: CompDataD<G> ) => `make${d.name}`
-export const allMapsName = <B, G> ( p: PageD<B, G> , suffix: string) => `All${p.name}Maps`
+export const allMapsName = <B, G> ( p: PageD<B, G> , suffix: string) => `All${p.name}_${suffix}_Maps`
 
 
 export const someFileName = <B, G> ( root: string, pd: PageD<B, G>, postfix: string ): string => `${root}/${pd.name}/${pd.name}.${postfix}`;
