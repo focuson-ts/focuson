@@ -12,7 +12,7 @@ interface StateForModalButtonTest extends HasPageSelection {
 }
 
 const context: PageSelectionContext<StateForModalButtonTest> = {
-  combine: ( pages: PageDetailsForCombine[] ): JSX.Element => <div>{pages.map ( c => c.element )}</div>,
+  combine: ( state, pages: PageDetailsForCombine[] ): JSX.Element => <div>{pages.map ( c => c.element )}</div>,
   pageSelectionL: pageSelectionlens (),
   pages: {}
 

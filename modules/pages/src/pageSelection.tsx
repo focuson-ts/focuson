@@ -50,7 +50,7 @@ export interface HasPageSelectionLens<S> {
   pageSelectionL: Optional<S, PageSelection[]>
 }
 export interface PageSelectionContext<S> extends HasPageSelectionLens<S>, HasMultiPageDetails<S, any> {
-  combine: ( pages: PageDetailsForCombine[] ) => JSX.Element
+  combine: ( state: LensState<S, any, any>, pages: PageDetailsForCombine[] ) => JSX.Element
 }
 
 

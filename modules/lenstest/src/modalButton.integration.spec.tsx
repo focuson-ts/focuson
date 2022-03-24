@@ -56,7 +56,7 @@ const listS: ModalButtonStateForTest = {
 type Context = FocusOnContext<ModalButtonStateForTest>
 const context: Context = {
   restL: restL<ModalButtonStateForTest> (),
-  combine: ( pages: PageDetailsForCombine[] ): JSX.Element => <div>{pages.map ( p => p.element )}</div>,
+  combine: ( state, pages: PageDetailsForCombine[] ): JSX.Element => <div>{pages.map ( p => p.element )}</div>,
   pageSelectionL: pageSelectionlens (),
   simpleMessagesL: simpleMessagesL (),
   pages: {}

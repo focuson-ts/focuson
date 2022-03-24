@@ -1,9 +1,10 @@
 import { focusPageClassName, PageDetailsForCombine } from "@focuson/pages";
+import {LensState} from "@focuson/state";
+import {Messages} from "./messages";
 
 export type PageType = 'MainPage' | 'ModalPage' | 'ModalPopup'
 
 const modalPopupJSX = ( p: PageDetailsForCombine, i: number ) => {
-  console.log ( "modalPopupJSX" )
   return (
     <div className="modalPopup show-modal focus-page">
       <div className="modalPopup-content">
@@ -14,7 +15,6 @@ const modalPopupJSX = ( p: PageDetailsForCombine, i: number ) => {
 }
 
 const modalPageJSX = ( p: PageDetailsForCombine, i: number ) => {
-  console.log ( "modalPageJSX" )
   return (
     <div id='modalPage' className={focusPageClassName} key={i}>
       <div id='contentWrapper'>{p.element}</div>
@@ -22,7 +22,6 @@ const modalPageJSX = ( p: PageDetailsForCombine, i: number ) => {
   )
 }
 const mainPageJSX = ( p: PageDetailsForCombine, i: number ) => {
-  console.log ( "mainPageJSX" )
   return (
     <div id='pageContainer' className={focusPageClassName} key={i}>
       <div id='contentWrapper'>{p.element}</div>
@@ -30,9 +29,10 @@ const mainPageJSX = ( p: PageDetailsForCombine, i: number ) => {
   )
 }
 
-export function MyCombined ( pages: PageDetailsForCombine[] ): JSX.Element {
-  console.log ( "mycombined", pages.map ( pd => pd.pageType ) )
+export function MyCombined <S, Context> ( state: LensState<S, any, Context>, pages: PageDetailsForCombine[] ): JSX.Element {
+
   return <div id='container' className='combine'>
+            <Messages state={state.focusOn('messages')}/>
     {
       pages.map ( ( p, i ) => {
           if ( p.pageType === 'ModalPopup' ) return modalPopupJSX ( p, i )
