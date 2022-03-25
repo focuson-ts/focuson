@@ -93,7 +93,7 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
   /** The json that this context is focused on */
   json = ( errorMessageIfNotHere?: () => string ): T =>
     getOr ( this.optional, this.main, () =>
-      errorMessageIfNotHere ? errorMessageIfNotHere () : "Trying to get json and it is not present" );
+      errorMessageIfNotHere ? errorMessageIfNotHere () : `Trying to get json from ${this.optional.description} and it is not present` );
 
   /** The json that this context is focused on */
   optJson (): T | undefined {

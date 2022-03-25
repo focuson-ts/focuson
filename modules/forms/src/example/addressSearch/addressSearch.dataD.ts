@@ -1,6 +1,6 @@
 import { DataD, OneLineStringDD, RepeatingDataD } from "../../common/dataD";
 import { AllGuards } from "../../buttons/guardButton";
-import { LayoutCd, TableCD } from "../../common/componentsD";
+import { TableCD } from "../../common/componentsD";
 
 export const postCodeDataLineD: DataD<AllGuards> = {
   name: "PostCodeDataLine",

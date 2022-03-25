@@ -56,17 +56,23 @@ export const LabelAndStringInputCD: DisplayCompD = {
 
 export const LabelAndNumberInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndNumberInput",
-
   params: { ...commonParamsWithLabel, ...intValidationParams }
+}
+export const YourCD: DisplayCompD = {
+  import: "@focuson/form_components", name: "LabelAndNumberInput",
+  params: { ...commonParamsWithLabel, pathToTheFlags:{paramType: 'pageState', needed: 'yes'}
+ }
 }
 
 export const LabelAndCheckboxInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndBooleanInput",
   params: commonParamsWithLabel
 }
+//The data about to use a react component.
 export const TableCD: DisplayCompD = {
-  import: "@focuson/form_components", name: "Table",
-  params: {
+  import: "@focuson/form_components",   //so that I can write the import statement for the react component
+  name: "Table",                        //The name of the react component
+  params: {                             //configuration parameter for the react component
     ...commonParams,
     order: { paramType: 'string[]', needed: 'yes' },
     copySelectedIndexTo: { paramType: 'pageState', needed: 'no' },
