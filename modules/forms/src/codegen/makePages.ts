@@ -5,7 +5,6 @@ import { addStringToEndOfAllButLast } from "./codegen";
 import { makeEmptyData } from "./makeSample";
 import { safeArray } from "@focuson/utils";
 
-
 export const makeMainPage =<G> ( params: TSParams ) => <B> ( p: MainPageD<B,G> ): string[] => {
   function makeEmpty () {
     let result: any = {}
@@ -14,7 +13,7 @@ export const makeMainPage =<G> ( params: TSParams ) => <B> ( p: MainPageD<B,G> )
   }
   const initialValue = p.initialValue === 'empty' ? makeEmpty () : p.initialValue
   return p.pageType === 'MainPage' ?
-    [ `    ${p.name}: {pageType: '${p.pageType}',  config: simpleMessagesConfig, lens: identity.focusQuery ( '${pageInState ( p )}' ), pageFunction: ${pageComponentName ( p )}(), initialValue: ${JSON.stringify ( initialValue )} }` ]
+    [ `    ${p.name}: {pageType: '${p.pageType}',  config: simpleMessagesConfig, lens: identity.focusQuery ( '${pageInState ( p )}' ), pageFunction: ${pageComponentName ( p )}(), initialValue: ${JSON.stringify ( initialValue )}, pageMode: '${p.modes[0]}' }` ]
     : [];
 }
 

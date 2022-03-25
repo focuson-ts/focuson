@@ -124,7 +124,6 @@ export const customerOccupationIncomeDetailsDD: ExampleRepeatingD = {
 export const occupationAndIncomeFullDomainDD: ExampleDataD = {
   name: 'OccupationAndIncomeFullDomain',
   description: 'This is a summary about occupation and income details data',
-
   structure: {
     mainCustomerName: { dataDD: StringDD, sample: [ occupationAndIncomeSample.mainCustomerName ] },
     jointCustomerName: { dataDD: StringDD, sample: [ occupationAndIncomeSample.jointCustomerName ] },
