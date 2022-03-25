@@ -22,7 +22,7 @@ const initial = {}
 function pageSelection ( pageMode: PageMode ): PageSelection { return { pageName: 'AccountOverview', pageMode}}
 const Template: Story<StoryState> = ( args: StoryState ) =>{
   const startState: FState = { ...emptyState, pageSelection: [ pageSelection ( args.pageMode ) ] }
-  return SBookProvider<FState, Context> ( { ...startState, AccountOverview: { ...initial, main: args.domain } },//NOTE currently stories only work if the target depth is 1
+  return SBookProvider<FState, Context> ( { ...startState, AccountOverview: { ...initial, ~: args.domain } },//NOTE currently stories only work if the target depth is 1
      context,
      s => findOneSelectedPageDetails ( s ) (pageSelection(args.pageMode)).element );}
  

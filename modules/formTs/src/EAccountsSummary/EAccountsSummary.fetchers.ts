@@ -12,7 +12,7 @@ export function EAccountsSummaryFetcher(fdLens:Optional<FState, domains.EAccount
   return pageAndTagFetcher<FState, domains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.EAccountsSummaryDomain>(),
      'EAccountsSummary',
-     'fromApi', fdLens, commonIds, localIds,["accountId"],["customerId"],
-      Lenses.identity< domains.EAccountsSummaryPageDomain> ().focusQuery('fromApi'),
+     '~/fromApi', fdLens, commonIds, localIds,["accountId"],["customerId"],
+      lens: pageState - ~/fromApi,
      '/api/accountsSummary?{query}')
 }

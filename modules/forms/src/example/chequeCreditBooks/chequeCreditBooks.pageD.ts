@@ -10,7 +10,7 @@ export const OrderChequeBookOrPayingInModalPD: ExampleModalPage = {
   /** This page can only view data */
   modes: [ 'create' ],
   /** How we display the page.*/
-  display: { target: [], dataDD: ChequeCreditbooksHistoryLineDD, importFrom: 'ChequeCreditbooks' },
+  display: { target: '', dataDD: ChequeCreditbooksHistoryLineDD, importFrom: 'ChequeCreditbooks' },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -32,7 +32,7 @@ export const ChequeCreditbooksPD: ExampleMainPage = {
   /** This page can only view data */
   modes: [ 'view' ],
   /** How we display the page.*/
-  display: { target: [ 'fromApi' ], dataDD: ChequeCreditbooksDD },
+  display: { target: '~/fromApi', dataDD: ChequeCreditbooksDD },
   /** When the page is selected for the first time this is the initial state */
   initialValue: {},
   /** This defines the domain data structures in react*/
@@ -46,7 +46,7 @@ export const ChequeCreditbooksPD: ExampleMainPage = {
   modals: [ { modal: OrderChequeBookOrPayingInModalPD, path: [ 'tempCreatePlan' ] } ],
   /** Binds the rest to 'where it takes place'. So we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
   rest: {
-    chequeCreditBooks: { rest: chequeCreditBooksRestD, targetFromPath: [ 'fromApi' ], fetcher: true }
+    chequeCreditBooks: { rest: chequeCreditBooksRestD, targetFromPath: '~/fromApi', fetcher: true }
   },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {                                                                      //interestingly these will be type checked in the target system...
@@ -54,7 +54,7 @@ export const ChequeCreditbooksPD: ExampleMainPage = {
     payingInBook: { control: 'ResetStateButton' },//, target: ['checkBookOrPayingInBook'], value : 'payingIn'},
     orderNewBook: {
       control: 'ModalButton', modal: OrderChequeBookOrPayingInModalPD, mode: 'create',
-      focusOn: [ '{basePage}', 'tempCreatePlan' ],//not type checked here... should be type checked in target
+      focusOn: '~/tempCreatePlan',//not type checked here... should be type checked in target
       createEmpty: ChequeCreditbooksHistoryLineDD,
       restOnCommit: { restName: 'chequeCreditBooks', action: 'create', result: 'refresh' }
     }

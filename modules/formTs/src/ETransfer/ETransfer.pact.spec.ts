@@ -16,7 +16,7 @@ pactWith ( { consumer: 'ETransferDataD', provider: 'ETransferDataDProvider', cor
       const restCommand: RestCommand = { name: 'ETransfer_ETransferDataDRestDetails', restAction: 'create' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
-      ETransfer: { fromApi:samples.sampleETransferDataD0 },
+      ETransfer: { makeTargetFor ( r.targetFromPath ) //needs fixing;:samples.sampleETransferDataD0  closeTargetFor ( r.targetFromPath );//needs fixing,
         pageSelection: [ { pageName: 'ETransfer', pageMode: 'view' } ]
       }
       const url = applyToTemplate('/api/eTransfers', firstState.CommonIds).join('')
@@ -39,7 +39,7 @@ pactWith ( { consumer: 'ETransferDataD', provider: 'ETransferDataDProvider', cor
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], ETransfer: { fromApi: samples.sampleETransferDataD0} }
+      const rawExpected:any = { ...firstState, restCommands: [], ETransfer: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleETransferDataD0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )

@@ -8,7 +8,7 @@ export function JointAccount_JointAccountRestDetails ( cd: NameAndLens<FState>, 
   const fdd: NameAndLens<domains.JointAccountPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('JointAccount'),
-    dLens: Lenses.identity<domains.JointAccountPageDomain>().focusQuery('fromApi'),
+    dLens: Lenses.identity<domains.JointAccountPageDomain>()state: fullState - ~/fromApi,
     cd, fdd,
     ids: ["customerId"],
     resourceId:  [],

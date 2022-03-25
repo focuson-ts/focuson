@@ -1,11 +1,11 @@
 import { ButtonCreator, MakeButton } from "../codegen/makeButtons";
-import { focusOnFor } from "../codegen/codegen";
+import { stateFocusQueryForRepl } from "../codegen/codegen";
 
 export interface CommonListButtonInPage {
   /** the path to the value from the root of this page's domain */
-  value: string[];
+  value: string;
   /** the path to the list that this is about */
-  list: string[];
+  list: string;
 }
 
 export interface ListNextButtonInPage extends CommonListButtonInPage {
@@ -19,7 +19,7 @@ function ListNextButton<B extends ListNextButtonInPage, G> (): ButtonCreator<B, 
   return {
     import: "@focuson/form_components",
     makeButton: ( { params, parent, name, button } ) =>
-      [ `<ListNextButton id='${name}' title='Next' list={fullState${focusOnFor ( button.list )}} value={fullState${focusOnFor ( button.value )}} />` ]
+      [ `<ListNextButton id='${name}' title='Next' list={${stateFocusQueryForRepl ('fullState', button.list )}} value={${stateFocusQueryForRepl ('fullState', button.value )}} />` ]
   }
 }
 
@@ -27,7 +27,7 @@ function ListPrevButton<B extends ListPrevButtonInPage, G> (): ButtonCreator<B, 
   return {
     import: "@focuson/form_components",
     makeButton: ( { params, parent, name, button } ) =>
-      [ `<ListPrevButton id='${name}' title='Prev' list={fullState${focusOnFor ( button.list )}} value={fullState${focusOnFor ( button.value )}} />` ]
+      [ `<ListPrevButton id='${name}' title='Prev'  list={${stateFocusQueryForRepl ('fullState', button.list )}} value={${stateFocusQueryForRepl ('fullState', button.value )}} />` ]
   }
 }
 

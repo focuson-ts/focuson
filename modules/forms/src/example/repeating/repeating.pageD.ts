@@ -6,16 +6,15 @@ import { IntegerDD } from "../../common/dataD";
 export const RepeatingLinePageD: ExampleModalPage = {
   name: "RepeatingLine",
   pageType: "ModalPage",
-  display: {target: [ 'temp' ], dataDD: RepeatingLineDataD, importFrom: 'Repeating' },
+  display: { target: '~/temp', dataDD: RepeatingLineDataD, importFrom: 'Repeating' },
   modes: [ 'create', 'edit' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' },
     commit: { control: 'ModalCommitButton' }
   }
 }
-export const selectedItemPath = [ 'selectedItem' ]
-export const fromApiPath = ['fromApi' ]
-export const basePageToApiPath = [ '{basePage}',...fromApiPath ]
+export const selectedItemPath = '~/selectedItem'
+export const fromApiPath = '~/fromApi'
 /** This is the 'bringing it all together */
 export const RepeatingPageD: ExampleMainPage = {
   name: 'Repeating',
@@ -43,16 +42,16 @@ export const RepeatingPageD: ExampleMainPage = {
   buttons: {
     addEntry: {
       control: 'ModalButton', modal: RepeatingLinePageD, mode: 'create',
-      focusOn: [ 'temp' ],
+      focusOn: '~/temp',
       createEmpty: RepeatingLineDataD,
       setToLengthOnClose: { variable: selectedItemPath, array: fromApiPath },
-      copyOnClose: {to: [ ...basePageToApiPath, '[append]' ]}
+      copyOnClose: { to: '~/fromApi[$append]' }
     },
     edit: {
       control: 'ModalButton', modal: RepeatingLinePageD, mode: 'edit',
-      focusOn: [ 'temp' ],
-      copy: [{from: [ ...basePageToApiPath, '{selectedItem}' ]}],
-      copyOnClose: {to: [ ...basePageToApiPath, '{selectedItem}' ]}
+      focusOn: '~/temp',
+      copy: [ { from: '~/fromApi[selectedItem]' } ],
+      copyOnClose: { to: '~/fromApi/[selectedItem]' }
     },
     prevOccupation: {
       by: { condition: '>0', path: selectedItemPath },

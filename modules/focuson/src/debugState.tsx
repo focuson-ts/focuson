@@ -1,10 +1,10 @@
 import { isMassTransformReason, isSetJsonReason, LensProps, MassTransformReason, SetJsonReason } from "@focuson/state";
-import { HasPageSelection, HasPageSelectionLens, isMainPageDetails } from "@focuson/pages";
+import { fromPathGivenState, HasPageSelection, HasPageSelectionLens, isMainPageDetails } from "@focuson/pages";
 import { HasTagHolder } from "@focuson/template";
-import { HasSimpleMessages, safeArray, SimpleMessage, sortedEntries } from "@focuson/utils";
+import { HasSimpleMessages, safeArray, safeString, SimpleMessage, sortedEntries } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands } from "@focuson/rest";
-import { FocusOnConfig, traceL } from "./config";
-import { Lenses, NameAndLens } from "@focuson/lens";
+import { FocusOnConfig, FocusOnContext, traceL } from "./config";
+import { NameAndLens } from "@focuson/lens";
 
 
 export function Tags<S extends HasPageSelection & HasTagHolder & HasSimpleMessages & HasRestCommands,
@@ -40,7 +40,7 @@ export function CommonIds<S extends HasPageSelection & HasTagHolder & HasSimpleM
 }
 
 function PagesData<S extends HasPageSelection & HasTagHolder & HasSimpleMessages & HasRestCommands,
-  C extends HasPageSelectionLens<S> & HasRestCommandL<S>> ( { state, config }: DebugProps<S, C> ) {
+  C extends FocusOnContext<S>> ( { state, config }: DebugProps<S, C> ) {
   const pages = safeArray ( state.context.pageSelectionL.getOption ( state.main ) )
   return <div>
     Pages
@@ -48,11 +48,11 @@ function PagesData<S extends HasPageSelection & HasTagHolder & HasSimpleMessages
       <tbody>{pages.map ( ( p, index ) => {
         const page = pages[ index ]
         const pageDetails = config.pages[ page.pageName ]
-        const lens = isMainPageDetails ( pageDetails ) ? pageDetails.lens : Lenses.fromPath ( safeArray ( page.focusOn ) )
+        const lens = isMainPageDetails ( pageDetails ) ? pageDetails.lens : fromPathGivenState ( state ) ( safeString ( page.focusOn ) )
         const title = isMainPageDetails ( pageDetails ) ? "Main" : "Modal"
         const pageData = lens.getOption ( state.main )
         return <tr key={index}>
-          <td>{title} {page.pageName} - {safeArray ( page.focusOn )}</td>
+          <td>{title} {page.pageName} - {safeString ( page.focusOn )}</td>
           <td>{lens?.description}</td>
           <td>
             <pre>{JSON.stringify ( pageData, null, 2 )}</pre>
@@ -117,7 +117,7 @@ interface DebugProps<S, Context> extends LensProps<S, any, Context> {
 }
 
 export function DebugState<S extends HasPageSelection & HasTagHolder & HasSimpleMessages & HasRestCommands,
-  C extends HasPageSelectionLens<S> & HasRestCommandL<S>> ( props: DebugProps<S, C> ) {
+  C extends FocusOnContext<S>> ( props: DebugProps<S, C> ) {
   const { state, config } = props
   return <div>
     <hr/>

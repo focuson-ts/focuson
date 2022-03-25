@@ -43,24 +43,24 @@ export interface GuardCreator<G> {
 
 export interface LocalVariableGuard {
   condition: 'in'
-  path: string[],
+  path: string,
   values: NameAnd<any> | undefined
 }
 export interface LocalVariableMoreThanZero {
   condition: '>0'
-  path: string[]
+  path: string
 }
 export interface LocalVariableValueEquals<T> {
   condition: 'equals';
-  path: string[];
+  path: string;
   value: T
 
 
 }
 export interface LocalVariableLessThanLengthMinusOne {
   condition: '<arrayEnd'
-  varPath: string[]
-  arrayPath: string[]
+  varPath: string
+  arrayPath: string
 }
 
 

@@ -9,9 +9,10 @@ import { MakeButton } from "../codegen/makeButtons";
 import { AppConfig } from "../focuson.config";
 import { validate } from "./validateModel";
 import { unique } from "../common/restD";
-import { safeArray } from "@focuson/utils";
+import { GenerateLogLevel, safeArray } from "@focuson/utils";
 
-export const generate = <G extends GuardWithCondition> ( appConfig: AppConfig, javaOutputRoot: string, tsRoot: string, focusOnVersion: string, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G> ) => <B extends ButtonD> ( pages: MainPageD<B, G>[] ) => {
+
+export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, appConfig: AppConfig, javaOutputRoot: string, tsRoot: string, focusOnVersion: string, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G> ) => <B extends ButtonD> ( pages: MainPageD<B, G>[] ) => {
   const params: CombinedParams = {
     pagesFile: 'pages',
     focusOnVersion,
@@ -50,8 +51,12 @@ export const generate = <G extends GuardWithCondition> ( appConfig: AppConfig, j
   }
 
   validate ( pages )
-  const fullPages = unique ( pages.flatMap ( p => [ p, ...safeArray(p.modals).map ( m => m.modal ) ] ), p => p.name )
+  const fullPages = unique ( pages.flatMap ( p => [ p, ...safeArray ( p.modals ).map ( m => m.modal ) ] ), p => p.name )
 
-  makeJavaFiles ( appConfig, javaOutputRoot, params, directorySpec ) ( fullPages )
-  makeTsFiles<G> ( appConfig, tsRoot, params, makeGuards, makeButtons, directorySpec ) ( fullPages )
+  console.log ( "focusOnVersion", params.focusOnVersion )
+  if ( logLevel === 'detailed' ) console.log ( "Making Java Files" )
+  makeJavaFiles ( logLevel, appConfig, javaOutputRoot, params, directorySpec ) ( fullPages )
+  if ( logLevel === 'detailed' ) console.log ( "Making Typescript Files" )
+  makeTsFiles<G> ( logLevel, appConfig, tsRoot, params, makeGuards, makeButtons, directorySpec ) ( fullPages )
+  if ( logLevel === 'detailed' ) console.log ( "Finished" )
 };

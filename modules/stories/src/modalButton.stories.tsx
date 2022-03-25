@@ -2,9 +2,6 @@ import React from 'react';
 import { Story } from "@storybook/react";
 import { HasPageSelection, ModalButton, PageMode, PageSelectionContext } from "@focuson/pages";
 import { SBookProvider } from "./sbookProvider";
-import { identityOptics } from "@focuson/lens";
-import { Store } from "@sambego/storybook-state";
-import { HasPostCommand, PostButton } from "@focuson/poster";
 import { defaultPageSelectionContext } from "@focuson/focuson";
 
 export default {
@@ -30,7 +27,7 @@ const Template: Story<ForModalPage> = ( args: ForModalPage ) =>
   SBookProvider<StateForModalButton, PageSelectionContext<StateForModalButton>> ( { pageSelection: [] },
     defaultPageSelectionContext<StateForModalButton, PageSelectionContext<StateForModalButton>> ( {} ),
     s => (
-      <ModalButton state={s} focusOn={[ 'some', 'base' ]}{...args}/>
+      <ModalButton state={s} focusOn={'some/base'}{...args}/>
     ) );
 
 

@@ -40,7 +40,7 @@ pactWith ( { consumer: 'CreatePlan', provider: 'CreatePlanProvider', cors: true 
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], EAccountsSummary: { tempCreatePlan: samples.sampleCreatePlan0} }
+      const rawExpected:any = { ...firstState, restCommands: [], EAccountsSummary: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleCreatePlan0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
@@ -55,7 +55,7 @@ pactWith ( { consumer: 'CreatePlan', provider: 'CreatePlanProvider', cors: true 
       const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'create' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
-      EAccountsSummary: { tempCreatePlan:samples.sampleCreatePlan0 },
+      EAccountsSummary: { makeTargetFor ( r.targetFromPath ) //needs fixing;:samples.sampleCreatePlan0  closeTargetFor ( r.targetFromPath );//needs fixing,
         pageSelection: [ { pageName: 'EAccountsSummary', pageMode: 'view' } ]
       }
       const url = applyToTemplate('/api/createPlan/{createPlanId}', firstState.CommonIds).join('')
@@ -78,7 +78,7 @@ pactWith ( { consumer: 'CreatePlan', provider: 'CreatePlanProvider', cors: true 
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], EAccountsSummary: { tempCreatePlan: samples.sampleCreatePlan0} }
+      const rawExpected:any = { ...firstState, restCommands: [], EAccountsSummary: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleCreatePlan0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
@@ -93,7 +93,7 @@ pactWith ( { consumer: 'CreatePlan', provider: 'CreatePlanProvider', cors: true 
       const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'update' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
-      EAccountsSummary: { tempCreatePlan:samples.sampleCreatePlan0 },
+      EAccountsSummary: { makeTargetFor ( r.targetFromPath ) //needs fixing;:samples.sampleCreatePlan0  closeTargetFor ( r.targetFromPath );//needs fixing,
         pageSelection: [ { pageName: 'EAccountsSummary', pageMode: 'view' } ]
       }
       const url = applyToTemplate('/api/createPlan/{createPlanId}', firstState.CommonIds).join('')
@@ -116,7 +116,7 @@ pactWith ( { consumer: 'CreatePlan', provider: 'CreatePlanProvider', cors: true 
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], EAccountsSummary: { tempCreatePlan: samples.sampleCreatePlan0} }
+      const rawExpected:any = { ...firstState, restCommands: [], EAccountsSummary: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleCreatePlan0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
@@ -154,7 +154,7 @@ pactWith ( { consumer: 'CreatePlan', provider: 'CreatePlanProvider', cors: true 
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], EAccountsSummary: { tempCreatePlan: samples.sampleCreatePlan0} }
+      const rawExpected:any = { ...firstState, restCommands: [], EAccountsSummary: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleCreatePlan0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
@@ -192,7 +192,7 @@ pactWith ( { consumer: 'CreatePlan', provider: 'CreatePlanProvider', cors: true 
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], EAccountsSummary: { tempCreatePlan: samples.sampleCreatePlan0} }
+      const rawExpected:any = { ...firstState, restCommands: [], EAccountsSummary: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleCreatePlan0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
@@ -225,8 +225,8 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
-         EAccountsSummary: {fromApi:samples.sampleEAccountsSummary0},
-        tags: { EAccountsSummary_fromApi:["accId","custId"]}
+         EAccountsSummary: {makeTargetFor ( path )//needs fixing:samples.sampleEAccountsSummary0closeTargetFor ( path ) //needs fixing ,
+        tags: { EAccountsSummary_~_/_f_r_o_m_A_p_i:["accId","custId"]}
       };
       const expected = massTransform(expectedRaw,)
       expect ( newState ).toEqual ( expected )
@@ -263,7 +263,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], EAccountsSummary: { fromApi: samples.sampleEAccountsSummary0} }
+      const rawExpected:any = { ...firstState, restCommands: [], EAccountsSummary: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleEAccountsSummary0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )

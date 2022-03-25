@@ -1,11 +1,18 @@
 import { applyToTemplate } from "@focuson/template";
+import { log } from "@focuson/utils";
 
 
 const fs = require ( 'fs' )//Why comment: because things like story book die if we have this as an import
 
-export function writeToFile ( name: string, contents: string[] ) {
-
-  fs.writeFileSync ( name, contents.join ( '\n' ) )
+export function writeToFile ( name: string, contents: () => string[], logDepth?: number ) {
+  if ( logDepth >= 0 ) log ( logDepth, name )
+  try {
+    const text = contents ().join ( '\n' );
+    fs.writeFileSync ( name, text )
+  } catch ( e: any ) {
+    console.error ( `Exception creating file ${name}` )
+    throw e
+  }
 }
 
 export interface DirectorySpec {
@@ -49,8 +56,7 @@ export function loadFile ( inputName: string, directorySpec?: DirectorySpec ): s
   }
 }
 
-export function templateFile ( name: string, inputName: string, template: any, directorySpec?: DirectorySpec ) {
-  const content = applyToTemplate ( loadFile ( inputName, directorySpec ), template )
-  writeToFile ( name, content )
+export function templateFile ( name: string, inputName: string, template: any, directorySpec?: DirectorySpec, logDepth?: number ) {
+  writeToFile ( name, () => applyToTemplate ( loadFile ( inputName, directorySpec ), template ), logDepth )
 
 }

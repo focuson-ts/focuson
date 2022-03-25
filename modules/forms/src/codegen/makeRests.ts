@@ -3,8 +3,7 @@ import { domainName, domainsFileName, pageDomainName, restDetailsName, restFileN
 import { TSParams } from "./config";
 import { allRestAndActions, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { sortedEntries } from "@focuson/utils";
-import { addStringToEndOfAllButLast, focusQueryFor } from "./codegen";
-import { replaceBasePageWithKnownPage } from "@focuson/pages";
+import { addStringToEndOfAllButLast, focusQueryFor, stateFocusQueryForRepl } from "./codegen";
 
 
 export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restName: string, r: RestDefnInPageProperties<G> ): string[] => {
@@ -17,7 +16,7 @@ export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restNam
     `  const fdd: NameAndLens<${pageDomain}> = {` + fddLens.join ( "," ) + "}",
     `  return {`,
     `    fdLens: Lenses.identity<${params.stateName}>().focusQuery('${p.name}'),`,
-    `    dLens: Lenses.identity<${pageDomain}>()${focusQueryFor ( replaceBasePageWithKnownPage ( p.name, r.targetFromPath ) )},`, //    dLens: Lenses.identity <pageDomains.EAccountsSummaryPageDomain> ().focusQuery ( 'tempCreatePlan' ),
+    `    dLens: Lenses.identity<${pageDomain}>()${stateFocusQueryForRepl( 'fullState',  r.targetFromPath  )},`,
     `    cd, fdd,`,
     `    ids: ${JSON.stringify ( ids )},`,
     `    resourceId:  ${JSON.stringify ( resourceIds )},`,

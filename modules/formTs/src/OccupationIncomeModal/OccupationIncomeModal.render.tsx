@@ -24,13 +24,13 @@ export function OccupationIncomeModalPage(){
               commit:<ModalCommitButton id='commit'  state={state} />,
               list:<ModalButton id='list' text='list'  state={state} modal = 'ListOccupationsModal'  
                 pageMode='edit'
-                focusOn={["{basePage}","searchList"]}
-                copy={[{"from":["{basePage}","fromApi","customerOccupationIncomeDetails","{selectedItem}","occupation"]}]}
-                copyOnClose={[{"to":["{basePage}","fromApi","customerOccupationIncomeDetails","{selectedItem}","occupation"]}]}
+                focusOn={["{basePage}","~","/","s","e","a","r","c","h","L","i","s","t"]}
+                copy={[{"from":"~/fromApi/customerOccupationIncomeDetails[~/selectedItem]/occupation"}]}
+                copyOnClose={[{"to":"~/fromApi/customerOccupationIncomeDetails[~/selectedItem]/occupation"}]}
               />,
               otherSourcesOfIncome:<ModalButton id='otherSourcesOfIncome' text='otherSourcesOfIncome'  state={state} modal = 'OtherSourcesOfIncomeModal'  
                 pageMode='edit'
-                focusOn={["{basePage}","otherSourcesOfIncome"]}
+                focusOn={["{basePage}","~","/","o","t","h","e","r","S","o","u","r","c","e","s","O","f","I","n","c","o","m","e"]}
               />,}
           return <>
           <OneOccupationIncomeDetails id={`${id}`} state={state} mode={mode} buttons={buttons} />

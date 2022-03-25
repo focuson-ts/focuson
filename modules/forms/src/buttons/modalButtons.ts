@@ -15,7 +15,7 @@ export interface CommonModalButtonInPage<G> {
   restOnCommit?: RestOnCommit,
   copy?: CopyDetails | CopyDetails[],
   copyOnClose?: CopyDetails | CopyDetails[];
-  focusOn: string[],
+  focusOn: string,
   setToLengthOnClose?: SetToLengthOnClose
 }
 

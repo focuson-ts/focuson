@@ -42,46 +42,46 @@ import {OccupationsListDataDomain} from "../OccupationAndIncomeSummary/Occupatio
 import {OneOccupationIncomeDetailsDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 import {OtherIncomeResponseDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 export function OccupationAndIncomeSummaryPage(){
-  return focusedPageWithExtraState<FState, OccupationAndIncomeSummaryPageDomain, OccupationAndIncomeFullDomainDomain, Context> ( s => 'OccupationAndIncomeSummary' ) ( s => s.focusOn('fromApi')) (
+  return focusedPageWithExtraState<FState, OccupationAndIncomeSummaryPageDomain, OccupationAndIncomeFullDomainDomain, Context> ( s => 'OccupationAndIncomeSummary' ) ( s => sstate: pageState - ~/fromApi) (
     ( fullState, state , full, d, mode) => {
   const id='root';
   const buttons =    {addEntry:<ModalButton id='addEntry' text='addEntry'  state={state} modal = 'OccupationIncomeModal'  
         pageMode='create'
-        focusOn={["{basePage}","temp"]}
-        copyOnClose={[{"to":["{basePage}","fromApi","customerOccupationIncomeDetails","[append]"]}]}
+        focusOn={["{basePage}","~","/","t","e","m","p"]}
+        copyOnClose={[{"to":"~/fromApi/customerOccupationIncomeDetails/[$append]"}]}
         createEmpty={empty.emptyOneOccupationIncomeDetails}
-        setToLengthOnClose={{"array":["fromApi","customerOccupationIncomeDetails"],"variable":["selectedItem"]}}
+        setToLengthOnClose={{"array":["!","/","f","r","o","m","A","p","i","/","c","u","s","t","o","m","e","r","O","c","c","u","p","a","t","i","o","n","I","n","c","o","m","e","D","e","t","a","i","l","s"],"variable":["~","/","s","e","l","e","c","t","e","d","I","t","e","m"]}}
       />,
       additionalInfo:<ModalButton id='additionalInfo' text='additionalInfo'  state={state} modal = 'AdditionalInformationModal'  
         pageMode='edit'
-        focusOn={["{basePage}","additionalInformation"]}
+        focusOn={["{basePage}","~","/","a","d","d","i","t","i","o","n","a","l","I","n","f","o","r","m","a","t","i","o","n"]}
       />,
       businessDetails:<ModalButton id='businessDetails' text='businessDetails'  state={state} modal = 'BusinessDetailsModal'  
         pageMode='edit'
-        focusOn={["{basePage}","businessDetails"]}
+        focusOn={["{basePage}","~","/","b","u","s","i","n","e","s","s","D","e","t","a","i","l","s"]}
       />,
       edit:<ModalButton id='edit' text='edit'  state={state} modal = 'OccupationIncomeModal'  
         pageMode='edit'
-        focusOn={["{basePage}","temp"]}
-        copy={[{"from":["{basePage}","fromApi","customerOccupationIncomeDetails","{selectedItem}"]}]}
-        copyOnClose={[{"to":["{basePage}","fromApi","customerOccupationIncomeDetails","{selectedItem}"]}]}
+        focusOn={["{basePage}","~","/","t","e","m","p"]}
+        copy={[{"from":"~/fromApi/customerOccupationIncomeDetails[~/selectedItem]"}]}
+        copyOnClose={[{"to":"~/formApi/customerOccupationIncomeDetails/[~/selectedItem]"}]}
       />,
       list:<ModalButton id='list' text='list'  state={state} modal = 'ListOccupationsModal'  
         pageMode='edit'
-        focusOn={["{basePage}","occupation"]}
-        copy={[{"from":["{basePage}","fromApi","customerOccupationIncomeDetails","{selectedItem}","occupation"],"to":["{basePage}","occupation","search"]},{"from":["{basePage}","fromApi","customerOccupationIncomeDetails","{selectedItem}","occupation"],"to":["{basePage}","occupation","selectedOccupationName"]}]}
-        copyOnClose={[{"from":["{basePage}","occupation","selectedOccupationName"],"to":["{basePage}","fromApi","customerOccupationIncomeDetails","{selectedItem}","occupation"]}]}
+        focusOn={["{basePage}","~","/","o","c","c","u","p","a","t","i","o","n"]}
+        copy={[{"from":"~/fromApi/customerOccupationIncomeDetails/[~/selectedItem]/occupation","to":"~/occupation/search"},{"from":"~/fromApi/customerOccupationIncomeDetails/[~/selectedItem]/occupation","to":"`/`occupation/selectedOccupationName"}]}
+        copyOnClose={[{"from":"~/occupation/selectedOccupationName","to":"~/fromApi/customerOccupationIncomeDetails[~/selectedItem]/occupation"}]}
       />,
-      mainOrJoint:<ToggleButton state={fullState.focusOn('mainOrJoint')}
+      mainOrJoint:<ToggleButton state={state: fullState - ~/mainOrJoint}
         id='mainOrJoint'
         buttonText='Showing {~/mainOrJoint|Main|Joint}'
          />,
-      nextOccupation:<ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />,
+      nextOccupation:<ListNextButton id='nextOccupation' title='Next' list={state: fullState - ~/fromApi/customerOccupationIncomeDetails} value={state: fullState - ~/selectedItem} />,
       otherSourcesOfIncome:<ModalButton id='otherSourcesOfIncome' text='otherSourcesOfIncome'  state={state} modal = 'OtherSourcesOfIncomeModal'  
         pageMode='edit'
-        focusOn={["{basePage}","otherSourcesOfIncome"]}
+        focusOn={["{basePage}","~","/","o","t","h","e","r","S","o","u","r","c","e","s","O","f","I","n","c","o","m","e"]}
       />,
-      prevOccupation:<ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />,}
+      prevOccupation:<ListPrevButton id='prevOccupation' title='Prev'  list={state: fullState - ~/fromApi/customerOccupationIncomeDetails} value={state: fullState - ~/selectedItem} />,}
 
       return <HideButtonsLayout buttons={buttons} hide={["additionalInfo","businessDetails","otherSourcesOfIncome","list"]}>
           <OccupationAndIncomeFullDomain id={`${id}`} state={state} mode={mode} buttons={buttons} />
@@ -218,11 +218,11 @@ export function OccupationDescriptionResponse({id,state,mode,buttons}: FocusedPr
 }
 
 export function OneOccupationIncomeDetails({id,state,mode,buttons}: FocusedProps<FState, OneOccupationIncomeDetailsDomain,Context>){
-const areYouGuard = state.chainLens(Lenses.fromPath(["areYou"])).optJsonOr([]);
-const employmentTypeGuard = state.chainLens(Lenses.fromPath(["employmentType"])).optJsonOr([]);
-const otherSourceOfIncomeGuard = state.chainLens(Lenses.fromPath(["otherSourceOfIncome"])).optJsonOr([]);
-const owningSharesPctGuard = state.chainLens(Lenses.fromPath(["owningSharesPct"])).optJsonOr([]);
-const ownShareOfTheCompanyGuard = state.chainLens(Lenses.fromPath(["ownShareOfTheCompany"])).optJsonOr([]);
+const areYouGuard = state.chainLens(Lenses.fromPath("areYou")).optJsonOr([]);
+const employmentTypeGuard = state.chainLens(Lenses.fromPath("employmentType")).optJsonOr([]);
+const otherSourceOfIncomeGuard = state.chainLens(Lenses.fromPath("otherSourceOfIncome")).optJsonOr([]);
+const owningSharesPctGuard = state.chainLens(Lenses.fromPath("owningSharesPct")).optJsonOr([]);
+const ownShareOfTheCompanyGuard = state.chainLens(Lenses.fromPath("ownShareOfTheCompany")).optJsonOr([]);
   return <Layout details='[[30]]' title='Current employment details - '>
     <LabelAndDropdown id={`${id}.areYou`} state={state.focusOn('areYou')} mode={mode} label='Are {~/mainOrJoint|you|they}... ' allButtons={buttons} enums={{"X":"","E":"Employed","S":"Self Employed","C":"Currently not earning","R":"Retired","T":"Student","U":"Unknown","H":"Home Family Responsibilities"}} />
     <Guard value={areYouGuard} cond={["E","S"]}><LabelAndStringInput id={`${id}.occupation`} state={state.focusOn('occupation')} mode={mode} label='What is {~/mainOrJoint|your|their} occupation? ' allButtons={buttons} required={true} buttons={["list"]} /></Guard>

@@ -40,26 +40,26 @@ import {ArrearsDetailsDomain} from "../AccountOverview/AccountOverview.domains"
 import {ArrearsDetailsLineDomain} from "../AccountOverview/AccountOverview.domains"
 import {ArrearsDetailsLinesDomain} from "../AccountOverview/AccountOverview.domains"
 export function AccountOverviewPage(){
-  return focusedPageWithExtraState<FState, AccountOverviewPageDomain, AccountOverviewDomain, Context> ( s => 'AccountOverview' ) ( s => s.focusOn('main')) (
+  return focusedPageWithExtraState<FState, AccountOverviewPageDomain, AccountOverviewDomain, Context> ( s => 'AccountOverview' ) ( s => sstate: pageState - ~/main) (
     ( fullState, state , full, d, mode) => {
   const id='root';
   const buttons =    {excessHistory:<ModalButton id='excessHistory' text='excessHistory'  state={state} modal = 'ExcessHistory'  
         pageMode='view'
-        focusOn={["{basePage}","excessHistory"]}
+        focusOn={["{basePage}","~","/","e","x","c","e","s","s","H","i","s","t","o","r","y"]}
       />,
       excessInfo:<ModalButton id='excessInfo' text='excessInfo'  state={state} modal = 'ExcessInfoSearch'  
         pageMode='view'
-        focusOn={["{basePage}","excessInfo"]}
+        focusOn={["{basePage}","~","/","e","x","c","e","s","s","I","n","f","o"]}
       />,
       flags:<ModalButton id='flags' text='flags'  state={state} modal = 'AccountFlags'  
         pageMode='edit'
-        focusOn={["{basePage}","editingAccountFlags"]}
-        copy={[{"from":["{basePage}","accountFlags"]}]}
-        copyOnClose={[{"to":["{basePage}","accountFlags"]}]}
+        focusOn={["{basePage}","~","/","e","d","i","t","i","n","g","A","c","c","o","u","n","t","F","l","a","g","s"]}
+        copy={[{"from":"~/accountFlags"}]}
+        copyOnClose={[{"to":"~/accountFlags"}]}
       />,
       reason:<ModalButton id='reason' text='reason'  state={state} modal = 'Reason'  
         pageMode='view'
-        focusOn={["{basePage}","reason"]}
+        focusOn={["{basePage}","~","/","r","e","a","s","o","n"]}
       />,}
 
       return <HideButtonsLayout buttons={buttons} hide={["excessHistory","reason"]}>

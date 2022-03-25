@@ -4,12 +4,15 @@ import { modalName, pageComponentName, pageInState, renderFileName } from "./nam
 import { addStringToEndOfAllButLast } from "./codegen";
 import { makeEmptyData } from "./makeSample";
 import { safeArray } from "@focuson/utils";
+import { Lenses } from "@focuson/lens";
+import { prefixToLensFromRoot } from "../../../pages/src/selectedPage";
+import { prefixToLensFromBasePath } from "@focuson/pages";
 
-export const makeMainPage =<G> ( params: TSParams ) => <B> ( p: MainPageD<B,G> ): string[] => {
+
+export const makeMainPage = <G> ( params: TSParams ) => <B> ( p: MainPageD<B, G> ): string[] => {
   function makeEmpty () {
-    let result: any = {}
-    result[ p.display.target.join ( "." ) ] = makeEmptyData ( p.display.dataDD )
-    return result
+    const lens: Optional<any, any> = Lenses.fromPathStringFor<any, any> ( prefixToLensFromBasePath ) ( p.display.target )
+    return lens.set ( {}, makeEmptyData ( p.display.dataDD ) )
   }
   const initialValue = p.initialValue === 'empty' ? makeEmpty () : p.initialValue
   return p.pageType === 'MainPage' ?
@@ -17,20 +20,20 @@ export const makeMainPage =<G> ( params: TSParams ) => <B> ( p: MainPageD<B,G> )
     : [];
 }
 
-export interface ModalCreationData<B,G> {
+export interface ModalCreationData<B, G> {
   name: string,
-  modal: PageD<B,G>
+  modal: PageD<B, G>
 }
-export function walkModals<B,G> ( ps: PageD<B,G>[] ): ModalCreationData<B,G>[] {
+export function walkModals<B, G> ( ps: PageD<B, G>[] ): ModalCreationData<B, G>[] {
   return ps.flatMap ( p => (isMainPage ( p ) ? safeArray ( p.modals ) : []).map ( ( { modal, path } ) =>
     ({ name: modalName ( p, modal ), path: [ p.name, ...path ], modal }) ) )
 }
 
-export const makeModal =<G> ( params: TSParams ) => <B> ( { name, modal }: ModalCreationData<B,G> ): string[] => {
+export const makeModal = <G> ( params: TSParams ) => <B> ( { name, modal }: ModalCreationData<B, G> ): string[] => {
   return [ `    ${name}: {pageType: '${modal.pageType}',  config: simpleMessagesConfig,  pageFunction: ${pageComponentName ( modal )}()}` ]
 };
 
-export function makePages<B,G> ( params: TSParams, ps: PageD<B,G>[] ): string[] {
+export function makePages<B, G> ( params: TSParams, ps: PageD<B, G>[] ): string[] {
   const modals = walkModals ( ps );
   const renderImports = ps.map ( p => `import { ${pageComponentName ( p )} } from '${renderFileName ( '.', params, p )}';` )
   return [

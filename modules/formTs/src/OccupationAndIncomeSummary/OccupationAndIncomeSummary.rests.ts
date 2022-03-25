@@ -8,7 +8,7 @@ export function OccupationAndIncomeSummary_AdditionalInformationRestDetails ( cd
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'),
-    dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('additionalInformation'),
+    dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>()state: fullState - ~/additionalInformation,
     cd, fdd,
     ids: ["customerId"],
     resourceId:  [],
@@ -21,7 +21,7 @@ export function OccupationAndIncomeSummary_BusinessDetailsMainRestDetails ( cd: 
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'),
-    dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('businessDetails'),
+    dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>()state: fullState - ~/businessDetails,
     cd, fdd,
     ids: ["customerId"],
     resourceId:  [],
@@ -34,7 +34,7 @@ export function OccupationAndIncomeSummary_DropdownsRestDetails ( cd: NameAndLen
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'),
-    dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('dropdowns'),
+    dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>()state: fullState - !/dropdowns,
     cd, fdd,
     ids: ["customerId"],
     resourceId:  [],
@@ -47,7 +47,7 @@ export function OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDeta
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'),
-    dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('fromApi'),
+    dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>()state: fullState - ~/fromApi,
     cd, fdd,
     ids: ["customerId"],
     resourceId:  [],
@@ -60,7 +60,7 @@ export function OccupationAndIncomeSummary_OtherIncomeResponseRestDetails ( cd: 
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'),
-    dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('otherSourcesOfIncome'),
+    dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>()state: fullState - ~/otherSourcesOfIncome,
     cd, fdd,
     ids: ["customerId"],
     resourceId:  [],

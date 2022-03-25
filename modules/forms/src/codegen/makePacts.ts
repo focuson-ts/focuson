@@ -81,7 +81,7 @@ export function makeTargetFor ( path: string[] ) {
 export function closeTargetFor ( path: string[] ) {
   return '}'.repeat ( path.length )
 }
-function makeCommonPropsForPact<B, G> ( p: PageD<B, G>, d: RestD<G>, params: TSParams, path: string[], restAction: RestAction, description2: string ) {
+function makeCommonPropsForPact<B, G> ( p: PageD<B, G>, d: RestD<G>, params: TSParams, path: string, restAction: RestAction, description2: string ) {
   let paramsValueForTest = makeCommonParamsValueForTest ( d, restAction );
   let body = params.samplesFile + "." + sampleName ( d.dataDD ) + '0';
   const props: CommonPactProps = {
@@ -95,8 +95,8 @@ function makeCommonPropsForPact<B, G> ( p: PageD<B, G>, d: RestD<G>, params: TSP
     status: "200",
     commonParams: params.commonParams,
     pageName: p.name,
-    target: makeTargetFor ( path ),
-    closeTarget: closeTargetFor ( path ),
+    target: 'makeTargetFor ( path )//needs fixing',
+    closeTarget: 'closeTargetFor ( path ) //needs fixing ',
     stateName: params.stateName,
     commonFile: params.commonFile,
     commonParamsValue: JSON.stringify ( paramsValueForTest ),
@@ -105,7 +105,7 @@ function makeCommonPropsForPact<B, G> ( p: PageD<B, G>, d: RestD<G>, params: TSP
   return props;
 }
 
-function makePropsForFetcherPact<B, G> ( p: PageD<B, G>, defn: RestDefnInPageProperties<G>, d: RestD<G>, params: TSParams, path: string[] ): FetcherPactProps {
+function makePropsForFetcherPact<B, G> ( p: PageD<B, G>, defn: RestDefnInPageProperties<G>, d: RestD<G>, params: TSParams, path: string ): FetcherPactProps {
   const locals: [ string, LensRestParam ][] = sortedEntries ( d.params ).flatMap ( ( [ n, l ] ) => isRestLens ( l ) ? [ [ n, l ] ] : [] )
   const localLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: Lenses.identity<${params.stateName}>().focusQuery('${p.name}')${focusQueryFor ( l.lens )}` )
   const lensTransformString = locals.map ( ( [ n, l ] ) => `[ids.${n}, () =>"${l.testValue}"]` )
@@ -136,8 +136,8 @@ function makePropsForRestPact<B, G> ( p: PageD<B, G>, restName: string, r: RestD
 
   let props = makeCommonPropsForPact ( p, r.rest, params, r.targetFromPath, restAction, `should have a ${restAction} rest for ${r.rest.dataDD.name}` );
   let sample = sampleName ( r.rest.dataDD ) + "0"
-  let target = makeTargetFor ( r.targetFromPath );
-  let closeTarget = closeTargetFor ( r.targetFromPath );
+  let target = 'makeTargetFor ( r.targetFromPath ) //needs fixing;'
+  let closeTarget = ' closeTargetFor ( r.targetFromPath );//needs fixing'
   const locals: [ string, LensRestParam ][] = sortedEntries ( r.rest.params ).flatMap ( ( [ n, l ] ) => isRestLens ( l ) ? [ [ n, l ] ] : [] )
   const lensTransformString = locals.map ( ( [ n, l ] ) => `[ids.${n}, () =>"${l.testValue}"]` )
   const localLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: Lenses.identity<${params.stateName}>().focusQuery('${p.name}')${focusQueryFor ( l.lens )}` )

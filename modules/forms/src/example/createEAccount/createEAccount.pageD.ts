@@ -1,10 +1,5 @@
-import { MainPageD, PageD } from "../../common/pageD";
-
 import { CreateEAccountDataD } from "./createEAccount.dataD";
 import { createEAccountRestD } from "./createEAccount.restD";
-import { eTransferRestD } from "../eTransfers/eTransfers.restD";
-import { AllButtonsInPage } from "../../buttons/allButtons";
-import { AllGuards } from "../../buttons/guardButton";
 import { ExampleMainPage } from "../common";
 
 
@@ -16,7 +11,7 @@ export const CreateEAccountPageD: ExampleMainPage = {
   /** This page can only view data */
   modes: [ 'create' ],
   /** How we display the page.*/
-  display: { target: [ 'editing' ], dataDD: CreateEAccountDataD },
+  display: { target: '~/editing', dataDD: CreateEAccountDataD },
   /** When the page is selected for the first time this is the initial state */
   initialValue: 'empty',
   /** This defines the domain data structures in react*/
@@ -26,7 +21,7 @@ export const CreateEAccountPageD: ExampleMainPage = {
 
   /** Binds the rest to 'where it takes place'. So we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
   rest: {
-    eTransfer: { rest: createEAccountRestD, targetFromPath: [ 'editing' ] }
+    eTransfer: { rest: createEAccountRestD, targetFromPath: '~/editing' }
   },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {

@@ -35,8 +35,8 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
-         ChequeCreditbooks: {fromApi:samples.sampleChequeCreditbooks0},
-        tags: { ChequeCreditbooks_fromApi:["accId","appref","brandRef","custId"]}
+         ChequeCreditbooks: {makeTargetFor ( path )//needs fixing:samples.sampleChequeCreditbooks0closeTargetFor ( path ) //needs fixing ,
+        tags: { ChequeCreditbooks_~_/_f_r_o_m_A_p_i:["accId","appref","brandRef","custId"]}
       };
       const expected = massTransform(expectedRaw,)
       expect ( newState ).toEqual ( expected )
@@ -73,7 +73,7 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], ChequeCreditbooks: { fromApi: samples.sampleChequeCreditbooks0} }
+      const rawExpected:any = { ...firstState, restCommands: [], ChequeCreditbooks: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleChequeCreditbooks0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
@@ -88,7 +88,7 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
       const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksRestDetails', restAction: 'create' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
-      ChequeCreditbooks: { fromApi:samples.sampleChequeCreditbooks0 },
+      ChequeCreditbooks: { makeTargetFor ( r.targetFromPath ) //needs fixing;:samples.sampleChequeCreditbooks0  closeTargetFor ( r.targetFromPath );//needs fixing,
         pageSelection: [ { pageName: 'ChequeCreditbooks', pageMode: 'view' } ]
       }
       const url = applyToTemplate('/api/chequeCreditBooks', firstState.CommonIds).join('')
@@ -111,7 +111,7 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], ChequeCreditbooks: { fromApi: samples.sampleChequeCreditbooks0} }
+      const rawExpected:any = { ...firstState, restCommands: [], ChequeCreditbooks: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleChequeCreditbooks0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )

@@ -12,7 +12,7 @@ export function PostCodeDataFetcher(fdLens:Optional<FState, domains.PostCodeDemo
   return pageAndTagFetcher<FState, domains.PostCodeDemoPageDomain, domains.PostCodeDataDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.PostCodeDataDomain>(),
      'PostCodeDemo',
-     'postcode_searchResults', fdLens, commonIds, localIds,["postcode"],[],
-      Lenses.identity< domains.PostCodeDemoPageDomain> ().focusQuery('postcode').focusQuery('searchResults'),
+     '~/postcode/searchResults', fdLens, commonIds, localIds,["postcode"],[],
+      lens: pageState - ~/postcode/searchResults,
      '/api/postCode?{query}')
 }

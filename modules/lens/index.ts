@@ -257,7 +257,7 @@ export class Lenses {
     return path.reduce ( ( acc, p ) => acc.focusQuery ( p ), initialValue )
   }
 
-  static fromPathStringFor<S, To> ( prefixToLens: NameAnd<Optional<S, any>> ): ( path: string, description?: string ) => Optional<S, any> {
+  static fromPathStringFor<S, To> ( prefixToLens?: NameAnd<Optional<S, any>> ): ( path: string, description?: string ) => Optional<S, any> {
     const f = fromPathWith<S, To> ( prefixToLens )
     return ( path: string, description?: string ) => f ( tokenisePath ( path ), description ? description : `[${path}]` )
 

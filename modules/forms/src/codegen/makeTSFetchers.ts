@@ -2,7 +2,7 @@ import { sortedEntries } from "@focuson/utils";
 import { isMainPage, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { domainName, domainsFileName, fetcherFileName, fetcherName, pageDomainName } from "./names";
 import { TSParams } from "./config";
-import { addStringToEndOfAllButLast, focusQueryFor, importsDot, importsDotDot, noExtension } from "./codegen";
+import { addStringToEndOfAllButLast, focusQueryFor, importsDot, importsDotDot, lensFocusQueryForRepl, noExtension } from "./codegen";
 import { findIds, isRestLens, LensRestParam } from "../common/restD";
 
 
@@ -25,8 +25,8 @@ export const makeFetcherCode = ( params: TSParams ) => <B, G> ( p: PageD<B, G> )
     `  return pageAndTagFetcher<${params.stateName}, ${domain}.${pageDomainName ( p )}, ${domain}.${dataType}, SimpleMessage>(`,
     `    ${common}.commonFetch<${params.stateName},  ${domain}.${dataType}>(),`,
     `     '${p.name}',`,
-    `     '${targetFromPath.join ( "_" )}', fdLens, commonIds, localIds,${JSON.stringify ( ids )},${JSON.stringify ( resourceIds )},`,
-    `      Lenses.identity< ${domain}.${pageDomainName ( p )}> ()${focusQueryFor ( targetFromPath )},`,
+    `     '${targetFromPath}', fdLens, commonIds, localIds,${JSON.stringify ( ids )},${JSON.stringify ( resourceIds )},`,
+    `      ${lensFocusQueryForRepl ( 'pageState', targetFromPath )},`,
     `     '${def.rest.url}')`,
     '}' ]
 };

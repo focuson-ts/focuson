@@ -12,7 +12,7 @@ export interface DomainDefnInPage<G> {
 
 export interface RestDefnInPageProperties<G> {
   rest: RestD<G>,
-  targetFromPath: string[],
+  targetFromPath: string,
   fetcher?: boolean
 }
 export interface RestDefnInPage<G> {
@@ -50,7 +50,7 @@ export interface MainPageD<Buttons, G> extends HasLayout {
   commonParams?: NameAnd<CommonLensRestParam>,
   name: string,
   modes: PageMode[],
-  display: { target: string[], dataDD: CompDataD<G> },
+  display: { target: string, dataDD: CompDataD<G> },
   initialValue: 'empty' | any,
   domain: DomainDefnInPage<G>,
   modals?: ModalData<Buttons, G>[],
@@ -65,7 +65,7 @@ export interface ModalPageD<Buttons, G> extends HasLayout {
   pageType: 'ModalPage' | 'ModalPopup',
   name: string,
   modes: PageMode[],
-  display: { target: string[], dataDD: DataD<G>, importFrom: string },
+  display: { target: string, dataDD: DataD<G>, importFrom: string },
   buttons: ButtonDefnInPage<Buttons>;
 }
 

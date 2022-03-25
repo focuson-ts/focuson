@@ -5,7 +5,7 @@ import { dataDsIn, isMainPage, isModalPage, PageD } from "../common/pageD";
 import { decamelize, NameAnd, sortedEntries } from "@focuson/utils";
 import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, pageComponentName, pageDomainName } from "./names";
 import { addButtonsFromVariables, MakeButton, makeButtonsVariable, makeGuardButtonVariables } from "./makeButtons";
-import { focusOnFor, indentList, noExtension } from "./codegen";
+import { focusOnFor, indentList, noExtension, stateFocusQueryForRepl } from "./codegen";
 import { TSParams } from "./config";
 import { unique } from "../common/restD";
 import { ButtonD } from "../buttons/allButtons";
@@ -185,7 +185,7 @@ export const createReactPageComponent = <B extends ButtonD, G extends GuardWithC
 
 export function createReactModalPageComponent<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButtons: MakeButton<G>, pageD: PageD<B, G> ): string[] {
   const { dataDD } = pageD.display
-  const focus = focusOnFor ( pageD.display.target );
+  // const focus = focusOnFor ( pageD.display.target );
   const domName = domainName ( pageD.display.dataDD );
   const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( `createReactModalPageComponent-layout ${pageD.name}`, [], pageD, "<>", '</>' );
 
@@ -206,12 +206,11 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
 }
 export function createReactMainPageComponent<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButtons: MakeButton<G>, pageD: PageD<B, G> ): string[] {
   const { dataDD } = pageD.display
-  const focus = focusOnFor ( pageD.display.target );
   let errorPrefix: string = `createReactMainPageComponent-layout ${pageD.name}`;
   const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( errorPrefix, [], pageD, `<>`, '</>' );
   return [
     `export function ${pageComponentName ( pageD )}(){`,
-    `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${pageD.name}' ) ( s => s${focus}) (
+    `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${pageD.name}' ) ( s => s${stateFocusQueryForRepl('pageState', pageD.display.target)}) (
     ( fullState, state , full, d, mode) => {`,
     ...indentList ( makeGuardButtonVariables ( params, makeGuard, pageD ) ),
     `  const id='root';`,

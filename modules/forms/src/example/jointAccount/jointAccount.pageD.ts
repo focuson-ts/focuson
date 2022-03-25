@@ -10,9 +10,9 @@ export const JointAccountPageD: ExampleMainPage = {
   /** This page can only view data */
   modes: [ 'view' ],
   /** How we display the page.*/
-  display: { target: [ 'fromApi' ], dataDD: JointAccountDd },
+  display: { target: '~/fromApi', dataDD: JointAccountDd },
   /** When the page is selected for the first time this is the initial state */
-  initialValue: {joint: false},
+  initialValue: { joint: false },
   /** This defines the domain data structures in react*/
   domain: {
     fromApi: { dataDD: JointAccountDd },
@@ -22,9 +22,9 @@ export const JointAccountPageD: ExampleMainPage = {
 
   /** Binds the rest to 'where it takes place'. So we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
   rest: {
-    jointAccount: { rest: jointAccountRestD, targetFromPath: [ 'fromApi' ], fetcher: true }
+    jointAccount: { rest: jointAccountRestD, targetFromPath: '~/fromApi', fetcher: true }
   },
   buttons: {
-    toggle: { control: 'ToggleButton', value: [ 'joint' ], buttonText: 'Toggle [{~/joint}]' }
+    toggle: { control: 'ToggleButton', value: '~/joint', buttonText: 'Toggle [{~/joint}]' }
   }
 }

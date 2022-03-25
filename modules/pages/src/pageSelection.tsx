@@ -24,12 +24,12 @@ export interface PageOnClose {
   onCloseParams: any; //
 }
 export interface SetToLengthOnClose {
-  array: string[],
-  variable: string[]
+  array: string,
+  variable: string
 }
 export interface CopyDetails {
-  from?: string[];
-  to?: string[]
+  from?: string;
+  to?: string
 }
 export interface PageSelection {
   pageName: string;
@@ -38,9 +38,7 @@ export interface PageSelection {
   onClose?: PageOnClose;
   rest?: RestCommand,
   copyOnClose?: CopyDetails[],
-  //This is a lens description. A path that should be the lens to the root of the data. This overrides the lens in the page description if it is present
-  // Right now it is just a list of strings. Later it might include 'the nth item' etc */
-  focusOn?: string[],
+  focusOn?: string,
   setToLengthOnClose?: SetToLengthOnClose
 }
 export interface HasPageSelection {
@@ -77,7 +75,7 @@ export function fromPathFor<S, Context extends HasPageSelectionLens<S>> ( state:
   const fromPath = Lenses.fromPathWith<S, any> ( lookup )
   return ( path, d ) => fromPath ( replaceBasePath ( state, path ), d );
 }
-export function replaceBasePageWithKnownPage ( pageName:string, path: string[] ) : string[]{
+export function replaceBasePageWithKnownPage ( pageName: string, path: string[] ): string[] {
   return path.map ( part => part === '{basePage}' ? pageName : part )
 }
 
@@ -141,15 +139,19 @@ export function newStateFromPath<S, Context extends PageSelectionContext<S>> ( s
   return ( path ) => state.copyWithLens ( fromPathGivenState ( state ) ( path ) )
 }
 export function fromPathGivenState<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): ( path: string, description?: string ) => Optional<S, any> {
-  const lookup = lookUpFromPathFor ( state )
-  let firstPage = firstPagePath ( state );
-  let firstPageLink = firstPage !== undefined ? { '~/': firstPage } : {}
-  const prefixToLens: NameAnd<Optional<S, any>> = {
-    ...firstPageLink,
-    '': state.optional,
-    '/': Lenses.identity (),
+  function prefixToLensForCurrentPath () {
+    const lookup = lookUpFromPathFor ( state )
+    let firstPage = firstPagePath ( state );
+    let firstPageLink = firstPage !== undefined ? { '~/': firstPage } : {}
+    const prefixToLens: NameAnd<Optional<S, any>> = {
+      ...firstPageLink,
+      '': state.optional,
+      '/': Lenses.identity (),
 
+    }
+    return prefixToLens;
   }
+  const prefixToLens = prefixToLensForCurrentPath ();
   return Lenses.fromPathStringFor<S, any> ( prefixToLens )
 }
 

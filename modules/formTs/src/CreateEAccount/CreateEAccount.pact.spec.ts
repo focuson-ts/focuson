@@ -16,7 +16,7 @@ pactWith ( { consumer: 'CreateEAccountData', provider: 'CreateEAccountDataProvid
       const restCommand: RestCommand = { name: 'CreateEAccount_CreateEAccountDataRestDetails', restAction: 'create' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
-      CreateEAccount: { editing:samples.sampleCreateEAccountData0 },
+      CreateEAccount: { makeTargetFor ( r.targetFromPath ) //needs fixing;:samples.sampleCreateEAccountData0  closeTargetFor ( r.targetFromPath );//needs fixing,
         pageSelection: [ { pageName: 'CreateEAccount', pageMode: 'view' } ]
       }
       const url = applyToTemplate('/api/createEAccount/{createPlanId}', firstState.CommonIds).join('')
@@ -39,7 +39,7 @@ pactWith ( { consumer: 'CreateEAccountData', provider: 'CreateEAccountDataProvid
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], CreateEAccount: { editing: samples.sampleCreateEAccountData0} }
+      const rawExpected:any = { ...firstState, restCommands: [], CreateEAccount: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleCreateEAccountData0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
@@ -77,7 +77,7 @@ pactWith ( { consumer: 'CreateEAccountData', provider: 'CreateEAccountDataProvid
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], CreateEAccount: { editing: samples.sampleCreateEAccountData0} }
+      const rawExpected:any = { ...firstState, restCommands: [], CreateEAccount: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleCreateEAccountData0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )

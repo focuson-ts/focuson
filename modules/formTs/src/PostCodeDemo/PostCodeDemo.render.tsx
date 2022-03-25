@@ -24,7 +24,7 @@ import {PostCodeDataLineDomain} from "../PostCodeDemo/PostCodeDemo.domains"
 import {PostCodeMainPageDomain} from "../PostCodeDemo/PostCodeDemo.domains"
 import {PostCodeSearchDomain} from "../PostCodeDemo/PostCodeDemo.domains"
 export function PostCodeDemoPage(){
-  return focusedPageWithExtraState<FState, PostCodeDemoPageDomain, PostCodeMainPageDomain, Context> ( s => 'PostCodeDemo' ) ( s => s.focusOn('main')) (
+  return focusedPageWithExtraState<FState, PostCodeDemoPageDomain, PostCodeMainPageDomain, Context> ( s => 'PostCodeDemo' ) ( s => sstate: pageState - ~/main) (
     ( fullState, state , full, d, mode) => {
   const id='root';
   const buttons =    {save:<RestButton state={state}
@@ -36,9 +36,9 @@ export function PostCodeDemoPage(){
        />,
       search:<ModalButton id='search' text='search'  state={state} modal = 'PostCodeSearch'  
         pageMode='edit'
-        focusOn={["{basePage}","postcode"]}
-        copy={[{"from":["{basePage}","main","postcode"],"to":["{basePage}","postcode","search"]}]}
-        copyOnClose={[{"from":["{basePage}","postcode","addressResults","line1"],"to":["{basePage}","main","line1"]},{"from":["{basePage}","postcode","addressResults","line2"],"to":["{basePage}","main","line2"]},{"from":["{basePage}","postcode","addressResults","line3"],"to":["{basePage}","main","line3"]},{"from":["{basePage}","postcode","addressResults","line4"],"to":["{basePage}","main","line4"]},{"from":["{basePage}","postcode","search"],"to":["{basePage}","main","postcode"]}]}
+        focusOn={["{basePage}","~","/","p","o","s","t","c","o","d","e"]}
+        copy={[{"from":"~/main/postcode","to":"~/postcode/search"}]}
+        copyOnClose={[{"from":"~/postcode/addressResults/line1","to":"~/main/line1"},{"from":"~/postcode/addressResults/line2","to":"~/main/line2"},{"from":"~/postcode/addressResults/line3","to":"~/main/line3"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/search","to":"`~/main/postcode"}]}
       />,}
 
       return <HideButtonsLayout buttons={buttons} hide={["search"]}>

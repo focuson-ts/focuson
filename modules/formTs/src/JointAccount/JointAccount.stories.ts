@@ -22,7 +22,7 @@ const initial = {"joint":false}
 function pageSelection ( pageMode: PageMode ): PageSelection { return { pageName: 'JointAccount', pageMode}}
 const Template: Story<StoryState> = ( args: StoryState ) =>{
   const startState: FState = { ...emptyState, pageSelection: [ pageSelection ( args.pageMode ) ] }
-  return SBookProvider<FState, Context> ( { ...startState, JointAccount: { ...initial, fromApi: args.domain } },//NOTE currently stories only work if the target depth is 1
+  return SBookProvider<FState, Context> ( { ...startState, JointAccount: { ...initial, ~: args.domain } },//NOTE currently stories only work if the target depth is 1
      context,
      s => findOneSelectedPageDetails ( s ) (pageSelection(args.pageMode)).element );}
  

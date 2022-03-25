@@ -24,7 +24,7 @@ export function ExcessHistoryPage(){
               commit:<ModalCommitButton id='commit'  state={state} />,
               details:<ModalButton id='details' text='details'  state={state} modal = 'ArrearsDetails'  
                 pageMode='view'
-                focusOn={["{basePage}","arrearsDetails"]}
+                focusOn={["{basePage}","~","/","a","r","r","e","a","r","s","D","e","t","a","i","l","s"]}
               />,}
           return <>
           <AccountOverviewHistory id={`${id}`} state={state} mode={mode} buttons={buttons} />

@@ -39,8 +39,8 @@ pactWith ( { consumer: 'AdditionalInformation', provider: 'AdditionalInformation
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
-         OccupationAndIncomeSummary: {additionalInformation:samples.sampleAdditionalInformation0},
-        tags: { OccupationAndIncomeSummary_additionalInformation:["custId"]}
+         OccupationAndIncomeSummary: {makeTargetFor ( path )//needs fixing:samples.sampleAdditionalInformation0closeTargetFor ( path ) //needs fixing ,
+        tags: { OccupationAndIncomeSummary_~_/_a_d_d_i_t_i_o_n_a_l_I_n_f_o_r_m_a_t_i_o_n:["custId"]}
       };
       const expected = massTransform(expectedRaw,)
       expect ( newState ).toEqual ( expected )
@@ -77,7 +77,7 @@ pactWith ( { consumer: 'AdditionalInformation', provider: 'AdditionalInformation
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], OccupationAndIncomeSummary: { additionalInformation: samples.sampleAdditionalInformation0} }
+      const rawExpected:any = { ...firstState, restCommands: [], OccupationAndIncomeSummary: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleAdditionalInformation0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
@@ -110,8 +110,8 @@ pactWith ( { consumer: 'BusinessDetailsMain', provider: 'BusinessDetailsMainProv
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
-         OccupationAndIncomeSummary: {businessDetails:samples.sampleBusinessDetailsMain0},
-        tags: { OccupationAndIncomeSummary_businessDetails:["custId"]}
+         OccupationAndIncomeSummary: {makeTargetFor ( path )//needs fixing:samples.sampleBusinessDetailsMain0closeTargetFor ( path ) //needs fixing ,
+        tags: { OccupationAndIncomeSummary_~_/_b_u_s_i_n_e_s_s_D_e_t_a_i_l_s:["custId"]}
       };
       const expected = massTransform(expectedRaw,)
       expect ( newState ).toEqual ( expected )
@@ -148,7 +148,7 @@ pactWith ( { consumer: 'BusinessDetailsMain', provider: 'BusinessDetailsMainProv
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], OccupationAndIncomeSummary: { businessDetails: samples.sampleBusinessDetailsMain0} }
+      const rawExpected:any = { ...firstState, restCommands: [], OccupationAndIncomeSummary: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleBusinessDetailsMain0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
@@ -181,8 +181,8 @@ pactWith ( { consumer: 'Dropdowns', provider: 'DropdownsProvider', cors: true },
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
-         OccupationAndIncomeSummary: {dropdowns:samples.sampleDropdowns0},
-        tags: { OccupationAndIncomeSummary_dropdowns:["custId"]}
+         OccupationAndIncomeSummary: {makeTargetFor ( path )//needs fixing:samples.sampleDropdowns0closeTargetFor ( path ) //needs fixing ,
+        tags: { OccupationAndIncomeSummary_!_/_d_r_o_p_d_o_w_n_s:["custId"]}
       };
       const expected = massTransform(expectedRaw,)
       expect ( newState ).toEqual ( expected )
@@ -219,7 +219,7 @@ pactWith ( { consumer: 'Dropdowns', provider: 'DropdownsProvider', cors: true },
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], OccupationAndIncomeSummary: { dropdowns: samples.sampleDropdowns0} }
+      const rawExpected:any = { ...firstState, restCommands: [], OccupationAndIncomeSummary: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleDropdowns0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
@@ -252,8 +252,8 @@ pactWith ( { consumer: 'OccupationAndIncomeFullDomain', provider: 'OccupationAnd
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
-         OccupationAndIncomeSummary: {fromApi:samples.sampleOccupationAndIncomeFullDomain0},
-        tags: { OccupationAndIncomeSummary_fromApi:["custId"]}
+         OccupationAndIncomeSummary: {makeTargetFor ( path )//needs fixing:samples.sampleOccupationAndIncomeFullDomain0closeTargetFor ( path ) //needs fixing ,
+        tags: { OccupationAndIncomeSummary_~_/_f_r_o_m_A_p_i:["custId"]}
       };
       const expected = massTransform(expectedRaw,)
       expect ( newState ).toEqual ( expected )
@@ -290,7 +290,7 @@ pactWith ( { consumer: 'OccupationAndIncomeFullDomain', provider: 'OccupationAnd
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], OccupationAndIncomeSummary: { fromApi: samples.sampleOccupationAndIncomeFullDomain0} }
+      const rawExpected:any = { ...firstState, restCommands: [], OccupationAndIncomeSummary: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleOccupationAndIncomeFullDomain0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
@@ -305,7 +305,7 @@ pactWith ( { consumer: 'OccupationAndIncomeFullDomain', provider: 'OccupationAnd
       const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDetails', restAction: 'update' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
-      OccupationAndIncomeSummary: { fromApi:samples.sampleOccupationAndIncomeFullDomain0 },
+      OccupationAndIncomeSummary: { makeTargetFor ( r.targetFromPath ) //needs fixing;:samples.sampleOccupationAndIncomeFullDomain0  closeTargetFor ( r.targetFromPath );//needs fixing,
         pageSelection: [ { pageName: 'OccupationAndIncomeSummary', pageMode: 'view' } ]
       }
       const url = applyToTemplate('/customer/occupation/v2/occupationIncomeDetails', firstState.CommonIds).join('')
@@ -328,7 +328,7 @@ pactWith ( { consumer: 'OccupationAndIncomeFullDomain', provider: 'OccupationAnd
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], OccupationAndIncomeSummary: { fromApi: samples.sampleOccupationAndIncomeFullDomain0} }
+      const rawExpected:any = { ...firstState, restCommands: [], OccupationAndIncomeSummary: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleOccupationAndIncomeFullDomain0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
@@ -361,8 +361,8 @@ pactWith ( { consumer: 'OtherIncomeResponse', provider: 'OtherIncomeResponseProv
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
-         OccupationAndIncomeSummary: {otherSourcesOfIncome:samples.sampleOtherIncomeResponse0},
-        tags: { OccupationAndIncomeSummary_otherSourcesOfIncome:["custId"]}
+         OccupationAndIncomeSummary: {makeTargetFor ( path )//needs fixing:samples.sampleOtherIncomeResponse0closeTargetFor ( path ) //needs fixing ,
+        tags: { OccupationAndIncomeSummary_~_/_o_t_h_e_r_S_o_u_r_c_e_s_O_f_I_n_c_o_m_e:["custId"]}
       };
       const expected = massTransform(expectedRaw,)
       expect ( newState ).toEqual ( expected )
@@ -399,7 +399,7 @@ pactWith ( { consumer: 'OtherIncomeResponse', provider: 'OtherIncomeResponseProv
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], OccupationAndIncomeSummary: { otherSourcesOfIncome: samples.sampleOtherIncomeResponse0} }
+      const rawExpected:any = { ...firstState, restCommands: [], OccupationAndIncomeSummary: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleOtherIncomeResponse0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )

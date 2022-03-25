@@ -8,7 +8,7 @@ export function PostCodeDemo_PostCodeMainPageRestDetails ( cd: NameAndLens<FStat
   const fdd: NameAndLens<domains.PostCodeDemoPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('PostCodeDemo'),
-    dLens: Lenses.identity<domains.PostCodeDemoPageDomain>().focusQuery('main'),
+    dLens: Lenses.identity<domains.PostCodeDemoPageDomain>()state: fullState - ~/main,
     cd, fdd,
     ids: [],
     resourceId:  [],
@@ -21,7 +21,7 @@ export function PostCodeDemo_PostCodeDataRestDetails ( cd: NameAndLens<FState>, 
   const fdd: NameAndLens<domains.PostCodeDemoPageDomain> = {postcode: Lenses.identity< domains.PostCodeDemoPageDomain>().focusQuery('postcode').focusQuery('search')}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('PostCodeDemo'),
-    dLens: Lenses.identity<domains.PostCodeDemoPageDomain>().focusQuery('postcode').focusQuery('searchResults'),
+    dLens: Lenses.identity<domains.PostCodeDemoPageDomain>()state: fullState - ~/postcode/searchResults,
     cd, fdd,
     ids: ["postcode"],
     resourceId:  [],

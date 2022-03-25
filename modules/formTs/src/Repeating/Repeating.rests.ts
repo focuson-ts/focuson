@@ -8,7 +8,7 @@ export function Repeating_RepeatingWholeDataRestDetails ( cd: NameAndLens<FState
   const fdd: NameAndLens<domains.RepeatingPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('Repeating'),
-    dLens: Lenses.identity<domains.RepeatingPageDomain>().focusQuery('fromApi'),
+    dLens: Lenses.identity<domains.RepeatingPageDomain>()state: fullState - ~/fromApi,
     cd, fdd,
     ids: ["customerId"],
     resourceId:  [],

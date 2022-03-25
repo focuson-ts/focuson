@@ -2,7 +2,7 @@ import { copyFiles, DirectorySpec, templateFile, writeToFile } from "@focuson/fi
 import { JavaWiringParams } from "../codegen/config";
 import fs from "fs";
 import { unique } from "../common/restD";
-import { sortedEntries } from "@focuson/utils";
+import { detailsLog, GenerateLogLevel, sortedEntries } from "@focuson/utils";
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
@@ -17,7 +17,11 @@ import { findSqlRoot, makeAggregateMapsFor, makeCreateTableSql, makeGetSqlFor, m
 import { isSqlResolverD } from "../common/resolverD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 
-export const makeJavaFiles = ( appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
+export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
+  //to help the readability of the writeFile/template files
+  const details = logLevel === 'detailed' ? 2 : -1
+  const minimal = logLevel === 'minimal' ? 2 : -1
+  const overview = logLevel === 'overview' ? 2 : -1
 
   const javaRoot = javaOutputRoot + "/java"
   const javaAppRoot = javaOutputRoot + "/java/" + params.applicationName
@@ -46,36 +50,42 @@ export const makeJavaFiles = ( appConfig: AppConfig, javaOutputRoot: string, par
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
   const raw = allMainPages ( pages ).flatMap ( x => sortedEntries ( x.rest ) ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest );
   const rests = unique ( raw, r => r.dataDD.name )
+  detailsLog ( logLevel, 1, 'java file copies' )
   copyFiles ( javaScriptRoot, 'templates/scripts', directorySpec ) ( 'makeJava.sh', 'makeJvmPact.sh', 'template.java' )
 
-  templateFile ( `${javaAppRoot}/pom.xml`, 'templates/mvnTemplate.pom', params, directorySpec )
   copyFiles ( javaAppRoot, 'templates/raw/java', directorySpec ) ( 'application.properties' )
-  templateFile ( `${javaCodeRoot}/SchemaController.java`, 'templates/raw/java/SchemaController.java', params, directorySpec )
-  templateFile ( `${javaControllerRoot}/Transform.java`, 'templates/Transform.java', params, directorySpec )
   copyFiles ( javaAppRoot, 'templates/raw', directorySpec ) ( '.gitignore' )
   copyFiles ( javaCodeRoot, 'templates/raw/java', directorySpec ) ( 'CorsConfig.java' )
+  detailsLog ( logLevel, 1, 'java common copies' )
+  templateFile ( `${javaAppRoot}/pom.xml`, 'templates/mvnTemplate.pom', params, directorySpec )
+  templateFile ( `${javaCodeRoot}/SchemaController.java`, 'templates/raw/java/SchemaController.java', params, directorySpec )
+  templateFile ( `${javaControllerRoot}/Transform.java`, 'templates/Transform.java', params, directorySpec )
 
 
   allMainPages ( pages ).forEach ( p => {
+    detailsLog ( logLevel, 1, `java page ${p.name}` )
     sortedEntries ( p.rest ).forEach ( ( [ restName, defn ] ) => {
+      detailsLog ( logLevel, 1, `rest ${restName}` )
       let resolver = defn.rest.resolver;
       if ( isSqlResolverD ( resolver ) ) {
         const getSql = resolver.get
         if ( getSql ) {
           const sqlData = makeSqlDataFor ( findSqlRoot ( defn.rest.dataDD, getSql ), getSql )
           walkSqlData ( sqlData, restName, ( sd, suffix ) =>
-            writeToFile ( `${javaDbPackages}/${allMapsName ( p, suffix )}.java`, makeAggregateMapsFor (params, p, suffix, sd ) ) );
+            writeToFile ( `${javaDbPackages}/${allMapsName ( p, suffix )}.java`, () => makeAggregateMapsFor ( params, p, suffix, sd ), details ) );
         }
       }
     } )
   } )
 
-  writeToFile ( `${javaResourcesRoot}/${params.schema}`, makeGraphQlSchema ( rests ) )
-  rests.forEach ( rest =>
-    writeToFile ( `${javaCodeRoot}/${params.fetcherPackage}/${fetcherInterfaceName ( params, rest )}.java`, makeJavaResolversInterface ( params, rest ) )
+  writeToFile ( `${javaResourcesRoot}/${params.schema}`, () => makeGraphQlSchema ( rests ), details )
+  rests.forEach ( rest => {
+      let file = `${javaCodeRoot}/${params.fetcherPackage}/${fetcherInterfaceName ( params, rest )}.java`;
+      writeToFile ( file, () => makeJavaResolversInterface ( params, rest ), details )
+    }
   )
-  writeToFile ( `${javaCodeRoot}/${params.wiringClass}.java`, makeAllJavaWiring ( params, rests, directorySpec ) )
-  templateFile ( `${javaCodeRoot}/${params.applicationName}.java`, 'templates/JavaApplicationTemplate.java', params, directorySpec )
+  writeToFile ( `${javaCodeRoot}/${params.wiringClass}.java`, () => makeAllJavaWiring ( params, rests, directorySpec ), details )
+  templateFile ( `${javaCodeRoot}/${params.applicationName}.java`, 'templates/JavaApplicationTemplate.java', params, directorySpec, details )
   rests.forEach ( restD => templateFile ( `${javaMockFetcherRoot}/${mockFetcherClassName ( params, restD )}.java`, 'templates/JavaFetcherClassTemplate.java',
     {
       ...params,
@@ -85,15 +95,15 @@ export const makeJavaFiles = ( appConfig: AppConfig, javaOutputRoot: string, par
       content: makeAllMockFetchers ( params, [ restD ] ).join ( "\n" )
     }, directorySpec ) )
   templateFile ( `${javaCodeRoot}/${params.sampleClass}.java`, 'templates/JavaSampleTemplate.java',
-    { ...params, content: indentList ( makeAllJavaVariableName ( pages, 0 ) ).join ( "\n" ) }, directorySpec )
+    { ...params, content: indentList ( makeAllJavaVariableName ( pages, 0 ) ).join ( "\n" ) }, directorySpec, details )
   rests.forEach ( r => templateFile ( `${javaQueriesPackages}/${queryClassName ( params, r )}.java`, 'templates/JavaQueryTemplate.java',
     {
       ...params,
       queriesClass: queryClassName ( params, r ),
       content: indentList ( makeJavaVariablesForGraphQlQuery ( [ r ] ) ).join ( "\n" )
-    }, directorySpec ) )
+    }, directorySpec, details ) )
 
-  rests.forEach ( rest => writeToFile ( `${javaControllerRoot}/${restControllerName ( rest )}.java`, makeSpringEndpointsFor ( params, rest ) ) )
+  rests.forEach ( rest => writeToFile ( `${javaControllerRoot}/${restControllerName ( rest )}.java`, () => makeSpringEndpointsFor ( params, rest ) ) )
 
   rests.forEach ( rest => {
     if ( isSqlResolverD ( rest.resolver ) ) {
@@ -101,11 +111,11 @@ export const makeJavaFiles = ( appConfig: AppConfig, javaOutputRoot: string, par
       if ( sqlG ) {
         console.log ( 'sqlG', rest.dataDD.name )
 
-        writeToFile ( `${javaSql}/${javaSqlCreateTableSqlName ( rest )}`, makeCreateTableSql ( rest.dataDD, sqlG ) )
+        writeToFile ( `${javaSql}/${javaSqlCreateTableSqlName ( rest )}`, () => makeCreateTableSql ( rest.dataDD, sqlG ), details )
         const sqlRoots = findSqlRoot ( JointAccountDd, sqlG );
         const sqlData = walkRoots ( sqlRoots, r => makeSqlDataFor ( r, sqlG ) )
         const makeSql = sqlData.flatMap ( makeGetSqlFor )
-        writeToFile ( `${javaSql}/${javaSqlReadSqlName ( rest )}`, makeSql )
+        writeToFile ( `${javaSql}/${javaSqlReadSqlName ( rest )}`, () => makeSql, details )
 
       }
     }

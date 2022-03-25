@@ -35,8 +35,8 @@ pactWith ( { consumer: 'JointAccount', provider: 'JointAccountProvider', cors: t
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
-         JointAccount: {fromApi:samples.sampleJointAccount0},
-        tags: { JointAccount_fromApi:["custId"]}
+         JointAccount: {makeTargetFor ( path )//needs fixing:samples.sampleJointAccount0closeTargetFor ( path ) //needs fixing ,
+        tags: { JointAccount_~_/_f_r_o_m_A_p_i:["custId"]}
       };
       const expected = massTransform(expectedRaw,)
       expect ( newState ).toEqual ( expected )
@@ -73,7 +73,7 @@ pactWith ( { consumer: 'JointAccount', provider: 'JointAccountProvider', cors: t
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], JointAccount: { fromApi: samples.sampleJointAccount0} }
+      const rawExpected:any = { ...firstState, restCommands: [], JointAccount: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleJointAccount0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )

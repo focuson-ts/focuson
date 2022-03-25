@@ -12,8 +12,8 @@ export function AdditionalInformationFetcher(fdLens:Optional<FState, domains.Occ
   return pageAndTagFetcher<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.AdditionalInformationDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.AdditionalInformationDomain>(),
      'OccupationAndIncomeSummary',
-     'additionalInformation', fdLens, commonIds, localIds,["customerId"],[],
-      Lenses.identity< domains.OccupationAndIncomeSummaryPageDomain> ().focusQuery('additionalInformation'),
+     '~/additionalInformation', fdLens, commonIds, localIds,["customerId"],[],
+      lens: pageState - ~/additionalInformation,
      '/customer/occupation/v2/additionalInfo?{query}')
 }
 //fetcher type true
@@ -22,8 +22,8 @@ export function BusinessDetailsMainFetcher(fdLens:Optional<FState, domains.Occup
   return pageAndTagFetcher<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.BusinessDetailsMainDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.BusinessDetailsMainDomain>(),
      'OccupationAndIncomeSummary',
-     'businessDetails', fdLens, commonIds, localIds,["customerId"],[],
-      Lenses.identity< domains.OccupationAndIncomeSummaryPageDomain> ().focusQuery('businessDetails'),
+     '~/businessDetails', fdLens, commonIds, localIds,["customerId"],[],
+      lens: pageState - ~/businessDetails,
      '/customer/occupation/v2/businessDetails?{query}')
 }
 //fetcher type true
@@ -32,8 +32,8 @@ export function DropdownsFetcher(fdLens:Optional<FState, domains.OccupationAndIn
   return pageAndTagFetcher<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.DropdownsDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.DropdownsDomain>(),
      'OccupationAndIncomeSummary',
-     'dropdowns', fdLens, commonIds, localIds,["customerId"],[],
-      Lenses.identity< domains.OccupationAndIncomeSummaryPageDomain> ().focusQuery('dropdowns'),
+     '!/dropdowns', fdLens, commonIds, localIds,["customerId"],[],
+      lens: pageState - !/dropdowns,
      '/customer/occupation/v2/occupationDetails?{query}')
 }
 //fetcher type true
@@ -42,8 +42,8 @@ export function OccupationAndIncomeFullDomainFetcher(fdLens:Optional<FState, dom
   return pageAndTagFetcher<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.OccupationAndIncomeFullDomainDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.OccupationAndIncomeFullDomainDomain>(),
      'OccupationAndIncomeSummary',
-     'fromApi', fdLens, commonIds, localIds,["customerId"],[],
-      Lenses.identity< domains.OccupationAndIncomeSummaryPageDomain> ().focusQuery('fromApi'),
+     '~/fromApi', fdLens, commonIds, localIds,["customerId"],[],
+      lens: pageState - ~/fromApi,
      '/customer/occupation/v2/occupationIncomeDetails?{query}')
 }
 //fetcher type true
@@ -52,7 +52,7 @@ export function OtherIncomeResponseFetcher(fdLens:Optional<FState, domains.Occup
   return pageAndTagFetcher<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.OtherIncomeResponseDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.OtherIncomeResponseDomain>(),
      'OccupationAndIncomeSummary',
-     'otherSourcesOfIncome', fdLens, commonIds, localIds,["customerId"],[],
-      Lenses.identity< domains.OccupationAndIncomeSummaryPageDomain> ().focusQuery('otherSourcesOfIncome'),
+     '~/otherSourcesOfIncome', fdLens, commonIds, localIds,["customerId"],[],
+      lens: pageState - ~/otherSourcesOfIncome,
      '/customer/occupation/v2/otherIncome?{query}')
 }

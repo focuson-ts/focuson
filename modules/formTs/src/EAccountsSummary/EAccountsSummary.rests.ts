@@ -8,7 +8,7 @@ export function EAccountsSummary_CreatePlanRestDetails ( cd: NameAndLens<FState>
   const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('EAccountsSummary'),
-    dLens: Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('tempCreatePlan'),
+    dLens: Lenses.identity<domains.EAccountsSummaryPageDomain>()state: fullState - ~/tempCreatePlan,
     cd, fdd,
     ids: ["accountId","customerId"],
     resourceId:  ["createPlanId"],
@@ -21,7 +21,7 @@ export function EAccountsSummary_EAccountsSummaryRestDetails ( cd: NameAndLens<F
   const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('EAccountsSummary'),
-    dLens: Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('fromApi'),
+    dLens: Lenses.identity<domains.EAccountsSummaryPageDomain>()state: fullState - ~/fromApi,
     cd, fdd,
     ids: ["accountId"],
     resourceId:  ["customerId"],

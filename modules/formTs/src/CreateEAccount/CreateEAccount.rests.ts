@@ -8,7 +8,7 @@ export function CreateEAccount_CreateEAccountDataRestDetails ( cd: NameAndLens<F
   const fdd: NameAndLens<domains.CreateEAccountPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('CreateEAccount'),
-    dLens: Lenses.identity<domains.CreateEAccountPageDomain>().focusQuery('editing'),
+    dLens: Lenses.identity<domains.CreateEAccountPageDomain>()state: fullState - ~/editing,
     cd, fdd,
     ids: ["accountId","customerId"],
     resourceId:  ["createPlanId"],

@@ -17,7 +17,7 @@ pactWith ( { consumer: 'PostCodeMainPage', provider: 'PostCodeMainPageProvider',
       const restCommand: RestCommand = { name: 'PostCodeDemo_PostCodeMainPageRestDetails', restAction: 'create' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
-      PostCodeDemo: { main:samples.samplePostCodeMainPage0 },
+      PostCodeDemo: { makeTargetFor ( r.targetFromPath ) //needs fixing;:samples.samplePostCodeMainPage0  closeTargetFor ( r.targetFromPath );//needs fixing,
         pageSelection: [ { pageName: 'PostCodeDemo', pageMode: 'view' } ]
       }
       const url = applyToTemplate('/api/address', firstState.CommonIds).join('')
@@ -40,7 +40,7 @@ pactWith ( { consumer: 'PostCodeMainPage', provider: 'PostCodeMainPageProvider',
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], PostCodeDemo: { main: samples.samplePostCodeMainPage0} }
+      const rawExpected:any = { ...firstState, restCommands: [], PostCodeDemo: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.samplePostCodeMainPage0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
@@ -74,8 +74,8 @@ pactWith ( { consumer: 'PostCodeData', provider: 'PostCodeDataProvider', cors: t
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
-         PostCodeDemo: {postcode:{searchResults:samples.samplePostCodeData0}},
-        tags: { PostCodeDemo_postcode_searchResults:["LW12 4RG"]}
+         PostCodeDemo: {makeTargetFor ( path )//needs fixing:samples.samplePostCodeData0closeTargetFor ( path ) //needs fixing ,
+        tags: { PostCodeDemo_~_/_p_o_s_t_c_o_d_e_/_s_e_a_r_c_h_R_e_s_u_l_t_s:["LW12 4RG"]}
       };
       const expected = massTransform(expectedRaw,[ids.postcode, () =>"LW12 4RG"])
       expect ( newState ).toEqual ( expected )
@@ -113,7 +113,7 @@ pactWith ( { consumer: 'PostCodeData', provider: 'PostCodeDataProvider', cors: t
       const withIds = massTransform(firstState,[ids.postcode, () =>"LW12 4RG"])
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], PostCodeDemo: { postcode:{searchResults: samples.samplePostCodeData0}} }
+      const rawExpected:any = { ...firstState, restCommands: [], PostCodeDemo: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.samplePostCodeData0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,[ids.postcode, () =>"LW12 4RG"])
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )

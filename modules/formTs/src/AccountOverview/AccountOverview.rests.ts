@@ -8,7 +8,7 @@ export function AccountOverview_AccountAllFlagsRestDetails ( cd: NameAndLens<FSt
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
-    dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('accountFlags'),
+    dLens: Lenses.identity<domains.AccountOverviewPageDomain>()state: fullState - ~/accountFlags,
     cd, fdd,
     ids: ["accountId","customerId"],
     resourceId:  [],
@@ -21,7 +21,7 @@ export function currentAccountOverview_ArrearsDetailsRestDetails ( cd: NameAndLe
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {startDate: Lenses.identity< domains.AccountOverviewPageDomain>().focusQuery('currentSelectedExcessHistory').focusQuery('start')}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
-    dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('arrearsDetailsCurrent'),
+    dLens: Lenses.identity<domains.AccountOverviewPageDomain>()state: fullState - ~/arrearsDetailsCurrent,
     cd, fdd,
     ids: ["accountId","customerId","startDate"],
     resourceId:  [],
@@ -34,7 +34,7 @@ export function previousAccountOverview_ArrearsDetailsRestDetails ( cd: NameAndL
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {startDate: Lenses.identity< domains.AccountOverviewPageDomain>().focusQuery('currentSelectedExcessHistory').focusQuery('start')}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
-    dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('arrearsDetailsPrevious'),
+    dLens: Lenses.identity<domains.AccountOverviewPageDomain>()state: fullState - ~/arrearsDetailsPrevious,
     cd, fdd,
     ids: ["accountId","customerId","startDate"],
     resourceId:  [],
@@ -47,7 +47,7 @@ export function AccountOverview_AccountOverviewHistoryRestDetails ( cd: NameAndL
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
-    dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('excessHistory'),
+    dLens: Lenses.identity<domains.AccountOverviewPageDomain>()state: fullState - ~/excessHistory,
     cd, fdd,
     ids: ["accountId","customerId"],
     resourceId:  [],
@@ -60,7 +60,7 @@ export function AccountOverview_AccountOverviewExcessInfoRestDetails ( cd: NameA
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
-    dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('excessInfo'),
+    dLens: Lenses.identity<domains.AccountOverviewPageDomain>()state: fullState - ~/excessInfo,
     cd, fdd,
     ids: ["accountId","customerId"],
     resourceId:  [],
@@ -73,7 +73,7 @@ export function AccountOverview_AccountOverviewRestDetails ( cd: NameAndLens<FSt
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
-    dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('main'),
+    dLens: Lenses.identity<domains.AccountOverviewPageDomain>()state: fullState - ~/main,
     cd, fdd,
     ids: ["accountId","customerId"],
     resourceId:  [],
@@ -86,7 +86,7 @@ export function AccountOverview_AccountOverviewReasonRestDetails ( cd: NameAndLe
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
-    dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('reason'),
+    dLens: Lenses.identity<domains.AccountOverviewPageDomain>()state: fullState - ~/reason,
     cd, fdd,
     ids: ["accountId","customerId"],
     resourceId:  [],

@@ -17,7 +17,7 @@ pactWith ( { consumer: 'RepeatingWholeData', provider: 'RepeatingWholeDataProvid
       const restCommand: RestCommand = { name: 'Repeating_RepeatingWholeDataRestDetails', restAction: 'create' }
       const firstState: FState = {
         ...emptyState, restCommands: [ restCommand ],
-      Repeating: { fromApi:samples.sampleRepeatingWholeData0 },
+      Repeating: { makeTargetFor ( r.targetFromPath ) //needs fixing;:samples.sampleRepeatingWholeData0  closeTargetFor ( r.targetFromPath );//needs fixing,
         pageSelection: [ { pageName: 'Repeating', pageMode: 'view' } ]
       }
       const url = applyToTemplate('/api/repeating', firstState.CommonIds).join('')
@@ -40,7 +40,7 @@ pactWith ( { consumer: 'RepeatingWholeData', provider: 'RepeatingWholeDataProvid
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], Repeating: { fromApi: samples.sampleRepeatingWholeData0} }
+      const rawExpected:any = { ...firstState, restCommands: [], Repeating: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleRepeatingWholeData0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )
@@ -73,8 +73,8 @@ pactWith ( { consumer: 'RepeatingWholeData', provider: 'RepeatingWholeDataProvid
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
       let expectedRaw: any = {
         ... firstState,
-         Repeating: {fromApi:samples.sampleRepeatingWholeData0},
-        tags: { Repeating_fromApi:["custId"]}
+         Repeating: {makeTargetFor ( path )//needs fixing:samples.sampleRepeatingWholeData0closeTargetFor ( path ) //needs fixing ,
+        tags: { Repeating_~_/_f_r_o_m_A_p_i:["custId"]}
       };
       const expected = massTransform(expectedRaw,)
       expect ( newState ).toEqual ( expected )
@@ -111,7 +111,7 @@ pactWith ( { consumer: 'RepeatingWholeData', provider: 'RepeatingWholeDataProvid
       const withIds = massTransform(firstState,)
       let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
       let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], Repeating: { fromApi: samples.sampleRepeatingWholeData0} }
+      const rawExpected:any = { ...firstState, restCommands: [], Repeating: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleRepeatingWholeData0 closeTargetFor ( r.targetFromPath );//needs fixing }
       const expected = massTransform(rawExpected,)
       expect ( { ...newState, messages: []}).toEqual ( expected )
       expect ( newState.messages.length ).toEqual ( 1 )

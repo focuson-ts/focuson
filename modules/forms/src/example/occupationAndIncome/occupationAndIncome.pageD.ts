@@ -1,4 +1,3 @@
-
 import { dropdownsDD, listOccupationsDD, occupationAndIncomeFullDomainDD, oneOccupationIncomeDetailsDD } from "./occupationAndIncome.dataD";
 import { additionalInfoRD, businessDetailsRD, dropdownsRD, occupationAndIncomeRD, otherIncomeRD } from "./occupationAndIncome.restD";
 import { additionalInformationDD } from "./additionalInformation/additionalInformation.dataD";
@@ -12,7 +11,7 @@ export const listOccupationsModalPD: ExampleModalPage = {
   name: 'ListOccupationsModal',
   pageType: 'ModalPopup',
   modes: [ 'edit' ],
-  display: { target: [], dataDD: listOccupationsDD, importFrom: 'OccupationAndIncomeSummary' },
+  display: { target: '', dataDD: listOccupationsDD, importFrom: 'OccupationAndIncomeSummary' },
   buttons: {
     cancel: { control: 'ModalCancelButton' },
     commit: { control: 'ModalCommitButton' }
@@ -25,7 +24,7 @@ export const otherSourcesOfIncomeModalPD: ExampleModalPage = {
   /** This page can only view data */
   modes: [ 'edit' ],
   /** How we display the page.*/
-  display: { target: [], dataDD: otherIncomeResponseDD, importFrom: 'OccupationAndIncomeSummary' },
+  display: { target: '', dataDD: otherIncomeResponseDD, importFrom: 'OccupationAndIncomeSummary' },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -38,20 +37,20 @@ export const occupationIncomeModalPD: ExampleModalPage = {
   pageType: 'ModalPage',
   modes: [ 'view', 'create', 'edit' ],
   /** How we display the page.*/
-  display: { target: [], dataDD: oneOccupationIncomeDetailsDD, importFrom: 'OccupationAndIncomeSummary' },
+  display: { target: '', dataDD: oneOccupationIncomeDetailsDD, importFrom: 'OccupationAndIncomeSummary' },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },
     commit: { control: 'ModalCommitButton' },
     list: {
       control: 'ModalButton', modal: listOccupationsModalPD, mode: 'edit',
-      focusOn: [ 'searchList' ],
-      copy: { from: [ '{basePage}', 'fromApi', 'customerOccupationIncomeDetails', '{selectedItem}', 'occupation' ] },
-      copyOnClose: { to: [ '{basePage}', 'fromApi', 'customerOccupationIncomeDetails', '{selectedItem}', 'occupation' ] }
+      focusOn: '~/searchList',
+      copy: { from: '~/fromApi/customerOccupationIncomeDetails[~/selectedItem]/occupation' },
+      copyOnClose: { to: '~/fromApi/customerOccupationIncomeDetails[~/selectedItem]/occupation' }
     },
     otherSourcesOfIncome: {
       control: 'ModalButton', modal: otherSourcesOfIncomeModalPD, mode: 'edit',
-      focusOn: [ 'otherSourcesOfIncome' ]
+      focusOn: '~/otherSourcesOfIncome'
     },
   }
 }
@@ -61,7 +60,7 @@ export const additionalInformationModalPD: ExampleModalPage = {
   pageType: 'ModalPage',
   modes: [ 'edit' ],
   /** How we display the page.*/
-  display: { target: [], dataDD: additionalInformationDD, importFrom: 'OccupationAndIncomeSummary' },
+  display: { target: '', dataDD: additionalInformationDD, importFrom: 'OccupationAndIncomeSummary' },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -75,7 +74,7 @@ export const businessDetailsModalPD: ExampleModalPage = {
   /** This page can only view data */
   modes: [ 'edit' ],
   /** How we display the page.*/
-  display: { target: [], dataDD: businessDetailsMainDD, importFrom: 'OccupationAndIncomeSummary' },
+  display: { target: '', dataDD: businessDetailsMainDD, importFrom: 'OccupationAndIncomeSummary' },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -99,7 +98,7 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
     { modal: otherSourcesOfIncomeModalPD, path: [] },
     { modal: listOccupationsModalPD, path: [] },
   ],
-  display: { target: [ 'fromApi' ], dataDD: occupationAndIncomeFullDomainDD },
+  display: { target: '~/fromApi', dataDD: occupationAndIncomeFullDomainDD },
   /** When the page is selected for the first time this is the initial state */
   initialValue: {
     selectedItem: 0,
@@ -127,55 +126,55 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
 
   /** Binds the rest to 'where it takes place'. So we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
   rest: {
-    occupationAndIncomeRD: { rest: occupationAndIncomeRD, targetFromPath: [ 'fromApi' ], fetcher: true },
-    dropdownsRD: { rest: dropdownsRD, targetFromPath: [ 'dropdowns' ], fetcher: true },
-    additionalInformationRD: { rest: additionalInfoRD, targetFromPath: [ 'additionalInformation' ], fetcher: true },
-    businessDetailsRD: { rest: businessDetailsRD, targetFromPath: [ 'businessDetails' ], fetcher: true },
-    otherSourcesOfIncomeRD: { rest: otherIncomeRD, targetFromPath: [ 'otherSourcesOfIncome' ], fetcher: true }
+    occupationAndIncomeRD: { rest: occupationAndIncomeRD, targetFromPath: '~/fromApi', fetcher: true },
+    dropdownsRD: { rest: dropdownsRD, targetFromPath: '!/dropdowns', fetcher: true },
+    additionalInformationRD: { rest: additionalInfoRD, targetFromPath: '~/additionalInformation', fetcher: true },
+    businessDetailsRD: { rest: businessDetailsRD, targetFromPath: '~/businessDetails', fetcher: true },
+    otherSourcesOfIncomeRD: { rest: otherIncomeRD, targetFromPath: '~/otherSourcesOfIncome', fetcher: true }
   },
   layout: { component: HideButtonsCD, displayParams: { hide: [ 'additionalInfo', 'businessDetails', 'otherSourcesOfIncome', 'list' ] } },
   buttons: {
-    mainOrJoint: { control: "ToggleButton", value: [ 'mainOrJoint' ], buttonText: 'Showing {~/mainOrJoint|Main|Joint}' },
-    nextOccupation: { control: 'ListNextButton', value: [ 'selectedItem' ], list: [ 'fromApi', 'customerOccupationIncomeDetails' ] },
-    prevOccupation: { control: 'ListPrevButton', value: [ 'selectedItem' ], list: [ 'fromApi', 'customerOccupationIncomeDetails' ] },
+    mainOrJoint: { control: "ToggleButton", value: '~/mainOrJoint', buttonText: 'Showing {~/mainOrJoint|Main|Joint}' },
+    nextOccupation: { control: 'ListNextButton', value: '~/selectedItem', list: '~/fromApi/customerOccupationIncomeDetails' },
+    prevOccupation: { control: 'ListPrevButton', value: '~/selectedItem', list: '~/fromApi/customerOccupationIncomeDetails' },
     addEntry: {
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'create',
-      focusOn: [ 'temp' ],
+      focusOn: '~/temp',
       // restOnCommit: { rest: occupationAndIncomeRD, target: ['OccupationAndIncomeSummary'], result: 'refresh', action: 'update' },
       createEmpty: oneOccupationIncomeDetailsDD,
-      setToLengthOnClose: { variable: [ 'selectedItem' ], array: [ 'fromApi', 'customerOccupationIncomeDetails' ] },
-      copyOnClose: { to: [ '{basePage}', 'fromApi', 'customerOccupationIncomeDetails', '[append]' ] }
+      setToLengthOnClose: { variable: '~/selectedItem', array: '!/fromApi/customerOccupationIncomeDetails' },
+      copyOnClose: { to: '~/fromApi/customerOccupationIncomeDetails/[$append]' }
       // restOnCommit: { rest: occupationAndIncomeRD, action: 'update', result: 'refresh', target: [ '' ] }
     },
     edit: {
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'edit',
-      focusOn: [ 'temp' ],
-      copy: { from: [ '{basePage}', 'fromApi', 'customerOccupationIncomeDetails', '{selectedItem}' ] },
-      copyOnClose: { to: [ '{basePage}', 'fromApi', 'customerOccupationIncomeDetails', '{selectedItem}' ] }
+      focusOn: '~/temp',
+      copy: { from: '~/fromApi/customerOccupationIncomeDetails[~/selectedItem]' },
+      copyOnClose: { to: '~/formApi/customerOccupationIncomeDetails/[~/selectedItem]' }
     },
     additionalInfo: {
       control: 'ModalButton', modal: additionalInformationModalPD, mode: 'edit',
-      focusOn: [ 'additionalInformation' ],
+      focusOn: '~/additionalInformation',
     },
     businessDetails: {
       control: 'ModalButton', modal: businessDetailsModalPD, mode: 'edit',
-      focusOn: [ 'businessDetails' ]
+      focusOn: '~/businessDetails'
     },
     otherSourcesOfIncome: {
       control: 'ModalButton', modal: otherSourcesOfIncomeModalPD, mode: 'edit',
-      focusOn: [ 'otherSourcesOfIncome' ]
+      focusOn: '~/otherSourcesOfIncome'
     },
     list: {
       control: 'ModalButton', modal: listOccupationsModalPD, mode: 'edit',
-      focusOn: [ 'occupation' ],
+      focusOn: '~/occupation',
       copy: [
-        { from: [ '{basePage}', 'fromApi', 'customerOccupationIncomeDetails', '{selectedItem}', 'occupation' ], to: [ '{basePage}', 'occupation', 'search' ] },
-        { from: [ '{basePage}', 'fromApi', 'customerOccupationIncomeDetails', '{selectedItem}', 'occupation' ], to: [ '{basePage}', 'occupation', 'selectedOccupationName' ] },
+        { from: '~/fromApi/customerOccupationIncomeDetails/[~/selectedItem]/occupation', to: '~/occupation/search' },
+        { from: '~/fromApi/customerOccupationIncomeDetails/[~/selectedItem]/occupation', to: '`/`occupation/selectedOccupationName' },
         // TODO FROM HAS TO BE AN ARRAY
         // { from: ['{basePage}', 'dropdowns', 'occupationDescriptionResponse' ], to: ['{basePage}', 'occupation', 'searchResults'] },
       ],
       copyOnClose: [
-        { from: [ '{basePage}', 'occupation', 'selectedOccupationName' ], to: [ '{basePage}', 'fromApi', 'customerOccupationIncomeDetails', '{selectedItem}', 'occupation' ] },
+        { from: '~/occupation/selectedOccupationName', to: '~/fromApi/customerOccupationIncomeDetails[~/selectedItem]/occupation' },
       ]
     },
   }

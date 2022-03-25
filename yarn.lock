@@ -2307,6 +2307,93 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@focuson/fetcher@0.4.99":
+  version "0.4.99"
+  resolved "https://registry.yarnpkg.com/@focuson/fetcher/-/fetcher-0.4.99.tgz#a1828b52eb87a1b25bcba6f750f7a87a9c30a99b"
+  integrity sha512-4oppnsFqv+YHOIjfuRrR3hz58Ev/ym1MbARRTwtMzasslw8gQ9dz1BVuyHsIHPycKp5JiUfG+456OZd4VvJEUA==
+  dependencies:
+    "@focuson/lens" "0.4.99"
+    "@focuson/state" "0.4.99"
+    "@focuson/template" "0.4.99"
+
+"@focuson/focuson@0.4.99":
+  version "0.4.99"
+  resolved "https://registry.yarnpkg.com/@focuson/focuson/-/focuson-0.4.99.tgz#07c522a87410b1e6e01c4269429feba794f7c9cb"
+  integrity sha512-Yvhm2wPhl/3sVSaoMensIEwHl4i/vrYLmyMgZfQscZyeKrXWGyvIIqwOCUT3ffDOPMIBNPOjwv8LI1IWHgYraQ==
+  dependencies:
+    "@focuson/pages" "0.4.99"
+
+"@focuson/form_components@0.4.99":
+  version "0.4.99"
+  resolved "https://registry.yarnpkg.com/@focuson/form_components/-/form_components-0.4.99.tgz#8e94bbd20b2efe60aa31d1b865af59fac034ad8e"
+  integrity sha512-9bO5TGX1ZHf2sVctaYSO8e5neGuLoiBKUKi545NS1lQpXkvLghgzeGaQedhw2aw7o4f0ER+2DdZf5zyMS+cWrg==
+  dependencies:
+    "@focuson/focuson" "0.4.99"
+    "@focuson/pages" "0.4.99"
+    "@focuson/state" "0.4.99"
+
+"@focuson/lens@0.4.99":
+  version "0.4.99"
+  resolved "https://registry.yarnpkg.com/@focuson/lens/-/lens-0.4.99.tgz#6c18b92a3a42209617a604a982fb159967453aab"
+  integrity sha512-oIwXtG0++ECoG7I5XHUPpk1RT1psb+1hGozEm4iqI+k4n2FxUT8lZPoK7YVz7OcX8RyzdM5+lx391cJE+nIxeA==
+  dependencies:
+    "@focuson/utils" "0.4.99"
+
+"@focuson/pages@0.4.99":
+  version "0.4.99"
+  resolved "https://registry.yarnpkg.com/@focuson/pages/-/pages-0.4.99.tgz#8a044464ac86e28c03557510da59b6435f72504d"
+  integrity sha512-lR0F0CI3EqaEENHzHvMidyg6B0vqBgZ4DakC5l9jO6t4NvcbsM8hdGgIX2Bl5Hk/ywexRpCy9xl9l9ukxhmXdQ==
+  dependencies:
+    "@focuson/fetcher" "0.4.99"
+    "@focuson/lens" "0.4.99"
+    "@focuson/rest" "0.4.99"
+    "@focuson/state" "0.4.99"
+
+"@focuson/poster@0.4.99":
+  version "0.4.99"
+  resolved "https://registry.yarnpkg.com/@focuson/poster/-/poster-0.4.99.tgz#f92e7bc3db0474fa4db8fbf1bb5b1f8a5a41da48"
+  integrity sha512-jjTLYyrUTBZzlNydn1lyqtv/yHIHPlYMv5VGgeFNmYXYFxXM2IfDIBzTVcU30yUQ3snoN29gZZ/Ym8jvABT7ng==
+  dependencies:
+    "@focuson/fetcher" "0.4.99"
+    "@focuson/lens" "0.4.99"
+
+"@focuson/rest@0.4.99":
+  version "0.4.99"
+  resolved "https://registry.yarnpkg.com/@focuson/rest/-/rest-0.4.99.tgz#fa0061cc1c10930441f6bf5b8730faa0cc7ce1d1"
+  integrity sha512-HqlOc7zsJMyL5MCQTL/UDnOFh/vndNo7RDlc7u29LeV6Lhi2kLUlWwRRm4TpodTjGSVUJO+U3hkIB+pP2lLEpA==
+  dependencies:
+    "@focuson/fetcher" "0.4.99"
+    "@focuson/lens" "0.4.99"
+
+"@focuson/state@0.4.99":
+  version "0.4.99"
+  resolved "https://registry.yarnpkg.com/@focuson/state/-/state-0.4.99.tgz#52dfd8869280d4f44e9b2df92e099a15d2723a40"
+  integrity sha512-A9HlXFZnNTyMZUf1AvWczlbOZOAPDeKSOdWvJIY7JJpMO+o2uv5YXTDbS2KGhe1wVKmCEC1f5lIoHtQyzsI32A==
+  dependencies:
+    "@focuson/lens" "0.4.99"
+
+"@focuson/stories@0.4.99":
+  version "0.4.99"
+  resolved "https://registry.yarnpkg.com/@focuson/stories/-/stories-0.4.99.tgz#4e11cc56d27857ef0370010414e05ee6e85d7b40"
+  integrity sha512-XW1tH7iWE1ziBnXnijt3Hf44X/zWj5aqiMvxfYmgVhkDpM6+8gfYRc4u6bKG+BMwPh/FEN95EtRQDVZjwdRGFw==
+  dependencies:
+    "@focuson/poster" "0.4.99"
+    react "^17.0.1"
+    react-dom "^17.0.1"
+    typescript "^4.1.5"
+
+"@focuson/template@0.4.99":
+  version "0.4.99"
+  resolved "https://registry.yarnpkg.com/@focuson/template/-/template-0.4.99.tgz#3a4661199b748fd0de66a29693353d7e200a0a39"
+  integrity sha512-tAIAyviwnPMAhrvzdjmVkFOJd2SBvBSG/9CIUkgBSygTeVczkPYuB95NPv/7cUTFf/qLb53ENgw4UhRAkRMC3A==
+
+"@focuson/utils@0.4.99":
+  version "0.4.99"
+  resolved "https://registry.yarnpkg.com/@focuson/utils/-/utils-0.4.99.tgz#3b41b62f6c035bdf7a374a05f05d13aecb51d7a8"
+  integrity sha512-EOSIKbUhWKOt+tk4Zu8mBLS1vnnK4ehTXQoWj+1zMd4FMp8cldde5lDScO5Ofp/vo0QObdkAd3ftlEyIXPsi4g==
+  dependencies:
+    node-fetch "2.6.1"
+
 "@gar/promisify@^1.0.1":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.2.tgz#30aa825f11d438671d585bd44e7fd564535fc210"

@@ -8,7 +8,7 @@ import { LayoutCd } from "../../common/componentsD";
 export const PostCodeModalPage: ExampleModalPage = {
   name: "PostCodeSearch",
   pageType: "ModalPage",
-  display: { dataDD: postCodeSearchDataD, target: [], importFrom: 'PostCodeDemo' },
+  display: { dataDD: postCodeSearchDataD, target: '~/', importFrom: 'PostCodeDemo' },
   modes: [ 'edit' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -19,7 +19,7 @@ export const PostCodeModalPage: ExampleModalPage = {
 export const PostCodeMainPage: ExampleMainPage = {
   name: "PostCodeDemo",
   pageType: "MainPage",
-  display: { dataDD: nameAndAddressDataD, target: [ 'main' ] },
+  display: { dataDD: nameAndAddressDataD, target: '~/main' },
   domain: {
     main: { dataDD: nameAndAddressDataD },
     postcode: { dataDD: postCodeSearchDataD },
@@ -29,22 +29,23 @@ export const PostCodeMainPage: ExampleMainPage = {
   modals: [ { modal: PostCodeModalPage, path: [ 'postcode' ] } ],
   modes: [ 'edit' ],
   rest: {
-    postcode: { rest: postcodeRestD, targetFromPath: [ 'postcode', 'searchResults' ], fetcher: true },
-    address: { rest: addressRestD, targetFromPath: [ 'main' ] }
+    postcode: { rest: postcodeRestD, targetFromPath: '~/postcode/searchResults', fetcher: true },
+    address: { rest: addressRestD, targetFromPath: '~/main' }
   },
   buttonOrder: [ 'save' ],//hide the search button
   layout: { component: HideButtonsCD, displayParams: { hide: [ 'search' ] } },
   buttons: {
     search: {
       control: 'ModalButton', modal: PostCodeModalPage, mode: 'edit',
-      focusOn: [ 'postcode' ],
-      copy: { from: [ '{basePage}', 'main', 'postcode' ], to: [ '{basePage}', 'postcode', 'search' ] },
+      focusOn: '~/postcode',
+      copy: { from: '~/main/postcode', to: '~/postcode/search' },
       copyOnClose: [
-        { from: [ '{basePage}', 'postcode', 'addressResults', 'line1' ], to: [ '{basePage}', 'main', 'line1' ] },
-        { from: [ '{basePage}', 'postcode', 'addressResults', 'line2' ], to: [ '{basePage}', 'main', 'line2' ] },
-        { from: [ '{basePage}', 'postcode', 'addressResults', 'line3' ], to: [ '{basePage}', 'main', 'line3' ] },
-        { from: [ '{basePage}', 'postcode', 'addressResults', 'line4' ], to: [ '{basePage}', 'main', 'line4' ] },
-        { from: [ '{basePage}', 'postcode', 'search' ], to: [ '{basePage}', 'main', 'postcode' ] },
+        { from: '~/postcode/addressResults/line1', to: '~/main/line1' },
+        { from: '~/postcode/addressResults/line2', to: '~/main/line2' },
+        { from: '~/postcode/addressResults/line3', to: '~/main/line3' },
+        { from: '~/postcode/addressResults/line4', to: '~/main/line4' },
+        { from: '~/postcode/addressResults/line4', to: '~/main/line4' },
+        { from: '~/postcode/search', to: '`~/main/postcode' }
       ]
     },
     save: {
