@@ -40,7 +40,7 @@ const makeButtonGuardVariableFrom = <B extends ButtonD, G extends GuardWithCondi
   if ( isGuardButton<B, G> ( button ) ) {
     const guardCreator = maker[ button.by.condition ]
     if ( !guardCreator ) throw Error ( `Don't know how to makeButtonGuardVariableFrom(${name},${button.by.condition} in page ${p.name}` )
-    return [ guardCreator.makeGuardVariable ( name, button.by ) ]
+    return [ guardCreator.makeGuardVariable ( params, p, name, button.by ) ]
   }
   return []
 };
@@ -59,7 +59,7 @@ export function makeButtonsVariable<B extends ButtonD, G> ( params: TSParams, ma
 }
 
 export function addButtonsFromVariables<B extends ButtonD, G> ( p: PageD<any, any> ): string[] {
-  let keys =Object.keys ( p.buttons );
+  let keys = Object.keys ( p.buttons );
   return keys.map ( name => `{ buttons.${name} } ` )
 
 }

@@ -47,7 +47,20 @@ export const stateFocusQueryWithTildaFromPage = <B, G> ( errorPrefix: string, pa
     throw e
   }
 }
-
+export const stateFocusQueryWithEmptyFromHere = <B, G> ( errorPrefix: string, params: TSParams, p: PageD<B, G>, path: string ) => {
+  try {
+    return parsePath ( path, stateCodeBuilder ( {
+      '/': `.copyWithLens(Lenses.identity<${params.domainsFile}.${pageDomainName ( p )}>())`,
+      '': ``,
+    }, 'focusOn' ) )
+  } catch ( e: any ) {
+    console.error ( errorPrefix )
+    throw e
+  }
+}
 export const stateForButton = <B, G> ( { parent, params, button, name }: CreateButtonData<B, G>, buttonName: string ) =>
   ( path: string ) => `fullState${stateFocusQueryWithTildaFromPage ( `${buttonName} page ${parent}${name})`, params, parent, path )}`;
+
+export const stateForGuardVariable = <B, G> ( page: PageD<B, G>, params: TSParams, guardName: string ) =>
+  ( path: string ) => `state${stateFocusQueryWithEmptyFromHere ( `Page ${page.name} guard variable ${guardName}`, params, page, path )}`;
 

@@ -162,7 +162,7 @@ export const createReactComponent = <B, G extends GuardWithCondition> ( params: 
   const guardStrings = isDataDd ( dataD ) ? sortedEntries ( dataD.guards ).map ( ( [ name, guard ] ) => {
     const maker = makeGuard[ guard.condition ]
     if ( !maker ) throw new Error ( `Don't know how to process guard with name ${name}: ${JSON.stringify ( guard )}` )
-    return maker.makeGuardVariable ( name, guard )
+    return maker.makeGuardVariable ( params, page, name, guard )
   } ) : []
   const layout = dataD.layout
   const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( `createReactComponent-layout ${dataD.name}`, [], dataD, '<>', '</>' );

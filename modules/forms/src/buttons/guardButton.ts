@@ -1,29 +1,33 @@
 import { ButtonD } from "./allButtons";
 import { NameAnd } from "@focuson/utils";
 import { guardName } from "../codegen/names";
+import { stateForGuardVariable } from "../codegen/lens";
+import { PageD } from "../common/pageD";
+import { TSParams } from "../codegen/config";
+
 
 export type AllGuards = LocalVariableGuard | LocalVariableMoreThanZero | LocalVariableLessThanLengthMinusOne | LocalVariableValueEquals<any>
 
 export const AllGuardCreator: MakeGuard<AllGuards> = {
   in: {
     imports: [],
-    makeGuardVariable: ( name, guard: LocalVariableGuard ) =>
-      `const ${guardName ( name )} = state.chainLens(Lenses.fromPath(${JSON.stringify ( guard.path )})).optJsonOr([]);`
+    makeGuardVariable: ( params, page, name, guard: LocalVariableGuard ) =>
+      `const ${guardName ( name )} = ${stateForGuardVariable ( page, params, name ) ( guard.path )}.optJson();`
   },
   equals: {
     imports: [],
-    makeGuardVariable: ( name, guard: LocalVariableValueEquals<any> ) =>
+    makeGuardVariable: ( params, page, name, guard: LocalVariableValueEquals<any> ) =>
       `const ${guardName ( name )} = state.chainLens(Lenses.fromPath(${JSON.stringify ( guard.path )})).json() === ${guard.value};`
   },
 
   ">0": {
     imports: [],
-    makeGuardVariable: ( name, guard: LocalVariableMoreThanZero ) =>
+    makeGuardVariable: ( params, page, name, guard: LocalVariableMoreThanZero ) =>
       `const ${guardName ( name )} = pageState(state)().chainLens<number>(Lenses.fromPath(${JSON.stringify ( guard.path )})).optJsonOr(0) >0`
   },
   "<arrayEnd": {
     imports: [],
-    makeGuardVariable: ( name, guard: LocalVariableLessThanLengthMinusOne ) =>
+    makeGuardVariable: ( params, page, name, guard: LocalVariableLessThanLengthMinusOne ) =>
       `const ${guardName ( name )} =  pageState(state)().chainLens<number>(Lenses.fromPath(${JSON.stringify ( guard.varPath )})).optJsonOr(0) <  pageState(state)().chainLens<string[]>(Lenses.fromPath(${JSON.stringify ( guard.arrayPath )})).optJsonOr([]).length - 1`
   }
 }
@@ -36,7 +40,7 @@ export type MakeGuard<G> = NameAnd<GuardCreator<G>>
 
 export interface GuardCreator<G> {
   imports: string[];
-  makeGuardVariable: ( name: string, guard: G ) => string
+  makeGuardVariable: ( params: TSParams, page: PageD<any, G>, name: string, guard: G ) => string
 
 }
 
