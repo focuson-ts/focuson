@@ -89,7 +89,10 @@ export function stateCodeBuilder ( initials: NameAnd<string> ): PathBuilder<stri
 
 
 export function processPath<Build> ( s: ParseState<Build>, p: PathBuilder<Build>, expectBracket: boolean ) {
-  if ( s.tokens.length == 0 ) return
+  if ( s.tokens.length == 0 ) {
+    s.build = p.zero ( '' );
+    return
+  }
   const initial = s.tokens[ s.tokens.length - 1 ]
   let hasSpecificInitial = initial === '/' || initial === '~';
   const actualInitial = hasSpecificInitial ? initial : ''

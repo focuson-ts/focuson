@@ -4,13 +4,13 @@ import { modalName, pageComponentName, pageInState, renderFileName } from "./nam
 import { addStringToEndOfAllButLast } from "./codegen";
 import { makeEmptyData } from "./makeSample";
 import { safeArray } from "@focuson/utils";
-import { Lenses, Optional } from "@focuson/lens";
-import { prefixToLensFromBasePath ,prefixToLensFromRoot} from "@focuson/pages";
+import { parsePath } from "@focuson/lens";
+import { pathBuilderForLensIncPage } from "./lens";
 
 
 export const makeMainPage = <G> ( params: TSParams ) => <B> ( p: MainPageD<B, G> ): string[] => {
   function makeEmpty () {
-    const lens: Optional<any, any> = Lenses.fromPathStringFor<any, any> ( prefixToLensFromBasePath ) ( p.display.target )
+    const lens = parsePath ( p.display.target, pathBuilderForLensIncPage ( p.name ) );
     return lens.set ( {}, makeEmptyData ( p.display.dataDD ) )
   }
   const initialValue = p.initialValue === 'empty' ? makeEmpty () : p.initialValue
