@@ -65,7 +65,7 @@ export const defaultRestAction: RestTypeDetails = {
   'list': { name: 'list', method: 'GET', query: 'Query', params: {}, output: { needsObj: true, needsBrackets: true, needsPling: true }, graphQPrefix: 'list', graphQlPostfix: '' },
   'update': { name: 'update', method: 'PUT', query: 'Mutation', params: { needsId: true, needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'update', graphQlPostfix: '' },
   'create': { name: 'create', method: 'POST', query: 'Mutation', params: { needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'create', graphQlPostfix: '' },
-  'delete': { name: 'delete', method: 'DELETE', query: 'Mutation', params: { needsId: true }, output: {needsObj: true}, graphQPrefix: 'delete', graphQlPostfix: '' },
+  'delete': { name: 'delete', method: 'DELETE', query: 'Mutation', params: { needsId: true }, output: { needsObj: true }, graphQPrefix: 'delete', graphQlPostfix: '' },
 }
 
 
@@ -134,11 +134,14 @@ export function unique<T> ( ts: T[] | undefined, tagFn: ( t: T ) => string ): T[
   return result
 }
 
-export function makeCommonParamsValueForTest<G> ( r: RestD<G>, restAction: RestAction ) {
+export function makeParamValueForTest<G> ( r: RestD<G>, restAction: RestAction ) {
   let visibleParams = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
-  const paramsInCorrectOrder = [...visibleParams.filter(([name,p]) => isRestLens(p)), ...visibleParams.filter(([name,p]) => !isRestLens(p))]
-  return Object.fromEntries(paramsInCorrectOrder.map ( ( [ name, v ] ) => [ name, v.testValue ] ))
-
+  const paramsInCorrectOrder = [ ...visibleParams.filter ( ( [ name, p ] ) => isRestLens ( p ) ), ...visibleParams.filter ( ( [ name, p ] ) => !isRestLens ( p ) ) ]
+  return Object.fromEntries ( paramsInCorrectOrder.map ( ( [ name, v ] ) => [ name, v.testValue ] ) )
+}
+export function makeCommonValueForTest<G> ( r: RestD<G>, restAction: RestAction ) {
+  let visibleParams = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
+  return Object.fromEntries ( visibleParams.filter ( ( [ name, p ] ) => isCommonLens ( p ) ).map ( ( [ name, v ] ) => [ name, v.testValue ] ) )
 }
 
 export function findIds<G> ( rest: RestD<G> ) {

@@ -3,8 +3,11 @@ import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD"
 import { paramsForTest } from "./makeJavaResolvers.spec";
 import { defaultRestAction } from "../common/restD";
 import { PostCodeMainPage } from "../example/addressSearch/addressSearch.pageD";
+import { makeRestPact } from "../codegen/makePacts2";
 
 describe ( "makePacts", () => {
+
+
   it ( "should make a pact", () => {
 
     expect ( makeFetcherPact ( paramsForTest, PostCodeMainPage, PostCodeMainPage.rest.postcode, defaultRestAction.get, { main: '.', backup: '.' } ) ).toEqual ( [

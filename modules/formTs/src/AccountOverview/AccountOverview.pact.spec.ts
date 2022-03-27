@@ -3,7 +3,6 @@ import { loadTree,wouldLoad,FetcherTree } from "@focuson/fetcher";
 import { pactWith } from "jest-pact";
 import { rest, RestCommand, restL } from "@focuson/rest";
 import { simpleMessagesL } from "@focuson/pages";
-import { applyToTemplate } from "@focuson/template";
 import { Lenses, massTransform } from "@focuson/lens";
 import * as samples from '../AccountOverview/AccountOverview.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
@@ -15,505 +14,466 @@ import {AccountOverviewHistoryFetcher} from './AccountOverview.fetchers'
 import {AccountOverviewExcessInfoFetcher} from './AccountOverview.fetchers'
 import {AccountOverviewFetcher} from './AccountOverview.fetchers'
 import {AccountOverviewReasonFetcher} from './AccountOverview.fetchers'
-describe("To support manually running the tests", () =>{it ("should support AccountOverview", () =>{})})
-//GetFetcher pact test
-pactWith ( { consumer: 'AccountAllFlags', provider: 'AccountAllFlagsProvider', cors: true }, provider => {
-  describe ( 'AccountOverview - fetcher', () => {
-    it ( 'should have a get fetcher for AccountAllFlags', async () => {
-      await provider.addInteraction ( {
-        state: 'default',
-        uponReceiving: 'AccountOverview should have a get fetcher for AccountAllFlags',
-        withRequest: {
-          method: 'GET',
-          path: '/api/accountOverview/flags',
-          query:{"accountId":"accId","customerId":"custId"}
-        },
-        willRespondWith: {
-          status: 200,
-          body: samples.sampleAccountAllFlags0
-        },
-      } )
-      const ids = {
-      }
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }] , AccountOverview: { }}
-      const withIds = massTransform(firstState,)
-       const f: FetcherTree<FState> = { fetchers: [ AccountAllFlagsFetcher ( identityL.focusQuery ( 'AccountOverview' ), commonIds ) ], children: [] }
-      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
-      let expectedRaw: any = {
-        ... firstState,
-         AccountOverview: {makeTargetFor ( path )//needs fixing:samples.sampleAccountAllFlags0closeTargetFor ( path ) //needs fixing ,
-        tags: { AccountOverview_~_/_a_c_c_o_u_n_t_F_l_a_g_s:["accId","custId"]}
-      };
-      const expected = massTransform(expectedRaw,)
-      expect ( newState ).toEqual ( expected )
-    } )
-  } )
-})
-//Rest get pact test
-pactWith ( { consumer: 'AccountAllFlags', provider: 'AccountAllFlagsProvider', cors: true }, provider => {
-  describe ( 'AccountOverview - rest get', () => {
-    it ( 'should have a get rest for AccountAllFlags', async () => {
-      const restCommand: RestCommand = { name: 'AccountOverview_AccountAllFlagsRestDetails', restAction: 'get' }
-      const firstState: FState = {
-        ...emptyState, restCommands: [ restCommand ],
-      AccountOverview:{},
-        pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
-      }
-      const url = applyToTemplate('/api/accountOverview/flags', firstState.CommonIds).join('')
-      await provider.addInteraction ( {
-        state: 'default',
-        uponReceiving: 'AccountOverview should have a get rest for AccountAllFlags',
-        withRequest: {
-          method: 'GET',
-          path: url,
-          query:{"accountId":"accId","customerId":"custId"}
-          //no body for get
-        },
-        willRespondWith: {
-          status: 200,
-          body: samples.sampleAccountAllFlags0
-        },
-      } )
-      const ids = {
-      }
-      const withIds = massTransform(firstState,)
-      let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], AccountOverview: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleAccountAllFlags0 closeTargetFor ( r.targetFromPath );//needs fixing }
-      const expected = massTransform(rawExpected,)
-      expect ( { ...newState, messages: []}).toEqual ( expected )
-      expect ( newState.messages.length ).toEqual ( 1 )
-      expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
-    } )
-  } )
-})
-//GetFetcher pact test
-pactWith ( { consumer: 'ArrearsDetails', provider: 'ArrearsDetailsProvider', cors: true }, provider => {
-  describe ( 'AccountOverview - fetcher', () => {
-    it ( 'should have a get fetcher for ArrearsDetails', async () => {
-      await provider.addInteraction ( {
-        state: 'default',
-        uponReceiving: 'AccountOverview should have a get fetcher for ArrearsDetails',
-        withRequest: {
-          method: 'GET',
-          path: '/api/accountOverview/arrearsDetails/current',
-          query:{"startDate":"2020-01-20","accountId":"accId","customerId":"custId"}
-        },
-        willRespondWith: {
-          status: 200,
-          body: samples.sampleArrearsDetails0
-        },
-      } )
-      const ids = {
-        startDate: Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('currentSelectedExcessHistory').focusQuery('start')
-      }
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }] , AccountOverview: { }}
-      const withIds = massTransform(firstState,[ids.startDate, () =>"2020-01-20"])
-       const f: FetcherTree<FState> = { fetchers: [ currentArrearsDetailsFetcher ( identityL.focusQuery ( 'AccountOverview' ), commonIds ) ], children: [] }
-      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
-      let expectedRaw: any = {
-        ... firstState,
-         AccountOverview: {makeTargetFor ( path )//needs fixing:samples.sampleArrearsDetails0closeTargetFor ( path ) //needs fixing ,
-        tags: { AccountOverview_~_/_a_r_r_e_a_r_s_D_e_t_a_i_l_s_C_u_r_r_e_n_t:["2020-01-20","accId","custId"]}
-      };
-      const expected = massTransform(expectedRaw,[ids.startDate, () =>"2020-01-20"])
-      expect ( newState ).toEqual ( expected )
-    } )
-  } )
-})
-//Rest get pact test
-pactWith ( { consumer: 'ArrearsDetails', provider: 'ArrearsDetailsProvider', cors: true }, provider => {
-  describe ( 'AccountOverview - rest get', () => {
-    it ( 'should have a get rest for ArrearsDetails', async () => {
-      const restCommand: RestCommand = { name: 'currentAccountOverview_ArrearsDetailsRestDetails', restAction: 'get' }
-      const firstState: FState = {
-        ...emptyState, restCommands: [ restCommand ],
-      AccountOverview:{},
-        pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
-      }
-      const url = applyToTemplate('/api/accountOverview/arrearsDetails/current', firstState.CommonIds).join('')
-      await provider.addInteraction ( {
-        state: 'default',
-        uponReceiving: 'AccountOverview should have a get rest for ArrearsDetails',
-        withRequest: {
-          method: 'GET',
-          path: url,
-          query:{"startDate":"2020-01-20","accountId":"accId","customerId":"custId"}
-          //no body for get
-        },
-        willRespondWith: {
-          status: 200,
-          body: samples.sampleArrearsDetails0
-        },
-      } )
-      const ids = {
-        startDate: Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('currentSelectedExcessHistory').focusQuery('start')
-      }
-      const withIds = massTransform(firstState,[ids.startDate, () =>"2020-01-20"])
-      let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], AccountOverview: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleArrearsDetails0 closeTargetFor ( r.targetFromPath );//needs fixing }
-      const expected = massTransform(rawExpected,[ids.startDate, () =>"2020-01-20"])
-      expect ( { ...newState, messages: []}).toEqual ( expected )
-      expect ( newState.messages.length ).toEqual ( 1 )
-      expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
-    } )
-  } )
-})
-//GetFetcher pact test
-pactWith ( { consumer: 'ArrearsDetails', provider: 'ArrearsDetailsProvider', cors: true }, provider => {
-  describe ( 'AccountOverview - fetcher', () => {
-    it ( 'should have a get fetcher for ArrearsDetails', async () => {
-      await provider.addInteraction ( {
-        state: 'default',
-        uponReceiving: 'AccountOverview should have a get fetcher for ArrearsDetails',
-        withRequest: {
-          method: 'GET',
-          path: '/api/accountOverview/arrearsDetails/previous',
-          query:{"startDate":"2020-01-20","accountId":"accId","customerId":"custId"}
-        },
-        willRespondWith: {
-          status: 200,
-          body: samples.sampleArrearsDetails0
-        },
-      } )
-      const ids = {
-        startDate: Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('currentSelectedExcessHistory').focusQuery('start')
-      }
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }] , AccountOverview: { }}
-      const withIds = massTransform(firstState,[ids.startDate, () =>"2020-01-20"])
-       const f: FetcherTree<FState> = { fetchers: [ previousArrearsDetailsFetcher ( identityL.focusQuery ( 'AccountOverview' ), commonIds ) ], children: [] }
-      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
-      let expectedRaw: any = {
-        ... firstState,
-         AccountOverview: {makeTargetFor ( path )//needs fixing:samples.sampleArrearsDetails0closeTargetFor ( path ) //needs fixing ,
-        tags: { AccountOverview_~_/_a_r_r_e_a_r_s_D_e_t_a_i_l_s_P_r_e_v_i_o_u_s:["2020-01-20","accId","custId"]}
-      };
-      const expected = massTransform(expectedRaw,[ids.startDate, () =>"2020-01-20"])
-      expect ( newState ).toEqual ( expected )
-    } )
-  } )
-})
-//Rest get pact test
-pactWith ( { consumer: 'ArrearsDetails', provider: 'ArrearsDetailsProvider', cors: true }, provider => {
-  describe ( 'AccountOverview - rest get', () => {
-    it ( 'should have a get rest for ArrearsDetails', async () => {
-      const restCommand: RestCommand = { name: 'previousAccountOverview_ArrearsDetailsRestDetails', restAction: 'get' }
-      const firstState: FState = {
-        ...emptyState, restCommands: [ restCommand ],
-      AccountOverview:{},
-        pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
-      }
-      const url = applyToTemplate('/api/accountOverview/arrearsDetails/previous', firstState.CommonIds).join('')
-      await provider.addInteraction ( {
-        state: 'default',
-        uponReceiving: 'AccountOverview should have a get rest for ArrearsDetails',
-        withRequest: {
-          method: 'GET',
-          path: url,
-          query:{"startDate":"2020-01-20","accountId":"accId","customerId":"custId"}
-          //no body for get
-        },
-        willRespondWith: {
-          status: 200,
-          body: samples.sampleArrearsDetails0
-        },
-      } )
-      const ids = {
-        startDate: Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('currentSelectedExcessHistory').focusQuery('start')
-      }
-      const withIds = massTransform(firstState,[ids.startDate, () =>"2020-01-20"])
-      let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], AccountOverview: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleArrearsDetails0 closeTargetFor ( r.targetFromPath );//needs fixing }
-      const expected = massTransform(rawExpected,[ids.startDate, () =>"2020-01-20"])
-      expect ( { ...newState, messages: []}).toEqual ( expected )
-      expect ( newState.messages.length ).toEqual ( 1 )
-      expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
-    } )
-  } )
-})
-//GetFetcher pact test
-pactWith ( { consumer: 'AccountOverviewHistory', provider: 'AccountOverviewHistoryProvider', cors: true }, provider => {
-  describe ( 'AccountOverview - fetcher', () => {
-    it ( 'should have a get fetcher for AccountOverviewHistory', async () => {
-      await provider.addInteraction ( {
-        state: 'default',
-        uponReceiving: 'AccountOverview should have a get fetcher for AccountOverviewHistory',
-        withRequest: {
-          method: 'GET',
-          path: '/api/accountOverview/excessHistory',
-          query:{"accountId":"accId","customerId":"custId"}
-        },
-        willRespondWith: {
-          status: 200,
-          body: samples.sampleAccountOverviewHistory0
-        },
-      } )
-      const ids = {
-      }
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }] , AccountOverview: { }}
-      const withIds = massTransform(firstState,)
-       const f: FetcherTree<FState> = { fetchers: [ AccountOverviewHistoryFetcher ( identityL.focusQuery ( 'AccountOverview' ), commonIds ) ], children: [] }
-      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
-      let expectedRaw: any = {
-        ... firstState,
-         AccountOverview: {makeTargetFor ( path )//needs fixing:samples.sampleAccountOverviewHistory0closeTargetFor ( path ) //needs fixing ,
-        tags: { AccountOverview_~_/_e_x_c_e_s_s_H_i_s_t_o_r_y:["accId","custId"]}
-      };
-      const expected = massTransform(expectedRaw,)
-      expect ( newState ).toEqual ( expected )
-    } )
-  } )
-})
-//Rest get pact test
-pactWith ( { consumer: 'AccountOverviewHistory', provider: 'AccountOverviewHistoryProvider', cors: true }, provider => {
-  describe ( 'AccountOverview - rest get', () => {
-    it ( 'should have a get rest for AccountOverviewHistory', async () => {
-      const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewHistoryRestDetails', restAction: 'get' }
-      const firstState: FState = {
-        ...emptyState, restCommands: [ restCommand ],
-      AccountOverview:{},
-        pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
-      }
-      const url = applyToTemplate('/api/accountOverview/excessHistory', firstState.CommonIds).join('')
-      await provider.addInteraction ( {
-        state: 'default',
-        uponReceiving: 'AccountOverview should have a get rest for AccountOverviewHistory',
-        withRequest: {
-          method: 'GET',
-          path: url,
-          query:{"accountId":"accId","customerId":"custId"}
-          //no body for get
-        },
-        willRespondWith: {
-          status: 200,
-          body: samples.sampleAccountOverviewHistory0
-        },
-      } )
-      const ids = {
-      }
-      const withIds = massTransform(firstState,)
-      let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], AccountOverview: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleAccountOverviewHistory0 closeTargetFor ( r.targetFromPath );//needs fixing }
-      const expected = massTransform(rawExpected,)
-      expect ( { ...newState, messages: []}).toEqual ( expected )
-      expect ( newState.messages.length ).toEqual ( 1 )
-      expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
-    } )
-  } )
-})
-//GetFetcher pact test
-pactWith ( { consumer: 'AccountOverviewExcessInfo', provider: 'AccountOverviewExcessInfoProvider', cors: true }, provider => {
-  describe ( 'AccountOverview - fetcher', () => {
-    it ( 'should have a get fetcher for AccountOverviewExcessInfo', async () => {
-      await provider.addInteraction ( {
-        state: 'default',
-        uponReceiving: 'AccountOverview should have a get fetcher for AccountOverviewExcessInfo',
-        withRequest: {
-          method: 'GET',
-          path: '/api/accountOverview/excessInfo',
-          query:{"accountId":"accId","customerId":"custId"}
-        },
-        willRespondWith: {
-          status: 200,
-          body: samples.sampleAccountOverviewExcessInfo0
-        },
-      } )
-      const ids = {
-      }
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }] , AccountOverview: { }}
-      const withIds = massTransform(firstState,)
-       const f: FetcherTree<FState> = { fetchers: [ AccountOverviewExcessInfoFetcher ( identityL.focusQuery ( 'AccountOverview' ), commonIds ) ], children: [] }
-      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
-      let expectedRaw: any = {
-        ... firstState,
-         AccountOverview: {makeTargetFor ( path )//needs fixing:samples.sampleAccountOverviewExcessInfo0closeTargetFor ( path ) //needs fixing ,
-        tags: { AccountOverview_~_/_e_x_c_e_s_s_I_n_f_o:["accId","custId"]}
-      };
-      const expected = massTransform(expectedRaw,)
-      expect ( newState ).toEqual ( expected )
-    } )
-  } )
-})
-//Rest get pact test
-pactWith ( { consumer: 'AccountOverviewExcessInfo', provider: 'AccountOverviewExcessInfoProvider', cors: true }, provider => {
-  describe ( 'AccountOverview - rest get', () => {
-    it ( 'should have a get rest for AccountOverviewExcessInfo', async () => {
-      const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewExcessInfoRestDetails', restAction: 'get' }
-      const firstState: FState = {
-        ...emptyState, restCommands: [ restCommand ],
-      AccountOverview:{},
-        pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
-      }
-      const url = applyToTemplate('/api/accountOverview/excessInfo', firstState.CommonIds).join('')
-      await provider.addInteraction ( {
-        state: 'default',
-        uponReceiving: 'AccountOverview should have a get rest for AccountOverviewExcessInfo',
-        withRequest: {
-          method: 'GET',
-          path: url,
-          query:{"accountId":"accId","customerId":"custId"}
-          //no body for get
-        },
-        willRespondWith: {
-          status: 200,
-          body: samples.sampleAccountOverviewExcessInfo0
-        },
-      } )
-      const ids = {
-      }
-      const withIds = massTransform(firstState,)
-      let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], AccountOverview: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleAccountOverviewExcessInfo0 closeTargetFor ( r.targetFromPath );//needs fixing }
-      const expected = massTransform(rawExpected,)
-      expect ( { ...newState, messages: []}).toEqual ( expected )
-      expect ( newState.messages.length ).toEqual ( 1 )
-      expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
-    } )
-  } )
-})
+
 //GetFetcher pact test
 pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
-  describe ( 'AccountOverview - fetcher', () => {
-    it ( 'should have a get fetcher for AccountOverview', async () => {
-      await provider.addInteraction ( {
-        state: 'default',
-        uponReceiving: 'AccountOverview should have a get fetcher for AccountOverview',
-        withRequest: {
-          method: 'GET',
-          path: '/api/accountOverview',
-          query:{"accountId":"accId","customerId":"custId"}
-        },
-        willRespondWith: {
-          status: 200,
-          body: samples.sampleAccountOverview0
-        },
+      describe ( 'AccountOverview - accountFlags - fetcher', () => {
+        it ( 'should have a  fetcher for AccountAllFlags', async () => {
+          await provider.addInteraction ( {
+            state: 'default',
+            uponReceiving: 'A request for AccountAllFlags',
+            withRequest: {
+              method: 'GET',
+              path: '/api/accountOverview/flags',
+              query:{"accountId":"accId","customerId":"custId"}
+            },
+            willRespondWith: {
+              status: 200,
+              body: samples.sampleAccountAllFlags0
+            },
+          } )
+          const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
+          const f: FetcherTree<FState> = { fetchers: [ AccountAllFlagsFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) ], children: [] }
+          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+          let expectedRaw: any = {
+            ... firstState,
+              tags: {'AccountOverview_~/accountFlags': ["accId","custId"]}
+        };
+        const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('accountFlags').set ( expectedRaw, samples.sampleAccountAllFlags0 )
+          expect ( newState ).toEqual ( expected )
+        } )
+        } )
+      })
+
+//Rest accountFlags get pact test for AccountOverview
+  pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
+    describe ( 'AccountOverview - accountFlags rest get', () => {
+      it ( 'should have a get rest for AccountAllFlags', async () => {
+        const restCommand: RestCommand = { name: 'AccountOverview_AccountAllFlagsRestDetails', restAction: 'get' }
+        const firstState: FState = {
+          ...emptyState, restCommands: [ restCommand ],
+          CommonIds: {"accountId":"accId","customerId":"custId"},
+          pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
+        }
+        await provider.addInteraction ( {
+          state: 'default',
+          uponReceiving: 'a rest for AccountOverview accountFlags get',
+          withRequest: {
+            method: 'GET',
+            path:  '/api/accountOverview/flags',
+            query:{"accountId":"accId","customerId":"custId"},
+            //no body needed for get,
+          },
+          willRespondWith: {
+            status: 200,
+            //no body needed for get
+          },
+        } )
+        const withIds = massTransform(firstState,)
+        let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
+        let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+        const rawExpected:any = { ...firstState, restCommands: []}
+        const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('accountFlags').set ( rawExpected, samples.sampleAccountAllFlags0 )
+        expect ( { ...newState, messages: []}).toEqual ( expected )
+        expect ( newState.messages.length ).toEqual ( 1 )
+        expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
       } )
-      const ids = {
-      }
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }] , AccountOverview: { }}
-      const withIds = massTransform(firstState,)
-       const f: FetcherTree<FState> = { fetchers: [ AccountOverviewFetcher ( identityL.focusQuery ( 'AccountOverview' ), commonIds ) ], children: [] }
-      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
-      let expectedRaw: any = {
-        ... firstState,
-         AccountOverview: {makeTargetFor ( path )//needs fixing:samples.sampleAccountOverview0closeTargetFor ( path ) //needs fixing ,
-        tags: { AccountOverview_~_/_m_a_i_n:["accId","custId"]}
-      };
-      const expected = massTransform(expectedRaw,)
-      expect ( newState ).toEqual ( expected )
-    } )
-  } )
-})
-//Rest get pact test
-pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
-  describe ( 'AccountOverview - rest get', () => {
-    it ( 'should have a get rest for AccountOverview', async () => {
-      const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewRestDetails', restAction: 'get' }
-      const firstState: FState = {
-        ...emptyState, restCommands: [ restCommand ],
-      AccountOverview:{},
-        pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
-      }
-      const url = applyToTemplate('/api/accountOverview', firstState.CommonIds).join('')
-      await provider.addInteraction ( {
-        state: 'default',
-        uponReceiving: 'AccountOverview should have a get rest for AccountOverview',
-        withRequest: {
-          method: 'GET',
-          path: url,
-          query:{"accountId":"accId","customerId":"custId"}
-          //no body for get
-        },
-        willRespondWith: {
-          status: 200,
-          body: samples.sampleAccountOverview0
-        },
       } )
-      const ids = {
-      }
-      const withIds = massTransform(firstState,)
-      let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], AccountOverview: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleAccountOverview0 closeTargetFor ( r.targetFromPath );//needs fixing }
-      const expected = massTransform(rawExpected,)
-      expect ( { ...newState, messages: []}).toEqual ( expected )
-      expect ( newState.messages.length ).toEqual ( 1 )
-      expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
-    } )
-  } )
-})
+      })
+  
 //GetFetcher pact test
-pactWith ( { consumer: 'AccountOverviewReason', provider: 'AccountOverviewReasonProvider', cors: true }, provider => {
-  describe ( 'AccountOverview - fetcher', () => {
-    it ( 'should have a get fetcher for AccountOverviewReason', async () => {
-      await provider.addInteraction ( {
-        state: 'default',
-        uponReceiving: 'AccountOverview should have a get fetcher for AccountOverviewReason',
-        withRequest: {
-          method: 'GET',
-          path: '/api/accountOverview/reason',
-          query:{"accountId":"accId","customerId":"custId"}
-        },
-        willRespondWith: {
-          status: 200,
-          body: samples.sampleAccountOverviewReason0
-        },
+pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
+      describe ( 'AccountOverview - arrearsDetailsCurrent - fetcher', () => {
+        it ( 'should have a  fetcher for ArrearsDetails', async () => {
+          await provider.addInteraction ( {
+            state: 'default',
+            uponReceiving: 'A request for ArrearsDetails',
+            withRequest: {
+              method: 'GET',
+              path: '/api/accountOverview/arrearsDetails/current',
+              query:{"startDate":"2020-01-20","accountId":"accId","customerId":"custId"}
+            },
+            willRespondWith: {
+              status: 200,
+              body: samples.sampleArrearsDetails0
+            },
+          } )
+          const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
+          const f: FetcherTree<FState> = { fetchers: [ currentArrearsDetailsFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) ], children: [] }
+          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+          let expectedRaw: any = {
+            ... firstState,
+              tags: {'AccountOverview_~/arrearsDetailsCurrent': ["2020-01-20","accId","custId"]}
+        };
+        const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('arrearsDetailsCurrent').set ( expectedRaw, samples.sampleArrearsDetails0 )
+          expect ( newState ).toEqual ( expected )
+        } )
+        } )
+      })
+
+//Rest arrearsDetailsCurrent get pact test for AccountOverview
+  pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
+    describe ( 'AccountOverview - arrearsDetailsCurrent rest get', () => {
+      it ( 'should have a get rest for ArrearsDetails', async () => {
+        const restCommand: RestCommand = { name: 'currentAccountOverview_ArrearsDetailsRestDetails', restAction: 'get' }
+        const firstState: FState = {
+          ...emptyState, restCommands: [ restCommand ],
+          CommonIds: {"accountId":"accId","customerId":"custId"},
+          pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
+        }
+        await provider.addInteraction ( {
+          state: 'default',
+          uponReceiving: 'a rest for AccountOverview arrearsDetailsCurrent get',
+          withRequest: {
+            method: 'GET',
+            path:  '/api/accountOverview/arrearsDetails/current',
+            query:{"startDate":"2020-01-20","accountId":"accId","customerId":"custId"},
+            //no body needed for get,
+          },
+          willRespondWith: {
+            status: 200,
+            //no body needed for get
+          },
+        } )
+        const withIds = massTransform(firstState,)
+        let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
+        let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+        const rawExpected:any = { ...firstState, restCommands: []}
+        const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('arrearsDetailsCurrent').set ( rawExpected, samples.sampleArrearsDetails0 )
+        expect ( { ...newState, messages: []}).toEqual ( expected )
+        expect ( newState.messages.length ).toEqual ( 1 )
+        expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
       } )
-      const ids = {
-      }
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }] , AccountOverview: { }}
-      const withIds = massTransform(firstState,)
-       const f: FetcherTree<FState> = { fetchers: [ AccountOverviewReasonFetcher ( identityL.focusQuery ( 'AccountOverview' ), commonIds ) ], children: [] }
-      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
-      let expectedRaw: any = {
-        ... firstState,
-         AccountOverview: {makeTargetFor ( path )//needs fixing:samples.sampleAccountOverviewReason0closeTargetFor ( path ) //needs fixing ,
-        tags: { AccountOverview_~_/_r_e_a_s_o_n:["accId","custId"]}
-      };
-      const expected = massTransform(expectedRaw,)
-      expect ( newState ).toEqual ( expected )
-    } )
-  } )
-})
-//Rest get pact test
-pactWith ( { consumer: 'AccountOverviewReason', provider: 'AccountOverviewReasonProvider', cors: true }, provider => {
-  describe ( 'AccountOverview - rest get', () => {
-    it ( 'should have a get rest for AccountOverviewReason', async () => {
-      const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewReasonRestDetails', restAction: 'get' }
-      const firstState: FState = {
-        ...emptyState, restCommands: [ restCommand ],
-      AccountOverview:{},
-        pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
-      }
-      const url = applyToTemplate('/api/accountOverview/reason', firstState.CommonIds).join('')
-      await provider.addInteraction ( {
-        state: 'default',
-        uponReceiving: 'AccountOverview should have a get rest for AccountOverviewReason',
-        withRequest: {
-          method: 'GET',
-          path: url,
-          query:{"accountId":"accId","customerId":"custId"}
-          //no body for get
-        },
-        willRespondWith: {
-          status: 200,
-          body: samples.sampleAccountOverviewReason0
-        },
       } )
-      const ids = {
-      }
-      const withIds = massTransform(firstState,)
-      let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], AccountOverview: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleAccountOverviewReason0 closeTargetFor ( r.targetFromPath );//needs fixing }
-      const expected = massTransform(rawExpected,)
-      expect ( { ...newState, messages: []}).toEqual ( expected )
-      expect ( newState.messages.length ).toEqual ( 1 )
-      expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
-    } )
-  } )
-})
+      })
+  
+//GetFetcher pact test
+pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
+      describe ( 'AccountOverview - arrearsDetailsPrevious - fetcher', () => {
+        it ( 'should have a  fetcher for ArrearsDetails', async () => {
+          await provider.addInteraction ( {
+            state: 'default',
+            uponReceiving: 'A request for ArrearsDetails',
+            withRequest: {
+              method: 'GET',
+              path: '/api/accountOverview/arrearsDetails/previous',
+              query:{"startDate":"2020-01-20","accountId":"accId","customerId":"custId"}
+            },
+            willRespondWith: {
+              status: 200,
+              body: samples.sampleArrearsDetails0
+            },
+          } )
+          const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
+          const f: FetcherTree<FState> = { fetchers: [ previousArrearsDetailsFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) ], children: [] }
+          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+          let expectedRaw: any = {
+            ... firstState,
+              tags: {'AccountOverview_~/arrearsDetailsPrevious': ["2020-01-20","accId","custId"]}
+        };
+        const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('arrearsDetailsPrevious').set ( expectedRaw, samples.sampleArrearsDetails0 )
+          expect ( newState ).toEqual ( expected )
+        } )
+        } )
+      })
+
+//Rest arrearsDetailsPrevious get pact test for AccountOverview
+  pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
+    describe ( 'AccountOverview - arrearsDetailsPrevious rest get', () => {
+      it ( 'should have a get rest for ArrearsDetails', async () => {
+        const restCommand: RestCommand = { name: 'previousAccountOverview_ArrearsDetailsRestDetails', restAction: 'get' }
+        const firstState: FState = {
+          ...emptyState, restCommands: [ restCommand ],
+          CommonIds: {"accountId":"accId","customerId":"custId"},
+          pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
+        }
+        await provider.addInteraction ( {
+          state: 'default',
+          uponReceiving: 'a rest for AccountOverview arrearsDetailsPrevious get',
+          withRequest: {
+            method: 'GET',
+            path:  '/api/accountOverview/arrearsDetails/previous',
+            query:{"startDate":"2020-01-20","accountId":"accId","customerId":"custId"},
+            //no body needed for get,
+          },
+          willRespondWith: {
+            status: 200,
+            //no body needed for get
+          },
+        } )
+        const withIds = massTransform(firstState,)
+        let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
+        let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+        const rawExpected:any = { ...firstState, restCommands: []}
+        const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('arrearsDetailsPrevious').set ( rawExpected, samples.sampleArrearsDetails0 )
+        expect ( { ...newState, messages: []}).toEqual ( expected )
+        expect ( newState.messages.length ).toEqual ( 1 )
+        expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+      } )
+      } )
+      })
+  
+//GetFetcher pact test
+pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
+      describe ( 'AccountOverview - excessHistory - fetcher', () => {
+        it ( 'should have a  fetcher for AccountOverviewHistory', async () => {
+          await provider.addInteraction ( {
+            state: 'default',
+            uponReceiving: 'A request for AccountOverviewHistory',
+            withRequest: {
+              method: 'GET',
+              path: '/api/accountOverview/excessHistory',
+              query:{"accountId":"accId","customerId":"custId"}
+            },
+            willRespondWith: {
+              status: 200,
+              body: samples.sampleAccountOverviewHistory0
+            },
+          } )
+          const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
+          const f: FetcherTree<FState> = { fetchers: [ AccountOverviewHistoryFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) ], children: [] }
+          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+          let expectedRaw: any = {
+            ... firstState,
+              tags: {'AccountOverview_~/excessHistory': ["accId","custId"]}
+        };
+        const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('excessHistory').set ( expectedRaw, samples.sampleAccountOverviewHistory0 )
+          expect ( newState ).toEqual ( expected )
+        } )
+        } )
+      })
+
+//Rest excessHistory get pact test for AccountOverview
+  pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
+    describe ( 'AccountOverview - excessHistory rest get', () => {
+      it ( 'should have a get rest for AccountOverviewHistory', async () => {
+        const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewHistoryRestDetails', restAction: 'get' }
+        const firstState: FState = {
+          ...emptyState, restCommands: [ restCommand ],
+          CommonIds: {"accountId":"accId","customerId":"custId"},
+          pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
+        }
+        await provider.addInteraction ( {
+          state: 'default',
+          uponReceiving: 'a rest for AccountOverview excessHistory get',
+          withRequest: {
+            method: 'GET',
+            path:  '/api/accountOverview/excessHistory',
+            query:{"accountId":"accId","customerId":"custId"},
+            //no body needed for get,
+          },
+          willRespondWith: {
+            status: 200,
+            //no body needed for get
+          },
+        } )
+        const withIds = massTransform(firstState,)
+        let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
+        let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+        const rawExpected:any = { ...firstState, restCommands: []}
+        const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('excessHistory').set ( rawExpected, samples.sampleAccountOverviewHistory0 )
+        expect ( { ...newState, messages: []}).toEqual ( expected )
+        expect ( newState.messages.length ).toEqual ( 1 )
+        expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+      } )
+      } )
+      })
+  
+//GetFetcher pact test
+pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
+      describe ( 'AccountOverview - excessInfo - fetcher', () => {
+        it ( 'should have a  fetcher for AccountOverviewExcessInfo', async () => {
+          await provider.addInteraction ( {
+            state: 'default',
+            uponReceiving: 'A request for AccountOverviewExcessInfo',
+            withRequest: {
+              method: 'GET',
+              path: '/api/accountOverview/excessInfo',
+              query:{"accountId":"accId","customerId":"custId"}
+            },
+            willRespondWith: {
+              status: 200,
+              body: samples.sampleAccountOverviewExcessInfo0
+            },
+          } )
+          const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
+          const f: FetcherTree<FState> = { fetchers: [ AccountOverviewExcessInfoFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) ], children: [] }
+          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+          let expectedRaw: any = {
+            ... firstState,
+              tags: {'AccountOverview_~/excessInfo': ["accId","custId"]}
+        };
+        const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('excessInfo').set ( expectedRaw, samples.sampleAccountOverviewExcessInfo0 )
+          expect ( newState ).toEqual ( expected )
+        } )
+        } )
+      })
+
+//Rest excessInfo get pact test for AccountOverview
+  pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
+    describe ( 'AccountOverview - excessInfo rest get', () => {
+      it ( 'should have a get rest for AccountOverviewExcessInfo', async () => {
+        const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewExcessInfoRestDetails', restAction: 'get' }
+        const firstState: FState = {
+          ...emptyState, restCommands: [ restCommand ],
+          CommonIds: {"accountId":"accId","customerId":"custId"},
+          pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
+        }
+        await provider.addInteraction ( {
+          state: 'default',
+          uponReceiving: 'a rest for AccountOverview excessInfo get',
+          withRequest: {
+            method: 'GET',
+            path:  '/api/accountOverview/excessInfo',
+            query:{"accountId":"accId","customerId":"custId"},
+            //no body needed for get,
+          },
+          willRespondWith: {
+            status: 200,
+            //no body needed for get
+          },
+        } )
+        const withIds = massTransform(firstState,)
+        let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
+        let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+        const rawExpected:any = { ...firstState, restCommands: []}
+        const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('excessInfo').set ( rawExpected, samples.sampleAccountOverviewExcessInfo0 )
+        expect ( { ...newState, messages: []}).toEqual ( expected )
+        expect ( newState.messages.length ).toEqual ( 1 )
+        expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+      } )
+      } )
+      })
+  
+//GetFetcher pact test
+pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
+      describe ( 'AccountOverview - main - fetcher', () => {
+        it ( 'should have a  fetcher for AccountOverview', async () => {
+          await provider.addInteraction ( {
+            state: 'default',
+            uponReceiving: 'A request for AccountOverview',
+            withRequest: {
+              method: 'GET',
+              path: '/api/accountOverview',
+              query:{"accountId":"accId","customerId":"custId"}
+            },
+            willRespondWith: {
+              status: 200,
+              body: samples.sampleAccountOverview0
+            },
+          } )
+          const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
+          const f: FetcherTree<FState> = { fetchers: [ AccountOverviewFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) ], children: [] }
+          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+          let expectedRaw: any = {
+            ... firstState,
+              tags: {'AccountOverview_~/main': ["accId","custId"]}
+        };
+        const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('main').set ( expectedRaw, samples.sampleAccountOverview0 )
+          expect ( newState ).toEqual ( expected )
+        } )
+        } )
+      })
+
+//Rest main get pact test for AccountOverview
+  pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
+    describe ( 'AccountOverview - main rest get', () => {
+      it ( 'should have a get rest for AccountOverview', async () => {
+        const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewRestDetails', restAction: 'get' }
+        const firstState: FState = {
+          ...emptyState, restCommands: [ restCommand ],
+          CommonIds: {"accountId":"accId","customerId":"custId"},
+          pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
+        }
+        await provider.addInteraction ( {
+          state: 'default',
+          uponReceiving: 'a rest for AccountOverview main get',
+          withRequest: {
+            method: 'GET',
+            path:  '/api/accountOverview',
+            query:{"accountId":"accId","customerId":"custId"},
+            //no body needed for get,
+          },
+          willRespondWith: {
+            status: 200,
+            //no body needed for get
+          },
+        } )
+        const withIds = massTransform(firstState,)
+        let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
+        let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+        const rawExpected:any = { ...firstState, restCommands: []}
+        const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('main').set ( rawExpected, samples.sampleAccountOverview0 )
+        expect ( { ...newState, messages: []}).toEqual ( expected )
+        expect ( newState.messages.length ).toEqual ( 1 )
+        expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+      } )
+      } )
+      })
+  
+//GetFetcher pact test
+pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
+      describe ( 'AccountOverview - reason - fetcher', () => {
+        it ( 'should have a  fetcher for AccountOverviewReason', async () => {
+          await provider.addInteraction ( {
+            state: 'default',
+            uponReceiving: 'A request for AccountOverviewReason',
+            withRequest: {
+              method: 'GET',
+              path: '/api/accountOverview/reason',
+              query:{"accountId":"accId","customerId":"custId"}
+            },
+            willRespondWith: {
+              status: 200,
+              body: samples.sampleAccountOverviewReason0
+            },
+          } )
+          const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
+          const f: FetcherTree<FState> = { fetchers: [ AccountOverviewReasonFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) ], children: [] }
+          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+          let expectedRaw: any = {
+            ... firstState,
+              tags: {'AccountOverview_~/reason': ["accId","custId"]}
+        };
+        const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('reason').set ( expectedRaw, samples.sampleAccountOverviewReason0 )
+          expect ( newState ).toEqual ( expected )
+        } )
+        } )
+      })
+
+//Rest reason get pact test for AccountOverview
+  pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
+    describe ( 'AccountOverview - reason rest get', () => {
+      it ( 'should have a get rest for AccountOverviewReason', async () => {
+        const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewReasonRestDetails', restAction: 'get' }
+        const firstState: FState = {
+          ...emptyState, restCommands: [ restCommand ],
+          CommonIds: {"accountId":"accId","customerId":"custId"},
+          pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
+        }
+        await provider.addInteraction ( {
+          state: 'default',
+          uponReceiving: 'a rest for AccountOverview reason get',
+          withRequest: {
+            method: 'GET',
+            path:  '/api/accountOverview/reason',
+            query:{"accountId":"accId","customerId":"custId"},
+            //no body needed for get,
+          },
+          willRespondWith: {
+            status: 200,
+            //no body needed for get
+          },
+        } )
+        const withIds = massTransform(firstState,)
+        let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
+        let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+        const rawExpected:any = { ...firstState, restCommands: []}
+        const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('reason').set ( rawExpected, samples.sampleAccountOverviewReason0 )
+        expect ( { ...newState, messages: []}).toEqual ( expected )
+        expect ( newState.messages.length ).toEqual ( 1 )
+        expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+      } )
+      } )
+      })
+  

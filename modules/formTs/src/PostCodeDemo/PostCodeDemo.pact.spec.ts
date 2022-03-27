@@ -3,121 +3,111 @@ import { loadTree,wouldLoad,FetcherTree } from "@focuson/fetcher";
 import { pactWith } from "jest-pact";
 import { rest, RestCommand, restL } from "@focuson/rest";
 import { simpleMessagesL } from "@focuson/pages";
-import { applyToTemplate } from "@focuson/template";
 import { Lenses, massTransform } from "@focuson/lens";
 import * as samples from '../PostCodeDemo/PostCodeDemo.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
 import {PostCodeDataFetcher} from './PostCodeDemo.fetchers'
-describe("To support manually running the tests", () =>{it ("should support PostCodeDemo", () =>{})})
-//Rest create pact test
-pactWith ( { consumer: 'PostCodeMainPage', provider: 'PostCodeMainPageProvider', cors: true }, provider => {
-  describe ( 'PostCodeDemo - rest create', () => {
-    it ( 'should have a create rest for PostCodeMainPage', async () => {
-      const restCommand: RestCommand = { name: 'PostCodeDemo_PostCodeMainPageRestDetails', restAction: 'create' }
-      const firstState: FState = {
-        ...emptyState, restCommands: [ restCommand ],
-      PostCodeDemo: { makeTargetFor ( r.targetFromPath ) //needs fixing;:samples.samplePostCodeMainPage0  closeTargetFor ( r.targetFromPath );//needs fixing,
-        pageSelection: [ { pageName: 'PostCodeDemo', pageMode: 'view' } ]
-      }
-      const url = applyToTemplate('/api/address', firstState.CommonIds).join('')
-      await provider.addInteraction ( {
-        state: 'default',
-        uponReceiving: 'PostCodeDemo should have a create rest for PostCodeMainPage',
-        withRequest: {
-          method: 'POST',
-          path: url,
-          query:{}
-          ,body: JSON.stringify(samples.samplePostCodeMainPage0)
-        },
-        willRespondWith: {
-          status: 200,
-          body: samples.samplePostCodeMainPage0
-        },
+
+//Rest address create pact test for PostCodeDemo
+  pactWith ( { consumer: 'PostCodeDemo', provider: 'PostCodeDemoProvider', cors: true }, provider => {
+    describe ( 'PostCodeDemo - address rest create', () => {
+      it ( 'should have a create rest for PostCodeMainPage', async () => {
+        const restCommand: RestCommand = { name: 'PostCodeDemo_PostCodeMainPageRestDetails', restAction: 'create' }
+        const firstState: FState = {
+          ...emptyState, restCommands: [ restCommand ],
+          CommonIds: {},
+          pageSelection: [ { pageName: 'PostCodeDemo', pageMode: 'view' } ]
+        }
+        await provider.addInteraction ( {
+          state: 'default',
+          uponReceiving: 'a rest for PostCodeDemo address create',
+          withRequest: {
+            method: 'POST',
+            path:  '/api/address',
+            query:{},
+            body: samples.samplePostCodeMainPage0,
+          },
+          willRespondWith: {
+            status: 200,
+            body: samples.samplePostCodeMainPage0
+          },
+        } )
+        const withIds = massTransform(firstState,)
+        let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
+        let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+        const rawExpected:any = { ...firstState, restCommands: []}
+        const expected = Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('main').set ( rawExpected, samples.samplePostCodeMainPage0 )
+        expect ( { ...newState, messages: []}).toEqual ( expected )
+        expect ( newState.messages.length ).toEqual ( 1 )
+        expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
       } )
-      const ids = {
-      }
-      const withIds = massTransform(firstState,)
-      let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], PostCodeDemo: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.samplePostCodeMainPage0 closeTargetFor ( r.targetFromPath );//needs fixing }
-      const expected = massTransform(rawExpected,)
-      expect ( { ...newState, messages: []}).toEqual ( expected )
-      expect ( newState.messages.length ).toEqual ( 1 )
-      expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
-    } )
-  } )
-})
+      } )
+      })
+  
 //GetFetcher pact test
-pactWith ( { consumer: 'PostCodeData', provider: 'PostCodeDataProvider', cors: true }, provider => {
-  describe ( 'PostCodeDemo - fetcher', () => {
-    it ( 'should have a get fetcher for PostCodeData', async () => {
-      await provider.addInteraction ( {
-        state: 'default',
-        uponReceiving: 'PostCodeDemo should have a get fetcher for PostCodeData',
-        withRequest: {
-          method: 'GET',
-          path: '/api/postCode',
-          query:{"postcode":"LW12 4RG"}
-        },
-        willRespondWith: {
-          status: 200,
-          body: samples.samplePostCodeData0
-        },
+pactWith ( { consumer: 'PostCodeDemo', provider: 'PostCodeDemoProvider', cors: true }, provider => {
+      describe ( 'PostCodeDemo - postcode - fetcher', () => {
+        it ( 'should have a  fetcher for PostCodeData', async () => {
+          await provider.addInteraction ( {
+            state: 'default',
+            uponReceiving: 'A request for PostCodeData',
+            withRequest: {
+              method: 'GET',
+              path: '/api/postCode',
+              query:{"postcode":"LW12 4RG"}
+            },
+            willRespondWith: {
+              status: 200,
+              body: samples.samplePostCodeData0
+            },
+          } )
+          const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'PostCodeDemo', pageMode: 'view' }], CommonIds: {} }
+          const f: FetcherTree<FState> = { fetchers: [ PostCodeDataFetcher (Lenses.identity<FState>().focusQuery('PostCodeDemo'), commonIds ) ], children: [] }
+          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+          let expectedRaw: any = {
+            ... firstState,
+              tags: {'PostCodeDemo_~/postcode/searchResults': ["LW12 4RG"]}
+        };
+        const expected = Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('searchResults').set ( expectedRaw, samples.samplePostCodeData0 )
+          expect ( newState ).toEqual ( expected )
+        } )
+        } )
+      })
+
+//Rest postcode get pact test for PostCodeDemo
+  pactWith ( { consumer: 'PostCodeDemo', provider: 'PostCodeDemoProvider', cors: true }, provider => {
+    describe ( 'PostCodeDemo - postcode rest get', () => {
+      it ( 'should have a get rest for PostCodeData', async () => {
+        const restCommand: RestCommand = { name: 'PostCodeDemo_PostCodeDataRestDetails', restAction: 'get' }
+        const firstState: FState = {
+          ...emptyState, restCommands: [ restCommand ],
+          CommonIds: {},
+          pageSelection: [ { pageName: 'PostCodeDemo', pageMode: 'view' } ]
+        }
+        await provider.addInteraction ( {
+          state: 'default',
+          uponReceiving: 'a rest for PostCodeDemo postcode get',
+          withRequest: {
+            method: 'GET',
+            path:  '/api/postCode',
+            query:{"postcode":"LW12 4RG"},
+            //no body needed for get,
+          },
+          willRespondWith: {
+            status: 200,
+            //no body needed for get
+          },
+        } )
+        const withIds = massTransform(firstState,)
+        let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
+        let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+        const rawExpected:any = { ...firstState, restCommands: []}
+        const expected = Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('searchResults').set ( rawExpected, samples.samplePostCodeData0 )
+        expect ( { ...newState, messages: []}).toEqual ( expected )
+        expect ( newState.messages.length ).toEqual ( 1 )
+        expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
       } )
-      const ids = {
-        postcode: Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('search')
-      }
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'PostCodeDemo', pageMode: 'view' }] , PostCodeDemo: { }}
-      const withIds = massTransform(firstState,[ids.postcode, () =>"LW12 4RG"])
-       const f: FetcherTree<FState> = { fetchers: [ PostCodeDataFetcher ( identityL.focusQuery ( 'PostCodeDemo' ), commonIds ) ], children: [] }
-      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
-      let expectedRaw: any = {
-        ... firstState,
-         PostCodeDemo: {makeTargetFor ( path )//needs fixing:samples.samplePostCodeData0closeTargetFor ( path ) //needs fixing ,
-        tags: { PostCodeDemo_~_/_p_o_s_t_c_o_d_e_/_s_e_a_r_c_h_R_e_s_u_l_t_s:["LW12 4RG"]}
-      };
-      const expected = massTransform(expectedRaw,[ids.postcode, () =>"LW12 4RG"])
-      expect ( newState ).toEqual ( expected )
-    } )
-  } )
-})
-//Rest get pact test
-pactWith ( { consumer: 'PostCodeData', provider: 'PostCodeDataProvider', cors: true }, provider => {
-  describe ( 'PostCodeDemo - rest get', () => {
-    it ( 'should have a get rest for PostCodeData', async () => {
-      const restCommand: RestCommand = { name: 'PostCodeDemo_PostCodeDataRestDetails', restAction: 'get' }
-      const firstState: FState = {
-        ...emptyState, restCommands: [ restCommand ],
-      PostCodeDemo:{},
-        pageSelection: [ { pageName: 'PostCodeDemo', pageMode: 'view' } ]
-      }
-      const url = applyToTemplate('/api/postCode', firstState.CommonIds).join('')
-      await provider.addInteraction ( {
-        state: 'default',
-        uponReceiving: 'PostCodeDemo should have a get rest for PostCodeData',
-        withRequest: {
-          method: 'GET',
-          path: url,
-          query:{"postcode":"LW12 4RG"}
-          //no body for get
-        },
-        willRespondWith: {
-          status: 200,
-          body: samples.samplePostCodeData0
-        },
       } )
-      const ids = {
-        postcode: Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('search')
-      }
-      const withIds = massTransform(firstState,[ids.postcode, () =>"LW12 4RG"])
-      let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], PostCodeDemo: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.samplePostCodeData0 closeTargetFor ( r.targetFromPath );//needs fixing }
-      const expected = massTransform(rawExpected,[ids.postcode, () =>"LW12 4RG"])
-      expect ( { ...newState, messages: []}).toEqual ( expected )
-      expect ( newState.messages.length ).toEqual ( 1 )
-      expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
-    } )
-  } )
-})
+      })
+  

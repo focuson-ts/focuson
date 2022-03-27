@@ -3,47 +3,44 @@ import { loadTree,wouldLoad,FetcherTree } from "@focuson/fetcher";
 import { pactWith } from "jest-pact";
 import { rest, RestCommand, restL } from "@focuson/rest";
 import { simpleMessagesL } from "@focuson/pages";
-import { applyToTemplate } from "@focuson/template";
 import { Lenses, massTransform } from "@focuson/lens";
 import * as samples from '../ETransfer/ETransfer.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
-describe("To support manually running the tests", () =>{it ("should support ETransfer", () =>{})})
-//Rest create pact test
-pactWith ( { consumer: 'ETransferDataD', provider: 'ETransferDataDProvider', cors: true }, provider => {
-  describe ( 'ETransfer - rest create', () => {
-    it ( 'should have a create rest for ETransferDataD', async () => {
-      const restCommand: RestCommand = { name: 'ETransfer_ETransferDataDRestDetails', restAction: 'create' }
-      const firstState: FState = {
-        ...emptyState, restCommands: [ restCommand ],
-      ETransfer: { makeTargetFor ( r.targetFromPath ) //needs fixing;:samples.sampleETransferDataD0  closeTargetFor ( r.targetFromPath );//needs fixing,
-        pageSelection: [ { pageName: 'ETransfer', pageMode: 'view' } ]
-      }
-      const url = applyToTemplate('/api/eTransfers', firstState.CommonIds).join('')
-      await provider.addInteraction ( {
-        state: 'default',
-        uponReceiving: 'ETransfer should have a create rest for ETransferDataD',
-        withRequest: {
-          method: 'POST',
-          path: url,
-          query:{"customerId":"custId"}
-          ,body: JSON.stringify(samples.sampleETransferDataD0)
-        },
-        willRespondWith: {
-          status: 200,
-          body: samples.sampleETransferDataD0
-        },
+
+//Rest eTransfer create pact test for ETransfer
+  pactWith ( { consumer: 'ETransfer', provider: 'ETransferProvider', cors: true }, provider => {
+    describe ( 'ETransfer - eTransfer rest create', () => {
+      it ( 'should have a create rest for ETransferDataD', async () => {
+        const restCommand: RestCommand = { name: 'ETransfer_ETransferDataDRestDetails', restAction: 'create' }
+        const firstState: FState = {
+          ...emptyState, restCommands: [ restCommand ],
+          CommonIds: {"customerId":"custId"},
+          pageSelection: [ { pageName: 'ETransfer', pageMode: 'view' } ]
+        }
+        await provider.addInteraction ( {
+          state: 'default',
+          uponReceiving: 'a rest for ETransfer eTransfer create',
+          withRequest: {
+            method: 'POST',
+            path:  '/api/eTransfers',
+            query:{"customerId":"custId"},
+            body: samples.sampleETransferDataD0,
+          },
+          willRespondWith: {
+            status: 200,
+            body: samples.sampleETransferDataD0
+          },
+        } )
+        const withIds = massTransform(firstState,)
+        let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
+        let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+        const rawExpected:any = { ...firstState, restCommands: []}
+        const expected = Lenses.identity<FState>().focusQuery('ETransfer').focusQuery('fromApi').set ( rawExpected, samples.sampleETransferDataD0 )
+        expect ( { ...newState, messages: []}).toEqual ( expected )
+        expect ( newState.messages.length ).toEqual ( 1 )
+        expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
       } )
-      const ids = {
-      }
-      const withIds = massTransform(firstState,)
-      let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-      let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
-      const rawExpected:any = { ...firstState, restCommands: [], ETransfer: { makeTargetFor ( r.targetFromPath ) //needs fixing;: samples.sampleETransferDataD0 closeTargetFor ( r.targetFromPath );//needs fixing }
-      const expected = massTransform(rawExpected,)
-      expect ( { ...newState, messages: []}).toEqual ( expected )
-      expect ( newState.messages.length ).toEqual ( 1 )
-      expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
-    } )
-  } )
-})
+      } )
+      })
+  

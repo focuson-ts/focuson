@@ -18,6 +18,7 @@ import { makeOneStory } from "../codegen/makeStories";
 import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { MakeButton } from "../codegen/makeButtons";
 import { AppConfig } from "../focuson.config";
+import { makeAllPactsForPage } from "../codegen/makePacts2";
 
 export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, appConfig: AppConfig, tsRoot: string, params: TSParams, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G>, directorySpec: DirectorySpec ) => <B extends ButtonD> ( pages: PageD<B, G>[] ) => {
   //to help the readability of the writeFile/template files
@@ -66,8 +67,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
       writeToFile ( storybookFileName ( tsCode, params, p ) + '.ts', () => makeOneStory ( params, p ), details )
 
       if ( Object.keys ( p.rest ).length > 0 )
-        templateFile ( pactFileName ( tsCode, params, p ) + ".ts", 'templates/allPacts.ts',
-          { content: makeAllPacts ( params, p, directorySpec ).join ( "\n" ) }, directorySpec, details )
+        writeToFile ( pactFileName ( tsCode, params, p ) + ".ts", () => makeAllPactsForPage ( params, p ) )
     }
 
 

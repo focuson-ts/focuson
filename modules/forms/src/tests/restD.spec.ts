@@ -1,4 +1,4 @@
-import { findMustConstructForRest, flapMapActionDetails, makeCommonParamsValueForTest } from "../common/restD";
+import { findMustConstructForRest, flapMapActionDetails, makeParamValueForTest } from "../common/restD";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { arrearsDetailsCurrentRestD } from "../example/accountOverview/accountOverview.restD";
 
@@ -35,21 +35,21 @@ describe ( "findMustConstructForRest", () => {
 
 describe ( "makeCommonParamsValueForTest", () => {
   it ( "get the values out of the rest params - for a get", () => {
-    expect ( makeCommonParamsValueForTest ( createPlanRestD, 'get' ) ).toEqual ( {
+    expect ( makeParamValueForTest ( createPlanRestD, 'get' ) ).toEqual ( {
       "accountId": "accId",
       "createPlanId": "tbd",
       "customerId": "custId"
     } )
   } )
   it ( "get the values out of the rest params - for a create (no primary id)", () => {
-    expect ( makeCommonParamsValueForTest ( createPlanRestD, 'create' ) ).toEqual ( {
+    expect ( makeParamValueForTest ( createPlanRestD, 'create' ) ).toEqual ( {
       "accountId": "accId",
       "customerId": "custId"
     } )
   } )
 
   it ( "should ensure the common lens come last, as that is what happens 'in the real'", () => {
-    expect ( JSON.stringify ( makeCommonParamsValueForTest ( arrearsDetailsCurrentRestD, 'get' ) ).replace ( /"/g, "'" ) ).toEqual (
+    expect ( JSON.stringify ( makeParamValueForTest ( arrearsDetailsCurrentRestD, 'get' ) ).replace ( /"/g, "'" ) ).toEqual (
       "{'startDate':'2020-01-20','accountId':'accId','customerId':'custId'}" )
   } )
 } )

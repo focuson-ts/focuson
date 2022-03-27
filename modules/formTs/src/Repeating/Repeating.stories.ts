@@ -22,10 +22,12 @@ interface StoryState {
 const initial = {}
 function pageSelection ( pageMode: PageMode ): PageSelection { return { pageName: 'Repeating', pageMode}}
 const Template: Story<StoryState> = ( args: StoryState ) =>{
+  const pageDetails: any = pages[ 'Repeating' ];
+  const initial = pageDetails.initialValue?pageDetails.initialValue:{}
   const rawState: FState = { ...emptyState, pageSelection: [ pageSelection ( args.pageMode ) ], Repeating: initial }
   const startState=Lenses.identity<FState>().focusQuery('Repeating').focusQuery('fromApi').set(rawState, args.domain)
   return SBookProvider<FState, Context> (startState, context,
-     s => findOneSelectedPageDetails ( s ) (pageSelection(args.pageMode)).element );}
+     s => findOneSelectedPageDetails ( s, pageDetails.lens) (pageSelection(args.pageMode)).element );}
  
  
 export const View = Template.bind ( {} );

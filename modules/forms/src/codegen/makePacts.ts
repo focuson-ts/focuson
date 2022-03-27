@@ -3,7 +3,7 @@ import { applyToTemplate } from "@focuson/template";
 import { DirectorySpec, loadFile } from "@focuson/files";
 import { beforeSeparator, NameAnd, RestAction, sortedEntries } from "@focuson/utils";
 import { fetcherName, restDetailsName, sampleName, samplesFileName } from "./names";
-import { defaultRestAction, isRestLens, LensRestParam, makeCommonParamsValueForTest, RestActionDetail, RestD } from "../common/restD";
+import { defaultRestAction, isRestLens, LensRestParam, makeParamValueForTest, RestActionDetail, RestD } from "../common/restD";
 import { TSParams } from "./config";
 import { lensFocusQueryFor, indentList } from "./codegen";
 
@@ -82,7 +82,7 @@ export function closeTargetFor ( path: string[] ) {
   return '}'.repeat ( path.length )
 }
 function makeCommonPropsForPact<B, G> ( p: PageD<B, G>, d: RestD<G>, params: TSParams, path: string, restAction: RestAction, description2: string ) {
-  let paramsValueForTest = makeCommonParamsValueForTest ( d, restAction );
+  let paramsValueForTest = makeParamValueForTest ( d, restAction );
   let body = params.samplesFile + "." + sampleName ( d.dataDD ) + '0';
   const props: CommonPactProps = {
     body,
