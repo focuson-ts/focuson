@@ -23,13 +23,13 @@ import {ChequeCreditbooksDomain} from "../ChequeCreditbooks/ChequeCreditbooks.do
 import {ChequeCreditbooksHistoryDomain} from "../ChequeCreditbooks/ChequeCreditbooks.domains"
 import {ChequeCreditbooksHistoryLineDomain} from "../ChequeCreditbooks/ChequeCreditbooks.domains"
 export function ChequeCreditbooksPage(){
-  return focusedPageWithExtraState<FState, ChequeCreditbooksPageDomain, ChequeCreditbooksDomain, Context> ( s => 'ChequeCreditbooks' ) ( s => sstate: pageState - ~/fromApi) (
-    ( fullState, state , full, d, mode) => {
+  return focusedPageWithExtraState<FState, ChequeCreditbooksPageDomain, ChequeCreditbooksDomain, Context> ( s => 'ChequeCreditbooks' ) ( state => state.focusOn('fromApi')) (
+( fullState, state , full, d, mode) => {
   const id='root';
   const buttons =    {chequeBook:<button>chequeBook of type ResetStateButton cannot be created yet</button>,
       orderNewBook:<ModalButton id='orderNewBook' text='orderNewBook'  state={state} modal = 'OrderChequeBookOrPayingInModal'  
         pageMode='create'
-        focusOn={["{basePage}","~","/","t","e","m","p","C","r","e","a","t","e","P","l","a","n"]}
+        focusOn='~/tempCreatePlan'
         createEmpty={empty.emptyChequeCreditbooksHistoryLine}
          rest={{"name":"ChequeCreditbooks_ChequeCreditbooksRestDetails","restAction":"create"}}
       />,

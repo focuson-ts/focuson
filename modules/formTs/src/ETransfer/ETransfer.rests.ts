@@ -8,7 +8,7 @@ export function ETransfer_ETransferDataDRestDetails ( cd: NameAndLens<FState>, d
   const fdd: NameAndLens<domains.ETransferPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('ETransfer'),
-    dLens: Lenses.identity<domains.ETransferPageDomain>()state: fullState - ~/fromApi,
+    dLens: Lenses.identity<domains.ETransferPageDomain>().focusQuery('fromApi'),
     cd, fdd,
     ids: ["customerId"],
     resourceId:  [],

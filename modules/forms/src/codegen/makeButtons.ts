@@ -6,7 +6,7 @@ import { addBrackets, addStringToStartOfFirst, indentList } from "./codegen";
 import { GuardWithCondition, isGuardButton, MakeGuard } from "../buttons/guardButton";
 import { guardName } from "./names";
 
-interface CreateButtonData<B, G> {
+export interface CreateButtonData<B, G> {
   params: TSParams,
   parent: PageD<B, G>,
   name: string;

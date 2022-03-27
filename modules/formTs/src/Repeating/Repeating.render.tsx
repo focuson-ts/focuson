@@ -22,29 +22,29 @@ import {RepeatingPageDomain} from "../Repeating/Repeating.domains";
 import {RepeatingLineDomain} from "../Repeating/Repeating.domains"
 import {RepeatingWholeDataDomain} from "../Repeating/Repeating.domains"
 export function RepeatingPage(){
-  return focusedPageWithExtraState<FState, RepeatingPageDomain, RepeatingWholeDataDomain, Context> ( s => 'Repeating' ) ( s => sstate: pageState - ~/fromApi) (
-    ( fullState, state , full, d, mode) => {
+  return focusedPageWithExtraState<FState, RepeatingPageDomain, RepeatingWholeDataDomain, Context> ( s => 'Repeating' ) ( state => state.focusOn('fromApi')) (
+( fullState, state , full, d, mode) => {
   const nextOccupationGuard =  pageState(state)().chainLens<number>(Lenses.fromPath("~/selectedItem")).optJsonOr(0) <  pageState(state)().chainLens<string[]>(Lenses.fromPath("~/fromApi")).optJsonOr([]).length - 1
   const prevOccupationGuard = pageState(state)().chainLens<number>(Lenses.fromPath("~/selectedItem")).optJsonOr(0) >0
   const id='root';
   const buttons =    {addEntry:<ModalButton id='addEntry' text='addEntry'  state={state} modal = 'RepeatingLine'  
         pageMode='create'
-        focusOn={["{basePage}","~","/","t","e","m","p"]}
+        focusOn='~/temp'
         copyOnClose={[{"to":"~/fromApi[$append]"}]}
         createEmpty={empty.emptyRepeatingLine}
-        setToLengthOnClose={{"array":["~","/","f","r","o","m","A","p","i"],"variable":["~","/","s","e","l","e","c","t","e","d","I","t","e","m"]}}
+        setToLengthOnClose={{"variable":"~/selectedItem","array":"~/fromApi"}}
       />,
       edit:<ModalButton id='edit' text='edit'  state={state} modal = 'RepeatingLine'  
         pageMode='edit'
-        focusOn={["{basePage}","~","/","t","e","m","p"]}
+        focusOn='~/temp'
         copy={[{"from":"~/fromApi[selectedItem]"}]}
         copyOnClose={[{"to":"~/fromApi/[selectedItem]"}]}
       />,
       nextOccupation:<GuardButton cond={nextOccupationGuard}>
-        <ListNextButton id='nextOccupation' title='Next' list={state: fullState - ~/fromApi} value={state: fullState - ~/selectedItem} />
+        <ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi')} value={fullState.focusOn('selectedItem')} />
       </GuardButton>,
       prevOccupation:<GuardButton cond={prevOccupationGuard}>
-        <ListPrevButton id='prevOccupation' title='Prev'  list={state: fullState - ~/fromApi} value={state: fullState - ~/selectedItem} />
+        <ListPrevButton id='prevOccupation' title='Next' list={fullState.focusOn('fromApi')} value={fullState.focusOn('selectedItem')} />
       </GuardButton>,}
 
       return <>

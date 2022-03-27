@@ -76,11 +76,12 @@ export function lensBuilder<S> ( prefixs: NameAndLens<S> ): PathBuilder<Optional
 export function stateCodeInitials ( stateName: string ): NameAnd<string> {
   return { '': 'state', '~': 'fullState', '/': `state.copyWithIdentity()` }
 }
-export function stateCodeBuilder ( initials: NameAnd<string> ): PathBuilder<string> {
+export function stateCodeBuilder ( initials: NameAnd<string>, focusQuery?: string ): PathBuilder<string> {
+  const realFocusQuery  = focusQuery?focusQuery: 'focusQuery'
   return {
     zero ( initial: string ): string { return initials[ initial ]; },
     foldBracketsPath ( acc: string, path: string ): string { return acc + `.chainNthFromPath(${path})`; },
-    foldKey ( acc: string, key: string ): string { return acc + `.focusQuery('${key}')` },
+    foldKey ( acc: string, key: string ): string { return acc + `.${realFocusQuery}('${key}')` },
     foldAppend ( acc: string ): string { return acc + ".chain(Lenses.append())"; },
     foldLast ( acc: string ): string { return acc + ".chain(Lenses.last())"; },
     foldNth ( acc: string, n: number ): string { return acc + `.chain(Lenses.nth(${n}))` },

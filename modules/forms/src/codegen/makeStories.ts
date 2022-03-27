@@ -2,6 +2,7 @@ import { isMainPage, isModalPage, MainPageD, PageD } from "../common/pageD";
 import { TSParams } from "./config";
 import { domainName, domainsFileName, emptyFileName, emptyName, pageComponentName, renderFileName, sampleName, samplesFileName } from "./names";
 import { parsePath, stateCodeBuilder } from "@focuson/lens";
+import { stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
 
 
 export function makeOneStory<B, G> ( params: TSParams, p: PageD<B, G> ): string[] {
@@ -40,10 +41,7 @@ export function makeOneMainStory<B, G> ( params: TSParams, p: MainPageD<B, G> ):
     `function pageSelection ( pageMode: PageMode ): PageSelection { return { pageName: '${p.name}', pageMode}}`,
     `const Template: Story<StoryState> = ( args: StoryState ) =>{`,
     `  const rawState: ${params.stateName} = { ...emptyState, pageSelection: [ pageSelection ( args.pageMode ) ], ${p.name}: initial }`,
-    `  const startState=${parsePath ( p.display.target, stateCodeBuilder ( {
-      '/': `Lenses.identity<${params.stateName}>()`,
-      '~': `Lenses.identity<${params.stateName}>().focusQuery('${p.name}')`,
-    } ) )}.set(rawState, args.domain)`,
+    `  const startState=${parsePath ( p.display.target, stateCodeBuilderWithSlashAndTildaFromIdentity ( params, p ) )}.set(rawState, args.domain)`,
     `  return SBookProvider<${params.stateName}, Context> (startState, context,`,
     `     s => findOneSelectedPageDetails ( s ) (pageSelection(args.pageMode)).element );}`,
     ` `,

@@ -4,6 +4,8 @@ import { TSParams } from "./config";
 import { allRestAndActions, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { sortedEntries } from "@focuson/utils";
 import { addStringToEndOfAllButLast, lensFocusQueryFor, stateFocusQueryForRepl } from "./codegen";
+import { parsePath, stateCodeBuilder } from "@focuson/lens";
+import { lensFocusQueryWithSlashAndTildaFromIdentity, lensFocusQueryWithTildaFromPage } from "./lens";
 
 
 export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restName: string, r: RestDefnInPageProperties<G> ): string[] => {
@@ -16,7 +18,7 @@ export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restNam
     `  const fdd: NameAndLens<${pageDomain}> = {` + fddLens.join ( "," ) + "}",
     `  return {`,
     `    fdLens: Lenses.identity<${params.stateName}>().focusQuery('${p.name}'),`,
-    `    dLens: Lenses.identity<${pageDomain}>()${stateFocusQueryForRepl( 'fullState',  r.targetFromPath  )},`,
+    `    dLens: ${lensFocusQueryWithTildaFromPage ( `makeRest for page ${p.name}, ${restName}`, params, p, r.targetFromPath )},`,
     `    cd, fdd,`,
     `    ids: ${JSON.stringify ( ids )},`,
     `    resourceId:  ${JSON.stringify ( resourceIds )},`,

@@ -26,18 +26,18 @@ import {EAccountsSummaryDomain} from "../EAccountsSummary/EAccountsSummary.domai
 import {EAccountsSummaryTableDomain} from "../EAccountsSummary/EAccountsSummary.domains"
 import {EAccountSummaryDomain} from "../EAccountsSummary/EAccountsSummary.domains"
 export function EAccountsSummaryPage(){
-  return focusedPageWithExtraState<FState, EAccountsSummaryPageDomain, EAccountsSummaryDomain, Context> ( s => 'EAccountsSummary' ) ( s => sstate: pageState - ~/fromApi) (
-    ( fullState, state , full, d, mode) => {
+  return focusedPageWithExtraState<FState, EAccountsSummaryPageDomain, EAccountsSummaryDomain, Context> ( s => 'EAccountsSummary' ) ( state => state.focusOn('fromApi')) (
+( fullState, state , full, d, mode) => {
   const id='root';
   const buttons =    {amendExistingPlan:<ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  
         pageMode='edit'
-        focusOn={["{basePage}","~","/","t","e","m","p","C","r","e","a","t","e","P","l","a","n"]}
+        focusOn='~/tempCreatePlan'
         copy={[{"from":"~/fromApi/createPlan"}]}
          rest={{"name":"EAccountsSummary_CreatePlanRestDetails","restAction":"update"}}
       />,
       createNewPlan:<ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  
         pageMode='create'
-        focusOn={["{basePage}","~","/","t","e","m","p","C","r","e","a","t","e","P","l","a","n"]}
+        focusOn='~/tempCreatePlan'
         createEmpty={empty.emptyCreatePlan}
          rest={{"name":"EAccountsSummary_CreatePlanRestDetails","restAction":"create"}}
       />,

@@ -13,6 +13,6 @@ export function EAccountsSummaryFetcher(fdLens:Optional<FState, domains.EAccount
     common.commonFetch<FState,  domains.EAccountsSummaryDomain>(),
      'EAccountsSummary',
      '~/fromApi', fdLens, commonIds, localIds,["accountId"],["customerId"],
-      Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('fromApi'),
+      Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('fromApi'),
      '/api/accountsSummary?{query}')
 }

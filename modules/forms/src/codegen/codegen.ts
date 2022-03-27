@@ -6,6 +6,7 @@ import { parsePath, stateCodeBuilder } from "@focuson/lens";
 import { PageD } from "../common/pageD";
 import { pageDomainName } from "./names";
 import { TSParams } from "./config";
+import { stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
 
 export const importsDot = ( ...names: string[] ): string[] => names.map ( name => {
   const s = noExtension ( name )
@@ -35,14 +36,6 @@ export const indent = ( path: string[], s: string ): string => ' '.repeat ( path
 export const indentList = ( ss: string[] ): string[] => ss.map ( s => '  ' + s )
 export const lensFocusQueryFor = ( path: string ) => parsePath ( path, stateCodeBuilder ( { '': '', '~': '', '/': '' } ) ) //TODO This clearly needs sorting out.
 export const stateFocusQueryForRepl = ( s: 'state' | 'pageState' | 'fullState', path: string ) => `state: ${s} - ${path}`
-export const lensFocusQueryStartedAtPage = <B, G> ( errorPrefix: string, params: TSParams, p: PageD<B, G>, path: string ) => {
-  try {
-    return parsePath ( path, stateCodeBuilder ( { '~': `Lenses.identity<${params.domainsFile}.${pageDomainName ( p )}>()` } ) )
-  } catch ( e: any ) {
-    console.error(errorPrefix)
-    throw e
-  }
-}
 
 export const focusOnFor = ( path: string[] ) => path.map ( p => `.focusOn('${p}')` ).join ( '' )
 

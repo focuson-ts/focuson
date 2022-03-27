@@ -24,8 +24,8 @@ import {PostCodeDataLineDomain} from "../PostCodeDemo/PostCodeDemo.domains"
 import {PostCodeMainPageDomain} from "../PostCodeDemo/PostCodeDemo.domains"
 import {PostCodeSearchDomain} from "../PostCodeDemo/PostCodeDemo.domains"
 export function PostCodeDemoPage(){
-  return focusedPageWithExtraState<FState, PostCodeDemoPageDomain, PostCodeMainPageDomain, Context> ( s => 'PostCodeDemo' ) ( s => sstate: pageState - ~/main) (
-    ( fullState, state , full, d, mode) => {
+  return focusedPageWithExtraState<FState, PostCodeDemoPageDomain, PostCodeMainPageDomain, Context> ( s => 'PostCodeDemo' ) ( state => state.focusOn('main')) (
+( fullState, state , full, d, mode) => {
   const id='root';
   const buttons =    {save:<RestButton state={state}
         id='save'
@@ -36,7 +36,7 @@ export function PostCodeDemoPage(){
        />,
       search:<ModalButton id='search' text='search'  state={state} modal = 'PostCodeSearch'  
         pageMode='edit'
-        focusOn={["{basePage}","~","/","p","o","s","t","c","o","d","e"]}
+        focusOn='~/postcode'
         copy={[{"from":"~/main/postcode","to":"~/postcode/search"}]}
         copyOnClose={[{"from":"~/postcode/addressResults/line1","to":"~/main/line1"},{"from":"~/postcode/addressResults/line2","to":"~/main/line2"},{"from":"~/postcode/addressResults/line3","to":"~/main/line3"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/search","to":"`~/main/postcode"}]}
       />,}

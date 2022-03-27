@@ -2,8 +2,9 @@ import { sortedEntries } from "@focuson/utils";
 import { isMainPage, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { domainName, domainsFileName, fetcherFileName, fetcherName, pageDomainName } from "./names";
 import { TSParams } from "./config";
-import { addStringToEndOfAllButLast, lensFocusQueryFor, importsDot, importsDotDot, lensFocusQueryStartedAtPage, noExtension } from "./codegen";
+import { addStringToEndOfAllButLast, importsDot, importsDotDot, lensFocusQueryFor, noExtension } from "./codegen";
 import { findIds, isRestLens, LensRestParam } from "../common/restD";
+import { lensFocusQueryWithSlashAndTildaFromIdentity } from "./lens";
 
 
 export const makeFetcherCode = ( params: TSParams ) => <B, G> ( p: PageD<B, G> ) => ( restName: string, def: RestDefnInPageProperties<G> ): string[] => {
@@ -26,7 +27,7 @@ export const makeFetcherCode = ( params: TSParams ) => <B, G> ( p: PageD<B, G> )
     `    ${common}.commonFetch<${params.stateName},  ${domain}.${dataType}>(),`,
     `     '${p.name}',`,
     `     '${targetFromPath}', fdLens, commonIds, localIds,${JSON.stringify ( ids )},${JSON.stringify ( resourceIds )},`,
-    `      ${lensFocusQueryStartedAtPage ( `Error making fetcher ${p.name} ${restName}. Target is '${targetFromPath}'. Do you need to start the path with a ~?`, params, p, targetFromPath )},`,
+    `      ${lensFocusQueryWithSlashAndTildaFromIdentity ( `Error making fetcher ${p.name} ${restName}. Target is '${targetFromPath}'. Do you need to start the path with a ~?`, params, p, targetFromPath )},`,
     `     '${def.rest.url}')`,
     '}' ]
 };

@@ -10,6 +10,7 @@ import { TSParams } from "./config";
 import { unique } from "../common/restD";
 import { ButtonD } from "../buttons/allButtons";
 import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
+import { lensFocusQueryWithTildaFromPage, stateFocusQueryWithTildaFromPage } from "./lens";
 
 
 export type AllComponentData<G> = ComponentData<G> | ErrorComponentData
@@ -210,8 +211,8 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
   const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( errorPrefix, [], pageD, `<>`, '</>' );
   return [
     `export function ${pageComponentName ( pageD )}(){`,
-    `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${pageD.name}' ) ( s => s${stateFocusQueryForRepl('pageState', pageD.display.target)}) (
-    ( fullState, state , full, d, mode) => {`,
+    `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${pageD.name}' ) ( state => state${stateFocusQueryWithTildaFromPage ( `createReactMainPageComponent for page ${pageD.name}`, params, pageD, pageD.display.target )}) (`,
+    `( fullState, state , full, d, mode) => {`,
     ...indentList ( makeGuardButtonVariables ( params, makeGuard, pageD ) ),
     `  const id='root';`,
     ...indentList ( makeButtonsVariable ( params, makeGuard, makeButtons, pageD ) ),

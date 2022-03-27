@@ -22,8 +22,8 @@ import {ValidationButton} from '@focuson/form_components';
 import {ETransferPageDomain} from "../ETransfer/ETransfer.domains";
 import {ETransferDataDDomain} from "../ETransfer/ETransfer.domains"
 export function ETransferPage(){
-  return focusedPageWithExtraState<FState, ETransferPageDomain, ETransferDataDDomain, Context> ( s => 'ETransfer' ) ( s => sstate: pageState - ~/fromApi) (
-    ( fullState, state , full, d, mode) => {
+  return focusedPageWithExtraState<FState, ETransferPageDomain, ETransferDataDDomain, Context> ( s => 'ETransfer' ) ( state => state.focusOn('fromApi')) (
+( fullState, state , full, d, mode) => {
   const id='root';
   const buttons =    {cancel:<button>cancel of type ResetStateButton cannot be created yet</button>,
       eTransfers:<RestButton state={state}

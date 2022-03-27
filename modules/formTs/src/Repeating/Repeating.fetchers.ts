@@ -13,6 +13,6 @@ export function RepeatingWholeDataFetcher(fdLens:Optional<FState, domains.Repeat
     common.commonFetch<FState,  domains.RepeatingWholeDataDomain>(),
      'Repeating',
      '~/fromApi', fdLens, commonIds, localIds,["customerId"],[],
-      Lenses.identity<domains.RepeatingPageDomain>().focusQuery('fromApi'),
+      Lenses.identity<FState>().focusQuery('Repeating').focusQuery('fromApi'),
      '/api/repeating?{query}')
 }

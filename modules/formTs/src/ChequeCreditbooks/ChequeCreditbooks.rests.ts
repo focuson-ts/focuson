@@ -8,7 +8,7 @@ export function ChequeCreditbooks_ChequeCreditbooksRestDetails ( cd: NameAndLens
   const fdd: NameAndLens<domains.ChequeCreditbooksPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('ChequeCreditbooks'),
-    dLens: Lenses.identity<domains.ChequeCreditbooksPageDomain>()state: fullState - ~/fromApi,
+    dLens: Lenses.identity<domains.ChequeCreditbooksPageDomain>().focusQuery('fromApi'),
     cd, fdd,
     ids: ["accountId","applRef","brandRef","customerId"],
     resourceId:  [],

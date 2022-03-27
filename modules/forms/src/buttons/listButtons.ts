@@ -1,5 +1,6 @@
 import { ButtonCreator, MakeButton } from "../codegen/makeButtons";
 import { stateFocusQueryForRepl } from "../codegen/codegen";
+import { stateFocusQueryWithTildaFromPage, stateForButton } from "../codegen/lens";
 
 export interface CommonListButtonInPage {
   /** the path to the value from the root of this page's domain */
@@ -18,16 +19,22 @@ export interface ListPrevButtonInPage extends CommonListButtonInPage {
 function ListNextButton<B extends ListNextButtonInPage, G> (): ButtonCreator<B, any> {
   return {
     import: "@focuson/form_components",
-    makeButton: ( { params, parent, name, button } ) =>
-      [ `<ListNextButton id='${name}' title='Next' list={${stateFocusQueryForRepl ('fullState', button.list )}} value={${stateFocusQueryForRepl ('fullState', button.value )}} />` ]
+    makeButton: createButton => {
+      const { params, parent, name, button } = createButton
+      const forButton = stateForButton ( createButton, 'ListNextButton' )
+      return [ `<ListNextButton id='${name}' title='Next' list={${forButton ( button.list )}} value={${forButton( button.value)}} />` ]
+    }
   }
 }
 
 function ListPrevButton<B extends ListPrevButtonInPage, G> (): ButtonCreator<B, any> {
   return {
     import: "@focuson/form_components",
-    makeButton: ( { params, parent, name, button } ) =>
-      [ `<ListPrevButton id='${name}' title='Prev'  list={${stateFocusQueryForRepl ('fullState', button.list )}} value={${stateFocusQueryForRepl ('fullState', button.value )}} />` ]
+    makeButton: ( createButton ) => {
+      const { params, parent, name, button } = createButton
+      const forButton = stateForButton ( createButton, 'ListPrevButton' )
+      return [ `<ListPrevButton id='${name}' title='Next' list={${forButton ( button.list )}} value={${forButton( button.value)}} />` ]
+    }
   }
 }
 

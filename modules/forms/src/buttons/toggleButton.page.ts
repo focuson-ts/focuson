@@ -1,13 +1,15 @@
 import { ButtonCreator, MakeButton } from "../codegen/makeButtons";
 import { stateFocusQueryForRepl, indentList, opt } from "../codegen/codegen";
+import { stateFocusQueryWithTildaFromPage, stateForButton } from "../codegen/lens";
 
 
 function makeToggleButton<B extends ToggleButtonInPage<G>, G> (): ButtonCreator<ToggleButtonInPage<G>, G> {
   return {
     import: '@focuson/form_components',
-    makeButton: ( { params, parent, name, button } ) => {
+    makeButton: ( createButton ) => {
+      const { params, parent, name, button } = createButton
       const { value, buttonText } = button
-      return [ `<ToggleButton state={${stateFocusQueryForRepl ( 'fullState', value )}}`,
+      return [ `<ToggleButton state={${stateForButton ( createButton, 'ToggleButton' ) ( value )}}`,
         ...indentList ( [
           ...opt ( 'id', name ),
           ...opt ( 'buttonText', buttonText ), ' />' ] ) ]

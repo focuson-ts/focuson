@@ -47,18 +47,17 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalButtonInPage<G>, G> {
         const { modal, mode, restOnCommit, focusOn, copy, createEmpty, copyOnClose, setToLengthOnClose, text } = button
         const createEmptyString = createEmpty ? [ `createEmpty={${params.emptyFile}.${emptyName ( createEmpty )}}` ] : []
 
-        const focusOnArray = [ '{basePage}', ...focusOn ]
-        const copyOnCloseArray = copyOnClose ? singleToList ( copyOnClose ) : undefined
-        const copyFromArray = copy ? singleToList ( copy ) : undefined
-        const actualSetToLengthOnClose = setToLengthOnClose ? { array: [ ...setToLengthOnClose.array ], variable: [ ...setToLengthOnClose.variable ] } : undefined
+
+        const copyOnCloseArray: CopyDetails[] = copyOnClose ? singleToList ( copyOnClose ) : undefined
+        const copyFromArray: CopyDetails[] = copy ? singleToList ( copy ) : undefined
         return [ `<${button.control} id='${name}' text='${text ? text : name}'  state={state} modal = '${modalName ( parent, modal )}'  `,
           ...indentList ( [
             ...opt ( 'pageMode', mode ),
-            ...optT ( 'focusOn', focusOnArray ),
+            ...opt ( 'focusOn', focusOn ),
             ...optT ( 'copy', copyFromArray ),
             ...optT ( 'copyOnClose', copyOnCloseArray ),
             ...createEmptyString,
-            ...optT ( 'setToLengthOnClose', actualSetToLengthOnClose ),
+            ...optT ( 'setToLengthOnClose', setToLengthOnClose ),
             ...restForButton ( parent, restOnCommit ) ] ), '/>' ]
 
       }
