@@ -16,7 +16,7 @@ interface StateForModalButtonTest extends HasPageSelection {
 const context: PageSelectionContext<StateForModalButtonTest> = {
   combine: ( state, pages: PageDetailsForCombine[] ): JSX.Element => <div>{pages.map ( c => c.element )}</div>,
   pageSelectionL: pageSelectionlens (),
-  pages: { a: { lens: Lenses.identity<StateForModalButtonTest> ().focusQuery ( 'a' ), pageFunction: () => <span/>, config: {}, pageType: 'MainPage' } }
+  pages: { a: { lens: Lenses.identity<StateForModalButtonTest> ().focusQuery ( 'a' ), pageFunction: () => <span/>, config: {}, pageType: 'MainPage', pageMode: "edit" } }
 
 }
 

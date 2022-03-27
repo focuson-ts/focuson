@@ -4,6 +4,7 @@ import { simpleMessagesLFn } from "./simpleMessage";
 import { FocusedPage } from "./focusedPage";
 import { PageTemplateProps } from "./PageTemplate";
 import { HasSimpleMessages, SimpleMessage } from "@focuson/utils";
+import { PageMode } from "./pageSelection";
 
 export interface MultiPageDetails<S, Context> {
   [ name: string ]: OnePageDetails<S, any, any, any, Context>

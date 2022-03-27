@@ -50,13 +50,15 @@ describe ( "makeCommon", () => {
       "  accountId?:string;",
       "  createPlanId?:string;",
       "  customerId?:string;",
+      "  usersRole?:string;",
       "}",
       "export const identityL = identityOptics<FState> ();",
       "export const commonIdsL = identityL.focusQuery('CommonIds');",
       "export const commonIds: NameAndLens<FState> = {",
       "   accountId: commonIdsL.focusQuery('accountId'),",
       "   createPlanId: commonIdsL.focusQuery('createPlanId'),",
-      "   customerId: commonIdsL.focusQuery('customerId')",
+      "   customerId: commonIdsL.focusQuery('customerId'),",
+      "   usersRole: commonIdsL.focusQuery('usersRole')",
       "}",
       "export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{",
       "  mode: PageMode;",
@@ -69,7 +71,7 @@ describe ( "makeCommon", () => {
       "    defaultDateFn ) ( onError ) //updateTagsAndMessagesOnError ( defaultErrorMessage )",
       "}",
       "export const emptyState: FState = {",
-      "  CommonIds: {'createPlanId':'tbd','customerId':'custId','accountId':'accId'},",
+      "  CommonIds: {'createPlanId':'tbd','customerId':'custId','accountId':'accId','usersRole':'user'},",
       "  tags: {},",
       "  messages: [],",
       "  pageSelection: [{ pageName: 'EAccountsSummary', firstTime: true, pageMode: 'view' }],",
@@ -77,7 +79,7 @@ describe ( "makeCommon", () => {
       "  restCommands: [],",
       "    debug: { selectedPageDebug: true, fetcherDebug: true }",
       "  }"
-    ] )
+    ])
 
   } )
 } )

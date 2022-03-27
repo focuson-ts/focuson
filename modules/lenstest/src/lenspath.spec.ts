@@ -103,21 +103,23 @@ describe ( "parsePathMakingLens", () => {
     expect ( parsePath ( '/a/[1]', lensBuilder ( prefixNameAndLens () ) ).description ).toEqual ( 'I.focus?(a).chain([1])' )
     expect ( parsePath ( '/a/[/a/b]', lensBuilder ( prefixNameAndLens () ) ).description ).toEqual ( 'I.focus?(a).chainCalc(I.focus?(a).focus?(b))' )
     expect ( parsePath ( '/a/[b]', lensBuilder ( prefixNameAndLens ( [ '', id.focusQuery ( 'a' ) ] ) ) ).description ).toEqual ( 'I.focus?(a).chainCalc(I.focus?(a).focus?(b))' )
+    // expect ( parsePath ( '', lensBuilder ( prefixNameAndLens () ) ) ).toEqual ( undefined )
   } )
-  it ( "should make undefined if the initial  isn't defined", () => {
-    expect ( parsePath ( '', lensBuilder ( prefixNameAndLens () ) ) ).toEqual ( undefined )
-    expect ( parsePath ( 'a/b', lensBuilder ( prefixNameAndLens () ) ) ).toEqual ( undefined )
+  it ( "should throw error if the initial  isn't defined", () => {
+    expect ( () => parsePath ( 'a/b', lensBuilder ( prefixNameAndLens () ) ) ).toThrow ( "Error parsing 'a/b'. Cannot find initial  ''" )
   } )
+
+
 } )
 
 describe ( "parseMakingCode", () => {
   const initials = stateCodeInitials ( 'FState' )
   it ( "should make code", () => {
-    expect ( parsePath ( '/a/v0', stateCodeBuilder ( initials ) ) ).toEqual ( 'state.copyWithIdentity().focusQuery(a).focusQuery(v0)' )
-    expect ( parsePath ( '~/a/$last', stateCodeBuilder ( initials ) ) ).toEqual ( 'fullState.focusQuery(a).chain(Lenses.last())' )
-    expect ( parsePath ( 'a/$append', stateCodeBuilder ( initials ) ) ).toEqual ( 'state.focusQuery(a).chain(Lenses.append())' )
-    expect ( parsePath ( 'a/[1]', stateCodeBuilder ( initials ) ) ).toEqual ( 'state.focusQuery(a).chain(Lenses.nth(1))' )
-    expect ( parsePath ( '/a/[/a/b]', stateCodeBuilder ( initials ) ) ).toEqual ( 'state.copyWithIdentity().focusQuery(a).chainNthFromPath(state.copyWithIdentity().focusQuery(a).focusQuery(b))' )
-    expect ( parsePath ( '/a/[b]', stateCodeBuilder ( initials ) ) ).toEqual ( 'state.copyWithIdentity().focusQuery(a).chainNthFromPath(state.focusQuery(b))' )
+    expect ( parsePath ( '/a/v0', stateCodeBuilder ( initials ) ) ).toEqual ( "state.copyWithIdentity().focusQuery('a').focusQuery('v0')" )
+    expect ( parsePath ( '~/a/$last', stateCodeBuilder ( initials ) ) ).toEqual ( "fullState.focusQuery('a').chain(Lenses.last())" )
+    expect ( parsePath ( 'a/$append', stateCodeBuilder ( initials ) ) ).toEqual ( "state.focusQuery('a').chain(Lenses.append())" )
+    expect ( parsePath ( 'a/[1]', stateCodeBuilder ( initials ) ) ).toEqual ( "state.focusQuery('a').chain(Lenses.nth(1))" )
+    expect ( parsePath ( '/a/[/a/b]', stateCodeBuilder ( initials ) ) ).toEqual ( "state.copyWithIdentity().focusQuery('a').chainNthFromPath(state.copyWithIdentity().focusQuery('a').focusQuery('b'))" )
+    expect ( parsePath ( '/a/[b]', stateCodeBuilder ( initials ) ) ).toEqual ( "state.copyWithIdentity().focusQuery('a').chainNthFromPath(state.focusQuery('b'))" )
   } )
 } )

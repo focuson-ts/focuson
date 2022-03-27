@@ -12,12 +12,12 @@ let view: PageMode = 'view';
 const nothingDisplayed: PageSpecState = { ...emptyState, messages: [], pageSelection: [ { pageName: 'nothing', pageMode: view } ] };
 
 describe ( "selectedPage", () => {
-  it ( "should display zero pages", () => {
-    const state = lensState<PageSpecState, ContextForTest> ( rootState, () => {}, 'displayMain / focusedPage', context )
-    const comp = shallow ( <SelectedPage state={state}/> )
-    // expect ( comp.html () ).toEqual ( '' )
-    expect ( comp.text () ).toEqual ( "" )
-  } )
+  // it ( "should display zero pages", () => {
+  //   const state = lensState<PageSpecState, ContextForTest> ( rootState, () => {}, 'displayMain / focusedPage', context )
+  //   const comp = shallow ( <SelectedPage state={state}/> )
+  //   // expect ( comp.html () ).toEqual ( '' )
+  //   expect ( comp.text () ).toEqual ( "" )
+  // } )
 
   it ( "should display one page", () => {
     const state = lensStateWith ( dataDefinedState, () => {}, [ 'firstPage', 'edit' ,undefined] )
