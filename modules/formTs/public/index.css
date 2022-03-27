@@ -174,3 +174,11 @@ select {
     position: absolute;
     top: 50px
 }
+
+.close {
+    text-decoration: none;
+    position: absolute;
+    top: 0;
+    right: 10px;
+    cursor: pointer;
+}

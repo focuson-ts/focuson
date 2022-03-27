@@ -39,7 +39,7 @@ const aL = identity.focusQuery ( 'a' )
 const abL = identity.focusOn ( 'a' ).focusQuery ( 'b' )
 const abxL = identity.focusOn ( 'a' ).focusQuery ( 'b' ).focusQuery ( 'x' )
 const pageDetails: MultiPageDetails<TextForLabelState, FocusOnContext<TextForLabelState>> = {
-  a: { config: {}, pageType: 'MainPage', pageFunction: () => <span/>, lens: aL }
+  a: { config: {}, pageType: 'MainPage', pageFunction: () => <span/>, lens: aL, pageMode: 'edit' }
 }
 const state = lensState ( textForLabelState, s => {}, '', defaultPageSelectionAndRestCommandsContext<TextForLabelState> ( pageDetails ) )
 

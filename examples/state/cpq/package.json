@@ -15,9 +15,9 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "typescript": "^4.1.5",
-    "@focuson/lens": "0.4.101",
-    "@focuson/nav": "0.4.101",
-    "@focuson/state": "0.4.101"
+    "@focuson/lens": "0.4.102",
+    "@focuson/nav": "0.4.102",
+    "@focuson/state": "0.4.102"
   },
   "description": "Showing how lens help in 'configure pricing quotation' examples",
   "devDependencies": {
@@ -59,7 +59,7 @@
     "test:watch": "npm run test -- --watch",
     "storybook": "start-storybook -p 6006 -s public"
   },
-  "version": "0.4.101",
+  "version": "0.4.102",
   "eslintConfig": {
     "extends": [
       "react-app",

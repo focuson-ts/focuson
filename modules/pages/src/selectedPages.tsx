@@ -21,8 +21,10 @@ export function IndexPage<S, Context extends PageSelectionContext<S>> ( { state,
   return (
     <div>
       <ul>
-        {sortedEntries ( state.context.pages ).filter ( ( [ name, pd ] ) => isMainPageDetails ( pd ) ).map ( ( [ name, pd ] ) =>
-          <li key={name}><SelectPage state={state} id={`selectPage-${name}`} pageName={name} pageMode='edit'/></li> )}
+        {sortedEntries ( state.context.pages ).filter ( ( [ name, pd ] ) => isMainPageDetails ( pd ) ).map ( ( [ name, pd ] ) => {
+          if ( !isMainPageDetails ( pd ) ) throw Error ( 'software error' )
+          return <li key={name}><SelectPage state={state} id={`selectPage-${name}`} pageName={name} pageMode={pd.pageMode}/></li>;
+        } )}
       </ul>
       {children}
     </div>)

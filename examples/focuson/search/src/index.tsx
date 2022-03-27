@@ -20,7 +20,7 @@ function MyLoading () {
 const simpleMessagesConfig = simpleMessagesPageConfig<FullState, string, Context> ( MyLoading )
 
 export const pages: MultiPageDetails<FullState, Context> = {
-  search: { pageType: "MainPage", config: simpleMessagesConfig, lens: identityOptics<FullState> ().focusQuery ( 'search' ), pageFunction: SearchPage<FullState, Context> (), initialValue: {} },
+  search: { pageType: "MainPage", config: simpleMessagesConfig, lens: identityOptics<FullState> ().focusQuery ( 'search' ), pageFunction: SearchPage<FullState, Context> (), initialValue: {}, pageMode: 'edit' },
   query: { pageType: "ModalPage", config: simpleMessagesConfig, pageFunction: SearchQueryModalPage () }
 }
 
