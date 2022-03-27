@@ -3,7 +3,7 @@ import { nameAndAddressDataD, postCodeSearchResponse } from "./addressSearch.dat
 import { RestD, RestParams } from "../../common/restD";
 
 export const postcodeParams: RestParams = {
-  postcode: { lens: [ 'postcode', 'search' ], testValue: 'LW12 4RG' }
+  postcode: { lens: '~/postcode/search', testValue: 'LW12 4RG' }
 }
 
 export const postcodeRestD: RestD<AllGuards> = {

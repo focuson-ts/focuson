@@ -1,6 +1,7 @@
 import { Story } from "@storybook/react";
 import { findOneSelectedPageDetails, PageMode, PageSelection } from "@focuson/pages";
 import { SBookProvider } from "@focuson/stories";
+import { Lenses } from "@focuson/lens";
 import { context, Context, emptyState, FState } from "../common";
 import { pages } from "../pages";
 import * as render  from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.render";
@@ -21,9 +22,9 @@ interface StoryState {
 const initial = {"selectedItem":0,"occupation":{"search":"","selectedOccupationName":"","searchResults":[]},"mainOrJoint":false}
 function pageSelection ( pageMode: PageMode ): PageSelection { return { pageName: 'OccupationAndIncomeSummary', pageMode}}
 const Template: Story<StoryState> = ( args: StoryState ) =>{
-  const startState: FState = { ...emptyState, pageSelection: [ pageSelection ( args.pageMode ) ] }
-  return SBookProvider<FState, Context> ( { ...startState, OccupationAndIncomeSummary: { ...initial, ~: args.domain } },//NOTE currently stories only work if the target depth is 1
-     context,
+  const rawState: FState = { ...emptyState, pageSelection: [ pageSelection ( args.pageMode ) ], OccupationAndIncomeSummary: initial }
+  const startState=Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('fromApi').set(rawState, args.domain)
+  return SBookProvider<FState, Context> (startState, context,
      s => findOneSelectedPageDetails ( s ) (pageSelection(args.pageMode)).element );}
  
  

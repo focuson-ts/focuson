@@ -1,5 +1,7 @@
-import { accountAllFlagsDataDD, accountOverviewDataD, accountOverviewExcessHistoryDataD,
-  accountOverviewExcessInfoDataD, accountOverviewReasonDataD, arrearsDetailsDataD } from "./accountOverview.dataD";
+import {
+  accountAllFlagsDataDD, accountOverviewDataD, accountOverviewExcessHistoryDataD,
+  accountOverviewExcessInfoDataD, accountOverviewReasonDataD, arrearsDetailsDataD
+} from "./accountOverview.dataD";
 
 import { ExampleRestD } from "../common";
 import { commonParams } from "../eAccounts/eAccountsSummary.restD";
@@ -35,7 +37,7 @@ export const accountOverviewExcessHistoryRestD: ExampleRestD = {
 
 export const arrearsDetailsParams: RestParams = {
   ...commonParams,
-  startDate: { lens: [ 'currentSelectedExcessHistory', 'start' ], testValue: '2020-01-20' }
+  startDate: { lens: '~/currentSelectedExcessHistory/start', testValue: '2020-01-20' }
 }
 
 export const arrearsDetailsCurrentRestD: ExampleRestD = {

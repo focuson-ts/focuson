@@ -1,6 +1,7 @@
 import { isMainPage, isModalPage, MainPageD, PageD } from "../common/pageD";
 import { TSParams } from "./config";
 import { domainName, domainsFileName, emptyFileName, emptyName, pageComponentName, renderFileName, sampleName, samplesFileName } from "./names";
+import { parsePath, stateCodeBuilder } from "@focuson/lens";
 
 
 export function makeOneStory<B, G> ( params: TSParams, p: PageD<B, G> ): string[] {
@@ -17,6 +18,7 @@ export function makeOneMainStory<B, G> ( params: TSParams, p: MainPageD<B, G> ):
     `import { Story } from "@storybook/react";`,
     `import { findOneSelectedPageDetails, PageMode, PageSelection } from "@focuson/pages";`,
     `import { SBookProvider } from "@focuson/stories";`,
+    `import { Lenses } from "@focuson/lens";`,
     `import { context, Context, emptyState, ${params.stateName} } from "../common";`,
     `import { pages } from "../pages";`,
     `import * as render  from "${renderFileName ( '..', params, p )}";`,
@@ -37,9 +39,12 @@ export function makeOneMainStory<B, G> ( params: TSParams, p: MainPageD<B, G> ):
     p.initialValue === 'empty' ? `const initial = ${params.emptyFile}.${emptyName ( p.display.dataDD )}` : `const initial = ${JSON.stringify ( p.initialValue )}`,
     `function pageSelection ( pageMode: PageMode ): PageSelection { return { pageName: '${p.name}', pageMode}}`,
     `const Template: Story<StoryState> = ( args: StoryState ) =>{`,
-    `  const startState: FState = { ...emptyState, pageSelection: [ pageSelection ( args.pageMode ) ] }`,
-    `  return SBookProvider<${params.stateName}, Context> ( { ...startState, ${p.name}: { ...initial, ${p.display.target[ 0 ]}: args.domain } },//NOTE currently stories only work if the target depth is 1`,
-    `     context,`,
+    `  const rawState: ${params.stateName} = { ...emptyState, pageSelection: [ pageSelection ( args.pageMode ) ], ${p.name}: initial }`,
+    `  const startState=${parsePath ( p.display.target, stateCodeBuilder ( {
+      '/': `Lenses.identity<${params.stateName}>()`,
+      '~': `Lenses.identity<${params.stateName}>().focusQuery('${p.name}')`,
+    } ) )}.set(rawState, args.domain)`,
+    `  return SBookProvider<${params.stateName}, Context> (startState, context,`,
     `     s => findOneSelectedPageDetails ( s ) (pageSelection(args.pageMode)).element );}`,
     ` `,
     ` `,

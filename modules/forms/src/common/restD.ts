@@ -12,7 +12,7 @@ export interface CommonLensRestParam {
   main?: boolean
 }
 export interface LensRestParam {
-  lens: string[],
+  lens: string,
   testValue: string,
   main?: boolean
 }

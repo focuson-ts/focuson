@@ -34,7 +34,7 @@ export function OccupationAndIncomeSummary_DropdownsRestDetails ( cd: NameAndLen
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'),
-    dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>()state: fullState - !/dropdowns,
+    dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>()state: fullState - ~/dropdowns,
     cd, fdd,
     ids: ["customerId"],
     resourceId:  [],

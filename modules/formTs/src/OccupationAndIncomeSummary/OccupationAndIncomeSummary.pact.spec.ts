@@ -182,7 +182,7 @@ pactWith ( { consumer: 'Dropdowns', provider: 'DropdownsProvider', cors: true },
       let expectedRaw: any = {
         ... firstState,
          OccupationAndIncomeSummary: {makeTargetFor ( path )//needs fixing:samples.sampleDropdowns0closeTargetFor ( path ) //needs fixing ,
-        tags: { OccupationAndIncomeSummary_!_/_d_r_o_p_d_o_w_n_s:["custId"]}
+        tags: { OccupationAndIncomeSummary_~_/_d_r_o_p_d_o_w_n_s:["custId"]}
       };
       const expected = massTransform(expectedRaw,)
       expect ( newState ).toEqual ( expected )

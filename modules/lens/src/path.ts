@@ -80,7 +80,7 @@ export function stateCodeBuilder ( initials: NameAnd<string> ): PathBuilder<stri
   return {
     zero ( initial: string ): string { return initials[ initial ]; },
     foldBracketsPath ( acc: string, path: string ): string { return acc + `.chainNthFromPath(${path})`; },
-    foldKey ( acc: string, key: string ): string { return acc + `.focusQuery(${key})` },
+    foldKey ( acc: string, key: string ): string { return acc + `.focusQuery('${key}')` },
     foldAppend ( acc: string ): string { return acc + ".chain(Lenses.append())"; },
     foldLast ( acc: string ): string { return acc + ".chain(Lenses.last())"; },
     foldNth ( acc: string, n: number ): string { return acc + `.chain(Lenses.nth(${n}))` },

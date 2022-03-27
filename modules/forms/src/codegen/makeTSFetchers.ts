@@ -2,11 +2,11 @@ import { sortedEntries } from "@focuson/utils";
 import { isMainPage, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { domainName, domainsFileName, fetcherFileName, fetcherName, pageDomainName } from "./names";
 import { TSParams } from "./config";
-import { addStringToEndOfAllButLast, focusQueryFor, importsDot, importsDotDot, lensFocusQueryForRepl, noExtension } from "./codegen";
+import { addStringToEndOfAllButLast, lensFocusQueryFor, importsDot, importsDotDot, lensFocusQueryStartedAtPage, noExtension } from "./codegen";
 import { findIds, isRestLens, LensRestParam } from "../common/restD";
 
 
-export const makeFetcherCode = ( params: TSParams ) => <B, G> ( p: PageD<B, G> ) => ( def: RestDefnInPageProperties<G> ): string[] => {
+export const makeFetcherCode = ( params: TSParams ) => <B, G> ( p: PageD<B, G> ) => ( restName: string, def: RestDefnInPageProperties<G> ): string[] => {
   const pageDomain = noExtension ( params.pageDomainsFile )
   const domain = noExtension ( params.domainsFile )
   const common = noExtension ( params.commonFile )
@@ -16,7 +16,7 @@ export const makeFetcherCode = ( params: TSParams ) => <B, G> ( p: PageD<B, G> )
   const targetFromPath = def.targetFromPath;
   const [ ids, resourceIds ] = findIds ( def.rest )
   const locals: [ string, LensRestParam ][] = sortedEntries ( def.rest.params ).flatMap ( ( [ n, l ] ) => isRestLens ( l ) ? [ [ n, l ] ] : [] )
-  const localLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: Lenses.identity< ${domain}.${pageDomainName ( p )}>()${focusQueryFor ( l.lens )}` )
+  const localLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: Lenses.identity< ${domain}.${pageDomainName ( p )}>()${lensFocusQueryFor ( l.lens )}` )
   const lensVariableString = `  const localIds = {` + localLens.join ( "," ) + "}"
   return [
     `//fetcher type ${def.fetcher}`,
@@ -26,21 +26,21 @@ export const makeFetcherCode = ( params: TSParams ) => <B, G> ( p: PageD<B, G> )
     `    ${common}.commonFetch<${params.stateName},  ${domain}.${dataType}>(),`,
     `     '${p.name}',`,
     `     '${targetFromPath}', fdLens, commonIds, localIds,${JSON.stringify ( ids )},${JSON.stringify ( resourceIds )},`,
-    `      ${lensFocusQueryForRepl ( 'pageState', targetFromPath )},`,
+    `      ${lensFocusQueryStartedAtPage ( `Error making fetcher ${p.name} ${restName}. Target is '${targetFromPath}'. Do you need to start the path with a ~?`, params, p, targetFromPath )},`,
     `     '${def.rest.url}')`,
     '}' ]
 };
 
 
-export function findAllFetchers<B, G> ( ps: PageD<B, G>[] ): [ PageD<B, G>, RestDefnInPageProperties<G> ][] {
+export function findAllFetchers<B, G> ( ps: PageD<B, G>[] ): [ PageD<B, G>, string, RestDefnInPageProperties<G> ][] {
   return ps.flatMap ( pd => (isMainPage ( pd ) ? sortedEntries ( pd.rest ) : []).flatMap ( ( [ name, d ] ) => {
-    let x: [ PageD<B, G>, RestDefnInPageProperties<G> ][] = d.fetcher ? [ [ pd, d ] ] : []
+    let x: [ PageD<B, G>, string, RestDefnInPageProperties<G> ][] = d.fetcher ? [ [ pd, name, d ] ] : []
     return x
   } ) )
 }
 
-export const makeAllFetchers = <B, G> ( params: TSParams, ps: PageD<B, G>[] ): string[] => findAllFetchers ( ps ).flatMap ( ( [ pd, rd ] ) =>
-  makeFetcherCode ( params ) ( pd ) ( rd ) );
+export const makeAllFetchers = <B, G> ( params: TSParams, ps: PageD<B, G>[] ): string[] => findAllFetchers ( ps ).flatMap ( ( [ pd, restName, rd ] ) =>
+  makeFetcherCode ( params ) ( pd ) ( restName, rd ) );
 
 interface FetcherDataStructureParams {
   stateName: string,
@@ -62,7 +62,7 @@ export function makeFetchersImport<B, G> ( params: TSParams, p: PageD<B, G> ): s
 }
 export function makeFetcherDataStructureImport<B, G> ( params: TSParams, pages: PageD<B, G>[] ): string[] {
   let fetchers = findAllFetchers ( pages );
-  const fetcherImports = fetchers.map ( ( [ page, prop ] ) => `import { ${fetcherName ( prop )} } from '${fetcherFileName ( '.', params, page )}';` )
+  const fetcherImports = fetchers.map ( ( [ page, restName, prop ] ) => `import { ${fetcherName ( prop )} } from '${fetcherFileName ( '.', params, page )}';` )
   return [
     ...importsDot ( params.commonFile ),
     ...fetcherImports,
@@ -82,7 +82,7 @@ export function makeFetchersDataStructure<B, G> ( params: TSParams, { stateName,
   return [
     `export const ${variableName}: FetcherTree<${params.commonFile}.${stateName}> = {`,
     `fetchers: [`,
-    ...addStringToEndOfAllButLast ( ',' ) ( fetchers.map ( ( [ pd, rd ], i ) =>
+    ...addStringToEndOfAllButLast ( ',' ) ( fetchers.map ( ( [ pd, restName, rd ], i ) =>
       `    ${fetcherName ( rd )}( identityL.focusQuery ( '${pd.name}' ), commonIds )` ) ),
     `],`,
     'children: []}',

@@ -10,7 +10,7 @@ import { GuardButton } from "@focuson/form_components";
 import { LabelAndStringInput } from '@focuson/form_components';
 import { LabelAndDropdown } from '@focuson/form_components';
 import { LabelAndNumberInput } from '@focuson/form_components';
-import { Table } from '2';
+import { Table } from '@focuson/form_components';
 import { SelectedItem } from '@focuson/form_components';
 import { Layout } from '@focuson/form_components';
 import {ListNextButton} from '@focuson/form_components';

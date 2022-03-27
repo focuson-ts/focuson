@@ -5,7 +5,7 @@ import { beforeSeparator, NameAnd, RestAction, sortedEntries } from "@focuson/ut
 import { fetcherName, restDetailsName, sampleName, samplesFileName } from "./names";
 import { defaultRestAction, isRestLens, LensRestParam, makeCommonParamsValueForTest, RestActionDetail, RestD } from "../common/restD";
 import { TSParams } from "./config";
-import { focusQueryFor, indentList } from "./codegen";
+import { lensFocusQueryFor, indentList } from "./codegen";
 
 
 interface CommonPactProps extends NameAnd<string> {
@@ -107,7 +107,7 @@ function makeCommonPropsForPact<B, G> ( p: PageD<B, G>, d: RestD<G>, params: TSP
 
 function makePropsForFetcherPact<B, G> ( p: PageD<B, G>, defn: RestDefnInPageProperties<G>, d: RestD<G>, params: TSParams, path: string ): FetcherPactProps {
   const locals: [ string, LensRestParam ][] = sortedEntries ( d.params ).flatMap ( ( [ n, l ] ) => isRestLens ( l ) ? [ [ n, l ] ] : [] )
-  const localLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: Lenses.identity<${params.stateName}>().focusQuery('${p.name}')${focusQueryFor ( l.lens )}` )
+  const localLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: Lenses.identity<${params.stateName}>().focusQuery('${p.name}')${lensFocusQueryFor ( l.lens )}` )
   const lensTransformString = locals.map ( ( [ n, l ] ) => `[ids.${n}, () =>"${l.testValue}"]` )
   const tag = [ p.name, ...path ].join ( "_" )
   let commonPactProps = makeCommonPropsForPact ( p, d, params, path, 'get', `should have a get fetcher for ${d.dataDD.name}` );
@@ -140,7 +140,7 @@ function makePropsForRestPact<B, G> ( p: PageD<B, G>, restName: string, r: RestD
   let closeTarget = ' closeTargetFor ( r.targetFromPath );//needs fixing'
   const locals: [ string, LensRestParam ][] = sortedEntries ( r.rest.params ).flatMap ( ( [ n, l ] ) => isRestLens ( l ) ? [ [ n, l ] ] : [] )
   const lensTransformString = locals.map ( ( [ n, l ] ) => `[ids.${n}, () =>"${l.testValue}"]` )
-  const localLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: Lenses.identity<${params.stateName}>().focusQuery('${p.name}')${focusQueryFor ( l.lens )}` )
+  const localLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: Lenses.identity<${params.stateName}>().focusQuery('${p.name}')${lensFocusQueryFor ( l.lens )}` )
 
   let content = indentList ( indentList ( indentList ( [
     `const ids = {`, ...indentList ( localLens ), '}',
