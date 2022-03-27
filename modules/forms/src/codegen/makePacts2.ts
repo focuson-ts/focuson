@@ -1,10 +1,8 @@
 import { isMainPage, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { beforeSeparator, RestAction, sortedEntries } from "@focuson/utils";
 import { fetcherName, restDetailsName, sampleName } from "./names";
-import { defaultRestAction, findIds, makeCommonValueForTest, makeParamValueForTest } from "../common/restD";
+import { defaultRestAction, makeCommonValueForTest, makeParamValueForTest } from "../common/restD";
 import { TSParams } from "./config";
-import { commonIds, FState, identityL } from "ExampleApp/src/common";
-import * as samples from "ExampleApp/src/OccupationAndIncomeSummary/OccupationAndIncomeSummary.samples";
 import { stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
 import { parsePath } from "@focuson/lens";
 

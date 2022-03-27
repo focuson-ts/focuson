@@ -24,8 +24,8 @@ export interface ModalCreationData<B, G> {
   modal: PageD<B, G>
 }
 export function walkModals<B, G> ( ps: PageD<B, G>[] ): ModalCreationData<B, G>[] {
-  return ps.flatMap ( p => (isMainPage ( p ) ? safeArray ( p.modals ) : []).map ( ( { modal, path } ) =>
-    ({ name: modalName ( p, modal ), path: [ p.name, ...path ], modal }) ) )
+  return ps.flatMap ( p => (isMainPage ( p ) ? safeArray ( p.modals ) : []).map ( ( { modal } ) =>
+    ({ name: modalName ( p, modal ), modal }) ) )
 }
 
 export const makeModal = <G> ( params: TSParams ) => <B> ( { name, modal }: ModalCreationData<B, G> ): string[] => {

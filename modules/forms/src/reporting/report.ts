@@ -72,7 +72,7 @@ export function makeDomainReport<B, G> ( page: MainPageD<B, G>, { generatedDomai
 }
 export function makeModalsReport<B, G> ( page: MainPageD<B, G>, info: ReportInfo ): ReportDetails {
   const general = safeArray ( page.modals ).flatMap ( m => [
-    `${m.modal.name} on path  ${JSON.stringify ( m.path )}. Displayed with ${m.modal.display.dataDD.name}`,
+    `${m.modal.name}. Displayed with ${m.modal.display.dataDD.name}`,
     ...notCreated ( info, m.modal.display.dataDD.name )
   ] )
   const critical = safeArray ( page.modals ).flatMap ( m => notCreated ( info, m.modal.display.dataDD.name ) )

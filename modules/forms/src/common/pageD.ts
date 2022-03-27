@@ -33,8 +33,7 @@ export interface ButtonDefnInPage<B> {
 
 export type PageType = 'MainPage' | 'ModalPage' | 'ModalPopup'
 export interface ModalData<B, G> {
-  modal: PageD<B, G>,
-  path: string[]
+  modal: PageD<B, G>
 }
 
 export function isMainPage<B, G> ( p: PageD<B, G> ): p is MainPageD<B, G> {

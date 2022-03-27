@@ -27,7 +27,11 @@ export function JointAccountPage(){
   return focusedPageWithExtraState<FState, JointAccountPageDomain, JointAccountDomain, Context> ( s => 'JointAccount' ) ( state => state.focusOn('fromApi')) (
 ( fullState, state , full, d, mode) => {
   const id='root';
-  const buttons =    {toggle:<ToggleButton state={fullState.focusOn('joint')}
+  const buttons =    {edit:<ModalButton id='edit' text='edit'  state={state} modal = 'JointAccountEditModalPage'  
+        pageMode='edit'
+        focusOn='~/fromApi'
+      />,
+      toggle:<ToggleButton state={fullState.focusOn('joint')}
         id='toggle'
         buttonText='Toggle [{~/joint}]'
          />,}
@@ -35,6 +39,7 @@ export function JointAccountPage(){
       return <>
           <JointAccount id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.toggle } 
+      { buttons.edit } 
       </>})}
 
 export function JointAccount({id,state,mode,buttons}: FocusedProps<FState, JointAccountDomain,Context>){

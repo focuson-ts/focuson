@@ -72,11 +72,11 @@ export const AccountOverviewMainPage: ExampleMainPage = {
     editingAccountFlags: { dataDD: accountAllFlagsDataDD } //when we open the modal window we copy it here
   },
   initialValue: {},
-  modals: [ { modal: ExcessInfoModalPage, path: [ 'excessInfo' ] },
-    { modal: ReasonModalPage, path: [ 'reason' ] },
-    { modal: ExcessHistoryModalPage, path: [ 'excessHistory' ] },
-    { modal: ArrearsDetailsModalPage, path: [ 'arrearsDetails' ] },
-    { modal: AccountFlagsModalPage, path: [ 'editingAccountFlags' ] }
+  modals: [ { modal: ExcessInfoModalPage },
+    { modal: ReasonModalPage },
+    { modal: ExcessHistoryModalPage },
+    { modal: ArrearsDetailsModalPage },
+    { modal: AccountFlagsModalPage }
   ],
   modes: [ 'view' ],
   rest: {

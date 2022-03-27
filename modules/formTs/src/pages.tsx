@@ -8,6 +8,7 @@ import { ExcessHistoryPage } from './ExcessHistory/ExcessHistory.render';
 import { ArrearsDetailsPage } from './ArrearsDetails/ArrearsDetails.render';
 import { AccountFlagsPage } from './AccountFlags/AccountFlags.render';
 import { JointAccountPage } from './JointAccount/JointAccount.render';
+import { JointAccountEditModalPagePage } from './JointAccountEditModalPage/JointAccountEditModalPage.render';
 import { OccupationAndIncomeSummaryPage } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.render';
 import { OccupationIncomeModalPage } from './OccupationIncomeModal/OccupationIncomeModal.render';
 import { AdditionalInformationModalPage } from './AdditionalInformationModal/AdditionalInformationModal.render';
@@ -45,6 +46,7 @@ export const pages: MultiPageDetails<FState, Context> = {
     ExcessHistory: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: ExcessHistoryPage()},
     ArrearsDetails: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: ArrearsDetailsPage()},
     AccountFlags: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: AccountFlagsPage()},
+    JointAccountEditModalPage: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: JointAccountEditModalPagePage()},
     OccupationIncomeModal: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: OccupationIncomeModalPage()},
     AdditionalInformationModal: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: AdditionalInformationModalPage()},
     BusinessDetailsModal: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: BusinessDetailsModalPage()},

@@ -92,11 +92,11 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
   modes: [ 'view', 'edit', 'create' ],
   /** How we display the page.*/
   modals: [
-    { modal: occupationIncomeModalPD, path: [] },
-    { modal: additionalInformationModalPD, path: [] },
-    { modal: businessDetailsModalPD, path: [] },
-    { modal: otherSourcesOfIncomeModalPD, path: [] },
-    { modal: listOccupationsModalPD, path: [] },
+    { modal: occupationIncomeModalPD },
+    { modal: additionalInformationModalPD },
+    { modal: businessDetailsModalPD},
+    { modal: otherSourcesOfIncomeModalPD},
+    { modal: listOccupationsModalPD},
   ],
   display: { target: '~/fromApi', dataDD: occupationAndIncomeFullDomainDD },
   /** When the page is selected for the first time this is the initial state */

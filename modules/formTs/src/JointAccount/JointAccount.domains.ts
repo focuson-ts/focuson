@@ -3,6 +3,7 @@ export interface HasJointAccountPageDomain {   JointAccount?: JointAccountPageDo
 export interface JointAccountPageDomain{
   fromApi?:JointAccountDomain;
   joint?:boolean;
+  temp?:JointAccountCustomerDomain;
 }
 
 export interface JointAccountDomain{
