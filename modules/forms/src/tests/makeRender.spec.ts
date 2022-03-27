@@ -68,17 +68,18 @@ describe ( " listComponentsIn", () => {
       "import {EAccountsSummaryTableDomain} from '../EAccountsSummary/EAccountsSummary.domains'",
       "import {EAccountSummaryDomain} from '../EAccountsSummary/EAccountsSummary.domains'",
       "export function EAccountsSummaryPage(){",
-      "  return focusedPageWithExtraState<FState, EAccountsSummaryPageDomain, EAccountsSummaryDomain, Context> ( s => 'EAccountsSummary' ) ( s => s.focusOn('fromApi')) (\n    ( fullState, state , full, d, mode) => {",
+      "  return focusedPageWithExtraState<FState, EAccountsSummaryPageDomain, EAccountsSummaryDomain, Context> ( s => 'EAccountsSummary' ) ( state => state.focusOn('fromApi')) (",
+      "( fullState, state , full, d, mode) => {",
       "  const id='root';",
       "  const buttons =    {amendExistingPlan:<ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  ",
       "        pageMode='edit'",
-      "        focusOn={['{basePage}','{basePage}','tempCreatePlan']}",
-      "        copy={[{'from':['{basePage}','fromApi','createPlan']}]}",
+      "        focusOn='~/tempCreatePlan'",
+      "        copy={[{'from':'~/fromApi/createPlan'}]}",
       "         rest={{'name':'EAccountsSummary_CreatePlanRestDetails','restAction':'update'}}",
       "      />,",
       "      createNewPlan:<ModalButton id='createNewPlan' text='createNewPlan'  state={state} modal = 'CreatePlan'  ",
       "        pageMode='create'",
-      "        focusOn={['{basePage}','{basePage}','tempCreatePlan']}",
+      "        focusOn='~/tempCreatePlan'",
       "        createEmpty={empty.emptyCreatePlan}",
       "         rest={{'name':'EAccountsSummary_CreatePlanRestDetails','restAction':'create'}}",
       "      />,",
@@ -183,7 +184,8 @@ describe ( " listComponentsIn", () => {
   it ( "should create a page with a Layout", () => {
     expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function PostCodeDemoPage(){",
-      "  return focusedPageWithExtraState<FState, PostCodeDemoPageDomain, PostCodeMainPageDomain, Context> ( s => 'PostCodeDemo' ) ( s => s.focusOn('main')) (\n    ( fullState, state , full, d, mode) => {",
+      "  return focusedPageWithExtraState<FState, PostCodeDemoPageDomain, PostCodeMainPageDomain, Context> ( s => 'PostCodeDemo' ) ( state => state.focusOn('main')) (",
+      "( fullState, state , full, d, mode) => {",
       "  const id='root';",
       "  const buttons =    {save:<RestButton state={state}",
       "        id='save'",
@@ -194,9 +196,9 @@ describe ( " listComponentsIn", () => {
       "       />,",
       "      search:<ModalButton id='search' text='search'  state={state} modal = 'PostCodeSearch'  ",
       "        pageMode='edit'",
-      "        focusOn={['{basePage}','postcode']}",
-      "        copy={[{'from':['{basePage}','main','postcode'],'to':['{basePage}','postcode','search']}]}",
-      "        copyOnClose={[{'from':['{basePage}','postcode','addressResults','line1'],'to':['{basePage}','main','line1']},{'from':['{basePage}','postcode','addressResults','line2'],'to':['{basePage}','main','line2']},{'from':['{basePage}','postcode','addressResults','line3'],'to':['{basePage}','main','line3']},{'from':['{basePage}','postcode','addressResults','line4'],'to':['{basePage}','main','line4']},{'from':['{basePage}','postcode','search'],'to':['{basePage}','main','postcode']}]}",
+      "        focusOn='~/postcode'",
+      "        copy={[{'from':'~/main/postcode','to':'~/postcode/search'}]}",
+      "        copyOnClose={[{'from':'~/postcode/addressResults/line1','to':'~/main/line1'},{'from':'~/postcode/addressResults/line2','to':'~/main/line2'},{'from':'~/postcode/addressResults/line3','to':'~/main/line3'},{'from':'~/postcode/addressResults/line4','to':'~/main/line4'},{'from':'~/postcode/addressResults/line4','to':'~/main/line4'},{'from':'~/postcode/search','to':'~/main/postcode'}]}",
       "      />,}",
       "",
       "      return <HideButtonsLayout buttons={buttons} hide={['search']}>",
@@ -214,10 +216,10 @@ describe ( "makeComponentWithGuard", () => {
   it ( "should make guard variables", () => {
     expect ( createReactComponent ( paramsForTest, AllGuardCreator, OccupationAndIncomeSummaryPD ) ( oneOccupationIncomeDetailsDD ).slice ( 0, 5 ).map ( r => r.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function OneOccupationIncomeDetails({id,state,mode,buttons}: FocusedProps<FState, OneOccupationIncomeDetailsDomain,Context>){",
-      "const areYouGuard = state.chainLens(Lenses.fromPath(['areYou'])).optJsonOr([]);",
-      "const employmentTypeGuard = state.chainLens(Lenses.fromPath(['employmentType'])).optJsonOr([]);",
-      "const otherSourceOfIncomeGuard = state.chainLens(Lenses.fromPath(['otherSourceOfIncome'])).optJsonOr([]);",
-      "const owningSharesPctGuard = state.chainLens(Lenses.fromPath(['owningSharesPct'])).optJsonOr([]);"
+      "const areYouGuard = state.focusOn('areYou').optJson();",
+      "const employmentTypeGuard = state.focusOn('employmentType').optJson();",
+      "const otherSourceOfIncomeGuard = state.focusOn('otherSourceOfIncome').optJson();",
+      "const owningSharesPctGuard = state.focusOn('owningSharesPct').optJson();"
     ] )
   } )
 } )

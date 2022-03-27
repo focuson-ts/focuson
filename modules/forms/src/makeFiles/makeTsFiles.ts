@@ -12,7 +12,6 @@ import { makeAllFetchers, makeFetcherDataStructureImport, makeFetchersDataStruct
 import { makeRestDetailsPage, makeRests } from "../codegen/makeRests";
 import { makeAllEmptyData, makeAllSampleVariables } from "../codegen/makeSample";
 import { makePages } from "../codegen/makePages";
-import { makeAllPacts } from "../codegen/makePacts";
 import { domainsFileName, emptyFileName, fetcherFileName, pactFileName, renderFileName, restFileName, samplesFileName, storybookFileName } from "../codegen/names";
 import { makeOneStory } from "../codegen/makeStories";
 import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";

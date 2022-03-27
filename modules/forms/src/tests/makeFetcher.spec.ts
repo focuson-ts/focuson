@@ -15,8 +15,8 @@ describe ( "makeAllFetchers", () => {
         "  return pageAndTagFetcher<FState, domains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDomain, SimpleMessage>(",
         "    common.commonFetch<FState,  domains.EAccountsSummaryDomain>(),",
         "     'EAccountsSummary',",
-        "     'fromApi', fdLens, commonIds, localIds,['accountId'],['customerId'],",
-        "      Lenses.identity< domains.EAccountsSummaryPageDomain> ().focusQuery('fromApi'),",
+        "     '~/fromApi', fdLens, commonIds, localIds,['accountId'],['customerId'],",
+        "      Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('fromApi'),",
         "     '/api/accountsSummary?{query}')",
         "}"
       ])
@@ -29,8 +29,8 @@ describe ( "makeAllFetchers", () => {
         "  return pageAndTagFetcher<FState, domains.RepeatingPageDomain, domains.RepeatingWholeDataDomain, SimpleMessage>(",
         "    common.commonFetch<FState,  domains.RepeatingWholeDataDomain>(),",
         "     'Repeating',",
-        "     'fromApi', fdLens, commonIds, localIds,['customerId'],[],",
-        "      Lenses.identity< domains.RepeatingPageDomain> ().focusQuery('fromApi'),",
+        "     '~/fromApi', fdLens, commonIds, localIds,['customerId'],[],",
+        "      Lenses.identity<domains.RepeatingPageDomain>().focusQuery('fromApi'),",
         "     '/api/repeating?{query}')",
         "}"
       ])
@@ -43,8 +43,8 @@ describe ( "makeAllFetchers", () => {
         "  return pageAndTagFetcher<FState, domains.PostCodeDemoPageDomain, domains.PostCodeDataDomain, SimpleMessage>(",
         "    common.commonFetch<FState,  domains.PostCodeDataDomain>(),",
         "     'PostCodeDemo',",
-        "     'postcode_searchResults', fdLens, commonIds, localIds,['postcode'],[],",
-        "      Lenses.identity< domains.PostCodeDemoPageDomain> ().focusQuery('postcode').focusQuery('searchResults'),",
+        "     '~/postcode/searchResults', fdLens, commonIds, localIds,['postcode'],[],",
+        "      Lenses.identity<domains.PostCodeDemoPageDomain>().focusQuery('postcode').focusQuery('searchResults'),",
         "     '/api/postCode?{query}')",
         "}"
       ])
