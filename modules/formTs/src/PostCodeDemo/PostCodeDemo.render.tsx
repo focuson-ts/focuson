@@ -38,7 +38,7 @@ export function PostCodeDemoPage(){
         pageMode='edit'
         focusOn='~/postcode'
         copy={[{"from":"~/main/postcode","to":"~/postcode/search"}]}
-        copyOnClose={[{"from":"~/postcode/addressResults/line1","to":"~/main/line1"},{"from":"~/postcode/addressResults/line2","to":"~/main/line2"},{"from":"~/postcode/addressResults/line3","to":"~/main/line3"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/search","to":"`~/main/postcode"}]}
+        copyOnClose={[{"from":"~/postcode/addressResults/line1","to":"~/main/line1"},{"from":"~/postcode/addressResults/line2","to":"~/main/line2"},{"from":"~/postcode/addressResults/line3","to":"~/main/line3"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/search","to":"~/main/postcode"}]}
       />,}
 
       return <HideButtonsLayout buttons={buttons} hide={["search"]}>

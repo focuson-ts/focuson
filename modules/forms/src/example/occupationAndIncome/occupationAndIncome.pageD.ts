@@ -142,7 +142,7 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
       focusOn: '~/temp',
       // restOnCommit: { rest: occupationAndIncomeRD, target: ['OccupationAndIncomeSummary'], result: 'refresh', action: 'update' },
       createEmpty: oneOccupationIncomeDetailsDD,
-      setToLengthOnClose: { variable: '~/selectedItem', array: '!/fromApi/customerOccupationIncomeDetails' },
+      setToLengthOnClose: { variable: '~/selectedItem', array: '~/fromApi/customerOccupationIncomeDetails' },
       copyOnClose: { to: '~/fromApi/customerOccupationIncomeDetails/[$append]' }
       // restOnCommit: { rest: occupationAndIncomeRD, action: 'update', result: 'refresh', target: [ '' ] }
     },
@@ -150,7 +150,7 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'edit',
       focusOn: '~/temp',
       copy: { from: '~/fromApi/customerOccupationIncomeDetails[~/selectedItem]' },
-      copyOnClose: { to: '~/formApi/customerOccupationIncomeDetails/[~/selectedItem]' }
+      copyOnClose: { to: '~/fromApi/customerOccupationIncomeDetails/[~/selectedItem]' }
     },
     additionalInfo: {
       control: 'ModalButton', modal: additionalInformationModalPD, mode: 'edit',

@@ -33,7 +33,7 @@ function ListPrevButton<B extends ListPrevButtonInPage, G> (): ButtonCreator<B, 
     makeButton: ( createButton ) => {
       const { params, parent, name, button } = createButton
       const forButton = stateForButton ( createButton, 'ListPrevButton' )
-      return [ `<ListPrevButton id='${name}' title='Next' list={${forButton ( button.list )}} value={${forButton( button.value)}} />` ]
+      return [ `<ListPrevButton id='${name}' title='Prev' list={${forButton ( button.list )}} value={${forButton( button.value)}} />` ]
     }
   }
 }
