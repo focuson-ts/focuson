@@ -1,7 +1,7 @@
 import { ButtonD } from "./allButtons";
 import { NameAnd } from "@focuson/utils";
 import { guardName } from "../codegen/names";
-import { stateForGuardVariable } from "../codegen/lens";
+import { stateForGuardButton, stateForGuardVariable } from "../codegen/lens";
 import { PageD } from "../common/pageD";
 import { TSParams } from "../codegen/config";
 
@@ -17,18 +17,18 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
   equals: {
     imports: [],
     makeGuardVariable: ( params, page, name, guard: LocalVariableValueEquals<any> ) =>
-      `const ${guardName ( name )} = state.chainLens(Lenses.fromPath(${JSON.stringify ( guard.path )})).json() === ${guard.value};`
+      `const ${guardName ( name )} =  ${stateForGuardButton ( page, params, name ) ( guard.path )}.json() === ${guard.value};`
   },
 
   ">0": {
     imports: [],
     makeGuardVariable: ( params, page, name, guard: LocalVariableMoreThanZero ) =>
-      `const ${guardName ( name )} = pageState(state)().chainLens<number>(Lenses.fromPath(${JSON.stringify ( guard.path )})).optJsonOr(0) >0`
+      `const ${guardName ( name )} =  ${stateForGuardButton ( page, params, name ) ( guard.path )}.optJsonOr(0) >0`
   },
   "<arrayEnd": {
     imports: [],
     makeGuardVariable: ( params, page, name, guard: LocalVariableLessThanLengthMinusOne ) =>
-      `const ${guardName ( name )} =  pageState(state)().chainLens<number>(Lenses.fromPath(${JSON.stringify ( guard.varPath )})).optJsonOr(0) <  pageState(state)().chainLens<string[]>(Lenses.fromPath(${JSON.stringify ( guard.arrayPath )})).optJsonOr([]).length - 1`
+      `const ${guardName ( name )} = ${stateForGuardButton ( page, params, name ) ( guard.varPath )}.optJsonOr(0) <   ${stateForGuardButton ( page, params, name ) ( guard.arrayPath )}.optJsonOr([]).length - 1`
   }
 }
 export interface GuardWithCondition {

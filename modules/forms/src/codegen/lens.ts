@@ -64,3 +64,7 @@ export const stateForButton = <B, G> ( { parent, params, button, name }: CreateB
 export const stateForGuardVariable = <B, G> ( page: PageD<B, G>, params: TSParams, guardName: string ) =>
   ( path: string ) => `state${stateFocusQueryWithEmptyFromHere ( `Page ${page.name} guard variable ${guardName}`, params, page, path )}`;
 
+
+export const stateForGuardButton = <B, G> ( page: PageD<B, G>, params: TSParams, guardName: string ) =>
+  ( path: string ) => `fullState${stateFocusQueryWithTildaFromPage ( `Page ${page.name} guard variable ${guardName}`, params, page, path )}`;
+

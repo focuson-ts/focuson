@@ -24,8 +24,8 @@ import {RepeatingWholeDataDomain} from "../Repeating/Repeating.domains"
 export function RepeatingPage(){
   return focusedPageWithExtraState<FState, RepeatingPageDomain, RepeatingWholeDataDomain, Context> ( s => 'Repeating' ) ( state => state.focusOn('fromApi')) (
 ( fullState, state , full, d, mode) => {
-  const nextOccupationGuard =  pageState(state)().chainLens<number>(Lenses.fromPath("~/selectedItem")).optJsonOr(0) <  pageState(state)().chainLens<string[]>(Lenses.fromPath("~/fromApi")).optJsonOr([]).length - 1
-  const prevOccupationGuard = pageState(state)().chainLens<number>(Lenses.fromPath("~/selectedItem")).optJsonOr(0) >0
+  const nextOccupationGuard = fullState.focusOn('selectedItem').optJsonOr(0) <   fullState.focusOn('fromApi').optJsonOr([]).length - 1
+  const prevOccupationGuard =  fullState.focusOn('selectedItem').optJsonOr(0) >0
   const id='root';
   const buttons =    {addEntry:<ModalButton id='addEntry' text='addEntry'  state={state} modal = 'RepeatingLine'  
         pageMode='create'
