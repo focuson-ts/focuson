@@ -4,9 +4,8 @@ import { modalName, pageComponentName, pageInState, renderFileName } from "./nam
 import { addStringToEndOfAllButLast } from "./codegen";
 import { makeEmptyData } from "./makeSample";
 import { safeArray } from "@focuson/utils";
-import { Lenses } from "@focuson/lens";
-import { prefixToLensFromRoot } from "../../../pages/src/selectedPage";
-import { prefixToLensFromBasePath } from "@focuson/pages";
+import { Lenses, Optional } from "@focuson/lens";
+import { prefixToLensFromBasePath ,prefixToLensFromRoot} from "@focuson/pages";
 
 
 export const makeMainPage = <G> ( params: TSParams ) => <B> ( p: MainPageD<B, G> ): string[] => {

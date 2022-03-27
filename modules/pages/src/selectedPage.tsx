@@ -5,7 +5,8 @@ import { FocusedPage } from "./focusedPage";
 import { isMainPageDetails, OnePageDetails, PageConfig } from "./pageConfig";
 import { DefaultTemplate, PageTemplateProps } from "./PageTemplate";
 import { Loading } from "./loading";
-import { Lenses, NameAndLens, Optional } from "@focuson/lens";
+import { lensBuilder, Lenses, NameAndLens, Optional, parsePath, PathBuilder } from "@focuson/lens";
+import { safeString } from "@focuson/utils";
 
 export interface HasSelectedPageDebug {
   debug?: SelectedPageDebug
@@ -48,7 +49,8 @@ export const prefixToLensFromRoot: NameAndLens<any> = { "/": Lenses.identity () 
 export const prefixToLensFromBasePath: NameAndLens<any> = { "~/": Lenses.identity () };
 
 export function lensForPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context extends PageSelectionContext<S>> ( page: OnePageDetails<S, D, Msgs, Config, Context>, base?: string ): Optional<S, any> {
-  return isMainPageDetails ( page ) ? page.lens : Lenses.fromPathStringFor<S, D> ( prefixToLensFromBasePath ) ( base )
+  if ( isMainPageDetails ( page ) ) return page.lens
+  return parsePath<Optional<S, any>> ( safeString ( base ), lensBuilder<S> ( { '/': Lenses.identity () } ) )
 }
 export const findOneSelectedPageDetails = <S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ) => ( ps: PageSelection ): PageDetailsForCombine => {
   // @ts-ignore

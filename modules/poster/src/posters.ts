@@ -1,4 +1,4 @@
-import { Lens, Lenses, Optional } from "@focuson/lens";
+import { Lenses, Optional } from "@focuson/lens";
 import { FetchFn, safeArray } from "@focuson/utils";
 
 export interface PostDebug {

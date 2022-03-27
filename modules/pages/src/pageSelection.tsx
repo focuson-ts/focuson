@@ -1,7 +1,7 @@
-import { GetNameFn, identityOptics, Lens, Lenses, Optional, Transform } from "@focuson/lens";
+import { identityOptics, Lens, lensBuilder, Optional, parsePath, prefixNameAndLens, Transform } from "@focuson/lens";
 import { LensState } from "@focuson/state";
 import { HasMultiPageDetails, isMainPageDetails } from "./pageConfig";
-import { NameAnd, safeArray } from "@focuson/utils";
+import { safeArray } from "@focuson/utils";
 import { RestCommand } from "@focuson/rest";
 import { PageDetailsForCombine } from "./selectedPage";
 
@@ -70,10 +70,11 @@ export function replaceBasePath<S, Context extends HasPageSelectionLens<S>> ( st
   return path.map ( p => p === '{basePage}' ? getPageName ( state ) : p )
 }
 
-export function fromPathFor<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ): ( path: string[], description?: string ) => Optional<S, any> {
-  const lookup = ( name: string ) => refFromFirstPage ( state.context.pageSelectionL ) ( name ).getOption ( state.main );
-  const fromPath = Lenses.fromPathWith<S, any> ( lookup )
-  return ( path, d ) => fromPath ( replaceBasePath ( state, path ), d );
+
+export function fromPathGivenState<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): ( path: string ) => Optional<S, any> {
+  const lens = firstPageDataLens ( state )
+  if ( !lens ) throw Error ( `Cannot 'fromPathGivenState' because there is no selected page` )
+  return ( path: string ) => parsePath<Optional<S, any>> ( path, lensBuilder<S> ( prefixNameAndLens<S> ( [ '~', lens ], [ '', state.optional ] ) ) );
 }
 export function replaceBasePageWithKnownPage ( pageName: string, path: string[] ): string[] {
   return path.map ( part => part === '{basePage}' ? pageName : part )
@@ -109,23 +110,8 @@ export function pageSelectionlens<S extends HasPageSelection> (): Lens<S, PageSe
   return identityOptics<S> ( 'state' ).focusOn ( 'pageSelection' )
 }
 
-export function refFromFirstPage<S> ( l: Optional<S, PageSelection[]> ): GetNameFn<S, any> {
-  return name => ({
-    getOption: ( s: S ) => {
-      const p = l.getOption ( s )?.[ 0 ]?.pageName
-      if ( p ) return Lenses.fromPath ( [ p, name ] ).getOption ( s )
-      return undefined
-    }
-  })
 
-}
-
-export function lookUpFromPathFor<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ) {
-  return ( name: string ) => refFromFirstPage ( state.context.pageSelectionL ) ( name ).getOption ( state.main );
-}
-
-
-function firstPagePath<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): Optional<S, any> | undefined {
+function firstPageDataLens<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): Optional<S, any> | undefined {
   let pageSelection = mainPage ( state );
   if ( pageSelection === undefined ) return undefined
   const { pageName, focusOn } = pageSelection
@@ -138,20 +124,5 @@ function firstPagePath<S, Context extends PageSelectionContext<S>> ( state: Lens
 export function newStateFromPath<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): ( path: string ) => LensState<S, any, Context> {
   return ( path ) => state.copyWithLens ( fromPathGivenState ( state ) ( path ) )
 }
-export function fromPathGivenState<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): ( path: string, description?: string ) => Optional<S, any> {
-  function prefixToLensForCurrentPath () {
-    const lookup = lookUpFromPathFor ( state )
-    let firstPage = firstPagePath ( state );
-    let firstPageLink = firstPage !== undefined ? { '~/': firstPage } : {}
-    const prefixToLens: NameAnd<Optional<S, any>> = {
-      ...firstPageLink,
-      '': state.optional,
-      '/': Lenses.identity (),
 
-    }
-    return prefixToLens;
-  }
-  const prefixToLens = prefixToLensForCurrentPath ();
-  return Lenses.fromPathStringFor<S, any> ( prefixToLens )
-}
 

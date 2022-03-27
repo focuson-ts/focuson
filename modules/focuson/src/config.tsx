@@ -23,7 +23,7 @@ export interface PageSelectionAndPostCommandsContext<S> extends PageSelectionCon
 export function defaultPageSelectionAndPostCommandsContext<S extends HasPageSelection & HasPostCommand<S, any>> ( pageDetails: MultiPageDetails<S, PageSelectionAndPostCommandsContext<S>> ): PageSelectionAndPostCommandsContext<S> {
   return {
     ...defaultPageSelectionContext<S, PageSelectionAndPostCommandsContext<S>> ( pageDetails ),
-    postCommandsL: Lenses.identity<S> ().focusOn ( 'postCommands' )
+    postCommandsL: Lenses.identity<S> ().focusQuery ( 'postCommands' )
   }
 }
 
@@ -32,7 +32,7 @@ export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSele
   FocusOnContext<S> {
   return {
     ...defaultPageSelectionContext<S, FocusOnContext<S>> ( pageDetails ),
-    restL: Lenses.identity<S> ().focusOn ( 'restCommands' ),
+    restL: Lenses.identity<S> ().focusQuery ( 'restCommands' ),
     simpleMessagesL: simpleMessagesL ()
   }
 }
@@ -65,8 +65,9 @@ export interface FocusOnConfig<S, Context, MSGs> {
   fetchers: FetcherTree<S>,
 }
 
-export function traceL<S> () {
-  return Lenses.fromPath<S, string[]> ( [ 'trace' ] );
+export function traceL<S> (): Optional<S, any> {
+  // @ts-ignore
+  return Lenses.identity<S> ().focusQuery ( 'trace' )
 }
 
 export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MSGs> ( config: FocusOnConfig<S, Context, MSGs>, context: Context, publish: ( lc: LensState<S, S, Context> ) => void ): ( s: S, reason: any ) => Promise<S> {

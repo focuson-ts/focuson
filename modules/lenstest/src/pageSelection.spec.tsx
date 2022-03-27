@@ -2,7 +2,7 @@ import { Lenses } from "@focuson/lens";
 import { defaultPageSelectionAndRestCommandsContext, FocusOnContext } from "@focuson/focuson";
 
 import { lensState } from "@focuson/state";
-import { fromPathGivenState, lookUpFromPathFor, MultiPageDetails, PageSelection } from "@focuson/pages";
+import { fromPathGivenState,  MultiPageDetails, PageSelection } from "@focuson/pages";
 
 
 let pageSelection: PageSelection = { pageName: 'a', pageMode: 'view' };
@@ -44,11 +44,6 @@ const from = ( path: string ) => fromL ( path ).getOption ( state.main )
 const set = ( path: string, value: any ) => fromL ( path ).set ( state.main, value )
 
 
-describe ( "lookUpFromPathFor", () => {
-  it ( "lookup variables", () => {
-    expect ( lookUpFromPathFor ( state ) ( 'selecteda' ) ).toEqual ( 3 )
-  } )
-} )
 
 describe ( "fromPathStringFor. Page is 'a'. The current lens is a/b/x", () => {
   it ( "should default to a path from 'here'. i.e. a/b/x'", () => {
@@ -101,7 +96,8 @@ describe ( "fromPathStringFor. Page is 'a'. The current lens is a/b/x", () => {
   } )
 
   it ( "should allow a path in the [ .. ] notation - default", () => {
-    expect ( fromL ( "/a/d[selected]" ).description ).toEqual ( 'I.focus?(a).focus?(d).chainNthFrom([selected])' )
+    expect ( fromL ( "/a/d[selected]" ).description ).toEqual ( 'I.focus?(a).focus?(d).chainCalc(I.focusOn(a).focus?(b).focus?(x).focus?(selected))' )
+    expect ( fromL ( "/a/d[/selected]" ).description ).toEqual ( 'I.focus?(a).focus?(d).chainCalc(I.focus?(selected))' )
   } )
   it ( "should allow a path in the [ .. ] notation - root", () => {
     expect ( from ( "/a/d[/selected][/selected]" ) ).toEqual ( 'o' )

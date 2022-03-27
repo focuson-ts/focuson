@@ -89,6 +89,10 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
   copyWithLens<NewT> ( lens: Optional<Main, NewT> ): LensState<Main, NewT, Context> {
     return new LensState ( this.main, this.dangerouslySetMain, lens, this.context )
   }
+  copyWithIdentity (): LensState<Main, Main, Context> {
+    return new LensState ( this.main, this.dangerouslySetMain, Lenses.identity (), this.context )
+
+  }
 
   /** The json that this context is focused on */
   json = ( errorMessageIfNotHere?: () => string ): T =>
