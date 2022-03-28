@@ -1,17 +1,17 @@
 {
   "consumer": {
-    "name": "OtherIncomeResponseDD"
+    "name": "BureauDataDD"
   },
   "provider": {
-    "name": "OtherIncomeResponseDDProvider"
+    "name": "BureauDataDDProvider"
   },
   "interactions": [
     {
-      "description": "OccupationAndIncomeSummary should have a get fetcher for OtherIncomeResponseDD",
+      "description": "BureauData should have a get fetcher for BureauDataDD",
       "providerState": "default",
       "request": {
         "method": "GET",
-        "path": "/customer/occupation/v2/otherIncome",
+        "path": "/v1/cradata",
         "query": "accountSeq=accountSeq&applicationRef=applicationRef&brandRef=brandRef&clientRef=clientRef&employmentSeq=employmentSeq&vbAccountSeq=vbAccountSeq&vbAccountType=vbAccountType"
       },
       "response": {
@@ -19,19 +19,21 @@
         "headers": {
         },
         "body": {
-          "clientOtherIncomeSeq": "someString",
-          "otherIncomeType": "someString",
-          "incomeFreqRef": "0",
-          "amount": 123
+          "reducedPayment": "N",
+          "reducedPaymentAmount": 123,
+          "creditInsurance": "N",
+          "queryMade": "N",
+          "arrearsReplay": "N",
+          "performanceLevel": "high"
         }
       }
     },
     {
-      "description": "OccupationAndIncomeSummary should have a get rest for OtherIncomeResponseDD",
+      "description": "BureauData should have a get rest for BureauDataDD",
       "providerState": "default",
       "request": {
         "method": "GET",
-        "path": "/customer/occupation/v2/otherIncome",
+        "path": "/v1/cradata",
         "query": "accountSeq=accountSeq&applicationRef=applicationRef&brandRef=brandRef&clientRef=clientRef&employmentSeq=employmentSeq&vbAccountSeq=vbAccountSeq&vbAccountType=vbAccountType"
       },
       "response": {
@@ -39,10 +41,12 @@
         "headers": {
         },
         "body": {
-          "clientOtherIncomeSeq": "someString",
-          "otherIncomeType": "someString",
-          "incomeFreqRef": "0",
-          "amount": 123
+          "reducedPayment": "N",
+          "reducedPaymentAmount": 123,
+          "creditInsurance": "N",
+          "queryMade": "N",
+          "arrearsReplay": "N",
+          "performanceLevel": "high"
         }
       }
     }

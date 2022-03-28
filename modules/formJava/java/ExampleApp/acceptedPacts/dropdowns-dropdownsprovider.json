@@ -12,7 +12,7 @@
       "request": {
         "method": "GET",
         "path": "/customer/occupation/v2/occupationDetails",
-        "query": "customerId=custId"
+        "query": "accountSeq=accountSeq&applicationRef=applicationRef&brandRef=brandRef&clientRef=clientRef&employmentSeq=employmentSeq&vbAccountSeq=vbAccountSeq&vbAccountType=vbAccountType"
       },
       "response": {
         "status": 200,
@@ -20,8 +20,8 @@
         },
         "body": {
           "occupationDescriptionResponse": {
-            "descTypeValue": "someString",
-            "descTypeName": "someString"
+            "descTypeValue": "W54",
+            "descTypeName": "Engineer"
           },
           "employmentStatus": {
             "employmentName": "someString",
@@ -45,7 +45,7 @@
       "request": {
         "method": "GET",
         "path": "/customer/occupation/v2/occupationDetails",
-        "query": "customerId=custId"
+        "query": "accountSeq=accountSeq&applicationRef=applicationRef&brandRef=brandRef&clientRef=clientRef&employmentSeq=employmentSeq&vbAccountSeq=vbAccountSeq&vbAccountType=vbAccountType"
       },
       "response": {
         "status": 200,
@@ -53,8 +53,8 @@
         },
         "body": {
           "occupationDescriptionResponse": {
-            "descTypeValue": "someString",
-            "descTypeName": "someString"
+            "descTypeValue": "W54",
+            "descTypeName": "Engineer"
           },
           "employmentStatus": {
             "employmentName": "someString",

@@ -1,17 +1,17 @@
 {
   "consumer": {
-    "name": "AccountOverviewReason"
+    "name": "AccountOverviewAgreementType"
   },
   "provider": {
-    "name": "AccountOverviewReasonProvider"
+    "name": "AccountOverviewAgreementTypeProvider"
   },
   "interactions": [
     {
-      "description": "AccountOverview should have a get fetcher for AccountOverviewReason",
+      "description": "AccountOverview should have a get fetcher for AccountOverviewAgreementType",
       "providerState": "default",
       "request": {
         "method": "GET",
-        "path": "/api/accountOverview/reason",
+        "path": "/api/accountOverview/agreementType",
         "query": "accountId=accId&customerId=custId"
       },
       "response": {
@@ -19,16 +19,17 @@
         "headers": {
         },
         "body": {
-          "reason": "Second charge case"
+          "agreementType": "checking",
+          "transactionHeading": "option1"
         }
       }
     },
     {
-      "description": "AccountOverview should have a get rest for AccountOverviewReason",
+      "description": "AccountOverview should have a get rest for AccountOverviewAgreementType",
       "providerState": "default",
       "request": {
         "method": "GET",
-        "path": "/api/accountOverview/reason",
+        "path": "/api/accountOverview/agreementType",
         "query": "accountId=accId&customerId=custId"
       },
       "response": {
@@ -36,7 +37,8 @@
         "headers": {
         },
         "body": {
-          "reason": "Second charge case"
+          "agreementType": "checking",
+          "transactionHeading": "option1"
         }
       }
     }

@@ -1,0 +1,169 @@
+{
+  "consumer": {
+    "name": "OccupationAndIncomeFullDomainDD"
+  },
+  "provider": {
+    "name": "OccupationAndIncomeFullDomainDDProvider"
+  },
+  "interactions": [
+    {
+      "description": "OccupationAndIncomeSummary should have a get fetcher for OccupationAndIncomeFullDomainDD",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/customer/occupation/v2/occupationIncomeDetails",
+        "query": "accountSeq=accountSeq&applicationRef=applicationRef&brandRef=brandRef&clientRef=clientRef&employmentSeq=employmentSeq&vbAccountSeq=vbAccountSeq&vbAccountType=vbAccountType"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "mainCustomerName": "Mr XXXXXXXXXX J ABCD Fred Bloggs",
+          "jointCustomerName": "",
+          "mainClientRef": 13606326,
+          "jointClientRef": -1,
+          "customerOccupationIncomeDetails": [
+            {
+              "areYou": "C",
+              "occupation": "someString",
+              "customerDescription": "someString",
+              "ownShareOfTheCompany": "N",
+              "owningSharesPct": "N",
+              "workFor": "someString",
+              "annualSalaryBeforeDeduction": 123,
+              "annualIncomeExcludingRent": 123,
+              "regularCommissionBonus": 123,
+              "whatTypeOfBusiness": "someString",
+              "whatNameBusiness": "someString",
+              "establishedYear": "someString",
+              "annualDrawing3Yrs": 123,
+              "employmentType": "0",
+              "empStartDate": "2020-10-01",
+              "empEndDate": "2020-10-01",
+              "dateOfEmploymentStart": "someString",
+              "otherSourceOfIncome": "N",
+              "createdBy": "someString",
+              "createdDate": "2020-10-01",
+              "employerName": "someString",
+              "sePositionHeld": "someString",
+              "occupationCategory": "someString",
+              "empEmploymentSeq": 123,
+              "empAppRoleSeq": 123,
+              "accountantAppRoleSeq": 123,
+              "currentEmployment": "N"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "OccupationAndIncomeSummary should have a get rest for OccupationAndIncomeFullDomainDD",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/customer/occupation/v2/occupationIncomeDetails",
+        "query": "accountSeq=accountSeq&applicationRef=applicationRef&brandRef=brandRef&clientRef=clientRef&employmentSeq=employmentSeq&vbAccountSeq=vbAccountSeq&vbAccountType=vbAccountType"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "mainCustomerName": "Mr XXXXXXXXXX J ABCD Fred Bloggs",
+          "jointCustomerName": "",
+          "mainClientRef": 13606326,
+          "jointClientRef": -1,
+          "customerOccupationIncomeDetails": [
+            {
+              "areYou": "C",
+              "occupation": "someString",
+              "customerDescription": "someString",
+              "ownShareOfTheCompany": "N",
+              "owningSharesPct": "N",
+              "workFor": "someString",
+              "annualSalaryBeforeDeduction": 123,
+              "annualIncomeExcludingRent": 123,
+              "regularCommissionBonus": 123,
+              "whatTypeOfBusiness": "someString",
+              "whatNameBusiness": "someString",
+              "establishedYear": "someString",
+              "annualDrawing3Yrs": 123,
+              "employmentType": "0",
+              "empStartDate": "2020-10-01",
+              "empEndDate": "2020-10-01",
+              "dateOfEmploymentStart": "someString",
+              "otherSourceOfIncome": "N",
+              "createdBy": "someString",
+              "createdDate": "2020-10-01",
+              "employerName": "someString",
+              "sePositionHeld": "someString",
+              "occupationCategory": "someString",
+              "empEmploymentSeq": 123,
+              "empAppRoleSeq": 123,
+              "accountantAppRoleSeq": 123,
+              "currentEmployment": "N"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "OccupationAndIncomeSummary should have a update rest for OccupationAndIncomeFullDomainDD",
+      "providerState": "default",
+      "request": {
+        "method": "PUT",
+        "path": "/customer/occupation/v2/occupationIncomeDetails",
+        "query": "accountSeq=accountSeq&applicationRef=applicationRef&brandRef=brandRef&clientRef=clientRef&employmentSeq=employmentSeq&vbAccountSeq=vbAccountSeq&vbAccountType=vbAccountType",
+        "body": "{\"mainCustomerName\":\"Mr XXXXXXXXXX J ABCD Fred Bloggs\",\"jointCustomerName\":\"\",\"mainClientRef\":13606326,\"jointClientRef\":-1,\"customerOccupationIncomeDetails\":[{\"areYou\":\"C\",\"occupation\":\"someString\",\"customerDescription\":\"someString\",\"ownShareOfTheCompany\":\"N\",\"owningSharesPct\":\"N\",\"workFor\":\"someString\",\"annualSalaryBeforeDeduction\":123,\"annualIncomeExcludingRent\":123,\"regularCommissionBonus\":123,\"whatTypeOfBusiness\":\"someString\",\"whatNameBusiness\":\"someString\",\"establishedYear\":\"someString\",\"annualDrawing3Yrs\":123,\"employmentType\":\"0\",\"empStartDate\":\"2020-10-01\",\"empEndDate\":\"2020-10-01\",\"dateOfEmploymentStart\":\"someString\",\"otherSourceOfIncome\":\"N\",\"createdBy\":\"someString\",\"createdDate\":\"2020-10-01\",\"employerName\":\"someString\",\"sePositionHeld\":\"someString\",\"occupationCategory\":\"someString\",\"empEmploymentSeq\":123,\"empAppRoleSeq\":123,\"accountantAppRoleSeq\":123,\"currentEmployment\":\"N\"}]}"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "mainCustomerName": "Mr XXXXXXXXXX J ABCD Fred Bloggs",
+          "jointCustomerName": "",
+          "mainClientRef": 13606326,
+          "jointClientRef": -1,
+          "customerOccupationIncomeDetails": [
+            {
+              "areYou": "C",
+              "occupation": "someString",
+              "customerDescription": "someString",
+              "ownShareOfTheCompany": "N",
+              "owningSharesPct": "N",
+              "workFor": "someString",
+              "annualSalaryBeforeDeduction": 123,
+              "annualIncomeExcludingRent": 123,
+              "regularCommissionBonus": 123,
+              "whatTypeOfBusiness": "someString",
+              "whatNameBusiness": "someString",
+              "establishedYear": "someString",
+              "annualDrawing3Yrs": 123,
+              "employmentType": "0",
+              "empStartDate": "2020-10-01",
+              "empEndDate": "2020-10-01",
+              "dateOfEmploymentStart": "someString",
+              "otherSourceOfIncome": "N",
+              "createdBy": "someString",
+              "createdDate": "2020-10-01",
+              "employerName": "someString",
+              "sePositionHeld": "someString",
+              "occupationCategory": "someString",
+              "empEmploymentSeq": 123,
+              "empAppRoleSeq": 123,
+              "accountantAppRoleSeq": 123,
+              "currentEmployment": "N"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

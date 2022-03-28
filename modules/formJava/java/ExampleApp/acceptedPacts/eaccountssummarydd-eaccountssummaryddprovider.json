@@ -19,24 +19,23 @@
         "headers": {
         },
         "body": {
-          "useEStatements": true,
           "eAccountsTable": [
             {
               "accountId": 1233450,
               "displayType": "checking",
-              "description": "This account has a description",
-              "virtualBankSeq": "seq1",
-              "total": 1000,
-              "frequency": "23"
+              "description": "This is a one line string",
+              "virtualBankSeq": "This is a one line string",
+              "total": 123,
+              "frequency": "This is a one line string"
             }
           ],
-          "totalMonthlyCost": 1000,
-          "oneAccountBalance": 9921,
-          "currentAccountBalance": 12321,
+          "totalMonthlyCost": 123,
+          "oneAccountBalance": 123,
+          "currentAccountBalance": 123,
           "createPlan": {
-            "createPlanStart": "2022-01-01",
-            "createPlanDate": "2022-03-01",
-            "createPlanEnd": "2022-10-01"
+            "createPlanStart": "2020-10-01",
+            "createPlanDate": "2020-10-01",
+            "createPlanEnd": "2020-10-01"
           }
         }
       }
@@ -54,24 +53,23 @@
         "headers": {
         },
         "body": {
-          "useEStatements": true,
           "eAccountsTable": [
             {
               "accountId": 1233450,
               "displayType": "checking",
-              "description": "This account has a description",
-              "virtualBankSeq": "seq1",
-              "total": 1000,
-              "frequency": "23"
+              "description": "This is a one line string",
+              "virtualBankSeq": "This is a one line string",
+              "total": 123,
+              "frequency": "This is a one line string"
             }
           ],
-          "totalMonthlyCost": 1000,
-          "oneAccountBalance": 9921,
-          "currentAccountBalance": 12321,
+          "totalMonthlyCost": 123,
+          "oneAccountBalance": 123,
+          "currentAccountBalance": 123,
           "createPlan": {
-            "createPlanStart": "2022-01-01",
-            "createPlanDate": "2022-03-01",
-            "createPlanEnd": "2022-10-01"
+            "createPlanStart": "2020-10-01",
+            "createPlanDate": "2020-10-01",
+            "createPlanEnd": "2020-10-01"
           }
         }
       }

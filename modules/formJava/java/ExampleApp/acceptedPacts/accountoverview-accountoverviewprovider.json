@@ -34,7 +34,25 @@
           "zFlagSet": "N",
           "excessSixMonths": 123,
           "bouncedDDs12Months": 123,
-          "unpaidCardOrMisuseItems": 123
+          "unpaidCardOrMisuseItems": 123,
+          "currentBalance": 123,
+          "currentInterestRate": 123,
+          "facilities": {
+            "facilities": [
+              {
+                "facility": 1234,
+                "changeDate": "23-03-2022",
+                "uwApproved": true,
+                "reason": "some reason",
+                "amount": 2345
+              }
+            ]
+          },
+          "highBalance": 123,
+          "lowBalance": 123,
+          "pctOfFacility": 123,
+          "eightyPctFacility": 123,
+          "eightyFivePctFacility": 123
         }
       }
     },
@@ -66,7 +84,276 @@
           "zFlagSet": "N",
           "excessSixMonths": 123,
           "bouncedDDs12Months": 123,
-          "unpaidCardOrMisuseItems": 123
+          "unpaidCardOrMisuseItems": 123,
+          "currentBalance": 123,
+          "currentInterestRate": 123,
+          "facilities": {
+            "facilities": [
+              {
+                "facility": 1234,
+                "changeDate": "23-03-2022",
+                "uwApproved": true,
+                "reason": "some reason",
+                "amount": 2345
+              }
+            ]
+          },
+          "highBalance": 123,
+          "lowBalance": 123,
+          "pctOfFacility": 123,
+          "eightyPctFacility": 123,
+          "eightyFivePctFacility": 123
+        }
+      }
+    },
+    {
+      "description": "a rest for AccountOverview accountFlags get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/flags",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        }
+      }
+    },
+    {
+      "description": "A request for AccountOverviewAgreementType",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/agreementType",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "agreementType": "checking",
+          "transactionHeading": "option1"
+        }
+      }
+    },
+    {
+      "description": "a rest for AccountOverview agreementType get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/agreementType",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        }
+      }
+    },
+    {
+      "description": "A request for AccountOverviewHistory",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/excessHistory",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "history": [
+            {
+              "start": "2020-10-01",
+              "end": "2020-10-01",
+              "consecutiveDays": 123
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "a rest for AccountOverview excessHistory get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/excessHistory",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        }
+      }
+    },
+    {
+      "description": "A request for AccountOverviewExcessInfo",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/excessInfo",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "dayOfCurrentExcess": 123,
+          "currentExcessOnAccount": 123,
+          "currentPctExcess": 123,
+          "dateOfLastCapitalization": "2020-10-01",
+          "dateOfLastExcessFulfillment": "2020-10-01"
+        }
+      }
+    },
+    {
+      "description": "a rest for AccountOverview excessInfo get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/excessInfo",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        }
+      }
+    },
+    {
+      "description": "A request for AccountOverview",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "score": 123,
+          "accountType": "checking",
+          "drawDownDate": "2020-10-01",
+          "repaymentDate": "2020-10-01",
+          "propertyValue": 220000,
+          "mul": 173750,
+          "drawDownAmount": 90007,
+          "criteria": [
+            {
+              "criteria": "Account Management"
+            }
+          ],
+          "zFlagSet": "N",
+          "excessSixMonths": 123,
+          "bouncedDDs12Months": 123,
+          "unpaidCardOrMisuseItems": 123,
+          "currentBalance": 123,
+          "currentInterestRate": 123,
+          "facilities": {
+            "facilities": [
+              {
+                "facility": 1234,
+                "changeDate": "23-03-2022",
+                "uwApproved": true,
+                "reason": "some reason",
+                "amount": 2345
+              }
+            ]
+          },
+          "highBalance": 123,
+          "lowBalance": 123,
+          "pctOfFacility": 123,
+          "eightyPctFacility": 123,
+          "eightyFivePctFacility": 123
+        }
+      }
+    },
+    {
+      "description": "a rest for AccountOverview main get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        }
+      }
+    },
+    {
+      "description": "A request for AccountOverviewOptOut",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/optOut",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "optOut": [
+            {
+              "optedOut": true,
+              "addrLine5": "someString",
+              "changedBy": "someString",
+              "changedDate": "2020-10-01"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "a rest for AccountOverview optOut get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/optOut",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        }
+      }
+    },
+    {
+      "description": "A request for AccountOverviewReason",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/reason",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "reason": "Second charge case"
+        }
+      }
+    },
+    {
+      "description": "a rest for AccountOverview reason get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/reason",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
         }
       }
     }

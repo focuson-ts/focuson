@@ -1,17 +1,17 @@
 {
   "consumer": {
-    "name": "OtherIncomeResponseDD"
+    "name": "OptOutHistory"
   },
   "provider": {
-    "name": "OtherIncomeResponseDDProvider"
+    "name": "OptOutHistoryProvider"
   },
   "interactions": [
     {
-      "description": "OccupationAndIncomeSummary should have a get fetcher for OtherIncomeResponseDD",
+      "description": "OptOut should have a get fetcher for OptOutHistory",
       "providerState": "default",
       "request": {
         "method": "GET",
-        "path": "/customer/occupation/v2/otherIncome",
+        "path": "/v1/optOutChangeHistory",
         "query": "accountSeq=accountSeq&applicationRef=applicationRef&brandRef=brandRef&clientRef=clientRef&employmentSeq=employmentSeq&vbAccountSeq=vbAccountSeq&vbAccountType=vbAccountType"
       },
       "response": {
@@ -19,19 +19,19 @@
         "headers": {
         },
         "body": {
-          "clientOtherIncomeSeq": "someString",
-          "otherIncomeType": "someString",
-          "incomeFreqRef": "0",
-          "amount": 123
+          "optOut": "This is a one line string",
+          "addrLine": "This is a one line string",
+          "changedBy": "This is a one line string",
+          "changedDate": "This is a one line string"
         }
       }
     },
     {
-      "description": "OccupationAndIncomeSummary should have a get rest for OtherIncomeResponseDD",
+      "description": "OptOut should have a get rest for OptOutHistory",
       "providerState": "default",
       "request": {
         "method": "GET",
-        "path": "/customer/occupation/v2/otherIncome",
+        "path": "/v1/optOutChangeHistory",
         "query": "accountSeq=accountSeq&applicationRef=applicationRef&brandRef=brandRef&clientRef=clientRef&employmentSeq=employmentSeq&vbAccountSeq=vbAccountSeq&vbAccountType=vbAccountType"
       },
       "response": {
@@ -39,10 +39,10 @@
         "headers": {
         },
         "body": {
-          "clientOtherIncomeSeq": "someString",
-          "otherIncomeType": "someString",
-          "incomeFreqRef": "0",
-          "amount": 123
+          "optOut": "This is a one line string",
+          "addrLine": "This is a one line string",
+          "changedBy": "This is a one line string",
+          "changedDate": "This is a one line string"
         }
       }
     }

@@ -1,13 +1,13 @@
 {
   "consumer": {
-    "name": "AdditionalInformation"
+    "name": "AdditionalInformationDD"
   },
   "provider": {
-    "name": "AdditionalInformationProvider"
+    "name": "AdditionalInformationDDProvider"
   },
   "interactions": [
     {
-      "description": "OccupationAndIncomeSummary should have a get rest for AdditionalInformation",
+      "description": "OccupationAndIncomeSummary should have a get fetcher for AdditionalInformationDD",
       "providerState": "default",
       "request": {
         "method": "GET",
@@ -30,7 +30,7 @@
       }
     },
     {
-      "description": "OccupationAndIncomeSummary should have a get fetcher for AdditionalInformation",
+      "description": "OccupationAndIncomeSummary should have a get rest for AdditionalInformationDD",
       "providerState": "default",
       "request": {
         "method": "GET",

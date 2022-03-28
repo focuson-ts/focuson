@@ -12,7 +12,7 @@
       "request": {
         "method": "GET",
         "path": "/customer/occupation/v2/otherIncome",
-        "query": "customerId=custId"
+        "query": "accountSeq=accountSeq&applicationRef=applicationRef&brandRef=brandRef&clientRef=clientRef&employmentSeq=employmentSeq&vbAccountSeq=vbAccountSeq&vbAccountType=vbAccountType"
       },
       "response": {
         "status": 200,
@@ -32,7 +32,7 @@
       "request": {
         "method": "GET",
         "path": "/customer/occupation/v2/otherIncome",
-        "query": "customerId=custId"
+        "query": "accountSeq=accountSeq&applicationRef=applicationRef&brandRef=brandRef&clientRef=clientRef&employmentSeq=employmentSeq&vbAccountSeq=vbAccountSeq&vbAccountType=vbAccountType"
       },
       "response": {
         "status": 200,

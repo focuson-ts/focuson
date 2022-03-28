@@ -20,8 +20,8 @@
         },
         "body": {
           "occupationDescriptionResponse": {
-            "descTypeValue": "someString",
-            "descTypeName": "someString"
+            "descTypeValue": "W54",
+            "descTypeName": "Engineer"
           },
           "employmentStatus": {
             "employmentName": "someString",
@@ -53,8 +53,8 @@
         },
         "body": {
           "occupationDescriptionResponse": {
-            "descTypeValue": "someString",
-            "descTypeName": "someString"
+            "descTypeValue": "W54",
+            "descTypeName": "Engineer"
           },
           "employmentStatus": {
             "employmentName": "someString",

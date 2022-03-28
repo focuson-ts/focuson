@@ -7,7 +7,7 @@
   },
   "interactions": [
     {
-      "description": "AccountOverview should have a get fetcher for ArrearsDetails",
+      "description": "AccountOverview should have a get rest for ArrearsDetails",
       "providerState": "default",
       "request": {
         "method": "GET",
@@ -19,7 +19,7 @@
         "headers": {
         },
         "body": {
-          "history": [
+          "details": [
             {
               "collectionsDate": "2020-10-01",
               "creditedDate": "2020-10-01",
@@ -36,7 +36,7 @@
       }
     },
     {
-      "description": "AccountOverview should have a get rest for ArrearsDetails",
+      "description": "AccountOverview should have a get fetcher for ArrearsDetails",
       "providerState": "default",
       "request": {
         "method": "GET",
@@ -48,7 +48,7 @@
         "headers": {
         },
         "body": {
-          "history": [
+          "details": [
             {
               "collectionsDate": "2020-10-01",
               "creditedDate": "2020-10-01",
