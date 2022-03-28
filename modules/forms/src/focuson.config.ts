@@ -37,6 +37,6 @@ export interface AppConfig {
 export const devAppConfig = {
   fetch: "fetchWithDelay ( 1, fetchWithPrefix ( 'http://localhost:8080', loggingFetchFn ) )",
   combine: MyCombineCD,
-  debug: { fetcherDebug: true, postDebug: true, Debug: true ,selectedPageDebug: true}
+  debug: { fetcherDebug: true, postDebug: false, selectedPageDebug: false, loadTreeDebug: false}
 }
 

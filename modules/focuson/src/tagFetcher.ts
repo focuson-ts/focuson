@@ -101,7 +101,7 @@ export function pageAndTagFetcher<S, Full, T, MSGS> (
     return result
   }
   return ifEEqualsFetcher<S> ( ( s ) =>
-    selected ( s, pageName ), "Page name mismatch",tagFetcher ( stf ), description );
+    selected ( s, pageName ), `Page ${pageName} not selected`, tagFetcher ( stf ), description );
 }
 
 export function simpleTagFetcher<S extends HasSimpleMessages, FD> (

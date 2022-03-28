@@ -50,12 +50,10 @@ export const focusedPageWithExtraState = <S extends any, Full extends any, D ext
       title: s => title ( s.optJson () ),
       displayLoading: realDisplayLoading,
       display: ( s, pageMode ) => {
-        console.log ( "focusedPageWithExtraState - enter", s )
         let lensState: LensState<S, D, Context> = lensFn ( s );
         let domain = lensState?.json ();
         if ( domain === undefined ) throw Error ( 'something went wrong: The domain is undefined in focusedPageWithExtraState' )
         const result = pageFn ( s, lensState, s.json (), domain, pageMode )
-        console.log ( "focusedPageWithExtraState -exit", result )
         return result
       }
     })

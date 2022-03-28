@@ -71,7 +71,7 @@ export const AccountOverviewMainPage: ExampleMainPage = {
     accountFlags: { dataDD: accountAllFlagsDataDD }, //the rest code gets the account flags and puts it here
     editingAccountFlags: { dataDD: accountAllFlagsDataDD } //when we open the modal window we copy it here
   },
-  initialValue: {},
+  initialValue: undefined,
   modals: [ { modal: ExcessInfoModalPage },
     { modal: ReasonModalPage },
     { modal: ExcessHistoryModalPage },

@@ -70,8 +70,9 @@ export function fetcher<State, T> ( shouldLoad: ( ns: State ) => string[],
 /** This will 'do the work of fetching' for a single fetcher. */
 export const applyFetcher = <State, T> ( fetcher: Fetcher<State, T>, s: State, fetchFn: FetchFn, debug?: FetcherDebug ): Promise<State> => {
   const fetcherDebug = debug?.fetcherDebug
-  if ( fetcherDebug ) console.log ( "applyFetcher", fetcher.description, s )
-  if ( fetcher.shouldLoad ( s ).length === 0 ) {
+  let shouldLoad = fetcher.shouldLoad ( s );
+  if ( shouldLoad.length === 0 ) {
+    if ( fetcherDebug ) console.log ( "applyFetcher", fetcher.description, s )
     const { requestInfo, requestInit, mutate, useThisInsteadOfLoad } = fetcher.load ( s )
     if ( fetcherDebug ) console.log ( "applyFetcher - loading", requestInfo, requestInit, mutate, useThisInsteadOfLoad )
     if ( useThisInsteadOfLoad ) {
@@ -100,7 +101,7 @@ export const applyFetcher = <State, T> ( fetcher: Fetcher<State, T>, s: State, f
       return result
 
     } )
-  } else if ( fetcherDebug ) console.log ( "didn't load", fetcher.description )
+  } else if ( fetcherDebug ) console.log ( "didn't load", fetcher.description, shouldLoad )
   return Promise.resolve ( s )
 }
 
@@ -155,7 +156,7 @@ export function fetcherWhenUndefined<State, Child> ( optional: Optional<State, C
   let result: Fetcher<State, Child> = ({
     shouldLoad: ( ns ) => {
       let nc = optional.getOption ( ns );
-      if ( nc===undefined ) return [ ]
+      if ( nc === undefined ) return []
       try {
         let req = reqFn ( ns )
         if ( req ) return [ 'defined' ]

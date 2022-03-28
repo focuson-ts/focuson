@@ -53,6 +53,6 @@ setJson ( {
   ...emptyState,
   pageSelection: [ { pageName: 'AccountOverview', firstTime: true, pageMode: 'view' } ],
 // @ts-ignore
-  debug: {"fetcherDebug":true,"postDebug":true,"Debug":true,"selectedPageDebug":true}
+  debug: {"fetcherDebug":true,"postDebug":false,"selectedPageDebug":false,"loadTreeDebug":false}
   // currentSelectedModalPage: 'EAccountsSummary_CreatePlan'
 }, 'initial')
