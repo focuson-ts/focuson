@@ -1,10 +1,11 @@
 import { isMainPage, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { beforeSeparator, RestAction, sortedEntries } from "@focuson/utils";
 import { fetcherName, restDetailsName, sampleName } from "./names";
-import { defaultRestAction, makeCommonValueForTest, makeParamValueForTest } from "../common/restD";
+import { defaultRestAction, isRestLens, makeCommonValueForTest, makeParamValueForTest } from "../common/restD";
 import { TSParams } from "./config";
-import { stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
+import { lensFocusQueryWithSlashAndTildaFromIdentity, stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
 import { parsePath } from "@focuson/lens";
+import { filterParamsByRestAction, indentList } from "./codegen";
 
 export function makeAllPactsForPage<B, G> ( params: TSParams, page: PageD<B, G> ): string[] {
   if ( !isMainPage ( page ) ) return []
@@ -14,7 +15,7 @@ export function makeAllPactsForPage<B, G> ( params: TSParams, page: PageD<B, G> 
     `import { pactWith } from "jest-pact";`,
     `import { rest, RestCommand, restL } from "@focuson/rest";`,
     `import { simpleMessagesL } from "@focuson/pages";`,
-    `import { Lenses, massTransform } from "@focuson/lens";`,
+    `import { Lenses, massTransform, Transform } from "@focuson/lens";`,
     `import * as samples from '../${page.name}/${page.name}.samples'`,
     `import {emptyState, ${params.stateName} , commonIds, identityL } from "../common";`,
     `import * as rests from "../rests";`,
@@ -44,46 +45,47 @@ export function makeRestPact<B, G> ( params: TSParams, page: PageD<B, G>, restNa
   const dataD = rest.dataDD
   // const [ id, resourceIds ] = findIds ( rest )
   let paramsValueForTest = makeParamValueForTest ( rest, action );
-  const requestBodyString = details.params.needsObj ? `body: ${params.samplesFile}.${sampleName ( dataD )}0` : `//no request body needed for ${action}`
-  const responseBodyString = details.output.needsObj?  `body: ${params.samplesFile}.${sampleName ( dataD )}0` : `//no response body needed for ${action}`
+  const requestBodyString = details.params.needsObj ? `body: JSON.stringify(${params.samplesFile}.${sampleName ( dataD )}0)` : `//no request body needed for ${action}`
+  const responseBodyString = details.output.needsObj ? `body: ${params.samplesFile}.${sampleName ( dataD )}0` : `//no response body needed for ${action}`
+  const initialStateBodyTransforms = details.params.needsObj ? [ `[${lensFocusQueryWithSlashAndTildaFromIdentity ( `initialStateBodyTransform for page ${page.name} ${restName}`, params, page, defn.targetFromPath )}, () => ${params.samplesFile}.${sampleName ( dataD )}0]` ] : []
   return [
     `//Rest ${restName} ${action} pact test for ${page.name}`,
-    `  pactWith ( { consumer: '${page.name}', provider: '${page.name}Provider', cors: true }, provider => {`,
-    `    describe ( '${page.name} - ${restName} rest ${action}', () => {`,
-    `      it ( 'should have a ${action} rest for ${dataD.name}', async () => {`,
-    `        const restCommand: RestCommand = { name: '${restDetailsName ( page, restName, rest )}', restAction: '${action}' }`,
-    `        const firstState: FState = {`,
-    `          ...emptyState, restCommands: [ restCommand ],`,
-    `          CommonIds: ${JSON.stringify ( makeCommonValueForTest ( rest, 'get' ) )},`,
-    `          pageSelection: [ { pageName: '${page.name}', pageMode: 'view' } ]`,
-    `        }`,
-
-    `        await provider.addInteraction ( {`,
-    `          state: 'default',`,
-    `          uponReceiving: 'a rest for ${page.name} ${restName} ${action}',`,
-    `          withRequest: {`,
-    `            method: '${details.method}',`,
-    `            path:  '${beforeSeparator ( "?", rest.url )}',`,
-    `            query:${JSON.stringify ( paramsValueForTest )},`,
-    `            ${requestBodyString},`,
-    `          },`,
-    `          willRespondWith: {`,
-    `            status: 200,`,
-    `            ${responseBodyString}`,
-    `          },`,
-    `        } )`,
-    `        const withIds = massTransform(firstState,)`,
-    `        let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );`,
-    `        let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )`,
-    `        const rawExpected:any = { ...firstState, restCommands: []}`,
-    `        const expected = ${parsePath ( defn.targetFromPath, stateCodeBuilderWithSlashAndTildaFromIdentity ( params, page ) )}.set ( rawExpected, ${params.samplesFile}.${sampleName ( dataD )}0 )`,
-    `        expect ( newState.messages.length ).toEqual ( 1 )`,
-    `        expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)`,
-    `        expect ( { ...newState, messages: []}).toEqual ( expected )`,
-    `      } )`,
-    `      } )`,
-    `      })`,
-    `  ` ]
+    `pactWith ( { consumer: '${page.name}', provider: '${page.name}Provider', cors: true }, provider => {`,
+    `  describe ( '${page.name} - ${restName} rest ${action}', () => {`,
+    `   it ( 'should have a ${action} rest for ${dataD.name}', async () => {`,
+    `    const restCommand: RestCommand = { name: '${restDetailsName ( page, restName, rest )}', restAction: '${action}' }`,
+    `    const firstState: FState = {`,
+    `       ...emptyState, restCommands: [ restCommand ],`,
+    `       CommonIds: ${JSON.stringify ( makeCommonValueForTest ( rest, 'get' ) )},`,
+    `       pageSelection: [ { pageName: '${page.name}', pageMode: 'view' } ]`,
+    `    }`,
+    `    await provider.addInteraction ( {`,
+    `      state: 'default',`,
+    `      uponReceiving: 'a rest for ${page.name} ${restName} ${action}',`,
+    `      withRequest: {`,
+    `         method: '${details.method}',`,
+    `         path:  '${beforeSeparator ( "?", rest.url )}',`,
+    `         query:${JSON.stringify ( paramsValueForTest )},`,
+    `         ${requestBodyString},`,
+    `      },`,
+    `      willRespondWith: {`,
+    `         status: 200,`,
+    `         ${responseBodyString}`,
+    `      },`,
+    `    } )`,
+    ...indentList ( indentList ( makeLensParamsTransformers ( params, page, restName, defn, action, initialStateBodyTransforms ) ) ),
+    `    const withIds = massTransform ( firstState, ...lensTransforms )`,
+    `    const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );`,
+    `    const newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )`,
+    `    const rawExpected:any = { ...withIds, restCommands: []}`,
+    `    const expected = ${parsePath ( defn.targetFromPath, stateCodeBuilderWithSlashAndTildaFromIdentity ( params, page ) )}.set ( rawExpected, ${params.samplesFile}.${sampleName ( dataD )}0 )`,
+    `    expect ( newState.messages.length ).toEqual ( 1 )`,
+    `    expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)`,
+    `    expect ( { ...newState, messages: []}).toEqual ( expected )`,
+    `   })`,
+    ` })`,
+    `})`,
+    `` ]
 }
 
 
@@ -94,36 +96,49 @@ export function makeFetcherPact<B, G> ( params: TSParams, page: PageD<B, G>, res
   return [
     `//GetFetcher pact test`,
     `pactWith ( { consumer: '${page.name}', provider: '${page.name}Provider', cors: true }, provider => {`,
-    `      describe ( '${page.name} - ${restName} - fetcher', () => {`,
-    `        it ( 'should have a  fetcher for ${rest.dataDD.name}', async () => {`,
-    `          await provider.addInteraction ( {`,
-    `            state: 'default',`,
-    `            uponReceiving: 'A request for ${rest.dataDD.name}',`,
-    `            withRequest: {`,
-    `              method: 'GET',`,
-    `              path: '${beforeSeparator ( "?", rest.url )}',`,
-    `              query:${JSON.stringify ( paramsValueForTest )}`,
-    `            },`,
-    `            willRespondWith: {`,
-    `              status: 200,`,
-    `              body: ${params.samplesFile}.${sampleName ( rest.dataDD )}0`,
-    `            },`,
-    `          } )`,
-    `          const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: '${page.name}', pageMode: 'view' }], CommonIds: ${JSON.stringify ( makeCommonValueForTest ( rest, 'get' ) )} }`,
-    `          const fetcher= ${fetcherName ( defn )} (Lenses.identity<${params.stateName}>().focusQuery('${page.name}'), commonIds ) `,
-    `          expect(fetcher.shouldLoad(firstState)).toEqual([]) // If this fails there is something wrong with the state` ,
-    `          const f: FetcherTree<${params.stateName}> = { fetchers: [fetcher], children: [] }`,
-    `          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )`,
-    `          let expectedRaw: any = {`,
-    `            ... firstState,`,
-    `              tags: {'${page.name}_${defn.targetFromPath}': ${JSON.stringify ( Object.values ( paramsValueForTest ) )}}`,
-    `        };`,
-    `        const expected = ${parsePath ( defn.targetFromPath, stateCodeBuilderWithSlashAndTildaFromIdentity ( params, page ) )}.set ( expectedRaw, ${params.samplesFile}.${sampleName ( rest.dataDD )}0 )`,
-    `          expect ( newState ).toEqual ( expected )`,
-    `        } )`,
-    `        } )`,
-    `      })`,
+    `describe ( '${page.name} - ${restName} - fetcher', () => {`,
+    `  it ( 'should have a  fetcher for ${rest.dataDD.name}', async () => {`,
+    `    await provider.addInteraction ( {`,
+    `      state: 'default',`,
+    `      uponReceiving: 'A request for ${rest.dataDD.name}',`,
+    `      withRequest: {`,
+    `        method: 'GET',`,
+    `        path: '${beforeSeparator ( "?", rest.url )}',`,
+    `        query:${JSON.stringify ( paramsValueForTest )}`,
+    `      },`,
+    `      willRespondWith: {`,
+    `        status: 200,`,
+    `        body: ${params.samplesFile}.${sampleName ( rest.dataDD )}0`,
+    `       },`,
+    `      } )`,
+    `      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: '${page.name}', pageMode: 'view' }], CommonIds: ${JSON.stringify ( makeCommonValueForTest ( rest, 'get' ) )} }`,
+    ...indentList ( makeLensParamsTransformers ( params, page, restName, defn, 'get', [] ) ),
+    `      const withIds = massTransform ( firstState, ...lensTransforms )`,
+    `      const fetcher= ${fetcherName ( defn )} (Lenses.identity<${params.stateName}>().focusQuery('${page.name}'), commonIds ) `,
+    `      expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state`,
+    `      const f: FetcherTree<${params.stateName}> = { fetchers: [fetcher], children: [] }`,
+    `      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )`,
+    `      let expectedRaw: any = {`,
+    `... withIds,`,
+    `      tags: {'${page.name}_${defn.targetFromPath}': ${JSON.stringify ( Object.values ( paramsValueForTest ) )}}`,
+    `      };`,
+    `      const expected = ${parsePath ( defn.targetFromPath, stateCodeBuilderWithSlashAndTildaFromIdentity ( params, page ) )}.set ( expectedRaw, ${params.samplesFile}.${sampleName ( rest.dataDD )}0 )`,
+    `      expect ( newState ).toEqual ( expected )`,
+    `    })`,
+    `  })`,
+    `})`,
     ``,
   ]
 }
 
+function makeLensParamsTransformers<B, G> ( params: TSParams, page: PageD<B, G>, restName: string, defn: RestDefnInPageProperties<G>, restAction: RestAction, extraTransforms: string[] ): string[] {
+  let visibleParams = sortedEntries ( defn.rest.params ).filter ( filterParamsByRestAction ( restAction ) );
+  const theseParams = visibleParams.map ( ( [ name, p ] ) => p )
+
+  return [ `const lensTransforms: Transform<${params.stateName},any>[] = [`,
+    ...extraTransforms,
+    ...indentList ( theseParams.flatMap ( v =>
+      isRestLens ( v ) ? [ `[${lensFocusQueryWithSlashAndTildaFromIdentity ( `makeLensParams for page ${page.name} ${restName}`, params, page, v.lens )}, () =>${JSON.stringify ( v.testValue )} ]` ] : [] ) ),
+    `]` ]
+
+}

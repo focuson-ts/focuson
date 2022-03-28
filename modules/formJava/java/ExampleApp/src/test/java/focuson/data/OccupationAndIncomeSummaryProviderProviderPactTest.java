@@ -13,9 +13,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(PactRunner.class)
-@Provider("RepeatingWholeDataProvider")
+@Provider("OccupationAndIncomeSummaryProvider")
 @PactFolder("acceptedPacts")
-public class RepeatingWholeDataProviderProviderPactTest {
+public class OccupationAndIncomeSummaryProviderProviderPactTest {
 
     @State(value = {"default"})
     public void configureState() {

@@ -1,3 +1,4 @@
+package focuson.data;
 
 import au.com.dius.pact.provider.junit.PactRunner;
 import au.com.dius.pact.provider.junit.target.HttpTarget;
@@ -12,9 +13,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(PactRunner.class)
-@Provider("AccountOverviewProvider")
+@Provider("CreateEAccountProvider")
 @PactFolder("acceptedPacts")
-public class AccountOverviewProviderProviderPactTest {
+public class CreateEAccountProviderProviderPactTest {
 
     @State(value = {"default"})
     public void configureState() {

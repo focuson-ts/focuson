@@ -7,45 +7,89 @@
   },
   "interactions": [
     {
-      "description": "EAccountsSummary should have a get fetcher for EAccountsSummary",
+      "description": "a rest for EAccountsSummary createPlanRestD get",
       "providerState": "default",
       "request": {
         "method": "GET",
-        "path": "/api/accountsSummary",
-        "query": "accountId=accId&customerId=custId"
+        "path": "/api/createPlan/",
+        "query": "accountId=accId&createPlanId=tbd&customerId=custId"
       },
       "response": {
         "status": 200,
         "headers": {
         },
         "body": {
-          "eAccountsTable": [
-            {
-              "accountId": 1233450,
-              "displayType": "checking",
-              "description": "This is a one line string",
-              "virtualBankSeq": "This is a one line string",
-              "total": 123,
-              "frequency": "This is a one line string"
-            }
-          ],
-          "totalMonthlyCost": 123,
-          "oneAccountBalance": 123,
-          "currentAccountBalance": 123,
-          "createPlan": {
-            "createPlanStart": "2020-10-01",
-            "createPlanDate": "2020-10-01",
-            "createPlanEnd": "2020-10-01"
-          }
+          "createPlanStart": "2022-01-01",
+          "createPlanDate": "2022-03-01",
+          "createPlanEnd": "2022-10-01"
         }
       }
     },
     {
-      "description": "EAccountsSummary should have a get rest for EAccountsSummary",
+      "description": "a rest for EAccountsSummary createPlanRestD create",
+      "providerState": "default",
+      "request": {
+        "method": "POST",
+        "path": "/api/createPlan/",
+        "query": "accountId=accId&customerId=custId",
+        "body": "{\"createPlanStart\":\"2022-01-01\",\"createPlanDate\":\"2022-03-01\",\"createPlanEnd\":\"2022-10-01\"}"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "createPlanStart": "2022-01-01",
+          "createPlanDate": "2022-03-01",
+          "createPlanEnd": "2022-10-01"
+        }
+      }
+    },
+    {
+      "description": "a rest for EAccountsSummary createPlanRestD update",
+      "providerState": "default",
+      "request": {
+        "method": "PUT",
+        "path": "/api/createPlan/",
+        "query": "accountId=accId&createPlanId=tbd&customerId=custId",
+        "body": "{\"createPlanStart\":\"2022-01-01\",\"createPlanDate\":\"2022-03-01\",\"createPlanEnd\":\"2022-10-01\"}"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "createPlanStart": "2022-01-01",
+          "createPlanDate": "2022-03-01",
+          "createPlanEnd": "2022-10-01"
+        }
+      }
+    },
+    {
+      "description": "a rest for EAccountsSummary createPlanRestD delete",
+      "providerState": "default",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/createPlan/",
+        "query": "accountId=accId&createPlanId=tbd&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "createPlanStart": "2022-01-01",
+          "createPlanDate": "2022-03-01",
+          "createPlanEnd": "2022-10-01"
+        }
+      }
+    },
+    {
+      "description": "a rest for EAccountsSummary createPlanRestD list",
       "providerState": "default",
       "request": {
         "method": "GET",
-        "path": "/api/accountsSummary",
+        "path": "/api/createPlan/",
         "query": "accountId=accId&customerId=custId"
       },
       "response": {
@@ -53,24 +97,9 @@
         "headers": {
         },
         "body": {
-          "eAccountsTable": [
-            {
-              "accountId": 1233450,
-              "displayType": "checking",
-              "description": "This is a one line string",
-              "virtualBankSeq": "This is a one line string",
-              "total": 123,
-              "frequency": "This is a one line string"
-            }
-          ],
-          "totalMonthlyCost": 123,
-          "oneAccountBalance": 123,
-          "currentAccountBalance": 123,
-          "createPlan": {
-            "createPlanStart": "2020-10-01",
-            "createPlanDate": "2020-10-01",
-            "createPlanEnd": "2020-10-01"
-          }
+          "createPlanStart": "2022-01-01",
+          "createPlanDate": "2022-03-01",
+          "createPlanEnd": "2022-10-01"
         }
       }
     },
@@ -87,23 +116,24 @@
         "headers": {
         },
         "body": {
+          "useEStatements": true,
           "eAccountsTable": [
             {
               "accountId": 1233450,
               "displayType": "checking",
-              "description": "This is a one line string",
-              "virtualBankSeq": "This is a one line string",
-              "total": 123,
-              "frequency": "This is a one line string"
+              "description": "This account has a description",
+              "virtualBankSeq": "seq1",
+              "total": 1000,
+              "frequency": "23"
             }
           ],
-          "totalMonthlyCost": 123,
-          "oneAccountBalance": 123,
-          "currentAccountBalance": 123,
+          "totalMonthlyCost": 1000,
+          "oneAccountBalance": 9921,
+          "currentAccountBalance": 12321,
           "createPlan": {
-            "createPlanStart": "2020-10-01",
-            "createPlanDate": "2020-10-01",
-            "createPlanEnd": "2020-10-01"
+            "createPlanStart": "2022-01-01",
+            "createPlanDate": "2022-03-01",
+            "createPlanEnd": "2022-10-01"
           }
         }
       }
@@ -119,6 +149,27 @@
       "response": {
         "status": 200,
         "headers": {
+        },
+        "body": {
+          "useEStatements": true,
+          "eAccountsTable": [
+            {
+              "accountId": 1233450,
+              "displayType": "checking",
+              "description": "This account has a description",
+              "virtualBankSeq": "seq1",
+              "total": 1000,
+              "frequency": "23"
+            }
+          ],
+          "totalMonthlyCost": 1000,
+          "oneAccountBalance": 9921,
+          "currentAccountBalance": 12321,
+          "createPlan": {
+            "createPlanStart": "2022-01-01",
+            "createPlanDate": "2022-03-01",
+            "createPlanEnd": "2022-10-01"
+          }
         }
       }
     }

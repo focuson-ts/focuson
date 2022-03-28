@@ -1,3 +1,4 @@
+package focuson.data;
 
 import au.com.dius.pact.provider.junit.PactRunner;
 import au.com.dius.pact.provider.junit.target.HttpTarget;
@@ -12,9 +13,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(PactRunner.class)
-@Provider("ETransferDataDProvider")
+@Provider("RepeatingProvider")
 @PactFolder("acceptedPacts")
-public class ETransferDataDProviderProviderPactTest {
+public class RepeatingProviderProviderPactTest {
 
     @State(value = {"default"})
     public void configureState() {

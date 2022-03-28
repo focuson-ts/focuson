@@ -1,13 +1,13 @@
 {
   "consumer": {
-    "name": "ETransferDataD"
+    "name": "ETransfer"
   },
   "provider": {
-    "name": "ETransferDataDProvider"
+    "name": "ETransferProvider"
   },
   "interactions": [
     {
-      "description": "ETransfer should have a create rest for ETransferDataD",
+      "description": "a rest for ETransfer eTransfer create",
       "providerState": "default",
       "request": {
         "method": "POST",

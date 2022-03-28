@@ -15,27 +15,27 @@ import java.util.Map;
 
   @Autowired
   public GraphQL graphQL;
-    @PostMapping(value="/api/createEAccount/{createPlanId}", produces="application/json")
+    @PostMapping(value="/api/createEAccount/", produces="application/json")
     public ResponseEntity createCreateEAccountData(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{
        return Transform.result(graphQL,CreateEAccountDataQueries.createCreateEAccountData(accountId, customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "createCreateEAccountData");
     }
 
-    @GetMapping(value="/api/createEAccount/{createPlanId}", produces="application/json")
+    @GetMapping(value="/api/createEAccount/", produces="application/json")
     public ResponseEntity getCreateEAccountData(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{
        return Transform.result(graphQL,CreateEAccountDataQueries.getCreateEAccountData(accountId, createPlanId, customerId), "getCreateEAccountData");
     }
 
-    @PostMapping(value="/api/createEAccount/{createPlanId}/query", produces="application/json")
+    @PostMapping(value="/api/createEAccount//query", produces="application/json")
     public String querycreateCreateEAccountData(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{
        return CreateEAccountDataQueries.createCreateEAccountData(accountId, customerId,   Transform.removeQuoteFromProperties(body, Map.class));
     }
 
-    @GetMapping(value="/api/createEAccount/{createPlanId}/query", produces="application/json")
+    @GetMapping(value="/api/createEAccount//query", produces="application/json")
     public String querygetCreateEAccountData(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{
        return CreateEAccountDataQueries.getCreateEAccountData(accountId, createPlanId, customerId);
     }
 
-  @GetMapping(value = "/api/createEAccount/{createPlanId}/sample", produces = "application/json")
+  @GetMapping(value = "/api/createEAccount//sample", produces = "application/json")
     public static String sampleCreateEAccountData() throws Exception {
       return new ObjectMapper().writeValueAsString( Sample.sampleCreateEAccountData0);
     }

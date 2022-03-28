@@ -41,8 +41,7 @@ export const arrearsDetailsParams: RestParams = {
 }
 
 export const arrearsDetailsCurrentRestD: ExampleRestD = {
-  namePrefix: 'current',
-  params: arrearsDetailsParams,
+    params: arrearsDetailsParams,
   dataDD: arrearsDetailsDataD,
   url: '/api/accountOverview/arrearsDetails/current?{query}',
   actions: [ 'get' ]

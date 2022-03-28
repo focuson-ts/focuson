@@ -7,7 +7,7 @@
   },
   "interactions": [
     {
-      "description": "a rest for JointAccount jointAccount get",
+      "description": "A request for JointAccount",
       "providerState": "default",
       "request": {
         "method": "GET",
@@ -42,7 +42,7 @@
       }
     },
     {
-      "description": "A request for JointAccount",
+      "description": "a rest for JointAccount jointAccount get",
       "providerState": "default",
       "request": {
         "method": "GET",

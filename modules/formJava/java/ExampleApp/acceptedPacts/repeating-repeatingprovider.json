@@ -27,6 +27,27 @@
       }
     },
     {
+      "description": "a rest for Repeating repeating create",
+      "providerState": "default",
+      "request": {
+        "method": "POST",
+        "path": "/api/repeating",
+        "query": "customerId=custId",
+        "body": "[{\"name\":\"This is a one line string\",\"age\":123}]"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": [
+          {
+            "name": "This is a one line string",
+            "age": 123
+          }
+        ]
+      }
+    },
+    {
       "description": "a rest for Repeating repeating get",
       "providerState": "default",
       "request": {

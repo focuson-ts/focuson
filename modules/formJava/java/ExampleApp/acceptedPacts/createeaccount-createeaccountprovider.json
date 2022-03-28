@@ -1,17 +1,17 @@
 {
   "consumer": {
-    "name": "CreateEAccountData"
+    "name": "CreateEAccount"
   },
   "provider": {
-    "name": "CreateEAccountDataProvider"
+    "name": "CreateEAccountProvider"
   },
   "interactions": [
     {
-      "description": "CreateEAccount should have a create rest for CreateEAccountData",
+      "description": "a rest for CreateEAccount eTransfer create",
       "providerState": "default",
       "request": {
         "method": "POST",
-        "path": "/api/createEAccount/tbd",
+        "path": "/api/createEAccount/",
         "query": "accountId=accId&customerId=custId",
         "body": "{\"name\":\"This is a one line string\",\"type\":\"checking\",\"savingsStyle\":\"adHoc\",\"initialAmount\":123}"
       },
@@ -28,11 +28,11 @@
       }
     },
     {
-      "description": "CreateEAccount should have a get rest for CreateEAccountData",
+      "description": "a rest for CreateEAccount eTransfer get",
       "providerState": "default",
       "request": {
         "method": "GET",
-        "path": "/api/createEAccount/tbd",
+        "path": "/api/createEAccount/",
         "query": "accountId=accId&createPlanId=tbd&customerId=custId"
       },
       "response": {
