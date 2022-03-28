@@ -9,6 +9,8 @@ import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
 import {PostCodeDataFetcher} from './PostCodeDemo.fetchers'
 
+describe("Allow pacts to be run from intelliJ for PostCodeDemo", () =>{})
+
 //Rest address create pact test for PostCodeDemo
   pactWith ( { consumer: 'PostCodeDemo', provider: 'PostCodeDemoProvider', cors: true }, provider => {
     describe ( 'PostCodeDemo - address rest create', () => {
@@ -38,9 +40,9 @@ import {PostCodeDataFetcher} from './PostCodeDemo.fetchers'
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('main').set ( rawExpected, samples.samplePostCodeMainPage0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })
@@ -63,8 +65,10 @@ pactWith ( { consumer: 'PostCodeDemo', provider: 'PostCodeDemoProvider', cors: t
             },
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'PostCodeDemo', pageMode: 'view' }], CommonIds: {} }
-          const f: FetcherTree<FState> = { fetchers: [ PostCodeDataFetcher (Lenses.identity<FState>().focusQuery('PostCodeDemo'), commonIds ) ], children: [] }
-          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+          const fetcher= PostCodeDataFetcher (Lenses.identity<FState>().focusQuery('PostCodeDemo'), commonIds ) 
+          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
+          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {
             ... firstState,
               tags: {'PostCodeDemo_~/postcode/searchResults': ["LW12 4RG"]}
@@ -92,11 +96,11 @@ pactWith ( { consumer: 'PostCodeDemo', provider: 'PostCodeDemoProvider', cors: t
             method: 'GET',
             path:  '/api/postCode',
             query:{"postcode":"LW12 4RG"},
-            //no body needed for get,
+            //no request body needed for get,
           },
           willRespondWith: {
             status: 200,
-            //no body needed for get
+            body: samples.samplePostCodeData0
           },
         } )
         const withIds = massTransform(firstState,)
@@ -104,9 +108,9 @@ pactWith ( { consumer: 'PostCodeDemo', provider: 'PostCodeDemoProvider', cors: t
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('searchResults').set ( rawExpected, samples.samplePostCodeData0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })

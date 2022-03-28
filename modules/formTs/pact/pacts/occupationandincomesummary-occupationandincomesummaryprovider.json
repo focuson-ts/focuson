@@ -40,6 +40,15 @@
       "response": {
         "status": 200,
         "headers": {
+        },
+        "body": {
+          "applicantName": "Mr XXXXXXXXXX ABCD Fred Bloggs",
+          "employerName": "AnalystXYZ",
+          "addressLine1": "Pinetrees Road",
+          "addressLine2": "Norwich",
+          "addressLine3": "Norfolk",
+          "addressLine4": "Norfolkkk",
+          "postcode": "PLXYZ"
         }
       }
     },
@@ -109,6 +118,47 @@
       "response": {
         "status": 200,
         "headers": {
+        },
+        "body": {
+          "businessDetails": {
+            "applicantName": "Mr XXXXXXXXXX ABCD Fred Bloggs",
+            "businessName": "AnalystXYZ",
+            "addressLine1": "Pinetrees Road",
+            "addressLine2": "Norwich",
+            "addressLine3": "Norfolk",
+            "addressLine4": "Norfolkkk",
+            "postcode": "PLXYZ"
+          },
+          "businessFinancialDetails": {
+            "turnoverLastYear": "10,000",
+            "turnoverPenultimateYear": "11,000",
+            "netProfitLastYear": "12,000",
+            "netProfitPenultimateYear": "9,000",
+            "drawingsLastYear": "13,000",
+            "drawingsPenultimateYear": "100,000",
+            "dividendsLastYear": "15,000",
+            "dividendsPenultimateYear": "3,000",
+            "netAssetsLastYear": "1,000",
+            "netAssetsPenultimateYear": "2,000"
+          },
+          "detailsOfNonRecurringItems": {
+            "nonRecurringItems": "Not Available"
+          },
+          "detailsOfReevaluationOfAssets": {
+            "revaluationOfAssets": "Not Available"
+          },
+          "accountantDetails": {
+            "contactTitle": "BARON",
+            "contactForename": "Justin",
+            "contactSurname": "Tesla",
+            "practice": "PracXyz",
+            "addressLine1": "Pinetrees Road",
+            "addressLine2": "Norwich",
+            "addressLine3": "Norfolk",
+            "addressLine4": "Norfolkkk",
+            "postcode": "PLXYZ",
+            "telephone": "224567"
+          }
         }
       }
     },
@@ -156,6 +206,25 @@
       "response": {
         "status": 200,
         "headers": {
+        },
+        "body": {
+          "occupationDescriptionResponse": {
+            "descTypeValue": "W54",
+            "descTypeName": "Engineer"
+          },
+          "employmentStatus": {
+            "employmentName": "someString",
+            "employmentValue": "someString"
+          },
+          "contractTypesResponse": {
+            "contractTypeId": 123,
+            "description": "someString"
+          },
+          "frequenciesResponse": {
+            "frequencyId": 123,
+            "frequencyDescription": "someString",
+            "annualMultiple": 123
+          }
         }
       }
     },
@@ -220,6 +289,42 @@
       "response": {
         "status": 200,
         "headers": {
+        },
+        "body": {
+          "mainCustomerName": "Mr XXXXXXXXXX J ABCD Fred Bloggs",
+          "jointCustomerName": "Mrs XXXXXXXXXX J ABCD Fred Bloggs",
+          "mainClientRef": 13606326,
+          "jointClientRef": -1,
+          "customerOccupationIncomeDetails": [
+            {
+              "areYou": "C",
+              "occupation": "W045",
+              "customerDescription": "XXXXXXXXX",
+              "ownShareOfTheCompany": "N",
+              "owningSharesPct": "N",
+              "workFor": "S.C. Bosch S.R.L.",
+              "employmentType": "0",
+              "empStartDate": "10/2002",
+              "empEndDate": "10/2003",
+              "annualSalaryBeforeDeduction": 20315,
+              "annualIncomeExcludingRent": 13255,
+              "regularCommissionBonus": 500,
+              "whatTypeOfBusiness": "Electrical Technical Support",
+              "whatNameBusiness": "XXXXXXXXX",
+              "establishedYear": "2006-04-01T00:00:00.000+01:00",
+              "annualDrawing3Yrs": 100000,
+              "otherSourceOfIncome": "N",
+              "createdBy": "Seras Alin",
+              "createdDate": "2007-07-03T10:52:27.000+01:00",
+              "employerName": "My employer name",
+              "sePositionHeld": "DIR",
+              "occupationCategory": "SK",
+              "empEmploymentSeq": 999999,
+              "empAppRoleSeq": 14648851,
+              "accountantAppRoleSeq": 14648851,
+              "currentEmployment": "N"
+            }
+          ]
         }
       }
     },
@@ -254,6 +359,12 @@
       "response": {
         "status": 200,
         "headers": {
+        },
+        "body": {
+          "clientOtherIncomeSeq": "someString",
+          "otherIncomeType": "someString",
+          "incomeFreqRef": "0",
+          "amount": 123
         }
       }
     }

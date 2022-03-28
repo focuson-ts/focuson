@@ -110,6 +110,15 @@
       "response": {
         "status": 200,
         "headers": {
+        },
+        "body": {
+          "history": [
+            {
+              "serialNumber": 937453,
+              "howOrdered": "Manually",
+              "dateOrder": "2022-10-01"
+            }
+          ]
         }
       }
     }

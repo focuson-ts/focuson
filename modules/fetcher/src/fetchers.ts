@@ -133,7 +133,11 @@ export function lensFetcher<State, Child, T> ( lens: Optional<State, Child>, fet
 
 
 export const condFetcher = <State> ( condition: ( s: State ) => boolean, fetcher: Fetcher<State, any>, description?: string ): Fetcher<State, any> => ({
-  shouldLoad: ( ns: State ) => condition ( ns ) && fetcher.shouldLoad ( ns ),
+  shouldLoad: ( ns: State ) => {
+    const thisCond = condition ( ns )
+    const result = thisCond && fetcher.shouldLoad ( ns )
+    return result
+  },
   load: ( ns: State ) => fetcher.load ( ns ),
   description: description ? description : `ifEqualsFetcher(${fetcher.description})`
 });

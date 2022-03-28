@@ -9,6 +9,8 @@ import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
 import {RepeatingWholeDataFetcher} from './Repeating.fetchers'
 
+describe("Allow pacts to be run from intelliJ for Repeating", () =>{})
+
 //GetFetcher pact test
 pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true }, provider => {
       describe ( 'Repeating - repeating - fetcher', () => {
@@ -27,8 +29,10 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
             },
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'Repeating', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
-          const f: FetcherTree<FState> = { fetchers: [ RepeatingWholeDataFetcher (Lenses.identity<FState>().focusQuery('Repeating'), commonIds ) ], children: [] }
-          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+          const fetcher= RepeatingWholeDataFetcher (Lenses.identity<FState>().focusQuery('Repeating'), commonIds ) 
+          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
+          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {
             ... firstState,
               tags: {'Repeating_~/fromApi': ["custId"]}
@@ -68,9 +72,9 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('Repeating').focusQuery('fromApi').set ( rawExpected, samples.sampleRepeatingWholeData0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })
@@ -92,11 +96,11 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
             method: 'GET',
             path:  '/api/repeating',
             query:{"customerId":"custId"},
-            //no body needed for get,
+            //no request body needed for get,
           },
           willRespondWith: {
             status: 200,
-            //no body needed for get
+            body: samples.sampleRepeatingWholeData0
           },
         } )
         const withIds = massTransform(firstState,)
@@ -104,9 +108,9 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('Repeating').focusQuery('fromApi').set ( rawExpected, samples.sampleRepeatingWholeData0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })

@@ -8,6 +8,8 @@ import * as samples from '../ETransfer/ETransfer.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
 
+describe("Allow pacts to be run from intelliJ for ETransfer", () =>{})
+
 //Rest eTransfer create pact test for ETransfer
   pactWith ( { consumer: 'ETransfer', provider: 'ETransferProvider', cors: true }, provider => {
     describe ( 'ETransfer - eTransfer rest create', () => {
@@ -37,9 +39,9 @@ import * as rests from "../rests";
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('ETransfer').focusQuery('fromApi').set ( rawExpected, samples.sampleETransferDataD0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })

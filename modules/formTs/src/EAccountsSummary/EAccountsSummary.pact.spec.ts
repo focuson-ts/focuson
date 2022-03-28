@@ -9,6 +9,8 @@ import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
 import {EAccountsSummaryFetcher} from './EAccountsSummary.fetchers'
 
+describe("Allow pacts to be run from intelliJ for EAccountsSummary", () =>{})
+
 //Rest createPlanRestD get pact test for EAccountsSummary
   pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider', cors: true }, provider => {
     describe ( 'EAccountsSummary - createPlanRestD rest get', () => {
@@ -26,11 +28,11 @@ import {EAccountsSummaryFetcher} from './EAccountsSummary.fetchers'
             method: 'GET',
             path:  '/api/createPlan/{createPlanId}',
             query:{"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
-            //no body needed for get,
+            //no request body needed for get,
           },
           willRespondWith: {
             status: 200,
-            //no body needed for get
+            body: samples.sampleCreatePlan0
           },
         } )
         const withIds = massTransform(firstState,)
@@ -38,9 +40,9 @@ import {EAccountsSummaryFetcher} from './EAccountsSummary.fetchers'
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('tempCreatePlan').set ( rawExpected, samples.sampleCreatePlan0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })
@@ -74,9 +76,9 @@ import {EAccountsSummaryFetcher} from './EAccountsSummary.fetchers'
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('tempCreatePlan').set ( rawExpected, samples.sampleCreatePlan0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })
@@ -110,9 +112,9 @@ import {EAccountsSummaryFetcher} from './EAccountsSummary.fetchers'
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('tempCreatePlan').set ( rawExpected, samples.sampleCreatePlan0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })
@@ -134,11 +136,11 @@ import {EAccountsSummaryFetcher} from './EAccountsSummary.fetchers'
             method: 'DELETE',
             path:  '/api/createPlan/{createPlanId}',
             query:{"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
-            //no body needed for delete,
+            //no request body needed for delete,
           },
           willRespondWith: {
             status: 200,
-            //no body needed for delete
+            body: samples.sampleCreatePlan0
           },
         } )
         const withIds = massTransform(firstState,)
@@ -146,9 +148,9 @@ import {EAccountsSummaryFetcher} from './EAccountsSummary.fetchers'
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('tempCreatePlan').set ( rawExpected, samples.sampleCreatePlan0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })
@@ -170,11 +172,11 @@ import {EAccountsSummaryFetcher} from './EAccountsSummary.fetchers'
             method: 'GET',
             path:  '/api/createPlan/{createPlanId}',
             query:{"accountId":"accId","customerId":"custId"},
-            //no body needed for list,
+            //no request body needed for list,
           },
           willRespondWith: {
             status: 200,
-            //no body needed for list
+            body: samples.sampleCreatePlan0
           },
         } )
         const withIds = massTransform(firstState,)
@@ -182,9 +184,9 @@ import {EAccountsSummaryFetcher} from './EAccountsSummary.fetchers'
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('tempCreatePlan').set ( rawExpected, samples.sampleCreatePlan0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })
@@ -207,8 +209,10 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
             },
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'EAccountsSummary', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
-          const f: FetcherTree<FState> = { fetchers: [ EAccountsSummaryFetcher (Lenses.identity<FState>().focusQuery('EAccountsSummary'), commonIds ) ], children: [] }
-          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+          const fetcher= EAccountsSummaryFetcher (Lenses.identity<FState>().focusQuery('EAccountsSummary'), commonIds ) 
+          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
+          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {
             ... firstState,
               tags: {'EAccountsSummary_~/fromApi': ["accId","custId"]}
@@ -236,11 +240,11 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
             method: 'GET',
             path:  '/api/accountsSummary',
             query:{"accountId":"accId","customerId":"custId"},
-            //no body needed for get,
+            //no request body needed for get,
           },
           willRespondWith: {
             status: 200,
-            //no body needed for get
+            body: samples.sampleEAccountsSummary0
           },
         } )
         const withIds = massTransform(firstState,)
@@ -248,9 +252,9 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('fromApi').set ( rawExpected, samples.sampleEAccountsSummary0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })

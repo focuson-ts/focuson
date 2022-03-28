@@ -9,6 +9,8 @@ import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
 import {JointAccountFetcher} from './JointAccount.fetchers'
 
+describe("Allow pacts to be run from intelliJ for JointAccount", () =>{})
+
 //GetFetcher pact test
 pactWith ( { consumer: 'JointAccount', provider: 'JointAccountProvider', cors: true }, provider => {
       describe ( 'JointAccount - jointAccount - fetcher', () => {
@@ -27,8 +29,10 @@ pactWith ( { consumer: 'JointAccount', provider: 'JointAccountProvider', cors: t
             },
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'JointAccount', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
-          const f: FetcherTree<FState> = { fetchers: [ JointAccountFetcher (Lenses.identity<FState>().focusQuery('JointAccount'), commonIds ) ], children: [] }
-          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+          const fetcher= JointAccountFetcher (Lenses.identity<FState>().focusQuery('JointAccount'), commonIds ) 
+          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
+          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {
             ... firstState,
               tags: {'JointAccount_~/fromApi': ["custId"]}
@@ -56,11 +60,11 @@ pactWith ( { consumer: 'JointAccount', provider: 'JointAccountProvider', cors: t
             method: 'GET',
             path:  '/api/jointAccount',
             query:{"customerId":"custId"},
-            //no body needed for get,
+            //no request body needed for get,
           },
           willRespondWith: {
             status: 200,
-            //no body needed for get
+            body: samples.sampleJointAccount0
           },
         } )
         const withIds = massTransform(firstState,)
@@ -68,9 +72,9 @@ pactWith ( { consumer: 'JointAccount', provider: 'JointAccountProvider', cors: t
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('JointAccount').focusQuery('fromApi').set ( rawExpected, samples.sampleJointAccount0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })

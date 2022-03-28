@@ -7,42 +7,7 @@
   },
   "interactions": [
     {
-      "description": "JointAccount should have a get fetcher for JointAccount",
-      "providerState": "default",
-      "request": {
-        "method": "GET",
-        "path": "/api/jointAccount",
-        "query": "customerId=custId"
-      },
-      "response": {
-        "status": 200,
-        "headers": {
-        },
-        "body": {
-          "balance": 123,
-          "main": {
-            "name": "Fred Bloggs",
-            "addresses": [
-              {
-                "line1": "This is a one line string",
-                "line2": "This is a one line string"
-              }
-            ]
-          },
-          "joint": {
-            "name": "Fred Bloggs",
-            "addresses": [
-              {
-                "line1": "This is a one line string",
-                "line2": "This is a one line string"
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "description": "JointAccount should have a get rest for JointAccount",
+      "description": "a rest for JointAccount jointAccount get",
       "providerState": "default",
       "request": {
         "method": "GET",
@@ -108,20 +73,6 @@
               }
             ]
           }
-        }
-      }
-    },
-    {
-      "description": "a rest for JointAccount jointAccount get",
-      "providerState": "default",
-      "request": {
-        "method": "GET",
-        "path": "/api/jointAccount",
-        "query": "customerId=custId"
-      },
-      "response": {
-        "status": 200,
-        "headers": {
         }
       }
     }

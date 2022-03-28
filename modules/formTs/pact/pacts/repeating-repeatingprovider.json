@@ -37,7 +37,13 @@
       "response": {
         "status": 200,
         "headers": {
-        }
+        },
+        "body": [
+          {
+            "name": "This is a one line string",
+            "age": 123
+          }
+        ]
       }
     }
   ],

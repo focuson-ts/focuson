@@ -19,6 +19,8 @@ export function makeAllPactsForPage<B, G> ( params: TSParams, page: PageD<B, G> 
     `import {emptyState, ${params.stateName} , commonIds, identityL } from "../common";`,
     `import * as rests from "../rests";`,
     ...makeFetcherImports ( params, page ),
+    '',
+    `describe("Allow pacts to be run from intelliJ for ${page.name}", () =>{})`,
     ``,
     ...sortedEntries ( page.rest ).flatMap ( ( [ restName, defn ] ) => makeAllPactsForRest ( params, page, restName, defn ) )
   ]
@@ -42,7 +44,8 @@ export function makeRestPact<B, G> ( params: TSParams, page: PageD<B, G>, restNa
   const dataD = rest.dataDD
   // const [ id, resourceIds ] = findIds ( rest )
   let paramsValueForTest = makeParamValueForTest ( rest, action );
-  const bodyString = details.params.needsObj ? `body: ${params.samplesFile}.${sampleName ( dataD )}0` : `//no body needed for ${action}`
+  const requestBodyString = details.params.needsObj ? `body: ${params.samplesFile}.${sampleName ( dataD )}0` : `//no request body needed for ${action}`
+  const responseBodyString = details.output.needsObj?  `body: ${params.samplesFile}.${sampleName ( dataD )}0` : `//no response body needed for ${action}`
   return [
     `//Rest ${restName} ${action} pact test for ${page.name}`,
     `  pactWith ( { consumer: '${page.name}', provider: '${page.name}Provider', cors: true }, provider => {`,
@@ -62,11 +65,11 @@ export function makeRestPact<B, G> ( params: TSParams, page: PageD<B, G>, restNa
     `            method: '${details.method}',`,
     `            path:  '${beforeSeparator ( "?", rest.url )}',`,
     `            query:${JSON.stringify ( paramsValueForTest )},`,
-    `            ${bodyString},`,
+    `            ${requestBodyString},`,
     `          },`,
     `          willRespondWith: {`,
     `            status: 200,`,
-    `            ${bodyString}`,
+    `            ${responseBodyString}`,
     `          },`,
     `        } )`,
     `        const withIds = massTransform(firstState,)`,
@@ -74,9 +77,9 @@ export function makeRestPact<B, G> ( params: TSParams, page: PageD<B, G>, restNa
     `        let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )`,
     `        const rawExpected:any = { ...firstState, restCommands: []}`,
     `        const expected = ${parsePath ( defn.targetFromPath, stateCodeBuilderWithSlashAndTildaFromIdentity ( params, page ) )}.set ( rawExpected, ${params.samplesFile}.${sampleName ( dataD )}0 )`,
-    `        expect ( { ...newState, messages: []}).toEqual ( expected )`,
     `        expect ( newState.messages.length ).toEqual ( 1 )`,
     `        expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)`,
+    `        expect ( { ...newState, messages: []}).toEqual ( expected )`,
     `      } )`,
     `      } )`,
     `      })`,
@@ -107,8 +110,10 @@ export function makeFetcherPact<B, G> ( params: TSParams, page: PageD<B, G>, res
     `            },`,
     `          } )`,
     `          const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: '${page.name}', pageMode: 'view' }], CommonIds: ${JSON.stringify ( makeCommonValueForTest ( rest, 'get' ) )} }`,
-    `          const f: FetcherTree<${params.stateName}> = { fetchers: [ ${fetcherName ( defn )} (Lenses.identity<${params.stateName}>().focusQuery('${page.name}'), commonIds ) ], children: [] }`,
-    `          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )`,
+    `          const fetcher= ${fetcherName ( defn )} (Lenses.identity<${params.stateName}>().focusQuery('${page.name}'), commonIds ) `,
+    `          expect(fetcher.shouldLoad(firstState)).toEqual(true) // If this fails there is something wrong with the state` ,
+    `          const f: FetcherTree<${params.stateName}> = { fetchers: [fetcher], children: [] }`,
+    `          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )`,
     `          let expectedRaw: any = {`,
     `            ... firstState,`,
     `              tags: {'${page.name}_${defn.targetFromPath}': ${JSON.stringify ( Object.values ( paramsValueForTest ) )}}`,

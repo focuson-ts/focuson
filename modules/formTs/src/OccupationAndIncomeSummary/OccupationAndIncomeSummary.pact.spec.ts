@@ -13,6 +13,8 @@ import {DropdownsFetcher} from './OccupationAndIncomeSummary.fetchers'
 import {OccupationAndIncomeFullDomainFetcher} from './OccupationAndIncomeSummary.fetchers'
 import {OtherIncomeResponseFetcher} from './OccupationAndIncomeSummary.fetchers'
 
+describe("Allow pacts to be run from intelliJ for OccupationAndIncomeSummary", () =>{})
+
 //GetFetcher pact test
 pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndIncomeSummaryProvider', cors: true }, provider => {
       describe ( 'OccupationAndIncomeSummary - additionalInformationRD - fetcher', () => {
@@ -31,8 +33,10 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
             },
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
-          const f: FetcherTree<FState> = { fetchers: [ AdditionalInformationFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) ], children: [] }
-          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+          const fetcher= AdditionalInformationFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) 
+          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
+          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {
             ... firstState,
               tags: {'OccupationAndIncomeSummary_~/additionalInformation': ["custId"]}
@@ -60,11 +64,11 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
             method: 'GET',
             path:  '/customer/occupation/v2/additionalInfo',
             query:{"customerId":"custId"},
-            //no body needed for get,
+            //no request body needed for get,
           },
           willRespondWith: {
             status: 200,
-            //no body needed for get
+            body: samples.sampleAdditionalInformation0
           },
         } )
         const withIds = massTransform(firstState,)
@@ -72,9 +76,9 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('additionalInformation').set ( rawExpected, samples.sampleAdditionalInformation0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })
@@ -97,8 +101,10 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
             },
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
-          const f: FetcherTree<FState> = { fetchers: [ BusinessDetailsMainFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) ], children: [] }
-          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+          const fetcher= BusinessDetailsMainFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) 
+          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
+          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {
             ... firstState,
               tags: {'OccupationAndIncomeSummary_~/businessDetails': ["custId"]}
@@ -126,11 +132,11 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
             method: 'GET',
             path:  '/customer/occupation/v2/businessDetails',
             query:{"customerId":"custId"},
-            //no body needed for get,
+            //no request body needed for get,
           },
           willRespondWith: {
             status: 200,
-            //no body needed for get
+            body: samples.sampleBusinessDetailsMain0
           },
         } )
         const withIds = massTransform(firstState,)
@@ -138,9 +144,9 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('businessDetails').set ( rawExpected, samples.sampleBusinessDetailsMain0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })
@@ -163,8 +169,10 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
             },
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
-          const f: FetcherTree<FState> = { fetchers: [ DropdownsFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) ], children: [] }
-          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+          const fetcher= DropdownsFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) 
+          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
+          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {
             ... firstState,
               tags: {'OccupationAndIncomeSummary_~/dropdowns': ["custId"]}
@@ -192,11 +200,11 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
             method: 'GET',
             path:  '/customer/occupation/v2/occupationDetails',
             query:{"customerId":"custId"},
-            //no body needed for get,
+            //no request body needed for get,
           },
           willRespondWith: {
             status: 200,
-            //no body needed for get
+            body: samples.sampleDropdowns0
           },
         } )
         const withIds = massTransform(firstState,)
@@ -204,9 +212,9 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('dropdowns').set ( rawExpected, samples.sampleDropdowns0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })
@@ -229,8 +237,10 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
             },
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
-          const f: FetcherTree<FState> = { fetchers: [ OccupationAndIncomeFullDomainFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) ], children: [] }
-          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+          const fetcher= OccupationAndIncomeFullDomainFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) 
+          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
+          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {
             ... firstState,
               tags: {'OccupationAndIncomeSummary_~/fromApi': ["custId"]}
@@ -258,11 +268,11 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
             method: 'GET',
             path:  '/customer/occupation/v2/occupationIncomeDetails',
             query:{"customerId":"custId"},
-            //no body needed for get,
+            //no request body needed for get,
           },
           willRespondWith: {
             status: 200,
-            //no body needed for get
+            body: samples.sampleOccupationAndIncomeFullDomain0
           },
         } )
         const withIds = massTransform(firstState,)
@@ -270,9 +280,9 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('fromApi').set ( rawExpected, samples.sampleOccupationAndIncomeFullDomain0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })
@@ -306,9 +316,9 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('fromApi').set ( rawExpected, samples.sampleOccupationAndIncomeFullDomain0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })
@@ -331,8 +341,10 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
             },
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
-          const f: FetcherTree<FState> = { fetchers: [ OtherIncomeResponseFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) ], children: [] }
-          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+          const fetcher= OtherIncomeResponseFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) 
+          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
+          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {
             ... firstState,
               tags: {'OccupationAndIncomeSummary_~/otherSourcesOfIncome': ["custId"]}
@@ -360,11 +372,11 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
             method: 'GET',
             path:  '/customer/occupation/v2/otherIncome',
             query:{"customerId":"custId"},
-            //no body needed for get,
+            //no request body needed for get,
           },
           willRespondWith: {
             status: 200,
-            //no body needed for get
+            body: samples.sampleOtherIncomeResponse0
           },
         } )
         const withIds = massTransform(firstState,)
@@ -372,9 +384,9 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('otherSourcesOfIncome').set ( rawExpected, samples.sampleOtherIncomeResponse0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })

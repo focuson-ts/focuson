@@ -8,6 +8,8 @@ import * as samples from '../CreateEAccount/CreateEAccount.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
 
+describe("Allow pacts to be run from intelliJ for CreateEAccount", () =>{})
+
 //Rest eTransfer create pact test for CreateEAccount
   pactWith ( { consumer: 'CreateEAccount', provider: 'CreateEAccountProvider', cors: true }, provider => {
     describe ( 'CreateEAccount - eTransfer rest create', () => {
@@ -37,9 +39,9 @@ import * as rests from "../rests";
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('CreateEAccount').focusQuery('editing').set ( rawExpected, samples.sampleCreateEAccountData0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })
@@ -61,11 +63,11 @@ import * as rests from "../rests";
             method: 'GET',
             path:  '/api/createEAccount/{createPlanId}',
             query:{"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
-            //no body needed for get,
+            //no request body needed for get,
           },
           willRespondWith: {
             status: 200,
-            //no body needed for get
+            body: samples.sampleCreateEAccountData0
           },
         } )
         const withIds = massTransform(firstState,)
@@ -73,9 +75,9 @@ import * as rests from "../rests";
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('CreateEAccount').focusQuery('editing').set ( rawExpected, samples.sampleCreateEAccountData0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })

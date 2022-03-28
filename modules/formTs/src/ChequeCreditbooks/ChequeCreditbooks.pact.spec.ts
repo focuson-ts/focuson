@@ -9,6 +9,8 @@ import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
 import {ChequeCreditbooksFetcher} from './ChequeCreditbooks.fetchers'
 
+describe("Allow pacts to be run from intelliJ for ChequeCreditbooks", () =>{})
+
 //GetFetcher pact test
 pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider', cors: true }, provider => {
       describe ( 'ChequeCreditbooks - chequeCreditBooks - fetcher', () => {
@@ -27,8 +29,10 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
             },
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'ChequeCreditbooks', pageMode: 'view' }], CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"} }
-          const f: FetcherTree<FState> = { fetchers: [ ChequeCreditbooksFetcher (Lenses.identity<FState>().focusQuery('ChequeCreditbooks'), commonIds ) ], children: [] }
-          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {} )
+          const fetcher= ChequeCreditbooksFetcher (Lenses.identity<FState>().focusQuery('ChequeCreditbooks'), commonIds ) 
+          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
+          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {
             ... firstState,
               tags: {'ChequeCreditbooks_~/fromApi': ["accId","appref","brandRef","custId"]}
@@ -56,11 +60,11 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
             method: 'GET',
             path:  '/api/chequeCreditBooks',
             query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"},
-            //no body needed for get,
+            //no request body needed for get,
           },
           willRespondWith: {
             status: 200,
-            //no body needed for get
+            body: samples.sampleChequeCreditbooks0
           },
         } )
         const withIds = massTransform(firstState,)
@@ -68,9 +72,9 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('ChequeCreditbooks').focusQuery('fromApi').set ( rawExpected, samples.sampleChequeCreditbooks0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })
@@ -104,9 +108,9 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
         let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
         const rawExpected:any = { ...firstState, restCommands: []}
         const expected = Lenses.identity<FState>().focusQuery('ChequeCreditbooks').focusQuery('fromApi').set ( rawExpected, samples.sampleChequeCreditbooks0 )
-        expect ( { ...newState, messages: []}).toEqual ( expected )
         expect ( newState.messages.length ).toEqual ( 1 )
         expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
       } )
       } )
       })
