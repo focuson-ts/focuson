@@ -17,7 +17,73 @@ import {AccountOverviewReasonFetcher} from './AccountOverview.fetchers'
 
 describe("Allow pacts to be run from intelliJ for AccountOverview", () =>{})
 
+//GetFetcher pact test
+pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
+      describe ( 'AccountOverview - accountFlags - fetcher', () => {
+        it ( 'should have a  fetcher for AccountAllFlags', async () => {
+          await provider.addInteraction ( {
+            state: 'default',
+            uponReceiving: 'A request for AccountAllFlags',
+            withRequest: {
+              method: 'GET',
+              path: '/api/accountOverview/flags',
+              query:{"accountId":"accId","customerId":"custId"}
+            },
+            willRespondWith: {
+              status: 200,
+              body: samples.sampleAccountAllFlags0
+            },
+          } )
+          const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
+          const fetcher= AccountAllFlagsFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
+          expect(fetcher.shouldLoad(firstState)).toEqual([]) // If this fails there is something wrong with the state
+          const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
+          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
+          let expectedRaw: any = {
+            ... firstState,
+              tags: {'AccountOverview_~/accountFlags': ["accId","custId"]}
+        };
+        const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('accountFlags').set ( expectedRaw, samples.sampleAccountAllFlags0 )
+          expect ( newState ).toEqual ( expected )
+        } )
+        } )
+      })
 
+//Rest accountFlags get pact test for AccountOverview
+  pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
+    describe ( 'AccountOverview - accountFlags rest get', () => {
+      it ( 'should have a get rest for AccountAllFlags', async () => {
+        const restCommand: RestCommand = { name: 'AccountOverview_AccountAllFlagsRestDetails', restAction: 'get' }
+        const firstState: FState = {
+          ...emptyState, restCommands: [ restCommand ],
+          CommonIds: {"accountId":"accId","customerId":"custId"},
+          pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
+        }
+        await provider.addInteraction ( {
+          state: 'default',
+          uponReceiving: 'a rest for AccountOverview accountFlags get',
+          withRequest: {
+            method: 'GET',
+            path:  '/api/accountOverview/flags',
+            query:{"accountId":"accId","customerId":"custId"},
+            //no request body needed for get,
+          },
+          willRespondWith: {
+            status: 200,
+            body: samples.sampleAccountAllFlags0
+          },
+        } )
+        const withIds = massTransform(firstState,)
+        let fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
+        let newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+        const rawExpected:any = { ...firstState, restCommands: []}
+        const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('accountFlags').set ( rawExpected, samples.sampleAccountAllFlags0 )
+        expect ( newState.messages.length ).toEqual ( 1 )
+        expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+        expect ( { ...newState, messages: []}).toEqual ( expected )
+      } )
+      } )
+      })
   
 //GetFetcher pact test
 pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
@@ -38,7 +104,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
           const fetcher= currentArrearsDetailsFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
-          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          expect(fetcher.shouldLoad(firstState)).toEqual([]) // If this fails there is something wrong with the state
           const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
           let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {
@@ -106,7 +172,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
           const fetcher= previousArrearsDetailsFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
-          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          expect(fetcher.shouldLoad(firstState)).toEqual([]) // If this fails there is something wrong with the state
           const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
           let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {
@@ -174,7 +240,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
           const fetcher= AccountOverviewHistoryFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
-          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          expect(fetcher.shouldLoad(firstState)).toEqual([]) // If this fails there is something wrong with the state
           const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
           let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {
@@ -242,7 +308,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
           const fetcher= AccountOverviewExcessInfoFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
-          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          expect(fetcher.shouldLoad(firstState)).toEqual([]) // If this fails there is something wrong with the state
           const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
           let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {
@@ -310,7 +376,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
           const fetcher= AccountOverviewFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
-          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          expect(fetcher.shouldLoad(firstState)).toEqual([]) // If this fails there is something wrong with the state
           const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
           let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {
@@ -378,7 +444,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
           const fetcher= AccountOverviewReasonFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
-          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          expect(fetcher.shouldLoad(firstState)).toEqual([]) // If this fails there is something wrong with the state
           const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
           let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {

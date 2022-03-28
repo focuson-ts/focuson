@@ -30,7 +30,7 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'Repeating', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
           const fetcher= RepeatingWholeDataFetcher (Lenses.identity<FState>().focusQuery('Repeating'), commonIds ) 
-          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          expect(fetcher.shouldLoad(firstState)).toEqual([]) // If this fails there is something wrong with the state
           const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
           let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {

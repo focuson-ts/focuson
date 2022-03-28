@@ -210,7 +210,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'EAccountsSummary', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
           const fetcher= EAccountsSummaryFetcher (Lenses.identity<FState>().focusQuery('EAccountsSummary'), commonIds ) 
-          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          expect(fetcher.shouldLoad(firstState)).toEqual([]) // If this fails there is something wrong with the state
           const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
           let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {

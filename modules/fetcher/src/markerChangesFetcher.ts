@@ -7,10 +7,13 @@ import { Fetcher, loadInfo, LoadInfo, MutateFn, ReqFn } from "./fetchers";
  * Example usage: the marker could be a url, the T the contents of that url. We can load now by setting the url.
  * */
 export function loadIfMarkerChangesFetcher<State, T> ( actualMarker: Optional<State, string>, selectedMarker: Optional<State, string>, target: Optional<State, T>, reqFn: ReqFn<State>, description?: string ): Fetcher<State, T> {
-  let shouldLoad = ( ns: State ): boolean => {
+  let shouldLoad = ( ns: State ): string[] => {
+    if ( !ns ) return [ 'State undefined' ]
     const actual = actualMarker.getOption ( ns )
     const selected = selectedMarker.getOption ( ns )
-    return selected != undefined && actual != selected
+    if ( selected === undefined ) return [ 'Selected undefined' ]
+    if ( actual === selected ) [ 'Selected matchs actual' ]
+    return []
   }
   let result: Fetcher<State, T> = {
     shouldLoad,
@@ -51,13 +54,13 @@ export function markerFetcher<State, Holder, Marker, T> (
   markerToReqFn: ( marker: Marker ) => ReqFn<State>,
   description?: string
 ) {
-  let shouldLoad = ( ns: State ): boolean => {
+  let shouldLoad = ( ns: State ): string[] => {
+    if ( !ns ) return [ 'State undefined' ]
     const desiredMarker = desired.getOption ( ns )
-    console.log ( "desiredMarker", desiredMarker )
     const actualMarker = map ( target.getOption ( ns ), h => map ( holderPrism.getOption ( h ), arr => arr[ 0 ] ) )
-    console.log ( "actualMarker", actualMarker )
-    console.log ( "equals", markersEqual ( desiredMarker, actualMarker ) )
-    return desiredMarker !== undefined && (actualMarker === undefined || !markersEqual ( desiredMarker, actualMarker ))
+    if ( !desiredMarker ) return [ 'Desired Marker undefined' ]
+    if ( actualMarker !== undefined || markersEqual ( desiredMarker, actualMarker ) ) return [ 'Markers match' ]
+    return []
   }
   let result: Fetcher<State, T> = {
     shouldLoad,

@@ -1,4 +1,4 @@
-import { identityOptics, Lens, Optional } from "@focuson/lens";
+import { identityOptics, Optional } from "@focuson/lens";
 import { applyFetcher, Fetcher } from "./fetchers";
 import { FetcherDebug, wouldLoadSummary } from "./setjson";
 import { defaultFetchFn, FetchFn } from "@focuson/utils";
@@ -23,9 +23,9 @@ export function descriptionOf<T> ( ft: FetcherTree<T>, depth?: number ): string[
 }
 
 export interface WouldLoad {
-  fetcher: Fetcher<any, any>,
-  load: boolean,
-  reqData?: [ RequestInfo, RequestInit | undefined, boolean ]
+  fetcher: Fetcher<any, any>;
+  load: boolean | string[];
+  reqData?: [ RequestInfo, RequestInit | undefined, boolean ];
 }
 
 export function foldFetchers<Result> ( ft: FetcherTree<any>, stateOptional: Optional<any, any>, foldFn: ( acc: Result, v: Fetcher<any, any>, stateOptional: Optional<any, any>, i?: number, depth?: number ) => Result, start: Result, i?: number, depth?: number ): Result {
@@ -38,12 +38,11 @@ export function foldFetchers<Result> ( ft: FetcherTree<any>, stateOptional: Opti
 export function wouldLoad<State> ( ft: FetcherTree<State>, state: State ): WouldLoad[] {
   return foldFetchers<WouldLoad[]> ( ft, identityOptics (), ( acc, fetcher, stateOpt, i, depth ) => {
     const localState = stateOpt.getOption ( state )
-    let shouldLoad = localState !== undefined && fetcher.shouldLoad ( localState );
-    if ( shouldLoad ) {
+    let shouldLoad: string[] = localState == undefined ? [ 'localStateUndefined' ] : fetcher.shouldLoad ( localState );
+    if ( shouldLoad.length === 0 ) {
       let { requestInfo, requestInit, useThisInsteadOfLoad } = fetcher.load ( localState )
       return [ ...acc, { fetcher, load: true, reqData: [ requestInfo, requestInit, !!useThisInsteadOfLoad ] } ]
-    } else
-      return [ ...acc, { fetcher, load: false } ]
+    } else return [ ...acc, { fetcher, load: shouldLoad } ]
   }, [] )
 }
 

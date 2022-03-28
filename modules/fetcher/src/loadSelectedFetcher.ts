@@ -5,7 +5,6 @@ import { areAllDefined, arraysEqual } from "@focuson/utils";
 import { Tags } from "@focuson/template";
 
 
-
 /** This is one of the more used fetchers: it allows us to have a set of tags (which are usually part of the selection state). In a shopping cart
  * we might have 'department', 'shelf', 'aisle'. If the tags change then the data is loaded by the fetcher. The tags must all be defined for the fetcher to load
  *
@@ -37,16 +36,19 @@ export const loadSelectedFetcher = <State, Holder, T> ( tagFn: ( s: State ) => T
   let currentTagFn = target.chain ( holderPrism ).chain ( firstIn2 () ).getOption
   let realOnError = onError ? onError : ( e: any ) => ( s: State ) => s;
   let result: Fetcher<State, T> = {
-    shouldLoad: ( s: State ): boolean => {
+    shouldLoad: ( s: State ): string[] => {
       try {
+        if ( s === undefined ) return [ 'State undefined' ]
         const desiredTags = s ? tagFn ( s ) : [];
         const allTagsDefined = areAllDefined ( desiredTags )
         const req = s && reqFn ( s )
-        return (s != undefined) && (req != undefined) && allTagsDefined && !arraysEqual ( currentTagFn ( s ), desiredTags );
+        const result: string[] = []
+        if ( !allTagsDefined ) result.push ( 'not all tags defined' )
+        if ( arraysEqual ( currentTagFn ( s ), desiredTags ) ) result.push ( 'tags match' )
+        return result;
       } catch ( e ) {
         if ( !onError ) throw e
-        return true
-
+        return []
       }
     },
     load: ( s: State ) => {

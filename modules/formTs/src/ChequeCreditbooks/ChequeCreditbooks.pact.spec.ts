@@ -30,7 +30,7 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'ChequeCreditbooks', pageMode: 'view' }], CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"} }
           const fetcher= ChequeCreditbooksFetcher (Lenses.identity<FState>().focusQuery('ChequeCreditbooks'), commonIds ) 
-          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          expect(fetcher.shouldLoad(firstState)).toEqual([]) // If this fails there is something wrong with the state
           const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
           let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {

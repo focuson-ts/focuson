@@ -11,12 +11,12 @@ export function radioButtonFetcher<State> (
 ): Fetcher<State, any> {
   let result: Fetcher<State, any> = {
     shouldLoad: ns => {
-      if ( !ns ) return false
+      if ( !ns ) return [ 'State undefined' ]
       const [ desiredTag, f ] = desiredFetcher ( ns, desiredRadioButton, whichFetcher )
-      if ( !f ) return false
+      if ( !f ) return [ 'Cannot find f' ]
       const tag = actualRadioButton.getOption ( ns )
-      if ( tag != desiredTag ) return true//because when the radio button changes...we need to load
-      return f ? f.shouldLoad ( ns ) : false
+      if ( tag != desiredTag ) return []//because when the radio button changes...we need to load
+      return f.shouldLoad ( ns )
     },
     load: ns => {
       if ( !ns ) throw partialFnUsageError ( result, ns )

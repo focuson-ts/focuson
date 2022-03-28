@@ -111,7 +111,7 @@ export function makeFetcherPact<B, G> ( params: TSParams, page: PageD<B, G>, res
     `          } )`,
     `          const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: '${page.name}', pageMode: 'view' }], CommonIds: ${JSON.stringify ( makeCommonValueForTest ( rest, 'get' ) )} }`,
     `          const fetcher= ${fetcherName ( defn )} (Lenses.identity<${params.stateName}>().focusQuery('${page.name}'), commonIds ) `,
-    `          expect(fetcher.shouldLoad(firstState)).toEqual(true) // If this fails there is something wrong with the state` ,
+    `          expect(fetcher.shouldLoad(firstState)).toEqual([]) // If this fails there is something wrong with the state` ,
     `          const f: FetcherTree<${params.stateName}> = { fetchers: [fetcher], children: [] }`,
     `          let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )`,
     `          let expectedRaw: any = {`,

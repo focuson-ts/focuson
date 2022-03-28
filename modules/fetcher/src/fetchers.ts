@@ -51,8 +51,8 @@ export interface ReqFn<State> {
 
 /** The fetcher is responsible for modifying state. It is effectively a PartialFunction. If 'shouldLoad' returns false, the behavior of 'load' is undefined */
 export interface Fetcher<State, T> {
-  /** This works out if we need to load. Typically is a strategy */
-  shouldLoad: ( state: State ) => boolean,
+  /** This works out if we need to load. Typically is a strategy. The strings are 'why it didn't load' so if empty we can load*/
+  shouldLoad: ( state: State ) => string[],
   /** This provides the info that we need to load. The first two parameters can be passed to fetch, and the third is how we process the result.
    * Note that it is hard to guarantee that the json is a T, so you might want to check it     * */
   load: LoadFn<State, T>,
@@ -61,7 +61,7 @@ export interface Fetcher<State, T> {
 }
 
 
-export function fetcher<State, T> ( shouldLoad: ( ns: State ) => boolean,
+export function fetcher<State, T> ( shouldLoad: ( ns: State ) => string[],
                                     load: LoadFn<State, T>,
                                     description: string ): Fetcher<State, T> {
   return ({ shouldLoad, load, description })
@@ -71,7 +71,7 @@ export function fetcher<State, T> ( shouldLoad: ( ns: State ) => boolean,
 export const applyFetcher = <State, T> ( fetcher: Fetcher<State, T>, s: State, fetchFn: FetchFn, debug?: FetcherDebug ): Promise<State> => {
   const fetcherDebug = debug?.fetcherDebug
   if ( fetcherDebug ) console.log ( "applyFetcher", fetcher.description, s )
-  if ( fetcher.shouldLoad ( s ) ) {
+  if ( fetcher.shouldLoad ( s ).length === 0 ) {
     const { requestInfo, requestInit, mutate, useThisInsteadOfLoad } = fetcher.load ( s )
     if ( fetcherDebug ) console.log ( "applyFetcher - loading", requestInfo, requestInit, mutate, useThisInsteadOfLoad )
     if ( useThisInsteadOfLoad ) {
@@ -106,10 +106,12 @@ export const applyFetcher = <State, T> ( fetcher: Fetcher<State, T>, s: State, f
 
 export function lensFetcher<State, Child, T> ( lens: Optional<State, Child>, fetcher: Fetcher<Child, T>, description?: string ): Fetcher<State, T> {
   const result: Fetcher<State, T> = ({
-    shouldLoad: ( ns ) => {
-      if ( !ns ) return false
+    shouldLoad: ( ns ): string[] => {
+      if ( !ns ) return [ 'emptyState' ]
       let nc = lens.getOption ( ns );
-      return !!nc && fetcher.shouldLoad ( nc )
+      if ( !nc ) return [ 'emptyFocusedOnState' ]
+      let result = nc && fetcher.shouldLoad ( nc );
+      return result
     },
     load ( ns ) {
       const cs: Child | undefined = lens.getOption ( ns )
@@ -132,10 +134,11 @@ export function lensFetcher<State, Child, T> ( lens: Optional<State, Child>, fet
 }
 
 
-export const condFetcher = <State> ( condition: ( s: State ) => boolean, fetcher: Fetcher<State, any>, description?: string ): Fetcher<State, any> => ({
+export const condFetcher = <State> ( condition: ( s: State ) => boolean, conditionFailedText: string, fetcher: Fetcher<State, any>, description?: string ): Fetcher<State, any> => ({
   shouldLoad: ( ns: State ) => {
     const thisCond = condition ( ns )
-    const result = thisCond && fetcher.shouldLoad ( ns )
+    if ( !thisCond ) return [ conditionFailedText ]
+    const result = fetcher.shouldLoad ( ns )
     return result
   },
   load: ( ns: State ) => fetcher.load ( ns ),
@@ -152,11 +155,13 @@ export function fetcherWhenUndefined<State, Child> ( optional: Optional<State, C
   let result: Fetcher<State, Child> = ({
     shouldLoad: ( ns ) => {
       let nc = optional.getOption ( ns );
+      if ( nc===undefined ) return [ ]
       try {
         let req = reqFn ( ns )
-        return req != undefined && nc == undefined
+        if ( req ) return [ 'defined' ]
+        return []
       } catch ( e ) {
-        return false
+        return [ `Error ${e}` ]
       }
     },
     load ( s ) {

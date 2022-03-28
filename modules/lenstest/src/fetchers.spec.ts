@@ -3,8 +3,8 @@ import { dirtyPrism, identityOptics } from "@focuson/lens";
 import { Tags } from "@focuson/template";
 
 
-const shouldLoadTrue = <T extends any> ( t: T ): boolean => true;
-const shouldLoadFalse = <T extends any> ( t: T ): boolean => false;
+const shouldLoadTrue = <T extends any> ( t: T ): string[] => [];
+const shouldLoadFalse = <T extends any> ( t: T ): string[] => [ 'some reason' ];
 const reqInit: RequestInit = { keepalive: true }
 const loadAddsDot: LoadFn<string, string> = ( s: string | undefined ) =>
   loadInfo ( `load url from ${s}`, reqInit, ( state ) => ( status, json ) => "." + state + "/" + status + "/" + json )
@@ -53,7 +53,7 @@ describe ( "lens fetcher ", () => {
     expect ( fFalse.description ).toEqual ( "fFalse" )
   } )
   it ( "when child condition is false", () => {
-    expect ( fFalse.shouldLoad ( {} ) ).toEqual ( false )
+    expect ( fFalse.shouldLoad ( {} ) ).toEqual (  ["emptyFocusedOnState"] )
   } )
   it.skip ( "when child  condition is true BUT the place the child is going to be added to is undefined", () => {
     expect ( fTrue.shouldLoad ( {} ) ).toEqual ( false ) //there is no ab to put the value loaded into
@@ -61,12 +61,12 @@ describe ( "lens fetcher ", () => {
   } )
   it ( "when child  doesnt exist, even if the condition would be true", () => {
     let state = { ab: {} };
-    expect ( fTrue.shouldLoad ( state ) ).toEqual ( false )
+    expect ( fTrue.shouldLoad ( state ) ).toEqual ( ["emptyFocusedOnState"] )
   } )
 
   it ( "when child  condition is true", () => {
     let state = { ab: { a: 'something' } };
-    expect ( fTrue.shouldLoad ( state ) ).toEqual ( true )
+    expect ( fTrue.shouldLoad ( state ) ).toEqual ( [] )
     const { requestInfo, requestInit, mutate } = fTrue.load ( { ab: { a: '' } } )
     expect ( mutate ( state ) ( 200, "someValue" ) ).toEqual ( { "ab": { "a": ".something/200/someValue" } } )
   } )
@@ -75,7 +75,7 @@ describe ( "lens fetcher", () => {
   it ( "when state defined but holder is undefined", () => {
     const opticsTo = identityOptics<AB> ().focusQuery ( 'ab' ).focusQuery ( 'a' )
     let f: Fetcher<AB, string> = lensFetcher ( opticsTo, loadTrueF );
-    expect ( f.shouldLoad ( {} ) ).toEqual ( false )
+    expect ( f.shouldLoad ( {} ) ).toEqual ( ["emptyFocusedOnState"] )
     // const {requestInfo, requestInit, mutate} = f.load({})
     // expect(requestInfo).toEqual("load url from undefined")
     // expect(requestInit).toEqual(reqInit)
@@ -84,13 +84,13 @@ describe ( "lens fetcher", () => {
   it ( "when state defined, holder is defined and condition is false", () => {
     const opticsTo = identityOptics<AB> ().focusQuery ( 'ab' ).focusQuery ( 'a' )
     let f: Fetcher<AB, string> = lensFetcher ( opticsTo, loadFalseF );
-    expect ( f.shouldLoad ( { ab: {} } ) ).toEqual ( false )
+    expect ( f.shouldLoad ( { ab: {} } ) ).toEqual ( ["emptyFocusedOnState"] )
   } )
   it ( "when state defined, holder is defined child is undefined and coniditon is true", () => {
     const opticsTo = identityOptics<AB> ().focusQuery ( 'ab' ).focusQuery ( 'a' )
     let f: Fetcher<AB, string> = lensFetcher ( opticsTo, loadTrueF );
     let state = { ab: {} };
-    expect ( f.shouldLoad ( state ) ).toEqual ( false )
+    expect ( f.shouldLoad ( state ) ).toEqual ( ["emptyFocusedOnState"] )
     // const {requestInfo, requestInit, mutate} = f.load(state)
     // expect(requestInfo).toEqual("load url from undefined")
     // expect(mutate(state)(200, "newValue")).toEqual({"ab": {"a": ".undefined/200/newValue"}})
@@ -99,7 +99,7 @@ describe ( "lens fetcher", () => {
     const opticsTo = identityOptics<AB> ().focusQuery ( 'ab' ).focusQuery ( 'a' )
     let f: Fetcher<AB, string> = lensFetcher ( opticsTo, loadTrueF );
     let state = { ab: { a: "a" } };
-    expect ( f.shouldLoad ( state ) ).toEqual ( true )
+    expect ( f.shouldLoad ( state ) ).toEqual ( [] )
     const { requestInfo, requestInit, mutate } = f.load ( state )
     expect ( requestInfo ).toEqual ( "load url from a" )
     expect ( mutate ( state ) ( 200, "newValue" ) ).toEqual ( { "ab": { "a": ".a/200/newValue" } } )
@@ -120,10 +120,10 @@ describe ( "fetcherWhenUndefined", () => {
 
   } )
   it ( 'doesnt loads when the focused on thing is defined', async () => {
-    expect ( fOKToLoad.shouldLoad ( { a: "someValue" } ) ).toEqual ( false )
+    expect ( fOKToLoad.shouldLoad ( { a: "someValue" } ) ).toEqual ( ["defined"] )
   } )
   it ( 'loads when the focused on thing is undefined', async () => {
-    expect ( fOKToLoad.shouldLoad ( {} ) ).toEqual ( true )
+    expect ( fOKToLoad.shouldLoad ( {} ) ).toEqual ( [] )
     const { requestInfo, requestInit, mutate } = fOKToLoad.load ( {} )
     expect ( requestInfo ).toEqual ( "someUrl" )
     expect ( requestInit ).toEqual ( reqInit )
@@ -215,20 +215,20 @@ describe ( "loadIfMarkerChangesFetcher", () => {
     marker => s => [ "someUrlBasedOn" + marker, {} ], "someFetcher" )
 
   it ( "should not load if the desired is undefined", () => {
-    expect ( fetcher.shouldLoad ( {} ) ).toEqual ( false )
+    expect ( fetcher.shouldLoad ( {} ) ).toEqual ( ["Desired Marker undefined"] )
   } )
 
   it ( "should  load if the desired is defined and the target undefined", () => {
-    expect ( fetcher.shouldLoad ( { desired: "something" } ) ).toEqual ( true )
+    expect ( fetcher.shouldLoad ( { desired: "something" } ) ).toEqual ( [] )
   } )
 
   it ( "should not load if the selected and actual are the same", () => {
-    expect ( fetcher.shouldLoad ( { desired: "tag", target: { tags: "tag", t: "anything" } } ) ).toEqual ( false )
+    expect ( fetcher.shouldLoad ( { desired: "tag", target: { tags: "tag", t: "anything" } } ) ).toEqual ( ["Markers match"] )
   } )
 
   it ( "should load if the selected and actual are different, and the actual should be updated", () => {
     let state = { target: { tags: "different", t: "something" }, desired: "newTag" };
-    expect ( fetcher.shouldLoad ( state ) ).toEqual ( true )
+    expect ( fetcher.shouldLoad ( state ) ).toEqual ( ["Markers match"] )
     const { requestInfo, requestInit, mutate } = fetcher.load ( state )
     expect ( requestInfo ).toEqual ( "someUrlBasedOnnewTag" )
     expect ( requestInit ).toEqual ( {} )
@@ -255,13 +255,13 @@ describe ( "loadSelectedFetcher", () => {
   } )
 
   it ( "should not load if any of the tags are undefined", () => {
-    expect ( f.shouldLoad ( { selState: {} } ) ).toEqual ( false )
-    expect ( f.shouldLoad ( { selState: { selEntity: 'someEntity' } } ) ).toEqual ( false )
-    expect ( f.shouldLoad ( { selState: { selProfile: 'someProfile' } } ) ).toEqual ( false )
+    expect ( f.shouldLoad ( { selState: {} } ) ).toEqual ( ["not all tags defined"] )
+    expect ( f.shouldLoad ( { selState: { selEntity: 'someEntity' } } ) ).toEqual ( ["not all tags defined"] )
+    expect ( f.shouldLoad ( { selState: { selProfile: 'someProfile' } } ) ).toEqual ( ["not all tags defined"] )
   } )
   it ( "should load if there is an error in reqFn and the onError is defined", () => {
     let start = { selState: {} };
-    expect ( fignoreerror.shouldLoad ( start ) ).toEqual ( true )
+    expect ( fignoreerror.shouldLoad ( start ) ).toEqual ( [] )
     const { requestInfo, requestInit, mutate, useThisInsteadOfLoad } = fignoreerror.load ( start )
     expect ( useThisInsteadOfLoad && useThisInsteadOfLoad ( start ) ).toEqual ( { "msg": "errorhandled", "selState": {} } )
   } )
@@ -271,7 +271,7 @@ describe ( "loadSelectedFetcher", () => {
 
   it ( "should load if the tags are  defined, and the target is undefined", () => {
     let startState = { selState: { selEntity: 'someEntity', selProfile: 'someProfile' } };
-    expect ( f.shouldLoad ( startState ) ).toEqual ( true )
+    expect ( f.shouldLoad ( startState ) ).toEqual ( [] )
     const { requestInfo, requestInit, mutate } = f.load ( startState )
     expect ( requestInfo ).toEqual ( "someUrl" )
     expect ( requestInit ).toEqual ( reqInit )
@@ -291,7 +291,7 @@ describe ( "loadSelectedFetcher", () => {
       },
       "selState": { "selEntity": "someEntity", "selProfile": "someProfile" }
     }
-    expect ( f.shouldLoad ( s ) ).toEqual ( false )
+    expect ( f.shouldLoad ( s ) ).toEqual (  ["tags match"] )
   } )
   it ( "should load if the tags are  defined, and the tags are not identical", async () => {
     let s: TState = {
@@ -301,7 +301,7 @@ describe ( "loadSelectedFetcher", () => {
       },
       "selState": { "selEntity": "someNewEntity", "selProfile": "someProfile" }
     }
-    expect ( f.shouldLoad ( s ) ).toEqual ( true )
+    expect ( f.shouldLoad ( s ) ).toEqual ( [] )
     const { requestInfo, requestInit, mutate } = f.load ( s )
     expect ( requestInfo ).toEqual ( "someUrl" )
     expect ( requestInit ).toEqual ( reqInit )
@@ -371,12 +371,12 @@ describe ( "fetchRadioButton", () => {
     expect ( f.description ).toEqual ( "fetchRadioButton(Optional(I.focus?(radioTag)))" )
   } )
   it ( "should not fetch if tag  is undefined", async () => {
-    expect ( f.shouldLoad ( { selState: {} } ) ).toEqual ( false )
+    expect ( f.shouldLoad ( { selState: {} } ) ).toEqual ( ["Cannot find f"] )
   } )
   it ( "should  fetch if tag  is defined and legal and the target is undefined. It should set 'actual tag'", async () => {
-    expect ( f.shouldLoad ( { selState: { selRadioTag: "doesntexist" } } ) ).toEqual ( false )
+    expect ( f.shouldLoad ( { selState: { selRadioTag: "doesntexist" } } ) ).toEqual (  ["Cannot find f"] )
     let tag1State = { selState: { selRadioTag: "tag1" } };
-    expect ( f.shouldLoad ( tag1State ) ).toEqual ( true )
+    expect ( f.shouldLoad ( tag1State ) ).toEqual ( [] )
     const { requestInfo, requestInit, mutate } = f.load ( tag1State )
     expect ( requestInfo ).toEqual ( "url for 1" )
     expect ( requestInit ).toEqual ( reqInit )
@@ -389,7 +389,7 @@ describe ( "fetchRadioButton", () => {
 
   it ( "should fetch if the tag is defined, but a different value. It should set 'actualTag'", async () => {
     let state = { selState: { selRadioTag: "tag2" }, radioTag: "tag1", radio: { "r1": "r1value" } };
-    expect ( f.shouldLoad ( state ) ).toEqual ( true )
+    expect ( f.shouldLoad ( state ) ).toEqual ( [] )
     const { requestInfo, requestInit, mutate } = f.load ( state )
     expect ( requestInfo ).toEqual ( "url for 2" )
     expect ( requestInit ).toEqual ( reqInit )
@@ -401,7 +401,7 @@ describe ( "fetchRadioButton", () => {
   } )
   it ( "should fetch if the tag is defined, but a different value. Even if the target is empty It should set 'actualTag'", async () => {
     let state = { selState: { selRadioTag: "tag2" }, radioTag: "tag1" };
-    expect ( f.shouldLoad ( state ) ).toEqual ( true )
+    expect ( f.shouldLoad ( state ) ).toEqual ( [] )
     const { requestInfo, requestInit, mutate } = f.load ( state )
     expect ( requestInfo ).toEqual ( "url for 2" )
     expect ( requestInit ).toEqual ( reqInit )
@@ -414,15 +414,15 @@ describe ( "fetchRadioButton", () => {
 } )
 
 describe ( "ifErrorFetcher", () => {
-  let rawError = fetcher<string, string> ( s => true, s => {throw Error ( 'msg' )}, "loadFalseF" );
+  let rawError = fetcher<string, string> ( shouldLoadTrue, s => {throw Error ( 'msg' )}, "loadFalseF" );
   const fFalse = ifErrorFetcher ( loadFalseF, () => {throw Error ( 'failed' )} )
   const fTrue = ifErrorFetcher ( loadTrueF, () => {throw Error ( 'failed' )} )
   const fError = ifErrorFetcher ( rawError, e => s => `${e}+${s}` )
 
   it ( "shouldLoad should act as the old one ", () => {
-    expect ( fFalse.shouldLoad ( "'" ) ).toEqual ( false )
-    expect ( fTrue.shouldLoad ( "'" ) ).toEqual ( true )
-    expect ( fError.shouldLoad ( "'" ) ).toEqual ( true )
+    expect ( fFalse.shouldLoad ( "'" ) ).toEqual (  ["some reason"] )
+    expect ( fTrue.shouldLoad ( "'" ) ).toEqual ( [] )
+    expect ( fError.shouldLoad ( "'" ) ).toEqual ( [] )
   } )
 
   it ( "load should act as old if there are no errors", () => {
@@ -437,10 +437,8 @@ describe ( "ifErrorFetcher", () => {
     const { requestInfo, requestInit, mutate, useThisInsteadOfLoad } = (fError.load ( 'oldState' ))
     expect ( requestInfo ).toEqual ( '' )
     expect ( requestInit ).toEqual ( undefined )
-    if ( useThisInsteadOfLoad )
-      expect ( useThisInsteadOfLoad ( "oldstate" ) ).toEqual ( "Error: msg+oldstate" )
-    else
-      throw Error ()
+    if ( !useThisInsteadOfLoad ) throw Error ()
+    expect ( useThisInsteadOfLoad ( "oldstate" ) ).toEqual ( "Error: msg+oldstate" )
 
   } )
 } )

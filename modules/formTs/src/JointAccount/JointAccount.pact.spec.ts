@@ -30,7 +30,7 @@ pactWith ( { consumer: 'JointAccount', provider: 'JointAccountProvider', cors: t
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'JointAccount', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
           const fetcher= JointAccountFetcher (Lenses.identity<FState>().focusQuery('JointAccount'), commonIds ) 
-          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          expect(fetcher.shouldLoad(firstState)).toEqual([]) // If this fails there is something wrong with the state
           const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
           let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {

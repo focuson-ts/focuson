@@ -17,7 +17,7 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
   equals: {
     imports: [],
     makeGuardVariable: ( params, page, name, guard: LocalVariableValueEquals<any> ) =>
-      `const ${guardName ( name )} =  ${stateForGuardButton ( page, params, name ) ( guard.path )}.json() === ${guard.value};`
+      `const ${guardName ( name )} =  ${stateForGuardButton ( page, params, name ) ( guard.path )}.optJson() === ${guard.value};`
   },
 
   ">0": {

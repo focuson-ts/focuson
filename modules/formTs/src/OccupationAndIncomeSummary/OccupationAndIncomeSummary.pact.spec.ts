@@ -34,7 +34,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
           const fetcher= AdditionalInformationFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) 
-          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          expect(fetcher.shouldLoad(firstState)).toEqual([]) // If this fails there is something wrong with the state
           const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
           let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {
@@ -102,7 +102,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
           const fetcher= BusinessDetailsMainFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) 
-          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          expect(fetcher.shouldLoad(firstState)).toEqual([]) // If this fails there is something wrong with the state
           const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
           let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {
@@ -170,7 +170,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
           const fetcher= DropdownsFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) 
-          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          expect(fetcher.shouldLoad(firstState)).toEqual([]) // If this fails there is something wrong with the state
           const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
           let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {
@@ -238,7 +238,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
           const fetcher= OccupationAndIncomeFullDomainFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) 
-          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          expect(fetcher.shouldLoad(firstState)).toEqual([]) // If this fails there is something wrong with the state
           const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
           let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {
@@ -342,7 +342,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
           const fetcher= OtherIncomeResponseFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) 
-          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          expect(fetcher.shouldLoad(firstState)).toEqual([]) // If this fails there is something wrong with the state
           const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
           let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {

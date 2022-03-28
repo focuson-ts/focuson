@@ -66,7 +66,7 @@ pactWith ( { consumer: 'PostCodeDemo', provider: 'PostCodeDemoProvider', cors: t
           } )
           const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'PostCodeDemo', pageMode: 'view' }], CommonIds: {} }
           const fetcher= PostCodeDataFetcher (Lenses.identity<FState>().focusQuery('PostCodeDemo'), commonIds ) 
-          expect(fetcher.shouldLoad(firstState)).toEqual(true)
+          expect(fetcher.shouldLoad(firstState)).toEqual([]) // If this fails there is something wrong with the state
           const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
           let newState = await loadTree (f, firstState, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
           let expectedRaw: any = {

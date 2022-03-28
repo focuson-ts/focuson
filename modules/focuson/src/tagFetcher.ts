@@ -3,9 +3,8 @@ import { Iso, Lens, Lenses, NameAndLens, Optional } from '@focuson/lens';
 // import { createSimpleMessage, HasPageSelection, HasSimpleMessages, PageSelection, SimpleMessage } from "@focuson/pages";
 import { areAllDefined, arraysEqual, DateFn, HasSimpleMessages, or, SimpleMessage } from "@focuson/utils";
 
-import { defaultErrorMessage, Fetcher, ifEEqualsFetcher, loadInfo, MutateFn, OnTagFetchErrorFn, updateTagsAndMessagesOnError } from "@focuson/fetcher";
-import { partialFnUsageError } from "@focuson/fetcher";
-import { HasTagHolder,  TagHolder, tagOps, Tags, UrlConfig } from "@focuson/template";
+import { defaultErrorMessage, Fetcher, ifEEqualsFetcher, loadInfo, MutateFn, OnTagFetchErrorFn, partialFnUsageError, updateTagsAndMessagesOnError } from "@focuson/fetcher";
+import { HasTagHolder, TagHolder, tagOps, Tags, UrlConfig } from "@focuson/template";
 import { HasPageSelection, PageSelection } from "@focuson/pages";
 
 
@@ -102,7 +101,7 @@ export function pageAndTagFetcher<S, Full, T, MSGS> (
     return result
   }
   return ifEEqualsFetcher<S> ( ( s ) =>
-    selected ( s, pageName ), tagFetcher ( stf ), description );
+    selected ( s, pageName ), "Page name mismatch",tagFetcher ( stf ), description );
 }
 
 export function simpleTagFetcher<S extends HasSimpleMessages, FD> (
@@ -134,15 +133,14 @@ export function tagFetcher<S, Full, T, MSGS> ( stf: SpecificTagFetcherProps<S, F
   const tagL = makeTagLens ( tagHolderL, stf.pageName, stf.tagName )
   let targetLens = fdLens.chain ( dLens );
   const result: Fetcher<S, T> = {
-    shouldLoad ( s: S ) {
+    shouldLoad ( s: S ): string[] {
       const currentTags = tagL.getOption ( s );
       let desiredTags = tagOps.tags ( stf, 'get' ) ( s );
       let target = targetLens.getOption ( s );
       let tagsDifferent = !arraysEqual ( desiredTags, currentTags );
-      let result = areAllDefined ( desiredTags ) && (tagsDifferent || target === undefined);
-      // @ts-ignore
-      if ( s.debug?.tagFetcherDebug ) console.log ( 'tagFetcher.shouldLoad', this.description, `currentTags`, currentTags, `desiredTags`, desiredTags, `tagsDifferent`, tagsDifferent, `result`, result )
-      return result;
+      if ( !areAllDefined ( desiredTags ) ) return [ 'Not all tags defined' ]
+      if ( !tagsDifferent ) return [ 'Tags all the same' ]
+      return [];
     },
     load ( s: S ) {
       // @ts-ignore
