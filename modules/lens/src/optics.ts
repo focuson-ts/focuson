@@ -1,4 +1,3 @@
-
 import { apply, applyOrDefault, checkIsFunction, copyWithFieldSet, NameAnd, useOrDefault } from "@focuson/utils";
 
 export const identityOptics = <State> ( description?: string ): Iso<State, State> => new Iso ( x => x, x => x, description ? description : "I" );
@@ -109,8 +108,25 @@ export class Optional<Main, Child> implements GetOptioner<Main, Child>, SetOptio
   combineAs<OtherChild, NewChild> ( other: Optional<Main, OtherChild>, iso: Iso<[ Child, OtherChild ], NewChild> ): Optional<Main, NewChild> {
     return this.combine ( other ).chain ( iso )
   }
+  chainIntoArray ( a: string[] ): Optional<Main, string> {
+    const opt = this
+    function getter ( m: Main ) {
+      const res: any = opt.getOption ( m )
+      if ( res === undefined ) return undefined
+      let t = typeof res;
+      if ( t === 'boolean' ) return a[ res ? 1 : 0 ]
+      if ( t === 'number' ) return a[ res ]
+      throw  Error ( `Tried to access data ${a} at ${opt.description} and value was type ${t}\n${JSON.stringify ( m )}` )
+    }
+    function setter ( m: Main, s: string ) {
+      const index: any = a.indexOf ( s )
+      if ( index < 0 ) throw  Error ( `Cannot give value ${s}. Legal values are ${a}` )
+      return opt.setOption ( m, index ) //Note this will change booleans to 0/1
+    }
+    return new Optional<Main, string> ( getter, setter, `chainIntoArray(${a})` )
+  }
 
-  chainBasedOnPath ( pathL: Optional<Main, keyof Child> ): Optional<Main, Child[keyof Child]> {
+  chainCalc ( pathL: Optional<Main, keyof Child> ): Optional<Main, Child[keyof Child]> {
     const lens = this
     function getter ( main: Main ) {
       const index = pathL.getOption ( main )
