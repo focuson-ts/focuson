@@ -7,6 +7,7 @@ import { Lenses, massTransform, Transform } from "@focuson/lens";
 import * as samples from '../AccountOverview/AccountOverview.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
+import { restUrlMutator } from "../rests";
 import {AccountAllFlagsFetcher} from './AccountOverview.fetchers'
 import {ArrearsDetailsFetcher} from './AccountOverview.fetchers'
 import {previousArrearsDetailsFetcher} from './AccountOverview.fetchers'
@@ -67,7 +68,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
       uponReceiving: 'a rest for AccountOverview accountFlags get',
       withRequest: {
          method: 'GET',
-         path:  '/api/accountOverview/flags',
+         path:   '/api/accountOverview/flags',
          query:{"accountId":"accId","customerId":"custId"},
          //no request body needed for get,
       },
@@ -80,7 +81,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('accountFlags').set ( rawExpected, samples.sampleAccountAllFlags0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -141,7 +142,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
       uponReceiving: 'a rest for AccountOverview arrearsDetailsCurrent get',
       withRequest: {
          method: 'GET',
-         path:  '/api/accountOverview/arrearsDetails/current',
+         path:   '/api/accountOverview/arrearsDetails/current',
          query:{"startDate":"2020-01-20","accountId":"accId","customerId":"custId"},
          //no request body needed for get,
       },
@@ -155,7 +156,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('arrearsDetailsCurrent').set ( rawExpected, samples.sampleArrearsDetails0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -216,7 +217,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
       uponReceiving: 'a rest for AccountOverview arrearsDetailsPrevious get',
       withRequest: {
          method: 'GET',
-         path:  '/api/accountOverview/arrearsDetails/previous',
+         path:   '/api/accountOverview/arrearsDetails/previous',
          query:{"startDate":"2020-01-20","accountId":"accId","customerId":"custId"},
          //no request body needed for get,
       },
@@ -230,7 +231,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('arrearsDetailsPrevious').set ( rawExpected, samples.sampleArrearsDetails0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -290,7 +291,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
       uponReceiving: 'a rest for AccountOverview excessHistory get',
       withRequest: {
          method: 'GET',
-         path:  '/api/accountOverview/excessHistory',
+         path:   '/api/accountOverview/excessHistory',
          query:{"accountId":"accId","customerId":"custId"},
          //no request body needed for get,
       },
@@ -303,7 +304,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('excessHistory').set ( rawExpected, samples.sampleAccountOverviewHistory0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -363,7 +364,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
       uponReceiving: 'a rest for AccountOverview excessInfo get',
       withRequest: {
          method: 'GET',
-         path:  '/api/accountOverview/excessInfo',
+         path:   '/api/accountOverview/excessInfo',
          query:{"accountId":"accId","customerId":"custId"},
          //no request body needed for get,
       },
@@ -376,7 +377,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('excessInfo').set ( rawExpected, samples.sampleAccountOverviewExcessInfo0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -436,7 +437,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
       uponReceiving: 'a rest for AccountOverview main get',
       withRequest: {
          method: 'GET',
-         path:  '/api/accountOverview',
+         path:   '/api/accountOverview',
          query:{"accountId":"accId","customerId":"custId"},
          //no request body needed for get,
       },
@@ -449,7 +450,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('main').set ( rawExpected, samples.sampleAccountOverview0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -509,7 +510,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
       uponReceiving: 'a rest for AccountOverview reason get',
       withRequest: {
          method: 'GET',
-         path:  '/api/accountOverview/reason',
+         path:   '/api/accountOverview/reason',
          query:{"accountId":"accId","customerId":"custId"},
          //no request body needed for get,
       },
@@ -522,7 +523,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('reason').set ( rawExpected, samples.sampleAccountOverviewReason0 )
     expect ( newState.messages.length ).toEqual ( 1 )

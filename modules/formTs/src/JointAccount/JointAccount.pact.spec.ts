@@ -7,6 +7,7 @@ import { Lenses, massTransform, Transform } from "@focuson/lens";
 import * as samples from '../JointAccount/JointAccount.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
+import { restUrlMutator } from "../rests";
 import {JointAccountFetcher} from './JointAccount.fetchers'
 
 describe("Allow pacts to be run from intelliJ for JointAccount", () =>{})
@@ -61,7 +62,7 @@ pactWith ( { consumer: 'JointAccount', provider: 'JointAccountProvider', cors: t
       uponReceiving: 'a rest for JointAccount jointAccount get',
       withRequest: {
          method: 'GET',
-         path:  '/api/jointAccount',
+         path:   '/api/jointAccount',
          query:{"customerId":"custId"},
          //no request body needed for get,
       },
@@ -74,7 +75,7 @@ pactWith ( { consumer: 'JointAccount', provider: 'JointAccountProvider', cors: t
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('JointAccount').focusQuery('fromApi').set ( rawExpected, samples.sampleJointAccount0 )
     expect ( newState.messages.length ).toEqual ( 1 )

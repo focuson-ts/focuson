@@ -26,7 +26,8 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
 
 
 
-  const { id, text } = props
+  const { id, text } =
+          props
   let onClick = () => {
     const { state, copy, modal, pageMode, rest, focusOn, copyOnClose, createEmpty, setToLengthOnClose } = props
     // const fromPath = fromPathFor ( state );

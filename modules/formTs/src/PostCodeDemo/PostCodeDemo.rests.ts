@@ -1,9 +1,10 @@
 import { OneRestDetails } from "@focuson/rest"
 import * as domains from "../PostCodeDemo/PostCodeDemo.domains"
-import { createSimpleMessage, DateFn, defaultDateFn, SimpleMessage } from "@focuson/utils"
+import { createSimpleMessage, DateFn, defaultDateFn,  SimpleMessage } from "@focuson/utils"
 import { Lenses, NameAndLens} from "@focuson/lens"
 
 import { FState } from "../common"
+
 export function PostCodeDemo_PostCodeMainPageRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.PostCodeDemoPageDomain, domains.PostCodeMainPageDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.PostCodeDemoPageDomain> = {}
   return {

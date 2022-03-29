@@ -11,7 +11,7 @@
       "providerState": "default",
       "request": {
         "method": "GET",
-        "path": "/api/createPlan/",
+        "path": "/api/createPlan",
         "query": "accountId=accId&createPlanId=tbd&customerId=custId"
       },
       "response": {
@@ -30,7 +30,7 @@
       "providerState": "default",
       "request": {
         "method": "POST",
-        "path": "/api/createPlan/",
+        "path": "/api/createPlan",
         "query": "accountId=accId&customerId=custId",
         "body": "{\"createPlanStart\":\"2022-01-01\",\"createPlanDate\":\"2022-03-01\",\"createPlanEnd\":\"2022-10-01\"}"
       },
@@ -50,7 +50,7 @@
       "providerState": "default",
       "request": {
         "method": "PUT",
-        "path": "/api/createPlan/",
+        "path": "/api/createPlan",
         "query": "accountId=accId&createPlanId=tbd&customerId=custId",
         "body": "{\"createPlanStart\":\"2022-01-01\",\"createPlanDate\":\"2022-03-01\",\"createPlanEnd\":\"2022-10-01\"}"
       },
@@ -70,7 +70,7 @@
       "providerState": "default",
       "request": {
         "method": "DELETE",
-        "path": "/api/createPlan/",
+        "path": "/api/createPlan",
         "query": "accountId=accId&createPlanId=tbd&customerId=custId"
       },
       "response": {
@@ -89,7 +89,7 @@
       "providerState": "default",
       "request": {
         "method": "GET",
-        "path": "/api/createPlan/",
+        "path": "/api/createPlan/list",
         "query": "accountId=accId&customerId=custId"
       },
       "response": {
@@ -125,6 +125,22 @@
               "virtualBankSeq": "seq1",
               "total": 1000,
               "frequency": "23"
+            },
+            {
+              "accountId": 3233450,
+              "displayType": "savings",
+              "description": "This is a one line string",
+              "virtualBankSeq": "seq2",
+              "total": 2991,
+              "frequency": "This is a one line string"
+            },
+            {
+              "accountId": 4333450,
+              "displayType": "This is a one line string",
+              "description": "another one line string",
+              "virtualBankSeq": "seq3",
+              "total": 1000,
+              "frequency": "another one line string"
             }
           ],
           "totalMonthlyCost": 1000,
@@ -160,6 +176,22 @@
               "virtualBankSeq": "seq1",
               "total": 1000,
               "frequency": "23"
+            },
+            {
+              "accountId": 3233450,
+              "displayType": "savings",
+              "description": "This is a one line string",
+              "virtualBankSeq": "seq2",
+              "total": 2991,
+              "frequency": "This is a one line string"
+            },
+            {
+              "accountId": 4333450,
+              "displayType": "This is a one line string",
+              "description": "another one line string",
+              "virtualBankSeq": "seq3",
+              "total": 1000,
+              "frequency": "another one line string"
             }
           ],
           "totalMonthlyCost": 1000,

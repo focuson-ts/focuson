@@ -7,6 +7,7 @@ import { Lenses, massTransform, Transform } from "@focuson/lens";
 import * as samples from '../PostCodeDemo/PostCodeDemo.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
+import { restUrlMutator } from "../rests";
 import {PostCodeDataFetcher} from './PostCodeDemo.fetchers'
 
 describe("Allow pacts to be run from intelliJ for PostCodeDemo", () =>{})
@@ -26,7 +27,7 @@ pactWith ( { consumer: 'PostCodeDemo', provider: 'PostCodeDemoProvider', cors: t
       uponReceiving: 'a rest for PostCodeDemo address create',
       withRequest: {
          method: 'POST',
-         path:  '/api/address',
+         path:   '/api/address',
          query:{},
          body: JSON.stringify(samples.samplePostCodeMainPage0),
       },
@@ -40,7 +41,7 @@ pactWith ( { consumer: 'PostCodeDemo', provider: 'PostCodeDemoProvider', cors: t
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('main').set ( rawExpected, samples.samplePostCodeMainPage0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -101,7 +102,7 @@ pactWith ( { consumer: 'PostCodeDemo', provider: 'PostCodeDemoProvider', cors: t
       uponReceiving: 'a rest for PostCodeDemo postcode get',
       withRequest: {
          method: 'GET',
-         path:  '/api/postCode',
+         path:   '/api/postCode',
          query:{"postcode":"LW12 4RG"},
          //no request body needed for get,
       },
@@ -115,7 +116,7 @@ pactWith ( { consumer: 'PostCodeDemo', provider: 'PostCodeDemoProvider', cors: t
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('searchResults').set ( rawExpected, samples.samplePostCodeData0 )
     expect ( newState.messages.length ).toEqual ( 1 )

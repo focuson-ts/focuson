@@ -7,6 +7,7 @@ import { Lenses, massTransform, Transform } from "@focuson/lens";
 import * as samples from '../ChequeCreditbooks/ChequeCreditbooks.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
+import { restUrlMutator } from "../rests";
 import {ChequeCreditbooksFetcher} from './ChequeCreditbooks.fetchers'
 
 describe("Allow pacts to be run from intelliJ for ChequeCreditbooks", () =>{})
@@ -61,7 +62,7 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
       uponReceiving: 'a rest for ChequeCreditbooks chequeCreditBooks get',
       withRequest: {
          method: 'GET',
-         path:  '/api/chequeCreditBooks',
+         path:   '/api/chequeCreditBooks',
          query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"},
          //no request body needed for get,
       },
@@ -74,7 +75,7 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('ChequeCreditbooks').focusQuery('fromApi').set ( rawExpected, samples.sampleChequeCreditbooks0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -99,7 +100,7 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
       uponReceiving: 'a rest for ChequeCreditbooks chequeCreditBooks create',
       withRequest: {
          method: 'POST',
-         path:  '/api/chequeCreditBooks',
+         path:   '/api/chequeCreditBooks',
          query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"},
          body: JSON.stringify(samples.sampleChequeCreditbooks0),
       },
@@ -113,7 +114,7 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('ChequeCreditbooks').focusQuery('fromApi').set ( rawExpected, samples.sampleChequeCreditbooks0 )
     expect ( newState.messages.length ).toEqual ( 1 )

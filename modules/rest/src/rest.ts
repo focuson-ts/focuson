@@ -37,9 +37,9 @@ export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]> ) => 
   return res
 };
 
-
 export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Details,
                                                                          restL: Optional<S, RestCommand[]>,
+                                                                         urlMutatorForRest: ( r: RestAction, url: string ) => string,
                                                                          s: S ): [ OneRestDetails<S, any, any, any>, RequestInfo, RequestInit | undefined ][] {
   // @ts-ignore
   const debug = s.debug?.restDebug
@@ -54,7 +54,8 @@ export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Deta
         console.log ( "restReq-fdLens", fdLens.description, fdLens )
         console.log ( "restReq-dLens", one.dLens.description, one.dLens );
       }
-      let request = reqFor ( { ...one, fdLens }, restAction ) ( s ) ( one.url );
+      let url = urlMutatorForRest ( restAction, one.url );
+      let request = reqFor ( { ...{ ...one, url }, fdLens }, restAction ) ( s ) ( url );
       if ( debug ) console.log ( "restReq-req", request )
       return [ one, ...request ]
     } catch ( e: any ) {
@@ -79,6 +80,7 @@ export function processAllRestResults<S, MSGSs> ( messageL: Optional<S, MSGSs[]>
 export async function rest<S, MSGS> (
   fetchFn: FetchFn,
   d: RestDetails<S, MSGS>,
+  urlMutatorForRest: ( r: RestAction, url: string ) => string,
   messageL: Optional<S, MSGS[]>,
   restL: Optional<S, RestCommand[]>,
   s: S ): Promise<S> {
@@ -87,7 +89,7 @@ export async function rest<S, MSGS> (
   const commands = restL.getOption ( s )
   if ( debug ) console.log ( "rest-commands", commands )
   if ( !commands || commands.length == 0 ) return Promise.resolve ( s )
-  const requests = restReq ( d, restL, s )
+  const requests = restReq ( d, restL, urlMutatorForRest, s )
   if ( debug ) console.log ( "rest-requests", requests )
   const results = await massFetch ( fetchFn, requests )
   if ( debug ) console.log ( "rest-results", results )

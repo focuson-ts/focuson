@@ -1,4 +1,4 @@
-import { createSimpleMessage, FetchFn, HasSimpleMessages, SimpleMessage, testDateFn } from "@focuson/utils";
+import { createSimpleMessage, FetchFn, HasSimpleMessages, insertBefore, RestAction, SimpleMessage, testDateFn } from "@focuson/utils";
 import { HasRestCommands, massFetch, OneRestDetails, rest, RestCommand, RestDetails, restL, restReq } from "./rest";
 import { identityOptics, NameAndLens } from "@focuson/lens";
 
@@ -36,8 +36,7 @@ function oneRestDetails<S extends HasFullDomainForTest> ( cd: NameAndLens<S>, fd
     ids: [ 'token' ],
     resourceId: [ 'id' ],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],
-    url: "/some/url/{token}?{query}"
-
+    url: "/some/url/{token}?{query}",
   }
 }
 const restDetails: RestDetails<RestStateForTest, SimpleMessage> = {
@@ -47,32 +46,33 @@ function withRestCommand ( r: RestStateForTest, ...restCommands: RestCommand[] )
   return { ...r, restCommands }
 }
 
+function restMutatator ( r: RestAction, url: string ) { return insertBefore ( "?", "/" + r, url )}
 describe ( "restReq", () => {
   it ( "it should turn post commands in the state into fetch requests - empty", () => {
-    expect ( restReq ( restDetails, restL (), emptyRestState ) ).toEqual ( [] )
+    expect ( restReq ( restDetails, restL (), restMutatator, emptyRestState ) ).toEqual ( [] )
   } )
   it ( "it should turn post commands in the state into fetch requests - one", () => {
-    const results = restReq ( restDetails, restL (), withRestCommand ( emptyRestState, { restAction: 'list', name: 'one' } ) );
+    const results = restReq ( restDetails, restL (), restMutatator, withRestCommand ( emptyRestState, { restAction: 'list', name: 'one' } ) );
     expect ( results.map ( a => [ a[ 0 ].url, a[ 1 ], a[ 2 ] ] ) ).toEqual ( [
-      [ "/some/url/{token}?{query}", "/some/url/someToken?token=someToken", undefined ]
+      [ "/some/url/{token}?{query}", "/some/url/someToken/list?token=someToken", undefined ]
     ] )
   } )
   it ( "it should turn post commands in the state into fetch requests - three", () => {
-    let results = restReq ( restDetails, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+    let results = restReq ( restDetails, restL (), restMutatator, withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: 'get', name: 'one' },
       { restAction: 'create', name: 'one' },
       { restAction: 'getOption', name: 'one' },
-      { restAction: 'delete', name: 'one'},
+      { restAction: 'delete', name: 'one' },
       { restAction: 'update', name: 'one' },
       { restAction: 'list', name: 'one' },
     ) );
     expect ( results.map ( a => [ a[ 1 ], a[ 2 ] ] ) ).toEqual ( [
-      [ "/some/url/someToken?token=someToken&id=someId", undefined ],
-      [ "/some/url/someToken?token=someToken", { "body": "someData", "method": "post" } ],
-      [ "/some/url/someToken?token=someToken&id=someId", undefined ],
-      [ "/some/url/someToken?token=someToken&id=someId", { "method": "delete" } ],
-      [ "/some/url/someToken?token=someToken&id=someId", { "body": "someData", "method": "put" } ],
-      [ "/some/url/someToken?token=someToken", undefined ] ] )
+      [ "/some/url/someToken/get?token=someToken&id=someId", undefined ],
+      [ "/some/url/someToken/create?token=someToken", { "body": "\"someData\"", "method": "post" } ],
+      [ "/some/url/someToken/getOption?token=someToken&id=someId", undefined ],
+      [ "/some/url/someToken/delete?token=someToken&id=someId", { "method": "delete" } ],
+      [ "/some/url/someToken/update?token=someToken&id=someId", { "body": "\"someData\"", "method": "put" } ],
+      [ "/some/url/someToken/list?token=someToken", undefined ] ] )
   } )
 } )
 
@@ -81,18 +81,18 @@ describe ( "massFetch", () => {
   it ( "should get the results from the fetch ", async () => {
     expect ( await massFetch ( mockFetch, [] ) ).toEqual ( [] )
     expect ( await massFetch ( mockFetch, [ [ 'cargo1', '/one', undefined ], [ 'cargo2', '/one', { method: 'delete' } ], [ 'cargo3', '/one', undefined ] ] ) ).toEqual ( [
-      { "one": "cargo1", "result": "from/one", "status": 200, "path": [ "fullDomain" ] },
-      { "one": "cargo2", "result": "deleteWentWrong", "path": [ "fullDomain" ] },
-      { "one": "cargo3", "result": "from/one", "status": 200, "path": [ "fullDomain" ] }
+      { "one": "cargo1", "result": "from/one", "status": 200 },
+      { "one": "cargo2", "result": "deleteWentWrong" },
+      { "one": "cargo3", "result": "from/one", "status": 200 }
     ] )
   } )
 } )
 
 describe ( "rest", () => {
   it ( "should fetch the results and put them into the state, removing the rest commands", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, simpleMessageL, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, simpleMessageL, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: 'get', name: 'one' },
-      { restAction: 'create', name: 'one'},
+      { restAction: 'create', name: 'one' },
       { restAction: 'getOption', name: 'one' },
       { restAction: 'delete', name: 'one' },
       { restAction: 'update', name: 'one' },
@@ -100,16 +100,16 @@ describe ( "rest", () => {
     ) );
     expect ( result ).toEqual ( {
       "fullDomain": {
-        "fromApi": "from/some/url/someToken?token=someToken",
+        "fromApi": "from/some/url/someToken/list?token=someToken",
         "idFromFullDomain": "someId"
       },
       "messages": [
-        { "level": "info", "msg": "200/\"from/some/url/someToken?token=someToken\"", "time": "timeForTest" },
-        { "level": "info", "msg": "200/\"from/some/url/someToken?token=someToken&id=someId\"", "time": "timeForTest" },
+        { "level": "info", "msg": "200/\"from/some/url/someToken/list?token=someToken\"", "time": "timeForTest" },
+        { "level": "info", "msg": "200/\"from/some/url/someToken/update?token=someToken&id=someId\"", "time": "timeForTest" },
         { "level": "info", "msg": "undefined/\"deleteWentWrong\"", "time": "timeForTest" },
-        { "level": "info", "msg": "200/\"from/some/url/someToken?token=someToken&id=someId\"", "time": "timeForTest" },
-        { "level": "info", "msg": "200/\"from/some/url/someToken?token=someToken\"", "time": "timeForTest" },
-        { "level": "info", "msg": "200/\"from/some/url/someToken?token=someToken&id=someId\"", "time": "timeForTest" }
+        { "level": "info", "msg": "200/\"from/some/url/someToken/getOption?token=someToken&id=someId\"", "time": "timeForTest" },
+        { "level": "info", "msg": "200/\"from/some/url/someToken/create?token=someToken\"", "time": "timeForTest" },
+        { "level": "info", "msg": "200/\"from/some/url/someToken/get?token=someToken&id=someId\"", "time": "timeForTest" }
       ],
       "restCommands": [],
       "token": "someToken"

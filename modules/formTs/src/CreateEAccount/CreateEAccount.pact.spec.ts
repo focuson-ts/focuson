@@ -7,6 +7,7 @@ import { Lenses, massTransform, Transform } from "@focuson/lens";
 import * as samples from '../CreateEAccount/CreateEAccount.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
+import { restUrlMutator } from "../rests";
 
 describe("Allow pacts to be run from intelliJ for CreateEAccount", () =>{})
 
@@ -25,7 +26,7 @@ pactWith ( { consumer: 'CreateEAccount', provider: 'CreateEAccountProvider', cor
       uponReceiving: 'a rest for CreateEAccount eTransfer create',
       withRequest: {
          method: 'POST',
-         path:  '/api/createEAccount/',
+         path:   '/api/createEAccount/',
          query:{"accountId":"accId","customerId":"custId"},
          body: JSON.stringify(samples.sampleCreateEAccountData0),
       },
@@ -39,7 +40,7 @@ pactWith ( { consumer: 'CreateEAccount', provider: 'CreateEAccountProvider', cor
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('CreateEAccount').focusQuery('editing').set ( rawExpected, samples.sampleCreateEAccountData0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -64,7 +65,7 @@ pactWith ( { consumer: 'CreateEAccount', provider: 'CreateEAccountProvider', cor
       uponReceiving: 'a rest for CreateEAccount eTransfer get',
       withRequest: {
          method: 'GET',
-         path:  '/api/createEAccount/',
+         path:   '/api/createEAccount/',
          query:{"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
          //no request body needed for get,
       },
@@ -77,7 +78,7 @@ pactWith ( { consumer: 'CreateEAccount', provider: 'CreateEAccountProvider', cor
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('CreateEAccount').focusQuery('editing').set ( rawExpected, samples.sampleCreateEAccountData0 )
     expect ( newState.messages.length ).toEqual ( 1 )

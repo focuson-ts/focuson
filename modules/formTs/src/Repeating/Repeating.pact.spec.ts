@@ -7,6 +7,7 @@ import { Lenses, massTransform, Transform } from "@focuson/lens";
 import * as samples from '../Repeating/Repeating.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
+import { restUrlMutator } from "../rests";
 import {RepeatingWholeDataFetcher} from './Repeating.fetchers'
 
 describe("Allow pacts to be run from intelliJ for Repeating", () =>{})
@@ -61,7 +62,7 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
       uponReceiving: 'a rest for Repeating repeating create',
       withRequest: {
          method: 'POST',
-         path:  '/api/repeating',
+         path:   '/api/repeating',
          query:{"customerId":"custId"},
          body: JSON.stringify(samples.sampleRepeatingWholeData0),
       },
@@ -75,7 +76,7 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('Repeating').focusQuery('fromApi').set ( rawExpected, samples.sampleRepeatingWholeData0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -100,7 +101,7 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
       uponReceiving: 'a rest for Repeating repeating get',
       withRequest: {
          method: 'GET',
-         path:  '/api/repeating',
+         path:   '/api/repeating',
          query:{"customerId":"custId"},
          //no request body needed for get,
       },
@@ -113,7 +114,7 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('Repeating').focusQuery('fromApi').set ( rawExpected, samples.sampleRepeatingWholeData0 )
     expect ( newState.messages.length ).toEqual ( 1 )

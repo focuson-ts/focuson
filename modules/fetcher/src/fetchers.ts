@@ -101,7 +101,7 @@ export const applyFetcher = <State, T> ( fetcher: Fetcher<State, T>, s: State, f
       return result
 
     } )
-  } else if ( fetcherDebug ) console.log ( "didn't load", fetcher.description, shouldLoad )
+  } else if ( fetcherDebug ) console.log ( "didn't load", fetcher.description, shouldLoad.join(","), shouldLoad )
   return Promise.resolve ( s )
 }
 

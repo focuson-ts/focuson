@@ -46,6 +46,26 @@
       }
     },
     {
+      "description": "a rest for EAccountsSummary createPlanRestD update",
+      "providerState": "default",
+      "request": {
+        "method": "PUT",
+        "path": "/api/createPlan",
+        "query": "accountId=accId&createPlanId=tbd&customerId=custId",
+        "body": "{\"createPlanStart\":\"2022-01-01\",\"createPlanDate\":\"2022-03-01\",\"createPlanEnd\":\"2022-10-01\"}"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "createPlanStart": "2022-01-01",
+          "createPlanDate": "2022-03-01",
+          "createPlanEnd": "2022-10-01"
+        }
+      }
+    },
+    {
       "description": "a rest for EAccountsSummary createPlanRestD delete",
       "providerState": "default",
       "request": {
@@ -69,7 +89,7 @@
       "providerState": "default",
       "request": {
         "method": "GET",
-        "path": "/api/createPlan",
+        "path": "/api/createPlan/list",
         "query": "accountId=accId&customerId=custId"
       },
       "response": {
@@ -182,26 +202,6 @@
             "createPlanDate": "2022-03-01",
             "createPlanEnd": "2022-10-01"
           }
-        }
-      }
-    },
-    {
-      "description": "a rest for EAccountsSummary createPlanRestD update",
-      "providerState": "default",
-      "request": {
-        "method": "PUT",
-        "path": "/api/createPlan",
-        "query": "accountId=accId&createPlanId=tbd&customerId=custId",
-        "body": "{\"createPlanStart\":\"2022-01-01\",\"createPlanDate\":\"2022-03-01\",\"createPlanEnd\":\"2022-10-01\"}"
-      },
-      "response": {
-        "status": 200,
-        "headers": {
-        },
-        "body": {
-          "createPlanStart": "2022-01-01",
-          "createPlanDate": "2022-03-01",
-          "createPlanEnd": "2022-10-01"
         }
       }
     }

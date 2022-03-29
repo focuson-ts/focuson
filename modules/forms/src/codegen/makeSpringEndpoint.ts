@@ -1,4 +1,4 @@
-import { defaultRestAction, RestD, RestParams } from "../common/restD";
+import { defaultRestAction, postFixForEndpoint, RestD, RestParams } from "../common/restD";
 import { endPointName, queryClassName, queryName, restControllerName, sampleName } from "./names";
 import { JavaWiringParams } from "./config";
 import { beforeSeparator, RestAction, sortedEntries } from "@focuson/utils";
@@ -33,13 +33,11 @@ function mappingAnnotation ( restAction: RestAction ) {
   if ( restAction === 'delete' ) return 'DeleteMapping'
   throw new Error ( `unknown rest action ${restAction} for mappingAnnotation` )
 }
-function postFixForEndpoint<G> ( r: RestD<G>, restAction: RestAction ) {
-  return restAction === 'list' ? "/list" : ""
-}
+
 function makeEndpoint<G> ( params: JavaWiringParams, r: RestD<G>, restAction: RestAction ): string[] {
 
   return [
-    `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( r, restAction )}", produces="application/json")`,
+    `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,
     `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
     `       return Transform.result(graphQL,${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( r, restAction )}), "${queryName ( r, restAction )}");`,
     `    }`,
@@ -49,7 +47,7 @@ function makeEndpoint<G> ( params: JavaWiringParams, r: RestD<G>, restAction: Re
 
 function makeQueryEndpoint<G> ( params: JavaWiringParams, r: RestD<G>, restAction: RestAction ): string[] {
   return [
-    `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( r, restAction )}/query", produces="application/json")`,
+    `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( restAction )}/query", produces="application/json")`,
     `    public String query${queryName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
     `       return ${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( r, restAction )});`,
     `    }`,

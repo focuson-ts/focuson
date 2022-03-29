@@ -53,7 +53,9 @@ export interface RestActionDetail {
   graphQPrefix: string,
   graphQlPostfix: string
 }
-
+export function postFixForEndpoint<G> ( restAction: RestAction ) {
+  return restAction === 'list' ? "/list" : ""
+}
 export interface RestTypeDetails {
   [ name: string ]: RestActionDetail
 }

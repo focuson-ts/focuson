@@ -1,19 +1,19 @@
 import { IndexPage, PageMode, pageSelectionlens, SelectedPage, SelectPage, simpleMessagesL } from "@focuson/pages";
 import { FocusOnConfig, setJsonForFocusOn } from "@focuson/focuson";
-import { postCommandsL, Posters } from "@focuson/poster";
 import { getElement, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
 import { context, Context, emptyState, FState } from "./{commonFile}";
-import { fetchWithDelay, fetchWithPrefix, loggingFetchFn, NameAnd, SimpleMessage, sortedEntries } from "@focuson/utils";
+import { fetchWithDelay, fetchWithPrefix, loggingFetchFn, NameAnd, RestAction, SimpleMessage, sortedEntries } from "@focuson/utils";
 import { fetchers } from "./{fetchersFile}";
 import { pages } from "./{pagesFile}";
 import { restL } from "@focuson/rest";
-import { restDetails } from "./{restsFile}";
+import { restDetails, restUrlMutator } from "./{restsFile}";
 import { DebugState } from "@focuson/focuson";
 import { commonIds } from "./common";
 
 
-const config: FocusOnConfig<{stateName}, Context, SimpleMessage> = {
+export const config: FocusOnConfig<{stateName}, Context, SimpleMessage> = {
+  restUrlMutator,
   /** How data is sent to/fetched from apis */
   fetchFn: {fetch},
   /**A hook that is called before anything else.  */

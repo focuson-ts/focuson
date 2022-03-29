@@ -67,11 +67,11 @@
       }
     },
     {
-      "description": "a rest for AccountOverview arrearsDetailsCurrent get",
+      "description": "A request for ArrearsDetails",
       "providerState": "default",
       "request": {
         "method": "GET",
-        "path": "/api/accountOverview/arrearsDetails/current",
+        "path": "/api/accountOverview/arrearsDetails/previous",
         "query": "startDate=2020-01-20&accountId=accId&customerId=custId"
       },
       "response": {
@@ -118,11 +118,11 @@
       }
     },
     {
-      "description": "A request for ArrearsDetails",
+      "description": "a rest for AccountOverview arrearsDetailsCurrent get",
       "providerState": "default",
       "request": {
         "method": "GET",
-        "path": "/api/accountOverview/arrearsDetails/previous",
+        "path": "/api/accountOverview/arrearsDetails/current",
         "query": "startDate=2020-01-20&accountId=accId&customerId=custId"
       },
       "response": {

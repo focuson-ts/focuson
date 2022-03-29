@@ -3,7 +3,7 @@ import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
 import { FetcherTree, loadTree, wouldLoad, wouldLoadSummary } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
 import { Lens, Lenses, Optional } from "@focuson/lens";
-import { FetchFn, HasSimpleMessages } from "@focuson/utils";
+import { FetchFn, HasSimpleMessages, RestAction } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestDetails } from "@focuson/rest";
 
 
@@ -63,6 +63,8 @@ export interface FocusOnConfig<S, Context, MSGs> {
 
   /** The collection of all registered fetchers that will get data from the back end */
   fetchers: FetcherTree<S>,
+  /** If we need to mutate the url dependant on the rest action this does it. */
+  restUrlMutator: ( r: RestAction, url: string ) => string
 }
 
 export function traceL<S> (): Optional<S, any> {
@@ -84,7 +86,7 @@ export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MS
       const withPreMutate = preMutate ( withDebug )
       const firstPageProcesses: S = preMutateForPages<S, Context> ( context ) ( withPreMutate )
       if ( debug?.fetcherDebug ) console.log ( 'setJsonForFetchers - after premutate', firstPageProcesses )
-      const afterRest = await rest ( fetchFn, restDetails, messageL, restL, firstPageProcesses )
+      const afterRest = await rest ( fetchFn, restDetails, config.restUrlMutator, messageL, restL, firstPageProcesses )
       if ( debug?.fetcherDebug || debug?.postDebug ) console.log ( 'setJsonForFetchers - afterRest', afterRest )
       if ( afterRest ) newStateFn ( afterRest )
       if ( debug?.fetcherDebug || debug?.postDebug ) console.log ( 'setJsonForFetchers - newStateFn', afterRest )

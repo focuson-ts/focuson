@@ -1,5 +1,5 @@
 import { RestDetails, OneRestDetails } from "@focuson/rest"
-import { createSimpleMessage, DateFn, defaultDateFn, SimpleMessage } from "@focuson/utils"
+import { createSimpleMessage, DateFn, defaultDateFn, RestAction, insertBefore, SimpleMessage } from "@focuson/utils"
 import { Lenses, NameAndLens} from "@focuson/lens"
 import { FState , commonIds} from "./common";
 
@@ -24,6 +24,9 @@ import { ChequeCreditbooks_ChequeCreditbooksRestDetails } from './ChequeCreditbo
 import { Repeating_RepeatingWholeDataRestDetails } from './Repeating/Repeating.rests';
 import { PostCodeDemo_PostCodeMainPageRestDetails } from './PostCodeDemo/PostCodeDemo.rests';
 import { PostCodeDemo_PostCodeDataRestDetails } from './PostCodeDemo/PostCodeDemo.rests';
+
+export function restUrlMutator ( r: RestAction, url: string ): string { return insertBefore ( '?', r === 'list' ? '/list' : '', url )}
+
 export const restDetails: RestDetails<FState, SimpleMessage> = {
    AccountOverview_AccountAllFlagsRestDetails: AccountOverview_AccountAllFlagsRestDetails(commonIds, defaultDateFn),
    AccountOverview_ArrearsDetailsRestDetails: AccountOverview_ArrearsDetailsRestDetails(commonIds, defaultDateFn),

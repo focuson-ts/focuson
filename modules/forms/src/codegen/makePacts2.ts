@@ -1,7 +1,7 @@
 import { isMainPage, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { beforeSeparator, RestAction, sortedEntries } from "@focuson/utils";
 import { fetcherName, restDetailsName, sampleName } from "./names";
-import { defaultRestAction, isRestLens, makeCommonValueForTest, makeParamValueForTest } from "../common/restD";
+import { defaultRestAction, isRestLens, makeCommonValueForTest, makeParamValueForTest, postFixForEndpoint } from "../common/restD";
 import { TSParams } from "./config";
 import { lensFocusQueryWithSlashAndTildaFromIdentity, stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
 import { parsePath } from "@focuson/lens";
@@ -19,6 +19,7 @@ export function makeAllPactsForPage<B, G> ( params: TSParams, page: PageD<B, G> 
     `import * as samples from '../${page.name}/${page.name}.samples'`,
     `import {emptyState, ${params.stateName} , commonIds, identityL } from "../common";`,
     `import * as rests from "../rests";`,
+    `import { restUrlMutator } from "../rests";`,
     ...makeFetcherImports ( params, page ),
     '',
     `describe("Allow pacts to be run from intelliJ for ${page.name}", () =>{})`,
@@ -64,7 +65,7 @@ export function makeRestPact<B, G> ( params: TSParams, page: PageD<B, G>, restNa
     `      uponReceiving: 'a rest for ${page.name} ${restName} ${action}',`,
     `      withRequest: {`,
     `         method: '${details.method}',`,
-    `         path:  '${beforeSeparator ( "?", rest.url )}',`,
+    `         path:   '${beforeSeparator ( "?", rest.url )}${postFixForEndpoint ( action )}',`,
     `         query:${JSON.stringify ( paramsValueForTest )},`,
     `         ${requestBodyString},`,
     `      },`,
@@ -76,7 +77,7 @@ export function makeRestPact<B, G> ( params: TSParams, page: PageD<B, G>, restNa
     ...indentList ( indentList ( makeLensParamsTransformers ( params, page, restName, defn, action, initialStateBodyTransforms ) ) ),
     `    const withIds = massTransform ( firstState, ...lensTransforms )`,
     `    const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );`,
-    `    const newState = await rest ( fetchFn, rests.restDetails, simpleMessagesL(), restL(), withIds )`,
+    `    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )`,
     `    const rawExpected:any = { ...withIds, restCommands: []}`,
     `    const expected = ${parsePath ( defn.targetFromPath, stateCodeBuilderWithSlashAndTildaFromIdentity ( params, page ) )}.set ( rawExpected, ${params.samplesFile}.${sampleName ( dataD )}0 )`,
     `    expect ( newState.messages.length ).toEqual ( 1 )`,

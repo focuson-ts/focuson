@@ -136,10 +136,11 @@ export function tagFetcher<S, Full, T, MSGS> ( stf: SpecificTagFetcherProps<S, F
     shouldLoad ( s: S ): string[] {
       const currentTags = tagL.getOption ( s );
       let desiredTags = tagOps.tags ( stf, 'get' ) ( s );
-      let target = targetLens.getOption ( s );
       let tagsDifferent = !arraysEqual ( desiredTags, currentTags );
       if ( !areAllDefined ( desiredTags ) ) return [ 'Not all tags defined' ]
-      if ( !tagsDifferent ) return [ 'Tags all the same' ]
+      let target = targetLens.getOption ( s );
+      if ( target === undefined ) return []
+      if ( !tagsDifferent ) return [ 'Tags all the same, and target defined' ]
       return [];
     },
     load ( s: S ) {

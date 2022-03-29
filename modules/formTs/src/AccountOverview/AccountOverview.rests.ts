@@ -1,9 +1,10 @@
 import { OneRestDetails } from "@focuson/rest"
 import * as domains from "../AccountOverview/AccountOverview.domains"
-import { createSimpleMessage, DateFn, defaultDateFn, SimpleMessage } from "@focuson/utils"
+import { createSimpleMessage, DateFn, defaultDateFn,  SimpleMessage } from "@focuson/utils"
 import { Lenses, NameAndLens} from "@focuson/lens"
 
 import { FState } from "../common"
+
 export function AccountOverview_AccountAllFlagsRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.AccountAllFlagsDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {

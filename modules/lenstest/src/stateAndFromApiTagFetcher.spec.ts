@@ -7,8 +7,8 @@ describe ( 'tagFetcher', () => {
     expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tags: {}, secondPage: {} } ) ).toEqual ( ["Not all tags defined"] )
     expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tags: {}, secondPage: {} } ) ).toEqual ( ["Not all tags defined"] )
     expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag2: 't2', tags: {}, secondPage: {} } ) ).toEqual ( ["Not all tags defined"] )
-    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tags: { fromApi: [] }, secondPage: {} } ) ).toEqual ( ["Not all tags defined"] )
-    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tags: { fromApi: [] }, secondPage: {} } ) ).toEqual ( ["Not all tags defined"] )
+    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tags: { secondPage_tag1: [] }, secondPage: {} } ) ).toEqual ( ["Not all tags defined"] )
+    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tags: { secondPage_tag1: [] }, secondPage: {} } ) ).toEqual ( ["Not all tags defined"] )
 
     //and now some funny states... unlikely to get these, but just checking anyway
     expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tags: { secondPage: [ 't1', undefined ] }, secondPage: {} } ) ).toEqual ( ["Not all tags defined"] )
@@ -16,12 +16,12 @@ describe ( 'tagFetcher', () => {
   } )
 
   it ( 'should load if the actual tags match the desired tags, but the target is undefined', () => {
-    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tag2: 't2', tags: { target: [ 't1', 't2' ] }, secondPage: {} } ) ).toEqual ( [] )
-    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tag2: 't2', tags: { target: [ 't1', 't2' ] }, secondPage: {} } ) ).toEqual ( [] )
+    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tag2: 't2', tags: { secondPage_tag1: [ 't1', 't2' ] }, secondPage: {} } ) ).toEqual ( [] )
+    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tag2: 't2', tags: { secondPage_tag1: [ 't1', 't2' ] }, secondPage: undefined}  ) ).toEqual ( [] )
   } )
   it ( 'should not load if the actual tags match the desired tags and the target is defined', () => {
     let state: PageSpecState = { ...secondPageSelectedState, tag1: 't1', tag2: 't2', secondPage: { fromApi: 'somevalue' }, tags: { secondPage_tag1: [ 't1', 't2' ] } };
-    expect ( stateAndFromApiFetcher.shouldLoad ( state ) ).toEqual (  ["Tags all the same"] )
+    expect ( stateAndFromApiFetcher.shouldLoad ( state ) ).toEqual (  ["Tags all the same, and target defined"] )
   } )
 
   it ( 'should  load if the actual tags are defined but the current are not', () => {
@@ -29,12 +29,12 @@ describe ( 'tagFetcher', () => {
   } )
 
   it ( 'should  load if the actual tags are defined and the current are different', () => {
-    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tag2: 't2', tags: { secondPage: [ 'x1', 't2' ] }, secondPage: {} } ) ).toEqual ( [] )
-    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tag2: 't2', tags: { secondPage: [ 't1', 'x2' ] }, secondPage: {} } ) ).toEqual ( [] )
-    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tag2: 't2', tags: { secondPage: [ 'x1', 'x2' ] }, secondPage: {} } ) ).toEqual ( [] )
+    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tag2: 't2', tags: { secondPage_tag1: [ 'x1', 't2' ] }, secondPage: {} } ) ).toEqual ( [] )
+    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tag2: 't2', tags: { secondPage_tag1: [ 't1', 'x2' ] }, secondPage: {} } ) ).toEqual ( [] )
+    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tag2: 't2', tags: { secondPage_tag1: [ 'x1', 'x2' ] }, secondPage: {} } ) ).toEqual ( [] )
 
     //and now some funny states... unlikely to get these, but just checking anyway
-    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tag2: 't2', tags: { secondPage: [] }, secondPage: {} } ) ).toEqual ( [] )
+    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tag2: 't2', tags: { secondPage_tag1: [] }, secondPage: {} } ) ).toEqual ( [] )
   } )
 
   it ( 'should load using the reqFn', () => {

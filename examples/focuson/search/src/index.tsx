@@ -5,7 +5,7 @@ import ReactDOM from "react-dom";
 import { SearchPage, SearchQueryModalPage } from "./search/searchPage";
 import React from "react";
 import { defaultPageSelectionContext, FocusOnConfig, HasFocusOnDebug, setJsonForFocusOn } from "@focuson/focuson";
-import { defaultDateFn, fetchWithDelay, fetchWithPrefix, loggingFetchFn, SimpleMessage } from "@focuson/utils";
+import { defaultDateFn, fetchWithDelay, fetchWithPrefix, loggingFetchFn, RestAction, SimpleMessage } from "@focuson/utils";
 import { SearchRequirements } from "./search/fullSearchDomain";
 import { fetchers } from "./fetchers";
 import { HasRestCommands, RestDetails, restL } from "@focuson/rest";
@@ -28,6 +28,7 @@ export const restDetails: RestDetails<FullState, SimpleMessage> = {}
 
 
 const config: FocusOnConfig<FullState, Context, SimpleMessage> = {
+  restUrlMutator ( r: RestAction, url: string ): string { return url; },
   /** How data is sent to/fetched from apis */
   fetchFn: fetchWithDelay ( 2000, fetchWithPrefix ( 'http://localhost:8080', loggingFetchFn ) ),
   messageL: simpleMessagesL (),

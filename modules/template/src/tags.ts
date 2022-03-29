@@ -36,7 +36,9 @@ export interface UrlConfig<S, FD, D> {
   fdLens: Optional<S, FD>;
   dLens: Optional<FD, D>;
   resourceId: string [];
-  ids: string []
+  ids: string [];
+
+
 }
 
 type TagOpsFn<T> = <S, FD, D>( urlConfig: UrlConfig<S, FD, D>, restAction: RestAction ) => ( m: S ) => T

@@ -18,8 +18,8 @@ export function copyWithFieldSet<T, K extends keyof T> ( t: T, k: K, v: T[K] ) {
   result[ k ] = v
   return result
 }
-export function safeArray<T> ( ts: T[] | undefined ) {  return ts ? ts : []}
-export function safeString ( s: string | undefined ) {  return s ? s : ''}
+export function safeArray<T> ( ts: T[] | undefined ) { return ts ? ts : []}
+export function safeString ( s: string | undefined ) { return s ? s : ''}
 export function safePick ( s: string[] | undefined, i: number ) {
   const sa = safeArray ( s )
   return sa.length == 0 ? '' : sa[ i % sa.length ]
@@ -36,6 +36,14 @@ export function asMultilineJavaString ( ss: string[], indent?: string ): string[
 export function beforeSeparator ( separator: string, string: string ) {
   const index = string.indexOf ( separator )
   return index < 0 ? string : string.substr ( 0, index )
+}
+export function beforeAfterSeparator ( separator: string, string: string ): [ string, string ] {
+  const index = string.indexOf ( separator )
+  return index < 0 ? [ string, '' ] : [ string.substr ( 0, index ), string.substr ( index + 1 ) ]
+}
+export function insertBefore( separator: string, insert: string, s: string): string{
+  const [b,a] = beforeAfterSeparator(separator, s)
+  return `${b}${insert}${separator}${a}`
 }
 export function arraysEqual<T> ( a: T[] | undefined, b: T[] | undefined ) {
   if ( !(a && b) ) return false;
