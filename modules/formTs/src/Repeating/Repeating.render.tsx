@@ -57,7 +57,7 @@ export function RepeatingPage(){
 
 export function RepeatingLine({id,state,mode,buttons}: FocusedProps<FState, RepeatingLineDomain,Context>){
   return <>
-    <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='name' allButtons={buttons} required={true} />
-    <LabelAndNumberInput id={`${id}.age`} state={state.focusOn('age')} mode={mode} label='age' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='Name' allButtons={buttons} required={true} />
+    <LabelAndNumberInput id={`${id}.age`} state={state.focusOn('age')} mode={mode} label='Age' allButtons={buttons} required={true} />
 </>
 }

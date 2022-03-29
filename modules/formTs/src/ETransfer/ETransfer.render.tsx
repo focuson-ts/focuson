@@ -22,7 +22,7 @@ import {ValidationButton} from '@focuson/form_components';
 import {ETransferPageDomain} from "../ETransfer/ETransfer.domains";
 import {ETransferDataDDomain} from "../ETransfer/ETransfer.domains"
 export function ETransferPage(){
-  return focusedPageWithExtraState<FState, ETransferPageDomain, ETransferDataDDomain, Context> ( s => 'ETransfer' ) ( state => state.focusOn('fromApi')) (
+  return focusedPageWithExtraState<FState, ETransferPageDomain, ETransferDataDDomain, Context> ( s => 'E Transfer' ) ( state => state.focusOn('fromApi')) (
 ( fullState, state , full, d, mode) => {
   const id='root';
   const buttons =    {cancel:<button>cancel of type ResetStateButton cannot be created yet</button>,
@@ -45,13 +45,13 @@ export function ETransferPage(){
 export function ETransferDataD({id,state,mode,buttons}: FocusedProps<FState, ETransferDataDDomain,Context>){
   return <Layout details='[[1],[3,3],[1,1]]'>
     <LabelAndNumberInput id={`${id}.account`} state={state.focusOn('account')} mode={mode} label='Account Id' allButtons={buttons} required={true} min={0} max={99999999} />
-    <LabelAndStringInput id={`${id}.dateOfETransfer`} state={state.focusOn('dateOfETransfer')} mode={mode} label='date of e transfer' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.description`} state={state.focusOn('description')} mode={mode} label='description' allButtons={buttons} required={true} />
-    <LabelAndNumberInput id={`${id}.fromAccount`} state={state.focusOn('fromAccount')} mode={mode} label='from account' allButtons={buttons} required={true} min={10000000} max={99999999} />
-    <LabelAndNumberInput id={`${id}.toAccount`} state={state.focusOn('toAccount')} mode={mode} label='to account' allButtons={buttons} required={true} min={10000000} max={99999999} />
-    <LabelAndNumberInput id={`${id}.monitoringAccount`} state={state.focusOn('monitoringAccount')} mode={mode} label='monitoring account' allButtons={buttons} required={true} min={10000000} max={99999999} />
-    <LabelAndRadio id={`${id}.type`} state={state.focusOn('type')} mode={mode} label='type' allButtons={buttons} enums={{"savings":"Savings","checking":"Checking"}} />
-    <LabelAndNumberInput id={`${id}.balance`} state={state.focusOn('balance')} mode={mode} label='balance' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.notes`} state={state.focusOn('notes')} mode={mode} label='notes' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.dateOfETransfer`} state={state.focusOn('dateOfETransfer')} mode={mode} label='Date Of E Transfer' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.description`} state={state.focusOn('description')} mode={mode} label='Description' allButtons={buttons} required={true} />
+    <LabelAndNumberInput id={`${id}.fromAccount`} state={state.focusOn('fromAccount')} mode={mode} label='From Account' allButtons={buttons} required={true} min={10000000} max={99999999} />
+    <LabelAndNumberInput id={`${id}.toAccount`} state={state.focusOn('toAccount')} mode={mode} label='To Account' allButtons={buttons} required={true} min={10000000} max={99999999} />
+    <LabelAndNumberInput id={`${id}.monitoringAccount`} state={state.focusOn('monitoringAccount')} mode={mode} label='Monitoring Account' allButtons={buttons} required={true} min={10000000} max={99999999} />
+    <LabelAndRadio id={`${id}.type`} state={state.focusOn('type')} mode={mode} label='Type' allButtons={buttons} enums={{"savings":"Savings","checking":"Checking"}} />
+    <LabelAndNumberInput id={`${id}.balance`} state={state.focusOn('balance')} mode={mode} label='Balance' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.notes`} state={state.focusOn('notes')} mode={mode} label='Notes' allButtons={buttons} required={true} />
 </Layout>
 }

@@ -23,7 +23,7 @@ import {ChequeCreditbooksDomain} from "../ChequeCreditbooks/ChequeCreditbooks.do
 import {ChequeCreditbooksHistoryDomain} from "../ChequeCreditbooks/ChequeCreditbooks.domains"
 import {ChequeCreditbooksHistoryLineDomain} from "../ChequeCreditbooks/ChequeCreditbooks.domains"
 export function ChequeCreditbooksPage(){
-  return focusedPageWithExtraState<FState, ChequeCreditbooksPageDomain, ChequeCreditbooksDomain, Context> ( s => 'ChequeCreditbooks' ) ( state => state.focusOn('fromApi')) (
+  return focusedPageWithExtraState<FState, ChequeCreditbooksPageDomain, ChequeCreditbooksDomain, Context> ( s => 'Cheque Creditbooks' ) ( state => state.focusOn('fromApi')) (
 ( fullState, state , full, d, mode) => {
   const id='root';
   const buttons =    {chequeBook:<button>chequeBook of type ResetStateButton cannot be created yet</button>,
@@ -50,8 +50,8 @@ export function ChequeCreditbooks({id,state,mode,buttons}: FocusedProps<FState, 
 
 export function ChequeCreditbooksHistoryLine({id,state,mode,buttons}: FocusedProps<FState, ChequeCreditbooksHistoryLineDomain,Context>){
   return <>
-    <LabelAndNumberInput id={`${id}.serialNumber`} state={state.focusOn('serialNumber')} mode={mode} label='serial number' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.howOrdered`} state={state.focusOn('howOrdered')} mode={mode} label='how ordered' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.dateOrder`} state={state.focusOn('dateOrder')} mode={mode} label='date order' allButtons={buttons} required={true} />
+    <LabelAndNumberInput id={`${id}.serialNumber`} state={state.focusOn('serialNumber')} mode={mode} label='Serial Number' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.howOrdered`} state={state.focusOn('howOrdered')} mode={mode} label='How Ordered' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.dateOrder`} state={state.focusOn('dateOrder')} mode={mode} label='Date Order' allButtons={buttons} required={true} />
 </>
 }

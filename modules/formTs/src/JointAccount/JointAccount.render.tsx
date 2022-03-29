@@ -24,7 +24,7 @@ import {JointAccountAddressDomain} from "../JointAccount/JointAccount.domains"
 import {JointAccountAddressesDomain} from "../JointAccount/JointAccount.domains"
 import {JointAccountCustomerDomain} from "../JointAccount/JointAccount.domains"
 export function JointAccountPage(){
-  return focusedPageWithExtraState<FState, JointAccountPageDomain, JointAccountDomain, Context> ( s => 'JointAccount' ) ( state => state.focusOn('fromApi')) (
+  return focusedPageWithExtraState<FState, JointAccountPageDomain, JointAccountDomain, Context> ( s => 'Joint Account' ) ( state => state.focusOn('fromApi')) (
 ( fullState, state , full, d, mode) => {
   const id='root';
   const buttons =    {edit:<ModalButton id='edit' text='edit'  state={state} modal = 'JointAccountEditModalPage'  
@@ -44,7 +44,7 @@ export function JointAccountPage(){
 
 export function JointAccount({id,state,mode,buttons}: FocusedProps<FState, JointAccountDomain,Context>){
   return <>
-    <LabelAndNumberInput id={`${id}.balance`} state={state.focusOn('balance')} mode={mode} label='balance' allButtons={buttons} required={true} />
+    <LabelAndNumberInput id={`${id}.balance`} state={state.focusOn('balance')} mode={mode} label='Balance' allButtons={buttons} required={true} />
     <JointAccountCustomer id={`${id}.main`} state={state.focusOn('main')} mode={mode} buttons={buttons} />
     <JointAccountCustomer id={`${id}.joint`} state={state.focusOn('joint')} mode={mode} buttons={buttons} />
 </>
@@ -52,14 +52,14 @@ export function JointAccount({id,state,mode,buttons}: FocusedProps<FState, Joint
 
 export function JointAccountAddress({id,state,mode,buttons}: FocusedProps<FState, JointAccountAddressDomain,Context>){
   return <>
-    <LabelAndStringInput id={`${id}.line1`} state={state.focusOn('line1')} mode={mode} label='line1' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.line2`} state={state.focusOn('line2')} mode={mode} label='line2' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.line1`} state={state.focusOn('line1')} mode={mode} label='Line1' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.line2`} state={state.focusOn('line2')} mode={mode} label='Line2' allButtons={buttons} required={true} />
 </>
 }
 
 export function JointAccountCustomer({id,state,mode,buttons}: FocusedProps<FState, JointAccountCustomerDomain,Context>){
   return <>
-    <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='name' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='Name' allButtons={buttons} required={true} />
     <Table id={`${id}.addresses`} state={state.focusOn('addresses')} mode={mode} order={["line1","line2"]} />
 </>
 }

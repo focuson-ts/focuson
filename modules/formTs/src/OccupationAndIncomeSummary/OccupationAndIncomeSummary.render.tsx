@@ -42,7 +42,7 @@ import {OccupationsListDataDomain} from "../OccupationAndIncomeSummary/Occupatio
 import {OneOccupationIncomeDetailsDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 import {OtherIncomeResponseDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 export function OccupationAndIncomeSummaryPage(){
-  return focusedPageWithExtraState<FState, OccupationAndIncomeSummaryPageDomain, OccupationAndIncomeFullDomainDomain, Context> ( s => 'OccupationAndIncomeSummary' ) ( state => state.focusOn('fromApi')) (
+  return focusedPageWithExtraState<FState, OccupationAndIncomeSummaryPageDomain, OccupationAndIncomeFullDomainDomain, Context> ( s => 'Occupation And Income Summary' ) ( state => state.focusOn('fromApi')) (
 ( fullState, state , full, d, mode) => {
   const id='root';
   const buttons =    {addEntry:<ModalButton id='addEntry' text='addEntry'  state={state} modal = 'OccupationIncomeModal'  
@@ -98,40 +98,40 @@ export function OccupationAndIncomeSummaryPage(){
 
 export function AccountDetails({id,state,mode,buttons}: FocusedProps<FState, AccountDetailsDomain,Context>){
   return <>
-    <LabelAndDropdown id={`${id}.contactTitle`} state={state.focusOn('contactTitle')} mode={mode} label='contact title' allButtons={buttons} enums={{"X":"","MR":"Mr","MRS":"Mrs","MISS":"Miss","MS":"Ms","DR":"Dr","REV":"Rev","PROF":"Prof","SIR":"Sir","CAPTAIN":"Captain","LADY":"Lady","MAJOR":"Major","MASTER":"Master","LORD":"Lord","COLONEL":"Colonel","BARON":"Baron","VISCOUNT":"Viscount","BRIGADIER":"Brigadier","LIEUT_COL":"Lieut Col","FRAU":"Frau","HERR":"Herr","FATHER":"Father","MESSRS":"Messrs","MADAM":"Madam"}} />
-    <LabelAndStringInput id={`${id}.contactForename`} state={state.focusOn('contactForename')} mode={mode} label='contact forename' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.contactSurname`} state={state.focusOn('contactSurname')} mode={mode} label='contact surname' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.practice`} state={state.focusOn('practice')} mode={mode} label='practice' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.addressLine1`} state={state.focusOn('addressLine1')} mode={mode} label='address line1' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.addressLine2`} state={state.focusOn('addressLine2')} mode={mode} label='address line2' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.addressLine3`} state={state.focusOn('addressLine3')} mode={mode} label='address line3' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.addressLine4`} state={state.focusOn('addressLine4')} mode={mode} label='address line4' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.postcode`} state={state.focusOn('postcode')} mode={mode} label='postcode' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.telephone`} state={state.focusOn('telephone')} mode={mode} label='telephone' allButtons={buttons} required={true} />
+    <LabelAndDropdown id={`${id}.contactTitle`} state={state.focusOn('contactTitle')} mode={mode} label='Contact Title' allButtons={buttons} enums={{"X":"","MR":"Mr","MRS":"Mrs","MISS":"Miss","MS":"Ms","DR":"Dr","REV":"Rev","PROF":"Prof","SIR":"Sir","CAPTAIN":"Captain","LADY":"Lady","MAJOR":"Major","MASTER":"Master","LORD":"Lord","COLONEL":"Colonel","BARON":"Baron","VISCOUNT":"Viscount","BRIGADIER":"Brigadier","LIEUT_COL":"Lieut Col","FRAU":"Frau","HERR":"Herr","FATHER":"Father","MESSRS":"Messrs","MADAM":"Madam"}} />
+    <LabelAndStringInput id={`${id}.contactForename`} state={state.focusOn('contactForename')} mode={mode} label='Contact Forename' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.contactSurname`} state={state.focusOn('contactSurname')} mode={mode} label='Contact Surname' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.practice`} state={state.focusOn('practice')} mode={mode} label='Practice' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.addressLine1`} state={state.focusOn('addressLine1')} mode={mode} label='Address Line1' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.addressLine2`} state={state.focusOn('addressLine2')} mode={mode} label='Address Line2' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.addressLine3`} state={state.focusOn('addressLine3')} mode={mode} label='Address Line3' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.addressLine4`} state={state.focusOn('addressLine4')} mode={mode} label='Address Line4' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.postcode`} state={state.focusOn('postcode')} mode={mode} label='Postcode' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.telephone`} state={state.focusOn('telephone')} mode={mode} label='Telephone' allButtons={buttons} required={true} />
 </>
 }
 
 export function AdditionalInformation({id,state,mode,buttons}: FocusedProps<FState, AdditionalInformationDomain,Context>){
   return <>
-    <LabelAndStringInput id={`${id}.applicantName`} state={state.focusOn('applicantName')} mode={mode} label='applicant name' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.employerName`} state={state.focusOn('employerName')} mode={mode} label='employer name' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.addressLine1`} state={state.focusOn('addressLine1')} mode={mode} label='address line1' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.addressLine2`} state={state.focusOn('addressLine2')} mode={mode} label='address line2' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.addressLine3`} state={state.focusOn('addressLine3')} mode={mode} label='address line3' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.addressLine4`} state={state.focusOn('addressLine4')} mode={mode} label='address line4' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.postcode`} state={state.focusOn('postcode')} mode={mode} label='postcode' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.applicantName`} state={state.focusOn('applicantName')} mode={mode} label='Applicant Name' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.employerName`} state={state.focusOn('employerName')} mode={mode} label='Employer Name' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.addressLine1`} state={state.focusOn('addressLine1')} mode={mode} label='Address Line1' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.addressLine2`} state={state.focusOn('addressLine2')} mode={mode} label='Address Line2' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.addressLine3`} state={state.focusOn('addressLine3')} mode={mode} label='Address Line3' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.addressLine4`} state={state.focusOn('addressLine4')} mode={mode} label='Address Line4' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.postcode`} state={state.focusOn('postcode')} mode={mode} label='Postcode' allButtons={buttons} required={true} />
 </>
 }
 
 export function BusinessDetails({id,state,mode,buttons}: FocusedProps<FState, BusinessDetailsDomain,Context>){
   return <>
-    <LabelAndStringInput id={`${id}.applicantName`} state={state.focusOn('applicantName')} mode={mode} label='applicant name' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.businessName`} state={state.focusOn('businessName')} mode={mode} label='business name' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.addressLine1`} state={state.focusOn('addressLine1')} mode={mode} label='address line1' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.addressLine2`} state={state.focusOn('addressLine2')} mode={mode} label='address line2' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.addressLine3`} state={state.focusOn('addressLine3')} mode={mode} label='address line3' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.addressLine4`} state={state.focusOn('addressLine4')} mode={mode} label='address line4' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.postcode`} state={state.focusOn('postcode')} mode={mode} label='postcode' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.applicantName`} state={state.focusOn('applicantName')} mode={mode} label='Applicant Name' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.businessName`} state={state.focusOn('businessName')} mode={mode} label='Business Name' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.addressLine1`} state={state.focusOn('addressLine1')} mode={mode} label='Address Line1' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.addressLine2`} state={state.focusOn('addressLine2')} mode={mode} label='Address Line2' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.addressLine3`} state={state.focusOn('addressLine3')} mode={mode} label='Address Line3' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.addressLine4`} state={state.focusOn('addressLine4')} mode={mode} label='Address Line4' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.postcode`} state={state.focusOn('postcode')} mode={mode} label='Postcode' allButtons={buttons} required={true} />
 </>
 }
 
@@ -147,16 +147,16 @@ export function BusinessDetailsMain({id,state,mode,buttons}: FocusedProps<FState
 
 export function BusinessFinancialDetails({id,state,mode,buttons}: FocusedProps<FState, BusinessFinancialDetailsDomain,Context>){
   return <>
-    <LabelAndStringInput id={`${id}.turnoverLastYear`} state={state.focusOn('turnoverLastYear')} mode={mode} label='turnover last year' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.turnoverPenultimateYear`} state={state.focusOn('turnoverPenultimateYear')} mode={mode} label='turnover penultimate year' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.netProfitLastYear`} state={state.focusOn('netProfitLastYear')} mode={mode} label='net profit last year' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.netProfitPenultimateYear`} state={state.focusOn('netProfitPenultimateYear')} mode={mode} label='net profit penultimate year' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.drawingsLastYear`} state={state.focusOn('drawingsLastYear')} mode={mode} label='drawings last year' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.drawingsPenultimateYear`} state={state.focusOn('drawingsPenultimateYear')} mode={mode} label='drawings penultimate year' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.dividendsLastYear`} state={state.focusOn('dividendsLastYear')} mode={mode} label='dividends last year' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.dividendsPenultimateYear`} state={state.focusOn('dividendsPenultimateYear')} mode={mode} label='dividends penultimate year' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.netAssetsLastYear`} state={state.focusOn('netAssetsLastYear')} mode={mode} label='net assets last year' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.netAssetsPenultimateYear`} state={state.focusOn('netAssetsPenultimateYear')} mode={mode} label='net assets penultimate year' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.turnoverLastYear`} state={state.focusOn('turnoverLastYear')} mode={mode} label='Turnover Last Year' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.turnoverPenultimateYear`} state={state.focusOn('turnoverPenultimateYear')} mode={mode} label='Turnover Penultimate Year' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.netProfitLastYear`} state={state.focusOn('netProfitLastYear')} mode={mode} label='Net Profit Last Year' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.netProfitPenultimateYear`} state={state.focusOn('netProfitPenultimateYear')} mode={mode} label='Net Profit Penultimate Year' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.drawingsLastYear`} state={state.focusOn('drawingsLastYear')} mode={mode} label='Drawings Last Year' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.drawingsPenultimateYear`} state={state.focusOn('drawingsPenultimateYear')} mode={mode} label='Drawings Penultimate Year' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.dividendsLastYear`} state={state.focusOn('dividendsLastYear')} mode={mode} label='Dividends Last Year' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.dividendsPenultimateYear`} state={state.focusOn('dividendsPenultimateYear')} mode={mode} label='Dividends Penultimate Year' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.netAssetsLastYear`} state={state.focusOn('netAssetsLastYear')} mode={mode} label='Net Assets Last Year' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.netAssetsPenultimateYear`} state={state.focusOn('netAssetsPenultimateYear')} mode={mode} label='Net Assets Penultimate Year' allButtons={buttons} required={true} />
 </>
 }
 
@@ -167,13 +167,13 @@ export function ContractTypesResponse({id,state,mode,buttons}: FocusedProps<FSta
 
 export function DetailsOfNonRecurringItems({id,state,mode,buttons}: FocusedProps<FState, DetailsOfNonRecurringItemsDomain,Context>){
   return <>
-    <LabelAndStringInput id={`${id}.nonRecurringItems`} state={state.focusOn('nonRecurringItems')} mode={mode} label='non recurring items' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.nonRecurringItems`} state={state.focusOn('nonRecurringItems')} mode={mode} label='Non Recurring Items' allButtons={buttons} required={true} />
 </>
 }
 
 export function DetailsOfReevaluationOfAssets({id,state,mode,buttons}: FocusedProps<FState, DetailsOfReevaluationOfAssetsDomain,Context>){
   return <>
-    <LabelAndStringInput id={`${id}.revaluationOfAssets`} state={state.focusOn('revaluationOfAssets')} mode={mode} label='revaluation of assets' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.revaluationOfAssets`} state={state.focusOn('revaluationOfAssets')} mode={mode} label='Revaluation Of Assets' allButtons={buttons} required={true} />
 </>
 }
 
@@ -198,22 +198,22 @@ export function FrequenciesResponse({id,state,mode,buttons}: FocusedProps<FState
 
 export function ListOccupations({id,state,mode,buttons}: FocusedProps<FState, ListOccupationsDomain,Context>){
   return <>
-    <LabelAndStringInput id={`${id}.search`} state={state.focusOn('search')} mode={mode} label='search' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.search`} state={state.focusOn('search')} mode={mode} label='Search' allButtons={buttons} required={true} />
     <Table id={`${id}.searchResults`} state={state.focusOn('searchResults')} mode={mode} order={["descTypeName"]} copySelectedItemTo={pageState(state)<any>().focusOn('{basePage}').focusOn('fromApi').focusOn('customerOccupationIncomeDetails').focusOn('{selectedItem}').focusOn('occupation')} />
 </>
 }
 
 export function OccupationAndIncomeFullDomain({id,state,mode,buttons}: FocusedProps<FState, OccupationAndIncomeFullDomainDomain,Context>){
   return <>
-    <LabelAndStringInput id={`${id}.mainCustomerName`} state={state.focusOn('mainCustomerName')} mode={mode} label='main customer name' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.jointCustomerName`} state={state.focusOn('jointCustomerName')} mode={mode} label='joint customer name' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.mainCustomerName`} state={state.focusOn('mainCustomerName')} mode={mode} label='Main Customer Name' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.jointCustomerName`} state={state.focusOn('jointCustomerName')} mode={mode} label='Joint Customer Name' allButtons={buttons} required={true} />
     <SelectedItem id={`${id}.customerOccupationIncomeDetails`} state={state.focusOn('customerOccupationIncomeDetails')} mode={mode} buttons={buttons} index={pageState(state)<any>().focusOn('selectedItem').json()} display={OneOccupationIncomeDetails} />
 </>
 }
 
 export function OccupationDescriptionResponse({id,state,mode,buttons}: FocusedProps<FState, OccupationDescriptionResponseDomain,Context>){
   return <>
-    <LabelAndStringInput id={`${id}.descTypeName`} state={state.focusOn('descTypeName')} mode={mode} label='desc type name' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.descTypeName`} state={state.focusOn('descTypeName')} mode={mode} label='Desc Type Name' allButtons={buttons} required={true} />
 </>
 }
 
@@ -248,9 +248,9 @@ const ownShareOfTheCompanyGuard = state.focusOn('ownShareOfTheCompany').optJson(
 
 export function OtherIncomeResponse({id,state,mode,buttons}: FocusedProps<FState, OtherIncomeResponseDomain,Context>){
   return <>
-    <LabelAndStringInput id={`${id}.clientOtherIncomeSeq`} state={state.focusOn('clientOtherIncomeSeq')} mode={mode} label='client other income seq' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.otherIncomeType`} state={state.focusOn('otherIncomeType')} mode={mode} label='other income type' allButtons={buttons} required={true} />
-    <LabelAndDropdown id={`${id}.incomeFreqRef`} state={state.focusOn('incomeFreqRef')} mode={mode} label='income freq ref' allButtons={buttons} enums={{"0":"","1":"Annual","2":"Monthly","3":"Quarterly","4":"Half-Yearly","5":"Fortnightly","6":"Weekly"}} />
-    <LabelAndNumberInput id={`${id}.amount`} state={state.focusOn('amount')} mode={mode} label='amount' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.clientOtherIncomeSeq`} state={state.focusOn('clientOtherIncomeSeq')} mode={mode} label='Client Other Income Seq' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.otherIncomeType`} state={state.focusOn('otherIncomeType')} mode={mode} label='Other Income Type' allButtons={buttons} required={true} />
+    <LabelAndDropdown id={`${id}.incomeFreqRef`} state={state.focusOn('incomeFreqRef')} mode={mode} label='Income Freq Ref' allButtons={buttons} enums={{"0":"","1":"Annual","2":"Monthly","3":"Quarterly","4":"Half-Yearly","5":"Fortnightly","6":"Weekly"}} />
+    <LabelAndNumberInput id={`${id}.amount`} state={state.focusOn('amount')} mode={mode} label='Amount' allButtons={buttons} required={true} />
 </>
 }
