@@ -51,12 +51,28 @@ describe ( 'makeSample', () => {
           "frequency": "23",
           "total": 1000,
           "virtualBankSeq": "seq1"
+        },
+        {
+          "accountId": 3233450,
+          "description": "This is a one line string",
+          "displayType": "savings",
+          "frequency": "This is a one line string",
+          "total": 2991,
+          "virtualBankSeq": "seq2"
+        },
+        {
+          "accountId": 4333450,
+          "description": "another one line string",
+          "displayType": "This is a one line string",
+          "frequency": "another one line string",
+          "total": 1000,
+          "virtualBankSeq": "seq3"
         }
       ],
       "oneAccountBalance": 9921,
       "totalMonthlyCost": 1000,
       "useEStatements": true
-    } )
+    })
   } )
 
 } );
@@ -75,6 +91,22 @@ describe ( "makeJavaVariable", () => {
       "       '      \\'virtualBankSeq\\': \\'seq1\\','+",
       "       '      \\'total\\': 1000,'+",
       "       '      \\'frequency\\': \\'23\\''+",
+      "       '    },'+",
+      "       '    {'+",
+      "       '      \\'accountId\\': 3233450,'+",
+      "       '      \\'displayType\\': \\'savings\\','+",
+      "       '      \\'description\\': \\'This is a one line string\\','+",
+      "       '      \\'virtualBankSeq\\': \\'seq2\\','+",
+      "       '      \\'total\\': 2991,'+",
+      "       '      \\'frequency\\': \\'This is a one line string\\''+",
+      "       '    },'+",
+      "       '    {'+",
+      "       '      \\'accountId\\': 4333450,'+",
+      "       '      \\'displayType\\': \\'This is a one line string\\','+",
+      "       '      \\'description\\': \\'another one line string\\','+",
+      "       '      \\'virtualBankSeq\\': \\'seq3\\','+",
+      "       '      \\'total\\': 1000,'+",
+      "       '      \\'frequency\\': \\'another one line string\\''+",
       "       '    }'+",
       "       '  ],'+",
       "       '  \\'totalMonthlyCost\\': 1000,'+",
@@ -96,10 +128,18 @@ describe ( "makeJavaVariable", () => {
       "       '  {'+",
       "       '    \\'name\\': \\'This is a one line string\\','+",
       "       '    \\'age\\': 123'+",
+      "       '  },'+",
+      "       '  {'+",
+      "       '    \\'name\\': \\'another one line string\\','+",
+      "       '    \\'age\\': 456'+",
+      "       '  },'+",
+      "       '  {'+",
+      "       '    \\'name\\': \\'This is a one line string\\','+",
+      "       '    \\'age\\': 123'+",
       "       '  }'+",
       "       ']'",
       ");"
-    ] )
+    ])
 
   } )
 } )

@@ -90,6 +90,7 @@ export interface RepeatingDataD<G> extends CommonDataDD {
   paged: boolean;
   display: DisplayCompD; // mandatory for a repeating
   dataDD: DataD<G>;
+  sampleCount?: number; //defaults to 3
 }
 export function isRepeatingDd<G> ( d: any ): d is RepeatingDataD<G> {
   return d.paged !== undefined

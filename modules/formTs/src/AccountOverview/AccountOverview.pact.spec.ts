@@ -8,7 +8,7 @@ import * as samples from '../AccountOverview/AccountOverview.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
 import {AccountAllFlagsFetcher} from './AccountOverview.fetchers'
-import {currentArrearsDetailsFetcher} from './AccountOverview.fetchers'
+import {ArrearsDetailsFetcher} from './AccountOverview.fetchers'
 import {previousArrearsDetailsFetcher} from './AccountOverview.fetchers'
 import {AccountOverviewHistoryFetcher} from './AccountOverview.fetchers'
 import {AccountOverviewExcessInfoFetcher} from './AccountOverview.fetchers'
@@ -112,7 +112,7 @@ describe ( 'AccountOverview - arrearsDetailsCurrent - fetcher', () => {
     [Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('currentSelectedExcessHistory').focusQuery('start'), () =>"2020-01-20" ]
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
-      const fetcher= currentArrearsDetailsFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
+      const fetcher= ArrearsDetailsFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
       expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state
       const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
@@ -130,7 +130,7 @@ describe ( 'AccountOverview - arrearsDetailsCurrent - fetcher', () => {
 pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
   describe ( 'AccountOverview - arrearsDetailsCurrent rest get', () => {
    it ( 'should have a get rest for ArrearsDetails', async () => {
-    const restCommand: RestCommand = { name: 'currentAccountOverview_ArrearsDetailsRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'AccountOverview_ArrearsDetailsRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","customerId":"custId"},

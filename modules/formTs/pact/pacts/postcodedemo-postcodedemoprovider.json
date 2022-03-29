@@ -47,6 +47,18 @@
             "line2": "Little Whinging",
             "line3": "Surrey",
             "line4": "England"
+          },
+          {
+            "line1": "27 Throughput Lane",
+            "line2": "Woodfield",
+            "line3": "",
+            "line4": "Ireland"
+          },
+          {
+            "line1": "This is a one line string",
+            "line2": "This is a one line string",
+            "line3": "This is a one line string",
+            "line4": "This is a one line string"
           }
         ]
       }
@@ -69,6 +81,18 @@
             "line2": "Little Whinging",
             "line3": "Surrey",
             "line4": "England"
+          },
+          {
+            "line1": "27 Throughput Lane",
+            "line2": "Woodfield",
+            "line3": "",
+            "line4": "Ireland"
+          },
+          {
+            "line1": "This is a one line string",
+            "line2": "This is a one line string",
+            "line3": "This is a one line string",
+            "line4": "This is a one line string"
           }
         ]
       }

@@ -22,6 +22,14 @@
           {
             "name": "This is a one line string",
             "age": 123
+          },
+          {
+            "name": "another one line string",
+            "age": 456
+          },
+          {
+            "name": "This is a one line string",
+            "age": 123
           }
         ]
       }
@@ -33,13 +41,21 @@
         "method": "POST",
         "path": "/api/repeating",
         "query": "customerId=custId",
-        "body": "[{\"name\":\"This is a one line string\",\"age\":123}]"
+        "body": "[{\"name\":\"This is a one line string\",\"age\":123},{\"name\":\"another one line string\",\"age\":456},{\"name\":\"This is a one line string\",\"age\":123}]"
       },
       "response": {
         "status": 200,
         "headers": {
         },
         "body": [
+          {
+            "name": "This is a one line string",
+            "age": 123
+          },
+          {
+            "name": "another one line string",
+            "age": 456
+          },
           {
             "name": "This is a one line string",
             "age": 123
@@ -60,6 +76,14 @@
         "headers": {
         },
         "body": [
+          {
+            "name": "This is a one line string",
+            "age": 123
+          },
+          {
+            "name": "another one line string",
+            "age": 456
+          },
           {
             "name": "This is a one line string",
             "age": 123

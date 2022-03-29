@@ -23,6 +23,14 @@
             {
               "flagName": "Terrorist",
               "flagValue": true
+            },
+            {
+              "flagName": "MI6 wanted list",
+              "flagValue": false
+            },
+            {
+              "flagName": "This is a one line string",
+              "flagValue": true
             }
           ]
         }
@@ -45,6 +53,14 @@
             {
               "flagName": "Terrorist",
               "flagValue": true
+            },
+            {
+              "flagName": "MI6 wanted list",
+              "flagValue": false
+            },
+            {
+              "flagName": "This is a one line string",
+              "flagValue": true
             }
           ]
         }
@@ -64,6 +80,28 @@
         },
         "body": {
           "history": [
+            {
+              "collectionsDate": "2020-10-01",
+              "creditedDate": "2020-10-01",
+              "minPayment": 123,
+              "contractualAmount": 123,
+              "paymentType": "dd",
+              "paymentReceived": 123,
+              "shortfall": 123,
+              "arrearsTotal": 123,
+              "missedPayments": 123
+            },
+            {
+              "collectionsDate": "2022-14-01",
+              "creditedDate": "2022-14-01",
+              "minPayment": 456,
+              "contractualAmount": 456,
+              "paymentType": "ddResubmit",
+              "paymentReceived": 456,
+              "shortfall": 456,
+              "arrearsTotal": 456,
+              "missedPayments": 456
+            },
             {
               "collectionsDate": "2020-10-01",
               "creditedDate": "2020-10-01",
@@ -103,6 +141,28 @@
               "shortfall": 123,
               "arrearsTotal": 123,
               "missedPayments": 123
+            },
+            {
+              "collectionsDate": "2022-14-01",
+              "creditedDate": "2022-14-01",
+              "minPayment": 456,
+              "contractualAmount": 456,
+              "paymentType": "ddResubmit",
+              "paymentReceived": 456,
+              "shortfall": 456,
+              "arrearsTotal": 456,
+              "missedPayments": 456
+            },
+            {
+              "collectionsDate": "2020-10-01",
+              "creditedDate": "2020-10-01",
+              "minPayment": 123,
+              "contractualAmount": 123,
+              "paymentType": "dd",
+              "paymentReceived": 123,
+              "shortfall": 123,
+              "arrearsTotal": 123,
+              "missedPayments": 123
             }
           ]
         }
@@ -122,6 +182,28 @@
         },
         "body": {
           "history": [
+            {
+              "collectionsDate": "2020-10-01",
+              "creditedDate": "2020-10-01",
+              "minPayment": 123,
+              "contractualAmount": 123,
+              "paymentType": "dd",
+              "paymentReceived": 123,
+              "shortfall": 123,
+              "arrearsTotal": 123,
+              "missedPayments": 123
+            },
+            {
+              "collectionsDate": "2022-14-01",
+              "creditedDate": "2022-14-01",
+              "minPayment": 456,
+              "contractualAmount": 456,
+              "paymentType": "ddResubmit",
+              "paymentReceived": 456,
+              "shortfall": 456,
+              "arrearsTotal": 456,
+              "missedPayments": 456
+            },
             {
               "collectionsDate": "2020-10-01",
               "creditedDate": "2020-10-01",
@@ -155,6 +237,16 @@
               "start": "2020-10-01",
               "end": "2020-10-01",
               "consecutiveDays": 123
+            },
+            {
+              "start": "2022-14-01",
+              "end": "2022-14-01",
+              "consecutiveDays": 456
+            },
+            {
+              "start": "2020-10-01",
+              "end": "2020-10-01",
+              "consecutiveDays": 123
             }
           ]
         }
@@ -174,6 +266,16 @@
         },
         "body": {
           "history": [
+            {
+              "start": "2020-10-01",
+              "end": "2020-10-01",
+              "consecutiveDays": 123
+            },
+            {
+              "start": "2022-14-01",
+              "end": "2022-14-01",
+              "consecutiveDays": 456
+            },
             {
               "start": "2020-10-01",
               "end": "2020-10-01",
@@ -248,6 +350,12 @@
           "criteria": [
             {
               "criteria": "Account Management"
+            },
+            {
+              "criteria": "Affordability check failed"
+            },
+            {
+              "criteria": "This is a one line string"
             }
           ],
           "zFlagSet": "N",
@@ -280,6 +388,12 @@
           "criteria": [
             {
               "criteria": "Account Management"
+            },
+            {
+              "criteria": "Affordability check failed"
+            },
+            {
+              "criteria": "This is a one line string"
             }
           ],
           "zFlagSet": "N",

@@ -1,6 +1,6 @@
 import * as common from './common';
 import { AccountAllFlagsFetcher } from './AccountOverview/AccountOverview.fetchers';
-import { currentArrearsDetailsFetcher } from './AccountOverview/AccountOverview.fetchers';
+import { ArrearsDetailsFetcher } from './AccountOverview/AccountOverview.fetchers';
 import { previousArrearsDetailsFetcher } from './AccountOverview/AccountOverview.fetchers';
 import { AccountOverviewHistoryFetcher } from './AccountOverview/AccountOverview.fetchers';
 import { AccountOverviewExcessInfoFetcher } from './AccountOverview/AccountOverview.fetchers';
@@ -26,7 +26,7 @@ import { Optional, Lenses, NameAndLens} from '@focuson/lens';
 export const fetchers: FetcherTree<common.FState> = {
 fetchers: [
     AccountAllFlagsFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
-    currentArrearsDetailsFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
+    ArrearsDetailsFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
     previousArrearsDetailsFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
     AccountOverviewHistoryFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
     AccountOverviewExcessInfoFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),

@@ -1,4 +1,4 @@
-import { AllDataDD, AllDataFolder, CompDataD, DataD, foldDataDD, HasEnum, HasSample, isDataDd, isRepeatingDd, OneDataDD, PrimitiveDD } from "../common/dataD";
+import { AllDataDD, AllDataFolder, CompDataD, DataD, foldDataDD, HasEnum, HasSample, isDataDd, isRepeatingDd, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
 import { asMultilineJavaString, safeArray, safePick, sortedEntries } from "@focuson/utils";
 import { Lenses, parsePath } from "@focuson/lens";
 import { domainName, emptyName, sampleName } from "./names";
@@ -10,7 +10,8 @@ import { pathBuilderForLensWithPageAsIdentity } from "./lens";
 
 function parsePathFromListFromPage ( path: string[] ) {
   let p = pathBuilderForLensWithPageAsIdentity ();
-  return parsePath ( path.join ( "/" ), p )}
+  return parsePath ( path.join ( "/" ), p )
+}
 
 const addData = <G> ( start: boolean, path: string[], acc: any, d: DataD<G> ) => {
   try {
@@ -34,13 +35,20 @@ const addPrimitive = <G> ( acc: any, path: string[], one: OneDataDD<G> | undefin
   parsePathFromListFromPage ( path ).set ( acc, selectSample ( i, one, d ) );
 
 export function makeTsSample<G> ( d: CompDataD<G>, i: number ): any {
-  return foldDataDD<any, G> ( d, [], [], {}, {
+  let foldStoppingAtRepeats = {
     stopAtDisplay: false,
     foldData: ( acc, path, parents, oneDataDD, dataDD, start ) => addData ( start, path, acc, dataDD ),
     foldRep: ( acc, path, parents, oneDataDD, dataDD, start ) =>
-      start ? acc : parsePathFromListFromPage ( path ).transform ( child => [ child ] ) ( acc ),
+      start ? acc : parsePathFromListFromPage ( path ).transform ( child => [ child, ...makeTsSampleForRepeats ( dataDD, i ) ] ) ( acc ),
     foldPrim: ( acc, path, parents, oneDataDD, dataDD ) => addPrimitive ( acc, path, oneDataDD, dataDD, i )
-  } )
+  };
+  return foldDataDD<any, G> ( d, [], [], {}, foldStoppingAtRepeats )
+}
+
+export function makeTsSampleForRepeats<G> ( r: RepeatingDataD<G>, i: number ): any[] {
+  const count = r.sampleCount ? r.sampleCount : 3
+  return [ ...Array ( 100 ).keys () ].slice ( count * i + 1, count * (i + 1) ).map ( i => makeTsSample ( r.dataDD, i ) )
+
 }
 
 

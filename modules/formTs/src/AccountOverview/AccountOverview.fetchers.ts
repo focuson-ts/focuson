@@ -17,7 +17,7 @@ export function AccountAllFlagsFetcher(fdLens:Optional<FState, domains.AccountOv
      '/api/accountOverview/flags?{query}')
 }
 //fetcher type true
-export function currentArrearsDetailsFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
+export function ArrearsDetailsFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
   const localIds = {startDate: Lenses.identity< domains.AccountOverviewPageDomain>().focusQuery('currentSelectedExcessHistory').focusQuery('start')}
   return pageAndTagFetcher<FState, domains.AccountOverviewPageDomain, domains.ArrearsDetailsDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.ArrearsDetailsDomain>(),

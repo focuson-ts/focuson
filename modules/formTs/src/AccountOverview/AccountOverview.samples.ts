@@ -6,6 +6,14 @@ export const sampleAccountAllFlags0: domains.AccountAllFlagsDomain =
     {
       "flagName": "Terrorist",
       "flagValue": true
+    },
+    {
+      "flagName": "MI6 wanted list",
+      "flagValue": false
+    },
+    {
+      "flagName": "This is a one line string",
+      "flagValue": true
     }
   ]
 }
@@ -13,6 +21,14 @@ export const sampleAccountAllFlagsList0: domains.AccountAllFlagsListDomain =
 [
   {
     "flagName": "Terrorist",
+    "flagValue": true
+  },
+  {
+    "flagName": "MI6 wanted list",
+    "flagValue": false
+  },
+  {
+    "flagName": "This is a one line string",
     "flagValue": true
   }
 ]
@@ -33,6 +49,12 @@ export const sampleAccountOverview0: domains.AccountOverviewDomain =
   "criteria": [
     {
       "criteria": "Account Management"
+    },
+    {
+      "criteria": "Affordability check failed"
+    },
+    {
+      "criteria": "This is a one line string"
     }
   ],
   "zFlagSet": "N",
@@ -44,6 +66,12 @@ export const sampleAccountOverviewCriteria0: domains.AccountOverviewCriteriaDoma
 [
   {
     "criteria": "Account Management"
+  },
+  {
+    "criteria": "Affordability check failed"
+  },
+  {
+    "criteria": "This is a one line string"
   }
 ]
 export const sampleAccountOverviewCriteriaLine0: domains.AccountOverviewCriteriaLineDomain = 
@@ -70,11 +98,31 @@ export const sampleAccountOverviewExcessLines0: domains.AccountOverviewExcessLin
     "start": "2020-10-01",
     "end": "2020-10-01",
     "consecutiveDays": 123
+  },
+  {
+    "start": "2022-14-01",
+    "end": "2022-14-01",
+    "consecutiveDays": 456
+  },
+  {
+    "start": "2020-10-01",
+    "end": "2020-10-01",
+    "consecutiveDays": 123
   }
 ]
 export const sampleAccountOverviewHistory0: domains.AccountOverviewHistoryDomain = 
 {
   "history": [
+    {
+      "start": "2020-10-01",
+      "end": "2020-10-01",
+      "consecutiveDays": 123
+    },
+    {
+      "start": "2022-14-01",
+      "end": "2022-14-01",
+      "consecutiveDays": 456
+    },
     {
       "start": "2020-10-01",
       "end": "2020-10-01",
@@ -89,6 +137,28 @@ export const sampleAccountOverviewReason0: domains.AccountOverviewReasonDomain =
 export const sampleArrearsDetails0: domains.ArrearsDetailsDomain = 
 {
   "history": [
+    {
+      "collectionsDate": "2020-10-01",
+      "creditedDate": "2020-10-01",
+      "minPayment": 123,
+      "contractualAmount": 123,
+      "paymentType": "dd",
+      "paymentReceived": 123,
+      "shortfall": 123,
+      "arrearsTotal": 123,
+      "missedPayments": 123
+    },
+    {
+      "collectionsDate": "2022-14-01",
+      "creditedDate": "2022-14-01",
+      "minPayment": 456,
+      "contractualAmount": 456,
+      "paymentType": "ddResubmit",
+      "paymentReceived": 456,
+      "shortfall": 456,
+      "arrearsTotal": 456,
+      "missedPayments": 456
+    },
     {
       "collectionsDate": "2020-10-01",
       "creditedDate": "2020-10-01",
@@ -126,6 +196,28 @@ export const sampleArrearsDetailsLines0: domains.ArrearsDetailsLinesDomain =
     "shortfall": 123,
     "arrearsTotal": 123,
     "missedPayments": 123
+  },
+  {
+    "collectionsDate": "2022-14-01",
+    "creditedDate": "2022-14-01",
+    "minPayment": 456,
+    "contractualAmount": 456,
+    "paymentType": "ddResubmit",
+    "paymentReceived": 456,
+    "shortfall": 456,
+    "arrearsTotal": 456,
+    "missedPayments": 456
+  },
+  {
+    "collectionsDate": "2020-10-01",
+    "creditedDate": "2020-10-01",
+    "minPayment": 123,
+    "contractualAmount": 123,
+    "paymentType": "dd",
+    "paymentReceived": 123,
+    "shortfall": 123,
+    "arrearsTotal": 123,
+    "missedPayments": 123
   }
 ]
 export const sampleAccountAllFlags1: domains.AccountAllFlagsDomain = 
@@ -134,11 +226,27 @@ export const sampleAccountAllFlags1: domains.AccountAllFlagsDomain =
     {
       "flagName": "MI6 wanted list",
       "flagValue": false
+    },
+    {
+      "flagName": "Terrorist",
+      "flagValue": true
+    },
+    {
+      "flagName": "MI6 wanted list",
+      "flagValue": false
     }
   ]
 }
 export const sampleAccountAllFlagsList1: domains.AccountAllFlagsListDomain = 
 [
+  {
+    "flagName": "MI6 wanted list",
+    "flagValue": false
+  },
+  {
+    "flagName": "Terrorist",
+    "flagValue": true
+  },
   {
     "flagName": "MI6 wanted list",
     "flagValue": false
@@ -161,6 +269,12 @@ export const sampleAccountOverview1: domains.AccountOverviewDomain =
   "criteria": [
     {
       "criteria": "Affordability check failed"
+    },
+    {
+      "criteria": "Account Management"
+    },
+    {
+      "criteria": "Affordability check failed"
     }
   ],
   "zFlagSet": "X",
@@ -170,6 +284,12 @@ export const sampleAccountOverview1: domains.AccountOverviewDomain =
 }
 export const sampleAccountOverviewCriteria1: domains.AccountOverviewCriteriaDomain = 
 [
+  {
+    "criteria": "Affordability check failed"
+  },
+  {
+    "criteria": "Account Management"
+  },
   {
     "criteria": "Affordability check failed"
   }
@@ -198,11 +318,31 @@ export const sampleAccountOverviewExcessLines1: domains.AccountOverviewExcessLin
     "start": "2022-14-01",
     "end": "2022-14-01",
     "consecutiveDays": 456
+  },
+  {
+    "start": "2020-10-01",
+    "end": "2020-10-01",
+    "consecutiveDays": 123
+  },
+  {
+    "start": "2022-14-01",
+    "end": "2022-14-01",
+    "consecutiveDays": 456
   }
 ]
 export const sampleAccountOverviewHistory1: domains.AccountOverviewHistoryDomain = 
 {
   "history": [
+    {
+      "start": "2022-14-01",
+      "end": "2022-14-01",
+      "consecutiveDays": 456
+    },
+    {
+      "start": "2020-10-01",
+      "end": "2020-10-01",
+      "consecutiveDays": 123
+    },
     {
       "start": "2022-14-01",
       "end": "2022-14-01",
@@ -217,6 +357,28 @@ export const sampleAccountOverviewReason1: domains.AccountOverviewReasonDomain =
 export const sampleArrearsDetails1: domains.ArrearsDetailsDomain = 
 {
   "history": [
+    {
+      "collectionsDate": "2022-14-01",
+      "creditedDate": "2022-14-01",
+      "minPayment": 456,
+      "contractualAmount": 456,
+      "paymentType": "ddResubmit",
+      "paymentReceived": 456,
+      "shortfall": 456,
+      "arrearsTotal": 456,
+      "missedPayments": 456
+    },
+    {
+      "collectionsDate": "2020-10-01",
+      "creditedDate": "2020-10-01",
+      "minPayment": 123,
+      "contractualAmount": 123,
+      "paymentType": "dd",
+      "paymentReceived": 123,
+      "shortfall": 123,
+      "arrearsTotal": 123,
+      "missedPayments": 123
+    },
     {
       "collectionsDate": "2022-14-01",
       "creditedDate": "2022-14-01",
@@ -254,6 +416,28 @@ export const sampleArrearsDetailsLines1: domains.ArrearsDetailsLinesDomain =
     "shortfall": 456,
     "arrearsTotal": 456,
     "missedPayments": 456
+  },
+  {
+    "collectionsDate": "2020-10-01",
+    "creditedDate": "2020-10-01",
+    "minPayment": 123,
+    "contractualAmount": 123,
+    "paymentType": "dd",
+    "paymentReceived": 123,
+    "shortfall": 123,
+    "arrearsTotal": 123,
+    "missedPayments": 123
+  },
+  {
+    "collectionsDate": "2022-14-01",
+    "creditedDate": "2022-14-01",
+    "minPayment": 456,
+    "contractualAmount": 456,
+    "paymentType": "ddResubmit",
+    "paymentReceived": 456,
+    "shortfall": 456,
+    "arrearsTotal": 456,
+    "missedPayments": 456
   }
 ]
 export const sampleAccountAllFlags2: domains.AccountAllFlagsDomain = 
@@ -262,6 +446,14 @@ export const sampleAccountAllFlags2: domains.AccountAllFlagsDomain =
     {
       "flagName": "This is a one line string",
       "flagValue": true
+    },
+    {
+      "flagName": "another one line string",
+      "flagValue": false
+    },
+    {
+      "flagName": "Terrorist",
+      "flagValue": true
     }
   ]
 }
@@ -269,6 +461,14 @@ export const sampleAccountAllFlagsList2: domains.AccountAllFlagsListDomain =
 [
   {
     "flagName": "This is a one line string",
+    "flagValue": true
+  },
+  {
+    "flagName": "another one line string",
+    "flagValue": false
+  },
+  {
+    "flagName": "Terrorist",
     "flagValue": true
   }
 ]
@@ -289,6 +489,12 @@ export const sampleAccountOverview2: domains.AccountOverviewDomain =
   "criteria": [
     {
       "criteria": "This is a one line string"
+    },
+    {
+      "criteria": "another one line string"
+    },
+    {
+      "criteria": "Account Management"
     }
   ],
   "zFlagSet": "Y",
@@ -300,6 +506,12 @@ export const sampleAccountOverviewCriteria2: domains.AccountOverviewCriteriaDoma
 [
   {
     "criteria": "This is a one line string"
+  },
+  {
+    "criteria": "another one line string"
+  },
+  {
+    "criteria": "Account Management"
   }
 ]
 export const sampleAccountOverviewCriteriaLine2: domains.AccountOverviewCriteriaLineDomain = 
@@ -326,11 +538,31 @@ export const sampleAccountOverviewExcessLines2: domains.AccountOverviewExcessLin
     "start": "2020-10-01",
     "end": "2020-10-01",
     "consecutiveDays": 123
+  },
+  {
+    "start": "2022-14-01",
+    "end": "2022-14-01",
+    "consecutiveDays": 456
+  },
+  {
+    "start": "2020-10-01",
+    "end": "2020-10-01",
+    "consecutiveDays": 123
   }
 ]
 export const sampleAccountOverviewHistory2: domains.AccountOverviewHistoryDomain = 
 {
   "history": [
+    {
+      "start": "2020-10-01",
+      "end": "2020-10-01",
+      "consecutiveDays": 123
+    },
+    {
+      "start": "2022-14-01",
+      "end": "2022-14-01",
+      "consecutiveDays": 456
+    },
     {
       "start": "2020-10-01",
       "end": "2020-10-01",
@@ -345,6 +577,28 @@ export const sampleAccountOverviewReason2: domains.AccountOverviewReasonDomain =
 export const sampleArrearsDetails2: domains.ArrearsDetailsDomain = 
 {
   "history": [
+    {
+      "collectionsDate": "2020-10-01",
+      "creditedDate": "2020-10-01",
+      "minPayment": 123,
+      "contractualAmount": 123,
+      "paymentType": "dd",
+      "paymentReceived": 123,
+      "shortfall": 123,
+      "arrearsTotal": 123,
+      "missedPayments": 123
+    },
+    {
+      "collectionsDate": "2022-14-01",
+      "creditedDate": "2022-14-01",
+      "minPayment": 456,
+      "contractualAmount": 456,
+      "paymentType": "ddResubmit",
+      "paymentReceived": 456,
+      "shortfall": 456,
+      "arrearsTotal": 456,
+      "missedPayments": 456
+    },
     {
       "collectionsDate": "2020-10-01",
       "creditedDate": "2020-10-01",
@@ -372,6 +626,28 @@ export const sampleArrearsDetailsLine2: domains.ArrearsDetailsLineDomain =
 }
 export const sampleArrearsDetailsLines2: domains.ArrearsDetailsLinesDomain = 
 [
+  {
+    "collectionsDate": "2020-10-01",
+    "creditedDate": "2020-10-01",
+    "minPayment": 123,
+    "contractualAmount": 123,
+    "paymentType": "dd",
+    "paymentReceived": 123,
+    "shortfall": 123,
+    "arrearsTotal": 123,
+    "missedPayments": 123
+  },
+  {
+    "collectionsDate": "2022-14-01",
+    "creditedDate": "2022-14-01",
+    "minPayment": 456,
+    "contractualAmount": 456,
+    "paymentType": "ddResubmit",
+    "paymentReceived": 456,
+    "shortfall": 456,
+    "arrearsTotal": 456,
+    "missedPayments": 456
+  },
   {
     "collectionsDate": "2020-10-01",
     "creditedDate": "2020-10-01",

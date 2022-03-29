@@ -12,6 +12,14 @@ public class Sample{
          "    {"+
          "      \"flagName\": \"Terrorist\","+
          "      \"flagValue\": true"+
+         "    },"+
+         "    {"+
+         "      \"flagName\": \"MI6 wanted list\","+
+         "      \"flagValue\": false"+
+         "    },"+
+         "    {"+
+         "      \"flagName\": \"This is a one line string\","+
+         "      \"flagValue\": true"+
          "    }"+
          "  ]"+
          "}"
@@ -20,6 +28,14 @@ public class Sample{
          "["+
          "  {"+
          "    \"flagName\": \"Terrorist\","+
+         "    \"flagValue\": true"+
+         "  },"+
+         "  {"+
+         "    \"flagName\": \"MI6 wanted list\","+
+         "    \"flagValue\": false"+
+         "  },"+
+         "  {"+
+         "    \"flagName\": \"This is a one line string\","+
          "    \"flagValue\": true"+
          "  }"+
          "]"
@@ -56,6 +72,12 @@ public class Sample{
          "  \"criteria\": ["+
          "    {"+
          "      \"criteria\": \"Account Management\""+
+         "    },"+
+         "    {"+
+         "      \"criteria\": \"Affordability check failed\""+
+         "    },"+
+         "    {"+
+         "      \"criteria\": \"This is a one line string\""+
          "    }"+
          "  ],"+
          "  \"zFlagSet\": \"N\","+
@@ -68,6 +90,12 @@ public class Sample{
          "["+
          "  {"+
          "    \"criteria\": \"Account Management\""+
+         "  },"+
+         "  {"+
+         "    \"criteria\": \"Affordability check failed\""+
+         "  },"+
+         "  {"+
+         "    \"criteria\": \"This is a one line string\""+
          "  }"+
          "]"
   );
@@ -98,12 +126,32 @@ public class Sample{
          "    \"start\": \"2020-10-01\","+
          "    \"end\": \"2020-10-01\","+
          "    \"consecutiveDays\": 123"+
+         "  },"+
+         "  {"+
+         "    \"start\": \"2022-14-01\","+
+         "    \"end\": \"2022-14-01\","+
+         "    \"consecutiveDays\": 456"+
+         "  },"+
+         "  {"+
+         "    \"start\": \"2020-10-01\","+
+         "    \"end\": \"2020-10-01\","+
+         "    \"consecutiveDays\": 123"+
          "  }"+
          "]"
   );
   public static Map sampleAccountOverviewHistory0 =  parse.parseMap(
          "{"+
          "  \"history\": ["+
+         "    {"+
+         "      \"start\": \"2020-10-01\","+
+         "      \"end\": \"2020-10-01\","+
+         "      \"consecutiveDays\": 123"+
+         "    },"+
+         "    {"+
+         "      \"start\": \"2022-14-01\","+
+         "      \"end\": \"2022-14-01\","+
+         "      \"consecutiveDays\": 456"+
+         "    },"+
          "    {"+
          "      \"start\": \"2020-10-01\","+
          "      \"end\": \"2020-10-01\","+
@@ -141,6 +189,28 @@ public class Sample{
          "      \"shortfall\": 123,"+
          "      \"arrearsTotal\": 123,"+
          "      \"missedPayments\": 123"+
+         "    },"+
+         "    {"+
+         "      \"collectionsDate\": \"2022-14-01\","+
+         "      \"creditedDate\": \"2022-14-01\","+
+         "      \"minPayment\": 456,"+
+         "      \"contractualAmount\": 456,"+
+         "      \"paymentType\": \"ddResubmit\","+
+         "      \"paymentReceived\": 456,"+
+         "      \"shortfall\": 456,"+
+         "      \"arrearsTotal\": 456,"+
+         "      \"missedPayments\": 456"+
+         "    },"+
+         "    {"+
+         "      \"collectionsDate\": \"2020-10-01\","+
+         "      \"creditedDate\": \"2020-10-01\","+
+         "      \"minPayment\": 123,"+
+         "      \"contractualAmount\": 123,"+
+         "      \"paymentType\": \"dd\","+
+         "      \"paymentReceived\": 123,"+
+         "      \"shortfall\": 123,"+
+         "      \"arrearsTotal\": 123,"+
+         "      \"missedPayments\": 123"+
          "    }"+
          "  ]"+
          "}"
@@ -160,6 +230,28 @@ public class Sample{
   );
   public static List sampleArrearsDetailsLines0 =  parse.parseList(
          "["+
+         "  {"+
+         "    \"collectionsDate\": \"2020-10-01\","+
+         "    \"creditedDate\": \"2020-10-01\","+
+         "    \"minPayment\": 123,"+
+         "    \"contractualAmount\": 123,"+
+         "    \"paymentType\": \"dd\","+
+         "    \"paymentReceived\": 123,"+
+         "    \"shortfall\": 123,"+
+         "    \"arrearsTotal\": 123,"+
+         "    \"missedPayments\": 123"+
+         "  },"+
+         "  {"+
+         "    \"collectionsDate\": \"2022-14-01\","+
+         "    \"creditedDate\": \"2022-14-01\","+
+         "    \"minPayment\": 456,"+
+         "    \"contractualAmount\": 456,"+
+         "    \"paymentType\": \"ddResubmit\","+
+         "    \"paymentReceived\": 456,"+
+         "    \"shortfall\": 456,"+
+         "    \"arrearsTotal\": 456,"+
+         "    \"missedPayments\": 456"+
+         "  },"+
          "  {"+
          "    \"collectionsDate\": \"2020-10-01\","+
          "    \"creditedDate\": \"2020-10-01\","+
@@ -248,6 +340,16 @@ public class Sample{
          "      \"serialNumber\": 937453,"+
          "      \"howOrdered\": \"Manually\","+
          "      \"dateOrder\": \"2022-10-01\""+
+         "    },"+
+         "    {"+
+         "      \"serialNumber\": 937453,"+
+         "      \"howOrdered\": \"This is a one line string\","+
+         "      \"dateOrder\": \"2020-10-01\""+
+         "    },"+
+         "    {"+
+         "      \"serialNumber\": 937453,"+
+         "      \"howOrdered\": \"another one line string\","+
+         "      \"dateOrder\": \"2022-14-01\""+
          "    }"+
          "  ]"+
          "}"
@@ -258,6 +360,16 @@ public class Sample{
          "    \"serialNumber\": 937453,"+
          "    \"howOrdered\": \"Manually\","+
          "    \"dateOrder\": \"2022-10-01\""+
+         "  },"+
+         "  {"+
+         "    \"serialNumber\": 937453,"+
+         "    \"howOrdered\": \"This is a one line string\","+
+         "    \"dateOrder\": \"2020-10-01\""+
+         "  },"+
+         "  {"+
+         "    \"serialNumber\": 937453,"+
+         "    \"howOrdered\": \"another one line string\","+
+         "    \"dateOrder\": \"2022-14-01\""+
          "  }"+
          "]"
   );
@@ -318,6 +430,62 @@ public class Sample{
          "    \"empAppRoleSeq\": 14648851,"+
          "    \"accountantAppRoleSeq\": 14648851,"+
          "    \"currentEmployment\": \"N\""+
+         "  },"+
+         "  {"+
+         "    \"areYou\": \"E\","+
+         "    \"occupation\": \"someString\","+
+         "    \"customerDescription\": \"someString\","+
+         "    \"ownShareOfTheCompany\": \"X\","+
+         "    \"owningSharesPct\": \"X\","+
+         "    \"workFor\": \"someString\","+
+         "    \"employmentType\": \"1\","+
+         "    \"empStartDate\": \"2020-10-01\","+
+         "    \"empEndDate\": \"2020-10-01\","+
+         "    \"annualSalaryBeforeDeduction\": 123,"+
+         "    \"annualIncomeExcludingRent\": 123,"+
+         "    \"regularCommissionBonus\": 123,"+
+         "    \"whatTypeOfBusiness\": \"someString\","+
+         "    \"whatNameBusiness\": \"someString\","+
+         "    \"establishedYear\": \"someString\","+
+         "    \"annualDrawing3Yrs\": 123,"+
+         "    \"otherSourceOfIncome\": \"X\","+
+         "    \"createdBy\": \"someString\","+
+         "    \"createdDate\": \"2020-10-01\","+
+         "    \"employerName\": \"someString\","+
+         "    \"sePositionHeld\": \"someString\","+
+         "    \"occupationCategory\": \"someString\","+
+         "    \"empEmploymentSeq\": 123,"+
+         "    \"empAppRoleSeq\": 123,"+
+         "    \"accountantAppRoleSeq\": 123,"+
+         "    \"currentEmployment\": \"X\""+
+         "  },"+
+         "  {"+
+         "    \"areYou\": \"H\","+
+         "    \"occupation\": \"anotherString\","+
+         "    \"customerDescription\": \"anotherString\","+
+         "    \"ownShareOfTheCompany\": \"Y\","+
+         "    \"owningSharesPct\": \"Y\","+
+         "    \"workFor\": \"anotherString\","+
+         "    \"employmentType\": \"2\","+
+         "    \"empStartDate\": \"2022-14-01\","+
+         "    \"empEndDate\": \"2022-14-01\","+
+         "    \"annualSalaryBeforeDeduction\": 456,"+
+         "    \"annualIncomeExcludingRent\": 456,"+
+         "    \"regularCommissionBonus\": 456,"+
+         "    \"whatTypeOfBusiness\": \"anotherString\","+
+         "    \"whatNameBusiness\": \"anotherString\","+
+         "    \"establishedYear\": \"anotherString\","+
+         "    \"annualDrawing3Yrs\": 456,"+
+         "    \"otherSourceOfIncome\": \"Y\","+
+         "    \"createdBy\": \"anotherString\","+
+         "    \"createdDate\": \"2022-14-01\","+
+         "    \"employerName\": \"anotherString\","+
+         "    \"sePositionHeld\": \"anotherString\","+
+         "    \"occupationCategory\": \"anotherString\","+
+         "    \"empEmploymentSeq\": 456,"+
+         "    \"empAppRoleSeq\": 456,"+
+         "    \"accountantAppRoleSeq\": 456,"+
+         "    \"currentEmployment\": \"Y\""+
          "  }"+
          "]"
   );
@@ -363,6 +531,22 @@ public class Sample{
          "      \"virtualBankSeq\": \"seq1\","+
          "      \"total\": 1000,"+
          "      \"frequency\": \"23\""+
+         "    },"+
+         "    {"+
+         "      \"accountId\": 3233450,"+
+         "      \"displayType\": \"savings\","+
+         "      \"description\": \"This is a one line string\","+
+         "      \"virtualBankSeq\": \"seq2\","+
+         "      \"total\": 2991,"+
+         "      \"frequency\": \"This is a one line string\""+
+         "    },"+
+         "    {"+
+         "      \"accountId\": 4333450,"+
+         "      \"displayType\": \"This is a one line string\","+
+         "      \"description\": \"another one line string\","+
+         "      \"virtualBankSeq\": \"seq3\","+
+         "      \"total\": 1000,"+
+         "      \"frequency\": \"another one line string\""+
          "    }"+
          "  ],"+
          "  \"totalMonthlyCost\": 1000,"+
@@ -384,6 +568,22 @@ public class Sample{
          "    \"virtualBankSeq\": \"seq1\","+
          "    \"total\": 1000,"+
          "    \"frequency\": \"23\""+
+         "  },"+
+         "  {"+
+         "    \"accountId\": 3233450,"+
+         "    \"displayType\": \"savings\","+
+         "    \"description\": \"This is a one line string\","+
+         "    \"virtualBankSeq\": \"seq2\","+
+         "    \"total\": 2991,"+
+         "    \"frequency\": \"This is a one line string\""+
+         "  },"+
+         "  {"+
+         "    \"accountId\": 4333450,"+
+         "    \"displayType\": \"This is a one line string\","+
+         "    \"description\": \"another one line string\","+
+         "    \"virtualBankSeq\": \"seq3\","+
+         "    \"total\": 1000,"+
+         "    \"frequency\": \"another one line string\""+
          "  }"+
          "]"
   );
@@ -432,12 +632,28 @@ public class Sample{
          "      {"+
          "        \"line1\": \"This is a one line string\","+
          "        \"line2\": \"This is a one line string\""+
+         "      },"+
+         "      {"+
+         "        \"line1\": \"another one line string\","+
+         "        \"line2\": \"another one line string\""+
+         "      },"+
+         "      {"+
+         "        \"line1\": \"This is a one line string\","+
+         "        \"line2\": \"This is a one line string\""+
          "      }"+
          "    ]"+
          "  },"+
          "  \"joint\": {"+
          "    \"name\": \"Fred Bloggs\","+
          "    \"addresses\": ["+
+         "      {"+
+         "        \"line1\": \"This is a one line string\","+
+         "        \"line2\": \"This is a one line string\""+
+         "      },"+
+         "      {"+
+         "        \"line1\": \"another one line string\","+
+         "        \"line2\": \"another one line string\""+
+         "      },"+
          "      {"+
          "        \"line1\": \"This is a one line string\","+
          "        \"line2\": \"This is a one line string\""+
@@ -457,6 +673,14 @@ public class Sample{
          "  {"+
          "    \"line1\": \"This is a one line string\","+
          "    \"line2\": \"This is a one line string\""+
+         "  },"+
+         "  {"+
+         "    \"line1\": \"another one line string\","+
+         "    \"line2\": \"another one line string\""+
+         "  },"+
+         "  {"+
+         "    \"line1\": \"This is a one line string\","+
+         "    \"line2\": \"This is a one line string\""+
          "  }"+
          "]"
   );
@@ -464,6 +688,14 @@ public class Sample{
          "{"+
          "  \"name\": \"Fred Bloggs\","+
          "  \"addresses\": ["+
+         "    {"+
+         "      \"line1\": \"This is a one line string\","+
+         "      \"line2\": \"This is a one line string\""+
+         "    },"+
+         "    {"+
+         "      \"line1\": \"another one line string\","+
+         "      \"line2\": \"another one line string\""+
+         "    },"+
          "    {"+
          "      \"line1\": \"This is a one line string\","+
          "      \"line2\": \"This is a one line string\""+
@@ -479,6 +711,14 @@ public class Sample{
          "    {"+
          "      \"descTypeValue\": \"W54\","+
          "      \"descTypeName\": \"Engineer\""+
+         "    },"+
+         "    {"+
+         "      \"descTypeValue\": \"someString\","+
+         "      \"descTypeName\": \"someString\""+
+         "    },"+
+         "    {"+
+         "      \"descTypeValue\": \"anotherString\","+
+         "      \"descTypeName\": \"anotherString\""+
          "    }"+
          "  ]"+
          "}"
@@ -517,6 +757,62 @@ public class Sample{
          "      \"empAppRoleSeq\": 14648851,"+
          "      \"accountantAppRoleSeq\": 14648851,"+
          "      \"currentEmployment\": \"N\""+
+         "    },"+
+         "    {"+
+         "      \"areYou\": \"E\","+
+         "      \"occupation\": \"someString\","+
+         "      \"customerDescription\": \"someString\","+
+         "      \"ownShareOfTheCompany\": \"X\","+
+         "      \"owningSharesPct\": \"X\","+
+         "      \"workFor\": \"someString\","+
+         "      \"employmentType\": \"1\","+
+         "      \"empStartDate\": \"2020-10-01\","+
+         "      \"empEndDate\": \"2020-10-01\","+
+         "      \"annualSalaryBeforeDeduction\": 123,"+
+         "      \"annualIncomeExcludingRent\": 123,"+
+         "      \"regularCommissionBonus\": 123,"+
+         "      \"whatTypeOfBusiness\": \"someString\","+
+         "      \"whatNameBusiness\": \"someString\","+
+         "      \"establishedYear\": \"someString\","+
+         "      \"annualDrawing3Yrs\": 123,"+
+         "      \"otherSourceOfIncome\": \"X\","+
+         "      \"createdBy\": \"someString\","+
+         "      \"createdDate\": \"2020-10-01\","+
+         "      \"employerName\": \"someString\","+
+         "      \"sePositionHeld\": \"someString\","+
+         "      \"occupationCategory\": \"someString\","+
+         "      \"empEmploymentSeq\": 123,"+
+         "      \"empAppRoleSeq\": 123,"+
+         "      \"accountantAppRoleSeq\": 123,"+
+         "      \"currentEmployment\": \"X\""+
+         "    },"+
+         "    {"+
+         "      \"areYou\": \"H\","+
+         "      \"occupation\": \"anotherString\","+
+         "      \"customerDescription\": \"anotherString\","+
+         "      \"ownShareOfTheCompany\": \"Y\","+
+         "      \"owningSharesPct\": \"Y\","+
+         "      \"workFor\": \"anotherString\","+
+         "      \"employmentType\": \"2\","+
+         "      \"empStartDate\": \"2022-14-01\","+
+         "      \"empEndDate\": \"2022-14-01\","+
+         "      \"annualSalaryBeforeDeduction\": 456,"+
+         "      \"annualIncomeExcludingRent\": 456,"+
+         "      \"regularCommissionBonus\": 456,"+
+         "      \"whatTypeOfBusiness\": \"anotherString\","+
+         "      \"whatNameBusiness\": \"anotherString\","+
+         "      \"establishedYear\": \"anotherString\","+
+         "      \"annualDrawing3Yrs\": 456,"+
+         "      \"otherSourceOfIncome\": \"Y\","+
+         "      \"createdBy\": \"anotherString\","+
+         "      \"createdDate\": \"2022-14-01\","+
+         "      \"employerName\": \"anotherString\","+
+         "      \"sePositionHeld\": \"anotherString\","+
+         "      \"occupationCategory\": \"anotherString\","+
+         "      \"empEmploymentSeq\": 456,"+
+         "      \"empAppRoleSeq\": 456,"+
+         "      \"accountantAppRoleSeq\": 456,"+
+         "      \"currentEmployment\": \"Y\""+
          "    }"+
          "  ]"+
          "}"
@@ -532,6 +828,14 @@ public class Sample{
          "  {"+
          "    \"descTypeValue\": \"W54\","+
          "    \"descTypeName\": \"Engineer\""+
+         "  },"+
+         "  {"+
+         "    \"descTypeValue\": \"someString\","+
+         "    \"descTypeName\": \"someString\""+
+         "  },"+
+         "  {"+
+         "    \"descTypeValue\": \"anotherString\","+
+         "    \"descTypeName\": \"anotherString\""+
          "  }"+
          "]"
   );
@@ -580,6 +884,18 @@ public class Sample{
          "    \"line2\": \"Little Whinging\","+
          "    \"line3\": \"Surrey\","+
          "    \"line4\": \"England\""+
+         "  },"+
+         "  {"+
+         "    \"line1\": \"27 Throughput Lane\","+
+         "    \"line2\": \"Woodfield\","+
+         "    \"line3\": \"\","+
+         "    \"line4\": \"Ireland\""+
+         "  },"+
+         "  {"+
+         "    \"line1\": \"This is a one line string\","+
+         "    \"line2\": \"This is a one line string\","+
+         "    \"line3\": \"This is a one line string\","+
+         "    \"line4\": \"This is a one line string\""+
          "  }"+
          "]"
   );
@@ -610,6 +926,18 @@ public class Sample{
          "      \"line2\": \"Little Whinging\","+
          "      \"line3\": \"Surrey\","+
          "      \"line4\": \"England\""+
+         "    },"+
+         "    {"+
+         "      \"line1\": \"27 Throughput Lane\","+
+         "      \"line2\": \"Woodfield\","+
+         "      \"line3\": \"\","+
+         "      \"line4\": \"Ireland\""+
+         "    },"+
+         "    {"+
+         "      \"line1\": \"This is a one line string\","+
+         "      \"line2\": \"This is a one line string\","+
+         "      \"line3\": \"This is a one line string\","+
+         "      \"line4\": \"This is a one line string\""+
          "    }"+
          "  ],"+
          "  \"addressResults\": {"+
@@ -628,6 +956,14 @@ public class Sample{
   );
   public static List sampleRepeatingWholeData0 =  parse.parseList(
          "["+
+         "  {"+
+         "    \"name\": \"This is a one line string\","+
+         "    \"age\": 123"+
+         "  },"+
+         "  {"+
+         "    \"name\": \"another one line string\","+
+         "    \"age\": 456"+
+         "  },"+
          "  {"+
          "    \"name\": \"This is a one line string\","+
          "    \"age\": 123"+

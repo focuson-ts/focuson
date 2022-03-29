@@ -17,6 +17,22 @@ export const sampleEAccountsSummary0: domains.EAccountsSummaryDomain =
       "virtualBankSeq": "seq1",
       "total": 1000,
       "frequency": "23"
+    },
+    {
+      "accountId": 3233450,
+      "displayType": "savings",
+      "description": "This is a one line string",
+      "virtualBankSeq": "seq2",
+      "total": 2991,
+      "frequency": "This is a one line string"
+    },
+    {
+      "accountId": 4333450,
+      "displayType": "This is a one line string",
+      "description": "another one line string",
+      "virtualBankSeq": "seq3",
+      "total": 1000,
+      "frequency": "another one line string"
     }
   ],
   "totalMonthlyCost": 1000,
@@ -37,6 +53,22 @@ export const sampleEAccountsSummaryTable0: domains.EAccountsSummaryTableDomain =
     "virtualBankSeq": "seq1",
     "total": 1000,
     "frequency": "23"
+  },
+  {
+    "accountId": 3233450,
+    "displayType": "savings",
+    "description": "This is a one line string",
+    "virtualBankSeq": "seq2",
+    "total": 2991,
+    "frequency": "This is a one line string"
+  },
+  {
+    "accountId": 4333450,
+    "displayType": "This is a one line string",
+    "description": "another one line string",
+    "virtualBankSeq": "seq3",
+    "total": 1000,
+    "frequency": "another one line string"
   }
 ]
 export const sampleEAccountSummary0: domains.EAccountSummaryDomain = 
@@ -65,6 +97,22 @@ export const sampleEAccountsSummary1: domains.EAccountsSummaryDomain =
       "virtualBankSeq": "seq2",
       "total": 2991,
       "frequency": "This is a one line string"
+    },
+    {
+      "accountId": 3233450,
+      "displayType": "checking",
+      "description": "This is a one line string",
+      "virtualBankSeq": "another one line string",
+      "total": 1000,
+      "frequency": "This is a one line string"
+    },
+    {
+      "accountId": 4333450,
+      "displayType": "savings",
+      "description": "another one line string",
+      "virtualBankSeq": "seq1",
+      "total": 2991,
+      "frequency": "another one line string"
     }
   ],
   "totalMonthlyCost": 1000,
@@ -85,6 +133,22 @@ export const sampleEAccountsSummaryTable1: domains.EAccountsSummaryTableDomain =
     "virtualBankSeq": "seq2",
     "total": 2991,
     "frequency": "This is a one line string"
+  },
+  {
+    "accountId": 3233450,
+    "displayType": "checking",
+    "description": "This is a one line string",
+    "virtualBankSeq": "another one line string",
+    "total": 1000,
+    "frequency": "This is a one line string"
+  },
+  {
+    "accountId": 4333450,
+    "displayType": "savings",
+    "description": "another one line string",
+    "virtualBankSeq": "seq1",
+    "total": 2991,
+    "frequency": "another one line string"
   }
 ]
 export const sampleEAccountSummary1: domains.EAccountSummaryDomain = 
@@ -113,6 +177,22 @@ export const sampleEAccountsSummary2: domains.EAccountsSummaryDomain =
       "virtualBankSeq": "seq3",
       "total": 1000,
       "frequency": "another one line string"
+    },
+    {
+      "accountId": 3233450,
+      "displayType": "another one line string",
+      "description": "This is a one line string",
+      "virtualBankSeq": "seq3",
+      "total": 2991,
+      "frequency": "This is a one line string"
+    },
+    {
+      "accountId": 4333450,
+      "displayType": "checking",
+      "description": "another one line string",
+      "virtualBankSeq": "This is a one line string",
+      "total": 1000,
+      "frequency": "another one line string"
     }
   ],
   "totalMonthlyCost": 1000,
@@ -131,6 +211,22 @@ export const sampleEAccountsSummaryTable2: domains.EAccountsSummaryTableDomain =
     "displayType": "This is a one line string",
     "description": "another one line string",
     "virtualBankSeq": "seq3",
+    "total": 1000,
+    "frequency": "another one line string"
+  },
+  {
+    "accountId": 3233450,
+    "displayType": "another one line string",
+    "description": "This is a one line string",
+    "virtualBankSeq": "seq3",
+    "total": 2991,
+    "frequency": "This is a one line string"
+  },
+  {
+    "accountId": 4333450,
+    "displayType": "checking",
+    "description": "another one line string",
+    "virtualBankSeq": "This is a one line string",
     "total": 1000,
     "frequency": "another one line string"
   }
