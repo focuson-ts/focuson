@@ -1,0 +1,82 @@
+{
+  "consumer": {
+    "name": "PostCodeDemo"
+  },
+  "provider": {
+    "name": "PostCodeDemoProvider"
+  },
+  "interactions": [
+    {
+      "description": "a rest for PostCodeDemo address create",
+      "providerState": "default",
+      "request": {
+        "method": "POST",
+        "path": "/api/address",
+        "query": "",
+        "body": "{\"name\":\"This is a one line string\",\"line1\":\"4 Privet drive\",\"line2\":\"Little Whinging\",\"line3\":\"Surrey\",\"line4\":\"England\",\"postcode\":\"This is a one line string\"}"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "name": "This is a one line string",
+          "line1": "4 Privet drive",
+          "line2": "Little Whinging",
+          "line3": "Surrey",
+          "line4": "England",
+          "postcode": "This is a one line string"
+        }
+      }
+    },
+    {
+      "description": "A request for PostCodeData",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/postCode",
+        "query": "postcode=LW12+4RG"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": [
+          {
+            "line1": "4 Privet drive",
+            "line2": "Little Whinging",
+            "line3": "Surrey",
+            "line4": "England"
+          }
+        ]
+      }
+    },
+    {
+      "description": "a rest for PostCodeDemo postcode get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/postCode",
+        "query": "postcode=LW12+4RG"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": [
+          {
+            "line1": "4 Privet drive",
+            "line2": "Little Whinging",
+            "line3": "Surrey",
+            "line4": "England"
+          }
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

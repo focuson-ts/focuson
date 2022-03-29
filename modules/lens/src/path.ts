@@ -71,7 +71,7 @@ export function lensBuilder<S> ( prefixs: NameAndLens<S> ): PathBuilder<Optional
     foldKey ( acc: Optional<S, any>, key: string ): Optional<S, any> { return acc.focusQuery ( key ); },
     foldLast ( acc: Optional<S, any> ): Optional<S, any> { return acc.chain ( Lenses.last () ); },
     foldNth ( acc: Optional<S, any>, n: number ): Optional<S, any> { return acc.chain ( Lenses.nth ( n ) ); },
-    foldChoices ( acc, choices ) {return acc}
+    foldChoices ( acc, choices ) {return acc.chainIntoArray ( choices )}
   }
 }
 
@@ -87,7 +87,7 @@ export function stateCodeBuilder ( initials: NameAnd<string>, focusQuery?: strin
     foldAppend ( acc: string ): string { return acc + ".chain(Lenses.append())"; },
     foldLast ( acc: string ): string { return acc + ".chain(Lenses.last())"; },
     foldNth ( acc: string, n: number ): string { return acc + `.chain(Lenses.nth(${n}))` },
-    foldChoices ( acc: string, choices: string[] ) {return acc}
+    foldChoices ( acc: string, choices: string[] ) {return acc + `.chainIntoArray(${JSON.stringify ( choices )}`}
   }
 }
 

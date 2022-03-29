@@ -5,7 +5,7 @@
   "details":     {
     "ideify":       true,
     "publish":      true,
-    "links":        ["@focuson/poster"],
+    "links":        ["@focuson/focuson"],
     "extraDeps":    {},
     "extraDevDeps": {
       "@sambego/storybook-state": "^2.0.1",

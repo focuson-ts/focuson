@@ -112,7 +112,9 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
 
   /** This defines the domain data structures in react*/
   domain: {
-    selectedItem: { dataDD: IntegerDD },
+    mainOrJoint: { dataDD: BooleanDD },
+    selectedItemMain: { dataDD: IntegerDD },
+    selectedItemJoin: { dataDD: IntegerDD },
     fromApi: { dataDD: occupationAndIncomeFullDomainDD },
     temp: { dataDD: oneOccupationIncomeDetailsDD },
     additionalInformation: { dataDD: additionalInformationDD },
@@ -120,7 +122,6 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
     otherSourcesOfIncome: { dataDD: otherIncomeResponseDD },
     dropdowns: { dataDD: dropdownsDD },
     searchList: { dataDD: listOccupationsDD },
-    mainOrJoint: { dataDD: BooleanDD }
   }
   ,
 
