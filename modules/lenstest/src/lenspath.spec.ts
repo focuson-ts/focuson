@@ -38,16 +38,9 @@ describe ( 'tokenisepath', () => {
     ] )
   } )
 
-  it ( "should tokenise |", () => {
-    expect ( tokenisePath ( '/one|two[three|four|five]' ) ).toEqual ( [
-      "/", "one", "|", "two", "[", "three", "|", "four", "|", "five", "]"
-    ] )
-
-  } )
 } )
 
 const stringBuilder: PathBuilder<string> = {
-  foldChoices ( acc: string, choices: string[] ): string {return acc + `.CHOICES<${choices}>`;},
   zero ( initial: string ): string { return `#${initial}#`; },
   foldAppend ( acc: string ): string {return acc + '.APPEND' },
   foldLast ( acc: string ): string {return acc + '.LAST' },
@@ -61,22 +54,6 @@ describe ( "parsePath", () => {
   it ( "should fold the tokens", () => {
     expect ( parsePath ( '/one[$last]/two[bbb/ccc]/three[~/ccc][1][$append]/[/x]', stringBuilder ) ).toEqual (
       '#/#.one.LAST.two.OPEN[##.bbb.ccc]CLOSE.three.OPEN[#~#.ccc]CLOSE.[1].APPEND.OPEN[#/#.x]CLOSE' )
-  } )
-  it ( "should allow choices at the end", () => {
-    expect ( parsePath ( "/one[two|1|2]|a|b|c", stringBuilder ) ).toEqual ( '#/#.one.OPEN[##.two.CHOICES<1,2>]CLOSE.CHOICES<a,b,c>' )
-  } )
-  it ( "should allow choices at the end of a []", () => {
-    expect ( parsePath ( "/a/b[v0|c|d]", stringBuilder ) ).toEqual ( '#/#.a.b.OPEN[##.v0.CHOICES<c,d>]CLOSE' )
-  } )
-
-
-  it ( "should report errors if are in 'choices' and have unexpected tokens", () => {
-    function error ( p: string, msg: string ) { expect ( () => parsePath ( p, stringBuilder ) ).toThrow ( msg )}
-    error ( '/p|[', "Error parsing '/p|['. Unexpected '[" )
-    error ( '/p|', "Error parsing '/p|'. Ran out of tokens!" )
-    error ( '/p|/', "Error parsing '/p|/'. Unexpected '/" )
-    error ( '/p|~', "Error parsing '/p|~'. Unexpected '~" )
-    error ( '/p|]', "Error parsing '/p|]'. Unexpected ']" )
   } )
 
 } )
@@ -146,16 +123,6 @@ describe ( "parsePathMakingLens", () => {
   it ( "should throw error if the initial  isn't defined", () => {
     expect ( () => parsePath ( 'a/b', lensBuilder ( prefixNameAndLens () ) ) ).toThrow ( "Error parsing 'a/b'. Cannot find initial  ''" )
   } )
-  it ( "should make an lens using  [path|0|1|2...] language", () => {
-    let zero: Optional<any, any> = parsePath ( "/a/b[v0|c|d]", lensBuilder ( prefixNameAndLens ( [ '', id.focusQuery ( 'a' ) ] ) ) );
-    let one: Optional<any, any> = parsePath ( "/a/b[v1|c|d]", lensBuilder ( prefixNameAndLens ( [ '', id.focusQuery ( 'a' ) ] ) ) );
-    expect ( zero.description ).toEqual ( "I.focus?(a).focus?(b).chainCalc(chainIntoArray(c,d))" )
-    expect ( zero.getOption ( someData ) ).toEqual ( 'cValue' )
-    expect ( zero.setOption ( someData, 'newV' ).a ).toEqual ( { "b": { "c": "newV", "d": "dValue" }, "e": [ "zero", "one" ], "v0": 0, "v1": 1, "vc": "c", "vd": "d", "vfalse": false, "vtrue": true } )
-    expect ( one.description ).toEqual ( "I.focus?(a).focus?(b).chainCalc(chainIntoArray(c,d))" )
-    expect ( one.getOption ( someData ) ).toEqual ( 'dValue' )
-    expect ( one.setOption ( someData, 'newV' ).a ).toEqual ( { "b": { "c": "cValue", "d": "newV" }, "e": [ "zero", "one" ], "v0": 0, "v1": 1, "vc": "c", "vd": "d", "vfalse": false, "vtrue": true } )
-  } )
 
 } )
 
@@ -168,6 +135,5 @@ describe ( "parseMakingCode", () => {
     expect ( parsePath ( 'a/[1]', stateCodeBuilder ( initials ) ) ).toEqual ( "state.focusQuery('a').chain(Lenses.nth(1))" )
     expect ( parsePath ( '/a/[/a/b]', stateCodeBuilder ( initials ) ) ).toEqual ( "state.copyWithIdentity().focusQuery('a').chainNthFromPath(state.copyWithIdentity().focusQuery('a').focusQuery('b'))" )
     expect ( parsePath ( '/a/[b]', stateCodeBuilder ( initials ) ) ).toEqual ( "state.copyWithIdentity().focusQuery('a').chainNthFromPath(state.focusQuery('b'))" )
-    expect ( parsePath ( "/a/b[v0|c|d]", stateCodeBuilder ( initials ) ) ).toEqual ( `state.copyWithIdentity().focusQuery('a').focusQuery('b').chainNthFromPath(state.focusQuery('v0').chainIntoArray(["c","d"])` )
   } )
 } )

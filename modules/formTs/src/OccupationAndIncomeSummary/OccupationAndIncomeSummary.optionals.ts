@@ -1,10 +1,5 @@
-import { Optional } from "@focuson/lens";
-import { Lenses } from "@focuson/lens"
-import { FState } from "../common";
+import {FState, identityL } from '../common';
+import { Lenses, Optional } from '@focuson/lens'
 
-function fkjgkdfjg()
-export const currentOccupation: Optional<FState, any> = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary')
-  .focusQuery('fromApi').focusQuery('customerOccupationIncomeDetails');
-
-
-// const selected: Optional<FState, number> = Lenses.identity<FState>...copy;
+const currentOccupation: Optional<FState, number> = identityL.focusOn('something');
+const selected: Optional<FState, number> = Lenses.identity<FState>...copy;

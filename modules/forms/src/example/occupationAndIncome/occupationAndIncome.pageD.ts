@@ -126,11 +126,13 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
     selected: {
       constructedBy: 'code',
       type: 'number',
-      imports: [ `import { Lenses } from @focuson/lens` ],
+      imports: [],
       code: 'Lenses.identity<FState>...copy'
     },
-    currentOccupation: { constructedBy: 'code', type: 'number', imports: [ `import { Lenses } from @focuson/lens` ],
-      code: 'Lenses.identity<FState>...copy' },
+    currentOccupation: {
+      constructedBy: 'code', type: 'number', imports: [],
+      code: `identityL.focusOn('something')`
+    },
   },
 
   /** Binds the rest to 'where it takes place'. So we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
@@ -144,7 +146,7 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
   layout: { component: HideButtonsCD, displayParams: { hide: [ 'additionalInfo', 'businessDetails', 'otherSourcesOfIncome', 'list' ] } },
   buttons: {
     mainOrJoint: { control: "ToggleButton", value: '~/mainOrJoint', buttonText: 'Showing {~/mainOrJoint|Main|Joint}' },
-    nextOccupation: { control: 'ListNextButton', value: '#selected', list: '#currentOccupation' },
+    nextOccupation: { control: 'ListNextButton', value: '~/selectedItem', list:'~/fromApi/customerOccupationIncomeDetails' },
     prevOccupation: { control: 'ListPrevButton', value: '~/selectedItem', list: '~/fromApi/customerOccupationIncomeDetails' },
     addEntry: {
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'create',
