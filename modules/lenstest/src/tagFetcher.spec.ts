@@ -21,10 +21,10 @@ describe ( 'tagFetcher', () => {
   } )
 
   it ( 'should load if the actual tags match the desired tags, but the target is undefined', () => {
-    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState,firstPage: undefined, tag1: 't1', tag2: 't2', tags: { firstPage: [ 't1', 't2' ] } } ) ).toEqual ( ["Tags all the same"] )
+    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState,firstPage: undefined, tag1: 't1', tag2: 't2', tags: { firstPage: [ 't1', 't2' ] } } ) ).toEqual ( [] )
   } )
   it ( 'should not load if the actual tags match the desired tags and the target is defined', () => {
-    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState, tag1: 't1', tag2: 't2', firstPage: 'somevalue', tags: { firstPage: [ 't1', 't2' ] } } ) ).toEqual ( ["Tags all the same"] )
+    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState, tag1: 't1', tag2: 't2', firstPage: 'somevalue', tags: { firstPage: [ 't1', 't2' ] } } ) ).toEqual ( [ "Tags all the same, and target defined"] )
   } )
 
   it ( 'should  load if the actual tags are defined but the current are not', () => {
