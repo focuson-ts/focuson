@@ -125,13 +125,11 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
   optionals: {
     selected: {
       constructedBy: 'code',
-      type: 'number',
-      imports: [],
-      code: 'Lenses.identity<FState>...copy'
+      code: "identityL.focusQuery ( 'OccupationAndIncomeSummary' ).focusQuery ( 'selectedItem' )"
     },
     currentOccupation: {
-      constructedBy: 'code', type: 'number', imports: [],
-      code: `identityL.focusOn('something')`
+      constructedBy: 'code',
+      code: `identityL.focusQuery ( 'OccupationAndIncomeSummary' ).focusQuery ( 'fromApi' ).focusQuery ( 'customerOccupationIncomeDetails' )`
     },
   },
 
@@ -146,7 +144,7 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
   layout: { component: HideButtonsCD, displayParams: { hide: [ 'additionalInfo', 'businessDetails', 'otherSourcesOfIncome', 'list' ] } },
   buttons: {
     mainOrJoint: { control: "ToggleButton", value: '~/mainOrJoint', buttonText: 'Showing {~/mainOrJoint|Main|Joint}' },
-    nextOccupation: { control: 'ListNextButton', value: '~/selectedItem', list:'~/fromApi/customerOccupationIncomeDetails' },
+    nextOccupation: { control: 'ListNextButton', value: '~/selectedItem', list: '~/fromApi/customerOccupationIncomeDetails' },
     prevOccupation: { control: 'ListPrevButton', value: '~/selectedItem', list: '~/fromApi/customerOccupationIncomeDetails' },
     addEntry: {
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'create',

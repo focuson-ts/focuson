@@ -2,7 +2,7 @@ import { focusPageClassName, HasPageSelection, HasSimpleMessageL, MultiPageDetai
 import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
 import { FetcherTree, loadTree, wouldLoad, wouldLoadSummary } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
-import { Lens, Lenses, Optional } from "@focuson/lens";
+import { Lens, Lenses, NameAndLens, Optional } from "@focuson/lens";
 import { FetchFn, HasSimpleMessages, RestAction } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestDetails } from "@focuson/rest";
 
@@ -64,7 +64,9 @@ export interface FocusOnConfig<S, Context, MSGs> {
   /** The collection of all registered fetchers that will get data from the back end */
   fetchers: FetcherTree<S>,
   /** If we need to mutate the url dependant on the rest action this does it. */
-  restUrlMutator: ( r: RestAction, url: string ) => string
+  restUrlMutator: ( r: RestAction, url: string ) => string;
+  /** Used in the paths. Optionals marked #xxx come from here */
+  namedOptionals: NameAndLens<S>
 }
 
 export function traceL<S> (): Optional<S, any> {

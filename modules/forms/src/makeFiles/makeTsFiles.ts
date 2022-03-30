@@ -66,8 +66,6 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
       writeToFile ( restFileName ( tsCode, params, p ) + ".ts", () => makeRests ( params, p ) )
       writeToFile ( storybookFileName ( tsCode, params, p ) + '.ts', () => makeOneStory ( params, p ), details )
 
-      const optionals = makeOptionals ( params, p )
-      if ( optionals.length > 0 ) writeToFile ( optionalsFileName ( tsCode, params, p ) + '.ts', () => optionals )
 
       if ( Object.keys ( p.rest ).length > 0 )
         writeToFile ( pactFileName ( tsCode, params, p ) + ".ts", () => makeAllPactsForPage ( params, p ) )
@@ -75,6 +73,8 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
 
 
   } )
+
+  writeToFile ( optionalsFileName ( tsCode, params ) + '.ts', () => makeOptionals ( params, pages ) )
 
   writeToFile ( `${tsCode}/${params.fetchersFile}.ts`, () => [
     ...makeFetcherDataStructureImport ( params, pages ),

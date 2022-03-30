@@ -284,31 +284,6 @@ export class Lenses {
   static build<Main> ( description: string ) {
     return Lenses.identity<Main> ().withDescription ( description )
   }
-  //
-  // static fromPath = <From, To> ( path: string[], description?: string ): Optional<From, To> => {
-  //   let initialValue: any = Lenses.identity<any> ( description ? description : '' );
-  //   return path.reduce ( ( acc, p ) => acc.focusQuery ( p ), initialValue )
-  // }
-  //
-  // static fromPathStringFor<S, To> ( prefixToLens?: NameAnd<Optional<S, any>> ): ( path: string, description?: string ) => Optional<S, any> {
-  //   const f = fromPathWith<S, To> ( prefixToLens )
-  //   return ( path: string, description?: string ) => f ( tokenisePath ( path ), description ? description : `[${path}]` )
-  //
-  // }
-  //
-  // static fromPathWith = <From, To> ( ref: ( name: string ) => any ) => ( path: string[], description?: string ): Optional<From, To> => {
-  //   let initialValue: any = Lenses.identity<any> ( description ? description : '' );
-  //   return path.reduce ( ( acc, p ) => {
-  //     if ( p === '[last]' ) return acc.chain ( Lenses.last () );
-  //     if ( p === '[append]' ) return acc.chain ( Lenses.append () );
-  //     const matchRef = /^{([a-zA-Z0-9]+)}$/g.exec ( p )
-  //     if ( matchRef ) return Lenses.chainNthRef ( acc, ref, matchRef[ 1 ] )
-  //     const matchNum = /^\[([0-9]+)]$/g.exec ( p )
-  //     if ( matchNum ) return acc.chain ( Lenses.nth ( Number.parseInt ( matchNum[ 1 ] ) ) )
-  //     return acc.focusQuery ( p );
-  //   }, initialValue )
-  // }
-
 
   /** Given a main which is an object, with a field name, this returns a lens that goes from the Main to the contents of the field name */
   static field = <Main, K extends keyof Main> ( fieldName: K ): Lens<Main, Main[K]> => lens ( m => m[ fieldName ], ( m, c ) => {

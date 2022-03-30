@@ -47,7 +47,6 @@ export type PageD<Buttons, G> = MainPageD<Buttons, G> | ModalPageD<Buttons, G>
 export interface OptionalD {
   constructedBy: 'code';
   imports?: string[];
-  type: string;
   code: string;
 }
 

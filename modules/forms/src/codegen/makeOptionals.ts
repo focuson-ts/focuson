@@ -1,18 +1,25 @@
 import { TSParams } from "./config";
-import { isMainPage, PageD } from "../common/pageD";
+import { isMainPage, OptionalD, PageD } from "../common/pageD";
 import { safeArray, sortedEntries } from "@focuson/utils";
 import { unique } from "../common/restD";
+import { addStringToEndOfAllButLast, indentList } from "./codegen";
 
 
-export function makeOptionals<B, G> ( params: TSParams, p: PageD<B, G> ): string[] {
-  if ( !isMainPage ( p ) ) return []
-  let optionals = sortedEntries ( p.optionals );
-  if ( optionals.length === 0 ) return []
-  let rawImports = optionals.flatMap ( ( [ n, v ] ) => v.imports );
-  const allImports = [ `import {FState, identityL } from '../common';`, `import { Lenses, Optional } from '@focuson/lens'`,
-    ...rawImports ]
-  const imports = unique ( allImports, x => x )
-  const values = optionals.map ( ( [ n, v ] ) =>
-    `const ${n}: Optional<${params.stateName}, ${v.type}> = ${v.code};` )
-  return [ ...imports, '', ...values ]
+export function makeOptionals<B, G> ( params: TSParams, ps: PageD<B, G>[] ): string[] {
+  function walkOptions ( fn: ( name: string, p: OptionalD ) => string[] ): string[] {
+    return ps.flatMap ( p => {
+      if ( !isMainPage ( p ) ) return []
+      let optionals = sortedEntries ( p.optionals );
+      return optionals.flatMap ( ( [ name, opt ] ) => fn ( name, opt ) )
+    } )
+  }
+  const imports = walkOptions ( ( name, opt ) => safeArray ( opt.imports ) )
+  const nameValues = walkOptions ( ( name: string, opt ) => [ `${name}: ${opt.code}` ] )
+  const allImports = unique ( [ `import {${params.stateName}, identityL } from './common';`, `import { Lenses, NameAndLens, Optional } from '@focuson/lens'`, ...imports ], x => x )
+  return [ ...allImports, '',
+    `const optionals: NameAndLens<${params.stateName}> = {`,
+    ...indentList ( addStringToEndOfAllButLast ( ',' ) ( nameValues ) ),
+    '}'
+  ]
+
 }
