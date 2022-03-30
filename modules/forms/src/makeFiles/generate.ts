@@ -40,7 +40,8 @@ export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLe
     schema: 'someSchema.graphql',
     sampleClass: 'Sample',
     dbPackage: 'db',
-    sqlDirectory: 'sql'
+    sqlDirectory: 'sql',
+    optionalsFile: 'optionals'
   };
 
   console.log ( 0 )

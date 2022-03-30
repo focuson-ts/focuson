@@ -4,6 +4,7 @@ import { CombinedParams } from "../codegen/config";
 import { repeatingRestRD } from "../example/repeating/repeating.restD";
 
 export const paramsForTest: CombinedParams =  {
+  optionalsFile: "optionals",
   pagesFile: 'pages',
   focusOnVersion: "someFocusOnVersion",
   commonParams: "CommonIds",

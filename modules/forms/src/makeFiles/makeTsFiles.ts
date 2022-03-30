@@ -12,12 +12,13 @@ import { makeAllFetchers, makeFetcherDataStructureImport, makeFetchersDataStruct
 import { makeRestDetailsPage, makeRests } from "../codegen/makeRests";
 import { makeAllEmptyData, makeAllSampleVariables } from "../codegen/makeSample";
 import { makePages } from "../codegen/makePages";
-import { domainsFileName, emptyFileName, fetcherFileName, pactFileName, renderFileName, restFileName, samplesFileName, storybookFileName } from "../codegen/names";
+import { domainsFileName, emptyFileName, fetcherFileName, optionalsFileName, pactFileName, renderFileName, restFileName, samplesFileName, storybookFileName } from "../codegen/names";
 import { makeOneStory } from "../codegen/makeStories";
 import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { MakeButton } from "../codegen/makeButtons";
 import { AppConfig } from "../focuson.config";
 import { makeAllPactsForPage } from "../codegen/makePacts2";
+import { makeOptionals } from "../codegen/makeOptionals";
 
 export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, appConfig: AppConfig, tsRoot: string, params: TSParams, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G>, directorySpec: DirectorySpec ) => <B extends ButtonD> ( pages: PageD<B, G>[] ) => {
   //to help the readability of the writeFile/template files
@@ -64,6 +65,9 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
 
       writeToFile ( restFileName ( tsCode, params, p ) + ".ts", () => makeRests ( params, p ) )
       writeToFile ( storybookFileName ( tsCode, params, p ) + '.ts', () => makeOneStory ( params, p ), details )
+
+      const optionals = makeOptionals ( params, p )
+      if ( optionals.length > 0 ) writeToFile ( optionalsFileName ( tsCode, params, p ) + '.ts', () => optionals )
 
       if ( Object.keys ( p.rest ).length > 0 )
         writeToFile ( pactFileName ( tsCode, params, p ) + ".ts", () => makeAllPactsForPage ( params, p ) )

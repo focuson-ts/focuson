@@ -44,6 +44,13 @@ export function isModalPage<B, G> ( p: PageD<B, G> ): p is ModalPageD<B, G> {
 }
 export type PageD<Buttons, G> = MainPageD<Buttons, G> | ModalPageD<Buttons, G>
 
+export interface OptionalD {
+  constructedBy: 'code';
+  imports?: string[];
+  type: string;
+  code: string;
+}
+
 export interface MainPageD<Buttons, G> extends HasLayout {
   pageType: 'MainPage',
   commonParams?: NameAnd<CommonLensRestParam>,
@@ -52,13 +59,12 @@ export interface MainPageD<Buttons, G> extends HasLayout {
   display: { target: string, dataDD: CompDataD<G> },
   initialValue: 'empty' | any,
   domain: DomainDefnInPage<G>,
+  optionals?: NameAnd<OptionalD>
   modals?: ModalData<Buttons, G>[],
   rest: RestDefnInPage<G>,
   /** The names and order of the visible buttons. If not populated uses definition order */
   buttonOrder?: string[];
   buttons: ButtonDefnInPage<Buttons>;
-
-
 }
 export interface ModalPageD<Buttons, G> extends HasLayout {
   pageType: 'ModalPage' | 'ModalPopup',

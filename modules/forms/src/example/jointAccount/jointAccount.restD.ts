@@ -1,12 +1,9 @@
-import { RestD } from "../../common/restD";
-import { AllGuards } from "../../buttons/guardButton";
-import { ETransferDataD } from "../eTransfers/eTransfers.dataD";
 import { commonParams } from "../eTransfers/eTransfers.restD";
 import { JointAccountCustomerDD, JointAccountDd } from "./jointAccount.dataD";
 import { accountT, addT, customerT, nameT } from "../database/tableNames";
 
 
-export const jointAccountRestD: RestD<AllGuards> = {
+export const jointAccountRestD: any = {
   params: { ...commonParams },
   dataDD: JointAccountDd,
   url: '/api/jointAccount?{query}',
