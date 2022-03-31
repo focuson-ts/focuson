@@ -30,6 +30,17 @@ describe ( "makePages", () => {
     ] )
   } )
   it ( "should create an initial from 'empty'", () => {
-    expect ( makePages ( paramsForTest, [ CreateEAccountPageD ] ) ).toEqual ( [] )
+    expect ( makePages ( paramsForTest, [ CreateEAccountPageD ] ).map(s=>s.replace(/"/g, "'")) ).toEqual ( [
+      "import { identityOptics } from '@focuson/lens';",
+      "import { Loading, MultiPageDetails, simpleMessagesPageConfig } from '@focuson/pages';",
+      "import {Context,  FState } from './common';",
+      "import { CreateEAccountPage } from './CreateEAccount/CreateEAccount.render';",
+      "",
+      "const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  Loading )",
+      "const identity = identityOptics<FState> ();",
+      "export const pages: MultiPageDetails<FState, Context> = {",
+      "    CreateEAccount: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'CreateEAccount' ), pageFunction: CreateEAccountPage(), initialValue: {'editing':{'name':'','type':'savings','savingsStyle':'adhoc','initialAmount':0}}, pageMode: 'create' }",
+      "  }"
+    ] )
   } )
 } )
