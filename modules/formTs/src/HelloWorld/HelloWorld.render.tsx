@@ -19,7 +19,7 @@ import {ValidationButton} from '@focuson/form_components';
 import {HelloWorldPageDomain} from "../HelloWorld/HelloWorld.domains";
 import {HelloWorldDomain} from "../HelloWorld/HelloWorld.domains"
 export function HelloWorldPage(){
-  return focusedPageWithExtraState<FState, HelloWorldPageDomain, HelloWorldDomain, Context> ( s => 'Hello World' ) ( state => state.focusQuery('main')) (
+  return focusedPageWithExtraState<FState, HelloWorldPageDomain, HelloWorldDomain, Context> ( s => 'Hello World' ) ( state => state.focusOn('main')) (
 ( fullState, state , full, d, mode) => {
   const id='root';
   const buttons ={}

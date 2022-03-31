@@ -41,7 +41,7 @@ export const stateFocusQueryWithTildaFromPage = <B, G> ( errorPrefix: string, pa
     return parsePath ( path, stateCodeBuilder ( {
       '/': `.copyWithLens(Lenses.identity<${params.domainsFile}.${pageDomainName ( p )}>())`,
       '~': ``,
-    }, 'focusOn' ) )
+    }, 'opt', 'focusOn' ) )
   } catch ( e: any ) {
     console.error ( errorPrefix )
     throw e
@@ -52,7 +52,7 @@ export const stateFocusQueryWithEmptyFromHere = <B, G> ( errorPrefix: string, pa
     return parsePath ( path, stateCodeBuilder ( {
       '/': `.copyWithLens(Lenses.identity<${params.domainsFile}.${pageDomainName ( p )}>())`,
       '': ``,
-    }, 'focusOn' ) )
+    }, 'opt','focusOn' ) )
   } catch ( e: any ) {
     console.error ( errorPrefix )
     throw e

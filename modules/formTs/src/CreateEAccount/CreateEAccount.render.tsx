@@ -22,7 +22,7 @@ import {ValidationButton} from '@focuson/form_components';
 import {CreateEAccountPageDomain} from "../CreateEAccount/CreateEAccount.domains";
 import {CreateEAccountDataDomain} from "../CreateEAccount/CreateEAccount.domains"
 export function CreateEAccountPage(){
-  return focusedPageWithExtraState<FState, CreateEAccountPageDomain, CreateEAccountDataDomain, Context> ( s => 'Create E Account' ) ( state => state.focusQuery('editing')) (
+  return focusedPageWithExtraState<FState, CreateEAccountPageDomain, CreateEAccountDataDomain, Context> ( s => 'Create E Account' ) ( state => state.focusOn('editing')) (
 ( fullState, state , full, d, mode) => {
   const id='root';
   const buttons =    {cancel:<button>cancel of type ResetStateButton cannot be created yet</button>,

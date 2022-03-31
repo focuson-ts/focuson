@@ -24,7 +24,7 @@ import {PostCodeDataLineDomain} from "../PostCodeDemo/PostCodeDemo.domains"
 import {PostCodeMainPageDomain} from "../PostCodeDemo/PostCodeDemo.domains"
 import {PostCodeSearchDomain} from "../PostCodeDemo/PostCodeDemo.domains"
 export function PostCodeDemoPage(){
-  return focusedPageWithExtraState<FState, PostCodeDemoPageDomain, PostCodeMainPageDomain, Context> ( s => 'Post Code Demo' ) ( state => state.focusQuery('main')) (
+  return focusedPageWithExtraState<FState, PostCodeDemoPageDomain, PostCodeMainPageDomain, Context> ( s => 'Post Code Demo' ) ( state => state.focusOn('main')) (
 ( fullState, state , full, d, mode) => {
   const id='root';
   const buttons =    {save:<RestButton state={state}

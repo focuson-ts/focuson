@@ -28,6 +28,7 @@ export const restDetails: RestDetails<FullState, SimpleMessage> = {}
 
 
 const config: FocusOnConfig<FullState, Context, SimpleMessage> = {
+  namedOptionals: {},
   restUrlMutator ( r: RestAction, url: string ): string { return url; },
   /** How data is sent to/fetched from apis */
   fetchFn: fetchWithDelay ( 2000, fetchWithPrefix ( 'http://localhost:8080', loggingFetchFn ) ),
