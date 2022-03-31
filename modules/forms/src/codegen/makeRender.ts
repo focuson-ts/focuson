@@ -1,16 +1,16 @@
-import { AllDataDD, CompDataD, DataD, DisplayParamDD, HasLayout, isDataDd, isPrimDd, isRepeatingDd } from "../common/dataD";
+import { AllDataDD, CompDataD, DisplayParamDD, HasLayout, isDataDd, isPrimDd, isRepeatingDd } from "../common/dataD";
 import { commonParams, DisplayCompD, OneDisplayCompParamD, SimpleDisplayComp } from "../common/componentsD";
 import { dataDsIn, isMainPage, isModalPage, PageD } from "../common/pageD";
 
 import { decamelize, NameAnd, sortedEntries } from "@focuson/utils";
 import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, pageComponentName, pageDomainName } from "./names";
 import { addButtonsFromVariables, MakeButton, makeButtonsVariable, makeGuardButtonVariables } from "./makeButtons";
-import { focusOnFor, indentList, noExtension, stateFocusQueryForRepl } from "./codegen";
+import { focusOnFor, indentList, noExtension } from "./codegen";
 import { TSParams } from "./config";
 import { unique } from "../common/restD";
 import { ButtonD } from "../buttons/allButtons";
 import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
-import { lensFocusQueryWithTildaFromPage, stateFocusQueryWithTildaFromPage } from "./lens";
+import { stateFocusQueryWithTildaFromPage } from "./lens";
 
 
 export type AllComponentData<G> = ComponentData<G> | ErrorComponentData
@@ -51,7 +51,7 @@ export const listComponentsIn = <G> ( dataDD: CompDataD<G> ): AllComponentData<G
   if ( isPrimDd ( dataDD ) ) throw  Error ( 'Showing a primitive... do we want this? I guess why not... might be a string. For now an error' );
 
   return Object.entries ( dataDD.structure ).map ( ( [ n, oneDataDD ] ) => {
-    const child = oneDataDD.dataDD
+    const child: AllDataDD<G> = oneDataDD.dataDD
     if ( isPrimDd ( child ) ) {
       const c: AllComponentData<G> = {
         displayParams: oneDataDD.displayParams,

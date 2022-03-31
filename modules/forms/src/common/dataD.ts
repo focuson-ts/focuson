@@ -17,18 +17,33 @@ export interface HasEnum {
 }
 
 export function sampleFromDataD<G> ( o: OneDataDD<G> | undefined, d: AllDataDD<G> ): string[] {
-  const fromO: string[] = safeArray ( o?.sample )
+  const fromO: string[] = safeArray ( isOneDataDDForPrim<any, any, G> ( o ) ? o?.sample : [] )
   const fromD: string[] = isPrimDd ( d ) ? [ ...safeArray<any> ( d.sample ).map ( ( t: any ) => t ), ...safeArray ( d.enum ? Object.keys ( d.enum ) : [] ) ] : []
   return [ ...fromO, ...fromD ]
 }
 
-export interface OneDataDD<G> extends HasSample<string> {
+export interface OneDataDDForPrim<D extends CommonPrimitiveDD<T>, T, G> extends HasSample<T> {
+  dataDD: D;
+  hidden?: boolean;
+  guard?: NameAnd<string[]>
+  displayParams?: ComponentDisplayParams,
+  db?: DbValues
+}
+export function isOneDataDDForPrim<D extends CommonPrimitiveDD<T>, T, G> ( o: OneDataDD<G> ): o is OneDataDDForPrim<D, T, G> {
+  // @ts-ignore
+  return o.sample !== undefined
+}
+export interface OneDataDDNonePrim<G> {
+  sample?: undefined;
   dataDD: AllDataDD<G>;
   hidden?: boolean;
   guard?: NameAnd<string[]>
   displayParams?: ComponentDisplayParams,
   db?: DbValues
 }
+export type OneDataDD<G> = OneDataDDForPrim<any, any, G> | OneDataDDNonePrim<G>
+
+
 export interface ManyDataDD<G> {
   [ name: string ]: OneDataDD<G>
 }
@@ -95,9 +110,9 @@ export interface RepeatingDataD<G> extends CommonDataDD {
 export function isRepeatingDd<G> ( d: any ): d is RepeatingDataD<G> {
   return d.paged !== undefined
 }
-export function allRepeatindDs<G>(d: AllDataDD<G>[]): RepeatingDataD<G>[]{
+export function allRepeatindDs<G> ( d: AllDataDD<G>[] ): RepeatingDataD<G>[] {
   // @ts-ignore
-  return d.filter(isRepeatingDd)
+  return d.filter ( isRepeatingDd )
 }
 
 export type CompDataDD<G> = DataD<G> | RepeatingDataD<G>

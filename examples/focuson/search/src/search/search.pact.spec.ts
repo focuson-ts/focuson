@@ -12,7 +12,7 @@ describe ( "searchFetcher", () => {
     let fetchFn = fetchWithPrefix ( "http://localhost:9999", defaultFetchFn );
     let s = { ...emptySearchRequirement, search: { query: "bob" } };
     let fetcher = searchFetcher ( Lenses.identity<typeof s> ().focusQuery ( 'search' ), testDateFn );
-    expect ( fetcher.shouldLoad ( s ) ).toEqual ( true )
+    expect ( fetcher.shouldLoad ( s ) ).toEqual ( [] )
     const ns = await applyFetcher ( fetcher, s, fetchFn )
     expect ( ns.messages ).toEqual ( [ {
       "level": "error",

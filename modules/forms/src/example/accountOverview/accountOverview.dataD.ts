@@ -131,12 +131,9 @@ export const accountOverviewDataD: ExampleDataD = {
     accountType: { dataDD: EAccountDisplayTypeDD },
     drawDownDate: { dataDD: DateDD },
     repaymentDate: { dataDD: DateDD },
-    //@ts-ignore
     propertyValue: { dataDD: MoneyDD, sample: [ 220000 ] },
-    //@ts-ignore
     mul: { dataDD: MoneyDD, sample: [ 173750 ] },
-    //@ts-ignore
-    drawDownAmount: { dataDD: MoneyDD, sample: [ 90007 ], table: '', field: 'ddamnt' },
+    drawDownAmount: { dataDD: MoneyDD, sample: [ 90007 ] },
     criteria: { dataDD: accountOverviewCriteriaDataD },
     zFlagSet: { dataDD: yesNoDD, displayParams: { buttons: ["reason"] } },
     excessSixMonths: { dataDD: IntegerDD, displayParams: { buttons: ["excessHistory"] } },
