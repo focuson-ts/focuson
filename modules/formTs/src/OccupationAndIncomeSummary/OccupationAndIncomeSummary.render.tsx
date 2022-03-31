@@ -42,7 +42,7 @@ import {OccupationsListDataDomain} from "../OccupationAndIncomeSummary/Occupatio
 import {OneOccupationIncomeDetailsDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 import {OtherIncomeResponseDomain} from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains"
 export function OccupationAndIncomeSummaryPage(){
-  return focusedPageWithExtraState<FState, OccupationAndIncomeSummaryPageDomain, OccupationAndIncomeFullDomainDomain, Context> ( s => 'Occupation And Income Summary' ) ( state => state.focusOn('fromApi')) (
+  return focusedPageWithExtraState<FState, OccupationAndIncomeSummaryPageDomain, OccupationAndIncomeFullDomainDomain, Context> ( s => 'Occupation And Income Summary' ) ( state => state.focusQuery('fromApi')) (
 ( fullState, state , full, d, mode) => {
   const id='root';
   const buttons =    {addEntry:<ModalButton id='addEntry' text='addEntry'  state={state} modal = 'OccupationIncomeModal'  
@@ -72,16 +72,16 @@ export function OccupationAndIncomeSummaryPage(){
         copy={[{"from":"~/fromApi/customerOccupationIncomeDetails/[~/selectedItem]/occupation","to":"~/occupation/search"},{"from":"~/fromApi/customerOccupationIncomeDetails/[~/selectedItem]/occupation","to":"`/`occupation/selectedOccupationName"}]}
         copyOnClose={[{"from":"~/occupation/selectedOccupationName","to":"~/fromApi/customerOccupationIncomeDetails[~/selectedItem]/occupation"}]}
       />,
-      mainOrJoint:<ToggleButton state={fullState.focusOn('mainOrJoint')}
+      mainOrJoint:<ToggleButton state={fullState.focusQuery('mainOrJoint')}
         id='mainOrJoint'
         buttonText='Showing {~/mainOrJoint|Main|Joint}'
          />,
-      nextOccupation:<ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />,
+      nextOccupation:<ListNextButton id='nextOccupation' title='Next' list={fullState.focusQuery('fromApi').focusQuery('customerOccupationIncomeDetails')} value={fullState.focusQuery('selectedItem')} />,
       otherSourcesOfIncome:<ModalButton id='otherSourcesOfIncome' text='otherSourcesOfIncome'  state={state} modal = 'OtherSourcesOfIncomeModal'  
         pageMode='edit'
         focusOn='~/otherSourcesOfIncome'
       />,
-      prevOccupation:<ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi').focusOn('customerOccupationIncomeDetails')} value={fullState.focusOn('selectedItem')} />,}
+      prevOccupation:<ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusQuery('fromApi').focusQuery('customerOccupationIncomeDetails')} value={fullState.focusQuery('selectedItem')} />,}
 
       return <HideButtonsLayout buttons={buttons} hide={["additionalInfo","businessDetails","otherSourcesOfIncome","list"]}>
           <OccupationAndIncomeFullDomain id={`${id}`} state={state} mode={mode} buttons={buttons} />
@@ -218,11 +218,11 @@ export function OccupationDescriptionResponse({id,state,mode,buttons}: FocusedPr
 }
 
 export function OneOccupationIncomeDetails({id,state,mode,buttons}: FocusedProps<FState, OneOccupationIncomeDetailsDomain,Context>){
-const areYouGuard = state.focusOn('areYou').optJson();
-const employmentTypeGuard = state.focusOn('employmentType').optJson();
-const otherSourceOfIncomeGuard = state.focusOn('otherSourceOfIncome').optJson();
-const owningSharesPctGuard = state.focusOn('owningSharesPct').optJson();
-const ownShareOfTheCompanyGuard = state.focusOn('ownShareOfTheCompany').optJson();
+const areYouGuard = state.focusQuery('areYou').optJson();
+const employmentTypeGuard = state.focusQuery('employmentType').optJson();
+const otherSourceOfIncomeGuard = state.focusQuery('otherSourceOfIncome').optJson();
+const owningSharesPctGuard = state.focusQuery('owningSharesPct').optJson();
+const ownShareOfTheCompanyGuard = state.focusQuery('ownShareOfTheCompany').optJson();
   return <Layout details='[[30]]' title='Current employment details - '>
     <LabelAndDropdown id={`${id}.areYou`} state={state.focusOn('areYou')} mode={mode} label='Are {~/mainOrJoint|you|they}... ' allButtons={buttons} enums={{"X":"","E":"Employed","S":"Self Employed","C":"Currently not earning","R":"Retired","T":"Student","U":"Unknown","H":"Home Family Responsibilities"}} />
     <Guard value={areYouGuard} cond={["E","S"]}><LabelAndStringInput id={`${id}.occupation`} state={state.focusOn('occupation')} mode={mode} label='What is {~/mainOrJoint|your|their} occupation? ' allButtons={buttons} required={true} buttons={["list"]} /></Guard>

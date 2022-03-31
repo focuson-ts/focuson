@@ -24,14 +24,14 @@ import {JointAccountAddressDomain} from "../JointAccount/JointAccount.domains"
 import {JointAccountAddressesDomain} from "../JointAccount/JointAccount.domains"
 import {JointAccountCustomerDomain} from "../JointAccount/JointAccount.domains"
 export function JointAccountPage(){
-  return focusedPageWithExtraState<FState, JointAccountPageDomain, JointAccountDomain, Context> ( s => 'Joint Account' ) ( state => state.focusOn('fromApi')) (
+  return focusedPageWithExtraState<FState, JointAccountPageDomain, JointAccountDomain, Context> ( s => 'Joint Account' ) ( state => state.focusQuery('fromApi')) (
 ( fullState, state , full, d, mode) => {
   const id='root';
   const buttons =    {edit:<ModalButton id='edit' text='edit'  state={state} modal = 'JointAccountEditModalPage'  
         pageMode='edit'
         focusOn='~/fromApi'
       />,
-      toggle:<ToggleButton state={fullState.focusOn('joint')}
+      toggle:<ToggleButton state={fullState.focusQuery('joint')}
         id='toggle'
         buttonText='Toggle [{~/joint}]'
          />,}

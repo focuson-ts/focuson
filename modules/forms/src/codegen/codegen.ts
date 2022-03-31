@@ -34,7 +34,7 @@ export const addBrackets = ( strOpen: string, strClose ) => ( ss: string[] ): st
 
 export const indent = ( path: string[], s: string ): string => ' '.repeat ( path.length * 2 + 2 ) + s;
 export const indentList = ( ss: string[] ): string[] => ss.map ( s => '  ' + s )
-export const lensFocusQueryFor = ( path: string ) => parsePath ( path, stateCodeBuilder ( { '': '', '~': '', '/': '' } ) ) //TODO This clearly needs sorting out.
+export const lensFocusQueryFor = ( path: string ) => parsePath ( path, stateCodeBuilder ( { '': '', '~': '', '/': '' }, 'changeMe' ) ) //TODO This clearly needs sorting out.
 export const stateFocusQueryForRepl = ( s: 'state' | 'pageState' | 'fullState', path: string ) => `state: ${s} - ${path}`
 
 export const focusOnFor = ( path: string[] ) => path.map ( p => `.focusOn('${p}')` ).join ( '' )

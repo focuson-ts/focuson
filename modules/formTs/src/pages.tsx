@@ -1,6 +1,7 @@
 import { identityOptics } from "@focuson/lens";
 import { MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";
 import {Context,  FState } from "./common";
+import { HelloWorldPage } from './HelloWorld/HelloWorld.render';
 import { AccountOverviewPage } from './AccountOverview/AccountOverview.render';
 import { ExcessInfoSearchPage } from './ExcessInfoSearch/ExcessInfoSearch.render';
 import { ReasonPage } from './Reason/Reason.render';
@@ -32,6 +33,7 @@ function MyLoading () {
 const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  MyLoading )
 const identity = identityOptics<FState> ();
 export const pages: MultiPageDetails<FState, Context> = {
+    HelloWorld: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'HelloWorld' ), pageFunction: HelloWorldPage(), initialValue: {"main":{"hello":"World"}}, pageMode: 'view' },
     AccountOverview: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'AccountOverview' ), pageFunction: AccountOverviewPage(), initialValue: undefined, pageMode: 'view' },
     JointAccount: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'JointAccount' ), pageFunction: JointAccountPage(), initialValue: {"joint":false}, pageMode: 'view' },
     OccupationAndIncomeSummary: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'OccupationAndIncomeSummary' ), pageFunction: OccupationAndIncomeSummaryPage(), initialValue: {"selectedItem":0,"occupation":{"search":"","selectedOccupationName":"","searchResults":[]},"mainOrJoint":false}, pageMode: 'view' },

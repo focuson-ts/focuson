@@ -74,7 +74,7 @@ export function replaceBasePath<S, Context extends HasPageSelectionLens<S>> ( st
 export function fromPathGivenState<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): ( path: string ) => Optional<S, any> {
   const lens = firstPageDataLens ( state )
   if ( !lens ) throw Error ( `Cannot 'fromPathGivenState' because there is no selected page` )
-  return ( path: string ) => parsePath<Optional<S, any>> ( path, lensBuilder<S> ( prefixNameAndLens<S> ( [ '~', lens ], [ '', state.optional ] ) ) );
+  return ( path: string ) => parsePath<Optional<S, any>> ( path, lensBuilder<S> ( prefixNameAndLens<S> ( [ '~', lens ], [ '', state.optional ] ), {} ) );
 }
 export function replaceBasePageWithKnownPage ( pageName: string, path: string[] ): string[] {
   return path.map ( part => part === '{basePage}' ? pageName : part )

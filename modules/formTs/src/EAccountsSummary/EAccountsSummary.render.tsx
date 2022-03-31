@@ -26,7 +26,7 @@ import {EAccountsSummaryDomain} from "../EAccountsSummary/EAccountsSummary.domai
 import {EAccountsSummaryTableDomain} from "../EAccountsSummary/EAccountsSummary.domains"
 import {EAccountSummaryDomain} from "../EAccountsSummary/EAccountsSummary.domains"
 export function EAccountsSummaryPage(){
-  return focusedPageWithExtraState<FState, EAccountsSummaryPageDomain, EAccountsSummaryDomain, Context> ( s => 'E Accounts Summary' ) ( state => state.focusOn('fromApi')) (
+  return focusedPageWithExtraState<FState, EAccountsSummaryPageDomain, EAccountsSummaryDomain, Context> ( s => 'E Accounts Summary' ) ( state => state.focusQuery('fromApi')) (
 ( fullState, state , full, d, mode) => {
   const id='root';
   const buttons =    {amendExistingPlan:<ModalButton id='amendExistingPlan' text='amendExistingPlan'  state={state} modal = 'CreatePlan'  

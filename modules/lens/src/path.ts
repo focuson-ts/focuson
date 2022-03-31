@@ -8,6 +8,9 @@ export interface PathBuilder<Build> {
   foldBracketsPath: ( acc: Build, path: Build ) => Build;
   foldKey: ( acc: Build, key: string ) => Build;
   foldNth: ( acc: Build, n: number ) => Build;
+  foldVariable: ( acc: Build, name: string ) => Build;
+  initialVariable: ( name: string ) => Build;
+  isVariable: ( name: string ) => boolean
 }
 
 interface ParseState<Build> {
@@ -62,44 +65,58 @@ export function prefixNameAndLens<S> ( ...choices: [ string, Optional<S, any> ][
   choices.forEach ( ( [ p, l ] ) => result[ p ] = l )
   return result
 }
-export function lensBuilder<S> ( prefixs: NameAndLens<S> ): PathBuilder<Optional<S, any>> {
+export function lensBuilder<S> ( prefixs: NameAndLens<S>, variables: NameAndLens<S> ): PathBuilder<Optional<S, any>> {
   return {
+    initialVariable ( name: string ): Optional<S, any> {return variables[ name ];},
+    isVariable ( name: string ): boolean {return variables[ name ] !== undefined;},
+    foldVariable<S> ( acc: Optional<S, any>, name: string ): Optional<S, any> {return acc.chain ( variables[ name ] );},
     zero ( initial: string ): Optional<S, any> { return prefixs[ initial ]; },
     foldBracketsPath ( acc: Optional<S, any>, path: Optional<S, any> ): Optional<S, any> { return acc.chainCalc ( path ) },
     foldAppend ( acc: Optional<S, any> ): Optional<S, any> { return acc.chain ( Lenses.append () ); },
     foldKey ( acc: Optional<S, any>, key: string ): Optional<S, any> { return acc.focusQuery ( key ); },
     foldLast ( acc: Optional<S, any> ): Optional<S, any> { return acc.chain ( Lenses.last () ); },
-    foldNth ( acc: Optional<S, any>, n: number ): Optional<S, any> { return acc.chain ( Lenses.nth ( n ) ); },
+    foldNth ( acc: Optional<S, any>, n: number ): Optional<S, any> { return acc.chain ( Lenses.nth ( n ) ); }
   }
 }
 
 export function stateCodeInitials ( stateName: string ): NameAnd<string> {
   return { '': 'state', '~': 'fullState', '/': `state.copyWithIdentity()` }
 }
-export function stateCodeBuilder ( initials: NameAnd<string>, focusQuery?: string ): PathBuilder<string> {
+export function stateCodeBuilder ( initials: NameAnd<string>, optionalsName: string, focusQuery?: string ): PathBuilder<string> {
   const realFocusQuery = focusQuery ? focusQuery : 'focusQuery'
   return {
+    initialVariable ( name: string ): string {return `${optionalsName}.${name}`;},
+    isVariable ( name: string ): boolean {return !name.match ( /^[0-9]+$/ );},
+    foldVariable ( acc: string, name: string ): string {return `.chain(${optionalsName}.${name})`;},
     zero ( initial: string ): string { return initials[ initial ]; },
     foldBracketsPath ( acc: string, path: string ): string { return acc + `.chainNthFromPath(${path})`; },
     foldKey ( acc: string, key: string ): string { return acc + `.${realFocusQuery}('${key}')` },
     foldAppend ( acc: string ): string { return acc + ".chain(Lenses.append())"; },
     foldLast ( acc: string ): string { return acc + ".chain(Lenses.last())"; },
-    foldNth ( acc: string, n: number ): string { return acc + `.chain(Lenses.nth(${n}))` },
+    foldNth ( acc: string, n: number ): string { return acc + `.chain(Lenses.nth(${n}))` }
   }
 }
 
 
-export function processPath<Build> ( s: ParseState<Build>, p: PathBuilder<Build>, expectBracket: boolean ) {
-  if ( s.tokens.length == 0 ) {
-    s.build = p.zero ( '' );
+function processInitialToken<Build> ( s: ParseState<Build>, p: PathBuilder<Build> ) {
+  const initial = s.tokens[ s.tokens.length - 1 ]
+  if ( initial.startsWith ( '$' ) ) {
+    s.build = p.initialVariable ( initial.slice ( 1 ) )
+    s.tokens.pop()
     return
   }
-  const initial = s.tokens[ s.tokens.length - 1 ]
   let hasSpecificInitial = initial === '/' || initial === '~';
   const actualInitial = hasSpecificInitial ? initial : ''
   if ( hasSpecificInitial ) s.tokens.pop ()
   s.build = p.zero ( actualInitial )
   if ( s.build === undefined ) throw makeError ( s, `Cannot find initial  '${actualInitial}'` )
+}
+export function processPath<Build> ( s: ParseState<Build>, p: PathBuilder<Build>, expectBracket: boolean ) {
+  if ( s.tokens.length == 0 ) {
+    s.build = p.zero ( '' );
+    return
+  }
+  processInitialToken ( s, p );
   while ( true ) {
     const token = s.tokens.pop ()
     if ( token === undefined ) if ( expectBracket ) throw makeError ( s, 'Ran out of tokens!' ); else return
@@ -108,9 +125,12 @@ export function processPath<Build> ( s: ParseState<Build>, p: PathBuilder<Build>
       if ( token === '$append' ) s.build = p.foldAppend ( s.build );
       else if ( token === '$last' ) s.build = p.foldLast ( s.build );
       else {
-        let n = Number.parseInt ( token.slice ( 1 ) );
-        if ( n === Number.NaN ) throw makeError ( s, `'${token.slice ( 1 )} is not a number` )
-        s.build = p.foldNth ( s.build, n )
+        let body = token.slice ( 1 );
+        if ( p.isVariable ( body ) ) s.build = p.foldVariable ( s.build, body ); else {
+          let n = Number.parseInt ( body );
+          if ( n === Number.NaN ) throw makeError ( s, `'${body} is not a number` )
+          s.build = p.foldNth ( s.build, n )
+        }
       }
     } else if ( token === '/' ) {}//
     else if ( token === '~' ) {throw makeError ( s, 'Unexpected ~' )}//

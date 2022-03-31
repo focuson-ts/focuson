@@ -8,6 +8,7 @@ import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusO
 import { LensProps } from '@focuson/state';
 import { pages } from "./pages";
 import { MyCombined } from "@focuson/form_components";
+import { HasHelloWorldPageDomain } from './HelloWorld/HelloWorld.domains';
 import { HasAccountOverviewPageDomain } from './AccountOverview/AccountOverview.domains';
 import { HasJointAccountPageDomain } from './JointAccount/JointAccount.domains';
 import { HasOccupationAndIncomeSummaryPageDomain } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains';
@@ -24,6 +25,7 @@ export const context: Context = {
    combine: MyCombined
 }
 export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,
+  HasHelloWorldPageDomain,
   HasAccountOverviewPageDomain,
   HasJointAccountPageDomain,
   HasOccupationAndIncomeSummaryPageDomain,
@@ -67,8 +69,8 @@ export const emptyState: FState = {
   CommonIds: {"applRef":"appref","createPlanId":"tbd","accountId":"accId","customerId":"custId","brandRef":"brandRef","usersRole":"user"},
   tags: {},
   messages: [],
-  pageSelection: [{ pageName: 'AccountOverview', firstTime: true, pageMode: 'view' }],
-  AccountOverview:{},
+  pageSelection: [{ pageName: 'HelloWorld', firstTime: true, pageMode: 'view' }],
+  HelloWorld:{},
   restCommands: [],
     debug: { selectedPageDebug: true, fetcherDebug: true }
   }

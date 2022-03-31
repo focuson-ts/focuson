@@ -10,8 +10,10 @@ import { ExampleMainPage } from "./example/common";
 import { OccupationAndIncomeSummaryPD } from "./example/occupationAndIncome/occupationAndIncome.pageD";
 import { AccountOverviewMainPage } from "./example/accountOverview/accountOverview.pageD";
 import { JointAccountPageD } from "./example/jointAccount/jointAccount.pageD";
+import { HelloWorldMainPage } from "./example/helloWorld/helloWorld.pageD";
 
 export const generatedPages: ExampleMainPage[] = [
+  HelloWorldMainPage,
   AccountOverviewMainPage,
   JointAccountPageD,
   OccupationAndIncomeSummaryPD,

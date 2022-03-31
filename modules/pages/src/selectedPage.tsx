@@ -55,7 +55,7 @@ export function lensForPageDetails<S, D, Msgs, Config extends PageConfig<S, D, M
   return parsePath<Optional<S, any>> ( safeString ( base ), lensBuilder<S> ( {
     '/': Lenses.identity (),
     '~': mainPageL,
-  } ) )
+  } , {}) )
 }
 export const findOneSelectedPageDetails = <S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context>, page0Lens: Optional<S, any> ) => ( ps: PageSelection ): PageDetailsForCombine => {
   // @ts-ignore

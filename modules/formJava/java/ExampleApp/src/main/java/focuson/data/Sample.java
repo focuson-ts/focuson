@@ -623,6 +623,11 @@ public class Sample{
          "  \"annualMultiple\": 123"+
          "}"
   );
+  public static Map sampleHelloWorld0 =  parse.parseMap(
+         "{"+
+         "  \"hello\": \"World\""+
+         "}"
+  );
   public static Map sampleJointAccount0 =  parse.parseMap(
          "{"+
          "  \"balance\": 123,"+

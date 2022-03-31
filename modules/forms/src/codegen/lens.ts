@@ -6,17 +6,17 @@ import { CompDataD, DataD } from "../common/dataD";
 import { CreateButtonData } from "./makeButtons";
 
 export function pathBuilderForLensIncPage ( pageName: string ): PathBuilder<Optional<any, any>> {
-  return lensBuilder ( prefixNameAndLens<any> ( [ '~', Lenses.identity<any> ().focusQuery ( pageName ) ] ) )
+  return lensBuilder ( prefixNameAndLens<any> ( [ '~', Lenses.identity<any> ().focusQuery ( pageName ) ] ), {} )
 }
 export function pathBuilderForLensWithPageAsIdentity (): PathBuilder<Optional<any, any>> {
-  return lensBuilder ( prefixNameAndLens<any> ( [ '~', Lenses.identity<any> () ], [ '', Lenses.identity<any> () ] ) )
+  return lensBuilder ( prefixNameAndLens<any> ( [ '~', Lenses.identity<any> () ], [ '', Lenses.identity<any> () ] ), {} )
 }
 
 export function stateCodeBuilderWithSlashAndTildaFromIdentity<B, G> ( params: TSParams, p: PageD<B, G> ) {
   return stateCodeBuilder ( {
     '/': `Lenses.identity<${params.stateName}>()`,
     '~': `Lenses.identity<${params.stateName}>().focusQuery('${p.name}')`,
-  } );
+  }, 'changeme' );
 }
 export const lensFocusQueryWithSlashAndTildaFromIdentity = <B, G> ( errorPrefix: string, params: TSParams, p: PageD<B, G>, path: string ) => {
   try {
@@ -30,7 +30,7 @@ export const lensFocusQueryWithTildaFromPage = <B, G> ( errorPrefix: string, par
   try {
     return parsePath ( path, stateCodeBuilder ( {
       '~': `Lenses.identity<${params.domainsFile}.${pageDomainName ( p )}>()`,
-    } ) )
+    }, 'changeme' ) )
   } catch ( e: any ) {
     console.error ( errorPrefix )
     throw e

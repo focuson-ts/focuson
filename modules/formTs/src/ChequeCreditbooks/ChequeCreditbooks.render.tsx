@@ -23,7 +23,7 @@ import {ChequeCreditbooksDomain} from "../ChequeCreditbooks/ChequeCreditbooks.do
 import {ChequeCreditbooksHistoryDomain} from "../ChequeCreditbooks/ChequeCreditbooks.domains"
 import {ChequeCreditbooksHistoryLineDomain} from "../ChequeCreditbooks/ChequeCreditbooks.domains"
 export function ChequeCreditbooksPage(){
-  return focusedPageWithExtraState<FState, ChequeCreditbooksPageDomain, ChequeCreditbooksDomain, Context> ( s => 'Cheque Creditbooks' ) ( state => state.focusOn('fromApi')) (
+  return focusedPageWithExtraState<FState, ChequeCreditbooksPageDomain, ChequeCreditbooksDomain, Context> ( s => 'Cheque Creditbooks' ) ( state => state.focusQuery('fromApi')) (
 ( fullState, state , full, d, mode) => {
   const id='root';
   const buttons =    {chequeBook:<button>chequeBook of type ResetStateButton cannot be created yet</button>,
