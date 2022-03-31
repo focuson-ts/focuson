@@ -24,7 +24,7 @@ export function makeContext ( appConfig: AppConfig, params: TSParams ): string[]
   return [
     `export type Context = FocusOnContext<${params.stateName}>`,
     `export const context: Context = {`,
-    `   ...defaultPageSelectionAndRestCommandsContext<FState> ( pages ),`,
+    `   ...defaultPageSelectionAndRestCommandsContext<FState> ( pages, commonIds),`,
     `   combine: ${appConfig.combine.name}`,
     `}` ]
 
@@ -45,9 +45,9 @@ export function makeCommon<B, G> ( appConfig: AppConfig, params: TSParams, pds: 
     `import { ${appConfig.combine.name} } from "${appConfig.combine.import}";`,
     ...pageDomainsImport,
     '',
-    ...makeContext ( appConfig, params ),
     ...makeFullState ( params, pds ),
     ...makeCommonParams ( params, pds, rds, directorySpec ),
+    ...makeContext ( appConfig, params ),
     ...makeStateWithSelectedPage ( params, JSON.stringify ( paramsWithSamples ), pds[ 0 ].name ) //TODO this should be slicker and aggregated params for example
   ]
 }

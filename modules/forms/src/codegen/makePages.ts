@@ -13,9 +13,9 @@ export const makeMainPage = <G> ( params: TSParams ) => <B> ( p: MainPageD<B, G>
     const lens = parsePath ( p.display.target, pathBuilderForLensIncPage ( p.name ) );
     return lens.set ( {}, makeEmptyData ( p.display.dataDD ) )
   }
-  const initialValue = p.initialValue === 'empty' ? makeEmpty () : p.initialValue
+  const initialValue = p.initialValue === 'empty' ? makeEmpty ()[ p.name ] : p.initialValue
   return p.pageType === 'MainPage' ?
-    [ `    ${p.name}: {pageType: '${p.pageType}',  config: simpleMessagesConfig, lens: identity.focusQuery ( '${pageInState ( p )}' ), pageFunction: ${pageComponentName ( p )}(), initialValue: ${JSON.stringify ( initialValue )}, pageMode: '${p.modes[0]}' }` ]
+    [ `    ${p.name}: {pageType: '${p.pageType}',  config: simpleMessagesConfig, lens: identity.focusQuery ( '${pageInState ( p )}' ), pageFunction: ${pageComponentName ( p )}(), initialValue: ${JSON.stringify ( initialValue )}, pageMode: '${p.modes[ 0 ]}' }` ]
     : [];
 }
 

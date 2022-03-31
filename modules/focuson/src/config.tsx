@@ -27,13 +27,16 @@ export function defaultPageSelectionAndPostCommandsContext<S extends HasPageSele
   }
 }
 
-export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S> {}
-export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSelection & HasRestCommands & HasSimpleMessages> ( pageDetails: MultiPageDetails<S, FocusOnContext<S>> ):
+export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S> {
+  commonIds: NameAndLens<S>;
+}
+export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSelection & HasRestCommands & HasSimpleMessages> ( pageDetails: MultiPageDetails<S, FocusOnContext<S>>, commonIds: NameAndLens<S> ):
   FocusOnContext<S> {
   return {
     ...defaultPageSelectionContext<S, FocusOnContext<S>> ( pageDetails ),
     restL: Lenses.identity<S> ().focusQuery ( 'restCommands' ),
-    simpleMessagesL: simpleMessagesL ()
+    simpleMessagesL: simpleMessagesL (),
+    commonIds
   }
 }
 

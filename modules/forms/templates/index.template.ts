@@ -57,10 +57,10 @@ const pageModeFor: NameAnd<PageMode> = {
 let setJson = setJsonForFocusOn<{stateName}, Context, SimpleMessage> ( config, context, ( s: LensState<{stateName}, {stateName}, Context> ): void =>
   ReactDOM.render ( <div>
     <IndexPage state={s}>
-  <SelectedPage state={s}/>
-</IndexPage>
-<DebugState state={s} config={config} commonIds={commonIds} />
-</div>, rootElement ) )
+       <SelectedPage state={s}/>
+    </IndexPage>
+    <DebugState state={s} />
+  </div>, rootElement ) )
 
 setJson ( {
   ...emptyState,

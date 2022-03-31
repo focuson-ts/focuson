@@ -5,11 +5,12 @@ import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 import { repeatingRestRD } from "../example/repeating/repeating.restD";
 import { RepeatingLinePageD, RepeatingPageD } from "../example/repeating/repeating.pageD";
 import { RepeatingWholeDataD } from "../example/repeating/repeating.dataD";
+import { CreateEAccountPageD } from "../example/createEAccount/createEAccount.pageD";
 
 
 describe ( "makePages", () => {
   it ( "should make the 'pages' description for the generated app", () => {
-    expect ( makePages ( paramsForTest, [ EAccountsSummaryPD ,CreatePlanPD,RepeatingPageD, RepeatingLinePageD] ) ).toEqual ( [
+    expect ( makePages ( paramsForTest, [ EAccountsSummaryPD, CreatePlanPD, RepeatingPageD, RepeatingLinePageD ] ) ).toEqual ( [
       "import { identityOptics } from \"@focuson/lens\";",
       "import { Loading, MultiPageDetails, simpleMessagesPageConfig } from \"@focuson/pages\";",
       "import {Context,  FState } from \"./common\";",
@@ -26,7 +27,9 @@ describe ( "makePages", () => {
       "    CreatePlan: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: CreatePlanPage()},",
       "    RepeatingLine: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: RepeatingLinePage()}",
       "  }"
-    ])
+    ] )
   } )
-
+  it ( "should create an initial from 'empty'", () => {
+    expect ( makePages ( paramsForTest, [ CreateEAccountPageD ] ) ).toEqual ( [] )
+  } )
 } )
