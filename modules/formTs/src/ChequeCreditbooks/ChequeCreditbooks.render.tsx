@@ -30,6 +30,7 @@ export function ChequeCreditbooksPage(){
       orderNewBook:<ModalButton id='orderNewBook' text='orderNewBook'  state={state} modal = 'OrderChequeBookOrPayingInModal'  
         pageMode='create'
         focusOn='~/tempCreatePlan'
+        pageParams={{"position":{"top":123}}}
         createEmpty={empty.emptyChequeCreditbooksHistoryLine}
          rest={{"name":"ChequeCreditbooks_ChequeCreditbooksRestDetails","restAction":"create"}}
       />,

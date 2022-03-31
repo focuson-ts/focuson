@@ -1,7 +1,7 @@
 import { DataD } from "../common/dataD";
 import { safeArray, sortedEntries } from "@focuson/utils";
 import { isMainPage, PageD, RestOnCommit } from "../common/pageD";
-import { CopyDetails, PageMode, SetToLengthOnClose } from "@focuson/pages";
+import { CopyDetails, PageMode, PageParams, SetToLengthOnClose } from "@focuson/pages";
 import { ButtonCreator, MakeButton } from "../codegen/makeButtons";
 import { indentList, opt, optT } from "../codegen/codegen";
 import { emptyName, modalName, restDetailsName } from "../codegen/names";
@@ -12,6 +12,7 @@ export interface CommonModalButtonInPage<G> {
   text?: string;
   modal: PageD<any, G>,
   mode: PageMode,
+  pageParams?: PageParams,
   restOnCommit?: RestOnCommit,
   copy?: CopyDetails | CopyDetails[],
   copyOnClose?: CopyDetails | CopyDetails[];
@@ -44,7 +45,7 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalButtonInPage<G>, G> {
     import: "@focuson/pages",
     makeButton:
       ( { params, parent, name, button } ) => {
-        const { modal, mode, restOnCommit, focusOn, copy, createEmpty, copyOnClose, setToLengthOnClose, text } = button
+        const { modal, mode, restOnCommit, focusOn, copy, createEmpty, copyOnClose, setToLengthOnClose, text,pageParams } = button
         const createEmptyString = createEmpty ? [ `createEmpty={${params.emptyFile}.${emptyName ( createEmpty )}}` ] : []
 
 
@@ -56,6 +57,7 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalButtonInPage<G>, G> {
             ...opt ( 'focusOn', focusOn ),
             ...optT ( 'copy', copyFromArray ),
             ...optT ( 'copyOnClose', copyOnCloseArray ),
+            ...optT ( 'pageParams', pageParams ),
             ...createEmptyString,
             ...optT ( 'setToLengthOnClose', setToLengthOnClose ),
             ...restForButton ( parent, restOnCommit ) ] ), '/>' ]

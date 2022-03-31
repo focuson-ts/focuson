@@ -43,7 +43,7 @@ export const ChequeCreditbooksPD: ExampleMainPage = {
     chequeBookOrPayingIn: { dataDD: CheckBookOrPayingInDD }
     // tempData: ChequeCreditbooksHistoryLineDD
   },
-  modals: [ { modal: OrderChequeBookOrPayingInModalPD} ],
+  modals: [ { modal: OrderChequeBookOrPayingInModalPD } ],
   /** Binds the rest to 'where it takes place'. So we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
   rest: {
     chequeCreditBooks: { rest: chequeCreditBooksRestD, targetFromPath: '~/fromApi', fetcher: true }
@@ -54,6 +54,7 @@ export const ChequeCreditbooksPD: ExampleMainPage = {
     payingInBook: { control: 'ResetStateButton' },//, target: ['checkBookOrPayingInBook'], value : 'payingIn'},
     orderNewBook: {
       control: 'ModalButton', modal: OrderChequeBookOrPayingInModalPD, mode: 'create',
+      pageParams: { position: { top: 123 } },
       focusOn: '~/tempCreatePlan',//not type checked here... should be type checked in target
       createEmpty: ChequeCreditbooksHistoryLineDD,
       restOnCommit: { restName: 'chequeCreditBooks', action: 'create', result: 'refresh' }
