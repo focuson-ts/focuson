@@ -1,5 +1,5 @@
 import { identityOptics } from "@focuson/lens";
-import { MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";
+import { Loading, MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";
 import {Context,  FState } from "./common";
 import { HelloWorldPage } from './HelloWorld/HelloWorld.render';
 import { AccountOverviewPage } from './AccountOverview/AccountOverview.render';
@@ -27,10 +27,7 @@ import { RepeatingLinePage } from './RepeatingLine/RepeatingLine.render';
 import { PostCodeDemoPage } from './PostCodeDemo/PostCodeDemo.render';
 import { PostCodeSearchPage } from './PostCodeSearch/PostCodeSearch.render';
 
-function MyLoading () {
-      return <p>Loading</p>
-}
-const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  MyLoading )
+const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  Loading )
 const identity = identityOptics<FState> ();
 export const pages: MultiPageDetails<FState, Context> = {
     HelloWorld: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'HelloWorld' ), pageFunction: HelloWorldPage(), initialValue: {"main":{"hello":"World"}}, pageMode: 'view' },

@@ -18,6 +18,7 @@ export function DefaultTemplate<S extends any, D extends any, Msgs, Context> ( {
   if ( debug ) console.log ( `DefaultTemplate`, state )
   const { title, displayLoading, display } = focusedPage
   let isLoading = displayLoading ( state );
+
   if ( debug ) console.log ( `DefaultTemplate.isLoading`, isLoading )
   const bodyFn = isLoading ? loading : display
   if ( debug ) console.log ( `DefaultTemplate.bodyFn`, bodyFn )

@@ -44,7 +44,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "0.5.12",
+  "version": "0.5.13",
   "template": "noreact",
   "name": "@focuson/utils",
   "description": "Common utilities for the @focuson project",

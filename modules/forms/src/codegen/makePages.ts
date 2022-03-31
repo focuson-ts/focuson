@@ -37,15 +37,13 @@ export function makePages<B, G> ( params: TSParams, ps: PageD<B, G>[] ): string[
   const renderImports = ps.map ( p => `import { ${pageComponentName ( p )} } from '${renderFileName ( '.', params, p )}';` )
   return [
     `import { identityOptics } from "@focuson/lens";`,
-    `import { MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";`,
+    `import { Loading, MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";`,
     `import {Context,  ${params.stateName} } from "./${params.commonFile}";`,
     ...renderImports,
     // `import { ${allMainPages ( ps ).map ( p => pageComponentName ( p ) ).join ( "," )} } from "./${params.renderFile}";`,
     '',
-    `function MyLoading () {`,
-    `      return <p>Loading</p>`,
-    `}`,
-    `const simpleMessagesConfig = simpleMessagesPageConfig<${params.stateName}, string, Context> (  MyLoading )`,
+
+    `const simpleMessagesConfig = simpleMessagesPageConfig<${params.stateName}, string, Context> (  Loading )`,
     `const identity = identityOptics<FState> ();`,
     `export const pages: MultiPageDetails<${params.stateName}, Context> = {`,
     ...addStringToEndOfAllButLast ( "," ) ( [ ...ps.flatMap ( makeMainPage ( params ) ), ...modals.flatMap ( makeModal ( params ) ) ] ),
