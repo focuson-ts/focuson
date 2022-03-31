@@ -32,7 +32,8 @@ export const config: FocusOnConfig<FState, Context, SimpleMessage> = {
   fetchers,
   messageL: simpleMessagesL (),
   restL: restL (),
-  restDetails: restDetails
+  restDetails: restDetails,
+  namedOptionals: { }
 }
 let rootElement = getElement ( "root" );
 console.log ( "set json" )

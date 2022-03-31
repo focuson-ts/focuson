@@ -12,6 +12,7 @@ import { AccountOverviewMainPage } from "./example/accountOverview/accountOvervi
 import { JointAccountPageD } from "./example/jointAccount/jointAccount.pageD";
 import { HelloWorldMainPage } from "./example/helloWorld/helloWorld.pageD";
 
+
 export const generatedPages: ExampleMainPage[] = [
   HelloWorldMainPage,
   AccountOverviewMainPage,

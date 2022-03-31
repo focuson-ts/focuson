@@ -36,10 +36,11 @@ export interface PageSelection {
   firstTime?: boolean;
   pageMode: PageMode;
   onClose?: PageOnClose;
-  rest?: RestCommand,
-  copyOnClose?: CopyDetails[],
-  focusOn?: string,
-  setToLengthOnClose?: SetToLengthOnClose
+  rest?: RestCommand;
+  copyOnClose?: CopyDetails[];
+  focusOn?: string;
+  setToLengthOnClose?: SetToLengthOnClose;
+  pageParams?: PageParams;
 }
 export interface HasPageSelection {
   pageSelection: PageSelection[]

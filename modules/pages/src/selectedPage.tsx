@@ -1,6 +1,6 @@
 import { LensProps, LensState } from "@focuson/state";
 
-import { currentPageSelection, HasPageSelectionLens, mainPage, PageMode, PageSelection, PageSelectionContext } from "./pageSelection";
+import { currentPageSelection, HasPageSelectionLens, mainPage, PageMode, PageParams, PageSelection, PageSelectionContext } from "./pageSelection";
 import { FocusedPage } from "./focusedPage";
 import { isMainPageDetails, MultiPageDetails, OnePageDetails, PageConfig } from "./pageConfig";
 import { DefaultTemplate, PageTemplateProps } from "./PageTemplate";
@@ -24,6 +24,7 @@ export function SelectedPage<S, Context extends PageSelectionContext<S>> ( { sta
 export interface PageDetailsForCombine {
   pageType?: string;
   element: JSX.Element;
+  pageParams?: PageParams;
 }
 
 function findSelectedPageDetails<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): PageDetailsForCombine[] {
@@ -55,7 +56,7 @@ export function lensForPageDetails<S, D, Msgs, Config extends PageConfig<S, D, M
   return parsePath<Optional<S, any>> ( safeString ( base ), lensBuilder<S> ( {
     '/': Lenses.identity (),
     '~': mainPageL,
-  } , {}) )
+  }, {} ) )
 }
 export const findOneSelectedPageDetails = <S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context>, page0Lens: Optional<S, any> ) => ( ps: PageSelection ): PageDetailsForCombine => {
   // @ts-ignore
@@ -75,7 +76,7 @@ export const findOneSelectedPageDetails = <S, Context extends PageSelectionConte
     if ( debug ) console.log ( "findOneSelectedPageDetails.legacy result", element )
     if ( debug ) console.log ( "findOneSelectedPageDetails.legacy result - json", JSON.stringify ( element ) )
     return { element, pageType }
-  } else return displayOne ( config, pageType, pageFunction, lsForPage, pageMode );
+  } else return displayOne ( config, pageType, pageFunction, ps.pageParams,lsForPage, pageMode );
 };
 
 export function findMainPageLens<S> ( pageSelections: PageSelection[], pageDetails: MultiPageDetails<S, any> ) {
@@ -91,6 +92,7 @@ export function displayOne<S extends any, D extends any, Msgs, Context> (
   config: PageConfig<S, D, Msgs, Context>,
   pageType: string | undefined,
   focusedPage: FocusedPage<S, D, Context>,
+  pageParams: PageParams | undefined,
   s: LensState<S, D, Context>, pageMode: PageMode ): PageDetailsForCombine {
   // @ts-ignore
   const debug = s.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
@@ -101,6 +103,6 @@ export function displayOne<S extends any, D extends any, Msgs, Context> (
   if ( debug ) console.log ( "displayMain.loading 2", loading )
   const element = template ( { state: s, focusedPage, loading, pageMode } )
   if ( debug ) console.log ( "displayMain.element 3", element );
-  return { element, pageType }
+  return { element, pageType, pageParams }
 }
 

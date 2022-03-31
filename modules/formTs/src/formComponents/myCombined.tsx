@@ -1,6 +1,6 @@
 import { focusPageClassName, PageDetailsForCombine } from "@focuson/pages";
-import {LensState} from "@focuson/state";
-import {Messages} from "./messages";
+import { LensState } from "@focuson/state";
+import { Messages } from "./messages";
 
 export type PageType = 'MainPage' | 'ModalPage' | 'ModalPopup'
 
@@ -29,10 +29,10 @@ const mainPageJSX = ( p: PageDetailsForCombine, i: number ) => {
   )
 }
 
-export function MyCombined <S, Context> ( state: LensState<S, any, Context>, pages: PageDetailsForCombine[] ): JSX.Element {
-
+export function MyCombined<S, Context> ( state: LensState<S, any, Context>, pages: PageDetailsForCombine[] ): JSX.Element {
+  console.log ( 'MyCombinded', pages )
   return <div id='container' className='combine'>
-            <Messages state={state.focusOn('messages')}/>
+    <Messages state={state.focusOn ( 'messages' )}/>
     {
       pages.map ( ( p, i ) => {
           if ( p.pageType === 'ModalPopup' ) return modalPopupJSX ( p, i )

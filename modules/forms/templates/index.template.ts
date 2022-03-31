@@ -37,7 +37,8 @@ export const config: FocusOnConfig<{stateName}, Context, SimpleMessage> = {
   fetchers,
   messageL: simpleMessagesL (),
   restL: restL (),
-  restDetails: restDetails
+  restDetails: restDetails,
+  namedOptionals: { }
 }
 
 
