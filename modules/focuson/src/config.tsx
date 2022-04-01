@@ -81,8 +81,8 @@ export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MS
   return async ( main: S, reason: any ): Promise<S> => {
     console.log ( 'setJsonForFocusOn', reason )
     // @ts-ignore
-    const debug = main.debug;
-    const withDebug = debug ? traceL<S> ().transform ( old => [ ...old ? old : [], reason ] ) ( main ) : main
+    const debug:any = main.debug;
+    const withDebug = debug?.recordTrace ? traceL<S> ().transform ( old => [ ...old ? old : [], reason ] ) ( main ) : main
     const { fetchFn, preMutate, postMutate, onError, pages, restDetails, fetchers, restL, pageL, messageL } = config
     const newStateFn = ( fs: S ) => publish ( lensState ( fs, setJsonForFocusOn ( config, context, publish ), 'setJson', context ) )
     try {

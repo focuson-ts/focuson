@@ -37,8 +37,8 @@ export function RepeatingPage(){
       edit:<ModalButton id='edit' text='edit'  state={state} modal = 'RepeatingLine'  
         pageMode='edit'
         focusOn='~/temp'
-        copy={[{"from":"~/fromApi[selectedItem]"}]}
-        copyOnClose={[{"to":"~/fromApi/[selectedItem]"}]}
+        copy={[{"from":"~/fromApi[~/selectedItem]"}]}
+        copyOnClose={[{"to":"~/fromApi/[~/selectedItem]"}]}
       />,
       nextOccupation:<GuardButton cond={nextOccupationGuard}>
         <ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi')} value={fullState.focusOn('selectedItem')} />

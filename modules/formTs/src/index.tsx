@@ -1,4 +1,4 @@
-import { IndexPage, PageMode, pageSelectionlens, SelectedPage, SelectPage, simpleMessagesL } from "@focuson/pages";
+import {  PageMode, pageSelectionlens, SelectedPage, simpleMessagesL } from "@focuson/pages";
 import { FocusOnConfig, setJsonForFocusOn } from "@focuson/focuson";
 import { getElement, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
@@ -8,8 +8,7 @@ import { fetchers } from "./fetchers";
 import { pages } from "./pages";
 import { restL } from "@focuson/rest";
 import { restDetails, restUrlMutator } from "./rests";
-import { DebugState } from "@focuson/focuson";
-import { commonIds } from "./common";
+import { IndexPage } from "@focuson/form_components";
 export const config: FocusOnConfig<FState, Context, SimpleMessage> = {
   restUrlMutator,
   /** How data is sent to/fetched from apis */
@@ -48,12 +47,11 @@ let setJson = setJsonForFocusOn<FState, Context, SimpleMessage> ( config, contex
     <IndexPage state={s}>
        <SelectedPage state={s}/>
     </IndexPage>
-    <DebugState state={s} />
   </div>, rootElement ) )
 setJson ( {
   ...emptyState,
   pageSelection: [ { pageName: 'HelloWorld', firstTime: true, pageMode: 'view' } ],
 // @ts-ignore
-  debug: {"fetcherDebug":true,"postDebug":false,"selectedPageDebug":false,"loadTreeDebug":false}
+  debug: {"fetcherDebug":true,"postDebug":false,"selectedPageDebug":false,"loadTreeDebug":false,"showTracing":false,"recordTrace":true}
   // currentSelectedModalPage: 'EAccountsSummary_CreatePlan'
 }, 'initial')

@@ -5,7 +5,7 @@ import { FocusedPage } from "./focusedPage";
 import { isMainPageDetails, MultiPageDetails, OnePageDetails, PageConfig } from "./pageConfig";
 import { DefaultTemplate, PageTemplateProps } from "./PageTemplate";
 import { Loading } from "./loading";
-import { lensBuilder, Lenses, NameAndLens, Optional, parsePath, PathBuilder } from "@focuson/lens";
+import { lensBuilder, Lenses, NameAndLens, Optional, parsePath } from "@focuson/lens";
 import { safeString } from "@focuson/utils";
 
 export interface HasSelectedPageDebug {
@@ -18,6 +18,7 @@ export interface SelectedPageDebug {
 export function SelectedPage<S, Context extends PageSelectionContext<S>> ( { state }: LensProps<S, any, Context> ) {
   let combine = state.context.combine;
   let pages: PageDetailsForCombine[] = findSelectedPageDetails ( state );
+  console.log('SelectedPages - combine', combine)
   return combine ? combine ( state, pages ) : <div>{pages}</div>
 }
 

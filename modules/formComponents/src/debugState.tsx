@@ -1,10 +1,12 @@
-import { isMassTransformReason, isSetJsonReason, LensProps, MassTransformReason, SetJsonReason } from "@focuson/state";
+import { isMassTransformReason, isSetJsonReason, LensProps, MassTransformReason, reasonFor, SetJsonReason } from "@focuson/state";
 import { fromPathGivenState, HasPageSelection, HasPageSelectionLens, isMainPageDetails } from "@focuson/pages";
 import { HasTagHolder } from "@focuson/template";
 import { HasSimpleMessages, safeArray, safeString, SimpleMessage, sortedEntries } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands } from "@focuson/rest";
-import { FocusOnConfig, FocusOnContext, traceL } from "./config";
-import { NameAndLens } from "@focuson/lens";
+import { FocusOnConfig, FocusOnContext, traceL } from "@focuson/focuson";
+import { Lenses, NameAndLens } from "@focuson/lens";
+import { ToggleButton } from "./toggleButton";
+import { AssertPages, MakeTest } from "./makeTest";
 
 
 export function Tags<S extends HasTagHolder, C> ( { state }: LensProps<S, any, C> ) {
@@ -32,7 +34,13 @@ export function Messages<S extends HasSimpleMessages, C> ( { state }: LensProps<
 }
 export function CommonIds<S, C extends FocusOnContext<S>> ( { state }: DebugProps<S, C> ) {
   const commonIds = state.context.commonIds
-  return <ul>{sortedEntries ( commonIds ).map ( ( [ n, l ] ) => <li key={n}>{n}: {l.getOption ( state.main )}</li> )}</ul>
+  return <><p>Common Ids</p>
+    <ul>{sortedEntries ( commonIds ).map ( ( [ n, l ] ) => <li key={n}>{n}: {l.getOption ( state.main )}</li> )}</ul>
+  </>
+}
+export function ClearTrace<S, C> ( { state }: LensProps<S, any, C> ) {
+  const traceState = state.copyWithLens ( traceL<S> () )
+  return <button id='ClearTrace' onClick={() => traceState.setJson ( [], reasonFor ( 'ClearTrace', 'onClick', 'ClearTrace' ) )}>Clear Trace</button>
 }
 
 function PagesData<S, C extends FocusOnContext<S>> ( { state }: DebugProps<S, C> ) {
@@ -98,50 +106,63 @@ export function Tracing<S, C> ( { state }: LensProps<S, any, C> ) {
   return <div><h3>Tracing</h3>
     <table>
       <tbody>
-      {state.copyWithLens ( traceL<S> () ).optJsonOr ( [] ).map ( ( r, i ) =>
+      {state.copyWithLens ( traceL<S> () ).optJsonOr ( [] ).map ( ( r: any, i: number ) =>
         <OneTracing key={i} reason={r}/> )}
       </tbody>
     </table>
   </div>
 }
 
-interface DebugProps<S, Context> extends LensProps<S, any, Context> {
+interface DebugProps<S, Context> extends LensProps<S, any, Context> {}
 
-}
 
 export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends FocusOnContext<S>> ( props: DebugProps<S, C> ) {
   const { state } = props
-  return <div>
-    <hr/>
-    <h1>Debug</h1>
-    <Tracing state={state}/>
-    <hr/>
-    <h3>State</h3>
-    <table>
-      <tbody>
-      <tr>
-        <td><Pages state={state}/></td>
-        <td><Tags state={state}/></td>
-        <td><Rest state={state}/></td>
-      </tr>
-      <tr>
-        <td><Messages state={state}/></td>
-        <td colSpan={2}><CommonIds {...props}/></td>
-      </tr>
-      </tbody>
-    </table>
-    <hr/>
-    <PagesData {...props} />
-    <hr/>
-    <h3>Context</h3>
-    <ul>
-      <li>Page Selection Lens: ${state.context.pageSelectionL.description}</li>
-      <li>Rest Command Lens: ${state.context.restL.description}</li>
-    </ul>
-    <h3>Raw State</h3>
-    <pre>{JSON.stringify ( state.json (), null, 2 )}</pre>
-  </div>
-
+  let main: any = state.main;
+  const { showDebug } = main.debug
+  const debugState = state.copyWithLens ( Lenses.identity<any> ().focusQuery ( 'debug' ) )
+  if ( showDebug ) {
+    let showTracingState = debugState.focusOn ( 'showTracing' );
+    let recordTracingState = debugState.focusOn ( 'recordTrace' );
+    return <div>
+      <hr/>
+      <ToggleButton id='hideDebug' buttonText='Hide Debug' state={debugState.focusOn ( 'showDebug' )}/>
+      <h1>Debug</h1>
+      <ul>
+        <li><ToggleButton id='debug.showTracing' buttonText='{/debug/showTracing|Show|Hide} Tracing ' state={showTracingState}/></li>
+        <li><ToggleButton id='debug.recordTracing' buttonText='{/debug/recordTrace|Start|Stop} Trace ' state={recordTracingState}/></li>
+        <li><ClearTrace state={state}/></li>
+        <li><MakeTest state={state}/></li>
+        <li><AssertPages state={state}/></li>
+      </ul>
+      {showTracingState.optJsonOr ( false ) && <Tracing state={state}/>}
+      <hr/>
+      <h3>State</h3>
+      <table>
+        <tbody>
+        <tr>
+          <td><Pages state={state}/></td>
+          <td><Tags state={state}/></td>
+          <td><Rest state={state}/></td>
+        </tr>
+        <tr>
+          <td><Messages state={state}/></td>
+          <td colSpan={2}><CommonIds {...props}/></td>
+        </tr>
+        </tbody>
+      </table>
+      <hr/>
+      <PagesData {...props} />
+      <hr/>
+      <h3>Context</h3>
+      <ul>
+        <li>Page Selection Lens: ${state.context.pageSelectionL.description}</li>
+        <li>Rest Command Lens: ${state.context.restL.description}</li>
+      </ul>
+      <h3>Raw State</h3>
+      <pre>{JSON.stringify ( state.json (), null, 2 )}</pre>
+    </div>
+  } else return <>   <ToggleButton id='showDebug' buttonText='Show Debug' state={debugState.focusOn ( 'showDebug' )}/></>
   // {PagesData ( { state, config } )}
 
 

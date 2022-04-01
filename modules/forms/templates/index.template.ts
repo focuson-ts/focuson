@@ -1,4 +1,4 @@
-import { IndexPage, PageMode, pageSelectionlens, SelectedPage, SelectPage, simpleMessagesL } from "@focuson/pages";
+import {  PageMode, pageSelectionlens, SelectedPage, simpleMessagesL } from "@focuson/pages";
 import { FocusOnConfig, setJsonForFocusOn } from "@focuson/focuson";
 import { getElement, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
@@ -8,8 +8,7 @@ import { fetchers } from "./{fetchersFile}";
 import { pages } from "./{pagesFile}";
 import { restL } from "@focuson/rest";
 import { restDetails, restUrlMutator } from "./{restsFile}";
-import { DebugState } from "@focuson/focuson";
-import { commonIds } from "./common";
+import { IndexPage } from "@focuson/form_components";
 
 
 export const config: FocusOnConfig<{stateName}, Context, SimpleMessage> = {
@@ -59,16 +58,13 @@ let setJson = setJsonForFocusOn<{stateName}, Context, SimpleMessage> ( config, c
     <IndexPage state={s}>
        <SelectedPage state={s}/>
     </IndexPage>
-    <DebugState state={s} />
   </div>, rootElement ) )
 
 setJson ( {
   ...emptyState,
   pageSelection: [ { pageName: '{firstPage}', firstTime: true, pageMode: 'view' } ],
-
 // @ts-ignore
   debug: {debug}
-
   // currentSelectedModalPage: 'EAccountsSummary_CreatePlan'
 }, 'initial')
 

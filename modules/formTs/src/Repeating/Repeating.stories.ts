@@ -19,7 +19,7 @@ interface StoryState {
    pageMode: PageMode
 }
  
-const initial = {}
+const initial = {"selectedItem":0}
 function pageSelection ( pageMode: PageMode ): PageSelection { return { pageName: 'Repeating', pageMode}}
 const Template: Story<StoryState> = ( args: StoryState ) =>{
   const pageDetails: any = pages[ 'Repeating' ];

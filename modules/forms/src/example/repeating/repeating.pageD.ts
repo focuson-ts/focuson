@@ -25,7 +25,7 @@ export const RepeatingPageD: ExampleMainPage = {
   /** How we display the page.*/
   display: { target: fromApiPath, dataDD: RepeatingWholeDataD },
   /** When the page is selected for the first time this is the initial state */
-  initialValue: {},
+  initialValue: {selectedItem:0},
   /** This defines the domain data structures in react*/
   domain: {
     temp: { dataDD: RepeatingLineDataD },
@@ -50,8 +50,8 @@ export const RepeatingPageD: ExampleMainPage = {
     edit: {
       control: 'ModalButton', modal: RepeatingLinePageD, mode: 'edit',
       focusOn: '~/temp',
-      copy: [ { from: '~/fromApi[selectedItem]' } ],
-      copyOnClose: { to: '~/fromApi/[selectedItem]' }
+      copy: [ { from: '~/fromApi[~/selectedItem]' } ],
+      copyOnClose: { to: '~/fromApi/[~/selectedItem]' }
     },
     prevOccupation: {
       by: { condition: '>0', path: selectedItemPath },

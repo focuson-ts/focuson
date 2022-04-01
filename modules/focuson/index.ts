@@ -1,5 +1,4 @@
 export * from './src/config'
 export * from './src/debug'
 export * from './src/tagFetcher'
-export * from './src/debugState'
 export * from './src/replace'

@@ -25,7 +25,7 @@ export const JointAccountCustomerDD: ExampleDataD = { //could have had a default
   name: "JointAccountCustomer",
   description: "The data about a customer",
   structure: {
-    name: { dataDD: OneLineStringDD, sample: [ 'Fred Bloggs' ], db: { table: nameT, field: 'zzname' } }, //Note the use of the table and not the alias. The correct alias will be used in the generated sql/map code
+    name: { dataDD: OneLineStringDD, sample: [ 'Fred Bloggs', 'Jill Blogs' ], db: { table: nameT, field: 'zzname' } }, //Note the use of the table and not the alias. The correct alias will be used in the generated sql/map code
     addresses: {
       dataDD: JointAccountAddressesDD
     }, //Note that the dataDD at the far end is a repeating structure

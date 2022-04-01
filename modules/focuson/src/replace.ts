@@ -1,8 +1,7 @@
 import { LensState } from "@focuson/state";
-import { fromPathGivenState } from "@focuson/pages";
-import { FocusOnContext } from "./config";
+import { fromPathGivenState, PageSelectionContext } from "@focuson/pages";
 
-export function replaceTextUsingPath<S, Context extends FocusOnContext<S>> ( state: LensState<S, any, Context>, label: string ) {
+export function replaceTextUsingPath<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context>, label: string ) {
   const from = fromPathGivenState ( state )
   function replaceIt ( f: string ) {
     const parts = f.slice ( 1, -1 ).split ( "|" )
