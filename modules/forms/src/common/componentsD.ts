@@ -121,3 +121,9 @@ export const LabelAndDropDownCD: DisplayCompD = {
   name: "LabelAndDropdown",
   params: { ...commonParamsWithLabel, ...enumParams }
 }
+
+export const LabelAndTextAreaCD: DisplayCompD = {
+  import: '@focuson/form_components',
+  name: "TextAreaInput",
+  params: { ...commonParamsWithLabel, ...enumParams }
+}
