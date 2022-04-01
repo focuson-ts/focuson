@@ -29,7 +29,6 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
     // const fromPath = fromPathFor ( state );
     const fromPage = fromPathGivenState ( state );
     const focusOnL = fromPage ( focusOn );
-    // const realFocusOn = replaceBasePath(state, focusOn)
     const copyTxs: Transform<S, any>[] = safeArray ( copy ).map ( ( { from, to } ) =>
       [ to ? fromPage ( to ) : focusOnL, () => (from ? fromPage ( from ) : focusOnL).getOption ( state.main ) ] )
     const emptyTx: Transform<S, any>[] = createEmpty ? [ [ focusOnL, ignore => createEmpty ] ] : [];
