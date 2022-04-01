@@ -2,6 +2,9 @@ import { reqFor, UrlConfig } from "@focuson/template";
 import { FetchFn, NameAnd, RestAction, safeArray } from "@focuson/utils";
 import { identityOptics, massTransform, Optional, Transform } from "@focuson/lens";
 
+export interface RestDebug{
+  restDebug? : boolean
+}
 
 export interface OneRestDetails<S, FD, D, MSGs> extends UrlConfig<S, FD, D> {
   url: string;

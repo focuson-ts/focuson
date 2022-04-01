@@ -77,11 +77,16 @@ export function traceL<S> (): Optional<S, any> {
   return Lenses.identity<S> ().focusQuery ( 'trace' )
 }
 
+export interface TracingDebug {
+  recordTrace?: boolean;
+  showTracing?: boolean
+}
+
 export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MSGs> ( config: FocusOnConfig<S, Context, MSGs>, context: Context, publish: ( lc: LensState<S, S, Context> ) => void ): ( s: S, reason: any ) => Promise<S> {
   return async ( main: S, reason: any ): Promise<S> => {
     console.log ( 'setJsonForFocusOn', reason )
     // @ts-ignore
-    const debug:any = main.debug;
+    const debug: any = main.debug;
     const withDebug = debug?.recordTrace ? traceL<S> ().transform ( old => [ ...old ? old : [], reason ] ) ( main ) : main
     const { fetchFn, preMutate, postMutate, onError, pages, restDetails, fetchers, restL, pageL, messageL } = config
     const newStateFn = ( fs: S ) => publish ( lensState ( fs, setJsonForFocusOn ( config, context, publish ), 'setJson', context ) )

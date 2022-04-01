@@ -42,6 +42,7 @@ export function makeCommon<B, G> ( appConfig: AppConfig, params: TSParams, pds: 
     `import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusOnContext, HasFocusOnDebug } from '@focuson/focuson';`,
     `import { LensProps } from '@focuson/state';`,
     `import { pages } from "./pages";`,
+
     `import { ${appConfig.combine.name} } from "${appConfig.combine.import}";`,
     ...pageDomainsImport,
     '',
@@ -62,7 +63,7 @@ export function makeStateWithSelectedPage ( params: TSParams, commonParamsValue:
     `  pageSelection: [{ pageName: '${pageName}', firstTime: true, pageMode: '${pageMode ? pageMode : 'view'}' }],`,
     ...pageName ? [ `  ${pageName}:{},` ] : [],
     `  restCommands: [],`,
-    `    debug: { selectedPageDebug: true, fetcherDebug: true }`,
+    `      debug: { fetcherDebug: true, postDebug: false, selectedPageDebug: false, loadTreeDebug: false, showTracing: false, recordTrace: true }`,
     `  }`
   ]
 }

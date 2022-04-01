@@ -36,11 +36,6 @@ describe ( "makeCommon", () => {
       "import { HasEAccountsSummaryPageDomain } from './EAccountsSummary/EAccountsSummary.domains';",
       "import { HasOccupationAndIncomeSummaryPageDomain } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains';",
       "",
-      "export type Context = FocusOnContext<FState>",
-      "export const context: Context = {",
-      "   ...defaultPageSelectionAndRestCommandsContext<FState> ( pages ),",
-      "   combine: MyCombined",
-      "}",
       "export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,",
       "  HasEAccountsSummaryPageDomain,",
       "  HasOccupationAndIncomeSummaryPageDomain",
@@ -70,6 +65,11 @@ describe ( "makeCommon", () => {
       "    ( s, date ) => [], //later do the messaging",
       "    defaultDateFn ) ( onError ) //updateTagsAndMessagesOnError ( defaultErrorMessage )",
       "}",
+      "export type Context = FocusOnContext<FState>",
+      "export const context: Context = {",
+      "   ...defaultPageSelectionAndRestCommandsContext<FState> ( pages, commonIds),",
+      "   combine: MyCombined",
+      "}",
       "export const emptyState: FState = {",
       "  CommonIds: {'createPlanId':'tbd','customerId':'custId','accountId':'accId','usersRole':'user'},",
       "  tags: {},",
@@ -77,7 +77,7 @@ describe ( "makeCommon", () => {
       "  pageSelection: [{ pageName: 'EAccountsSummary', firstTime: true, pageMode: 'view' }],",
       "  EAccountsSummary:{},",
       "  restCommands: [],",
-      "    debug: { selectedPageDebug: true, fetcherDebug: true }",
+      "      debug: { fetcherDebug: true, postDebug: false, selectedPageDebug: false, loadTreeDebug: false, showTracing: false, recordTrace: true }",
       "  }"
     ])
 

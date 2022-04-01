@@ -55,4 +55,4 @@ export const pactFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B
 export const samplesFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.samplesFile );
 export const restFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.restsFile );
 export const fetcherFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.fetchersFile );
-export const optionalsFileName = <B, G> ( root: string, params: TSParams ): string => `${root}/${params.optionalsFile}.ts`;
+export const optionalsFileName = <B, G> ( root: string, params: TSParams ): string => `${root}/${params.optionalsFile}`;

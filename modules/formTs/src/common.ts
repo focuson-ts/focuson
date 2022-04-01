@@ -72,5 +72,5 @@ export const emptyState: FState = {
   pageSelection: [{ pageName: 'HelloWorld', firstTime: true, pageMode: 'view' }],
   HelloWorld:{},
   restCommands: [],
-    debug: { selectedPageDebug: true, fetcherDebug: true }
+      debug: { fetcherDebug: true, postDebug: false, selectedPageDebug: false, loadTreeDebug: false, showTracing: false, recordTrace: true }
   }
