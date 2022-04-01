@@ -19,11 +19,6 @@ import { HasChequeCreditbooksPageDomain } from './ChequeCreditbooks/ChequeCredit
 import { HasRepeatingPageDomain } from './Repeating/Repeating.domains';
 import { HasPostCodeDemoPageDomain } from './PostCodeDemo/PostCodeDemo.domains';
 
-export type Context = FocusOnContext<FState>
-export const context: Context = {
-   ...defaultPageSelectionAndRestCommandsContext<FState> ( pages ),
-   combine: MyCombined
-}
 export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,
   HasHelloWorldPageDomain,
   HasAccountOverviewPageDomain,
@@ -64,6 +59,11 @@ export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPage
   return commonTagFetchProps<S, T> (
     ( s, date ) => [], //later do the messaging
     defaultDateFn ) ( onError ) //updateTagsAndMessagesOnError ( defaultErrorMessage )
+}
+export type Context = FocusOnContext<FState>
+export const context: Context = {
+   ...defaultPageSelectionAndRestCommandsContext<FState> ( pages, commonIds),
+   combine: MyCombined
 }
 export const emptyState: FState = {
   CommonIds: {"applRef":"appref","createPlanId":"tbd","accountId":"accId","customerId":"custId","brandRef":"brandRef","usersRole":"user"},

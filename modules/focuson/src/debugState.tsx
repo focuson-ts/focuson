@@ -7,47 +7,42 @@ import { FocusOnConfig, FocusOnContext, traceL } from "./config";
 import { NameAndLens } from "@focuson/lens";
 
 
-export function Tags<S extends HasPageSelection & HasTagHolder & HasSimpleMessages & HasRestCommands,
-  C extends HasPageSelectionLens<S> & HasRestCommandL<S>> ( { state }: LensProps<S, any, C> ) {
+export function Tags<S extends HasTagHolder, C> ( { state }: LensProps<S, any, C> ) {
   return <div>Tags
     <ul>{sortedEntries ( state.main.tags ).map ( ( [ n, t ] ) => <li key={n}>{n}: {JSON.stringify ( t )}</li> )}</ul>
   </div>
 }
-export function Pages<S extends HasPageSelection & HasTagHolder & HasSimpleMessages & HasRestCommands,
-  C extends HasPageSelectionLens<S> & HasRestCommandL<S>> ( { state }: LensProps<S, any, C> ) {
+export function Pages<S, C extends HasPageSelectionLens<S>> ( { state }: LensProps<S, any, C> ) {
   const pages = safeArray ( state.context.pageSelectionL.getOption ( state.main ) )
   return <div>Pages
     <ul>{pages.map ( ( p, i ) => <li key={i}>{JSON.stringify ( p )}</li> )}</ul>
   </div>
 }
-export function Rest<S extends HasPageSelection & HasTagHolder & HasSimpleMessages & HasRestCommands,
-  C extends HasPageSelectionLens<S> & HasRestCommandL<S>> ( { state }: LensProps<S, any, C> ) {
+export function Rest<S, C extends HasRestCommandL<S>> ( { state }: LensProps<S, any, C> ) {
   const restCommands = safeArray ( state.context.restL.getOption ( state.main ) )
   return <div>Rest
     <ul>{restCommands.map ( ( p, i ) => <li key={i}>{JSON.stringify ( p )}</li> )}</ul>
   </div>
 }
-export function Messages<S extends HasPageSelection & HasTagHolder & HasSimpleMessages & HasRestCommands,
-  C extends HasPageSelectionLens<S> & HasRestCommandL<S>> ( { state }: LensProps<S, any, C> ) {
+export function Messages<S extends HasSimpleMessages, C> ( { state }: LensProps<S, any, C> ) {
   const messages = safeArray ( state.main.messages )
   return <div>Messages
     <ul>{messages.map ( ( p, i ) => <li key={i}>{JSON.stringify ( p )}</li> )}</ul>
   </div>
 }
-export function CommonIds<S extends HasPageSelection & HasTagHolder & HasSimpleMessages & HasRestCommands,
-  C extends HasPageSelectionLens<S> & HasRestCommandL<S>> ( { state, config, commonIds }: DebugProps<S, C> ) {
+export function CommonIds<S, C extends FocusOnContext<S>> ( { state }: DebugProps<S, C> ) {
+  const commonIds = state.context.commonIds
   return <ul>{sortedEntries ( commonIds ).map ( ( [ n, l ] ) => <li key={n}>{n}: {l.getOption ( state.main )}</li> )}</ul>
 }
 
-function PagesData<S extends HasPageSelection & HasTagHolder & HasSimpleMessages & HasRestCommands,
-  C extends FocusOnContext<S>> ( { state, config }: DebugProps<S, C> ) {
+function PagesData<S, C extends FocusOnContext<S>> ( { state }: DebugProps<S, C> ) {
   const pages = safeArray ( state.context.pageSelectionL.getOption ( state.main ) )
   return <div>
     Pages
     <table>
       <tbody>{pages.map ( ( p, index ) => {
         const page = pages[ index ]
-        const pageDetails = config.pages[ page.pageName ]
+        const pageDetails = state.context.pages[ page.pageName ]
         const lens = isMainPageDetails ( pageDetails ) ? pageDetails.lens : fromPathGivenState ( state ) ( safeString ( page.focusOn ) )
         const title = isMainPageDetails ( pageDetails ) ? "Main" : "Modal"
         const pageData = lens.getOption ( state.main )
@@ -111,14 +106,11 @@ export function Tracing<S, C> ( { state }: LensProps<S, any, C> ) {
 }
 
 interface DebugProps<S, Context> extends LensProps<S, any, Context> {
-  config: FocusOnConfig<S, Context, SimpleMessage>;
-  commonIds: NameAndLens<S>;
 
 }
 
-export function DebugState<S extends HasPageSelection & HasTagHolder & HasSimpleMessages & HasRestCommands,
-  C extends FocusOnContext<S>> ( props: DebugProps<S, C> ) {
-  const { state, config } = props
+export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends FocusOnContext<S>> ( props: DebugProps<S, C> ) {
+  const { state } = props
   return <div>
     <hr/>
     <h1>Debug</h1>

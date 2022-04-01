@@ -88,7 +88,7 @@ export function findMainPageLens<S> ( pageSelections: PageSelection[], pageDetai
 }
 
 /** Given a config.ts, a focused page data structure and a lens state (focused on anything...doesn't matter) this will display a page */
-export function displayOne<S extends any, D extends any, Msgs, Context> (
+export function displayOne<S extends any, D extends any, Msgs, Context extends PageSelectionContext<S>> (
   config: PageConfig<S, D, Msgs, Context>,
   pageType: string | undefined,
   focusedPage: FocusedPage<S, D, Context>,

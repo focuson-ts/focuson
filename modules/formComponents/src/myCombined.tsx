@@ -30,7 +30,7 @@ const mainPageJSX = ( p: PageDetailsForCombine, i: number ) => {
 }
 
 export function MyCombined<S, Context> ( state: LensState<S, any, Context>, pages: PageDetailsForCombine[] ): JSX.Element {
-  console.log ( 'MyCombinded', pages )
+  const debug = state.optJson()?.debug
   return <div id='container' className='combine'>
     <Messages state={state.focusOn ( 'messages' )}/>
     {

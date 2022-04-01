@@ -1,7 +1,6 @@
-import { lensState } from "@focuson/state";
 import { mount, shallow } from "enzyme";
 import { PageMode, SelectedPage } from "@focuson/pages";
-import { context, ContextForTest, emptyState, dataDefinedState, lensStateWith, PageSpecState, rootState } from "./page.fixture";
+import { dataDefinedState, emptyState, lensStateWith, PageSpecState, rootState } from "./page.fixture";
 import { enzymeSetup } from "./enzymeAdapterSetup";
 
 
@@ -48,7 +47,7 @@ describe ( "selectedPage", () => {
   it ( "display loading when no data", () => {
     const state = lensStateWith ( rootState, () => {}, [ 'firstPage', 'edit',undefined ], [ 'secondPage', 'view' ,undefined], [ 'modalData', 'edit',undefined ] )
     const comp = shallow ( <SelectedPage state={state}/> )
-    expect ( comp.text () ).toEqual ( "[firstPageTitle]:Loading[secondPageTitle]:Loading[modalDataTitle]:modalData[x]/edit" )
+    expect ( comp.text () ).toEqual ( "[firstPageTitle]:Loading<ModalCancelButton />[secondPageTitle]:Loading<ModalCancelButton />[modalDataTitle]:modalData[x]/edit" )
 
   } )
 } )

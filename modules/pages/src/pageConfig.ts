@@ -62,7 +62,7 @@ export interface PageConfig<S, D, Msgs, Context> {
 
 /** If the state is using simple messages, and HasSelectedModalPage, this provides a default page config.ts that works in many situations
  * It doesn't have postCommand configuration in it, which is the most common 'add on' */
-export function simpleMessagesPageConfig<S extends HasSimpleMessages, D, Context> ( loading: ( s: LensState<S, any, Context> ) => JSX.Element ): PageConfig<S, D, SimpleMessage[], Context> {
+export function simpleMessagesPageConfig<S extends HasSimpleMessages, D, Context> ( loading: ( props: LensState<S, any, Context> ) => JSX.Element ): PageConfig<S, D, SimpleMessage[], Context> {
   return ({
     messageLens: simpleMessagesLFn<S, D, Context> (),
     loading

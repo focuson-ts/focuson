@@ -1,4 +1,4 @@
-import { copyFiles, DirectorySpec, templateFile, writeToFile } from "@focuson/files";
+import { copyFile, copyFiles, DirectorySpec, templateFile, writeToFile } from "@focuson/files";
 import { TSParams } from "../codegen/config";
 import fs from "fs";
 import { unique } from "../common/restD";
@@ -92,7 +92,9 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
   detailsLog ( logLevel, 1, 'copying files' )
   copyFiles ( tsRoot, 'templates/raw/ts', directorySpec ) ( '.env', 'README.md', 'tsconfig.json' )
   copyFiles ( tsScripts, 'templates/scripts', directorySpec ) ( 'makePact.sh', 'makeJava.sh', 'makeJvmPact.sh', 'template.java', 'ports' )
-  copyFiles ( tsRoot, 'templates/raw', directorySpec ) ( '.gitignore' )
+  copyFile ( tsRoot + '/.gitignore', 'templates/raw/gitignore', directorySpec )
+
+  // copyFiles ( tsRoot, 'templates/raw', directorySpec ) ( '.gitignore' )
   copyFiles ( tsStoryBook, 'templates/raw/ts/stories', directorySpec ) ( 'main.js', 'preview.js', 'preview-head.html' )
   copyFiles ( tsPublic, 'templates/raw/ts/public', directorySpec ) ( 'favicon.ico', 'index.css', 'index.html', 'logo192.png', 'logo512.png', 'manifest.json', 'robots.txt' )
 

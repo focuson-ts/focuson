@@ -13,9 +13,9 @@ export const makeMainPage = <G> ( params: TSParams ) => <B> ( p: MainPageD<B, G>
     const lens = parsePath ( p.display.target, pathBuilderForLensIncPage ( p.name ) );
     return lens.set ( {}, makeEmptyData ( p.display.dataDD ) )
   }
-  const initialValue = p.initialValue === 'empty' ? makeEmpty () : p.initialValue
+  const initialValue = p.initialValue === 'empty' ? makeEmpty ()[ p.name ] : p.initialValue
   return p.pageType === 'MainPage' ?
-    [ `    ${p.name}: {pageType: '${p.pageType}',  config: simpleMessagesConfig, lens: identity.focusQuery ( '${pageInState ( p )}' ), pageFunction: ${pageComponentName ( p )}(), initialValue: ${JSON.stringify ( initialValue )}, pageMode: '${p.modes[0]}' }` ]
+    [ `    ${p.name}: {pageType: '${p.pageType}',  config: simpleMessagesConfig, lens: identity.focusQuery ( '${pageInState ( p )}' ), pageFunction: ${pageComponentName ( p )}(), initialValue: ${JSON.stringify ( initialValue )}, pageMode: '${p.modes[ 0 ]}' }` ]
     : [];
 }
 
@@ -37,15 +37,13 @@ export function makePages<B, G> ( params: TSParams, ps: PageD<B, G>[] ): string[
   const renderImports = ps.map ( p => `import { ${pageComponentName ( p )} } from '${renderFileName ( '.', params, p )}';` )
   return [
     `import { identityOptics } from "@focuson/lens";`,
-    `import { MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";`,
+    `import { Loading, MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";`,
     `import {Context,  ${params.stateName} } from "./${params.commonFile}";`,
     ...renderImports,
     // `import { ${allMainPages ( ps ).map ( p => pageComponentName ( p ) ).join ( "," )} } from "./${params.renderFile}";`,
     '',
-    `function MyLoading () {`,
-    `      return <p>Loading</p>`,
-    `}`,
-    `const simpleMessagesConfig = simpleMessagesPageConfig<${params.stateName}, string, Context> (  MyLoading )`,
+
+    `const simpleMessagesConfig = simpleMessagesPageConfig<${params.stateName}, string, Context> (  Loading )`,
     `const identity = identityOptics<FState> ();`,
     `export const pages: MultiPageDetails<${params.stateName}, Context> = {`,
     ...addStringToEndOfAllButLast ( "," ) ( [ ...ps.flatMap ( makeMainPage ( params ) ), ...modals.flatMap ( makeModal ( params ) ) ] ),

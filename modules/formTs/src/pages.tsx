@@ -1,5 +1,5 @@
 import { identityOptics } from "@focuson/lens";
-import { MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";
+import { Loading, MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";
 import {Context,  FState } from "./common";
 import { HelloWorldPage } from './HelloWorld/HelloWorld.render';
 import { AccountOverviewPage } from './AccountOverview/AccountOverview.render';
@@ -27,10 +27,7 @@ import { RepeatingLinePage } from './RepeatingLine/RepeatingLine.render';
 import { PostCodeDemoPage } from './PostCodeDemo/PostCodeDemo.render';
 import { PostCodeSearchPage } from './PostCodeSearch/PostCodeSearch.render';
 
-function MyLoading () {
-      return <p>Loading</p>
-}
-const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  MyLoading )
+const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  Loading )
 const identity = identityOptics<FState> ();
 export const pages: MultiPageDetails<FState, Context> = {
     HelloWorld: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'HelloWorld' ), pageFunction: HelloWorldPage(), initialValue: {"main":{"hello":"World"}}, pageMode: 'view' },
@@ -39,7 +36,7 @@ export const pages: MultiPageDetails<FState, Context> = {
     OccupationAndIncomeSummary: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'OccupationAndIncomeSummary' ), pageFunction: OccupationAndIncomeSummaryPage(), initialValue: {"selectedItem":0,"occupation":{"search":"","selectedOccupationName":"","searchResults":[]},"mainOrJoint":false}, pageMode: 'view' },
     EAccountsSummary: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'EAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: {}, pageMode: 'view' },
     ETransfer: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'ETransfer' ), pageFunction: ETransferPage(), initialValue: {"fromApi":{}}, pageMode: 'create' },
-    CreateEAccount: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'CreateEAccount' ), pageFunction: CreateEAccountPage(), initialValue: {"CreateEAccount":{"editing":{"name":"","type":"savings","savingsStyle":"adhoc","initialAmount":0}}}, pageMode: 'create' },
+    CreateEAccount: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'CreateEAccount' ), pageFunction: CreateEAccountPage(), initialValue: {"editing":{"name":"","type":"savings","savingsStyle":"adhoc","initialAmount":0}}, pageMode: 'create' },
     ChequeCreditbooks: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'ChequeCreditbooks' ), pageFunction: ChequeCreditbooksPage(), initialValue: {}, pageMode: 'view' },
     Repeating: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'Repeating' ), pageFunction: RepeatingPage(), initialValue: {}, pageMode: 'view' },
     PostCodeDemo: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'PostCodeDemo' ), pageFunction: PostCodeDemoPage(), initialValue: {"main":{},"postcode":{"search":"","searchResults":[],"addressResults":{"line1":"","line2":"","line3":"","line4":""}}}, pageMode: 'edit' },

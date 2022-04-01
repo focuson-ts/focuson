@@ -1,4 +1,4 @@
-import { copyFiles, DirectorySpec, templateFile, writeToFile } from "@focuson/files";
+import { copyFile, copyFiles, DirectorySpec, templateFile, writeToFile } from "@focuson/files";
 import { JavaWiringParams } from "../codegen/config";
 import fs from "fs";
 import { unique } from "../common/restD";
@@ -54,7 +54,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   copyFiles ( javaScriptRoot, 'templates/scripts', directorySpec ) ( 'makeJava.sh', 'makeJvmPact.sh', 'template.java' )
 
   copyFiles ( javaAppRoot, 'templates/raw/java', directorySpec ) ( 'application.properties' )
-  copyFiles ( javaAppRoot, 'templates/raw', directorySpec ) ( '.gitignore' )
+  copyFile ( javaAppRoot+'/.gitignore','templates/raw/gitignore', directorySpec )
   copyFiles ( javaCodeRoot, 'templates/raw/java', directorySpec ) ( 'CorsConfig.java' )
   detailsLog ( logLevel, 1, 'java common copies' )
   templateFile ( `${javaAppRoot}/pom.xml`, 'templates/mvnTemplate.pom', params, directorySpec )
