@@ -1,6 +1,4 @@
 //Common Data Definitions
-
-
 import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndNumberInputCD, LabelAndStringInputCD, SimpleDisplayComp } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeRender";
 import { NameAnd, safeArray } from "@focuson/utils";
@@ -27,6 +25,7 @@ export interface OneDataDDForPrim<D extends CommonPrimitiveDD<T>, T, G> extends 
   hidden?: boolean;
   guard?: NameAnd<string[]>
   displayParams?: ComponentDisplayParams,
+  sampleOffset?: number;
   db?: DbValues
 }
 export function isOneDataDDForPrim<D extends CommonPrimitiveDD<T>, T, G> ( o: OneDataDD<G> ): o is OneDataDDForPrim<D, T, G> {
@@ -39,6 +38,7 @@ export interface OneDataDDNonePrim<G> {
   hidden?: boolean;
   guard?: NameAnd<string[]>
   displayParams?: ComponentDisplayParams,
+  sampleOffset?: number;
   db?: DbValues
 }
 export type OneDataDD<G> = OneDataDDForPrim<any, any, G> | OneDataDDNonePrim<G>

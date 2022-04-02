@@ -40,7 +40,7 @@ export const JointAccountDd: ExampleDataD = {
   structure: {
     balance: { dataDD: MoneyDD, db: 'blnc' },
     main: { dataDD: JointAccountCustomerDD },
-    joint: { dataDD: JointAccountCustomerDD }
+    joint: { dataDD: JointAccountCustomerDD, sampleOffset: 1 }
   }
 }
 

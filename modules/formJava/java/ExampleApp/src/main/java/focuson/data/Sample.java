@@ -649,11 +649,11 @@ public class Sample{
          "    ]"+
          "  },"+
          "  \"joint\": {"+
-         "    \"name\": \"Fred Bloggs\","+
+         "    \"name\": \"Jill Blogs\","+
          "    \"addresses\": ["+
          "      {"+
-         "        \"line1\": \"This is a one line string\","+
-         "        \"line2\": \"This is a one line string\""+
+         "        \"line1\": \"another one line string\","+
+         "        \"line2\": \"another one line string\""+
          "      },"+
          "      {"+
          "        \"line1\": \"another one line string\","+

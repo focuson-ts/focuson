@@ -3,6 +3,7 @@ import { CreatePlanDD, EAccountsSummaryDD } from "../example/eAccounts/eAccounts
 import { paramsForTest } from "./makeJavaResolvers.spec";
 import { RepeatingPageD } from "../example/repeating/repeating.pageD";
 import { RepeatingWholeDataD } from "../example/repeating/repeating.dataD";
+import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 
 describe ( "makeEmptyTs", () => {
   it ( "should make an empty data structure", () => {
@@ -142,7 +143,15 @@ describe ( "makeJavaVariable", () => {
     ])
 
   } )
+
+  it ("should make a sample with a sampleOffset", () =>{
+    expect ( makeSampleVariable ( paramsForTest, JointAccountDd, 0 ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+      ])
+
+  })
 } )
+
+
 
 describe ( "makeSampleVariable", () => {
   it ( "should attach a sample to a variable", () => {

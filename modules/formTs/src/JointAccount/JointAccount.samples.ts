@@ -21,11 +21,11 @@ export const sampleJointAccount0: domains.JointAccountDomain =
     ]
   },
   "joint": {
-    "name": "Fred Bloggs",
+    "name": "Jill Blogs",
     "addresses": [
       {
-        "line1": "This is a one line string",
-        "line2": "This is a one line string"
+        "line1": "another one line string",
+        "line2": "another one line string"
       },
       {
         "line1": "another one line string",
@@ -97,11 +97,11 @@ export const sampleJointAccount1: domains.JointAccountDomain =
     ]
   },
   "joint": {
-    "name": "Jill Blogs",
+    "name": "This is a one line string",
     "addresses": [
       {
-        "line1": "another one line string",
-        "line2": "another one line string"
+        "line1": "This is a one line string",
+        "line2": "This is a one line string"
       },
       {
         "line1": "This is a one line string",
@@ -173,11 +173,11 @@ export const sampleJointAccount2: domains.JointAccountDomain =
     ]
   },
   "joint": {
-    "name": "This is a one line string",
+    "name": "another one line string",
     "addresses": [
       {
-        "line1": "This is a one line string",
-        "line2": "This is a one line string"
+        "line1": "another one line string",
+        "line2": "another one line string"
       },
       {
         "line1": "another one line string",

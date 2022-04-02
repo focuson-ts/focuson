@@ -37,10 +37,16 @@ const addPrimitive = <G> ( acc: any, path: string[], one: OneDataDD<G> | undefin
 export function makeTsSample<G> ( d: CompDataD<G>, i: number ): any {
   let foldStoppingAtRepeats = {
     stopAtDisplay: false,
-    foldData: ( acc, path, parents, oneDataDD, dataDD, start ) => addData ( start, path, acc, dataDD ),
+    offset: 0,
+    foldData: ( acc, path, parents, oneDataDD, dataDD, start ) => {
+      if ( oneDataDD?.sampleOffset && oneDataDD?.sampleOffset > 0 )
+        if ( start ) foldStoppingAtRepeats.offset = foldStoppingAtRepeats.offset + oneDataDD.sampleOffset;
+        else foldStoppingAtRepeats.offset = foldStoppingAtRepeats.offset - oneDataDD.sampleOffset
+      return addData ( start, path, acc, dataDD )
+    },
     foldRep: ( acc, path, parents, oneDataDD, dataDD, start ) =>
       start ? acc : parsePathFromListFromPage ( path ).transform ( child => [ child, ...makeTsSampleForRepeats ( dataDD, i ) ] ) ( acc ),
-    foldPrim: ( acc, path, parents, oneDataDD, dataDD ) => addPrimitive ( acc, path, oneDataDD, dataDD, i )
+    foldPrim: ( acc, path, parents, oneDataDD, dataDD ) => addPrimitive ( acc, path, oneDataDD, dataDD, i + foldStoppingAtRepeats.offset )
   };
   return foldDataDD<any, G> ( d, [], [], {}, foldStoppingAtRepeats )
 }
@@ -48,7 +54,6 @@ export function makeTsSample<G> ( d: CompDataD<G>, i: number ): any {
 export function makeTsSampleForRepeats<G> ( r: RepeatingDataD<G>, i: number ): any[] {
   const count = r.sampleCount ? r.sampleCount : 3
   return [ ...Array ( 100 ).keys () ].slice ( count * i + 1, count * (i + 1) ).map ( i => makeTsSample ( r.dataDD, i ) )
-
 }
 
 
