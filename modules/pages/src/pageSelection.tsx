@@ -1,4 +1,4 @@
-import { identityOptics, Lens, lensBuilder, NameAndLens, Optional, parsePath, prefixNameAndLens, Transform } from "@focuson/lens";
+import { identityOptics, Lens, lensBuilder, NameAndLens, NameAndLensFn, Optional, parsePath, prefixNameAndLens, Transform } from "@focuson/lens";
 import { LensState } from "@focuson/state";
 import { HasMultiPageDetails, isMainPageDetails } from "./pageConfig";
 import { safeArray } from "@focuson/utils";
@@ -112,7 +112,7 @@ export function pageSelectionlens<S extends HasPageSelection> (): Lens<S, PageSe
 }
 
 
-function firstPageDataLensAndOptionals<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): [ Optional<S, any> | undefined, NameAndLens<S> ] {
+function firstPageDataLensAndOptionals<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): [ Optional<S, any> | undefined, NameAndLensFn<S> ] {
   let pageSelection = mainPage ( state );
   if ( pageSelection === undefined ) return undefined
   const { pageName, focusOn } = pageSelection

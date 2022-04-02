@@ -1,4 +1,4 @@
-import { lensBuilder, Lenses, NameAndLens, Optional, parsePath, PathBuilder, prefixNameAndLens, stateCodeBuilder, stateCodeInitials, tokenisePath } from "@focuson/lens";
+import { lensBuilder, Lenses, NameAndLensFn, Optional, parsePath, PathBuilder, prefixNameAndLens, stateCodeBuilder, stateCodeInitials, tokenisePath } from "@focuson/lens";
 
 describe ( 'tokenisepath', () => {
   it ( "should extract the prefix as a token, replacing 'no prefix with ''", () => {
@@ -39,10 +39,15 @@ describe ( 'tokenisepath', () => {
     ] )
   } )
 
+  it ( "should tokenise the common usages of #", () => {
+    expect ( tokenisePath ( '#variable' ) ).toEqual ( [ "#variable" ] )
+    expect ( tokenisePath ( '#var1[#var2]' ) ).toEqual ( [ "#var1", "[", "#var2", "]" ] )
+  } )
+
 } )
 
 const stringBuilder: PathBuilder<string> = {
-  initialVariable ( name: string ): string {return `initial(${name})`;},
+  initialVariable ( name: string ): string {return `initialV(${name})`;},
   isVariable ( name: string ): boolean {return !name.match ( /^[0-9]+$/ );},
   foldVariable ( acc: string, name: string ): string {return acc + `.variable(${name})`;},
   zero ( initial: string ): string { return `#${initial}#`; },
@@ -55,15 +60,17 @@ const stringBuilder: PathBuilder<string> = {
 
 describe ( "parsePath", () => {
   it ( "should fold the tokens", () => {
-    expect ( parsePath ( '/one[$last]/two[bbb/ccc]/three[~/ccc][1][$append]/[$x]', stringBuilder ) ).toEqual (
-      '#/#.one.LAST.two.OPEN[##.bbb.ccc]CLOSE.three.OPEN[#~#.ccc]CLOSE.[1].APPEND.variable(x)' )
+    expect ( parsePath ( '/one[$last]/two[bbb/ccc]/three[~/ccc][1][$append]/[#var]', stringBuilder ) ).toEqual (
+      '#/#.one.LAST.two.OPEN[##.bbb.ccc]CLOSE.three.OPEN[#~#.ccc]CLOSE.[1].APPEND.OPEN[initialV(var)]CLOSE' )
   } )
   it ( "should fold 'just a variable name'", () => {
-    expect ( parsePath ( '$name', stringBuilder ) ).toEqual (
-      'initial(name)' )
-
+    expect ( parsePath ( '#name', stringBuilder ) ).toEqual (
+      'initialV(name)' )
   } )
-
+  it ( "should fold '#var1[#var2]", () => {
+    expect ( parsePath ( '#var1[#var2]', stringBuilder ) ).toEqual (
+      'initialV(var1).OPEN[initialV(var2)]CLOSE' )
+  } )
 } )
 
 const someData = {
@@ -118,9 +125,9 @@ describe ( "chainIntoArray", () => {
 } )
 
 describe ( "parsePathMakingLens", () => {
-  const optionals: NameAndLens<any> = {
-    a: id.focusQuery ( 'a' ),
-    b: id.focusQuery ( 'a' ).focusQuery ( 'b' ),
+  const optionals: NameAndLensFn<any> = {
+    a: l => l.focusQuery ( 'a' ),
+    b: l => l.focusQuery ( 'a' ).focusQuery ( 'b' ),
   }
   it ( "should make an optional", () => {
     expect ( parsePath ( '/', lensBuilder ( prefixNameAndLens (), optionals ) ).description ).toEqual ( 'I' )
@@ -136,21 +143,20 @@ describe ( "parsePathMakingLens", () => {
     expect ( () => parsePath ( 'a/b', lensBuilder ( prefixNameAndLens (), optionals ) ) ).toThrow ( "Error parsing 'a/b'. Cannot find initial  ''" )
   } )
   it ( "should use variables", () => {
-    expect ( parsePath ( '/a/$b', lensBuilder ( prefixNameAndLens (), optionals ) ).description ).toEqual ( 'I.focus?(a).chain(I.focus?(a).focus?(b))' )
-    expect ( parsePath ( '/a/$a', lensBuilder ( prefixNameAndLens (), optionals ) ).description ).toEqual ( 'I.focus?(a).chain(I.focus?(a))' )
-    expect ( parsePath ( '$a', lensBuilder ( prefixNameAndLens (), optionals ) ).description ).toEqual ( 'I.focus?(a)' )
-    expect ( parsePath ( '$b', lensBuilder ( prefixNameAndLens (), optionals ) ).description ).toEqual ( 'I.focus?(a).focus?(b)' )
+    expect ( parsePath ( '/a/#b', lensBuilder ( prefixNameAndLens (), optionals ) ).description ).toEqual ( 'I.focus?(a).chain(I.focus?(a).focus?(b))' )
+    expect ( parsePath ( '/a/#a', lensBuilder ( prefixNameAndLens (), optionals ) ).description ).toEqual ( 'I.focus?(a).chain(I.focus?(a))' )
+    expect ( parsePath ( '#a', lensBuilder ( prefixNameAndLens (), optionals ) ).description ).toEqual ( 'I.focus?(a)' )
+    expect ( parsePath ( '#b', lensBuilder ( prefixNameAndLens (), optionals ) ).description ).toEqual ( 'I.focus?(a).focus?(b)' )
   } )
 
   it ( "should work in the style $currentOccupation[$selected]/occupation", () => {
     const data = {
-      cur: [ {occupation: 'zero'}, {occupation: 'one'} ],
+      cur: [ { occupation: 'zero' }, { occupation: 'one' } ],
       selected: 1
     }
-    const id = Lenses.identity<any> ()
-    const optionals: NameAndLens<any> = {
-      currentOccupation: id.focusQuery ( 'cur' ),
-      selected: id.focusQuery ( 'selected' )
+    const optionals: NameAndLensFn<any> = {
+      currentOccupation: l => l.focusQuery ( 'cur' ),
+      selected: l => l.focusQuery ( 'selected' )
     }
     let builder = lensBuilder ( prefixNameAndLens (), optionals );
     expect ( tokenisePath ( '#currentOccupation[#selected]/occupation' ) ).toEqual ( [

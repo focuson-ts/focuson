@@ -15,9 +15,9 @@ export function makeOptionals<B, G> ( params: TSParams, ps: PageD<B, G>[] ): str
   }
   const imports = walkOptions ( ( name, opt ) => safeArray ( opt.imports ) )
   const nameValues = walkOptions ( ( name: string, opt ) => [ `${name}: ${opt.code}` ] )
-  const allImports = unique ( [ `import {${params.stateName}, identityL } from './common';`, `import { Lenses, NameAndLens, Optional } from '@focuson/lens'`, ...imports ], x => x )
+  const allImports = unique ( [ `import {${params.stateName}, identityL } from './common';`, `import { Lenses, NameAndLensFn, Optional } from '@focuson/lens'`, ...imports ], x => x )
   return [ ...allImports, '',
-    `export const namedOptionals: NameAndLens<${params.stateName}> = {`,
+    `export const namedOptionals: NameAndLensFn<${params.stateName}> = {`,
     ...indentList ( addStringToEndOfAllButLast ( ',' ) ( nameValues ) ),
     '}'
   ]

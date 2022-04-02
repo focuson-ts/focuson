@@ -1,4 +1,4 @@
-import { Lenses, NameAndLens, Optional } from "../index";
+import { Lenses, NameAndLens, NameAndLensFn, Optional } from "../index";
 import { NameAnd } from "@focuson/utils";
 
 export interface PathBuilder<Build> {
@@ -65,11 +65,12 @@ export function prefixNameAndLens<S> ( ...choices: [ string, Optional<S, any> ][
   choices.forEach ( ( [ p, l ] ) => result[ p ] = l )
   return result
 }
-export function lensBuilder<S> ( prefixs: NameAndLens<S>, variables: NameAndLens<S> ): PathBuilder<Optional<S, any>> {
+export function lensBuilder<S> ( prefixs: NameAndLens<S>, variables: NameAndLensFn<S> ): PathBuilder<Optional<S, any>> {
+  const id = Lenses.identity<S> ()
   return {
-    initialVariable ( name: string ): Optional<S, any> {return variables[ name ];},
+    initialVariable ( name: string ): Optional<S, any> {return variables[ name ] ( id );},
     isVariable ( name: string ): boolean {return variables[ name ] !== undefined;},
-    foldVariable<S> ( acc: Optional<S, any>, name: string ): Optional<S, any> {return acc.chain ( variables[ name ] );},
+    foldVariable<S> ( acc: Optional<S, any>, name: string ): Optional<S, any> {return acc.chain ( variables[ name ] ( id ) );},
     zero ( initial: string ): Optional<S, any> { return prefixs[ initial ]; },
     foldBracketsPath ( acc: Optional<S, any>, path: Optional<S, any> ): Optional<S, any> { return acc.chainCalc ( path ) },
     foldAppend ( acc: Optional<S, any> ): Optional<S, any> { return acc.chain ( Lenses.append () ); },
@@ -85,9 +86,9 @@ export function stateCodeInitials ( stateName: string ): NameAnd<string> {
 export function stateCodeBuilder ( initials: NameAnd<string>, optionalsName: string, focusQuery?: string ): PathBuilder<string> {
   const realFocusQuery = focusQuery ? focusQuery : 'focusQuery'
   return {
-    initialVariable ( name: string ): string {return `${optionalsName}.${name}`;},
+    initialVariable ( name: string ): string {return `.copyWithLens(${optionalsName}.${name}(identityL))`;},
     isVariable ( name: string ): boolean {return !name.match ( /^[0-9]+$/ );},
-    foldVariable ( acc: string, name: string ): string {return `.chain(${optionalsName}.${name})`;},
+    foldVariable ( acc: string, name: string ): string {return `.chain(${optionalsName}.${name}(identityL))`;},
     zero ( initial: string ): string { return initials[ initial ]; },
     foldBracketsPath ( acc: string, path: string ): string { return acc + `.chainNthFromPath(${path})`; },
     foldKey ( acc: string, key: string ): string { return acc + `.${realFocusQuery}('${key}')` },
@@ -100,9 +101,9 @@ export function stateCodeBuilder ( initials: NameAnd<string>, optionalsName: str
 
 function processInitialToken<Build> ( s: ParseState<Build>, p: PathBuilder<Build> ) {
   const initial = s.tokens[ s.tokens.length - 1 ]
-  if ( initial.startsWith ( '$' ) ) {
+  if ( initial.startsWith ( '#' ) ) {
     s.build = p.initialVariable ( initial.slice ( 1 ) )
-    s.tokens.pop()
+    s.tokens.pop ()
     return
   }
   let hasSpecificInitial = initial === '/' || initial === '~';
@@ -121,17 +122,17 @@ export function processPath<Build> ( s: ParseState<Build>, p: PathBuilder<Build>
     const token = s.tokens.pop ()
     if ( token === undefined ) if ( expectBracket ) throw makeError ( s, 'Ran out of tokens!' ); else return
     if ( token === ']' ) if ( expectBracket ) return; else throw makeError ( s, 'Unexpected ]' );
-    if ( token.startsWith ( '$' ) ) {
-      if ( token === '$append' ) s.build = p.foldAppend ( s.build );
-      else if ( token === '$last' ) s.build = p.foldLast ( s.build );
-      else {
-        let body = token.slice ( 1 );
-        if ( p.isVariable ( body ) ) s.build = p.foldVariable ( s.build, body ); else {
-          let n = Number.parseInt ( body );
-          if ( n === Number.NaN ) throw makeError ( s, `'${body} is not a number` )
-          s.build = p.foldNth ( s.build, n )
-        }
-      }
+    if ( token.startsWith ( '#' ) ) {
+      let body = token.slice ( 1 );
+      if ( p.isVariable ( body ) ) s.build = p.foldVariable ( s.build, body );
+      else throw makeError ( s, `Variable ${token} not found` )
+    } else if ( token === '$append' ) s.build = p.foldAppend ( s.build );
+    else if ( token === '$last' ) s.build = p.foldLast ( s.build );
+    else if ( token.startsWith ( '$' ) ) {
+      let body = token.slice ( 1 );
+      let n = Number.parseInt ( body );
+      if ( n === Number.NaN ) throw makeError ( s, `'${body} is not a number` )
+      s.build = p.foldNth ( s.build, n )
     } else if ( token === '/' ) {}//
     else if ( token === '~' ) {throw makeError ( s, 'Unexpected ~' )}//
     else if ( token === '[' ) {

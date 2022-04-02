@@ -2,11 +2,12 @@ import * as domain from '../OccupationAndIncomeSummary/OccupationAndIncomeSummar
 import * as empty from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.empty';
 import { LensProps } from "@focuson/state";
 import { FocusOnContext } from '@focuson/focuson';
-import {  focusedPage, focusedPageWithExtraState,   fullState,pageState} from "@focuson/pages";
-import { Context, FocusedProps, FState } from "../common";
+import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from "@focuson/pages";
+import { Context, FocusedProps, FState, identityL } from "../common";
 import { Lenses } from '@focuson/lens';
 import { Guard } from "@focuson/form_components";
 import { GuardButton } from "@focuson/form_components";
+import { namedOptionals } from "../optionals";
 import { LabelAndStringInput } from '@focuson/form_components';
 import { LabelAndDropdown } from '@focuson/form_components';
 import { LabelAndNumberInput } from '@focuson/form_components';
@@ -76,12 +77,12 @@ export function OccupationAndIncomeSummaryPage(){
         id='mainOrJoint'
         buttonText='Showing {~/mainOrJoint|Main|Joint}'
          />,
-      nextOccupation:<ListNextButton id='nextOccupation' title='Next' list={fullStateopt.currentOccupation} value={fullStateopt.selected} />,
+      nextOccupation:<ListNextButton id='nextOccupation' title='Next' list={fullState.copyWithLens(namedOptionals.currentOccupation(identityL))} value={fullState.copyWithLens(namedOptionals.selected(identityL))} />,
       otherSourcesOfIncome:<ModalButton id='otherSourcesOfIncome' text='otherSourcesOfIncome'  state={state} modal = 'OtherSourcesOfIncomeModal'  
         pageMode='edit'
         focusOn='~/otherSourcesOfIncome'
       />,
-      prevOccupation:<ListPrevButton id='prevOccupation' title='Prev' list={fullStateopt.currentOccupation} value={fullStateopt.selected} />,}
+      prevOccupation:<ListPrevButton id='prevOccupation' title='Prev' list={fullState.copyWithLens(namedOptionals.currentOccupation(identityL))} value={fullState.copyWithLens(namedOptionals.selected(identityL))} />,}
 
       return <HideButtonsLayout buttons={buttons} hide={["additionalInfo","businessDetails","otherSourcesOfIncome","list"]}>
           <OccupationAndIncomeFullDomain id={`${id}`} state={state} mode={mode} buttons={buttons} />

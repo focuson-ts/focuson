@@ -1,4 +1,4 @@
-import { NameAndLens, Optional } from "@focuson/lens";
+import { NameAndLens, NameAndLensFn, Optional } from "@focuson/lens";
 import { LensProps, LensState } from "@focuson/state";
 import { simpleMessagesLFn } from "./simpleMessage";
 import { FocusedPage } from "./focusedPage";
@@ -28,7 +28,7 @@ export interface MainPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msg
   lens: Optional<S, D>;
   pageType: 'MainPage';
   pageMode: PageMode;
-  namedOptionals?: NameAndLens<S>;
+  namedOptionals?: NameAndLensFn<S>;
 }
 export function isMainPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> ( o: OnePageDetails<S, D, Msgs, Config, Context> ): o is MainPageDetails<S, D, Msgs, Config, Context> {
   return o.pageType === 'MainPage'

@@ -125,11 +125,11 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
   optionals: {
     selected: {
       constructedBy: 'code',
-      code: "Lenses.identity<FState>().focusQuery ( 'OccupationAndIncomeSummary' ).focusQuery ( 'selectedItem' )"
+      code: "id => id.focusQuery ( 'OccupationAndIncomeSummary' ).focusQuery ( 'selectedItem' )"
     },
     currentOccupation: {
       constructedBy: 'code',
-      code: `Lenses.identity<FState>().focusQuery ( 'OccupationAndIncomeSummary' ).focusQuery ( 'fromApi' ).focusQuery ( 'customerOccupationIncomeDetails' )`
+      code: `id => id.focusQuery ( 'OccupationAndIncomeSummary' ).focusQuery ( 'fromApi' ).focusQuery ( 'customerOccupationIncomeDetails' )`
     },
   },
 
