@@ -146,7 +146,45 @@ describe ( "makeJavaVariable", () => {
 
   it ("should make a sample with a sampleOffset", () =>{
     expect ( makeSampleVariable ( paramsForTest, JointAccountDd, 0 ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      ])
+      "export const sampleJointAccount0: domains.JointAccountDomain = ",
+      "{",
+      "  'balance': 123,",
+      "  'main': {",
+      "    'name': 'Fred Bloggs',",
+      "    'addresses': [",
+      "      {",
+      "        'line1': 'This is a one line string',",
+      "        'line2': 'This is a one line string'",
+      "      },",
+      "      {",
+      "        'line1': 'another one line string',",
+      "        'line2': 'another one line string'",
+      "      },",
+      "      {",
+      "        'line1': 'This is a one line string',",
+      "        'line2': 'This is a one line string'",
+      "      }",
+      "    ]",
+      "  },",
+      "  'joint': {",
+      "    'name': 'Jill Blogs',",
+      "    'addresses': [",
+      "      {",
+      "        'line1': 'another one line string',",
+      "        'line2': 'another one line string'",
+      "      },",
+      "      {",
+      "        'line1': 'another one line string',",
+      "        'line2': 'another one line string'",
+      "      },",
+      "      {",
+      "        'line1': 'This is a one line string',",
+      "        'line2': 'This is a one line string'",
+      "      }",
+      "    ]",
+      "  }",
+      "}"
+    ])
 
   })
 } )
