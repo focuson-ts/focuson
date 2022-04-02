@@ -14,6 +14,7 @@ describe ( "makePages", () => {
       "import { identityOptics } from \"@focuson/lens\";",
       "import { Loading, MultiPageDetails, simpleMessagesPageConfig } from \"@focuson/pages\";",
       "import {Context,  FState } from \"./common\";",
+      "import { namedOptionals } from \"./optionals\";",
       "import { EAccountsSummaryPage } from './EAccountsSummary/EAccountsSummary.render';",
       "import { CreatePlanPage } from './CreatePlan/CreatePlan.render';",
       "import { RepeatingPage } from './Repeating/Repeating.render';",
@@ -22,25 +23,26 @@ describe ( "makePages", () => {
       "const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  Loading )",
       "const identity = identityOptics<FState> ();",
       "export const pages: MultiPageDetails<FState, Context> = {",
-      "    EAccountsSummary: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'EAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: {}, pageMode: 'view' },",
-      "    Repeating: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'Repeating' ), pageFunction: RepeatingPage(), initialValue: {\"selectedItem\":0}, pageMode: 'view' },",
+      "    EAccountsSummary: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'EAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: {}, pageMode: 'view',namedOptionals },",
+      "    Repeating: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'Repeating' ), pageFunction: RepeatingPage(), initialValue: {\"selectedItem\":0}, pageMode: 'view',namedOptionals },",
       "    CreatePlan: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: CreatePlanPage()},",
       "    RepeatingLine: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: RepeatingLinePage()}",
       "  }"
-    ] )
+    ])
   } )
   it ( "should create an initial from 'empty'", () => {
     expect ( makePages ( paramsForTest, [ CreateEAccountPageD ] ).map(s=>s.replace(/"/g, "'")) ).toEqual ( [
       "import { identityOptics } from '@focuson/lens';",
       "import { Loading, MultiPageDetails, simpleMessagesPageConfig } from '@focuson/pages';",
       "import {Context,  FState } from './common';",
+      "import { namedOptionals } from './optionals';",
       "import { CreateEAccountPage } from './CreateEAccount/CreateEAccount.render';",
       "",
       "const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  Loading )",
       "const identity = identityOptics<FState> ();",
       "export const pages: MultiPageDetails<FState, Context> = {",
-      "    CreateEAccount: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'CreateEAccount' ), pageFunction: CreateEAccountPage(), initialValue: {'editing':{'name':'','type':'savings','savingsStyle':'adhoc','initialAmount':0}}, pageMode: 'create' }",
+      "    CreateEAccount: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'CreateEAccount' ), pageFunction: CreateEAccountPage(), initialValue: {'editing':{'name':'','type':'savings','savingsStyle':'adhoc','initialAmount':0}}, pageMode: 'create',namedOptionals }",
       "  }"
-    ] )
+    ])
   } )
 } )
