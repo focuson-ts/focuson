@@ -142,6 +142,24 @@ describe ( "parsePathMakingLens", () => {
     expect ( parsePath ( '$b', lensBuilder ( prefixNameAndLens (), optionals ) ).description ).toEqual ( 'I.focus?(a).focus?(b)' )
   } )
 
+  it ( "should work in the style $currentOccupation[$selected]/occupation", () => {
+    const data = {
+      cur: [ {occupation: 'zero'}, {occupation: 'one'} ],
+      selected: 1
+    }
+    const id = Lenses.identity<any> ()
+    const optionals: NameAndLens<any> = {
+      currentOccupation: id.focusQuery ( 'cur' ),
+      selected: id.focusQuery ( 'selected' )
+    }
+    let builder = lensBuilder ( prefixNameAndLens (), optionals );
+    expect ( tokenisePath ( '#currentOccupation[#selected]/occupation' ) ).toEqual ( [
+      "#currentOccupation", "[", "#selected", "]", "/", "occupation" ] )
+    let lens = parsePath ( '#currentOccupation[#selected]/occupation', builder );
+    expect ( lens.description ).toEqual ( 'I.focus?(cur).chainCalc(I.focus?(selected)).focus?(occupation)' )
+    expect ( lens.getOption ( data ) ).toEqual ( 'one' )
+  } )
+
 } )
 
 describe ( "parseMakingCode", () => {

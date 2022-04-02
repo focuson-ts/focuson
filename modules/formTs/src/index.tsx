@@ -9,7 +9,6 @@ import { pages } from "./pages";
 import { restL } from "@focuson/rest";
 import { restDetails, restUrlMutator } from "./rests";
 import { IndexPage } from "@focuson/form_components";
-import { optionals } from "./optionals";
 export const config: FocusOnConfig<FState, Context, SimpleMessage> = {
   restUrlMutator,
   /** How data is sent to/fetched from apis */
@@ -32,8 +31,7 @@ export const config: FocusOnConfig<FState, Context, SimpleMessage> = {
   fetchers,
   messageL: simpleMessagesL (),
   restL: restL (),
-  restDetails: restDetails,
-  namedOptionals: optionals
+  restDetails: restDetails
 }
 let rootElement = getElement ( "root" );
 console.log ( "set json" )

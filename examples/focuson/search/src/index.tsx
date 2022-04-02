@@ -20,7 +20,7 @@ function MyLoading () {
 const simpleMessagesConfig = simpleMessagesPageConfig<FullState, string, Context> ( MyLoading )
 
 export const pages: MultiPageDetails<FullState, Context> = {
-  search: { pageType: "MainPage", config: simpleMessagesConfig, lens: identityOptics<FullState> ().focusQuery ( 'search' ), pageFunction: SearchPage<FullState, Context> (), initialValue: {}, pageMode: 'edit' },
+  search: { pageType: "MainPage", config: simpleMessagesConfig, lens: identityOptics<FullState> ().focusQuery ( 'search' ), pageFunction: SearchPage<FullState, Context> (), initialValue: {}, pageMode: 'edit', namedOptionals: {} },
   query: { pageType: "ModalPage", config: simpleMessagesConfig, pageFunction: SearchQueryModalPage () }
 }
 
@@ -28,7 +28,6 @@ export const restDetails: RestDetails<FullState, SimpleMessage> = {}
 
 
 const config: FocusOnConfig<FullState, Context, SimpleMessage> = {
-  namedOptionals: {},
   restUrlMutator ( r: RestAction, url: string ): string { return url; },
   /** How data is sent to/fetched from apis */
   fetchFn: fetchWithDelay ( 2000, fetchWithPrefix ( 'http://localhost:8080', loggingFetchFn ) ),
@@ -56,8 +55,6 @@ const config: FocusOnConfig<FullState, Context, SimpleMessage> = {
   /** The collection of all registered fetchers that will get data from the back end */
   fetchers: fetchers ( defaultDateFn )
 }
-type Config = typeof config
-
 let rootElement = getElement ( "root" );
 console.log ( "set json" )
 let setJson = setJsonForFocusOn<FullState, Context, SimpleMessage> ( config, defaultPageSelectionContext ( pages ), ( s: LensState<FullState, FullState, PageSelectionContext<FullState>> ): void =>

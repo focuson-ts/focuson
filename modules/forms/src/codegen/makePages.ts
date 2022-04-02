@@ -15,7 +15,7 @@ export const makeMainPage = <G> ( params: TSParams ) => <B> ( p: MainPageD<B, G>
   }
   const initialValue = p.initialValue === 'empty' ? makeEmpty ()[ p.name ] : p.initialValue
   return p.pageType === 'MainPage' ?
-    [ `    ${p.name}: {pageType: '${p.pageType}',  config: simpleMessagesConfig, lens: identity.focusQuery ( '${pageInState ( p )}' ), pageFunction: ${pageComponentName ( p )}(), initialValue: ${JSON.stringify ( initialValue )}, pageMode: '${p.modes[ 0 ]}' }` ]
+    [ `    ${p.name}: {pageType: '${p.pageType}',  config: simpleMessagesConfig, lens: identity.focusQuery ( '${pageInState ( p )}' ), pageFunction: ${pageComponentName ( p )}(), initialValue: ${JSON.stringify ( initialValue )}, pageMode: '${p.modes[ 0 ]}',namedOptionals }` ]
     : [];
 }
 
@@ -39,6 +39,7 @@ export function makePages<B, G> ( params: TSParams, ps: PageD<B, G>[] ): string[
     `import { identityOptics } from "@focuson/lens";`,
     `import { Loading, MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";`,
     `import {Context,  ${params.stateName} } from "./${params.commonFile}";`,
+    `import { namedOptionals } from "./${params.optionalsFile}";`,
     ...renderImports,
     // `import { ${allMainPages ( ps ).map ( p => pageComponentName ( p ) ).join ( "," )} } from "./${params.renderFile}";`,
     '',

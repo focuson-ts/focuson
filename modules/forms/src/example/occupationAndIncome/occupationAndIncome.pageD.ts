@@ -125,11 +125,11 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
   optionals: {
     selected: {
       constructedBy: 'code',
-      code: "identityL.focusQuery ( 'OccupationAndIncomeSummary' ).focusQuery ( 'selectedItem' )"
+      code: "Lenses.identity<FState>().focusQuery ( 'OccupationAndIncomeSummary' ).focusQuery ( 'selectedItem' )"
     },
     currentOccupation: {
       constructedBy: 'code',
-      code: `identityL.focusQuery ( 'OccupationAndIncomeSummary' ).focusQuery ( 'fromApi' ).focusQuery ( 'customerOccupationIncomeDetails' )`
+      code: `Lenses.identity<FState>().focusQuery ( 'OccupationAndIncomeSummary' ).focusQuery ( 'fromApi' ).focusQuery ( 'customerOccupationIncomeDetails' )`
     },
   },
 
@@ -144,22 +144,22 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
   layout: { component: HideButtonsCD, displayParams: { hide: [ 'additionalInfo', 'businessDetails', 'otherSourcesOfIncome', 'list' ] } },
   buttons: {
     mainOrJoint: { control: "ToggleButton", value: '~/mainOrJoint', buttonText: 'Showing {~/mainOrJoint|Main|Joint}' },
-    nextOccupation: { control: 'ListNextButton', value: '~/selectedItem', list: '~/fromApi/customerOccupationIncomeDetails' },
-    prevOccupation: { control: 'ListPrevButton', value: '~/selectedItem', list: '~/fromApi/customerOccupationIncomeDetails' },
+    nextOccupation: { control: 'ListNextButton', value: '#selected', list: '#currentOccupation' },
+    prevOccupation: { control: 'ListPrevButton', value: '#selected', list: '#currentOccupation' },
     addEntry: {
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'create',
       focusOn: '~/temp',
       // restOnCommit: { rest: occupationAndIncomeRD, target: ['OccupationAndIncomeSummary'], result: 'refresh', action: 'update' },
       createEmpty: oneOccupationIncomeDetailsDD,
-      setToLengthOnClose: { variable: '~/selectedItem', array: '~/fromApi/customerOccupationIncomeDetails' },
-      copyOnClose: { to: '~/fromApi/customerOccupationIncomeDetails/[$append]' }
+      setToLengthOnClose: { variable: '#selected', array: '#currentOccupation' },
+      copyOnClose: { to: '#currentOccupation/[$append]' }
       // restOnCommit: { rest: occupationAndIncomeRD, action: 'update', result: 'refresh', target: [ '' ] }
     },
     edit: {
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'edit',
       focusOn: '~/temp',
-      copy: { from: '~/fromApi/customerOccupationIncomeDetails[~/selectedItem]' },
-      copyOnClose: { to: '~/fromApi/customerOccupationIncomeDetails/[~/selectedItem]' }
+      copy: { from: '#currentOccupation[#selected]' },
+      copyOnClose: { to: '#currentOccupation[#selected]' }
     },
     additionalInfo: {
       control: 'ModalButton', modal: additionalInformationModalPD, mode: 'edit',
@@ -177,13 +177,13 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
       control: 'ModalButton', modal: listOccupationsModalPD, mode: 'edit',
       focusOn: '~/occupation',
       copy: [
-        { from: '~/fromApi/customerOccupationIncomeDetails/[~/selectedItem]/occupation', to: '~/occupation/search' },
-        { from: '~/fromApi/customerOccupationIncomeDetails/[~/selectedItem]/occupation', to: '`/`occupation/selectedOccupationName' },
+        { from: '#currentOccupation[#selected]/occupation', to: '~/occupation/search' },
+        { from: '#currentOccupation[#selected]/occupation', to: '~/occupation/selectedOccupationName' },
         // TODO FROM HAS TO BE AN ARRAY
         // { from: ['{basePage}', 'dropdowns', 'occupationDescriptionResponse' ], to: ['{basePage}', 'occupation', 'searchResults'] },
       ],
       copyOnClose: [
-        { from: '~/occupation/selectedOccupationName', to: '~/fromApi/customerOccupationIncomeDetails[~/selectedItem]/occupation' },
+        { from: '~/occupation/selectedOccupationName', to: '#currentOccupation[#selected]/occupation' },
       ]
     },
   }

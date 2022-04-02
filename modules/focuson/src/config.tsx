@@ -27,6 +27,7 @@ export function defaultPageSelectionAndPostCommandsContext<S extends HasPageSele
   }
 }
 
+
 export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S> {
   commonIds: NameAndLens<S>;
 }
@@ -68,8 +69,6 @@ export interface FocusOnConfig<S, Context, MSGs> {
   fetchers: FetcherTree<S>,
   /** If we need to mutate the url dependant on the rest action this does it. */
   restUrlMutator: ( r: RestAction, url: string ) => string;
-  /** Used in the paths. Optionals marked #xxx come from here */
-  namedOptionals: NameAndLens<S>
 }
 
 export function traceL<S> (): Optional<S, any> {

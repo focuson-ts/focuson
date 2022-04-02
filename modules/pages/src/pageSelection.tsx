@@ -1,4 +1,4 @@
-import { identityOptics, Lens, lensBuilder, Optional, parsePath, prefixNameAndLens, Transform } from "@focuson/lens";
+import { identityOptics, Lens, lensBuilder, NameAndLens, Optional, parsePath, prefixNameAndLens, Transform } from "@focuson/lens";
 import { LensState } from "@focuson/state";
 import { HasMultiPageDetails, isMainPageDetails } from "./pageConfig";
 import { safeArray } from "@focuson/utils";
@@ -73,9 +73,9 @@ export function replaceBasePath<S, Context extends HasPageSelectionLens<S>> ( st
 
 
 export function fromPathGivenState<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): ( path: string ) => Optional<S, any> {
-  const lens = firstPageDataLens ( state )
+  const [ lens, namedOptionals ] = firstPageDataLensAndOptionals ( state )
   if ( !lens ) throw Error ( `Cannot 'fromPathGivenState' because there is no selected page` )
-  return ( path: string ) => parsePath<Optional<S, any>> ( path, lensBuilder<S> ( prefixNameAndLens<S> ( [ '~', lens ], [ '', state.optional ] ), {} ) );
+  return ( path: string ) => parsePath<Optional<S, any>> ( path, lensBuilder<S> ( prefixNameAndLens<S> ( [ '~', lens ], [ '', state.optional ] ), namedOptionals ? namedOptionals : {} ) );
 }
 export function replaceBasePageWithKnownPage ( pageName: string, path: string[] ): string[] {
   return path.map ( part => part === '{basePage}' ? pageName : part )
@@ -112,7 +112,7 @@ export function pageSelectionlens<S extends HasPageSelection> (): Lens<S, PageSe
 }
 
 
-function firstPageDataLens<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): Optional<S, any> | undefined {
+function firstPageDataLensAndOptionals<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): [ Optional<S, any> | undefined, NameAndLens<S> ] {
   let pageSelection = mainPage ( state );
   if ( pageSelection === undefined ) return undefined
   const { pageName, focusOn } = pageSelection
@@ -120,8 +120,9 @@ function firstPageDataLens<S, Context extends PageSelectionContext<S>> ( state: 
   const page = state.context.pages[ pageName ]
   if ( page === undefined ) throw Error ( `Main Page is ${pageName} and it cannot be found.\nLegal values are ${Object.keys ( state.context.pages )}` )
   if ( !isMainPageDetails ( page ) ) throw Error ( `Main page ${pageName} has details which aren't a main page${JSON.stringify ( page )}` )
-  return page.lens
+  return [ page.lens, page.namedOptionals ]
 }
+
 export function newStateFromPath<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): ( path: string ) => LensState<S, any, Context> {
   return ( path ) => state.copyWithLens ( fromPathGivenState ( state ) ( path ) )
 }

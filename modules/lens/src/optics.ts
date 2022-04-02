@@ -558,3 +558,6 @@ export type GetNameFn<Main, T> = ( name: string ) => GetOptioner<Main, T>
 export interface NameAndLens<S> {
   [ name: string ]: Optional<S, any>
 }
+export interface NameAndLensFn<S> {
+  [ name: string ]: ( o: Iso<S, S> ) => Optional<S, any>
+}

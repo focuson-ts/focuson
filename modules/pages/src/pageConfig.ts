@@ -1,4 +1,4 @@
-import { Optional } from "@focuson/lens";
+import { NameAndLens, Optional } from "@focuson/lens";
 import { LensProps, LensState } from "@focuson/state";
 import { simpleMessagesLFn } from "./simpleMessage";
 import { FocusedPage } from "./focusedPage";
@@ -28,6 +28,7 @@ export interface MainPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msg
   lens: Optional<S, D>;
   pageType: 'MainPage';
   pageMode: PageMode;
+  namedOptionals?: NameAndLens<S>;
 }
 export function isMainPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> ( o: OnePageDetails<S, D, Msgs, Config, Context> ): o is MainPageDetails<S, D, Msgs, Config, Context> {
   return o.pageType === 'MainPage'
@@ -57,7 +58,8 @@ export interface PageConfig<S, D, Msgs, Context> {
    * If the template isn't present then the element in the focused page is shown directly
    *
    * A common used for the template is to handle 'loading' */
-  template?: ( p: PageTemplateProps<S, D, Context> ) => JSX.Element
+  template?: ( p: PageTemplateProps<S, D, Context> ) => JSX.Element;
+
 }
 
 /** If the state is using simple messages, and HasSelectedModalPage, this provides a default page config.ts that works in many situations

@@ -12,7 +12,6 @@ import { LabelAndNumberInput } from '@focuson/form_components';
 import { Table } from '@focuson/form_components';
 import { LabelAndBooleanInput } from '@focuson/form_components';
 import { LabelAndRadio } from '@focuson/form_components';
-import { Layout } from '@focuson/form_components';
 import {ListNextButton} from '@focuson/form_components';
 import {ListPrevButton} from '@focuson/form_components';
 import {ModalButton} from '@focuson/pages';
@@ -68,14 +67,14 @@ export function CreatePlan({id,state,mode,buttons}: FocusedProps<FState, CreateP
 }
 
 export function EAccountsSummary({id,state,mode,buttons}: FocusedProps<FState, EAccountsSummaryDomain,Context>){
-  return <Layout details='[[2], [3,3]]'>
+  return <>
     <LabelAndBooleanInput id={`${id}.useEStatements`} state={state.focusOn('useEStatements')} mode={mode} label='Use E Statements' allButtons={buttons} />
     <Table id={`${id}.eAccountsTable`} state={state.focusOn('eAccountsTable')} mode={mode} order={["accountId","displayType","description","virtualBankSeq","frequency","total"]} />
     <LabelAndNumberInput id={`${id}.totalMonthlyCost`} state={state.focusOn('totalMonthlyCost')} mode={mode} label='Total Monthly Cost' allButtons={buttons} required={true} />
     <LabelAndNumberInput id={`${id}.oneAccountBalance`} state={state.focusOn('oneAccountBalance')} mode={mode} label='One Account Balance' allButtons={buttons} required={true} />
     <LabelAndNumberInput id={`${id}.currentAccountBalance`} state={state.focusOn('currentAccountBalance')} mode={mode} label='Current Account Balance' allButtons={buttons} required={true} />
     <CreatePlan id={`${id}.createPlan`} state={state.focusOn('createPlan')} mode={mode} buttons={buttons} />
-</Layout>
+</>
 }
 
 export function EAccountSummary({id,state,mode,buttons}: FocusedProps<FState, EAccountSummaryDomain,Context>){

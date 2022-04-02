@@ -49,7 +49,7 @@ export function tokenisePath ( p: string ) {
     } else if ( ch === '[' || ch === ']' || ch === '~' || ch === '/' ) {
       addAcc ();
       tokens.push ( ch )
-    } else if ( !ch.match ( /[0-9A-Za-z._$]/ ) ) throw new Error ( `Illegal character [${ch}] at position ${i - 1} in [${p}]` )
+    } else if ( !ch.match ( /[0-9A-Za-z._$#]/ ) ) throw new Error ( `Illegal character [${ch}] at position ${i - 1} in [${p}]` )
   }
 }
 export function parsePath<Build> ( path: string, p: PathBuilder<Build> ): Build {
