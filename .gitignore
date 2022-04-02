@@ -7,7 +7,7 @@ node_modules/
 .tgz
 
 out/
-
+.vs/
 # testing
 /coverage
 
