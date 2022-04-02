@@ -7,7 +7,7 @@ import { Context, FocusedProps, FState, identityL } from "../common";
 import { Lenses } from '@focuson/lens';
 import { Guard } from "@focuson/form_components";
 import { GuardButton } from "@focuson/form_components";
-import { namedOptionals } from "../optionals";
+import { AccountOverviewOptionals } from "../AccountOverview/AccountOverview.optionals";
 import { Table } from '@focuson/form_components';
 import { LabelAndStringInput } from '@focuson/form_components';
 import { LabelAndBooleanInput } from '@focuson/form_components';

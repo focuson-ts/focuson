@@ -4,11 +4,11 @@ import { paramsForTest } from "./makeJavaResolvers.spec";
 
 describe ( 'makeOptionals', () => {
   it ( "should take the data out of the pageD and make a composite of the optionals from all the pages", () => {
-    expect ( makeOptionals ( paramsForTest, [ OccupationAndIncomeSummaryPD ] ) ).toEqual ( [
-      "import {FState, identityL } from './common';",
+    expect ( makeOptionals ( paramsForTest,  OccupationAndIncomeSummaryPD  ) ).toEqual ( [
+      "import {FState, identityL } from '../common';",
       "import { Lenses, NameAndLensFn, Optional } from '@focuson/lens'",
       "",
-      "export const namedOptionals: NameAndLensFn<FState> = {",
+      "export const OccupationAndIncomeSummaryOptionals: NameAndLensFn<FState> = {",
       "  currentOccupation: id => id.focusQuery ( 'OccupationAndIncomeSummary' ).focusQuery ( 'fromApi' ).focusQuery ( 'customerOccupationIncomeDetails' ),",
       "  selected: id => id.focusQuery ( 'OccupationAndIncomeSummary' ).focusQuery ( 'selectedItem' )",
       "}"

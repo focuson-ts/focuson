@@ -66,12 +66,12 @@ describe ( "makeButtons", () => {
       "      id='mainOrJoint'",
       "      buttonText='Showing {~/mainOrJoint|Main|Joint}'",
       "       />,",
-      "    nextOccupation:<ListNextButton id='nextOccupation' title='Next' list={fullState.copyWithLens(namedOptionals.currentOccupation(identityL))} value={fullState.copyWithLens(namedOptionals.selected(identityL))} />,",
+      "    nextOccupation:<ListNextButton id='nextOccupation' title='Next' list={fullState.copyWithLens(OccupationAndIncomeSummaryOptionals.currentOccupation(identityL))} value={fullState.copyWithLens(OccupationAndIncomeSummaryOptionals.selected(identityL))} />,",
       "    otherSourcesOfIncome:<ModalButton id='otherSourcesOfIncome' text='otherSourcesOfIncome'  state={state} modal = 'OtherSourcesOfIncomeModal'  ",
       "      pageMode='edit'",
       "      focusOn='~/otherSourcesOfIncome'",
       "    />,",
-      "    prevOccupation:<ListPrevButton id='prevOccupation' title='Prev' list={fullState.copyWithLens(namedOptionals.currentOccupation(identityL))} value={fullState.copyWithLens(namedOptionals.selected(identityL))} />,}"
+      "    prevOccupation:<ListPrevButton id='prevOccupation' title='Prev' list={fullState.copyWithLens(OccupationAndIncomeSummaryOptionals.currentOccupation(identityL))} value={fullState.copyWithLens(OccupationAndIncomeSummaryOptionals.selected(identityL))} />,}"
     ])
   } )
 

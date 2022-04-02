@@ -43,9 +43,12 @@ export const dbMapname = <G> ( d: AllDataDD<G> ) => d.name
 export const dbMapMakerProcname = <G> ( d: CompDataD<G> ) => `make${d.name}`
 export const allMapsName = <B, G> ( p: PageD<B, G>, suffix: string ) => `All${p.name}_${suffix}_Maps`
 
+export const optionalsName = <B, G> ( p: PageD<B, G>) => `${p.name}Optionals`
+
 
 export const someFileName = <B, G> ( root: string, pd: PageD<B, G>, postfix: string ): string => `${root}/${pd.name}/${pd.name}.${postfix}`;
 export const modalImportFromFileName = <B, G> ( root: string, p: ModalPageD<B, G>, suffix: string ): string => `${root}/${p.display.importFrom}/${p.display.importFrom}.${suffix}`
+
 
 export const storybookFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, `stories` );
 export const renderFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.renderFile );
@@ -55,4 +58,4 @@ export const pactFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B
 export const samplesFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.samplesFile );
 export const restFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.restsFile );
 export const fetcherFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.fetchersFile );
-export const optionalsFileName = <B, G> ( root: string, params: TSParams ): string => `${root}/${params.optionalsFile}`;
+export const optionalsFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G >): string => someFileName ( root, pd, params.optionalsFile );

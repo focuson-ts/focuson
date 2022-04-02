@@ -1,7 +1,7 @@
 import { lensBuilder, Lenses, Optional, parsePath, PathBuilder, prefixNameAndLens, stateCodeBuilder } from "@focuson/lens";
 import { TSParams } from "./config";
 import { PageD } from "../common/pageD";
-import { pageDomainName } from "./names";
+import { optionalsName, pageDomainName } from "./names";
 import { CreateButtonData } from "./makeButtons";
 
 export function pathBuilderForLensIncPage ( pageName: string ): PathBuilder<Optional<any, any>> {
@@ -40,7 +40,7 @@ export const stateFocusQueryWithTildaFromPage = <B, G> ( errorPrefix: string, pa
     return parsePath ( path, stateCodeBuilder ( {
       '/': `.copyWithLens(Lenses.identity<${params.domainsFile}.${pageDomainName ( p )}>())`,
       '~': ``,
-    }, 'namedOptionals', 'focusOn' ) )
+    }, optionalsName(p), 'focusOn' ) )
   } catch ( e: any ) {
     console.error ( errorPrefix )
     throw e
@@ -51,7 +51,7 @@ export const stateFocusQueryWithEmptyFromHere = <B, G> ( errorPrefix: string, pa
     return parsePath ( path, stateCodeBuilder ( {
       '/': `.copyWithLens(Lenses.identity<${params.domainsFile}.${pageDomainName ( p )}>())`,
       '': ``,
-    }, 'namedOptionals','focusOn' ) )
+    }, optionalsName(p),'focusOn' ) )
   } catch ( e: any ) {
     console.error ( errorPrefix )
     throw e

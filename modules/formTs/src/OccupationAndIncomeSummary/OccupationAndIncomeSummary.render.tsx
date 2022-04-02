@@ -7,7 +7,7 @@ import { Context, FocusedProps, FState, identityL } from "../common";
 import { Lenses } from '@focuson/lens';
 import { Guard } from "@focuson/form_components";
 import { GuardButton } from "@focuson/form_components";
-import { namedOptionals } from "../optionals";
+import { OccupationAndIncomeSummaryOptionals } from "../OccupationAndIncomeSummary/OccupationAndIncomeSummary.optionals";
 import { LabelAndStringInput } from '@focuson/form_components';
 import { LabelAndDropdown } from '@focuson/form_components';
 import { LabelAndNumberInput } from '@focuson/form_components';
@@ -77,12 +77,12 @@ export function OccupationAndIncomeSummaryPage(){
         id='mainOrJoint'
         buttonText='Showing {~/mainOrJoint|Main|Joint}'
          />,
-      nextOccupation:<ListNextButton id='nextOccupation' title='Next' list={fullState.copyWithLens(namedOptionals.currentOccupation(identityL))} value={fullState.copyWithLens(namedOptionals.selected(identityL))} />,
+      nextOccupation:<ListNextButton id='nextOccupation' title='Next' list={fullState.copyWithLens(OccupationAndIncomeSummaryOptionals.currentOccupation(identityL))} value={fullState.copyWithLens(OccupationAndIncomeSummaryOptionals.selected(identityL))} />,
       otherSourcesOfIncome:<ModalButton id='otherSourcesOfIncome' text='otherSourcesOfIncome'  state={state} modal = 'OtherSourcesOfIncomeModal'  
         pageMode='edit'
         focusOn='~/otherSourcesOfIncome'
       />,
-      prevOccupation:<ListPrevButton id='prevOccupation' title='Prev' list={fullState.copyWithLens(namedOptionals.currentOccupation(identityL))} value={fullState.copyWithLens(namedOptionals.selected(identityL))} />,}
+      prevOccupation:<ListPrevButton id='prevOccupation' title='Prev' list={fullState.copyWithLens(OccupationAndIncomeSummaryOptionals.currentOccupation(identityL))} value={fullState.copyWithLens(OccupationAndIncomeSummaryOptionals.selected(identityL))} />,}
 
       return <HideButtonsLayout buttons={buttons} hide={["additionalInfo","businessDetails","otherSourcesOfIncome","list"]}>
           <OccupationAndIncomeFullDomain id={`${id}`} state={state} mode={mode} buttons={buttons} />

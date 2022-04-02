@@ -1,6 +1,6 @@
-import { isMainPage, MainPageD, PageD } from "../common/pageD";
+import { allMainPages, isMainPage, MainPageD, PageD } from "../common/pageD";
 import { TSParams } from "./config";
-import { modalName, pageComponentName, pageInState, renderFileName } from "./names";
+import { modalName, optionalsFileName, optionalsName, pageComponentName, pageInState, renderFileName } from "./names";
 import { addStringToEndOfAllButLast } from "./codegen";
 import { makeEmptyData } from "./makeSample";
 import { safeArray } from "@focuson/utils";
@@ -15,7 +15,7 @@ export const makeMainPage = <G> ( params: TSParams ) => <B> ( p: MainPageD<B, G>
   }
   const initialValue = p.initialValue === 'empty' ? makeEmpty ()[ p.name ] : p.initialValue
   return p.pageType === 'MainPage' ?
-    [ `    ${p.name}: {pageType: '${p.pageType}',  config: simpleMessagesConfig, lens: identity.focusQuery ( '${pageInState ( p )}' ), pageFunction: ${pageComponentName ( p )}(), initialValue: ${JSON.stringify ( initialValue )}, pageMode: '${p.modes[ 0 ]}',namedOptionals }` ]
+    [ `    ${p.name}: {pageType: '${p.pageType}',  config: simpleMessagesConfig, lens: identity.focusQuery ( '${pageInState ( p )}' ), pageFunction: ${pageComponentName ( p )}(), initialValue: ${JSON.stringify ( initialValue )}, pageMode: '${p.modes[ 0 ]}',namedOptionals: ${optionalsName(p)} }` ]
     : [];
 }
 
@@ -35,13 +35,13 @@ export const makeModal = <G> ( params: TSParams ) => <B> ( { name, modal }: Moda
 export function makePages<B, G> ( params: TSParams, ps: PageD<B, G>[] ): string[] {
   const modals = walkModals ( ps );
   const renderImports = ps.map ( p => `import { ${pageComponentName ( p )} } from '${renderFileName ( '.', params, p )}';` )
+  const optionalImports = allMainPages ( ps ).map ( p => `import { ${optionalsName ( p )} } from "${optionalsFileName ( '.', params, p )}"; ` )
   return [
     `import { identityOptics } from "@focuson/lens";`,
     `import { Loading, MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";`,
     `import {Context,  ${params.stateName} } from "./${params.commonFile}";`,
-    `import { namedOptionals } from "./${params.optionalsFile}";`,
     ...renderImports,
-    // `import { ${allMainPages ( ps ).map ( p => pageComponentName ( p ) ).join ( "," )} } from "./${params.renderFile}";`,
+    ...optionalImports,
     '',
 
     `const simpleMessagesConfig = simpleMessagesPageConfig<${params.stateName}, string, Context> (  Loading )`,

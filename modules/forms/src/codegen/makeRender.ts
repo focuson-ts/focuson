@@ -3,7 +3,7 @@ import { commonParams, DisplayCompD, OneDisplayCompParamD, SimpleDisplayComp } f
 import { dataDsIn, isMainPage, isModalPage, PageD } from "../common/pageD";
 
 import { decamelize, NameAnd, sortedEntries } from "@focuson/utils";
-import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, pageComponentName, pageDomainName } from "./names";
+import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, optionalsFileName, optionalsName, pageComponentName, pageDomainName } from "./names";
 import { addButtonsFromVariables, MakeButton, makeButtonsVariable, makeGuardButtonVariables } from "./makeButtons";
 import { focusOnFor, indentList, noExtension } from "./codegen";
 import { TSParams } from "./config";
@@ -239,6 +239,7 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
   const pages = [ page ]
   const dataComponents = sortedEntries ( dataDsIn ( pages, false ) ).flatMap ( ( [ name, dataD ] ) => dataD.display ? [] : createReactComponent ( params, makeGuard, page ) ( dataD ) )
   const pageComponents = pages.flatMap ( p => createReactPageComponent ( params, makeGuard, makeButton, p ) )
+  const optionalImports = isMainPage ( page ) ? [ `import { ${optionalsName ( page )} } from "${optionalsFileName ( `..`, params, page )}";` ] : []
   const imports = [
     `import { LensProps } from "@focuson/state";`,
     `import { FocusOnContext } from '@focuson/focuson';`,
@@ -247,7 +248,8 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
     `import { Lenses } from '@focuson/lens';`,
     `import { Guard } from "@focuson/form_components";`,
     `import { GuardButton } from "@focuson/form_components";`,
-    `import { namedOptionals } from "../${params.optionalsFile}";`
+    ...optionalImports
+
   ]
   let pageDomain = noExtension ( params.pageDomainsFile );
   let domain = noExtension ( params.domainsFile );
