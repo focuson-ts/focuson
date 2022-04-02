@@ -2,7 +2,7 @@ import { LensProps, LensState } from "@focuson/state";
 
 import { currentPageSelection, HasPageSelectionLens, mainPage, PageMode, PageParams, PageSelection, PageSelectionContext } from "./pageSelection";
 import { FocusedPage } from "./focusedPage";
-import { isMainPageDetails, MultiPageDetails, OnePageDetails, PageConfig } from "./pageConfig";
+import { isMainPageDetails, MainPageDetails, MultiPageDetails, OnePageDetails, PageConfig } from "./pageConfig";
 import { DefaultTemplate, PageTemplateProps } from "./PageTemplate";
 import { Loading } from "./loading";
 import { lensBuilder, Lenses, NameAndLens, Optional, parsePath } from "@focuson/lens";
@@ -18,7 +18,7 @@ export interface SelectedPageDebug {
 export function SelectedPage<S, Context extends PageSelectionContext<S>> ( { state }: LensProps<S, any, Context> ) {
   let combine = state.context.combine;
   let pages: PageDetailsForCombine[] = findSelectedPageDetails ( state );
-  console.log('SelectedPages - combine', combine)
+  console.log ( 'SelectedPages - combine', combine )
   return combine ? combine ( state, pages ) : <div>{pages}</div>
 }
 
@@ -34,7 +34,7 @@ function findSelectedPageDetails<S, Context extends PageSelectionContext<S>> ( s
   let selectedPageData: PageSelection[] = currentPageSelection ( state );
   if ( debug ) console.log ( 'findSelectedPageDetails', selectedPageData )
 
-  return selectedPageData.map ( findOneSelectedPageDetails ( state, findMainPageLens ( selectedPageData, state.context.pages ) ) )
+  return selectedPageData.map ( findOneSelectedPageDetails ( state, findMainPageDtails ( selectedPageData, state.context.pages ) ) )
 }
 
 export function fullState<S, T, C> ( ls: LensState<S, T, C> ): LensState<S, S, C> {
@@ -51,15 +51,15 @@ export const pageState = <S, T, C extends HasPageSelectionLens<S>> ( ls: LensSta
 export const prefixToLensFromRoot: NameAndLens<any> = { "/": Lenses.identity () };
 export const prefixToLensFromBasePath: NameAndLens<any> = { "~/": Lenses.identity () };
 
-export function lensForPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context extends PageSelectionContext<S>> ( mainPageL: Optional<S, any>, currentPageD: OnePageDetails<S, D, Msgs, Config, Context>, base?: string ): Optional<S, any> {
-
+export function lensForPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context extends PageSelectionContext<S>> ( mainPageD: MainPageDetails<S, D, Msgs, Config, Context>,
+                                                                                                                                          currentPageD: OnePageDetails<S, D, Msgs, Config, Context>, base?: string ): Optional<S, any> {
   if ( isMainPageDetails ( currentPageD ) ) return currentPageD.lens
   return parsePath<Optional<S, any>> ( safeString ( base ), lensBuilder<S> ( {
     '/': Lenses.identity (),
-    '~': mainPageL,
-  }, {} ) )
+    '~': mainPageD.lens,
+  }, mainPageD.namedOptionals ) )
 }
-export const findOneSelectedPageDetails = <S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context>, page0Lens: Optional<S, any> ) => ( ps: PageSelection ): PageDetailsForCombine => {
+export const findOneSelectedPageDetails = <S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context>, page0Details: MainPageDetails<S, any, any, any, Context>) => ( ps: PageSelection ): PageDetailsForCombine => {
   // @ts-ignore
   const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
   const pages = state.context.pages
@@ -68,7 +68,7 @@ export const findOneSelectedPageDetails = <S, Context extends PageSelectionConte
   if ( !page ) throw Error ( `Cannot find page with name ${pageName}, legal Values are [${Object.keys ( pages ).join ( "," )}]` )
   const { config, pageFunction, pageType } = page
 
-  const lsForPage = state.copyWithLens ( lensForPageDetails ( page0Lens, page, focusOn ) )
+  const lsForPage = state.copyWithLens ( lensForPageDetails ( page0Details, page, focusOn ) )
 
   if ( debug ) console.log ( "findOneSelectedPageDetails.pageFunction", pageFunction )
   if ( typeof pageFunction === 'function' ) {// this is for legacy support
@@ -77,15 +77,14 @@ export const findOneSelectedPageDetails = <S, Context extends PageSelectionConte
     if ( debug ) console.log ( "findOneSelectedPageDetails.legacy result", element )
     if ( debug ) console.log ( "findOneSelectedPageDetails.legacy result - json", JSON.stringify ( element ) )
     return { element, pageType }
-  } else return displayOne ( config, pageType, pageFunction, ps.pageParams,lsForPage, pageMode );
+  } else return displayOne ( config, pageType, pageFunction, ps.pageParams, lsForPage, pageMode );
 };
 
-export function findMainPageLens<S> ( pageSelections: PageSelection[], pageDetails: MultiPageDetails<S, any> ) {
+export function findMainPageDtails<S> ( pageSelections: PageSelection[], pageDetails: MultiPageDetails<S, any> ) {
   const firstPage = pageSelections[ 0 ]
   let page0Details: any = pageDetails[ firstPage.pageName ];
   if ( page0Details.pageType !== 'MainPage' ) throw Error ( `Software error: first page ${firstPage.pageName} is not a main page` )
-  let mainPageL = page0Details.lens;
-  return mainPageL;
+  return page0Details
 }
 
 /** Given a config.ts, a focused page data structure and a lens state (focused on anything...doesn't matter) this will display a page */

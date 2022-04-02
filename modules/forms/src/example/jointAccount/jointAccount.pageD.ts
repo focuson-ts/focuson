@@ -28,7 +28,20 @@ export const JointAccountPageD: ExampleMainPage = {
   domain: {
     fromApi: { dataDD: JointAccountDd },
     joint: { dataDD: BooleanDD },
-    temp: { dataDD: JointAccountCustomerDD },
+    temp: { dataDD: JointAccountCustomerDD }
+  },
+  optionals: {
+    selectedAccount: {
+      constructedBy: 'code',
+      code: ` id => {
+    return Lenses.chainNthFromOptionalFn ( id, state => {
+      if ( state.JointAccount?.joint )
+        return id.focusQuery ( 'JointAccount' ).focusQuery ( 'fromApi' ).focusQuery ( 'joint' )
+      else
+        return id.focusQuery ( 'JointAccount' ).focusQuery ( 'fromApi' ).focusQuery ( 'main' )
+    }, '#currentOccupation' )
+  }`
+    },
   },
   modals: [ { modal: JointAccountEditModalPageD } ],
 
@@ -38,6 +51,6 @@ export const JointAccountPageD: ExampleMainPage = {
   },
   buttons: {
     toggle: { control: 'ToggleButton', value: '~/joint', buttonText: 'Toggle [{~/joint}]' },
-    edit: { control: 'ModalButton', modal: JointAccountEditModalPageD, focusOn: '~/fromApi', mode: 'edit' } // needs more stuff
+    edit: { control: 'ModalButton', modal: JointAccountEditModalPageD, focusOn: '#selectedAccount', mode: 'edit' } // needs more stuff
   }
 }

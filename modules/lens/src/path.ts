@@ -67,10 +67,11 @@ export function prefixNameAndLens<S> ( ...choices: [ string, Optional<S, any> ][
 }
 export function lensBuilder<S> ( prefixs: NameAndLens<S>, variables: NameAndLensFn<S> ): PathBuilder<Optional<S, any>> {
   const id = Lenses.identity<S> ()
+
   return {
-    initialVariable ( name: string ): Optional<S, any> {return variables[ name ] ( id );},
+    initialVariable ( name: string ): Optional<S, any> {return variables[ name ]?. ( id );},
     isVariable ( name: string ): boolean {return variables[ name ] !== undefined;},
-    foldVariable<S> ( acc: Optional<S, any>, name: string ): Optional<S, any> {return acc.chain ( variables[ name ] ( id ) );},
+    foldVariable<S> ( acc: Optional<S, any>, name: string ): Optional<S, any> {return acc.chain ( variables[ name ]?. ( id ) );},
     zero ( initial: string ): Optional<S, any> { return prefixs[ initial ]; },
     foldBracketsPath ( acc: Optional<S, any>, path: Optional<S, any> ): Optional<S, any> { return acc.chainCalc ( path ) },
     foldAppend ( acc: Optional<S, any> ): Optional<S, any> { return acc.chain ( Lenses.append () ); },
@@ -103,6 +104,7 @@ function processInitialToken<Build> ( s: ParseState<Build>, p: PathBuilder<Build
   const initial = s.tokens[ s.tokens.length - 1 ]
   if ( initial.startsWith ( '#' ) ) {
     s.build = p.initialVariable ( initial.slice ( 1 ) )
+    if ( s.build === undefined ) throw makeError ( s, `Cannot find variable ${initial}` )
     s.tokens.pop ()
     return
   }

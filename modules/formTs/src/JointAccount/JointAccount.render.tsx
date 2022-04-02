@@ -30,7 +30,7 @@ export function JointAccountPage(){
   const id='root';
   const buttons =    {edit:<ModalButton id='edit' text='edit'  state={state} modal = 'JointAccountEditModalPage'  
         pageMode='edit'
-        focusOn='~/fromApi'
+        focusOn='#selectedAccount'
       />,
       toggle:<ToggleButton state={fullState.focusOn('joint')}
         id='toggle'
