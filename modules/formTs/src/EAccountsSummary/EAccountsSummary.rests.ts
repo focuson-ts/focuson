@@ -5,6 +5,7 @@ import { Lenses, NameAndLens} from "@focuson/lens"
 
 import { FState } from "../common"
 
+//If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
 export function EAccountsSummary_CreatePlanRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.CreatePlanDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}
   return {
@@ -18,6 +19,7 @@ export function EAccountsSummary_CreatePlanRestDetails ( cd: NameAndLens<FState>
   }
 }
 
+//If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
 export function EAccountsSummary_EAccountsSummaryRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}
   return {

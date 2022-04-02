@@ -1,8 +1,8 @@
-import { dataDsIn, isMainPage, MainPageD, PageD } from "../common/pageD";
+import { dataDsIn, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { indentList } from "../codegen/codegen";
 import { safeArray, sortedEntries } from "@focuson/utils";
 import { isModalButtonInPage, ModalButtonInPage } from "../buttons/modalButtons";
-import { ButtonD, ButtonWithControl, isButtonWithControl } from "../buttons/allButtons";
+import { ButtonD, isButtonWithControl } from "../buttons/allButtons";
 import { GuardWithCondition, isGuardButton } from "../buttons/guardButton";
 
 export function makeReport<B extends ButtonD, G extends GuardWithCondition> ( ps: PageD<B, G>[] ): string[] {
@@ -59,11 +59,16 @@ export function makeReportFor<B extends ButtonD, G extends GuardWithCondition> (
 const notCreated = ( { generatedDomainNames }: ReportInfo, name ): string[] => generatedDomainNames.indexOf ( name ) < 0 ?
   [ `CRITICAL - ${name} will not be generated. Generated is ${generatedDomainNames.join ( "," )}` ] :
   [];
+const dontSupportVariables = <S> ( info: ReportInfo, name: string, rdp: RestDefnInPageProperties<S> ): string[] => rdp.targetFromPath.indexOf ( '#' ) >= 0 ?
+  [ `CRITICAL - Currently do not support variable names in 'rest' ${name} 'targetFromPath'. ${rdp.targetFromPath} ` ] :
+  [];
 export function makeRestReport<B, G> ( page: MainPageD<B, G>, info: ReportInfo ): ReportDetails {
   const general: string[] = sortedEntries ( page.rest ).flatMap ( ( [ name, rdp ] ) => [
     `${name} at ${rdp.rest.url}. Params: ${sortedEntries ( rdp.rest.params ).map ( ( [ name, p ] ) => name )}`,
     ...notCreated ( info, rdp.rest.dataDD.name ) ] )
-  const critical: string[] = sortedEntries ( page.rest ).flatMap ( ( [ name, rdp ] ) => notCreated ( info, rdp.rest.dataDD.name ) )
+  const critical: string[] = sortedEntries ( page.rest ).flatMap ( ( [ name, rdp ] ) => [
+    ...notCreated ( info, rdp.rest.dataDD.name ),
+    ...dontSupportVariables ( info,name, rdp ) ] )
   return { part: 'rests', general, critical }
 
 }

@@ -3,7 +3,7 @@ import { domainName, domainsFileName, pageDomainName, restDetailsName, restFileN
 import { TSParams } from "./config";
 import { allRestAndActions, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { sortedEntries } from "@focuson/utils";
-import { addStringToEndOfAllButLast, lensFocusQueryFor, stateFocusQueryForRepl } from "./codegen";
+import { addStringToEndOfAllButLast, indentList, lensFocusQueryFor, stateFocusQueryForRepl } from "./codegen";
 import { parsePath, stateCodeBuilder } from "@focuson/lens";
 import { lensFocusQueryWithSlashAndTildaFromIdentity, lensFocusQueryWithTildaFromPage } from "./lens";
 
@@ -13,11 +13,16 @@ export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restNam
   let pageDomain = `${params.domainsFile}.${pageDomainName ( p )}`;
   const locals: [ string, LensRestParam ][] = sortedEntries ( r.rest.params ).flatMap ( ( [ n, l ] ) => isRestLens ( l ) ? [ [ n, l ] ] : [] )
   const fddLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: Lenses.identity< ${pageDomain}>()${lensFocusQueryFor ( l.lens )}` )
+  const compilationException = r.targetFromPath.indexOf ( '#' ) >= 0 ?
+    [ `    //This compilation error is because you used a variable name in the target '${r.targetFromPath}'. Currently that is not supported` ] : []
+
   return [
+    `//If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs`,
     `export function ${restDetailsName ( p, restName, r.rest )} ( cd: NameAndLens<${params.stateName}>, dateFn: DateFn  ): OneRestDetails<${params.stateName}, ${pageDomain}, ${params.domainsFile}.${domainName ( r.rest.dataDD )}, SimpleMessage> {`,
     `  const fdd: NameAndLens<${pageDomain}> = {` + fddLens.join ( "," ) + "}",
     `  return {`,
     `    fdLens: Lenses.identity<${params.stateName}>().focusQuery('${p.name}'),`,
+    ...indentList ( compilationException ),
     `    dLens: ${lensFocusQueryWithTildaFromPage ( `makeRest for page ${p.name}, ${restName}`, params, p, r.targetFromPath )},`,
     `    cd, fdd,`,
     `    ids: ${JSON.stringify ( ids )},`,

@@ -5,6 +5,7 @@ import { accountT, addT, customerT, nameT } from "../database/tableNames";
 
 export const jointAccountRestD: any = {
   params: { ...commonParams },
+
   dataDD: JointAccountDd,
   url: '/api/jointAccount?{query}',
   actions: [ 'get' ],

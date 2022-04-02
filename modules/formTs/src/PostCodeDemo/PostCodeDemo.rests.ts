@@ -5,6 +5,7 @@ import { Lenses, NameAndLens} from "@focuson/lens"
 
 import { FState } from "../common"
 
+//If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
 export function PostCodeDemo_PostCodeMainPageRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.PostCodeDemoPageDomain, domains.PostCodeMainPageDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.PostCodeDemoPageDomain> = {}
   return {
@@ -18,6 +19,7 @@ export function PostCodeDemo_PostCodeMainPageRestDetails ( cd: NameAndLens<FStat
   }
 }
 
+//If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
 export function PostCodeDemo_PostCodeDataRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.PostCodeDemoPageDomain, domains.PostCodeDataDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.PostCodeDemoPageDomain> = {postcode: Lenses.identity< domains.PostCodeDemoPageDomain>().focusQuery('postcode').focusQuery('search')}
   return {
