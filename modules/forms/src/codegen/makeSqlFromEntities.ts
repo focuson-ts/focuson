@@ -1,12 +1,45 @@
 import { DBTable } from "../common/resolverD";
-import { beforeSeparator, NameAnd } from "@focuson/utils";
+import { beforeSeparator, NameAnd, safeArray } from "@focuson/utils";
 import { EntityAndWhere, unique } from "../common/restD";
-import { isTableAndField, simplifyTableAndFieldAndAliasData, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, TableAliasAndField } from "./makeJavaSql";
 import { CompDataD, emptyDataFlatMap, flatMapDD } from "../common/dataD";
 import { beforeAfterSeparator } from "@focuson/utils/src/utils";
-import { RestDefnInPageProperties } from "../common/pageD";
+import { PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfAllButLast, indentList } from "./codegen";
+import { JavaWiringParams } from "./config";
+import { sqlTafFieldName, sqlMapName, sqlListName } from "./names";
 
+export type DbValues = string | TableAndField
+
+export interface TableAndField {
+  table: DBTable;
+  field: string;
+}
+export interface TableAliasAndField extends TableAndField {
+  alias: string
+}
+export function isTableAndField ( d: DbValues ): d is TableAndField {
+  // @ts-ignore
+  return d?.table !== undefined
+}
+
+export function simplifyTableAndFields ( t: TableAndField ) {
+  return `${t.table.name}.${t.field}`
+}
+export function simplifyTableAndFieldsData<G> ( t: TableAndFieldsData<G> ) {
+  return `${t.table.name} => ${t.fieldData.map ( fd => `${fd.dbFieldName}/${fd.fieldName}:${fd.reactType}` ).join ( ',' )}`
+}
+export function simplifyTableAndFieldData<G> ( t: TableAndFieldData<G> ) {
+  return `${t.table.name}.${t.fieldData.dbFieldName}/${t.fieldData.fieldName}`
+}
+export function simplifyTableAndFieldAndAliasData<G> ( t: TableAndFieldAndAliasData<G> ) {
+  return `${t.alias}:${t.table.name}.${t.fieldData.dbFieldName}/${t.fieldData.fieldName}`
+}
+export function simplifyTableAndFieldDataArray<G> ( ts: TableAndFieldData<G>[] ) {
+  return unique ( ts.map ( t => `${t.table.name}.${t.fieldData.dbFieldName}/${t.fieldData.fieldName}` ), t => t )
+}
+export function simplifyTableAndFieldAndAliasDataArray<G> ( ts: TableAndFieldAndAliasData<G>[] ) {
+  return unique ( ts.map ( t => `${t.alias}:${t.table.name}.${t.fieldData.dbFieldName}/${t.fieldData.fieldName}` ), t => t )
+}
 export interface CommonEntity {
   table: DBTable;
   where?: string;
@@ -93,8 +126,9 @@ const findSqlRootsMapper: EntityFolder<SqlRoot[]> = {
 export function findSqlRoots ( m: EntityAndWhere ): SqlRoot {
   return foldEntitys ( findSqlRootsMapper, m, m.entity, [] )[ 0 ]
 }
-export function walkSqlRoots<T> ( s: SqlRoot, fn: ( s: SqlRoot ) => T ): T[] {
-  return [ fn ( s ), ...s.children.flatMap ( c => walkSqlRoots ( c, fn ) ) ]
+export function walkSqlRoots<T> ( s: SqlRoot, fn: ( s: SqlRoot, path: number[] ) => T, path?: number[] ): T[] {
+  let safePath = safeArray ( path );
+  return [ fn ( s, safePath ), ...s.children.flatMap ( ( c, i ) => walkSqlRoots ( c, fn, [ ...safePath, i ] ) ) ]
 }
 
 export interface TableWhereLink {
@@ -193,9 +227,9 @@ export function findWhereLinksForSqlRootGoingUp ( sqlRoot: SqlRoot ): WhereLink[
   } )
 }
 export const whereFieldToFieldData = <G> ( errorPrefix: string, name: string ): FieldData<G> => {
-  const [ fieldName, theType ] = beforeAfterSeparator ( ":", name )
-  if ( theType === '' || theType === 'integer' ) return ({ fieldName, reactType: 'number', rsGetter: 'getInt', dbType: 'integer' })
-  if ( theType === 'string' ) return ({ fieldName, reactType: 'string', rsGetter: 'getString', dbType: 'string' })
+  const [ dbFieldName, theType ] = beforeAfterSeparator ( ":", name )
+  if ( theType === '' || theType === 'integer' ) return ({ dbFieldName, reactType: 'number', rsGetter: 'getInt', dbType: 'integer' })
+  if ( theType === 'string' ) return ({ dbFieldName, reactType: 'string', rsGetter: 'getString', dbType: 'string' })
   throw Error ( `${errorPrefix} Cannot find whereFieldToFieldData for type [${theType}] in [${name}]` )
 };
 
@@ -211,7 +245,9 @@ export function findFieldsFromWhere<G> ( errorPrefix: string, ws: WhereLink[] ):
 }
 
 interface FieldData<G> {
-  fieldName: string;
+  /** Can be undefined if only present in a where clause and needed for ids */
+  fieldName?: string;
+  dbFieldName: string;
   rsGetter: string;
   reactType: string;
   dbType: string;
@@ -220,7 +256,7 @@ interface TableAndFieldData<G> {
   table: DBTable;
   fieldData: FieldData<G>
 }
-interface TableAndFieldAndAliasData<G> extends TableAndFieldData<G> {
+export interface TableAndFieldAndAliasData<G> extends TableAndFieldData<G> {
   table: DBTable;
   fieldData: FieldData<G>
   alias: string;
@@ -235,14 +271,15 @@ export function findTableAndFieldFromDataD<G> ( dataD: CompDataD<G> ): TableAndF
   let withDuplicates = flatMapDD<TableAndFieldData<G>, any> ( dataD, {
     ...emptyDataFlatMap<TableAndFieldData<G>, any> (),
     walkPrim: ( path, parents, oneDataDD, dataDD ) => {
+      const fieldName = path[ path.length - 1 ];
       if ( oneDataDD?.db )
         if ( isTableAndField ( oneDataDD.db ) ) {
-          let fieldData: FieldData<any> = { fieldName: oneDataDD.db.field, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType };
+          let fieldData: FieldData<any> = { dbFieldName: oneDataDD.db.field, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName };
           return [ { table: oneDataDD.db.table, fieldData } ]
         } else {
           const parent = parents[ parents.length - 1 ]
           if ( !parent.table ) throw new Error ( `Have a field name [${oneDataDD.db} in ${path}], but there is no table in the parent ${parent.name}` )
-          let fieldData: FieldData<any> = { fieldName: oneDataDD.db, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType };
+          let fieldData: FieldData<any> = { dbFieldName: oneDataDD.db, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName };
           return [ { table: parent.table, fieldData: fieldData } ]
         }
       return []
@@ -302,7 +339,7 @@ export function makeWhereClause ( ws: WhereLink[] ) {
 }
 
 export function generateGetSql ( s: SqlLinkData ): string[] {
-  return [ `select ${s.fields.map ( taf => `${taf.alias}.${taf.fieldData.fieldName}` ).join ( "," )}`,
+  return [ `select ${s.fields.map ( taf => `${taf.alias}.${taf.fieldData.dbFieldName} as ${sqlTafFieldName ( taf )}` ).join ( "," )}`,
     `from ${s.aliasAndTables.map ( ( [ alias, table ] ) => `${table.name} ${alias}` ).join ( "," )}`,
     `where ${makeWhereClause ( s.whereLinks )}` ]
 }
@@ -326,9 +363,54 @@ export const findAllTableAndFieldDatasIn = <G> ( rdps: RestDefnInPageProperties<
 
 export function createTableSql<G> ( rdps: RestDefnInPageProperties<G>[] ): NameAnd<string[]> {
   const createSql = ( taf: TableAndFieldsData<G> ): string[] => [
-    `create table ${taf.table.name}(`,
-    ...indentList ( addStringToEndOfAllButLast ( "," ) ( taf.fieldData.map ( fd => `${fd.fieldName} ${fd.dbType}` ) ) ),
+    `create table ${taf.table.name}` + '(',
+    ...indentList ( addStringToEndOfAllButLast ( "," ) ( taf.fieldData.map ( fd => `${fd.dbFieldName} ${fd.dbType}` ) ) ),
     ')'
   ];
   return Object.fromEntries ( findAllTableAndFieldDatasIn ( rdps ).map ( taf => [ taf.table.name, createSql ( taf ) ] ) )
+}
+
+export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, ld: SqlLinkData, path: number[], childCount: number ): string[] {
+  const maps = ld.aliasAndTables.map ( ( [ alias, table ] ) => `public final Map<String,Object> ${alias} = new HashMap<>();` )
+  let onlyIds = ld.fields.filter ( taf => !taf.fieldData.fieldName );
+  const ids = onlyIds.map ( taf => `public final Object ${sqlTafFieldName ( taf )};` )
+  const className = sqlMapName ( p, restName, path );
+
+  const constParams = [ `ResultSet rs`, ...[ ...Array ( childCount ).keys () ].map ( i => `List<${sqlListName ( p, restName, path, i )}> list${i}` ) ].join ( ',' )
+  const sql = generateGetSql ( ld )
+  const putters = ld.fields
+    .filter ( taf => taf.fieldData.fieldName )
+    .sort ( ( l, r ) => l.table.name.localeCompare ( r.table.name ) )
+    .sort ( ( l, r ) => l.fieldData.dbFieldName.localeCompare ( r.fieldData.dbFieldName ) )
+    .map ( taf => `this.${taf.alias}.put("${taf.fieldData.fieldName}", rs.${taf.fieldData.rsGetter}("${sqlTafFieldName ( taf )}"));` )
+  const setIds = onlyIds.map ( taf => `this.${sqlTafFieldName ( taf )} = rs.${taf.fieldData.rsGetter}("{${sqlTafFieldName ( taf )}");` )
+  const links = ld.sqlRoot.children.map ( ( childRoot, i ) => {
+    const [ name, entity ] = childRoot.path[ childRoot.path.length - 1 ]
+    return `this.${name}.put("", list${i});`
+  } );
+  return [
+    `package ${params.thePackage}.${params.dbPackage};`,
+    '',
+    `import java.sql.ResultSet;`,
+    `import java.sql.SQLException;`,
+    `import java.util.HashMap;`,
+    `import java.util.List;`,
+    `import java.util.Map;`,
+    ``,
+    '/**',
+    ...indentList ( sql ),
+    '*/',
+    `public class ${className} {`,
+    ...indentList ( [
+      ...ids,
+      '',
+      ...maps,
+      '',
+      `public ${className}(${constParams}) throws SQLException{`,
+      ...indentList ( [ ...putters, '', ...setIds, '', ...links ] ),
+      '}'
+    ] ),
+    `}`
+  ]
+
 }

@@ -6,17 +6,16 @@ import { detailsLog, GenerateLogLevel, sortedEntries } from "@focuson/utils";
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
-import { allMapsName, createTableSqlName, fetcherInterfaceName, javaSqlCreateTableSqlName, javaSqlReadSqlName, mockFetcherClassName, queryClassName, restControllerName } from "../codegen/names";
+import { createTableSqlName, fetcherInterfaceName, mockFetcherClassName, queryClassName, restControllerName, sqlMapFileName } from "../codegen/names";
 import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
 import { makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
 import { makeAllMockFetchers } from "../codegen/makeMockFetchers";
 import { makeJavaVariablesForGraphQlQuery } from "../codegen/makeGraphQlQuery";
 import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
 import { AppConfig } from "../focuson.config";
-import { findSqlRoot, makeAggregateMapsFor, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, walkRoots, walkSqlData } from "../codegen/makeJavaSql";
-import { isSqlResolverD } from "../common/resolverD";
-import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
-import { createTableSql } from "../codegen/makeSqlFromEntities";
+// import { findSqlRoot, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, walkRoots } from "../codegen/makeJavaSql.tsxxx";
+import { createTableSql, findSqlLinkDataFromRootAndDataD, findSqlRoots, makeMapsForRest, walkSqlRoots } from "../codegen/makeSqlFromEntities";
+
 
 export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
   //to help the readability of the writeFile/template files
@@ -66,9 +65,9 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   const allRestDefns: RestDefnInPageProperties<G>[] = allMainPages ( pages ).flatMap ( p => sortedEntries ( p.rest ).map ( t => t[ 1 ] ) )
 
   const createTable = createTableSql ( allRestDefns )
-  console.log(JSON.stringify(createTable,null,2))
+  console.log ( JSON.stringify ( createTable, null, 2 ) )
   Object.entries ( createTable ).forEach ( ( [ name, sql ] ) =>
-    writeToFile ( `${javaSql}/${createTableSqlName ( name )}`, () => sql ) ,details)
+    writeToFile ( `${javaSql}/${createTableSqlName ( name )}`, () => sql ), details )
 
 
   writeToFile ( `${javaResourcesRoot}/${params.schema}`, () => makeGraphQlSchema ( rests ), details )
@@ -97,21 +96,34 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
     }, directorySpec, details ) )
 
   rests.forEach ( rest => writeToFile ( `${javaControllerRoot}/${restControllerName ( rest )}.java`, () => makeSpringEndpointsFor ( params, rest ) ) )
-
-  rests.forEach ( rest => {
-    if ( isSqlResolverD ( rest.resolver ) ) {
-      let sqlG = rest.resolver.get;
-      if ( sqlG ) {
-        console.log ( 'sqlG', rest.dataDD.name )
-
-        writeToFile ( `${javaSql}/${javaSqlCreateTableSqlName ( rest )}`, () => makeCreateTableSql ( rest.dataDD, sqlG ), details )
-        const sqlRoots = findSqlRoot ( JointAccountDd, sqlG );
-        const sqlData = walkRoots ( sqlRoots, r => makeSqlDataFor ( r, sqlG ) )
-        const makeSql = sqlData.flatMap ( makeGetSqlFor )
-        writeToFile ( `${javaSql}/${javaSqlReadSqlName ( rest )}`, () => makeSql, details )
-
-      }
-    }
+  allMainPages ( pages ).map ( p => {
+    Object.entries ( p.rest ).map ( ( [ name, rdp ] ) => {
+      let tables = rdp.rest.tables;
+      if ( !tables ) return
+      detailsLog ( logLevel, 2, `Creating rest files for ${p.name} ${name}` )
+      walkSqlRoots ( findSqlRoots ( tables ), ( root, path ) => {
+        const ld = findSqlLinkDataFromRootAndDataD ( root, rdp.rest.dataDD )
+        let fileName = sqlMapFileName ( javaDbPackages,  p, name, path ) + ".java";
+        console.log('name:', fileName)
+        writeToFile ( fileName, () => makeMapsForRest ( params, p, name, ld, path, root.children.length ) )
+      } )
+    } )
   } )
+
+  // rests.forEach ( rest => {
+  //   if ( isSqlResolverD ( rest.resolver ) ) {
+  //     let sqlG = rest.resolver.get;
+  //     if ( sqlG ) {
+  //       console.log ( 'sqlG', rest.dataDD.name )
+  //
+  //       writeToFile ( `${javaSql}/${javaSqlCreateTableSqlName ( rest )}`, () => makeCreateTableSql ( rest.dataDD, sqlG ), details )
+  //       const sqlRoots = findSqlRoot ( JointAccountDd, sqlG );
+  //       const sqlData = walkRoots ( sqlRoots, r => makeSqlDataFor ( r, sqlG ) )
+  //       const makeSql = sqlData.flatMap ( makeGetSqlFor )
+  //       writeToFile ( `${javaSql}/${javaSqlReadSqlName ( rest )}`, () => makeSql, details )
+  //
+  //     }
+  //   }
+  // } )
 
 };

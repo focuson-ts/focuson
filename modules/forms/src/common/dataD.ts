@@ -4,7 +4,8 @@ import { ComponentDisplayParams } from "../codegen/makeRender";
 import { NameAnd, safeArray } from "@focuson/utils";
 import { Guards } from "../buttons/guardButton";
 import { DBTable } from "./resolverD";
-import { DbValues } from "../codegen/makeJavaSql";
+import { DbValues } from "../codegen/makeSqlFromEntities";
+
 
 
 export interface HasSample<T> {

@@ -4,6 +4,7 @@ import { RestActionDetail, RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
 import { RestAction, safeString } from "@focuson/utils";
 import { JavaWiringParams, TSParams } from "./config";
+import { TableAndFieldAndAliasData } from "./makeSqlFromEntities";
 
 export const guardName = ( s: string ) => s + "Guard"
 export const domainName = <G> ( d: CompDataD<G> ): string => d.name + "Domain";
@@ -25,8 +26,8 @@ export const javaSqlCreateTableSqlName = <G> ( restD: RestD<G> ) => `${restD.dat
 export const javaSqlReadSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.readTableSql.sql`
 
 export const queryName = <G> ( restD: RestD<G>, action: RestAction ): string => { return action + compDataDIn ( restD.dataDD ).name; }
-export const createTableName = <G> ( restD: RestD<G> ): string => { return "createTable"+ compDataDIn ( restD.dataDD ).name; }
-export const createTableSqlName = <G> ( tableName): string => { return tableName + ".createTable.sql"}
+export const createTableName = <G> ( restD: RestD<G> ): string => { return "createTable" + compDataDIn ( restD.dataDD ).name; }
+export const createTableSqlName = <G> ( tableName ): string => { return tableName + ".createTable.sql"}
 export const endPointName = <G> ( restD: RestD<G>, action: RestAction ): string => action + restD.dataDD.name
 
 export const modalName = <B, G> ( p: PageD<B, G>, modal: PageD<B, G> ) => modal.name
@@ -40,12 +41,15 @@ export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): str
 export const javaDbFileName = <B, G> ( params: JavaWiringParams, p: PageD<B, G> ): string => `${p.name}Db`;
 export const sqlDataSuffixFor = ( suffix: string, i: number ): string => suffix + "_" + i
 
+export function sqlMapName<B, G> ( p: PageD<B, G>, restName: string, path: number[] ) {return `${p.name}_${restName}Maps${path.join ( "_" )}`}
+export function sqlListName<B, G> ( p: PageD<B, G>, restName: string, path: number[], i: number ) {return sqlMapName ( p, restName, [ ...path, i ] )}
+export function sqlMapFileName<B, G> ( root: string, p: PageD<B, G>, restName: string, path: number[] ) {return `${root}/${sqlMapName ( p, restName, path )}`}
+export function sqlTafFieldName<G> ( taf: TableAndFieldAndAliasData<G> ) {return `${taf.alias}_${taf.fieldData.dbFieldName}`}
+// export const dbMapname = <G> ( d: AllDataDD<G> ) => d.name
+// export const dbMapMakerProcname = <G> ( d: CompDataD<G> ) => `make${d.name}`
+// export const allMapsName = <B, G> ( p: PageD<B, G>, suffix: string ) => `All${p.name}_${suffix}_Maps`
 
-export const dbMapname = <G> ( d: AllDataDD<G> ) => d.name
-export const dbMapMakerProcname = <G> ( d: CompDataD<G> ) => `make${d.name}`
-export const allMapsName = <B, G> ( p: PageD<B, G>, suffix: string ) => `All${p.name}_${suffix}_Maps`
-
-export const optionalsName = <B, G> ( p: PageD<B, G>) => `${p.name}Optionals`
+export const optionalsName = <B, G> ( p: PageD<B, G> ) => `${p.name}Optionals`
 
 
 export const someFileName = <B, G> ( root: string, pd: PageD<B, G>, postfix: string ): string => `${root}/${pd.name}/${pd.name}.${postfix}`;
@@ -60,4 +64,4 @@ export const pactFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B
 export const samplesFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.samplesFile );
 export const restFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.restsFile );
 export const fetcherFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.fetchersFile );
-export const optionalsFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G >): string => someFileName ( root, pd, params.optionalsFile );
+export const optionalsFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.optionalsFile );
