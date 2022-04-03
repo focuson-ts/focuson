@@ -912,7 +912,7 @@ public class Sample{
          "  \"line4\": \"England\""+
          "}"
   );
-  public static Map samplePostCodeMainPage0 =  parse.parseMap(
+  public static Map samplePostCodeNameAndAddress0 =  parse.parseMap(
          "{"+
          "  \"name\": \"This is a one line string\","+
          "  \"line1\": \"4 Privet drive\","+

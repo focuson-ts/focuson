@@ -22,10 +22,10 @@ import {PostCodeDemoPageDomain} from "../PostCodeDemo/PostCodeDemo.domains";
 import { HideButtonsLayout } from '@focuson/form_components';
 import {PostCodeDataDomain} from "../PostCodeDemo/PostCodeDemo.domains"
 import {PostCodeDataLineDomain} from "../PostCodeDemo/PostCodeDemo.domains"
-import {PostCodeMainPageDomain} from "../PostCodeDemo/PostCodeDemo.domains"
+import {PostCodeNameAndAddressDomain} from "../PostCodeDemo/PostCodeDemo.domains"
 import {PostCodeSearchDomain} from "../PostCodeDemo/PostCodeDemo.domains"
 export function PostCodeDemoPage(){
-  return focusedPageWithExtraState<FState, PostCodeDemoPageDomain, PostCodeMainPageDomain, Context> ( s => 'Post Code Demo' ) ( state => state.focusOn('main')) (
+  return focusedPageWithExtraState<FState, PostCodeDemoPageDomain, PostCodeNameAndAddressDomain, Context> ( s => 'Post Code Demo' ) ( state => state.focusOn('main')) (
 ( fullState, state , full, d, mode) => {
   const id='root';
   const buttons =    {save:<RestButton state={state}
@@ -33,7 +33,7 @@ export function PostCodeDemoPage(){
         name='save'
         action='create'
         validate={false}
-        rest='PostCodeDemo_PostCodeMainPageRestDetails'
+        rest='PostCodeDemo_PostCodeNameAndAddressRestDetails'
        />,
       search:<ModalButton id='search' text='search'  state={state} modal = 'PostCodeSearch'  
         pageMode='edit'
@@ -43,7 +43,7 @@ export function PostCodeDemoPage(){
       />,}
 
       return <HideButtonsLayout buttons={buttons} hide={["search"]}>
-          <PostCodeMainPage id={`${id}`} state={state} mode={mode} buttons={buttons} />
+          <PostCodeNameAndAddress id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.search } 
       { buttons.save } 
       </HideButtonsLayout>})}
@@ -57,7 +57,7 @@ export function PostCodeDataLine({id,state,mode,buttons}: FocusedProps<FState, P
 </>
 }
 
-export function PostCodeMainPage({id,state,mode,buttons}: FocusedProps<FState, PostCodeMainPageDomain,Context>){
+export function PostCodeNameAndAddress({id,state,mode,buttons}: FocusedProps<FState, PostCodeNameAndAddressDomain,Context>){
   return <>
     <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='Name' allButtons={buttons} required={true} />
     <LabelAndStringInput id={`${id}.line1`} state={state.focusOn('line1')} mode={mode} label='Line1' allButtons={buttons} required={true} />

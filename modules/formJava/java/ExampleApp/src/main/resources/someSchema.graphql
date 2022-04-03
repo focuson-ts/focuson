@@ -28,7 +28,7 @@ type Mutation{
   createCreateEAccountData(accountId: String!, customerId: String!,obj: CreateEAccountDataInp!):CreateEAccountData!
   createChequeCreditbooks(accountId: String!, applRef: String!, brandRef: String!, customerId: String!,obj: ChequeCreditbooksInp!):ChequeCreditbooks!
   createRepeatingLine(customerId: String!,obj: [RepeatingLineInp!]!):[RepeatingLine!]!
-  createPostCodeMainPage(,obj: PostCodeMainPageInp!):PostCodeMainPage!
+  createPostCodeNameAndAddress(,obj: PostCodeNameAndAddressInp!):PostCodeNameAndAddress!
 }
 type AccountAllFlags{
   flags: [AccountOneFlag!]!
@@ -270,7 +270,7 @@ type PostCodeDataLine{
   line3: String!
   line4: String!
 }
-type PostCodeMainPage{
+type PostCodeNameAndAddress{
   name: String!
   line1: String!
   line2: String!
@@ -347,7 +347,7 @@ input OneOccupationIncomeDetailsInp{
   accountantAppRoleSeq: Int!
   currentEmployment: String!
 }
-input PostCodeMainPageInp{
+input PostCodeNameAndAddressInp{
   name: String!
   line1: String!
   line2: String!

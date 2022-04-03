@@ -1,7 +1,7 @@
 export interface HasPostCodeDemoPageDomain {   PostCodeDemo?: PostCodeDemoPageDomain}
 
 export interface PostCodeDemoPageDomain{
-  main?:PostCodeMainPageDomain;
+  main?:PostCodeNameAndAddressDomain;
   postcode?:PostCodeSearchDomain;
   selectedPostcodeIndex?:number;
 }
@@ -15,7 +15,7 @@ export interface PostCodeDataLineDomain{
   line4: string;
 }
 
-export interface PostCodeMainPageDomain{
+export interface PostCodeNameAndAddressDomain{
   line1: string;
   line2: string;
   line3: string;

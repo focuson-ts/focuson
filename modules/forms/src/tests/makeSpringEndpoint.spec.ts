@@ -47,16 +47,6 @@ describe ( "makeSpringEndpoint", () => {
       "    public static String sampleEAccountsSummary() throws Exception {",
       "      return new ObjectMapper().writeValueAsString( Sample.sampleEAccountsSummary0);",
       "    }",
-      "    @PostMapping(value=\"/api/accountsSummary/createTable\", produces=\"text/html\")",
-      "    public String createTableEAccountsSummary() throws Exception{",
-      "       return \"\";",
-      "    }",
-      "",
-      "    @GetMapping(value=\"/api/accountsSummary/createTableSql\", produces=\"text/plain\")",
-      "    public String createTableSqlEAccountsSummary() throws Exception{",
-      "       return new String(getClass().getResourceAsStream(\"/sql/EAccountsSummary.createTableSql.sql\").readAllBytes(), \"utf-8\");",
-      "    }",
-      "",
       "  }"
     ] )
   } )
@@ -133,16 +123,6 @@ describe ( "makeSpringEndpoint", () => {
       "    public static String sampleCreatePlan() throws Exception {",
       "      return new ObjectMapper().writeValueAsString( Sample.sampleCreatePlan0);",
       "    }",
-      "    @PostMapping(value='/api/createPlan/createTable', produces='text/html')",
-      "    public String createTableCreatePlan() throws Exception{",
-      "       return '';",
-      "    }",
-      "",
-      "    @GetMapping(value='/api/createPlan/createTableSql', produces='text/plain')",
-      "    public String createTableSqlCreatePlan() throws Exception{",
-      "       return new String(getClass().getResourceAsStream('/sql/CreatePlan.createTableSql.sql').readAllBytes(), 'utf-8');",
-      "    }",
-      "",
       "  }"
     ])
   } )
@@ -190,16 +170,6 @@ describe ( "makeSpringEndpoint", () => {
       "    public static String sampleRepeatingWholeData() throws Exception {",
       "      return new ObjectMapper().writeValueAsString( Sample.sampleRepeatingWholeData0);",
       "    }",
-      "    @PostMapping(value='/api/repeating/createTable', produces='text/html')",
-      "    public String createTableRepeatingLine() throws Exception{",
-      "       return '';",
-      "    }",
-      "",
-      "    @GetMapping(value='/api/repeating/createTableSql', produces='text/plain')",
-      "    public String createTableSqlRepeatingLine() throws Exception{",
-      "       return new String(getClass().getResourceAsStream('/sql/RepeatingWholeData.createTableSql.sql').readAllBytes(), 'utf-8');",
-      "    }",
-      "",
       "  }"
     ])
 
@@ -238,16 +208,6 @@ describe ( "makeSpringEndpoint", () => {
       "    public static String samplePostCodeNameAndAddress() throws Exception {",
       "      return new ObjectMapper().writeValueAsString( Sample.samplePostCodeNameAndAddress0);",
       "    }",
-      "    @PostMapping(value='/api/address/createTable', produces='text/html')",
-      "    public String createTablePostCodeNameAndAddress() throws Exception{",
-      "       return '';",
-      "    }",
-      "",
-      "    @GetMapping(value='/api/address/createTableSql', produces='text/plain')",
-      "    public String createTableSqlPostCodeNameAndAddress() throws Exception{",
-      "       return new String(getClass().getResourceAsStream('/sql/PostCodeNameAndAddress.createTableSql.sql').readAllBytes(), 'utf-8');",
-      "    }",
-      "",
       "  }"
     ])
 

@@ -39,14 +39,4 @@ import java.util.Map;
     public static String sampleOccupationAndIncomeFullDomain() throws Exception {
       return new ObjectMapper().writeValueAsString( Sample.sampleOccupationAndIncomeFullDomain0);
     }
-    @PostMapping(value="/customer/occupation/v2/occupationIncomeDetails/createTable", produces="text/html")
-    public String createTableOccupationAndIncomeFullDomain() throws Exception{
-       return "";
-    }
-
-    @GetMapping(value="/customer/occupation/v2/occupationIncomeDetails/createTableSql", produces="text/plain")
-    public String createTableSqlOccupationAndIncomeFullDomain() throws Exception{
-       return new String(getClass().getResourceAsStream("/sql/OccupationAndIncomeFullDomain.createTableSql.sql").readAllBytes(), "utf-8");
-    }
-
   }

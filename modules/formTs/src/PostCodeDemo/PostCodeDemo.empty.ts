@@ -16,7 +16,7 @@ export const emptyPostCodeDataLine:domains.PostCodeDataLineDomain =
     "line3": "",
     "line4": ""
   }
-export const emptyPostCodeMainPage:domains.PostCodeMainPageDomain =
+export const emptyPostCodeNameAndAddress:domains.PostCodeNameAndAddressDomain =
   {
     "name": "",
     "line1": "",

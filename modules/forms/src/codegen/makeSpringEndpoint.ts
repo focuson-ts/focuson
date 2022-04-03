@@ -1,5 +1,5 @@
 import { defaultRestAction, postFixForEndpoint, RestD, RestParams } from "../common/restD";
-import { createTableName, createTableSqllName, endPointName, queryClassName, queryName, restControllerName, sampleName } from "./names";
+import { createTableName,  endPointName, queryClassName, queryName, restControllerName, sampleName } from "./names";
 import { JavaWiringParams } from "./config";
 import { beforeSeparator, RestAction, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction, indentList } from "./codegen";
@@ -56,21 +56,21 @@ function makeQueryEndpoint<G> ( params: JavaWiringParams, r: RestD<G>, restActio
 }
 
 
-function makeCreateTableEndpoints<G> ( params: JavaWiringParams, r: RestD<G> ): string[] {
-  return [
-    `    @PostMapping(value="${beforeSeparator ( "?", r.url )}/createTable", produces="text/html")`,
-    `    public String ${createTableName ( r )}() throws Exception{`,
-    `       return "";`,
-    `    }`,
-    ``,
-    `    @GetMapping(value="${beforeSeparator ( "?", r.url )}/createTableSql", produces="text/plain")`,
-    `    public String ${createTableSqllName ( r )}() throws Exception{`,
-    `       return new String(getClass().getResourceAsStream("/sql/${r.dataDD.name}.createTableSql.sql").readAllBytes(), "utf-8");`,
-    `    }`,
-    ``
-  ];
-
-}
+// function makeCreateTableEndpoints<G> ( params: JavaWiringParams, r: RestD<G> ): string[] {
+//   return [
+//     `    @PostMapping(value="${beforeSeparator ( "?", r.url )}/createTable", produces="text/html")`,
+//     `    public String ${createTableName ( r )}() throws Exception{`,
+//     `       return "";`,
+//     `    }`,
+//     ``,
+//     `    @GetMapping(value="${beforeSeparator ( "?", r.url )}/createTableSql", produces="text/plain")`,
+//     `    public String ${createTableSqllName ( r )}() throws Exception{`,
+//     `       return new String(getClass().getResourceAsStream("/sql/${r.dataDD.name}.createTableSql.sql").readAllBytes(), "utf-8");`,
+//     `    }`,
+//     ``
+//   ];
+//
+// }
 
 function makeSampleEndpoint<G> ( params: JavaWiringParams, r: RestD<G> ): string[] {
   return [
@@ -103,6 +103,6 @@ export function makeSpringEndpointsFor<G> ( params: JavaWiringParams, r: RestD<G
     ...endpoints,
     ...queries,
     ...makeSampleEndpoint ( params, r ),
-    ...makeCreateTableEndpoints ( params, r ),
+    // ...makeCreateTableEndpoints ( params, r ),
     `  }` ]
 }

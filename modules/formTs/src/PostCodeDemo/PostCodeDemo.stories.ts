@@ -15,7 +15,7 @@ export default {
 }
  
 interface StoryState {
-   domain: domain.PostCodeMainPageDomain
+   domain: domain.PostCodeNameAndAddressDomain
    pageMode: PageMode
 }
  
@@ -32,17 +32,17 @@ const Template: Story<StoryState> = ( args: StoryState ) =>{
  
 export const View = Template.bind ( {} );
 View.args = {
-   domain: samples.samplePostCodeMainPage0,
+   domain: samples.samplePostCodeNameAndAddress0,
    pageMode: 'view'
 };
 export const Edit = Template.bind ( {} );
  Edit.args = {
-   domain: samples.samplePostCodeMainPage0,
+   domain: samples.samplePostCodeNameAndAddress0,
    pageMode: 'edit'
 };
  
 export const Empty = Template.bind ( {} );
 Empty.args = {
-   domain: empty.emptyPostCodeMainPage,
+   domain: empty.emptyPostCodeNameAndAddress,
    pageMode: 'create'
 };

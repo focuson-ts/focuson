@@ -6,7 +6,7 @@ import { detailsLog, GenerateLogLevel, sortedEntries } from "@focuson/utils";
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
-import { allMapsName, fetcherInterfaceName, javaSqlCreateTableSqlName, javaSqlReadSqlName, mockFetcherClassName, queryClassName, restControllerName } from "../codegen/names";
+import { allMapsName, createTableSqlName, fetcherInterfaceName, javaSqlCreateTableSqlName, javaSqlReadSqlName, mockFetcherClassName, queryClassName, restControllerName } from "../codegen/names";
 import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
 import { makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
 import { makeAllMockFetchers } from "../codegen/makeMockFetchers";
@@ -16,6 +16,7 @@ import { AppConfig } from "../focuson.config";
 import { findSqlRoot, makeAggregateMapsFor, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, walkRoots, walkSqlData } from "../codegen/makeJavaSql";
 import { isSqlResolverD } from "../common/resolverD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
+import { createTableSql } from "../codegen/makeSqlFromEntities";
 
 export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
   //to help the readability of the writeFile/template files
@@ -54,7 +55,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   copyFiles ( javaScriptRoot, 'templates/scripts', directorySpec ) ( 'makeJava.sh', 'makeJvmPact.sh', 'template.java' )
 
   copyFiles ( javaAppRoot, 'templates/raw/java', directorySpec ) ( 'application.properties' )
-  copyFile ( javaAppRoot+'/.gitignore','templates/raw/gitignore', directorySpec )
+  copyFile ( javaAppRoot + '/.gitignore', 'templates/raw/gitignore', directorySpec )
   copyFiles ( javaCodeRoot, 'templates/raw/java', directorySpec ) ( 'CorsConfig.java' )
   detailsLog ( logLevel, 1, 'java common copies' )
   templateFile ( `${javaAppRoot}/pom.xml`, 'templates/mvnTemplate.pom', params, directorySpec )
@@ -62,21 +63,13 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   templateFile ( `${javaControllerRoot}/Transform.java`, 'templates/Transform.java', params, directorySpec )
 
 
-  allMainPages ( pages ).forEach ( p => {
-    detailsLog ( logLevel, 1, `java page ${p.name}` )
-    sortedEntries ( p.rest ).forEach ( ( [ restName, defn ] ) => {
-      detailsLog ( logLevel, 1, `rest ${restName}` )
-      let resolver = defn.rest.resolver;
-      if ( isSqlResolverD ( resolver ) ) {
-        const getSql = resolver.get
-        if ( getSql ) {
-          const sqlData = makeSqlDataFor ( findSqlRoot ( defn.rest.dataDD, getSql ), getSql )
-          walkSqlData ( sqlData, restName, ( sd, suffix ) =>
-            writeToFile ( `${javaDbPackages}/${allMapsName ( p, suffix )}.java`, () => makeAggregateMapsFor ( params, p, suffix, sd ), details ) );
-        }
-      }
-    } )
-  } )
+  const allRestDefns: RestDefnInPageProperties<G>[] = allMainPages ( pages ).flatMap ( p => sortedEntries ( p.rest ).map ( t => t[ 1 ] ) )
+
+  const createTable = createTableSql ( allRestDefns )
+  console.log(JSON.stringify(createTable,null,2))
+  Object.entries ( createTable ).forEach ( ( [ name, sql ] ) =>
+    writeToFile ( `${javaSql}/${createTableSqlName ( name )}`, () => sql ) ,details)
+
 
   writeToFile ( `${javaResourcesRoot}/${params.schema}`, () => makeGraphQlSchema ( rests ), details )
   rests.forEach ( rest => {

@@ -28,7 +28,7 @@ export const samplePostCodeDataLine0: domains.PostCodeDataLineDomain =
   "line3": "Surrey",
   "line4": "England"
 }
-export const samplePostCodeMainPage0: domains.PostCodeMainPageDomain = 
+export const samplePostCodeNameAndAddress0: domains.PostCodeNameAndAddressDomain = 
 {
   "name": "This is a one line string",
   "line1": "4 Privet drive",
@@ -95,7 +95,7 @@ export const samplePostCodeDataLine1: domains.PostCodeDataLineDomain =
   "line3": "",
   "line4": "Ireland"
 }
-export const samplePostCodeMainPage1: domains.PostCodeMainPageDomain = 
+export const samplePostCodeNameAndAddress1: domains.PostCodeNameAndAddressDomain = 
 {
   "name": "another one line string",
   "line1": "27 Throughput Lane",
@@ -162,7 +162,7 @@ export const samplePostCodeDataLine2: domains.PostCodeDataLineDomain =
   "line3": "This is a one line string",
   "line4": "This is a one line string"
 }
-export const samplePostCodeMainPage2: domains.PostCodeMainPageDomain = 
+export const samplePostCodeNameAndAddress2: domains.PostCodeNameAndAddressDomain = 
 {
   "name": "This is a one line string",
   "line1": "This is a one line string",

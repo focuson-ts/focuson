@@ -15,8 +15,8 @@ describe("Allow pacts to be run from intelliJ for PostCodeDemo", () =>{})
 //Rest address create pact test for PostCodeDemo
 pactWith ( { consumer: 'PostCodeDemo', provider: 'PostCodeDemoProvider', cors: true }, provider => {
   describe ( 'PostCodeDemo - address rest create', () => {
-   it ( 'should have a create rest for PostCodeMainPage', async () => {
-    const restCommand: RestCommand = { name: 'PostCodeDemo_PostCodeMainPageRestDetails', restAction: 'create' }
+   it ( 'should have a create rest for PostCodeNameAndAddress', async () => {
+    const restCommand: RestCommand = { name: 'PostCodeDemo_PostCodeNameAndAddressRestDetails', restAction: 'create' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {},
@@ -29,21 +29,21 @@ pactWith ( { consumer: 'PostCodeDemo', provider: 'PostCodeDemoProvider', cors: t
          method: 'POST',
          path:   '/api/address',
          query:{},
-         body: JSON.stringify(samples.samplePostCodeMainPage0),
+         body: JSON.stringify(samples.samplePostCodeNameAndAddress0),
       },
       willRespondWith: {
          status: 200,
-         body: samples.samplePostCodeMainPage0
+         body: samples.samplePostCodeNameAndAddress0
       },
     } )
     const lensTransforms: Transform<FState,any>[] = [
-    [Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('main'), () => samples.samplePostCodeMainPage0]
+    [Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('main'), () => samples.samplePostCodeNameAndAddress0]
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
     const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
-    const expected = Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('main').set ( rawExpected, samples.samplePostCodeMainPage0 )
+    const expected = Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('main').set ( rawExpected, samples.samplePostCodeNameAndAddress0 )
     expect ( newState.messages.length ).toEqual ( 1 )
     expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
     expect ( { ...newState, messages: []}).toEqual ( expected )

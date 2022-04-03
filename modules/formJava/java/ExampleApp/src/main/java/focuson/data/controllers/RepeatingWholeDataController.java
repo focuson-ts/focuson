@@ -39,14 +39,4 @@ import java.util.Map;
     public static String sampleRepeatingWholeData() throws Exception {
       return new ObjectMapper().writeValueAsString( Sample.sampleRepeatingWholeData0);
     }
-    @PostMapping(value="/api/repeating/createTable", produces="text/html")
-    public String createTableRepeatingLine() throws Exception{
-       return "";
-    }
-
-    @GetMapping(value="/api/repeating/createTableSql", produces="text/plain")
-    public String createTableSqlRepeatingLine() throws Exception{
-       return new String(getClass().getResourceAsStream("/sql/RepeatingWholeData.createTableSql.sql").readAllBytes(), "utf-8");
-    }
-
   }
