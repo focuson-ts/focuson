@@ -415,8 +415,8 @@ describe ( "makeMapsForRest", () => {
         "    this.ACC_TBL_acc_id = rs.getInt('{ACC_TBL_acc_id');",
         "    this.ACC_TBL_brand_id = rs.getInt('{ACC_TBL_brand_id');",
         "    ",
-        "    this.mainCustomer.put('', list0);",
-        "    this.jointCustomer.put('', list1);",
+        "    this.mainCustomer.put('addresses', list0);",
+        "    this.jointCustomer.put('addresses', list1);",
         "  }",
         "}"
       ],
