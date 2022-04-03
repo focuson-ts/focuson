@@ -8,7 +8,7 @@ import { makeButtons } from "../buttons/allButtons";
 
 import { AllGuardCreator } from "../buttons/guardButton";
 import { RepeatingLinePageD, RepeatingPageD } from "../example/repeating/repeating.pageD";
-import { PostCodeMainPage } from "../example/addressSearch/addressSearch.pageD";
+import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { listOccupationsModalPD, OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
 import { oneOccupationIncomeDetailsDD } from "../example/occupationAndIncome/occupationAndIncome.dataD";
 

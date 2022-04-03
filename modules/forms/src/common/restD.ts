@@ -2,6 +2,7 @@ import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
 import { RestAction, safeArray, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction } from "../codegen/codegen";
 import { ResolverD } from "./resolverD";
+import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 
 
 export type AllLensRestParams = CommonLensRestParam | LensRestParam
@@ -78,7 +79,12 @@ export interface RestD<G> {
   dataDD: CompDataD<G>,
   url: string,
   actions: RestAction[];
-  resolver?: ResolverD
+  resolver?: ResolverD;
+  tables?:EntityAndWhere
+}
+export interface EntityAndWhere{
+  entity: MainEntity;
+  where:  WhereFromQuery[],
 }
 
 export const actionDetail = ( r: RestAction ): RestActionDetail => defaultRestAction[ r ];

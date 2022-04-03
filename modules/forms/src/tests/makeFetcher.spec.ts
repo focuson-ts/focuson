@@ -3,8 +3,8 @@ import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD"
 import { paramsForTest } from "./makeJavaResolvers.spec";
 import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 import { RepeatingPageD } from "../example/repeating/repeating.pageD";
-import { postcodeRestD } from "../example/addressSearch/addressSearch.restD";
-import { PostCodeMainPage } from "../example/addressSearch/addressSearch.pageD";
+import { postcodeRestD } from "../example/postCodeDemo/addressSearch.restD";
+import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 
 describe ( "makeAllFetchers", () => {
     it ( "should make a fetcher", () => {

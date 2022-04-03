@@ -39,4 +39,14 @@ import java.util.Map;
     public static String sampleChequeCreditbooks() throws Exception {
       return new ObjectMapper().writeValueAsString( Sample.sampleChequeCreditbooks0);
     }
+    @PostMapping(value="/api/chequeCreditBooks/createTable", produces="text/html")
+    public String createTableChequeCreditbooks() throws Exception{
+       return "";
+    }
+
+    @GetMapping(value="/api/chequeCreditBooks/createTableSql", produces="text/plain")
+    public String createTableSqlChequeCreditbooks() throws Exception{
+       return new String(getClass().getResourceAsStream("/sql/ChequeCreditbooks.createTableSql.sql").readAllBytes(), "utf-8");
+    }
+
   }

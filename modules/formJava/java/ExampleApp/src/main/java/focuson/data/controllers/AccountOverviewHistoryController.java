@@ -29,4 +29,14 @@ import java.util.Map;
     public static String sampleAccountOverviewHistory() throws Exception {
       return new ObjectMapper().writeValueAsString( Sample.sampleAccountOverviewHistory0);
     }
+    @PostMapping(value="/api/accountOverview/excessHistory/createTable", produces="text/html")
+    public String createTableAccountOverviewHistory() throws Exception{
+       return "";
+    }
+
+    @GetMapping(value="/api/accountOverview/excessHistory/createTableSql", produces="text/plain")
+    public String createTableSqlAccountOverviewHistory() throws Exception{
+       return new String(getClass().getResourceAsStream("/sql/AccountOverviewHistory.createTableSql.sql").readAllBytes(), "utf-8");
+    }
+
   }

@@ -29,4 +29,14 @@ import java.util.Map;
     public static String samplePostCodeMainPage() throws Exception {
       return new ObjectMapper().writeValueAsString( Sample.samplePostCodeMainPage0);
     }
+    @PostMapping(value="/api/address/createTable", produces="text/html")
+    public String createTablePostCodeMainPage() throws Exception{
+       return "";
+    }
+
+    @GetMapping(value="/api/address/createTableSql", produces="text/plain")
+    public String createTableSqlPostCodeMainPage() throws Exception{
+       return new String(getClass().getResourceAsStream("/sql/PostCodeMainPage.createTableSql.sql").readAllBytes(), "utf-8");
+    }
+
   }

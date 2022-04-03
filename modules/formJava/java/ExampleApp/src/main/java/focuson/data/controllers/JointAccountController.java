@@ -29,4 +29,14 @@ import java.util.Map;
     public static String sampleJointAccount() throws Exception {
       return new ObjectMapper().writeValueAsString( Sample.sampleJointAccount0);
     }
+    @PostMapping(value="/api/jointAccount/createTable", produces="text/html")
+    public String createTableJointAccount() throws Exception{
+       return "";
+    }
+
+    @GetMapping(value="/api/jointAccount/createTableSql", produces="text/plain")
+    public String createTableSqlJointAccount() throws Exception{
+       return new String(getClass().getResourceAsStream("/sql/JointAccount.createTableSql.sql").readAllBytes(), "utf-8");
+    }
+
   }

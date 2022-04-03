@@ -1,6 +1,6 @@
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { paramsForTest } from "./makeJavaResolvers.spec";
-import { PostCodeMainPage } from "../example/addressSearch/addressSearch.pageD";
+import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { makeFetcherImports, makeFetcherPact, makeRestPact } from "../codegen/makePacts2";
 
 describe ( "makePacts", () => {

@@ -4,7 +4,7 @@ import { ETransferPageD } from "./example/eTransfers/eTransfers.pageD";
 import { CreateEAccountPageD } from "./example/createEAccount/createEAccount.pageD";
 import { ChequeCreditbooksPD } from "./example/chequeCreditBooks/chequeCreditBooks.pageD";
 import { RepeatingPageD } from "./example/repeating/repeating.pageD";
-import { PostCodeMainPage } from "./example/addressSearch/addressSearch.pageD";
+import { PostCodeMainPage } from "./example/postCodeDemo/addressSearch.pageD";
 import { SimpleDisplayComp } from "./common/componentsD";
 import { ExampleMainPage } from "./example/common";
 import { OccupationAndIncomeSummaryPD } from "./example/occupationAndIncome/occupationAndIncome.pageD";

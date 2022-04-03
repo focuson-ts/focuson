@@ -29,4 +29,14 @@ import java.util.Map;
     public static String sampleAdditionalInformation() throws Exception {
       return new ObjectMapper().writeValueAsString( Sample.sampleAdditionalInformation0);
     }
+    @PostMapping(value="/customer/occupation/v2/additionalInfo/createTable", produces="text/html")
+    public String createTableAdditionalInformation() throws Exception{
+       return "";
+    }
+
+    @GetMapping(value="/customer/occupation/v2/additionalInfo/createTableSql", produces="text/plain")
+    public String createTableSqlAdditionalInformation() throws Exception{
+       return new String(getClass().getResourceAsStream("/sql/AdditionalInformation.createTableSql.sql").readAllBytes(), "utf-8");
+    }
+
   }

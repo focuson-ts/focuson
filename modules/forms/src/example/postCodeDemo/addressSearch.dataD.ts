@@ -1,15 +1,17 @@
 import { DataD, OneLineStringDD, RepeatingDataD } from "../../common/dataD";
 import { AllGuards } from "../../buttons/guardButton";
 import { TableCD } from "../../common/componentsD";
+import { addT } from "../database/tableNames";
 
 export const postCodeDataLineD: DataD<AllGuards> = {
   name: "PostCodeDataLine",
   description: "",
+  table: addT,
   structure: {
-    line1: { dataDD: OneLineStringDD, sample: [ '4 Privet drive', '27 Throughput Lane' ] },
-    line2: { dataDD: OneLineStringDD, sample: [ 'Little Whinging', 'Woodfield' ] },
-    line3: { dataDD: OneLineStringDD, sample: [ 'Surrey', '' ] },
-    line4: { dataDD: OneLineStringDD, sample: [ 'England', 'Ireland' ] }
+    line1: { dataDD: OneLineStringDD, db: 'zzline1', sample: [ '4 Privet drive', '27 Throughput Lane' ] },
+    line2: { dataDD: OneLineStringDD, db: 'zzline2', sample: [ 'Little Whinging', 'Woodfield' ] },
+    line3: { dataDD: OneLineStringDD, db: 'zzline3', sample: [ 'Surrey', '' ] },
+    line4: { dataDD: OneLineStringDD, db: 'zzline4', sample: [ 'England', 'Ireland' ] }
   }
 }
 

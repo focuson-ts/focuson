@@ -2,7 +2,7 @@ import { makeRest } from "../codegen/makeRests";
 import { paramsForTest } from "./makeJavaResolvers.spec";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { RepeatingPageD } from "../example/repeating/repeating.pageD";
-import { PostCodeMainPage } from "../example/addressSearch/addressSearch.pageD";
+import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 
 
 describe ( "makeRest", () => {

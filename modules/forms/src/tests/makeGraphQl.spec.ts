@@ -1,6 +1,6 @@
 import { makeJavaVariablesForGraphQlQuery, makeQuery } from "../codegen/makeGraphQlQuery";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
-import { addressRestD } from "../example/addressSearch/addressSearch.restD";
+import { addressRestD } from "../example/postCodeDemo/addressSearch.restD";
 
 
 describe ( "Making GraphQl from RestD", () => {

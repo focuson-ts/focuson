@@ -29,4 +29,14 @@ import java.util.Map;
     public static String sampleETransferDataD() throws Exception {
       return new ObjectMapper().writeValueAsString( Sample.sampleETransferDataD0);
     }
+    @PostMapping(value="/api/eTransfers/createTable", produces="text/html")
+    public String createTableETransferDataD() throws Exception{
+       return "";
+    }
+
+    @GetMapping(value="/api/eTransfers/createTableSql", produces="text/plain")
+    public String createTableSqlETransferDataD() throws Exception{
+       return new String(getClass().getResourceAsStream("/sql/ETransferDataD.createTableSql.sql").readAllBytes(), "utf-8");
+    }
+
   }

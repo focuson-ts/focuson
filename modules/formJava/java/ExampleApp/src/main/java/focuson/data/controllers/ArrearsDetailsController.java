@@ -29,4 +29,14 @@ import java.util.Map;
     public static String sampleArrearsDetails() throws Exception {
       return new ObjectMapper().writeValueAsString( Sample.sampleArrearsDetails0);
     }
+    @PostMapping(value="/api/accountOverview/arrearsDetails/current/createTable", produces="text/html")
+    public String createTableArrearsDetails() throws Exception{
+       return "";
+    }
+
+    @GetMapping(value="/api/accountOverview/arrearsDetails/current/createTableSql", produces="text/plain")
+    public String createTableSqlArrearsDetails() throws Exception{
+       return new String(getClass().getResourceAsStream("/sql/ArrearsDetails.createTableSql.sql").readAllBytes(), "utf-8");
+    }
+
   }

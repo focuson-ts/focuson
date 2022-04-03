@@ -39,4 +39,14 @@ import java.util.Map;
     public static String sampleCreateEAccountData() throws Exception {
       return new ObjectMapper().writeValueAsString( Sample.sampleCreateEAccountData0);
     }
+    @PostMapping(value="/api/createEAccount//createTable", produces="text/html")
+    public String createTableCreateEAccountData() throws Exception{
+       return "";
+    }
+
+    @GetMapping(value="/api/createEAccount//createTableSql", produces="text/plain")
+    public String createTableSqlCreateEAccountData() throws Exception{
+       return new String(getClass().getResourceAsStream("/sql/CreateEAccountData.createTableSql.sql").readAllBytes(), "utf-8");
+    }
+
   }

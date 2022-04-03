@@ -69,4 +69,14 @@ import java.util.Map;
     public static String sampleCreatePlan() throws Exception {
       return new ObjectMapper().writeValueAsString( Sample.sampleCreatePlan0);
     }
+    @PostMapping(value="/api/createPlan/createTable", produces="text/html")
+    public String createTableCreatePlan() throws Exception{
+       return "";
+    }
+
+    @GetMapping(value="/api/createPlan/createTableSql", produces="text/plain")
+    public String createTableSqlCreatePlan() throws Exception{
+       return new String(getClass().getResourceAsStream("/sql/CreatePlan.createTableSql.sql").readAllBytes(), "utf-8");
+    }
+
   }

@@ -13,6 +13,9 @@ export interface TableAndField {
   table: DBTable;
   field: string;
 }
+export interface TableAliasAndField extends TableAndField {
+  alias: string
+}
 export function isTableAndField ( d: DbValues ): d is TableAndField {
   // @ts-ignore
   return d?.table !== undefined
@@ -344,6 +347,9 @@ export function addToTableAndFieldsDataArray<G> ( acc: TableAndFieldsData<G>[], 
   return [ ...acc, { table: one.table, fieldData: [ one.fieldData ] } ]
 }
 
+export function simplifyTableAndFields ( t: TableAndField ) {
+  return `${t.table.name}.${t.field}`
+}
 export function simplifyTableAndFieldsData<G> ( t: TableAndFieldsData<G> ) {
   return `${t.table.name} => ${t.fieldData.map ( fd => `${fd.fieldName}:${fd.reactType}` ).join ( ',' )}`
 }
