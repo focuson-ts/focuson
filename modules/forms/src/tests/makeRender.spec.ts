@@ -185,7 +185,7 @@ describe ( " listComponentsIn", () => {
   it ( "should create a page with a Layout", () => {
     expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function PostCodeDemoPage(){",
-      "  return focusedPageWithExtraState<FState, PostCodeDemoPageDomain, PostCodeMainPageDomain, Context> ( s => 'Post Code Demo' ) ( state => state.focusOn('main')) (",
+      "  return focusedPageWithExtraState<FState, PostCodeDemoPageDomain, PostCodeNameAndAddressDomain, Context> ( s => 'Post Code Demo' ) ( state => state.focusOn('main')) (",
       "( fullState, state , full, d, mode) => {",
       "  const id='root';",
       "  const buttons =    {save:<RestButton state={state}",
@@ -193,7 +193,7 @@ describe ( " listComponentsIn", () => {
       "        name='save'",
       "        action='create'",
       "        validate={false}",
-      "        rest='PostCodeDemo_PostCodeMainPageRestDetails'",
+      "        rest='PostCodeDemo_PostCodeNameAndAddressRestDetails'",
       "       />,",
       "      search:<ModalButton id='search' text='search'  state={state} modal = 'PostCodeSearch'  ",
       "        pageMode='edit'",
@@ -203,12 +203,12 @@ describe ( " listComponentsIn", () => {
       "      />,}",
       "",
       "      return <HideButtonsLayout buttons={buttons} hide={['search']}>",
-      "          <PostCodeMainPage id={`${id}`} state={state} mode={mode} buttons={buttons} />",
+      "          <PostCodeNameAndAddress id={`${id}`} state={state} mode={mode} buttons={buttons} />",
       "      { buttons.search } ",
       "      { buttons.save } ",
       "      </HideButtonsLayout>})}",
       ""
-    ] )
+    ])
   } )
 
 } )

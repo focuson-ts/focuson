@@ -4,6 +4,7 @@ import { addressRestD, postcodeRestD } from "./addressSearch.restD";
 import { IntegerDD } from "../../common/dataD";
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 import { LayoutCd } from "../../common/componentsD";
+import { addT } from "../database/tableNames";
 
 export const PostCodeModalPage: ExampleModalPage = {
   name: "PostCodeSearch",
@@ -20,6 +21,7 @@ export const PostCodeMainPage: ExampleMainPage = {
   name: "PostCodeDemo",
   pageType: "MainPage",
   display: { dataDD: nameAndAddressDataD, target: '~/main' },
+
   domain: {
     main: { dataDD: nameAndAddressDataD },
     postcode: { dataDD: postCodeSearchDataD },

@@ -90,9 +90,9 @@ describe ( "Making GraphQl from RestD", () => {
 
   it ("should make a query with no params", () =>{
     expect ( makeJavaVariablesForGraphQlQuery ( [ addressRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "public static  String createPostCodeMainPage(String obj){ ",
+      "public static  String createPostCodeNameAndAddress(String obj){ ",
       "   return",
-      "'mutation{createPostCodeMainPage(' +  ' obj:' + obj + '){'+",
+      "'mutation{createPostCodeNameAndAddress(' +  ' obj:' + obj + '){'+",
       "      '    name'+",
       "      '    line1'+",
       "      '    line2'+",

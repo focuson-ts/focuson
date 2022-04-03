@@ -82,6 +82,7 @@ export interface CommonPrimitiveDD<T> extends CommonDataDD, HasSample<T>, HasEnu
   display: DisplayCompD;
   graphQlType: string;
   rsGetter: string;
+  dbType: string;
 }
 
 export interface StringPrimitiveDD extends CommonPrimitiveDD<string> {
@@ -227,24 +228,29 @@ interface StringPrimDD {
   reactType: 'string';
   graphQlType: 'String';
   rsGetter: 'getString';
+  dbType: string
 }
 export const stringPrimDD: StringPrimDD = {
   emptyValue: "",
   reactType: 'string',
   graphQlType: 'String',
-  rsGetter: 'getString'
+  rsGetter: 'getString',
+  dbType: 'varchar(256)'
 }
 interface NumberPrimDD {
   emptyValue: number,
   graphQlType: 'Int',
   reactType: 'number',
-  rsGetter: 'getInt'
+  rsGetter: 'getInt';
+  dbType: string
 }
 export const numberPrimDD: NumberPrimDD = {
   emptyValue: 0,
   graphQlType: 'Int',
   reactType: 'number',
-  rsGetter: 'getInt'
+  rsGetter: 'getInt',
+  dbType: 'integer'
+
 }
 
 export const CustomerIdDD: StringPrimitiveDD = {
@@ -307,6 +313,7 @@ export const MoneyDD: NumberPrimitiveDD = {
 }
 export const BooleanDD: PrimitiveDD = {
   rsGetter: "getBoolean",
+  dbType: 'boolean',
   name: 'Boolean',
   emptyValue: false,
   graphQlType: 'Boolean',

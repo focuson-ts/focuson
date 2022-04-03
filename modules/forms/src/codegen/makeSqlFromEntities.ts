@@ -3,8 +3,9 @@ import { beforeSeparator, NameAnd } from "@focuson/utils";
 import { EntityAndWhere, unique } from "../common/restD";
 import { isTableAndField, simplifyTableAndFieldAndAliasData, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, TableAliasAndField } from "./makeJavaSql";
 import { CompDataD, emptyDataFlatMap, flatMapDD } from "../common/dataD";
-import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { beforeAfterSeparator } from "@focuson/utils/src/utils";
+import { RestDefnInPageProperties } from "../common/pageD";
+import { addStringToEndOfAllButLast, indentList } from "./codegen";
 
 export interface CommonEntity {
   table: DBTable;
@@ -193,8 +194,8 @@ export function findWhereLinksForSqlRootGoingUp ( sqlRoot: SqlRoot ): WhereLink[
 }
 export const whereFieldToFieldData = <G> ( errorPrefix: string, name: string ): FieldData<G> => {
   const [ fieldName, theType ] = beforeAfterSeparator ( ":", name )
-  if ( theType === '' || theType === 'integer' ) return ({ fieldName, reactType: 'number', rsGetter: 'getInt' })
-  if ( theType === 'string' ) return ({ fieldName, reactType: 'string', rsGetter: 'getString' })
+  if ( theType === '' || theType === 'integer' ) return ({ fieldName, reactType: 'number', rsGetter: 'getInt', dbType: 'integer' })
+  if ( theType === 'string' ) return ({ fieldName, reactType: 'string', rsGetter: 'getString', dbType: 'string' })
   throw Error ( `${errorPrefix} Cannot find whereFieldToFieldData for type [${theType}] in [${name}]` )
 };
 
@@ -213,6 +214,7 @@ interface FieldData<G> {
   fieldName: string;
   rsGetter: string;
   reactType: string;
+  dbType: string;
 }
 interface TableAndFieldData<G> {
   table: DBTable;
@@ -229,29 +231,37 @@ interface TableAndFieldsData<G> {
 }
 
 
-export const findTableAndFieldFromDataD = <G> ( dataD: CompDataD<G> ): TableAndFieldData<G>[] => unique ( flatMapDD<TableAndFieldData<G>, any> ( JointAccountDd, {
-  ...emptyDataFlatMap<TableAndFieldData<G>, any> (),
-  walkPrim: ( path, parents, oneDataDD, dataDD ) => {
-    if ( oneDataDD?.db )
-      if ( isTableAndField ( oneDataDD.db ) ) {
-        let fieldData: FieldData<any> = { fieldName: oneDataDD.db.field, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType };
-        return [ { table: oneDataDD.db.table, fieldData } ]
-      } else {
-        const parent = parents[ parents.length - 1 ]
-        if ( !parent.table ) throw new Error ( `Have a field name [${oneDataDD.db} in ${path}], but there is no table in the parent ${parent.name}` )
-        let fieldData: FieldData<any> = { fieldName: oneDataDD.db, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType };
-        return [ { table: parent.table, fieldData: fieldData } ]
-      }
-    return []
-  }
-} ), s => simplifyTableAndFieldData<G> ( s ) )
+export function findTableAndFieldFromDataD<G> ( dataD: CompDataD<G> ): TableAndFieldData<G>[] {
+  let withDuplicates = flatMapDD<TableAndFieldData<G>, any> ( dataD, {
+    ...emptyDataFlatMap<TableAndFieldData<G>, any> (),
+    walkPrim: ( path, parents, oneDataDD, dataDD ) => {
+      if ( oneDataDD?.db )
+        if ( isTableAndField ( oneDataDD.db ) ) {
+          let fieldData: FieldData<any> = { fieldName: oneDataDD.db.field, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType };
+          return [ { table: oneDataDD.db.table, fieldData } ]
+        } else {
+          const parent = parents[ parents.length - 1 ]
+          if ( !parent.table ) throw new Error ( `Have a field name [${oneDataDD.db} in ${path}], but there is no table in the parent ${parent.name}` )
+          let fieldData: FieldData<any> = { fieldName: oneDataDD.db, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType };
+          return [ { table: parent.table, fieldData: fieldData } ]
+        }
+      return []
+    }
+  } );
+  return unique ( withDuplicates, s => simplifyTableAndFieldData<G> ( s ) );
+}
 
 
 export function findTableAliasAndFieldFromDataD<G> ( sqlRoot: SqlRoot, fromDataD: TableAndFieldData<G>[] ) {
-  const add = ( acc: TableAndFieldAndAliasData<G>[], e: Entity, alias: string ): TableAndFieldAndAliasData<G>[] =>
-    fromDataD.filter ( tf => tf.table.name === e.table.name ).map ( tf => ({ ...tf, alias }) );
+  const add = ( acc: TableAndFieldAndAliasData<G>[], e: Entity, alias: string ): TableAndFieldAndAliasData<G>[] => {
+    let found = fromDataD.filter ( tf => tf.table.name === e.table.name );
+    return [ ...acc, ...found.map ( tf =>
+      ({ ...tf, alias }) ) ];
+  };
   const folder: EntityFolder<TableAndFieldAndAliasData<G>[]> = {
-    foldMain ( childAccs: TableAndFieldAndAliasData<G>[][], main: EntityAndWhere, e: Entity ): TableAndFieldAndAliasData<G>[] {return add ( childAccs.flat (), e, sqlRoot.alias )},
+    foldMain ( childAccs: TableAndFieldAndAliasData<G>[][], main: EntityAndWhere, e: Entity ): TableAndFieldAndAliasData<G>[] {
+      return add ( childAccs.flat (), e, sqlRoot.alias )
+    },
     foldSingle ( childAccs: TableAndFieldAndAliasData<G>[][], main: EntityAndWhere, path: [ string, ChildEntity ][], name: string, single: SingleEntity ): TableAndFieldAndAliasData<G>[] {
       return add ( childAccs.flat (), single, name )
     },
@@ -297,3 +307,28 @@ export function generateGetSql ( s: SqlLinkData ): string[] {
     `where ${makeWhereClause ( s.whereLinks )}` ]
 }
 
+export const findAllTableAndFieldsIn = <G> ( rdps: RestDefnInPageProperties<G>[] ) => unique ( rdps.flatMap ( rdp => {
+  if ( !rdp.rest.tables ) return []
+  return walkSqlRoots ( findSqlRoots ( rdp.rest.tables ), sqlRoot => findSqlLinkDataFromRootAndDataD ( sqlRoot, rdp.rest.dataDD ) ).flatMap (
+    linkData => linkData.fields.map ( taf =>
+      ({ table: taf.table, fieldData: taf.fieldData }) )
+  )
+} ), simplifyTableAndFieldData );
+
+export const findAllTableAndFieldDatasIn = <G> ( rdps: RestDefnInPageProperties<G>[] ): TableAndFieldsData<G>[] => {
+  var empty: NameAnd<TableAndFieldsData<G>> = {}
+  findAllTableAndFieldsIn ( rdps ).forEach ( tdp => {
+    if ( empty[ tdp.table.name ] === undefined ) empty[ tdp.table.name ] = ({ table: tdp.table, fieldData: [] });
+    empty[ tdp.table.name ].fieldData.push ( tdp.fieldData )
+  } )
+  return Object.values ( empty )
+}
+
+export function createTableSql<G> ( rdps: RestDefnInPageProperties<G>[] ): NameAnd<string[]> {
+  const createSql = ( taf: TableAndFieldsData<G> ): string[] => [
+    `create table ${taf.table.name}(`,
+    ...indentList ( addStringToEndOfAllButLast ( "," ) ( taf.fieldData.map ( fd => `${fd.fieldName} ${fd.dbType}` ) ) ),
+    ')'
+  ];
+  return Object.fromEntries ( findAllTableAndFieldDatasIn ( rdps ).map ( taf => [ taf.table.name, createSql ( taf ) ] ) )
+}

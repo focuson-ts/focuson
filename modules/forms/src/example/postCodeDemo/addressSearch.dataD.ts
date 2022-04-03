@@ -39,8 +39,9 @@ export const postCodeSearchDataD: DataD<AllGuards> = {
 }
 
 export const nameAndAddressDataD: DataD<AllGuards> = {
-  name: "PostCodeMainPage",
+  name: "PostCodeNameAndAddress",
   description: "An address that the Postcode data needs to be copied to",
+  table: addT,
   structure: {
     name: { dataDD: OneLineStringDD },
     ...postCodeDataLineD.structure,

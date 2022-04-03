@@ -82,7 +82,7 @@ describe ( "makeButtons", () => {
       "      name='save'",
       "      action='create'",
       "      validate={false}",
-      "      rest='PostCodeDemo_PostCodeMainPageRestDetails'",
+      "      rest='PostCodeDemo_PostCodeNameAndAddressRestDetails'",
       "     />,",
       "    search:<ModalButton id='search' text='search'  state={state} modal = 'PostCodeSearch'  ",
       "      pageMode='edit'",

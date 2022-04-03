@@ -12,15 +12,16 @@ export const postcodeRestD: RestD<AllGuards> = {
   dataDD: postCodeSearchResponse,
   url: '/api/postCode?{query}',
   actions: [ 'get' ],
-  tables: {
-    entity: { type: 'Main', table: addT, children: {} },
-    where: [ { table: addT, field: '', alias: addT.name, paramName: 'postcode' } ]
-  }
+
 }
 
 export const addressRestD: RestD<AllGuards> = {
   params: {},
   dataDD: nameAndAddressDataD,
   url: '/api/address?{query}',
-  actions: [ 'create' ]
+  actions: [ 'create' ],
+  tables: {
+    entity: { type: 'Main', table: addT, children: {} },
+    where: [ { table: addT, field: 'postcode', alias: addT.name, paramName: 'postcode' } ]
+  }
 }

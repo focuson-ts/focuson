@@ -1,52 +1,15 @@
-import { accountT, addT, customerT, nameT } from "../example/database/tableNames";
-import { ChildEntity, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findFieldsFromWhere, findSqlLinkDataFromRootAndDataD, findSqlRoots, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinkDataForLinkData, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, MainEntity, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldData } from "../codegen/makeSqlFromEntities";
-import { EntityAndWhere, RestD, unique } from "../common/restD";
+import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findSqlLinkDataFromRootAndDataD, findSqlRoots, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinkDataForLinkData, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, MainEntity, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldData } from "../codegen/makeSqlFromEntities";
+import { EntityAndWhere, unique } from "../common/restD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
-import { simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData } from "../codegen/makeJavaSql";
-import { postCodeDataLineD } from "../example/postCodeDemo/addressSearch.dataD";
-import { postcodeRestD } from "../example/postCodeDemo/addressSearch.restD";
+import { simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData } from "../codegen/makeJavaSql";
+import { nameAndAddressDataD, postCodeDataLineD } from "../example/postCodeDemo/addressSearch.dataD";
+import { addressRestD, postcodeRestD } from "../example/postCodeDemo/addressSearch.restD";
+import { JointAccountPageD } from "../example/jointAccount/jointAccount.pageD";
+import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
+import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
 
-const mainEntity: MainEntity = {
-  type: 'Main',
-  table: accountT,
-  children: {
-    mainCustomer: {
-      type: 'Single',
-      table: customerT,
-      idInParent: 'mainCustomerId:integer',
-      idInThis: 'id:integer',
-      children: {
-        mainAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId" },
-        mainName: { type: 'Single', table: nameT, idInParent: 'nameId', idInThis: 'id' },
-      }
-    },
-    jointCustomer: {
-      type: 'Single',
-      table: customerT,
-      idInParent: 'jointCustomerId:integer', idInThis: 'id:integer',
-      children: {
-        jointAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId" },
-        jointName: { type: 'Single', table: nameT, idInParent: 'nameId', idInThis: 'id' },
-      }
-    },
-  }
-}
-const theRestD: RestD<any> = {
-  dataDD: JointAccountDd,
-  actions: [ 'get' ],
-  url: "/some/url/not user",
-  params: {
-    accountId: { commonLens: 'customerId', testValue: 'theCustId' }, //Note that these are used in many places.. so we have to bind them somewhere else
-    brandId: { commonLens: 'accountId', testValue: 'theBrandId' }
-  },
-  tables: {
-    entity: mainEntity,
-    where: [
-      { table: accountT, alias: accountT.name, field: 'acc_id', paramName: 'accountId' },
-      { table: accountT, alias: accountT.name, field: 'brand_id', paramName: 'brandId' },
-    ]
-  },
-}
+const mainEntity: MainEntity = jointAccountRestD.tables.entity
+const theRestD = jointAccountRestD
 
 
 describe ( "EntityFolder", () => {
@@ -120,15 +83,13 @@ describe ( "findWhereLinkDataForLinkData", () => {
 )
 describe ( "whereFieldToFieldData", () => {
   it ( "should work with no type specified (defaulting to integer)", () => {
-    expect ( whereFieldToFieldData ( 'someErrorPrefix', 'someField' ) ).toEqual ( { "fieldName": "someField", "reactType": "number", "rsGetter": "getInt" } )
+    expect ( whereFieldToFieldData ( 'someErrorPrefix', 'someField' ) ).toEqual ( { "dbType": "integer", "fieldName": "someField", "reactType": "number", "rsGetter": "getInt" } )
   } )
   it ( "should work with string type specified", () => {
-    expect ( whereFieldToFieldData ( 'someErrorPrefix', 'someField:string' ) ).toEqual ( { "fieldName": "someField", "reactType": "string", "rsGetter": "getString" } )
-
+    expect ( whereFieldToFieldData ( 'someErrorPrefix', 'someField:string' ) ).toEqual ( { "dbType": "string", "fieldName": "someField", "reactType": "string", "rsGetter": "getString" } )
   } )
   it ( "should work with integer type specified ", () => {
-    expect ( whereFieldToFieldData ( 'someErrorPrefix', 'someField:integer' ) ).toEqual ( { "fieldName": "someField", "reactType": "number", "rsGetter": "getInt" } )
-
+    expect ( whereFieldToFieldData ( 'someErrorPrefix', 'someField:integer' ) ).toEqual ( { "dbType": "integer", "fieldName": "someField", "reactType": "number", "rsGetter": "getInt" } )
   } )
 
 } )
@@ -170,6 +131,14 @@ describe ( "findFieldsFromWhere", () => {
 } )
 
 describe ( "findTableAndFieldFromDataD", () => {
+  it ( "find the tables and fields from a dataD -simple ", () => {
+    expect ( findTableAndFieldFromDataD ( nameAndAddressDataD ).map ( simplifyTableAndFieldData ) ).toEqual ( [
+      "ADD_TBL.zzline1",
+      "ADD_TBL.zzline2",
+      "ADD_TBL.zzline3",
+      "ADD_TBL.zzline4"
+    ] )
+  } )
   it ( "find the tables and fields from a dataD. ", () => {
     expect ( findTableAndFieldFromDataD ( JointAccountDd ).map ( simplifyTableAndFieldData ) ).toEqual ( [
       "ACC_TBL.blnc",
@@ -181,10 +150,13 @@ describe ( "findTableAndFieldFromDataD", () => {
 } )
 
 describe ( "findTableAliasAndFieldFromDataD", () => {
+
   it ( "should start with the fields from the wheres, and add in the fields from the dataD: only adding where the data is needed - i.e. not adding fields to the 'path' to the root", () => {
     const fromDataD = findTableAndFieldFromDataD ( JointAccountDd )
     expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), r => simplifyTableAndFieldAndAliasDataArray ( findTableAliasAndFieldFromDataD ( r, fromDataD ) ) ) ).toEqual ( [
       [
+        "mainName:NAME_TBL.zzname",
+        "jointName:NAME_TBL.zzname",
         "ACC_TBL:ACC_TBL.blnc"
       ],
       [
@@ -200,9 +172,22 @@ describe ( "findTableAliasAndFieldFromDataD", () => {
 } )
 
 describe ( "findAllFields", () => {
+  it ( "should aggregate the fields from the where and from the dataD - simple ", () => {
+    expect ( walkSqlRoots ( findSqlRoots ( addressRestD.tables ), r => simplifyTableAndFieldAndAliasDataArray ( findAllFields ( r, nameAndAddressDataD, findWhereLinksForSqlRootGoingUp ( r ) ) ) ) ).toEqual ( [
+      [
+        "ADD_TBL:ADD_TBL.zzline1",
+        "ADD_TBL:ADD_TBL.zzline2",
+        "ADD_TBL:ADD_TBL.zzline3",
+        "ADD_TBL:ADD_TBL.zzline4"
+      ]
+    ] )
+  } )
+
   it ( "should aggregate the fields from the where and from the dataD ", () => {
     expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), r => simplifyTableAndFieldAndAliasDataArray ( findAllFields ( r, JointAccountDd, findWhereLinksForSqlRootGoingUp ( r ) ) ) ) ).toEqual ( [
       [
+        "mainName:NAME_TBL.zzname",
+        "jointName:NAME_TBL.zzname",
         "ACC_TBL:ACC_TBL.blnc"
       ],
       [
@@ -221,18 +206,18 @@ describe ( "findAllFields", () => {
         "jointAddress:ADD_TBL.zzline1",
         "jointAddress:ADD_TBL.zzline2"
       ]
-    ])
+    ] )
   } )
 } )
 
 describe ( "findSqlLinkDataFromRootAndDataD", () => {
   it ( "should create the data for the links in postCodeDataLineD (simple)", () => {
-    expect ( walkSqlRoots ( findSqlRoots ( postcodeRestD.tables ), r => simplifySqlLinkData ( findSqlLinkDataFromRootAndDataD ( r, postCodeDataLineD ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoots ( addressRestD.tables ), r => simplifySqlLinkData ( findSqlLinkDataFromRootAndDataD ( r, postCodeDataLineD ) ) ) ).toEqual ( [
       [
         "sqlRoot: ADD_TBL",
-        "fields: ADD_TBL:ADD_TBL.,ADD_TBL:ADD_TBL.zzline1,ADD_TBL:ADD_TBL.zzline2",
+        "fields: ADD_TBL:ADD_TBL.postcode,ADD_TBL:ADD_TBL.zzline1,ADD_TBL:ADD_TBL.zzline2,ADD_TBL:ADD_TBL.zzline3,ADD_TBL:ADD_TBL.zzline4",
         "aliasAndTables ADD_TBL->ADD_TBL",
-        "where param postcode == ADD_TBL:ADD_TBL."
+        "where param postcode == ADD_TBL:ADD_TBL.postcode"
       ]
     ] )
   } )
@@ -241,7 +226,7 @@ describe ( "findSqlLinkDataFromRootAndDataD", () => {
     expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), r => simplifySqlLinkData ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd ) ) ) ).toEqual ( [
       [
         "sqlRoot: ACC_TBL",
-        "fields: mainCustomer:CUST_TBL.nameId,mainName:NAME_TBL.id,ACC_TBL:ACC_TBL.mainCustomerId,mainCustomer:CUST_TBL.id,jointCustomer:CUST_TBL.nameId,jointName:NAME_TBL.id,ACC_TBL:ACC_TBL.jointCustomerId,jointCustomer:CUST_TBL.id,ACC_TBL:ACC_TBL.acc_id,ACC_TBL:ACC_TBL.brand_id,ACC_TBL:ACC_TBL.blnc",
+        "fields: mainCustomer:CUST_TBL.nameId,mainName:NAME_TBL.id,ACC_TBL:ACC_TBL.mainCustomerId,mainCustomer:CUST_TBL.id,jointCustomer:CUST_TBL.nameId,jointName:NAME_TBL.id,ACC_TBL:ACC_TBL.jointCustomerId,jointCustomer:CUST_TBL.id,ACC_TBL:ACC_TBL.acc_id,ACC_TBL:ACC_TBL.brand_id,mainName:NAME_TBL.zzname,jointName:NAME_TBL.zzname,ACC_TBL:ACC_TBL.blnc",
         "aliasAndTables mainName->NAME_TBL,mainCustomer->CUST_TBL,jointName->NAME_TBL,jointCustomer->CUST_TBL,ACC_TBL->ACC_TBL",
         "where mainCustomer:CUST_TBL.nameId == mainName:NAME_TBL.id,ACC_TBL:ACC_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer,jointCustomer:CUST_TBL.nameId == jointName:NAME_TBL.id,ACC_TBL:ACC_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer,param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id"
       ],
@@ -257,14 +242,14 @@ describe ( "findSqlLinkDataFromRootAndDataD", () => {
         "aliasAndTables jointAddress->ADD_TBL",
         "where param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id,jointAddress:ADD_TBL.id == jointAddress:ADD_TBL.customerId,jointCustomer:CUST_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer"
       ]
-    ])
+    ] )
   } )
 } )
 describe ( "generateGetSql", () => {
   it ( "should generate the get sql", () => {
     expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), r => generateGetSql ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd ) ) ) ).toEqual ( [
       [
-        "select mainCustomer.nameId,mainName.id,ACC_TBL.mainCustomerId,mainCustomer.id,jointCustomer.nameId,jointName.id,ACC_TBL.jointCustomerId,jointCustomer.id,ACC_TBL.acc_id,ACC_TBL.brand_id,ACC_TBL.blnc",
+        "select mainCustomer.nameId,mainName.id,ACC_TBL.mainCustomerId,mainCustomer.id,jointCustomer.nameId,jointName.id,ACC_TBL.jointCustomerId,jointCustomer.id,ACC_TBL.acc_id,ACC_TBL.brand_id,mainName.zzname,jointName.zzname,ACC_TBL.blnc",
         "from NAME_TBL mainName,CUST_TBL mainCustomer,NAME_TBL jointName,CUST_TBL jointCustomer,ACC_TBL ACC_TBL",
         "where mainCustomer.nameId = mainName.id,ACC_TBL.mainCustomerId = mainCustomer.id,jointCustomer.nameId = jointName.id,ACC_TBL.jointCustomerId = jointCustomer.id, ACC_TBL.acc_id = ?, ACC_TBL.brand_id = ?"
       ],
@@ -282,12 +267,96 @@ describe ( "generateGetSql", () => {
   } )
 
 } )
-//
-// describe ( "findAllTableData", () => {
-//   it ( "should find the table  a table from multiple link datas.. because the tables can be used in multiple dataDs", () => {
-//      expect(findAllTableData(JointAccountPageD.rest.fromApi, PostCodeMainPage.rest.main)).toEqual([])
-//
-//   } )
-//
-// } )
 
+describe ( "findAllTableAndFieldsIn", () => {
+  it ( "should find the table from a simple rest", () => {
+    expect ( simplifyTableAndFieldDataArray ( findAllTableAndFieldsIn ( [ PostCodeMainPage.rest.address ] ) ) ).toEqual ( [
+      "ADD_TBL =>postcode",
+      "ADD_TBL =>zzline1",
+      "ADD_TBL =>zzline2",
+      "ADD_TBL =>zzline3",
+      "ADD_TBL =>zzline4"
+    ] )
+  } )
+
+
+  it ( "should find the table  a table from multiple link datas.. because the tables can be used in multiple dataDs", () => {
+    let rdps = [ JointAccountPageD.rest.jointAccount, PostCodeMainPage.rest.address ];
+    expect ( simplifyTableAndFieldDataArray ( findAllTableAndFieldsIn ( rdps ) ) ).toEqual ( [
+      "CUST_TBL =>nameId",
+      "NAME_TBL =>id",
+      "ACC_TBL =>mainCustomerId",
+      "CUST_TBL =>id",
+      "ACC_TBL =>jointCustomerId",
+      "ACC_TBL =>acc_id",
+      "ACC_TBL =>brand_id",
+      "NAME_TBL =>zzname",
+      "ACC_TBL =>blnc",
+      "ADD_TBL =>id",
+      "ADD_TBL =>customerId",
+      "CUST_TBL =>mainCustomerId",
+      "ADD_TBL =>zzline1",
+      "ADD_TBL =>zzline2",
+      "CUST_TBL =>jointCustomerId",
+      "ADD_TBL =>postcode",
+      "ADD_TBL =>zzline3",
+      "ADD_TBL =>zzline4"
+    ] )
+  } )
+
+} )
+
+describe ( "findAllTableAndFieldDatasIn", () => {
+  it ( "should group the field data by table", () => {
+    let rdps = [ JointAccountPageD.rest.jointAccount, PostCodeMainPage.rest.address ];
+    expect ( findAllTableAndFieldDatasIn ( rdps ).map ( simplifyTableAndFieldsData ) ).toEqual ( [
+      "CUST_TBL => nameId:number,id:number,mainCustomerId:number,jointCustomerId:number",
+      "NAME_TBL => id:number,zzname:string",
+      "ACC_TBL => mainCustomerId:number,jointCustomerId:number,acc_id:number,brand_id:number,blnc:number",
+      "ADD_TBL => id:number,customerId:number,zzline1:string,zzline2:string,postcode:number,zzline3:string,zzline4:string"
+    ] )
+  } )
+} )
+
+describe ( "createTableSql", () => {
+  it ( "should make h2 compatible create table ", () => {
+    let rdps = [ JointAccountPageD.rest.jointAccount, PostCodeMainPage.rest.address ];
+    expect ( createTableSql( rdps ) ).toEqual ( {
+      "ACC_TBL": [
+        "create table ACC_TBL(",
+        "  mainCustomerId integer,",
+        "  jointCustomerId integer,",
+        "  acc_id integer,",
+        "  brand_id integer,",
+        "  blnc integer",
+        ")"
+      ],
+      "ADD_TBL": [
+        "create table ADD_TBL(",
+        "  id integer,",
+        "  customerId integer,",
+        "  zzline1 varchar(256),",
+        "  zzline2 varchar(256),",
+        "  postcode integer,",
+        "  zzline3 varchar(256),",
+        "  zzline4 varchar(256)",
+        ")"
+      ],
+      "CUST_TBL": [
+        "create table CUST_TBL(",
+        "  nameId integer,",
+        "  id integer,",
+        "  mainCustomerId integer,",
+        "  jointCustomerId integer",
+        ")"
+      ],
+      "NAME_TBL": [
+        "create table NAME_TBL(",
+        "  id integer,",
+        "  zzname varchar(256)",
+        ")"
+      ]
+    })
+
+  } )
+} )
