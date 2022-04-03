@@ -1,10 +1,10 @@
 import { DBTable } from "../common/resolverD";
 import { beforeSeparator, NameAnd } from "@focuson/utils";
 import { EntityAndWhere, unique } from "../common/restD";
-import { isTableAndField, simplifyTableAndFields, TableAliasAndField, TableAndField } from "./makeJavaSql";
+import { isTableAndField, simplifyTableAndFieldAndAliasData, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, TableAliasAndField } from "./makeJavaSql";
 import { CompDataD, emptyDataFlatMap, flatMapDD } from "../common/dataD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
-import { RestDefnInPageProperties } from "../common/pageD";
+import { beforeAfterSeparator } from "@focuson/utils/src/utils";
 
 export interface CommonEntity {
   table: DBTable;
@@ -125,7 +125,7 @@ export function isTableWhereLink ( w: WhereLink ): w is TableWhereLink {
 export interface SqlLinkData {
   sqlRoot: SqlRoot;
   aliasAndTables: [ string, DBTable ][];
-  fields: TableAliasAndField[],
+  fields: TableAndFieldAndAliasData<any>[],
   whereLinks: WhereLink[]
 }
 export function simplifyAliasAndTables ( ats: [ string, DBTable ] [] ) {return ats.map ( ( [ alias, table ] ) => `${alias}->${table.name}` ).join ( "," )}
@@ -138,7 +138,7 @@ export function simplifyWhereLinks ( ws: WhereLink[] ) {
   )
 }
 export function simplifySqlLinkData ( s: SqlLinkData ): string[] {
-  return [ `sqlRoot: ${s.sqlRoot.root.table.name}`, `fields: ${simplifyTableAliasAndFields ( s.fields ).join ( "," )}`, `aliasAndTables ${simplifyAliasAndTables ( s.aliasAndTables )}`, `where ${simplifyWhereLinks ( s.whereLinks )}` ]
+  return [ `sqlRoot: ${s.sqlRoot.root.table.name}`, `fields: ${simplifyTableAndFieldAndAliasDataArray ( s.fields ).join ( "," )}`, `aliasAndTables ${simplifyAliasAndTables ( s.aliasAndTables )}`, `where ${simplifyWhereLinks ( s.whereLinks )}` ]
 }
 
 export function getParentTableAndAlias<T> ( main: EntityAndWhere, path: [ string, ChildEntity ][], fn: ( c: Entity ) => T ): [ string, T ] {
@@ -191,48 +191,83 @@ export function findWhereLinksForSqlRootGoingUp ( sqlRoot: SqlRoot ): WhereLink[
     );
   } )
 }
-export function findFieldsFromWhere ( ws: WhereLink[] ): TableAliasAndField[] {
+export const whereFieldToFieldData = <G> ( errorPrefix: string, name: string ): FieldData<G> => {
+  const [ fieldName, theType ] = beforeAfterSeparator ( ":", name )
+  if ( theType === '' || theType === 'integer' ) return ({ fieldName, reactType: 'number', rsGetter: 'getInt' })
+  if ( theType === 'string' ) return ({ fieldName, reactType: 'string', rsGetter: 'getString' })
+  throw Error ( `${errorPrefix} Cannot find whereFieldToFieldData for type [${theType}] in [${name}]` )
+};
+
+export function findFieldsFromWhere<G> ( errorPrefix: string, ws: WhereLink[] ): TableAndFieldAndAliasData<G>[] {
   return ws.flatMap ( w => {
-    if ( isWhereFromQuery ( w ) ) return [ w ]
-    if ( isTableWhereLink ( w ) ) return [ { table: w.parentTable, alias: w.parentAlias, field: w.idInParent }, { table: w.childTable, alias: w.childAlias, field: w.idInThis } ]
+    if ( isWhereFromQuery ( w ) ) {
+      return [ { ...w, fieldData: whereFieldToFieldData ( errorPrefix, w.field ) } ]
+    }
+    if ( isTableWhereLink ( w ) ) return [ { table: w.parentTable, alias: w.parentAlias, fieldData: whereFieldToFieldData ( errorPrefix, w.idInParent ) },
+      { table: w.childTable, alias: w.childAlias, fieldData: whereFieldToFieldData ( errorPrefix, w.idInThis ) } ]
     throw Error ( `Unknown type of where ${w}` )
   } )
 }
 
-export const findTableAndFieldFromDataD = <G> ( dataD: CompDataD<G> ) => unique ( flatMapDD<TableAndField, any> ( JointAccountDd, {
-  ...emptyDataFlatMap<TableAndField, any> (),
+interface FieldData<G> {
+  fieldName: string;
+  rsGetter: string;
+  reactType: string;
+}
+interface TableAndFieldData<G> {
+  table: DBTable;
+  fieldData: FieldData<G>
+}
+interface TableAndFieldAndAliasData<G> extends TableAndFieldData<G> {
+  table: DBTable;
+  fieldData: FieldData<G>
+  alias: string;
+}
+interface TableAndFieldsData<G> {
+  table: DBTable;
+  fieldData: FieldData<G>[]
+}
+
+
+export const findTableAndFieldFromDataD = <G> ( dataD: CompDataD<G> ): TableAndFieldData<G>[] => unique ( flatMapDD<TableAndFieldData<G>, any> ( JointAccountDd, {
+  ...emptyDataFlatMap<TableAndFieldData<G>, any> (),
   walkPrim: ( path, parents, oneDataDD, dataDD ) => {
     if ( oneDataDD?.db )
-      if ( isTableAndField ( oneDataDD.db ) ) return [ oneDataDD.db ]
-      else {
+      if ( isTableAndField ( oneDataDD.db ) ) {
+        let fieldData: FieldData<any> = { fieldName: oneDataDD.db.field, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType };
+        return [ { table: oneDataDD.db.table, fieldData } ]
+      } else {
         const parent = parents[ parents.length - 1 ]
         if ( !parent.table ) throw new Error ( `Have a field name [${oneDataDD.db} in ${path}], but there is no table in the parent ${parent.name}` )
-        return [ { table: parent.table, field: oneDataDD.db } ]
+        let fieldData: FieldData<any> = { fieldName: oneDataDD.db, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType };
+        return [ { table: parent.table, fieldData: fieldData } ]
       }
     return []
   }
-} ), s => simplifyTableAndFields ( s ) )
+} ), s => simplifyTableAndFieldData<G> ( s ) )
 
 
-export function findTableAliasAndFieldFromDataD ( sqlRoot: SqlRoot, fromDataD: TableAndField[] ) {
-  const add = ( acc: TableAliasAndField[], e: Entity, alias: string ) => fromDataD.filter ( tf => tf.table.name === e.table.name ).map ( tf => ({ ...tf, alias }) );
-  const folder: EntityFolder<TableAliasAndField[]> = {
-    foldMain ( childAccs: TableAliasAndField[][], main: EntityAndWhere, e: Entity ): TableAliasAndField[] {return add ( childAccs.flat (), e, sqlRoot.alias )},
-    foldSingle ( childAccs: TableAliasAndField[][], main: EntityAndWhere, path: [ string, ChildEntity ][], name: string, single: SingleEntity ): TableAliasAndField[] {
+export function findTableAliasAndFieldFromDataD<G> ( sqlRoot: SqlRoot, fromDataD: TableAndFieldData<G>[] ) {
+  const add = ( acc: TableAndFieldAndAliasData<G>[], e: Entity, alias: string ): TableAndFieldAndAliasData<G>[] =>
+    fromDataD.filter ( tf => tf.table.name === e.table.name ).map ( tf => ({ ...tf, alias }) );
+  const folder: EntityFolder<TableAndFieldAndAliasData<G>[]> = {
+    foldMain ( childAccs: TableAndFieldAndAliasData<G>[][], main: EntityAndWhere, e: Entity ): TableAndFieldAndAliasData<G>[] {return add ( childAccs.flat (), e, sqlRoot.alias )},
+    foldSingle ( childAccs: TableAndFieldAndAliasData<G>[][], main: EntityAndWhere, path: [ string, ChildEntity ][], name: string, single: SingleEntity ): TableAndFieldAndAliasData<G>[] {
       return add ( childAccs.flat (), single, name )
     },
-    foldMultiple ( childAccs: TableAliasAndField[][], main: EntityAndWhere, path: [ string, ChildEntity ][], name: string, multiple: MultipleEntity ): TableAliasAndField[] {
+    foldMultiple ( childAccs: TableAndFieldAndAliasData<G>[][], main: EntityAndWhere, path: [ string, ChildEntity ][], name: string, multiple: MultipleEntity ): TableAndFieldAndAliasData<G>[] {
       return []//we stop at multiples
     }
   }
-  return foldEntitys<TableAliasAndField[]> ( folder, sqlRoot.main, sqlRoot.root, [] )
+  return foldEntitys<TableAndFieldAndAliasData<G>[]> ( folder, sqlRoot.main, sqlRoot.root, [] )
 }
 
-export function findAllFields ( sqlRoot: SqlRoot, dataD: CompDataD<any>, wheres: WhereLink[] ): TableAliasAndField[] {
-  const tfFromData = findTableAndFieldFromDataD ( dataD )
-  const tfAliasFromData = findTableAliasAndFieldFromDataD ( sqlRoot, tfFromData )
-  const fromWhere = findFieldsFromWhere ( wheres )
-  return unique ( [ ...fromWhere, ...tfAliasFromData ], t => simplifyTableAliasAndField ( t ) )
+export function findAllFields<G> ( sqlRoot: SqlRoot, dataD: CompDataD<any>, wheres: WhereLink[] ): TableAndFieldAndAliasData<G>[] {
+  const errorPrefix = `Error dataD is ${dataD.name}`
+  const tfFromData: TableAndFieldData<any>[] = findTableAndFieldFromDataD ( dataD )
+  const tfAliasFromData: TableAndFieldAndAliasData<G>[] = findTableAliasAndFieldFromDataD ( sqlRoot, tfFromData )
+  const fromWhere: TableAndFieldAndAliasData<G>[] = findFieldsFromWhere ( errorPrefix, wheres )
+  return unique ( [ ...fromWhere, ...tfAliasFromData ], t => simplifyTableAndFieldAndAliasData ( t ) )
 }
 
 export function findSqlLinkDataFromRootAndDataD ( sqlRoot: SqlRoot, dataD: CompDataD<any> ): SqlLinkData {
@@ -257,21 +292,8 @@ export function makeWhereClause ( ws: WhereLink[] ) {
 }
 
 export function generateGetSql ( s: SqlLinkData ): string[] {
-  return [ `select ${s.fields.map ( taf => `${taf.alias}.${taf.field}` ).join ( "," )}`,
+  return [ `select ${s.fields.map ( taf => `${taf.alias}.${taf.fieldData.fieldName}` ).join ( "," )}`,
     `from ${s.aliasAndTables.map ( ( [ alias, table ] ) => `${table.name} ${alias}` ).join ( "," )}`,
     `where ${makeWhereClause ( s.whereLinks )}` ]
 }
 
-// export interface TableData {
-//
-// }
-// export function findAllTableData ( ...rdsps: RestDefnInPageProperties<any>[] ): TableData[] {
-//   rdsps.flatMap ( rdp => {
-//     if ( !rdp.rest.tables ) return []
-//     return walkSqlRoots ( findSqlRoots ( rdp.rest.tables ), r => findSqlLinkDataFromRootAndDataD ( r, rdp.rest.dataDD ).fields )
-//   } )
-//
-//   return []
-//
-//
-// }

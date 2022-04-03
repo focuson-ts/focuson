@@ -172,25 +172,57 @@ describe ( "fieldsInWhere", () => {
   it ( 'should return the two sides of the equal from the ids', () => {
     expect ( allData.map ( d => simplifyTableAndFieldAndAliasDataArray ( fieldsInWhere ( d.aliasMap,
       { ids: [ 'account.one = mainName.two ', 'jointName.x= main.y ' ], other: [ 'ssdgjkflkgj&()^*76' ] } ) ) ) ).toEqual ( [
-      [ "ACC_TBL account =>one", "NAME_TBL mainName =>two", "NAME_TBL jointName =>x", "CUST_TBL main =>y" ],
-      [ "ACC_TBL account =>one", "NAME_TBL mainName =>two", "CUST_TBL main =>y" ],
-      [ "ACC_TBL account =>one", "NAME_TBL jointName =>x" ]
+      [
+        "account:ACC_TBL.one",
+        "mainName:NAME_TBL.two",
+        "jointName:NAME_TBL.x",
+        "main:CUST_TBL.y"
+      ],
+      [
+        "account:ACC_TBL.one",
+        "mainName:NAME_TBL.two",
+        "main:CUST_TBL.y"
+      ],
+      [
+        "account:ACC_TBL.one",
+        "jointName:NAME_TBL.x"
+      ]
     ] )
   } )
   it ( 'should allow data in the form of [cust].. which is a table name not an alias', () => {
     expect ( allData.map ( d => simplifyTableAndFieldAndAliasDataArray ( fieldsInWhere ( d.aliasMap,
       { ids: [ '[cust].one = [ACC_TBL].two ' ] } ) ) ) ).toEqual ( [
-      [ "CUST_TBL main =>one", "CUST_TBL joint =>one", "ACC_TBL account =>two" ],
-      [ "CUST_TBL main =>one", "ACC_TBL account =>two" ],
-      [ "CUST_TBL joint =>one", "ACC_TBL account =>two" ]
+      [
+        "main:CUST_TBL.one",
+        "joint:CUST_TBL.one",
+        "account:ACC_TBL.two"
+      ],
+      [
+        "main:CUST_TBL.one",
+        "account:ACC_TBL.two"
+      ],
+      [
+        "joint:CUST_TBL.one",
+        "account:ACC_TBL.two"
+      ]
     ] )
   } )
   it ( 'should ignores <> in ids', () => {
     expect ( allData.map ( d => simplifyTableAndFieldAndAliasDataArray ( fieldsInWhere ( d.aliasMap,
       { ids: [ 'account.one=jointName.two', 'mainName.x=<accountId>' ], other: [ 'ssdgjkflkgj&()^*76' ] } ) ) ) ).toEqual ( [
-      [ "ACC_TBL account =>one", "NAME_TBL jointName =>two", "NAME_TBL mainName =>x" ],
-      [ "ACC_TBL account =>one", "NAME_TBL mainName =>x" ],
-      [ "ACC_TBL account =>one", "NAME_TBL jointName =>two" ]
+      [
+        "account:ACC_TBL.one",
+        "jointName:NAME_TBL.two",
+        "mainName:NAME_TBL.x"
+      ],
+      [
+        "account:ACC_TBL.one",
+        "mainName:NAME_TBL.x"
+      ],
+      [
+        "account:ACC_TBL.one",
+        "jointName:NAME_TBL.two"
+      ]
     ] )
   } )
   it ( 'should throw an error if the ids have aliases that are not in the map', () => {
@@ -204,36 +236,36 @@ describe ( "findFieldsFor", () => {
   it ( "should prepare the fields for sql", () => {
     expect ( walkRoots ( findSqlRoot ( JointAccountDd, sqlG ), root => makeSqlDataFor ( root, sqlG ) ).map ( findFieldsFor ).map ( simplifyTableAndFieldAndAliasDataArray ) ).toEqual ( [
       [
-        "ACC_TBL account =>blnc",
-        "NAME_TBL mainName =>zzname",
-        "NAME_TBL jointName =>zzname",
-        "ACC_TBL account =>id",
-        "ACC_TBL account =>main",
-        "CUST_TBL main =>id",
-        "NAME_TBL mainName =>id",
-        "ACC_TBL account =>joint",
-        "CUST_TBL joint =>id",
-        "NAME_TBL jointName =>id"
+        "account:ACC_TBL.blnc",
+        "mainName:NAME_TBL.zzname",
+        "jointName:NAME_TBL.zzname",
+        "account:ACC_TBL.id",
+        "account:ACC_TBL.main",
+        "main:CUST_TBL.id",
+        "mainName:NAME_TBL.id",
+        "account:ACC_TBL.joint",
+        "joint:CUST_TBL.id",
+        "jointName:NAME_TBL.id"
       ],
       [
-        "ADD_TBL address =>zzline1",
-        "ADD_TBL address =>zzline2",
-        "ACC_TBL account =>id",
-        "ACC_TBL account =>main",
-        "CUST_TBL main =>id",
-        "NAME_TBL mainName =>id",
-        "ADD_TBL address =>id"
+        "address:ADD_TBL.zzline1",
+        "address:ADD_TBL.zzline2",
+        "account:ACC_TBL.id",
+        "account:ACC_TBL.main",
+        "main:CUST_TBL.id",
+        "mainName:NAME_TBL.id",
+        "address:ADD_TBL.id"
       ],
       [
-        "ADD_TBL address =>zzline1",
-        "ADD_TBL address =>zzline2",
-        "ACC_TBL account =>id",
-        "ACC_TBL account =>joint",
-        "CUST_TBL joint =>id",
-        "NAME_TBL jointName =>id",
-        "ADD_TBL address =>id"
+        "address:ADD_TBL.zzline1",
+        "address:ADD_TBL.zzline2",
+        "account:ACC_TBL.id",
+        "account:ACC_TBL.joint",
+        "joint:CUST_TBL.id",
+        "jointName:NAME_TBL.id",
+        "address:ADD_TBL.id"
       ]
-    ] )
+    ])
   } )
 } )
 describe ( "findTableAliasFor", () => {

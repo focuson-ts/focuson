@@ -353,11 +353,17 @@ export function simplifyTableAndFields ( t: TableAndField ) {
 export function simplifyTableAndFieldsData<G> ( t: TableAndFieldsData<G> ) {
   return `${t.table.name} => ${t.fieldData.map ( fd => `${fd.fieldName}:${fd.reactType}` ).join ( ',' )}`
 }
+export function simplifyTableAndFieldData<G> ( t: TableAndFieldData<G> ) {
+  return `${t.table.name}.${t.fieldData.fieldName}`
+}
+export function simplifyTableAndFieldAndAliasData<G> ( t: TableAndFieldAndAliasData<G> ) {
+  return `${t.alias}:${t.table.name} => ${t.fieldData.fieldName}`
+}
 export function simplifyTableAndFieldDataArray<G> ( ts: TableAndFieldData<G>[] ) {
   return unique ( ts.map ( t => `${t.table.name} =>${t.fieldData.fieldName}` ), t => t )
 }
 export function simplifyTableAndFieldAndAliasDataArray<G> ( ts: TableAndFieldAndAliasData<G>[] ) {
-  return unique ( ts.map ( t => `${t.table.name} ${t.alias} =>${t.fieldData.fieldName}` ), t => t )
+  return unique ( ts.map ( t => `${t.alias}:${t.table.name}.${t.fieldData.fieldName}` ), t => t )
 }
 
 
