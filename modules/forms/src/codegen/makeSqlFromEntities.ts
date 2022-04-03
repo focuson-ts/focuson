@@ -53,8 +53,12 @@ export interface MultipleEntity extends CommonEntity {  //parent id is in the ch
   type: 'Multiple';
   idInParent: string;
   idInThis: string;
+  linkInData: { mapName: string, field: string }
 }
-
+export function isMultipleEntity ( e: Entity ): e is MultipleEntity {
+  // @ts-ignore
+  return e.linkInData != undefined
+}
 export interface SingleEntity extends CommonEntity { //child id is in the parent
   type: 'Single'
   idInParent: string;
@@ -385,8 +389,11 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
     .map ( taf => `this.${taf.alias}.put("${taf.fieldData.fieldName}", rs.${taf.fieldData.rsGetter}("${sqlTafFieldName ( taf )}"));` )
   const setIds = onlyIds.map ( taf => `this.${sqlTafFieldName ( taf )} = rs.${taf.fieldData.rsGetter}("{${sqlTafFieldName ( taf )}");` )
   const links = ld.sqlRoot.children.map ( ( childRoot, i ) => {
-    const [ name, entity ] = childRoot.path[ childRoot.path.length - 1 ]
-    return `this.${name}.put("", list${i});`
+    let childEntity = childRoot.root
+    if ( !isMultipleEntity ( childEntity ) ) throw Error ( `Page: ${p.name} rest ${restName} The parent of sql root must be a multiple entity.\n ${JSON.stringify ( childRoot )}` )
+    if ( childRoot.children.length > 0 )
+      throw Error ( `Page: ${p.name} rest ${restName} has nested 'multiples. Currently this is not supported` )
+    return `this.${childEntity.linkInData.mapName}.put("${childEntity.linkInData.field}", list${i});`
   } );
   return [
     `package ${params.thePackage}.${params.dbPackage};`,
