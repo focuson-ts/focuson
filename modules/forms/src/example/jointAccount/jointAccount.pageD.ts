@@ -30,7 +30,7 @@ export const JointAccountPageD: ExampleMainPage = {
     joint: { dataDD: BooleanDD },
     temp: { dataDD: JointAccountCustomerDD }
   },
-  optionals: {
+  variables: {
     selectedAccount: {
       constructedBy: 'code',
       code: ` id => {

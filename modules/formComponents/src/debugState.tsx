@@ -1,5 +1,5 @@
 import { isMassTransformReason, isSetJsonReason, LensProps, MassTransformReason, reasonFor, SetJsonReason } from "@focuson/state";
-import { fromPathGivenState, HasPageSelection, HasPageSelectionLens, isMainPageDetails } from "@focuson/pages";
+import { fromPathGivenState, HasPageSelection, HasPageSelectionLens, isMainPageDetails, PageSelectionContext } from "@focuson/pages";
 import { HasTagHolder } from "@focuson/template";
 import { HasSimpleMessages, safeArray, safeString, SimpleMessage, sortedEntries } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands } from "@focuson/rest";
@@ -115,6 +115,19 @@ export function Tracing<S, C> ( { state }: LensProps<S, any, C> ) {
 
 interface DebugProps<S, Context> extends LensProps<S, any, Context> {}
 
+export function ToggleOneDebug<S, C extends PageSelectionContext<S>> ( { state, name }: LensProps<S, any, C> & { name: string } ) {
+  return <ToggleButton id={name} buttonText={`{/debug/${name}|Show|Hide} ${name}`} state={state.focusOn ( name )}/>
+}
+export function ToggleDebugs<S, C extends PageSelectionContext<S>> ( { state }: LensProps<S, any, C> ) {
+  const debugState = state.copyWithLens ( Lenses.identity<any> ().focusQuery ( 'debug' ) )
+  return <div>
+    <ToggleOneDebug state={debugState} name='fetcherDebug'/>
+    <ToggleOneDebug state={debugState} name='restDebug'/>
+    <ToggleOneDebug state={debugState} name='selectedPageDebug'/>
+    <ToggleOneDebug state={debugState} name='loadTreeDebug'/>
+  </div>
+
+}
 
 export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends FocusOnContext<S>> ( props: DebugProps<S, C> ) {
   const { state } = props
@@ -128,6 +141,9 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
       <hr/>
       <ToggleButton id='hideDebug' buttonText='Hide Debug' state={debugState.focusOn ( 'showDebug' )}/>
       <h1>Debug</h1>
+      <h2>Logging</h2>
+      <ToggleDebugs state={state}/>
+      <h2>Tracing</h2>
       <ul>
         <li><ToggleButton id='debug.showTracing' buttonText='{/debug/showTracing|Show|Hide} Tracing ' state={showTracingState}/></li>
         <li><ToggleButton id='debug.recordTracing' buttonText='{/debug/recordTrace|Start|Stop} Trace ' state={recordTracingState}/></li>

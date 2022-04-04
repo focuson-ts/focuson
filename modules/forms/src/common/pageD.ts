@@ -58,7 +58,7 @@ export interface MainPageD<Buttons, G> extends HasLayout {
   display: { target: string, dataDD: CompDataD<G> },
   initialValue: 'empty' | any,
   domain: DomainDefnInPage<G>,
-  optionals?: NameAnd<OptionalD>
+  variables?: NameAnd<OptionalD>
   modals?: ModalData<Buttons, G>[],
   rest: RestDefnInPage<G>,
   /** The names and order of the visible buttons. If not populated uses definition order */

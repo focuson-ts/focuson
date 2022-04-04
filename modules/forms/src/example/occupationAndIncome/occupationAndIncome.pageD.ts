@@ -122,7 +122,7 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
     searchList: { dataDD: listOccupationsDD },
     mainOrJoint: { dataDD: BooleanDD }
   },
-  optionals: {
+  variables: {
     selected: {
       constructedBy: 'code',
       code: "id => id.focusQuery ( 'OccupationAndIncomeSummary' ).focusQuery ( 'selectedItem' )"

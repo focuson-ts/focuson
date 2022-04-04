@@ -9,7 +9,7 @@ import { optionalsName } from "./names";
 export function makeOptionals<B, G> ( params: TSParams, p: PageD<B, G> ): string[] {
   function walkOptions ( fn: ( name: string, p: OptionalD ) => string[] ): string[] {
     if ( !isMainPage ( p ) ) return []
-    let optionals = sortedEntries ( p.optionals );
+    let optionals = sortedEntries ( p.variables );
     return optionals.flatMap ( ( [ name, opt ] ) => fn ( name, opt ) )
   }
   const imports = walkOptions ( ( name, opt ) => safeArray ( opt.imports ) )

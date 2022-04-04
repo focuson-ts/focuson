@@ -85,7 +85,7 @@ export function applyPageOps ( pageOps: PageOps, pageSelection: PageSelection ):
   return ( old: PageSelection[] | undefined ) => {
     const ps = safeArray ( old )
     if ( pageOps === 'popup' ) return [ ...ps, pageSelection ];
-    if ( pageOps === 'select' ) return [ ...ps.slice ( 0, -1 ), pageSelection ];
+    if ( pageOps === 'select' ) return [  pageSelection ];
     throw new Error ( `Cannot perform pageOps ${pageOps}` )
   }
 }
