@@ -10,7 +10,6 @@ export interface RadioProps<S, T, Context> extends CommonStateProps<S, T, Contex
 }
 
 export function Radio<S, T, Context extends FocusOnContext<S>> ( { state, mode, enums, ariaLabel, id }: RadioProps<S, string, Context> ) {
-  console.log ( state.optJson () )
   return <>{Object.entries ( enums ).map ( ( [ key, value ] ) => {
     return <span onClick={() => state.setJson ( value, reasonFor ( 'Radio', 'onClick', id ) )} key={key}>
       <input id={id + value} onChange={() => {}} checked={state.optJson () === value} value={state.optJson ()} type='radio' name={id} disabled={mode === 'view'} aria-label={ariaLabel}/>

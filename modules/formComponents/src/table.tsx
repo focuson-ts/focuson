@@ -41,6 +41,6 @@ export interface SelectedItemProps<FS, S, T, Context> extends LensProps<S, T[], 
 }
 export function SelectedItem<FS, S, T, Context> ( { index, state, display, mode, id, buttons }: SelectedItemProps<FS, S, T, Context> ) {
   let newState = state.chainLens ( Lenses.nth ( index ) );
-  console.log ( "SelectedItem", index, newState.optional.description, newState.optJson () )
+  // console.log ( "SelectedItem", index, newState.optional.description, newState.optJson () )
   return display ( { state: newState, mode, id, buttons } )
 }
