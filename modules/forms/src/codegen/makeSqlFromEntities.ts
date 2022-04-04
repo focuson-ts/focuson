@@ -1,12 +1,11 @@
 import { DBTable } from "../common/resolverD";
-import { beforeSeparator, NameAnd, safeArray } from "@focuson/utils";
+import { beforeAfterSeparator, beforeSeparator, NameAnd, safeArray } from "@focuson/utils";
 import { EntityAndWhere, unique } from "../common/restD";
 import { CompDataD, emptyDataFlatMap, flatMapDD } from "../common/dataD";
-import { beforeAfterSeparator } from "@focuson/utils/src/utils";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfAllButLast, indentList } from "./codegen";
 import { JavaWiringParams } from "./config";
-import { sqlTafFieldName, sqlMapName, sqlListName } from "./names";
+import { sqlListName, sqlMapName, sqlTafFieldName } from "./names";
 
 export type DbValues = string | TableAndField
 

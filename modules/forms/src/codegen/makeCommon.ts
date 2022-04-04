@@ -49,11 +49,11 @@ export function makeCommon<B, G> ( appConfig: AppConfig, params: TSParams, pds: 
     ...makeFullState ( params, pds ),
     ...makeCommonParams ( params, pds, rds, directorySpec ),
     ...makeContext ( appConfig, params ),
-    ...makeStateWithSelectedPage ( params, JSON.stringify ( paramsWithSamples ), pds[ 0 ].name ) //TODO this should be slicker and aggregated params for example
+    ...makeStateWithSelectedPage ( appConfig, params, JSON.stringify ( paramsWithSamples ), pds[ 0 ].name ) //TODO this should be slicker and aggregated params for example
   ]
 }
 
-export function makeStateWithSelectedPage ( params: TSParams, commonParamsValue: any, pageName?: string, pageMode?: PageMode ): string[] {
+export function makeStateWithSelectedPage ( appConfig: AppConfig, params: TSParams, commonParamsValue: any, pageName?: string, pageMode?: PageMode ): string[] {
   const { stateName, commonParams } = params
   return [
     `export const emptyState: ${params.stateName} = {`,
@@ -63,7 +63,7 @@ export function makeStateWithSelectedPage ( params: TSParams, commonParamsValue:
     `  pageSelection: [{ pageName: '${pageName}', firstTime: true, pageMode: '${pageMode ? pageMode : 'view'}' }],`,
     ...pageName ? [ `  ${pageName}:{},` ] : [],
     `  restCommands: [],`,
-    `      debug: { fetcherDebug: true, postDebug: false, selectedPageDebug: false, loadTreeDebug: false, showTracing: false, recordTrace: true }`,
+    `  debug: ${JSON.stringify ( appConfig.debug )}`,
     `  }`
   ]
 }
