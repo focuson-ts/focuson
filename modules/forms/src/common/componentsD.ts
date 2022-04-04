@@ -79,6 +79,9 @@ export const TableCD: DisplayCompD = {
     copySelectedItemTo: { paramType: 'pageState', needed: 'no' }
   }
 }
+
+
+
 export const SelectedItemCD: DisplayCompD = {
   import: "@focuson/form_components",
   name: "SelectedItem",
