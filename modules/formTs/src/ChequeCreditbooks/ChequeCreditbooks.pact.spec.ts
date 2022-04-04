@@ -8,7 +8,7 @@ import * as samples from '../ChequeCreditbooks/ChequeCreditbooks.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
 import { restUrlMutator } from "../rests";
-import {ChequeCreditbooksFetcher} from './ChequeCreditbooks.fetchers'
+import {_ChequeCreditbooksFetcher} from './ChequeCreditbooks.fetchers'
 
 describe("Allow pacts to be run from intelliJ for ChequeCreditbooks", () =>{})
 
@@ -33,7 +33,7 @@ describe ( 'ChequeCreditbooks - chequeCreditBooks - fetcher', () => {
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
-      const fetcher= ChequeCreditbooksFetcher (Lenses.identity<FState>().focusQuery('ChequeCreditbooks'), commonIds ) 
+      const fetcher= _ChequeCreditbooksFetcher (Lenses.identity<FState>().focusQuery('ChequeCreditbooks'), commonIds ) 
       expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state
       const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
@@ -51,7 +51,7 @@ describe ( 'ChequeCreditbooks - chequeCreditBooks - fetcher', () => {
 pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider', cors: true }, provider => {
   describe ( 'ChequeCreditbooks - chequeCreditBooks rest get', () => {
    it ( 'should have a get rest for ChequeCreditbooks', async () => {
-    const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'ChequeCreditbooks__ChequeCreditbooksRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"},
@@ -89,7 +89,7 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
 pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider', cors: true }, provider => {
   describe ( 'ChequeCreditbooks - chequeCreditBooks rest create', () => {
    it ( 'should have a create rest for ChequeCreditbooks', async () => {
-    const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksRestDetails', restAction: 'create' }
+    const restCommand: RestCommand = { name: 'ChequeCreditbooks__ChequeCreditbooksRestDetails', restAction: 'create' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"},

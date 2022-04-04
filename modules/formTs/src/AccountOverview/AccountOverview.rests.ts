@@ -6,7 +6,7 @@ import { Lenses, NameAndLens} from "@focuson/lens"
 import { FState } from "../common"
 
 //If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
-export function AccountOverview_AccountAllFlagsRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.AccountAllFlagsDomain, SimpleMessage> {
+export function AccountOverview__AccountAllFlagsRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.AccountAllFlagsDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
@@ -20,7 +20,7 @@ export function AccountOverview_AccountAllFlagsRestDetails ( cd: NameAndLens<FSt
 }
 
 //If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
-export function AccountOverview_ArrearsDetailsRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.ArrearsDetailsDomain, SimpleMessage> {
+export function AccountOverview__ArrearsDetailsRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.ArrearsDetailsDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {startDate: Lenses.identity< domains.AccountOverviewPageDomain>().focusQuery('currentSelectedExcessHistory').focusQuery('start')}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
@@ -34,7 +34,7 @@ export function AccountOverview_ArrearsDetailsRestDetails ( cd: NameAndLens<FSta
 }
 
 //If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
-export function previousAccountOverview_ArrearsDetailsRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.ArrearsDetailsDomain, SimpleMessage> {
+export function AccountOverview_previous_ArrearsDetailsRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.ArrearsDetailsDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {startDate: Lenses.identity< domains.AccountOverviewPageDomain>().focusQuery('currentSelectedExcessHistory').focusQuery('start')}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
@@ -48,7 +48,7 @@ export function previousAccountOverview_ArrearsDetailsRestDetails ( cd: NameAndL
 }
 
 //If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
-export function AccountOverview_AccountOverviewHistoryRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.AccountOverviewHistoryDomain, SimpleMessage> {
+export function AccountOverview__AccountOverviewHistoryRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.AccountOverviewHistoryDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
@@ -62,7 +62,7 @@ export function AccountOverview_AccountOverviewHistoryRestDetails ( cd: NameAndL
 }
 
 //If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
-export function AccountOverview_AccountOverviewExcessInfoRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.AccountOverviewExcessInfoDomain, SimpleMessage> {
+export function AccountOverview__AccountOverviewExcessInfoRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.AccountOverviewExcessInfoDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
@@ -76,7 +76,7 @@ export function AccountOverview_AccountOverviewExcessInfoRestDetails ( cd: NameA
 }
 
 //If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
-export function AccountOverview_AccountOverviewRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.AccountOverviewDomain, SimpleMessage> {
+export function AccountOverview__AccountOverviewRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.AccountOverviewDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
@@ -90,7 +90,7 @@ export function AccountOverview_AccountOverviewRestDetails ( cd: NameAndLens<FSt
 }
 
 //If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
-export function AccountOverview_AccountOverviewReasonRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.AccountOverviewReasonDomain, SimpleMessage> {
+export function AccountOverview__AccountOverviewReasonRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.AccountOverviewReasonDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),

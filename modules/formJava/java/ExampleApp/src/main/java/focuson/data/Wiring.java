@@ -14,68 +14,71 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URL;
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
-import focuson.data.fetchers.AccountAllFlagsFFetcher;
-import focuson.data.fetchers.ArrearsDetailsFFetcher;
-import focuson.data.fetchers.AccountOverviewHistoryFFetcher;
-import focuson.data.fetchers.AccountOverviewExcessInfoFFetcher;
-import focuson.data.fetchers.AccountOverviewFFetcher;
-import focuson.data.fetchers.AccountOverviewReasonFFetcher;
-import focuson.data.fetchers.JointAccountFFetcher;
-import focuson.data.fetchers.AdditionalInformationFFetcher;
-import focuson.data.fetchers.BusinessDetailsMainFFetcher;
-import focuson.data.fetchers.DropdownsFFetcher;
-import focuson.data.fetchers.OccupationAndIncomeFullDomainFFetcher;
-import focuson.data.fetchers.OtherIncomeResponseFFetcher;
-import focuson.data.fetchers.CreatePlanFFetcher;
-import focuson.data.fetchers.EAccountsSummaryFFetcher;
-import focuson.data.fetchers.ETransferDataDFFetcher;
-import focuson.data.fetchers.CreateEAccountDataFFetcher;
-import focuson.data.fetchers.ChequeCreditbooksFFetcher;
-import focuson.data.fetchers.RepeatingWholeDataFFetcher;
-import focuson.data.fetchers.PostCodeNameAndAddressFFetcher;
-import focuson.data.fetchers.PostCodeDataFFetcher;
+import focuson.data.fetchers._AccountAllFlagsFFetcher;
+import focuson.data.fetchers._ArrearsDetailsFFetcher;
+import focuson.data.fetchers.previous_ArrearsDetailsFFetcher;
+import focuson.data.fetchers._AccountOverviewHistoryFFetcher;
+import focuson.data.fetchers._AccountOverviewExcessInfoFFetcher;
+import focuson.data.fetchers._AccountOverviewFFetcher;
+import focuson.data.fetchers._AccountOverviewReasonFFetcher;
+import focuson.data.fetchers._JointAccountFFetcher;
+import focuson.data.fetchers._AdditionalInformationFFetcher;
+import focuson.data.fetchers._BusinessDetailsMainFFetcher;
+import focuson.data.fetchers._DropdownsFFetcher;
+import focuson.data.fetchers._OccupationAndIncomeFullDomainFFetcher;
+import focuson.data.fetchers._OtherIncomeResponseFFetcher;
+import focuson.data.fetchers._CreatePlanFFetcher;
+import focuson.data.fetchers._EAccountsSummaryFFetcher;
+import focuson.data.fetchers._ETransferDataDFFetcher;
+import focuson.data.fetchers._CreateEAccountDataFFetcher;
+import focuson.data.fetchers._ChequeCreditbooksFFetcher;
+import focuson.data.fetchers._RepeatingWholeDataFFetcher;
+import focuson.data.fetchers._PostCodeNameAndAddressFFetcher;
+import focuson.data.fetchers._PostCodeDataFFetcher;
 @Component
 public class Wiring {
       @Autowired
-      AccountAllFlagsFFetcher _AccountAllFlagsFFetcher;
+      _AccountAllFlagsFFetcher __AccountAllFlagsFFetcher;
       @Autowired
-      ArrearsDetailsFFetcher _ArrearsDetailsFFetcher;
+      _ArrearsDetailsFFetcher __ArrearsDetailsFFetcher;
       @Autowired
-      AccountOverviewHistoryFFetcher _AccountOverviewHistoryFFetcher;
+      previous_ArrearsDetailsFFetcher _previous_ArrearsDetailsFFetcher;
       @Autowired
-      AccountOverviewExcessInfoFFetcher _AccountOverviewExcessInfoFFetcher;
+      _AccountOverviewHistoryFFetcher __AccountOverviewHistoryFFetcher;
       @Autowired
-      AccountOverviewFFetcher _AccountOverviewFFetcher;
+      _AccountOverviewExcessInfoFFetcher __AccountOverviewExcessInfoFFetcher;
       @Autowired
-      AccountOverviewReasonFFetcher _AccountOverviewReasonFFetcher;
+      _AccountOverviewFFetcher __AccountOverviewFFetcher;
       @Autowired
-      JointAccountFFetcher _JointAccountFFetcher;
+      _AccountOverviewReasonFFetcher __AccountOverviewReasonFFetcher;
       @Autowired
-      AdditionalInformationFFetcher _AdditionalInformationFFetcher;
+      _JointAccountFFetcher __JointAccountFFetcher;
       @Autowired
-      BusinessDetailsMainFFetcher _BusinessDetailsMainFFetcher;
+      _AdditionalInformationFFetcher __AdditionalInformationFFetcher;
       @Autowired
-      DropdownsFFetcher _DropdownsFFetcher;
+      _BusinessDetailsMainFFetcher __BusinessDetailsMainFFetcher;
       @Autowired
-      OccupationAndIncomeFullDomainFFetcher _OccupationAndIncomeFullDomainFFetcher;
+      _DropdownsFFetcher __DropdownsFFetcher;
       @Autowired
-      OtherIncomeResponseFFetcher _OtherIncomeResponseFFetcher;
+      _OccupationAndIncomeFullDomainFFetcher __OccupationAndIncomeFullDomainFFetcher;
       @Autowired
-      CreatePlanFFetcher _CreatePlanFFetcher;
+      _OtherIncomeResponseFFetcher __OtherIncomeResponseFFetcher;
       @Autowired
-      EAccountsSummaryFFetcher _EAccountsSummaryFFetcher;
+      _CreatePlanFFetcher __CreatePlanFFetcher;
       @Autowired
-      ETransferDataDFFetcher _ETransferDataDFFetcher;
+      _EAccountsSummaryFFetcher __EAccountsSummaryFFetcher;
       @Autowired
-      CreateEAccountDataFFetcher _CreateEAccountDataFFetcher;
+      _ETransferDataDFFetcher __ETransferDataDFFetcher;
       @Autowired
-      ChequeCreditbooksFFetcher _ChequeCreditbooksFFetcher;
+      _CreateEAccountDataFFetcher __CreateEAccountDataFFetcher;
       @Autowired
-      RepeatingWholeDataFFetcher _RepeatingWholeDataFFetcher;
+      _ChequeCreditbooksFFetcher __ChequeCreditbooksFFetcher;
       @Autowired
-      PostCodeNameAndAddressFFetcher _PostCodeNameAndAddressFFetcher;
+      _RepeatingWholeDataFFetcher __RepeatingWholeDataFFetcher;
       @Autowired
-      PostCodeDataFFetcher _PostCodeDataFFetcher;
+      _PostCodeNameAndAddressFFetcher __PostCodeNameAndAddressFFetcher;
+      @Autowired
+      _PostCodeDataFFetcher __PostCodeDataFFetcher;
     private GraphQL graphQL;
     @PostConstruct
     public void init() throws IOException {
@@ -92,38 +95,39 @@ public class Wiring {
     }
     private RuntimeWiring buildWiring() {
         return RuntimeWiring.newRuntimeWiring()
-          .type(newTypeWiring("Query").dataFetcher("getAccountAllFlags", _AccountAllFlagsFFetcher.getAccountAllFlags()))
-          .type(newTypeWiring("Query").dataFetcher("getArrearsDetails", _ArrearsDetailsFFetcher.getArrearsDetails()))
-          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewHistory", _AccountOverviewHistoryFFetcher.getAccountOverviewHistory()))
-          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewExcessInfo", _AccountOverviewExcessInfoFFetcher.getAccountOverviewExcessInfo()))
-          .type(newTypeWiring("Query").dataFetcher("getAccountOverview", _AccountOverviewFFetcher.getAccountOverview()))
-          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewReason", _AccountOverviewReasonFFetcher.getAccountOverviewReason()))
-          .type(newTypeWiring("Query").dataFetcher("getJointAccount", _JointAccountFFetcher.getJointAccount()))
-          .type(newTypeWiring("Query").dataFetcher("getAdditionalInformation", _AdditionalInformationFFetcher.getAdditionalInformation()))
-          .type(newTypeWiring("Query").dataFetcher("getBusinessDetailsMain", _BusinessDetailsMainFFetcher.getBusinessDetailsMain()))
-          .type(newTypeWiring("Query").dataFetcher("getDropdowns", _DropdownsFFetcher.getDropdowns()))
-          .type(newTypeWiring("Query").dataFetcher("getOccupationAndIncomeFullDomain", _OccupationAndIncomeFullDomainFFetcher.getOccupationAndIncomeFullDomain()))
-          .type(newTypeWiring("Mutation").dataFetcher("updateOccupationAndIncomeFullDomain", _OccupationAndIncomeFullDomainFFetcher.updateOccupationAndIncomeFullDomain()))
-          .type(newTypeWiring("Query").dataFetcher("getOtherIncomeResponse", _OtherIncomeResponseFFetcher.getOtherIncomeResponse()))
-          .type(newTypeWiring("Query").dataFetcher("getCreatePlan", _CreatePlanFFetcher.getCreatePlan()))
-          .type(newTypeWiring("Mutation").dataFetcher("createCreatePlan", _CreatePlanFFetcher.createCreatePlan()))
-          .type(newTypeWiring("Mutation").dataFetcher("updateCreatePlan", _CreatePlanFFetcher.updateCreatePlan()))
-          .type(newTypeWiring("Mutation").dataFetcher("deleteCreatePlan", _CreatePlanFFetcher.deleteCreatePlan()))
-          .type(newTypeWiring("Query").dataFetcher("listCreatePlan", _CreatePlanFFetcher.listCreatePlan()))
-          .type(newTypeWiring("Query").dataFetcher("getEAccountsSummary", _EAccountsSummaryFFetcher.getEAccountsSummary()))
-          .type(newTypeWiring("EAccountSummary").dataFetcher("description", _EAccountsSummaryFFetcher.getAccountSummaryDescription()))
-          .type(newTypeWiring("EAccountsSummary").dataFetcher("totalMonthlyCost", _EAccountsSummaryFFetcher.getTotalMonthlyCost()))
-          .type(newTypeWiring("EAccountsSummary").dataFetcher("oneAccountBalance", _EAccountsSummaryFFetcher.getOneAccountBalance()))
-          .type(newTypeWiring("EAccountsSummary").dataFetcher("currentAccountBalance", _EAccountsSummaryFFetcher.getCurrentAccountBalance()))
-          .type(newTypeWiring("Mutation").dataFetcher("createETransferDataD", _ETransferDataDFFetcher.createETransferDataD()))
-          .type(newTypeWiring("Mutation").dataFetcher("createCreateEAccountData", _CreateEAccountDataFFetcher.createCreateEAccountData()))
-          .type(newTypeWiring("Query").dataFetcher("getCreateEAccountData", _CreateEAccountDataFFetcher.getCreateEAccountData()))
-          .type(newTypeWiring("Query").dataFetcher("getChequeCreditbooks", _ChequeCreditbooksFFetcher.getChequeCreditbooks()))
-          .type(newTypeWiring("Mutation").dataFetcher("createChequeCreditbooks", _ChequeCreditbooksFFetcher.createChequeCreditbooks()))
-          .type(newTypeWiring("Mutation").dataFetcher("createRepeatingLine", _RepeatingWholeDataFFetcher.createRepeatingLine()))
-          .type(newTypeWiring("Query").dataFetcher("getRepeatingLine", _RepeatingWholeDataFFetcher.getRepeatingLine()))
-          .type(newTypeWiring("Mutation").dataFetcher("createPostCodeNameAndAddress", _PostCodeNameAndAddressFFetcher.createPostCodeNameAndAddress()))
-          .type(newTypeWiring("Query").dataFetcher("getPostCodeDataLine", _PostCodeDataFFetcher.getPostCodeDataLine()))
+          .type(newTypeWiring("Query").dataFetcher("getAccountAllFlags", __AccountAllFlagsFFetcher.getAccountAllFlags()))
+          .type(newTypeWiring("Query").dataFetcher("getArrearsDetails", __ArrearsDetailsFFetcher.getArrearsDetails()))
+          .type(newTypeWiring("Query").dataFetcher("getArrearsDetails", _previous_ArrearsDetailsFFetcher.getArrearsDetails()))
+          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewHistory", __AccountOverviewHistoryFFetcher.getAccountOverviewHistory()))
+          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewExcessInfo", __AccountOverviewExcessInfoFFetcher.getAccountOverviewExcessInfo()))
+          .type(newTypeWiring("Query").dataFetcher("getAccountOverview", __AccountOverviewFFetcher.getAccountOverview()))
+          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewReason", __AccountOverviewReasonFFetcher.getAccountOverviewReason()))
+          .type(newTypeWiring("Query").dataFetcher("getJointAccount", __JointAccountFFetcher.getJointAccount()))
+          .type(newTypeWiring("Query").dataFetcher("getAdditionalInformation", __AdditionalInformationFFetcher.getAdditionalInformation()))
+          .type(newTypeWiring("Query").dataFetcher("getBusinessDetailsMain", __BusinessDetailsMainFFetcher.getBusinessDetailsMain()))
+          .type(newTypeWiring("Query").dataFetcher("getDropdowns", __DropdownsFFetcher.getDropdowns()))
+          .type(newTypeWiring("Query").dataFetcher("getOccupationAndIncomeFullDomain", __OccupationAndIncomeFullDomainFFetcher.getOccupationAndIncomeFullDomain()))
+          .type(newTypeWiring("Mutation").dataFetcher("updateOccupationAndIncomeFullDomain", __OccupationAndIncomeFullDomainFFetcher.updateOccupationAndIncomeFullDomain()))
+          .type(newTypeWiring("Query").dataFetcher("getOtherIncomeResponse", __OtherIncomeResponseFFetcher.getOtherIncomeResponse()))
+          .type(newTypeWiring("Query").dataFetcher("getCreatePlan", __CreatePlanFFetcher.getCreatePlan()))
+          .type(newTypeWiring("Mutation").dataFetcher("createCreatePlan", __CreatePlanFFetcher.createCreatePlan()))
+          .type(newTypeWiring("Mutation").dataFetcher("updateCreatePlan", __CreatePlanFFetcher.updateCreatePlan()))
+          .type(newTypeWiring("Mutation").dataFetcher("deleteCreatePlan", __CreatePlanFFetcher.deleteCreatePlan()))
+          .type(newTypeWiring("Query").dataFetcher("listCreatePlan", __CreatePlanFFetcher.listCreatePlan()))
+          .type(newTypeWiring("Query").dataFetcher("getEAccountsSummary", __EAccountsSummaryFFetcher.getEAccountsSummary()))
+          .type(newTypeWiring("EAccountSummary").dataFetcher("description", __EAccountsSummaryFFetcher.getAccountSummaryDescription()))
+          .type(newTypeWiring("EAccountsSummary").dataFetcher("totalMonthlyCost", __EAccountsSummaryFFetcher.getTotalMonthlyCost()))
+          .type(newTypeWiring("EAccountsSummary").dataFetcher("oneAccountBalance", __EAccountsSummaryFFetcher.getOneAccountBalance()))
+          .type(newTypeWiring("EAccountsSummary").dataFetcher("currentAccountBalance", __EAccountsSummaryFFetcher.getCurrentAccountBalance()))
+          .type(newTypeWiring("Mutation").dataFetcher("createETransferDataD", __ETransferDataDFFetcher.createETransferDataD()))
+          .type(newTypeWiring("Mutation").dataFetcher("createCreateEAccountData", __CreateEAccountDataFFetcher.createCreateEAccountData()))
+          .type(newTypeWiring("Query").dataFetcher("getCreateEAccountData", __CreateEAccountDataFFetcher.getCreateEAccountData()))
+          .type(newTypeWiring("Query").dataFetcher("getChequeCreditbooks", __ChequeCreditbooksFFetcher.getChequeCreditbooks()))
+          .type(newTypeWiring("Mutation").dataFetcher("createChequeCreditbooks", __ChequeCreditbooksFFetcher.createChequeCreditbooks()))
+          .type(newTypeWiring("Mutation").dataFetcher("createRepeatingLine", __RepeatingWholeDataFFetcher.createRepeatingLine()))
+          .type(newTypeWiring("Query").dataFetcher("getRepeatingLine", __RepeatingWholeDataFFetcher.getRepeatingLine()))
+          .type(newTypeWiring("Mutation").dataFetcher("createPostCodeNameAndAddress", __PostCodeNameAndAddressFFetcher.createPostCodeNameAndAddress()))
+          .type(newTypeWiring("Query").dataFetcher("getPostCodeDataLine", __PostCodeDataFFetcher.getPostCodeDataLine()))
           .build();
     }
     @Bean

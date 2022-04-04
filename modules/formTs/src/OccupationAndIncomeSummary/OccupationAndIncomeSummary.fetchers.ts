@@ -7,7 +7,7 @@ import { pageAndTagFetcher } from "@focuson/focuson";
 import { FState } from "../common";
 import { Optional, Lenses, NameAndLens} from '@focuson/lens';
 //fetcher type true
-export function AdditionalInformationFetcher(fdLens:Optional<FState, domains.OccupationAndIncomeSummaryPageDomain>,commonIds: NameAndLens<FState>) {
+export function _AdditionalInformationFetcher(fdLens:Optional<FState, domains.OccupationAndIncomeSummaryPageDomain>,commonIds: NameAndLens<FState>) {
   const localIds = {}
   return pageAndTagFetcher<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.AdditionalInformationDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.AdditionalInformationDomain>(),
@@ -17,7 +17,7 @@ export function AdditionalInformationFetcher(fdLens:Optional<FState, domains.Occ
      '/customer/occupation/v2/additionalInfo?{query}')
 }
 //fetcher type true
-export function BusinessDetailsMainFetcher(fdLens:Optional<FState, domains.OccupationAndIncomeSummaryPageDomain>,commonIds: NameAndLens<FState>) {
+export function _BusinessDetailsMainFetcher(fdLens:Optional<FState, domains.OccupationAndIncomeSummaryPageDomain>,commonIds: NameAndLens<FState>) {
   const localIds = {}
   return pageAndTagFetcher<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.BusinessDetailsMainDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.BusinessDetailsMainDomain>(),
@@ -27,7 +27,7 @@ export function BusinessDetailsMainFetcher(fdLens:Optional<FState, domains.Occup
      '/customer/occupation/v2/businessDetails?{query}')
 }
 //fetcher type true
-export function DropdownsFetcher(fdLens:Optional<FState, domains.OccupationAndIncomeSummaryPageDomain>,commonIds: NameAndLens<FState>) {
+export function _DropdownsFetcher(fdLens:Optional<FState, domains.OccupationAndIncomeSummaryPageDomain>,commonIds: NameAndLens<FState>) {
   const localIds = {}
   return pageAndTagFetcher<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.DropdownsDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.DropdownsDomain>(),
@@ -37,7 +37,7 @@ export function DropdownsFetcher(fdLens:Optional<FState, domains.OccupationAndIn
      '/customer/occupation/v2/occupationDetails?{query}')
 }
 //fetcher type true
-export function OccupationAndIncomeFullDomainFetcher(fdLens:Optional<FState, domains.OccupationAndIncomeSummaryPageDomain>,commonIds: NameAndLens<FState>) {
+export function _OccupationAndIncomeFullDomainFetcher(fdLens:Optional<FState, domains.OccupationAndIncomeSummaryPageDomain>,commonIds: NameAndLens<FState>) {
   const localIds = {}
   return pageAndTagFetcher<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.OccupationAndIncomeFullDomainDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.OccupationAndIncomeFullDomainDomain>(),
@@ -47,7 +47,7 @@ export function OccupationAndIncomeFullDomainFetcher(fdLens:Optional<FState, dom
      '/customer/occupation/v2/occupationIncomeDetails?{query}')
 }
 //fetcher type true
-export function OtherIncomeResponseFetcher(fdLens:Optional<FState, domains.OccupationAndIncomeSummaryPageDomain>,commonIds: NameAndLens<FState>) {
+export function _OtherIncomeResponseFetcher(fdLens:Optional<FState, domains.OccupationAndIncomeSummaryPageDomain>,commonIds: NameAndLens<FState>) {
   const localIds = {}
   return pageAndTagFetcher<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.OtherIncomeResponseDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.OtherIncomeResponseDomain>(),

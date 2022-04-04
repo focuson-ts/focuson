@@ -7,7 +7,7 @@ import { pageAndTagFetcher } from "@focuson/focuson";
 import { FState } from "../common";
 import { Optional, Lenses, NameAndLens} from '@focuson/lens';
 //fetcher type true
-export function JointAccountFetcher(fdLens:Optional<FState, domains.JointAccountPageDomain>,commonIds: NameAndLens<FState>) {
+export function _JointAccountFetcher(fdLens:Optional<FState, domains.JointAccountPageDomain>,commonIds: NameAndLens<FState>) {
   const localIds = {}
   return pageAndTagFetcher<FState, domains.JointAccountPageDomain, domains.JointAccountDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.JointAccountDomain>(),

@@ -33,7 +33,7 @@ export function PostCodeDemoPage(){
         name='save'
         action='create'
         validate={false}
-        rest='PostCodeDemo_PostCodeNameAndAddressRestDetails'
+        rest='PostCodeDemo__PostCodeNameAndAddressRestDetails'
        />,
       search:<ModalButton id='search' text='search'  state={state} modal = 'PostCodeSearch'  
         pageMode='edit'

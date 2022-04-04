@@ -21,7 +21,7 @@ export function resolverName<G> ( dataD: AllDataDD<G>, action: RestActionDetail 
 export const sampleName = <G> ( dataD: AllDataDD<G> ) => "sample" + dataD.name;
 export const emptyName = <G> ( dataD: AllDataDD<G> ) => "empty" + dataD.name;
 
-export const restControllerName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}Controller`
+export const restControllerName = <G> ( restD: RestD<G> ) => (restD.namePrefix ? `${restD.namePrefix}_` : '') + `${restD.dataDD.name}Controller`
 export const javaSqlCreateTableSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.createTableSql.sql`
 export const javaSqlReadSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.readTableSql.sql`
 
@@ -31,11 +31,13 @@ export const createTableSqlName = <G> ( tableName ): string => { return tableNam
 export const endPointName = <G> ( restD: RestD<G>, action: RestAction ): string => action + restD.dataDD.name
 
 export const modalName = <B, G> ( p: PageD<B, G>, modal: PageD<B, G> ) => modal.name
-export const restDetailsName = <B, G> ( p: PageD<B, G>, restName: string, r: RestD<G> ) => safeString ( r.namePrefix ) + p.name + "_" + r.dataDD.name + "RestDetails"
-export const fetcherName = <G> ( d: RestDefnInPageProperties<G> ): string => safeString ( d.rest.namePrefix ) + d.rest.dataDD.name + "Fetcher";
-export const fetcherInterfaceName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${r.dataDD.name}${params.fetcherInterface}`;
-export const fetcherVariableName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `_${r.dataDD.name}${params.fetcherInterface}`;
-export const mockFetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${r.dataDD.name}${params.fetcherInterface}Mock`;
+export const restNameWithPrefix = <G> ( r: RestD<G> ) => safeString ( r.namePrefix ) + "_" + r.dataDD.name
+export const restDetailsName = <B, G> ( p: PageD<B, G>, restName: string, r: RestD<G> ) => p.name + "_" + restNameWithPrefix ( r ) + "RestDetails"
+export const fetcherName = <G> ( d: RestDefnInPageProperties<G> ): string => restNameWithPrefix (d.rest)  + "Fetcher";
+export const fetcherInterfaceName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${restNameWithPrefix(r)}${params.fetcherInterface}`;
+export const fetcherVariableName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `_${restNameWithPrefix(r)}${params.fetcherInterface}`;
+export const mockFetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${restNameWithPrefix(r)}${params.fetcherInterface}Mock`;
+
 export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${r.dataDD.name}Queries`;
 
 export const javaDbFileName = <B, G> ( params: JavaWiringParams, p: PageD<B, G> ): string => `${p.name}Db`;

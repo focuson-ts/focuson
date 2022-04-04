@@ -3,51 +3,51 @@ import { createSimpleMessage, DateFn, defaultDateFn, RestAction, insertBefore, S
 import { Lenses, NameAndLens} from "@focuson/lens"
 import { FState , commonIds} from "./common";
 
-import { AccountOverview_AccountAllFlagsRestDetails } from './AccountOverview/AccountOverview.rests';
-import { AccountOverview_ArrearsDetailsRestDetails } from './AccountOverview/AccountOverview.rests';
-import { previousAccountOverview_ArrearsDetailsRestDetails } from './AccountOverview/AccountOverview.rests';
-import { AccountOverview_AccountOverviewHistoryRestDetails } from './AccountOverview/AccountOverview.rests';
-import { AccountOverview_AccountOverviewExcessInfoRestDetails } from './AccountOverview/AccountOverview.rests';
-import { AccountOverview_AccountOverviewRestDetails } from './AccountOverview/AccountOverview.rests';
-import { AccountOverview_AccountOverviewReasonRestDetails } from './AccountOverview/AccountOverview.rests';
-import { JointAccount_JointAccountRestDetails } from './JointAccount/JointAccount.rests';
-import { OccupationAndIncomeSummary_AdditionalInformationRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
-import { OccupationAndIncomeSummary_BusinessDetailsMainRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
-import { OccupationAndIncomeSummary_DropdownsRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
-import { OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
-import { OccupationAndIncomeSummary_OtherIncomeResponseRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
-import { EAccountsSummary_CreatePlanRestDetails } from './EAccountsSummary/EAccountsSummary.rests';
-import { EAccountsSummary_EAccountsSummaryRestDetails } from './EAccountsSummary/EAccountsSummary.rests';
-import { ETransfer_ETransferDataDRestDetails } from './ETransfer/ETransfer.rests';
-import { CreateEAccount_CreateEAccountDataRestDetails } from './CreateEAccount/CreateEAccount.rests';
-import { ChequeCreditbooks_ChequeCreditbooksRestDetails } from './ChequeCreditbooks/ChequeCreditbooks.rests';
-import { Repeating_RepeatingWholeDataRestDetails } from './Repeating/Repeating.rests';
-import { PostCodeDemo_PostCodeNameAndAddressRestDetails } from './PostCodeDemo/PostCodeDemo.rests';
-import { PostCodeDemo_PostCodeDataRestDetails } from './PostCodeDemo/PostCodeDemo.rests';
+import { AccountOverview__AccountAllFlagsRestDetails } from './AccountOverview/AccountOverview.rests';
+import { AccountOverview__ArrearsDetailsRestDetails } from './AccountOverview/AccountOverview.rests';
+import { AccountOverview_previous_ArrearsDetailsRestDetails } from './AccountOverview/AccountOverview.rests';
+import { AccountOverview__AccountOverviewHistoryRestDetails } from './AccountOverview/AccountOverview.rests';
+import { AccountOverview__AccountOverviewExcessInfoRestDetails } from './AccountOverview/AccountOverview.rests';
+import { AccountOverview__AccountOverviewRestDetails } from './AccountOverview/AccountOverview.rests';
+import { AccountOverview__AccountOverviewReasonRestDetails } from './AccountOverview/AccountOverview.rests';
+import { JointAccount__JointAccountRestDetails } from './JointAccount/JointAccount.rests';
+import { OccupationAndIncomeSummary__AdditionalInformationRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
+import { OccupationAndIncomeSummary__BusinessDetailsMainRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
+import { OccupationAndIncomeSummary__DropdownsRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
+import { OccupationAndIncomeSummary__OccupationAndIncomeFullDomainRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
+import { OccupationAndIncomeSummary__OtherIncomeResponseRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
+import { EAccountsSummary__CreatePlanRestDetails } from './EAccountsSummary/EAccountsSummary.rests';
+import { EAccountsSummary__EAccountsSummaryRestDetails } from './EAccountsSummary/EAccountsSummary.rests';
+import { ETransfer__ETransferDataDRestDetails } from './ETransfer/ETransfer.rests';
+import { CreateEAccount__CreateEAccountDataRestDetails } from './CreateEAccount/CreateEAccount.rests';
+import { ChequeCreditbooks__ChequeCreditbooksRestDetails } from './ChequeCreditbooks/ChequeCreditbooks.rests';
+import { Repeating__RepeatingWholeDataRestDetails } from './Repeating/Repeating.rests';
+import { PostCodeDemo__PostCodeNameAndAddressRestDetails } from './PostCodeDemo/PostCodeDemo.rests';
+import { PostCodeDemo__PostCodeDataRestDetails } from './PostCodeDemo/PostCodeDemo.rests';
 
 export function restUrlMutator ( r: RestAction, url: string ): string { return insertBefore ( '?', r === 'list' ? '/list' : '', url )}
 
 export const restDetails: RestDetails<FState, SimpleMessage> = {
-   AccountOverview_AccountAllFlagsRestDetails: AccountOverview_AccountAllFlagsRestDetails(commonIds, defaultDateFn),
-   AccountOverview_ArrearsDetailsRestDetails: AccountOverview_ArrearsDetailsRestDetails(commonIds, defaultDateFn),
-   previousAccountOverview_ArrearsDetailsRestDetails: previousAccountOverview_ArrearsDetailsRestDetails(commonIds, defaultDateFn),
-   AccountOverview_AccountOverviewHistoryRestDetails: AccountOverview_AccountOverviewHistoryRestDetails(commonIds, defaultDateFn),
-   AccountOverview_AccountOverviewExcessInfoRestDetails: AccountOverview_AccountOverviewExcessInfoRestDetails(commonIds, defaultDateFn),
-   AccountOverview_AccountOverviewRestDetails: AccountOverview_AccountOverviewRestDetails(commonIds, defaultDateFn),
-   AccountOverview_AccountOverviewReasonRestDetails: AccountOverview_AccountOverviewReasonRestDetails(commonIds, defaultDateFn),
-   JointAccount_JointAccountRestDetails: JointAccount_JointAccountRestDetails(commonIds, defaultDateFn),
-   OccupationAndIncomeSummary_AdditionalInformationRestDetails: OccupationAndIncomeSummary_AdditionalInformationRestDetails(commonIds, defaultDateFn),
-   OccupationAndIncomeSummary_BusinessDetailsMainRestDetails: OccupationAndIncomeSummary_BusinessDetailsMainRestDetails(commonIds, defaultDateFn),
-   OccupationAndIncomeSummary_DropdownsRestDetails: OccupationAndIncomeSummary_DropdownsRestDetails(commonIds, defaultDateFn),
-   OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDetails: OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDetails(commonIds, defaultDateFn),
-   OccupationAndIncomeSummary_OtherIncomeResponseRestDetails: OccupationAndIncomeSummary_OtherIncomeResponseRestDetails(commonIds, defaultDateFn),
-   EAccountsSummary_CreatePlanRestDetails: EAccountsSummary_CreatePlanRestDetails(commonIds, defaultDateFn),
-   EAccountsSummary_EAccountsSummaryRestDetails: EAccountsSummary_EAccountsSummaryRestDetails(commonIds, defaultDateFn),
-   ETransfer_ETransferDataDRestDetails: ETransfer_ETransferDataDRestDetails(commonIds, defaultDateFn),
-   CreateEAccount_CreateEAccountDataRestDetails: CreateEAccount_CreateEAccountDataRestDetails(commonIds, defaultDateFn),
-   ChequeCreditbooks_ChequeCreditbooksRestDetails: ChequeCreditbooks_ChequeCreditbooksRestDetails(commonIds, defaultDateFn),
-   Repeating_RepeatingWholeDataRestDetails: Repeating_RepeatingWholeDataRestDetails(commonIds, defaultDateFn),
-   PostCodeDemo_PostCodeNameAndAddressRestDetails: PostCodeDemo_PostCodeNameAndAddressRestDetails(commonIds, defaultDateFn),
-   PostCodeDemo_PostCodeDataRestDetails: PostCodeDemo_PostCodeDataRestDetails(commonIds, defaultDateFn)
+   AccountOverview__AccountAllFlagsRestDetails: AccountOverview__AccountAllFlagsRestDetails(commonIds, defaultDateFn),
+   AccountOverview__ArrearsDetailsRestDetails: AccountOverview__ArrearsDetailsRestDetails(commonIds, defaultDateFn),
+   AccountOverview_previous_ArrearsDetailsRestDetails: AccountOverview_previous_ArrearsDetailsRestDetails(commonIds, defaultDateFn),
+   AccountOverview__AccountOverviewHistoryRestDetails: AccountOverview__AccountOverviewHistoryRestDetails(commonIds, defaultDateFn),
+   AccountOverview__AccountOverviewExcessInfoRestDetails: AccountOverview__AccountOverviewExcessInfoRestDetails(commonIds, defaultDateFn),
+   AccountOverview__AccountOverviewRestDetails: AccountOverview__AccountOverviewRestDetails(commonIds, defaultDateFn),
+   AccountOverview__AccountOverviewReasonRestDetails: AccountOverview__AccountOverviewReasonRestDetails(commonIds, defaultDateFn),
+   JointAccount__JointAccountRestDetails: JointAccount__JointAccountRestDetails(commonIds, defaultDateFn),
+   OccupationAndIncomeSummary__AdditionalInformationRestDetails: OccupationAndIncomeSummary__AdditionalInformationRestDetails(commonIds, defaultDateFn),
+   OccupationAndIncomeSummary__BusinessDetailsMainRestDetails: OccupationAndIncomeSummary__BusinessDetailsMainRestDetails(commonIds, defaultDateFn),
+   OccupationAndIncomeSummary__DropdownsRestDetails: OccupationAndIncomeSummary__DropdownsRestDetails(commonIds, defaultDateFn),
+   OccupationAndIncomeSummary__OccupationAndIncomeFullDomainRestDetails: OccupationAndIncomeSummary__OccupationAndIncomeFullDomainRestDetails(commonIds, defaultDateFn),
+   OccupationAndIncomeSummary__OtherIncomeResponseRestDetails: OccupationAndIncomeSummary__OtherIncomeResponseRestDetails(commonIds, defaultDateFn),
+   EAccountsSummary__CreatePlanRestDetails: EAccountsSummary__CreatePlanRestDetails(commonIds, defaultDateFn),
+   EAccountsSummary__EAccountsSummaryRestDetails: EAccountsSummary__EAccountsSummaryRestDetails(commonIds, defaultDateFn),
+   ETransfer__ETransferDataDRestDetails: ETransfer__ETransferDataDRestDetails(commonIds, defaultDateFn),
+   CreateEAccount__CreateEAccountDataRestDetails: CreateEAccount__CreateEAccountDataRestDetails(commonIds, defaultDateFn),
+   ChequeCreditbooks__ChequeCreditbooksRestDetails: ChequeCreditbooks__ChequeCreditbooksRestDetails(commonIds, defaultDateFn),
+   Repeating__RepeatingWholeDataRestDetails: Repeating__RepeatingWholeDataRestDetails(commonIds, defaultDateFn),
+   PostCodeDemo__PostCodeNameAndAddressRestDetails: PostCodeDemo__PostCodeNameAndAddressRestDetails(commonIds, defaultDateFn),
+   PostCodeDemo__PostCodeDataRestDetails: PostCodeDemo__PostCodeDataRestDetails(commonIds, defaultDateFn)
 
 }

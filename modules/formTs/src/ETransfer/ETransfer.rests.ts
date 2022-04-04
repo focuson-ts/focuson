@@ -6,7 +6,7 @@ import { Lenses, NameAndLens} from "@focuson/lens"
 import { FState } from "../common"
 
 //If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
-export function ETransfer_ETransferDataDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.ETransferPageDomain, domains.ETransferDataDDomain, SimpleMessage> {
+export function ETransfer__ETransferDataDRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.ETransferPageDomain, domains.ETransferDataDDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.ETransferPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('ETransfer'),

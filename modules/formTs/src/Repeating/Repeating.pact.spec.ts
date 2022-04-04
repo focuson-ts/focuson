@@ -8,7 +8,7 @@ import * as samples from '../Repeating/Repeating.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
 import { restUrlMutator } from "../rests";
-import {RepeatingWholeDataFetcher} from './Repeating.fetchers'
+import {_RepeatingWholeDataFetcher} from './Repeating.fetchers'
 
 describe("Allow pacts to be run from intelliJ for Repeating", () =>{})
 
@@ -33,7 +33,7 @@ describe ( 'Repeating - repeating - fetcher', () => {
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
-      const fetcher= RepeatingWholeDataFetcher (Lenses.identity<FState>().focusQuery('Repeating'), commonIds ) 
+      const fetcher= _RepeatingWholeDataFetcher (Lenses.identity<FState>().focusQuery('Repeating'), commonIds ) 
       expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state
       const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
@@ -51,7 +51,7 @@ describe ( 'Repeating - repeating - fetcher', () => {
 pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true }, provider => {
   describe ( 'Repeating - repeating rest create', () => {
    it ( 'should have a create rest for RepeatingWholeData', async () => {
-    const restCommand: RestCommand = { name: 'Repeating_RepeatingWholeDataRestDetails', restAction: 'create' }
+    const restCommand: RestCommand = { name: 'Repeating__RepeatingWholeDataRestDetails', restAction: 'create' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"customerId":"custId"},
@@ -90,7 +90,7 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
 pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true }, provider => {
   describe ( 'Repeating - repeating rest get', () => {
    it ( 'should have a get rest for RepeatingWholeData', async () => {
-    const restCommand: RestCommand = { name: 'Repeating_RepeatingWholeDataRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'Repeating__RepeatingWholeDataRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"customerId":"custId"},

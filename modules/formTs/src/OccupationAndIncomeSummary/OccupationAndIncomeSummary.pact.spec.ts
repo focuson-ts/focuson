@@ -8,11 +8,11 @@ import * as samples from '../OccupationAndIncomeSummary/OccupationAndIncomeSumma
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
 import { restUrlMutator } from "../rests";
-import {AdditionalInformationFetcher} from './OccupationAndIncomeSummary.fetchers'
-import {BusinessDetailsMainFetcher} from './OccupationAndIncomeSummary.fetchers'
-import {DropdownsFetcher} from './OccupationAndIncomeSummary.fetchers'
-import {OccupationAndIncomeFullDomainFetcher} from './OccupationAndIncomeSummary.fetchers'
-import {OtherIncomeResponseFetcher} from './OccupationAndIncomeSummary.fetchers'
+import {_AdditionalInformationFetcher} from './OccupationAndIncomeSummary.fetchers'
+import {_BusinessDetailsMainFetcher} from './OccupationAndIncomeSummary.fetchers'
+import {_DropdownsFetcher} from './OccupationAndIncomeSummary.fetchers'
+import {_OccupationAndIncomeFullDomainFetcher} from './OccupationAndIncomeSummary.fetchers'
+import {_OtherIncomeResponseFetcher} from './OccupationAndIncomeSummary.fetchers'
 
 describe("Allow pacts to be run from intelliJ for OccupationAndIncomeSummary", () =>{})
 
@@ -37,7 +37,7 @@ describe ( 'OccupationAndIncomeSummary - additionalInformationRD - fetcher', () 
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
-      const fetcher= AdditionalInformationFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) 
+      const fetcher= _AdditionalInformationFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) 
       expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state
       const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
@@ -55,7 +55,7 @@ describe ( 'OccupationAndIncomeSummary - additionalInformationRD - fetcher', () 
 pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndIncomeSummaryProvider', cors: true }, provider => {
   describe ( 'OccupationAndIncomeSummary - additionalInformationRD rest get', () => {
    it ( 'should have a get rest for AdditionalInformation', async () => {
-    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_AdditionalInformationRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary__AdditionalInformationRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"customerId":"custId"},
@@ -110,7 +110,7 @@ describe ( 'OccupationAndIncomeSummary - businessDetailsRD - fetcher', () => {
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
-      const fetcher= BusinessDetailsMainFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) 
+      const fetcher= _BusinessDetailsMainFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) 
       expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state
       const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
@@ -128,7 +128,7 @@ describe ( 'OccupationAndIncomeSummary - businessDetailsRD - fetcher', () => {
 pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndIncomeSummaryProvider', cors: true }, provider => {
   describe ( 'OccupationAndIncomeSummary - businessDetailsRD rest get', () => {
    it ( 'should have a get rest for BusinessDetailsMain', async () => {
-    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_BusinessDetailsMainRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary__BusinessDetailsMainRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"customerId":"custId"},
@@ -183,7 +183,7 @@ describe ( 'OccupationAndIncomeSummary - dropdownsRD - fetcher', () => {
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
-      const fetcher= DropdownsFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) 
+      const fetcher= _DropdownsFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) 
       expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state
       const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
@@ -201,7 +201,7 @@ describe ( 'OccupationAndIncomeSummary - dropdownsRD - fetcher', () => {
 pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndIncomeSummaryProvider', cors: true }, provider => {
   describe ( 'OccupationAndIncomeSummary - dropdownsRD rest get', () => {
    it ( 'should have a get rest for Dropdowns', async () => {
-    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_DropdownsRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary__DropdownsRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"customerId":"custId"},
@@ -256,7 +256,7 @@ describe ( 'OccupationAndIncomeSummary - occupationAndIncomeRD - fetcher', () =>
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
-      const fetcher= OccupationAndIncomeFullDomainFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) 
+      const fetcher= _OccupationAndIncomeFullDomainFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) 
       expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state
       const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
@@ -274,7 +274,7 @@ describe ( 'OccupationAndIncomeSummary - occupationAndIncomeRD - fetcher', () =>
 pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndIncomeSummaryProvider', cors: true }, provider => {
   describe ( 'OccupationAndIncomeSummary - occupationAndIncomeRD rest get', () => {
    it ( 'should have a get rest for OccupationAndIncomeFullDomain', async () => {
-    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary__OccupationAndIncomeFullDomainRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"customerId":"custId"},
@@ -312,7 +312,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
 pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndIncomeSummaryProvider', cors: true }, provider => {
   describe ( 'OccupationAndIncomeSummary - occupationAndIncomeRD rest update', () => {
    it ( 'should have a update rest for OccupationAndIncomeFullDomain', async () => {
-    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDetails', restAction: 'update' }
+    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary__OccupationAndIncomeFullDomainRestDetails', restAction: 'update' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"customerId":"custId"},
@@ -368,7 +368,7 @@ describe ( 'OccupationAndIncomeSummary - otherSourcesOfIncomeRD - fetcher', () =
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
-      const fetcher= OtherIncomeResponseFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) 
+      const fetcher= _OtherIncomeResponseFetcher (Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'), commonIds ) 
       expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state
       const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
@@ -386,7 +386,7 @@ describe ( 'OccupationAndIncomeSummary - otherSourcesOfIncomeRD - fetcher', () =
 pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndIncomeSummaryProvider', cors: true }, provider => {
   describe ( 'OccupationAndIncomeSummary - otherSourcesOfIncomeRD rest get', () => {
    it ( 'should have a get rest for OtherIncomeResponse', async () => {
-    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OtherIncomeResponseRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary__OtherIncomeResponseRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"customerId":"custId"},

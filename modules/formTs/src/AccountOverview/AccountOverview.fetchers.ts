@@ -7,7 +7,7 @@ import { pageAndTagFetcher } from "@focuson/focuson";
 import { FState } from "../common";
 import { Optional, Lenses, NameAndLens} from '@focuson/lens';
 //fetcher type true
-export function AccountAllFlagsFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
+export function _AccountAllFlagsFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
   const localIds = {}
   return pageAndTagFetcher<FState, domains.AccountOverviewPageDomain, domains.AccountAllFlagsDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.AccountAllFlagsDomain>(),
@@ -17,7 +17,7 @@ export function AccountAllFlagsFetcher(fdLens:Optional<FState, domains.AccountOv
      '/api/accountOverview/flags?{query}')
 }
 //fetcher type true
-export function ArrearsDetailsFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
+export function _ArrearsDetailsFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
   const localIds = {startDate: Lenses.identity< domains.AccountOverviewPageDomain>().focusQuery('currentSelectedExcessHistory').focusQuery('start')}
   return pageAndTagFetcher<FState, domains.AccountOverviewPageDomain, domains.ArrearsDetailsDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.ArrearsDetailsDomain>(),
@@ -27,7 +27,7 @@ export function ArrearsDetailsFetcher(fdLens:Optional<FState, domains.AccountOve
      '/api/accountOverview/arrearsDetails/current?{query}')
 }
 //fetcher type true
-export function previousArrearsDetailsFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
+export function previous_ArrearsDetailsFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
   const localIds = {startDate: Lenses.identity< domains.AccountOverviewPageDomain>().focusQuery('currentSelectedExcessHistory').focusQuery('start')}
   return pageAndTagFetcher<FState, domains.AccountOverviewPageDomain, domains.ArrearsDetailsDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.ArrearsDetailsDomain>(),
@@ -37,7 +37,7 @@ export function previousArrearsDetailsFetcher(fdLens:Optional<FState, domains.Ac
      '/api/accountOverview/arrearsDetails/previous?{query}')
 }
 //fetcher type true
-export function AccountOverviewHistoryFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
+export function _AccountOverviewHistoryFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
   const localIds = {}
   return pageAndTagFetcher<FState, domains.AccountOverviewPageDomain, domains.AccountOverviewHistoryDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.AccountOverviewHistoryDomain>(),
@@ -47,7 +47,7 @@ export function AccountOverviewHistoryFetcher(fdLens:Optional<FState, domains.Ac
      '/api/accountOverview/excessHistory?{query}')
 }
 //fetcher type true
-export function AccountOverviewExcessInfoFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
+export function _AccountOverviewExcessInfoFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
   const localIds = {}
   return pageAndTagFetcher<FState, domains.AccountOverviewPageDomain, domains.AccountOverviewExcessInfoDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.AccountOverviewExcessInfoDomain>(),
@@ -57,7 +57,7 @@ export function AccountOverviewExcessInfoFetcher(fdLens:Optional<FState, domains
      '/api/accountOverview/excessInfo?{query}')
 }
 //fetcher type true
-export function AccountOverviewFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
+export function _AccountOverviewFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
   const localIds = {}
   return pageAndTagFetcher<FState, domains.AccountOverviewPageDomain, domains.AccountOverviewDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.AccountOverviewDomain>(),
@@ -67,7 +67,7 @@ export function AccountOverviewFetcher(fdLens:Optional<FState, domains.AccountOv
      '/api/accountOverview?{query}')
 }
 //fetcher type true
-export function AccountOverviewReasonFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
+export function _AccountOverviewReasonFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
   const localIds = {}
   return pageAndTagFetcher<FState, domains.AccountOverviewPageDomain, domains.AccountOverviewReasonDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.AccountOverviewReasonDomain>(),

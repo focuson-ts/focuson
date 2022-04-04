@@ -7,36 +7,6 @@
   },
   "interactions": [
     {
-      "description": "A request for AccountAllFlags",
-      "providerState": "default",
-      "request": {
-        "method": "GET",
-        "path": "/api/accountOverview/flags",
-        "query": "accountId=accId&customerId=custId"
-      },
-      "response": {
-        "status": 200,
-        "headers": {
-        },
-        "body": {
-          "flags": [
-            {
-              "flagName": "Terrorist",
-              "flagValue": true
-            },
-            {
-              "flagName": "MI6 wanted list",
-              "flagValue": false
-            },
-            {
-              "flagName": "This is a one line string",
-              "flagValue": true
-            }
-          ]
-        }
-      }
-    },
-    {
       "description": "a rest for AccountOverview accountFlags get",
       "providerState": "default",
       "request": {
@@ -434,6 +404,36 @@
         },
         "body": {
           "reason": "Really good reason"
+        }
+      }
+    },
+    {
+      "description": "A request for AccountAllFlags",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/flags",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "flags": [
+            {
+              "flagName": "Terrorist",
+              "flagValue": true
+            },
+            {
+              "flagName": "MI6 wanted list",
+              "flagValue": false
+            },
+            {
+              "flagName": "This is a one line string",
+              "flagValue": true
+            }
+          ]
         }
       }
     }

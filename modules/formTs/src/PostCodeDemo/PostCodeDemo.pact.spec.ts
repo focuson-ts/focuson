@@ -8,7 +8,7 @@ import * as samples from '../PostCodeDemo/PostCodeDemo.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
 import { restUrlMutator } from "../rests";
-import {PostCodeDataFetcher} from './PostCodeDemo.fetchers'
+import {_PostCodeDataFetcher} from './PostCodeDemo.fetchers'
 
 describe("Allow pacts to be run from intelliJ for PostCodeDemo", () =>{})
 
@@ -16,7 +16,7 @@ describe("Allow pacts to be run from intelliJ for PostCodeDemo", () =>{})
 pactWith ( { consumer: 'PostCodeDemo', provider: 'PostCodeDemoProvider', cors: true }, provider => {
   describe ( 'PostCodeDemo - address rest create', () => {
    it ( 'should have a create rest for PostCodeNameAndAddress', async () => {
-    const restCommand: RestCommand = { name: 'PostCodeDemo_PostCodeNameAndAddressRestDetails', restAction: 'create' }
+    const restCommand: RestCommand = { name: 'PostCodeDemo__PostCodeNameAndAddressRestDetails', restAction: 'create' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {},
@@ -73,7 +73,7 @@ describe ( 'PostCodeDemo - postcode - fetcher', () => {
     [Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('search'), () =>"LW12 4RG" ]
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
-      const fetcher= PostCodeDataFetcher (Lenses.identity<FState>().focusQuery('PostCodeDemo'), commonIds ) 
+      const fetcher= _PostCodeDataFetcher (Lenses.identity<FState>().focusQuery('PostCodeDemo'), commonIds ) 
       expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state
       const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
@@ -91,7 +91,7 @@ describe ( 'PostCodeDemo - postcode - fetcher', () => {
 pactWith ( { consumer: 'PostCodeDemo', provider: 'PostCodeDemoProvider', cors: true }, provider => {
   describe ( 'PostCodeDemo - postcode rest get', () => {
    it ( 'should have a get rest for PostCodeData', async () => {
-    const restCommand: RestCommand = { name: 'PostCodeDemo_PostCodeDataRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'PostCodeDemo__PostCodeDataRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {},

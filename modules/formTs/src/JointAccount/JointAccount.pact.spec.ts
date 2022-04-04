@@ -8,7 +8,7 @@ import * as samples from '../JointAccount/JointAccount.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
 import { restUrlMutator } from "../rests";
-import {JointAccountFetcher} from './JointAccount.fetchers'
+import {_JointAccountFetcher} from './JointAccount.fetchers'
 
 describe("Allow pacts to be run from intelliJ for JointAccount", () =>{})
 
@@ -33,7 +33,7 @@ describe ( 'JointAccount - jointAccount - fetcher', () => {
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
-      const fetcher= JointAccountFetcher (Lenses.identity<FState>().focusQuery('JointAccount'), commonIds ) 
+      const fetcher= _JointAccountFetcher (Lenses.identity<FState>().focusQuery('JointAccount'), commonIds ) 
       expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state
       const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
@@ -51,7 +51,7 @@ describe ( 'JointAccount - jointAccount - fetcher', () => {
 pactWith ( { consumer: 'JointAccount', provider: 'JointAccountProvider', cors: true }, provider => {
   describe ( 'JointAccount - jointAccount rest get', () => {
    it ( 'should have a get rest for JointAccount', async () => {
-    const restCommand: RestCommand = { name: 'JointAccount_JointAccountRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'JointAccount__JointAccountRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"customerId":"custId"},

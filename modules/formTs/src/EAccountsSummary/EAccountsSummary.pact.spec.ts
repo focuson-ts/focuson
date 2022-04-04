@@ -8,7 +8,7 @@ import * as samples from '../EAccountsSummary/EAccountsSummary.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
 import { restUrlMutator } from "../rests";
-import {EAccountsSummaryFetcher} from './EAccountsSummary.fetchers'
+import {_EAccountsSummaryFetcher} from './EAccountsSummary.fetchers'
 
 describe("Allow pacts to be run from intelliJ for EAccountsSummary", () =>{})
 
@@ -16,7 +16,7 @@ describe("Allow pacts to be run from intelliJ for EAccountsSummary", () =>{})
 pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider', cors: true }, provider => {
   describe ( 'EAccountsSummary - createPlanRestD rest get', () => {
    it ( 'should have a get rest for CreatePlan', async () => {
-    const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'EAccountsSummary__CreatePlanRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
@@ -54,7 +54,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
 pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider', cors: true }, provider => {
   describe ( 'EAccountsSummary - createPlanRestD rest create', () => {
    it ( 'should have a create rest for CreatePlan', async () => {
-    const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'create' }
+    const restCommand: RestCommand = { name: 'EAccountsSummary__CreatePlanRestDetails', restAction: 'create' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
@@ -93,7 +93,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
 pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider', cors: true }, provider => {
   describe ( 'EAccountsSummary - createPlanRestD rest update', () => {
    it ( 'should have a update rest for CreatePlan', async () => {
-    const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'update' }
+    const restCommand: RestCommand = { name: 'EAccountsSummary__CreatePlanRestDetails', restAction: 'update' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
@@ -132,7 +132,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
 pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider', cors: true }, provider => {
   describe ( 'EAccountsSummary - createPlanRestD rest delete', () => {
    it ( 'should have a delete rest for CreatePlan', async () => {
-    const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'delete' }
+    const restCommand: RestCommand = { name: 'EAccountsSummary__CreatePlanRestDetails', restAction: 'delete' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
@@ -170,7 +170,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
 pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider', cors: true }, provider => {
   describe ( 'EAccountsSummary - createPlanRestD rest list', () => {
    it ( 'should have a list rest for CreatePlan', async () => {
-    const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'list' }
+    const restCommand: RestCommand = { name: 'EAccountsSummary__CreatePlanRestDetails', restAction: 'list' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
@@ -225,7 +225,7 @@ describe ( 'EAccountsSummary - eAccountsSummary - fetcher', () => {
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
-      const fetcher= EAccountsSummaryFetcher (Lenses.identity<FState>().focusQuery('EAccountsSummary'), commonIds ) 
+      const fetcher= _EAccountsSummaryFetcher (Lenses.identity<FState>().focusQuery('EAccountsSummary'), commonIds ) 
       expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state
       const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
@@ -243,7 +243,7 @@ describe ( 'EAccountsSummary - eAccountsSummary - fetcher', () => {
 pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider', cors: true }, provider => {
   describe ( 'EAccountsSummary - eAccountsSummary rest get', () => {
    it ( 'should have a get rest for EAccountsSummary', async () => {
-    const restCommand: RestCommand = { name: 'EAccountsSummary_EAccountsSummaryRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'EAccountsSummary__EAccountsSummaryRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","customerId":"custId"},

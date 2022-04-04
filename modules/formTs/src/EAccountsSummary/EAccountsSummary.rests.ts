@@ -6,7 +6,7 @@ import { Lenses, NameAndLens} from "@focuson/lens"
 import { FState } from "../common"
 
 //If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
-export function EAccountsSummary_CreatePlanRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.CreatePlanDomain, SimpleMessage> {
+export function EAccountsSummary__CreatePlanRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.CreatePlanDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('EAccountsSummary'),
@@ -20,7 +20,7 @@ export function EAccountsSummary_CreatePlanRestDetails ( cd: NameAndLens<FState>
 }
 
 //If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
-export function EAccountsSummary_EAccountsSummaryRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDomain, SimpleMessage> {
+export function EAccountsSummary__EAccountsSummaryRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('EAccountsSummary'),

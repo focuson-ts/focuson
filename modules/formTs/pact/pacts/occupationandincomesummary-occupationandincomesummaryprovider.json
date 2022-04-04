@@ -7,29 +7,6 @@
   },
   "interactions": [
     {
-      "description": "A request for AdditionalInformation",
-      "providerState": "default",
-      "request": {
-        "method": "GET",
-        "path": "/customer/occupation/v2/additionalInfo",
-        "query": "customerId=custId"
-      },
-      "response": {
-        "status": 200,
-        "headers": {
-        },
-        "body": {
-          "applicantName": "Mr XXXXXXXXXX ABCD Fred Bloggs",
-          "employerName": "AnalystXYZ",
-          "addressLine1": "Pinetrees Road",
-          "addressLine2": "Norwich",
-          "addressLine3": "Norfolk",
-          "addressLine4": "Norfolkkk",
-          "postcode": "PLXYZ"
-        }
-      }
-    },
-    {
       "description": "a rest for OccupationAndIncomeSummary additionalInformationRD get",
       "providerState": "default",
       "request": {
@@ -584,6 +561,29 @@
           "otherIncomeType": "someString",
           "incomeFreqRef": "0",
           "amount": 123
+        }
+      }
+    },
+    {
+      "description": "A request for AdditionalInformation",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/customer/occupation/v2/additionalInfo",
+        "query": "customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "applicantName": "Mr XXXXXXXXXX ABCD Fred Bloggs",
+          "employerName": "AnalystXYZ",
+          "addressLine1": "Pinetrees Road",
+          "addressLine2": "Norwich",
+          "addressLine3": "Norfolk",
+          "addressLine4": "Norfolkkk",
+          "postcode": "PLXYZ"
         }
       }
     }

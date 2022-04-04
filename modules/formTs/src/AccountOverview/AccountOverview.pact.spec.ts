@@ -8,13 +8,13 @@ import * as samples from '../AccountOverview/AccountOverview.samples'
 import {emptyState, FState , commonIds, identityL } from "../common";
 import * as rests from "../rests";
 import { restUrlMutator } from "../rests";
-import {AccountAllFlagsFetcher} from './AccountOverview.fetchers'
-import {ArrearsDetailsFetcher} from './AccountOverview.fetchers'
-import {previousArrearsDetailsFetcher} from './AccountOverview.fetchers'
-import {AccountOverviewHistoryFetcher} from './AccountOverview.fetchers'
-import {AccountOverviewExcessInfoFetcher} from './AccountOverview.fetchers'
-import {AccountOverviewFetcher} from './AccountOverview.fetchers'
-import {AccountOverviewReasonFetcher} from './AccountOverview.fetchers'
+import {_AccountAllFlagsFetcher} from './AccountOverview.fetchers'
+import {_ArrearsDetailsFetcher} from './AccountOverview.fetchers'
+import {previous_ArrearsDetailsFetcher} from './AccountOverview.fetchers'
+import {_AccountOverviewHistoryFetcher} from './AccountOverview.fetchers'
+import {_AccountOverviewExcessInfoFetcher} from './AccountOverview.fetchers'
+import {_AccountOverviewFetcher} from './AccountOverview.fetchers'
+import {_AccountOverviewReasonFetcher} from './AccountOverview.fetchers'
 
 describe("Allow pacts to be run from intelliJ for AccountOverview", () =>{})
 
@@ -39,7 +39,7 @@ describe ( 'AccountOverview - accountFlags - fetcher', () => {
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
-      const fetcher= AccountAllFlagsFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
+      const fetcher= _AccountAllFlagsFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
       expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state
       const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
@@ -57,7 +57,7 @@ describe ( 'AccountOverview - accountFlags - fetcher', () => {
 pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
   describe ( 'AccountOverview - accountFlags rest get', () => {
    it ( 'should have a get rest for AccountAllFlags', async () => {
-    const restCommand: RestCommand = { name: 'AccountOverview_AccountAllFlagsRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'AccountOverview__AccountAllFlagsRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","customerId":"custId"},
@@ -113,7 +113,7 @@ describe ( 'AccountOverview - arrearsDetailsCurrent - fetcher', () => {
     [Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('currentSelectedExcessHistory').focusQuery('start'), () =>"2020-01-20" ]
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
-      const fetcher= ArrearsDetailsFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
+      const fetcher= _ArrearsDetailsFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
       expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state
       const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
@@ -131,7 +131,7 @@ describe ( 'AccountOverview - arrearsDetailsCurrent - fetcher', () => {
 pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
   describe ( 'AccountOverview - arrearsDetailsCurrent rest get', () => {
    it ( 'should have a get rest for ArrearsDetails', async () => {
-    const restCommand: RestCommand = { name: 'AccountOverview_ArrearsDetailsRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'AccountOverview__ArrearsDetailsRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","customerId":"custId"},
@@ -188,7 +188,7 @@ describe ( 'AccountOverview - arrearsDetailsPrevious - fetcher', () => {
     [Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('currentSelectedExcessHistory').focusQuery('start'), () =>"2020-01-20" ]
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
-      const fetcher= previousArrearsDetailsFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
+      const fetcher= previous_ArrearsDetailsFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
       expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state
       const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
@@ -206,7 +206,7 @@ describe ( 'AccountOverview - arrearsDetailsPrevious - fetcher', () => {
 pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
   describe ( 'AccountOverview - arrearsDetailsPrevious rest get', () => {
    it ( 'should have a get rest for ArrearsDetails', async () => {
-    const restCommand: RestCommand = { name: 'previousAccountOverview_ArrearsDetailsRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'AccountOverview_previous_ArrearsDetailsRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","customerId":"custId"},
@@ -262,7 +262,7 @@ describe ( 'AccountOverview - excessHistory - fetcher', () => {
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
-      const fetcher= AccountOverviewHistoryFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
+      const fetcher= _AccountOverviewHistoryFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
       expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state
       const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
@@ -280,7 +280,7 @@ describe ( 'AccountOverview - excessHistory - fetcher', () => {
 pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
   describe ( 'AccountOverview - excessHistory rest get', () => {
    it ( 'should have a get rest for AccountOverviewHistory', async () => {
-    const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewHistoryRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'AccountOverview__AccountOverviewHistoryRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","customerId":"custId"},
@@ -335,7 +335,7 @@ describe ( 'AccountOverview - excessInfo - fetcher', () => {
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
-      const fetcher= AccountOverviewExcessInfoFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
+      const fetcher= _AccountOverviewExcessInfoFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
       expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state
       const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
@@ -353,7 +353,7 @@ describe ( 'AccountOverview - excessInfo - fetcher', () => {
 pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
   describe ( 'AccountOverview - excessInfo rest get', () => {
    it ( 'should have a get rest for AccountOverviewExcessInfo', async () => {
-    const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewExcessInfoRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'AccountOverview__AccountOverviewExcessInfoRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","customerId":"custId"},
@@ -408,7 +408,7 @@ describe ( 'AccountOverview - main - fetcher', () => {
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
-      const fetcher= AccountOverviewFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
+      const fetcher= _AccountOverviewFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
       expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state
       const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
@@ -426,7 +426,7 @@ describe ( 'AccountOverview - main - fetcher', () => {
 pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
   describe ( 'AccountOverview - main rest get', () => {
    it ( 'should have a get rest for AccountOverview', async () => {
-    const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'AccountOverview__AccountOverviewRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","customerId":"custId"},
@@ -481,7 +481,7 @@ describe ( 'AccountOverview - reason - fetcher', () => {
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
-      const fetcher= AccountOverviewReasonFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
+      const fetcher= _AccountOverviewReasonFetcher (Lenses.identity<FState>().focusQuery('AccountOverview'), commonIds ) 
       expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state
       const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
@@ -499,7 +499,7 @@ describe ( 'AccountOverview - reason - fetcher', () => {
 pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
   describe ( 'AccountOverview - reason rest get', () => {
    it ( 'should have a get rest for AccountOverviewReason', async () => {
-    const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewReasonRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'AccountOverview__AccountOverviewReasonRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","customerId":"custId"},

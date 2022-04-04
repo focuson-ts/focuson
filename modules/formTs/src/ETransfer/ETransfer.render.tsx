@@ -31,7 +31,7 @@ export function ETransferPage(){
         id='eTransfers'
         name='eTransfers'
         action='create'
-        rest='ETransfer_ETransferDataDRestDetails'
+        rest='ETransfer__ETransferDataDRestDetails'
         confirm={true}
        />,
       resetAll:<button>resetAll of type ResetStateButton cannot be created yet</button>,}

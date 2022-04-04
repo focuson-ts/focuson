@@ -6,7 +6,7 @@ import { Lenses, NameAndLens} from "@focuson/lens"
 import { FState } from "../common"
 
 //If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
-export function OccupationAndIncomeSummary_AdditionalInformationRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.AdditionalInformationDomain, SimpleMessage> {
+export function OccupationAndIncomeSummary__AdditionalInformationRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.AdditionalInformationDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'),
@@ -20,7 +20,7 @@ export function OccupationAndIncomeSummary_AdditionalInformationRestDetails ( cd
 }
 
 //If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
-export function OccupationAndIncomeSummary_BusinessDetailsMainRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.BusinessDetailsMainDomain, SimpleMessage> {
+export function OccupationAndIncomeSummary__BusinessDetailsMainRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.BusinessDetailsMainDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'),
@@ -34,7 +34,7 @@ export function OccupationAndIncomeSummary_BusinessDetailsMainRestDetails ( cd: 
 }
 
 //If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
-export function OccupationAndIncomeSummary_DropdownsRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.DropdownsDomain, SimpleMessage> {
+export function OccupationAndIncomeSummary__DropdownsRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.DropdownsDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'),
@@ -48,7 +48,7 @@ export function OccupationAndIncomeSummary_DropdownsRestDetails ( cd: NameAndLen
 }
 
 //If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
-export function OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.OccupationAndIncomeFullDomainDomain, SimpleMessage> {
+export function OccupationAndIncomeSummary__OccupationAndIncomeFullDomainRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.OccupationAndIncomeFullDomainDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'),
@@ -62,7 +62,7 @@ export function OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDeta
 }
 
 //If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
-export function OccupationAndIncomeSummary_OtherIncomeResponseRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.OtherIncomeResponseDomain, SimpleMessage> {
+export function OccupationAndIncomeSummary__OtherIncomeResponseRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.OtherIncomeResponseDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'),
