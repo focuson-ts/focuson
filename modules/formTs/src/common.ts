@@ -1,9 +1,9 @@
-import { HasPageSelection, PageMode, PageSelectionContext } from '@focuson/pages'
+import { HasPageSelection, PageMode ,PageSelectionContext} from '@focuson/pages'
 import { defaultDateFn, HasSimpleMessages, SimpleMessage, NameAnd } from '@focuson/utils';
-import { OnTagFetchErrorFn } from '@focuson/fetcher';
-import { identityOptics, NameAndLens } from '@focuson/lens';
+import {  OnTagFetchErrorFn } from '@focuson/fetcher';
+import { identityOptics,NameAndLens } from '@focuson/lens';
 import { HasTagHolder } from '@focuson/template';
-import { HasRestCommands } from '@focuson/rest'
+ import { HasRestCommands } from '@focuson/rest'
 import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusOnContext, HasFocusOnDebug } from '@focuson/focuson';
 import { LensProps } from '@focuson/state';
 import { pages } from "./pages";
@@ -19,7 +19,7 @@ import { HasChequeCreditbooksPageDomain } from './ChequeCreditbooks/ChequeCredit
 import { HasRepeatingPageDomain } from './Repeating/Repeating.domains';
 import { HasPostCodeDemoPageDomain } from './PostCodeDemo/PostCodeDemo.domains';
 
-export interface FState extends HasSimpleMessages, HasPageSelection, HasCommonIds, HasTagHolder, HasRestCommands, HasFocusOnDebug,
+export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,
   HasHelloWorldPageDomain,
   HasAccountOverviewPageDomain,
   HasJointAccountPageDomain,
@@ -29,27 +29,28 @@ export interface FState extends HasSimpleMessages, HasPageSelection, HasCommonId
   HasCreateEAccountPageDomain,
   HasChequeCreditbooksPageDomain,
   HasRepeatingPageDomain,
-  HasPostCodeDemoPageDomain {}
+  HasPostCodeDemoPageDomain
+{}
 export interface HasCommonIds {CommonIds: CommonIds}
 export type CommonIds = {
-  accountId?: string;
-  applRef?: string;
-  brandRef?: string;
-  createPlanId?: string;
-  customerId?: string;
-  usersRole?: string;
+  accountId?:string;
+  applRef?:string;
+  brandRef?:string;
+  createPlanId?:string;
+  customerId?:string;
+  usersRole?:string;
 }
 export const identityL = identityOptics<FState> ();
-export const commonIdsL = identityL.focusQuery ( 'CommonIds' );
+export const commonIdsL = identityL.focusQuery('CommonIds');
 export const commonIds: NameAndLens<FState> = {
-  accountId: commonIdsL.focusQuery ( 'accountId' ),
-  applRef: commonIdsL.focusQuery ( 'applRef' ),
-  brandRef: commonIdsL.focusQuery ( 'brandRef' ),
-  createPlanId: commonIdsL.focusQuery ( 'createPlanId' ),
-  customerId: commonIdsL.focusQuery ( 'customerId' ),
-  usersRole: commonIdsL.focusQuery ( 'usersRole' )
+   accountId: commonIdsL.focusQuery('accountId'),
+   applRef: commonIdsL.focusQuery('applRef'),
+   brandRef: commonIdsL.focusQuery('brandRef'),
+   createPlanId: commonIdsL.focusQuery('createPlanId'),
+   customerId: commonIdsL.focusQuery('customerId'),
+   usersRole: commonIdsL.focusQuery('usersRole')
 }
-export interface FocusedProps<S, D, Context> extends LensProps<S, D, Context> {
+export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{
   mode: PageMode;
   id: string;
   buttons: NameAnd<JSX.Element>
@@ -61,15 +62,15 @@ export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPage
 }
 export type Context = FocusOnContext<FState>
 export const context: Context = {
-  ...defaultPageSelectionAndRestCommandsContext<FState> ( pages, commonIds ),
-  combine: MyCombined
+   ...defaultPageSelectionAndRestCommandsContext<FState> ( pages, commonIds),
+   combine: MyCombined
 }
 export const emptyState: FState = {
-  CommonIds: { "applRef": "appref", "createPlanId": "tbd", "accountId": "accId", "customerId": "custId", "brandRef": "brandRef", "usersRole": "user" },
+  CommonIds: {"applRef":"appref","createPlanId":"tbd","accountId":"accId","customerId":"custId","brandRef":"brandRef","usersRole":"user"},
   tags: {},
   messages: [],
-  pageSelection: [ { pageName: 'HelloWorld', firstTime: true, pageMode: 'view' } ],
-  HelloWorld: {},
+  pageSelection: [{ pageName: 'HelloWorld', firstTime: true, pageMode: 'view' }],
+  HelloWorld:{},
   restCommands: [],
-  debug: { "fetcherDebug": true, "restDebug": false, "selectedPageDebug": false, "loadTreeDebug": false, "showTracing": false, "recordTrace": true }
-}
+  debug: {"fetcherDebug":true,"restDebug":false,"selectedPageDebug":false,"loadTreeDebug":false,"showTracing":false,"recordTrace":true}
+  }

@@ -4,6 +4,7 @@ export * from './src/buttons/listButtons'
 export * from './src/buttons/modalButtons'
 export * from './src/buttons/modalCloseButtons'
 export * from './src/buttons/restButton'
+export * from './src/buttons/hideButtonsCD'
 export * from './src/buttons/stateButtons'
 export * from './src/buttons/ValidationDebugButton'
 
