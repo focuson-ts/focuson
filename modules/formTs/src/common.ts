@@ -68,7 +68,7 @@ export const context: Context = {
    combine: MyCombined
 }
 export const emptyState: FState = {
-  CommonIds: {"applRef":"appref","createPlanId":"tbd","accountId":"custId","brandId":"custId","customerId":"custId","brandRef":"brandRef","usersRole":"user"},
+  CommonIds: {"applRef":"appref","createPlanId":"tbd","brandId":"custId","accountId":"custId","customerId":"custId","brandRef":"brandRef","usersRole":"user"},
   tags: {},
   messages: [],
   pageSelection: [{ pageName: 'HelloWorld', firstTime: true, pageMode: 'view' }],

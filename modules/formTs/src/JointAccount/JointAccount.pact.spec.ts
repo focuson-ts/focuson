@@ -22,14 +22,14 @@ describe ( 'JointAccount - jointAccount - fetcher', () => {
       withRequest: {
         method: 'GET',
         path: '/api/jointAccount',
-        query:{"brandId":"custId","customerId":"custId"}
+        query:{"accountId":"custId","brandId":"custId"}
       },
       willRespondWith: {
         status: 200,
         body: samples.sampleJointAccount0
        },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'JointAccount', pageMode: 'view' }], CommonIds: {"brandId":"custId","customerId":"custId"} }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'JointAccount', pageMode: 'view' }], CommonIds: {"accountId":"custId","brandId":"custId"} }
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
@@ -54,7 +54,7 @@ pactWith ( { consumer: 'JointAccount', provider: 'JointAccountProvider', cors: t
     const restCommand: RestCommand = { name: 'JointAccount_JointAccountRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"brandId":"custId","customerId":"custId"},
+       CommonIds: {"accountId":"custId","brandId":"custId"},
        pageSelection: [ { pageName: 'JointAccount', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -63,7 +63,7 @@ pactWith ( { consumer: 'JointAccount', provider: 'JointAccountProvider', cors: t
       withRequest: {
          method: 'GET',
          path:   '/api/jointAccount',
-         query:{"brandId":"custId","customerId":"custId"},
+         query:{"accountId":"custId","brandId":"custId"},
          //no request body needed for get,
       },
       willRespondWith: {

@@ -13,16 +13,15 @@ import java.util.stream.Collectors;
 
 //{}
 public class PostCodeDemo_addressMaps {
-    @SuppressWarnings("SqlResolve")
+  @SuppressWarnings("SqlResolve")
   public static String sql = "select"+
-  "  ADD_TBL.postcode as ADD_TBL_postcode,"+
   "  ADD_TBL.zzline1 as ADD_TBL_zzline1,"+
   "  ADD_TBL.zzline2 as ADD_TBL_zzline2,"+
   "  ADD_TBL.zzline3 as ADD_TBL_zzline3,"+
   "  ADD_TBL.zzline4 as ADD_TBL_zzline4"+
   " from"+
   "  ADD_TBL ADD_TBL"+
-  " where  ADD_TBL.postcode = ?";
+  " where ";
   
   public static Optional<Map<String,Object>> getAll(Connection connection) throws SQLException {
      return getRoot(connection).map(x -> x._root);
@@ -39,7 +38,6 @@ public class PostCodeDemo_addressMaps {
       }
   }
   
-  public final Object ADD_TBL_postcode;
   
   public final Map<String,Object> _root = new HashMap<>();
   
@@ -49,7 +47,6 @@ public class PostCodeDemo_addressMaps {
     this._root.put("line3", rs.getString("ADD_TBL_zzline3"));
     this._root.put("line4", rs.getString("ADD_TBL_zzline4"));
     
-    this.ADD_TBL_postcode = rs.getInt("ADD_TBL_postcode");
     
     
   }

@@ -1,9 +1,9 @@
-import { RestD, RestParams } from "../../common/restD";
+import { IntParam, RestD, RestParams } from "../../common/restD";
 import { AllGuards } from "../../buttons/guardButton";
 import { RepeatingWholeDataD } from "./repeating.dataD";
 
 export const commonParams: RestParams = {
-  customerId: { commonLens: 'customerId', testValue: 'custId' }
+  customerId: { ...IntParam, commonLens: 'customerId', testValue: 'custId' }
 }
 
 /** This should fully define the api*/

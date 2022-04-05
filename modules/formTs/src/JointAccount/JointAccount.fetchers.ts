@@ -12,7 +12,7 @@ export function JointAccountFetcher(fdLens:Optional<FState, domains.JointAccount
   return pageAndTagFetcher<FState, domains.JointAccountPageDomain, domains.JointAccountDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.JointAccountDomain>(),
      'JointAccount',
-     '~/fromApi', fdLens, commonIds, localIds,["brandId","customerId"],[],
+     '~/fromApi', fdLens, commonIds, localIds,["accountId","brandId"],[],
       Lenses.identity<domains.JointAccountPageDomain>().focusQuery('fromApi'),
      '/api/jointAccount?{query}')
 }

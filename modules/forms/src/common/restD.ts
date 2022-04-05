@@ -7,15 +7,28 @@ import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 
 export type AllLensRestParams = CommonLensRestParam | LensRestParam
 
+export const StringParam = {
+  rsSetter: 'setString',
+  javaType: 'String'
+}
+export const IntParam = {
+  rsSetter: 'setInteger',
+  javaType: 'int'
+}
+
 export interface CommonLensRestParam {
   commonLens: string,
   testValue: string,
-  main?: boolean
+  main?: boolean,
+  rsSetter: string;
+  javaType: string;
 }
 export interface LensRestParam {
   lens: string,
   testValue: string,
-  main?: boolean
+  main?: boolean,
+  rsSetter: string;
+  javaType: string;
 }
 
 export function isCommonLens ( a: AllLensRestParams ): a is CommonLensRestParam {
@@ -80,11 +93,11 @@ export interface RestD<G> {
   url: string,
   actions: RestAction[];
   resolver?: ResolverD;
-  tables?:EntityAndWhere
+  tables?: EntityAndWhere
 }
-export interface EntityAndWhere{
+export interface EntityAndWhere {
   entity: MainEntity;
-  where:  WhereFromQuery[],
+  where: WhereFromQuery[],
 }
 
 export const actionDetail = ( r: RestAction ): RestActionDetail => defaultRestAction[ r ];

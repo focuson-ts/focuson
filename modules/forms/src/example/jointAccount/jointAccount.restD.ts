@@ -1,11 +1,11 @@
 import { commonParams } from "../eTransfers/eTransfers.restD";
 import { JointAccountCustomerDD, JointAccountDd } from "./jointAccount.dataD";
 import { accountT, addT, customerT, nameT } from "../database/tableNames";
-import { RestD, RestParams } from "../../common/restD";
+import { IntParam, RestD, RestParams, StringParam } from "../../common/restD";
 
 export const jointAccountParams: RestParams = {
-  customerId: { commonLens: 'accountId', testValue: 'custId' },
-  brandId: { commonLens: 'brandId', testValue: 'custId' }
+  accountId: { ...IntParam, commonLens: 'accountId', testValue: 'custId' },
+  brandId: { ...IntParam, commonLens: 'brandId', testValue: 'custId' }
 }
 
 export const jointAccountRestD: RestD<any> = {

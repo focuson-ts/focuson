@@ -1,4 +1,4 @@
--- JointAccount /api/jointAccount?{query} {"customerId":{"commonLens":"accountId","testValue":"custId"},"brandId":{"commonLens":"brandId","testValue":"custId"}}
+-- JointAccount /api/jointAccount?{query} {"accountId":{"rsSetter":"setInteger","javaType":"int","commonLens":"accountId","testValue":"custId"},"brandId":{"rsSetter":"setInteger","javaType":"int","commonLens":"brandId","testValue":"custId"}}
 select
   mainCustomer.nameId as mainCustomer_nameId,
   mainName.id as mainName_id,
@@ -14,11 +14,11 @@ select
   jointName.zzname as jointName_zzname,
   ACC_TBL.blnc as ACC_TBL_blnc
  from
+  ACC_TBL ACC_TBL,
   NAME_TBL mainName,
   CUST_TBL mainCustomer,
   NAME_TBL jointName,
-  CUST_TBL jointCustomer,
-  ACC_TBL ACC_TBL
+  CUST_TBL jointCustomer
  where mainCustomer.nameId = mainName.id and ACC_TBL.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and ACC_TBL.jointCustomerId = jointCustomer.id and  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ?;
 
 select
@@ -30,6 +30,8 @@ select
   mainAddress.zzline1 as mainAddress_zzline1,
   mainAddress.zzline2 as mainAddress_zzline2
  from
+  ACC_TBL ACC_TBL,
+  CUST_TBL mainCustomer,
   ADD_TBL mainAddress
  where  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and mainCustomer.id = mainAddress.customerId and ACC_TBL.mainCustomerId = mainCustomer.id;
 
@@ -42,16 +44,17 @@ select
   jointAddress.zzline1 as jointAddress_zzline1,
   jointAddress.zzline2 as jointAddress_zzline2
  from
+  ACC_TBL ACC_TBL,
+  CUST_TBL jointCustomer,
   ADD_TBL jointAddress
  where  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and jointCustomer.id = jointAddress.customerId and ACC_TBL.jointCustomerId = jointCustomer.id;
 
 -- PostCodeNameAndAddress /api/address?{query} {}
 select
-  ADD_TBL.postcode as ADD_TBL_postcode,
   ADD_TBL.zzline1 as ADD_TBL_zzline1,
   ADD_TBL.zzline2 as ADD_TBL_zzline2,
   ADD_TBL.zzline3 as ADD_TBL_zzline3,
   ADD_TBL.zzline4 as ADD_TBL_zzline4
  from
   ADD_TBL ADD_TBL
- where  ADD_TBL.postcode = ?;
+ where ;

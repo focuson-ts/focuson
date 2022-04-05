@@ -1,10 +1,10 @@
 import { AllGuards } from "../../buttons/guardButton";
 import { nameAndAddressDataD, postCodeSearchResponse } from "./addressSearch.dataD";
-import { RestD, RestParams } from "../../common/restD";
+import { IntParam, RestD, RestParams } from "../../common/restD";
 import { addT } from "../database/tableNames";
 
 export const postcodeParams: RestParams = {
-  postcode: { lens: '~/postcode/search', testValue: 'LW12 4RG' }
+  postcode: { ...IntParam, lens: '~/postcode/search', testValue: 'LW12 4RG' }
 }
 
 export const postcodeRestD: RestD<AllGuards> = {
@@ -22,6 +22,6 @@ export const addressRestD: RestD<AllGuards> = {
   actions: [ 'create' ],
   tables: {
     entity: { type: 'Main', table: addT, children: {} },
-    where: [ { table: addT, field: 'postcode', alias: addT.name, paramName: 'postcode' } ]
+    where: []
   }
 }

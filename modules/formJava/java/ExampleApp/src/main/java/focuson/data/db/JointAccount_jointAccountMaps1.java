@@ -11,9 +11,9 @@ import java.util.Optional;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-//{"customerId":{"commonLens":"accountId","testValue":"custId"},"brandId":{"commonLens":"brandId","testValue":"custId"}}
+//{"accountId":{"rsSetter":"setInteger","javaType":"int","commonLens":"accountId","testValue":"custId"},"brandId":{"rsSetter":"setInteger","javaType":"int","commonLens":"brandId","testValue":"custId"}}
 public class JointAccount_jointAccountMaps1 {
-    @SuppressWarnings("SqlResolve")
+  @SuppressWarnings("SqlResolve")
   public static String sql = "select"+
   "  ACC_TBL.acc_id as ACC_TBL_acc_id,"+
   "  ACC_TBL.brand_id as ACC_TBL_brand_id,"+
@@ -23,13 +23,15 @@ public class JointAccount_jointAccountMaps1 {
   "  jointAddress.zzline1 as jointAddress_zzline1,"+
   "  jointAddress.zzline2 as jointAddress_zzline2"+
   " from"+
+  "  ACC_TBL ACC_TBL,"+
+  "  CUST_TBL jointCustomer,"+
   "  ADD_TBL jointAddress"+
   " where  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and jointCustomer.id = jointAddress.customerId and ACC_TBL.jointCustomerId = jointCustomer.id";
   
-  public static Optional<Map<String,Object>> getAll(Connection connection) throws SQLException {
-     return getRoot(connection,get0(connection),get1(connection)).map(x -> x._root);
+  public static Optional<Map<String,Object>> getAll(Connection connection,int accountId,int brandId) throws SQLException {
+     return getRoot(connection,accountId,brandId,get0(connection,accountId,brandId),get1(connection,accountId,brandId)).map(x -> x._root);
   }
-  public static Optional<JointAccount_jointAccountMaps> getRoot(Connection connection, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {
+  public static Optional<JointAccount_jointAccountMaps> getRoot(Connection connection, int accountId, int brandId, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {
       PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps.sql);
       //set params needed
       ResultSet rs = statement.executeQuery();
@@ -40,7 +42,7 @@ public class JointAccount_jointAccountMaps1 {
         statement.close();
       }
   }
-  public static List<JointAccount_jointAccountMaps0> get0(Connection connection) throws SQLException {
+  public static List<JointAccount_jointAccountMaps0> get0(Connection connection, int accountId, int brandId) throws SQLException {
       PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps0.sql);
       //set params needed
       ResultSet rs = statement.executeQuery();
@@ -54,7 +56,7 @@ public class JointAccount_jointAccountMaps1 {
         statement.close();
       }
   }
-  public static List<JointAccount_jointAccountMaps1> get1(Connection connection) throws SQLException {
+  public static List<JointAccount_jointAccountMaps1> get1(Connection connection, int accountId, int brandId) throws SQLException {
       PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps1.sql);
       //set params needed
       ResultSet rs = statement.executeQuery();
