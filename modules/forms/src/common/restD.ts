@@ -12,7 +12,7 @@ export const StringParam = {
   javaType: 'String'
 }
 export const IntParam = {
-  rsSetter: 'setInteger',
+  rsSetter: 'setInt',
   javaType: 'int'
 }
 

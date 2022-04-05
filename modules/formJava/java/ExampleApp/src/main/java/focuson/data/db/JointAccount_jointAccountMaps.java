@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-//{"accountId":{"rsSetter":"setInteger","javaType":"int","commonLens":"accountId","testValue":"custId"},"brandId":{"rsSetter":"setInteger","javaType":"int","commonLens":"brandId","testValue":"custId"}}
+//{"accountId":{"rsSetter":"setInt","javaType":"int","commonLens":"accountId","testValue":"custId"},"brandId":{"rsSetter":"setInt","javaType":"int","commonLens":"brandId","testValue":"custId"}}
 public class JointAccount_jointAccountMaps {
   @SuppressWarnings("SqlResolve")
   public static String sql = "select"+
@@ -41,7 +41,8 @@ public class JointAccount_jointAccountMaps {
   }
   public static Optional<JointAccount_jointAccountMaps> getRoot(Connection connection, int accountId, int brandId, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {
       PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps.sql);
-      //set params needed
+    statement.setInt(1,accountId);
+    statement.setInt(2,brandId);
       ResultSet rs = statement.executeQuery();
       try {
         return rs.next() ? Optional.of(new JointAccount_jointAccountMaps(rs,list0,list1)) : Optional.empty();
@@ -52,7 +53,8 @@ public class JointAccount_jointAccountMaps {
   }
   public static List<JointAccount_jointAccountMaps0> get0(Connection connection, int accountId, int brandId) throws SQLException {
       PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps0.sql);
-      //set params needed
+    statement.setInt(1,accountId);
+    statement.setInt(2,brandId);
       ResultSet rs = statement.executeQuery();
       try {
         List<JointAccount_jointAccountMaps0> result = new LinkedList<>();
@@ -66,7 +68,8 @@ public class JointAccount_jointAccountMaps {
   }
   public static List<JointAccount_jointAccountMaps1> get1(Connection connection, int accountId, int brandId) throws SQLException {
       PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps1.sql);
-      //set params needed
+    statement.setInt(1,accountId);
+    statement.setInt(2,brandId);
       ResultSet rs = statement.executeQuery();
       try {
         List<JointAccount_jointAccountMaps1> result = new LinkedList<>();

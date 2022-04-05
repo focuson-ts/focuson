@@ -123,7 +123,7 @@ describe ( "findFieldsFromWhere", () => {
         "jointAddress:ADD_TBL.customerId/undefined",
         "ACC_TBL:ACC_TBL.jointCustomerId/undefined"
       ]
-    ])
+    ] )
   } )
 
 } )
@@ -219,7 +219,7 @@ describe ( "findAllFields", () => {
         "jointAddress:ADD_TBL.zzline1/line1/joint,addresses,line1",
         "jointAddress:ADD_TBL.zzline2/line2/joint,addresses,line2"
       ]
-    ])
+    ] )
   } )
 } )
 
@@ -228,9 +228,9 @@ describe ( "findSqlLinkDataFromRootAndDataD", () => {
     expect ( walkSqlRoots ( findSqlRoot ( addressRestD.tables ), r => simplifySqlLinkData ( findSqlLinkDataFromRootAndDataD ( r, postCodeDataLineD ) ) ) ).toEqual ( [
       [
         "sqlRoot: ADD_TBL",
-        "fields: ADD_TBL:ADD_TBL.postcode/undefined,ADD_TBL:ADD_TBL.zzline1/line1,ADD_TBL:ADD_TBL.zzline2/line2,ADD_TBL:ADD_TBL.zzline3/line3,ADD_TBL:ADD_TBL.zzline4/line4",
+        "fields: ADD_TBL:ADD_TBL.zzline1/line1,ADD_TBL:ADD_TBL.zzline2/line2,ADD_TBL:ADD_TBL.zzline3/line3,ADD_TBL:ADD_TBL.zzline4/line4",
         "aliasAndTables ADD_TBL->ADD_TBL",
-        "where param postcode == ADD_TBL:ADD_TBL.postcode"
+        "where "
       ]
     ] )
   } )
@@ -322,7 +322,6 @@ describe ( "generateGetSql", () => {
 describe ( "findAllTableAndFieldsIn", () => {
   it ( "should find the table from a simple rest", () => {
     expect ( simplifyTableAndFieldDataArray ( findAllTableAndFieldsIn ( [ PostCodeMainPage.rest.address ] ) ) ).toEqual ( [
-      "ADD_TBL.postcode/undefined",
       "ADD_TBL.zzline1/line1",
       "ADD_TBL.zzline2/line2",
       "ADD_TBL.zzline3/line3",
@@ -346,7 +345,6 @@ describe ( "findAllTableAndFieldsIn", () => {
       "ADD_TBL.customerId/undefined",
       "ADD_TBL.zzline1/line1",
       "ADD_TBL.zzline2/line2",
-      "ADD_TBL.postcode/undefined",
       "ADD_TBL.zzline3/line3",
       "ADD_TBL.zzline4/line4"
     ] )
@@ -361,8 +359,8 @@ describe ( "findAllTableAndFieldDatasIn", () => {
       "CUST_TBL => nameId/undefined:number,id/undefined:number",
       "NAME_TBL => id/undefined:number,zzname/name:string/main,name",
       "ACC_TBL => mainCustomerId/undefined:number,jointCustomerId/undefined:number,acc_id/undefined:number,brand_id/undefined:number,blnc/balance:number/balance",
-      "ADD_TBL => customerId/undefined:number,zzline1/line1:string/main,addresses,line1,zzline2/line2:string/main,addresses,line2,postcode/undefined:number,zzline3/line3:string/line3,zzline4/line4:string/line4"
-    ])
+      "ADD_TBL => customerId/undefined:number,zzline1/line1:string/main,addresses,line1,zzline2/line2:string/main,addresses,line2,zzline3/line3:string/line3,zzline4/line4:string/line4"
+    ] ) //where did post code go?
   } )
 } )
 
@@ -384,7 +382,6 @@ describe ( "createTableSql", () => {
         "  customerId integer,",
         "  zzline1 varchar(256),",
         "  zzline2 varchar(256),",
-        "  postcode integer,",
         "  zzline3 varchar(256),",
         "  zzline4 varchar(256)",
         ")"
@@ -402,7 +399,6 @@ describe ( "createTableSql", () => {
         ")"
       ]
     } )
-
   } )
 } )
 
@@ -426,7 +422,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "",
-        "//{'customerId':{'commonLens':'accountId','testValue':'custId'},'brandId':{'commonLens':'brandId','testValue':'custId'}}",
+        "//{'accountId':{'rsSetter':'setInt','javaType':'int','commonLens':'accountId','testValue':'custId'},'brandId':{'rsSetter':'setInt','javaType':'int','commonLens':'brandId','testValue':'custId'}}",
         "public class JointAccount_jointAccountMaps {",
         "  @SuppressWarnings('SqlResolve')",
         "  public static String sql = 'select'+",
@@ -451,12 +447,13 @@ describe ( "makeMapsForRest", () => {
         "  '  CUST_TBL jointCustomer'+",
         "  ' where mainCustomer.nameId = mainName.id and ACC_TBL.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and ACC_TBL.jointCustomerId = jointCustomer.id and  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ?';",
         "  ",
-        "  public static Optional<Map<String,Object>> getAll(Connection connection) throws SQLException {",
-        "     return getRoot(connection,get0(connection),get1(connection)).map(x -> x._root);",
+        "  public static Optional<Map<String,Object>> getAll(Connection connection,int accountId,int brandId) throws SQLException {",
+        "     return getRoot(connection,accountId,brandId,get0(connection,accountId,brandId),get1(connection,accountId,brandId)).map(x -> x._root);",
         "  }",
-        "  public static Optional<JointAccount_jointAccountMaps> getRoot(Connection connection, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {",
+        "  public static Optional<JointAccount_jointAccountMaps> getRoot(Connection connection, int accountId, int brandId, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {",
         "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps.sql);",
-        "      //set params needed",
+        "    statement.setInt(1,accountId);",
+        "    statement.setInt(2,brandId);",
         "      ResultSet rs = statement.executeQuery();",
         "      try {",
         "        return rs.next() ? Optional.of(new JointAccount_jointAccountMaps(rs,list0,list1)) : Optional.empty();",
@@ -465,9 +462,10 @@ describe ( "makeMapsForRest", () => {
         "        statement.close();",
         "      }",
         "  }",
-        "  public static List<JointAccount_jointAccountMaps0> get0(Connection connection) throws SQLException {",
+        "  public static List<JointAccount_jointAccountMaps0> get0(Connection connection, int accountId, int brandId) throws SQLException {",
         "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps0.sql);",
-        "      //set params needed",
+        "    statement.setInt(1,accountId);",
+        "    statement.setInt(2,brandId);",
         "      ResultSet rs = statement.executeQuery();",
         "      try {",
         "        List<JointAccount_jointAccountMaps0> result = new LinkedList<>();",
@@ -479,9 +477,10 @@ describe ( "makeMapsForRest", () => {
         "        statement.close();",
         "      }",
         "  }",
-        "  public static List<JointAccount_jointAccountMaps1> get1(Connection connection) throws SQLException {",
+        "  public static List<JointAccount_jointAccountMaps1> get1(Connection connection, int accountId, int brandId) throws SQLException {",
         "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps1.sql);",
-        "      //set params needed",
+        "    statement.setInt(1,accountId);",
+        "    statement.setInt(2,brandId);",
         "      ResultSet rs = statement.executeQuery();",
         "      try {",
         "        List<JointAccount_jointAccountMaps1> result = new LinkedList<>();",
@@ -551,7 +550,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "",
-        "//{'customerId':{'commonLens':'accountId','testValue':'custId'},'brandId':{'commonLens':'brandId','testValue':'custId'}}",
+        "//{'accountId':{'rsSetter':'setInt','javaType':'int','commonLens':'accountId','testValue':'custId'},'brandId':{'rsSetter':'setInt','javaType':'int','commonLens':'brandId','testValue':'custId'}}",
         "public class JointAccount_jointAccountMaps0 {",
         "  @SuppressWarnings('SqlResolve')",
         "  public static String sql = 'select'+",
@@ -568,12 +567,13 @@ describe ( "makeMapsForRest", () => {
         "  '  ADD_TBL mainAddress'+",
         "  ' where  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and mainCustomer.id = mainAddress.customerId and ACC_TBL.mainCustomerId = mainCustomer.id';",
         "  ",
-        "  public static Optional<Map<String,Object>> getAll(Connection connection) throws SQLException {",
-        "     return getRoot(connection,get0(connection),get1(connection)).map(x -> x._root);",
+        "  public static Optional<Map<String,Object>> getAll(Connection connection,int accountId,int brandId) throws SQLException {",
+        "     return getRoot(connection,accountId,brandId,get0(connection,accountId,brandId),get1(connection,accountId,brandId)).map(x -> x._root);",
         "  }",
-        "  public static Optional<JointAccount_jointAccountMaps> getRoot(Connection connection, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {",
+        "  public static Optional<JointAccount_jointAccountMaps> getRoot(Connection connection, int accountId, int brandId, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {",
         "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps.sql);",
-        "      //set params needed",
+        "    statement.setInt(1,accountId);",
+        "    statement.setInt(2,brandId);",
         "      ResultSet rs = statement.executeQuery();",
         "      try {",
         "        return rs.next() ? Optional.of(new JointAccount_jointAccountMaps(rs,list0,list1)) : Optional.empty();",
@@ -582,9 +582,10 @@ describe ( "makeMapsForRest", () => {
         "        statement.close();",
         "      }",
         "  }",
-        "  public static List<JointAccount_jointAccountMaps0> get0(Connection connection) throws SQLException {",
+        "  public static List<JointAccount_jointAccountMaps0> get0(Connection connection, int accountId, int brandId) throws SQLException {",
         "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps0.sql);",
-        "      //set params needed",
+        "    statement.setInt(1,accountId);",
+        "    statement.setInt(2,brandId);",
         "      ResultSet rs = statement.executeQuery();",
         "      try {",
         "        List<JointAccount_jointAccountMaps0> result = new LinkedList<>();",
@@ -596,9 +597,10 @@ describe ( "makeMapsForRest", () => {
         "        statement.close();",
         "      }",
         "  }",
-        "  public static List<JointAccount_jointAccountMaps1> get1(Connection connection) throws SQLException {",
+        "  public static List<JointAccount_jointAccountMaps1> get1(Connection connection, int accountId, int brandId) throws SQLException {",
         "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps1.sql);",
-        "      //set params needed",
+        "    statement.setInt(1,accountId);",
+        "    statement.setInt(2,brandId);",
         "      ResultSet rs = statement.executeQuery();",
         "      try {",
         "        List<JointAccount_jointAccountMaps1> result = new LinkedList<>();",
@@ -653,7 +655,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "",
-        "//{'customerId':{'commonLens':'accountId','testValue':'custId'},'brandId':{'commonLens':'brandId','testValue':'custId'}}",
+        "//{'accountId':{'rsSetter':'setInt','javaType':'int','commonLens':'accountId','testValue':'custId'},'brandId':{'rsSetter':'setInt','javaType':'int','commonLens':'brandId','testValue':'custId'}}",
         "public class JointAccount_jointAccountMaps1 {",
         "  @SuppressWarnings('SqlResolve')",
         "  public static String sql = 'select'+",
@@ -670,12 +672,13 @@ describe ( "makeMapsForRest", () => {
         "  '  ADD_TBL jointAddress'+",
         "  ' where  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and jointCustomer.id = jointAddress.customerId and ACC_TBL.jointCustomerId = jointCustomer.id';",
         "  ",
-        "  public static Optional<Map<String,Object>> getAll(Connection connection) throws SQLException {",
-        "     return getRoot(connection,get0(connection),get1(connection)).map(x -> x._root);",
+        "  public static Optional<Map<String,Object>> getAll(Connection connection,int accountId,int brandId) throws SQLException {",
+        "     return getRoot(connection,accountId,brandId,get0(connection,accountId,brandId),get1(connection,accountId,brandId)).map(x -> x._root);",
         "  }",
-        "  public static Optional<JointAccount_jointAccountMaps> getRoot(Connection connection, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {",
+        "  public static Optional<JointAccount_jointAccountMaps> getRoot(Connection connection, int accountId, int brandId, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {",
         "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps.sql);",
-        "      //set params needed",
+        "    statement.setInt(1,accountId);",
+        "    statement.setInt(2,brandId);",
         "      ResultSet rs = statement.executeQuery();",
         "      try {",
         "        return rs.next() ? Optional.of(new JointAccount_jointAccountMaps(rs,list0,list1)) : Optional.empty();",
@@ -684,9 +687,10 @@ describe ( "makeMapsForRest", () => {
         "        statement.close();",
         "      }",
         "  }",
-        "  public static List<JointAccount_jointAccountMaps0> get0(Connection connection) throws SQLException {",
+        "  public static List<JointAccount_jointAccountMaps0> get0(Connection connection, int accountId, int brandId) throws SQLException {",
         "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps0.sql);",
-        "      //set params needed",
+        "    statement.setInt(1,accountId);",
+        "    statement.setInt(2,brandId);",
         "      ResultSet rs = statement.executeQuery();",
         "      try {",
         "        List<JointAccount_jointAccountMaps0> result = new LinkedList<>();",
@@ -698,9 +702,10 @@ describe ( "makeMapsForRest", () => {
         "        statement.close();",
         "      }",
         "  }",
-        "  public static List<JointAccount_jointAccountMaps1> get1(Connection connection) throws SQLException {",
+        "  public static List<JointAccount_jointAccountMaps1> get1(Connection connection, int accountId, int brandId) throws SQLException {",
         "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps1.sql);",
-        "      //set params needed",
+        "    statement.setInt(1,accountId);",
+        "    statement.setInt(2,brandId);",
         "      ResultSet rs = statement.executeQuery();",
         "      try {",
         "        List<JointAccount_jointAccountMaps1> result = new LinkedList<>();",
@@ -741,6 +746,6 @@ describe ( "makeMapsForRest", () => {
         "  }",
         "}"
       ]
-    ])
+    ] )
   } )
 } )

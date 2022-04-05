@@ -491,7 +491,7 @@ function makeGetRestForRoot<B, G> ( p: PageD<B, G>, restName: string, childCount
   return [
     `public static Optional<${mapName}> getRoot(${getParameters ( childCount, p, restName, [], queryParams )}) throws SQLException {`,
     `    PreparedStatement statement = connection.prepareStatement(${mapName}.sql);`,
-    `    //set params needed`,
+    ...indentList ( queryParams.map ( ( q, i ) => `statement.${q.rsSetter}(${i + 1},${q.name});` ) ),
     `    ResultSet rs = statement.executeQuery();`,
     `    try {`,
     `      return rs.next() ? Optional.of(${newMap ( mapName, childCount, [] )}) : Optional.empty();`,
@@ -507,7 +507,7 @@ function makeGetRestForChild<B, G> ( p: PageD<B, G>, restName: string, path: num
   return [
     `public static List<${mapName}> get${path.join ( '_' )}(${getParameters ( childCount, p, restName, [], queryParams )}) throws SQLException {`,
     `    PreparedStatement statement = connection.prepareStatement(${mapName}.sql);`,
-    `    //set params needed`,
+    ...indentList ( queryParams.map ( ( q, i ) => `statement.${q.rsSetter}(${i + 1},${q.name});` ) ),
     `    ResultSet rs = statement.executeQuery();`,
     `    try {`,
     `      List<${mapName}> result = new LinkedList<>();`,

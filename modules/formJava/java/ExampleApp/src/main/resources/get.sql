@@ -1,4 +1,4 @@
--- JointAccount /api/jointAccount?{query} {"accountId":{"rsSetter":"setInteger","javaType":"int","commonLens":"accountId","testValue":"custId"},"brandId":{"rsSetter":"setInteger","javaType":"int","commonLens":"brandId","testValue":"custId"}}
+-- JointAccount /api/jointAccount?{query} {"accountId":{"rsSetter":"setInt","javaType":"int","commonLens":"accountId","testValue":"custId"},"brandId":{"rsSetter":"setInt","javaType":"int","commonLens":"brandId","testValue":"custId"}}
 select
   mainCustomer.nameId as mainCustomer_nameId,
   mainName.id as mainName_id,

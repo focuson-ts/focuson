@@ -28,7 +28,6 @@ public class PostCodeDemo_addressMaps {
   }
   public static Optional<PostCodeDemo_addressMaps> getRoot(Connection connection) throws SQLException {
       PreparedStatement statement = connection.prepareStatement(PostCodeDemo_addressMaps.sql);
-      //set params needed
       ResultSet rs = statement.executeQuery();
       try {
         return rs.next() ? Optional.of(new PostCodeDemo_addressMaps(rs)) : Optional.empty();
