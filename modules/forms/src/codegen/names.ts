@@ -27,7 +27,8 @@ export const javaSqlReadSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.nam
 
 export const queryName = <G> ( restD: RestD<G>, action: RestAction ): string => { return action + compDataDIn ( restD.dataDD ).name; }
 export const createTableName = <G> ( restD: RestD<G> ): string => { return "createTable" + compDataDIn ( restD.dataDD ).name; }
-export const createTableSqlName = <G> (  ): string => { return  "schema"}
+export const createTableSqlName = (): string => { return "schema"}
+export const getSqlName = (): string => { return "get"}
 export const endPointName = <G> ( restD: RestD<G>, action: RestAction ): string => action + restD.dataDD.name
 
 export const modalName = <B, G> ( p: PageD<B, G>, modal: PageD<B, G> ) => modal.name

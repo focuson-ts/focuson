@@ -2,11 +2,11 @@ import { copyFile, copyFiles, DirectorySpec, templateFile, writeToFile } from "@
 import { JavaWiringParams } from "../codegen/config";
 import fs from "fs";
 import { unique } from "../common/restD";
-import { detailsLog, GenerateLogLevel, NameAnd, sortedEntries } from "@focuson/utils";
+import { detailsLog, GenerateLogLevel, NameAnd, safeString, sortedEntries } from "@focuson/utils";
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
-import { createTableSqlName, fetcherInterfaceName, mockFetcherClassName, queryClassName, restControllerName, sqlMapFileName } from "../codegen/names";
+import { createTableSqlName, fetcherInterfaceName, getSqlName, mockFetcherClassName, queryClassName, restControllerName, sqlMapFileName } from "../codegen/names";
 import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
 import { makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
 import { makeAllMockFetchers } from "../codegen/makeMockFetchers";
@@ -14,7 +14,8 @@ import { makeJavaVariablesForGraphQlQuery } from "../codegen/makeGraphQlQuery";
 import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
 import { AppConfig } from "../focuson.config";
 // import { findSqlRoot, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, walkRoots } from "../codegen/makeJavaSql.tsxxx";
-import { createTableSql, findSqlLinkDataFromRootAndDataD, findSqlRoot, makeMapsForRest, walkSqlRoots } from "../codegen/makeSqlFromEntities";
+import { createTableSql, findSqlLinkDataFromRootAndDataD, findSqlRoot, generateGetSql, makeMapsForRest, walkSqlRoots } from "../codegen/makeSqlFromEntities";
+import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 
 
 export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
@@ -26,7 +27,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   const javaRoot = javaOutputRoot + "/java"
   const javaAppRoot = javaOutputRoot + "/java/" + params.applicationName
   const javaScriptRoot = javaAppRoot + "/scripts"
-  const javaCodeRoot = javaAppRoot + "/src/main/java/focuson/data"
+  const javaCodeRoot = javaAppRoot + `/src/main/java/${params.thePackage.replace ( ".", '/' )}`
   const javaResourcesRoot = javaAppRoot + "/src/main/resources"
   const javaFetcherRoot = javaCodeRoot + "/" + params.fetcherPackage
   const javaControllerRoot = javaCodeRoot + "/" + params.controllerPackage
@@ -67,6 +68,11 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   console.log ( JSON.stringify ( createTable, null, 2 ) )
   writeToFile ( `${javaResourcesRoot}/${createTableSqlName ()}.sql`, () => Object.values ( createTable ).flatMap ( addStringToEndOfList ( ";\n" ) ), details )
 
+  writeToFile ( `${javaResourcesRoot}/${getSqlName ()}.sql`,
+    () => rests.filter ( r => r.tables ).flatMap ( rest =>
+      [ `--${safeString ( rest.namePrefix )} ${rest.dataDD.name} ${rest.url} ${JSON.stringify ( rest.params )}`,
+        ...walkSqlRoots ( findSqlRoot ( rest.tables ), r =>
+          generateGetSql ( findSqlLinkDataFromRootAndDataD ( r, rest.dataDD ) ) ).map ( addStringToEndOfList ( ';\n' ) ).flat () ] ), details )
 
   writeToFile ( `${javaResourcesRoot}/${params.schema}`, () => makeGraphQlSchema ( rests ), details )
   rests.forEach ( rest => {

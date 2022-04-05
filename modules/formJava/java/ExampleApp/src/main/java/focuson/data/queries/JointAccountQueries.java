@@ -1,8 +1,8 @@
 package focuson.data.queries;
 public class JointAccountQueries{
-  public static  String getJointAccount(String customerId){ 
+  public static  String getJointAccount(String brandId,String customerId){ 
      return
-  "query{getJointAccount(" + "customerId:" + "\"" + customerId + "\"" + "){"+
+  "query{getJointAccount(" + "brandId:" + "\"" + brandId + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
         "    balance"+
         "    main{"+
         "      name"+

@@ -5,7 +5,7 @@ type Query{
   getAccountOverviewExcessInfo(accountId: String!, customerId: String!):AccountOverviewExcessInfo!
   getAccountOverview(accountId: String!, customerId: String!):AccountOverview!
   getAccountOverviewReason(accountId: String!, customerId: String!):AccountOverviewReason!
-  getJointAccount(customerId: String!):JointAccount!
+  getJointAccount(brandId: String!, customerId: String!):JointAccount!
   getAdditionalInformation(customerId: String!):AdditionalInformation!
   getBusinessDetailsMain(customerId: String!):BusinessDetailsMain!
   getDropdowns(customerId: String!):Dropdowns!

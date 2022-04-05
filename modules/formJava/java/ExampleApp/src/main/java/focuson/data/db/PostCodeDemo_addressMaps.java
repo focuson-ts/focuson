@@ -11,10 +11,18 @@ import java.util.Optional;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+//{}
 public class PostCodeDemo_addressMaps {
-  public static String sql = "select ADD_TBL.postcode as ADD_TBL_postcode,ADD_TBL.zzline1 as ADD_TBL_zzline1,ADD_TBL.zzline2 as ADD_TBL_zzline2,ADD_TBL.zzline3 as ADD_TBL_zzline3,ADD_TBL.zzline4 as ADD_TBL_zzline4 "+
-  "from ADD_TBL ADD_TBL "+
-  "where  ADD_TBL.postcode = ?";
+    @SuppressWarnings("SqlResolve")
+  public static String sql = "select"+
+  "  ADD_TBL.postcode as ADD_TBL_postcode,"+
+  "  ADD_TBL.zzline1 as ADD_TBL_zzline1,"+
+  "  ADD_TBL.zzline2 as ADD_TBL_zzline2,"+
+  "  ADD_TBL.zzline3 as ADD_TBL_zzline3,"+
+  "  ADD_TBL.zzline4 as ADD_TBL_zzline4"+
+  " from"+
+  "  ADD_TBL ADD_TBL"+
+  " where  ADD_TBL.postcode = ?";
   
   public static Optional<Map<String,Object>> getAll(Connection connection) throws SQLException {
      return getRoot(connection).map(x -> x._root);

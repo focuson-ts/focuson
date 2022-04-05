@@ -152,7 +152,11 @@ export interface TableWhereLink {
   idInThis: string;
 }
 export type WhereLink = TableWhereLink | WhereFromQuery
-
+function simplifyWhereLink ( wl: WhereLink ) {
+  if ( isTableWhereLink ( wl ) ) return `Table: parent${wl.parentAlias}:${wl.parentTable.name}.${wl.idInParent} == child ${wl.childAlias}:${wl.childTable.name}.${wl.idInThis}`
+  if ( isWhereFromQuery ( wl ) ) return `Table: query ${wl.paramName} == child ${wl.alias}:${wl.table.name}.${wl.field}`
+  throw Error ( `Unknown where link ${wl}` )
+}
 export interface WhereFromQuery {
   paramName: string;
   table: DBTable;
@@ -212,7 +216,8 @@ export function findWhereLinksForSqlRoot ( sqlRoot: SqlRoot ): WhereLink[] {
     foldMultiple ( childAccs: WhereLink[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, multiple: MultipleEntity ): WhereLink[] { return [] },
     foldSingle ( childAccs: WhereLink[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, single: SingleEntity ): WhereLink[] {
       const [ parentAlias, parentTable ] = getParentTableAndAlias ( main, path, e => e.table )
-      return [ ...childAccs.flat (), { parentTable, parentAlias, idInParent: single.idInParent, childAlias, childTable: single.table, idInThis: single.idInThis } ]
+      let whereLink: WhereLink = { parentTable, parentAlias, idInParent: single.idInParent, childAlias, childTable: single.table, idInThis: single.idInThis };
+      return [ ...childAccs.flat (), whereLink ]
     }
   }, sqlRoot.main, sqlRoot.root, sqlRoot.filterPath, [] );
   const result: WhereLink[] = [ ...whereLinks.flat (), ...findWhereLinksForSqlRootGoingUp ( sqlRoot ) ]
@@ -222,17 +227,19 @@ export function findWhereLinksForSqlRoot ( sqlRoot: SqlRoot ): WhereLink[] {
 export function findWhereLinksForSqlRootGoingUp ( sqlRoot: SqlRoot ): WhereLink[] {
   if ( sqlRoot.root === sqlRoot.main.entity ) return []
 
-  let meAndParents: [ string, Entity ][] = [ [ sqlRoot.alias, sqlRoot.root ], ...sqlRoot.path ];
-  const upToMain: [ string, Entity ][] = [ ...meAndParents, [ sqlRoot.main.entity.table.name, sqlRoot.main.entity ] ]
-  console.log ( 'findWhereLinksForSqlRootGoingUp', upToMain.map ( ( [ alias, entity ] ) => `${alias} => ${entity.table.name}` ) )
-  return meAndParents.map ( ( p, i ) => {
+  let sqlRootAndParentsPath: [ string, Entity ][] = [ [ sqlRoot.alias, sqlRoot.root ], ...sqlRoot.path ];
+  const upToMain: [ string, Entity ][] = [ ...sqlRootAndParentsPath, [ sqlRoot.main.entity.table.name, sqlRoot.main.entity ] ]
+  // console.log ( 'findWhereLinksForSqlRootGoingUp', upToMain.map ( ( [ alias, entity ] ) => `${alias} => ${entity.table.name}` ) )
+  return sqlRootAndParentsPath.map ( ( p, i ) => {
     if ( p[ 1 ].type === 'Main' )
       throw Error ();
-    return ({
-        parentTable: upToMain[ i ][ 1 ].table, parentAlias: upToMain[ i ][ 0 ],
-        childTable: p[ 1 ].table, childAlias: p[ 0 ], idInThis: p[ 1 ].idInThis, idInParent: p[ 1 ].idInParent
-      }
-    );
+    const fromUpToMain = upToMain[ i + 1 ]
+    let result: WhereLink = {
+      parentTable: fromUpToMain[ 1 ].table, parentAlias: fromUpToMain[ 0 ],
+      childTable: p[ 1 ].table, childAlias: p[ 0 ], idInThis: p[ 1 ].idInThis, idInParent: p[ 1 ].idInParent
+    };
+    // console.log('result / wherelink is', simplifyWhereLink(result))
+    return result;
   } )
 }
 export const whereFieldToFieldData = <G> ( errorPrefix: string, name: string ): FieldData<G> => {
@@ -350,13 +357,13 @@ export function makeWhereClause ( ws: WhereLink[] ) {
       return ` ${w.alias}.${w.field} = ?`
     }
     throw new Error ( `Unknown where link ${JSON.stringify ( w )}` )
-  } )
+  } ).join ( " and " )
 }
 
 export function generateGetSql ( s: SqlLinkData ): string[] {
-  return [ `select ${s.fields.map ( taf => `${taf.alias}.${taf.fieldData.dbFieldName} as ${sqlTafFieldName ( taf )}` ).join ( "," )} `,
-    `from ${s.aliasAndTables.map ( ( [ alias, table ] ) => `${table.name} ${alias}` ).join ( "," )} `,
-    `where ${makeWhereClause ( s.whereLinks )}` ]
+  return [ `select`, ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.fields.map ( taf => `${taf.alias}.${taf.fieldData.dbFieldName} as ${sqlTafFieldName ( taf )}` ) ) ),
+    ` from`, ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.aliasAndTables.map ( ( [ alias, table ] ) => `${table.name} ${alias}` ) ) ),
+    ` where ${makeWhereClause ( s.whereLinks )}` ]
 }
 
 export const findAllTableAndFieldsIn = <G> ( rdps: RestDefnInPageProperties<G>[] ) => unique ( rdps.flatMap ( rdp => {
@@ -421,6 +428,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
       throw Error ( `Page: ${p.name} rest ${restName} has nested 'multiples. Currently this is not supported` )
     return `this.${childEntity.linkInData.mapName}.put("${childEntity.linkInData.field}", list${i}.stream().map(m ->m.${childEntity.linkInData.mapName}).collect(Collectors.toList()));`
   } );
+  const paramDetails = restD.params
   return [
     `package ${params.thePackage}.${params.dbPackage};`,
     '',
@@ -435,8 +443,10 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
     `import java.util.Map;`,
     `import java.util.stream.Collectors;`,
     ``,
+    `//${JSON.stringify ( restD.params )}`,
     `public class ${className} {`,
     ...indentList ( [
+      `@SuppressWarnings("SqlResolve")`,
       ...addBrackets ( 'public static String sql = ', ';' ) ( addStringToEndOfAllButLast ( '+' ) ( sql.map ( s => '"' + s.replace ( /""/g, '\"' ) + '"' ) ) ),
       '',
       ...makeAllGetsForRest ( params, p, restName, restD ),

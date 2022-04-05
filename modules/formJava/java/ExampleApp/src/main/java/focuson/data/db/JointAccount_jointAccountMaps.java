@@ -11,10 +11,30 @@ import java.util.Optional;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+//{"customerId":{"commonLens":"accountId","testValue":"custId"},"brandId":{"commonLens":"brandId","testValue":"custId"}}
 public class JointAccount_jointAccountMaps {
-  public static String sql = "select mainCustomer.nameId as mainCustomer_nameId,mainName.id as mainName_id,ACC_TBL.mainCustomerId as ACC_TBL_mainCustomerId,mainCustomer.id as mainCustomer_id,jointCustomer.nameId as jointCustomer_nameId,jointName.id as jointName_id,ACC_TBL.jointCustomerId as ACC_TBL_jointCustomerId,jointCustomer.id as jointCustomer_id,ACC_TBL.acc_id as ACC_TBL_acc_id,ACC_TBL.brand_id as ACC_TBL_brand_id,mainName.zzname as mainName_zzname,jointName.zzname as jointName_zzname,ACC_TBL.blnc as ACC_TBL_blnc "+
-  "from NAME_TBL mainName,CUST_TBL mainCustomer,NAME_TBL jointName,CUST_TBL jointCustomer,ACC_TBL ACC_TBL "+
-  "where mainCustomer.nameId = mainName.id,ACC_TBL.mainCustomerId = mainCustomer.id,jointCustomer.nameId = jointName.id,ACC_TBL.jointCustomerId = jointCustomer.id, ACC_TBL.acc_id = ?, ACC_TBL.brand_id = ?";
+    @SuppressWarnings("SqlResolve")
+  public static String sql = "select"+
+  "  mainCustomer.nameId as mainCustomer_nameId,"+
+  "  mainName.id as mainName_id,"+
+  "  ACC_TBL.mainCustomerId as ACC_TBL_mainCustomerId,"+
+  "  mainCustomer.id as mainCustomer_id,"+
+  "  jointCustomer.nameId as jointCustomer_nameId,"+
+  "  jointName.id as jointName_id,"+
+  "  ACC_TBL.jointCustomerId as ACC_TBL_jointCustomerId,"+
+  "  jointCustomer.id as jointCustomer_id,"+
+  "  ACC_TBL.acc_id as ACC_TBL_acc_id,"+
+  "  ACC_TBL.brand_id as ACC_TBL_brand_id,"+
+  "  mainName.zzname as mainName_zzname,"+
+  "  jointName.zzname as jointName_zzname,"+
+  "  ACC_TBL.blnc as ACC_TBL_blnc"+
+  " from"+
+  "  NAME_TBL mainName,"+
+  "  CUST_TBL mainCustomer,"+
+  "  NAME_TBL jointName,"+
+  "  CUST_TBL jointCustomer,"+
+  "  ACC_TBL ACC_TBL"+
+  " where mainCustomer.nameId = mainName.id and ACC_TBL.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and ACC_TBL.jointCustomerId = jointCustomer.id and  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ?";
   
   public static Optional<Map<String,Object>> getAll(Connection connection) throws SQLException {
      return getRoot(connection,get0(connection),get1(connection)).map(x -> x._root);

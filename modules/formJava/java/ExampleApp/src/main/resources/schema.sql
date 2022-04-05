@@ -1,8 +1,6 @@
 create table CUST_TBL(
   nameId integer,
-  id integer,
-  mainCustomerId integer,
-  jointCustomerId integer
+  id integer
 );
 
 create table NAME_TBL(
@@ -19,7 +17,6 @@ create table ACC_TBL(
 );
 
 create table ADD_TBL(
-  id integer,
   customerId integer,
   zzline1 varchar(256),
   zzline2 varchar(256),

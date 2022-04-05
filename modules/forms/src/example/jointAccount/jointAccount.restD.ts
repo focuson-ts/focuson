@@ -1,12 +1,15 @@
 import { commonParams } from "../eTransfers/eTransfers.restD";
 import { JointAccountCustomerDD, JointAccountDd } from "./jointAccount.dataD";
 import { accountT, addT, customerT, nameT } from "../database/tableNames";
-import { RestD } from "../../common/restD";
+import { RestD, RestParams } from "../../common/restD";
 
+export const jointAccountParams: RestParams = {
+  customerId: { commonLens: 'accountId', testValue: 'custId' },
+  brandId: { commonLens: 'brandId', testValue: 'custId' }
+}
 
 export const jointAccountRestD: RestD<any> = {
-  params: { ...commonParams },
-
+  params: jointAccountParams,
   dataDD: JointAccountDd,
   url: '/api/jointAccount?{query}',
   actions: [ 'get' ],

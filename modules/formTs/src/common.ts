@@ -35,6 +35,7 @@ export interface HasCommonIds {CommonIds: CommonIds}
 export type CommonIds = {
   accountId?:string;
   applRef?:string;
+  brandId?:string;
   brandRef?:string;
   createPlanId?:string;
   customerId?:string;
@@ -45,6 +46,7 @@ export const commonIdsL = identityL.focusQuery('CommonIds');
 export const commonIds: NameAndLens<FState> = {
    accountId: commonIdsL.focusQuery('accountId'),
    applRef: commonIdsL.focusQuery('applRef'),
+   brandId: commonIdsL.focusQuery('brandId'),
    brandRef: commonIdsL.focusQuery('brandRef'),
    createPlanId: commonIdsL.focusQuery('createPlanId'),
    customerId: commonIdsL.focusQuery('customerId'),
@@ -66,7 +68,7 @@ export const context: Context = {
    combine: MyCombined
 }
 export const emptyState: FState = {
-  CommonIds: {"applRef":"appref","createPlanId":"tbd","accountId":"accId","customerId":"custId","brandRef":"brandRef","usersRole":"user"},
+  CommonIds: {"applRef":"appref","createPlanId":"tbd","accountId":"custId","brandId":"custId","customerId":"custId","brandRef":"brandRef","usersRole":"user"},
   tags: {},
   messages: [],
   pageSelection: [{ pageName: 'HelloWorld', firstTime: true, pageMode: 'view' }],

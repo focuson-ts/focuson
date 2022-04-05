@@ -22,14 +22,14 @@ describe ( 'JointAccount - jointAccount - fetcher', () => {
       withRequest: {
         method: 'GET',
         path: '/api/jointAccount',
-        query:{"customerId":"custId"}
+        query:{"brandId":"custId","customerId":"custId"}
       },
       willRespondWith: {
         status: 200,
         body: samples.sampleJointAccount0
        },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'JointAccount', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'JointAccount', pageMode: 'view' }], CommonIds: {"brandId":"custId","customerId":"custId"} }
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
@@ -39,7 +39,7 @@ describe ( 'JointAccount - jointAccount - fetcher', () => {
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
       let expectedRaw: any = {
 ... withIds,
-      tags: {'JointAccount_~/fromApi': ["custId"]}
+      tags: {'JointAccount_~/fromApi': ["custId","custId"]}
       };
       const expected = Lenses.identity<FState>().focusQuery('JointAccount').focusQuery('fromApi').set ( expectedRaw, samples.sampleJointAccount0 )
       expect ( newState ).toEqual ( expected )
@@ -54,7 +54,7 @@ pactWith ( { consumer: 'JointAccount', provider: 'JointAccountProvider', cors: t
     const restCommand: RestCommand = { name: 'JointAccount_JointAccountRestDetails', restAction: 'get' }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"customerId":"custId"},
+       CommonIds: {"brandId":"custId","customerId":"custId"},
        pageSelection: [ { pageName: 'JointAccount', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -63,7 +63,7 @@ pactWith ( { consumer: 'JointAccount', provider: 'JointAccountProvider', cors: t
       withRequest: {
          method: 'GET',
          path:   '/api/jointAccount',
-         query:{"customerId":"custId"},
+         query:{"brandId":"custId","customerId":"custId"},
          //no request body needed for get,
       },
       willRespondWith: {

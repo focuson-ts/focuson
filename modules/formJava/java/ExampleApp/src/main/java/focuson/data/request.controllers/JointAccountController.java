@@ -16,13 +16,13 @@ import java.util.Map;
   @Autowired
   public GraphQL graphQL;
     @GetMapping(value="/api/jointAccount", produces="application/json")
-    public ResponseEntity getJointAccount(@RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL,JointAccountQueries.getJointAccount(customerId), "getJointAccount");
+    public ResponseEntity getJointAccount(@RequestParam String brandId, @RequestParam String customerId) throws Exception{
+       return Transform.result(graphQL,JointAccountQueries.getJointAccount(brandId, customerId), "getJointAccount");
     }
 
     @GetMapping(value="/api/jointAccount/query", produces="application/json")
-    public String querygetJointAccount(@RequestParam String customerId) throws Exception{
-       return JointAccountQueries.getJointAccount(customerId);
+    public String querygetJointAccount(@RequestParam String brandId, @RequestParam String customerId) throws Exception{
+       return JointAccountQueries.getJointAccount(brandId, customerId);
     }
 
   @GetMapping(value = "/api/jointAccount/sample", produces = "application/json")

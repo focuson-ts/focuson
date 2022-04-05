@@ -11,10 +11,20 @@ import java.util.Optional;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+//{"customerId":{"commonLens":"accountId","testValue":"custId"},"brandId":{"commonLens":"brandId","testValue":"custId"}}
 public class JointAccount_jointAccountMaps0 {
-  public static String sql = "select ACC_TBL.acc_id as ACC_TBL_acc_id,ACC_TBL.brand_id as ACC_TBL_brand_id,mainAddress.id as mainAddress_id,mainAddress.customerId as mainAddress_customerId,mainCustomer.mainCustomerId as mainCustomer_mainCustomerId,mainCustomer.id as mainCustomer_id,mainAddress.zzline1 as mainAddress_zzline1,mainAddress.zzline2 as mainAddress_zzline2 "+
-  "from ADD_TBL mainAddress "+
-  "where  ACC_TBL.acc_id = ?, ACC_TBL.brand_id = ?,mainAddress.id = mainAddress.customerId,mainCustomer.mainCustomerId = mainCustomer.id";
+    @SuppressWarnings("SqlResolve")
+  public static String sql = "select"+
+  "  ACC_TBL.acc_id as ACC_TBL_acc_id,"+
+  "  ACC_TBL.brand_id as ACC_TBL_brand_id,"+
+  "  mainCustomer.id as mainCustomer_id,"+
+  "  mainAddress.customerId as mainAddress_customerId,"+
+  "  ACC_TBL.mainCustomerId as ACC_TBL_mainCustomerId,"+
+  "  mainAddress.zzline1 as mainAddress_zzline1,"+
+  "  mainAddress.zzline2 as mainAddress_zzline2"+
+  " from"+
+  "  ADD_TBL mainAddress"+
+  " where  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and mainCustomer.id = mainAddress.customerId and ACC_TBL.mainCustomerId = mainCustomer.id";
   
   public static Optional<Map<String,Object>> getAll(Connection connection) throws SQLException {
      return getRoot(connection,get0(connection),get1(connection)).map(x -> x._root);
@@ -61,10 +71,9 @@ public class JointAccount_jointAccountMaps0 {
   
   public final Object ACC_TBL_acc_id;
   public final Object ACC_TBL_brand_id;
-  public final Object mainAddress_id;
-  public final Object mainAddress_customerId;
-  public final Object mainCustomer_mainCustomerId;
   public final Object mainCustomer_id;
+  public final Object mainAddress_customerId;
+  public final Object ACC_TBL_mainCustomerId;
   
   public final Map<String,Object> _root = new HashMap<>();
   public final Map<String,Object> main = new HashMap<>();
@@ -78,10 +87,9 @@ public class JointAccount_jointAccountMaps0 {
     
     this.ACC_TBL_acc_id = rs.getInt("ACC_TBL_acc_id");
     this.ACC_TBL_brand_id = rs.getInt("ACC_TBL_brand_id");
-    this.mainAddress_id = rs.getInt("mainAddress_id");
-    this.mainAddress_customerId = rs.getInt("mainAddress_customerId");
-    this.mainCustomer_mainCustomerId = rs.getInt("mainCustomer_mainCustomerId");
     this.mainCustomer_id = rs.getInt("mainCustomer_id");
+    this.mainAddress_customerId = rs.getInt("mainAddress_customerId");
+    this.ACC_TBL_mainCustomerId = rs.getInt("ACC_TBL_mainCustomerId");
     
     _root.put("main", main);
     main.put("addresses", main_addresses);

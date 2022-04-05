@@ -12,7 +12,7 @@ export function JointAccount_JointAccountRestDetails ( cd: NameAndLens<FState>, 
     fdLens: Lenses.identity<FState>().focusQuery('JointAccount'),
     dLens: Lenses.identity<domains.JointAccountPageDomain>().focusQuery('fromApi'),
     cd, fdd,
-    ids: ["customerId"],
+    ids: ["brandId","customerId"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/api/jointAccount?{query}"

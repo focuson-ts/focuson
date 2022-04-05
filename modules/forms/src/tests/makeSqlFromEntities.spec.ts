@@ -68,14 +68,14 @@ describe ( "findWhereLinkDataForLinkData", () => {
         [
           "param accountId == ACC_TBL:ACC_TBL.acc_id",
           "param brandId == ACC_TBL:ACC_TBL.brand_id",
-          "mainAddress:ADD_TBL.id == mainAddress:ADD_TBL.customerId",
-          "mainCustomer:CUST_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer"
+          "mainCustomer:CUST_TBL.id == mainAddress:ADD_TBL.customerId",
+          "ACC_TBL:ACC_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer"
         ],
         [
           "param accountId == ACC_TBL:ACC_TBL.acc_id",
           "param brandId == ACC_TBL:ACC_TBL.brand_id",
-          "jointAddress:ADD_TBL.id == jointAddress:ADD_TBL.customerId",
-          "jointCustomer:CUST_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer"
+          "jointCustomer:CUST_TBL.id == jointAddress:ADD_TBL.customerId",
+          "ACC_TBL:ACC_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer"
         ]
       ] )
     } )
@@ -112,20 +112,18 @@ describe ( "findFieldsFromWhere", () => {
       [
         "ACC_TBL:ACC_TBL.acc_id/undefined",
         "ACC_TBL:ACC_TBL.brand_id/undefined",
-        "mainAddress:ADD_TBL.id/undefined",
+        "mainCustomer:CUST_TBL.id/undefined",
         "mainAddress:ADD_TBL.customerId/undefined",
-        "mainCustomer:CUST_TBL.mainCustomerId/undefined",
-        "mainCustomer:CUST_TBL.id/undefined"
+        "ACC_TBL:ACC_TBL.mainCustomerId/undefined"
       ],
       [
         "ACC_TBL:ACC_TBL.acc_id/undefined",
         "ACC_TBL:ACC_TBL.brand_id/undefined",
-        "jointAddress:ADD_TBL.id/undefined",
+        "jointCustomer:CUST_TBL.id/undefined",
         "jointAddress:ADD_TBL.customerId/undefined",
-        "jointCustomer:CUST_TBL.jointCustomerId/undefined",
-        "jointCustomer:CUST_TBL.id/undefined"
+        "ACC_TBL:ACC_TBL.jointCustomerId/undefined"
       ]
-    ] )
+    ])
   } )
 
 } )
@@ -182,6 +180,20 @@ describe ( "findAllFields", () => {
         "ADD_TBL:ADD_TBL.zzline2/line2",
         "ADD_TBL:ADD_TBL.zzline3/line3",
         "ADD_TBL:ADD_TBL.zzline4/line4"
+      ]
+    ] )
+  } )
+
+  it ( "should findWhereLinksForSqlRootsGoingUp", () => {
+    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), r => simplifyWhereLinks ( findWhereLinksForSqlRootGoingUp ( r ) ) ) ).toEqual ( [
+      [],
+      [
+        "mainCustomer:CUST_TBL.id == mainAddress:ADD_TBL.customerId",
+        "ACC_TBL:ACC_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer"
+      ],
+      [
+        "jointCustomer:CUST_TBL.id == jointAddress:ADD_TBL.customerId",
+        "ACC_TBL:ACC_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer"
       ]
     ] )
   } )
