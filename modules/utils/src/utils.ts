@@ -6,6 +6,18 @@ export function checkIsFunction ( functionToCheck: any ) {
   if ( !(typeof functionToCheck === "function") ) throw Error ( 'getter should be a function, instead is ' + JSON.stringify ( functionToCheck ) )
 }
 
+export function ints ( n: number ): number[] {
+  const numbers = new Array ( n );
+  for ( var i = 0; i < n; i++ ) {
+    numbers[ i ] = i;
+  }
+  return numbers
+}
+export const mapPathPlusInts = ( path: number[], count: number ) => <T> ( fn: ( p: number[] ) => T ): T[] => {
+  return ints ( count ).map ( i => fn ( [ ...path, i ] ) )
+};
+
+
 export const apply = <T, T1> ( t: T | undefined, fn: ( t: T ) => T1 ): T1 | undefined => t ? fn ( t ) : undefined;
 
 export const applyOrDefault = <T, T1> ( t: T | undefined, fn: ( t: T ) => T1, def: T1 ): T1 => t ? fn ( t ) : def;
@@ -41,8 +53,8 @@ export function beforeAfterSeparator ( separator: string, string: string ): [ st
   const index = string.indexOf ( separator )
   return index < 0 ? [ string, '' ] : [ string.substr ( 0, index ), string.substr ( index + 1 ) ]
 }
-export function insertBefore( separator: string, insert: string, s: string): string{
-  const [b,a] = beforeAfterSeparator(separator, s)
+export function insertBefore ( separator: string, insert: string, s: string ): string {
+  const [ b, a ] = beforeAfterSeparator ( separator, s )
   return `${b}${insert}${separator}${a}`
 }
 export function arraysEqual<T> ( a: T[] | undefined, b: T[] | undefined ) {

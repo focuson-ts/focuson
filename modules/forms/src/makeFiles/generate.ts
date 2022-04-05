@@ -37,7 +37,6 @@ export const params: any = {
   schema: 'someSchema.graphql',
   sampleClass: 'Sample',
   dbPackage: 'db',
-  sqlDirectory: 'sql',
   optionalsFile: 'optionals'
 };
 

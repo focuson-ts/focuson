@@ -1,4 +1,4 @@
-import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findSqlLinkDataFromRootAndDataD, findSqlRoots, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, MainEntity, makeMapsForRest, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldData } from "../codegen/makeSqlFromEntities";
+import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, MainEntity, makeAllGetsForRest, makeMapsForRest, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldData } from "../codegen/makeSqlFromEntities";
 import { EntityAndWhere, unique } from "../common/restD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { nameAndAddressDataD, postCodeDataLineD } from "../example/postCodeDemo/addressSearch.dataD";
@@ -37,7 +37,7 @@ describe ( "EntityFolder", () => {
 
 describe ( "findSqlRoots", () => {
   it ( "should find a root for the main and each multiple", () => {
-    expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), simplifySqlRoot ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), simplifySqlRoot ) ).toEqual ( [
       "main ACC_TBL path [] root ACC_TBL children [ADD_TBL,ADD_TBL] filterPath: undefined",
       "main ACC_TBL path [mainCustomer -> CUST_TBL] root ADD_TBL children [] filterPath: main",
       "main ACC_TBL path [jointCustomer -> CUST_TBL] root ADD_TBL children [] filterPath: joint"
@@ -47,7 +47,7 @@ describe ( "findSqlRoots", () => {
 
 describe ( "findAliasAndTablesLinksForLinkDataFolder", () => {
   it ( "should generate aliasAndTables", () => {
-    expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), r => simplifyAliasAndTables ( findAliasAndTableLinksForLinkData ( r ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), r => simplifyAliasAndTables ( findAliasAndTableLinksForLinkData ( r ) ) ) ).toEqual ( [
       "mainName->NAME_TBL,mainCustomer->CUST_TBL,jointName->NAME_TBL,jointCustomer->CUST_TBL,ACC_TBL->ACC_TBL",
       "mainAddress->ADD_TBL",
       "jointAddress->ADD_TBL"
@@ -56,7 +56,7 @@ describe ( "findAliasAndTablesLinksForLinkDataFolder", () => {
 } )
 describe ( "findWhereLinkDataForLinkData", () => {
     it ( "should generate  findWhereLinkDataForLinkData", () => {
-      expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), r => simplifyWhereLinks ( findWhereLinksForSqlRoot ( r ) ) ) ).toEqual ( [
+      expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), r => simplifyWhereLinks ( findWhereLinksForSqlRoot ( r ) ) ) ).toEqual ( [
         [
           "mainCustomer:CUST_TBL.nameId == mainName:NAME_TBL.id",
           "ACC_TBL:ACC_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer",
@@ -95,7 +95,7 @@ describe ( "whereFieldToFieldData. Note that the undefined gets fixed later in t
 } )
 describe ( "findFieldsFromWhere", () => {
   it ( "find the fields in the where clauses. ", () => {
-    expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), r =>
+    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), r =>
       unique ( simplifyTableAndFieldAndAliasDataArray ( findFieldsFromWhere ( 'someErrorPrefix', findWhereLinksForSqlRoot ( r ) ) ), s => s ) ) ).toEqual ( [
       [
         "mainCustomer:CUST_TBL.nameId/undefined",
@@ -156,7 +156,7 @@ describe ( "findTableAliasAndFieldFromDataD", () => {
 
   it ( "should start with the fields from the wheres, and add in the fields from the dataD: only adding where the data is needed - i.e. not adding fields to the 'path' to the root", () => {
     const fromDataD = findTableAndFieldFromDataD ( JointAccountDd )
-    expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), r => simplifyTableAndFieldAndAliasDataArray ( findTableAliasAndFieldFromDataD ( r, fromDataD ), true ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), r => simplifyTableAndFieldAndAliasDataArray ( findTableAliasAndFieldFromDataD ( r, fromDataD ), true ) ) ).toEqual ( [
       [
         "mainName:NAME_TBL.zzname/name/main,name",
         "jointName:NAME_TBL.zzname/name/joint,name",
@@ -176,7 +176,7 @@ describe ( "findTableAliasAndFieldFromDataD", () => {
 
 describe ( "findAllFields", () => {
   it ( "should aggregate the fields from the where and from the dataD - simple ", () => {
-    expect ( walkSqlRoots ( findSqlRoots ( addressRestD.tables ), r => simplifyTableAndFieldAndAliasDataArray ( findAllFields ( r, nameAndAddressDataD, findWhereLinksForSqlRootGoingUp ( r ) ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( addressRestD.tables ), r => simplifyTableAndFieldAndAliasDataArray ( findAllFields ( r, nameAndAddressDataD, findWhereLinksForSqlRootGoingUp ( r ) ) ) ) ).toEqual ( [
       [
         "ADD_TBL:ADD_TBL.zzline1/line1",
         "ADD_TBL:ADD_TBL.zzline2/line2",
@@ -187,7 +187,7 @@ describe ( "findAllFields", () => {
   } )
 
   it ( "should aggregate the fields from the where and from the dataD ", () => {
-    expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), r => simplifyTableAndFieldAndAliasDataArray ( findAllFields ( r, JointAccountDd, findWhereLinksForSqlRootGoingUp ( r ) ), true ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), r => simplifyTableAndFieldAndAliasDataArray ( findAllFields ( r, JointAccountDd, findWhereLinksForSqlRootGoingUp ( r ) ), true ) ) ).toEqual ( [
       [
         "mainName:NAME_TBL.zzname/name/main,name",
         "jointName:NAME_TBL.zzname/name/joint,name",
@@ -215,7 +215,7 @@ describe ( "findAllFields", () => {
 
 describe ( "findSqlLinkDataFromRootAndDataD", () => {
   it ( "should create the data for the links in postCodeDataLineD (simple)", () => {
-    expect ( walkSqlRoots ( findSqlRoots ( addressRestD.tables ), r => simplifySqlLinkData ( findSqlLinkDataFromRootAndDataD ( r, postCodeDataLineD ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( addressRestD.tables ), r => simplifySqlLinkData ( findSqlLinkDataFromRootAndDataD ( r, postCodeDataLineD ) ) ) ).toEqual ( [
       [
         "sqlRoot: ADD_TBL",
         "fields: ADD_TBL:ADD_TBL.postcode/undefined,ADD_TBL:ADD_TBL.zzline1/line1,ADD_TBL:ADD_TBL.zzline2/line2,ADD_TBL:ADD_TBL.zzline3/line3,ADD_TBL:ADD_TBL.zzline4/line4",
@@ -226,7 +226,7 @@ describe ( "findSqlLinkDataFromRootAndDataD", () => {
   } )
 
   it ( "shouldCreate the data for the links in accountD", () => {
-    expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), r => simplifySqlLinkData ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), r => simplifySqlLinkData ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd ) ) ) ).toEqual ( [
       [
         "sqlRoot: ACC_TBL",
         "fields: mainCustomer:CUST_TBL.nameId/undefined,mainName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.mainCustomerId/undefined,mainCustomer:CUST_TBL.id/undefined,jointCustomer:CUST_TBL.nameId/undefined,jointName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.jointCustomerId/undefined,jointCustomer:CUST_TBL.id/undefined,ACC_TBL:ACC_TBL.acc_id/undefined,ACC_TBL:ACC_TBL.brand_id/undefined,mainName:NAME_TBL.zzname/name,jointName:NAME_TBL.zzname/name,ACC_TBL:ACC_TBL.blnc/balance",
@@ -250,20 +250,20 @@ describe ( "findSqlLinkDataFromRootAndDataD", () => {
 } )
 describe ( "generateGetSql", () => {
   it ( "should generate the get sql", () => {
-    expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), r => generateGetSql ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), r => generateGetSql ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd ) ) ) ).toEqual ( [
       [
-        "select mainCustomer.nameId as mainCustomer_nameId,mainName.id as mainName_id,ACC_TBL.mainCustomerId as ACC_TBL_mainCustomerId,mainCustomer.id as mainCustomer_id,jointCustomer.nameId as jointCustomer_nameId,jointName.id as jointName_id,ACC_TBL.jointCustomerId as ACC_TBL_jointCustomerId,jointCustomer.id as jointCustomer_id,ACC_TBL.acc_id as ACC_TBL_acc_id,ACC_TBL.brand_id as ACC_TBL_brand_id,mainName.zzname as mainName_zzname,jointName.zzname as jointName_zzname,ACC_TBL.blnc as ACC_TBL_blnc",
-        "from NAME_TBL mainName,CUST_TBL mainCustomer,NAME_TBL jointName,CUST_TBL jointCustomer,ACC_TBL ACC_TBL",
+        "select mainCustomer.nameId as mainCustomer_nameId,mainName.id as mainName_id,ACC_TBL.mainCustomerId as ACC_TBL_mainCustomerId,mainCustomer.id as mainCustomer_id,jointCustomer.nameId as jointCustomer_nameId,jointName.id as jointName_id,ACC_TBL.jointCustomerId as ACC_TBL_jointCustomerId,jointCustomer.id as jointCustomer_id,ACC_TBL.acc_id as ACC_TBL_acc_id,ACC_TBL.brand_id as ACC_TBL_brand_id,mainName.zzname as mainName_zzname,jointName.zzname as jointName_zzname,ACC_TBL.blnc as ACC_TBL_blnc ",
+        "from NAME_TBL mainName,CUST_TBL mainCustomer,NAME_TBL jointName,CUST_TBL jointCustomer,ACC_TBL ACC_TBL ",
         "where mainCustomer.nameId = mainName.id,ACC_TBL.mainCustomerId = mainCustomer.id,jointCustomer.nameId = jointName.id,ACC_TBL.jointCustomerId = jointCustomer.id, ACC_TBL.acc_id = ?, ACC_TBL.brand_id = ?"
       ],
       [
-        "select ACC_TBL.acc_id as ACC_TBL_acc_id,ACC_TBL.brand_id as ACC_TBL_brand_id,mainAddress.id as mainAddress_id,mainAddress.customerId as mainAddress_customerId,mainCustomer.mainCustomerId as mainCustomer_mainCustomerId,mainCustomer.id as mainCustomer_id,mainAddress.zzline1 as mainAddress_zzline1,mainAddress.zzline2 as mainAddress_zzline2",
-        "from ADD_TBL mainAddress",
+        "select ACC_TBL.acc_id as ACC_TBL_acc_id,ACC_TBL.brand_id as ACC_TBL_brand_id,mainAddress.id as mainAddress_id,mainAddress.customerId as mainAddress_customerId,mainCustomer.mainCustomerId as mainCustomer_mainCustomerId,mainCustomer.id as mainCustomer_id,mainAddress.zzline1 as mainAddress_zzline1,mainAddress.zzline2 as mainAddress_zzline2 ",
+        "from ADD_TBL mainAddress ",
         "where  ACC_TBL.acc_id = ?, ACC_TBL.brand_id = ?,mainAddress.id = mainAddress.customerId,mainCustomer.mainCustomerId = mainCustomer.id"
       ],
       [
-        "select ACC_TBL.acc_id as ACC_TBL_acc_id,ACC_TBL.brand_id as ACC_TBL_brand_id,jointAddress.id as jointAddress_id,jointAddress.customerId as jointAddress_customerId,jointCustomer.jointCustomerId as jointCustomer_jointCustomerId,jointCustomer.id as jointCustomer_id,jointAddress.zzline1 as jointAddress_zzline1,jointAddress.zzline2 as jointAddress_zzline2",
-        "from ADD_TBL jointAddress",
+        "select ACC_TBL.acc_id as ACC_TBL_acc_id,ACC_TBL.brand_id as ACC_TBL_brand_id,jointAddress.id as jointAddress_id,jointAddress.customerId as jointAddress_customerId,jointCustomer.jointCustomerId as jointCustomer_jointCustomerId,jointCustomer.id as jointCustomer_id,jointAddress.zzline1 as jointAddress_zzline1,jointAddress.zzline2 as jointAddress_zzline2 ",
+        "from ADD_TBL jointAddress ",
         "where  ACC_TBL.acc_id = ?, ACC_TBL.brand_id = ?,jointAddress.id = jointAddress.customerId,jointCustomer.jointCustomerId = jointCustomer.id"
       ]
     ] )
@@ -366,26 +366,72 @@ describe ( "createTableSql", () => {
 
 describe ( "makeMapsForRest", () => {
   it ( "should make maps for each sql root, from the link data", () => {
-    expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), ( r, path ) => {
+    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), ( r, path ) => {
       const ld = findSqlLinkDataFromRootAndDataD ( r, JointAccountDd )
-      return makeMapsForRest ( paramsForTest, JointAccountPageD, 'jointAccount', JointAccountDd, ld, path, r.children.length )
+      return makeMapsForRest ( paramsForTest, JointAccountPageD, 'jointAccount', jointAccountRestD, ld, path, r.children.length )
     } ).map ( s => s.map ( s => s.replace ( /"/g, "'" ) ) ) ).toEqual ( [
       [
         "package focuson.data.db;",
         "",
         "import java.sql.ResultSet;",
+        "import java.sql.Connection;",
+        "import java.sql.PreparedStatement;",
         "import java.sql.SQLException;",
         "import java.util.HashMap;",
         "import java.util.List;",
+        "import java.util.LinkedList;",
+        "import java.util.Optional;",
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "",
-        "/**",
-        "  select mainCustomer.nameId as mainCustomer_nameId,mainName.id as mainName_id,ACC_TBL.mainCustomerId as ACC_TBL_mainCustomerId,mainCustomer.id as mainCustomer_id,jointCustomer.nameId as jointCustomer_nameId,jointName.id as jointName_id,ACC_TBL.jointCustomerId as ACC_TBL_jointCustomerId,jointCustomer.id as jointCustomer_id,ACC_TBL.acc_id as ACC_TBL_acc_id,ACC_TBL.brand_id as ACC_TBL_brand_id,mainName.zzname as mainName_zzname,jointName.zzname as jointName_zzname,ACC_TBL.blnc as ACC_TBL_blnc",
-        "  from NAME_TBL mainName,CUST_TBL mainCustomer,NAME_TBL jointName,CUST_TBL jointCustomer,ACC_TBL ACC_TBL",
-        "  where mainCustomer.nameId = mainName.id,ACC_TBL.mainCustomerId = mainCustomer.id,jointCustomer.nameId = jointName.id,ACC_TBL.jointCustomerId = jointCustomer.id, ACC_TBL.acc_id = ?, ACC_TBL.brand_id = ?",
-        "*/",
         "public class JointAccount_jointAccountMaps {",
+        "  public static String sql = 'select mainCustomer.nameId as mainCustomer_nameId,mainName.id as mainName_id,ACC_TBL.mainCustomerId as ACC_TBL_mainCustomerId,mainCustomer.id as mainCustomer_id,jointCustomer.nameId as jointCustomer_nameId,jointName.id as jointName_id,ACC_TBL.jointCustomerId as ACC_TBL_jointCustomerId,jointCustomer.id as jointCustomer_id,ACC_TBL.acc_id as ACC_TBL_acc_id,ACC_TBL.brand_id as ACC_TBL_brand_id,mainName.zzname as mainName_zzname,jointName.zzname as jointName_zzname,ACC_TBL.blnc as ACC_TBL_blnc '+",
+        "  'from NAME_TBL mainName,CUST_TBL mainCustomer,NAME_TBL jointName,CUST_TBL jointCustomer,ACC_TBL ACC_TBL '+",
+        "  'where mainCustomer.nameId = mainName.id,ACC_TBL.mainCustomerId = mainCustomer.id,jointCustomer.nameId = jointName.id,ACC_TBL.jointCustomerId = jointCustomer.id, ACC_TBL.acc_id = ?, ACC_TBL.brand_id = ?';",
+        "  ",
+        "  public static Optional<Map<String,Object>> getAll(Connection connection) throws SQLException {",
+        "     return getRoot(connection,get0(connection),get1(connection)).map(x -> x._root);",
+        "  }",
+        "  public static Optional<JointAccount_jointAccountMaps> getRoot(Connection connection, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {",
+        "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps.sql);",
+        "      //set params needed",
+        "      ResultSet rs = statement.executeQuery();",
+        "      try {",
+        "        return rs.next() ? Optional.of(new JointAccount_jointAccountMaps(rs,list0,list1)) : Optional.empty();",
+        "      } finally {",
+        "        rs.close();",
+        "        statement.close();",
+        "      }",
+        "  }",
+        "  public static List<JointAccount_jointAccountMaps0> get0(Connection connection) throws SQLException {",
+        "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps0.sql);",
+        "      //set params needed",
+        "      ResultSet rs = statement.executeQuery();",
+        "      try {",
+        "        List<JointAccount_jointAccountMaps0> result = new LinkedList<>();",
+        "        while (rs.next())",
+        "          result.add(new JointAccount_jointAccountMaps0(rs));",
+        "        return result;",
+        "      } finally {",
+        "        rs.close();",
+        "        statement.close();",
+        "      }",
+        "  }",
+        "  public static List<JointAccount_jointAccountMaps1> get1(Connection connection) throws SQLException {",
+        "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps1.sql);",
+        "      //set params needed",
+        "      ResultSet rs = statement.executeQuery();",
+        "      try {",
+        "        List<JointAccount_jointAccountMaps1> result = new LinkedList<>();",
+        "        while (rs.next())",
+        "          result.add(new JointAccount_jointAccountMaps1(rs));",
+        "        return result;",
+        "      } finally {",
+        "        rs.close();",
+        "        statement.close();",
+        "      }",
+        "  }",
+        "  ",
         "  public final Object mainCustomer_nameId;",
         "  public final Object mainName_id;",
         "  public final Object ACC_TBL_mainCustomerId;",
@@ -408,16 +454,16 @@ describe ( "makeMapsForRest", () => {
         "    this.main.put('name', rs.getString('mainName_zzname'));",
         "    this.joint.put('name', rs.getString('jointName_zzname'));",
         "    ",
-        "    this.mainCustomer_nameId = rs.getInt('{mainCustomer_nameId');",
-        "    this.mainName_id = rs.getInt('{mainName_id');",
-        "    this.ACC_TBL_mainCustomerId = rs.getInt('{ACC_TBL_mainCustomerId');",
-        "    this.mainCustomer_id = rs.getInt('{mainCustomer_id');",
-        "    this.jointCustomer_nameId = rs.getInt('{jointCustomer_nameId');",
-        "    this.jointName_id = rs.getInt('{jointName_id');",
-        "    this.ACC_TBL_jointCustomerId = rs.getInt('{ACC_TBL_jointCustomerId');",
-        "    this.jointCustomer_id = rs.getInt('{jointCustomer_id');",
-        "    this.ACC_TBL_acc_id = rs.getInt('{ACC_TBL_acc_id');",
-        "    this.ACC_TBL_brand_id = rs.getInt('{ACC_TBL_brand_id');",
+        "    this.mainCustomer_nameId = rs.getInt('mainCustomer_nameId');",
+        "    this.mainName_id = rs.getInt('mainName_id');",
+        "    this.ACC_TBL_mainCustomerId = rs.getInt('ACC_TBL_mainCustomerId');",
+        "    this.mainCustomer_id = rs.getInt('mainCustomer_id');",
+        "    this.jointCustomer_nameId = rs.getInt('jointCustomer_nameId');",
+        "    this.jointName_id = rs.getInt('jointName_id');",
+        "    this.ACC_TBL_jointCustomerId = rs.getInt('ACC_TBL_jointCustomerId');",
+        "    this.jointCustomer_id = rs.getInt('jointCustomer_id');",
+        "    this.ACC_TBL_acc_id = rs.getInt('ACC_TBL_acc_id');",
+        "    this.ACC_TBL_brand_id = rs.getInt('ACC_TBL_brand_id');",
         "    ",
         "    _root.put('main', main);",
         "    main.put('addresses', main_addresses);",
@@ -433,18 +479,64 @@ describe ( "makeMapsForRest", () => {
         "package focuson.data.db;",
         "",
         "import java.sql.ResultSet;",
+        "import java.sql.Connection;",
+        "import java.sql.PreparedStatement;",
         "import java.sql.SQLException;",
         "import java.util.HashMap;",
         "import java.util.List;",
+        "import java.util.LinkedList;",
+        "import java.util.Optional;",
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "",
-        "/**",
-        "  select ACC_TBL.acc_id as ACC_TBL_acc_id,ACC_TBL.brand_id as ACC_TBL_brand_id,mainAddress.id as mainAddress_id,mainAddress.customerId as mainAddress_customerId,mainCustomer.mainCustomerId as mainCustomer_mainCustomerId,mainCustomer.id as mainCustomer_id,mainAddress.zzline1 as mainAddress_zzline1,mainAddress.zzline2 as mainAddress_zzline2",
-        "  from ADD_TBL mainAddress",
-        "  where  ACC_TBL.acc_id = ?, ACC_TBL.brand_id = ?,mainAddress.id = mainAddress.customerId,mainCustomer.mainCustomerId = mainCustomer.id",
-        "*/",
         "public class JointAccount_jointAccountMaps0 {",
+        "  public static String sql = 'select ACC_TBL.acc_id as ACC_TBL_acc_id,ACC_TBL.brand_id as ACC_TBL_brand_id,mainAddress.id as mainAddress_id,mainAddress.customerId as mainAddress_customerId,mainCustomer.mainCustomerId as mainCustomer_mainCustomerId,mainCustomer.id as mainCustomer_id,mainAddress.zzline1 as mainAddress_zzline1,mainAddress.zzline2 as mainAddress_zzline2 '+",
+        "  'from ADD_TBL mainAddress '+",
+        "  'where  ACC_TBL.acc_id = ?, ACC_TBL.brand_id = ?,mainAddress.id = mainAddress.customerId,mainCustomer.mainCustomerId = mainCustomer.id';",
+        "  ",
+        "  public static Optional<Map<String,Object>> getAll(Connection connection) throws SQLException {",
+        "     return getRoot(connection,get0(connection),get1(connection)).map(x -> x._root);",
+        "  }",
+        "  public static Optional<JointAccount_jointAccountMaps> getRoot(Connection connection, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {",
+        "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps.sql);",
+        "      //set params needed",
+        "      ResultSet rs = statement.executeQuery();",
+        "      try {",
+        "        return rs.next() ? Optional.of(new JointAccount_jointAccountMaps(rs,list0,list1)) : Optional.empty();",
+        "      } finally {",
+        "        rs.close();",
+        "        statement.close();",
+        "      }",
+        "  }",
+        "  public static List<JointAccount_jointAccountMaps0> get0(Connection connection) throws SQLException {",
+        "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps0.sql);",
+        "      //set params needed",
+        "      ResultSet rs = statement.executeQuery();",
+        "      try {",
+        "        List<JointAccount_jointAccountMaps0> result = new LinkedList<>();",
+        "        while (rs.next())",
+        "          result.add(new JointAccount_jointAccountMaps0(rs));",
+        "        return result;",
+        "      } finally {",
+        "        rs.close();",
+        "        statement.close();",
+        "      }",
+        "  }",
+        "  public static List<JointAccount_jointAccountMaps1> get1(Connection connection) throws SQLException {",
+        "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps1.sql);",
+        "      //set params needed",
+        "      ResultSet rs = statement.executeQuery();",
+        "      try {",
+        "        List<JointAccount_jointAccountMaps1> result = new LinkedList<>();",
+        "        while (rs.next())",
+        "          result.add(new JointAccount_jointAccountMaps1(rs));",
+        "        return result;",
+        "      } finally {",
+        "        rs.close();",
+        "        statement.close();",
+        "      }",
+        "  }",
+        "  ",
         "  public final Object ACC_TBL_acc_id;",
         "  public final Object ACC_TBL_brand_id;",
         "  public final Object mainAddress_id;",
@@ -462,12 +554,12 @@ describe ( "makeMapsForRest", () => {
         "    this.main_addresses.put('line1', rs.getString('mainAddress_zzline1'));",
         "    this.main_addresses.put('line2', rs.getString('mainAddress_zzline2'));",
         "    ",
-        "    this.ACC_TBL_acc_id = rs.getInt('{ACC_TBL_acc_id');",
-        "    this.ACC_TBL_brand_id = rs.getInt('{ACC_TBL_brand_id');",
-        "    this.mainAddress_id = rs.getInt('{mainAddress_id');",
-        "    this.mainAddress_customerId = rs.getInt('{mainAddress_customerId');",
-        "    this.mainCustomer_mainCustomerId = rs.getInt('{mainCustomer_mainCustomerId');",
-        "    this.mainCustomer_id = rs.getInt('{mainCustomer_id');",
+        "    this.ACC_TBL_acc_id = rs.getInt('ACC_TBL_acc_id');",
+        "    this.ACC_TBL_brand_id = rs.getInt('ACC_TBL_brand_id');",
+        "    this.mainAddress_id = rs.getInt('mainAddress_id');",
+        "    this.mainAddress_customerId = rs.getInt('mainAddress_customerId');",
+        "    this.mainCustomer_mainCustomerId = rs.getInt('mainCustomer_mainCustomerId');",
+        "    this.mainCustomer_id = rs.getInt('mainCustomer_id');",
         "    ",
         "    _root.put('main', main);",
         "    main.put('addresses', main_addresses);",
@@ -479,18 +571,64 @@ describe ( "makeMapsForRest", () => {
         "package focuson.data.db;",
         "",
         "import java.sql.ResultSet;",
+        "import java.sql.Connection;",
+        "import java.sql.PreparedStatement;",
         "import java.sql.SQLException;",
         "import java.util.HashMap;",
         "import java.util.List;",
+        "import java.util.LinkedList;",
+        "import java.util.Optional;",
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "",
-        "/**",
-        "  select ACC_TBL.acc_id as ACC_TBL_acc_id,ACC_TBL.brand_id as ACC_TBL_brand_id,jointAddress.id as jointAddress_id,jointAddress.customerId as jointAddress_customerId,jointCustomer.jointCustomerId as jointCustomer_jointCustomerId,jointCustomer.id as jointCustomer_id,jointAddress.zzline1 as jointAddress_zzline1,jointAddress.zzline2 as jointAddress_zzline2",
-        "  from ADD_TBL jointAddress",
-        "  where  ACC_TBL.acc_id = ?, ACC_TBL.brand_id = ?,jointAddress.id = jointAddress.customerId,jointCustomer.jointCustomerId = jointCustomer.id",
-        "*/",
         "public class JointAccount_jointAccountMaps1 {",
+        "  public static String sql = 'select ACC_TBL.acc_id as ACC_TBL_acc_id,ACC_TBL.brand_id as ACC_TBL_brand_id,jointAddress.id as jointAddress_id,jointAddress.customerId as jointAddress_customerId,jointCustomer.jointCustomerId as jointCustomer_jointCustomerId,jointCustomer.id as jointCustomer_id,jointAddress.zzline1 as jointAddress_zzline1,jointAddress.zzline2 as jointAddress_zzline2 '+",
+        "  'from ADD_TBL jointAddress '+",
+        "  'where  ACC_TBL.acc_id = ?, ACC_TBL.brand_id = ?,jointAddress.id = jointAddress.customerId,jointCustomer.jointCustomerId = jointCustomer.id';",
+        "  ",
+        "  public static Optional<Map<String,Object>> getAll(Connection connection) throws SQLException {",
+        "     return getRoot(connection,get0(connection),get1(connection)).map(x -> x._root);",
+        "  }",
+        "  public static Optional<JointAccount_jointAccountMaps> getRoot(Connection connection, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {",
+        "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps.sql);",
+        "      //set params needed",
+        "      ResultSet rs = statement.executeQuery();",
+        "      try {",
+        "        return rs.next() ? Optional.of(new JointAccount_jointAccountMaps(rs,list0,list1)) : Optional.empty();",
+        "      } finally {",
+        "        rs.close();",
+        "        statement.close();",
+        "      }",
+        "  }",
+        "  public static List<JointAccount_jointAccountMaps0> get0(Connection connection) throws SQLException {",
+        "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps0.sql);",
+        "      //set params needed",
+        "      ResultSet rs = statement.executeQuery();",
+        "      try {",
+        "        List<JointAccount_jointAccountMaps0> result = new LinkedList<>();",
+        "        while (rs.next())",
+        "          result.add(new JointAccount_jointAccountMaps0(rs));",
+        "        return result;",
+        "      } finally {",
+        "        rs.close();",
+        "        statement.close();",
+        "      }",
+        "  }",
+        "  public static List<JointAccount_jointAccountMaps1> get1(Connection connection) throws SQLException {",
+        "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps1.sql);",
+        "      //set params needed",
+        "      ResultSet rs = statement.executeQuery();",
+        "      try {",
+        "        List<JointAccount_jointAccountMaps1> result = new LinkedList<>();",
+        "        while (rs.next())",
+        "          result.add(new JointAccount_jointAccountMaps1(rs));",
+        "        return result;",
+        "      } finally {",
+        "        rs.close();",
+        "        statement.close();",
+        "      }",
+        "  }",
+        "  ",
         "  public final Object ACC_TBL_acc_id;",
         "  public final Object ACC_TBL_brand_id;",
         "  public final Object jointAddress_id;",
@@ -508,12 +646,12 @@ describe ( "makeMapsForRest", () => {
         "    this.joint_addresses.put('line1', rs.getString('jointAddress_zzline1'));",
         "    this.joint_addresses.put('line2', rs.getString('jointAddress_zzline2'));",
         "    ",
-        "    this.ACC_TBL_acc_id = rs.getInt('{ACC_TBL_acc_id');",
-        "    this.ACC_TBL_brand_id = rs.getInt('{ACC_TBL_brand_id');",
-        "    this.jointAddress_id = rs.getInt('{jointAddress_id');",
-        "    this.jointAddress_customerId = rs.getInt('{jointAddress_customerId');",
-        "    this.jointCustomer_jointCustomerId = rs.getInt('{jointCustomer_jointCustomerId');",
-        "    this.jointCustomer_id = rs.getInt('{jointCustomer_id');",
+        "    this.ACC_TBL_acc_id = rs.getInt('ACC_TBL_acc_id');",
+        "    this.ACC_TBL_brand_id = rs.getInt('ACC_TBL_brand_id');",
+        "    this.jointAddress_id = rs.getInt('jointAddress_id');",
+        "    this.jointAddress_customerId = rs.getInt('jointAddress_customerId');",
+        "    this.jointCustomer_jointCustomerId = rs.getInt('jointCustomer_jointCustomerId');",
+        "    this.jointCustomer_id = rs.getInt('jointCustomer_id');",
         "    ",
         "    _root.put('joint', joint);",
         "    joint.put('addresses', joint_addresses);",
@@ -521,7 +659,6 @@ describe ( "makeMapsForRest", () => {
         "  }",
         "}"
       ]
-    ])
-
+    ] )
   } )
 } )

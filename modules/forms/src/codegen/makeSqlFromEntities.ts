@@ -1,11 +1,12 @@
 import { DBTable } from "../common/resolverD";
-import { beforeAfterSeparator, beforeSeparator, NameAnd, safeArray, safeString } from "@focuson/utils";
-import { EntityAndWhere, unique } from "../common/restD";
+import { beforeAfterSeparator, beforeSeparator, ints, mapPathPlusInts, NameAnd, safeArray, safeString } from "@focuson/utils";
+import { EntityAndWhere, RestD, unique } from "../common/restD";
 import { CompDataD, emptyDataFlatMap, flatMapDD } from "../common/dataD";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
-import { addStringToEndOfAllButLast, indentList } from "./codegen";
+import { addBrackets, addStringToEndOfAllButLast, indentList } from "./codegen";
 import { JavaWiringParams } from "./config";
 import { sqlListName, sqlMapName, sqlTafFieldName } from "./names";
+import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 
 export type DbValues = string | TableAndField
 
@@ -123,7 +124,7 @@ export interface SqlRoot {
 export function simplifySqlRoot ( s: SqlRoot ): string {
   return `main ${s.main.entity.table.name} path ${simplifyAliasAndChildEntityPath ( s.path )} root ${s.root.table.name} children [${s.children.map ( c => c.root.table.name ).join ( ',' )}] filterPath: ${s.filterPath}`
 }
-export function findSqlRoots ( m: EntityAndWhere ): SqlRoot {
+export function findSqlRoot ( m: EntityAndWhere ): SqlRoot {
   return foldEntitys ( {
     foldMain ( childAccs: SqlRoot[][], main: EntityAndWhere, e: Entity ): SqlRoot[] {
       return [ { main, path: [], alias: main.entity.table.name, root: e, children: childAccs.flat () } ];
@@ -353,14 +354,14 @@ export function makeWhereClause ( ws: WhereLink[] ) {
 }
 
 export function generateGetSql ( s: SqlLinkData ): string[] {
-  return [ `select ${s.fields.map ( taf => `${taf.alias}.${taf.fieldData.dbFieldName} as ${sqlTafFieldName ( taf )}` ).join ( "," )}`,
-    `from ${s.aliasAndTables.map ( ( [ alias, table ] ) => `${table.name} ${alias}` ).join ( "," )}`,
+  return [ `select ${s.fields.map ( taf => `${taf.alias}.${taf.fieldData.dbFieldName} as ${sqlTafFieldName ( taf )}` ).join ( "," )} `,
+    `from ${s.aliasAndTables.map ( ( [ alias, table ] ) => `${table.name} ${alias}` ).join ( "," )} `,
     `where ${makeWhereClause ( s.whereLinks )}` ]
 }
 
 export const findAllTableAndFieldsIn = <G> ( rdps: RestDefnInPageProperties<G>[] ) => unique ( rdps.flatMap ( rdp => {
   if ( !rdp.rest.tables ) return []
-  return walkSqlRoots ( findSqlRoots ( rdp.rest.tables ), sqlRoot => findSqlLinkDataFromRootAndDataD ( sqlRoot, rdp.rest.dataDD ) ).flatMap (
+  return walkSqlRoots ( findSqlRoot ( rdp.rest.tables ), sqlRoot => findSqlLinkDataFromRootAndDataD ( sqlRoot, rdp.rest.dataDD ) ).flatMap (
     linkData => linkData.fields.map ( taf =>
       ({ table: taf.table, fieldData: taf.fieldData }) )
   )
@@ -384,10 +385,10 @@ export function createTableSql<G> ( rdps: RestDefnInPageProperties<G>[] ): NameA
   return Object.fromEntries ( findAllTableAndFieldDatasIn ( rdps ).map ( taf => [ taf.table.name, createSql ( taf ) ] ) )
 }
 
-export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, dataD: CompDataD<G>, ld: SqlLinkData, path: number[], childCount: number ): string[] {
+export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, restD: RestD<G>, ld: SqlLinkData, path: number[], childCount: number ): string[] {
   function mapName ( path: string[] ) {return path.length === 0 ? '_root' : safeArray ( path ).join ( "_" )}
 
-  const maps = flatMapDD<string, G> ( dataD, {
+  const maps = flatMapDD<string, G> ( restD.dataDD, {
     ...emptyDataFlatMap (),
     walkDataStart: ( path1, parents, oneDataDD, dataDD ) =>
       [ `public final Map<String,Object> ${mapName ( path1 )} = new HashMap<>();` ]
@@ -396,23 +397,23 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
   const ids = onlyIds.map ( taf => `public final Object ${sqlTafFieldName ( taf )};` )
   const className = sqlMapName ( p, restName, path );
 
-  const constParams = [ `ResultSet rs`, ...[ ...Array ( childCount ).keys () ].map ( i => `List<${sqlListName ( p, restName, path, i )}> list${i}` ) ].join ( ',' )
+  const constParams = [ `ResultSet rs`, ...ints ( childCount ).map ( i => `List<${sqlListName ( p, restName, path, i )}> list${i}` ) ].join ( ',' )
   const sql = generateGetSql ( ld )
   const putters = ld.fields
     .filter ( taf => taf.fieldData.fieldName )
     .sort ( ( l, r ) => l.table.name.localeCompare ( r.table.name ) )
     .sort ( ( l, r ) => l.fieldData.dbFieldName.localeCompare ( r.fieldData.dbFieldName ) )
     .map ( taf => `this.${mapName ( taf.fieldData.path.slice ( 0, -1 ) )}.put("${taf.fieldData.fieldName}", rs.${taf.fieldData.rsGetter}("${sqlTafFieldName ( taf )}"));` )
-  const setIds = onlyIds.map ( taf => `this.${sqlTafFieldName ( taf )} = rs.${taf.fieldData.rsGetter}("{${sqlTafFieldName ( taf )}");` )
-  const allPaths = unique ( flatMapDD<string[], G> ( dataD, {
+  const setIds = onlyIds.map ( taf => `this.${sqlTafFieldName ( taf )} = rs.${taf.fieldData.rsGetter}("${sqlTafFieldName ( taf )}");` )
+  const allPaths = unique ( flatMapDD<string[], G> ( restD.dataDD, {
     ...emptyDataFlatMap (),
     walkDataStart: ( path1, parents, oneDataDD, dataDD ) =>
       [ path1 ]
   } ), r => r.toString () )
 
   const links = allPaths.filter ( p => p.length > 0 )
-    .filter(p => p.join("/").startsWith(safeString(ld.sqlRoot.filterPath)))
-    .map ( path => `${mapName ( path.slice(0,-1) )}.put("${path[ path.length - 1 ]}", ${mapName ( path )});` )
+    .filter ( p => p.join ( "/" ).startsWith ( safeString ( ld.sqlRoot.filterPath ) ) )
+    .map ( path => `${mapName ( path.slice ( 0, -1 ) )}.put("${path[ path.length - 1 ]}", ${mapName ( path )});` )
   const linksToOtherMaps = ld.sqlRoot.children.map ( ( childRoot, i ) => {
     let childEntity = childRoot.root
     if ( !isMultipleEntity ( childEntity ) ) throw Error ( `Page: ${p.name} rest ${restName} The parent of sql root must be a multiple entity.\n ${JSON.stringify ( childRoot )}` )
@@ -424,17 +425,22 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
     `package ${params.thePackage}.${params.dbPackage};`,
     '',
     `import java.sql.ResultSet;`,
+    `import java.sql.Connection;`,
+    `import java.sql.PreparedStatement;`,
     `import java.sql.SQLException;`,
     `import java.util.HashMap;`,
     `import java.util.List;`,
+    `import java.util.LinkedList;`,
+    `import java.util.Optional;`,
     `import java.util.Map;`,
     `import java.util.stream.Collectors;`,
     ``,
-    '/**',
-    ...indentList ( sql ),
-    '*/',
     `public class ${className} {`,
     ...indentList ( [
+      ...addBrackets ( 'public static String sql = ', ';' ) ( addStringToEndOfAllButLast ( '+' ) ( sql.map ( s => '"' + s.replace ( /""/g, '\"' ) + '"' ) ) ),
+      '',
+      ...makeAllGetsForRest ( params, p, restName, restD ),
+      '',
       ...ids,
       '',
       ...maps,
@@ -446,4 +452,62 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
     `}`
   ]
 
+}
+
+function getParameters<B, G> ( childCount: number, p: PageD<B, G>, restName: string, path: number[] ) {
+  return [ 'Connection connection', ...mapPathPlusInts ( path, childCount ) ( pathAndI => `List<${sqlMapName ( p, restName, pathAndI )}> list${pathAndI}` ) ].join ( ", " );
+}
+function newMap ( mapName: string, childCount: number, path: number[] ) {
+  return `new ${mapName}(${[ 'rs', ...ints ( childCount ).map ( i => `list${i}` ) ].join ( "," )})`
+}
+function makeGetRestForRoot<B, G> ( p: PageD<B, G>, restName: string, childCount: number ) {
+  const mapName = `${sqlMapName ( p, restName, [] )}`;
+  return [
+    `public static Optional<${mapName}> getRoot(${getParameters ( childCount, p, restName, [] )}) throws SQLException {`,
+    `    PreparedStatement statement = connection.prepareStatement(${mapName}.sql);`,
+    `    //set params needed`,
+    `    ResultSet rs = statement.executeQuery();`,
+    `    try {`,
+    `      return rs.next() ? Optional.of(${newMap ( mapName, childCount, [] )}) : Optional.empty();`,
+    `    } finally {`,
+    `      rs.close();`,
+    `      statement.close();`,
+    `    }`,
+    `}`
+  ]
+}
+function makeGetRestForChild<B, G> ( p: PageD<B, G>, restName: string, path: number[], childCount: number ) {
+  const mapName = `${sqlMapName ( p, restName, path )}`;
+  return [
+    `public static List<${mapName}> get${path.join ( '_' )}(${getParameters ( childCount, p, restName, [] )}) throws SQLException {`,
+    `    PreparedStatement statement = connection.prepareStatement(${mapName}.sql);`,
+    `    //set params needed`,
+    `    ResultSet rs = statement.executeQuery();`,
+    `    try {`,
+    `      List<${mapName}> result = new LinkedList<>();`,
+    `      while (rs.next())`,
+    `        result.add(${newMap ( mapName, childCount, [] )});`,
+    `      return result;`,
+    `    } finally {`,
+    `      rs.close();`,
+    `      statement.close();`,
+    `    }`,
+    `}`
+  ]
+}
+
+export function makeGetForRestFromLinkData<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, dataD: CompDataD<G>, ld: SqlLinkData, path: number[], childCount: number ) {
+  return path.length === 0 ? makeGetRestForRoot ( p, restName, childCount ) : makeGetRestForChild ( p, restName, path, childCount );
+}
+export function makeAllGetsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, restD: RestD<G> ): string[] {
+  let sqlRoot = findSqlRoot ( restD.tables );
+  const getters: string[][] = walkSqlRoots ( sqlRoot, ( r, path ) => {
+    const ld = findSqlLinkDataFromRootAndDataD ( r, restD.dataDD )
+    return makeGetForRestFromLinkData ( params, p, restName, restD.dataDD, ld, path, r.children.length )
+  } )
+  const mainGet: string[] = [
+    `public static Optional<Map<String,Object>> getAll(Connection connection) throws SQLException {`,
+    `   return getRoot(${[ 'connection', ...ints ( sqlRoot.children.length ).map ( i => `get${i}(connection)` ) ].join ( "," )}).map(x -> x._root);`, // Note not yet recursing here
+    `}` ]
+  return [ ...mainGet, ...getters.flat () ]
 }

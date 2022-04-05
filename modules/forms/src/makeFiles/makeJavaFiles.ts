@@ -2,9 +2,9 @@ import { copyFile, copyFiles, DirectorySpec, templateFile, writeToFile } from "@
 import { JavaWiringParams } from "../codegen/config";
 import fs from "fs";
 import { unique } from "../common/restD";
-import { detailsLog, GenerateLogLevel, sortedEntries } from "@focuson/utils";
+import { detailsLog, GenerateLogLevel, NameAnd, sortedEntries } from "@focuson/utils";
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
-import { indentList } from "../codegen/codegen";
+import { addStringToEndOfList, indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
 import { createTableSqlName, fetcherInterfaceName, mockFetcherClassName, queryClassName, restControllerName, sqlMapFileName } from "../codegen/names";
 import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
@@ -14,7 +14,7 @@ import { makeJavaVariablesForGraphQlQuery } from "../codegen/makeGraphQlQuery";
 import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
 import { AppConfig } from "../focuson.config";
 // import { findSqlRoot, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, walkRoots } from "../codegen/makeJavaSql.tsxxx";
-import { createTableSql, findSqlLinkDataFromRootAndDataD, findSqlRoots, makeMapsForRest, walkSqlRoots } from "../codegen/makeSqlFromEntities";
+import { createTableSql, findSqlLinkDataFromRootAndDataD, findSqlRoot, makeMapsForRest, walkSqlRoots } from "../codegen/makeSqlFromEntities";
 
 
 export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
@@ -33,7 +33,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   const javaMockFetcherRoot = javaCodeRoot + "/" + params.mockFetcherPackage
   const javaQueriesPackages = javaCodeRoot + "/" + params.queriesPackage
   const javaDbPackages = javaCodeRoot + "/" + params.dbPackage
-  const javaSql = javaResourcesRoot + "/" + params.sqlDirectory
+  // const javaSql = javaResourcesRoot + "/" + params.sqlDirectory
 
   fs.mkdirSync ( `${javaOutputRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaAppRoot}`, { recursive: true } )
@@ -45,7 +45,6 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   fs.mkdirSync ( `${javaControllerRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaQueriesPackages}`, { recursive: true } )
   fs.mkdirSync ( `${javaDbPackages}`, { recursive: true } )
-  fs.mkdirSync ( `${javaSql}`, { recursive: true } )
 
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
   const raw = allMainPages ( pages ).flatMap ( x => sortedEntries ( x.rest ) ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest );
@@ -64,10 +63,9 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
   const allRestDefns: RestDefnInPageProperties<G>[] = allMainPages ( pages ).flatMap ( p => sortedEntries ( p.rest ).map ( t => t[ 1 ] ) )
 
-  const createTable = createTableSql ( allRestDefns )
+  const createTable: NameAnd<string[]> = createTableSql ( allRestDefns )
   console.log ( JSON.stringify ( createTable, null, 2 ) )
-  Object.entries ( createTable ).forEach ( ( [ name, sql ] ) =>
-    writeToFile ( `${javaSql}/${createTableSqlName ( name )}`, () => sql ), details )
+  writeToFile ( `${javaResourcesRoot}/${createTableSqlName ()}.sql`, () => Object.values ( createTable ).flatMap ( addStringToEndOfList ( ";\n" ) ), details )
 
 
   writeToFile ( `${javaResourcesRoot}/${params.schema}`, () => makeGraphQlSchema ( rests ), details )
@@ -101,11 +99,11 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
       let tables = rdp.rest.tables;
       if ( !tables ) return
       detailsLog ( logLevel, 2, `Creating rest files for ${p.name} ${name}` )
-      walkSqlRoots ( findSqlRoots ( tables ), ( root, path ) => {
+      walkSqlRoots ( findSqlRoot ( tables ), ( root, path ) => {
         const ld = findSqlLinkDataFromRootAndDataD ( root, rdp.rest.dataDD )
         let fileName = sqlMapFileName ( javaDbPackages, p, name, path ) + ".java";
         console.log ( 'name:', fileName )
-        writeToFile ( fileName, () => makeMapsForRest ( params, p, name, rdp.rest.dataDD, ld, path, root.children.length ) )
+        writeToFile ( fileName, () => makeMapsForRest ( params, p, name, rdp.rest, ld, path, root.children.length ) )
       } )
     } )
   } )
