@@ -1,4 +1,4 @@
-import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findSqlLinkDataFromRootAndDataD, findSqlRoots, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinkDataForLinkData, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, MainEntity, makeMapsForRest, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldData } from "../codegen/makeSqlFromEntities";
+import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findSqlLinkDataFromRootAndDataD, findSqlRoots, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, MainEntity, makeMapsForRest, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldData } from "../codegen/makeSqlFromEntities";
 import { EntityAndWhere, unique } from "../common/restD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { nameAndAddressDataD, postCodeDataLineD } from "../example/postCodeDemo/addressSearch.dataD";
@@ -16,32 +16,32 @@ describe ( "EntityFolder", () => {
   it ( "should walk all the nodes", () => {
     const testFolder: EntityFolder<string[]> = {
       foldMain ( childAcc: string[][], main: EntityAndWhere ): string[] {return [ ...childAcc.flat (), `main: ${main.entity.table.name} where: ${simplifyWhereFromQuery ( main.where )}` ]},
-      foldMultiple ( childAcc: string[][], main: EntityAndWhere, path: [ string, ChildEntity ][], name: string, multiple: MultipleEntity ): string[] {
-        return [ ...childAcc.flat (), `multiple ${main.entity.table.name} path ${simplifyAliasAndChildEntityPath ( path )} => ${multiple.table.name}` ]
+      foldMultiple ( childAcc: string[][], main: EntityAndWhere, path: [ string, ChildEntity ][], name: string, fp, multiple: MultipleEntity ): string[] {
+        return [ ...childAcc.flat (), `multiple ${main.entity.table.name} path ${simplifyAliasAndChildEntityPath ( path )} => ${multiple.table.name} -- fp ${fp}` ]
       },
-      foldSingle ( childAcc: string[][], main: EntityAndWhere, path: [ string, ChildEntity ][], name: string, single: SingleEntity ): string[] {
-        return [ ...childAcc.flat (), `single ${main.entity.table.name} path ${simplifyAliasAndChildEntityPath ( path )} => ${single.table.name}` ]
+      foldSingle ( childAcc: string[][], main: EntityAndWhere, path: [ string, ChildEntity ][], name: string, fp, single: SingleEntity ): string[] {
+        return [ ...childAcc.flat (), `single ${main.entity.table.name} path ${simplifyAliasAndChildEntityPath ( path )} => ${single.table.name} -- fp ${fp}` ]
       },
     }
-    expect ( foldEntitys ( testFolder, theRestD.tables, theRestD.tables.entity, [] ) ).toEqual ( [
-      "multiple ACC_TBL path [mainCustomer -> CUST_TBL] => ADD_TBL",
-      "single ACC_TBL path [mainCustomer -> CUST_TBL] => NAME_TBL",
-      "single ACC_TBL path [] => CUST_TBL",
-      "multiple ACC_TBL path [jointCustomer -> CUST_TBL] => ADD_TBL",
-      "single ACC_TBL path [jointCustomer -> CUST_TBL] => NAME_TBL",
-      "single ACC_TBL path [] => CUST_TBL",
+    expect ( foldEntitys ( testFolder, theRestD.tables, theRestD.tables.entity, undefined, [] ) ).toEqual ( [
+      "multiple ACC_TBL path [mainCustomer -> CUST_TBL] => ADD_TBL -- fp main",
+      "single ACC_TBL path [mainCustomer -> CUST_TBL] => NAME_TBL -- fp main",
+      "single ACC_TBL path [] => CUST_TBL -- fp main",
+      "multiple ACC_TBL path [jointCustomer -> CUST_TBL] => ADD_TBL -- fp joint",
+      "single ACC_TBL path [jointCustomer -> CUST_TBL] => NAME_TBL -- fp joint",
+      "single ACC_TBL path [] => CUST_TBL -- fp joint",
       "main: ACC_TBL where: ACC_TBL:ACC_TBL.acc_id==accountId , ACC_TBL:ACC_TBL.brand_id==brandId "
-    ] )
+    ])
   } )
 } )
 
 describe ( "findSqlRoots", () => {
   it ( "should find a root for the main and each multiple", () => {
     expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), simplifySqlRoot ) ).toEqual ( [
-      "main ACC_TBL path [] root ACC_TBL children [ADD_TBL,ADD_TBL]}",
-      "main ACC_TBL path [mainCustomer -> CUST_TBL] root ADD_TBL children []}",
-      "main ACC_TBL path [jointCustomer -> CUST_TBL] root ADD_TBL children []}"
-    ] )
+      "main ACC_TBL path [] root ACC_TBL children [ADD_TBL,ADD_TBL] filterPath: undefined",
+      "main ACC_TBL path [mainCustomer -> CUST_TBL] root ADD_TBL children [] filterPath: main",
+      "main ACC_TBL path [jointCustomer -> CUST_TBL] root ADD_TBL children [] filterPath: joint"
+    ])
   } )
 } )
 
@@ -132,20 +132,23 @@ describe ( "findFieldsFromWhere", () => {
 
 describe ( "findTableAndFieldFromDataD", () => {
   it ( "find the tables and fields from a dataD -simple ", () => {
-    expect ( findTableAndFieldFromDataD ( nameAndAddressDataD ).map ( simplifyTableAndFieldData ) ).toEqual ( [
-      "ADD_TBL.zzline1/line1",
-      "ADD_TBL.zzline2/line2",
-      "ADD_TBL.zzline3/line3",
-      "ADD_TBL.zzline4/line4"
-    ] )
+    expect ( findTableAndFieldFromDataD ( nameAndAddressDataD ).map ( t => simplifyTableAndFieldData ( t, true ) ) ).toEqual ( [
+      "ADD_TBL.zzline1/line1/line1",
+      "ADD_TBL.zzline2/line2/line2",
+      "ADD_TBL.zzline3/line3/line3",
+      "ADD_TBL.zzline4/line4/line4"
+    ])
   } )
   it ( "find the tables and fields from a dataD. ", () => {
-    expect ( findTableAndFieldFromDataD ( JointAccountDd ).map ( simplifyTableAndFieldData ) ).toEqual ( [
-      "ACC_TBL.blnc/balance",
-      "NAME_TBL.zzname/name",
-      "ADD_TBL.zzline1/line1",
-      "ADD_TBL.zzline2/line2"
-    ] )
+    expect ( findTableAndFieldFromDataD ( JointAccountDd ).map ( t => simplifyTableAndFieldData ( t ,true) ) ).toEqual ([
+      "ACC_TBL.blnc/balance/balance",
+      "NAME_TBL.zzname/name/main,name",
+      "ADD_TBL.zzline1/line1/main,addresses,line1",
+      "ADD_TBL.zzline2/line2/main,addresses,line2",
+      "NAME_TBL.zzname/name/joint,name",
+      "ADD_TBL.zzline1/line1/joint,addresses,line1",
+      "ADD_TBL.zzline2/line2/joint,addresses,line2"
+    ])
   } )
 } )
 
@@ -153,21 +156,21 @@ describe ( "findTableAliasAndFieldFromDataD", () => {
 
   it ( "should start with the fields from the wheres, and add in the fields from the dataD: only adding where the data is needed - i.e. not adding fields to the 'path' to the root", () => {
     const fromDataD = findTableAndFieldFromDataD ( JointAccountDd )
-    expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), r => simplifyTableAndFieldAndAliasDataArray ( findTableAliasAndFieldFromDataD ( r, fromDataD ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), r => simplifyTableAndFieldAndAliasDataArray ( findTableAliasAndFieldFromDataD ( r, fromDataD ) ,true) ) ).toEqual ( [
       [
-        "mainName:NAME_TBL.zzname/name",
-        "jointName:NAME_TBL.zzname/name",
-        "ACC_TBL:ACC_TBL.blnc/balance"
+        "mainName:NAME_TBL.zzname/name/main,name",
+        "jointName:NAME_TBL.zzname/name/joint,name",
+        "ACC_TBL:ACC_TBL.blnc/balance/balance"
       ],
       [
-        "mainAddress:ADD_TBL.zzline1/line1",
-        "mainAddress:ADD_TBL.zzline2/line2"
+        "mainAddress:ADD_TBL.zzline1/line1/main,addresses,line1",
+        "mainAddress:ADD_TBL.zzline2/line2/main,addresses,line2"
       ],
       [
-        "jointAddress:ADD_TBL.zzline1/line1",
-        "jointAddress:ADD_TBL.zzline2/line2"
+        "jointAddress:ADD_TBL.zzline1/line1/joint,addresses,line1",
+        "jointAddress:ADD_TBL.zzline2/line2/joint,addresses,line2"
       ]
-    ] )
+    ])
   } )
 } )
 
@@ -184,29 +187,29 @@ describe ( "findAllFields", () => {
   } )
 
   it ( "should aggregate the fields from the where and from the dataD ", () => {
-    expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), r => simplifyTableAndFieldAndAliasDataArray ( findAllFields ( r, JointAccountDd, findWhereLinksForSqlRootGoingUp ( r ) ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), r => simplifyTableAndFieldAndAliasDataArray ( findAllFields ( r, JointAccountDd, findWhereLinksForSqlRootGoingUp ( r ) ), true ) ) ).toEqual ( [
       [
-        "mainName:NAME_TBL.zzname/name",
-        "jointName:NAME_TBL.zzname/name",
-        "ACC_TBL:ACC_TBL.blnc/balance"
+        "mainName:NAME_TBL.zzname/name/main,name",
+        "jointName:NAME_TBL.zzname/name/joint,name",
+        "ACC_TBL:ACC_TBL.blnc/balance/balance"
       ],
       [
         "mainAddress:ADD_TBL.id/undefined",
         "mainAddress:ADD_TBL.customerId/undefined",
         "mainCustomer:CUST_TBL.mainCustomerId/undefined",
         "mainCustomer:CUST_TBL.id/undefined",
-        "mainAddress:ADD_TBL.zzline1/line1",
-        "mainAddress:ADD_TBL.zzline2/line2"
+        "mainAddress:ADD_TBL.zzline1/line1/main,addresses,line1",
+        "mainAddress:ADD_TBL.zzline2/line2/main,addresses,line2"
       ],
       [
         "jointAddress:ADD_TBL.id/undefined",
         "jointAddress:ADD_TBL.customerId/undefined",
         "jointCustomer:CUST_TBL.jointCustomerId/undefined",
         "jointCustomer:CUST_TBL.id/undefined",
-        "jointAddress:ADD_TBL.zzline1/line1",
-        "jointAddress:ADD_TBL.zzline2/line2"
+        "jointAddress:ADD_TBL.zzline1/line1/joint,addresses,line1",
+        "jointAddress:ADD_TBL.zzline2/line2/joint,addresses,line2"
       ]
-    ])
+    ] )
   } )
 } )
 
@@ -219,7 +222,7 @@ describe ( "findSqlLinkDataFromRootAndDataD", () => {
         "aliasAndTables ADD_TBL->ADD_TBL",
         "where param postcode == ADD_TBL:ADD_TBL.postcode"
       ]
-    ])
+    ] )
   } )
 
   it ( "shouldCreate the data for the links in accountD", () => {
@@ -242,7 +245,7 @@ describe ( "findSqlLinkDataFromRootAndDataD", () => {
         "aliasAndTables jointAddress->ADD_TBL",
         "where param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id,jointAddress:ADD_TBL.id == jointAddress:ADD_TBL.customerId,jointCustomer:CUST_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer"
       ]
-    ])
+    ] )
   } )
 } )
 describe ( "generateGetSql", () => {
@@ -263,7 +266,7 @@ describe ( "generateGetSql", () => {
         "from ADD_TBL jointAddress",
         "where  ACC_TBL.acc_id = ?, ACC_TBL.brand_id = ?,jointAddress.id = jointAddress.customerId,jointCustomer.jointCustomerId = jointCustomer.id"
       ]
-    ])
+    ] )
   } )
 
 } )
@@ -276,7 +279,7 @@ describe ( "findAllTableAndFieldsIn", () => {
       "ADD_TBL.zzline2/line2",
       "ADD_TBL.zzline3/line3",
       "ADD_TBL.zzline4/line4"
-    ])
+    ] )
   } )
 
 
@@ -309,12 +312,12 @@ describe ( "findAllTableAndFieldsIn", () => {
 describe ( "findAllTableAndFieldDatasIn", () => {
   it ( "should group the field data by table", () => {
     let rdps = [ JointAccountPageD.rest.jointAccount, PostCodeMainPage.rest.address ];
-    expect ( findAllTableAndFieldDatasIn ( rdps ).map ( simplifyTableAndFieldsData ) ).toEqual ( [
+    expect ( findAllTableAndFieldDatasIn ( rdps ).map ( t => simplifyTableAndFieldsData ( t, true ) ) ).toEqual ( [
       "CUST_TBL => nameId/undefined:number,id/undefined:number,mainCustomerId/undefined:number,jointCustomerId/undefined:number",
-      "NAME_TBL => id/undefined:number,zzname/name:string",
-      "ACC_TBL => mainCustomerId/undefined:number,jointCustomerId/undefined:number,acc_id/undefined:number,brand_id/undefined:number,blnc/balance:number",
-      "ADD_TBL => id/undefined:number,customerId/undefined:number,zzline1/line1:string,zzline2/line2:string,postcode/undefined:number,zzline3/line3:string,zzline4/line4:string"
-    ] )
+      "NAME_TBL => id/undefined:number,zzname/name:string/main,name",
+      "ACC_TBL => mainCustomerId/undefined:number,jointCustomerId/undefined:number,acc_id/undefined:number,brand_id/undefined:number,blnc/balance:number/balance",
+      "ADD_TBL => id/undefined:number,customerId/undefined:number,zzline1/line1:string/main,addresses,line1,zzline2/line2:string/main,addresses,line2,postcode/undefined:number,zzline3/line3:string/line3,zzline4/line4:string/line4"
+    ])
   } )
 } )
 
@@ -496,7 +499,7 @@ describe ( "makeMapsForRest", () => {
         "  }",
         "}"
       ]
-    ])
+    ] )
 
   } )
 } )

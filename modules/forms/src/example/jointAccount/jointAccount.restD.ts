@@ -22,6 +22,7 @@ export const jointAccountRestD: RestD<any> = {
         mainCustomer: {
           type: 'Single',
           table: customerT,
+          filterPath: 'main', //if it exists then we are into path filtering and only variables with this path get this data. This is a / separated path
           idInParent: 'mainCustomerId:integer',
           idInThis: 'id:integer',
           children: {
@@ -32,6 +33,7 @@ export const jointAccountRestD: RestD<any> = {
         jointCustomer: {
           type: 'Single',
           table: customerT,
+          filterPath: 'joint',
           idInParent: 'jointCustomerId:integer', idInThis: 'id:integer',
           children: {
             jointAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", linkInData: { mapName: 'jointCustomer', field: 'addresses' } },
