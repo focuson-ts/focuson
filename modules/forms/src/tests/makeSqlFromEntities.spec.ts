@@ -31,7 +31,7 @@ describe ( "EntityFolder", () => {
       "single ACC_TBL path [jointCustomer -> CUST_TBL] => NAME_TBL -- fp joint",
       "single ACC_TBL path [] => CUST_TBL -- fp joint",
       "main: ACC_TBL where: ACC_TBL:ACC_TBL.acc_id==accountId , ACC_TBL:ACC_TBL.brand_id==brandId "
-    ])
+    ] )
   } )
 } )
 
@@ -41,7 +41,7 @@ describe ( "findSqlRoots", () => {
       "main ACC_TBL path [] root ACC_TBL children [ADD_TBL,ADD_TBL] filterPath: undefined",
       "main ACC_TBL path [mainCustomer -> CUST_TBL] root ADD_TBL children [] filterPath: main",
       "main ACC_TBL path [jointCustomer -> CUST_TBL] root ADD_TBL children [] filterPath: joint"
-    ])
+    ] )
   } )
 } )
 
@@ -137,10 +137,10 @@ describe ( "findTableAndFieldFromDataD", () => {
       "ADD_TBL.zzline2/line2/line2",
       "ADD_TBL.zzline3/line3/line3",
       "ADD_TBL.zzline4/line4/line4"
-    ])
+    ] )
   } )
   it ( "find the tables and fields from a dataD. ", () => {
-    expect ( findTableAndFieldFromDataD ( JointAccountDd ).map ( t => simplifyTableAndFieldData ( t ,true) ) ).toEqual ([
+    expect ( findTableAndFieldFromDataD ( JointAccountDd ).map ( t => simplifyTableAndFieldData ( t, true ) ) ).toEqual ( [
       "ACC_TBL.blnc/balance/balance",
       "NAME_TBL.zzname/name/main,name",
       "ADD_TBL.zzline1/line1/main,addresses,line1",
@@ -148,7 +148,7 @@ describe ( "findTableAndFieldFromDataD", () => {
       "NAME_TBL.zzname/name/joint,name",
       "ADD_TBL.zzline1/line1/joint,addresses,line1",
       "ADD_TBL.zzline2/line2/joint,addresses,line2"
-    ])
+    ] )
   } )
 } )
 
@@ -156,7 +156,7 @@ describe ( "findTableAliasAndFieldFromDataD", () => {
 
   it ( "should start with the fields from the wheres, and add in the fields from the dataD: only adding where the data is needed - i.e. not adding fields to the 'path' to the root", () => {
     const fromDataD = findTableAndFieldFromDataD ( JointAccountDd )
-    expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), r => simplifyTableAndFieldAndAliasDataArray ( findTableAliasAndFieldFromDataD ( r, fromDataD ) ,true) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), r => simplifyTableAndFieldAndAliasDataArray ( findTableAliasAndFieldFromDataD ( r, fromDataD ), true ) ) ).toEqual ( [
       [
         "mainName:NAME_TBL.zzname/name/main,name",
         "jointName:NAME_TBL.zzname/name/joint,name",
@@ -170,7 +170,7 @@ describe ( "findTableAliasAndFieldFromDataD", () => {
         "jointAddress:ADD_TBL.zzline1/line1/joint,addresses,line1",
         "jointAddress:ADD_TBL.zzline2/line2/joint,addresses,line2"
       ]
-    ])
+    ] )
   } )
 } )
 
@@ -317,7 +317,7 @@ describe ( "findAllTableAndFieldDatasIn", () => {
       "NAME_TBL => id/undefined:number,zzname/name:string/main,name",
       "ACC_TBL => mainCustomerId/undefined:number,jointCustomerId/undefined:number,acc_id/undefined:number,brand_id/undefined:number,blnc/balance:number/balance",
       "ADD_TBL => id/undefined:number,customerId/undefined:number,zzline1/line1:string/main,addresses,line1,zzline2/line2:string/main,addresses,line2,postcode/undefined:number,zzline3/line3:string/line3,zzline4/line4:string/line4"
-    ])
+    ] )
   } )
 } )
 
@@ -368,7 +368,7 @@ describe ( "makeMapsForRest", () => {
   it ( "should make maps for each sql root, from the link data", () => {
     expect ( walkSqlRoots ( findSqlRoots ( theRestD.tables ), ( r, path ) => {
       const ld = findSqlLinkDataFromRootAndDataD ( r, JointAccountDd )
-      return makeMapsForRest ( paramsForTest, JointAccountPageD, 'jointAccount', ld, path, r.children.length )
+      return makeMapsForRest ( paramsForTest, JointAccountPageD, 'jointAccount', JointAccountDd, ld, path, r.children.length )
     } ).map ( s => s.map ( s => s.replace ( /"/g, "'" ) ) ) ).toEqual ( [
       [
         "package focuson.data.db;",
@@ -378,6 +378,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.HashMap;",
         "import java.util.List;",
         "import java.util.Map;",
+        "import java.util.stream.Collectors;",
         "",
         "/**",
         "  select mainCustomer.nameId as mainCustomer_nameId,mainName.id as mainName_id,ACC_TBL.mainCustomerId as ACC_TBL_mainCustomerId,mainCustomer.id as mainCustomer_id,jointCustomer.nameId as jointCustomer_nameId,jointName.id as jointName_id,ACC_TBL.jointCustomerId as ACC_TBL_jointCustomerId,jointCustomer.id as jointCustomer_id,ACC_TBL.acc_id as ACC_TBL_acc_id,ACC_TBL.brand_id as ACC_TBL_brand_id,mainName.zzname as mainName_zzname,jointName.zzname as jointName_zzname,ACC_TBL.blnc as ACC_TBL_blnc",
@@ -396,16 +397,16 @@ describe ( "makeMapsForRest", () => {
         "  public final Object ACC_TBL_acc_id;",
         "  public final Object ACC_TBL_brand_id;",
         "  ",
-        "  public final Map<String,Object> mainName = new HashMap<>();",
-        "  public final Map<String,Object> mainCustomer = new HashMap<>();",
-        "  public final Map<String,Object> jointName = new HashMap<>();",
-        "  public final Map<String,Object> jointCustomer = new HashMap<>();",
-        "  public final Map<String,Object> ACC_TBL = new HashMap<>();",
+        "  public final Map<String,Object> _root = new HashMap<>();",
+        "  public final Map<String,Object> main = new HashMap<>();",
+        "  public final Map<String,Object> main_addresses = new HashMap<>();",
+        "  public final Map<String,Object> joint = new HashMap<>();",
+        "  public final Map<String,Object> joint_addresses = new HashMap<>();",
         "  ",
         "  public JointAccount_jointAccountMaps(ResultSet rs,List<JointAccount_jointAccountMaps0> list0,List<JointAccount_jointAccountMaps1> list1) throws SQLException{",
-        "    this.ACC_TBL.put('balance', rs.getInt('ACC_TBL_blnc'));",
-        "    this.mainName.put('name', rs.getString('mainName_zzname'));",
-        "    this.jointName.put('name', rs.getString('jointName_zzname'));",
+        "    this._root.put('balance', rs.getInt('ACC_TBL_blnc'));",
+        "    this.main.put('name', rs.getString('mainName_zzname'));",
+        "    this.joint.put('name', rs.getString('jointName_zzname'));",
         "    ",
         "    this.mainCustomer_nameId = rs.getInt('{mainCustomer_nameId');",
         "    this.mainName_id = rs.getInt('{mainName_id');",
@@ -418,8 +419,13 @@ describe ( "makeMapsForRest", () => {
         "    this.ACC_TBL_acc_id = rs.getInt('{ACC_TBL_acc_id');",
         "    this.ACC_TBL_brand_id = rs.getInt('{ACC_TBL_brand_id');",
         "    ",
-        "    this.mainCustomer.put('addresses', list0);",
-        "    this.jointCustomer.put('addresses', list1);",
+        "    _root.put('main', main);",
+        "    main.put('addresses', main_addresses);",
+        "    _root.put('joint', joint);",
+        "    joint.put('addresses', joint_addresses);",
+        "    ",
+        "    this.main.put('addresses', list0.stream().map(m ->m.main).collect(Collectors.toList()));",
+        "    this.joint.put('addresses', list1.stream().map(m ->m.joint).collect(Collectors.toList()));",
         "  }",
         "}"
       ],
@@ -431,6 +437,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.HashMap;",
         "import java.util.List;",
         "import java.util.Map;",
+        "import java.util.stream.Collectors;",
         "",
         "/**",
         "  select ACC_TBL.acc_id as ACC_TBL_acc_id,ACC_TBL.brand_id as ACC_TBL_brand_id,mainAddress.id as mainAddress_id,mainAddress.customerId as mainAddress_customerId,mainCustomer.mainCustomerId as mainCustomer_mainCustomerId,mainCustomer.id as mainCustomer_id,mainAddress.zzline1 as mainAddress_zzline1,mainAddress.zzline2 as mainAddress_zzline2",
@@ -445,11 +452,15 @@ describe ( "makeMapsForRest", () => {
         "  public final Object mainCustomer_mainCustomerId;",
         "  public final Object mainCustomer_id;",
         "  ",
-        "  public final Map<String,Object> mainAddress = new HashMap<>();",
+        "  public final Map<String,Object> _root = new HashMap<>();",
+        "  public final Map<String,Object> main = new HashMap<>();",
+        "  public final Map<String,Object> main_addresses = new HashMap<>();",
+        "  public final Map<String,Object> joint = new HashMap<>();",
+        "  public final Map<String,Object> joint_addresses = new HashMap<>();",
         "  ",
         "  public JointAccount_jointAccountMaps0(ResultSet rs) throws SQLException{",
-        "    this.mainAddress.put('line1', rs.getString('mainAddress_zzline1'));",
-        "    this.mainAddress.put('line2', rs.getString('mainAddress_zzline2'));",
+        "    this.main_addresses.put('line1', rs.getString('mainAddress_zzline1'));",
+        "    this.main_addresses.put('line2', rs.getString('mainAddress_zzline2'));",
         "    ",
         "    this.ACC_TBL_acc_id = rs.getInt('{ACC_TBL_acc_id');",
         "    this.ACC_TBL_brand_id = rs.getInt('{ACC_TBL_brand_id');",
@@ -457,6 +468,9 @@ describe ( "makeMapsForRest", () => {
         "    this.mainAddress_customerId = rs.getInt('{mainAddress_customerId');",
         "    this.mainCustomer_mainCustomerId = rs.getInt('{mainCustomer_mainCustomerId');",
         "    this.mainCustomer_id = rs.getInt('{mainCustomer_id');",
+        "    ",
+        "    _root.put('main', main);",
+        "    main.put('addresses', main_addresses);",
         "    ",
         "  }",
         "}"
@@ -469,6 +483,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.HashMap;",
         "import java.util.List;",
         "import java.util.Map;",
+        "import java.util.stream.Collectors;",
         "",
         "/**",
         "  select ACC_TBL.acc_id as ACC_TBL_acc_id,ACC_TBL.brand_id as ACC_TBL_brand_id,jointAddress.id as jointAddress_id,jointAddress.customerId as jointAddress_customerId,jointCustomer.jointCustomerId as jointCustomer_jointCustomerId,jointCustomer.id as jointCustomer_id,jointAddress.zzline1 as jointAddress_zzline1,jointAddress.zzline2 as jointAddress_zzline2",
@@ -483,11 +498,15 @@ describe ( "makeMapsForRest", () => {
         "  public final Object jointCustomer_jointCustomerId;",
         "  public final Object jointCustomer_id;",
         "  ",
-        "  public final Map<String,Object> jointAddress = new HashMap<>();",
+        "  public final Map<String,Object> _root = new HashMap<>();",
+        "  public final Map<String,Object> main = new HashMap<>();",
+        "  public final Map<String,Object> main_addresses = new HashMap<>();",
+        "  public final Map<String,Object> joint = new HashMap<>();",
+        "  public final Map<String,Object> joint_addresses = new HashMap<>();",
         "  ",
         "  public JointAccount_jointAccountMaps1(ResultSet rs) throws SQLException{",
-        "    this.jointAddress.put('line1', rs.getString('jointAddress_zzline1'));",
-        "    this.jointAddress.put('line2', rs.getString('jointAddress_zzline2'));",
+        "    this.joint_addresses.put('line1', rs.getString('jointAddress_zzline1'));",
+        "    this.joint_addresses.put('line2', rs.getString('jointAddress_zzline2'));",
         "    ",
         "    this.ACC_TBL_acc_id = rs.getInt('{ACC_TBL_acc_id');",
         "    this.ACC_TBL_brand_id = rs.getInt('{ACC_TBL_brand_id');",
@@ -496,10 +515,13 @@ describe ( "makeMapsForRest", () => {
         "    this.jointCustomer_jointCustomerId = rs.getInt('{jointCustomer_jointCustomerId');",
         "    this.jointCustomer_id = rs.getInt('{jointCustomer_id');",
         "    ",
+        "    _root.put('joint', joint);",
+        "    joint.put('addresses', joint_addresses);",
+        "    ",
         "  }",
         "}"
       ]
-    ] )
+    ])
 
   } )
 } )

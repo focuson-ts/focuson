@@ -1,5 +1,5 @@
 import { DBTable } from "../common/resolverD";
-import { beforeAfterSeparator, beforeSeparator, NameAnd, safeArray } from "@focuson/utils";
+import { beforeAfterSeparator, beforeSeparator, NameAnd, safeArray, safeString } from "@focuson/utils";
 import { EntityAndWhere, unique } from "../common/restD";
 import { CompDataD, emptyDataFlatMap, flatMapDD } from "../common/dataD";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
@@ -277,7 +277,7 @@ interface TableAndFieldsData<G> {
 
 
 export function findTableAndFieldFromDataD<G> ( dataD: CompDataD<G> ): TableAndFieldData<G>[] {
-  return  flatMapDD<TableAndFieldData<G>, any> ( dataD, {
+  return flatMapDD<TableAndFieldData<G>, any> ( dataD, {
     ...emptyDataFlatMap<TableAndFieldData<G>, any> (),
     walkPrim: ( path, parents, oneDataDD, dataDD ) => {
       const fieldName = path[ path.length - 1 ];
@@ -384,8 +384,14 @@ export function createTableSql<G> ( rdps: RestDefnInPageProperties<G>[] ): NameA
   return Object.fromEntries ( findAllTableAndFieldDatasIn ( rdps ).map ( taf => [ taf.table.name, createSql ( taf ) ] ) )
 }
 
-export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, ld: SqlLinkData, path: number[], childCount: number ): string[] {
-  const maps = ld.aliasAndTables.map ( ( [ alias, table ] ) => `public final Map<String,Object> ${alias} = new HashMap<>();` )
+export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, dataD: CompDataD<G>, ld: SqlLinkData, path: number[], childCount: number ): string[] {
+  function mapName ( path: string[] ) {return path.length === 0 ? '_root' : safeArray ( path ).join ( "_" )}
+
+  const maps = flatMapDD<string, G> ( dataD, {
+    ...emptyDataFlatMap (),
+    walkDataStart: ( path1, parents, oneDataDD, dataDD ) =>
+      [ `public final Map<String,Object> ${mapName ( path1 )} = new HashMap<>();` ]
+  } )
   let onlyIds = ld.fields.filter ( taf => !taf.fieldData.fieldName );
   const ids = onlyIds.map ( taf => `public final Object ${sqlTafFieldName ( taf )};` )
   const className = sqlMapName ( p, restName, path );
@@ -396,14 +402,23 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
     .filter ( taf => taf.fieldData.fieldName )
     .sort ( ( l, r ) => l.table.name.localeCompare ( r.table.name ) )
     .sort ( ( l, r ) => l.fieldData.dbFieldName.localeCompare ( r.fieldData.dbFieldName ) )
-    .map ( taf => `this.${taf.alias}.put("${taf.fieldData.fieldName}", rs.${taf.fieldData.rsGetter}("${sqlTafFieldName ( taf )}"));` )
+    .map ( taf => `this.${mapName ( taf.fieldData.path.slice ( 0, -1 ) )}.put("${taf.fieldData.fieldName}", rs.${taf.fieldData.rsGetter}("${sqlTafFieldName ( taf )}"));` )
   const setIds = onlyIds.map ( taf => `this.${sqlTafFieldName ( taf )} = rs.${taf.fieldData.rsGetter}("{${sqlTafFieldName ( taf )}");` )
-  const links = ld.sqlRoot.children.map ( ( childRoot, i ) => {
+  const allPaths = unique ( flatMapDD<string[], G> ( dataD, {
+    ...emptyDataFlatMap (),
+    walkDataStart: ( path1, parents, oneDataDD, dataDD ) =>
+      [ path1 ]
+  } ), r => r.toString () )
+
+  const links = allPaths.filter ( p => p.length > 0 )
+    .filter(p => p.join("/").startsWith(safeString(ld.sqlRoot.filterPath)))
+    .map ( path => `${mapName ( path.slice(0,-1) )}.put("${path[ path.length - 1 ]}", ${mapName ( path )});` )
+  const linksToOtherMaps = ld.sqlRoot.children.map ( ( childRoot, i ) => {
     let childEntity = childRoot.root
     if ( !isMultipleEntity ( childEntity ) ) throw Error ( `Page: ${p.name} rest ${restName} The parent of sql root must be a multiple entity.\n ${JSON.stringify ( childRoot )}` )
     if ( childRoot.children.length > 0 )
       throw Error ( `Page: ${p.name} rest ${restName} has nested 'multiples. Currently this is not supported` )
-    return `this.${childEntity.linkInData.mapName}.put("${childEntity.linkInData.field}", list${i});`
+    return `this.${childEntity.linkInData.mapName}.put("${childEntity.linkInData.field}", list${i}.stream().map(m ->m.${childEntity.linkInData.mapName}).collect(Collectors.toList()));`
   } );
   return [
     `package ${params.thePackage}.${params.dbPackage};`,
@@ -413,6 +428,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
     `import java.util.HashMap;`,
     `import java.util.List;`,
     `import java.util.Map;`,
+    `import java.util.stream.Collectors;`,
     ``,
     '/**',
     ...indentList ( sql ),
@@ -424,7 +440,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
       ...maps,
       '',
       `public ${className}(${constParams}) throws SQLException{`,
-      ...indentList ( [ ...putters, '', ...setIds, '', ...links ] ),
+      ...indentList ( [ ...putters, '', ...setIds, '', ...links, '', ...linksToOtherMaps ] ),
       '}'
     ] ),
     `}`

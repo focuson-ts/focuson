@@ -49,7 +49,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
   const raw = allMainPages ( pages ).flatMap ( x => sortedEntries ( x.rest ) ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest );
-  const rests = unique ( raw, r => r.dataDD.name+":"+  r.namePrefix )
+  const rests = unique ( raw, r => r.dataDD.name + ":" + r.namePrefix )
   detailsLog ( logLevel, 1, 'java file copies' )
   copyFiles ( javaScriptRoot, 'templates/scripts', directorySpec ) ( 'makeJava.sh', 'makeJvmPact.sh', 'template.java' )
 
@@ -95,7 +95,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
       content: indentList ( makeJavaVariablesForGraphQlQuery ( [ r ] ) ).join ( "\n" )
     }, directorySpec, details ) )
 
-  rests.forEach ( rest => writeToFile ( `${javaControllerRoot}/${restControllerName ( rest )}.java`, () => makeSpringEndpointsFor ( params, rest ) ,details) )
+  rests.forEach ( rest => writeToFile ( `${javaControllerRoot}/${restControllerName ( rest )}.java`, () => makeSpringEndpointsFor ( params, rest ), details ) )
   allMainPages ( pages ).map ( p => {
     Object.entries ( p.rest ).map ( ( [ name, rdp ] ) => {
       let tables = rdp.rest.tables;
@@ -103,9 +103,9 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
       detailsLog ( logLevel, 2, `Creating rest files for ${p.name} ${name}` )
       walkSqlRoots ( findSqlRoots ( tables ), ( root, path ) => {
         const ld = findSqlLinkDataFromRootAndDataD ( root, rdp.rest.dataDD )
-        let fileName = sqlMapFileName ( javaDbPackages,  p, name, path ) + ".java";
-        console.log('name:', fileName)
-        writeToFile ( fileName, () => makeMapsForRest ( params, p, name, ld, path, root.children.length ) )
+        let fileName = sqlMapFileName ( javaDbPackages, p, name, path ) + ".java";
+        console.log ( 'name:', fileName )
+        writeToFile ( fileName, () => makeMapsForRest ( params, p, name, rdp.rest.dataDD, ld, path, root.children.length ) )
       } )
     } )
   } )

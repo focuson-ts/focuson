@@ -26,7 +26,7 @@ export const jointAccountRestD: RestD<any> = {
           idInParent: 'mainCustomerId:integer',
           idInThis: 'id:integer',
           children: {
-            mainAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", linkInData: { mapName: 'mainCustomer', field: 'addresses' } },
+            mainAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", linkInData: { mapName: 'main', field: 'addresses' } },
             mainName: { type: 'Single', table: nameT, idInParent: 'nameId', idInThis: 'id' },
           }
         },
@@ -36,7 +36,7 @@ export const jointAccountRestD: RestD<any> = {
           filterPath: 'joint',
           idInParent: 'jointCustomerId:integer', idInThis: 'id:integer',
           children: {
-            jointAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", linkInData: { mapName: 'jointCustomer', field: 'addresses' } },
+            jointAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", linkInData: { mapName: 'joint', field: 'addresses' } },
             jointName: { type: 'Single', table: nameT, idInParent: 'nameId', idInThis: 'id' },
           }
         }
