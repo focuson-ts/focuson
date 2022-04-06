@@ -52,7 +52,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   detailsLog ( logLevel, 1, 'java file copies' )
   copyFiles ( javaScriptRoot, 'templates/scripts', directorySpec ) ( 'makeJava.sh', 'makeJvmPact.sh', 'template.java' )
 
-  templateFile ( javaAppRoot + ".projectDetails.json", 'templates/java.projectDetails.json',params, directorySpec )
+  templateFile ( javaAppRoot + "/projectDetails.json", 'templates/java.projectDetails.json',{...params, applicationName: params.applicationName.toLowerCase()}, directorySpec )
   copyFiles ( javaAppRoot, 'templates/raw/java', directorySpec ) ( 'application.properties' )
   copyFile ( javaAppRoot + '/.gitignore', 'templates/raw/gitignore', directorySpec )
   copyFiles ( javaCodeRoot, 'templates/raw/java', directorySpec ) ( 'CorsConfig.java' )
