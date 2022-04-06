@@ -66,7 +66,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
       writeToFile ( restFileName ( tsCode, params, p ) + ".ts", () => makeRests ( params, p ) )
       writeToFile ( storybookFileName ( tsCode, params, p ) + '.ts', () => makeOneStory ( params, p ), details )
 
-      writeToFile ( optionalsFileName ( tsCode, params, p ) + '.ts', () => makeOptionals ( params,  p  ) )
+      writeToFile ( optionalsFileName ( tsCode, params, p ) + '.ts', () => makeOptionals ( params, p ) )
 
 
       if ( Object.keys ( p.rest ).length > 0 )
@@ -88,7 +88,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
 
 
   templateFile ( `${tsCode}/index.tsx`, 'templates/index.template.ts', { ...params, firstPage: pages[ 0 ].name, fetch: appConfig.fetch, debug: JSON.stringify ( appConfig.debug ) }, directorySpec, details )
-  templateFile ( `${tsRoot}/package.json`, 'templates/packageTemplate.json', params, directorySpec, details )
+  templateFile ( `${tsRoot}/package.json`, 'templates/packageTemplate.json', { ...params, applicationName: params.applicationName.toLowerCase () }, directorySpec, details )
   detailsLog ( logLevel, 1, 'copying files' )
   copyFiles ( tsRoot, 'templates/raw/ts', directorySpec ) ( '.env', 'README.md', 'tsconfig.json' )
   copyFiles ( tsScripts, 'templates/scripts', directorySpec ) ( 'makePact.sh', 'makeJava.sh', 'makeJvmPact.sh', 'template.java', 'ports' )

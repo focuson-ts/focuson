@@ -55,7 +55,7 @@ export interface MultipleEntity extends CommonEntity {  //parent id is in the ch
   type: 'Multiple';
   idInParent: string;
   idInThis: string;
-  linkInData: { mapName: string, field: string }
+  linkInData: { mapName: string, field: string, link: string }
   filterPath?: string
 }
 export function isMultipleEntity ( e: Entity ): e is MultipleEntity {
@@ -427,7 +427,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
     if ( !isMultipleEntity ( childEntity ) ) throw Error ( `Page: ${p.name} rest ${restName} The parent of sql root must be a multiple entity.\n ${JSON.stringify ( childRoot )}` )
     if ( childRoot.children.length > 0 )
       throw Error ( `Page: ${p.name} rest ${restName} has nested 'multiples. Currently this is not supported` )
-    return `this.${childEntity.linkInData.mapName}.put("${childEntity.linkInData.field}", list${i}.stream().map(m ->m.${childEntity.linkInData.mapName}).collect(Collectors.toList()));`
+    return `this.${childEntity.linkInData.mapName}.put("${childEntity.linkInData.field}", list${i}.stream().map(m ->m.${childEntity.linkInData.link}).collect(Collectors.toList()));`
   } );
   const paramDetails = restD.params
   return [

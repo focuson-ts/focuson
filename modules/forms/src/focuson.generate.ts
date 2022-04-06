@@ -1,4 +1,4 @@
-import { generate, params } from "./makeFiles/generate";
+import { directorySpec, generate, params } from "./makeFiles/generate";
 import *  as fse from "fs-extra";
 import { devAppConfig, focusOnVersion, generatedPages, javaOutputRoot, tsRoot } from "./focuson.config";
 import { AllGuardCreator } from "./buttons/guardButton";
@@ -8,7 +8,7 @@ import { GenerateLogLevel } from "@focuson/utils";
 
 const logLevel: GenerateLogLevel = 'detailed';
 
-generate ( logLevel, devAppConfig, { ...params, focusOnVersion }, javaOutputRoot, tsRoot, AllGuardCreator, makeButtons () ) ( generatedPages )
+generate ( logLevel, directorySpec, devAppConfig, { ...params, focusOnVersion }, javaOutputRoot, tsRoot, AllGuardCreator, makeButtons () ) ( generatedPages )
 
 fse.copySync ( '../formComponents/src', tsRoot + "/src/formComponents" )
 

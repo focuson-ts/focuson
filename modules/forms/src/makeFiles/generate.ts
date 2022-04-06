@@ -40,14 +40,18 @@ export const params: any = {
   optionalsFile: 'optionals'
 };
 
-export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, appConfig: AppConfig, params: CombinedParams, javaOutputRoot: string, tsRoot: string, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G> ) => <B extends ButtonD> ( pages: MainPageD<B, G>[] ) => {
+export const directorySpec: DirectorySpec = {
+  main: '.',
+  backup: 'node_modules/@focuson/forms'
+}
+export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, directorySpec: DirectorySpec, appConfig: AppConfig, params: CombinedParams, javaOutputRoot: string, tsRoot: string, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G> ) => <B extends ButtonD> ( pages: MainPageD<B, G>[] ) => {
+if (pages.length ===0){
+  console.log('no pages have been configured')
+  process.exit(2)
+}
 
   console.log ( 0 )
   console.log ( "focusOnVersion", params.focusOnVersion )
-  const directorySpec: DirectorySpec = {
-    main: '.',
-    backup: 'node_modules/@focuson/forms'
-  }
 
   validate ( pages )
   const fullPages = unique ( pages.flatMap ( p => [ p, ...safeArray ( p.modals ).map ( m => m.modal ) ] ), p => p.name )

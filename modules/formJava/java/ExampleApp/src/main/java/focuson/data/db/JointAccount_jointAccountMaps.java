@@ -120,7 +120,7 @@ public class JointAccount_jointAccountMaps {
     _root.put("joint", joint);
     joint.put("addresses", joint_addresses);
     
-    this.main.put("addresses", list0.stream().map(m ->m.main).collect(Collectors.toList()));
-    this.joint.put("addresses", list1.stream().map(m ->m.joint).collect(Collectors.toList()));
+    this.main.put("addresses", list0.stream().map(m ->m.main_addresses).collect(Collectors.toList()));
+    this.joint.put("addresses", list1.stream().map(m ->m.joint_addresses).collect(Collectors.toList()));
   }
 }

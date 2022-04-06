@@ -65,8 +65,8 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   const allRestDefns: RestDefnInPageProperties<G>[] = allMainPages ( pages ).flatMap ( p => sortedEntries ( p.rest ).map ( t => t[ 1 ] ) )
 
   const createTable: NameAnd<string[]> = createTableSql ( allRestDefns )
-  console.log ( JSON.stringify ( createTable, null, 2 ) )
-  writeToFile ( `${javaResourcesRoot}/${createTableSqlName ()}.sql`, () => Object.values ( createTable ).flatMap ( addStringToEndOfList ( ";\n" ) ), details )
+  // console.log ( JSON.stringify ( createTable, null, 2 ) )
+  if ( Object.entries ( createTable ).length > 0 ) writeToFile ( `${javaResourcesRoot}/${createTableSqlName ()}.sql`, () => Object.values ( createTable ).flatMap ( addStringToEndOfList ( ";\n" ) ), details )
 
   writeToFile ( `${javaResourcesRoot}/${getSqlName ()}.sql`,
     () => rests.filter ( r => r.tables ).flatMap ( rest =>

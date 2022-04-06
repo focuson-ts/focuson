@@ -14,6 +14,7 @@ export interface JavaWiringParams {
 }
 
 export interface TSParams {
+  applicationName: string,
   focusOnVersion: string,
   stateName: string;
   commonParams: string;
