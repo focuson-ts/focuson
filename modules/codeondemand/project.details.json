@@ -8,6 +8,6 @@
     "links":        ["@focuson/lens", "@focuson/nav", "@focuson/state"],
     "extraDeps":    {},
     "extraDevDeps": {},
-    "test":         true
+    "test":         false
   }
 }

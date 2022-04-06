@@ -11,6 +11,7 @@ import { OccupationAndIncomeSummaryPD } from "./example/occupationAndIncome/occu
 import { AccountOverviewMainPage } from "./example/accountOverview/accountOverview.pageD";
 import { JointAccountPageD } from "./example/jointAccount/jointAccount.pageD";
 import { HelloWorldMainPage } from "./example/helloWorld/helloWorld.pageD";
+import * as process from "process";
 
 
 export const generatedPages: ExampleMainPage[] = [
