@@ -1,17 +1,18 @@
 {
-  "template": "noreact",
-  "name": "@focuson/form_components",
+  "template":    "noreact",
+  "name":        "@focuson/form_components",
   "description": "Components that can be used by @focuson/forms",
-  "details": {
-    "ideify": true,
-    "test": false,
-    "publish": true,
-    "links": [
+  "details":     {
+    "ideify":       true,
+    "test":         false,
+    "publish":      true,
+    "links":        [
       "@focuson/state",
       "@focuson/pages",
       "@focuson/focuson"
     ],
-    "extraDeps": {},
-    "extraDevDeps": {}
+    "extraDeps":    {},
+    "extraDevDeps": {},
+    "tsc":          true
   }
 }

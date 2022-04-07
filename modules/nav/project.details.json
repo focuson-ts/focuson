@@ -8,6 +8,7 @@
     "links":        [],
     "extraDeps":    {},
     "extraDevDeps": {},
-    "test": true
+    "test":         true,
+    "tsc":          true
   }
 }

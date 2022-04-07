@@ -8,6 +8,7 @@
     "links":        ["@focuson/pages", "@focuson/template", "@focuson/focuson", "@focuson/form_components"],
     "extraDeps":    {},
     "extraDevDeps": {},
-    "test":         true
+    "test":         true,
+    "tsc":          true
   }
 }

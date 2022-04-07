@@ -17,7 +17,7 @@ import { HasETransferPageDomain } from './ETransfer/ETransfer.domains';
 import { HasCreateEAccountPageDomain } from './CreateEAccount/CreateEAccount.domains';
 import { HasChequeCreditbooksPageDomain } from './ChequeCreditbooks/ChequeCreditbooks.domains';
 import { HasRepeatingPageDomain } from './Repeating/Repeating.domains';
-import { HasPostCodeDemoPageDomain } from './PostCodeDemo/PostCodeDemo.domains';
+import { HasPostCodeMainPagePageDomain } from './PostCodeMainPage/PostCodeMainPage.domains';
 
 export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,
   HasHelloWorldPageDomain,
@@ -29,7 +29,7 @@ export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,
   HasCreateEAccountPageDomain,
   HasChequeCreditbooksPageDomain,
   HasRepeatingPageDomain,
-  HasPostCodeDemoPageDomain
+  HasPostCodeMainPagePageDomain
 {}
 export interface HasCommonIds {CommonIds: CommonIds}
 export type CommonIds = {

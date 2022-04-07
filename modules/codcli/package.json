@@ -49,13 +49,14 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "0.5.29",
+  "version": "0.5.37",
   "template": "noreact",
   "name": "@focuson/cod",
   "description": "A command line tool to help with the code on demand",
   "details": {
     "publish": true,
     "links": [],
+    "tsc": true,
     "extraDeps": {
       "@babel/core": "^7.12.9",
       "@babel/preset-env": "^7.12.7",

@@ -1,11 +1,12 @@
 {
-  "template"      : "noreact",
-  "name"          : "@focuson/example_fetcher_api",
-  "description"   : "A relatively complex example of fetchers showing",
-  "details": {
-    "links": ["@focuson/lens"],
-    "extraDeps"   : {},
+  "template":    "noreact",
+  "name":        "@focuson/example_fetcher_api",
+  "description": "A relatively complex example of fetchers showing",
+  "details":     {
+    "links":        ["@focuson/lens"],
+    "extraDeps":    {},
     "extraDevDeps": {},
-    "test": false
+    "test":         false,
+    "tsc":          true
   }
 }

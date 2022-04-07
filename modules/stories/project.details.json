@@ -8,16 +8,17 @@
     "links":        ["@focuson/focuson"],
     "extraDeps":    {},
     "extraDevDeps": {
-      "@sambego/storybook-state": "^2.0.1",
-      "@storybook/addon-actions": "^6.4.4",
-      "@storybook/addon-docs": "^6.4.4",
-      "@storybook/addon-essentials": "^6.4.4",
-      "@storybook/addon-links": "^6.4.4",
-      "@storybook/addon-storyshots": "^6.4.4",
-      "@storybook/node-logger": "^6.4.4",
+      "@sambego/storybook-state":           "^2.0.1",
+      "@storybook/addon-actions":           "^6.4.4",
+      "@storybook/addon-docs":              "^6.4.4",
+      "@storybook/addon-essentials":        "^6.4.4",
+      "@storybook/addon-links":             "^6.4.4",
+      "@storybook/addon-storyshots":        "^6.4.4",
+      "@storybook/node-logger":             "^6.4.4",
       "@storybook/preset-create-react-app": "^3.2.0",
-      "@storybook/react": "^6.4.4"
-    }
-  },
-  "test":        true
+      "@storybook/react":                   "^6.4.4"
+    },
+    "test":         true,
+    "tsc":          true
+  }
 }

@@ -29,9 +29,19 @@
       "guard":       "${projectDetails.details.port}",
       "env":         {"PORT": "${projectDetails.details.port}"}
     },
+    "ls-tsc":         {
+      "description": "lists projects that will be tsced",
+      "guard":       "${projectDetails.details.tsc}",
+      "commands":    ["js:process.cwd()"]
+    },
     "tsc":            {
       "description": "runs tsc",
+      "guard":       "${projectDetails.details.tsc}",
       "commands":    [{"name": "tsc", "command": "tsc --noEmit false --outDir dist", "status": true}]
+    },
+    "tsc-noguard":            {
+      "description": "runs tsc without a guard",
+      "commands":    [{"name": "tsc-noguard", "command": "tsc --noEmit false --outDir dist", "status": true}]
     },
     "test":           {
       "description": "runs ${packageManager} test",
@@ -130,6 +140,36 @@
         {"name": "publish", "command": "${packageManager} publish --access public", "status": true}
       ],
       "inLinksOrder": true
+    },
+    "ls-generated":   {"description": "lists all the projects that were generated", "commands": ["js:process.cwd()"], "guard": "${projectDetails.details.generated}"},
+    "kill-generated": {
+      "description": "removes all the projects that have been generated, but throws lots of errors",
+      "osGuard":     "Windows",
+      "commands":    [
+        {"name": "kill formJava", "command": "rmdir /Q /S formJava ", "directory": ".."},
+        {"name": "Kill formTs", "command": "rmdir /Q /S formTs ", "directory": ".."}
+      ]
+    },
+    "ls-generate":    {
+      "description": "lists the projects that will respond to the generate command",
+      "guard":       "${projectDetails.details.generator}",
+      "commands":    [
+        {"name": "generate", "command": "js:`${process.cwd()} ${projectDetails.name}`"}
+      ]
+    },
+    "generate":       {
+      "description": "generates the type script and java projects",
+      "guard":       "${projectDetails.details.generator}",
+      "commands":    [
+        {"name": "generate", "command": " npx ts-node src/focuson.generate.ts", "status": true}
+      ]
+    },
+    "mvn":            {
+      "description": "generates the type script and java projects",
+      "guard":       "${projectDetails.details.mvn}",
+      "commands":    [
+        {"name": "maven", "command": "mvn clean install", "status": true}
+      ]
     }
   }
 }

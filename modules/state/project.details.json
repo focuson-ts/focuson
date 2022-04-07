@@ -7,6 +7,7 @@
     "publish":      true,
     "links":        ["@focuson/lens"],
     "extraDeps":    {},
-    "extraDevDeps": {}
+    "extraDevDeps": {},
+    "tsc":          true
   }
 }

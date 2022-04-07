@@ -22,8 +22,8 @@ import { ETransfer_ETransferDataDRestDetails } from './ETransfer/ETransfer.rests
 import { CreateEAccount_CreateEAccountDataRestDetails } from './CreateEAccount/CreateEAccount.rests';
 import { ChequeCreditbooks_ChequeCreditbooksRestDetails } from './ChequeCreditbooks/ChequeCreditbooks.rests';
 import { Repeating_RepeatingWholeDataRestDetails } from './Repeating/Repeating.rests';
-import { PostCodeDemo_PostCodeNameAndAddressRestDetails } from './PostCodeDemo/PostCodeDemo.rests';
-import { PostCodeDemo_PostCodeDataRestDetails } from './PostCodeDemo/PostCodeDemo.rests';
+import { PostCodeMainPage_PostCodeNameAndAddressRestDetails } from './PostCodeMainPage/PostCodeMainPage.rests';
+import { PostCodeMainPage_PostCodeDataRestDetails } from './PostCodeMainPage/PostCodeMainPage.rests';
 
 export function restUrlMutator ( r: RestAction, url: string ): string { return insertBefore ( '?', r === 'list' ? '/list' : '', url )}
 
@@ -47,7 +47,7 @@ export const restDetails: RestDetails<FState, SimpleMessage> = {
    CreateEAccount_CreateEAccountDataRestDetails: CreateEAccount_CreateEAccountDataRestDetails(commonIds, defaultDateFn),
    ChequeCreditbooks_ChequeCreditbooksRestDetails: ChequeCreditbooks_ChequeCreditbooksRestDetails(commonIds, defaultDateFn),
    Repeating_RepeatingWholeDataRestDetails: Repeating_RepeatingWholeDataRestDetails(commonIds, defaultDateFn),
-   PostCodeDemo_PostCodeNameAndAddressRestDetails: PostCodeDemo_PostCodeNameAndAddressRestDetails(commonIds, defaultDateFn),
-   PostCodeDemo_PostCodeDataRestDetails: PostCodeDemo_PostCodeDataRestDetails(commonIds, defaultDateFn)
+   PostCodeMainPage_PostCodeNameAndAddressRestDetails: PostCodeMainPage_PostCodeNameAndAddressRestDetails(commonIds, defaultDateFn),
+   PostCodeMainPage_PostCodeDataRestDetails: PostCodeMainPage_PostCodeDataRestDetails(commonIds, defaultDateFn)
 
 }

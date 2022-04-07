@@ -7,6 +7,7 @@
     "extraDeps":    {"react-i18next": "^11.8.5", "i18next": "^19.8.4"},
     "extraDevDeps": {},
     "test":         true,
-    "port":         3010
+    "port":         3010,
+    "tsc":          true
   }
 }

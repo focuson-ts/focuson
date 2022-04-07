@@ -8,6 +8,7 @@
     "extraDevDeps": {},
     "port":         3005,
     "test":         false,
+    "tsc":          false,
     "orgcmd":       true
   }
 }

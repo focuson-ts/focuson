@@ -18,7 +18,7 @@ export const PostCodeModalPage: ExampleModalPage = {
 
 }
 export const PostCodeMainPage: ExampleMainPage = {
-  name: "PostCodeDemo",
+  name: "PostCodeMainPage",
   pageType: "MainPage",
   display: { dataDD: nameAndAddressDataD, target: '~/main' },
 

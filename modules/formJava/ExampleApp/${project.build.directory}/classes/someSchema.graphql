@@ -1,0 +1,361 @@
+type Query{
+  getAccountAllFlags(accountId: String!, customerId: String!):AccountAllFlags!
+  getArrearsDetails(accountId: String!, customerId: String!, startDate: String!):ArrearsDetails!
+  getAccountOverviewHistory(accountId: String!, customerId: String!):AccountOverviewHistory!
+  getAccountOverviewExcessInfo(accountId: String!, customerId: String!):AccountOverviewExcessInfo!
+  getAccountOverview(accountId: String!, customerId: String!):AccountOverview!
+  getAccountOverviewReason(accountId: String!, customerId: String!):AccountOverviewReason!
+  getJointAccount(accountId: String!, brandId: String!):JointAccount!
+  getAdditionalInformation(customerId: String!):AdditionalInformation!
+  getBusinessDetailsMain(customerId: String!):BusinessDetailsMain!
+  getDropdowns(customerId: String!):Dropdowns!
+  getOccupationAndIncomeFullDomain(customerId: String!):OccupationAndIncomeFullDomain!
+  getOtherIncomeResponse(customerId: String!):OtherIncomeResponse!
+  getCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):CreatePlan!
+  listCreatePlan(accountId: String!, customerId: String!):[CreatePlan!]!
+  getEAccountsSummary(accountId: String!, customerId: String!):EAccountsSummary!
+  getCreateEAccountData(accountId: String!, createPlanId: String!, customerId: String!):CreateEAccountData!
+  getChequeCreditbooks(accountId: String!, applRef: String!, brandRef: String!, customerId: String!):ChequeCreditbooks!
+  getRepeatingLine(customerId: String!):[RepeatingLine!]!
+  getPostCodeDataLine(postcode: String!):[PostCodeDataLine!]!
+}
+type Mutation{
+  updateOccupationAndIncomeFullDomain(customerId: String!,obj: OccupationAndIncomeFullDomainInp!):OccupationAndIncomeFullDomain!
+  createCreatePlan(accountId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!
+  updateCreatePlan(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!
+  deleteCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):CreatePlan
+  createETransferDataD(customerId: String!,obj: ETransferDataDInp!):ETransferDataD!
+  createCreateEAccountData(accountId: String!, customerId: String!,obj: CreateEAccountDataInp!):CreateEAccountData!
+  createChequeCreditbooks(accountId: String!, applRef: String!, brandRef: String!, customerId: String!,obj: ChequeCreditbooksInp!):ChequeCreditbooks!
+  createRepeatingLine(customerId: String!,obj: [RepeatingLineInp!]!):[RepeatingLine!]!
+  createPostCodeNameAndAddress(,obj: PostCodeNameAndAddressInp!):PostCodeNameAndAddress!
+}
+type AccountAllFlags{
+  flags: [AccountOneFlag!]!
+}
+type AccountDetails{
+  contactTitle: String!
+  contactForename: String!
+  contactSurname: String!
+  practice: String!
+  addressLine1: String!
+  addressLine2: String!
+  addressLine3: String!
+  addressLine4: String!
+  postcode: String!
+  telephone: String!
+}
+type AccountOneFlag{
+  flagName: String!
+  flagValue: Boolean!
+}
+type AccountOverview{
+  score: Int!
+  accountType: String!
+  drawDownDate: String!
+  repaymentDate: String!
+  propertyValue: Int!
+  mul: Int!
+  drawDownAmount: Int!
+  criteria: [AccountOverviewCriteriaLine!]!
+  zFlagSet: String!
+  excessSixMonths: Int!
+  bouncedDDs12Months: Int!
+  unpaidCardOrMisuseItems: Int!
+}
+type AccountOverviewCriteriaLine{
+  criteria: String!
+}
+type AccountOverviewExcessHistoryLine{
+  start: String!
+  end: String!
+  consecutiveDays: Int!
+}
+type AccountOverviewExcessInfo{
+  dayOfCurrentExcess: Int!
+  currentExcessOnAccount: Int!
+  currentPctExcess: Int!
+  dateOfLastCapitalization: String!
+  dateOfLastExcessFulfillment: String!
+}
+type AccountOverviewHistory{
+  history: [AccountOverviewExcessHistoryLine!]!
+}
+type AccountOverviewReason{
+  reason: String!
+}
+type AdditionalInformation{
+  applicantName: String!
+  employerName: String!
+  addressLine1: String!
+  addressLine2: String!
+  addressLine3: String!
+  addressLine4: String!
+  postcode: String!
+}
+type ArrearsDetails{
+  history: [ArrearsDetailsLine!]!
+}
+type ArrearsDetailsLine{
+  collectionsDate: String!
+  creditedDate: String!
+  minPayment: Int!
+  contractualAmount: Int!
+  paymentType: String!
+  paymentReceived: Int!
+  shortfall: Int!
+  arrearsTotal: Int!
+  missedPayments: Int!
+}
+type BusinessDetails{
+  applicantName: String!
+  businessName: String!
+  addressLine1: String!
+  addressLine2: String!
+  addressLine3: String!
+  addressLine4: String!
+  postcode: String!
+}
+type BusinessDetailsMain{
+  businessDetails: BusinessDetails!
+  businessFinancialDetails: BusinessFinancialDetails!
+  detailsOfNonRecurringItems: DetailsOfNonRecurringItems!
+  detailsOfReevaluationOfAssets: DetailsOfReevaluationOfAssets!
+  accountantDetails: AccountDetails!
+}
+type BusinessFinancialDetails{
+  turnoverLastYear: String!
+  turnoverPenultimateYear: String!
+  netProfitLastYear: String!
+  netProfitPenultimateYear: String!
+  drawingsLastYear: String!
+  drawingsPenultimateYear: String!
+  dividendsLastYear: String!
+  dividendsPenultimateYear: String!
+  netAssetsLastYear: String!
+  netAssetsPenultimateYear: String!
+}
+type ChequeCreditbooks{
+  history: [ChequeCreditbooksHistoryLine!]!
+}
+type ChequeCreditbooksHistoryLine{
+  serialNumber: Int!
+  howOrdered: String!
+  dateOrder: String!
+}
+type ContractTypesResponse{
+  contractTypeId: Int!
+  description: String!
+}
+type CreateEAccountData{
+  name: String!
+  type: String!
+  savingsStyle: String!
+  initialAmount: Int!
+}
+type CreatePlan{
+  createPlanStart: String!
+  createPlanDate: String!
+  createPlanEnd: String!
+}
+type DetailsOfNonRecurringItems{
+  nonRecurringItems: String!
+}
+type DetailsOfReevaluationOfAssets{
+  revaluationOfAssets: String!
+}
+type Dropdowns{
+  occupationDescriptionResponse: OccupationDescriptionResponse!
+  employmentStatus: EmploymentStatus!
+  contractTypesResponse: ContractTypesResponse!
+  frequenciesResponse: FrequenciesResponse!
+}
+type EAccountsSummary{
+  useEStatements: Boolean!
+  eAccountsTable: [EAccountSummary!]!
+  totalMonthlyCost: Int!
+  oneAccountBalance: Int!
+  currentAccountBalance: Int!
+  createPlan: CreatePlan!
+}
+type EAccountSummary{
+  accountId: Int!
+  displayType: String!
+  description: String!
+  virtualBankSeq: String!
+  total: Int!
+  frequency: String!
+}
+type EmploymentStatus{
+  employmentName: String!
+  employmentValue: String!
+}
+type ETransferDataD{
+  account: Int!
+  dateOfETransfer: String!
+  description: String!
+  fromAccount: Int!
+  toAccount: Int!
+  monitoringAccount: Int!
+  type: String!
+  balance: Int!
+  notes: String!
+}
+type FrequenciesResponse{
+  frequencyId: Int!
+  frequencyDescription: String!
+  annualMultiple: Int!
+}
+type JointAccount{
+  balance: Int!
+  main: JointAccountCustomer!
+  joint: JointAccountCustomer!
+}
+type JointAccountAddress{
+  line1: String!
+  line2: String!
+}
+type JointAccountCustomer{
+  name: String!
+  addresses: [JointAccountAddress!]!
+}
+type OccupationAndIncomeFullDomain{
+  mainCustomerName: String!
+  jointCustomerName: String!
+  mainClientRef: Int!
+  jointClientRef: Int!
+  customerOccupationIncomeDetails: [OneOccupationIncomeDetails!]!
+}
+type OccupationDescriptionResponse{
+  descTypeValue: String!
+  descTypeName: String!
+}
+type OneOccupationIncomeDetails{
+  areYou: String!
+  occupation: String!
+  customerDescription: String!
+  ownShareOfTheCompany: String!
+  owningSharesPct: String!
+  workFor: String!
+  employmentType: String!
+  empStartDate: String!
+  empEndDate: String!
+  annualSalaryBeforeDeduction: Int!
+  annualIncomeExcludingRent: Int!
+  regularCommissionBonus: Int!
+  whatTypeOfBusiness: String!
+  whatNameBusiness: String!
+  establishedYear: String!
+  annualDrawing3Yrs: Int!
+  otherSourceOfIncome: String!
+  createdBy: String!
+  createdDate: String!
+  employerName: String!
+  sePositionHeld: String!
+  occupationCategory: String!
+  empEmploymentSeq: Int!
+  empAppRoleSeq: Int!
+  accountantAppRoleSeq: Int!
+  currentEmployment: String!
+}
+type OtherIncomeResponse{
+  clientOtherIncomeSeq: String!
+  otherIncomeType: String!
+  incomeFreqRef: String!
+  amount: Int!
+}
+type PostCodeDataLine{
+  line1: String!
+  line2: String!
+  line3: String!
+  line4: String!
+}
+type PostCodeNameAndAddress{
+  name: String!
+  line1: String!
+  line2: String!
+  line3: String!
+  line4: String!
+  postcode: String!
+}
+type RepeatingLine{
+  name: String!
+  age: Int!
+}
+input ChequeCreditbooksInp{
+  history: [ChequeCreditbooksHistoryLineInp!]!
+}
+input ChequeCreditbooksHistoryLineInp{
+  serialNumber: Int!
+  howOrdered: String!
+  dateOrder: String!
+}
+input CreateEAccountDataInp{
+  name: String!
+  type: String!
+  savingsStyle: String!
+  initialAmount: Int!
+}
+input CreatePlanInp{
+  createPlanStart: String!
+  createPlanDate: String!
+  createPlanEnd: String!
+}
+input ETransferDataDInp{
+  account: Int!
+  dateOfETransfer: String!
+  description: String!
+  fromAccount: Int!
+  toAccount: Int!
+  monitoringAccount: Int!
+  type: String!
+  balance: Int!
+  notes: String!
+}
+input OccupationAndIncomeFullDomainInp{
+  mainCustomerName: String!
+  jointCustomerName: String!
+  mainClientRef: Int!
+  jointClientRef: Int!
+  customerOccupationIncomeDetails: [OneOccupationIncomeDetailsInp!]!
+}
+input OneOccupationIncomeDetailsInp{
+  areYou: String!
+  occupation: String!
+  customerDescription: String!
+  ownShareOfTheCompany: String!
+  owningSharesPct: String!
+  workFor: String!
+  employmentType: String!
+  empStartDate: String!
+  empEndDate: String!
+  annualSalaryBeforeDeduction: Int!
+  annualIncomeExcludingRent: Int!
+  regularCommissionBonus: Int!
+  whatTypeOfBusiness: String!
+  whatNameBusiness: String!
+  establishedYear: String!
+  annualDrawing3Yrs: Int!
+  otherSourceOfIncome: String!
+  createdBy: String!
+  createdDate: String!
+  employerName: String!
+  sePositionHeld: String!
+  occupationCategory: String!
+  empEmploymentSeq: Int!
+  empAppRoleSeq: Int!
+  accountantAppRoleSeq: Int!
+  currentEmployment: String!
+}
+input PostCodeNameAndAddressInp{
+  name: String!
+  line1: String!
+  line2: String!
+  line3: String!
+  line4: String!
+  postcode: String!
+}
+input RepeatingLineInp{
+  name: String!
+  age: Int!
+}

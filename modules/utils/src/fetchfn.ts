@@ -21,9 +21,9 @@ export interface FetchFn {
 export const defaultFetchFn = <T> ( re: RequestInfo, init?: RequestInit ): Promise<[ number, T ]> => {
   if ( re === "" ) throw Error ( 'calling defaultFetchFn with empty string as url' )
   try {
-    return actualFetch ( re, init ).then ( r => r.ok
-      ? r.json ().then ( json => [ r.status, json ] )
-      : r.text ().then ( text => [ r.status, text ] )
+    return actualFetch ( re, init ).then ( (r: any) => r.ok
+      ? r.json ().then ( (json: any) => [ r.status, json ] )
+      : r.text ().then ( (text: any) => [ r.status, text ] )
     );
   } catch ( e: any ) {
     return Promise.reject ( e )

@@ -1,11 +1,12 @@
 {
-  "template"      : "react",
-  "name"          : "@focuson/example_state_cart",
-  "description"   : "The redux 'shopping cart' example' using lens",
-  "details": {
-    "links"       : ["@focuson/lens", "@focuson/state"],
-    "extraDeps"   : {},
+  "template":    "react",
+  "name":        "@focuson/example_state_cart",
+  "description": "The redux 'shopping cart' example' using lens",
+  "details":     {
+    "links":        ["@focuson/lens", "@focuson/state"],
+    "extraDeps":    {},
     "extraDevDeps": {},
-    "port": 3008
+    "port":         3008,
+    "tsc":          true
   }
 }

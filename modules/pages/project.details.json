@@ -1,17 +1,18 @@
 {
-  "template": "noreact",
-  "name": "@focuson/pages",
+  "template":    "noreact",
+  "name":        "@focuson/pages",
   "description": "Used when we want a simple many page application",
-  "details": {
-    "ideify": true,
-    "publish": true,
-    "links": [
+  "details":     {
+    "ideify":       true,
+    "publish":      true,
+    "links":        [
       "@focuson/lens",
       "@focuson/state",
       "@focuson/fetcher",
       "@focuson/rest"
     ],
-    "extraDeps": {},
-    "extraDevDeps": {}
+    "extraDeps":    {},
+    "extraDevDeps": {},
+    "tsc":          true
   }
 }

@@ -37,7 +37,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
   fs.mkdirSync ( `${tsScripts}`, { recursive: true } )
   fs.mkdirSync ( `${tsPublic}`, { recursive: true } )
   fs.mkdirSync ( `${tsStoryBook}`, { recursive: true } )
-  templateFile ( tsRoot + "/projectDetails.json", 'templates/ts.projectDetails.json',{...params, applicationName: params.applicationName.toLowerCase()}, directorySpec )
+  templateFile ( tsRoot + "/project.details.json", 'templates/ts.projectDetails.json',{...params, applicationName: params.applicationName.toLowerCase()}, directorySpec )
 
   pages.forEach ( p => {
     detailsLog ( logLevel, 1, `typescript page ${p.name}` )
@@ -85,7 +85,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
   const rests = unique ( pages.flatMap ( pd => isMainPage ( pd ) ? sortedEntries ( pd.rest ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest ) : [] ), r => r.dataDD.name )
 
   writeToFile ( `${tsCode}/${params.commonFile}.ts`, () => makeCommon ( appConfig, params, pages, rests, directorySpec ), details )
-  writeToFile ( `${tsCode}/${params.pagesFile}.tsx`, () => makePages ( params, pages ), details )
+  writeToFile ( `${tsCode}/${params.pagesFile}.ts`, () => makePages ( params, pages ), details )
 
 
   templateFile ( `${tsCode}/index.tsx`, 'templates/index.template.ts', { ...params, firstPage: pages[ 0 ].name, fetch: appConfig.fetch, debug: JSON.stringify ( appConfig.debug ) }, directorySpec, details )
