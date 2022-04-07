@@ -45,10 +45,10 @@ export const directorySpec: DirectorySpec = {
   backup: 'node_modules/@focuson/forms'
 }
 export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, directorySpec: DirectorySpec, appConfig: AppConfig, params: CombinedParams, javaOutputRoot: string, tsRoot: string, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G> ) => <B extends ButtonD> ( pages: MainPageD<B, G>[] ) => {
-if (pages.length ===0){
-  console.log('no pages have been configured')
-  process.exit(2)
-}
+  if ( pages.length === 0 ) {
+    console.log ( 'no pages have been configured' )
+    process.exit ( 2 )
+  }
 
   console.log ( 0 )
   console.log ( "focusOnVersion", params.focusOnVersion )
@@ -60,6 +60,6 @@ if (pages.length ===0){
   if ( logLevel === 'detailed' ) console.log ( "Making Java Files" )
   makeJavaFiles ( logLevel, appConfig, javaOutputRoot, params, directorySpec ) ( fullPages )
   if ( logLevel === 'detailed' ) console.log ( "Making Typescript Files" )
-  makeTsFiles<G> ( logLevel, appConfig, tsRoot, params, makeGuards, makeButtons, directorySpec ) ( fullPages )
+  makeTsFiles<G> ( logLevel, appConfig, tsRoot, params, makeGuards, makeButtons, directorySpec ) ( pages, fullPages )
   if ( logLevel === 'detailed' ) console.log ( "Finished" )
 };

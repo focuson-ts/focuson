@@ -53,7 +53,7 @@ export const oneOccupationIncomeDetailsDD: ExampleDataD = {
   layout: {
     component: LayoutCd,
     displayParams: {
-      details: '[[3,3],[5,5], [{count: 1, labelWidth: 150}]]',
+      details: '[[3,3],[5,5],[30]]',
       title: [ 'Current employment details - ' ],
     }
   },

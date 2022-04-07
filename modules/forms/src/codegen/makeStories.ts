@@ -22,7 +22,7 @@ export function makeOneMainStory<B, G> ( params: TSParams, p: MainPageD<B, G> ):
     `import { Lenses } from "@focuson/lens";`,
     `import { context, Context, emptyState, ${params.stateName} } from "../common";`,
     `import { pages } from "../pages";`,
-    `import * as render  from "${renderFileName ( '..', params, p )}";`,
+    `import * as render  from "${renderFileName ( '..', params, p, p )}";`,
     `import * as domain  from "${domainsFileName ( '..', params, p )}";`,
     `import * as samples  from "${samplesFileName ( '..', params, p )}";`,
     `import * as empty from "${emptyFileName ( '..', params, p )}";`,

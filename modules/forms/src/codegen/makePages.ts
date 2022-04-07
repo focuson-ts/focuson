@@ -15,27 +15,33 @@ export const makeMainPage = <G> ( params: TSParams ) => <B> ( p: MainPageD<B, G>
   }
   const initialValue = p.initialValue === 'empty' ? makeEmpty ()[ p.name ] : p.initialValue
   return p.pageType === 'MainPage' ?
-    [ `    ${p.name}: {pageType: '${p.pageType}',  config: simpleMessagesConfig, lens: identity.focusQuery ( '${pageInState ( p )}' ), pageFunction: ${pageComponentName ( p )}(), initialValue: ${JSON.stringify ( initialValue )}, pageMode: '${p.modes[ 0 ]}',namedOptionals: ${optionalsName(p)} }` ]
+    [ `    ${p.name}: {pageType: '${p.pageType}',  config: simpleMessagesConfig, lens: identity.focusQuery ( '${pageInState ( p )}' ), pageFunction: ${pageComponentName ( p )}(), initialValue: ${JSON.stringify ( initialValue )}, pageMode: '${p.modes[ 0 ]}',namedOptionals: ${optionalsName ( p )} }` ]
     : [];
 }
 
 export interface ModalCreationData<B, G> {
   name: string,
+  main: PageD<B, G>
   modal: PageD<B, G>
 }
 export function walkModals<B, G> ( ps: PageD<B, G>[] ): ModalCreationData<B, G>[] {
-  return ps.flatMap ( p => (isMainPage ( p ) ? safeArray ( p.modals ) : []).map ( ( { modal } ) =>
-    ({ name: modalName ( p, modal ), modal }) ) )
+  return allMainPages ( ps ).flatMap ( main => {
+    return safeArray ( main.modals ).map ( ( { modal } ) =>
+      ({ name: modalName ( main, modal ), main, modal }) )
+  } )
 }
 
 export const makeModal = <G> ( params: TSParams ) => <B> ( { name, modal }: ModalCreationData<B, G> ): string[] => {
   return [ `    ${name}: {pageType: '${modal.pageType}',  config: simpleMessagesConfig,  pageFunction: ${pageComponentName ( modal )}()}` ]
 };
 
-export function makePages<B, G> ( params: TSParams, ps: PageD<B, G>[] ): string[] {
+export function makePages<B, G> ( params: TSParams, ps: MainPageD<B, G>[] ): string[] {
   const modals = walkModals ( ps );
-  const renderImports = ps.map ( p => `import { ${pageComponentName ( p )} } from '${renderFileName ( '.', params, p )}';` )
-  const optionalImports = allMainPages ( ps ).map ( p => `import { ${optionalsName ( p )} } from "${optionalsFileName ( '.', params, p )}"; ` )
+  const renderImports = ps.flatMap ( mainPage => [
+    `import { ${pageComponentName ( mainPage )} } from '${renderFileName ( '.', params, mainPage, mainPage )}';`,
+    ...safeArray ( mainPage.modals ).map ( ( { modal } ) => `import { ${pageComponentName ( modal )} } from '${renderFileName ( '.', params, mainPage, modal )}';` )
+  ] )
+  const optionalImports = ps .map ( p => `import { ${optionalsName ( p )} } from "${optionalsFileName ( '.', params, p )}"; ` )
   return [
     `import { identityOptics } from "@focuson/lens";`,
     `import { Loading, MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";`,

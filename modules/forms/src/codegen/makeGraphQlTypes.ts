@@ -55,8 +55,9 @@ function extraParam<G> ( restD: RestD<G>, action: RestActionDetail ) {
 export const oneQueryMutateLine = <G> ( [ restD, a, action ]: [ RestD<G>, RestAction, RestActionDetail ] ): string => {
   let rawType = rawTypeName ( restD.dataDD );
   const paramString = "(" + makeParamsString ( a ) ( restD.params ) + extraParam ( restD, action ) + ")";
+  const realParamString = paramString==='()'?'':paramString
   const needExtrabrackets = isRepeatingDd(restD.dataDD)
-  return `  ${resolverName ( restD.dataDD, action )}${paramString}:${makeOutputString ( rawType, needExtrabrackets, action )}`;
+  return `  ${resolverName ( restD.dataDD, action )}${realParamString}:${makeOutputString ( rawType, needExtrabrackets, action )}`;
 }
 
 export const makeSchemaBlockFor = <G> ( [ dataD, rt ]: [ DataD<G>, RestTypeDetails ] ): string[] =>
