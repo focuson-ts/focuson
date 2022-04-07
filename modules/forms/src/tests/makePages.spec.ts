@@ -10,14 +10,14 @@ import { CreateEAccountPageD } from "../example/createEAccount/createEAccount.pa
 
 describe ( "makePages", () => {
   it ( "should make the 'pages' description for the generated app", () => {
-    expect ( makePages ( paramsForTest, [ EAccountsSummaryPD, CreatePlanPD, RepeatingPageD, RepeatingLinePageD ] ) ).toEqual ( [
+    expect ( makePages ( paramsForTest, [ EAccountsSummaryPD,  RepeatingPageD ] ) ).toEqual ( [
       "import { identityOptics } from \"@focuson/lens\";",
       "import { Loading, MultiPageDetails, simpleMessagesPageConfig } from \"@focuson/pages\";",
       "import {Context,  FState } from \"./common\";",
       "import { EAccountsSummaryPage } from './EAccountsSummary/EAccountsSummary.render';",
-      "import { CreatePlanPage } from './CreatePlan/CreatePlan.render';",
+      "import { CreatePlanPage } from './EAccountsSummary/CreatePlan.render';",
       "import { RepeatingPage } from './Repeating/Repeating.render';",
-      "import { RepeatingLinePage } from './RepeatingLine/RepeatingLine.render';",
+      "import { RepeatingLinePage } from './Repeating/RepeatingLine.render';",
       "import { EAccountsSummaryOptionals } from \"./EAccountsSummary/EAccountsSummary.optionals\"; ",
       "import { RepeatingOptionals } from \"./Repeating/Repeating.optionals\"; ",
       "",

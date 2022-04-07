@@ -53,11 +53,11 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
       // fs.mkdirSync ( tsPage + "/" + mainP.name, { recursive: true } )
 
       writeToFile ( renderFileName ( tsCode, params, mainP, mainP ) + ".tsx",
-        () => createRenderPage ( params, makeGuards, makeButtons, mainP ), details )
-      safeArray(mainP.modals).forEach ( ( { modal } ) => {
+        () => createRenderPage ( params, makeGuards, makeButtons, mainP, mainP ), details )
+      safeArray ( mainP.modals ).forEach ( ( { modal } ) => {
           // fs.mkdirSync ( tsPage + "/" + modal.name, { recursive: true } )
-          writeToFile ( renderFileName ( tsCode, params,  mainP,modal ) + ".tsx",
-            () => createRenderPage ( params, makeGuards, makeButtons, modal ), details );
+          writeToFile ( renderFileName ( tsCode, params, mainP, modal ) + ".tsx",
+            () => createRenderPage ( params, makeGuards, makeButtons, mainP, modal ), details );
         }
       )
       writeToFile ( domainsFileName ( tsCode, params, mainP ) + ".ts", () => [

@@ -1,4 +1,4 @@
-import { PageD } from "../common/pageD";
+import { MainPageD, PageD } from "../common/pageD";
 import { NameAnd, sortedEntries } from "@focuson/utils";
 import { TSParams } from "./config";
 import { ButtonD, ButtonWithControl, isButtonWithControl } from "../buttons/allButtons";
@@ -36,17 +36,17 @@ export const makeButtonFrom = <B extends ButtonD, G> ( makeGuard: MakeGuard<G>, 
        }
 ;
 
-const makeButtonGuardVariableFrom = <B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, maker: MakeGuard<G>, p: PageD<B, G> ) => ( [ name, button ]: [ string, B ] ): string[] => {
+const makeButtonGuardVariableFrom = <B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, maker: MakeGuard<G>, mainP: MainPageD<B, G>, p: PageD<B, G> ) => ( [ name, button ]: [ string, B ] ): string[] => {
   if ( isGuardButton<B, G> ( button ) ) {
     const guardCreator = maker[ button.by.condition ]
     if ( !guardCreator ) throw Error ( `Don't know how to makeButtonGuardVariableFrom(${name},${button.by.condition} in page ${p.name}` )
-    return [ guardCreator.makeGuardVariable ( params, p, name, button.by ) ]
+    return [ guardCreator.makeGuardVariable ( params, mainP, p, name, button.by ) ]
   }
   return []
 };
 
-export function makeGuardButtonVariables<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, p: PageD<B, G> ): string[] {
-  return sortedEntries ( p.buttons ).flatMap ( makeButtonGuardVariableFrom ( params, makeGuard, p ) )
+export function makeGuardButtonVariables<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, mainP: MainPageD<B, G>, p: PageD<B, G> ): string[] {
+  return sortedEntries ( p.buttons ).flatMap ( makeButtonGuardVariableFrom ( params, makeGuard, mainP, p ) )
 }
 export function makeButtonsFrom<B extends ButtonD, G> ( params: TSParams, makeGuard: MakeGuard<G>, makeButton: MakeButton<G>, p: PageD<B, G> ): string[] {
   if ( Object.keys ( p.buttons ).length === 0 ) return [ '{}' ]

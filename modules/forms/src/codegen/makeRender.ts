@@ -1,6 +1,6 @@
 import { AllDataDD, CompDataD, DisplayParamDD, HasLayout, isDataDd, isPrimDd, isRepeatingDd } from "../common/dataD";
 import { commonParams, DisplayCompD, OneDisplayCompParamD, SimpleDisplayComp } from "../common/componentsD";
-import { dataDsIn, isMainPage, isModalPage, PageD } from "../common/pageD";
+import { dataDsIn, isMainPage, isModalPage, MainPageD, PageD } from "../common/pageD";
 
 import { decamelize, NameAnd, sortedEntries } from "@focuson/utils";
 import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, optionalsFileName, optionalsName, pageComponentName, pageDomainName } from "./names";
@@ -157,12 +157,12 @@ function makeLayoutPrefixPostFix ( errorPrefix: string, path: string[], hasLayou
     return { layoutPrefixString, layoutPostfixString };
   } else return { layoutPrefixString: defaultOpen, layoutPostfixString: defaultClose }
 }
-export const createReactComponent = <B, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, page: PageD<B, G> ) => ( dataD: CompDataD<G> ): string[] => {
+export const createReactComponent = <B, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, mainP: MainPageD<B, G>, page: PageD<B, G> ) => ( dataD: CompDataD<G> ): string[] => {
   const contents = indentList ( indentList ( createAllReactCalls ( page, listComponentsIn ( dataD ) ) ) )
   const guardStrings = isDataDd ( dataD ) ? sortedEntries ( dataD.guards ).map ( ( [ name, guard ] ) => {
     const maker = makeGuard[ guard.condition ]
     if ( !maker ) throw new Error ( `Don't know how to process guard with name ${name}: ${JSON.stringify ( guard )}` )
-    return maker.makeGuardVariable ( params, page, name, guard )
+    return maker.makeGuardVariable ( params, mainP, page, name, guard )
   } ) : []
   const layout = dataD.layout
   const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( `createReactComponent-layout ${dataD.name}`, [], dataD, '<>', '</>' );
@@ -177,14 +177,14 @@ export const createReactComponent = <B, G extends GuardWithCondition> ( params: 
 };
 
 
-export const createReactPageComponent = <B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButtons: MakeButton<G>, pageD: PageD<B, G> ): string[] => {
+export const createReactPageComponent = <B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButtons: MakeButton<G>, mainP: MainPageD<B, G>, pageD: PageD<B, G> ): string[] => {
   if ( isMainPage ( pageD ) ) return createReactMainPageComponent ( params, makeGuard, makeButtons, pageD )
-  if ( isModalPage ( pageD ) ) return createReactModalPageComponent ( params, makeGuard, makeButtons, pageD )
+  if ( isModalPage ( pageD ) ) return createReactModalPageComponent ( params, makeGuard, makeButtons, mainP, pageD )
   // @ts-ignore
   throw new Error ( `Unknown page type ${pageD.pageType} in ${pageD.name}` )
 };
 
-export function createReactModalPageComponent<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButtons: MakeButton<G>, pageD: PageD<B, G> ): string[] {
+export function createReactModalPageComponent<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButtons: MakeButton<G>, mainP: MainPageD<B, G>, pageD: PageD<B, G> ): string[] {
   const { dataDD } = pageD.display
   // const focus = focusOnFor ( pageD.display.target );
   const domName = domainName ( pageD.display.dataDD );
@@ -195,7 +195,7 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
     `  return focusedPage<${params.stateName}, ${domName}, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page`,
     `     ( state, d, mode ) => {`,
     ...(indentList ( indentList ( indentList ( indentList ( indentList ( [
-      ...makeGuardButtonVariables ( params, makeGuard, pageD ),
+      ...makeGuardButtonVariables ( params, makeGuard, mainP, pageD ),
       `const id='root';`,
       ...makeButtonsVariable ( params, makeGuard, makeButtons, pageD ),
       `return ${layoutPrefixString}`,
@@ -205,7 +205,7 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
     ] ) ) ) ) )),
   ]
 }
-export function createReactMainPageComponent<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButtons: MakeButton<G>, pageD: PageD<B, G> ): string[] {
+export function createReactMainPageComponent<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButtons: MakeButton<G>, pageD: MainPageD<B, G> ): string[] {
   const { dataDD } = pageD.display
   let errorPrefix: string = `createReactMainPageComponent-layout ${pageD.name}`;
   const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( errorPrefix, [], pageD, `<>`, '</>' );
@@ -213,7 +213,7 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
     `export function ${pageComponentName ( pageD )}(){`,
     `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${decamelize ( pageD.name, ' ' )}' ) ( state => state${stateFocusQueryWithTildaFromPage ( `createReactMainPageComponent for page ${pageD.name}`, params, pageD, pageD.display.target )}) (`,
     `( fullState, state , full, d, mode) => {`,
-    ...indentList ( makeGuardButtonVariables ( params, makeGuard, pageD ) ),
+    ...indentList ( makeGuardButtonVariables ( params, makeGuard, pageD, pageD ) ),
     `  const id='root';`,
     ...indentList ( makeButtonsVariable ( params, makeGuard, makeButtons, pageD ) ),
     '',
@@ -227,18 +227,18 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
   ]
 }
 
-export function createRenderPage<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, transformButtons: MakeButton<G>, p: PageD<B, G> ): string[] {
+export function createRenderPage<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, transformButtons: MakeButton<G>, mainP: MainPageD<B, G>, p: PageD<B, G> ): string[] {
   const imports = isMainPage ( p ) ? [
     `import * as domain from '${domainsFileName ( '..', params, p )}';`,
     `import * as empty from '${emptyFileName ( '..', params, p )}';` ] : []
   return [ ...imports,
-    ...createAllReactComponents ( params, makeGuard, transformButtons, p ) ]
+    ...createAllReactComponents ( params, makeGuard, transformButtons, mainP, p ) ]
 }
 
-export function createAllReactComponents<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButton: MakeButton<G>, page: PageD<B, G> ): string[] {
+export function createAllReactComponents<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButton: MakeButton<G>, mainP: MainPageD<B, G>, page: PageD<B, G> ): string[] {
   const pages = [ page ]
-  const dataComponents = sortedEntries ( dataDsIn ( pages, false ) ).flatMap ( ( [ name, dataD ] ) => dataD.display ? [] : createReactComponent ( params, makeGuard, page ) ( dataD ) )
-  const pageComponents = pages.flatMap ( p => createReactPageComponent ( params, makeGuard, makeButton, p ) )
+  const dataComponents = sortedEntries ( dataDsIn ( pages, false ) ).flatMap ( ( [ name, dataD ] ) => dataD.display ? [] : createReactComponent ( params, makeGuard, mainP, page ) ( dataD ) )
+  const pageComponents = pages.flatMap ( p => createReactPageComponent ( params, makeGuard, makeButton, mainP, p ) )
   const optionalImports = isMainPage ( page ) ? [ `import { ${optionalsName ( page )} } from "${optionalsFileName ( `..`, params, page )}";` ] : []
   const imports = [
     `import { LensProps } from "@focuson/state";`,

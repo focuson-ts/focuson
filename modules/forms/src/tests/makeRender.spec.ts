@@ -7,7 +7,6 @@ import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 import { makeButtons } from "../buttons/allButtons";
 
 import { AllGuardCreator } from "../buttons/guardButton";
-import { RepeatingLinePageD, RepeatingPageD } from "../example/repeating/repeating.pageD";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { listOccupationsModalPD, OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
 import { oneOccupationIncomeDetailsDD } from "../example/occupationAndIncome/occupationAndIncome.dataD";
@@ -22,11 +21,11 @@ describe ( " listComponentsIn", () => {
       "<LabelAndNumberInput id={`${id}.oneAccountBalance`} state={state.focusOn('oneAccountBalance')} mode={mode} label='One Account Balance' allButtons={buttons} required={true} />",
       "<LabelAndNumberInput id={`${id}.currentAccountBalance`} state={state.focusOn('currentAccountBalance')} mode={mode} label='Current Account Balance' allButtons={buttons} required={true} />",
       "<CreatePlan id={`${id}.createPlan`} state={state.focusOn('createPlan')} mode={mode} buttons={buttons} />"
-    ])
+    ] )
   } )
 
   it ( "should createReactComponent", () => {
-    expect ( createReactComponent ( paramsForTest, AllGuardCreator, EAccountsSummaryPD ) ( EAccountsSummaryDD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( createReactComponent ( paramsForTest, AllGuardCreator, EAccountsSummaryPD, EAccountsSummaryPD ) ( EAccountsSummaryDD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function EAccountsSummary({id,state,mode,buttons}: FocusedProps<FState, EAccountsSummaryDomain,Context>){",
       "  return <>",
       "    <LabelAndBooleanInput id={`${id}.useEStatements`} state={state.focusOn('useEStatements')} mode={mode} label='Use E Statements' allButtons={buttons} />",
@@ -41,7 +40,7 @@ describe ( " listComponentsIn", () => {
     ] )
   } )
   it ( "should createAllReactComponents ", () => {
-    expect ( createAllReactComponents ( paramsForTest, AllGuardCreator, makeButtons (), EAccountsSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( createAllReactComponents ( paramsForTest, AllGuardCreator, makeButtons (), EAccountsSummaryPD, EAccountsSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "import { LensProps } from '@focuson/state';",
       "import { FocusOnContext } from '@focuson/focuson';",
       "import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from '@focuson/pages';",
@@ -135,7 +134,7 @@ describe ( " listComponentsIn", () => {
   } )
 
   it ( "should createAllReactComponents for a modal page that define a display on the data", () => {
-    expect ( createAllReactComponents ( paramsForTest, AllGuardCreator, makeButtons (), listOccupationsModalPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( createAllReactComponents ( paramsForTest, AllGuardCreator, makeButtons (), OccupationAndIncomeSummaryPD, listOccupationsModalPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "import { LensProps } from '@focuson/state';",
       "import { FocusOnContext } from '@focuson/focuson';",
       "import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from '@focuson/pages';",
@@ -168,7 +167,7 @@ describe ( " listComponentsIn", () => {
     ] )
   } )
   it ( "should create a simple page", () => {
-    expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), CreatePlanPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), EAccountsSummaryPD, CreatePlanPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function CreatePlanPage(){",
       "  return focusedPage<FState, CreatePlanDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page",
       "     ( state, d, mode ) => {",
@@ -183,7 +182,7 @@ describe ( " listComponentsIn", () => {
     ] )
   } )
   it ( "should create a page with a Layout", () => {
-    expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage, PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function PostCodeMainPagePage(){",
       "  return focusedPageWithExtraState<FState, PostCodeMainPagePageDomain, PostCodeNameAndAddressDomain, Context> ( s => 'Post Code Main Page' ) ( state => state.focusOn('main')) (",
       "( fullState, state , full, d, mode) => {",
@@ -208,14 +207,14 @@ describe ( " listComponentsIn", () => {
       "      { buttons.save } ",
       "      </HideButtonsLayout>})}",
       ""
-    ])
+    ] )
   } )
 
 } )
 
 describe ( "makeComponentWithGuard", () => {
   it ( "should make guard variables", () => {
-    expect ( createReactComponent ( paramsForTest, AllGuardCreator, OccupationAndIncomeSummaryPD ) ( oneOccupationIncomeDetailsDD ).slice ( 0, 5 ).map ( r => r.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( createReactComponent ( paramsForTest, AllGuardCreator, OccupationAndIncomeSummaryPD,OccupationAndIncomeSummaryPD ) ( oneOccupationIncomeDetailsDD ).slice ( 0, 5 ).map ( r => r.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function OneOccupationIncomeDetails({id,state,mode,buttons}: FocusedProps<FState, OneOccupationIncomeDetailsDomain,Context>){",
       "const areYouGuard = state.focusOn('areYou').optJson();",
       "const employmentTypeGuard = state.focusOn('employmentType').optJson();",

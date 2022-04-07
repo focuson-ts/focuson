@@ -2,7 +2,7 @@ import { ButtonD } from "./allButtons";
 import { NameAnd } from "@focuson/utils";
 import { guardName } from "../codegen/names";
 import { stateForGuardButton, stateForGuardVariable } from "../codegen/lens";
-import { PageD } from "../common/pageD";
+import { MainPageD, PageD } from "../common/pageD";
 import { TSParams } from "../codegen/config";
 
 
@@ -11,23 +11,23 @@ export type AllGuards = LocalVariableGuard | LocalVariableMoreThanZero | LocalVa
 export const AllGuardCreator: MakeGuard<AllGuards> = {
   in: {
     imports: [],
-    makeGuardVariable: ( params, page, name, guard: LocalVariableGuard ) =>
+    makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableGuard ) =>
       `const ${guardName ( name )} = ${stateForGuardVariable ( page, params, name ) ( guard.path )}.optJson();`
   },
   equals: {
     imports: [],
-    makeGuardVariable: ( params, page, name, guard: LocalVariableValueEquals<any> ) =>
+    makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableValueEquals<any> ) =>
       `const ${guardName ( name )} =  ${stateForGuardButton ( page, params, name ) ( guard.path )}.optJson() === ${guard.value};`
   },
 
   ">0": {
     imports: [],
-    makeGuardVariable: ( params, page, name, guard: LocalVariableMoreThanZero ) =>
+    makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableMoreThanZero ) =>
       `const ${guardName ( name )} =  ${stateForGuardButton ( page, params, name ) ( guard.path )}.optJsonOr(0) >0`
   },
   "<arrayEnd": {
     imports: [],
-    makeGuardVariable: ( params, page, name, guard: LocalVariableLessThanLengthMinusOne ) =>
+    makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableLessThanLengthMinusOne ) =>
       `const ${guardName ( name )} = ${stateForGuardButton ( page, params, name ) ( guard.varPath )}.optJsonOr(0) <   ${stateForGuardButton ( page, params, name ) ( guard.arrayPath )}.optJsonOr([]).length - 1`
   }
 }
@@ -40,7 +40,7 @@ export type MakeGuard<G> = NameAnd<GuardCreator<G>>
 
 export interface GuardCreator<G> {
   imports: string[];
-  makeGuardVariable: ( params: TSParams, page: PageD<any, G>, name: string, guard: G ) => string
+  makeGuardVariable: ( params: TSParams, mainPage: MainPageD<any, G>, page: PageD<any, G>, name: string, guard: G ) => string
 
 }
 
