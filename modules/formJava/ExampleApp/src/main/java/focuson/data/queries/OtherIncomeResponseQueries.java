@@ -9,4 +9,13 @@ public class OtherIncomeResponseQueries{
         "    amount"+
         "  }"
   +"}";}
+  public static  String updateOtherIncomeResponse(String customerId, String obj){ 
+     return
+  "mutation{updateOtherIncomeResponse(" + "customerId:" + "\"" + customerId + "\""  + ", obj:" + obj + "){"+
+        "    clientOtherIncomeSeq"+
+        "    otherIncomeType"+
+        "    incomeFreqRef"+
+        "    amount"+
+        "  }"
+  +"}";}
 }

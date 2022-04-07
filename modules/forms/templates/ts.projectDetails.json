@@ -10,6 +10,9 @@
     "links":        [],
     "extraDeps":    {},
     "extraDevDeps": {},
+    "name":         "{applicationName}",
+    "javaPort":     {javaPort},
+    "port":         {tsPort},
     "generated":    true
   }
 }

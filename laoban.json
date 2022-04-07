@@ -81,17 +81,7 @@
         {"name": "test", "command": "${packageManager} test", "status": true}
       ], "inLinksOrder": true
     },
-    "ls-ports":       {
-      "description": "lists the projects that have a port defined in project.details.json",
-      "guard":       "${projectDetails.details.port}",
-      "commands":    ["js:process.cwd()"]
-    },
-    "start":          {
-      "description": "${packageManager} start for all projects that have a port defined in project.details.json",
-      "guard":       "${projectDetails.details.port}",
-      "commands":    ["${packageManager} start"],
-      "env":         {"PORT": "${projectDetails.details.port}"}
-    },
+
     "ls-publish":     {
       "description": "lists the projects that can be published",
       "guard":       "${projectDetails.details.publish}",
@@ -142,13 +132,11 @@
       "inLinksOrder": true
     },
     "ls-generated":   {"description": "lists all the projects that were generated", "commands": ["js:process.cwd()"], "guard": "${projectDetails.details.generated}"},
-    "kill-generated": {
-      "description": "removes all the projects that have been generated, but throws lots of errors",
+    "kill-generated-src": {
+      "description": "removes the src folders ",
+      "guard":       "${projectDetails.details.generated}",
       "osGuard":     "Windows",
-      "commands":    [
-        {"name": "kill formJava", "command": "rmdir /Q /S formJava ", "directory": ".."},
-        {"name": "Kill formTs", "command": "rmdir /Q /S formTs ", "directory": ".."}
-      ]
+      "commands":    ["rmdir /Q /S src "]
     },
     "ls-generate":    {
       "description": "lists the projects that will respond to the generate command",
@@ -169,6 +157,33 @@
       "guard":       "${projectDetails.details.mvn}",
       "commands":    [
         {"name": "maven", "command": "mvn clean install", "status": true}
+      ]
+    },
+    "run-api":            {
+      "description": "Runs the spring boot server (the jar must exist in /target...",
+      "guard":       "${projectDetails.details.mvn}",
+      "commands":    [
+        {"name": "run-java", "command": "java -jar  .\\target\\${projectDetails.details.name}-2.5.0.jar --server.port=${projectDetails.details.javaPort}"}
+      ]
+    },
+    "ls-api":             {
+      "description": "Lists the spring boot servers and their port",
+      "guard":       "${projectDetails.details.mvn}",
+      "commands":    [
+        {"name": "echo-java", "command": "echo java -jar  .\\target\\${projectDetails.details.name}-2.5.0.jar --server.port=${projectDetails.details.javaPort}"}
+      ]
+    },
+    "run-react":          {
+      "description": "${packageManager} start for all  projects that have a port defined in project.details.json",
+      "guard":       "${projectDetails.details.port}",
+      "commands":    ["${packageManager} start"],
+      "env":         {"PORT": "${projectDetails.details.port}"}
+    },
+    "ls-react":       {
+      "description": "lists the projects that have a port defined in project.details.json",
+      "guard":       "${projectDetails.details.port}",
+      "commands":    [
+        "js: '${projectDetails.name}'.padEnd(40)+ ' React ${projectDetails.details.port} Java ${projectDetails.details.javaPort}'"
       ]
     }
   }

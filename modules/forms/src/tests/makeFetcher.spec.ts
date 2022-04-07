@@ -38,13 +38,13 @@ describe ( "makeAllFetchers", () => {
     it ( "make a fetcher for address/postcode which has a nested target", () => {
       expect ( makeAllFetchers ( paramsForTest, [ PostCodeMainPage ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
         "//fetcher type true",
-        "export function PostCodeDataFetcher(fdLens:Optional<FState, domains.PostCodeDemoPageDomain>,commonIds: NameAndLens<FState>) {",
-        "  const localIds = {postcode: Lenses.identity< domains.PostCodeDemoPageDomain>().focusQuery('postcode').focusQuery('search')}",
-        "  return pageAndTagFetcher<FState, domains.PostCodeDemoPageDomain, domains.PostCodeDataDomain, SimpleMessage>(",
+        "export function PostCodeDataFetcher(fdLens:Optional<FState, domains.PostCodeMainPagePageDomain>,commonIds: NameAndLens<FState>) {",
+        "  const localIds = {postcode: Lenses.identity< domains.PostCodeMainPagePageDomain>().focusQuery('postcode').focusQuery('search')}",
+        "  return pageAndTagFetcher<FState, domains.PostCodeMainPagePageDomain, domains.PostCodeDataDomain, SimpleMessage>(",
         "    common.commonFetch<FState,  domains.PostCodeDataDomain>(),",
-        "     'PostCodeDemo',",
+        "     'PostCodeMainPage',",
         "     '~/postcode/searchResults', fdLens, commonIds, localIds,['postcode'],[],",
-        "      Lenses.identity<domains.PostCodeDemoPageDomain>().focusQuery('postcode').focusQuery('searchResults'),",
+        "      Lenses.identity<domains.PostCodeMainPagePageDomain>().focusQuery('postcode').focusQuery('searchResults'),",
         "     '/api/postCode?{query}')",
         "}"
       ])

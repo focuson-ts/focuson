@@ -37,7 +37,12 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
   fs.mkdirSync ( `${tsScripts}`, { recursive: true } )
   fs.mkdirSync ( `${tsPublic}`, { recursive: true } )
   fs.mkdirSync ( `${tsStoryBook}`, { recursive: true } )
-  templateFile ( tsRoot + "/project.details.json", 'templates/ts.projectDetails.json',{...params, applicationName: params.applicationName.toLowerCase()}, directorySpec )
+  templateFile ( tsRoot + "/project.details.json", 'templates/ts.projectDetails.json', {
+    ...params,
+    applicationName: params.applicationName.toLowerCase (),
+    javaPort: appConfig.javaPort,
+    tsPort: appConfig.tsPort
+  }, directorySpec )
 
   pages.forEach ( p => {
     detailsLog ( logLevel, 1, `typescript page ${p.name}` )

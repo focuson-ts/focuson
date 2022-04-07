@@ -20,9 +20,19 @@ import java.util.Map;
        return Transform.result(graphQL,OtherIncomeResponseQueries.getOtherIncomeResponse(customerId), "getOtherIncomeResponse");
     }
 
+    @PutMapping(value="/customer/occupation/v2/otherIncome", produces="application/json")
+    public ResponseEntity updateOtherIncomeResponse(@RequestParam String customerId, @RequestBody String body) throws Exception{
+       return Transform.result(graphQL,OtherIncomeResponseQueries.updateOtherIncomeResponse(customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateOtherIncomeResponse");
+    }
+
     @GetMapping(value="/customer/occupation/v2/otherIncome/query", produces="application/json")
     public String querygetOtherIncomeResponse(@RequestParam String customerId) throws Exception{
        return OtherIncomeResponseQueries.getOtherIncomeResponse(customerId);
+    }
+
+    @PutMapping(value="/customer/occupation/v2/otherIncome/query", produces="application/json")
+    public String queryupdateOtherIncomeResponse(@RequestParam String customerId, @RequestBody String body) throws Exception{
+       return OtherIncomeResponseQueries.updateOtherIncomeResponse(customerId,   Transform.removeQuoteFromProperties(body, Map.class));
     }
 
   @GetMapping(value = "/customer/occupation/v2/otherIncome/sample", produces = "application/json")

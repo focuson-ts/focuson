@@ -11,6 +11,8 @@
     "links":        [],
     "extraDeps":    {},
     "extraDevDeps": {},
-    "generated": true
+    "generated": true,
+    "name":  "exampleapp",
+    "javaPort": 8080
   }
 }

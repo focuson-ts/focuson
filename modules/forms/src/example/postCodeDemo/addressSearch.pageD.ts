@@ -9,7 +9,7 @@ import { addT } from "../database/tableNames";
 export const PostCodeModalPage: ExampleModalPage = {
   name: "PostCodeSearch",
   pageType: "ModalPage",
-  display: { dataDD: postCodeSearchDataD, target: '~/', importFrom: 'PostCodeDemo' },
+  display: { dataDD: postCodeSearchDataD, target: '~/', importFrom: 'PostCodeMainPage' },
   modes: [ 'edit' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' },

@@ -184,8 +184,8 @@ describe ( " listComponentsIn", () => {
   } )
   it ( "should create a page with a Layout", () => {
     expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "export function PostCodeDemoPage(){",
-      "  return focusedPageWithExtraState<FState, PostCodeDemoPageDomain, PostCodeNameAndAddressDomain, Context> ( s => 'Post Code Demo' ) ( state => state.focusOn('main')) (",
+      "export function PostCodeMainPagePage(){",
+      "  return focusedPageWithExtraState<FState, PostCodeMainPagePageDomain, PostCodeNameAndAddressDomain, Context> ( s => 'Post Code Main Page' ) ( state => state.focusOn('main')) (",
       "( fullState, state , full, d, mode) => {",
       "  const id='root';",
       "  const buttons =    {save:<RestButton state={state}",
@@ -193,7 +193,7 @@ describe ( " listComponentsIn", () => {
       "        name='save'",
       "        action='create'",
       "        validate={false}",
-      "        rest='PostCodeDemo_PostCodeNameAndAddressRestDetails'",
+      "        rest='PostCodeMainPage_PostCodeNameAndAddressRestDetails'",
       "       />,",
       "      search:<ModalButton id='search' text='search'  state={state} modal = 'PostCodeSearch'  ",
       "        pageMode='edit'",

@@ -15,7 +15,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "typescript": "^4.1.5",
-    "@focuson/focuson": "0.5.37"
+    "@focuson/focuson": "0.5.41"
   },
   "description": "Storybook showing the components' ",
   "devDependencies": {
@@ -66,7 +66,7 @@
     "test:watch": "npm run test -- --watch",
     "storybook": "start-storybook -p 6006 -s public"
   },
-  "version": "0.5.37",
+  "version": "0.5.41",
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -102,8 +102,8 @@
       "@storybook/node-logger": "^6.4.4",
       "@storybook/preset-create-react-app": "^3.2.0",
       "@storybook/react": "^6.4.4"
-    }
-  },
-  "test": true,
-  "tsc": true
+    },
+    "test": true,
+    "tsc": true
+  }
 }

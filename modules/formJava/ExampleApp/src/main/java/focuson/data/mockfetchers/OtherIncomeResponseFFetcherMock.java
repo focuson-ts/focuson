@@ -11,4 +11,5 @@ import java.util.Map;
 @Component
 public class OtherIncomeResponseFFetcherMock  implements OtherIncomeResponseFFetcher{
  public DataFetcher getOtherIncomeResponse() {  return dataFetchingEnvironment -> Sample.sampleOtherIncomeResponse0;    }
+ public DataFetcher updateOtherIncomeResponse() {  return dataFetchingEnvironment -> Sample.sampleOtherIncomeResponse0;    }
 }

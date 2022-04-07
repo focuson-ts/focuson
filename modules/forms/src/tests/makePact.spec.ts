@@ -10,8 +10,8 @@ describe ( "makePacts", () => {
 
     expect ( makeFetcherPact ( paramsForTest, PostCodeMainPage, 'postcode', PostCodeMainPage.rest.postcode ) ).toEqual ( [
       "//GetFetcher pact test",
-      "pactWith ( { consumer: 'PostCodeDemo', provider: 'PostCodeDemoProvider', cors: true }, provider => {",
-      "describe ( 'PostCodeDemo - postcode - fetcher', () => {",
+      "pactWith ( { consumer: 'PostCodeMainPage', provider: 'PostCodeMainPageProvider', cors: true }, provider => {",
+      "describe ( 'PostCodeMainPage - postcode - fetcher', () => {",
       "  it ( 'should have a  fetcher for PostCodeData', async () => {",
       "    await provider.addInteraction ( {",
       "      state: 'default',",
@@ -26,20 +26,20 @@ describe ( "makePacts", () => {
       "        body: samples.samplePostCodeData0",
       "       },",
       "      } )",
-      "      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'PostCodeDemo', pageMode: 'view' }], CommonIds: {} }",
+      "      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'PostCodeMainPage', pageMode: 'view' }], CommonIds: {} }",
       "  const lensTransforms: Transform<FState,any>[] = [",
-      "    [Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('search'), () =>\"LW12 4RG\" ]",
+      "    [Lenses.identity<FState>().focusQuery('PostCodeMainPage').focusQuery('postcode').focusQuery('search'), () =>\"LW12 4RG\" ]",
       "  ]",
       "      const withIds = massTransform ( firstState, ...lensTransforms )",
-      "      const fetcher= PostCodeDataFetcher (Lenses.identity<FState>().focusQuery('PostCodeDemo'), commonIds ) ",
+      "      const fetcher= PostCodeDataFetcher (Lenses.identity<FState>().focusQuery('PostCodeMainPage'), commonIds ) ",
       "      expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state",
       "      const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }",
       "      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )",
       "      let expectedRaw: any = {",
       "... withIds,",
-      "      tags: {'PostCodeDemo_~/postcode/searchResults': [\"LW12 4RG\"]}",
+      "      tags: {'PostCodeMainPage_~/postcode/searchResults': [\"LW12 4RG\"]}",
       "      };",
-      "      const expected = Lenses.identity<FState>().focusQuery('PostCodeDemo').focusQuery('postcode').focusQuery('searchResults').set ( expectedRaw, samples.samplePostCodeData0 )",
+      "      const expected = Lenses.identity<FState>().focusQuery('PostCodeMainPage').focusQuery('postcode').focusQuery('searchResults').set ( expectedRaw, samples.samplePostCodeData0 )",
       "      expect ( newState ).toEqual ( expected )",
       "    })",
       "  })",
@@ -179,7 +179,7 @@ describe ( "makePacts", () => {
 
   it ( "should make imports, skipping when 'fetcher: false'in rest defn", () => {
     expect ( makeFetcherImports ( paramsForTest, PostCodeMainPage ) ).toEqual ( [
-      "import {PostCodeDataFetcher} from './PostCodeDemo.fetchers'"
+      "import {PostCodeDataFetcher} from './PostCodeMainPage.fetchers'"
     ] )
   } )
 } )
