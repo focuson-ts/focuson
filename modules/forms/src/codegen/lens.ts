@@ -1,6 +1,6 @@
 import { lensBuilder, Lenses, Optional, parsePath, PathBuilder, prefixNameAndLens, stateCodeBuilder } from "@focuson/lens";
 import { TSParams } from "./config";
-import { PageD } from "../common/pageD";
+import { MainPageD, PageD } from "../common/pageD";
 import { optionalsName, pageDomainName } from "./names";
 import { CreateButtonData } from "./makeButtons";
 
@@ -17,7 +17,7 @@ export function stateCodeBuilderWithSlashAndTildaFromIdentity<B, G> ( params: TS
     '~': `Lenses.identity<${params.stateName}>().focusQuery('${p.name}')`,
   }, 'changeme' );
 }
-export const lensFocusQueryWithSlashAndTildaFromIdentity = <B, G> ( errorPrefix: string, params: TSParams, p: PageD<B, G>, path: string ) :string=> {
+export const lensFocusQueryWithSlashAndTildaFromIdentity = <B, G> ( errorPrefix: string, params: TSParams, p: PageD<B, G>, path: string ): string => {
   try {
     return parsePath ( path, stateCodeBuilderWithSlashAndTildaFromIdentity ( params, p ) )
   } catch ( e: any ) {
@@ -40,18 +40,31 @@ export const stateFocusQueryWithTildaFromPage = <B, G> ( errorPrefix: string, pa
     return parsePath ( path, stateCodeBuilder ( {
       '/': `.copyWithLens(Lenses.identity<${params.domainsFile}.${pageDomainName ( p )}>())`,
       '~': ``,
-    }, optionalsName(p), 'focusOn' ) )
+    }, optionalsName ( p ), 'focusOn' ) )
   } catch ( e: any ) {
     console.error ( errorPrefix )
     throw e
   }
 }
+export const stateQueryForGuards = <B, G> ( errorPrefix: string, params: TSParams, mainPage: MainPageD<B, G>, p: PageD<B, G>, path: string ) => {
+  try {
+    return parsePath ( path, stateCodeBuilder ( {
+      '/': `fullState<${params.stateName},any,Context>(state)`,
+      '~': `pageState(state)<domain.${pageDomainName ( mainPage )}>()`,
+      '': 'state'
+    }, optionalsName ( p ), 'focusOn' ) )
+  } catch ( e: any ) {
+    console.error ( errorPrefix )
+    throw e
+  }
+}
+
 export const stateFocusQueryWithEmptyFromHere = <B, G> ( errorPrefix: string, params: TSParams, p: PageD<B, G>, path: string ) => {
   try {
     return parsePath ( path, stateCodeBuilder ( {
       '/': `.copyWithLens(Lenses.identity<${params.domainsFile}.${pageDomainName ( p )}>())`,
       '': ``,
-    }, optionalsName(p),'focusOn' ) )
+    }, optionalsName ( p ), 'focusOn' ) )
   } catch ( e: any ) {
     console.error ( errorPrefix )
     throw e

@@ -1,5 +1,5 @@
-import * as domain from '../CreateEAccount/CreateEAccount.domains';
 import * as empty from '../CreateEAccount/CreateEAccount.empty';
+import * as domain from '../CreateEAccount/CreateEAccount.domains';
 import { LensProps } from "@focuson/state";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from "@focuson/pages";

@@ -1,5 +1,5 @@
-import * as domain from '../JointAccount/JointAccount.domains';
 import * as empty from '../JointAccount/JointAccount.empty';
+import * as domain from '../JointAccount/JointAccount.domains';
 import { LensProps } from "@focuson/state";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from "@focuson/pages";

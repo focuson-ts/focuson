@@ -1,34 +1,38 @@
 import { ButtonD } from "./allButtons";
 import { NameAnd } from "@focuson/utils";
 import { guardName } from "../codegen/names";
-import { stateForGuardButton, stateForGuardVariable } from "../codegen/lens";
+import { stateForGuardButton, stateForGuardVariable, stateQueryForGuards } from "../codegen/lens";
 import { MainPageD, PageD } from "../common/pageD";
 import { TSParams } from "../codegen/config";
 
 
 export type AllGuards = LocalVariableGuard | LocalVariableMoreThanZero | LocalVariableLessThanLengthMinusOne | LocalVariableValueEquals<any>
 
+function errorPrefix ( mainP: PageD<any, any>, p: PageD<any, any>, name: string, guard: any ) {
+  if ( mainP.name === p.name ) return `MakeGuardVariable for ${p.name} ${name} ${JSON.stringify ( guard )}`
+  return `MakeGuardVariable for ${mainP.name}/${p.name} ${name} ${JSON.stringify ( guard )}`
+}
 export const AllGuardCreator: MakeGuard<AllGuards> = {
   in: {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableGuard ) =>
-      `const ${guardName ( name )} = ${stateForGuardVariable ( page, params, name ) ( guard.path )}.optJson();`
+      `const ${guardName ( name )} = ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson();`
   },
   equals: {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableValueEquals<any> ) =>
-      `const ${guardName ( name )} =  ${stateForGuardButton ( page, params, name ) ( guard.path )}.optJson() === ${guard.value};`
+      `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson() === ${guard.value};`
   },
 
   ">0": {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableMoreThanZero ) =>
-      `const ${guardName ( name )} =  ${stateForGuardButton ( page, params, name ) ( guard.path )}.optJsonOr(0) >0`
+      `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJsonOr(0) >0`
   },
   "<arrayEnd": {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableLessThanLengthMinusOne ) =>
-      `const ${guardName ( name )} = ${stateForGuardButton ( page, params, name ) ( guard.varPath )}.optJsonOr(0) <   ${stateForGuardButton ( page, params, name ) ( guard.arrayPath )}.optJsonOr([]).length - 1`
+      `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.varPath )}.optJsonOr(0) <  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.arrayPath )}.optJsonOr([]).length - 1`
   }
 }
 export interface GuardWithCondition {

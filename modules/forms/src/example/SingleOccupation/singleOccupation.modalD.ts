@@ -68,7 +68,7 @@ export const editOccupationIncomeSummaryModalPD: ExampleModalPage = {
                 copy: { from: '~/fromApi/additionalInfoFirst' },
                 copyOnClose: { to: '~/fromApi/additionalInfoFirst' } } },
         additionalInfoSecond: {
-            by: { condition: "equals", path: '/MainOccupationDetailsPageSummary/temp/areYou', value: `"S"` },
+            by: { condition: "equals", path: '/MainOccupationDetailsPageSummary/tempForOccupationEdit/areYou', value: `"S"` },
             guard: {
                 control: 'ModalButton', modal: additionalInfoSecondModalPD, mode: 'edit', focusOn: '~/tempForAdditionalInfoSecond',
                 copy: { from: '~/fromApi/additionalInfoSecond' },

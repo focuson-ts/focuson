@@ -40,20 +40,6 @@ public class Sample{
          "  }"+
          "]"
   );
-  public static Map sampleAccountDetails0 =  parse.parseMap(
-         "{"+
-         "  \"contactTitle\": \"BARON\","+
-         "  \"contactForename\": \"Justin\","+
-         "  \"contactSurname\": \"Tesla\","+
-         "  \"practice\": \"PracXyz\","+
-         "  \"addressLine1\": \"Pinetrees Road\","+
-         "  \"addressLine2\": \"Norwich\","+
-         "  \"addressLine3\": \"Norfolk\","+
-         "  \"addressLine4\": \"Norfolkkk\","+
-         "  \"postcode\": \"PLXYZ\","+
-         "  \"telephone\": \"224567\""+
-         "}"
-  );
   public static Map sampleAccountOneFlag0 =  parse.parseMap(
          "{"+
          "  \"flagName\": \"Terrorist\","+
@@ -165,7 +151,7 @@ public class Sample{
          "  \"reason\": \"Really good reason\""+
          "}"
   );
-  public static Map sampleAdditionalInformation0 =  parse.parseMap(
+  public static Map sampleAdditionalInfoFirst0 =  parse.parseMap(
          "{"+
          "  \"applicantName\": \"Mr XXXXXXXXXX ABCD Fred Bloggs\","+
          "  \"employerName\": \"AnalystXYZ\","+
@@ -174,6 +160,20 @@ public class Sample{
          "  \"addressLine3\": \"Norfolk\","+
          "  \"addressLine4\": \"Norfolkkk\","+
          "  \"postcode\": \"PLXYZ\""+
+         "}"
+  );
+  public static Map sampleAdditionalInfoSecond0 =  parse.parseMap(
+         "{"+
+         "  \"turnoverLastYear\": \"10,000\","+
+         "  \"turnoverPenultimateYear\": \"11,000\","+
+         "  \"netProfitLastYear\": \"12,000\","+
+         "  \"netProfitPenultimateYear\": \"9,000\","+
+         "  \"drawingsLastYear\": \"13,000\","+
+         "  \"drawingsPenultimateYear\": \"100,000\","+
+         "  \"dividendsLastYear\": \"15,000\","+
+         "  \"dividendsPenultimateYear\": \"3,000\","+
+         "  \"netAssetsLastYear\": \"1,000\","+
+         "  \"netAssetsPenultimateYear\": \"2,000\""+
          "}"
   );
   public static Map sampleArrearsDetails0 =  parse.parseMap(
@@ -265,74 +265,6 @@ public class Sample{
          "  }"+
          "]"
   );
-  public static Map sampleBusinessDetails0 =  parse.parseMap(
-         "{"+
-         "  \"applicantName\": \"Mr XXXXXXXXXX ABCD Fred Bloggs\","+
-         "  \"businessName\": \"AnalystXYZ\","+
-         "  \"addressLine1\": \"Pinetrees Road\","+
-         "  \"addressLine2\": \"Norwich\","+
-         "  \"addressLine3\": \"Norfolk\","+
-         "  \"addressLine4\": \"Norfolkkk\","+
-         "  \"postcode\": \"PLXYZ\""+
-         "}"
-  );
-  public static Map sampleBusinessDetailsMain0 =  parse.parseMap(
-         "{"+
-         "  \"businessDetails\": {"+
-         "    \"applicantName\": \"Mr XXXXXXXXXX ABCD Fred Bloggs\","+
-         "    \"businessName\": \"AnalystXYZ\","+
-         "    \"addressLine1\": \"Pinetrees Road\","+
-         "    \"addressLine2\": \"Norwich\","+
-         "    \"addressLine3\": \"Norfolk\","+
-         "    \"addressLine4\": \"Norfolkkk\","+
-         "    \"postcode\": \"PLXYZ\""+
-         "  },"+
-         "  \"businessFinancialDetails\": {"+
-         "    \"turnoverLastYear\": \"10,000\","+
-         "    \"turnoverPenultimateYear\": \"11,000\","+
-         "    \"netProfitLastYear\": \"12,000\","+
-         "    \"netProfitPenultimateYear\": \"9,000\","+
-         "    \"drawingsLastYear\": \"13,000\","+
-         "    \"drawingsPenultimateYear\": \"100,000\","+
-         "    \"dividendsLastYear\": \"15,000\","+
-         "    \"dividendsPenultimateYear\": \"3,000\","+
-         "    \"netAssetsLastYear\": \"1,000\","+
-         "    \"netAssetsPenultimateYear\": \"2,000\""+
-         "  },"+
-         "  \"detailsOfNonRecurringItems\": {"+
-         "    \"nonRecurringItems\": \"Not Available\""+
-         "  },"+
-         "  \"detailsOfReevaluationOfAssets\": {"+
-         "    \"revaluationOfAssets\": \"Not Available\""+
-         "  },"+
-         "  \"accountantDetails\": {"+
-         "    \"contactTitle\": \"BARON\","+
-         "    \"contactForename\": \"Justin\","+
-         "    \"contactSurname\": \"Tesla\","+
-         "    \"practice\": \"PracXyz\","+
-         "    \"addressLine1\": \"Pinetrees Road\","+
-         "    \"addressLine2\": \"Norwich\","+
-         "    \"addressLine3\": \"Norfolk\","+
-         "    \"addressLine4\": \"Norfolkkk\","+
-         "    \"postcode\": \"PLXYZ\","+
-         "    \"telephone\": \"224567\""+
-         "  }"+
-         "}"
-  );
-  public static Map sampleBusinessFinancialDetails0 =  parse.parseMap(
-         "{"+
-         "  \"turnoverLastYear\": \"10,000\","+
-         "  \"turnoverPenultimateYear\": \"11,000\","+
-         "  \"netProfitLastYear\": \"12,000\","+
-         "  \"netProfitPenultimateYear\": \"9,000\","+
-         "  \"drawingsLastYear\": \"13,000\","+
-         "  \"drawingsPenultimateYear\": \"100,000\","+
-         "  \"dividendsLastYear\": \"15,000\","+
-         "  \"dividendsPenultimateYear\": \"3,000\","+
-         "  \"netAssetsLastYear\": \"1,000\","+
-         "  \"netAssetsPenultimateYear\": \"2,000\""+
-         "}"
-  );
   public static Map sampleChequeCreditbooks0 =  parse.parseMap(
          "{"+
          "  \"history\": ["+
@@ -380,12 +312,6 @@ public class Sample{
          "  \"dateOrder\": \"2022-10-01\""+
          "}"
   );
-  public static Map sampleContractTypesResponse0 =  parse.parseMap(
-         "{"+
-         "  \"contractTypeId\": 123,"+
-         "  \"description\": \"someString\""+
-         "}"
-  );
   public static Map sampleCreateEAccountData0 =  parse.parseMap(
          "{"+
          "  \"name\": \"This is a one line string\","+
@@ -399,125 +325,6 @@ public class Sample{
          "  \"createPlanStart\": \"2022-01-01\","+
          "  \"createPlanDate\": \"2022-03-01\","+
          "  \"createPlanEnd\": \"2022-10-01\""+
-         "}"
-  );
-  public static List sampleCustomerOccupationIncomeDetails0 =  parse.parseList(
-         "["+
-         "  {"+
-         "    \"areYou\": \"C\","+
-         "    \"occupation\": \"W045\","+
-         "    \"customerDescription\": \"XXXXXXXXX\","+
-         "    \"ownShareOfTheCompany\": \"N\","+
-         "    \"owningSharesPct\": \"N\","+
-         "    \"workFor\": \"S.C. Bosch S.R.L.\","+
-         "    \"employmentType\": \"0\","+
-         "    \"empStartDate\": \"10/2002\","+
-         "    \"empEndDate\": \"10/2003\","+
-         "    \"annualSalaryBeforeDeduction\": 20315,"+
-         "    \"annualIncomeExcludingRent\": 13255,"+
-         "    \"regularCommissionBonus\": 500,"+
-         "    \"whatTypeOfBusiness\": \"Electrical Technical Support\","+
-         "    \"whatNameBusiness\": \"XXXXXXXXX\","+
-         "    \"establishedYear\": \"2006-04-01T00:00:00.000+01:00\","+
-         "    \"annualDrawing3Yrs\": 100000,"+
-         "    \"otherSourceOfIncome\": \"N\","+
-         "    \"createdBy\": \"Seras Alin\","+
-         "    \"createdDate\": \"2007-07-03T10:52:27.000+01:00\","+
-         "    \"employerName\": \"My employer name\","+
-         "    \"sePositionHeld\": \"DIR\","+
-         "    \"occupationCategory\": \"SK\","+
-         "    \"empEmploymentSeq\": 999999,"+
-         "    \"empAppRoleSeq\": 14648851,"+
-         "    \"accountantAppRoleSeq\": 14648851,"+
-         "    \"currentEmployment\": \"N\""+
-         "  },"+
-         "  {"+
-         "    \"areYou\": \"E\","+
-         "    \"occupation\": \"someString\","+
-         "    \"customerDescription\": \"someString\","+
-         "    \"ownShareOfTheCompany\": \"X\","+
-         "    \"owningSharesPct\": \"X\","+
-         "    \"workFor\": \"someString\","+
-         "    \"employmentType\": \"1\","+
-         "    \"empStartDate\": \"2020-10-01\","+
-         "    \"empEndDate\": \"2020-10-01\","+
-         "    \"annualSalaryBeforeDeduction\": 123,"+
-         "    \"annualIncomeExcludingRent\": 123,"+
-         "    \"regularCommissionBonus\": 123,"+
-         "    \"whatTypeOfBusiness\": \"someString\","+
-         "    \"whatNameBusiness\": \"someString\","+
-         "    \"establishedYear\": \"someString\","+
-         "    \"annualDrawing3Yrs\": 123,"+
-         "    \"otherSourceOfIncome\": \"X\","+
-         "    \"createdBy\": \"someString\","+
-         "    \"createdDate\": \"2020-10-01\","+
-         "    \"employerName\": \"someString\","+
-         "    \"sePositionHeld\": \"someString\","+
-         "    \"occupationCategory\": \"someString\","+
-         "    \"empEmploymentSeq\": 123,"+
-         "    \"empAppRoleSeq\": 123,"+
-         "    \"accountantAppRoleSeq\": 123,"+
-         "    \"currentEmployment\": \"X\""+
-         "  },"+
-         "  {"+
-         "    \"areYou\": \"H\","+
-         "    \"occupation\": \"anotherString\","+
-         "    \"customerDescription\": \"anotherString\","+
-         "    \"ownShareOfTheCompany\": \"Y\","+
-         "    \"owningSharesPct\": \"Y\","+
-         "    \"workFor\": \"anotherString\","+
-         "    \"employmentType\": \"2\","+
-         "    \"empStartDate\": \"2022-14-01\","+
-         "    \"empEndDate\": \"2022-14-01\","+
-         "    \"annualSalaryBeforeDeduction\": 456,"+
-         "    \"annualIncomeExcludingRent\": 456,"+
-         "    \"regularCommissionBonus\": 456,"+
-         "    \"whatTypeOfBusiness\": \"anotherString\","+
-         "    \"whatNameBusiness\": \"anotherString\","+
-         "    \"establishedYear\": \"anotherString\","+
-         "    \"annualDrawing3Yrs\": 456,"+
-         "    \"otherSourceOfIncome\": \"Y\","+
-         "    \"createdBy\": \"anotherString\","+
-         "    \"createdDate\": \"2022-14-01\","+
-         "    \"employerName\": \"anotherString\","+
-         "    \"sePositionHeld\": \"anotherString\","+
-         "    \"occupationCategory\": \"anotherString\","+
-         "    \"empEmploymentSeq\": 456,"+
-         "    \"empAppRoleSeq\": 456,"+
-         "    \"accountantAppRoleSeq\": 456,"+
-         "    \"currentEmployment\": \"Y\""+
-         "  }"+
-         "]"
-  );
-  public static Map sampleDetailsOfNonRecurringItems0 =  parse.parseMap(
-         "{"+
-         "  \"nonRecurringItems\": \"Not Available\""+
-         "}"
-  );
-  public static Map sampleDetailsOfReevaluationOfAssets0 =  parse.parseMap(
-         "{"+
-         "  \"revaluationOfAssets\": \"Not Available\""+
-         "}"
-  );
-  public static Map sampleDropdowns0 =  parse.parseMap(
-         "{"+
-         "  \"occupationDescriptionResponse\": {"+
-         "    \"descTypeValue\": \"W54\","+
-         "    \"descTypeName\": \"Engineer\""+
-         "  },"+
-         "  \"employmentStatus\": {"+
-         "    \"employmentName\": \"someString\","+
-         "    \"employmentValue\": \"someString\""+
-         "  },"+
-         "  \"contractTypesResponse\": {"+
-         "    \"contractTypeId\": 123,"+
-         "    \"description\": \"someString\""+
-         "  },"+
-         "  \"frequenciesResponse\": {"+
-         "    \"frequencyId\": 123,"+
-         "    \"frequencyDescription\": \"someString\","+
-         "    \"annualMultiple\": 123"+
-         "  }"+
          "}"
   );
   public static Map sampleEAccountsSummary0 =  parse.parseMap(
@@ -597,12 +404,6 @@ public class Sample{
          "  \"frequency\": \"23\""+
          "}"
   );
-  public static Map sampleEmploymentStatus0 =  parse.parseMap(
-         "{"+
-         "  \"employmentName\": \"someString\","+
-         "  \"employmentValue\": \"someString\""+
-         "}"
-  );
   public static Map sampleETransferDataD0 =  parse.parseMap(
          "{"+
          "  \"account\": 1233450,"+
@@ -616,11 +417,65 @@ public class Sample{
          "  \"notes\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit\""+
          "}"
   );
-  public static Map sampleFrequenciesResponse0 =  parse.parseMap(
+  public static Map sampleFromApi0 =  parse.parseMap(
          "{"+
-         "  \"frequencyId\": 123,"+
-         "  \"frequencyDescription\": \"someString\","+
-         "  \"annualMultiple\": 123"+
+         "  \"occupationAndIncome\": {"+
+         "    \"mainCustomerName\": \"Mr XXXXXXXXXX J ABCD Fred Bloggs\","+
+         "    \"mainClientRef\": 13606326,"+
+         "    \"customerOccupationIncomeDetails\": {"+
+         "      \"areYou\": \"C\","+
+         "      \"occupation\": \"W045\","+
+         "      \"customerDescription\": \"XXXXXXXXX\","+
+         "      \"ownShareOfTheCompany\": \"N\","+
+         "      \"owningSharesPct\": \"N\","+
+         "      \"workFor\": \"S.C. Bosch S.R.L.\","+
+         "      \"employmentType\": \"0\","+
+         "      \"empStartDate\": \"10/2002\","+
+         "      \"empEndDate\": \"10/2003\","+
+         "      \"annualSalaryBeforeDeduction\": 20315,"+
+         "      \"annualIncomeExcludingRent\": 13255,"+
+         "      \"regularCommissionBonus\": 500,"+
+         "      \"whatTypeOfBusiness\": \"Electrical Technical Support\","+
+         "      \"whatNameBusiness\": \"XXXXXXXXX\","+
+         "      \"establishedYear\": \"2006-04-01T00:00:00.000+01:00\","+
+         "      \"annualDrawing3Yrs\": 100000,"+
+         "      \"otherSourceOfIncome\": \"N\","+
+         "      \"createdBy\": \"Seras Alin\","+
+         "      \"empEmploymentSeq\": 999999,"+
+         "      \"accountantAppRoleSeq\": 14648851"+
+         "    }"+
+         "  },"+
+         "  \"additionalInfoFirst\": {"+
+         "    \"applicantName\": \"Mr XXXXXXXXXX ABCD Fred Bloggs\","+
+         "    \"employerName\": \"AnalystXYZ\","+
+         "    \"addressLine1\": \"Pinetrees Road\","+
+         "    \"addressLine2\": \"Norwich\","+
+         "    \"addressLine3\": \"Norfolk\","+
+         "    \"addressLine4\": \"Norfolkkk\","+
+         "    \"postcode\": \"PLXYZ\""+
+         "  },"+
+         "  \"additionalInfoSecond\": {"+
+         "    \"turnoverLastYear\": \"10,000\","+
+         "    \"turnoverPenultimateYear\": \"11,000\","+
+         "    \"netProfitLastYear\": \"12,000\","+
+         "    \"netProfitPenultimateYear\": \"9,000\","+
+         "    \"drawingsLastYear\": \"13,000\","+
+         "    \"drawingsPenultimateYear\": \"100,000\","+
+         "    \"dividendsLastYear\": \"15,000\","+
+         "    \"dividendsPenultimateYear\": \"3,000\","+
+         "    \"netAssetsLastYear\": \"1,000\","+
+         "    \"netAssetsPenultimateYear\": \"2,000\""+
+         "  },"+
+         "  \"otherSourcesOfIncome\": {"+
+         "    \"clientOtherIncomeSeq\": \"1\","+
+         "    \"otherIncomeType\": \"\","+
+         "    \"incomeFreqRef\": \"0\","+
+         "    \"amount\": 123"+
+         "  },"+
+         "  \"occupationsList\": {"+
+         "    \"descTypeValue\": \"W54\","+
+         "    \"descTypeName\": \"Engineer\""+
+         "  }"+
          "}"
   );
   public static Map sampleHelloWorldDomainData0 =  parse.parseMap(
@@ -710,139 +565,37 @@ public class Sample{
   );
   public static Map sampleListOccupations0 =  parse.parseMap(
          "{"+
-         "  \"search\": \"Hair dresser\","+
-         "  \"selectedOccupationName\": \"someString\","+
-         "  \"searchResults\": ["+
-         "    {"+
-         "      \"descTypeValue\": \"W54\","+
-         "      \"descTypeName\": \"Engineer\""+
-         "    },"+
-         "    {"+
-         "      \"descTypeValue\": \"someString\","+
-         "      \"descTypeName\": \"someString\""+
-         "    },"+
-         "    {"+
-         "      \"descTypeValue\": \"anotherString\","+
-         "      \"descTypeName\": \"anotherString\""+
-         "    }"+
-         "  ]"+
+         "  \"descTypeValue\": \"W54\","+
+         "  \"descTypeName\": \"Engineer\""+
          "}"
   );
   public static Map sampleOccupationAndIncomeFullDomain0 =  parse.parseMap(
          "{"+
          "  \"mainCustomerName\": \"Mr XXXXXXXXXX J ABCD Fred Bloggs\","+
-         "  \"jointCustomerName\": \"Mrs XXXXXXXXXX J ABCD Fred Bloggs\","+
          "  \"mainClientRef\": 13606326,"+
-         "  \"jointClientRef\": -1,"+
-         "  \"customerOccupationIncomeDetails\": ["+
-         "    {"+
-         "      \"areYou\": \"C\","+
-         "      \"occupation\": \"W045\","+
-         "      \"customerDescription\": \"XXXXXXXXX\","+
-         "      \"ownShareOfTheCompany\": \"N\","+
-         "      \"owningSharesPct\": \"N\","+
-         "      \"workFor\": \"S.C. Bosch S.R.L.\","+
-         "      \"employmentType\": \"0\","+
-         "      \"empStartDate\": \"10/2002\","+
-         "      \"empEndDate\": \"10/2003\","+
-         "      \"annualSalaryBeforeDeduction\": 20315,"+
-         "      \"annualIncomeExcludingRent\": 13255,"+
-         "      \"regularCommissionBonus\": 500,"+
-         "      \"whatTypeOfBusiness\": \"Electrical Technical Support\","+
-         "      \"whatNameBusiness\": \"XXXXXXXXX\","+
-         "      \"establishedYear\": \"2006-04-01T00:00:00.000+01:00\","+
-         "      \"annualDrawing3Yrs\": 100000,"+
-         "      \"otherSourceOfIncome\": \"N\","+
-         "      \"createdBy\": \"Seras Alin\","+
-         "      \"createdDate\": \"2007-07-03T10:52:27.000+01:00\","+
-         "      \"employerName\": \"My employer name\","+
-         "      \"sePositionHeld\": \"DIR\","+
-         "      \"occupationCategory\": \"SK\","+
-         "      \"empEmploymentSeq\": 999999,"+
-         "      \"empAppRoleSeq\": 14648851,"+
-         "      \"accountantAppRoleSeq\": 14648851,"+
-         "      \"currentEmployment\": \"N\""+
-         "    },"+
-         "    {"+
-         "      \"areYou\": \"E\","+
-         "      \"occupation\": \"someString\","+
-         "      \"customerDescription\": \"someString\","+
-         "      \"ownShareOfTheCompany\": \"X\","+
-         "      \"owningSharesPct\": \"X\","+
-         "      \"workFor\": \"someString\","+
-         "      \"employmentType\": \"1\","+
-         "      \"empStartDate\": \"2020-10-01\","+
-         "      \"empEndDate\": \"2020-10-01\","+
-         "      \"annualSalaryBeforeDeduction\": 123,"+
-         "      \"annualIncomeExcludingRent\": 123,"+
-         "      \"regularCommissionBonus\": 123,"+
-         "      \"whatTypeOfBusiness\": \"someString\","+
-         "      \"whatNameBusiness\": \"someString\","+
-         "      \"establishedYear\": \"someString\","+
-         "      \"annualDrawing3Yrs\": 123,"+
-         "      \"otherSourceOfIncome\": \"X\","+
-         "      \"createdBy\": \"someString\","+
-         "      \"createdDate\": \"2020-10-01\","+
-         "      \"employerName\": \"someString\","+
-         "      \"sePositionHeld\": \"someString\","+
-         "      \"occupationCategory\": \"someString\","+
-         "      \"empEmploymentSeq\": 123,"+
-         "      \"empAppRoleSeq\": 123,"+
-         "      \"accountantAppRoleSeq\": 123,"+
-         "      \"currentEmployment\": \"X\""+
-         "    },"+
-         "    {"+
-         "      \"areYou\": \"H\","+
-         "      \"occupation\": \"anotherString\","+
-         "      \"customerDescription\": \"anotherString\","+
-         "      \"ownShareOfTheCompany\": \"Y\","+
-         "      \"owningSharesPct\": \"Y\","+
-         "      \"workFor\": \"anotherString\","+
-         "      \"employmentType\": \"2\","+
-         "      \"empStartDate\": \"2022-14-01\","+
-         "      \"empEndDate\": \"2022-14-01\","+
-         "      \"annualSalaryBeforeDeduction\": 456,"+
-         "      \"annualIncomeExcludingRent\": 456,"+
-         "      \"regularCommissionBonus\": 456,"+
-         "      \"whatTypeOfBusiness\": \"anotherString\","+
-         "      \"whatNameBusiness\": \"anotherString\","+
-         "      \"establishedYear\": \"anotherString\","+
-         "      \"annualDrawing3Yrs\": 456,"+
-         "      \"otherSourceOfIncome\": \"Y\","+
-         "      \"createdBy\": \"anotherString\","+
-         "      \"createdDate\": \"2022-14-01\","+
-         "      \"employerName\": \"anotherString\","+
-         "      \"sePositionHeld\": \"anotherString\","+
-         "      \"occupationCategory\": \"anotherString\","+
-         "      \"empEmploymentSeq\": 456,"+
-         "      \"empAppRoleSeq\": 456,"+
-         "      \"accountantAppRoleSeq\": 456,"+
-         "      \"currentEmployment\": \"Y\""+
-         "    }"+
-         "  ]"+
-         "}"
-  );
-  public static Map sampleOccupationDescriptionResponse0 =  parse.parseMap(
-         "{"+
-         "  \"descTypeValue\": \"W54\","+
-         "  \"descTypeName\": \"Engineer\""+
-         "}"
-  );
-  public static List sampleOccupationsListData0 =  parse.parseList(
-         "["+
-         "  {"+
-         "    \"descTypeValue\": \"W54\","+
-         "    \"descTypeName\": \"Engineer\""+
-         "  },"+
-         "  {"+
-         "    \"descTypeValue\": \"someString\","+
-         "    \"descTypeName\": \"someString\""+
-         "  },"+
-         "  {"+
-         "    \"descTypeValue\": \"anotherString\","+
-         "    \"descTypeName\": \"anotherString\""+
+         "  \"customerOccupationIncomeDetails\": {"+
+         "    \"areYou\": \"C\","+
+         "    \"occupation\": \"W045\","+
+         "    \"customerDescription\": \"XXXXXXXXX\","+
+         "    \"ownShareOfTheCompany\": \"N\","+
+         "    \"owningSharesPct\": \"N\","+
+         "    \"workFor\": \"S.C. Bosch S.R.L.\","+
+         "    \"employmentType\": \"0\","+
+         "    \"empStartDate\": \"10/2002\","+
+         "    \"empEndDate\": \"10/2003\","+
+         "    \"annualSalaryBeforeDeduction\": 20315,"+
+         "    \"annualIncomeExcludingRent\": 13255,"+
+         "    \"regularCommissionBonus\": 500,"+
+         "    \"whatTypeOfBusiness\": \"Electrical Technical Support\","+
+         "    \"whatNameBusiness\": \"XXXXXXXXX\","+
+         "    \"establishedYear\": \"2006-04-01T00:00:00.000+01:00\","+
+         "    \"annualDrawing3Yrs\": 100000,"+
+         "    \"otherSourceOfIncome\": \"N\","+
+         "    \"createdBy\": \"Seras Alin\","+
+         "    \"empEmploymentSeq\": 999999,"+
+         "    \"accountantAppRoleSeq\": 14648851"+
          "  }"+
-         "]"
+         "}"
   );
   public static Map sampleOneOccupationIncomeDetails0 =  parse.parseMap(
          "{"+
@@ -864,20 +617,14 @@ public class Sample{
          "  \"annualDrawing3Yrs\": 100000,"+
          "  \"otherSourceOfIncome\": \"N\","+
          "  \"createdBy\": \"Seras Alin\","+
-         "  \"createdDate\": \"2007-07-03T10:52:27.000+01:00\","+
-         "  \"employerName\": \"My employer name\","+
-         "  \"sePositionHeld\": \"DIR\","+
-         "  \"occupationCategory\": \"SK\","+
          "  \"empEmploymentSeq\": 999999,"+
-         "  \"empAppRoleSeq\": 14648851,"+
-         "  \"accountantAppRoleSeq\": 14648851,"+
-         "  \"currentEmployment\": \"N\""+
+         "  \"accountantAppRoleSeq\": 14648851"+
          "}"
   );
   public static Map sampleOtherIncomeResponse0 =  parse.parseMap(
          "{"+
-         "  \"clientOtherIncomeSeq\": \"someString\","+
-         "  \"otherIncomeType\": \"someString\","+
+         "  \"clientOtherIncomeSeq\": \"1\","+
+         "  \"otherIncomeType\": \"\","+
          "  \"incomeFreqRef\": \"0\","+
          "  \"amount\": 123"+
          "}"

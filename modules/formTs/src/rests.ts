@@ -12,11 +12,11 @@ import { AccountOverview_AccountOverviewExcessInfoRestDetails } from './AccountO
 import { AccountOverview_AccountOverviewRestDetails } from './AccountOverview/AccountOverview.rests';
 import { AccountOverview_AccountOverviewReasonRestDetails } from './AccountOverview/AccountOverview.rests';
 import { JointAccount_JointAccountRestDetails } from './JointAccount/JointAccount.rests';
-import { OccupationAndIncomeSummary_AdditionalInformationRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
-import { OccupationAndIncomeSummary_BusinessDetailsMainRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
-import { OccupationAndIncomeSummary_DropdownsRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
-import { OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
-import { OccupationAndIncomeSummary_OtherIncomeResponseRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
+import { MainOccupationDetailsPageSummary_AdditionalInfoFirstRestDetails } from './MainOccupationDetailsPageSummary/MainOccupationDetailsPageSummary.rests';
+import { MainOccupationDetailsPageSummary_AdditionalInfoSecondRestDetails } from './MainOccupationDetailsPageSummary/MainOccupationDetailsPageSummary.rests';
+import { MainOccupationDetailsPageSummary_OccupationAndIncomeFullDomainRestDetails } from './MainOccupationDetailsPageSummary/MainOccupationDetailsPageSummary.rests';
+import { MainOccupationDetailsPageSummary_ListOccupationsRestDetails } from './MainOccupationDetailsPageSummary/MainOccupationDetailsPageSummary.rests';
+import { MainOccupationDetailsPageSummary_OtherIncomeResponseRestDetails } from './MainOccupationDetailsPageSummary/MainOccupationDetailsPageSummary.rests';
 import { EAccountsSummary_CreatePlanRestDetails } from './EAccountsSummary/EAccountsSummary.rests';
 import { EAccountsSummary_EAccountsSummaryRestDetails } from './EAccountsSummary/EAccountsSummary.rests';
 import { ETransfer_ETransferDataDRestDetails } from './ETransfer/ETransfer.rests';
@@ -38,11 +38,11 @@ export const restDetails: RestDetails<FState, SimpleMessage> = {
    AccountOverview_AccountOverviewRestDetails: AccountOverview_AccountOverviewRestDetails(commonIds, defaultDateFn),
    AccountOverview_AccountOverviewReasonRestDetails: AccountOverview_AccountOverviewReasonRestDetails(commonIds, defaultDateFn),
    JointAccount_JointAccountRestDetails: JointAccount_JointAccountRestDetails(commonIds, defaultDateFn),
-   OccupationAndIncomeSummary_AdditionalInformationRestDetails: OccupationAndIncomeSummary_AdditionalInformationRestDetails(commonIds, defaultDateFn),
-   OccupationAndIncomeSummary_BusinessDetailsMainRestDetails: OccupationAndIncomeSummary_BusinessDetailsMainRestDetails(commonIds, defaultDateFn),
-   OccupationAndIncomeSummary_DropdownsRestDetails: OccupationAndIncomeSummary_DropdownsRestDetails(commonIds, defaultDateFn),
-   OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDetails: OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDetails(commonIds, defaultDateFn),
-   OccupationAndIncomeSummary_OtherIncomeResponseRestDetails: OccupationAndIncomeSummary_OtherIncomeResponseRestDetails(commonIds, defaultDateFn),
+   MainOccupationDetailsPageSummary_AdditionalInfoFirstRestDetails: MainOccupationDetailsPageSummary_AdditionalInfoFirstRestDetails(commonIds, defaultDateFn),
+   MainOccupationDetailsPageSummary_AdditionalInfoSecondRestDetails: MainOccupationDetailsPageSummary_AdditionalInfoSecondRestDetails(commonIds, defaultDateFn),
+   MainOccupationDetailsPageSummary_OccupationAndIncomeFullDomainRestDetails: MainOccupationDetailsPageSummary_OccupationAndIncomeFullDomainRestDetails(commonIds, defaultDateFn),
+   MainOccupationDetailsPageSummary_ListOccupationsRestDetails: MainOccupationDetailsPageSummary_ListOccupationsRestDetails(commonIds, defaultDateFn),
+   MainOccupationDetailsPageSummary_OtherIncomeResponseRestDetails: MainOccupationDetailsPageSummary_OtherIncomeResponseRestDetails(commonIds, defaultDateFn),
    EAccountsSummary_CreatePlanRestDetails: EAccountsSummary_CreatePlanRestDetails(commonIds, defaultDateFn),
    EAccountsSummary_EAccountsSummaryRestDetails: EAccountsSummary_EAccountsSummaryRestDetails(commonIds, defaultDateFn),
    ETransfer_ETransferDataDRestDetails: ETransfer_ETransferDataDRestDetails(commonIds, defaultDateFn),

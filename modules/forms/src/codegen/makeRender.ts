@@ -228,10 +228,8 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
 }
 
 export function createRenderPage<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, transformButtons: MakeButton<G>, mainP: MainPageD<B, G>, p: PageD<B, G> ): string[] {
-  const imports = isMainPage ( p ) ? [
-    `import * as domain from '${domainsFileName ( '..', params, p )}';`,
-    `import * as empty from '${emptyFileName ( '..', params, p )}';` ] : []
-  return [ ...imports,
+  const imports = isMainPage ( p ) ? [ `import * as empty from '${emptyFileName ( '..', params, p )}';` ] : []
+  return [ ...imports, `import * as domain from '${domainsFileName ( '..', params, mainP )}';`,
     ...createAllReactComponents ( params, makeGuard, transformButtons, mainP, p ) ]
 }
 

@@ -1,5 +1,5 @@
-import * as domain from '../ETransfer/ETransfer.domains';
 import * as empty from '../ETransfer/ETransfer.empty';
+import * as domain from '../ETransfer/ETransfer.domains';
 import { LensProps } from "@focuson/state";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from "@focuson/pages";

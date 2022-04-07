@@ -1,5 +1,5 @@
-import * as domain from '../HelloWorldMainPage/HelloWorldMainPage.domains';
 import * as empty from '../HelloWorldMainPage/HelloWorldMainPage.empty';
+import * as domain from '../HelloWorldMainPage/HelloWorldMainPage.domains';
 import { LensProps } from "@focuson/state";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from "@focuson/pages";

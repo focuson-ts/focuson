@@ -1,5 +1,5 @@
-import * as domain from '../Repeating/Repeating.domains';
 import * as empty from '../Repeating/Repeating.empty';
+import * as domain from '../Repeating/Repeating.domains';
 import { LensProps } from "@focuson/state";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from "@focuson/pages";
@@ -25,8 +25,8 @@ import {RepeatingWholeDataDomain} from "../Repeating/Repeating.domains"
 export function RepeatingPage(){
   return focusedPageWithExtraState<FState, RepeatingPageDomain, RepeatingWholeDataDomain, Context> ( s => 'Repeating' ) ( state => state.focusOn('fromApi')) (
 ( fullState, state , full, d, mode) => {
-  const nextOccupationGuard = fullState.focusOn('selectedItem').optJsonOr(0) <   fullState.focusOn('fromApi').optJsonOr([]).length - 1
-  const prevOccupationGuard =  fullState.focusOn('selectedItem').optJsonOr(0) >0
+  const nextOccupationGuard =  pageState(state)<domain.RepeatingPageDomain>().focusOn('selectedItem').optJsonOr(0) <  pageState(state)<domain.RepeatingPageDomain>().focusOn('fromApi').optJsonOr([]).length - 1
+  const prevOccupationGuard =  pageState(state)<domain.RepeatingPageDomain>().focusOn('selectedItem').optJsonOr(0) >0
   const id='root';
   const buttons =    {addEntry:<ModalButton id='addEntry' text='addEntry'  state={state} modal = 'RepeatingLine'  
         pageMode='create'

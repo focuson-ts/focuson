@@ -1,3 +1,4 @@
+import * as domain from '../ChequeCreditbooks/ChequeCreditbooks.domains';
 import { LensProps } from "@focuson/state";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from "@focuson/pages";

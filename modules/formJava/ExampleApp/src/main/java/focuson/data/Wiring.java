@@ -23,10 +23,10 @@ import focuson.data.fetchers.AccountOverviewExcessInfoFFetcher;
 import focuson.data.fetchers.AccountOverviewFFetcher;
 import focuson.data.fetchers.AccountOverviewReasonFFetcher;
 import focuson.data.fetchers.JointAccountFFetcher;
-import focuson.data.fetchers.AdditionalInformationFFetcher;
-import focuson.data.fetchers.BusinessDetailsMainFFetcher;
-import focuson.data.fetchers.DropdownsFFetcher;
+import focuson.data.fetchers.AdditionalInfoFirstFFetcher;
+import focuson.data.fetchers.AdditionalInfoSecondFFetcher;
 import focuson.data.fetchers.OccupationAndIncomeFullDomainFFetcher;
+import focuson.data.fetchers.ListOccupationsFFetcher;
 import focuson.data.fetchers.OtherIncomeResponseFFetcher;
 import focuson.data.fetchers.CreatePlanFFetcher;
 import focuson.data.fetchers.EAccountsSummaryFFetcher;
@@ -57,13 +57,13 @@ public class Wiring {
       @Autowired
       JointAccountFFetcher _JointAccountFFetcher;
       @Autowired
-      AdditionalInformationFFetcher _AdditionalInformationFFetcher;
+      AdditionalInfoFirstFFetcher _AdditionalInfoFirstFFetcher;
       @Autowired
-      BusinessDetailsMainFFetcher _BusinessDetailsMainFFetcher;
-      @Autowired
-      DropdownsFFetcher _DropdownsFFetcher;
+      AdditionalInfoSecondFFetcher _AdditionalInfoSecondFFetcher;
       @Autowired
       OccupationAndIncomeFullDomainFFetcher _OccupationAndIncomeFullDomainFFetcher;
+      @Autowired
+      ListOccupationsFFetcher _ListOccupationsFFetcher;
       @Autowired
       OtherIncomeResponseFFetcher _OtherIncomeResponseFFetcher;
       @Autowired
@@ -107,12 +107,15 @@ public class Wiring {
           .type(newTypeWiring("Query").dataFetcher("getAccountOverview", _AccountOverviewFFetcher.getAccountOverview()))
           .type(newTypeWiring("Query").dataFetcher("getAccountOverviewReason", _AccountOverviewReasonFFetcher.getAccountOverviewReason()))
           .type(newTypeWiring("Query").dataFetcher("getJointAccount", _JointAccountFFetcher.getJointAccount()))
-          .type(newTypeWiring("Query").dataFetcher("getAdditionalInformation", _AdditionalInformationFFetcher.getAdditionalInformation()))
-          .type(newTypeWiring("Query").dataFetcher("getBusinessDetailsMain", _BusinessDetailsMainFFetcher.getBusinessDetailsMain()))
-          .type(newTypeWiring("Query").dataFetcher("getDropdowns", _DropdownsFFetcher.getDropdowns()))
+          .type(newTypeWiring("Query").dataFetcher("getAdditionalInfoFirst", _AdditionalInfoFirstFFetcher.getAdditionalInfoFirst()))
+          .type(newTypeWiring("Mutation").dataFetcher("updateAdditionalInfoFirst", _AdditionalInfoFirstFFetcher.updateAdditionalInfoFirst()))
+          .type(newTypeWiring("Query").dataFetcher("getAdditionalInfoSecond", _AdditionalInfoSecondFFetcher.getAdditionalInfoSecond()))
+          .type(newTypeWiring("Mutation").dataFetcher("updateAdditionalInfoSecond", _AdditionalInfoSecondFFetcher.updateAdditionalInfoSecond()))
           .type(newTypeWiring("Query").dataFetcher("getOccupationAndIncomeFullDomain", _OccupationAndIncomeFullDomainFFetcher.getOccupationAndIncomeFullDomain()))
           .type(newTypeWiring("Mutation").dataFetcher("updateOccupationAndIncomeFullDomain", _OccupationAndIncomeFullDomainFFetcher.updateOccupationAndIncomeFullDomain()))
+          .type(newTypeWiring("Query").dataFetcher("getListOccupations", _ListOccupationsFFetcher.getListOccupations()))
           .type(newTypeWiring("Query").dataFetcher("getOtherIncomeResponse", _OtherIncomeResponseFFetcher.getOtherIncomeResponse()))
+          .type(newTypeWiring("Mutation").dataFetcher("updateOtherIncomeResponse", _OtherIncomeResponseFFetcher.updateOtherIncomeResponse()))
           .type(newTypeWiring("Query").dataFetcher("getCreatePlan", _CreatePlanFFetcher.getCreatePlan()))
           .type(newTypeWiring("Mutation").dataFetcher("createCreatePlan", _CreatePlanFFetcher.createCreatePlan()))
           .type(newTypeWiring("Mutation").dataFetcher("updateCreatePlan", _CreatePlanFFetcher.updateCreatePlan()))
