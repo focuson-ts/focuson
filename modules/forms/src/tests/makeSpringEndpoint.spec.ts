@@ -3,19 +3,22 @@ import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAc
 import { paramsForTest } from "./makeJavaResolvers.spec";
 import { repeatingRestRD } from "../example/repeating/repeating.restD";
 import { addressRestD } from "../example/postCodeDemo/addressSearch.restD";
+import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
+import { RepeatingPageD } from "../example/repeating/repeating.pageD";
+import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 
 
 describe ( "makeSpringEndpoint", () => {
   it ( "should makeParamsForJava", () => {
-    expect ( makeParamsForJava ( createPlanRestD, 'get' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId' )
-    expect ( makeParamsForJava ( createPlanRestD, 'list' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String customerId' )
-    expect ( makeParamsForJava ( createPlanRestD, 'create' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body' )
-    expect ( makeParamsForJava ( createPlanRestD, 'update' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId, @RequestBody String body' )
-    expect ( makeParamsForJava ( createPlanRestD, 'delete' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId' )
-    expect ( makeParamsForJava ( createPlanRestD, 'getOption' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId' )
+    expect ( makeParamsForJava ( createPlanRestD, 'get' ) ).toEqual ( '@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId' )
+    expect ( makeParamsForJava ( createPlanRestD, 'list' ) ).toEqual ( '@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String customerId' )
+    expect ( makeParamsForJava ( createPlanRestD, 'create' ) ).toEqual ( '@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String customerId,@RequestBody String body' )
+    expect ( makeParamsForJava ( createPlanRestD, 'update' ) ).toEqual ( '@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId,@RequestBody String body' )
+    expect ( makeParamsForJava ( createPlanRestD, 'delete' ) ).toEqual ( '@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId' )
+    expect ( makeParamsForJava ( createPlanRestD, 'getOption' ) ).toEqual ( '@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId' )
   } )
   it ( "should make an endpoint for a rest", () => {
-    expect ( makeSpringEndpointsFor ( paramsForTest, eAccountsSummaryRestD ) ).toEqual ( [
+    expect ( makeSpringEndpointsFor ( paramsForTest, EAccountsSummaryPD, 'eAccountsSummary', eAccountsSummaryRestD ) ).toEqual ( [
       "package focuson.data.controllers;",
       "",
       "import com.fasterxml.jackson.databind.ObjectMapper;",
@@ -35,12 +38,12 @@ describe ( "makeSpringEndpoint", () => {
       "  @Autowired",
       "  public IManyGraphQl graphQL;",
       "    @GetMapping(value=\"/api/accountsSummary\", produces=\"application/json\")",
-      "    public ResponseEntity getEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId) throws Exception{",
-      "       return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.getEAccountsSummary(accountId, customerId), \"getEAccountsSummary\");",
+      "    public ResponseEntity getEAccountsSummary(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String customerId) throws Exception{",
+      "       return Transform.result(graphQL.get(dbName),EAccountsSummaryQueries.getEAccountsSummary(accountId, customerId), \"getEAccountsSummary\");",
       "    }",
       "",
       "    @GetMapping(value=\"/api/accountsSummary/query\", produces=\"application/json\")",
-      "    public String querygetEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId) throws Exception{",
+      "    public String querygetEAccountsSummary(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String customerId) throws Exception{",
       "       return EAccountsSummaryQueries.getEAccountsSummary(accountId, customerId);",
       "    }",
       "",
@@ -52,7 +55,7 @@ describe ( "makeSpringEndpoint", () => {
     ] )
   } )
   it ( "should make a second endpoint for a res", () => {
-    expect ( makeSpringEndpointsFor ( paramsForTest, createPlanRestD ).map(s=>s.replace(/"/g,"'")) ).toEqual ( [
+    expect ( makeSpringEndpointsFor ( paramsForTest, EAccountsSummaryPD, 'createPlanRestD', createPlanRestD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "package focuson.data.controllers;",
       "",
       "import com.fasterxml.jackson.databind.ObjectMapper;",
@@ -72,52 +75,52 @@ describe ( "makeSpringEndpoint", () => {
       "  @Autowired",
       "  public IManyGraphQl graphQL;",
       "    @GetMapping(value='/api/createPlan', produces='application/json')",
-      "    public ResponseEntity getCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{",
-      "       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.getCreatePlan(accountId, createPlanId, customerId), 'getCreatePlan');",
+      "    public ResponseEntity getCreatePlan(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{",
+      "       return Transform.result(graphQL.get(dbName),CreatePlanQueries.getCreatePlan(accountId, createPlanId, customerId), 'getCreatePlan');",
       "    }",
       "",
       "    @PostMapping(value='/api/createPlan', produces='application/json')",
-      "    public ResponseEntity createCreatePlan(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{",
-      "       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.createCreatePlan(accountId, customerId,   Transform.removeQuoteFromProperties(body, Map.class)), 'createCreatePlan');",
+      "    public ResponseEntity createCreatePlan(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String customerId,@RequestBody String body) throws Exception{",
+      "       return Transform.result(graphQL.get(dbName),CreatePlanQueries.createCreatePlan(accountId, customerId,   Transform.removeQuoteFromProperties(body, Map.class)), 'createCreatePlan');",
       "    }",
       "",
       "    @PutMapping(value='/api/createPlan', produces='application/json')",
-      "    public ResponseEntity updateCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId, @RequestBody String body) throws Exception{",
-      "       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.updateCreatePlan(accountId, createPlanId, customerId,   Transform.removeQuoteFromProperties(body, Map.class)), 'updateCreatePlan');",
+      "    public ResponseEntity updateCreatePlan(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId,@RequestBody String body) throws Exception{",
+      "       return Transform.result(graphQL.get(dbName),CreatePlanQueries.updateCreatePlan(accountId, createPlanId, customerId,   Transform.removeQuoteFromProperties(body, Map.class)), 'updateCreatePlan');",
       "    }",
       "",
       "    @DeleteMapping(value='/api/createPlan', produces='application/json')",
-      "    public ResponseEntity deleteCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{",
-      "       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.deleteCreatePlan(accountId, createPlanId, customerId), 'deleteCreatePlan');",
+      "    public ResponseEntity deleteCreatePlan(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{",
+      "       return Transform.result(graphQL.get(dbName),CreatePlanQueries.deleteCreatePlan(accountId, createPlanId, customerId), 'deleteCreatePlan');",
       "    }",
       "",
       "    @GetMapping(value='/api/createPlan/list', produces='application/json')",
-      "    public ResponseEntity listCreatePlan(@RequestParam String accountId, @RequestParam String customerId) throws Exception{",
-      "       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.listCreatePlan(accountId, customerId), 'listCreatePlan');",
+      "    public ResponseEntity listCreatePlan(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String customerId) throws Exception{",
+      "       return Transform.result(graphQL.get(dbName),CreatePlanQueries.listCreatePlan(accountId, customerId), 'listCreatePlan');",
       "    }",
       "",
       "    @GetMapping(value='/api/createPlan/query', produces='application/json')",
-      "    public String querygetCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{",
+      "    public String querygetCreatePlan(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{",
       "       return CreatePlanQueries.getCreatePlan(accountId, createPlanId, customerId);",
       "    }",
       "",
       "    @PostMapping(value='/api/createPlan/query', produces='application/json')",
-      "    public String querycreateCreatePlan(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{",
+      "    public String querycreateCreatePlan(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String customerId,@RequestBody String body) throws Exception{",
       "       return CreatePlanQueries.createCreatePlan(accountId, customerId,   Transform.removeQuoteFromProperties(body, Map.class));",
       "    }",
       "",
       "    @PutMapping(value='/api/createPlan/query', produces='application/json')",
-      "    public String queryupdateCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId, @RequestBody String body) throws Exception{",
+      "    public String queryupdateCreatePlan(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId,@RequestBody String body) throws Exception{",
       "       return CreatePlanQueries.updateCreatePlan(accountId, createPlanId, customerId,   Transform.removeQuoteFromProperties(body, Map.class));",
       "    }",
       "",
       "    @DeleteMapping(value='/api/createPlan/query', produces='application/json')",
-      "    public String querydeleteCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{",
+      "    public String querydeleteCreatePlan(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{",
       "       return CreatePlanQueries.deleteCreatePlan(accountId, createPlanId, customerId);",
       "    }",
       "",
       "    @GetMapping(value='/api/createPlan/list/query', produces='application/json')",
-      "    public String querylistCreatePlan(@RequestParam String accountId, @RequestParam String customerId) throws Exception{",
+      "    public String querylistCreatePlan(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String customerId) throws Exception{",
       "       return CreatePlanQueries.listCreatePlan(accountId, customerId);",
       "    }",
       "",
@@ -130,7 +133,7 @@ describe ( "makeSpringEndpoint", () => {
   } )
 
   it ( "should make an endpoint for a repeating", () => {
-    expect ( makeSpringEndpointsFor ( paramsForTest, repeatingRestRD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeSpringEndpointsFor ( paramsForTest, RepeatingPageD, 'repeating', repeatingRestRD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "package focuson.data.controllers;",
       "",
       "import com.fasterxml.jackson.databind.ObjectMapper;",
@@ -150,22 +153,22 @@ describe ( "makeSpringEndpoint", () => {
       "  @Autowired",
       "  public IManyGraphQl graphQL;",
       "    @PostMapping(value='/api/repeating', produces='application/json')",
-      "    public ResponseEntity createRepeatingWholeData(@RequestParam String customerId, @RequestBody String body) throws Exception{",
-      "       return Transform.result(graphQL.get(IFetcher.mock),RepeatingWholeDataQueries.createRepeatingLine(customerId,   Transform.removeQuoteFromProperties(body, List.class)), 'createRepeatingLine');",
+      "    public ResponseEntity createRepeatingWholeData(@RequestParam(required=false) String dbName, @RequestParam String customerId,@RequestBody String body) throws Exception{",
+      "       return Transform.result(graphQL.get(dbName),RepeatingWholeDataQueries.createRepeatingLine(customerId,   Transform.removeQuoteFromProperties(body, List.class)), 'createRepeatingLine');",
       "    }",
       "",
       "    @GetMapping(value='/api/repeating', produces='application/json')",
-      "    public ResponseEntity getRepeatingWholeData(@RequestParam String customerId) throws Exception{",
-      "       return Transform.result(graphQL.get(IFetcher.mock),RepeatingWholeDataQueries.getRepeatingLine(customerId), 'getRepeatingLine');",
+      "    public ResponseEntity getRepeatingWholeData(@RequestParam(required=false) String dbName, @RequestParam String customerId) throws Exception{",
+      "       return Transform.result(graphQL.get(dbName),RepeatingWholeDataQueries.getRepeatingLine(customerId), 'getRepeatingLine');",
       "    }",
       "",
       "    @PostMapping(value='/api/repeating/query', produces='application/json')",
-      "    public String querycreateRepeatingLine(@RequestParam String customerId, @RequestBody String body) throws Exception{",
+      "    public String querycreateRepeatingLine(@RequestParam(required=false) String dbName, @RequestParam String customerId,@RequestBody String body) throws Exception{",
       "       return RepeatingWholeDataQueries.createRepeatingLine(customerId,   Transform.removeQuoteFromProperties(body, List.class));",
       "    }",
       "",
       "    @GetMapping(value='/api/repeating/query', produces='application/json')",
-      "    public String querygetRepeatingLine(@RequestParam String customerId) throws Exception{",
+      "    public String querygetRepeatingLine(@RequestParam(required=false) String dbName, @RequestParam String customerId) throws Exception{",
       "       return RepeatingWholeDataQueries.getRepeatingLine(customerId);",
       "    }",
       "",
@@ -174,12 +177,12 @@ describe ( "makeSpringEndpoint", () => {
       "      return new ObjectMapper().writeValueAsString( Sample.sampleRepeatingWholeData0);",
       "    }",
       "  }"
-    ])
+    ] )
 
   } )
 
-  it ("should make spring boot endpoints when no parameters", () =>{
-    expect ( makeSpringEndpointsFor ( paramsForTest, addressRestD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
+  it ( "should make spring boot endpoints when no parameters", () => {
+    expect ( makeSpringEndpointsFor ( paramsForTest,PostCodeMainPage, 'address', addressRestD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "package focuson.data.controllers;",
       "",
       "import com.fasterxml.jackson.databind.ObjectMapper;",
@@ -192,6 +195,7 @@ describe ( "makeSpringEndpoint", () => {
       "import org.springframework.beans.factory.annotation.Autowired;",
       "import java.util.List;",
       "import java.util.Map;",
+      "import focuson.data.db.PostCodeMainPage_addressMaps ; ",
       "",
       "  @RestController",
       "  public class PostCodeNameAndAddressController {",
@@ -199,12 +203,12 @@ describe ( "makeSpringEndpoint", () => {
       "  @Autowired",
       "  public IManyGraphQl graphQL;",
       "    @PostMapping(value='/api/address', produces='application/json')",
-      "    public ResponseEntity createPostCodeNameAndAddress(@RequestBody String body) throws Exception{",
-      "       return Transform.result(graphQL.get(IFetcher.mock),PostCodeNameAndAddressQueries.createPostCodeNameAndAddress(  Transform.removeQuoteFromProperties(body, Map.class)), 'createPostCodeNameAndAddress');",
+      "    public ResponseEntity createPostCodeNameAndAddress(@RequestParam(required=false) String dbName,@RequestBody String body) throws Exception{",
+      "       return Transform.result(graphQL.get(dbName),PostCodeNameAndAddressQueries.createPostCodeNameAndAddress(  Transform.removeQuoteFromProperties(body, Map.class)), 'createPostCodeNameAndAddress');",
       "    }",
       "",
       "    @PostMapping(value='/api/address/query', produces='application/json')",
-      "    public String querycreatePostCodeNameAndAddress(@RequestBody String body) throws Exception{",
+      "    public String querycreatePostCodeNameAndAddress(@RequestParam(required=false) String dbName,@RequestBody String body) throws Exception{",
       "       return PostCodeNameAndAddressQueries.createPostCodeNameAndAddress(  Transform.removeQuoteFromProperties(body, Map.class));",
       "    }",
       "",
@@ -212,9 +216,13 @@ describe ( "makeSpringEndpoint", () => {
       "    public static String samplePostCodeNameAndAddress() throws Exception {",
       "      return new ObjectMapper().writeValueAsString( Sample.samplePostCodeNameAndAddress0);",
       "    }",
+      "  @GetMapping(value = '/api/address/sql', produces = 'text/html')",
+      "    public static String sqlPostCodeNameAndAddress() throws Exception {",
+      "      return PostCodeMainPage_addressMaps.allSql;",
+      "    }",
       "  }"
     ])
 
-  })
+  } )
 
 } )
