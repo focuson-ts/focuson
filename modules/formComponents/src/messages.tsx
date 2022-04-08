@@ -41,7 +41,7 @@ export function Messages<S, T, Context>( { state }: MessagesProps<S, SimpleMessa
                     state.json().map((message, index) => {
                         return  <div key={index} className={cssClasses(message.level)}>
                             <span> {getMessage(message.msg)} </span>
-                            <a className="close" onClick={() => removeMessage(index)}>&times;</a>
+                            <a className="close-button" onClick={() => removeMessage(index)}>&times;</a>
                         </div>
                     }
 
