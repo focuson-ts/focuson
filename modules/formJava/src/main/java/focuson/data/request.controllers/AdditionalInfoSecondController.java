@@ -5,7 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import focuson.data.Sample;
 import focuson.data.queries.AdditionalInfoSecondQueries;
-import graphql.GraphQL;
+import focuson.data.IManyGraphQl;
+import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
@@ -14,15 +15,15 @@ import java.util.Map;
   public class AdditionalInfoSecondController {
 
   @Autowired
-  public GraphQL graphQL;
+  public IManyGraphQl graphQL;
     @GetMapping(value="/customer/occupation/v2/additionalInfoSecond", produces="application/json")
     public ResponseEntity getAdditionalInfoSecond(@RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL,AdditionalInfoSecondQueries.getAdditionalInfoSecond(customerId), "getAdditionalInfoSecond");
+       return Transform.result(graphQL.get(IFetcher.mock),AdditionalInfoSecondQueries.getAdditionalInfoSecond(customerId), "getAdditionalInfoSecond");
     }
 
     @PutMapping(value="/customer/occupation/v2/additionalInfoSecond", produces="application/json")
     public ResponseEntity updateAdditionalInfoSecond(@RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL,AdditionalInfoSecondQueries.updateAdditionalInfoSecond(customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateAdditionalInfoSecond");
+       return Transform.result(graphQL.get(IFetcher.mock),AdditionalInfoSecondQueries.updateAdditionalInfoSecond(customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateAdditionalInfoSecond");
     }
 
     @GetMapping(value="/customer/occupation/v2/additionalInfoSecond/query", produces="application/json")

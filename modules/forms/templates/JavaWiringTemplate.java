@@ -4,6 +4,7 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import graphql.GraphQL;
 import graphql.schema.GraphQLSchema;
+import graphql.schema.DataFetcher;
 import graphql.schema.idl.RuntimeWiring;
 import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.SchemaParser;
@@ -15,42 +16,56 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URL;
-
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import {thePackage}.{fetcherPackage}.IFetcher;
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
 {imports}
 
 
 @Component
-public class {wiringClass} {
+public class {wiringClass}  implements IManyGraphQl{
 
 {fetchers}
-
-    private GraphQL graphQL;
-
-    @PostConstruct
+   private String sdl;
+   private Map<String, GraphQL> cache = Collections.synchronizedMap(new HashMap<>()); //sucks and need to improve
+   @PostConstruct
     public void init() throws IOException {
-        URL url = Resources.getResource("{schema}");
-        String sdl = Resources.toString(url, Charsets.UTF_8);
-        GraphQLSchema graphQLSchema = buildSchema(sdl);
-        this.graphQL = GraphQL.newGraphQL(graphQLSchema).build();
+       URL url = Resources.getResource("someSchema.graphql");
+       sdl = Resources.toString(url, Charsets.UTF_8);
     }
 
-    private GraphQLSchema buildSchema(String sdl) {
+   @Override
+   public GraphQL get(String dbName) {
+        if (!cache.containsKey(dbName)) {
+        GraphQLSchema graphQLSchema = buildSchema(dbName);
+        cache.put(dbName, GraphQL.newGraphQL(graphQLSchema).build());
+        }
+        return cache.get(dbName);
+    }
+
+   private GraphQLSchema buildSchema(String dbName) {
         TypeDefinitionRegistry typeRegistry = new SchemaParser().parse(sdl);
-        RuntimeWiring runtimeWiring = buildWiring();
+        RuntimeWiring runtimeWiring = buildWiring(dbName);
         SchemaGenerator schemaGenerator = new SchemaGenerator();
         return schemaGenerator.makeExecutableSchema(typeRegistry, runtimeWiring);
-    }
+   }
 
-    private RuntimeWiring buildWiring() {
-        return RuntimeWiring.newRuntimeWiring()
+   public <T extends IFetcher> T find(List<T> list, String dbName) {
+        return list.stream().filter(f -> f.dbName() == dbName).findFirst().get();
+   }
+
+   private RuntimeWiring buildWiring(String dbName) {
+       return RuntimeWiring.newRuntimeWiring()
 {wiring}
-          .build();
+       .build();
     }
 
     @Bean
     public GraphQL graphQL() {
-        return graphQL;
+        return get(IFetcher.mock);
     }
 
 }

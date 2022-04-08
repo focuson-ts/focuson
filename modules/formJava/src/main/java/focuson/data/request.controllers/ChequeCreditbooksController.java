@@ -5,7 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import focuson.data.Sample;
 import focuson.data.queries.ChequeCreditbooksQueries;
-import graphql.GraphQL;
+import focuson.data.IManyGraphQl;
+import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
@@ -14,15 +15,15 @@ import java.util.Map;
   public class ChequeCreditbooksController {
 
   @Autowired
-  public GraphQL graphQL;
+  public IManyGraphQl graphQL;
     @GetMapping(value="/api/chequeCreditBooks", produces="application/json")
     public ResponseEntity getChequeCreditbooks(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL,ChequeCreditbooksQueries.getChequeCreditbooks(accountId, applRef, brandRef, customerId), "getChequeCreditbooks");
+       return Transform.result(graphQL.get(IFetcher.mock),ChequeCreditbooksQueries.getChequeCreditbooks(accountId, applRef, brandRef, customerId), "getChequeCreditbooks");
     }
 
     @PostMapping(value="/api/chequeCreditBooks", produces="application/json")
     public ResponseEntity createChequeCreditbooks(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL,ChequeCreditbooksQueries.createChequeCreditbooks(accountId, applRef, brandRef, customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "createChequeCreditbooks");
+       return Transform.result(graphQL.get(IFetcher.mock),ChequeCreditbooksQueries.createChequeCreditbooks(accountId, applRef, brandRef, customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "createChequeCreditbooks");
     }
 
     @GetMapping(value="/api/chequeCreditBooks/query", produces="application/json")

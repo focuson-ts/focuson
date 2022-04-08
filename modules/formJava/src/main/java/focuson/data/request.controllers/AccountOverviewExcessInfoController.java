@@ -5,7 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import focuson.data.Sample;
 import focuson.data.queries.AccountOverviewExcessInfoQueries;
-import graphql.GraphQL;
+import focuson.data.IManyGraphQl;
+import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
@@ -14,10 +15,10 @@ import java.util.Map;
   public class AccountOverviewExcessInfoController {
 
   @Autowired
-  public GraphQL graphQL;
+  public IManyGraphQl graphQL;
     @GetMapping(value="/api/accountOverview/excessInfo", produces="application/json")
     public ResponseEntity getAccountOverviewExcessInfo(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL,AccountOverviewExcessInfoQueries.getAccountOverviewExcessInfo(accountId, customerId), "getAccountOverviewExcessInfo");
+       return Transform.result(graphQL.get(IFetcher.mock),AccountOverviewExcessInfoQueries.getAccountOverviewExcessInfo(accountId, customerId), "getAccountOverviewExcessInfo");
     }
 
     @GetMapping(value="/api/accountOverview/excessInfo/query", produces="application/json")

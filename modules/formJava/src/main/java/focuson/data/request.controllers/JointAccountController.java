@@ -5,7 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import focuson.data.Sample;
 import focuson.data.queries.JointAccountQueries;
-import graphql.GraphQL;
+import focuson.data.IManyGraphQl;
+import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
@@ -14,10 +15,10 @@ import java.util.Map;
   public class JointAccountController {
 
   @Autowired
-  public GraphQL graphQL;
+  public IManyGraphQl graphQL;
     @GetMapping(value="/api/jointAccount", produces="application/json")
     public ResponseEntity getJointAccount(@RequestParam String accountId, @RequestParam String brandId) throws Exception{
-       return Transform.result(graphQL,JointAccountQueries.getJointAccount(accountId, brandId), "getJointAccount");
+       return Transform.result(graphQL.get(IFetcher.mock),JointAccountQueries.getJointAccount(accountId, brandId), "getJointAccount");
     }
 
     @GetMapping(value="/api/jointAccount/query", produces="application/json")

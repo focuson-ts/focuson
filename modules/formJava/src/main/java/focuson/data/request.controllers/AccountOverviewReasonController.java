@@ -5,7 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import focuson.data.Sample;
 import focuson.data.queries.AccountOverviewReasonQueries;
-import graphql.GraphQL;
+import focuson.data.IManyGraphQl;
+import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
@@ -14,10 +15,10 @@ import java.util.Map;
   public class AccountOverviewReasonController {
 
   @Autowired
-  public GraphQL graphQL;
+  public IManyGraphQl graphQL;
     @GetMapping(value="/api/accountOverview/reason", produces="application/json")
     public ResponseEntity getAccountOverviewReason(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL,AccountOverviewReasonQueries.getAccountOverviewReason(accountId, customerId), "getAccountOverviewReason");
+       return Transform.result(graphQL.get(IFetcher.mock),AccountOverviewReasonQueries.getAccountOverviewReason(accountId, customerId), "getAccountOverviewReason");
     }
 
     @GetMapping(value="/api/accountOverview/reason/query", produces="application/json")

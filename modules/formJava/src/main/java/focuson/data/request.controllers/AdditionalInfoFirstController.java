@@ -5,7 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import focuson.data.Sample;
 import focuson.data.queries.AdditionalInfoFirstQueries;
-import graphql.GraphQL;
+import focuson.data.IManyGraphQl;
+import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
@@ -14,15 +15,15 @@ import java.util.Map;
   public class AdditionalInfoFirstController {
 
   @Autowired
-  public GraphQL graphQL;
+  public IManyGraphQl graphQL;
     @GetMapping(value="/customer/occupation/v2/additionalInfoFirst", produces="application/json")
     public ResponseEntity getAdditionalInfoFirst(@RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL,AdditionalInfoFirstQueries.getAdditionalInfoFirst(customerId), "getAdditionalInfoFirst");
+       return Transform.result(graphQL.get(IFetcher.mock),AdditionalInfoFirstQueries.getAdditionalInfoFirst(customerId), "getAdditionalInfoFirst");
     }
 
     @PutMapping(value="/customer/occupation/v2/additionalInfoFirst", produces="application/json")
     public ResponseEntity updateAdditionalInfoFirst(@RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL,AdditionalInfoFirstQueries.updateAdditionalInfoFirst(customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateAdditionalInfoFirst");
+       return Transform.result(graphQL.get(IFetcher.mock),AdditionalInfoFirstQueries.updateAdditionalInfoFirst(customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateAdditionalInfoFirst");
     }
 
     @GetMapping(value="/customer/occupation/v2/additionalInfoFirst/query", produces="application/json")
