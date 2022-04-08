@@ -12,9 +12,9 @@
     ]
   },
   "dependencies": {
-    "@focuson/lens": "0.5.43",
-    "@focuson/template": "0.5.43",
-    "@focuson/state": "0.5.43"
+    "@focuson/lens": "0.5.45",
+    "@focuson/template": "0.5.45",
+    "@focuson/state": "0.5.45"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -46,7 +46,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "0.5.43",
+  "version": "0.5.45",
   "template": "noreact",
   "description": "Used when we want to fetch data from APIs in order to display it. This provides a declarative and composable approach to state management",
   "details": {
