@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-//{"accountId":{"rsSetter":"setInt","javaType":"int","commonLens":"accountId","testValue":"custId"},"brandId":{"rsSetter":"setInt","javaType":"int","commonLens":"brandId","testValue":"custId"}}
+//{"accountId":{"rsSetter":"setInt","javaType":"int","javaParser":"Integer.parseInt","commonLens":"accountId","testValue":"custId"},"brandId":{"rsSetter":"setInt","javaType":"int","javaParser":"Integer.parseInt","commonLens":"brandId","testValue":"custId"}}
 public class JointAccount_jointAccountMaps1 {
   @SuppressWarnings("SqlResolve")
   public static String sql = "select"+
@@ -31,6 +31,56 @@ public class JointAccount_jointAccountMaps1 {
   public static Optional<Map<String,Object>> getAll(Connection connection,int accountId,int brandId) throws SQLException {
      return getRoot(connection,accountId,brandId,get0(connection,accountId,brandId),get1(connection,accountId,brandId)).map(x -> x._root);
   }
+  public static String allSql="select\n"+
+  "  mainCustomer.nameId as mainCustomer_nameId,\n"+
+  "  mainName.id as mainName_id,\n"+
+  "  ACC_TBL.mainCustomerId as ACC_TBL_mainCustomerId,\n"+
+  "  mainCustomer.id as mainCustomer_id,\n"+
+  "  jointCustomer.nameId as jointCustomer_nameId,\n"+
+  "  jointName.id as jointName_id,\n"+
+  "  ACC_TBL.jointCustomerId as ACC_TBL_jointCustomerId,\n"+
+  "  jointCustomer.id as jointCustomer_id,\n"+
+  "  ACC_TBL.acc_id as ACC_TBL_acc_id,\n"+
+  "  ACC_TBL.brand_id as ACC_TBL_brand_id,\n"+
+  "  mainName.zzname as mainName_zzname,\n"+
+  "  jointName.zzname as jointName_zzname,\n"+
+  "  ACC_TBL.blnc as ACC_TBL_blnc\n"+
+  " from\n"+
+  "  ACC_TBL ACC_TBL,\n"+
+  "  NAME_TBL mainName,\n"+
+  "  CUST_TBL mainCustomer,\n"+
+  "  NAME_TBL jointName,\n"+
+  "  CUST_TBL jointCustomer\n"+
+  " where mainCustomer.nameId = mainName.id and ACC_TBL.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and ACC_TBL.jointCustomerId = jointCustomer.id and  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ?\n"+
+  "\n"+
+  "select\n"+
+  "  ACC_TBL.acc_id as ACC_TBL_acc_id,\n"+
+  "  ACC_TBL.brand_id as ACC_TBL_brand_id,\n"+
+  "  mainCustomer.id as mainCustomer_id,\n"+
+  "  mainAddress.customerId as mainAddress_customerId,\n"+
+  "  ACC_TBL.mainCustomerId as ACC_TBL_mainCustomerId,\n"+
+  "  mainAddress.zzline1 as mainAddress_zzline1,\n"+
+  "  mainAddress.zzline2 as mainAddress_zzline2\n"+
+  " from\n"+
+  "  ACC_TBL ACC_TBL,\n"+
+  "  CUST_TBL mainCustomer,\n"+
+  "  ADD_TBL mainAddress\n"+
+  " where  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and mainCustomer.id = mainAddress.customerId and ACC_TBL.mainCustomerId = mainCustomer.id\n"+
+  "\n"+
+  "select\n"+
+  "  ACC_TBL.acc_id as ACC_TBL_acc_id,\n"+
+  "  ACC_TBL.brand_id as ACC_TBL_brand_id,\n"+
+  "  jointCustomer.id as jointCustomer_id,\n"+
+  "  jointAddress.customerId as jointAddress_customerId,\n"+
+  "  ACC_TBL.jointCustomerId as ACC_TBL_jointCustomerId,\n"+
+  "  jointAddress.zzline1 as jointAddress_zzline1,\n"+
+  "  jointAddress.zzline2 as jointAddress_zzline2\n"+
+  " from\n"+
+  "  ACC_TBL ACC_TBL,\n"+
+  "  CUST_TBL jointCustomer,\n"+
+  "  ADD_TBL jointAddress\n"+
+  " where  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and jointCustomer.id = jointAddress.customerId and ACC_TBL.jointCustomerId = jointCustomer.id\n"+
+  "\n";
   public static Optional<JointAccount_jointAccountMaps> getRoot(Connection connection, int accountId, int brandId, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {
       PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps.sql);
     statement.setInt(1,accountId);

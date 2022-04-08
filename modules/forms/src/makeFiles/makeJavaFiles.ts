@@ -6,7 +6,7 @@ import { detailsLog, GenerateLogLevel, NameAnd, safeString, sortedEntries } from
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
-import { createTableSqlName, fetcherInterfaceName, getSqlName, mockFetcherClassName, queryClassName, restControllerName, sqlMapFileName } from "../codegen/names";
+import { createTableSqlName, fetcherInterfaceName, getSqlName, h2FetcherClassName, mockFetcherClassName, queryClassName, restControllerName, sqlMapFileName } from "../codegen/names";
 import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
 import { makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
 import { makeAllMockFetchers } from "../codegen/makeMockFetchers";
@@ -16,6 +16,8 @@ import { AppConfig } from "../focuson.config";
 // import { findSqlRoot, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, walkRoots } from "../codegen/makeJavaSql.tsxxx";
 import { createTableSql, findSqlLinkDataFromRootAndDataD, findSqlRoot, generateGetSql, makeMapsForRest, walkSqlRoots } from "../codegen/makeSqlFromEntities";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
+import { makeH2Fetchers } from "../codegen/makeH2Fetchers";
+import { mainPage } from "@focuson/pages";
 
 
 export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
@@ -31,6 +33,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   const javaFetcherRoot = javaCodeRoot + "/" + params.fetcherPackage
   const javaControllerRoot = javaCodeRoot + "/" + params.controllerPackage
   const javaMockFetcherRoot = javaCodeRoot + "/" + params.mockFetcherPackage
+  const javaH2FetcherRoot = javaCodeRoot + "/" + params.h2FetcherPackage
   const javaQueriesPackages = javaCodeRoot + "/" + params.queriesPackage
   const javaDbPackages = javaCodeRoot + "/" + params.dbPackage
   // const javaSql = javaResourcesRoot + "/" + params.sqlDirectory
@@ -42,6 +45,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   fs.mkdirSync ( `${javaScriptRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaFetcherRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaMockFetcherRoot}`, { recursive: true } )
+  fs.mkdirSync ( `${javaH2FetcherRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaControllerRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaQueriesPackages}`, { recursive: true } )
   fs.mkdirSync ( `${javaDbPackages}`, { recursive: true } )
@@ -78,10 +82,10 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
           generateGetSql ( findSqlLinkDataFromRootAndDataD ( r, rest.dataDD ) ) ).map ( addStringToEndOfList ( ';\n' ) ).flat () ] ), details )
 
   writeToFile ( `${javaResourcesRoot}/${params.schema}`, () => makeGraphQlSchema ( rests ), details )
-  copyFile(`${javaCodeRoot}/${params.fetcherPackage}/IFetcher.java`, 'templates/raw/java/IFetcher.java')
+  copyFile ( `${javaCodeRoot}/${params.fetcherPackage}/IFetcher.java`, 'templates/raw/java/IFetcher.java' )
   rests.forEach ( rest => {
-      let file = `${javaCodeRoot}/${params.fetcherPackage}/${fetcherInterfaceName ( params, rest )}.java`;
-      writeToFile ( file, () => makeJavaResolversInterface ( params, rest ), details )
+      let fetcherFile = `${javaCodeRoot}/${params.fetcherPackage}/${fetcherInterfaceName ( params, rest )}.java`;
+      writeToFile ( fetcherFile, () => makeJavaResolversInterface ( params, rest ), details )
     }
   )
 
@@ -95,6 +99,15 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
       fetcherClass: mockFetcherClassName ( params, restD ),
       content: makeAllMockFetchers ( params, [ restD ] ).join ( "\n" )
     }, directorySpec ) )
+
+  allMainPages ( pages ).flatMap ( mainPage =>
+    sortedEntries ( mainPage.rest ).forEach ( ( [ restName, rdp ] ) => {
+      if ( rdp.rest.actions.indexOf ( 'get' ) < 0 ) return;
+      if ( rdp.rest.tables === undefined ) return;
+      writeToFile ( `${javaH2FetcherRoot}/${h2FetcherClassName ( params, rdp.rest )}.java`, () => makeH2Fetchers ( params, mainPage, restName, rdp.rest ) )
+    } )
+  )
+
   templateFile ( `${javaCodeRoot}/${params.sampleClass}.java`, 'templates/JavaSampleTemplate.java',
     { ...params, content: indentList ( makeAllJavaVariableName ( pages, 0 ) ).join ( "\n" ) }, directorySpec, details )
   rests.forEach ( r => templateFile ( `${javaQueriesPackages}/${queryClassName ( params, r )}.java`, 'templates/JavaQueryTemplate.java',
@@ -104,9 +117,9 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
       content: indentList ( makeJavaVariablesForGraphQlQuery ( [ r ] ) ).join ( "\n" )
     }, directorySpec, details ) )
 
-  rests.forEach ( rest => writeToFile ( `${javaControllerRoot}/${restControllerName ( rest )}.java`, () => makeSpringEndpointsFor ( params, rest ), details ) )
   allMainPages ( pages ).map ( p => {
     Object.entries ( p.rest ).map ( ( [ name, rdp ] ) => {
+      writeToFile ( `${javaControllerRoot}/${restControllerName ( rdp.rest )}.java`, () => makeSpringEndpointsFor ( params, p, name, rdp.rest ), details )
       let tables = rdp.rest.tables;
       if ( !tables ) return
       detailsLog ( logLevel, 2, `Creating rest files for ${p.name} ${name}` )

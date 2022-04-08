@@ -17,22 +17,22 @@ import java.util.Map;
   @Autowired
   public IManyGraphQl graphQL;
     @PostMapping(value="/api/createEAccount/", produces="application/json")
-    public ResponseEntity createCreateEAccountData(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),CreateEAccountDataQueries.createCreateEAccountData(accountId, customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "createCreateEAccountData");
+    public ResponseEntity createCreateEAccountData(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String customerId,@RequestBody String body) throws Exception{
+       return Transform.result(graphQL.get(dbName),CreateEAccountDataQueries.createCreateEAccountData(accountId, customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "createCreateEAccountData");
     }
 
     @GetMapping(value="/api/createEAccount/", produces="application/json")
-    public ResponseEntity getCreateEAccountData(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),CreateEAccountDataQueries.getCreateEAccountData(accountId, createPlanId, customerId), "getCreateEAccountData");
+    public ResponseEntity getCreateEAccountData(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{
+       return Transform.result(graphQL.get(dbName),CreateEAccountDataQueries.getCreateEAccountData(accountId, createPlanId, customerId), "getCreateEAccountData");
     }
 
     @PostMapping(value="/api/createEAccount//query", produces="application/json")
-    public String querycreateCreateEAccountData(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{
+    public String querycreateCreateEAccountData(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String customerId,@RequestBody String body) throws Exception{
        return CreateEAccountDataQueries.createCreateEAccountData(accountId, customerId,   Transform.removeQuoteFromProperties(body, Map.class));
     }
 
     @GetMapping(value="/api/createEAccount//query", produces="application/json")
-    public String querygetCreateEAccountData(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{
+    public String querygetCreateEAccountData(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{
        return CreateEAccountDataQueries.getCreateEAccountData(accountId, createPlanId, customerId);
     }
 

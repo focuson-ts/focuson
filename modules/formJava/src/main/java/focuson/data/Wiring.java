@@ -8,6 +8,7 @@ import graphql.schema.idl.RuntimeWiring;
 import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.SchemaParser;
 import graphql.schema.idl.TypeDefinitionRegistry;
+import graphql.schema.DataFetchingEnvironment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -18,8 +19,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import focuson.data.fetchers.IFetcher;
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
+import java.util.function.Function;
 import focuson.data.fetchers.HelloWorldDomainDataFFetcher;
 import focuson.data.fetchers.AccountAllFlagsFFetcher;
 import focuson.data.fetchers.ArrearsDetailsFFetcher;
@@ -97,11 +100,12 @@ public class Wiring  implements IManyGraphQl{
     }
    @Override
    public GraphQL get(String dbName) {
-        if (!cache.containsKey(dbName)) {
-        GraphQLSchema graphQLSchema = buildSchema(dbName);
-        cache.put(dbName, GraphQL.newGraphQL(graphQLSchema).build());
-        }
-        return cache.get(dbName);
+      if (dbName==null) dbName= IFetcher.mock;
+      if (!cache.containsKey(dbName)) {
+          GraphQLSchema graphQLSchema = buildSchema(dbName);
+          cache.put(dbName, GraphQL.newGraphQL(graphQLSchema).build());
+      }
+      return cache.get(dbName);
     }
    private GraphQLSchema buildSchema(String dbName) {
         TypeDefinitionRegistry typeRegistry = new SchemaParser().parse(sdl);
@@ -109,48 +113,55 @@ public class Wiring  implements IManyGraphQl{
         SchemaGenerator schemaGenerator = new SchemaGenerator();
         return schemaGenerator.makeExecutableSchema(typeRegistry, runtimeWiring);
    }
-   public <T extends IFetcher> T find(List<T> list, String dbName) {
-        return list.stream().filter(f -> f.dbName() == dbName).findFirst().get();
+   public <T extends IFetcher, Res> DataFetcher<Res> find(List<T> list, String dbName, Function<T, DataFetcher<Res>> fn) {
+        Optional<T> result = list.stream().filter(f -> f.dbName().equals(dbName)).findFirst();
+        if (result.isPresent()) return fn.apply(result.get());
+        return new DataFetcher<Res>() {
+            @Override
+            public Res get(DataFetchingEnvironment dataFetchingEnvironment) throws Exception {
+                    throw new RuntimeException("Cannot find the fetcher for " + dbName);
+            }
+        };
    }
    private RuntimeWiring buildWiring(String dbName) {
        return RuntimeWiring.newRuntimeWiring()
-          .type(newTypeWiring("Query").dataFetcher("getHelloWorldDomainData", find(_HelloWorldDomainDataFFetcher, dbName).getHelloWorldDomainData()))
-          .type(newTypeWiring("Query").dataFetcher("getAccountAllFlags", find(_AccountAllFlagsFFetcher, dbName).getAccountAllFlags()))
-          .type(newTypeWiring("Query").dataFetcher("getArrearsDetails", find(_ArrearsDetailsFFetcher, dbName).getArrearsDetails()))
-          .type(newTypeWiring("Query").dataFetcher("getArrearsDetails", find(_previous_ArrearsDetailsFFetcher, dbName).getArrearsDetails()))
-          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewHistory", find(_AccountOverviewHistoryFFetcher, dbName).getAccountOverviewHistory()))
-          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewExcessInfo", find(_AccountOverviewExcessInfoFFetcher, dbName).getAccountOverviewExcessInfo()))
-          .type(newTypeWiring("Query").dataFetcher("getAccountOverview", find(_AccountOverviewFFetcher, dbName).getAccountOverview()))
-          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewReason", find(_AccountOverviewReasonFFetcher, dbName).getAccountOverviewReason()))
-          .type(newTypeWiring("Query").dataFetcher("getJointAccount", find(_JointAccountFFetcher, dbName).getJointAccount()))
-          .type(newTypeWiring("Query").dataFetcher("getAdditionalInfoFirst", find(_AdditionalInfoFirstFFetcher, dbName).getAdditionalInfoFirst()))
-          .type(newTypeWiring("Mutation").dataFetcher("updateAdditionalInfoFirst", find(_AdditionalInfoFirstFFetcher, dbName).updateAdditionalInfoFirst()))
-          .type(newTypeWiring("Query").dataFetcher("getAdditionalInfoSecond", find(_AdditionalInfoSecondFFetcher, dbName).getAdditionalInfoSecond()))
-          .type(newTypeWiring("Mutation").dataFetcher("updateAdditionalInfoSecond", find(_AdditionalInfoSecondFFetcher, dbName).updateAdditionalInfoSecond()))
-          .type(newTypeWiring("Query").dataFetcher("getOccupationAndIncomeFullDomain", find(_OccupationAndIncomeFullDomainFFetcher, dbName).getOccupationAndIncomeFullDomain()))
-          .type(newTypeWiring("Mutation").dataFetcher("updateOccupationAndIncomeFullDomain", find(_OccupationAndIncomeFullDomainFFetcher, dbName).updateOccupationAndIncomeFullDomain()))
-          .type(newTypeWiring("Query").dataFetcher("getListOccupations", find(_ListOccupationsFFetcher, dbName).getListOccupations()))
-          .type(newTypeWiring("Query").dataFetcher("getOtherIncomeResponse", find(_OtherIncomeResponseFFetcher, dbName).getOtherIncomeResponse()))
-          .type(newTypeWiring("Mutation").dataFetcher("updateOtherIncomeResponse", find(_OtherIncomeResponseFFetcher, dbName).updateOtherIncomeResponse()))
-          .type(newTypeWiring("Query").dataFetcher("getCreatePlan", find(_CreatePlanFFetcher, dbName).getCreatePlan()))
-          .type(newTypeWiring("Mutation").dataFetcher("createCreatePlan", find(_CreatePlanFFetcher, dbName).createCreatePlan()))
-          .type(newTypeWiring("Mutation").dataFetcher("updateCreatePlan", find(_CreatePlanFFetcher, dbName).updateCreatePlan()))
-          .type(newTypeWiring("Mutation").dataFetcher("deleteCreatePlan", find(_CreatePlanFFetcher, dbName).deleteCreatePlan()))
-          .type(newTypeWiring("Query").dataFetcher("listCreatePlan", find(_CreatePlanFFetcher, dbName).listCreatePlan()))
-          .type(newTypeWiring("Query").dataFetcher("getEAccountsSummary", find(_EAccountsSummaryFFetcher, dbName).getEAccountsSummary()))
-          .type(newTypeWiring("EAccountSummary").dataFetcher("description", find(_EAccountsSummaryFFetcher, dbName).getAccountSummaryDescription()))
-          .type(newTypeWiring("EAccountsSummary").dataFetcher("totalMonthlyCost", find(_EAccountsSummaryFFetcher, dbName).getTotalMonthlyCost()))
-          .type(newTypeWiring("EAccountsSummary").dataFetcher("oneAccountBalance", find(_EAccountsSummaryFFetcher, dbName).getOneAccountBalance()))
-          .type(newTypeWiring("EAccountsSummary").dataFetcher("currentAccountBalance", find(_EAccountsSummaryFFetcher, dbName).getCurrentAccountBalance()))
-          .type(newTypeWiring("Mutation").dataFetcher("createETransferDataD", find(_ETransferDataDFFetcher, dbName).createETransferDataD()))
-          .type(newTypeWiring("Mutation").dataFetcher("createCreateEAccountData", find(_CreateEAccountDataFFetcher, dbName).createCreateEAccountData()))
-          .type(newTypeWiring("Query").dataFetcher("getCreateEAccountData", find(_CreateEAccountDataFFetcher, dbName).getCreateEAccountData()))
-          .type(newTypeWiring("Query").dataFetcher("getChequeCreditbooks", find(_ChequeCreditbooksFFetcher, dbName).getChequeCreditbooks()))
-          .type(newTypeWiring("Mutation").dataFetcher("createChequeCreditbooks", find(_ChequeCreditbooksFFetcher, dbName).createChequeCreditbooks()))
-          .type(newTypeWiring("Mutation").dataFetcher("createRepeatingLine", find(_RepeatingWholeDataFFetcher, dbName).createRepeatingLine()))
-          .type(newTypeWiring("Query").dataFetcher("getRepeatingLine", find(_RepeatingWholeDataFFetcher, dbName).getRepeatingLine()))
-          .type(newTypeWiring("Mutation").dataFetcher("createPostCodeNameAndAddress", find(_PostCodeNameAndAddressFFetcher, dbName).createPostCodeNameAndAddress()))
-          .type(newTypeWiring("Query").dataFetcher("getPostCodeDataLine", find(_PostCodeDataFFetcher, dbName).getPostCodeDataLine()))
+          .type(newTypeWiring("Query").dataFetcher("getHelloWorldDomainData", find(_HelloWorldDomainDataFFetcher, dbName, f ->f.getHelloWorldDomainData())))
+          .type(newTypeWiring("Query").dataFetcher("getAccountAllFlags", find(_AccountAllFlagsFFetcher, dbName, f ->f.getAccountAllFlags())))
+          .type(newTypeWiring("Query").dataFetcher("getArrearsDetails", find(_ArrearsDetailsFFetcher, dbName, f ->f.getArrearsDetails())))
+          .type(newTypeWiring("Query").dataFetcher("getArrearsDetails", find(_previous_ArrearsDetailsFFetcher, dbName, f ->f.getArrearsDetails())))
+          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewHistory", find(_AccountOverviewHistoryFFetcher, dbName, f ->f.getAccountOverviewHistory())))
+          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewExcessInfo", find(_AccountOverviewExcessInfoFFetcher, dbName, f ->f.getAccountOverviewExcessInfo())))
+          .type(newTypeWiring("Query").dataFetcher("getAccountOverview", find(_AccountOverviewFFetcher, dbName, f ->f.getAccountOverview())))
+          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewReason", find(_AccountOverviewReasonFFetcher, dbName, f ->f.getAccountOverviewReason())))
+          .type(newTypeWiring("Query").dataFetcher("getJointAccount", find(_JointAccountFFetcher, dbName, f ->f.getJointAccount())))
+          .type(newTypeWiring("Query").dataFetcher("getAdditionalInfoFirst", find(_AdditionalInfoFirstFFetcher, dbName, f ->f.getAdditionalInfoFirst())))
+          .type(newTypeWiring("Mutation").dataFetcher("updateAdditionalInfoFirst", find(_AdditionalInfoFirstFFetcher, dbName, f ->f.updateAdditionalInfoFirst())))
+          .type(newTypeWiring("Query").dataFetcher("getAdditionalInfoSecond", find(_AdditionalInfoSecondFFetcher, dbName, f ->f.getAdditionalInfoSecond())))
+          .type(newTypeWiring("Mutation").dataFetcher("updateAdditionalInfoSecond", find(_AdditionalInfoSecondFFetcher, dbName, f ->f.updateAdditionalInfoSecond())))
+          .type(newTypeWiring("Query").dataFetcher("getOccupationAndIncomeFullDomain", find(_OccupationAndIncomeFullDomainFFetcher, dbName, f ->f.getOccupationAndIncomeFullDomain())))
+          .type(newTypeWiring("Mutation").dataFetcher("updateOccupationAndIncomeFullDomain", find(_OccupationAndIncomeFullDomainFFetcher, dbName, f ->f.updateOccupationAndIncomeFullDomain())))
+          .type(newTypeWiring("Query").dataFetcher("getListOccupations", find(_ListOccupationsFFetcher, dbName, f ->f.getListOccupations())))
+          .type(newTypeWiring("Query").dataFetcher("getOtherIncomeResponse", find(_OtherIncomeResponseFFetcher, dbName, f ->f.getOtherIncomeResponse())))
+          .type(newTypeWiring("Mutation").dataFetcher("updateOtherIncomeResponse", find(_OtherIncomeResponseFFetcher, dbName, f ->f.updateOtherIncomeResponse())))
+          .type(newTypeWiring("Query").dataFetcher("getCreatePlan", find(_CreatePlanFFetcher, dbName, f ->f.getCreatePlan())))
+          .type(newTypeWiring("Mutation").dataFetcher("createCreatePlan", find(_CreatePlanFFetcher, dbName, f ->f.createCreatePlan())))
+          .type(newTypeWiring("Mutation").dataFetcher("updateCreatePlan", find(_CreatePlanFFetcher, dbName, f ->f.updateCreatePlan())))
+          .type(newTypeWiring("Mutation").dataFetcher("deleteCreatePlan", find(_CreatePlanFFetcher, dbName, f ->f.deleteCreatePlan())))
+          .type(newTypeWiring("Query").dataFetcher("listCreatePlan", find(_CreatePlanFFetcher, dbName, f ->f.listCreatePlan())))
+          .type(newTypeWiring("Query").dataFetcher("getEAccountsSummary", find(_EAccountsSummaryFFetcher, dbName, f ->f.getEAccountsSummary())))
+          .type(newTypeWiring("EAccountSummary").dataFetcher("description", find(_EAccountsSummaryFFetcher, dbName, f ->f.getAccountSummaryDescription())))
+          .type(newTypeWiring("EAccountsSummary").dataFetcher("totalMonthlyCost", find(_EAccountsSummaryFFetcher, dbName, f ->f.getTotalMonthlyCost())))
+          .type(newTypeWiring("EAccountsSummary").dataFetcher("oneAccountBalance", find(_EAccountsSummaryFFetcher, dbName, f ->f.getOneAccountBalance())))
+          .type(newTypeWiring("EAccountsSummary").dataFetcher("currentAccountBalance", find(_EAccountsSummaryFFetcher, dbName, f ->f.getCurrentAccountBalance())))
+          .type(newTypeWiring("Mutation").dataFetcher("createETransferDataD", find(_ETransferDataDFFetcher, dbName, f ->f.createETransferDataD())))
+          .type(newTypeWiring("Mutation").dataFetcher("createCreateEAccountData", find(_CreateEAccountDataFFetcher, dbName, f ->f.createCreateEAccountData())))
+          .type(newTypeWiring("Query").dataFetcher("getCreateEAccountData", find(_CreateEAccountDataFFetcher, dbName, f ->f.getCreateEAccountData())))
+          .type(newTypeWiring("Query").dataFetcher("getChequeCreditbooks", find(_ChequeCreditbooksFFetcher, dbName, f ->f.getChequeCreditbooks())))
+          .type(newTypeWiring("Mutation").dataFetcher("createChequeCreditbooks", find(_ChequeCreditbooksFFetcher, dbName, f ->f.createChequeCreditbooks())))
+          .type(newTypeWiring("Mutation").dataFetcher("createRepeatingLine", find(_RepeatingWholeDataFFetcher, dbName, f ->f.createRepeatingLine())))
+          .type(newTypeWiring("Query").dataFetcher("getRepeatingLine", find(_RepeatingWholeDataFFetcher, dbName, f ->f.getRepeatingLine())))
+          .type(newTypeWiring("Mutation").dataFetcher("createPostCodeNameAndAddress", find(_PostCodeNameAndAddressFFetcher, dbName, f ->f.createPostCodeNameAndAddress())))
+          .type(newTypeWiring("Query").dataFetcher("getPostCodeDataLine", find(_PostCodeDataFFetcher, dbName, f ->f.getPostCodeDataLine())))
        .build();
     }
     @Bean

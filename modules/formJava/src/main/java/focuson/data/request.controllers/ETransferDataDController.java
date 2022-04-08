@@ -17,12 +17,12 @@ import java.util.Map;
   @Autowired
   public IManyGraphQl graphQL;
     @PostMapping(value="/api/eTransfers", produces="application/json")
-    public ResponseEntity createETransferDataD(@RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),ETransferDataDQueries.createETransferDataD(customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "createETransferDataD");
+    public ResponseEntity createETransferDataD(@RequestParam(required=false) String dbName, @RequestParam String customerId,@RequestBody String body) throws Exception{
+       return Transform.result(graphQL.get(dbName),ETransferDataDQueries.createETransferDataD(customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "createETransferDataD");
     }
 
     @PostMapping(value="/api/eTransfers/query", produces="application/json")
-    public String querycreateETransferDataD(@RequestParam String customerId, @RequestBody String body) throws Exception{
+    public String querycreateETransferDataD(@RequestParam(required=false) String dbName, @RequestParam String customerId,@RequestBody String body) throws Exception{
        return ETransferDataDQueries.createETransferDataD(customerId,   Transform.removeQuoteFromProperties(body, Map.class));
     }
 

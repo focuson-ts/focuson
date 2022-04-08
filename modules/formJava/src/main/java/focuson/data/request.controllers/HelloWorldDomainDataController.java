@@ -17,12 +17,12 @@ import java.util.Map;
   @Autowired
   public IManyGraphQl graphQL;
     @GetMapping(value="/helloWorld", produces="application/json")
-    public ResponseEntity getHelloWorldDomainData() throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),HelloWorldDomainDataQueries.getHelloWorldDomainData(), "getHelloWorldDomainData");
+    public ResponseEntity getHelloWorldDomainData(@RequestParam(required=false) String dbName) throws Exception{
+       return Transform.result(graphQL.get(dbName),HelloWorldDomainDataQueries.getHelloWorldDomainData(), "getHelloWorldDomainData");
     }
 
     @GetMapping(value="/helloWorld/query", produces="application/json")
-    public String querygetHelloWorldDomainData() throws Exception{
+    public String querygetHelloWorldDomainData(@RequestParam(required=false) String dbName) throws Exception{
        return HelloWorldDomainDataQueries.getHelloWorldDomainData();
     }
 

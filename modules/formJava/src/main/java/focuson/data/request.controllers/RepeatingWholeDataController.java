@@ -17,22 +17,22 @@ import java.util.Map;
   @Autowired
   public IManyGraphQl graphQL;
     @PostMapping(value="/api/repeating", produces="application/json")
-    public ResponseEntity createRepeatingWholeData(@RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),RepeatingWholeDataQueries.createRepeatingLine(customerId,   Transform.removeQuoteFromProperties(body, List.class)), "createRepeatingLine");
+    public ResponseEntity createRepeatingWholeData(@RequestParam(required=false) String dbName, @RequestParam String customerId,@RequestBody String body) throws Exception{
+       return Transform.result(graphQL.get(dbName),RepeatingWholeDataQueries.createRepeatingLine(customerId,   Transform.removeQuoteFromProperties(body, List.class)), "createRepeatingLine");
     }
 
     @GetMapping(value="/api/repeating", produces="application/json")
-    public ResponseEntity getRepeatingWholeData(@RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),RepeatingWholeDataQueries.getRepeatingLine(customerId), "getRepeatingLine");
+    public ResponseEntity getRepeatingWholeData(@RequestParam(required=false) String dbName, @RequestParam String customerId) throws Exception{
+       return Transform.result(graphQL.get(dbName),RepeatingWholeDataQueries.getRepeatingLine(customerId), "getRepeatingLine");
     }
 
     @PostMapping(value="/api/repeating/query", produces="application/json")
-    public String querycreateRepeatingLine(@RequestParam String customerId, @RequestBody String body) throws Exception{
+    public String querycreateRepeatingLine(@RequestParam(required=false) String dbName, @RequestParam String customerId,@RequestBody String body) throws Exception{
        return RepeatingWholeDataQueries.createRepeatingLine(customerId,   Transform.removeQuoteFromProperties(body, List.class));
     }
 
     @GetMapping(value="/api/repeating/query", produces="application/json")
-    public String querygetRepeatingLine(@RequestParam String customerId) throws Exception{
+    public String querygetRepeatingLine(@RequestParam(required=false) String dbName, @RequestParam String customerId) throws Exception{
        return RepeatingWholeDataQueries.getRepeatingLine(customerId);
     }
 

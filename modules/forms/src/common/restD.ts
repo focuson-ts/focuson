@@ -9,11 +9,13 @@ export type AllLensRestParams = CommonLensRestParam | LensRestParam
 
 export const StringParam = {
   rsSetter: 'setString',
-  javaType: 'String'
+  javaType: 'String',
+  javaParser: ''
 }
 export const IntParam = {
   rsSetter: 'setInt',
-  javaType: 'int'
+  javaType: 'int',
+  javaParser: 'Integer.parseInt'
 }
 
 export interface CommonLensRestParam {
@@ -22,6 +24,7 @@ export interface CommonLensRestParam {
   main?: boolean,
   rsSetter: string;
   javaType: string;
+  javaParser: string;
 }
 export interface LensRestParam {
   lens: string,
@@ -29,6 +32,7 @@ export interface LensRestParam {
   main?: boolean,
   rsSetter: string;
   javaType: string;
+  javaParser: string;
 }
 
 export function isCommonLens ( a: AllLensRestParams ): a is CommonLensRestParam {

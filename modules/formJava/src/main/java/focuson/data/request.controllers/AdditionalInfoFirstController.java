@@ -17,22 +17,22 @@ import java.util.Map;
   @Autowired
   public IManyGraphQl graphQL;
     @GetMapping(value="/customer/occupation/v2/additionalInfoFirst", produces="application/json")
-    public ResponseEntity getAdditionalInfoFirst(@RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),AdditionalInfoFirstQueries.getAdditionalInfoFirst(customerId), "getAdditionalInfoFirst");
+    public ResponseEntity getAdditionalInfoFirst(@RequestParam(required=false) String dbName, @RequestParam String customerId) throws Exception{
+       return Transform.result(graphQL.get(dbName),AdditionalInfoFirstQueries.getAdditionalInfoFirst(customerId), "getAdditionalInfoFirst");
     }
 
     @PutMapping(value="/customer/occupation/v2/additionalInfoFirst", produces="application/json")
-    public ResponseEntity updateAdditionalInfoFirst(@RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),AdditionalInfoFirstQueries.updateAdditionalInfoFirst(customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateAdditionalInfoFirst");
+    public ResponseEntity updateAdditionalInfoFirst(@RequestParam(required=false) String dbName, @RequestParam String customerId,@RequestBody String body) throws Exception{
+       return Transform.result(graphQL.get(dbName),AdditionalInfoFirstQueries.updateAdditionalInfoFirst(customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateAdditionalInfoFirst");
     }
 
     @GetMapping(value="/customer/occupation/v2/additionalInfoFirst/query", produces="application/json")
-    public String querygetAdditionalInfoFirst(@RequestParam String customerId) throws Exception{
+    public String querygetAdditionalInfoFirst(@RequestParam(required=false) String dbName, @RequestParam String customerId) throws Exception{
        return AdditionalInfoFirstQueries.getAdditionalInfoFirst(customerId);
     }
 
     @PutMapping(value="/customer/occupation/v2/additionalInfoFirst/query", produces="application/json")
-    public String queryupdateAdditionalInfoFirst(@RequestParam String customerId, @RequestBody String body) throws Exception{
+    public String queryupdateAdditionalInfoFirst(@RequestParam(required=false) String dbName, @RequestParam String customerId,@RequestBody String body) throws Exception{
        return AdditionalInfoFirstQueries.updateAdditionalInfoFirst(customerId,   Transform.removeQuoteFromProperties(body, Map.class));
     }
 

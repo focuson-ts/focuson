@@ -9,6 +9,7 @@ import graphql.schema.idl.RuntimeWiring;
 import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.SchemaParser;
 import graphql.schema.idl.TypeDefinitionRegistry;
+import graphql.schema.DataFetchingEnvironment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -20,8 +21,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import {thePackage}.{fetcherPackage}.IFetcher;
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
+import java.util.function.Function;
+
 {imports}
 
 
@@ -39,11 +43,12 @@ public class {wiringClass}  implements IManyGraphQl{
 
    @Override
    public GraphQL get(String dbName) {
-        if (!cache.containsKey(dbName)) {
-        GraphQLSchema graphQLSchema = buildSchema(dbName);
-        cache.put(dbName, GraphQL.newGraphQL(graphQLSchema).build());
-        }
-        return cache.get(dbName);
+      if (dbName==null) dbName= IFetcher.mock;
+      if (!cache.containsKey(dbName)) {
+          GraphQLSchema graphQLSchema = buildSchema(dbName);
+          cache.put(dbName, GraphQL.newGraphQL(graphQLSchema).build());
+      }
+      return cache.get(dbName);
     }
 
    private GraphQLSchema buildSchema(String dbName) {
@@ -53,8 +58,15 @@ public class {wiringClass}  implements IManyGraphQl{
         return schemaGenerator.makeExecutableSchema(typeRegistry, runtimeWiring);
    }
 
-   public <T extends IFetcher> T find(List<T> list, String dbName) {
-        return list.stream().filter(f -> f.dbName() == dbName).findFirst().get();
+   public <T extends IFetcher, Res> DataFetcher<Res> find(List<T> list, String dbName, Function<T, DataFetcher<Res>> fn) {
+        Optional<T> result = list.stream().filter(f -> f.dbName().equals(dbName)).findFirst();
+        if (result.isPresent()) return fn.apply(result.get());
+        return new DataFetcher<Res>() {
+            @Override
+            public Res get(DataFetchingEnvironment dataFetchingEnvironment) throws Exception {
+                    throw new RuntimeException("Cannot find the fetcher for " + dbName);
+            }
+        };
    }
 
    private RuntimeWiring buildWiring(String dbName) {

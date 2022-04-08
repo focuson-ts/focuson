@@ -4,6 +4,7 @@ export interface JavaWiringParams {
   fetcherPackage: string;
   controllerPackage: string;
   mockFetcherPackage: string;
+  h2FetcherPackage: string;
   fetcherInterface: string;
   wiringClass: string;
   fetcherClass: string;

@@ -20,6 +20,7 @@ export const params: any = {
   domainsFile: "domains",
   fetchersFile: "fetchers",
   mockFetcherPackage: "mockfetchers",
+  h2FetcherPackage: 'h2Fetchers',
   controllerPackage: "request.controllers",
   restsFile: "rests",
   pactsFile: "pact.spec",

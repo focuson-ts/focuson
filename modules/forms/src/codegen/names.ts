@@ -38,6 +38,7 @@ export const fetcherName = <G> ( d: RestDefnInPageProperties<G> ): string => res
 export const fetcherInterfaceName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${restNameWithPrefix ( r )}${params.fetcherInterface}`;
 export const fetcherVariableName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `_${restNameWithPrefix ( r )}${params.fetcherInterface}`;
 export const mockFetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${restNameWithPrefix ( r )}${params.fetcherInterface}Mock`;
+export const h2FetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${restNameWithPrefix ( r )}${params.fetcherInterface}H2`;
 
 export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${r.dataDD.name}Queries`;
 
@@ -48,9 +49,6 @@ export function sqlMapName<B, G> ( p: PageD<B, G>, restName: string, path: numbe
 export function sqlListName<B, G> ( p: PageD<B, G>, restName: string, path: number[], i: number ) {return sqlMapName ( p, restName, [ ...path, i ] )}
 export function sqlMapFileName<B, G> ( root: string, p: PageD<B, G>, restName: string, path: number[] ) {return `${root}/${sqlMapName ( p, restName, path )}`}
 export function sqlTafFieldName<G> ( taf: TableAndFieldAndAliasData<G> ) {return `${taf.alias}_${taf.fieldData.dbFieldName}`}
-// export const dbMapname = <G> ( d: AllDataDD<G> ) => d.name
-// export const dbMapMakerProcname = <G> ( d: CompDataD<G> ) => `make${d.name}`
-// export const allMapsName = <B, G> ( p: PageD<B, G>, suffix: string ) => `All${p.name}_${suffix}_Maps`
 
 export const optionalsName = <B, G> ( p: PageD<B, G> ) => `${p.name}Optionals`
 

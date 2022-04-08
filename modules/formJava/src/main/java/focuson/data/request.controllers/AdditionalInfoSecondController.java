@@ -17,22 +17,22 @@ import java.util.Map;
   @Autowired
   public IManyGraphQl graphQL;
     @GetMapping(value="/customer/occupation/v2/additionalInfoSecond", produces="application/json")
-    public ResponseEntity getAdditionalInfoSecond(@RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),AdditionalInfoSecondQueries.getAdditionalInfoSecond(customerId), "getAdditionalInfoSecond");
+    public ResponseEntity getAdditionalInfoSecond(@RequestParam(required=false) String dbName, @RequestParam String customerId) throws Exception{
+       return Transform.result(graphQL.get(dbName),AdditionalInfoSecondQueries.getAdditionalInfoSecond(customerId), "getAdditionalInfoSecond");
     }
 
     @PutMapping(value="/customer/occupation/v2/additionalInfoSecond", produces="application/json")
-    public ResponseEntity updateAdditionalInfoSecond(@RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),AdditionalInfoSecondQueries.updateAdditionalInfoSecond(customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateAdditionalInfoSecond");
+    public ResponseEntity updateAdditionalInfoSecond(@RequestParam(required=false) String dbName, @RequestParam String customerId,@RequestBody String body) throws Exception{
+       return Transform.result(graphQL.get(dbName),AdditionalInfoSecondQueries.updateAdditionalInfoSecond(customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateAdditionalInfoSecond");
     }
 
     @GetMapping(value="/customer/occupation/v2/additionalInfoSecond/query", produces="application/json")
-    public String querygetAdditionalInfoSecond(@RequestParam String customerId) throws Exception{
+    public String querygetAdditionalInfoSecond(@RequestParam(required=false) String dbName, @RequestParam String customerId) throws Exception{
        return AdditionalInfoSecondQueries.getAdditionalInfoSecond(customerId);
     }
 
     @PutMapping(value="/customer/occupation/v2/additionalInfoSecond/query", produces="application/json")
-    public String queryupdateAdditionalInfoSecond(@RequestParam String customerId, @RequestBody String body) throws Exception{
+    public String queryupdateAdditionalInfoSecond(@RequestParam(required=false) String dbName, @RequestParam String customerId,@RequestBody String body) throws Exception{
        return AdditionalInfoSecondQueries.updateAdditionalInfoSecond(customerId,   Transform.removeQuoteFromProperties(body, Map.class));
     }
 

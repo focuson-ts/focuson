@@ -17,12 +17,12 @@ import java.util.Map;
   @Autowired
   public IManyGraphQl graphQL;
     @GetMapping(value="/api/postCode", produces="application/json")
-    public ResponseEntity getPostCodeData(@RequestParam String postcode) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),PostCodeDataQueries.getPostCodeDataLine(postcode), "getPostCodeDataLine");
+    public ResponseEntity getPostCodeData(@RequestParam(required=false) String dbName, @RequestParam String postcode) throws Exception{
+       return Transform.result(graphQL.get(dbName),PostCodeDataQueries.getPostCodeDataLine(postcode), "getPostCodeDataLine");
     }
 
     @GetMapping(value="/api/postCode/query", produces="application/json")
-    public String querygetPostCodeDataLine(@RequestParam String postcode) throws Exception{
+    public String querygetPostCodeDataLine(@RequestParam(required=false) String dbName, @RequestParam String postcode) throws Exception{
        return PostCodeDataQueries.getPostCodeDataLine(postcode);
     }
 

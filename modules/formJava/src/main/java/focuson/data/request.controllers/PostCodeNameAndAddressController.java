@@ -10,6 +10,7 @@ import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
+import focuson.data.db.PostCodeMainPage_addressMaps ; 
 
   @RestController
   public class PostCodeNameAndAddressController {
@@ -17,17 +18,21 @@ import java.util.Map;
   @Autowired
   public IManyGraphQl graphQL;
     @PostMapping(value="/api/address", produces="application/json")
-    public ResponseEntity createPostCodeNameAndAddress(@RequestBody String body) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),PostCodeNameAndAddressQueries.createPostCodeNameAndAddress(  Transform.removeQuoteFromProperties(body, Map.class)), "createPostCodeNameAndAddress");
+    public ResponseEntity createPostCodeNameAndAddress(@RequestParam(required=false) String dbName,@RequestBody String body) throws Exception{
+       return Transform.result(graphQL.get(dbName),PostCodeNameAndAddressQueries.createPostCodeNameAndAddress(  Transform.removeQuoteFromProperties(body, Map.class)), "createPostCodeNameAndAddress");
     }
 
     @PostMapping(value="/api/address/query", produces="application/json")
-    public String querycreatePostCodeNameAndAddress(@RequestBody String body) throws Exception{
+    public String querycreatePostCodeNameAndAddress(@RequestParam(required=false) String dbName,@RequestBody String body) throws Exception{
        return PostCodeNameAndAddressQueries.createPostCodeNameAndAddress(  Transform.removeQuoteFromProperties(body, Map.class));
     }
 
   @GetMapping(value = "/api/address/sample", produces = "application/json")
     public static String samplePostCodeNameAndAddress() throws Exception {
       return new ObjectMapper().writeValueAsString( Sample.samplePostCodeNameAndAddress0);
+    }
+  @GetMapping(value = "/api/address/sql", produces = "text/html")
+    public static String sqlPostCodeNameAndAddress() throws Exception {
+      return PostCodeMainPage_addressMaps.allSql;
     }
   }

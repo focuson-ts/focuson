@@ -10,6 +10,7 @@ import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
+import focuson.data.db.JointAccount_jointAccountMaps ; 
 
   @RestController
   public class JointAccountController {
@@ -17,17 +18,21 @@ import java.util.Map;
   @Autowired
   public IManyGraphQl graphQL;
     @GetMapping(value="/api/jointAccount", produces="application/json")
-    public ResponseEntity getJointAccount(@RequestParam String accountId, @RequestParam String brandId) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),JointAccountQueries.getJointAccount(accountId, brandId), "getJointAccount");
+    public ResponseEntity getJointAccount(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String brandId) throws Exception{
+       return Transform.result(graphQL.get(dbName),JointAccountQueries.getJointAccount(accountId, brandId), "getJointAccount");
     }
 
     @GetMapping(value="/api/jointAccount/query", produces="application/json")
-    public String querygetJointAccount(@RequestParam String accountId, @RequestParam String brandId) throws Exception{
+    public String querygetJointAccount(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String brandId) throws Exception{
        return JointAccountQueries.getJointAccount(accountId, brandId);
     }
 
   @GetMapping(value = "/api/jointAccount/sample", produces = "application/json")
     public static String sampleJointAccount() throws Exception {
       return new ObjectMapper().writeValueAsString( Sample.sampleJointAccount0);
+    }
+  @GetMapping(value = "/api/jointAccount/sql", produces = "text/html")
+    public static String sqlJointAccount() throws Exception {
+      return JointAccount_jointAccountMaps.allSql;
     }
   }

@@ -21,7 +21,7 @@ export function makeJavaResolversInterface <G> ( params: JavaWiringParams, restD
 }
 
 function makeWiring ( varName: string, parentName: string, resolver: string, name: string ): string {
-  return `.type(newTypeWiring("${parentName}").dataFetcher("${name}", find(${varName}, dbName).${resolver}()))`;
+  return `.type(newTypeWiring("${parentName}").dataFetcher("${name}", find(${varName}, dbName, f ->f.${resolver}())))`;
 }
 
 

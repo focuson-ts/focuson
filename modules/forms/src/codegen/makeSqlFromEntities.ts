@@ -3,7 +3,7 @@ import { beforeAfterSeparator, beforeSeparator, ints, mapPathPlusInts, NameAnd, 
 import { AllLensRestParams, EntityAndWhere, RestD, unique } from "../common/restD";
 import { CompDataD, emptyDataFlatMap, flatMapDD } from "../common/dataD";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
-import { addBrackets, addStringToEndOfAllButLast, indentList } from "./codegen";
+import { addBrackets, addStringToEndOfAllButLast, addStringToStartOfFirst, indentList } from "./codegen";
 import { JavaWiringParams } from "./config";
 import { sqlListName, sqlMapName, sqlTafFieldName } from "./names";
 
@@ -429,7 +429,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
       throw Error ( `Page: ${p.name} rest ${restName} has nested 'multiples. Currently this is not supported` )
     return `this.${childEntity.linkInData.mapName}.put("${childEntity.linkInData.field}", list${i}.stream().map(m ->m.${childEntity.linkInData.link}).collect(Collectors.toList()));`
   } );
-  const paramDetails = restD.params
+
   return [
     `package ${params.thePackage}.${params.dbPackage};`,
     '',
@@ -450,7 +450,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
       `@SuppressWarnings("SqlResolve")`,
       ...addBrackets ( 'public static String sql = ', ';' ) ( addStringToEndOfAllButLast ( '+' ) ( sql.map ( s => '"' + s.replace ( /""/g, '\"' ) + '"' ) ) ),
       '',
-      ...makeAllGetsForRest ( params, p, restName, restD ),
+      ...makeAllGetsAndAllSqlForRest ( params, p, restName, restD ),
       '',
       ...ids,
       '',
@@ -527,14 +527,15 @@ export function makeGetForRestFromLinkData<B, G> ( params: JavaWiringParams, p: 
 }
 interface QueryAndGetters {
   query: JavaQueryParamDetails[],
-  getter: string[]
+  getter: string[];
+  sql: string[]
 }
-export function makeAllGetsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, restD: RestD<G> ): string[] {
+export function makeAllGetsAndAllSqlForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, restD: RestD<G> ): string[] {
   let sqlRoot = findSqlRoot ( restD.tables );
   const getters: QueryAndGetters[] = walkSqlRoots ( sqlRoot, ( r, path ) => {
     const ld = findSqlLinkDataFromRootAndDataD ( r, restD.dataDD )
     const query = getParametersFromLinkDataAndRest ( `Page ${p.name} rest ${restName}`, ld, restD )
-    return { query, getter: makeGetForRestFromLinkData ( params, p, restName, restD, query, path, r.children.length ) }
+    return { query, getter: makeGetForRestFromLinkData ( params, p, restName, restD, query, path, r.children.length ), sql: [ ...generateGetSql ( ld ), '' ] }
   } )
   const paramsForMainGet = getters.slice ( 1 ).map ( g => g.query )
   function callingParams ( qs: JavaQueryParamDetails[] ) {return qs.map ( q => q.name )}
@@ -544,5 +545,6 @@ export function makeAllGetsForRest<B, G> ( params: JavaWiringParams, p: PageD<B,
     `   return getRoot(${[ 'connection', ...callingParams ( getters[ 0 ].query ), ...ints ( sqlRoot.children.length )
       .map ( i => `get${i}(${[ 'connection', ...callingParams ( paramsForMainGet[ i ] ) ].join ( ',' )})` ) ].join ( "," )}).map(x -> x._root);`, // Note not yet recursing here
     `}` ]
-  return [ ...mainGet, ...getters.flatMap ( g => g.getter ) ]
+  const allSql = addBrackets ( `public static String allSql=`, ';' ) ( addStringToEndOfAllButLast ( "+" ) ( getters.flatMap ( g => g.sql.map ( s => '"' + s + '\\n"' ) ) ) )
+  return [ ...mainGet, ...allSql, ...getters.flatMap ( g => g.getter ) ]
 }
