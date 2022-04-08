@@ -1,8 +1,9 @@
 package focuson.data.fetchers;
 
 import graphql.schema.DataFetcher;
+import java.util.Map;
 
 public interface CreateEAccountDataFFetcher extends IFetcher{
-   public DataFetcher createCreateEAccountData();
-   public DataFetcher getCreateEAccountData();
+   public DataFetcher<Map<String,Object>> createCreateEAccountData();
+   public DataFetcher<Map<String,Object>> getCreateEAccountData();
 }

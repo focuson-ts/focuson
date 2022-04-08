@@ -1,8 +1,9 @@
 package focuson.data.fetchers;
 
 import graphql.schema.DataFetcher;
+import java.util.Map;
 
 public interface AdditionalInfoFirstFFetcher extends IFetcher{
-   public DataFetcher getAdditionalInfoFirst();
-   public DataFetcher updateAdditionalInfoFirst();
+   public DataFetcher<Map<String,Object>> getAdditionalInfoFirst();
+   public DataFetcher<Map<String,Object>> updateAdditionalInfoFirst();
 }

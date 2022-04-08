@@ -1,8 +1,9 @@
 package focuson.data.fetchers;
 
 import graphql.schema.DataFetcher;
+import java.util.Map;
 
 public interface OtherIncomeResponseFFetcher extends IFetcher{
-   public DataFetcher getOtherIncomeResponse();
-   public DataFetcher updateOtherIncomeResponse();
+   public DataFetcher<Map<String,Object>> getOtherIncomeResponse();
+   public DataFetcher<Map<String,Object>> updateOtherIncomeResponse();
 }

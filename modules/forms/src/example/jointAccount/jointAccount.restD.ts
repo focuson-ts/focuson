@@ -2,6 +2,7 @@ import { commonParams } from "../eTransfers/eTransfers.restD";
 import { JointAccountCustomerDD, JointAccountDd } from "./jointAccount.dataD";
 import { accountT, addT, customerT, nameT } from "../database/tableNames";
 import { IntParam, RestD, RestParams, StringParam } from "../../common/restD";
+import { jointAccountSql } from "./jointAccount.sql";
 
 export const jointAccountParams: RestParams = {
   accountId: { ...IntParam, commonLens: 'accountId', testValue: 'custId' },
@@ -13,6 +14,7 @@ export const jointAccountRestD: RestD<any> = {
   dataDD: JointAccountDd,
   url: '/api/jointAccount?{query}',
   actions: [ 'get' ],
+  initialSql: jointAccountSql,
   tables: {
     where: [
       { table: accountT, alias: accountT.name, field: 'acc_id', paramName: 'accountId' },
@@ -29,7 +31,7 @@ export const jointAccountRestD: RestD<any> = {
           idInParent: 'mainCustomerId:integer',
           idInThis: 'id:integer',
           children: {
-            mainAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", linkInData: { mapName: 'main', field: 'addresses', link: 'main_addresses'} },
+            mainAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", linkInData: { mapName: 'main', field: 'addresses', link: 'main_addresses' } },
             mainName: { type: 'Single', table: nameT, idInParent: 'nameId', idInThis: 'id' },
           }
         },
@@ -39,13 +41,16 @@ export const jointAccountRestD: RestD<any> = {
           filterPath: 'joint',
           idInParent: 'jointCustomerId:integer', idInThis: 'id:integer',
           children: {
-            jointAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", linkInData: { mapName: 'joint', field: 'addresses' , link: 'joint_addresses'} },
+            jointAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", linkInData: { mapName: 'joint', field: 'addresses', link: 'joint_addresses' } },
             jointName: { type: 'Single', table: nameT, idInParent: 'nameId', idInThis: 'id' },
           }
         }
       }
     }
   }
+
+
+
 
   //
   // resolver: {

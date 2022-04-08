@@ -97,6 +97,7 @@ export interface RestD<G> {
   url: string,
   actions: RestAction[];
   resolver?: ResolverD;
+  initialSql?: string[];
   tables?: EntityAndWhere
 }
 export interface EntityAndWhere {

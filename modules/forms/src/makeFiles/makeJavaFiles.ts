@@ -2,7 +2,7 @@ import { copyFile, copyFiles, DirectorySpec, templateFile, writeToFile } from "@
 import { JavaWiringParams } from "../codegen/config";
 import fs from "fs";
 import { unique } from "../common/restD";
-import { detailsLog, GenerateLogLevel, NameAnd, safeString, sortedEntries } from "@focuson/utils";
+import { detailsLog, GenerateLogLevel, NameAnd, safeArray, safeString, sortedEntries } from "@focuson/utils";
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
@@ -107,6 +107,9 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
       writeToFile ( `${javaH2FetcherRoot}/${h2FetcherClassName ( params, rdp.rest )}.java`, () => makeH2Fetchers ( params, mainPage, restName, rdp.rest ) )
     } )
   )
+
+  writeToFile ( `${javaResourcesRoot}/data.sql`, () => allMainPages ( pages ).flatMap ( mainPage =>
+    sortedEntries ( mainPage.rest ).flatMap ( ( [ restName, rdp ] ) => safeArray ( rdp.rest.initialSql ) ) ) )
 
   templateFile ( `${javaCodeRoot}/${params.sampleClass}.java`, 'templates/JavaSampleTemplate.java',
     { ...params, content: indentList ( makeAllJavaVariableName ( pages, 0 ) ).join ( "\n" ) }, directorySpec, details )

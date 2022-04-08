@@ -8,11 +8,12 @@ import { DirectorySpec, loadFile } from "@focuson/files";
 
 export function makeJavaResolversInterface <G> ( params: JavaWiringParams, restD: RestD <G> ): string[] {
   const { thePackage } = params
-  const resolvers = findAllResolvers ( [ restD ] ).map ( ( { resolver } ) => `   public DataFetcher ${resolver}();` )
+  const resolvers = findAllResolvers ( [ restD ] ).map ( ( { resolver } ) => `   public DataFetcher<Map<String,Object>> ${resolver}();` )
   return [
     `package ${thePackage}.${params.fetcherPackage};`,
     '',
     'import graphql.schema.DataFetcher;',
+    'import java.util.Map;',
     '',
     `public interface ${fetcherInterfaceName ( params, restD )} extends IFetcher{`,
     ...resolvers,

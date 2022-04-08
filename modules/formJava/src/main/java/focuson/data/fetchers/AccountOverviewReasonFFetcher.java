@@ -1,7 +1,8 @@
 package focuson.data.fetchers;
 
 import graphql.schema.DataFetcher;
+import java.util.Map;
 
 public interface AccountOverviewReasonFFetcher extends IFetcher{
-   public DataFetcher getAccountOverviewReason();
+   public DataFetcher<Map<String,Object>> getAccountOverviewReason();
 }

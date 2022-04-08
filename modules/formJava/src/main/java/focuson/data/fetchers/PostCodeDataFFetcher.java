@@ -1,7 +1,8 @@
 package focuson.data.fetchers;
 
 import graphql.schema.DataFetcher;
+import java.util.Map;
 
 public interface PostCodeDataFFetcher extends IFetcher{
-   public DataFetcher getPostCodeDataLine();
+   public DataFetcher<Map<String,Object>> getPostCodeDataLine();
 }
