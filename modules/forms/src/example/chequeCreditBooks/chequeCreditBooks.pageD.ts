@@ -10,7 +10,7 @@ export const OrderChequeBookOrPayingInModalPD: ExampleModalPage = {
   /** This page can only view data */
   modes: [ 'create' ],
   /** How we display the page.*/
-  display: { target: '', dataDD: ChequeCreditbooksHistoryLineDD, importFrom: 'ChequeCreditbooks' },
+  display: { target: '', dataDD: ChequeCreditbooksHistoryLineDD },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },

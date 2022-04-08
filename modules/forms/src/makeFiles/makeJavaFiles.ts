@@ -24,7 +24,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   const minimal = logLevel === 'minimal' ? 2 : -1
   const overview = logLevel === 'overview' ? 2 : -1
 
-  const javaAppRoot = javaOutputRoot + "/" + params.applicationName
+  const javaAppRoot = javaOutputRoot
   const javaScriptRoot = javaAppRoot + "/scripts"
   const javaCodeRoot = javaAppRoot + `/src/main/java/${params.thePackage.replace ( ".", '/' )}`
   const javaResourcesRoot = javaAppRoot + "/src/main/resources"

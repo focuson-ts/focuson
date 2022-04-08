@@ -6,7 +6,7 @@ import { BooleanDD } from "../../common/dataD";
 export const JointAccountEditModalPageD: ExampleModalPage = {
   name: "JointAccountEditModalPage",
   pageType: 'ModalPage',
-  display: { target: 'temp', dataDD: JointAccountCustomerDD, importFrom: 'JointAccount' },
+  display: { target: 'temp', dataDD: JointAccountCustomerDD },
   modes: [ 'edit' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' },

@@ -255,9 +255,9 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
   const domainImports = pages.flatMap ( p => sortedEntries ( dataDsIn ( [ p ] ) ).map ( ( [ name, dataD ] ) => `import {${domainName ( dataD )}} from "${domainsFileName ( '..', params, p )}"` ) )
   const modalDomainImports = pages.flatMap ( p => isModalPage ( p ) ? [
     `//if there is an error message here... did you set the importFrom on this modal correctly, and also check that the PageD links to this DataD in a domain or rest block`,
-    `import {${domainName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', p, params.domainsFile )}'; ` ] : [] )
+    `import {${domainName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..',mainP, p, params.domainsFile )}'; ` ] : [] )
   const modalRenderImports = pages.flatMap ( p => (isModalPage ( p ) && !p.display.dataDD.display) ? [
-    `import {${componentName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', p, params.renderFile )}'` ] : [] )
+    `import {${componentName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..',mainP,p, params.renderFile )}'` ] : [] )
   const pageLayoutImports = pages.flatMap ( p => p.layout ? [ `import { ${p.layout.component.name} } from '${p.layout.component.import}';` ] : [] )
   return [ ...imports, ...modalDomainImports, ...modalRenderImports, ...makeComponentImports ( pages ), ...makeButtonImports ( makeButton ), ...pageDomainsImports, ...pageLayoutImports, ...domainImports, ...pageComponents, ...dataComponents ]
 }

@@ -12,7 +12,7 @@ export const listOccupationsModalPD: ExampleModalPage = {
   name: 'ListOccupationsModal',
   pageType: 'ModalPopup',
   modes: [ 'edit' ],
-  display: { target: '', dataDD: listOccupationsDD, importFrom: 'OccupationAndIncomeSummary' },
+  display: { target: '', dataDD: listOccupationsDD},
   buttons: {
     cancel: { control: 'ModalCancelButton' },
     commit: { control: 'ModalCommitButton' }
@@ -25,7 +25,7 @@ export const otherSourcesOfIncomeModalPD: ExampleModalPage = {
   /** This page can only view data */
   modes: [ 'edit' ],
   /** How we display the page.*/
-  display: { target: '', dataDD: otherIncomeResponseDD, importFrom: 'OccupationAndIncomeSummary' },
+  display: { target: '', dataDD: otherIncomeResponseDD },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -38,7 +38,7 @@ export const occupationIncomeModalPD: ExampleModalPage = {
   pageType: 'ModalPage',
   modes: [ 'view', 'create', 'edit' ],
   /** How we display the page.*/
-  display: { target: '', dataDD: oneOccupationIncomeDetailsDD, importFrom: 'OccupationAndIncomeSummary' },
+  display: { target: '', dataDD: oneOccupationIncomeDetailsDD },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -61,7 +61,7 @@ export const additionalInformationModalPD: ExampleModalPage = {
   pageType: 'ModalPage',
   modes: [ 'edit' ],
   /** How we display the page.*/
-  display: { target: '', dataDD: additionalInformationDD, importFrom: 'OccupationAndIncomeSummary' },
+  display: { target: '', dataDD: additionalInformationDD },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -75,7 +75,7 @@ export const businessDetailsModalPD: ExampleModalPage = {
   /** This page can only view data */
   modes: [ 'edit' ],
   /** How we display the page.*/
-  display: { target: '', dataDD: businessDetailsMainDD, importFrom: 'OccupationAndIncomeSummary' },
+  display: { target: '', dataDD: businessDetailsMainDD },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },

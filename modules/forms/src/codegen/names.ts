@@ -57,7 +57,7 @@ export const optionalsName = <B, G> ( p: PageD<B, G> ) => `${p.name}Optionals`
 
 export const someFileName = <B, G> ( root: string, pd: PageD<B, G>, postfix: string ): string => `${root}/${pd.name}/${pd.name}.${postfix}`;
 export const someFileNameFromMainPage = <B, G> ( root: string, mainPage: PageD<B, G>, pd: PageD<B, G>, postfix: string ): string => `${root}/${mainPage.name}/${pd.name}.${postfix}`;
-export const modalImportFromFileName = <B, G> ( root: string, p: ModalPageD<B, G>, suffix: string ): string => `${root}/${p.display.importFrom}/${p.display.importFrom}.${suffix}`
+export const modalImportFromFileName = <B, G> ( root: string,mainP: MainPageD<B,G>,  p: ModalPageD<B, G>, suffix: string ): string => `${root}/${mainP.name}/${mainP.name}.${suffix}`
 
 
 export const storybookFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, `stories` );

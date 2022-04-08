@@ -11,7 +11,7 @@ export const CreatePlanPD:ExampleModalPage = {
   /** This page can only view data */
   modes: [ 'view', 'create', 'edit' ],
   /** How we display the page.*/
-  display: { target: '', dataDD: CreatePlanDD , importFrom: 'EAccountsSummary'},
+  display: { target: '', dataDD: CreatePlanDD},
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {
     cancel: { control: 'ModalCancelButton' },

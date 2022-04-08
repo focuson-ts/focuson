@@ -6,7 +6,7 @@ import { IntegerDD } from "../../common/dataD";
 export const RepeatingLinePageD: ExampleModalPage = {
   name: "RepeatingLine",
   pageType: "ModalPage",
-  display: { target: '~/temp', dataDD: RepeatingLineDataD, importFrom: 'Repeating' },
+  display: { target: '~/temp', dataDD: RepeatingLineDataD},
   modes: [ 'create', 'edit' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' },
