@@ -58,7 +58,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   }, directorySpec )
   copyFiles ( javaAppRoot, 'templates/raw/java', directorySpec ) ( 'application.properties' )
   copyFile ( javaAppRoot + '/.gitignore', 'templates/raw/gitignore', directorySpec )
-  copyFiles ( javaCodeRoot, 'templates/raw/java', directorySpec ) ( 'CorsConfig.java' )
+  copyFiles ( javaCodeRoot, 'templates/raw/java', directorySpec ) ( 'CorsConfig.java', 'IManyGraphQl.java' )
   detailsLog ( logLevel, 1, 'java common copies' )
   templateFile ( `${javaAppRoot}/pom.xml`, 'templates/mvnTemplate.pom', params, directorySpec )
   templateFile ( `${javaCodeRoot}/SchemaController.java`, 'templates/raw/java/SchemaController.java', params, directorySpec )
@@ -78,11 +78,14 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
           generateGetSql ( findSqlLinkDataFromRootAndDataD ( r, rest.dataDD ) ) ).map ( addStringToEndOfList ( ';\n' ) ).flat () ] ), details )
 
   writeToFile ( `${javaResourcesRoot}/${params.schema}`, () => makeGraphQlSchema ( rests ), details )
+  copyFile(`${javaCodeRoot}/${params.fetcherPackage}/IFetcher.java`, 'templates/raw/java/IFetcher.java')
   rests.forEach ( rest => {
       let file = `${javaCodeRoot}/${params.fetcherPackage}/${fetcherInterfaceName ( params, rest )}.java`;
       writeToFile ( file, () => makeJavaResolversInterface ( params, rest ), details )
     }
   )
+
+
   writeToFile ( `${javaCodeRoot}/${params.wiringClass}.java`, () => makeAllJavaWiring ( params, rests, directorySpec ), details )
   templateFile ( `${javaCodeRoot}/${params.applicationName}.java`, 'templates/JavaApplicationTemplate.java', params, directorySpec, details )
   rests.forEach ( restD => templateFile ( `${javaMockFetcherRoot}/${mockFetcherClassName ( params, restD )}.java`, 'templates/JavaFetcherClassTemplate.java',
@@ -90,7 +93,6 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
       ...params,
       fetcherInterface: fetcherInterfaceName ( params, restD ),
       fetcherClass: mockFetcherClassName ( params, restD ),
-      thePackage: params.thePackage + "." + params.mockFetcherPackage,
       content: makeAllMockFetchers ( params, [ restD ] ).join ( "\n" )
     }, directorySpec ) )
   templateFile ( `${javaCodeRoot}/${params.sampleClass}.java`, 'templates/JavaSampleTemplate.java',

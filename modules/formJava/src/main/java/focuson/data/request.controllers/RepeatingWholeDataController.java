@@ -5,7 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import focuson.data.Sample;
 import focuson.data.queries.RepeatingWholeDataQueries;
-import graphql.GraphQL;
+import focuson.data.IManyGraphQl;
+import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
@@ -14,15 +15,15 @@ import java.util.Map;
   public class RepeatingWholeDataController {
 
   @Autowired
-  public GraphQL graphQL;
+  public IManyGraphQl graphQL;
     @PostMapping(value="/api/repeating", produces="application/json")
     public ResponseEntity createRepeatingWholeData(@RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL,RepeatingWholeDataQueries.createRepeatingLine(customerId,   Transform.removeQuoteFromProperties(body, List.class)), "createRepeatingLine");
+       return Transform.result(graphQL.get(IFetcher.mock),RepeatingWholeDataQueries.createRepeatingLine(customerId,   Transform.removeQuoteFromProperties(body, List.class)), "createRepeatingLine");
     }
 
     @GetMapping(value="/api/repeating", produces="application/json")
     public ResponseEntity getRepeatingWholeData(@RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL,RepeatingWholeDataQueries.getRepeatingLine(customerId), "getRepeatingLine");
+       return Transform.result(graphQL.get(IFetcher.mock),RepeatingWholeDataQueries.getRepeatingLine(customerId), "getRepeatingLine");
     }
 
     @PostMapping(value="/api/repeating/query", produces="application/json")

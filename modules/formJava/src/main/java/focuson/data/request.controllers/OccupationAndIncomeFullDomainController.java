@@ -5,7 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import focuson.data.Sample;
 import focuson.data.queries.OccupationAndIncomeFullDomainQueries;
-import graphql.GraphQL;
+import focuson.data.IManyGraphQl;
+import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
@@ -14,15 +15,15 @@ import java.util.Map;
   public class OccupationAndIncomeFullDomainController {
 
   @Autowired
-  public GraphQL graphQL;
+  public IManyGraphQl graphQL;
     @GetMapping(value="/customer/occupation/v2/occupationIncomeDetails", produces="application/json")
     public ResponseEntity getOccupationAndIncomeFullDomain(@RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL,OccupationAndIncomeFullDomainQueries.getOccupationAndIncomeFullDomain(customerId), "getOccupationAndIncomeFullDomain");
+       return Transform.result(graphQL.get(IFetcher.mock),OccupationAndIncomeFullDomainQueries.getOccupationAndIncomeFullDomain(customerId), "getOccupationAndIncomeFullDomain");
     }
 
     @PutMapping(value="/customer/occupation/v2/occupationIncomeDetails", produces="application/json")
     public ResponseEntity updateOccupationAndIncomeFullDomain(@RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL,OccupationAndIncomeFullDomainQueries.updateOccupationAndIncomeFullDomain(customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateOccupationAndIncomeFullDomain");
+       return Transform.result(graphQL.get(IFetcher.mock),OccupationAndIncomeFullDomainQueries.updateOccupationAndIncomeFullDomain(customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateOccupationAndIncomeFullDomain");
     }
 
     @GetMapping(value="/customer/occupation/v2/occupationIncomeDetails/query", produces="application/json")

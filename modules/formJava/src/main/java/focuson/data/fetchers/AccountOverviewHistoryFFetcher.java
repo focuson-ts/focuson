@@ -2,6 +2,6 @@ package focuson.data.fetchers;
 
 import graphql.schema.DataFetcher;
 
-public interface AccountOverviewHistoryFFetcher {
+public interface AccountOverviewHistoryFFetcher extends IFetcher{
    public DataFetcher getAccountOverviewHistory();
 }

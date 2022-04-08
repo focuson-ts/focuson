@@ -1,12 +1,12 @@
 package focuson.data.request.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import focuson.data.IManyGraphQl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import focuson.data.Sample;
 import focuson.data.queries.AccountAllFlagsQueries;
-import graphql.GraphQL;
+import focuson.data.IManyGraphQl;
+import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +18,7 @@ import java.util.Map;
   public IManyGraphQl graphQL;
     @GetMapping(value="/api/accountOverview/flags", produces="application/json")
     public ResponseEntity getAccountAllFlags(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL,AccountAllFlagsQueries.getAccountAllFlags(accountId, customerId), "getAccountAllFlags");
+       return Transform.result(graphQL.get(IFetcher.mock),AccountAllFlagsQueries.getAccountAllFlags(accountId, customerId), "getAccountAllFlags");
     }
 
     @GetMapping(value="/api/accountOverview/flags/query", produces="application/json")

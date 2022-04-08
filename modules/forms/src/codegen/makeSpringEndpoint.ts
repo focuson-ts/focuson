@@ -1,5 +1,5 @@
 import { defaultRestAction, postFixForEndpoint, RestD, RestParams } from "../common/restD";
-import { createTableName,  endPointName, queryClassName, queryName, restControllerName, sampleName } from "./names";
+import { createTableName, endPointName, queryClassName, queryName, restControllerName, sampleName } from "./names";
 import { JavaWiringParams } from "./config";
 import { beforeSeparator, RestAction, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction, indentList } from "./codegen";
@@ -39,7 +39,7 @@ function makeEndpoint<G> ( params: JavaWiringParams, r: RestD<G>, restAction: Re
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,
     `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
-    `       return Transform.result(graphQL,${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( r, restAction )}), "${queryName ( r, restAction )}");`,
+    `       return Transform.result(graphQL.get(IFetcher.mock),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( r, restAction )}), "${queryName ( r, restAction )}");`,
     `    }`,
     `` ];
 }
@@ -88,9 +88,10 @@ export function makeSpringEndpointsFor<G> ( params: JavaWiringParams, r: RestD<G
     'import com.fasterxml.jackson.databind.ObjectMapper;',
     `import org.springframework.http.ResponseEntity;`,
     `import org.springframework.web.bind.annotation.*;`,
-    `import focuson.data.Sample;`,
-    `import focuson.data.${params.queriesPackage}.${queryClassName ( params, r )};`,
-    `import graphql.GraphQL;`,
+    `import ${params.thePackage}.Sample;`,
+    `import ${params.thePackage}.${params.queriesPackage}.${queryClassName ( params, r )};`,
+    `import ${params.thePackage}.IManyGraphQl;`,
+    `import ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
     `import org.springframework.beans.factory.annotation.Autowired;`,
     `import java.util.List;`,
     `import java.util.Map;`,
@@ -99,7 +100,7 @@ export function makeSpringEndpointsFor<G> ( params: JavaWiringParams, r: RestD<G
     `  public class ${restControllerName ( r )} {`,
     ``,
     ...indentList ( [ `@Autowired`,
-      `public GraphQL graphQL;`, ] ),
+      `public IManyGraphQl graphQL;`, ] ),
     ...endpoints,
     ...queries,
     ...makeSampleEndpoint ( params, r ),

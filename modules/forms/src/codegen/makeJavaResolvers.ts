@@ -14,14 +14,14 @@ export function makeJavaResolversInterface <G> ( params: JavaWiringParams, restD
     '',
     'import graphql.schema.DataFetcher;',
     '',
-    `public interface ${fetcherInterfaceName ( params, restD )} {`,
+    `public interface ${fetcherInterfaceName ( params, restD )} extends IFetcher{`,
     ...resolvers,
     // ...findUniqueDataDsAndRestTypeDetails ( restD ).flatMap ( ( [ datad, rad ] ) => `   public DataFetcher ${resolverName ( datad, rad )}();` ),
     '}' ]
 }
 
 function makeWiring ( varName: string, parentName: string, resolver: string, name: string ): string {
-  return `.type(newTypeWiring("${parentName}").dataFetcher("${name}", ${varName}.${resolver}()))`;
+  return `.type(newTypeWiring("${parentName}").dataFetcher("${name}", find(${varName}, dbName).${resolver}()))`;
 }
 
 
@@ -29,7 +29,7 @@ export function makeAllJavaWiring  <G>( params: JavaWiringParams, rs: RestD <G>[
   let imports = rs.map ( r => `import ${params.thePackage}.${params.fetcherPackage}.${fetcherInterfaceName ( params, r )};` )
   let wiring: string[] = rs.flatMap ( r => findAllResolversFor ( r ).map ( ( { parent, resolver, name, sample } ) =>
     makeWiring ( fetcherVariableName ( params, r ), parent, resolver, name ) ) )
-  let fetchers = rs.flatMap ( r => [ `@Autowired`, `${fetcherInterfaceName ( params, r )} ${fetcherVariableName ( params, r )};` ] )
+  let fetchers = rs.flatMap ( r => [ `@Autowired`, `List<${fetcherInterfaceName ( params, r )}> ${fetcherVariableName ( params, r )};` ] )
   const str: string = loadFile ( 'templates/JavaWiringTemplate.java', directorySpec ).toString ()
   return applyToTemplate ( str, {
     ...params,
