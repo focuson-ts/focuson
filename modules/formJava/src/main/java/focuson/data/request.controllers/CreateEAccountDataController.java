@@ -17,7 +17,7 @@ import java.util.Map;
   @Autowired
   public IManyGraphQl graphQL;
     @PostMapping(value="/api/createEAccount/", produces="application/json")
-    public ResponseEntity createCreateEAccountData(@RequestParam String accountId, @RequestParam String customerId,@RequestBody String body) throws Exception{
+    public ResponseEntity createCreateEAccountData(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{
        return Transform.result(graphQL.get(IFetcher.mock),CreateEAccountDataQueries.createCreateEAccountData(accountId, customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "createCreateEAccountData");
     }
 
@@ -27,7 +27,7 @@ import java.util.Map;
     }
 
     @PostMapping(value="/api/createEAccount//query", produces="application/json")
-    public String querycreateCreateEAccountData(@RequestParam String accountId, @RequestParam String customerId,@RequestBody String body) throws Exception{
+    public String querycreateCreateEAccountData(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{
        return CreateEAccountDataQueries.createCreateEAccountData(accountId, customerId,   Transform.removeQuoteFromProperties(body, Map.class));
     }
 

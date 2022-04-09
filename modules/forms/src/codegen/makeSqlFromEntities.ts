@@ -1,9 +1,9 @@
 import { DBTable } from "../common/resolverD";
 import { beforeAfterSeparator, beforeSeparator, ints, mapPathPlusInts, NameAnd, safeArray, safeString } from "@focuson/utils";
-import { AllLensRestParams, EntityAndWhere, RestD, unique } from "../common/restD";
+import { AllLensRestParams, EntityAndWhere, RestD, RestParams, unique } from "../common/restD";
 import { CompDataD, emptyDataFlatMap, flatMapDD } from "../common/dataD";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
-import { addBrackets, addStringToEndOfAllButLast, addStringToStartOfFirst, indentList } from "./codegen";
+import { addBrackets, addStringToEndOfAllButLast, indentList } from "./codegen";
 import { JavaWiringParams } from "./config";
 import { sqlListName, sqlMapName, sqlTafFieldName } from "./names";
 
@@ -464,24 +464,11 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
   ]
 
 }
-interface JavaQueryParamDetails {
-  rsSetter: string;
-  javaType: string;
-  name: string;
-}
-function getParametersFromLinkDataAndRest<G> ( errorPrefix: string, ld: SqlLinkData, rest: RestD<G> ): JavaQueryParamDetails[] {
-  return ld.whereLinks.flatMap ( l => {
-    if ( isWhereFromQuery ( l ) ) {
-      const param: AllLensRestParams = rest.params[ l.paramName ]
-      if ( !param ) throw Error ( `${errorPrefix} Cannot find param ${l.paramName}. Legal Params are ${JSON.stringify ( rest.params )}` )
-      return [ { rsSetter: param.rsSetter, javaType: param.javaType, name: l.paramName } ]
-    }
-    return [];
-  } )
-}
 
+type JavaQueryParamDetails = [ string, AllLensRestParams ]
 function getParameters<B, G> ( childCount: number, p: PageD<B, G>, restName: string, path: number[], queryParams: JavaQueryParamDetails[] ) {
-  return [ 'Connection connection', ...queryParams.map ( ( { javaType, name } ) => `${javaType} ${name}` ), ...mapPathPlusInts ( path, childCount ) ( pathAndI => `List<${sqlMapName ( p, restName, pathAndI )}> list${pathAndI}` ) ].join ( ", " );
+  return [ 'Connection connection', ...queryParams.map ( ( [ name, param ] ) =>
+    `${param.javaType} ${name}` ), ...mapPathPlusInts ( path, childCount ) ( pathAndI => `List<${sqlMapName ( p, restName, pathAndI )}> list${pathAndI}` ) ].join ( ", " );
 }
 function newMap ( mapName: string, childCount: number, path: number[] ) {
   return `new ${mapName}(${[ 'rs', ...ints ( childCount ).map ( i => `list${i}` ) ].join ( "," )})`
@@ -491,7 +478,7 @@ function makeGetRestForRoot<B, G> ( p: PageD<B, G>, restName: string, childCount
   return [
     `public static Optional<${mapName}> getRoot(${getParameters ( childCount, p, restName, [], queryParams )}) throws SQLException {`,
     `    PreparedStatement statement = connection.prepareStatement(${mapName}.sql);`,
-    ...indentList ( queryParams.map ( ( q, i ) => `statement.${q.rsSetter}(${i + 1},${q.name});` ) ),
+    ...indentList ( queryParams.map ( ( [ name, param ], i ) => `statement.${param.rsSetter}(${i + 1},${name});` ) ),
     `    ResultSet rs = statement.executeQuery();`,
     `    try {`,
     `      return rs.next() ? Optional.of(${newMap ( mapName, childCount, [] )}) : Optional.empty();`,
@@ -507,7 +494,7 @@ function makeGetRestForChild<B, G> ( p: PageD<B, G>, restName: string, path: num
   return [
     `public static List<${mapName}> get${path.join ( '_' )}(${getParameters ( childCount, p, restName, [], queryParams )}) throws SQLException {`,
     `    PreparedStatement statement = connection.prepareStatement(${mapName}.sql);`,
-    ...indentList ( queryParams.map ( ( q, i ) => `statement.${q.rsSetter}(${i + 1},${q.name});` ) ),
+    ...indentList ( queryParams.map ( ( [ name, param ], i ) => `statement.${param.rsSetter}(${i + 1},${name});` ) ),
     `    ResultSet rs = statement.executeQuery();`,
     `    try {`,
     `      List<${mapName}> result = new LinkedList<>();`,
@@ -534,17 +521,31 @@ export function makeAllGetsAndAllSqlForRest<B, G> ( params: JavaWiringParams, p:
   let sqlRoot = findSqlRoot ( restD.tables );
   const getters: QueryAndGetters[] = walkSqlRoots ( sqlRoot, ( r, path ) => {
     const ld = findSqlLinkDataFromRootAndDataD ( r, restD.dataDD )
-    const query = getParametersFromLinkDataAndRest ( `Page ${p.name} rest ${restName}`, ld, restD )
+    if ( restD.tables === undefined ) throw Error ( `somehow have a sql root without a tables in ${p.name} ${restName}` )
+    const query = findParamsForTable ( `Page ${p.name} rest ${restName}`, restD.params, restD.tables )
     return { query, getter: makeGetForRestFromLinkData ( params, p, restName, restD, query, path, r.children.length ), sql: [ ...generateGetSql ( ld ), '' ] }
   } )
   const paramsForMainGet = getters.slice ( 1 ).map ( g => g.query )
-  function callingParams ( qs: JavaQueryParamDetails[] ) {return qs.map ( q => q.name )}
-  const allParams = unique ( getters.flatMap ( g => g.query ), q => q.name + q.javaType )
+  function callingParams ( qs: JavaQueryParamDetails[] ) {return qs.map ( q => q[ 0 ] )}
+  const allParams = unique ( getters.flatMap ( g => g.query ), q => q[ 0 ] + q[ 1 ].javaType )
   const mainGet: string[] = [
-    `public static Optional<Map<String,Object>> getAll(${[ 'Connection connection', ...allParams.map ( p => `${p.javaType} ${p.name}` ) ].join ( "," )}) throws SQLException {`,
+    `public static Optional<Map<String,Object>> getAll(${[ 'Connection connection', ...allParams.map ( ( [ name, param ] ) =>
+      `${param.javaType} ${name}` ) ].join ( "," )}) throws SQLException {`,
     `   return getRoot(${[ 'connection', ...callingParams ( getters[ 0 ].query ), ...ints ( sqlRoot.children.length )
       .map ( i => `get${i}(${[ 'connection', ...callingParams ( paramsForMainGet[ i ] ) ].join ( ',' )})` ) ].join ( "," )}).map(x -> x._root);`, // Note not yet recursing here
     `}` ]
   const allSql = addBrackets ( `public static String allSql=`, ';' ) ( addStringToEndOfAllButLast ( "+" ) ( getters.flatMap ( g => g.sql.map ( s => '"' + s + '\\n"' ) ) ) )
   return [ ...mainGet, ...allSql, ...getters.flatMap ( g => g.getter ) ]
+}
+
+export function findParamsForTable ( errorPrefix: string, params: RestParams, table: EntityAndWhere ): JavaQueryParamDetails[] {
+  return table.where.flatMap ( wl => {
+    if ( isWhereFromQuery ( wl ) ) {
+      let param = params[ wl.paramName ];
+      if ( param == undefined ) throw Error ( `${errorPrefix} param ${wl.paramName} is defined in where ${JSON.stringify ( wl )}\nBut not available in the params[${Object.keys ( params )}]` )
+      let result: [ string, AllLensRestParams ] = [ wl.paramName, param ];
+      return [ result ]
+    }
+    return []
+  } )
 }

@@ -17,7 +17,7 @@ import java.util.Map;
   @Autowired
   public IManyGraphQl graphQL;
     @PostMapping(value="/api/repeating", produces="application/json")
-    public ResponseEntity createRepeatingWholeData(@RequestParam String customerId,@RequestBody String body) throws Exception{
+    public ResponseEntity createRepeatingWholeData(@RequestParam String customerId, @RequestBody String body) throws Exception{
        return Transform.result(graphQL.get(IFetcher.mock),RepeatingWholeDataQueries.createRepeatingLine(customerId,   Transform.removeQuoteFromProperties(body, List.class)), "createRepeatingLine");
     }
 
@@ -27,7 +27,7 @@ import java.util.Map;
     }
 
     @PostMapping(value="/api/repeating/query", produces="application/json")
-    public String querycreateRepeatingLine(@RequestParam String customerId,@RequestBody String body) throws Exception{
+    public String querycreateRepeatingLine(@RequestParam String customerId, @RequestBody String body) throws Exception{
        return RepeatingWholeDataQueries.createRepeatingLine(customerId,   Transform.removeQuoteFromProperties(body, List.class));
     }
 

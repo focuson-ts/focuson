@@ -1,7 +1,7 @@
-import { defaultRestAction, postFixForEndpoint, RestD, RestParams } from "../common/restD";
-import { createTableName, endPointName, queryClassName, queryName, restControllerName, sampleName, sqlMapName } from "./names";
+import { defaultRestAction, postFixForEndpoint, RestD } from "../common/restD";
+import { endPointName, queryClassName, queryName, restControllerName, sampleName, sqlMapName } from "./names";
 import { JavaWiringParams } from "./config";
-import { beforeSeparator, RestAction, safeArray, safeObject, sortedEntries } from "@focuson/utils";
+import { beforeSeparator, RestAction, safeObject, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction, indentList } from "./codegen";
 import { isRepeatingDd } from "../common/dataD";
 import { MainPageD } from "../common/pageD";
@@ -14,8 +14,8 @@ function makeCommaIfHaveParams<G> ( r: RestD<G>, restAction: RestAction ) {
 
 export function makeParamsForJava<G> ( r: RestD<G>, restAction: RestAction ): string {
   const params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
-  // const comma = makeCommaIfHaveParams ( r, restAction );
-  const requestParam = defaultRestAction[ restAction ].params.needsObj ? `,@RequestBody String body` : ""
+  const comma = makeCommaIfHaveParams ( r, restAction );
+  const requestParam = defaultRestAction[ restAction ].params.needsObj ? `${comma}@RequestBody String body` : ""
   return params.map ( (( [ name, param ] ) => `@RequestParam String ${name}`) ).join ( ", " ) + requestParam
 }
 function paramsForQuery<G> ( r: RestD<G>, restAction: RestAction ): string {
@@ -37,7 +37,7 @@ function mappingAnnotation ( restAction: RestAction ) {
 
 function makeEndpoint<G> ( params: JavaWiringParams, r: RestD<G>, restAction: RestAction ): string[] {
   const hasDbName = safeObject ( r.params )[ 'dbName' ] !== undefined
-  const dbNameString = hasDbName?'dbName': 'IFetcher.mock'
+  const dbNameString = hasDbName ? 'dbName' : 'IFetcher.mock'
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,
     `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,

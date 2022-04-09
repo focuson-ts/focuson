@@ -25,7 +25,7 @@ public class JointAccountFFetcherH2 implements JointAccountFFetcher {
       String dbName = dataFetchingEnvironment.getArgument("dbName");
        Connection c = dataSource.getConnection();
        try {
-         Optional<Map<String, Object>> opt = JointAccount_jointAccountMaps.getAll(c,Integer.parseInt(accountId),Integer.parseInt(brandId),(dbName));
+         Optional<Map<String, Object>> opt = JointAccount_jointAccountMaps.getAll(c,Integer.parseInt(accountId),Integer.parseInt(brandId));
          Map json = opt.get();
          return json;
        } finally {

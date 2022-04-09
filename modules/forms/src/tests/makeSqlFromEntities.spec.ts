@@ -1,5 +1,5 @@
-import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, MainEntity, makeAllGetsAndAllSqlForRest, makeMapsForRest, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldData } from "../codegen/makeSqlFromEntities";
-import { EntityAndWhere, unique } from "../common/restD";
+import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findParamsForTable, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, MainEntity, makeMapsForRest, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldData } from "../codegen/makeSqlFromEntities";
+import { AllLensRestParams, EntityAndWhere, IntParam, StringParam, unique } from "../common/restD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { nameAndAddressDataD, postCodeDataLineD } from "../example/postCodeDemo/addressSearch.dataD";
 import { addressRestD } from "../example/postCodeDemo/addressSearch.restD";
@@ -369,7 +369,7 @@ describe ( "createTableSql", () => {
     let rdps = [ JointAccountPageD.rest.jointAccount, PostCodeMainPage.rest.address ];
     expect ( createTableSql ( rdps ) ).toEqual ( {
       "ACC_TBL": [
-        "create table ACC_TBL(",
+        "create table ACC_TBL" + "(",
         "  mainCustomerId integer,",
         "  jointCustomerId integer,",
         "  acc_id integer,",
@@ -378,7 +378,7 @@ describe ( "createTableSql", () => {
         ")"
       ],
       "ADD_TBL": [
-        "create table ADD_TBL(",
+        "create table ADD_TBL" + "(",
         "  customerId integer,",
         "  zzline1 varchar(256),",
         "  zzline2 varchar(256),",
@@ -387,13 +387,13 @@ describe ( "createTableSql", () => {
         ")"
       ],
       "CUST_TBL": [
-        "create table CUST_TBL(",
+        "create table CUST_TBL" + "(",
         "  nameId integer,",
         "  id integer",
         ")"
       ],
       "NAME_TBL": [
-        "create table NAME_TBL(",
+        "create table NAME_TBL" + "(",
         "  id integer,",
         "  zzname varchar(256)",
         ")"
@@ -422,7 +422,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "",
-        "//{'accountId':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':'custId'},'brandId':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'brandId','testValue':'custId'}}",
+        "//{'accountId':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':'custId'},'brandId':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'brandId','testValue':'custId'},'dbName':{'rsSetter':'setString','javaType':'String','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
         "public class JointAccount_jointAccountMaps {",
         "  @SuppressWarnings('SqlResolve')",
         "  public static String sql = 'select'+",
@@ -600,7 +600,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "",
-        "//{'accountId':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':'custId'},'brandId':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'brandId','testValue':'custId'}}",
+        "//{'accountId':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':'custId'},'brandId':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'brandId','testValue':'custId'},'dbName':{'rsSetter':'setString','javaType':'String','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
         "public class JointAccount_jointAccountMaps0 {",
         "  @SuppressWarnings('SqlResolve')",
         "  public static String sql = 'select'+",
@@ -755,7 +755,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "",
-        "//{'accountId':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':'custId'},'brandId':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'brandId','testValue':'custId'}}",
+        "//{'accountId':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':'custId'},'brandId':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'brandId','testValue':'custId'},'dbName':{'rsSetter':'setString','javaType':'String','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
         "public class JointAccount_jointAccountMaps1 {",
         "  @SuppressWarnings('SqlResolve')",
         "  public static String sql = 'select'+",
@@ -896,6 +896,28 @@ describe ( "makeMapsForRest", () => {
         "  }",
         "}"
       ]
-    ])
+    ] )
   } )
+} )
+
+describe ( "paramsForLinkedData", () => {
+  const accountId: AllLensRestParams = { ...IntParam, commonLens: 'accountId', testValue: 'custId' }
+  const brandId: AllLensRestParams = { ...IntParam, commonLens: 'brandId', testValue: 'custId' }
+  const dbName: AllLensRestParams = { ...StringParam, commonLens: 'dbName', testValue: 'mock' }
+
+  it ( "should find the params (in the correct order) from the wheres in the linked data", () => {
+    expect ( findParamsForTable ( `error`, { accountId, brandId }, jointAccountRestD.tables ) ).toEqual ( [ [ 'accountId', accountId ], [ 'brandId', brandId ] ] )
+    expect ( findParamsForTable ( `error`, { brandId, accountId }, jointAccountRestD.tables ) ).toEqual ( [ [ 'accountId', accountId ], [ 'brandId', brandId ] ] )
+    expect ( findParamsForTable ( `error`, { brandId, accountId, dbName }, jointAccountRestD.tables ) ).toEqual ( [ [ 'accountId', accountId ], [ 'brandId', brandId ] ] )
+    const reversed: EntityAndWhere = { ...jointAccountRestD.tables, where: jointAccountRestD.tables.where.reverse () }
+    expect ( findParamsForTable ( `error`, { accountId, brandId }, reversed ) ).toEqual ( [ [ 'brandId', brandId ], [ 'accountId', accountId ] ] )
+    expect ( findParamsForTable ( `error`, { brandId, accountId }, reversed ) ).toEqual ( [ [ 'brandId', brandId ], [ 'accountId', accountId ] ] )
+
+  } )
+
+  it ( "should throw a nice error message if a param is needed but isn't available", () => {
+      expect ( () => findParamsForTable ( `error`, {}, jointAccountRestD.tables ) ).toThrow ( 'error param brandId is defined in where' )
+
+    }
+  )
 } )

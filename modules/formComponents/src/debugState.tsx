@@ -8,6 +8,7 @@ import { Lenses, NameAndLens } from "@focuson/lens";
 import { ToggleButton } from "./toggleButton";
 import { AssertPages, MakeTest } from "./makeTest";
 import { LabelAndStringInput } from "./labelAndInput";
+import { LabelAndDropdown } from "./labelAndDropdown";
 
 
 export function Tags<S extends HasTagHolder, C> ( { state }: LensProps<S, any, C> ) {
@@ -36,7 +37,10 @@ export function Messages<S extends HasSimpleMessages, C> ( { state }: LensProps<
 export function CommonIds<S, C extends FocusOnContext<S>> ( { state }: DebugProps<S, C> ) {
   const commonIds = state.context.commonIds
   return <><p>Common Ids</p>
-    <ul>{sortedEntries ( commonIds ).map ( ( [ n, l ] ) => <li key={n}><LabelAndStringInput id={`commonIds.${n}`} state={state.copyWithLens ( l )} label={n} allButtons={{}}/></li> )}</ul>
+    <ul>{sortedEntries ( commonIds ).map ( ( [ n, l ] ) => {
+      if ( n === 'dbName' ) return <li key={n}><LabelAndDropdown id={`commonIds.${n}`} state={state.copyWithLens ( l )} label={n} allButtons={{}} enums={{ mock: 'Mock', h2: 'H2 database' }}/></li>;
+      return <li key={n}><LabelAndStringInput id={`commonIds.${n}`} state={state.copyWithLens ( l )} label={n} allButtons={{}}/></li>;
+    } )}</ul>
   </>
 }
 export function ClearTrace<S, C> ( { state }: LensProps<S, any, C> ) {

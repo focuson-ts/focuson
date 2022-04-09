@@ -22,12 +22,12 @@ import java.util.Map;
     }
 
     @PostMapping(value="/api/createPlan", produces="application/json")
-    public ResponseEntity createCreatePlan(@RequestParam String accountId, @RequestParam String customerId,@RequestBody String body) throws Exception{
+    public ResponseEntity createCreatePlan(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{
        return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.createCreatePlan(accountId, customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "createCreatePlan");
     }
 
     @PutMapping(value="/api/createPlan", produces="application/json")
-    public ResponseEntity updateCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId,@RequestBody String body) throws Exception{
+    public ResponseEntity updateCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId, @RequestBody String body) throws Exception{
        return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.updateCreatePlan(accountId, createPlanId, customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateCreatePlan");
     }
 
@@ -47,12 +47,12 @@ import java.util.Map;
     }
 
     @PostMapping(value="/api/createPlan/query", produces="application/json")
-    public String querycreateCreatePlan(@RequestParam String accountId, @RequestParam String customerId,@RequestBody String body) throws Exception{
+    public String querycreateCreatePlan(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{
        return CreatePlanQueries.createCreatePlan(accountId, customerId,   Transform.removeQuoteFromProperties(body, Map.class));
     }
 
     @PutMapping(value="/api/createPlan/query", produces="application/json")
-    public String queryupdateCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId,@RequestBody String body) throws Exception{
+    public String queryupdateCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId, @RequestBody String body) throws Exception{
        return CreatePlanQueries.updateCreatePlan(accountId, createPlanId, customerId,   Transform.removeQuoteFromProperties(body, Map.class));
     }
 

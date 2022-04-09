@@ -22,7 +22,7 @@ import java.util.Map;
     }
 
     @PutMapping(value="/customer/occupation/v2/otherIncome", produces="application/json")
-    public ResponseEntity updateOtherIncomeResponse(@RequestParam String customerId,@RequestBody String body) throws Exception{
+    public ResponseEntity updateOtherIncomeResponse(@RequestParam String customerId, @RequestBody String body) throws Exception{
        return Transform.result(graphQL.get(IFetcher.mock),OtherIncomeResponseQueries.updateOtherIncomeResponse(customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateOtherIncomeResponse");
     }
 
@@ -32,7 +32,7 @@ import java.util.Map;
     }
 
     @PutMapping(value="/customer/occupation/v2/otherIncome/query", produces="application/json")
-    public String queryupdateOtherIncomeResponse(@RequestParam String customerId,@RequestBody String body) throws Exception{
+    public String queryupdateOtherIncomeResponse(@RequestParam String customerId, @RequestBody String body) throws Exception{
        return OtherIncomeResponseQueries.updateOtherIncomeResponse(customerId,   Transform.removeQuoteFromProperties(body, Map.class));
     }
 

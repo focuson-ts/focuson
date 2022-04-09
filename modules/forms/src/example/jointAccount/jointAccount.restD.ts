@@ -1,5 +1,4 @@
-import { commonParams } from "../eTransfers/eTransfers.restD";
-import { JointAccountCustomerDD, JointAccountDd } from "./jointAccount.dataD";
+import { JointAccountDd } from "./jointAccount.dataD";
 import { accountT, addT, customerT, nameT } from "../database/tableNames";
 import { IntParam, RestD, RestParams, StringParam } from "../../common/restD";
 import { jointAccountSql } from "./jointAccount.sql";
