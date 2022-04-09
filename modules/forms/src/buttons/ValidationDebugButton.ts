@@ -1,4 +1,4 @@
-import { ButtonCreator, MakeButton } from "../codegen/makeButtons";
+import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
 import { opt } from "../codegen/codegen";
 
 
@@ -7,7 +7,7 @@ function makeValidationDebugButton<G> (): ButtonCreator<ValidationButtonInPage, 
     import: "@focuson/form_components",
     makeButton:
       ( { params, parent, name, button } ) => {
-        return [`<ValidationButton  ${opt ( 'id', name )}   ${opt ( 'name', name )}  />`]
+        return [`<ValidationButton  id=${makeIdForButton(name)}   ${opt ( 'name', name )}  />`]
       }
   }
 }

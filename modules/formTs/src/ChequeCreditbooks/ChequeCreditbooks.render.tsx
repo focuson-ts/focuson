@@ -26,9 +26,9 @@ import {ChequeCreditbooksHistoryLineDomain} from "../ChequeCreditbooks/ChequeCre
 export function ChequeCreditbooksPage(){
   return focusedPageWithExtraState<FState, ChequeCreditbooksPageDomain, ChequeCreditbooksDomain, Context> ( s => 'Cheque Creditbooks' ) ( state => state.focusOn('fromApi')) (
 ( fullState, state , full, d, mode, index) => {
-const id=`root${index}`;
+const id=`page${index}`;
   const buttons =    {chequeBook:<button>chequeBook of type ResetStateButton cannot be created yet</button>,
-      orderNewBook:<ModalButton id='orderNewBook' text='orderNewBook'  state={state} modal = 'OrderChequeBookOrPayingInModal'  
+      orderNewBook:<ModalButton id={`${id}.orderNewBook`} text='orderNewBook'  state={state} modal = 'OrderChequeBookOrPayingInModal'  
         pageMode='create'
         focusOn='~/tempCreatePlan'
         pageParams={{"position":{"top":123}}}

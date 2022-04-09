@@ -15,7 +15,7 @@ interface ModalCommitButtonProps<S, C> extends ModalCommitCancelButtonProps<S, C
   validate?: boolean
 }
 export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( { id, state }: ModalCommitCancelButtonProps<S, Context> ) {
-  return <button onClick={() => state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) )}>Cancel</button>
+  return <button id={id} onClick={() => state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) )}>Cancel</button>
 }
 
 
@@ -54,5 +54,5 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
       console.error ( 'ModalCommit button called and bad state.', lastPage )
   }
 
-  return <button onClick={onClick}>Commit</button>
+  return <button id={id} onClick={onClick}>Commit</button>
 }

@@ -24,9 +24,9 @@ export function OccupationIncomeModalPage(){
           const additionalInfoFirstGuard =  pageState(state)<domain.MainOccupationDetailsPageSummaryPageDomain>().focusOn('tempForOccupationEdit').focusOn('areYou').optJson() === "E";
           const additionalInfoSecondGuard =  fullState<FState,any,Context>(state).focusOn('MainOccupationDetailsPageSummary').focusOn('tempForOccupationEdit').focusOn('areYou').optJson() === "S";
           const otherSourcesOfIncomeGuard =  pageState(state)<domain.MainOccupationDetailsPageSummaryPageDomain>().focusOn('fromApi').focusOn('occupationAndIncome').focusOn('customerOccupationIncomeDetails').focusOn('otherSourceOfIncome').optJson() === "Y";
-          const id=`root${index}`;
+          const id=`page${index}`;
           const buttons =    {additionalInfoFirst:<GuardButton cond={additionalInfoFirstGuard}>
-                <ModalButton id='additionalInfoFirst' text='additionalInfoFirst'  state={state} modal = 'AdditionalInfoFirstModal'  
+                <ModalButton id={`${id}.additionalInfoFirst`} text='additionalInfoFirst'  state={state} modal = 'AdditionalInfoFirstModal'  
                   pageMode='view'
                   focusOn='~/tempForAdditionalInfoFirst'
                   copy={[{"from":"~/fromApi/additionalInfoFirst"}]}
@@ -34,7 +34,7 @@ export function OccupationIncomeModalPage(){
                 />
               </GuardButton>,
               additionalInfoSecond:<GuardButton cond={additionalInfoSecondGuard}>
-                <ModalButton id='additionalInfoSecond' text='additionalInfoSecond'  state={state} modal = 'AdditionalInfoSecondModal'  
+                <ModalButton id={`${id}.additionalInfoSecond`} text='additionalInfoSecond'  state={state} modal = 'AdditionalInfoSecondModal'  
                   pageMode='edit'
                   focusOn='~/tempForAdditionalInfoSecond'
                   copy={[{"from":"~/fromApi/additionalInfoSecond"}]}
@@ -42,15 +42,15 @@ export function OccupationIncomeModalPage(){
                 />
               </GuardButton>,
               cancel:<ModalCancelButton id='cancel' state={state} />,
-              commit:<ModalCommitButton id='commit'  state={state} />,
-              list:<ModalButton id='list' text='list'  state={state} modal = 'ListOccupationsModal'  
+              commit:<ModalCommitButton id={`${id}.commit`}  state={state} />,
+              list:<ModalButton id={`${id}.list`} text='list'  state={state} modal = 'ListOccupationsModal'  
                 pageMode='edit'
                 focusOn='~/fromApi/occupation'
                 copy={[{"from":"~/fromApi/occupationAndIncome/customerOccupationIncomeDetails/occupation","to":"~/fromApi/occupation/search"},{"from":"~/fromApi/occupationAndIncome/customerOccupationIncomeDetails/occupation","to":"~/fromApi/occupation/selectedOccupationName"},{"from":"~/fromApi/occupationsList","to":"~/fromApi/occupation/searchResults"}]}
                 copyOnClose={[{"from":"~/fromApi/occupation/selectedOccupationName","to":"~/fromApi/occupationAndIncome/customerOccupationIncomeDetails/occupation"}]}
               />,
               otherSourcesOfIncome:<GuardButton cond={otherSourcesOfIncomeGuard}>
-                <ModalButton id='otherSourcesOfIncome' text='otherSourcesOfIncome'  state={state} modal = 'OtherSourcesOfIncomeModal'  
+                <ModalButton id={`${id}.otherSourcesOfIncome`} text='otherSourcesOfIncome'  state={state} modal = 'OtherSourcesOfIncomeModal'  
                   pageMode='edit'
                   focusOn='~/tempForOtherSourcesOfIncome'
                   copy={[{"from":"~/fromApi/otherSourcesOfIncome"}]}

@@ -1,4 +1,4 @@
-import { ButtonCreator, MakeButton } from "../codegen/makeButtons";
+import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
 import { stateFocusQueryForRepl, indentList, opt } from "../codegen/codegen";
 import { stateFocusQueryWithTildaFromPage, stateForButton } from "../codegen/lens";
 
@@ -9,10 +9,8 @@ function makeToggleButton<B extends ToggleButtonInPage<G>, G> (): ButtonCreator<
     makeButton: ( createButton ) => {
       const { params, parent, name, button } = createButton
       const { value, buttonText } = button
-      return [ `<ToggleButton state={${stateForButton ( createButton, 'ToggleButton' ) ( value )}}`,
-        ...indentList ( [
-          ...opt ( 'id', name ),
-          ...opt ( 'buttonText', buttonText ), ' />' ] ) ]
+      return [ `<ToggleButton id=${makeIdForButton ( name )} state={${stateForButton ( createButton, 'ToggleButton' ) ( value )}}`,
+        ...indentList ( [ ...opt ( 'buttonText', buttonText ), ' />' ] ) ]
     }
   }
 }

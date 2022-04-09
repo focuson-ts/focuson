@@ -43,22 +43,22 @@ import {ArrearsDetailsLinesDomain} from "../AccountOverview/AccountOverview.doma
 export function AccountOverviewPage(){
   return focusedPageWithExtraState<FState, AccountOverviewPageDomain, AccountOverviewDomain, Context> ( s => 'Account Overview' ) ( state => state.focusOn('main')) (
 ( fullState, state , full, d, mode, index) => {
-const id=`root${index}`;
-  const buttons =    {excessHistory:<ModalButton id='excessHistory' text='excessHistory'  state={state} modal = 'ExcessHistory'  
+const id=`page${index}`;
+  const buttons =    {excessHistory:<ModalButton id={`${id}.excessHistory`} text='excessHistory'  state={state} modal = 'ExcessHistory'  
         pageMode='view'
         focusOn='~/excessHistory'
       />,
-      excessInfo:<ModalButton id='excessInfo' text='excessInfo'  state={state} modal = 'ExcessInfoSearch'  
+      excessInfo:<ModalButton id={`${id}.excessInfo`} text='excessInfo'  state={state} modal = 'ExcessInfoSearch'  
         pageMode='view'
         focusOn='~/excessInfo'
       />,
-      flags:<ModalButton id='flags' text='flags'  state={state} modal = 'AccountFlags'  
+      flags:<ModalButton id={`${id}.flags`} text='flags'  state={state} modal = 'AccountFlags'  
         pageMode='edit'
         focusOn='~/editingAccountFlags'
         copy={[{"from":"~/accountFlags"}]}
         copyOnClose={[{"to":"~/accountFlags"}]}
       />,
-      reason:<ModalButton id='reason' text='reason'  state={state} modal = 'Reason'  
+      reason:<ModalButton id={`${id}.reason`} text='reason'  state={state} modal = 'Reason'  
         pageMode='view'
         focusOn='~/reason'
       />,}

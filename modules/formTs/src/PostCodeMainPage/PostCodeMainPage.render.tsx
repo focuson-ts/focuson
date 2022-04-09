@@ -27,15 +27,14 @@ import {PostCodeSearchDomain} from "../PostCodeMainPage/PostCodeMainPage.domains
 export function PostCodeMainPagePage(){
   return focusedPageWithExtraState<FState, PostCodeMainPagePageDomain, PostCodeNameAndAddressDomain, Context> ( s => 'Post Code Main Page' ) ( state => state.focusOn('main')) (
 ( fullState, state , full, d, mode, index) => {
-const id=`root${index}`;
-  const buttons =    {save:<RestButton state={state}
-        id='save'
+const id=`page${index}`;
+  const buttons =    {save:<RestButton state={state} id={`${id}.save`}
         name='save'
         action='create'
         validate={false}
         rest='PostCodeMainPage_PostCodeNameAndAddressRestDetails'
        />,
-      search:<ModalButton id='search' text='search'  state={state} modal = 'PostCodeSearch'  
+      search:<ModalButton id={`${id}.search`} text='search'  state={state} modal = 'PostCodeSearch'  
         pageMode='edit'
         focusOn='~/postcode'
         copy={[{"from":"~/main/postcode","to":"~/postcode/search"}]}

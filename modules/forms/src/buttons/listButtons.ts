@@ -1,4 +1,4 @@
-import { ButtonCreator, MakeButton } from "../codegen/makeButtons";
+import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
 import { stateFocusQueryForRepl } from "../codegen/codegen";
 import { stateFocusQueryWithTildaFromPage, stateForButton } from "../codegen/lens";
 
@@ -22,7 +22,7 @@ function ListNextButton<B extends ListNextButtonInPage, G> (): ButtonCreator<B, 
     makeButton: createButton => {
       const { params, parent, name, button } = createButton
       const forButton = stateForButton ( createButton, 'ListNextButton' )
-      return [ `<ListNextButton id='${name}' title='Next' list={${forButton ( button.list )}} value={${forButton( button.value)}} />` ]
+      return [ `<ListNextButton id=${makeIdForButton(name)} title='Next' list={${forButton ( button.list )}} value={${forButton( button.value)}} />` ]
     }
   }
 }
@@ -33,7 +33,7 @@ function ListPrevButton<B extends ListPrevButtonInPage, G> (): ButtonCreator<B, 
     makeButton: ( createButton ) => {
       const { params, parent, name, button } = createButton
       const forButton = stateForButton ( createButton, 'ListPrevButton' )
-      return [ `<ListPrevButton id='${name}' title='Prev' list={${forButton ( button.list )}} value={${forButton( button.value)}} />` ]
+      return [ `<ListPrevButton id=${makeIdForButton(name)} title='Prev' list={${forButton ( button.list )}} value={${forButton( button.value)}} />` ]
     }
   }
 }

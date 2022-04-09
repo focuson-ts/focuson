@@ -1,5 +1,5 @@
 import { RestAction } from "@focuson/utils";
-import { ButtonCreator } from "./makeButtons";
+import { ButtonCreator, makeIdForButton } from "./makeButtons";
 import { ModalButtonInPage } from "../buttons/modalButtons";
 import { AllLensRestParams } from "../common/restD";
 import { parsePath, stateCodeBuilder } from "@focuson/lens";
@@ -50,6 +50,6 @@ export function optT<T> ( name: string, p: T | undefined ) {
 export const makeSimpleButton: <G> ( imp: string ) => ButtonCreator<ModalButtonInPage<G>, G> = imp => ({
   import: imp,
   makeButton: ( { name, button } ) =>
-    [ `<${button.control} id='${button.text ? button.text : name}' state={state} />` ]
+    [ `<${button.control} id=${makeIdForButton ( button.text ? button.text : name )} state={state} />` ]
 })
 export const filterParamsByRestAction = ( restAction: RestAction ) => ( [ name, param ]: [ string, AllLensRestParams ] ) => restAction === 'list' || restAction === 'create' ? !param.main : true

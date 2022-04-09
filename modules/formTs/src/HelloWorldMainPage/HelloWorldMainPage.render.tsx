@@ -22,7 +22,7 @@ import {HelloWorldDomainDataDomain} from "../HelloWorldMainPage/HelloWorldMainPa
 export function HelloWorldMainPagePage(){
   return focusedPageWithExtraState<FState, HelloWorldMainPagePageDomain, HelloWorldDomainDataDomain, Context> ( s => 'Hello World Main Page' ) ( state => state.focusOn('fromApi')) (
 ( fullState, state , full, d, mode, index) => {
-const id=`root${index}`;
+const id=`page${index}`;
   const buttons ={}
 
       return <>

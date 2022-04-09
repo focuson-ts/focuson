@@ -27,25 +27,25 @@ export function RepeatingPage(){
 ( fullState, state , full, d, mode, index) => {
   const nextOccupationGuard =  pageState(state)<domain.RepeatingPageDomain>().focusOn('selectedItem').optJsonOr(0) <  pageState(state)<domain.RepeatingPageDomain>().focusOn('fromApi').optJsonOr([]).length - 1
   const prevOccupationGuard =  pageState(state)<domain.RepeatingPageDomain>().focusOn('selectedItem').optJsonOr(0) >0
-const id=`root${index}`;
-  const buttons =    {addEntry:<ModalButton id='addEntry' text='addEntry'  state={state} modal = 'RepeatingLine'  
+const id=`page${index}`;
+  const buttons =    {addEntry:<ModalButton id={`${id}.addEntry`} text='addEntry'  state={state} modal = 'RepeatingLine'  
         pageMode='create'
         focusOn='~/temp'
         copyOnClose={[{"to":"~/fromApi[$append]"}]}
         createEmpty={empty.emptyRepeatingLine}
         setToLengthOnClose={{"variable":"~/selectedItem","array":"~/fromApi"}}
       />,
-      edit:<ModalButton id='edit' text='edit'  state={state} modal = 'RepeatingLine'  
+      edit:<ModalButton id={`${id}.edit`} text='edit'  state={state} modal = 'RepeatingLine'  
         pageMode='edit'
         focusOn='~/temp'
         copy={[{"from":"~/fromApi[~/selectedItem]"}]}
         copyOnClose={[{"to":"~/fromApi/[~/selectedItem]"}]}
       />,
       nextOccupation:<GuardButton cond={nextOccupationGuard}>
-        <ListNextButton id='nextOccupation' title='Next' list={fullState.focusOn('fromApi')} value={fullState.focusOn('selectedItem')} />
+        <ListNextButton id={`${id}.nextOccupation`} title='Next' list={fullState.focusOn('fromApi')} value={fullState.focusOn('selectedItem')} />
       </GuardButton>,
       prevOccupation:<GuardButton cond={prevOccupationGuard}>
-        <ListPrevButton id='prevOccupation' title='Prev' list={fullState.focusOn('fromApi')} value={fullState.focusOn('selectedItem')} />
+        <ListPrevButton id={`${id}.prevOccupation`} title='Prev' list={fullState.focusOn('fromApi')} value={fullState.focusOn('selectedItem')} />
       </GuardButton>,}
 
       return <>

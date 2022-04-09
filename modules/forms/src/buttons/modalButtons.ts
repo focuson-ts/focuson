@@ -2,7 +2,7 @@ import { DataD } from "../common/dataD";
 import { safeArray, sortedEntries } from "@focuson/utils";
 import { isMainPage, PageD, RestOnCommit } from "../common/pageD";
 import { CopyDetails, PageMode, PageParams, SetToLengthOnClose } from "@focuson/pages";
-import { ButtonCreator, MakeButton } from "../codegen/makeButtons";
+import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
 import { indentList, opt, optT } from "../codegen/codegen";
 import { emptyName, modalName, restDetailsName } from "../codegen/names";
 
@@ -45,13 +45,13 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalButtonInPage<G>, G> {
     import: "@focuson/pages",
     makeButton:
       ( { params, parent, name, button } ) => {
-        const { modal, mode, restOnCommit, focusOn, copy, createEmpty, copyOnClose, setToLengthOnClose, text,pageParams } = button
+        const { modal, mode, restOnCommit, focusOn, copy, createEmpty, copyOnClose, setToLengthOnClose, text, pageParams } = button
         const createEmptyString = createEmpty ? [ `createEmpty={${params.emptyFile}.${emptyName ( createEmpty )}}` ] : []
 
 
         const copyOnCloseArray: CopyDetails[] = copyOnClose ? singleToList ( copyOnClose ) : undefined
         const copyFromArray: CopyDetails[] = copy ? singleToList ( copy ) : undefined
-        return [ `<${button.control} id='${name}' text='${text ? text : name}'  state={state} modal = '${modalName ( parent, modal )}'  `,
+        return [ `<${button.control} id=${makeIdForButton ( name )} text='${text ? text : name}'  state={state} modal = '${modalName ( parent, modal )}'  `,
           ...indentList ( [
             ...opt ( 'pageMode', mode ),
             ...opt ( 'focusOn', focusOn ),

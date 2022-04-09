@@ -16,7 +16,7 @@ export interface ButtonCreator<B, G> {
   import: string;
   makeButton: ( data: CreateButtonData<B, G> ) => string[];
 }
-
+export function makeIdForButton ( idSuffix: string ) {return '{`${id}.' + idSuffix + "`}" }
 export interface MakeButton<G> extends NameAnd<ButtonCreator<any, G>> {}
 
 

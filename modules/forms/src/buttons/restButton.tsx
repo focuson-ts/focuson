@@ -1,4 +1,4 @@
-import { ButtonCreator, MakeButton } from "../codegen/makeButtons";
+import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
 import { RestAction, RestResult } from "@focuson/utils";
 import { RestD } from "../common/restD";
 import { indentList, opt, optT } from "../codegen/codegen";
@@ -15,9 +15,8 @@ function makeRestButton<B extends RestButtonInPage<G>, G> (): ButtonCreator<Rest
       if ( !isMainPage ( parent ) ) throw new Error ( 'Currently rest buttons are only valid on main pages' ) //Note: this is just for 'how do we specify them'
       const rest = parent.rest[ restName ]
       if ( !rest ) throw new Error ( `Rest button on page ${parent.name} uses restName ${restName} which doesn't exist\n${JSON.stringify ( button )}` )
-      return [ `<RestButton state={state}`,
+      return [ `<RestButton state={state} id=${makeIdForButton ( name )}`,
         ...indentList ( [
-          ...opt ( 'id', name ),
           ...opt ( 'name', name ),
           ...opt ( 'action', action ),
           ...optT ( 'validate', validate ),
