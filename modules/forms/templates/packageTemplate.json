@@ -21,6 +21,7 @@
   "devDependencies": {
     "@pact-foundation/pact": "^9.17.0",
     "@pact-foundation/pact-core": "^13.3.0",
+    "jest-watch-typeahead": "^0.6.5",
     "@sambego/storybook-state": "^2.0.1",
     "@storybook/addon-actions": "^6.4.4",
     "@storybook/addon-docs": "^6.4.4",

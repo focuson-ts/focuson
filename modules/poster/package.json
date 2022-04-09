@@ -12,8 +12,8 @@
     ]
   },
   "dependencies": {
-    "@focuson/lens": "0.5.61",
-    "@focuson/fetcher": "0.5.61"
+    "@focuson/lens": "0.5.63",
+    "@focuson/fetcher": "0.5.63"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -45,7 +45,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "0.5.61",
+  "version": "0.5.63",
   "template": "noreact",
   "description": "This allows for declarative 'posting' ",
   "details": {
