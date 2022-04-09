@@ -58,7 +58,7 @@ export function lensForPageDetails<S, D, Msgs, Config extends PageConfig<S, D, M
     '~': mainPageD.lens,
   }, mainPageD.namedOptionals ) )
 }
-export const findOneSelectedPageDetails = <S, T,Context extends PageSelectionContext<S>> ( state: LensState<S, T, Context>, page0Details: MainPageDetails<S, any, any, any, Context>) => ( ps: PageSelection ): PageDetailsForCombine => {
+export const findOneSelectedPageDetails = <S, T, Context extends PageSelectionContext<S>> ( state: LensState<S, T, Context>, page0Details: MainPageDetails<S, any, any, any, Context> ) => ( ps: PageSelection, index: number ): PageDetailsForCombine => {
   // @ts-ignore
   const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
   const pages = state.context.pages
@@ -76,7 +76,7 @@ export const findOneSelectedPageDetails = <S, T,Context extends PageSelectionCon
     if ( debug ) console.log ( "findOneSelectedPageDetails.legacy result", element )
     if ( debug ) console.log ( "findOneSelectedPageDetails.legacy result - json", JSON.stringify ( element ) )
     return { element, pageType }
-  } else return displayOne ( config, pageType, pageFunction, ps.pageParams, lsForPage, pageMode );
+  } else return displayOne ( config, pageType, pageFunction, ps.pageParams, lsForPage, pageMode, index );
 };
 
 export function findMainPageDtails<S> ( pageSelections: PageSelection[], pageDetails: MultiPageDetails<S, any> ) {
@@ -92,7 +92,7 @@ export function displayOne<S extends any, D extends any, Msgs, Context extends P
   pageType: string | undefined,
   focusedPage: FocusedPage<S, D, Context>,
   pageParams: PageParams | undefined,
-  s: LensState<S, D, Context>, pageMode: PageMode ): PageDetailsForCombine {
+  s: LensState<S, D, Context>, pageMode: PageMode, index: number ): PageDetailsForCombine {
   // @ts-ignore
   const debug = s.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
   let t = config.template
@@ -100,7 +100,7 @@ export function displayOne<S extends any, D extends any, Msgs, Context extends P
   if ( debug ) console.log ( "displayMain.template 1", template )
   const loading = config.loading ? config.loading : Loading
   if ( debug ) console.log ( "displayMain.loading 2", loading )
-  const element = template ( { state: s, focusedPage, loading, pageMode } )
+  const element = template ( { state: s, focusedPage, loading, pageMode, index } )
   if ( debug ) console.log ( "displayMain.element 3", element );
   return { element, pageType, pageParams }
 }

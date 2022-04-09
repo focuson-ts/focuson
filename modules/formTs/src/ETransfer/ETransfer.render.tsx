@@ -24,8 +24,8 @@ import {ETransferPageDomain} from "../ETransfer/ETransfer.domains";
 import {ETransferDataDDomain} from "../ETransfer/ETransfer.domains"
 export function ETransferPage(){
   return focusedPageWithExtraState<FState, ETransferPageDomain, ETransferDataDDomain, Context> ( s => 'E Transfer' ) ( state => state.focusOn('fromApi')) (
-( fullState, state , full, d, mode) => {
-  const id='root';
+( fullState, state , full, d, mode, index) => {
+const id=`root${index}`;
   const buttons =    {cancel:<button>cancel of type ResetStateButton cannot be created yet</button>,
       eTransfers:<RestButton state={state}
         id='eTransfers'

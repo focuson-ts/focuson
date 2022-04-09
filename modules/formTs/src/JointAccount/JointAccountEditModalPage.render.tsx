@@ -19,8 +19,8 @@ import {ToggleButton} from '@focuson/form_components';
 import {ValidationButton} from '@focuson/form_components';
 export function JointAccountEditModalPagePage(){
   return focusedPage<FState, JointAccountCustomerDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
-     ( state, d, mode ) => {
-          const id='root';
+     ( state, d, mode, index ) => {
+          const id=`root${index}`;
           const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,
               commit:<ModalCommitButton id='commit'  state={state} />,}
           return <>

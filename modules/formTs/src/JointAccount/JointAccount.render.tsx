@@ -26,8 +26,8 @@ import {JointAccountAddressesDomain} from "../JointAccount/JointAccount.domains"
 import {JointAccountCustomerDomain} from "../JointAccount/JointAccount.domains"
 export function JointAccountPage(){
   return focusedPageWithExtraState<FState, JointAccountPageDomain, JointAccountDomain, Context> ( s => 'Joint Account' ) ( state => state.focusOn('fromApi')) (
-( fullState, state , full, d, mode) => {
-  const id='root';
+( fullState, state , full, d, mode, index) => {
+const id=`root${index}`;
   const buttons =    {edit:<ModalButton id='edit' text='edit'  state={state} modal = 'JointAccountEditModalPage'  
         pageMode='edit'
         focusOn='#selectedAccount'

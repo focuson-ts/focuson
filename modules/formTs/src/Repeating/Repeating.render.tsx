@@ -24,10 +24,10 @@ import {RepeatingLineDomain} from "../Repeating/Repeating.domains"
 import {RepeatingWholeDataDomain} from "../Repeating/Repeating.domains"
 export function RepeatingPage(){
   return focusedPageWithExtraState<FState, RepeatingPageDomain, RepeatingWholeDataDomain, Context> ( s => 'Repeating' ) ( state => state.focusOn('fromApi')) (
-( fullState, state , full, d, mode) => {
+( fullState, state , full, d, mode, index) => {
   const nextOccupationGuard =  pageState(state)<domain.RepeatingPageDomain>().focusOn('selectedItem').optJsonOr(0) <  pageState(state)<domain.RepeatingPageDomain>().focusOn('fromApi').optJsonOr([]).length - 1
   const prevOccupationGuard =  pageState(state)<domain.RepeatingPageDomain>().focusOn('selectedItem').optJsonOr(0) >0
-  const id='root';
+const id=`root${index}`;
   const buttons =    {addEntry:<ModalButton id='addEntry' text='addEntry'  state={state} modal = 'RepeatingLine'  
         pageMode='create'
         focusOn='~/temp'

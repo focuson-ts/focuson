@@ -193,10 +193,10 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
   return [
     `export function ${pageComponentName ( pageD )}(){`,
     `  return focusedPage<${params.stateName}, ${domName}, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page`,
-    `     ( state, d, mode ) => {`,
+    `     ( state, d, mode, index ) => {`,
     ...(indentList ( indentList ( indentList ( indentList ( indentList ( [
       ...makeGuardButtonVariables ( params, makeGuard, mainP, pageD ),
-      `const id='root';`,
+      'const id=`root${index}`;',
       ...makeButtonsVariable ( params, makeGuard, makeButtons, pageD ),
       `return ${layoutPrefixString}`,
       ...createAllReactCalls ( pageD, [ componentDataForPage ( pageD.display.dataDD ) ] ),
@@ -212,9 +212,9 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
   return [
     `export function ${pageComponentName ( pageD )}(){`,
     `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${decamelize ( pageD.name, ' ' )}' ) ( state => state${stateFocusQueryWithTildaFromPage ( `createReactMainPageComponent for page ${pageD.name}`, params, pageD, pageD.display.target )}) (`,
-    `( fullState, state , full, d, mode) => {`,
+    `( fullState, state , full, d, mode, index) => {`,
     ...indentList ( makeGuardButtonVariables ( params, makeGuard, pageD, pageD ) ),
-    `  const id='root';`,
+    'const id=`root${index}`;',
     ...indentList ( makeButtonsVariable ( params, makeGuard, makeButtons, pageD ) ),
     '',
     ...indentList ( indentList ( indentList ( [

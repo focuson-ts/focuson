@@ -10,7 +10,7 @@ export interface FocusedPage<S extends any, D extends any, Context> {
   title: ( s: LensState<S, D, Context> ) => string,
   displayLoading: ( s: LensState<S, D, Context> ) => boolean,
   /** this will only be called if display loading is not showing */
-  display: ( s: LensState<S, D, Context>, mode: PageMode ) => JSX.Element
+  display: ( s: LensState<S, D, Context>, mode: PageMode, index: number ) => JSX.Element
 }
 
 
@@ -19,10 +19,10 @@ export interface FocusedPage<S extends any, D extends any, Context> {
  * @param title
  */
 export const focusedPage = <S extends any, D extends any, Context> ( title: ( d?: D ) => string ) =>
-  ( pageFn: ( state: LensState<S, D, Context>, d: D, mode: PageMode ) => JSX.Element ): FocusedPage<S, D, Context> => ({
+  ( pageFn: ( state: LensState<S, D, Context>, d: D, mode: PageMode , index: number) => JSX.Element ): FocusedPage<S, D, Context> => ({
     title: s => title ( s.optJson () ),
     displayLoading: s => !s.optJson (),
-    display: ( s, mode ) => pageFn ( s, s.json (), mode )
+    display: ( s, mode, index: number ) => pageFn ( s, s.json (), mode , index)
   })
 
 /** The legacy way of creating a focused Page. It is deprecated and should be replaced with focusedPage
@@ -31,8 +31,8 @@ export const focusedPage = <S extends any, D extends any, Context> ( title: ( d?
  * debugging or reporting
  */
 export const loadingPage = <S extends any, D extends any, Context> ( title: ( d?: D ) => string ) =>
-  ( pageFn: ( state: LensState<S, D, Context>, d: D ) => JSX.Element ): ( s: LensState<S, D, Context>, pageMode: PageMode ) => JSX.Element =>
-    ( s, pageMode ) => focusedPage<S, D, Context> ( title ) ( pageFn ).display ( s, pageMode )
+  ( pageFn: ( state: LensState<S, D, Context>, d: D ) => JSX.Element ): ( s: LensState<S, D, Context>, pageMode: PageMode, index: number ) => JSX.Element =>
+    ( s, pageMode, index ) => focusedPage<S, D, Context> ( title ) ( pageFn ).display ( s, pageMode, index )
 
 /** Returns the `FocusedPage` data structure configured for a Focused Page where typically SOME of the data comes from an api, and other is 'local state'
  *
@@ -44,23 +44,25 @@ export const loadingPage = <S extends any, D extends any, Context> ( title: ( d?
  */
 
 export const focusedPageWithExtraState = <S extends any, Full extends any, D extends any, Context> ( title: ( d?: Full ) => string ) =>
-  ( lensFn: ( lens: LensState<S, Full, Context> ) => LensState<S, D, Context>, displayLoading?: ( s: LensState<S, Full, Context> ) => boolean ) => ( pageFn: ( fullState: LensState<S, Full, Context>, state: LensState<S, D, Context>, f: Full, d: D, mode: PageMode ) => JSX.Element ): FocusedPage<S, Full, Context> => {
+  ( lensFn: ( lens: LensState<S, Full, Context> ) => LensState<S, D, Context>, displayLoading?: ( s: LensState<S, Full, Context> ) => boolean ) =>
+    ( pageFn: ( fullState: LensState<S, Full, Context>, state: LensState<S, D, Context>, f: Full, d: D, mode: PageMode , index: number) => JSX.Element ): FocusedPage<S, Full, Context> => {
     const realDisplayLoading = displayLoading ? displayLoading : ( s: LensState<S, Full, Context> ) => lensFn ( s ).optJson () === undefined
     return ({
       title: s => title ( s.optJson () ),
       displayLoading: realDisplayLoading,
-      display: ( s, pageMode ) => {
+      display: ( s, pageMode, index: number ) => {
         let lensState: LensState<S, D, Context> = lensFn ( s );
         let domain = lensState?.json ();
         if ( domain === undefined ) throw Error ( 'something went wrong: The domain is undefined in focusedPageWithExtraState' )
-        const result = pageFn ( s, lensState, s.json (), domain, pageMode )
+        const result = pageFn ( s, lensState, s.json (), domain, pageMode, index )
         return result
       }
     })
   }
 
 export const loadingPageWithExtraState = <S extends any, Full extends any, D extends any, Context> ( title: ( d?: Full ) => string ) =>
-  ( lensFn: ( lens: LensState<S, Full, Context> ) => LensState<S, D, Context> ) => ( pageFn: ( fullState: LensState<S, Full, Context>, state: LensState<S, D, Context>, f: Full, d: D, pageMode: PageMode ) => JSX.Element ): ( s: LensState<S, Full, Context>, pageMode: PageMode ) => JSX.Element =>
-    ( s, pageMode ) => focusedPageWithExtraState<S, Full, D, Context> ( title ) ( lensFn ) ( pageFn ).display ( s, pageMode )
+  ( lensFn: ( lens: LensState<S, Full, Context> ) => LensState<S, D, Context> ) => ( pageFn: ( fullState: LensState<S, Full, Context>, state: LensState<S, D, Context>, f: Full, d: D, pageMode: PageMode ) => JSX.Element ): ( s: LensState<S, Full, Context>, pageMode: PageMode, index: number ) => JSX.Element =>
+    ( s, pageMode, index ) =>
+      focusedPageWithExtraState<S, Full, D, Context> ( title ) ( lensFn ) ( pageFn ).display ( s, pageMode, index )
 
 

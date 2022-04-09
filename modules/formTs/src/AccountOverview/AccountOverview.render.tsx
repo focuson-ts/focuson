@@ -42,8 +42,8 @@ import {ArrearsDetailsLineDomain} from "../AccountOverview/AccountOverview.domai
 import {ArrearsDetailsLinesDomain} from "../AccountOverview/AccountOverview.domains"
 export function AccountOverviewPage(){
   return focusedPageWithExtraState<FState, AccountOverviewPageDomain, AccountOverviewDomain, Context> ( s => 'Account Overview' ) ( state => state.focusOn('main')) (
-( fullState, state , full, d, mode) => {
-  const id='root';
+( fullState, state , full, d, mode, index) => {
+const id=`root${index}`;
   const buttons =    {excessHistory:<ModalButton id='excessHistory' text='excessHistory'  state={state} modal = 'ExcessHistory'  
         pageMode='view'
         focusOn='~/excessHistory'

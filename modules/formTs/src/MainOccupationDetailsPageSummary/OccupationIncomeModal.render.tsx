@@ -20,11 +20,11 @@ import {ValidationButton} from '@focuson/form_components';
 import { HideButtonsLayout } from '@focuson/form_components';
 export function OccupationIncomeModalPage(){
   return focusedPage<FState, OneOccupationIncomeDetailsDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
-     ( state, d, mode ) => {
+     ( state, d, mode, index ) => {
           const additionalInfoFirstGuard =  pageState(state)<domain.MainOccupationDetailsPageSummaryPageDomain>().focusOn('tempForOccupationEdit').focusOn('areYou').optJson() === "E";
           const additionalInfoSecondGuard =  fullState<FState,any,Context>(state).focusOn('MainOccupationDetailsPageSummary').focusOn('tempForOccupationEdit').focusOn('areYou').optJson() === "S";
           const otherSourcesOfIncomeGuard =  pageState(state)<domain.MainOccupationDetailsPageSummaryPageDomain>().focusOn('fromApi').focusOn('occupationAndIncome').focusOn('customerOccupationIncomeDetails').focusOn('otherSourceOfIncome').optJson() === "Y";
-          const id='root';
+          const id=`root${index}`;
           const buttons =    {additionalInfoFirst:<GuardButton cond={additionalInfoFirstGuard}>
                 <ModalButton id='additionalInfoFirst' text='additionalInfoFirst'  state={state} modal = 'AdditionalInfoFirstModal'  
                   pageMode='view'

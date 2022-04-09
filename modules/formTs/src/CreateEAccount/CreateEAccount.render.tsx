@@ -24,8 +24,8 @@ import {CreateEAccountPageDomain} from "../CreateEAccount/CreateEAccount.domains
 import {CreateEAccountDataDomain} from "../CreateEAccount/CreateEAccount.domains"
 export function CreateEAccountPage(){
   return focusedPageWithExtraState<FState, CreateEAccountPageDomain, CreateEAccountDataDomain, Context> ( s => 'Create E Account' ) ( state => state.focusOn('editing')) (
-( fullState, state , full, d, mode) => {
-  const id='root';
+( fullState, state , full, d, mode, index) => {
+const id=`root${index}`;
   const buttons =    {cancel:<button>cancel of type ResetStateButton cannot be created yet</button>,
       createEAccounts:<RestButton state={state}
         id='createEAccounts'

@@ -31,8 +31,8 @@ import {OneOccupationIncomeDetailsDomain} from "../MainOccupationDetailsPageSumm
 import {OtherIncomeResponseDomain} from "../MainOccupationDetailsPageSummary/MainOccupationDetailsPageSummary.domains"
 export function MainOccupationDetailsPageSummaryPage(){
   return focusedPageWithExtraState<FState, MainOccupationDetailsPageSummaryPageDomain, OccupationAndIncomeFullDomainDomain, Context> ( s => 'Main Occupation Details Page Summary' ) ( state => state.focusOn('fromApi').focusOn('occupationAndIncome')) (
-( fullState, state , full, d, mode) => {
-  const id='root';
+( fullState, state , full, d, mode, index) => {
+const id=`root${index}`;
   const buttons =    {edit:<ModalButton id='edit' text='edit'  state={state} modal = 'OccupationIncomeModal'  
         pageMode='edit'
         focusOn='~/tempForOccupationEdit'

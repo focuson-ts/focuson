@@ -27,7 +27,7 @@ const Template: Story<StoryState> = ( args: StoryState ) =>{
   const rawState: FState = { ...emptyState, pageSelection: [ pageSelection ( args.pageMode ) ], AccountOverview: initial }
   const startState=Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('main').set(rawState, args.domain)
   return SBookProvider<FState, Context> (startState, context,
-     s => findOneSelectedPageDetails ( s, pageDetails.lens) (pageSelection(args.pageMode)).element );}
+     s => findOneSelectedPageDetails ( s, pageDetails.lens) (pageSelection(args.pageMode), 0).element );}
  
  
 export const View = Template.bind ( {} );

@@ -21,8 +21,8 @@ import {HelloWorldMainPagePageDomain} from "../HelloWorldMainPage/HelloWorldMain
 import {HelloWorldDomainDataDomain} from "../HelloWorldMainPage/HelloWorldMainPage.domains"
 export function HelloWorldMainPagePage(){
   return focusedPageWithExtraState<FState, HelloWorldMainPagePageDomain, HelloWorldDomainDataDomain, Context> ( s => 'Hello World Main Page' ) ( state => state.focusOn('fromApi')) (
-( fullState, state , full, d, mode) => {
-  const id='root';
+( fullState, state , full, d, mode, index) => {
+const id=`root${index}`;
   const buttons ={}
 
       return <>

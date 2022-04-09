@@ -26,8 +26,8 @@ import {PostCodeNameAndAddressDomain} from "../PostCodeMainPage/PostCodeMainPage
 import {PostCodeSearchDomain} from "../PostCodeMainPage/PostCodeMainPage.domains"
 export function PostCodeMainPagePage(){
   return focusedPageWithExtraState<FState, PostCodeMainPagePageDomain, PostCodeNameAndAddressDomain, Context> ( s => 'Post Code Main Page' ) ( state => state.focusOn('main')) (
-( fullState, state , full, d, mode) => {
-  const id='root';
+( fullState, state , full, d, mode, index) => {
+const id=`root${index}`;
   const buttons =    {save:<RestButton state={state}
         id='save'
         name='save'
