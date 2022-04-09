@@ -15,9 +15,7 @@ import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
 import { AppConfig } from "../focuson.config";
 // import { findSqlRoot, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, walkRoots } from "../codegen/makeJavaSql.tsxxx";
 import { createTableSql, findSqlLinkDataFromRootAndDataD, findSqlRoot, generateGetSql, makeMapsForRest, walkSqlRoots } from "../codegen/makeSqlFromEntities";
-import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { makeH2Fetchers } from "../codegen/makeH2Fetchers";
-import { mainPage } from "@focuson/pages";
 
 
 export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
@@ -111,7 +109,10 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
   let dataSql = allMainPages ( pages ).flatMap ( mainPage =>
     sortedEntries ( mainPage.rest ).flatMap ( ( [ restName, rdp ] ) => safeArray ( rdp.rest.initialSql ) ) );
-  if ( dataSql.length > 0 ) writeToFile ( `${javaResourcesRoot}/data.sql`, () => dataSql )
+  if ( dataSql.length > 0 )
+    writeToFile ( `${javaResourcesRoot}/data.sql`, () => dataSql )
+  else
+      fs.rmSync(`${javaResourcesRoot}/data.sql`, {force: true})
 
   templateFile ( `${javaCodeRoot}/${params.sampleClass}.java`, 'templates/JavaSampleTemplate.java',
     { ...params, content: indentList ( makeAllJavaVariableName ( pages, 0 ) ).join ( "\n" ) }, directorySpec, details )
