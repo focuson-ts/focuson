@@ -19,7 +19,8 @@ export interface TransformerProps<T> {
   type: string;
   default: T;
 }
-export function makeButtons ( allButtons: NameAnd<JSX.Element>, buttons?: string[] ) {return safeArray ( buttons ).map ( ( b, i ) => <ButtonFromPage key={b} button={b} buttons={allButtons}/> )}
+export function makeButtons ( allButtons: NameAnd<JSX.Element>, buttons?: string[] ) {return safeArray ( buttons ).map ( ( b, i ) =>
+  <ButtonFromPage key={b} button={b} buttons={allButtons}/> )}
 
 const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> ) =>
   <S, Context extends FocusOnContext<S>> ( props: LabelAndInputProps<S, T, Context> & P ) => {

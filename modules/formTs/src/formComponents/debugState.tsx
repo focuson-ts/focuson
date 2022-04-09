@@ -7,6 +7,7 @@ import { FocusOnConfig, FocusOnContext, traceL } from "@focuson/focuson";
 import { Lenses, NameAndLens } from "@focuson/lens";
 import { ToggleButton } from "./toggleButton";
 import { AssertPages, MakeTest } from "./makeTest";
+import { LabelAndStringInput } from "./labelAndInput";
 
 
 export function Tags<S extends HasTagHolder, C> ( { state }: LensProps<S, any, C> ) {
@@ -35,7 +36,7 @@ export function Messages<S extends HasSimpleMessages, C> ( { state }: LensProps<
 export function CommonIds<S, C extends FocusOnContext<S>> ( { state }: DebugProps<S, C> ) {
   const commonIds = state.context.commonIds
   return <><p>Common Ids</p>
-    <ul>{sortedEntries ( commonIds ).map ( ( [ n, l ] ) => <li key={n}>{n}: {l.getOption ( state.main )}</li> )}</ul>
+    <ul>{sortedEntries ( commonIds ).map ( ( [ n, l ] ) => <li key={n}><LabelAndStringInput id={`commonIds.${n}`} state={state.copyWithLens ( l )} label={n} allButtons={{}}/></li> )}</ul>
   </>
 }
 export function ClearTrace<S, C> ( { state }: LensProps<S, any, C> ) {
@@ -116,7 +117,7 @@ export function Tracing<S, C> ( { state }: LensProps<S, any, C> ) {
 interface DebugProps<S, Context> extends LensProps<S, any, Context> {}
 
 export function ToggleOneDebug<S, C extends PageSelectionContext<S>> ( { state, name }: LensProps<S, any, C> & { name: string } ) {
-  return <ToggleButton id={name} buttonText={`{/debug/${name}|Show|Hide} ${name}`} state={state.focusOn ( name )}/>
+  return <ToggleButton id={name} buttonText={`{/debug/${name}|Hiding|Showing} ${name}`} state={state.focusOn ( name )}/>
 }
 export function ToggleDebugs<S, C extends PageSelectionContext<S>> ( { state }: LensProps<S, any, C> ) {
   const debugState = state.copyWithLens ( Lenses.identity<any> ().focusQuery ( 'debug' ) )

@@ -17,12 +17,12 @@ import java.util.Map;
   @Autowired
   public IManyGraphQl graphQL;
     @GetMapping(value="/api/accountOverview/arrearsDetails/previous", produces="application/json")
-    public ResponseEntity getArrearsDetails(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String customerId, @RequestParam String startDate) throws Exception{
-       return Transform.result(graphQL.get(dbName),ArrearsDetailsQueries.getArrearsDetails(accountId, customerId, startDate), "getArrearsDetails");
+    public ResponseEntity getArrearsDetails(@RequestParam String accountId, @RequestParam String customerId, @RequestParam String startDate) throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),ArrearsDetailsQueries.getArrearsDetails(accountId, customerId, startDate), "getArrearsDetails");
     }
 
     @GetMapping(value="/api/accountOverview/arrearsDetails/previous/query", produces="application/json")
-    public String querygetArrearsDetails(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String customerId, @RequestParam String startDate) throws Exception{
+    public String querygetArrearsDetails(@RequestParam String accountId, @RequestParam String customerId, @RequestParam String startDate) throws Exception{
        return ArrearsDetailsQueries.getArrearsDetails(accountId, customerId, startDate);
     }
 

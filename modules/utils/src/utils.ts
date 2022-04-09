@@ -30,6 +30,7 @@ export function copyWithFieldSet<T, K extends keyof T> ( t: T, k: K, v: T[K] ) {
   result[ k ] = v
   return result
 }
+export function safeObject<T> ( t: T | undefined ) { return t ? t: { }}
 export function safeArray<T> ( ts: T[] | undefined ) { return ts ? ts : []}
 export function safeString ( s: string | undefined ) { return s ? s : ''}
 export function safePick ( s: string[] | undefined, i: number ) {

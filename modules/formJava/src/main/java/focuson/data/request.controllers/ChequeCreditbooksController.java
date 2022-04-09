@@ -17,22 +17,22 @@ import java.util.Map;
   @Autowired
   public IManyGraphQl graphQL;
     @GetMapping(value="/api/chequeCreditBooks", produces="application/json")
-    public ResponseEntity getChequeCreditbooks(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL.get(dbName),ChequeCreditbooksQueries.getChequeCreditbooks(accountId, applRef, brandRef, customerId), "getChequeCreditbooks");
+    public ResponseEntity getChequeCreditbooks(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId) throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),ChequeCreditbooksQueries.getChequeCreditbooks(accountId, applRef, brandRef, customerId), "getChequeCreditbooks");
     }
 
     @PostMapping(value="/api/chequeCreditBooks", produces="application/json")
-    public ResponseEntity createChequeCreditbooks(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId,@RequestBody String body) throws Exception{
-       return Transform.result(graphQL.get(dbName),ChequeCreditbooksQueries.createChequeCreditbooks(accountId, applRef, brandRef, customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "createChequeCreditbooks");
+    public ResponseEntity createChequeCreditbooks(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId,@RequestBody String body) throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),ChequeCreditbooksQueries.createChequeCreditbooks(accountId, applRef, brandRef, customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "createChequeCreditbooks");
     }
 
     @GetMapping(value="/api/chequeCreditBooks/query", produces="application/json")
-    public String querygetChequeCreditbooks(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId) throws Exception{
+    public String querygetChequeCreditbooks(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId) throws Exception{
        return ChequeCreditbooksQueries.getChequeCreditbooks(accountId, applRef, brandRef, customerId);
     }
 
     @PostMapping(value="/api/chequeCreditBooks/query", produces="application/json")
-    public String querycreateChequeCreditbooks(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId,@RequestBody String body) throws Exception{
+    public String querycreateChequeCreditbooks(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId,@RequestBody String body) throws Exception{
        return ChequeCreditbooksQueries.createChequeCreditbooks(accountId, applRef, brandRef, customerId,   Transform.removeQuoteFromProperties(body, Map.class));
     }
 

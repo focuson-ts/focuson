@@ -1,12 +1,13 @@
 import { JavaWiringParams } from "./config";
-import { MainPageD, PageD } from "../common/pageD";
+import { MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { sortedEntries } from "@focuson/utils";
 import { RestD } from "../common/restD";
 import { fetcherInterfaceName, fetcherName, h2FetcherClassName, sqlMapName } from "./names";
 import { indentList } from "./codegen";
 
 
-export function makeH2Fetchers<B, G> ( params: JavaWiringParams, pageD: MainPageD<B, G>, restName: string, rest: RestD<G> ): string[] {
+export function makeH2Fetchers<B, G> ( params: JavaWiringParams, pageD: MainPageD<B, G>, restName: string, rdp: RestDefnInPageProperties<G> ): string[] {
+  const rest = rdp.rest
   const paramVariables = sortedEntries ( rest.params ).map ( ( [ name, props ] ) =>
     `String ${name} = dataFetchingEnvironment.getArgument("${name}");` )
   const getAllParams = [ 'c',
@@ -17,7 +18,7 @@ export function makeH2Fetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
     ``,
     `import  ${params.thePackage}.${params.dbPackage}.${sqlMapName ( pageD, restName, [] )};`,
     `import  ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
-    `import  ${params.thePackage}.${params.fetcherPackage}.JointAccountFFetcher;`,
+    `import  ${params.thePackage}.${params.fetcherPackage}.${fetcherInterfaceName(params,rdp.rest)};`,
     `import graphql.schema.DataFetcher;`,
     `import org.springframework.beans.factory.annotation.Autowired;`,
     `import org.springframework.stereotype.Component;`,

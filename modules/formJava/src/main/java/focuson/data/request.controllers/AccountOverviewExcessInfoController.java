@@ -17,12 +17,12 @@ import java.util.Map;
   @Autowired
   public IManyGraphQl graphQL;
     @GetMapping(value="/api/accountOverview/excessInfo", produces="application/json")
-    public ResponseEntity getAccountOverviewExcessInfo(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL.get(dbName),AccountOverviewExcessInfoQueries.getAccountOverviewExcessInfo(accountId, customerId), "getAccountOverviewExcessInfo");
+    public ResponseEntity getAccountOverviewExcessInfo(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),AccountOverviewExcessInfoQueries.getAccountOverviewExcessInfo(accountId, customerId), "getAccountOverviewExcessInfo");
     }
 
     @GetMapping(value="/api/accountOverview/excessInfo/query", produces="application/json")
-    public String querygetAccountOverviewExcessInfo(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String customerId) throws Exception{
+    public String querygetAccountOverviewExcessInfo(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
        return AccountOverviewExcessInfoQueries.getAccountOverviewExcessInfo(accountId, customerId);
     }
 

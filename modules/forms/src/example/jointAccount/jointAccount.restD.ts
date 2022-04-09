@@ -6,7 +6,8 @@ import { jointAccountSql } from "./jointAccount.sql";
 
 export const jointAccountParams: RestParams = {
   accountId: { ...IntParam, commonLens: 'accountId', testValue: 'custId' },
-  brandId: { ...IntParam, commonLens: 'brandId', testValue: 'custId' }
+  brandId: { ...IntParam, commonLens: 'brandId', testValue: 'custId' },
+  dbName: { ...StringParam, commonLens: 'dbName', testValue: 'mock' }
 }
 
 export const jointAccountRestD: RestD<any> = {

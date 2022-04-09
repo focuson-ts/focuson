@@ -17,12 +17,12 @@ import java.util.Map;
   @Autowired
   public IManyGraphQl graphQL;
     @GetMapping(value="/api/accountOverview/flags", produces="application/json")
-    public ResponseEntity getAccountAllFlags(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL.get(dbName),AccountAllFlagsQueries.getAccountAllFlags(accountId, customerId), "getAccountAllFlags");
+    public ResponseEntity getAccountAllFlags(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),AccountAllFlagsQueries.getAccountAllFlags(accountId, customerId), "getAccountAllFlags");
     }
 
     @GetMapping(value="/api/accountOverview/flags/query", produces="application/json")
-    public String querygetAccountAllFlags(@RequestParam(required=false) String dbName, @RequestParam String accountId, @RequestParam String customerId) throws Exception{
+    public String querygetAccountAllFlags(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
        return AccountAllFlagsQueries.getAccountAllFlags(accountId, customerId);
     }
 

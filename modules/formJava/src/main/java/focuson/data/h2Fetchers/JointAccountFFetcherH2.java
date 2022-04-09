@@ -22,9 +22,10 @@ public class JointAccountFFetcherH2 implements JointAccountFFetcher {
     return dataFetchingEnvironment -> {
       String accountId = dataFetchingEnvironment.getArgument("accountId");
       String brandId = dataFetchingEnvironment.getArgument("brandId");
+      String dbName = dataFetchingEnvironment.getArgument("dbName");
        Connection c = dataSource.getConnection();
        try {
-         Optional<Map<String, Object>> opt = JointAccount_jointAccountMaps.getAll(c,Integer.parseInt(accountId),Integer.parseInt(brandId));
+         Optional<Map<String, Object>> opt = JointAccount_jointAccountMaps.getAll(c,Integer.parseInt(accountId),Integer.parseInt(brandId),(dbName));
          Map json = opt.get();
          return json;
        } finally {

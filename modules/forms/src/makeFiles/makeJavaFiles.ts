@@ -56,11 +56,12 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   detailsLog ( logLevel, 1, 'java file copies' )
   copyFiles ( javaScriptRoot, 'templates/scripts', directorySpec ) ( 'makeJava.sh', 'makeJvmPact.sh', 'template.java' )
 
-  templateFile ( javaAppRoot + "/project.details.json", 'templates/java.projectDetails.json', {
+  let templateWithPortAndAppName = {
     ...params, applicationName: params.applicationName.toLowerCase (),
     javaPort: appConfig.javaPort
-  }, directorySpec )
-  copyFiles ( javaAppRoot, 'templates/raw/java', directorySpec ) ( 'application.properties' )
+  };
+  templateFile ( javaAppRoot + "/project.details.json", 'templates/java.projectDetails.json', templateWithPortAndAppName, directorySpec )
+  templateFile ( javaAppRoot + "/application.properties", "templates/application.properties", templateWithPortAndAppName, directorySpec )
   copyFile ( javaAppRoot + '/.gitignore', 'templates/raw/gitignore', directorySpec )
   copyFiles ( javaCodeRoot, 'templates/raw/java', directorySpec ) ( 'CorsConfig.java', 'IManyGraphQl.java' )
   detailsLog ( logLevel, 1, 'java common copies' )
@@ -82,7 +83,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
           generateGetSql ( findSqlLinkDataFromRootAndDataD ( r, rest.dataDD ) ) ).map ( addStringToEndOfList ( ';\n' ) ).flat () ] ), details )
 
   writeToFile ( `${javaResourcesRoot}/${params.schema}`, () => makeGraphQlSchema ( rests ), details )
-  copyFile ( `${javaCodeRoot}/${params.fetcherPackage}/IFetcher.java`, 'templates/raw/java/IFetcher.java' )
+  copyFile ( `${javaFetcherRoot}/IFetcher.java`, 'templates/raw/java/IFetcher.java', directorySpec )
   rests.forEach ( rest => {
       let fetcherFile = `${javaCodeRoot}/${params.fetcherPackage}/${fetcherInterfaceName ( params, rest )}.java`;
       writeToFile ( fetcherFile, () => makeJavaResolversInterface ( params, rest ), details )
@@ -104,12 +105,13 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
     sortedEntries ( mainPage.rest ).forEach ( ( [ restName, rdp ] ) => {
       if ( rdp.rest.actions.indexOf ( 'get' ) < 0 ) return;
       if ( rdp.rest.tables === undefined ) return;
-      writeToFile ( `${javaH2FetcherRoot}/${h2FetcherClassName ( params, rdp.rest )}.java`, () => makeH2Fetchers ( params, mainPage, restName, rdp.rest ) )
+      writeToFile ( `${javaH2FetcherRoot}/${h2FetcherClassName ( params, rdp.rest )}.java`, () => makeH2Fetchers ( params, mainPage, restName, rdp ) )
     } )
   )
 
-  writeToFile ( `${javaResourcesRoot}/data.sql`, () => allMainPages ( pages ).flatMap ( mainPage =>
-    sortedEntries ( mainPage.rest ).flatMap ( ( [ restName, rdp ] ) => safeArray ( rdp.rest.initialSql ) ) ) )
+  let dataSql = allMainPages ( pages ).flatMap ( mainPage =>
+    sortedEntries ( mainPage.rest ).flatMap ( ( [ restName, rdp ] ) => safeArray ( rdp.rest.initialSql ) ) );
+  if ( dataSql.length > 0 ) writeToFile ( `${javaResourcesRoot}/data.sql`, () => dataSql )
 
   templateFile ( `${javaCodeRoot}/${params.sampleClass}.java`, 'templates/JavaSampleTemplate.java',
     { ...params, content: indentList ( makeAllJavaVariableName ( pages, 0 ) ).join ( "\n" ) }, directorySpec, details )

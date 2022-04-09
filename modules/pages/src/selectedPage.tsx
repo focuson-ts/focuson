@@ -58,7 +58,7 @@ export function lensForPageDetails<S, D, Msgs, Config extends PageConfig<S, D, M
     '~': mainPageD.lens,
   }, mainPageD.namedOptionals ) )
 }
-export const findOneSelectedPageDetails = <S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context>, page0Details: MainPageDetails<S, any, any, any, Context>) => ( ps: PageSelection ): PageDetailsForCombine => {
+export const findOneSelectedPageDetails = <S, T,Context extends PageSelectionContext<S>> ( state: LensState<S, T, Context>, page0Details: MainPageDetails<S, any, any, any, Context>) => ( ps: PageSelection ): PageDetailsForCombine => {
   // @ts-ignore
   const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
   const pages = state.context.pages

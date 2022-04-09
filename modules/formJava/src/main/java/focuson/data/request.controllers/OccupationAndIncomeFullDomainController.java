@@ -17,22 +17,22 @@ import java.util.Map;
   @Autowired
   public IManyGraphQl graphQL;
     @GetMapping(value="/customer/occupation/v2/occupationIncomeDetails", produces="application/json")
-    public ResponseEntity getOccupationAndIncomeFullDomain(@RequestParam(required=false) String dbName, @RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL.get(dbName),OccupationAndIncomeFullDomainQueries.getOccupationAndIncomeFullDomain(customerId), "getOccupationAndIncomeFullDomain");
+    public ResponseEntity getOccupationAndIncomeFullDomain(@RequestParam String customerId) throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),OccupationAndIncomeFullDomainQueries.getOccupationAndIncomeFullDomain(customerId), "getOccupationAndIncomeFullDomain");
     }
 
     @PutMapping(value="/customer/occupation/v2/occupationIncomeDetails", produces="application/json")
-    public ResponseEntity updateOccupationAndIncomeFullDomain(@RequestParam(required=false) String dbName, @RequestParam String customerId,@RequestBody String body) throws Exception{
-       return Transform.result(graphQL.get(dbName),OccupationAndIncomeFullDomainQueries.updateOccupationAndIncomeFullDomain(customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateOccupationAndIncomeFullDomain");
+    public ResponseEntity updateOccupationAndIncomeFullDomain(@RequestParam String customerId,@RequestBody String body) throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),OccupationAndIncomeFullDomainQueries.updateOccupationAndIncomeFullDomain(customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateOccupationAndIncomeFullDomain");
     }
 
     @GetMapping(value="/customer/occupation/v2/occupationIncomeDetails/query", produces="application/json")
-    public String querygetOccupationAndIncomeFullDomain(@RequestParam(required=false) String dbName, @RequestParam String customerId) throws Exception{
+    public String querygetOccupationAndIncomeFullDomain(@RequestParam String customerId) throws Exception{
        return OccupationAndIncomeFullDomainQueries.getOccupationAndIncomeFullDomain(customerId);
     }
 
     @PutMapping(value="/customer/occupation/v2/occupationIncomeDetails/query", produces="application/json")
-    public String queryupdateOccupationAndIncomeFullDomain(@RequestParam(required=false) String dbName, @RequestParam String customerId,@RequestBody String body) throws Exception{
+    public String queryupdateOccupationAndIncomeFullDomain(@RequestParam String customerId,@RequestBody String body) throws Exception{
        return OccupationAndIncomeFullDomainQueries.updateOccupationAndIncomeFullDomain(customerId,   Transform.removeQuoteFromProperties(body, Map.class));
     }
 

@@ -5,7 +5,7 @@ import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
 
 describe ( "makeH2Fetchers", () => {
   it ( "should make the java code for the fetchers", () => {
-    expect ( makeH2Fetchers ( paramsForTest, JointAccountPageD, 'jointAccount', jointAccountRestD ) ).toEqual ( [
+    expect ( makeH2Fetchers ( paramsForTest, JointAccountPageD, 'jointAccount', JointAccountPageD.rest.fromApi ) ).toEqual ( [
       " package focuson.data.h2fetchers;",
       "",
       "import  focuson.data.db.JointAccount_jointAccountMaps;",

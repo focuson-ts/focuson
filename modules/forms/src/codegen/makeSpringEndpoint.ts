@@ -1,7 +1,7 @@
 import { defaultRestAction, postFixForEndpoint, RestD, RestParams } from "../common/restD";
 import { createTableName, endPointName, queryClassName, queryName, restControllerName, sampleName, sqlMapName } from "./names";
 import { JavaWiringParams } from "./config";
-import { beforeSeparator, RestAction, sortedEntries } from "@focuson/utils";
+import { beforeSeparator, RestAction, safeArray, safeObject, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction, indentList } from "./codegen";
 import { isRepeatingDd } from "../common/dataD";
 import { MainPageD } from "../common/pageD";
@@ -16,7 +16,7 @@ export function makeParamsForJava<G> ( r: RestD<G>, restAction: RestAction ): st
   const params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
   // const comma = makeCommaIfHaveParams ( r, restAction );
   const requestParam = defaultRestAction[ restAction ].params.needsObj ? `,@RequestBody String body` : ""
-  return [ `@RequestParam(required=false) String dbName`, ...params.map ( (( [ name, param ] ) => `@RequestParam String ${name}`) ) ].join ( ", " ) + requestParam
+  return params.map ( (( [ name, param ] ) => `@RequestParam String ${name}`) ).join ( ", " ) + requestParam
 }
 function paramsForQuery<G> ( r: RestD<G>, restAction: RestAction ): string {
   const clazz = isRepeatingDd ( r.dataDD ) ? 'List' : 'Map'
@@ -36,11 +36,12 @@ function mappingAnnotation ( restAction: RestAction ) {
 }
 
 function makeEndpoint<G> ( params: JavaWiringParams, r: RestD<G>, restAction: RestAction ): string[] {
-
+  const hasDbName = safeObject ( r.params )[ 'dbName' ] !== undefined
+  const dbNameString = hasDbName?'dbName': 'IFetcher.mock'
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,
     `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
-    `       return Transform.result(graphQL.get(dbName),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( r, restAction )}), "${queryName ( r, restAction )}");`,
+    `       return Transform.result(graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( r, restAction )}), "${queryName ( r, restAction )}");`,
     `    }`,
     `` ];
 }
@@ -55,22 +56,6 @@ function makeQueryEndpoint<G> ( params: JavaWiringParams, r: RestD<G>, restActio
 
 }
 
-
-// function makeCreateTableEndpoints<G> ( params: JavaWiringParams, r: RestD<G> ): string[] {
-//   return [
-//     `    @PostMapping(value="${beforeSeparator ( "?", r.url )}/createTable", produces="text/html")`,
-//     `    public String ${createTableName ( r )}() throws Exception{`,
-//     `       return "";`,
-//     `    }`,
-//     ``,
-//     `    @GetMapping(value="${beforeSeparator ( "?", r.url )}/createTableSql", produces="text/plain")`,
-//     `    public String ${createTableSqllName ( r )}() throws Exception{`,
-//     `       return new String(getClass().getResourceAsStream("/sql/${r.dataDD.name}.createTableSql.sql").readAllBytes(), "utf-8");`,
-//     `    }`,
-//     ``
-//   ];
-//
-// }
 
 function makeSampleEndpoint<G> ( params: JavaWiringParams, r: RestD<G> ): string[] {
   return [

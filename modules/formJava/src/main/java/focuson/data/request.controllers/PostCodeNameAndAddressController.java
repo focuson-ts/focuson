@@ -18,12 +18,12 @@ import focuson.data.db.PostCodeMainPage_addressMaps ;
   @Autowired
   public IManyGraphQl graphQL;
     @PostMapping(value="/api/address", produces="application/json")
-    public ResponseEntity createPostCodeNameAndAddress(@RequestParam(required=false) String dbName,@RequestBody String body) throws Exception{
-       return Transform.result(graphQL.get(dbName),PostCodeNameAndAddressQueries.createPostCodeNameAndAddress(  Transform.removeQuoteFromProperties(body, Map.class)), "createPostCodeNameAndAddress");
+    public ResponseEntity createPostCodeNameAndAddress(,@RequestBody String body) throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),PostCodeNameAndAddressQueries.createPostCodeNameAndAddress(  Transform.removeQuoteFromProperties(body, Map.class)), "createPostCodeNameAndAddress");
     }
 
     @PostMapping(value="/api/address/query", produces="application/json")
-    public String querycreatePostCodeNameAndAddress(@RequestParam(required=false) String dbName,@RequestBody String body) throws Exception{
+    public String querycreatePostCodeNameAndAddress(,@RequestBody String body) throws Exception{
        return PostCodeNameAndAddressQueries.createPostCodeNameAndAddress(  Transform.removeQuoteFromProperties(body, Map.class));
     }
 

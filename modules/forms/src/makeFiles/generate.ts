@@ -10,6 +10,7 @@ import { AppConfig } from "../focuson.config";
 import { validate } from "./validateModel";
 import { unique } from "../common/restD";
 import { GenerateLogLevel, safeArray } from "@focuson/utils";
+import * as process from "process";
 
 export const params: any = {
   pagesFile: 'pages',
@@ -47,7 +48,7 @@ export const directorySpec: DirectorySpec = {
 }
 export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, directorySpec: DirectorySpec, appConfig: AppConfig, params: CombinedParams, javaOutputRoot: string, tsRoot: string, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G> ) => <B extends ButtonD> ( pages: MainPageD<B, G>[] ) => {
   if ( pages.length === 0 ) {
-    console.log ( 'no pages have been configured' )
+    console.log ( `no pages have been configured ${process.cwd()}` )
     process.exit ( 2 )
   }
 

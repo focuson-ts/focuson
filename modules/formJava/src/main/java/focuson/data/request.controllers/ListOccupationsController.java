@@ -17,12 +17,12 @@ import java.util.Map;
   @Autowired
   public IManyGraphQl graphQL;
     @GetMapping(value="/customer/occupation/v2/occupationsList", produces="application/json")
-    public ResponseEntity getListOccupations(@RequestParam(required=false) String dbName, @RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL.get(dbName),ListOccupationsQueries.getListOccupations(customerId), "getListOccupations");
+    public ResponseEntity getListOccupations(@RequestParam String customerId) throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),ListOccupationsQueries.getListOccupations(customerId), "getListOccupations");
     }
 
     @GetMapping(value="/customer/occupation/v2/occupationsList/query", produces="application/json")
-    public String querygetListOccupations(@RequestParam(required=false) String dbName, @RequestParam String customerId) throws Exception{
+    public String querygetListOccupations(@RequestParam String customerId) throws Exception{
        return ListOccupationsQueries.getListOccupations(customerId);
     }
 
