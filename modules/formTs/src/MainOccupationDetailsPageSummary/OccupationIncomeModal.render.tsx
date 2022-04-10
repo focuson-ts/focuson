@@ -41,7 +41,7 @@ export function OccupationIncomeModalPage(){
                   copyOnClose={[{"to":"~/fromApi/additionalInfoSecond"}]}
                 />
               </GuardButton>,
-              cancel:<ModalCancelButton id='cancel' state={state} />,
+              cancel:<ModalCancelButton id={`${id}.cancel`} state={state} />,
               commit:<ModalCommitButton id={`${id}.commit`}  state={state} />,
               list:<ModalButton id={`${id}.list`} text='list'  state={state} modal = 'ListOccupationsModal'  
                 pageMode='edit'

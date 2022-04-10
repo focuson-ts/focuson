@@ -21,7 +21,7 @@ export function ListOccupationsModalPage(){
   return focusedPage<FState, ListOccupationsDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
      ( state, d, mode, index ) => {
           const id=`page${index}`;
-          const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,
+          const buttons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} />,
               commit:<ModalCommitButton id={`${id}.commit`}  state={state} />,}
           return <>
           <ListOccupations id={`${id}`} state={state} mode={mode} buttons={buttons} />

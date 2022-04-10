@@ -12,9 +12,9 @@
     ]
   },
   "dependencies": {
-    "@focuson/state": "0.5.63",
-    "@focuson/pages": "0.5.63",
-    "@focuson/focuson": "0.5.63"
+    "@focuson/state": "0.5.66",
+    "@focuson/pages": "0.5.66",
+    "@focuson/focuson": "0.5.66"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -46,7 +46,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "0.5.63",
+  "version": "0.5.66",
   "template": "noreact",
   "description": "Components that can be used by @focuson/forms",
   "details": {

@@ -21,7 +21,7 @@ export function ArrearsDetailsPage(){
   return focusedPage<FState, ArrearsDetailsDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
      ( state, d, mode, index ) => {
           const id=`page${index}`;
-          const buttons =    {cancel:<ModalCancelButton id='cancel' state={state} />,}
+          const buttons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} />,}
           return <>
           <ArrearsDetails id={`${id}`} state={state} mode={mode} buttons={buttons} />
           { buttons.cancel } 

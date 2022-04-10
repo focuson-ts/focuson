@@ -259,7 +259,8 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
   const modalRenderImports = pages.flatMap ( p => (isModalPage ( p ) && !p.display.dataDD.display) ? [
     `import {${componentName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..',mainP,p, params.renderFile )}'` ] : [] )
   const pageLayoutImports = pages.flatMap ( p => p.layout ? [ `import { ${p.layout.component.name} } from '${p.layout.component.import}';` ] : [] )
-  return [ ...imports, ...modalDomainImports, ...modalRenderImports, ...makeComponentImports ( pages ), ...makeButtonImports ( makeButton ), ...pageDomainsImports, ...pageLayoutImports, ...domainImports, ...pageComponents, ...dataComponents ]
+  const allImports = unique([...imports, ...modalDomainImports, ...modalRenderImports, ...makeComponentImports ( pages ), ...makeButtonImports ( makeButton ), ...pageDomainsImports, ...pageLayoutImports, ...domainImports], s=>s)
+  return [ ...allImports, ...pageComponents, ...dataComponents ]
 }
 
 
