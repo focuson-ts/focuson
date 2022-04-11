@@ -1,7 +1,7 @@
 import { defaultRestAction, postFixForEndpoint, RestD } from "../common/restD";
 import { endPointName, queryClassName, queryName, restControllerName, sampleName, sqlMapName } from "./names";
 import { JavaWiringParams } from "./config";
-import { beforeSeparator, RestAction, safeObject, sortedEntries } from "@focuson/utils";
+import {beforeSeparator, RestAction, safeObject, sortedEntries} from "@focuson/utils";
 import { filterParamsByRestAction, indentList } from "./codegen";
 import { isRepeatingDd } from "../common/dataD";
 import { MainPageD } from "../common/pageD";

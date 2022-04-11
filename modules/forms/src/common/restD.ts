@@ -1,5 +1,5 @@
 import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
-import { RestAction, safeArray, safeObject, sortedEntries } from "@focuson/utils";
+import { RestAction, safeArray, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction } from "../codegen/codegen";
 import { ResolverD } from "./resolverD";
 import { Entity, MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";

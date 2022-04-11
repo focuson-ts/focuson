@@ -173,8 +173,15 @@ select {
     border: 1px solid #888;
 }
 
+.m-3 {
+    position: relative;
+}
+
 /* The Close Button */
 .close-button {
+    position: absolute;
+    right: 10px;
+    top: -5px;
     color: #aaa;
     float: right;
     font-size: 28px;
@@ -184,6 +191,7 @@ select {
 .close-button:hover,
 .close-button:focus {
     color: black;
+    background-color: transparent!important;
     text-decoration: none;
     cursor: pointer;
 }
@@ -226,6 +234,7 @@ select {
 }
 
 #modalPage {
+    height: 100%;
     position: absolute;
     top: 0;
     background-color: white;
@@ -247,4 +256,8 @@ select {
 }
 .labelValue label{
     width: 250px;
+}
+
+.glassPane {
+    position: relative;
 }
