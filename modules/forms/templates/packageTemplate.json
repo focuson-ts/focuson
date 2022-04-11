@@ -9,8 +9,7 @@
 	"@focuson/stories":  "{focusOnVersion}",
 	"@focuson/form_components":  "{focusOnVersion}",
     "@pact-foundation/pact-node": "^10.17.1",
-    "decamelize": "^6.0.0",
-    "b64-to-blob": "^1.2.19",
+    "decamelize": "^4.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3"
@@ -18,9 +17,7 @@
   "files": [
     "dist/"
   ],
-  "devDependencies": {
-    "@pact-foundation/pact": "^9.17.0",
-    "@pact-foundation/pact-core": "^13.3.0",
+  "devDependencies": { "@pact-foundation/pact": "^8.2.6",
     "jest-watch-typeahead": "^0.6.5",
     "@sambego/storybook-state": "^2.0.1",
     "@storybook/addon-actions": "^6.4.4",
@@ -33,7 +30,7 @@
     "@storybook/react": "^6.4.4",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.2.0",
+    "@testing-library/user-event": "^11.4.0",
     "@types/enzyme": "^3.10.8",
     "@types/jest": "^26.0.15",
     "@types/node": "^14.14.7",
