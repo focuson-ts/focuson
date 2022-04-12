@@ -4,13 +4,16 @@ import { safeArray, sortedEntries } from "@focuson/utils";
 import { isModalButtonInPage, ModalButtonInPage } from "../buttons/modalButtons";
 import { ButtonD, isButtonWithControl } from "../buttons/allButtons";
 import { GuardWithCondition, isGuardButton } from "../buttons/guardButton";
+import { CompDataD, emptyDataFlatMap, flatMapDD, isComdDD } from "../common/dataD";
 
 export function makeReportData<B extends ButtonD, G extends GuardWithCondition> ( ps: PageD<B, G>[] ): Report<B, G>[] {
   return ps.map ( makeReportFor )
 }
 
 export function makeCriticalReport<B, G> ( reports: Report<B, G>[] ): string[] {
-  return reports.flatMap ( ( { page, details } ) => criticalSummary ( page, details ) );
+  let criticals = reports.flatMap ( ( { page, details } ) => criticalSummary ( page, details ) );
+  if (criticals.length>0)return ['# Critical Issues',...criticals, '', '---']
+  return [];
 }
 export function makeReport<B extends ButtonD, G extends GuardWithCondition> ( reports: Report<B, G>[] ): string[] {
   const main = reports.flatMap ( ( { page, details } ) => format ( page, details ) )
@@ -45,7 +48,9 @@ export interface ReportDetails {
 
 
 function criticalSummary<B, G> ( p: PageD<B, G>, ds: ReportDetails[] ): string[] {
-  return ds.flatMap ( d => d.critical.length > 0 ? [ `CRITICAL issues in ${p.name}`, ...indentList ( d.critical ) ] : [] )
+  let criticals = ds.flatMap ( d => d.critical );
+  if ( criticals.length > 0 ) return [ `## Critical Issues in ${p.name}`, ...criticals.map ( c => `* ${c}` ) ]
+  return []
 }
 
 function makeReportInfo<B, G> ( p: PageD<B, G> ): ReportInfo {
@@ -90,7 +95,24 @@ export function makeRestReport<B, G> ( page: MainPageD<B, G>, info: ReportInfo )
 
 }
 export function makeDomainReport<B, G> ( page: MainPageD<B, G>, { generatedDomainNames }: ReportInfo ): ReportDetails {
-  return { part: 'domains', headers: [], general: generatedDomainNames, critical: [] };
+  const rootObjects: Set<CompDataD<G>> = new Set ()
+  sortedEntries ( page.domain ).forEach ( ( [ name, obj ] ) => {if ( isComdDD ( obj.dataDD ) ) rootObjects.add ( obj.dataDD ) } )
+  rootObjects.add ( page.display.dataDD )
+  sortedEntries ( page.rest ).forEach ( ( [ name, obj ] ) => rootObjects.add ( obj.rest.dataDD ) );
+  const objects: Set<CompDataD<G>> = new Set ()
+  rootObjects.forEach ( obj => flatMapDD<CompDataD<G>, G> ( obj, {
+    ...emptyDataFlatMap (),
+    walkDataStart: ( path, parents, oneDataDD, dataDD ) => [ dataDD ],
+    walkRepStart: ( path, parents, oneDataDD, dataDD ) => [ dataDD ]
+  } ).forEach ( d => objects.add ( d ) ) )
+  const existingNames = new Set<String> ()
+  let dups = [ ...objects ].filter ( o => {
+    if ( existingNames.has ( o.name ) ) return true;
+    existingNames.add ( o.name )
+  } );
+  const duplicates = dups.map ( d => `CRITICAL duplicate name in dataD ${d.name}` )
+
+  return { part: 'domains', headers: [], general: generatedDomainNames, critical: duplicates };
 }
 export function makeModalsReport<B, G> ( page: MainPageD<B, G>, info: ReportInfo ): ReportDetails {
   const general = safeArray ( page.modals ).flatMap ( m => [

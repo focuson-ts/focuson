@@ -39,9 +39,9 @@ describe ( 'JointAccount - jointAccount - fetcher', () => {
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
       let expectedRaw: any = {
 ... withIds,
-      tags: {'JointAccount_~/#fromApi': ["custId","custId","mock"]}
+      tags: {'JointAccount_~/fromApi': ["custId","custId","mock"]}
       };
-      const expected = .chain(changeme.fromApi(identityL)).set ( expectedRaw, samples.sampleJointAccount0 )
+      const expected = Lenses.identity<FState>().focusQuery('JointAccount').focusQuery('fromApi').set ( expectedRaw, samples.sampleJointAccount0 )
       expect ( newState ).toEqual ( expected )
     })
   })
@@ -77,7 +77,7 @@ pactWith ( { consumer: 'JointAccount', provider: 'JointAccountProvider', cors: t
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
     const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
-    const expected = .chain(changeme.fromApi(identityL)).set ( rawExpected, samples.sampleJointAccount0 )
+    const expected = Lenses.identity<FState>().focusQuery('JointAccount').focusQuery('fromApi').set ( rawExpected, samples.sampleJointAccount0 )
     expect ( newState.messages.length ).toEqual ( 1 )
     expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
     expect ( { ...newState, messages: []}).toEqual ( expected )

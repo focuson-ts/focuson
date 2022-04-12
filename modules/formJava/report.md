@@ -1,5 +1,3 @@
-CRITICAL issues in JointAccount
-  CRITICAL - Currently do not support variable names in 'rest' jointAccount 'targetFromPath'. ~/#fromApi 
 #HelloWorldMainPage - MainPage
   ##domains 
     HelloWorldDomainData
@@ -63,8 +61,6 @@ CRITICAL issues in JointAccount
 
 ---
 #JointAccount - MainPage
-CRITICAL - Currently do not support variable names in 'rest' jointAccount 'targetFromPath'. ~/#fromApi 
-
   ##domains 
     JointAccount
     JointAccountAddress
@@ -255,5 +251,3 @@ CRITICAL - Currently do not support variable names in 'rest' jointAccount 'targe
       Copy on close [{"from":"~/postcode/addressResults/line1","to":"~/main/line1"},{"from":"~/postcode/addressResults/line2","to":"~/main/line2"},{"from":"~/postcode/addressResults/line3","to":"~/main/line3"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/search","to":"~/main/postcode"}] 
 
 ---
-CRITICAL issues in JointAccount
-  CRITICAL - Currently do not support variable names in 'rest' jointAccount 'targetFromPath'. ~/#fromApi 
