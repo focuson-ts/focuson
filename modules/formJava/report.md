@@ -1,3 +1,41 @@
+# All Pages
+## Common Params
+| Name | Location
+| --- | ---
+|accountId|accountId
+|customerId|customerId
+|brandId|brandId
+|dbName|dbName
+|createPlanId|createPlanId
+|applRef|applRef
+|brandRef|brandRef
+# All endpoints
+| Page | Rest | Url | Params |
+| --- | --- | ---  |  --- |
+|HelloWorldMainPage|restDataRD | /helloWorld?{query}.| 
+|AccountOverview|accountFlags | /api/accountOverview/flags?{query}.| accountId,customerId
+|AccountOverview|arrearsDetailsCurrent | /api/accountOverview/arrearsDetails/current?{query}.| accountId,customerId,startDate
+|AccountOverview|arrearsDetailsPrevious | /api/accountOverview/arrearsDetails/previous?{query}.| accountId,customerId,startDate
+|AccountOverview|excessHistory | /api/accountOverview/excessHistory?{query}.| accountId,customerId
+|AccountOverview|excessInfo | /api/accountOverview/excessInfo?{query}.| accountId,customerId
+|AccountOverview|main | /api/accountOverview?{query}.| accountId,customerId
+|AccountOverview|reason | /api/accountOverview/reason?{query}.| accountId,customerId
+|JointAccount|jointAccount | /api/jointAccount?{query}.| accountId,brandId,dbName
+|MainOccupationDetailsPageSummary|additionalInfoFirstRD | /customer/occupation/v2/additionalInfoFirst?{query}.| customerId
+|MainOccupationDetailsPageSummary|additionalInfoSecondRD | /customer/occupation/v2/additionalInfoSecond?{query}.| customerId
+|MainOccupationDetailsPageSummary|occupationAndIncomeRD | /customer/occupation/v2/occupationIncomeDetails?{query}.| customerId
+|MainOccupationDetailsPageSummary|occupationsListRD | /customer/occupation/v2/occupationsList?{query}.| customerId
+|MainOccupationDetailsPageSummary|otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}.| customerId
+|EAccountsSummary|createPlanRestD | /api/createPlan?{query}.| accountId,createPlanId,customerId
+|EAccountsSummary|eAccountsSummary | /api/accountsSummary?{query}.| accountId,customerId
+|ETransfer|eTransfer | /api/eTransfers?{query}.| customerId
+|CreateEAccount|eTransfer | /api/createEAccount/?{query}.| accountId,createPlanId,customerId
+|ChequeCreditbooks|chequeCreditBooks | /api/chequeCreditBooks?{query}.| accountId,applRef,brandRef,customerId
+|Repeating|repeating | /api/repeating?{query}.| customerId
+|PostCodeMainPage|address | /api/address?{query}.| 
+|PostCodeMainPage|postcode | /api/postCode?{query}.| postcode
+
+---
 #HelloWorldMainPage - MainPage
   ##domains 
     HelloWorldDomainData
@@ -12,6 +50,11 @@
 
 ---
 #AccountOverview - MainPage
+## Common Params
+| Name | Location
+| --- | ---
+|accountId|accountId
+|customerId|customerId
   ##domains 
     AccountAllFlags
     AccountAllFlagsList
@@ -61,6 +104,12 @@
 
 ---
 #JointAccount - MainPage
+## Common Params
+| Name | Location
+| --- | ---
+|accountId|accountId
+|brandId|brandId
+|dbName|dbName
   ##domains 
     JointAccount
     JointAccountAddress
@@ -83,6 +132,10 @@
 
 ---
 #MainOccupationDetailsPageSummary - MainPage
+## Common Params
+| Name | Location
+| --- | ---
+|customerId|customerId
   ##domains 
     AdditionalInfoFirst
     AdditionalInfoSecond
@@ -117,6 +170,12 @@
 
 ---
 #EAccountsSummary - MainPage
+## Common Params
+| Name | Location
+| --- | ---
+|accountId|accountId
+|createPlanId|createPlanId
+|customerId|customerId
   ##domains 
     CreatePlan
     EAccountsSummary
@@ -146,6 +205,10 @@
 
 ---
 #ETransfer - MainPage
+## Common Params
+| Name | Location
+| --- | ---
+|customerId|customerId
   ##domains 
     ETransferDataD
   ##rests   
@@ -162,6 +225,12 @@
 
 ---
 #CreateEAccount - MainPage
+## Common Params
+| Name | Location
+| --- | ---
+|accountId|accountId
+|createPlanId|createPlanId
+|customerId|customerId
   ##domains 
     CreateEAccountData
   ##rests   
@@ -178,6 +247,13 @@
 
 ---
 #ChequeCreditbooks - MainPage
+## Common Params
+| Name | Location
+| --- | ---
+|accountId|accountId
+|applRef|applRef
+|brandRef|brandRef
+|customerId|customerId
   ##domains 
     ChequeCreditbooks
     ChequeCreditbooksHistory
@@ -201,6 +277,10 @@
 
 ---
 #Repeating - MainPage
+## Common Params
+| Name | Location
+| --- | ---
+|customerId|customerId
   ##domains 
     RepeatingLine
     RepeatingWholeData

@@ -1,10 +1,11 @@
 import { dataDsIn, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { indentList } from "../codegen/codegen";
-import { safeArray, sortedEntries } from "@focuson/utils";
+import { NameAnd, safeArray, sortedEntries } from "@focuson/utils";
 import { isModalButtonInPage, ModalButtonInPage } from "../buttons/modalButtons";
 import { ButtonD, isButtonWithControl } from "../buttons/allButtons";
 import { GuardWithCondition, isGuardButton } from "../buttons/guardButton";
 import { CompDataD, emptyDataFlatMap, flatMapDD, isComdDD } from "../common/dataD";
+import { isCommonLens, RestParams, unique } from "../common/restD";
 
 export function makeReportData<B extends ButtonD, G extends GuardWithCondition> ( ps: PageD<B, G>[] ): Report<B, G>[] {
   return ps.map ( makeReportFor )
@@ -12,26 +13,46 @@ export function makeReportData<B extends ButtonD, G extends GuardWithCondition> 
 
 export function makeCriticalReport<B, G> ( reports: Report<B, G>[] ): string[] {
   let criticals = reports.flatMap ( ( { page, details } ) => criticalSummary ( page, details ) );
-  if (criticals.length>0)return ['# Critical Issues',...criticals, '', '---']
+  if ( criticals.length > 0 ) return [ '# Critical Issues', ...criticals, '', '---' ]
   return [];
 }
-export function makeReport<B extends ButtonD, G extends GuardWithCondition> ( reports: Report<B, G>[] ): string[] {
-  const main = reports.flatMap ( ( { page, details } ) => format ( page, details ) )
+
+export function makeReportHeader<B, G> ( reports: Report<B, G>[] ): string[] {
   const critical = makeCriticalReport ( reports )
-  return [ ...main, ...critical ]
+  const rests = [
+    `# All endpoints`,
+    `| Page | Rest | Url | Params |`,
+    `| --- | --- | ---  |  --- |`,
+    ...reports.flatMap ( r => r.details.filter ( d => d.part === 'rests' ).flatMap ( d => d.general.map ( g => `|${r.page.name}${g}` ) ) ) ]
+  const paramsAndHeader = makeParamsAndHeader ( reports.map ( r => r.commonParams ) )
+  return [ `# All Pages`, ...critical, ...paramsAndHeader, ...rests, '', '---' ];
 }
 
-function format<B, G> ( p: PageD<B, G>, ds: ReportDetails[] ): string[] {
-  const mainReport = ds.flatMap ( d => {
+export function makeReport<B extends ButtonD, G extends GuardWithCondition> ( reports: Report<B, G>[] ): string[] {
+  const main = reports.flatMap ( ( r ) => format ( r ) )
+  const header = makeReportHeader ( reports )
+  return [ ...header, ...main, ]
+}
+
+function makeParamsAndHeader ( commonParams: NameAnd<string>[] ) {
+  const params = unique ( commonParams.flatMap ( c => sortedEntries ( c ).flatMap ( ( [ name, value ] ) => `|${name}|${value}` ) ), s => s )
+  const paramsAndHeader = params.length == 0 ? [] : [ `## Common Params`, `| Name | Location`, '| --- | ---', ...params ]
+  return paramsAndHeader;
+}
+function format<B, G> ( r: Report<B, G> ): string[] {
+  const { commonParams, page, details } = r
+  const mainReport = details.flatMap ( d => {
     const name = d.part.padEnd ( 8 );
     if ( d.general.length === 0 ) return [ `# ${d.part} - None` ]
     const header = d.headers.length > 0 ? [ `|${d.headers.join ( "|" )}`, `|${d.headers.map ( u => ` --- ` ).join ( "|" )}` ] : []
+
     return [ `##${name}`, ...header, ...indentList ( d.general ) ];
   } )
-  const name = `#${p.name} - ${p.pageType}`;
-  const errors: string[] = ds.flatMap ( d => d.critical )
+  const name = `#${page.name} - ${page.pageType}`;
+  const errors: string[] = details.flatMap ( d => d.critical )
   const errorMarker: string[] = errors.length > 0 ? [ '' ] : []
-  return [ name, ...errors, ...errorMarker, ...indentList ( mainReport ), '', '---' ];
+  const paramsAndHeader = makeParamsAndHeader ( [ commonParams ] );
+  return [ name, ...errors, ...errorMarker, ...paramsAndHeader, ...indentList ( mainReport ), '', '---' ];
 }
 
 
@@ -60,7 +81,13 @@ function makeReportInfo<B, G> ( p: PageD<B, G> ): ReportInfo {
 }
 export interface Report<B, G> {
   page: PageD<B, G>;
-  details: ReportDetails[ ]
+  details: ReportDetails[ ];
+  commonParams: NameAnd<string>;
+}
+
+function justCommonParams ( ps: RestParams[] ): NameAnd<string> {
+  return Object.fromEntries ( ps.flatMap ( p => sortedEntries ( p ).flatMap ( ( [ name, p ] ) => isCommonLens ( p ) ? [ [ name, p.commonLens ] ] : [] ) ) )
+
 }
 
 export function makeReportFor<B extends ButtonD, G extends GuardWithCondition> ( page: PageD<B, G> ): Report<B, G> {
@@ -73,7 +100,8 @@ export function makeReportFor<B extends ButtonD, G extends GuardWithCondition> (
       makeButtonsReport ( page, info ) ] :
     [ makeDisplayReport ( page, info ),
       makeButtonsReport ( page, info ) ]
-  return { page, details }
+  const commonParams = isMainPage ( page ) ? justCommonParams ( sortedEntries ( page.rest ).map ( ( [ name, rdp ] ) => rdp.rest.params ) ) : {}
+  return { page, details, commonParams }
 }
 
 const notCreated = ( { generatedDomainNames }: ReportInfo, name ): string[] => generatedDomainNames.indexOf ( name ) < 0 ?
