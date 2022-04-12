@@ -24,11 +24,11 @@ const state: TagTestState = {
 
 let identityState = Lenses.identity<TagTestState> ();
 let identityChild = Lenses.identity<ChildTagTestState> ();
- const urlConfig: UrlConfig<TagTestState, ChildTagTestState, string> = {
+const urlConfig: UrlConfig<TagTestState, ChildTagTestState, string> = {
   cd: { aId: identityState.focusQuery ( 'a' ), bId: identityState.focusQuery ( 'b' ) },
   fdd: { cId: identityChild.focusQuery ( 'c' ), dId: identityChild.focusQuery ( 'd' ) },
   fdLens: identityState.focusQuery ( 'child' ),
-  dLens: identityOptics<ChildTagTestState>() .focusQuery ( 'data' ),
+  dLens: identityOptics<ChildTagTestState> ().focusQuery ( 'data' ),
   ids: [ "aId", "bId", "cId" ],
   resourceId: [ "dId" ]
 
@@ -37,12 +37,12 @@ let identityChild = Lenses.identity<ChildTagTestState> ();
 describe ( "tags", () => {
   describe ( "for restAction get", () => {
     it ( "should return the tags found in the state from the definition in the urlConfig ", () => {
-      expect ( tags ( urlConfig, 'get' ) ( state ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [ "4", "1", "{'x':1}", "3" ] )
+      expect ( tags ( urlConfig, 'get' ) ( state ).map ( ( [ name, s ] ) => [ name, s.replace ( /"/g, "'" ) ] ) ).toEqual ( [ "4", "1", "{'x':1}", "3" ] )
     } )
   } )
   describe ( "for restAction list", () => {
     it ( "should return the tags found in the state from the definition in the urlConfig ", () => {
-      expect ( tags ( urlConfig, 'list' ) ( state ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [ "1", "{'x':1}", "3" ] )
+      expect ( tags ( urlConfig, 'list' ) ( state ).map ( ( [ name, s ] ) => [ name, s.replace ( /"/g, "'" ) ] ) ).toEqual ( [ "1", "{'x':1}", "3" ] )
     } )
 
   } )

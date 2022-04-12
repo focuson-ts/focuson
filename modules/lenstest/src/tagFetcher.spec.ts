@@ -9,22 +9,22 @@ import { firstPageSelectedState } from "./page.fixture";
 
 describe ( 'tagFetcher', () => {
   it ( 'should not load if the tags are not all present', () => {
-    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState, tags: {} } ) ).toEqual (  ["Not all tags defined"] )
-    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState, tag1: 't1', tags: {} } ) ).toEqual (  ["Not all tags defined"] )
-    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState, tag2: 't2', tags: {} } ) ).toEqual (  ["Not all tags defined"] )
-    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState, tags: { target: [] } } ) ).toEqual (  ["Not all tags defined"] )
-    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState, tags: { target: [] } } ) ).toEqual (  ["Not all tags defined"] )
+    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState, tags: {} } ) ).toEqual ( [ "Undefined tags. tag1Id:undefined,tag2Id:undefined" ] )
+    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState, tag1: 't1', tags: {} } ) ).toEqual ( [  "Undefined tags. tag1Id:t1,tag2Id:undefined" ] )
+    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState, tag2: 't2', tags: {} } ) ).toEqual ( [   "Undefined tags. tag1Id:undefined,tag2Id:t2" ] )
+    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState, tags: { target: [] } } ) ).toEqual ( [  "Undefined tags. tag1Id:undefined,tag2Id:undefined" ] )
+    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState, tags: { target: [] } } ) ).toEqual ( [  "Undefined tags. tag1Id:undefined,tag2Id:undefined" ] )
 
     //and now some funny states... unlikely to get these, but just checking anyway
-    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState, tag1: 't1', tags: { target: [ 't1', undefined ] } } ) ).toEqual (  ["Not all tags defined"] )
-    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState, tag2: 't2', tags: { target: [ undefined, 't2' ] } } ) ).toEqual (  ["Not all tags defined"] )
+    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState, tag1: 't1', tags: { target: [ 't1', undefined ] } } ) ).toEqual ( [   "Undefined tags. tag1Id:t1,tag2Id:undefined" ] )
+    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState, tag2: 't2', tags: { target: [ undefined, 't2' ] } } ) ).toEqual ( [   "Undefined tags. tag1Id:undefined,tag2Id:t2" ] )
   } )
 
   it ( 'should load if the actual tags match the desired tags, but the target is undefined', () => {
-    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState,firstPage: undefined, tag1: 't1', tag2: 't2', tags: { firstPage: [ 't1', 't2' ] } } ) ).toEqual ( [] )
+    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState, firstPage: undefined, tag1: 't1', tag2: 't2', tags: { firstPage: [ 't1', 't2' ] } } ) ).toEqual ( [] )
   } )
   it ( 'should not load if the actual tags match the desired tags and the target is defined', () => {
-    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState, tag1: 't1', tag2: 't2', firstPage: 'somevalue', tags: { firstPage: [ 't1', 't2' ] } } ) ).toEqual ( [ "Tags all the same, and target defined"] )
+    expect ( simpleFetcherWithMessages.shouldLoad ( { ...firstPageSelectedState, tag1: 't1', tag2: 't2', firstPage: 'somevalue', tags: { firstPage: [ 't1', 't2' ] } } ) ).toEqual ( [ "Tags all the same, and target defined" ] )
   } )
 
   it ( 'should  load if the actual tags are defined but the current are not', () => {

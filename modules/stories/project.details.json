@@ -18,7 +18,7 @@
       "@storybook/preset-create-react-app": "^3.2.0",
       "@storybook/react":                   "^6.4.4"
     },
-    "test":         true,
+    "test":         false,
     "tsc":          true
   }
 }

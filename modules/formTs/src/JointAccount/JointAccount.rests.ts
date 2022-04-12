@@ -10,7 +10,8 @@ export function JointAccount_JointAccountRestDetails ( cd: NameAndLens<FState>, 
   const fdd: NameAndLens<domains.JointAccountPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('JointAccount'),
-    dLens: Lenses.identity<domains.JointAccountPageDomain>().focusQuery('fromApi'),
+      //This compilation error is because you used a variable name in the target '~/#fromApi'. Currently that is not supported
+    dLens: .chain(changeme.fromApi(identityL)),
     cd, fdd,
     ids: ["accountId","brandId","dbName"],
     resourceId:  [],
