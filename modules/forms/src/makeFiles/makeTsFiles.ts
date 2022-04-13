@@ -41,6 +41,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     fs.mkdirSync ( `${tsStoryBook}`, { recursive: true } )
     templateFile ( tsRoot + "/project.details.json", 'templates/ts.projectDetails.json', {
       ...params,
+      versionNumber: appConfig.versionNumber,
       applicationName: params.applicationName.toLowerCase (),
       javaPort: appConfig.javaPort,
       tsPort: appConfig.tsPort
@@ -98,8 +99,9 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     writeToFile ( `${tsCode}/${params.pagesFile}.ts`, () => makePages ( params, mainPs ), details )
 
 
-    templateFile ( `${tsCode}/index.tsx`, 'templates/index.template.ts', { ...params, pageMode: JSON.stringify(allMainPages ( allPages )[ 0 ].modes[ 0 ]), firstPage: allPages[ 0 ].name, fetch: appConfig.fetch, debug: JSON.stringify ( appConfig.debug ) }, directorySpec, details )
-    templateFile ( `${tsRoot}/package.json`, 'templates/packageTemplate.json', { ...params, applicationName: params.applicationName.toLowerCase () }, directorySpec, details )
+    templateFile ( `${tsCode}/index.tsx`, 'templates/index.template.ts', { ...params, pageMode: JSON.stringify ( allMainPages ( allPages )[ 0 ].modes[ 0 ] ), firstPage: allPages[ 0 ].name, fetch: appConfig.fetch, debug: JSON.stringify ( appConfig.debug ) }, directorySpec, details )
+    templateFile ( `${tsRoot}/package.json`, 'templates/packageTemplate.json',
+      { ...params, applicationName: params.applicationName.toLowerCase (), versionNumber: appConfig.versionNumber }, directorySpec, details )
     detailsLog ( logLevel, 1, 'copying files' )
     copyFiles ( tsRoot, 'templates/raw/ts', directorySpec ) ( '.env', 'README.md', 'tsconfig.json' )
     copyFiles ( tsScripts, 'templates/scripts', directorySpec ) ( 'makePact.sh', 'makeJava.sh', 'makeJvmPact.sh', 'template.java', 'ports' )

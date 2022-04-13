@@ -4,24 +4,24 @@ import { PageSpecState, secondPageSelectedState } from "./page.fixture";
 
 describe ( 'tagFetcher', () => {
   it ( 'should not load if the tags are not all present', () => {
-    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tags: {}, secondPage: {} } ) ).toEqual ( ["Not all tags defined"] )
-    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tags: {}, secondPage: {} } ) ).toEqual ( ["Not all tags defined"] )
-    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag2: 't2', tags: {}, secondPage: {} } ) ).toEqual ( ["Not all tags defined"] )
-    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tags: { secondPage_tag1: [] }, secondPage: {} } ) ).toEqual ( ["Not all tags defined"] )
-    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tags: { secondPage_tag1: [] }, secondPage: {} } ) ).toEqual ( ["Not all tags defined"] )
+    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tags: {}, secondPage: {} } ) ).toEqual ( [ "Undefined tags. tag1Id:undefined,tag2Id:undefined" ] )
+    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tags: {}, secondPage: {} } ) ).toEqual ( [ "Undefined tags. tag1Id:t1,tag2Id:undefined" ] )
+    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag2: 't2', tags: {}, secondPage: {} } ) ).toEqual ( [ "Undefined tags. tag1Id:undefined,tag2Id:t2" ] )
+    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tags: { secondPage_tag1: [] }, secondPage: {} } ) ).toEqual ( [ "Undefined tags. tag1Id:undefined,tag2Id:undefined" ] )
+    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tags: { secondPage_tag1: [] }, secondPage: {} } ) ).toEqual ( [ "Undefined tags. tag1Id:undefined,tag2Id:undefined" ] )
 
     //and now some funny states... unlikely to get these, but just checking anyway
-    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tags: { secondPage: [ 't1', undefined ] }, secondPage: {} } ) ).toEqual ( ["Not all tags defined"] )
-    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag2: 't2', tags: { secondPage: [ undefined, 't2' ] }, secondPage: {} } ) ).toEqual ( ["Not all tags defined"] )
+    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tags: { secondPage: [ 't1', undefined ] }, secondPage: {} } ) ).toEqual ( [ "Undefined tags. tag1Id:t1,tag2Id:undefined" ] )
+    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag2: 't2', tags: { secondPage: [ undefined, 't2' ] }, secondPage: {} } ) ).toEqual ( [ "Undefined tags. tag1Id:undefined,tag2Id:t2"] )
   } )
 
   it ( 'should load if the actual tags match the desired tags, but the target is undefined', () => {
     expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tag2: 't2', tags: { secondPage_tag1: [ 't1', 't2' ] }, secondPage: {} } ) ).toEqual ( [] )
-    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tag2: 't2', tags: { secondPage_tag1: [ 't1', 't2' ] }, secondPage: undefined}  ) ).toEqual ( [] )
+    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tag2: 't2', tags: { secondPage_tag1: [ 't1', 't2' ] }, secondPage: undefined } ) ).toEqual ( [] )
   } )
   it ( 'should not load if the actual tags match the desired tags and the target is defined', () => {
     let state: PageSpecState = { ...secondPageSelectedState, tag1: 't1', tag2: 't2', secondPage: { fromApi: 'somevalue' }, tags: { secondPage_tag1: [ 't1', 't2' ] } };
-    expect ( stateAndFromApiFetcher.shouldLoad ( state ) ).toEqual (  ["Tags all the same, and target defined"] )
+    expect ( stateAndFromApiFetcher.shouldLoad ( state ) ).toEqual ( [ "Tags all the same, and target defined" ] )
   } )
 
   it ( 'should  load if the actual tags are defined but the current are not', () => {

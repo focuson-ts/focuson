@@ -135,9 +135,10 @@ export function tagFetcher<S, Full, T, MSGS> ( stf: SpecificTagFetcherProps<S, F
   const result: Fetcher<S, T> = {
     shouldLoad ( s: S ): string[] {
       const currentTags = tagL.getOption ( s );
-      let desiredTags = tagOps.tags ( stf, 'get' ) ( s );
+      let tagAndNames = tagOps.tags ( stf, 'get' ) ( s );
+      const desiredTags = tagAndNames.map ( ( [ name, tag ] ) => tag )
+      if ( !areAllDefined ( desiredTags ) ) return [ `Undefined tags. ${tagAndNames.map ( ( [ name, tag ] ) => `${name}:${tag}` )}` ]
       let tagsDifferent = !arraysEqual ( desiredTags, currentTags );
-      if ( !areAllDefined ( desiredTags ) ) return [ 'Not all tags defined' ]
       let target = targetLens.getOption ( s );
       if ( target === undefined ) return []
       if ( !tagsDifferent ) return [ 'Tags all the same, and target defined' ]
@@ -146,8 +147,9 @@ export function tagFetcher<S, Full, T, MSGS> ( stf: SpecificTagFetcherProps<S, F
     load ( s: S ) {
       // @ts-ignore
       const debug = s.debug?.tagFetcherDebug
-      const currentTags = tagOps.tags ( stf, 'get' ) ( s );
-      if ( !areAllDefined ( currentTags ) ) throw partialFnUsageError ( result, s );
+      const tagAndNames = tagOps.tags ( stf, 'get' ) ( s );
+      const desiredTags = tagAndNames.map ( ( [ name, tag ] ) => tag )
+      if ( !areAllDefined ( desiredTags ) ) throw partialFnUsageError ( result, s );
       const req = tagOps.reqFor ( stf, 'get' ) ( s ) ( stf.url );
       if ( !req ) throw partialFnUsageError ( result, s );
       const [ info, init ] = req;
@@ -157,7 +159,7 @@ export function tagFetcher<S, Full, T, MSGS> ( stf: SpecificTagFetcherProps<S, F
         const tagAndTargetLens: Optional<S, [ Tags, T ]> = tagL.combine ( targetLens );
         if ( status < 300 ) {
           if ( debug ) console.log ( 'tagFetcher.load.mutate', tagAndTargetLens.description, status, response )
-          let resultWithoutMessages: S | undefined = tagAndTargetLens.setOption ( state, [ currentTags, response ] );
+          let resultWithoutMessages: S | undefined = tagAndTargetLens.setOption ( state, [ desiredTags, response ] );
           if ( !resultWithoutMessages ) { console.error ( `Unexpected problem seting response and tags in state. ${this.description}` )}
           let messages = messagesFromTarget ( response, stf.dateFn () );
           if ( debug ) console.log ( 'tagFetcher.load.mutate.messages', messages )
@@ -173,7 +175,7 @@ export function tagFetcher<S, Full, T, MSGS> ( stf: SpecificTagFetcherProps<S, F
         } else {
           if ( debug ) console.log ( 'tagFetcher.load.mutate - onError is being called', status, response )
           let originalTags = tagL.getOption ( s );
-          return onError ( { s, info, init, status, req, response, tagL, tagAndTargetLens, originalTags, currentTags, messageL: stf.messageL, dateFn: stf.dateFn } )
+          return onError ( { s, info, init, status, req, response, tagL, tagAndTargetLens, originalTags, currentTags: desiredTags, messageL: stf.messageL, dateFn: stf.dateFn } )
         }
       };
       if ( debug ) console.log ( 'tagFetcher.load', info, init )

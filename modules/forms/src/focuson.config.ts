@@ -38,6 +38,7 @@ export interface AppConfig {
   fetch: string;
   combine: SimpleDisplayComp;
   debug: any;
+  versionNumber: string;
   tsPort: number;
   javaPort: number
 }
@@ -54,6 +55,7 @@ console.log ( "JavaPort is", javaPort, "tsPort is", tsPort )
 export const devAppConfig: AppConfig = {
   javaPort,
   tsPort,
+  versionNumber: '0.0.1',
   fetch: `fetchWithDelay ( 1, fetchWithPrefix ( 'http://localhost:${javaPort}', loggingFetchFn ) )`,
   combine: MyCombineCD,
   debug: { fetcherDebug: true, restDebug: false, selectedPageDebug: false, loadTreeDebug: false, showTracing: false, recordTrace: true }

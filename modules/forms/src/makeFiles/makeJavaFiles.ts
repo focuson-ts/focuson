@@ -63,7 +63,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   copyFile ( javaAppRoot + '/.gitignore', 'templates/raw/gitignore', directorySpec )
   copyFiles ( javaCodeRoot, 'templates/raw/java', directorySpec ) ( 'CorsConfig.java', 'IManyGraphQl.java' )
   detailsLog ( logLevel, 1, 'java common copies' )
-  templateFile ( `${javaAppRoot}/pom.xml`, 'templates/mvnTemplate.pom', params, directorySpec )
+  templateFile ( `${javaAppRoot}/pom.xml`, 'templates/mvnTemplate.pom', {...params, versionNumber: appConfig.versionNumber}, directorySpec )
   templateFile ( `${javaCodeRoot}/SchemaController.java`, 'templates/raw/java/SchemaController.java', params, directorySpec )
   templateFile ( `${javaControllerRoot}/Transform.java`, 'templates/Transform.java', params, directorySpec )
 

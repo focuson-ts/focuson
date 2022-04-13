@@ -4,6 +4,7 @@ import { RestAction } from "@focuson/utils";
 
 
 export type Tags = (string | undefined)[]
+export type NamePlusTags = [string,string | undefined][]
 
 export interface HasTagHolder {
   tags: TagHolder
@@ -44,16 +45,17 @@ export interface UrlConfig<S, FD, D> {
 type TagOpsFn<T> = <S, FD, D>( urlConfig: UrlConfig<S, FD, D>, restAction: RestAction ) => ( m: S ) => T
 export interface TagOps {
   /** puts the values defined in the urlConfig as tags. */
-  tags: TagOpsFn<Tags>
+  tags: TagOpsFn<NamePlusTags>
   /** The lens is to describe where the data comes from (in a update/create) or goes to (get/list) it's not used in the get/list, but having it means that we can simplify the calling code */
   reqFor: TagOpsFn<( url: string ) => [ RequestInfo, RequestInit | undefined ]>
 }
 
 
-export const tags: TagOpsFn<Tags> = ( urlConfig, restAction ) => <S> ( s ) => {
+export const tags: TagOpsFn<[ string, string | undefined ][]> = ( urlConfig, restAction ) => <S> ( s ) => {
   const names = needsId ( restAction ) ? [ ...urlConfig.resourceId, ...urlConfig.ids ] : urlConfig.ids
-  return names.map ( onePart ( urlConfig, { failSilently: true } ) ( s, restAction ) ).sort ()
-};
+  return names.sort ().map ( name => [ name, onePart ( urlConfig, { failSilently: true } ) ( s, restAction ) ( name ) ] )
+}
+
 export function nameToLens<S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, restAction: RestAction ): GetNameFn<S, any> {
   return ( name: string ) => {
     if ( name === 'query' ) return { getOption: s => makeAEqualsB ( urlConfig, { failSilently: true } ) ( s, restAction ) }
@@ -104,7 +106,7 @@ export const makeAEqualsB = <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, { encod
     const names = needsId ( restAction ) ? [ ...urlConfig.ids, ...urlConfig.resourceId ] : urlConfig.ids
     return names.map ( name => {
         const value = nameLnFn ( name ).getOption ( main )
-        if ( value !==undefined || failSilently ) return name + '=' + realEncoder ( value )
+        if ( value !== undefined || failSilently ) return name + '=' + realEncoder ( value )
         throw new Error ( `Could not find [${name}] in makeAEqualsB. All names are ${names.join ( "." )}` )
       }
     ).join ( realSeparator )
