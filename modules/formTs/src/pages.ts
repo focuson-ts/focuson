@@ -10,12 +10,12 @@ import { ArrearsDetailsPage } from './AccountOverview/ArrearsDetails.render';
 import { AccountFlagsPage } from './AccountOverview/AccountFlags.render';
 import { JointAccountPage } from './JointAccount/JointAccount.render';
 import { JointAccountEditModalPagePage } from './JointAccount/JointAccountEditModalPage.render';
-import { MainOccupationDetailsPageSummaryPage } from './MainOccupationDetailsPageSummary/MainOccupationDetailsPageSummary.render';
-import { OccupationIncomeModalPage } from './MainOccupationDetailsPageSummary/OccupationIncomeModal.render';
-import { AdditionalInfoFirstModalPage } from './MainOccupationDetailsPageSummary/AdditionalInfoFirstModal.render';
-import { AdditionalInfoSecondModalPage } from './MainOccupationDetailsPageSummary/AdditionalInfoSecondModal.render';
-import { OtherSourcesOfIncomeModalPage } from './MainOccupationDetailsPageSummary/OtherSourcesOfIncomeModal.render';
-import { ListOccupationsModalPage } from './MainOccupationDetailsPageSummary/ListOccupationsModal.render';
+import { OccupationAndIncomeSummaryPage } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.render';
+import { OccupationIncomeModalPage } from './OccupationAndIncomeSummary/OccupationIncomeModal.render';
+import { AdditionalInformationModalPage } from './OccupationAndIncomeSummary/AdditionalInformationModal.render';
+import { BusinessDetailsModalPage } from './OccupationAndIncomeSummary/BusinessDetailsModal.render';
+import { OtherSourcesOfIncomeModalPage } from './OccupationAndIncomeSummary/OtherSourcesOfIncomeModal.render';
+import { ListOccupationsModalPage } from './OccupationAndIncomeSummary/ListOccupationsModal.render';
 import { EAccountsSummaryPage } from './EAccountsSummary/EAccountsSummary.render';
 import { CreatePlanPage } from './EAccountsSummary/CreatePlan.render';
 import { ETransferPage } from './ETransfer/ETransfer.render';
@@ -29,7 +29,7 @@ import { PostCodeSearchPage } from './PostCodeMainPage/PostCodeSearch.render';
 import { HelloWorldMainPageOptionals } from "./HelloWorldMainPage/HelloWorldMainPage.optionals"; 
 import { AccountOverviewOptionals } from "./AccountOverview/AccountOverview.optionals"; 
 import { JointAccountOptionals } from "./JointAccount/JointAccount.optionals"; 
-import { MainOccupationDetailsPageSummaryOptionals } from "./MainOccupationDetailsPageSummary/MainOccupationDetailsPageSummary.optionals"; 
+import { OccupationAndIncomeSummaryOptionals } from "./OccupationAndIncomeSummary/OccupationAndIncomeSummary.optionals"; 
 import { EAccountsSummaryOptionals } from "./EAccountsSummary/EAccountsSummary.optionals"; 
 import { ETransferOptionals } from "./ETransfer/ETransfer.optionals"; 
 import { CreateEAccountOptionals } from "./CreateEAccount/CreateEAccount.optionals"; 
@@ -40,10 +40,10 @@ import { PostCodeMainPageOptionals } from "./PostCodeMainPage/PostCodeMainPage.o
 const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  Loading )
 const identity = identityOptics<FState> ();
 export const pages: MultiPageDetails<FState, Context> = {
-    HelloWorldMainPage: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'HelloWorldMainPage' ), pageFunction: HelloWorldMainPagePage(), initialValue: {"main":{"message":""}}, pageMode: 'view',namedOptionals: HelloWorldMainPageOptionals },
+    HelloWorldMainPage: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'HelloWorldMainPage' ), pageFunction: HelloWorldMainPagePage(), initialValue: {"fromApi":{"message":""}}, pageMode: 'view',namedOptionals: HelloWorldMainPageOptionals },
     AccountOverview: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'AccountOverview' ), pageFunction: AccountOverviewPage(), initialValue: undefined, pageMode: 'view',namedOptionals: AccountOverviewOptionals },
     JointAccount: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'JointAccount' ), pageFunction: JointAccountPage(), initialValue: {"joint":false}, pageMode: 'view',namedOptionals: JointAccountOptionals },
-    MainOccupationDetailsPageSummary: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'MainOccupationDetailsPageSummary' ), pageFunction: MainOccupationDetailsPageSummaryPage(), initialValue: {"occupation":{"search":"","selectedOccupationName":"","searchResults":[]}}, pageMode: 'view',namedOptionals: MainOccupationDetailsPageSummaryOptionals },
+    OccupationAndIncomeSummary: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'OccupationAndIncomeSummary' ), pageFunction: OccupationAndIncomeSummaryPage(), initialValue: {"selectedItem":0,"occupation":{"search":"","selectedOccupationName":"","searchResults":[]},"mainOrJoint":false}, pageMode: 'view',namedOptionals: OccupationAndIncomeSummaryOptionals },
     EAccountsSummary: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'EAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: {}, pageMode: 'view',namedOptionals: EAccountsSummaryOptionals },
     ETransfer: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'ETransfer' ), pageFunction: ETransferPage(), initialValue: {"fromApi":{}}, pageMode: 'create',namedOptionals: ETransferOptionals },
     CreateEAccount: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'CreateEAccount' ), pageFunction: CreateEAccountPage(), initialValue: {"editing":{"name":"","type":"savings","savingsStyle":"adhoc","initialAmount":0}}, pageMode: 'create',namedOptionals: CreateEAccountOptionals },
@@ -57,8 +57,8 @@ export const pages: MultiPageDetails<FState, Context> = {
     AccountFlags: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: AccountFlagsPage()},
     JointAccountEditModalPage: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: JointAccountEditModalPagePage()},
     OccupationIncomeModal: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: OccupationIncomeModalPage()},
-    AdditionalInfoFirstModal: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: AdditionalInfoFirstModalPage()},
-    AdditionalInfoSecondModal: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: AdditionalInfoSecondModalPage()},
+    AdditionalInformationModal: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: AdditionalInformationModalPage()},
+    BusinessDetailsModal: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: BusinessDetailsModalPage()},
     OtherSourcesOfIncomeModal: {pageType: 'ModalPopup',  config: simpleMessagesConfig,  pageFunction: OtherSourcesOfIncomeModalPage()},
     ListOccupationsModal: {pageType: 'ModalPopup',  config: simpleMessagesConfig,  pageFunction: ListOccupationsModalPage()},
     CreatePlan: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: CreatePlanPage()},

@@ -7,10 +7,10 @@ type Query{
   getAccountOverview(accountId: String!, customerId: String!):AccountOverview!
   getAccountOverviewReason(accountId: String!, customerId: String!):AccountOverviewReason!
   getJointAccount(accountId: String!, brandId: String!, dbName: String!):JointAccount!
-  getAdditionalInfoFirst(customerId: String!):AdditionalInfoFirst!
-  getAdditionalInfoSecond(customerId: String!):AdditionalInfoSecond!
+  getAdditionalInformation(customerId: String!):AdditionalInformation!
+  getBusinessDetailsMain(customerId: String!):BusinessDetailsMain!
+  getDropdowns(customerId: String!):Dropdowns!
   getOccupationAndIncomeFullDomain(customerId: String!):OccupationAndIncomeFullDomain!
-  getListOccupations(customerId: String!):ListOccupations!
   getOtherIncomeResponse(customerId: String!):OtherIncomeResponse!
   getCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):CreatePlan!
   listCreatePlan(accountId: String!, customerId: String!):[CreatePlan!]!
@@ -21,10 +21,7 @@ type Query{
   getPostCodeDataLine(postcode: String!):[PostCodeDataLine!]!
 }
 type Mutation{
-  updateAdditionalInfoFirst(customerId: String!,obj: AdditionalInfoFirstInp!):AdditionalInfoFirst!
-  updateAdditionalInfoSecond(customerId: String!,obj: AdditionalInfoSecondInp!):AdditionalInfoSecond!
   updateOccupationAndIncomeFullDomain(customerId: String!,obj: OccupationAndIncomeFullDomainInp!):OccupationAndIncomeFullDomain!
-  updateOtherIncomeResponse(customerId: String!,obj: OtherIncomeResponseInp!):OtherIncomeResponse!
   createCreatePlan(accountId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!
   updateCreatePlan(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!
   deleteCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):CreatePlan
@@ -36,6 +33,18 @@ type Mutation{
 }
 type AccountAllFlags{
   flags: [AccountOneFlag!]!
+}
+type AccountDetails{
+  contactTitle: String!
+  contactForename: String!
+  contactSurname: String!
+  practice: String!
+  addressLine1: String!
+  addressLine2: String!
+  addressLine3: String!
+  addressLine4: String!
+  postcode: String!
+  telephone: String!
 }
 type AccountOneFlag{
   flagName: String!
@@ -76,7 +85,7 @@ type AccountOverviewHistory{
 type AccountOverviewReason{
   reason: String!
 }
-type AdditionalInfoFirst{
+type AdditionalInformation{
   applicantName: String!
   employerName: String!
   addressLine1: String!
@@ -84,18 +93,6 @@ type AdditionalInfoFirst{
   addressLine3: String!
   addressLine4: String!
   postcode: String!
-}
-type AdditionalInfoSecond{
-  turnoverLastYear: String!
-  turnoverPenultimateYear: String!
-  netProfitLastYear: String!
-  netProfitPenultimateYear: String!
-  drawingsLastYear: String!
-  drawingsPenultimateYear: String!
-  dividendsLastYear: String!
-  dividendsPenultimateYear: String!
-  netAssetsLastYear: String!
-  netAssetsPenultimateYear: String!
 }
 type ArrearsDetails{
   history: [ArrearsDetailsLine!]!
@@ -111,6 +108,34 @@ type ArrearsDetailsLine{
   arrearsTotal: Int!
   missedPayments: Int!
 }
+type BusinessDetails{
+  applicantName: String!
+  businessName: String!
+  addressLine1: String!
+  addressLine2: String!
+  addressLine3: String!
+  addressLine4: String!
+  postcode: String!
+}
+type BusinessDetailsMain{
+  businessDetails: BusinessDetails!
+  businessFinancialDetails: BusinessFinancialDetails!
+  detailsOfNonRecurringItems: DetailsOfNonRecurringItems!
+  detailsOfReevaluationOfAssets: DetailsOfReevaluationOfAssets!
+  accountantDetails: AccountDetails!
+}
+type BusinessFinancialDetails{
+  turnoverLastYear: String!
+  turnoverPenultimateYear: String!
+  netProfitLastYear: String!
+  netProfitPenultimateYear: String!
+  drawingsLastYear: String!
+  drawingsPenultimateYear: String!
+  dividendsLastYear: String!
+  dividendsPenultimateYear: String!
+  netAssetsLastYear: String!
+  netAssetsPenultimateYear: String!
+}
 type ChequeCreditbooks{
   history: [ChequeCreditbooksHistoryLine!]!
 }
@@ -118,6 +143,10 @@ type ChequeCreditbooksHistoryLine{
   serialNumber: Int!
   howOrdered: String!
   dateOrder: String!
+}
+type ContractTypesResponse{
+  contractTypeId: Int!
+  description: String!
 }
 type CreateEAccountData{
   name: String!
@@ -129,6 +158,18 @@ type CreatePlan{
   createPlanStart: String!
   createPlanDate: String!
   createPlanEnd: String!
+}
+type DetailsOfNonRecurringItems{
+  nonRecurringItems: String!
+}
+type DetailsOfReevaluationOfAssets{
+  revaluationOfAssets: String!
+}
+type Dropdowns{
+  occupationDescriptionResponse: OccupationDescriptionResponse!
+  employmentStatus: EmploymentStatus!
+  contractTypesResponse: ContractTypesResponse!
+  frequenciesResponse: FrequenciesResponse!
 }
 type EAccountsSummary{
   useEStatements: Boolean!
@@ -146,6 +187,10 @@ type EAccountSummary{
   total: Int!
   frequency: String!
 }
+type EmploymentStatus{
+  employmentName: String!
+  employmentValue: String!
+}
 type ETransferDataD{
   account: Int!
   dateOfETransfer: String!
@@ -156,6 +201,11 @@ type ETransferDataD{
   type: String!
   balance: Int!
   notes: String!
+}
+type FrequenciesResponse{
+  frequencyId: Int!
+  frequencyDescription: String!
+  annualMultiple: Int!
 }
 type HelloWorldDomainData{
   message: String!
@@ -173,14 +223,16 @@ type JointAccountCustomer{
   name: String!
   addresses: [JointAccountAddress!]!
 }
-type ListOccupations{
-  descTypeValue: String!
-  descTypeName: String!
-}
 type OccupationAndIncomeFullDomain{
   mainCustomerName: String!
+  jointCustomerName: String!
   mainClientRef: Int!
-  customerOccupationIncomeDetails: OneOccupationIncomeDetails!
+  jointClientRef: Int!
+  customerOccupationIncomeDetails: [OneOccupationIncomeDetails!]!
+}
+type OccupationDescriptionResponse{
+  descTypeValue: String!
+  descTypeName: String!
 }
 type OneOccupationIncomeDetails{
   areYou: String!
@@ -201,8 +253,14 @@ type OneOccupationIncomeDetails{
   annualDrawing3Yrs: Int!
   otherSourceOfIncome: String!
   createdBy: String!
+  createdDate: String!
+  employerName: String!
+  sePositionHeld: String!
+  occupationCategory: String!
   empEmploymentSeq: Int!
+  empAppRoleSeq: Int!
   accountantAppRoleSeq: Int!
+  currentEmployment: String!
 }
 type OtherIncomeResponse{
   clientOtherIncomeSeq: String!
@@ -227,27 +285,6 @@ type PostCodeNameAndAddress{
 type RepeatingLine{
   name: String!
   age: Int!
-}
-input AdditionalInfoFirstInp{
-  applicantName: String!
-  employerName: String!
-  addressLine1: String!
-  addressLine2: String!
-  addressLine3: String!
-  addressLine4: String!
-  postcode: String!
-}
-input AdditionalInfoSecondInp{
-  turnoverLastYear: String!
-  turnoverPenultimateYear: String!
-  netProfitLastYear: String!
-  netProfitPenultimateYear: String!
-  drawingsLastYear: String!
-  drawingsPenultimateYear: String!
-  dividendsLastYear: String!
-  dividendsPenultimateYear: String!
-  netAssetsLastYear: String!
-  netAssetsPenultimateYear: String!
 }
 input ChequeCreditbooksInp{
   history: [ChequeCreditbooksHistoryLineInp!]!
@@ -281,8 +318,10 @@ input ETransferDataDInp{
 }
 input OccupationAndIncomeFullDomainInp{
   mainCustomerName: String!
+  jointCustomerName: String!
   mainClientRef: Int!
-  customerOccupationIncomeDetails: OneOccupationIncomeDetailsInp!
+  jointClientRef: Int!
+  customerOccupationIncomeDetails: [OneOccupationIncomeDetailsInp!]!
 }
 input OneOccupationIncomeDetailsInp{
   areYou: String!
@@ -303,14 +342,14 @@ input OneOccupationIncomeDetailsInp{
   annualDrawing3Yrs: Int!
   otherSourceOfIncome: String!
   createdBy: String!
+  createdDate: String!
+  employerName: String!
+  sePositionHeld: String!
+  occupationCategory: String!
   empEmploymentSeq: Int!
+  empAppRoleSeq: Int!
   accountantAppRoleSeq: Int!
-}
-input OtherIncomeResponseInp{
-  clientOtherIncomeSeq: String!
-  otherIncomeType: String!
-  incomeFreqRef: String!
-  amount: Int!
+  currentEmployment: String!
 }
 input PostCodeNameAndAddressInp{
   name: String!

@@ -5,5 +5,4 @@ import java.util.Map;
 
 public interface OtherIncomeResponseFFetcher extends IFetcher{
    public DataFetcher<Map<String,Object>> getOtherIncomeResponse();
-   public DataFetcher<Map<String,Object>> updateOtherIncomeResponse();
 }

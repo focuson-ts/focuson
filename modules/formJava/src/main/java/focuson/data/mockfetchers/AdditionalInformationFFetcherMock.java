@@ -4,16 +4,15 @@ import graphql.schema.DataFetcher;
 import graphql.schema.StaticDataFetcher;
 import org.springframework.stereotype.Component;
 import focuson.data.fetchers.IFetcher;
-import focuson.data.fetchers.AdditionalInfoFirstFFetcher;
+import focuson.data.fetchers.AdditionalInformationFFetcher;
 import focuson.data.fetchers.IFetcher;
 import focuson.data.Sample;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 @Component
-public class AdditionalInfoFirstFFetcherMock  implements AdditionalInfoFirstFFetcher{
+public class AdditionalInformationFFetcherMock  implements AdditionalInformationFFetcher{
 @Override
 public String dbName() {return IFetcher.mock; }
- public DataFetcher getAdditionalInfoFirst() {  return dataFetchingEnvironment -> Sample.sampleAdditionalInfoFirst0;    }
- public DataFetcher updateAdditionalInfoFirst() {  return dataFetchingEnvironment -> Sample.sampleAdditionalInfoFirst0;    }
+ public DataFetcher getAdditionalInformation() {  return dataFetchingEnvironment -> Sample.sampleAdditionalInformation0;    }
 }

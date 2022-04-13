@@ -1,4 +1,4 @@
-import * as domain from '../MainOccupationDetailsPageSummary/MainOccupationDetailsPageSummary.domains';
+import * as domain from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains';
 import { LensProps } from "@focuson/state";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from "@focuson/pages";
@@ -7,8 +7,8 @@ import { Lenses } from '@focuson/lens';
 import { Guard } from "@focuson/form_components";
 import { GuardButton } from "@focuson/form_components";
 //if there is an error message here... did you set the importFrom on this modal correctly, and also check that the PageD links to this DataD in a domain or rest block
-import {OtherIncomeResponseDomain} from '../MainOccupationDetailsPageSummary/MainOccupationDetailsPageSummary.domains'; 
-import {OtherIncomeResponse} from '../MainOccupationDetailsPageSummary/MainOccupationDetailsPageSummary.render'
+import {OtherIncomeResponseDomain} from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains'; 
+import {OtherIncomeResponse} from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.render'
 import {ListNextButton} from '@focuson/form_components';
 import {ListPrevButton} from '@focuson/form_components';
 import {ModalButton} from '@focuson/pages';

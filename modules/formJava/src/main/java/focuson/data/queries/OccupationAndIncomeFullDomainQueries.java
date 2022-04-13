@@ -4,7 +4,9 @@ public class OccupationAndIncomeFullDomainQueries{
      return
   "query{getOccupationAndIncomeFullDomain(" + "customerId:" + "\"" + customerId + "\"" + "){"+
         "    mainCustomerName"+
+        "    jointCustomerName"+
         "    mainClientRef"+
+        "    jointClientRef"+
         "    customerOccupationIncomeDetails{"+
         "      areYou"+
         "      occupation"+
@@ -24,8 +26,14 @@ public class OccupationAndIncomeFullDomainQueries{
         "      annualDrawing3Yrs"+
         "      otherSourceOfIncome"+
         "      createdBy"+
+        "      createdDate"+
+        "      employerName"+
+        "      sePositionHeld"+
+        "      occupationCategory"+
         "      empEmploymentSeq"+
+        "      empAppRoleSeq"+
         "      accountantAppRoleSeq"+
+        "      currentEmployment"+
         "    }"+
         "  }"
   +"}";}
@@ -33,7 +41,9 @@ public class OccupationAndIncomeFullDomainQueries{
      return
   "mutation{updateOccupationAndIncomeFullDomain(" + "customerId:" + "\"" + customerId + "\""  + ", obj:" + obj + "){"+
         "    mainCustomerName"+
+        "    jointCustomerName"+
         "    mainClientRef"+
+        "    jointClientRef"+
         "    customerOccupationIncomeDetails{"+
         "      areYou"+
         "      occupation"+
@@ -53,8 +63,14 @@ public class OccupationAndIncomeFullDomainQueries{
         "      annualDrawing3Yrs"+
         "      otherSourceOfIncome"+
         "      createdBy"+
+        "      createdDate"+
+        "      employerName"+
+        "      sePositionHeld"+
+        "      occupationCategory"+
         "      empEmploymentSeq"+
+        "      empAppRoleSeq"+
         "      accountantAppRoleSeq"+
+        "      currentEmployment"+
         "    }"+
         "  }"
   +"}";}

@@ -15,5 +15,4 @@ public class OtherIncomeResponseFFetcherMock  implements OtherIncomeResponseFFet
 @Override
 public String dbName() {return IFetcher.mock; }
  public DataFetcher getOtherIncomeResponse() {  return dataFetchingEnvironment -> Sample.sampleOtherIncomeResponse0;    }
- public DataFetcher updateOtherIncomeResponse() {  return dataFetchingEnvironment -> Sample.sampleOtherIncomeResponse0;    }
 }

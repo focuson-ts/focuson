@@ -32,10 +32,10 @@ import focuson.data.fetchers.AccountOverviewExcessInfoFFetcher;
 import focuson.data.fetchers.AccountOverviewFFetcher;
 import focuson.data.fetchers.AccountOverviewReasonFFetcher;
 import focuson.data.fetchers.JointAccountFFetcher;
-import focuson.data.fetchers.AdditionalInfoFirstFFetcher;
-import focuson.data.fetchers.AdditionalInfoSecondFFetcher;
+import focuson.data.fetchers.AdditionalInformationFFetcher;
+import focuson.data.fetchers.BusinessDetailsMainFFetcher;
+import focuson.data.fetchers.DropdownsFFetcher;
 import focuson.data.fetchers.OccupationAndIncomeFullDomainFFetcher;
-import focuson.data.fetchers.ListOccupationsFFetcher;
 import focuson.data.fetchers.OtherIncomeResponseFFetcher;
 import focuson.data.fetchers.CreatePlanFFetcher;
 import focuson.data.fetchers.EAccountsSummaryFFetcher;
@@ -66,13 +66,13 @@ public class Wiring  implements IManyGraphQl{
       @Autowired
       List<JointAccountFFetcher> _JointAccountFFetcher;
       @Autowired
-      List<AdditionalInfoFirstFFetcher> _AdditionalInfoFirstFFetcher;
+      List<AdditionalInformationFFetcher> _AdditionalInformationFFetcher;
       @Autowired
-      List<AdditionalInfoSecondFFetcher> _AdditionalInfoSecondFFetcher;
+      List<BusinessDetailsMainFFetcher> _BusinessDetailsMainFFetcher;
+      @Autowired
+      List<DropdownsFFetcher> _DropdownsFFetcher;
       @Autowired
       List<OccupationAndIncomeFullDomainFFetcher> _OccupationAndIncomeFullDomainFFetcher;
-      @Autowired
-      List<ListOccupationsFFetcher> _ListOccupationsFFetcher;
       @Autowired
       List<OtherIncomeResponseFFetcher> _OtherIncomeResponseFFetcher;
       @Autowired
@@ -134,15 +134,12 @@ public class Wiring  implements IManyGraphQl{
           .type(newTypeWiring("Query").dataFetcher("getAccountOverview", find(_AccountOverviewFFetcher, dbName, f ->f.getAccountOverview())))
           .type(newTypeWiring("Query").dataFetcher("getAccountOverviewReason", find(_AccountOverviewReasonFFetcher, dbName, f ->f.getAccountOverviewReason())))
           .type(newTypeWiring("Query").dataFetcher("getJointAccount", find(_JointAccountFFetcher, dbName, f ->f.getJointAccount())))
-          .type(newTypeWiring("Query").dataFetcher("getAdditionalInfoFirst", find(_AdditionalInfoFirstFFetcher, dbName, f ->f.getAdditionalInfoFirst())))
-          .type(newTypeWiring("Mutation").dataFetcher("updateAdditionalInfoFirst", find(_AdditionalInfoFirstFFetcher, dbName, f ->f.updateAdditionalInfoFirst())))
-          .type(newTypeWiring("Query").dataFetcher("getAdditionalInfoSecond", find(_AdditionalInfoSecondFFetcher, dbName, f ->f.getAdditionalInfoSecond())))
-          .type(newTypeWiring("Mutation").dataFetcher("updateAdditionalInfoSecond", find(_AdditionalInfoSecondFFetcher, dbName, f ->f.updateAdditionalInfoSecond())))
+          .type(newTypeWiring("Query").dataFetcher("getAdditionalInformation", find(_AdditionalInformationFFetcher, dbName, f ->f.getAdditionalInformation())))
+          .type(newTypeWiring("Query").dataFetcher("getBusinessDetailsMain", find(_BusinessDetailsMainFFetcher, dbName, f ->f.getBusinessDetailsMain())))
+          .type(newTypeWiring("Query").dataFetcher("getDropdowns", find(_DropdownsFFetcher, dbName, f ->f.getDropdowns())))
           .type(newTypeWiring("Query").dataFetcher("getOccupationAndIncomeFullDomain", find(_OccupationAndIncomeFullDomainFFetcher, dbName, f ->f.getOccupationAndIncomeFullDomain())))
           .type(newTypeWiring("Mutation").dataFetcher("updateOccupationAndIncomeFullDomain", find(_OccupationAndIncomeFullDomainFFetcher, dbName, f ->f.updateOccupationAndIncomeFullDomain())))
-          .type(newTypeWiring("Query").dataFetcher("getListOccupations", find(_ListOccupationsFFetcher, dbName, f ->f.getListOccupations())))
           .type(newTypeWiring("Query").dataFetcher("getOtherIncomeResponse", find(_OtherIncomeResponseFFetcher, dbName, f ->f.getOtherIncomeResponse())))
-          .type(newTypeWiring("Mutation").dataFetcher("updateOtherIncomeResponse", find(_OtherIncomeResponseFFetcher, dbName, f ->f.updateOtherIncomeResponse())))
           .type(newTypeWiring("Query").dataFetcher("getCreatePlan", find(_CreatePlanFFetcher, dbName, f ->f.getCreatePlan())))
           .type(newTypeWiring("Mutation").dataFetcher("createCreatePlan", find(_CreatePlanFFetcher, dbName, f ->f.createCreatePlan())))
           .type(newTypeWiring("Mutation").dataFetcher("updateCreatePlan", find(_CreatePlanFFetcher, dbName, f ->f.updateCreatePlan())))

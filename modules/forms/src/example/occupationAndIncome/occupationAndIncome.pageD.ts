@@ -147,14 +147,13 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
     mainOrJoint: { control: "ToggleButton", value: '~/mainOrJoint', buttonText: 'Showing {~/mainOrJoint|Main|Joint}' },
     nextOccupation: { control: 'ListNextButton', value: '#selected', list: '#currentOccupation' },
     prevOccupation: { control: 'ListPrevButton', value: '#selected', list: '#currentOccupation' },
+
     addEntry: {
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'create',
       focusOn: '~/temp',
-      // restOnCommit: { rest: occupationAndIncomeRD, target: ['OccupationAndIncomeSummary'], result: 'refresh', action: 'update' },
       createEmpty: oneOccupationIncomeDetailsDD,
       setToLengthOnClose: { variable: '#selected', array: '#currentOccupation' },
       copyOnClose: { to: '#currentOccupation/[$append]' }
-      // restOnCommit: { rest: occupationAndIncomeRD, action: 'update', result: 'refresh', target: [ '' ] }
     },
     edit: {
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'edit',

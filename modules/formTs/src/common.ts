@@ -11,7 +11,7 @@ import { MyCombined } from "@focuson/form_components";
 import { HasHelloWorldMainPagePageDomain } from './HelloWorldMainPage/HelloWorldMainPage.domains';
 import { HasAccountOverviewPageDomain } from './AccountOverview/AccountOverview.domains';
 import { HasJointAccountPageDomain } from './JointAccount/JointAccount.domains';
-import { HasMainOccupationDetailsPageSummaryPageDomain } from './MainOccupationDetailsPageSummary/MainOccupationDetailsPageSummary.domains';
+import { HasOccupationAndIncomeSummaryPageDomain } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains';
 import { HasEAccountsSummaryPageDomain } from './EAccountsSummary/EAccountsSummary.domains';
 import { HasETransferPageDomain } from './ETransfer/ETransfer.domains';
 import { HasCreateEAccountPageDomain } from './CreateEAccount/CreateEAccount.domains';
@@ -23,7 +23,7 @@ export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,
   HasHelloWorldMainPagePageDomain,
   HasAccountOverviewPageDomain,
   HasJointAccountPageDomain,
-  HasMainOccupationDetailsPageSummaryPageDomain,
+  HasOccupationAndIncomeSummaryPageDomain,
   HasEAccountsSummaryPageDomain,
   HasETransferPageDomain,
   HasCreateEAccountPageDomain,
@@ -40,6 +40,7 @@ export type CommonIds = {
   createPlanId?:string;
   customerId?:string;
   dbName?:string;
+  usersRole?:string;
 }
 export const identityL = identityOptics<FState> ();
 export const commonIdsL = identityL.focusQuery('CommonIds');
@@ -50,7 +51,8 @@ export const commonIds: NameAndLens<FState> = {
    brandRef: commonIdsL.focusQuery('brandRef'),
    createPlanId: commonIdsL.focusQuery('createPlanId'),
    customerId: commonIdsL.focusQuery('customerId'),
-   dbName: commonIdsL.focusQuery('dbName')
+   dbName: commonIdsL.focusQuery('dbName'),
+   usersRole: commonIdsL.focusQuery('usersRole')
 }
 export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{
   mode: PageMode;
@@ -68,7 +70,7 @@ export const context: Context = {
    combine: MyCombined
 }
 export const emptyState: FState = {
-  CommonIds: {"applRef":"appref","createPlanId":"tbd","dbName":"mock","brandId":"custId","accountId":"custId","customerId":"custId","brandRef":"brandRef"},
+  CommonIds: {"applRef":"appref","createPlanId":"tbd","dbName":"mock","brandId":"custId","accountId":"custId","customerId":"custId","brandRef":"brandRef","usersRole":"user"},
   tags: {},
   messages: [],
   pageSelection: [{ pageName: 'HelloWorldMainPage', firstTime: true, pageMode: 'view' }],

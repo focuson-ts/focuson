@@ -25,7 +25,7 @@ import {JointAccountAddressDomain} from "../JointAccount/JointAccount.domains"
 import {JointAccountAddressesDomain} from "../JointAccount/JointAccount.domains"
 import {JointAccountCustomerDomain} from "../JointAccount/JointAccount.domains"
 export function JointAccountPage(){
-//A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/fromApi
+   //A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/fromApi
   return focusedPageWithExtraState<FState, JointAccountPageDomain, JointAccountDomain, Context> ( s => 'Joint Account' ) ( state => state.focusOn('fromApi')) (
 ( fullState, state , full, d, mode, index) => {
 const id=`page${index}`;

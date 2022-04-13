@@ -8,11 +8,11 @@ import { AccountOverviewExcessInfoFetcher } from './AccountOverview/AccountOverv
 import { AccountOverviewFetcher } from './AccountOverview/AccountOverview.fetchers';
 import { AccountOverviewReasonFetcher } from './AccountOverview/AccountOverview.fetchers';
 import { JointAccountFetcher } from './JointAccount/JointAccount.fetchers';
-import { AdditionalInfoFirstFetcher } from './MainOccupationDetailsPageSummary/MainOccupationDetailsPageSummary.fetchers';
-import { AdditionalInfoSecondFetcher } from './MainOccupationDetailsPageSummary/MainOccupationDetailsPageSummary.fetchers';
-import { OccupationAndIncomeFullDomainFetcher } from './MainOccupationDetailsPageSummary/MainOccupationDetailsPageSummary.fetchers';
-import { ListOccupationsFetcher } from './MainOccupationDetailsPageSummary/MainOccupationDetailsPageSummary.fetchers';
-import { OtherIncomeResponseFetcher } from './MainOccupationDetailsPageSummary/MainOccupationDetailsPageSummary.fetchers';
+import { AdditionalInformationFetcher } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.fetchers';
+import { BusinessDetailsMainFetcher } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.fetchers';
+import { DropdownsFetcher } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.fetchers';
+import { OccupationAndIncomeFullDomainFetcher } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.fetchers';
+import { OtherIncomeResponseFetcher } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.fetchers';
 import { EAccountsSummaryFetcher } from './EAccountsSummary/EAccountsSummary.fetchers';
 import { ChequeCreditbooksFetcher } from './ChequeCreditbooks/ChequeCreditbooks.fetchers';
 import { RepeatingWholeDataFetcher } from './Repeating/Repeating.fetchers';
@@ -35,11 +35,11 @@ fetchers: [
     AccountOverviewFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
     AccountOverviewReasonFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
     JointAccountFetcher( identityL.focusQuery ( 'JointAccount' ), commonIds ),
-    AdditionalInfoFirstFetcher( identityL.focusQuery ( 'MainOccupationDetailsPageSummary' ), commonIds ),
-    AdditionalInfoSecondFetcher( identityL.focusQuery ( 'MainOccupationDetailsPageSummary' ), commonIds ),
-    OccupationAndIncomeFullDomainFetcher( identityL.focusQuery ( 'MainOccupationDetailsPageSummary' ), commonIds ),
-    ListOccupationsFetcher( identityL.focusQuery ( 'MainOccupationDetailsPageSummary' ), commonIds ),
-    OtherIncomeResponseFetcher( identityL.focusQuery ( 'MainOccupationDetailsPageSummary' ), commonIds ),
+    AdditionalInformationFetcher( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ),
+    BusinessDetailsMainFetcher( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ),
+    DropdownsFetcher( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ),
+    OccupationAndIncomeFullDomainFetcher( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ),
+    OtherIncomeResponseFetcher( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ),
     EAccountsSummaryFetcher( identityL.focusQuery ( 'EAccountsSummary' ), commonIds ),
     ChequeCreditbooksFetcher( identityL.focusQuery ( 'ChequeCreditbooks' ), commonIds ),
     RepeatingWholeDataFetcher( identityL.focusQuery ( 'Repeating' ), commonIds ),

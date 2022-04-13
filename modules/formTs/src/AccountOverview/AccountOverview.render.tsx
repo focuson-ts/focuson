@@ -41,7 +41,7 @@ import {ArrearsDetailsDomain} from "../AccountOverview/AccountOverview.domains"
 import {ArrearsDetailsLineDomain} from "../AccountOverview/AccountOverview.domains"
 import {ArrearsDetailsLinesDomain} from "../AccountOverview/AccountOverview.domains"
 export function AccountOverviewPage(){
-//A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/main
+   //A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/main
   return focusedPageWithExtraState<FState, AccountOverviewPageDomain, AccountOverviewDomain, Context> ( s => 'Account Overview' ) ( state => state.focusOn('main')) (
 ( fullState, state , full, d, mode, index) => {
 const id=`page${index}`;

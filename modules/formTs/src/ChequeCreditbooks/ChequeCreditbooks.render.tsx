@@ -24,7 +24,7 @@ import {ChequeCreditbooksDomain} from "../ChequeCreditbooks/ChequeCreditbooks.do
 import {ChequeCreditbooksHistoryDomain} from "../ChequeCreditbooks/ChequeCreditbooks.domains"
 import {ChequeCreditbooksHistoryLineDomain} from "../ChequeCreditbooks/ChequeCreditbooks.domains"
 export function ChequeCreditbooksPage(){
-//A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/fromApi
+   //A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/fromApi
   return focusedPageWithExtraState<FState, ChequeCreditbooksPageDomain, ChequeCreditbooksDomain, Context> ( s => 'Cheque Creditbooks' ) ( state => state.focusOn('fromApi')) (
 ( fullState, state , full, d, mode, index) => {
 const id=`page${index}`;

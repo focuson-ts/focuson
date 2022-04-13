@@ -65,9 +65,9 @@ export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLe
   if ( logLevel === 'detailed' ) console.log ( "Making Typescript Files" )
   makeTsFiles<G> ( logLevel, appConfig, tsRoot, params, makeGuards, makeButtons, directorySpec ) ( pages, fullPages )
 
-  const reports = makeReportData<B,G> ( pages );
-  const criticals = makeCriticalReport ( reports );
-  const report = [ ...criticals, ...makeReport ( reports ) ]
+  const reportData = makeReportData<B, G> ( pages );
+  const criticals = makeCriticalReport ( reportData);
+  const report =makeReport ( reportData )
   console.log ( criticals.join ( "\n" ) )
   writeToFile ( `${javaOutputRoot}/report.md`, () => report )
   writeToFile ( `${tsRoot}/report.md`, () => report )
