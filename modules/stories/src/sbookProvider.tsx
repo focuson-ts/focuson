@@ -20,5 +20,6 @@ export function SBookProvider<S extends StateObject, Context> ( initialState: S,
     )
   }
 
-  return <State store={store}>{s=>component ( makeState(s) )}</State>;
+  // @ts-ignore
+    return <State store={store}>{s=>component ( makeState(s) )}</State>;
 };

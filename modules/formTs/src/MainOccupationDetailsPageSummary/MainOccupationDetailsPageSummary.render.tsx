@@ -30,7 +30,7 @@ import {OccupationAndIncomeFullDomainDomain} from "../MainOccupationDetailsPageS
 import {OneOccupationIncomeDetailsDomain} from "../MainOccupationDetailsPageSummary/MainOccupationDetailsPageSummary.domains"
 import {OtherIncomeResponseDomain} from "../MainOccupationDetailsPageSummary/MainOccupationDetailsPageSummary.domains"
 export function MainOccupationDetailsPageSummaryPage(){
-//A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/fromApi/occupationAndIncome
+   //A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/fromApi/occupationAndIncome
   return focusedPageWithExtraState<FState, MainOccupationDetailsPageSummaryPageDomain, OccupationAndIncomeFullDomainDomain, Context> ( s => 'Main Occupation Details Page Summary' ) ( state => state.focusOn('fromApi').focusOn('occupationAndIncome')) (
 ( fullState, state , full, d, mode, index) => {
 const id=`page${index}`;

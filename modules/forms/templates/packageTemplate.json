@@ -8,7 +8,7 @@
     "@focuson/focuson":  "{focusOnVersion}",
 	"@focuson/stories":  "{focusOnVersion}",
 	"@focuson/form_components":  "{focusOnVersion}",
-    "@pact-foundation/pact-node": "^10.17.1",
+    "@pact-foundation/pact-node": "^10.17.2",
     "decamelize": "^4.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -17,7 +17,8 @@
   "files": [
     "dist/"
   ],
-  "devDependencies": { "@pact-foundation/pact": "^8.2.6",
+  "devDependencies": {
+    "@pact-foundation/pact": "^9.17.3",
     "jest-watch-typeahead": "^0.6.5",
     "@sambego/storybook-state": "^2.0.1",
     "@storybook/addon-actions": "^6.4.4",

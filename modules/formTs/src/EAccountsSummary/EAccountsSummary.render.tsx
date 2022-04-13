@@ -27,7 +27,7 @@ import {EAccountsSummaryDomain} from "../EAccountsSummary/EAccountsSummary.domai
 import {EAccountsSummaryTableDomain} from "../EAccountsSummary/EAccountsSummary.domains"
 import {EAccountSummaryDomain} from "../EAccountsSummary/EAccountsSummary.domains"
 export function EAccountsSummaryPage(){
-//A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/fromApi
+   //A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/fromApi
   return focusedPageWithExtraState<FState, EAccountsSummaryPageDomain, EAccountsSummaryDomain, Context> ( s => 'E Accounts Summary' ) ( state => state.focusOn('fromApi')) (
 ( fullState, state , full, d, mode, index) => {
 const id=`page${index}`;
