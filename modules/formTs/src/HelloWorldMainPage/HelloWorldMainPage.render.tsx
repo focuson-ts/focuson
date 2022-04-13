@@ -20,7 +20,8 @@ import {ValidationButton} from '@focuson/form_components';
 import {HelloWorldMainPagePageDomain} from "../HelloWorldMainPage/HelloWorldMainPage.domains";
 import {HelloWorldDomainDataDomain} from "../HelloWorldMainPage/HelloWorldMainPage.domains"
 export function HelloWorldMainPagePage(){
-  return focusedPageWithExtraState<FState, HelloWorldMainPagePageDomain, HelloWorldDomainDataDomain, Context> ( s => 'Hello World Main Page' ) ( state => state.focusOn('fromApi')) (
+//A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/main
+  return focusedPageWithExtraState<FState, HelloWorldMainPagePageDomain, HelloWorldDomainDataDomain, Context> ( s => 'Hello World Main Page' ) ( state => state.focusOn('main')) (
 ( fullState, state , full, d, mode, index) => {
 const id=`page${index}`;
   const buttons ={}

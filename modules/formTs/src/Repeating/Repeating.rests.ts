@@ -10,6 +10,7 @@ export function Repeating_RepeatingWholeDataRestDetails ( cd: NameAndLens<FState
   const fdd: NameAndLens<domains.RepeatingPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('Repeating'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is repeating and the path specified is ~/fromApi
     dLens: Lenses.identity<domains.RepeatingPageDomain>().focusQuery('fromApi'),
     cd, fdd,
     ids: ["customerId"],

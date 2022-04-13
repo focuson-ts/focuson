@@ -23,6 +23,7 @@ import {ValidationButton} from '@focuson/form_components';
 import {CreateEAccountPageDomain} from "../CreateEAccount/CreateEAccount.domains";
 import {CreateEAccountDataDomain} from "../CreateEAccount/CreateEAccount.domains"
 export function CreateEAccountPage(){
+//A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/editing
   return focusedPageWithExtraState<FState, CreateEAccountPageDomain, CreateEAccountDataDomain, Context> ( s => 'Create E Account' ) ( state => state.focusOn('editing')) (
 ( fullState, state , full, d, mode, index) => {
 const id=`page${index}`;

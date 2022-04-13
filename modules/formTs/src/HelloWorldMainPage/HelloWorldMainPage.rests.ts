@@ -10,6 +10,7 @@ export function HelloWorldMainPage_HelloWorldDomainDataRestDetails ( cd: NameAnd
   const fdd: NameAndLens<domains.HelloWorldMainPagePageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('HelloWorldMainPage'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is restDataRD and the path specified is ~/fromApi
     dLens: Lenses.identity<domains.HelloWorldMainPagePageDomain>().focusQuery('fromApi'),
     cd, fdd,
     ids: [],

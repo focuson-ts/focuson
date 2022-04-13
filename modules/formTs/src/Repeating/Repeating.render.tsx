@@ -23,6 +23,7 @@ import {RepeatingPageDomain} from "../Repeating/Repeating.domains";
 import {RepeatingLineDomain} from "../Repeating/Repeating.domains"
 import {RepeatingWholeDataDomain} from "../Repeating/Repeating.domains"
 export function RepeatingPage(){
+//A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/fromApi
   return focusedPageWithExtraState<FState, RepeatingPageDomain, RepeatingWholeDataDomain, Context> ( s => 'Repeating' ) ( state => state.focusOn('fromApi')) (
 ( fullState, state , full, d, mode, index) => {
   const nextOccupationGuard =  pageState(state)<domain.RepeatingPageDomain>().focusOn('selectedItem').optJsonOr(0) <  pageState(state)<domain.RepeatingPageDomain>().focusOn('fromApi').optJsonOr([]).length - 1

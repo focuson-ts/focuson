@@ -25,7 +25,7 @@ const Template: Story<StoryState> = ( args: StoryState ) =>{
   const pageDetails: any = pages[ 'HelloWorldMainPage' ];
   const initial = pageDetails.initialValue?pageDetails.initialValue:{}
   const rawState: FState = { ...emptyState, pageSelection: [ pageSelection ( args.pageMode ) ], HelloWorldMainPage: initial }
-  const startState=Lenses.identity<FState>().focusQuery('HelloWorldMainPage').focusQuery('fromApi').set(rawState, args.domain)
+  const startState=Lenses.identity<FState>().focusQuery('HelloWorldMainPage').focusQuery('main').set(rawState, args.domain)
   return SBookProvider<FState, Context> (startState, context,
      s => findOneSelectedPageDetails ( s, pageDetails.lens) (pageSelection(args.pageMode), 0).element );}
  

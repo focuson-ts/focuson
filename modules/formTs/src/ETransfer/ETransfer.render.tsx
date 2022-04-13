@@ -23,6 +23,7 @@ import {ValidationButton} from '@focuson/form_components';
 import {ETransferPageDomain} from "../ETransfer/ETransfer.domains";
 import {ETransferDataDDomain} from "../ETransfer/ETransfer.domains"
 export function ETransferPage(){
+//A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/fromApi
   return focusedPageWithExtraState<FState, ETransferPageDomain, ETransferDataDDomain, Context> ( s => 'E Transfer' ) ( state => state.focusOn('fromApi')) (
 ( fullState, state , full, d, mode, index) => {
 const id=`page${index}`;

@@ -6,7 +6,7 @@ import { makeTsFiles } from "./makeTsFiles";
 import { AllButtonsInPage, ButtonD } from "../buttons/allButtons";
 import { AllGuards, GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { MakeButton } from "../codegen/makeButtons";
-import { AppConfig, generatedPages } from "../focuson.config";
+import { AppConfig } from "../focuson.config";
 import { validate } from "./validateModel";
 import { unique } from "../common/restD";
 import { GenerateLogLevel, safeArray } from "@focuson/utils";
@@ -65,7 +65,7 @@ export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLe
   if ( logLevel === 'detailed' ) console.log ( "Making Typescript Files" )
   makeTsFiles<G> ( logLevel, appConfig, tsRoot, params, makeGuards, makeButtons, directorySpec ) ( pages, fullPages )
 
-  const reports = makeReportData<AllButtonsInPage<AllGuards>, AllGuards> ( generatedPages );
+  const reports = makeReportData<B,G> ( pages );
   const criticals = makeCriticalReport ( reports );
   const report = [ ...criticals, ...makeReport ( reports ) ]
   console.log ( criticals.join ( "\n" ) )

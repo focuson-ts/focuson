@@ -10,6 +10,7 @@ export function MainOccupationDetailsPageSummary_AdditionalInfoFirstRestDetails 
   const fdd: NameAndLens<domains.MainOccupationDetailsPageSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('MainOccupationDetailsPageSummary'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is additionalInfoFirstRD and the path specified is ~/fromApi/additionalInfoFirst
     dLens: Lenses.identity<domains.MainOccupationDetailsPageSummaryPageDomain>().focusQuery('fromApi').focusQuery('additionalInfoFirst'),
     cd, fdd,
     ids: ["customerId"],
@@ -24,6 +25,7 @@ export function MainOccupationDetailsPageSummary_AdditionalInfoSecondRestDetails
   const fdd: NameAndLens<domains.MainOccupationDetailsPageSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('MainOccupationDetailsPageSummary'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is additionalInfoSecondRD and the path specified is ~/fromApi/additionalInfoSecond
     dLens: Lenses.identity<domains.MainOccupationDetailsPageSummaryPageDomain>().focusQuery('fromApi').focusQuery('additionalInfoSecond'),
     cd, fdd,
     ids: ["customerId"],
@@ -38,6 +40,7 @@ export function MainOccupationDetailsPageSummary_OccupationAndIncomeFullDomainRe
   const fdd: NameAndLens<domains.MainOccupationDetailsPageSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('MainOccupationDetailsPageSummary'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is occupationAndIncomeRD and the path specified is ~/fromApi/occupationAndIncome
     dLens: Lenses.identity<domains.MainOccupationDetailsPageSummaryPageDomain>().focusQuery('fromApi').focusQuery('occupationAndIncome'),
     cd, fdd,
     ids: ["customerId"],
@@ -52,6 +55,7 @@ export function MainOccupationDetailsPageSummary_ListOccupationsRestDetails ( cd
   const fdd: NameAndLens<domains.MainOccupationDetailsPageSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('MainOccupationDetailsPageSummary'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is occupationsListRD and the path specified is ~/fromApi/occupationsList
     dLens: Lenses.identity<domains.MainOccupationDetailsPageSummaryPageDomain>().focusQuery('fromApi').focusQuery('occupationsList'),
     cd, fdd,
     ids: ["customerId"],
@@ -66,6 +70,7 @@ export function MainOccupationDetailsPageSummary_OtherIncomeResponseRestDetails 
   const fdd: NameAndLens<domains.MainOccupationDetailsPageSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('MainOccupationDetailsPageSummary'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is otherSourcesOfIncomeRD and the path specified is ~/fromApi/otherSourcesOfIncome
     dLens: Lenses.identity<domains.MainOccupationDetailsPageSummaryPageDomain>().focusQuery('fromApi').focusQuery('otherSourcesOfIncome'),
     cd, fdd,
     ids: ["customerId"],

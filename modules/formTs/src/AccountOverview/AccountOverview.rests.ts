@@ -10,6 +10,7 @@ export function AccountOverview_AccountAllFlagsRestDetails ( cd: NameAndLens<FSt
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is accountFlags and the path specified is ~/accountFlags
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('accountFlags'),
     cd, fdd,
     ids: ["accountId","customerId"],
@@ -24,6 +25,7 @@ export function AccountOverview_ArrearsDetailsRestDetails ( cd: NameAndLens<FSta
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {startDate: Lenses.identity< domains.AccountOverviewPageDomain>().focusQuery('currentSelectedExcessHistory').focusQuery('start')}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is arrearsDetailsCurrent and the path specified is ~/arrearsDetailsCurrent
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('arrearsDetailsCurrent'),
     cd, fdd,
     ids: ["accountId","customerId","startDate"],
@@ -38,6 +40,7 @@ export function AccountOverview_previous_ArrearsDetailsRestDetails ( cd: NameAnd
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {startDate: Lenses.identity< domains.AccountOverviewPageDomain>().focusQuery('currentSelectedExcessHistory').focusQuery('start')}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is arrearsDetailsPrevious and the path specified is ~/arrearsDetailsPrevious
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('arrearsDetailsPrevious'),
     cd, fdd,
     ids: ["accountId","customerId","startDate"],
@@ -52,6 +55,7 @@ export function AccountOverview_AccountOverviewHistoryRestDetails ( cd: NameAndL
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is excessHistory and the path specified is ~/excessHistory
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('excessHistory'),
     cd, fdd,
     ids: ["accountId","customerId"],
@@ -66,6 +70,7 @@ export function AccountOverview_AccountOverviewExcessInfoRestDetails ( cd: NameA
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is excessInfo and the path specified is ~/excessInfo
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('excessInfo'),
     cd, fdd,
     ids: ["accountId","customerId"],
@@ -80,6 +85,7 @@ export function AccountOverview_AccountOverviewRestDetails ( cd: NameAndLens<FSt
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is main and the path specified is ~/main
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('main'),
     cd, fdd,
     ids: ["accountId","customerId"],
@@ -94,6 +100,7 @@ export function AccountOverview_AccountOverviewReasonRestDetails ( cd: NameAndLe
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is reason and the path specified is ~/reason
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('reason'),
     cd, fdd,
     ids: ["accountId","customerId"],

@@ -10,6 +10,7 @@ export function ETransfer_ETransferDataDRestDetails ( cd: NameAndLens<FState>, d
   const fdd: NameAndLens<domains.ETransferPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('ETransfer'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is eTransfer and the path specified is ~/fromApi
     dLens: Lenses.identity<domains.ETransferPageDomain>().focusQuery('fromApi'),
     cd, fdd,
     ids: ["customerId"],

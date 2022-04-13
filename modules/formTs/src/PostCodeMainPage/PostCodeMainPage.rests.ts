@@ -10,6 +10,7 @@ export function PostCodeMainPage_PostCodeNameAndAddressRestDetails ( cd: NameAnd
   const fdd: NameAndLens<domains.PostCodeMainPagePageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('PostCodeMainPage'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is address and the path specified is ~/main
     dLens: Lenses.identity<domains.PostCodeMainPagePageDomain>().focusQuery('main'),
     cd, fdd,
     ids: [],
@@ -24,6 +25,7 @@ export function PostCodeMainPage_PostCodeDataRestDetails ( cd: NameAndLens<FStat
   const fdd: NameAndLens<domains.PostCodeMainPagePageDomain> = {postcode: Lenses.identity< domains.PostCodeMainPagePageDomain>().focusQuery('postcode').focusQuery('search')}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('PostCodeMainPage'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is postcode and the path specified is ~/postcode/searchResults
     dLens: Lenses.identity<domains.PostCodeMainPagePageDomain>().focusQuery('postcode').focusQuery('searchResults'),
     cd, fdd,
     ids: ["postcode"],

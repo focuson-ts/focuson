@@ -10,6 +10,7 @@ export function ChequeCreditbooks_ChequeCreditbooksRestDetails ( cd: NameAndLens
   const fdd: NameAndLens<domains.ChequeCreditbooksPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('ChequeCreditbooks'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is chequeCreditBooks and the path specified is ~/fromApi
     dLens: Lenses.identity<domains.ChequeCreditbooksPageDomain>().focusQuery('fromApi'),
     cd, fdd,
     ids: ["accountId","applRef","brandRef","customerId"],
