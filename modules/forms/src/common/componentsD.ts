@@ -138,3 +138,20 @@ export const LabelAndTextAreaCD: DisplayCompD = {
   name: "TextAreaInput",
   params: { ...commonParamsWithLabel, ...enumParams }
 }
+
+export const TableWithCheckboxInputCD: DisplayCompD = {
+  import: '@focuson/form_components',
+  name: "TableWithCheckboxInput",
+  params: {
+    ...commonParams,
+    order: { paramType: 'string[]', needed: 'yes' },
+    copySelectedIndexTo: { paramType: 'pageState', needed: 'no' },
+    copySelectedItemTo: { paramType: 'pageState', needed: 'no' }
+  }
+}
+
+export const UnpaidCardOrMisuseItemsCD: DisplayCompD = {
+  import: '@focuson/form_components',
+  name: "PlusMinusButtonsAndInput",
+  params: { ...commonParamsWithLabel, ...intValidationParams, flags: { paramType: "pageState", needed: "yes" } },
+}

@@ -1,23 +1,22 @@
-import { ExampleDataD, ExampleRepeatingD } from "../common";
-import { EAccountDisplayTypeDD } from "../eAccounts/eAccountsSummary.dataD";
 import { yesNoDD } from "../occupationAndIncome/occupationAndIncome.dataD";
+import { ExampleDataD, ExampleRepeatingD } from "../common";
+import { BooleanDD, DateDD, IntegerDD, MoneyDD, NatNumDd, OneLineStringDD, ManyLineStringDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
+import { EAccountDisplayTypeDD } from "../eAccounts/eAccountsSummary.dataD";
+import { PaymentTypeDd } from "../commonEnums";
 import {
-  commonParamsWithLabel,
-  DisplayCompD, intValidationParams, LabelAndDropDownCD,
+  LabelAndDropDownCD,
   LayoutCd,
   TableCD,
-  TableWithCheckboxInputCD
+  TableWithCheckboxInputCD,
+  UnpaidCardOrMisuseItemsCD
 } from "../../common/componentsD";
-import {NatNumDd, PaymentTypeDd} from "../commonEnums";
-import {
-  BooleanDD,
-  DateDD, IntegerDD,
-  ManyLineStringDD,
-  MoneyDD,
-  OneLineStringDD,
-  StringDD,
-  StringPrimitiveDD
-} from "../../common/dataD";
+
+// import { ExampleDataD, ExampleRepeatingD, NatNumDd, PaymentTypeDd } from "../common";
+// import { BooleanDD, DateDD, IntegerDD, ManyLineStringDD, MoneyDD, OneLineStringDD, StringDD, StringPrimitiveDD } from "@focuson/forms";
+// import { EAccountDisplayTypeDD } from "../eAccount/eAccountsSummary.dataD";
+// import { yesNoDD } from "../occupationAndIncome/occupationAndIncome.dataD";
+// import { commonParamsWithLabel, DisplayCompD, intValidationParams, LabelAndDropDownCD, TableCD } from "@focuson/forms/dist/src/common/componentsD";
+// import { TableWithCheckboxInputCD } from "../../forms/tableWithCheckboxInputD"
 
 export const accountOverviewFacilitiesLineDataD: ExampleDataD = {
   name: "AccountOverviewFacilitiesLine",
@@ -51,7 +50,7 @@ export const accountOverviewFacilitiesDataD: ExampleDataD = {
 }
 
 const accountOneFlagDD: ExampleDataD = {
-  name: "OccountOneFlag",
+  name: "AccountOneFlag",
   description: "One flag from the backend, with the 'type' so that we know how to display",
   // display: LabelAndStringInputCD,
   structure: {
@@ -204,12 +203,6 @@ const accountOverviewCriteriaDataD: ExampleRepeatingD = {
   display: TableCD,
   displayParams: { order: [ "criteria" ] },
   dataDD: accountOverviewCriteriaLineDataD
-}
-
-export const UnpaidCardOrMisuseItemsCD: DisplayCompD = {
-  import: "../formComponents/plusMinusButtonsAndInput",
-  name: "PlusMinusButtonsAndInput",
-  params: { ...commonParamsWithLabel, ...intValidationParams, flags: { paramType: "pageState", needed: "yes" } },
 }
 
 export const agreementTypeDD: StringPrimitiveDD = {
