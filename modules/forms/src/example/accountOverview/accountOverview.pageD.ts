@@ -1,12 +1,12 @@
 import { ExampleMainPage, ExampleModalPage } from "../common";
-import { accountAllFlagsDataDD, accountOverviewDataD, accountOverviewExcessHistoryDataD, accountOverviewExcessHistoryLineDataD, accountOverviewExcessInfoDataD, accountOverviewReasonDataD, arrearsDetailsDataD } from "./accountOverview.dataD";
-import { accountFlagsRestDD, accountOverviewExcessHistoryRestD, accountOverviewExcessInfoRestD, accountOverviewReasonRestD, accountOverviewRestD, arrearsDetailsCurrentRestD, arrearsDetailsPreviousRestD } from "./accountOverview.restD";
-import { HideButtonsCD } from "../../buttons/hideButtonsCD";
+import { accountAllFlagsDataDD, accountOverviewAgreementTypeDataD, accountOverviewDataD, accountOverviewExcessHistoryDataD, accountOverviewExcessHistoryLineDataD, accountOverviewExcessInfoDataD, accountOverviewOptOutDataD, accountOverviewReasonDataD, arrearsDetailsDataD } from "./accountOverview.dataD";
+import { accountFlagsRestDD, accountOverviewAgreementTypeRestDD, accountOverviewExcessHistoryRestD, accountOverviewExcessInfoRestD, accountOverviewOptOutRestDD, accountOverviewReasonRestD, accountOverviewRestD, arrearsDetailsRestD } from "./accountOverview.restD";
+import {HideButtonsCD} from "../../buttons/hideButtonsCD";
 
 export const ArrearsDetailsModalPage: ExampleModalPage = {
   name: "ArrearsDetails",
   pageType: "ModalPage",
-  display: { dataDD: arrearsDetailsDataD, target: '~/' },
+  display: { dataDD: arrearsDetailsDataD, target: '~/', importFrom: 'AccountOverview' },
   modes: [ 'view' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' }
@@ -16,7 +16,7 @@ export const ArrearsDetailsModalPage: ExampleModalPage = {
 export const ExcessHistoryModalPage: ExampleModalPage = {
   name: "ExcessHistory",
   pageType: "ModalPage",
-  display: { dataDD: accountOverviewExcessHistoryDataD, target: '~/' },
+  display: { dataDD: accountOverviewExcessHistoryDataD, target: '~/', importFrom: 'AccountOverview' },
   modes: [ 'view' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -28,7 +28,7 @@ export const ExcessHistoryModalPage: ExampleModalPage = {
 export const ExcessInfoModalPage: ExampleModalPage = {
   name: "ExcessInfoSearch",
   pageType: "ModalPage",
-  display: { dataDD: accountOverviewExcessInfoDataD, target: '~/'},
+  display: { dataDD: accountOverviewExcessInfoDataD, target: '~/', importFrom: 'AccountOverview' },
   modes: [ 'view' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -38,7 +38,7 @@ export const ExcessInfoModalPage: ExampleModalPage = {
 export const ReasonModalPage: ExampleModalPage = {
   name: "Reason",
   pageType: "ModalPage",
-  display: { dataDD: accountOverviewReasonDataD, target: '~/'},
+  display: { dataDD: accountOverviewReasonDataD, target: '~/', importFrom: 'AccountOverview' },
   modes: [ 'view' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -48,7 +48,29 @@ export const ReasonModalPage: ExampleModalPage = {
 export const AccountFlagsModalPage: ExampleModalPage = {
   name: "AccountFlags",
   pageType: "ModalPage",
-  display: { dataDD: accountAllFlagsDataDD, target: '~/' },
+  display: { dataDD: accountAllFlagsDataDD, target: '~/', importFrom: 'AccountOverview' },
+  modes: [ 'view' ],
+  buttons: {
+    cancel: { control: 'ModalCancelButton' },
+    commit: { control: 'ModalCommitButton' }
+  },
+}
+
+export const OptOutModalPage: ExampleModalPage = {
+  name: "OptOut",
+  pageType: "ModalPage",
+  display: { dataDD: accountOverviewOptOutDataD, target: '~/', importFrom: 'AccountOverview' },
+  modes: [ 'view' ],
+  buttons: {
+    cancel: { control: 'ModalCancelButton' },
+    commit: { control: 'ModalCommitButton' }
+  },
+}
+
+export const AgreementTypeModalPage: ExampleModalPage = {
+  name: "AgreementType",
+  pageType: "ModalPage",
+  display: { dataDD: accountOverviewAgreementTypeDataD, target: '~/', importFrom: 'AccountOverview' },
   modes: [ 'view' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -66,17 +88,20 @@ export const AccountOverviewMainPage: ExampleMainPage = {
     reason: { dataDD: accountOverviewReasonDataD },
     excessHistory: { dataDD: accountOverviewExcessHistoryDataD },
     currentSelectedExcessHistory: { dataDD: accountOverviewExcessHistoryLineDataD },
-    arrearsDetailsCurrent: { dataDD: arrearsDetailsDataD },
-    arrearsDetailsPrevious: { dataDD: arrearsDetailsDataD },
+    arrearsDetails: { dataDD: arrearsDetailsDataD },
     accountFlags: { dataDD: accountAllFlagsDataDD }, //the rest code gets the account flags and puts it here
-    editingAccountFlags: { dataDD: accountAllFlagsDataDD } //when we open the modal window we copy it here
+    editingAccountFlags: { dataDD: accountAllFlagsDataDD }, //when we open the modal window we copy it here
+    optOut: { dataDD: accountOverviewOptOutDataD },
+    agreementType: { dataDD: accountOverviewAgreementTypeDataD },
   },
-  initialValue: undefined,
+  initialValue: {},
   modals: [ { modal: ExcessInfoModalPage },
     { modal: ReasonModalPage },
-    { modal: ExcessHistoryModalPage },
+    { modal: ExcessHistoryModalPage},
     { modal: ArrearsDetailsModalPage },
-    { modal: AccountFlagsModalPage }
+    { modal: AccountFlagsModalPage },
+    { modal: OptOutModalPage },
+    { modal: AgreementTypeModalPage }
   ],
   modes: [ 'view' ],
   rest: {
@@ -84,11 +109,12 @@ export const AccountOverviewMainPage: ExampleMainPage = {
     excessInfo: { rest: accountOverviewExcessInfoRestD, targetFromPath: '~/excessInfo', fetcher: true },
     reason: { rest: accountOverviewReasonRestD, targetFromPath: '~/reason', fetcher: true },
     excessHistory: { rest: accountOverviewExcessHistoryRestD, targetFromPath: '~/excessHistory', fetcher: true },
-    arrearsDetailsCurrent: { rest: arrearsDetailsCurrentRestD, targetFromPath: '~/arrearsDetailsCurrent', fetcher: true },
-    arrearsDetailsPrevious: { rest: arrearsDetailsPreviousRestD, targetFromPath: '~/arrearsDetailsPrevious', fetcher: true },
-    accountFlags: { rest: accountFlagsRestDD, targetFromPath: '~/accountFlags', fetcher: true }
+    arrearsDetails: { rest: arrearsDetailsRestD, targetFromPath: '~/arrearsDetails', fetcher: true },
+    accountFlags: { rest: accountFlagsRestDD, targetFromPath: '~/accountFlags', fetcher: true },
+    optOut: { rest: accountOverviewOptOutRestDD, targetFromPath: '~/optOut', fetcher: true },
+    agreementType: { rest: accountOverviewAgreementTypeRestDD, targetFromPath: '~/agreementType', fetcher: true },
   },
-  layout: { component: HideButtonsCD, displayParams: { hide: [ 'excessHistory', 'reason' ] } },
+  layout: {component: HideButtonsCD, displayParams: {hide: ['reason', 'arrearsDetails',  'excessHistory']}},
   buttons: {
     excessInfo: {
       control: 'ModalButton', modal: ExcessInfoModalPage, mode: 'view',
@@ -100,7 +126,11 @@ export const AccountOverviewMainPage: ExampleMainPage = {
     },
     excessHistory: {
       control: 'ModalButton', modal: ExcessHistoryModalPage, mode: 'view',
-      focusOn: '~/excessHistory'
+      focusOn:  '~/excessHistory'
+    },
+    arrearsDetails: {
+      control: 'ModalButton', modal: ArrearsDetailsModalPage, mode: 'view',
+      focusOn: '~/arrearsDetails'
     },
     flags: {
       control: 'ModalButton', modal: AccountFlagsModalPage, mode: 'edit',
@@ -109,6 +139,13 @@ export const AccountOverviewMainPage: ExampleMainPage = {
       // restOnCommit: {rest: accountFlagsRestDD, action: 'update', result: 'refresh'},
       focusOn: '~/editingAccountFlags'
     },
+    optOut: {
+      control: 'ModalButton', modal: OptOutModalPage, mode: 'view',
+      focusOn: '~/optOut'
+    },
+    agreementType: {
+      control: 'ModalButton', modal: AgreementTypeModalPage, mode: 'view',
+      focusOn: '~/agreementType'
+    },
   }
 }
-

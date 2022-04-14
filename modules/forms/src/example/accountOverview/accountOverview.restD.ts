@@ -1,8 +1,7 @@
-import { accountAllFlagsDataDD, accountOverviewDataD, accountOverviewExcessHistoryDataD, accountOverviewExcessInfoDataD, accountOverviewReasonDataD, arrearsDetailsDataD } from "./accountOverview.dataD";
-
 import { ExampleRestD } from "../common";
 import { commonParams } from "../eAccounts/eAccountsSummary.restD";
-import { RestParams, StringParam } from "../../common/restD";
+import { accountAllFlagsDataDD, accountOverviewAgreementTypeDataD, accountOverviewDataD, accountOverviewExcessHistoryDataD, accountOverviewExcessInfoDataD, accountOverviewOptOutDataD, accountOverviewReasonDataD, arrearsDetailsDataD } from "./accountOverview.dataD";
+import {RestParams, StringParam} from "../../common/restD";
 
 export const accountOverviewRestD: ExampleRestD = {
   params: commonParams,
@@ -34,20 +33,13 @@ export const accountOverviewExcessHistoryRestD: ExampleRestD = {
 
 export const arrearsDetailsParams: RestParams = {
   ...commonParams,
-  startDate: { ...StringParam, lens: '~/currentSelectedExcessHistory/start', testValue: '2020-01-20' }
+  startDate: {...StringParam, lens: '~/currentSelectedExcessHistory/start', testValue: '2020-01-20' }
 }
 
-export const arrearsDetailsCurrentRestD: ExampleRestD = {
+export const arrearsDetailsRestD: ExampleRestD = {
   params: arrearsDetailsParams,
   dataDD: arrearsDetailsDataD,
-  url: '/api/accountOverview/arrearsDetails/current?{query}',
-  actions: [ 'get' ]
-}
-export const arrearsDetailsPreviousRestD: ExampleRestD = {
-  namePrefix: 'previous',
-  params: arrearsDetailsParams,
-  dataDD: arrearsDetailsDataD,
-  url: '/api/accountOverview/arrearsDetails/previous?{query}',
+  url: '/api/accountOverview/arrearsDetails?{query}',
   actions: [ 'get' ]
 }
 
@@ -55,5 +47,19 @@ export const accountFlagsRestDD: ExampleRestD = {
   params: commonParams,
   dataDD: accountAllFlagsDataDD,
   url: '/api/accountOverview/flags?{query}',
+  actions: [ 'get' ]
+}
+
+export const accountOverviewOptOutRestDD: ExampleRestD = {
+  params: commonParams,
+  dataDD: accountOverviewOptOutDataD,
+  url: '/api/accountOverview/optOut?{query}',
+  actions: [ 'get' ]
+}
+
+export const accountOverviewAgreementTypeRestDD: ExampleRestD = {
+  params: commonParams,
+  dataDD: accountOverviewAgreementTypeDataD,
+  url: '/api/accountOverview/agreementType?{query}',
   actions: [ 'get' ]
 }
