@@ -7,18 +7,29 @@ import { GuardWithCondition, isGuardButton } from "../buttons/guardButton";
 import { CompDataD, emptyDataFlatMap, flatMapDD, isComdDD } from "../common/dataD";
 import { isCommonLens, RestParams, unique } from "../common/restD";
 
-export function makeReportData<B extends ButtonD, G extends GuardWithCondition> ( ps: PageD<B, G>[] ): Report<B, G>[] {
-  return ps.map ( makeReportFor )
+export interface FullReport<B, G> {
+  reports: Report<B, G>[];
+  criticals: string[]
 }
 
-export function makeCriticalReport<B, G> ( reports: Report<B, G>[] ): string[] {
-  let criticals = reports.flatMap ( ( { page, details } ) => criticalSummary ( page, details ) );
+function makeFullReportCriticals<B, G> ( ps: MainPageD<B, G>[] ) {
+  const allpages = ps.flatMap ( p => [ p.name, ...safeArray ( p.modals ).map ( m => m.modal.name ) ] )
+  return findDuplicates ( allpages, p => p ).map ( name => `CRITICAL Multiple pages with name ${name}` )
+}
+export function makeReportData<B extends ButtonD, G extends GuardWithCondition> ( ps: MainPageD<B, G>[] ): FullReport<B, G> {
+  let reports: Report<B, G>[] = ps.map ( makeReportFor );
+  return { reports, criticals: makeFullReportCriticals ( ps ) }
+}
+
+export function makeCriticalReport<B, G> ( report: FullReport<B, G> ): string[] {
+  let criticals = [ ...report.criticals, ...report.reports.flatMap ( ( { page, details } ) => criticalSummary ( page, details ) ) ];
   if ( criticals.length > 0 ) return [ '# Critical Issues', ...criticals, '', '---' ]
   return [];
 }
 
-export function makeReportHeader<B, G> ( reports: Report<B, G>[] ): string[] {
-  const critical = makeCriticalReport ( reports )
+export function makeReportHeader<B, G> ( report: FullReport<B, G> ): string[] {
+  const { reports } = report
+  const critical = makeCriticalReport ( report )
   const rests = [
     `# All endpoints`,
     `| Page | Rest | Url | Params |`,
@@ -28,9 +39,10 @@ export function makeReportHeader<B, G> ( reports: Report<B, G>[] ): string[] {
   return [ `# All Pages`, ...critical, ...paramsAndHeader, ...rests, '', '---' ];
 }
 
-export function makeReport<B extends ButtonD, G extends GuardWithCondition> ( reports: Report<B, G>[] ): string[] {
+export function makeReport<B extends ButtonD, G extends GuardWithCondition> ( report: FullReport<B, G> ): string[] {
+  const { reports } = report
   const main = reports.flatMap ( ( r ) => format ( r ) )
-  const header = makeReportHeader ( reports )
+  const header = makeReportHeader ( report )
   return [ ...header, ...main, ]
 }
 
@@ -90,7 +102,7 @@ function justCommonParams ( ps: RestParams[] ): NameAnd<string> {
 
 }
 
-export function makeReportFor<B extends ButtonD, G extends GuardWithCondition> ( page: PageD<B, G> ): Report<B, G> {
+export function makeReportFor<B extends ButtonD, G extends GuardWithCondition> ( page: MainPageD<B, G> ): Report<B, G> {
   const info = makeReportInfo ( page )
   const details: ReportDetails[] = isMainPage ( page ) ?
     [ makeDomainReport ( page, info ),
@@ -122,6 +134,15 @@ export function makeRestReport<B, G> ( page: MainPageD<B, G>, info: ReportInfo )
   return { part: 'rests', headers: [ 'name', 'url', 'params' ], general, critical }
 
 }
+
+function findDuplicates<T> ( ts: T[], fn: ( t: T ) => string ): T[] {
+  const existingNames = new Set<String> ()
+  let dups = [ ...ts ].filter ( t => {
+    if ( existingNames.has ( fn ( t ) ) ) return true;
+    existingNames.add ( fn ( t ) )
+  } );
+  return dups
+}
 export function makeDomainReport<B, G> ( page: MainPageD<B, G>, { generatedDomainNames }: ReportInfo ): ReportDetails {
   const rootObjects: Set<CompDataD<G>> = new Set ()
   sortedEntries ( page.domain ).forEach ( ( [ name, obj ] ) => {if ( isComdDD ( obj.dataDD ) ) rootObjects.add ( obj.dataDD ) } )
@@ -134,10 +155,7 @@ export function makeDomainReport<B, G> ( page: MainPageD<B, G>, { generatedDomai
     walkRepStart: ( path, parents, oneDataDD, dataDD ) => [ dataDD ]
   } ).forEach ( d => objects.add ( d ) ) )
   const existingNames = new Set<String> ()
-  let dups = [ ...objects ].filter ( o => {
-    if ( existingNames.has ( o.name ) ) return true;
-    existingNames.add ( o.name )
-  } );
+  let dups = findDuplicates ( [ ...objects ], o => o.name );
   const duplicates = dups.map ( d => `CRITICAL duplicate name in dataD ${d.name}` )
 
   return { part: 'domains', headers: [], general: generatedDomainNames, critical: duplicates };
