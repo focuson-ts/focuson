@@ -38,7 +38,30 @@ export const emptyAccountOverview:domains.AccountOverviewDomain =
     "zFlagSet": "",
     "excessSixMonths": 0,
     "bouncedDDs12Months": 0,
-    "unpaidCardOrMisuseItems": 0
+    "unpaidCardOrMisuseItems": 0,
+    "currentBalance": 0,
+    "currentInterestRate": 0,
+    "facilities": {
+      "facilities": [
+        {
+          "facility": 0,
+          "changeDate": "2022-1-1",
+          "unApproved": false,
+          "reason": "",
+          "amount": 0
+        }
+      ]
+    },
+    "highBalance": 0,
+    "lowBalance": 0,
+    "pctOfFacility": 0,
+    "eightyPctFacility": 0,
+    "eightyFivePctFacility": 0
+  }
+export const emptyAccountOverviewAgreementType:domains.AccountOverviewAgreementTypeDomain =
+  {
+    "agreementType": "",
+    "transactionHeading": ""
   }
 export const emptyAccountOverviewCriteria:domains.AccountOverviewCriteriaDomain =
   [
@@ -72,6 +95,36 @@ export const emptyAccountOverviewExcessLines:domains.AccountOverviewExcessLinesD
       "consecutiveDays": 0
     }
   ]
+export const emptyAccountOverviewFacilities:domains.AccountOverviewFacilitiesDomain =
+  {
+    "facilities": [
+      {
+        "facility": 0,
+        "changeDate": "2022-1-1",
+        "unApproved": false,
+        "reason": "",
+        "amount": 0
+      }
+    ]
+  }
+export const emptyAccountOverviewFacilitiesLine:domains.AccountOverviewFacilitiesLineDomain =
+  {
+    "facility": 0,
+    "changeDate": "2022-1-1",
+    "unApproved": false,
+    "reason": "",
+    "amount": 0
+  }
+export const emptyAccountOverviewFacilitiesLines:domains.AccountOverviewFacilitiesLinesDomain =
+  [
+    {
+      "facility": 0,
+      "changeDate": "2022-1-1",
+      "unApproved": false,
+      "reason": "",
+      "amount": 0
+    }
+  ]
 export const emptyAccountOverviewHistory:domains.AccountOverviewHistoryDomain =
   {
     "history": [
@@ -82,13 +135,40 @@ export const emptyAccountOverviewHistory:domains.AccountOverviewHistoryDomain =
       }
     ]
   }
+export const emptyAccountOverviewOptOut:domains.AccountOverviewOptOutDomain =
+  {
+    "optOut": [
+      {
+        "optedOut": false,
+        "addrLine5": "",
+        "changedBy": "",
+        "changedDate": "2022-1-1"
+      }
+    ]
+  }
+export const emptyAccountOverviewOptOutLine:domains.AccountOverviewOptOutLineDomain =
+  {
+    "optedOut": false,
+    "addrLine5": "",
+    "changedBy": "",
+    "changedDate": "2022-1-1"
+  }
+export const emptyAccountOverviewOptOutLines:domains.AccountOverviewOptOutLinesDomain =
+  [
+    {
+      "optedOut": false,
+      "addrLine5": "",
+      "changedBy": "",
+      "changedDate": "2022-1-1"
+    }
+  ]
 export const emptyAccountOverviewReason:domains.AccountOverviewReasonDomain =
   {
     "reason": ""
   }
 export const emptyArrearsDetails:domains.ArrearsDetailsDomain =
   {
-    "history": [
+    "details": [
       {
         "collectionsDate": "2022-1-1",
         "creditedDate": "2022-1-1",

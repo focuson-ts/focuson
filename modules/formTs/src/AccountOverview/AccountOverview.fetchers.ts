@@ -17,24 +17,24 @@ export function AccountAllFlagsFetcher(fdLens:Optional<FState, domains.AccountOv
      '/api/accountOverview/flags?{query}')
 }
 //fetcher type true
+export function AccountOverviewAgreementTypeFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
+  const localIds = {}
+  return pageAndTagFetcher<FState, domains.AccountOverviewPageDomain, domains.AccountOverviewAgreementTypeDomain, SimpleMessage>(
+    common.commonFetch<FState,  domains.AccountOverviewAgreementTypeDomain>(),
+     'AccountOverview',
+     '~/agreementType', fdLens, commonIds, localIds,["accountId","customerId"],[],
+      Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('agreementType'),
+     '/api/accountOverview/agreementType?{query}')
+}
+//fetcher type true
 export function ArrearsDetailsFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
   const localIds = {startDate: Lenses.identity< domains.AccountOverviewPageDomain>().focusQuery('currentSelectedExcessHistory').focusQuery('start')}
   return pageAndTagFetcher<FState, domains.AccountOverviewPageDomain, domains.ArrearsDetailsDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.ArrearsDetailsDomain>(),
      'AccountOverview',
-     '~/arrearsDetailsCurrent', fdLens, commonIds, localIds,["accountId","customerId","startDate"],[],
-      Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('arrearsDetailsCurrent'),
-     '/api/accountOverview/arrearsDetails/current?{query}')
-}
-//fetcher type true
-export function previous_ArrearsDetailsFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
-  const localIds = {startDate: Lenses.identity< domains.AccountOverviewPageDomain>().focusQuery('currentSelectedExcessHistory').focusQuery('start')}
-  return pageAndTagFetcher<FState, domains.AccountOverviewPageDomain, domains.ArrearsDetailsDomain, SimpleMessage>(
-    common.commonFetch<FState,  domains.ArrearsDetailsDomain>(),
-     'AccountOverview',
-     '~/arrearsDetailsPrevious', fdLens, commonIds, localIds,["accountId","customerId","startDate"],[],
-      Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('arrearsDetailsPrevious'),
-     '/api/accountOverview/arrearsDetails/previous?{query}')
+     '~/arrearsDetails', fdLens, commonIds, localIds,["accountId","customerId","startDate"],[],
+      Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('arrearsDetails'),
+     '/api/accountOverview/arrearsDetails?{query}')
 }
 //fetcher type true
 export function AccountOverviewHistoryFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
@@ -65,6 +65,16 @@ export function AccountOverviewFetcher(fdLens:Optional<FState, domains.AccountOv
      '~/main', fdLens, commonIds, localIds,["accountId","customerId"],[],
       Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('main'),
      '/api/accountOverview?{query}')
+}
+//fetcher type true
+export function AccountOverviewOptOutFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {
+  const localIds = {}
+  return pageAndTagFetcher<FState, domains.AccountOverviewPageDomain, domains.AccountOverviewOptOutDomain, SimpleMessage>(
+    common.commonFetch<FState,  domains.AccountOverviewOptOutDomain>(),
+     'AccountOverview',
+     '~/optOut', fdLens, commonIds, localIds,["accountId","customerId"],[],
+      Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('optOut'),
+     '/api/accountOverview/optOut?{query}')
 }
 //fetcher type true
 export function AccountOverviewReasonFetcher(fdLens:Optional<FState, domains.AccountOverviewPageDomain>,commonIds: NameAndLens<FState>) {

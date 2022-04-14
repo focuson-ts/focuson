@@ -8,6 +8,8 @@ import { ReasonPage } from './AccountOverview/Reason.render';
 import { ExcessHistoryPage } from './AccountOverview/ExcessHistory.render';
 import { ArrearsDetailsPage } from './AccountOverview/ArrearsDetails.render';
 import { AccountFlagsPage } from './AccountOverview/AccountFlags.render';
+import { OptOutPage } from './AccountOverview/OptOut.render';
+import { AgreementTypePage } from './AccountOverview/AgreementType.render';
 import { JointAccountPage } from './JointAccount/JointAccount.render';
 import { JointAccountEditModalPagePage } from './JointAccount/JointAccountEditModalPage.render';
 import { OccupationAndIncomeSummaryPage } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.render';
@@ -41,7 +43,7 @@ const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (
 const identity = identityOptics<FState> ();
 export const pages: MultiPageDetails<FState, Context> = {
     HelloWorldMainPage: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'HelloWorldMainPage' ), pageFunction: HelloWorldMainPagePage(), initialValue: {"fromApi":{"message":""}}, pageMode: 'view',namedOptionals: HelloWorldMainPageOptionals },
-    AccountOverview: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'AccountOverview' ), pageFunction: AccountOverviewPage(), initialValue: undefined, pageMode: 'view',namedOptionals: AccountOverviewOptionals },
+    AccountOverview: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'AccountOverview' ), pageFunction: AccountOverviewPage(), initialValue: {}, pageMode: 'view',namedOptionals: AccountOverviewOptionals },
     JointAccount: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'JointAccount' ), pageFunction: JointAccountPage(), initialValue: {"joint":false}, pageMode: 'view',namedOptionals: JointAccountOptionals },
     OccupationAndIncomeSummary: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'OccupationAndIncomeSummary' ), pageFunction: OccupationAndIncomeSummaryPage(), initialValue: {"selectedItem":0,"occupation":{"search":"","selectedOccupationName":"","searchResults":[]},"mainOrJoint":false}, pageMode: 'view',namedOptionals: OccupationAndIncomeSummaryOptionals },
     EAccountsSummary: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'EAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: {}, pageMode: 'view',namedOptionals: EAccountsSummaryOptionals },
@@ -55,6 +57,8 @@ export const pages: MultiPageDetails<FState, Context> = {
     ExcessHistory: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: ExcessHistoryPage()},
     ArrearsDetails: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: ArrearsDetailsPage()},
     AccountFlags: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: AccountFlagsPage()},
+    OptOut: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: OptOutPage()},
+    AgreementType: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: AgreementTypePage()},
     JointAccountEditModalPage: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: JointAccountEditModalPagePage()},
     OccupationIncomeModal: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: OccupationIncomeModalPage()},
     AdditionalInformationModal: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: AdditionalInformationModalPage()},

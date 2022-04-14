@@ -21,32 +21,32 @@ export function AccountOverview_AccountAllFlagsRestDetails ( cd: NameAndLens<FSt
 }
 
 //If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
-export function AccountOverview_ArrearsDetailsRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.ArrearsDetailsDomain, SimpleMessage> {
-  const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {startDate: Lenses.identity< domains.AccountOverviewPageDomain>().focusQuery('currentSelectedExcessHistory').focusQuery('start')}
+export function AccountOverview_AccountOverviewAgreementTypeRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.AccountOverviewAgreementTypeDomain, SimpleMessage> {
+  const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
-//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is arrearsDetailsCurrent and the path specified is ~/arrearsDetailsCurrent
-    dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('arrearsDetailsCurrent'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is agreementType and the path specified is ~/agreementType
+    dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('agreementType'),
     cd, fdd,
-    ids: ["accountId","customerId","startDate"],
+    ids: ["accountId","customerId"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/accountOverview/arrearsDetails/current?{query}"
+    url: "/api/accountOverview/agreementType?{query}"
   }
 }
 
 //If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
-export function AccountOverview_previous_ArrearsDetailsRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.ArrearsDetailsDomain, SimpleMessage> {
+export function AccountOverview_ArrearsDetailsRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.ArrearsDetailsDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {startDate: Lenses.identity< domains.AccountOverviewPageDomain>().focusQuery('currentSelectedExcessHistory').focusQuery('start')}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
-//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is arrearsDetailsPrevious and the path specified is ~/arrearsDetailsPrevious
-    dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('arrearsDetailsPrevious'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is arrearsDetails and the path specified is ~/arrearsDetails
+    dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('arrearsDetails'),
     cd, fdd,
     ids: ["accountId","customerId","startDate"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/accountOverview/arrearsDetails/previous?{query}"
+    url: "/api/accountOverview/arrearsDetails?{query}"
   }
 }
 
@@ -92,6 +92,21 @@ export function AccountOverview_AccountOverviewRestDetails ( cd: NameAndLens<FSt
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/api/accountOverview?{query}"
+  }
+}
+
+//If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
+export function AccountOverview_AccountOverviewOptOutRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.AccountOverviewPageDomain, domains.AccountOverviewOptOutDomain, SimpleMessage> {
+  const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
+  return {
+    fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
+//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is optOut and the path specified is ~/optOut
+    dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('optOut'),
+    cd, fdd,
+    ids: ["accountId","customerId"],
+    resourceId:  [],
+    messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
+    url: "/api/accountOverview/optOut?{query}"
   }
 }
 

@@ -1,7 +1,29 @@
 body {
-    font: 14px "Century Gothic", Futura, sans-serif;
+    font: 12px "Century Gothic", Futura, sans-serif;
     margin: 20px;
     background:rgba(241, 241, 241, 0.5);
+}
+
+.row {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(var(--bs-gutter-y) * -1);
+    margin-right: calc(var(--bs-gutter-x) * -.5);
+    margin-left: calc(var(--bs-gutter-x) * -.5);
+}
+.row > * {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    padding-right: calc(var(--bs-gutter-x) * .5);
+    padding-left: calc(var(--bs-gutter-x) * .5);
+    margin-top: var(--bs-gutter-y);
+}
+
+.col {
+    flex: 1 0 0%;
 }
 
 ol, ul {
@@ -51,8 +73,30 @@ input:valid{
     display: block;
     width: 100%;
     background: #fff;
-    padding: 25px;
+    padding: 5px 25px;
 }
+
+/* button {
+    min-width: 50px;
+    background-color: white;
+    color: black;
+    padding: 1px 2px;
+    text-align: center;
+    text-decoration: none;
+    margin: 3px!important;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: lightgrey;
+}
+
+button:disabled {
+    background-color: white;
+    color: gray;
+    border: 2px solid gray;
+} */
 
 button {
     color: #fff;
@@ -63,11 +107,14 @@ button {
     /* line-height: 1.5; */
     text-align: center;
     text-decoration: none;
+    text-transform: capitalize;
     vertical-align: middle;
     cursor: pointer;
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
+    padding: 0.25rem !important;
+    margin: 0.25rem !important;
     font-size: 0.75rem;
     border-radius: 0.25rem;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
@@ -130,47 +177,57 @@ tr:hover {background-color: lightgray;}
     width: 100%;
     display: flex;
     align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .labelDropdown {
     display: flex;
     align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .labelValue {
+    justify-content: space-between;
     display: flex;
     align-items: center;
 }
 
 .labelValueButton {
-    width: 100%;
+    /*width: 100%;*/
     display: flex;
     align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
+label {
+    width: 35%;
+}
+
+input[type=text],input[type=number],input[type=radio],input[type=checkbox] {
+    width: 40%;
+}
 
 select {
     height: 1.625rem;
 }
 
-.modalPopup {
-    /*display: none;*/ /* Hidden by default */
-    position: fixed; /* Stay in place */
+#modalPage {
+    position: absolute; /* Stay in place */
     z-index: 1; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
-    height: 100%; /* Full height */
+    height: auto; /* Full height */
     overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
 /* Modal Content/Box */
-.modalPopup-content {
+#modalPage div#contentWrapper {
     background-color: #fefefe;
-    padding: 20px;
-    border: 1px solid #888;
+    height: 100%;
 }
 
 /* The Close Button */
@@ -222,29 +279,247 @@ select {
 
 #container {
     position: relative;
-    width: 1024px;
+    /*width: 1024px;*/
+    width: auto;
 }
 
-#modalPage {
+/* #modalPage {
     position: absolute;
-    top: 0;
+    top: 130px;
     background-color: white;
     width: 100%;
+    height: 100%
+} */
+
+.modalPageContainer {
+    position: absolute;
+    top: 50px
 }
 
-.row {
-    margin: 0!important;
+.mt-0 {
+    margin-top: 0 !important;
+}
+.mr-0 {
+    margin-right: 0 !important;
+}
+.mb-0 {
+    margin-bottom: 0 !important;
+}
+.ml-0 {
+    margin-left: 0 !important;
 }
 
-.labelValueButton label{
-    width: 250px;
+table {
+    caption-side: bottom;
+    border-collapse: collapse;
 }
-.labelDropdown label{
-    width: 250px;
+
+caption {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    color: #6c757d;
+    text-align: left;
 }
-.labelDropdownButton label{
-    width: 250px;
+
+th {
+    text-align: inherit;
+    text-align: -webkit-match-parent;
 }
-.labelValue label{
-    width: 250px;
+
+thead,
+tbody,
+tfoot,
+tr,
+td,
+th {
+    border-color: inherit;
+    border-style: solid;
+    border-width: 0;
+}
+
+table {
+    --bs-table-bg: #f8f9fa;
+    --bs-table-striped-bg: #ecedee;
+    --bs-table-striped-color: #000;
+    --bs-table-active-bg: #dfe0e1;
+    --bs-table-active-color: #000;
+    --bs-table-hover-bg: #e5e6e7;
+    --bs-table-hover-color: #000;
+    color: #000;
+    border-color: #dfe0e1;
+    /*--bs-table-bg: transparent;*/
+    --bs-table-accent-bg: transparent;
+    /*--bs-table-striped-color: #212529;*/
+    --bs-table-striped-bg: rgba(0, 0, 0, 0.05);
+    /*--bs-table-active-color: #212529;*/
+    --bs-table-active-bg: rgba(0, 0, 0, 0.1);
+    /*--bs-table-hover-color: #212529;*/
+    --bs-table-hover-bg: rgba(0, 0, 0, 0.075);
+    width: 100%;
+    margin-bottom: 1rem;
+    /*color: #212529;*/
+    vertical-align: top;
+    /*border-color: #dee2e6;*/
+}
+table > :not(caption) > * > * {
+    padding: 0.5rem 0.5rem;
+    vertical-align: middle;
+    background-color: var(--bs-table-bg);
+    /*border-bottom-width: 1px;*/
+    box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+}
+table > tbody {
+    vertical-align: inherit;
+}
+table > thead {
+    vertical-align: bottom;
+}
+table > :not(:last-child) > :last-child > * {
+    border-bottom-color: currentColor;
+}
+table > thead > tr > th{
+    background-color: #d5d1d1;
+}
+
+table > tbody > tr:hover {
+    --bs-table-accent-bg: var(--bs-table-hover-bg);
+    color: var(--bs-table-hover-color);
+}
+
+input[type=text], input[type=number]{
+    border: 1px solid #ced4da;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /*border-radius: 0.25rem;*/
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.alert {
+    position: relative;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+}
+
+.alert-heading {
+    color: inherit;
+}
+
+.alert-link {
+    font-weight: 700;
+}
+
+.alert-dismissible {
+    padding-right: 3rem;
+}
+a.close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    padding: 0.5rem;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.alert-info {
+    color: #055160;
+    background-color: #cff4fc;
+    border-color: #b6effb;
+}
+.alert-info .alert-link {
+    color: #04414d;
+}
+
+.alert-danger {
+    color: #842029;
+    background-color: #f8d7da;
+    border-color: #f5c2c7;
+}
+.alert-danger .alert-link {
+    color: #6a1a21;
+}
+
+.alert-success {
+    color: #0f5132;
+    background-color: #d1e7dd;
+    border-color: #badbcc;
+}
+.alert-success .alert-link {
+    color: #0c4128;
+}
+
+.labelWidth10 label{
+    width: 10% !important;
+}
+
+.labelWidth20 label{
+    width: 20% !important;
+}
+
+.labelWidth25 label{
+    width: 25% !important;
+}
+
+.labelWidth30 label{
+    width: 30% !important;
+}
+
+.labelWidth40 label{
+    width: 40% !important;
+}
+
+.labelWidth50 label{
+    width: 50% !important;
+}
+
+.labelWidth60 label{
+    width: 60% !important;
+}
+
+.labelWidth70 label{
+    width: 70% !important;
+}
+
+.labelWidth80 label{
+    width: 80% !important;
+}
+
+.inputWidth20 input[type=text], .inputWidth20 input[type=number]{
+    width: 20% !important;
+}
+
+.inputWidth30 input[type=text], .inputWidth30 input[type=number]{
+    width: 30% !important;
+}
+
+.inputWidth40 input[type=text], .inputWidth40 input[type=number]{
+    width: 40% !important;
+}
+
+.inputWidth50 input[type=text], .inputWidth50 input[type=number]{
+    width: 50% !important;
+}
+
+.inputWidth60 input[type=text], .inputWidth60 input[type=number]{
+    width: 60% !important;
+}
+
+.inputWidth70 input[type=text], .inputWidth70 input[type=number]{
+    width: 70% !important;
+}
+
+.inputWidth80 input[type=text], .inputWidth80 input[type=number]{
+    width: 80% !important;
+}
+
+#default_template {
+    border: 1px solid black;
+    padding: 10px
+}
+
+.glassPane {
+    position: relative;
 }

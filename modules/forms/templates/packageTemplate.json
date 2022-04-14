@@ -17,7 +17,8 @@
   "files": [
     "dist/"
   ],
-  "devDependencies": { "@pact-foundation/pact": "^8.2.6",
+  "devDependencies": {
+    "@pact-foundation/pact": "^9.17.3",
     "jest-watch-typeahead": "^0.6.5",
     "@sambego/storybook-state": "^2.0.1",
     "@storybook/addon-actions": "^6.4.4",

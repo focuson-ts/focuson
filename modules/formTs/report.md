@@ -14,11 +14,12 @@
 | --- | --- | ---  |  --- |
 |HelloWorldMainPage|restDataRD | /helloWorld?{query}.| 
 |AccountOverview|accountFlags | /api/accountOverview/flags?{query}.| accountId,customerId
-|AccountOverview|arrearsDetailsCurrent | /api/accountOverview/arrearsDetails/current?{query}.| accountId,customerId,startDate
-|AccountOverview|arrearsDetailsPrevious | /api/accountOverview/arrearsDetails/previous?{query}.| accountId,customerId,startDate
+|AccountOverview|agreementType | /api/accountOverview/agreementType?{query}.| accountId,customerId
+|AccountOverview|arrearsDetails | /api/accountOverview/arrearsDetails?{query}.| accountId,customerId,startDate
 |AccountOverview|excessHistory | /api/accountOverview/excessHistory?{query}.| accountId,customerId
 |AccountOverview|excessInfo | /api/accountOverview/excessInfo?{query}.| accountId,customerId
 |AccountOverview|main | /api/accountOverview?{query}.| accountId,customerId
+|AccountOverview|optOut | /api/accountOverview/optOut?{query}.| accountId,customerId
 |AccountOverview|reason | /api/accountOverview/reason?{query}.| accountId,customerId
 |JointAccount|jointAccount | /api/jointAccount?{query}.| accountId,brandId,dbName
 |OccupationAndIncomeSummary|additionalInformationRD | /customer/occupation/v2/additionalInfo?{query}.| customerId
@@ -60,12 +61,19 @@
     AccountAllFlagsList
     AccountOneFlag
     AccountOverview
+    AccountOverviewAgreementType
     AccountOverviewCriteria
     AccountOverviewCriteriaLine
     AccountOverviewExcessHistoryLine
     AccountOverviewExcessInfo
     AccountOverviewExcessLines
+    AccountOverviewFacilities
+    AccountOverviewFacilitiesLine
+    AccountOverviewFacilitiesLines
     AccountOverviewHistory
+    AccountOverviewOptOut
+    AccountOverviewOptOutLine
+    AccountOverviewOptOutLines
     AccountOverviewReason
     ArrearsDetails
     ArrearsDetailsLine
@@ -74,11 +82,12 @@
   |name|url|params
   | --- | --- | --- 
     |accountFlags | /api/accountOverview/flags?{query}.| accountId,customerId
-    |arrearsDetailsCurrent | /api/accountOverview/arrearsDetails/current?{query}.| accountId,customerId,startDate
-    |arrearsDetailsPrevious | /api/accountOverview/arrearsDetails/previous?{query}.| accountId,customerId,startDate
+    |agreementType | /api/accountOverview/agreementType?{query}.| accountId,customerId
+    |arrearsDetails | /api/accountOverview/arrearsDetails?{query}.| accountId,customerId,startDate
     |excessHistory | /api/accountOverview/excessHistory?{query}.| accountId,customerId
     |excessInfo | /api/accountOverview/excessInfo?{query}.| accountId,customerId
     |main | /api/accountOverview?{query}.| accountId,customerId
+    |optOut | /api/accountOverview/optOut?{query}.| accountId,customerId
     |reason | /api/accountOverview/reason?{query}.| accountId,customerId
   ##modals  
   |name|displayed with
@@ -88,9 +97,15 @@
     | ExcessHistory |AccountOverviewHistory
     | ArrearsDetails |ArrearsDetails
     | AccountFlags |AccountAllFlags
+    | OptOut |AccountOverviewOptOut
+    | AgreementType |AccountOverviewAgreementType
   ##display 
     AccountOverview
   ##buttons 
+    Modal Button ==> AgreementType in mode view
+      Focused on "~/agreementType"
+    Modal Button ==> ArrearsDetails in mode view
+      Focused on "~/arrearsDetails"
     Modal Button ==> ExcessHistory in mode view
       Focused on "~/excessHistory"
     Modal Button ==> ExcessInfoSearch in mode view
@@ -99,6 +114,8 @@
       Copy from {"from":"~/accountFlags"}
       Focused on "~/editingAccountFlags"
       Copy on close {"to":"~/accountFlags"} 
+    Modal Button ==> OptOut in mode view
+      Focused on "~/optOut"
     Modal Button ==> Reason in mode view
       Focused on "~/reason"
 

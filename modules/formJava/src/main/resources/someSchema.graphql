@@ -1,10 +1,12 @@
 type Query{
   getHelloWorldDomainData:HelloWorldDomainData!
   getAccountAllFlags(accountId: String!, customerId: String!):AccountAllFlags!
+  getAccountOverviewAgreementType(accountId: String!, customerId: String!):AccountOverviewAgreementType!
   getArrearsDetails(accountId: String!, customerId: String!, startDate: String!):ArrearsDetails!
   getAccountOverviewHistory(accountId: String!, customerId: String!):AccountOverviewHistory!
   getAccountOverviewExcessInfo(accountId: String!, customerId: String!):AccountOverviewExcessInfo!
   getAccountOverview(accountId: String!, customerId: String!):AccountOverview!
+  getAccountOverviewOptOut(accountId: String!, customerId: String!):AccountOverviewOptOut!
   getAccountOverviewReason(accountId: String!, customerId: String!):AccountOverviewReason!
   getJointAccount(accountId: String!, brandId: String!, dbName: String!):JointAccount!
   getAdditionalInformation(customerId: String!):AdditionalInformation!
@@ -63,6 +65,18 @@ type AccountOverview{
   excessSixMonths: Int!
   bouncedDDs12Months: Int!
   unpaidCardOrMisuseItems: Int!
+  currentBalance: Int!
+  currentInterestRate: Int!
+  facilities: AccountOverviewFacilities!
+  highBalance: Int!
+  lowBalance: Int!
+  pctOfFacility: Int!
+  eightyPctFacility: Int!
+  eightyFivePctFacility: Int!
+}
+type AccountOverviewAgreementType{
+  agreementType: String!
+  transactionHeading: String!
 }
 type AccountOverviewCriteriaLine{
   criteria: String!
@@ -79,8 +93,27 @@ type AccountOverviewExcessInfo{
   dateOfLastCapitalization: String!
   dateOfLastExcessFulfillment: String!
 }
+type AccountOverviewFacilities{
+  facilities: [AccountOverviewFacilitiesLine!]!
+}
+type AccountOverviewFacilitiesLine{
+  facility: Int!
+  changeDate: String!
+  unApproved: Boolean!
+  reason: String!
+  amount: Int!
+}
 type AccountOverviewHistory{
   history: [AccountOverviewExcessHistoryLine!]!
+}
+type AccountOverviewOptOut{
+  optOut: [AccountOverviewOptOutLine!]!
+}
+type AccountOverviewOptOutLine{
+  optedOut: Boolean!
+  addrLine5: String!
+  changedBy: String!
+  changedDate: String!
 }
 type AccountOverviewReason{
   reason: String!
@@ -95,7 +128,7 @@ type AdditionalInformation{
   postcode: String!
 }
 type ArrearsDetails{
-  history: [ArrearsDetailsLine!]!
+  details: [ArrearsDetailsLine!]!
 }
 type ArrearsDetailsLine{
   collectionsDate: String!

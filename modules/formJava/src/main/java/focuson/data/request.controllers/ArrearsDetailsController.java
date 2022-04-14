@@ -16,17 +16,17 @@ import java.util.Map;
 
   @Autowired
   public IManyGraphQl graphQL;
-    @GetMapping(value="/api/accountOverview/arrearsDetails/current", produces="application/json")
+    @GetMapping(value="/api/accountOverview/arrearsDetails", produces="application/json")
     public ResponseEntity getArrearsDetails(@RequestParam String accountId, @RequestParam String customerId, @RequestParam String startDate) throws Exception{
        return Transform.result(graphQL.get(IFetcher.mock),ArrearsDetailsQueries.getArrearsDetails(accountId, customerId, startDate), "getArrearsDetails");
     }
 
-    @GetMapping(value="/api/accountOverview/arrearsDetails/current/query", produces="application/json")
+    @GetMapping(value="/api/accountOverview/arrearsDetails/query", produces="application/json")
     public String querygetArrearsDetails(@RequestParam String accountId, @RequestParam String customerId, @RequestParam String startDate) throws Exception{
        return ArrearsDetailsQueries.getArrearsDetails(accountId, customerId, startDate);
     }
 
-  @GetMapping(value = "/api/accountOverview/arrearsDetails/current/sample", produces = "application/json")
+  @GetMapping(value = "/api/accountOverview/arrearsDetails/sample", produces = "application/json")
     public static String sampleArrearsDetails() throws Exception {
       return new ObjectMapper().writeValueAsString( Sample.sampleArrearsDetails0);
     }

@@ -19,7 +19,7 @@ interface StoryState {
    pageMode: PageMode
 }
  
-const initial = undefined
+const initial = {}
 function pageSelection ( pageMode: PageMode ): PageSelection { return { pageName: 'AccountOverview', pageMode}}
 const Template: Story<StoryState> = ( args: StoryState ) =>{
   const pageDetails: any = pages[ 'AccountOverview' ];

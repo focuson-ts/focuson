@@ -5,11 +5,12 @@ import { FState , commonIds} from "./common";
 
 import { HelloWorldMainPage_HelloWorldDomainDataRestDetails } from './HelloWorldMainPage/HelloWorldMainPage.rests';
 import { AccountOverview_AccountAllFlagsRestDetails } from './AccountOverview/AccountOverview.rests';
+import { AccountOverview_AccountOverviewAgreementTypeRestDetails } from './AccountOverview/AccountOverview.rests';
 import { AccountOverview_ArrearsDetailsRestDetails } from './AccountOverview/AccountOverview.rests';
-import { AccountOverview_previous_ArrearsDetailsRestDetails } from './AccountOverview/AccountOverview.rests';
 import { AccountOverview_AccountOverviewHistoryRestDetails } from './AccountOverview/AccountOverview.rests';
 import { AccountOverview_AccountOverviewExcessInfoRestDetails } from './AccountOverview/AccountOverview.rests';
 import { AccountOverview_AccountOverviewRestDetails } from './AccountOverview/AccountOverview.rests';
+import { AccountOverview_AccountOverviewOptOutRestDetails } from './AccountOverview/AccountOverview.rests';
 import { AccountOverview_AccountOverviewReasonRestDetails } from './AccountOverview/AccountOverview.rests';
 import { JointAccount_JointAccountRestDetails } from './JointAccount/JointAccount.rests';
 import { OccupationAndIncomeSummary_AdditionalInformationRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
@@ -31,11 +32,12 @@ export function restUrlMutator ( r: RestAction, url: string ): string { return i
 export const restDetails: RestDetails<FState, SimpleMessage> = {
    HelloWorldMainPage_HelloWorldDomainDataRestDetails: HelloWorldMainPage_HelloWorldDomainDataRestDetails(commonIds, defaultDateFn),
    AccountOverview_AccountAllFlagsRestDetails: AccountOverview_AccountAllFlagsRestDetails(commonIds, defaultDateFn),
+   AccountOverview_AccountOverviewAgreementTypeRestDetails: AccountOverview_AccountOverviewAgreementTypeRestDetails(commonIds, defaultDateFn),
    AccountOverview_ArrearsDetailsRestDetails: AccountOverview_ArrearsDetailsRestDetails(commonIds, defaultDateFn),
-   AccountOverview_previous_ArrearsDetailsRestDetails: AccountOverview_previous_ArrearsDetailsRestDetails(commonIds, defaultDateFn),
    AccountOverview_AccountOverviewHistoryRestDetails: AccountOverview_AccountOverviewHistoryRestDetails(commonIds, defaultDateFn),
    AccountOverview_AccountOverviewExcessInfoRestDetails: AccountOverview_AccountOverviewExcessInfoRestDetails(commonIds, defaultDateFn),
    AccountOverview_AccountOverviewRestDetails: AccountOverview_AccountOverviewRestDetails(commonIds, defaultDateFn),
+   AccountOverview_AccountOverviewOptOutRestDetails: AccountOverview_AccountOverviewOptOutRestDetails(commonIds, defaultDateFn),
    AccountOverview_AccountOverviewReasonRestDetails: AccountOverview_AccountOverviewReasonRestDetails(commonIds, defaultDateFn),
    JointAccount_JointAccountRestDetails: JointAccount_JointAccountRestDetails(commonIds, defaultDateFn),
    OccupationAndIncomeSummary_AdditionalInformationRestDetails: OccupationAndIncomeSummary_AdditionalInformationRestDetails(commonIds, defaultDateFn),

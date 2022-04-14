@@ -1,11 +1,12 @@
 import * as common from './common';
 import { HelloWorldDomainDataFetcher } from './HelloWorldMainPage/HelloWorldMainPage.fetchers';
 import { AccountAllFlagsFetcher } from './AccountOverview/AccountOverview.fetchers';
+import { AccountOverviewAgreementTypeFetcher } from './AccountOverview/AccountOverview.fetchers';
 import { ArrearsDetailsFetcher } from './AccountOverview/AccountOverview.fetchers';
-import { previous_ArrearsDetailsFetcher } from './AccountOverview/AccountOverview.fetchers';
 import { AccountOverviewHistoryFetcher } from './AccountOverview/AccountOverview.fetchers';
 import { AccountOverviewExcessInfoFetcher } from './AccountOverview/AccountOverview.fetchers';
 import { AccountOverviewFetcher } from './AccountOverview/AccountOverview.fetchers';
+import { AccountOverviewOptOutFetcher } from './AccountOverview/AccountOverview.fetchers';
 import { AccountOverviewReasonFetcher } from './AccountOverview/AccountOverview.fetchers';
 import { JointAccountFetcher } from './JointAccount/JointAccount.fetchers';
 import { AdditionalInformationFetcher } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.fetchers';
@@ -28,11 +29,12 @@ export const fetchers: FetcherTree<common.FState> = {
 fetchers: [
     HelloWorldDomainDataFetcher( identityL.focusQuery ( 'HelloWorldMainPage' ), commonIds ),
     AccountAllFlagsFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
+    AccountOverviewAgreementTypeFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
     ArrearsDetailsFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
-    previous_ArrearsDetailsFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
     AccountOverviewHistoryFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
     AccountOverviewExcessInfoFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
     AccountOverviewFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
+    AccountOverviewOptOutFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
     AccountOverviewReasonFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
     JointAccountFetcher( identityL.focusQuery ( 'JointAccount' ), commonIds ),
     AdditionalInformationFetcher( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ),

@@ -10,11 +10,11 @@ public class Sample{
          "{"+
          "  \"flags\": ["+
          "    {"+
-         "      \"flagName\": \"Terrorist\","+
+         "      \"flagName\": \"Capitalised\","+
          "      \"flagValue\": true"+
          "    },"+
          "    {"+
-         "      \"flagName\": \"MI6 wanted list\","+
+         "      \"flagName\": \"Contigent Obligations\","+
          "      \"flagValue\": false"+
          "    },"+
          "    {"+
@@ -27,11 +27,11 @@ public class Sample{
   public static List sampleAccountAllFlagsList0 =  parse.parseList(
          "["+
          "  {"+
-         "    \"flagName\": \"Terrorist\","+
+         "    \"flagName\": \"Capitalised\","+
          "    \"flagValue\": true"+
          "  },"+
          "  {"+
-         "    \"flagName\": \"MI6 wanted list\","+
+         "    \"flagName\": \"Contigent Obligations\","+
          "    \"flagValue\": false"+
          "  },"+
          "  {"+
@@ -56,7 +56,7 @@ public class Sample{
   );
   public static Map sampleAccountOneFlag0 =  parse.parseMap(
          "{"+
-         "  \"flagName\": \"Terrorist\","+
+         "  \"flagName\": \"Capitalised\","+
          "  \"flagValue\": true"+
          "}"
   );
@@ -81,9 +81,47 @@ public class Sample{
          "    }"+
          "  ],"+
          "  \"zFlagSet\": \"N\","+
-         "  \"excessSixMonths\": 123,"+
-         "  \"bouncedDDs12Months\": 123,"+
-         "  \"unpaidCardOrMisuseItems\": 123"+
+         "  \"excessSixMonths\": 1,"+
+         "  \"bouncedDDs12Months\": 3,"+
+         "  \"unpaidCardOrMisuseItems\": 0,"+
+         "  \"currentBalance\": 123,"+
+         "  \"currentInterestRate\": 12,"+
+         "  \"facilities\": {"+
+         "    \"facilities\": ["+
+         "      {"+
+         "        \"facility\": 1234,"+
+         "        \"changeDate\": \"23-03-2022\","+
+         "        \"unApproved\": true,"+
+         "        \"reason\": \"some reason\","+
+         "        \"amount\": 2345"+
+         "      },"+
+         "      {"+
+         "        \"facility\": 123,"+
+         "        \"changeDate\": \"2020-10-01\","+
+         "        \"unApproved\": true,"+
+         "        \"reason\": \"someString\","+
+         "        \"amount\": 123"+
+         "      },"+
+         "      {"+
+         "        \"facility\": 456,"+
+         "        \"changeDate\": \"2022-14-01\","+
+         "        \"unApproved\": false,"+
+         "        \"reason\": \"anotherString\","+
+         "        \"amount\": 456"+
+         "      }"+
+         "    ]"+
+         "  },"+
+         "  \"highBalance\": 1000,"+
+         "  \"lowBalance\": 23,"+
+         "  \"pctOfFacility\": 27,"+
+         "  \"eightyPctFacility\": 800,"+
+         "  \"eightyFivePctFacility\": 234"+
+         "}"
+  );
+  public static Map sampleAccountOverviewAgreementType0 =  parse.parseMap(
+         "{"+
+         "  \"agreementType\": \"checking\","+
+         "  \"transactionHeading\": \"option1\""+
          "}"
   );
   public static List sampleAccountOverviewCriteria0 =  parse.parseList(
@@ -139,6 +177,67 @@ public class Sample{
          "  }"+
          "]"
   );
+  public static Map sampleAccountOverviewFacilities0 =  parse.parseMap(
+         "{"+
+         "  \"facilities\": ["+
+         "    {"+
+         "      \"facility\": 1234,"+
+         "      \"changeDate\": \"23-03-2022\","+
+         "      \"unApproved\": true,"+
+         "      \"reason\": \"some reason\","+
+         "      \"amount\": 2345"+
+         "    },"+
+         "    {"+
+         "      \"facility\": 123,"+
+         "      \"changeDate\": \"2020-10-01\","+
+         "      \"unApproved\": true,"+
+         "      \"reason\": \"someString\","+
+         "      \"amount\": 123"+
+         "    },"+
+         "    {"+
+         "      \"facility\": 456,"+
+         "      \"changeDate\": \"2022-14-01\","+
+         "      \"unApproved\": false,"+
+         "      \"reason\": \"anotherString\","+
+         "      \"amount\": 456"+
+         "    }"+
+         "  ]"+
+         "}"
+  );
+  public static Map sampleAccountOverviewFacilitiesLine0 =  parse.parseMap(
+         "{"+
+         "  \"facility\": 1234,"+
+         "  \"changeDate\": \"23-03-2022\","+
+         "  \"unApproved\": true,"+
+         "  \"reason\": \"some reason\","+
+         "  \"amount\": 2345"+
+         "}"
+  );
+  public static List sampleAccountOverviewFacilitiesLines0 =  parse.parseList(
+         "["+
+         "  {"+
+         "    \"facility\": 1234,"+
+         "    \"changeDate\": \"23-03-2022\","+
+         "    \"unApproved\": true,"+
+         "    \"reason\": \"some reason\","+
+         "    \"amount\": 2345"+
+         "  },"+
+         "  {"+
+         "    \"facility\": 123,"+
+         "    \"changeDate\": \"2020-10-01\","+
+         "    \"unApproved\": true,"+
+         "    \"reason\": \"someString\","+
+         "    \"amount\": 123"+
+         "  },"+
+         "  {"+
+         "    \"facility\": 456,"+
+         "    \"changeDate\": \"2022-14-01\","+
+         "    \"unApproved\": false,"+
+         "    \"reason\": \"anotherString\","+
+         "    \"amount\": 456"+
+         "  }"+
+         "]"
+  );
   public static Map sampleAccountOverviewHistory0 =  parse.parseMap(
          "{"+
          "  \"history\": ["+
@@ -160,9 +259,63 @@ public class Sample{
          "  ]"+
          "}"
   );
+  public static Map sampleAccountOverviewOptOut0 =  parse.parseMap(
+         "{"+
+         "  \"optOut\": ["+
+         "    {"+
+         "      \"optedOut\": true,"+
+         "      \"addrLine5\": \"someString\","+
+         "      \"changedBy\": \"someString\","+
+         "      \"changedDate\": \"2020-10-01\""+
+         "    },"+
+         "    {"+
+         "      \"optedOut\": false,"+
+         "      \"addrLine5\": \"anotherString\","+
+         "      \"changedBy\": \"anotherString\","+
+         "      \"changedDate\": \"2022-14-01\""+
+         "    },"+
+         "    {"+
+         "      \"optedOut\": true,"+
+         "      \"addrLine5\": \"someString\","+
+         "      \"changedBy\": \"someString\","+
+         "      \"changedDate\": \"2020-10-01\""+
+         "    }"+
+         "  ]"+
+         "}"
+  );
+  public static Map sampleAccountOverviewOptOutLine0 =  parse.parseMap(
+         "{"+
+         "  \"optedOut\": true,"+
+         "  \"addrLine5\": \"someString\","+
+         "  \"changedBy\": \"someString\","+
+         "  \"changedDate\": \"2020-10-01\""+
+         "}"
+  );
+  public static List sampleAccountOverviewOptOutLines0 =  parse.parseList(
+         "["+
+         "  {"+
+         "    \"optedOut\": true,"+
+         "    \"addrLine5\": \"someString\","+
+         "    \"changedBy\": \"someString\","+
+         "    \"changedDate\": \"2020-10-01\""+
+         "  },"+
+         "  {"+
+         "    \"optedOut\": false,"+
+         "    \"addrLine5\": \"anotherString\","+
+         "    \"changedBy\": \"anotherString\","+
+         "    \"changedDate\": \"2022-14-01\""+
+         "  },"+
+         "  {"+
+         "    \"optedOut\": true,"+
+         "    \"addrLine5\": \"someString\","+
+         "    \"changedBy\": \"someString\","+
+         "    \"changedDate\": \"2020-10-01\""+
+         "  }"+
+         "]"
+  );
   public static Map sampleAccountOverviewReason0 =  parse.parseMap(
          "{"+
-         "  \"reason\": \"Really good reason\""+
+         "  \"reason\": \"Second charge case\""+
          "}"
   );
   public static Map sampleAdditionalInformation0 =  parse.parseMap(
@@ -178,7 +331,7 @@ public class Sample{
   );
   public static Map sampleArrearsDetails0 =  parse.parseMap(
          "{"+
-         "  \"history\": ["+
+         "  \"details\": ["+
          "    {"+
          "      \"collectionsDate\": \"2020-10-01\","+
          "      \"creditedDate\": \"2020-10-01\","+

@@ -17,6 +17,22 @@ public class AccountOverviewQueries{
         "    excessSixMonths"+
         "    bouncedDDs12Months"+
         "    unpaidCardOrMisuseItems"+
+        "    currentBalance"+
+        "    currentInterestRate"+
+        "    facilities{"+
+        "      facilities{"+
+        "        facility"+
+        "        changeDate"+
+        "        unApproved"+
+        "        reason"+
+        "        amount"+
+        "      }"+
+        "    }"+
+        "    highBalance"+
+        "    lowBalance"+
+        "    pctOfFacility"+
+        "    eightyPctFacility"+
+        "    eightyFivePctFacility"+
         "  }"
   +"}";}
 }

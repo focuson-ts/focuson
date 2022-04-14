@@ -25,11 +25,12 @@ import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
 import java.util.function.Function;
 import focuson.data.fetchers.HelloWorldDomainDataFFetcher;
 import focuson.data.fetchers.AccountAllFlagsFFetcher;
+import focuson.data.fetchers.AccountOverviewAgreementTypeFFetcher;
 import focuson.data.fetchers.ArrearsDetailsFFetcher;
-import focuson.data.fetchers.previous_ArrearsDetailsFFetcher;
 import focuson.data.fetchers.AccountOverviewHistoryFFetcher;
 import focuson.data.fetchers.AccountOverviewExcessInfoFFetcher;
 import focuson.data.fetchers.AccountOverviewFFetcher;
+import focuson.data.fetchers.AccountOverviewOptOutFFetcher;
 import focuson.data.fetchers.AccountOverviewReasonFFetcher;
 import focuson.data.fetchers.JointAccountFFetcher;
 import focuson.data.fetchers.AdditionalInformationFFetcher;
@@ -52,15 +53,17 @@ public class Wiring  implements IManyGraphQl{
       @Autowired
       List<AccountAllFlagsFFetcher> _AccountAllFlagsFFetcher;
       @Autowired
-      List<ArrearsDetailsFFetcher> _ArrearsDetailsFFetcher;
+      List<AccountOverviewAgreementTypeFFetcher> _AccountOverviewAgreementTypeFFetcher;
       @Autowired
-      List<previous_ArrearsDetailsFFetcher> _previous_ArrearsDetailsFFetcher;
+      List<ArrearsDetailsFFetcher> _ArrearsDetailsFFetcher;
       @Autowired
       List<AccountOverviewHistoryFFetcher> _AccountOverviewHistoryFFetcher;
       @Autowired
       List<AccountOverviewExcessInfoFFetcher> _AccountOverviewExcessInfoFFetcher;
       @Autowired
       List<AccountOverviewFFetcher> _AccountOverviewFFetcher;
+      @Autowired
+      List<AccountOverviewOptOutFFetcher> _AccountOverviewOptOutFFetcher;
       @Autowired
       List<AccountOverviewReasonFFetcher> _AccountOverviewReasonFFetcher;
       @Autowired
@@ -127,11 +130,12 @@ public class Wiring  implements IManyGraphQl{
        return RuntimeWiring.newRuntimeWiring()
           .type(newTypeWiring("Query").dataFetcher("getHelloWorldDomainData", find(_HelloWorldDomainDataFFetcher, dbName, f ->f.getHelloWorldDomainData())))
           .type(newTypeWiring("Query").dataFetcher("getAccountAllFlags", find(_AccountAllFlagsFFetcher, dbName, f ->f.getAccountAllFlags())))
+          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewAgreementType", find(_AccountOverviewAgreementTypeFFetcher, dbName, f ->f.getAccountOverviewAgreementType())))
           .type(newTypeWiring("Query").dataFetcher("getArrearsDetails", find(_ArrearsDetailsFFetcher, dbName, f ->f.getArrearsDetails())))
-          .type(newTypeWiring("Query").dataFetcher("getArrearsDetails", find(_previous_ArrearsDetailsFFetcher, dbName, f ->f.getArrearsDetails())))
           .type(newTypeWiring("Query").dataFetcher("getAccountOverviewHistory", find(_AccountOverviewHistoryFFetcher, dbName, f ->f.getAccountOverviewHistory())))
           .type(newTypeWiring("Query").dataFetcher("getAccountOverviewExcessInfo", find(_AccountOverviewExcessInfoFFetcher, dbName, f ->f.getAccountOverviewExcessInfo())))
           .type(newTypeWiring("Query").dataFetcher("getAccountOverview", find(_AccountOverviewFFetcher, dbName, f ->f.getAccountOverview())))
+          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewOptOut", find(_AccountOverviewOptOutFFetcher, dbName, f ->f.getAccountOverviewOptOut())))
           .type(newTypeWiring("Query").dataFetcher("getAccountOverviewReason", find(_AccountOverviewReasonFFetcher, dbName, f ->f.getAccountOverviewReason())))
           .type(newTypeWiring("Query").dataFetcher("getJointAccount", find(_JointAccountFFetcher, dbName, f ->f.getJointAccount())))
           .type(newTypeWiring("Query").dataFetcher("getAdditionalInformation", find(_AdditionalInformationFFetcher, dbName, f ->f.getAdditionalInformation())))

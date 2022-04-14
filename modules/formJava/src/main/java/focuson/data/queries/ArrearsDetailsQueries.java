@@ -3,7 +3,7 @@ public class ArrearsDetailsQueries{
   public static  String getArrearsDetails(String accountId,String customerId,String startDate){ 
      return
   "query{getArrearsDetails(" + "accountId:" + "\"" + accountId + "\""  + "," + "customerId:" + "\"" + customerId + "\""  + "," + "startDate:" + "\"" + startDate + "\"" + "){"+
-        "    history{"+
+        "    details{"+
         "      collectionsDate"+
         "      creditedDate"+
         "      minPayment"+

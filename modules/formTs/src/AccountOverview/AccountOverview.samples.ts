@@ -4,11 +4,11 @@ export const sampleAccountAllFlags0: domains.AccountAllFlagsDomain =
 {
   "flags": [
     {
-      "flagName": "Terrorist",
+      "flagName": "Capitalised",
       "flagValue": true
     },
     {
-      "flagName": "MI6 wanted list",
+      "flagName": "Contigent Obligations",
       "flagValue": false
     },
     {
@@ -20,11 +20,11 @@ export const sampleAccountAllFlags0: domains.AccountAllFlagsDomain =
 export const sampleAccountAllFlagsList0: domains.AccountAllFlagsListDomain = 
 [
   {
-    "flagName": "Terrorist",
+    "flagName": "Capitalised",
     "flagValue": true
   },
   {
-    "flagName": "MI6 wanted list",
+    "flagName": "Contigent Obligations",
     "flagValue": false
   },
   {
@@ -34,7 +34,7 @@ export const sampleAccountAllFlagsList0: domains.AccountAllFlagsListDomain =
 ]
 export const sampleAccountOneFlag0: domains.AccountOneFlagDomain = 
 {
-  "flagName": "Terrorist",
+  "flagName": "Capitalised",
   "flagValue": true
 }
 export const sampleAccountOverview0: domains.AccountOverviewDomain = 
@@ -58,9 +58,46 @@ export const sampleAccountOverview0: domains.AccountOverviewDomain =
     }
   ],
   "zFlagSet": "N",
-  "excessSixMonths": 123,
-  "bouncedDDs12Months": 123,
-  "unpaidCardOrMisuseItems": 123
+  "excessSixMonths": 1,
+  "bouncedDDs12Months": 3,
+  "unpaidCardOrMisuseItems": 0,
+  "currentBalance": 123,
+  "currentInterestRate": 12,
+  "facilities": {
+    "facilities": [
+      {
+        "facility": 1234,
+        "changeDate": "23-03-2022",
+        "unApproved": true,
+        "reason": "some reason",
+        "amount": 2345
+      },
+      {
+        "facility": 123,
+        "changeDate": "2020-10-01",
+        "unApproved": true,
+        "reason": "someString",
+        "amount": 123
+      },
+      {
+        "facility": 456,
+        "changeDate": "2022-14-01",
+        "unApproved": false,
+        "reason": "anotherString",
+        "amount": 456
+      }
+    ]
+  },
+  "highBalance": 1000,
+  "lowBalance": 23,
+  "pctOfFacility": 27,
+  "eightyPctFacility": 800,
+  "eightyFivePctFacility": 234
+}
+export const sampleAccountOverviewAgreementType0: domains.AccountOverviewAgreementTypeDomain = 
+{
+  "agreementType": "checking",
+  "transactionHeading": "option1"
 }
 export const sampleAccountOverviewCriteria0: domains.AccountOverviewCriteriaDomain = 
 [
@@ -110,6 +147,64 @@ export const sampleAccountOverviewExcessLines0: domains.AccountOverviewExcessLin
     "consecutiveDays": 123
   }
 ]
+export const sampleAccountOverviewFacilities0: domains.AccountOverviewFacilitiesDomain = 
+{
+  "facilities": [
+    {
+      "facility": 1234,
+      "changeDate": "23-03-2022",
+      "unApproved": true,
+      "reason": "some reason",
+      "amount": 2345
+    },
+    {
+      "facility": 123,
+      "changeDate": "2020-10-01",
+      "unApproved": true,
+      "reason": "someString",
+      "amount": 123
+    },
+    {
+      "facility": 456,
+      "changeDate": "2022-14-01",
+      "unApproved": false,
+      "reason": "anotherString",
+      "amount": 456
+    }
+  ]
+}
+export const sampleAccountOverviewFacilitiesLine0: domains.AccountOverviewFacilitiesLineDomain = 
+{
+  "facility": 1234,
+  "changeDate": "23-03-2022",
+  "unApproved": true,
+  "reason": "some reason",
+  "amount": 2345
+}
+export const sampleAccountOverviewFacilitiesLines0: domains.AccountOverviewFacilitiesLinesDomain = 
+[
+  {
+    "facility": 1234,
+    "changeDate": "23-03-2022",
+    "unApproved": true,
+    "reason": "some reason",
+    "amount": 2345
+  },
+  {
+    "facility": 123,
+    "changeDate": "2020-10-01",
+    "unApproved": true,
+    "reason": "someString",
+    "amount": 123
+  },
+  {
+    "facility": 456,
+    "changeDate": "2022-14-01",
+    "unApproved": false,
+    "reason": "anotherString",
+    "amount": 456
+  }
+]
 export const sampleAccountOverviewHistory0: domains.AccountOverviewHistoryDomain = 
 {
   "history": [
@@ -130,13 +225,64 @@ export const sampleAccountOverviewHistory0: domains.AccountOverviewHistoryDomain
     }
   ]
 }
+export const sampleAccountOverviewOptOut0: domains.AccountOverviewOptOutDomain = 
+{
+  "optOut": [
+    {
+      "optedOut": true,
+      "addrLine5": "someString",
+      "changedBy": "someString",
+      "changedDate": "2020-10-01"
+    },
+    {
+      "optedOut": false,
+      "addrLine5": "anotherString",
+      "changedBy": "anotherString",
+      "changedDate": "2022-14-01"
+    },
+    {
+      "optedOut": true,
+      "addrLine5": "someString",
+      "changedBy": "someString",
+      "changedDate": "2020-10-01"
+    }
+  ]
+}
+export const sampleAccountOverviewOptOutLine0: domains.AccountOverviewOptOutLineDomain = 
+{
+  "optedOut": true,
+  "addrLine5": "someString",
+  "changedBy": "someString",
+  "changedDate": "2020-10-01"
+}
+export const sampleAccountOverviewOptOutLines0: domains.AccountOverviewOptOutLinesDomain = 
+[
+  {
+    "optedOut": true,
+    "addrLine5": "someString",
+    "changedBy": "someString",
+    "changedDate": "2020-10-01"
+  },
+  {
+    "optedOut": false,
+    "addrLine5": "anotherString",
+    "changedBy": "anotherString",
+    "changedDate": "2022-14-01"
+  },
+  {
+    "optedOut": true,
+    "addrLine5": "someString",
+    "changedBy": "someString",
+    "changedDate": "2020-10-01"
+  }
+]
 export const sampleAccountOverviewReason0: domains.AccountOverviewReasonDomain = 
 {
-  "reason": "Really good reason"
+  "reason": "Second charge case"
 }
 export const sampleArrearsDetails0: domains.ArrearsDetailsDomain = 
 {
-  "history": [
+  "details": [
     {
       "collectionsDate": "2020-10-01",
       "creditedDate": "2020-10-01",
@@ -224,15 +370,15 @@ export const sampleAccountAllFlags1: domains.AccountAllFlagsDomain =
 {
   "flags": [
     {
-      "flagName": "MI6 wanted list",
+      "flagName": "Contigent Obligations",
       "flagValue": false
     },
     {
-      "flagName": "Terrorist",
+      "flagName": "Capitalised",
       "flagValue": true
     },
     {
-      "flagName": "MI6 wanted list",
+      "flagName": "Contigent Obligations",
       "flagValue": false
     }
   ]
@@ -240,21 +386,21 @@ export const sampleAccountAllFlags1: domains.AccountAllFlagsDomain =
 export const sampleAccountAllFlagsList1: domains.AccountAllFlagsListDomain = 
 [
   {
-    "flagName": "MI6 wanted list",
+    "flagName": "Contigent Obligations",
     "flagValue": false
   },
   {
-    "flagName": "Terrorist",
+    "flagName": "Capitalised",
     "flagValue": true
   },
   {
-    "flagName": "MI6 wanted list",
+    "flagName": "Contigent Obligations",
     "flagValue": false
   }
 ]
 export const sampleAccountOneFlag1: domains.AccountOneFlagDomain = 
 {
-  "flagName": "MI6 wanted list",
+  "flagName": "Contigent Obligations",
   "flagValue": false
 }
 export const sampleAccountOverview1: domains.AccountOverviewDomain = 
@@ -278,9 +424,46 @@ export const sampleAccountOverview1: domains.AccountOverviewDomain =
     }
   ],
   "zFlagSet": "X",
-  "excessSixMonths": 456,
-  "bouncedDDs12Months": 456,
-  "unpaidCardOrMisuseItems": 456
+  "excessSixMonths": 2,
+  "bouncedDDs12Months": 1,
+  "unpaidCardOrMisuseItems": 123,
+  "currentBalance": 563,
+  "currentInterestRate": 1,
+  "facilities": {
+    "facilities": [
+      {
+        "facility": 123,
+        "changeDate": "2020-10-01",
+        "unApproved": true,
+        "reason": "someString",
+        "amount": 123
+      },
+      {
+        "facility": 123,
+        "changeDate": "2020-10-01",
+        "unApproved": true,
+        "reason": "someString",
+        "amount": 123
+      },
+      {
+        "facility": 456,
+        "changeDate": "2022-14-01",
+        "unApproved": false,
+        "reason": "anotherString",
+        "amount": 456
+      }
+    ]
+  },
+  "highBalance": 2000,
+  "lowBalance": 6354,
+  "pctOfFacility": 12,
+  "eightyPctFacility": 8000,
+  "eightyFivePctFacility": 456
+}
+export const sampleAccountOverviewAgreementType1: domains.AccountOverviewAgreementTypeDomain = 
+{
+  "agreementType": "mixed",
+  "transactionHeading": "option2"
 }
 export const sampleAccountOverviewCriteria1: domains.AccountOverviewCriteriaDomain = 
 [
@@ -330,6 +513,64 @@ export const sampleAccountOverviewExcessLines1: domains.AccountOverviewExcessLin
     "consecutiveDays": 456
   }
 ]
+export const sampleAccountOverviewFacilities1: domains.AccountOverviewFacilitiesDomain = 
+{
+  "facilities": [
+    {
+      "facility": 123,
+      "changeDate": "2020-10-01",
+      "unApproved": true,
+      "reason": "someString",
+      "amount": 123
+    },
+    {
+      "facility": 123,
+      "changeDate": "2020-10-01",
+      "unApproved": true,
+      "reason": "someString",
+      "amount": 123
+    },
+    {
+      "facility": 456,
+      "changeDate": "2022-14-01",
+      "unApproved": false,
+      "reason": "anotherString",
+      "amount": 456
+    }
+  ]
+}
+export const sampleAccountOverviewFacilitiesLine1: domains.AccountOverviewFacilitiesLineDomain = 
+{
+  "facility": 123,
+  "changeDate": "2020-10-01",
+  "unApproved": true,
+  "reason": "someString",
+  "amount": 123
+}
+export const sampleAccountOverviewFacilitiesLines1: domains.AccountOverviewFacilitiesLinesDomain = 
+[
+  {
+    "facility": 123,
+    "changeDate": "2020-10-01",
+    "unApproved": true,
+    "reason": "someString",
+    "amount": 123
+  },
+  {
+    "facility": 123,
+    "changeDate": "2020-10-01",
+    "unApproved": true,
+    "reason": "someString",
+    "amount": 123
+  },
+  {
+    "facility": 456,
+    "changeDate": "2022-14-01",
+    "unApproved": false,
+    "reason": "anotherString",
+    "amount": 456
+  }
+]
 export const sampleAccountOverviewHistory1: domains.AccountOverviewHistoryDomain = 
 {
   "history": [
@@ -350,13 +591,64 @@ export const sampleAccountOverviewHistory1: domains.AccountOverviewHistoryDomain
     }
   ]
 }
+export const sampleAccountOverviewOptOut1: domains.AccountOverviewOptOutDomain = 
+{
+  "optOut": [
+    {
+      "optedOut": false,
+      "addrLine5": "anotherString",
+      "changedBy": "anotherString",
+      "changedDate": "2022-14-01"
+    },
+    {
+      "optedOut": true,
+      "addrLine5": "someString",
+      "changedBy": "someString",
+      "changedDate": "2020-10-01"
+    },
+    {
+      "optedOut": false,
+      "addrLine5": "anotherString",
+      "changedBy": "anotherString",
+      "changedDate": "2022-14-01"
+    }
+  ]
+}
+export const sampleAccountOverviewOptOutLine1: domains.AccountOverviewOptOutLineDomain = 
+{
+  "optedOut": false,
+  "addrLine5": "anotherString",
+  "changedBy": "anotherString",
+  "changedDate": "2022-14-01"
+}
+export const sampleAccountOverviewOptOutLines1: domains.AccountOverviewOptOutLinesDomain = 
+[
+  {
+    "optedOut": false,
+    "addrLine5": "anotherString",
+    "changedBy": "anotherString",
+    "changedDate": "2022-14-01"
+  },
+  {
+    "optedOut": true,
+    "addrLine5": "someString",
+    "changedBy": "someString",
+    "changedDate": "2020-10-01"
+  },
+  {
+    "optedOut": false,
+    "addrLine5": "anotherString",
+    "changedBy": "anotherString",
+    "changedDate": "2022-14-01"
+  }
+]
 export const sampleAccountOverviewReason1: domains.AccountOverviewReasonDomain = 
 {
-  "reason": "This is a one line string"
+  "reason": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
 }
 export const sampleArrearsDetails1: domains.ArrearsDetailsDomain = 
 {
-  "history": [
+  "details": [
     {
       "collectionsDate": "2022-14-01",
       "creditedDate": "2022-14-01",
@@ -452,7 +744,7 @@ export const sampleAccountAllFlags2: domains.AccountAllFlagsDomain =
       "flagValue": false
     },
     {
-      "flagName": "Terrorist",
+      "flagName": "Capitalised",
       "flagValue": true
     }
   ]
@@ -468,7 +760,7 @@ export const sampleAccountAllFlagsList2: domains.AccountAllFlagsListDomain =
     "flagValue": false
   },
   {
-    "flagName": "Terrorist",
+    "flagName": "Capitalised",
     "flagValue": true
   }
 ]
@@ -498,9 +790,46 @@ export const sampleAccountOverview2: domains.AccountOverviewDomain =
     }
   ],
   "zFlagSet": "Y",
-  "excessSixMonths": 123,
-  "bouncedDDs12Months": 123,
-  "unpaidCardOrMisuseItems": 123
+  "excessSixMonths": 3,
+  "bouncedDDs12Months": 0,
+  "unpaidCardOrMisuseItems": 456,
+  "currentBalance": 234,
+  "currentInterestRate": 2,
+  "facilities": {
+    "facilities": [
+      {
+        "facility": 456,
+        "changeDate": "2022-14-01",
+        "unApproved": false,
+        "reason": "anotherString",
+        "amount": 456
+      },
+      {
+        "facility": 123,
+        "changeDate": "2020-10-01",
+        "unApproved": true,
+        "reason": "someString",
+        "amount": 123
+      },
+      {
+        "facility": 456,
+        "changeDate": "2022-14-01",
+        "unApproved": false,
+        "reason": "anotherString",
+        "amount": 456
+      }
+    ]
+  },
+  "highBalance": 123,
+  "lowBalance": 123,
+  "pctOfFacility": 123,
+  "eightyPctFacility": 123,
+  "eightyFivePctFacility": 123
+}
+export const sampleAccountOverviewAgreementType2: domains.AccountOverviewAgreementTypeDomain = 
+{
+  "agreementType": "option1",
+  "transactionHeading": "option3"
 }
 export const sampleAccountOverviewCriteria2: domains.AccountOverviewCriteriaDomain = 
 [
@@ -550,6 +879,64 @@ export const sampleAccountOverviewExcessLines2: domains.AccountOverviewExcessLin
     "consecutiveDays": 123
   }
 ]
+export const sampleAccountOverviewFacilities2: domains.AccountOverviewFacilitiesDomain = 
+{
+  "facilities": [
+    {
+      "facility": 456,
+      "changeDate": "2022-14-01",
+      "unApproved": false,
+      "reason": "anotherString",
+      "amount": 456
+    },
+    {
+      "facility": 123,
+      "changeDate": "2020-10-01",
+      "unApproved": true,
+      "reason": "someString",
+      "amount": 123
+    },
+    {
+      "facility": 456,
+      "changeDate": "2022-14-01",
+      "unApproved": false,
+      "reason": "anotherString",
+      "amount": 456
+    }
+  ]
+}
+export const sampleAccountOverviewFacilitiesLine2: domains.AccountOverviewFacilitiesLineDomain = 
+{
+  "facility": 456,
+  "changeDate": "2022-14-01",
+  "unApproved": false,
+  "reason": "anotherString",
+  "amount": 456
+}
+export const sampleAccountOverviewFacilitiesLines2: domains.AccountOverviewFacilitiesLinesDomain = 
+[
+  {
+    "facility": 456,
+    "changeDate": "2022-14-01",
+    "unApproved": false,
+    "reason": "anotherString",
+    "amount": 456
+  },
+  {
+    "facility": 123,
+    "changeDate": "2020-10-01",
+    "unApproved": true,
+    "reason": "someString",
+    "amount": 123
+  },
+  {
+    "facility": 456,
+    "changeDate": "2022-14-01",
+    "unApproved": false,
+    "reason": "anotherString",
+    "amount": 456
+  }
+]
 export const sampleAccountOverviewHistory2: domains.AccountOverviewHistoryDomain = 
 {
   "history": [
@@ -570,13 +957,64 @@ export const sampleAccountOverviewHistory2: domains.AccountOverviewHistoryDomain
     }
   ]
 }
+export const sampleAccountOverviewOptOut2: domains.AccountOverviewOptOutDomain = 
+{
+  "optOut": [
+    {
+      "optedOut": true,
+      "addrLine5": "someString",
+      "changedBy": "someString",
+      "changedDate": "2020-10-01"
+    },
+    {
+      "optedOut": false,
+      "addrLine5": "anotherString",
+      "changedBy": "anotherString",
+      "changedDate": "2022-14-01"
+    },
+    {
+      "optedOut": true,
+      "addrLine5": "someString",
+      "changedBy": "someString",
+      "changedDate": "2020-10-01"
+    }
+  ]
+}
+export const sampleAccountOverviewOptOutLine2: domains.AccountOverviewOptOutLineDomain = 
+{
+  "optedOut": true,
+  "addrLine5": "someString",
+  "changedBy": "someString",
+  "changedDate": "2020-10-01"
+}
+export const sampleAccountOverviewOptOutLines2: domains.AccountOverviewOptOutLinesDomain = 
+[
+  {
+    "optedOut": true,
+    "addrLine5": "someString",
+    "changedBy": "someString",
+    "changedDate": "2020-10-01"
+  },
+  {
+    "optedOut": false,
+    "addrLine5": "anotherString",
+    "changedBy": "anotherString",
+    "changedDate": "2022-14-01"
+  },
+  {
+    "optedOut": true,
+    "addrLine5": "someString",
+    "changedBy": "someString",
+    "changedDate": "2020-10-01"
+  }
+]
 export const sampleAccountOverviewReason2: domains.AccountOverviewReasonDomain = 
 {
-  "reason": "another one line string"
+  "reason": "Second charge case"
 }
 export const sampleArrearsDetails2: domains.ArrearsDetailsDomain = 
 {
-  "history": [
+  "details": [
     {
       "collectionsDate": "2020-10-01",
       "creditedDate": "2020-10-01",

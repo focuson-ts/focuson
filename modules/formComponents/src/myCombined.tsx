@@ -45,6 +45,7 @@ export function MyCombined<S extends HasTagHolder & HasSimpleMessages, Context e
   const messagesJSX = <Messages state={state.focusOn ( 'messages' )}/>
   return <>
     <div id='container' className='combine'>
+        <div className='glassPane'>
       {
         pages.map ( ( p, i ) => {
             if ( p.pageType === 'ModalPopup' ) return modalPopupJSX ( p, i, messagesJSX )
@@ -53,6 +54,7 @@ export function MyCombined<S extends HasTagHolder & HasSimpleMessages, Context e
             throw new Error ( `Don't know how to process page type ${p.pageType}\n${JSON.stringify ( p )}` )
           }
         )}
+        </div>
       <DebugState state={state}/>
     </div>
   </>
