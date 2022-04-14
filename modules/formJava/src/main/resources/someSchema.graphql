@@ -34,7 +34,7 @@ type Mutation{
   createPostCodeNameAndAddress(,obj: PostCodeNameAndAddressInp!):PostCodeNameAndAddress!
 }
 type AccountAllFlags{
-  flags: [OccountOneFlag!]!
+  flags: [AccountOneFlag!]!
 }
 type AccountDetails{
   contactTitle: String!
@@ -47,6 +47,10 @@ type AccountDetails{
   addressLine4: String!
   postcode: String!
   telephone: String!
+}
+type AccountOneFlag{
+  flagName: String!
+  flagValue: Boolean!
 }
 type AccountOverview{
   score: Int!
@@ -251,10 +255,6 @@ type JointAccountAddress{
 type JointAccountCustomer{
   name: String!
   addresses: [JointAccountAddress!]!
-}
-type OccountOneFlag{
-  flagName: String!
-  flagValue: Boolean!
 }
 type OccupationAndIncomeFullDomain{
   mainCustomerName: String!

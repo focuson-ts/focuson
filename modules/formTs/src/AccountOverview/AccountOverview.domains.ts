@@ -14,10 +14,15 @@ export interface AccountOverviewPageDomain{
 }
 
 export interface AccountAllFlagsDomain{
-  flags: OccountOneFlagDomain[];
+  flags: AccountOneFlagDomain[];
 }
 
-export type AccountAllFlagsListDomain = OccountOneFlagDomain[]
+export type AccountAllFlagsListDomain = AccountOneFlagDomain[]
+
+export interface AccountOneFlagDomain{
+  flagName: string;
+  flagValue: boolean;
+}
 
 export interface AccountOverviewDomain{
   accountType: string;
@@ -121,8 +126,3 @@ export interface ArrearsDetailsLineDomain{
 }
 
 export type ArrearsDetailsLinesDomain = ArrearsDetailsLineDomain[]
-
-export interface OccountOneFlagDomain{
-  flagName: string;
-  flagValue: boolean;
-}

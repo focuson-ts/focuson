@@ -8,14 +8,14 @@ import { Lenses } from '@focuson/lens';
 import { Guard } from "@focuson/form_components";
 import { GuardButton } from "@focuson/form_components";
 import { AccountOverviewOptionals } from "../AccountOverview/AccountOverview.optionals";
-import { TableWithCheckbox } from '../formComponents/tableWithCheckboxInput';
+import { TableWithCheckboxInput } from '@focuson/form_components';
+import { LabelAndStringInput } from '@focuson/form_components';
+import { LabelAndBooleanInput } from '@focuson/form_components';
 import { LabelAndRadio } from '@focuson/form_components';
 import { LabelAndNumberInput } from '@focuson/form_components';
 import { Table } from '@focuson/form_components';
-import { LabelAndStringInput } from '@focuson/form_components';
-import { PlusMinusButtonsAndInput } from '../formComponents/plusMinusButtonsAndInput';
+import { PlusMinusButtonsAndInput } from '@focuson/form_components';
 import { LabelAndDropdown } from '@focuson/form_components';
-import { LabelAndBooleanInput } from '@focuson/form_components';
 import { Layout } from '@focuson/form_components';
 import {ListNextButton} from '@focuson/form_components';
 import {ListPrevButton} from '@focuson/form_components';
@@ -29,6 +29,7 @@ import {AccountOverviewPageDomain} from "../AccountOverview/AccountOverview.doma
 import { HideButtonsLayout } from '@focuson/form_components';
 import {AccountAllFlagsDomain} from "../AccountOverview/AccountOverview.domains"
 import {AccountAllFlagsListDomain} from "../AccountOverview/AccountOverview.domains"
+import {AccountOneFlagDomain} from "../AccountOverview/AccountOverview.domains"
 import {AccountOverviewDomain} from "../AccountOverview/AccountOverview.domains"
 import {AccountOverviewAgreementTypeDomain} from "../AccountOverview/AccountOverview.domains"
 import {AccountOverviewCriteriaDomain} from "../AccountOverview/AccountOverview.domains"
@@ -47,7 +48,6 @@ import {AccountOverviewReasonDomain} from "../AccountOverview/AccountOverview.do
 import {ArrearsDetailsDomain} from "../AccountOverview/AccountOverview.domains"
 import {ArrearsDetailsLineDomain} from "../AccountOverview/AccountOverview.domains"
 import {ArrearsDetailsLinesDomain} from "../AccountOverview/AccountOverview.domains"
-import {OccountOneFlagDomain} from "../AccountOverview/AccountOverview.domains"
 export function AccountOverviewPage(){
    //A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/main
   return focusedPageWithExtraState<FState, AccountOverviewPageDomain, AccountOverviewDomain, Context> ( s => 'Account Overview' ) ( state => state.focusOn('main')) (
@@ -97,7 +97,14 @@ const id=`page${index}`;
 
 export function AccountAllFlags({id,state,mode,buttons}: FocusedProps<FState, AccountAllFlagsDomain,Context>){
   return <>
-    <TableWithCheckbox id={`${id}.flags`} state={state.focusOn('flags')} mode={mode} order={["flagName","flagValue"]} />
+    <TableWithCheckboxInput id={`${id}.flags`} state={state.focusOn('flags')} mode={mode} order={["flagName","flagValue"]} />
+</>
+}
+
+export function AccountOneFlag({id,state,mode,buttons}: FocusedProps<FState, AccountOneFlagDomain,Context>){
+  return <>
+    <LabelAndStringInput id={`${id}.flagName`} state={state.focusOn('flagName')} mode={mode} label='Flag Name' allButtons={buttons} required={true} />
+    <LabelAndBooleanInput id={`${id}.flagValue`} state={state.focusOn('flagValue')} mode={mode} label='Flag Value' allButtons={buttons} />
 </>
 }
 
@@ -217,12 +224,5 @@ export function ArrearsDetailsLine({id,state,mode,buttons}: FocusedProps<FState,
     <LabelAndNumberInput id={`${id}.shortfall`} state={state.focusOn('shortfall')} mode={mode} label='Shortfall' allButtons={buttons} required={true} />
     <LabelAndNumberInput id={`${id}.arrearsTotal`} state={state.focusOn('arrearsTotal')} mode={mode} label='Arrears Total' allButtons={buttons} required={true} />
     <LabelAndNumberInput id={`${id}.missedPayments`} state={state.focusOn('missedPayments')} mode={mode} label='Missed Payments' allButtons={buttons} required={true} min={0} />
-</>
-}
-
-export function OccountOneFlag({id,state,mode,buttons}: FocusedProps<FState, OccountOneFlagDomain,Context>){
-  return <>
-    <LabelAndStringInput id={`${id}.flagName`} state={state.focusOn('flagName')} mode={mode} label='Flag Name' allButtons={buttons} required={true} />
-    <LabelAndBooleanInput id={`${id}.flagValue`} state={state.focusOn('flagValue')} mode={mode} label='Flag Value' allButtons={buttons} />
 </>
 }

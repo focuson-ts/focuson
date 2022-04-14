@@ -59,6 +59,7 @@
   ##domains 
     AccountAllFlags
     AccountAllFlagsList
+    AccountOneFlag
     AccountOverview
     AccountOverviewAgreementType
     AccountOverviewCriteria
@@ -77,7 +78,6 @@
     ArrearsDetails
     ArrearsDetailsLine
     ArrearsDetailsLines
-    OccountOneFlag
   ##rests   
   |name|url|params
   | --- | --- | --- 

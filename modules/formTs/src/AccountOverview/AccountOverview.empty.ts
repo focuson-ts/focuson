@@ -16,6 +16,11 @@ export const emptyAccountAllFlagsList:domains.AccountAllFlagsListDomain =
       "flagValue": false
     }
   ]
+export const emptyAccountOneFlag:domains.AccountOneFlagDomain =
+  {
+    "flagName": "",
+    "flagValue": false
+  }
 export const emptyAccountOverview:domains.AccountOverviewDomain =
   {
     "score": 0,
@@ -203,8 +208,3 @@ export const emptyArrearsDetailsLines:domains.ArrearsDetailsLinesDomain =
       "missedPayments": 0
     }
   ]
-export const emptyOccountOneFlag:domains.OccountOneFlagDomain =
-  {
-    "flagName": "",
-    "flagValue": false
-  }

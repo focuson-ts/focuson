@@ -80,16 +80,6 @@ export const TableCD: DisplayCompD = {
   }
 }
 
-export const TableWithCheckboxInputCD: DisplayCompD = {
-  import: "../formComponents/tableWithCheckboxInput", name: "TableWithCheckbox",
-  params: {
-    ...commonParams,
-    order: { paramType: 'string[]', needed: 'yes' },
-    copySelectedIndexTo: { paramType: 'pageState', needed: 'no' },
-    copySelectedItemTo: { paramType: 'pageState', needed: 'no' }
-  }
-}
-
 export const SelectedItemCD: DisplayCompD = {
   import: "@focuson/form_components",
   name: "SelectedItem",
@@ -119,7 +109,6 @@ export const LabelAndRadioCD: DisplayCompD = {
   name: "LabelAndRadio",
   params: { ...commonParamsWithLabel, ...enumParams }
 }
-
 
 export const OptionalCD: DisplayCompD = {
   import: '@focuson/form_components',

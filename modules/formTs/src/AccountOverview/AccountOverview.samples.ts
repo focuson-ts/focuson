@@ -32,6 +32,11 @@ export const sampleAccountAllFlagsList0: domains.AccountAllFlagsListDomain =
     "flagValue": true
   }
 ]
+export const sampleAccountOneFlag0: domains.AccountOneFlagDomain = 
+{
+  "flagName": "Capitalised",
+  "flagValue": true
+}
 export const sampleAccountOverview0: domains.AccountOverviewDomain = 
 {
   "score": 123,
@@ -361,11 +366,6 @@ export const sampleArrearsDetailsLines0: domains.ArrearsDetailsLinesDomain =
     "missedPayments": 123
   }
 ]
-export const sampleOccountOneFlag0: domains.OccountOneFlagDomain = 
-{
-  "flagName": "Capitalised",
-  "flagValue": true
-}
 export const sampleAccountAllFlags1: domains.AccountAllFlagsDomain = 
 {
   "flags": [
@@ -398,6 +398,11 @@ export const sampleAccountAllFlagsList1: domains.AccountAllFlagsListDomain =
     "flagValue": false
   }
 ]
+export const sampleAccountOneFlag1: domains.AccountOneFlagDomain = 
+{
+  "flagName": "Contigent Obligations",
+  "flagValue": false
+}
 export const sampleAccountOverview1: domains.AccountOverviewDomain = 
 {
   "score": 456,
@@ -727,11 +732,6 @@ export const sampleArrearsDetailsLines1: domains.ArrearsDetailsLinesDomain =
     "missedPayments": 456
   }
 ]
-export const sampleOccountOneFlag1: domains.OccountOneFlagDomain = 
-{
-  "flagName": "Contigent Obligations",
-  "flagValue": false
-}
 export const sampleAccountAllFlags2: domains.AccountAllFlagsDomain = 
 {
   "flags": [
@@ -764,6 +764,11 @@ export const sampleAccountAllFlagsList2: domains.AccountAllFlagsListDomain =
     "flagValue": true
   }
 ]
+export const sampleAccountOneFlag2: domains.AccountOneFlagDomain = 
+{
+  "flagName": "This is a one line string",
+  "flagValue": true
+}
 export const sampleAccountOverview2: domains.AccountOverviewDomain = 
 {
   "score": 123,
@@ -1093,8 +1098,3 @@ export const sampleArrearsDetailsLines2: domains.ArrearsDetailsLinesDomain =
     "missedPayments": 123
   }
 ]
-export const sampleOccountOneFlag2: domains.OccountOneFlagDomain = 
-{
-  "flagName": "This is a one line string",
-  "flagValue": true
-}
