@@ -10,7 +10,7 @@ import { ExampleMainPage } from "./example/common";
 import { OccupationAndIncomeSummaryPD } from "./example/occupationAndIncome/occupationAndIncome.pageD";
 import { AccountOverviewMainPage } from "./example/accountOverview/accountOverview.pageD";
 import { JointAccountPageD } from "./example/jointAccount/jointAccount.pageD";
-import { HelloWorldPage } from "./example/helloWorld/helloWorld.pageD";
+import { HelloWorldPage } from "./example/HelloWorld/helloWorld.pageD";
 import * as process from "process";
 import { MainOccupationDetailsPageSummaryPD } from "./example/SingleOccupation/singleOccupation.pageD";
 
