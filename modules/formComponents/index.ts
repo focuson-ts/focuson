@@ -22,6 +22,9 @@ export * from './src/toggleButton'
 export * from './src/transformers'
 export * from './src/unpaidCardOrMisuseItems'
 export * from './src/validationButton'
+export * from './src/plusMinusButtonsAndInput'
+export * from './src/tableWithCheckboxInput'
+
 
 
 
