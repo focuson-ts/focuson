@@ -182,11 +182,20 @@ export function isTableWhereLink ( w: WhereLink ): w is TableWhereLink {
   return w.parentTable !== undefined
 }
 
+export interface SingleLinkData {
+  w: WhereLink;
+  name: string
+}
+export function singleLinkData ( w: WhereLink ) {
+  if ( isWhereFromQuery ( w ) ) return { w, name: `param__${w.paramName}` }
+  return { w, name: `${w.parentAlias}__${w.idInParent}__${w.childAlias}__${w.idInThis}` }
+}
 export interface SqlLinkData {
   sqlRoot: SqlRoot;
   aliasAndTables: [ string, DBTable ][];
   fields: TableAndFieldAndAliasData<any>[],
-  whereLinks: WhereLink[];
+  whereLinks: WhereLink[] // refactoring to loose this and move into next structure + parent
+  linksInThis: SingleLinkData[];
   children: SqlLinkData[]
 }
 export function simplifyAliasAndTables ( ats: [ string, DBTable ] [] ) {return ats.map ( ( [ alias, table ] ) => `${alias}->${table.name}` ).join ( "," )}
@@ -199,7 +208,12 @@ export function simplifyWhereLinks ( ws: WhereLink[] ) {
   )
 }
 export function simplifySqlLinkData ( s: SqlLinkData ): string[] {
-  return [ `sqlRoot: ${s.sqlRoot.root.table.name}`, `fields: ${simplifyTableAndFieldAndAliasDataArray ( s.fields ).join ( "," )}`, `aliasAndTables ${simplifyAliasAndTables ( s.aliasAndTables )}`, `where ${simplifyWhereLinks ( s.whereLinks )}` ]
+  return [ `sqlRoot: ${s.sqlRoot.root.table.name}`,
+    `fields: ${simplifyTableAndFieldAndAliasDataArray ( s.fields ).join ( "," )}`,
+    `aliasAndTables ${simplifyAliasAndTables ( s.aliasAndTables )}`,
+    `where ${simplifyWhereLinks ( s.whereLinks )}`,
+    `linksInThis: ${s.linksInThis.map ( l => l.name ).join ( "," )}`,
+    `children: ${s.children.length}` ]
 }
 
 export function getParentTableAndAlias<T> ( main: EntityAndWhere, path: [ string, ChildEntity ][], fn: ( c: Entity ) => T ): [ string, T ] {
@@ -223,7 +237,7 @@ export function findAliasAndTableLinksForLinkData ( m: SqlRoot ): [ string, DBTa
   return unique ( [ [ m.main.entity.table.name, m.main.entity.table ], ...zero, ...result ], ( [ alias, table ] ) => `${alias}:${table.name}` )
 }
 
-export function findWhereLinksForSqlRoot ( sqlRoot: SqlRoot ): WhereLink[] {
+function findWhereLinksForSqlRootGoingDown ( sqlRoot: SqlRoot ) {
   let whereLinks = foldEntitys ( {
     foldMain ( childAccs: WhereLink[][], main: EntityAndWhere ): WhereLink[] { return [ ...childAccs.flat (), ...main.where ]},
     foldMultiple ( childAccs: WhereLink[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, multiple: MultipleEntity ): WhereLink[] { return [] },
@@ -233,8 +247,10 @@ export function findWhereLinksForSqlRoot ( sqlRoot: SqlRoot ): WhereLink[] {
       return [ ...childAccs.flat (), whereLink ]
     }
   }, sqlRoot.main, sqlRoot.root, sqlRoot.filterPath, [] );
-  const result: WhereLink[] = [ ...whereLinks.flat (), ...findWhereLinksForSqlRootGoingUp ( sqlRoot ) ]
-  return result
+  return whereLinks;
+}
+export function findWhereLinksForSqlRoot ( sqlRoot: SqlRoot ): WhereLink[] {
+  return [ ...(findWhereLinksForSqlRootGoingDown ( sqlRoot )), ...findWhereLinksForSqlRootGoingUp ( sqlRoot ) ]
 }
 
 export function findWhereLinksForSqlRootGoingUp ( sqlRoot: SqlRoot ): WhereLink[] {
@@ -353,11 +369,16 @@ export function findAllFields<G> ( sqlRoot: SqlRoot, dataD: CompDataD<any>, wher
 }
 
 export function findSqlLinkDataFromRootAndDataD ( sqlRoot: SqlRoot, dataD: CompDataD<any> ): SqlLinkData {
+  return findSqlLinkDataFromRootAndDataDWithParent(undefined, sqlRoot, dataD)
+}
+export function findSqlLinkDataFromRootAndDataDWithParent ( parent: SqlRoot | undefined, sqlRoot: SqlRoot, dataD: CompDataD<any> ): SqlLinkData {
   const aliasAndTables = findAliasAndTableLinksForLinkData ( sqlRoot )
   const whereLinks = findWhereLinksForSqlRoot ( sqlRoot )
   const fields = findAllFields ( sqlRoot, dataD, whereLinks )
-  const children = sqlRoot.children.map ( childRoot => findSqlLinkDataFromRootAndDataD ( childRoot, dataD ) )
-  return { whereLinks, aliasAndTables, sqlRoot, fields, children }
+  const children = sqlRoot.children.map ( childRoot => findSqlLinkDataFromRootAndDataDWithParent ( sqlRoot, childRoot, dataD ) )
+  const rawLinksInThis = findWhereLinksForSqlRootGoingDown ( sqlRoot ).map ( singleLinkData )
+  const linksInThis = parent ? rawLinksInThis.filter ( l => isTableWhereLink ( l.w ) ) : rawLinksInThis //we only have param links in the top most.. by definition that params are constant in one query
+  return { whereLinks, aliasAndTables, sqlRoot, fields, linksInThis, children }
 }
 
 
