@@ -136,11 +136,13 @@ export function findSqlRoot ( m: EntityAndWhere ): SqlRoot {
     }
   }, m, m.entity, undefined, [] )[ 0 ]
 }
-export function walkSqlRoots<T> ( s: SqlRoot, fn: ( s: SqlRoot, path: number[] ) => T, path?: number[] ): T[] {
-  let safePath = safeArray ( path );
-  return [ fn ( s, safePath ), ...s.children.flatMap ( ( c, i ) => walkSqlRoots ( c, fn, [ ...safePath, i ] ) ) ]
+export function walkSqlRoots<T> ( s: SqlRoot, fn: ( parent: SqlRoot | undefined, s: SqlRoot, path: number[] ) => T, path?: number[] ): T[] {
+  return walkSqlRootsWithparent ( undefined, s, fn )
 }
-
+function walkSqlRootsWithparent<T> ( parent: SqlRoot | undefined, s: SqlRoot, fn: ( parent: SqlRoot | undefined, s: SqlRoot, path: number[] ) => T, path?: number[] ): T[] {
+  let safePath = safeArray ( path );
+  return [ fn ( parent, s, safePath ), ...s.children.flatMap ( ( c, i ) => walkSqlRootsWithparent ( s, c, fn, [ ...safePath, i ] ) ) ]
+}
 export interface TableWhereLink {
   parentTable: DBTable;
   parentAlias: string;
@@ -369,7 +371,7 @@ export function generateGetSql ( s: SqlLinkData ): string[] {
 
 export const findAllTableAndFieldsIn = <G> ( rdps: RestDefnInPageProperties<G>[] ) => unique ( rdps.flatMap ( rdp => {
   if ( !rdp.rest.tables ) return []
-  return walkSqlRoots ( findSqlRoot ( rdp.rest.tables ), sqlRoot => findSqlLinkDataFromRootAndDataD ( sqlRoot, rdp.rest.dataDD ) ).flatMap (
+  return walkSqlRoots ( findSqlRoot ( rdp.rest.tables ), (parent,sqlRoot) => findSqlLinkDataFromRootAndDataD ( sqlRoot, rdp.rest.dataDD ) ).flatMap (
     linkData => linkData.fields.map ( taf =>
       ({ table: taf.table, fieldData: taf.fieldData }) )
   )
@@ -519,7 +521,7 @@ interface QueryAndGetters {
 }
 export function makeAllGetsAndAllSqlForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, restD: RestD<G> ): string[] {
   let sqlRoot = findSqlRoot ( restD.tables );
-  const getters: QueryAndGetters[] = walkSqlRoots ( sqlRoot, ( r, path ) => {
+  const getters: QueryAndGetters[] = walkSqlRoots ( sqlRoot, ( parent, r, path ) => {
     const ld = findSqlLinkDataFromRootAndDataD ( r, restD.dataDD )
     if ( restD.tables === undefined ) throw Error ( `somehow have a sql root without a tables in ${p.name} ${restName}` )
     const query = findParamsForTable ( `Page ${p.name} rest ${restName}`, restD.params, restD.tables )

@@ -37,17 +37,24 @@ describe ( "EntityFolder", () => {
 
 describe ( "findSqlRoots", () => {
   it ( "should find a root for the main and each multiple", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), simplifySqlRoot ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), ( p, r ) => simplifySqlRoot ( r ) ) ).toEqual ( [
       "main ACC_TBL path [] root ACC_TBL children [ADD_TBL,ADD_TBL] filterPath: undefined",
       "main ACC_TBL path [mainCustomer -> CUST_TBL] root ADD_TBL children [] filterPath: main",
       "main ACC_TBL path [jointCustomer -> CUST_TBL] root ADD_TBL children [] filterPath: joint"
     ] )
   } )
+  it ( "should have a walkSqlRoots that gives access to the parent as well", () => {
+    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), ( p, r ) => p ? simplifySqlRoot ( p ) : '' ) ).toEqual ( [
+      "",
+      "main ACC_TBL path [] root ACC_TBL children [ADD_TBL,ADD_TBL] filterPath: undefined",
+      "main ACC_TBL path [] root ACC_TBL children [ADD_TBL,ADD_TBL] filterPath: undefined"
+    ])
+  } )
 } )
 
 describe ( "findAliasAndTablesLinksForLinkDataFolder", () => {
   it ( "should generate aliasAndTables", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), r => simplifyAliasAndTables ( findAliasAndTableLinksForLinkData ( r ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), ( parent, r ) => simplifyAliasAndTables ( findAliasAndTableLinksForLinkData ( r ) ) ) ).toEqual ( [
       "ACC_TBL->ACC_TBL,mainName->NAME_TBL,mainCustomer->CUST_TBL,jointName->NAME_TBL,jointCustomer->CUST_TBL",
       "ACC_TBL->ACC_TBL,mainCustomer->CUST_TBL,mainAddress->ADD_TBL",
       "ACC_TBL->ACC_TBL,jointCustomer->CUST_TBL,jointAddress->ADD_TBL"
@@ -56,7 +63,7 @@ describe ( "findAliasAndTablesLinksForLinkDataFolder", () => {
 } )
 describe ( "findWhereLinkDataForLinkData", () => {
     it ( "should generate  findWhereLinkDataForLinkData", () => {
-      expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), r => simplifyWhereLinks ( findWhereLinksForSqlRoot ( r ) ) ) ).toEqual ( [
+      expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), ( parent, r ) => simplifyWhereLinks ( findWhereLinksForSqlRoot ( r ) ) ) ).toEqual ( [
         [
           "mainCustomer:CUST_TBL.nameId == mainName:NAME_TBL.id",
           "ACC_TBL:ACC_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer",
@@ -95,7 +102,7 @@ describe ( "whereFieldToFieldData. Note that the undefined gets fixed later in t
 } )
 describe ( "findFieldsFromWhere", () => {
   it ( "find the fields in the where clauses. ", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), r =>
+    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), ( parent, r ) =>
       unique ( simplifyTableAndFieldAndAliasDataArray ( findFieldsFromWhere ( 'someErrorPrefix', findWhereLinksForSqlRoot ( r ) ) ), s => s ) ) ).toEqual ( [
       [
         "mainCustomer:CUST_TBL.nameId/undefined",
@@ -154,7 +161,7 @@ describe ( "findTableAliasAndFieldFromDataD", () => {
 
   it ( "should start with the fields from the wheres, and add in the fields from the dataD: only adding where the data is needed - i.e. not adding fields to the 'path' to the root", () => {
     const fromDataD = findTableAndFieldFromDataD ( JointAccountDd )
-    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), r => simplifyTableAndFieldAndAliasDataArray ( findTableAliasAndFieldFromDataD ( r, fromDataD ), true ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), ( parent, r ) => simplifyTableAndFieldAndAliasDataArray ( findTableAliasAndFieldFromDataD ( r, fromDataD ), true ) ) ).toEqual ( [
       [
         "mainName:NAME_TBL.zzname/name/main,name",
         "jointName:NAME_TBL.zzname/name/joint,name",
@@ -174,7 +181,7 @@ describe ( "findTableAliasAndFieldFromDataD", () => {
 
 describe ( "findAllFields", () => {
   it ( "should aggregate the fields from the where and from the dataD - simple ", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( addressRestD.tables ), r => simplifyTableAndFieldAndAliasDataArray ( findAllFields ( r, nameAndAddressDataD, findWhereLinksForSqlRootGoingUp ( r ) ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( addressRestD.tables ), ( parent, r ) => simplifyTableAndFieldAndAliasDataArray ( findAllFields ( r, nameAndAddressDataD, findWhereLinksForSqlRootGoingUp ( r ) ) ) ) ).toEqual ( [
       [
         "ADD_TBL:ADD_TBL.zzline1/line1",
         "ADD_TBL:ADD_TBL.zzline2/line2",
@@ -185,7 +192,7 @@ describe ( "findAllFields", () => {
   } )
 
   it ( "should findWhereLinksForSqlRootsGoingUp", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), r => simplifyWhereLinks ( findWhereLinksForSqlRootGoingUp ( r ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), ( parent, r ) => simplifyWhereLinks ( findWhereLinksForSqlRootGoingUp ( r ) ) ) ).toEqual ( [
       [],
       [
         "mainCustomer:CUST_TBL.id == mainAddress:ADD_TBL.customerId",
@@ -199,7 +206,7 @@ describe ( "findAllFields", () => {
   } )
 
   it ( "should aggregate the fields from the where and from the dataD ", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), r => simplifyTableAndFieldAndAliasDataArray ( findAllFields ( r, JointAccountDd, findWhereLinksForSqlRootGoingUp ( r ) ), true ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), ( parent, r ) => simplifyTableAndFieldAndAliasDataArray ( findAllFields ( r, JointAccountDd, findWhereLinksForSqlRootGoingUp ( r ) ), true ) ) ).toEqual ( [
       [
         "mainName:NAME_TBL.zzname/name/main,name",
         "jointName:NAME_TBL.zzname/name/joint,name",
@@ -225,7 +232,7 @@ describe ( "findAllFields", () => {
 
 describe ( "findSqlLinkDataFromRootAndDataD", () => {
   it ( "should create the data for the links in postCodeDataLineD (simple)", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( addressRestD.tables ), r => simplifySqlLinkData ( findSqlLinkDataFromRootAndDataD ( r, postCodeDataLineD ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( addressRestD.tables ), ( parent, r ) => simplifySqlLinkData ( findSqlLinkDataFromRootAndDataD ( r, postCodeDataLineD ) ) ) ).toEqual ( [
       [
         "sqlRoot: ADD_TBL",
         "fields: ADD_TBL:ADD_TBL.zzline1/line1,ADD_TBL:ADD_TBL.zzline2/line2,ADD_TBL:ADD_TBL.zzline3/line3,ADD_TBL:ADD_TBL.zzline4/line4",
@@ -236,7 +243,7 @@ describe ( "findSqlLinkDataFromRootAndDataD", () => {
   } )
 
   it ( "shouldCreate the data for the links in accountD", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), r => simplifySqlLinkData ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), ( parent, r ) => simplifySqlLinkData ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd ) ) ) ).toEqual ( [
       [
         "sqlRoot: ACC_TBL",
         "fields: mainCustomer:CUST_TBL.nameId/undefined,mainName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.mainCustomerId/undefined,mainCustomer:CUST_TBL.id/undefined,jointCustomer:CUST_TBL.nameId/undefined,jointName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.jointCustomerId/undefined,jointCustomer:CUST_TBL.id/undefined,ACC_TBL:ACC_TBL.acc_id/undefined,ACC_TBL:ACC_TBL.brand_id/undefined,mainName:NAME_TBL.zzname/name,jointName:NAME_TBL.zzname/name,ACC_TBL:ACC_TBL.blnc/balance",
@@ -260,7 +267,7 @@ describe ( "findSqlLinkDataFromRootAndDataD", () => {
 } )
 describe ( "generateGetSql", () => {
   it ( "should generate the get sql", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), r => generateGetSql ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), ( parent, r ) => generateGetSql ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd ) ) ) ).toEqual ( [
       [
         "select",
         "  mainCustomer.nameId as mainCustomer_nameId,",
@@ -404,7 +411,7 @@ describe ( "createTableSql", () => {
 
 describe ( "makeMapsForRest", () => {
   it ( "should make maps for each sql root, from the link data", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), ( r, path ) => {
+    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), ( parent, r, path ) => {
       const ld = findSqlLinkDataFromRootAndDataD ( r, JointAccountDd )
       return makeMapsForRest ( paramsForTest, JointAccountPageD, 'jointAccount', jointAccountRestD, ld, path, r.children.length )
     } ).map ( s => s.map ( s => s.replace ( /"/g, "'" ) ) ) ).toEqual ( [
