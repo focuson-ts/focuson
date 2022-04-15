@@ -274,23 +274,27 @@ describe ( "findSqlLinkDataFromRootAndDataD", () => {
   } )
 
   it ( "should have a walkSqlLinkData that passes in the parent ", () => {
-    expect ( walkSqlLinkData ( findSqlLinkDataFromRootAndDataD ( findSqlRoot (  theRestD.tables  ), JointAccountDd ), ( parent, ld ) => parent ? simplifySqlLinkData ( parent ) : '' ) ).toEqual ( [
-      "",
+    expect ( walkSqlLinkData ( findSqlLinkDataFromRootAndDataD ( findSqlRoot (  theRestD.tables  ), JointAccountDd ), ( parent, ld ) => parent.map(simplifySqlLinkData) ) ).toEqual ( [
+      [],
       [
-        "sqlRoot: ACC_TBL",
-        "fields: mainCustomer:CUST_TBL.nameId/undefined,mainName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.mainCustomerId/undefined,mainCustomer:CUST_TBL.id/undefined,jointCustomer:CUST_TBL.nameId/undefined,jointName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.jointCustomerId/undefined,jointCustomer:CUST_TBL.id/undefined,ACC_TBL:ACC_TBL.acc_id/undefined,ACC_TBL:ACC_TBL.brand_id/undefined,mainName:NAME_TBL.zzname/name,jointName:NAME_TBL.zzname/name,ACC_TBL:ACC_TBL.blnc/balance",
-        "aliasAndTables ACC_TBL->ACC_TBL,mainName->NAME_TBL,mainCustomer->CUST_TBL,jointName->NAME_TBL,jointCustomer->CUST_TBL",
-        "where mainCustomer:CUST_TBL.nameId == mainName:NAME_TBL.id,ACC_TBL:ACC_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer,jointCustomer:CUST_TBL.nameId == jointName:NAME_TBL.id,ACC_TBL:ACC_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer,param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id",
-        "linksInThis: mainCustomer__nameId__mainName__id,ACC_TBL__mainCustomerId__mainCustomer__id,jointCustomer__nameId__jointName__id,ACC_TBL__jointCustomerId__jointCustomer__id,param__accountId,param__brandId",
-        "children: 2"
+        [
+          "sqlRoot: ACC_TBL",
+          "fields: mainCustomer:CUST_TBL.nameId/undefined,mainName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.mainCustomerId/undefined,mainCustomer:CUST_TBL.id/undefined,jointCustomer:CUST_TBL.nameId/undefined,jointName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.jointCustomerId/undefined,jointCustomer:CUST_TBL.id/undefined,ACC_TBL:ACC_TBL.acc_id/undefined,ACC_TBL:ACC_TBL.brand_id/undefined,mainName:NAME_TBL.zzname/name,jointName:NAME_TBL.zzname/name,ACC_TBL:ACC_TBL.blnc/balance",
+          "aliasAndTables ACC_TBL->ACC_TBL,mainName->NAME_TBL,mainCustomer->CUST_TBL,jointName->NAME_TBL,jointCustomer->CUST_TBL",
+          "where mainCustomer:CUST_TBL.nameId == mainName:NAME_TBL.id,ACC_TBL:ACC_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer,jointCustomer:CUST_TBL.nameId == jointName:NAME_TBL.id,ACC_TBL:ACC_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer,param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id",
+          "linksInThis: mainCustomer__nameId__mainName__id,ACC_TBL__mainCustomerId__mainCustomer__id,jointCustomer__nameId__jointName__id,ACC_TBL__jointCustomerId__jointCustomer__id,param__accountId,param__brandId",
+          "children: 2"
+        ]
       ],
       [
-        "sqlRoot: ACC_TBL",
-        "fields: mainCustomer:CUST_TBL.nameId/undefined,mainName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.mainCustomerId/undefined,mainCustomer:CUST_TBL.id/undefined,jointCustomer:CUST_TBL.nameId/undefined,jointName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.jointCustomerId/undefined,jointCustomer:CUST_TBL.id/undefined,ACC_TBL:ACC_TBL.acc_id/undefined,ACC_TBL:ACC_TBL.brand_id/undefined,mainName:NAME_TBL.zzname/name,jointName:NAME_TBL.zzname/name,ACC_TBL:ACC_TBL.blnc/balance",
-        "aliasAndTables ACC_TBL->ACC_TBL,mainName->NAME_TBL,mainCustomer->CUST_TBL,jointName->NAME_TBL,jointCustomer->CUST_TBL",
-        "where mainCustomer:CUST_TBL.nameId == mainName:NAME_TBL.id,ACC_TBL:ACC_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer,jointCustomer:CUST_TBL.nameId == jointName:NAME_TBL.id,ACC_TBL:ACC_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer,param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id",
-        "linksInThis: mainCustomer__nameId__mainName__id,ACC_TBL__mainCustomerId__mainCustomer__id,jointCustomer__nameId__jointName__id,ACC_TBL__jointCustomerId__jointCustomer__id,param__accountId,param__brandId",
-        "children: 2"
+        [
+          "sqlRoot: ACC_TBL",
+          "fields: mainCustomer:CUST_TBL.nameId/undefined,mainName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.mainCustomerId/undefined,mainCustomer:CUST_TBL.id/undefined,jointCustomer:CUST_TBL.nameId/undefined,jointName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.jointCustomerId/undefined,jointCustomer:CUST_TBL.id/undefined,ACC_TBL:ACC_TBL.acc_id/undefined,ACC_TBL:ACC_TBL.brand_id/undefined,mainName:NAME_TBL.zzname/name,jointName:NAME_TBL.zzname/name,ACC_TBL:ACC_TBL.blnc/balance",
+          "aliasAndTables ACC_TBL->ACC_TBL,mainName->NAME_TBL,mainCustomer->CUST_TBL,jointName->NAME_TBL,jointCustomer->CUST_TBL",
+          "where mainCustomer:CUST_TBL.nameId == mainName:NAME_TBL.id,ACC_TBL:ACC_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer,jointCustomer:CUST_TBL.nameId == jointName:NAME_TBL.id,ACC_TBL:ACC_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer,param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id",
+          "linksInThis: mainCustomer__nameId__mainName__id,ACC_TBL__mainCustomerId__mainCustomer__id,jointCustomer__nameId__jointName__id,ACC_TBL__jointCustomerId__jointCustomer__id,param__accountId,param__brandId",
+          "children: 2"
+        ]
       ]
     ])
   } )

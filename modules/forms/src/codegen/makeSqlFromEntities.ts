@@ -144,12 +144,12 @@ function walkSqlRootsWithparent<T> ( parent: SqlRoot | undefined, s: SqlRoot, fn
   return [ fn ( parent, s, safePath ), ...s.children.flatMap ( ( c, i ) => walkSqlRootsWithparent ( s, c, fn, [ ...safePath, i ] ) ) ]
 }
 
-export function walkSqlLinkData<T> ( ld: SqlLinkData, fn: ( parent: SqlLinkData | undefined, ld: SqlLinkData, path?: number[] ) => T ): T[] {
-  return walkSqlLinkDataWithParent ( undefined, ld, fn, [] )
+export function walkSqlLinkData<T> ( ld: SqlLinkData, fn: ( parent: SqlLinkData [], ld: SqlLinkData, path?: number[] ) => T ): T[] {
+  return walkSqlLinkDataWithParents ( [], ld, fn, [] )
 }
-export function walkSqlLinkDataWithParent<T> ( parent: SqlLinkData | undefined, ld: SqlLinkData, fn: ( parent: SqlLinkData | undefined, ld: SqlLinkData, path?: number[] ) => T, path: number[] ): T[] {
+export function walkSqlLinkDataWithParents<T> ( parents: SqlLinkData[], ld: SqlLinkData, fn: ( parent: SqlLinkData [], ld: SqlLinkData, path?: number[] ) => T, path: number[] ): T[] {
   let safePath = safeArray ( path );
-  return [ fn ( parent, ld, safePath ), ...ld.children.flatMap ( ( c, i ) => walkSqlLinkDataWithParent ( ld, c, fn, [ ...safePath, i ] ) ) ]
+  return [ fn ( parents, ld, safePath ), ...ld.children.flatMap ( ( c, i ) => walkSqlLinkDataWithParents ( [...parents,ld], c, fn, [ ...safePath, i ] ) ) ]
 
 }
 export interface TableWhereLink {
