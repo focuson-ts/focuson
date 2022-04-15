@@ -519,5 +519,6 @@ a.close {
 }
 
 .glassPane {
+    min-height: 600px;
     position: relative;
 }
