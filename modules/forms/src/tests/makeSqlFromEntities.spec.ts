@@ -1,4 +1,4 @@
-import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findParamsForTable, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, MainEntity, makeMapsForRest, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldData } from "../codegen/makeSqlFromEntities";
+import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findParamsForTable, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, MainEntity, makeMapsForRest, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlLinkData, walkSqlRoots, whereFieldToFieldData } from "../codegen/makeSqlFromEntities";
 import { AllLensRestParams, EntityAndWhere, IntParam, StringParam, unique } from "../common/restD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { nameAndAddressDataD, postCodeDataLineD } from "../example/postCodeDemo/addressSearch.dataD";
@@ -48,7 +48,7 @@ describe ( "findSqlRoots", () => {
       "",
       "main ACC_TBL path [] root ACC_TBL children [ADD_TBL,ADD_TBL] filterPath: undefined",
       "main ACC_TBL path [] root ACC_TBL children [ADD_TBL,ADD_TBL] filterPath: undefined"
-    ])
+    ] )
   } )
 } )
 
@@ -232,7 +232,7 @@ describe ( "findAllFields", () => {
 
 describe ( "findSqlLinkDataFromRootAndDataD", () => {
   it ( "should create the data for the links in postCodeDataLineD (simple)", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( addressRestD.tables ), ( parent, r ) => simplifySqlLinkData ( findSqlLinkDataFromRootAndDataD ( r, postCodeDataLineD ) ) ) ).toEqual ( [
+    expect ( walkSqlLinkData ( findSqlLinkDataFromRootAndDataD ( findSqlRoot ( addressRestD.tables ), postCodeDataLineD ), ( parent, ld ) => simplifySqlLinkData ( ld ) ) ).toEqual ( [
       [
         "sqlRoot: ADD_TBL",
         "fields: ADD_TBL:ADD_TBL.zzline1/line1,ADD_TBL:ADD_TBL.zzline2/line2,ADD_TBL:ADD_TBL.zzline3/line3,ADD_TBL:ADD_TBL.zzline4/line4",
@@ -242,8 +242,11 @@ describe ( "findSqlLinkDataFromRootAndDataD", () => {
     ] )
   } )
 
+
+
+
   it ( "shouldCreate the data for the links in accountD", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), ( parent, r ) => simplifySqlLinkData ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd ) ) ) ).toEqual ( [
+    expect ( walkSqlLinkData ( findSqlLinkDataFromRootAndDataD ( findSqlRoot ( theRestD.tables ), JointAccountDd ), ( parent, ld ) => simplifySqlLinkData ( ld ) ) ).toEqual ( [
       [
         "sqlRoot: ACC_TBL",
         "fields: mainCustomer:CUST_TBL.nameId/undefined,mainName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.mainCustomerId/undefined,mainCustomer:CUST_TBL.id/undefined,jointCustomer:CUST_TBL.nameId/undefined,jointName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.jointCustomerId/undefined,jointCustomer:CUST_TBL.id/undefined,ACC_TBL:ACC_TBL.acc_id/undefined,ACC_TBL:ACC_TBL.brand_id/undefined,mainName:NAME_TBL.zzname/name,jointName:NAME_TBL.zzname/name,ACC_TBL:ACC_TBL.blnc/balance",
@@ -264,10 +267,29 @@ describe ( "findSqlLinkDataFromRootAndDataD", () => {
       ]
     ] )
   } )
+
+  it ( "should have a walkSqlLinkData that passes in the parent ", () => {
+    expect ( walkSqlLinkData ( findSqlLinkDataFromRootAndDataD ( findSqlRoot (  theRestD.tables  ), JointAccountDd ), ( parent, ld ) => parent ? simplifySqlLinkData ( parent ) : '' ) ).toEqual ( [
+      "",
+      [
+        "sqlRoot: ACC_TBL",
+        "fields: mainCustomer:CUST_TBL.nameId/undefined,mainName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.mainCustomerId/undefined,mainCustomer:CUST_TBL.id/undefined,jointCustomer:CUST_TBL.nameId/undefined,jointName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.jointCustomerId/undefined,jointCustomer:CUST_TBL.id/undefined,ACC_TBL:ACC_TBL.acc_id/undefined,ACC_TBL:ACC_TBL.brand_id/undefined,mainName:NAME_TBL.zzname/name,jointName:NAME_TBL.zzname/name,ACC_TBL:ACC_TBL.blnc/balance",
+        "aliasAndTables ACC_TBL->ACC_TBL,mainName->NAME_TBL,mainCustomer->CUST_TBL,jointName->NAME_TBL,jointCustomer->CUST_TBL",
+        "where mainCustomer:CUST_TBL.nameId == mainName:NAME_TBL.id,ACC_TBL:ACC_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer,jointCustomer:CUST_TBL.nameId == jointName:NAME_TBL.id,ACC_TBL:ACC_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer,param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id"
+      ],
+      [
+        "sqlRoot: ACC_TBL",
+        "fields: mainCustomer:CUST_TBL.nameId/undefined,mainName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.mainCustomerId/undefined,mainCustomer:CUST_TBL.id/undefined,jointCustomer:CUST_TBL.nameId/undefined,jointName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.jointCustomerId/undefined,jointCustomer:CUST_TBL.id/undefined,ACC_TBL:ACC_TBL.acc_id/undefined,ACC_TBL:ACC_TBL.brand_id/undefined,mainName:NAME_TBL.zzname/name,jointName:NAME_TBL.zzname/name,ACC_TBL:ACC_TBL.blnc/balance",
+        "aliasAndTables ACC_TBL->ACC_TBL,mainName->NAME_TBL,mainCustomer->CUST_TBL,jointName->NAME_TBL,jointCustomer->CUST_TBL",
+        "where mainCustomer:CUST_TBL.nameId == mainName:NAME_TBL.id,ACC_TBL:ACC_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer,jointCustomer:CUST_TBL.nameId == jointName:NAME_TBL.id,ACC_TBL:ACC_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer,param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id"
+      ]
+    ])
+
+  } )
 } )
 describe ( "generateGetSql", () => {
   it ( "should generate the get sql", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), ( parent, r ) => generateGetSql ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd ) ) ) ).toEqual ( [
+    expect ( walkSqlLinkData ( findSqlLinkDataFromRootAndDataD ( findSqlRoot ( theRestD.tables ), JointAccountDd ), ( parent, ld ) => generateGetSql ( ld ) ) ).toEqual ( [
       [
         "select",
         "  mainCustomer.nameId as mainCustomer_nameId,",
@@ -411,9 +433,8 @@ describe ( "createTableSql", () => {
 
 describe ( "makeMapsForRest", () => {
   it ( "should make maps for each sql root, from the link data", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( theRestD.tables ), ( parent, r, path ) => {
-      const ld = findSqlLinkDataFromRootAndDataD ( r, JointAccountDd )
-      return makeMapsForRest ( paramsForTest, JointAccountPageD, 'jointAccount', jointAccountRestD, ld, path, r.children.length )
+    expect ( walkSqlLinkData ( findSqlLinkDataFromRootAndDataD ( findSqlRoot ( theRestD.tables ), JointAccountDd ), ( parent, ld, path ) => {
+      return makeMapsForRest ( paramsForTest, JointAccountPageD, 'jointAccount', jointAccountRestD, ld, path, ld.children.length )
     } ).map ( s => s.map ( s => s.replace ( /"/g, "'" ) ) ) ).toEqual ( [
       [
         "package focuson.data.db;",

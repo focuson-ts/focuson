@@ -143,6 +143,15 @@ function walkSqlRootsWithparent<T> ( parent: SqlRoot | undefined, s: SqlRoot, fn
   let safePath = safeArray ( path );
   return [ fn ( parent, s, safePath ), ...s.children.flatMap ( ( c, i ) => walkSqlRootsWithparent ( s, c, fn, [ ...safePath, i ] ) ) ]
 }
+
+export function walkSqlLinkData<T> ( ld: SqlLinkData, fn: ( parent: SqlLinkData | undefined, ld: SqlLinkData, path?: number[] ) => T ): T[] {
+  return walkSqlLinkDataWithParent ( undefined, ld, fn, [] )
+}
+export function walkSqlLinkDataWithParent<T> ( parent: SqlLinkData | undefined, ld: SqlLinkData, fn: ( parent: SqlLinkData | undefined, ld: SqlLinkData, path?: number[] ) => T, path: number[] ): T[] {
+  let safePath = safeArray ( path );
+  return [ fn ( parent, ld, safePath ), ...ld.children.flatMap ( ( c, i ) => walkSqlLinkDataWithParent ( ld, c, fn, [ ...safePath, i ] ) ) ]
+
+}
 export interface TableWhereLink {
   parentTable: DBTable;
   parentAlias: string;
@@ -177,7 +186,8 @@ export interface SqlLinkData {
   sqlRoot: SqlRoot;
   aliasAndTables: [ string, DBTable ][];
   fields: TableAndFieldAndAliasData<any>[],
-  whereLinks: WhereLink[]
+  whereLinks: WhereLink[];
+  children: SqlLinkData[]
 }
 export function simplifyAliasAndTables ( ats: [ string, DBTable ] [] ) {return ats.map ( ( [ alias, table ] ) => `${alias}->${table.name}` ).join ( "," )}
 export function simplifyWhereLinks ( ws: WhereLink[] ) {
@@ -346,7 +356,8 @@ export function findSqlLinkDataFromRootAndDataD ( sqlRoot: SqlRoot, dataD: CompD
   const aliasAndTables = findAliasAndTableLinksForLinkData ( sqlRoot )
   const whereLinks = findWhereLinksForSqlRoot ( sqlRoot )
   const fields = findAllFields ( sqlRoot, dataD, whereLinks )
-  return { whereLinks, aliasAndTables, sqlRoot, fields }
+  const children = sqlRoot.children.map ( childRoot => findSqlLinkDataFromRootAndDataD ( childRoot, dataD ) )
+  return { whereLinks, aliasAndTables, sqlRoot, fields, children }
 }
 
 
@@ -371,7 +382,7 @@ export function generateGetSql ( s: SqlLinkData ): string[] {
 
 export const findAllTableAndFieldsIn = <G> ( rdps: RestDefnInPageProperties<G>[] ) => unique ( rdps.flatMap ( rdp => {
   if ( !rdp.rest.tables ) return []
-  return walkSqlRoots ( findSqlRoot ( rdp.rest.tables ), (parent,sqlRoot) => findSqlLinkDataFromRootAndDataD ( sqlRoot, rdp.rest.dataDD ) ).flatMap (
+  return walkSqlRoots ( findSqlRoot ( rdp.rest.tables ), ( parent, sqlRoot ) => findSqlLinkDataFromRootAndDataD ( sqlRoot, rdp.rest.dataDD ) ).flatMap (
     linkData => linkData.fields.map ( taf =>
       ({ table: taf.table, fieldData: taf.fieldData }) )
   )
