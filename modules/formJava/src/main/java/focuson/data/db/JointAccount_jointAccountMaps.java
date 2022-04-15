@@ -132,16 +132,12 @@ public class JointAccount_jointAccountMaps {
       }
   }
   
-  public final Object mainCustomer_nameId;
-  public final Object mainName_id;
-  public final Object ACC_TBL_mainCustomerId;
-  public final Object mainCustomer_id;
-  public final Object jointCustomer_nameId;
-  public final Object jointName_id;
-  public final Object ACC_TBL_jointCustomerId;
-  public final Object jointCustomer_id;
-  public final Object ACC_TBL_acc_id;
-  public final Object ACC_TBL_brand_id;
+  public final Object mainCustomer__nameId__mainName__id;
+  public final Object ACC_TBL__mainCustomerId__mainCustomer__id;
+  public final Object jointCustomer__nameId__jointName__id;
+  public final Object ACC_TBL__jointCustomerId__jointCustomer__id;
+  public final Object param__accountId;
+  public final Object param__brandId;
   
   public final Map<String,Object> _root = new HashMap<>();
   public final Map<String,Object> main = new HashMap<>();
@@ -154,16 +150,12 @@ public class JointAccount_jointAccountMaps {
     this.main.put("name", rs.getString("mainName_zzname"));
     this.joint.put("name", rs.getString("jointName_zzname"));
     
-    this.mainCustomer_nameId = rs.getInt("mainCustomer_nameId");
-    this.mainName_id = rs.getInt("mainName_id");
-    this.ACC_TBL_mainCustomerId = rs.getInt("ACC_TBL_mainCustomerId");
-    this.mainCustomer_id = rs.getInt("mainCustomer_id");
-    this.jointCustomer_nameId = rs.getInt("jointCustomer_nameId");
-    this.jointName_id = rs.getInt("jointName_id");
-    this.ACC_TBL_jointCustomerId = rs.getInt("ACC_TBL_jointCustomerId");
-    this.jointCustomer_id = rs.getInt("jointCustomer_id");
-    this.ACC_TBL_acc_id = rs.getInt("ACC_TBL_acc_id");
-    this.ACC_TBL_brand_id = rs.getInt("ACC_TBL_brand_id");
+    this.mainCustomer__nameId__mainName__id = rs.getInt("mainCustomer_nameId");
+    this.ACC_TBL__mainCustomerId__mainCustomer__id = rs.getInt("ACC_TBL_mainCustomerId");
+    this.jointCustomer__nameId__jointName__id = rs.getInt("jointCustomer_nameId");
+    this.ACC_TBL__jointCustomerId__jointCustomer__id = rs.getInt("ACC_TBL_jointCustomerId");
+    this.param__accountId = rs.getInt("ACC_TBL_acc_id");
+    this.param__brandId = rs.getInt("ACC_TBL_brand_id");
     
     _root.put("main", main);
     main.put("addresses", main_addresses);

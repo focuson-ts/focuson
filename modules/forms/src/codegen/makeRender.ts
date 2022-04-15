@@ -211,7 +211,7 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
   const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( errorPrefix, [], pageD, `<>`, '</>' );
   return [
     `export function ${pageComponentName ( pageD )}(){`,
-    `   //A compilation error here is often because you have specified the wrong path in display. The path you gave is ${pageD.display.target}`,
+    `   //A compilation error here is often because you have specified the wrong path in display, or because the path points at the wrong type. The path you gave is ${pageD.display.target}`,
     `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${decamelize ( pageD.name, ' ' )}' ) ( state => state${stateFocusQueryWithTildaFromPage ( `createReactMainPageComponent for page ${pageD.name}`, params, pageD, pageD.display.target )}) (`,
     `( fullState, state , full, d, mode, index) => {`,
     ...indentList ( makeGuardButtonVariables ( params, makeGuard, pageD, pageD ) ),

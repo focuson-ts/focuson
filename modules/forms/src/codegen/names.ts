@@ -4,7 +4,7 @@ import { RestActionDetail, RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
 import { RestAction, safeString } from "@focuson/utils";
 import { JavaWiringParams, TSParams } from "./config";
-import { TableAndFieldAndAliasData } from "./makeSqlFromEntities";
+import { SingleLinkData, SqlLinkData, TableAndFieldAndAliasData } from "./makeSqlFromEntities";
 
 export const guardName = ( s: string ) => s + "Guard"
 export const domainName = <G> ( d: CompDataD<G> ): string => d.name + "Domain";

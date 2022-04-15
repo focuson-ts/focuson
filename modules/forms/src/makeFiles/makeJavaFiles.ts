@@ -77,7 +77,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   writeToFile ( `${javaResourcesRoot}/${getSqlName ()}.sql`,
     () => rests.filter ( r => r.tables ).flatMap ( rest =>
       [ `--${safeString ( rest.namePrefix )} ${rest.dataDD.name} ${rest.url} ${JSON.stringify ( rest.params )}`,
-        ...walkSqlRoots ( findSqlRoot ( rest.tables ), r =>
+        ...walkSqlRoots ( findSqlRoot ( rest.tables ), (parent,r) =>
           generateGetSql ( findSqlLinkDataFromRootAndDataD ( r, rest.dataDD ) ) ).map ( addStringToEndOfList ( ';\n' ) ).flat () ] ), details )
 
   writeToFile ( `${javaResourcesRoot}/${params.schema}`, () => makeGraphQlSchema ( rests ), details )
@@ -129,7 +129,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
       let tables = rdp.rest.tables;
       if ( !tables ) return
       detailsLog ( logLevel, 2, `Creating rest files for ${p.name} ${name}` )
-      walkSqlRoots ( findSqlRoot ( tables ), ( root, path ) => {
+      walkSqlRoots ( findSqlRoot ( tables ), (parent, root, path ) => {
         const ld = findSqlLinkDataFromRootAndDataD ( root, rdp.rest.dataDD )
         let fileName = sqlMapFileName ( javaDbPackages, p, name, path ) + ".java";
         console.log ( 'name:', fileName )

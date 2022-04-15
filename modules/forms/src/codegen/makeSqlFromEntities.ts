@@ -184,12 +184,24 @@ export function isTableWhereLink ( w: WhereLink ): w is TableWhereLink {
 
 export interface SingleLinkData {
   w: WhereLink;
+  tafs: TableAndFieldAndAliasData<any>[]; //There will be one or two fields in the Where link. When we are inserting we need to put the id in both. If two they should obviously both be the same type or crazyness happens
   name: string
 }
-export function singleLinkData ( w: WhereLink ) {
-  if ( isWhereFromQuery ( w ) ) return { w, name: `param__${w.paramName}` }
-  return { w, name: `${w.parentAlias}__${w.idInParent}__${w.childAlias}__${w.idInThis}` }
-}
+export const singleLinkData = ( errorPrefix: string, tfads: TableAndFieldAndAliasData<any>[] ) => ( w: WhereLink ): SingleLinkData => {
+  function find ( alias: string, fieldName: string ): TableAndFieldAndAliasData<any> {
+    const cleanName = beforeSeparator ( ":", fieldName )
+    const result = tfads.findIndex ( t => t.alias === alias && t.fieldData.dbFieldName === cleanName )
+    if ( result < 0 )
+      throw Error ( `${errorPrefix}. Software error: looking for [${alias}.${cleanName}] in [${tfads.map ( t => `${t.alias}.${t.fieldData.dbFieldName}` )}]` )
+    return tfads[ result ]
+  }
+  if ( isWhereFromQuery ( w ) ) return { w, name: `param__${w.paramName}`, tafs: [ find ( w.alias, w.field ) ] }
+  return {
+    w,
+    name: `${w.parentAlias}__${beforeSeparator ( ":", w.idInParent )}__${w.childAlias}__${beforeSeparator ( ":", w.idInThis )}`,
+    tafs: [ find ( w.parentAlias, w.idInParent ), find ( w.childAlias, w.idInThis ) ]
+  }
+};
 export interface SqlLinkData {
   sqlRoot: SqlRoot;
   aliasAndTables: [ string, DBTable ][];
@@ -369,14 +381,14 @@ export function findAllFields<G> ( sqlRoot: SqlRoot, dataD: CompDataD<any>, wher
 }
 
 export function findSqlLinkDataFromRootAndDataD ( sqlRoot: SqlRoot, dataD: CompDataD<any> ): SqlLinkData {
-  return findSqlLinkDataFromRootAndDataDWithParent(undefined, sqlRoot, dataD)
+  return findSqlLinkDataFromRootAndDataDWithParent ( undefined, sqlRoot, dataD )
 }
 export function findSqlLinkDataFromRootAndDataDWithParent ( parent: SqlRoot | undefined, sqlRoot: SqlRoot, dataD: CompDataD<any> ): SqlLinkData {
   const aliasAndTables = findAliasAndTableLinksForLinkData ( sqlRoot )
   const whereLinks = findWhereLinksForSqlRoot ( sqlRoot )
-  const fields = findAllFields ( sqlRoot, dataD, whereLinks )
+  const fields: TableAndFieldAndAliasData<any>[] = findAllFields ( sqlRoot, dataD, whereLinks )
   const children = sqlRoot.children.map ( childRoot => findSqlLinkDataFromRootAndDataDWithParent ( sqlRoot, childRoot, dataD ) )
-  const rawLinksInThis = findWhereLinksForSqlRootGoingDown ( sqlRoot ).map ( singleLinkData )
+  const rawLinksInThis = findWhereLinksForSqlRootGoingDown ( sqlRoot ).map ( singleLinkData ( `In ${dataD.name}, sqlRoot is ${sqlRoot.root.table.name}/${sqlRoot.filterPath} trying to find sql link data`, fields ) )
   const linksInThis = parent ? rawLinksInThis.filter ( l => isTableWhereLink ( l.w ) ) : rawLinksInThis //we only have param links in the top most.. by definition that params are constant in one query
   return { whereLinks, aliasAndTables, sqlRoot, fields, linksInThis, children }
 }
@@ -435,8 +447,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
     walkDataStart: ( path1, parents, oneDataDD, dataDD ) =>
       [ `public final Map<String,Object> ${mapName ( path1 )} = new HashMap<>();` ]
   } )
-  let onlyIds = ld.fields.filter ( taf => !taf.fieldData.fieldName );
-  const ids = onlyIds.map ( taf => `public final Object ${sqlTafFieldName ( taf )};` )
+  const ids = ld.linksInThis.map ( l => `public final Object ${l.name};` )
   const className = sqlMapName ( p, restName, path );
 
   const constParams = [ `ResultSet rs`, ...ints ( childCount ).map ( i => `List<${sqlListName ( p, restName, path, i )}> list${i}` ) ].join ( ',' )
@@ -446,7 +457,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
     .sort ( ( l, r ) => l.table.name.localeCompare ( r.table.name ) )
     .sort ( ( l, r ) => l.fieldData.dbFieldName.localeCompare ( r.fieldData.dbFieldName ) )
     .map ( taf => `this.${mapName ( taf.fieldData.path.slice ( 0, -1 ) )}.put("${taf.fieldData.fieldName}", rs.${taf.fieldData.rsGetter}("${sqlTafFieldName ( taf )}"));` )
-  const setIds = onlyIds.map ( taf => `this.${sqlTafFieldName ( taf )} = rs.${taf.fieldData.rsGetter}("${sqlTafFieldName ( taf )}");` )
+  const setIds = ld.linksInThis.map ( l => `this.${l.name} = rs.${l.tafs[ 0 ].fieldData.rsGetter}("${sqlTafFieldName ( l.tafs[ 0 ] )}");` )
   const allPaths = unique ( flatMapDD<string[], G> ( restD.dataDD, {
     ...emptyDataFlatMap (),
     walkDataStart: ( path1, parents, oneDataDD, dataDD ) =>

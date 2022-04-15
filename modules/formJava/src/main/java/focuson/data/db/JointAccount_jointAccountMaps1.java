@@ -124,11 +124,8 @@ public class JointAccount_jointAccountMaps1 {
       }
   }
   
-  public final Object ACC_TBL_acc_id;
-  public final Object ACC_TBL_brand_id;
-  public final Object jointCustomer_id;
-  public final Object jointAddress_customerId;
-  public final Object ACC_TBL_jointCustomerId;
+  public final Object param__accountId;
+  public final Object param__brandId;
   
   public final Map<String,Object> _root = new HashMap<>();
   public final Map<String,Object> main = new HashMap<>();
@@ -140,11 +137,8 @@ public class JointAccount_jointAccountMaps1 {
     this.joint_addresses.put("line1", rs.getString("jointAddress_zzline1"));
     this.joint_addresses.put("line2", rs.getString("jointAddress_zzline2"));
     
-    this.ACC_TBL_acc_id = rs.getInt("ACC_TBL_acc_id");
-    this.ACC_TBL_brand_id = rs.getInt("ACC_TBL_brand_id");
-    this.jointCustomer_id = rs.getInt("jointCustomer_id");
-    this.jointAddress_customerId = rs.getInt("jointAddress_customerId");
-    this.ACC_TBL_jointCustomerId = rs.getInt("ACC_TBL_jointCustomerId");
+    this.param__accountId = rs.getInt("ACC_TBL_acc_id");
+    this.param__brandId = rs.getInt("ACC_TBL_brand_id");
     
     _root.put("joint", joint);
     joint.put("addresses", joint_addresses);

@@ -13,6 +13,7 @@ describe ( "makeRest", () => {
       "  const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}",
       "  return {",
       "    fdLens: Lenses.identity<FState>().focusQuery('EAccountsSummary'),",
+      "//A compilation error is often because you have specified a path in the rest that does not exist, or the object pointed at is not the current type. The rest name is eAccountsSummary and the path specified is ~/fromApi",
       "    dLens: Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('fromApi'),",
       "    cd, fdd,",
       "    ids: ['accountId'],",
@@ -31,6 +32,7 @@ describe ( "makeRest", () => {
       "  const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}",
       "  return {",
       "    fdLens: Lenses.identity<FState>().focusQuery('EAccountsSummary'),",
+      "//A compilation error is often because you have specified a path in the rest that does not exist, or the object pointed at is not the current type. The rest name is eAccountsSummary and the path specified is ~/tempCreatePlan",
       "    dLens: Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('tempCreatePlan'),",
       "    cd, fdd,",
       "    ids: ['accountId','customerId'],",
@@ -50,6 +52,7 @@ describe ( "makeRest", () => {
       "  const fdd: NameAndLens<domains.RepeatingPageDomain> = {}",
       "  return {",
       "    fdLens: Lenses.identity<FState>().focusQuery('Repeating'),",
+      "//A compilation error is often because you have specified a path in the rest that does not exist, or the object pointed at is not the current type. The rest name is repeating and the path specified is ~/fromApi",
       "    dLens: Lenses.identity<domains.RepeatingPageDomain>().focusQuery('fromApi'),",
       "    cd, fdd,",
       "    ids: ['customerId'],",
@@ -60,8 +63,5 @@ describe ( "makeRest", () => {
       "}",
       ""
     ])
-
   } )
-
-
 } )

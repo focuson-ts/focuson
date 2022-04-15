@@ -23,7 +23,7 @@ export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restNam
     `  return {`,
     `    fdLens: Lenses.identity<${params.stateName}>().focusQuery('${p.name}'),`,
     ...indentList ( compilationException ),
-    `//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is ${restName} and the path specified is ${r.targetFromPath}` ,
+    `//A compilation error is often because you have specified a path in the rest that does not exist, or the object pointed at is not the current type. The rest name is ${restName} and the path specified is ${r.targetFromPath}` ,
     `    dLens: ${lensFocusQueryWithTildaFromPage ( `makeRest for page ${p.name}, ${restName}`, params, p, r.targetFromPath )},`,
     `    cd, fdd,`,
     `    ids: ${JSON.stringify ( ids )},`,
