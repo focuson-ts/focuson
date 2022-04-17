@@ -1,11 +1,13 @@
 import { DBTable } from "../common/resolverD";
-import { beforeAfterSeparator, beforeSeparator, ints, mapPathPlusInts, NameAnd, safeArray, safeString } from "@focuson/utils";
+import { beforeAfterSeparator, beforeSeparator, ints, lastButOneItem, lastItem, mapPathPlusInts, NameAnd, safeArray, safeString } from "@focuson/utils";
 import { AllLensRestParams, EntityAndWhere, RestD, RestParams, unique } from "../common/restD";
-import { CompDataD, emptyDataFlatMap, flatMapDD } from "../common/dataD";
+import { CompDataD, emptyDataFlatMap, flatMapDD, HasSample, OneDataDD, PrimitiveDD } from "../common/dataD";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addBrackets, addStringToEndOfAllButLast, indentList } from "./codegen";
 import { JavaWiringParams } from "./config";
 import { sqlListName, sqlMapName, sqlTafFieldName } from "./names";
+import { selectSample } from "./makeSample";
+import * as path from "path";
 
 export type DbValues = string | TableAndField
 
@@ -27,20 +29,20 @@ export function simplifyTableAndFields ( t: TableAndField ) {
 function thePath ( path: string[] | undefined, incPath: boolean | undefined ) {
   return path && incPath ? `/${path}` : ''
 }
-export function simplifyTableAndFieldsData<G> ( t: TableAndFieldsData<G>, incPath?: boolean ) {
-  return `${t.table.name} => ${t.fieldData.map ( fd => `${fd.dbFieldName}/${fd.fieldName}:${fd.reactType}${thePath ( fd.path, incPath )}` ).join ( ',' )}`
+export function simplifyTableAndFieldsData<G> ( t: TableAndFieldsData<G>, incPathAndSamples?: boolean ) {
+  return `${t.table.name} => ${t.fieldData.map ( fd => `${fd.dbFieldName}/${fd.fieldName}:${fd.reactType}${thePath ( fd.path, incPathAndSamples )}` ).join ( ',' )}`
 }
-export function simplifyTableAndFieldData<G> ( t: TableAndFieldData<G>, incPath?: boolean ) {
-  return `${t.table.name}.${t.fieldData.dbFieldName}/${t.fieldData.fieldName}${thePath ( t.fieldData.path, incPath )}`
+export function simplifyTableAndFieldData<G> ( t: TableAndFieldData<G>, incPathAndSamples?: boolean ) {
+  return `${t.table.name}.${t.fieldData.dbFieldName}/${t.fieldData.fieldName}${thePath ( t.fieldData.path, incPathAndSamples )}${incPathAndSamples ? `[${safeArray ( t.fieldData.sample )}]` : ''}`
 }
-export function simplifyTableAndFieldAndAliasData<G> ( t: TableAndFieldAndAliasData<G>, incPath?: boolean ) {
-  return `${t.alias}:${simplifyTableAndFieldData ( t, incPath )}`
+export function simplifyTableAndFieldAndAliasData<G> ( t: TableAndFieldAndAliasData<G>, incPathAndSamples?: boolean ) {
+  return `${t.alias}:${simplifyTableAndFieldData ( t, incPathAndSamples )}`
 }
-export function simplifyTableAndFieldDataArray<G> ( ts: TableAndFieldData<G>[], incPath?: boolean ) {
-  return unique ( ts.map ( t => `${simplifyTableAndFieldData ( t, incPath )}` ), t => t )
+export function simplifyTableAndFieldDataArray<G> ( ts: TableAndFieldData<G>[], incPathAndSamples?: boolean ) {
+  return unique ( ts.map ( t => `${simplifyTableAndFieldData ( t, incPathAndSamples )}` ), t => t )
 }
-export function simplifyTableAndFieldAndAliasDataArray<G> ( ts: TableAndFieldAndAliasData<G>[], incPath?: boolean ) {
-  return unique ( ts.map ( t => simplifyTableAndFieldAndAliasData ( t, incPath ) ), t => t )
+export function simplifyTableAndFieldAndAliasDataArray<G> ( ts: TableAndFieldAndAliasData<G>[], incPathAndSamples?: boolean ) {
+  return unique ( ts.map ( t => simplifyTableAndFieldAndAliasData ( t, incPathAndSamples ) ), t => t )
 }
 export interface CommonEntity {
   table: DBTable;
@@ -120,6 +122,16 @@ export interface SqlRoot {
   filterPath?: string
 }
 
+export function sqlRootToLinkToParent ( s: SqlRoot ): TableWhereLink | undefined {
+  const root = s.root
+  if ( isMultipleEntity ( root ) ) {
+    const [ parentAlias, parentEntity ] = lastItem ( s.path )
+    const whereLink: TableWhereLink = { linking: true, parentTable: parentEntity.table, idInParent: root.idInParent, parentAlias, childTable: root.table, childAlias: s.alias, idInThis: root.idInThis }
+    return whereLink
+  }
+  return undefined
+}
+
 export function simplifySqlRoot ( s: SqlRoot ): string {
   return `main ${s.main.entity.table.name} path ${simplifyAliasAndChildEntityPath ( s.path )} root ${s.root.table.name} children [${s.children.map ( c => c.root.table.name ).join ( ',' )}] filterPath: ${s.filterPath}`
 }
@@ -149,9 +161,15 @@ export function walkSqlLinkData<T> ( ld: SqlLinkData, fn: ( parent: SqlLinkData 
 }
 export function walkSqlLinkDataWithParents<T> ( parents: SqlLinkData[], ld: SqlLinkData, fn: ( parent: SqlLinkData [], ld: SqlLinkData, path?: number[] ) => T, path: number[] ): T[] {
   let safePath = safeArray ( path );
-  return [ fn ( parents, ld, safePath ), ...ld.children.flatMap ( ( c, i ) => walkSqlLinkDataWithParents ( [...parents,ld], c, fn, [ ...safePath, i ] ) ) ]
-
+  return [ fn ( parents, ld, safePath ), ...ld.children.flatMap ( ( c, i ) => walkSqlLinkDataWithParents ( [ ...parents, ld ], c, fn, [ ...safePath, i ] ) ) ]
 }
+
+type SqlLinkDataFolder<Acc> = ( ld: SqlLinkData, childResults: Acc[] ) => Acc
+
+export const foldSqlLinkData = <Acc> ( folder: SqlLinkDataFolder<Acc> ) => ( ld: SqlLinkData ): Acc => {
+  return folder ( ld, ld.children.map ( foldSqlLinkData ( folder ) ) );
+}
+
 export interface TableWhereLink {
   parentTable: DBTable;
   parentAlias: string;
@@ -160,11 +178,13 @@ export interface TableWhereLink {
   childTable: DBTable;
   childAlias: string
   idInThis: string;
+  linking: boolean;
 }
 export type WhereLink = TableWhereLink | WhereFromQuery
-function simplifyWhereLink ( wl: WhereLink ) {
-  if ( isTableWhereLink ( wl ) ) return `Table: parent${wl.parentAlias}:${wl.parentTable.name}.${wl.idInParent} == child ${wl.childAlias}:${wl.childTable.name}.${wl.idInThis}`
-  if ( isWhereFromQuery ( wl ) ) return `Table: query ${wl.paramName} == child ${wl.alias}:${wl.table.name}.${wl.field}`
+function simplifyWhereLink ( wl: WhereLink | undefined ) {
+  if ( wl === undefined ) return 'undefined'
+  if ( isTableWhereLink ( wl ) ) return `Table: parent-${wl.parentAlias}:${wl.parentTable.name}.${wl.idInParent} == child-${wl.childAlias}:${wl.childTable.name}.${wl.idInThis}`
+  if ( isWhereFromQuery ( wl ) ) return `Table: query-${wl.paramName} == child ${wl.alias}:${wl.table.name}.${wl.field}`
   throw Error ( `Unknown where link ${wl}` )
 }
 export interface WhereFromQuery {
@@ -187,18 +207,23 @@ export interface SingleLinkData {
   tafs: TableAndFieldAndAliasData<any>[]; //There will be one or two fields in the Where link. When we are inserting we need to put the id in both. If two they should obviously both be the same type or crazyness happens
   name: string
 }
+function findNameForTableWhereLink ( w: TableWhereLink ) {
+  if ( w === undefined ) return undefined
+  return `${w.parentAlias}__${beforeSeparator ( ":", w.idInParent )}__${w.childAlias}__${beforeSeparator ( ":", w.idInThis )}`;
+}
+
 export const singleLinkData = ( errorPrefix: string, tfads: TableAndFieldAndAliasData<any>[] ) => ( w: WhereLink ): SingleLinkData => {
   function find ( alias: string, fieldName: string ): TableAndFieldAndAliasData<any> {
     const cleanName = beforeSeparator ( ":", fieldName )
     const result = tfads.findIndex ( t => t.alias === alias && t.fieldData.dbFieldName === cleanName )
     if ( result < 0 )
-      throw Error ( `${errorPrefix}. Software error: looking for [${alias}.${cleanName}] in [${tfads.map ( t => `${t.alias}.${t.fieldData.dbFieldName}` )}]` )
+      throw Error ( `${errorPrefix}. Software error: looking for [${alias}.${cleanName}] in [${tfads.map ( t => `${t.alias}.${t.fieldData.dbFieldName}` )}]. Whereclause is ${JSON.stringify ( w )}` )
     return tfads[ result ]
   }
   if ( isWhereFromQuery ( w ) ) return { w, name: `param__${w.paramName}`, tafs: [ find ( w.alias, w.field ) ] }
   return {
     w,
-    name: `${w.parentAlias}__${beforeSeparator ( ":", w.idInParent )}__${w.childAlias}__${beforeSeparator ( ":", w.idInThis )}`,
+    name: findNameForTableWhereLink ( w ),
     tafs: [ find ( w.parentAlias, w.idInParent ), find ( w.childAlias, w.idInThis ) ]
   }
 };
@@ -206,6 +231,7 @@ export interface SqlLinkData {
   sqlRoot: SqlRoot;
   aliasAndTables: [ string, DBTable ][];
   fields: TableAndFieldAndAliasData<any>[],
+  linkToParent: TableWhereLink | undefined
   whereLinks: WhereLink[] // refactoring to loose this and move into next structure + parent
   linksInThis: SingleLinkData[];
   children: SqlLinkData[]
@@ -219,12 +245,13 @@ export function simplifyWhereLinks ( ws: WhereLink[] ) {
     }
   )
 }
-export function simplifySqlLinkData ( s: SqlLinkData ): string[] {
+export function simplifySqlLinkData ( s: SqlLinkData, incPathAndSample?: boolean ): string[] {
   return [ `sqlRoot: ${s.sqlRoot.root.table.name}`,
-    `fields: ${simplifyTableAndFieldAndAliasDataArray ( s.fields ).join ( "," )}`,
+    `fields: ${simplifyTableAndFieldAndAliasDataArray ( s.fields, incPathAndSample ).join ( "," )}`,
     `aliasAndTables ${simplifyAliasAndTables ( s.aliasAndTables )}`,
     `where ${simplifyWhereLinks ( s.whereLinks )}`,
     `linksInThis: ${s.linksInThis.map ( l => l.name ).join ( "," )}`,
+    `linkToParent:${simplifyWhereLink ( s.linkToParent )}`,
     `children: ${s.children.length}` ]
 }
 
@@ -250,13 +277,17 @@ export function findAliasAndTableLinksForLinkData ( m: SqlRoot ): [ string, DBTa
 }
 
 function findWhereLinksForSqlRootGoingDown ( sqlRoot: SqlRoot ) {
+  function makeWhere ( main: EntityAndWhere, path: [ string, ChildEntity ][], entity: MultipleEntity | SingleEntity, childAlias: string, multiple: boolean ): WhereLink {
+    const [ parentAlias, parentTable ] = getParentTableAndAlias ( main, path, e => e.table )
+    return { parentTable, parentAlias, idInParent: entity.idInParent, childAlias, childTable: entity.table, idInThis: entity.idInThis, linking: multiple }
+  }
   let whereLinks = foldEntitys ( {
     foldMain ( childAccs: WhereLink[][], main: EntityAndWhere ): WhereLink[] { return [ ...childAccs.flat (), ...main.where ]},
-    foldMultiple ( childAccs: WhereLink[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, multiple: MultipleEntity ): WhereLink[] { return [] },
+    foldMultiple ( childAccs: WhereLink[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, multiple: MultipleEntity ): WhereLink[] {
+      return []
+    },
     foldSingle ( childAccs: WhereLink[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, single: SingleEntity ): WhereLink[] {
-      const [ parentAlias, parentTable ] = getParentTableAndAlias ( main, path, e => e.table )
-      let whereLink: WhereLink = { parentTable, parentAlias, idInParent: single.idInParent, childAlias, childTable: single.table, idInThis: single.idInThis };
-      return [ ...childAccs.flat (), whereLink ]
+      return [ ...childAccs.flat (), makeWhere ( main, path, single, childAlias, false ) ]
     }
   }, sqlRoot.main, sqlRoot.root, sqlRoot.filterPath, [] );
   return whereLinks;
@@ -277,7 +308,7 @@ export function findWhereLinksForSqlRootGoingUp ( sqlRoot: SqlRoot ): WhereLink[
     const fromUpToMain = upToMain[ i + 1 ]
     let result: WhereLink = {
       parentTable: fromUpToMain[ 1 ].table, parentAlias: fromUpToMain[ 0 ],
-      childTable: p[ 1 ].table, childAlias: p[ 0 ], idInThis: p[ 1 ].idInThis, idInParent: p[ 1 ].idInParent
+      childTable: p[ 1 ].table, childAlias: p[ 0 ], idInThis: p[ 1 ].idInThis, idInParent: p[ 1 ].idInParent, linking: false
     };
     // console.log('result / wherelink is', simplifyWhereLink(result))
     return result;
@@ -301,7 +332,7 @@ export function findFieldsFromWhere<G> ( errorPrefix: string, ws: WhereLink[] ):
   } )
 }
 
-interface FieldData<G> {
+interface FieldData<G> extends HasSample<(string | number | boolean)> {
   /** Can be undefined if only present in a where clause and needed for ids */
   fieldName?: string;
   path?: string[]
@@ -309,6 +340,7 @@ interface FieldData<G> {
   rsGetter: string;
   reactType: string;
   dbType: string;
+  sample?: (string | number | boolean)[];
 }
 interface TableAndFieldData<G> {
   table: DBTable;
@@ -323,21 +355,33 @@ interface TableAndFieldsData<G> {
   table: DBTable;
   fieldData: FieldData<G>[]
 }
+interface TableAndFieldsAndAliasData<G> extends TableAndFieldsData<G> {
+  alias: string;
+}
 
+export function foldTableAndFieldIntoTableAndFields<G> ( tafs: TableAndFieldData<G>[] ): TableAndFieldsData<G>[] {
+  const justTables = unique ( tafs.map ( t => t.table ), t => t.name )
+  return justTables.map ( table => ({ table, fieldData: tafs.filter ( taf => taf.table.name == table.name ).map ( t => t.fieldData ) }) )
+}
+function getSample<G> ( oneDataD: OneDataDD<G> | undefined, prim: PrimitiveDD ): any[] {
+  if ( oneDataD.sample ) return oneDataD.sample
+  return safeArray<any> ( prim.sample )
+}
 
 export function findTableAndFieldFromDataD<G> ( dataD: CompDataD<G> ): TableAndFieldData<G>[] {
   return flatMapDD<TableAndFieldData<G>, any> ( dataD, {
     ...emptyDataFlatMap<TableAndFieldData<G>, any> (),
     walkPrim: ( path, parents, oneDataDD, dataDD ) => {
       const fieldName = path[ path.length - 1 ];
+      const samples: any[] = getSample ( oneDataDD, dataDD )
       if ( oneDataDD?.db )
         if ( isTableAndField ( oneDataDD.db ) ) {
-          let fieldData: FieldData<any> = { dbFieldName: oneDataDD.db.field, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName, path };
+          let fieldData: FieldData<any> = { dbFieldName: oneDataDD.db.field, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName, path, sample: samples };
           return [ { table: oneDataDD.db.table, fieldData } ]
         } else {
           const parent = parents[ parents.length - 1 ]
           if ( !parent.table ) throw new Error ( `Have a field name [${oneDataDD.db} in ${path}], but there is no table in the parent ${parent.name}` )
-          let fieldData: FieldData<any> = { dbFieldName: oneDataDD.db, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName, path };
+          let fieldData: FieldData<any> = { dbFieldName: oneDataDD.db, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName, path, sample: samples };
           return [ { table: parent.table, fieldData: fieldData } ]
         }
       return []
@@ -385,12 +429,13 @@ export function findSqlLinkDataFromRootAndDataD ( sqlRoot: SqlRoot, dataD: CompD
 }
 export function findSqlLinkDataFromRootAndDataDWithParent ( parent: SqlRoot | undefined, sqlRoot: SqlRoot, dataD: CompDataD<any> ): SqlLinkData {
   const aliasAndTables = findAliasAndTableLinksForLinkData ( sqlRoot )
-  const whereLinks = findWhereLinksForSqlRoot ( sqlRoot )
+  const whereLinks: WhereLink[] = findWhereLinksForSqlRoot ( sqlRoot )
+  const linkToParent = sqlRootToLinkToParent ( sqlRoot )
   const fields: TableAndFieldAndAliasData<any>[] = findAllFields ( sqlRoot, dataD, whereLinks )
   const children = sqlRoot.children.map ( childRoot => findSqlLinkDataFromRootAndDataDWithParent ( sqlRoot, childRoot, dataD ) )
-  const rawLinksInThis = findWhereLinksForSqlRootGoingDown ( sqlRoot ).map ( singleLinkData ( `In ${dataD.name}, sqlRoot is ${sqlRoot.root.table.name}/${sqlRoot.filterPath} trying to find sql link data`, fields ) )
+  const rawLinksInThis = findWhereLinksForSqlRootGoingDown ( sqlRoot ).filter ( wl => isWhereFromQuery ( wl ) || !wl.linking ).map ( singleLinkData ( `In ${dataD.name}, sqlRoot is ${sqlRoot.root.table.name}/${sqlRoot.filterPath} trying to find sql link data`, fields ) )
   const linksInThis = parent ? rawLinksInThis.filter ( l => isTableWhereLink ( l.w ) ) : rawLinksInThis //we only have param links in the top most.. by definition that params are constant in one query
-  return { whereLinks, aliasAndTables, sqlRoot, fields, linksInThis, children }
+  return { whereLinks, aliasAndTables, sqlRoot, fields, linksInThis, children, linkToParent }
 }
 
 
@@ -593,4 +638,109 @@ export function findParamsForTable ( errorPrefix: string, params: RestParams, ta
     }
     return []
   } )
+}
+
+
+export function makeSampleForOneTable ( ld: SqlLinkData, table: string, i: number ) {
+  const data: any = {}
+  function addSample ( f: FieldData<any> ) {
+    if ( data[ f.dbFieldName ] !== undefined ) return
+    selectSample ( i, f )
+  }
+  ld.fields.filter ( f => f.table.name = table ).forEach ( f => f.fieldData.dbFieldName )
+
+
+}
+function addBracketsTo ( [ reactType, value ]: [ string, any ] ) {
+  if ( reactType === 'string' ) return `'${value}'`
+  if ( reactType === 'number' ) return `${value}`
+  throw new Error ( `Don't know how to handle brackets for reactType ${reactType}` )
+}
+
+interface DataForMutate {
+  parent?: DataForMutate
+  data: NameAnd<NameAnd<string>>; //table name maps to fieldname maps to value
+  idData: NameAnd<string>; //the link name to id
+  ld: SqlLinkData;
+  children: DataForMutate[]
+}
+
+function setForDataForMutate<T> ( na: NameAnd<NameAnd<T>>, name1: string, name2: string, t: T ) {
+  if ( na[ name1 ] === undefined ) na[ name1 ] = {}
+  na[ name1 ][ beforeSeparator ( ":", name2 ) ] = t
+}
+function foldTableAndFieldDataArrayIntoNameAndNameAndFieldDataWithValue ( i: number, tafs: TableAndFieldAndAliasData<any>[] ): NameAnd<NameAnd<string>> {
+  const result: NameAnd<NameAnd<string>> = {}
+  tafs.forEach ( taf => {if ( taf.fieldData.sample ) setForDataForMutate ( result, taf.alias, taf.fieldData.dbFieldName, selectSample ( i, taf.fieldData ) )} )
+  return result
+}
+export function walkDataForMutate<Acc> ( path: DataForMutate[], fold: ( path: DataForMutate[] ) => Acc ): Acc[] {
+  let tail = lastItem ( path );
+  return [ fold ( path ), ...tail.children.flatMap ( c => walkDataForMutate ( [ ...path, c ], fold ) ) ]
+}
+export function getValueFrom ( path: DataForMutate[], table: string, name: string ): any {
+  const actualName = beforeSeparator ( ':', name )
+  let found = path.find ( dm => dm.data?.[ table ]?.[ actualName ] );
+  return found?.data[ table ]?.[ actualName ]
+}
+export function setDataFrom ( na: NameAnd<NameAnd<any>>, path: DataForMutate[], alias: string, field: string ) {
+  let valueFrom = getValueFrom ( path, alias, field );
+  if ( valueFrom === undefined ) valueFrom = 'wasUndefined'
+  setForDataForMutate ( na, alias, field, valueFrom )
+}
+export function makeSampleDataForMutate ( ld: SqlLinkData, i: number ): DataForMutate {
+  const result: DataForMutate = foldSqlLinkData<DataForMutate> ( ( ld, children ) => {
+    const withoutChildren: DataForMutate = {
+      data: foldTableAndFieldDataArrayIntoNameAndNameAndFieldDataWithValue ( i, ld.fields ),
+      children: [], ld, idData: {},
+    }
+    withoutChildren.children = children.map ( c => ({ ...c, parent: withoutChildren }) )
+    return withoutChildren
+  } )
+  ( ld );
+  walkDataForMutate ( [ result ], path => lastItem ( path ).parent = lastButOneItem ( path ) )
+  walkDataForMutate ( [ result ], path => {
+    const dm = lastItem ( path )
+    const parentDm = lastButOneItem ( path )
+    if ( path.length > 1 )
+      console.log ( `links`, dm.ld.linksInThis.length )
+
+    dm.ld.linksInThis.forEach ( link => {
+      const id = `idFor${link.name}`
+      dm.idData[ link.name ] = id
+      if ( isWhereFromQuery ( link.w ) )
+        setForDataForMutate ( dm.data, link.w.alias, link.w.field, id )
+      if ( isTableWhereLink ( link.w ) ) {
+        setForDataForMutate ( dm.data, link.w.parentAlias, link.w.idInParent, id );
+        setForDataForMutate ( dm.data, link.w.childAlias, link.w.idInThis, id );
+      }
+    } )
+    const linkToParent = dm.ld.linkToParent
+    function findIdInParentOrMakeNew () {
+      if ( parentDm ) {
+        const id = getValueFrom ( path, linkToParent.parentAlias, linkToParent.idInParent )
+        if ( id ) return id
+      }
+      const id = `idFor${findNameForTableWhereLink ( linkToParent )}`//need to check if already exists
+      return id;
+    }
+    if ( linkToParent ) {
+      const id = findIdInParentOrMakeNew ();
+      if ( parentDm ) setForDataForMutate ( parentDm.data, linkToParent.parentAlias, linkToParent.idInParent, id );
+      setForDataForMutate ( dm.data, linkToParent.childAlias, linkToParent.idInThis, id );
+    }
+  } )
+  return result
+}
+
+export function simplifyDataForMutate ( d: DataForMutate ): string[] {
+  return [ `Parent ${d.parent ? 'parent' : 'noParent'}, ${JSON.stringify ( d.data )}`, `linkToParent: ${simplifyWhereLink ( d.ld.linkToParent )}`, ...indentList ( d.children.flatMap ( simplifyDataForMutate ) ) ]
+}
+
+export function makeInsertSqlForSample ( ld: SqlLinkData, i: number ): string[] {
+  return walkDataForMutate ( [ makeSampleDataForMutate ( ld, i ) ], path => {
+    const dm = lastItem ( path )
+    return Object.entries ( dm.data ).map ( ( [ alias, values ] ) =>
+      `insert into alias ${alias} (${Object.keys ( values ).join ( "," )})` + ` values (${Object.values ( values ).join ( ',' )})` )
+  } ).flat ()
 }
