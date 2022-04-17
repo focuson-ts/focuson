@@ -941,13 +941,19 @@ describe ( "makeSampleDataForMutate", () => {
   it ( "should get data from samples, and from the ids", () => {
     const ld = findSqlLinkDataFromRootAndDataD ( findSqlRoot ( jointAccountRestD.tables ), JointAccountDd )
     expect ( simplifyDataForMutate ( makeSampleDataForMutate ( ld, 0 ) ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "Parent noParent, {'mainName':{'zzname':'Fred Bloggs','id':'idFormainCustomer__nameId__mainName__id'},'jointName':{'zzname':'Fred Bloggs','id':'idForjointCustomer__nameId__jointName__id'},'ACC_TBL':{'blnc':123,'mainCustomerId':'idForACC_TBL__mainCustomerId__mainCustomer__id','jointCustomerId':'idForACC_TBL__jointCustomerId__jointCustomer__id','brand_id':'idForparam__brandId','acc_id':'idForparam__accountId'},'mainCustomer':{'nameId':'idFormainCustomer__nameId__mainName__id','id':'idForACC_TBL__mainCustomerId__mainCustomer__id'},'jointCustomer':{'nameId':'idForjointCustomer__nameId__jointName__id','id':'idForACC_TBL__jointCustomerId__jointCustomer__id'}}",
+      "Parent noParent",
+      "data - {'mainName':{'zzname':''Fred Bloggs'','id':'idFormainCustomer__nameId__mainName__id'},'jointName':{'zzname':''Fred Bloggs'','id':'idForjointCustomer__nameId__jointName__id'},'ACC_TBL':{'blnc':123,'mainCustomerId':'idForACC_TBL__mainCustomerId__mainCustomer__id','jointCustomerId':'idForACC_TBL__jointCustomerId__jointCustomer__id','brand_id':'idForparam__brandId','acc_id':'idForparam__accountId'},'mainCustomer':{'nameId':'idFormainCustomer__nameId__mainName__id','id':'idForACC_TBL__mainCustomerId__mainCustomer__id'},'jointCustomer':{'nameId':'idForjointCustomer__nameId__jointName__id','id':'idForACC_TBL__jointCustomerId__jointCustomer__id'}}",
+      "idData - {'mainCustomer__nameId__mainName__id':['idFormainCustomer__nameId__mainName__id','1'],'ACC_TBL__mainCustomerId__mainCustomer__id':['idForACC_TBL__mainCustomerId__mainCustomer__id','1'],'jointCustomer__nameId__jointName__id':['idForjointCustomer__nameId__jointName__id','1'],'ACC_TBL__jointCustomerId__jointCustomer__id':['idForACC_TBL__jointCustomerId__jointCustomer__id','1'],'param__brandId':['idForparam__brandId','1'],'param__accountId':['idForparam__accountId','1']}",
       "linkToParent: undefined",
-      "  Parent parent, {'mainAddress':{'zzline1':'This is a one line string','zzline2':'This is a one line string','customerId':'idForACC_TBL__mainCustomerId__mainCustomer__id'}}",
+      "  Parent parent",
+      "  data - {'mainAddress':{'zzline1':''This is a one line string'','zzline2':''This is a one line string'','customerId':'idForACC_TBL__mainCustomerId__mainCustomer__id'}}",
+      "  idData - {'mainCustomer__id__mainAddress__customerId':['idForACC_TBL__mainCustomerId__mainCustomer__id','1']}",
       "  linkToParent: Table: parent-mainCustomer:CUST_TBL.id == child-mainAddress:ADD_TBL.customerId",
-      "  Parent parent, {'jointAddress':{'zzline1':'This is a one line string','zzline2':'This is a one line string','customerId':'idForACC_TBL__jointCustomerId__jointCustomer__id'}}",
+      "  Parent parent",
+      "  data - {'jointAddress':{'zzline1':''This is a one line string'','zzline2':''This is a one line string'','customerId':'idForACC_TBL__jointCustomerId__jointCustomer__id'}}",
+      "  idData - {'jointCustomer__id__jointAddress__customerId':['idForACC_TBL__jointCustomerId__jointCustomer__id','1']}",
       "  linkToParent: Table: parent-jointCustomer:CUST_TBL.id == child-jointAddress:ADD_TBL.customerId"
-    ])
+    ] )
   } )
 } )
 
@@ -956,13 +962,21 @@ describe ( "make insert sql for samples", () => {
     const ld = findSqlLinkDataFromRootAndDataD ( findSqlRoot ( PostCodeMainPage.rest.address.rest.tables ), nameAndAddressDataD )
     // noinspection SqlResolve
     expect ( makeInsertSqlForSample ( ld, 0 ) ).toEqual ( [
-      "insert into ADD_TBL (zzline1,zzline2,zzline3,zzline4) values ('4 Privet drive','Little Whinging','Surrey','England') "
-    ] )
+      "insert into ADD_TBL (zzline1,zzline2,zzline3,zzline4) values ('4 Privet drive','Little Whinging','Surrey','England')"
+    ])
 
   } )
   it ( "should make sample sql", () => {
     const ld = findSqlLinkDataFromRootAndDataD ( findSqlRoot ( jointAccountRestD.tables ), JointAccountDd )
-    expect ( makeInsertSqlForSample ( ld, 0 ) ).toEqual ( '' )
+    expect ( makeInsertSqlForSample ( ld, 0 ) ).toEqual ( [
+      "insert into NAME_TBL (zzname,id) values ('Fred Bloggs',idFormainCustomer__nameId__mainName__id)",
+      "insert into NAME_TBL (zzname,id) values ('Fred Bloggs',idForjointCustomer__nameId__jointName__id)",
+      "insert into ACC_TBL (blnc,mainCustomerId,jointCustomerId,brand_id,acc_id) values (123,idForACC_TBL__mainCustomerId__mainCustomer__id,idForACC_TBL__jointCustomerId__jointCustomer__id,idForparam__brandId,idForparam__accountId)",
+      "insert into CUST_TBL (nameId,id) values (idFormainCustomer__nameId__mainName__id,idForACC_TBL__mainCustomerId__mainCustomer__id)",
+      "insert into CUST_TBL (nameId,id) values (idForjointCustomer__nameId__jointName__id,idForACC_TBL__jointCustomerId__jointCustomer__id)",
+      "insert into ADD_TBL (zzline1,zzline2,customerId) values ('This is a one line string','This is a one line string',idForACC_TBL__mainCustomerId__mainCustomer__id)",
+      "insert into ADD_TBL (zzline1,zzline2,customerId) values ('This is a one line string','This is a one line string',idForACC_TBL__jointCustomerId__jointCustomer__id)"
+    ] )
 
   } )
 

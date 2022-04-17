@@ -23,8 +23,10 @@ export const jointAccountRestD: RestD<any> = {
     entity: {
       type: 'Main',
       table: accountT,
+      sample: {idOffset: 1},
       children: {
         mainCustomer: {
+          sample: {idOffset: 100, sampleOffset: 0},
           type: 'Single',
           table: customerT,
           filterPath: 'main', //if it exists then we are into path filtering and only variables with this path get this data. This is a / separated path
@@ -36,6 +38,7 @@ export const jointAccountRestD: RestD<any> = {
           }
         },
         jointCustomer: {
+          sample: {idOffset: 200, sampleOffset: 1},
           type: 'Single',
           table: customerT,
           filterPath: 'joint',

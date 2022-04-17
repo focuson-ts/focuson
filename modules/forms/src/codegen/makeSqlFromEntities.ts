@@ -660,8 +660,9 @@ function addBracketsTo ( [ reactType, value ]: [ string, any ] ) {
 interface DataForMutate {
   parent?: DataForMutate
   data: NameAnd<NameAnd<string>>; //table name maps to fieldname maps to value
-  idData: NameAnd<string>; //the link name to id
+  idData: NameAnd<[ string, string ]>; //the link name to [idNameForDebuging, idValue]
   ld: SqlLinkData;
+  aliasToTable: NameAnd<DBTable>;
   children: DataForMutate[]
 }
 
@@ -671,7 +672,13 @@ function setForDataForMutate<T> ( na: NameAnd<NameAnd<T>>, name1: string, name2:
 }
 function foldTableAndFieldDataArrayIntoNameAndNameAndFieldDataWithValue ( i: number, tafs: TableAndFieldAndAliasData<any>[] ): NameAnd<NameAnd<string>> {
   const result: NameAnd<NameAnd<string>> = {}
-  tafs.forEach ( taf => {if ( taf.fieldData.sample ) setForDataForMutate ( result, taf.alias, taf.fieldData.dbFieldName, selectSample ( i, taf.fieldData ) )} )
+  tafs.forEach ( taf => {
+    if ( taf.fieldData.sample ) {
+      const sample = selectSample ( i, taf.fieldData );
+      const quotedSample = taf.fieldData.reactType === 'number' ? sample : "'" + sample + "'"
+      setForDataForMutate ( result, taf.alias, taf.fieldData.dbFieldName, quotedSample )
+    }
+  } )
   return result
 }
 export function walkDataForMutate<Acc> ( path: DataForMutate[], fold: ( path: DataForMutate[] ) => Acc ): Acc[] {
@@ -690,8 +697,9 @@ export function setDataFrom ( na: NameAnd<NameAnd<any>>, path: DataForMutate[], 
 }
 export function makeSampleDataForMutate ( ld: SqlLinkData, i: number ): DataForMutate {
   const result: DataForMutate = foldSqlLinkData<DataForMutate> ( ( ld, children ) => {
+    const aliasToTable: NameAnd<DBTable> = Object.fromEntries ( ld.fields.map ( taf => [ taf.alias, taf.table ] ) )
     const withoutChildren: DataForMutate = {
-      data: foldTableAndFieldDataArrayIntoNameAndNameAndFieldDataWithValue ( i, ld.fields ),
+      data: foldTableAndFieldDataArrayIntoNameAndNameAndFieldDataWithValue ( i, ld.fields ), aliasToTable,
       children: [], ld, idData: {},
     }
     withoutChildren.children = children.map ( c => ({ ...c, parent: withoutChildren }) )
@@ -707,7 +715,7 @@ export function makeSampleDataForMutate ( ld: SqlLinkData, i: number ): DataForM
 
     dm.ld.linksInThis.forEach ( link => {
       const id = `idFor${link.name}`
-      dm.idData[ link.name ] = id
+      dm.idData[ link.name ] = [ id, '1' ]
       if ( isWhereFromQuery ( link.w ) )
         setForDataForMutate ( dm.data, link.w.alias, link.w.field, id )
       if ( isTableWhereLink ( link.w ) ) {
@@ -727,6 +735,7 @@ export function makeSampleDataForMutate ( ld: SqlLinkData, i: number ): DataForM
     if ( linkToParent ) {
       const id = findIdInParentOrMakeNew ();
       if ( parentDm ) setForDataForMutate ( parentDm.data, linkToParent.parentAlias, linkToParent.idInParent, id );
+      dm.idData[ findNameForTableWhereLink ( linkToParent ) ] = [ id, '1' ]
       setForDataForMutate ( dm.data, linkToParent.childAlias, linkToParent.idInThis, id );
     }
   } )
@@ -734,13 +743,17 @@ export function makeSampleDataForMutate ( ld: SqlLinkData, i: number ): DataForM
 }
 
 export function simplifyDataForMutate ( d: DataForMutate ): string[] {
-  return [ `Parent ${d.parent ? 'parent' : 'noParent'}, ${JSON.stringify ( d.data )}`, `linkToParent: ${simplifyWhereLink ( d.ld.linkToParent )}`, ...indentList ( d.children.flatMap ( simplifyDataForMutate ) ) ]
+  return [ `Parent ${d.parent ? 'parent' : 'noParent'}`,
+    `data - ${JSON.stringify ( d.data )}`,
+    `idData - ${JSON.stringify ( d.idData )}`,
+    `linkToParent: ${simplifyWhereLink ( d.ld.linkToParent )}`,
+    ...indentList ( d.children.flatMap ( simplifyDataForMutate ) ) ]
 }
 
 export function makeInsertSqlForSample ( ld: SqlLinkData, i: number ): string[] {
   return walkDataForMutate ( [ makeSampleDataForMutate ( ld, i ) ], path => {
     const dm = lastItem ( path )
     return Object.entries ( dm.data ).map ( ( [ alias, values ] ) =>
-      `insert into alias ${alias} (${Object.keys ( values ).join ( "," )})` + ` values (${Object.values ( values ).join ( ',' )})` )
+      `insert into ${dm.aliasToTable[ alias ].name} (${Object.keys ( values ).join ( "," )})` + ` values (${Object.values ( values ).join ( ',' )})` )
   } ).flat ()
 }
