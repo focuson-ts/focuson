@@ -1,4 +1,4 @@
-import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findParamsForTable, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, MainEntity, makeInsertSqlForSample, makeMapsForRest, makeSampleDataForMutate, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifyDataForMutate, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlLinkData, walkSqlRoots, whereFieldToFieldData } from "../codegen/makeSqlFromEntities";
+import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findParamsForTable, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, MainEntity, makeInsertSqlForSample, makeMapsForRest, makeDataForMutate, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifyDataForMutate, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlLinkData, walkSqlRoots, whereFieldToFieldData } from "../codegen/makeSqlFromEntities";
 import { AllLensRestParams, EntityAndWhere, IntParam, StringParam, unique } from "../common/restD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { nameAndAddressDataD, postCodeDataLineD } from "../example/postCodeDemo/addressSearch.dataD";
@@ -940,7 +940,7 @@ describe ( "paramsForLinkedData", () => {
 describe ( "makeSampleDataForMutate", () => {
   it ( "should get data from samples, and from the ids", () => {
     const ld = findSqlLinkDataFromRootAndDataD ( findSqlRoot ( jointAccountRestD.tables ), JointAccountDd )
-    expect ( simplifyDataForMutate ( makeSampleDataForMutate ( ld, 0 ) ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( simplifyDataForMutate ( makeDataForMutate ( ld, 0 ) ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "Parent noParent",
       "data - {'mainName':{'zzname':''Fred Bloggs'','id':'idFormainCustomer__nameId__mainName__id'},'jointName':{'zzname':''Fred Bloggs'','id':'idForjointCustomer__nameId__jointName__id'},'ACC_TBL':{'blnc':123,'mainCustomerId':'idForACC_TBL__mainCustomerId__mainCustomer__id','jointCustomerId':'idForACC_TBL__jointCustomerId__jointCustomer__id','brand_id':'idForparam__brandId','acc_id':'idForparam__accountId'},'mainCustomer':{'nameId':'idFormainCustomer__nameId__mainName__id','id':'idForACC_TBL__mainCustomerId__mainCustomer__id'},'jointCustomer':{'nameId':'idForjointCustomer__nameId__jointName__id','id':'idForACC_TBL__jointCustomerId__jointCustomer__id'}}",
       "idData - {'mainCustomer__nameId__mainName__id':['idFormainCustomer__nameId__mainName__id','1'],'ACC_TBL__mainCustomerId__mainCustomer__id':['idForACC_TBL__mainCustomerId__mainCustomer__id','1'],'jointCustomer__nameId__jointName__id':['idForjointCustomer__nameId__jointName__id','1'],'ACC_TBL__jointCustomerId__jointCustomer__id':['idForACC_TBL__jointCustomerId__jointCustomer__id','1'],'param__brandId':['idForparam__brandId','1'],'param__accountId':['idForparam__accountId','1']}",
@@ -956,6 +956,14 @@ describe ( "makeSampleDataForMutate", () => {
     ] )
   } )
 } )
+
+describe ("make sampleData for the databases", () =>{
+  it("", () =>{
+    const ld = findSqlLinkDataFromRootAndDataD ( findSqlRoot ( jointAccountRestD.tables ), JointAccountDd )
+    expect ( simplifyDataForMutate ( makeDataForMutate ( ld, 0 ) ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [])
+
+  })
+})
 
 describe ( "make insert sql for samples", () => {
   it ( "should make sample sql - simple case", () => {

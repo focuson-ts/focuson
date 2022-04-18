@@ -56,7 +56,7 @@ export interface SamplesForEntity {
   idOffset: number;  //no default you have to specify it
   sampleOffset?: number; //default 0
 }
-export interface SamplesForEntityWithCount extends SamplesForEntity{
+export interface SamplesForEntityWithCount extends SamplesForEntity {
   count?: number; //default 1
 }
 export interface MainEntity extends CommonEntity {
@@ -662,16 +662,16 @@ export function makeSampleForOneTable ( ld: SqlLinkData, table: string, i: numbe
 
 
 }
-function addBracketsTo ( [ reactType, value ]: [ string, any ] ) {
-  if ( reactType === 'string' ) return `'${value}'`
-  if ( reactType === 'number' ) return `${value}`
-  throw new Error ( `Don't know how to handle brackets for reactType ${reactType}` )
-}
+// function addBracketsTo ( [ reactType, value ]: [ string, any ] ) {
+//   if ( reactType === 'string' ) return `'${value}'`
+//   if ( reactType === 'number' ) return `${value}`
+//   throw new Error ( `Don't know how to handle brackets for reactType ${reactType}` )
+// }
 
 interface DataForMutate {
   parent?: DataForMutate
-  data: NameAnd<NameAnd<string>>; //table name maps to fieldname maps to value
-  idData: NameAnd<[ string, string ]>; //the link name to [idNameForDebuging, idValue]
+  data: NameAnd<NameAnd<[ FieldData<any> ]>>; //table name maps to fieldname maps to value
+  idData: NameAnd<SingleLinkData>; //the link name to all the data we have about that id.
   ld: SqlLinkData;
   aliasToTable: NameAnd<DBTable>;
   children: DataForMutate[]
@@ -706,7 +706,7 @@ export function setDataFrom ( na: NameAnd<NameAnd<any>>, path: DataForMutate[], 
   if ( valueFrom === undefined ) valueFrom = 'wasUndefined'
   setForDataForMutate ( na, alias, field, valueFrom )
 }
-export function makeSampleDataForMutate ( ld: SqlLinkData, i: number ): DataForMutate {
+export function makeDataForMutate ( ld: SqlLinkData, i: number ): DataForMutate {
   const result: DataForMutate = foldSqlLinkData<DataForMutate> ( ( ld, children ) => {
     const aliasToTable: NameAnd<DBTable> = Object.fromEntries ( ld.fields.map ( taf => [ taf.alias, taf.table ] ) )
     const withoutChildren: DataForMutate = {
@@ -726,7 +726,7 @@ export function makeSampleDataForMutate ( ld: SqlLinkData, i: number ): DataForM
 
     dm.ld.linksInThis.forEach ( link => {
       const id = `idFor${link.name}`
-      dm.idData[ link.name ] = [ id, '1' ]
+      dm.idData[ link.name ] = link
       if ( isWhereFromQuery ( link.w ) )
         setForDataForMutate ( dm.data, link.w.alias, link.w.field, id )
       if ( isTableWhereLink ( link.w ) ) {
@@ -735,18 +735,25 @@ export function makeSampleDataForMutate ( ld: SqlLinkData, i: number ): DataForM
       }
     } )
     const linkToParent = dm.ld.linkToParent
+    let linkName = findNameForTableWhereLink ( linkToParent );
     function findIdInParentOrMakeNew () {
       if ( parentDm ) {
         const id = getValueFrom ( path, linkToParent.parentAlias, linkToParent.idInParent )
         if ( id ) return id
       }
-      const id = `idFor${findNameForTableWhereLink ( linkToParent )}`//need to check if already exists
+      const id = `idFor${linkName}`//need to check if already exists
       return id;
     }
     if ( linkToParent ) {
       const id = findIdInParentOrMakeNew ();
       if ( parentDm ) setForDataForMutate ( parentDm.data, linkToParent.parentAlias, linkToParent.idInParent, id );
-      dm.idData[ findNameForTableWhereLink ( linkToParent ) ] = [ id, '1' ]
+      dm.idData[ linkName ] = {
+        name: linkName, w: linkToParent, tafs: [
+          { table: linkToParent.parentTable, alias: linkToParent.parentAlias, fieldData: { dbFieldName: linkToParent.idInParent } },
+          { table: linkToParent.childTable, alias: linkToParent.childTable, fieldData: { dbFieldName: linkToParent.idInParent, } }
+        ]
+      }
+
       setForDataForMutate ( dm.data, linkToParent.childAlias, linkToParent.idInThis, id );
     }
   } )
@@ -762,7 +769,7 @@ export function simplifyDataForMutate ( d: DataForMutate ): string[] {
 }
 
 export function makeInsertSqlForSample ( ld: SqlLinkData, i: number ): string[] {
-  return walkDataForMutate ( [ makeSampleDataForMutate ( ld, i ) ], path => {
+  return walkDataForMutate ( [ makeDataForMutate ( ld, i ) ], path => {
     const dm = lastItem ( path )
     return Object.entries ( dm.data ).map ( ( [ alias, values ] ) =>
       `insert into ${dm.aliasToTable[ alias ].name} (${Object.keys ( values ).join ( "," )})` + ` values (${Object.values ( values ).join ( ',' )})` )
