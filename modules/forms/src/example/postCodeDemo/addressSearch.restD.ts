@@ -21,7 +21,7 @@ export const addressRestD: RestD<AllGuards> = {
   url: '/api/address?{query}',
   actions: [ 'create' ],
   tables: {
-    entity: { type: 'Main', table: addT, children: {} },
+    entity: { type: 'Main', table: addT, children: {}, samples: { count: 10, idOffset: 100 } },
     where: []
   }
 }

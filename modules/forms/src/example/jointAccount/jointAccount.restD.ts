@@ -23,29 +23,29 @@ export const jointAccountRestD: RestD<any> = {
     entity: {
       type: 'Main',
       table: accountT,
-      sample: {idOffset: 1},
+      samples: { idOffset: 1, count: 5 },
       children: {
         mainCustomer: {
-          sample: {idOffset: 100, sampleOffset: 0},
+          samples: { idOffset: 100, sampleOffset: 0 },
           type: 'Single',
           table: customerT,
           filterPath: 'main', //if it exists then we are into path filtering and only variables with this path get this data. This is a / separated path
           idInParent: 'mainCustomerId:integer',
           idInThis: 'id:integer',
           children: {
-            mainAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", linkInData: { mapName: 'main', field: 'addresses', link: 'main_addresses' } },
-            mainName: { type: 'Single', table: nameT, idInParent: 'nameId', idInThis: 'id' },
+            mainAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", linkInData: { mapName: 'main', field: 'addresses', link: 'main_addresses' }, samples: { idOffset: 130, count: 2 } },
+            mainName: { type: 'Single', table: nameT, idInParent: 'nameId', idInThis: 'id', samples: { idOffset: 160 } },
           }
         },
         jointCustomer: {
-          sample: {idOffset: 200, sampleOffset: 1},
+          samples: { idOffset: 200, sampleOffset: 1 },
           type: 'Single',
           table: customerT,
           filterPath: 'joint',
           idInParent: 'jointCustomerId:integer', idInThis: 'id:integer',
           children: {
-            jointAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", linkInData: { mapName: 'joint', field: 'addresses', link: 'joint_addresses' } },
-            jointName: { type: 'Single', table: nameT, idInParent: 'nameId', idInThis: 'id' },
+            jointAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", linkInData: { mapName: 'joint', field: 'addresses', link: 'joint_addresses' }, samples: { idOffset: 230, count: 1 } },
+            jointName: { type: 'Single', table: nameT, idInParent: 'nameId', idInThis: 'id', samples: { idOffset: 260 } },
           }
         }
       }

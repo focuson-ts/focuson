@@ -49,16 +49,27 @@ export interface CommonEntity {
   where?: string;
   children?: NameAnd<ChildEntity>;
   type: 'Main' | 'Multiple' | 'Single';
+  samples: SamplesForEntity;
+}
+
+export interface SamplesForEntity {
+  idOffset: number;  //no default you have to specify it
+  sampleOffset?: number; //default 0
+}
+export interface SamplesForEntityWithCount extends SamplesForEntity{
+  count?: number; //default 1
 }
 export interface MainEntity extends CommonEntity {
   type: 'Main';
+  samples: SamplesForEntityWithCount
 }
 export interface MultipleEntity extends CommonEntity {  //parent id is in the child
   type: 'Multiple';
   idInParent: string;
   idInThis: string;
-  linkInData: { mapName: string, field: string, link: string }
-  filterPath?: string
+  linkInData: { mapName: string, field: string, link: string };
+  filterPath?: string;
+  samples: SamplesForEntityWithCount
 }
 export function isMultipleEntity ( e: Entity ): e is MultipleEntity {
   // @ts-ignore
