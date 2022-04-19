@@ -224,7 +224,7 @@ const employmentTypeGuard = state.focusOn('employmentType').optJson();
 const otherSourceOfIncomeGuard = state.focusOn('otherSourceOfIncome').optJson();
 const owningSharesPctGuard = state.focusOn('owningSharesPct').optJson();
 const ownShareOfTheCompanyGuard = state.focusOn('ownShareOfTheCompany').optJson();
-  return <Layout details='[[3,3],[5,5],[30]]' title='Current employment details - '>
+  return <Layout details='[[3,3],[{"count":5,"labelWidth":70, "valueWidth":40},5],[30]]' title='Current employment details - '>
     <LabelAndDropdown id={`${id}.areYou`} state={state.focusOn('areYou')} mode={mode} label='Are {~/mainOrJoint|you|they}... ' allButtons={buttons} enums={{"X":"","E":"Employed","S":"Self Employed","C":"Currently not earning","R":"Retired","T":"Student","U":"Unknown","H":"Home Family Responsibilities"}} />
     <Guard value={areYouGuard} cond={["E","S"]}><LabelAndStringInput id={`${id}.occupation`} state={state.focusOn('occupation')} mode={mode} label='What is {~/mainOrJoint|your|their} occupation? ' allButtons={buttons} required={true} buttons={["list"]} /></Guard>
     <Guard value={areYouGuard} cond={["E","S"]}><LabelAndStringInput id={`${id}.customerDescription`} state={state.focusOn('customerDescription')} mode={mode} label='Customers description: ' allButtons={buttons} required={true} /></Guard>
