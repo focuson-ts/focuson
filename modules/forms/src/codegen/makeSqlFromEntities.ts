@@ -218,7 +218,7 @@ export interface SingleLinkData {
   tafs: TableAndFieldAndAliasData<any>[]; //There will be one or two fields in the Where link. When we are inserting we need to put the id in both. If two they should obviously both be the same type or crazyness happens
   name: string
 }
-function findNameForTableWhereLink ( w: TableWhereLink ) {
+function findNameForTableWhereLink ( w: TableWhereLink | undefined ) {
   if ( w === undefined ) return undefined
   return `${w.parentAlias}__${beforeSeparator ( ":", w.idInParent )}__${w.childAlias}__${beforeSeparator ( ":", w.idInThis )}`;
 }
@@ -694,7 +694,7 @@ function foldTableAndFieldDataArrayIntoNameAndNameAndFieldDataWithValue ( i: num
 }
 export function walkDataForMutate<Acc> ( path: DataForMutate[], fold: ( path: DataForMutate[] ) => Acc ): Acc[] {
   let tail = lastItem ( path );
-  return [ fold ( path ), ...tail.children.flatMap ( c => walkDataForMutate ( [ ...path, c ], fold ) ) ]
+  return [ fold ( path ), ...tail.children.flatMap ( (c: DataForMutate) => walkDataForMutate ( [ ...path, c ], fold ) ) ]
 }
 export function getValueFrom ( path: DataForMutate[], table: string, name: string ): any {
   const actualName = beforeSeparator ( ':', name )
@@ -722,7 +722,7 @@ export function makeDataForMutate ( ld: SqlLinkData, i: number ): DataForMutate 
     const dm = lastItem ( path )
     const parentDm = lastButOneItem ( path )
 
-    dm.ld.linksInThis.forEach ( link => {
+    dm.ld.linksInThis.forEach ( (link: { name: string | number; w: WhereLink; }) => {
       const id = `idFor${link.name}`
       dm.idData[ link.name ] = link
       if ( isWhereFromQuery ( link.w ) )
