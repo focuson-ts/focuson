@@ -670,7 +670,7 @@ export function makeSampleForOneTable ( ld: SqlLinkData, table: string, i: numbe
 
 interface DataForMutate {
   parent?: DataForMutate
-  data: NameAnd<NameAnd<[ FieldData<any> ]>>; //table name maps to fieldname maps to value
+  data: NameAnd<NameAnd< FieldData<any> >>; //alias name maps to fieldname maps to value
   idData: NameAnd<SingleLinkData>; //the link name to all the data we have about that id.
   ld: SqlLinkData;
   aliasToTable: NameAnd<DBTable>;
@@ -721,8 +721,6 @@ export function makeDataForMutate ( ld: SqlLinkData, i: number ): DataForMutate 
   walkDataForMutate ( [ result ], path => {
     const dm = lastItem ( path )
     const parentDm = lastButOneItem ( path )
-    if ( path.length > 1 )
-      console.log ( `links`, dm.ld.linksInThis.length )
 
     dm.ld.linksInThis.forEach ( link => {
       const id = `idFor${link.name}`
