@@ -1,0 +1,12 @@
+{
+  "template":    "noreact",
+  "name":        "@focuson/example_lens_account",
+  "description": "Showing how lens help in 'normal programming'",
+  "details":     {
+    "links":        ["@focuson/lens"],
+    "extraDeps":    {},
+    "extraDevDeps": {},
+    "test":         false,
+    "tsc":          true
+  }
+}

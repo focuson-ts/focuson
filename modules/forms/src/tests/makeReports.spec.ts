@@ -15,7 +15,26 @@ describe ( "makeReports", () => {
   it ( "should make a report, when everything is ok", () => {
     const reports = makeReportData<AllButtonsInPage<AllGuards>, AllGuards> ( [ JointAccountPageD ] );
     expect ( makeReport ( reports ) ).toEqual ( [
+      "# All Pages",
+      "## Common Params",
+      "| Name | Location",
+      "| --- | ---",
+      "|accountId|accountId",
+      "|brandId|brandId",
+      "|dbName|dbName",
+      "# All endpoints",
+      "| Page | Rest | Url | Params |",
+      "| --- | --- | ---  |  --- |",
+      "|JointAccount|jointAccount | /api/jointAccount?{query}.| accountId,brandId,dbName",
+      "",
+      "---",
       "#JointAccount - MainPage",
+      "## Common Params",
+      "| Name | Location",
+      "| --- | ---",
+      "|accountId|accountId",
+      "|brandId|brandId",
+      "|dbName|dbName",
       "  ##domains ",
       "    JointAccount",
       "    JointAccountAddress",
@@ -43,9 +62,33 @@ describe ( "makeReports", () => {
     let page: MainPageD<any, any> = { ...JointAccountPageD, rest: { jointAccount: { rest: jointAccountRestD, targetFromPath: '#fromApi', fetcher: true }, } };
     const reports = makeReportData<AllButtonsInPage<AllGuards>, AllGuards> ( [ page ] );
     expect ( makeReport ( reports ) ).toEqual ( [
+      "# All Pages",
+      "# Critical Issues",
+      "## Critical Issues in JointAccount",
+      "* CRITICAL - Currently do not support variable names in 'rest' jointAccount 'targetFromPath'. #fromApi ",
+      "",
+      "---",
+      "## Common Params",
+      "| Name | Location",
+      "| --- | ---",
+      "|accountId|accountId",
+      "|brandId|brandId",
+      "|dbName|dbName",
+      "# All endpoints",
+      "| Page | Rest | Url | Params |",
+      "| --- | --- | ---  |  --- |",
+      "|JointAccount|jointAccount | /api/jointAccount?{query}.| accountId,brandId,dbName",
+      "",
+      "---",
       "#JointAccount - MainPage",
       "CRITICAL - Currently do not support variable names in 'rest' jointAccount 'targetFromPath'. #fromApi ",
       "",
+      "## Common Params",
+      "| Name | Location",
+      "| --- | ---",
+      "|accountId|accountId",
+      "|brandId|brandId",
+      "|dbName|dbName",
       "  ##domains ",
       "    JointAccount",
       "    JointAccountAddress",
@@ -66,11 +109,6 @@ describe ( "makeReports", () => {
       "      Focused on \"#selectedAccount\"",
       "    toggle       ToggleButton",
       "",
-      "---",
-      "# Critical Issues",
-      "## Critical Issues in JointAccount",
-      "* CRITICAL - Currently do not support variable names in 'rest' jointAccount 'targetFromPath'. #fromApi ",
-      "",
       "---"
     ] )
   } )
@@ -84,6 +122,18 @@ describe ( "makeReports", () => {
       let page: MainPageD<any, any> = { ...HelloWorldPage, display: { target: '~/fromApi', dataDD: duphelloWorldDD } };
       const reports = makeReportData<AllButtonsInPage<AllGuards>, AllGuards> ( [ page ] );
       expect ( makeReport ( reports ) ).toEqual ( [
+        "# All Pages",
+        "# Critical Issues",
+        "## Critical Issues in HelloWorldMainPage",
+        "* CRITICAL duplicate name in dataD HelloWorldDomainData",
+        "",
+        "---",
+        "# All endpoints",
+        "| Page | Rest | Url | Params |",
+        "| --- | --- | ---  |  --- |",
+        "|HelloWorldMainPage|restDataRD | /helloWorld?{query}.| ",
+        "",
+        "---",
         "#HelloWorldMainPage - MainPage",
         "CRITICAL duplicate name in dataD HelloWorldDomainData",
         "",
@@ -98,13 +148,8 @@ describe ( "makeReports", () => {
         "    HelloWorldDomainData",
         "  # buttons - None",
         "",
-        "---",
-        "# Critical Issues",
-        "## Critical Issues in HelloWorldMainPage",
-        "* CRITICAL duplicate name in dataD HelloWorldDomainData",
-        "",
         "---"
-      ] )
+      ])
     }
   )
 

@@ -15,10 +15,10 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "typescript": "^4.1.5",
-    "@focuson/pages": "1.2.0",
-    "@focuson/template": "1.2.0",
-    "@focuson/focuson": "1.2.0",
-    "@focuson/form_components": "1.2.0"
+    "@focuson/pages": "1.3.1",
+    "@focuson/template": "1.3.1",
+    "@focuson/focuson": "1.3.1",
+    "@focuson/form_components": "1.3.1"
   },
   "description": "Tests the lens defined in @focuson/lens, the state defined in @focuson/state, and the fetchers in @focuson/fetcher",
   "devDependencies": {
@@ -60,7 +60,7 @@
     "test:watch": "npm run test -- --watch",
     "storybook": "start-storybook -p 6006 -s public"
   },
-  "version": "1.2.0",
+  "version": "1.3.1",
   "eslintConfig": {
     "extends": [
       "react-app",

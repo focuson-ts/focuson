@@ -12,9 +12,7 @@
     ]
   },
   "dependencies": {
-    "@focuson/state": "1.3.1",
-    "@focuson/pages": "1.3.1",
-    "@focuson/focuson": "1.3.1"
+    "@focuson/lens": "1.3.1"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -48,19 +46,15 @@
   },
   "version": "1.3.1",
   "template": "noreact",
-  "description": "Components that can be used by @focuson/forms",
+  "description": "Showing how lens help in 'normal programming'",
   "details": {
-    "ideify": true,
-    "test": false,
-    "publish": true,
     "links": [
-      "@focuson/state",
-      "@focuson/pages",
-      "@focuson/focuson"
+      "@focuson/lens"
     ],
     "extraDeps": {},
     "extraDevDeps": {},
+    "test": false,
     "tsc": true
   },
-  "name": "@focuson/form_components"
+  "name": "@focuson/example_lens_account"
 }

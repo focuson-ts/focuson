@@ -53,7 +53,7 @@ export const oneOccupationIncomeDetailsDD: ExampleDataD = {
   layout: {
     component: LayoutCd,
     displayParams: {
-      details: '[[3,3],[5,5],[30]]',
+      details: '[[3,3],[{"count":5,"labelWidth":70, "valueWidth":40},5],[30]]',//{"count":7,"labelWidth":30, "valueWidth":40}
       title: [ 'Current employment details - ' ],
     }
   },
@@ -64,6 +64,7 @@ export const oneOccupationIncomeDetailsDD: ExampleDataD = {
     employmentType: { condition: 'in', path: 'employmentType', values: employmentTypeDD.enum },
     otherSourceOfIncome: { condition: 'in', path: 'otherSourceOfIncome', values: yesNoDD.enum },
   },
+
   structure: {
     areYou: { dataDD: customerStatusDD, displayParams: { label: "Are {~/mainOrJoint|you|they}... " } },
     occupation: { dataDD: StringDD, displayParams: { label: "What is {~/mainOrJoint|your|their} occupation? ", buttons: [ 'list' ] }, guard: { areYou: [ 'E', 'S' ] }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].occupation ] },
