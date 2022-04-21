@@ -27,7 +27,7 @@ export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, 
     <tr>{orderJsx}</tr>
     </thead>
     <tbody>{json.map ( ( row, i ) =>
-        <tr key={i} onClick={onClick ( i )}>{order.map ( o => <td key={o.toString ()}>{row[ o ]}</td> )}</tr> )}</tbody>
+      <tr id={`${id}[${i}]`} key={i} onClick={onClick ( i )}>{order.map ( o => <td id={`${id}[${i}].${o}`} key={o.toString ()}>{row[ o ]}</td> )}</tr> )}</tbody>
   </table>
 }
 
