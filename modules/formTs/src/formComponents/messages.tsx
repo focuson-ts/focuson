@@ -16,7 +16,7 @@ export function Messages<S, T, Context>( { state }: MessagesProps<S, SimpleMessa
     const cssClasses = (messageType: SimpleMessageLevel) => {
         if (!messageType) return;
 
-        const classes = ['alert', 'alert-dismissable'];
+        const classes = [ 'alert-dismissable'];
 
         const alertTypeClass = {
             error: 'alert alert-danger',
@@ -41,7 +41,7 @@ export function Messages<S, T, Context>( { state }: MessagesProps<S, SimpleMessa
                     state.json().map((message, index) => {
                         return  <div key={index} className={cssClasses(message.level)}>
                             <span> {getMessage(message.msg)} </span>
-                            <a className="close-button" onClick={() => removeMessage(index)}>&times;</a>
+                            <a id={`messages[${index}].close`} className="close-button" onClick={() => removeMessage(index)}>&times;</a>
                         </div>
                     }
 

@@ -9,7 +9,3 @@
 * Guards on button: very painful (not impossible) to create new type, and not particularly easy to use
 * There is 'bodge' in the MultipleEntity for linking the entity to the DataD. Hard to explain but needed, so we should work out how to do this better
 
-
-#Intermittant
-* Sometimes get the same main page twice... the second one appearing as a modal page
-    * One route is to click a main page in the nav bar while in a modal window, but there may be others

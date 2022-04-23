@@ -1,7 +1,7 @@
 import { ButtonD } from "./allButtons";
 import { NameAnd } from "@focuson/utils";
 import { guardName } from "../codegen/names";
-import { stateForGuardButton, stateForGuardVariable, stateQueryForGuards } from "../codegen/lens";
+import { stateQueryForGuards } from "../codegen/lens";
 import { MainPageD, PageD } from "../common/pageD";
 import { TSParams } from "../codegen/config";
 

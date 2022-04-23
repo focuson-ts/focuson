@@ -244,7 +244,7 @@ select {
 }
 
 .modalPopup {
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
     width: 100%;
@@ -258,8 +258,8 @@ select {
 
 .modalPopup-content {
     position: absolute;
-    top: 25%;
-    left: 25%;
+    top: 40%;
+    left: 20%;
     padding: 20px;
     background-color: white;
 }
@@ -521,4 +521,150 @@ a.close {
 .glassPane {
     min-height: 600px;
     position: relative;
+}
+
+pre {
+    background-color: ghostwhite;
+    border: 1px solid silver;
+    padding: 10px 20px;
+    margin: 0 20px;
+}
+.json-key {
+    color: brown;
+}
+.json-value {
+    color: navy;
+}
+.json-string {
+    color: olive;
+}
+
+.table-light {
+    --bs-table-bg: #f8f9fa;
+    --bs-table-striped-bg: #ecedee;
+    --bs-table-striped-color: #000;
+    --bs-table-active-bg: #dfe0e1;
+    --bs-table-active-color: #000;
+    --bs-table-hover-bg: #e5e6e7;
+    --bs-table-hover-color: #000;
+    color: #000;
+    border-color: #dfe0e1;
+}
+.table-bordered > :not(caption) > * {
+    border-width: 1px 0;
+}
+.table-bordered > :not(caption) > * > * {
+    border-width: 0 1px;
+}
+.border-primary {
+    border-color: #0d6efd !important;
+}
+.border-secondary {
+    border-color: #6c757d !important;
+}
+
+.border-info {
+    border-color: #0dcaf0 !important;
+}
+
+.border-light {
+    border-color: #f8f9fa !important;
+}
+
+#debug-container button {
+    background-color: brown;
+    border-color: brown;
+    /*width: 50px;*/
+    /*height: 50px;*/
+    /*background: green;*/
+    /*border-radius: 50%;*/
+}
+
+#debug-bucket {
+    display: inline-flex;
+}
+#debug-log button {
+    background-color: darkgoldenrod;
+    border-color: darkgoldenrod;
+}
+#debug-trace button {
+    background-color: darkolivegreen;
+    border-color: darkolivegreen;
+}
+
+.accordion {
+    max-width: 600px;
+    margin: 2rem auto;
+}
+
+.accordion-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    cursor: pointer;
+    background-color: #21aeca;
+}
+
+.accordion-title:hover {
+    background-color: #3ab4cc;
+}
+
+.accordion-title,
+.accordion-content {
+    padding: 1rem;
+}
+
+.accordion-content {
+    background-color: #39b9d2;
+}
+
+/*@media screen and (max-width: 1470px) {*/
+/*    body {*/
+/*        font-size: 18px;*/
+/*    }*/
+
+/*    .accordion {*/
+/*        width: 90%;*/
+/*    }*/
+/*}*/
+
+
+
+.toggleButton {
+    border: 1px solid blue;
+    background: aliceblue;
+    color: black;
+    margin: 0;
+    border-radius: 0;
+}
+
+.px-10 {
+    padding: 0 10px;
+}
+
+.px-20 {
+    padding: 0 20px;
+}
+
+.extra-info{
+    color: rgb(165, 159, 133);
+    font-style: italic;
+    padding: 0 0 0 10px;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+#debug-pages-container button {
+    background: brown;
+    border: none;
+    color: white;
+}
+
+#debug-pages-container table > thead > tr > th, #debug-state-container table > thead > tr > th, #debug-context-container table > thead > tr > th,
+#debug-raw-state-container table > thead > tr > th, #debug-tracing-container table > thead > tr > th
+{
+    background-color: #000000;
+    color: #ffffff;
 }

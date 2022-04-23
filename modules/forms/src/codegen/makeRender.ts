@@ -127,8 +127,10 @@ function makeParams<G> ( errorPrefix: string, path: string[], optEnum: NameAnd<S
   return fullDisplayParams;
 }
 export function createOneReact<B, G> ( pageD: PageD<B, G>, { path, dataDD, display, displayParams, guard }: ComponentData<G> ): string[] {
-  const { name, params } = display
-  const fullDisplayParams = makeParams ( `Page ${pageD.name}, Datad ${dataDD.name} with path ${JSON.stringify ( path )}`, path,
+  const name = display.name
+  let errorPrefix = `Page ${pageD.name}, Datad ${dataDD.name} with path ${JSON.stringify ( path )}`;
+  if ( name === undefined ) throw Error ( errorPrefix + " cannot find the name of the display component. Check it is a dataD or similar" )
+  const fullDisplayParams = makeParams ( errorPrefix, path,
     isPrimDd ( dataDD ) && dataDD.enum, display, dataDD.displayParams, displayParams );
 
   const displayParamsString = fullDisplayParams.map ( ( [ k, v ] ) => `${k}=${v}` ).join ( " " )
@@ -256,11 +258,11 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
   const domainImports = pages.flatMap ( p => sortedEntries ( dataDsIn ( [ p ] ) ).map ( ( [ name, dataD ] ) => `import {${domainName ( dataD )}} from "${domainsFileName ( '..', params, p )}"` ) )
   const modalDomainImports = pages.flatMap ( p => isModalPage ( p ) ? [
     `//if there is an error message here... did you set the importFrom on this modal correctly, and also check that the PageD links to this DataD in a domain or rest block`,
-    `import {${domainName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..',mainP, p, params.domainsFile )}'; ` ] : [] )
+    `import {${domainName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', mainP, p, params.domainsFile )}'; ` ] : [] )
   const modalRenderImports = pages.flatMap ( p => (isModalPage ( p ) && !p.display.dataDD.display) ? [
-    `import {${componentName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..',mainP,p, params.renderFile )}'` ] : [] )
+    `import {${componentName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', mainP, p, params.renderFile )}'` ] : [] )
   const pageLayoutImports = pages.flatMap ( p => p.layout ? [ `import { ${p.layout.component.name} } from '${p.layout.component.import}';` ] : [] )
-  const allImports = unique([...imports, ...modalDomainImports, ...modalRenderImports, ...makeComponentImports ( pages ), ...makeButtonImports ( makeButton ), ...pageDomainsImports, ...pageLayoutImports, ...domainImports], s=>s)
+  const allImports = unique ( [ ...imports, ...modalDomainImports, ...modalRenderImports, ...makeComponentImports ( pages ), ...makeButtonImports ( makeButton ), ...pageDomainsImports, ...pageLayoutImports, ...domainImports ], s => s )
   return [ ...allImports, ...pageComponents, ...dataComponents ]
 }
 

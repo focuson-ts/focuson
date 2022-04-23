@@ -33,7 +33,7 @@ function findSelectedPageDetails<S, Context extends PageSelectionContext<S>> ( s
   let selectedPageData: PageSelection[] = currentPageSelection ( state );
   if ( debug ) console.log ( 'findSelectedPageDetails', selectedPageData )
 
-  return selectedPageData.map ( findOneSelectedPageDetails ( state, findMainPageDtails ( selectedPageData, state.context.pages ) ) )
+  return selectedPageData.map ( findOneSelectedPageDetails ( state, findMainPageDetails ( selectedPageData, state.context.pages ), selectedPageData.length ) )
 }
 
 export function fullState<S, T, C> ( ls: LensState<S, T, C> ): LensState<S, S, C> {
@@ -58,28 +58,29 @@ export function lensForPageDetails<S, D, Msgs, Config extends PageConfig<S, D, M
     '~': mainPageD.lens,
   }, mainPageD.namedOptionals ) )
 }
-export const findOneSelectedPageDetails = <S, T, Context extends PageSelectionContext<S>> ( state: LensState<S, T, Context>, page0Details: MainPageDetails<S, any, any, any, Context> ) => ( ps: PageSelection, index: number ): PageDetailsForCombine => {
-  // @ts-ignore
-  const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
-  const pages = state.context.pages
-  const { pageName, pageMode, focusOn } = ps
-  const page = pages[ pageName ]
-  if ( !page ) throw Error ( `Cannot find page with name ${pageName}, legal Values are [${Object.keys ( pages ).join ( "," )}]` )
-  const { config, pageFunction, pageType } = page
+export const findOneSelectedPageDetails = <S, T, Context extends PageSelectionContext<S>> ( state: LensState<S, T, Context>, page0Details: MainPageDetails<S, any, any, any, Context>, pageCount: number ) =>
+  ( ps: PageSelection, index: number ): PageDetailsForCombine => {
+    // @ts-ignore
+    const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
+    const pages = state.context.pages
+    const { pageName, pageMode, focusOn } = ps
+    const page = pages[ pageName ]
+    if ( !page ) throw Error ( `Cannot find page with name ${pageName}, legal Values are [${Object.keys ( pages ).join ( "," )}]` )
+    const { config, pageFunction, pageType } = page
 
-  const lsForPage = state.copyWithLens ( lensForPageDetails ( page0Details, page, focusOn ) )
+    const lsForPage = state.copyWithLens ( lensForPageDetails ( page0Details, page, focusOn ) )
 
-  if ( debug ) console.log ( "findOneSelectedPageDetails.pageFunction", pageFunction )
-  if ( typeof pageFunction === 'function' ) {// this is for legacy support
-    if ( debug ) console.log ( "findOneSelectedPageDetails.legacy display" )
-    let element = pageFunction ( { state: lsForPage } );
-    if ( debug ) console.log ( "findOneSelectedPageDetails.legacy result", element )
-    if ( debug ) console.log ( "findOneSelectedPageDetails.legacy result - json", JSON.stringify ( element ) )
-    return { element, pageType }
-  } else return displayOne ( config, pageType, pageFunction, ps.pageParams, lsForPage, pageMode, index );
-};
+    if ( debug ) console.log ( "findOneSelectedPageDetails.pageFunction", pageFunction )
+    if ( typeof pageFunction === 'function' ) {// this is for legacy support
+      if ( debug ) console.log ( "findOneSelectedPageDetails.legacy display" )
+      let element = pageFunction ( { state: lsForPage } );
+      if ( debug ) console.log ( "findOneSelectedPageDetails.legacy result", element )
+      if ( debug ) console.log ( "findOneSelectedPageDetails.legacy result - json", JSON.stringify ( element ) )
+      return { element, pageType }
+    } else return displayOne ( config, pageType, pageFunction, ps.pageParams, lsForPage, pageMode, pageCount - index );
+  };
 
-export function findMainPageDtails<S> ( pageSelections: PageSelection[], pageDetails: MultiPageDetails<S, any> ) {
+export function findMainPageDetails<S> ( pageSelections: PageSelection[], pageDetails: MultiPageDetails<S, any> ) {
   const firstPage = pageSelections[ 0 ]
   let page0Details: any = pageDetails[ firstPage.pageName ];
   if ( page0Details.pageType !== 'MainPage' ) throw Error ( `Software error: first page ${firstPage.pageName} is not a main page` )

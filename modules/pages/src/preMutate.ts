@@ -2,7 +2,7 @@
 import { PageSelection, PageSelectionContext } from "./pageSelection";
 import { Lenses, Optional } from "@focuson/lens";
 import { safeArray } from "@focuson/utils";
-import { findMainPageDtails, lensForPageDetails } from "./selectedPage";
+import { findMainPageDetails, lensForPageDetails } from "./selectedPage";
 import { MultiPageDetails } from "./pageConfig";
 
 /** if 'first time' is true for a page, this returns a new state mutated with the firstTime false, and the initial state for the domain adjusted if requested by the config.ts
@@ -24,7 +24,7 @@ function premutateOnePage<S, Context extends PageSelectionContext<S>> ( c: Conte
   const details = pageDetails[ pageName ]
   if ( !details ) throw new Error ( `Could not find details for ${pageName}. LegalValues are ${Object.keys ( pageDetails ).join ( "," )}` )
   if ( firstTime ) {
-    let mainPageD = findMainPageDtails(pageSelections, pageDetails );
+    let mainPageD = findMainPageDetails(pageSelections, pageDetails );
     const dataLens: Optional<S, any> = lensForPageDetails ( mainPageD, details, focusOn )
     let firstTimeLens = lens.focusOn ( 'firstTime' );
     if ( details.clearAtStart && details.initialValue ) throw new Error ( `page ${pageName} has both clear at start and initialValue set` )

@@ -45,7 +45,7 @@ export function makeOneMainStory<B, G> ( params: TSParams, p: MainPageD<B, G> ):
     `  const rawState: ${params.stateName} = { ...emptyState, pageSelection: [ pageSelection ( args.pageMode ) ], ${p.name}: initial }`,
     `  const startState=${parsePath ( p.display.target, stateCodeBuilderWithSlashAndTildaFromIdentity ( params, p ) )}.set(rawState, args.domain)`,
     `  return SBookProvider<${params.stateName}, Context> (startState, context,`,
-    `     s => findOneSelectedPageDetails ( s, pageDetails.lens) (pageSelection(args.pageMode), 0).element );}`,
+    `     s => findOneSelectedPageDetails ( s, pageDetails.lens, 1) (pageSelection(args.pageMode), 0).element );}`,
     ` `,
     ` `,
     `export const View = Template.bind ( {} );`,
