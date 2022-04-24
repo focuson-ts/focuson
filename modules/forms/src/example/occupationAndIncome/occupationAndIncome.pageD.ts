@@ -1,4 +1,4 @@
-import { dropdownsDD, listOccupationsDD, occupationAndIncomeFullDomainDD, oneOccupationIncomeDetailsDD } from "./occupationAndIncome.dataD";
+import { customerStatusDD, dropdownsDD, employmentTypeDD, listOccupationsDD, occupationAndIncomeFullDomainDD, oneOccupationIncomeDetailsDD, yesNoDD } from "./occupationAndIncome.dataD";
 import { additionalInfoRD, businessDetailsRD, dropdownsRD, occupationAndIncomeRD, otherIncomeRD } from "./occupationAndIncome.restD";
 import { additionalInformationDD } from "./additionalInformation/additionalInformation.dataD";
 import { otherIncomeResponseDD } from "./otherSourcesOfIncome/otherSourcesOfIncome.dataD";
@@ -143,6 +143,7 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
     otherSourcesOfIncomeRD: { rest: otherIncomeRD, targetFromPath: '~/otherSourcesOfIncome', fetcher: true }
   },
   layout: { component: HideButtonsCD, displayParams: { hide: [ 'additionalInfo', 'businessDetails', 'otherSourcesOfIncome', 'list' ] } },
+
   buttons: {
     mainOrJoint: { control: "ToggleButton", value: '~/mainOrJoint', buttonText: 'Showing {~/mainOrJoint|Main|Joint}' },
     nextOccupation: { control: 'ListNextButton', value: '#selected', list: '#currentOccupation' },

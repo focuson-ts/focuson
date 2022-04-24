@@ -1,8 +1,9 @@
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
 import { stateFocusQueryForRepl } from "../codegen/codegen";
 import { stateFocusQueryWithTildaFromPage, stateForButton } from "../codegen/lens";
+import { EnabledBy, enabledByString } from "./enabledBy";
 
-export interface CommonListButtonInPage {
+export interface CommonListButtonInPage  extends EnabledBy{
   /** the path to the value from the root of this page's domain */
   value: string;
   /** the path to the list that this is about */
@@ -22,7 +23,7 @@ function ListNextButton<B extends ListNextButtonInPage, G> (): ButtonCreator<B, 
     makeButton: createButton => {
       const { params, parent, name, button } = createButton
       const forButton = stateForButton ( createButton, 'ListNextButton' )
-      return [ `<ListNextButton id=${makeIdForButton(name)} title='Next' list={${forButton ( button.list )}} value={${forButton( button.value)}} />` ]
+      return [ `<ListNextButton id=${makeIdForButton(name)} ${enabledByString(button)}title='Next' list={${forButton ( button.list )}} value={${forButton( button.value)}} />` ]
     }
   }
 }
@@ -33,7 +34,7 @@ function ListPrevButton<B extends ListPrevButtonInPage, G> (): ButtonCreator<B, 
     makeButton: ( createButton ) => {
       const { params, parent, name, button } = createButton
       const forButton = stateForButton ( createButton, 'ListPrevButton' )
-      return [ `<ListPrevButton id=${makeIdForButton(name)} title='Prev' list={${forButton ( button.list )}} value={${forButton( button.value)}} />` ]
+      return [ `<ListPrevButton id=${makeIdForButton(name)} ${enabledByString(button)}title='Prev' list={${forButton ( button.list )}} value={${forButton( button.value)}} />` ]
     }
   }
 }

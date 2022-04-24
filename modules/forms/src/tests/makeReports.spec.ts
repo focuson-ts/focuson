@@ -1,4 +1,4 @@
-import { makeReport, makeReportData } from "../reporting/report";
+import { makeGuardsReportForPage, makeReport, makeReportData } from "../reporting/report";
 import { AllButtonsInPage } from "../buttons/allButtons";
 import { AllGuards } from "../buttons/guardButton";
 import { JointAccountPageD } from "../example/jointAccount/jointAccount.pageD";
@@ -9,6 +9,8 @@ import { helloWorldDD } from "../example/HelloWorld/helloWorld.dataD";
 import { ExampleDataD } from "../example/common";
 import { StringDD } from "../common/dataD";
 import { helloWorldSample } from "../example/HelloWorld/helloWorld.sample";
+import { MainOccupationDetailsPageSummaryPD } from "../example/SingleOccupation/singleOccupation.pageD";
+import { editOccupationIncomeSummaryModalPD } from "../example/SingleOccupation/singleOccupation.modalD";
 
 
 describe ( "makeReports", () => {
@@ -54,6 +56,7 @@ describe ( "makeReports", () => {
       "    Modal Button ==> JointAccountEditModalPage in mode edit",
       "      Focused on \"#selectedAccount\"",
       "    toggle       ToggleButton",
+      "  # guards - None",
       "",
       "---"
     ] )
@@ -108,9 +111,10 @@ describe ( "makeReports", () => {
       "    Modal Button ==> JointAccountEditModalPage in mode edit",
       "      Focused on \"#selectedAccount\"",
       "    toggle       ToggleButton",
+      "  # guards - None",
       "",
       "---"
-    ] )
+    ])
   } )
 
   it ( "should report duplicate names", () => {
@@ -121,36 +125,53 @@ describe ( "makeReports", () => {
       }
       let page: MainPageD<any, any> = { ...HelloWorldPage, display: { target: '~/fromApi', dataDD: duphelloWorldDD } };
       const reports = makeReportData<AllButtonsInPage<AllGuards>, AllGuards> ( [ page ] );
-      expect ( makeReport ( reports ) ).toEqual ( [
+      expect ( makeReport ( reports ).slice(0,6) ).toEqual ( [
         "# All Pages",
         "# Critical Issues",
         "## Critical Issues in HelloWorldMainPage",
         "* CRITICAL duplicate name in dataD HelloWorldDomainData",
         "",
-        "---",
-        "# All endpoints",
-        "| Page | Rest | Url | Params |",
-        "| --- | --- | ---  |  --- |",
-        "|HelloWorldMainPage|restDataRD | /helloWorld?{query}.| ",
-        "",
-        "---",
-        "#HelloWorldMainPage - MainPage",
-        "CRITICAL duplicate name in dataD HelloWorldDomainData",
-        "",
-        "  ##domains ",
-        "    HelloWorldDomainData",
-        "  ##rests   ",
-        "  |name|url|params",
-        "  | --- | --- | --- ",
-        "    |restDataRD | /helloWorld?{query}.| ",
-        "  # modals - None",
-        "  ##display ",
-        "    HelloWorldDomainData",
-        "  # buttons - None",
-        "",
         "---"
       ])
     }
   )
-
 } )
+
+describe("makeGuardsReport", () =>{
+  it ("should make a truth table for each component (page/dataD) with guards - main page", () =>{
+    expect(makeGuardsReportForPage(MainOccupationDetailsPageSummaryPD)).toEqual({
+      "critical": [],
+      "dontIndent": true,
+      "general": [
+        "| |areYou|ownShareOfTheCompany|owningSharesPct|employmentType|otherSourceOfIncome",
+        "| --- | --- | --- | --- | --- | --- ",
+        "OneOccupationIncomeDetails.occupation|E,S| | | | ",
+        "OneOccupationIncomeDetails.customerDescription|E,S| | | | ",
+        "OneOccupationIncomeDetails.ownShareOfTheCompany|E| | | | ",
+        "OneOccupationIncomeDetails.owningSharesPct|E|Y| | | ",
+        "OneOccupationIncomeDetails.workFor|E| |N| | ",
+        "OneOccupationIncomeDetails.employmentType|E| |N| | ",
+        "OneOccupationIncomeDetails.empStartDate|E| | |1| ",
+        "OneOccupationIncomeDetails.empEndDate|E| | |2,3| ",
+        "OneOccupationIncomeDetails.annualSalaryBeforeDeduction|E| |N| | ",
+        "OneOccupationIncomeDetails.annualIncomeExcludingRent|E| |N| | ",
+        "OneOccupationIncomeDetails.regularCommissionBonus|E| |N| | ",
+        "OneOccupationIncomeDetails.whatTypeOfBusiness|E,S| |Y| | ",
+        "OneOccupationIncomeDetails.whatNameBusiness|E,S| |Y| | ",
+        "OneOccupationIncomeDetails.establishedYear|E,S| |Y| | ",
+        "OneOccupationIncomeDetails.annualDrawing3Yrs|E,S| |Y| | "
+      ],
+      "headers": [],
+      "part": "guards"
+    })
+  })
+  it ("should make a truth table for each component (page/dataD) with guards - modal page", () =>{
+    expect(makeGuardsReportForPage(editOccupationIncomeSummaryModalPD)).toEqual({
+      "critical": [],
+      "dontIndent": true,
+      "general": [],
+      "headers": [],
+      "part": "guards"
+    })
+  })
+})

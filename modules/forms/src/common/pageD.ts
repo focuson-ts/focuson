@@ -1,4 +1,4 @@
-import { AllDataDD, CompDataD, DataD, findAllDataDs, HasLayout, isDataDd, NamesAndDataDs } from "./dataD";
+import { AllDataDD, CompDataD, DataD, findAllDataDs, HasGuards, HasLayout, isDataDd, NamesAndDataDs } from "./dataD";
 import { CommonLensRestParam, defaultRestAction, RestActionDetail, RestD, unique } from "./restD";
 import { NameAnd, RestAction, RestResult, safeString, sortedEntries } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
@@ -50,7 +50,7 @@ export interface OptionalD {
   code: string;
 }
 
-export interface MainPageD<Buttons, G> extends HasLayout {
+export interface MainPageD<Buttons, G> extends HasLayout,HasGuards<G> {
   pageType: 'MainPage',
   commonParams?: NameAnd<CommonLensRestParam>,
   name: string,
@@ -65,7 +65,7 @@ export interface MainPageD<Buttons, G> extends HasLayout {
   buttonOrder?: string[];
   buttons: ButtonDefnInPage<Buttons>;
 }
-export interface ModalPageD<Buttons, G> extends HasLayout {
+export interface ModalPageD<Buttons, G> extends HasLayout,HasGuards<G> {
   pageType: 'ModalPage' | 'ModalPopup',
   name: string,
   modes: PageMode[],

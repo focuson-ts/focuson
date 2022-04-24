@@ -5,11 +5,13 @@ import { CopyDetails, PageMode, PageParams, SetToLengthOnClose } from "@focuson/
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
 import { indentList, opt, optT } from "../codegen/codegen";
 import { emptyName, modalName, restDetailsName } from "../codegen/names";
+import { EnabledBy, enabledByString } from "./enabledBy";
 
 
-export interface CommonModalButtonInPage<G> {
+export interface CommonModalButtonInPage<G> extends EnabledBy{
   control: string;
   text?: string;
+  enabledBy?: string;
   modal: PageD<any, G>,
   mode: PageMode,
   pageParams?: PageParams,
@@ -45,13 +47,13 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalButtonInPage<G>, G> {
     import: "@focuson/pages",
     makeButton:
       ( { params, parent, name, button } ) => {
-        const { modal, mode, restOnCommit, focusOn, copy, createEmpty, copyOnClose, setToLengthOnClose, text, pageParams } = button
+        const { modal, mode, restOnCommit, focusOn, copy, createEmpty, copyOnClose, setToLengthOnClose, text, pageParams ,enabledBy} = button
         const createEmptyString = createEmpty ? [ `createEmpty={${params.emptyFile}.${emptyName ( createEmpty )}}` ] : []
 
 
         const copyOnCloseArray: CopyDetails[] = copyOnClose ? singleToList ( copyOnClose ) : undefined
         const copyFromArray: CopyDetails[] = copy ? singleToList ( copy ) : undefined
-        return [ `<${button.control} id=${makeIdForButton ( name )} text='${text ? text : name}'  state={state} modal = '${modalName ( parent, modal )}'  `,
+        return [ `<${button.control} id=${makeIdForButton ( name )} ${enabledByString(button)}text='${text ? text : name}'  state={state} modal = '${modalName ( parent, modal )}'  `,
           ...indentList ( [
             ...opt ( 'pageMode', mode ),
             ...opt ( 'focusOn', focusOn ),

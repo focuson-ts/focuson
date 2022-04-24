@@ -9,6 +9,7 @@ import { HasSimpleMessageL } from "../simpleMessage";
 
 interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Context> {
   id: string;
+  enabledBy?: boolean;
   dateFn?: DateFn
 }
 interface ModalCommitButtonProps<S, C> extends ModalCommitCancelButtonProps<S, C> {
@@ -19,7 +20,7 @@ export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( 
 }
 
 
-export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S>> ( { state, id, dateFn, validate }: ModalCommitButtonProps<S, Context> ) {
+export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S>> ( { state, id, dateFn, validate, enabledBy }: ModalCommitButtonProps<S, Context> ) {
   function onClick () {
     const realvalidate = validate === undefined ? true : validate
     if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return
@@ -54,5 +55,5 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
       console.error ( 'ModalCommit button called and bad state.', lastPage )
   }
 
-  return <button id={id} onClick={onClick}>Commit</button>
+  return <button id={id} disabled={enabledBy === false} onClick={onClick}>Commit</button>
 }

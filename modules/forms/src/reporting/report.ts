@@ -1,10 +1,10 @@
 import { dataDsIn, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { indentList } from "../codegen/codegen";
-import { NameAnd, safeArray, sortedEntries } from "@focuson/utils";
+import { NameAnd, safeArray, safeObject, safeString, sortedEntries } from "@focuson/utils";
 import { isModalButtonInPage, ModalButtonInPage } from "../buttons/modalButtons";
 import { ButtonD, isButtonWithControl } from "../buttons/allButtons";
-import { GuardWithCondition, isGuardButton } from "../buttons/guardButton";
-import { CompDataD, emptyDataFlatMap, flatMapDD, isComdDD } from "../common/dataD";
+import { Guards, GuardWithCondition, isGuardButton } from "../buttons/guardButton";
+import { CompDataD, DataD, emptyDataFlatMap, flatMapDD, HasGuards, isComdDD, isRepeatingDd, OneDataDD } from "../common/dataD";
 import { isCommonLens, RestParams, unique } from "../common/restD";
 
 export interface FullReport<B, G> {
@@ -57,8 +57,7 @@ function format<B, G> ( r: Report<B, G> ): string[] {
     const name = d.part.padEnd ( 8 );
     if ( d.general.length === 0 ) return [ `# ${d.part} - None` ]
     const header = d.headers.length > 0 ? [ `|${d.headers.join ( "|" )}`, `|${d.headers.map ( u => ` --- ` ).join ( "|" )}` ] : []
-
-    return [ `##${name}`, ...header, ...indentList ( d.general ) ];
+    return [ `##${name}`, ...header, ...d.dontIndent ? d.general : indentList ( d.general ) ];
   } )
   const name = `#${page.name} - ${page.pageType}`;
   const errors: string[] = details.flatMap ( d => d.critical )
@@ -77,6 +76,7 @@ export interface ReportDetails {
   headers: string[];
   general: string[];
   critical: string[];
+  dontIndent?: boolean
 }
 
 
@@ -109,9 +109,11 @@ export function makeReportFor<B extends ButtonD, G extends GuardWithCondition> (
       makeRestReport ( page, info ),
       makeModalsReport ( page, info ),
       makeDisplayReport ( page, info ),
-      makeButtonsReport ( page, info ) ] :
+      makeButtonsReport ( page, info ),
+      makeGuardsReportForPage ( page ) ] :
     [ makeDisplayReport ( page, info ),
-      makeButtonsReport ( page, info ) ]
+      makeButtonsReport ( page, info ),
+      makeGuardsReportForPage ( page ) ]
   const commonParams = isMainPage ( page ) ? justCommonParams ( sortedEntries ( page.rest ).map ( ( [ name, rdp ] ) => rdp.rest.params ) ) : {}
   return { page, details, commonParams }
 }
@@ -191,3 +193,32 @@ function modalButtonData<G> ( button: ModalButtonInPage<G>, guardedBy: string ):
   return [ `Modal Button ==> ${button.modal.name} in mode ${button.mode}${guardedBy}`, ...indentList ( [
     ...from, `Focused on ${JSON.stringify ( button.focusOn )}`, ...restOnCommit, ...copyOnClose ] ) ]
 }
+
+function makeTitle<G> ( g: HasGuards<G> ): string[] {
+  if ( g.guards === undefined ) return []
+  const names = [ '', ...Object.keys ( g.guards ) ]
+  return [ `| ${names.join ( "|" )}`, `|${names.map ( n => ' --- ' ).join ( '|' )}` ]
+
+}
+const makeGuardReportFor = ( prefix: string, titles: string[] ) => <G> ( [ name, oneDataD ]: [ string, OneDataDD<G> ] ): string[] => {
+  if ( oneDataD.guard === undefined ) return []
+  return [ [ `${prefix}.${name}`, ...titles.map ( t => oneDataD.guard[ t ] ? safeArray ( oneDataD.guard[ t ] ).join ( "," ) : ' ' ) ].join ( '|' ) ]
+};
+function makeGuardReportForDataD<G> ( d: CompDataD<G> ): string[] {
+  if ( isRepeatingDd ( d ) ) return []
+  if ( d.guards === undefined ) return []
+  const names = Object.keys ( d.guards )
+  return [ ...makeTitle ( d ), ...Object.entries ( d.structure ).flatMap ( makeGuardReportFor ( d.name, names ) ) ]
+}
+
+export function makeGuardsReportForPage ( p: PageD<any, any> ): ReportDetails {
+  const fromDataDs = sortedEntries ( dataDsIn ( [ p ] ) ).flatMap ( ( [ name, d ] ) => makeGuardReportForDataD ( d ) )
+  return {
+    part: 'guards',
+    headers: [],
+    general: fromDataDs,
+    critical: [],
+    dontIndent: true
+  }
+}
+

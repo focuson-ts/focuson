@@ -23,7 +23,7 @@ describe ( "makeButtons", () => {
       "      createEmpty={empty.emptyCreatePlan}",
       "       rest={{'name':'EAccountsSummary_CreatePlanRestDetails','restAction':'create'}}",
       "    />,",
-      "    deleteExistingPlan:<RestButton state={state} id={`${id}.deleteExistingPlan`}",
+      "    deleteExistingPlan:<RestButton state={state} id={`${id}.deleteExistingPlan`} ",
       "      name='deleteExistingPlan'",
       "      action='delete'",
       "      rest='EAccountsSummary_CreatePlanRestDetails'",
@@ -75,7 +75,7 @@ describe ( "makeButtons", () => {
 
   it ( "should render a postcode button", () => {
     expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "    {save:<RestButton state={state} id={`${id}.save`}",
+      "    {save:<RestButton state={state} id={`${id}.save`} ",
       "      name='save'",
       "      action='create'",
       "      validate={false}",

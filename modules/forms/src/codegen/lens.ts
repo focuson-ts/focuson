@@ -48,6 +48,7 @@ export const stateFocusQueryWithTildaFromPage = <B, G> ( errorPrefix: string, pa
 }
 export const stateQueryForGuards = <B, G> ( errorPrefix: string, params: TSParams, mainPage: MainPageD<B, G>, p: PageD<B, G>, path: string ) => {
   try {
+    if ( path.indexOf ( '#' ) >= 0 ) throw new Error ( `${errorPrefix}\nCurrently guards cannot use variables. Path is ${path}` )
     return parsePath ( path, stateCodeBuilder ( {
       '/': `fullState<${params.stateName},any,Context>(state)`,
       '~': `pageState(state)<domain.${pageDomainName ( mainPage )}>()`,

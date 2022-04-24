@@ -9,6 +9,7 @@ export interface ModalButtonProps<S, Context> {
   state: LensState<S, any, Context>
   id?: string,
   text: string,
+  enabledBy?: boolean,
   modal: string,
   focusOn: string,
   pageMode: PageMode,
@@ -22,10 +23,9 @@ export interface ModalButtonProps<S, Context> {
 
 
 export function ModalButton<S extends any, Context extends PageSelectionContext<S>> ( props: ModalButtonProps<S, Context> ): JSX.Element {
-  const { id, text } =
-          props
+  const { id, text, enabledBy } = props
+  const { state, copy, modal, pageMode, rest, focusOn, copyOnClose, createEmpty, setToLengthOnClose, pageParams } = props
   let onClick = () => {
-    const { state, copy, modal, pageMode, rest, focusOn, copyOnClose, createEmpty, setToLengthOnClose, pageParams } = props
     // const fromPath = fromPathFor ( state );
     const fromPage = fromPathGivenState ( state );
     const focusOnL = fromPage ( focusOn );
@@ -37,5 +37,6 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
       ...emptyTx,
       ...copyTxs );
   };
-  return <button id={id} onClick={onClick}>{text}</button>
+  const disabled = enabledBy === false
+  return <button id={id} disabled={disabled} onClick={onClick}>{text}</button>
 }
