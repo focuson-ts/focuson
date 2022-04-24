@@ -72,7 +72,7 @@ export interface LocalVariableLessThanLengthMinusOne {
 }
 
 
-export function isGuardButton<B, G> ( b: ButtonD ): b is GuardButtonInPage<B, G> {
+export function isGuardButton<B, G> ( b: any ): b is GuardButtonInPage<B, G> {
   // @ts-ignore
   return b.guard !== undefined
 }

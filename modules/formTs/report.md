@@ -143,7 +143,7 @@
   ##buttons 
     Modal Button ==> JointAccountEditModalPage in mode edit
       Focused on "#selectedAccount"
-    toggle       ToggleButton
+    toggle       ToggleButton toggles ~/joint
 
 ---
 #MainOccupationDetailsPageSummary - MainPage
@@ -201,6 +201,9 @@
   establishedYear|E,S| |Y| | 
   annualDrawing3Yrs|E,S| |Y| | 
   
+  | OccupationIncomeModal button | condition
+  | --- | --- |
+  | otherSourcesOfIncome | {"condition":"equals","path":"~/fromApi/occupationAndIncome/customerOccupationIncomeDetails/otherSourceOfIncome","value":"\"Y\""}}
 
 ---
 #EAccountsSummary - MainPage
@@ -336,6 +339,11 @@
       Copy on close {"to":"~/fromApi/[~/selectedItem]"} 
     nextOccupation ListNextButton guarded by [<arrayEnd]
     prevOccupation ListPrevButton guarded by [>0]
+  ##guards  
+  | Repeating button | condition
+  | --- | --- |
+  | nextOccupation | {"condition":"<arrayEnd","arrayPath":"~/fromApi","varPath":"~/selectedItem"}}
+  | prevOccupation | {"condition":">0","path":"~/selectedItem"}}
 
 ---
 #PostCodeMainPage - MainPage

@@ -55,7 +55,7 @@ export function formatReport<B, G> ( r: Report<B, G> ): string[] {
   const { commonParams, page, details } = r
   const mainReport = details.flatMap ( d => {
     const name = d.part.padEnd ( 8 );
-    if ( d.general.length === 0 ) return [ ]
+    if ( d.general.length === 0 ) return []
     // if ( d.general.length === 0 ) return [ `# ${d.part} - None` ]
     const header = d.headers.length > 0 ? [ `|${d.headers.join ( "|" )}`, `|${d.headers.map ( u => ` --- ` ).join ( "|" )}` ] : []
     return [ `##${name}`, ...header, ...d.dontIndent ? d.general : indentList ( d.general ) ];
@@ -181,7 +181,9 @@ export function makeButtonsReport<B extends ButtonD, G extends GuardWithConditio
     const actualButton = isGuardButton ( button ) ? button.guard : button
     const guardedString = isGuardButton ( button ) ? ` guarded by [${button.by.condition}]` : ``
     if ( isModalButtonInPage ( actualButton ) ) return modalButtonData ( actualButton, guardedString )
-    if ( isButtonWithControl ( actualButton ) ) return [ `${name.padEnd ( 12 )} ${actualButton.control}${guardedString}` ]
+    let raw = `${name.padEnd ( 12 )} ${actualButton.control}${guardedString}`;
+    if ( actualButton.control === 'ToggleButton' ) return [ `${raw} toggles ${actualButton.value}` ]
+    if ( isButtonWithControl ( actualButton ) ) return [ raw ]
     return [ `Unknown button Page ${page.name} Button ${name} ${JSON.stringify ( button )} ` ]
   } )
   return { part: 'buttons', headers: [], general, critical: [] };
@@ -211,13 +213,23 @@ function makeGuardReportForDataD<G> ( d: CompDataD<G> ): string[] {
   const names = Object.keys ( d.guards )
   return [ ...makeTitle ( d.name, d ), ...Object.entries ( d.structure ).flatMap ( makeGuardReportFor ( names ) ), '' ]
 }
+function makeGuardButtonReportForPage<B, G extends GuardWithCondition> ( p: PageD<B, G> ): string[] {
+  const lines: string[] = sortedEntries ( p.buttons ).flatMap ( ( [ name, button ] ) => {
+    if ( isGuardButton ( button ) ) return [ `| ${name} | ${JSON.stringify ( button.by )}}` ]
+    return []
+  } )
+  if ( lines.length === 0 ) return []
+  return [ `| ${p.name} button | condition`, `| --- | --- |`, ...lines ]
+}
 
-export function makeGuardsReportForPage ( p: MainPageD<any, any> ): ReportDetails {
-  const fromDataDs = sortedEntries ( dataDsIn ( [ p, ...safeArray ( p.modals ).map ( m => m.modal ) ] ) ).flatMap ( ( [ name, d ] ) => makeGuardReportForDataD ( d ) )
+export function makeGuardsReportForPage<B, G extends GuardWithCondition> ( p: MainPageD<B, G> ): ReportDetails {
+  let pages: PageD<B, G>[] = [ p, ...safeArray ( p.modals ).map ( m => m.modal ) ];
+  const fromDataDs = sortedEntries ( dataDsIn ( pages ) ).flatMap ( ( [ name, d ] ) => makeGuardReportForDataD ( d ) )
+  const fromButtons: string[] = pages.flatMap ( makeGuardButtonReportForPage )
   return {
     part: 'guards',
     headers: [],
-    general: fromDataDs,
+    general: [ ...fromDataDs, ...fromButtons ],
     critical: [],
     dontIndent: true
   }
