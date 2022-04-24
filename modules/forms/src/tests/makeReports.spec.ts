@@ -56,7 +56,6 @@ describe ( "makeReports", () => {
       "    Modal Button ==> JointAccountEditModalPage in mode edit",
       "      Focused on \"#selectedAccount\"",
       "    toggle       ToggleButton",
-      "  # guards - None",
       "",
       "---"
     ] )
@@ -111,7 +110,6 @@ describe ( "makeReports", () => {
       "    Modal Button ==> JointAccountEditModalPage in mode edit",
       "      Focused on \"#selectedAccount\"",
       "    toggle       ToggleButton",
-      "  # guards - None",
       "",
       "---"
     ])
@@ -143,33 +141,25 @@ describe("makeGuardsReport", () =>{
       "critical": [],
       "dontIndent": true,
       "general": [
-        "| |areYou|ownShareOfTheCompany|owningSharesPct|employmentType|otherSourceOfIncome",
+        "| OneOccupationIncomeDetails|areYou|ownShareOfTheCompany|owningSharesPct|employmentType|otherSourceOfIncome",
         "| --- | --- | --- | --- | --- | --- ",
-        "OneOccupationIncomeDetails.occupation|E,S| | | | ",
-        "OneOccupationIncomeDetails.customerDescription|E,S| | | | ",
-        "OneOccupationIncomeDetails.ownShareOfTheCompany|E| | | | ",
-        "OneOccupationIncomeDetails.owningSharesPct|E|Y| | | ",
-        "OneOccupationIncomeDetails.workFor|E| |N| | ",
-        "OneOccupationIncomeDetails.employmentType|E| |N| | ",
-        "OneOccupationIncomeDetails.empStartDate|E| | |1| ",
-        "OneOccupationIncomeDetails.empEndDate|E| | |2,3| ",
-        "OneOccupationIncomeDetails.annualSalaryBeforeDeduction|E| |N| | ",
-        "OneOccupationIncomeDetails.annualIncomeExcludingRent|E| |N| | ",
-        "OneOccupationIncomeDetails.regularCommissionBonus|E| |N| | ",
-        "OneOccupationIncomeDetails.whatTypeOfBusiness|E,S| |Y| | ",
-        "OneOccupationIncomeDetails.whatNameBusiness|E,S| |Y| | ",
-        "OneOccupationIncomeDetails.establishedYear|E,S| |Y| | ",
-        "OneOccupationIncomeDetails.annualDrawing3Yrs|E,S| |Y| | "
+        "occupation|E,S| | | | ",
+        "customerDescription|E,S| | | | ",
+        "ownShareOfTheCompany|E| | | | ",
+        "owningSharesPct|E|Y| | | ",
+        "workFor|E| |N| | ",
+        "employmentType|E| |N| | ",
+        "empStartDate|E| | |1| ",
+        "empEndDate|E| | |2,3| ",
+        "annualSalaryBeforeDeduction|E| |N| | ",
+        "annualIncomeExcludingRent|E| |N| | ",
+        "regularCommissionBonus|E| |N| | ",
+        "whatTypeOfBusiness|E,S| |Y| | ",
+        "whatNameBusiness|E,S| |Y| | ",
+        "establishedYear|E,S| |Y| | ",
+        "annualDrawing3Yrs|E,S| |Y| | ",
+        ""
       ],
-      "headers": [],
-      "part": "guards"
-    })
-  })
-  it ("should make a truth table for each component (page/dataD) with guards - modal page", () =>{
-    expect(makeGuardsReportForPage(editOccupationIncomeSummaryModalPD)).toEqual({
-      "critical": [],
-      "dontIndent": true,
-      "general": [],
       "headers": [],
       "part": "guards"
     })

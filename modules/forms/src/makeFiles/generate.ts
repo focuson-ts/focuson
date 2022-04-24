@@ -29,6 +29,7 @@ export const params: any = {
   samplesFile: "samples",
   emptyFile: "empty",
   renderFile: "render",
+  guardReportFile: 'guards',
   urlparams: 'commonIds',
   queriesPackage: 'queries',
   thePackage: 'focuson.data',

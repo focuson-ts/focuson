@@ -41,7 +41,7 @@ export function makeReportHeader<B, G> ( report: FullReport<B, G> ): string[] {
 
 export function makeReport<B extends ButtonD, G extends GuardWithCondition> ( report: FullReport<B, G> ): string[] {
   const { reports } = report
-  const main = reports.flatMap ( ( r ) => format ( r ) )
+  const main = reports.flatMap ( ( r ) => formatReport ( r ) )
   const header = makeReportHeader ( report )
   return [ ...header, ...main, ]
 }
@@ -51,11 +51,12 @@ function makeParamsAndHeader ( commonParams: NameAnd<string>[] ) {
   const paramsAndHeader = params.length == 0 ? [] : [ `## Common Params`, `| Name | Location`, '| --- | ---', ...params ]
   return paramsAndHeader;
 }
-function format<B, G> ( r: Report<B, G> ): string[] {
+export function formatReport<B, G> ( r: Report<B, G> ): string[] {
   const { commonParams, page, details } = r
   const mainReport = details.flatMap ( d => {
     const name = d.part.padEnd ( 8 );
-    if ( d.general.length === 0 ) return [ `# ${d.part} - None` ]
+    if ( d.general.length === 0 ) return [ ]
+    // if ( d.general.length === 0 ) return [ `# ${d.part} - None` ]
     const header = d.headers.length > 0 ? [ `|${d.headers.join ( "|" )}`, `|${d.headers.map ( u => ` --- ` ).join ( "|" )}` ] : []
     return [ `##${name}`, ...header, ...d.dontIndent ? d.general : indentList ( d.general ) ];
   } )
@@ -194,25 +195,25 @@ function modalButtonData<G> ( button: ModalButtonInPage<G>, guardedBy: string ):
     ...from, `Focused on ${JSON.stringify ( button.focusOn )}`, ...restOnCommit, ...copyOnClose ] ) ]
 }
 
-function makeTitle<G> ( g: HasGuards<G> ): string[] {
+function makeTitle<G> ( title: string, g: HasGuards<G> ): string[] {
   if ( g.guards === undefined ) return []
-  const names = [ '', ...Object.keys ( g.guards ) ]
+  const names = [ title, ...Object.keys ( g.guards ) ]
   return [ `| ${names.join ( "|" )}`, `|${names.map ( n => ' --- ' ).join ( '|' )}` ]
 
 }
-const makeGuardReportFor = ( prefix: string, titles: string[] ) => <G> ( [ name, oneDataD ]: [ string, OneDataDD<G> ] ): string[] => {
+const makeGuardReportFor = ( titles: string[] ) => <G> ( [ name, oneDataD ]: [ string, OneDataDD<G> ] ): string[] => {
   if ( oneDataD.guard === undefined ) return []
-  return [ [ `${prefix}.${name}`, ...titles.map ( t => oneDataD.guard[ t ] ? safeArray ( oneDataD.guard[ t ] ).join ( "," ) : ' ' ) ].join ( '|' ) ]
+  return [ [ name, ...titles.map ( t => oneDataD.guard[ t ] ? safeArray ( oneDataD.guard[ t ] ).join ( "," ) : ' ' ) ].join ( '|' ) ]
 };
 function makeGuardReportForDataD<G> ( d: CompDataD<G> ): string[] {
   if ( isRepeatingDd ( d ) ) return []
   if ( d.guards === undefined ) return []
   const names = Object.keys ( d.guards )
-  return [ ...makeTitle ( d ), ...Object.entries ( d.structure ).flatMap ( makeGuardReportFor ( d.name, names ) ) ]
+  return [ ...makeTitle ( d.name, d ), ...Object.entries ( d.structure ).flatMap ( makeGuardReportFor ( names ) ), '' ]
 }
 
-export function makeGuardsReportForPage ( p: PageD<any, any> ): ReportDetails {
-  const fromDataDs = sortedEntries ( dataDsIn ( [ p ] ) ).flatMap ( ( [ name, d ] ) => makeGuardReportForDataD ( d ) )
+export function makeGuardsReportForPage ( p: MainPageD<any, any> ): ReportDetails {
+  const fromDataDs = sortedEntries ( dataDsIn ( [ p, ...safeArray ( p.modals ).map ( m => m.modal ) ] ) ).flatMap ( ( [ name, d ] ) => makeGuardReportForDataD ( d ) )
   return {
     part: 'guards',
     headers: [],

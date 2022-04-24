@@ -44,11 +44,8 @@
   |name|url|params
   | --- | --- | --- 
     |restDataRD | /helloWorld?{query}.| 
-  # modals - None
   ##display 
     HelloWorldDomainData
-  # buttons - None
-  # guards - None
 
 ---
 #AccountOverview - MainPage
@@ -119,7 +116,6 @@
       Focused on "~/optOut"
     Modal Button ==> Reason in mode view
       Focused on "~/reason"
-  # guards - None
 
 ---
 #JointAccount - MainPage
@@ -148,7 +144,6 @@
     Modal Button ==> JointAccountEditModalPage in mode edit
       Focused on "#selectedAccount"
     toggle       ToggleButton
-  # guards - None
 
 ---
 #MainOccupationDetailsPageSummary - MainPage
@@ -188,23 +183,24 @@
       Focused on "~/tempForOccupationEdit"
       Copy on close {"to":"~/fromApi/occupationAndIncome/customerOccupationIncomeDetails"} 
   ##guards  
-  | |areYou|ownShareOfTheCompany|owningSharesPct|employmentType|otherSourceOfIncome
+  | OneOccupationIncomeDetails|areYou|ownShareOfTheCompany|owningSharesPct|employmentType|otherSourceOfIncome
   | --- | --- | --- | --- | --- | --- 
-  OneOccupationIncomeDetails.occupation|E,S| | | | 
-  OneOccupationIncomeDetails.customerDescription|E,S| | | | 
-  OneOccupationIncomeDetails.ownShareOfTheCompany|E| | | | 
-  OneOccupationIncomeDetails.owningSharesPct|E|Y| | | 
-  OneOccupationIncomeDetails.workFor|E| |N| | 
-  OneOccupationIncomeDetails.employmentType|E| |N| | 
-  OneOccupationIncomeDetails.empStartDate|E| | |1| 
-  OneOccupationIncomeDetails.empEndDate|E| | |2,3| 
-  OneOccupationIncomeDetails.annualSalaryBeforeDeduction|E| |N| | 
-  OneOccupationIncomeDetails.annualIncomeExcludingRent|E| |N| | 
-  OneOccupationIncomeDetails.regularCommissionBonus|E| |N| | 
-  OneOccupationIncomeDetails.whatTypeOfBusiness|E,S| |Y| | 
-  OneOccupationIncomeDetails.whatNameBusiness|E,S| |Y| | 
-  OneOccupationIncomeDetails.establishedYear|E,S| |Y| | 
-  OneOccupationIncomeDetails.annualDrawing3Yrs|E,S| |Y| | 
+  occupation|E,S| | | | 
+  customerDescription|E,S| | | | 
+  ownShareOfTheCompany|E| | | | 
+  owningSharesPct|E|Y| | | 
+  workFor|E| |N| | 
+  employmentType|E| |N| | 
+  empStartDate|E| | |1| 
+  empEndDate|E| | |2,3| 
+  annualSalaryBeforeDeduction|E| |N| | 
+  annualIncomeExcludingRent|E| |N| | 
+  regularCommissionBonus|E| |N| | 
+  whatTypeOfBusiness|E,S| |Y| | 
+  whatNameBusiness|E,S| |Y| | 
+  establishedYear|E,S| |Y| | 
+  annualDrawing3Yrs|E,S| |Y| | 
+  
 
 ---
 #EAccountsSummary - MainPage
@@ -240,7 +236,6 @@
       RestOnCommit: createPlanRestD/create
     deleteExistingPlan RestButton
     refresh      ResetStateButton
-  # guards - None
 
 ---
 #ETransfer - MainPage
@@ -254,14 +249,12 @@
   |name|url|params
   | --- | --- | --- 
     |eTransfer | /api/eTransfers?{query}.| customerId
-  # modals - None
   ##display 
     ETransferDataD
   ##buttons 
     cancel       ResetStateButton
     eTransfers   RestButton
     resetAll     ResetStateButton
-  # guards - None
 
 ---
 #CreateEAccount - MainPage
@@ -277,14 +270,12 @@
   |name|url|params
   | --- | --- | --- 
     |eTransfer | /api/createEAccount/?{query}.| accountId,createPlanId,customerId
-  # modals - None
   ##display 
     CreateEAccountData
   ##buttons 
     cancel       ResetStateButton
     createEAccounts RestButton
     resetAll     ResetStateButton
-  # guards - None
 
 ---
 #ChequeCreditbooks - MainPage
@@ -315,7 +306,6 @@
       Focused on "~/tempCreatePlan"
       RestOnCommit: chequeCreditBooks/create
     payingInBook ResetStateButton
-  # guards - None
 
 ---
 #Repeating - MainPage
@@ -346,7 +336,6 @@
       Copy on close {"to":"~/fromApi/[~/selectedItem]"} 
     nextOccupation ListNextButton guarded by [<arrayEnd]
     prevOccupation ListPrevButton guarded by [>0]
-  # guards - None
 
 ---
 #PostCodeMainPage - MainPage
@@ -372,6 +361,5 @@
       Copy from {"from":"~/main/postcode","to":"~/postcode/search"}
       Focused on "~/postcode"
       Copy on close [{"from":"~/postcode/addressResults/line1","to":"~/main/line1"},{"from":"~/postcode/addressResults/line2","to":"~/main/line2"},{"from":"~/postcode/addressResults/line3","to":"~/main/line3"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/search","to":"~/main/postcode"}] 
-  # guards - None
 
 ---

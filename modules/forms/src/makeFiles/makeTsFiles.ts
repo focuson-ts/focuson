@@ -12,7 +12,7 @@ import { makeAllFetchers, makeFetcherDataStructureImport, makeFetchersDataStruct
 import { makeRestDetailsPage, makeRests } from "../codegen/makeRests";
 import { makeAllEmptyData, makeAllSampleVariables } from "../codegen/makeSample";
 import { makePages } from "../codegen/makePages";
-import { domainsFileName, emptyFileName, fetcherFileName, optionalsFileName, pactFileName, renderFileName, restFileName, samplesFileName, storybookFileName } from "../codegen/names";
+import { domainsFileName, emptyFileName, fetcherFileName, guardReportFileName, optionalsFileName, pactFileName, renderFileName, restFileName, samplesFileName, storybookFileName } from "../codegen/names";
 import { makeOneStory } from "../codegen/makeStories";
 import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { MakeButton } from "../codegen/makeButtons";
@@ -20,6 +20,7 @@ import { AppConfig } from "../focuson.config";
 import { makeAllPactsForPage } from "../codegen/makePacts2";
 import { makeOptionals } from "../codegen/makeOptionals";
 import { mainPage } from "@focuson/pages";
+import { makeGuardsReportForPage } from "../reporting/report";
 
 export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, appConfig: AppConfig, tsRoot: string, params: TSParams, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G>, directorySpec: DirectorySpec ) =>
   <B extends ButtonD> ( mainPs: MainPageD<B, G>[], allPages: PageD<B, G>[] ) => {
@@ -84,6 +85,10 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
 
       if ( Object.keys ( mainP.rest ).length > 0 )
         writeToFile ( pactFileName ( tsCode, params, mainP ) + ".ts", () => makeAllPactsForPage ( params, mainP ) )
+
+      let report = makeGuardsReportForPage ( mainP ).general;
+      if ( report.length > 0 )
+        writeToFile ( guardReportFileName ( tsCode, params, mainP ) + ".md", () => report )
 
     } )
 

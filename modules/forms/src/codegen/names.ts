@@ -60,6 +60,7 @@ export const modalImportFromFileName = <B, G> ( root: string,mainP: MainPageD<B,
 
 export const storybookFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, `stories` );
 export const renderFileName = <B, G> ( root: string, params: TSParams, mainPage: MainPageD<B, G>, pd: PageD<B, G> ): string => someFileNameFromMainPage ( root, mainPage, pd, params.renderFile );
+export const guardReportFileName = <B, G> ( root: string, params: TSParams, mainPage: MainPageD<B, G>): string => someFileName ( root, mainPage, params.guardReportFile );
 export const domainsFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.domainsFile );
 export const emptyFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.emptyFile );
 export const pactFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.pactsFile );
