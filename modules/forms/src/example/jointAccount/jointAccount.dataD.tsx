@@ -1,7 +1,7 @@
 import { MoneyDD, OneLineStringDD } from "../../common/dataD";
 import { TableCD } from "../../common/componentsD";
 import { ExampleDataD, ExampleRepeatingD } from "../common";
-import { accountT, addT, nameT } from "../database/tableNames";
+import {accountT, addT, cityT, nameT, postCodeT} from "../database/tableNames";
 
 export const JointAccountAddressDD: ExampleDataD = {
   name: "JointAccountAddress",
@@ -9,7 +9,9 @@ export const JointAccountAddressDD: ExampleDataD = {
   table: addT, //just a default
   structure: {
     line1: { dataDD: OneLineStringDD, db: 'zzline1' }, //db can be a string or a
-    line2: { dataDD: OneLineStringDD, db: 'zzline2' },
+    line2: { dataDD: OneLineStringDD, db: 'zzline2' }, //db can be a string or a
+    postCode: { dataDD: OneLineStringDD, db: {table: postCodeT, field: 'postCode'} }, //db can be a string or a
+    city: { dataDD: OneLineStringDD, db: {table: cityT, field: 'city'} },
   }
 }
 export const JointAccountAddressesDD: ExampleRepeatingD = { //No db stuff here.

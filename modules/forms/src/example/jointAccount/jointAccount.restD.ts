@@ -1,5 +1,5 @@
 import { JointAccountDd } from "./jointAccount.dataD";
-import { accountT, addT, customerT, nameT } from "../database/tableNames";
+import {accountT, addT, cityT, customerT, nameT, postCodeT} from "../database/tableNames";
 import { IntParam, RestD, RestParams, StringParam } from "../../common/restD";
 import { jointAccountSql } from "./jointAccount.sql";
 
@@ -33,7 +33,11 @@ export const jointAccountRestD: RestD<any> = {
           idInParent: 'mainCustomerId:integer',
           idInThis: 'id:integer',
           children: {
-            mainAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", linkInData: { mapName: 'main', field: 'addresses', link: 'main_addresses' }, samples: { idOffset: 130, count: 2 } },
+            mainAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", samples: { idOffset: 130, count: 2 },
+              children: {
+                mainPostCode: {type: 'Single', table: postCodeT, idInParent: 'postCode', idInThis: 'id', samples: { idOffset: 180 }},
+                mainCity: {type: 'Single', table: cityT, idInParent: 'city', idInThis: 'id', samples: { idOffset: 200 }}}
+            },
             mainName: { type: 'Single', table: nameT, idInParent: 'nameId', idInThis: 'id', samples: { idOffset: 160 } },
           }
         },
@@ -44,7 +48,11 @@ export const jointAccountRestD: RestD<any> = {
           filterPath: 'joint',
           idInParent: 'jointCustomerId:integer', idInThis: 'id:integer',
           children: {
-            jointAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", linkInData: { mapName: 'joint', field: 'addresses', link: 'joint_addresses' }, samples: { idOffset: 230, count: 1 } },
+            jointAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", samples: { idOffset: 230, count: 1 },
+              children: {
+                joinPostCode: {type: 'Single', table: postCodeT, idInParent: 'postCode', idInThis: 'id', samples: { idOffset: 250 }},
+                joinCity: {type: 'Single', table: cityT, idInParent: 'city', idInThis: 'id', samples: { idOffset: 270 }}}
+            },
             jointName: { type: 'Single', table: nameT, idInParent: 'nameId', idInThis: 'id', samples: { idOffset: 260 } },
           }
         }

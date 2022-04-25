@@ -32,4 +32,18 @@ export const addT: DBTable = {
   notes: '',
   audit: { restActions: [ 'get' ], by: 'how we do the auditing' }
 }
+export const postCodeT: DBTable = {
+  schema: onlySchema,
+  name: 'POST_CODE_TBL',
+  description: '',
+  notes: '',
+  audit: { restActions: [ 'get' ], by: 'how we do the auditing' }
+}
+export const cityT: DBTable = {
+  schema: onlySchema,
+  name: 'CITY_TBL',
+  description: '',
+  notes: '',
+  audit: { restActions: [ 'get' ], by: 'how we do the auditing' }
+}
 
