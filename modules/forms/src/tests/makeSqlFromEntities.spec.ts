@@ -216,6 +216,8 @@ describe ( "findAllFields", () => {
         "mainCustomer:CUST_TBL.id/undefined[]",
         "mainAddress:ADD_TBL.customerId/undefined[]",
         "ACC_TBL:ACC_TBL.mainCustomerId/undefined[]",
+        "mainPostCode:POST_CODE_TBL.postCode/postCode/main,addresses,postCode[This is a one line string,another one line string]",
+        "mainCity:CITY_TBL.city/city/main,addresses,city[This is a one line string,another one line string]",
         "mainAddress:ADD_TBL.zzline1/line1/main,addresses,line1[This is a one line string,another one line string]",
         "mainAddress:ADD_TBL.zzline2/line2/main,addresses,line2[This is a one line string,another one line string]"
       ],
@@ -223,10 +225,12 @@ describe ( "findAllFields", () => {
         "jointCustomer:CUST_TBL.id/undefined[]",
         "jointAddress:ADD_TBL.customerId/undefined[]",
         "ACC_TBL:ACC_TBL.jointCustomerId/undefined[]",
+        "joinPostCode:POST_CODE_TBL.postCode/postCode/joint,addresses,postCode[This is a one line string,another one line string]",
+        "joinCity:CITY_TBL.city/city/joint,addresses,city[This is a one line string,another one line string]",
         "jointAddress:ADD_TBL.zzline1/line1/joint,addresses,line1[This is a one line string,another one line string]",
         "jointAddress:ADD_TBL.zzline2/line2/joint,addresses,line2[This is a one line string,another one line string]"
       ]
-    ] )
+    ])
   } )
 } )
 
@@ -258,23 +262,23 @@ describe ( "findSqlLinkDataFromRootAndDataD", () => {
       ],
       [
         "sqlRoot: ADD_TBL",
-        "fields: ACC_TBL:ACC_TBL.acc_id/undefined[],ACC_TBL:ACC_TBL.brand_id/undefined[],mainCustomer:CUST_TBL.id/undefined[],mainAddress:ADD_TBL.customerId/undefined[],ACC_TBL:ACC_TBL.mainCustomerId/undefined[],mainAddress:ADD_TBL.zzline1/line1/main,addresses,line1[This is a one line string,another one line string],mainAddress:ADD_TBL.zzline2/line2/main,addresses,line2[This is a one line string,another one line string]",
-        "aliasAndTables ACC_TBL->ACC_TBL,mainCustomer->CUST_TBL,mainAddress->ADD_TBL",
-        "where param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id,mainCustomer:CUST_TBL.id == mainAddress:ADD_TBL.customerId,ACC_TBL:ACC_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer",
-        "linksInThis: ",
+        "fields: ACC_TBL:ACC_TBL.postCode/undefined[],mainPostCode:POST_CODE_TBL.id/undefined[],ACC_TBL:ACC_TBL.city/undefined[],mainCity:CITY_TBL.id/undefined[],ACC_TBL:ACC_TBL.acc_id/undefined[],ACC_TBL:ACC_TBL.brand_id/undefined[],mainCustomer:CUST_TBL.id/undefined[],mainAddress:ADD_TBL.customerId/undefined[],ACC_TBL:ACC_TBL.mainCustomerId/undefined[],mainPostCode:POST_CODE_TBL.postCode/postCode/main,addresses,postCode[This is a one line string,another one line string],mainCity:CITY_TBL.city/city/main,addresses,city[This is a one line string,another one line string],mainAddress:ADD_TBL.zzline1/line1/main,addresses,line1[This is a one line string,another one line string],mainAddress:ADD_TBL.zzline2/line2/main,addresses,line2[This is a one line string,another one line string]",
+        "aliasAndTables ACC_TBL->ACC_TBL,mainCustomer->CUST_TBL,mainPostCode->POST_CODE_TBL,mainCity->CITY_TBL,mainAddress->ADD_TBL",
+        "where ACC_TBL:ACC_TBL.postCode == mainPostCode:POST_CODE_TBL.id,ACC_TBL:ACC_TBL.city == mainCity:CITY_TBL.id,param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id,mainCustomer:CUST_TBL.id == mainAddress:ADD_TBL.customerId,ACC_TBL:ACC_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer",
+        "linksInThis: ACC_TBL__postCode__mainPostCode__id,ACC_TBL__city__mainCity__id",
         "linkToParent:Table: parent-mainCustomer:CUST_TBL.id == child-mainAddress:ADD_TBL.customerId",
         "children: 0"
       ],
       [
         "sqlRoot: ADD_TBL",
-        "fields: ACC_TBL:ACC_TBL.acc_id/undefined[],ACC_TBL:ACC_TBL.brand_id/undefined[],jointCustomer:CUST_TBL.id/undefined[],jointAddress:ADD_TBL.customerId/undefined[],ACC_TBL:ACC_TBL.jointCustomerId/undefined[],jointAddress:ADD_TBL.zzline1/line1/joint,addresses,line1[This is a one line string,another one line string],jointAddress:ADD_TBL.zzline2/line2/joint,addresses,line2[This is a one line string,another one line string]",
-        "aliasAndTables ACC_TBL->ACC_TBL,jointCustomer->CUST_TBL,jointAddress->ADD_TBL",
-        "where param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id,jointCustomer:CUST_TBL.id == jointAddress:ADD_TBL.customerId,ACC_TBL:ACC_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer",
-        "linksInThis: ",
+        "fields: ACC_TBL:ACC_TBL.postCode/undefined[],joinPostCode:POST_CODE_TBL.id/undefined[],ACC_TBL:ACC_TBL.city/undefined[],joinCity:CITY_TBL.id/undefined[],ACC_TBL:ACC_TBL.acc_id/undefined[],ACC_TBL:ACC_TBL.brand_id/undefined[],jointCustomer:CUST_TBL.id/undefined[],jointAddress:ADD_TBL.customerId/undefined[],ACC_TBL:ACC_TBL.jointCustomerId/undefined[],joinPostCode:POST_CODE_TBL.postCode/postCode/joint,addresses,postCode[This is a one line string,another one line string],joinCity:CITY_TBL.city/city/joint,addresses,city[This is a one line string,another one line string],jointAddress:ADD_TBL.zzline1/line1/joint,addresses,line1[This is a one line string,another one line string],jointAddress:ADD_TBL.zzline2/line2/joint,addresses,line2[This is a one line string,another one line string]",
+        "aliasAndTables ACC_TBL->ACC_TBL,jointCustomer->CUST_TBL,joinPostCode->POST_CODE_TBL,joinCity->CITY_TBL,jointAddress->ADD_TBL",
+        "where ACC_TBL:ACC_TBL.postCode == joinPostCode:POST_CODE_TBL.id,ACC_TBL:ACC_TBL.city == joinCity:CITY_TBL.id,param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id,jointCustomer:CUST_TBL.id == jointAddress:ADD_TBL.customerId,ACC_TBL:ACC_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer",
+        "linksInThis: ACC_TBL__postCode__joinPostCode__id,ACC_TBL__city__joinCity__id",
         "linkToParent:Table: parent-jointCustomer:CUST_TBL.id == child-jointAddress:ADD_TBL.customerId",
         "children: 0"
       ]
-    ] )
+    ])
   } )
 
   it ( "should have a walkSqlLinkData that passes in the parent ", () => {

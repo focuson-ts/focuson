@@ -1,21 +1,12 @@
 import { DBTable } from "../common/resolverD";
-import { beforeAfterSeparator, beforeSeparator, ints, lastButOneItem, lastItem, mapPathPlusInts, NameAnd, safeArray, safeString } from "@focuson/utils";
+import { beforeAfterSeparator, beforeSeparator, ints, lastItem, mapPathPlusInts, NameAnd, safeArray, safeString } from "@focuson/utils";
 import { AllLensRestParams, EntityAndWhere, RestD, RestParams, unique } from "../common/restD";
-import {
-  CompDataD,
-  emptyDataFlatMap,
-  flatMapDD,
-  HasSample,
-  isRepeatingDd,
-  OneDataDD,
-  PrimitiveDD
-} from "../common/dataD";
+import { CompDataD, emptyDataFlatMap, flatMapDD, HasSample, OneDataDD, PrimitiveDD } from "../common/dataD";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addBrackets, addStringToEndOfAllButLast, indentList } from "./codegen";
 import { JavaWiringParams } from "./config";
 import { sqlListName, sqlMapName, sqlTafFieldName } from "./names";
 import { selectSample } from "./makeSample";
-import * as path from "path";
 
 export type DbValues = string | TableAndField
 
@@ -103,6 +94,11 @@ export function foldEntitys<Acc> ( folder: EntityFolder<Acc>, main: EntityAndWhe
   let childAccs = foldChildEntitys ( folder, main, [], e.children, filterPath, zero );
   return folder.foldMain ( childAccs, main, e )
 }
+export function foldEntityFromChildSqlRoot<Acc>(folder: EntityFolder<Acc>, sqlRoot: SqlRoot, zero: Acc): Acc{
+  let newPath: [string,ChildEntity][] =  sqlRoot.root.type === 'Main'? [] : [...sqlRoot.path, [ sqlRoot.alias, sqlRoot.root ]];
+  return  folder.foldMain(foldChildEntitys<Acc> ( folder, sqlRoot.main,newPath, sqlRoot.root.children, sqlRoot.filterPath, zero ), sqlRoot.main, sqlRoot.root)
+}
+
 function foldChildEntitys<Acc> ( folder: EntityFolder<Acc>, main: EntityAndWhere, path: [ string, ChildEntity ][], children: NameAnd<ChildEntity> | undefined, filterPath: string | undefined, zero: Acc ): Acc[] {
   if ( !children ) return []
   return Object.entries ( children ).map ( ( [ name, child ] ) => foldChildEntity ( folder, main, path, name, child, filterPath, zero ) )
@@ -300,19 +296,24 @@ function findWhereLinksForSqlRootGoingDown ( sqlRoot: SqlRoot ) {
     const [ parentAlias, parentTable ] = getParentTableAndAlias ( main, path, e => e.table )
     return { parentTable, parentAlias, idInParent: entity.idInParent, childAlias, childTable: entity.table, idInThis: entity.idInThis, linking: multiple }
   }
-  let whereLinks = foldEntitys ( {
-    foldMain ( childAccs: WhereLink[][], main: EntityAndWhere ): WhereLink[] { return [ ...childAccs.flat (), ...main.where ]},
+  let whereLinks = foldEntityFromChildSqlRoot<WhereLink[]> ( {
+    foldMain ( childAccs: WhereLink[][], main: EntityAndWhere ): WhereLink[] {
+      return [ ...childAccs.flat (), ...main.where ]
+    },
     foldMultiple ( childAccs: WhereLink[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, multiple: MultipleEntity ): WhereLink[] {
       return []
     },
     foldSingle ( childAccs: WhereLink[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, single: SingleEntity ): WhereLink[] {
-      return [ ...childAccs.flat (), makeWhere ( main, path, single, childAlias, false ) ]
+      let where = makeWhere ( main, path, single, childAlias, false );
+      return [ ...childAccs.flat (), where ]
     }
-  }, sqlRoot.main, sqlRoot.root, sqlRoot.filterPath, [] );
+  }, sqlRoot, [] );
   return whereLinks;
 }
 export function findWhereLinksForSqlRoot ( sqlRoot: SqlRoot ): WhereLink[] {
-  return [ ...(findWhereLinksForSqlRootGoingDown ( sqlRoot )), ...findWhereLinksForSqlRootGoingUp ( sqlRoot ) ]
+  let down : WhereLink[]= findWhereLinksForSqlRootGoingDown ( sqlRoot );
+  let up: WhereLink[] = findWhereLinksForSqlRootGoingUp ( sqlRoot );
+  return [ ...down, ...up ]
 }
 
 export function findWhereLinksForSqlRootGoingUp ( sqlRoot: SqlRoot ): WhereLink[] {
@@ -447,6 +448,7 @@ export function findSqlLinkDataFromRootAndDataD ( sqlRoot: SqlRoot, dataD: CompD
   return findSqlLinkDataFromRootAndDataDWithParent ( undefined, sqlRoot, dataD )
 }
 export function findSqlLinkDataFromRootAndDataDWithParent ( parent: SqlRoot | undefined, sqlRoot: SqlRoot, dataD: CompDataD<any> ): SqlLinkData {
+  // findAllFields ( r, JointAccountDd, findWhereLinksForSqlRootGoingUp ( r )
   const aliasAndTables = findAliasAndTableLinksForLinkData ( sqlRoot )
   const whereLinks: WhereLink[] = findWhereLinksForSqlRoot ( sqlRoot )
   const linkToParent = sqlRootToLinkToParent ( sqlRoot )
@@ -516,32 +518,32 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
 
   const constParams = [ `ResultSet rs`, ...ints ( childCount ).map ( i => `List<${sqlListName ( p, restName, path, i )}> list${i}` ) ].join ( ',' )
   const sql = generateGetSql ( ld )
-  const putters = ld.fields
+  const putters: string[] = ld.fields
     .filter ( taf => taf.fieldData.fieldName )
     .sort ( ( l, r ) => l.table.name.localeCompare ( r.table.name ) )
     .sort ( ( l, r ) => l.fieldData.dbFieldName.localeCompare ( r.fieldData.dbFieldName ) )
     .map ( taf => `this.${mapName ( taf.fieldData.path.slice ( 0, -1 ) )}.put("${taf.fieldData.fieldName}", rs.${taf.fieldData.rsGetter}("${sqlTafFieldName ( taf )}"));` )
-  const setIds = ld.linksInThis.map ( l => `this.${l.name} = rs.${l.tafs[ 0 ].fieldData.rsGetter}("${sqlTafFieldName ( l.tafs[ 0 ] )}");` )
+  const setIds: string[] = ld.linksInThis.map ( l => `this.${l.name} = rs.${l.tafs[ 0 ].fieldData.rsGetter}("${sqlTafFieldName ( l.tafs[ 0 ] )}");` )
   const allPaths = unique ( flatMapDD<string[], G> ( restD.dataDD, {
     ...emptyDataFlatMap (),
     walkDataStart: ( path1, parents, oneDataDD, dataDD ) =>
       [ path1 ]
   } ), r => r.toString () )
 
-  const links = allPaths.filter ( p => p.length > 0 )
+  const links: string[] = allPaths.filter ( p => p.length > 0 )
     .filter ( p => p.join ( "/" ).startsWith ( safeString ( ld.sqlRoot.filterPath ) ) )
     .map ( path => `${mapName ( path.slice ( 0, -1 ) )}.put("${path[ path.length - 1 ]}", ${mapName ( path )});` )
 
-  const linksMultipleEntities = (sqlRoot: SqlRoot) => allPaths.filter(p => p.length > 1) //  [main, addresses], [join, addresses]
-        .filter((p: string[]) => p.join("/").startsWith(safeString(sqlRoot.filterPath)) )
-        .map(path => [path[path.length - 1], mapName(path)]);
+  const linksMultipleEntities = ( sqlRoot: SqlRoot ) => allPaths.filter ( p => p.length > 1 ) //  [main, addresses], [join, addresses]
+    .filter ( ( p: string[] ) => p.join ( "/" ).startsWith ( safeString ( sqlRoot.filterPath ) ) )
+    .map ( path => [ path[ path.length - 1 ], mapName ( path ) ] );
 
-  const linksToOtherMaps = ld.sqlRoot.children.map ( ( childRoot, i ) => {
+  const linksToOtherMaps: string[] = ld.sqlRoot.children.flatMap ( ( childRoot, i ) => {
     let childEntity = childRoot.root
     if ( !isMultipleEntity ( childEntity ) ) throw Error ( `Page: ${p.name} rest ${restName} The parent of sql root must be a multiple entity.\n ${JSON.stringify ( childRoot )}` )
     if ( childRoot.children.length > 0 )
       throw Error ( `Page: ${p.name} rest ${restName} has nested 'multiples. Currently this is not supported` )
-    return linksMultipleEntities(childRoot).map( l => `this.${childRoot.filterPath}.put("${l[0]}", list${i}.stream().map(m ->m.${l[1]}).collect(Collectors.toList()));`)
+    return linksMultipleEntities ( childRoot ).map ( l => `this.${childRoot.filterPath}.put("${l[ 0 ]}", list${i}.stream().map(m ->m.${l[ 1 ]}).collect(Collectors.toList()));` )
   } );
 
   return [
@@ -683,7 +685,7 @@ export function makeSampleForOneTable ( ld: SqlLinkData, table: string, i: numbe
 
 interface DataForMutate {
   parent?: DataForMutate
-  data: NameAnd<NameAnd< FieldData<any> >>; //alias name maps to fieldname maps to value
+  data: NameAnd<NameAnd<string>>; //alias name maps to fieldname maps to value
   idData: NameAnd<SingleLinkData>; //the link name to all the data we have about that id.
   ld: SqlLinkData;
   aliasToTable: NameAnd<DBTable>;
@@ -707,7 +709,7 @@ function foldTableAndFieldDataArrayIntoNameAndNameAndFieldDataWithValue ( i: num
 }
 export function walkDataForMutate<Acc> ( path: DataForMutate[], fold: ( path: DataForMutate[] ) => Acc ): Acc[] {
   let tail = lastItem ( path );
-  return [ fold ( path ), ...tail.children.flatMap ( (c: DataForMutate) => walkDataForMutate ( [ ...path, c ], fold ) ) ]
+  return [ fold ( path ), ...tail.children.flatMap ( ( c: DataForMutate ) => walkDataForMutate ( [ ...path, c ], fold ) ) ]
 }
 export function getValueFrom ( path: DataForMutate[], table: string, name: string ): any {
   const actualName = beforeSeparator ( ':', name )
@@ -719,56 +721,8 @@ export function setDataFrom ( na: NameAnd<NameAnd<any>>, path: DataForMutate[], 
   if ( valueFrom === undefined ) valueFrom = 'wasUndefined'
   setForDataForMutate ( na, alias, field, valueFrom )
 }
-export function makeDataForMutate ( ld: SqlLinkData, i: number ): DataForMutate {
-  const result: DataForMutate = foldSqlLinkData<DataForMutate> ( ( ld, children ) => {
-    const aliasToTable: NameAnd<DBTable> = Object.fromEntries ( ld.fields.map ( taf => [ taf.alias, taf.table ] ) )
-    const withoutChildren: DataForMutate = {
-      data: foldTableAndFieldDataArrayIntoNameAndNameAndFieldDataWithValue ( i, ld.fields ), aliasToTable,
-      children: [], ld, idData: {},
-    }
-    withoutChildren.children = children.map ( c => ({ ...c, parent: withoutChildren }) )
-    return withoutChildren
-  } )
-  ( ld );
-  walkDataForMutate ( [ result ], path => lastItem ( path ).parent = lastButOneItem ( path ) )
-  walkDataForMutate ( [ result ], path => {
-    const dm = lastItem ( path )
-    const parentDm = lastButOneItem ( path )
+export function makeDataForMutate ( ld: SqlLinkData, i: number ): any {
 
-    dm.ld.linksInThis.forEach ( (link: { name: string | number; w: WhereLink; }) => {
-      const id = `idFor${link.name}`
-      dm.idData[ link.name ] = link
-      if ( isWhereFromQuery ( link.w ) )
-        setForDataForMutate ( dm.data, link.w.alias, link.w.field, id )
-      if ( isTableWhereLink ( link.w ) ) {
-        setForDataForMutate ( dm.data, link.w.parentAlias, link.w.idInParent, id );
-        setForDataForMutate ( dm.data, link.w.childAlias, link.w.idInThis, id );
-      }
-    } )
-    const linkToParent = dm.ld.linkToParent
-    let linkName = findNameForTableWhereLink ( linkToParent );
-    function findIdInParentOrMakeNew () {
-      if ( parentDm ) {
-        const id = getValueFrom ( path, linkToParent.parentAlias, linkToParent.idInParent )
-        if ( id ) return id
-      }
-      const id = `idFor${linkName}`//need to check if already exists
-      return id;
-    }
-    if ( linkToParent ) {
-      const id = findIdInParentOrMakeNew ();
-      if ( parentDm ) setForDataForMutate ( parentDm.data, linkToParent.parentAlias, linkToParent.idInParent, id );
-      dm.idData[ linkName ] = {
-        name: linkName, w: linkToParent, tafs: [
-          { table: linkToParent.parentTable, alias: linkToParent.parentAlias, fieldData: { dbFieldName: linkToParent.idInParent } },
-          { table: linkToParent.childTable, alias: linkToParent.childTable, fieldData: { dbFieldName: linkToParent.idInParent, } }
-        ]
-      }
-
-      setForDataForMutate ( dm.data, linkToParent.childAlias, linkToParent.idInThis, id );
-    }
-  } )
-  return result
 }
 
 export function simplifyDataForMutate ( d: DataForMutate ): string[] {
