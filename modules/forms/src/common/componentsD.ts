@@ -4,7 +4,7 @@
  * string and string[] are just the types
  *
  * */
-export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'string[]'
+export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'string[]' | 'path' | 'pathValue'
 
 type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons'
 
@@ -87,7 +87,7 @@ export const SelectedItemCD: DisplayCompD = {
   name: "SelectedItem",
   params: {
     ...commonParams,
-    index: { paramType: 'pageStateValue', needed: 'yes' },
+    index: { paramType: 'pathValue', needed: 'yes' },
     display: { paramType: 'object', needed: 'yes' },
     buttons: { paramType: 'object', needed: 'defaultToButtons' }
   }

@@ -5,7 +5,7 @@ import { occupationAndIncomeSample } from "./occupationAndIncome.sample";
 import { CustomerStatus, EmploymentType, YesNo } from "@focuson/form_components";
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 import { DateDD, IntegerDD, OneLineStringDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
-import { commonParams, DisplayCompD, LabelAndDropDownCD, LayoutCd, TableCD } from "../../common/componentsD";
+import { commonParams, DisplayCompD, LabelAndDropDownCD, LayoutCd, SelectedItemCD, TableCD } from "../../common/componentsD";
 
 const labelAndDropdownContainerStyle = {
   display: 'flex',
@@ -36,16 +36,6 @@ export const employmentTypeDD: StringPrimitiveDD = {
   enum: EmploymentType
 }
 
-export const SelectedItemCD: DisplayCompD = {
-  import: '@focuson/form_components',
-  name: "SelectedItem",
-  params: {
-    ...commonParams,
-    index: { paramType: 'pageStateValue', needed: 'yes' },
-    display: { paramType: 'object', needed: 'yes' },
-    buttons: { paramType: 'object', needed: 'defaultToButtons' }
-  }
-}
 
 export const oneOccupationIncomeDetailsDD: ExampleDataD = {
   name: "OneOccupationIncomeDetails",
@@ -119,7 +109,7 @@ export const customerOccupationIncomeDetailsDD: ExampleRepeatingD = {
   display: SelectedItemCD,
   name: "CustomerOccupationIncomeDetails",
   description: "This is a summary customer occupations data",
-  displayParams: { index: [ 'selectedItem' ], display: oneOccupationIncomeDetailsDD.name },
+  displayParams: { index: '#selected', display: oneOccupationIncomeDetailsDD.name },
   dataDD: oneOccupationIncomeDetailsDD
 }
 

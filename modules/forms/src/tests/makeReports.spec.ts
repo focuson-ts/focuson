@@ -55,10 +55,10 @@ describe ( "makeReports", () => {
       "  ##buttons ",
       "    Modal Button ==> JointAccountEditModalPage in mode edit",
       "      Focused on \"#selectedAccount\"",
-      "    toggle       ToggleButton",
+      "    toggle       ToggleButton toggles ~/joint",
       "",
       "---"
-    ] )
+    ])
   } )
   it ( "should make a report, when have critcal issue", () => {
     let page: MainPageD<any, any> = { ...JointAccountPageD, rest: { jointAccount: { rest: jointAccountRestD, targetFromPath: '#fromApi', fetcher: true }, } };
@@ -109,7 +109,7 @@ describe ( "makeReports", () => {
       "  ##buttons ",
       "    Modal Button ==> JointAccountEditModalPage in mode edit",
       "      Focused on \"#selectedAccount\"",
-      "    toggle       ToggleButton",
+      "    toggle       ToggleButton toggles ~/joint",
       "",
       "---"
     ])
@@ -158,7 +158,10 @@ describe("makeGuardsReport", () =>{
         "whatNameBusiness|E,S| |Y| | ",
         "establishedYear|E,S| |Y| | ",
         "annualDrawing3Yrs|E,S| |Y| | ",
-        ""
+        "",
+        "| OccupationIncomeModal button | condition",
+        "| --- | --- |",
+        "| otherSourcesOfIncome | {\"condition\":\"equals\",\"path\":\"~/fromApi/occupationAndIncome/customerOccupationIncomeDetails/otherSourceOfIncome\",\"value\":\"\\\"Y\\\"\"}}"
       ],
       "headers": [],
       "part": "guards"

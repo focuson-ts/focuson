@@ -22,11 +22,11 @@
 |AccountOverview|optOut | /api/accountOverview/optOut?{query}.| accountId,customerId
 |AccountOverview|reason | /api/accountOverview/reason?{query}.| accountId,customerId
 |JointAccount|jointAccount | /api/jointAccount?{query}.| accountId,brandId,dbName
-|MainOccupationDetailsPageSummary|additionalInfoFirstRD | /customer/occupation/v2/additionalInfoFirst?{query}.| customerId
-|MainOccupationDetailsPageSummary|additionalInfoSecondRD | /customer/occupation/v2/additionalInfoSecond?{query}.| customerId
-|MainOccupationDetailsPageSummary|occupationAndIncomeRD | /customer/occupation/v2/occupationIncomeDetails?{query}.| customerId
-|MainOccupationDetailsPageSummary|occupationsListRD | /customer/occupation/v2/occupationsList?{query}.| customerId
-|MainOccupationDetailsPageSummary|otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}.| customerId
+|OccupationAndIncomeSummary|additionalInformationRD | /customer/occupation/v2/additionalInfo?{query}.| customerId
+|OccupationAndIncomeSummary|businessDetailsRD | /customer/occupation/v2/businessDetails?{query}.| customerId
+|OccupationAndIncomeSummary|dropdownsRD | /customer/occupation/v2/occupationDetails?{query}.| customerId
+|OccupationAndIncomeSummary|occupationAndIncomeRD | /customer/occupation/v2/occupationIncomeDetails?{query}.| customerId
+|OccupationAndIncomeSummary|otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}.| customerId
 |EAccountsSummary|createPlanRestD | /api/createPlan?{query}.| accountId,createPlanId,customerId
 |EAccountsSummary|eAccountsSummary | /api/accountsSummary?{query}.| accountId,customerId
 |ETransfer|eTransfer | /api/eTransfers?{query}.| customerId
@@ -146,42 +146,69 @@
     toggle       ToggleButton toggles ~/joint
 
 ---
-#MainOccupationDetailsPageSummary - MainPage
+#OccupationAndIncomeSummary - MainPage
 ## Common Params
 | Name | Location
 | --- | ---
 |customerId|customerId
   ##domains 
-    AdditionalInfoFirst
-    AdditionalInfoSecond
-    FromApi
+    AccountDetails
+    AdditionalInformation
+    BusinessDetails
+    BusinessDetailsMain
+    BusinessFinancialDetails
+    ContractTypesResponse
+    CustomerOccupationIncomeDetails
+    DetailsOfNonRecurringItems
+    DetailsOfReevaluationOfAssets
+    Dropdowns
+    EmploymentStatus
+    FrequenciesResponse
     ListOccupations
     OccupationAndIncomeFullDomain
+    OccupationDescriptionResponse
+    OccupationsListData
     OneOccupationIncomeDetails
     OtherIncomeResponse
   ##rests   
   |name|url|params
   | --- | --- | --- 
-    |additionalInfoFirstRD | /customer/occupation/v2/additionalInfoFirst?{query}.| customerId
-    |additionalInfoSecondRD | /customer/occupation/v2/additionalInfoSecond?{query}.| customerId
+    |additionalInformationRD | /customer/occupation/v2/additionalInfo?{query}.| customerId
+    |businessDetailsRD | /customer/occupation/v2/businessDetails?{query}.| customerId
+    |dropdownsRD | /customer/occupation/v2/occupationDetails?{query}.| customerId
     |occupationAndIncomeRD | /customer/occupation/v2/occupationIncomeDetails?{query}.| customerId
-    |occupationsListRD | /customer/occupation/v2/occupationsList?{query}.| customerId
     |otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}.| customerId
   ##modals  
   |name|displayed with
   | --- | --- 
     | OccupationIncomeModal |OneOccupationIncomeDetails
-    | AdditionalInfoFirstModal |AdditionalInfoFirst
-    | AdditionalInfoSecondModal |AdditionalInfoSecond
+    | AdditionalInformationModal |AdditionalInformation
+    | BusinessDetailsModal |BusinessDetailsMain
     | OtherSourcesOfIncomeModal |OtherIncomeResponse
     | ListOccupationsModal |ListOccupations
   ##display 
     OccupationAndIncomeFullDomain
   ##buttons 
+    Modal Button ==> OccupationIncomeModal in mode create
+      Focused on "~/temp"
+      Copy on close {"to":"#currentOccupation/[$append]"} 
+    Modal Button ==> AdditionalInformationModal in mode edit
+      Focused on "~/additionalInformation"
+    Modal Button ==> BusinessDetailsModal in mode edit
+      Focused on "~/businessDetails"
     Modal Button ==> OccupationIncomeModal in mode edit
-      Copy from {"from":"~/fromApi/occupationAndIncome/customerOccupationIncomeDetails"}
-      Focused on "~/tempForOccupationEdit"
-      Copy on close {"to":"~/fromApi/occupationAndIncome/customerOccupationIncomeDetails"} 
+      Copy from {"from":"#currentOccupation[#selected]"}
+      Focused on "~/temp"
+      Copy on close {"to":"#currentOccupation[#selected]"} 
+    Modal Button ==> ListOccupationsModal in mode edit
+      Copy from [{"from":"#currentOccupation[#selected]/occupation","to":"~/occupation/search"},{"from":"#currentOccupation[#selected]/occupation","to":"~/occupation/selectedOccupationName"}]
+      Focused on "~/occupation"
+      Copy on close [{"from":"~/occupation/selectedOccupationName","to":"#currentOccupation[#selected]/occupation"}] 
+    mainOrJoint  ToggleButton toggles ~/mainOrJoint
+    nextOccupation ListNextButton
+    Modal Button ==> OtherSourcesOfIncomeModal in mode edit
+      Focused on "~/otherSourcesOfIncome"
+    prevOccupation ListPrevButton
   ##guards  
   | OneOccupationIncomeDetails|areYou|ownShareOfTheCompany|owningSharesPct|employmentType|otherSourceOfIncome
   | --- | --- | --- | --- | --- | --- 
@@ -201,9 +228,6 @@
   establishedYear|E,S| |Y| | 
   annualDrawing3Yrs|E,S| |Y| | 
   
-  | OccupationIncomeModal button | condition
-  | --- | --- |
-  | otherSourcesOfIncome | {"condition":"equals","path":"~/fromApi/occupationAndIncome/customerOccupationIncomeDetails/otherSourceOfIncome","value":"\"Y\""}}
 
 ---
 #EAccountsSummary - MainPage

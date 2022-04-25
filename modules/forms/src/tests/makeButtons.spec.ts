@@ -10,7 +10,7 @@ import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occ
 
 describe ( "makeButtons", () => {
   it ( "should generate a tsx line using that button", () => {
-    expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator, makeButtons (), EAccountsSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator, makeButtons (), EAccountsSummaryPD,EAccountsSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "    {amendExistingPlan:<ModalButton id={`${id}.amendExistingPlan`} text='amendExistingPlan'  state={state} modal = 'CreatePlan'  ",
       "      pageMode='edit'",
       "      focusOn='~/tempCreatePlan'",
@@ -33,7 +33,7 @@ describe ( "makeButtons", () => {
     ])
   } )
   it ( "should create modal buttons with copy on close", () => {
-    expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator, makeButtons (), OccupationAndIncomeSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator, makeButtons (), OccupationAndIncomeSummaryPD,OccupationAndIncomeSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "    {addEntry:<ModalButton id={`${id}.addEntry`} text='addEntry'  state={state} modal = 'OccupationIncomeModal'  ",
       "      pageMode='create'",
       "      focusOn='~/temp'",
@@ -64,17 +64,17 @@ describe ( "makeButtons", () => {
       "    mainOrJoint:<ToggleButton id={`${id}.mainOrJoint`} state={fullState.focusOn('mainOrJoint')}",
       "      buttonText='Showing {~/mainOrJoint|Main|Joint}'",
       "       />,",
-      "    nextOccupation:<ListNextButton id={`${id}.nextOccupation`} title='Next' list={fullState.copyWithLens(OccupationAndIncomeSummaryOptionals.currentOccupation(identityL))} value={fullState.copyWithLens(OccupationAndIncomeSummaryOptionals.selected(identityL))} />,",
+      "    nextOccupation:<ListNextButton id={`${id}.nextOccupation`} title='Next' list={state.copyWithLens(OccupationAndIncomeSummaryOptionals.currentOccupation(identityL))} value={state.copyWithLens(OccupationAndIncomeSummaryOptionals.selected(identityL))} />,",
       "    otherSourcesOfIncome:<ModalButton id={`${id}.otherSourcesOfIncome`} text='otherSourcesOfIncome'  state={state} modal = 'OtherSourcesOfIncomeModal'  ",
       "      pageMode='edit'",
       "      focusOn='~/otherSourcesOfIncome'",
       "    />,",
-      "    prevOccupation:<ListPrevButton id={`${id}.prevOccupation`} title='Prev' list={fullState.copyWithLens(OccupationAndIncomeSummaryOptionals.currentOccupation(identityL))} value={fullState.copyWithLens(OccupationAndIncomeSummaryOptionals.selected(identityL))} />,}"
+      "    prevOccupation:<ListPrevButton id={`${id}.prevOccupation`} title='Prev' list={state.copyWithLens(OccupationAndIncomeSummaryOptionals.currentOccupation(identityL))} value={state.copyWithLens(OccupationAndIncomeSummaryOptionals.selected(identityL))} />,}"
     ])
   } )
 
   it ( "should render a postcode button", () => {
-    expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage,PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "    {save:<RestButton state={state} id={`${id}.save`} ",
       "      name='save'",
       "      action='create'",

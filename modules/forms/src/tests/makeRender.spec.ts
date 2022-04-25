@@ -14,7 +14,7 @@ import { oneOccupationIncomeDetailsDD } from "../example/occupationAndIncome/occ
 //
 describe ( " listComponentsIn", () => {
   it ( "should make the react component lists", () => {
-    expect ( createAllReactCalls ( EAccountsSummaryPD, listComponentsIn ( EAccountsSummaryDD ) ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( createAllReactCalls ( EAccountsSummaryPD, paramsForTest, EAccountsSummaryPD, listComponentsIn ( EAccountsSummaryDD ) ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "<LabelAndBooleanInput id={`${id}.useEStatements`} state={state.focusOn('useEStatements')} mode={mode} label='Use E Statements' allButtons={buttons} />",
       "<Table id={`${id}.eAccountsTable`} state={state.focusOn('eAccountsTable')} mode={mode} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} />",
       "<LabelAndNumberInput id={`${id}.totalMonthlyCost`} state={state.focusOn('totalMonthlyCost')} mode={mode} label='Total Monthly Cost' allButtons={buttons} required={true} />",
@@ -207,14 +207,14 @@ describe ( " listComponentsIn", () => {
       "      { buttons.save } ",
       "      </HideButtonsLayout>})}",
       ""
-    ])
+    ] )
   } )
 
 } )
 
 describe ( "makeComponentWithGuard", () => {
   it ( "should make guard variables", () => {
-    expect ( createReactComponent ( paramsForTest, AllGuardCreator, OccupationAndIncomeSummaryPD,OccupationAndIncomeSummaryPD ) ( oneOccupationIncomeDetailsDD ).slice ( 0, 5 ).map ( r => r.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( createReactComponent ( paramsForTest, AllGuardCreator, OccupationAndIncomeSummaryPD, OccupationAndIncomeSummaryPD ) ( oneOccupationIncomeDetailsDD ).slice ( 0, 5 ).map ( r => r.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function OneOccupationIncomeDetails({id,state,mode,buttons}: FocusedProps<FState, OneOccupationIncomeDetailsDomain,Context>){",
       "const areYouGuard = state.focusOn('areYou').optJson();",
       "const employmentTypeGuard = state.focusOn('employmentType').optJson();",
@@ -226,7 +226,7 @@ describe ( "makeComponentWithGuard", () => {
 
 describe ( "make components - the different parameter types", () => {
   function makeParam ( theType: DisplayCompParamType, val: string | string[] ) {
-    return processParam ( 'errorPrefix', { ...LabelAndStringInputCD, params: { p1: { paramType: theType, needed: 'no' } } } ) ( 'p1', val );
+    return processParam ( OccupationAndIncomeSummaryPD, paramsForTest, 'errorPrefix', { ...LabelAndStringInputCD, params: { p1: { paramType: theType, needed: 'no' } } } ) ( 'p1', val );
   }
   it ( "should create paramtype object", () => {
     expect ( makeParam ( 'object', 'obj' ) ).toEqual ( '{obj}' )
@@ -258,4 +258,17 @@ describe ( "make components - the different parameter types", () => {
   it ( "should create paramtype fullStateValue", () => {
     expect ( makeParam ( 'fullStateValue', [ 'a', 'b' ] ).replace ( /"/g, "'" ) ).toEqual ( "{fullState(state).focusOn('a').focusOn('b').json()}" )
   } )
+  it ( "should create paramtype path - from page", () => {
+    expect ( makeParam ( 'path', '~/one/two' ).replace ( /"/g, "'" ) ).toEqual ( "{pageState(state)<domain.OccupationAndIncomeSummaryPageDomain>().focusOn('one').focusOn('two')}" )
+  } )
+  it ( "should create paramtype path - from full", () => {
+    expect ( makeParam ( 'path', '/one/two' ).replace ( /"/g, "'" ) ).toEqual ( "{fullState<FState,any,Context>(state).focusOn('one').focusOn('two')}" )
+  } )
+  it ( "should create paramtype path - from 'here'", () => {
+    expect ( makeParam ( 'path', 'one/two' ).replace ( /"/g, "'" ) ).toEqual ( "{state.focusOn('one').focusOn('two')}" )
+  } )
+  it ( "should create paramtype path - with variables", () => {
+    expect ( makeParam ( 'path', '#one' ).replace ( /"/g, "'" ) ).toEqual ( "{state.copyWithLens(OccupationAndIncomeSummaryOptionals.one(identityL))}" )
+  } )
 } )
+

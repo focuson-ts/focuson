@@ -87,7 +87,7 @@ export function stateCodeInitials ( stateName: string ): NameAnd<string> {
 export function stateCodeBuilder ( initials: NameAnd<string>, optionalsName: string, focusQuery?: string ): PathBuilder<string> {
   const realFocusQuery = focusQuery ? focusQuery : 'focusQuery'
   return {
-    initialVariable ( name: string ): string {return `.copyWithLens(${optionalsName}.${name}(identityL))`;},
+    initialVariable ( name: string ): string {return `state.copyWithLens(${optionalsName}.${name}(identityL))`;},
     isVariable ( name: string ): boolean {return !name.match ( /^[0-9]+$/ );},
     foldVariable ( acc: string, name: string ): string {return `.chain(${optionalsName}.${name}(identityL))`;},
     zero ( initial: string ): string { return initials[ initial ]; },

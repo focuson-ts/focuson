@@ -46,9 +46,8 @@ export const stateFocusQueryWithTildaFromPage = <B, G> ( errorPrefix: string, pa
     throw e
   }
 }
-export const stateQueryForGuards = <B, G> ( errorPrefix: string, params: TSParams, mainPage: MainPageD<B, G>, p: PageD<B, G>, path: string ) => {
+export const stateQueryForParams = <B, G> ( errorPrefix: string, params: TSParams, mainPage: MainPageD<B, G>, p: PageD<B, G>, path: string ) => {
   try {
-    if ( path.indexOf ( '#' ) >= 0 ) throw new Error ( `${errorPrefix}\nCurrently guards cannot use variables. Path is ${path}` )
     return parsePath ( path, stateCodeBuilder ( {
       '/': `fullState<${params.stateName},any,Context>(state)`,
       '~': `pageState(state)<domain.${pageDomainName ( mainPage )}>()`,
@@ -58,6 +57,10 @@ export const stateQueryForGuards = <B, G> ( errorPrefix: string, params: TSParam
     console.error ( errorPrefix )
     throw e
   }
+}
+export const stateQueryForGuards = <B, G> ( errorPrefix: string, params: TSParams, mainPage: MainPageD<B, G>, p: PageD<B, G>, path: string ) => {
+  if ( path.indexOf ( '#' ) >= 0 ) throw new Error ( `${errorPrefix}\nCurrently guards cannot use variables. Path is ${path}` )
+  return stateQueryForParams ( errorPrefix, params, mainPage, p, path )
 }
 
 export const stateFocusQueryWithEmptyFromHere = <B, G> ( errorPrefix: string, params: TSParams, p: PageD<B, G>, path: string ) => {
@@ -73,6 +76,9 @@ export const stateFocusQueryWithEmptyFromHere = <B, G> ( errorPrefix: string, pa
 }
 export const stateForButton = <B, G> ( { parent, params, button, name }: CreateButtonData<B, G>, buttonName: string ) =>
   ( path: string ) => `fullState${stateFocusQueryWithTildaFromPage ( `${buttonName} page ${parent}${name})`, params, parent, path )}`;
+
+export const stateForButtonWithPath = <B, G> ( { parent, params, button, name , mainPage}: CreateButtonData<B, G>, buttonName: string ) =>
+  ( path: string ) => `${stateQueryForParams ( `${buttonName} page ${parent}${name})`, params,mainPage, parent, path )}`;
 
 export const stateForGuardVariable = <B, G> ( page: PageD<B, G>, params: TSParams, guardName: string ) =>
   ( path: string ) => `state${stateFocusQueryWithEmptyFromHere ( `Page ${page.name} guard variable ${guardName}`, params, page, path )}`;

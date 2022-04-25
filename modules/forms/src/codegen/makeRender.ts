@@ -10,7 +10,7 @@ import { TSParams } from "./config";
 import { unique } from "../common/restD";
 import { ButtonD } from "../buttons/allButtons";
 import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
-import { stateFocusQueryWithTildaFromPage } from "./lens";
+import { lensFocusQueryWithSlashAndTildaFromIdentity, stateFocusQueryWithTildaFromPage, stateQueryForGuards, stateQueryForParams } from "./lens";
 
 
 export type AllComponentData<G> = ComponentData<G> | ErrorComponentData
@@ -72,7 +72,7 @@ export const listComponentsIn = <G> ( dataDD: CompDataD<G> ): AllComponentData<G
   // return flatMapDD ( dataDD, listComponentsInFolder () );
 };
 
-export const processParam = <G> ( errorPrefix: string, dcd: DisplayCompD ) => ( name: string, s: number | string | string[] | boolean ) => {
+export const processParam = <B, G> ( p: MainPageD<B, G>, params: TSParams, errorPrefix: string, dcd: DisplayCompD ) => ( name: string, s: number | string | string[] | boolean ) => {
   if ( dcd.params === undefined ) throw Error ( `${errorPrefix} Trying to get data for param ${name}, but no params have been defined` )
   const dcdType: OneDisplayCompParamD<any> | undefined = dcd.params[ name ]
   if ( dcdType === undefined ) throw Error ( `${errorPrefix}  param '${name}' not found in ${JSON.stringify ( Object.keys ( dcd.params ).sort () )}` )
@@ -88,6 +88,10 @@ export const processParam = <G> ( errorPrefix: string, dcd: DisplayCompD ) => ( 
     if ( Array.isArray ( s ) ) return `{${prefix}${focusOnFor ( s )}${postFix}}`; else
       throw new Error ( `${fullErrorPrefix} needs to be a string[]. Actually is ${typeof s}, with value ${JSON.stringify ( s )}` )
   }
+  function processPath ( postFix: string ) {
+    if ( typeof s !== 'string' ) throw new Error ( `${fullErrorPrefix} needs to be a string. Actually is ${typeof s}, with value ${JSON.stringify ( s )}` )
+    return `{${stateQueryForParams ( fullErrorPrefix + ` the path is ${s}`, params, p, p, s )}${postFix}}`
+  }
 
   if ( dcdType.paramType === 'string' ) return processStringParam ()
   if ( dcdType.paramType === 'boolean' ) return processObjectParam ()
@@ -99,12 +103,14 @@ export const processParam = <G> ( errorPrefix: string, dcd: DisplayCompD ) => ( 
   if ( dcdType.paramType === 'fullStateValue' ) return processState ( 'fullState(state)', '.json()' )
   if ( dcdType.paramType === 'pageStateValue' ) return processState ( 'pageState(state)<any>()', '.json()' )
   if ( dcdType.paramType === 'stateValue' ) return processState ( 'state', '.json()' )
+  if ( dcdType.paramType === 'path' ) return processPath ( '' )
+  if ( dcdType.paramType === 'pathValue' ) return processPath ( '.json()' )
   throw new Error ( `${fullErrorPrefix} with type ${dcdType.paramType} which can't be processed` )
 };
 
 
-function makeParams<G> ( errorPrefix: string, path: string[], optEnum: NameAnd<String> | undefined, display: DisplayCompD, definingParams: DisplayParamDD | undefined, displayParams: ComponentDisplayParams ) {
-  const processOneParam = processParam ( errorPrefix, display )
+function makeParams<B, G> ( mainPage: MainPageD<B, G>, params: TSParams, errorPrefix: string, path: string[], optEnum: NameAnd<String> | undefined, display: DisplayCompD, definingParams: DisplayParamDD | undefined, displayParams: ComponentDisplayParams ) {
+  const processOneParam = processParam ( mainPage, params, errorPrefix, display )
   const dataDDParams: [ string, string ][] = definingParams ? Object.entries ( definingParams )
     .map ( ( [ name, value ] ) => [ name, processOneParam ( name, value ) ] ) : []
   const defaultParams: [ string, string ][] = Object.entries ( display.params ).flatMap ( ( [ name, param ] ) => {
@@ -126,11 +132,11 @@ function makeParams<G> ( errorPrefix: string, path: string[], optEnum: NameAnd<S
   const fullDisplayParams = Object.entries ( Object.fromEntries ( [ ...defaultParams, ...dataDDParams, ...displayParamsA ] ) )
   return fullDisplayParams;
 }
-export function createOneReact<B, G> ( pageD: PageD<B, G>, { path, dataDD, display, displayParams, guard }: ComponentData<G> ): string[] {
+export function createOneReact<B, G> ( mainPage: MainPageD<B, G>, params: TSParams, pageD: PageD<B, G>, { path, dataDD, display, displayParams, guard }: ComponentData<G> ): string[] {
   const name = display.name
   let errorPrefix = `Page ${pageD.name}, Datad ${dataDD.name} with path ${JSON.stringify ( path )}`;
   if ( name === undefined ) throw Error ( errorPrefix + " cannot find the name of the display component. Check it is a dataD or similar" )
-  const fullDisplayParams = makeParams ( errorPrefix, path,
+  const fullDisplayParams = makeParams ( mainPage, params, errorPrefix, path,
     isPrimDd ( dataDD ) && dataDD.enum, display, dataDD.displayParams, displayParams );
 
   const displayParamsString = fullDisplayParams.map ( ( [ k, v ] ) => `${k}=${v}` ).join ( " " )
@@ -141,19 +147,19 @@ export function createOneReact<B, G> ( pageD: PageD<B, G>, { path, dataDD, displ
   const buttons = isDataDd ( dataDD ) && !dataDD.display ? 'buttons={buttons} ' : ''
   return [ `${guardPrefix}<${name} ${displayParamsString} ${buttons}/>${guardPostfix}` ]
 }
-export function createAllReactCalls<B, G> ( p: PageD<B, G>, d: AllComponentData<G>[] ): string[] {
+export function createAllReactCalls<B, G> ( mainPage: MainPageD<B, G>, params: TSParams, p: PageD<B, G>, d: AllComponentData<G>[] ): string[] {
   return d.filter ( ds => isComponentData ( ds ) && !ds.hidden ).flatMap ( d => {
     const comment = []//isComponentData ( d ) ? [ " {/*" + JSON.stringify ( { ...d, dataDD: d.dataDD?.name } ) + '*/}' ] : []
     if ( isErrorComponentData ( d ) ) return [ d.error ]
-    const comp = [ ...comment, ...createOneReact ( p, d ) ]
+    const comp = [ ...comment, ...createOneReact ( mainPage, params, p, d ) ]
     return comp
   } )
 }
 
-function makeLayoutPrefixPostFix ( errorPrefix: string, path: string[], hasLayout: HasLayout, defaultOpen: string, defaultClose: string ) {
+function makeLayoutPrefixPostFix<B, G> ( mainPage: MainPageD<B, G>, tsparams: TSParams, errorPrefix: string, path: string[], hasLayout: HasLayout, defaultOpen: string, defaultClose: string ) {
   if ( hasLayout.layout ) {
     const { component, displayParams } = hasLayout.layout
-    const params = makeParams ( errorPrefix, path, undefined, component, displayParams, {} )
+    const params = makeParams ( mainPage, tsparams, errorPrefix, path, undefined, component, displayParams, {} )
     const layoutPrefixString = `<${component.name} ${params.map ( ( [ n, v ] ) => `${n}=${v}` ).join ( ' ' )}>`
     const layoutPostfixString = `</${component.name}>`
     return { layoutPrefixString, layoutPostfixString };
@@ -170,9 +176,9 @@ function makeGuardVariables<B, G extends GuardWithCondition> ( hasGuards: HasGua
 
 
 export const createReactComponent = <B, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, mainP: MainPageD<B, G>, page: PageD<B, G> ) => ( dataD: CompDataD<G> ): string[] => {
-  const contents = indentList ( indentList ( createAllReactCalls ( page, listComponentsIn ( dataD ) ) ) )
+  const contents = indentList ( indentList ( createAllReactCalls ( mainP, params, page, listComponentsIn ( dataD ) ) ) )
   const guardStrings = isDataDd ( dataD ) ? makeGuardVariables ( dataD, makeGuard, params, mainP, page ) : []
-  const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( `createReactComponent-layout ${dataD.name}`, [], dataD, '<>', '</>' );
+  const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( mainP, params, `createReactComponent-layout ${dataD.name}`, [], dataD, '<>', '</>' );
   return [
     `export function ${componentName ( dataD )}({id,state,mode,buttons}: FocusedProps<${params.stateName}, ${domainName ( dataD )},Context>){`,
     ...guardStrings,
@@ -195,7 +201,7 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
   const { dataDD } = pageD.display
   // const focus = focusOnFor ( pageD.display.target );
   const domName = domainName ( pageD.display.dataDD );
-  const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( `createReactModalPageComponent-layout ${pageD.name}`, [], pageD, "<>", '</>' );
+  const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( mainP, params, `createReactModalPageComponent-layout ${pageD.name}`, [], pageD, "<>", '</>' );
 
   const guards = makeGuardVariables ( pageD, makeGuard, params, mainP, pageD )
   return [
@@ -206,9 +212,9 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
       ...guards,
       ...makeGuardButtonVariables ( params, makeGuard, mainP, pageD ),
       'const id=`page${index}`;',
-      ...makeButtonsVariable ( params, makeGuard, makeButtons, pageD ),
+      ...makeButtonsVariable ( params, makeGuard, makeButtons, mainP, pageD ),
       `return ${layoutPrefixString}`,
-      ...createAllReactCalls ( pageD, [ componentDataForPage ( pageD.display.dataDD ) ] ),
+      ...createAllReactCalls ( mainP, params, pageD, [ componentDataForPage ( pageD.display.dataDD ) ] ),
       ...addButtonsFromVariables ( pageD ),
       `${layoutPostfixString}})}`
     ] ) ) ) ) )),
@@ -217,7 +223,7 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
 export function createReactMainPageComponent<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButtons: MakeButton<G>, pageD: MainPageD<B, G> ): string[] {
   const { dataDD } = pageD.display
   let errorPrefix: string = `createReactMainPageComponent-layout ${pageD.name}`;
-  const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( errorPrefix, [], pageD, `<>`, '</>' );
+  const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( pageD, params, errorPrefix, [], pageD, `<>`, '</>' );
   const guards = makeGuardVariables ( pageD, makeGuard, params, pageD, pageD )
   return [
     `export function ${pageComponentName ( pageD )}(){`,
@@ -227,11 +233,11 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
     ...indentList ( makeGuardButtonVariables ( params, makeGuard, pageD, pageD ) ),
     'const id=`page${index}`;',
     ...indentList ( guards ),
-    ...indentList ( makeButtonsVariable ( params, makeGuard, makeButtons, pageD ) ),
+    ...indentList ( makeButtonsVariable ( params, makeGuard, makeButtons, pageD, pageD ) ),
     '',
     ...indentList ( indentList ( indentList ( [
       `return ${layoutPrefixString}`,
-      ...indentList ( indentList ( createAllReactCalls ( pageD, [ componentDataForPage ( pageD.display.dataDD ), ] ) ) ),
+      ...indentList ( indentList ( createAllReactCalls ( pageD, params, pageD, [ componentDataForPage ( pageD.display.dataDD ), ] ) ) ),
       ...addButtonsFromVariables ( pageD ),
       `${layoutPostfixString}})}`
     ] ) ) ),
