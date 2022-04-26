@@ -1,4 +1,4 @@
-package focuson.data;
+package {thePackage};
 
 import graphql.GraphQL;
 

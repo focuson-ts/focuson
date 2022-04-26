@@ -10,7 +10,7 @@ import { writeToFile } from "@focuson/files";
 
 const logLevel: GenerateLogLevel = 'detailed';
 
-generate ( logLevel, directorySpec, devAppConfig, { ...params, focusOnVersion }, javaOutputRoot, tsRoot, AllGuardCreator, makeButtons () ) ( generatedPages )
+generate ( logLevel, directorySpec, devAppConfig, { ...params, focusOnVersion, thePackage: 'focuson.data' }, javaOutputRoot, tsRoot, AllGuardCreator, makeButtons () ) ( generatedPages )
 
 
 

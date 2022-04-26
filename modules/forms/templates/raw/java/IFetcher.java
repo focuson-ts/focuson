@@ -1,4 +1,4 @@
-package focuson.data.fetchers;
+package {thePackage}.fetchers;
 
 import graphql.schema.DataFetcher;
 

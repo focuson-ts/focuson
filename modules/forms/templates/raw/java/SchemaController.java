@@ -1,4 +1,4 @@
-package focuson.data;
+package  {thePackage};
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;

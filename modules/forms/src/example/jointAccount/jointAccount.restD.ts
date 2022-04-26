@@ -23,6 +23,7 @@ export const jointAccountRestD: RestD<any> = {
     entity: {
       type: 'Main',
       table: accountT,
+      where: `${accountT.name} <> 'canceled'`,
       children: {
         mainCustomer: {
           type: 'Single',
@@ -48,6 +49,7 @@ export const jointAccountRestD: RestD<any> = {
       }
     }
   }
+
 
 
 

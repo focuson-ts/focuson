@@ -61,11 +61,15 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   templateFile ( javaAppRoot + "/project.details.json", 'templates/java.projectDetails.json', templateWithPortAndAppName, directorySpec )
   templateFile ( javaAppRoot + "/application.properties", "templates/application.properties", templateWithPortAndAppName, directorySpec )
   copyFile ( javaAppRoot + '/.gitignore', 'templates/raw/gitignore', directorySpec )
-  copyFiles ( javaCodeRoot, 'templates/raw/java', directorySpec ) ( 'CorsConfig.java', 'IManyGraphQl.java' )
+
+
   detailsLog ( logLevel, 1, 'java common copies' )
   templateFile ( `${javaAppRoot}/pom.xml`, 'templates/mvnTemplate.pom', {...params, versionNumber: appConfig.versionNumber}, directorySpec )
+  templateFile ( javaCodeRoot + "/IManyGraphQl.java", "templates/raw/java/IManyGraphQl.java", params, directorySpec )
+  templateFile ( javaCodeRoot + "/CorsConfig.java", "templates/raw/java/CorsConfig.java", params, directorySpec )
   templateFile ( `${javaCodeRoot}/SchemaController.java`, 'templates/raw/java/SchemaController.java', params, directorySpec )
   templateFile ( `${javaControllerRoot}/Transform.java`, 'templates/Transform.java', params, directorySpec )
+  templateFile ( `${javaFetcherRoot}/IFetcher.java`, 'templates/raw/java/IFetcher.java', params, directorySpec )
 
 
   const allRestDefns: RestDefnInPageProperties<G>[] = allMainPages ( pages ).flatMap ( p => sortedEntries ( p.rest ).map ( t => t[ 1 ] ) )
@@ -81,7 +85,6 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
           generateGetSql ( findSqlLinkDataFromRootAndDataD ( r, rest.dataDD ) ) ).map ( addStringToEndOfList ( ';\n' ) ).flat () ] ), details )
 
   writeToFile ( `${javaResourcesRoot}/${params.schema}`, () => makeGraphQlSchema ( rests ), details )
-  copyFile ( `${javaFetcherRoot}/IFetcher.java`, 'templates/raw/java/IFetcher.java', directorySpec )
   rests.forEach ( rest => {
       let fetcherFile = `${javaCodeRoot}/${params.fetcherPackage}/${fetcherInterfaceName ( params, rest )}.java`;
       writeToFile ( fetcherFile, () => makeJavaResolversInterface ( params, rest ), details )
@@ -137,6 +140,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
       } )
     } )
   } )
+
 
   // rests.forEach ( rest => {
   //   if ( isSqlResolverD ( rest.resolver ) ) {
