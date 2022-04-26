@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import {thePackage}.{fetcherPackage}.IFetcher;
 import {thePackage}.{fetcherPackage}.{fetcherInterface};
 import {thePackage}.{fetcherPackage}.IFetcher;
-import focuson.data.Sample;
+import {thePackage}.Sample;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
