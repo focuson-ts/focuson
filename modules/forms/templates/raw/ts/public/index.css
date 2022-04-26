@@ -244,7 +244,7 @@ select {
 }
 
 .modalPopup {
-    position: fixed;
+    position: absolute;
     left: 0;
     top: 0;
     width: 100%;
@@ -258,7 +258,7 @@ select {
 
 .modalPopup-content {
     position: absolute;
-    top: 40%;
+    top: 20%;
     left: 20%;
     padding: 20px;
     background-color: white;
