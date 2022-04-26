@@ -1,0 +1,382 @@
+{
+  "consumer": {
+    "name": "MainOccupationDetailsPageSummary"
+  },
+  "provider": {
+    "name": "MainOccupationDetailsPageSummaryProvider"
+  },
+  "interactions": [
+    {
+      "description": "A request for AdditionalInfoFirst",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/customer/occupation/v2/additionalInfoFirst",
+        "query": "customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "applicantName": "Mr XXXXXXXXXX ABCD Fred Bloggs",
+          "employerName": "AnalystXYZ",
+          "addressLine1": "Pinetrees Road",
+          "addressLine2": "Norwich",
+          "addressLine3": "Norfolk",
+          "addressLine4": "Norfolkkk",
+          "postcode": "PLXYZ"
+        }
+      }
+    },
+    {
+      "description": "a rest for MainOccupationDetailsPageSummary additionalInfoFirstRD get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/customer/occupation/v2/additionalInfoFirst",
+        "query": "customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "applicantName": "Mr XXXXXXXXXX ABCD Fred Bloggs",
+          "employerName": "AnalystXYZ",
+          "addressLine1": "Pinetrees Road",
+          "addressLine2": "Norwich",
+          "addressLine3": "Norfolk",
+          "addressLine4": "Norfolkkk",
+          "postcode": "PLXYZ"
+        }
+      }
+    },
+    {
+      "description": "a rest for MainOccupationDetailsPageSummary additionalInfoFirstRD update",
+      "providerState": "default",
+      "request": {
+        "method": "PUT",
+        "path": "/customer/occupation/v2/additionalInfoFirst",
+        "query": "customerId=custId",
+        "body": "{\"applicantName\":\"Mr XXXXXXXXXX ABCD Fred Bloggs\",\"employerName\":\"AnalystXYZ\",\"addressLine1\":\"Pinetrees Road\",\"addressLine2\":\"Norwich\",\"addressLine3\":\"Norfolk\",\"addressLine4\":\"Norfolkkk\",\"postcode\":\"PLXYZ\"}"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "applicantName": "Mr XXXXXXXXXX ABCD Fred Bloggs",
+          "employerName": "AnalystXYZ",
+          "addressLine1": "Pinetrees Road",
+          "addressLine2": "Norwich",
+          "addressLine3": "Norfolk",
+          "addressLine4": "Norfolkkk",
+          "postcode": "PLXYZ"
+        }
+      }
+    },
+    {
+      "description": "A request for AdditionalInfoSecond",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/customer/occupation/v2/additionalInfoSecond",
+        "query": "customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "turnoverLastYear": "10,000",
+          "turnoverPenultimateYear": "11,000",
+          "netProfitLastYear": "12,000",
+          "netProfitPenultimateYear": "9,000",
+          "drawingsLastYear": "13,000",
+          "drawingsPenultimateYear": "100,000",
+          "dividendsLastYear": "15,000",
+          "dividendsPenultimateYear": "3,000",
+          "netAssetsLastYear": "1,000",
+          "netAssetsPenultimateYear": "2,000"
+        }
+      }
+    },
+    {
+      "description": "a rest for MainOccupationDetailsPageSummary additionalInfoSecondRD get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/customer/occupation/v2/additionalInfoSecond",
+        "query": "customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "turnoverLastYear": "10,000",
+          "turnoverPenultimateYear": "11,000",
+          "netProfitLastYear": "12,000",
+          "netProfitPenultimateYear": "9,000",
+          "drawingsLastYear": "13,000",
+          "drawingsPenultimateYear": "100,000",
+          "dividendsLastYear": "15,000",
+          "dividendsPenultimateYear": "3,000",
+          "netAssetsLastYear": "1,000",
+          "netAssetsPenultimateYear": "2,000"
+        }
+      }
+    },
+    {
+      "description": "a rest for MainOccupationDetailsPageSummary additionalInfoSecondRD update",
+      "providerState": "default",
+      "request": {
+        "method": "PUT",
+        "path": "/customer/occupation/v2/additionalInfoSecond",
+        "query": "customerId=custId",
+        "body": "{\"turnoverLastYear\":\"10,000\",\"turnoverPenultimateYear\":\"11,000\",\"netProfitLastYear\":\"12,000\",\"netProfitPenultimateYear\":\"9,000\",\"drawingsLastYear\":\"13,000\",\"drawingsPenultimateYear\":\"100,000\",\"dividendsLastYear\":\"15,000\",\"dividendsPenultimateYear\":\"3,000\",\"netAssetsLastYear\":\"1,000\",\"netAssetsPenultimateYear\":\"2,000\"}"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "turnoverLastYear": "10,000",
+          "turnoverPenultimateYear": "11,000",
+          "netProfitLastYear": "12,000",
+          "netProfitPenultimateYear": "9,000",
+          "drawingsLastYear": "13,000",
+          "drawingsPenultimateYear": "100,000",
+          "dividendsLastYear": "15,000",
+          "dividendsPenultimateYear": "3,000",
+          "netAssetsLastYear": "1,000",
+          "netAssetsPenultimateYear": "2,000"
+        }
+      }
+    },
+    {
+      "description": "A request for OccupationAndIncomeFullDomain",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/customer/occupation/v2/occupationIncomeDetails",
+        "query": "customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "mainCustomerName": "Mr XXXXXXXXXX J ABCD Fred Bloggs",
+          "mainClientRef": 13606326,
+          "customerOccupationIncomeDetails": {
+            "areYou": "C",
+            "occupation": "W045",
+            "customerDescription": "XXXXXXXXX",
+            "ownShareOfTheCompany": "N",
+            "owningSharesPct": "N",
+            "workFor": "S.C. Bosch S.R.L.",
+            "employmentType": "0",
+            "empStartDate": "10/2002",
+            "empEndDate": "10/2003",
+            "annualSalaryBeforeDeduction": 20315,
+            "annualIncomeExcludingRent": 13255,
+            "regularCommissionBonus": 500,
+            "whatTypeOfBusiness": "Electrical Technical Support",
+            "whatNameBusiness": "XXXXXXXXX",
+            "establishedYear": "2006-04-01T00:00:00.000+01:00",
+            "annualDrawing3Yrs": 100000,
+            "otherSourceOfIncome": "N",
+            "createdBy": "Seras Alin",
+            "empEmploymentSeq": 999999,
+            "accountantAppRoleSeq": 14648851
+          }
+        }
+      }
+    },
+    {
+      "description": "a rest for MainOccupationDetailsPageSummary occupationAndIncomeRD get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/customer/occupation/v2/occupationIncomeDetails",
+        "query": "customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "mainCustomerName": "Mr XXXXXXXXXX J ABCD Fred Bloggs",
+          "mainClientRef": 13606326,
+          "customerOccupationIncomeDetails": {
+            "areYou": "C",
+            "occupation": "W045",
+            "customerDescription": "XXXXXXXXX",
+            "ownShareOfTheCompany": "N",
+            "owningSharesPct": "N",
+            "workFor": "S.C. Bosch S.R.L.",
+            "employmentType": "0",
+            "empStartDate": "10/2002",
+            "empEndDate": "10/2003",
+            "annualSalaryBeforeDeduction": 20315,
+            "annualIncomeExcludingRent": 13255,
+            "regularCommissionBonus": 500,
+            "whatTypeOfBusiness": "Electrical Technical Support",
+            "whatNameBusiness": "XXXXXXXXX",
+            "establishedYear": "2006-04-01T00:00:00.000+01:00",
+            "annualDrawing3Yrs": 100000,
+            "otherSourceOfIncome": "N",
+            "createdBy": "Seras Alin",
+            "empEmploymentSeq": 999999,
+            "accountantAppRoleSeq": 14648851
+          }
+        }
+      }
+    },
+    {
+      "description": "a rest for MainOccupationDetailsPageSummary occupationAndIncomeRD update",
+      "providerState": "default",
+      "request": {
+        "method": "PUT",
+        "path": "/customer/occupation/v2/occupationIncomeDetails",
+        "query": "customerId=custId",
+        "body": "{\"mainCustomerName\":\"Mr XXXXXXXXXX J ABCD Fred Bloggs\",\"mainClientRef\":13606326,\"customerOccupationIncomeDetails\":{\"areYou\":\"C\",\"occupation\":\"W045\",\"customerDescription\":\"XXXXXXXXX\",\"ownShareOfTheCompany\":\"N\",\"owningSharesPct\":\"N\",\"workFor\":\"S.C. Bosch S.R.L.\",\"employmentType\":\"0\",\"empStartDate\":\"10/2002\",\"empEndDate\":\"10/2003\",\"annualSalaryBeforeDeduction\":20315,\"annualIncomeExcludingRent\":13255,\"regularCommissionBonus\":500,\"whatTypeOfBusiness\":\"Electrical Technical Support\",\"whatNameBusiness\":\"XXXXXXXXX\",\"establishedYear\":\"2006-04-01T00:00:00.000+01:00\",\"annualDrawing3Yrs\":100000,\"otherSourceOfIncome\":\"N\",\"createdBy\":\"Seras Alin\",\"empEmploymentSeq\":999999,\"accountantAppRoleSeq\":14648851}}"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "mainCustomerName": "Mr XXXXXXXXXX J ABCD Fred Bloggs",
+          "mainClientRef": 13606326,
+          "customerOccupationIncomeDetails": {
+            "areYou": "C",
+            "occupation": "W045",
+            "customerDescription": "XXXXXXXXX",
+            "ownShareOfTheCompany": "N",
+            "owningSharesPct": "N",
+            "workFor": "S.C. Bosch S.R.L.",
+            "employmentType": "0",
+            "empStartDate": "10/2002",
+            "empEndDate": "10/2003",
+            "annualSalaryBeforeDeduction": 20315,
+            "annualIncomeExcludingRent": 13255,
+            "regularCommissionBonus": 500,
+            "whatTypeOfBusiness": "Electrical Technical Support",
+            "whatNameBusiness": "XXXXXXXXX",
+            "establishedYear": "2006-04-01T00:00:00.000+01:00",
+            "annualDrawing3Yrs": 100000,
+            "otherSourceOfIncome": "N",
+            "createdBy": "Seras Alin",
+            "empEmploymentSeq": 999999,
+            "accountantAppRoleSeq": 14648851
+          }
+        }
+      }
+    },
+    {
+      "description": "A request for ListOccupations",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/customer/occupation/v2/occupationsList",
+        "query": "customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "descTypeValue": "W54",
+          "descTypeName": "Engineer"
+        }
+      }
+    },
+    {
+      "description": "a rest for MainOccupationDetailsPageSummary occupationsListRD get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/customer/occupation/v2/occupationsList",
+        "query": "customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "descTypeValue": "W54",
+          "descTypeName": "Engineer"
+        }
+      }
+    },
+    {
+      "description": "A request for OtherIncomeResponse",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/customer/occupation/v2/otherIncome",
+        "query": "customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "clientOtherIncomeSeq": "1",
+          "otherIncomeType": "",
+          "incomeFreqRef": "0",
+          "amount": 123
+        }
+      }
+    },
+    {
+      "description": "a rest for MainOccupationDetailsPageSummary otherSourcesOfIncomeRD get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/customer/occupation/v2/otherIncome",
+        "query": "customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "clientOtherIncomeSeq": "1",
+          "otherIncomeType": "",
+          "incomeFreqRef": "0",
+          "amount": 123
+        }
+      }
+    },
+    {
+      "description": "a rest for MainOccupationDetailsPageSummary otherSourcesOfIncomeRD update",
+      "providerState": "default",
+      "request": {
+        "method": "PUT",
+        "path": "/customer/occupation/v2/otherIncome",
+        "query": "customerId=custId",
+        "body": "{\"clientOtherIncomeSeq\":\"1\",\"otherIncomeType\":\"\",\"incomeFreqRef\":\"0\",\"amount\":123}"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "clientOtherIncomeSeq": "1",
+          "otherIncomeType": "",
+          "incomeFreqRef": "0",
+          "amount": 123
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

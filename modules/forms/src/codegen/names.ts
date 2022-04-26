@@ -39,6 +39,9 @@ export const fetcherInterfaceName = <G> ( params: JavaWiringParams, r: RestD<G> 
 export const fetcherVariableName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `_${restNameWithPrefix ( r )}${params.fetcherInterface}`;
 export const mockFetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${restNameWithPrefix ( r )}${params.fetcherInterface}Mock`;
 export const h2FetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${restNameWithPrefix ( r )}${params.fetcherInterface}H2`;
+export const providerPactClassName = <B, G> ( pd: MainPageD<B, G> ): string => providerName ( pd ) + "Test";
+
+export const providerName = <B, G> ( p: MainPageD<B, G> ) => p.name + "Provider"
 
 export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${r.dataDD.name}Queries`;
 
@@ -55,12 +58,12 @@ export const optionalsName = <B, G> ( p: PageD<B, G> ) => `${p.name}Optionals`
 
 export const someFileName = <B, G> ( root: string, pd: PageD<B, G>, postfix: string ): string => `${root}/${pd.name}/${pd.name}.${postfix}`;
 export const someFileNameFromMainPage = <B, G> ( root: string, mainPage: PageD<B, G>, pd: PageD<B, G>, postfix: string ): string => `${root}/${mainPage.name}/${pd.name}.${postfix}`;
-export const modalImportFromFileName = <B, G> ( root: string,mainP: MainPageD<B,G>,  p: ModalPageD<B, G>, suffix: string ): string => `${root}/${mainP.name}/${mainP.name}.${suffix}`
+export const modalImportFromFileName = <B, G> ( root: string, mainP: MainPageD<B, G>, p: ModalPageD<B, G>, suffix: string ): string => `${root}/${mainP.name}/${mainP.name}.${suffix}`
 
 
 export const storybookFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, `stories` );
 export const renderFileName = <B, G> ( root: string, params: TSParams, mainPage: MainPageD<B, G>, pd: PageD<B, G> ): string => someFileNameFromMainPage ( root, mainPage, pd, params.renderFile );
-export const guardReportFileName = <B, G> ( root: string, params: TSParams, mainPage: MainPageD<B, G>): string => someFileName ( root, mainPage, params.guardReportFile );
+export const guardReportFileName = <B, G> ( root: string, params: TSParams, mainPage: MainPageD<B, G> ): string => someFileName ( root, mainPage, params.guardReportFile );
 export const domainsFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.domainsFile );
 export const emptyFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.emptyFile );
 export const pactFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.pactsFile );

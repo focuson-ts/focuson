@@ -6,7 +6,7 @@ import { detailsLog, GenerateLogLevel, NameAnd, safeArray, safeString, sortedEnt
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
-import { createTableSqlName, fetcherInterfaceName, getSqlName, h2FetcherClassName, mockFetcherClassName, queryClassName, restControllerName, sqlMapFileName } from "../codegen/names";
+import { createTableSqlName, fetcherInterfaceName, getSqlName, h2FetcherClassName, mockFetcherClassName, providerPactClassName, queryClassName, restControllerName, sqlMapFileName } from "../codegen/names";
 import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
 import { makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
 import { makeAllMockFetchers } from "../codegen/makeMockFetchers";
@@ -16,6 +16,7 @@ import { AppConfig } from "../focuson.config";
 // import { findSqlRoot, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, walkRoots } from "../codegen/makeJavaSql.tsxxx";
 import { createTableSql, findSqlLinkDataFromRootAndDataD, findSqlRoot, generateGetSql, makeMapsForRest, walkSqlRoots } from "../codegen/makeSqlFromEntities";
 import { makeH2Fetchers } from "../codegen/makeH2Fetchers";
+import { makePactValidation } from "../codegen/makePactValidation";
 
 
 export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
@@ -27,6 +28,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   const javaAppRoot = javaOutputRoot
   const javaScriptRoot = javaAppRoot + "/scripts"
   const javaCodeRoot = javaAppRoot + `/src/main/java/${params.thePackage.replace ( ".", '/' )}`
+  const javaTestRoot = javaAppRoot + `/src/test/java/${params.thePackage.replace ( ".", '/' )}`
   const javaResourcesRoot = javaAppRoot + "/src/main/resources"
   const javaFetcherRoot = javaCodeRoot + "/" + params.fetcherPackage
   const javaControllerRoot = javaCodeRoot + "/" + params.controllerPackage
@@ -39,6 +41,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   fs.mkdirSync ( `${javaOutputRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaAppRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaCodeRoot}`, { recursive: true } )
+  fs.mkdirSync ( `${javaTestRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaResourcesRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaScriptRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaFetcherRoot}`, { recursive: true } )
@@ -64,7 +67,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
 
   detailsLog ( logLevel, 1, 'java common copies' )
-  templateFile ( `${javaAppRoot}/pom.xml`, 'templates/mvnTemplate.pom', {...params, versionNumber: appConfig.versionNumber}, directorySpec )
+  templateFile ( `${javaAppRoot}/pom.xml`, 'templates/mvnTemplate.pom', { ...params, versionNumber: appConfig.versionNumber }, directorySpec )
   templateFile ( javaCodeRoot + "/IManyGraphQl.java", "templates/raw/java/IManyGraphQl.java", params, directorySpec )
   templateFile ( javaCodeRoot + "/CorsConfig.java", "templates/raw/java/CorsConfig.java", params, directorySpec )
   templateFile ( `${javaCodeRoot}/SchemaController.java`, 'templates/raw/java/SchemaController.java', params, directorySpec )
@@ -115,7 +118,10 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   if ( dataSql.length > 0 )
     writeToFile ( `${javaResourcesRoot}/data.sql`, () => dataSql )
   else
-      fs.rmSync(`${javaResourcesRoot}/data.sql`, {force: true})
+    fs.rmSync ( `${javaResourcesRoot}/data.sql`, { force: true } )
+
+  allMainPages ( pages ).forEach ( p => writeToFile ( `${javaTestRoot}/${providerPactClassName(p)}.java`, () => makePactValidation ( params, appConfig.javaPort, p ) ) )
+
 
   templateFile ( `${javaCodeRoot}/${params.sampleClass}.java`, 'templates/JavaSampleTemplate.java',
     { ...params, content: indentList ( makeAllJavaVariableName ( pages, 0 ) ).join ( "\n" ) }, directorySpec, details )

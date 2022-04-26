@@ -1,0 +1,41 @@
+{
+  "consumer": {
+    "name": "ETransfer"
+  },
+  "provider": {
+    "name": "ETransferProvider"
+  },
+  "interactions": [
+    {
+      "description": "a rest for ETransfer eTransfer create",
+      "providerState": "default",
+      "request": {
+        "method": "POST",
+        "path": "/api/eTransfers",
+        "query": "customerId=custId",
+        "body": "{\"account\":1233450,\"dateOfETransfer\":\"2020-10-01\",\"description\":\"Why we are doing this transfer\",\"fromAccount\":1233450,\"toAccount\":1233450,\"monitoringAccount\":1233450,\"type\":\"checking\",\"balance\":123,\"notes\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit\"}"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "account": 1233450,
+          "dateOfETransfer": "2020-10-01",
+          "description": "Why we are doing this transfer",
+          "fromAccount": 1233450,
+          "toAccount": 1233450,
+          "monitoringAccount": 1233450,
+          "type": "checking",
+          "balance": 123,
+          "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

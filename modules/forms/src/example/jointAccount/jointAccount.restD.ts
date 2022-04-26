@@ -28,6 +28,7 @@ export const jointAccountRestD: RestD<any> = {
         mainCustomer: {
           type: 'Single',
           table: customerT,
+          where:'1=1',
           filterPath: 'main', //if it exists then we are into path filtering and only variables with this path get this data. This is a / separated path
           idInParent: 'mainCustomerId:integer',
           idInThis: 'id:integer',

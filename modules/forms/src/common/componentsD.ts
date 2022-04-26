@@ -80,8 +80,6 @@ export const TableCD: DisplayCompD = {
   }
 }
 
-
-
 export const SelectedItemCD: DisplayCompD = {
   import: "@focuson/form_components",
   name: "SelectedItem",

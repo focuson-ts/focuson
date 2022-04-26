@@ -1,0 +1,49 @@
+{
+  "consumer": {
+    "name": "HelloWorldMainPage"
+  },
+  "provider": {
+    "name": "HelloWorldMainPageProvider"
+  },
+  "interactions": [
+    {
+      "description": "A request for HelloWorldDomainData",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/helloWorld",
+        "query": ""
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "message": "Greetings message !"
+        }
+      }
+    },
+    {
+      "description": "a rest for HelloWorldMainPage restDataRD get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/helloWorld",
+        "query": ""
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "message": "Greetings message !"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

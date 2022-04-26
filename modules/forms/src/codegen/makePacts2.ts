@@ -1,6 +1,6 @@
-import { isMainPage, PageD, RestDefnInPageProperties } from "../common/pageD";
+import { isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { beforeSeparator, RestAction, sortedEntries } from "@focuson/utils";
-import { fetcherName, restDetailsName, sampleName } from "./names";
+import { fetcherName, providerName, providerPactClassName, restDetailsName, sampleName } from "./names";
 import { defaultRestAction, isRestLens, makeCommonValueForTest, makeParamValueForTest, postFixForEndpoint } from "../common/restD";
 import { TSParams } from "./config";
 import { lensFocusQueryWithSlashAndTildaFromIdentity, stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
@@ -32,7 +32,7 @@ export function makeFetcherImports<B, G> ( params: TSParams, p: PageD<B, G> ): s
   if ( !isMainPage ( p ) ) return [];
   return sortedEntries ( p.rest ).filter ( ( [ name, defn ] ) => defn.fetcher ).map ( ( [ name, defn ] ) => `import {${fetcherName ( defn )}} from './${p.name}.fetchers'` )
 }
-export function makeAllPactsForRest<B, G> ( params: TSParams, page: PageD<B, G>, restName: string, defn: RestDefnInPageProperties<G> ): string[] {
+export function makeAllPactsForRest<B, G> ( params: TSParams, page: MainPageD<B, G>, restName: string, defn: RestDefnInPageProperties<G> ): string[] {
   const rest = defn.rest
   return [
     ...makeFetcherPact ( params, page, restName, defn ),
@@ -40,7 +40,7 @@ export function makeAllPactsForRest<B, G> ( params: TSParams, page: PageD<B, G>,
   ]
 }
 
-export function makeRestPact<B, G> ( params: TSParams, page: PageD<B, G>, restName: string, defn: RestDefnInPageProperties<G>, action: RestAction ): string[] {
+export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, restName: string, defn: RestDefnInPageProperties<G>, action: RestAction ): string[] {
   const rest = defn.rest
   const details = defaultRestAction[ action ]
   const dataD = rest.dataDD
@@ -51,7 +51,7 @@ export function makeRestPact<B, G> ( params: TSParams, page: PageD<B, G>, restNa
   const initialStateBodyTransforms = details.params.needsObj ? [ `[${lensFocusQueryWithSlashAndTildaFromIdentity ( `initialStateBodyTransform for page ${page.name} ${restName}`, params, page, defn.targetFromPath )}, () => ${params.samplesFile}.${sampleName ( dataD )}0]` ] : []
   return [
     `//Rest ${restName} ${action} pact test for ${page.name}`,
-    `pactWith ( { consumer: '${page.name}', provider: '${page.name}Provider', cors: true }, provider => {`,
+    `pactWith ( { consumer: '${page.name}', provider: '${providerName ( page )}', cors: true }, provider => {`,
     `  describe ( '${page.name} - ${restName} rest ${action}', () => {`,
     `   it ( 'should have a ${action} rest for ${dataD.name}', async () => {`,
     `    const restCommand: RestCommand = { name: '${restDetailsName ( page, restName, rest )}', restAction: '${action}' }`,
@@ -90,13 +90,13 @@ export function makeRestPact<B, G> ( params: TSParams, page: PageD<B, G>, restNa
 }
 
 
-export function makeFetcherPact<B, G> ( params: TSParams, page: PageD<B, G>, restName: string, defn: RestDefnInPageProperties<G> ): string[] {
+export function makeFetcherPact<B, G> ( params: TSParams, page: MainPageD<B, G>, restName: string, defn: RestDefnInPageProperties<G> ): string[] {
   if ( !defn.fetcher ) return []
   let rest = defn.rest;
   let paramsValueForTest = makeParamValueForTest ( rest, 'get' );
   return [
     `//GetFetcher pact test`,
-    `pactWith ( { consumer: '${page.name}', provider: '${page.name}Provider', cors: true }, provider => {`,
+    `pactWith ( { consumer: '${page.name}', provider: '${providerName ( page )}', cors: true }, provider => {`,
     `describe ( '${page.name} - ${restName} - fetcher', () => {`,
     `  it ( 'should have a  fetcher for ${rest.dataDD.name}', async () => {`,
     `    await provider.addInteraction ( {`,
