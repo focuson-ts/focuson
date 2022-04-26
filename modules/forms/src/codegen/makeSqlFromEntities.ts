@@ -385,11 +385,14 @@ export const findAllTableAndFieldDatasIn = <G> ( rdps: RestDefnInPageProperties<
 }
 
 export function createTableSql<G> ( rdps: RestDefnInPageProperties<G>[] ): NameAnd<string[]> {
-  const createSql = ( taf: TableAndFieldsData<G> ): string[] => [
-    `create table ${taf.table.name}` + '(',
-    ...indentList ( addStringToEndOfAllButLast ( "," ) ( taf.fieldData.map ( fd => `${fd.dbFieldName} ${fd.dbType}` ) ) ),
-    ')'
-  ];
+  const createSql = ( taf: TableAndFieldsData<G> ): string[] => {
+    let columns = unique(taf.fieldData.map ( fd => `${fd.dbFieldName} ${fd.dbType}` ), s=> s.toLowerCase());
+    return [
+      `create table ${taf.table.name}` + '(',
+      ...indentList ( addStringToEndOfAllButLast ( "," ) ( columns ) ),
+      ')'
+    ];
+  };
   return Object.fromEntries ( findAllTableAndFieldDatasIn ( rdps ).map ( taf => [ taf.table.name, createSql ( taf ) ] ) )
 }
 
