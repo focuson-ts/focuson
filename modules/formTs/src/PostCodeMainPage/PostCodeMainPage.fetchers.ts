@@ -13,7 +13,7 @@ export function PostCodeDataFetcher(fdLens:Optional<FState, domains.PostCodeMain
     common.commonFetch<FState,  domains.PostCodeDataDomain>(),
      'PostCodeMainPage',
      '~/postcode/searchResults', fdLens, commonIds, localIds,["postcode"],[],
-      //From PostCodeMainPage.display.targetFromPath ~/postcode/searchResults
+      //From PostCodeMainPage.rest[postcode].targetFromPath ~/postcode/searchResults Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
       Lenses.identity<domains.PostCodeMainPagePageDomain>().focusQuery('postcode').focusQuery('searchResults'),
      '/api/postCode?{query}')
 }

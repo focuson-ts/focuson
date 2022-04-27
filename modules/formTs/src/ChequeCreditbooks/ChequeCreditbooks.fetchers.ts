@@ -13,7 +13,7 @@ export function ChequeCreditbooksFetcher(fdLens:Optional<FState, domains.ChequeC
     common.commonFetch<FState,  domains.ChequeCreditbooksDomain>(),
      'ChequeCreditbooks',
      '~/fromApi', fdLens, commonIds, localIds,["accountId","applRef","brandRef","customerId"],[],
-      //From ChequeCreditbooks.display.targetFromPath ~/fromApi
+      //From ChequeCreditbooks.rest[chequeCreditBooks].targetFromPath ~/fromApi Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
       Lenses.identity<domains.ChequeCreditbooksPageDomain>().focusQuery('fromApi'),
      '/api/chequeCreditBooks?{query}')
 }

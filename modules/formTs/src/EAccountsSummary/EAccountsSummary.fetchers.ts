@@ -13,7 +13,7 @@ export function EAccountsSummaryFetcher(fdLens:Optional<FState, domains.EAccount
     common.commonFetch<FState,  domains.EAccountsSummaryDomain>(),
      'EAccountsSummary',
      '~/fromApi', fdLens, commonIds, localIds,["accountId"],["customerId"],
-      //From EAccountsSummary.display.targetFromPath ~/fromApi
+      //From EAccountsSummary.rest[eAccountsSummary].targetFromPath ~/fromApi Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
       Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('fromApi'),
      '/api/accountsSummary?{query}')
 }

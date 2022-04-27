@@ -10,7 +10,7 @@ export function OccupationAndIncomeSummary_AdditionalInformationRestDetails ( cd
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'),
-//From OccupationAndIncomeSummary.rest.additionalInformationRD.targetFromPath (~/additionalInformation. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
+//From OccupationAndIncomeSummary.rest[additionalInformationRD].targetFromPath (~/additionalInformation). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('additionalInformation'),
     cd, fdd,
     ids: ["customerId"],
@@ -25,7 +25,7 @@ export function OccupationAndIncomeSummary_BusinessDetailsMainRestDetails ( cd: 
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'),
-//From OccupationAndIncomeSummary.rest.businessDetailsRD.targetFromPath (~/businessDetails. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
+//From OccupationAndIncomeSummary.rest[businessDetailsRD].targetFromPath (~/businessDetails). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('businessDetails'),
     cd, fdd,
     ids: ["customerId"],
@@ -40,7 +40,7 @@ export function OccupationAndIncomeSummary_DropdownsRestDetails ( cd: NameAndLen
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'),
-//From OccupationAndIncomeSummary.rest.dropdownsRD.targetFromPath (~/dropdowns. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
+//From OccupationAndIncomeSummary.rest[dropdownsRD].targetFromPath (~/dropdowns). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('dropdowns'),
     cd, fdd,
     ids: ["customerId"],
@@ -55,7 +55,7 @@ export function OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDeta
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'),
-//From OccupationAndIncomeSummary.rest.occupationAndIncomeRD.targetFromPath (~/fromApi. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
+//From OccupationAndIncomeSummary.rest[occupationAndIncomeRD].targetFromPath (~/fromApi). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('fromApi'),
     cd, fdd,
     ids: ["customerId"],
@@ -70,7 +70,7 @@ export function OccupationAndIncomeSummary_OtherIncomeResponseRestDetails ( cd: 
   const fdd: NameAndLens<domains.OccupationAndIncomeSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary'),
-//From OccupationAndIncomeSummary.rest.otherSourcesOfIncomeRD.targetFromPath (~/otherSourcesOfIncome. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
+//From OccupationAndIncomeSummary.rest[otherSourcesOfIncomeRD].targetFromPath (~/otherSourcesOfIncome). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('otherSourcesOfIncome'),
     cd, fdd,
     ids: ["customerId"],

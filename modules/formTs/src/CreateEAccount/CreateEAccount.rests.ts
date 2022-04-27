@@ -10,7 +10,7 @@ export function CreateEAccount_CreateEAccountDataRestDetails ( cd: NameAndLens<F
   const fdd: NameAndLens<domains.CreateEAccountPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('CreateEAccount'),
-//From CreateEAccount.rest.eTransfer.targetFromPath (~/editing. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
+//From CreateEAccount.rest[eTransfer].targetFromPath (~/editing). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.CreateEAccountPageDomain>().focusQuery('editing'),
     cd, fdd,
     ids: ["accountId","customerId"],

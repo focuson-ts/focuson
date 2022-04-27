@@ -10,7 +10,7 @@ export function Repeating_RepeatingWholeDataRestDetails ( cd: NameAndLens<FState
   const fdd: NameAndLens<domains.RepeatingPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('Repeating'),
-//From Repeating.rest.repeating.targetFromPath (~/fromApi. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
+//From Repeating.rest[repeating].targetFromPath (~/fromApi). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.RepeatingPageDomain>().focusQuery('fromApi'),
     cd, fdd,
     ids: ["customerId"],

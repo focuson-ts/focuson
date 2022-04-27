@@ -220,12 +220,28 @@ describe ( "conditional lens", () => {
     expect ( lens.getOption ( dataB ) ).toEqual ( 2 )
   } )
   it ( "should be able to set data", () => {
-    expect ( lens.setOption ( dataA, 3 ) ).toEqual ( {"cond": "a", "true": {"a": 3}})
-    expect ( lens.setOption ( dataB, 3 ) ).toEqual ( {"cond": "b", "false": {"b": 3}} )
+    expect ( lens.setOption ( dataA, 3 ) ).toEqual ( { "cond": "a", "true": { "a": 3 } } )
+    expect ( lens.setOption ( dataB, 3 ) ).toEqual ( { "cond": "b", "false": { "b": 3 } } )
   } )
 
   it ( "should have a description", () => {
     expect ( lens.description ).toEqual ( 'If(I.focusOn(cond)) then I.focus?(true).focusOn(a) else I.focus?(false).focusOn(b)' )
   } )
 
+} )
+
+interface CalcNthForTest {
+  n: number;
+  ts: string[]
+}
+describe ( "calculatedNth", () => {
+  const id = Lenses.identity<CalcNthForTest> ()
+  const l = Lenses.calculatedNth<CalcNthForTest, string> ( id.focusQuery ( 'n' ), id.focusQuery ( 'ts' ) )
+  it ( 'should get the nth item', () => {
+    expect ( l.getOption ( { n: 1, ts: [ 'zero', 'one', 'two' ] } ) ).toEqual ( 'one' )
+  } )
+  it ( 'should set the nth item', () => {
+    expect ( l.setOption ( { n: 1, ts: [ 'zero', 'one', 'two' ] }, 'x' ) ).toEqual ( { "n": 1, "ts": [ "zero", "x", "two" ] } )
+
+  } )
 } )

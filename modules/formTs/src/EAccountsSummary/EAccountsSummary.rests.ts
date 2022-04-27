@@ -10,7 +10,7 @@ export function EAccountsSummary_CreatePlanRestDetails ( cd: NameAndLens<FState>
   const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('EAccountsSummary'),
-//From EAccountsSummary.rest.createPlanRestD.targetFromPath (~/tempCreatePlan. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
+//From EAccountsSummary.rest[createPlanRestD].targetFromPath (~/tempCreatePlan). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('tempCreatePlan'),
     cd, fdd,
     ids: ["accountId","customerId"],
@@ -25,7 +25,7 @@ export function EAccountsSummary_EAccountsSummaryRestDetails ( cd: NameAndLens<F
   const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('EAccountsSummary'),
-//From EAccountsSummary.rest.eAccountsSummary.targetFromPath (~/fromApi. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
+//From EAccountsSummary.rest[eAccountsSummary].targetFromPath (~/fromApi). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('fromApi'),
     cd, fdd,
     ids: ["accountId"],

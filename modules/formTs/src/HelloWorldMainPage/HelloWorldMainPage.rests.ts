@@ -10,7 +10,7 @@ export function HelloWorldMainPage_HelloWorldDomainDataRestDetails ( cd: NameAnd
   const fdd: NameAndLens<domains.HelloWorldMainPagePageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('HelloWorldMainPage'),
-//From HelloWorldMainPage.rest.restDataRD.targetFromPath (~/fromApi. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
+//From HelloWorldMainPage.rest[restDataRD].targetFromPath (~/fromApi). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.HelloWorldMainPagePageDomain>().focusQuery('fromApi'),
     cd, fdd,
     ids: [],

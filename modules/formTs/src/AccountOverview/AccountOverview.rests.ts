@@ -10,7 +10,7 @@ export function AccountOverview_AccountAllFlagsRestDetails ( cd: NameAndLens<FSt
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
-//From AccountOverview.rest.accountFlags.targetFromPath (~/accountFlags. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
+//From AccountOverview.rest[accountFlags].targetFromPath (~/accountFlags). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('accountFlags'),
     cd, fdd,
     ids: ["accountId","customerId"],
@@ -25,7 +25,7 @@ export function AccountOverview_AccountOverviewAgreementTypeRestDetails ( cd: Na
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
-//From AccountOverview.rest.agreementType.targetFromPath (~/agreementType. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
+//From AccountOverview.rest[agreementType].targetFromPath (~/agreementType). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('agreementType'),
     cd, fdd,
     ids: ["accountId","customerId"],
@@ -40,7 +40,7 @@ export function AccountOverview_ArrearsDetailsRestDetails ( cd: NameAndLens<FSta
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {startDate: Lenses.identity< domains.AccountOverviewPageDomain>().focusQuery('currentSelectedExcessHistory').focusQuery('start')}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
-//From AccountOverview.rest.arrearsDetails.targetFromPath (~/arrearsDetails. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
+//From AccountOverview.rest[arrearsDetails].targetFromPath (~/arrearsDetails). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('arrearsDetails'),
     cd, fdd,
     ids: ["accountId","customerId","startDate"],
@@ -55,7 +55,7 @@ export function AccountOverview_AccountOverviewHistoryRestDetails ( cd: NameAndL
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
-//From AccountOverview.rest.excessHistory.targetFromPath (~/excessHistory. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
+//From AccountOverview.rest[excessHistory].targetFromPath (~/excessHistory). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('excessHistory'),
     cd, fdd,
     ids: ["accountId","customerId"],
@@ -70,7 +70,7 @@ export function AccountOverview_AccountOverviewExcessInfoRestDetails ( cd: NameA
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
-//From AccountOverview.rest.excessInfo.targetFromPath (~/excessInfo. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
+//From AccountOverview.rest[excessInfo].targetFromPath (~/excessInfo). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('excessInfo'),
     cd, fdd,
     ids: ["accountId","customerId"],
@@ -85,7 +85,7 @@ export function AccountOverview_AccountOverviewRestDetails ( cd: NameAndLens<FSt
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
-//From AccountOverview.rest.main.targetFromPath (~/main. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
+//From AccountOverview.rest[main].targetFromPath (~/main). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('main'),
     cd, fdd,
     ids: ["accountId","customerId"],
@@ -100,7 +100,7 @@ export function AccountOverview_AccountOverviewOptOutRestDetails ( cd: NameAndLe
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
-//From AccountOverview.rest.optOut.targetFromPath (~/optOut. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
+//From AccountOverview.rest[optOut].targetFromPath (~/optOut). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('optOut'),
     cd, fdd,
     ids: ["accountId","customerId"],
@@ -115,7 +115,7 @@ export function AccountOverview_AccountOverviewReasonRestDetails ( cd: NameAndLe
   const fdd: NameAndLens<domains.AccountOverviewPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('AccountOverview'),
-//From AccountOverview.rest.reason.targetFromPath (~/reason. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
+//From AccountOverview.rest[reason].targetFromPath (~/reason). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('reason'),
     cd, fdd,
     ids: ["accountId","customerId"],

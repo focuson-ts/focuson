@@ -407,6 +407,21 @@ export class Lenses {
     }
     return new Optional ( getter, setter, `If(${cond.description}) then ${trueL.description} else ${falseL.description}` )
   }
+
+  static calculatedNth<Main, T> ( nL: Optional<Main, number>, opt: Optional<Main, T[]> ) {
+    function getter ( m: Main ): T | undefined {
+      const rawN = nL.getOption ( m )
+      return opt.getOption ( m )[ rawN ? rawN : 0 ]
+    }
+    function setter ( m: Main, t: T ): Main | undefined {
+      const rawN = nL.getOption ( m )
+      const newArray = [ ...opt.getOption ( m ) ]
+      newArray[ rawN ] = t
+      return opt.setOption ( m, newArray )
+    }
+    return new Optional ( getter, setter, `calculatedNth(${nL.description}, ${opt.description}` )
+  }
+
 }
 export type FocusOnPathItem = string | FocusOnPathSimpleItem | FocusOnPathNthItem | FocusOnPathPathItem
 export interface FocusOnPathSimpleItem {

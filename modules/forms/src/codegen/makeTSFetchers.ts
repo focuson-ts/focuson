@@ -27,7 +27,7 @@ export const makeFetcherCode = ( params: TSParams ) => <B, G> ( p: PageD<B, G> )
     `    ${common}.commonFetch<${params.stateName},  ${domain}.${dataType}>(),`,
     `     '${p.name}',`,
     `     '${targetFromPath}', fdLens, commonIds, localIds,${JSON.stringify ( ids )},${JSON.stringify ( resourceIds )},`,
-    `      //From ${p.name}.display.targetFromPath ${targetFromPath}`,
+    `      //From ${p.name}.rest[${restName}].targetFromPath ${targetFromPath} Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?`,
     `      ${lensFocusQueryWithTildaFromPage ( `Error making fetcher ${p.name} ${restName}. Target is '${targetFromPath}'. Do you need to start the path with a ~?`, params, p, targetFromPath )},`,
     `     '${def.rest.url}')`,
     '}' ]

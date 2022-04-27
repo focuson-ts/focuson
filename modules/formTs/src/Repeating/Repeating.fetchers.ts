@@ -13,7 +13,7 @@ export function RepeatingWholeDataFetcher(fdLens:Optional<FState, domains.Repeat
     common.commonFetch<FState,  domains.RepeatingWholeDataDomain>(),
      'Repeating',
      '~/fromApi', fdLens, commonIds, localIds,["customerId"],[],
-      //From Repeating.display.targetFromPath ~/fromApi
+      //From Repeating.rest[repeating].targetFromPath ~/fromApi Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
       Lenses.identity<domains.RepeatingPageDomain>().focusQuery('fromApi'),
      '/api/repeating?{query}')
 }

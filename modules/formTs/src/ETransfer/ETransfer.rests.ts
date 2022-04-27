@@ -10,7 +10,7 @@ export function ETransfer_ETransferDataDRestDetails ( cd: NameAndLens<FState>, d
   const fdd: NameAndLens<domains.ETransferPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('ETransfer'),
-//From ETransfer.rest.eTransfer.targetFromPath (~/fromApi. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
+//From ETransfer.rest[eTransfer].targetFromPath (~/fromApi). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.ETransferPageDomain>().focusQuery('fromApi'),
     cd, fdd,
     ids: ["customerId"],

@@ -13,7 +13,7 @@ export function HelloWorldDomainDataFetcher(fdLens:Optional<FState, domains.Hell
     common.commonFetch<FState,  domains.HelloWorldDomainDataDomain>(),
      'HelloWorldMainPage',
      '~/fromApi', fdLens, commonIds, localIds,[],[],
-      //From HelloWorldMainPage.display.targetFromPath ~/fromApi
+      //From HelloWorldMainPage.rest[restDataRD].targetFromPath ~/fromApi Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
       Lenses.identity<domains.HelloWorldMainPagePageDomain>().focusQuery('fromApi'),
      '/helloWorld?{query}')
 }
