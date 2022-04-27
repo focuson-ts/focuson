@@ -13,6 +13,7 @@ export function ChequeCreditbooksFetcher(fdLens:Optional<FState, domains.ChequeC
     common.commonFetch<FState,  domains.ChequeCreditbooksDomain>(),
      'ChequeCreditbooks',
      '~/fromApi', fdLens, commonIds, localIds,["accountId","applRef","brandRef","customerId"],[],
+      //From ChequeCreditbooks.display.targetFromPath ~/fromApi
       Lenses.identity<domains.ChequeCreditbooksPageDomain>().focusQuery('fromApi'),
      '/api/chequeCreditBooks?{query}')
 }

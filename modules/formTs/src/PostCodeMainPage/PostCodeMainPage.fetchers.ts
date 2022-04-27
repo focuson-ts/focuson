@@ -13,6 +13,7 @@ export function PostCodeDataFetcher(fdLens:Optional<FState, domains.PostCodeMain
     common.commonFetch<FState,  domains.PostCodeDataDomain>(),
      'PostCodeMainPage',
      '~/postcode/searchResults', fdLens, commonIds, localIds,["postcode"],[],
+      //From PostCodeMainPage.display.targetFromPath ~/postcode/searchResults
       Lenses.identity<domains.PostCodeMainPagePageDomain>().focusQuery('postcode').focusQuery('searchResults'),
      '/api/postCode?{query}')
 }

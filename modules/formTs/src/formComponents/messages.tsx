@@ -30,7 +30,7 @@ export function Messages<S, T, Context>( { state }: MessagesProps<S, SimpleMessa
 
     // TO DO parse message
     const getMessage = (message: string) => {
-        return message
+        return message.slice(0, 300)
     }
 
     if (!state.json().length) return null;
@@ -40,7 +40,7 @@ export function Messages<S, T, Context>( { state }: MessagesProps<S, SimpleMessa
                 {
                     state.json().map((message, index) => {
                         return  <div key={index} className={cssClasses(message.level)}>
-                            <span> {getMessage(message.msg)} </span>
+                            <span title={message.msg}> {getMessage(message.msg)} </span>
                             <a id={`messages[${index}].close`} className="close-button" onClick={() => removeMessage(index)}>&times;</a>
                         </div>
                     }

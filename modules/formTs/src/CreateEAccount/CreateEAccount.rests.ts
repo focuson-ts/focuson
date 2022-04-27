@@ -10,7 +10,7 @@ export function CreateEAccount_CreateEAccountDataRestDetails ( cd: NameAndLens<F
   const fdd: NameAndLens<domains.CreateEAccountPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('CreateEAccount'),
-//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is eTransfer and the path specified is ~/editing
+//From CreateEAccount.rest.eTransfer.targetFromPath (~/editing. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
     dLens: Lenses.identity<domains.CreateEAccountPageDomain>().focusQuery('editing'),
     cd, fdd,
     ids: ["accountId","customerId"],

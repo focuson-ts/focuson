@@ -6,7 +6,7 @@ import { makeTsFiles } from "./makeTsFiles";
 import { AllButtonsInPage, ButtonD } from "../buttons/allButtons";
 import { AllGuards, GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { MakeButton } from "../codegen/makeButtons";
-import { AppConfig } from "../focuson.config";
+import { AppConfig, focusOnVersion } from "../focuson.config";
 import { validate } from "./validateModel";
 import { unique } from "../common/restD";
 import { GenerateLogLevel, safeArray } from "@focuson/utils";
@@ -56,6 +56,7 @@ export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLe
 
   console.log ( 0 )
   console.log ( "focusOnVersion", params.focusOnVersion )
+  if (focusOnVersion === undefined) throw Error("The focusOnVersion is undefined")
 
   validate ( pages )
   const fullPages = unique ( pages.flatMap ( p => [ p, ...safeArray ( p.modals ).map ( m => m.modal ) ] ), p => p.name )

@@ -13,6 +13,7 @@ export function AdditionalInformationFetcher(fdLens:Optional<FState, domains.Occ
     common.commonFetch<FState,  domains.AdditionalInformationDomain>(),
      'OccupationAndIncomeSummary',
      '~/additionalInformation', fdLens, commonIds, localIds,["customerId"],[],
+      //From OccupationAndIncomeSummary.display.targetFromPath ~/additionalInformation
       Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('additionalInformation'),
      '/customer/occupation/v2/additionalInfo?{query}')
 }
@@ -23,6 +24,7 @@ export function BusinessDetailsMainFetcher(fdLens:Optional<FState, domains.Occup
     common.commonFetch<FState,  domains.BusinessDetailsMainDomain>(),
      'OccupationAndIncomeSummary',
      '~/businessDetails', fdLens, commonIds, localIds,["customerId"],[],
+      //From OccupationAndIncomeSummary.display.targetFromPath ~/businessDetails
       Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('businessDetails'),
      '/customer/occupation/v2/businessDetails?{query}')
 }
@@ -33,6 +35,7 @@ export function DropdownsFetcher(fdLens:Optional<FState, domains.OccupationAndIn
     common.commonFetch<FState,  domains.DropdownsDomain>(),
      'OccupationAndIncomeSummary',
      '~/dropdowns', fdLens, commonIds, localIds,["customerId"],[],
+      //From OccupationAndIncomeSummary.display.targetFromPath ~/dropdowns
       Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('dropdowns'),
      '/customer/occupation/v2/occupationDetails?{query}')
 }
@@ -43,6 +46,7 @@ export function OccupationAndIncomeFullDomainFetcher(fdLens:Optional<FState, dom
     common.commonFetch<FState,  domains.OccupationAndIncomeFullDomainDomain>(),
      'OccupationAndIncomeSummary',
      '~/fromApi', fdLens, commonIds, localIds,["customerId"],[],
+      //From OccupationAndIncomeSummary.display.targetFromPath ~/fromApi
       Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('fromApi'),
      '/customer/occupation/v2/occupationIncomeDetails?{query}')
 }
@@ -53,6 +57,7 @@ export function OtherIncomeResponseFetcher(fdLens:Optional<FState, domains.Occup
     common.commonFetch<FState,  domains.OtherIncomeResponseDomain>(),
      'OccupationAndIncomeSummary',
      '~/otherSourcesOfIncome', fdLens, commonIds, localIds,["customerId"],[],
+      //From OccupationAndIncomeSummary.display.targetFromPath ~/otherSourcesOfIncome
       Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('otherSourcesOfIncome'),
      '/customer/occupation/v2/otherIncome?{query}')
 }

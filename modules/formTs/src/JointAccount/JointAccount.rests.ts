@@ -10,7 +10,7 @@ export function JointAccount_JointAccountRestDetails ( cd: NameAndLens<FState>, 
   const fdd: NameAndLens<domains.JointAccountPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('JointAccount'),
-//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is jointAccount and the path specified is ~/fromApi
+//From JointAccount.rest.jointAccount.targetFromPath (~/fromApi. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
     dLens: Lenses.identity<domains.JointAccountPageDomain>().focusQuery('fromApi'),
     cd, fdd,
     ids: ["accountId","brandId","dbName"],

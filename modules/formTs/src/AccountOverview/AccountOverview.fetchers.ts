@@ -13,6 +13,7 @@ export function AccountAllFlagsFetcher(fdLens:Optional<FState, domains.AccountOv
     common.commonFetch<FState,  domains.AccountAllFlagsDomain>(),
      'AccountOverview',
      '~/accountFlags', fdLens, commonIds, localIds,["accountId","customerId"],[],
+      //From AccountOverview.display.targetFromPath ~/accountFlags
       Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('accountFlags'),
      '/api/accountOverview/flags?{query}')
 }
@@ -23,6 +24,7 @@ export function AccountOverviewAgreementTypeFetcher(fdLens:Optional<FState, doma
     common.commonFetch<FState,  domains.AccountOverviewAgreementTypeDomain>(),
      'AccountOverview',
      '~/agreementType', fdLens, commonIds, localIds,["accountId","customerId"],[],
+      //From AccountOverview.display.targetFromPath ~/agreementType
       Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('agreementType'),
      '/api/accountOverview/agreementType?{query}')
 }
@@ -33,6 +35,7 @@ export function ArrearsDetailsFetcher(fdLens:Optional<FState, domains.AccountOve
     common.commonFetch<FState,  domains.ArrearsDetailsDomain>(),
      'AccountOverview',
      '~/arrearsDetails', fdLens, commonIds, localIds,["accountId","customerId","startDate"],[],
+      //From AccountOverview.display.targetFromPath ~/arrearsDetails
       Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('arrearsDetails'),
      '/api/accountOverview/arrearsDetails?{query}')
 }
@@ -43,6 +46,7 @@ export function AccountOverviewHistoryFetcher(fdLens:Optional<FState, domains.Ac
     common.commonFetch<FState,  domains.AccountOverviewHistoryDomain>(),
      'AccountOverview',
      '~/excessHistory', fdLens, commonIds, localIds,["accountId","customerId"],[],
+      //From AccountOverview.display.targetFromPath ~/excessHistory
       Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('excessHistory'),
      '/api/accountOverview/excessHistory?{query}')
 }
@@ -53,6 +57,7 @@ export function AccountOverviewExcessInfoFetcher(fdLens:Optional<FState, domains
     common.commonFetch<FState,  domains.AccountOverviewExcessInfoDomain>(),
      'AccountOverview',
      '~/excessInfo', fdLens, commonIds, localIds,["accountId","customerId"],[],
+      //From AccountOverview.display.targetFromPath ~/excessInfo
       Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('excessInfo'),
      '/api/accountOverview/excessInfo?{query}')
 }
@@ -63,6 +68,7 @@ export function AccountOverviewFetcher(fdLens:Optional<FState, domains.AccountOv
     common.commonFetch<FState,  domains.AccountOverviewDomain>(),
      'AccountOverview',
      '~/main', fdLens, commonIds, localIds,["accountId","customerId"],[],
+      //From AccountOverview.display.targetFromPath ~/main
       Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('main'),
      '/api/accountOverview?{query}')
 }
@@ -73,6 +79,7 @@ export function AccountOverviewOptOutFetcher(fdLens:Optional<FState, domains.Acc
     common.commonFetch<FState,  domains.AccountOverviewOptOutDomain>(),
      'AccountOverview',
      '~/optOut', fdLens, commonIds, localIds,["accountId","customerId"],[],
+      //From AccountOverview.display.targetFromPath ~/optOut
       Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('optOut'),
      '/api/accountOverview/optOut?{query}')
 }
@@ -83,6 +90,7 @@ export function AccountOverviewReasonFetcher(fdLens:Optional<FState, domains.Acc
     common.commonFetch<FState,  domains.AccountOverviewReasonDomain>(),
      'AccountOverview',
      '~/reason', fdLens, commonIds, localIds,["accountId","customerId"],[],
+      //From AccountOverview.display.targetFromPath ~/reason
       Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('reason'),
      '/api/accountOverview/reason?{query}')
 }

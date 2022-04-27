@@ -10,7 +10,7 @@ export function EAccountsSummary_CreatePlanRestDetails ( cd: NameAndLens<FState>
   const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('EAccountsSummary'),
-//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is createPlanRestD and the path specified is ~/tempCreatePlan
+//From EAccountsSummary.rest.createPlanRestD.targetFromPath (~/tempCreatePlan. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
     dLens: Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('tempCreatePlan'),
     cd, fdd,
     ids: ["accountId","customerId"],
@@ -25,7 +25,7 @@ export function EAccountsSummary_EAccountsSummaryRestDetails ( cd: NameAndLens<F
   const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('EAccountsSummary'),
-//A compilation error is often because you have specified a path in the rest that does not exist. The rest name is eAccountsSummary and the path specified is ~/fromApi
+//From EAccountsSummary.rest.eAccountsSummary.targetFromPath (~/fromApi. Does the path exist? Is the 'type' at the end of the path the type that rest is fetching?
     dLens: Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('fromApi'),
     cd, fdd,
     ids: ["accountId"],

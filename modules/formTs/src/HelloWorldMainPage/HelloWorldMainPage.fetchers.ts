@@ -13,6 +13,7 @@ export function HelloWorldDomainDataFetcher(fdLens:Optional<FState, domains.Hell
     common.commonFetch<FState,  domains.HelloWorldDomainDataDomain>(),
      'HelloWorldMainPage',
      '~/fromApi', fdLens, commonIds, localIds,[],[],
+      //From HelloWorldMainPage.display.targetFromPath ~/fromApi
       Lenses.identity<domains.HelloWorldMainPagePageDomain>().focusQuery('fromApi'),
      '/helloWorld?{query}')
 }

@@ -27,8 +27,8 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
   const javaAppRoot = javaOutputRoot
   const javaScriptRoot = javaAppRoot + "/scripts"
-  const javaCodeRoot = javaAppRoot + `/src/main/java/${params.thePackage.replace ( ".", '/' )}`
-  const javaTestRoot = javaAppRoot + `/src/test/java/${params.thePackage.replace ( ".", '/' )}`
+  const javaCodeRoot = javaAppRoot + `/src/main/java/${params.thePackage.replace ( /\./g, '/' )}`
+  const javaTestRoot = javaAppRoot + `/src/test/java/${params.thePackage.replace ( /\./g, '/' )}`
   const javaResourcesRoot = javaAppRoot + "/src/main/resources"
   const javaFetcherRoot = javaCodeRoot + "/" + params.fetcherPackage
   const javaControllerRoot = javaCodeRoot + "/" + params.controllerPackage
