@@ -1,8 +1,8 @@
 import { JavaWiringParams } from "./config";
 import { MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { sortedEntries } from "@focuson/utils";
-import { RestD } from "../common/restD";
-import { fetcherInterfaceName, fetcherName, h2FetcherClassName, sqlMapName } from "./names";
+import { defaultRestAction, RestD } from "../common/restD";
+import { fetcherInterfaceName, fetcherName, h2FetcherClassName, resolverName, sqlMapName } from "./names";
 import { indentList } from "./codegen";
 import { findParamsForTable } from "./makeSqlFromEntities";
 
@@ -37,7 +37,7 @@ export function makeH2Fetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
     `  @Autowired`,
     `  private DataSource dataSource;`,
     ``,
-    `  public DataFetcher get${rest.dataDD.name}() {`,
+    `  public DataFetcher ${resolverName ( rest.dataDD, defaultRestAction.get )}}() {`,
     `    return dataFetchingEnvironment -> {`,
     ...indentList ( indentList ( indentList ( paramVariables ) ) ),
     `       Connection c = dataSource.getConnection();`,
