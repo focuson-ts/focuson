@@ -16,6 +16,7 @@ describe ( "makeAllFetchers", () => {
         "    common.commonFetch<FState,  domains.EAccountsSummaryDomain>(),",
         "     'EAccountsSummary',",
         "     '~/fromApi', fdLens, commonIds, localIds,['accountId'],['customerId'],",
+        "      //From EAccountsSummary.display.targetFromPath ~/fromApi",
         "      Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('fromApi'),",
         "     '/api/accountsSummary?{query}')",
         "}"
@@ -30,6 +31,7 @@ describe ( "makeAllFetchers", () => {
         "    common.commonFetch<FState,  domains.RepeatingWholeDataDomain>(),",
         "     'Repeating',",
         "     '~/fromApi', fdLens, commonIds, localIds,['customerId'],[],",
+        "      //From Repeating.display.targetFromPath ~/fromApi",
         "      Lenses.identity<domains.RepeatingPageDomain>().focusQuery('fromApi'),",
         "     '/api/repeating?{query}')",
         "}"
@@ -44,6 +46,7 @@ describe ( "makeAllFetchers", () => {
         "    common.commonFetch<FState,  domains.PostCodeDataDomain>(),",
         "     'PostCodeMainPage',",
         "     '~/postcode/searchResults', fdLens, commonIds, localIds,['postcode'],[],",
+        "      //From PostCodeMainPage.display.targetFromPath ~/postcode/searchResults",
         "      Lenses.identity<domains.PostCodeMainPagePageDomain>().focusQuery('postcode').focusQuery('searchResults'),",
         "     '/api/postCode?{query}')",
         "}"

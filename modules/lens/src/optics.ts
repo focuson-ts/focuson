@@ -390,6 +390,23 @@ export class Lenses {
       'removeUndefined'
     )
   }
+
+  static if<Main, T> ( cond: Optional<Main, boolean>, trueL: Optional<Main, T>, falseL: Optional<Main, T> ) {
+    return Lenses.condition ( cond, c => c, trueL, falseL )
+  }
+  static condition<Main, Cond, T> ( cond: Optional<Main, Cond>, fn: ( c: Cond ) => boolean, trueL: Optional<Main, T>, falseL: Optional<Main, T> ) {
+    function getter ( m: Main ): T | undefined {
+      const c = cond.getOption ( m )
+      if ( c !== undefined && fn ( c ) ) return trueL.getOption ( m )
+      return falseL.getOption ( m )
+    }
+    function setter ( m: Main, t: T ): Main | undefined {
+      const c = cond.getOption ( m )
+      if ( c !== undefined && fn ( c ) ) return trueL.setOption ( m, t )
+      return falseL.setOption ( m, t )
+    }
+    return new Optional ( getter, setter, `If(${cond.description}) then ${trueL.description} else ${falseL.description}` )
+  }
 }
 export type FocusOnPathItem = string | FocusOnPathSimpleItem | FocusOnPathNthItem | FocusOnPathPathItem
 export interface FocusOnPathSimpleItem {

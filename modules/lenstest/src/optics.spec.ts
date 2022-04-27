@@ -193,3 +193,39 @@ describe ( "optional.setOption", () => {
     expect ( targetAndTagL.setOption ( { a: { b: { c: '' } } }, [ 'newTarget', 'newTag' ] ) ).toEqual ( expected )
   } )
 } )
+
+
+interface DataForCond {
+  cond: string;
+  true?: { a: number },
+  false?: { b: number },
+}
+const dataA: DataForCond = {
+  cond: 'a',
+  true: { a: 1 }
+}
+const dataB: DataForCond = {
+  cond: 'b',
+  false: { b: 2 }
+}
+describe ( "conditional lens", () => {
+  const id = Lenses.identity<DataForCond> ()
+  const condL = id.focusOn ( 'cond' )
+  const trueL = id.focusQuery ( 'true' ).focusOn ( 'a' )
+  const falseL = id.focusQuery ( 'false' ).focusOn ( 'b' )
+  const lens = Lenses.condition ( condL, c => c === 'a', trueL, falseL );
+
+  it ( "should be able to get data", () => {
+    expect ( lens.getOption ( dataA ) ).toEqual ( 1 )
+    expect ( lens.getOption ( dataB ) ).toEqual ( 2 )
+  } )
+  it ( "should be able to set data", () => {
+    expect ( lens.setOption ( dataA, 3 ) ).toEqual ( {"cond": "a", "true": {"a": 3}})
+    expect ( lens.setOption ( dataB, 3 ) ).toEqual ( {"cond": "b", "false": {"b": 3}} )
+  } )
+
+  it ( "should have a description", () => {
+    expect ( lens.description ).toEqual ( 'If(I.focusOn(cond)) then I.focus?(true).focusOn(a) else I.focus?(false).focusOn(b)' )
+  } )
+
+} )
