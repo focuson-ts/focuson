@@ -15,6 +15,7 @@ export const jointAccountRestD: RestD<any> = {
   url: '/api/jointAccount?{query}',
   actions: [ 'get' ],
   initialSql: jointAccountSql,
+  namePrefix: 'pre',
   tables: {
     where: [
       { table: accountT, alias: accountT.name, field: 'acc_id', paramName: 'accountId' },

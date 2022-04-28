@@ -17,6 +17,8 @@ export type RestDetails<S, MSGs> = NameAnd<OneRestDetails<S, any, any, MSGs>>
 export interface RestCommand {
   name: string;
   restAction: RestAction;
+  /** If set, after the rest action has succeeded the named path will be deleted in the state. This is allow us to trigger the fetchers, which will fetch the latest data */
+  deleteOnSuccess?: string
 }
 export interface HasRestCommands {
   restCommands: RestCommand[]

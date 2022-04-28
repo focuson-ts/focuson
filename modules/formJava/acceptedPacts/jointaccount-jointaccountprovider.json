@@ -12,7 +12,7 @@
       "request": {
         "method": "GET",
         "path": "/api/jointAccount",
-        "query": "accountId=custId&brandId=custId"
+        "query": "accountId=custId&brandId=custId&dbName=mock"
       },
       "response": {
         "status": 200,
@@ -63,7 +63,7 @@
       "request": {
         "method": "GET",
         "path": "/api/jointAccount",
-        "query": "accountId=custId&brandId=custId"
+        "query": "accountId=custId&brandId=custId&dbName=mock"
       },
       "response": {
         "status": 200,

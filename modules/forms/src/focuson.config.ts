@@ -12,7 +12,7 @@ import { AccountOverviewMainPage } from "./example/accountOverview/accountOvervi
 import { JointAccountPageD } from "./example/jointAccount/jointAccount.pageD";
 import { HelloWorldPage } from "./example/HelloWorld/helloWorld.pageD";
 import * as process from "process";
-import { MainOccupationDetailsPageSummaryPD } from "./example/SingleOccupation/singleOccupation.pageD";
+import { AppConfig } from "./appConfig";
 
 
 export const generatedPages: ExampleMainPage[] = [
@@ -33,15 +33,6 @@ export const tsRoot = "../formTs"
 export const focusOnVersion: string = JSON.parse ( loadFile ( 'package.json' ) ).version
 
 const MyCombineCD: SimpleDisplayComp = { import: "@focuson/form_components", name: "MyCombined" }
-
-export interface AppConfig {
-  fetch: string;
-  combine: SimpleDisplayComp;
-  debug: any;
-  versionNumber: string;
-  tsPort: number;
-  javaPort: number
-}
 
 const details = JSON.parse ( loadFile ( 'project.details.json' ) ).details;
 export const javaPort = details.javaPort

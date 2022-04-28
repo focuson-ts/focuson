@@ -14,9 +14,10 @@ export const pageComponentName = <B, G> ( d: PageD<B, G> ): string => d.name + "
 // export const pageComponent = ( p: PageD ): string => p.name;
 export const hasDomainForPage = <B, G> ( pd: PageD<B, G> ): string => "Has" + pageDomainName ( pd );
 export const pageDomainName = <B, G> ( pd: PageD<B, G> ): string => pd.name + "PageDomain"
-export function resolverName<G> ( dataD: AllDataDD<G>, action: RestActionDetail ) {
-  let rawType = rawTypeName ( dataD );
-  return `${action.graphQPrefix}${rawType}${action.graphQlPostfix}`
+export function resolverName<G> ( rest: RestD<G>, action: RestActionDetail ) {
+  let rawType = rawTypeName ( rest.dataDD );
+  const prefix = rest.namePrefix ? rest.namePrefix : ''
+  return `${action.graphQPrefix}${prefix}${rawType}${action.graphQlPostfix}`
 }
 export const sampleName = <G> ( dataD: AllDataDD<G> ) => "sample" + dataD.name;
 export const emptyName = <G> ( dataD: AllDataDD<G> ) => "empty" + dataD.name;
@@ -25,7 +26,7 @@ export const restControllerName = <G> ( restD: RestD<G> ) => (restD.namePrefix ?
 export const javaSqlCreateTableSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.createTableSql.sql`
 export const javaSqlReadSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.readTableSql.sql`
 
-export const queryName = <G> ( restD: RestD<G>, action: RestAction ): string => { return action + compDataDIn ( restD.dataDD ).name; }
+export const queryName = <G> ( restD: RestD<G>, action: RestAction ): string => { return  action + safeString ( restD.namePrefix ) +compDataDIn ( restD.dataDD ).name; }
 export const createTableName = <G> ( restD: RestD<G> ): string => { return "createTable" + compDataDIn ( restD.dataDD ).name; }
 export const createTableSqlName = (): string => { return "schema"}
 export const getSqlName = (): string => { return "get"}

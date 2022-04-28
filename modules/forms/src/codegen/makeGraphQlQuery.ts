@@ -34,7 +34,7 @@ export function makeQuery<G> ( r: RestD<G>, action: RestAction ): string[] {
   const prefix = defaultRestAction[ action ].query.toLowerCase ()
   let allParams = `${paramString}${objParamString}`;
   let allParamsAndBrackets = allParams === '' ? '' : `(\" + ${allParams}+ \")`;
-  return [ `"${prefix}{${resolverName ( r.dataDD, defaultRestAction[ action ] )}${allParamsAndBrackets}{"+`,
+  return [ `"${prefix}{${resolverName ( r, defaultRestAction[ action ] )}${allParamsAndBrackets}{"+`,
     ...asMultilineJavaString ( flatMapDD ( r.dataDD, makeQueryFolder () ), '      ' ), '+"}";}' ]
 }
 

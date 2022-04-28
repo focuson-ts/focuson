@@ -18,13 +18,25 @@ export interface RestDefnInPageProperties<G> {
 export interface RestDefnInPage<G> {
   [ name: string ]: RestDefnInPageProperties<G>
 }
-
-export interface RestOnCommit {
+interface  CommonRestOnCommit {
   restName: string,
   action: RestAction,
   /** What happens when the rest is completed. Currently only 'refresh' which clears the 'main object' triggering a fetch. Later we will be more clever' */
   result: RestResult;
+
 }
+export interface RestOnCommitNothing extends CommonRestOnCommit{
+  result:'nothing';
+}
+export interface RestOnCommitRefresh extends CommonRestOnCommit{
+  result:'refresh';
+  /** If specified this will be set to 'undefined', otherwise the actual rest object will be set to undefined.
+   * This is to allow the fetchers to get the latest version after a mutation
+   * This reason we have a path is that sometimes we do 'rest' on a list item, and need to refresh the list
+   * At the moment the paths must start with /, but that might relax later*/
+  pathToDelete?: string[]
+}
+export type RestOnCommit  = RestOnCommitNothing | RestOnCommitRefresh
 
 
 export interface ButtonDefnInPage<B> {

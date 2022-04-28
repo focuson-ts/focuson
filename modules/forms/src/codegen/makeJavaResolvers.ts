@@ -57,7 +57,7 @@ export interface ResolverData {
 export function findQueryMutationResolvers <G> ( r: RestD <G> ): ResolverData[] {
   return r.actions.map ( a => {
     const rad = defaultRestAction[ a ];
-    let name = resolverName ( r.dataDD, rad );
+    let name = resolverName ( r, rad );
     return ({ isRoot: true, parent: rad.query, resolver: name, name, samplerName: sampleName ( r.dataDD ), sample: [] })
   } )
 }

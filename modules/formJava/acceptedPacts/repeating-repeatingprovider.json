@@ -7,6 +7,34 @@
   },
   "interactions": [
     {
+      "description": "A request for RepeatingWholeData",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/repeating",
+        "query": "customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": [
+          {
+            "name": "This is a one line string",
+            "age": 123
+          },
+          {
+            "name": "another one line string",
+            "age": 456
+          },
+          {
+            "name": "This is a one line string",
+            "age": 123
+          }
+        ]
+      }
+    },
+    {
       "description": "a rest for Repeating repeating create",
       "providerState": "default",
       "request": {
@@ -37,34 +65,6 @@
     },
     {
       "description": "a rest for Repeating repeating get",
-      "providerState": "default",
-      "request": {
-        "method": "GET",
-        "path": "/api/repeating",
-        "query": "customerId=custId"
-      },
-      "response": {
-        "status": 200,
-        "headers": {
-        },
-        "body": [
-          {
-            "name": "This is a one line string",
-            "age": 123
-          },
-          {
-            "name": "another one line string",
-            "age": 456
-          },
-          {
-            "name": "This is a one line string",
-            "age": 123
-          }
-        ]
-      }
-    },
-    {
-      "description": "A request for RepeatingWholeData",
       "providerState": "default",
       "request": {
         "method": "GET",

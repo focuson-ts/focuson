@@ -3,15 +3,15 @@ import { CombinedParams } from "../codegen/config";
 import { MainPageD } from "../common/pageD";
 import { makeJavaFiles } from "./makeJavaFiles";
 import { makeTsFiles } from "./makeTsFiles";
-import { AllButtonsInPage, ButtonD } from "../buttons/allButtons";
-import { AllGuards, GuardWithCondition, MakeGuard } from "../buttons/guardButton";
+import { ButtonD } from "../buttons/allButtons";
+import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { MakeButton } from "../codegen/makeButtons";
-import { AppConfig, focusOnVersion } from "../focuson.config";
 import { validate } from "./validateModel";
 import { unique } from "../common/restD";
 import { GenerateLogLevel, safeArray } from "@focuson/utils";
 import * as process from "process";
 import { makeCriticalReport, makeReport, makeReportData } from "../reporting/report";
+import { AppConfig } from "../appConfig";
 
 export const params: any = {
   pagesFile: 'pages',
@@ -53,10 +53,10 @@ export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLe
     console.log ( `no pages have been configured ${process.cwd ()}` )
     process.exit ( 2 )
   }
-
-  console.log ( 0 )
-  console.log ( "focusOnVersion", params.focusOnVersion )
-  if (focusOnVersion === undefined) throw Error("The focusOnVersion is undefined")
+  if ( [].flatMap === undefined ) {
+    console.log ( `This code is running with an old version of Node (less than 11). Please update the node version` )
+    process.exit ( 2 )
+  }
 
   validate ( pages )
   const fullPages = unique ( pages.flatMap ( p => [ p, ...safeArray ( p.modals ).map ( m => m.modal ) ] ), p => p.name )
@@ -68,8 +68,8 @@ export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLe
   makeTsFiles<G> ( logLevel, appConfig, tsRoot, params, makeGuards, makeButtons, directorySpec ) ( pages, fullPages )
 
   const reportData = makeReportData<B, G> ( pages );
-  const criticals = makeCriticalReport ( reportData);
-  const report =makeReport ( reportData )
+  const criticals = makeCriticalReport ( reportData );
+  const report = makeReport ( reportData )
   console.log ( criticals.join ( "\n" ) )
   writeToFile ( `${javaOutputRoot}/report.md`, () => report )
   writeToFile ( `${tsRoot}/report.md`, () => report )

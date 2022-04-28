@@ -2,6 +2,7 @@ import { ChequeCreditbooksDD, ChequeCreditbooksHistoryDD, ChequeCreditbooksHisto
 import { chequeCreditBooksRestD } from "./chequeCreditBooks.restD";
 import { IntegerDD, PrimitiveDD } from "../../common/dataD";
 import { ExampleMainPage, ExampleModalPage } from "../common";
+import { NatNumDd } from "../commonEnums";
 
 
 export const OrderChequeBookOrPayingInModalPD: ExampleModalPage = {
@@ -40,7 +41,8 @@ export const ChequeCreditbooksPD: ExampleMainPage = {
     fromApi: { dataDD: ChequeCreditbooksDD },
     temp: { dataDD: ChequeCreditbooksHistoryDD },
     tempCreatePlan: { dataDD: ChequeCreditbooksHistoryLineDD },
-    chequeBookOrPayingIn: { dataDD: CheckBookOrPayingInDD }
+    chequeBookOrPayingIn: { dataDD: CheckBookOrPayingInDD },
+    selectedBook: {dataDD: NatNumDd}
     // tempData: ChequeCreditbooksHistoryLineDD
   },
   modals: [ { modal: OrderChequeBookOrPayingInModalPD } ],

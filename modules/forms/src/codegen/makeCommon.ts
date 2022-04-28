@@ -7,7 +7,7 @@ import { DirectorySpec, loadFile } from "@focuson/files";
 import { isCommonLens, RestD, unique } from "../common/restD";
 import { sortedEntries } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
-import { AppConfig } from "../focuson.config";
+import { AppConfig } from "../appConfig";
 
 export function makeFullState<B, G> ( params: TSParams, pds: PageD<B, G>[] ): string[] {
   const hasDomains = addStringToEndOfAllButLast ( ',' ) ( allMainPages ( pds ).map ( d => hasDomainForPage ( d ) ) )

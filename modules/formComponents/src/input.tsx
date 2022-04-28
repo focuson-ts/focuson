@@ -22,7 +22,7 @@ export const Input = <T extends any> ( tProps: TransformerProps<T> ) => {
   }
 }
 
-export const InputString = Input<string> ( StringTransformer )
-export const InputNumber = Input<number> ( NumberTransformer )
-export const InputBoolean = Input<boolean> ( BooleanTransformer )
+export const StringInput = Input<string> ( StringTransformer )
+export const NumberInput = Input<number> ( NumberTransformer )
+export const BooleanInput = Input<boolean> ( BooleanTransformer )
 

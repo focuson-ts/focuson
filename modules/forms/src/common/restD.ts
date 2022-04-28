@@ -162,8 +162,8 @@ export function unique<T> ( ts: T[] | undefined, tagFn: ( t: T ) => string ): T[
 
 export function makeParamValueForTest<G> ( r: RestD<G>, restAction: RestAction ) {
   let visibleParams = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
-  const paramsInCorrectOrder = [ ...visibleParams.filter ( ( [ name, p ] ) => isRestLens ( p ) ), ...visibleParams.filter ( ( [ name, p ] ) => !isRestLens ( p ) ) ]
-  return Object.fromEntries ( paramsInCorrectOrder.map ( ( [ name, v ] ) => [ name, v.testValue ] ) )
+  // const paramsInCorrectOrder = [ ...visibleParams.filter ( ( [ name, p ] ) => isRestLens ( p ) ), ...visibleParams.filter ( ( [ name, p ] ) => !isRestLens ( p ) ) ]
+  return Object.fromEntries ( visibleParams.map ( ( [ name, v ] ) => [ name, v.testValue ] ) )
 }
 export function makeCommonValueForTest<G> ( r: RestD<G>, restAction: RestAction ) {
   let visibleParams = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );

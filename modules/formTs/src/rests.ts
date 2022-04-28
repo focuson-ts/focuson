@@ -12,7 +12,7 @@ import { AccountOverview_AccountOverviewExcessInfoRestDetails } from './AccountO
 import { AccountOverview_AccountOverviewRestDetails } from './AccountOverview/AccountOverview.rests';
 import { AccountOverview_AccountOverviewOptOutRestDetails } from './AccountOverview/AccountOverview.rests';
 import { AccountOverview_AccountOverviewReasonRestDetails } from './AccountOverview/AccountOverview.rests';
-import { JointAccount_JointAccountRestDetails } from './JointAccount/JointAccount.rests';
+import { JointAccount_pre_JointAccountRestDetails } from './JointAccount/JointAccount.rests';
 import { OccupationAndIncomeSummary_AdditionalInformationRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
 import { OccupationAndIncomeSummary_BusinessDetailsMainRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
 import { OccupationAndIncomeSummary_DropdownsRestDetails } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.rests';
@@ -39,7 +39,7 @@ export const restDetails: RestDetails<FState, SimpleMessage> = {
    AccountOverview_AccountOverviewRestDetails: AccountOverview_AccountOverviewRestDetails(commonIds, defaultDateFn),
    AccountOverview_AccountOverviewOptOutRestDetails: AccountOverview_AccountOverviewOptOutRestDetails(commonIds, defaultDateFn),
    AccountOverview_AccountOverviewReasonRestDetails: AccountOverview_AccountOverviewReasonRestDetails(commonIds, defaultDateFn),
-   JointAccount_JointAccountRestDetails: JointAccount_JointAccountRestDetails(commonIds, defaultDateFn),
+   JointAccount_pre_JointAccountRestDetails: JointAccount_pre_JointAccountRestDetails(commonIds, defaultDateFn),
    OccupationAndIncomeSummary_AdditionalInformationRestDetails: OccupationAndIncomeSummary_AdditionalInformationRestDetails(commonIds, defaultDateFn),
    OccupationAndIncomeSummary_BusinessDetailsMainRestDetails: OccupationAndIncomeSummary_BusinessDetailsMainRestDetails(commonIds, defaultDateFn),
    OccupationAndIncomeSummary_DropdownsRestDetails: OccupationAndIncomeSummary_DropdownsRestDetails(commonIds, defaultDateFn),

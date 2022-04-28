@@ -14,20 +14,27 @@ export interface TableProps<S, T, Context> extends CommonStateProps<S, T[], Cont
 }
 
 export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, copySelectedItemTo }: TableProps<S, T, Context> ) {
-  const orderJsx = order.map ( o => <th key={o.toString ()} id={`header-${0})}`}>{decamelize ( o.toString (), ' ' )}</th> )
+  const orderJsx = order.map ( ( o, i ) => <th key={o.toString ()} id={`${id}.th[${i}]`}>{decamelize ( o.toString (), ' ' )}</th> )
   const json: T[] = safeArray ( state.optJson () )
   const onClick = ( row: number ) => ( e: any ) => {
-    console.log ( 'clicked row ', row )
-    const indexTx: Transform<S, number>[] = copySelectedIndexTo ? [ [ copySelectedIndexTo.optional, () => row ] ] : []
-    const itemTx: Transform<S, T>[] = copySelectedItemTo ? [ [ copySelectedItemTo.optional, () => json[ row ] ] ] : []
-    state.massTransform ( reasonFor ( 'Table', 'onClick', id, `selected row ${row}` ) ) ( ...[ ...indexTx, ...itemTx ] )
-  };
+    if ( copySelectedIndexTo || copySelectedItemTo ) {
+      console.log ( 'clicked row ', row )
+      const indexTx: Transform<S, number>[] = copySelectedIndexTo ? [ [ copySelectedIndexTo.optional, () => row ] ] : []
+      const itemTx: Transform<S, T>[] = copySelectedItemTo ? [ [ copySelectedItemTo.optional, () => json[ row ] ] ] : []
+      state.massTransform ( reasonFor ( 'Table', 'onClick', id, `selected row ${row}` ) ) ( ...[ ...indexTx, ...itemTx ] )
+    }
+  }
+  const selected = copySelectedIndexTo?.optJson ()
+  function selectedClass ( i: number ) {return i === selected ? 'bg-primary' : undefined }
   return <table id={id}>
     <thead>
     <tr>{orderJsx}</tr>
     </thead>
     <tbody>{json.map ( ( row, i ) =>
-      <tr id={`${id}[${i}]`} key={i} onClick={onClick ( i )}>{order.map ( o => <td id={`${id}[${i}].${o}`} key={o.toString ()}>{row[ o ]}</td> )}</tr> )}</tbody>
+      <tr id={`${id}[${i}]`} className={selectedClass ( i )} key={i} onClick={onClick ( i )}>{order.map ( o => {
+        const value = typeof row[ o ] === 'string' ? row[ o ] : JSON.stringify ( row[ o ] );
+        return <td id={`${id}[${i}].${o}`} key={o.toString ()}>{value}</td>
+      } )}</tr> )}</tbody>
   </table>
 }
 

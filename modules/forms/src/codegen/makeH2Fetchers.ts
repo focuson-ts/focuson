@@ -37,7 +37,7 @@ export function makeH2Fetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
     `  @Autowired`,
     `  private DataSource dataSource;`,
     ``,
-    `  public DataFetcher ${resolverName ( rest.dataDD, defaultRestAction.get )}() {`,
+    `  public DataFetcher ${resolverName ( rest, defaultRestAction.get )}() {`,
     `    return dataFetchingEnvironment -> {`,
     ...indentList ( indentList ( indentList ( paramVariables ) ) ),
     `       Connection c = dataSource.getConnection();`,

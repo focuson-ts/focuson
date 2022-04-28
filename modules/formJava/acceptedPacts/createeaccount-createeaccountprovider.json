@@ -7,12 +7,13 @@
   },
   "interactions": [
     {
-      "description": "a rest for CreateEAccount eTransfer get",
+      "description": "a rest for CreateEAccount eTransfer create",
       "providerState": "default",
       "request": {
-        "method": "GET",
+        "method": "POST",
         "path": "/api/createEAccount/",
-        "query": "accountId=accId&createPlanId=tbd&customerId=custId"
+        "query": "accountId=accId&customerId=custId",
+        "body": "{\"name\":\"This is a one line string\",\"type\":\"checking\",\"savingsStyle\":\"adHoc\",\"initialAmount\":123}"
       },
       "response": {
         "status": 200,
@@ -27,13 +28,12 @@
       }
     },
     {
-      "description": "a rest for CreateEAccount eTransfer create",
+      "description": "a rest for CreateEAccount eTransfer get",
       "providerState": "default",
       "request": {
-        "method": "POST",
+        "method": "GET",
         "path": "/api/createEAccount/",
-        "query": "accountId=accId&customerId=custId",
-        "body": "{\"name\":\"This is a one line string\",\"type\":\"checking\",\"savingsStyle\":\"adHoc\",\"initialAmount\":123}"
+        "query": "accountId=accId&createPlanId=tbd&customerId=custId"
       },
       "response": {
         "status": 200,

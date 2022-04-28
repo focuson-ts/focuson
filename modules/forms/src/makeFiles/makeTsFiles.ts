@@ -16,11 +16,11 @@ import { domainsFileName, emptyFileName, fetcherFileName, guardReportFileName, o
 import { makeOneStory } from "../codegen/makeStories";
 import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { MakeButton } from "../codegen/makeButtons";
-import { AppConfig } from "../focuson.config";
 import { makeAllPactsForPage } from "../codegen/makePacts2";
 import { makeOptionals } from "../codegen/makeOptionals";
 import { mainPage } from "@focuson/pages";
 import { makeGuardsReportForPage } from "../reporting/report";
+import { AppConfig } from "../appConfig";
 
 export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, appConfig: AppConfig, tsRoot: string, params: TSParams, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G>, directorySpec: DirectorySpec ) =>
   <B extends ButtonD> ( mainPs: MainPageD<B, G>[], allPages: PageD<B, G>[] ) => {

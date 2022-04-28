@@ -48,8 +48,8 @@ describe ( "makeCommonParamsValueForTest", () => {
     } )
   } )
 
-  it ( "should ensure the common lens come last, as that is what happens 'in the real'", () => {
+  it ( "should work with a mixture of common lens and normal lens", () => {
     expect ( JSON.stringify ( makeParamValueForTest ( arrearsDetailsRestD, 'get' ) ).replace ( /"/g, "'" ) ).toEqual (
-      "{'startDate':'2020-01-20','accountId':'accId','customerId':'custId'}" )
+      "{'accountId':'accId','customerId':'custId','startDate':'2020-01-20'}" )
   } )
 } )

@@ -38,5 +38,6 @@ export interface RestButtonInPage<G> extends EnabledBy {
   confirm?: boolean;
   result?: RestResult;
   validate?: boolean;
+
 }
 

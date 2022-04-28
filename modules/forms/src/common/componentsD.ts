@@ -43,6 +43,24 @@ export const intValidationParams: DisplayCompParamD = {
   min: { paramType: 'object', needed: 'no' },
   max: { paramType: 'object', needed: 'no' },
 }
+export const commonInputParams: DisplayCompParamD = {
+  ...commonParams,
+}
+export const StringInputCD: DisplayCompD = {
+  import: "@focuson/form_components", name: "StringInput",
+  params: { ...commonInputParams, ...stringValidationParams }
+}
+
+export const NumberInputCD: DisplayCompD = {
+  import: "@focuson/form_components", name: "NumberInput",
+  params: { ...commonInputParams, ...intValidationParams }
+}
+
+export const CheckboxInputCD: DisplayCompD = {
+  import: "@focuson/form_components", name: "BooleanInput",
+  params: commonInputParams
+}
+
 export const commonParamsWithLabel: DisplayCompParamD = {
   ...commonParams,
   label: { paramType: 'string', needed: 'defaultToCamelCaseOfName' },
@@ -58,16 +76,14 @@ export const LabelAndNumberInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndNumberInput",
   params: { ...commonParamsWithLabel, ...intValidationParams }
 }
-export const YourCD: DisplayCompD = {
-  import: "@focuson/form_components", name: "LabelAndNumberInput",
-  params: { ...commonParamsWithLabel, pathToTheFlags:{paramType: 'pageState', needed: 'yes'}
- }
-}
 
 export const LabelAndCheckboxInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndBooleanInput",
   params: commonParamsWithLabel
 }
+
+
+
 //The data about to use a react component.
 export const TableCD: DisplayCompD = {
   import: "@focuson/form_components",   //so that I can write the import statement for the react component

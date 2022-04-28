@@ -7,7 +7,7 @@ export const ChequeCreditbooksHistoryLineDD: DataD<AllGuards> = {
   name: "ChequeCreditbooksHistoryLine",
   description: "The create plan data (actually just put in one place to allow a test for a structure)",
   structure: {
-    serialNumber: { dataDD: { ...IntegerDD, sample: [ 937453 ] } ,},
+    serialNumber: { dataDD: { ...IntegerDD, sample: [ 937453 ] }, },
     howOrdered: { dataDD: OneLineStringDD, sample: [ 'Manually' ] },
     dateOrder: { dataDD: DateDD, sample: [ '2022-10-01' ] }
   }
@@ -18,7 +18,7 @@ export const ChequeCreditbooksHistoryDD: RepeatingDataD<AllGuards> = {
   description: "The history of how cheque and credit books have been ordered",
   dataDD: ChequeCreditbooksHistoryLineDD,
   display: TableCD,
-  displayParams: { order: [ 'serialNumber', 'howOrdered', 'dateOrder' ] }
+  displayParams: { order: [ 'serialNumber', 'howOrdered', 'dateOrder' ], copySelectedIndexTo: ['selectedBook'] }
 }
 export const ChequeCreditbooksDD: DataD<AllGuards> = {
   name: "ChequeCreditbooks",
