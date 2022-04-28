@@ -55,12 +55,11 @@ export interface MultipleEntity extends CommonEntity {  //parent id is in the ch
   type: 'Multiple';
   idInParent: string;
   idInThis: string;
-  linkInData: { mapName: string, field: string, link: string }
   filterPath?: string
 }
 export function isMultipleEntity ( e: Entity ): e is MultipleEntity {
   // @ts-ignore
-  return e.linkInData != undefined
+  return e.type === 'Multiple'
 }
 export interface SingleEntity extends CommonEntity { //child id is in the parent
   type: 'Single'
@@ -414,7 +413,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
     .filter ( taf => taf.fieldData.fieldName )
     .sort ( ( l, r ) => l.table.name.localeCompare ( r.table.name ) )
     .sort ( ( l, r ) => l.fieldData.dbFieldName.localeCompare ( r.fieldData.dbFieldName ) )
-    .map ( taf => `this.${mapName ( taf.fieldData.path.slice ( 0, -1 ) )}.put("${taf.fieldData.fieldName}", rs.${taf.fieldData.rsGetter}("${sqlTafFieldName ( taf )}"));` )
+    .map ( taf => `this.${mapName ( safeArray(taf.fieldData.path).slice ( 0, -1 ) )}.put("${taf.fieldData.fieldName}", rs.${taf.fieldData.rsGetter}("${sqlTafFieldName ( taf )}"));` )
   const setIds = onlyIds.map ( taf => `this.${sqlTafFieldName ( taf )} = rs.${taf.fieldData.rsGetter}("${sqlTafFieldName ( taf )}");` )
   const allPaths = unique ( flatMapDD<string[], G> ( restD.dataDD, {
     ...emptyDataFlatMap (),
@@ -425,12 +424,17 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
   const links = allPaths.filter ( p => p.length > 0 )
     .filter ( p => p.join ( "/" ).startsWith ( safeString ( ld.sqlRoot.filterPath ) ) )
     .map ( path => `${mapName ( path.slice ( 0, -1 ) )}.put("${path[ path.length - 1 ]}", ${mapName ( path )});` )
-  const linksToOtherMaps = ld.sqlRoot.children.map ( ( childRoot, i ) => {
+
+  const linksMultipleEntities = (sqlRoot: SqlRoot ) => allPaths.filter (p => p.length > 1 )
+    .filter ( ( p: string[] ) => p.join ( "/" ).startsWith ( safeString ( sqlRoot.filterPath ) ) )
+    .map ( path => [ path[ path.length - 1 ], mapName ( path ) ] );
+
+  const linksToOtherMaps: string[] = ld.sqlRoot.children.flatMap ( (childRoot, i ) => {
     let childEntity = childRoot.root
     if ( !isMultipleEntity ( childEntity ) ) throw Error ( `Page: ${p.name} rest ${restName} The parent of sql root must be a multiple entity.\n ${JSON.stringify ( childRoot )}` )
     if ( childRoot.children.length > 0 )
       throw Error ( `Page: ${p.name} rest ${restName} has nested 'multiples. Currently this is not supported` )
-    return `this.${childEntity.linkInData.mapName}.put("${childEntity.linkInData.field}", list${i}.stream().map(m ->m.${childEntity.linkInData.link}).collect(Collectors.toList()));`
+    return linksMultipleEntities ( childRoot ).map ( l => `this.${childRoot.filterPath}.put("${l[ 0 ]}", list${i}.stream().map(m ->m.${l[ 1 ]}).collect(Collectors.toList()));` )
   } );
 
   return [
@@ -521,6 +525,7 @@ interface QueryAndGetters {
   sql: string[]
 }
 export function makeAllGetsAndAllSqlForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, restD: RestD<G> ): string[] {
+  if ( restD.tables === undefined ) throw Error ( `somehow have a sql root without a tables in ${p.name} ${restName}` )
   let sqlRoot = findSqlRoot ( restD.tables );
   const getters: QueryAndGetters[] = walkSqlRoots ( sqlRoot, ( r, path ) => {
     const ld = findSqlLinkDataFromRootAndDataD ( r, restD.dataDD )
