@@ -37,7 +37,7 @@ function mappingAnnotation ( restAction: RestAction ) {
 
 function makeEndpoint<G> ( params: JavaWiringParams, r: RestD<G>, restAction: RestAction ): string[] {
   const hasDbName = safeObject ( r.params )[ 'dbName' ] !== undefined
-  const dbNameString = hasDbName ? 'dbName' : 'IFetcher.mock'
+  const dbNameString = hasDbName ? 'dbName' : `IFetcher.${params.defaultDbName}`
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,
     `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,

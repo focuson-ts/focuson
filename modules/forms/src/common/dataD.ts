@@ -1,11 +1,10 @@
 //Common Data Definitions
-import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndNumberInputCD, LabelAndStringInputCD, SimpleDisplayComp } from "./componentsD";
+import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndNumberInputCD, LabelAndStringInputCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeRender";
 import { NameAnd, safeArray } from "@focuson/utils";
 import { Guards } from "../buttons/guardButton";
 import { DBTable } from "./resolverD";
 import { DbValues } from "../codegen/makeSqlFromEntities";
-
 
 
 export interface HasSample<T> {
@@ -17,8 +16,8 @@ export interface HasEnum {
 
 export function sampleFromDataD<G> ( o: OneDataDD<G> | undefined, d: AllDataDD<G> ): string[] {
   const fromO: string[] = safeArray ( isOneDataDDForPrim<any, any, G> ( o ) ? o?.sample : [] )
-  const fromD: string[] = isPrimDd ( d ) ? [ ...safeArray<any> ( d.sample ).map ( ( t: any ) => t ), ...safeArray ( d.enum ? Object.keys ( d.enum ) : [] ) ] : []
-  return [ ...fromO, ...fromD ]
+  if (fromO.length>0) return fromO
+  return isPrimDd ( d ) ? [ ...safeArray<any> ( d.sample ).map ( ( t: any ) => t ), ...safeArray ( d.enum ? Object.keys ( d.enum ) : [] ) ] : []
 }
 
 export interface OneDataDDForPrim<D extends CommonPrimitiveDD<T>, T, G> extends HasSample<T> {

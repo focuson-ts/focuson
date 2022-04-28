@@ -6,5 +6,4 @@ export interface AppConfig {
   debug: any;
   versionNumber: string;
   tsPort: number;
-  javaPort: number
-}
+  javaPort: number;}

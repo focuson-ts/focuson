@@ -12,6 +12,7 @@ export interface JavaWiringParams {
   queriesPackage: string,
   dbPackage: string,
   schema: string;
+  defaultDbName: string
 }
 
 export interface TSParams {

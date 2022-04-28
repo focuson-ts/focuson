@@ -27,8 +27,8 @@ const addData = <G> ( start: boolean, path: string[], acc: any, d: DataD<G> ) =>
 
 export function selectSample ( i: number, ...ds: (HasSample<any> | undefined | HasEnum)[] ) {
   const enums: string[] = safeArray<any> ( ds ).flatMap ( d => sortedEntries ( d?.enum ).map ( x => x[ 0 ] ) )
-  const samples: string[] = safeArray<any> ( ds ).flatMap ( d => d ? safeArray ( d.sample ) : [] )
-  return safePick ( [ ...enums, ...samples ], i )
+  const samples: string[] = safeArray<any> ( ds ).find ( d => d?.sample && d.sample.length > 0 ).sample
+  return safePick ( enums.length > 0 ? enums : samples, i )
 }
 
 const addPrimitive = <G> ( acc: any, path: string[], one: OneDataDD<G> | undefined, d: PrimitiveDD, i: number ) =>

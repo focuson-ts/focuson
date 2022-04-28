@@ -13,7 +13,8 @@ import * as process from "process";
 import { makeCriticalReport, makeReport, makeReportData } from "../reporting/report";
 import { AppConfig } from "../appConfig";
 
-export const params: any = {
+export const params = {
+  defaultDbName: "mock",
   pagesFile: 'pages',
   commonParams: "CommonIds",
   stateName: "FState",
@@ -42,6 +43,7 @@ export const params: any = {
   sampleClass: 'Sample',
   dbPackage: 'db',
   optionalsFile: 'optionals'
+
 };
 
 export const directorySpec: DirectorySpec = {
