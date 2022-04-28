@@ -181,6 +181,13 @@ tr:hover {background-color: lightgray;}
     margin-bottom: 10px;
 }
 
+.labelAndDate {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .labelDropdown {
     display: flex;
     align-items: center;

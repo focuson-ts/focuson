@@ -81,6 +81,10 @@ export const LabelAndCheckboxInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndBooleanInput",
   params: commonParamsWithLabel
 }
+export const LabelAndDateInputCD: DisplayCompD = {
+  import: "@focuson/form_components", name: "LabelAndDateInput",
+  params: commonParamsWithLabel
+}
 
 
 
