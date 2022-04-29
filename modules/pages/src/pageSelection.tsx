@@ -31,6 +31,7 @@ export interface CopyDetails {
   from?: string;
   to?: string
 }
+
 export interface PageSelection {
   pageName: string;
   firstTime?: boolean;

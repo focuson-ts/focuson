@@ -15,10 +15,10 @@ export const samplePostCodeData0: domains.PostCodeDataDomain =
     "line4": "Ireland"
   },
   {
-    "line1": "This is a one line string",
-    "line2": "This is a one line string",
-    "line3": "This is a one line string",
-    "line4": "This is a one line string"
+    "line1": "4 Privet drive",
+    "line2": "Little Whinging",
+    "line3": "Surrey",
+    "line4": "England"
   }
 ]
 export const samplePostCodeDataLine0: domains.PostCodeDataLineDomain = 
@@ -54,10 +54,10 @@ export const samplePostCodeSearch0: domains.PostCodeSearchDomain =
       "line4": "Ireland"
     },
     {
-      "line1": "This is a one line string",
-      "line2": "This is a one line string",
-      "line3": "This is a one line string",
-      "line4": "This is a one line string"
+      "line1": "4 Privet drive",
+      "line2": "Little Whinging",
+      "line3": "Surrey",
+      "line4": "England"
     }
   ],
   "addressResults": {
@@ -106,7 +106,7 @@ export const samplePostCodeNameAndAddress1: domains.PostCodeNameAndAddressDomain
 }
 export const samplePostCodeSearch1: domains.PostCodeSearchDomain = 
 {
-  "search": "This is a one line string",
+  "search": "LS21 3EY",
   "searchResults": [
     {
       "line1": "27 Throughput Lane",
@@ -137,16 +137,16 @@ export const samplePostCodeSearch1: domains.PostCodeSearchDomain =
 export const samplePostCodeData2: domains.PostCodeDataDomain = 
 [
   {
-    "line1": "This is a one line string",
-    "line2": "This is a one line string",
-    "line3": "This is a one line string",
-    "line4": "This is a one line string"
+    "line1": "4 Privet drive",
+    "line2": "Little Whinging",
+    "line3": "Surrey",
+    "line4": "England"
   },
   {
-    "line1": "another one line string",
-    "line2": "another one line string",
-    "line3": "another one line string",
-    "line4": "another one line string"
+    "line1": "27 Throughput Lane",
+    "line2": "Woodfield",
+    "line3": "",
+    "line4": "Ireland"
   },
   {
     "line1": "4 Privet drive",
@@ -157,35 +157,35 @@ export const samplePostCodeData2: domains.PostCodeDataDomain =
 ]
 export const samplePostCodeDataLine2: domains.PostCodeDataLineDomain = 
 {
-  "line1": "This is a one line string",
-  "line2": "This is a one line string",
-  "line3": "This is a one line string",
-  "line4": "This is a one line string"
+  "line1": "4 Privet drive",
+  "line2": "Little Whinging",
+  "line3": "Surrey",
+  "line4": "England"
 }
 export const samplePostCodeNameAndAddress2: domains.PostCodeNameAndAddressDomain = 
 {
   "name": "This is a one line string",
-  "line1": "This is a one line string",
-  "line2": "This is a one line string",
-  "line3": "This is a one line string",
-  "line4": "This is a one line string",
+  "line1": "4 Privet drive",
+  "line2": "Little Whinging",
+  "line3": "Surrey",
+  "line4": "England",
   "postcode": "This is a one line string"
 }
 export const samplePostCodeSearch2: domains.PostCodeSearchDomain = 
 {
-  "search": "another one line string",
+  "search": "LS21 3EY",
   "searchResults": [
     {
-      "line1": "This is a one line string",
-      "line2": "This is a one line string",
-      "line3": "This is a one line string",
-      "line4": "This is a one line string"
+      "line1": "4 Privet drive",
+      "line2": "Little Whinging",
+      "line3": "Surrey",
+      "line4": "England"
     },
     {
-      "line1": "another one line string",
-      "line2": "another one line string",
-      "line3": "another one line string",
-      "line4": "another one line string"
+      "line1": "27 Throughput Lane",
+      "line2": "Woodfield",
+      "line3": "",
+      "line4": "Ireland"
     },
     {
       "line1": "4 Privet drive",
@@ -195,9 +195,9 @@ export const samplePostCodeSearch2: domains.PostCodeSearchDomain =
     }
   ],
   "addressResults": {
-    "line1": "This is a one line string",
-    "line2": "This is a one line string",
-    "line3": "This is a one line string",
-    "line4": "This is a one line string"
+    "line1": "4 Privet drive",
+    "line2": "Little Whinging",
+    "line3": "Surrey",
+    "line4": "England"
   }
 }

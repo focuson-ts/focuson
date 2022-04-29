@@ -6,9 +6,9 @@ export const sampleHelloWorldDomainData0: domains.HelloWorldDomainDataDomain =
 }
 export const sampleHelloWorldDomainData1: domains.HelloWorldDomainDataDomain = 
 {
-  "message": "someString"
+  "message": "Greetings message !"
 }
 export const sampleHelloWorldDomainData2: domains.HelloWorldDomainDataDomain = 
 {
-  "message": "anotherString"
+  "message": "Greetings message !"
 }

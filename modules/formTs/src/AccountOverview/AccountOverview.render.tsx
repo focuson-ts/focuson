@@ -167,7 +167,7 @@ export function AccountOverviewExcessInfo({id,state,mode,buttons}: FocusedProps<
 
 export function AccountOverviewFacilities({id,state,mode,buttons}: FocusedProps<FState, AccountOverviewFacilitiesDomain,Context>){
   return <>
-    <Table id={`${id}.facilities`} state={state.focusOn('facilities')} mode={mode} order={["facility","changeDate","unApproved","reason","amount"]} />
+    <Table id={`${id}.facilities`} state={state.focusOn('facilities')} mode={mode} maxCount='0' order={["facility","changeDate","unApproved","reason","amount"]} />
 </>
 }
 

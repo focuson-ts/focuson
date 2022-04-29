@@ -18,7 +18,7 @@ public class Sample{
          "      \"flagValue\": false"+
          "    },"+
          "    {"+
-         "      \"flagName\": \"This is a one line string\","+
+         "      \"flagName\": \"Capitalised\","+
          "      \"flagValue\": true"+
          "    }"+
          "  ]"+
@@ -35,7 +35,7 @@ public class Sample{
          "    \"flagValue\": false"+
          "  },"+
          "  {"+
-         "    \"flagName\": \"This is a one line string\","+
+         "    \"flagName\": \"Capitalised\","+
          "    \"flagValue\": true"+
          "  }"+
          "]"
@@ -77,7 +77,7 @@ public class Sample{
          "      \"criteria\": \"Affordability check failed\""+
          "    },"+
          "    {"+
-         "      \"criteria\": \"This is a one line string\""+
+         "      \"criteria\": \"Account Management\""+
          "    }"+
          "  ],"+
          "  \"zFlagSet\": \"N\","+
@@ -96,18 +96,18 @@ public class Sample{
          "        \"amount\": 2345"+
          "      },"+
          "      {"+
-         "        \"facility\": 123,"+
-         "        \"changeDate\": \"2020-10-01\","+
+         "        \"facility\": 1234,"+
+         "        \"changeDate\": \"23-03-2022\","+
          "        \"unApproved\": true,"+
-         "        \"reason\": \"someString\","+
-         "        \"amount\": 123"+
+         "        \"reason\": \"some reason\","+
+         "        \"amount\": 2345"+
          "      },"+
          "      {"+
-         "        \"facility\": 456,"+
-         "        \"changeDate\": \"2022-14-01\","+
-         "        \"unApproved\": false,"+
-         "        \"reason\": \"anotherString\","+
-         "        \"amount\": 456"+
+         "        \"facility\": 1234,"+
+         "        \"changeDate\": \"23-03-2022\","+
+         "        \"unApproved\": true,"+
+         "        \"reason\": \"some reason\","+
+         "        \"amount\": 2345"+
          "      }"+
          "    ]"+
          "  },"+
@@ -133,7 +133,7 @@ public class Sample{
          "    \"criteria\": \"Affordability check failed\""+
          "  },"+
          "  {"+
-         "    \"criteria\": \"This is a one line string\""+
+         "    \"criteria\": \"Account Management\""+
          "  }"+
          "]"
   );
@@ -188,18 +188,18 @@ public class Sample{
          "      \"amount\": 2345"+
          "    },"+
          "    {"+
-         "      \"facility\": 123,"+
-         "      \"changeDate\": \"2020-10-01\","+
+         "      \"facility\": 1234,"+
+         "      \"changeDate\": \"23-03-2022\","+
          "      \"unApproved\": true,"+
-         "      \"reason\": \"someString\","+
-         "      \"amount\": 123"+
+         "      \"reason\": \"some reason\","+
+         "      \"amount\": 2345"+
          "    },"+
          "    {"+
-         "      \"facility\": 456,"+
-         "      \"changeDate\": \"2022-14-01\","+
-         "      \"unApproved\": false,"+
-         "      \"reason\": \"anotherString\","+
-         "      \"amount\": 456"+
+         "      \"facility\": 1234,"+
+         "      \"changeDate\": \"23-03-2022\","+
+         "      \"unApproved\": true,"+
+         "      \"reason\": \"some reason\","+
+         "      \"amount\": 2345"+
          "    }"+
          "  ]"+
          "}"
@@ -223,18 +223,18 @@ public class Sample{
          "    \"amount\": 2345"+
          "  },"+
          "  {"+
-         "    \"facility\": 123,"+
-         "    \"changeDate\": \"2020-10-01\","+
+         "    \"facility\": 1234,"+
+         "    \"changeDate\": \"23-03-2022\","+
          "    \"unApproved\": true,"+
-         "    \"reason\": \"someString\","+
-         "    \"amount\": 123"+
+         "    \"reason\": \"some reason\","+
+         "    \"amount\": 2345"+
          "  },"+
          "  {"+
-         "    \"facility\": 456,"+
-         "    \"changeDate\": \"2022-14-01\","+
-         "    \"unApproved\": false,"+
-         "    \"reason\": \"anotherString\","+
-         "    \"amount\": 456"+
+         "    \"facility\": 1234,"+
+         "    \"changeDate\": \"23-03-2022\","+
+         "    \"unApproved\": true,"+
+         "    \"reason\": \"some reason\","+
+         "    \"amount\": 2345"+
          "  }"+
          "]"
   );
@@ -496,13 +496,13 @@ public class Sample{
          "    },"+
          "    {"+
          "      \"serialNumber\": 937453,"+
-         "      \"howOrdered\": \"This is a one line string\","+
-         "      \"dateOrder\": \"2020-10-01\""+
+         "      \"howOrdered\": \"Manually\","+
+         "      \"dateOrder\": \"2022-10-01\""+
          "    },"+
          "    {"+
          "      \"serialNumber\": 937453,"+
-         "      \"howOrdered\": \"another one line string\","+
-         "      \"dateOrder\": \"2022-14-01\""+
+         "      \"howOrdered\": \"Manually\","+
+         "      \"dateOrder\": \"2022-10-01\""+
          "    }"+
          "  ]"+
          "}"
@@ -516,13 +516,13 @@ public class Sample{
          "  },"+
          "  {"+
          "    \"serialNumber\": 937453,"+
-         "    \"howOrdered\": \"This is a one line string\","+
-         "    \"dateOrder\": \"2020-10-01\""+
+         "    \"howOrdered\": \"Manually\","+
+         "    \"dateOrder\": \"2022-10-01\""+
          "  },"+
          "  {"+
          "    \"serialNumber\": 937453,"+
-         "    \"howOrdered\": \"another one line string\","+
-         "    \"dateOrder\": \"2022-14-01\""+
+         "    \"howOrdered\": \"Manually\","+
+         "    \"dateOrder\": \"2022-10-01\""+
          "  }"+
          "]"
   );
@@ -586,58 +586,58 @@ public class Sample{
          "  },"+
          "  {"+
          "    \"areYou\": \"E\","+
-         "    \"occupation\": \"someString\","+
-         "    \"customerDescription\": \"someString\","+
+         "    \"occupation\": \"W045\","+
+         "    \"customerDescription\": \"XXXXXXXXX\","+
          "    \"ownShareOfTheCompany\": \"X\","+
          "    \"owningSharesPct\": \"X\","+
-         "    \"workFor\": \"someString\","+
+         "    \"workFor\": \"S.C. Bosch S.R.L.\","+
          "    \"employmentType\": \"1\","+
-         "    \"empStartDate\": \"2020-10-01\","+
-         "    \"empEndDate\": \"2020-10-01\","+
-         "    \"annualSalaryBeforeDeduction\": 123,"+
-         "    \"annualIncomeExcludingRent\": 123,"+
-         "    \"regularCommissionBonus\": 123,"+
-         "    \"whatTypeOfBusiness\": \"someString\","+
-         "    \"whatNameBusiness\": \"someString\","+
-         "    \"establishedYear\": \"someString\","+
-         "    \"annualDrawing3Yrs\": 123,"+
+         "    \"empStartDate\": \"10/2002\","+
+         "    \"empEndDate\": \"10/2003\","+
+         "    \"annualSalaryBeforeDeduction\": 20315,"+
+         "    \"annualIncomeExcludingRent\": 13255,"+
+         "    \"regularCommissionBonus\": 500,"+
+         "    \"whatTypeOfBusiness\": \"Electrical Technical Support\","+
+         "    \"whatNameBusiness\": \"XXXXXXXXX\","+
+         "    \"establishedYear\": \"2006-04-01T00:00:00.000+01:00\","+
+         "    \"annualDrawing3Yrs\": 100000,"+
          "    \"otherSourceOfIncome\": \"X\","+
-         "    \"createdBy\": \"someString\","+
-         "    \"createdDate\": \"2020-10-01\","+
-         "    \"employerName\": \"someString\","+
-         "    \"sePositionHeld\": \"someString\","+
-         "    \"occupationCategory\": \"someString\","+
-         "    \"empEmploymentSeq\": 123,"+
-         "    \"empAppRoleSeq\": 123,"+
-         "    \"accountantAppRoleSeq\": 123,"+
+         "    \"createdBy\": \"Seras Alin\","+
+         "    \"createdDate\": \"2007-07-03T10:52:27.000+01:00\","+
+         "    \"employerName\": \"My employer name\","+
+         "    \"sePositionHeld\": \"DIR\","+
+         "    \"occupationCategory\": \"SK\","+
+         "    \"empEmploymentSeq\": 999999,"+
+         "    \"empAppRoleSeq\": 14648851,"+
+         "    \"accountantAppRoleSeq\": 14648851,"+
          "    \"currentEmployment\": \"X\""+
          "  },"+
          "  {"+
          "    \"areYou\": \"H\","+
-         "    \"occupation\": \"anotherString\","+
-         "    \"customerDescription\": \"anotherString\","+
+         "    \"occupation\": \"W045\","+
+         "    \"customerDescription\": \"XXXXXXXXX\","+
          "    \"ownShareOfTheCompany\": \"Y\","+
          "    \"owningSharesPct\": \"Y\","+
-         "    \"workFor\": \"anotherString\","+
+         "    \"workFor\": \"S.C. Bosch S.R.L.\","+
          "    \"employmentType\": \"2\","+
-         "    \"empStartDate\": \"2022-14-01\","+
-         "    \"empEndDate\": \"2022-14-01\","+
-         "    \"annualSalaryBeforeDeduction\": 456,"+
-         "    \"annualIncomeExcludingRent\": 456,"+
-         "    \"regularCommissionBonus\": 456,"+
-         "    \"whatTypeOfBusiness\": \"anotherString\","+
-         "    \"whatNameBusiness\": \"anotherString\","+
-         "    \"establishedYear\": \"anotherString\","+
-         "    \"annualDrawing3Yrs\": 456,"+
+         "    \"empStartDate\": \"10/2002\","+
+         "    \"empEndDate\": \"10/2003\","+
+         "    \"annualSalaryBeforeDeduction\": 20315,"+
+         "    \"annualIncomeExcludingRent\": 13255,"+
+         "    \"regularCommissionBonus\": 500,"+
+         "    \"whatTypeOfBusiness\": \"Electrical Technical Support\","+
+         "    \"whatNameBusiness\": \"XXXXXXXXX\","+
+         "    \"establishedYear\": \"2006-04-01T00:00:00.000+01:00\","+
+         "    \"annualDrawing3Yrs\": 100000,"+
          "    \"otherSourceOfIncome\": \"Y\","+
-         "    \"createdBy\": \"anotherString\","+
-         "    \"createdDate\": \"2022-14-01\","+
-         "    \"employerName\": \"anotherString\","+
-         "    \"sePositionHeld\": \"anotherString\","+
-         "    \"occupationCategory\": \"anotherString\","+
-         "    \"empEmploymentSeq\": 456,"+
-         "    \"empAppRoleSeq\": 456,"+
-         "    \"accountantAppRoleSeq\": 456,"+
+         "    \"createdBy\": \"Seras Alin\","+
+         "    \"createdDate\": \"2007-07-03T10:52:27.000+01:00\","+
+         "    \"employerName\": \"My employer name\","+
+         "    \"sePositionHeld\": \"DIR\","+
+         "    \"occupationCategory\": \"SK\","+
+         "    \"empEmploymentSeq\": 999999,"+
+         "    \"empAppRoleSeq\": 14648851,"+
+         "    \"accountantAppRoleSeq\": 14648851,"+
          "    \"currentEmployment\": \"Y\""+
          "  }"+
          "]"
@@ -688,18 +688,18 @@ public class Sample{
          "    {"+
          "      \"accountId\": 3233450,"+
          "      \"displayType\": \"savings\","+
-         "      \"description\": \"This is a one line string\","+
+         "      \"description\": \"another description\","+
          "      \"virtualBankSeq\": \"seq2\","+
          "      \"total\": 2991,"+
-         "      \"frequency\": \"This is a one line string\""+
+         "      \"frequency\": \"23\""+
          "    },"+
          "    {"+
          "      \"accountId\": 4333450,"+
-         "      \"displayType\": \"This is a one line string\","+
-         "      \"description\": \"another one line string\","+
+         "      \"displayType\": \"checking\","+
+         "      \"description\": \"This account has a description\","+
          "      \"virtualBankSeq\": \"seq3\","+
          "      \"total\": 1000,"+
-         "      \"frequency\": \"another one line string\""+
+         "      \"frequency\": \"23\""+
          "    }"+
          "  ],"+
          "  \"totalMonthlyCost\": 1000,"+
@@ -725,18 +725,18 @@ public class Sample{
          "  {"+
          "    \"accountId\": 3233450,"+
          "    \"displayType\": \"savings\","+
-         "    \"description\": \"This is a one line string\","+
+         "    \"description\": \"another description\","+
          "    \"virtualBankSeq\": \"seq2\","+
          "    \"total\": 2991,"+
-         "    \"frequency\": \"This is a one line string\""+
+         "    \"frequency\": \"23\""+
          "  },"+
          "  {"+
          "    \"accountId\": 4333450,"+
-         "    \"displayType\": \"This is a one line string\","+
-         "    \"description\": \"another one line string\","+
+         "    \"displayType\": \"checking\","+
+         "    \"description\": \"This account has a description\","+
          "    \"virtualBankSeq\": \"seq3\","+
          "    \"total\": 1000,"+
-         "    \"frequency\": \"another one line string\""+
+         "    \"frequency\": \"23\""+
          "  }"+
          "]"
   );
@@ -871,12 +871,12 @@ public class Sample{
          "      \"descTypeName\": \"Engineer\""+
          "    },"+
          "    {"+
-         "      \"descTypeValue\": \"someString\","+
-         "      \"descTypeName\": \"someString\""+
+         "      \"descTypeValue\": \"W54\","+
+         "      \"descTypeName\": \"Engineer\""+
          "    },"+
          "    {"+
-         "      \"descTypeValue\": \"anotherString\","+
-         "      \"descTypeName\": \"anotherString\""+
+         "      \"descTypeValue\": \"W54\","+
+         "      \"descTypeName\": \"Engineer\""+
          "    }"+
          "  ]"+
          "}"
@@ -918,58 +918,58 @@ public class Sample{
          "    },"+
          "    {"+
          "      \"areYou\": \"E\","+
-         "      \"occupation\": \"someString\","+
-         "      \"customerDescription\": \"someString\","+
+         "      \"occupation\": \"W045\","+
+         "      \"customerDescription\": \"XXXXXXXXX\","+
          "      \"ownShareOfTheCompany\": \"X\","+
          "      \"owningSharesPct\": \"X\","+
-         "      \"workFor\": \"someString\","+
+         "      \"workFor\": \"S.C. Bosch S.R.L.\","+
          "      \"employmentType\": \"1\","+
-         "      \"empStartDate\": \"2020-10-01\","+
-         "      \"empEndDate\": \"2020-10-01\","+
-         "      \"annualSalaryBeforeDeduction\": 123,"+
-         "      \"annualIncomeExcludingRent\": 123,"+
-         "      \"regularCommissionBonus\": 123,"+
-         "      \"whatTypeOfBusiness\": \"someString\","+
-         "      \"whatNameBusiness\": \"someString\","+
-         "      \"establishedYear\": \"someString\","+
-         "      \"annualDrawing3Yrs\": 123,"+
+         "      \"empStartDate\": \"10/2002\","+
+         "      \"empEndDate\": \"10/2003\","+
+         "      \"annualSalaryBeforeDeduction\": 20315,"+
+         "      \"annualIncomeExcludingRent\": 13255,"+
+         "      \"regularCommissionBonus\": 500,"+
+         "      \"whatTypeOfBusiness\": \"Electrical Technical Support\","+
+         "      \"whatNameBusiness\": \"XXXXXXXXX\","+
+         "      \"establishedYear\": \"2006-04-01T00:00:00.000+01:00\","+
+         "      \"annualDrawing3Yrs\": 100000,"+
          "      \"otherSourceOfIncome\": \"X\","+
-         "      \"createdBy\": \"someString\","+
-         "      \"createdDate\": \"2020-10-01\","+
-         "      \"employerName\": \"someString\","+
-         "      \"sePositionHeld\": \"someString\","+
-         "      \"occupationCategory\": \"someString\","+
-         "      \"empEmploymentSeq\": 123,"+
-         "      \"empAppRoleSeq\": 123,"+
-         "      \"accountantAppRoleSeq\": 123,"+
+         "      \"createdBy\": \"Seras Alin\","+
+         "      \"createdDate\": \"2007-07-03T10:52:27.000+01:00\","+
+         "      \"employerName\": \"My employer name\","+
+         "      \"sePositionHeld\": \"DIR\","+
+         "      \"occupationCategory\": \"SK\","+
+         "      \"empEmploymentSeq\": 999999,"+
+         "      \"empAppRoleSeq\": 14648851,"+
+         "      \"accountantAppRoleSeq\": 14648851,"+
          "      \"currentEmployment\": \"X\""+
          "    },"+
          "    {"+
          "      \"areYou\": \"H\","+
-         "      \"occupation\": \"anotherString\","+
-         "      \"customerDescription\": \"anotherString\","+
+         "      \"occupation\": \"W045\","+
+         "      \"customerDescription\": \"XXXXXXXXX\","+
          "      \"ownShareOfTheCompany\": \"Y\","+
          "      \"owningSharesPct\": \"Y\","+
-         "      \"workFor\": \"anotherString\","+
+         "      \"workFor\": \"S.C. Bosch S.R.L.\","+
          "      \"employmentType\": \"2\","+
-         "      \"empStartDate\": \"2022-14-01\","+
-         "      \"empEndDate\": \"2022-14-01\","+
-         "      \"annualSalaryBeforeDeduction\": 456,"+
-         "      \"annualIncomeExcludingRent\": 456,"+
-         "      \"regularCommissionBonus\": 456,"+
-         "      \"whatTypeOfBusiness\": \"anotherString\","+
-         "      \"whatNameBusiness\": \"anotherString\","+
-         "      \"establishedYear\": \"anotherString\","+
-         "      \"annualDrawing3Yrs\": 456,"+
+         "      \"empStartDate\": \"10/2002\","+
+         "      \"empEndDate\": \"10/2003\","+
+         "      \"annualSalaryBeforeDeduction\": 20315,"+
+         "      \"annualIncomeExcludingRent\": 13255,"+
+         "      \"regularCommissionBonus\": 500,"+
+         "      \"whatTypeOfBusiness\": \"Electrical Technical Support\","+
+         "      \"whatNameBusiness\": \"XXXXXXXXX\","+
+         "      \"establishedYear\": \"2006-04-01T00:00:00.000+01:00\","+
+         "      \"annualDrawing3Yrs\": 100000,"+
          "      \"otherSourceOfIncome\": \"Y\","+
-         "      \"createdBy\": \"anotherString\","+
-         "      \"createdDate\": \"2022-14-01\","+
-         "      \"employerName\": \"anotherString\","+
-         "      \"sePositionHeld\": \"anotherString\","+
-         "      \"occupationCategory\": \"anotherString\","+
-         "      \"empEmploymentSeq\": 456,"+
-         "      \"empAppRoleSeq\": 456,"+
-         "      \"accountantAppRoleSeq\": 456,"+
+         "      \"createdBy\": \"Seras Alin\","+
+         "      \"createdDate\": \"2007-07-03T10:52:27.000+01:00\","+
+         "      \"employerName\": \"My employer name\","+
+         "      \"sePositionHeld\": \"DIR\","+
+         "      \"occupationCategory\": \"SK\","+
+         "      \"empEmploymentSeq\": 999999,"+
+         "      \"empAppRoleSeq\": 14648851,"+
+         "      \"accountantAppRoleSeq\": 14648851,"+
          "      \"currentEmployment\": \"Y\""+
          "    }"+
          "  ]"+
@@ -988,12 +988,12 @@ public class Sample{
          "    \"descTypeName\": \"Engineer\""+
          "  },"+
          "  {"+
-         "    \"descTypeValue\": \"someString\","+
-         "    \"descTypeName\": \"someString\""+
+         "    \"descTypeValue\": \"W54\","+
+         "    \"descTypeName\": \"Engineer\""+
          "  },"+
          "  {"+
-         "    \"descTypeValue\": \"anotherString\","+
-         "    \"descTypeName\": \"anotherString\""+
+         "    \"descTypeValue\": \"W54\","+
+         "    \"descTypeName\": \"Engineer\""+
          "  }"+
          "]"
   );
@@ -1050,10 +1050,10 @@ public class Sample{
          "    \"line4\": \"Ireland\""+
          "  },"+
          "  {"+
-         "    \"line1\": \"This is a one line string\","+
-         "    \"line2\": \"This is a one line string\","+
-         "    \"line3\": \"This is a one line string\","+
-         "    \"line4\": \"This is a one line string\""+
+         "    \"line1\": \"4 Privet drive\","+
+         "    \"line2\": \"Little Whinging\","+
+         "    \"line3\": \"Surrey\","+
+         "    \"line4\": \"England\""+
          "  }"+
          "]"
   );
@@ -1092,10 +1092,10 @@ public class Sample{
          "      \"line4\": \"Ireland\""+
          "    },"+
          "    {"+
-         "      \"line1\": \"This is a one line string\","+
-         "      \"line2\": \"This is a one line string\","+
-         "      \"line3\": \"This is a one line string\","+
-         "      \"line4\": \"This is a one line string\""+
+         "      \"line1\": \"4 Privet drive\","+
+         "      \"line2\": \"Little Whinging\","+
+         "      \"line3\": \"Surrey\","+
+         "      \"line4\": \"England\""+
          "    }"+
          "  ],"+
          "  \"addressResults\": {"+

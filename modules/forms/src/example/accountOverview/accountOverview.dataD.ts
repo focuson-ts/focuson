@@ -35,6 +35,7 @@ export const accountOverviewFacilitiesLinesDataD: ExampleRepeatingD = {
   display: TableCD,
 
   displayParams: {
+    maxCount: '0',
     order: [ "facility", "changeDate", "unApproved", "reason", "amount" ],
     // copySelectedItemTo: { value: [ 'currentSelectedExcessHistory' ] }
   },

@@ -8,7 +8,7 @@ export function checkIsFunction ( functionToCheck: any ) {
 
 export function ints ( n: number ): number[] {
   const numbers = new Array ( n );
-  for ( var i = 0; i < n; i++ ) {
+  for ( let i = 0; i < n; i++ ) {
     numbers[ i ] = i;
   }
   return numbers
@@ -62,7 +62,7 @@ export function arraysEqual<T> ( a: T[] | undefined, b: T[] | undefined ) {
   if ( !(a && b) ) return false;
   if ( a === b ) return true;
   if ( a.length !== b.length ) return false;
-  for ( var i = 0; i < a.length; ++i ) {
+  for ( let i = 0; i < a.length; ++i ) {
     if ( a[ i ] !== b[ i ] ) return false;
   }
   return true;
@@ -79,4 +79,28 @@ export interface NameAnd<T> {
 }
 export function sortedEntries<T> ( a: NameAnd<T> | undefined ): [ string, T ][] {
   return a ? Object.entries ( a ).sort ( ( [ n1, v1 ], [ n2, v2 ] ) => n1.localeCompare ( n2 ) ) : []
+}
+
+export function findJoiner ( name: string, joiners: undefined| string | string[] ) {
+  if ( joiners === undefined ) return ','
+  if ( typeof joiners === 'string' ) return joiners
+  const j = joiners.find ( n => n.startsWith ( `${name}:` ) )
+  if ( j === undefined ) return ','
+  return j.substr ( name.length+1 )
+}
+
+export function anyIntoPrimitive( raw: any, joiner: string): string | number | boolean{
+  const t = typeof raw
+  if ( t === 'string' || t === 'boolean' || t === 'number' ) return raw
+  if ( t === 'object' ) return Object.values ( raw ).map ( v => anyIntoPrimitive (  v, joiner) ).join ( joiner )
+  if ( Array.isArray ( raw ) ) return raw.map ( v => anyIntoPrimitive ( v, joiner ) ).join ( joiner )
+  throw new Error ( `Don't know how to turn ${t} into a string. Details: '${JSON.stringify(raw)}'}` )
+}
+export function makeIntoString ( name: string, raw: any, joiners: undefined | string | string[] ): string {
+  const t = typeof raw
+  if ( t === 'string' || t === 'boolean' || t === 'number' ) return raw
+  const joiner = findJoiner ( name, joiners )
+  if ( t === 'object' ) return Object.values ( raw ).map ( v => makeIntoString ( name, v, joiners ) ).join ( joiner )
+  if ( Array.isArray ( raw ) ) return raw.map ( v => makeIntoString ( name, v, joiners ) ).join ( joiner )
+  throw new Error ( `Cannot find value for ${name} in ${JSON.stringify ( raw )}` )
 }

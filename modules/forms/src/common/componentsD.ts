@@ -1,3 +1,5 @@
+import { LensState } from "@focuson/state";
+
 /** A state is a string[] that means 'turn into a state  'from' the current state
  * A full state is a string[] that means 'turn into a state from the root'.
  * In general 'state' doesn't break encapsulation, pagestate and fullState do. pageState is slightly cleaner becaues the damage doesn't leave the page
@@ -96,7 +98,11 @@ export const TableCD: DisplayCompD = {
     ...commonParams,
     order: { paramType: 'string[]', needed: 'yes' },
     copySelectedIndexTo: { paramType: 'pageState', needed: 'no' },
-    copySelectedItemTo: { paramType: 'pageState', needed: 'no' }
+    copySelectedItemTo: { paramType: 'pageState', needed: 'no' },
+    joiners: {paramType: 'string', needed: 'no'},
+    prefixFilter: {paramType: 'path', needed: 'no' },
+    prefixColumn: {paramType: 'string', needed: 'no' },
+    maxCount: {paramType: 'string', needed: 'no' }
   }
 }
 

@@ -99,6 +99,29 @@ describe ( "modal buttons", () => {
         mainPage: { "temp": { "data": "data" } }
       } )
     } )
+    it ( "should copyJustString", () => {
+      var remembered: any = {}
+      const state = { ...emptyS, a: { x: 'somedata', y: 'other' } }
+      const button = displayAndGetButton ( state, s => remembered = s, state =>
+        <ModalButton text='someTitle' id='someId' state={state} copyJustString={[ { from: '/a', to: '/b', joiner: '*' } ]} focusOn={'~/temp'} modal={'someModal'} pageMode='view'/> )
+      button.simulate ( 'click' )
+      expect ( remembered ).toEqual ( {
+        ...state,
+        "b": "somedata*other",
+        "pageSelection": [ { "pageName": "mainPage", "pageMode": "view" }, { "focusOn": "~/temp", "firstTime": true, "pageMode": "view", "pageName": "someModal" } ]
+      } )
+    } )
+    it ( "should handle copyJustString when target is not there", () => {
+      var remembered: any = {}
+      const button = displayAndGetButton ( emptyS, s => remembered = s, state =>
+        <ModalButton text='someTitle' id='someId' state={state} copyJustString={[ { from: '/a', to: '/b', joiner: '*' } ]} focusOn={'~/temp'} modal={'someModal'} pageMode='view'/> )
+      button.simulate ( 'click' )
+      expect ( remembered ).toEqual ( {
+        ...emptyS,
+        "pageSelection": [ { "pageName": "mainPage", "pageMode": "view" }, { "focusOn": "~/temp", "firstTime": true, "pageMode": "view", "pageName": "someModal" } ]
+      } )
+    } )
+
     it ( "should create empty, then copy back", () => {
       var remembered: any = {}
       displayAndGetButton ( emptyS, s => remembered = s, state =>

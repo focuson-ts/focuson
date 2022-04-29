@@ -17,7 +17,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
   const onChange = ( e: any ) => state.setJson ( e.target.value, reasonFor ( 'LabelAndDate', 'onChange', id ) );
   return (<div className='labelAndDate'>
       <Label state={state} htmlFor={name} label={label}/>
-      <input {...props} type='date' onChange={onChange} value={state.json () }/>
+      <input {...props} type='date' readOnly={mode === 'view'} onChange={onChange} value={state.json ()}/>
       {makeButtons ( props.allButtons, props.buttons )}
     </div>
   )

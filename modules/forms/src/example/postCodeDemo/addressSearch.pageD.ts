@@ -40,7 +40,7 @@ export const PostCodeMainPage: ExampleMainPage = {
     search: {
       control: 'ModalButton', modal: PostCodeModalPage, mode: 'edit',
       focusOn: '~/postcode',
-      copy: { from: '~/main/postcode', to: '~/postcode/search' },
+      copyJustString: { from: '~/main/postcode', to: '~/postcode/search' },
       copyOnClose: [
         { from: '~/postcode/addressResults/line1', to: '~/main/line1' },
         { from: '~/postcode/addressResults/line2', to: '~/main/line2' },

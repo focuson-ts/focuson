@@ -12,7 +12,7 @@ export const sampleAccountAllFlags0: domains.AccountAllFlagsDomain =
       "flagValue": false
     },
     {
-      "flagName": "This is a one line string",
+      "flagName": "Capitalised",
       "flagValue": true
     }
   ]
@@ -28,7 +28,7 @@ export const sampleAccountAllFlagsList0: domains.AccountAllFlagsListDomain =
     "flagValue": false
   },
   {
-    "flagName": "This is a one line string",
+    "flagName": "Capitalised",
     "flagValue": true
   }
 ]
@@ -54,7 +54,7 @@ export const sampleAccountOverview0: domains.AccountOverviewDomain =
       "criteria": "Affordability check failed"
     },
     {
-      "criteria": "This is a one line string"
+      "criteria": "Account Management"
     }
   ],
   "zFlagSet": "N",
@@ -73,18 +73,18 @@ export const sampleAccountOverview0: domains.AccountOverviewDomain =
         "amount": 2345
       },
       {
-        "facility": 123,
-        "changeDate": "2020-10-01",
+        "facility": 1234,
+        "changeDate": "23-03-2022",
         "unApproved": true,
-        "reason": "someString",
-        "amount": 123
+        "reason": "some reason",
+        "amount": 2345
       },
       {
-        "facility": 456,
-        "changeDate": "2022-14-01",
-        "unApproved": false,
-        "reason": "anotherString",
-        "amount": 456
+        "facility": 1234,
+        "changeDate": "23-03-2022",
+        "unApproved": true,
+        "reason": "some reason",
+        "amount": 2345
       }
     ]
   },
@@ -108,7 +108,7 @@ export const sampleAccountOverviewCriteria0: domains.AccountOverviewCriteriaDoma
     "criteria": "Affordability check failed"
   },
   {
-    "criteria": "This is a one line string"
+    "criteria": "Account Management"
   }
 ]
 export const sampleAccountOverviewCriteriaLine0: domains.AccountOverviewCriteriaLineDomain = 
@@ -158,18 +158,18 @@ export const sampleAccountOverviewFacilities0: domains.AccountOverviewFacilities
       "amount": 2345
     },
     {
-      "facility": 123,
-      "changeDate": "2020-10-01",
+      "facility": 1234,
+      "changeDate": "23-03-2022",
       "unApproved": true,
-      "reason": "someString",
-      "amount": 123
+      "reason": "some reason",
+      "amount": 2345
     },
     {
-      "facility": 456,
-      "changeDate": "2022-14-01",
-      "unApproved": false,
-      "reason": "anotherString",
-      "amount": 456
+      "facility": 1234,
+      "changeDate": "23-03-2022",
+      "unApproved": true,
+      "reason": "some reason",
+      "amount": 2345
     }
   ]
 }
@@ -191,18 +191,18 @@ export const sampleAccountOverviewFacilitiesLines0: domains.AccountOverviewFacil
     "amount": 2345
   },
   {
-    "facility": 123,
-    "changeDate": "2020-10-01",
+    "facility": 1234,
+    "changeDate": "23-03-2022",
     "unApproved": true,
-    "reason": "someString",
-    "amount": 123
+    "reason": "some reason",
+    "amount": 2345
   },
   {
-    "facility": 456,
-    "changeDate": "2022-14-01",
-    "unApproved": false,
-    "reason": "anotherString",
-    "amount": 456
+    "facility": 1234,
+    "changeDate": "23-03-2022",
+    "unApproved": true,
+    "reason": "some reason",
+    "amount": 2345
   }
 ]
 export const sampleAccountOverviewHistory0: domains.AccountOverviewHistoryDomain = 
@@ -409,9 +409,9 @@ export const sampleAccountOverview1: domains.AccountOverviewDomain =
   "accountType": "savings",
   "drawDownDate": "2022-14-01",
   "repaymentDate": "2022-14-01",
-  "propertyValue": 123,
-  "mul": 123,
-  "drawDownAmount": 123,
+  "propertyValue": 220000,
+  "mul": 173750,
+  "drawDownAmount": 90007,
   "criteria": [
     {
       "criteria": "Affordability check failed"
@@ -426,31 +426,31 @@ export const sampleAccountOverview1: domains.AccountOverviewDomain =
   "zFlagSet": "X",
   "excessSixMonths": 2,
   "bouncedDDs12Months": 1,
-  "unpaidCardOrMisuseItems": 123,
+  "unpaidCardOrMisuseItems": 0,
   "currentBalance": 563,
   "currentInterestRate": 1,
   "facilities": {
     "facilities": [
       {
-        "facility": 123,
-        "changeDate": "2020-10-01",
+        "facility": 1234,
+        "changeDate": "23-03-2022",
         "unApproved": true,
-        "reason": "someString",
-        "amount": 123
+        "reason": "some reason",
+        "amount": 2345
       },
       {
-        "facility": 123,
-        "changeDate": "2020-10-01",
+        "facility": 1234,
+        "changeDate": "23-03-2022",
         "unApproved": true,
-        "reason": "someString",
-        "amount": 123
+        "reason": "some reason",
+        "amount": 2345
       },
       {
-        "facility": 456,
-        "changeDate": "2022-14-01",
-        "unApproved": false,
-        "reason": "anotherString",
-        "amount": 456
+        "facility": 1234,
+        "changeDate": "23-03-2022",
+        "unApproved": true,
+        "reason": "some reason",
+        "amount": 2345
       }
     ]
   },
@@ -517,58 +517,58 @@ export const sampleAccountOverviewFacilities1: domains.AccountOverviewFacilities
 {
   "facilities": [
     {
-      "facility": 123,
-      "changeDate": "2020-10-01",
+      "facility": 1234,
+      "changeDate": "23-03-2022",
       "unApproved": true,
-      "reason": "someString",
-      "amount": 123
+      "reason": "some reason",
+      "amount": 2345
     },
     {
-      "facility": 123,
-      "changeDate": "2020-10-01",
+      "facility": 1234,
+      "changeDate": "23-03-2022",
       "unApproved": true,
-      "reason": "someString",
-      "amount": 123
+      "reason": "some reason",
+      "amount": 2345
     },
     {
-      "facility": 456,
-      "changeDate": "2022-14-01",
-      "unApproved": false,
-      "reason": "anotherString",
-      "amount": 456
+      "facility": 1234,
+      "changeDate": "23-03-2022",
+      "unApproved": true,
+      "reason": "some reason",
+      "amount": 2345
     }
   ]
 }
 export const sampleAccountOverviewFacilitiesLine1: domains.AccountOverviewFacilitiesLineDomain = 
 {
-  "facility": 123,
-  "changeDate": "2020-10-01",
+  "facility": 1234,
+  "changeDate": "23-03-2022",
   "unApproved": true,
-  "reason": "someString",
-  "amount": 123
+  "reason": "some reason",
+  "amount": 2345
 }
 export const sampleAccountOverviewFacilitiesLines1: domains.AccountOverviewFacilitiesLinesDomain = 
 [
   {
-    "facility": 123,
-    "changeDate": "2020-10-01",
+    "facility": 1234,
+    "changeDate": "23-03-2022",
     "unApproved": true,
-    "reason": "someString",
-    "amount": 123
+    "reason": "some reason",
+    "amount": 2345
   },
   {
-    "facility": 123,
-    "changeDate": "2020-10-01",
+    "facility": 1234,
+    "changeDate": "23-03-2022",
     "unApproved": true,
-    "reason": "someString",
-    "amount": 123
+    "reason": "some reason",
+    "amount": 2345
   },
   {
-    "facility": 456,
-    "changeDate": "2022-14-01",
-    "unApproved": false,
-    "reason": "anotherString",
-    "amount": 456
+    "facility": 1234,
+    "changeDate": "23-03-2022",
+    "unApproved": true,
+    "reason": "some reason",
+    "amount": 2345
   }
 ]
 export const sampleAccountOverviewHistory1: domains.AccountOverviewHistoryDomain = 
@@ -644,7 +644,7 @@ export const sampleAccountOverviewOptOutLines1: domains.AccountOverviewOptOutLin
 ]
 export const sampleAccountOverviewReason1: domains.AccountOverviewReasonDomain = 
 {
-  "reason": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
+  "reason": "Second charge case"
 }
 export const sampleArrearsDetails1: domains.ArrearsDetailsDomain = 
 {
@@ -736,11 +736,11 @@ export const sampleAccountAllFlags2: domains.AccountAllFlagsDomain =
 {
   "flags": [
     {
-      "flagName": "This is a one line string",
+      "flagName": "Capitalised",
       "flagValue": true
     },
     {
-      "flagName": "another one line string",
+      "flagName": "Contigent Obligations",
       "flagValue": false
     },
     {
@@ -752,11 +752,11 @@ export const sampleAccountAllFlags2: domains.AccountAllFlagsDomain =
 export const sampleAccountAllFlagsList2: domains.AccountAllFlagsListDomain = 
 [
   {
-    "flagName": "This is a one line string",
+    "flagName": "Capitalised",
     "flagValue": true
   },
   {
-    "flagName": "another one line string",
+    "flagName": "Contigent Obligations",
     "flagValue": false
   },
   {
@@ -766,24 +766,24 @@ export const sampleAccountAllFlagsList2: domains.AccountAllFlagsListDomain =
 ]
 export const sampleAccountOneFlag2: domains.AccountOneFlagDomain = 
 {
-  "flagName": "This is a one line string",
+  "flagName": "Capitalised",
   "flagValue": true
 }
 export const sampleAccountOverview2: domains.AccountOverviewDomain = 
 {
   "score": 123,
-  "accountType": "This is a one line string",
+  "accountType": "checking",
   "drawDownDate": "2020-10-01",
   "repaymentDate": "2020-10-01",
-  "propertyValue": 456,
-  "mul": 456,
-  "drawDownAmount": 456,
+  "propertyValue": 220000,
+  "mul": 173750,
+  "drawDownAmount": 90007,
   "criteria": [
     {
-      "criteria": "This is a one line string"
+      "criteria": "Account Management"
     },
     {
-      "criteria": "another one line string"
+      "criteria": "Affordability check failed"
     },
     {
       "criteria": "Account Management"
@@ -792,39 +792,39 @@ export const sampleAccountOverview2: domains.AccountOverviewDomain =
   "zFlagSet": "Y",
   "excessSixMonths": 3,
   "bouncedDDs12Months": 0,
-  "unpaidCardOrMisuseItems": 456,
+  "unpaidCardOrMisuseItems": 0,
   "currentBalance": 234,
   "currentInterestRate": 2,
   "facilities": {
     "facilities": [
       {
-        "facility": 456,
-        "changeDate": "2022-14-01",
-        "unApproved": false,
-        "reason": "anotherString",
-        "amount": 456
-      },
-      {
-        "facility": 123,
-        "changeDate": "2020-10-01",
+        "facility": 1234,
+        "changeDate": "23-03-2022",
         "unApproved": true,
-        "reason": "someString",
-        "amount": 123
+        "reason": "some reason",
+        "amount": 2345
       },
       {
-        "facility": 456,
-        "changeDate": "2022-14-01",
-        "unApproved": false,
-        "reason": "anotherString",
-        "amount": 456
+        "facility": 1234,
+        "changeDate": "23-03-2022",
+        "unApproved": true,
+        "reason": "some reason",
+        "amount": 2345
+      },
+      {
+        "facility": 1234,
+        "changeDate": "23-03-2022",
+        "unApproved": true,
+        "reason": "some reason",
+        "amount": 2345
       }
     ]
   },
-  "highBalance": 123,
-  "lowBalance": 123,
-  "pctOfFacility": 123,
-  "eightyPctFacility": 123,
-  "eightyFivePctFacility": 123
+  "highBalance": 1000,
+  "lowBalance": 23,
+  "pctOfFacility": 27,
+  "eightyPctFacility": 800,
+  "eightyFivePctFacility": 234
 }
 export const sampleAccountOverviewAgreementType2: domains.AccountOverviewAgreementTypeDomain = 
 {
@@ -834,10 +834,10 @@ export const sampleAccountOverviewAgreementType2: domains.AccountOverviewAgreeme
 export const sampleAccountOverviewCriteria2: domains.AccountOverviewCriteriaDomain = 
 [
   {
-    "criteria": "This is a one line string"
+    "criteria": "Account Management"
   },
   {
-    "criteria": "another one line string"
+    "criteria": "Affordability check failed"
   },
   {
     "criteria": "Account Management"
@@ -845,7 +845,7 @@ export const sampleAccountOverviewCriteria2: domains.AccountOverviewCriteriaDoma
 ]
 export const sampleAccountOverviewCriteriaLine2: domains.AccountOverviewCriteriaLineDomain = 
 {
-  "criteria": "This is a one line string"
+  "criteria": "Account Management"
 }
 export const sampleAccountOverviewExcessHistoryLine2: domains.AccountOverviewExcessHistoryLineDomain = 
 {
@@ -883,58 +883,58 @@ export const sampleAccountOverviewFacilities2: domains.AccountOverviewFacilities
 {
   "facilities": [
     {
-      "facility": 456,
-      "changeDate": "2022-14-01",
-      "unApproved": false,
-      "reason": "anotherString",
-      "amount": 456
-    },
-    {
-      "facility": 123,
-      "changeDate": "2020-10-01",
+      "facility": 1234,
+      "changeDate": "23-03-2022",
       "unApproved": true,
-      "reason": "someString",
-      "amount": 123
+      "reason": "some reason",
+      "amount": 2345
     },
     {
-      "facility": 456,
-      "changeDate": "2022-14-01",
-      "unApproved": false,
-      "reason": "anotherString",
-      "amount": 456
+      "facility": 1234,
+      "changeDate": "23-03-2022",
+      "unApproved": true,
+      "reason": "some reason",
+      "amount": 2345
+    },
+    {
+      "facility": 1234,
+      "changeDate": "23-03-2022",
+      "unApproved": true,
+      "reason": "some reason",
+      "amount": 2345
     }
   ]
 }
 export const sampleAccountOverviewFacilitiesLine2: domains.AccountOverviewFacilitiesLineDomain = 
 {
-  "facility": 456,
-  "changeDate": "2022-14-01",
-  "unApproved": false,
-  "reason": "anotherString",
-  "amount": 456
+  "facility": 1234,
+  "changeDate": "23-03-2022",
+  "unApproved": true,
+  "reason": "some reason",
+  "amount": 2345
 }
 export const sampleAccountOverviewFacilitiesLines2: domains.AccountOverviewFacilitiesLinesDomain = 
 [
   {
-    "facility": 456,
-    "changeDate": "2022-14-01",
-    "unApproved": false,
-    "reason": "anotherString",
-    "amount": 456
-  },
-  {
-    "facility": 123,
-    "changeDate": "2020-10-01",
+    "facility": 1234,
+    "changeDate": "23-03-2022",
     "unApproved": true,
-    "reason": "someString",
-    "amount": 123
+    "reason": "some reason",
+    "amount": 2345
   },
   {
-    "facility": 456,
-    "changeDate": "2022-14-01",
-    "unApproved": false,
-    "reason": "anotherString",
-    "amount": 456
+    "facility": 1234,
+    "changeDate": "23-03-2022",
+    "unApproved": true,
+    "reason": "some reason",
+    "amount": 2345
+  },
+  {
+    "facility": 1234,
+    "changeDate": "23-03-2022",
+    "unApproved": true,
+    "reason": "some reason",
+    "amount": 2345
   }
 ]
 export const sampleAccountOverviewHistory2: domains.AccountOverviewHistoryDomain = 

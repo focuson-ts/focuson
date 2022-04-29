@@ -1,5 +1,5 @@
 import { CommonStateProps } from "./common";
-import { decamelize, NameAnd, safeArray } from "@focuson/utils";
+import { decamelize, findJoiner, makeIntoString, NameAnd, safeArray } from "@focuson/utils";
 import { LensProps, LensState, reasonFor } from "@focuson/state";
 import { Lenses, Transform } from "@focuson/lens";
 import { PageMode } from "@focuson/pages";
@@ -11,9 +11,17 @@ export interface TableProps<S, T, Context> extends CommonStateProps<S, T[], Cont
   copySelectedIndexTo?: LensState<S, number, Context>
   /** If set then the selected index will be copied here as the table items are selected */
   copySelectedItemTo?: LensState<S, T, Context>
+  joiners?: string | string[];
+  prefixFilter?: LensState<S, string, Context>; // column is hard coded. but the prefix is in the state
+  prefixColumn?: keyof T;
+  maxCount?: string
 }
 
-export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, copySelectedItemTo }: TableProps<S, T, Context> ) {
+export function getValue<T> ( o: keyof T, row: T, joiners: undefined| string | string[] ): any {
+  let result = makeIntoString ( o.toString (), row[ o ], findJoiner ( o.toString (), joiners ) );
+  return result;
+}
+export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, copySelectedItemTo, joiners, prefixFilter, prefixColumn, maxCount }: TableProps<S, T, Context> ) {
   const orderJsx = order.map ( ( o, i ) => <th key={o.toString ()} id={`${id}.th[${i}]`}>{decamelize ( o.toString (), ' ' )}</th> )
   const json: T[] = safeArray ( state.optJson () )
   const onClick = ( row: number ) => ( e: any ) => {
@@ -26,15 +34,17 @@ export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, 
   }
   const selected = copySelectedIndexTo?.optJson ()
   function selectedClass ( i: number ) {return i === selected ? 'bg-primary' : undefined }
+
+  const prefixFilterString = prefixFilter?.optJsonOr ( '' )
+  const filtered = prefixColumn && prefixFilter ? json.filter ( t => getValue ( prefixColumn, t, joiners ).toString ().startsWith ( prefixFilterString ) ) : json
+  const withMaxCount = maxCount !== undefined ? filtered.slice ( 0,Number.parseInt(maxCount) ) : filtered
   return <table id={id}>
     <thead>
     <tr>{orderJsx}</tr>
     </thead>
-    <tbody>{json.map ( ( row, i ) =>
-      <tr id={`${id}[${i}]`} className={selectedClass ( i )} key={i} onClick={onClick ( i )}>{order.map ( o => {
-        const value = typeof row[ o ] === 'string' ? row[ o ] : JSON.stringify ( row[ o ] );
-        return <td id={`${id}[${i}].${o}`} key={o.toString ()}>{value}</td>
-      } )}</tr> )}</tbody>
+    <tbody>{withMaxCount.map ( ( row, i ) =>
+      <tr id={`${id}[${i}]`} className={selectedClass ( i )} key={i} onClick={onClick ( i )}>{order.map ( o =>
+        <td id={`${id}[${i}].${o}`} key={o.toString ()}>{getValue ( o, row, joiners )}</td> )}</tr> )}</tbody>
   </table>
 }
 

@@ -17,7 +17,7 @@ export const sampleCreateEAccountData1: domains.CreateEAccountDataDomain =
 export const sampleCreateEAccountData2: domains.CreateEAccountDataDomain = 
 {
   "name": "This is a one line string",
-  "type": "This is a one line string",
+  "type": "checking",
   "savingsStyle": "paySettime",
   "initialAmount": 123
 }
