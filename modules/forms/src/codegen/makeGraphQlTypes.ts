@@ -32,10 +32,10 @@ function theType<G> ( d: AllDataDD<G> ): string {
 // }
 
 
-export function makeOutputString ( name: string, needExtrabrackets: boolean,{ params, query, output, graphQlPostfix }: RestActionDetail ) {
+export function makeOutputString ( name: string, needExtrabrackets: boolean, { params, query, output, graphQlPostfix }: RestActionDetail ) {
   const obj = output.needsObj ? (name + (output.needsPling ? "!" : "")) : 'String'; // this String is probably the id
-  const raw =  output.needsBrackets ? "[" + obj + "]!" : obj
-  return needExtrabrackets?  "[" + raw + "]!" : raw
+  const raw = output.needsBrackets ? "[" + obj + "]!" : obj
+  return needExtrabrackets ? "[" + raw + "]!" : raw
 }
 
 
@@ -47,7 +47,7 @@ function extraParam<G> ( restD: RestD<G>, action: RestActionDetail ) {
   const prefix = ",obj: "
   if ( action.params.needsObj ) {
     if ( isDataDd ( restD.dataDD ) ) return prefix + restD.dataDD.name + "Inp!"
-    if ( isRepeatingDd ( restD.dataDD ) ) return  prefix + "[" +restD.dataDD.dataDD.name + "Inp!]!"
+    if ( isRepeatingDd ( restD.dataDD ) ) return prefix + "[" + restD.dataDD.dataDD.name + "Inp!]!"
     throw new Error ( `Don't know how to make extra param ${restD.dataDD}` )
   }
   return ""
@@ -55,8 +55,8 @@ function extraParam<G> ( restD: RestD<G>, action: RestActionDetail ) {
 export const oneQueryMutateLine = <G> ( [ restD, a, action ]: [ RestD<G>, RestAction, RestActionDetail ] ): string => {
   let rawType = rawTypeName ( restD.dataDD );
   const paramString = "(" + makeParamsString ( a ) ( restD.params ) + extraParam ( restD, action ) + ")";
-  const realParamString = paramString==='()'?'':paramString
-  const needExtrabrackets = isRepeatingDd(restD.dataDD)
+  const realParamString = paramString === '()' ? '' : paramString
+  const needExtrabrackets = isRepeatingDd ( restD.dataDD )
   return `  ${resolverName ( restD, action )}${realParamString}:${makeOutputString ( rawType, needExtrabrackets, action )}`;
 }
 
@@ -91,11 +91,12 @@ export const makeGraphQlSchema = <G> ( rs: RestD<G>[] ): string[] => {
   const { input, objs } = findMustConstructForRest ( rs )
   const doOne = ( keyword: string, suffix: string, ds: CompDataD<G>[] ): string[] => ds.flatMap ( makeSchemaBlock ( keyword, suffix ) );
 
-  return [
+  let result = [
     ...makeQueryOrMutateBlock ( rs, 'Query' ),
     ...makeQueryOrMutateBlock ( rs, 'Mutation' ),
     ...doOne ( 'type', '', objs ),
     ...doOne ( 'input', 'Inp', input )
     // ...doOne ( 'input', 'IdAndInp', inputWithId )
   ];
+  return result.length > 0 ? result : [ `type Query{notUsed: String}` ];
 }

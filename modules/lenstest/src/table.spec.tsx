@@ -2,7 +2,7 @@ import { lensState, LensState } from "@focuson/state";
 import { shallow } from "enzyme";
 import { ModalButtonStateForTest } from "./modalButton.integration.spec";
 import { enzymeSetup } from "./enzymeAdapterSetup";
-import { Table } from "@focuson/form_components";
+import { findJoiner, Table } from "@focuson/form_components";
 
 enzymeSetup ()
 
@@ -10,6 +10,7 @@ type Context = {}
 interface TableContents {
   a: number;
   b: string;
+  c?: { d: number, e: number }
 }
 interface TableStateForTest {
   contents?: TableContents[];
@@ -22,6 +23,14 @@ function displayAndGetTable ( s: TableStateForTest, setMain: ( s: TableStateForT
 }
 
 describe ( "Table", () => {
+  describe ( "'findJoiner'", () => {
+    it ( "should find the joiner for a name", () => {
+      expect ( findJoiner ( 'c', undefined ) ).toEqual ( ',' )
+      expect ( findJoiner ( 'c', 'x' ) ).toEqual ( 'x' )
+      expect ( findJoiner ( 'c', [] ) ).toEqual ( ',' )
+      expect ( findJoiner ( 'c', [ 'a:1', 'b:2', 'c:3' ] ) ).toEqual ( '3' )
+    } )
+  } )
   describe ( "empty table", () => {
     it ( "should render an empty with no selected", () => {
       const table = displayAndGetTable ( {}, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id'/> )
@@ -33,7 +42,8 @@ describe ( "Table", () => {
     } )
   } )
 
-  let twoRows = { contents: [ { a: 1, b: 'one' }, { a: 2, b: 'two' } ] };
+  let twoRows: TableStateForTest = { contents: [ { a: 1, b: 'one' }, { a: 2, b: 'two' } ] };
+  let twoRowsWithC: TableStateForTest = { contents: [ { a: 1, b: 'one', c: { d: 3, e: 4 } }, { a: 2, b: 'two', c: { d: 5, e: 6 } } ] };
   let twoRowsS0 = { ...twoRows, selected: 0 };
   let twoRowsS1 = { ...twoRows, selected: 1 };
   describe ( "table without selected", () => {
@@ -43,6 +53,20 @@ describe ( "Table", () => {
         "<thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead>" +
         "<tbody><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td></tr>" +
         "<tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td></tr></tbody></table>" )
+    } )
+    it ( "should render order a, b, c and use the joiner, when joiner is a string", () => {
+      const table = displayAndGetTable ( twoRowsWithC, s => {}, s => <Table order={[ 'a', 'b', 'c' ]} joiners='-' state={s.focusOn ( 'contents' )} id='id'/> )
+      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual (
+        "<table id='id'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead>" +
+        "<tbody><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td><td id='id[0].c'>3-4</td></tr>" +
+        "<tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td><td id='id[1].c'>5-6</td></tr></tbody></table>" )
+    } )
+    it ( "should render order a, b, c and use the joiner, when joiner is a string[]", () => {
+      const table = displayAndGetTable ( twoRowsWithC, s => {}, s => <Table order={[ 'a', 'b', 'c' ]} joiners={[ 'c:*' ]} state={s.focusOn ( 'contents' )} id='id'/> )
+      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual (
+        "<table id='id'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead>" +
+        "<tbody><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td><td id='id[0].c'>3*4</td></tr>" +
+        "<tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td><td id='id[1].c'>5*6</td></tr></tbody></table>" )
     } )
     it ( "should render order b,a", () => {
       const table = displayAndGetTable ( twoRowsS0, s => {}, s => <Table order={[ 'b', 'a' ]} state={s.focusOn ( 'contents' )} id='id'/> )

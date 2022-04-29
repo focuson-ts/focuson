@@ -11,9 +11,25 @@ export interface TableProps<S, T, Context> extends CommonStateProps<S, T[], Cont
   copySelectedIndexTo?: LensState<S, number, Context>
   /** If set then the selected index will be copied here as the table items are selected */
   copySelectedItemTo?: LensState<S, T, Context>
+  joiners?: string | string[]
+}
+export function findJoiner ( name: string, joiners: undefined| string | string[] ) {
+  if ( joiners === undefined ) return ','
+  if ( typeof joiners === 'string' ) return joiners
+  const j = joiners.find ( n => n.startsWith ( `${name}:` ) )
+  if ( j === undefined ) return ','
+  return j.substr ( name.length+1 )
+}
+export function value ( name: string, raw: any, joiners: undefined | string | string[] ): any {
+  const t = typeof raw
+  if ( t === 'string' || t === 'boolean' || t === 'number' ) return raw
+  const joiner = findJoiner ( name, joiners )
+  if ( t === 'object' ) return Object.values ( raw ).map ( v => value ( name, v, joiners ) ).join ( joiner )
+  if ( Array.isArray ( raw ) ) return raw.map ( v => value ( name, v, joiners ) ).join ( joiner )
+  throw new Error ( `Cannot find value for ${name} in ${JSON.stringify ( raw )}` )
 }
 
-export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, copySelectedItemTo }: TableProps<S, T, Context> ) {
+export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, copySelectedItemTo, joiners }: TableProps<S, T, Context> ) {
   const orderJsx = order.map ( ( o, i ) => <th key={o.toString ()} id={`${id}.th[${i}]`}>{decamelize ( o.toString (), ' ' )}</th> )
   const json: T[] = safeArray ( state.optJson () )
   const onClick = ( row: number ) => ( e: any ) => {
@@ -31,10 +47,8 @@ export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, 
     <tr>{orderJsx}</tr>
     </thead>
     <tbody>{json.map ( ( row, i ) =>
-      <tr id={`${id}[${i}]`} className={selectedClass ( i )} key={i} onClick={onClick ( i )}>{order.map ( o => {
-        const value = typeof row[ o ] === 'string' ? row[ o ] : JSON.stringify ( row[ o ] );
-        return <td id={`${id}[${i}].${o}`} key={o.toString ()}>{value}</td>
-      } )}</tr> )}</tbody>
+      <tr id={`${id}[${i}]`} className={selectedClass ( i )} key={i} onClick={onClick ( i )}>{order.map ( o =>
+        <td id={`${id}[${i}].${o}`} key={o.toString ()}>{value ( o.toString (), row[ o ], joiners )}</td> )}</tr> )}</tbody>
   </table>
 }
 
