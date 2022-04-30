@@ -1,10 +1,11 @@
 import { JavaWiringParams } from "./config";
 import { MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { sortedEntries } from "@focuson/utils";
-import { defaultRestAction, RestD } from "../common/restD";
+import { RestD } from "../common/restD";
 import { fetcherInterfaceName, fetcherName, fetcherPackageName, h2FetcherClassName, h2FetcherPackage, resolverName, sqlMapName } from "./names";
 import { indentList } from "./codegen";
 import { findParamsForTable } from "./makeSqlFromEntities";
+import { getRestTypeDetails } from "@focuson/rest";
 
 
 export function makeH2Fetchers<B, G> ( params: JavaWiringParams, pageD: MainPageD<B, G>, restName: string, rdp: RestDefnInPageProperties<G> ): string[] {
@@ -18,11 +19,11 @@ export function makeH2Fetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
       .map ( ( [ name, param ] ) =>
         `${param.javaParser}(${name})` ) ].join ( ',' )
   return [
-    ` package ${h2FetcherPackage(params, pageD)};`,
+    ` package ${h2FetcherPackage ( params, pageD )};`,
     ``,
     `import  ${params.thePackage}.${params.dbPackage}.${sqlMapName ( pageD, restName, [] )};`,
     `import  ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
-    `import  ${fetcherPackageName(params, pageD)}.${fetcherInterfaceName ( params, rdp.rest, 'get' )};`,
+    `import  ${fetcherPackageName ( params, pageD )}.${fetcherInterfaceName ( params, rdp.rest, 'get' )};`,
     `import graphql.schema.DataFetcher;`,
     `import org.springframework.beans.factory.annotation.Autowired;`,
     `import org.springframework.stereotype.Component;`,
@@ -38,7 +39,7 @@ export function makeH2Fetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
     `  @Autowired`,
     `  private DataSource dataSource;`,
     ``,
-    `  public DataFetcher ${resolverName ( rest, defaultRestAction.get )}() {`,
+    `  public DataFetcher ${resolverName ( rest, getRestTypeDetails ( 'get' ) )}() {`,
     `    return dataFetchingEnvironment -> {`,
     ...indentList ( indentList ( indentList ( paramVariables ) ) ),
     `       Connection c = dataSource.getConnection();`,

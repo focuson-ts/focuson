@@ -1,10 +1,11 @@
-import { defaultRestAction, postFixForEndpoint, RestD } from "../common/restD";
+import {  postFixForEndpoint, RestD } from "../common/restD";
 import { endPointName, queryClassName, queryName, queryPackage, restControllerName, sampleName, sqlMapName } from "./names";
 import { JavaWiringParams } from "./config";
 import { beforeSeparator, RestAction, safeObject, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction, indentList } from "./codegen";
 import { isRepeatingDd } from "../common/dataD";
 import { MainPageD } from "../common/pageD";
+import { getRestTypeDetails } from "@focuson/rest";
 
 
 function makeCommaIfHaveParams<G> ( r: RestD<G>, restAction: RestAction ) {
@@ -15,14 +16,14 @@ function makeCommaIfHaveParams<G> ( r: RestD<G>, restAction: RestAction ) {
 export function makeParamsForJava<G> ( r: RestD<G>, restAction: RestAction ): string {
   const params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
   const comma = makeCommaIfHaveParams ( r, restAction );
-  const requestParam = defaultRestAction[ restAction ].params.needsObj ? `${comma}@RequestBody String body` : ""
+  const requestParam = getRestTypeDetails(restAction ).params.needsObj ? `${comma}@RequestBody String body` : ""
   return params.map ( (( [ name, param ] ) => `@RequestParam String ${name}`) ).join ( ", " ) + requestParam
 }
 function paramsForQuery<G> ( r: RestD<G>, restAction: RestAction ): string {
   const clazz = isRepeatingDd ( r.dataDD ) ? 'List' : 'Map'
   let params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
   const comma = params.length === 0 ? '' : ', '
-  const objParam = defaultRestAction[ restAction ].params.needsObj ? `${comma}  Transform.removeQuoteFromProperties(body, ${clazz}.class)` : ""
+  const objParam = getRestTypeDetails(restAction ).params.needsObj ? `${comma}  Transform.removeQuoteFromProperties(body, ${clazz}.class)` : ""
   return params.map ( ( [ name, param ] ) => name ).join ( ", " ) + objParam
 }
 

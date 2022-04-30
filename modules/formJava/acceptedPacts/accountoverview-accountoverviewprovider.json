@@ -29,7 +29,7 @@
               "flagValue": false
             },
             {
-              "flagName": "This is a one line string",
+              "flagName": "Capitalised",
               "flagValue": true
             }
           ]
@@ -59,7 +59,7 @@
               "flagValue": false
             },
             {
-              "flagName": "This is a one line string",
+              "flagName": "Capitalised",
               "flagValue": true
             }
           ]
@@ -340,7 +340,7 @@
               "criteria": "Affordability check failed"
             },
             {
-              "criteria": "This is a one line string"
+              "criteria": "Account Management"
             }
           ],
           "zFlagSet": "N",
@@ -359,18 +359,18 @@
                 "amount": 2345
               },
               {
-                "facility": 123,
-                "changeDate": "2020-10-01",
+                "facility": 1234,
+                "changeDate": "23-03-2022",
                 "unApproved": true,
-                "reason": "someString",
-                "amount": 123
+                "reason": "some reason",
+                "amount": 2345
               },
               {
-                "facility": 456,
-                "changeDate": "2022-14-01",
-                "unApproved": false,
-                "reason": "anotherString",
-                "amount": 456
+                "facility": 1234,
+                "changeDate": "23-03-2022",
+                "unApproved": true,
+                "reason": "some reason",
+                "amount": 2345
               }
             ]
           },
@@ -410,7 +410,7 @@
               "criteria": "Affordability check failed"
             },
             {
-              "criteria": "This is a one line string"
+              "criteria": "Account Management"
             }
           ],
           "zFlagSet": "N",
@@ -429,18 +429,18 @@
                 "amount": 2345
               },
               {
-                "facility": 123,
-                "changeDate": "2020-10-01",
+                "facility": 1234,
+                "changeDate": "23-03-2022",
                 "unApproved": true,
-                "reason": "someString",
-                "amount": 123
+                "reason": "some reason",
+                "amount": 2345
               },
               {
-                "facility": 456,
-                "changeDate": "2022-14-01",
-                "unApproved": false,
-                "reason": "anotherString",
-                "amount": 456
+                "facility": 1234,
+                "changeDate": "23-03-2022",
+                "unApproved": true,
+                "reason": "some reason",
+                "amount": 2345
               }
             ]
           },

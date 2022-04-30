@@ -1,11 +1,12 @@
 import { isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { beforeSeparator, RestAction, sortedEntries } from "@focuson/utils";
 import { fetcherName, providerName, providerPactClassName, restDetailsName, sampleName } from "./names";
-import { defaultRestAction, isRestLens, makeCommonValueForTest, makeParamValueForTest, postFixForEndpoint } from "../common/restD";
+import { isRestLens, makeCommonValueForTest, makeParamValueForTest, postFixForEndpoint } from "../common/restD";
 import { TSParams } from "./config";
 import { lensFocusQueryWithSlashAndTildaFromIdentity, stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
 import { parsePath } from "@focuson/lens";
 import { filterParamsByRestAction, indentList } from "./codegen";
+import { getRestTypeDetails } from "@focuson/rest";
 
 export function makeAllPactsForPage<B, G> ( params: TSParams, page: PageD<B, G> ): string[] {
   if ( !isMainPage ( page ) ) return []
@@ -42,13 +43,15 @@ export function makeAllPactsForRest<B, G> ( params: TSParams, page: MainPageD<B,
 
 export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, restName: string, defn: RestDefnInPageProperties<G>, action: RestAction ): string[] {
   const rest = defn.rest
-  const details = defaultRestAction[ action ]
+  const details = getRestTypeDetails ( action )
   const dataD = rest.dataDD
   // const [ id, resourceIds ] = findIds ( rest )
   let paramsValueForTest = makeParamValueForTest ( rest, action );
   const requestBodyString = details.params.needsObj ? `body: JSON.stringify(${params.samplesFile}.${sampleName ( dataD )}0)` : `//no request body needed for ${action}`
-  const responseBodyString = details.output.needsObj ? `body: ${params.samplesFile}.${sampleName ( dataD )}0` : `//no response body needed for ${action}`
+  const responseBodyString = details.output.needsObj ? `body: ${params.samplesFile}.${sampleName ( dataD )}0` : `body:{}//no response body needed for ${action}`
+  const suppressExpectedResult = details.output.needsObj ? [] : [ `// @ts-ignore` ]
   const initialStateBodyTransforms = details.params.needsObj ? [ `[${lensFocusQueryWithSlashAndTildaFromIdentity ( `initialStateBodyTransform for page ${page.name} ${restName}`, params, page, defn.targetFromPath )}, () => ${params.samplesFile}.${sampleName ( dataD )}0]` ] : []
+  let expectedResult = details.output.needsObj ? `${params.samplesFile}.${sampleName ( dataD )}0` : `{}`; //Not really sure the best way to do this.
   return [
     `//Rest ${restName} ${action} pact test for ${page.name}`,
     `pactWith ( { consumer: '${page.name}', provider: '${providerName ( page )}', cors: true }, provider => {`,
@@ -79,7 +82,8 @@ export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, re
     `    const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );`,
     `    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )`,
     `    const rawExpected:any = { ...withIds, restCommands: []}`,
-    `    const expected = ${parsePath ( defn.targetFromPath, stateCodeBuilderWithSlashAndTildaFromIdentity ( params, page ) )}.set ( rawExpected, ${params.samplesFile}.${sampleName ( dataD )}0 )`,
+    ...suppressExpectedResult,
+    `    const expected = ${parsePath ( defn.targetFromPath, stateCodeBuilderWithSlashAndTildaFromIdentity ( params, page ) )}.set ( rawExpected, ${expectedResult} )`,
     `    expect ( newState.messages.length ).toEqual ( 1 )`,
     `    expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)`,
     `    expect ( { ...newState, messages: []}).toEqual ( expected )`,

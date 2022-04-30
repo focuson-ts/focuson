@@ -149,7 +149,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
       },
       willRespondWith: {
          status: 200,
-         body: samples.sampleCreatePlan0
+         body:{}//no response body needed for delete
       },
     } )
     const lensTransforms: Transform<FState,any>[] = [
@@ -158,7 +158,8 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
     const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
-    const expected = Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('tempCreatePlan').set ( rawExpected, samples.sampleCreatePlan0 )
+// @ts-ignore
+    const expected = Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('tempCreatePlan').set ( rawExpected, {} )
     expect ( newState.messages.length ).toEqual ( 1 )
     expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
     expect ( { ...newState, messages: []}).toEqual ( expected )

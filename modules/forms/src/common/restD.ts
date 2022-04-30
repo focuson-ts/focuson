@@ -1,9 +1,10 @@
 import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
-import { RestAction, safeArray, safeObject, sortedEntries } from "@focuson/utils";
+import { beforeAfterSeparator, isRestStateChange, RestAction, safeArray, safeObject, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction } from "../codegen/codegen";
 import { ResolverD } from "./resolverD";
 import { Entity, MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 import { allMainPages, MainPageD, PageD, RestDefnInPageProperties } from "./pageD";
+import { getRestTypeDetails, RestActionDetail } from "@focuson/rest";
 
 
 export type AllLensRestParams = CommonLensRestParam | LensRestParam
@@ -48,47 +49,10 @@ export function isRestLens ( a: AllLensRestParams ): a is LensRestParam {
 export interface RestParams {
   [ name: string ]: AllLensRestParams
 }
-export type QueryOrMutation = 'Query' | 'Mutation'
 
-
-export interface RestParamsDetails {
-  needsId?: boolean,
-  needsObj?: boolean
-}
-
-export interface RestOutputDetails {
-  needsBrackets?: boolean,
-  needsObj?: boolean,
-  needsPling?: boolean,
-}
-
-export interface RestActionDetail {
-  /** get, update, insert... */
-  name: RestAction,
-  method: string,
-  query: QueryOrMutation,
-  params: RestParamsDetails,
-  output: RestOutputDetails,
-  graphQPrefix: string,
-  graphQlPostfix: string
-}
 export function postFixForEndpoint<G> ( restAction: RestAction ) {
   return restAction === 'list' ? "/list" : ""
 }
-export interface RestTypeDetails {
-  [ name: string ]: RestActionDetail
-}
-
-export const defaultRestAction: RestTypeDetails = {
-  'get': { name: 'get', method: 'GET', query: 'Query', params: { needsId: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'get', graphQlPostfix: '' },
-  // 'getString': { name: 'getString', query: 'Query', params: { needsId: true }, output: { needsPling: true }, graphQPrefix: 'get', graphQlPostfix: '' }, //special for mocks
-  'getOption': { name: 'getOption', method: 'GET', query: 'Query', params: { needsId: true }, output: { needsObj: true }, graphQPrefix: 'getOption', graphQlPostfix: '' },
-  'list': { name: 'list', method: 'GET', query: 'Query', params: {}, output: { needsObj: true, needsBrackets: true, needsPling: true }, graphQPrefix: 'list', graphQlPostfix: '' },
-  'update': { name: 'update', method: 'PUT', query: 'Mutation', params: { needsId: true, needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'update', graphQlPostfix: '' },
-  'create': { name: 'create', method: 'POST', query: 'Mutation', params: { needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'create', graphQlPostfix: '' },
-  'delete': { name: 'delete', method: 'DELETE', query: 'Mutation', params: { needsId: true }, output: { needsObj: true }, graphQPrefix: 'delete', graphQlPostfix: '' },
-}
-
 
 export interface RestD<G> {
   /** Only used for dedupping when the dataDd is repeated */
@@ -106,8 +70,7 @@ export interface EntityAndWhere {
   where: WhereFromQuery[],
 }
 
-export const actionDetail = ( r: RestAction ): RestActionDetail => defaultRestAction[ r ];
-export const actionDetails = <G> ( r: RestD<G> ): RestActionDetail[] => r.actions.map ( actionDetail );
+export const actionDetails = <G> ( r: RestD<G> ): RestActionDetail[] => r.actions.map ( getRestTypeDetails );
 
 export function flapMapActionDetails<Acc, G> ( r: RestD<G>, fn: ( r: RestD<G>, rt: RestActionDetail ) => Acc[] ): Acc[] {
   return actionDetails ( r ).flatMap ( rt => fn ( r, rt ) )
@@ -138,7 +101,7 @@ export function findDataDsAndRestTypeDetails<G> ( r: RestD<G> ): [ CompDataD<G>,
 }
 export function findUniqueDataDsAndRestTypeDetails<G> ( rs: RestD<G>[] ): [ RestD<G>, RestAction, RestActionDetail ][] {
   const nonUnique: [ RestD<G>, RestAction, RestActionDetail ][] = rs.flatMap ( r => {
-    var x: [ RestD<G>, RestAction, RestActionDetail ][] = r.actions.map ( a => [ r, a, defaultRestAction[ a ] ] )
+    var x: [ RestD<G>, RestAction, RestActionDetail ][] = r.actions.map ( a => [ r, a, getRestTypeDetails ( a ) ] )
     return x
   } )
   return unique<[ RestD<G>, RestAction, RestActionDetail ]> ( nonUnique, ( [ restD, a, rad ] ) => restD.dataDD.name + "," + a )

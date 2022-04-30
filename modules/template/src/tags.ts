@@ -1,10 +1,10 @@
 import { expand } from "./template";
 import { GetNameFn, NameAndLens, Optional } from "@focuson/lens";
-import { RestAction } from "@focuson/utils";
+import { isRestStateChange, RestAction } from "@focuson/utils";
 
 
 export type Tags = (string | undefined)[]
-export type NamePlusTags = [string,string | undefined][]
+export type NamePlusTags = [ string, string | undefined ][]
 
 export interface HasTagHolder {
   tags: TagHolder
@@ -71,6 +71,7 @@ export const url: TagOpsFn<( urlTemplate: string ) => string> =
                ( urlConfig, restAction ) => s =>
                  urlTemplate => expand ( nameToLens ( urlConfig, restAction ) ) ( urlTemplate ) ( s )
 export function methodFor ( r: RestAction ) {
+  if ( isRestStateChange ( r ) ) return 'post'
   return {
     get: 'get', getOption: 'get', list: 'get',
     delete: 'delete', create: 'post', update: 'put'

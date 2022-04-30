@@ -27,13 +27,13 @@
             },
             {
               "serialNumber": 937453,
-              "howOrdered": "This is a one line string",
-              "dateOrder": "2020-10-01"
+              "howOrdered": "Manually",
+              "dateOrder": "2022-10-01"
             },
             {
               "serialNumber": 937453,
-              "howOrdered": "another one line string",
-              "dateOrder": "2022-14-01"
+              "howOrdered": "Manually",
+              "dateOrder": "2022-10-01"
             }
           ]
         }
@@ -60,13 +60,13 @@
             },
             {
               "serialNumber": 937453,
-              "howOrdered": "This is a one line string",
-              "dateOrder": "2020-10-01"
+              "howOrdered": "Manually",
+              "dateOrder": "2022-10-01"
             },
             {
               "serialNumber": 937453,
-              "howOrdered": "another one line string",
-              "dateOrder": "2022-14-01"
+              "howOrdered": "Manually",
+              "dateOrder": "2022-10-01"
             }
           ]
         }
@@ -79,7 +79,7 @@
         "method": "POST",
         "path": "/api/chequeCreditBooks",
         "query": "accountId=accId&applRef=appref&brandRef=brandRef&customerId=custId",
-        "body": "{\"history\":[{\"serialNumber\":937453,\"howOrdered\":\"Manually\",\"dateOrder\":\"2022-10-01\"},{\"serialNumber\":937453,\"howOrdered\":\"This is a one line string\",\"dateOrder\":\"2020-10-01\"},{\"serialNumber\":937453,\"howOrdered\":\"another one line string\",\"dateOrder\":\"2022-14-01\"}]}"
+        "body": "{\"history\":[{\"serialNumber\":937453,\"howOrdered\":\"Manually\",\"dateOrder\":\"2022-10-01\"},{\"serialNumber\":937453,\"howOrdered\":\"Manually\",\"dateOrder\":\"2022-10-01\"},{\"serialNumber\":937453,\"howOrdered\":\"Manually\",\"dateOrder\":\"2022-10-01\"}]}"
       },
       "response": {
         "status": 200,
@@ -94,13 +94,13 @@
             },
             {
               "serialNumber": 937453,
-              "howOrdered": "This is a one line string",
-              "dateOrder": "2020-10-01"
+              "howOrdered": "Manually",
+              "dateOrder": "2022-10-01"
             },
             {
               "serialNumber": 937453,
-              "howOrdered": "another one line string",
-              "dateOrder": "2022-14-01"
+              "howOrdered": "Manually",
+              "dateOrder": "2022-10-01"
             }
           ]
         }

@@ -1,10 +1,65 @@
 import { reqFor, UrlConfig } from "@focuson/template";
-import { FetchFn, NameAnd, RestAction, safeArray } from "@focuson/utils";
+import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RestAction, safeArray } from "@focuson/utils";
 import { identityOptics, massTransform, Optional, Transform } from "@focuson/lens";
 
-export interface RestDebug{
-  restDebug? : boolean
+
+export interface RestDebug {
+  restDebug?: boolean
 }
+
+export type QueryOrMutation = 'Query' | 'Mutation'
+
+export interface RestParamsDetails {
+  needsId?: boolean,
+  needsObj?: boolean
+}
+
+export interface RestOutputDetails {
+  needsBrackets?: boolean,
+  needsObj?: boolean,
+  needsPling?: boolean,
+}
+export interface RestActionDetail {
+  /** get, update, insert... */
+  name: RestAction | 'state',
+  method: string,
+  query: QueryOrMutation,
+  params: RestParamsDetails,
+  output: RestOutputDetails,
+  graphQPrefix: string,
+  graphQlPostfix: string
+}
+export interface RestTypeDetails {
+  [ name: string ]: RestActionDetail
+}
+
+export const defaultRestAction: RestTypeDetails = {
+  'get': { name: 'get', method: 'GET', query: 'Query', params: { needsId: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'get', graphQlPostfix: '' },
+  // 'getString': { name: 'getString', query: 'Query', params: { needsId: true }, output: { needsPling: true }, graphQPrefix: 'get', graphQlPostfix: '' }, //special for mocks
+  'getOption': { name: 'getOption', method: 'GET', query: 'Query', params: { needsId: true }, output: { needsObj: true }, graphQPrefix: 'getOption', graphQlPostfix: '' },
+  'list': { name: 'list', method: 'GET', query: 'Query', params: {}, output: { needsObj: true, needsBrackets: true, needsPling: true }, graphQPrefix: 'list', graphQlPostfix: '' },
+  'update': { name: 'update', method: 'PUT', query: 'Mutation', params: { needsId: true, needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'update', graphQlPostfix: '' },
+  'create': { name: 'create', method: 'POST', query: 'Mutation', params: { needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'create', graphQlPostfix: '' },
+  'delete': { name: 'delete', method: 'DELETE', query: 'Mutation', params: { needsId: true }, output: { needsObj: false }, graphQPrefix: 'delete', graphQlPostfix: '' },
+  'state': { name: 'state', method: 'POST', query: 'Mutation', params: { needsId: true }, output: { needsObj: false }, graphQPrefix: 'state', graphQlPostfix: '' },
+}
+export function restActionToString ( r: RestAction ): string {
+  return isRestStateChange ( r ) ? `state:${r.state}` : r
+}
+export function parseRestAction ( s: string ): RestAction {
+  const [ before, after ] = beforeAfterSeparator ( ":", s )
+  if ( before === 'state' ) return { state: after }
+  // @ts-ignore
+  return before
+}
+
+export function printRestAction ( r: RestAction ): string {
+  return isRestStateChange ( r ) ? `state:${r.state}` : r
+}
+export function getRestTypeDetails ( a: RestAction ): RestActionDetail {
+  return isRestStateChange ( a ) ? { ...defaultRestAction[ 'state' ], graphQlPostfix: a.state } : defaultRestAction[ a ];
+}
+
 
 export interface OneRestDetails<S, FD, D, MSGs> extends UrlConfig<S, FD, D> {
   url: string;

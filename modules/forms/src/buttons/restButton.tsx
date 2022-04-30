@@ -6,6 +6,7 @@ import { restDetailsName } from "../codegen/names";
 import { replaceBasePageWithKnownPage } from "@focuson/pages";
 import { isMainPage } from "../common/pageD";
 import { EnabledBy, enabledByString } from "./enabledBy";
+import { printRestAction } from "@focuson/rest";
 
 
 function makeRestButton<B extends RestButtonInPage<G>, G> (): ButtonCreator<RestButtonInPage<G>, G> {
@@ -19,7 +20,7 @@ function makeRestButton<B extends RestButtonInPage<G>, G> (): ButtonCreator<Rest
       return [ `<RestButton state={state} id=${makeIdForButton ( name )} ${enabledByString ( button )}`,
         ...indentList ( [
           ...opt ( 'name', name ),
-          ...opt ( 'action', action ),
+          ...opt ( 'action', printRestAction ( action ) ),
           ...optT ( 'validate', validate ),
           ...opt ( 'rest', restDetailsName ( parent, restName, rest.rest ) ),
           ...optT ( 'confirm', confirm ) ] ), ' />' ]

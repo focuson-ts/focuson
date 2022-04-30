@@ -26,7 +26,7 @@ type Mutation{
   updateOccupationAndIncomeFullDomain(customerId: String!,obj: OccupationAndIncomeFullDomainInp!):OccupationAndIncomeFullDomain!
   createCreatePlan(accountId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!
   updateCreatePlan(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!
-  deleteCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):CreatePlan
+  deleteCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):Boolean
   createETransferDataD(customerId: String!,obj: ETransferDataDInp!):ETransferDataD!
   createCreateEAccountData(accountId: String!, customerId: String!,obj: CreateEAccountDataInp!):CreateEAccountData!
   createChequeCreditbooks(accountId: String!, applRef: String!, brandRef: String!, customerId: String!,obj: ChequeCreditbooksInp!):ChequeCreditbooks!

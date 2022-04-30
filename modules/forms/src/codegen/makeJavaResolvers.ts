@@ -1,4 +1,4 @@
-import { defaultRestAction, flatMapRestAndActions, mapRestAndActions, RestD } from "../common/restD";
+import { flatMapRestAndActions, mapRestAndActions, RestD } from "../common/restD";
 import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, OneDataDD, PrimitiveDD, RepeatingDataD, sampleFromDataD } from "../common/dataD";
 import { fetcherInterfaceName, fetcherPackageName, fetcherVariableName, resolverName, sampleName } from "./names";
 import { JavaWiringParams } from "./config";
@@ -6,6 +6,7 @@ import { applyToTemplate } from "@focuson/template";
 import { DirectorySpec, loadFile } from "@focuson/files";
 import { RestAction } from "@focuson/utils";
 import { MainPageD, PageD } from "../common/pageD";
+import { getRestTypeDetails } from "@focuson/rest";
 
 
 export function makeJavaResolversInterface<G> ( params: JavaWiringParams, page: MainPageD<any, G>, restD: RestD<G>, restAction: RestAction ): string[] {
@@ -58,7 +59,7 @@ export interface ResolverData {
   sample: string[];
 }
 export function findQueryMutationResolvers<G> ( r: RestD<G>, a: RestAction ): ResolverData {
-  const rad = defaultRestAction[ a ];
+  const rad = getRestTypeDetails ( a );
   let name = resolverName ( r, rad );
   return ({ isRoot: true, parent: rad.query, resolver: name, name, samplerName: sampleName ( r.dataDD ), sample: [] })
 

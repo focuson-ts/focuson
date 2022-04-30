@@ -1,8 +1,8 @@
 import { AllDataDD, CompDataD, DataD, findAllDataDs, HasGuards, HasLayout, isDataDd, NamesAndDataDs } from "./dataD";
-import { CommonLensRestParam, defaultRestAction, RestActionDetail, RestD, unique } from "./restD";
+import { CommonLensRestParam, RestD, unique } from "./restD";
 import { NameAnd, RestAction, RestResult, safeString, sortedEntries } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
-import { DisplayCompD, SimpleDisplayComp } from "./componentsD";
+import { getRestTypeDetails, RestActionDetail } from "@focuson/rest";
 
 
 export interface DomainDefnInPage<G> {
@@ -103,7 +103,7 @@ export function dataDsIn<B, G> ( pds: PageD<B, G>[], stopAtDisplay?: boolean ): 
 export function allRestAndActions<B, G> ( pds: PageD<B, G>[] ): [ PageD<B, G>, string, RestDefnInPageProperties<G>, RestActionDetail ][] {
   return unique ( allMainPages ( pds ).flatMap ( pd => {
     return sortedEntries ( pd.rest ).flatMap ( ( [ name, rdp ] ) => {
-      const y: [ PageD<B, G>, string, RestDefnInPageProperties<G>, RestActionDetail ][] = rdp.rest.actions.map ( a => [ pd, name, rdp, defaultRestAction[ a ] ] )
+      const y: [ PageD<B, G>, string, RestDefnInPageProperties<G>, RestActionDetail ][] = rdp.rest.actions.map ( a => [ pd, name, rdp, getRestTypeDetails(a) ] )
       return y
     } )
   } ), ( [ p, name, r, rad ] ) => safeString ( r.rest.namePrefix ) + name + p.name + "," + r.rest.dataDD.name + "," + rad.name )

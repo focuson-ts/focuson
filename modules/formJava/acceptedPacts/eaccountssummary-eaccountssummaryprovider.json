@@ -78,9 +78,6 @@
         "headers": {
         },
         "body": {
-          "createPlanStart": "2022-01-01",
-          "createPlanDate": "2022-03-01",
-          "createPlanEnd": "2022-10-01"
         }
       }
     },
@@ -129,18 +126,18 @@
             {
               "accountId": 3233450,
               "displayType": "savings",
-              "description": "This is a one line string",
+              "description": "another description",
               "virtualBankSeq": "seq2",
               "total": 2991,
-              "frequency": "This is a one line string"
+              "frequency": "23"
             },
             {
               "accountId": 4333450,
-              "displayType": "This is a one line string",
-              "description": "another one line string",
+              "displayType": "checking",
+              "description": "This account has a description",
               "virtualBankSeq": "seq3",
               "total": 1000,
-              "frequency": "another one line string"
+              "frequency": "23"
             }
           ],
           "totalMonthlyCost": 1000,
@@ -180,18 +177,18 @@
             {
               "accountId": 3233450,
               "displayType": "savings",
-              "description": "This is a one line string",
+              "description": "another description",
               "virtualBankSeq": "seq2",
               "total": 2991,
-              "frequency": "This is a one line string"
+              "frequency": "23"
             },
             {
               "accountId": 4333450,
-              "displayType": "This is a one line string",
-              "description": "another one line string",
+              "displayType": "checking",
+              "description": "This account has a description",
               "virtualBankSeq": "seq3",
               "total": 1000,
-              "frequency": "another one line string"
+              "frequency": "23"
             }
           ],
           "totalMonthlyCost": 1000,

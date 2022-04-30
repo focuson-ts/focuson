@@ -17,7 +17,7 @@ export const chequeCreditBooksRestD: any = {// RestD<AllGuards> = {
   url: '/api/chequeCreditBooks?{query}', //or maybe accountId={accountId}&customerId={customerId}
   actions: [ 'get', 'create' ],
   useStoredProcedure:{
-    create: {procedureName: 'someProcName', params: [commonParams.customerId,commonParams.accountId]}
+    create: {procedureName: 'someProcName', params: ['customerId','accountId']}
   }
 
 }

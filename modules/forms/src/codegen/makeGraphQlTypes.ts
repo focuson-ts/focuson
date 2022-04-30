@@ -1,8 +1,9 @@
 import { AllDataDD, AllDataFlatMap, CompDataD, compDataDIn, DataD, emptyDataFlatMap, flatMapDD, isDataDd, isRepeatingDd, OneDataDD } from "../common/dataD";
-import { findMustConstructForRest, findUniqueDataDsAndRestTypeDetails, QueryOrMutation, RestActionDetail, RestD, RestParams, RestTypeDetails } from "../common/restD";
+import { findMustConstructForRest, findUniqueDataDsAndRestTypeDetails, RestD, RestParams } from "../common/restD";
 import { resolverName } from "./names";
 import { RestAction, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction } from "./codegen";
+import { QueryOrMutation, RestActionDetail, RestTypeDetails } from "@focuson/rest";
 
 export function makeGraphQlTypeFolder<G> ( { keyword, create, postfix }: RestTypeDetails ): AllDataFlatMap<string, G> {
   return {
@@ -33,7 +34,7 @@ function theType<G> ( d: AllDataDD<G> ): string {
 
 
 export function makeOutputString ( name: string, needExtrabrackets: boolean, { params, query, output, graphQlPostfix }: RestActionDetail ) {
-  const obj = output.needsObj ? (name + (output.needsPling ? "!" : "")) : 'String'; // this String is probably the id
+  const obj = output.needsObj ? (name + (output.needsPling ? "!" : "")) : 'Boolean';
   const raw = output.needsBrackets ? "[" + obj + "]!" : obj
   return needExtrabrackets ? "[" + raw + "]!" : raw
 }
