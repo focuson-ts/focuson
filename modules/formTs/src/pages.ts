@@ -42,7 +42,7 @@ import { PostCodeMainPageOptionals } from "./PostCodeMainPage/PostCodeMainPage.o
 const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  Loading )
 const identity = identityOptics<FState> ();
 export const pages: MultiPageDetails<FState, Context> = {
-    HelloWorldMainPage: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'HelloWorldMainPage' ), pageFunction: HelloWorldMainPagePage(), initialValue: {"fromApi":{"message":""}}, pageMode: 'view',namedOptionals: HelloWorldMainPageOptionals },
+    HelloWorldMainPage: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'HelloWorldMainPage' ), pageFunction: HelloWorldMainPagePage(), initialValue: undefined, pageMode: 'view',namedOptionals: HelloWorldMainPageOptionals },
     AccountOverview: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'AccountOverview' ), pageFunction: AccountOverviewPage(), initialValue: {}, pageMode: 'view',namedOptionals: AccountOverviewOptionals },
     JointAccount: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'JointAccount' ), pageFunction: JointAccountPage(), initialValue: {"joint":false}, pageMode: 'view',namedOptionals: JointAccountOptionals },
     OccupationAndIncomeSummary: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'OccupationAndIncomeSummary' ), pageFunction: OccupationAndIncomeSummaryPage(), initialValue: {"selectedItem":0,"occupation":{"search":"","selectedOccupationName":"","searchResults":[]},"mainOrJoint":false}, pageMode: 'view',namedOptionals: OccupationAndIncomeSummaryOptionals },

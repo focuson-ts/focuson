@@ -19,7 +19,7 @@ interface StoryState {
    pageMode: PageMode
 }
  
-const initial = empty.emptyHelloWorldDomainData
+const initial = undefined
 function pageSelection ( pageMode: PageMode ): PageSelection { return { pageName: 'HelloWorldMainPage', pageMode}}
 const Template: Story<StoryState> = ( args: StoryState ) =>{
   const pageDetails: any = pages[ 'HelloWorldMainPage' ];

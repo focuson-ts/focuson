@@ -1,12 +1,12 @@
 import { copyFile, copyFiles, DirectorySpec, templateFile, writeToFile } from "@focuson/files";
 import { JavaWiringParams } from "../codegen/config";
 import fs from "fs";
-import { unique } from "../common/restD";
+import { forEachRest, forEachRestAndActions, unique } from "../common/restD";
 import { detailsLog, GenerateLogLevel, NameAnd, safeArray, safeString, sortedEntries } from "@focuson/utils";
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
-import { createTableSqlName, fetcherInterfaceName, getSqlName, h2FetcherClassName, mockFetcherClassName, providerPactClassName, queryClassName, restControllerName, sqlMapFileName } from "../codegen/names";
+import { createTableSqlName, fetcherInterfaceName, fetcherPackageName, getSqlName, h2FetcherClassName, mockFetcherClassName, mockFetcherPackage, providerPactClassName, queryClassName, queryPackage, restControllerName, sqlMapFileName } from "../codegen/names";
 import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
 import { makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
 import { makeAllMockFetchers } from "../codegen/makeMockFetchers";
@@ -50,6 +50,12 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   fs.mkdirSync ( `${javaControllerRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaQueriesPackages}`, { recursive: true } )
   fs.mkdirSync ( `${javaDbPackages}`, { recursive: true } )
+  allMainPages ( pages ).forEach ( p => {
+    fs.mkdirSync ( `${javaFetcherRoot}/${p.name}`, { recursive: true } );
+    fs.mkdirSync ( `${javaMockFetcherRoot}/${p.name}`, { recursive: true } );
+    fs.mkdirSync ( `${javaH2FetcherRoot}/${p.name}`, { recursive: true } );
+    fs.mkdirSync ( `${javaQueriesPackages}/${p.name}`, { recursive: true } );
+  } )
 
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
   const raw = allMainPages ( pages ).flatMap ( x => sortedEntries ( x.rest ) ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest );
@@ -88,28 +94,32 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
           generateGetSql ( findSqlLinkDataFromRootAndDataD ( r, rest.dataDD ) ) ).map ( addStringToEndOfList ( ';\n' ) ).flat () ] ), details )
 
   writeToFile ( `${javaResourcesRoot}/${params.schema}`, () => makeGraphQlSchema ( rests ), details )
-  rests.forEach ( rest => {
-      let fetcherFile = `${javaCodeRoot}/${params.fetcherPackage}/${fetcherInterfaceName ( params, rest )}.java`;
-      writeToFile ( fetcherFile, () => makeJavaResolversInterface ( params, rest ), details )
-    }
-  )
+  forEachRestAndActions ( pages, p => rest => action => {
+    let fetcherFile = `${javaCodeRoot}/${params.fetcherPackage}/${p.name}/${fetcherInterfaceName ( params, rest, action )}.java`;
+    writeToFile ( fetcherFile, () => makeJavaResolversInterface ( params, p, rest, action ), details )
+  } )
 
 
-  writeToFile ( `${javaCodeRoot}/${params.wiringClass}.java`, () => makeAllJavaWiring ( params, rests, directorySpec ), details )
+  writeToFile ( `${javaCodeRoot}/${params.wiringClass}.java`, () => makeAllJavaWiring ( params, pages, directorySpec ), details )
   templateFile ( `${javaCodeRoot}/${params.applicationName}.java`, 'templates/JavaApplicationTemplate.java', params, directorySpec, details )
-  rests.forEach ( restD => templateFile ( `${javaMockFetcherRoot}/${mockFetcherClassName ( params, restD )}.java`, 'templates/JavaFetcherClassTemplate.java',
+  forEachRestAndActions ( pages, p => restD => action => templateFile ( `${javaMockFetcherRoot}/${p.name}/${mockFetcherClassName ( params, restD, action )}.java`, 'templates/JavaFetcherClassTemplate.java',
     {
       ...params,
-      fetcherInterface: fetcherInterfaceName ( params, restD ),
-      fetcherClass: mockFetcherClassName ( params, restD ),
-      content: makeAllMockFetchers ( params, [ restD ] ).join ( "\n" )
+      mockFetcherPackage: mockFetcherPackage ( params, p ),
+      thisFetcherPackage: fetcherPackageName ( params, p ),
+      fetcherInterface: fetcherInterfaceName ( params, restD, action ),
+      fetcherClass: mockFetcherClassName ( params, restD, action ),
+      content: makeAllMockFetchers ( params, restD, action ).join ( "\n" )
     }, directorySpec ) )
 
+  forEachRestAndActions ( pages, p => ( r, restName, rdp ) => a => {
+    if ( a !== 'get' ) return;
+    if ( rdp.rest.tables === undefined ) return;
+    writeToFile ( `${javaH2FetcherRoot}/${p.name}/${h2FetcherClassName ( params, rdp.rest )}.java`, () => makeH2Fetchers ( params, p, restName, rdp ) )
+
+  } )
   allMainPages ( pages ).flatMap ( mainPage =>
     sortedEntries ( mainPage.rest ).forEach ( ( [ restName, rdp ] ) => {
-      if ( rdp.rest.actions.indexOf ( 'get' ) < 0 ) return;
-      if ( rdp.rest.tables === undefined ) return;
-      writeToFile ( `${javaH2FetcherRoot}/${h2FetcherClassName ( params, rdp.rest )}.java`, () => makeH2Fetchers ( params, mainPage, restName, rdp ) )
     } )
   )
 
@@ -120,17 +130,20 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   else
     fs.rmSync ( `${javaResourcesRoot}/data.sql`, { force: true } )
 
-  allMainPages ( pages ).forEach ( p => writeToFile ( `${javaTestRoot}/${providerPactClassName(p)}.java`, () => makePactValidation ( params, appConfig.javaPort, p ) ) )
+  allMainPages ( pages ).forEach ( p => writeToFile ( `${javaTestRoot}/${providerPactClassName ( p )}.java`, () => makePactValidation ( params, appConfig.javaPort, p ) ) )
 
 
   templateFile ( `${javaCodeRoot}/${params.sampleClass}.java`, 'templates/JavaSampleTemplate.java',
     { ...params, content: indentList ( makeAllJavaVariableName ( pages, 0 ) ).join ( "\n" ) }, directorySpec, details )
-  rests.forEach ( r => templateFile ( `${javaQueriesPackages}/${queryClassName ( params, r )}.java`, 'templates/JavaQueryTemplate.java',
-    {
-      ...params,
-      queriesClass: queryClassName ( params, r ),
-      content: indentList ( makeJavaVariablesForGraphQlQuery ( [ r ] ) ).join ( "\n" )
-    }, directorySpec, details ) )
+  forEachRest ( pages, p => r =>
+    templateFile ( `${javaQueriesPackages}/${p.name}/${queryClassName ( params, r )}.java`, 'templates/JavaQueryTemplate.java',
+      {
+        ...params,
+        queriesPackage: queryPackage ( params, p ),
+        queriesClass: queryClassName ( params, r ),
+        content: indentList ( makeJavaVariablesForGraphQlQuery ( [ r ] ) ).join ( "\n" )
+      }, directorySpec, details )
+  )
 
   allMainPages ( pages ).map ( p => {
     Object.entries ( p.rest ).map ( ( [ name, rdp ] ) => {

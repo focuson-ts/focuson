@@ -1,6 +1,6 @@
 import { AllDataDD, CompDataD, compDataDIn } from "../common/dataD";
 import { MainPageD, ModalPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
-import { RestActionDetail, RestD } from "../common/restD";
+import { defaultRestAction, RestActionDetail, RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
 import { RestAction, safeString } from "@focuson/utils";
 import { JavaWiringParams, TSParams } from "./config";
@@ -26,7 +26,7 @@ export const restControllerName = <G> ( restD: RestD<G> ) => (restD.namePrefix ?
 export const javaSqlCreateTableSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.createTableSql.sql`
 export const javaSqlReadSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.readTableSql.sql`
 
-export const queryName = <G> ( restD: RestD<G>, action: RestAction ): string => { return  action + safeString ( restD.namePrefix ) +compDataDIn ( restD.dataDD ).name; }
+export const queryName = <G> ( restD: RestD<G>, action: RestAction ): string => { return action + safeString ( restD.namePrefix ) + compDataDIn ( restD.dataDD ).name; }
 export const createTableName = <G> ( restD: RestD<G> ): string => { return "createTable" + compDataDIn ( restD.dataDD ).name; }
 export const createTableSqlName = (): string => { return "schema"}
 export const getSqlName = (): string => { return "get"}
@@ -35,14 +35,25 @@ export const endPointName = <G> ( restD: RestD<G>, action: RestAction ): string 
 export const modalName = <B, G> ( p: PageD<B, G>, modal: PageD<B, G> ) => modal.name
 export const restNameWithPrefix = <G> ( r: RestD<G> ) => r.namePrefix ? r.namePrefix + "_" + r.dataDD.name : r.dataDD.name
 export const restDetailsName = <B, G> ( p: PageD<B, G>, restName: string, r: RestD<G> ) => p.name + "_" + restNameWithPrefix ( r ) + "RestDetails"
-export const fetcherName = <G> ( d: RestDefnInPageProperties<G> ): string => restNameWithPrefix ( d.rest ) + "Fetcher";
-export const fetcherInterfaceName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${restNameWithPrefix ( r )}${params.fetcherInterface}`;
-export const fetcherVariableName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `_${restNameWithPrefix ( r )}${params.fetcherInterface}`;
-export const mockFetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${restNameWithPrefix ( r )}${params.fetcherInterface}Mock`;
+
+export const packageNameFor = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, thing: string ): string => `${params.thePackage}.${thing}.${p.name}`;
+export const fetcherPackageName = <G> ( params: JavaWiringParams, p: MainPageD<any, G> ): string => packageNameFor ( params, p, params.fetcherPackage );
+export const fetcherInterfaceName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => `${restNameWithPrefix ( r )}_${defaultRestAction[ a ].name}_${params.fetcherInterface}`;
+
+export const h2FetcherPackage = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G> ): string => packageNameFor ( params, p, params.h2FetcherPackage );
 export const h2FetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${restNameWithPrefix ( r )}${params.fetcherInterface}H2`;
+
+export const mockFetcherPackage = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G> ): string => packageNameFor ( params, p, params.mockFetcherPackage );
+export const mockFetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => `${restNameWithPrefix ( r )}_${a}_${params.fetcherInterface}Mock`;
+
+
+export const queryPackage = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G> ): string => packageNameFor ( params, p, params.queriesPackage );
+export const providerName = <B, G> ( p: MainPageD<B, G> ) => p.name + "Provider"
+
+export const fetcherName = <G> ( d: RestDefnInPageProperties<G> ): string => restNameWithPrefix ( d.rest ) + "Fetcher";
+export const fetcherVariableName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => `${restNameWithPrefix ( r )}_${a}_${params.fetcherInterface}`;
 export const providerPactClassName = <B, G> ( pd: MainPageD<B, G> ): string => providerName ( pd ) + "Test";
 
-export const providerName = <B, G> ( p: MainPageD<B, G> ) => p.name + "Provider"
 
 export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${r.dataDD.name}Queries`;
 

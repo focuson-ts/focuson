@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import focuson.data.Sample;
-import focuson.data.queries.OccupationAndIncomeFullDomainQueries;
+import focuson.data.queries.OccupationAndIncomeSummary.OccupationAndIncomeFullDomainQueries;
 import focuson.data.IManyGraphQl;
 import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;

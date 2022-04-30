@@ -1,5 +1,5 @@
 import { defaultRestAction, postFixForEndpoint, RestD } from "../common/restD";
-import { endPointName, queryClassName, queryName, restControllerName, sampleName, sqlMapName } from "./names";
+import { endPointName, queryClassName, queryName, queryPackage, restControllerName, sampleName, sqlMapName } from "./names";
 import { JavaWiringParams } from "./config";
 import { beforeSeparator, RestAction, safeObject, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction, indentList } from "./codegen";
@@ -84,7 +84,7 @@ export function makeSpringEndpointsFor<B, G> ( params: JavaWiringParams, p: Main
     `import org.springframework.http.ResponseEntity;`,
     `import org.springframework.web.bind.annotation.*;`,
     `import ${params.thePackage}.Sample;`,
-    `import ${params.thePackage}.${params.queriesPackage}.${queryClassName ( params, r )};`,
+    `import ${queryPackage ( params, p )}.${queryClassName ( params, r )};`,
     `import ${params.thePackage}.IManyGraphQl;`,
     `import ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
     `import org.springframework.beans.factory.annotation.Autowired;`,

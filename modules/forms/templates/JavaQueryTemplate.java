@@ -1,4 +1,4 @@
-package {thePackage}.{queriesPackage};
+package {queriesPackage};
 
 public class {queriesClass}{
 

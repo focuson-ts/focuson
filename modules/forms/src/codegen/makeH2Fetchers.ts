@@ -2,13 +2,14 @@ import { JavaWiringParams } from "./config";
 import { MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { sortedEntries } from "@focuson/utils";
 import { defaultRestAction, RestD } from "../common/restD";
-import { fetcherInterfaceName, fetcherName, h2FetcherClassName, resolverName, sqlMapName } from "./names";
+import { fetcherInterfaceName, fetcherName, fetcherPackageName, h2FetcherClassName, h2FetcherPackage, resolverName, sqlMapName } from "./names";
 import { indentList } from "./codegen";
 import { findParamsForTable } from "./makeSqlFromEntities";
 
 
 export function makeH2Fetchers<B, G> ( params: JavaWiringParams, pageD: MainPageD<B, G>, restName: string, rdp: RestDefnInPageProperties<G> ): string[] {
   const rest = rdp.rest
+  if ( rest.actions.indexOf ( 'get' ) < 0 ) return []
   const paramVariables = sortedEntries ( rest.params ).map ( ( [ name, props ] ) =>
     `String ${name} = dataFetchingEnvironment.getArgument("${name}");` )
   if ( rest.tables === undefined ) throw Error ( `Calling makeH2Fetchers when tables not defined for page ${pageD.name}` )
@@ -17,11 +18,11 @@ export function makeH2Fetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
       .map ( ( [ name, param ] ) =>
         `${param.javaParser}(${name})` ) ].join ( ',' )
   return [
-    ` package ${params.thePackage}.${params.h2FetcherPackage};`,
+    ` package ${h2FetcherPackage(params, pageD)};`,
     ``,
     `import  ${params.thePackage}.${params.dbPackage}.${sqlMapName ( pageD, restName, [] )};`,
     `import  ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
-    `import  ${params.thePackage}.${params.fetcherPackage}.${fetcherInterfaceName ( params, rdp.rest )};`,
+    `import  ${fetcherPackageName(params, pageD)}.${fetcherInterfaceName ( params, rdp.rest, 'get' )};`,
     `import graphql.schema.DataFetcher;`,
     `import org.springframework.beans.factory.annotation.Autowired;`,
     `import org.springframework.stereotype.Component;`,
@@ -32,7 +33,7 @@ export function makeH2Fetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
     `import java.util.Optional;`,
     ``,
     `  @Component`,
-    `public class ${h2FetcherClassName ( params, rest )} implements ${fetcherInterfaceName ( params, rest )} {`,
+    `public class ${h2FetcherClassName ( params, rest )} implements ${fetcherInterfaceName ( params, rest, "get" )} {`,
     ``,
     `  @Autowired`,
     `  private DataSource dataSource;`,

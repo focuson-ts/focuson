@@ -23,77 +23,101 @@ import java.util.Optional;
 import focuson.data.fetchers.IFetcher;
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
 import java.util.function.Function;
-import focuson.data.fetchers.HelloWorldDomainDataFFetcher;
-import focuson.data.fetchers.AccountAllFlagsFFetcher;
-import focuson.data.fetchers.AccountOverviewAgreementTypeFFetcher;
-import focuson.data.fetchers.ArrearsDetailsFFetcher;
-import focuson.data.fetchers.AccountOverviewHistoryFFetcher;
-import focuson.data.fetchers.AccountOverviewExcessInfoFFetcher;
-import focuson.data.fetchers.AccountOverviewFFetcher;
-import focuson.data.fetchers.AccountOverviewOptOutFFetcher;
-import focuson.data.fetchers.AccountOverviewReasonFFetcher;
-import focuson.data.fetchers.pre_JointAccountFFetcher;
-import focuson.data.fetchers.AdditionalInformationFFetcher;
-import focuson.data.fetchers.BusinessDetailsMainFFetcher;
-import focuson.data.fetchers.DropdownsFFetcher;
-import focuson.data.fetchers.OccupationAndIncomeFullDomainFFetcher;
-import focuson.data.fetchers.OtherIncomeResponseFFetcher;
-import focuson.data.fetchers.CreatePlanFFetcher;
-import focuson.data.fetchers.EAccountsSummaryFFetcher;
-import focuson.data.fetchers.ETransferDataDFFetcher;
-import focuson.data.fetchers.CreateEAccountDataFFetcher;
-import focuson.data.fetchers.ChequeCreditbooksFFetcher;
-import focuson.data.fetchers.RepeatingWholeDataFFetcher;
-import focuson.data.fetchers.PostCodeNameAndAddressFFetcher;
-import focuson.data.fetchers.PostCodeDataFFetcher;
+import focuson.data.fetchers.HelloWorldMainPage.HelloWorldDomainData_get_FFetcher;
+import focuson.data.fetchers.AccountOverview.AccountAllFlags_get_FFetcher;
+import focuson.data.fetchers.AccountOverview.AccountOverviewAgreementType_get_FFetcher;
+import focuson.data.fetchers.AccountOverview.ArrearsDetails_get_FFetcher;
+import focuson.data.fetchers.AccountOverview.AccountOverviewHistory_get_FFetcher;
+import focuson.data.fetchers.AccountOverview.AccountOverviewExcessInfo_get_FFetcher;
+import focuson.data.fetchers.AccountOverview.AccountOverview_get_FFetcher;
+import focuson.data.fetchers.AccountOverview.AccountOverviewOptOut_get_FFetcher;
+import focuson.data.fetchers.AccountOverview.AccountOverviewReason_get_FFetcher;
+import focuson.data.fetchers.JointAccount.pre_JointAccount_get_FFetcher;
+import focuson.data.fetchers.OccupationAndIncomeSummary.AdditionalInformation_get_FFetcher;
+import focuson.data.fetchers.OccupationAndIncomeSummary.BusinessDetailsMain_get_FFetcher;
+import focuson.data.fetchers.OccupationAndIncomeSummary.Dropdowns_get_FFetcher;
+import focuson.data.fetchers.OccupationAndIncomeSummary.OccupationAndIncomeFullDomain_get_FFetcher;
+import focuson.data.fetchers.OccupationAndIncomeSummary.OccupationAndIncomeFullDomain_update_FFetcher;
+import focuson.data.fetchers.OccupationAndIncomeSummary.OtherIncomeResponse_get_FFetcher;
+import focuson.data.fetchers.EAccountsSummary.CreatePlan_get_FFetcher;
+import focuson.data.fetchers.EAccountsSummary.CreatePlan_create_FFetcher;
+import focuson.data.fetchers.EAccountsSummary.CreatePlan_update_FFetcher;
+import focuson.data.fetchers.EAccountsSummary.CreatePlan_delete_FFetcher;
+import focuson.data.fetchers.EAccountsSummary.CreatePlan_list_FFetcher;
+import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_get_FFetcher;
+import focuson.data.fetchers.ETransfer.ETransferDataD_create_FFetcher;
+import focuson.data.fetchers.CreateEAccount.CreateEAccountData_create_FFetcher;
+import focuson.data.fetchers.CreateEAccount.CreateEAccountData_get_FFetcher;
+import focuson.data.fetchers.ChequeCreditbooks.ChequeCreditbooks_get_FFetcher;
+import focuson.data.fetchers.ChequeCreditbooks.ChequeCreditbooks_create_FFetcher;
+import focuson.data.fetchers.Repeating.RepeatingWholeData_create_FFetcher;
+import focuson.data.fetchers.Repeating.RepeatingWholeData_get_FFetcher;
+import focuson.data.fetchers.PostCodeMainPage.PostCodeNameAndAddress_create_FFetcher;
+import focuson.data.fetchers.PostCodeMainPage.PostCodeData_get_FFetcher;
 @Component
 public class Wiring  implements IManyGraphQl{
       @Autowired
-      List<HelloWorldDomainDataFFetcher> _HelloWorldDomainDataFFetcher;
+      List<HelloWorldDomainData_get_FFetcher> HelloWorldDomainData_get_FFetcher;
       @Autowired
-      List<AccountAllFlagsFFetcher> _AccountAllFlagsFFetcher;
+      List<AccountAllFlags_get_FFetcher> AccountAllFlags_get_FFetcher;
       @Autowired
-      List<AccountOverviewAgreementTypeFFetcher> _AccountOverviewAgreementTypeFFetcher;
+      List<AccountOverviewAgreementType_get_FFetcher> AccountOverviewAgreementType_get_FFetcher;
       @Autowired
-      List<ArrearsDetailsFFetcher> _ArrearsDetailsFFetcher;
+      List<ArrearsDetails_get_FFetcher> ArrearsDetails_get_FFetcher;
       @Autowired
-      List<AccountOverviewHistoryFFetcher> _AccountOverviewHistoryFFetcher;
+      List<AccountOverviewHistory_get_FFetcher> AccountOverviewHistory_get_FFetcher;
       @Autowired
-      List<AccountOverviewExcessInfoFFetcher> _AccountOverviewExcessInfoFFetcher;
+      List<AccountOverviewExcessInfo_get_FFetcher> AccountOverviewExcessInfo_get_FFetcher;
       @Autowired
-      List<AccountOverviewFFetcher> _AccountOverviewFFetcher;
+      List<AccountOverview_get_FFetcher> AccountOverview_get_FFetcher;
       @Autowired
-      List<AccountOverviewOptOutFFetcher> _AccountOverviewOptOutFFetcher;
+      List<AccountOverviewOptOut_get_FFetcher> AccountOverviewOptOut_get_FFetcher;
       @Autowired
-      List<AccountOverviewReasonFFetcher> _AccountOverviewReasonFFetcher;
+      List<AccountOverviewReason_get_FFetcher> AccountOverviewReason_get_FFetcher;
       @Autowired
-      List<pre_JointAccountFFetcher> _pre_JointAccountFFetcher;
+      List<pre_JointAccount_get_FFetcher> pre_JointAccount_get_FFetcher;
       @Autowired
-      List<AdditionalInformationFFetcher> _AdditionalInformationFFetcher;
+      List<AdditionalInformation_get_FFetcher> AdditionalInformation_get_FFetcher;
       @Autowired
-      List<BusinessDetailsMainFFetcher> _BusinessDetailsMainFFetcher;
+      List<BusinessDetailsMain_get_FFetcher> BusinessDetailsMain_get_FFetcher;
       @Autowired
-      List<DropdownsFFetcher> _DropdownsFFetcher;
+      List<Dropdowns_get_FFetcher> Dropdowns_get_FFetcher;
       @Autowired
-      List<OccupationAndIncomeFullDomainFFetcher> _OccupationAndIncomeFullDomainFFetcher;
+      List<OccupationAndIncomeFullDomain_get_FFetcher> OccupationAndIncomeFullDomain_get_FFetcher;
       @Autowired
-      List<OtherIncomeResponseFFetcher> _OtherIncomeResponseFFetcher;
+      List<OccupationAndIncomeFullDomain_update_FFetcher> OccupationAndIncomeFullDomain_update_FFetcher;
       @Autowired
-      List<CreatePlanFFetcher> _CreatePlanFFetcher;
+      List<OtherIncomeResponse_get_FFetcher> OtherIncomeResponse_get_FFetcher;
       @Autowired
-      List<EAccountsSummaryFFetcher> _EAccountsSummaryFFetcher;
+      List<CreatePlan_get_FFetcher> CreatePlan_get_FFetcher;
       @Autowired
-      List<ETransferDataDFFetcher> _ETransferDataDFFetcher;
+      List<CreatePlan_create_FFetcher> CreatePlan_create_FFetcher;
       @Autowired
-      List<CreateEAccountDataFFetcher> _CreateEAccountDataFFetcher;
+      List<CreatePlan_update_FFetcher> CreatePlan_update_FFetcher;
       @Autowired
-      List<ChequeCreditbooksFFetcher> _ChequeCreditbooksFFetcher;
+      List<CreatePlan_delete_FFetcher> CreatePlan_delete_FFetcher;
       @Autowired
-      List<RepeatingWholeDataFFetcher> _RepeatingWholeDataFFetcher;
+      List<CreatePlan_list_FFetcher> CreatePlan_list_FFetcher;
       @Autowired
-      List<PostCodeNameAndAddressFFetcher> _PostCodeNameAndAddressFFetcher;
+      List<EAccountsSummary_get_FFetcher> EAccountsSummary_get_FFetcher;
       @Autowired
-      List<PostCodeDataFFetcher> _PostCodeDataFFetcher;
+      List<ETransferDataD_create_FFetcher> ETransferDataD_create_FFetcher;
+      @Autowired
+      List<CreateEAccountData_create_FFetcher> CreateEAccountData_create_FFetcher;
+      @Autowired
+      List<CreateEAccountData_get_FFetcher> CreateEAccountData_get_FFetcher;
+      @Autowired
+      List<ChequeCreditbooks_get_FFetcher> ChequeCreditbooks_get_FFetcher;
+      @Autowired
+      List<ChequeCreditbooks_create_FFetcher> ChequeCreditbooks_create_FFetcher;
+      @Autowired
+      List<RepeatingWholeData_create_FFetcher> RepeatingWholeData_create_FFetcher;
+      @Autowired
+      List<RepeatingWholeData_get_FFetcher> RepeatingWholeData_get_FFetcher;
+      @Autowired
+      List<PostCodeNameAndAddress_create_FFetcher> PostCodeNameAndAddress_create_FFetcher;
+      @Autowired
+      List<PostCodeData_get_FFetcher> PostCodeData_get_FFetcher;
    private String sdl;
    private Map<String, GraphQL> cache = Collections.synchronizedMap(new HashMap<>()); //sucks and need to improve
    @PostConstruct
@@ -128,41 +152,41 @@ public class Wiring  implements IManyGraphQl{
    }
    private RuntimeWiring buildWiring(String dbName) {
        return RuntimeWiring.newRuntimeWiring()
-          .type(newTypeWiring("Query").dataFetcher("getHelloWorldDomainData", find(_HelloWorldDomainDataFFetcher, dbName, f ->f.getHelloWorldDomainData())))
-          .type(newTypeWiring("Query").dataFetcher("getAccountAllFlags", find(_AccountAllFlagsFFetcher, dbName, f ->f.getAccountAllFlags())))
-          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewAgreementType", find(_AccountOverviewAgreementTypeFFetcher, dbName, f ->f.getAccountOverviewAgreementType())))
-          .type(newTypeWiring("Query").dataFetcher("getArrearsDetails", find(_ArrearsDetailsFFetcher, dbName, f ->f.getArrearsDetails())))
-          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewHistory", find(_AccountOverviewHistoryFFetcher, dbName, f ->f.getAccountOverviewHistory())))
-          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewExcessInfo", find(_AccountOverviewExcessInfoFFetcher, dbName, f ->f.getAccountOverviewExcessInfo())))
-          .type(newTypeWiring("Query").dataFetcher("getAccountOverview", find(_AccountOverviewFFetcher, dbName, f ->f.getAccountOverview())))
-          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewOptOut", find(_AccountOverviewOptOutFFetcher, dbName, f ->f.getAccountOverviewOptOut())))
-          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewReason", find(_AccountOverviewReasonFFetcher, dbName, f ->f.getAccountOverviewReason())))
-          .type(newTypeWiring("Query").dataFetcher("getpreJointAccount", find(_pre_JointAccountFFetcher, dbName, f ->f.getpreJointAccount())))
-          .type(newTypeWiring("Query").dataFetcher("getAdditionalInformation", find(_AdditionalInformationFFetcher, dbName, f ->f.getAdditionalInformation())))
-          .type(newTypeWiring("Query").dataFetcher("getBusinessDetailsMain", find(_BusinessDetailsMainFFetcher, dbName, f ->f.getBusinessDetailsMain())))
-          .type(newTypeWiring("Query").dataFetcher("getDropdowns", find(_DropdownsFFetcher, dbName, f ->f.getDropdowns())))
-          .type(newTypeWiring("Query").dataFetcher("getOccupationAndIncomeFullDomain", find(_OccupationAndIncomeFullDomainFFetcher, dbName, f ->f.getOccupationAndIncomeFullDomain())))
-          .type(newTypeWiring("Mutation").dataFetcher("updateOccupationAndIncomeFullDomain", find(_OccupationAndIncomeFullDomainFFetcher, dbName, f ->f.updateOccupationAndIncomeFullDomain())))
-          .type(newTypeWiring("Query").dataFetcher("getOtherIncomeResponse", find(_OtherIncomeResponseFFetcher, dbName, f ->f.getOtherIncomeResponse())))
-          .type(newTypeWiring("Query").dataFetcher("getCreatePlan", find(_CreatePlanFFetcher, dbName, f ->f.getCreatePlan())))
-          .type(newTypeWiring("Mutation").dataFetcher("createCreatePlan", find(_CreatePlanFFetcher, dbName, f ->f.createCreatePlan())))
-          .type(newTypeWiring("Mutation").dataFetcher("updateCreatePlan", find(_CreatePlanFFetcher, dbName, f ->f.updateCreatePlan())))
-          .type(newTypeWiring("Mutation").dataFetcher("deleteCreatePlan", find(_CreatePlanFFetcher, dbName, f ->f.deleteCreatePlan())))
-          .type(newTypeWiring("Query").dataFetcher("listCreatePlan", find(_CreatePlanFFetcher, dbName, f ->f.listCreatePlan())))
-          .type(newTypeWiring("Query").dataFetcher("getEAccountsSummary", find(_EAccountsSummaryFFetcher, dbName, f ->f.getEAccountsSummary())))
-          .type(newTypeWiring("EAccountSummary").dataFetcher("description", find(_EAccountsSummaryFFetcher, dbName, f ->f.getAccountSummaryDescription())))
-          .type(newTypeWiring("EAccountsSummary").dataFetcher("totalMonthlyCost", find(_EAccountsSummaryFFetcher, dbName, f ->f.getTotalMonthlyCost())))
-          .type(newTypeWiring("EAccountsSummary").dataFetcher("oneAccountBalance", find(_EAccountsSummaryFFetcher, dbName, f ->f.getOneAccountBalance())))
-          .type(newTypeWiring("EAccountsSummary").dataFetcher("currentAccountBalance", find(_EAccountsSummaryFFetcher, dbName, f ->f.getCurrentAccountBalance())))
-          .type(newTypeWiring("Mutation").dataFetcher("createETransferDataD", find(_ETransferDataDFFetcher, dbName, f ->f.createETransferDataD())))
-          .type(newTypeWiring("Mutation").dataFetcher("createCreateEAccountData", find(_CreateEAccountDataFFetcher, dbName, f ->f.createCreateEAccountData())))
-          .type(newTypeWiring("Query").dataFetcher("getCreateEAccountData", find(_CreateEAccountDataFFetcher, dbName, f ->f.getCreateEAccountData())))
-          .type(newTypeWiring("Query").dataFetcher("getChequeCreditbooks", find(_ChequeCreditbooksFFetcher, dbName, f ->f.getChequeCreditbooks())))
-          .type(newTypeWiring("Mutation").dataFetcher("createChequeCreditbooks", find(_ChequeCreditbooksFFetcher, dbName, f ->f.createChequeCreditbooks())))
-          .type(newTypeWiring("Mutation").dataFetcher("createRepeatingLine", find(_RepeatingWholeDataFFetcher, dbName, f ->f.createRepeatingLine())))
-          .type(newTypeWiring("Query").dataFetcher("getRepeatingLine", find(_RepeatingWholeDataFFetcher, dbName, f ->f.getRepeatingLine())))
-          .type(newTypeWiring("Mutation").dataFetcher("createPostCodeNameAndAddress", find(_PostCodeNameAndAddressFFetcher, dbName, f ->f.createPostCodeNameAndAddress())))
-          .type(newTypeWiring("Query").dataFetcher("getPostCodeDataLine", find(_PostCodeDataFFetcher, dbName, f ->f.getPostCodeDataLine())))
+          .type(newTypeWiring("Query").dataFetcher("getHelloWorldDomainData", find(HelloWorldDomainData_get_FFetcher, dbName, f ->f.getHelloWorldDomainData())))
+          .type(newTypeWiring("Query").dataFetcher("getAccountAllFlags", find(AccountAllFlags_get_FFetcher, dbName, f ->f.getAccountAllFlags())))
+          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewAgreementType", find(AccountOverviewAgreementType_get_FFetcher, dbName, f ->f.getAccountOverviewAgreementType())))
+          .type(newTypeWiring("Query").dataFetcher("getArrearsDetails", find(ArrearsDetails_get_FFetcher, dbName, f ->f.getArrearsDetails())))
+          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewHistory", find(AccountOverviewHistory_get_FFetcher, dbName, f ->f.getAccountOverviewHistory())))
+          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewExcessInfo", find(AccountOverviewExcessInfo_get_FFetcher, dbName, f ->f.getAccountOverviewExcessInfo())))
+          .type(newTypeWiring("Query").dataFetcher("getAccountOverview", find(AccountOverview_get_FFetcher, dbName, f ->f.getAccountOverview())))
+          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewOptOut", find(AccountOverviewOptOut_get_FFetcher, dbName, f ->f.getAccountOverviewOptOut())))
+          .type(newTypeWiring("Query").dataFetcher("getAccountOverviewReason", find(AccountOverviewReason_get_FFetcher, dbName, f ->f.getAccountOverviewReason())))
+          .type(newTypeWiring("Query").dataFetcher("getpreJointAccount", find(pre_JointAccount_get_FFetcher, dbName, f ->f.getpreJointAccount())))
+          .type(newTypeWiring("Query").dataFetcher("getAdditionalInformation", find(AdditionalInformation_get_FFetcher, dbName, f ->f.getAdditionalInformation())))
+          .type(newTypeWiring("Query").dataFetcher("getBusinessDetailsMain", find(BusinessDetailsMain_get_FFetcher, dbName, f ->f.getBusinessDetailsMain())))
+          .type(newTypeWiring("Query").dataFetcher("getDropdowns", find(Dropdowns_get_FFetcher, dbName, f ->f.getDropdowns())))
+          .type(newTypeWiring("Query").dataFetcher("getOccupationAndIncomeFullDomain", find(OccupationAndIncomeFullDomain_get_FFetcher, dbName, f ->f.getOccupationAndIncomeFullDomain())))
+          .type(newTypeWiring("Mutation").dataFetcher("updateOccupationAndIncomeFullDomain", find(OccupationAndIncomeFullDomain_update_FFetcher, dbName, f ->f.updateOccupationAndIncomeFullDomain())))
+          .type(newTypeWiring("Query").dataFetcher("getOtherIncomeResponse", find(OtherIncomeResponse_get_FFetcher, dbName, f ->f.getOtherIncomeResponse())))
+          .type(newTypeWiring("Query").dataFetcher("getCreatePlan", find(CreatePlan_get_FFetcher, dbName, f ->f.getCreatePlan())))
+          .type(newTypeWiring("Mutation").dataFetcher("createCreatePlan", find(CreatePlan_create_FFetcher, dbName, f ->f.createCreatePlan())))
+          .type(newTypeWiring("Mutation").dataFetcher("updateCreatePlan", find(CreatePlan_update_FFetcher, dbName, f ->f.updateCreatePlan())))
+          .type(newTypeWiring("Mutation").dataFetcher("deleteCreatePlan", find(CreatePlan_delete_FFetcher, dbName, f ->f.deleteCreatePlan())))
+          .type(newTypeWiring("Query").dataFetcher("listCreatePlan", find(CreatePlan_list_FFetcher, dbName, f ->f.listCreatePlan())))
+          .type(newTypeWiring("Query").dataFetcher("getEAccountsSummary", find(EAccountsSummary_get_FFetcher, dbName, f ->f.getEAccountsSummary())))
+          .type(newTypeWiring("EAccountSummary").dataFetcher("description", find(EAccountsSummary_get_FFetcher, dbName, f ->f.getAccountSummaryDescription())))
+          .type(newTypeWiring("EAccountsSummary").dataFetcher("totalMonthlyCost", find(EAccountsSummary_get_FFetcher, dbName, f ->f.getTotalMonthlyCost())))
+          .type(newTypeWiring("EAccountsSummary").dataFetcher("oneAccountBalance", find(EAccountsSummary_get_FFetcher, dbName, f ->f.getOneAccountBalance())))
+          .type(newTypeWiring("EAccountsSummary").dataFetcher("currentAccountBalance", find(EAccountsSummary_get_FFetcher, dbName, f ->f.getCurrentAccountBalance())))
+          .type(newTypeWiring("Mutation").dataFetcher("createETransferDataD", find(ETransferDataD_create_FFetcher, dbName, f ->f.createETransferDataD())))
+          .type(newTypeWiring("Mutation").dataFetcher("createCreateEAccountData", find(CreateEAccountData_create_FFetcher, dbName, f ->f.createCreateEAccountData())))
+          .type(newTypeWiring("Query").dataFetcher("getCreateEAccountData", find(CreateEAccountData_get_FFetcher, dbName, f ->f.getCreateEAccountData())))
+          .type(newTypeWiring("Query").dataFetcher("getChequeCreditbooks", find(ChequeCreditbooks_get_FFetcher, dbName, f ->f.getChequeCreditbooks())))
+          .type(newTypeWiring("Mutation").dataFetcher("createChequeCreditbooks", find(ChequeCreditbooks_create_FFetcher, dbName, f ->f.createChequeCreditbooks())))
+          .type(newTypeWiring("Mutation").dataFetcher("createRepeatingLine", find(RepeatingWholeData_create_FFetcher, dbName, f ->f.createRepeatingLine())))
+          .type(newTypeWiring("Query").dataFetcher("getRepeatingLine", find(RepeatingWholeData_get_FFetcher, dbName, f ->f.getRepeatingLine())))
+          .type(newTypeWiring("Mutation").dataFetcher("createPostCodeNameAndAddress", find(PostCodeNameAndAddress_create_FFetcher, dbName, f ->f.createPostCodeNameAndAddress())))
+          .type(newTypeWiring("Query").dataFetcher("getPostCodeDataLine", find(PostCodeData_get_FFetcher, dbName, f ->f.getPostCodeDataLine())))
        .build();
     }
     @Bean
