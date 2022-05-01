@@ -20,7 +20,6 @@ export function makeUseStoredProcedure<B, G> ( params: JavaWiringParams, pageD: 
   return [
     `package ${h2FetcherPackage ( params, pageD )};`,
     ``,
-    `import   ${params.thePackage}.${params.dbPackage}.JointAccount_jointAccountMaps;`,
     `import   ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
     `import  ${fetcherPackageName ( params, pageD )}.${fetcherInterfaceName ( params, restD, action )};`,
     `import graphql.schema.DataFetcher;`,
