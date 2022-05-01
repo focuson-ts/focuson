@@ -1,7 +1,7 @@
-import { paramsForTest } from "./makeJavaResolvers.spec";
 import { JointAccountPageD } from "../example/jointAccount/jointAccount.pageD";
 import { makeH2Fetchers } from "../codegen/makeH2Fetchers";
 import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
+import { paramsForTest } from "./paramsForTest";
 
 describe ( "makeH2Fetchers", () => {
   it ( "should make the java code for the fetchers", () => {
@@ -21,7 +21,7 @@ describe ( "makeH2Fetchers", () => {
       "import java.util.Optional;",
       "",
       "  @Component",
-      "public class pre_JointAccountFFetcherH2 implements pre_JointAccount_get_FFetcher {",
+      "public class pre_JointAccount_get_FFetcherH2 implements pre_JointAccount_get_FFetcher {",
       "",
       "  @Autowired",
       "  private DataSource dataSource;",

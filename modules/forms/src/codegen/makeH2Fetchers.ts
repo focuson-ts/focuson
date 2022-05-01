@@ -34,7 +34,7 @@ export function makeH2Fetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
     `import java.util.Optional;`,
     ``,
     `  @Component`,
-    `public class ${h2FetcherClassName ( params, rest )} implements ${fetcherInterfaceName ( params, rest, "get" )} {`,
+    `public class ${h2FetcherClassName ( params, rest, 'get' )} implements ${fetcherInterfaceName ( params, rest, "get" )} {`,
     ``,
     `  @Autowired`,
     `  private DataSource dataSource;`,

@@ -1,9 +1,9 @@
 import { makeAllDomainsFor, makeDomainForDataD, makePageDomainsFor } from "../codegen/makeDomain";
 import { CreatePlanDD, EAccountsSummaryDD, EAccountSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
-import { paramsForTest } from "./makeJavaResolvers.spec";
 import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 import { RepeatingLinePageD, RepeatingPageD } from "../example/repeating/repeating.pageD";
+import { paramsForTest } from "./paramsForTest";
 
 
 describe ( "makeDomainFor", () => {

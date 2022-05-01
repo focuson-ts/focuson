@@ -1,9 +1,9 @@
 import { makeEmptyData, makeJavaVariable, makeSampleVariable, makeTsSample } from "../codegen/makeSample";
 import { CreatePlanDD, EAccountsSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD";
-import { paramsForTest } from "./makeJavaResolvers.spec";
 import { RepeatingPageD } from "../example/repeating/repeating.pageD";
 import { RepeatingWholeDataD } from "../example/repeating/repeating.dataD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
+import { paramsForTest } from "./paramsForTest";
 
 describe ( "makeEmptyTs", () => {
   it ( "should make an empty data structure", () => {

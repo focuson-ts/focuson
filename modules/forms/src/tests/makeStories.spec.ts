@@ -1,6 +1,6 @@
 import { makeOneStory } from "../codegen/makeStories";
-import { paramsForTest } from "./makeJavaResolvers.spec";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
+import { paramsForTest } from "./paramsForTest";
 
 describe ( 'makeStories', () => {
   it ( 'generate ts for a story', () => {

@@ -1,11 +1,11 @@
 import { makePages } from "../codegen/makePages";
-import { paramsForTest } from "./makeJavaResolvers.spec";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 import { repeatingRestRD } from "../example/repeating/repeating.restD";
 import { RepeatingLinePageD, RepeatingPageD } from "../example/repeating/repeating.pageD";
 import { RepeatingWholeDataD } from "../example/repeating/repeating.dataD";
 import { CreateEAccountPageD } from "../example/createEAccount/createEAccount.pageD";
+import { paramsForTest } from "./paramsForTest";
 
 
 describe ( "makePages", () => {

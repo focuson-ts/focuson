@@ -1,0 +1,567 @@
+{
+  "consumer": {
+    "name": "AccountOverview"
+  },
+  "provider": {
+    "name": "AccountOverviewProvider"
+  },
+  "interactions": [
+    {
+      "description": "A request for AccountAllFlags",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/flags",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "flags": [
+            {
+              "flagName": "Capitalised",
+              "flagValue": true
+            },
+            {
+              "flagName": "Contigent Obligations",
+              "flagValue": false
+            },
+            {
+              "flagName": "Capitalised",
+              "flagValue": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "a rest for AccountOverview accountFlags get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/flags",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "flags": [
+            {
+              "flagName": "Capitalised",
+              "flagValue": true
+            },
+            {
+              "flagName": "Contigent Obligations",
+              "flagValue": false
+            },
+            {
+              "flagName": "Capitalised",
+              "flagValue": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "A request for AccountOverviewAgreementType",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/agreementType",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "agreementType": "checking",
+          "transactionHeading": "option1"
+        }
+      }
+    },
+    {
+      "description": "a rest for AccountOverview agreementType get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/agreementType",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "agreementType": "checking",
+          "transactionHeading": "option1"
+        }
+      }
+    },
+    {
+      "description": "A request for ArrearsDetails",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/arrearsDetails",
+        "query": "accountId=accId&customerId=custId&startDate=2020-01-20"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "details": [
+            {
+              "collectionsDate": "2020-10-01",
+              "creditedDate": "2020-10-01",
+              "minPayment": 123,
+              "contractualAmount": 123,
+              "paymentType": "dd",
+              "paymentReceived": 123,
+              "shortfall": 123,
+              "arrearsTotal": 123,
+              "missedPayments": 123
+            },
+            {
+              "collectionsDate": "2022-14-01",
+              "creditedDate": "2022-14-01",
+              "minPayment": 456,
+              "contractualAmount": 456,
+              "paymentType": "ddResubmit",
+              "paymentReceived": 456,
+              "shortfall": 456,
+              "arrearsTotal": 456,
+              "missedPayments": 456
+            },
+            {
+              "collectionsDate": "2020-10-01",
+              "creditedDate": "2020-10-01",
+              "minPayment": 123,
+              "contractualAmount": 123,
+              "paymentType": "dd",
+              "paymentReceived": 123,
+              "shortfall": 123,
+              "arrearsTotal": 123,
+              "missedPayments": 123
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "a rest for AccountOverview arrearsDetails get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/arrearsDetails",
+        "query": "accountId=accId&customerId=custId&startDate=2020-01-20"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "details": [
+            {
+              "collectionsDate": "2020-10-01",
+              "creditedDate": "2020-10-01",
+              "minPayment": 123,
+              "contractualAmount": 123,
+              "paymentType": "dd",
+              "paymentReceived": 123,
+              "shortfall": 123,
+              "arrearsTotal": 123,
+              "missedPayments": 123
+            },
+            {
+              "collectionsDate": "2022-14-01",
+              "creditedDate": "2022-14-01",
+              "minPayment": 456,
+              "contractualAmount": 456,
+              "paymentType": "ddResubmit",
+              "paymentReceived": 456,
+              "shortfall": 456,
+              "arrearsTotal": 456,
+              "missedPayments": 456
+            },
+            {
+              "collectionsDate": "2020-10-01",
+              "creditedDate": "2020-10-01",
+              "minPayment": 123,
+              "contractualAmount": 123,
+              "paymentType": "dd",
+              "paymentReceived": 123,
+              "shortfall": 123,
+              "arrearsTotal": 123,
+              "missedPayments": 123
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "A request for AccountOverviewHistory",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/excessHistory",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "history": [
+            {
+              "start": "2020-10-01",
+              "end": "2020-10-01",
+              "consecutiveDays": 123
+            },
+            {
+              "start": "2022-14-01",
+              "end": "2022-14-01",
+              "consecutiveDays": 456
+            },
+            {
+              "start": "2020-10-01",
+              "end": "2020-10-01",
+              "consecutiveDays": 123
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "a rest for AccountOverview excessHistory get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/excessHistory",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "history": [
+            {
+              "start": "2020-10-01",
+              "end": "2020-10-01",
+              "consecutiveDays": 123
+            },
+            {
+              "start": "2022-14-01",
+              "end": "2022-14-01",
+              "consecutiveDays": 456
+            },
+            {
+              "start": "2020-10-01",
+              "end": "2020-10-01",
+              "consecutiveDays": 123
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "A request for AccountOverviewExcessInfo",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/excessInfo",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "dayOfCurrentExcess": 123,
+          "currentExcessOnAccount": 123,
+          "currentPctExcess": 123,
+          "dateOfLastCapitalization": "2020-10-01",
+          "dateOfLastExcessFulfillment": "2020-10-01"
+        }
+      }
+    },
+    {
+      "description": "a rest for AccountOverview excessInfo get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/excessInfo",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "dayOfCurrentExcess": 123,
+          "currentExcessOnAccount": 123,
+          "currentPctExcess": 123,
+          "dateOfLastCapitalization": "2020-10-01",
+          "dateOfLastExcessFulfillment": "2020-10-01"
+        }
+      }
+    },
+    {
+      "description": "A request for AccountOverview",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "score": 123,
+          "accountType": "checking",
+          "drawDownDate": "2020-10-01",
+          "repaymentDate": "2020-10-01",
+          "propertyValue": 220000,
+          "mul": 173750,
+          "drawDownAmount": 90007,
+          "criteria": [
+            {
+              "criteria": "Account Management"
+            },
+            {
+              "criteria": "Affordability check failed"
+            },
+            {
+              "criteria": "Account Management"
+            }
+          ],
+          "zFlagSet": "N",
+          "excessSixMonths": 1,
+          "bouncedDDs12Months": 3,
+          "unpaidCardOrMisuseItems": 0,
+          "currentBalance": 123,
+          "currentInterestRate": 12,
+          "facilities": {
+            "facilities": [
+              {
+                "facility": 1234,
+                "changeDate": "23-03-2022",
+                "unApproved": true,
+                "reason": "some reason",
+                "amount": 2345
+              },
+              {
+                "facility": 1234,
+                "changeDate": "23-03-2022",
+                "unApproved": true,
+                "reason": "some reason",
+                "amount": 2345
+              },
+              {
+                "facility": 1234,
+                "changeDate": "23-03-2022",
+                "unApproved": true,
+                "reason": "some reason",
+                "amount": 2345
+              }
+            ]
+          },
+          "highBalance": 1000,
+          "lowBalance": 23,
+          "pctOfFacility": 27,
+          "eightyPctFacility": 800,
+          "eightyFivePctFacility": 234
+        }
+      }
+    },
+    {
+      "description": "a rest for AccountOverview main get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "score": 123,
+          "accountType": "checking",
+          "drawDownDate": "2020-10-01",
+          "repaymentDate": "2020-10-01",
+          "propertyValue": 220000,
+          "mul": 173750,
+          "drawDownAmount": 90007,
+          "criteria": [
+            {
+              "criteria": "Account Management"
+            },
+            {
+              "criteria": "Affordability check failed"
+            },
+            {
+              "criteria": "Account Management"
+            }
+          ],
+          "zFlagSet": "N",
+          "excessSixMonths": 1,
+          "bouncedDDs12Months": 3,
+          "unpaidCardOrMisuseItems": 0,
+          "currentBalance": 123,
+          "currentInterestRate": 12,
+          "facilities": {
+            "facilities": [
+              {
+                "facility": 1234,
+                "changeDate": "23-03-2022",
+                "unApproved": true,
+                "reason": "some reason",
+                "amount": 2345
+              },
+              {
+                "facility": 1234,
+                "changeDate": "23-03-2022",
+                "unApproved": true,
+                "reason": "some reason",
+                "amount": 2345
+              },
+              {
+                "facility": 1234,
+                "changeDate": "23-03-2022",
+                "unApproved": true,
+                "reason": "some reason",
+                "amount": 2345
+              }
+            ]
+          },
+          "highBalance": 1000,
+          "lowBalance": 23,
+          "pctOfFacility": 27,
+          "eightyPctFacility": 800,
+          "eightyFivePctFacility": 234
+        }
+      }
+    },
+    {
+      "description": "A request for AccountOverviewOptOut",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/optOut",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "optOut": [
+            {
+              "optedOut": true,
+              "addrLine5": "someString",
+              "changedBy": "someString",
+              "changedDate": "2020-10-01"
+            },
+            {
+              "optedOut": false,
+              "addrLine5": "anotherString",
+              "changedBy": "anotherString",
+              "changedDate": "2022-14-01"
+            },
+            {
+              "optedOut": true,
+              "addrLine5": "someString",
+              "changedBy": "someString",
+              "changedDate": "2020-10-01"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "a rest for AccountOverview optOut get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/optOut",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "optOut": [
+            {
+              "optedOut": true,
+              "addrLine5": "someString",
+              "changedBy": "someString",
+              "changedDate": "2020-10-01"
+            },
+            {
+              "optedOut": false,
+              "addrLine5": "anotherString",
+              "changedBy": "anotherString",
+              "changedDate": "2022-14-01"
+            },
+            {
+              "optedOut": true,
+              "addrLine5": "someString",
+              "changedBy": "someString",
+              "changedDate": "2020-10-01"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "A request for AccountOverviewReason",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/reason",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "reason": "Second charge case"
+        }
+      }
+    },
+    {
+      "description": "a rest for AccountOverview reason get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/accountOverview/reason",
+        "query": "accountId=accId&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "reason": "Second charge case"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

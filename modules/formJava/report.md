@@ -33,6 +33,7 @@
 |ETransfer|eTransfer | /api/eTransfers?{query}| customerId
 |CreateEAccount|eTransfer | /api/createEAccount/?{query}| accountId,createPlanId,customerId
 |ChequeCreditbooks|chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,customerId
+|ChequeCreditbooks| | /api/chequeCreditBooks/?{query}| accountId,applRef,brandRef,customerId
 |Repeating|repeating | /api/repeating?{query}| customerId
 |PostCodeMainPage|address | /api/address?{query}| 
 |PostCodeMainPage|postcode | /api/postCode?{query}| postcode
@@ -323,6 +324,7 @@
   |name|url|params
   | --- | --- | --- 
     |chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,customerId
+    | | /api/chequeCreditBooks/?{query}| accountId,applRef,brandRef,customerId
   ##modals  
   |name|displayed with
   | --- | --- 

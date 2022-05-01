@@ -1,42 +1,9 @@
 import { findAllResolversFor, findChildResolvers, findQueryMutationResolvers, makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
-import { CombinedParams } from "../codegen/config";
 import { repeatingRestRD } from "../example/repeating/repeating.restD";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { RepeatingPageD } from "../example/repeating/repeating.pageD";
-
-export const paramsForTest: CombinedParams = {
-  optionalsFile: "optionals",
-  pagesFile: 'pages',
-  focusOnVersion: "someFocusOnVersion",
-  commonParams: "CommonIds",
-  stateName: "FState",
-  commonFile: "common",
-  pageDomainsFile: "pageDomains",
-  domainsFile: "domains",
-  fetchersFile: "fetchers",
-  mockFetcherPackage: "mockfetchers",
-  h2FetcherPackage: 'h2fetchers',
-  controllerPackage: "controllers",
-  restsFile: "rests",
-  pactsFile: "pact.spec",
-  samplesFile: "samples",
-  emptyFile: "empty",
-  renderFile: "render",
-  guardReportFile: 'guards',
-  urlparams: 'commonIds',
-  queriesPackage: 'queries',
-  thePackage: 'focuson.data',
-  applicationName: 'ExampleApp',
-  fetcherPackage: 'fetchers',
-  fetcherInterface: 'FFetcher',
-  wiringClass: 'Wiring',
-  fetcherClass: 'MockFetchers',
-  schema: 'someSchema.graphql',
-  sampleClass: 'Sample',
-  dbPackage: 'db',
-  defaultDbName: 'mock'
-};
+import { paramsForTest } from "./paramsForTest";
 
 describe ( "makeJavaResolversInterface", () => {
   it ( "should make a java interface when action is get", () => {

@@ -6,7 +6,7 @@ import { addressRestD } from "../example/postCodeDemo/addressSearch.restD";
 import { JointAccountPageD } from "../example/jointAccount/jointAccount.pageD";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
-import { paramsForTest } from "./makeJavaResolvers.spec";
+import { paramsForTest } from "./paramsForTest";
 
 const mainEntity: MainEntity = jointAccountRestD.tables.entity
 const theRestD = jointAccountRestD

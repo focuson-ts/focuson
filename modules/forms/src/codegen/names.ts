@@ -27,11 +27,11 @@ export const restControllerName = <G> ( restD: RestD<G> ) => (restD.namePrefix ?
 export const javaSqlCreateTableSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.createTableSql.sql`
 export const javaSqlReadSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.readTableSql.sql`
 
-export const queryName = <G> ( restD: RestD<G>, action: RestAction ): string => { return restActionForName(action) + safeString ( restD.namePrefix ) + compDataDIn ( restD.dataDD ).name; }
+export const queryName = <G> ( restD: RestD<G>, action: RestAction ): string => { return restActionForName ( action ) + safeString ( restD.namePrefix ) + compDataDIn ( restD.dataDD ).name; }
 export const createTableName = <G> ( restD: RestD<G> ): string => { return "createTable" + compDataDIn ( restD.dataDD ).name; }
 export const createTableSqlName = (): string => { return "schema"}
 export const getSqlName = (): string => { return "get"}
-export const endPointName = <G> ( restD: RestD<G>, action: RestAction ): string => restActionForName(action) + restD.dataDD.name
+export const endPointName = <G> ( restD: RestD<G>, action: RestAction ): string => restActionForName ( action ) + restD.dataDD.name
 
 export const modalName = <B, G> ( p: PageD<B, G>, modal: PageD<B, G> ) => modal.name
 export const restNameWithPrefix = <G> ( r: RestD<G> ) => r.namePrefix ? r.namePrefix + "_" + r.dataDD.name : r.dataDD.name
@@ -39,19 +39,19 @@ export const restDetailsName = <B, G> ( p: PageD<B, G>, restName: string, r: Res
 
 export const packageNameFor = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, thing: string ): string => `${params.thePackage}.${thing}.${p.name}`;
 export const fetcherPackageName = <G> ( params: JavaWiringParams, p: MainPageD<any, G> ): string => packageNameFor ( params, p, params.fetcherPackage );
-export const fetcherInterfaceName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => `${restNameWithPrefix ( r )}_${restActionForName( a )}_${params.fetcherInterface}`;
+export const fetcherInterfaceName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${params.fetcherInterface}`;
 
 export const h2FetcherPackage = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G> ): string => packageNameFor ( params, p, params.h2FetcherPackage );
-export const h2FetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${restNameWithPrefix ( r )}${params.fetcherInterface}H2`;
+export const h2FetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G>, action: RestAction ): string => `${restNameWithPrefix ( r )}_${restActionForName ( action )}_${params.fetcherInterface}H2`;
 
 export const mockFetcherPackage = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G> ): string => packageNameFor ( params, p, params.mockFetcherPackage );
-export const mockFetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => `${restNameWithPrefix ( r )}_${restActionForName(a)}_${params.fetcherInterface}Mock`;
+export const mockFetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${params.fetcherInterface}Mock`;
 
 export const queryPackage = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G> ): string => packageNameFor ( params, p, params.queriesPackage );
 export const providerName = <B, G> ( p: MainPageD<B, G> ) => p.name + "Provider"
 
 export const fetcherName = <G> ( d: RestDefnInPageProperties<G> ): string => restNameWithPrefix ( d.rest ) + "Fetcher";
-export const fetcherVariableName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => `${restNameWithPrefix ( r )}_${restActionForName(a)}_${params.fetcherInterface}`;
+export const fetcherVariableName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${params.fetcherInterface}`;
 export const providerPactClassName = <B, G> ( pd: MainPageD<B, G> ): string => providerName ( pd ) + "Test";
 
 

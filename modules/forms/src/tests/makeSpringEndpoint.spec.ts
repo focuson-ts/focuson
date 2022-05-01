@@ -1,11 +1,11 @@
 import { makeParamsForJava, makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
-import { paramsForTest } from "./makeJavaResolvers.spec";
 import { repeatingRestRD } from "../example/repeating/repeating.restD";
 import { addressRestD } from "../example/postCodeDemo/addressSearch.restD";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { RepeatingPageD } from "../example/repeating/repeating.pageD";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
+import { paramsForTest } from "./paramsForTest";
 
 
 describe ( "makeSpringEndpoint", () => {

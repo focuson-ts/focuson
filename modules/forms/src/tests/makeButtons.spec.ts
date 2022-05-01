@@ -1,11 +1,11 @@
 import { makeButtonsFrom } from "../codegen/makeButtons";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
-import { paramsForTest } from "./makeJavaResolvers.spec";
 import { makeButtons } from "../buttons/allButtons";
 
 import { AllGuardCreator } from "../buttons/guardButton";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
+import { paramsForTest } from "./paramsForTest";
 
 
 describe ( "makeButtons", () => {

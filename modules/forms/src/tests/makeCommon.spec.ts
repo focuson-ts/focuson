@@ -1,11 +1,11 @@
 import { findAllCommonParams, makeCommon, makeCommonParams, makeFullState } from "../codegen/makeCommon";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
-import { paramsForTest } from "./makeJavaResolvers.spec";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
 import { devAppConfig } from "../focuson.config";
 import { occupationAndIncomeRD } from "../example/occupationAndIncome/occupationAndIncome.restD";
+import { paramsForTest } from "./paramsForTest";
 
 
 describe ( "makeFullState", () => {

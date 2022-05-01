@@ -2,7 +2,7 @@ import { copyFile, copyFiles, DirectorySpec, templateFile, writeToFile } from "@
 import { JavaWiringParams } from "../codegen/config";
 import fs from "fs";
 import { forEachRest, forEachRestAndActions, unique } from "../common/restD";
-import { detailsLog, GenerateLogLevel, NameAnd, safeArray, safeString, sortedEntries } from "@focuson/utils";
+import { detailsLog, GenerateLogLevel, isRestStateChange, NameAnd, safeArray, safeString, sortedEntries } from "@focuson/utils";
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
@@ -17,6 +17,7 @@ import { createTableSql, findSqlLinkDataFromRootAndDataD, findSqlRoot, generateG
 import { makeH2Fetchers } from "../codegen/makeH2Fetchers";
 import { makePactValidation } from "../codegen/makePactValidation";
 import { AppConfig } from "../appConfig";
+import { makeUseStoredProcedure } from "../codegen/makeUseStoredProcedure";
 
 
 export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
@@ -115,8 +116,14 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   forEachRestAndActions ( pages, p => ( r, restName, rdp ) => a => {
     if ( a !== 'get' ) return;
     if ( rdp.rest.tables === undefined ) return;
-    writeToFile ( `${javaH2FetcherRoot}/${p.name}/${h2FetcherClassName ( params, rdp.rest )}.java`, () => makeH2Fetchers ( params, p, restName, rdp ) )
-
+    writeToFile ( `${javaH2FetcherRoot}/${p.name}/${h2FetcherClassName ( params, rdp.rest, a )}.java`, () => makeH2Fetchers ( params, p, restName, rdp ) )
+  } )
+  forEachRestAndActions ( pages, p => ( r, restName, rdp ) => a => {
+    if ( !isRestStateChange ( a ) ) return;
+    if ( rdp.rest.states === undefined ) return;
+    const procCode = makeUseStoredProcedure ( params, p, restName, rdp.rest, a )
+    if ( procCode.length > 0 )
+      writeToFile ( `${javaH2FetcherRoot}/${p.name}/${h2FetcherClassName ( params, rdp.rest, a )}.java`, () => procCode )
   } )
   allMainPages ( pages ).flatMap ( mainPage =>
     sortedEntries ( mainPage.rest ).forEach ( ( [ restName, rdp ] ) => {

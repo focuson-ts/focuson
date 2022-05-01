@@ -1,10 +1,10 @@
 import { makeAllFetchers, makeFetchersDataStructure } from "../codegen/makeTSFetchers";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
-import { paramsForTest } from "./makeJavaResolvers.spec";
 import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 import { RepeatingPageD } from "../example/repeating/repeating.pageD";
 import { postcodeRestD } from "../example/postCodeDemo/addressSearch.restD";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
+import { paramsForTest } from "./paramsForTest";
 
 describe ( "makeAllFetchers", () => {
     it ( "should make a fetcher", () => {

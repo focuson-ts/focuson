@@ -1,0 +1,106 @@
+{
+  "consumer": {
+    "name": "PostCodeMainPage"
+  },
+  "provider": {
+    "name": "PostCodeMainPageProvider"
+  },
+  "interactions": [
+    {
+      "description": "a rest for PostCodeMainPage address create",
+      "providerState": "default",
+      "request": {
+        "method": "POST",
+        "path": "/api/address",
+        "query": "",
+        "body": "{\"name\":\"This is a one line string\",\"line1\":\"4 Privet drive\",\"line2\":\"Little Whinging\",\"line3\":\"Surrey\",\"line4\":\"England\",\"postcode\":\"This is a one line string\"}"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "name": "This is a one line string",
+          "line1": "4 Privet drive",
+          "line2": "Little Whinging",
+          "line3": "Surrey",
+          "line4": "England",
+          "postcode": "This is a one line string"
+        }
+      }
+    },
+    {
+      "description": "A request for PostCodeData",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/postCode",
+        "query": "postcode=LW12+4RG"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": [
+          {
+            "line1": "4 Privet drive",
+            "line2": "Little Whinging",
+            "line3": "Surrey",
+            "line4": "England"
+          },
+          {
+            "line1": "27 Throughput Lane",
+            "line2": "Woodfield",
+            "line3": "",
+            "line4": "Ireland"
+          },
+          {
+            "line1": "4 Privet drive",
+            "line2": "Little Whinging",
+            "line3": "Surrey",
+            "line4": "England"
+          }
+        ]
+      }
+    },
+    {
+      "description": "a rest for PostCodeMainPage postcode get",
+      "providerState": "default",
+      "request": {
+        "method": "GET",
+        "path": "/api/postCode",
+        "query": "postcode=LW12+4RG"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": [
+          {
+            "line1": "4 Privet drive",
+            "line2": "Little Whinging",
+            "line3": "Surrey",
+            "line4": "England"
+          },
+          {
+            "line1": "27 Throughput Lane",
+            "line2": "Woodfield",
+            "line3": "",
+            "line4": "Ireland"
+          },
+          {
+            "line1": "4 Privet drive",
+            "line2": "Little Whinging",
+            "line3": "Surrey",
+            "line4": "England"
+          }
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

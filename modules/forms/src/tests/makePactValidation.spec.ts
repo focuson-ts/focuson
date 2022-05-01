@@ -1,7 +1,7 @@
 import { JointAccountPageD } from "../example/jointAccount/jointAccount.pageD";
 import { CreateEAccountPageD } from "../example/createEAccount/createEAccount.pageD";
 import { makePactValidation } from "../codegen/makePactValidation";
-import { paramsForTest } from "./makeJavaResolvers.spec";
+import { paramsForTest } from "./paramsForTest";
 
 describe ( "makePactValidation", () => {
   it ( "should make a pact validation for each page", () => {

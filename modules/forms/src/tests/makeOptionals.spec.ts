@@ -1,6 +1,6 @@
 import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
 import { makeOptionals } from "../codegen/makeOptionals";
-import { paramsForTest } from "./makeJavaResolvers.spec";
+import { paramsForTest } from "./paramsForTest";
 
 describe ( 'makeOptionals', () => {
   it ( "should take the data out of the pageD and make a composite of the optionals from all the pages", () => {

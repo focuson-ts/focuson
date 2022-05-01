@@ -2,7 +2,6 @@ import { EAccountsSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD"
 import { createAllReactCalls, createAllReactComponents, createReactComponent, createReactPageComponent, listComponentsIn, processParam } from "../codegen/makeRender";
 import { DisplayCompParamType, LabelAndStringInputCD } from "../common/componentsD";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
-import { paramsForTest } from "./makeJavaResolvers.spec";
 import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 import { makeButtons } from "../buttons/allButtons";
 
@@ -10,6 +9,7 @@ import { AllGuardCreator } from "../buttons/guardButton";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { listOccupationsModalPD, OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
 import { oneOccupationIncomeDetailsDD } from "../example/occupationAndIncome/occupationAndIncome.dataD";
+import { paramsForTest } from "./paramsForTest";
 
 //
 describe ( " listComponentsIn", () => {
