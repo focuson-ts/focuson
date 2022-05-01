@@ -47,7 +47,7 @@ describe ( 'makeSample', () => {
       "eAccountsTable": [
         {
           "accountId": 1233450,
-          "description": "This account has a description",
+          "description": "This account's description",
           "displayType": "checking",
           "frequency": "23",
           "total": 1000,
@@ -55,7 +55,7 @@ describe ( 'makeSample', () => {
         },
         {
           "accountId": 3233450,
-          "description": "another description",
+          "description": "This account's description",
           "displayType": "savings",
           "frequency": "23",
           "total": 2991,
@@ -63,7 +63,7 @@ describe ( 'makeSample', () => {
         },
         {
           "accountId": 4333450,
-          "description": "This account has a description",
+          "description": "This account's description",
           "displayType": "checking",
           "frequency": "23",
           "total": 1000,
@@ -88,7 +88,7 @@ describe ( "makeJavaVariable", () => {
       "       '    {'+",
       "       '      \\'accountId\\': 1233450,'+",
       "       '      \\'displayType\\': \\'checking\\','+",
-      "       '      \\'description\\': \\'This account has a description\\','+",
+      "       '      \\'description\\': \\'This account's description\\','+",
       "       '      \\'virtualBankSeq\\': \\'seq1\\','+",
       "       '      \\'total\\': 1000,'+",
       "       '      \\'frequency\\': \\'23\\''+",
@@ -96,7 +96,7 @@ describe ( "makeJavaVariable", () => {
       "       '    {'+",
       "       '      \\'accountId\\': 3233450,'+",
       "       '      \\'displayType\\': \\'savings\\','+",
-      "       '      \\'description\\': \\'another description\\','+",
+      "       '      \\'description\\': \\'This account's description\\','+",
       "       '      \\'virtualBankSeq\\': \\'seq2\\','+",
       "       '      \\'total\\': 2991,'+",
       "       '      \\'frequency\\': \\'23\\''+",
@@ -104,7 +104,7 @@ describe ( "makeJavaVariable", () => {
       "       '    {'+",
       "       '      \\'accountId\\': 4333450,'+",
       "       '      \\'displayType\\': \\'checking\\','+",
-      "       '      \\'description\\': \\'This account has a description\\','+",
+      "       '      \\'description\\': \\'This account's description\\','+",
       "       '      \\'virtualBankSeq\\': \\'seq3\\','+",
       "       '      \\'total\\': 1000,'+",
       "       '      \\'frequency\\': \\'23\\''+",

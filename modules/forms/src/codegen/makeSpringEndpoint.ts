@@ -30,7 +30,7 @@ function paramsForQuery<G> ( r: RestD<G>, restAction: RestAction ): string {
 function mappingAnnotation ( restAction: RestAction ) {
   if ( restAction === 'get' ) return 'GetMapping'
   if ( restAction === 'update' ) return 'PutMapping'
-  if ( restAction === 'list' ) return 'GetMapping'
+  // if ( restAction === 'list' ) return 'GetMapping'
   if ( restAction === 'create' ) return 'PostMapping'
   if ( restAction === 'delete' ) return 'DeleteMapping'
   if ( isRestStateChange ( (restAction) ) ) return 'PostMapping'

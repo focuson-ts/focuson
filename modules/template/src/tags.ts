@@ -82,7 +82,7 @@ export function methodFor ( r: RestAction ) {
 export const bodyFor: TagOpsFn<RequestInit | undefined> =
                ( urlConfig, restAction ) => s => {
                  const method = methodFor ( restAction )
-                 if ( restAction === 'get' || restAction === 'getOption' || restAction === 'list' ) return undefined
+                 if ( restAction === 'get' || restAction === 'getOption') return undefined // || restAction === 'list'
                  if ( restAction === 'delete'|| isRestStateChange(restAction) ) return { method }
                  let bodyL = urlConfig.fdLens.chain ( urlConfig.dLens );
                  const body: any = bodyL.getOption ( s )

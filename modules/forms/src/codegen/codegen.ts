@@ -7,6 +7,7 @@ import { PageD } from "../common/pageD";
 import { pageDomainName } from "./names";
 import { TSParams } from "./config";
 import { stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
+import { getRestTypeDetails } from "@focuson/rest";
 
 export const importsDot = ( ...names: string[] ): string[] => names.map ( name => {
   const s = noExtension ( name )
@@ -52,4 +53,5 @@ export const makeSimpleButton: <G> ( imp: string ) => ButtonCreator<ModalButtonI
   makeButton: ( { name, button } ) =>
     [ `<${button.control} id=${makeIdForButton ( button.text ? button.text : name )} state={state} />` ]
 })
-export const filterParamsByRestAction = ( restAction: RestAction ) => ( [ name, param ]: [ string, AllLensRestParams ] ) => restAction === 'list' || restAction === 'create' ? !param.main : true
+export const filterParamsByRestAction = ( restAction: RestAction ) => ( [ name, param ]: [ string, AllLensRestParams ] ) =>
+  getRestTypeDetails ( restAction ).params.needsId ? true : !param.main

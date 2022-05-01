@@ -51,7 +51,7 @@ export interface RestParams {
 }
 
 export function postFixForEndpoint<G> ( restAction: RestAction ) {
-  return restAction === 'list' ? "/list" : ""
+  return '' //restAction === 'list' ? "/list" : ""
 }
 //  states: {
 //     invalidate: {url: '/api/accountsSummary/invalidate?{query}', useStoredProcedure: {  schema: onlySchema, name: 'sda', params: ['accountId', 'customerId']}}

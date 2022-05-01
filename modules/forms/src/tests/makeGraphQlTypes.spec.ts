@@ -14,7 +14,6 @@ describe ( "makeGraphQlSchema", () => {
         "type Query{",
         "  getEAccountsSummary(accountId: String!, customerId: String!):EAccountsSummary!",
         "  getCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):CreatePlan!",
-        "  listCreatePlan(accountId: String!, customerId: String!):[CreatePlan!]!",
         "}"
       ] )
     } )
@@ -65,7 +64,6 @@ describe ( "makeGraphQlSchema", () => {
       "type Query{",
       "  getEAccountsSummary(accountId: String!, customerId: String!):EAccountsSummary!",
       "  getCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):CreatePlan!",
-      "  listCreatePlan(accountId: String!, customerId: String!):[CreatePlan!]!",
       "}",
       "type Mutation{",
       "  stateEAccountsSummaryinvalidate(accountId: String!, customerId: String!):Boolean",

@@ -36,13 +36,13 @@ const urlConfig: UrlConfig<TagTestState, ChildTagTestState, string> = {
 
 describe ( "tags", () => {
   describe ( "for restAction get", () => {
-    it ( "should return the tags found in the state from the definition in the urlConfig ", () => {
+    it ( "should return the tags found in the state from the definition in the urlConfig including the id ", () => {
       expect ( tags ( urlConfig, 'get' ) ( state ).map ( ( [ name, s ] ) => [ name, s.replace ( /"/g, "'" ) ] ) ).toEqual ( [ "4", "1", "{'x':1}", "3" ] )
     } )
   } )
-  describe ( "for restAction list", () => {
-    it ( "should return the tags found in the state from the definition in the urlConfig ", () => {
-      expect ( tags ( urlConfig, 'list' ) ( state ).map ( ( [ name, s ] ) => [ name, s.replace ( /"/g, "'" ) ] ) ).toEqual ( [ "1", "{'x':1}", "3" ] )
+  describe ( "for restAction create", () => {
+    it ( "should return the tags found in the state from the definition in the urlConfig, not including the id ", () => {
+      expect ( tags ( urlConfig, 'create' ) ( state ).map ( ( [ name, s ] ) => [ name, s.replace ( /"/g, "'" ) ] ) ).toEqual ( [ "1", "{'x':1}", "3" ] )
     } )
 
   } )
@@ -62,8 +62,8 @@ describe ( 'nameToLens', () => {
     expect ( nameToLens ( urlConfig, 'get' ) ( 'query' ).getOption ( state ).replace ( /"/g, "'" ) ).toEqual ( "aId=1&bId={'x':1}&cId=3&dId=4" )
 
   } )
-  it ( "should turn 'query' into the aId=a style query string. Not including  resource ids for 'list'", () => {
-    expect ( nameToLens ( urlConfig, 'list' ) ( 'query' ).getOption ( state ).replace ( /"/g, "'" ) ).toEqual ( "aId=1&bId={'x':1}&cId=3" )
+  it ( "should turn 'query' into the aId=a style query string. Not including  resource ids for 'create'", () => {
+    expect ( nameToLens ( urlConfig, 'create' ) ( 'query' ).getOption ( state ).replace ( /"/g, "'" ) ).toEqual ( "aId=1&bId={'x':1}&cId=3" )
 
   } )
 } );
@@ -78,12 +78,12 @@ describe ( "url", () => {
     } )
 
   } )
-  describe ( "for restAction list", () => {
+  describe ( "for restAction create", () => {
     it ( "should replace named ids ", () => {
-      expect ( url ( urlConfig, 'list' ) ( state ) ( '/{aId}/{bId}/{cId}/{dId}' ).replace ( /"/g, "'" ) ).toEqual ( "/1/{'x':1}/3/4" )
+      expect ( url ( urlConfig, 'create' ) ( state ) ( '/{aId}/{bId}/{cId}/{dId}' ).replace ( /"/g, "'" ) ).toEqual ( "/1/{'x':1}/3/4" )
     } )
     it ( "should return the tags found in the state from the definition in the urlConfig not including the ids ", () => {
-      expect ( url ( urlConfig, 'list' ) ( state ) ( '/something?{query}' ).replace ( /"/g, "'" ).replace ( /"/g, "'" ) ).toEqual ( "/something?aId=1&bId={'x':1}&cId=3" )
+      expect ( url ( urlConfig, 'create' ) ( state ) ( '/something?{query}' ).replace ( /"/g, "'" ).replace ( /"/g, "'" ) ).toEqual ( "/something?aId=1&bId={'x':1}&cId=3" )
     } )
   } )
 } )
@@ -115,12 +115,12 @@ describe ( "reqFn", () => {
         [ "/1/2/3/4?aId=1&bId=2&cId=3&dId=4", undefined ] )
     } )
   } )
-  describe ( "for restAction list", () => {
-    it ( "should replace named ids, no body", () => {
-      expect ( reqFor ( urlConfig, 'list' ) ( simplerState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
-        [ "/1/2/3/4?aId=1&bId=2&cId=3", undefined ] )
-    } )
-  } )
+  // describe ( "for restAction list", () => {
+  //   it ( "should replace named ids, no body", () => {
+  //     expect ( reqFor ( urlConfig, 'list' ) ( simplerState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
+  //       [ "/1/2/3/4?aId=1&bId=2&cId=3", undefined ] )
+  //   } )
+  // } )
   describe ( "for restAction update", () => {
     it ( "should replace named ids,  body", () => {
       expect ( reqFor ( urlConfig, 'update' ) ( simplerState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (

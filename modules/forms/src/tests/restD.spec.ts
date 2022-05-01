@@ -16,7 +16,7 @@ describe ( "flatMapActionDetails", () => {
       expect ( r ).toBe ( createPlanRestD )
       return [ rt.name ]
     } )
-    expect ( found ).toEqual ( [ "get", "create", "update", "delete", "list" ] )
+    expect ( found ).toEqual ( [ "get", "create", "update", "delete" ] )
   } )
 
 } )

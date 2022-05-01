@@ -22,5 +22,5 @@ export const createPlanRestD: RestD<AllGuards> = {
   params: { ...commonParams, createPlanId: { ...IntParam, commonLens: 'createPlanId', testValue: 'tbd', main: true } },
   dataDD: CreatePlanDD,
   url: '/api/createPlan?{query}',
-  actions: [ 'get', 'create', 'update', 'delete', 'list' ],
+  actions: [ 'get', 'create', 'update', 'delete'],
 }

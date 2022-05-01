@@ -11,7 +11,7 @@ import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 describe ( "makeSpringEndpoint", () => {
   it ( "should makeParamsForJava", () => {
     expect ( makeParamsForJava ( createPlanRestD, 'get' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId' )
-    expect ( makeParamsForJava ( createPlanRestD, 'list' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String customerId' )
+    // expect ( makeParamsForJava ( createPlanRestD, 'list' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String customerId' )
     expect ( makeParamsForJava ( createPlanRestD, 'create' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body' )
     expect ( makeParamsForJava ( createPlanRestD, 'update' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId, @RequestBody String body' )
     expect ( makeParamsForJava ( createPlanRestD, 'delete' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId' )
@@ -104,11 +104,6 @@ describe ( "makeSpringEndpoint", () => {
       "       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.deleteCreatePlan(accountId, createPlanId, customerId), '');",
       "    }",
       "",
-      "    @GetMapping(value='/api/createPlan/list', produces='application/json')",
-      "    public ResponseEntity listCreatePlan(@RequestParam String accountId, @RequestParam String customerId) throws Exception{",
-      "       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.listCreatePlan(accountId, customerId), 'listCreatePlan');",
-      "    }",
-      "",
       "    @GetMapping(value='/api/createPlan/query', produces='application/json')",
       "    public String querygetCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{",
       "       return CreatePlanQueries.getCreatePlan(accountId, createPlanId, customerId);",
@@ -127,11 +122,6 @@ describe ( "makeSpringEndpoint", () => {
       "    @DeleteMapping(value='/api/createPlan/query', produces='application/json')",
       "    public String querydeleteCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{",
       "       return CreatePlanQueries.deleteCreatePlan(accountId, createPlanId, customerId);",
-      "    }",
-      "",
-      "    @GetMapping(value='/api/createPlan/list/query', produces='application/json')",
-      "    public String querylistCreatePlan(@RequestParam String accountId, @RequestParam String customerId) throws Exception{",
-      "       return CreatePlanQueries.listCreatePlan(accountId, customerId);",
       "    }",
       "",
       "  @GetMapping(value = '/api/createPlan/sample', produces = 'application/json')",

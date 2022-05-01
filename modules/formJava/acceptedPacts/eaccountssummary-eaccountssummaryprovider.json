@@ -78,25 +78,7 @@
         "headers": {
         },
         "body": {
-        }
-      }
-    },
-    {
-      "description": "a rest for EAccountsSummary createPlanRestD list",
-      "providerState": "default",
-      "request": {
-        "method": "GET",
-        "path": "/api/createPlan/list",
-        "query": "accountId=accId&customerId=custId"
-      },
-      "response": {
-        "status": 200,
-        "headers": {
-        },
-        "body": {
-          "createPlanStart": "2022-01-01",
-          "createPlanDate": "2022-03-01",
-          "createPlanEnd": "2022-10-01"
+          "deleteCreatePlan": true
         }
       }
     },
@@ -118,7 +100,7 @@
             {
               "accountId": 1233450,
               "displayType": "checking",
-              "description": "This account has a description",
+              "description": "This account's description",
               "virtualBankSeq": "seq1",
               "total": 1000,
               "frequency": "23"
@@ -126,7 +108,7 @@
             {
               "accountId": 3233450,
               "displayType": "savings",
-              "description": "another description",
+              "description": "This account's description",
               "virtualBankSeq": "seq2",
               "total": 2991,
               "frequency": "23"
@@ -134,7 +116,7 @@
             {
               "accountId": 4333450,
               "displayType": "checking",
-              "description": "This account has a description",
+              "description": "This account's description",
               "virtualBankSeq": "seq3",
               "total": 1000,
               "frequency": "23"
@@ -169,7 +151,7 @@
             {
               "accountId": 1233450,
               "displayType": "checking",
-              "description": "This account has a description",
+              "description": "This account's description",
               "virtualBankSeq": "seq1",
               "total": 1000,
               "frequency": "23"
@@ -177,7 +159,7 @@
             {
               "accountId": 3233450,
               "displayType": "savings",
-              "description": "another description",
+              "description": "This account's description",
               "virtualBankSeq": "seq2",
               "total": 2991,
               "frequency": "23"
@@ -185,7 +167,7 @@
             {
               "accountId": 4333450,
               "displayType": "checking",
-              "description": "This account has a description",
+              "description": "This account's description",
               "virtualBankSeq": "seq3",
               "total": 1000,
               "frequency": "23"
@@ -215,6 +197,7 @@
         "headers": {
         },
         "body": {
+          "stateEAccountsSummaryinvalidate": true
         }
       }
     }

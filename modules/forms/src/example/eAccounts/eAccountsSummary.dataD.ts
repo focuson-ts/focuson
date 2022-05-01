@@ -20,7 +20,7 @@ export const EAccountSummaryDD: DataD<AllGuards> = {
   structure: {
     accountId: { dataDD: AccountIdDD, displayParams: { label: "Account Id" } },
     displayType: { dataDD: EAccountDisplayTypeDD },//No label because it is derivable from the camelCase
-    description: { dataDD: { ...OneLineStringDD, resolver: 'getAccountSummaryDescription' }, sample:  ['This account has a description', 'another description'] },
+    description: { dataDD: { ...OneLineStringDD, resolver: 'getAccountSummaryDescription' }, sample:  ["This account's description"] },
     virtualBankSeq: { dataDD: OneLineStringDD, sample: [ 'seq1', 'seq2', 'seq3' ] },
     total: { dataDD: { ...MoneyDD, sample: [ 1000, 2991 ] } },
     frequency: { dataDD: OneLineStringDD, sample: [ '23' ], displayParams: { label: "Frequency/Amount" } },

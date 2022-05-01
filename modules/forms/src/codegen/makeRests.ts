@@ -66,7 +66,8 @@ export function makeRestDetailsPage<B, G> ( params: TSParams, ps: PageD<B, G>[] 
 export function makeRestDetails<B, G> ( params: TSParams, ps: PageD<B, G>[] ): string[] {
   return [
     '',
-    "export function restUrlMutator ( r: RestAction, url: string ): string { return insertBefore ( '?', r === 'list' ? '/list' : '', url )}", '',
+    // "export function restUrlMutator ( r: RestAction, url: string ): string { return insertBefore ( '?', r === 'list' ? '/list' : '', url )}", '',
+    "export function restUrlMutator ( r: RestAction, url: string ): string { return url }", '',
     `export const restDetails: RestDetails<${params.stateName}, SimpleMessage> = {`,
     ...addStringToEndOfAllButLast ( "," ) ( ps.flatMap ( pd => (isMainPage ( pd ) ? sortedEntries ( pd.rest ) : []).flatMap ( ( [ name, rd ] ) =>
       `   ${restDetailsName ( pd, name, rd.rest )}: ${restDetailsName ( pd, name, rd.rest )}(commonIds, defaultDateFn)` ) ) ),

@@ -8,7 +8,7 @@ describe ( "makeMockFetchers", () => {
   it ( "to make a java mock fetcher - has child fetchers", () => {
     expect ( makeAllMockFetchers ( paramsForTest, eAccountsSummaryRestD, 'get' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       " public DataFetcher getEAccountsSummary() {  return dataFetchingEnvironment -> Sample.sampleEAccountsSummary0;    }",
-      "  public DataFetcher getAccountSummaryDescription (){ return new StaticDataFetcher('This account has a description');}",
+      "  public DataFetcher getAccountSummaryDescription (){ return new StaticDataFetcher('This account's description');}",
       "  public DataFetcher getTotalMonthlyCost (){ return new StaticDataFetcher(1000);}",
       "  public DataFetcher getOneAccountBalance (){ return new StaticDataFetcher(9921);}",
       "  public DataFetcher getCurrentAccountBalance (){ return new StaticDataFetcher(12321);}"

@@ -1,13 +1,13 @@
 import { isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { beforeSeparator, RestAction, sortedEntries } from "@focuson/utils";
-import { fetcherName, providerName, providerPactClassName, restDetailsName, sampleName } from "./names";
-import { isRestLens, makeCommonValueForTest, makeParamValueForTest, postFixForEndpoint } from "../common/restD";
+import { fetcherName, providerName, queryName, resolverName, restDetailsName, sampleName } from "./names";
+import { isRestLens, makeCommonValueForTest, makeParamValueForTest, postFixForEndpoint, RestD } from "../common/restD";
 import { TSParams } from "./config";
 import { lensFocusQueryWithSlashAndTildaFromIdentity, stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
 import { parsePath } from "@focuson/lens";
 import { filterParamsByRestAction, indentList } from "./codegen";
-import { getRestTypeDetails, getUrlForRestAction, printRestAction } from "@focuson/rest";
-import { restUrlMutator } from "exampleapp/src/rests";
+import { getRestTypeDetails, getUrlForRestAction, printRestAction, RestActionDetail } from "@focuson/rest";
+import { CompDataD, isRepeatingDd } from "../common/dataD";
 
 export function makeAllPactsForPage<B, G> ( params: TSParams, page: PageD<B, G> ): string[] {
   if ( !isMainPage ( page ) ) return []
@@ -42,6 +42,9 @@ export function makeAllPactsForRest<B, G> ( params: TSParams, page: MainPageD<B,
   ]
 }
 
+function getResponseBodyString<G> ( details: RestActionDetail, params: TSParams, dataD: CompDataD<G>, restD: RestD<G>, restAction: RestAction ) {
+  return details.output.needsObj ? `body: ${params.samplesFile}.${sampleName ( dataD )}0` : `body: {"${resolverName ( restD, getRestTypeDetails ( restAction ) )}": true}`;
+}
 export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, restName: string, defn: RestDefnInPageProperties<G>, action: RestAction ): string[] {
   const rest = defn.rest
   const details = getRestTypeDetails ( action )
@@ -50,7 +53,7 @@ export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, re
   let paramsValueForTest = makeParamValueForTest ( rest, action );
   const restActionName = printRestAction ( action )
   const requestBodyString = details.params.needsObj ? `body: JSON.stringify(${params.samplesFile}.${sampleName ( dataD )}0)` : `//no request body needed for ${restActionName}`
-  const responseBodyString = details.output.needsObj ? `body: ${params.samplesFile}.${sampleName ( dataD )}0` : `body:{}//no response body needed for ${restActionName}`
+  const responseBodyString = getResponseBodyString ( details, params, dataD, rest, action )
   // const suppressExpectedResult = details.output.needsObj ? [] : [ `// @ts-ignore` ]
   const initialStateBodyTransforms = details.params.needsObj ? [ `[${lensFocusQueryWithSlashAndTildaFromIdentity ( `initialStateBodyTransform for page ${page.name} ${restName}`, params, page, defn.targetFromPath )}, () => ${params.samplesFile}.${sampleName ( dataD )}0]` ] : []
   let expectedResult = details.output.needsObj ? `${params.samplesFile}.${sampleName ( dataD )}0` : `{}`; //Not really sure the best way to do this.
