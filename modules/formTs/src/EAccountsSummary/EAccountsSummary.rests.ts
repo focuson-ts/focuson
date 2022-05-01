@@ -16,7 +16,8 @@ export function EAccountsSummary_CreatePlanRestDetails ( cd: NameAndLens<FState>
     ids: ["accountId","customerId"],
     resourceId:  ["createPlanId"],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/createPlan?{query}"
+    url: "/api/createPlan?{query}",
+    states : {}
   }
 }
 
@@ -31,6 +32,7 @@ export function EAccountsSummary_EAccountsSummaryRestDetails ( cd: NameAndLens<F
     ids: ["accountId"],
     resourceId:  ["customerId"],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/accountsSummary?{query}"
+    url: "/api/accountsSummary?{query}",
+    states : {"invalidate":{"url":"/api/accountsSummary/invalidate?{query}"}}
   }
 }

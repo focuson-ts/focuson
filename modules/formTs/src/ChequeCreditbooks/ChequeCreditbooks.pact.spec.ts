@@ -51,7 +51,7 @@ describe ( 'ChequeCreditbooks - chequeCreditBooks - fetcher', () => {
 pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider', cors: true }, provider => {
   describe ( 'ChequeCreditbooks - chequeCreditBooks rest get', () => {
    it ( 'should have a get rest for ChequeCreditbooks', async () => {
-    const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"},
@@ -89,7 +89,7 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
 pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider', cors: true }, provider => {
   describe ( 'ChequeCreditbooks - chequeCreditBooks rest create', () => {
    it ( 'should have a create rest for ChequeCreditbooks', async () => {
-    const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksRestDetails', restAction: 'create' }
+    const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksRestDetails', restAction: "create" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"},

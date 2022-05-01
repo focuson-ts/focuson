@@ -13,5 +13,5 @@ import java.util.Map;
 public class CreatePlan_delete_FFetcherMock  implements CreatePlan_delete_FFetcher{
 @Override
 public String dbName() {return IFetcher.mock; }
- public DataFetcher deleteCreatePlan() {  return dataFetchingEnvironment -> Sample.sampleCreatePlan0;    }
+  public DataFetcher deleteCreatePlan (){ return new StaticDataFetcher(true);}
 }

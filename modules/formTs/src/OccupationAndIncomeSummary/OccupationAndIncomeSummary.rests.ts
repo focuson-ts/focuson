@@ -16,7 +16,8 @@ export function OccupationAndIncomeSummary_AdditionalInformationRestDetails ( cd
     ids: ["customerId"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/customer/occupation/v2/additionalInfo?{query}"
+    url: "/customer/occupation/v2/additionalInfo?{query}",
+    states : {}
   }
 }
 
@@ -31,7 +32,8 @@ export function OccupationAndIncomeSummary_BusinessDetailsMainRestDetails ( cd: 
     ids: ["customerId"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/customer/occupation/v2/businessDetails?{query}"
+    url: "/customer/occupation/v2/businessDetails?{query}",
+    states : {}
   }
 }
 
@@ -46,7 +48,8 @@ export function OccupationAndIncomeSummary_DropdownsRestDetails ( cd: NameAndLen
     ids: ["customerId"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/customer/occupation/v2/occupationDetails?{query}"
+    url: "/customer/occupation/v2/occupationDetails?{query}",
+    states : {}
   }
 }
 
@@ -61,7 +64,8 @@ export function OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDeta
     ids: ["customerId"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/customer/occupation/v2/occupationIncomeDetails?{query}"
+    url: "/customer/occupation/v2/occupationIncomeDetails?{query}",
+    states : {}
   }
 }
 
@@ -76,6 +80,7 @@ export function OccupationAndIncomeSummary_OtherIncomeResponseRestDetails ( cd: 
     ids: ["customerId"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/customer/occupation/v2/otherIncome?{query}"
+    url: "/customer/occupation/v2/otherIncome?{query}",
+    states : {}
   }
 }

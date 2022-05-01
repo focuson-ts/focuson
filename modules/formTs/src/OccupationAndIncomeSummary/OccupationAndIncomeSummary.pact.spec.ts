@@ -55,7 +55,7 @@ describe ( 'OccupationAndIncomeSummary - additionalInformationRD - fetcher', () 
 pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndIncomeSummaryProvider', cors: true }, provider => {
   describe ( 'OccupationAndIncomeSummary - additionalInformationRD rest get', () => {
    it ( 'should have a get rest for AdditionalInformation', async () => {
-    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_AdditionalInformationRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_AdditionalInformationRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"customerId":"custId"},
@@ -128,7 +128,7 @@ describe ( 'OccupationAndIncomeSummary - businessDetailsRD - fetcher', () => {
 pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndIncomeSummaryProvider', cors: true }, provider => {
   describe ( 'OccupationAndIncomeSummary - businessDetailsRD rest get', () => {
    it ( 'should have a get rest for BusinessDetailsMain', async () => {
-    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_BusinessDetailsMainRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_BusinessDetailsMainRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"customerId":"custId"},
@@ -201,7 +201,7 @@ describe ( 'OccupationAndIncomeSummary - dropdownsRD - fetcher', () => {
 pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndIncomeSummaryProvider', cors: true }, provider => {
   describe ( 'OccupationAndIncomeSummary - dropdownsRD rest get', () => {
    it ( 'should have a get rest for Dropdowns', async () => {
-    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_DropdownsRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_DropdownsRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"customerId":"custId"},
@@ -274,7 +274,7 @@ describe ( 'OccupationAndIncomeSummary - occupationAndIncomeRD - fetcher', () =>
 pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndIncomeSummaryProvider', cors: true }, provider => {
   describe ( 'OccupationAndIncomeSummary - occupationAndIncomeRD rest get', () => {
    it ( 'should have a get rest for OccupationAndIncomeFullDomain', async () => {
-    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"customerId":"custId"},
@@ -312,7 +312,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
 pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndIncomeSummaryProvider', cors: true }, provider => {
   describe ( 'OccupationAndIncomeSummary - occupationAndIncomeRD rest update', () => {
    it ( 'should have a update rest for OccupationAndIncomeFullDomain', async () => {
-    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDetails', restAction: 'update' }
+    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDetails', restAction: "update" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"customerId":"custId"},
@@ -386,7 +386,7 @@ describe ( 'OccupationAndIncomeSummary - otherSourcesOfIncomeRD - fetcher', () =
 pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndIncomeSummaryProvider', cors: true }, provider => {
   describe ( 'OccupationAndIncomeSummary - otherSourcesOfIncomeRD rest get', () => {
    it ( 'should have a get rest for OtherIncomeResponse', async () => {
-    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OtherIncomeResponseRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OtherIncomeResponseRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"customerId":"custId"},

@@ -19,4 +19,11 @@ describe ( "makeMockFetchers", () => {
       " public DataFetcher updateCreatePlan() {  return dataFetchingEnvironment -> Sample.sampleCreatePlan0;    }",
     ] )
   } )
+
+  it ( "to make a java mock fetcher -returning true for RestActions that just return a boolean", () => {
+    expect ( makeAllMockFetchers ( paramsForTest, createPlanRestD, 'delete' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+      "  public DataFetcher deleteCreatePlan (){ return new StaticDataFetcher(true);}"
+    ] )
+  } )
+
 } )

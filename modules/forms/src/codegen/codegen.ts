@@ -26,7 +26,7 @@ export function noExtension ( name: string ) {
 export const addStringToEndOfAllButLast = ( ch: string ) => ( ss: string[] ): string[] =>
   ss.map ( ( s, i ) => i < ss.length - 1 ? s + ch : s );
 export const addStringToStartOfFirst = ( str: string ) => ( ss: string[] ): string[] =>
-  ss.map ( ( s, i ) => i === 0 ? str + s : s );
+  ss.length === 0 ? [ str ] : ss.map ( ( s, i ) => i === 0 ? str + s : s );
 export const addStringToEndOfList = ( str: string ) => ( ss: string[] ): string[] =>
   ss.map ( ( s, i ) => i === ss.length - 1 ? s + str : s );
 export const addBrackets = ( strOpen: string, strClose ) => ( ss: string[] ): string[] =>

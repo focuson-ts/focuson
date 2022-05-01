@@ -1,4 +1,4 @@
-import { makeJavaVariablesForGraphQlQuery, makeQuery } from "../codegen/makeGraphQlQuery";
+import { makeGraphQlQueryForOneAction, makeJavaVariablesForGraphQlQuery, makeQuery } from "../codegen/makeGraphQlQuery";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { addressRestD } from "../example/postCodeDemo/addressSearch.restD";
 
@@ -26,7 +26,7 @@ describe ( "Making GraphQl from RestD", () => {
       "      '    }'+",
       "      '  }'",
       "+'}';}"
-    ])
+    ] )
   } )
   it ( "should include the 'main' params in a get", () => {
     expect ( makeQuery ( createPlanRestD, 'get' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
@@ -56,16 +56,14 @@ describe ( "Making GraphQl from RestD", () => {
       "      '    createPlanEnd'+",
       "      '  }'",
       "+'}';}"
-    ])
+    ] )
   } )
 
 
   it ( "makeAllQueryForRest - should make java variables", () => {
     expect ( makeJavaVariablesForGraphQlQuery ( [ eAccountsSummaryRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "public static  String getEAccountsSummary(String accountId,String customerId){ ",
-      "   return",
-
-      "'query{getEAccountsSummary(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\'' + '){'+",
+      "  return'query{getEAccountsSummary(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\'' + '){'+",
       "      '    useEStatements'+",
       "      '    eAccountsTable{'+",
       "      '      accountId'+",
@@ -84,15 +82,17 @@ describe ( "Making GraphQl from RestD", () => {
       "      '      createPlanEnd'+",
       "      '    }'+",
       "      '  }'",
-      "+'}';}"
+      "+'}';}",
+      "public static  String state_invalidateEAccountsSummary(String accountId,String customerId){ ",
+      "  return'mutation{stateEAccountsSummaryinvalidate(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\'' + ')}';",
+      "}"
     ] )
   } )
 
-  it ("should make a query with no params", () =>{
+  it ( "should make a query with no params", () => {
     expect ( makeJavaVariablesForGraphQlQuery ( [ addressRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "public static  String createPostCodeNameAndAddress(String obj){ ",
-      "   return",
-      "'mutation{createPostCodeNameAndAddress(' +  ' obj:' + obj + '){'+",
+      "  return'mutation{createPostCodeNameAndAddress(' +  ' obj:' + obj + '){'+",
       "      '    name'+",
       "      '    line1'+",
       "      '    line2'+",
@@ -101,8 +101,23 @@ describe ( "Making GraphQl from RestD", () => {
       "      '    postcode'+",
       "      '  }'",
       "+'}';}"
-    ])
+    ] )
+  } )
 
-  })
+  it ( "should make a query for delete, returning a boolean so no {}", () => {
+    expect ( makeGraphQlQueryForOneAction ( createPlanRestD ) ( 'delete' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+      "public static  String deleteCreatePlan(String accountId,String createPlanId,String customerId){ ",
+      "  return'mutation{deleteCreatePlan(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'createPlanId:' + '\\'' + createPlanId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\'' + ')}';",
+      "}"
+    ] )
+  } )
+
+  it ( "should make a query for state change, returning a boolean so no {}", () => {
+    expect ( makeGraphQlQueryForOneAction ( eAccountsSummaryRestD ) ( { state: 'someState' } ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+      "public static  String state_someStateEAccountsSummary(String accountId,String customerId){ ",
+      "  return'mutation{stateEAccountsSummarysomeState(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\'' + ')}';",
+      "}"
+    ] )
+  } )
 
 } )

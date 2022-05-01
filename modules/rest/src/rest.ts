@@ -1,5 +1,5 @@
 import { reqFor, UrlConfig } from "@focuson/template";
-import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RestAction, safeArray } from "@focuson/utils";
+import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RestAction, safeArray, safeObject, sortedEntries } from "@focuson/utils";
 import { identityOptics, massTransform, Optional, Transform } from "@focuson/lens";
 
 
@@ -56,13 +56,18 @@ export function parseRestAction ( s: string ): RestAction {
 export function printRestAction ( r: RestAction ): string {
   return isRestStateChange ( r ) ? `state:${r.state}` : r
 }
+export function restActionForName ( r: RestAction ): string {
+  return isRestStateChange ( r ) ? `state_${r.state}` : r
+}
 export function getRestTypeDetails ( a: RestAction ): RestActionDetail {
   return isRestStateChange ( a ) ? { ...defaultRestAction[ 'state' ], graphQlPostfix: a.state } : defaultRestAction[ a ];
 }
 
 
+export type StateAccessDetails = { url: string }
 export interface OneRestDetails<S, FD, D, MSGs> extends UrlConfig<S, FD, D> {
   url: string;
+  states?: NameAnd<StateAccessDetails>,
   messages: ( status: number, body: any ) => MSGs[];//often the returning value will have messages in it. Usually a is of type Domain. When the rest action is Delete there may be no object returned, but might be MSGs
 }
 
@@ -85,27 +90,37 @@ export function restL<S extends HasRestCommands> () {
   return identityOptics<S> ().focusQuery ( 'restCommands' )
 }
 export interface RestResult<S, MSGs, Cargo> {
+  restAction: RestAction;
   one: Cargo;
   status?: number;
   result: any
 }
 
-export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]> ) => ( s: S, { one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): S => {
+export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]> ) => ( s: S, { restAction, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): S => {
   const msgTransform: Transform<S, MSGs[]> = [ messageL, old => [ ...one.messages ( status, result ), ...old ] ]
-  const resultTransform: Transform<S, any>[] = status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => result ] ] : []
+  const useResponse = getRestTypeDetails ( restAction ).output.needsObj
+  const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => result ] ] : []
   let res = massTransform ( s, msgTransform, ...resultTransform );
   return res
 };
-
+export function getUrlForRestAction ( restAction: RestAction, url: string, states?: NameAnd<StateAccessDetails> ): string {
+  if ( isRestStateChange ( restAction ) ) {
+    const url: string | undefined = safeObject ( states )[ restAction.state ]?.url
+    if ( url === undefined ) throw Error ( `Requested state change is ${restAction.state}. The legal list is [${sortedEntries ( states ).map ( x => x[ 0 ] )}]\nThe base url is ${url}` )
+    return url;
+  }
+  return url
+}
 export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Details,
                                                                          restL: Optional<S, RestCommand[]>,
                                                                          urlMutatorForRest: ( r: RestAction, url: string ) => string,
-                                                                         s: S ): [ OneRestDetails<S, any, any, any>, RequestInfo, RequestInit | undefined ][] {
+                                                                         s: S ): [ RestAction, OneRestDetails<S, any, any, any>, RequestInfo, RequestInit | undefined ][] {
   // @ts-ignore
   const debug = s.debug?.restDebug
   const commands = safeArray ( restL.getOption ( s ) )
   return commands.map ( ( { name, restAction } ) => {
     const one: OneRestDetails<S, any, any, MSGS> = d[ name ]
+
     if ( debug ) console.log ( "restReq-onex", name, one )
     if ( !one ) throw new Error ( `Cannot find page details for ${name} ${restAction}. Legal values are ${Object.keys ( d ).sort ()}` )
     try {
@@ -114,10 +129,12 @@ export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Deta
         console.log ( "restReq-fdLens", fdLens.description, fdLens )
         console.log ( "restReq-dLens", one.dLens.description, one.dLens );
       }
-      let url = urlMutatorForRest ( restAction, one.url );
+      let rawUrl = getUrlForRestAction ( restAction, one.url, one.states );
+      let url = urlMutatorForRest ( restAction, rawUrl );
+      if ( debug ) console.log ( "restReq-url", url )
       let request = reqFor ( { ...{ ...one, url }, fdLens }, restAction ) ( s ) ( url );
       if ( debug ) console.log ( "restReq-req", request )
-      return [ one, ...request ]
+      return [ restAction, one, ...request ]
     } catch ( e: any ) {
       console.error ( `error making details for ${name}`, e )
       throw e
@@ -125,10 +142,10 @@ export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Deta
   } )
 }
 
-export function massFetch<S, MSGs, Cargo> ( fetchFn: FetchFn, reqs: [ Cargo, RequestInfo, RequestInit | undefined ][] ): Promise<RestResult<S, MSGs[], Cargo>[]> {
-  return Promise.all ( reqs.map ( ( [ one, info, init ] ) => fetchFn ( info, init ).then (
-    ( [ status, result ] ) => ({ one, status, result }),
-    error => ({ one, result: error }) ) ) )
+export function massFetch<S, MSGs, Cargo> ( fetchFn: FetchFn, reqs: [ RestAction, Cargo, RequestInfo, RequestInit | undefined ][] ): Promise<RestResult<S, MSGs[], Cargo>[]> {
+  return Promise.all ( reqs.map ( ( [ restAction, one, info, init ] ) => fetchFn ( info, init ).then (
+    ( [ status, result ] ) => ({ restAction, one, status, result }),
+    error => ({ restAction, one, result: error }) ) ) )
 }
 
 export function processAllRestResults<S, MSGSs> ( messageL: Optional<S, MSGSs[]>, restL: Optional<S, RestCommand[]>, results: RestResult<S, MSGSs, OneRestDetails<S, any, any, MSGSs>>[], s: S ) {

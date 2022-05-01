@@ -1,10 +1,10 @@
 import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
-import { beforeAfterSeparator, isRestStateChange, RestAction, safeArray, safeObject, sortedEntries } from "@focuson/utils";
+import { NameAnd, RestAction, safeArray, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction } from "../codegen/codegen";
-import { ResolverD } from "./resolverD";
-import { Entity, MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
+import { ResolverD, Schema } from "./resolverD";
+import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 import { allMainPages, MainPageD, PageD, RestDefnInPageProperties } from "./pageD";
-import { getRestTypeDetails, RestActionDetail } from "@focuson/rest";
+import { getRestTypeDetails, RestActionDetail, StateAccessDetails } from "@focuson/rest";
 
 
 export type AllLensRestParams = CommonLensRestParam | LensRestParam
@@ -53,7 +53,17 @@ export interface RestParams {
 export function postFixForEndpoint<G> ( restAction: RestAction ) {
   return restAction === 'list' ? "/list" : ""
 }
-
+//  states: {
+//     invalidate: {url: '/api/accountsSummary/invalidate?{query}', useStoredProcedure: {  schema: onlySchema, name: 'sda', params: ['accountId', 'customerId']}}
+//   }
+export interface StoredProcedureForStateDetails {
+  schema: Schema,
+  name: string,
+  params: string[]
+}
+export interface RestStateDetails extends StateAccessDetails {
+  useStoredProcedure: StoredProcedureForStateDetails
+}
 export interface RestD<G> {
   /** Only used for dedupping when the dataDd is repeated */
   namePrefix?: string;
@@ -63,7 +73,8 @@ export interface RestD<G> {
   actions: RestAction[];
   resolver?: ResolverD;
   initialSql?: string[];
-  tables?: EntityAndWhere
+  tables?: EntityAndWhere;
+  states?: NameAnd<RestStateDetails>
 }
 export interface EntityAndWhere {
   entity: MainEntity;

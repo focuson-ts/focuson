@@ -42,9 +42,19 @@ describe ( "makeSpringEndpoint", () => {
       "       return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.getEAccountsSummary(accountId, customerId), \"getEAccountsSummary\");",
       "    }",
       "",
+      "    @PostMapping(value=\"/api/accountsSummary/invalidate\", produces=\"application/json\")",
+      "    public ResponseEntity state_invalidateEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId) throws Exception{",
+      "       return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, customerId), \"\");",
+      "    }",
+      "",
       "    @GetMapping(value=\"/api/accountsSummary/query\", produces=\"application/json\")",
       "    public String querygetEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId) throws Exception{",
       "       return EAccountsSummaryQueries.getEAccountsSummary(accountId, customerId);",
+      "    }",
+      "",
+      "    @PostMapping(value=\"/api/accountsSummary/invalidate/query\", produces=\"application/json\")",
+      "    public String querystate_invalidateEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId) throws Exception{",
+      "       return EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, customerId);",
       "    }",
       "",
       "  @GetMapping(value = \"/api/accountsSummary/sample\", produces = \"application/json\")",
@@ -91,7 +101,7 @@ describe ( "makeSpringEndpoint", () => {
       "",
       "    @DeleteMapping(value='/api/createPlan', produces='application/json')",
       "    public ResponseEntity deleteCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{",
-      "       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.deleteCreatePlan(accountId, createPlanId, customerId), 'deleteCreatePlan');",
+      "       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.deleteCreatePlan(accountId, createPlanId, customerId), '');",
       "    }",
       "",
       "    @GetMapping(value='/api/createPlan/list', produces='application/json')",
@@ -129,7 +139,7 @@ describe ( "makeSpringEndpoint", () => {
       "      return new ObjectMapper().writeValueAsString( Sample.sampleCreatePlan0);",
       "    }",
       "  }"
-    ])
+    ] )
   } )
 
   it ( "should make an endpoint for a repeating", () => {
@@ -177,12 +187,12 @@ describe ( "makeSpringEndpoint", () => {
       "      return new ObjectMapper().writeValueAsString( Sample.sampleRepeatingWholeData0);",
       "    }",
       "  }"
-    ])
+    ] )
 
   } )
 
   it ( "should make spring boot endpoints when no parameters", () => {
-    expect ( makeSpringEndpointsFor ( paramsForTest,PostCodeMainPage, 'address', addressRestD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeSpringEndpointsFor ( paramsForTest, PostCodeMainPage, 'address', addressRestD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "package focuson.data.controllers;",
       "",
       "import com.fasterxml.jackson.databind.ObjectMapper;",
@@ -221,8 +231,9 @@ describe ( "makeSpringEndpoint", () => {
       "      return PostCodeMainPage_addressMaps.allSql;",
       "    }",
       "  }"
-    ])
+    ] )
 
   } )
+
 
 } )

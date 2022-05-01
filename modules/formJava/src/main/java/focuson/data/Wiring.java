@@ -45,6 +45,7 @@ import focuson.data.fetchers.EAccountsSummary.CreatePlan_update_FFetcher;
 import focuson.data.fetchers.EAccountsSummary.CreatePlan_delete_FFetcher;
 import focuson.data.fetchers.EAccountsSummary.CreatePlan_list_FFetcher;
 import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_get_FFetcher;
+import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_state_invalidate_FFetcher;
 import focuson.data.fetchers.ETransfer.ETransferDataD_create_FFetcher;
 import focuson.data.fetchers.CreateEAccount.CreateEAccountData_create_FFetcher;
 import focuson.data.fetchers.CreateEAccount.CreateEAccountData_get_FFetcher;
@@ -100,6 +101,8 @@ public class Wiring  implements IManyGraphQl{
       List<CreatePlan_list_FFetcher> CreatePlan_list_FFetcher;
       @Autowired
       List<EAccountsSummary_get_FFetcher> EAccountsSummary_get_FFetcher;
+      @Autowired
+      List<EAccountsSummary_state_invalidate_FFetcher> EAccountsSummary_state_invalidate_FFetcher;
       @Autowired
       List<ETransferDataD_create_FFetcher> ETransferDataD_create_FFetcher;
       @Autowired
@@ -178,6 +181,7 @@ public class Wiring  implements IManyGraphQl{
           .type(newTypeWiring("EAccountsSummary").dataFetcher("totalMonthlyCost", find(EAccountsSummary_get_FFetcher, dbName, f ->f.getTotalMonthlyCost())))
           .type(newTypeWiring("EAccountsSummary").dataFetcher("oneAccountBalance", find(EAccountsSummary_get_FFetcher, dbName, f ->f.getOneAccountBalance())))
           .type(newTypeWiring("EAccountsSummary").dataFetcher("currentAccountBalance", find(EAccountsSummary_get_FFetcher, dbName, f ->f.getCurrentAccountBalance())))
+          .type(newTypeWiring("Mutation").dataFetcher("stateEAccountsSummaryinvalidate", find(EAccountsSummary_state_invalidate_FFetcher, dbName, f ->f.stateEAccountsSummaryinvalidate())))
           .type(newTypeWiring("Mutation").dataFetcher("createETransferDataD", find(ETransferDataD_create_FFetcher, dbName, f ->f.createETransferDataD())))
           .type(newTypeWiring("Mutation").dataFetcher("createCreateEAccountData", find(CreateEAccountData_create_FFetcher, dbName, f ->f.createCreateEAccountData())))
           .type(newTypeWiring("Query").dataFetcher("getCreateEAccountData", find(CreateEAccountData_get_FFetcher, dbName, f ->f.getCreateEAccountData())))

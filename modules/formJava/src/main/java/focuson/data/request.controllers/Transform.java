@@ -21,8 +21,9 @@ public class Transform {
         final HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("x-query", query);
         if (errors.isEmpty()) {
-            Map data = (Map) executionResult.toSpecification().get("data");
-            String body = new ObjectMapper().writeValueAsString(data.get(result));
+            Map rawData = (Map) executionResult.toSpecification().get("data");
+            Object data =  result.length()==0 ? rawData:rawData.get(result);
+            String body = new ObjectMapper().writeValueAsString(data);
             return new ResponseEntity(body, responseHeaders, HttpStatus.OK);
         }
         String body = new ObjectMapper().writeValueAsString(errors);

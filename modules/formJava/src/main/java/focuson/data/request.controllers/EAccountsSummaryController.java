@@ -21,9 +21,19 @@ import java.util.Map;
        return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.getEAccountsSummary(accountId, customerId), "getEAccountsSummary");
     }
 
+    @PostMapping(value="/api/accountsSummary/invalidate", produces="application/json")
+    public ResponseEntity state_invalidateEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, customerId), "");
+    }
+
     @GetMapping(value="/api/accountsSummary/query", produces="application/json")
     public String querygetEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
        return EAccountsSummaryQueries.getEAccountsSummary(accountId, customerId);
+    }
+
+    @PostMapping(value="/api/accountsSummary/invalidate/query", produces="application/json")
+    public String querystate_invalidateEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
+       return EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, customerId);
     }
 
   @GetMapping(value = "/api/accountsSummary/sample", produces = "application/json")

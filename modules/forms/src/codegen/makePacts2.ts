@@ -6,7 +6,8 @@ import { TSParams } from "./config";
 import { lensFocusQueryWithSlashAndTildaFromIdentity, stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
 import { parsePath } from "@focuson/lens";
 import { filterParamsByRestAction, indentList } from "./codegen";
-import { getRestTypeDetails } from "@focuson/rest";
+import { getRestTypeDetails, getUrlForRestAction, printRestAction } from "@focuson/rest";
+import { restUrlMutator } from "exampleapp/src/rests";
 
 export function makeAllPactsForPage<B, G> ( params: TSParams, page: PageD<B, G> ): string[] {
   if ( !isMainPage ( page ) ) return []
@@ -47,17 +48,22 @@ export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, re
   const dataD = rest.dataDD
   // const [ id, resourceIds ] = findIds ( rest )
   let paramsValueForTest = makeParamValueForTest ( rest, action );
-  const requestBodyString = details.params.needsObj ? `body: JSON.stringify(${params.samplesFile}.${sampleName ( dataD )}0)` : `//no request body needed for ${action}`
-  const responseBodyString = details.output.needsObj ? `body: ${params.samplesFile}.${sampleName ( dataD )}0` : `body:{}//no response body needed for ${action}`
-  const suppressExpectedResult = details.output.needsObj ? [] : [ `// @ts-ignore` ]
+  const restActionName = printRestAction ( action )
+  const requestBodyString = details.params.needsObj ? `body: JSON.stringify(${params.samplesFile}.${sampleName ( dataD )}0)` : `//no request body needed for ${restActionName}`
+  const responseBodyString = details.output.needsObj ? `body: ${params.samplesFile}.${sampleName ( dataD )}0` : `body:{}//no response body needed for ${restActionName}`
+  // const suppressExpectedResult = details.output.needsObj ? [] : [ `// @ts-ignore` ]
   const initialStateBodyTransforms = details.params.needsObj ? [ `[${lensFocusQueryWithSlashAndTildaFromIdentity ( `initialStateBodyTransform for page ${page.name} ${restName}`, params, page, defn.targetFromPath )}, () => ${params.samplesFile}.${sampleName ( dataD )}0]` ] : []
   let expectedResult = details.output.needsObj ? `${params.samplesFile}.${sampleName ( dataD )}0` : `{}`; //Not really sure the best way to do this.
+  let url = getUrlForRestAction ( action, rest.url, rest.states );
+  const setExpectedResult: string[] = getRestTypeDetails ( action ).output.needsObj ?
+    [ `    const expected = ${parsePath ( defn.targetFromPath, stateCodeBuilderWithSlashAndTildaFromIdentity ( params, page ) )}.set ( rawExpected, ${expectedResult} )` ] :
+    [ `    const expected = rawExpected; // this rest action doesn't load data` ];
   return [
     `//Rest ${restName} ${action} pact test for ${page.name}`,
     `pactWith ( { consumer: '${page.name}', provider: '${providerName ( page )}', cors: true }, provider => {`,
-    `  describe ( '${page.name} - ${restName} rest ${action}', () => {`,
-    `   it ( 'should have a ${action} rest for ${dataD.name}', async () => {`,
-    `    const restCommand: RestCommand = { name: '${restDetailsName ( page, restName, rest )}', restAction: '${action}' }`,
+    `  describe ( '${page.name} - ${restName} rest ${restActionName}', () => {`,
+    `   it ( 'should have a ${restActionName} rest for ${dataD.name}', async () => {`,
+    `    const restCommand: RestCommand = { name: '${restDetailsName ( page, restName, rest )}', restAction: ${JSON.stringify ( action )} }`,
     `    const firstState: FState = {`,
     `       ...emptyState, restCommands: [ restCommand ],`,
     `       CommonIds: ${JSON.stringify ( makeCommonValueForTest ( rest, 'get' ) )},`,
@@ -65,10 +71,10 @@ export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, re
     `    }`,
     `    await provider.addInteraction ( {`,
     `      state: 'default',`,
-    `      uponReceiving: 'a rest for ${page.name} ${restName} ${action}',`,
+    `      uponReceiving: 'a rest for ${page.name} ${restName} ${restActionName}',`,
     `      withRequest: {`,
     `         method: '${details.method}',`,
-    `         path:   '${beforeSeparator ( "?", rest.url )}${postFixForEndpoint ( action )}',`,
+    `         path:   '${beforeSeparator ( "?", url )}${postFixForEndpoint ( action )}',`,
     `         query:${JSON.stringify ( paramsValueForTest )},`,
     `         ${requestBodyString},`,
     `      },`,
@@ -82,8 +88,8 @@ export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, re
     `    const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );`,
     `    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )`,
     `    const rawExpected:any = { ...withIds, restCommands: []}`,
-    ...suppressExpectedResult,
-    `    const expected = ${parsePath ( defn.targetFromPath, stateCodeBuilderWithSlashAndTildaFromIdentity ( params, page ) )}.set ( rawExpected, ${expectedResult} )`,
+    // ...suppressExpectedResult,
+    ...setExpectedResult,
     `    expect ( newState.messages.length ).toEqual ( 1 )`,
     `    expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)`,
     `    expect ( { ...newState, messages: []}).toEqual ( expected )`,

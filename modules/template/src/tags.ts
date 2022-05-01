@@ -83,7 +83,7 @@ export const bodyFor: TagOpsFn<RequestInit | undefined> =
                ( urlConfig, restAction ) => s => {
                  const method = methodFor ( restAction )
                  if ( restAction === 'get' || restAction === 'getOption' || restAction === 'list' ) return undefined
-                 if ( restAction === 'delete' ) return { method }
+                 if ( restAction === 'delete'|| isRestStateChange(restAction) ) return { method }
                  let bodyL = urlConfig.fdLens.chain ( urlConfig.dLens );
                  const body: any = bodyL.getOption ( s )
                  if ( body ) {
@@ -141,5 +141,5 @@ export interface TagOpsProps extends MakeAEqualsBProps {
 }
 
 export function needsId ( r: RestAction ): boolean {
-  return r === 'get' || r === 'getOption' || r === 'update' || r === 'delete'
+  return r === 'get' || r === 'getOption' || r === 'update' || r === 'delete' || isRestStateChange(r)
 }

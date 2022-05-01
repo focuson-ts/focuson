@@ -16,7 +16,7 @@ describe("Allow pacts to be run from intelliJ for PostCodeMainPage", () =>{})
 pactWith ( { consumer: 'PostCodeMainPage', provider: 'PostCodeMainPageProvider', cors: true }, provider => {
   describe ( 'PostCodeMainPage - address rest create', () => {
    it ( 'should have a create rest for PostCodeNameAndAddress', async () => {
-    const restCommand: RestCommand = { name: 'PostCodeMainPage_PostCodeNameAndAddressRestDetails', restAction: 'create' }
+    const restCommand: RestCommand = { name: 'PostCodeMainPage_PostCodeNameAndAddressRestDetails', restAction: "create" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {},
@@ -91,7 +91,7 @@ describe ( 'PostCodeMainPage - postcode - fetcher', () => {
 pactWith ( { consumer: 'PostCodeMainPage', provider: 'PostCodeMainPageProvider', cors: true }, provider => {
   describe ( 'PostCodeMainPage - postcode rest get', () => {
    it ( 'should have a get rest for PostCodeData', async () => {
-    const restCommand: RestCommand = { name: 'PostCodeMainPage_PostCodeDataRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'PostCodeMainPage_PostCodeDataRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {},

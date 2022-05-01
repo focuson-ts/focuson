@@ -8,6 +8,13 @@ import { parsePath, stateCodeBuilder } from "@focuson/lens";
 import { lensFocusQueryWithSlashAndTildaFromIdentity, lensFocusQueryWithTildaFromPage } from "./lens";
 
 
+function cleanStates<G> ( r: RestDefnInPageProperties<G> ) {
+  if ( r.rest.states ) {
+    return Object.fromEntries ( Object.entries ( r.rest.states ).map ( ( [ name, stateDetails ] ) =>
+      [ name, {url: stateDetails.url} ] ) )
+  }
+  return {};
+}
 export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restName: string, r: RestDefnInPageProperties<G> ): string[] => {
   const [ ids, resourceIds ] = findIds ( r.rest )
   let pageDomain = `${params.domainsFile}.${pageDomainName ( p )}`;
@@ -15,7 +22,7 @@ export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restNam
   const fddLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: Lenses.identity< ${pageDomain}>()${lensFocusQueryFor ( l.lens )}` )
   const compilationException = r.targetFromPath.indexOf ( '#' ) >= 0 ?
     [ `    //This compilation error is because you used a variable name in the target '${r.targetFromPath}'. Currently that is not supported` ] : []
-
+  const states = cleanStates ( r )
   return [
     `//If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs`,
     `export function ${restDetailsName ( p, restName, r.rest )} ( cd: NameAndLens<${params.stateName}>, dateFn: DateFn  ): OneRestDetails<${params.stateName}, ${pageDomain}, ${params.domainsFile}.${domainName ( r.rest.dataDD )}, SimpleMessage> {`,
@@ -29,7 +36,8 @@ export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restNam
     `    ids: ${JSON.stringify ( ids )},`,
     `    resourceId:  ${JSON.stringify ( resourceIds )},`,
     "    messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],",
-    `    url: "${r.rest.url}"`,
+    `    url: "${r.rest.url}",`,
+    `    states : ${JSON.stringify ( states )}`,
     `  }`,
     `}`,
     ``,

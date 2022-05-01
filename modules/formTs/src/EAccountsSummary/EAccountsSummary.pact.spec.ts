@@ -16,7 +16,7 @@ describe("Allow pacts to be run from intelliJ for EAccountsSummary", () =>{})
 pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider', cors: true }, provider => {
   describe ( 'EAccountsSummary - createPlanRestD rest get', () => {
    it ( 'should have a get rest for CreatePlan', async () => {
-    const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
@@ -54,7 +54,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
 pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider', cors: true }, provider => {
   describe ( 'EAccountsSummary - createPlanRestD rest create', () => {
    it ( 'should have a create rest for CreatePlan', async () => {
-    const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'create' }
+    const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: "create" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
@@ -93,7 +93,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
 pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider', cors: true }, provider => {
   describe ( 'EAccountsSummary - createPlanRestD rest update', () => {
    it ( 'should have a update rest for CreatePlan', async () => {
-    const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'update' }
+    const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: "update" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
@@ -132,7 +132,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
 pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider', cors: true }, provider => {
   describe ( 'EAccountsSummary - createPlanRestD rest delete', () => {
    it ( 'should have a delete rest for CreatePlan', async () => {
-    const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'delete' }
+    const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: "delete" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
@@ -158,8 +158,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
     const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
-// @ts-ignore
-    const expected = Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('tempCreatePlan').set ( rawExpected, {} )
+    const expected = rawExpected; // this rest action doesn't load data
     expect ( newState.messages.length ).toEqual ( 1 )
     expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
     expect ( { ...newState, messages: []}).toEqual ( expected )
@@ -171,7 +170,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
 pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider', cors: true }, provider => {
   describe ( 'EAccountsSummary - createPlanRestD rest list', () => {
    it ( 'should have a list rest for CreatePlan', async () => {
-    const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: 'list' }
+    const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: "list" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
@@ -244,7 +243,7 @@ describe ( 'EAccountsSummary - eAccountsSummary - fetcher', () => {
 pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider', cors: true }, provider => {
   describe ( 'EAccountsSummary - eAccountsSummary rest get', () => {
    it ( 'should have a get rest for EAccountsSummary', async () => {
-    const restCommand: RestCommand = { name: 'EAccountsSummary_EAccountsSummaryRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'EAccountsSummary_EAccountsSummaryRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","customerId":"custId"},
@@ -271,6 +270,44 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
     const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('fromApi').set ( rawExpected, samples.sampleEAccountsSummary0 )
+    expect ( newState.messages.length ).toEqual ( 1 )
+    expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+    expect ( { ...newState, messages: []}).toEqual ( expected )
+   })
+ })
+})
+
+//Rest eAccountsSummary [object Object] pact test for EAccountsSummary
+pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider', cors: true }, provider => {
+  describe ( 'EAccountsSummary - eAccountsSummary rest state:invalidate', () => {
+   it ( 'should have a state:invalidate rest for EAccountsSummary', async () => {
+    const restCommand: RestCommand = { name: 'EAccountsSummary_EAccountsSummaryRestDetails', restAction: {"state":"invalidate"} }
+    const firstState: FState = {
+       ...emptyState, restCommands: [ restCommand ],
+       CommonIds: {"accountId":"accId","customerId":"custId"},
+       pageSelection: [ { pageName: 'EAccountsSummary', pageMode: 'view' } ]
+    }
+    await provider.addInteraction ( {
+      state: 'default',
+      uponReceiving: 'a rest for EAccountsSummary eAccountsSummary state:invalidate',
+      withRequest: {
+         method: 'POST',
+         path:   '/api/accountsSummary/invalidate',
+         query:{"accountId":"accId","customerId":"custId"},
+         //no request body needed for state:invalidate,
+      },
+      willRespondWith: {
+         status: 200,
+         body:{}//no response body needed for state:invalidate
+      },
+    } )
+    const lensTransforms: Transform<FState,any>[] = [
+    ]
+    const withIds = massTransform ( firstState, ...lensTransforms )
+    const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const rawExpected:any = { ...withIds, restCommands: []}
+    const expected = rawExpected; // this rest action doesn't load data
     expect ( newState.messages.length ).toEqual ( 1 )
     expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
     expect ( { ...newState, messages: []}).toEqual ( expected )

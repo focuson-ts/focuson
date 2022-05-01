@@ -33,7 +33,7 @@ import java.util.Map;
 
     @DeleteMapping(value="/api/createPlan", produces="application/json")
     public ResponseEntity deleteCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.deleteCreatePlan(accountId, createPlanId, customerId), "deleteCreatePlan");
+       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.deleteCreatePlan(accountId, createPlanId, customerId), "");
     }
 
     @GetMapping(value="/api/createPlan/list", produces="application/json")

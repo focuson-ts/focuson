@@ -51,7 +51,7 @@ describe ( 'Repeating - repeating - fetcher', () => {
 pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true }, provider => {
   describe ( 'Repeating - repeating rest create', () => {
    it ( 'should have a create rest for RepeatingWholeData', async () => {
-    const restCommand: RestCommand = { name: 'Repeating_RepeatingWholeDataRestDetails', restAction: 'create' }
+    const restCommand: RestCommand = { name: 'Repeating_RepeatingWholeDataRestDetails', restAction: "create" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"customerId":"custId"},
@@ -90,7 +90,7 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
 pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true }, provider => {
   describe ( 'Repeating - repeating rest get', () => {
    it ( 'should have a get rest for RepeatingWholeData', async () => {
-    const restCommand: RestCommand = { name: 'Repeating_RepeatingWholeDataRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'Repeating_RepeatingWholeDataRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"customerId":"custId"},

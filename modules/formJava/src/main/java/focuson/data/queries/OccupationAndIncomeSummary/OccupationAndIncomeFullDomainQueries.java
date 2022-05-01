@@ -1,8 +1,7 @@
 package focuson.data.queries.OccupationAndIncomeSummary;
 public class OccupationAndIncomeFullDomainQueries{
   public static  String getOccupationAndIncomeFullDomain(String customerId){ 
-     return
-  "query{getOccupationAndIncomeFullDomain(" + "customerId:" + "\"" + customerId + "\"" + "){"+
+    return"query{getOccupationAndIncomeFullDomain(" + "customerId:" + "\"" + customerId + "\"" + "){"+
         "    mainCustomerName"+
         "    jointCustomerName"+
         "    mainClientRef"+
@@ -38,8 +37,7 @@ public class OccupationAndIncomeFullDomainQueries{
         "  }"
   +"}";}
   public static  String updateOccupationAndIncomeFullDomain(String customerId, String obj){ 
-     return
-  "mutation{updateOccupationAndIncomeFullDomain(" + "customerId:" + "\"" + customerId + "\""  + ", obj:" + obj + "){"+
+    return"mutation{updateOccupationAndIncomeFullDomain(" + "customerId:" + "\"" + customerId + "\""  + ", obj:" + obj + "){"+
         "    mainCustomerName"+
         "    jointCustomerName"+
         "    mainClientRef"+

@@ -16,6 +16,7 @@ export function ETransfer_ETransferDataDRestDetails ( cd: NameAndLens<FState>, d
     ids: ["customerId"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/eTransfers?{query}"
+    url: "/api/eTransfers?{query}",
+    states : {}
   }
 }

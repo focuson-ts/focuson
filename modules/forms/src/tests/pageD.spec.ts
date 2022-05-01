@@ -46,7 +46,8 @@ describe ( "allRestAndActions", () => {
       "['EAccountsSummary','createPlanRestD','CreatePlan','update']",
       "['EAccountsSummary','createPlanRestD','CreatePlan','delete']",
       "['EAccountsSummary','createPlanRestD','CreatePlan','list']",
-      "['EAccountsSummary','eAccountsSummary','EAccountsSummary','get']"
+      "['EAccountsSummary','eAccountsSummary','EAccountsSummary','get']",
+      "['EAccountsSummary','eAccountsSummary','EAccountsSummary','state']"
     ])
   } )
 

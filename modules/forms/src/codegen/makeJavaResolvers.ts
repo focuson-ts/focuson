@@ -53,6 +53,7 @@ export interface ResolverData {
   resolver: string;
   /** In the case of the Query/Mutation = resolver. Other => the field name (both are logically the field name)*/
   name: string;
+  needsObjectInOutput: boolean;
 
   samplerName: string,
   /** Values that represent a sample. Will only be present for a field */
@@ -61,7 +62,7 @@ export interface ResolverData {
 export function findQueryMutationResolvers<G> ( r: RestD<G>, a: RestAction ): ResolverData {
   const rad = getRestTypeDetails ( a );
   let name = resolverName ( r, rad );
-  return ({ isRoot: true, parent: rad.query, resolver: name, name, samplerName: sampleName ( r.dataDD ), sample: [] })
+  return ({ isRoot: true, parent: rad.query, resolver: name, name, samplerName: sampleName ( r.dataDD ), sample: [], needsObjectInOutput: getRestTypeDetails ( a ).output.needsObj })
 
 }
 
@@ -74,6 +75,7 @@ export function findChildResolvers<G> ( restD: RestD<G> ): ResolverData[] {
       name: path[ path.length - 1 ],
       samplerName: sampleName ( dataDD ),
       sample: sampleFromDataD ( oneDataDD, dataDD ),
+      needsObjectInOutput: true
     } ] : []
   }
   const mapper: AllDataFlatMap<ResolverData, G> = {

@@ -16,7 +16,8 @@ export function AccountOverview_AccountAllFlagsRestDetails ( cd: NameAndLens<FSt
     ids: ["accountId","customerId"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/accountOverview/flags?{query}"
+    url: "/api/accountOverview/flags?{query}",
+    states : {}
   }
 }
 
@@ -31,7 +32,8 @@ export function AccountOverview_AccountOverviewAgreementTypeRestDetails ( cd: Na
     ids: ["accountId","customerId"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/accountOverview/agreementType?{query}"
+    url: "/api/accountOverview/agreementType?{query}",
+    states : {}
   }
 }
 
@@ -46,7 +48,8 @@ export function AccountOverview_ArrearsDetailsRestDetails ( cd: NameAndLens<FSta
     ids: ["accountId","customerId","startDate"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/accountOverview/arrearsDetails?{query}"
+    url: "/api/accountOverview/arrearsDetails?{query}",
+    states : {}
   }
 }
 
@@ -61,7 +64,8 @@ export function AccountOverview_AccountOverviewHistoryRestDetails ( cd: NameAndL
     ids: ["accountId","customerId"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/accountOverview/excessHistory?{query}"
+    url: "/api/accountOverview/excessHistory?{query}",
+    states : {}
   }
 }
 
@@ -76,7 +80,8 @@ export function AccountOverview_AccountOverviewExcessInfoRestDetails ( cd: NameA
     ids: ["accountId","customerId"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/accountOverview/excessInfo?{query}"
+    url: "/api/accountOverview/excessInfo?{query}",
+    states : {}
   }
 }
 
@@ -91,7 +96,8 @@ export function AccountOverview_AccountOverviewRestDetails ( cd: NameAndLens<FSt
     ids: ["accountId","customerId"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/accountOverview?{query}"
+    url: "/api/accountOverview?{query}",
+    states : {}
   }
 }
 
@@ -106,7 +112,8 @@ export function AccountOverview_AccountOverviewOptOutRestDetails ( cd: NameAndLe
     ids: ["accountId","customerId"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/accountOverview/optOut?{query}"
+    url: "/api/accountOverview/optOut?{query}",
+    states : {}
   }
 }
 
@@ -121,6 +128,7 @@ export function AccountOverview_AccountOverviewReasonRestDetails ( cd: NameAndLe
     ids: ["accountId","customerId"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/accountOverview/reason?{query}"
+    url: "/api/accountOverview/reason?{query}",
+    states : {}
   }
 }

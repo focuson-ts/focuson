@@ -1,6 +1,7 @@
 import { CreatePlanDD, EAccountsSummaryDD } from "./eAccountsSummary.dataD";
 import { IntParam, RestD, RestParams } from "../../common/restD";
 import { AllGuards } from "../../buttons/guardButton";
+import { onlySchema } from "../database/tableNames";
 
 export const commonParams: RestParams = {
   customerId: { ...IntParam, commonLens: 'customerId', testValue: 'custId' },
@@ -12,7 +13,10 @@ export const eAccountsSummaryRestD: RestD<AllGuards> = {
   params: { ...commonParams, customerId: { ...IntParam, commonLens: 'customerId', testValue: 'custId', main: true } },
   dataDD: EAccountsSummaryDD,
   url: '/api/accountsSummary?{query}', //or maybe accountId={accountId}&customerId={customerId}
-  actions: [ 'get' ],
+  actions: [ 'get', {state: 'invalidate'} ],
+  states: {
+    invalidate: {url: '/api/accountsSummary/invalidate?{query}', useStoredProcedure: {  schema: onlySchema, name: 'sda', params: ['accountId', 'customerId']}}
+  }
 }
 export const createPlanRestD: RestD<AllGuards> = {
   params: { ...commonParams, createPlanId: { ...IntParam, commonLens: 'createPlanId', testValue: 'tbd', main: true } },

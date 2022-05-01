@@ -15,7 +15,7 @@ describe("Allow pacts to be run from intelliJ for CreateEAccount", () =>{})
 pactWith ( { consumer: 'CreateEAccount', provider: 'CreateEAccountProvider', cors: true }, provider => {
   describe ( 'CreateEAccount - eTransfer rest create', () => {
    it ( 'should have a create rest for CreateEAccountData', async () => {
-    const restCommand: RestCommand = { name: 'CreateEAccount_CreateEAccountDataRestDetails', restAction: 'create' }
+    const restCommand: RestCommand = { name: 'CreateEAccount_CreateEAccountDataRestDetails', restAction: "create" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
@@ -54,7 +54,7 @@ pactWith ( { consumer: 'CreateEAccount', provider: 'CreateEAccountProvider', cor
 pactWith ( { consumer: 'CreateEAccount', provider: 'CreateEAccountProvider', cors: true }, provider => {
   describe ( 'CreateEAccount - eTransfer rest get', () => {
    it ( 'should have a get rest for CreateEAccountData', async () => {
-    const restCommand: RestCommand = { name: 'CreateEAccount_CreateEAccountDataRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'CreateEAccount_CreateEAccountDataRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","createPlanId":"tbd","customerId":"custId"},

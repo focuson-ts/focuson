@@ -51,7 +51,7 @@ describe ( 'HelloWorldMainPage - restDataRD - fetcher', () => {
 pactWith ( { consumer: 'HelloWorldMainPage', provider: 'HelloWorldMainPageProvider', cors: true }, provider => {
   describe ( 'HelloWorldMainPage - restDataRD rest get', () => {
    it ( 'should have a get rest for HelloWorldDomainData', async () => {
-    const restCommand: RestCommand = { name: 'HelloWorldMainPage_HelloWorldDomainDataRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'HelloWorldMainPage_HelloWorldDomainDataRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {},

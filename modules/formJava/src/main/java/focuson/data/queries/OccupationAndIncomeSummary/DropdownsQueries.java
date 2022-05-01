@@ -1,8 +1,7 @@
 package focuson.data.queries.OccupationAndIncomeSummary;
 public class DropdownsQueries{
   public static  String getDropdowns(String customerId){ 
-     return
-  "query{getDropdowns(" + "customerId:" + "\"" + customerId + "\"" + "){"+
+    return"query{getDropdowns(" + "customerId:" + "\"" + customerId + "\"" + "){"+
         "    occupationDescriptionResponse{"+
         "      descTypeValue"+
         "      descTypeName"+

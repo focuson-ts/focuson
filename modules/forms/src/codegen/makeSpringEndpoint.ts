@@ -1,11 +1,11 @@
-import {  postFixForEndpoint, RestD } from "../common/restD";
+import { postFixForEndpoint, RestD } from "../common/restD";
 import { endPointName, queryClassName, queryName, queryPackage, restControllerName, sampleName, sqlMapName } from "./names";
 import { JavaWiringParams } from "./config";
-import { beforeSeparator, RestAction, safeObject, sortedEntries } from "@focuson/utils";
+import { beforeSeparator, isRestStateChange, RestAction, safeObject, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction, indentList } from "./codegen";
 import { isRepeatingDd } from "../common/dataD";
 import { MainPageD } from "../common/pageD";
-import { getRestTypeDetails } from "@focuson/rest";
+import { getRestTypeDetails, getUrlForRestAction } from "@focuson/rest";
 
 
 function makeCommaIfHaveParams<G> ( r: RestD<G>, restAction: RestAction ) {
@@ -16,14 +16,14 @@ function makeCommaIfHaveParams<G> ( r: RestD<G>, restAction: RestAction ) {
 export function makeParamsForJava<G> ( r: RestD<G>, restAction: RestAction ): string {
   const params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
   const comma = makeCommaIfHaveParams ( r, restAction );
-  const requestParam = getRestTypeDetails(restAction ).params.needsObj ? `${comma}@RequestBody String body` : ""
+  const requestParam = getRestTypeDetails ( restAction ).params.needsObj ? `${comma}@RequestBody String body` : ""
   return params.map ( (( [ name, param ] ) => `@RequestParam String ${name}`) ).join ( ", " ) + requestParam
 }
 function paramsForQuery<G> ( r: RestD<G>, restAction: RestAction ): string {
   const clazz = isRepeatingDd ( r.dataDD ) ? 'List' : 'Map'
   let params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
   const comma = params.length === 0 ? '' : ', '
-  const objParam = getRestTypeDetails(restAction ).params.needsObj ? `${comma}  Transform.removeQuoteFromProperties(body, ${clazz}.class)` : ""
+  const objParam = getRestTypeDetails ( restAction ).params.needsObj ? `${comma}  Transform.removeQuoteFromProperties(body, ${clazz}.class)` : ""
   return params.map ( ( [ name, param ] ) => name ).join ( ", " ) + objParam
 }
 
@@ -33,23 +33,27 @@ function mappingAnnotation ( restAction: RestAction ) {
   if ( restAction === 'list' ) return 'GetMapping'
   if ( restAction === 'create' ) return 'PostMapping'
   if ( restAction === 'delete' ) return 'DeleteMapping'
+  if ( isRestStateChange ( (restAction) ) ) return 'PostMapping'
   throw new Error ( `unknown rest action ${restAction} for mappingAnnotation` )
 }
 
 function makeEndpoint<G> ( params: JavaWiringParams, r: RestD<G>, restAction: RestAction ): string[] {
   const hasDbName = safeObject ( r.params )[ 'dbName' ] !== undefined
   const dbNameString = hasDbName ? 'dbName' : `IFetcher.${params.defaultDbName}`
+  const url = getUrlForRestAction ( restAction, r.url, r.states )
+  let selectionFromData = getRestTypeDetails ( restAction ).output.needsObj ? `"${queryName ( r, restAction )}"` : '""';
   return [
-    `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,
+    `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,
     `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
-    `       return Transform.result(graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( r, restAction )}), "${queryName ( r, restAction )}");`,
+    `       return Transform.result(graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( r, restAction )}), ${selectionFromData});`,
     `    }`,
     `` ];
 }
 
 function makeQueryEndpoint<G> ( params: JavaWiringParams, r: RestD<G>, restAction: RestAction ): string[] {
+  const url = getUrlForRestAction ( restAction, r.url, r.states )
   return [
-    `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", r.url )}${postFixForEndpoint ( restAction )}/query", produces="application/json")`,
+    `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}/query", produces="application/json")`,
     `    public String query${queryName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
     `       return ${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( r, restAction )});`,
     `    }`,

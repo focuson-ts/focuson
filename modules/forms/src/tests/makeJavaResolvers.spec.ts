@@ -106,6 +106,7 @@ describe ( "makeAllJavaWiring", () => {
       "import focuson.data.fetchers.EAccountsSummary.CreatePlan_delete_FFetcher;",
       "import focuson.data.fetchers.EAccountsSummary.CreatePlan_list_FFetcher;",
       "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_get_FFetcher;",
+      "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_state_invalidate_FFetcher;",
       "import focuson.data.fetchers.Repeating.RepeatingWholeData_create_FFetcher;",
       "import focuson.data.fetchers.Repeating.RepeatingWholeData_get_FFetcher;",
       "@Component",
@@ -122,6 +123,8 @@ describe ( "makeAllJavaWiring", () => {
       "      List<CreatePlan_list_FFetcher> CreatePlan_list_FFetcher;",
       "      @Autowired",
       "      List<EAccountsSummary_get_FFetcher> EAccountsSummary_get_FFetcher;",
+      "      @Autowired",
+      "      List<EAccountsSummary_state_invalidate_FFetcher> EAccountsSummary_state_invalidate_FFetcher;",
       "      @Autowired",
       "      List<RepeatingWholeData_create_FFetcher> RepeatingWholeData_create_FFetcher;",
       "      @Autowired",
@@ -170,6 +173,7 @@ describe ( "makeAllJavaWiring", () => {
       "          .type(newTypeWiring('EAccountsSummary').dataFetcher('totalMonthlyCost', find(EAccountsSummary_get_FFetcher, dbName, f ->f.getTotalMonthlyCost())))",
       "          .type(newTypeWiring('EAccountsSummary').dataFetcher('oneAccountBalance', find(EAccountsSummary_get_FFetcher, dbName, f ->f.getOneAccountBalance())))",
       "          .type(newTypeWiring('EAccountsSummary').dataFetcher('currentAccountBalance', find(EAccountsSummary_get_FFetcher, dbName, f ->f.getCurrentAccountBalance())))",
+      "          .type(newTypeWiring('Mutation').dataFetcher('stateEAccountsSummaryinvalidate', find(EAccountsSummary_state_invalidate_FFetcher, dbName, f ->f.stateEAccountsSummaryinvalidate())))",
       "          .type(newTypeWiring('Mutation').dataFetcher('createRepeatingLine', find(RepeatingWholeData_create_FFetcher, dbName, f ->f.createRepeatingLine())))",
       "          .type(newTypeWiring('Query').dataFetcher('getRepeatingLine', find(RepeatingWholeData_get_FFetcher, dbName, f ->f.getRepeatingLine())))",
       "       .build();",
@@ -188,51 +192,51 @@ describe ( "makeAllJavaWiring", () => {
 describe ( "findAllResolvers2", () => {
   it ( "findResolvers2", () => {
     expect ( findChildResolvers ( eAccountsSummaryRestD ) ).toEqual ( [
-      { "isRoot": false, "name": "description", "parent": "EAccountSummary", "resolver": "getAccountSummaryDescription", "sample": [ "This account has a description", "another description" ], "samplerName": "sampleOneLineString" },
-      { "isRoot": false, "name": "totalMonthlyCost", "parent": "EAccountsSummary", "resolver": "getTotalMonthlyCost", "sample": [ 1000 ], "samplerName": "sampleMoney" },
-      { "isRoot": false, "name": "oneAccountBalance", "parent": "EAccountsSummary", "resolver": "getOneAccountBalance", "sample": [ 9921 ], "samplerName": "sampleMoney" },
-      { "isRoot": false, "name": "currentAccountBalance", "parent": "EAccountsSummary", "resolver": "getCurrentAccountBalance", "sample": [ 12321 ], "samplerName": "sampleMoney" }
+      { "isRoot": false, needsObjectInOutput: true, "name": "description", "parent": "EAccountSummary", "resolver": "getAccountSummaryDescription", "sample": [ "This account has a description", "another description" ], "samplerName": "sampleOneLineString" },
+      { "isRoot": false, needsObjectInOutput: true, "name": "totalMonthlyCost", "parent": "EAccountsSummary", "resolver": "getTotalMonthlyCost", "sample": [ 1000 ], "samplerName": "sampleMoney" },
+      { "isRoot": false, needsObjectInOutput: true, "name": "oneAccountBalance", "parent": "EAccountsSummary", "resolver": "getOneAccountBalance", "sample": [ 9921 ], "samplerName": "sampleMoney" },
+      { "isRoot": false, needsObjectInOutput: true, "name": "currentAccountBalance", "parent": "EAccountsSummary", "resolver": "getCurrentAccountBalance", "sample": [ 12321 ], "samplerName": "sampleMoney" }
     ] )
   } )
 
   it ( "findQueryMutationResolvers2", () => {
     expect ( findQueryMutationResolvers ( eAccountsSummaryRestD, 'get' ) ).toEqual (
-      { "isRoot": true, "name": "getEAccountsSummary", "parent": "Query", "resolver": "getEAccountsSummary", "sample": [], "samplerName": "sampleEAccountsSummary" }
-     )
+      { "isRoot": true, needsObjectInOutput: true, "name": "getEAccountsSummary", "parent": "Query", "resolver": "getEAccountsSummary", "sample": [], "samplerName": "sampleEAccountsSummary" }
+    )
     expect ( findQueryMutationResolvers ( createPlanRestD, "get" ) ).toEqual (
-      { "isRoot": true, "name": "getCreatePlan", "parent": "Query", "resolver": "getCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
-     )
+      { "isRoot": true, needsObjectInOutput: true, "name": "getCreatePlan", "parent": "Query", "resolver": "getCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
+    )
     expect ( findQueryMutationResolvers ( createPlanRestD, "create" ) ).toEqual (
-      { "isRoot": true, "name": "createCreatePlan", "parent": "Mutation", "resolver": "createCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
-     )
+      { "isRoot": true, needsObjectInOutput: true, "name": "createCreatePlan", "parent": "Mutation", "resolver": "createCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
+    )
     expect ( findQueryMutationResolvers ( createPlanRestD, "update" ) ).toEqual (
-      { "isRoot": true, "name": "updateCreatePlan", "parent": "Mutation", "resolver": "updateCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
-     )
+      { "isRoot": true, needsObjectInOutput: true, "name": "updateCreatePlan", "parent": "Mutation", "resolver": "updateCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
+    )
     expect ( findQueryMutationResolvers ( createPlanRestD, "delete" ) ).toEqual (
-      { "isRoot": true, "name": "deleteCreatePlan", "parent": "Mutation", "resolver": "deleteCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
-     )
+      { "isRoot": true, needsObjectInOutput: false, "name": "deleteCreatePlan", "parent": "Mutation", "resolver": "deleteCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
+    )
     expect ( findQueryMutationResolvers ( createPlanRestD, "list" ) ).toEqual (
-      { "isRoot": true, "name": "listCreatePlan", "parent": "Query", "resolver": "listCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
-     )
+      { "isRoot": true, needsObjectInOutput: true, "name": "listCreatePlan", "parent": "Query", "resolver": "listCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
+    )
   } )
 
   it ( "findAllResolversFor with children - gets with children", () => {
     expect ( findAllResolversFor ( eAccountsSummaryRestD, 'get' ) ).toEqual ( [
-      { "isRoot": true, "name": "getEAccountsSummary", "parent": "Query", "resolver": "getEAccountsSummary", "sample": [], "samplerName": "sampleEAccountsSummary" },
-      { "isRoot": false, "name": "description", "parent": "EAccountSummary", "resolver": "getAccountSummaryDescription", "sample": [ "This account has a description", "another description" ], "samplerName": "sampleOneLineString" },
-      { "isRoot": false, "name": "totalMonthlyCost", "parent": "EAccountsSummary", "resolver": "getTotalMonthlyCost", "sample": [ 1000 ], "samplerName": "sampleMoney" },
-      { "isRoot": false, "name": "oneAccountBalance", "parent": "EAccountsSummary", "resolver": "getOneAccountBalance", "sample": [ 9921 ], "samplerName": "sampleMoney" },
-      { "isRoot": false, "name": "currentAccountBalance", "parent": "EAccountsSummary", "resolver": "getCurrentAccountBalance", "sample": [ 12321 ], "samplerName": "sampleMoney" }
+      { "isRoot": true, needsObjectInOutput: true, "name": "getEAccountsSummary", "parent": "Query", "resolver": "getEAccountsSummary", "sample": [], "samplerName": "sampleEAccountsSummary" },
+      { "isRoot": false, needsObjectInOutput: true, "name": "description", "parent": "EAccountSummary", "resolver": "getAccountSummaryDescription", "sample": [ "This account has a description", "another description" ], "samplerName": "sampleOneLineString" },
+      { "isRoot": false, needsObjectInOutput: true, "name": "totalMonthlyCost", "parent": "EAccountsSummary", "resolver": "getTotalMonthlyCost", "sample": [ 1000 ], "samplerName": "sampleMoney" },
+      { "isRoot": false, needsObjectInOutput: true, "name": "oneAccountBalance", "parent": "EAccountsSummary", "resolver": "getOneAccountBalance", "sample": [ 9921 ], "samplerName": "sampleMoney" },
+      { "isRoot": false, needsObjectInOutput: true, "name": "currentAccountBalance", "parent": "EAccountsSummary", "resolver": "getCurrentAccountBalance", "sample": [ 12321 ], "samplerName": "sampleMoney" }
     ] )
   } )
   it ( "findAllResolversFor with children - with mutations", () => {
     expect ( findAllResolversFor ( createPlanRestD, 'update' ) ).toEqual ( [
-      { "isRoot": true, "name": "updateCreatePlan", "parent": "Mutation", "resolver": "updateCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
+      { "isRoot": true, needsObjectInOutput: true, "name": "updateCreatePlan", "parent": "Mutation", "resolver": "updateCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
     ] )
   } )
   it ( "findAllResolversFor simple", () => {
     expect ( findAllResolversFor ( createPlanRestD, 'get' ) ).toEqual ( [
-      { "isRoot": true, "name": "getCreatePlan", "parent": "Query", "resolver": "getCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
+      { "isRoot": true, needsObjectInOutput: true, "name": "getCreatePlan", "parent": "Query", "resolver": "getCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
     ] )
   } )
 
@@ -240,6 +244,7 @@ describe ( "findAllResolvers2", () => {
     expect ( findAllResolversFor ( repeatingRestRD, 'get' ) ).toEqual ( [
       {
         "isRoot": true,
+        needsObjectInOutput: true,
         "name": "getRepeatingLine",
         "parent": "Query",
         "resolver": "getRepeatingLine",
@@ -252,6 +257,7 @@ describe ( "findAllResolvers2", () => {
     expect ( findAllResolversFor ( repeatingRestRD, 'create' ) ).toEqual ( [
       {
         "isRoot": true,
+        needsObjectInOutput: true,
         "name": "createRepeatingLine",
         "parent": "Mutation",
         "resolver": "createRepeatingLine",

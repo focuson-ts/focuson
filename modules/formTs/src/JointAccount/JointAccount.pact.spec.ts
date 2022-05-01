@@ -51,7 +51,7 @@ describe ( 'JointAccount - jointAccount - fetcher', () => {
 pactWith ( { consumer: 'JointAccount', provider: 'JointAccountProvider', cors: true }, provider => {
   describe ( 'JointAccount - jointAccount rest get', () => {
    it ( 'should have a get rest for JointAccount', async () => {
-    const restCommand: RestCommand = { name: 'JointAccount_pre_JointAccountRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'JointAccount_pre_JointAccountRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"custId","brandId":"custId","dbName":"mock"},

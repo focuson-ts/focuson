@@ -125,12 +125,14 @@ const notCreated = ( { generatedDomainNames }: ReportInfo, name ): string[] => g
 const dontSupportVariables = <S> ( info: ReportInfo, name: string, rdp: RestDefnInPageProperties<S> ): string[] => rdp.targetFromPath.indexOf ( '#' ) >= 0 ?
   [ `CRITICAL - Currently do not support variable names in 'rest' ${name} 'targetFromPath'. ${rdp.targetFromPath} ` ] :
   [];
-// const namePrefixIsCapitalised = <S> ( info: ReportInfo, name: string, rdp: RestDefnInPageProperties<S> ): string[] => rdp.targetFromPath.indexOf ( '#' ) >= 0 ?
-//   [ `CRITICAL - Currently do not support variable names in 'rest' ${name} 'targetFromPath'. ${rdp.targetFromPath} ` ] :
-//   [];
+
+
 export function makeRestReport<B, G> ( page: MainPageD<B, G>, info: ReportInfo ): ReportDetails {
-  const general: string[] = sortedEntries ( page.rest ).map ( ( [ name, rdp ] ) =>
-    `|${name} | ${rdp.rest.url}.| ${sortedEntries ( rdp.rest.params ).map ( ( [ name, p ] ) => name )}` )
+  const general: string[] = sortedEntries ( page.rest ).flatMap ( ( [ name, rdp ] ) =>
+    [ `|${name} | ${rdp.rest.url}| ${sortedEntries ( rdp.rest.params ).map ( ( [ name, p ] ) => name )}`,
+      ...sortedEntries ( rdp.rest.states ).map ( ( [ stateName, details ] ) =>
+        `| | ${details.url}| ${sortedEntries ( rdp.rest.params ).map ( ( [ name, p ] ) => name )}` )
+    ] )
   const critical: string[] = sortedEntries ( page.rest ).flatMap ( ( [ name, rdp ] ) => [
     ...notCreated ( info, rdp.rest.dataDD.name ),
     ...dontSupportVariables ( info, name, rdp ) ] )

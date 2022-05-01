@@ -16,6 +16,7 @@ export function JointAccount_pre_JointAccountRestDetails ( cd: NameAndLens<FStat
     ids: ["accountId","brandId","dbName"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/jointAccount?{query}"
+    url: "/api/jointAccount?{query}",
+    states : {}
   }
 }

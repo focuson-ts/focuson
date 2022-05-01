@@ -58,7 +58,7 @@ describe ( 'AccountOverview - accountFlags - fetcher', () => {
 pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
   describe ( 'AccountOverview - accountFlags rest get', () => {
    it ( 'should have a get rest for AccountAllFlags', async () => {
-    const restCommand: RestCommand = { name: 'AccountOverview_AccountAllFlagsRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'AccountOverview_AccountAllFlagsRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","customerId":"custId"},
@@ -131,7 +131,7 @@ describe ( 'AccountOverview - agreementType - fetcher', () => {
 pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
   describe ( 'AccountOverview - agreementType rest get', () => {
    it ( 'should have a get rest for AccountOverviewAgreementType', async () => {
-    const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewAgreementTypeRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewAgreementTypeRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","customerId":"custId"},
@@ -205,7 +205,7 @@ describe ( 'AccountOverview - arrearsDetails - fetcher', () => {
 pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
   describe ( 'AccountOverview - arrearsDetails rest get', () => {
    it ( 'should have a get rest for ArrearsDetails', async () => {
-    const restCommand: RestCommand = { name: 'AccountOverview_ArrearsDetailsRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'AccountOverview_ArrearsDetailsRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","customerId":"custId"},
@@ -279,7 +279,7 @@ describe ( 'AccountOverview - excessHistory - fetcher', () => {
 pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
   describe ( 'AccountOverview - excessHistory rest get', () => {
    it ( 'should have a get rest for AccountOverviewHistory', async () => {
-    const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewHistoryRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewHistoryRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","customerId":"custId"},
@@ -352,7 +352,7 @@ describe ( 'AccountOverview - excessInfo - fetcher', () => {
 pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
   describe ( 'AccountOverview - excessInfo rest get', () => {
    it ( 'should have a get rest for AccountOverviewExcessInfo', async () => {
-    const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewExcessInfoRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewExcessInfoRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","customerId":"custId"},
@@ -425,7 +425,7 @@ describe ( 'AccountOverview - main - fetcher', () => {
 pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
   describe ( 'AccountOverview - main rest get', () => {
    it ( 'should have a get rest for AccountOverview', async () => {
-    const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","customerId":"custId"},
@@ -498,7 +498,7 @@ describe ( 'AccountOverview - optOut - fetcher', () => {
 pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
   describe ( 'AccountOverview - optOut rest get', () => {
    it ( 'should have a get rest for AccountOverviewOptOut', async () => {
-    const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewOptOutRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewOptOutRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","customerId":"custId"},
@@ -571,7 +571,7 @@ describe ( 'AccountOverview - reason - fetcher', () => {
 pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', cors: true }, provider => {
   describe ( 'AccountOverview - reason rest get', () => {
    it ( 'should have a get rest for AccountOverviewReason', async () => {
-    const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewReasonRestDetails', restAction: 'get' }
+    const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewReasonRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","customerId":"custId"},

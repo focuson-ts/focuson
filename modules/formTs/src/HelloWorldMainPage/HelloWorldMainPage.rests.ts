@@ -16,6 +16,7 @@ export function HelloWorldMainPage_HelloWorldDomainDataRestDetails ( cd: NameAnd
     ids: [],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/helloWorld?{query}"
+    url: "/helloWorld?{query}",
+    states : {}
   }
 }

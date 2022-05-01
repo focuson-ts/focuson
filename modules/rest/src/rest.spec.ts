@@ -1,4 +1,4 @@
-import { createSimpleMessage, FetchFn, HasSimpleMessages, insertBefore, RestAction, SimpleMessage, testDateFn } from "@focuson/utils";
+import { createSimpleMessage, FetchFn, HasSimpleMessages, insertBefore, isRestStateChange, RestAction, SimpleMessage, testDateFn } from "@focuson/utils";
 import { HasRestCommands, massFetch, OneRestDetails, rest, RestCommand, RestDetails, restL, restReq } from "./rest";
 import { identityOptics, NameAndLens } from "@focuson/lens";
 
@@ -37,6 +37,9 @@ function oneRestDetails<S extends HasFullDomainForTest> ( cd: NameAndLens<S>, fd
     resourceId: [ 'id' ],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],
     url: "/some/url/{token}?{query}",
+    states: {
+      newState: {url: "/some/new/state/{token}?{query}"}
+    }
   }
 }
 const restDetails: RestDetails<RestStateForTest, SimpleMessage> = {
@@ -46,15 +49,15 @@ function withRestCommand ( r: RestStateForTest, ...restCommands: RestCommand[] )
   return { ...r, restCommands }
 }
 
-function restMutatator ( r: RestAction, url: string ) { return insertBefore ( "?", "/" + r, url )}
+function restMutatator ( r: RestAction, url: string ) { return insertBefore ( "?", "/" + (isRestStateChange ( r ) ? r.state : r), url )}
 describe ( "restReq", () => {
   it ( "it should turn post commands in the state into fetch requests - empty", () => {
     expect ( restReq ( restDetails, restL (), restMutatator, emptyRestState ) ).toEqual ( [] )
   } )
   it ( "it should turn post commands in the state into fetch requests - one", () => {
     const results = restReq ( restDetails, restL (), restMutatator, withRestCommand ( emptyRestState, { restAction: 'list', name: 'one' } ) );
-    expect ( results.map ( a => [ a[ 0 ].url, a[ 1 ], a[ 2 ] ] ) ).toEqual ( [
-      [ "/some/url/{token}?{query}", "/some/url/someToken/list?token=someToken", undefined ]
+    expect ( results.map ( a => [ a[ 0 ], a[ 1 ].url, a[ 2 ], a[ 3 ] ] ) ).toEqual ( [
+      [ 'list', "/some/url/{token}?{query}", "/some/url/someToken/list?token=someToken", undefined ]
     ] )
   } )
   it ( "it should turn post commands in the state into fetch requests - three", () => {
@@ -65,25 +68,29 @@ describe ( "restReq", () => {
       { restAction: 'delete', name: 'one' },
       { restAction: 'update', name: 'one' },
       { restAction: 'list', name: 'one' },
+      { restAction: { state: 'newState' }, name: 'one' },
     ) );
-    expect ( results.map ( a => [ a[ 1 ], a[ 2 ] ] ) ).toEqual ( [
+    expect ( results.map ( a => [ a[ 2 ], a[ 3 ] ] ) ).toEqual ( [
       [ "/some/url/someToken/get?token=someToken&id=someId", undefined ],
       [ "/some/url/someToken/create?token=someToken", { "body": "\"someData\"", "method": "post" } ],
       [ "/some/url/someToken/getOption?token=someToken&id=someId", undefined ],
       [ "/some/url/someToken/delete?token=someToken&id=someId", { "method": "delete" } ],
       [ "/some/url/someToken/update?token=someToken&id=someId", { "body": "\"someData\"", "method": "put" } ],
-      [ "/some/url/someToken/list?token=someToken", undefined ] ] )
+      [ "/some/url/someToken/list?token=someToken", undefined ],
+      [ "/some/new/state/someToken/newState?token=someToken", { "body": "\"someData\"", "method": "post" } ] ]
+    )
   } )
 } )
 
-const mockFetch: FetchFn = ( url, info ) => info?.method === 'delete' ? Promise.reject ( 'deleteWentWrong' ) : Promise.resolve ( [ 200, `from${url}` ] )
+const mockFetch: FetchFn = ( url, info ) =>
+  info?.method === 'delete' ? Promise.reject ( 'deleteWentWrong' ) : Promise.resolve ( [ 200, `from${url}` ] )
 describe ( "massFetch", () => {
   it ( "should get the results from the fetch ", async () => {
     expect ( await massFetch ( mockFetch, [] ) ).toEqual ( [] )
-    expect ( await massFetch ( mockFetch, [ [ 'cargo1', '/one', undefined ], [ 'cargo2', '/one', { method: 'delete' } ], [ 'cargo3', '/one', undefined ] ] ) ).toEqual ( [
-      { "one": "cargo1", "result": "from/one", "status": 200 },
-      { "one": "cargo2", "result": "deleteWentWrong" },
-      { "one": "cargo3", "result": "from/one", "status": 200 }
+    expect ( await massFetch ( mockFetch, [ [ 'list', 'cargo1', '/one', undefined ], [ 'delete', 'cargo2', '/one', { method: 'delete' } ], [ { state: 'newState' }, 'cargo3', '/one', undefined ] ] ) ).toEqual ( [
+      { "one": "cargo1", "restAction": "list", "result": "from/one", "status": 200 },
+      { "one": "cargo2", "restAction": "delete", "result": "deleteWentWrong" },
+      { "one": "cargo3", "restAction": { "state": "newState" }, "result": "from/one", "status": 200 }
     ] )
   } )
 } )
@@ -114,6 +121,29 @@ describe ( "rest", () => {
       "restCommands": [],
       "token": "someToken"
     } )
+  } )
+
+  it ( "should process state changes without changing the domain object", async () => {
+    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, simpleMessageL, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+      { restAction: { state: 'newState' }, name: 'one' }
+    ) );
+    expect ( result ).toEqual ( {
+      "fullDomain": {
+        "fromApi": "someData", //unchanged
+        "idFromFullDomain": "someId"
+      },
+      "messages": [
+        { "level": "info", "msg": "200/\"from/some/new/state/someToken/newState?token=someToken\"", "time": "timeForTest" }
+      ],
+      "restCommands": [],
+      "token": "someToken"
+    } )
+  } )
+
+  it ( "should throw error with illegal state", async () => {
+    await expect ( rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, simpleMessageL, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+      { restAction: { state: 'illegalState' }, name: 'one' }
+    ) ) ).rejects.toThrow ( 'Requested state change is illegalState. The legal list is [newState]' )
   } )
 
 } )

@@ -21,6 +21,7 @@ describe ( "makeGraphQlSchema", () => {
     it ( "should make type Mutation", () => {
       expect ( makeQueryOrMutateBlock ( rs, 'Mutation' ) ).toEqual ( [
         "type Mutation{",
+        "  stateEAccountsSummaryinvalidate(accountId: String!, customerId: String!):Boolean",
         "  createCreatePlan(accountId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!",
         "  updateCreatePlan(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!",
         "  deleteCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):Boolean",
@@ -67,6 +68,7 @@ describe ( "makeGraphQlSchema", () => {
       "  listCreatePlan(accountId: String!, customerId: String!):[CreatePlan!]!",
       "}",
       "type Mutation{",
+      "  stateEAccountsSummaryinvalidate(accountId: String!, customerId: String!):Boolean",
       "  createCreatePlan(accountId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!",
       "  updateCreatePlan(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!",
       "  deleteCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):Boolean",

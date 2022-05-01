@@ -16,6 +16,7 @@ export function Repeating_RepeatingWholeDataRestDetails ( cd: NameAndLens<FState
     ids: ["customerId"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/repeating?{query}"
+    url: "/api/repeating?{query}",
+    states : {}
   }
 }

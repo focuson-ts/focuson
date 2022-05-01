@@ -19,14 +19,16 @@ describe ( "makeRest", () => {
       "    ids: ['accountId'],",
       "    resourceId:  ['customerId'],",
       "    messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],",
-      "    url: '/api/accountsSummary?{query}'",
+      "    url: '/api/accountsSummary?{query}',",
+      "    states : {'invalidate':{'url':'/api/accountsSummary/invalidate?{query}'}}",
+
       "  }",
       "}",
       ""
-    ])
+    ] )
   } )
   it ( "should create posters for a restD with many actions", () => {
-    expect ( makeRest ( paramsForTest, EAccountsSummaryPD ) ('eAccountsSummary',  EAccountsSummaryPD.rest.createPlanRestD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeRest ( paramsForTest, EAccountsSummaryPD ) ( 'eAccountsSummary', EAccountsSummaryPD.rest.createPlanRestD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "//If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs",
       "export function EAccountsSummary_CreatePlanRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.CreatePlanDomain, SimpleMessage> {",
       "  const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}",
@@ -38,11 +40,11 @@ describe ( "makeRest", () => {
       "    ids: ['accountId','customerId'],",
       "    resourceId:  ['createPlanId'],",
       "    messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],",
-      "    url: '/api/createPlan?{query}'",
-      "  }",
+      "    url: '/api/createPlan?{query}',",
+      "    states : {}", "  }",
       "}",
       ""
-    ])
+    ] )
   } )
 
   it ( "should create rest for a repeating restD", () => {
@@ -58,11 +60,12 @@ describe ( "makeRest", () => {
       "    ids: ['customerId'],",
       "    resourceId:  [],",
       "    messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],",
-      "    url: '/api/repeating?{query}'",
+      "    url: '/api/repeating?{query}',",
+      "    states : {}",
       "  }",
       "}",
       ""
-    ])
+    ] )
 
   } )
 

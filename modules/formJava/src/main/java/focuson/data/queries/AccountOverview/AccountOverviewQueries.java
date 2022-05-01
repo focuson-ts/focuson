@@ -1,8 +1,7 @@
 package focuson.data.queries.AccountOverview;
 public class AccountOverviewQueries{
   public static  String getAccountOverview(String accountId,String customerId){ 
-     return
-  "query{getAccountOverview(" + "accountId:" + "\"" + accountId + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
+    return"query{getAccountOverview(" + "accountId:" + "\"" + accountId + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
         "    score"+
         "    accountType"+
         "    drawDownDate"+

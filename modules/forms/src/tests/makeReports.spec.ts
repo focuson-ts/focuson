@@ -1,4 +1,4 @@
-import { makeGuardsReportForPage, makeReport, makeReportData } from "../reporting/report";
+import { makeGuardsReportForPage, makeReport, makeReportData, makeRestReport } from "../reporting/report";
 import { AllButtonsInPage } from "../buttons/allButtons";
 import { AllGuards } from "../buttons/guardButton";
 import { JointAccountPageD } from "../example/jointAccount/jointAccount.pageD";
@@ -11,9 +11,21 @@ import { StringDD } from "../common/dataD";
 import { helloWorldSample } from "../example/HelloWorld/helloWorld.sample";
 import { MainOccupationDetailsPageSummaryPD } from "../example/SingleOccupation/singleOccupation.pageD";
 import { editOccupationIncomeSummaryModalPD } from "../example/SingleOccupation/singleOccupation.modalD";
+import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 
 
 describe ( "makeReports", () => {
+  describe ( "makeRestReport", () => {
+    it ( "should include the state data", () => {
+      expect ( makeRestReport ( EAccountsSummaryPD, { generatedDomainNames: [] } ).general ).toEqual ( [
+        "|createPlanRestD | /api/createPlan?{query}| accountId,createPlanId,customerId",
+        "|eAccountsSummary | /api/accountsSummary?{query}| accountId,customerId",
+        "| | /api/accountsSummary/invalidate?{query}| accountId,customerId"
+      ] )
+
+    } )
+  } )
+
   it ( "should make a report, when everything is ok", () => {
     const reports = makeReportData<AllButtonsInPage<AllGuards>, AllGuards> ( [ JointAccountPageD ] );
     expect ( makeReport ( reports ) ).toEqual ( [
@@ -27,7 +39,7 @@ describe ( "makeReports", () => {
       "# All endpoints",
       "| Page | Rest | Url | Params |",
       "| --- | --- | ---  |  --- |",
-      "|JointAccount|jointAccount | /api/jointAccount?{query}.| accountId,brandId,dbName",
+      "|JointAccount|jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName",
       "",
       "---",
       "#JointAccount - MainPage",
@@ -45,7 +57,7 @@ describe ( "makeReports", () => {
       "  ##rests   ",
       "  |name|url|params",
       "  | --- | --- | --- ",
-      "    |jointAccount | /api/jointAccount?{query}.| accountId,brandId,dbName",
+      "    |jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName",
       "  ##modals  ",
       "  |name|displayed with",
       "  | --- | --- ",
@@ -58,7 +70,7 @@ describe ( "makeReports", () => {
       "    toggle       ToggleButton toggles ~/joint",
       "",
       "---"
-    ])
+    ] )
   } )
   it ( "should make a report, when have critcal issue", () => {
     let page: MainPageD<any, any> = { ...JointAccountPageD, rest: { jointAccount: { rest: jointAccountRestD, targetFromPath: '#fromApi', fetcher: true }, } };
@@ -79,7 +91,7 @@ describe ( "makeReports", () => {
       "# All endpoints",
       "| Page | Rest | Url | Params |",
       "| --- | --- | ---  |  --- |",
-      "|JointAccount|jointAccount | /api/jointAccount?{query}.| accountId,brandId,dbName",
+      "|JointAccount|jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName",
       "",
       "---",
       "#JointAccount - MainPage",
@@ -99,7 +111,7 @@ describe ( "makeReports", () => {
       "  ##rests   ",
       "  |name|url|params",
       "  | --- | --- | --- ",
-      "    |jointAccount | /api/jointAccount?{query}.| accountId,brandId,dbName",
+      "    |jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName",
       "  ##modals  ",
       "  |name|displayed with",
       "  | --- | --- ",
@@ -112,7 +124,7 @@ describe ( "makeReports", () => {
       "    toggle       ToggleButton toggles ~/joint",
       "",
       "---"
-    ])
+    ] )
   } )
 
   it ( "should report duplicate names", () => {
@@ -123,21 +135,22 @@ describe ( "makeReports", () => {
       }
       let page: MainPageD<any, any> = { ...HelloWorldPage, display: { target: '~/fromApi', dataDD: duphelloWorldDD } };
       const reports = makeReportData<AllButtonsInPage<AllGuards>, AllGuards> ( [ page ] );
-      expect ( makeReport ( reports ).slice(0,6) ).toEqual ( [
+      expect ( makeReport ( reports ).slice ( 0, 6 ) ).toEqual ( [
         "# All Pages",
         "# Critical Issues",
         "## Critical Issues in HelloWorldMainPage",
         "* CRITICAL duplicate name in dataD HelloWorldDomainData",
         "",
         "---"
-      ])
+      ] )
     }
   )
 } )
 
-describe("makeGuardsReport", () =>{
-  it ("should make a truth table for each component (page/dataD) with guards - main page", () =>{
-    expect(makeGuardsReportForPage(MainOccupationDetailsPageSummaryPD)).toEqual({
+
+describe ( "makeGuardsReport", () => {
+  it ( "should make a truth table for each component (page/dataD) with guards - main page", () => {
+    expect ( makeGuardsReportForPage ( MainOccupationDetailsPageSummaryPD ) ).toEqual ( {
       "critical": [],
       "dontIndent": true,
       "general": [
@@ -165,6 +178,6 @@ describe("makeGuardsReport", () =>{
       ],
       "headers": [],
       "part": "guards"
-    })
-  })
-})
+    } )
+  } )
+} )

@@ -9,7 +9,7 @@ describe ( "flatMapActionDetails", () => {
       expect ( r ).toBe ( eAccountsSummaryRestD )
       return [ rt.name ]
     } )
-    expect ( found ).toEqual ( [ "get" ] )
+    expect ( found ).toEqual ( [ "get" , "state"] )
   } )
   it ( "should work for createPlanRestD", () => {
     const found = flapMapActionDetails ( createPlanRestD, ( r, rt ) => {

@@ -16,6 +16,7 @@ export function ChequeCreditbooks_ChequeCreditbooksRestDetails ( cd: NameAndLens
     ids: ["accountId","applRef","brandRef","customerId"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/chequeCreditBooks?{query}"
+    url: "/api/chequeCreditBooks?{query}",
+    states : {}
   }
 }

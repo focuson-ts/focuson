@@ -16,7 +16,8 @@ export function PostCodeMainPage_PostCodeNameAndAddressRestDetails ( cd: NameAnd
     ids: [],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/address?{query}"
+    url: "/api/address?{query}",
+    states : {}
   }
 }
 
@@ -31,6 +32,7 @@ export function PostCodeMainPage_PostCodeDataRestDetails ( cd: NameAndLens<FStat
     ids: ["postcode"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
-    url: "/api/postCode?{query}"
+    url: "/api/postCode?{query}",
+    states : {}
   }
 }

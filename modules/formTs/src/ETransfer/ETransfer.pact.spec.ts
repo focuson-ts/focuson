@@ -15,7 +15,7 @@ describe("Allow pacts to be run from intelliJ for ETransfer", () =>{})
 pactWith ( { consumer: 'ETransfer', provider: 'ETransferProvider', cors: true }, provider => {
   describe ( 'ETransfer - eTransfer rest create', () => {
    it ( 'should have a create rest for ETransferDataD', async () => {
-    const restCommand: RestCommand = { name: 'ETransfer_ETransferDataDRestDetails', restAction: 'create' }
+    const restCommand: RestCommand = { name: 'ETransfer_ETransferDataDRestDetails', restAction: "create" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"customerId":"custId"},
