@@ -22,7 +22,10 @@ export const eAccountsSummaryRestD: RestD<AllGuards> = {
     invalidate: { url: '/api/accountsSummary/invalidate?{query}', useStoredProcedure: { schema: onlySchema, name: 'sda', params: [ 'accountId', 'customerId' ] } }
   },
   access: [
-    { restAction: { state: 'invalidate' }, condition: { type: 'in', param: 'employeeType', values: [ 'teamLeader' ] } }
+    { restAction: { state: 'invalidate' }, condition: { type: 'in', param: 'employeeType', values: [ 'teamLeader'  ] } }
+  ],
+  audit:[
+    {restAction: {state: 'invalidate'}, storedProcedure: {name: 'auditStuff', params: ['accountId', 'customerId'], schema: onlySchema}}
   ]
 }
 export const createPlanRestD: RestD<AllGuards> = {

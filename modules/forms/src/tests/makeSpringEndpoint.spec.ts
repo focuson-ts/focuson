@@ -32,6 +32,7 @@ describe ( "makeSpringEndpoint", () => {
       "import focuson.data.queries.EAccountsSummary.EAccountsSummaryQueries;",
       "import focuson.data.IManyGraphQl;",
       "import focuson.data.fetchers.IFetcher;",
+      "import focuson.data.audit.EAccountsSummary.EAccountsSummaryAudit;",
       "import org.springframework.beans.factory.annotation.Autowired;",
       "import java.util.List;",
       "import java.util.Map;",
@@ -42,6 +43,8 @@ describe ( "makeSpringEndpoint", () => {
       "",
       "  @Autowired",
       "  public IManyGraphQl graphQL;",
+      "  @Autowired",
+      "  EAccountsSummaryAudit __audit;",
       "    @GetMapping(value=\"/api/accountsSummary\", produces=\"application/json\")",
       "    public ResponseEntity getEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{",
       "       return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.getEAccountsSummary(accountId, customerId, employeeType), \"getEAccountsSummary\");",
@@ -50,6 +53,7 @@ describe ( "makeSpringEndpoint", () => {
       "    @PostMapping(value=\"/api/accountsSummary/invalidate\", produces=\"application/json\")",
       "    public ResponseEntity state_invalidateEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{",
       "      if (!Arrays.asList(\"teamLeader\").contains(employeeType)) return new ResponseEntity(\"\", new HttpHeaders(), HttpStatus.FORBIDDEN);",
+      "        __audit.EAccountsSummary_state_invalidate_auditStuff(IFetcher.mock,accountId,customerId);",
       "       return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, customerId, employeeType), \"\");",
       "    }",
       "",
@@ -68,7 +72,7 @@ describe ( "makeSpringEndpoint", () => {
       "      return new ObjectMapper().writeValueAsString( Sample.sampleEAccountsSummary0);",
       "    }",
       "  }"
-    ] )
+    ])
   } )
   it ( "should make a second endpoint for a res", () => {
     expect ( makeSpringEndpointsFor ( paramsForTest, EAccountsSummaryPD, 'createPlanRestD', createPlanRestD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [

@@ -1,6 +1,6 @@
 import { AllDataDD, CompDataD, compDataDIn } from "../common/dataD";
 import { MainPageD, ModalPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
-import { RestD } from "../common/restD";
+import { RestD, StoredProcedureForStateDetails } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
 import { RestAction, safeString } from "@focuson/utils";
 import { JavaWiringParams, TSParams } from "./config";
@@ -54,6 +54,8 @@ export const fetcherName = <G> ( d: RestDefnInPageProperties<G> ): string => res
 export const fetcherVariableName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${params.fetcherInterface}`;
 export const providerPactClassName = <B, G> ( pd: MainPageD<B, G> ): string => providerName ( pd ) + "Test";
 
+export const auditClassName = <B, G> ( r: RestD<G> ) => `${restNameWithPrefix ( r )}Audit`;
+export const auditMethodName = <B, G> ( r: RestD<G>, a: RestAction , sp: StoredProcedureForStateDetails) => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${sp.name}`;
 
 export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${r.dataDD.name}Queries`;
 

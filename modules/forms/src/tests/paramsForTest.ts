@@ -30,5 +30,6 @@ export const paramsForTest: CombinedParams = {
   schema: 'someSchema.graphql',
   sampleClass: 'Sample',
   dbPackage: 'db',
-  defaultDbName: 'mock'
+  defaultDbName: 'mock',
+  auditPackage: 'audit'
 };

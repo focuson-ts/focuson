@@ -11,42 +11,42 @@
 |applRef|applRef
 |brandRef|brandRef
 # All endpoints
-| Page | Rest | Url | Params |
-| --- | --- | ---  |  --- |
-|HelloWorldMainPage|restDataRD | /helloWorld?{query}| 
-|AccountOverview|accountFlags | /api/accountOverview/flags?{query}| accountId,customerId
-|AccountOverview|agreementType | /api/accountOverview/agreementType?{query}| accountId,customerId
-|AccountOverview|arrearsDetails | /api/accountOverview/arrearsDetails?{query}| accountId,customerId,startDate
-|AccountOverview|excessHistory | /api/accountOverview/excessHistory?{query}| accountId,customerId
-|AccountOverview|excessInfo | /api/accountOverview/excessInfo?{query}| accountId,customerId
-|AccountOverview|main | /api/accountOverview?{query}| accountId,customerId
-|AccountOverview|optOut | /api/accountOverview/optOut?{query}| accountId,customerId
-|AccountOverview|reason | /api/accountOverview/reason?{query}| accountId,customerId
-|JointAccount|jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName
-|OccupationAndIncomeSummary|additionalInformationRD | /customer/occupation/v2/additionalInfo?{query}| customerId
-|OccupationAndIncomeSummary|businessDetailsRD | /customer/occupation/v2/businessDetails?{query}| customerId
-|OccupationAndIncomeSummary|dropdownsRD | /customer/occupation/v2/occupationDetails?{query}| customerId
-|OccupationAndIncomeSummary|occupationAndIncomeRD | /customer/occupation/v2/occupationIncomeDetails?{query}| customerId
-|OccupationAndIncomeSummary|otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}| customerId
-|EAccountsSummary|createPlanRestD | /api/createPlan?{query}| accountId,createPlanId,customerId
-|EAccountsSummary|eAccountsSummary | /api/accountsSummary?{query}| accountId,customerId,employeeType
-|EAccountsSummary| | /api/accountsSummary/invalidate?{query}| accountId,customerId,employeeType
-|ETransfer|eTransfer | /api/eTransfers?{query}| customerId
-|CreateEAccount|eTransfer | /api/createEAccount/?{query}| accountId,createPlanId,customerId
-|ChequeCreditbooks|chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,customerId
-|ChequeCreditbooks| | /api/chequeCreditBooks/?{query}| accountId,applRef,brandRef,customerId
-|Repeating|repeating | /api/repeating?{query}| customerId
-|PostCodeMainPage|address | /api/address?{query}| 
-|PostCodeMainPage|postcode | /api/postCode?{query}| postcode
+| Page | Rest | Url | Params | Access | Audit
+| --- | --- | ---  |  --- | --- | --- |
+|HelloWorldMainPage|restDataRD | /helloWorld?{query}|  |  | 
+|AccountOverview|accountFlags | /api/accountOverview/flags?{query}| accountId,customerId |  | 
+|AccountOverview|agreementType | /api/accountOverview/agreementType?{query}| accountId,customerId |  | 
+|AccountOverview|arrearsDetails | /api/accountOverview/arrearsDetails?{query}| accountId,customerId,startDate |  | 
+|AccountOverview|excessHistory | /api/accountOverview/excessHistory?{query}| accountId,customerId |  | 
+|AccountOverview|excessInfo | /api/accountOverview/excessInfo?{query}| accountId,customerId |  | 
+|AccountOverview|main | /api/accountOverview?{query}| accountId,customerId |  | 
+|AccountOverview|optOut | /api/accountOverview/optOut?{query}| accountId,customerId |  | 
+|AccountOverview|reason | /api/accountOverview/reason?{query}| accountId,customerId |  | 
+|JointAccount|jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName |  | 
+|OccupationAndIncomeSummary|additionalInformationRD | /customer/occupation/v2/additionalInfo?{query}| customerId |  | 
+|OccupationAndIncomeSummary|businessDetailsRD | /customer/occupation/v2/businessDetails?{query}| customerId |  | 
+|OccupationAndIncomeSummary|dropdownsRD | /customer/occupation/v2/occupationDetails?{query}| customerId |  | 
+|OccupationAndIncomeSummary|occupationAndIncomeRD | /customer/occupation/v2/occupationIncomeDetails?{query}| customerId |  | 
+|OccupationAndIncomeSummary|otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}| customerId |  | 
+|EAccountsSummary|createPlanRestD | /api/createPlan?{query}| accountId,createPlanId,customerId |  | 
+|EAccountsSummary|eAccountsSummary | /api/accountsSummary?{query}| accountId,customerId,employeeType | employeeType in teamLeader | state:invalidate->auditStuff
+|EAccountsSummary| | /api/accountsSummary/invalidate?{query}| accountId,customerId,employeeType |
+|ETransfer|eTransfer | /api/eTransfers?{query}| customerId |  | 
+|CreateEAccount|eTransfer | /api/createEAccount/?{query}| accountId,createPlanId,customerId |  | 
+|ChequeCreditbooks|chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,customerId |  | 
+|ChequeCreditbooks| | /api/chequeCreditBooks/?{query}| accountId,applRef,brandRef,customerId |
+|Repeating|repeating | /api/repeating?{query}| customerId |  | 
+|PostCodeMainPage|address | /api/address?{query}|  |  | 
+|PostCodeMainPage|postcode | /api/postCode?{query}| postcode |  | 
 
 ---
 #HelloWorldMainPage - MainPage
   ##domains 
     HelloWorldDomainData
   ##rests   
-  |name|url|params
-  | --- | --- | --- 
-    |restDataRD | /helloWorld?{query}| 
+  |name|url|params|access|audit
+  | --- | --- | --- | --- | --- 
+    |restDataRD | /helloWorld?{query}|  |  | 
   ##display 
     HelloWorldDomainData
 
@@ -80,16 +80,16 @@
     ArrearsDetailsLine
     ArrearsDetailsLines
   ##rests   
-  |name|url|params
-  | --- | --- | --- 
-    |accountFlags | /api/accountOverview/flags?{query}| accountId,customerId
-    |agreementType | /api/accountOverview/agreementType?{query}| accountId,customerId
-    |arrearsDetails | /api/accountOverview/arrearsDetails?{query}| accountId,customerId,startDate
-    |excessHistory | /api/accountOverview/excessHistory?{query}| accountId,customerId
-    |excessInfo | /api/accountOverview/excessInfo?{query}| accountId,customerId
-    |main | /api/accountOverview?{query}| accountId,customerId
-    |optOut | /api/accountOverview/optOut?{query}| accountId,customerId
-    |reason | /api/accountOverview/reason?{query}| accountId,customerId
+  |name|url|params|access|audit
+  | --- | --- | --- | --- | --- 
+    |accountFlags | /api/accountOverview/flags?{query}| accountId,customerId |  | 
+    |agreementType | /api/accountOverview/agreementType?{query}| accountId,customerId |  | 
+    |arrearsDetails | /api/accountOverview/arrearsDetails?{query}| accountId,customerId,startDate |  | 
+    |excessHistory | /api/accountOverview/excessHistory?{query}| accountId,customerId |  | 
+    |excessInfo | /api/accountOverview/excessInfo?{query}| accountId,customerId |  | 
+    |main | /api/accountOverview?{query}| accountId,customerId |  | 
+    |optOut | /api/accountOverview/optOut?{query}| accountId,customerId |  | 
+    |reason | /api/accountOverview/reason?{query}| accountId,customerId |  | 
   ##modals  
   |name|displayed with
   | --- | --- 
@@ -134,9 +134,9 @@
     JointAccountAddresses
     JointAccountCustomer
   ##rests   
-  |name|url|params
-  | --- | --- | --- 
-    |jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName
+  |name|url|params|access|audit
+  | --- | --- | --- | --- | --- 
+    |jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName |  | 
   ##modals  
   |name|displayed with
   | --- | --- 
@@ -174,13 +174,13 @@
     OneOccupationIncomeDetails
     OtherIncomeResponse
   ##rests   
-  |name|url|params
-  | --- | --- | --- 
-    |additionalInformationRD | /customer/occupation/v2/additionalInfo?{query}| customerId
-    |businessDetailsRD | /customer/occupation/v2/businessDetails?{query}| customerId
-    |dropdownsRD | /customer/occupation/v2/occupationDetails?{query}| customerId
-    |occupationAndIncomeRD | /customer/occupation/v2/occupationIncomeDetails?{query}| customerId
-    |otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}| customerId
+  |name|url|params|access|audit
+  | --- | --- | --- | --- | --- 
+    |additionalInformationRD | /customer/occupation/v2/additionalInfo?{query}| customerId |  | 
+    |businessDetailsRD | /customer/occupation/v2/businessDetails?{query}| customerId |  | 
+    |dropdownsRD | /customer/occupation/v2/occupationDetails?{query}| customerId |  | 
+    |occupationAndIncomeRD | /customer/occupation/v2/occupationIncomeDetails?{query}| customerId |  | 
+    |otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}| customerId |  | 
   ##modals  
   |name|displayed with
   | --- | --- 
@@ -247,11 +247,11 @@
     EAccountsSummaryTable
     EAccountSummary
   ##rests   
-  |name|url|params
-  | --- | --- | --- 
-    |createPlanRestD | /api/createPlan?{query}| accountId,createPlanId,customerId
-    |eAccountsSummary | /api/accountsSummary?{query}| accountId,customerId,employeeType
-    | | /api/accountsSummary/invalidate?{query}| accountId,customerId,employeeType
+  |name|url|params|access|audit
+  | --- | --- | --- | --- | --- 
+    |createPlanRestD | /api/createPlan?{query}| accountId,createPlanId,customerId |  | 
+    |eAccountsSummary | /api/accountsSummary?{query}| accountId,customerId,employeeType | employeeType in teamLeader | state:invalidate->auditStuff
+    | | /api/accountsSummary/invalidate?{query}| accountId,customerId,employeeType |
   ##modals  
   |name|displayed with
   | --- | --- 
@@ -278,9 +278,9 @@
   ##domains 
     ETransferDataD
   ##rests   
-  |name|url|params
-  | --- | --- | --- 
-    |eTransfer | /api/eTransfers?{query}| customerId
+  |name|url|params|access|audit
+  | --- | --- | --- | --- | --- 
+    |eTransfer | /api/eTransfers?{query}| customerId |  | 
   ##display 
     ETransferDataD
   ##buttons 
@@ -299,9 +299,9 @@
   ##domains 
     CreateEAccountData
   ##rests   
-  |name|url|params
-  | --- | --- | --- 
-    |eTransfer | /api/createEAccount/?{query}| accountId,createPlanId,customerId
+  |name|url|params|access|audit
+  | --- | --- | --- | --- | --- 
+    |eTransfer | /api/createEAccount/?{query}| accountId,createPlanId,customerId |  | 
   ##display 
     CreateEAccountData
   ##buttons 
@@ -323,10 +323,10 @@
     ChequeCreditbooksHistory
     ChequeCreditbooksHistoryLine
   ##rests   
-  |name|url|params
-  | --- | --- | --- 
-    |chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,customerId
-    | | /api/chequeCreditBooks/?{query}| accountId,applRef,brandRef,customerId
+  |name|url|params|access|audit
+  | --- | --- | --- | --- | --- 
+    |chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,customerId |  | 
+    | | /api/chequeCreditBooks/?{query}| accountId,applRef,brandRef,customerId |
   ##modals  
   |name|displayed with
   | --- | --- 
@@ -350,9 +350,9 @@
     RepeatingLine
     RepeatingWholeData
   ##rests   
-  |name|url|params
-  | --- | --- | --- 
-    |repeating | /api/repeating?{query}| customerId
+  |name|url|params|access|audit
+  | --- | --- | --- | --- | --- 
+    |repeating | /api/repeating?{query}| customerId |  | 
   ##modals  
   |name|displayed with
   | --- | --- 
@@ -383,10 +383,10 @@
     PostCodeNameAndAddress
     PostCodeSearch
   ##rests   
-  |name|url|params
-  | --- | --- | --- 
-    |address | /api/address?{query}| 
-    |postcode | /api/postCode?{query}| postcode
+  |name|url|params|access|audit
+  | --- | --- | --- | --- | --- 
+    |address | /api/address?{query}|  |  | 
+    |postcode | /api/postCode?{query}| postcode |  | 
   ##modals  
   |name|displayed with
   | --- | --- 

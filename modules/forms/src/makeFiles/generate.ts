@@ -42,8 +42,8 @@ export const params = {
   schema: 'someSchema.graphql',
   sampleClass: 'Sample',
   dbPackage: 'db',
-  optionalsFile: 'optionals'
-
+  optionalsFile: 'optionals',
+  auditPackage:'audit'
 };
 
 export const directorySpec: DirectorySpec = {

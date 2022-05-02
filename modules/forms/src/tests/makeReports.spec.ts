@@ -18,9 +18,9 @@ describe ( "makeReports", () => {
   describe ( "makeRestReport", () => {
     it ( "should include the state data", () => {
       expect ( makeRestReport ( EAccountsSummaryPD, { generatedDomainNames: [] } ).general ).toEqual ( [
-        "|createPlanRestD | /api/createPlan?{query}| accountId,createPlanId,customerId",
-        "|eAccountsSummary | /api/accountsSummary?{query}| accountId,customerId,employeeType",
-        "| | /api/accountsSummary/invalidate?{query}| accountId,customerId,employeeType"
+        "|createPlanRestD | /api/createPlan?{query}| accountId,createPlanId,customerId |  | ",
+        "|eAccountsSummary | /api/accountsSummary?{query}| accountId,customerId,employeeType | employeeType in teamLeader | state:invalidate->auditStuff",
+        "| | /api/accountsSummary/invalidate?{query}| accountId,customerId,employeeType |"
       ])
 
     } )
@@ -37,9 +37,9 @@ describe ( "makeReports", () => {
       "|brandId|brandId",
       "|dbName|dbName",
       "# All endpoints",
-      "| Page | Rest | Url | Params |",
-      "| --- | --- | ---  |  --- |",
-      "|JointAccount|jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName",
+      "| Page | Rest | Url | Params | Access | Audit",
+      "| --- | --- | ---  |  --- | --- | --- |",
+      "|JointAccount|jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName |  | ",
       "",
       "---",
       "#JointAccount - MainPage",
@@ -55,9 +55,9 @@ describe ( "makeReports", () => {
       "    JointAccountAddresses",
       "    JointAccountCustomer",
       "  ##rests   ",
-      "  |name|url|params",
-      "  | --- | --- | --- ",
-      "    |jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName",
+      "  |name|url|params|access|audit",
+      "  | --- | --- | --- | --- | --- ",
+      "    |jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName |  | ",
       "  ##modals  ",
       "  |name|displayed with",
       "  | --- | --- ",
@@ -70,7 +70,7 @@ describe ( "makeReports", () => {
       "    toggle       ToggleButton toggles ~/joint",
       "",
       "---"
-    ] )
+    ])
   } )
   it ( "should make a report, when have critcal issue", () => {
     let page: MainPageD<any, any> = { ...JointAccountPageD, rest: { jointAccount: { rest: jointAccountRestD, targetFromPath: '#fromApi', fetcher: true }, } };
@@ -89,9 +89,9 @@ describe ( "makeReports", () => {
       "|brandId|brandId",
       "|dbName|dbName",
       "# All endpoints",
-      "| Page | Rest | Url | Params |",
-      "| --- | --- | ---  |  --- |",
-      "|JointAccount|jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName",
+      "| Page | Rest | Url | Params | Access | Audit",
+      "| --- | --- | ---  |  --- | --- | --- |",
+      "|JointAccount|jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName |  | ",
       "",
       "---",
       "#JointAccount - MainPage",
@@ -109,9 +109,9 @@ describe ( "makeReports", () => {
       "    JointAccountAddresses",
       "    JointAccountCustomer",
       "  ##rests   ",
-      "  |name|url|params",
-      "  | --- | --- | --- ",
-      "    |jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName",
+      "  |name|url|params|access|audit",
+      "  | --- | --- | --- | --- | --- ",
+      "    |jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName |  | ",
       "  ##modals  ",
       "  |name|displayed with",
       "  | --- | --- ",
@@ -124,7 +124,7 @@ describe ( "makeReports", () => {
       "    toggle       ToggleButton toggles ~/joint",
       "",
       "---"
-    ] )
+    ])
   } )
 
   it ( "should report duplicate names", () => {

@@ -6,7 +6,7 @@ import { detailsLog, GenerateLogLevel, isRestStateChange, NameAnd, safeArray, sa
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
-import { createTableSqlName, fetcherInterfaceName, fetcherPackageName, getSqlName, h2FetcherClassName, mockFetcherClassName, mockFetcherPackage, providerPactClassName, queryClassName, queryPackage, restControllerName, sqlMapFileName } from "../codegen/names";
+import { auditClassName, createTableSqlName, fetcherInterfaceName, fetcherPackageName, getSqlName, h2FetcherClassName, mockFetcherClassName, mockFetcherPackage, providerPactClassName, queryClassName, queryPackage, restControllerName, sqlMapFileName } from "../codegen/names";
 import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
 import { makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
 import { makeAllMockFetchers } from "../codegen/makeMockFetchers";
@@ -18,6 +18,7 @@ import { makeH2Fetchers } from "../codegen/makeH2Fetchers";
 import { makePactValidation } from "../codegen/makePactValidation";
 import { AppConfig } from "../appConfig";
 import { makeUseStoredProcedure } from "../codegen/makeUseStoredProcedure";
+import { makeAudit } from "../codegen/makeAudit";
 
 
 export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
@@ -36,6 +37,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   const javaMockFetcherRoot = javaCodeRoot + "/" + params.mockFetcherPackage
   const javaH2FetcherRoot = javaCodeRoot + "/" + params.h2FetcherPackage
   const javaQueriesPackages = javaCodeRoot + "/" + params.queriesPackage
+  const javaAuditPackage = javaCodeRoot + '/' + params.auditPackage
   const javaDbPackages = javaCodeRoot + "/" + params.dbPackage
   // const javaSql = javaResourcesRoot + "/" + params.sqlDirectory
 
@@ -56,6 +58,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
     fs.mkdirSync ( `${javaMockFetcherRoot}/${p.name}`, { recursive: true } );
     fs.mkdirSync ( `${javaH2FetcherRoot}/${p.name}`, { recursive: true } );
     fs.mkdirSync ( `${javaQueriesPackages}/${p.name}`, { recursive: true } );
+    fs.mkdirSync ( `${javaAuditPackage}/${p.name}`, { recursive: true } )
   } )
 
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
@@ -167,6 +170,12 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
     } )
   } )
 
+  forEachRest ( pages, p => r => {
+    const audit = makeAudit ( params, p, r )
+    if ( audit.length > 0 )
+      writeToFile ( `${javaAuditPackage}/${p.name}/${auditClassName ( r )}.java`, () => audit )
+
+  } )
 
   // rests.forEach ( rest => {
   //   if ( isSqlResolverD ( rest.resolver ) ) {

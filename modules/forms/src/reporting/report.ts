@@ -1,11 +1,12 @@
 import { dataDsIn, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { indentList } from "../codegen/codegen";
-import { NameAnd, safeArray, safeObject, safeString, sortedEntries } from "@focuson/utils";
+import { NameAnd, safeArray, safeObject, safeString, sortedEntries, toArray } from "@focuson/utils";
 import { isModalButtonInPage, ModalButtonInPage } from "../buttons/modalButtons";
 import { ButtonD, isButtonWithControl } from "../buttons/allButtons";
 import { Guards, GuardWithCondition, isGuardButton } from "../buttons/guardButton";
 import { CompDataD, DataD, emptyDataFlatMap, flatMapDD, HasGuards, isComdDD, isRepeatingDd, OneDataDD } from "../common/dataD";
-import { isCommonLens, RestParams, unique } from "../common/restD";
+import { isCommonLens, RestD, RestParams, unique } from "../common/restD";
+import { printRestAction } from "@focuson/rest";
 
 export interface FullReport<B, G> {
   reports: Report<B, G>[];
@@ -32,8 +33,8 @@ export function makeReportHeader<B, G> ( report: FullReport<B, G> ): string[] {
   const critical = makeCriticalReport ( report )
   const rests = [
     `# All endpoints`,
-    `| Page | Rest | Url | Params |`,
-    `| --- | --- | ---  |  --- |`,
+    `| Page | Rest | Url | Params | Access | Audit`,
+    `| --- | --- | ---  |  --- | --- | --- |`,
     ...reports.flatMap ( r => r.details.filter ( d => d.part === 'rests' ).flatMap ( d => d.general.map ( g => `|${r.page.name}${g}` ) ) ) ]
   const paramsAndHeader = makeParamsAndHeader ( reports.map ( r => r.commonParams ) )
   return [ `# All Pages`, ...critical, ...paramsAndHeader, ...rests, '', '---' ];
@@ -126,17 +127,23 @@ const dontSupportVariables = <S> ( info: ReportInfo, name: string, rdp: RestDefn
   [ `CRITICAL - Currently do not support variable names in 'rest' ${name} 'targetFromPath'. ${rdp.targetFromPath} ` ] :
   [];
 
+function accessDetails<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ): string {
+  return safeArray ( rest.access ).flatMap ( a => toArray ( a.condition ).map ( c => `${c.param} ${c.type} ${c.values}` ) ).join ( "; " )
+}
+function auditDetails<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ): string {
+  return safeArray ( rest.audit ).flatMap ( a => `${printRestAction ( a.restAction )}->${toArray ( a.storedProcedure ).map ( s => s.name )}` ).join ( '; ' )
+}
 
 export function makeRestReport<B, G> ( page: MainPageD<B, G>, info: ReportInfo ): ReportDetails {
   const general: string[] = sortedEntries ( page.rest ).flatMap ( ( [ name, rdp ] ) =>
-    [ `|${name} | ${rdp.rest.url}| ${sortedEntries ( rdp.rest.params ).map ( ( [ name, p ] ) => name )}`,
+    [ `|${name} | ${rdp.rest.url}| ${sortedEntries ( rdp.rest.params ).map ( ( [ name, p ] ) => name )} | ${accessDetails ( page, rdp.rest )} | ${auditDetails(page, rdp.rest)}`,
       ...sortedEntries ( rdp.rest.states ).map ( ( [ stateName, details ] ) =>
-        `| | ${details.url}| ${sortedEntries ( rdp.rest.params ).map ( ( [ name, p ] ) => name )}` )
+        `| | ${details.url}| ${sortedEntries ( rdp.rest.params ).map ( ( [ name, p ] ) => name )} |` )
     ] )
   const critical: string[] = sortedEntries ( page.rest ).flatMap ( ( [ name, rdp ] ) => [
     ...notCreated ( info, rdp.rest.dataDD.name ),
     ...dontSupportVariables ( info, name, rdp ) ] )
-  return { part: 'rests', headers: [ 'name', 'url', 'params' ], general, critical }
+  return { part: 'rests', headers: [ 'name', 'url', 'params', 'access', 'audit' ], general, critical }
 
 }
 
