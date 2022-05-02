@@ -1,4 +1,4 @@
-import { makeParamsForJava, makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
+import { accessDetails, makeParamsForJava, makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { repeatingRestRD } from "../example/repeating/repeating.restD";
 import { addressRestD } from "../example/postCodeDemo/addressSearch.restD";
@@ -6,6 +6,8 @@ import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD"
 import { RepeatingPageD } from "../example/repeating/repeating.pageD";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { paramsForTest } from "./paramsForTest";
+import { IntParam, RestD, StringParam } from "../common/restD";
+import { CreatePlanDD } from "../example/eAccounts/eAccountsSummary.dataD";
 
 
 describe ( "makeSpringEndpoint", () => {
@@ -24,6 +26,8 @@ describe ( "makeSpringEndpoint", () => {
       "import com.fasterxml.jackson.databind.ObjectMapper;",
       "import org.springframework.http.ResponseEntity;",
       "import org.springframework.web.bind.annotation.*;",
+      "import org.springframework.http.HttpHeaders;",
+      "import org.springframework.http.HttpStatus;",
       "import focuson.data.Sample;",
       "import focuson.data.queries.EAccountsSummary.EAccountsSummaryQueries;",
       "import focuson.data.IManyGraphQl;",
@@ -31,6 +35,7 @@ describe ( "makeSpringEndpoint", () => {
       "import org.springframework.beans.factory.annotation.Autowired;",
       "import java.util.List;",
       "import java.util.Map;",
+      "import java.util.Arrays;",
       "",
       "  @RestController",
       "  public class EAccountsSummaryController {",
@@ -38,23 +43,24 @@ describe ( "makeSpringEndpoint", () => {
       "  @Autowired",
       "  public IManyGraphQl graphQL;",
       "    @GetMapping(value=\"/api/accountsSummary\", produces=\"application/json\")",
-      "    public ResponseEntity getEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId) throws Exception{",
-      "       return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.getEAccountsSummary(accountId, customerId), \"getEAccountsSummary\");",
+      "    public ResponseEntity getEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{",
+      "       return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.getEAccountsSummary(accountId, customerId, employeeType), \"getEAccountsSummary\");",
       "    }",
       "",
       "    @PostMapping(value=\"/api/accountsSummary/invalidate\", produces=\"application/json\")",
-      "    public ResponseEntity state_invalidateEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId) throws Exception{",
-      "       return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, customerId), \"\");",
+      "    public ResponseEntity state_invalidateEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{",
+      "      if (!Arrays.asList(\"teamLeader\").contains(employeeType)) return new ResponseEntity(\"\", new HttpHeaders(), HttpStatus.FORBIDDEN);",
+      "       return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, customerId, employeeType), \"\");",
       "    }",
       "",
       "    @GetMapping(value=\"/api/accountsSummary/query\", produces=\"application/json\")",
-      "    public String querygetEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId) throws Exception{",
-      "       return EAccountsSummaryQueries.getEAccountsSummary(accountId, customerId);",
+      "    public String querygetEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{",
+      "       return EAccountsSummaryQueries.getEAccountsSummary(accountId, customerId, employeeType);",
       "    }",
       "",
       "    @PostMapping(value=\"/api/accountsSummary/invalidate/query\", produces=\"application/json\")",
-      "    public String querystate_invalidateEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId) throws Exception{",
-      "       return EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, customerId);",
+      "    public String querystate_invalidateEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{",
+      "       return EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, customerId, employeeType);",
       "    }",
       "",
       "  @GetMapping(value = \"/api/accountsSummary/sample\", produces = \"application/json\")",
@@ -71,6 +77,8 @@ describe ( "makeSpringEndpoint", () => {
       "import com.fasterxml.jackson.databind.ObjectMapper;",
       "import org.springframework.http.ResponseEntity;",
       "import org.springframework.web.bind.annotation.*;",
+      "import org.springframework.http.HttpHeaders;",
+      "import org.springframework.http.HttpStatus;",
       "import focuson.data.Sample;",
       "import focuson.data.queries.EAccountsSummary.CreatePlanQueries;",
       "import focuson.data.IManyGraphQl;",
@@ -78,6 +86,7 @@ describe ( "makeSpringEndpoint", () => {
       "import org.springframework.beans.factory.annotation.Autowired;",
       "import java.util.List;",
       "import java.util.Map;",
+      "import java.util.Arrays;",
       "",
       "  @RestController",
       "  public class CreatePlanController {",
@@ -139,6 +148,8 @@ describe ( "makeSpringEndpoint", () => {
       "import com.fasterxml.jackson.databind.ObjectMapper;",
       "import org.springframework.http.ResponseEntity;",
       "import org.springframework.web.bind.annotation.*;",
+      "import org.springframework.http.HttpHeaders;",
+      "import org.springframework.http.HttpStatus;",
       "import focuson.data.Sample;",
       "import focuson.data.queries.Repeating.RepeatingWholeDataQueries;",
       "import focuson.data.IManyGraphQl;",
@@ -146,6 +157,7 @@ describe ( "makeSpringEndpoint", () => {
       "import org.springframework.beans.factory.annotation.Autowired;",
       "import java.util.List;",
       "import java.util.Map;",
+      "import java.util.Arrays;",
       "",
       "  @RestController",
       "  public class RepeatingWholeDataController {",
@@ -188,6 +200,8 @@ describe ( "makeSpringEndpoint", () => {
       "import com.fasterxml.jackson.databind.ObjectMapper;",
       "import org.springframework.http.ResponseEntity;",
       "import org.springframework.web.bind.annotation.*;",
+      "import org.springframework.http.HttpHeaders;",
+      "import org.springframework.http.HttpStatus;",
       "import focuson.data.Sample;",
       "import focuson.data.queries.PostCodeMainPage.PostCodeNameAndAddressQueries;",
       "import focuson.data.IManyGraphQl;",
@@ -195,6 +209,7 @@ describe ( "makeSpringEndpoint", () => {
       "import org.springframework.beans.factory.annotation.Autowired;",
       "import java.util.List;",
       "import java.util.Map;",
+      "import java.util.Arrays;",
       "import focuson.data.db.PostCodeMainPage_addressMaps ; ",
       "",
       "  @RestController",
@@ -226,4 +241,36 @@ describe ( "makeSpringEndpoint", () => {
   } )
 
 
+} )
+
+const restD: RestD<any> = {
+  actions: [],
+  dataDD: CreatePlanDD,
+  params: {
+    p1: { ...StringParam, lens: 'someLens', testValue: 'p1V' },
+    p2: { ...IntParam, lens: 'someLens', testValue: 'p2v' },
+  },
+  url: "/some/url",
+  access: [
+    { restAction: 'get', condition: { type: 'in', param: "p1", values: [ 'a', 'b' ] } },
+    { restAction: { state: 'hi' }, condition: { type: 'in', param: "p1", values: [ 'c' ] } },
+    { restAction: { state: 'hi' }, condition: { type: 'in', param: "p2", values: [ 'd' ] } },
+    { restAction: { state: 'lo' }, condition: { type: 'in', param: "p3", values: [ 'e' ] } },
+  ]
+}
+describe ( "accessDetails", () => {
+  it ( "should check that the correct end point has the correct access - zero requirements", () => {
+    expect ( accessDetails ( paramsForTest, EAccountsSummaryPD, 'createPlanRestD', restD, 'update' ) ).toEqual ( [] )
+  } )
+  it ( "should check that the correct end point has the correct access - one requirement", () => {
+    expect ( accessDetails ( paramsForTest, EAccountsSummaryPD, 'createPlanRestD', restD, 'get' ) ).toEqual ( [
+      "if (!Arrays.asList(\"a\",\"b\").contains(p1)) return new ResponseEntity(\"\", new HttpHeaders(), HttpStatus.FORBIDDEN);"
+    ])
+  } )
+  it ( "should check that the correct end point has the correct access - many requirement", () => {
+    expect ( accessDetails ( paramsForTest, EAccountsSummaryPD, 'createPlanRestD', restD, { state: 'hi' } ) ).toEqual ( [
+      "if (!Arrays.asList(\"c\").contains(p1)) return new ResponseEntity(\"\", new HttpHeaders(), HttpStatus.FORBIDDEN);",
+      "if (!Arrays.asList(\"d\").contains(p2)) return new ResponseEntity(\"\", new HttpHeaders(), HttpStatus.FORBIDDEN);"
+    ])
+  } )
 } )

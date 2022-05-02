@@ -1,6 +1,5 @@
 package focuson.data.h2Fetchers.EAccountsSummary;
 
-import   focuson.data.db.JointAccount_jointAccountMaps;
 import   focuson.data.fetchers.IFetcher;
 import  focuson.data.fetchers.EAccountsSummary.EAccountsSummary_state_invalidate_FFetcher;
 import graphql.schema.DataFetcher;

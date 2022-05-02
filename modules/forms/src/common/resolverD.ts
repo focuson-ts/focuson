@@ -1,5 +1,7 @@
 import { NameAnd, RestAction } from "@focuson/utils";
 import { OneDataDD } from "./dataD";
+import { StoredProcedureForStateDetails } from "./restD";
+import { deprecate } from "util";
 
 export interface Schema {
   name: string
@@ -15,12 +17,33 @@ export interface DBTable {
   /** Any important comments or notes about this*/
   notes: string,
   /** How we audit the file */
-  audit: AuditDetails
+  audit: AuditDetails| AuditDetail[];
+  /** How we access the file */
+  access?: AccessDetails[];
 }
-
+/** * No longer used. Kept to avoid */
 export interface AuditDetails {
   restActions: RestAction[],
   by: string
+}
+
+export function isAuditDetail(a: any): a is AuditDetail {
+  return a.restAction !== undefined
+}
+
+export interface AuditDetail{
+  restAction: RestAction;
+  storedProcedure: StoredProcedureForStateDetails | StoredProcedureForStateDetails[];
+}
+
+export interface AccessDetails{
+  restAction: RestAction;
+  condition: AccessCondition | AccessCondition[]
+}
+export interface AccessCondition{
+  type: 'in';
+  param: string;
+  values: string[]
 }
 
 export interface DBTableAndName {

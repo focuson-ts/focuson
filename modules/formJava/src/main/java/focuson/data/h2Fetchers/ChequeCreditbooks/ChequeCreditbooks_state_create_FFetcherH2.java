@@ -1,6 +1,5 @@
 package focuson.data.h2Fetchers.ChequeCreditbooks;
 
-import   focuson.data.db.JointAccount_jointAccountMaps;
 import   focuson.data.fetchers.IFetcher;
 import  focuson.data.fetchers.ChequeCreditbooks.ChequeCreditbooks_state_create_FFetcher;
 import graphql.schema.DataFetcher;

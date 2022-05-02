@@ -7,6 +7,7 @@
 |brandId|brandId
 |dbName|dbName
 |createPlanId|createPlanId
+|employeeType|employeeType
 |applRef|applRef
 |brandRef|brandRef
 # All endpoints
@@ -28,8 +29,8 @@
 |OccupationAndIncomeSummary|occupationAndIncomeRD | /customer/occupation/v2/occupationIncomeDetails?{query}| customerId
 |OccupationAndIncomeSummary|otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}| customerId
 |EAccountsSummary|createPlanRestD | /api/createPlan?{query}| accountId,createPlanId,customerId
-|EAccountsSummary|eAccountsSummary | /api/accountsSummary?{query}| accountId,customerId
-|EAccountsSummary| | /api/accountsSummary/invalidate?{query}| accountId,customerId
+|EAccountsSummary|eAccountsSummary | /api/accountsSummary?{query}| accountId,customerId,employeeType
+|EAccountsSummary| | /api/accountsSummary/invalidate?{query}| accountId,customerId,employeeType
 |ETransfer|eTransfer | /api/eTransfers?{query}| customerId
 |CreateEAccount|eTransfer | /api/createEAccount/?{query}| accountId,createPlanId,customerId
 |ChequeCreditbooks|chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,customerId
@@ -239,6 +240,7 @@
 |accountId|accountId
 |createPlanId|createPlanId
 |customerId|customerId
+|employeeType|employeeType
   ##domains 
     CreatePlan
     EAccountsSummary
@@ -248,8 +250,8 @@
   |name|url|params
   | --- | --- | --- 
     |createPlanRestD | /api/createPlan?{query}| accountId,createPlanId,customerId
-    |eAccountsSummary | /api/accountsSummary?{query}| accountId,customerId
-    | | /api/accountsSummary/invalidate?{query}| accountId,customerId
+    |eAccountsSummary | /api/accountsSummary?{query}| accountId,customerId,employeeType
+    | | /api/accountsSummary/invalidate?{query}| accountId,customerId,employeeType
   ##modals  
   |name|displayed with
   | --- | --- 

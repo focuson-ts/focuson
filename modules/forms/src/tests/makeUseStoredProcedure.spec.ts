@@ -8,7 +8,6 @@ describe ( "makeUseStoredProcedure", () => {
     expect ( makeUseStoredProcedure ( paramsForTest, ChequeCreditbooksPD, 'restName', chequeCreditBooksRestD, { state: 'create' } ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "package focuson.data.h2fetchers.ChequeCreditbooks;",
       "",
-      "import   focuson.data.db.JointAccount_jointAccountMaps;",
       "import   focuson.data.fetchers.IFetcher;",
       "import  focuson.data.fetchers.ChequeCreditbooks.ChequeCreditbooks_state_create_FFetcher;",
       "import graphql.schema.DataFetcher;",

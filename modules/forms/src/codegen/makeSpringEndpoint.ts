@@ -1,11 +1,12 @@
-import { postFixForEndpoint, RestD } from "../common/restD";
+import { postFixForEndpoint, RestD, RestParams } from "../common/restD";
 import { endPointName, queryClassName, queryName, queryPackage, restControllerName, sampleName, sqlMapName } from "./names";
 import { JavaWiringParams } from "./config";
-import { beforeSeparator, isRestStateChange, RestAction, safeObject, sortedEntries } from "@focuson/utils";
-import { filterParamsByRestAction, indentList } from "./codegen";
+import { actionsEqual, beforeSeparator, isRestStateChange, RestAction, safeArray, safeObject, sortedEntries, toArray } from "@focuson/utils";
+import { addBrackets, filterParamsByRestAction, indentList } from "./codegen";
 import { isRepeatingDd } from "../common/dataD";
 import { MainPageD } from "../common/pageD";
-import { getRestTypeDetails, getUrlForRestAction } from "@focuson/rest";
+import { getRestTypeDetails, getUrlForRestAction, rest } from "@focuson/rest";
+import { AccessCondition } from "../common/resolverD";
 
 
 function makeCommaIfHaveParams<G> ( r: RestD<G>, restAction: RestAction ) {
@@ -37,14 +38,34 @@ function mappingAnnotation ( restAction: RestAction ) {
   throw new Error ( `unknown rest action ${restAction} for mappingAnnotation` )
 }
 
-function makeEndpoint<G> ( params: JavaWiringParams, r: RestD<G>, restAction: RestAction ): string[] {
-  const hasDbName = safeObject ( r.params )[ 'dbName' ] !== undefined
+export function accessDetails ( params: JavaWiringParams, p: MainPageD<any, any>, restName: string, r: RestD<any>, restAction: RestAction ): string[] {
+  const allAccess = safeArray ( r.access )
+  const legalParamNames = Object.keys ( r.params )
+  return allAccess.filter ( a => actionsEqual ( a.restAction, restAction ) ).flatMap (
+    ( { restAction, condition } ) => toArray<AccessCondition> ( condition ).map (
+      ( cond ) => {
+        if ( cond.type === 'in' ) {
+          const { param, values } = cond
+          return `if (!Arrays.asList(${values.map ( v => `"${v}"` ).join ( "," )}).contains(${param})) return new ResponseEntity("", new HttpHeaders(), HttpStatus.FORBIDDEN);`
+        }
+        throw Error ( `Page ${p.name}.rests[${restName}].access. action is ${restAction}. Do not recognise condition ${JSON.stringify ( cond )}` )
+      } ) )
+
+}
+export function auditDetails ( params: JavaWiringParams, r: RestD<any>, restAction: RestAction ): string[] {
+  return []
+}
+
+function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restName: string, r: RestD<G>, restAction: RestAction ): string[] {
+  let safeParams: RestParams = safeObject<RestParams> ( r.params );
+  const hasDbName = safeParams[ 'dbName' ] !== undefined
   const dbNameString = hasDbName ? 'dbName' : `IFetcher.${params.defaultDbName}`
   const url = getUrlForRestAction ( restAction, r.url, r.states )
   let selectionFromData = getRestTypeDetails ( restAction ).output.needsObj ? `"${queryName ( r, restAction )}"` : '""';
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,
     `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
+    ...indentList ( indentList ( indentList ( accessDetails ( params, p, restName, r, restAction ) ) ) ),
     `       return Transform.result(graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( r, restAction )}), ${selectionFromData});`,
     `    }`,
     `` ];
@@ -79,7 +100,7 @@ function makeSqlEndpoint<B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, r
     `    }` ];
 }
 export function makeSpringEndpointsFor<B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, restName: string, r: RestD<G> ): string[] {
-  const endpoints: string[] = r.actions.flatMap ( action => makeEndpoint ( params, r, action ) )
+  const endpoints: string[] = r.actions.flatMap ( action => makeEndpoint ( params, p, restName, r, action ) )
   const queries: string[] = r.actions.flatMap ( action => makeQueryEndpoint ( params, r, action ) )
   const importForSql = r.tables === undefined ? [] : [ `import ${params.thePackage}.${params.dbPackage}.${sqlMapName ( p, restName, [] )} ; ` ]
   return [
@@ -88,6 +109,8 @@ export function makeSpringEndpointsFor<B, G> ( params: JavaWiringParams, p: Main
     'import com.fasterxml.jackson.databind.ObjectMapper;',
     `import org.springframework.http.ResponseEntity;`,
     `import org.springframework.web.bind.annotation.*;`,
+    `import org.springframework.http.HttpHeaders;`,
+    `import org.springframework.http.HttpStatus;`,
     `import ${params.thePackage}.Sample;`,
     `import ${queryPackage ( params, p )}.${queryClassName ( params, r )};`,
     `import ${params.thePackage}.IManyGraphQl;`,
@@ -95,6 +118,7 @@ export function makeSpringEndpointsFor<B, G> ( params: JavaWiringParams, p: Main
     `import org.springframework.beans.factory.annotation.Autowired;`,
     `import java.util.List;`,
     `import java.util.Map;`,
+    `import java.util.Arrays;`,
     ...importForSql,
     '',
     `  @RestController`,

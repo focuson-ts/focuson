@@ -1,7 +1,7 @@
 import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
 import { NameAnd, RestAction, safeArray, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction } from "../codegen/codegen";
-import { ResolverD, Schema } from "./resolverD";
+import { AccessDetails, AuditDetail, ResolverD, Schema } from "./resolverD";
 import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 import { allMainPages, MainPageD, PageD, RestDefnInPageProperties } from "./pageD";
 import { getRestTypeDetails, RestActionDetail, StateAccessDetails } from "@focuson/rest";
@@ -74,7 +74,9 @@ export interface RestD<G> {
   resolver?: ResolverD;
   initialSql?: string[];
   tables?: EntityAndWhere;
-  states?: NameAnd<RestStateDetails>
+  states?: NameAnd<RestStateDetails>;
+  access?: AccessDetails[];
+  audit?: AuditDetail[];
 }
 export interface EntityAndWhere {
   entity: MainEntity;

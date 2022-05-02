@@ -15,7 +15,7 @@ describe ( "makeAllFetchers", () => {
         "  return pageAndTagFetcher<FState, domains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDomain, SimpleMessage>(",
         "    common.commonFetch<FState,  domains.EAccountsSummaryDomain>(),",
         "     'EAccountsSummary',",
-        "     '~/fromApi', fdLens, commonIds, localIds,['accountId'],['customerId'],",
+        "     '~/fromApi', fdLens, commonIds, localIds,['accountId','employeeType'],['customerId'],",
         "      //From EAccountsSummary.rest[eAccountsSummary].targetFromPath ~/fromApi Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?",
         "      Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('fromApi'),",
         "     '/api/accountsSummary?{query}')",

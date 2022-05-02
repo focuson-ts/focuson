@@ -6,7 +6,7 @@ import { addressRestD } from "../example/postCodeDemo/addressSearch.restD";
 describe ( "Making GraphQl from RestD", () => {
   it ( "should be possible to make a query ", () => {
     expect ( makeQuery ( eAccountsSummaryRestD, 'get' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "'query{getEAccountsSummary(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\'' + '){'+",
+      "'query{getEAccountsSummary(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\''  + ',' + 'employeeType:' + '\\'' + employeeType + '\\'' + '){'+",
       "      '    useEStatements'+",
       "      '    eAccountsTable{'+",
       "      '      accountId'+",
@@ -62,8 +62,8 @@ describe ( "Making GraphQl from RestD", () => {
 
   it ( "makeAllQueryForRest - should make java variables", () => {
     expect ( makeJavaVariablesForGraphQlQuery ( [ eAccountsSummaryRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "public static  String getEAccountsSummary(String accountId,String customerId){ ",
-      "  return'query{getEAccountsSummary(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\'' + '){'+",
+      "public static  String getEAccountsSummary(String accountId,String customerId,String employeeType){ ",
+      "  return'query{getEAccountsSummary(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\''  + ',' + 'employeeType:' + '\\'' + employeeType + '\\'' + '){'+",
       "      '    useEStatements'+",
       "      '    eAccountsTable{'+",
       "      '      accountId'+",
@@ -83,8 +83,8 @@ describe ( "Making GraphQl from RestD", () => {
       "      '    }'+",
       "      '  }'",
       "+'}';}",
-      "public static  String state_invalidateEAccountsSummary(String accountId,String customerId){ ",
-      "  return'mutation{stateEAccountsSummaryinvalidate(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\'' + ')}';",
+      "public static  String state_invalidateEAccountsSummary(String accountId,String customerId,String employeeType){ ",
+      "  return'mutation{stateEAccountsSummaryinvalidate(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\''  + ',' + 'employeeType:' + '\\'' + employeeType + '\\'' + ')}';",
       "}"
     ] )
   } )
@@ -114,8 +114,8 @@ describe ( "Making GraphQl from RestD", () => {
 
   it ( "should make a query for state change, returning a boolean so no {}", () => {
     expect ( makeGraphQlQueryForOneAction ( eAccountsSummaryRestD ) ( { state: 'someState' } ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "public static  String state_someStateEAccountsSummary(String accountId,String customerId){ ",
-      "  return'mutation{stateEAccountsSummarysomeState(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\'' + ')}';",
+      "public static  String state_someStateEAccountsSummary(String accountId,String customerId,String employeeType){ ",
+      "  return'mutation{stateEAccountsSummarysomeState(' + 'accountId:' + '\\'' + accountId + '\\''  + ',' + 'customerId:' + '\\'' + customerId + '\\''  + ',' + 'employeeType:' + '\\'' + employeeType + '\\'' + ')}';",
       "}"
     ] )
   } )

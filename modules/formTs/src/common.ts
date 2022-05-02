@@ -40,6 +40,7 @@ export type CommonIds = {
   createPlanId?:string;
   customerId?:string;
   dbName?:string;
+  employeeType?:string;
   usersRole?:string;
 }
 export const identityL = identityOptics<FState> ();
@@ -52,6 +53,7 @@ export const commonIds: NameAndLens<FState> = {
    createPlanId: commonIdsL.focusQuery('createPlanId'),
    customerId: commonIdsL.focusQuery('customerId'),
    dbName: commonIdsL.focusQuery('dbName'),
+   employeeType: commonIdsL.focusQuery('employeeType'),
    usersRole: commonIdsL.focusQuery('usersRole')
 }
 export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{
@@ -70,7 +72,7 @@ export const context: Context = {
    combine: MyCombined
 }
 export const emptyState: FState = {
-  CommonIds: {"applRef":"appref","createPlanId":"tbd","dbName":"mock","brandId":"custId","accountId":"custId","customerId":"custId","brandRef":"brandRef","usersRole":"user"},
+  CommonIds: {"applRef":"appref","createPlanId":"tbd","dbName":"mock","brandId":"custId","accountId":"custId","customerId":"custId","employeeType":"basic","brandRef":"brandRef","usersRole":"user"},
   tags: {},
   messages: [],
   pageSelection: [{ pageName: 'HelloWorldMainPage', firstTime: true, pageMode: 'view' }],

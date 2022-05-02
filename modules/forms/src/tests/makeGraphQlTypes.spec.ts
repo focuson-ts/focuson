@@ -12,7 +12,7 @@ describe ( "makeGraphQlSchema", () => {
     it ( "should make type Query", () => {
       expect ( makeQueryOrMutateBlock ( rs, 'Query' ) ).toEqual ( [
         "type Query{",
-        "  getEAccountsSummary(accountId: String!, customerId: String!):EAccountsSummary!",
+        "  getEAccountsSummary(accountId: String!, customerId: String!, employeeType: String!):EAccountsSummary!",
         "  getCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):CreatePlan!",
         "}"
       ] )
@@ -20,7 +20,7 @@ describe ( "makeGraphQlSchema", () => {
     it ( "should make type Mutation", () => {
       expect ( makeQueryOrMutateBlock ( rs, 'Mutation' ) ).toEqual ( [
         "type Mutation{",
-        "  stateEAccountsSummaryinvalidate(accountId: String!, customerId: String!):Boolean",
+        "  stateEAccountsSummaryinvalidate(accountId: String!, customerId: String!, employeeType: String!):Boolean",
         "  createCreatePlan(accountId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!",
         "  updateCreatePlan(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!",
         "  deleteCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):Boolean",
@@ -62,11 +62,11 @@ describe ( "makeGraphQlSchema", () => {
   it ( "should make a schema from RestDs", () => {
     expect ( makeGraphQlSchema ( rs ) ).toEqual ( [
       "type Query{",
-      "  getEAccountsSummary(accountId: String!, customerId: String!):EAccountsSummary!",
+      "  getEAccountsSummary(accountId: String!, customerId: String!, employeeType: String!):EAccountsSummary!",
       "  getCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):CreatePlan!",
       "}",
       "type Mutation{",
-      "  stateEAccountsSummaryinvalidate(accountId: String!, customerId: String!):Boolean",
+      "  stateEAccountsSummaryinvalidate(accountId: String!, customerId: String!, employeeType: String!):Boolean",
       "  createCreatePlan(accountId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!",
       "  updateCreatePlan(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!",
       "  deleteCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):Boolean",

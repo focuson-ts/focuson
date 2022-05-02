@@ -6,6 +6,9 @@ import { beforeAfterSeparator } from "./utils";
  */
 export type RestAction = 'get' | 'getOption' | 'update' | 'create' | 'delete' | RestStateChange //| 'list'
 
+export function actionsEqual ( r1: RestAction, r2: RestAction ) {
+  return isRestStateChange ( r1 ) && isRestStateChange ( r2 ) ? r1.state == r2.state : r1 === r2;
+}
 export interface RestStateChange {
   state: string
 }
