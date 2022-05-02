@@ -1,0 +1,15 @@
+{
+  "template":    "noreact",
+  "name":        "@focuson/redux",
+  "description": "The tools needed to bind to redux, doesn't actually have a version of redux",
+  "details":     {
+    "ideify":       true,
+    "publish":      true,
+    "links":        [
+      "@focuson/focuson"
+    ],
+    "extraDeps":    {},
+    "extraDevDeps": {},
+    "tsc":          true
+  }
+}
