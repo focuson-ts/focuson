@@ -81,6 +81,10 @@ export interface TracingDebug {
   showTracing?: boolean
 }
 
+export interface AccordionsInDebug {
+  accordions?: string[]
+}
+
 export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MSGs> ( config: FocusOnConfig<S, Context, MSGs>, context: Context, publish: ( lc: LensState<S, S, Context> ) => void ): ( s: S, reason: any ) => Promise<S> {
   return async ( main: S, reason: any ): Promise<S> => {
     console.log ( 'setJsonForFocusOn', reason )
