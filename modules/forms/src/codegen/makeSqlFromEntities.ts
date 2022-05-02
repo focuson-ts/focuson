@@ -44,7 +44,7 @@ export function simplifyTableAndFieldAndAliasDataArray<G> ( ts: TableAndFieldAnd
 }
 export interface CommonEntity {
   table: DBTable;
-  where?: string;
+  staticWhere?: string;
   children?: NameAnd<ChildEntity>;
   type: 'Main' | 'Multiple' | 'Single';
 }
@@ -174,6 +174,7 @@ export interface SqlLinkData {
   sqlRoot: SqlRoot;
   aliasAndTables: [ string, DBTable ][];
   fields: TableAndFieldAndAliasData<any>[],
+  staticWheres: string[],
   whereLinks: WhereLink[]
 }
 export function simplifyAliasAndTables ( ats: [ string, DBTable ] [] ) {return ats.map ( ( [ alias, table ] ) => `${alias}->${table.name}` ).join ( "," )}
@@ -339,11 +340,38 @@ export function findAllFields<G> ( sqlRoot: SqlRoot, dataD: CompDataD<any>, wher
   return unique ( [ ...fromWhere, ...tfAliasFromData ], t => simplifyTableAndFieldAndAliasData ( t, true ) )
 }
 
+export function findStaticWheres ( sqlRoot: SqlRoot ): string[] { // things to ignore: path, childAlias
+  let staticWhereLinks = foldEntitys ( {
+    foldMain ( childAccs: string[][], main: EntityAndWhere ): string[] {
+      if (main.staticWhere === undefined) return childAccs.flat()
+      return [ ...childAccs.flat(), ...main.staticWhere ]
+    },
+    foldMultiple ( childAccs: string[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, multiple: MultipleEntity ): string[] { return [] },
+    foldSingle ( childAccs: string[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, single: SingleEntity ): string[] {
+      if (single.staticWhere === undefined) return childAccs.flat()
+      return [ ...childAccs.flat(), single.staticWhere ]
+    }
+  }, sqlRoot.main, sqlRoot.root, sqlRoot.filterPath, [] );
+  return [ ...staticWhereLinks.flat(), ...findStaticWheresForSqlRootGoingUp ( sqlRoot ) ]
+}
+
+export function findStaticWheresForSqlRootGoingUp ( sqlRoot: SqlRoot ): string[] {
+  if ( sqlRoot.root === sqlRoot.main.entity )
+    return sqlRoot.root.staticWhere != undefined ? [sqlRoot.root.staticWhere] : []
+
+  let sqlRootAndParentsPath: [ string, Entity ][] = [ [ sqlRoot.alias, sqlRoot.root ], ...sqlRoot.path ];
+  return sqlRootAndParentsPath.map ( ( p, _ ) => {
+    if ( p[ 1 ].staticWhere === undefined) return "";
+    return p[ 1 ].staticWhere
+  } )
+}
+
 export function findSqlLinkDataFromRootAndDataD ( sqlRoot: SqlRoot, dataD: CompDataD<any> ): SqlLinkData {
   const aliasAndTables = findAliasAndTableLinksForLinkData ( sqlRoot )
   const whereLinks = findWhereLinksForSqlRoot ( sqlRoot )
   const fields = findAllFields ( sqlRoot, dataD, whereLinks )
-  return { whereLinks, aliasAndTables, sqlRoot, fields }
+  const staticWheres = findStaticWheres ( sqlRoot )
+  return { whereLinks, aliasAndTables, sqlRoot, fields, staticWheres }
 }
 
 
@@ -361,9 +389,11 @@ export function makeWhereClause ( ws: WhereLink[] ) {
 }
 
 export function generateGetSql ( s: SqlLinkData ): string[] {
+  const where = s.staticWheres.filter(s => s!== "").length === 0 ?
+     `where ${makeWhereClause(s.whereLinks)}` : `where ${makeWhereClause ( s.whereLinks )} and ${s.staticWheres.join(" and ")}`
   return [ `select`, ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.fields.map ( taf => `${taf.alias}.${taf.fieldData.dbFieldName} as ${sqlTafFieldName ( taf )}` ) ) ),
     ` from`, ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.aliasAndTables.map ( ( [ alias, table ] ) => `${table.name} ${alias}` ) ) ),
-    ` where ${makeWhereClause ( s.whereLinks )}` ]
+    ` ${where}` ]
 }
 
 export const findAllTableAndFieldsIn = <G> ( rdps: RestDefnInPageProperties<G>[] ) => unique ( rdps.flatMap ( rdp => {

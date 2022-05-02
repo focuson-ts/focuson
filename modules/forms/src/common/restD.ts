@@ -81,6 +81,7 @@ export interface RestD<G> {
 export interface EntityAndWhere {
   entity: MainEntity;
   where: WhereFromQuery[],
+  staticWhere?: string
 }
 
 export const actionDetails = <G> ( r: RestD<G> ): RestActionDetail[] => r.actions.map ( getRestTypeDetails );

@@ -24,18 +24,18 @@ export const jointAccountRestD: RestD<any> = {
     entity: {
       type: 'Main',
       table: accountT,
-      where: `${accountT.name} <> 'canceled'`,
+      staticWhere: `${accountT.name} <> 'canceled'`,
       children: {
         mainCustomer: {
           type: 'Single',
           table: customerT,
-          where:'1=1',
+          staticWhere:'1=1',
           filterPath: 'main', //if it exists then we are into path filtering and only variables with this path get this data. This is a / separated path
           idInParent: 'mainCustomerId:integer',
           idInThis: 'id:integer',
           children: {
-            mainAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId" },
-            mainName: { type: 'Single', table: nameT, idInParent: 'nameId', idInThis: 'id' },
+            mainAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", staticWhere: '2=2' },
+            mainName: { type: 'Single', table: nameT, idInParent: 'nameId', idInThis: 'id', staticWhere: '3=3' },
           }
         },
         jointCustomer: {
