@@ -49,7 +49,8 @@ import focuson.data.fetchers.ETransfer.ETransferDataD_create_FFetcher;
 import focuson.data.fetchers.CreateEAccount.CreateEAccountData_create_FFetcher;
 import focuson.data.fetchers.CreateEAccount.CreateEAccountData_get_FFetcher;
 import focuson.data.fetchers.ChequeCreditbooks.ChequeCreditbooks_get_FFetcher;
-import focuson.data.fetchers.ChequeCreditbooks.ChequeCreditbooks_state_create_FFetcher;
+import focuson.data.fetchers.ChequeCreditbooks.ChequeCreditbooks_create_FFetcher;
+import focuson.data.fetchers.ChequeCreditbooks.ChequeCreditbooks_state_cancel_FFetcher;
 import focuson.data.fetchers.Repeating.RepeatingWholeData_create_FFetcher;
 import focuson.data.fetchers.Repeating.RepeatingWholeData_get_FFetcher;
 import focuson.data.fetchers.PostCodeMainPage.PostCodeNameAndAddress_create_FFetcher;
@@ -109,7 +110,9 @@ public class Wiring  implements IManyGraphQl{
       @Autowired
       List<ChequeCreditbooks_get_FFetcher> ChequeCreditbooks_get_FFetcher;
       @Autowired
-      List<ChequeCreditbooks_state_create_FFetcher> ChequeCreditbooks_state_create_FFetcher;
+      List<ChequeCreditbooks_create_FFetcher> ChequeCreditbooks_create_FFetcher;
+      @Autowired
+      List<ChequeCreditbooks_state_cancel_FFetcher> ChequeCreditbooks_state_cancel_FFetcher;
       @Autowired
       List<RepeatingWholeData_create_FFetcher> RepeatingWholeData_create_FFetcher;
       @Autowired
@@ -182,7 +185,8 @@ public class Wiring  implements IManyGraphQl{
           .type(newTypeWiring("Mutation").dataFetcher("createCreateEAccountData", find(CreateEAccountData_create_FFetcher, dbName, f ->f.createCreateEAccountData())))
           .type(newTypeWiring("Query").dataFetcher("getCreateEAccountData", find(CreateEAccountData_get_FFetcher, dbName, f ->f.getCreateEAccountData())))
           .type(newTypeWiring("Query").dataFetcher("getChequeCreditbooks", find(ChequeCreditbooks_get_FFetcher, dbName, f ->f.getChequeCreditbooks())))
-          .type(newTypeWiring("Mutation").dataFetcher("stateChequeCreditbookscreate", find(ChequeCreditbooks_state_create_FFetcher, dbName, f ->f.stateChequeCreditbookscreate())))
+          .type(newTypeWiring("Mutation").dataFetcher("createChequeCreditbooks", find(ChequeCreditbooks_create_FFetcher, dbName, f ->f.createChequeCreditbooks())))
+          .type(newTypeWiring("Mutation").dataFetcher("stateChequeCreditbookscancel", find(ChequeCreditbooks_state_cancel_FFetcher, dbName, f ->f.stateChequeCreditbookscancel())))
           .type(newTypeWiring("Mutation").dataFetcher("createRepeatingLine", find(RepeatingWholeData_create_FFetcher, dbName, f ->f.createRepeatingLine())))
           .type(newTypeWiring("Query").dataFetcher("getRepeatingLine", find(RepeatingWholeData_get_FFetcher, dbName, f ->f.getRepeatingLine())))
           .type(newTypeWiring("Mutation").dataFetcher("createPostCodeNameAndAddress", find(PostCodeNameAndAddress_create_FFetcher, dbName, f ->f.createPostCodeNameAndAddress())))

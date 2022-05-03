@@ -20,13 +20,13 @@ import java.util.Arrays;
   @Autowired
   public IManyGraphQl graphQL;
     @GetMapping(value="/customer/occupation/v2/occupationDetails", produces="application/json")
-    public ResponseEntity getDropdowns(@RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),DropdownsQueries.getDropdowns(customerId), "getDropdowns");
+    public ResponseEntity getDropdowns() throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),DropdownsQueries.getDropdowns(), "getDropdowns");
     }
 
     @GetMapping(value="/customer/occupation/v2/occupationDetails/query", produces="application/json")
-    public String querygetDropdowns(@RequestParam String customerId) throws Exception{
-       return DropdownsQueries.getDropdowns(customerId);
+    public String querygetDropdowns() throws Exception{
+       return DropdownsQueries.getDropdowns();
     }
 
   @GetMapping(value = "/customer/occupation/v2/occupationDetails/sample", produces = "application/json")

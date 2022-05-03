@@ -1,4 +1,4 @@
-import { postFixForEndpoint, RestD, RestParams } from "../common/restD";
+import { postFixForEndpoint, RestD, RestParams, unique } from "../common/restD";
 import { auditClassName, auditMethodName, endPointName, queryClassName, queryName, queryPackage, restControllerName, sampleName, sqlMapName } from "./names";
 import { JavaWiringParams } from "./config";
 import { actionsEqual, beforeSeparator, isRestStateChange, RestAction, safeArray, safeObject, sortedEntries, toArray } from "@focuson/utils";
@@ -57,7 +57,7 @@ export function auditDetails ( params: JavaWiringParams, r: RestD<any>, restActi
 }
 
 function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restName: string, r: RestD<G>, restAction: RestAction ): string[] {
-  let safeParams: RestParams = safeObject<RestParams> ( r.params );
+  let safeParams: RestParams = safeObject ( r.params );
   const hasDbName = safeParams[ 'dbName' ] !== undefined
   const dbNameString = hasDbName ? 'dbName' : `IFetcher.${params.defaultDbName}`
   const url = getUrlForRestAction ( restAction, r.url, r.states )
@@ -107,10 +107,7 @@ export function makeSpringEndpointsFor<B, G> ( params: JavaWiringParams, p: Main
   const queries: string[] = r.actions.flatMap ( action => makeQueryEndpoint ( params, r, action ) )
   const importForSql = r.tables === undefined ? [] : [ `import ${params.thePackage}.${params.dbPackage}.${sqlMapName ( p, restName, [] )} ; ` ]
   const auditImports = safeArray ( r.audit ).map ( ad => `import ${params.thePackage}.${params.auditPackage}.${p.name}.${auditClassName ( r )};` )
-  const auditVariables = indentList ( safeArray ( r.audit ).flatMap ( ad => [
-    `@Autowired`,
-    `${auditClassName ( r )} __audit;`
-  ] ) )
+  const auditVariables = safeArray ( r.audit ).length > 0 ? indentList ( [ `@Autowired`, `${auditClassName ( r )} __audit;` ] ) : []
 
 
   return [

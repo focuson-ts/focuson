@@ -24,7 +24,7 @@ describe ( "makeAudit", () => {
       "",
       "    public void EAccountsSummary_state_invalidate_auditStuff(String dbName, String accountId, String customerId) throws SQLException {",
       "        if (dbName.equals(IFetcher.mock)) {",
-      "           System.out.println(\"Mock audit: EAccountsSummary_state_invalidate_auditStuff(\" + accountId + \",\" + customerId + \")\");",
+      "           System.out.println(\"Mock audit: EAccountsSummary_state_invalidate_auditStuff(\" + accountId + \", \" +customerId+ \")\");",
       "           return;",
       "    }",
       "    try (Connection c = dataSource.getConnection()) {",
@@ -35,7 +35,7 @@ describe ( "makeAudit", () => {
       "  }}}",
       "",
       "}"
-    ] )
+    ])
   } )
 
 } )

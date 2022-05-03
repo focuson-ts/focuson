@@ -1,4 +1,3 @@
-
 import {
   dropdownsDD,
   occupationAndIncomeFullDomainDD,
@@ -6,8 +5,9 @@ import {
 import { additionalInformationDD } from "./additionalInformation/additionalInformation.dataD";
 import { businessDetailsMainDD } from "./businessDetails/businessDetails.dataD";
 import { otherIncomeResponseDD } from "./otherSourcesOfIncome/otherSourcesOfIncome.dataD";
-import {commonParams} from "../repeating/repeating.restD";
+import { commonParams } from "../repeating/repeating.restD";
 import { RestD } from "../../common/restD";
+import { onlySchema } from "../database/tableNames";
 
 /** This should fully define the api*/
 export const occupationAndIncomeRD: RestD<any> = {
@@ -15,10 +15,14 @@ export const occupationAndIncomeRD: RestD<any> = {
   dataDD: occupationAndIncomeFullDomainDD,
   url: '/customer/occupation/v2/occupationIncomeDetails?{query}',
   actions: [ 'get', 'update' ],
+  audit: [
+    { restAction: 'get', storedProcedure: { name: 'auditGetCustomerOccupation', schema: onlySchema, params: [ 'customerId' ] } },
+    { restAction: 'update', storedProcedure: { name: 'auditUpdateCustomerOccupation', schema: onlySchema, params: [ 'customerId' ] } },
+  ]
 }
 
-export const dropdownsRD: RestD<any> = {
-  params: { ...commonParams },
+export const occupationDetailsRD: RestD<any> = {
+  params: {},
   dataDD: dropdownsDD,
   url: '/customer/occupation/v2/occupationDetails?{query}',
   actions: [ 'get' ],
@@ -29,6 +33,9 @@ export const additionalInfoRD: RestD<any> = {
   dataDD: additionalInformationDD,
   url: '/customer/occupation/v2/additionalInfo?{query}',
   actions: [ 'get' ],
+  audit: [
+    { restAction: 'get', storedProcedure: { name: 'auditGetCustomeAdditionalInfo', schema: onlySchema, params: [ 'customerId' ] } },
+  ]
 }
 
 export const businessDetailsRD: RestD<any> = {
@@ -36,6 +43,9 @@ export const businessDetailsRD: RestD<any> = {
   dataDD: businessDetailsMainDD,
   url: '/customer/occupation/v2/businessDetails?{query}',
   actions: [ 'get' ],
+  audit: [
+    { restAction: 'get', storedProcedure: { name: 'auditGetBusinessDetails', schema: onlySchema, params: [ 'customerId' ] } },
+  ]
 }
 
 export const otherIncomeRD: RestD<any> = {
@@ -43,5 +53,8 @@ export const otherIncomeRD: RestD<any> = {
   dataDD: otherIncomeResponseDD,
   url: '/customer/occupation/v2/otherIncome?{query}',
   actions: [ 'get' ],
+  audit: [
+    { restAction: 'get', storedProcedure: { name: 'auditGetBusinessDetails', schema: onlySchema, params: [ 'customerId' ] } },
+  ]
 }
 

@@ -34,7 +34,7 @@ export function DropdownsFetcher(fdLens:Optional<FState, domains.OccupationAndIn
   return pageAndTagFetcher<FState, domains.OccupationAndIncomeSummaryPageDomain, domains.DropdownsDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.DropdownsDomain>(),
      'OccupationAndIncomeSummary',
-     '~/dropdowns', fdLens, commonIds, localIds,["customerId"],[],
+     '~/dropdowns', fdLens, commonIds, localIds,[],[],
       //From OccupationAndIncomeSummary.rest[dropdownsRD].targetFromPath ~/dropdowns Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
       Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('dropdowns'),
      '/customer/occupation/v2/occupationDetails?{query}')

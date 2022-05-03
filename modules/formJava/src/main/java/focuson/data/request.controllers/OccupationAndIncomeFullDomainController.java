@@ -9,6 +9,8 @@ import focuson.data.Sample;
 import focuson.data.queries.OccupationAndIncomeSummary.OccupationAndIncomeFullDomainQueries;
 import focuson.data.IManyGraphQl;
 import focuson.data.fetchers.IFetcher;
+import focuson.data.audit.OccupationAndIncomeSummary.OccupationAndIncomeFullDomainAudit;
+import focuson.data.audit.OccupationAndIncomeSummary.OccupationAndIncomeFullDomainAudit;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
@@ -19,13 +21,17 @@ import java.util.Arrays;
 
   @Autowired
   public IManyGraphQl graphQL;
+  @Autowired
+  OccupationAndIncomeFullDomainAudit __audit;
     @GetMapping(value="/customer/occupation/v2/occupationIncomeDetails", produces="application/json")
     public ResponseEntity getOccupationAndIncomeFullDomain(@RequestParam String customerId) throws Exception{
+        __audit.OccupationAndIncomeFullDomain_get_auditGetCustomerOccupation(IFetcher.mock,customerId);
        return Transform.result(graphQL.get(IFetcher.mock),OccupationAndIncomeFullDomainQueries.getOccupationAndIncomeFullDomain(customerId), "getOccupationAndIncomeFullDomain");
     }
 
     @PutMapping(value="/customer/occupation/v2/occupationIncomeDetails", produces="application/json")
     public ResponseEntity updateOccupationAndIncomeFullDomain(@RequestParam String customerId, @RequestBody String body) throws Exception{
+        __audit.OccupationAndIncomeFullDomain_update_auditUpdateCustomerOccupation(IFetcher.mock,customerId);
        return Transform.result(graphQL.get(IFetcher.mock),OccupationAndIncomeFullDomainQueries.updateOccupationAndIncomeFullDomain(customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateOccupationAndIncomeFullDomain");
     }
 

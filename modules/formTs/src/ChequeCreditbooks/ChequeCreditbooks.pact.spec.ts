@@ -85,11 +85,11 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
  })
 })
 
-//Rest chequeCreditBooks [object Object] pact test for ChequeCreditbooks
+//Rest chequeCreditBooks create pact test for ChequeCreditbooks
 pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider', cors: true }, provider => {
-  describe ( 'ChequeCreditbooks - chequeCreditBooks rest state:create', () => {
-   it ( 'should have a state:create rest for ChequeCreditbooks', async () => {
-    const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksRestDetails', restAction: {"state":"create"} }
+  describe ( 'ChequeCreditbooks - chequeCreditBooks rest create', () => {
+   it ( 'should have a create rest for ChequeCreditbooks', async () => {
+    const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksRestDetails', restAction: "create" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
        CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"},
@@ -97,16 +97,55 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
     }
     await provider.addInteraction ( {
       state: 'default',
-      uponReceiving: 'a rest for ChequeCreditbooks chequeCreditBooks state:create',
+      uponReceiving: 'a rest for ChequeCreditbooks chequeCreditBooks create',
       withRequest: {
          method: 'POST',
-         path:   '/api/chequeCreditBooks/',
+         path:   '/api/chequeCreditBooks',
          query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"},
-         //no request body needed for state:create,
+         body: JSON.stringify(samples.sampleChequeCreditbooks0),
       },
       willRespondWith: {
          status: 200,
-         body: {"stateChequeCreditbookscreate": true}
+         body: samples.sampleChequeCreditbooks0
+      },
+    } )
+    const lensTransforms: Transform<FState,any>[] = [
+    [Lenses.identity<FState>().focusQuery('ChequeCreditbooks').focusQuery('fromApi'), () => samples.sampleChequeCreditbooks0]
+    ]
+    const withIds = massTransform ( firstState, ...lensTransforms )
+    const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const rawExpected:any = { ...withIds, restCommands: []}
+    const expected = Lenses.identity<FState>().focusQuery('ChequeCreditbooks').focusQuery('fromApi').set ( rawExpected, samples.sampleChequeCreditbooks0 )
+    expect ( newState.messages.length ).toEqual ( 1 )
+    expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+    expect ( { ...newState, messages: []}).toEqual ( expected )
+   })
+ })
+})
+
+//Rest chequeCreditBooks [object Object] pact test for ChequeCreditbooks
+pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider', cors: true }, provider => {
+  describe ( 'ChequeCreditbooks - chequeCreditBooks rest state:cancel', () => {
+   it ( 'should have a state:cancel rest for ChequeCreditbooks', async () => {
+    const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksRestDetails', restAction: {"state":"cancel"} }
+    const firstState: FState = {
+       ...emptyState, restCommands: [ restCommand ],
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"},
+       pageSelection: [ { pageName: 'ChequeCreditbooks', pageMode: 'view' } ]
+    }
+    await provider.addInteraction ( {
+      state: 'default',
+      uponReceiving: 'a rest for ChequeCreditbooks chequeCreditBooks state:cancel',
+      withRequest: {
+         method: 'POST',
+         path:   '/api/chequeCreditBooks/cancel',
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"},
+         //no request body needed for state:cancel,
+      },
+      willRespondWith: {
+         status: 200,
+         body: {"stateChequeCreditbookscancel": true}
       },
     } )
     const lensTransforms: Transform<FState,any>[] = [

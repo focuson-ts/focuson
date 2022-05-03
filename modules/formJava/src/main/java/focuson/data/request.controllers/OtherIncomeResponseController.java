@@ -9,6 +9,7 @@ import focuson.data.Sample;
 import focuson.data.queries.OccupationAndIncomeSummary.OtherIncomeResponseQueries;
 import focuson.data.IManyGraphQl;
 import focuson.data.fetchers.IFetcher;
+import focuson.data.audit.OccupationAndIncomeSummary.OtherIncomeResponseAudit;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
@@ -19,8 +20,11 @@ import java.util.Arrays;
 
   @Autowired
   public IManyGraphQl graphQL;
+  @Autowired
+  OtherIncomeResponseAudit __audit;
     @GetMapping(value="/customer/occupation/v2/otherIncome", produces="application/json")
     public ResponseEntity getOtherIncomeResponse(@RequestParam String customerId) throws Exception{
+        __audit.OtherIncomeResponse_get_auditGetBusinessDetails(IFetcher.mock,customerId);
        return Transform.result(graphQL.get(IFetcher.mock),OtherIncomeResponseQueries.getOtherIncomeResponse(customerId), "getOtherIncomeResponse");
     }
 

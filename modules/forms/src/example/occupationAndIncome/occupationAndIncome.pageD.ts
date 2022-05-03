@@ -1,5 +1,5 @@
 import { customerStatusDD, dropdownsDD, employmentTypeDD, listOccupationsDD, occupationAndIncomeFullDomainDD, oneOccupationIncomeDetailsDD, yesNoDD } from "./occupationAndIncome.dataD";
-import { additionalInfoRD, businessDetailsRD, dropdownsRD, occupationAndIncomeRD, otherIncomeRD } from "./occupationAndIncome.restD";
+import { additionalInfoRD, businessDetailsRD, occupationDetailsRD, occupationAndIncomeRD, otherIncomeRD } from "./occupationAndIncome.restD";
 import { additionalInformationDD } from "./additionalInformation/additionalInformation.dataD";
 import { otherIncomeResponseDD } from "./otherSourcesOfIncome/otherSourcesOfIncome.dataD";
 import { businessDetailsMainDD } from "./businessDetails/businessDetails.dataD";
@@ -137,7 +137,7 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
   /** Binds the rest to 'where it takes place'. So we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
   rest: {
     occupationAndIncomeRD: { rest: occupationAndIncomeRD, targetFromPath: '~/fromApi', fetcher: true },
-    dropdownsRD: { rest: dropdownsRD, targetFromPath: '~/dropdowns', fetcher: true },
+    dropdownsRD: { rest: occupationDetailsRD, targetFromPath: '~/dropdowns', fetcher: true },
     additionalInformationRD: { rest: additionalInfoRD, targetFromPath: '~/additionalInformation', fetcher: true },
     businessDetailsRD: { rest: businessDetailsRD, targetFromPath: '~/businessDetails', fetcher: true },
     otherSourcesOfIncomeRD: { rest: otherIncomeRD, targetFromPath: '~/otherSourcesOfIncome', fetcher: true }

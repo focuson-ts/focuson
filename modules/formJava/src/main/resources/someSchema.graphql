@@ -11,7 +11,7 @@ type Query{
   getpreJointAccount(accountId: String!, brandId: String!, dbName: String!):JointAccount!
   getAdditionalInformation(customerId: String!):AdditionalInformation!
   getBusinessDetailsMain(customerId: String!):BusinessDetailsMain!
-  getDropdowns(customerId: String!):Dropdowns!
+  getDropdowns:Dropdowns!
   getOccupationAndIncomeFullDomain(customerId: String!):OccupationAndIncomeFullDomain!
   getOtherIncomeResponse(customerId: String!):OtherIncomeResponse!
   getCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):CreatePlan!
@@ -29,7 +29,8 @@ type Mutation{
   stateEAccountsSummaryinvalidate(accountId: String!, customerId: String!, employeeType: String!):Boolean
   createETransferDataD(customerId: String!,obj: ETransferDataDInp!):ETransferDataD!
   createCreateEAccountData(accountId: String!, customerId: String!,obj: CreateEAccountDataInp!):CreateEAccountData!
-  stateChequeCreditbookscreate(accountId: String!, applRef: String!, brandRef: String!, customerId: String!):Boolean
+  createChequeCreditbooks(accountId: String!, applRef: String!, brandRef: String!, customerId: String!,obj: ChequeCreditbooksInp!):ChequeCreditbooks!
+  stateChequeCreditbookscancel(accountId: String!, applRef: String!, brandRef: String!, customerId: String!):Boolean
   createRepeatingLine(customerId: String!,obj: [RepeatingLineInp!]!):[RepeatingLine!]!
   createPostCodeNameAndAddress(,obj: PostCodeNameAndAddressInp!):PostCodeNameAndAddress!
 }
@@ -318,6 +319,14 @@ type PostCodeNameAndAddress{
 type RepeatingLine{
   name: String!
   age: Int!
+}
+input ChequeCreditbooksInp{
+  history: [ChequeCreditbooksHistoryLineInp!]!
+}
+input ChequeCreditbooksHistoryLineInp{
+  serialNumber: Int!
+  howOrdered: String!
+  dateOrder: String!
 }
 input CreateEAccountDataInp{
   name: String!

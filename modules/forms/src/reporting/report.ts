@@ -7,6 +7,7 @@ import { Guards, GuardWithCondition, isGuardButton } from "../buttons/guardButto
 import { CompDataD, DataD, emptyDataFlatMap, flatMapDD, HasGuards, isComdDD, isRepeatingDd, OneDataDD } from "../common/dataD";
 import { isCommonLens, RestD, RestParams, unique } from "../common/restD";
 import { printRestAction } from "@focuson/rest";
+import { findAllFields, findAllTableAndFieldDatasIn, findSqlRoot, findTableAndFieldFromDataD, TableAndFieldAndAliasData, walkSqlRoots } from "../codegen/makeSqlFromEntities";
 
 export interface FullReport<B, G> {
   reports: Report<B, G>[];
@@ -112,7 +113,8 @@ export function makeReportFor<B extends ButtonD, G extends GuardWithCondition> (
       makeModalsReport ( page, info ),
       makeDisplayReport ( page, info ),
       makeButtonsReport ( page, info ),
-      makeGuardsReportForPage ( page ) ] :
+      makeGuardsReportForPage ( page ),
+      makeDataMappingReportForPage ( page ) ] :
     [ makeDisplayReport ( page, info ),
       makeButtonsReport ( page, info ),
       makeGuardsReportForPage ( page ) ]
@@ -136,7 +138,7 @@ function auditDetails<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ): string {
 
 export function makeRestReport<B, G> ( page: MainPageD<B, G>, info: ReportInfo ): ReportDetails {
   const general: string[] = sortedEntries ( page.rest ).flatMap ( ( [ name, rdp ] ) =>
-    [ `|${name} | ${rdp.rest.url}| ${sortedEntries ( rdp.rest.params ).map ( ( [ name, p ] ) => name )} | ${accessDetails ( page, rdp.rest )} | ${auditDetails(page, rdp.rest)}`,
+    [ `|${name} | ${rdp.rest.url}| ${sortedEntries ( rdp.rest.params ).map ( ( [ name, p ] ) => name )} | ${accessDetails ( page, rdp.rest )} | ${auditDetails ( page, rdp.rest )}`,
       ...sortedEntries ( rdp.rest.states ).map ( ( [ stateName, details ] ) =>
         `| | ${details.url}| ${sortedEntries ( rdp.rest.params ).map ( ( [ name, p ] ) => name )} |` )
     ] )
@@ -231,6 +233,7 @@ function makeGuardButtonReportForPage<B, G extends GuardWithCondition> ( p: Page
   return [ `| ${p.name} button | condition`, `| --- | --- |`, ...lines ]
 }
 
+
 export function makeGuardsReportForPage<B, G extends GuardWithCondition> ( p: MainPageD<B, G> ): ReportDetails {
   let pages: PageD<B, G>[] = [ p, ...safeArray ( p.modals ).map ( m => m.modal ) ];
   const fromDataDs = sortedEntries ( dataDsIn ( pages ) ).flatMap ( ( [ name, d ] ) => makeGuardReportForDataD ( d ) )
@@ -244,3 +247,18 @@ export function makeGuardsReportForPage<B, G extends GuardWithCondition> ( p: Ma
   }
 }
 
+
+export function makeDataMappingReportForPage<B, G> ( p: MainPageD<B, G> ): ReportDetails {
+  const data: string[] = findAllTableAndFieldDatasIn ( Object.values ( p.rest ) ).flatMap ( taf => {
+    return [ `## Table ${taf.table.name} (Schema ${taf.table.schema.name})`, '|Display path | Database Field', '| --- | --- |', ...taf.fieldData.flatMap ( fd =>
+      fd.fieldName === undefined ? [] : [ `| ${fd.path}  |  ${fd.dbFieldName} ` ] ), '' ]
+  } )
+  return {
+    part: 'dataMapping',
+    headers: [],
+    general: data,
+    critical: [],
+    dontIndent: true
+  }
+
+}

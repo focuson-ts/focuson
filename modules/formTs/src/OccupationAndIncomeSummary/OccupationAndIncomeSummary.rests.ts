@@ -45,7 +45,7 @@ export function OccupationAndIncomeSummary_DropdownsRestDetails ( cd: NameAndLen
 //From OccupationAndIncomeSummary.rest[dropdownsRD].targetFromPath (~/dropdowns). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('dropdowns'),
     cd, fdd,
-    ids: ["customerId"],
+    ids: [],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/customer/occupation/v2/occupationDetails?{query}",

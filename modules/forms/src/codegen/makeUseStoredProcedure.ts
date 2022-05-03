@@ -10,6 +10,7 @@ import { indentList } from "./codegen";
 export function makeUseStoredProcedure<B, G> ( params: JavaWiringParams, pageD: MainPageD<B, G>, restName, restD: RestD<G>, action: RestAction ): string[] {
   if ( restD.states === undefined || !isRestStateChange ( action ) ) return []
   const stateDetails = restD.states[ action.state ]
+  if (stateDetails=== undefined) throw Error(`Cannot find state details for ${JSON.stringify(action)}} in ${[pageD.name]}.rests[${restName}]. Legal values are ${Object.keys(restD.states)}`)
   if ( stateDetails.useStoredProcedure === undefined ) return []
 
   let spParams = stateDetails.useStoredProcedure.params;

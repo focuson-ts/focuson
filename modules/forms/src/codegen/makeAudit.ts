@@ -9,18 +9,21 @@ import { indentList } from "./codegen";
 export function makeAudit<G> ( params: JavaWiringParams, p: MainPageD<any, any>, r: RestD<G> ): string[] {
   let audits = safeArray ( r.audit );
   if ( audits.length == 0 ) return []
-  const methods = audits.flatMap ( ( { restAction, storedProcedure } ) => toArray ( storedProcedure ).flatMap ( sp => [
-    `    public void ${auditMethodName ( r, restAction, sp )}(${[ 'dbName', ...sp.params ].map ( param => `String ${param}` ).join ( ", " )}) throws SQLException {`,
-    `        if (dbName.equals(IFetcher.mock)) {`,
-    `           System.out.println("Mock audit: EAccountsSummary_state_invalidate_auditStuff(" + accountId + "," + customerId + ")");`,
-    `           return;`,
-    `    }`,
-    `    try (Connection c = dataSource.getConnection()) {`,
-    `      try (CallableStatement s = c.prepareCall("call ${sp.name}(${sp.params.map ( x => '?' ).join ( ", " )})")) {`,
-    ...indentList ( indentList ( indentList ( sp.params.map ( ( param, i ) => `s.setObject(${i + 1},${param});` ) ) ) ),
-    `      if (!s.execute()) throw new SQLException("Count not audit");`,
-    `  }}}`,
-  ] ) )
+  const methods = audits.flatMap ( ( { restAction, storedProcedure } ) => toArray ( storedProcedure ).flatMap ( sp => {
+    let paramsForLog = sp.params.length === 0 ? '' : sp.params.join ( ' + ", " +' ) + '+';
+    return [
+      `    public void ${auditMethodName ( r, restAction, sp )}(${[ 'dbName', ...sp.params ].map ( param => `String ${param}` ).join ( ", " )}) throws SQLException {`,
+      `        if (dbName.equals(IFetcher.mock)) {`,
+      `           System.out.println("Mock audit: ${auditMethodName ( r, restAction, sp )}(" + ${paramsForLog} ")");`,
+      `           return;`,
+      `    }`,
+      `    try (Connection c = dataSource.getConnection()) {`,
+      `      try (CallableStatement s = c.prepareCall("call ${sp.name}(${sp.params.map ( x => '?' ).join ( ", " )})")) {`,
+      ...indentList ( indentList ( indentList ( sp.params.map ( ( param, i ) => `s.setObject(${i + 1},${param});` ) ) ) ),
+      `      if (!s.execute()) throw new SQLException("Count not audit");`,
+      `  }}}`,
+    ];
+  } ) )
   return [
     `package ${params.thePackage}.${params.auditPackage}.${p.name};`,
     ``,

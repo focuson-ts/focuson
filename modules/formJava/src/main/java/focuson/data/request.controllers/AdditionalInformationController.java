@@ -9,6 +9,7 @@ import focuson.data.Sample;
 import focuson.data.queries.OccupationAndIncomeSummary.AdditionalInformationQueries;
 import focuson.data.IManyGraphQl;
 import focuson.data.fetchers.IFetcher;
+import focuson.data.audit.OccupationAndIncomeSummary.AdditionalInformationAudit;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
@@ -19,8 +20,11 @@ import java.util.Arrays;
 
   @Autowired
   public IManyGraphQl graphQL;
+  @Autowired
+  AdditionalInformationAudit __audit;
     @GetMapping(value="/customer/occupation/v2/additionalInfo", produces="application/json")
     public ResponseEntity getAdditionalInformation(@RequestParam String customerId) throws Exception{
+        __audit.AdditionalInformation_get_auditGetCustomeAdditionalInfo(IFetcher.mock,customerId);
        return Transform.result(graphQL.get(IFetcher.mock),AdditionalInformationQueries.getAdditionalInformation(customerId), "getAdditionalInformation");
     }
 

@@ -1,4 +1,4 @@
-package focuson.data.audit.EAccountsSummary;
+package focuson.data.audit.OccupationAndIncomeSummary;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import focuson.data.fetchers.IFetcher;
@@ -9,19 +9,18 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 @Component
-public class EAccountsSummaryAudit {
+public class BusinessDetailsMainAudit {
     @Autowired
     private DataSource dataSource;
 
-    public void EAccountsSummary_state_invalidate_auditStuff(String dbName, String accountId, String customerId) throws SQLException {
+    public void BusinessDetailsMain_get_auditGetBusinessDetails(String dbName, String customerId) throws SQLException {
         if (dbName.equals(IFetcher.mock)) {
-           System.out.println("Mock audit: EAccountsSummary_state_invalidate_auditStuff(" + accountId + ", " +customerId+ ")");
+           System.out.println("Mock audit: BusinessDetailsMain_get_auditGetBusinessDetails(" + customerId+ ")");
            return;
     }
     try (Connection c = dataSource.getConnection()) {
-      try (CallableStatement s = c.prepareCall("call auditStuff(?, ?)")) {
-      s.setObject(1,accountId);
-      s.setObject(2,customerId);
+      try (CallableStatement s = c.prepareCall("call auditGetBusinessDetails(?)")) {
+      s.setObject(1,customerId);
       if (!s.execute()) throw new SQLException("Count not audit");
   }}}
 

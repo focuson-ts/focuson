@@ -9,7 +9,16 @@ public class ChequeCreditbooksQueries{
         "    }"+
         "  }"
   +"}";}
-  public static  String state_createChequeCreditbooks(String accountId,String applRef,String brandRef,String customerId){ 
-    return"mutation{stateChequeCreditbookscreate(" + "accountId:" + "\"" + accountId + "\""  + "," + "applRef:" + "\"" + applRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + ")}";
+  public static  String createChequeCreditbooks(String accountId,String applRef,String brandRef,String customerId, String obj){ 
+    return"mutation{createChequeCreditbooks(" + "accountId:" + "\"" + accountId + "\""  + "," + "applRef:" + "\"" + applRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "customerId:" + "\"" + customerId + "\""  + ", obj:" + obj + "){"+
+        "    history{"+
+        "      serialNumber"+
+        "      howOrdered"+
+        "      dateOrder"+
+        "    }"+
+        "  }"
+  +"}";}
+  public static  String state_cancelChequeCreditbooks(String accountId,String applRef,String brandRef,String customerId){ 
+    return"mutation{stateChequeCreditbookscancel(" + "accountId:" + "\"" + accountId + "\""  + "," + "applRef:" + "\"" + applRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + ")}";
   }
 }

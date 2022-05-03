@@ -23,18 +23,18 @@
 |AccountOverview|optOut | /api/accountOverview/optOut?{query}| accountId,customerId |  | 
 |AccountOverview|reason | /api/accountOverview/reason?{query}| accountId,customerId |  | 
 |JointAccount|jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName |  | 
-|OccupationAndIncomeSummary|additionalInformationRD | /customer/occupation/v2/additionalInfo?{query}| customerId |  | 
-|OccupationAndIncomeSummary|businessDetailsRD | /customer/occupation/v2/businessDetails?{query}| customerId |  | 
-|OccupationAndIncomeSummary|dropdownsRD | /customer/occupation/v2/occupationDetails?{query}| customerId |  | 
-|OccupationAndIncomeSummary|occupationAndIncomeRD | /customer/occupation/v2/occupationIncomeDetails?{query}| customerId |  | 
-|OccupationAndIncomeSummary|otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}| customerId |  | 
+|OccupationAndIncomeSummary|additionalInformationRD | /customer/occupation/v2/additionalInfo?{query}| customerId |  | get->auditGetCustomeAdditionalInfo
+|OccupationAndIncomeSummary|businessDetailsRD | /customer/occupation/v2/businessDetails?{query}| customerId |  | get->auditGetBusinessDetails
+|OccupationAndIncomeSummary|dropdownsRD | /customer/occupation/v2/occupationDetails?{query}|  |  | 
+|OccupationAndIncomeSummary|occupationAndIncomeRD | /customer/occupation/v2/occupationIncomeDetails?{query}| customerId |  | get->auditGetCustomerOccupation; update->auditUpdateCustomerOccupation
+|OccupationAndIncomeSummary|otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}| customerId |  | get->auditGetBusinessDetails
 |EAccountsSummary|createPlanRestD | /api/createPlan?{query}| accountId,createPlanId,customerId |  | 
 |EAccountsSummary|eAccountsSummary | /api/accountsSummary?{query}| accountId,customerId,employeeType | employeeType in teamLeader | state:invalidate->auditStuff
 |EAccountsSummary| | /api/accountsSummary/invalidate?{query}| accountId,customerId,employeeType |
 |ETransfer|eTransfer | /api/eTransfers?{query}| customerId |  | 
 |CreateEAccount|eTransfer | /api/createEAccount/?{query}| accountId,createPlanId,customerId |  | 
-|ChequeCreditbooks|chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,customerId |  | 
-|ChequeCreditbooks| | /api/chequeCreditBooks/?{query}| accountId,applRef,brandRef,customerId |
+|ChequeCreditbooks|chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,customerId |  | create->auditCreateCheckBook; get->auditGetCheckBook
+|ChequeCreditbooks| | /api/chequeCreditBooks/cancel?{query}| accountId,applRef,brandRef,customerId |
 |Repeating|repeating | /api/repeating?{query}| customerId |  | 
 |PostCodeMainPage|address | /api/address?{query}|  |  | 
 |PostCodeMainPage|postcode | /api/postCode?{query}| postcode |  | 
@@ -147,6 +147,27 @@
     Modal Button ==> JointAccountEditModalPage in mode edit
       Focused on "#selectedAccount"
     toggle       ToggleButton toggles ~/joint
+  ##dataMapping
+  ## Table CUST_TBL (Schema TheSchema)
+  |Display path | Database Field
+  | --- | --- |
+  
+  ## Table NAME_TBL (Schema TheSchema)
+  |Display path | Database Field
+  | --- | --- |
+  | main,name  |  zzname 
+  
+  ## Table ACC_TBL (Schema TheSchema)
+  |Display path | Database Field
+  | --- | --- |
+  | balance  |  blnc 
+  
+  ## Table ADD_TBL (Schema TheSchema)
+  |Display path | Database Field
+  | --- | --- |
+  | main,addresses,line1  |  zzline1 
+  | main,addresses,line2  |  zzline2 
+  
 
 ---
 #OccupationAndIncomeSummary - MainPage
@@ -176,11 +197,11 @@
   ##rests   
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
-    |additionalInformationRD | /customer/occupation/v2/additionalInfo?{query}| customerId |  | 
-    |businessDetailsRD | /customer/occupation/v2/businessDetails?{query}| customerId |  | 
-    |dropdownsRD | /customer/occupation/v2/occupationDetails?{query}| customerId |  | 
-    |occupationAndIncomeRD | /customer/occupation/v2/occupationIncomeDetails?{query}| customerId |  | 
-    |otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}| customerId |  | 
+    |additionalInformationRD | /customer/occupation/v2/additionalInfo?{query}| customerId |  | get->auditGetCustomeAdditionalInfo
+    |businessDetailsRD | /customer/occupation/v2/businessDetails?{query}| customerId |  | get->auditGetBusinessDetails
+    |dropdownsRD | /customer/occupation/v2/occupationDetails?{query}|  |  | 
+    |occupationAndIncomeRD | /customer/occupation/v2/occupationIncomeDetails?{query}| customerId |  | get->auditGetCustomerOccupation; update->auditUpdateCustomerOccupation
+    |otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}| customerId |  | get->auditGetBusinessDetails
   ##modals  
   |name|displayed with
   | --- | --- 
@@ -325,8 +346,8 @@
   ##rests   
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
-    |chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,customerId |  | 
-    | | /api/chequeCreditBooks/?{query}| accountId,applRef,brandRef,customerId |
+    |chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,customerId |  | create->auditCreateCheckBook; get->auditGetCheckBook
+    | | /api/chequeCreditBooks/cancel?{query}| accountId,applRef,brandRef,customerId |
   ##modals  
   |name|displayed with
   | --- | --- 
@@ -398,5 +419,14 @@
     Modal Button ==> PostCodeSearch in mode edit
       Focused on "~/postcode"
       Copy on close [{"from":"~/postcode/addressResults/line1","to":"~/main/line1"},{"from":"~/postcode/addressResults/line2","to":"~/main/line2"},{"from":"~/postcode/addressResults/line3","to":"~/main/line3"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/search","to":"~/main/postcode"}] 
+  ##dataMapping
+  ## Table ADD_TBL (Schema TheSchema)
+  |Display path | Database Field
+  | --- | --- |
+  | line1  |  zzline1 
+  | line2  |  zzline2 
+  | line3  |  zzline3 
+  | line4  |  zzline4 
+  
 
 ---

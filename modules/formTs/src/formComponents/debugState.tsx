@@ -5,10 +5,11 @@ import { HasSimpleMessages, safeArray, safeString, SimpleMessage, sortedEntries 
 import { HasRestCommandL, HasRestCommands } from "@focuson/rest";
 import { FocusOnConfig, FocusOnContext, traceL } from "@focuson/focuson";
 import { Lenses, NameAndLens } from "@focuson/lens";
-import { ToggleButton, ToggleJsonButton} from "./toggleButton";
+import { ToggleButton } from "./toggleButton";
 import { AssertPages, MakeTest } from "./makeTest";
 import { LabelAndStringInput } from "./labelAndInput";
 import { LabelAndDropdown } from "./labelAndDropdown";
+import { AccordionCollapseAll, AccordionExpandAll, AccordionWithInfo} from "./accordion";
 
 
 export function Tags<S extends HasTagHolder, C> ( { state }: LensProps<S, any, C> ) {
@@ -59,18 +60,23 @@ function PagesData<S, C extends FocusOnContext<S>> ( { state }: DebugProps<S, C>
         const lens = isMainPageDetails ( pageDetails ) ? pageDetails.lens : fromPathGivenState ( state ) ( safeString ( page.focusOn ) )
         const title = isMainPageDetails ( pageDetails ) ? "Main" : "Modal"
         const pageData = lens.getOption ( state.main )
+        const accordionsOpen = state.focusOn('debug').json().accordions
+        const accordions = Object.keys(pageData)
+
         return <tr key={index}>
           <td>{title} {page.pageName} - {safeString ( page.focusOn )}</td>
           <td>{lens?.description}</td>
           <td>
-            {/*<pre>{JSON.stringify ( pageData, null, 2 )}</pre>*/}
+            <div>
+              <AccordionExpandAll id="expandAllPageButtons" buttonText="Expand All" state={state.focusOn('debug').focusOn ( 'accordions' )} list={accordions}/>
+              <AccordionCollapseAll id="collapseAllPageButtons" buttonText="Collapse All" state={state.focusOn('debug').focusOn ( 'accordions' )} list={accordions}/>
+            </div>
             {Object.entries(pageData).map(([itemKey, itemVal], index) => {
-              const debugState = state.copyWithLens ( Lenses.identity<any> ().focusQuery ( 'debug' ) )
               return <div key={`${itemKey}-${index}`}>
                   {(Array.isArray(itemVal) && itemVal.length > 0)
-                      ? <><ToggleJsonButton id={itemKey} buttonText={`{/debug/${itemKey}|+|-}`} state={state} count={itemVal.length}/>{debugState.focusOn (itemKey).optJson() && <pre className="json-value">{JSON.stringify(itemVal, null, 2)}</pre>}</>
+                      ? <><AccordionWithInfo id={itemKey} buttonText={"-|+"} state={state.focusOn('debug').focusOn('accordions')} list={accordions} count={itemVal.length}/>{accordionsOpen.find((elem:string) => elem == itemKey) && <pre className="json-value">{JSON.stringify(itemVal, null, 2)}</pre>}</>
                       : (typeof itemVal === 'object' && itemVal !== null)
-                          ? <><ToggleJsonButton id={itemKey} buttonText={`{/debug/${itemKey}|+|-}`} state={state} count={Object.entries(itemVal).length}/>{debugState.focusOn (itemKey).optJson() && <pre className="json-value">{JSON.stringify(itemVal, null, 2)}</pre>}</>
+                          ? <><AccordionWithInfo id={itemKey} buttonText={"-|+"} state={state.focusOn('debug').focusOn('accordions')} list={accordions} count={Object.entries(itemVal).length}/>{accordionsOpen.find((elem:string) => elem == itemKey) && <pre className="json-value">{JSON.stringify(itemVal, null, 2)}</pre>}</>
                           : <><span className="json-key">{itemKey}</span>: {typeof itemVal === 'boolean' ? <span className="json-value">{itemVal.toString()}</span> : <span className="json-string">{itemVal+""}</span>}</>
                   }
                   </div>

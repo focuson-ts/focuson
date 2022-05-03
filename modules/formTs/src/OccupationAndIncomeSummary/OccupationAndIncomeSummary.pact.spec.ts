@@ -172,14 +172,14 @@ describe ( 'OccupationAndIncomeSummary - dropdownsRD - fetcher', () => {
       withRequest: {
         method: 'GET',
         path: '/customer/occupation/v2/occupationDetails',
-        query:{"customerId":"custId"}
+        query:{}
       },
       willRespondWith: {
         status: 200,
         body: samples.sampleDropdowns0
        },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }], CommonIds: {} }
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
@@ -189,7 +189,7 @@ describe ( 'OccupationAndIncomeSummary - dropdownsRD - fetcher', () => {
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
       let expectedRaw: any = {
 ... withIds,
-      tags: {'OccupationAndIncomeSummary_~/dropdowns': ["custId"]}
+      tags: {'OccupationAndIncomeSummary_~/dropdowns': []}
       };
       const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('dropdowns').set ( expectedRaw, samples.sampleDropdowns0 )
       expect ( newState ).toEqual ( expected )
@@ -204,7 +204,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
     const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_DropdownsRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"customerId":"custId"},
+       CommonIds: {},
        pageSelection: [ { pageName: 'OccupationAndIncomeSummary', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -213,7 +213,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
       withRequest: {
          method: 'GET',
          path:   '/customer/occupation/v2/occupationDetails',
-         query:{"customerId":"custId"},
+         query:{},
          //no request body needed for get,
       },
       willRespondWith: {

@@ -16,9 +16,13 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
   params: commonParams,
   dataDD: ChequeCreditbooksDD,
   url: '/api/chequeCreditBooks?{query}', //or maybe accountId={accountId}&customerId={customerId}
-  actions: [ 'get', { state: 'create' } ], //do we need create?
+  actions: [ 'get', 'create', { "state": 'cancel' } ],
   states: {
-    create: { url: '/api/chequeCreditBooks/?{query}', useStoredProcedure: { schema: onlySchema, name: 'someProcName', params: [ 'customerId', 'accountId' ] } }
-  }
+    cancel: { url: '/api/chequeCreditBooks/cancel?{query}', useStoredProcedure: { schema: onlySchema, name: 'cancelCheckBook', params: [ 'customerId', 'accountId' ] } }
+  },
+  audit: [
+    { restAction: 'create', storedProcedure: { name: 'auditCreateCheckBook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
+    { restAction: 'get', storedProcedure: { name: 'auditGetCheckBook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
+  ]
 
 }
