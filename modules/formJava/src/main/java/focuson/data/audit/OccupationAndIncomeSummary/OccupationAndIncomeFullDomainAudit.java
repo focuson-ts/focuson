@@ -21,7 +21,7 @@ public class OccupationAndIncomeFullDomainAudit {
     try (Connection c = dataSource.getConnection()) {
       try (CallableStatement s = c.prepareCall("call auditGetCustomerOccupation(?)")) {
       s.setObject(1,customerId);
-      if (!s.execute()) throw new SQLException("Count not audit");
+      if (!s.execute()) throw new SQLException("Cannot not audit: OccupationAndIncomeFullDomain_get_auditGetCustomerOccupation");
   }}}
     public void OccupationAndIncomeFullDomain_update_auditUpdateCustomerOccupation(String dbName, String customerId) throws SQLException {
         if (dbName.equals(IFetcher.mock)) {
@@ -31,7 +31,7 @@ public class OccupationAndIncomeFullDomainAudit {
     try (Connection c = dataSource.getConnection()) {
       try (CallableStatement s = c.prepareCall("call auditUpdateCustomerOccupation(?)")) {
       s.setObject(1,customerId);
-      if (!s.execute()) throw new SQLException("Count not audit");
+      if (!s.execute()) throw new SQLException("Cannot not audit: OccupationAndIncomeFullDomain_update_auditUpdateCustomerOccupation");
   }}}
 
 }

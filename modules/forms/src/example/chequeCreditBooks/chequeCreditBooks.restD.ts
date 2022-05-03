@@ -1,7 +1,7 @@
 import { IntParam, RestD, RestParams } from "../../common/restD";
 import { ChequeCreditbooksDD, ChequeCreditbooksHistoryDD, ChequeCreditbooksHistoryLineDD } from "./chequeCreditBooks.dataD";
 import { AllGuards } from "../../buttons/guardButton";
-import { onlySchema } from "../database/tableNames";
+import { accountT, onlySchema } from "../database/tableNames";
 
 export const commonParams = {
   brandRef: { ...IntParam, commonLens: 'brandRef', testValue: 'brandRef' },
@@ -23,6 +23,7 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
   audit: [
     { restAction: 'create', storedProcedure: { name: 'auditCreateCheckBook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
     { restAction: 'get', storedProcedure: { name: 'auditGetCheckBook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
+    { restAction: {state: 'cancel'}, storedProcedure: { name: 'auditCancelCheckbook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
   ]
 
 }

@@ -168,7 +168,7 @@
       "request": {
         "method": "GET",
         "path": "/customer/occupation/v2/occupationDetails",
-        "query": "customerId=custId"
+        "query": ""
       },
       "response": {
         "status": 200,
@@ -201,7 +201,7 @@
       "request": {
         "method": "GET",
         "path": "/customer/occupation/v2/occupationDetails",
-        "query": "customerId=custId"
+        "query": ""
       },
       "response": {
         "status": 200,

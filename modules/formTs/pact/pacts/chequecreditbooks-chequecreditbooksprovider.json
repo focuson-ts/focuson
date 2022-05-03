@@ -122,6 +122,23 @@
           "stateChequeCreditbookscreate": true
         }
       }
+    },
+    {
+      "description": "a rest for ChequeCreditbooks chequeCreditBooks state:cancel",
+      "providerState": "default",
+      "request": {
+        "method": "POST",
+        "path": "/api/chequeCreditBooks/cancel",
+        "query": "accountId=accId&applRef=appref&brandRef=brandRef&customerId=custId"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "stateChequeCreditbookscancel": true
+        }
+      }
     }
   ],
   "metadata": {

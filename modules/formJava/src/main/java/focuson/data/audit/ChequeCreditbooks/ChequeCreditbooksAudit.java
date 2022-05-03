@@ -22,7 +22,7 @@ public class ChequeCreditbooksAudit {
       try (CallableStatement s = c.prepareCall("call auditCreateCheckBook(?, ?)")) {
       s.setObject(1,brandRef);
       s.setObject(2,accountId);
-      if (!s.execute()) throw new SQLException("Count not audit");
+      if (!s.execute()) throw new SQLException("Cannot not audit: ChequeCreditbooks_create_auditCreateCheckBook");
   }}}
     public void ChequeCreditbooks_get_auditGetCheckBook(String dbName, String brandRef, String accountId) throws SQLException {
         if (dbName.equals(IFetcher.mock)) {
@@ -33,7 +33,18 @@ public class ChequeCreditbooksAudit {
       try (CallableStatement s = c.prepareCall("call auditGetCheckBook(?, ?)")) {
       s.setObject(1,brandRef);
       s.setObject(2,accountId);
-      if (!s.execute()) throw new SQLException("Count not audit");
+      if (!s.execute()) throw new SQLException("Cannot not audit: ChequeCreditbooks_get_auditGetCheckBook");
+  }}}
+    public void ChequeCreditbooks_state_cancel_auditCancelCheckbook(String dbName, String brandRef, String accountId) throws SQLException {
+        if (dbName.equals(IFetcher.mock)) {
+           System.out.println("Mock audit: ChequeCreditbooks_state_cancel_auditCancelCheckbook(" + brandRef + ", " +accountId+ ")");
+           return;
+    }
+    try (Connection c = dataSource.getConnection()) {
+      try (CallableStatement s = c.prepareCall("call auditCancelCheckbook(?, ?)")) {
+      s.setObject(1,brandRef);
+      s.setObject(2,accountId);
+      if (!s.execute()) throw new SQLException("Cannot not audit: ChequeCreditbooks_state_cancel_auditCancelCheckbook");
   }}}
 
 }

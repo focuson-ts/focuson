@@ -11,6 +11,7 @@ import focuson.data.IManyGraphQl;
 import focuson.data.fetchers.IFetcher;
 import focuson.data.audit.ChequeCreditbooks.ChequeCreditbooksAudit;
 import focuson.data.audit.ChequeCreditbooks.ChequeCreditbooksAudit;
+import focuson.data.audit.ChequeCreditbooks.ChequeCreditbooksAudit;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ import java.util.Arrays;
 
     @PostMapping(value="/api/chequeCreditBooks/cancel", produces="application/json")
     public ResponseEntity state_cancelChequeCreditbooks(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String customerId) throws Exception{
+        __audit.ChequeCreditbooks_state_cancel_auditCancelCheckbook(IFetcher.mock,brandRef,accountId);
        return Transform.result(graphQL.get(IFetcher.mock),ChequeCreditbooksQueries.state_cancelChequeCreditbooks(accountId, applRef, brandRef, customerId), "");
     }
 

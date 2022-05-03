@@ -21,7 +21,7 @@ public class AdditionalInformationAudit {
     try (Connection c = dataSource.getConnection()) {
       try (CallableStatement s = c.prepareCall("call auditGetCustomeAdditionalInfo(?)")) {
       s.setObject(1,customerId);
-      if (!s.execute()) throw new SQLException("Count not audit");
+      if (!s.execute()) throw new SQLException("Cannot not audit: AdditionalInformation_get_auditGetCustomeAdditionalInfo");
   }}}
 
 }

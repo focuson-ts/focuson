@@ -68,11 +68,32 @@ describe ( "makeReports", () => {
       "    Modal Button ==> JointAccountEditModalPage in mode edit",
       "      Focused on \"#selectedAccount\"",
       "    toggle       ToggleButton toggles ~/joint",
+      "  ##dataMapping",
+      "  ## Table CUST_TBL (Schema TheSchema)",
+      "  |Display path | Database Field",
+      "  | --- | --- |",
+      "  ",
+      "  ## Table NAME_TBL (Schema TheSchema)",
+      "  |Display path | Database Field",
+      "  | --- | --- |",
+      "  | main,name  |  zzname ",
+      "  ",
+      "  ## Table ACC_TBL (Schema TheSchema)",
+      "  |Display path | Database Field",
+      "  | --- | --- |",
+      "  | balance  |  blnc ",
+      "  ",
+      "  ## Table ADD_TBL (Schema TheSchema)",
+      "  |Display path | Database Field",
+      "  | --- | --- |",
+      "  | main,addresses,line1  |  zzline1 ",
+      "  | main,addresses,line2  |  zzline2 ",
+      "  ",
       "",
       "---"
     ])
   } )
-  it ( "should make a report, when have critcal issue", () => {
+  it ( "should make a report, when have critical issue", () => {
     let page: MainPageD<any, any> = { ...JointAccountPageD, rest: { jointAccount: { rest: jointAccountRestD, targetFromPath: '#fromApi', fetcher: true }, } };
     const reports = makeReportData<AllButtonsInPage<AllGuards>, AllGuards> ( [ page ] );
     expect ( makeReport ( reports ) ).toEqual ( [
@@ -122,6 +143,27 @@ describe ( "makeReports", () => {
       "    Modal Button ==> JointAccountEditModalPage in mode edit",
       "      Focused on \"#selectedAccount\"",
       "    toggle       ToggleButton toggles ~/joint",
+      "  ##dataMapping",
+      "  ## Table CUST_TBL (Schema TheSchema)",
+      "  |Display path | Database Field",
+      "  | --- | --- |",
+      "  ",
+      "  ## Table NAME_TBL (Schema TheSchema)",
+      "  |Display path | Database Field",
+      "  | --- | --- |",
+      "  | main,name  |  zzname ",
+      "  ",
+      "  ## Table ACC_TBL (Schema TheSchema)",
+      "  |Display path | Database Field",
+      "  | --- | --- |",
+      "  | balance  |  blnc ",
+      "  ",
+      "  ## Table ADD_TBL (Schema TheSchema)",
+      "  |Display path | Database Field",
+      "  | --- | --- |",
+      "  | main,addresses,line1  |  zzline1 ",
+      "  | main,addresses,line2  |  zzline2 ",
+      "  ",
       "",
       "---"
     ])

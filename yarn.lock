@@ -2314,6 +2314,94 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@focuson/fetcher@1.7.5":
+  version "1.7.5"
+  resolved "https://registry.yarnpkg.com/@focuson/fetcher/-/fetcher-1.7.5.tgz#1f690ae9527b3ab3c31b83095edd14be1b87b450"
+  integrity sha512-r15KMzRGr3MyXekTRvJqATGHMxxJAEDuMaBN0/3dIPQ2bYjeWh4gKjC66xxPGwUMQ7WnnnmwRIlHtqhrkRzfAw==
+  dependencies:
+    "@focuson/lens" "1.7.5"
+    "@focuson/state" "1.7.5"
+    "@focuson/template" "1.7.5"
+
+"@focuson/focuson@1.7.5":
+  version "1.7.5"
+  resolved "https://registry.yarnpkg.com/@focuson/focuson/-/focuson-1.7.5.tgz#be26e2df064f213f6fa074417ee34bbf84bfd5ba"
+  integrity sha512-F7L5ryrKcG8uk8lgfsEy72ravf/S9+k5+Bia8eOKa6urxSrRbuyr59trmZY8AZinYAiCxvkoU8HiBDLYgGOVzg==
+  dependencies:
+    "@focuson/pages" "1.7.5"
+    "@focuson/poster" "1.7.5"
+
+"@focuson/form_components@1.7.5":
+  version "1.7.5"
+  resolved "https://registry.yarnpkg.com/@focuson/form_components/-/form_components-1.7.5.tgz#709ee83b32751b3a962f3de40bce530ccf3ecb1d"
+  integrity sha512-EZNXiy5SmdpFlN0goltFIc/FHJLmgYUVas5OChI8IPwPpCZke2dtsit2uZYOwtQAfYbZnRTXXE9ts3cNjjZy9w==
+  dependencies:
+    "@focuson/focuson" "1.7.5"
+    "@focuson/pages" "1.7.5"
+    "@focuson/state" "1.7.5"
+
+"@focuson/lens@1.7.5":
+  version "1.7.5"
+  resolved "https://registry.yarnpkg.com/@focuson/lens/-/lens-1.7.5.tgz#9ae4e4eccc1e4d461b4636b3bab4a278d8254c07"
+  integrity sha512-UULTKSwG5epLwOcRkbwPr9GpX50+n0KteQ9eK7e1sa50Wtjc1uHHHge+5JKGLTJGoP+JBsyOk2WovL+NiMbh3w==
+  dependencies:
+    "@focuson/utils" "1.7.5"
+
+"@focuson/pages@1.7.5":
+  version "1.7.5"
+  resolved "https://registry.yarnpkg.com/@focuson/pages/-/pages-1.7.5.tgz#be7d5ff7f87e207547a114f26ebfc358d09ba6e5"
+  integrity sha512-npwSHGicUaU9RVraZpplDPnk7Jn+3P9OlakikeYrOepID9rftpOZHRA65rWoo4pqdMzpZoV6u6hPPHzO2qX8fw==
+  dependencies:
+    "@focuson/fetcher" "1.7.5"
+    "@focuson/lens" "1.7.5"
+    "@focuson/rest" "1.7.5"
+    "@focuson/state" "1.7.5"
+
+"@focuson/poster@1.7.5":
+  version "1.7.5"
+  resolved "https://registry.yarnpkg.com/@focuson/poster/-/poster-1.7.5.tgz#110815ef48535c0232859e5d1308c0ba729d00ce"
+  integrity sha512-ZLvRz+K3Lxl0Gp3Hu4R38gPVMhyzg+tsffbCTqtuW6JEPliKGYmna5zh2I7mAKZVQnEhM60Q6t9WdeJknFLzEQ==
+  dependencies:
+    "@focuson/fetcher" "1.7.5"
+    "@focuson/lens" "1.7.5"
+
+"@focuson/rest@1.7.5":
+  version "1.7.5"
+  resolved "https://registry.yarnpkg.com/@focuson/rest/-/rest-1.7.5.tgz#65c332a7e90f47fa94901dc39c3e27e69213f8ad"
+  integrity sha512-+evrG8V8FHrd0egtM6S4fApirQvhGcyCW5X5H5xazidedo28UX1u7Rfuhu4baFde4qCzm467WUPt5prPc41xow==
+  dependencies:
+    "@focuson/fetcher" "1.7.5"
+    "@focuson/lens" "1.7.5"
+
+"@focuson/state@1.7.5":
+  version "1.7.5"
+  resolved "https://registry.yarnpkg.com/@focuson/state/-/state-1.7.5.tgz#aa137c9bb906380aa65505a9a00abb64aa826773"
+  integrity sha512-W4rEKInsxUs7ytDTKfaze5x5Uo5v0g1XdIFbscDdBFy87BEx3+NY0OVqzf+ylFFCA40pytjTuJSF2rezdMe7Pw==
+  dependencies:
+    "@focuson/lens" "1.7.5"
+
+"@focuson/stories@1.7.5":
+  version "1.7.5"
+  resolved "https://registry.yarnpkg.com/@focuson/stories/-/stories-1.7.5.tgz#53b48ce47a582a9f95e210df62a85d21af9cfcf6"
+  integrity sha512-uJySWEdgFkHpFzbnHgYsgsRVkNPJcRjiS3cs8kumBS7bADF9xWxtpNCttSWiQqIn4JmtoTGGBFu2N0t2GkeWeA==
+  dependencies:
+    "@focuson/focuson" "1.7.5"
+    react "^17.0.1"
+    react-dom "^17.0.1"
+    typescript "^4.1.5"
+
+"@focuson/template@1.7.5":
+  version "1.7.5"
+  resolved "https://registry.yarnpkg.com/@focuson/template/-/template-1.7.5.tgz#af04eb794844b9c900697b14736e36a859f31d38"
+  integrity sha512-SqIXwJ0/Wef2W10WWxXe60vPPXZ010wsCirBHCqdRGCAYkJjq7Y4/U/aQdricSXTp/yAcYosf5ryQvwZmJivhg==
+
+"@focuson/utils@1.7.5":
+  version "1.7.5"
+  resolved "https://registry.yarnpkg.com/@focuson/utils/-/utils-1.7.5.tgz#20ca4dfc469bf416b70f535369042b7fb26dc4c6"
+  integrity sha512-GuSnLEErNS/Tl1muy5YKhvf50Jh7HT2EVBs5fhul7D8KRR05A3bDoPMP24NqzAeHxOQsLxqZhKI9a5CP48tXIQ==
+  dependencies:
+    node-fetch "2.6.1"
+
 "@gar/promisify@^1.0.1":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.2.tgz#30aa825f11d438671d585bd44e7fd564535fc210"

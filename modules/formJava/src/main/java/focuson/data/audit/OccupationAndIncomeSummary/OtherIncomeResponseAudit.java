@@ -21,7 +21,7 @@ public class OtherIncomeResponseAudit {
     try (Connection c = dataSource.getConnection()) {
       try (CallableStatement s = c.prepareCall("call auditGetBusinessDetails(?)")) {
       s.setObject(1,customerId);
-      if (!s.execute()) throw new SQLException("Count not audit");
+      if (!s.execute()) throw new SQLException("Cannot not audit: OtherIncomeResponse_get_auditGetBusinessDetails");
   }}}
 
 }

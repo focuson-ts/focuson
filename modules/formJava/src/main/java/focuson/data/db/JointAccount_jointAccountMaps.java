@@ -34,7 +34,7 @@ public class JointAccount_jointAccountMaps {
   "  CUST_TBL mainCustomer,"+
   "  NAME_TBL jointName,"+
   "  CUST_TBL jointCustomer"+
-  " where mainCustomer.nameId = mainName.id and ACC_TBL.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and ACC_TBL.jointCustomerId = jointCustomer.id and  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ?";
+  " where mainCustomer.nameId = mainName.id and ACC_TBL.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and ACC_TBL.jointCustomerId = jointCustomer.id and  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and 3=3 and 1=1 and ACC_TBL <> 'canceled'";
   
   public static Optional<Map<String,Object>> getAll(Connection connection,int accountId,int brandId) throws SQLException {
      return getRoot(connection,accountId,brandId,get0(connection,accountId,brandId),get1(connection,accountId,brandId)).map(x -> x._root);
@@ -59,7 +59,7 @@ public class JointAccount_jointAccountMaps {
   "  CUST_TBL mainCustomer,\n"+
   "  NAME_TBL jointName,\n"+
   "  CUST_TBL jointCustomer\n"+
-  " where mainCustomer.nameId = mainName.id and ACC_TBL.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and ACC_TBL.jointCustomerId = jointCustomer.id and  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ?\n"+
+  " where mainCustomer.nameId = mainName.id and ACC_TBL.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and ACC_TBL.jointCustomerId = jointCustomer.id and  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and 3=3 and 1=1 and ACC_TBL <> 'canceled'\n"+
   "\n"+
   "select\n"+
   "  ACC_TBL.acc_id as ACC_TBL_acc_id,\n"+
@@ -73,7 +73,7 @@ public class JointAccount_jointAccountMaps {
   "  ACC_TBL ACC_TBL,\n"+
   "  CUST_TBL mainCustomer,\n"+
   "  ADD_TBL mainAddress\n"+
-  " where  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and mainCustomer.id = mainAddress.customerId and ACC_TBL.mainCustomerId = mainCustomer.id\n"+
+  " where  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and mainCustomer.id = mainAddress.customerId and ACC_TBL.mainCustomerId = mainCustomer.id and 2=2 and 1=1\n"+
   "\n"+
   "select\n"+
   "  ACC_TBL.acc_id as ACC_TBL_acc_id,\n"+

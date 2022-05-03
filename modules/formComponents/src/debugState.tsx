@@ -60,7 +60,7 @@ function PagesData<S, C extends FocusOnContext<S>> ( { state }: DebugProps<S, C>
         const lens = isMainPageDetails ( pageDetails ) ? pageDetails.lens : fromPathGivenState ( state ) ( safeString ( page.focusOn ) )
         const title = isMainPageDetails ( pageDetails ) ? "Main" : "Modal"
         const pageData = lens.getOption ( state.main )
-        const accordionsOpen = state.focusOn('debug').json().accordions
+        const accordionsOpen = state.focusOn('debug').focusOn('accordions').optJsonOr([])
         const accordions = Object.keys(pageData)
 
         return <tr key={index}>

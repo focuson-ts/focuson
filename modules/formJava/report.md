@@ -33,7 +33,7 @@
 |EAccountsSummary| | /api/accountsSummary/invalidate?{query}| accountId,customerId,employeeType |
 |ETransfer|eTransfer | /api/eTransfers?{query}| customerId |  | 
 |CreateEAccount|eTransfer | /api/createEAccount/?{query}| accountId,createPlanId,customerId |  | 
-|ChequeCreditbooks|chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,customerId |  | create->auditCreateCheckBook; get->auditGetCheckBook
+|ChequeCreditbooks|chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,customerId |  | create->auditCreateCheckBook; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
 |ChequeCreditbooks| | /api/chequeCreditBooks/cancel?{query}| accountId,applRef,brandRef,customerId |
 |Repeating|repeating | /api/repeating?{query}| customerId |  | 
 |PostCodeMainPage|address | /api/address?{query}|  |  | 
@@ -147,7 +147,7 @@
     Modal Button ==> JointAccountEditModalPage in mode edit
       Focused on "#selectedAccount"
     toggle       ToggleButton toggles ~/joint
-  ##Zapping
+  ##dataMapping
   ## Table CUST_TBL (Schema TheSchema)
   |Display path | Database Field
   | --- | --- |
@@ -346,7 +346,7 @@
   ##rests   
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
-    |chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,customerId |  | create->auditCreateCheckBook; get->auditGetCheckBook
+    |chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,customerId |  | create->auditCreateCheckBook; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
     | | /api/chequeCreditBooks/cancel?{query}| accountId,applRef,brandRef,customerId |
   ##modals  
   |name|displayed with

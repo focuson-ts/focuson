@@ -22,7 +22,7 @@ public class EAccountsSummaryAudit {
       try (CallableStatement s = c.prepareCall("call auditStuff(?, ?)")) {
       s.setObject(1,accountId);
       s.setObject(2,customerId);
-      if (!s.execute()) throw new SQLException("Count not audit");
+      if (!s.execute()) throw new SQLException("Cannot not audit: EAccountsSummary_state_invalidate_auditStuff");
   }}}
 
 }

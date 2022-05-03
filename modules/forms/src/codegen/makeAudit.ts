@@ -20,7 +20,7 @@ export function makeAudit<G> ( params: JavaWiringParams, p: MainPageD<any, any>,
       `    try (Connection c = dataSource.getConnection()) {`,
       `      try (CallableStatement s = c.prepareCall("call ${sp.name}(${sp.params.map ( x => '?' ).join ( ", " )})")) {`,
       ...indentList ( indentList ( indentList ( sp.params.map ( ( param, i ) => `s.setObject(${i + 1},${param});` ) ) ) ),
-      `      if (!s.execute()) throw new SQLException("Count not audit");`,
+      `      if (!s.execute()) throw new SQLException("Cannot not audit: ${auditMethodName ( r, restAction, sp )}");`,
       `  }}}`,
     ];
   } ) )
