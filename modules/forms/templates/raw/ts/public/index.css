@@ -209,12 +209,24 @@ tr:hover {background-color: lightgray;}
     margin-bottom: 10px;
 }
 
+.labelRadioButton{
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 label {
     width: 35%;
 }
 
-input[type=text],input[type=number],input[type=radio],input[type=checkbox] {
+input[type=text],input[type=number] {
     width: 40%;
+}
+
+input[type=radio], input[type=checkbox] {
+    vertical-align: middle;
+    margin: 0 5px;
 }
 
 select {
@@ -689,3 +701,10 @@ pre {
     border-color: #bacbe6;
 }
 
+.d-flex-inline {
+    display: inline-flex;
+}
+
+.p-2 {
+    padding: 2px;
+}
