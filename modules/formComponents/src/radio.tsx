@@ -11,10 +11,10 @@ export interface RadioProps<S, T, Context> extends CommonStateProps<S, T, Contex
 
 export function Radio<S, T, Context extends FocusOnContext<S>> ( { state, mode, enums, ariaLabel, id }: RadioProps<S, string, Context> ) {
   return <>{Object.entries ( enums ).map ( ( [ key, value ] ) => {
-    return <span onClick={() => state.setJson ( value, reasonFor ( 'Radio', 'onClick', id ) )} key={key}>
+    return <div className="p-2" onClick={() => state.setJson ( value, reasonFor ( 'Radio', 'onClick', id ) )} key={key}>
       <input id={id + value} onChange={() => {}} checked={state.optJson () === value} value={state.optJson ()} type='radio' name={id} disabled={mode === 'view'} aria-label={ariaLabel}/>
       <Label state={state} htmlFor={key} label={value}/>
-    </span>
+    </div>
   } )}</>
 }
 
@@ -25,5 +25,5 @@ export interface LabelAndRadioProps<S, T, Context> extends RadioProps<S, T, Cont
 }
 export function LabelAndRadio<S, T, Context extends FocusOnContext<S>> ( props: LabelAndRadioProps<S, string, Context> ) {
   const { label, name } = props
-  return <div><Label state={props.state} htmlFor={name} label={label}/><span><Radio {...props}/></span></div>
+  return <div className="labelRadioButton"><Label state={props.state} htmlFor={name} label={label}/><span className="d-flex-inline"><Radio {...props}/></span></div>
 }
