@@ -209,12 +209,28 @@ tr:hover {background-color: lightgray;}
     margin-bottom: 10px;
 }
 
+.labelRadioButton{
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 label {
     width: 35%;
 }
 
-input[type=text],input[type=number],input[type=radio],input[type=checkbox] {
+input[type=text],input[type=number],input[type=date] {
     width: 40%;
+}
+
+select {
+    width: 41%;
+}
+
+input[type=radio], input[type=checkbox] {
+    vertical-align: middle;
+    margin: 0 5px;
 }
 
 select {
@@ -391,7 +407,7 @@ table > tbody > tr:hover {
     color: var(--bs-table-hover-color);
 }
 
-input[type=text], input[type=number]{
+input[type=text], input[type=number], input[type=date]{
     border: 1px solid #ced4da;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -492,31 +508,31 @@ a.close {
     width: 80% !important;
 }
 
-.inputWidth20 input[type=text], .inputWidth20 input[type=number]{
+.inputWidth20 input[type=text], .inputWidth20 input[type=number], .inputWidth20 input[type=date] {
     width: 20% !important;
 }
 
-.inputWidth30 input[type=text], .inputWidth30 input[type=number]{
+.inputWidth30 input[type=text], .inputWidth30 input[type=number], .inputWidth30 input[type=date]{
     width: 30% !important;
 }
 
-.inputWidth40 input[type=text], .inputWidth40 input[type=number]{
+.inputWidth40 input[type=text], .inputWidth40 input[type=number], .inputWidth40 input[type=date]{
     width: 40% !important;
 }
 
-.inputWidth50 input[type=text], .inputWidth50 input[type=number]{
+.inputWidth50 input[type=text], .inputWidth50 input[type=number], .inputWidth50 input[type=date]{
     width: 50% !important;
 }
 
-.inputWidth60 input[type=text], .inputWidth60 input[type=number]{
+.inputWidth60 input[type=text], .inputWidth60 input[type=number], .inputWidth60 input[type=date]{
     width: 60% !important;
 }
 
-.inputWidth70 input[type=text], .inputWidth70 input[type=number]{
+.inputWidth70 input[type=text], .inputWidth70 input[type=number], .inputWidth70 input[type=date]{
     width: 70% !important;
 }
 
-.inputWidth80 input[type=text], .inputWidth80 input[type=number]{
+.inputWidth80 input[type=text], .inputWidth80 input[type=number], .inputWidth80 input[type=date]{
     width: 80% !important;
 }
 
@@ -689,3 +705,38 @@ pre {
     border-color: #bacbe6;
 }
 
+.d-flex-inline {
+    display: inline-flex;
+}
+
+.p-2 {
+    padding: 2px;
+}
+
+.inputWidth20 select{
+    width: 21% !important;
+}
+
+.inputWidth30 select{
+    width: 31% !important;
+}
+
+.inputWidth40 select{
+    width: 41% !important;
+}
+
+.inputWidth50 select{
+    width: 51% !important;
+}
+
+.inputWidth60 select{
+    width: 61% !important;
+}
+
+.inputWidth70 select{
+    width: 71% !important;
+}
+
+.inputWidth80 select{
+    width: 81% !important;
+}

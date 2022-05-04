@@ -3,6 +3,7 @@ import { replaceTextUsingPath } from "@focuson/focuson";
 import { PageSelectionContext } from "@focuson/pages";
 
 
+
 export interface ToggleButtonProps<S, T, Context> extends LensProps<S, boolean, Context> {
     id: string;
     buttonText: string;
@@ -11,5 +12,5 @@ export interface ToggleButtonProps<S, T, Context> extends LensProps<S, boolean, 
 export function ToggleButton<S, T, Context extends PageSelectionContext<S>> ( props: ToggleButtonProps<S, boolean, Context> ) {
     const { id, state, buttonText }=props
     const text = replaceTextUsingPath(state,buttonText)
-    return (<button {...props} onClick={() => state.setJson ( !state.optJson (), reasonFor ( 'ToggleButton', 'onClick', id ) )}>{text}</button>)
+    return (<button id={id} onClick={() => state.setJson ( !state.optJson (), reasonFor ( 'ToggleButton', 'onClick', id ) )}>{text}</button>)
 }
