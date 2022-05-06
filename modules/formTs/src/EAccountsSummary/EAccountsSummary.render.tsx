@@ -46,7 +46,7 @@ const id=`page${index}`;
       />,
       deleteExistingPlan:<RestButton state={state} id={`${id}.deleteExistingPlan`} 
         name='deleteExistingPlan'
-        action='delete'
+        action={"delete"}
         rest='EAccountsSummary_CreatePlanRestDetails'
         confirm={true}
        />,

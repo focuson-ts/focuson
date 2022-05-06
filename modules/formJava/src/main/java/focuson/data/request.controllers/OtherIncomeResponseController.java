@@ -23,14 +23,15 @@ import java.util.Arrays;
   @Autowired
   OtherIncomeResponseAudit __audit;
     @GetMapping(value="/customer/occupation/v2/otherIncome", produces="application/json")
-    public ResponseEntity getOtherIncomeResponse(@RequestParam String customerId) throws Exception{
-        __audit.OtherIncomeResponse_get_auditGetBusinessDetails(IFetcher.mock,customerId);
-       return Transform.result(graphQL.get(IFetcher.mock),OtherIncomeResponseQueries.getOtherIncomeResponse(customerId), "getOtherIncomeResponse");
+    public ResponseEntity getOtherIncomeResponse(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
+        //from OccupationAndIncomeSummary.rest[otherSourcesOfIncomeRD].audit["get"]
+        __audit.OtherIncomeResponse_get_auditGetBusinessDetails(IFetcher.mock,clientRef);
+       return Transform.result(graphQL.get(IFetcher.mock),OtherIncomeResponseQueries.getOtherIncomeResponse(accountId, applRef, brandRef, clientRef), "getOtherIncomeResponse");
     }
 
     @GetMapping(value="/customer/occupation/v2/otherIncome/query", produces="application/json")
-    public String querygetOtherIncomeResponse(@RequestParam String customerId) throws Exception{
-       return OtherIncomeResponseQueries.getOtherIncomeResponse(customerId);
+    public String querygetOtherIncomeResponse(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
+       return OtherIncomeResponseQueries.getOtherIncomeResponse(accountId, applRef, brandRef, clientRef);
     }
 
   @GetMapping(value = "/customer/occupation/v2/otherIncome/sample", produces = "application/json")

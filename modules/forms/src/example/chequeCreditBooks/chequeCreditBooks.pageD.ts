@@ -52,14 +52,17 @@ export const ChequeCreditbooksPD: ExampleMainPage = {
   },
   /** As well as displaying/editing the data we have these buttons. These are passed to layout */
   buttons: {                                                                      //interestingly these will be type checked in the target system...
-    chequeBook: { control: 'ResetStateButton' },//, target: ['checkBookOrPayingInBook'], value : 'cheque'},
-    payingInBook: { control: 'ResetStateButton' },//, target: ['checkBookOrPayingInBook'], value : 'payingIn'},
+    // chequeBook: { control: 'ResetStateButton' },//, target: ['checkBookOrPayingInBook'], value : 'cheque'},
+    // payingInBook: { control: 'ResetStateButton' },//, target: ['checkBookOrPayingInBook'], value : 'payingIn'},
     orderNewBook: {
       control: 'ModalButton', modal: OrderChequeBookOrPayingInModalPD, mode: 'create',
       pageParams: { position: { top: 123 } },
       focusOn: '~/tempCreatePlan',//not type checked here... should be type checked in target
       createEmpty: ChequeCreditbooksHistoryLineDD,
       restOnCommit: { restName: 'chequeCreditBooks', action: 'create', result: 'refresh' }
+    },
+    cancelCheckBook:{
+      control: 'RestButton', restName: 'chequeCreditBooks', action: {state: 'cancel'}
     }
   }
 }

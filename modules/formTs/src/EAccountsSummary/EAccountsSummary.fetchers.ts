@@ -8,11 +8,12 @@ import { FState } from "../common";
 import { Optional, Lenses, NameAndLens} from '@focuson/lens';
 //fetcher type true
 export function EAccountsSummaryFetcher(fdLens:Optional<FState, domains.EAccountsSummaryPageDomain>,commonIds: NameAndLens<FState>) {
+//If you have a compilation here it might be because of the 'local' params in EAccountsSummary.rest[eAccountsSummary].params
   const localIds = {}
   return pageAndTagFetcher<FState, domains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.EAccountsSummaryDomain>(),
      'EAccountsSummary',
-     '~/fromApi', fdLens, commonIds, localIds,["accountId","employeeType"],["customerId"],
+     '~/fromApi', fdLens, commonIds, localIds,["accountId","applRef","brandRef","clientRef","employeeType"],["customerId"],
       //From EAccountsSummary.rest[eAccountsSummary].targetFromPath ~/fromApi Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
       Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('fromApi'),
      '/api/accountsSummary?{query}')

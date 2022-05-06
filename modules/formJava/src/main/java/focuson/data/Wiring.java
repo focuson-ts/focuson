@@ -24,6 +24,11 @@ import focuson.data.fetchers.IFetcher;
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
 import java.util.function.Function;
 import focuson.data.fetchers.HelloWorldMainPage.HelloWorldDomainData_get_FFetcher;
+import focuson.data.fetchers.LinkedAccountDetails.CollectionsList_get_FFetcher;
+import focuson.data.fetchers.LinkedAccountDetails.CollectionSummary_get_FFetcher;
+import focuson.data.fetchers.LinkedAccountDetails.CollectionItem_state_cancel_FFetcher;
+import focuson.data.fetchers.LinkedAccountDetails.CollectionItem_state_revalidate_FFetcher;
+import focuson.data.fetchers.LinkedAccountDetails.MandateList_get_FFetcher;
 import focuson.data.fetchers.AccountOverview.AccountAllFlags_get_FFetcher;
 import focuson.data.fetchers.AccountOverview.AccountOverviewAgreementType_get_FFetcher;
 import focuson.data.fetchers.AccountOverview.ArrearsDetails_get_FFetcher;
@@ -59,6 +64,16 @@ import focuson.data.fetchers.PostCodeMainPage.PostCodeData_get_FFetcher;
 public class Wiring  implements IManyGraphQl{
       @Autowired
       List<HelloWorldDomainData_get_FFetcher> HelloWorldDomainData_get_FFetcher;
+      @Autowired
+      List<CollectionsList_get_FFetcher> CollectionsList_get_FFetcher;
+      @Autowired
+      List<CollectionSummary_get_FFetcher> CollectionSummary_get_FFetcher;
+      @Autowired
+      List<CollectionItem_state_cancel_FFetcher> CollectionItem_state_cancel_FFetcher;
+      @Autowired
+      List<CollectionItem_state_revalidate_FFetcher> CollectionItem_state_revalidate_FFetcher;
+      @Autowired
+      List<MandateList_get_FFetcher> MandateList_get_FFetcher;
       @Autowired
       List<AccountAllFlags_get_FFetcher> AccountAllFlags_get_FFetcher;
       @Autowired
@@ -156,6 +171,11 @@ public class Wiring  implements IManyGraphQl{
    private RuntimeWiring buildWiring(String dbName) {
        return RuntimeWiring.newRuntimeWiring()
           .type(newTypeWiring("Query").dataFetcher("getHelloWorldDomainData", find(HelloWorldDomainData_get_FFetcher, dbName, f ->f.getHelloWorldDomainData())))
+          .type(newTypeWiring("Query").dataFetcher("getCollectionItem", find(CollectionsList_get_FFetcher, dbName, f ->f.getCollectionItem())))
+          .type(newTypeWiring("Query").dataFetcher("getCollectionSummary", find(CollectionSummary_get_FFetcher, dbName, f ->f.getCollectionSummary())))
+          .type(newTypeWiring("Mutation").dataFetcher("stateCollectionItemcancel", find(CollectionItem_state_cancel_FFetcher, dbName, f ->f.stateCollectionItemcancel())))
+          .type(newTypeWiring("Mutation").dataFetcher("stateCollectionItemrevalidate", find(CollectionItem_state_revalidate_FFetcher, dbName, f ->f.stateCollectionItemrevalidate())))
+          .type(newTypeWiring("Query").dataFetcher("getMandate", find(MandateList_get_FFetcher, dbName, f ->f.getMandate())))
           .type(newTypeWiring("Query").dataFetcher("getAccountAllFlags", find(AccountAllFlags_get_FFetcher, dbName, f ->f.getAccountAllFlags())))
           .type(newTypeWiring("Query").dataFetcher("getAccountOverviewAgreementType", find(AccountOverviewAgreementType_get_FFetcher, dbName, f ->f.getAccountOverviewAgreementType())))
           .type(newTypeWiring("Query").dataFetcher("getArrearsDetails", find(ArrearsDetails_get_FFetcher, dbName, f ->f.getArrearsDetails())))

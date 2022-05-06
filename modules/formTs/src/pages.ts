@@ -2,6 +2,8 @@ import { identityOptics } from "@focuson/lens";
 import { Loading, MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";
 import {Context,  FState } from "./common";
 import { HelloWorldMainPagePage } from './HelloWorldMainPage/HelloWorldMainPage.render';
+import { LinkedAccountDetailsPage } from './LinkedAccountDetails/LinkedAccountDetails.render';
+import { SelectMandatePage } from './LinkedAccountDetails/SelectMandate.render';
 import { AccountOverviewPage } from './AccountOverview/AccountOverview.render';
 import { ExcessInfoSearchPage } from './AccountOverview/ExcessInfoSearch.render';
 import { ReasonPage } from './AccountOverview/Reason.render';
@@ -29,6 +31,7 @@ import { RepeatingLinePage } from './Repeating/RepeatingLine.render';
 import { PostCodeMainPagePage } from './PostCodeMainPage/PostCodeMainPage.render';
 import { PostCodeSearchPage } from './PostCodeMainPage/PostCodeSearch.render';
 import { HelloWorldMainPageOptionals } from "./HelloWorldMainPage/HelloWorldMainPage.optionals"; 
+import { LinkedAccountDetailsOptionals } from "./LinkedAccountDetails/LinkedAccountDetails.optionals"; 
 import { AccountOverviewOptionals } from "./AccountOverview/AccountOverview.optionals"; 
 import { JointAccountOptionals } from "./JointAccount/JointAccount.optionals"; 
 import { OccupationAndIncomeSummaryOptionals } from "./OccupationAndIncomeSummary/OccupationAndIncomeSummary.optionals"; 
@@ -43,6 +46,7 @@ const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (
 const identity = identityOptics<FState> ();
 export const pages: MultiPageDetails<FState, Context> = {
     HelloWorldMainPage: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'HelloWorldMainPage' ), pageFunction: HelloWorldMainPagePage(), initialValue: undefined, pageMode: 'view',namedOptionals: HelloWorldMainPageOptionals },
+    LinkedAccountDetails: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'LinkedAccountDetails' ), pageFunction: LinkedAccountDetailsPage(), initialValue: undefined, pageMode: 'view',namedOptionals: LinkedAccountDetailsOptionals },
     AccountOverview: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'AccountOverview' ), pageFunction: AccountOverviewPage(), initialValue: {}, pageMode: 'view',namedOptionals: AccountOverviewOptionals },
     JointAccount: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'JointAccount' ), pageFunction: JointAccountPage(), initialValue: {"joint":false}, pageMode: 'view',namedOptionals: JointAccountOptionals },
     OccupationAndIncomeSummary: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'OccupationAndIncomeSummary' ), pageFunction: OccupationAndIncomeSummaryPage(), initialValue: {"selectedItem":0,"occupation":{"search":"","selectedOccupationName":"","searchResults":[]},"mainOrJoint":false}, pageMode: 'view',namedOptionals: OccupationAndIncomeSummaryOptionals },
@@ -52,6 +56,7 @@ export const pages: MultiPageDetails<FState, Context> = {
     ChequeCreditbooks: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'ChequeCreditbooks' ), pageFunction: ChequeCreditbooksPage(), initialValue: {}, pageMode: 'view',namedOptionals: ChequeCreditbooksOptionals },
     Repeating: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'Repeating' ), pageFunction: RepeatingPage(), initialValue: {"selectedItem":0}, pageMode: 'view',namedOptionals: RepeatingOptionals },
     PostCodeMainPage: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'PostCodeMainPage' ), pageFunction: PostCodeMainPagePage(), initialValue: {"main":{},"postcode":{"search":"","searchResults":[],"addressResults":{"line1":"","line2":"","line3":"","line4":""}}}, pageMode: 'edit',namedOptionals: PostCodeMainPageOptionals },
+    SelectMandate: {pageType: 'ModalPopup',  config: simpleMessagesConfig,  pageFunction: SelectMandatePage()},
     ExcessInfoSearch: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: ExcessInfoSearchPage()},
     Reason: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: ReasonPage()},
     ExcessHistory: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: ExcessHistoryPage()},

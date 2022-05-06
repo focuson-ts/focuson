@@ -8,6 +8,7 @@ import { FState } from "../common";
 import { Optional, Lenses, NameAndLens} from '@focuson/lens';
 //fetcher type true
 export function pre_JointAccountFetcher(fdLens:Optional<FState, domains.JointAccountPageDomain>,commonIds: NameAndLens<FState>) {
+//If you have a compilation here it might be because of the 'local' params in JointAccount.rest[jointAccount].params
   const localIds = {}
   return pageAndTagFetcher<FState, domains.JointAccountPageDomain, domains.JointAccountDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.JointAccountDomain>(),

@@ -13,7 +13,7 @@ export function ChequeCreditbooks_ChequeCreditbooksRestDetails ( cd: NameAndLens
 //From ChequeCreditbooks.rest[chequeCreditBooks].targetFromPath (~/fromApi). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.ChequeCreditbooksPageDomain>().focusQuery('fromApi'),
     cd, fdd,
-    ids: ["accountId","applRef","brandRef","customerId"],
+    ids: ["accountId","applRef","brandRef","clientRef"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/api/chequeCreditBooks?{query}",

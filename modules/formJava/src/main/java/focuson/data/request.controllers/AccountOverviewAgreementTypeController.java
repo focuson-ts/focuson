@@ -20,13 +20,13 @@ import java.util.Arrays;
   @Autowired
   public IManyGraphQl graphQL;
     @GetMapping(value="/api/accountOverview/agreementType", produces="application/json")
-    public ResponseEntity getAccountOverviewAgreementType(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),AccountOverviewAgreementTypeQueries.getAccountOverviewAgreementType(accountId, customerId), "getAccountOverviewAgreementType");
+    public ResponseEntity getAccountOverviewAgreementType(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),AccountOverviewAgreementTypeQueries.getAccountOverviewAgreementType(accountId, applRef, brandRef, clientRef), "getAccountOverviewAgreementType");
     }
 
     @GetMapping(value="/api/accountOverview/agreementType/query", produces="application/json")
-    public String querygetAccountOverviewAgreementType(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       return AccountOverviewAgreementTypeQueries.getAccountOverviewAgreementType(accountId, customerId);
+    public String querygetAccountOverviewAgreementType(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
+       return AccountOverviewAgreementTypeQueries.getAccountOverviewAgreementType(accountId, applRef, brandRef, clientRef);
     }
 
   @GetMapping(value = "/api/accountOverview/agreementType/sample", produces = "application/json")

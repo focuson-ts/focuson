@@ -29,14 +29,14 @@ describe ( 'AccountOverview - accountFlags - fetcher', () => {
       withRequest: {
         method: 'GET',
         path: '/api/accountOverview/flags',
-        query:{"accountId":"accId","customerId":"custId"}
+        query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"}
       },
       willRespondWith: {
         status: 200,
         body: samples.sampleAccountAllFlags0
        },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"} }
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
@@ -46,7 +46,7 @@ describe ( 'AccountOverview - accountFlags - fetcher', () => {
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
       let expectedRaw: any = {
 ... withIds,
-      tags: {'AccountOverview_~/accountFlags': ["accId","custId"]}
+      tags: {'AccountOverview_~/accountFlags': ["accId","appref","brandRef","custId"]}
       };
       const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('accountFlags').set ( expectedRaw, samples.sampleAccountAllFlags0 )
       expect ( newState ).toEqual ( expected )
@@ -61,7 +61,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
     const restCommand: RestCommand = { name: 'AccountOverview_AccountAllFlagsRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"accountId":"accId","customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
        pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -70,7 +70,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
       withRequest: {
          method: 'GET',
          path:   '/api/accountOverview/flags',
-         query:{"accountId":"accId","customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
          //no request body needed for get,
       },
       willRespondWith: {
@@ -102,14 +102,14 @@ describe ( 'AccountOverview - agreementType - fetcher', () => {
       withRequest: {
         method: 'GET',
         path: '/api/accountOverview/agreementType',
-        query:{"accountId":"accId","customerId":"custId"}
+        query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"}
       },
       willRespondWith: {
         status: 200,
         body: samples.sampleAccountOverviewAgreementType0
        },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"} }
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
@@ -119,7 +119,7 @@ describe ( 'AccountOverview - agreementType - fetcher', () => {
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
       let expectedRaw: any = {
 ... withIds,
-      tags: {'AccountOverview_~/agreementType': ["accId","custId"]}
+      tags: {'AccountOverview_~/agreementType': ["accId","appref","brandRef","custId"]}
       };
       const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('agreementType').set ( expectedRaw, samples.sampleAccountOverviewAgreementType0 )
       expect ( newState ).toEqual ( expected )
@@ -134,7 +134,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
     const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewAgreementTypeRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"accountId":"accId","customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
        pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -143,7 +143,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
       withRequest: {
          method: 'GET',
          path:   '/api/accountOverview/agreementType',
-         query:{"accountId":"accId","customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
          //no request body needed for get,
       },
       willRespondWith: {
@@ -175,14 +175,14 @@ describe ( 'AccountOverview - arrearsDetails - fetcher', () => {
       withRequest: {
         method: 'GET',
         path: '/api/accountOverview/arrearsDetails',
-        query:{"accountId":"accId","customerId":"custId","startDate":"2020-01-20"}
+        query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId","startDate":"2020-01-20"}
       },
       willRespondWith: {
         status: 200,
         body: samples.sampleArrearsDetails0
        },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"} }
   const lensTransforms: Transform<FState,any>[] = [
     [Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('currentSelectedExcessHistory').focusQuery('start'), () =>"2020-01-20" ]
   ]
@@ -193,7 +193,7 @@ describe ( 'AccountOverview - arrearsDetails - fetcher', () => {
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
       let expectedRaw: any = {
 ... withIds,
-      tags: {'AccountOverview_~/arrearsDetails': ["accId","custId","2020-01-20"]}
+      tags: {'AccountOverview_~/arrearsDetails': ["accId","appref","brandRef","custId","2020-01-20"]}
       };
       const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('arrearsDetails').set ( expectedRaw, samples.sampleArrearsDetails0 )
       expect ( newState ).toEqual ( expected )
@@ -208,7 +208,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
     const restCommand: RestCommand = { name: 'AccountOverview_ArrearsDetailsRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"accountId":"accId","customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
        pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -217,7 +217,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
       withRequest: {
          method: 'GET',
          path:   '/api/accountOverview/arrearsDetails',
-         query:{"accountId":"accId","customerId":"custId","startDate":"2020-01-20"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId","startDate":"2020-01-20"},
          //no request body needed for get,
       },
       willRespondWith: {
@@ -250,14 +250,14 @@ describe ( 'AccountOverview - excessHistory - fetcher', () => {
       withRequest: {
         method: 'GET',
         path: '/api/accountOverview/excessHistory',
-        query:{"accountId":"accId","customerId":"custId"}
+        query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"}
       },
       willRespondWith: {
         status: 200,
         body: samples.sampleAccountOverviewHistory0
        },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"} }
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
@@ -267,7 +267,7 @@ describe ( 'AccountOverview - excessHistory - fetcher', () => {
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
       let expectedRaw: any = {
 ... withIds,
-      tags: {'AccountOverview_~/excessHistory': ["accId","custId"]}
+      tags: {'AccountOverview_~/excessHistory': ["accId","appref","brandRef","custId"]}
       };
       const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('excessHistory').set ( expectedRaw, samples.sampleAccountOverviewHistory0 )
       expect ( newState ).toEqual ( expected )
@@ -282,7 +282,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
     const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewHistoryRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"accountId":"accId","customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
        pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -291,7 +291,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
       withRequest: {
          method: 'GET',
          path:   '/api/accountOverview/excessHistory',
-         query:{"accountId":"accId","customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
          //no request body needed for get,
       },
       willRespondWith: {
@@ -323,14 +323,14 @@ describe ( 'AccountOverview - excessInfo - fetcher', () => {
       withRequest: {
         method: 'GET',
         path: '/api/accountOverview/excessInfo',
-        query:{"accountId":"accId","customerId":"custId"}
+        query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"}
       },
       willRespondWith: {
         status: 200,
         body: samples.sampleAccountOverviewExcessInfo0
        },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"} }
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
@@ -340,7 +340,7 @@ describe ( 'AccountOverview - excessInfo - fetcher', () => {
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
       let expectedRaw: any = {
 ... withIds,
-      tags: {'AccountOverview_~/excessInfo': ["accId","custId"]}
+      tags: {'AccountOverview_~/excessInfo': ["accId","appref","brandRef","custId"]}
       };
       const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('excessInfo').set ( expectedRaw, samples.sampleAccountOverviewExcessInfo0 )
       expect ( newState ).toEqual ( expected )
@@ -355,7 +355,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
     const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewExcessInfoRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"accountId":"accId","customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
        pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -364,7 +364,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
       withRequest: {
          method: 'GET',
          path:   '/api/accountOverview/excessInfo',
-         query:{"accountId":"accId","customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
          //no request body needed for get,
       },
       willRespondWith: {
@@ -396,14 +396,14 @@ describe ( 'AccountOverview - main - fetcher', () => {
       withRequest: {
         method: 'GET',
         path: '/api/accountOverview',
-        query:{"accountId":"accId","customerId":"custId"}
+        query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"}
       },
       willRespondWith: {
         status: 200,
         body: samples.sampleAccountOverview0
        },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"} }
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
@@ -413,7 +413,7 @@ describe ( 'AccountOverview - main - fetcher', () => {
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
       let expectedRaw: any = {
 ... withIds,
-      tags: {'AccountOverview_~/main': ["accId","custId"]}
+      tags: {'AccountOverview_~/main': ["accId","appref","brandRef","custId"]}
       };
       const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('main').set ( expectedRaw, samples.sampleAccountOverview0 )
       expect ( newState ).toEqual ( expected )
@@ -428,7 +428,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
     const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"accountId":"accId","customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
        pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -437,7 +437,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
       withRequest: {
          method: 'GET',
          path:   '/api/accountOverview',
-         query:{"accountId":"accId","customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
          //no request body needed for get,
       },
       willRespondWith: {
@@ -469,14 +469,14 @@ describe ( 'AccountOverview - optOut - fetcher', () => {
       withRequest: {
         method: 'GET',
         path: '/api/accountOverview/optOut',
-        query:{"accountId":"accId","customerId":"custId"}
+        query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"}
       },
       willRespondWith: {
         status: 200,
         body: samples.sampleAccountOverviewOptOut0
        },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"} }
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
@@ -486,7 +486,7 @@ describe ( 'AccountOverview - optOut - fetcher', () => {
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
       let expectedRaw: any = {
 ... withIds,
-      tags: {'AccountOverview_~/optOut': ["accId","custId"]}
+      tags: {'AccountOverview_~/optOut': ["accId","appref","brandRef","custId"]}
       };
       const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('optOut').set ( expectedRaw, samples.sampleAccountOverviewOptOut0 )
       expect ( newState ).toEqual ( expected )
@@ -501,7 +501,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
     const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewOptOutRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"accountId":"accId","customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
        pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -510,7 +510,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
       withRequest: {
          method: 'GET',
          path:   '/api/accountOverview/optOut',
-         query:{"accountId":"accId","customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
          //no request body needed for get,
       },
       willRespondWith: {
@@ -542,14 +542,14 @@ describe ( 'AccountOverview - reason - fetcher', () => {
       withRequest: {
         method: 'GET',
         path: '/api/accountOverview/reason',
-        query:{"accountId":"accId","customerId":"custId"}
+        query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"}
       },
       willRespondWith: {
         status: 200,
         body: samples.sampleAccountOverviewReason0
        },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId"} }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'AccountOverview', pageMode: 'view' }], CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"} }
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
@@ -559,7 +559,7 @@ describe ( 'AccountOverview - reason - fetcher', () => {
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
       let expectedRaw: any = {
 ... withIds,
-      tags: {'AccountOverview_~/reason': ["accId","custId"]}
+      tags: {'AccountOverview_~/reason': ["accId","appref","brandRef","custId"]}
       };
       const expected = Lenses.identity<FState>().focusQuery('AccountOverview').focusQuery('reason').set ( expectedRaw, samples.sampleAccountOverviewReason0 )
       expect ( newState ).toEqual ( expected )
@@ -574,7 +574,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
     const restCommand: RestCommand = { name: 'AccountOverview_AccountOverviewReasonRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"accountId":"accId","customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
        pageSelection: [ { pageName: 'AccountOverview', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -583,7 +583,7 @@ pactWith ( { consumer: 'AccountOverview', provider: 'AccountOverviewProvider', c
       withRequest: {
          method: 'GET',
          path:   '/api/accountOverview/reason',
-         query:{"accountId":"accId","customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
          //no request body needed for get,
       },
       willRespondWith: {

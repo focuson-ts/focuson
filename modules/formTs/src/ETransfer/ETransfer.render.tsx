@@ -31,7 +31,7 @@ const id=`page${index}`;
   const buttons =    {cancel:<button>cancel of type ResetStateButton cannot be created yet</button>,
       eTransfers:<RestButton state={state} id={`${id}.eTransfers`} 
         name='eTransfers'
-        action='create'
+        action={"create"}
         rest='ETransfer_ETransferDataDRestDetails'
         confirm={true}
        />,

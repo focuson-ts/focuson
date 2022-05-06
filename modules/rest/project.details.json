@@ -5,10 +5,10 @@
   "details":     {
     "ideify":       true,
     "publish":      true,
-    "links":        ["@focuson/lens", "@focuson/fetcher"],
+    "links":        ["@focuson/lens", "@focuson/fetcher", "@focuson/rest"],
     "extraDeps":    {},
     "extraDevDeps": {},
-    "tsc":          true
-  },
-  "test":        true
+    "tsc":          true,
+    "test":         true
+  }
 }

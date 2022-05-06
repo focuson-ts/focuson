@@ -5,7 +5,7 @@ import { isRestLens, makeCommonValueForTest, makeParamValueForTest, postFixForEn
 import { TSParams } from "./config";
 import { lensFocusQueryWithSlashAndTildaFromIdentity, stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
 import { parsePath } from "@focuson/lens";
-import { filterParamsByRestAction, indentList } from "./codegen";
+import { addStringToEndOfAllButLast, filterParamsByRestAction, indentList } from "./codegen";
 import { getRestTypeDetails, getUrlForRestAction, printRestAction, RestActionDetail } from "@focuson/rest";
 import { CompDataD, isRepeatingDd } from "../common/dataD";
 
@@ -151,8 +151,8 @@ function makeLensParamsTransformers<B, G> ( params: TSParams, page: PageD<B, G>,
 
   return [ `const lensTransforms: Transform<${params.stateName},any>[] = [`,
     ...extraTransforms,
-    ...indentList ( theseParams.flatMap ( v =>
-      isRestLens ( v ) ? [ `[${lensFocusQueryWithSlashAndTildaFromIdentity ( `makeLensParams for page ${page.name} ${restName}`, params, page, v.lens )}, () =>${JSON.stringify ( v.testValue )} ]` ] : [] ) ),
+    ...indentList ( addStringToEndOfAllButLast ( "," ) ( theseParams.flatMap ( v =>
+      isRestLens ( v ) ? [ `[${lensFocusQueryWithSlashAndTildaFromIdentity ( `makeLensParams for page ${page.name} ${restName}`, params, page, v.lens )}, () =>${JSON.stringify ( v.testValue )} ]` ] : [] ) ) ),
     `]` ]
 
 }

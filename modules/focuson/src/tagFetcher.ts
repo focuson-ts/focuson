@@ -134,6 +134,8 @@ export function tagFetcher<S, Full, T, MSGS> ( stf: SpecificTagFetcherProps<S, F
   let targetLens = fdLens.chain ( dLens );
   const result: Fetcher<S, T> = {
     shouldLoad ( s: S ): string[] {
+      // @ts-ignore
+      const debug = s.debug?.tagFetcherDebug
       const currentTags = tagL.getOption ( s );
       let tagAndNames = tagOps.tags ( stf, 'get' ) ( s );
       const desiredTags = tagAndNames.map ( ( [ name, tag ] ) => tag )
@@ -142,6 +144,7 @@ export function tagFetcher<S, Full, T, MSGS> ( stf: SpecificTagFetcherProps<S, F
       let target = targetLens.getOption ( s );
       if ( target === undefined ) return []
       if ( !tagsDifferent ) return [ 'Tags all the same, and target defined' ]
+      if (debug) console.log ( 'tagFetcher.shouldLoad', this.description, desiredTags, debug )
       return [];
     },
     load ( s: S ) {
@@ -150,6 +153,7 @@ export function tagFetcher<S, Full, T, MSGS> ( stf: SpecificTagFetcherProps<S, F
       const tagAndNames = tagOps.tags ( stf, 'get' ) ( s );
       const desiredTags = tagAndNames.map ( ( [ name, tag ] ) => tag )
       if ( !areAllDefined ( desiredTags ) ) throw partialFnUsageError ( result, s );
+      if (debug) console.log ( 'tagFetcher.load.tags', desiredTags )
       const req = tagOps.reqFor ( stf, 'get' ) ( s ) ( stf.url );
       if ( !req ) throw partialFnUsageError ( result, s );
       const [ info, init ] = req;

@@ -22,11 +22,11 @@ public class EAccountsSummary_state_invalidate_FFetcherH2 implements EAccountsSu
   public DataFetcher stateEAccountsSummaryinvalidate() {
     return dataFetchingEnvironment -> {
       String accountId = dataFetchingEnvironment.getArgument("accountId");
-      String customerId = dataFetchingEnvironment.getArgument("customerId");
+      String clientRef = dataFetchingEnvironment.getArgument("clientRef");
       try (Connection c = dataSource.getConnection()) {
         try(CallableStatement s = c.prepareCall("call sda(?, ?)")){
           s.setObject(1,accountId);
-          s.setObject(2,customerId);
+          s.setObject(2,clientRef);
           return s.execute();
         }
       }

@@ -42,7 +42,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.7.10",
+  "version": "1.7.11",
   "template": "noreact",
   "description": "Putting the values from lens into strings. For things like urls, or general string substitutio",
   "details": {

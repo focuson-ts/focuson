@@ -4,6 +4,10 @@ import { Lenses, NameAndLens} from "@focuson/lens"
 import { FState , commonIds} from "./common";
 
 import { HelloWorldMainPage_HelloWorldDomainDataRestDetails } from './HelloWorldMainPage/HelloWorldMainPage.rests';
+import { LinkedAccountDetails_CollectionsListRestDetails } from './LinkedAccountDetails/LinkedAccountDetails.rests';
+import { LinkedAccountDetails_CollectionSummaryRestDetails } from './LinkedAccountDetails/LinkedAccountDetails.rests';
+import { LinkedAccountDetails_CollectionItemRestDetails } from './LinkedAccountDetails/LinkedAccountDetails.rests';
+import { LinkedAccountDetails_MandateListRestDetails } from './LinkedAccountDetails/LinkedAccountDetails.rests';
 import { AccountOverview_AccountAllFlagsRestDetails } from './AccountOverview/AccountOverview.rests';
 import { AccountOverview_AccountOverviewAgreementTypeRestDetails } from './AccountOverview/AccountOverview.rests';
 import { AccountOverview_ArrearsDetailsRestDetails } from './AccountOverview/AccountOverview.rests';
@@ -31,6 +35,10 @@ export function restUrlMutator ( r: RestAction, url: string ): string { return u
 
 export const restDetails: RestDetails<FState, SimpleMessage> = {
    HelloWorldMainPage_HelloWorldDomainDataRestDetails: HelloWorldMainPage_HelloWorldDomainDataRestDetails(commonIds, defaultDateFn),
+   LinkedAccountDetails_CollectionsListRestDetails: LinkedAccountDetails_CollectionsListRestDetails(commonIds, defaultDateFn),
+   LinkedAccountDetails_CollectionSummaryRestDetails: LinkedAccountDetails_CollectionSummaryRestDetails(commonIds, defaultDateFn),
+   LinkedAccountDetails_CollectionItemRestDetails: LinkedAccountDetails_CollectionItemRestDetails(commonIds, defaultDateFn),
+   LinkedAccountDetails_MandateListRestDetails: LinkedAccountDetails_MandateListRestDetails(commonIds, defaultDateFn),
    AccountOverview_AccountAllFlagsRestDetails: AccountOverview_AccountAllFlagsRestDetails(commonIds, defaultDateFn),
    AccountOverview_AccountOverviewAgreementTypeRestDetails: AccountOverview_AccountOverviewAgreementTypeRestDetails(commonIds, defaultDateFn),
    AccountOverview_ArrearsDetailsRestDetails: AccountOverview_ArrearsDetailsRestDetails(commonIds, defaultDateFn),

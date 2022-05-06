@@ -78,7 +78,7 @@ export interface RestCommand {
   name: string;
   restAction: RestAction;
   /** If set, after the rest action has succeeded the named path will be deleted in the state. This is allow us to trigger the fetchers, which will fetch the latest data */
-  deleteOnSuccess?: string
+  deleteOnSuccess?: string | string[]
 }
 export interface HasRestCommands {
   restCommands: RestCommand[]
@@ -90,15 +90,15 @@ export function restL<S extends HasRestCommands> () {
   return identityOptics<S> ().focusQuery ( 'restCommands' )
 }
 export interface RestResult<S, MSGs, Cargo> {
-  restAction: RestAction;
+  restCommand: RestCommand;
   one: Cargo;
   status?: number;
   result: any
 }
 
-export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]> ) => ( s: S, { restAction, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): S => {
+export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]> ) => ( s: S, { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): S => {
   const msgTransform: Transform<S, MSGs[]> = [ messageL, old => [ ...one.messages ( status, result ), ...old ] ]
-  const useResponse = getRestTypeDetails ( restAction ).output.needsObj
+  const useResponse = getRestTypeDetails ( restCommand.restAction ).output.needsObj
   const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => result ] ] : []
   let res = massTransform ( s, msgTransform, ...resultTransform );
   return res
@@ -114,11 +114,12 @@ export function getUrlForRestAction ( restAction: RestAction, url: string, state
 export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Details,
                                                                          restL: Optional<S, RestCommand[]>,
                                                                          urlMutatorForRest: ( r: RestAction, url: string ) => string,
-                                                                         s: S ): [ RestAction, OneRestDetails<S, any, any, any>, RequestInfo, RequestInit | undefined ][] {
+                                                                         s: S ): [ RestCommand, OneRestDetails<S, any, any, any>, RequestInfo, RequestInit | undefined ][] {
   // @ts-ignore
   const debug = s.debug?.restDebug
   const commands = safeArray ( restL.getOption ( s ) )
-  return commands.map ( ( { name, restAction } ) => {
+  return commands.map ( command => {
+    const  { name, restAction } = command
     const one: OneRestDetails<S, any, any, MSGS> = d[ name ]
 
     if ( debug ) console.log ( "restReq-onex", name, one )
@@ -134,7 +135,7 @@ export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Deta
       if ( debug ) console.log ( "restReq-url", url )
       let request = reqFor ( { ...{ ...one, url }, fdLens }, restAction ) ( s ) ( url );
       if ( debug ) console.log ( "restReq-req", request )
-      return [ restAction, one, ...request ]
+      return [ command, one, ...request ]
     } catch ( e: any ) {
       console.error ( `error making details for ${name}`, e )
       throw e
@@ -142,13 +143,20 @@ export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Deta
   } )
 }
 
-export function massFetch<S, MSGs, Cargo> ( fetchFn: FetchFn, reqs: [ RestAction, Cargo, RequestInfo, RequestInit | undefined ][] ): Promise<RestResult<S, MSGs[], Cargo>[]> {
-  return Promise.all ( reqs.map ( ( [ restAction, one, info, init ] ) => fetchFn ( info, init ).then (
-    ( [ status, result ] ) => ({ restAction, one, status, result }),
-    error => ({ restAction, one, result: error }) ) ) )
+export function massFetch<S, MSGs, Cargo> ( fetchFn: FetchFn, reqs: [ RestCommand, Cargo, RequestInfo, RequestInit | undefined ][] ): Promise<RestResult<S, MSGs[], Cargo>[]> {
+  return Promise.all ( reqs.map ( ( [ restCommand, one, info, init ] ) => fetchFn ( info, init ).then (
+    ( [ status, result ] ) => ({ restCommand, one, status, result }),
+    error => ({ restCommand, one, result: error }) ) ) )
 }
 
-export function processAllRestResults<S, MSGSs> ( messageL: Optional<S, MSGSs[]>, restL: Optional<S, RestCommand[]>, results: RestResult<S, MSGSs, OneRestDetails<S, any, any, MSGSs>>[], s: S ) {
+export interface allLensForRest<S,MSGS>{
+  messageL: Optional<S, MSGS[]>;
+  restL: Optional<S, RestCommand[]>;
+  traceL: Optional<S, any>
+}
+
+export function processAllRestResults<S, MSGS> ( messageL: Optional<S, MSGS[]>, restL: Optional<S, RestCommand[]>, results: RestResult<S, MSGS, OneRestDetails<S, any, any, MSGS>>[], s: S ) {
+
   let withResults = results.reduce ( processRestResult ( messageL ), s );
   let res = restL.set ( withResults, [] );
   return res

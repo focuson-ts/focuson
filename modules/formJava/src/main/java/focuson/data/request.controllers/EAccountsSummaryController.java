@@ -23,25 +23,27 @@ import java.util.Arrays;
   @Autowired
   EAccountsSummaryAudit __audit;
     @GetMapping(value="/api/accountsSummary", produces="application/json")
-    public ResponseEntity getEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.getEAccountsSummary(accountId, customerId, employeeType), "getEAccountsSummary");
+    public ResponseEntity getEAccountsSummary(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.getEAccountsSummary(accountId, applRef, brandRef, clientRef, customerId, employeeType), "getEAccountsSummary");
     }
 
     @PostMapping(value="/api/accountsSummary/invalidate", produces="application/json")
-    public ResponseEntity state_invalidateEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{
+    public ResponseEntity state_invalidateEAccountsSummary(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{
+      //from EAccountsSummary.rest[eAccountsSummary.access[{"state":"invalidate"}]]
       if (!Arrays.asList("teamLeader").contains(employeeType)) return new ResponseEntity("", new HttpHeaders(), HttpStatus.FORBIDDEN);
-        __audit.EAccountsSummary_state_invalidate_auditStuff(IFetcher.mock,accountId,customerId);
-       return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, customerId, employeeType), "");
+        //from EAccountsSummary.rest[eAccountsSummary].audit[{"state":"invalidate"}]
+        __audit.EAccountsSummary_state_invalidate_auditStuff(IFetcher.mock,accountId,clientRef);
+       return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, applRef, brandRef, clientRef, customerId, employeeType), "");
     }
 
     @GetMapping(value="/api/accountsSummary/query", produces="application/json")
-    public String querygetEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{
-       return EAccountsSummaryQueries.getEAccountsSummary(accountId, customerId, employeeType);
+    public String querygetEAccountsSummary(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{
+       return EAccountsSummaryQueries.getEAccountsSummary(accountId, applRef, brandRef, clientRef, customerId, employeeType);
     }
 
     @PostMapping(value="/api/accountsSummary/invalidate/query", produces="application/json")
-    public String querystate_invalidateEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{
-       return EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, customerId, employeeType);
+    public String querystate_invalidateEAccountsSummary(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{
+       return EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, applRef, brandRef, clientRef, customerId, employeeType);
     }
 
   @GetMapping(value = "/api/accountsSummary/sample", produces = "application/json")

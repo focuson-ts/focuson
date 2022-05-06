@@ -21,11 +21,11 @@ public class ChequeCreditbooks_state_cancel_FFetcherH2 implements ChequeCreditbo
   @SuppressWarnings("SqlResolve")
   public DataFetcher stateChequeCreditbookscancel() {
     return dataFetchingEnvironment -> {
-      String customerId = dataFetchingEnvironment.getArgument("customerId");
+      String clientRef = dataFetchingEnvironment.getArgument("clientRef");
       String accountId = dataFetchingEnvironment.getArgument("accountId");
       try (Connection c = dataSource.getConnection()) {
         try(CallableStatement s = c.prepareCall("call cancelCheckBook(?, ?)")){
-          s.setObject(1,customerId);
+          s.setObject(1,clientRef);
           s.setObject(2,accountId);
           return s.execute();
         }

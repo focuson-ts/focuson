@@ -23,14 +23,15 @@ import java.util.Arrays;
   @Autowired
   BusinessDetailsMainAudit __audit;
     @GetMapping(value="/customer/occupation/v2/businessDetails", produces="application/json")
-    public ResponseEntity getBusinessDetailsMain(@RequestParam String customerId) throws Exception{
-        __audit.BusinessDetailsMain_get_auditGetBusinessDetails(IFetcher.mock,customerId);
-       return Transform.result(graphQL.get(IFetcher.mock),BusinessDetailsMainQueries.getBusinessDetailsMain(customerId), "getBusinessDetailsMain");
+    public ResponseEntity getBusinessDetailsMain(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
+        //from OccupationAndIncomeSummary.rest[businessDetailsRD].audit["get"]
+        __audit.BusinessDetailsMain_get_auditGetBusinessDetails(IFetcher.mock,clientRef);
+       return Transform.result(graphQL.get(IFetcher.mock),BusinessDetailsMainQueries.getBusinessDetailsMain(accountId, applRef, brandRef, clientRef), "getBusinessDetailsMain");
     }
 
     @GetMapping(value="/customer/occupation/v2/businessDetails/query", produces="application/json")
-    public String querygetBusinessDetailsMain(@RequestParam String customerId) throws Exception{
-       return BusinessDetailsMainQueries.getBusinessDetailsMain(customerId);
+    public String querygetBusinessDetailsMain(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
+       return BusinessDetailsMainQueries.getBusinessDetailsMain(accountId, applRef, brandRef, clientRef);
     }
 
   @GetMapping(value = "/customer/occupation/v2/businessDetails/sample", produces = "application/json")

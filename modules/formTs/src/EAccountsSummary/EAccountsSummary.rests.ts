@@ -13,7 +13,7 @@ export function EAccountsSummary_CreatePlanRestDetails ( cd: NameAndLens<FState>
 //From EAccountsSummary.rest[createPlanRestD].targetFromPath (~/tempCreatePlan). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('tempCreatePlan'),
     cd, fdd,
-    ids: ["accountId","customerId"],
+    ids: ["accountId","applRef","brandRef","clientRef"],
     resourceId:  ["createPlanId"],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/api/createPlan?{query}",
@@ -29,7 +29,7 @@ export function EAccountsSummary_EAccountsSummaryRestDetails ( cd: NameAndLens<F
 //From EAccountsSummary.rest[eAccountsSummary].targetFromPath (~/fromApi). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('fromApi'),
     cd, fdd,
-    ids: ["accountId","employeeType"],
+    ids: ["accountId","applRef","brandRef","clientRef","employeeType"],
     resourceId:  ["customerId"],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/api/accountsSummary?{query}",

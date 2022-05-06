@@ -20,13 +20,13 @@ import java.util.Arrays;
   @Autowired
   public IManyGraphQl graphQL;
     @GetMapping(value="/api/accountOverview/flags", produces="application/json")
-    public ResponseEntity getAccountAllFlags(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),AccountAllFlagsQueries.getAccountAllFlags(accountId, customerId), "getAccountAllFlags");
+    public ResponseEntity getAccountAllFlags(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),AccountAllFlagsQueries.getAccountAllFlags(accountId, applRef, brandRef, clientRef), "getAccountAllFlags");
     }
 
     @GetMapping(value="/api/accountOverview/flags/query", produces="application/json")
-    public String querygetAccountAllFlags(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       return AccountAllFlagsQueries.getAccountAllFlags(accountId, customerId);
+    public String querygetAccountAllFlags(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
+       return AccountAllFlagsQueries.getAccountAllFlags(accountId, applRef, brandRef, clientRef);
     }
 
   @GetMapping(value = "/api/accountOverview/flags/sample", produces = "application/json")

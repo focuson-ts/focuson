@@ -20,13 +20,13 @@ import java.util.Arrays;
   @Autowired
   public IManyGraphQl graphQL;
     @GetMapping(value="/api/accountOverview/excessInfo", produces="application/json")
-    public ResponseEntity getAccountOverviewExcessInfo(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),AccountOverviewExcessInfoQueries.getAccountOverviewExcessInfo(accountId, customerId), "getAccountOverviewExcessInfo");
+    public ResponseEntity getAccountOverviewExcessInfo(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),AccountOverviewExcessInfoQueries.getAccountOverviewExcessInfo(accountId, applRef, brandRef, clientRef), "getAccountOverviewExcessInfo");
     }
 
     @GetMapping(value="/api/accountOverview/excessInfo/query", produces="application/json")
-    public String querygetAccountOverviewExcessInfo(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       return AccountOverviewExcessInfoQueries.getAccountOverviewExcessInfo(accountId, customerId);
+    public String querygetAccountOverviewExcessInfo(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
+       return AccountOverviewExcessInfoQueries.getAccountOverviewExcessInfo(accountId, applRef, brandRef, clientRef);
     }
 
   @GetMapping(value = "/api/accountOverview/excessInfo/sample", produces = "application/json")

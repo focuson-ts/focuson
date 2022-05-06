@@ -29,21 +29,23 @@ export function ChequeCreditbooksPage(){
   return focusedPageWithExtraState<FState, ChequeCreditbooksPageDomain, ChequeCreditbooksDomain, Context> ( s => 'Cheque Creditbooks' ) ( state => state.focusOn('fromApi')) (
 ( fullState, state , full, d, mode, index) => {
 const id=`page${index}`;
-  const buttons =    {chequeBook:<button>chequeBook of type ResetStateButton cannot be created yet</button>,
+  const buttons =    {cancelCheckBook:<RestButton state={state} id={`${id}.cancelCheckBook`} 
+        name='cancelCheckBook'
+        action={{"state":"cancel"}}
+        rest='ChequeCreditbooks_ChequeCreditbooksRestDetails'
+       />,
       orderNewBook:<ModalButton id={`${id}.orderNewBook`} text='orderNewBook'  state={state} modal = 'OrderChequeBookOrPayingInModal'  
         pageMode='create'
         focusOn='~/tempCreatePlan'
         pageParams={{"position":{"top":123}}}
         createEmpty={empty.emptyChequeCreditbooksHistoryLine}
          rest={{"name":"ChequeCreditbooks_ChequeCreditbooksRestDetails","restAction":"create"}}
-      />,
-      payingInBook:<button>payingInBook of type ResetStateButton cannot be created yet</button>,}
+      />,}
 
       return <>
           <ChequeCreditbooks id={`${id}`} state={state} mode={mode} buttons={buttons} />
-      { buttons.chequeBook } 
-      { buttons.payingInBook } 
       { buttons.orderNewBook } 
+      { buttons.cancelCheckBook } 
       </>})}
 
 export function ChequeCreditbooks({id,state,mode,buttons}: FocusedProps<FState, ChequeCreditbooksDomain,Context>){

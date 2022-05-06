@@ -1,5 +1,8 @@
 import * as common from './common';
 import { HelloWorldDomainDataFetcher } from './HelloWorldMainPage/HelloWorldMainPage.fetchers';
+import { CollectionsListFetcher } from './LinkedAccountDetails/LinkedAccountDetails.fetchers';
+import { CollectionSummaryFetcher } from './LinkedAccountDetails/LinkedAccountDetails.fetchers';
+import { MandateListFetcher } from './LinkedAccountDetails/LinkedAccountDetails.fetchers';
 import { AccountAllFlagsFetcher } from './AccountOverview/AccountOverview.fetchers';
 import { AccountOverviewAgreementTypeFetcher } from './AccountOverview/AccountOverview.fetchers';
 import { ArrearsDetailsFetcher } from './AccountOverview/AccountOverview.fetchers';
@@ -28,6 +31,9 @@ import { Optional, Lenses, NameAndLens} from '@focuson/lens';
 export const fetchers: FetcherTree<common.FState> = {
 fetchers: [
     HelloWorldDomainDataFetcher( identityL.focusQuery ( 'HelloWorldMainPage' ), commonIds ),
+    CollectionsListFetcher( identityL.focusQuery ( 'LinkedAccountDetails' ), commonIds ),
+    CollectionSummaryFetcher( identityL.focusQuery ( 'LinkedAccountDetails' ), commonIds ),
+    MandateListFetcher( identityL.focusQuery ( 'LinkedAccountDetails' ), commonIds ),
     AccountAllFlagsFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
     AccountOverviewAgreementTypeFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
     ArrearsDetailsFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),

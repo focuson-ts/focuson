@@ -533,6 +533,50 @@ public class Sample{
          "  \"dateOrder\": \"2022-10-01\""+
          "}"
   );
+  public static Map sampleCollectionItem0 =  parse.parseMap(
+         "{"+
+         "  \"paymentId\": 123,"+
+         "  \"collectionDate\": \"2020-10-01\","+
+         "  \"amount\": 56657,"+
+         "  \"status\": \"C\""+
+         "}"
+  );
+  public static List sampleCollectionsList0 =  parse.parseList(
+         "["+
+         "  {"+
+         "    \"paymentId\": 123,"+
+         "    \"collectionDate\": \"2020-10-01\","+
+         "    \"amount\": 56657,"+
+         "    \"status\": \"C\""+
+         "  },"+
+         "  {"+
+         "    \"paymentId\": 456,"+
+         "    \"collectionDate\": \"2022-14-01\","+
+         "    \"amount\": 32834,"+
+         "    \"status\": \"P\""+
+         "  },"+
+         "  {"+
+         "    \"paymentId\": 123,"+
+         "    \"collectionDate\": \"2020-10-01\","+
+         "    \"amount\": 56657,"+
+         "    \"status\": \"C\""+
+         "  },"+
+         "  {"+
+         "    \"paymentId\": 456,"+
+         "    \"collectionDate\": \"2022-14-01\","+
+         "    \"amount\": 32834,"+
+         "    \"status\": \"P\""+
+         "  }"+
+         "]"
+  );
+  public static Map sampleCollectionSummary0 =  parse.parseMap(
+         "{"+
+         "  \"lastCollectionDate\": \"2021/10/6\","+
+         "  \"lastCollectionAmount\": 1234,"+
+         "  \"nextCollectionDate\": \"202/10/6\","+
+         "  \"nextCollectionAmount\": 13434"+
+         "}"
+  );
   public static Map sampleContractTypesResponse0 =  parse.parseMap(
          "{"+
          "  \"contractTypeId\": 123,"+
@@ -861,6 +905,50 @@ public class Sample{
          "  ]"+
          "}"
   );
+  public static Map sampleLinkedAccountDetailsDisplay0 =  parse.parseMap(
+         "{"+
+         "  \"mandate\": {"+
+         "    \"sortCode\": \"10-11-12\","+
+         "    \"accountId\": 12341234,"+
+         "    \"mandateStatus\": \"ACTIVE\","+
+         "    \"bankName\": \"NatWest\","+
+         "    \"accountName\": \"F & J Bloggs\","+
+         "    \"mandateRef\": \"12099845-34\""+
+         "  },"+
+         "  \"collectionSummary\": {"+
+         "    \"lastCollectionDate\": \"2021/10/6\","+
+         "    \"lastCollectionAmount\": 1234,"+
+         "    \"nextCollectionDate\": \"202/10/6\","+
+         "    \"nextCollectionAmount\": 13434"+
+         "  },"+
+         "  \"collectionHistory\": ["+
+         "    {"+
+         "      \"paymentId\": 123,"+
+         "      \"collectionDate\": \"2020-10-01\","+
+         "      \"amount\": 56657,"+
+         "      \"status\": \"C\""+
+         "    },"+
+         "    {"+
+         "      \"paymentId\": 456,"+
+         "      \"collectionDate\": \"2022-14-01\","+
+         "      \"amount\": 32834,"+
+         "      \"status\": \"P\""+
+         "    },"+
+         "    {"+
+         "      \"paymentId\": 123,"+
+         "      \"collectionDate\": \"2020-10-01\","+
+         "      \"amount\": 56657,"+
+         "      \"status\": \"C\""+
+         "    },"+
+         "    {"+
+         "      \"paymentId\": 456,"+
+         "      \"collectionDate\": \"2022-14-01\","+
+         "      \"amount\": 32834,"+
+         "      \"status\": \"P\""+
+         "    }"+
+         "  ]"+
+         "}"
+  );
   public static Map sampleListOccupations0 =  parse.parseMap(
          "{"+
          "  \"search\": \"Hair dresser\","+
@@ -877,6 +965,107 @@ public class Sample{
          "    {"+
          "      \"descTypeValue\": \"W54\","+
          "      \"descTypeName\": \"Engineer\""+
+         "    }"+
+         "  ]"+
+         "}"
+  );
+  public static Map sampleMandate0 =  parse.parseMap(
+         "{"+
+         "  \"sortCode\": \"10-11-12\","+
+         "  \"accountId\": 12341234,"+
+         "  \"mandateStatus\": \"ACTIVE\","+
+         "  \"bankName\": \"NatWest\","+
+         "  \"accountName\": \"F & J Bloggs\","+
+         "  \"mandateRef\": \"12099845-34\""+
+         "}"
+  );
+  public static List sampleMandateList0 =  parse.parseList(
+         "["+
+         "  {"+
+         "    \"sortCode\": \"10-11-12\","+
+         "    \"accountId\": 12341234,"+
+         "    \"mandateStatus\": \"ACTIVE\","+
+         "    \"bankName\": \"NatWest\","+
+         "    \"accountName\": \"F & J Bloggs\","+
+         "    \"mandateRef\": \"12099845-34\""+
+         "  },"+
+         "  {"+
+         "    \"sortCode\": \"23-54-12\","+
+         "    \"accountId\": 23456123,"+
+         "    \"mandateStatus\": \"ACTIVE\","+
+         "    \"bankName\": \"RBS\","+
+         "    \"accountName\": \"F & J Bloggs\","+
+         "    \"mandateRef\": \"12099845-78\""+
+         "  },"+
+         "  {"+
+         "    \"sortCode\": \"10-11-12\","+
+         "    \"accountId\": 3245454,"+
+         "    \"mandateStatus\": \"ACTIVE\","+
+         "    \"bankName\": \"NatWest\","+
+         "    \"accountName\": \"F & J Bloggs\","+
+         "    \"mandateRef\": \"12099845-34\""+
+         "  },"+
+         "  {"+
+         "    \"sortCode\": \"23-54-12\","+
+         "    \"accountId\": 12341234,"+
+         "    \"mandateStatus\": \"ACTIVE\","+
+         "    \"bankName\": \"RBS\","+
+         "    \"accountName\": \"F & J Bloggs\","+
+         "    \"mandateRef\": \"12099845-78\""+
+         "  },"+
+         "  {"+
+         "    \"sortCode\": \"10-11-12\","+
+         "    \"accountId\": 23456123,"+
+         "    \"mandateStatus\": \"ACTIVE\","+
+         "    \"bankName\": \"NatWest\","+
+         "    \"accountName\": \"F & J Bloggs\","+
+         "    \"mandateRef\": \"12099845-34\""+
+         "  }"+
+         "]"
+  );
+  public static Map sampleMandateSearch0 =  parse.parseMap(
+         "{"+
+         "  \"sortCode\": \"10-11-12\","+
+         "  \"searchResults\": ["+
+         "    {"+
+         "      \"sortCode\": \"10-11-12\","+
+         "      \"accountId\": 12341234,"+
+         "      \"mandateStatus\": \"ACTIVE\","+
+         "      \"bankName\": \"NatWest\","+
+         "      \"accountName\": \"F & J Bloggs\","+
+         "      \"mandateRef\": \"12099845-34\""+
+         "    },"+
+         "    {"+
+         "      \"sortCode\": \"23-54-12\","+
+         "      \"accountId\": 23456123,"+
+         "      \"mandateStatus\": \"ACTIVE\","+
+         "      \"bankName\": \"RBS\","+
+         "      \"accountName\": \"F & J Bloggs\","+
+         "      \"mandateRef\": \"12099845-78\""+
+         "    },"+
+         "    {"+
+         "      \"sortCode\": \"10-11-12\","+
+         "      \"accountId\": 3245454,"+
+         "      \"mandateStatus\": \"ACTIVE\","+
+         "      \"bankName\": \"NatWest\","+
+         "      \"accountName\": \"F & J Bloggs\","+
+         "      \"mandateRef\": \"12099845-34\""+
+         "    },"+
+         "    {"+
+         "      \"sortCode\": \"23-54-12\","+
+         "      \"accountId\": 12341234,"+
+         "      \"mandateStatus\": \"ACTIVE\","+
+         "      \"bankName\": \"RBS\","+
+         "      \"accountName\": \"F & J Bloggs\","+
+         "      \"mandateRef\": \"12099845-78\""+
+         "    },"+
+         "    {"+
+         "      \"sortCode\": \"10-11-12\","+
+         "      \"accountId\": 23456123,"+
+         "      \"mandateStatus\": \"ACTIVE\","+
+         "      \"bankName\": \"NatWest\","+
+         "      \"accountName\": \"F & J Bloggs\","+
+         "      \"mandateRef\": \"12099845-34\""+
          "    }"+
          "  ]"+
          "}"

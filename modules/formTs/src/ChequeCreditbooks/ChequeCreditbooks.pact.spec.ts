@@ -22,14 +22,14 @@ describe ( 'ChequeCreditbooks - chequeCreditBooks - fetcher', () => {
       withRequest: {
         method: 'GET',
         path: '/api/chequeCreditBooks',
-        query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"}
+        query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"}
       },
       willRespondWith: {
         status: 200,
         body: samples.sampleChequeCreditbooks0
        },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'ChequeCreditbooks', pageMode: 'view' }], CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"} }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'ChequeCreditbooks', pageMode: 'view' }], CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"} }
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
@@ -54,7 +54,7 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
     const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
        pageSelection: [ { pageName: 'ChequeCreditbooks', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -63,7 +63,7 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
       withRequest: {
          method: 'GET',
          path:   '/api/chequeCreditBooks',
-         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
          //no request body needed for get,
       },
       willRespondWith: {
@@ -92,7 +92,7 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
     const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksRestDetails', restAction: "create" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
        pageSelection: [ { pageName: 'ChequeCreditbooks', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -101,7 +101,7 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
       withRequest: {
          method: 'POST',
          path:   '/api/chequeCreditBooks',
-         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
          body: JSON.stringify(samples.sampleChequeCreditbooks0),
       },
       willRespondWith: {
@@ -131,7 +131,7 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
     const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksRestDetails', restAction: {"state":"cancel"} }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
        pageSelection: [ { pageName: 'ChequeCreditbooks', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -140,7 +140,7 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
       withRequest: {
          method: 'POST',
          path:   '/api/chequeCreditBooks/cancel',
-         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
          //no request body needed for state:cancel,
       },
       willRespondWith: {

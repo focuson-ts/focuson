@@ -13,7 +13,7 @@ export function AccountOverview_AccountAllFlagsRestDetails ( cd: NameAndLens<FSt
 //From AccountOverview.rest[accountFlags].targetFromPath (~/accountFlags). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('accountFlags'),
     cd, fdd,
-    ids: ["accountId","customerId"],
+    ids: ["accountId","applRef","brandRef","clientRef"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/api/accountOverview/flags?{query}",
@@ -29,7 +29,7 @@ export function AccountOverview_AccountOverviewAgreementTypeRestDetails ( cd: Na
 //From AccountOverview.rest[agreementType].targetFromPath (~/agreementType). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('agreementType'),
     cd, fdd,
-    ids: ["accountId","customerId"],
+    ids: ["accountId","applRef","brandRef","clientRef"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/api/accountOverview/agreementType?{query}",
@@ -45,7 +45,7 @@ export function AccountOverview_ArrearsDetailsRestDetails ( cd: NameAndLens<FSta
 //From AccountOverview.rest[arrearsDetails].targetFromPath (~/arrearsDetails). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('arrearsDetails'),
     cd, fdd,
-    ids: ["accountId","customerId","startDate"],
+    ids: ["accountId","applRef","brandRef","clientRef","startDate"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/api/accountOverview/arrearsDetails?{query}",
@@ -61,7 +61,7 @@ export function AccountOverview_AccountOverviewHistoryRestDetails ( cd: NameAndL
 //From AccountOverview.rest[excessHistory].targetFromPath (~/excessHistory). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('excessHistory'),
     cd, fdd,
-    ids: ["accountId","customerId"],
+    ids: ["accountId","applRef","brandRef","clientRef"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/api/accountOverview/excessHistory?{query}",
@@ -77,7 +77,7 @@ export function AccountOverview_AccountOverviewExcessInfoRestDetails ( cd: NameA
 //From AccountOverview.rest[excessInfo].targetFromPath (~/excessInfo). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('excessInfo'),
     cd, fdd,
-    ids: ["accountId","customerId"],
+    ids: ["accountId","applRef","brandRef","clientRef"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/api/accountOverview/excessInfo?{query}",
@@ -93,7 +93,7 @@ export function AccountOverview_AccountOverviewRestDetails ( cd: NameAndLens<FSt
 //From AccountOverview.rest[main].targetFromPath (~/main). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('main'),
     cd, fdd,
-    ids: ["accountId","customerId"],
+    ids: ["accountId","applRef","brandRef","clientRef"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/api/accountOverview?{query}",
@@ -109,7 +109,7 @@ export function AccountOverview_AccountOverviewOptOutRestDetails ( cd: NameAndLe
 //From AccountOverview.rest[optOut].targetFromPath (~/optOut). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('optOut'),
     cd, fdd,
-    ids: ["accountId","customerId"],
+    ids: ["accountId","applRef","brandRef","clientRef"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/api/accountOverview/optOut?{query}",
@@ -125,7 +125,7 @@ export function AccountOverview_AccountOverviewReasonRestDetails ( cd: NameAndLe
 //From AccountOverview.rest[reason].targetFromPath (~/reason). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.AccountOverviewPageDomain>().focusQuery('reason'),
     cd, fdd,
-    ids: ["accountId","customerId"],
+    ids: ["accountId","applRef","brandRef","clientRef"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/api/accountOverview/reason?{query}",

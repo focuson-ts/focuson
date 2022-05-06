@@ -13,14 +13,14 @@ public class OtherIncomeResponseAudit {
     @Autowired
     private DataSource dataSource;
 
-    public void OtherIncomeResponse_get_auditGetBusinessDetails(String dbName, String customerId) throws SQLException {
+    public void OtherIncomeResponse_get_auditGetBusinessDetails(String dbName, String clientRef) throws SQLException {
         if (dbName.equals(IFetcher.mock)) {
-           System.out.println("Mock audit: OtherIncomeResponse_get_auditGetBusinessDetails(" + customerId+ ")");
+           System.out.println("Mock audit: OtherIncomeResponse_get_auditGetBusinessDetails(" + clientRef+ ")");
            return;
     }
     try (Connection c = dataSource.getConnection()) {
       try (CallableStatement s = c.prepareCall("call auditGetBusinessDetails(?)")) {
-      s.setObject(1,customerId);
+      s.setObject(1,clientRef);
       if (!s.execute()) throw new SQLException("Cannot not audit: OtherIncomeResponse_get_auditGetBusinessDetails");
   }}}
 

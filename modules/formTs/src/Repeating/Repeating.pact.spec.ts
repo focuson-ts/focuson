@@ -22,14 +22,14 @@ describe ( 'Repeating - repeating - fetcher', () => {
       withRequest: {
         method: 'GET',
         path: '/api/repeating',
-        query:{"customerId":"custId"}
+        query:{"clientRef":"custId"}
       },
       willRespondWith: {
         status: 200,
         body: samples.sampleRepeatingWholeData0
        },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'Repeating', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'Repeating', pageMode: 'view' }], CommonIds: {"clientRef":"custId"} }
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
@@ -54,7 +54,7 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
     const restCommand: RestCommand = { name: 'Repeating_RepeatingWholeDataRestDetails', restAction: "create" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"customerId":"custId"},
+       CommonIds: {"clientRef":"custId"},
        pageSelection: [ { pageName: 'Repeating', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -63,7 +63,7 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
       withRequest: {
          method: 'POST',
          path:   '/api/repeating',
-         query:{"customerId":"custId"},
+         query:{"clientRef":"custId"},
          body: JSON.stringify(samples.sampleRepeatingWholeData0),
       },
       willRespondWith: {
@@ -93,7 +93,7 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
     const restCommand: RestCommand = { name: 'Repeating_RepeatingWholeDataRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"customerId":"custId"},
+       CommonIds: {"clientRef":"custId"},
        pageSelection: [ { pageName: 'Repeating', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -102,7 +102,7 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
       withRequest: {
          method: 'GET',
          path:   '/api/repeating',
-         query:{"customerId":"custId"},
+         query:{"clientRef":"custId"},
          //no request body needed for get,
       },
       willRespondWith: {

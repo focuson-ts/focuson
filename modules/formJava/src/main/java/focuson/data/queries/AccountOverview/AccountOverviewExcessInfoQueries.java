@@ -1,7 +1,7 @@
 package focuson.data.queries.AccountOverview;
 public class AccountOverviewExcessInfoQueries{
-  public static  String getAccountOverviewExcessInfo(String accountId,String customerId){ 
-    return"query{getAccountOverviewExcessInfo(" + "accountId:" + "\"" + accountId + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
+  public static  String getAccountOverviewExcessInfo(String accountId,String applRef,String brandRef,String clientRef){ 
+    return"query{getAccountOverviewExcessInfo(" + "accountId:" + "\"" + accountId + "\""  + "," + "applRef:" + "\"" + applRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "clientRef:" + "\"" + clientRef + "\"" + "){"+
         "    dayOfCurrentExcess"+
         "    currentExcessOnAccount"+
         "    currentPctExcess"+

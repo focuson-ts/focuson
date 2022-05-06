@@ -8,6 +8,7 @@ import { FState } from "../common";
 import { Optional, Lenses, NameAndLens} from '@focuson/lens';
 //fetcher type true
 export function PostCodeDataFetcher(fdLens:Optional<FState, domains.PostCodeMainPagePageDomain>,commonIds: NameAndLens<FState>) {
+//If you have a compilation here it might be because of the 'local' params in PostCodeMainPage.rest[postcode].params
   const localIds = {postcode: Lenses.identity< domains.PostCodeMainPagePageDomain>().focusQuery('postcode').focusQuery('search')}
   return pageAndTagFetcher<FState, domains.PostCodeMainPagePageDomain, domains.PostCodeDataDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.PostCodeDataDomain>(),

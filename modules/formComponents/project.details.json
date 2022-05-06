@@ -8,7 +8,6 @@
     "publish":      true,
     "links":        [
       "@focuson/state",
-      "@focuson/pages",
       "@focuson/focuson"
     ],
     "extraDeps":    {},

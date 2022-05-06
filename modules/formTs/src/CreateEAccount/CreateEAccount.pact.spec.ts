@@ -18,7 +18,7 @@ pactWith ( { consumer: 'CreateEAccount', provider: 'CreateEAccountProvider', cor
     const restCommand: RestCommand = { name: 'CreateEAccount_CreateEAccountDataRestDetails', restAction: "create" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId","createPlanId":"tbd"},
        pageSelection: [ { pageName: 'CreateEAccount', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -27,7 +27,7 @@ pactWith ( { consumer: 'CreateEAccount', provider: 'CreateEAccountProvider', cor
       withRequest: {
          method: 'POST',
          path:   '/api/createEAccount/',
-         query:{"accountId":"accId","customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
          body: JSON.stringify(samples.sampleCreateEAccountData0),
       },
       willRespondWith: {
@@ -57,7 +57,7 @@ pactWith ( { consumer: 'CreateEAccount', provider: 'CreateEAccountProvider', cor
     const restCommand: RestCommand = { name: 'CreateEAccount_CreateEAccountDataRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId","createPlanId":"tbd"},
        pageSelection: [ { pageName: 'CreateEAccount', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -66,7 +66,7 @@ pactWith ( { consumer: 'CreateEAccount', provider: 'CreateEAccountProvider', cor
       withRequest: {
          method: 'GET',
          path:   '/api/createEAccount/',
-         query:{"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId","createPlanId":"tbd"},
          //no request body needed for get,
       },
       willRespondWith: {

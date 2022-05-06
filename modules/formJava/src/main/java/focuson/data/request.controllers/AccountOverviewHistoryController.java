@@ -20,13 +20,13 @@ import java.util.Arrays;
   @Autowired
   public IManyGraphQl graphQL;
     @GetMapping(value="/api/accountOverview/excessHistory", produces="application/json")
-    public ResponseEntity getAccountOverviewHistory(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),AccountOverviewHistoryQueries.getAccountOverviewHistory(accountId, customerId), "getAccountOverviewHistory");
+    public ResponseEntity getAccountOverviewHistory(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),AccountOverviewHistoryQueries.getAccountOverviewHistory(accountId, applRef, brandRef, clientRef), "getAccountOverviewHistory");
     }
 
     @GetMapping(value="/api/accountOverview/excessHistory/query", produces="application/json")
-    public String querygetAccountOverviewHistory(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       return AccountOverviewHistoryQueries.getAccountOverviewHistory(accountId, customerId);
+    public String querygetAccountOverviewHistory(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
+       return AccountOverviewHistoryQueries.getAccountOverviewHistory(accountId, applRef, brandRef, clientRef);
     }
 
   @GetMapping(value = "/api/accountOverview/excessHistory/sample", produces = "application/json")

@@ -30,7 +30,7 @@ const id=`page${index}`;
   const buttons =    {cancel:<button>cancel of type ResetStateButton cannot be created yet</button>,
       createEAccounts:<RestButton state={state} id={`${id}.createEAccounts`} 
         name='createEAccounts'
-        action='create'
+        action={"create"}
         rest='CreateEAccount_CreateEAccountDataRestDetails'
         confirm={true}
        />,

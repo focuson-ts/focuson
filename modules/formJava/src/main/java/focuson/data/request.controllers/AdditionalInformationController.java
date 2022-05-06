@@ -23,14 +23,15 @@ import java.util.Arrays;
   @Autowired
   AdditionalInformationAudit __audit;
     @GetMapping(value="/customer/occupation/v2/additionalInfo", produces="application/json")
-    public ResponseEntity getAdditionalInformation(@RequestParam String customerId) throws Exception{
-        __audit.AdditionalInformation_get_auditGetCustomeAdditionalInfo(IFetcher.mock,customerId);
-       return Transform.result(graphQL.get(IFetcher.mock),AdditionalInformationQueries.getAdditionalInformation(customerId), "getAdditionalInformation");
+    public ResponseEntity getAdditionalInformation(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
+        //from OccupationAndIncomeSummary.rest[additionalInformationRD].audit["get"]
+        __audit.AdditionalInformation_get_auditGetCustomeAdditionalInfo(IFetcher.mock,clientRef);
+       return Transform.result(graphQL.get(IFetcher.mock),AdditionalInformationQueries.getAdditionalInformation(accountId, applRef, brandRef, clientRef), "getAdditionalInformation");
     }
 
     @GetMapping(value="/customer/occupation/v2/additionalInfo/query", produces="application/json")
-    public String querygetAdditionalInformation(@RequestParam String customerId) throws Exception{
-       return AdditionalInformationQueries.getAdditionalInformation(customerId);
+    public String querygetAdditionalInformation(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
+       return AdditionalInformationQueries.getAdditionalInformation(accountId, applRef, brandRef, clientRef);
     }
 
   @GetMapping(value = "/customer/occupation/v2/additionalInfo/sample", produces = "application/json")

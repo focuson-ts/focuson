@@ -38,13 +38,13 @@ describe ( "makeCommonParamsValueForTest", () => {
     expect ( makeParamValueForTest ( createPlanRestD, 'get' ) ).toEqual ( {
       "accountId": "accId",
       "createPlanId": "tbd",
-      "customerId": "custId"
+      "clientRef": "custId"
     } )
   } )
   it ( "get the values out of the rest params - for a create (no primary id)", () => {
     expect ( makeParamValueForTest ( createPlanRestD, 'create' ) ).toEqual ( {
       "accountId": "accId",
-      "customerId": "custId"
+      "clientRef": "custId"
     } )
   } )
 

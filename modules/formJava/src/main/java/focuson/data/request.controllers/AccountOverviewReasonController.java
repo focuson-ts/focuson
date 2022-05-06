@@ -20,13 +20,13 @@ import java.util.Arrays;
   @Autowired
   public IManyGraphQl graphQL;
     @GetMapping(value="/api/accountOverview/reason", produces="application/json")
-    public ResponseEntity getAccountOverviewReason(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),AccountOverviewReasonQueries.getAccountOverviewReason(accountId, customerId), "getAccountOverviewReason");
+    public ResponseEntity getAccountOverviewReason(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),AccountOverviewReasonQueries.getAccountOverviewReason(accountId, applRef, brandRef, clientRef), "getAccountOverviewReason");
     }
 
     @GetMapping(value="/api/accountOverview/reason/query", produces="application/json")
-    public String querygetAccountOverviewReason(@RequestParam String accountId, @RequestParam String customerId) throws Exception{
-       return AccountOverviewReasonQueries.getAccountOverviewReason(accountId, customerId);
+    public String querygetAccountOverviewReason(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
+       return AccountOverviewReasonQueries.getAccountOverviewReason(accountId, applRef, brandRef, clientRef);
     }
 
   @GetMapping(value = "/api/accountOverview/reason/sample", produces = "application/json")

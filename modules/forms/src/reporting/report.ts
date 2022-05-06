@@ -60,9 +60,9 @@ export function formatReport<B, G> ( r: Report<B, G> ): string[] {
     if ( d.general.length === 0 ) return []
     // if ( d.general.length === 0 ) return [ `# ${d.part} - None` ]
     const header = d.headers.length > 0 ? [ `|${d.headers.join ( "|" )}`, `|${d.headers.map ( u => ` --- ` ).join ( "|" )}` ] : []
-    return [ `##${name}`, ...header, ...d.dontIndent ? d.general : indentList ( d.general ) ];
+    return [ `## ${name}`, ...header, ...d.dontIndent ? d.general : indentList ( d.general ) ];
   } )
-  const name = `#${page.name} - ${page.pageType}`;
+  const name = `# ${page.name} - ${page.pageType}`;
   const errors: string[] = details.flatMap ( d => d.critical )
   const errorMarker: string[] = errors.length > 0 ? [ '' ] : []
   const paramsAndHeader = makeParamsAndHeader ( [ commonParams ] );

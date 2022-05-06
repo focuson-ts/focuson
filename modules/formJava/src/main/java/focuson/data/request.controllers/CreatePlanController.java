@@ -20,43 +20,43 @@ import java.util.Arrays;
   @Autowired
   public IManyGraphQl graphQL;
     @GetMapping(value="/api/createPlan", produces="application/json")
-    public ResponseEntity getCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.getCreatePlan(accountId, createPlanId, customerId), "getCreatePlan");
+    public ResponseEntity getCreatePlan(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String createPlanId) throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.getCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId), "getCreatePlan");
     }
 
     @PostMapping(value="/api/createPlan", produces="application/json")
-    public ResponseEntity createCreatePlan(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.createCreatePlan(accountId, customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "createCreatePlan");
+    public ResponseEntity createCreatePlan(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestBody String body) throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.createCreatePlan(accountId, applRef, brandRef, clientRef,   Transform.removeQuoteFromProperties(body, Map.class)), "createCreatePlan");
     }
 
     @PutMapping(value="/api/createPlan", produces="application/json")
-    public ResponseEntity updateCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.updateCreatePlan(accountId, createPlanId, customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateCreatePlan");
+    public ResponseEntity updateCreatePlan(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String createPlanId, @RequestBody String body) throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.updateCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateCreatePlan");
     }
 
     @DeleteMapping(value="/api/createPlan", produces="application/json")
-    public ResponseEntity deleteCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.deleteCreatePlan(accountId, createPlanId, customerId), "");
+    public ResponseEntity deleteCreatePlan(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String createPlanId) throws Exception{
+       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.deleteCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId), "");
     }
 
     @GetMapping(value="/api/createPlan/query", produces="application/json")
-    public String querygetCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{
-       return CreatePlanQueries.getCreatePlan(accountId, createPlanId, customerId);
+    public String querygetCreatePlan(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String createPlanId) throws Exception{
+       return CreatePlanQueries.getCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId);
     }
 
     @PostMapping(value="/api/createPlan/query", produces="application/json")
-    public String querycreateCreatePlan(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{
-       return CreatePlanQueries.createCreatePlan(accountId, customerId,   Transform.removeQuoteFromProperties(body, Map.class));
+    public String querycreateCreatePlan(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestBody String body) throws Exception{
+       return CreatePlanQueries.createCreatePlan(accountId, applRef, brandRef, clientRef,   Transform.removeQuoteFromProperties(body, Map.class));
     }
 
     @PutMapping(value="/api/createPlan/query", produces="application/json")
-    public String queryupdateCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId, @RequestBody String body) throws Exception{
-       return CreatePlanQueries.updateCreatePlan(accountId, createPlanId, customerId,   Transform.removeQuoteFromProperties(body, Map.class));
+    public String queryupdateCreatePlan(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String createPlanId, @RequestBody String body) throws Exception{
+       return CreatePlanQueries.updateCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId,   Transform.removeQuoteFromProperties(body, Map.class));
     }
 
     @DeleteMapping(value="/api/createPlan/query", produces="application/json")
-    public String querydeleteCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{
-       return CreatePlanQueries.deleteCreatePlan(accountId, createPlanId, customerId);
+    public String querydeleteCreatePlan(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String createPlanId) throws Exception{
+       return CreatePlanQueries.deleteCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId);
     }
 
   @GetMapping(value = "/api/createPlan/sample", produces = "application/json")

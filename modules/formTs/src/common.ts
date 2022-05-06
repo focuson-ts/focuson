@@ -9,6 +9,7 @@ import { LensProps } from '@focuson/state';
 import { pages } from "./pages";
 import { MyCombined } from "@focuson/form_components";
 import { HasHelloWorldMainPagePageDomain } from './HelloWorldMainPage/HelloWorldMainPage.domains';
+import { HasLinkedAccountDetailsPageDomain } from './LinkedAccountDetails/LinkedAccountDetails.domains';
 import { HasAccountOverviewPageDomain } from './AccountOverview/AccountOverview.domains';
 import { HasJointAccountPageDomain } from './JointAccount/JointAccount.domains';
 import { HasOccupationAndIncomeSummaryPageDomain } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains';
@@ -21,6 +22,7 @@ import { HasPostCodeMainPagePageDomain } from './PostCodeMainPage/PostCodeMainPa
 
 export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,
   HasHelloWorldMainPagePageDomain,
+  HasLinkedAccountDetailsPageDomain,
   HasAccountOverviewPageDomain,
   HasJointAccountPageDomain,
   HasOccupationAndIncomeSummaryPageDomain,
@@ -37,6 +39,7 @@ export type CommonIds = {
   applRef?:string;
   brandId?:string;
   brandRef?:string;
+  clientRef?:string;
   createPlanId?:string;
   customerId?:string;
   dbName?:string;
@@ -50,6 +53,7 @@ export const commonIds: NameAndLens<FState> = {
    applRef: commonIdsL.focusQuery('applRef'),
    brandId: commonIdsL.focusQuery('brandId'),
    brandRef: commonIdsL.focusQuery('brandRef'),
+   clientRef: commonIdsL.focusQuery('clientRef'),
    createPlanId: commonIdsL.focusQuery('createPlanId'),
    customerId: commonIdsL.focusQuery('customerId'),
    dbName: commonIdsL.focusQuery('dbName'),
@@ -72,11 +76,11 @@ export const context: Context = {
    combine: MyCombined
 }
 export const emptyState: FState = {
-  CommonIds: {"applRef":"appref","createPlanId":"tbd","dbName":"mock","brandId":"custId","accountId":"custId","customerId":"custId","employeeType":"basic","brandRef":"brandRef","usersRole":"user"},
+  CommonIds: {"clientRef":"custId","applRef":"appref","createPlanId":"tbd","dbName":"mock","brandId":"custId","accountId":"custId","brandRef":"brandRef","customerId":"custId","employeeType":"basic","usersRole":"user"},
   tags: {},
   messages: [],
   pageSelection: [{ pageName: 'HelloWorldMainPage', firstTime: true, pageMode: 'view' }],
   HelloWorldMainPage:{},
   restCommands: [],
-  debug: {"fetcherDebug":true,"restDebug":false,"selectedPageDebug":false,"loadTreeDebug":false,"showTracing":false,"recordTrace":true,"accordions":[]}
+  debug: {"fetcherDebug":true,"restDebug":false,"selectedPageDebug":false,"loadTreeDebug":false,"showTracing":false,"recordTrace":true,"tagFetcherDebug":false,"accordions":[]}
   }

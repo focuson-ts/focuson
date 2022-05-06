@@ -42,11 +42,11 @@ export function accessDetails ( params: JavaWiringParams, p: MainPageD<any, any>
   const allAccess = safeArray ( r.access )
   const legalParamNames = Object.keys ( r.params )
   return allAccess.filter ( a => actionsEqual ( a.restAction, restAction ) ).flatMap (
-    ( { restAction, condition } ) => toArray<AccessCondition> ( condition ).map (
+    ( { restAction, condition } ) => toArray<AccessCondition> ( condition ).flatMap (
       ( cond ) => {
         if ( cond.type === 'in' ) {
           const { param, values } = cond
-          return `if (!Arrays.asList(${values.map ( v => `"${v}"` ).join ( "," )}).contains(${param})) return new ResponseEntity("", new HttpHeaders(), HttpStatus.FORBIDDEN);`
+          return [ `//from ${p.name}.rest[${restName}.access[${JSON.stringify ( restAction )}]]`, `if (!Arrays.asList(${values.map ( v => `"${v}"` ).join ( "," )}).contains(${param})) return new ResponseEntity("", new HttpHeaders(), HttpStatus.FORBIDDEN);` ]
         }
         throw Error ( `Page ${p.name}.rests[${restName}].access. action is ${restAction}. Do not recognise condition ${JSON.stringify ( cond )}` )
       } ) )
@@ -63,7 +63,8 @@ function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restN
   const url = getUrlForRestAction ( restAction, r.url, r.states )
   let selectionFromData = getRestTypeDetails ( restAction ).output.needsObj ? `"${queryName ( r, restAction )}"` : '""';
   const callAudit = indentList ( safeArray ( r.audit ).filter ( a => actionsEqual ( a.restAction, restAction ) ).flatMap ( ad =>
-    toArray ( ad.storedProcedure ).map ( sp => `__audit.${auditMethodName ( r, restAction, sp )}(${[ dbNameString, sp.params ].join ( ',' )});` ) ) )
+    toArray ( ad.storedProcedure ).flatMap ( sp =>
+      [ `//from ${p.name}.rest[${restName}].audit[${JSON.stringify ( restAction )}]`, `__audit.${auditMethodName ( r, restAction, sp )}(${[ dbNameString, sp.params ].join ( ',' )});` ] ) ) )
 
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,

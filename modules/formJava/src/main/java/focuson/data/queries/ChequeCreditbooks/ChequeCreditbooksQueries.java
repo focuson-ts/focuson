@@ -1,7 +1,7 @@
 package focuson.data.queries.ChequeCreditbooks;
 public class ChequeCreditbooksQueries{
-  public static  String getChequeCreditbooks(String accountId,String applRef,String brandRef,String customerId){ 
-    return"query{getChequeCreditbooks(" + "accountId:" + "\"" + accountId + "\""  + "," + "applRef:" + "\"" + applRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + "){"+
+  public static  String getChequeCreditbooks(String accountId,String applRef,String brandRef,String clientRef){ 
+    return"query{getChequeCreditbooks(" + "accountId:" + "\"" + accountId + "\""  + "," + "applRef:" + "\"" + applRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "clientRef:" + "\"" + clientRef + "\"" + "){"+
         "    history{"+
         "      serialNumber"+
         "      howOrdered"+
@@ -9,8 +9,8 @@ public class ChequeCreditbooksQueries{
         "    }"+
         "  }"
   +"}";}
-  public static  String createChequeCreditbooks(String accountId,String applRef,String brandRef,String customerId, String obj){ 
-    return"mutation{createChequeCreditbooks(" + "accountId:" + "\"" + accountId + "\""  + "," + "applRef:" + "\"" + applRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "customerId:" + "\"" + customerId + "\""  + ", obj:" + obj + "){"+
+  public static  String createChequeCreditbooks(String accountId,String applRef,String brandRef,String clientRef, String obj){ 
+    return"mutation{createChequeCreditbooks(" + "accountId:" + "\"" + accountId + "\""  + "," + "applRef:" + "\"" + applRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "clientRef:" + "\"" + clientRef + "\""  + ", obj:" + obj + "){"+
         "    history{"+
         "      serialNumber"+
         "      howOrdered"+
@@ -18,7 +18,7 @@ public class ChequeCreditbooksQueries{
         "    }"+
         "  }"
   +"}";}
-  public static  String state_cancelChequeCreditbooks(String accountId,String applRef,String brandRef,String customerId){ 
-    return"mutation{stateChequeCreditbookscancel(" + "accountId:" + "\"" + accountId + "\""  + "," + "applRef:" + "\"" + applRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "customerId:" + "\"" + customerId + "\"" + ")}";
+  public static  String state_cancelChequeCreditbooks(String accountId,String applRef,String brandRef,String clientRef){ 
+    return"mutation{stateChequeCreditbookscancel(" + "accountId:" + "\"" + accountId + "\""  + "," + "applRef:" + "\"" + applRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "clientRef:" + "\"" + clientRef + "\"" + ")}";
   }
 }

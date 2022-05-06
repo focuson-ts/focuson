@@ -31,7 +31,7 @@ export function PostCodeMainPagePage(){
 const id=`page${index}`;
   const buttons =    {save:<RestButton state={state} id={`${id}.save`} 
         name='save'
-        action='create'
+        action={"create"}
         validate={false}
         rest='PostCodeMainPage_PostCodeNameAndAddressRestDetails'
        />,
