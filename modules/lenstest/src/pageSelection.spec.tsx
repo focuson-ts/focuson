@@ -2,7 +2,7 @@ import { Lenses } from "@focuson/lens";
 import { defaultPageSelectionAndRestCommandsContext, FocusOnContext } from "@focuson/focuson";
 
 import { lensState } from "@focuson/state";
-import { fromPathGivenState,  MultiPageDetails, PageSelection } from "@focuson/pages";
+import { fromPathFromRaw, fromPathGivenState, MultiPageDetails, PageSelection, pageSelectionlens } from "@focuson/pages";
 
 
 let pageSelection: PageSelection = { pageName: 'a', pageMode: 'view' };
@@ -35,14 +35,13 @@ const abxL = identity.focusOn ( 'a' ).focusQuery ( 'b' ).focusQuery ( 'x' )
 const pageDetails: MultiPageDetails<TextForLabelState, FocusOnContext<TextForLabelState>> = {
   a: { config: {}, pageType: 'MainPage', pageFunction: () => <span/>, lens: aL, pageMode: 'edit' }
 }
-const state = lensState ( textForLabelState, s => {}, '', defaultPageSelectionAndRestCommandsContext<TextForLabelState> ( pageDetails,{} ) )
+const state = lensState ( textForLabelState, s => {}, '', defaultPageSelectionAndRestCommandsContext<TextForLabelState> ( pageDetails, {} ) )
 
 // const fromPath: ( path: string[], description?: string ) => Optional<TextForLabelState, any> = fromPathFor ( state )
 let stateabx = state.copyWithLens ( abxL );
 const fromL = ( path: string ) => fromPathGivenState ( stateabx ) ( path )
 const from = ( path: string ) => fromL ( path ).getOption ( state.main )
 const set = ( path: string, value: any ) => fromL ( path ).set ( state.main, value )
-
 
 
 describe ( "fromPathStringFor. Page is 'a'. The current lens is a/b/x", () => {
@@ -110,6 +109,17 @@ describe ( "fromPathStringFor. Page is 'a'. The current lens is a/b/x", () => {
     expect ( from ( "/a/d[~/selecteda]" ) ).toEqual ( 'three' )
 
   } )
+} )
+
+//Note that the raw behaviour is tested about. Here we just check we make suitable lens
+describe ( "fromPathFromRaw", () => {
+  it ( "should make lens", () => {
+    const fromPath = fromPathFromRaw ( pageSelectionlens<TextForLabelState> (), pageDetails, textForLabelState )
+    expect ( fromPath ( "~/b/c" ).description ).toEqual ( 'I.focus?(a).focus?(b).focus?(c)' )
+    expect ( fromPath ( "/a/b/c" ).description ).toEqual ( 'I.focus?(a).focus?(b).focus?(c)' )
+    expect ( () =>fromPath ( "b/c" ).description ).toThrow("Error parsing 'b/c'. Cannot find initial  ''")
+  } )
+
 } )
 // describe ( "fromPathFor", () => {
 //   it ( "should return a lens to a path", () => {

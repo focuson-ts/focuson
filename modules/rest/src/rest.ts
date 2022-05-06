@@ -119,7 +119,7 @@ export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Deta
   const debug = s.debug?.restDebug
   const commands = safeArray ( restL.getOption ( s ) )
   return commands.map ( command => {
-    const  { name, restAction } = command
+    const { name, restAction } = command
     const one: OneRestDetails<S, any, any, MSGS> = d[ name ]
 
     if ( debug ) console.log ( "restReq-onex", name, one )
@@ -149,7 +149,7 @@ export function massFetch<S, MSGs, Cargo> ( fetchFn: FetchFn, reqs: [ RestComman
     error => ({ restCommand, one, result: error }) ) ) )
 }
 
-export interface allLensForRest<S,MSGS>{
+export interface allLensForRest<S, MSGS> {
   messageL: Optional<S, MSGS[]>;
   restL: Optional<S, RestCommand[]>;
   traceL: Optional<S, any>
