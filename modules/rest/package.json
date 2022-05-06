@@ -12,9 +12,9 @@
     ]
   },
   "dependencies": {
-    "@focuson/lens": "1.7.11",
-    "@focuson/fetcher": "1.7.11",
-    "@focuson/rest": "1.7.11"
+    "@focuson/lens": "1.7.12",
+    "@focuson/fetcher": "1.7.12",
+    "@focuson/rest": "1.7.12"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -46,7 +46,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.7.11",
+  "version": "1.7.12",
   "template": "noreact",
   "description": "This allows for declarative 'rest actions'. Get/Update/Create... ",
   "details": {
@@ -59,8 +59,8 @@
     ],
     "extraDeps": {},
     "extraDevDeps": {},
-    "tsc": true
+    "tsc": true,
+    "test": true
   },
-  "test": true,
   "name": "@focuson/rest"
 }

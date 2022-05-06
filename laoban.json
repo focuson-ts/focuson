@@ -85,7 +85,7 @@
     "ls-publish":     {
       "description": "lists the projects that can be published",
       "guard":       "${projectDetails.details.publish}",
-      "commands":    ["js:process.cwd()"], "inLinksOrder": true
+      "commands":    ["js:process.cwd()"]
     },
     "ls-orgcmd":      {
       "description": "lists the projects that have code on demand",
@@ -110,8 +110,7 @@
       "commands":     [
         {"name": "tsc", "command": "tsc --noEmit false --outDir dist", "status": true},
         {"name": "pack", "command": "${packageManager} pack", "status": true}
-      ],
-      "inLinksOrder": true
+      ]
     },
     "publish":        {
       "description":  "publishes the projects to npmjs",
@@ -119,8 +118,7 @@
       "commands":     [
         {"name": "tsc", "command": "tsc --noEmit false --outDir dist", "status": true},
         {"name": "publish", "command": "${packageManager} publish --access public", "status": true}
-      ],
-      "inLinksOrder": true
+      ]
     },
     "publish-public": {
       "description":  "publishes the projects to npmjs as a public repo",
