@@ -6,7 +6,7 @@ import { paramsForTest } from "./paramsForTest";
 describe ( "makeUseStoredProcedure", () => {
   it ( "should generate the java that will call a stored procedure with the given values, with parameters in the order given", () => {
     expect ( makeUseStoredProcedure ( paramsForTest, ChequeCreditbooksPD, 'restName', chequeCreditBooksRestD, { state: 'cancel' } ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
-      "package focuson.data.h2fetchers.ChequeCreditbooks;",
+      "package focuson.data.dbfetchers.ChequeCreditbooks;",
       "",
       "import   focuson.data.fetchers.IFetcher;",
       "import  focuson.data.fetchers.ChequeCreditbooks.ChequeCreditbooks_state_cancel_FFetcher;",
@@ -21,7 +21,7 @@ describe ( "makeUseStoredProcedure", () => {
       "import java.util.Optional;",
       "",
       "@Component",
-      "public class ChequeCreditbooks_state_cancel_FFetcherH2 implements ChequeCreditbooks_state_cancel_FFetcher {",
+      "public class ChequeCreditbooks_state_cancel_FFetcherDB implements ChequeCreditbooks_state_cancel_FFetcher {",
       "",
       "  @Autowired",
       "  private DataSource dataSource;",
@@ -43,7 +43,7 @@ describe ( "makeUseStoredProcedure", () => {
       "",
       "  @Override",
       "  public String dbName() {",
-      "    return IFetcher.h2;",
+      "    return IFetcher.db;",
       "  }",
       "}"
     ])

@@ -6,7 +6,7 @@ import { detailsLog, GenerateLogLevel, isRestStateChange, NameAnd, safeArray, sa
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
-import { auditClassName, createTableSqlName, fetcherInterfaceName, fetcherPackageName, getSqlName, h2FetcherClassName, mockFetcherClassName, mockFetcherPackage, providerPactClassName, queryClassName, queryPackage, restControllerName, sqlMapFileName } from "../codegen/names";
+import { auditClassName, createTableSqlName, fetcherInterfaceName, fetcherPackageName, getSqlName, dbFetcherClassName, mockFetcherClassName, mockFetcherPackage, providerPactClassName, queryClassName, queryPackage, restControllerName, sqlMapFileName } from "../codegen/names";
 import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
 import { makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
 import { makeAllMockFetchers } from "../codegen/makeMockFetchers";
@@ -14,7 +14,7 @@ import { makeJavaVariablesForGraphQlQuery } from "../codegen/makeGraphQlQuery";
 import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
 // import { findSqlRoot, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, walkRoots } from "../codegen/makeJavaSql.tsxxx";
 import { createTableSql, findSqlLinkDataFromRootAndDataD, findSqlRoot, generateGetSql, makeMapsForRest, walkSqlRoots } from "../codegen/makeSqlFromEntities";
-import { makeH2Fetchers } from "../codegen/makeH2Fetchers";
+import { makeDBFetchers } from "../codegen/makeDBFetchers";
 import { makePactValidation } from "../codegen/makePactValidation";
 import { AppConfig } from "../appConfig";
 import { makeUseStoredProcedure } from "../codegen/makeUseStoredProcedure";
@@ -35,7 +35,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   const javaFetcherRoot = javaCodeRoot + "/" + params.fetcherPackage
   const javaControllerRoot = javaCodeRoot + "/" + params.controllerPackage
   const javaMockFetcherRoot = javaCodeRoot + "/" + params.mockFetcherPackage
-  const javaH2FetcherRoot = javaCodeRoot + "/" + params.h2FetcherPackage
+  const javaH2FetcherRoot = javaCodeRoot + "/" + params.dbFetcherPackage
   const javaQueriesPackages = javaCodeRoot + "/" + params.queriesPackage
   const javaAuditPackage = javaCodeRoot + '/' + params.auditPackage
   const javaDbPackages = javaCodeRoot + "/" + params.dbPackage
@@ -119,14 +119,14 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   forEachRestAndActions ( pages, p => ( r, restName, rdp ) => a => {
     if ( a !== 'get' ) return;
     if ( rdp.rest.tables === undefined ) return;
-    writeToFile ( `${javaH2FetcherRoot}/${p.name}/${h2FetcherClassName ( params, rdp.rest, a )}.java`, () => makeH2Fetchers ( params, p, restName, rdp ) )
+    writeToFile ( `${javaH2FetcherRoot}/${p.name}/${dbFetcherClassName ( params, rdp.rest, a )}.java`, () => makeDBFetchers ( params, p, restName, rdp ) )
   } )
   forEachRestAndActions ( pages, p => ( r, restName, rdp ) => a => {
     if ( !isRestStateChange ( a ) ) return;
     if ( rdp.rest.states === undefined ) return;
     const procCode = makeUseStoredProcedure ( params, p, restName, rdp.rest, a )
     if ( procCode.length > 0 )
-      writeToFile ( `${javaH2FetcherRoot}/${p.name}/${h2FetcherClassName ( params, rdp.rest, a )}.java`, () => procCode )
+      writeToFile ( `${javaH2FetcherRoot}/${p.name}/${dbFetcherClassName ( params, rdp.rest, a )}.java`, () => procCode )
   } )
   allMainPages ( pages ).flatMap ( mainPage =>
     sortedEntries ( mainPage.rest ).forEach ( ( [ restName, rdp ] ) => {

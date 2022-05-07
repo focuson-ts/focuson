@@ -1,4 +1,4 @@
-package focuson.data.h2Fetchers.ChequeCreditbooks;
+package focuson.data.dbFetchers.ChequeCreditbooks;
 
 import   focuson.data.fetchers.IFetcher;
 import  focuson.data.fetchers.ChequeCreditbooks.ChequeCreditbooks_state_cancel_FFetcher;
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
-public class ChequeCreditbooks_state_cancel_FFetcherH2 implements ChequeCreditbooks_state_cancel_FFetcher {
+public class ChequeCreditbooks_state_cancel_FFetcherDB implements ChequeCreditbooks_state_cancel_FFetcher {
 
   @Autowired
   private DataSource dataSource;
@@ -35,6 +35,6 @@ public class ChequeCreditbooks_state_cancel_FFetcherH2 implements ChequeCreditbo
 
   @Override
   public String dbName() {
-    return IFetcher.h2;
+    return IFetcher.db;
   }
 }

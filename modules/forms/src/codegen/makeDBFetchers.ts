@@ -2,14 +2,14 @@ import { JavaWiringParams } from "./config";
 import { MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { sortedEntries } from "@focuson/utils";
 import { RestD } from "../common/restD";
-import { fetcherInterfaceName, fetcherName, fetcherPackageName, h2FetcherClassName, h2FetcherPackage, resolverName, sqlMapName } from "./names";
+import { fetcherInterfaceName, fetcherName, fetcherPackageName, dbFetcherClassName, dbFetcherPackage, resolverName, sqlMapName } from "./names";
 import { indentList } from "./codegen";
 import { findParamsForTable } from "./makeSqlFromEntities";
 import { getRestTypeDetails } from "@focuson/rest";
 import { isRepeatingDd } from "../common/dataD";
 
 
-export function makeH2Fetchers<B, G> ( params: JavaWiringParams, pageD: MainPageD<B, G>, restName: string, rdp: RestDefnInPageProperties<G> ): string[] {
+export function makeDBFetchers<B, G> ( params: JavaWiringParams, pageD: MainPageD<B, G>, restName: string, rdp: RestDefnInPageProperties<G> ): string[] {
   const rest = rdp.rest
   if ( rest.actions.indexOf ( 'get' ) < 0 ) return []
   const paramVariables = sortedEntries ( rest.params ).map ( ( [ name, props ] ) =>
@@ -28,7 +28,7 @@ export function makeH2Fetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
 
 
   return [
-    ` package ${h2FetcherPackage ( params, pageD )};`,
+    ` package ${dbFetcherPackage ( params, pageD )};`,
     ``,
     `import  ${params.thePackage}.${params.dbPackage}.${sqlMapName ( pageD, restName, [] )};`,
     `import  ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
@@ -44,7 +44,7 @@ export function makeH2Fetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
     `import java.util.Optional;`,
     ``,
     `  @Component`,
-    `public class ${h2FetcherClassName ( params, rest, 'get' )} implements ${fetcherInterfaceName ( params, rest, "get" )} {`,
+    `public class ${dbFetcherClassName ( params, rest, 'get' )} implements ${fetcherInterfaceName ( params, rest, "get" )} {`,
     ``,
     `  @Autowired`,
     `  private DataSource dataSource;`,
@@ -64,7 +64,7 @@ export function makeH2Fetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
     ``,
     `  @Override`,
     `  public String dbName() {`,
-    `      return IFetcher.h2;`,
+    `      return IFetcher.db;`,
     `  }`,
     `}`,
   ]

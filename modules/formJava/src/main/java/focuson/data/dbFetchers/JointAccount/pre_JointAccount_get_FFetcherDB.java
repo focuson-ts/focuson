@@ -1,4 +1,4 @@
- package focuson.data.h2Fetchers.JointAccount;
+ package focuson.data.dbFetchers.JointAccount;
 
 import  focuson.data.db.JointAccount_jointAccountMaps;
 import  focuson.data.fetchers.IFetcher;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
   @Component
-public class pre_JointAccount_get_FFetcherH2 implements pre_JointAccount_get_FFetcher {
+public class pre_JointAccount_get_FFetcherDB implements pre_JointAccount_get_FFetcher {
 
   @Autowired
   private DataSource dataSource;
@@ -38,6 +38,6 @@ public class pre_JointAccount_get_FFetcherH2 implements pre_JointAccount_get_FFe
 
   @Override
   public String dbName() {
-      return IFetcher.h2;
+      return IFetcher.db;
   }
 }

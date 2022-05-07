@@ -2,7 +2,7 @@ import { JavaWiringParams } from "./config";
 import { MainPageD } from "../common/pageD";
 import { RestD } from "../common/restD";
 import { isRestStateChange, RestAction, sortedEntries } from "@focuson/utils";
-import { fetcherInterfaceName, fetcherPackageName, h2FetcherClassName, h2FetcherPackage, resolverName } from "./names";
+import { fetcherInterfaceName, fetcherPackageName, dbFetcherClassName, dbFetcherPackage, resolverName } from "./names";
 import { getRestTypeDetails } from "@focuson/rest";
 import { indentList } from "./codegen";
 
@@ -19,7 +19,7 @@ export function makeUseStoredProcedure<B, G> ( params: JavaWiringParams, pageD: 
   const setParams = spParams.map ( ( name, i ) => `    s.setObject(${i + 1},${name});` )
   const questionMarks = spParams.map ( () => '?' ).join ( ', ' )
   return [
-    `package ${h2FetcherPackage ( params, pageD )};`,
+    `package ${dbFetcherPackage ( params, pageD )};`,
     ``,
     `import   ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
     `import  ${fetcherPackageName ( params, pageD )}.${fetcherInterfaceName ( params, restD, action )};`,
@@ -34,7 +34,7 @@ export function makeUseStoredProcedure<B, G> ( params: JavaWiringParams, pageD: 
     `import java.util.Optional;`,
     ``,
     `@Component`,
-    `public class ${h2FetcherClassName ( params, restD, action )} implements ${fetcherInterfaceName ( params, restD, action )} {`,
+    `public class ${dbFetcherClassName ( params, restD, action )} implements ${fetcherInterfaceName ( params, restD, action )} {`,
     ``,
     `  @Autowired`,
     `  private DataSource dataSource;`,
@@ -55,7 +55,7 @@ export function makeUseStoredProcedure<B, G> ( params: JavaWiringParams, pageD: 
     ``,
     `  @Override`,
     `  public String dbName() {`,
-    `    return IFetcher.h2;`,
+    `    return IFetcher.db;`,
     `  }`,
     `}` ]
 

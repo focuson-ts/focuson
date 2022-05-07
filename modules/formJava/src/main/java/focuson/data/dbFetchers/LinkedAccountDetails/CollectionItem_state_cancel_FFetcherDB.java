@@ -1,4 +1,4 @@
-package focuson.data.h2Fetchers.LinkedAccountDetails;
+package focuson.data.dbFetchers.LinkedAccountDetails;
 
 import   focuson.data.fetchers.IFetcher;
 import  focuson.data.fetchers.LinkedAccountDetails.CollectionItem_state_cancel_FFetcher;
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
-public class CollectionItem_state_cancel_FFetcherH2 implements CollectionItem_state_cancel_FFetcher {
+public class CollectionItem_state_cancel_FFetcherDB implements CollectionItem_state_cancel_FFetcher {
 
   @Autowired
   private DataSource dataSource;
@@ -35,6 +35,6 @@ public class CollectionItem_state_cancel_FFetcherH2 implements CollectionItem_st
 
   @Override
   public String dbName() {
-    return IFetcher.h2;
+    return IFetcher.db;
   }
 }

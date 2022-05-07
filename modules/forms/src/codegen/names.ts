@@ -41,8 +41,8 @@ export const packageNameFor = <B, G> ( params: JavaWiringParams, p: MainPageD<B,
 export const fetcherPackageName = <G> ( params: JavaWiringParams, p: MainPageD<any, G> ): string => packageNameFor ( params, p, params.fetcherPackage );
 export const fetcherInterfaceName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${params.fetcherInterface}`;
 
-export const h2FetcherPackage = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G> ): string => packageNameFor ( params, p, params.h2FetcherPackage );
-export const h2FetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G>, action: RestAction ): string => `${restNameWithPrefix ( r )}_${restActionForName ( action )}_${params.fetcherInterface}H2`;
+export const dbFetcherPackage = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G> ): string => packageNameFor ( params, p, params.dbFetcherPackage );
+export const dbFetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G>, action: RestAction ): string => `${restNameWithPrefix ( r )}_${restActionForName ( action )}_${params.fetcherInterface}DB`;
 
 export const mockFetcherPackage = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G> ): string => packageNameFor ( params, p, params.mockFetcherPackage );
 export const mockFetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${params.fetcherInterface}Mock`;

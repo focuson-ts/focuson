@@ -1,4 +1,4 @@
-package focuson.data.h2Fetchers.EAccountsSummary;
+package focuson.data.dbFetchers.EAccountsSummary;
 
 import   focuson.data.fetchers.IFetcher;
 import  focuson.data.fetchers.EAccountsSummary.EAccountsSummary_state_invalidate_FFetcher;
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
-public class EAccountsSummary_state_invalidate_FFetcherH2 implements EAccountsSummary_state_invalidate_FFetcher {
+public class EAccountsSummary_state_invalidate_FFetcherDB implements EAccountsSummary_state_invalidate_FFetcher {
 
   @Autowired
   private DataSource dataSource;
@@ -35,6 +35,6 @@ public class EAccountsSummary_state_invalidate_FFetcherH2 implements EAccountsSu
 
   @Override
   public String dbName() {
-    return IFetcher.h2;
+    return IFetcher.db;
   }
 }

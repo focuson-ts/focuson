@@ -1,4 +1,4 @@
- package focuson.data.h2Fetchers.PostCodeMainPage;
+ package focuson.data.dbFetchers.PostCodeMainPage;
 
 import  focuson.data.db.PostCodeMainPage_postcodeMaps;
 import  focuson.data.fetchers.IFetcher;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
   @Component
-public class PostCodeSearchResponse_get_FFetcherH2 implements PostCodeSearchResponse_get_FFetcher {
+public class PostCodeSearchResponse_get_FFetcherDB implements PostCodeSearchResponse_get_FFetcher {
 
   @Autowired
   private DataSource dataSource;
@@ -36,6 +36,6 @@ public class PostCodeSearchResponse_get_FFetcherH2 implements PostCodeSearchResp
 
   @Override
   public String dbName() {
-      return IFetcher.h2;
+      return IFetcher.db;
   }
 }
