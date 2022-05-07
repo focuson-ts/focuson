@@ -59,13 +59,14 @@ select
   ADD_TBL ADD_TBL
  ;
 
--- PostCodeSearchResponse /api/postCode?{query} {"dbName":{"rsSetter":"setString","javaType":"String","javaParser":"","commonLens":"dbName","testValue":"mock"},"postcode":{"rsSetter":"setInt","javaType":"int","javaParser":"Integer.parseInt","lens":"~/postcode/search","testValue":"LW12 4RG"}}
+-- PostCodeSearchResponse /api/postCode?{query} {"dbName":{"rsSetter":"setString","javaType":"String","javaParser":"","commonLens":"dbName","testValue":"mock"},"postcode":{"rsSetter":"setString","javaType":"String","javaParser":"","lens":"~/postcode/search","testValue":"LW12 4RG"}}
 select
   POSTCODE.PC_POSTCODE as POSTCODE_PC_POSTCODE,
   POSTCODE.zzline1 as POSTCODE_zzline1,
   POSTCODE.zzline2 as POSTCODE_zzline2,
   POSTCODE.zzline3 as POSTCODE_zzline3,
-  POSTCODE.zzline4 as POSTCODE_zzline4
+  POSTCODE.zzline4 as POSTCODE_zzline4,
+  POSTCODE.PC_POSTCODE as POSTCODE_PC_POSTCODE
  from
   POSTCODE POSTCODE
- where  POSTCODE.PC_POSTCODE = ?;
+ where  POSTCODE.PC_POSTCODE like ?;

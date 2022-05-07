@@ -3,12 +3,10 @@ import { nameAndAddressDataD, postCodeSearchDataD } from "./addressSearch.dataD"
 import { addressRestD, postcodeRestD } from "./addressSearch.restD";
 import { IntegerDD } from "../../common/dataD";
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
-import { LayoutCd } from "../../common/componentsD";
-import { addT } from "../database/tableNames";
 
 export const PostCodeModalPage: ExampleModalPage = {
   name: "PostCodeSearch",
-  pageType: "ModalPage",
+  pageType: "ModalPopup",
   display: { dataDD: postCodeSearchDataD, target: '~/' },
   modes: [ 'edit' ],
   buttons: {
@@ -42,12 +40,12 @@ export const PostCodeMainPage: ExampleMainPage = {
       focusOn: '~/postcode',
       copyJustString: { from: '~/main/postcode', to: '~/postcode/search' },
       copyOnClose: [
-        { from: '~/postcode/addressResults/line1', to: '~/main/line1' },
+        { from: '~/postcode/addressResults/line1', to: '~/main/line1' }, //could do simpler, but this is a demo of multiple lines
         { from: '~/postcode/addressResults/line2', to: '~/main/line2' },
         { from: '~/postcode/addressResults/line3', to: '~/main/line3' },
         { from: '~/postcode/addressResults/line4', to: '~/main/line4' },
         { from: '~/postcode/addressResults/line4', to: '~/main/line4' },
-        { from: '~/postcode/search', to: '~/main/postcode' }
+        { from: '~/postcode/addressResults/postcode', to: '~/main/postcode' }
       ]
     },
     save: {

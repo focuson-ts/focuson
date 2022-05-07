@@ -17,7 +17,7 @@ export function makeDBFetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
   if ( rest.tables === undefined ) throw Error ( `Calling makeH2Fetchers when tables not defined for page ${pageD.name}` )
   const getAllParams = [ 'c',
     ...findParamsForTable ( `Error in page ${pageD.name} rest ${restName}`, rest.params, rest.tables )
-      .map ( ( [ name, param ] ) =>
+      .map ( ( {name, param } ) =>
         `${param.javaParser}(${name})` ) ].join ( ',' )
   const getDataFromRS: string[] = isRepeatingDd ( rdp.rest.dataDD ) ?
     [ `         List<Map<String, Object>> list = ${sqlMapName ( pageD, restName, [] )}.getAll(${getAllParams});`,

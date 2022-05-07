@@ -5,7 +5,8 @@ export const emptyPostCodeDataLine:domains.PostCodeDataLineDomain =
     "line1": "",
     "line2": "",
     "line3": "",
-    "line4": ""
+    "line4": "",
+    "postcode": ""
   }
 export const emptyPostCodeNameAndAddress:domains.PostCodeNameAndAddressDomain =
   {
@@ -24,14 +25,16 @@ export const emptyPostCodeSearch:domains.PostCodeSearchDomain =
         "line1": "",
         "line2": "",
         "line3": "",
-        "line4": ""
+        "line4": "",
+        "postcode": ""
       }
     ],
     "addressResults": {
       "line1": "",
       "line2": "",
       "line3": "",
-      "line4": ""
+      "line4": "",
+      "postcode": ""
     }
   }
 export const emptyPostCodeSearchResponse:domains.PostCodeSearchResponseDomain =
@@ -40,6 +43,7 @@ export const emptyPostCodeSearchResponse:domains.PostCodeSearchResponseDomain =
       "line1": "",
       "line2": "",
       "line3": "",
-      "line4": ""
+      "line4": "",
+      "postcode": ""
     }
   ]

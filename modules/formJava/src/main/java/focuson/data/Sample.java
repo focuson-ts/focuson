@@ -1229,7 +1229,8 @@ public class Sample{
          "  \"line1\": \"4 Privet drive\","+
          "  \"line2\": \"Little Whinging\","+
          "  \"line3\": \"Surrey\","+
-         "  \"line4\": \"England\""+
+         "  \"line4\": \"England\","+
+         "  \"postcode\": \"LW12 5f\""+
          "}"
   );
   public static Map samplePostCodeNameAndAddress0 =  parse.parseMap(
@@ -1250,26 +1251,30 @@ public class Sample{
          "      \"line1\": \"4 Privet drive\","+
          "      \"line2\": \"Little Whinging\","+
          "      \"line3\": \"Surrey\","+
-         "      \"line4\": \"England\""+
+         "      \"line4\": \"England\","+
+         "      \"postcode\": \"LW12 5f\""+
          "    },"+
          "    {"+
          "      \"line1\": \"27 Throughput Lane\","+
          "      \"line2\": \"Woodfield\","+
          "      \"line3\": \"\","+
-         "      \"line4\": \"Ireland\""+
+         "      \"line4\": \"Ireland\","+
+         "      \"postcode\": \"IR45 3GT\""+
          "    },"+
          "    {"+
          "      \"line1\": \"4 Privet drive\","+
          "      \"line2\": \"Little Whinging\","+
          "      \"line3\": \"Surrey\","+
-         "      \"line4\": \"England\""+
+         "      \"line4\": \"England\","+
+         "      \"postcode\": \"LW12 5f\""+
          "    }"+
          "  ],"+
          "  \"addressResults\": {"+
          "    \"line1\": \"4 Privet drive\","+
          "    \"line2\": \"Little Whinging\","+
          "    \"line3\": \"Surrey\","+
-         "    \"line4\": \"England\""+
+         "    \"line4\": \"England\","+
+         "    \"postcode\": \"LW12 5f\""+
          "  }"+
          "}"
   );
@@ -1279,19 +1284,22 @@ public class Sample{
          "    \"line1\": \"4 Privet drive\","+
          "    \"line2\": \"Little Whinging\","+
          "    \"line3\": \"Surrey\","+
-         "    \"line4\": \"England\""+
+         "    \"line4\": \"England\","+
+         "    \"postcode\": \"LW12 5f\""+
          "  },"+
          "  {"+
          "    \"line1\": \"27 Throughput Lane\","+
          "    \"line2\": \"Woodfield\","+
          "    \"line3\": \"\","+
-         "    \"line4\": \"Ireland\""+
+         "    \"line4\": \"Ireland\","+
+         "    \"postcode\": \"IR45 3GT\""+
          "  },"+
          "  {"+
          "    \"line1\": \"4 Privet drive\","+
          "    \"line2\": \"Little Whinging\","+
          "    \"line3\": \"Surrey\","+
-         "    \"line4\": \"England\""+
+         "    \"line4\": \"England\","+
+         "    \"postcode\": \"LW12 5f\""+
          "  }"+
          "]"
   );

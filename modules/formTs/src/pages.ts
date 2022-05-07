@@ -73,5 +73,5 @@ export const pages: MultiPageDetails<FState, Context> = {
     CreatePlan: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: CreatePlanPage()},
     OrderChequeBookOrPayingInModal: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: OrderChequeBookOrPayingInModalPage()},
     RepeatingLine: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: RepeatingLinePage()},
-    PostCodeSearch: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: PostCodeSearchPage()}
+    PostCodeSearch: {pageType: 'ModalPopup',  config: simpleMessagesConfig,  pageFunction: PostCodeSearchPage()}
   }

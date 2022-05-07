@@ -26,7 +26,7 @@ public class PostCodeSearchResponse_get_FFetcherDB implements PostCodeSearchResp
        Connection c = dataSource.getConnection();
        try {
          //from the data type in PostCodeMainPage.rest[postcode].dataDD which is a PostCodeSearchResponse 
-         List<Map<String, Object>> list = PostCodeMainPage_postcodeMaps.getAll(c,Integer.parseInt(postcode));
+         List<Map<String, Object>> list = PostCodeMainPage_postcodeMaps.getAll(c,(postcode));
          return list;
        } finally {
          c.close();

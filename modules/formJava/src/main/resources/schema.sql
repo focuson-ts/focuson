@@ -5,7 +5,7 @@ create table CUST_TBL(
 
 create table NAME_TBL(
   id integer,
-  zzname varchar(256)
+  zzname varchar(255)
 );
 
 create table ACC_TBL(
@@ -18,16 +18,16 @@ create table ACC_TBL(
 
 create table ADD_TBL(
   customerId integer,
-  zzline1 varchar(256),
-  zzline2 varchar(256),
-  zzline3 varchar(256),
-  zzline4 varchar(256)
+  zzline1 varchar(255),
+  zzline2 varchar(255),
+  zzline3 varchar(255),
+  zzline4 varchar(255)
 );
 
 create table POSTCODE(
-  PC_POSTCODE integer,
-  zzline1 varchar(256),
-  zzline2 varchar(256),
-  zzline3 varchar(256),
-  zzline4 varchar(256)
+  PC_POSTCODE varchar(255),
+  zzline1 varchar(255),
+  zzline2 varchar(255),
+  zzline3 varchar(255),
+  zzline4 varchar(255)
 );

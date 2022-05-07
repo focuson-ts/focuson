@@ -1,13 +1,13 @@
 import { AllGuards } from "../../buttons/guardButton";
 import { nameAndAddressDataD, postCodeSearchResponseDD } from "./addressSearch.dataD";
-import { IntParam, RestD, RestParams } from "../../common/restD";
+import { IntParam, RestD, RestParams, StringParam } from "../../common/restD";
 import { addT, postCodeSearchTable } from "../database/tableNames";
 import { allCommonIds } from "../commonIds";
 import { addressSearchSql } from "./addressSearch.sql";
 
 export const postcodeParams: RestParams = {
   dbName: { ...allCommonIds.dbName },
-  postcode: { ...IntParam, lens: '~/postcode/search', testValue: 'LW12 4RG' }
+  postcode: { ...StringParam, lens: '~/postcode/search', testValue: 'LW12 4RG' }
 }
 
 export const postcodeRestD: RestD<AllGuards> = {
@@ -22,7 +22,7 @@ export const postcodeRestD: RestD<AllGuards> = {
       table: postCodeSearchTable
     },
     where: [
-      { table: postCodeSearchTable, alias: postCodeSearchTable.name, field: 'PC_POSTCODE', paramName: 'postcode' }
+      { table: postCodeSearchTable, alias: postCodeSearchTable.name, field: 'PC_POSTCODE', paramName: 'postcode', comparator: 'like', paramPrefix: '%', paramPostfix: '%' }
     ]
   }
 

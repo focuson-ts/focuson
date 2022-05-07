@@ -111,7 +111,7 @@ export function simplifyTableAliasAndFields ( tafs: TableAliasAndField[] ): stri
 }
 
 export interface SqlRoot {
-  main: EntityAndWhere
+    main: EntityAndWhere
   path: [ string, ChildEntity ][];
   alias: string;
   root: Entity;
@@ -246,20 +246,28 @@ export function findWhereLinksForSqlRootGoingUp ( sqlRoot: SqlRoot ): WhereLink[
     return result;
   } )
 }
-export const whereFieldToFieldData = <G> ( errorPrefix: string, name: string ): FieldData<G> => {
+export const whereFieldToFieldDataFromTableWhereLink = <G> ( errorPrefix: string, name: string ): FieldData<G> => {
   const [ dbFieldName, theType ] = beforeAfterSeparator ( ":", name )
   if ( theType === '' || theType === 'integer' ) return ({ dbFieldName, reactType: 'number', rsGetter: 'getInt', dbType: 'integer' })
-  if ( theType === 'string' ) return ({ dbFieldName, reactType: 'string', rsGetter: 'getString', dbType: 'string' })
+  if ( theType === 'string' ) return ({ dbFieldName, reactType: 'string', rsGetter: 'getString', dbType: 'varchar(255)' })
   throw Error ( `${errorPrefix} Cannot find whereFieldToFieldData for type [${theType}] in [${name}]` )
 };
+export const whereFieldToFieldDataFromTableQueryLink = <G> ( errorPrefix: string, w: WhereFromQuery, restParams: RestParams ): FieldData<G> => {
+  const paramDetails = restParams[ w.paramName ]
+  const dbFieldName = w.field
+  if ( paramDetails === undefined ) throw Error ( `${errorPrefix}. Cannot find param in ${JSON.stringify ( w )}\nLegal values are ${Object.keys ( restParams )}` )
+  if ( paramDetails.javaType === 'String' ) return ({ dbFieldName, reactType: 'string', rsGetter: 'getString', dbType: 'varchar(255)' })
+  if ( paramDetails.javaType === 'int' ) return ({ dbFieldName, reactType: 'number', rsGetter: 'getInt', dbType: 'integer' })
+  throw Error ( `${errorPrefix} Cannot find whereFieldToFieldData for [${w.paramName}]  with java type [${paramDetails.javaType}] (paramDetails are ${JSON.stringify ( paramDetails )})` )
+};
 
-export function findFieldsFromWhere<G> ( errorPrefix: string, ws: WhereLink[] ): TableAndFieldAndAliasData<G>[] {
+export function findFieldsFromWhere<G> ( errorPrefix: string, ws: WhereLink[], restParams: RestParams ): TableAndFieldAndAliasData<G>[] {
   return ws.flatMap ( w => {
     if ( isWhereFromQuery ( w ) ) {
-      return [ { ...w, fieldData: whereFieldToFieldData ( errorPrefix, w.field ) } ]
+      return [ { ...w, fieldData: whereFieldToFieldDataFromTableQueryLink ( errorPrefix, w, restParams) } ]
     }
-    if ( isTableWhereLink ( w ) ) return [ { table: w.parentTable, alias: w.parentAlias, fieldData: whereFieldToFieldData ( errorPrefix, w.idInParent ) },
-      { table: w.childTable, alias: w.childAlias, fieldData: whereFieldToFieldData ( errorPrefix, w.idInThis ) } ]
+    if ( isTableWhereLink ( w ) ) return [ { table: w.parentTable, alias: w.parentAlias, fieldData: whereFieldToFieldDataFromTableWhereLink ( errorPrefix, w.idInParent ) },
+      { table: w.childTable, alias: w.childAlias, fieldData: whereFieldToFieldDataFromTableWhereLink ( errorPrefix, w.idInThis ) } ]
     throw Error ( `Unknown type of where ${w}` )
   } )
 }
@@ -335,11 +343,11 @@ export function findTableAliasAndFieldFromDataD<G> ( sqlRoot: SqlRoot, fromDataD
   return foldEntitys<TableAndFieldAndAliasData<G>[]> ( folder, sqlRoot.main, sqlRoot.root, sqlRoot.filterPath, [] )
 }
 
-export function findAllFields<G> ( sqlRoot: SqlRoot, dataD: CompDataD<any>, wheres: WhereLink[] ): TableAndFieldAndAliasData<G>[] {
+export function findAllFields<G> ( sqlRoot: SqlRoot, dataD: CompDataD<any>, wheres: WhereLink[], restParams: RestParams ): TableAndFieldAndAliasData<G>[] {
   const errorPrefix = `Error dataD is ${dataD.name}`
   const tfFromData: TableAndFieldData<any>[] = findTableAndFieldFromDataD ( dataD )
   const tfAliasFromData: TableAndFieldAndAliasData<G>[] = findTableAliasAndFieldFromDataD ( sqlRoot, tfFromData )
-  const fromWhere: TableAndFieldAndAliasData<G>[] = findFieldsFromWhere ( errorPrefix, wheres )
+  const fromWhere: TableAndFieldAndAliasData<G>[] = findFieldsFromWhere ( errorPrefix, wheres, restParams )
   return unique ( [ ...fromWhere, ...tfAliasFromData ], t => simplifyTableAndFieldAndAliasData ( t, true ) )
 }
 
@@ -369,10 +377,10 @@ export function findStaticWheresForSqlRootGoingUp ( sqlRoot: SqlRoot ): string[]
   } )
 }
 
-export function findSqlLinkDataFromRootAndDataD ( sqlRoot: SqlRoot, dataD: CompDataD<any> ): SqlLinkData {
+export function findSqlLinkDataFromRootAndDataD ( sqlRoot: SqlRoot, dataD: CompDataD<any> , restParams: RestParams): SqlLinkData {
   const aliasAndTables = findAliasAndTableLinksForLinkData ( sqlRoot )
-  const whereLinks = findWhereLinksForSqlRoot ( sqlRoot )
-  const fields = findAllFields ( sqlRoot, dataD, whereLinks )
+  const whereLinks: WhereLink[] = findWhereLinksForSqlRoot ( sqlRoot )
+  const fields: TableAndFieldAndAliasData<any>[] = findAllFields ( sqlRoot, dataD, whereLinks ,restParams)
   const staticWheres = findStaticWheres ( sqlRoot )
   return { whereLinks, aliasAndTables, sqlRoot, fields, staticWheres }
 }
@@ -385,7 +393,8 @@ export function makeWhereClauseStringsFrom ( ws: WhereLink[] ) {
       return `${parentAlias}.${beforeSeparator ( ":", idInParent )} = ${childAlias}.${beforeSeparator ( ":", idInThis )}`;
     }
     if ( isWhereFromQuery ( w ) ) {
-      return ` ${w.alias}.${w.field} = ?`
+      const comparator = w.comparator ? w.comparator : '='
+      return ` ${w.alias}.${w.field} ${comparator} ?`
     }
     throw new Error ( `Unknown where link ${JSON.stringify ( w )}` )
   } )
@@ -403,7 +412,7 @@ export function generateGetSql ( s: SqlLinkData ): string[] {
 
 export const findAllTableAndFieldsIn = <G> ( rdps: RestDefnInPageProperties<G>[] ) => unique ( rdps.flatMap ( rdp => {
   if ( !rdp.rest.tables ) return []
-  return walkSqlRoots ( findSqlRoot ( rdp.rest.tables ), sqlRoot => findSqlLinkDataFromRootAndDataD ( sqlRoot, rdp.rest.dataDD ) ).flatMap (
+  return walkSqlRoots ( findSqlRoot ( rdp.rest.tables ), sqlRoot => findSqlLinkDataFromRootAndDataD ( sqlRoot, rdp.rest.dataDD, rdp.rest.params ) ).flatMap (
     linkData => linkData.fields.map ( taf =>
       ({ table: taf.table, fieldData: taf.fieldData }) )
   )
@@ -508,9 +517,15 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
 
 }
 
-type JavaQueryParamDetails = [ string, AllLensRestParams ]
+export interface JavaQueryParamDetails {
+  name: string;
+  param: AllLensRestParams
+  paramPrefix?: string;
+  paramPostfix?: string;
+}
+
 function getParameters<B, G> ( childCount: number, p: PageD<B, G>, restName: string, path: number[], queryParams: JavaQueryParamDetails[] ) {
-  return [ 'Connection connection', ...queryParams.map ( ( [ name, param ] ) =>
+  return [ 'Connection connection', ...queryParams.map ( ( { name, param, paramPostfix, paramPrefix } ) =>
     `${param.javaType} ${name}` ), ...mapPathPlusInts ( path, childCount ) ( pathAndI => `List<${sqlMapName ( p, restName, pathAndI )}> list${pathAndI}` ) ].join ( ", " );
 }
 function newMap ( mapName: string, childCount: number, path: number[] ) {
@@ -536,10 +551,13 @@ function makeGetRestForMainOrChild<B, G> ( p: PageD<B, G>, restName: string, pat
     ] :
     [ `      return rs.next() ? Optional.of(${newMap ( mapName, childCount, [] )}) : Optional.empty();` ]
 
+  function addPrefixPostFix ( { name, paramPrefix, paramPostfix }: JavaQueryParamDetails ): string {
+    return (paramPrefix ? '"' + paramPrefix + '"+' : '') + name + (paramPostfix ? '+"' + paramPostfix + '"' : '')
+  }
   return [
     `public static ${repeating ? 'List' : 'Optional'}<${mapName}> get${path.join ( '_' )}(${getParameters ( childCount, p, restName, [], queryParams )}) throws SQLException {`,
     `    PreparedStatement statement = connection.prepareStatement(${mapName}.sql);`,
-    ...indentList ( queryParams.map ( ( [ name, param ], i ) => `statement.${param.rsSetter}(${i + 1},${name});` ) ),
+    ...indentList ( indentList ( queryParams.map ( ( paramDetails, i ) => `statement.${paramDetails.param.rsSetter}(${i + 1},${addPrefixPostFix ( paramDetails )});` ) ) ),
     `    ResultSet rs = statement.executeQuery();`,
     `    try {`,
     ...retreiveData,
@@ -567,17 +585,17 @@ export function makeAllGetsAndAllSqlForRest<B, G> ( params: JavaWiringParams, p:
   if ( restD.tables === undefined ) throw Error ( `somehow have a sql root without a tables in ${p.name} ${restName}` )
   let sqlRoot = findSqlRoot ( restD.tables );
   const getters: QueryAndGetters[] = walkSqlRoots ( sqlRoot, ( r, path ) => {
-    const ld = findSqlLinkDataFromRootAndDataD ( r, restD.dataDD )
+    const ld = findSqlLinkDataFromRootAndDataD ( r, restD.dataDD, rdp.rest.params )
     if ( restD.tables === undefined ) throw Error ( `somehow have a sql root without a tables in ${p.name} ${restName}` )
     const query = findParamsForTable ( `Page ${p.name} rest ${restName}`, restD.params, restD.tables )
     return { query, getter: makeGetForRestFromLinkData ( params, p, restName, rdp, query, path, r.children.length ), sql: [ ...generateGetSql ( ld ), '' ] }
   } )
   const paramsForMainGet = getters.slice ( 1 ).map ( g => g.query )
-  function callingParams ( qs: JavaQueryParamDetails[] ) {return qs.map ( q => q[ 0 ] )}
-  const allParams = unique ( getters.flatMap ( g => g.query ), q => q[ 0 ] + q[ 1 ].javaType )
+  function callingParams ( qs: JavaQueryParamDetails[] ) {return qs.map ( q => q.name )}
+  const allParams = unique ( getters.flatMap ( g => g.query ), ( { name, param } ) => name + param.javaType )
   const mapString = isRepeatingDd ( rdp.rest.dataDD ) ? '.stream().map(x -> x._root).collect(Collectors.toList())' : '.map(x -> x._root)'
   const mainGet: string[] = [
-    `public static ${isListOrOptional ( rdp )}<Map<String,Object>> getAll(${[ 'Connection connection', ...allParams.map ( ( [ name, param ] ) =>
+    `public static ${isListOrOptional ( rdp )}<Map<String,Object>> getAll(${[ 'Connection connection', ...allParams.map ( ( { name, param } ) =>
       `${param.javaType} ${name}` ) ].join ( "," )}) throws SQLException {`,
     `//from ${p.name}.rest[${restName}].dataDD which is of type ${rdp.rest.dataDD.name}`,
     `   return get(${[ 'connection', ...callingParams ( getters[ 0 ].query ), ...ints ( sqlRoot.children.length )
@@ -589,10 +607,11 @@ export function makeAllGetsAndAllSqlForRest<B, G> ( params: JavaWiringParams, p:
 
 export function findParamsForTable ( errorPrefix: string, params: RestParams, table: EntityAndWhere ): JavaQueryParamDetails[] {
   return table.where.flatMap ( wl => {
+    const { paramPrefix, paramPostfix } = wl
     if ( isWhereFromQuery ( wl ) ) {
       let param = params[ wl.paramName ];
       if ( param == undefined ) throw Error ( `${errorPrefix} param ${wl.paramName} is defined in where ${JSON.stringify ( wl )}\nBut not available in the params[${Object.keys ( params )}]` )
-      let result: [ string, AllLensRestParams ] = [ wl.paramName, param ];
+      let result = { name: wl.paramName, param, paramPrefix, paramPostfix };
       return [ result ]
     }
     return []

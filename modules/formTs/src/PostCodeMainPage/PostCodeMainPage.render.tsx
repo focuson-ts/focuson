@@ -40,7 +40,7 @@ const id=`page${index}`;
       search:<ModalButton id={`${id}.search`} text='search'  state={state} modal = 'PostCodeSearch'  
         pageMode='edit'
         focusOn='~/postcode'
-        copyOnClose={[{"from":"~/postcode/addressResults/line1","to":"~/main/line1"},{"from":"~/postcode/addressResults/line2","to":"~/main/line2"},{"from":"~/postcode/addressResults/line3","to":"~/main/line3"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/search","to":"~/main/postcode"}]}
+        copyOnClose={[{"from":"~/postcode/addressResults/line1","to":"~/main/line1"},{"from":"~/postcode/addressResults/line2","to":"~/main/line2"},{"from":"~/postcode/addressResults/line3","to":"~/main/line3"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/addressResults/postcode","to":"~/main/postcode"}]}
         copyJustString={[{"from":"~/main/postcode","to":"~/postcode/search"}]}
       />,}
 
@@ -54,8 +54,9 @@ export function PostCodeDataLine({id,state,mode,buttons}: FocusedProps<FState, P
   return <>
     <LabelAndStringInput id={`${id}.line1`} state={state.focusOn('line1')} mode={mode} label='Line1' allButtons={buttons} required={true} />
     <LabelAndStringInput id={`${id}.line2`} state={state.focusOn('line2')} mode={mode} label='Line2' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.line3`} state={state.focusOn('line3')} mode={mode} label='Line3' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.line3`} state={state.focusOn('line3')} mode={mode} label='Line3' allButtons={buttons} required={false} />
     <LabelAndStringInput id={`${id}.line4`} state={state.focusOn('line4')} mode={mode} label='Line4' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.postcode`} state={state.focusOn('postcode')} mode={mode} label='Postcode' allButtons={buttons} required={true} />
 </>
 }
 
@@ -64,7 +65,7 @@ export function PostCodeNameAndAddress({id,state,mode,buttons}: FocusedProps<FSt
     <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='Name' allButtons={buttons} required={true} />
     <LabelAndStringInput id={`${id}.line1`} state={state.focusOn('line1')} mode={mode} label='Line1' allButtons={buttons} required={true} />
     <LabelAndStringInput id={`${id}.line2`} state={state.focusOn('line2')} mode={mode} label='Line2' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.line3`} state={state.focusOn('line3')} mode={mode} label='Line3' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.line3`} state={state.focusOn('line3')} mode={mode} label='Line3' allButtons={buttons} required={false} />
     <LabelAndStringInput id={`${id}.line4`} state={state.focusOn('line4')} mode={mode} label='Line4' allButtons={buttons} required={true} />
     <LabelAndStringInput id={`${id}.postcode`} state={state.focusOn('postcode')} mode={mode} label='Postcode' allButtons={buttons} required={true} buttons={["search"]} />
 </>
@@ -72,8 +73,8 @@ export function PostCodeNameAndAddress({id,state,mode,buttons}: FocusedProps<FSt
 
 export function PostCodeSearch({id,state,mode,buttons}: FocusedProps<FState, PostCodeSearchDomain,Context>){
   return <>
-    <StringInput id={`${id}.search`} state={state.focusOn('search')} mode={mode} required={true} />
-    <Table id={`${id}.searchResults`} state={state.focusOn('searchResults')} mode={mode} order={["line1","line2","line3","line4"]} copySelectedItemTo={pageState(state)<any>().focusOn('postcode').focusOn('addressResults')} />
+    <StringInput id={`${id}.search`} state={state.focusOn('search')} mode={mode} required={false} />
+    <Table id={`${id}.searchResults`} state={state.focusOn('searchResults')} mode={mode} order={["postcode","line1","line2","line3","line4"]} copySelectedItemTo={pageState(state)<any>().focusOn('postcode').focusOn('addressResults')} />
     <PostCodeDataLine id={`${id}.addressResults`} state={state.focusOn('addressResults')} mode={mode} buttons={buttons} />
 </>
 }

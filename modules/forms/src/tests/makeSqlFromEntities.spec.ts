@@ -1,4 +1,4 @@
-import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findParamsForTable, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, makeMapsForRest, makeWhereClause, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldData } from "../codegen/makeSqlFromEntities";
+import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findParamsForTable, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, JavaQueryParamDetails, makeMapsForRest, makeWhereClause, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldDataFromTableQueryLink, whereFieldToFieldDataFromTableWhereLink } from "../codegen/makeSqlFromEntities";
 import { AllLensRestParams, EntityAndWhere, IntParam, StringParam, unique } from "../common/restD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { nameAndAddressDataD, postCodeSearchResponseDD } from "../example/postCodeDemo/addressSearch.dataD";
@@ -7,10 +7,14 @@ import { JointAccountPageD } from "../example/jointAccount/jointAccount.pageD";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
 import { paramsForTest } from "./paramsForTest";
+import { fromCommonIds } from "../example/commonIds";
+import { accountT } from "../example/database/tableNames";
 
 const jointAccountRestDTables = jointAccountRestD.tables
 if ( jointAccountRestDTables === undefined ) throw Error ( "addressRestDTables must be defined" )
+const jointAccountRestParams = jointAccountRestD.params
 const addressRestDTables = addressRestD.tables
+const addressRestDParams = addressRestD.params
 if ( addressRestDTables === undefined ) throw Error ( "addressRestDTables must be defined" )
 
 
@@ -85,20 +89,41 @@ describe ( "findWhereLinkDataForLinkData", () => {
 )
 describe ( "whereFieldToFieldData. Note that the undefined gets fixed later in the process", () => {
   it ( "should work with no type specified (defaulting to integer)", () => {
-    expect ( whereFieldToFieldData ( 'someErrorPrefix', 'someField' ) ).toEqual ( { "dbType": "integer", "dbFieldName": "someField", "reactType": "number", "rsGetter": "getInt" } )
+    expect ( whereFieldToFieldDataFromTableWhereLink ( 'someErrorPrefix', 'someField' ) ).toEqual ( { "dbType": "integer", "dbFieldName": "someField", "reactType": "number", "rsGetter": "getInt" } )
   } )
   it ( "should work with string type specified", () => {
-    expect ( whereFieldToFieldData ( 'someErrorPrefix', 'someField:string' ) ).toEqual ( { "dbType": "string", "dbFieldName": "someField", "reactType": "string", "rsGetter": "getString" } )
+    expect ( whereFieldToFieldDataFromTableWhereLink ( 'someErrorPrefix', 'someField:string' ) ).toEqual ( { "dbType": "varchar(255)", "dbFieldName": "someField", "reactType": "string", "rsGetter": "getString" } )
   } )
   it ( "should work with integer type specified ", () => {
-    expect ( whereFieldToFieldData ( 'someErrorPrefix', 'someField:integer' ) ).toEqual ( { "dbType": "integer", "dbFieldName": "someField", "reactType": "number", "rsGetter": "getInt" } )
+    expect ( whereFieldToFieldDataFromTableWhereLink ( 'someErrorPrefix', 'someField:integer' ) ).toEqual ( { "dbType": "integer", "dbFieldName": "someField", "reactType": "number", "rsGetter": "getInt" } )
+  } )
+
+  it ( "should work with where clauses - ints ", () => {
+    expect ( whereFieldToFieldDataFromTableQueryLink ( 'someErrorPrefix',
+      { table: accountT, field: 'id', alias: 'all', paramName: 'accountId' },
+      fromCommonIds ( 'accountId', 'employeeType' ) ) ).toEqual ( {
+      "dbFieldName": "id",
+      "dbType": "integer",
+      "reactType": "number",
+      "rsGetter": "getInt"
+    } )
+  } )
+  it ( "should work with where clauses - strings ", () => {
+    expect ( whereFieldToFieldDataFromTableQueryLink ( 'someErrorPrefix',
+      { table: accountT, field: 'id', alias: 'all', paramName: 'employeeType' },
+      fromCommonIds ( 'accountId', 'employeeType' ) ) ).toEqual ( {
+      "dbFieldName": "id",
+      "dbType": "varchar(255)",
+      "reactType": "string",
+      "rsGetter": "getString"
+    } )
   } )
 
 } )
 describe ( "findFieldsFromWhere", () => {
   it ( "find the fields in the where clauses. ", () => {
     expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), r =>
-      unique ( simplifyTableAndFieldAndAliasDataArray ( findFieldsFromWhere ( 'someErrorPrefix', findWhereLinksForSqlRoot ( r ) ) ), s => s ) ) ).toEqual ( [
+      unique ( simplifyTableAndFieldAndAliasDataArray ( findFieldsFromWhere ( 'someErrorPrefix', findWhereLinksForSqlRoot ( r ), jointAccountRestParams ) ), s => s ) ) ).toEqual ( [
       [
         "mainCustomer:CUST_TBL.nameId/undefined",
         "mainName:NAME_TBL.id/undefined",
@@ -176,7 +201,7 @@ describe ( "findTableAliasAndFieldFromDataD", () => {
 
 describe ( "findAllFields", () => {
   it ( "should aggregate the fields from the where and from the dataD - simple ", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( addressRestDTables ), r => simplifyTableAndFieldAndAliasDataArray ( findAllFields ( r, nameAndAddressDataD, findWhereLinksForSqlRootGoingUp ( r ) ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( addressRestDTables ), r => simplifyTableAndFieldAndAliasDataArray ( findAllFields ( r, nameAndAddressDataD, findWhereLinksForSqlRootGoingUp ( r ), addressRestDParams ) ) ) ).toEqual ( [
       [
         "ADD_TBL:ADD_TBL.zzline1/line1",
         "ADD_TBL:ADD_TBL.zzline2/line2",
@@ -201,7 +226,7 @@ describe ( "findAllFields", () => {
   } )
 
   it ( "should aggregate the fields from the where and from the dataD ", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), r => simplifyTableAndFieldAndAliasDataArray ( findAllFields ( r, JointAccountDd, findWhereLinksForSqlRootGoingUp ( r ) ), true ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), r => simplifyTableAndFieldAndAliasDataArray ( findAllFields ( r, JointAccountDd, findWhereLinksForSqlRootGoingUp ( r ), jointAccountRestParams ), true ) ) ).toEqual ( [
       [
         "mainName:NAME_TBL.zzname/name/main,name",
         "jointName:NAME_TBL.zzname/name/joint,name",
@@ -227,7 +252,7 @@ describe ( "findAllFields", () => {
 
 describe ( "findSqlLinkDataFromRootAndDataD", () => {
   it ( "should create the data for the links in nameAndAddressDataD (simple)", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( addressRestDTables ), r => simplifySqlLinkData ( findSqlLinkDataFromRootAndDataD ( r, nameAndAddressDataD ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( addressRestDTables ), r => simplifySqlLinkData ( findSqlLinkDataFromRootAndDataD ( r, nameAndAddressDataD, addressRestDParams ) ) ) ).toEqual ( [
       [
         "sqlRoot: ADD_TBL",
         "fields: ADD_TBL:ADD_TBL.zzline1/line1,ADD_TBL:ADD_TBL.zzline2/line2,ADD_TBL:ADD_TBL.zzline3/line3,ADD_TBL:ADD_TBL.zzline4/line4",
@@ -238,7 +263,7 @@ describe ( "findSqlLinkDataFromRootAndDataD", () => {
   } )
 
   it ( "shouldCreate the data for the links in accountD", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), r => simplifySqlLinkData ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), r => simplifySqlLinkData ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd, jointAccountRestParams ) ) ) ).toEqual ( [
       [
         "sqlRoot: ACC_TBL",
         "fields: mainCustomer:CUST_TBL.nameId/undefined,mainName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.mainCustomerId/undefined,mainCustomer:CUST_TBL.id/undefined,jointCustomer:CUST_TBL.nameId/undefined,jointName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.jointCustomerId/undefined,jointCustomer:CUST_TBL.id/undefined,ACC_TBL:ACC_TBL.acc_id/undefined,ACC_TBL:ACC_TBL.brand_id/undefined,mainName:NAME_TBL.zzname/name,jointName:NAME_TBL.zzname/name,ACC_TBL:ACC_TBL.blnc/balance",
@@ -262,7 +287,7 @@ describe ( "findSqlLinkDataFromRootAndDataD", () => {
 } )
 describe ( "generateGetSql", () => {
   it ( "should generate the get sql", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), r => generateGetSql ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), r => generateGetSql ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd, jointAccountRestParams ) ) ) ).toEqual ( [
       [
         "select",
         "  mainCustomer.nameId as mainCustomer_nameId,",
@@ -368,7 +393,7 @@ describe ( "findAllTableAndFieldDatasIn", () => {
 
 describe ( "createTableSql", () => {
   it ( "should make h2 compatible create table ", () => {
-    let rdps = [ JointAccountPageD.rest.jointAccount, PostCodeMainPage.rest.address ];
+    let rdps = [ JointAccountPageD.rest.jointAccount, PostCodeMainPage.rest.address, PostCodeMainPage.rest.postcode ];
     expect ( createTableSql ( rdps ) ).toEqual ( {
       "ACC_TBL": [
         "create table ACC_TBL" + "(",
@@ -382,10 +407,10 @@ describe ( "createTableSql", () => {
       "ADD_TBL": [
         "create table ADD_TBL" + "(",
         "  customerId integer,",
-        "  zzline1 varchar(256),",
-        "  zzline2 varchar(256),",
-        "  zzline3 varchar(256),",
-        "  zzline4 varchar(256)",
+        "  zzline1 varchar(255),",
+        "  zzline2 varchar(255),",
+        "  zzline3 varchar(255),",
+        "  zzline4 varchar(255)",
         ")"
       ],
       "CUST_TBL": [
@@ -397,17 +422,28 @@ describe ( "createTableSql", () => {
       "NAME_TBL": [
         "create table NAME_TBL" + "(",
         "  id integer,",
-        "  zzname varchar(256)",
+        "  zzname varchar(255)",
+        ")"
+      ],
+      "POSTCODE": [
+        "create table POSTCODE" + "(",
+        "  PC_POSTCODE varchar(255),",
+        "  zzline1 varchar(255),",
+        "  zzline2 varchar(255),",
+        "  zzline3 varchar(255),",
+        "  zzline4 varchar(255)",
         ")"
       ]
     } )
   } )
+
+
 } )
 
 describe ( "makeMapsForRest", () => {
   it ( "should make maps for each sql root, from the link data, for a 'single item'", () => {
     expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), ( r, path ) => {
-      const ld = findSqlLinkDataFromRootAndDataD ( r, JointAccountDd )
+      const ld = findSqlLinkDataFromRootAndDataD ( r, JointAccountDd, jointAccountRestParams )
       return makeMapsForRest ( paramsForTest, JointAccountPageD, 'jointAccount', JointAccountPageD.rest.jointAccount, ld, path, r.children.length )
     } ).map ( s => s.map ( s => s.replace ( /"/g, "'" ) ) ) ).toEqual ( [
       [
@@ -505,8 +541,8 @@ describe ( "makeMapsForRest", () => {
         "  '\\n';",
         "  public static Optional<JointAccount_jointAccountMaps> get(Connection connection, int accountId, int brandRef, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {",
         "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps.sql);",
-        "    statement.setInt(1,accountId);",
-        "    statement.setInt(2,brandRef);",
+        "      statement.setInt(1,accountId);",
+        "      statement.setInt(2,brandRef);",
         "      ResultSet rs = statement.executeQuery();",
         "      try {",
         "        return rs.next() ? Optional.of(new JointAccount_jointAccountMaps(rs,list0,list1)) : Optional.empty();",
@@ -517,8 +553,8 @@ describe ( "makeMapsForRest", () => {
         "  }",
         "  public static List<JointAccount_jointAccountMaps0> get0(Connection connection, int accountId, int brandRef) throws SQLException {",
         "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps0.sql);",
-        "    statement.setInt(1,accountId);",
-        "    statement.setInt(2,brandRef);",
+        "      statement.setInt(1,accountId);",
+        "      statement.setInt(2,brandRef);",
         "      ResultSet rs = statement.executeQuery();",
         "      try {",
         "        List<JointAccount_jointAccountMaps0> result = new LinkedList<>();",
@@ -532,8 +568,8 @@ describe ( "makeMapsForRest", () => {
         "  }",
         "  public static List<JointAccount_jointAccountMaps1> get1(Connection connection, int accountId, int brandRef) throws SQLException {",
         "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps1.sql);",
-        "    statement.setInt(1,accountId);",
-        "    statement.setInt(2,brandRef);",
+        "      statement.setInt(1,accountId);",
+        "      statement.setInt(2,brandRef);",
         "      ResultSet rs = statement.executeQuery();",
         "      try {",
         "        List<JointAccount_jointAccountMaps1> result = new LinkedList<>();",
@@ -676,8 +712,8 @@ describe ( "makeMapsForRest", () => {
         "  '\\n';",
         "  public static Optional<JointAccount_jointAccountMaps> get(Connection connection, int accountId, int brandRef, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {",
         "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps.sql);",
-        "    statement.setInt(1,accountId);",
-        "    statement.setInt(2,brandRef);",
+        "      statement.setInt(1,accountId);",
+        "      statement.setInt(2,brandRef);",
         "      ResultSet rs = statement.executeQuery();",
         "      try {",
         "        return rs.next() ? Optional.of(new JointAccount_jointAccountMaps(rs,list0,list1)) : Optional.empty();",
@@ -688,8 +724,8 @@ describe ( "makeMapsForRest", () => {
         "  }",
         "  public static List<JointAccount_jointAccountMaps0> get0(Connection connection, int accountId, int brandRef) throws SQLException {",
         "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps0.sql);",
-        "    statement.setInt(1,accountId);",
-        "    statement.setInt(2,brandRef);",
+        "      statement.setInt(1,accountId);",
+        "      statement.setInt(2,brandRef);",
         "      ResultSet rs = statement.executeQuery();",
         "      try {",
         "        List<JointAccount_jointAccountMaps0> result = new LinkedList<>();",
@@ -703,8 +739,8 @@ describe ( "makeMapsForRest", () => {
         "  }",
         "  public static List<JointAccount_jointAccountMaps1> get1(Connection connection, int accountId, int brandRef) throws SQLException {",
         "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps1.sql);",
-        "    statement.setInt(1,accountId);",
-        "    statement.setInt(2,brandRef);",
+        "      statement.setInt(1,accountId);",
+        "      statement.setInt(2,brandRef);",
         "      ResultSet rs = statement.executeQuery();",
         "      try {",
         "        List<JointAccount_jointAccountMaps1> result = new LinkedList<>();",
@@ -832,8 +868,8 @@ describe ( "makeMapsForRest", () => {
         "  '\\n';",
         "  public static Optional<JointAccount_jointAccountMaps> get(Connection connection, int accountId, int brandRef, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {",
         "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps.sql);",
-        "    statement.setInt(1,accountId);",
-        "    statement.setInt(2,brandRef);",
+        "      statement.setInt(1,accountId);",
+        "      statement.setInt(2,brandRef);",
         "      ResultSet rs = statement.executeQuery();",
         "      try {",
         "        return rs.next() ? Optional.of(new JointAccount_jointAccountMaps(rs,list0,list1)) : Optional.empty();",
@@ -844,8 +880,8 @@ describe ( "makeMapsForRest", () => {
         "  }",
         "  public static List<JointAccount_jointAccountMaps0> get0(Connection connection, int accountId, int brandRef) throws SQLException {",
         "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps0.sql);",
-        "    statement.setInt(1,accountId);",
-        "    statement.setInt(2,brandRef);",
+        "      statement.setInt(1,accountId);",
+        "      statement.setInt(2,brandRef);",
         "      ResultSet rs = statement.executeQuery();",
         "      try {",
         "        List<JointAccount_jointAccountMaps0> result = new LinkedList<>();",
@@ -859,8 +895,8 @@ describe ( "makeMapsForRest", () => {
         "  }",
         "  public static List<JointAccount_jointAccountMaps1> get1(Connection connection, int accountId, int brandRef) throws SQLException {",
         "      PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps1.sql);",
-        "    statement.setInt(1,accountId);",
-        "    statement.setInt(2,brandRef);",
+        "      statement.setInt(1,accountId);",
+        "      statement.setInt(2,brandRef);",
         "      ResultSet rs = statement.executeQuery();",
         "      try {",
         "        List<JointAccount_jointAccountMaps1> result = new LinkedList<>();",
@@ -905,7 +941,7 @@ describe ( "makeMapsForRest", () => {
   } )
   it ( "should  add 'where' to the sql if there is a where clause", () => {
     expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), ( r, path ) =>
-      makeWhereClause ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd ) ) ) ).toEqual ( [
+      makeWhereClause ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd, jointAccountRestParams ) ) ) ).toEqual ( [
       "where mainCustomer.nameId = mainName.id and ACC_TBL.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and ACC_TBL.jointCustomerId = jointCustomer.id and  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and 3=3 and 1=1 and ACC_TBL <> 'canceled'",
       "where  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and mainCustomer.id = mainAddress.customerId and ACC_TBL.mainCustomerId = mainCustomer.id and 2=2 and 1=1",
       "where  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and jointCustomer.id = jointAddress.customerId and ACC_TBL.jointCustomerId = jointCustomer.id"
@@ -915,13 +951,13 @@ describe ( "makeMapsForRest", () => {
 
 
     expect ( walkSqlRoots ( findSqlRoot ( addressRestD.tables ), ( r, path ) =>
-      makeWhereClause ( findSqlLinkDataFromRootAndDataD ( r, nameAndAddressDataD ) )
+      makeWhereClause ( findSqlLinkDataFromRootAndDataD ( r, nameAndAddressDataD, addressRestDParams ) )
     ) ).toEqual ( [ '' ] )
   } )
 
   it ( "should make maps for a repeating item", () => {
     expect ( walkSqlRoots ( findSqlRoot ( addressRestDTables ), ( r, path ) => {
-      const ld = findSqlLinkDataFromRootAndDataD ( r, postCodeSearchResponseDD )
+      const ld = findSqlLinkDataFromRootAndDataD ( r, postCodeSearchResponseDD, addressRestDParams )
       return makeMapsForRest ( paramsForTest, PostCodeMainPage, 'postcode', PostCodeMainPage.rest.postcode, ld, path, r.children.length )
     } ).map ( s => s.map ( s => s.replace ( /"/g, "'" ) ) ) ).toEqual ( [
       [
@@ -938,7 +974,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "",
-        "//{'dbName':{'rsSetter':'setString','javaType':'String','javaParser':'','commonLens':'dbName','testValue':'mock'},'postcode':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','lens':'~/postcode/search','testValue':'LW12 4RG'}}",
+        "//{'dbName':{'rsSetter':'setString','javaType':'String','javaParser':'','commonLens':'dbName','testValue':'mock'},'postcode':{'rsSetter':'setString','javaType':'String','javaParser':'','lens':'~/postcode/search','testValue':'LW12 4RG'}}",
         "public class PostCodeMainPage_postcodeMaps {",
         "  @SuppressWarnings('SqlResolve')",
         "  public static String sql = 'select'+",
@@ -946,7 +982,7 @@ describe ( "makeMapsForRest", () => {
         "  '  ADD_TBL ADD_TBL'+",
         "  ' ';",
         "  ",
-        "  public static List<Map<String,Object>> getAll(Connection connection,int postcode) throws SQLException {",
+        "  public static List<Map<String,Object>> getAll(Connection connection,String postcode) throws SQLException {",
         "  //from PostCodeMainPage.rest[postcode].dataDD which is of type PostCodeSearchResponse",
         "     return get(connection,postcode).stream().map(x -> x._root).collect(Collectors.toList());",
         "  }",
@@ -955,14 +991,15 @@ describe ( "makeMapsForRest", () => {
         "  '  POSTCODE.zzline1 as POSTCODE_zzline1,\\n'+",
         "  '  POSTCODE.zzline2 as POSTCODE_zzline2,\\n'+",
         "  '  POSTCODE.zzline3 as POSTCODE_zzline3,\\n'+",
-        "  '  POSTCODE.zzline4 as POSTCODE_zzline4\\n'+",
+        "  '  POSTCODE.zzline4 as POSTCODE_zzline4,\\n'+",
+        "  '  POSTCODE.PC_POSTCODE as POSTCODE_PC_POSTCODE\\n'+",
         "  ' from\\n'+",
         "  '  POSTCODE POSTCODE\\n'+",
-        "  ' where  POSTCODE.PC_POSTCODE = ?\\n'+",
+        "  ' where  POSTCODE.PC_POSTCODE like ?\\n'+",
         "  '\\n';",
-        "  public static List<PostCodeMainPage_postcodeMaps> get(Connection connection, int postcode) throws SQLException {",
+        "  public static List<PostCodeMainPage_postcodeMaps> get(Connection connection, String postcode) throws SQLException {",
         "      PreparedStatement statement = connection.prepareStatement(PostCodeMainPage_postcodeMaps.sql);",
-        "    statement.setInt(1,postcode);",
+        "      statement.setString(1,'%'+postcode+'%');",
         "      ResultSet rs = statement.executeQuery();",
         "      try {",
         "        List<PostCodeMainPage_postcodeMaps> result = new LinkedList<>();",
@@ -996,18 +1033,18 @@ describe ( "paramsForLinkedData", () => {
   const dbName: AllLensRestParams = { ...StringParam, commonLens: 'dbName', testValue: 'mock' }
 
   it ( "should find the params (in the correct order) from the wheres in the linked data", () => {
-    expect ( findParamsForTable ( `error`, { accountId, brandRef }, jointAccountRestDTables ) ).toEqual ( [ [ 'accountId', accountId ], [ 'brandRef', brandRef ] ] )
-    expect ( findParamsForTable ( `error`, { brandRef, accountId }, jointAccountRestDTables ) ).toEqual ( [ [ 'accountId', accountId ], [ 'brandRef', brandRef ] ] )
-    expect ( findParamsForTable ( `error`, { brandRef, accountId, dbName }, jointAccountRestDTables ) ).toEqual ( [ [ 'accountId', accountId ], [ 'brandRef', brandRef ] ] )
+    function justNameAndParam ( ps: JavaQueryParamDetails[] ) {return ps.map ( ( { name, param } ) => [ name, param ] )}
+    expect ( justNameAndParam ( findParamsForTable ( `error`, { accountId, brandRef }, jointAccountRestDTables ) ) ).toEqual ( [ [ 'accountId', accountId ], [ 'brandRef', brandRef ] ] )
+    expect ( justNameAndParam ( findParamsForTable ( `error`, { brandRef, accountId }, jointAccountRestDTables ) ) ).toEqual ( [ [ 'accountId', accountId ], [ 'brandRef', brandRef ] ] )
+    expect ( justNameAndParam ( findParamsForTable ( `error`, { brandRef, accountId, dbName }, jointAccountRestDTables ) ) ).toEqual ( [ [ 'accountId', accountId ], [ 'brandRef', brandRef ] ] )
     const reversed: EntityAndWhere = { ...jointAccountRestDTables, where: jointAccountRestDTables.where.reverse () }
-    expect ( findParamsForTable ( `error`, { accountId, brandRef }, reversed ) ).toEqual ( [ [ 'brandRef', brandRef ], [ 'accountId', accountId ] ] )
-    expect ( findParamsForTable ( `error`, { brandRef, accountId }, reversed ) ).toEqual ( [ [ 'brandRef', brandRef ], [ 'accountId', accountId ] ] )
+    expect ( justNameAndParam ( findParamsForTable ( `error`, { accountId, brandRef }, reversed ) ) ).toEqual ( [ [ 'brandRef', brandRef ], [ 'accountId', accountId ] ] )
+    expect ( justNameAndParam ( findParamsForTable ( `error`, { brandRef, accountId }, reversed ) ) ).toEqual ( [ [ 'brandRef', brandRef ], [ 'accountId', accountId ] ] )
 
   } )
 
   it ( "should throw a nice error message if a param is needed but isn't available", () => {
       expect ( () => findParamsForTable ( `error`, {}, jointAccountRestDTables ) ).toThrow ( 'error param brandRef is defined in where' )
-
     }
   )
 } )

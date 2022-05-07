@@ -236,7 +236,7 @@ export const stringPrimDD: StringPrimDD = {
   reactType: 'string',
   graphQlType: 'String',
   rsGetter: 'getString',
-  dbType: 'varchar(256)'
+  dbType: 'varchar(255)'
 }
 interface NumberPrimDD {
   emptyValue: number,

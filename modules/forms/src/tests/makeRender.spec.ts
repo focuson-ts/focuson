@@ -200,7 +200,7 @@ describe ( " listComponentsIn", () => {
       "      search:<ModalButton id={`${id}.search`} text='search'  state={state} modal = 'PostCodeSearch'  ",
       "        pageMode='edit'",
       "        focusOn='~/postcode'",
-      "        copyOnClose={[{'from':'~/postcode/addressResults/line1','to':'~/main/line1'},{'from':'~/postcode/addressResults/line2','to':'~/main/line2'},{'from':'~/postcode/addressResults/line3','to':'~/main/line3'},{'from':'~/postcode/addressResults/line4','to':'~/main/line4'},{'from':'~/postcode/addressResults/line4','to':'~/main/line4'},{'from':'~/postcode/search','to':'~/main/postcode'}]}",
+      "        copyOnClose={[{'from':'~/postcode/addressResults/line1','to':'~/main/line1'},{'from':'~/postcode/addressResults/line2','to':'~/main/line2'},{'from':'~/postcode/addressResults/line3','to':'~/main/line3'},{'from':'~/postcode/addressResults/line4','to':'~/main/line4'},{'from':'~/postcode/addressResults/line4','to':'~/main/line4'},{'from':'~/postcode/addressResults/postcode','to':'~/main/postcode'}]}",
       "        copyJustString={[{'from':'~/main/postcode','to':'~/postcode/search'}]}",
       "      />,}",
       "",

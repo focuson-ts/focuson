@@ -82,7 +82,7 @@ describe ( "makeDbFetchers", () => {
       "       Connection c = dataSource.getConnection();",
       "       try {",
       "         //from the data type in PostCodeMainPage.rest[postcode].dataDD which is a PostCodeSearchResponse ",
-      "         List<Map<String, Object>> list = PostCodeMainPage_postcodeMaps.getAll(c,Integer.parseInt(postcode));",
+      "         List<Map<String, Object>> list = PostCodeMainPage_postcodeMaps.getAll(c,(postcode));",
       "         return list;",
       "       } finally {",
       "         c.close();",
@@ -95,7 +95,7 @@ describe ( "makeDbFetchers", () => {
       "      return IFetcher.db;",
       "  }",
       "}"
-    ] )
+    ])
   } )
 
 } )

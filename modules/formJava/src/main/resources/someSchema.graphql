@@ -331,6 +331,7 @@ type PostCodeDataLine{
   line2: String!
   line3: String!
   line4: String!
+  postcode: String!
 }
 type PostCodeNameAndAddress{
   name: String!

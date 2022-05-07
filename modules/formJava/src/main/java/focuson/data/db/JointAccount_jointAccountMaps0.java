@@ -84,8 +84,8 @@ public class JointAccount_jointAccountMaps0 {
   "\n";
   public static Optional<JointAccount_jointAccountMaps> get(Connection connection, int accountId, int brandRef, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {
       PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps.sql);
-    statement.setInt(1,accountId);
-    statement.setInt(2,brandRef);
+      statement.setInt(1,accountId);
+      statement.setInt(2,brandRef);
       ResultSet rs = statement.executeQuery();
       try {
         return rs.next() ? Optional.of(new JointAccount_jointAccountMaps(rs,list0,list1)) : Optional.empty();
@@ -96,8 +96,8 @@ public class JointAccount_jointAccountMaps0 {
   }
   public static List<JointAccount_jointAccountMaps0> get0(Connection connection, int accountId, int brandRef) throws SQLException {
       PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps0.sql);
-    statement.setInt(1,accountId);
-    statement.setInt(2,brandRef);
+      statement.setInt(1,accountId);
+      statement.setInt(2,brandRef);
       ResultSet rs = statement.executeQuery();
       try {
         List<JointAccount_jointAccountMaps0> result = new LinkedList<>();
@@ -111,8 +111,8 @@ public class JointAccount_jointAccountMaps0 {
   }
   public static List<JointAccount_jointAccountMaps1> get1(Connection connection, int accountId, int brandRef) throws SQLException {
       PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps1.sql);
-    statement.setInt(1,accountId);
-    statement.setInt(2,brandRef);
+      statement.setInt(1,accountId);
+      statement.setInt(2,brandRef);
       ResultSet rs = statement.executeQuery();
       try {
         List<JointAccount_jointAccountMaps1> result = new LinkedList<>();

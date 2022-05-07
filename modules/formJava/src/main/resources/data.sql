@@ -24,6 +24,6 @@ INSERT INTO ADD_TBL(customerId, zzline1, zzline2, zzline3, zzline4)
           (2002, 'fiveLineOne', 'fiveLineTwo', 'fiveLineThree', 'fiveLineFour'),
           (2002, 'sixLineOne', 'sixLineTwo', 'sixLineThree', 'sixLineFour');
 insert into POSTCODE(PC_POSTCODE, zzline1, zzline2, zzline3, zzline4)
-   values (1, '4 Privet drive', 'Little Whinging', 'Surrey', 'England');
+   values ('LW23 1HQ', '4 Privet drive', 'Little Whinging', 'Surrey', 'England');
 insert into POSTCODE(PC_POSTCODE, zzline1, zzline2, zzline3, zzline4)
-   values (2, '27 Throughput drive', 'Woodfield', 'Country Cork', 'Ireland');
+   values ('IR12 1w4', '27 Throughput drive', 'Woodfield', 'Country Cork', 'Ireland');

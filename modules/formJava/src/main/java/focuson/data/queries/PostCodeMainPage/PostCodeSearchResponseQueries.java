@@ -6,6 +6,7 @@ public class PostCodeSearchResponseQueries{
         "    line2"+
         "    line3"+
         "    line4"+
+        "    postcode"+
         "  }"
   +"}";}
 }
