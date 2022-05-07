@@ -57,7 +57,7 @@ select
   ADD_TBL.zzline4 as ADD_TBL_zzline4
  from
   ADD_TBL ADD_TBL
- where ;
+ ;
 
 -- PostCodeSearchResponse /api/postCode?{query} {"dbName":{"rsSetter":"setString","javaType":"String","javaParser":"","commonLens":"dbName","testValue":"mock"},"postcode":{"rsSetter":"setInt","javaType":"int","javaParser":"Integer.parseInt","lens":"~/postcode/search","testValue":"LW12 4RG"}}
 select

@@ -21,7 +21,7 @@ public class PostCodeMainPage_addressMaps {
   "  ADD_TBL.zzline4 as ADD_TBL_zzline4"+
   " from"+
   "  ADD_TBL ADD_TBL"+
-  " where ";
+  " ";
   
   public static Optional<Map<String,Object>> getAll(Connection connection) throws SQLException {
   //from PostCodeMainPage.rest[address].dataDD which is of type PostCodeNameAndAddress
@@ -34,7 +34,7 @@ public class PostCodeMainPage_addressMaps {
   "  ADD_TBL.zzline4 as ADD_TBL_zzline4\n"+
   " from\n"+
   "  ADD_TBL ADD_TBL\n"+
-  " where \n"+
+  " \n"+
   "\n";
   public static Optional<PostCodeMainPage_addressMaps> get(Connection connection) throws SQLException {
       PreparedStatement statement = connection.prepareStatement(PostCodeMainPage_addressMaps.sql);

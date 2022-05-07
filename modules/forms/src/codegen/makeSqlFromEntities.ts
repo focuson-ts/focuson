@@ -1,6 +1,6 @@
 import { DBTable } from "../common/resolverD";
 import { beforeAfterSeparator, beforeSeparator, ints, mapPathPlusInts, NameAnd, safeArray, safeString } from "@focuson/utils";
-import { AllLensRestParams, EntityAndWhere, RestD, RestParams, unique } from "../common/restD";
+import { AllLensRestParams, EntityAndWhere, RestParams, unique } from "../common/restD";
 import { CompDataD, emptyDataFlatMap, flatMapDD, isRepeatingDd } from "../common/dataD";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addBrackets, addStringToEndOfAllButLast, indentList } from "./codegen";
@@ -160,6 +160,9 @@ export interface WhereFromQuery {
   table: DBTable;
   alias: string
   field: string;
+  comparator?: '=' | '<>' | 'like' | '>' | '<'; // defaults to =. We can use this for 'like' or for <> or > or <
+  paramPrefix?: '%'; //added to the start of the parameter. For use with like
+  paramPostfix?: '%';//added to the end of the parameter. For use with like
 }
 export function isWhereFromQuery ( w: WhereLink ): w is WhereFromQuery {
   // @ts-ignore
@@ -375,7 +378,7 @@ export function findSqlLinkDataFromRootAndDataD ( sqlRoot: SqlRoot, dataD: CompD
 }
 
 
-export function makeWhereClause ( ws: WhereLink[] ) {
+export function makeWhereClauseStringsFrom ( ws: WhereLink[] ) {
   return ws.map ( ( w ) => {
     if ( isTableWhereLink ( w ) ) {
       const { parentAlias, idInParent, childAlias, idInThis } = w
@@ -385,15 +388,17 @@ export function makeWhereClause ( ws: WhereLink[] ) {
       return ` ${w.alias}.${w.field} = ?`
     }
     throw new Error ( `Unknown where link ${JSON.stringify ( w )}` )
-  } ).join ( " and " )
+  } )
 }
 
+export function makeWhereClause ( s: SqlLinkData ) {
+  let whereList = [ ...makeWhereClauseStringsFrom ( s.whereLinks ), ...s.staticWheres.filter ( s => s !== '' ) ];
+  return whereList.length === 0 ? '' : 'where ' + whereList.join ( ' and ' );
+}
 export function generateGetSql ( s: SqlLinkData ): string[] {
-  const where = s.staticWheres.filter ( s => s !== "" ).length === 0 ?
-    `where ${makeWhereClause ( s.whereLinks )}` : `where ${makeWhereClause ( s.whereLinks )} and ${s.staticWheres.join ( " and " )}`
   return [ `select`, ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.fields.map ( taf => `${taf.alias}.${taf.fieldData.dbFieldName} as ${sqlTafFieldName ( taf )}` ) ) ),
     ` from`, ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.aliasAndTables.map ( ( [ alias, table ] ) => `${table.name} ${alias}` ) ) ),
-    ` ${where}` ]
+    ` ${(makeWhereClause ( s ))}` ]
 }
 
 export const findAllTableAndFieldsIn = <G> ( rdps: RestDefnInPageProperties<G>[] ) => unique ( rdps.flatMap ( rdp => {
@@ -570,7 +575,7 @@ export function makeAllGetsAndAllSqlForRest<B, G> ( params: JavaWiringParams, p:
   const paramsForMainGet = getters.slice ( 1 ).map ( g => g.query )
   function callingParams ( qs: JavaQueryParamDetails[] ) {return qs.map ( q => q[ 0 ] )}
   const allParams = unique ( getters.flatMap ( g => g.query ), q => q[ 0 ] + q[ 1 ].javaType )
-  const mapString = isRepeatingDd ( rdp.rest.dataDD ) ? '.stream().map(x -> x._root).collect(Collectors.toList())': '.map(x -> x._root)'
+  const mapString = isRepeatingDd ( rdp.rest.dataDD ) ? '.stream().map(x -> x._root).collect(Collectors.toList())' : '.map(x -> x._root)'
   const mainGet: string[] = [
     `public static ${isListOrOptional ( rdp )}<Map<String,Object>> getAll(${[ 'Connection connection', ...allParams.map ( ( [ name, param ] ) =>
       `${param.javaType} ${name}` ) ].join ( "," )}) throws SQLException {`,

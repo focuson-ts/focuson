@@ -1,7 +1,7 @@
-import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findParamsForTable, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, MainEntity, makeMapsForRest, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldData } from "../codegen/makeSqlFromEntities";
+import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findParamsForTable, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, makeMapsForRest, makeWhereClause, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldData } from "../codegen/makeSqlFromEntities";
 import { AllLensRestParams, EntityAndWhere, IntParam, StringParam, unique } from "../common/restD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
-import { nameAndAddressDataD, postCodeDataLineD, postCodeSearchResponseDD } from "../example/postCodeDemo/addressSearch.dataD";
+import { nameAndAddressDataD, postCodeSearchResponseDD } from "../example/postCodeDemo/addressSearch.dataD";
 import { addressRestD } from "../example/postCodeDemo/addressSearch.restD";
 import { JointAccountPageD } from "../example/jointAccount/jointAccount.pageD";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
@@ -903,6 +903,22 @@ describe ( "makeMapsForRest", () => {
       ]
     ] )
   } )
+  it ( "should  add 'where' to the sql if there is a where clause", () => {
+    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), ( r, path ) =>
+      makeWhereClause ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd ) ) ) ).toEqual ( [
+      "where mainCustomer.nameId = mainName.id and ACC_TBL.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and ACC_TBL.jointCustomerId = jointCustomer.id and  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and 3=3 and 1=1 and ACC_TBL <> 'canceled'",
+      "where  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and mainCustomer.id = mainAddress.customerId and ACC_TBL.mainCustomerId = mainCustomer.id and 2=2 and 1=1",
+      "where  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and jointCustomer.id = jointAddress.customerId and ACC_TBL.jointCustomerId = jointCustomer.id"
+    ] )
+  } )
+  it ( "should not add 'where' to the sql if there isn't a where clause", () => {
+
+
+    expect ( walkSqlRoots ( findSqlRoot ( addressRestD.tables ), ( r, path ) =>
+      makeWhereClause ( findSqlLinkDataFromRootAndDataD ( r, nameAndAddressDataD ) )
+    ) ).toEqual ( [ '' ] )
+  } )
+
   it ( "should make maps for a repeating item", () => {
     expect ( walkSqlRoots ( findSqlRoot ( addressRestDTables ), ( r, path ) => {
       const ld = findSqlLinkDataFromRootAndDataD ( r, postCodeSearchResponseDD )
@@ -928,7 +944,7 @@ describe ( "makeMapsForRest", () => {
         "  public static String sql = 'select'+",
         "  ' from'+",
         "  '  ADD_TBL ADD_TBL'+",
-        "  ' where ';",
+        "  ' ';",
         "  ",
         "  public static List<Map<String,Object>> getAll(Connection connection,int postcode) throws SQLException {",
         "  //from PostCodeMainPage.rest[postcode].dataDD which is of type PostCodeSearchResponse",
