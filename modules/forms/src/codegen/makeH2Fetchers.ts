@@ -6,6 +6,7 @@ import { fetcherInterfaceName, fetcherName, fetcherPackageName, h2FetcherClassNa
 import { indentList } from "./codegen";
 import { findParamsForTable } from "./makeSqlFromEntities";
 import { getRestTypeDetails } from "@focuson/rest";
+import { isRepeatingDd } from "../common/dataD";
 
 
 export function makeH2Fetchers<B, G> ( params: JavaWiringParams, pageD: MainPageD<B, G>, restName: string, rdp: RestDefnInPageProperties<G> ): string[] {

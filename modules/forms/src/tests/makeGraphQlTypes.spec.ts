@@ -12,18 +12,18 @@ describe ( "makeGraphQlSchema", () => {
     it ( "should make type Query", () => {
       expect ( makeQueryOrMutateBlock ( rs, 'Query' ) ).toEqual ( [
         "type Query{",
-        "  getEAccountsSummary(accountId: String!, customerId: String!, employeeType: String!):EAccountsSummary!",
-        "  getCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):CreatePlan!",
+        "  getEAccountsSummary(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, customerId: String!, employeeType: String!):EAccountsSummary!",
+        "  getCreatePlan(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, createPlanId: String!):CreatePlan!",
         "}"
       ] )
     } )
     it ( "should make type Mutation", () => {
       expect ( makeQueryOrMutateBlock ( rs, 'Mutation' ) ).toEqual ( [
         "type Mutation{",
-        "  stateEAccountsSummaryinvalidate(accountId: String!, customerId: String!, employeeType: String!):Boolean",
-        "  createCreatePlan(accountId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!",
-        "  updateCreatePlan(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!",
-        "  deleteCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):Boolean",
+        "  stateEAccountsSummaryinvalidate(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, customerId: String!, employeeType: String!):Boolean",
+        "  createCreatePlan(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!,obj: CreatePlanInp!):CreatePlan!",
+        "  updateCreatePlan(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, createPlanId: String!,obj: CreatePlanInp!):CreatePlan!",
+        "  deleteCreatePlan(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, createPlanId: String!):Boolean",
         "}"
       ])
     } )
@@ -62,14 +62,14 @@ describe ( "makeGraphQlSchema", () => {
   it ( "should make a schema from RestDs", () => {
     expect ( makeGraphQlSchema ( rs ) ).toEqual ( [
       "type Query{",
-      "  getEAccountsSummary(accountId: String!, customerId: String!, employeeType: String!):EAccountsSummary!",
-      "  getCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):CreatePlan!",
+      "  getEAccountsSummary(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, customerId: String!, employeeType: String!):EAccountsSummary!",
+      "  getCreatePlan(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, createPlanId: String!):CreatePlan!",
       "}",
       "type Mutation{",
-      "  stateEAccountsSummaryinvalidate(accountId: String!, customerId: String!, employeeType: String!):Boolean",
-      "  createCreatePlan(accountId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!",
-      "  updateCreatePlan(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!",
-      "  deleteCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):Boolean",
+      "  stateEAccountsSummaryinvalidate(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, customerId: String!, employeeType: String!):Boolean",
+      "  createCreatePlan(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!,obj: CreatePlanInp!):CreatePlan!",
+      "  updateCreatePlan(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, createPlanId: String!,obj: CreatePlanInp!):CreatePlan!",
+      "  deleteCreatePlan(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, createPlanId: String!):Boolean",
       "}",
       "type CreatePlan{",
       "  createPlanStart: String!",
@@ -103,10 +103,10 @@ describe ( "makeGraphQlSchema", () => {
   it ( "should make a schema for something with a repeating block in the fetcher", () => {
     expect ( makeGraphQlSchema ( [ repeatingRestRD ] ) ).toEqual ( [
       "type Query{",
-      "  getRepeatingLine(customerId: String!):[RepeatingLine!]!",
+      "  getRepeatingLine(clientRef: String!):[RepeatingLine!]!",
       "}",
       "type Mutation{",
-      "  createRepeatingLine(customerId: String!,obj: [RepeatingLineInp!]!):[RepeatingLine!]!",
+      "  createRepeatingLine(clientRef: String!,obj: [RepeatingLineInp!]!):[RepeatingLine!]!",
       "}",
       "type RepeatingLine{",
       "  name: String!",
@@ -116,7 +116,7 @@ describe ( "makeGraphQlSchema", () => {
       "  name: String!",
       "  age: Int!",
       "}"
-    ] )
+    ])
 
   } )
 } )

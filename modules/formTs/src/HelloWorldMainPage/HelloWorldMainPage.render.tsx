@@ -9,6 +9,7 @@ import { Guard } from "@focuson/form_components";
 import { GuardButton } from "@focuson/form_components";
 import { HelloWorldMainPageOptionals } from "../HelloWorldMainPage/HelloWorldMainPage.optionals";
 import { LabelAndStringInput } from '@focuson/form_components';
+import {DeleteStateButton} from '@focuson/form_components';
 import {ListNextButton} from '@focuson/form_components';
 import {ListPrevButton} from '@focuson/form_components';
 import {ModalButton} from '@focuson/pages';

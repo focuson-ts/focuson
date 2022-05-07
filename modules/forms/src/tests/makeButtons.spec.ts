@@ -25,7 +25,7 @@ describe ( "makeButtons", () => {
       "    />,",
       "    deleteExistingPlan:<RestButton state={state} id={`${id}.deleteExistingPlan`} ",
       "      name='deleteExistingPlan'",
-      "      action='delete'",
+      "      action={'delete'}",
       "      rest='EAccountsSummary_CreatePlanRestDetails'",
       "      confirm={true}",
       "     />,",
@@ -77,7 +77,7 @@ describe ( "makeButtons", () => {
     expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage,PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "    {save:<RestButton state={state} id={`${id}.save`} ",
       "      name='save'",
-      "      action='create'",
+      "      action={'create'}",
       "      validate={false}",
       "      rest='PostCodeMainPage_PostCodeNameAndAddressRestDetails'",
       "     />,",

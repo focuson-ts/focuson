@@ -12,6 +12,7 @@ import { Table } from '@focuson/form_components';
 import { LabelAndDateInput } from '@focuson/form_components';
 import { LabelAndStringInput } from '@focuson/form_components';
 import { LabelAndNumberInput } from '@focuson/form_components';
+import {DeleteStateButton} from '@focuson/form_components';
 import {ListNextButton} from '@focuson/form_components';
 import {ListPrevButton} from '@focuson/form_components';
 import {ModalButton} from '@focuson/pages';
@@ -33,6 +34,7 @@ const id=`page${index}`;
         name='cancelCheckBook'
         action={{"state":"cancel"}}
         rest='ChequeCreditbooks_ChequeCreditbooksRestDetails'
+        confirm={"Really?"}
        />,
       orderNewBook:<ModalButton id={`${id}.orderNewBook`} text='orderNewBook'  state={state} modal = 'OrderChequeBookOrPayingInModal'  
         pageMode='create'
@@ -40,11 +42,13 @@ const id=`page${index}`;
         pageParams={{"position":{"top":123}}}
         createEmpty={empty.emptyChequeCreditbooksHistoryLine}
          rest={{"name":"ChequeCreditbooks_ChequeCreditbooksRestDetails","restAction":"create"}}
-      />,}
+      />,
+      refreshx:<DeleteStateButton  id={`${id}.refreshx`} states={[pageState(state)<domain.ChequeCreditbooksPageDomain>().focusOn('fromApi'),pageState(state)<domain.ChequeCreditbooksPageDomain>().focusOn('tempCreatePlan')]} label='Refresh' />,}
 
       return <>
           <ChequeCreditbooks id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.orderNewBook } 
+      { buttons.refreshx } 
       { buttons.cancelCheckBook } 
       </>})}
 

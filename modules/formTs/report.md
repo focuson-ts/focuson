@@ -412,6 +412,7 @@
     Modal Button ==> OrderChequeBookOrPayingInModal in mode create
       Focused on "~/tempCreatePlan"
       RestOnCommit: chequeCreditBooks/create
+    refreshx     DeleteStateButton
 
 ---
 # Repeating - MainPage

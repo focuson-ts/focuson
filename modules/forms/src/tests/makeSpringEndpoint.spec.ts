@@ -12,12 +12,12 @@ import { CreatePlanDD } from "../example/eAccounts/eAccountsSummary.dataD";
 
 describe ( "makeSpringEndpoint", () => {
   it ( "should makeParamsForJava", () => {
-    expect ( makeParamsForJava ( createPlanRestD, 'get' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId' )
+    expect ( makeParamsForJava ( createPlanRestD, 'get' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String createPlanId' )
     // expect ( makeParamsForJava ( createPlanRestD, 'list' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String customerId' )
-    expect ( makeParamsForJava ( createPlanRestD, 'create' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body' )
-    expect ( makeParamsForJava ( createPlanRestD, 'update' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId, @RequestBody String body' )
-    expect ( makeParamsForJava ( createPlanRestD, 'delete' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId' )
-    expect ( makeParamsForJava ( createPlanRestD, 'getOption' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId' )
+    expect ( makeParamsForJava ( createPlanRestD, 'create' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestBody String body' )
+    expect ( makeParamsForJava ( createPlanRestD, 'update' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String createPlanId, @RequestBody String body' )
+    expect ( makeParamsForJava ( createPlanRestD, 'delete' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String createPlanId' )
+    expect ( makeParamsForJava ( createPlanRestD, 'getOption' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String createPlanId' )
   } )
   it ( "should make an endpoint for a rest", () => {
     expect ( makeSpringEndpointsFor ( paramsForTest, EAccountsSummaryPD, 'eAccountsSummary', eAccountsSummaryRestD ) ).toEqual ( [
@@ -46,25 +46,27 @@ describe ( "makeSpringEndpoint", () => {
       "  @Autowired",
       "  EAccountsSummaryAudit __audit;",
       "    @GetMapping(value=\"/api/accountsSummary\", produces=\"application/json\")",
-      "    public ResponseEntity getEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{",
-      "       return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.getEAccountsSummary(accountId, customerId, employeeType), \"getEAccountsSummary\");",
+      "    public ResponseEntity getEAccountsSummary(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{",
+      "       return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.getEAccountsSummary(accountId, applRef, brandRef, clientRef, customerId, employeeType), \"getEAccountsSummary\");",
       "    }",
       "",
       "    @PostMapping(value=\"/api/accountsSummary/invalidate\", produces=\"application/json\")",
-      "    public ResponseEntity state_invalidateEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{",
+      "    public ResponseEntity state_invalidateEAccountsSummary(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{",
+      "      //from EAccountsSummary.rest[eAccountsSummary.access[{\"state\":\"invalidate\"}]]",
       "      if (!Arrays.asList(\"teamLeader\").contains(employeeType)) return new ResponseEntity(\"\", new HttpHeaders(), HttpStatus.FORBIDDEN);",
-      "        __audit.EAccountsSummary_state_invalidate_auditStuff(IFetcher.mock,accountId,customerId);",
-      "       return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, customerId, employeeType), \"\");",
+      "        //from EAccountsSummary.rest[eAccountsSummary].audit[{\"state\":\"invalidate\"}]",
+      "        __audit.EAccountsSummary_state_invalidate_auditStuff(IFetcher.mock,accountId,clientRef);",
+      "       return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, applRef, brandRef, clientRef, customerId, employeeType), \"\");",
       "    }",
       "",
       "    @GetMapping(value=\"/api/accountsSummary/query\", produces=\"application/json\")",
-      "    public String querygetEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{",
-      "       return EAccountsSummaryQueries.getEAccountsSummary(accountId, customerId, employeeType);",
+      "    public String querygetEAccountsSummary(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{",
+      "       return EAccountsSummaryQueries.getEAccountsSummary(accountId, applRef, brandRef, clientRef, customerId, employeeType);",
       "    }",
       "",
       "    @PostMapping(value=\"/api/accountsSummary/invalidate/query\", produces=\"application/json\")",
-      "    public String querystate_invalidateEAccountsSummary(@RequestParam String accountId, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{",
-      "       return EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, customerId, employeeType);",
+      "    public String querystate_invalidateEAccountsSummary(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{",
+      "       return EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, applRef, brandRef, clientRef, customerId, employeeType);",
       "    }",
       "",
       "  @GetMapping(value = \"/api/accountsSummary/sample\", produces = \"application/json\")",
@@ -98,43 +100,43 @@ describe ( "makeSpringEndpoint", () => {
       "  @Autowired",
       "  public IManyGraphQl graphQL;",
       "    @GetMapping(value='/api/createPlan', produces='application/json')",
-      "    public ResponseEntity getCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{",
-      "       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.getCreatePlan(accountId, createPlanId, customerId), 'getCreatePlan');",
+      "    public ResponseEntity getCreatePlan(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String createPlanId) throws Exception{",
+      "       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.getCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId), 'getCreatePlan');",
       "    }",
       "",
       "    @PostMapping(value='/api/createPlan', produces='application/json')",
-      "    public ResponseEntity createCreatePlan(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{",
-      "       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.createCreatePlan(accountId, customerId,   Transform.removeQuoteFromProperties(body, Map.class)), 'createCreatePlan');",
+      "    public ResponseEntity createCreatePlan(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestBody String body) throws Exception{",
+      "       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.createCreatePlan(accountId, applRef, brandRef, clientRef,   Transform.removeQuoteFromProperties(body, Map.class)), 'createCreatePlan');",
       "    }",
       "",
       "    @PutMapping(value='/api/createPlan', produces='application/json')",
-      "    public ResponseEntity updateCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId, @RequestBody String body) throws Exception{",
-      "       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.updateCreatePlan(accountId, createPlanId, customerId,   Transform.removeQuoteFromProperties(body, Map.class)), 'updateCreatePlan');",
+      "    public ResponseEntity updateCreatePlan(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String createPlanId, @RequestBody String body) throws Exception{",
+      "       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.updateCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId,   Transform.removeQuoteFromProperties(body, Map.class)), 'updateCreatePlan');",
       "    }",
       "",
       "    @DeleteMapping(value='/api/createPlan', produces='application/json')",
-      "    public ResponseEntity deleteCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{",
-      "       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.deleteCreatePlan(accountId, createPlanId, customerId), '');",
+      "    public ResponseEntity deleteCreatePlan(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String createPlanId) throws Exception{",
+      "       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.deleteCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId), '');",
       "    }",
       "",
       "    @GetMapping(value='/api/createPlan/query', produces='application/json')",
-      "    public String querygetCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{",
-      "       return CreatePlanQueries.getCreatePlan(accountId, createPlanId, customerId);",
+      "    public String querygetCreatePlan(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String createPlanId) throws Exception{",
+      "       return CreatePlanQueries.getCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId);",
       "    }",
       "",
       "    @PostMapping(value='/api/createPlan/query', produces='application/json')",
-      "    public String querycreateCreatePlan(@RequestParam String accountId, @RequestParam String customerId, @RequestBody String body) throws Exception{",
-      "       return CreatePlanQueries.createCreatePlan(accountId, customerId,   Transform.removeQuoteFromProperties(body, Map.class));",
+      "    public String querycreateCreatePlan(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestBody String body) throws Exception{",
+      "       return CreatePlanQueries.createCreatePlan(accountId, applRef, brandRef, clientRef,   Transform.removeQuoteFromProperties(body, Map.class));",
       "    }",
       "",
       "    @PutMapping(value='/api/createPlan/query', produces='application/json')",
-      "    public String queryupdateCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId, @RequestBody String body) throws Exception{",
-      "       return CreatePlanQueries.updateCreatePlan(accountId, createPlanId, customerId,   Transform.removeQuoteFromProperties(body, Map.class));",
+      "    public String queryupdateCreatePlan(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String createPlanId, @RequestBody String body) throws Exception{",
+      "       return CreatePlanQueries.updateCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId,   Transform.removeQuoteFromProperties(body, Map.class));",
       "    }",
       "",
       "    @DeleteMapping(value='/api/createPlan/query', produces='application/json')",
-      "    public String querydeleteCreatePlan(@RequestParam String accountId, @RequestParam String createPlanId, @RequestParam String customerId) throws Exception{",
-      "       return CreatePlanQueries.deleteCreatePlan(accountId, createPlanId, customerId);",
+      "    public String querydeleteCreatePlan(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String createPlanId) throws Exception{",
+      "       return CreatePlanQueries.deleteCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId);",
       "    }",
       "",
       "  @GetMapping(value = '/api/createPlan/sample', produces = 'application/json')",
@@ -169,23 +171,23 @@ describe ( "makeSpringEndpoint", () => {
       "  @Autowired",
       "  public IManyGraphQl graphQL;",
       "    @PostMapping(value='/api/repeating', produces='application/json')",
-      "    public ResponseEntity createRepeatingWholeData(@RequestParam String customerId, @RequestBody String body) throws Exception{",
-      "       return Transform.result(graphQL.get(IFetcher.mock),RepeatingWholeDataQueries.createRepeatingLine(customerId,   Transform.removeQuoteFromProperties(body, List.class)), 'createRepeatingLine');",
+      "    public ResponseEntity createRepeatingWholeData(@RequestParam String clientRef, @RequestBody String body) throws Exception{",
+      "       return Transform.result(graphQL.get(IFetcher.mock),RepeatingWholeDataQueries.createRepeatingLine(clientRef,   Transform.removeQuoteFromProperties(body, List.class)), 'createRepeatingLine');",
       "    }",
       "",
       "    @GetMapping(value='/api/repeating', produces='application/json')",
-      "    public ResponseEntity getRepeatingWholeData(@RequestParam String customerId) throws Exception{",
-      "       return Transform.result(graphQL.get(IFetcher.mock),RepeatingWholeDataQueries.getRepeatingLine(customerId), 'getRepeatingLine');",
+      "    public ResponseEntity getRepeatingWholeData(@RequestParam String clientRef) throws Exception{",
+      "       return Transform.result(graphQL.get(IFetcher.mock),RepeatingWholeDataQueries.getRepeatingLine(clientRef), 'getRepeatingLine');",
       "    }",
       "",
       "    @PostMapping(value='/api/repeating/query', produces='application/json')",
-      "    public String querycreateRepeatingLine(@RequestParam String customerId, @RequestBody String body) throws Exception{",
-      "       return RepeatingWholeDataQueries.createRepeatingLine(customerId,   Transform.removeQuoteFromProperties(body, List.class));",
+      "    public String querycreateRepeatingLine(@RequestParam String clientRef, @RequestBody String body) throws Exception{",
+      "       return RepeatingWholeDataQueries.createRepeatingLine(clientRef,   Transform.removeQuoteFromProperties(body, List.class));",
       "    }",
       "",
       "    @GetMapping(value='/api/repeating/query', produces='application/json')",
-      "    public String querygetRepeatingLine(@RequestParam String customerId) throws Exception{",
-      "       return RepeatingWholeDataQueries.getRepeatingLine(customerId);",
+      "    public String querygetRepeatingLine(@RequestParam String clientRef) throws Exception{",
+      "       return RepeatingWholeDataQueries.getRepeatingLine(clientRef);",
       "    }",
       "",
       "  @GetMapping(value = '/api/repeating/sample', produces = 'application/json')",
@@ -268,12 +270,15 @@ describe ( "accessDetails", () => {
   } )
   it ( "should check that the correct end point has the correct access - one requirement", () => {
     expect ( accessDetails ( paramsForTest, EAccountsSummaryPD, 'createPlanRestD', restD, 'get' ) ).toEqual ( [
+      "//from EAccountsSummary.rest[createPlanRestD.access[\"get\"]]",
       "if (!Arrays.asList(\"a\",\"b\").contains(p1)) return new ResponseEntity(\"\", new HttpHeaders(), HttpStatus.FORBIDDEN);"
     ])
   } )
   it ( "should check that the correct end point has the correct access - many requirement", () => {
     expect ( accessDetails ( paramsForTest, EAccountsSummaryPD, 'createPlanRestD', restD, { state: 'hi' } ) ).toEqual ( [
+      "//from EAccountsSummary.rest[createPlanRestD.access[{\"state\":\"hi\"}]]",
       "if (!Arrays.asList(\"c\").contains(p1)) return new ResponseEntity(\"\", new HttpHeaders(), HttpStatus.FORBIDDEN);",
+      "//from EAccountsSummary.rest[createPlanRestD.access[{\"state\":\"hi\"}]]",
       "if (!Arrays.asList(\"d\").contains(p2)) return new ResponseEntity(\"\", new HttpHeaders(), HttpStatus.FORBIDDEN);"
     ])
   } )

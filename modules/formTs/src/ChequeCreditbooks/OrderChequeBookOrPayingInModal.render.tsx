@@ -9,6 +9,7 @@ import { GuardButton } from "@focuson/form_components";
 //if there is an error message here... did you set the importFrom on this modal correctly, and also check that the PageD links to this DataD in a domain or rest block
 import {ChequeCreditbooksHistoryLineDomain} from '../ChequeCreditbooks/ChequeCreditbooks.domains'; 
 import {ChequeCreditbooksHistoryLine} from '../ChequeCreditbooks/ChequeCreditbooks.render'
+import {DeleteStateButton} from '@focuson/form_components';
 import {ListNextButton} from '@focuson/form_components';
 import {ListPrevButton} from '@focuson/form_components';
 import {ModalButton} from '@focuson/pages';

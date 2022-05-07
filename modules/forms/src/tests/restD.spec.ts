@@ -37,19 +37,23 @@ describe ( "makeCommonParamsValueForTest", () => {
   it ( "get the values out of the rest params - for a get", () => {
     expect ( makeParamValueForTest ( createPlanRestD, 'get' ) ).toEqual ( {
       "accountId": "accId",
-      "createPlanId": "tbd",
-      "clientRef": "custId"
+      "applRef": "appref",
+      "brandRef": "brandRef",
+      "clientRef": "custId",
+      "createPlanId": "tbd"
     } )
   } )
   it ( "get the values out of the rest params - for a create (no primary id)", () => {
     expect ( makeParamValueForTest ( createPlanRestD, 'create' ) ).toEqual ( {
       "accountId": "accId",
+      "applRef": "appref",
+      "brandRef": "brandRef",
       "clientRef": "custId"
-    } )
+    })
   } )
 
   it ( "should work with a mixture of common lens and normal lens", () => {
     expect ( JSON.stringify ( makeParamValueForTest ( arrearsDetailsRestD, 'get' ) ).replace ( /"/g, "'" ) ).toEqual (
-      "{'accountId':'accId','customerId':'custId','startDate':'2020-01-20'}" )
+      "{'accountId':'accId','applRef':'appref','brandRef':'brandRef','clientRef':'custId','startDate':'2020-01-20'}" )
   } )
 } )

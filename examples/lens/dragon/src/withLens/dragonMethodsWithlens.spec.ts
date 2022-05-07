@@ -2,7 +2,7 @@
 
 
 import {damage, dragonChestHpL, dragonContentsL, dragonHeadHpL, dragonLeftWingHpL, dragonRightWingHpL, eat, heal} from "./dragonMethodsWithlens";
-import {Dragon} from "../../index";
+import {Dragon} from "../../../../../../focusontraining/trainingDragon/src";
 
 
 export let startDragon: Dragon = {

@@ -1,6 +1,6 @@
 import { DataD, OneLineStringDD, RepeatingDataD } from "../../common/dataD";
 import { AllGuards } from "../../buttons/guardButton";
-import { TableCD } from "../../common/componentsD";
+import { StringInputCD, TableCD } from "../../common/componentsD";
 import { addT } from "../database/tableNames";
 
 export const postCodeDataLineD: DataD<AllGuards> = {
@@ -32,7 +32,7 @@ export const postCodeSearchDataD: DataD<AllGuards> = {
   name: "PostCodeSearch",
   description: "The post code search example: type postcode get results",
   structure: {
-    search: { dataDD: OneLineStringDD, sample: [ 'LS21 3EY' ] },
+    search: { dataDD: {...OneLineStringDD, display: StringInputCD}, sample: [ 'LS21 3EY' ] },
     searchResults: { dataDD: postCodeSearchResponse },
     addressResults: { dataDD: postCodeDataLineD }
   }

@@ -12,7 +12,7 @@ export const listOccupationsModalPD: ExampleModalPage = {
   name: 'ListOccupationsModal',
   pageType: 'ModalPopup',
   modes: [ 'edit' ],
-  display: { target: '', dataDD: listOccupationsDD},
+  display: { target: '', dataDD: listOccupationsDD },
   buttons: {
     cancel: { control: 'ModalCancelButton' },
     commit: { control: 'ModalCommitButton' }

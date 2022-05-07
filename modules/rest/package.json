@@ -13,8 +13,7 @@
   },
   "dependencies": {
     "@focuson/lens": "1.7.12",
-    "@focuson/fetcher": "1.7.12",
-    "@focuson/rest": "1.7.12"
+    "@focuson/fetcher": "1.7.12"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -54,8 +53,7 @@
     "publish": true,
     "links": [
       "@focuson/lens",
-      "@focuson/fetcher",
-      "@focuson/rest"
+      "@focuson/fetcher"
     ],
     "extraDeps": {},
     "extraDevDeps": {},

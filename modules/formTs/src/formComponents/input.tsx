@@ -1,4 +1,4 @@
-import { CommonStateProps } from "./common";
+import { BooleanValidations, CommonStateProps, NumberValidations, StringValidations } from "./common";
 import { reasonFor } from "@focuson/state";
 import React from "react";
 import { TransformerProps } from "./labelAndInput";
@@ -22,9 +22,9 @@ export const cleanInputProps = <T extends NameAnd<any>> ( p: T ): T => {
   return result
 };
 
-export const Input = <T extends any> ( tProps: TransformerProps<T> ) => {
+export const Input = <T extends any,P> ( tProps: TransformerProps<T> ) => {
   const { transformer, type } = tProps
-  return <S, P, Props extends InputProps<S, T, Context> & P, Context> ( props: Props ) => {
+  return <S,  Props extends InputProps<S, T, Context> & P, Context> ( props: Props ) => {
     const { state, mode, id, name, ariaLabel, defaultValue, readonly } = props
     const onChange = ( transformer: ( s: string ) => T, e: React.ChangeEvent<HTMLInputElement> ) =>
       state.setJson ( transformer ( e.target.value ), reasonFor ( 'Input', 'onChange', id ) );
@@ -33,7 +33,7 @@ export const Input = <T extends any> ( tProps: TransformerProps<T> ) => {
   }
 }
 
-export const StringInput = Input<string> ( StringTransformer )
-export const NumberInput = Input<number> ( NumberTransformer )
-export const BooleanInput = Input<boolean> ( BooleanTransformer )
+export const StringInput = Input<string, StringValidations> ( StringTransformer )
+export const NumberInput = Input<number, NumberValidations> ( NumberTransformer )
+export const BooleanInput = Input<boolean, BooleanValidations> ( BooleanTransformer )
 

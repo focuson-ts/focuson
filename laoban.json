@@ -15,6 +15,8 @@
       ]
     },
     "ls":             {"description": "lists all the projects", "commands": ["js:process.cwd()"]},
+    "ls-deps":             {"description": "lists all the projects, and which other projects they depend on",
+      "commands": ["js:'${projectDetails.name}  => '.padEnd(30,' ') + '${projectDetails.details.links}'"]},
     "ls-names":       {"description": "lists all the projects and their nams ", "commands": ["js:`${process.cwd().padEnd(50)} ${projectDetails.name}`"]},
     "clean":          {"description": "removes the dist directory", "commands": ["rm -rf dist", "rm -f .status", "rm -f .log", "rm -f .profile"]},
     "lsDist":         {
@@ -85,7 +87,7 @@
     "ls-publish":     {
       "description": "lists the projects that can be published",
       "guard":       "${projectDetails.details.publish}",
-      "commands":    ["js:process.cwd()"]
+      "commands":    ["js:process.cwd()"], "inLinksOrder": true
     },
     "ls-orgcmd":      {
       "description": "lists the projects that have code on demand",
@@ -110,7 +112,8 @@
       "commands":     [
         {"name": "tsc", "command": "tsc --noEmit false --outDir dist", "status": true},
         {"name": "pack", "command": "${packageManager} pack", "status": true}
-      ]
+      ],
+      "inLinksOrder": true
     },
     "publish":        {
       "description":  "publishes the projects to npmjs",
@@ -118,7 +121,8 @@
       "commands":     [
         {"name": "tsc", "command": "tsc --noEmit false --outDir dist", "status": true},
         {"name": "publish", "command": "${packageManager} publish --access public", "status": true}
-      ]
+      ],
+      "inLinksOrder": true
     },
     "publish-public": {
       "description":  "publishes the projects to npmjs as a public repo",

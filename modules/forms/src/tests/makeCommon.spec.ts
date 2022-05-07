@@ -43,16 +43,20 @@ describe ( "makeCommon", () => {
       "export interface HasCommonIds {CommonIds: CommonIds}",
       "export type CommonIds = {",
       "  accountId?:string;",
+      "  applRef?:string;",
+      "  brandRef?:string;",
+      "  clientRef?:string;",
       "  createPlanId?:string;",
-      "  customerId?:string;",
       "  usersRole?:string;",
       "}",
       "export const identityL = identityOptics<FState> ();",
       "export const commonIdsL = identityL.focusQuery('CommonIds');",
       "export const commonIds: NameAndLens<FState> = {",
       "   accountId: commonIdsL.focusQuery('accountId'),",
+      "   applRef: commonIdsL.focusQuery('applRef'),",
+      "   brandRef: commonIdsL.focusQuery('brandRef'),",
+      "   clientRef: commonIdsL.focusQuery('clientRef'),",
       "   createPlanId: commonIdsL.focusQuery('createPlanId'),",
-      "   customerId: commonIdsL.focusQuery('customerId'),",
       "   usersRole: commonIdsL.focusQuery('usersRole')",
       "}",
       "export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{",
@@ -71,13 +75,13 @@ describe ( "makeCommon", () => {
       "   combine: MyCombined",
       "}",
       "export const emptyState: FState = {",
-      "  CommonIds: {'createPlanId':'tbd','customerId':'custId','accountId':'accId','usersRole':'user'},",
+      "  CommonIds: {'createPlanId':'tbd','clientRef':'custId','applRef':'appref','accountId':'accId','brandRef':'brandRef','usersRole':'user'},",
       "  tags: {},",
       "  messages: [],",
       "  pageSelection: [{ pageName: 'EAccountsSummary', firstTime: true, pageMode: 'view' }],",
       "  EAccountsSummary:{},",
       "  restCommands: [],",
-      "  debug: {'fetcherDebug':true,'restDebug':false,'selectedPageDebug':false,'loadTreeDebug':false,'showTracing':false,'recordTrace':true,'accordions':[]}",
+      "  debug: {'fetcherDebug':true,'restDebug':false,'selectedPageDebug':false,'loadTreeDebug':false,'showTracing':false,'recordTrace':true,'tagFetcherDebug':false,'accordions':[]}",
       "  }"
     ] )
 
@@ -86,12 +90,23 @@ describe ( "makeCommon", () => {
 
 describe ( "findAllCommonParams", () => {
   it ( 'should find all the commons lens in the pages from rest', () => {
-    expect ( findAllCommonParams ( [], [ eAccountsSummaryRestD, createPlanRestD ] ) ).toEqual ( [ "accountId", "createPlanId", "customerId", "employeeType" ] )
+    expect ( findAllCommonParams ( [], [ eAccountsSummaryRestD, createPlanRestD ] ) ).toEqual ( [
+      "accountId",
+      "applRef",
+      "brandRef",
+      "clientRef",
+      "createPlanId",
+      "customerId",
+      "employeeType"
+    ] )
   } )
 
   it ( "should include the info from the pages", () => {
     expect ( findAllCommonParams ( [ OccupationAndIncomeSummaryPD ], [ eAccountsSummaryRestD, createPlanRestD ] ) ).toEqual ( [
       "accountId",
+      "applRef",
+      "brandRef",
+      "clientRef",
       "createPlanId",
       "customerId",
       "employeeType",
@@ -106,6 +121,9 @@ describe ( "makeCommonParams", () => {
       "export interface HasCommonIds {CommonIds: CommonIds}",
       "export type CommonIds = {",
       "  accountId?:string;",
+      "  applRef?:string;",
+      "  brandRef?:string;",
+      "  clientRef?:string;",
       "  customerId?:string;",
       "  employeeType?:string;",
       "  usersRole?:string;",
@@ -114,6 +132,9 @@ describe ( "makeCommonParams", () => {
       "export const commonIdsL = identityL.focusQuery('CommonIds');",
       "export const commonIds: NameAndLens<FState> = {",
       "   accountId: commonIdsL.focusQuery('accountId'),",
+      "   applRef: commonIdsL.focusQuery('applRef'),",
+      "   brandRef: commonIdsL.focusQuery('brandRef'),",
+      "   clientRef: commonIdsL.focusQuery('clientRef'),",
       "   customerId: commonIdsL.focusQuery('customerId'),",
       "   employeeType: commonIdsL.focusQuery('employeeType'),",
       "   usersRole: commonIdsL.focusQuery('usersRole')",

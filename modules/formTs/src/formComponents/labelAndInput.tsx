@@ -10,7 +10,7 @@ export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T
   label?: string;
   defaultValue?: string | number
   value?: string | number;
-  readonly? : boolean;
+  readonly?: boolean;
   allButtons: NameAnd<JSX.Element>;
   buttons?: string[]
 }
@@ -20,13 +20,15 @@ export interface TransformerProps<T> {
   type: string;
   default: T;
 }
-export function makeButtons ( allButtons: NameAnd<JSX.Element>, buttons?: string[] ) {return safeArray ( buttons ).map ( ( b, i ) =>
-  <ButtonFromPage key={b} button={b} buttons={allButtons}/> )}
+export function makeButtons ( allButtons: NameAnd<JSX.Element>, buttons?: string[] ) {
+  return safeArray ( buttons ).map ( ( b, i ) =>
+    <ButtonFromPage key={b} button={b} buttons={allButtons}/> )
+}
 
 const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> ) =>
   <S, Context extends FocusOnContext<S>> ( props: LabelAndInputProps<S, T, Context> & P ) => {
     const label = <Label state={props.state} htmlFor={props.name} label={props.label}/>;
-    const input = Input ( tProps )<S, P, LabelAndInputProps<S, T, Context> & P, Context> ( props );
+    const input = Input<T, P> ( tProps )<S, LabelAndInputProps<S, T, Context> & P, Context> ( props );
     return < div className='labelValueButton'> {label}{input}{makeButtons ( props.allButtons, props.buttons )}</div>
   }
 

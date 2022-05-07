@@ -42,7 +42,7 @@ export const ChequeCreditbooksPD: ExampleMainPage = {
     temp: { dataDD: ChequeCreditbooksHistoryDD },
     tempCreatePlan: { dataDD: ChequeCreditbooksHistoryLineDD },
     chequeBookOrPayingIn: { dataDD: CheckBookOrPayingInDD },
-    selectedBook: {dataDD: NatNumDd}
+    selectedBook: { dataDD: NatNumDd }
     // tempData: ChequeCreditbooksHistoryLineDD
   },
   modals: [ { modal: OrderChequeBookOrPayingInModalPD } ],
@@ -61,8 +61,9 @@ export const ChequeCreditbooksPD: ExampleMainPage = {
       createEmpty: ChequeCreditbooksHistoryLineDD,
       restOnCommit: { restName: 'chequeCreditBooks', action: 'create', result: 'refresh' }
     },
-    cancelCheckBook:{
-      control: 'RestButton', restName: 'chequeCreditBooks', action: {state: 'cancel'}
+    refreshx: { control: 'DeleteStateButton', label: 'Refresh', path: [ '~/fromApi', '~/tempCreatePlan' ] },
+    cancelCheckBook: {
+      control: 'RestButton', restName: 'chequeCreditBooks', confirm: 'Really?', action: { state: 'cancel' }
     }
   }
 }

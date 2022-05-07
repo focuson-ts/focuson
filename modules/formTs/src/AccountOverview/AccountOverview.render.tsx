@@ -18,6 +18,7 @@ import { LabelAndDateInput } from '@focuson/form_components';
 import { PlusMinusButtonsAndInput } from '@focuson/form_components';
 import { LabelAndDropdown } from '@focuson/form_components';
 import { Layout } from '@focuson/form_components';
+import {DeleteStateButton} from '@focuson/form_components';
 import {ListNextButton} from '@focuson/form_components';
 import {ListPrevButton} from '@focuson/form_components';
 import {ModalButton} from '@focuson/pages';

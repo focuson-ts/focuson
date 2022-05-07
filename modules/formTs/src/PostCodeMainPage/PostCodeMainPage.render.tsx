@@ -9,7 +9,9 @@ import { Guard } from "@focuson/form_components";
 import { GuardButton } from "@focuson/form_components";
 import { PostCodeMainPageOptionals } from "../PostCodeMainPage/PostCodeMainPage.optionals";
 import { LabelAndStringInput } from '@focuson/form_components';
+import { StringInput } from '@focuson/form_components';
 import { Table } from '@focuson/form_components';
+import {DeleteStateButton} from '@focuson/form_components';
 import {ListNextButton} from '@focuson/form_components';
 import {ListPrevButton} from '@focuson/form_components';
 import {ModalButton} from '@focuson/pages';
@@ -70,7 +72,7 @@ export function PostCodeNameAndAddress({id,state,mode,buttons}: FocusedProps<FSt
 
 export function PostCodeSearch({id,state,mode,buttons}: FocusedProps<FState, PostCodeSearchDomain,Context>){
   return <>
-    <LabelAndStringInput id={`${id}.search`} state={state.focusOn('search')} mode={mode} label='Search' allButtons={buttons} required={true} />
+    <StringInput id={`${id}.search`} state={state.focusOn('search')} mode={mode} required={true} />
     <Table id={`${id}.searchResults`} state={state.focusOn('searchResults')} mode={mode} order={["line1","line2","line3","line4"]} copySelectedItemTo={pageState(state)<any>().focusOn('postcode').focusOn('addressResults')} />
     <PostCodeDataLine id={`${id}.addressResults`} state={state.focusOn('addressResults')} mode={mode} buttons={buttons} />
 </>

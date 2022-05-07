@@ -14,6 +14,7 @@ import { Table } from '@focuson/form_components';
 import { LabelAndBooleanInput } from '@focuson/form_components';
 import { LabelAndStringInput } from '@focuson/form_components';
 import { LabelAndRadio } from '@focuson/form_components';
+import {DeleteStateButton} from '@focuson/form_components';
 import {ListNextButton} from '@focuson/form_components';
 import {ListPrevButton} from '@focuson/form_components';
 import {ModalButton} from '@focuson/pages';
