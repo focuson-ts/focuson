@@ -1224,28 +1224,6 @@ public class Sample{
          "  \"amount\": 123"+
          "}"
   );
-  public static List samplePostCodeData0 =  parse.parseList(
-         "["+
-         "  {"+
-         "    \"line1\": \"4 Privet drive\","+
-         "    \"line2\": \"Little Whinging\","+
-         "    \"line3\": \"Surrey\","+
-         "    \"line4\": \"England\""+
-         "  },"+
-         "  {"+
-         "    \"line1\": \"27 Throughput Lane\","+
-         "    \"line2\": \"Woodfield\","+
-         "    \"line3\": \"\","+
-         "    \"line4\": \"Ireland\""+
-         "  },"+
-         "  {"+
-         "    \"line1\": \"4 Privet drive\","+
-         "    \"line2\": \"Little Whinging\","+
-         "    \"line3\": \"Surrey\","+
-         "    \"line4\": \"England\""+
-         "  }"+
-         "]"
-  );
   public static Map samplePostCodeDataLine0 =  parse.parseMap(
          "{"+
          "  \"line1\": \"4 Privet drive\","+
@@ -1294,6 +1272,28 @@ public class Sample{
          "    \"line4\": \"England\""+
          "  }"+
          "}"
+  );
+  public static List samplePostCodeSearchResponse0 =  parse.parseList(
+         "["+
+         "  {"+
+         "    \"line1\": \"4 Privet drive\","+
+         "    \"line2\": \"Little Whinging\","+
+         "    \"line3\": \"Surrey\","+
+         "    \"line4\": \"England\""+
+         "  },"+
+         "  {"+
+         "    \"line1\": \"27 Throughput Lane\","+
+         "    \"line2\": \"Woodfield\","+
+         "    \"line3\": \"\","+
+         "    \"line4\": \"Ireland\""+
+         "  },"+
+         "  {"+
+         "    \"line1\": \"4 Privet drive\","+
+         "    \"line2\": \"Little Whinging\","+
+         "    \"line3\": \"Surrey\","+
+         "    \"line4\": \"England\""+
+         "  }"+
+         "]"
   );
   public static Map sampleRepeatingLine0 =  parse.parseMap(
          "{"+

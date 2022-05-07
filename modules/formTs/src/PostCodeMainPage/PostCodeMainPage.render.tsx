@@ -22,10 +22,10 @@ import {ToggleButton} from '@focuson/form_components';
 import {ValidationButton} from '@focuson/form_components';
 import {PostCodeMainPagePageDomain} from "../PostCodeMainPage/PostCodeMainPage.domains";
 import { HideButtonsLayout } from '@focuson/form_components';
-import {PostCodeDataDomain} from "../PostCodeMainPage/PostCodeMainPage.domains"
 import {PostCodeDataLineDomain} from "../PostCodeMainPage/PostCodeMainPage.domains"
 import {PostCodeNameAndAddressDomain} from "../PostCodeMainPage/PostCodeMainPage.domains"
 import {PostCodeSearchDomain} from "../PostCodeMainPage/PostCodeMainPage.domains"
+import {PostCodeSearchResponseDomain} from "../PostCodeMainPage/PostCodeMainPage.domains"
 export function PostCodeMainPagePage(){
    //A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/main
   return focusedPageWithExtraState<FState, PostCodeMainPagePageDomain, PostCodeNameAndAddressDomain, Context> ( s => 'Post Code Main Page' ) ( state => state.focusOn('main')) (

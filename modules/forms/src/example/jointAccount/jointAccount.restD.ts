@@ -2,13 +2,9 @@ import { JointAccountDd } from "./jointAccount.dataD";
 import { accountT, addT, customerT, nameT } from "../database/tableNames";
 import { IntParam, RestD, RestParams, StringParam } from "../../common/restD";
 import { jointAccountSql } from "./jointAccount.sql";
+import { fromCommonIds } from "../commonIds";
 
-export const jointAccountParams: RestParams = {
-  accountId: { ...IntParam, commonLens: 'accountId', testValue: 'custId' },
-  brandId: { ...IntParam, commonLens: 'brandId', testValue: 'custId' },
-  dbName: { ...StringParam, commonLens: 'dbName', testValue: 'mock' }
-}
-
+export const jointAccountParams: RestParams = fromCommonIds('accountId', 'brandRef', 'dbName')
 export const jointAccountRestD: RestD<any> = {
   params: jointAccountParams,
   dataDD: JointAccountDd,
@@ -19,7 +15,7 @@ export const jointAccountRestD: RestD<any> = {
   tables: {
     where: [
       { table: accountT, alias: accountT.name, field: 'acc_id', paramName: 'accountId' },
-      { table: accountT, alias: accountT.name, field: 'brand_id', paramName: 'brandId' },
+      { table: accountT, alias: accountT.name, field: 'brand_id', paramName: 'brandRef' },
     ],
     entity: {
       type: 'Main',

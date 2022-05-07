@@ -29,7 +29,7 @@ import { CreateEAccount_CreateEAccountDataRestDetails } from './CreateEAccount/C
 import { ChequeCreditbooks_ChequeCreditbooksRestDetails } from './ChequeCreditbooks/ChequeCreditbooks.rests';
 import { Repeating_RepeatingWholeDataRestDetails } from './Repeating/Repeating.rests';
 import { PostCodeMainPage_PostCodeNameAndAddressRestDetails } from './PostCodeMainPage/PostCodeMainPage.rests';
-import { PostCodeMainPage_PostCodeDataRestDetails } from './PostCodeMainPage/PostCodeMainPage.rests';
+import { PostCodeMainPage_PostCodeSearchResponseRestDetails } from './PostCodeMainPage/PostCodeMainPage.rests';
 
 export function restUrlMutator ( r: RestAction, url: string ): string { return url }
 
@@ -60,6 +60,6 @@ export const restDetails: RestDetails<FState, SimpleMessage> = {
    ChequeCreditbooks_ChequeCreditbooksRestDetails: ChequeCreditbooks_ChequeCreditbooksRestDetails(commonIds, defaultDateFn),
    Repeating_RepeatingWholeDataRestDetails: Repeating_RepeatingWholeDataRestDetails(commonIds, defaultDateFn),
    PostCodeMainPage_PostCodeNameAndAddressRestDetails: PostCodeMainPage_PostCodeNameAndAddressRestDetails(commonIds, defaultDateFn),
-   PostCodeMainPage_PostCodeDataRestDetails: PostCodeMainPage_PostCodeDataRestDetails(commonIds, defaultDateFn)
+   PostCodeMainPage_PostCodeSearchResponseRestDetails: PostCodeMainPage_PostCodeSearchResponseRestDetails(commonIds, defaultDateFn)
 
 }

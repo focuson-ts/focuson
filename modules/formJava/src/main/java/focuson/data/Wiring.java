@@ -59,7 +59,7 @@ import focuson.data.fetchers.ChequeCreditbooks.ChequeCreditbooks_state_cancel_FF
 import focuson.data.fetchers.Repeating.RepeatingWholeData_create_FFetcher;
 import focuson.data.fetchers.Repeating.RepeatingWholeData_get_FFetcher;
 import focuson.data.fetchers.PostCodeMainPage.PostCodeNameAndAddress_create_FFetcher;
-import focuson.data.fetchers.PostCodeMainPage.PostCodeData_get_FFetcher;
+import focuson.data.fetchers.PostCodeMainPage.PostCodeSearchResponse_get_FFetcher;
 @Component
 public class Wiring  implements IManyGraphQl{
       @Autowired
@@ -135,7 +135,7 @@ public class Wiring  implements IManyGraphQl{
       @Autowired
       List<PostCodeNameAndAddress_create_FFetcher> PostCodeNameAndAddress_create_FFetcher;
       @Autowired
-      List<PostCodeData_get_FFetcher> PostCodeData_get_FFetcher;
+      List<PostCodeSearchResponse_get_FFetcher> PostCodeSearchResponse_get_FFetcher;
    private String sdl;
    private Map<String, GraphQL> cache = Collections.synchronizedMap(new HashMap<>()); //sucks and need to improve
    @PostConstruct
@@ -210,7 +210,7 @@ public class Wiring  implements IManyGraphQl{
           .type(newTypeWiring("Mutation").dataFetcher("createRepeatingLine", find(RepeatingWholeData_create_FFetcher, dbName, f ->f.createRepeatingLine())))
           .type(newTypeWiring("Query").dataFetcher("getRepeatingLine", find(RepeatingWholeData_get_FFetcher, dbName, f ->f.getRepeatingLine())))
           .type(newTypeWiring("Mutation").dataFetcher("createPostCodeNameAndAddress", find(PostCodeNameAndAddress_create_FFetcher, dbName, f ->f.createPostCodeNameAndAddress())))
-          .type(newTypeWiring("Query").dataFetcher("getPostCodeDataLine", find(PostCodeData_get_FFetcher, dbName, f ->f.getPostCodeDataLine())))
+          .type(newTypeWiring("Query").dataFetcher("getPostCodeDataLine", find(PostCodeSearchResponse_get_FFetcher, dbName, f ->f.getPostCodeDataLine())))
        .build();
     }
     @Bean

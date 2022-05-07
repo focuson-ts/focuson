@@ -21,13 +21,13 @@ import focuson.data.db.JointAccount_jointAccountMaps ;
   @Autowired
   public IManyGraphQl graphQL;
     @GetMapping(value="/api/jointAccount", produces="application/json")
-    public ResponseEntity getJointAccount(@RequestParam String accountId, @RequestParam String brandId, @RequestParam String dbName) throws Exception{
-       return Transform.result(graphQL.get(dbName),JointAccountQueries.getpreJointAccount(accountId, brandId, dbName), "getpreJointAccount");
+    public ResponseEntity getJointAccount(@RequestParam String accountId, @RequestParam String brandRef, @RequestParam String dbName) throws Exception{
+       return Transform.result(graphQL.get(dbName),JointAccountQueries.getpreJointAccount(accountId, brandRef, dbName), "getpreJointAccount");
     }
 
     @GetMapping(value="/api/jointAccount/query", produces="application/json")
-    public String querygetpreJointAccount(@RequestParam String accountId, @RequestParam String brandId, @RequestParam String dbName) throws Exception{
-       return JointAccountQueries.getpreJointAccount(accountId, brandId, dbName);
+    public String querygetpreJointAccount(@RequestParam String accountId, @RequestParam String brandRef, @RequestParam String dbName) throws Exception{
+       return JointAccountQueries.getpreJointAccount(accountId, brandRef, dbName);
     }
 
   @GetMapping(value = "/api/jointAccount/sample", produces = "application/json")

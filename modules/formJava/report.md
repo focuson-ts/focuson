@@ -6,7 +6,6 @@
 |accountId|accountId
 |applRef|applRef
 |brandRef|brandRef
-|brandId|brandId
 |dbName|dbName
 |createPlanId|createPlanId
 |customerId|customerId
@@ -29,7 +28,7 @@
 |AccountOverview|main | /api/accountOverview?{query}| accountId,applRef,brandRef,clientRef |  | 
 |AccountOverview|optOut | /api/accountOverview/optOut?{query}| accountId,applRef,brandRef,clientRef |  | 
 |AccountOverview|reason | /api/accountOverview/reason?{query}| accountId,applRef,brandRef,clientRef |  | 
-|JointAccount|jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName |  | 
+|JointAccount|jointAccount | /api/jointAccount?{query}| accountId,brandRef,dbName |  | 
 |OccupationAndIncomeSummary|additionalInformationRD | /customer/occupation/v2/additionalInfo?{query}| accountId,applRef,brandRef,clientRef |  | get->auditGetCustomeAdditionalInfo
 |OccupationAndIncomeSummary|businessDetailsRD | /customer/occupation/v2/businessDetails?{query}| accountId,applRef,brandRef,clientRef |  | get->auditGetBusinessDetails
 |OccupationAndIncomeSummary|dropdownsRD | /customer/occupation/v2/occupationDetails?{query}|  |  | 
@@ -44,7 +43,7 @@
 |ChequeCreditbooks| | /api/chequeCreditBooks/cancel?{query}| accountId,applRef,brandRef,clientRef |
 |Repeating|repeating | /api/repeating?{query}| clientRef |  | 
 |PostCodeMainPage|address | /api/address?{query}|  |  | 
-|PostCodeMainPage|postcode | /api/postCode?{query}| postcode |  | 
+|PostCodeMainPage|postcode | /api/postCode?{query}| dbName,postcode |  | 
 
 ---
 # HelloWorldMainPage - MainPage
@@ -171,7 +170,7 @@
 | Name | Location
 | --- | ---
 |accountId|accountId
-|brandId|brandId
+|brandRef|brandRef
 |dbName|dbName
   ## domains 
     JointAccount
@@ -181,7 +180,7 @@
   ## rests   
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
-    |jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName |  | 
+    |jointAccount | /api/jointAccount?{query}| accountId,brandRef,dbName |  | 
   ## modals  
   |name|displayed with
   | --- | --- 
@@ -451,16 +450,20 @@
 
 ---
 # PostCodeMainPage - MainPage
+## Common Params
+| Name | Location
+| --- | ---
+|dbName|dbName
   ## domains 
-    PostCodeData
     PostCodeDataLine
     PostCodeNameAndAddress
     PostCodeSearch
+    PostCodeSearchResponse
   ## rests   
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
     |address | /api/address?{query}|  |  | 
-    |postcode | /api/postCode?{query}| postcode |  | 
+    |postcode | /api/postCode?{query}| dbName,postcode |  | 
   ## modals  
   |name|displayed with
   | --- | --- 
@@ -473,6 +476,14 @@
       Focused on "~/postcode"
       Copy on close [{"from":"~/postcode/addressResults/line1","to":"~/main/line1"},{"from":"~/postcode/addressResults/line2","to":"~/main/line2"},{"from":"~/postcode/addressResults/line3","to":"~/main/line3"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/search","to":"~/main/postcode"}] 
   ## dataMapping
+  ## Table POSTCODE (Schema TheSchema)
+  |Display path | Database Field
+  | --- | --- |
+  | line1  |  zzline1 
+  | line2  |  zzline2 
+  | line3  |  zzline3 
+  | line4  |  zzline4 
+  
   ## Table ADD_TBL (Schema TheSchema)
   |Display path | Database Field
   | --- | --- |

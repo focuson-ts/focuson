@@ -33,3 +33,10 @@ export const addT: DBTable = {
   audit: { restActions: [ 'get' ], by: 'how we do the auditing' }
 }
 
+export const postCodeSearchTable: DBTable = {
+  schema: onlySchema,
+  name: 'POSTCODE',
+  description: '',
+  notes: '',
+  audit: { restActions: [ 'get' ], by: 'how we do the auditing' }
+}

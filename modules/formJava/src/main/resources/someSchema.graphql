@@ -11,7 +11,7 @@ type Query{
   getAccountOverview(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):AccountOverview!
   getAccountOverviewOptOut(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):AccountOverviewOptOut!
   getAccountOverviewReason(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):AccountOverviewReason!
-  getpreJointAccount(accountId: String!, brandId: String!, dbName: String!):JointAccount!
+  getpreJointAccount(accountId: String!, brandRef: String!, dbName: String!):JointAccount!
   getAdditionalInformation(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):AdditionalInformation!
   getBusinessDetailsMain(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):BusinessDetailsMain!
   getDropdowns:Dropdowns!
@@ -22,7 +22,7 @@ type Query{
   getCreateEAccountData(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, createPlanId: String!):CreateEAccountData!
   getChequeCreditbooks(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):ChequeCreditbooks!
   getRepeatingLine(clientRef: String!):[RepeatingLine!]!
-  getPostCodeDataLine(postcode: String!):[PostCodeDataLine!]!
+  getPostCodeDataLine(dbName: String!, postcode: String!):[PostCodeDataLine!]!
 }
 type Mutation{
   stateCollectionItemcancel(accountId: String!, clientRef: String!, paymentId: String!):Boolean

@@ -1,7 +1,7 @@
 import { DBTable } from "../common/resolverD";
 import { beforeAfterSeparator, beforeSeparator, ints, mapPathPlusInts, NameAnd, safeArray, safeString } from "@focuson/utils";
 import { AllLensRestParams, EntityAndWhere, RestD, RestParams, unique } from "../common/restD";
-import { CompDataD, emptyDataFlatMap, flatMapDD } from "../common/dataD";
+import { CompDataD, emptyDataFlatMap, flatMapDD, isRepeatingDd } from "../common/dataD";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addBrackets, addStringToEndOfAllButLast, indentList } from "./codegen";
 import { JavaWiringParams } from "./config";
@@ -343,25 +343,25 @@ export function findAllFields<G> ( sqlRoot: SqlRoot, dataD: CompDataD<any>, wher
 export function findStaticWheres ( sqlRoot: SqlRoot ): string[] { // things to ignore: path, childAlias
   let staticWhereLinks = foldEntitys ( {
     foldMain ( childAccs: string[][], main: EntityAndWhere ): string[] {
-      if (main.staticWhere === undefined) return childAccs.flat()
-      return [ ...childAccs.flat(), ...main.staticWhere ]
+      if ( main.staticWhere === undefined ) return childAccs.flat ()
+      return [ ...childAccs.flat (), ...main.staticWhere ]
     },
     foldMultiple ( childAccs: string[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, multiple: MultipleEntity ): string[] { return [] },
     foldSingle ( childAccs: string[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, single: SingleEntity ): string[] {
-      if (single.staticWhere === undefined) return childAccs.flat()
-      return [ ...childAccs.flat(), single.staticWhere ]
+      if ( single.staticWhere === undefined ) return childAccs.flat ()
+      return [ ...childAccs.flat (), single.staticWhere ]
     }
   }, sqlRoot.main, sqlRoot.root, sqlRoot.filterPath, [] );
-  return [ ...staticWhereLinks.flat(), ...findStaticWheresForSqlRootGoingUp ( sqlRoot ) ]
+  return [ ...staticWhereLinks.flat (), ...findStaticWheresForSqlRootGoingUp ( sqlRoot ) ]
 }
 
 export function findStaticWheresForSqlRootGoingUp ( sqlRoot: SqlRoot ): string[] {
   if ( sqlRoot.root === sqlRoot.main.entity )
-    return sqlRoot.root.staticWhere != undefined ? [sqlRoot.root.staticWhere] : []
+    return sqlRoot.root.staticWhere != undefined ? [ sqlRoot.root.staticWhere ] : []
 
   let sqlRootAndParentsPath: [ string, Entity ][] = [ [ sqlRoot.alias, sqlRoot.root ], ...sqlRoot.path ];
   return sqlRootAndParentsPath.map ( ( p, _ ) => {
-    if ( p[ 1 ].staticWhere === undefined) return "";
+    if ( p[ 1 ].staticWhere === undefined ) return "";
     return p[ 1 ].staticWhere
   } )
 }
@@ -389,8 +389,8 @@ export function makeWhereClause ( ws: WhereLink[] ) {
 }
 
 export function generateGetSql ( s: SqlLinkData ): string[] {
-  const where = s.staticWheres.filter(s => s!== "").length === 0 ?
-     `where ${makeWhereClause(s.whereLinks)}` : `where ${makeWhereClause ( s.whereLinks )} and ${s.staticWheres.join(" and ")}`
+  const where = s.staticWheres.filter ( s => s !== "" ).length === 0 ?
+    `where ${makeWhereClause ( s.whereLinks )}` : `where ${makeWhereClause ( s.whereLinks )} and ${s.staticWheres.join ( " and " )}`
   return [ `select`, ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.fields.map ( taf => `${taf.alias}.${taf.fieldData.dbFieldName} as ${sqlTafFieldName ( taf )}` ) ) ),
     ` from`, ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.aliasAndTables.map ( ( [ alias, table ] ) => `${table.name} ${alias}` ) ) ),
     ` ${where}` ]
@@ -415,7 +415,7 @@ export const findAllTableAndFieldDatasIn = <G> ( rdps: RestDefnInPageProperties<
 
 export function createTableSql<G> ( rdps: RestDefnInPageProperties<G>[] ): NameAnd<string[]> {
   const createSql = ( taf: TableAndFieldsData<G> ): string[] => {
-    let columns = unique(taf.fieldData.map ( fd => `${fd.dbFieldName} ${fd.dbType}` ), s=> s.toLowerCase());
+    let columns = unique ( taf.fieldData.map ( fd => `${fd.dbFieldName} ${fd.dbType}` ), s => s.toLowerCase () );
     return [
       `create table ${taf.table.name}` + '(',
       ...indentList ( addStringToEndOfAllButLast ( "," ) ( columns ) ),
@@ -425,7 +425,8 @@ export function createTableSql<G> ( rdps: RestDefnInPageProperties<G>[] ): NameA
   return Object.fromEntries ( findAllTableAndFieldDatasIn ( rdps ).map ( taf => [ taf.table.name, createSql ( taf ) ] ) )
 }
 
-export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, restD: RestD<G>, ld: SqlLinkData, path: number[], childCount: number ): string[] {
+export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, rdp: RestDefnInPageProperties<G>, ld: SqlLinkData, path: number[], childCount: number ): string[] {
+  const restD = rdp.rest;
   function mapName ( path: string[] ) {return path.length === 0 ? '_root' : safeArray ( path ).join ( "_" )}
 
   const maps = flatMapDD<string, G> ( restD.dataDD, {
@@ -443,7 +444,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
     .filter ( taf => taf.fieldData.fieldName )
     .sort ( ( l, r ) => l.table.name.localeCompare ( r.table.name ) )
     .sort ( ( l, r ) => l.fieldData.dbFieldName.localeCompare ( r.fieldData.dbFieldName ) )
-    .map ( taf => `this.${mapName ( safeArray(taf.fieldData.path).slice ( 0, -1 ) )}.put("${taf.fieldData.fieldName}", rs.${taf.fieldData.rsGetter}("${sqlTafFieldName ( taf )}"));` )
+    .map ( taf => `this.${mapName ( safeArray ( taf.fieldData.path ).slice ( 0, -1 ) )}.put("${taf.fieldData.fieldName}", rs.${taf.fieldData.rsGetter}("${sqlTafFieldName ( taf )}"));` )
   const setIds = onlyIds.map ( taf => `this.${sqlTafFieldName ( taf )} = rs.${taf.fieldData.rsGetter}("${sqlTafFieldName ( taf )}");` )
   const allPaths = unique ( flatMapDD<string[], G> ( restD.dataDD, {
     ...emptyDataFlatMap (),
@@ -455,11 +456,11 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
     .filter ( p => p.join ( "/" ).startsWith ( safeString ( ld.sqlRoot.filterPath ) ) )
     .map ( path => `${mapName ( path.slice ( 0, -1 ) )}.put("${path[ path.length - 1 ]}", ${mapName ( path )});` )
 
-  const linksMultipleEntities = (sqlRoot: SqlRoot ) => allPaths.filter (p => p.length > 1 )
+  const linksMultipleEntities = ( sqlRoot: SqlRoot ) => allPaths.filter ( p => p.length > 1 )
     .filter ( ( p: string[] ) => p.join ( "/" ).startsWith ( safeString ( sqlRoot.filterPath ) ) )
     .map ( path => [ path[ path.length - 1 ], mapName ( path ) ] );
 
-  const linksToOtherMaps: string[] = ld.sqlRoot.children.flatMap ( (childRoot, i ) => {
+  const linksToOtherMaps: string[] = ld.sqlRoot.children.flatMap ( ( childRoot, i ) => {
     let childEntity = childRoot.root
     if ( !isMultipleEntity ( childEntity ) ) throw Error ( `Page: ${p.name} rest ${restName} The parent of sql root must be a multiple entity.\n ${JSON.stringify ( childRoot )}` )
     if ( childRoot.children.length > 0 )
@@ -487,7 +488,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
       `@SuppressWarnings("SqlResolve")`,
       ...addBrackets ( 'public static String sql = ', ';' ) ( addStringToEndOfAllButLast ( '+' ) ( sql.map ( s => '"' + s.replace ( /""/g, '\"' ) + '"' ) ) ),
       '',
-      ...makeAllGetsAndAllSqlForRest ( params, p, restName, restD ),
+      ...makeAllGetsAndAllSqlForRest ( params, p, restName, rdp ),
       '',
       ...ids,
       '',
@@ -510,34 +511,33 @@ function getParameters<B, G> ( childCount: number, p: PageD<B, G>, restName: str
 function newMap ( mapName: string, childCount: number, path: number[] ) {
   return `new ${mapName}(${[ 'rs', ...ints ( childCount ).map ( i => `list${i}` ) ].join ( "," )})`
 }
-function makeGetRestForRoot<B, G> ( p: PageD<B, G>, restName: string, childCount: number, queryParams: JavaQueryParamDetails[] ) {
-  const mapName = `${sqlMapName ( p, restName, [] )}`;
-  return [
-    `public static Optional<${mapName}> getRoot(${getParameters ( childCount, p, restName, [], queryParams )}) throws SQLException {`,
-    `    PreparedStatement statement = connection.prepareStatement(${mapName}.sql);`,
-    ...indentList ( queryParams.map ( ( [ name, param ], i ) => `statement.${param.rsSetter}(${i + 1},${name});` ) ),
-    `    ResultSet rs = statement.executeQuery();`,
-    `    try {`,
-    `      return rs.next() ? Optional.of(${newMap ( mapName, childCount, [] )}) : Optional.empty();`,
-    `    } finally {`,
-    `      rs.close();`,
-    `      statement.close();`,
-    `    }`,
-    `}`
-  ]
+
+function makeGetRestForRoot<B, G> ( p: PageD<B, G>, restName: string, rdp: RestDefnInPageProperties<G>, childCount: number, queryParams: JavaQueryParamDetails[] ) {
+  return makeGetRestForMainOrChild ( p, restName, [], childCount, queryParams, isRepeatingDd ( rdp.rest.dataDD ) )
 }
+
 function makeGetRestForChild<B, G> ( p: PageD<B, G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[] ) {
+  return makeGetRestForMainOrChild ( p, restName, path, childCount, queryParams, true )
+
+}
+
+function makeGetRestForMainOrChild<B, G> ( p: PageD<B, G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[], repeating: Boolean ) {
   const mapName = `${sqlMapName ( p, restName, path )}`;
+  const retreiveData: string[] = repeating ?
+    [ `      List<${mapName}> result = new LinkedList<>();`,
+      `      while (rs.next())`,
+      `        result.add(${newMap ( mapName, childCount, [] )});`,
+      `      return result;`,
+    ] :
+    [ `      return rs.next() ? Optional.of(${newMap ( mapName, childCount, [] )}) : Optional.empty();` ]
+
   return [
-    `public static List<${mapName}> get${path.join ( '_' )}(${getParameters ( childCount, p, restName, [], queryParams )}) throws SQLException {`,
+    `public static ${repeating ? 'List' : 'Optional'}<${mapName}> get${path.join ( '_' )}(${getParameters ( childCount, p, restName, [], queryParams )}) throws SQLException {`,
     `    PreparedStatement statement = connection.prepareStatement(${mapName}.sql);`,
     ...indentList ( queryParams.map ( ( [ name, param ], i ) => `statement.${param.rsSetter}(${i + 1},${name});` ) ),
     `    ResultSet rs = statement.executeQuery();`,
     `    try {`,
-    `      List<${mapName}> result = new LinkedList<>();`,
-    `      while (rs.next())`,
-    `        result.add(${newMap ( mapName, childCount, [] )});`,
-    `      return result;`,
+    ...retreiveData,
     `    } finally {`,
     `      rs.close();`,
     `      statement.close();`,
@@ -546,31 +546,37 @@ function makeGetRestForChild<B, G> ( p: PageD<B, G>, restName: string, path: num
   ]
 }
 
-export function makeGetForRestFromLinkData<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, rest: RestD<G>, queryParams: JavaQueryParamDetails[], path: number[], childCount: number ) {
-  return path.length === 0 ? makeGetRestForRoot ( p, restName, childCount, queryParams ) : makeGetRestForChild ( p, restName, path, childCount, queryParams );
+export function makeGetForRestFromLinkData<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, rdp: RestDefnInPageProperties<G>, queryParams: JavaQueryParamDetails[], path: number[], childCount: number ) {
+  return path.length === 0 ? makeGetRestForRoot ( p, restName, rdp, childCount, queryParams ) : makeGetRestForChild ( p, restName, path, childCount, queryParams );
 }
 interface QueryAndGetters {
   query: JavaQueryParamDetails[],
   getter: string[];
   sql: string[]
 }
-export function makeAllGetsAndAllSqlForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, restD: RestD<G> ): string[] {
+function isListOrOptional<G> ( rdp: RestDefnInPageProperties<G> ) {
+  return isRepeatingDd ( rdp.rest.dataDD ) ? 'List' : 'Optional';
+}
+export function makeAllGetsAndAllSqlForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, rdp: RestDefnInPageProperties<G> ): string[] {
+  const restD = rdp.rest
   if ( restD.tables === undefined ) throw Error ( `somehow have a sql root without a tables in ${p.name} ${restName}` )
   let sqlRoot = findSqlRoot ( restD.tables );
   const getters: QueryAndGetters[] = walkSqlRoots ( sqlRoot, ( r, path ) => {
     const ld = findSqlLinkDataFromRootAndDataD ( r, restD.dataDD )
     if ( restD.tables === undefined ) throw Error ( `somehow have a sql root without a tables in ${p.name} ${restName}` )
     const query = findParamsForTable ( `Page ${p.name} rest ${restName}`, restD.params, restD.tables )
-    return { query, getter: makeGetForRestFromLinkData ( params, p, restName, restD, query, path, r.children.length ), sql: [ ...generateGetSql ( ld ), '' ] }
+    return { query, getter: makeGetForRestFromLinkData ( params, p, restName, rdp, query, path, r.children.length ), sql: [ ...generateGetSql ( ld ), '' ] }
   } )
   const paramsForMainGet = getters.slice ( 1 ).map ( g => g.query )
   function callingParams ( qs: JavaQueryParamDetails[] ) {return qs.map ( q => q[ 0 ] )}
   const allParams = unique ( getters.flatMap ( g => g.query ), q => q[ 0 ] + q[ 1 ].javaType )
+  const mapString = isRepeatingDd ( rdp.rest.dataDD ) ? '.stream().map(x -> x._root).collect(Collectors.toList())': '.map(x -> x._root)'
   const mainGet: string[] = [
-    `public static Optional<Map<String,Object>> getAll(${[ 'Connection connection', ...allParams.map ( ( [ name, param ] ) =>
+    `public static ${isListOrOptional ( rdp )}<Map<String,Object>> getAll(${[ 'Connection connection', ...allParams.map ( ( [ name, param ] ) =>
       `${param.javaType} ${name}` ) ].join ( "," )}) throws SQLException {`,
-    `   return getRoot(${[ 'connection', ...callingParams ( getters[ 0 ].query ), ...ints ( sqlRoot.children.length )
-      .map ( i => `get${i}(${[ 'connection', ...callingParams ( paramsForMainGet[ i ] ) ].join ( ',' )})` ) ].join ( "," )}).map(x -> x._root);`, // Note not yet recursing here
+    `//from ${p.name}.rest[${restName}].dataDD which is of type ${rdp.rest.dataDD.name}`,
+    `   return get(${[ 'connection', ...callingParams ( getters[ 0 ].query ), ...ints ( sqlRoot.children.length )
+      .map ( i => `get${i}(${[ 'connection', ...callingParams ( paramsForMainGet[ i ] ) ].join ( ',' )})` ) ].join ( "," )})${mapString};`, // Note not yet recursing here
     `}` ]
   const allSql = addBrackets ( `public static String allSql=`, ';' ) ( addStringToEndOfAllButLast ( "+" ) ( getters.flatMap ( g => g.sql.map ( s => '"' + s + '\\n"' ) ) ) )
   return [ ...mainGet, ...allSql, ...getters.flatMap ( g => g.getter ) ]

@@ -22,14 +22,14 @@ export function PostCodeMainPage_PostCodeNameAndAddressRestDetails ( cd: NameAnd
 }
 
 //If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
-export function PostCodeMainPage_PostCodeDataRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.PostCodeMainPagePageDomain, domains.PostCodeDataDomain, SimpleMessage> {
+export function PostCodeMainPage_PostCodeSearchResponseRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.PostCodeMainPagePageDomain, domains.PostCodeSearchResponseDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.PostCodeMainPagePageDomain> = {postcode: Lenses.identity< domains.PostCodeMainPagePageDomain>().focusQuery('postcode').focusQuery('search')}
   return {
     fdLens: Lenses.identity<FState>().focusQuery('PostCodeMainPage'),
 //From PostCodeMainPage.rest[postcode].targetFromPath (~/postcode/searchResults). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.PostCodeMainPagePageDomain>().focusQuery('postcode').focusQuery('searchResults'),
     cd, fdd,
-    ids: ["postcode"],
+    ids: ["dbName","postcode"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/api/postCode?{query}",

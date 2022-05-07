@@ -5,7 +5,8 @@ export const allCommonIds = {
   applRef: { ...IntParam, commonLens: 'applRef', testValue: 'appref' },
   clientRef: { ...IntParam, commonLens: 'clientRef', testValue: 'custId' },
   accountId: { ...IntParam, commonLens: 'accountId', testValue: "accId" },
-  employeeType: { ...StringParam, commonLens: 'employeeType', testValue: 'basic' }
+  employeeType: { ...StringParam, commonLens: 'employeeType', testValue: 'basic' },
+  dbName: { ...StringParam, commonLens: 'dbName', testValue: 'mock' }
 }
 
 export const commonIds = fromCommonIds ( "brandRef", "applRef", "clientRef", "accountId" )

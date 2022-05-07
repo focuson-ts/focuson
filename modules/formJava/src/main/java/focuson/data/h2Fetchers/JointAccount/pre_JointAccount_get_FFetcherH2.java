@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 
   @Component
@@ -21,11 +22,12 @@ public class pre_JointAccount_get_FFetcherH2 implements pre_JointAccount_get_FFe
   public DataFetcher getpreJointAccount() {
     return dataFetchingEnvironment -> {
       String accountId = dataFetchingEnvironment.getArgument("accountId");
-      String brandId = dataFetchingEnvironment.getArgument("brandId");
+      String brandRef = dataFetchingEnvironment.getArgument("brandRef");
       String dbName = dataFetchingEnvironment.getArgument("dbName");
        Connection c = dataSource.getConnection();
        try {
-         Optional<Map<String, Object>> opt = JointAccount_jointAccountMaps.getAll(c,Integer.parseInt(accountId),Integer.parseInt(brandId));
+         //from the data type in JointAccount.rest[jointAccount].dataDD which is a JointAccount 
+         Optional<Map<String, Object>> opt = JointAccount_jointAccountMaps.getAll(c,Integer.parseInt(accountId),Integer.parseInt(brandRef));
          Map json = opt.get();
          return json;
        } finally {

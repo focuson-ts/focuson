@@ -1,12 +1,12 @@
 import { DataD, OneLineStringDD, RepeatingDataD } from "../../common/dataD";
 import { AllGuards } from "../../buttons/guardButton";
 import { StringInputCD, TableCD } from "../../common/componentsD";
-import { addT } from "../database/tableNames";
+import { addT, postCodeSearchTable } from "../database/tableNames";
 
 export const postCodeDataLineD: DataD<AllGuards> = {
   name: "PostCodeDataLine",
   description: "",
-  table: addT,
+  table: postCodeSearchTable,
   structure: {
     line1: { dataDD: OneLineStringDD, db: 'zzline1', sample: [ '4 Privet drive', '27 Throughput Lane' ] },
     line2: { dataDD: OneLineStringDD, db: 'zzline2', sample: [ 'Little Whinging', 'Woodfield' ] },
@@ -16,8 +16,8 @@ export const postCodeDataLineD: DataD<AllGuards> = {
 }
 
 
-export const postCodeSearchResponse: RepeatingDataD<AllGuards> = {
-  name: "PostCodeData",
+export const postCodeSearchResponseDD: RepeatingDataD<AllGuards> = {
+  name: "PostCodeSearchResponse",
   description: "The array of all the data",
   dataDD: postCodeDataLineD,
   paged: false,
@@ -33,7 +33,7 @@ export const postCodeSearchDataD: DataD<AllGuards> = {
   description: "The post code search example: type postcode get results",
   structure: {
     search: { dataDD: {...OneLineStringDD, display: StringInputCD}, sample: [ 'LS21 3EY' ] },
-    searchResults: { dataDD: postCodeSearchResponse },
+    searchResults: { dataDD: postCodeSearchResponseDD },
     addressResults: { dataDD: postCodeDataLineD }
   }
 }

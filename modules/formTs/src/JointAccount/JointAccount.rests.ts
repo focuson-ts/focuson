@@ -13,7 +13,7 @@ export function JointAccount_pre_JointAccountRestDetails ( cd: NameAndLens<FStat
 //From JointAccount.rest[jointAccount].targetFromPath (~/fromApi). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.JointAccountPageDomain>().focusQuery('fromApi'),
     cd, fdd,
-    ids: ["accountId","brandId","dbName"],
+    ids: ["accountId","brandRef","dbName"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/api/jointAccount?{query}",

@@ -42,13 +42,13 @@ describe ( "makeAllFetchers", () => {
     it ( "make a fetcher for address/postcode which has a nested target", () => {
       expect ( makeAllFetchers ( paramsForTest, [ PostCodeMainPage ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
         "//fetcher type true",
-        "export function PostCodeDataFetcher(fdLens:Optional<FState, domains.PostCodeMainPagePageDomain>,commonIds: NameAndLens<FState>) {",
+        "export function PostCodeSearchResponseFetcher(fdLens:Optional<FState, domains.PostCodeMainPagePageDomain>,commonIds: NameAndLens<FState>) {",
         "//If you have a compilation here it might be because of the 'local' params in PostCodeMainPage.rest[postcode].params",
         "  const localIds = {postcode: Lenses.identity< domains.PostCodeMainPagePageDomain>().focusQuery('postcode').focusQuery('search')}",
-        "  return pageAndTagFetcher<FState, domains.PostCodeMainPagePageDomain, domains.PostCodeDataDomain, SimpleMessage>(",
-        "    common.commonFetch<FState,  domains.PostCodeDataDomain>(),",
+        "  return pageAndTagFetcher<FState, domains.PostCodeMainPagePageDomain, domains.PostCodeSearchResponseDomain, SimpleMessage>(",
+        "    common.commonFetch<FState,  domains.PostCodeSearchResponseDomain>(),",
         "     'PostCodeMainPage',",
-        "     '~/postcode/searchResults', fdLens, commonIds, localIds,['postcode'],[],",
+        "     '~/postcode/searchResults', fdLens, commonIds, localIds,['dbName','postcode'],[],",
         "      //From PostCodeMainPage.rest[postcode].targetFromPath ~/postcode/searchResults Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?",
         "      Lenses.identity<domains.PostCodeMainPagePageDomain>().focusQuery('postcode').focusQuery('searchResults'),",
         "     '/api/postCode?{query}')",

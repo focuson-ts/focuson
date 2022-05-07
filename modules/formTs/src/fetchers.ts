@@ -20,7 +20,7 @@ import { OtherIncomeResponseFetcher } from './OccupationAndIncomeSummary/Occupat
 import { EAccountsSummaryFetcher } from './EAccountsSummary/EAccountsSummary.fetchers';
 import { ChequeCreditbooksFetcher } from './ChequeCreditbooks/ChequeCreditbooks.fetchers';
 import { RepeatingWholeDataFetcher } from './Repeating/Repeating.fetchers';
-import { PostCodeDataFetcher } from './PostCodeMainPage/PostCodeMainPage.fetchers';
+import { PostCodeSearchResponseFetcher } from './PostCodeMainPage/PostCodeMainPage.fetchers';
 import { FetcherTree,  } from "@focuson/fetcher";
 import { HasTagHolder } from "@focuson/template";
 import { HasPageSelection } from "@focuson/pages";
@@ -51,6 +51,6 @@ fetchers: [
     EAccountsSummaryFetcher( identityL.focusQuery ( 'EAccountsSummary' ), commonIds ),
     ChequeCreditbooksFetcher( identityL.focusQuery ( 'ChequeCreditbooks' ), commonIds ),
     RepeatingWholeDataFetcher( identityL.focusQuery ( 'Repeating' ), commonIds ),
-    PostCodeDataFetcher( identityL.focusQuery ( 'PostCodeMainPage' ), commonIds )
+    PostCodeSearchResponseFetcher( identityL.focusQuery ( 'PostCodeMainPage' ), commonIds )
 ],
 children: []}

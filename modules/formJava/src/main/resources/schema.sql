@@ -23,3 +23,11 @@ create table ADD_TBL(
   zzline3 varchar(256),
   zzline4 varchar(256)
 );
+
+create table POSTCODE(
+  PC_POSTCODE integer,
+  zzline1 varchar(256),
+  zzline2 varchar(256),
+  zzline3 varchar(256),
+  zzline4 varchar(256)
+);

@@ -1,14 +1,5 @@
 import * as domains from '../PostCodeMainPage/PostCodeMainPage.domains'
 
-export const emptyPostCodeData:domains.PostCodeDataDomain =
-  [
-    {
-      "line1": "",
-      "line2": "",
-      "line3": "",
-      "line4": ""
-    }
-  ]
 export const emptyPostCodeDataLine:domains.PostCodeDataLineDomain =
   {
     "line1": "",
@@ -43,3 +34,12 @@ export const emptyPostCodeSearch:domains.PostCodeSearchDomain =
       "line4": ""
     }
   }
+export const emptyPostCodeSearchResponse:domains.PostCodeSearchResponseDomain =
+  [
+    {
+      "line1": "",
+      "line2": "",
+      "line3": "",
+      "line4": ""
+    }
+  ]

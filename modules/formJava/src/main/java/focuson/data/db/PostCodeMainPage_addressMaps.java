@@ -24,7 +24,8 @@ public class PostCodeMainPage_addressMaps {
   " where ";
   
   public static Optional<Map<String,Object>> getAll(Connection connection) throws SQLException {
-     return getRoot(connection).map(x -> x._root);
+  //from PostCodeMainPage.rest[address].dataDD which is of type PostCodeNameAndAddress
+     return get(connection).map(x -> x._root);
   }
   public static String allSql="select\n"+
   "  ADD_TBL.zzline1 as ADD_TBL_zzline1,\n"+
@@ -35,7 +36,7 @@ public class PostCodeMainPage_addressMaps {
   "  ADD_TBL ADD_TBL\n"+
   " where \n"+
   "\n";
-  public static Optional<PostCodeMainPage_addressMaps> getRoot(Connection connection) throws SQLException {
+  public static Optional<PostCodeMainPage_addressMaps> get(Connection connection) throws SQLException {
       PreparedStatement statement = connection.prepareStatement(PostCodeMainPage_addressMaps.sql);
       ResultSet rs = statement.executeQuery();
       try {

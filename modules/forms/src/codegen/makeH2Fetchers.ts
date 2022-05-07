@@ -19,6 +19,14 @@ export function makeH2Fetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
     ...findParamsForTable ( `Error in page ${pageD.name} rest ${restName}`, rest.params, rest.tables )
       .map ( ( [ name, param ] ) =>
         `${param.javaParser}(${name})` ) ].join ( ',' )
+  const getDataFromRS: string[] = isRepeatingDd ( rdp.rest.dataDD ) ?
+    [ `         List<Map<String, Object>> list = ${sqlMapName ( pageD, restName, [] )}.getAll(${getAllParams});`,
+      `         return list;`, ] :
+    [ `         Optional<Map<String, Object>> opt = ${sqlMapName ( pageD, restName, [] )}.getAll(${getAllParams});`,
+      `         Map json = opt.get();`,
+      `         return json;`, ]
+
+
   return [
     ` package ${h2FetcherPackage ( params, pageD )};`,
     ``,
@@ -32,6 +40,7 @@ export function makeH2Fetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
     `import javax.sql.DataSource;`,
     `import java.sql.Connection;`,
     `import java.util.Map;`,
+    `import java.util.List;`,
     `import java.util.Optional;`,
     ``,
     `  @Component`,
@@ -45,9 +54,8 @@ export function makeH2Fetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
     ...indentList ( indentList ( indentList ( paramVariables ) ) ),
     `       Connection c = dataSource.getConnection();`,
     `       try {`,
-    `         Optional<Map<String, Object>> opt = ${sqlMapName ( pageD, restName, [] )}.getAll(${getAllParams});`,
-    `         Map json = opt.get();`,
-    `         return json;`,
+    `         //from the data type in ${pageD.name}.rest[${restName}].dataDD which is a ${rdp.rest.dataDD.name} `,
+    ...getDataFromRS,
     `       } finally {`,
     `         c.close();`,
     `       }`,

@@ -165,7 +165,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
         const ld = findSqlLinkDataFromRootAndDataD ( root, rdp.rest.dataDD )
         let fileName = sqlMapFileName ( javaDbPackages, p, name, path ) + ".java";
         console.log ( 'name:', fileName )
-        writeToFile ( fileName, () => makeMapsForRest ( params, p, name, rdp.rest, ld, path, root.children.length ) )
+        writeToFile ( fileName, () => makeMapsForRest ( params, p, name, rdp, ld, path, root.children.length ) )
       } )
     } )
   } )

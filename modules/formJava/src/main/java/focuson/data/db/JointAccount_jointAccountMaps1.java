@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-//{"accountId":{"rsSetter":"setInt","javaType":"int","javaParser":"Integer.parseInt","commonLens":"accountId","testValue":"custId"},"brandId":{"rsSetter":"setInt","javaType":"int","javaParser":"Integer.parseInt","commonLens":"brandId","testValue":"custId"},"dbName":{"rsSetter":"setString","javaType":"String","javaParser":"","commonLens":"dbName","testValue":"mock"}}
+//{"accountId":{"rsSetter":"setInt","javaType":"int","javaParser":"Integer.parseInt","commonLens":"accountId","testValue":"accId"},"brandRef":{"rsSetter":"setInt","javaType":"int","javaParser":"Integer.parseInt","commonLens":"brandRef","testValue":"brandRef"},"dbName":{"rsSetter":"setString","javaType":"String","javaParser":"","commonLens":"dbName","testValue":"mock"}}
 public class JointAccount_jointAccountMaps1 {
   @SuppressWarnings("SqlResolve")
   public static String sql = "select"+
@@ -28,8 +28,9 @@ public class JointAccount_jointAccountMaps1 {
   "  ADD_TBL jointAddress"+
   " where  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and jointCustomer.id = jointAddress.customerId and ACC_TBL.jointCustomerId = jointCustomer.id";
   
-  public static Optional<Map<String,Object>> getAll(Connection connection,int accountId,int brandId) throws SQLException {
-     return getRoot(connection,accountId,brandId,get0(connection,accountId,brandId),get1(connection,accountId,brandId)).map(x -> x._root);
+  public static Optional<Map<String,Object>> getAll(Connection connection,int accountId,int brandRef) throws SQLException {
+  //from JointAccount.rest[jointAccount].dataDD which is of type JointAccount
+     return get(connection,accountId,brandRef,get0(connection,accountId,brandRef),get1(connection,accountId,brandRef)).map(x -> x._root);
   }
   public static String allSql="select\n"+
   "  mainCustomer.nameId as mainCustomer_nameId,\n"+
@@ -81,10 +82,10 @@ public class JointAccount_jointAccountMaps1 {
   "  ADD_TBL jointAddress\n"+
   " where  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and jointCustomer.id = jointAddress.customerId and ACC_TBL.jointCustomerId = jointCustomer.id\n"+
   "\n";
-  public static Optional<JointAccount_jointAccountMaps> getRoot(Connection connection, int accountId, int brandId, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {
+  public static Optional<JointAccount_jointAccountMaps> get(Connection connection, int accountId, int brandRef, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {
       PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps.sql);
     statement.setInt(1,accountId);
-    statement.setInt(2,brandId);
+    statement.setInt(2,brandRef);
       ResultSet rs = statement.executeQuery();
       try {
         return rs.next() ? Optional.of(new JointAccount_jointAccountMaps(rs,list0,list1)) : Optional.empty();
@@ -93,10 +94,10 @@ public class JointAccount_jointAccountMaps1 {
         statement.close();
       }
   }
-  public static List<JointAccount_jointAccountMaps0> get0(Connection connection, int accountId, int brandId) throws SQLException {
+  public static List<JointAccount_jointAccountMaps0> get0(Connection connection, int accountId, int brandRef) throws SQLException {
       PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps0.sql);
     statement.setInt(1,accountId);
-    statement.setInt(2,brandId);
+    statement.setInt(2,brandRef);
       ResultSet rs = statement.executeQuery();
       try {
         List<JointAccount_jointAccountMaps0> result = new LinkedList<>();
@@ -108,10 +109,10 @@ public class JointAccount_jointAccountMaps1 {
         statement.close();
       }
   }
-  public static List<JointAccount_jointAccountMaps1> get1(Connection connection, int accountId, int brandId) throws SQLException {
+  public static List<JointAccount_jointAccountMaps1> get1(Connection connection, int accountId, int brandRef) throws SQLException {
       PreparedStatement statement = connection.prepareStatement(JointAccount_jointAccountMaps1.sql);
     statement.setInt(1,accountId);
-    statement.setInt(2,brandId);
+    statement.setInt(2,brandRef);
       ResultSet rs = statement.executeQuery();
       try {
         List<JointAccount_jointAccountMaps1> result = new LinkedList<>();

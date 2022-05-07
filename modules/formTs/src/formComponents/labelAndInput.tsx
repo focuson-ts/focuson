@@ -28,7 +28,7 @@ export function makeButtons ( allButtons: NameAnd<JSX.Element>, buttons?: string
 const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> ) =>
   <S, Context extends FocusOnContext<S>> ( props: LabelAndInputProps<S, T, Context> & P ) => {
     const label = <Label state={props.state} htmlFor={props.name} label={props.label}/>;
-    const input = Input<T, P> ( tProps )<S, LabelAndInputProps<S, T, Context> & P, Context> ( props );
+    const input = Input<S, T, P> ( tProps )<LabelAndInputProps<S, T, Context> & P, Context> ( props );
     return < div className='labelValueButton'> {label}{input}{makeButtons ( props.allButtons, props.buttons )}</div>
   }
 

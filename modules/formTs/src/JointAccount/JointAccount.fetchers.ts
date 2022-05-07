@@ -13,7 +13,7 @@ export function pre_JointAccountFetcher(fdLens:Optional<FState, domains.JointAcc
   return pageAndTagFetcher<FState, domains.JointAccountPageDomain, domains.JointAccountDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.JointAccountDomain>(),
      'JointAccount',
-     '~/fromApi', fdLens, commonIds, localIds,["accountId","brandId","dbName"],[],
+     '~/fromApi', fdLens, commonIds, localIds,["accountId","brandRef","dbName"],[],
       //From JointAccount.rest[jointAccount].targetFromPath ~/fromApi Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
       Lenses.identity<domains.JointAccountPageDomain>().focusQuery('fromApi'),
      '/api/jointAccount?{query}')
