@@ -26,6 +26,7 @@ import java.util.function.Function;
 import focuson.data.fetchers.HelloWorldMainPage.HelloWorldDomainData_get_FFetcher;
 import focuson.data.fetchers.LinkedAccountDetails.CollectionsList_get_FFetcher;
 import focuson.data.fetchers.LinkedAccountDetails.CollectionSummary_get_FFetcher;
+import focuson.data.fetchers.LinkedAccountDetails.CreatePayment_create_FFetcher;
 import focuson.data.fetchers.LinkedAccountDetails.CollectionItem_state_cancel_FFetcher;
 import focuson.data.fetchers.LinkedAccountDetails.CollectionItem_state_revalidate_FFetcher;
 import focuson.data.fetchers.LinkedAccountDetails.MandateList_get_FFetcher;
@@ -68,6 +69,8 @@ public class Wiring  implements IManyGraphQl{
       List<CollectionsList_get_FFetcher> CollectionsList_get_FFetcher;
       @Autowired
       List<CollectionSummary_get_FFetcher> CollectionSummary_get_FFetcher;
+      @Autowired
+      List<CreatePayment_create_FFetcher> CreatePayment_create_FFetcher;
       @Autowired
       List<CollectionItem_state_cancel_FFetcher> CollectionItem_state_cancel_FFetcher;
       @Autowired
@@ -173,6 +176,7 @@ public class Wiring  implements IManyGraphQl{
           .type(newTypeWiring("Query").dataFetcher("getHelloWorldDomainData", find(HelloWorldDomainData_get_FFetcher, dbName, f ->f.getHelloWorldDomainData())))
           .type(newTypeWiring("Query").dataFetcher("getCollectionItem", find(CollectionsList_get_FFetcher, dbName, f ->f.getCollectionItem())))
           .type(newTypeWiring("Query").dataFetcher("getCollectionSummary", find(CollectionSummary_get_FFetcher, dbName, f ->f.getCollectionSummary())))
+          .type(newTypeWiring("Mutation").dataFetcher("createCreatePayment", find(CreatePayment_create_FFetcher, dbName, f ->f.createCreatePayment())))
           .type(newTypeWiring("Mutation").dataFetcher("stateCollectionItemcancel", find(CollectionItem_state_cancel_FFetcher, dbName, f ->f.stateCollectionItemcancel())))
           .type(newTypeWiring("Mutation").dataFetcher("stateCollectionItemrevalidate", find(CollectionItem_state_revalidate_FFetcher, dbName, f ->f.stateCollectionItemrevalidate())))
           .type(newTypeWiring("Query").dataFetcher("getMandate", find(MandateList_get_FFetcher, dbName, f ->f.getMandate())))

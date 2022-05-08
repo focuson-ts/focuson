@@ -16,6 +16,7 @@
 |HelloWorldMainPage|restDataRD | /helloWorld?{query}|  |  | 
 |LinkedAccountDetails|collectionHistoryList | /api/collections/list?{query}| accountId,clientRef |  | 
 |LinkedAccountDetails|collectionSummary | /api/collections/summary?{query}| accountId,clientRef |  | 
+|LinkedAccountDetails|createPayment | /api/payment/create?{query}| accountId,clientRef,paymentId |  | create->auditCreate
 |LinkedAccountDetails|payments | /api/payment?{query}| accountId,clientRef,paymentId |  | state:cancel->auditCancel; state:revalidate->auditrevalidate
 |LinkedAccountDetails| | /api/payment/cancel?{query}| accountId,clientRef,paymentId |
 |LinkedAccountDetails| | /api/payment/revalidate?{query}| accountId,clientRef,paymentId |
@@ -76,6 +77,7 @@
   | --- | --- | --- | --- | --- 
     |collectionHistoryList | /api/collections/list?{query}| accountId,clientRef |  | 
     |collectionSummary | /api/collections/summary?{query}| accountId,clientRef |  | 
+    |createPayment | /api/payment/create?{query}| accountId,clientRef,paymentId |  | create->auditCreate
     |payments | /api/payment?{query}| accountId,clientRef,paymentId |  | state:cancel->auditCancel; state:revalidate->auditrevalidate
     | | /api/payment/cancel?{query}| accountId,clientRef,paymentId |
     | | /api/payment/revalidate?{query}| accountId,clientRef,paymentId |
@@ -92,6 +94,7 @@
     Modal Button ==> CreatePayment in mode create
       Copy from [{"from":"~/display/collectionSummary/allowance","to":"~/createPayment/allowance"},{"from":"~/display/collectionSummary/period","to":"~/createPayment/period"}]
       Focused on "~/createPayment"
+      RestOnCommit: createPayment/create
     refreshMandate DeleteStateButton
     Modal Button ==> SelectMandate in mode edit
       Copy from [{"from":"~/display/mandate/sortCode","to":"~/selectMandateSearch/sortCode"},{"from":"~/display/mandate","to":"~/tempMandate"}]
@@ -423,7 +426,7 @@
     Modal Button ==> OrderChequeBookOrPayingInModal in mode create
       Focused on "~/tempCreatePlan"
       RestOnCommit: chequeCreditBooks/create
-    refreshx     DeleteStateButton
+    refresh      DeleteStateButton
 
 ---
 # Repeating - MainPage

@@ -25,6 +25,7 @@ type Query{
   getPostCodeDataLine(dbName: String!, postcode: String!):[PostCodeDataLine!]!
 }
 type Mutation{
+  createCreatePayment(accountId: String!, clientRef: String!, paymentId: String!,obj: CreatePaymentInp!):CreatePayment!
   stateCollectionItemcancel(accountId: String!, clientRef: String!, paymentId: String!):Boolean
   updateOccupationAndIncomeFullDomain(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!,obj: OccupationAndIncomeFullDomainInp!):OccupationAndIncomeFullDomain!
   createCreatePlan(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!,obj: CreatePlanInp!):CreatePlan!
@@ -206,6 +207,13 @@ type CreateEAccountData{
   savingsStyle: String!
   initialAmount: Int!
 }
+type CreatePayment{
+  amount: Int!
+  collectionDate: String!
+  reason: String!
+  allowance: Int!
+  period: String!
+}
 type CreatePlan{
   createPlanStart: String!
   createPlanDate: String!
@@ -360,6 +368,13 @@ input CreateEAccountDataInp{
   type: String!
   savingsStyle: String!
   initialAmount: Int!
+}
+input CreatePaymentInp{
+  amount: Int!
+  collectionDate: String!
+  reason: String!
+  allowance: Int!
+  period: String!
 }
 input CreatePlanInp{
   createPlanStart: String!

@@ -50,6 +50,7 @@ const id=`page${index}`;
         focusOn='~/createPayment'
         copy={[{"from":"~/display/collectionSummary/allowance","to":"~/createPayment/allowance"},{"from":"~/display/collectionSummary/period","to":"~/createPayment/period"}]}
         createEmpty={empty.emptyCreatePayment}
+         rest={{"name":"LinkedAccountDetails_CreatePaymentRestDetails","restAction":"create","deleteOnSuccess":["~/display/collectionSummary","~/display/collectionHistory"]}}
       />,
       refreshMandate:<DeleteStateButton  id={`${id}.refreshMandate`} states={[pageState(state)<domain.LinkedAccountDetailsPageDomain>().focusOn('display').focusOn('collectionSummary'),pageState(state)<domain.LinkedAccountDetailsPageDomain>().focusOn('display').focusOn('collectionHistory')]} label='Refresh Mandate' />,
       selectMandate:<ModalButton id={`${id}.selectMandate`} text='selectMandate'  state={state} modal = 'SelectMandate'  

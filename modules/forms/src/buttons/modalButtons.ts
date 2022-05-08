@@ -27,7 +27,8 @@ export function restForButton<B, G> ( parent: PageD<B, G>, rest?: RestOnCommit )
   if ( !isMainPage ( parent ) ) throw new Error ( `Cannot have a rest for button on a page that isn't a main page at the moment. Page is ${parent.name}. Rest is ${JSON.stringify ( rest )}` )
   const rd = parent.rest[ rest.restName ]
   if ( !rd ) throw new Error ( `Illegal rest name ${rest.restName} on page ${parent.name}. Legal values are ${Object.values ( parent.rest )}` )
-  return [ ` rest={${JSON.stringify ( { name: restDetailsName ( parent, rest.restName, rd.rest ), restAction: rest.action } )}}` ]
+  const deleteOnSuccess = rest.result === 'refresh' ? { deleteOnSuccess: rest.pathToDelete } : {}
+  return [ ` rest={${JSON.stringify ( { name: restDetailsName ( parent, rest.restName, rd.rest ), restAction: rest.action,...deleteOnSuccess } ) }}` ]
 }
 
 export function isModalButtonInPage<G> ( m: any ): m is ModalButtonInPage<G> {

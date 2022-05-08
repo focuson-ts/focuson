@@ -1,6 +1,6 @@
 import { ExampleMainPage, ExampleModalPage } from "../common";
 import { CollectionItemDD, CreatePaymentDD, linkedAccountDetailsDD, MandateDD, MandateSearchDD, paymentReasonDD } from "./linkedAccountDetails.dataD";
-import { allMandatesForClientRD, collectionHistoryListRD, collectionSummaryRD, singleCollectionPaymentRD } from "./linkedAccountDetails.restD";
+import { allMandatesForClientRD, collectionHistoryListRD, collectionSummaryRD, createPaymentRD, singleCollectionPaymentRD } from "./linkedAccountDetails.restD";
 import { NatNumDd } from "../commonEnums";
 
 export const SelectMandateMP: ExampleModalPage = {
@@ -48,7 +48,8 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
     collectionSummary: { rest: collectionSummaryRD, targetFromPath: '~/display/collectionSummary', fetcher: true },
     collectionHistoryList: { rest: collectionHistoryListRD, targetFromPath: '~/display/collectionHistory', fetcher: true },
     searchMandate: { rest: allMandatesForClientRD, targetFromPath: '~/selectMandateSearch/searchResults', fetcher: true },
-    payments: { rest: singleCollectionPaymentRD, targetFromPath: '~/selectedCollectionItem' }
+    payments: { rest: singleCollectionPaymentRD, targetFromPath: '~/selectedCollectionItem' },
+    createPayment: { rest: createPaymentRD, targetFromPath: '~/createPayment' }
   },
   guards: { haveLegalSelectedPayment: { condition: 'isDefined', path: '~/selectedCollectionItem/paymentId' } },
   buttons: {
@@ -63,11 +64,13 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
     },
     createPayment: {
       control: 'ModalButton',
+      mode: 'create', focusOn: '~/createPayment',
+      modal: CreatePaymentMP,
       createEmpty: CreatePaymentDD,
       copy: [
         { from: '~/display/collectionSummary/allowance', to: '~/createPayment/allowance' },
         { from: '~/display/collectionSummary/period', to: '~/createPayment/period' } ],
-      modal: CreatePaymentMP, mode: 'create', focusOn: '~/createPayment'
+      restOnCommit: { restName: 'createPayment', action: 'create', pathToDelete: [ '~/display/collectionSummary', '~/display/collectionHistory' ], result: 'refresh' }
     },
     cancelPayment: {
       control: "RestButton",

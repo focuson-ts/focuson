@@ -164,6 +164,47 @@ pactWith ( { consumer: 'LinkedAccountDetails', provider: 'LinkedAccountDetailsPr
  })
 })
 
+//Rest createPayment create pact test for LinkedAccountDetails
+pactWith ( { consumer: 'LinkedAccountDetails', provider: 'LinkedAccountDetailsProvider', cors: true }, provider => {
+  describe ( 'LinkedAccountDetails - createPayment rest create', () => {
+   it ( 'should have a create rest for CreatePayment', async () => {
+    const restCommand: RestCommand = { name: 'LinkedAccountDetails_CreatePaymentRestDetails', restAction: "create" }
+    const firstState: FState = {
+       ...emptyState, restCommands: [ restCommand ],
+       CommonIds: {"clientRef":"custId"},
+       pageSelection: [ { pageName: 'LinkedAccountDetails', pageMode: 'view' } ]
+    }
+    await provider.addInteraction ( {
+      state: 'default',
+      uponReceiving: 'a rest for LinkedAccountDetails createPayment create',
+      withRequest: {
+         method: 'POST',
+         path:   '/api/payment/create',
+         query:{"accountId":"1","clientRef":"custId","paymentId":"123"},
+         body: JSON.stringify(samples.sampleCreatePayment0),
+      },
+      willRespondWith: {
+         status: 200,
+         body: samples.sampleCreatePayment0
+      },
+    } )
+    const lensTransforms: Transform<FState,any>[] = [
+    [Lenses.identity<FState>().focusQuery('LinkedAccountDetails').focusQuery('createPayment'), () => samples.sampleCreatePayment0]
+      [Lenses.identity<FState>().focusQuery('LinkedAccountDetails').focusQuery('display').focusQuery('mandate').focusQuery('accountId'), () =>"1" ],
+      [Lenses.identity<FState>().focusQuery('LinkedAccountDetails').focusQuery('selectedCollectionItem').focusQuery('paymentId'), () =>"123" ]
+    ]
+    const withIds = massTransform ( firstState, ...lensTransforms )
+    const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
+    const rawExpected:any = { ...withIds, restCommands: []}
+    const expected = Lenses.identity<FState>().focusQuery('LinkedAccountDetails').focusQuery('createPayment').set ( rawExpected, samples.sampleCreatePayment0 )
+    expect ( newState.messages.length ).toEqual ( 1 )
+    expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+    expect ( { ...newState, messages: []}).toEqual ( expected )
+   })
+ })
+})
+
 //Rest payments [object Object] pact test for LinkedAccountDetails
 pactWith ( { consumer: 'LinkedAccountDetails', provider: 'LinkedAccountDetailsProvider', cors: true }, provider => {
   describe ( 'LinkedAccountDetails - payments rest state:cancel', () => {

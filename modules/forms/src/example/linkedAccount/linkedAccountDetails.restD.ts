@@ -1,5 +1,5 @@
 import { ExampleRestD } from "../common";
-import { CollectionItemDD, CollectionListDD, CollectionSummaryDD, MandateListDD } from "./linkedAccountDetails.dataD";
+import { CollectionItemDD, CollectionListDD, CollectionSummaryDD, CreatePaymentDD, MandateListDD } from "./linkedAccountDetails.dataD";
 
 import { IntParam, RestParams } from "../../common/restD";
 import { onlySchema } from "../database/tableNames";
@@ -39,6 +39,7 @@ export const collectionPaymentParams: RestParams = {
   paymentId: { ...IntParam, lens: '~/selectedCollectionItem/paymentId', testValue: '123' },
 }
 
+
 export const singleCollectionPaymentRD: ExampleRestD = {
   params: collectionPaymentParams,
   dataDD: CollectionItemDD,
@@ -54,3 +55,13 @@ export const singleCollectionPaymentRD: ExampleRestD = {
   }
 }
 
+
+export const createPaymentRD: ExampleRestD = {
+  params: collectionPaymentParams,
+  dataDD: CreatePaymentDD,
+  url: '/api/payment/create?{query}',
+  actions: [ 'create' ],
+  audit: [
+    { restAction: 'create', storedProcedure: { name: 'auditCreate', schema: onlySchema, params: [ 'accountId' ] } },
+  ],
+}

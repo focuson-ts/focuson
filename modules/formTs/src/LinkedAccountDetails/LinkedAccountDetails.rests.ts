@@ -38,6 +38,22 @@ export function LinkedAccountDetails_CollectionSummaryRestDetails ( cd: NameAndL
 }
 
 //If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
+export function LinkedAccountDetails_CreatePaymentRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.LinkedAccountDetailsPageDomain, domains.CreatePaymentDomain, SimpleMessage> {
+  const fdd: NameAndLens<domains.LinkedAccountDetailsPageDomain> = {accountId: Lenses.identity< domains.LinkedAccountDetailsPageDomain>().focusQuery('display').focusQuery('mandate').focusQuery('accountId'),paymentId: Lenses.identity< domains.LinkedAccountDetailsPageDomain>().focusQuery('selectedCollectionItem').focusQuery('paymentId')}
+  return {
+    fdLens: Lenses.identity<FState>().focusQuery('LinkedAccountDetails'),
+//From LinkedAccountDetails.rest[createPayment].targetFromPath (~/createPayment). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
+    dLens: Lenses.identity<domains.LinkedAccountDetailsPageDomain>().focusQuery('createPayment'),
+    cd, fdd,
+    ids: ["accountId","clientRef","paymentId"],
+    resourceId:  [],
+    messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
+    url: "/api/payment/create?{query}",
+    states : {}
+  }
+}
+
+//If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs
 export function LinkedAccountDetails_CollectionItemRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.LinkedAccountDetailsPageDomain, domains.CollectionItemDomain, SimpleMessage> {
   const fdd: NameAndLens<domains.LinkedAccountDetailsPageDomain> = {accountId: Lenses.identity< domains.LinkedAccountDetailsPageDomain>().focusQuery('display').focusQuery('mandate').focusQuery('accountId'),paymentId: Lenses.identity< domains.LinkedAccountDetailsPageDomain>().focusQuery('selectedCollectionItem').focusQuery('paymentId')}
   return {

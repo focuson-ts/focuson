@@ -30,7 +30,8 @@ export function ChequeCreditbooksPage(){
   return focusedPageWithExtraState<FState, ChequeCreditbooksPageDomain, ChequeCreditbooksDomain, Context> ( s => 'Cheque Creditbooks' ) ( state => state.focusOn('fromApi')) (
 ( fullState, state , full, d, mode, index) => {
 const id=`page${index}`;
-  const buttons =    {cancelCheckBook:<RestButton state={state} id={`${id}.cancelCheckBook`} 
+  const canCancelGuard = pageState(state)<domain.ChequeCreditbooksPageDomain>().focusOn('selectedBook').optJson() !== undefined
+  const buttons =    {cancelCheckBook:<RestButton state={state} id={`${id}.cancelCheckBook`} enabledBy={canCancelGuard} 
         name='cancelCheckBook'
         action={{"state":"cancel"}}
         rest='ChequeCreditbooks_ChequeCreditbooksRestDetails'
@@ -43,12 +44,12 @@ const id=`page${index}`;
         createEmpty={empty.emptyChequeCreditbooksHistoryLine}
          rest={{"name":"ChequeCreditbooks_ChequeCreditbooksRestDetails","restAction":"create"}}
       />,
-      refreshx:<DeleteStateButton  id={`${id}.refreshx`} states={[pageState(state)<domain.ChequeCreditbooksPageDomain>().focusOn('fromApi'),pageState(state)<domain.ChequeCreditbooksPageDomain>().focusOn('tempCreatePlan')]} label='Refresh' />,}
+      refresh:<DeleteStateButton  id={`${id}.refresh`} states={[pageState(state)<domain.ChequeCreditbooksPageDomain>().focusOn('fromApi'),pageState(state)<domain.ChequeCreditbooksPageDomain>().focusOn('tempCreatePlan'),pageState(state)<domain.ChequeCreditbooksPageDomain>().focusOn('selectedBook')]} label='Refresh' />,}
 
       return <>
           <ChequeCreditbooks id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.orderNewBook } 
-      { buttons.refreshx } 
+      { buttons.refresh } 
       { buttons.cancelCheckBook } 
       </>})}
 

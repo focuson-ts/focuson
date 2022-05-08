@@ -50,7 +50,9 @@ export const ChequeCreditbooksPD: ExampleMainPage = {
   rest: {
     chequeCreditBooks: { rest: chequeCreditBooksRestD, targetFromPath: '~/fromApi', fetcher: true }
   },
-  /** As well as displaying/editing the data we have these buttons. These are passed to layout */
+  guards: {
+    canCancel: { condition: 'isDefined', path: '~/selectedBook' }
+  },
   buttons: {                                                                      //interestingly these will be type checked in the target system...
     // chequeBook: { control: 'ResetStateButton' },//, target: ['checkBookOrPayingInBook'], value : 'cheque'},
     // payingInBook: { control: 'ResetStateButton' },//, target: ['checkBookOrPayingInBook'], value : 'payingIn'},
@@ -61,9 +63,9 @@ export const ChequeCreditbooksPD: ExampleMainPage = {
       createEmpty: ChequeCreditbooksHistoryLineDD,
       restOnCommit: { restName: 'chequeCreditBooks', action: 'create', result: 'refresh' }
     },
-    refreshx: { control: 'DeleteStateButton', label: 'Refresh', path: [ '~/fromApi', '~/tempCreatePlan' ] },
+    refresh: { control: 'DeleteStateButton', label: 'Refresh', path: [ '~/fromApi', '~/tempCreatePlan', '~/selectedBook' ] },
     cancelCheckBook: {
-      control: 'RestButton', restName: 'chequeCreditBooks', confirm: 'Really?', action: { state: 'cancel' }
+      control: 'RestButton', restName: 'chequeCreditBooks', enabledBy: 'canCancel', confirm: 'Really?', action: { state: 'cancel' }
     }
   }
 }
