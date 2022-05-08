@@ -2,10 +2,10 @@ import { fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
 import { loadTree,wouldLoad,FetcherTree } from "@focuson/fetcher";
 import { pactWith } from "jest-pact";
 import { rest, RestCommand, restL } from "@focuson/rest";
-import { simpleMessagesL } from "@focuson/pages";
+import { simpleMessagesL} from "@focuson/pages";
 import { Lenses, massTransform, Transform } from "@focuson/lens";
 import * as samples from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.samples'
-import {emptyState, FState , commonIds, identityL } from "../common";
+import {emptyState, FState , commonIds, identityL, pathToLens } from "../common";
 import * as rests from "../rests";
 import { restUrlMutator } from "../rests";
 import {AdditionalInformationFetcher} from './OccupationAndIncomeSummary.fetchers'
@@ -79,7 +79,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('additionalInformation').set ( rawExpected, samples.sampleAdditionalInformation0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -152,7 +152,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('businessDetails').set ( rawExpected, samples.sampleBusinessDetailsMain0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -225,7 +225,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('dropdowns').set ( rawExpected, samples.sampleDropdowns0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -298,7 +298,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('fromApi').set ( rawExpected, samples.sampleOccupationAndIncomeFullDomain0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -337,7 +337,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('fromApi').set ( rawExpected, samples.sampleOccupationAndIncomeFullDomain0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -410,7 +410,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('otherSourcesOfIncome').set ( rawExpected, samples.sampleOtherIncomeResponse0 )
     expect ( newState.messages.length ).toEqual ( 1 )

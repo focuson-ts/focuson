@@ -74,7 +74,8 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
       restName: 'payments',
       confirm: 'Really?',
       enabledBy: 'haveLegalSelectedPayment',
-      action: { state: 'cancel' }, deleteOnSuccess: [ '~/display/collectionSummary', '~/display/collectionHistory' ]
+      action: { state: 'cancel' },
+      deleteOnSuccess: [ '~/display/collectionSummary', '~/display/collectionHistory' ]
     },
     refreshMandate: {
       control: 'DeleteStateButton', path: [ '~/display/collectionSummary', '~/display/collectionHistory' ], label: "Refresh Mandate",

@@ -29,7 +29,7 @@ export const MandateDD: ExampleDataD = {
     sortCode: { dataDD: StringDD, sample: [ '10-11-12', '23-54-12' ] },
     accountId: { dataDD: AccountDD, sample: [ 12341234, 23456123, 3245454 ] },
     mandateStatus: { dataDD: StringDD, sample: [ 'ACTIVE' ] },
-    bankName: { dataDD: StringDD, sample: [ 'NatWest', 'RBS' ] },
+    bankName: { dataDD: StringDD, sample: [ 'Bank Of Happiness', 'Royal Bank of Success' ] },
     accountName: { dataDD: StringDD, sample: [ 'F & J Bloggs' ] },
     mandateRef: { dataDD: StringDD, sample: [ '12099845-34', '12099845-78' ] }
   }

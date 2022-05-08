@@ -114,7 +114,7 @@ describe ( "fromPathStringFor. Page is 'a'. The current lens is a/b/x", () => {
 //Note that the raw behaviour is tested about. Here we just check we make suitable lens
 describe ( "fromPathFromRaw", () => {
   it ( "should make lens", () => {
-    const fromPath = fromPathFromRaw ( pageSelectionlens<TextForLabelState> (), pageDetails, textForLabelState )
+    const fromPath = fromPathFromRaw ( pageSelectionlens<TextForLabelState> (), pageDetails)( textForLabelState )
     expect ( fromPath ( "~/b/c" ).description ).toEqual ( 'I.focus?(a).focus?(b).focus?(c)' )
     expect ( fromPath ( "/a/b/c" ).description ).toEqual ( 'I.focus?(a).focus?(b).focus?(c)' )
     expect ( () =>fromPath ( "b/c" ).description ).toThrow("Error parsing 'b/c'. Cannot find initial  ''")

@@ -59,7 +59,8 @@ export function lensForPageDetails<S, D, Msgs, Config extends PageConfig<S, D, M
     '~': mainPageD.lens,
   }, mainPageD.namedOptionals ) )
 }
-export function fromPathFromRaw<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context extends PageSelectionContext<S>>( pageSelectionL: Optional<S, PageSelection[]>, pageDetails: MultiPageDetails<S, any>, s: S ): ( path: string ) => Optional<S, any> {
+export const fromPathFromRaw = <S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context extends PageSelectionContext<S>>
+( pageSelectionL: Optional<S, PageSelection[]>, pageDetails: MultiPageDetails<S, any> ) => ( s: S) =>(path: string ): Optional<S, any> => {
   let selectedPageData: PageSelection[] = pageSelectionL.getOption ( s );
   if ( selectedPageData === undefined ) throw Error ( `Calling lensForPageDetailsFromRaw without a selected page\n ${JSON.stringify ( s )}` )
   const mainPageD: MainPageDetails<S, D, Msgs, Config, Context> = findMainPageDetails ( selectedPageData, pageDetails )
@@ -68,8 +69,8 @@ export function fromPathFromRaw<S, D, Msgs, Config extends PageConfig<S, D, Msgs
     '/': Lenses.identity (),
     '~': mainPageD.lens,
   }, mainPageD.namedOptionals )
-  return path => parsePath ( path, builder );
-}
+  return parsePath ( path, builder );
+};
 
 
 export const findOneSelectedPageDetails = <S, T, Context extends PageSelectionContext<S>> ( state: LensState<S, T, Context>, page0Details: MainPageDetails<S, any, any, any, Context>, pageCount: number ) =>

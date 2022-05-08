@@ -23,10 +23,10 @@ describe ( "makeCommon", () => {
   it ( 'should make the common page', () => {
     let common = makeCommon ( devAppConfig, paramsForTest, [ EAccountsSummaryPD, CreatePlanPD, OccupationAndIncomeSummaryPD ], [ occupationAndIncomeRD, createPlanRestD ], { main: '.', backup: '.' } );
     expect ( common.map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "import { HasPageSelection, PageMode ,PageSelectionContext} from '@focuson/pages'",
+      "import { fromPathFromRaw, HasPageSelection, PageMode ,PageSelectionContext, pageSelectionlens} from '@focuson/pages'",
       "import { defaultDateFn, HasSimpleMessages, SimpleMessage, NameAnd } from '@focuson/utils';",
       "import {  OnTagFetchErrorFn } from '@focuson/fetcher';",
-      "import { identityOptics,NameAndLens } from '@focuson/lens';",
+      "import { identityOptics,NameAndLens, Optional } from '@focuson/lens';",
       "import { HasTagHolder } from '@focuson/template';",
       " import { HasRestCommands } from '@focuson/rest'",
       "import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusOnContext, HasFocusOnDebug } from '@focuson/focuson';",
@@ -74,6 +74,8 @@ describe ( "makeCommon", () => {
       "   ...defaultPageSelectionAndRestCommandsContext<FState> ( pages, commonIds),",
       "   combine: MyCombined",
       "}",
+      "export const pathToLens: ( s: FState ) => ( path: string ) => Optional<FState, any> =",
+      "    fromPathFromRaw ( pageSelectionlens<FState> (), pages )",
       "export const emptyState: FState = {",
       "  CommonIds: {'createPlanId':'tbd','clientRef':'custId','applRef':'appref','accountId':'accId','brandRef':'brandRef','usersRole':'user'},",
       "  tags: {},",

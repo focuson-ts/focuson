@@ -85,21 +85,21 @@ export interface AccordionsInDebug {
   accordions?: string[]
 }
 
-export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MSGs> ( config: FocusOnConfig<S, Context, MSGs>, context: Context, publish: ( lc: LensState<S, S, Context> ) => void ): ( s: S, reason: any ) => Promise<S> {
+export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MSGs> ( config: FocusOnConfig<S, Context, MSGs>, context: Context, pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>, publish: ( lc: LensState<S, S, Context> ) => void ): ( s: S, reason: any ) => Promise<S> {
   return async ( main: S, reason: any ): Promise<S> => {
     console.log ( 'setJsonForFocusOn', reason )
     // @ts-ignore
     const debug: any = main.debug;
     const withDebug = debug?.recordTrace ? traceL<S> ().transform ( old => [ ...old ? old : [], reason ] ) ( main ) : main
     const { fetchFn, preMutate, postMutate, onError, pages, restDetails, fetchers, restL, pageL, messageL } = config
-    const newStateFn = ( fs: S ) => publish ( lensState ( fs, setJsonForFocusOn ( config, context, publish ), 'setJson', context ) )
+    const newStateFn = ( fs: S ) => publish ( lensState ( fs, setJsonForFocusOn ( config, context, pathToLens, publish ), 'setJson', context ) )
     try {
       if ( debug?.fetcherDebug ) console.log ( 'setJsonForFetchers - start', main )
       if ( debug?.fetcherDebug ) console.log ( 'setJsonForFetchers - withDebug', withDebug )
       const withPreMutate = preMutate ( withDebug )
       const firstPageProcesses: S = preMutateForPages<S, Context> ( context ) ( withPreMutate )
       if ( debug?.fetcherDebug ) console.log ( 'setJsonForFetchers - after premutate', firstPageProcesses )
-      const afterRest = await rest ( fetchFn, restDetails, config.restUrlMutator, messageL, restL, firstPageProcesses )
+      const afterRest = await rest ( fetchFn, restDetails, config.restUrlMutator, pathToLens, messageL, restL, firstPageProcesses )
       if ( debug?.fetcherDebug || debug?.postDebug ) console.log ( 'setJsonForFetchers - afterRest', afterRest )
       if ( afterRest ) newStateFn ( afterRest )
       if ( debug?.fetcherDebug || debug?.postDebug ) console.log ( 'setJsonForFetchers - newStateFn', afterRest )

@@ -2,10 +2,10 @@ import { fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
 import { loadTree,wouldLoad,FetcherTree } from "@focuson/fetcher";
 import { pactWith } from "jest-pact";
 import { rest, RestCommand, restL } from "@focuson/rest";
-import { simpleMessagesL } from "@focuson/pages";
+import { simpleMessagesL} from "@focuson/pages";
 import { Lenses, massTransform, Transform } from "@focuson/lens";
 import * as samples from '../CreateEAccount/CreateEAccount.samples'
-import {emptyState, FState , commonIds, identityL } from "../common";
+import {emptyState, FState , commonIds, identityL, pathToLens } from "../common";
 import * as rests from "../rests";
 import { restUrlMutator } from "../rests";
 
@@ -40,7 +40,7 @@ pactWith ( { consumer: 'CreateEAccount', provider: 'CreateEAccountProvider', cor
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('CreateEAccount').focusQuery('editing').set ( rawExpected, samples.sampleCreateEAccountData0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -78,7 +78,7 @@ pactWith ( { consumer: 'CreateEAccount', provider: 'CreateEAccountProvider', cor
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('CreateEAccount').focusQuery('editing').set ( rawExpected, samples.sampleCreateEAccountData0 )
     expect ( newState.messages.length ).toEqual ( 1 )
