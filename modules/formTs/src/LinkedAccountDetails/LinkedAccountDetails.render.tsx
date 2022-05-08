@@ -41,7 +41,7 @@ const id=`page${index}`;
   const buttons =    {cancelPayment:<RestButton state={state} id={`${id}.cancelPayment`} enabledBy={haveLegalSelectedPaymentGuard} 
         name='cancelPayment'
         action={{"state":"cancel"}}
-        deleteOnSuccess={["~/display/collectionSummary","~/display/collectionHistory"]}
+        deleteOnSuccess={["~/display/collectionSummary","~/display/collectionHistory","~/selectedCollectionIndex"]}
         rest='LinkedAccountDetails_CollectionItemRestDetails'
         confirm={"Really?"}
        />,

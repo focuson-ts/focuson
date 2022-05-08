@@ -65,7 +65,7 @@ export const CollectionSummaryDD: ExampleDataD = {
   structure: {
     lastCollectionDate: { dataDD: StringDD, sample: [ '2021/10/6', '2021/12/5' ] },
     lastCollectionAmount: { dataDD: MoneyDD, sample: [ 1234, 456455 ] },
-    nextCollectionDate: { dataDD: StringDD, sample: [ '202/10/6', '2022/12/6' ] },
+    nextCollectionDate: { dataDD: StringDD, sample: [ '2022/10/6', '2022/12/6' ] },
     nextCollectionAmount: { dataDD: MoneyDD, sample: [ 13434, 123455 ] },
     allowance: { dataDD: MoneyDD, sample: [ 1000 , 2000 ], hidden: true },
     period: { dataDD: periodDD, hidden: true },

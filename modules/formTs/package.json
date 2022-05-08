@@ -5,9 +5,9 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "@focuson/focuson":  "1.7.12",
-	"@focuson/stories":  "1.7.12",
-	"@focuson/form_components":  "1.7.12",
+    "@focuson/focuson":  "1.8.0",
+	"@focuson/stories":  "1.8.0",
+	"@focuson/form_components":  "1.8.0",
     "@pact-foundation/pact-node": "^10.17.1",
     "decamelize": "^4.0.0",
     "react": "^17.0.2",

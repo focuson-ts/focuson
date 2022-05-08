@@ -573,7 +573,7 @@ public class Sample{
          "{"+
          "  \"lastCollectionDate\": \"2021/10/6\","+
          "  \"lastCollectionAmount\": 1234,"+
-         "  \"nextCollectionDate\": \"202/10/6\","+
+         "  \"nextCollectionDate\": \"2022/10/6\","+
          "  \"nextCollectionAmount\": 13434,"+
          "  \"allowance\": 1000,"+
          "  \"period\": \"Monthly\""+
@@ -929,7 +929,7 @@ public class Sample{
          "  \"collectionSummary\": {"+
          "    \"lastCollectionDate\": \"2021/10/6\","+
          "    \"lastCollectionAmount\": 1234,"+
-         "    \"nextCollectionDate\": \"202/10/6\","+
+         "    \"nextCollectionDate\": \"2022/10/6\","+
          "    \"nextCollectionAmount\": 13434,"+
          "    \"allowance\": 1000,"+
          "    \"period\": \"Monthly\""+

@@ -38,7 +38,7 @@ export const sampleCollectionSummary0: domains.CollectionSummaryDomain =
 {
   "lastCollectionDate": "2021/10/6",
   "lastCollectionAmount": 1234,
-  "nextCollectionDate": "202/10/6",
+  "nextCollectionDate": "2022/10/6",
   "nextCollectionAmount": 13434,
   "allowance": 1000,
   "period": "Monthly"
@@ -64,7 +64,7 @@ export const sampleLinkedAccountDetailsDisplay0: domains.LinkedAccountDetailsDis
   "collectionSummary": {
     "lastCollectionDate": "2021/10/6",
     "lastCollectionAmount": 1234,
-    "nextCollectionDate": "202/10/6",
+    "nextCollectionDate": "2022/10/6",
     "nextCollectionAmount": 13434,
     "allowance": 1000,
     "period": "Monthly"
@@ -426,7 +426,7 @@ export const sampleCollectionSummary2: domains.CollectionSummaryDomain =
 {
   "lastCollectionDate": "2021/10/6",
   "lastCollectionAmount": 1234,
-  "nextCollectionDate": "202/10/6",
+  "nextCollectionDate": "2022/10/6",
   "nextCollectionAmount": 13434,
   "allowance": 1000,
   "period": "Monthly"
@@ -452,7 +452,7 @@ export const sampleLinkedAccountDetailsDisplay2: domains.LinkedAccountDetailsDis
   "collectionSummary": {
     "lastCollectionDate": "2021/10/6",
     "lastCollectionAmount": 1234,
-    "nextCollectionDate": "202/10/6",
+    "nextCollectionDate": "2022/10/6",
     "nextCollectionAmount": 13434,
     "allowance": 1000,
     "period": "Monthly"
