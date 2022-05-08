@@ -574,7 +574,9 @@ public class Sample{
          "  \"lastCollectionDate\": \"2021/10/6\","+
          "  \"lastCollectionAmount\": 1234,"+
          "  \"nextCollectionDate\": \"202/10/6\","+
-         "  \"nextCollectionAmount\": 13434"+
+         "  \"nextCollectionAmount\": 13434,"+
+         "  \"allowance\": 1000,"+
+         "  \"period\": \"Monthly\""+
          "}"
   );
   public static Map sampleContractTypesResponse0 =  parse.parseMap(
@@ -589,6 +591,15 @@ public class Sample{
          "  \"type\": \"checking\","+
          "  \"savingsStyle\": \"adHoc\","+
          "  \"initialAmount\": 123"+
+         "}"
+  );
+  public static Map sampleCreatePayment0 =  parse.parseMap(
+         "{"+
+         "  \"amount\": 56657,"+
+         "  \"collectionDate\": \"2020-10-01\","+
+         "  \"reason\": \"\","+
+         "  \"allowance\": 123,"+
+         "  \"period\": \"Monthly\""+
          "}"
   );
   public static Map sampleCreatePlan0 =  parse.parseMap(
@@ -919,7 +930,9 @@ public class Sample{
          "    \"lastCollectionDate\": \"2021/10/6\","+
          "    \"lastCollectionAmount\": 1234,"+
          "    \"nextCollectionDate\": \"202/10/6\","+
-         "    \"nextCollectionAmount\": 13434"+
+         "    \"nextCollectionAmount\": 13434,"+
+         "    \"allowance\": 1000,"+
+         "    \"period\": \"Monthly\""+
          "  },"+
          "  \"collectionHistory\": ["+
          "    {"+

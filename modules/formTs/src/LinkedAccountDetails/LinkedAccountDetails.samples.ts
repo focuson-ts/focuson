@@ -39,7 +39,17 @@ export const sampleCollectionSummary0: domains.CollectionSummaryDomain =
   "lastCollectionDate": "2021/10/6",
   "lastCollectionAmount": 1234,
   "nextCollectionDate": "202/10/6",
-  "nextCollectionAmount": 13434
+  "nextCollectionAmount": 13434,
+  "allowance": 1000,
+  "period": "Monthly"
+}
+export const sampleCreatePayment0: domains.CreatePaymentDomain = 
+{
+  "amount": 56657,
+  "collectionDate": "2020-10-01",
+  "reason": "",
+  "allowance": 123,
+  "period": "Monthly"
 }
 export const sampleLinkedAccountDetailsDisplay0: domains.LinkedAccountDetailsDisplayDomain = 
 {
@@ -55,7 +65,9 @@ export const sampleLinkedAccountDetailsDisplay0: domains.LinkedAccountDetailsDis
     "lastCollectionDate": "2021/10/6",
     "lastCollectionAmount": 1234,
     "nextCollectionDate": "202/10/6",
-    "nextCollectionAmount": 13434
+    "nextCollectionAmount": 13434,
+    "allowance": 1000,
+    "period": "Monthly"
   },
   "collectionHistory": [
     {
@@ -221,7 +233,17 @@ export const sampleCollectionSummary1: domains.CollectionSummaryDomain =
   "lastCollectionDate": "2021/12/5",
   "lastCollectionAmount": 456455,
   "nextCollectionDate": "2022/12/6",
-  "nextCollectionAmount": 123455
+  "nextCollectionAmount": 123455,
+  "allowance": 2000,
+  "period": "Yearly"
+}
+export const sampleCreatePayment1: domains.CreatePaymentDomain = 
+{
+  "amount": 32834,
+  "collectionDate": "2022-14-01",
+  "reason": "A",
+  "allowance": 456,
+  "period": "Yearly"
 }
 export const sampleLinkedAccountDetailsDisplay1: domains.LinkedAccountDetailsDisplayDomain = 
 {
@@ -237,7 +259,9 @@ export const sampleLinkedAccountDetailsDisplay1: domains.LinkedAccountDetailsDis
     "lastCollectionDate": "2021/12/5",
     "lastCollectionAmount": 456455,
     "nextCollectionDate": "2022/12/6",
-    "nextCollectionAmount": 123455
+    "nextCollectionAmount": 123455,
+    "allowance": 2000,
+    "period": "Yearly"
   },
   "collectionHistory": [
     {
@@ -403,7 +427,17 @@ export const sampleCollectionSummary2: domains.CollectionSummaryDomain =
   "lastCollectionDate": "2021/10/6",
   "lastCollectionAmount": 1234,
   "nextCollectionDate": "202/10/6",
-  "nextCollectionAmount": 13434
+  "nextCollectionAmount": 13434,
+  "allowance": 1000,
+  "period": "Monthly"
+}
+export const sampleCreatePayment2: domains.CreatePaymentDomain = 
+{
+  "amount": 56657,
+  "collectionDate": "2020-10-01",
+  "reason": "O",
+  "allowance": 123,
+  "period": "Monthly"
 }
 export const sampleLinkedAccountDetailsDisplay2: domains.LinkedAccountDetailsDisplayDomain = 
 {
@@ -419,7 +453,9 @@ export const sampleLinkedAccountDetailsDisplay2: domains.LinkedAccountDetailsDis
     "lastCollectionDate": "2021/10/6",
     "lastCollectionAmount": 1234,
     "nextCollectionDate": "202/10/6",
-    "nextCollectionAmount": 13434
+    "nextCollectionAmount": 13434,
+    "allowance": 1000,
+    "period": "Monthly"
   },
   "collectionHistory": [
     {

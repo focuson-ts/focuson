@@ -193,6 +193,8 @@ type CollectionSummary{
   lastCollectionAmount: Int!
   nextCollectionDate: String!
   nextCollectionAmount: Int!
+  allowance: Int!
+  period: String!
 }
 type ContractTypesResponse{
   contractTypeId: Int!

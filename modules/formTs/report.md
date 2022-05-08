@@ -66,6 +66,7 @@
     CollectionItem
     CollectionsList
     CollectionSummary
+    CreatePayment
     LinkedAccountDetailsDisplay
     Mandate
     MandateList
@@ -83,14 +84,25 @@
   |name|displayed with
   | --- | --- 
     | SelectMandate |MandateSearch
+    | CreatePayment |CreatePayment
   ## display 
     LinkedAccountDetailsDisplay
   ## buttons 
     cancelPayment RestButton
+    Modal Button ==> CreatePayment in mode create
+      Copy from [{"from":"~/display/collectionSummary/allowance","to":"~/createPayment/allowance"},{"from":"~/display/collectionSummary/period","to":"~/createPayment/period"}]
+      Focused on "~/createPayment"
+    refreshMandate DeleteStateButton
     Modal Button ==> SelectMandate in mode edit
       Copy from [{"from":"~/display/mandate/sortCode","to":"~/selectMandateSearch/sortCode"},{"from":"~/display/mandate","to":"~/tempMandate"}]
       Focused on "~/selectMandateSearch"
       Copy on close {"from":"~/tempMandate","to":"~/display/mandate"} 
+  ## guards  
+  | CreatePayment|reasonIsAllowance
+  | --- | --- 
+  allowance|A
+  period|A
+  
 
 ---
 # AccountOverview - MainPage

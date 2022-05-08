@@ -79,7 +79,7 @@ export const findOneSelectedPageDetails = <S, T, Context extends PageSelectionCo
     const pages = state.context.pages
     const { pageName, pageMode, focusOn } = ps
     const page = pages[ pageName ]
-    if ( !page ) throw Error ( `Cannot find page with name ${pageName}, legal Values are [${Object.keys ( pages ).join ( "," )}]` )
+    if ( !page ) throw Error ( `Cannot find page with name ${pageName}, legal Values are [${Object.keys ( pages ).join ( "," )}]\nIs this a modal page and you need to add it to the main page?` )
     const { config, pageFunction, pageType } = page
 
     const lsForPage = state.copyWithLens ( lensForPageDetails ( page0Details, page, focusOn ) )

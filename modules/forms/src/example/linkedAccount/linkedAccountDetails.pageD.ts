@@ -1,5 +1,5 @@
 import { ExampleMainPage, ExampleModalPage } from "../common";
-import { CollectionItemDD, linkedAccountDetailsDD, MandateDD, MandateSearchDD } from "./linkedAccountDetails.dataD";
+import { CollectionItemDD, CreatePaymentDD, linkedAccountDetailsDD, MandateDD, MandateSearchDD, paymentReasonDD } from "./linkedAccountDetails.dataD";
 import { allMandatesForClientRD, collectionHistoryListRD, collectionSummaryRD, singleCollectionPaymentRD } from "./linkedAccountDetails.restD";
 import { NatNumDd } from "../commonEnums";
 
@@ -12,7 +12,20 @@ export const SelectMandateMP: ExampleModalPage = {
   pageType: 'ModalPopup',
   display: { dataDD: MandateSearchDD, target: '~/selectMandateSearch' },
   modes: [ 'view', 'edit' ],
+}
 
+export const CreatePaymentMP: ExampleModalPage = {
+  name: "CreatePayment",
+  guards: {
+    reasonHasBeenSelected: { condition: 'notEquals', path: '~/createPayment/reason', value: '' }
+  },
+  buttons: {
+    cancel: { control: 'ModalCancelButton' },
+    commit: { control: 'ModalCommitButton', enabledBy: 'reasonHasBeenSelected' }
+  },
+  pageType: 'ModalPopup',
+  display: { dataDD: CreatePaymentDD, target: '~/createPayment' },
+  modes: [ 'view', 'edit' ],
 }
 export const LinkedAccountDetailsPD: ExampleMainPage = {
   name: "LinkedAccountDetails",
@@ -23,10 +36,11 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
     tempMandate: { dataDD: MandateDD },
     selectIndex: { dataDD: NatNumDd },
     selectedCollectionIndex: { dataDD: NatNumDd },
-    selectedCollectionItem: { dataDD: CollectionItemDD }
+    selectedCollectionItem: { dataDD: CollectionItemDD },
+    createPayment: { dataDD: CreatePaymentDD }
   },
   initialValue: undefined,
-  modals: [ { modal: SelectMandateMP } ],
+  modals: [ { modal: SelectMandateMP }, { modal: CreatePaymentMP } ],
   modes: [ 'view' ],
   pageType: "MainPage",
   rest: {
@@ -36,6 +50,7 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
     searchMandate: { rest: allMandatesForClientRD, targetFromPath: '~/selectMandateSearch/searchResults', fetcher: true },
     payments: { rest: singleCollectionPaymentRD, targetFromPath: '~/selectedCollectionItem' }
   },
+  guards: { haveLegalSelectedPayment: { condition: 'isDefined', path: '~/selectedCollectionItem/paymentId' } },
   buttons: {
     selectMandate: {
       control: 'ModalButton',
@@ -46,11 +61,23 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
       ],
       copyOnClose: { from: '~/tempMandate', to: '~/display/mandate' }
     },
+    createPayment: {
+      control: 'ModalButton',
+      createEmpty: CreatePaymentDD,
+      copy: [
+        { from: '~/display/collectionSummary/allowance', to: '~/createPayment/allowance' },
+        { from: '~/display/collectionSummary/period', to: '~/createPayment/period' } ],
+      modal: CreatePaymentMP, mode: 'create', focusOn: '~/createPayment'
+    },
     cancelPayment: {
       control: "RestButton",
       restName: 'payments',
-      action: { state: 'cancel' },deleteOnSuccess:''
-
+      confirm: 'Really?',
+      enabledBy: 'haveLegalSelectedPayment',
+      action: { state: 'cancel' }, deleteOnSuccess: [ '~/display/collectionSummary', '~/display/collectionHistory' ]
+    },
+    refreshMandate: {
+      control: 'DeleteStateButton', path: [ '~/display/collectionSummary', '~/display/collectionHistory' ], label: "Refresh Mandate",
     }
   },
 }

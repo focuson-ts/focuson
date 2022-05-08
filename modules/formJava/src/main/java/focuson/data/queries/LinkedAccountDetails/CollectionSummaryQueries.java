@@ -6,6 +6,8 @@ public class CollectionSummaryQueries{
         "    lastCollectionAmount"+
         "    nextCollectionDate"+
         "    nextCollectionAmount"+
+        "    allowance"+
+        "    period"+
         "  }"
   +"}";}
 }

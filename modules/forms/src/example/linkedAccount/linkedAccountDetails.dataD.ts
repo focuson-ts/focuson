@@ -1,7 +1,21 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
-import { DateDD, IntegerDD, MoneyDD, PrimitiveDD, StringDD } from "../../common/dataD";
-import { LayoutCd, TableCD } from "../../common/componentsD";
+import { DateDD, IntegerDD, MoneyDD, OneLineStringDD, PrimitiveDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
+import { LabelAndDropDownCD, LayoutCd, TableCD } from "../../common/componentsD";
 
+export const paymentReasonDD: StringPrimitiveDD = {
+  ...OneLineStringDD,
+  name: 'PaymentReason',
+  description: "An enum about why the payment is being mad",
+  display: LabelAndDropDownCD,
+  enum: { '': 'Select...', 'A': 'Allowance', 'O': 'Overpayment' }
+}
+export const periodDD: StringPrimitiveDD = {
+  ...OneLineStringDD,
+  name: 'A Period',
+  description: "An enum for monthly/yearly etc",
+  display: LabelAndDropDownCD,
+  enum: { 'Monthly': 'Monthly', 'Yearly': 'Yearly' }
+}
 
 const AccountDD: PrimitiveDD = {
   ...IntegerDD,
@@ -40,19 +54,35 @@ export const MandateSearchDD: ExampleDataD = {
   name: 'MandateSearch',
   description: "The search sortcode and search results for a 'select mandate'",
   structure: {
-    sortCode: { dataDD: StringDD, sample: [ '10-11-12', '23-54-12' ] },
+    sortCode: { dataDD: StringDD, sample: [ '10-11-12', '23-54-12' ], displayParams: { required: false } },
     searchResults: { dataDD: MandateListDD },
   }
 }
 export const CollectionSummaryDD: ExampleDataD = {
   name: 'CollectionSummary',
-  description: 'The four most important things about collection for a mandate',
+  description: 'The four most important things about collection for a mandate, plus a couple of things we need to create a payment',
   layout: { component: LayoutCd, displayParams: { details: '[[2,2]]' } },
   structure: {
     lastCollectionDate: { dataDD: StringDD, sample: [ '2021/10/6', '2021/12/5' ] },
     lastCollectionAmount: { dataDD: MoneyDD, sample: [ 1234, 456455 ] },
     nextCollectionDate: { dataDD: StringDD, sample: [ '202/10/6', '2022/12/6' ] },
     nextCollectionAmount: { dataDD: MoneyDD, sample: [ 13434, 123455 ] },
+    allowance: { dataDD: MoneyDD, sample: [ 1000 , 2000 ], hidden: true },
+    period: { dataDD: periodDD, hidden: true },
+  }
+}
+
+
+export const CreatePaymentDD: ExampleDataD = {
+  name: 'CreatePayment',
+  description: 'The data needed to make a payment',
+  guards: { reasonIsAllowance: { condition: 'in', path: 'reason', values: paymentReasonDD.enum } },
+  structure: {
+    amount: { dataDD: MoneyDD, sample: [ 56657, 32834 ], displayParams: { min: 200 } },
+    collectionDate: { dataDD: DateDD },
+    reason: { dataDD: paymentReasonDD },
+    allowance: { dataDD: MoneyDD, guard: { reasonIsAllowance: [ 'A' ] }, displayParams: { readonly: true } },
+    period: { dataDD: periodDD, guard: { reasonIsAllowance: [ 'A' ] }, displayParams: { readonly: true } }
   }
 }
 
@@ -66,7 +96,6 @@ export const CollectionItemDD: ExampleDataD = {
     status: { dataDD: StringDD, sample: [ 'C', 'P' ] }
   }
 }
-
 
 export const CollectionListDD: ExampleRepeatingD = {
   name: "CollectionsList",

@@ -11,6 +11,7 @@ import { LinkedAccountDetailsOptionals } from "../LinkedAccountDetails/LinkedAcc
 import { LabelAndNumberInput } from '@focuson/form_components';
 import { LabelAndDateInput } from '@focuson/form_components';
 import { LabelAndStringInput } from '@focuson/form_components';
+import { LabelAndDropdown } from '@focuson/form_components';
 import { Table } from '@focuson/form_components';
 import { Layout } from '@focuson/form_components';
 import {DeleteStateButton} from '@focuson/form_components';
@@ -26,6 +27,7 @@ import {LinkedAccountDetailsPageDomain} from "../LinkedAccountDetails/LinkedAcco
 import {CollectionItemDomain} from "../LinkedAccountDetails/LinkedAccountDetails.domains"
 import {CollectionsListDomain} from "../LinkedAccountDetails/LinkedAccountDetails.domains"
 import {CollectionSummaryDomain} from "../LinkedAccountDetails/LinkedAccountDetails.domains"
+import {CreatePaymentDomain} from "../LinkedAccountDetails/LinkedAccountDetails.domains"
 import {LinkedAccountDetailsDisplayDomain} from "../LinkedAccountDetails/LinkedAccountDetails.domains"
 import {MandateDomain} from "../LinkedAccountDetails/LinkedAccountDetails.domains"
 import {MandateListDomain} from "../LinkedAccountDetails/LinkedAccountDetails.domains"
@@ -35,12 +37,21 @@ export function LinkedAccountDetailsPage(){
   return focusedPageWithExtraState<FState, LinkedAccountDetailsPageDomain, LinkedAccountDetailsDisplayDomain, Context> ( s => 'Linked Account Details' ) ( state => state.focusOn('display')) (
 ( fullState, state , full, d, mode, index) => {
 const id=`page${index}`;
-  const buttons =    {cancelPayment:<RestButton state={state} id={`${id}.cancelPayment`} 
+  const haveLegalSelectedPaymentGuard = pageState(state)<domain.LinkedAccountDetailsPageDomain>().focusOn('selectedCollectionItem').focusOn('paymentId').optJson() !== undefined
+  const buttons =    {cancelPayment:<RestButton state={state} id={`${id}.cancelPayment`} enabledBy={haveLegalSelectedPaymentGuard} 
         name='cancelPayment'
         action={{"state":"cancel"}}
-        deleteOnSuccess={""}
+        deleteOnSuccess={["~/display/collectionSummary","~/display/collectionHistory"]}
         rest='LinkedAccountDetails_CollectionItemRestDetails'
+        confirm={"Really?"}
        />,
+      createPayment:<ModalButton id={`${id}.createPayment`} text='createPayment'  state={state} modal = 'CreatePayment'  
+        pageMode='create'
+        focusOn='~/createPayment'
+        copy={[{"from":"~/display/collectionSummary/allowance","to":"~/createPayment/allowance"},{"from":"~/display/collectionSummary/period","to":"~/createPayment/period"}]}
+        createEmpty={empty.emptyCreatePayment}
+      />,
+      refreshMandate:<DeleteStateButton  id={`${id}.refreshMandate`} states={[pageState(state)<domain.LinkedAccountDetailsPageDomain>().focusOn('display').focusOn('collectionSummary'),pageState(state)<domain.LinkedAccountDetailsPageDomain>().focusOn('display').focusOn('collectionHistory')]} label='Refresh Mandate' />,
       selectMandate:<ModalButton id={`${id}.selectMandate`} text='selectMandate'  state={state} modal = 'SelectMandate'  
         pageMode='edit'
         focusOn='~/selectMandateSearch'
@@ -51,7 +62,9 @@ const id=`page${index}`;
       return <>
           <LinkedAccountDetailsDisplay id={`${id}`} state={state} mode={mode} buttons={buttons} />
       { buttons.selectMandate } 
+      { buttons.createPayment } 
       { buttons.cancelPayment } 
+      { buttons.refreshMandate } 
       </>})}
 
 export function CollectionItem({id,state,mode,buttons}: FocusedProps<FState, CollectionItemDomain,Context>){
@@ -70,6 +83,17 @@ export function CollectionSummary({id,state,mode,buttons}: FocusedProps<FState, 
     <LabelAndStringInput id={`${id}.nextCollectionDate`} state={state.focusOn('nextCollectionDate')} mode={mode} label='Next Collection Date' allButtons={buttons} required={true} />
     <LabelAndNumberInput id={`${id}.nextCollectionAmount`} state={state.focusOn('nextCollectionAmount')} mode={mode} label='Next Collection Amount' allButtons={buttons} required={true} />
 </Layout>
+}
+
+export function CreatePayment({id,state,mode,buttons}: FocusedProps<FState, CreatePaymentDomain,Context>){
+const reasonIsAllowanceGuard = state.focusOn('reason').optJson();
+  return <>
+    <LabelAndNumberInput id={`${id}.amount`} state={state.focusOn('amount')} mode={mode} label='Amount' allButtons={buttons} required={true} min={200} />
+    <LabelAndDateInput id={`${id}.collectionDate`} state={state.focusOn('collectionDate')} mode={mode} label='Collection Date' allButtons={buttons} />
+    <LabelAndDropdown id={`${id}.reason`} state={state.focusOn('reason')} mode={mode} label='Reason' allButtons={buttons} enums={{"":"Select...","A":"Allowance","O":"Overpayment"}} />
+    <Guard value={reasonIsAllowanceGuard} cond={["A"]}><LabelAndNumberInput id={`${id}.allowance`} state={state.focusOn('allowance')} mode={mode} label='Allowance' allButtons={buttons} required={true} readonly={true} /></Guard>
+    <Guard value={reasonIsAllowanceGuard} cond={["A"]}><LabelAndDropdown id={`${id}.period`} state={state.focusOn('period')} mode={mode} label='Period' allButtons={buttons} enums={{"Monthly":"Monthly","Yearly":"Yearly"}} readonly={true} /></Guard>
+</>
 }
 
 export function LinkedAccountDetailsDisplay({id,state,mode,buttons}: FocusedProps<FState, LinkedAccountDetailsDisplayDomain,Context>){
@@ -93,7 +117,7 @@ export function Mandate({id,state,mode,buttons}: FocusedProps<FState, MandateDom
 
 export function MandateSearch({id,state,mode,buttons}: FocusedProps<FState, MandateSearchDomain,Context>){
   return <>
-    <LabelAndStringInput id={`${id}.sortCode`} state={state.focusOn('sortCode')} mode={mode} label='Sort Code' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.sortCode`} state={state.focusOn('sortCode')} mode={mode} label='Sort Code' allButtons={buttons} required={false} />
     <Table id={`${id}.searchResults`} state={state.focusOn('searchResults')} mode={mode} order={["sortCode","accountId","bankName","accountName","mandateRef","mandateStatus"]} copySelectedItemTo={pageState(state)<any>().focusOn('tempMandate')} copySelectedIndexTo={pageState(state)<any>().focusOn('selectIndex')} prefixFilter={pageState(state)<domain.LinkedAccountDetailsPageDomain>().focusOn('selectMandateSearch').focusOn('sortCode')} prefixColumn='sortCode' />
 </>
 }

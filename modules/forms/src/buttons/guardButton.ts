@@ -6,7 +6,7 @@ import { MainPageD, PageD } from "../common/pageD";
 import { TSParams } from "../codegen/config";
 
 
-export type AllGuards = LocalVariableGuard | LocalVariableMoreThanZero | LocalVariableLessThanLengthMinusOne | LocalVariableValueEquals<any>
+export type AllGuards = LocalVariableGuard | LocalVariableMoreThanZero | LocalVariableLessThanLengthMinusOne | LocalVariableValueEquals<any> | LocalVariableDefined
 
 function errorPrefix ( mainP: PageD<any, any>, p: PageD<any, any>, name: string, guard: any ) {
   if ( mainP.name === p.name ) return `MakeGuardVariable for ${p.name} ${name} ${JSON.stringify ( guard )}`
@@ -18,10 +18,21 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
     makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableGuard ) =>
       `const ${guardName ( name )} = ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson();`
   },
+  isDefined: {
+    imports: [],
+    makeGuardVariable: ( params, mainPage, page, name, guard: LocalVariableDefined ) =>
+      `const ${guardName ( name )} = ${stateQueryForGuards ( errorPrefix ( mainPage, page, name, guard ), params, mainPage, page, guard.path )}.optJson() !== undefined`
+  },
   equals: {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableValueEquals<any> ) =>
       `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson() === ${guard.value};`
+  },
+
+  notEquals: {
+    imports: [],
+    makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableValueEquals<any> ) =>
+      `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson() !== ${JSON.stringify(guard.value)};`
   },
 
   ">0": {
@@ -59,11 +70,13 @@ export interface LocalVariableMoreThanZero {
   path: string
 }
 export interface LocalVariableValueEquals<T> {
-  condition: 'equals';
+  condition: 'equals' | 'notEquals';
   path: string;
   value: T
-
-
+}
+export interface LocalVariableDefined {
+  condition: 'isDefined';
+  path: string;
 }
 export interface LocalVariableLessThanLengthMinusOne {
   condition: '<arrayEnd'

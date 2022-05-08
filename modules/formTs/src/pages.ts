@@ -4,6 +4,7 @@ import {Context,  FState } from "./common";
 import { HelloWorldMainPagePage } from './HelloWorldMainPage/HelloWorldMainPage.render';
 import { LinkedAccountDetailsPage } from './LinkedAccountDetails/LinkedAccountDetails.render';
 import { SelectMandatePage } from './LinkedAccountDetails/SelectMandate.render';
+import { CreatePaymentPage } from './LinkedAccountDetails/CreatePayment.render';
 import { AccountOverviewPage } from './AccountOverview/AccountOverview.render';
 import { ExcessInfoSearchPage } from './AccountOverview/ExcessInfoSearch.render';
 import { ReasonPage } from './AccountOverview/Reason.render';
@@ -57,6 +58,7 @@ export const pages: MultiPageDetails<FState, Context> = {
     Repeating: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'Repeating' ), pageFunction: RepeatingPage(), initialValue: {"selectedItem":0}, pageMode: 'view',namedOptionals: RepeatingOptionals },
     PostCodeMainPage: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'PostCodeMainPage' ), pageFunction: PostCodeMainPagePage(), initialValue: {"main":{},"postcode":{"search":"","searchResults":[],"addressResults":{"line1":"","line2":"","line3":"","line4":""}}}, pageMode: 'edit',namedOptionals: PostCodeMainPageOptionals },
     SelectMandate: {pageType: 'ModalPopup',  config: simpleMessagesConfig,  pageFunction: SelectMandatePage()},
+    CreatePayment: {pageType: 'ModalPopup',  config: simpleMessagesConfig,  pageFunction: CreatePaymentPage()},
     ExcessInfoSearch: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: ExcessInfoSearchPage()},
     Reason: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: ReasonPage()},
     ExcessHistory: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: ExcessHistoryPage()},

@@ -1,6 +1,7 @@
 export interface HasLinkedAccountDetailsPageDomain {   LinkedAccountDetails?: LinkedAccountDetailsPageDomain}
 
 export interface LinkedAccountDetailsPageDomain{
+  createPayment?:CreatePaymentDomain;
   display?:LinkedAccountDetailsDisplayDomain;
   selectedCollectionIndex?:number;
   selectedCollectionItem?:CollectionItemDomain;
@@ -19,10 +20,20 @@ export interface CollectionItemDomain{
 export type CollectionsListDomain = CollectionItemDomain[]
 
 export interface CollectionSummaryDomain{
+  allowance: number;
   lastCollectionAmount: number;
   lastCollectionDate: string;
   nextCollectionAmount: number;
   nextCollectionDate: string;
+  period: string;
+}
+
+export interface CreatePaymentDomain{
+  allowance: number;
+  amount: number;
+  collectionDate: string;
+  period: string;
+  reason: string;
 }
 
 export interface LinkedAccountDetailsDisplayDomain{

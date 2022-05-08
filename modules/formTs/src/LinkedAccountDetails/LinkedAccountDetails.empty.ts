@@ -21,7 +21,17 @@ export const emptyCollectionSummary:domains.CollectionSummaryDomain =
     "lastCollectionDate": "",
     "lastCollectionAmount": 0,
     "nextCollectionDate": "",
-    "nextCollectionAmount": 0
+    "nextCollectionAmount": 0,
+    "allowance": 0,
+    "period": ""
+  }
+export const emptyCreatePayment:domains.CreatePaymentDomain =
+  {
+    "amount": 0,
+    "collectionDate": "2022-1-1",
+    "reason": "",
+    "allowance": 0,
+    "period": ""
   }
 export const emptyLinkedAccountDetailsDisplay:domains.LinkedAccountDetailsDisplayDomain =
   {
@@ -37,7 +47,9 @@ export const emptyLinkedAccountDetailsDisplay:domains.LinkedAccountDetailsDispla
       "lastCollectionDate": "",
       "lastCollectionAmount": 0,
       "nextCollectionDate": "",
-      "nextCollectionAmount": 0
+      "nextCollectionAmount": 0,
+      "allowance": 0,
+      "period": ""
     },
     "collectionHistory": [
       {
