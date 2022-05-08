@@ -10,6 +10,8 @@ import focuson.data.queries.LinkedAccountDetails.CollectionSummaryQueries;
 import focuson.data.IManyGraphQl;
 import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.sql.Connection;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
@@ -19,9 +21,13 @@ import java.util.Arrays;
 
   @Autowired
   public IManyGraphQl graphQL;
+  @Autowired
+  public DataSource dataSource;
     @GetMapping(value="/api/collections/summary", produces="application/json")
     public ResponseEntity getCollectionSummary(@RequestParam String accountId, @RequestParam String clientRef) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),CollectionSummaryQueries.getCollectionSummary(accountId, clientRef), "getCollectionSummary");
+        try (Connection connection = dataSource.getConnection()) {
+          return Transform.result(connection,graphQL.get(IFetcher.mock),CollectionSummaryQueries.getCollectionSummary(accountId, clientRef), "getCollectionSummary");
+        }
     }
 
     @GetMapping(value="/api/collections/summary/query", produces="application/json")

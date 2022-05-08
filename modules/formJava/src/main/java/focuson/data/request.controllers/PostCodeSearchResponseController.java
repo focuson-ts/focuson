@@ -10,6 +10,8 @@ import focuson.data.queries.PostCodeMainPage.PostCodeSearchResponseQueries;
 import focuson.data.IManyGraphQl;
 import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.sql.Connection;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
@@ -20,9 +22,13 @@ import focuson.data.db.PostCodeMainPage_postcodeMaps ;
 
   @Autowired
   public IManyGraphQl graphQL;
+  @Autowired
+  public DataSource dataSource;
     @GetMapping(value="/api/postCode", produces="application/json")
     public ResponseEntity getPostCodeSearchResponse(@RequestParam String dbName, @RequestParam String postcode) throws Exception{
-       return Transform.result(graphQL.get(dbName),PostCodeSearchResponseQueries.getPostCodeDataLine(dbName, postcode), "getPostCodeDataLine");
+        try (Connection connection = dataSource.getConnection()) {
+          return Transform.result(connection,graphQL.get(dbName),PostCodeSearchResponseQueries.getPostCodeDataLine(dbName, postcode), "getPostCodeDataLine");
+        }
     }
 
     @GetMapping(value="/api/postCode/query", produces="application/json")

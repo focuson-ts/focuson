@@ -57,7 +57,7 @@ export const sampleLinkedAccountDetailsDisplay0: domains.LinkedAccountDetailsDis
     "sortCode": "10-11-12",
     "accountId": 12341234,
     "mandateStatus": "ACTIVE",
-    "bankName": "NatWest",
+    "bankName": "Bank Of Happiness",
     "accountName": "F & J Bloggs",
     "mandateRef": "12099845-34"
   },
@@ -101,7 +101,7 @@ export const sampleMandate0: domains.MandateDomain =
   "sortCode": "10-11-12",
   "accountId": 12341234,
   "mandateStatus": "ACTIVE",
-  "bankName": "NatWest",
+  "bankName": "Bank Of Happiness",
   "accountName": "F & J Bloggs",
   "mandateRef": "12099845-34"
 }
@@ -111,7 +111,7 @@ export const sampleMandateList0: domains.MandateListDomain =
     "sortCode": "10-11-12",
     "accountId": 12341234,
     "mandateStatus": "ACTIVE",
-    "bankName": "NatWest",
+    "bankName": "Bank Of Happiness",
     "accountName": "F & J Bloggs",
     "mandateRef": "12099845-34"
   },
@@ -119,7 +119,7 @@ export const sampleMandateList0: domains.MandateListDomain =
     "sortCode": "23-54-12",
     "accountId": 23456123,
     "mandateStatus": "ACTIVE",
-    "bankName": "RBS",
+    "bankName": "Royal Bank of Success",
     "accountName": "F & J Bloggs",
     "mandateRef": "12099845-78"
   },
@@ -127,7 +127,7 @@ export const sampleMandateList0: domains.MandateListDomain =
     "sortCode": "10-11-12",
     "accountId": 3245454,
     "mandateStatus": "ACTIVE",
-    "bankName": "NatWest",
+    "bankName": "Bank Of Happiness",
     "accountName": "F & J Bloggs",
     "mandateRef": "12099845-34"
   },
@@ -135,7 +135,7 @@ export const sampleMandateList0: domains.MandateListDomain =
     "sortCode": "23-54-12",
     "accountId": 12341234,
     "mandateStatus": "ACTIVE",
-    "bankName": "RBS",
+    "bankName": "Royal Bank of Success",
     "accountName": "F & J Bloggs",
     "mandateRef": "12099845-78"
   },
@@ -143,7 +143,7 @@ export const sampleMandateList0: domains.MandateListDomain =
     "sortCode": "10-11-12",
     "accountId": 23456123,
     "mandateStatus": "ACTIVE",
-    "bankName": "NatWest",
+    "bankName": "Bank Of Happiness",
     "accountName": "F & J Bloggs",
     "mandateRef": "12099845-34"
   }
@@ -156,7 +156,7 @@ export const sampleMandateSearch0: domains.MandateSearchDomain =
       "sortCode": "10-11-12",
       "accountId": 12341234,
       "mandateStatus": "ACTIVE",
-      "bankName": "NatWest",
+      "bankName": "Bank Of Happiness",
       "accountName": "F & J Bloggs",
       "mandateRef": "12099845-34"
     },
@@ -164,7 +164,7 @@ export const sampleMandateSearch0: domains.MandateSearchDomain =
       "sortCode": "23-54-12",
       "accountId": 23456123,
       "mandateStatus": "ACTIVE",
-      "bankName": "RBS",
+      "bankName": "Royal Bank of Success",
       "accountName": "F & J Bloggs",
       "mandateRef": "12099845-78"
     },
@@ -172,7 +172,7 @@ export const sampleMandateSearch0: domains.MandateSearchDomain =
       "sortCode": "10-11-12",
       "accountId": 3245454,
       "mandateStatus": "ACTIVE",
-      "bankName": "NatWest",
+      "bankName": "Bank Of Happiness",
       "accountName": "F & J Bloggs",
       "mandateRef": "12099845-34"
     },
@@ -180,7 +180,7 @@ export const sampleMandateSearch0: domains.MandateSearchDomain =
       "sortCode": "23-54-12",
       "accountId": 12341234,
       "mandateStatus": "ACTIVE",
-      "bankName": "RBS",
+      "bankName": "Royal Bank of Success",
       "accountName": "F & J Bloggs",
       "mandateRef": "12099845-78"
     },
@@ -188,7 +188,7 @@ export const sampleMandateSearch0: domains.MandateSearchDomain =
       "sortCode": "10-11-12",
       "accountId": 23456123,
       "mandateStatus": "ACTIVE",
-      "bankName": "NatWest",
+      "bankName": "Bank Of Happiness",
       "accountName": "F & J Bloggs",
       "mandateRef": "12099845-34"
     }
@@ -251,7 +251,7 @@ export const sampleLinkedAccountDetailsDisplay1: domains.LinkedAccountDetailsDis
     "sortCode": "23-54-12",
     "accountId": 23456123,
     "mandateStatus": "ACTIVE",
-    "bankName": "RBS",
+    "bankName": "Royal Bank of Success",
     "accountName": "F & J Bloggs",
     "mandateRef": "12099845-78"
   },
@@ -295,7 +295,7 @@ export const sampleMandate1: domains.MandateDomain =
   "sortCode": "23-54-12",
   "accountId": 23456123,
   "mandateStatus": "ACTIVE",
-  "bankName": "RBS",
+  "bankName": "Royal Bank of Success",
   "accountName": "F & J Bloggs",
   "mandateRef": "12099845-78"
 }
@@ -305,7 +305,7 @@ export const sampleMandateList1: domains.MandateListDomain =
     "sortCode": "23-54-12",
     "accountId": 23456123,
     "mandateStatus": "ACTIVE",
-    "bankName": "RBS",
+    "bankName": "Royal Bank of Success",
     "accountName": "F & J Bloggs",
     "mandateRef": "12099845-78"
   },
@@ -313,7 +313,7 @@ export const sampleMandateList1: domains.MandateListDomain =
     "sortCode": "10-11-12",
     "accountId": 12341234,
     "mandateStatus": "ACTIVE",
-    "bankName": "NatWest",
+    "bankName": "Bank Of Happiness",
     "accountName": "F & J Bloggs",
     "mandateRef": "12099845-34"
   },
@@ -321,7 +321,7 @@ export const sampleMandateList1: domains.MandateListDomain =
     "sortCode": "23-54-12",
     "accountId": 23456123,
     "mandateStatus": "ACTIVE",
-    "bankName": "RBS",
+    "bankName": "Royal Bank of Success",
     "accountName": "F & J Bloggs",
     "mandateRef": "12099845-78"
   },
@@ -329,7 +329,7 @@ export const sampleMandateList1: domains.MandateListDomain =
     "sortCode": "10-11-12",
     "accountId": 3245454,
     "mandateStatus": "ACTIVE",
-    "bankName": "NatWest",
+    "bankName": "Bank Of Happiness",
     "accountName": "F & J Bloggs",
     "mandateRef": "12099845-34"
   },
@@ -337,7 +337,7 @@ export const sampleMandateList1: domains.MandateListDomain =
     "sortCode": "23-54-12",
     "accountId": 12341234,
     "mandateStatus": "ACTIVE",
-    "bankName": "RBS",
+    "bankName": "Royal Bank of Success",
     "accountName": "F & J Bloggs",
     "mandateRef": "12099845-78"
   }
@@ -350,7 +350,7 @@ export const sampleMandateSearch1: domains.MandateSearchDomain =
       "sortCode": "23-54-12",
       "accountId": 23456123,
       "mandateStatus": "ACTIVE",
-      "bankName": "RBS",
+      "bankName": "Royal Bank of Success",
       "accountName": "F & J Bloggs",
       "mandateRef": "12099845-78"
     },
@@ -358,7 +358,7 @@ export const sampleMandateSearch1: domains.MandateSearchDomain =
       "sortCode": "10-11-12",
       "accountId": 12341234,
       "mandateStatus": "ACTIVE",
-      "bankName": "NatWest",
+      "bankName": "Bank Of Happiness",
       "accountName": "F & J Bloggs",
       "mandateRef": "12099845-34"
     },
@@ -366,7 +366,7 @@ export const sampleMandateSearch1: domains.MandateSearchDomain =
       "sortCode": "23-54-12",
       "accountId": 23456123,
       "mandateStatus": "ACTIVE",
-      "bankName": "RBS",
+      "bankName": "Royal Bank of Success",
       "accountName": "F & J Bloggs",
       "mandateRef": "12099845-78"
     },
@@ -374,7 +374,7 @@ export const sampleMandateSearch1: domains.MandateSearchDomain =
       "sortCode": "10-11-12",
       "accountId": 3245454,
       "mandateStatus": "ACTIVE",
-      "bankName": "NatWest",
+      "bankName": "Bank Of Happiness",
       "accountName": "F & J Bloggs",
       "mandateRef": "12099845-34"
     },
@@ -382,7 +382,7 @@ export const sampleMandateSearch1: domains.MandateSearchDomain =
       "sortCode": "23-54-12",
       "accountId": 12341234,
       "mandateStatus": "ACTIVE",
-      "bankName": "RBS",
+      "bankName": "Royal Bank of Success",
       "accountName": "F & J Bloggs",
       "mandateRef": "12099845-78"
     }
@@ -445,7 +445,7 @@ export const sampleLinkedAccountDetailsDisplay2: domains.LinkedAccountDetailsDis
     "sortCode": "10-11-12",
     "accountId": 3245454,
     "mandateStatus": "ACTIVE",
-    "bankName": "NatWest",
+    "bankName": "Bank Of Happiness",
     "accountName": "F & J Bloggs",
     "mandateRef": "12099845-34"
   },
@@ -489,7 +489,7 @@ export const sampleMandate2: domains.MandateDomain =
   "sortCode": "10-11-12",
   "accountId": 3245454,
   "mandateStatus": "ACTIVE",
-  "bankName": "NatWest",
+  "bankName": "Bank Of Happiness",
   "accountName": "F & J Bloggs",
   "mandateRef": "12099845-34"
 }
@@ -499,7 +499,7 @@ export const sampleMandateList2: domains.MandateListDomain =
     "sortCode": "10-11-12",
     "accountId": 3245454,
     "mandateStatus": "ACTIVE",
-    "bankName": "NatWest",
+    "bankName": "Bank Of Happiness",
     "accountName": "F & J Bloggs",
     "mandateRef": "12099845-34"
   },
@@ -507,7 +507,7 @@ export const sampleMandateList2: domains.MandateListDomain =
     "sortCode": "23-54-12",
     "accountId": 3245454,
     "mandateStatus": "ACTIVE",
-    "bankName": "RBS",
+    "bankName": "Royal Bank of Success",
     "accountName": "F & J Bloggs",
     "mandateRef": "12099845-78"
   },
@@ -515,7 +515,7 @@ export const sampleMandateList2: domains.MandateListDomain =
     "sortCode": "10-11-12",
     "accountId": 12341234,
     "mandateStatus": "ACTIVE",
-    "bankName": "NatWest",
+    "bankName": "Bank Of Happiness",
     "accountName": "F & J Bloggs",
     "mandateRef": "12099845-34"
   },
@@ -523,7 +523,7 @@ export const sampleMandateList2: domains.MandateListDomain =
     "sortCode": "23-54-12",
     "accountId": 23456123,
     "mandateStatus": "ACTIVE",
-    "bankName": "RBS",
+    "bankName": "Royal Bank of Success",
     "accountName": "F & J Bloggs",
     "mandateRef": "12099845-78"
   },
@@ -531,7 +531,7 @@ export const sampleMandateList2: domains.MandateListDomain =
     "sortCode": "10-11-12",
     "accountId": 3245454,
     "mandateStatus": "ACTIVE",
-    "bankName": "NatWest",
+    "bankName": "Bank Of Happiness",
     "accountName": "F & J Bloggs",
     "mandateRef": "12099845-34"
   }
@@ -544,7 +544,7 @@ export const sampleMandateSearch2: domains.MandateSearchDomain =
       "sortCode": "10-11-12",
       "accountId": 3245454,
       "mandateStatus": "ACTIVE",
-      "bankName": "NatWest",
+      "bankName": "Bank Of Happiness",
       "accountName": "F & J Bloggs",
       "mandateRef": "12099845-34"
     },
@@ -552,7 +552,7 @@ export const sampleMandateSearch2: domains.MandateSearchDomain =
       "sortCode": "23-54-12",
       "accountId": 3245454,
       "mandateStatus": "ACTIVE",
-      "bankName": "RBS",
+      "bankName": "Royal Bank of Success",
       "accountName": "F & J Bloggs",
       "mandateRef": "12099845-78"
     },
@@ -560,7 +560,7 @@ export const sampleMandateSearch2: domains.MandateSearchDomain =
       "sortCode": "10-11-12",
       "accountId": 12341234,
       "mandateStatus": "ACTIVE",
-      "bankName": "NatWest",
+      "bankName": "Bank Of Happiness",
       "accountName": "F & J Bloggs",
       "mandateRef": "12099845-34"
     },
@@ -568,7 +568,7 @@ export const sampleMandateSearch2: domains.MandateSearchDomain =
       "sortCode": "23-54-12",
       "accountId": 23456123,
       "mandateStatus": "ACTIVE",
-      "bankName": "RBS",
+      "bankName": "Royal Bank of Success",
       "accountName": "F & J Bloggs",
       "mandateRef": "12099845-78"
     },
@@ -576,7 +576,7 @@ export const sampleMandateSearch2: domains.MandateSearchDomain =
       "sortCode": "10-11-12",
       "accountId": 3245454,
       "mandateStatus": "ACTIVE",
-      "bankName": "NatWest",
+      "bankName": "Bank Of Happiness",
       "accountName": "F & J Bloggs",
       "mandateRef": "12099845-34"
     }

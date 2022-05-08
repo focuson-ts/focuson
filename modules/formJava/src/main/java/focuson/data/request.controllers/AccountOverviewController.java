@@ -10,6 +10,8 @@ import focuson.data.queries.AccountOverview.AccountOverviewQueries;
 import focuson.data.IManyGraphQl;
 import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.sql.Connection;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
@@ -19,9 +21,13 @@ import java.util.Arrays;
 
   @Autowired
   public IManyGraphQl graphQL;
+  @Autowired
+  public DataSource dataSource;
     @GetMapping(value="/api/accountOverview", produces="application/json")
     public ResponseEntity getAccountOverview(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),AccountOverviewQueries.getAccountOverview(accountId, applRef, brandRef, clientRef), "getAccountOverview");
+        try (Connection connection = dataSource.getConnection()) {
+          return Transform.result(connection,graphQL.get(IFetcher.mock),AccountOverviewQueries.getAccountOverview(accountId, applRef, brandRef, clientRef), "getAccountOverview");
+        }
     }
 
     @GetMapping(value="/api/accountOverview/query", produces="application/json")

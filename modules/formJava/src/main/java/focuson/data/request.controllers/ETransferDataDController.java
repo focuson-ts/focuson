@@ -10,6 +10,8 @@ import focuson.data.queries.ETransfer.ETransferDataDQueries;
 import focuson.data.IManyGraphQl;
 import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.sql.Connection;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
@@ -19,9 +21,13 @@ import java.util.Arrays;
 
   @Autowired
   public IManyGraphQl graphQL;
+  @Autowired
+  public DataSource dataSource;
     @PostMapping(value="/api/eTransfers", produces="application/json")
     public ResponseEntity createETransferDataD(@RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),ETransferDataDQueries.createETransferDataD(customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "createETransferDataD");
+        try (Connection connection = dataSource.getConnection()) {
+          return Transform.result(connection,graphQL.get(IFetcher.mock),ETransferDataDQueries.createETransferDataD(customerId,   Transform.removeQuoteFromProperties(body, Map.class)), "createETransferDataD");
+        }
     }
 
     @PostMapping(value="/api/eTransfers/query", produces="application/json")

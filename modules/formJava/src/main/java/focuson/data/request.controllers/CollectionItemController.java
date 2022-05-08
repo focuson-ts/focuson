@@ -12,6 +12,8 @@ import focuson.data.fetchers.IFetcher;
 import focuson.data.audit.LinkedAccountDetails.CollectionItemAudit;
 import focuson.data.audit.LinkedAccountDetails.CollectionItemAudit;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.sql.Connection;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
@@ -22,19 +24,25 @@ import java.util.Arrays;
   @Autowired
   public IManyGraphQl graphQL;
   @Autowired
+  public DataSource dataSource;
+  @Autowired
   CollectionItemAudit __audit;
     @PostMapping(value="/api/payment/cancel", produces="application/json")
     public ResponseEntity state_cancelCollectionItem(@RequestParam String accountId, @RequestParam String clientRef, @RequestParam String paymentId) throws Exception{
-        //from LinkedAccountDetails.rest[payments].audit[{"state":"cancel"}]
-        __audit.CollectionItem_state_cancel_auditCancel(IFetcher.mock,accountId,paymentId);
-       return Transform.result(graphQL.get(IFetcher.mock),CollectionItemQueries.state_cancelCollectionItem(accountId, clientRef, paymentId), "");
+        try (Connection connection = dataSource.getConnection()) {
+          //from LinkedAccountDetails.rest[payments].audit[{"state":"cancel"}]
+          __audit.CollectionItem_state_cancel_auditCancel(connection,IFetcher.mock,accountId,paymentId);
+          return Transform.result(connection,graphQL.get(IFetcher.mock),CollectionItemQueries.state_cancelCollectionItem(accountId, clientRef, paymentId), "");
+        }
     }
 
     @PostMapping(value="/api/payment/revalidate", produces="application/json")
     public ResponseEntity state_revalidateCollectionItem(@RequestParam String accountId, @RequestParam String clientRef, @RequestParam String paymentId) throws Exception{
-        //from LinkedAccountDetails.rest[payments].audit[{"state":"revalidate"}]
-        __audit.CollectionItem_state_revalidate_auditrevalidate(IFetcher.mock,accountId,paymentId);
-       return Transform.result(graphQL.get(IFetcher.mock),CollectionItemQueries.state_revalidateCollectionItem(accountId, clientRef, paymentId), "");
+        try (Connection connection = dataSource.getConnection()) {
+          //from LinkedAccountDetails.rest[payments].audit[{"state":"revalidate"}]
+          __audit.CollectionItem_state_revalidate_auditrevalidate(connection,IFetcher.mock,accountId,paymentId);
+          return Transform.result(connection,graphQL.get(IFetcher.mock),CollectionItemQueries.state_revalidateCollectionItem(accountId, clientRef, paymentId), "");
+        }
     }
 
     @PostMapping(value="/api/payment/cancel/query", produces="application/json")

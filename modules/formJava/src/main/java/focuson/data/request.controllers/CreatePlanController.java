@@ -10,6 +10,8 @@ import focuson.data.queries.EAccountsSummary.CreatePlanQueries;
 import focuson.data.IManyGraphQl;
 import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.sql.Connection;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
@@ -19,24 +21,34 @@ import java.util.Arrays;
 
   @Autowired
   public IManyGraphQl graphQL;
+  @Autowired
+  public DataSource dataSource;
     @GetMapping(value="/api/createPlan", produces="application/json")
     public ResponseEntity getCreatePlan(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String createPlanId) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.getCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId), "getCreatePlan");
+        try (Connection connection = dataSource.getConnection()) {
+          return Transform.result(connection,graphQL.get(IFetcher.mock),CreatePlanQueries.getCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId), "getCreatePlan");
+        }
     }
 
     @PostMapping(value="/api/createPlan", produces="application/json")
     public ResponseEntity createCreatePlan(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.createCreatePlan(accountId, applRef, brandRef, clientRef,   Transform.removeQuoteFromProperties(body, Map.class)), "createCreatePlan");
+        try (Connection connection = dataSource.getConnection()) {
+          return Transform.result(connection,graphQL.get(IFetcher.mock),CreatePlanQueries.createCreatePlan(accountId, applRef, brandRef, clientRef,   Transform.removeQuoteFromProperties(body, Map.class)), "createCreatePlan");
+        }
     }
 
     @PutMapping(value="/api/createPlan", produces="application/json")
     public ResponseEntity updateCreatePlan(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String createPlanId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.updateCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateCreatePlan");
+        try (Connection connection = dataSource.getConnection()) {
+          return Transform.result(connection,graphQL.get(IFetcher.mock),CreatePlanQueries.updateCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId,   Transform.removeQuoteFromProperties(body, Map.class)), "updateCreatePlan");
+        }
     }
 
     @DeleteMapping(value="/api/createPlan", produces="application/json")
     public ResponseEntity deleteCreatePlan(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String createPlanId) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.deleteCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId), "");
+        try (Connection connection = dataSource.getConnection()) {
+          return Transform.result(connection,graphQL.get(IFetcher.mock),CreatePlanQueries.deleteCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId), "");
+        }
     }
 
     @GetMapping(value="/api/createPlan/query", produces="application/json")

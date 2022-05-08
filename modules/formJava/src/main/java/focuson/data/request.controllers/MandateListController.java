@@ -10,6 +10,8 @@ import focuson.data.queries.LinkedAccountDetails.MandateListQueries;
 import focuson.data.IManyGraphQl;
 import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.sql.Connection;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
@@ -19,9 +21,13 @@ import java.util.Arrays;
 
   @Autowired
   public IManyGraphQl graphQL;
+  @Autowired
+  public DataSource dataSource;
     @GetMapping(value="/api/mandates/allForClient", produces="application/json")
     public ResponseEntity getMandateList(@RequestParam String clientRef) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),MandateListQueries.getMandate(clientRef), "getMandate");
+        try (Connection connection = dataSource.getConnection()) {
+          return Transform.result(connection,graphQL.get(IFetcher.mock),MandateListQueries.getMandate(clientRef), "getMandate");
+        }
     }
 
     @GetMapping(value="/api/mandates/allForClient/query", produces="application/json")

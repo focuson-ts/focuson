@@ -64,13 +64,15 @@ function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restN
   let selectionFromData = getRestTypeDetails ( restAction ).output.needsObj ? `"${queryName ( r, restAction )}"` : '""';
   const callAudit = indentList ( safeArray ( r.audit ).filter ( a => actionsEqual ( a.restAction, restAction ) ).flatMap ( ad =>
     toArray ( ad.storedProcedure ).flatMap ( sp =>
-      [ `//from ${p.name}.rest[${restName}].audit[${JSON.stringify ( restAction )}]`, `__audit.${auditMethodName ( r, restAction, sp )}(${[ dbNameString, sp.params ].join ( ',' )});` ] ) ) )
+      [ `//from ${p.name}.rest[${restName}].audit[${JSON.stringify ( restAction )}]`, `__audit.${auditMethodName ( r, restAction, sp )}(connection,${[ dbNameString, sp.params ].join ( ',' )});` ] ) ) )
 
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,
     `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
-    ...indentList ( indentList ( indentList ( [ ...accessDetails ( params, p, restName, r, restAction ), ...callAudit ] ) ) ),
-    `       return Transform.result(graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( r, restAction )}), ${selectionFromData});`,
+    `        try (Connection connection = dataSource.getConnection()) {`,
+    ...indentList ( indentList ( indentList ( indentList ( [ ...accessDetails ( params, p, restName, r, restAction ), ...callAudit ] ) ) ) ),
+    `          return Transform.result(connection,graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( r, restAction )}), ${selectionFromData});`,
+    `        }`,
     `    }`,
     `` ];
 }
@@ -125,6 +127,8 @@ export function makeSpringEndpointsFor<B, G> ( params: JavaWiringParams, p: Main
     `import ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
     ...auditImports,
     `import org.springframework.beans.factory.annotation.Autowired;`,
+    `import java.sql.Connection;`,
+    `import javax.sql.DataSource;`,
     `import java.util.List;`,
     `import java.util.Map;`,
     `import java.util.Arrays;`,
@@ -133,8 +137,7 @@ export function makeSpringEndpointsFor<B, G> ( params: JavaWiringParams, p: Main
     `  @RestController`,
     `  public class ${restControllerName ( r )} {`,
     ``,
-    ...indentList ( [ `@Autowired`,
-      `public IManyGraphQl graphQL;`, ] ),
+    ...indentList ( [ `@Autowired`, `public IManyGraphQl graphQL;`, `@Autowired`, `public DataSource dataSource;` ] ),
     ...auditVariables,
     ...endpoints,
     ...queries,

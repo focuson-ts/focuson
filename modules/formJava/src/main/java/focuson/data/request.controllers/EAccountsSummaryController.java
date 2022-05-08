@@ -11,6 +11,8 @@ import focuson.data.IManyGraphQl;
 import focuson.data.fetchers.IFetcher;
 import focuson.data.audit.EAccountsSummary.EAccountsSummaryAudit;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.sql.Connection;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
@@ -21,19 +23,25 @@ import java.util.Arrays;
   @Autowired
   public IManyGraphQl graphQL;
   @Autowired
+  public DataSource dataSource;
+  @Autowired
   EAccountsSummaryAudit __audit;
     @GetMapping(value="/api/accountsSummary", produces="application/json")
     public ResponseEntity getEAccountsSummary(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.getEAccountsSummary(accountId, applRef, brandRef, clientRef, customerId, employeeType), "getEAccountsSummary");
+        try (Connection connection = dataSource.getConnection()) {
+          return Transform.result(connection,graphQL.get(IFetcher.mock),EAccountsSummaryQueries.getEAccountsSummary(accountId, applRef, brandRef, clientRef, customerId, employeeType), "getEAccountsSummary");
+        }
     }
 
     @PostMapping(value="/api/accountsSummary/invalidate", produces="application/json")
     public ResponseEntity state_invalidateEAccountsSummary(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef, @RequestParam String customerId, @RequestParam String employeeType) throws Exception{
-      //from EAccountsSummary.rest[eAccountsSummary.access[{"state":"invalidate"}]]
-      if (!Arrays.asList("teamLeader").contains(employeeType)) return new ResponseEntity("", new HttpHeaders(), HttpStatus.FORBIDDEN);
-        //from EAccountsSummary.rest[eAccountsSummary].audit[{"state":"invalidate"}]
-        __audit.EAccountsSummary_state_invalidate_auditStuff(IFetcher.mock,accountId,clientRef);
-       return Transform.result(graphQL.get(IFetcher.mock),EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, applRef, brandRef, clientRef, customerId, employeeType), "");
+        try (Connection connection = dataSource.getConnection()) {
+        //from EAccountsSummary.rest[eAccountsSummary.access[{"state":"invalidate"}]]
+        if (!Arrays.asList("teamLeader").contains(employeeType)) return new ResponseEntity("", new HttpHeaders(), HttpStatus.FORBIDDEN);
+          //from EAccountsSummary.rest[eAccountsSummary].audit[{"state":"invalidate"}]
+          __audit.EAccountsSummary_state_invalidate_auditStuff(connection,IFetcher.mock,accountId,clientRef);
+          return Transform.result(connection,graphQL.get(IFetcher.mock),EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, applRef, brandRef, clientRef, customerId, employeeType), "");
+        }
     }
 
     @GetMapping(value="/api/accountsSummary/query", produces="application/json")

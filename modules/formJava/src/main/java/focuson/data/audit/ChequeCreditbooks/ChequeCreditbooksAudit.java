@@ -10,41 +10,36 @@ import java.sql.Connection;
 import java.sql.SQLException;
 @Component
 public class ChequeCreditbooksAudit {
-    @Autowired
-    private DataSource dataSource;
 
-    public void ChequeCreditbooks_create_auditCreateCheckBook(String dbName, String brandRef, String accountId) throws SQLException {
+    public void ChequeCreditbooks_create_auditCreateCheckBook(Connection connection, String dbName, String brandRef, String accountId) throws SQLException {
         if (dbName.equals(IFetcher.mock)) {
            System.out.println("Mock audit: ChequeCreditbooks_create_auditCreateCheckBook(" + brandRef + ", " +accountId+ ")");
            return;
     }
-    try (Connection c = dataSource.getConnection()) {
-      try (CallableStatement s = c.prepareCall("call auditCreateCheckBook(?, ?)")) {
+    try (CallableStatement s = connection.prepareCall("call auditCreateCheckBook(?, ?)")) {
       s.setObject(1,brandRef);
       s.setObject(2,accountId);
-      if (!s.execute()) throw new SQLException("Cannot not audit: ChequeCreditbooks_create_auditCreateCheckBook");
-  }}}
-    public void ChequeCreditbooks_get_auditGetCheckBook(String dbName, String brandRef, String accountId) throws SQLException {
+    if (!s.execute()) throw new SQLException("Cannot not audit: ChequeCreditbooks_create_auditCreateCheckBook");
+  }}
+    public void ChequeCreditbooks_get_auditGetCheckBook(Connection connection, String dbName, String brandRef, String accountId) throws SQLException {
         if (dbName.equals(IFetcher.mock)) {
            System.out.println("Mock audit: ChequeCreditbooks_get_auditGetCheckBook(" + brandRef + ", " +accountId+ ")");
            return;
     }
-    try (Connection c = dataSource.getConnection()) {
-      try (CallableStatement s = c.prepareCall("call auditGetCheckBook(?, ?)")) {
+    try (CallableStatement s = connection.prepareCall("call auditGetCheckBook(?, ?)")) {
       s.setObject(1,brandRef);
       s.setObject(2,accountId);
-      if (!s.execute()) throw new SQLException("Cannot not audit: ChequeCreditbooks_get_auditGetCheckBook");
-  }}}
-    public void ChequeCreditbooks_state_cancel_auditCancelCheckbook(String dbName, String brandRef, String accountId) throws SQLException {
+    if (!s.execute()) throw new SQLException("Cannot not audit: ChequeCreditbooks_get_auditGetCheckBook");
+  }}
+    public void ChequeCreditbooks_state_cancel_auditCancelCheckbook(Connection connection, String dbName, String brandRef, String accountId) throws SQLException {
         if (dbName.equals(IFetcher.mock)) {
            System.out.println("Mock audit: ChequeCreditbooks_state_cancel_auditCancelCheckbook(" + brandRef + ", " +accountId+ ")");
            return;
     }
-    try (Connection c = dataSource.getConnection()) {
-      try (CallableStatement s = c.prepareCall("call auditCancelCheckbook(?, ?)")) {
+    try (CallableStatement s = connection.prepareCall("call auditCancelCheckbook(?, ?)")) {
       s.setObject(1,brandRef);
       s.setObject(2,accountId);
-      if (!s.execute()) throw new SQLException("Cannot not audit: ChequeCreditbooks_state_cancel_auditCancelCheckbook");
-  }}}
+    if (!s.execute()) throw new SQLException("Cannot not audit: ChequeCreditbooks_state_cancel_auditCancelCheckbook");
+  }}
 
 }

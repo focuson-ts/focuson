@@ -1,6 +1,7 @@
 package focuson.data.request.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
 import graphql.GraphQLError;
@@ -9,14 +10,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.IOException;
 public class Transform {
-    public static ResponseEntity<String> result(GraphQL graphQL, String query, String result) throws JsonProcessingException {
-        ExecutionResult executionResult = graphQL.execute(query);
+    public static ResponseEntity<String> result(Connection connection,GraphQL graphQL, String query, String result) throws JsonProcessingException {
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput().query(query).localContext(connection).build();
+        ExecutionResult executionResult = graphQL.execute(executionInput);
         List<GraphQLError> errors = executionResult.getErrors();
         final HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("x-query", query);

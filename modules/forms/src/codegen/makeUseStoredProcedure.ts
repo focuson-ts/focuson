@@ -10,7 +10,7 @@ import { indentList } from "./codegen";
 export function makeUseStoredProcedure<B, G> ( params: JavaWiringParams, pageD: MainPageD<B, G>, restName, restD: RestD<G>, action: RestAction ): string[] {
   if ( restD.states === undefined || !isRestStateChange ( action ) ) return []
   const stateDetails = restD.states[ action.state ]
-  if (stateDetails=== undefined) throw Error(`Cannot find state details for ${JSON.stringify(action)}} in ${[pageD.name]}.rests[${restName}]. Legal values are ${Object.keys(restD.states)}`)
+  if ( stateDetails === undefined ) throw Error ( `Cannot find state details for ${JSON.stringify ( action )}} in ${[ pageD.name ]}.rests[${restName}]. Legal values are ${Object.keys ( restD.states )}` )
   if ( stateDetails.useStoredProcedure === undefined ) return []
 
   let spParams = stateDetails.useStoredProcedure.params;
@@ -24,10 +24,8 @@ export function makeUseStoredProcedure<B, G> ( params: JavaWiringParams, pageD: 
     `import   ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
     `import  ${fetcherPackageName ( params, pageD )}.${fetcherInterfaceName ( params, restD, action )};`,
     `import graphql.schema.DataFetcher;`,
-    `import org.springframework.beans.factory.annotation.Autowired;`,
     `import org.springframework.stereotype.Component;`,
     ``,
-    `import javax.sql.DataSource;`,
     `import java.sql.Connection;`,
     `import java.sql.CallableStatement;`,
     `import java.util.Map;`,
@@ -35,23 +33,19 @@ export function makeUseStoredProcedure<B, G> ( params: JavaWiringParams, pageD: 
     ``,
     `@Component`,
     `public class ${dbFetcherClassName ( params, restD, action )} implements ${fetcherInterfaceName ( params, restD, action )} {`,
-    ``,
-    `  @Autowired`,
-    `  private DataSource dataSource;`,
+
     ``,
     `  @SuppressWarnings("SqlResolve")`,
     `  public DataFetcher ${resolverName ( restD, getRestTypeDetails ( action ) )}() {`,
     `    return dataFetchingEnvironment -> {`,
     ...indentList ( indentList ( indentList ( [
       ...paramVariables,
-      `try (Connection c = dataSource.getConnection()) {`,
-      `  try(CallableStatement s = c.prepareCall("call ${stateDetails.useStoredProcedure.name}(${questionMarks})")){`,
+      `Connection connection = dataFetchingEnvironment.getLocalContext();`,
+      `try(CallableStatement s = connection.prepareCall("call ${stateDetails.useStoredProcedure.name}(${questionMarks})")){`,
       ...setParams,
-      `    return s.execute();`,
-      `  }`,
-      `}` ] ) ) ),
-    `  };`,
-    `}`,
+      `  return s.execute();`,
+      `}};` ] ) ) ),
+    `  }`,
     ``,
     `  @Override`,
     `  public String dbName() {`,

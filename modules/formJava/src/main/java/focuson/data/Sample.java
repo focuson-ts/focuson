@@ -922,7 +922,7 @@ public class Sample{
          "    \"sortCode\": \"10-11-12\","+
          "    \"accountId\": 12341234,"+
          "    \"mandateStatus\": \"ACTIVE\","+
-         "    \"bankName\": \"NatWest\","+
+         "    \"bankName\": \"Bank Of Happiness\","+
          "    \"accountName\": \"F & J Bloggs\","+
          "    \"mandateRef\": \"12099845-34\""+
          "  },"+
@@ -987,7 +987,7 @@ public class Sample{
          "  \"sortCode\": \"10-11-12\","+
          "  \"accountId\": 12341234,"+
          "  \"mandateStatus\": \"ACTIVE\","+
-         "  \"bankName\": \"NatWest\","+
+         "  \"bankName\": \"Bank Of Happiness\","+
          "  \"accountName\": \"F & J Bloggs\","+
          "  \"mandateRef\": \"12099845-34\""+
          "}"
@@ -998,7 +998,7 @@ public class Sample{
          "    \"sortCode\": \"10-11-12\","+
          "    \"accountId\": 12341234,"+
          "    \"mandateStatus\": \"ACTIVE\","+
-         "    \"bankName\": \"NatWest\","+
+         "    \"bankName\": \"Bank Of Happiness\","+
          "    \"accountName\": \"F & J Bloggs\","+
          "    \"mandateRef\": \"12099845-34\""+
          "  },"+
@@ -1006,7 +1006,7 @@ public class Sample{
          "    \"sortCode\": \"23-54-12\","+
          "    \"accountId\": 23456123,"+
          "    \"mandateStatus\": \"ACTIVE\","+
-         "    \"bankName\": \"RBS\","+
+         "    \"bankName\": \"Royal Bank of Success\","+
          "    \"accountName\": \"F & J Bloggs\","+
          "    \"mandateRef\": \"12099845-78\""+
          "  },"+
@@ -1014,7 +1014,7 @@ public class Sample{
          "    \"sortCode\": \"10-11-12\","+
          "    \"accountId\": 3245454,"+
          "    \"mandateStatus\": \"ACTIVE\","+
-         "    \"bankName\": \"NatWest\","+
+         "    \"bankName\": \"Bank Of Happiness\","+
          "    \"accountName\": \"F & J Bloggs\","+
          "    \"mandateRef\": \"12099845-34\""+
          "  },"+
@@ -1022,7 +1022,7 @@ public class Sample{
          "    \"sortCode\": \"23-54-12\","+
          "    \"accountId\": 12341234,"+
          "    \"mandateStatus\": \"ACTIVE\","+
-         "    \"bankName\": \"RBS\","+
+         "    \"bankName\": \"Royal Bank of Success\","+
          "    \"accountName\": \"F & J Bloggs\","+
          "    \"mandateRef\": \"12099845-78\""+
          "  },"+
@@ -1030,7 +1030,7 @@ public class Sample{
          "    \"sortCode\": \"10-11-12\","+
          "    \"accountId\": 23456123,"+
          "    \"mandateStatus\": \"ACTIVE\","+
-         "    \"bankName\": \"NatWest\","+
+         "    \"bankName\": \"Bank Of Happiness\","+
          "    \"accountName\": \"F & J Bloggs\","+
          "    \"mandateRef\": \"12099845-34\""+
          "  }"+
@@ -1044,7 +1044,7 @@ public class Sample{
          "      \"sortCode\": \"10-11-12\","+
          "      \"accountId\": 12341234,"+
          "      \"mandateStatus\": \"ACTIVE\","+
-         "      \"bankName\": \"NatWest\","+
+         "      \"bankName\": \"Bank Of Happiness\","+
          "      \"accountName\": \"F & J Bloggs\","+
          "      \"mandateRef\": \"12099845-34\""+
          "    },"+
@@ -1052,7 +1052,7 @@ public class Sample{
          "      \"sortCode\": \"23-54-12\","+
          "      \"accountId\": 23456123,"+
          "      \"mandateStatus\": \"ACTIVE\","+
-         "      \"bankName\": \"RBS\","+
+         "      \"bankName\": \"Royal Bank of Success\","+
          "      \"accountName\": \"F & J Bloggs\","+
          "      \"mandateRef\": \"12099845-78\""+
          "    },"+
@@ -1060,7 +1060,7 @@ public class Sample{
          "      \"sortCode\": \"10-11-12\","+
          "      \"accountId\": 3245454,"+
          "      \"mandateStatus\": \"ACTIVE\","+
-         "      \"bankName\": \"NatWest\","+
+         "      \"bankName\": \"Bank Of Happiness\","+
          "      \"accountName\": \"F & J Bloggs\","+
          "      \"mandateRef\": \"12099845-34\""+
          "    },"+
@@ -1068,7 +1068,7 @@ public class Sample{
          "      \"sortCode\": \"23-54-12\","+
          "      \"accountId\": 12341234,"+
          "      \"mandateStatus\": \"ACTIVE\","+
-         "      \"bankName\": \"RBS\","+
+         "      \"bankName\": \"Royal Bank of Success\","+
          "      \"accountName\": \"F & J Bloggs\","+
          "      \"mandateRef\": \"12099845-78\""+
          "    },"+
@@ -1076,7 +1076,7 @@ public class Sample{
          "      \"sortCode\": \"10-11-12\","+
          "      \"accountId\": 23456123,"+
          "      \"mandateStatus\": \"ACTIVE\","+
-         "      \"bankName\": \"NatWest\","+
+         "      \"bankName\": \"Bank Of Happiness\","+
          "      \"accountName\": \"F & J Bloggs\","+
          "      \"mandateRef\": \"12099845-34\""+
          "    }"+
