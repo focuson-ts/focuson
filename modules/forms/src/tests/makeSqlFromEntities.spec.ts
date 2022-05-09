@@ -1,4 +1,4 @@
-import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findParamsForTable, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, MainEntity, makeMapsForRest, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldData } from "../codegen/makeSqlFromEntities";
+import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findParamsForTable, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, MainEntity, makeInsertSqlForSample, makeMapsForRest, makeDataForMutate, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifyDataForMutate, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlLinkData, walkSqlRoots, whereFieldToFieldData } from "../codegen/makeSqlFromEntities";
 import { AllLensRestParams, EntityAndWhere, IntParam, StringParam, unique } from "../common/restD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { nameAndAddressDataD, postCodeDataLineD } from "../example/postCodeDemo/addressSearch.dataD";
@@ -39,17 +39,24 @@ describe ( "EntityFolder", () => {
 
 describe ( "findSqlRoots", () => {
   it ( "should find a root for the main and each multiple", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), simplifySqlRoot ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), ( p, r ) => simplifySqlRoot ( r ) ) ).toEqual ( [
       "main ACC_TBL path [] root ACC_TBL children [ADD_TBL,ADD_TBL] filterPath: undefined",
       "main ACC_TBL path [mainCustomer -> CUST_TBL] root ADD_TBL children [] filterPath: main",
       "main ACC_TBL path [jointCustomer -> CUST_TBL] root ADD_TBL children [] filterPath: joint"
+    ] )
+  } )
+  it ( "should have a walkSqlRoots that gives access to the parent as well", () => {
+    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), ( p, r ) => p ? simplifySqlRoot ( p ) : '' ) ).toEqual ( [
+      "",
+      "main ACC_TBL path [] root ACC_TBL children [ADD_TBL,ADD_TBL] filterPath: undefined",
+      "main ACC_TBL path [] root ACC_TBL children [ADD_TBL,ADD_TBL] filterPath: undefined"
     ] )
   } )
 } )
 
 describe ( "findAliasAndTablesLinksForLinkDataFolder", () => {
   it ( "should generate aliasAndTables", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), r => simplifyAliasAndTables ( findAliasAndTableLinksForLinkData ( r ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), ( parent, r ) => simplifyAliasAndTables ( findAliasAndTableLinksForLinkData ( r ) ) ) ).toEqual ( [
       "ACC_TBL->ACC_TBL,mainName->NAME_TBL,mainCustomer->CUST_TBL,jointName->NAME_TBL,jointCustomer->CUST_TBL",
       "ACC_TBL->ACC_TBL,mainCustomer->CUST_TBL,mainAddress->ADD_TBL",
       "ACC_TBL->ACC_TBL,jointCustomer->CUST_TBL,jointAddress->ADD_TBL"
@@ -58,7 +65,7 @@ describe ( "findAliasAndTablesLinksForLinkDataFolder", () => {
 } )
 describe ( "findWhereLinkDataForLinkData", () => {
     it ( "should generate  findWhereLinkDataForLinkData", () => {
-      expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), r => simplifyWhereLinks ( findWhereLinksForSqlRoot ( r ) ) ) ).toEqual ( [
+      expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), ( parent, r ) => simplifyWhereLinks ( findWhereLinksForSqlRoot ( r ) ) ) ).toEqual ( [
         [
           "mainCustomer:CUST_TBL.nameId == mainName:NAME_TBL.id",
           "ACC_TBL:ACC_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer",
@@ -97,33 +104,33 @@ describe ( "whereFieldToFieldData. Note that the undefined gets fixed later in t
 } )
 describe ( "findFieldsFromWhere", () => {
   it ( "find the fields in the where clauses. ", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), r =>
-      unique ( simplifyTableAndFieldAndAliasDataArray ( findFieldsFromWhere ( 'someErrorPrefix', findWhereLinksForSqlRoot ( r ) ) ), s => s ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), ( parent, r ) =>
+      unique ( simplifyTableAndFieldAndAliasDataArray ( findFieldsFromWhere ( 'someErrorPrefix', findWhereLinksForSqlRoot ( r ) ), true ), s => s ) ) ).toEqual ( [
       [
-        "mainCustomer:CUST_TBL.nameId/undefined",
-        "mainName:NAME_TBL.id/undefined",
-        "ACC_TBL:ACC_TBL.mainCustomerId/undefined",
-        "mainCustomer:CUST_TBL.id/undefined",
-        "jointCustomer:CUST_TBL.nameId/undefined",
-        "jointName:NAME_TBL.id/undefined",
-        "ACC_TBL:ACC_TBL.jointCustomerId/undefined",
-        "jointCustomer:CUST_TBL.id/undefined",
-        "ACC_TBL:ACC_TBL.acc_id/undefined",
-        "ACC_TBL:ACC_TBL.brand_id/undefined"
+        "mainCustomer:CUST_TBL.nameId/undefined[]",
+        "mainName:NAME_TBL.id/undefined[]",
+        "ACC_TBL:ACC_TBL.mainCustomerId/undefined[]",
+        "mainCustomer:CUST_TBL.id/undefined[]",
+        "jointCustomer:CUST_TBL.nameId/undefined[]",
+        "jointName:NAME_TBL.id/undefined[]",
+        "ACC_TBL:ACC_TBL.jointCustomerId/undefined[]",
+        "jointCustomer:CUST_TBL.id/undefined[]",
+        "ACC_TBL:ACC_TBL.acc_id/undefined[]",
+        "ACC_TBL:ACC_TBL.brand_id/undefined[]"
       ],
       [
-        "ACC_TBL:ACC_TBL.acc_id/undefined",
-        "ACC_TBL:ACC_TBL.brand_id/undefined",
-        "mainCustomer:CUST_TBL.id/undefined",
-        "mainAddress:ADD_TBL.customerId/undefined",
-        "ACC_TBL:ACC_TBL.mainCustomerId/undefined"
+        "ACC_TBL:ACC_TBL.acc_id/undefined[]",
+        "ACC_TBL:ACC_TBL.brand_id/undefined[]",
+        "mainCustomer:CUST_TBL.id/undefined[]",
+        "mainAddress:ADD_TBL.customerId/undefined[]",
+        "ACC_TBL:ACC_TBL.mainCustomerId/undefined[]"
       ],
       [
-        "ACC_TBL:ACC_TBL.acc_id/undefined",
-        "ACC_TBL:ACC_TBL.brand_id/undefined",
-        "jointCustomer:CUST_TBL.id/undefined",
-        "jointAddress:ADD_TBL.customerId/undefined",
-        "ACC_TBL:ACC_TBL.jointCustomerId/undefined"
+        "ACC_TBL:ACC_TBL.acc_id/undefined[]",
+        "ACC_TBL:ACC_TBL.brand_id/undefined[]",
+        "jointCustomer:CUST_TBL.id/undefined[]",
+        "jointAddress:ADD_TBL.customerId/undefined[]",
+        "ACC_TBL:ACC_TBL.jointCustomerId/undefined[]"
       ]
     ] )
   } )
@@ -133,21 +140,21 @@ describe ( "findFieldsFromWhere", () => {
 describe ( "findTableAndFieldFromDataD", () => {
   it ( "find the tables and fields from a dataD -simple ", () => {
     expect ( findTableAndFieldFromDataD ( nameAndAddressDataD ).map ( t => simplifyTableAndFieldData ( t, true ) ) ).toEqual ( [
-      "ADD_TBL.zzline1/line1/line1",
-      "ADD_TBL.zzline2/line2/line2",
-      "ADD_TBL.zzline3/line3/line3",
-      "ADD_TBL.zzline4/line4/line4"
+      "ADD_TBL.zzline1/line1/line1[4 Privet drive,27 Throughput Lane]",
+      "ADD_TBL.zzline2/line2/line2[Little Whinging,Woodfield]",
+      "ADD_TBL.zzline3/line3/line3[Surrey,]",
+      "ADD_TBL.zzline4/line4/line4[England,Ireland]"
     ] )
   } )
   it ( "find the tables and fields from a dataD. ", () => {
     expect ( findTableAndFieldFromDataD ( JointAccountDd ).map ( t => simplifyTableAndFieldData ( t, true ) ) ).toEqual ( [
-      "ACC_TBL.blnc/balance/balance",
-      "NAME_TBL.zzname/name/main,name",
-      "ADD_TBL.zzline1/line1/main,addresses,line1",
-      "ADD_TBL.zzline2/line2/main,addresses,line2",
-      "NAME_TBL.zzname/name/joint,name",
-      "ADD_TBL.zzline1/line1/joint,addresses,line1",
-      "ADD_TBL.zzline2/line2/joint,addresses,line2"
+      "ACC_TBL.blnc/balance/balance[123,456]",
+      "NAME_TBL.zzname/name/main,name[Fred Bloggs,Jill Blogs]",
+      "ADD_TBL.zzline1/line1/main,addresses,line1[This is a one line string,another one line string]",
+      "ADD_TBL.zzline2/line2/main,addresses,line2[This is a one line string,another one line string]",
+      "NAME_TBL.zzname/name/joint,name[Fred Bloggs,Jill Blogs]",
+      "ADD_TBL.zzline1/line1/joint,addresses,line1[This is a one line string,another one line string]",
+      "ADD_TBL.zzline2/line2/joint,addresses,line2[This is a one line string,another one line string]"
     ] )
   } )
 } )
@@ -156,19 +163,19 @@ describe ( "findTableAliasAndFieldFromDataD", () => {
 
   it ( "should start with the fields from the wheres, and add in the fields from the dataD: only adding where the data is needed - i.e. not adding fields to the 'path' to the root", () => {
     const fromDataD = findTableAndFieldFromDataD ( JointAccountDd )
-    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), r => simplifyTableAndFieldAndAliasDataArray ( findTableAliasAndFieldFromDataD ( r, fromDataD ), true ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), ( parent, r ) => simplifyTableAndFieldAndAliasDataArray ( findTableAliasAndFieldFromDataD ( r, fromDataD ), true ) ) ).toEqual ( [
       [
-        "mainName:NAME_TBL.zzname/name/main,name",
-        "jointName:NAME_TBL.zzname/name/joint,name",
-        "ACC_TBL:ACC_TBL.blnc/balance/balance"
+        "mainName:NAME_TBL.zzname/name/main,name[Fred Bloggs,Jill Blogs]",
+        "jointName:NAME_TBL.zzname/name/joint,name[Fred Bloggs,Jill Blogs]",
+        "ACC_TBL:ACC_TBL.blnc/balance/balance[123,456]"
       ],
       [
-        "mainAddress:ADD_TBL.zzline1/line1/main,addresses,line1",
-        "mainAddress:ADD_TBL.zzline2/line2/main,addresses,line2"
+        "mainAddress:ADD_TBL.zzline1/line1/main,addresses,line1[This is a one line string,another one line string]",
+        "mainAddress:ADD_TBL.zzline2/line2/main,addresses,line2[This is a one line string,another one line string]"
       ],
       [
-        "jointAddress:ADD_TBL.zzline1/line1/joint,addresses,line1",
-        "jointAddress:ADD_TBL.zzline2/line2/joint,addresses,line2"
+        "jointAddress:ADD_TBL.zzline1/line1/joint,addresses,line1[This is a one line string,another one line string]",
+        "jointAddress:ADD_TBL.zzline2/line2/joint,addresses,line2[This is a one line string,another one line string]"
       ]
     ] )
   } )
@@ -176,18 +183,23 @@ describe ( "findTableAliasAndFieldFromDataD", () => {
 
 describe ( "findAllFields", () => {
   it ( "should aggregate the fields from the where and from the dataD - simple ", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( addressRestDTables ), r => simplifyTableAndFieldAndAliasDataArray ( findAllFields ( r, nameAndAddressDataD, findWhereLinksForSqlRootGoingUp ( r ) ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot (jointAccountRestDTables ), ( parent, r ) => simplifyTableAndFieldAndAliasDataArray ( findAllFields ( r, nameAndAddressDataD, findWhereLinksForSqlRootGoingUp ( r ) ), true ) ) ).toEqual ( [
+      [],
       [
-        "ADD_TBL:ADD_TBL.zzline1/line1",
-        "ADD_TBL:ADD_TBL.zzline2/line2",
-        "ADD_TBL:ADD_TBL.zzline3/line3",
-        "ADD_TBL:ADD_TBL.zzline4/line4"
+        "mainCustomer:CUST_TBL.id/undefined[]",
+        "mainAddress:ADD_TBL.customerId/undefined[]",
+        "ACC_TBL:ACC_TBL.mainCustomerId/undefined[]"
+      ],
+      [
+        "jointCustomer:CUST_TBL.id/undefined[]",
+        "jointAddress:ADD_TBL.customerId/undefined[]",
+        "ACC_TBL:ACC_TBL.jointCustomerId/undefined[]"
       ]
     ] )
   } )
 
   it ( "should findWhereLinksForSqlRootsGoingUp", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), r => simplifyWhereLinks ( findWhereLinksForSqlRootGoingUp ( r ) ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), ( parent, r ) => simplifyWhereLinks ( findWhereLinksForSqlRootGoingUp ( r ) ) ) ).toEqual ( [
       [],
       [
         "mainCustomer:CUST_TBL.id == mainAddress:ADD_TBL.customerId",
@@ -201,25 +213,25 @@ describe ( "findAllFields", () => {
   } )
 
   it ( "should aggregate the fields from the where and from the dataD ", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), r => simplifyTableAndFieldAndAliasDataArray ( findAllFields ( r, JointAccountDd, findWhereLinksForSqlRootGoingUp ( r ) ), true ) ) ).toEqual ( [
+    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), ( parent, r ) => simplifyTableAndFieldAndAliasDataArray ( findAllFields ( r, JointAccountDd, findWhereLinksForSqlRootGoingUp ( r ) ), true ) ) ).toEqual ( [
       [
-        "mainName:NAME_TBL.zzname/name/main,name",
-        "jointName:NAME_TBL.zzname/name/joint,name",
-        "ACC_TBL:ACC_TBL.blnc/balance/balance"
+        "mainName:NAME_TBL.zzname/name/main,name[Fred Bloggs,Jill Blogs]",
+        "jointName:NAME_TBL.zzname/name/joint,name[Fred Bloggs,Jill Blogs]",
+        "ACC_TBL:ACC_TBL.blnc/balance/balance[123,456]"
       ],
       [
-        "mainCustomer:CUST_TBL.id/undefined",
-        "mainAddress:ADD_TBL.customerId/undefined",
-        "ACC_TBL:ACC_TBL.mainCustomerId/undefined",
-        "mainAddress:ADD_TBL.zzline1/line1/main,addresses,line1",
-        "mainAddress:ADD_TBL.zzline2/line2/main,addresses,line2"
+        "mainCustomer:CUST_TBL.id/undefined[]",
+        "mainAddress:ADD_TBL.customerId/undefined[]",
+        "ACC_TBL:ACC_TBL.mainCustomerId/undefined[]",
+        "mainAddress:ADD_TBL.zzline1/line1/main,addresses,line1[This is a one line string,another one line string]",
+        "mainAddress:ADD_TBL.zzline2/line2/main,addresses,line2[This is a one line string,another one line string]"
       ],
       [
-        "jointCustomer:CUST_TBL.id/undefined",
-        "jointAddress:ADD_TBL.customerId/undefined",
-        "ACC_TBL:ACC_TBL.jointCustomerId/undefined",
-        "jointAddress:ADD_TBL.zzline1/line1/joint,addresses,line1",
-        "jointAddress:ADD_TBL.zzline2/line2/joint,addresses,line2"
+        "jointCustomer:CUST_TBL.id/undefined[]",
+        "jointAddress:ADD_TBL.customerId/undefined[]",
+        "ACC_TBL:ACC_TBL.jointCustomerId/undefined[]",
+        "jointAddress:ADD_TBL.zzline1/line1/joint,addresses,line1[This is a one line string,another one line string]",
+        "jointAddress:ADD_TBL.zzline2/line2/joint,addresses,line2[This is a one line string,another one line string]"
       ]
     ] )
   } )
@@ -227,42 +239,80 @@ describe ( "findAllFields", () => {
 
 describe ( "findSqlLinkDataFromRootAndDataD", () => {
   it ( "should create the data for the links in postCodeDataLineD (simple)", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( addressRestDTables ), r => simplifySqlLinkData ( findSqlLinkDataFromRootAndDataD ( r, postCodeDataLineD ) ) ) ).toEqual ( [
+    expect ( walkSqlLinkData ( findSqlLinkDataFromRootAndDataD ( findSqlRoot ( addressRestDTables ), postCodeDataLineD ), ( parent, ld ) => simplifySqlLinkData ( ld ) ) ).toEqual ( [
       [
         "sqlRoot: ADD_TBL",
         "fields: ADD_TBL:ADD_TBL.zzline1/line1,ADD_TBL:ADD_TBL.zzline2/line2,ADD_TBL:ADD_TBL.zzline3/line3,ADD_TBL:ADD_TBL.zzline4/line4",
         "aliasAndTables ADD_TBL->ADD_TBL",
-        "where "
+        "where ",
+        "linksInThis: ",
+        "linkToParent:undefined",
+        "children: 0"
       ]
     ] )
   } )
 
   it ( "shouldCreate the data for the links in accountD", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), r => simplifySqlLinkData ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd ) ) ) ).toEqual ( [
+    expect ( walkSqlLinkData ( findSqlLinkDataFromRootAndDataD ( findSqlRoot ( jointAccountRestDTables ), JointAccountDd ), ( parent, ld ) => simplifySqlLinkData ( ld, true ) ) ).toEqual ( [
       [
         "sqlRoot: ACC_TBL",
-        "fields: mainCustomer:CUST_TBL.nameId/undefined,mainName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.mainCustomerId/undefined,mainCustomer:CUST_TBL.id/undefined,jointCustomer:CUST_TBL.nameId/undefined,jointName:NAME_TBL.id/undefined,ACC_TBL:ACC_TBL.jointCustomerId/undefined,jointCustomer:CUST_TBL.id/undefined,ACC_TBL:ACC_TBL.acc_id/undefined,ACC_TBL:ACC_TBL.brand_id/undefined,mainName:NAME_TBL.zzname/name,jointName:NAME_TBL.zzname/name,ACC_TBL:ACC_TBL.blnc/balance",
+        "fields: mainCustomer:CUST_TBL.nameId/undefined[],mainName:NAME_TBL.id/undefined[],ACC_TBL:ACC_TBL.mainCustomerId/undefined[],mainCustomer:CUST_TBL.id/undefined[],jointCustomer:CUST_TBL.nameId/undefined[],jointName:NAME_TBL.id/undefined[],ACC_TBL:ACC_TBL.jointCustomerId/undefined[],jointCustomer:CUST_TBL.id/undefined[],ACC_TBL:ACC_TBL.acc_id/undefined[],ACC_TBL:ACC_TBL.brand_id/undefined[],mainName:NAME_TBL.zzname/name/main,name[Fred Bloggs,Jill Blogs],jointName:NAME_TBL.zzname/name/joint,name[Fred Bloggs,Jill Blogs],ACC_TBL:ACC_TBL.blnc/balance/balance[123,456]",
         "aliasAndTables ACC_TBL->ACC_TBL,mainName->NAME_TBL,mainCustomer->CUST_TBL,jointName->NAME_TBL,jointCustomer->CUST_TBL",
-        "where mainCustomer:CUST_TBL.nameId == mainName:NAME_TBL.id,ACC_TBL:ACC_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer,jointCustomer:CUST_TBL.nameId == jointName:NAME_TBL.id,ACC_TBL:ACC_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer,param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id"
+        "where mainCustomer:CUST_TBL.nameId == mainName:NAME_TBL.id,ACC_TBL:ACC_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer,jointCustomer:CUST_TBL.nameId == jointName:NAME_TBL.id,ACC_TBL:ACC_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer,param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id",
+        "linksInThis: mainCustomer__nameId__mainName__id,ACC_TBL__mainCustomerId__mainCustomer__id,jointCustomer__nameId__jointName__id,ACC_TBL__jointCustomerId__jointCustomer__id,param__accountId,param__brandId",
+        "linkToParent:undefined",
+        "children: 2"
       ],
       [
         "sqlRoot: ADD_TBL",
-        "fields: ACC_TBL:ACC_TBL.acc_id/undefined,ACC_TBL:ACC_TBL.brand_id/undefined,mainCustomer:CUST_TBL.id/undefined,mainAddress:ADD_TBL.customerId/undefined,ACC_TBL:ACC_TBL.mainCustomerId/undefined,mainAddress:ADD_TBL.zzline1/line1,mainAddress:ADD_TBL.zzline2/line2",
+        "fields: ACC_TBL:ACC_TBL.acc_id/undefined[],ACC_TBL:ACC_TBL.brand_id/undefined[],mainCustomer:CUST_TBL.id/undefined[],mainAddress:ADD_TBL.customerId/undefined[],ACC_TBL:ACC_TBL.mainCustomerId/undefined[],mainAddress:ADD_TBL.zzline1/line1/main,addresses,line1[This is a one line string,another one line string],mainAddress:ADD_TBL.zzline2/line2/main,addresses,line2[This is a one line string,another one line string]",
         "aliasAndTables ACC_TBL->ACC_TBL,mainCustomer->CUST_TBL,mainAddress->ADD_TBL",
-        "where param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id,mainCustomer:CUST_TBL.id == mainAddress:ADD_TBL.customerId,ACC_TBL:ACC_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer"
+        "where param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id,mainCustomer:CUST_TBL.id == mainAddress:ADD_TBL.customerId,ACC_TBL:ACC_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer",
+        "linksInThis: ",
+        "linkToParent:Table: parent-mainCustomer:CUST_TBL.id == child-mainAddress:ADD_TBL.customerId",
+        "children: 0"
       ],
       [
         "sqlRoot: ADD_TBL",
-        "fields: ACC_TBL:ACC_TBL.acc_id/undefined,ACC_TBL:ACC_TBL.brand_id/undefined,jointCustomer:CUST_TBL.id/undefined,jointAddress:ADD_TBL.customerId/undefined,ACC_TBL:ACC_TBL.jointCustomerId/undefined,jointAddress:ADD_TBL.zzline1/line1,jointAddress:ADD_TBL.zzline2/line2",
+        "fields: ACC_TBL:ACC_TBL.acc_id/undefined[],ACC_TBL:ACC_TBL.brand_id/undefined[],jointCustomer:CUST_TBL.id/undefined[],jointAddress:ADD_TBL.customerId/undefined[],ACC_TBL:ACC_TBL.jointCustomerId/undefined[],jointAddress:ADD_TBL.zzline1/line1/joint,addresses,line1[This is a one line string,another one line string],jointAddress:ADD_TBL.zzline2/line2/joint,addresses,line2[This is a one line string,another one line string]",
         "aliasAndTables ACC_TBL->ACC_TBL,jointCustomer->CUST_TBL,jointAddress->ADD_TBL",
-        "where param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id,jointCustomer:CUST_TBL.id == jointAddress:ADD_TBL.customerId,ACC_TBL:ACC_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer"
+        "where param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id,jointCustomer:CUST_TBL.id == jointAddress:ADD_TBL.customerId,ACC_TBL:ACC_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer",
+        "linksInThis: ",
+        "linkToParent:Table: parent-jointCustomer:CUST_TBL.id == child-jointAddress:ADD_TBL.customerId",
+        "children: 0"
       ]
     ] )
+  } )
+
+  it ( "should have a walkSqlLinkData that passes in the parent ", () => {
+    expect ( walkSqlLinkData ( findSqlLinkDataFromRootAndDataD ( findSqlRoot ( jointAccountRestDTables ), JointAccountDd ), ( parent, ld ) => parent.map ( p => simplifySqlLinkData ( p, true ) ) ) ).toEqual ( [
+      [],
+      [
+        [
+          "sqlRoot: ACC_TBL",
+          "fields: mainCustomer:CUST_TBL.nameId/undefined[],mainName:NAME_TBL.id/undefined[],ACC_TBL:ACC_TBL.mainCustomerId/undefined[],mainCustomer:CUST_TBL.id/undefined[],jointCustomer:CUST_TBL.nameId/undefined[],jointName:NAME_TBL.id/undefined[],ACC_TBL:ACC_TBL.jointCustomerId/undefined[],jointCustomer:CUST_TBL.id/undefined[],ACC_TBL:ACC_TBL.acc_id/undefined[],ACC_TBL:ACC_TBL.brand_id/undefined[],mainName:NAME_TBL.zzname/name/main,name[Fred Bloggs,Jill Blogs],jointName:NAME_TBL.zzname/name/joint,name[Fred Bloggs,Jill Blogs],ACC_TBL:ACC_TBL.blnc/balance/balance[123,456]",
+          "aliasAndTables ACC_TBL->ACC_TBL,mainName->NAME_TBL,mainCustomer->CUST_TBL,jointName->NAME_TBL,jointCustomer->CUST_TBL",
+          "where mainCustomer:CUST_TBL.nameId == mainName:NAME_TBL.id,ACC_TBL:ACC_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer,jointCustomer:CUST_TBL.nameId == jointName:NAME_TBL.id,ACC_TBL:ACC_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer,param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id",
+          "linksInThis: mainCustomer__nameId__mainName__id,ACC_TBL__mainCustomerId__mainCustomer__id,jointCustomer__nameId__jointName__id,ACC_TBL__jointCustomerId__jointCustomer__id,param__accountId,param__brandId",
+          "linkToParent:undefined",
+          "children: 2"
+        ]
+      ],
+      [
+        [
+          "sqlRoot: ACC_TBL",
+          "fields: mainCustomer:CUST_TBL.nameId/undefined[],mainName:NAME_TBL.id/undefined[],ACC_TBL:ACC_TBL.mainCustomerId/undefined[],mainCustomer:CUST_TBL.id/undefined[],jointCustomer:CUST_TBL.nameId/undefined[],jointName:NAME_TBL.id/undefined[],ACC_TBL:ACC_TBL.jointCustomerId/undefined[],jointCustomer:CUST_TBL.id/undefined[],ACC_TBL:ACC_TBL.acc_id/undefined[],ACC_TBL:ACC_TBL.brand_id/undefined[],mainName:NAME_TBL.zzname/name/main,name[Fred Bloggs,Jill Blogs],jointName:NAME_TBL.zzname/name/joint,name[Fred Bloggs,Jill Blogs],ACC_TBL:ACC_TBL.blnc/balance/balance[123,456]",
+          "aliasAndTables ACC_TBL->ACC_TBL,mainName->NAME_TBL,mainCustomer->CUST_TBL,jointName->NAME_TBL,jointCustomer->CUST_TBL",
+          "where mainCustomer:CUST_TBL.nameId == mainName:NAME_TBL.id,ACC_TBL:ACC_TBL.mainCustomerId:integer == mainCustomer:CUST_TBL.id:integer,jointCustomer:CUST_TBL.nameId == jointName:NAME_TBL.id,ACC_TBL:ACC_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer,param accountId == ACC_TBL:ACC_TBL.acc_id,param brandId == ACC_TBL:ACC_TBL.brand_id",
+          "linksInThis: mainCustomer__nameId__mainName__id,ACC_TBL__mainCustomerId__mainCustomer__id,jointCustomer__nameId__jointName__id,ACC_TBL__jointCustomerId__jointCustomer__id,param__accountId,param__brandId",
+          "linkToParent:undefined",
+          "children: 2"
+        ] ] ] )
   } )
 } )
 describe ( "generateGetSql", () => {
   it ( "should generate the get sql", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), r => generateGetSql ( findSqlLinkDataFromRootAndDataD ( r, JointAccountDd ) ) ) ).toEqual ( [
+    expect ( walkSqlLinkData ( findSqlLinkDataFromRootAndDataD ( findSqlRoot ( jointAccountRestDTables ), JointAccountDd ), ( parent, ld ) => generateGetSql ( ld ) ) ).toEqual ( [
       [
         "select",
         "  mainCustomer.nameId as mainCustomer_nameId,",
@@ -406,9 +456,9 @@ describe ( "createTableSql", () => {
 
 describe ( "makeMapsForRest", () => {
   it ( "should make maps for each sql root, from the link data", () => {
-    expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), ( r, path ) => {
-      const ld = findSqlLinkDataFromRootAndDataD ( r, JointAccountDd )
-      return makeMapsForRest ( paramsForTest, JointAccountPageD, 'jointAccount', jointAccountRestD, ld, path, r.children.length )
+    expect ( walkSqlLinkData ( findSqlLinkDataFromRootAndDataD ( findSqlRoot ( jointAccountRestDTables ), JointAccountDd ), ( parent, ld, path ) => {
+      if (path === undefined) throw Error("path must be defined")
+      return makeMapsForRest ( paramsForTest, JointAccountPageD, 'jointAccount', jointAccountRestD, ld, path, ld.children.length )
     } ).map ( s => s.map ( s => s.replace ( /"/g, "'" ) ) ) ).toEqual ( [
       [
         "package focuson.data.db;",
@@ -922,4 +972,57 @@ describe ( "paramsForLinkedData", () => {
 
     }
   )
+} )
+
+describe ( "makeSampleDataForMutate", () => {
+  it ( "should get data from samples, and from the ids", () => {
+    const ld = findSqlLinkDataFromRootAndDataD ( findSqlRoot ( jointAccountRestDTables ), JointAccountDd )
+    expect ( simplifyDataForMutate ( makeDataForMutate ( ld, 0 ) ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+      "Parent noParent",
+      "data - {'mainName':{'zzname':''Fred Bloggs'','id':'idFormainCustomer__nameId__mainName__id'},'jointName':{'zzname':''Fred Bloggs'','id':'idForjointCustomer__nameId__jointName__id'},'ACC_TBL':{'blnc':123,'mainCustomerId':'idForACC_TBL__mainCustomerId__mainCustomer__id','jointCustomerId':'idForACC_TBL__jointCustomerId__jointCustomer__id','brand_id':'idForparam__brandId','acc_id':'idForparam__accountId'},'mainCustomer':{'nameId':'idFormainCustomer__nameId__mainName__id','id':'idForACC_TBL__mainCustomerId__mainCustomer__id'},'jointCustomer':{'nameId':'idForjointCustomer__nameId__jointName__id','id':'idForACC_TBL__jointCustomerId__jointCustomer__id'}}",
+      "idData - {'mainCustomer__nameId__mainName__id':['idFormainCustomer__nameId__mainName__id','1'],'ACC_TBL__mainCustomerId__mainCustomer__id':['idForACC_TBL__mainCustomerId__mainCustomer__id','1'],'jointCustomer__nameId__jointName__id':['idForjointCustomer__nameId__jointName__id','1'],'ACC_TBL__jointCustomerId__jointCustomer__id':['idForACC_TBL__jointCustomerId__jointCustomer__id','1'],'param__brandId':['idForparam__brandId','1'],'param__accountId':['idForparam__accountId','1']}",
+      "linkToParent: undefined",
+      "  Parent parent",
+      "  data - {'mainAddress':{'zzline1':''This is a one line string'','zzline2':''This is a one line string'','customerId':'idForACC_TBL__mainCustomerId__mainCustomer__id'}}",
+      "  idData - {'mainCustomer__id__mainAddress__customerId':['idForACC_TBL__mainCustomerId__mainCustomer__id','1']}",
+      "  linkToParent: Table: parent-mainCustomer:CUST_TBL.id == child-mainAddress:ADD_TBL.customerId",
+      "  Parent parent",
+      "  data - {'jointAddress':{'zzline1':''This is a one line string'','zzline2':''This is a one line string'','customerId':'idForACC_TBL__jointCustomerId__jointCustomer__id'}}",
+      "  idData - {'jointCustomer__id__jointAddress__customerId':['idForACC_TBL__jointCustomerId__jointCustomer__id','1']}",
+      "  linkToParent: Table: parent-jointCustomer:CUST_TBL.id == child-jointAddress:ADD_TBL.customerId"
+    ] )
+  } )
+} )
+
+describe ("make sampleData for the databases", () =>{
+  it("", () =>{
+    const ld = findSqlLinkDataFromRootAndDataD ( findSqlRoot ( jointAccountRestDTables ), JointAccountDd )
+    expect ( simplifyDataForMutate ( makeDataForMutate ( ld, 0 ) ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [])
+
+  })
+})
+
+describe ( "make insert sql for samples", () => {
+  // it ( "should make sample sql - simple case", () => {
+  //   const ld = findSqlLinkDataFromRootAndDataD ( findSqlRoot ( PostCodeMainPage.rest.address.rest.tables ), nameAndAddressDataD )
+  //   // noinspection SqlResolve
+  //   expect ( makeInsertSqlForSample ( ld, 0 ) ).toEqual ( [
+  //     "insert into ADD_TBL (zzline1,zzline2,zzline3,zzline4) values ('4 Privet drive','Little Whinging','Surrey','England')"
+  //   ])
+  //
+  // } )
+  it ( "should make sample sql", () => {
+    const ld = findSqlLinkDataFromRootAndDataD ( findSqlRoot ( jointAccountRestDTables ), JointAccountDd )
+    expect ( makeInsertSqlForSample ( ld, 0 ) ).toEqual ( [
+      "insert into NAME_TBL (zzname,id) values ('Fred Bloggs',idFormainCustomer__nameId__mainName__id)",
+      "insert into NAME_TBL (zzname,id) values ('Fred Bloggs',idForjointCustomer__nameId__jointName__id)",
+      "insert into ACC_TBL (blnc,mainCustomerId,jointCustomerId,acc_id,brand_id) values (123,idForACC_TBL__mainCustomerId__mainCustomer__id,idForACC_TBL__jointCustomerId__jointCustomer__id,idForparam__accountId,idForparam__brandId)",
+      "insert into CUST_TBL (nameId,id) values (idFormainCustomer__nameId__mainName__id,idForACC_TBL__mainCustomerId__mainCustomer__id)",
+      "insert into CUST_TBL (nameId,id) values (idForjointCustomer__nameId__jointName__id,idForACC_TBL__jointCustomerId__jointCustomer__id)",
+      "insert into ADD_TBL (zzline1,zzline2,customerId) values ('This is a one line string','This is a one line string',idForACC_TBL__mainCustomerId__mainCustomer__id)",
+      "insert into ADD_TBL (zzline1,zzline2,customerId) values ('This is a one line string','This is a one line string',idForACC_TBL__jointCustomerId__jointCustomer__id)"
+    ] )
+
+  } )
+
 } )

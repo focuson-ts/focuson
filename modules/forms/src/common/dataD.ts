@@ -15,9 +15,10 @@ export interface HasEnum {
 }
 
 export function sampleFromDataD<G> ( o: OneDataDD<G> | undefined, d: AllDataDD<G> ): string[] {
+  if (o === undefined) throw Error("o must be defined")
   const fromO: string[] = safeArray ( isOneDataDDForPrim<any, any, G> ( o ) ? o?.sample : [] )
-  if (fromO.length>0) return fromO
-  return isPrimDd ( d ) ? [ ...safeArray<any> ( d.sample ).map ( ( t: any ) => t ), ...safeArray ( d.enum ? Object.keys ( d.enum ) : [] ) ] : []
+  const fromD: string[] = isPrimDd ( d ) ? [ ...safeArray<any> ( d.sample ).map ( ( t: any ) => t ), ...safeArray ( d.enum ? Object.keys ( d.enum ) : [] ) ] : []
+  return [ ...fromO, ...fromD ]
 }
 
 export interface OneDataDDForPrim<D extends CommonPrimitiveDD<T>, T, G> extends HasSample<T> {

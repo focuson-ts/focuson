@@ -109,3 +109,10 @@ export function makeIntoString ( name: string, raw: any, joiners: undefined | st
   if ( Array.isArray ( raw ) ) return raw.map ( v => makeIntoString ( name, v, joiners ) ).join ( joiner )
   throw new Error ( `Cannot find value for ${name} in ${JSON.stringify ( raw )}` )
 }
+
+export function lastItem<T> ( ts: T[] ): T {
+  return ts[ ts.length - 1 ]
+}
+export function lastButOneItem<T> ( ts: T[] ): T | undefined {
+  return ts[ ts.length - 2 ]
+}

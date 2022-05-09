@@ -1,18 +1,32 @@
 {
   "compilerOptions": {
-    "module":           "commonjs",
-    "target":           "es6",
-    "outDir":           "dist",
+    "module": "esnext",
+    "target": "es6",
+    "outDir": "dist",
     "moduleResolution": "node",
-    "declaration":      true,
-    "allowJs":          false,
-    "skipLibCheck":     true,
-    "esModuleInterop":  true,
-    "jsx":              "react-jsx",
-    "lib":              [
-      "es2019", "dom"
-    ]
+    "declaration": true,
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "lib": [
+      "es2019",
+      "dom"
+    ],
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true
   },
-  "include":         ["src/**/*.ts", "index.ts"],
-  "exclude":         ["dist", "node_modules"]
+  "include": [
+    "src/**/*.ts",
+    "index.ts"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules"
+  ]
 }

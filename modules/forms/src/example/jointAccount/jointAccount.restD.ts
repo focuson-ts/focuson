@@ -25,6 +25,7 @@ export const jointAccountRestD: RestD<any> = {
       type: 'Main',
       table: accountT,
       staticWhere: `${accountT.name} <> 'canceled'`,
+      samples: {idOffset: 7000},
       children: {
         mainCustomer: {
           type: 'Single',
@@ -33,9 +34,10 @@ export const jointAccountRestD: RestD<any> = {
           filterPath: 'main', //if it exists then we are into path filtering and only variables with this path get this data. This is a / separated path
           idInParent: 'mainCustomerId:integer',
           idInThis: 'id:integer',
+          samples: {idOffset: 6000},
           children: {
-            mainAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", staticWhere: '2=2' },
-            mainName: { type: 'Single', table: nameT, idInParent: 'nameId', idInThis: 'id', staticWhere: '3=3' },
+            mainAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", staticWhere: '2=2', samples: {idOffset: 1000} },
+            mainName: { type: 'Single', table: nameT, idInParent: 'nameId', idInThis: 'id', staticWhere: '3=3', samples: {idOffset: 2000} },
           }
         },
         jointCustomer: {
@@ -43,9 +45,10 @@ export const jointAccountRestD: RestD<any> = {
           table: customerT,
           filterPath: 'joint',
           idInParent: 'jointCustomerId:integer', idInThis: 'id:integer',
+          samples: {idOffset: 5000},
           children: {
-            jointAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId" },
-            jointName: { type: 'Single', table: nameT, idInParent: 'nameId', idInThis: 'id' },
+            jointAddress: { type: 'Multiple', table: addT, idInParent: 'id', idInThis: "customerId", samples: {idOffset: 3000} },
+            jointName: { type: 'Single', table: nameT, idInParent: 'nameId', idInThis: 'id', samples: {idOffset: 4000} },
           }
         }
       }
