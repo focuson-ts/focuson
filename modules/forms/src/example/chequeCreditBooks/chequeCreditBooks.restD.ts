@@ -12,7 +12,8 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
   url: '/api/chequeCreditBooks?{query}', //or maybe accountId={accountId}&customerId={customerId}
   actions: [ 'get', 'create', { "state": 'cancel' } ],
   states: {
-    cancel: { url: '/api/chequeCreditBooks/cancel?{query}', useStoredProcedure: { schema: onlySchema, name: 'cancelCheckBook', params: [ 'clientRef', 'accountId' ] } }
+    cancel: { url: '/api/chequeCreditBooks/cancel?{query}', useStoredProcedure: { schema: onlySchema, name: 'cancelCheckBook', params: [ 'clientRef', 'accountId' ] } },
+    revalidate: { url: '/api/chequeCreditBooks/cancel?{query}', useSql: { schema: onlySchema, sql: 'here is some sql', params: [ 'clientRef', 'accountId' ] } }
   },
   audit: [
     { restAction: 'create', storedProcedure: { name: 'auditCreateCheckBook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },

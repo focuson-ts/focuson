@@ -17,7 +17,7 @@ import { createTableSql, findSqlLinkDataFromRootAndDataD, findSqlRoot, generateG
 import { makeDBFetchers } from "../codegen/makeDBFetchers";
 import { makePactValidation } from "../codegen/makePactValidation";
 import { AppConfig } from "../appConfig";
-import { makeUseStoredProcedure } from "../codegen/makeUseStoredProcedure";
+import { makeStateChangeCode } from "../codegen/makeStateChangeCode";
 import { makeAudit } from "../codegen/makeAudit";
 
 
@@ -124,7 +124,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   forEachRestAndActions ( pages, p => ( r, restName, rdp ) => a => {
     if ( !isRestStateChange ( a ) ) return;
     if ( rdp.rest.states === undefined ) return;
-    const procCode = makeUseStoredProcedure ( params, p, restName, rdp.rest, a )
+    const procCode = makeStateChangeCode ( params, p, restName, rdp.rest, a )
     if ( procCode.length > 0 )
       writeToFile ( `${javaH2FetcherRoot}/${p.name}/${dbFetcherClassName ( params, rdp.rest, a )}.java`, () => procCode )
   } )

@@ -1,5 +1,5 @@
 import { ExampleRestD } from "../common";
-import { CollectionItemDD, CollectionListDD, CollectionSummaryDD, CreatePaymentDD, MandateListDD } from "./linkedAccountDetails.dataD";
+import { CollectionItemDD, CollectionListDD, CollectionSummaryDD, CreatePaymentDD, MandateListDD, OverpaymentPageDD } from "./linkedAccountDetails.dataD";
 
 import { IntParam, RestParams } from "../../common/restD";
 import { onlySchema } from "../database/tableNames";
@@ -64,4 +64,12 @@ export const createPaymentRD: ExampleRestD = {
   audit: [
     { restAction: 'create', storedProcedure: { name: 'auditCreate', schema: onlySchema, params: [ 'accountId' ] } },
   ],
+}
+
+
+export const overpaymentHistoryRD: ExampleRestD = {
+  params:   {...fromCommonIds ( 'clientRef', 'accountId' )},
+  dataDD: OverpaymentPageDD,
+  url: '/api/payment/overpayment/history?{query}',
+  actions: [ 'get' ]
 }

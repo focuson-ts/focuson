@@ -1,3 +1,4 @@
+import * as empty from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.empty';
 import * as domain from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains';
 import { LensProps } from "@focuson/state";
 import { FocusOnContext } from '@focuson/focuson';

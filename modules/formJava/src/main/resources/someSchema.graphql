@@ -2,6 +2,7 @@ type Query{
   getHelloWorldDomainData:HelloWorldDomainData!
   getCollectionItem(accountId: String!, clientRef: String!):[CollectionItem!]!
   getCollectionSummary(accountId: String!, clientRef: String!):CollectionSummary!
+  getOverpaymentPage(accountId: String!, clientRef: String!):OverpaymentPage!
   getMandate(clientRef: String!):[Mandate!]!
   getAccountAllFlags(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):AccountAllFlags!
   getAccountOverviewAgreementType(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):AccountOverviewAgreementType!
@@ -335,6 +336,16 @@ type OtherIncomeResponse{
   otherIncomeType: String!
   incomeFreqRef: String!
   amount: Int!
+}
+type OverpaymentHistoryLine{
+  amountReceived: Int!
+  date: String!
+  status: String!
+}
+type OverpaymentPage{
+  history: [OverpaymentHistoryLine!]!
+  drawDownDate: String!
+  initialBorrowing: Int!
 }
 type PostCodeDataLine{
   line1: String!

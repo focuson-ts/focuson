@@ -16,11 +16,45 @@ export const periodDD: StringPrimitiveDD = {
   display: LabelAndDropDownCD,
   enum: { 'Monthly': 'Monthly', 'Yearly': 'Yearly' }
 }
-
+export const paymentStatus: StringPrimitiveDD = {
+  ...OneLineStringDD,
+  name: 'The status of a payment',
+  description: "An enum that describes the lifecycles phases of the payment",
+  display: LabelAndDropDownCD,
+  enum: { 'COLLECTED': 'COLLECTED', 'CANCELLED': 'CANCELLED' }
+}
 const AccountDD: PrimitiveDD = {
   ...IntegerDD,
   name: "Account"
 }
+
+export const OverpaymentHistoryLineDD: ExampleDataD = {
+  name: 'OverpaymentHistoryLine',
+  description: 'A single overpayment in the past',
+  structure: {
+    amountReceived: { dataDD: MoneyDD, sample: [ 1234, 3656734 ] },
+    date: { dataDD: DateDD, sample: [ '2020/10/1', '2021/9/1' ] },
+    status: { dataDD: paymentStatus },
+  }
+}
+export const OverpaymentHistory: ExampleRepeatingD = {
+  dataDD: OverpaymentHistoryLineDD,
+  description: "All the history ",
+  display: TableCD,
+  displayParams: { order: [ "amountReceived", 'date', 'status' ] },
+  name: "OverpaymentHistory",
+  paged: false
+}
+export const OverpaymentPageDD: ExampleDataD = {
+  name: 'OverpaymentPage',
+  description: 'A single overpayment in the past',
+  structure: {
+    history: { dataDD: OverpaymentHistory },
+    drawDownDate: { dataDD: DateDD, sample: [ '2020/10/1', '2021/9/1' ] },
+    initialBorrowing: { dataDD: MoneyDD, sample: [ 100010, 200020 ] },
+  }
+}
+
 export const MandateDD: ExampleDataD = {
   name: 'Mandate',
   description: 'All the data displayed on the screen',
@@ -34,6 +68,7 @@ export const MandateDD: ExampleDataD = {
     mandateRef: { dataDD: StringDD, sample: [ '12099845-34', '12099845-78' ] }
   }
 }
+
 
 export const MandateListDD: ExampleRepeatingD = {
   name: "MandateList",
@@ -67,7 +102,7 @@ export const CollectionSummaryDD: ExampleDataD = {
     lastCollectionAmount: { dataDD: MoneyDD, sample: [ 1234, 456455 ] },
     nextCollectionDate: { dataDD: StringDD, sample: [ '2022/10/6', '2022/12/6' ] },
     nextCollectionAmount: { dataDD: MoneyDD, sample: [ 13434, 123455 ] },
-    allowance: { dataDD: MoneyDD, sample: [ 1000 , 2000 ], hidden: true },
+    allowance: { dataDD: MoneyDD, sample: [ 1000, 2000 ], hidden: true },
     period: { dataDD: periodDD, hidden: true },
   }
 }

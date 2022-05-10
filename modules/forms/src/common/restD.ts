@@ -61,9 +61,31 @@ export interface StoredProcedureForStateDetails {
   name: string,
   params: string[]
 }
-export interface RestStateDetails extends StateAccessDetails {
+export interface RestStateDetailsUsingStoredProcedure {
+  url: string,
   useStoredProcedure: StoredProcedureForStateDetails
 }
+export function isRestStateDetailsUsingStoredProcedure ( r: RestStateDetails ): r is RestStateDetailsUsingStoredProcedure {
+  // @ts-ignore
+  return r.useStoredProcedure !== undefined
+}
+
+export interface SqlForStateDetails {
+  schema: Schema;
+  sql: string;
+  params: string[]
+
+}
+export interface RestStateDetailsUsingSql {
+  url: string,
+  useSql: SqlForStateDetails
+}
+export function isRestStateDetailsUsingSql ( r: RestStateDetails ): r is RestStateDetailsUsingStoredProcedure {
+  // @ts-ignore
+  return r.useSql !== undefined
+}
+export type  RestStateDetails = RestStateDetailsUsingStoredProcedure | RestStateDetailsUsingSql
+
 export interface RestD<G> {
   /** Only used for dedupping when the dataDd is repeated */
   namePrefix?: string;

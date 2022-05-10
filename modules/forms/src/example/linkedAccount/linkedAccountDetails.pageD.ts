@@ -1,6 +1,6 @@
 import { ExampleMainPage, ExampleModalPage } from "../common";
-import { CollectionItemDD, CreatePaymentDD, linkedAccountDetailsDD, MandateDD, MandateSearchDD, paymentReasonDD } from "./linkedAccountDetails.dataD";
-import { allMandatesForClientRD, collectionHistoryListRD, collectionSummaryRD, createPaymentRD, singleCollectionPaymentRD } from "./linkedAccountDetails.restD";
+import { CollectionItemDD, CreatePaymentDD, linkedAccountDetailsDD, MandateDD, MandateSearchDD, OverpaymentPageDD, paymentReasonDD } from "./linkedAccountDetails.dataD";
+import { allMandatesForClientRD, collectionHistoryListRD, collectionSummaryRD, createPaymentRD, overpaymentHistoryRD, singleCollectionPaymentRD } from "./linkedAccountDetails.restD";
 import { NatNumDd } from "../commonEnums";
 
 export const SelectMandateMP: ExampleModalPage = {
@@ -14,6 +14,17 @@ export const SelectMandateMP: ExampleModalPage = {
   modes: [ 'view', 'edit' ],
 }
 
+
+export const OverpaymentMP: ExampleModalPage = {
+  name: "OverpaymentModalPage",
+  buttons: {
+    cancel: { control: 'ModalCancelButton' },
+  },
+  pageType: 'ModalPopup',
+  display: { dataDD: OverpaymentPageDD, target: '~/overpayment' },
+  modes: [ 'view' ],
+}
+
 export const CreatePaymentMP: ExampleModalPage = {
   name: "CreatePayment",
   guards: {
@@ -21,12 +32,18 @@ export const CreatePaymentMP: ExampleModalPage = {
   },
   buttons: {
     cancel: { control: 'ModalCancelButton' },
-    commit: { control: 'ModalCommitButton', enabledBy: 'reasonHasBeenSelected' }
+    commit: { control: 'ModalCommitButton', enabledBy: 'reasonHasBeenSelected' },
+    overpaymentHistory: {
+      control: 'ModalButton',
+      mode: 'view', focusOn: '~/overpayment',
+      modal: OverpaymentMP
+    },
   },
   pageType: 'ModalPopup',
   display: { dataDD: CreatePaymentDD, target: '~/createPayment' },
   modes: [ 'view', 'edit' ],
 }
+
 export const LinkedAccountDetailsPD: ExampleMainPage = {
   name: "LinkedAccountDetails",
   display: { target: '~/display', dataDD: linkedAccountDetailsDD },
@@ -37,10 +54,11 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
     selectIndex: { dataDD: NatNumDd },
     selectedCollectionIndex: { dataDD: NatNumDd },
     selectedCollectionItem: { dataDD: CollectionItemDD },
-    createPayment: { dataDD: CreatePaymentDD }
+    createPayment: { dataDD: CreatePaymentDD },
+    overpayment: { dataDD: OverpaymentPageDD }
   },
   initialValue: undefined,
-  modals: [ { modal: SelectMandateMP }, { modal: CreatePaymentMP } ],
+  modals: [ { modal: SelectMandateMP }, { modal: CreatePaymentMP }, { modal: OverpaymentMP } ],
   modes: [ 'view' ],
   pageType: "MainPage",
   rest: {
@@ -49,7 +67,9 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
     collectionHistoryList: { rest: collectionHistoryListRD, targetFromPath: '~/display/collectionHistory', fetcher: true },
     searchMandate: { rest: allMandatesForClientRD, targetFromPath: '~/selectMandateSearch/searchResults', fetcher: true },
     payments: { rest: singleCollectionPaymentRD, targetFromPath: '~/selectedCollectionItem' },
-    createPayment: { rest: createPaymentRD, targetFromPath: '~/createPayment' }
+    createPayment: { rest: createPaymentRD, targetFromPath: '~/createPayment' },
+    overpaymentHistory: { rest: overpaymentHistoryRD, targetFromPath: '~/overpayment', fetcher: true },
+
   },
   guards: { haveLegalSelectedPayment: { condition: 'isDefined', path: '~/selectedCollectionItem/paymentId' } },
   buttons: {
@@ -72,6 +92,7 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
         { from: '~/display/collectionSummary/period', to: '~/createPayment/period' } ],
       restOnCommit: { restName: 'createPayment', action: 'create', pathToDelete: [ '~/display/collectionSummary', '~/display/collectionHistory' ], result: 'refresh' }
     },
+
     cancelPayment: {
       control: "RestButton",
       restName: 'payments',

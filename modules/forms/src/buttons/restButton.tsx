@@ -7,6 +7,7 @@ import { replaceBasePageWithKnownPage } from "@focuson/pages";
 import { isMainPage } from "../common/pageD";
 import { EnabledBy, enabledByString } from "./enabledBy";
 import { printRestAction } from "@focuson/rest";
+import { ButtonWithControl } from "./allButtons";
 
 
 function makeRestButton<B extends RestButtonInPage<G>, G> (): ButtonCreator<RestButtonInPage<G>, G> {
@@ -34,6 +35,9 @@ export function makeRestButtons<G> (): MakeButton<G> {
   return { RestButton: makeRestButton () }
 }
 
+export function isRestButtonInPage( p: ButtonWithControl) : p is RestButtonInPage<any>{
+  return p.control === 'RestButton'
+}
 export interface RestButtonInPage<G> extends EnabledBy {
   control: 'RestButton';
   restName: string;
