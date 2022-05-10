@@ -44,7 +44,7 @@ export function findCreateJavaDetailsForState<B, G> ( pageD: MainPageD<B, G>, re
 export function makHeartForSql<B, G> ( createJavaDetailsForState: CreateJavaDetailsForSSql ): string[] {
   const { setParams, questionMarks, useSql } = createJavaDetailsForState
   return [ `Connection connection = dataFetchingEnvironment.getLocalContext();`,
-    `try(CallableStatement s = connection.prepareStatement("call ${useSql.sql}(${questionMarks})")){`,
+    `try(PreparedStatement s = connection.prepareStatement("${useSql.sql}")){`,
     ...setParams,
     `  return s.execute();`,
     `}};` ]
@@ -76,6 +76,7 @@ export function makeStateChangeCode<B, G> ( params: JavaWiringParams, pageD: Mai
     ``,
     `import java.sql.Connection;`,
     `import java.sql.CallableStatement;`,
+    `import java.sql.PreparedStatement;`,
     `import java.util.Map;`,
     `import java.util.Optional;`,
     ``,

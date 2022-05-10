@@ -123,8 +123,10 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   } )
   forEachRestAndActions ( pages, p => ( r, restName, rdp ) => a => {
     if ( !isRestStateChange ( a ) ) return;
+    console.log('state change code',p.name, restName, a)
     if ( rdp.rest.states === undefined ) return;
     const procCode = makeStateChangeCode ( params, p, restName, rdp.rest, a )
+    console.log('proccode',procCode.length, dbFetcherClassName ( params, rdp.rest, a ))
     if ( procCode.length > 0 )
       writeToFile ( `${javaH2FetcherRoot}/${p.name}/${dbFetcherClassName ( params, rdp.rest, a )}.java`, () => procCode )
   } )

@@ -21,4 +21,7 @@ public class ChequeCreditbooksQueries{
   public static  String state_cancelChequeCreditbooks(String accountId,String applRef,String brandRef,String clientRef){ 
     return"mutation{stateChequeCreditbookscancel(" + "accountId:" + "\"" + accountId + "\""  + "," + "applRef:" + "\"" + applRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "clientRef:" + "\"" + clientRef + "\"" + ")}";
   }
+  public static  String state_revalidateChequeCreditbooks(String accountId,String applRef,String brandRef,String clientRef){ 
+    return"mutation{stateChequeCreditbooksrevalidate(" + "accountId:" + "\"" + accountId + "\""  + "," + "applRef:" + "\"" + applRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "clientRef:" + "\"" + clientRef + "\"" + ")}";
+  }
 }

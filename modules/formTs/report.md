@@ -43,7 +43,7 @@
 |CreateEAccount|eTransfer | /api/createEAccount/?{query}| accountId,applRef,brandRef,clientRef,createPlanId |  | 
 |ChequeCreditbooks|chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,clientRef |  | create->auditCreateCheckBook; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
 |ChequeCreditbooks| | /api/chequeCreditBooks/cancel?{query}| accountId,applRef,brandRef,clientRef |
-|ChequeCreditbooks| | /api/chequeCreditBooks/cancel?{query}| accountId,applRef,brandRef,clientRef |
+|ChequeCreditbooks| | /api/chequeCreditBooks/revalidate?{query}| accountId,applRef,brandRef,clientRef |
 |Repeating|repeating | /api/repeating?{query}| clientRef |  | 
 |PostCodeMainPage|address | /api/address?{query}|  |  | 
 |PostCodeMainPage|postcode | /api/postCode?{query}| dbName,postcode |  | 
@@ -423,7 +423,7 @@
   | --- | --- | --- | --- | --- 
     |chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,clientRef |  | create->auditCreateCheckBook; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
     | | /api/chequeCreditBooks/cancel?{query}| accountId,applRef,brandRef,clientRef |
-    | | /api/chequeCreditBooks/cancel?{query}| accountId,applRef,brandRef,clientRef |
+    | | /api/chequeCreditBooks/revalidate?{query}| accountId,applRef,brandRef,clientRef |
   ## modals  
   |name|displayed with
   | --- | --- 

@@ -55,6 +55,13 @@ import java.util.Arrays;
         }
     }
 
+    @PostMapping(value="/api/chequeCreditBooks/revalidate", produces="application/json")
+    public ResponseEntity state_revalidateChequeCreditbooks(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
+        try (Connection connection = dataSource.getConnection()) {
+          return Transform.result(connection,graphQL.get(IFetcher.mock),ChequeCreditbooksQueries.state_revalidateChequeCreditbooks(accountId, applRef, brandRef, clientRef), "");
+        }
+    }
+
     @GetMapping(value="/api/chequeCreditBooks/query", produces="application/json")
     public String querygetChequeCreditbooks(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
        return ChequeCreditbooksQueries.getChequeCreditbooks(accountId, applRef, brandRef, clientRef);
@@ -68,6 +75,11 @@ import java.util.Arrays;
     @PostMapping(value="/api/chequeCreditBooks/cancel/query", produces="application/json")
     public String querystate_cancelChequeCreditbooks(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
        return ChequeCreditbooksQueries.state_cancelChequeCreditbooks(accountId, applRef, brandRef, clientRef);
+    }
+
+    @PostMapping(value="/api/chequeCreditBooks/revalidate/query", produces="application/json")
+    public String querystate_revalidateChequeCreditbooks(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
+       return ChequeCreditbooksQueries.state_revalidateChequeCreditbooks(accountId, applRef, brandRef, clientRef);
     }
 
   @GetMapping(value = "/api/chequeCreditBooks/sample", produces = "application/json")
