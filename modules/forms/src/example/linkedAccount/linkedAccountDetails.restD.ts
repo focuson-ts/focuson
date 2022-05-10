@@ -50,7 +50,7 @@ export const singleCollectionPaymentRD: ExampleRestD = {
     { restAction: { state: 'revalidate' }, storedProcedure: { name: 'auditrevalidate', schema: onlySchema, params: [ 'accountId', 'paymentId' ] } }
   ],
   states: {
-    cancel: { url: '/api/payment/cancel?{query}', useStoredProcedure: { name: 'cancelPayment', params: [ 'accountId', 'paymentId' ], schema: onlySchema } },
+    cancel: { url: '/api/payment/cancel?{query}', useSql: { sql: 'write ', params: [ 'accountId', 'paymentId' ], schema: onlySchema } },
     revalidate: { url: '/api/payment/revalidate?{query}', useStoredProcedure: { name: 'revalidate', params: [ 'accountId', 'paymentId' ], schema: onlySchema } },
   }
 }

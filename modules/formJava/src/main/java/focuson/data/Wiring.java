@@ -25,6 +25,7 @@ import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import focuson.data.fetchers.HelloWorldMainPage.HelloWorldDomainData_get_FFetcher;
+import focuson.data.fetchers.ListOfPaymentsPage.PrintRecordHistory_get_FFetcher;
 import focuson.data.fetchers.LinkedAccountDetails.CollectionsList_get_FFetcher;
 import focuson.data.fetchers.LinkedAccountDetails.CollectionSummary_get_FFetcher;
 import focuson.data.fetchers.LinkedAccountDetails.CreatePayment_create_FFetcher;
@@ -72,6 +73,8 @@ import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_getCurrentAccount
 public class Wiring  implements IManyGraphQl{
       @Autowired
       List<HelloWorldDomainData_get_FFetcher> HelloWorldDomainData_get_FFetcher;
+      @Autowired
+      List<PrintRecordHistory_get_FFetcher> PrintRecordHistory_get_FFetcher;
       @Autowired
       List<CollectionsList_get_FFetcher> CollectionsList_get_FFetcher;
       @Autowired
@@ -194,6 +197,7 @@ public class Wiring  implements IManyGraphQl{
    private RuntimeWiring buildWiring(String dbName) {
        return RuntimeWiring.newRuntimeWiring()
           .type(newTypeWiring("Query").dataFetcher("getHelloWorldDomainData", find(HelloWorldDomainData_get_FFetcher, dbName, f ->f.getHelloWorldDomainData())))
+          .type(newTypeWiring("Query").dataFetcher("getPrintRecordItem", find(PrintRecordHistory_get_FFetcher, dbName, f ->f.getPrintRecordItem())))
           .type(newTypeWiring("Query").dataFetcher("getCollectionItem", find(CollectionsList_get_FFetcher, dbName, f ->f.getCollectionItem())))
           .type(newTypeWiring("Query").dataFetcher("getCollectionSummary", find(CollectionSummary_get_FFetcher, dbName, f ->f.getCollectionSummary())))
           .type(newTypeWiring("Mutation").dataFetcher("createCreatePayment", find(CreatePayment_create_FFetcher, dbName, f ->f.createCreatePayment())))

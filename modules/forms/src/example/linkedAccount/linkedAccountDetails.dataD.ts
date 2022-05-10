@@ -93,6 +93,7 @@ export const MandateSearchDD: ExampleDataD = {
     searchResults: { dataDD: MandateListDD },
   }
 }
+
 export const CollectionSummaryDD: ExampleDataD = {
   name: 'CollectionSummary',
   description: 'The four most important things about collection for a mandate, plus a couple of things we need to create a payment',

@@ -47,7 +47,9 @@ export const dbFetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G>, a
 
 export const mockFetcherPackage = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G> ): string => packageNameFor ( params, p, params.mockFetcherPackage );
 export const mockFetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${params.fetcherInterface}Mock`;
-export const mockFetcherClassNameForResolver = <G> ( params: JavaWiringParams, r: RestD<G>, resolver: string ): string => `${restNameWithPrefix ( r )}_${resolver}_${params.fetcherInterface}Mock`;
+export const mockFetcherClassNameForResolver = <G> ( params: JavaWiringParams, r: RestD<G>, resolver: string ): string => {
+  if (typeof resolver !== 'string') throw Error(`Resolver must be string. Actually is ${JSON.stringify(resolver)}`)
+  return `${restNameWithPrefix ( r )}_${resolver}_${params.fetcherInterface}MockR`; };
 
 export const queryPackage = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G> ): string => packageNameFor ( params, p, params.queriesPackage );
 export const providerName = <B, G> ( p: MainPageD<B, G> ) => p.name + "Provider"

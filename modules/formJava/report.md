@@ -14,6 +14,7 @@
 | Page | Rest | Url | Params | Access | Audit
 | --- | --- | ---  |  --- | --- | --- |
 |HelloWorldMainPage|restDataRD | /helloWorld?{query}|  |  | 
+|ListOfPaymentsPage|paymentHistory | /api/printrecordhistory?{query}| accountId |  | 
 |LinkedAccountDetails|collectionHistoryList | /api/collections/list?{query}| accountId,clientRef |  | 
 |LinkedAccountDetails|collectionSummary | /api/collections/summary?{query}| accountId,clientRef |  | 
 |LinkedAccountDetails|createPayment | /api/payment/create?{query}| accountId,clientRef,paymentId |  | create->auditCreate
@@ -58,6 +59,41 @@
     |restDataRD | /helloWorld?{query}|  |  | 
   ## display 
     HelloWorldDomainData
+
+---
+# ListOfPaymentsPage - MainPage
+## Common Params
+| Name | Location
+| --- | ---
+|accountId|accountId
+  ## domains 
+    ListOfPayments
+    PrintRecordHistory
+    PrintRecordItem
+    RequesterDetails
+    SinglePrint
+  ## rests   
+  |name|url|params|access|audit
+  | --- | --- | --- | --- | --- 
+    |paymentHistory | /api/printrecordhistory?{query}| accountId |  | 
+  ## modals  
+  |name|displayed with
+  | --- | --- 
+    | EditListOfPayments |PrintRecordItem
+  ## display 
+    PrintRecordHistory displayed using SelectedItem
+  ## buttons 
+    Modal Button ==> EditListOfPayments in mode create
+      Focused on "~/tempListOfPayments"
+      Copy on close {"to":"~/display/[$append]"} 
+    next         ListNextButton
+    prev         ListPrevButton
+  ## guards  
+  | PrintRecordItem|requestedBy
+  | --- | --- 
+  requesterDetails|m,j
+  authorisedByCustomer|m,j
+  
 
 ---
 # LinkedAccountDetails - MainPage

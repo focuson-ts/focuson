@@ -53,11 +53,11 @@ export interface SelectedItemProps<FS, S, T, Context> extends LensProps<S, T[], 
   mode: PageMode;
   id: string;
   label?: string;
-  buttons: NameAnd<JSX.Element>
-  display: ( { state, mode, id, buttons }: { state: LensState<S, T, Context>, mode: PageMode, id: string, buttons: NameAnd<JSX.Element> } ) => JSX.Element
+  allButtons: NameAnd<JSX.Element>
+  display: ( { state, mode, id, allButtons }: { state: LensState<S, T, Context>, mode: PageMode, id: string, allButtons: NameAnd<JSX.Element> } ) => JSX.Element
 }
-export function SelectedItem<FS, S, T, Context> ( { index, state, display, mode, id, buttons }: SelectedItemProps<FS, S, T, Context> ) {
+export function SelectedItem<FS, S, T, Context> ( { index, state, display, mode, id, allButtons }: SelectedItemProps<FS, S, T, Context> ) {
   let newState = state.chainLens ( Lenses.nth ( index ) );
   // console.log ( "SelectedItem", index, newState.optional.description, newState.optJson () )
-  return display ( { state: newState, mode, id, buttons } )
+  return display ( { state: newState, mode, id, allButtons } )
 }

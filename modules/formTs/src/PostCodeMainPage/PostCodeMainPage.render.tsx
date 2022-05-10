@@ -31,7 +31,7 @@ export function PostCodeMainPagePage(){
   return focusedPageWithExtraState<FState, PostCodeMainPagePageDomain, PostCodeNameAndAddressDomain, Context> ( s => 'Post Code Main Page' ) ( state => state.focusOn('main')) (
 ( fullState, state , full, d, mode, index) => {
 const id=`page${index}`;
-  const buttons =    {save:<RestButton state={state} id={`${id}.save`} 
+  const allButtons =    {save:<RestButton state={state} id={`${id}.save`} 
         name='save'
         action={"create"}
         validate={false}
@@ -44,37 +44,37 @@ const id=`page${index}`;
         copyJustString={[{"from":"~/main/postcode","to":"~/postcode/search"}]}
       />,}
 
-      return <HideButtonsLayout buttons={buttons} hide={["search"]}>
-          <PostCodeNameAndAddress id={`${id}`} state={state} mode={mode} buttons={buttons} />
-      { buttons.search } 
-      { buttons.save } 
+      return <HideButtonsLayout buttons={allButtons} hide={["search"]}>
+          <PostCodeNameAndAddress id={`${id}`} state={state} mode={mode} label='' allButtons={allButtons} />
+      { allButtons.search } 
+      { allButtons.save } 
       </HideButtonsLayout>})}
 
-export function PostCodeDataLine({id,state,mode,buttons}: FocusedProps<FState, PostCodeDataLineDomain,Context>){
+export function PostCodeDataLine({id,state,mode,allButtons,label}: FocusedProps<FState, PostCodeDataLineDomain,Context>){
   return <>
-    <LabelAndStringInput id={`${id}.line1`} state={state.focusOn('line1')} mode={mode} label='Line1' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.line2`} state={state.focusOn('line2')} mode={mode} label='Line2' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.line3`} state={state.focusOn('line3')} mode={mode} label='Line3' allButtons={buttons} required={false} />
-    <LabelAndStringInput id={`${id}.line4`} state={state.focusOn('line4')} mode={mode} label='Line4' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.postcode`} state={state.focusOn('postcode')} mode={mode} label='Postcode' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.line1`} state={state.focusOn('line1')} mode={mode} label='Line1' allButtons={allButtons} required={true} />
+    <LabelAndStringInput id={`${id}.line2`} state={state.focusOn('line2')} mode={mode} label='Line2' allButtons={allButtons} required={true} />
+    <LabelAndStringInput id={`${id}.line3`} state={state.focusOn('line3')} mode={mode} label='Line3' allButtons={allButtons} required={false} />
+    <LabelAndStringInput id={`${id}.line4`} state={state.focusOn('line4')} mode={mode} label='Line4' allButtons={allButtons} required={true} />
+    <LabelAndStringInput id={`${id}.postcode`} state={state.focusOn('postcode')} mode={mode} label='Postcode' allButtons={allButtons} required={true} />
 </>
 }
 
-export function PostCodeNameAndAddress({id,state,mode,buttons}: FocusedProps<FState, PostCodeNameAndAddressDomain,Context>){
+export function PostCodeNameAndAddress({id,state,mode,allButtons,label}: FocusedProps<FState, PostCodeNameAndAddressDomain,Context>){
   return <>
-    <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='Name' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.line1`} state={state.focusOn('line1')} mode={mode} label='Line1' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.line2`} state={state.focusOn('line2')} mode={mode} label='Line2' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.line3`} state={state.focusOn('line3')} mode={mode} label='Line3' allButtons={buttons} required={false} />
-    <LabelAndStringInput id={`${id}.line4`} state={state.focusOn('line4')} mode={mode} label='Line4' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.postcode`} state={state.focusOn('postcode')} mode={mode} label='Postcode' allButtons={buttons} required={true} buttons={["search"]} />
+    <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='Name' allButtons={allButtons} required={true} />
+    <LabelAndStringInput id={`${id}.line1`} state={state.focusOn('line1')} mode={mode} label='Line1' allButtons={allButtons} required={true} />
+    <LabelAndStringInput id={`${id}.line2`} state={state.focusOn('line2')} mode={mode} label='Line2' allButtons={allButtons} required={true} />
+    <LabelAndStringInput id={`${id}.line3`} state={state.focusOn('line3')} mode={mode} label='Line3' allButtons={allButtons} required={false} />
+    <LabelAndStringInput id={`${id}.line4`} state={state.focusOn('line4')} mode={mode} label='Line4' allButtons={allButtons} required={true} />
+    <LabelAndStringInput id={`${id}.postcode`} state={state.focusOn('postcode')} mode={mode} label='Postcode' allButtons={allButtons} required={true} buttons={["search"]} />
 </>
 }
 
-export function PostCodeSearch({id,state,mode,buttons}: FocusedProps<FState, PostCodeSearchDomain,Context>){
+export function PostCodeSearch({id,state,mode,allButtons,label}: FocusedProps<FState, PostCodeSearchDomain,Context>){
   return <>
     <StringInput id={`${id}.search`} state={state.focusOn('search')} mode={mode} required={false} />
     <Table id={`${id}.searchResults`} state={state.focusOn('searchResults')} mode={mode} order={["postcode","line1","line2","line3","line4"]} copySelectedItemTo={pageState(state)<any>().focusOn('postcode').focusOn('addressResults')} />
-    <PostCodeDataLine id={`${id}.addressResults`} state={state.focusOn('addressResults')} mode={mode} buttons={buttons} />
+    <PostCodeDataLine id={`${id}.addressResults`} state={state.focusOn('addressResults')} mode={mode} label='Address Results' allButtons={allButtons} />
 </>
 }

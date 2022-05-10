@@ -1,5 +1,5 @@
-import { AllDataDD, CompDataD, CompDataDD, DisplayParamDD, HasGuards, HasLayout, isDataDd, isPrimDd, isRepeatingDd } from "../common/dataD";
-import { commonParams, DisplayCompD, OneDisplayCompParamD, SimpleDisplayComp } from "../common/componentsD";
+import { AllDataDD, CompDataD, CompDataDD, DisplayParamDD, HasGuards, HasLayout, isDataDd, isPrimDd, isRepeatingDd, OneDataDD } from "../common/dataD";
+import { commonParams, commonParamsWithLabel, DisplayCompD, OneDisplayCompParamD, SimpleDisplayComp } from "../common/componentsD";
 import { dataDsIn, isMainPage, isModalPage, MainPageD, PageD } from "../common/pageD";
 
 import { decamelize, NameAnd, sortedEntries } from "@focuson/utils";
@@ -22,9 +22,13 @@ export interface ComponentData<G> {
   guard?: NameAnd<string[]>;
   displayParams?: ComponentDisplayParams
 }
-function componentDataForPage<G> ( d: CompDataD<G> ): ComponentData<G> {
-  const display = { import: '', name: d.display?.name ? d.display.name : d.name, params: d.display?.params ? d.display.params : commonParams };
+function componentDataForRootPage<G> ( d: CompDataD<G> ): ComponentData<G> {
+  const display = { import: '', name: d.display?.name ? d.display.name : d.name, params: d.display?.params ? d.display.params : commonParamsWithLabel };
   return { dataDD: d, display, path: [] }
+
+}
+function componentDataForPage<G> ( oneDataD: OneDataDD<G>, d: CompDataD<G> ): ComponentData<G> {
+  return { ...componentDataForRootPage ( d ), guard: oneDataD.guard }
 
 }
 export interface ErrorComponentData {
@@ -63,7 +67,7 @@ export const listComponentsIn = <G> ( dataDD: CompDataD<G> ): AllComponentData<G
       }
       return c
     }
-    const c = componentDataForPage ( child )
+    const c = componentDataForPage ( oneDataDD, child )
     delete c.path
     return { path: [ n ], ...c } //just to get format nice on o/p
 
@@ -117,7 +121,8 @@ function makeParams<B, G> ( mainPage: MainPageD<B, G>, params: TSParams, errorPr
     if ( param?.default ) return [ [ name, processOneParam ( name, param.default ) ] ]
     if ( param?.needed === 'defaultToCamelCaseOfName' ) return [ [ name, processOneParam ( name, decamelize ( path.slice ( -1 ) + "", ' ' ) ) ] ]
     if ( param?.needed === 'defaultToPath' ) return [ [ name, processOneParam ( name, path ) ] ]
-    if ( param?.needed === 'defaultToButtons' ) return [ [ name, processOneParam ( name, 'buttons' ) ] ]
+    if ( param?.needed === 'defaultToLabel' ) return [ [ name, processOneParam ( name, 'label' ) ] ]
+    if ( param?.needed === 'defaultToButtons' ) return [ [ name, processOneParam ( name, 'allButtons' ) ] ]
     if ( param?.needed === 'id' ) {
       const dot = path.length > 0 ? '.' : ''
       return [ [ name, processOneParam ( name, '`${id}' + dot + path.join ( "." ) + '`' ) ] ]
@@ -144,8 +149,8 @@ export function createOneReact<B, G> ( mainPage: MainPageD<B, G>, params: TSPara
   const guardPrefix = guard ? sortedEntries ( guard ).map ( ( [ n, guard ] ) =>
     `<Guard value={${guardName ( n )}} cond={${JSON.stringify ( guard )}}>` ).join ( '' ) : ''
   const guardPostfix = guard ? sortedEntries ( guard ).map ( ( [ n, guard ] ) => `</Guard>` ).join ( '' ) : ''
-  const buttons = isDataDd ( dataDD ) && !dataDD.display ? 'buttons={buttons} ' : ''
-  return [ `${guardPrefix}<${name} ${displayParamsString} ${buttons}/>${guardPostfix}` ]
+  // const buttons = isDataDd ( dataDD ) && !dataDD.display ? 'buttons={buttons} ' : ''
+  return [ `${guardPrefix}<${name} ${displayParamsString} />${guardPostfix}` ]
 }
 export function createAllReactCalls<B, G> ( mainPage: MainPageD<B, G>, params: TSParams, p: PageD<B, G>, d: AllComponentData<G>[] ): string[] {
   return d.filter ( ds => isComponentData ( ds ) && !ds.hidden ).flatMap ( d => {
@@ -180,7 +185,7 @@ export const createReactComponent = <B, G extends GuardWithCondition> ( params: 
   const guardStrings = isDataDd ( dataD ) ? makeGuardVariables ( dataD, makeGuard, params, mainP, page ) : []
   const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( mainP, params, `createReactComponent-layout ${dataD.name}`, [], dataD, '<>', '</>' );
   return [
-    `export function ${componentName ( dataD )}({id,state,mode,buttons}: FocusedProps<${params.stateName}, ${domainName ( dataD )},Context>){`,
+    `export function ${componentName ( dataD )}({id,state,mode,allButtons,label}: FocusedProps<${params.stateName}, ${domainName ( dataD )},Context>){`,
     ...guardStrings,
     `  return ${layoutPrefixString}`,
     ...contents,
@@ -214,7 +219,7 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
       'const id=`page${index}`;',
       ...makeButtonsVariable ( params, makeGuard, makeButtons, mainP, pageD ),
       `return ${layoutPrefixString}`,
-      ...createAllReactCalls ( mainP, params, pageD, [ componentDataForPage ( pageD.display.dataDD ) ] ),
+      ...createAllReactCalls ( mainP, params, pageD, [ componentDataForRootPage ( pageD.display.dataDD ) ] ),
       ...addButtonsFromVariables ( pageD ),
       `${layoutPostfixString}})}`
     ] ) ) ) ) )),
@@ -237,7 +242,7 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
     '',
     ...indentList ( indentList ( indentList ( [
       `return ${layoutPrefixString}`,
-      ...indentList ( indentList ( createAllReactCalls ( pageD, params, pageD, [ componentDataForPage ( pageD.display.dataDD ), ] ) ) ),
+      ...indentList ( indentList ( createAllReactCalls ( pageD, params, pageD, [ componentDataForRootPage ( pageD.display.dataDD ), ] ) ) ),
       ...addButtonsFromVariables ( pageD ),
       `${layoutPostfixString}})}`
     ] ) ) ),

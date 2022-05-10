@@ -20,7 +20,7 @@ public class CollectionItem_state_cancel_FFetcherDB implements CollectionItem_st
       String accountId = dataFetchingEnvironment.getArgument("accountId");
       String paymentId = dataFetchingEnvironment.getArgument("paymentId");
       Connection connection = dataFetchingEnvironment.getLocalContext();
-      try(CallableStatement s = connection.prepareCall("call cancelPayment(?, ?)")){
+      try(PreparedStatement s = connection.prepareStatement("write ")){
           s.setObject(1,accountId);
           s.setObject(2,paymentId);
         return s.execute();

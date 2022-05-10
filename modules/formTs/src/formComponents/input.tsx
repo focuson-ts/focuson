@@ -27,7 +27,7 @@ export const Input = <S, T extends any, P> ( tProps: TransformerProps<T> ) => {
     const { state, mode, id, name, ariaLabel, defaultValue, readonly } = props
     const onChange = ( transformer: ( s: string ) => T, e: React.ChangeEvent<HTMLInputElement> ) =>
       state.setJson ( transformer ( e.target.value ), reasonFor ( 'Input', 'onChange', id ) );
-    return <input type={type} {...cleanInputProps ( props )} value={`${state.optJsonOr ( tProps.default )}`} readOnly={mode === 'view' || readonly} onChange={( e ) => onChange ( transformer, e )}/>
+    return <input type={type} {...cleanInputProps ( props )} value={`${state.optJsonOr ( tProps.default )}`} disabled={mode === 'view' || readonly} onChange={( e ) => onChange ( transformer, e )}/>
   }
 }
 

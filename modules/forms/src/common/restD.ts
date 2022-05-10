@@ -191,7 +191,7 @@ export function flatMapRest<B, G, T> ( pages: PageD<B, G>[], fn: ( p: MainPageD<
   return allMainPages ( pages ).flatMap ( p => sortedEntries ( p.rest ).flatMap ( ( [ name, rdp ] ) => fn ( p ) ( rdp.rest, name, rdp ) ) )
 }
 export function mapRestAndResolver<B, G, T> ( pages: PageD<B, G>[], fn: ( p: MainPageD<B, G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => ( resolver: ResolverData, ) => T ): T[] {
-  return flatMapRest ( pages, p => ( r, restName, rdp ) => findChildResolvers ( r ).map ( resolverData => fn ( p ) ( r, restName, rdp ) ( resolverData ) ) )
+  return flatMapRest ( pages, p => ( r, restName, rdp ) => findChildResolvers ( r ).map ( (resolverData) => fn ( p ) ( r, restName, rdp ) ( resolverData ) ) )
 }
 export function flatMapRestAndResolver<B, G, T> ( pages: PageD<B, G>[], fn: ( p: MainPageD<B, G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => ( resolver: ResolverData, ) => T[] ): T[] {
   return flatMapRest ( pages, p => ( r, restName, rdp ) => findChildResolvers ( r ).flatMap ( resolverData => fn ( p ) ( r, restName, rdp ) ( resolverData ) ) )

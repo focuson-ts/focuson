@@ -9,6 +9,7 @@ import { LensProps } from '@focuson/state';
 import { pages } from "./pages";
 import { MyCombined } from "@focuson/form_components";
 import { HasHelloWorldMainPagePageDomain } from './HelloWorldMainPage/HelloWorldMainPage.domains';
+import { HasListOfPaymentsPagePageDomain } from './ListOfPaymentsPage/ListOfPaymentsPage.domains';
 import { HasLinkedAccountDetailsPageDomain } from './LinkedAccountDetails/LinkedAccountDetails.domains';
 import { HasAccountOverviewPageDomain } from './AccountOverview/AccountOverview.domains';
 import { HasJointAccountPageDomain } from './JointAccount/JointAccount.domains';
@@ -22,6 +23,7 @@ import { HasPostCodeMainPagePageDomain } from './PostCodeMainPage/PostCodeMainPa
 
 export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,
   HasHelloWorldMainPagePageDomain,
+  HasListOfPaymentsPagePageDomain,
   HasLinkedAccountDetailsPageDomain,
   HasAccountOverviewPageDomain,
   HasJointAccountPageDomain,
@@ -61,7 +63,8 @@ export const commonIds: NameAndLens<FState> = {
 export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{
   mode: PageMode;
   id: string;
-  buttons: NameAnd<JSX.Element>
+  label?:string;
+  allButtons: NameAnd<JSX.Element>;
 }
 export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPageSelection, T> ( onError?: OnTagFetchErrorFn<S, any, T, SimpleMessage> ) {
   return commonTagFetchProps<S, T> (
@@ -76,7 +79,7 @@ export const context: Context = {
 export const pathToLens: ( s: FState ) => ( path: string ) => Optional<FState, any> =
     fromPathFromRaw ( pageSelectionlens<FState> (), pages )
 export const emptyState: FState = {
-  CommonIds: {"dbName":"mock","clientRef":"custId","applRef":"appref","createPlanId":"tbd","accountId":"accId","brandRef":"brandRef","customerId":"custId","employeeType":"basic","usersRole":"user"},
+  CommonIds: {"dbName":"mock","clientRef":"custId","applRef":"appref","createPlanId":"tbd","accountId":"123","brandRef":"brandRef","customerId":"custId","employeeType":"basic","usersRole":"user"},
   tags: {},
   messages: [],
   pageSelection: [{ pageName: 'HelloWorldMainPage', firstTime: true, pageMode: 'view' }],

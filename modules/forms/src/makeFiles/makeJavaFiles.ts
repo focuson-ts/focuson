@@ -1,7 +1,7 @@
 import { copyFile, copyFiles, DirectorySpec, templateFile, writeToFile } from "@focuson/files";
 import { JavaWiringParams } from "../codegen/config";
 import fs from "fs";
-import { flatMapRestAndResolver, forEachRest, forEachRestAndActions, mapRestAndResolver, unique } from "../common/restD";
+import { forEachRest, forEachRestAndActions, mapRestAndResolver, unique } from "../common/restD";
 import { detailsLog, GenerateLogLevel, isRestStateChange, NameAnd, safeArray, safeString, sortedEntries } from "@focuson/utils";
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
@@ -9,7 +9,7 @@ import { makeAllJavaVariableName } from "../codegen/makeSample";
 import { auditClassName, createTableSqlName, dbFetcherClassName, fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, getSqlName, mockFetcherClassName, mockFetcherClassNameForResolver, mockFetcherPackage, providerPactClassName, queryClassName, queryPackage, restControllerName, sqlMapFileName } from "../codegen/names";
 import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
 
-import { makeMockFetchersForRest, makeMockFetcherFor } from "../codegen/makeMockFetchers";
+import { makeMockFetcherFor, makeMockFetchersForRest } from "../codegen/makeMockFetchers";
 import { makeJavaVariablesForGraphQlQuery } from "../codegen/makeGraphQlQuery";
 import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
 // import { findSqlRoot, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, walkRoots } from "../codegen/makeJavaSql.tsxxx";
@@ -19,8 +19,7 @@ import { makePactValidation } from "../codegen/makePactValidation";
 import { AppConfig } from "../appConfig";
 import { makeStateChangeCode } from "../codegen/makeStateChangeCode";
 import { makeAudit } from "../codegen/makeAudit";
-import { findChildResolvers, makeAllJavaWiring, makeJavaFetcherInterfaceForResolver, makeJavaFetchersInterface } from "../codegen/makeJavaFetchersInterface";
-import { makeAllMockFetchers } from "../../dist";
+import { makeAllJavaWiring, makeJavaFetcherInterfaceForResolver, makeJavaFetchersInterface } from "../codegen/makeJavaFetchersInterface";
 
 
 export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
@@ -118,9 +117,9 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
       thisFetcherPackage: fetcherPackageName ( params, p ),
       fetcherInterface: fetcherInterfaceName ( params, restD, action ),
       fetcherClass: mockFetcherClassName ( params, restD, action ),
-      content: makeAllMockFetchers ( params, restD, action ).join ( "\n" )
+      content: makeMockFetchersForRest ( params, restD, action ).join ( "\n" )
     }, directorySpec ) )
-  mapRestAndResolver ( pages, p => restD => resolverData => templateFile ( `${javaMockFetcherRoot}/${p.name}/${mockFetcherClassNameForResolver ( params, restD, resolverData.resolver )}.java`, 'templates/JavaFetcherClassTemplate.java',
+  mapRestAndResolver ( pages, p => (restD) => (resolverData) => templateFile ( `${javaMockFetcherRoot}/${p.name}/${mockFetcherClassNameForResolver ( params, restD, resolverData.resolver )}.java`, 'templates/JavaFetcherClassTemplate.java',
     {
       ...params,
       mockFetcherPackage: mockFetcherPackage ( params, p ),
