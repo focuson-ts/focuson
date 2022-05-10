@@ -18,7 +18,6 @@ export const cleanInputProps = <T extends NameAnd<any>> ( p: T ): T => {
   delete result.state
   delete result.readonly
   delete result.ariaLabel
-  console.log ( 'in clean props', p, result )
   return result
 };
 
@@ -28,7 +27,6 @@ export const Input = <S, T extends any, P> ( tProps: TransformerProps<T> ) => {
     const { state, mode, id, name, ariaLabel, defaultValue, readonly } = props
     const onChange = ( transformer: ( s: string ) => T, e: React.ChangeEvent<HTMLInputElement> ) =>
       state.setJson ( transformer ( e.target.value ), reasonFor ( 'Input', 'onChange', id ) );
-    console.log ( 'in input' )
     return <input type={type} {...cleanInputProps ( props )} value={`${state.optJsonOr ( tProps.default )}`} readOnly={mode === 'view' || readonly} onChange={( e ) => onChange ( transformer, e )}/>
   }
 }
