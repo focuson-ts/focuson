@@ -1,5 +1,5 @@
 export * from './src/common'
-export * from '@focuson/utils/dist/src/componentUtils'
+// export * from '@focuson/utils/dist/src/componentUtils'
 export * from './src/debugState'
 export * from './src/deleteStateButton'
 export * from './src/dropdown'

@@ -13,7 +13,9 @@
   },
   "dependencies": {
     "@focuson/state": "1.8.0",
-    "@focuson/focuson": "1.8.0"
+    "@focuson/focuson": "1.8.0",
+    "@types/react-datepicker": "^4.4.1",
+    "react-datepicker": "^4.7.0"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
