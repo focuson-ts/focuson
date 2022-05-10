@@ -1,4 +1,4 @@
-import { findAllResolversFor, findChildResolvers, findQueryMutationResolvers, makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
+import { findAllResolversFor, findChildResolvers, findQueryMutationResolvers, makeAllJavaWiring, makeJavaFetcherInterfaceForResolver, makeJavaFetchersInterface } from "../codegen/makeJavaFetchersInterface";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { repeatingRestRD } from "../example/repeating/repeating.restD";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
@@ -7,7 +7,7 @@ import { paramsForTest } from "./paramsForTest";
 
 describe ( "makeJavaResolversInterface", () => {
   it ( "should make a java interface when action is get", () => {
-    expect ( makeJavaResolversInterface ( paramsForTest, EAccountsSummaryPD, eAccountsSummaryRestD, 'get' ) ).toEqual ( [
+    expect ( makeJavaFetchersInterface ( paramsForTest, EAccountsSummaryPD, eAccountsSummaryRestD, 'get' ) ).toEqual ( [
       "package focuson.data.fetchers.EAccountsSummary;",
       "",
       "import graphql.schema.DataFetcher;",
@@ -16,15 +16,24 @@ describe ( "makeJavaResolversInterface", () => {
       "",
       "public interface EAccountsSummary_get_FFetcher extends IFetcher{",
       "   public DataFetcher<Map<String,Object>> getEAccountsSummary();",
-      "   public DataFetcher<Map<String,Object>> getAccountSummaryDescription();",
-      "   public DataFetcher<Map<String,Object>> getTotalMonthlyCost();",
-      "   public DataFetcher<Map<String,Object>> getOneAccountBalance();",
-      "   public DataFetcher<Map<String,Object>> getCurrentAccountBalance();",
+      "}"
+    ] )
+  } )
+  it ( "should make a java interface for a resolver", () => {
+    expect ( makeJavaFetcherInterfaceForResolver ( paramsForTest, EAccountsSummaryPD, eAccountsSummaryRestD, 'resolverName' ) ).toEqual ( [
+      "package focuson.data.fetchers.EAccountsSummary;",
+      "",
+      "import graphql.schema.DataFetcher;",
+      "import java.util.Map;",
+      "import focuson.data.fetchers.IFetcher;",
+      "",
+      "public interface EAccountsSummary_resolverName_FFetcher extends IFetcher{",
+      "   public DataFetcher<Map<String,Object>> resolverName();",
       "}"
     ] )
   } )
   it ( "should make a java interface when action is update", () => {
-    expect ( makeJavaResolversInterface ( paramsForTest, EAccountsSummaryPD, createPlanRestD, 'update' ) ).toEqual ( [
+    expect ( makeJavaFetchersInterface ( paramsForTest, EAccountsSummaryPD, createPlanRestD, 'update' ) ).toEqual ( [
       "package focuson.data.fetchers.EAccountsSummary;",
       "",
       "import graphql.schema.DataFetcher;",
@@ -67,6 +76,7 @@ describe ( "makeAllJavaWiring", () => {
       "import focuson.data.fetchers.IFetcher;",
       "import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;",
       "import java.util.function.Function;",
+      "import java.util.stream.Collectors;",
       "import focuson.data.fetchers.EAccountsSummary.CreatePlan_get_FFetcher;",
       "import focuson.data.fetchers.EAccountsSummary.CreatePlan_create_FFetcher;",
       "import focuson.data.fetchers.EAccountsSummary.CreatePlan_update_FFetcher;",
@@ -75,6 +85,10 @@ describe ( "makeAllJavaWiring", () => {
       "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_state_invalidate_FFetcher;",
       "import focuson.data.fetchers.Repeating.RepeatingWholeData_create_FFetcher;",
       "import focuson.data.fetchers.Repeating.RepeatingWholeData_get_FFetcher;",
+      "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_getAccountSummaryDescription_FFetcher;",
+      "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_getTotalMonthlyCost_FFetcher;",
+      "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_getOneAccountBalance_FFetcher;",
+      "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_getCurrentAccountBalance_FFetcher;",
       "@Component",
       "public class Wiring  implements IManyGraphQl{",
       "      @Autowired",
@@ -93,6 +107,14 @@ describe ( "makeAllJavaWiring", () => {
       "      List<RepeatingWholeData_create_FFetcher> RepeatingWholeData_create_FFetcher;",
       "      @Autowired",
       "      List<RepeatingWholeData_get_FFetcher> RepeatingWholeData_get_FFetcher;",
+      "      @Autowired",
+      "      List<EAccountsSummary_getAccountSummaryDescription_FFetcher> EAccountsSummary_getAccountSummaryDescription_FFetcher;",
+      "      @Autowired",
+      "      List<EAccountsSummary_getTotalMonthlyCost_FFetcher> EAccountsSummary_getTotalMonthlyCost_FFetcher;",
+      "      @Autowired",
+      "      List<EAccountsSummary_getOneAccountBalance_FFetcher> EAccountsSummary_getOneAccountBalance_FFetcher;",
+      "      @Autowired",
+      "      List<EAccountsSummary_getCurrentAccountBalance_FFetcher> EAccountsSummary_getCurrentAccountBalance_FFetcher;",
       "   private String sdl;",
       "   private Map<String, GraphQL> cache = Collections.synchronizedMap(new HashMap<>()); //sucks and need to improve",
       "   @PostConstruct",
@@ -115,13 +137,14 @@ describe ( "makeAllJavaWiring", () => {
       "        SchemaGenerator schemaGenerator = new SchemaGenerator();",
       "        return schemaGenerator.makeExecutableSchema(typeRegistry, runtimeWiring);",
       "   }",
-      "   public <T extends IFetcher, Res> DataFetcher<Res> find(List<T> list, String dbName, Function<T, DataFetcher<Res>> fn) {",
-      "        Optional<T> result = list.stream().filter(f -> f.dbName().equals(dbName)).findFirst();",
-      "        if (result.isPresent()) return fn.apply(result.get());",
-      "        return new DataFetcher<Res>() {",
+      "   public<T extends IFetcher, Res> DataFetcher<Res> find(List<T> list,String dbName,Function<T, DataFetcher<Res>>fn){",
+      "        List<T> result=list.stream().filter(f->f.dbName().equals(dbName)).collect(Collectors.toList());",
+      "        if(result.size()==1)return fn.apply(result.get(0));",
+      "        String names='. Had '+result.stream().map(s->s.getClass().getName()).collect(Collectors.joining(','));",
+      "        return new DataFetcher<Res>(){",
       "            @Override",
-      "            public Res get(DataFetchingEnvironment dataFetchingEnvironment) throws Exception {",
-      "                    throw new RuntimeException('Cannot find the fetcher for ' + dbName);",
+      "            public Res get(DataFetchingEnvironment dataFetchingEnvironment)throws Exception{",
+      "                throw new RuntimeException('Cannot find the unique fetcher for '+dbName+names);",
       "            }",
       "        };",
       "   }",
@@ -132,13 +155,13 @@ describe ( "makeAllJavaWiring", () => {
       "          .type(newTypeWiring('Mutation').dataFetcher('updateCreatePlan', find(CreatePlan_update_FFetcher, dbName, f ->f.updateCreatePlan())))",
       "          .type(newTypeWiring('Mutation').dataFetcher('deleteCreatePlan', find(CreatePlan_delete_FFetcher, dbName, f ->f.deleteCreatePlan())))",
       "          .type(newTypeWiring('Query').dataFetcher('getEAccountsSummary', find(EAccountsSummary_get_FFetcher, dbName, f ->f.getEAccountsSummary())))",
-      "          .type(newTypeWiring('EAccountSummary').dataFetcher('description', find(EAccountsSummary_get_FFetcher, dbName, f ->f.getAccountSummaryDescription())))",
-      "          .type(newTypeWiring('EAccountsSummary').dataFetcher('totalMonthlyCost', find(EAccountsSummary_get_FFetcher, dbName, f ->f.getTotalMonthlyCost())))",
-      "          .type(newTypeWiring('EAccountsSummary').dataFetcher('oneAccountBalance', find(EAccountsSummary_get_FFetcher, dbName, f ->f.getOneAccountBalance())))",
-      "          .type(newTypeWiring('EAccountsSummary').dataFetcher('currentAccountBalance', find(EAccountsSummary_get_FFetcher, dbName, f ->f.getCurrentAccountBalance())))",
       "          .type(newTypeWiring('Mutation').dataFetcher('stateEAccountsSummaryinvalidate', find(EAccountsSummary_state_invalidate_FFetcher, dbName, f ->f.stateEAccountsSummaryinvalidate())))",
       "          .type(newTypeWiring('Mutation').dataFetcher('createRepeatingLine', find(RepeatingWholeData_create_FFetcher, dbName, f ->f.createRepeatingLine())))",
       "          .type(newTypeWiring('Query').dataFetcher('getRepeatingLine', find(RepeatingWholeData_get_FFetcher, dbName, f ->f.getRepeatingLine())))",
+      "          .type(newTypeWiring('EAccountSummary').dataFetcher('description', find(EAccountsSummary_getAccountSummaryDescription_FFetcher, dbName, f ->f.getAccountSummaryDescription())))",
+      "          .type(newTypeWiring('EAccountsSummary').dataFetcher('totalMonthlyCost', find(EAccountsSummary_getTotalMonthlyCost_FFetcher, dbName, f ->f.getTotalMonthlyCost())))",
+      "          .type(newTypeWiring('EAccountsSummary').dataFetcher('oneAccountBalance', find(EAccountsSummary_getOneAccountBalance_FFetcher, dbName, f ->f.getOneAccountBalance())))",
+      "          .type(newTypeWiring('EAccountsSummary').dataFetcher('currentAccountBalance', find(EAccountsSummary_getCurrentAccountBalance_FFetcher, dbName, f ->f.getCurrentAccountBalance())))",
       "       .build();",
       "    }",
       "    @Bean",

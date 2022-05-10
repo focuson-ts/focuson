@@ -1,6 +1,6 @@
-import { flatMapRestAndActions, mapRestAndActions, RestD } from "../common/restD";
+import { flatMapRestAndActions, flatMapRestAndResolver, mapRest, mapRestAndActions, mapRestAndResolver, RestD } from "../common/restD";
 import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, OneDataDD, PrimitiveDD, RepeatingDataD, sampleFromDataD } from "../common/dataD";
-import { fetcherInterfaceName, fetcherPackageName, fetcherVariableName, resolverName, sampleName } from "./names";
+import { fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, fetcherVariableName, fetcherVariableNameForResolver, resolverName, sampleName } from "./names";
 import { JavaWiringParams } from "./config";
 import { applyToTemplate } from "@focuson/template";
 import { DirectorySpec, loadFile } from "@focuson/files";
@@ -9,9 +9,7 @@ import { MainPageD, PageD } from "../common/pageD";
 import { getRestTypeDetails } from "@focuson/rest";
 
 
-export function makeJavaResolversInterface<G> ( params: JavaWiringParams, page: MainPageD<any, G>, restD: RestD<G>, restAction: RestAction ): string[] {
-  const { thePackage } = params
-  const resolvers = findAllResolversFor ( restD, restAction ).map ( ( { resolver } ) => `   public DataFetcher<Map<String,Object>> ${resolver}();` )
+export function makeJavaFetchersInterface<G> ( params: JavaWiringParams, page: MainPageD<any, G>, restD: RestD<G>, restAction: RestAction ): string[] {
   return [
     `package ${fetcherPackageName ( params, page )};`,
     '',
@@ -20,7 +18,20 @@ export function makeJavaResolversInterface<G> ( params: JavaWiringParams, page: 
     `import ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
     '',
     `public interface ${fetcherInterfaceName ( params, restD, restAction )} extends IFetcher{`,
-    ...resolvers,
+    `   public DataFetcher<Map<String,Object>> ${findQueryMutationResolvers ( restD, restAction ).resolver}();`,
+    '}' ]
+}
+
+export function makeJavaFetcherInterfaceForResolver<G> ( params: JavaWiringParams, page: MainPageD<any, G>, restD: RestD<G>, resolverName: string ): string[] {
+  return [
+    `package ${fetcherPackageName ( params, page )};`,
+    '',
+    'import graphql.schema.DataFetcher;',
+    'import java.util.Map;',
+    `import ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
+    '',
+    `public interface ${fetcherInterfaceForResolverName ( params, restD, resolverName )} extends IFetcher{`,
+    `   public DataFetcher<Map<String,Object>> ${resolverName}();`,
     // ...findUniqueDataDsAndRestTypeDetails ( restD ).flatMap ( ( [ datad, rad ] ) => `   public DataFetcher ${resolverName ( datad, rad )}();` ),
     '}' ]
 }
@@ -31,10 +42,24 @@ function makeWiring ( varName: string, parentName: string, resolver: string, nam
 
 
 export function makeAllJavaWiring<B, G> ( params: JavaWiringParams, ps: PageD<B, G>[], directorySpec: DirectorySpec ): string[] {
-  let imports = mapRestAndActions ( ps, p => r => a => `import ${fetcherPackageName ( params, p )}.${fetcherInterfaceName ( params, r, a )};` )
-  let wiring: string[] = flatMapRestAndActions ( ps, p => r => a => findAllResolversFor ( r, a ).map ( ( { parent, resolver, name, sample } ) =>
-    makeWiring ( fetcherVariableName ( params, r, a ), parent, resolver, name ) ) )
-  let fetchers = flatMapRestAndActions ( ps, p => r => a => [ `@Autowired`, `List<${fetcherInterfaceName ( params, r, a )}> ${fetcherVariableName ( params, r, a )};` ] )
+  let imports = [
+    ...mapRestAndActions ( ps, p => r => a => `import ${fetcherPackageName ( params, p )}.${fetcherInterfaceName ( params, r, a )};` ),
+    ...mapRestAndResolver ( ps, p => r => ( { resolver } ) => `import ${fetcherPackageName ( params, p )}.${fetcherInterfaceForResolverName ( params, r, resolver )};` )
+  ]
+  let wiringForRest: string[] = mapRestAndActions ( ps, p => r => a => {
+    const { parent, resolver, name, sample } = findQueryMutationResolvers ( r, a )
+    return makeWiring ( fetcherVariableName ( params, r, a ), parent, resolver, name )
+  } )
+  let wiringForResolvers: string[] = mapRestAndResolver ( ps, p => r => ( { resolver, parent, name } ) =>
+    makeWiring ( fetcherVariableNameForResolver ( params, r, resolver ), parent, resolver, name ) )
+  let wiring = [ ...wiringForRest, ...wiringForResolvers ]
+
+
+  let fetchers = [ ...(flatMapRestAndActions ( ps, p => r => a => [ `@Autowired`, `List<${fetcherInterfaceName ( params, r, a )}> ${fetcherVariableName ( params, r, a )};` ] )),
+    ...flatMapRestAndResolver ( ps, p => r => ( { resolver } ) => [
+      `@Autowired`,
+      `List<${fetcherInterfaceForResolverName ( params, r, resolver )}> ${fetcherVariableNameForResolver ( params, r, resolver )};` ] ) ]
+
   const str: string = loadFile ( 'templates/JavaWiringTemplate.java', directorySpec ).toString ()
   return applyToTemplate ( str, {
     ...params,
