@@ -62,7 +62,8 @@ describe ( "makeCommon", () => {
       "export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{",
       "  mode: PageMode;",
       "  id: string;",
-      "  buttons: NameAnd<JSX.Element>",
+      "  label?:string;",
+      "  allButtons: NameAnd<JSX.Element>;",
       "}",
       "export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPageSelection, T> ( onError?: OnTagFetchErrorFn<S, any, T, SimpleMessage> ) {",
       "  return commonTagFetchProps<S, T> (",
@@ -85,7 +86,7 @@ describe ( "makeCommon", () => {
       "  restCommands: [],",
       "  debug: {'fetcherDebug':true,'restDebug':false,'selectedPageDebug':false,'loadTreeDebug':false,'showTracing':false,'recordTrace':true,'tagFetcherDebug':false,'accordions':[]}",
       "  }"
-    ] )
+    ])
 
   } )
 } )
@@ -144,7 +145,8 @@ describe ( "makeCommonParams", () => {
       "export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{",
       "  mode: PageMode;",
       "  id: string;",
-      "  buttons: NameAnd<JSX.Element>",
+      "  label?:string;",
+      "  allButtons: NameAnd<JSX.Element>;",
       "}",
       "export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPageSelection, T> ( onError?: OnTagFetchErrorFn<S, any, T, SimpleMessage> ) {",
       "  return commonTagFetchProps<S, T> (",

@@ -194,6 +194,52 @@ export const sampleMandateSearch0: domains.MandateSearchDomain =
     }
   ]
 }
+export const sampleOverpaymentHistory0: domains.OverpaymentHistoryDomain = 
+[
+  {
+    "amountReceived": 1234,
+    "date": "2020/10/1",
+    "status": "CANCELLED"
+  },
+  {
+    "amountReceived": 3656734,
+    "date": "2021/9/1",
+    "status": "COLLECTED"
+  },
+  {
+    "amountReceived": 1234,
+    "date": "2020/10/1",
+    "status": "CANCELLED"
+  }
+]
+export const sampleOverpaymentHistoryLine0: domains.OverpaymentHistoryLineDomain = 
+{
+  "amountReceived": 1234,
+  "date": "2020/10/1",
+  "status": "CANCELLED"
+}
+export const sampleOverpaymentPage0: domains.OverpaymentPageDomain = 
+{
+  "history": [
+    {
+      "amountReceived": 1234,
+      "date": "2020/10/1",
+      "status": "CANCELLED"
+    },
+    {
+      "amountReceived": 3656734,
+      "date": "2021/9/1",
+      "status": "COLLECTED"
+    },
+    {
+      "amountReceived": 1234,
+      "date": "2020/10/1",
+      "status": "CANCELLED"
+    }
+  ],
+  "drawDownDate": "2020/10/1",
+  "initialBorrowing": 100010
+}
 export const sampleCollectionItem1: domains.CollectionItemDomain = 
 {
   "paymentId": 456,
@@ -388,6 +434,52 @@ export const sampleMandateSearch1: domains.MandateSearchDomain =
     }
   ]
 }
+export const sampleOverpaymentHistory1: domains.OverpaymentHistoryDomain = 
+[
+  {
+    "amountReceived": 3656734,
+    "date": "2021/9/1",
+    "status": "COLLECTED"
+  },
+  {
+    "amountReceived": 1234,
+    "date": "2020/10/1",
+    "status": "CANCELLED"
+  },
+  {
+    "amountReceived": 3656734,
+    "date": "2021/9/1",
+    "status": "COLLECTED"
+  }
+]
+export const sampleOverpaymentHistoryLine1: domains.OverpaymentHistoryLineDomain = 
+{
+  "amountReceived": 3656734,
+  "date": "2021/9/1",
+  "status": "COLLECTED"
+}
+export const sampleOverpaymentPage1: domains.OverpaymentPageDomain = 
+{
+  "history": [
+    {
+      "amountReceived": 3656734,
+      "date": "2021/9/1",
+      "status": "COLLECTED"
+    },
+    {
+      "amountReceived": 1234,
+      "date": "2020/10/1",
+      "status": "CANCELLED"
+    },
+    {
+      "amountReceived": 3656734,
+      "date": "2021/9/1",
+      "status": "COLLECTED"
+    }
+  ],
+  "drawDownDate": "2021/9/1",
+  "initialBorrowing": 200020
+}
 export const sampleCollectionItem2: domains.CollectionItemDomain = 
 {
   "paymentId": 123,
@@ -581,4 +673,50 @@ export const sampleMandateSearch2: domains.MandateSearchDomain =
       "mandateRef": "12099845-34"
     }
   ]
+}
+export const sampleOverpaymentHistory2: domains.OverpaymentHistoryDomain = 
+[
+  {
+    "amountReceived": 1234,
+    "date": "2020/10/1",
+    "status": "CANCELLED"
+  },
+  {
+    "amountReceived": 3656734,
+    "date": "2021/9/1",
+    "status": "COLLECTED"
+  },
+  {
+    "amountReceived": 1234,
+    "date": "2020/10/1",
+    "status": "CANCELLED"
+  }
+]
+export const sampleOverpaymentHistoryLine2: domains.OverpaymentHistoryLineDomain = 
+{
+  "amountReceived": 1234,
+  "date": "2020/10/1",
+  "status": "CANCELLED"
+}
+export const sampleOverpaymentPage2: domains.OverpaymentPageDomain = 
+{
+  "history": [
+    {
+      "amountReceived": 1234,
+      "date": "2020/10/1",
+      "status": "CANCELLED"
+    },
+    {
+      "amountReceived": 3656734,
+      "date": "2021/9/1",
+      "status": "COLLECTED"
+    },
+    {
+      "amountReceived": 1234,
+      "date": "2020/10/1",
+      "status": "CANCELLED"
+    }
+  ],
+  "drawDownDate": "2020/10/1",
+  "initialBorrowing": 100010
 }

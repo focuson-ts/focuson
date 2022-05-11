@@ -31,6 +31,18 @@ export function CollectionSummaryFetcher(fdLens:Optional<FState, domains.LinkedA
      '/api/collections/summary?{query}')
 }
 //fetcher type true
+export function OverpaymentPageFetcher(fdLens:Optional<FState, domains.LinkedAccountDetailsPageDomain>,commonIds: NameAndLens<FState>) {
+//If you have a compilation here it might be because of the 'local' params in LinkedAccountDetails.rest[overpaymentHistory].params
+  const localIds = {}
+  return pageAndTagFetcher<FState, domains.LinkedAccountDetailsPageDomain, domains.OverpaymentPageDomain, SimpleMessage>(
+    common.commonFetch<FState,  domains.OverpaymentPageDomain>(),
+     'LinkedAccountDetails',
+     '~/overpayment', fdLens, commonIds, localIds,["accountId","clientRef"],[],
+      //From LinkedAccountDetails.rest[overpaymentHistory].targetFromPath ~/overpayment Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
+      Lenses.identity<domains.LinkedAccountDetailsPageDomain>().focusQuery('overpayment'),
+     '/api/payment/overpayment/history?{query}')
+}
+//fetcher type true
 export function MandateListFetcher(fdLens:Optional<FState, domains.LinkedAccountDetailsPageDomain>,commonIds: NameAndLens<FState>) {
 //If you have a compilation here it might be because of the 'local' params in LinkedAccountDetails.rest[searchMandate].params
   const localIds = {}

@@ -94,3 +94,29 @@ export const emptyMandateSearch:domains.MandateSearchDomain =
       }
     ]
   }
+export const emptyOverpaymentHistory:domains.OverpaymentHistoryDomain =
+  [
+    {
+      "amountReceived": 0,
+      "date": "2022-1-1",
+      "status": ""
+    }
+  ]
+export const emptyOverpaymentHistoryLine:domains.OverpaymentHistoryLineDomain =
+  {
+    "amountReceived": 0,
+    "date": "2022-1-1",
+    "status": ""
+  }
+export const emptyOverpaymentPage:domains.OverpaymentPageDomain =
+  {
+    "history": [
+      {
+        "amountReceived": 0,
+        "date": "2022-1-1",
+        "status": ""
+      }
+    ],
+    "drawDownDate": "2022-1-1",
+    "initialBorrowing": 0
+  }

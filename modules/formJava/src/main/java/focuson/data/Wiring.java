@@ -23,10 +23,13 @@ import java.util.Optional;
 import focuson.data.fetchers.IFetcher;
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import focuson.data.fetchers.HelloWorldMainPage.HelloWorldDomainData_get_FFetcher;
+import focuson.data.fetchers.ListOfPaymentsPage.PrintRecordHistory_get_FFetcher;
 import focuson.data.fetchers.LinkedAccountDetails.CollectionsList_get_FFetcher;
 import focuson.data.fetchers.LinkedAccountDetails.CollectionSummary_get_FFetcher;
 import focuson.data.fetchers.LinkedAccountDetails.CreatePayment_create_FFetcher;
+import focuson.data.fetchers.LinkedAccountDetails.OverpaymentPage_get_FFetcher;
 import focuson.data.fetchers.LinkedAccountDetails.CollectionItem_state_cancel_FFetcher;
 import focuson.data.fetchers.LinkedAccountDetails.CollectionItem_state_revalidate_FFetcher;
 import focuson.data.fetchers.LinkedAccountDetails.MandateList_get_FFetcher;
@@ -57,20 +60,29 @@ import focuson.data.fetchers.CreateEAccount.CreateEAccountData_get_FFetcher;
 import focuson.data.fetchers.ChequeCreditbooks.ChequeCreditbooks_get_FFetcher;
 import focuson.data.fetchers.ChequeCreditbooks.ChequeCreditbooks_create_FFetcher;
 import focuson.data.fetchers.ChequeCreditbooks.ChequeCreditbooks_state_cancel_FFetcher;
+import focuson.data.fetchers.ChequeCreditbooks.ChequeCreditbooks_state_revalidate_FFetcher;
 import focuson.data.fetchers.Repeating.RepeatingWholeData_create_FFetcher;
 import focuson.data.fetchers.Repeating.RepeatingWholeData_get_FFetcher;
 import focuson.data.fetchers.PostCodeMainPage.PostCodeNameAndAddress_create_FFetcher;
 import focuson.data.fetchers.PostCodeMainPage.PostCodeSearchResponse_get_FFetcher;
+import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_getAccountSummaryDescription_FFetcher;
+import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_getTotalMonthlyCost_FFetcher;
+import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_getOneAccountBalance_FFetcher;
+import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_getCurrentAccountBalance_FFetcher;
 @Component
 public class Wiring  implements IManyGraphQl{
       @Autowired
       List<HelloWorldDomainData_get_FFetcher> HelloWorldDomainData_get_FFetcher;
+      @Autowired
+      List<PrintRecordHistory_get_FFetcher> PrintRecordHistory_get_FFetcher;
       @Autowired
       List<CollectionsList_get_FFetcher> CollectionsList_get_FFetcher;
       @Autowired
       List<CollectionSummary_get_FFetcher> CollectionSummary_get_FFetcher;
       @Autowired
       List<CreatePayment_create_FFetcher> CreatePayment_create_FFetcher;
+      @Autowired
+      List<OverpaymentPage_get_FFetcher> OverpaymentPage_get_FFetcher;
       @Autowired
       List<CollectionItem_state_cancel_FFetcher> CollectionItem_state_cancel_FFetcher;
       @Autowired
@@ -132,6 +144,8 @@ public class Wiring  implements IManyGraphQl{
       @Autowired
       List<ChequeCreditbooks_state_cancel_FFetcher> ChequeCreditbooks_state_cancel_FFetcher;
       @Autowired
+      List<ChequeCreditbooks_state_revalidate_FFetcher> ChequeCreditbooks_state_revalidate_FFetcher;
+      @Autowired
       List<RepeatingWholeData_create_FFetcher> RepeatingWholeData_create_FFetcher;
       @Autowired
       List<RepeatingWholeData_get_FFetcher> RepeatingWholeData_get_FFetcher;
@@ -139,6 +153,14 @@ public class Wiring  implements IManyGraphQl{
       List<PostCodeNameAndAddress_create_FFetcher> PostCodeNameAndAddress_create_FFetcher;
       @Autowired
       List<PostCodeSearchResponse_get_FFetcher> PostCodeSearchResponse_get_FFetcher;
+      @Autowired
+      List<EAccountsSummary_getAccountSummaryDescription_FFetcher> EAccountsSummary_getAccountSummaryDescription_FFetcher;
+      @Autowired
+      List<EAccountsSummary_getTotalMonthlyCost_FFetcher> EAccountsSummary_getTotalMonthlyCost_FFetcher;
+      @Autowired
+      List<EAccountsSummary_getOneAccountBalance_FFetcher> EAccountsSummary_getOneAccountBalance_FFetcher;
+      @Autowired
+      List<EAccountsSummary_getCurrentAccountBalance_FFetcher> EAccountsSummary_getCurrentAccountBalance_FFetcher;
    private String sdl;
    private Map<String, GraphQL> cache = Collections.synchronizedMap(new HashMap<>()); //sucks and need to improve
    @PostConstruct
@@ -161,22 +183,25 @@ public class Wiring  implements IManyGraphQl{
         SchemaGenerator schemaGenerator = new SchemaGenerator();
         return schemaGenerator.makeExecutableSchema(typeRegistry, runtimeWiring);
    }
-   public <T extends IFetcher, Res> DataFetcher<Res> find(List<T> list, String dbName, Function<T, DataFetcher<Res>> fn) {
-        Optional<T> result = list.stream().filter(f -> f.dbName().equals(dbName)).findFirst();
-        if (result.isPresent()) return fn.apply(result.get());
-        return new DataFetcher<Res>() {
+   public<T extends IFetcher, Res> DataFetcher<Res> find(List<T> list,String dbName,Function<T, DataFetcher<Res>>fn){
+        List<T> result=list.stream().filter(f->f.dbName().equals(dbName)).collect(Collectors.toList());
+        if(result.size()==1)return fn.apply(result.get(0));
+        String names=". Had "+result.stream().map(s->s.getClass().getName()).collect(Collectors.joining(","));
+        return new DataFetcher<Res>(){
             @Override
-            public Res get(DataFetchingEnvironment dataFetchingEnvironment) throws Exception {
-                    throw new RuntimeException("Cannot find the fetcher for " + dbName);
+            public Res get(DataFetchingEnvironment dataFetchingEnvironment)throws Exception{
+                throw new RuntimeException("Cannot find the unique fetcher for "+dbName+names);
             }
         };
    }
    private RuntimeWiring buildWiring(String dbName) {
        return RuntimeWiring.newRuntimeWiring()
           .type(newTypeWiring("Query").dataFetcher("getHelloWorldDomainData", find(HelloWorldDomainData_get_FFetcher, dbName, f ->f.getHelloWorldDomainData())))
+          .type(newTypeWiring("Query").dataFetcher("getPrintRecordItem", find(PrintRecordHistory_get_FFetcher, dbName, f ->f.getPrintRecordItem())))
           .type(newTypeWiring("Query").dataFetcher("getCollectionItem", find(CollectionsList_get_FFetcher, dbName, f ->f.getCollectionItem())))
           .type(newTypeWiring("Query").dataFetcher("getCollectionSummary", find(CollectionSummary_get_FFetcher, dbName, f ->f.getCollectionSummary())))
           .type(newTypeWiring("Mutation").dataFetcher("createCreatePayment", find(CreatePayment_create_FFetcher, dbName, f ->f.createCreatePayment())))
+          .type(newTypeWiring("Query").dataFetcher("getOverpaymentPage", find(OverpaymentPage_get_FFetcher, dbName, f ->f.getOverpaymentPage())))
           .type(newTypeWiring("Mutation").dataFetcher("stateCollectionItemcancel", find(CollectionItem_state_cancel_FFetcher, dbName, f ->f.stateCollectionItemcancel())))
           .type(newTypeWiring("Mutation").dataFetcher("stateCollectionItemrevalidate", find(CollectionItem_state_revalidate_FFetcher, dbName, f ->f.stateCollectionItemrevalidate())))
           .type(newTypeWiring("Query").dataFetcher("getMandate", find(MandateList_get_FFetcher, dbName, f ->f.getMandate())))
@@ -200,10 +225,6 @@ public class Wiring  implements IManyGraphQl{
           .type(newTypeWiring("Mutation").dataFetcher("updateCreatePlan", find(CreatePlan_update_FFetcher, dbName, f ->f.updateCreatePlan())))
           .type(newTypeWiring("Mutation").dataFetcher("deleteCreatePlan", find(CreatePlan_delete_FFetcher, dbName, f ->f.deleteCreatePlan())))
           .type(newTypeWiring("Query").dataFetcher("getEAccountsSummary", find(EAccountsSummary_get_FFetcher, dbName, f ->f.getEAccountsSummary())))
-          .type(newTypeWiring("EAccountSummary").dataFetcher("description", find(EAccountsSummary_get_FFetcher, dbName, f ->f.getAccountSummaryDescription())))
-          .type(newTypeWiring("EAccountsSummary").dataFetcher("totalMonthlyCost", find(EAccountsSummary_get_FFetcher, dbName, f ->f.getTotalMonthlyCost())))
-          .type(newTypeWiring("EAccountsSummary").dataFetcher("oneAccountBalance", find(EAccountsSummary_get_FFetcher, dbName, f ->f.getOneAccountBalance())))
-          .type(newTypeWiring("EAccountsSummary").dataFetcher("currentAccountBalance", find(EAccountsSummary_get_FFetcher, dbName, f ->f.getCurrentAccountBalance())))
           .type(newTypeWiring("Mutation").dataFetcher("stateEAccountsSummaryinvalidate", find(EAccountsSummary_state_invalidate_FFetcher, dbName, f ->f.stateEAccountsSummaryinvalidate())))
           .type(newTypeWiring("Mutation").dataFetcher("createETransferDataD", find(ETransferDataD_create_FFetcher, dbName, f ->f.createETransferDataD())))
           .type(newTypeWiring("Mutation").dataFetcher("createCreateEAccountData", find(CreateEAccountData_create_FFetcher, dbName, f ->f.createCreateEAccountData())))
@@ -211,10 +232,15 @@ public class Wiring  implements IManyGraphQl{
           .type(newTypeWiring("Query").dataFetcher("getChequeCreditbooks", find(ChequeCreditbooks_get_FFetcher, dbName, f ->f.getChequeCreditbooks())))
           .type(newTypeWiring("Mutation").dataFetcher("createChequeCreditbooks", find(ChequeCreditbooks_create_FFetcher, dbName, f ->f.createChequeCreditbooks())))
           .type(newTypeWiring("Mutation").dataFetcher("stateChequeCreditbookscancel", find(ChequeCreditbooks_state_cancel_FFetcher, dbName, f ->f.stateChequeCreditbookscancel())))
+          .type(newTypeWiring("Mutation").dataFetcher("stateChequeCreditbooksrevalidate", find(ChequeCreditbooks_state_revalidate_FFetcher, dbName, f ->f.stateChequeCreditbooksrevalidate())))
           .type(newTypeWiring("Mutation").dataFetcher("createRepeatingLine", find(RepeatingWholeData_create_FFetcher, dbName, f ->f.createRepeatingLine())))
           .type(newTypeWiring("Query").dataFetcher("getRepeatingLine", find(RepeatingWholeData_get_FFetcher, dbName, f ->f.getRepeatingLine())))
           .type(newTypeWiring("Mutation").dataFetcher("createPostCodeNameAndAddress", find(PostCodeNameAndAddress_create_FFetcher, dbName, f ->f.createPostCodeNameAndAddress())))
           .type(newTypeWiring("Query").dataFetcher("getPostCodeDataLine", find(PostCodeSearchResponse_get_FFetcher, dbName, f ->f.getPostCodeDataLine())))
+          .type(newTypeWiring("EAccountSummary").dataFetcher("description", find(EAccountsSummary_getAccountSummaryDescription_FFetcher, dbName, f ->f.getAccountSummaryDescription())))
+          .type(newTypeWiring("EAccountsSummary").dataFetcher("totalMonthlyCost", find(EAccountsSummary_getTotalMonthlyCost_FFetcher, dbName, f ->f.getTotalMonthlyCost())))
+          .type(newTypeWiring("EAccountsSummary").dataFetcher("oneAccountBalance", find(EAccountsSummary_getOneAccountBalance_FFetcher, dbName, f ->f.getOneAccountBalance())))
+          .type(newTypeWiring("EAccountsSummary").dataFetcher("currentAccountBalance", find(EAccountsSummary_getCurrentAccountBalance_FFetcher, dbName, f ->f.getCurrentAccountBalance())))
        .build();
     }
     @Bean

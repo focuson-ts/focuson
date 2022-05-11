@@ -56,11 +56,11 @@ export function makeButtonsFrom<B extends ButtonD, G> ( params: TSParams, makeGu
 }
 
 export function makeButtonsVariable<B extends ButtonD, G> ( params: TSParams, makeGuard: MakeGuard<G>, makeButton: MakeButton<G>, mainPage: MainPageD<B, G>, p: PageD<B, G> ): string[] {
-  return addStringToStartOfFirst ( "const buttons =" ) ( makeButtonsFrom<B, G> ( params, makeGuard, makeButton, mainPage, p ) )
+  return addStringToStartOfFirst ( "const allButtons =" ) ( makeButtonsFrom<B, G> ( params, makeGuard, makeButton, mainPage, p ) )
 }
 
 export function addButtonsFromVariables<B extends ButtonD, G> ( p: PageD<any, any> ): string[] {
   let keys = Object.keys ( p.buttons );
-  return keys.map ( name => `{ buttons.${name} } ` )
+  return keys.map ( name => `{ allButtons.${name} } ` )
 
 }

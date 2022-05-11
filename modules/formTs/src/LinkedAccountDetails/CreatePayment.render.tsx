@@ -1,4 +1,6 @@
+import * as empty from '../LinkedAccountDetails/LinkedAccountDetails.empty';
 import * as domain from '../LinkedAccountDetails/LinkedAccountDetails.domains';
+import * as render from "./LinkedAccountDetails.render";
 import { LensProps } from "@focuson/state";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from "@focuson/pages";
@@ -23,10 +25,15 @@ export function CreatePaymentPage(){
      ( state, d, mode, index ) => {
           const reasonHasBeenSelectedGuard =  pageState(state)<domain.LinkedAccountDetailsPageDomain>().focusOn('createPayment').focusOn('reason').optJson() !== "";
           const id=`page${index}`;
-          const buttons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} />,
-              commit:<ModalCommitButton id={`${id}.commit`} enabledBy={reasonHasBeenSelectedGuard}   state={state} />,}
+          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} />,
+              commit:<ModalCommitButton id={`${id}.commit`} enabledBy={reasonHasBeenSelectedGuard}   state={state} />,
+              overpaymentHistory:<ModalButton id={`${id}.overpaymentHistory`} text='overpaymentHistory'  state={state} modal = 'OverpaymentModalPage'  
+                pageMode='view'
+                focusOn='~/overpayment'
+              />,}
           return <>
-          <CreatePayment id={`${id}`} state={state} mode={mode} buttons={buttons} />
-          { buttons.cancel } 
-          { buttons.commit } 
+          <CreatePayment id={`${id}`} state={state} mode={mode} label='' allButtons={allButtons} />
+          { allButtons.cancel } 
+          { allButtons.commit } 
+          { allButtons.overpaymentHistory } 
           </>})}

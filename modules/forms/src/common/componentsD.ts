@@ -6,9 +6,9 @@ import { LensState } from "@focuson/state";
  * string and string[] are just the types
  *
  * */
-export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'string[]' | 'path' | 'pathValue'
+export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'string[]' | 'path' | 'pathValue' | 'objectAndRenderPrefix'
 
-type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons'
+type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons' | 'defaultToLabel'
 
 export interface OneDisplayCompParamD<T> {
   paramType: DisplayCompParamType;
@@ -116,14 +116,19 @@ export const SelectedItemCD: DisplayCompD = {
   params: {
     ...commonParams,
     index: { paramType: 'pathValue', needed: 'yes' },
-    display: { paramType: 'object', needed: 'yes' },
-    buttons: { paramType: 'object', needed: 'defaultToButtons' }
+    display: { paramType: 'objectAndRenderPrefix', needed: 'yes' },
+    allButtons: { paramType: 'object', needed: 'defaultToButtons' }
   }
 }
 export const LayoutCd: DisplayCompD = {
   params: { details: { paramType: 'string', needed: 'yes' }, title: { paramType: 'string', needed: 'no' }, defaultProps: { paramType: 'string', needed: 'no' } },
   import: "@focuson/form_components",
   name: "Layout"
+}
+export const TwoElementWithTitleLayoutCD: DisplayCompD = {
+  params: { title: { paramType: 'object', needed: 'defaultToLabel' } },
+  import: "@focuson/form_components",
+  name: "TwoElementWithTitleLayout"
 }
 
 

@@ -25,6 +25,7 @@ import java.util.Optional;
 import {thePackage}.{fetcherPackage}.IFetcher;
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 {imports}
 
@@ -58,13 +59,14 @@ public class {wiringClass}  implements IManyGraphQl{
         return schemaGenerator.makeExecutableSchema(typeRegistry, runtimeWiring);
    }
 
-   public <T extends IFetcher, Res> DataFetcher<Res> find(List<T> list, String dbName, Function<T, DataFetcher<Res>> fn) {
-        Optional<T> result = list.stream().filter(f -> f.dbName().equals(dbName)).findFirst();
-        if (result.isPresent()) return fn.apply(result.get());
-        return new DataFetcher<Res>() {
+   public<T extends IFetcher, Res> DataFetcher<Res> find(List<T> list,String dbName,Function<T, DataFetcher<Res>>fn){
+        List<T> result=list.stream().filter(f->f.dbName().equals(dbName)).collect(Collectors.toList());
+        if(result.size()==1)return fn.apply(result.get(0));
+        String names=". Had "+result.stream().map(s->s.getClass().getName()).collect(Collectors.joining(","));
+        return new DataFetcher<Res>(){
             @Override
-            public Res get(DataFetchingEnvironment dataFetchingEnvironment) throws Exception {
-                    throw new RuntimeException("Cannot find the fetcher for " + dbName);
+            public Res get(DataFetchingEnvironment dataFetchingEnvironment)throws Exception{
+                throw new RuntimeException("Cannot find the unique fetcher for "+dbName+names);
             }
         };
    }

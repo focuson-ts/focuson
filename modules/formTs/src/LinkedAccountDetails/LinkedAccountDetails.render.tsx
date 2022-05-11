@@ -32,13 +32,16 @@ import {LinkedAccountDetailsDisplayDomain} from "../LinkedAccountDetails/LinkedA
 import {MandateDomain} from "../LinkedAccountDetails/LinkedAccountDetails.domains"
 import {MandateListDomain} from "../LinkedAccountDetails/LinkedAccountDetails.domains"
 import {MandateSearchDomain} from "../LinkedAccountDetails/LinkedAccountDetails.domains"
+import {OverpaymentHistoryDomain} from "../LinkedAccountDetails/LinkedAccountDetails.domains"
+import {OverpaymentHistoryLineDomain} from "../LinkedAccountDetails/LinkedAccountDetails.domains"
+import {OverpaymentPageDomain} from "../LinkedAccountDetails/LinkedAccountDetails.domains"
 export function LinkedAccountDetailsPage(){
    //A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/display
   return focusedPageWithExtraState<FState, LinkedAccountDetailsPageDomain, LinkedAccountDetailsDisplayDomain, Context> ( s => 'Linked Account Details' ) ( state => state.focusOn('display')) (
 ( fullState, state , full, d, mode, index) => {
 const id=`page${index}`;
   const haveLegalSelectedPaymentGuard = pageState(state)<domain.LinkedAccountDetailsPageDomain>().focusOn('selectedCollectionItem').focusOn('paymentId').optJson() !== undefined
-  const buttons =    {cancelPayment:<RestButton state={state} id={`${id}.cancelPayment`} enabledBy={haveLegalSelectedPaymentGuard} 
+  const allButtons =    {cancelPayment:<RestButton state={state} id={`${id}.cancelPayment`} enabledBy={haveLegalSelectedPaymentGuard} 
         name='cancelPayment'
         action={{"state":"cancel"}}
         deleteOnSuccess={["~/display/collectionSummary","~/display/collectionHistory","~/selectedCollectionIndex"]}
@@ -61,64 +64,80 @@ const id=`page${index}`;
       />,}
 
       return <>
-          <LinkedAccountDetailsDisplay id={`${id}`} state={state} mode={mode} buttons={buttons} />
-      { buttons.selectMandate } 
-      { buttons.createPayment } 
-      { buttons.cancelPayment } 
-      { buttons.refreshMandate } 
+          <LinkedAccountDetailsDisplay id={`${id}`} state={state} mode={mode} label='' allButtons={allButtons} />
+      { allButtons.selectMandate } 
+      { allButtons.createPayment } 
+      { allButtons.cancelPayment } 
+      { allButtons.refreshMandate } 
       </>})}
 
-export function CollectionItem({id,state,mode,buttons}: FocusedProps<FState, CollectionItemDomain,Context>){
+export function CollectionItem({id,state,mode,allButtons,label}: FocusedProps<FState, CollectionItemDomain,Context>){
   return <>
-    <LabelAndNumberInput id={`${id}.paymentId`} state={state.focusOn('paymentId')} mode={mode} label='Payment Id' allButtons={buttons} required={true} />
-    <LabelAndDateInput id={`${id}.collectionDate`} state={state.focusOn('collectionDate')} mode={mode} label='Collection Date' allButtons={buttons} />
-    <LabelAndNumberInput id={`${id}.amount`} state={state.focusOn('amount')} mode={mode} label='Amount' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.status`} state={state.focusOn('status')} mode={mode} label='Status' allButtons={buttons} required={true} />
+    <LabelAndNumberInput id={`${id}.paymentId`} state={state.focusOn('paymentId')} mode={mode} label='Payment Id' allButtons={allButtons} required={true} />
+    <LabelAndDateInput id={`${id}.collectionDate`} state={state.focusOn('collectionDate')} mode={mode} label='Collection Date' allButtons={allButtons} />
+    <LabelAndNumberInput id={`${id}.amount`} state={state.focusOn('amount')} mode={mode} label='Amount' allButtons={allButtons} required={true} />
+    <LabelAndStringInput id={`${id}.status`} state={state.focusOn('status')} mode={mode} label='Status' allButtons={allButtons} required={true} />
 </>
 }
 
-export function CollectionSummary({id,state,mode,buttons}: FocusedProps<FState, CollectionSummaryDomain,Context>){
+export function CollectionSummary({id,state,mode,allButtons,label}: FocusedProps<FState, CollectionSummaryDomain,Context>){
   return <Layout details='[[2,2]]'>
-    <LabelAndStringInput id={`${id}.lastCollectionDate`} state={state.focusOn('lastCollectionDate')} mode={mode} label='Last Collection Date' allButtons={buttons} required={true} />
-    <LabelAndNumberInput id={`${id}.lastCollectionAmount`} state={state.focusOn('lastCollectionAmount')} mode={mode} label='Last Collection Amount' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.nextCollectionDate`} state={state.focusOn('nextCollectionDate')} mode={mode} label='Next Collection Date' allButtons={buttons} required={true} />
-    <LabelAndNumberInput id={`${id}.nextCollectionAmount`} state={state.focusOn('nextCollectionAmount')} mode={mode} label='Next Collection Amount' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.lastCollectionDate`} state={state.focusOn('lastCollectionDate')} mode={mode} label='Last Collection Date' allButtons={allButtons} required={true} />
+    <LabelAndNumberInput id={`${id}.lastCollectionAmount`} state={state.focusOn('lastCollectionAmount')} mode={mode} label='Last Collection Amount' allButtons={allButtons} required={true} />
+    <LabelAndStringInput id={`${id}.nextCollectionDate`} state={state.focusOn('nextCollectionDate')} mode={mode} label='Next Collection Date' allButtons={allButtons} required={true} />
+    <LabelAndNumberInput id={`${id}.nextCollectionAmount`} state={state.focusOn('nextCollectionAmount')} mode={mode} label='Next Collection Amount' allButtons={allButtons} required={true} />
 </Layout>
 }
 
-export function CreatePayment({id,state,mode,buttons}: FocusedProps<FState, CreatePaymentDomain,Context>){
+export function CreatePayment({id,state,mode,allButtons,label}: FocusedProps<FState, CreatePaymentDomain,Context>){
 const reasonIsAllowanceGuard = state.focusOn('reason').optJson();
   return <>
-    <LabelAndNumberInput id={`${id}.amount`} state={state.focusOn('amount')} mode={mode} label='Amount' allButtons={buttons} required={true} min={200} />
-    <LabelAndDateInput id={`${id}.collectionDate`} state={state.focusOn('collectionDate')} mode={mode} label='Collection Date' allButtons={buttons} />
-    <LabelAndDropdown id={`${id}.reason`} state={state.focusOn('reason')} mode={mode} label='Reason' allButtons={buttons} enums={{"":"Select...","A":"Allowance","O":"Overpayment"}} />
-    <Guard value={reasonIsAllowanceGuard} cond={["A"]}><LabelAndNumberInput id={`${id}.allowance`} state={state.focusOn('allowance')} mode={mode} label='Allowance' allButtons={buttons} required={true} readonly={true} /></Guard>
-    <Guard value={reasonIsAllowanceGuard} cond={["A"]}><LabelAndDropdown id={`${id}.period`} state={state.focusOn('period')} mode={mode} label='Period' allButtons={buttons} enums={{"Monthly":"Monthly","Yearly":"Yearly"}} readonly={true} /></Guard>
+    <LabelAndNumberInput id={`${id}.amount`} state={state.focusOn('amount')} mode={mode} label='Amount' allButtons={allButtons} required={true} min={200} />
+    <LabelAndDateInput id={`${id}.collectionDate`} state={state.focusOn('collectionDate')} mode={mode} label='Collection Date' allButtons={allButtons} />
+    <LabelAndDropdown id={`${id}.reason`} state={state.focusOn('reason')} mode={mode} label='Reason' allButtons={allButtons} enums={{"":"Select...","A":"Allowance","O":"Overpayment"}} />
+    <Guard value={reasonIsAllowanceGuard} cond={["A"]}><LabelAndNumberInput id={`${id}.allowance`} state={state.focusOn('allowance')} mode={mode} label='Allowance' allButtons={allButtons} required={true} readonly={true} /></Guard>
+    <Guard value={reasonIsAllowanceGuard} cond={["A"]}><LabelAndDropdown id={`${id}.period`} state={state.focusOn('period')} mode={mode} label='Period' allButtons={allButtons} enums={{"Monthly":"Monthly","Yearly":"Yearly"}} readonly={true} /></Guard>
 </>
 }
 
-export function LinkedAccountDetailsDisplay({id,state,mode,buttons}: FocusedProps<FState, LinkedAccountDetailsDisplayDomain,Context>){
+export function LinkedAccountDetailsDisplay({id,state,mode,allButtons,label}: FocusedProps<FState, LinkedAccountDetailsDisplayDomain,Context>){
   return <Layout details='[[1]]'>
-    <Mandate id={`${id}.mandate`} state={state.focusOn('mandate')} mode={mode} buttons={buttons} />
-    <CollectionSummary id={`${id}.collectionSummary`} state={state.focusOn('collectionSummary')} mode={mode} buttons={buttons} />
+    <Mandate id={`${id}.mandate`} state={state.focusOn('mandate')} mode={mode} label='Mandate' allButtons={allButtons} />
+    <CollectionSummary id={`${id}.collectionSummary`} state={state.focusOn('collectionSummary')} mode={mode} label='Collection Summary' allButtons={allButtons} />
     <Table id={`${id}.collectionHistory`} state={state.focusOn('collectionHistory')} mode={mode} order={["collectionDate","amount","status"]} copySelectedIndexTo={pageState(state)<any>().focusOn('selectedCollectionIndex')} copySelectedItemTo={pageState(state)<any>().focusOn('selectedCollectionItem')} />
 </Layout>
 }
 
-export function Mandate({id,state,mode,buttons}: FocusedProps<FState, MandateDomain,Context>){
+export function Mandate({id,state,mode,allButtons,label}: FocusedProps<FState, MandateDomain,Context>){
   return <Layout details='[[3,3]]'>
-    <LabelAndStringInput id={`${id}.sortCode`} state={state.focusOn('sortCode')} mode={mode} label='Sort Code' allButtons={buttons} required={true} />
-    <LabelAndNumberInput id={`${id}.accountId`} state={state.focusOn('accountId')} mode={mode} label='Account Id' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.mandateStatus`} state={state.focusOn('mandateStatus')} mode={mode} label='Mandate Status' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.bankName`} state={state.focusOn('bankName')} mode={mode} label='Bank Name' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.accountName`} state={state.focusOn('accountName')} mode={mode} label='Account Name' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.mandateRef`} state={state.focusOn('mandateRef')} mode={mode} label='Mandate Ref' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.sortCode`} state={state.focusOn('sortCode')} mode={mode} label='Sort Code' allButtons={allButtons} required={true} />
+    <LabelAndNumberInput id={`${id}.accountId`} state={state.focusOn('accountId')} mode={mode} label='Account Id' allButtons={allButtons} required={true} />
+    <LabelAndStringInput id={`${id}.mandateStatus`} state={state.focusOn('mandateStatus')} mode={mode} label='Mandate Status' allButtons={allButtons} required={true} />
+    <LabelAndStringInput id={`${id}.bankName`} state={state.focusOn('bankName')} mode={mode} label='Bank Name' allButtons={allButtons} required={true} />
+    <LabelAndStringInput id={`${id}.accountName`} state={state.focusOn('accountName')} mode={mode} label='Account Name' allButtons={allButtons} required={true} />
+    <LabelAndStringInput id={`${id}.mandateRef`} state={state.focusOn('mandateRef')} mode={mode} label='Mandate Ref' allButtons={allButtons} required={true} />
 </Layout>
 }
 
-export function MandateSearch({id,state,mode,buttons}: FocusedProps<FState, MandateSearchDomain,Context>){
+export function MandateSearch({id,state,mode,allButtons,label}: FocusedProps<FState, MandateSearchDomain,Context>){
   return <>
-    <LabelAndStringInput id={`${id}.sortCode`} state={state.focusOn('sortCode')} mode={mode} label='Sort Code' allButtons={buttons} required={false} />
+    <LabelAndStringInput id={`${id}.sortCode`} state={state.focusOn('sortCode')} mode={mode} label='Sort Code' allButtons={allButtons} required={false} />
     <Table id={`${id}.searchResults`} state={state.focusOn('searchResults')} mode={mode} order={["sortCode","accountId","bankName","accountName","mandateRef","mandateStatus"]} copySelectedItemTo={pageState(state)<any>().focusOn('tempMandate')} copySelectedIndexTo={pageState(state)<any>().focusOn('selectIndex')} prefixFilter={pageState(state)<domain.LinkedAccountDetailsPageDomain>().focusOn('selectMandateSearch').focusOn('sortCode')} prefixColumn='sortCode' />
+</>
+}
+
+export function OverpaymentHistoryLine({id,state,mode,allButtons,label}: FocusedProps<FState, OverpaymentHistoryLineDomain,Context>){
+  return <>
+    <LabelAndNumberInput id={`${id}.amountReceived`} state={state.focusOn('amountReceived')} mode={mode} label='Amount Received' allButtons={allButtons} required={true} />
+    <LabelAndDateInput id={`${id}.date`} state={state.focusOn('date')} mode={mode} label='Date' allButtons={allButtons} />
+    <LabelAndDropdown id={`${id}.status`} state={state.focusOn('status')} mode={mode} label='Status' allButtons={allButtons} enums={{"COLLECTED":"COLLECTED","CANCELLED":"CANCELLED"}} />
+</>
+}
+
+export function OverpaymentPage({id,state,mode,allButtons,label}: FocusedProps<FState, OverpaymentPageDomain,Context>){
+  return <>
+    <Table id={`${id}.history`} state={state.focusOn('history')} mode={mode} order={["amountReceived","date","status"]} />
+    <LabelAndDateInput id={`${id}.drawDownDate`} state={state.focusOn('drawDownDate')} mode={mode} label='Draw Down Date' allButtons={allButtons} />
+    <LabelAndNumberInput id={`${id}.initialBorrowing`} state={state.focusOn('initialBorrowing')} mode={mode} label='Initial Borrowing' allButtons={allButtons} required={true} />
 </>
 }

@@ -36,7 +36,7 @@ pactWith ( { consumer: 'ETransfer', provider: 'ETransferProvider', cors: true },
       },
     } )
     const lensTransforms: Transform<FState,any>[] = [
-    [Lenses.identity<FState>().focusQuery('ETransfer').focusQuery('fromApi'), () => samples.sampleETransferDataD0]
+      [Lenses.identity<FState>().focusQuery('ETransfer').focusQuery('fromApi'), () => samples.sampleETransferDataD0]
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );

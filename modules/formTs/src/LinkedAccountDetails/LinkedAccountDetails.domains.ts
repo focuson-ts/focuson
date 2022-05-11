@@ -3,6 +3,7 @@ export interface HasLinkedAccountDetailsPageDomain {   LinkedAccountDetails?: Li
 export interface LinkedAccountDetailsPageDomain{
   createPayment?:CreatePaymentDomain;
   display?:LinkedAccountDetailsDisplayDomain;
+  overpayment?:OverpaymentPageDomain;
   selectedCollectionIndex?:number;
   selectedCollectionItem?:CollectionItemDomain;
   selectIndex?:number;
@@ -56,4 +57,18 @@ export type MandateListDomain = MandateDomain[]
 export interface MandateSearchDomain{
   searchResults: MandateDomain[];
   sortCode: string;
+}
+
+export type OverpaymentHistoryDomain = OverpaymentHistoryLineDomain[]
+
+export interface OverpaymentHistoryLineDomain{
+  amountReceived: number;
+  date: string;
+  status: string;
+}
+
+export interface OverpaymentPageDomain{
+  drawDownDate: string;
+  history: OverpaymentHistoryLineDomain[];
+  initialBorrowing: number;
 }

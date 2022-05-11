@@ -982,6 +982,30 @@ public class Sample{
          "  ]"+
          "}"
   );
+  public static Map sampleListOfPayments0 =  parse.parseMap(
+         "{"+
+         "  \"standingOrders\": {"+
+         "    \"shouldPrint\": true,"+
+         "    \"numberOfItems\": 1"+
+         "  },"+
+         "  \"openBankingStandingOrders\": {"+
+         "    \"shouldPrint\": false,"+
+         "    \"numberOfItems\": 2"+
+         "  },"+
+         "  \"directDebits\": {"+
+         "    \"shouldPrint\": true,"+
+         "    \"numberOfItems\": 3"+
+         "  },"+
+         "  \"billPayments\": {"+
+         "    \"shouldPrint\": false,"+
+         "    \"numberOfItems\": 4"+
+         "  },"+
+         "  \"openBanking\": {"+
+         "    \"shouldPrint\": true,"+
+         "    \"numberOfItems\": 5"+
+         "  }"+
+         "}"
+  );
   public static Map sampleMandate0 =  parse.parseMap(
          "{"+
          "  \"sortCode\": \"10-11-12\","+
@@ -1237,6 +1261,55 @@ public class Sample{
          "  \"amount\": 123"+
          "}"
   );
+  public static List sampleOverpaymentHistory0 =  parse.parseList(
+         "["+
+         "  {"+
+         "    \"amountReceived\": 1234,"+
+         "    \"date\": \"2020/10/1\","+
+         "    \"status\": \"CANCELLED\""+
+         "  },"+
+         "  {"+
+         "    \"amountReceived\": 3656734,"+
+         "    \"date\": \"2021/9/1\","+
+         "    \"status\": \"COLLECTED\""+
+         "  },"+
+         "  {"+
+         "    \"amountReceived\": 1234,"+
+         "    \"date\": \"2020/10/1\","+
+         "    \"status\": \"CANCELLED\""+
+         "  }"+
+         "]"
+  );
+  public static Map sampleOverpaymentHistoryLine0 =  parse.parseMap(
+         "{"+
+         "  \"amountReceived\": 1234,"+
+         "  \"date\": \"2020/10/1\","+
+         "  \"status\": \"CANCELLED\""+
+         "}"
+  );
+  public static Map sampleOverpaymentPage0 =  parse.parseMap(
+         "{"+
+         "  \"history\": ["+
+         "    {"+
+         "      \"amountReceived\": 1234,"+
+         "      \"date\": \"2020/10/1\","+
+         "      \"status\": \"CANCELLED\""+
+         "    },"+
+         "    {"+
+         "      \"amountReceived\": 3656734,"+
+         "      \"date\": \"2021/9/1\","+
+         "      \"status\": \"COLLECTED\""+
+         "    },"+
+         "    {"+
+         "      \"amountReceived\": 1234,"+
+         "      \"date\": \"2020/10/1\","+
+         "      \"status\": \"CANCELLED\""+
+         "    }"+
+         "  ],"+
+         "  \"drawDownDate\": \"2020/10/1\","+
+         "  \"initialBorrowing\": 100010"+
+         "}"
+  );
   public static Map samplePostCodeDataLine0 =  parse.parseMap(
          "{"+
          "  \"line1\": \"4 Privet drive\","+
@@ -1316,6 +1389,172 @@ public class Sample{
          "  }"+
          "]"
   );
+  public static List samplePrintRecordHistory0 =  parse.parseList(
+         "["+
+         "  {"+
+         "    \"requestedBy\": \"m\","+
+         "    \"requesterDetails\": {"+
+         "      \"title\": \"Mr\","+
+         "      \"forename\": \"Fred\","+
+         "      \"surname\": \"Bloggs\","+
+         "      \"addressLine1\": \"4 Privat Drive\","+
+         "      \"addressLine2\": \"Little Winging\","+
+         "      \"addressLine3\": \"Surrey\","+
+         "      \"addressLine4\": \"UK\","+
+         "      \"postcode\": \"HG1 1FL\","+
+         "      \"phone\": \"555 1234\","+
+         "      \"fax\": \"5556365\""+
+         "    },"+
+         "    \"listOfPayments\": {"+
+         "      \"standingOrders\": {"+
+         "        \"shouldPrint\": true,"+
+         "        \"numberOfItems\": 1"+
+         "      },"+
+         "      \"openBankingStandingOrders\": {"+
+         "        \"shouldPrint\": false,"+
+         "        \"numberOfItems\": 2"+
+         "      },"+
+         "      \"directDebits\": {"+
+         "        \"shouldPrint\": true,"+
+         "        \"numberOfItems\": 3"+
+         "      },"+
+         "      \"billPayments\": {"+
+         "        \"shouldPrint\": false,"+
+         "        \"numberOfItems\": 4"+
+         "      },"+
+         "      \"openBanking\": {"+
+         "        \"shouldPrint\": true,"+
+         "        \"numberOfItems\": 5"+
+         "      }"+
+         "    },"+
+         "    \"includeSingleAndInitialDirectDebits\": true,"+
+         "    \"authorisedByCustomer\": \"n\","+
+         "    \"alreadyPrinted\": true"+
+         "  },"+
+         "  {"+
+         "    \"requestedBy\": \"j\","+
+         "    \"requesterDetails\": {"+
+         "      \"title\": \"Mrs\","+
+         "      \"forename\": \"Fredrica\","+
+         "      \"surname\": \"Smith\","+
+         "      \"addressLine1\": \" 11 Green Acres\","+
+         "      \"addressLine2\": \"Nether Wallop\","+
+         "      \"addressLine3\": \"Aylesbury\","+
+         "      \"addressLine4\": \"UK\","+
+         "      \"postcode\": \"SO34 1DF\","+
+         "      \"phone\": \"555 2344\","+
+         "      \"fax\": \"555 1231\""+
+         "    },"+
+         "    \"listOfPayments\": {"+
+         "      \"standingOrders\": {"+
+         "        \"shouldPrint\": false,"+
+         "        \"numberOfItems\": 2"+
+         "      },"+
+         "      \"openBankingStandingOrders\": {"+
+         "        \"shouldPrint\": true,"+
+         "        \"numberOfItems\": 3"+
+         "      },"+
+         "      \"directDebits\": {"+
+         "        \"shouldPrint\": false,"+
+         "        \"numberOfItems\": 4"+
+         "      },"+
+         "      \"billPayments\": {"+
+         "        \"shouldPrint\": true,"+
+         "        \"numberOfItems\": 5"+
+         "      },"+
+         "      \"openBanking\": {"+
+         "        \"shouldPrint\": false,"+
+         "        \"numberOfItems\": 6"+
+         "      }"+
+         "    },"+
+         "    \"includeSingleAndInitialDirectDebits\": false,"+
+         "    \"authorisedByCustomer\": \"notyet\","+
+         "    \"alreadyPrinted\": false"+
+         "  },"+
+         "  {"+
+         "    \"requestedBy\": \"new bank\","+
+         "    \"requesterDetails\": {"+
+         "      \"title\": \"Mr\","+
+         "      \"forename\": \"Fred\","+
+         "      \"surname\": \"Bloggs\","+
+         "      \"addressLine1\": \"4 Privat Drive\","+
+         "      \"addressLine2\": \"Little Winging\","+
+         "      \"addressLine3\": \"Surrey\","+
+         "      \"addressLine4\": \"UK\","+
+         "      \"postcode\": \"HG1 1FL\","+
+         "      \"phone\": \"555 1234\","+
+         "      \"fax\": \"5556365\""+
+         "    },"+
+         "    \"listOfPayments\": {"+
+         "      \"standingOrders\": {"+
+         "        \"shouldPrint\": true,"+
+         "        \"numberOfItems\": 3"+
+         "      },"+
+         "      \"openBankingStandingOrders\": {"+
+         "        \"shouldPrint\": false,"+
+         "        \"numberOfItems\": 4"+
+         "      },"+
+         "      \"directDebits\": {"+
+         "        \"shouldPrint\": true,"+
+         "        \"numberOfItems\": 5"+
+         "      },"+
+         "      \"billPayments\": {"+
+         "        \"shouldPrint\": false,"+
+         "        \"numberOfItems\": 6"+
+         "      },"+
+         "      \"openBanking\": {"+
+         "        \"shouldPrint\": true,"+
+         "        \"numberOfItems\": 1"+
+         "      }"+
+         "    },"+
+         "    \"includeSingleAndInitialDirectDebits\": true,"+
+         "    \"authorisedByCustomer\": \"y\","+
+         "    \"alreadyPrinted\": true"+
+         "  }"+
+         "]"
+  );
+  public static Map samplePrintRecordItem0 =  parse.parseMap(
+         "{"+
+         "  \"requestedBy\": \"m\","+
+         "  \"requesterDetails\": {"+
+         "    \"title\": \"Mr\","+
+         "    \"forename\": \"Fred\","+
+         "    \"surname\": \"Bloggs\","+
+         "    \"addressLine1\": \"4 Privat Drive\","+
+         "    \"addressLine2\": \"Little Winging\","+
+         "    \"addressLine3\": \"Surrey\","+
+         "    \"addressLine4\": \"UK\","+
+         "    \"postcode\": \"HG1 1FL\","+
+         "    \"phone\": \"555 1234\","+
+         "    \"fax\": \"5556365\""+
+         "  },"+
+         "  \"listOfPayments\": {"+
+         "    \"standingOrders\": {"+
+         "      \"shouldPrint\": true,"+
+         "      \"numberOfItems\": 1"+
+         "    },"+
+         "    \"openBankingStandingOrders\": {"+
+         "      \"shouldPrint\": false,"+
+         "      \"numberOfItems\": 2"+
+         "    },"+
+         "    \"directDebits\": {"+
+         "      \"shouldPrint\": true,"+
+         "      \"numberOfItems\": 3"+
+         "    },"+
+         "    \"billPayments\": {"+
+         "      \"shouldPrint\": false,"+
+         "      \"numberOfItems\": 4"+
+         "    },"+
+         "    \"openBanking\": {"+
+         "      \"shouldPrint\": true,"+
+         "      \"numberOfItems\": 5"+
+         "    }"+
+         "  },"+
+         "  \"includeSingleAndInitialDirectDebits\": true,"+
+         "  \"authorisedByCustomer\": \"n\","+
+         "  \"alreadyPrinted\": true"+
+         "}"
+  );
   public static Map sampleRepeatingLine0 =  parse.parseMap(
          "{"+
          "  \"name\": \"This is a one line string\","+
@@ -1337,5 +1576,25 @@ public class Sample{
          "    \"age\": 123"+
          "  }"+
          "]"
+  );
+  public static Map sampleRequesterDetails0 =  parse.parseMap(
+         "{"+
+         "  \"title\": \"Mr\","+
+         "  \"forename\": \"Fred\","+
+         "  \"surname\": \"Bloggs\","+
+         "  \"addressLine1\": \"4 Privat Drive\","+
+         "  \"addressLine2\": \"Little Winging\","+
+         "  \"addressLine3\": \"Surrey\","+
+         "  \"addressLine4\": \"UK\","+
+         "  \"postcode\": \"HG1 1FL\","+
+         "  \"phone\": \"555 1234\","+
+         "  \"fax\": \"5556365\""+
+         "}"
+  );
+  public static Map sampleSinglePrint0 =  parse.parseMap(
+         "{"+
+         "  \"shouldPrint\": true,"+
+         "  \"numberOfItems\": 1"+
+         "}"
   );
 }

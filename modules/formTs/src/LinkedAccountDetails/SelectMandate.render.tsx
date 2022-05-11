@@ -1,4 +1,6 @@
+import * as empty from '../LinkedAccountDetails/LinkedAccountDetails.empty';
 import * as domain from '../LinkedAccountDetails/LinkedAccountDetails.domains';
+import * as render from "./LinkedAccountDetails.render";
 import { LensProps } from "@focuson/state";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from "@focuson/pages";
@@ -22,10 +24,10 @@ export function SelectMandatePage(){
   return focusedPage<FState, MandateSearchDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
      ( state, d, mode, index ) => {
           const id=`page${index}`;
-          const buttons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} />,
+          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} />,
               commit:<ModalCommitButton id={`${id}.commit`}  validate={false}  state={state} />,}
           return <>
-          <MandateSearch id={`${id}`} state={state} mode={mode} buttons={buttons} />
-          { buttons.cancel } 
-          { buttons.commit } 
+          <MandateSearch id={`${id}`} state={state} mode={mode} label='' allButtons={allButtons} />
+          { allButtons.cancel } 
+          { allButtons.commit } 
           </>})}

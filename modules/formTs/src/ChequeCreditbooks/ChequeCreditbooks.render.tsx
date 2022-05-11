@@ -31,7 +31,7 @@ export function ChequeCreditbooksPage(){
 ( fullState, state , full, d, mode, index) => {
 const id=`page${index}`;
   const canCancelGuard = pageState(state)<domain.ChequeCreditbooksPageDomain>().focusOn('selectedBook').optJson() !== undefined
-  const buttons =    {cancelCheckBook:<RestButton state={state} id={`${id}.cancelCheckBook`} enabledBy={canCancelGuard} 
+  const allButtons =    {cancelCheckBook:<RestButton state={state} id={`${id}.cancelCheckBook`} enabledBy={canCancelGuard} 
         name='cancelCheckBook'
         action={{"state":"cancel"}}
         rest='ChequeCreditbooks_ChequeCreditbooksRestDetails'
@@ -47,22 +47,22 @@ const id=`page${index}`;
       refresh:<DeleteStateButton  id={`${id}.refresh`} states={[pageState(state)<domain.ChequeCreditbooksPageDomain>().focusOn('fromApi'),pageState(state)<domain.ChequeCreditbooksPageDomain>().focusOn('tempCreatePlan'),pageState(state)<domain.ChequeCreditbooksPageDomain>().focusOn('selectedBook')]} label='Refresh' />,}
 
       return <>
-          <ChequeCreditbooks id={`${id}`} state={state} mode={mode} buttons={buttons} />
-      { buttons.orderNewBook } 
-      { buttons.refresh } 
-      { buttons.cancelCheckBook } 
+          <ChequeCreditbooks id={`${id}`} state={state} mode={mode} label='' allButtons={allButtons} />
+      { allButtons.orderNewBook } 
+      { allButtons.refresh } 
+      { allButtons.cancelCheckBook } 
       </>})}
 
-export function ChequeCreditbooks({id,state,mode,buttons}: FocusedProps<FState, ChequeCreditbooksDomain,Context>){
+export function ChequeCreditbooks({id,state,mode,allButtons,label}: FocusedProps<FState, ChequeCreditbooksDomain,Context>){
   return <>
     <Table id={`${id}.history`} state={state.focusOn('history')} mode={mode} order={["serialNumber","howOrdered","dateOrder"]} copySelectedIndexTo={pageState(state)<any>().focusOn('selectedBook')} />
 </>
 }
 
-export function ChequeCreditbooksHistoryLine({id,state,mode,buttons}: FocusedProps<FState, ChequeCreditbooksHistoryLineDomain,Context>){
+export function ChequeCreditbooksHistoryLine({id,state,mode,allButtons,label}: FocusedProps<FState, ChequeCreditbooksHistoryLineDomain,Context>){
   return <>
-    <LabelAndNumberInput id={`${id}.serialNumber`} state={state.focusOn('serialNumber')} mode={mode} label='Serial Number' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.howOrdered`} state={state.focusOn('howOrdered')} mode={mode} label='How Ordered' allButtons={buttons} required={true} />
-    <LabelAndDateInput id={`${id}.dateOrder`} state={state.focusOn('dateOrder')} mode={mode} label='Date Order' allButtons={buttons} />
+    <LabelAndNumberInput id={`${id}.serialNumber`} state={state.focusOn('serialNumber')} mode={mode} label='Serial Number' allButtons={allButtons} required={true} />
+    <LabelAndStringInput id={`${id}.howOrdered`} state={state.focusOn('howOrdered')} mode={mode} label='How Ordered' allButtons={allButtons} required={true} />
+    <LabelAndDateInput id={`${id}.dateOrder`} state={state.focusOn('dateOrder')} mode={mode} label='Date Order' allButtons={allButtons} />
 </>
 }

@@ -10,6 +10,7 @@ import * as rests from "../rests";
 import { restUrlMutator } from "../rests";
 import {CollectionsListFetcher} from './LinkedAccountDetails.fetchers'
 import {CollectionSummaryFetcher} from './LinkedAccountDetails.fetchers'
+import {OverpaymentPageFetcher} from './LinkedAccountDetails.fetchers'
 import {MandateListFetcher} from './LinkedAccountDetails.fetchers'
 
 describe("Allow pacts to be run from intelliJ for LinkedAccountDetails", () =>{})
@@ -189,7 +190,7 @@ pactWith ( { consumer: 'LinkedAccountDetails', provider: 'LinkedAccountDetailsPr
       },
     } )
     const lensTransforms: Transform<FState,any>[] = [
-    [Lenses.identity<FState>().focusQuery('LinkedAccountDetails').focusQuery('createPayment'), () => samples.sampleCreatePayment0]
+      [Lenses.identity<FState>().focusQuery('LinkedAccountDetails').focusQuery('createPayment'), () => samples.sampleCreatePayment0],
       [Lenses.identity<FState>().focusQuery('LinkedAccountDetails').focusQuery('display').focusQuery('mandate').focusQuery('accountId'), () =>"1" ],
       [Lenses.identity<FState>().focusQuery('LinkedAccountDetails').focusQuery('selectedCollectionItem').focusQuery('paymentId'), () =>"123" ]
     ]
@@ -198,6 +199,79 @@ pactWith ( { consumer: 'LinkedAccountDetails', provider: 'LinkedAccountDetailsPr
     const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('LinkedAccountDetails').focusQuery('createPayment').set ( rawExpected, samples.sampleCreatePayment0 )
+    expect ( newState.messages.length ).toEqual ( 1 )
+    expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+    expect ( { ...newState, messages: []}).toEqual ( expected )
+   })
+ })
+})
+
+//GetFetcher pact test
+pactWith ( { consumer: 'LinkedAccountDetails', provider: 'LinkedAccountDetailsProvider', cors: true }, provider => {
+describe ( 'LinkedAccountDetails - overpaymentHistory - fetcher', () => {
+  it ( 'should have a  fetcher for OverpaymentPage', async () => {
+    await provider.addInteraction ( {
+      state: 'default',
+      uponReceiving: 'A request for OverpaymentPage',
+      withRequest: {
+        method: 'GET',
+        path: '/api/payment/overpayment/history',
+        query:{"accountId":"accId","clientRef":"custId"}
+      },
+      willRespondWith: {
+        status: 200,
+        body: samples.sampleOverpaymentPage0
+       },
+      } )
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'LinkedAccountDetails', pageMode: 'view' }], CommonIds: {"accountId":"accId","clientRef":"custId"} }
+  const lensTransforms: Transform<FState,any>[] = [
+  ]
+      const withIds = massTransform ( firstState, ...lensTransforms )
+      const fetcher= OverpaymentPageFetcher (Lenses.identity<FState>().focusQuery('LinkedAccountDetails'), commonIds ) 
+      expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state
+      const f: FetcherTree<FState> = { fetchers: [fetcher], children: [] }
+      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
+      let expectedRaw: any = {
+... withIds,
+      tags: {'LinkedAccountDetails_~/overpayment': ["accId","custId"]}
+      };
+      const expected = Lenses.identity<FState>().focusQuery('LinkedAccountDetails').focusQuery('overpayment').set ( expectedRaw, samples.sampleOverpaymentPage0 )
+      expect ( newState ).toEqual ( expected )
+    })
+  })
+})
+
+//Rest overpaymentHistory get pact test for LinkedAccountDetails
+pactWith ( { consumer: 'LinkedAccountDetails', provider: 'LinkedAccountDetailsProvider', cors: true }, provider => {
+  describe ( 'LinkedAccountDetails - overpaymentHistory rest get', () => {
+   it ( 'should have a get rest for OverpaymentPage', async () => {
+    const restCommand: RestCommand = { name: 'LinkedAccountDetails_OverpaymentPageRestDetails', restAction: "get" }
+    const firstState: FState = {
+       ...emptyState, restCommands: [ restCommand ],
+       CommonIds: {"accountId":"accId","clientRef":"custId"},
+       pageSelection: [ { pageName: 'LinkedAccountDetails', pageMode: 'view' } ]
+    }
+    await provider.addInteraction ( {
+      state: 'default',
+      uponReceiving: 'a rest for LinkedAccountDetails overpaymentHistory get',
+      withRequest: {
+         method: 'GET',
+         path:   '/api/payment/overpayment/history',
+         query:{"accountId":"accId","clientRef":"custId"},
+         //no request body needed for get,
+      },
+      willRespondWith: {
+         status: 200,
+         body: samples.sampleOverpaymentPage0
+      },
+    } )
+    const lensTransforms: Transform<FState,any>[] = [
+    ]
+    const withIds = massTransform ( firstState, ...lensTransforms )
+    const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
+    const rawExpected:any = { ...withIds, restCommands: []}
+    const expected = Lenses.identity<FState>().focusQuery('LinkedAccountDetails').focusQuery('overpayment').set ( rawExpected, samples.sampleOverpaymentPage0 )
     expect ( newState.messages.length ).toEqual ( 1 )
     expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
     expect ( { ...newState, messages: []}).toEqual ( expected )

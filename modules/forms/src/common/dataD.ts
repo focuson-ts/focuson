@@ -74,6 +74,7 @@ export interface HasGuards<G>{
 export interface DataD<G> extends CommonDataDD ,HasGuards<G>{
   structure: ManyDataDD<G>;
   table?: DBTable;
+  sealedBy?: string;
 }
 export type CompDataD<G> = DataD<G> | RepeatingDataD<G>
 

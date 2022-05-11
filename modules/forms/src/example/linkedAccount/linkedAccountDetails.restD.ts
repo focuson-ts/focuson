@@ -1,5 +1,5 @@
 import { ExampleRestD } from "../common";
-import { CollectionItemDD, CollectionListDD, CollectionSummaryDD, CreatePaymentDD, MandateListDD } from "./linkedAccountDetails.dataD";
+import { CollectionItemDD, CollectionListDD, CollectionSummaryDD, CreatePaymentDD, MandateListDD, OverpaymentPageDD } from "./linkedAccountDetails.dataD";
 
 import { IntParam, RestParams } from "../../common/restD";
 import { onlySchema } from "../database/tableNames";
@@ -35,7 +35,7 @@ export const collectionHistoryListRD: ExampleRestD = {
 
 export const collectionPaymentParams: RestParams = {
   ...fromCommonIds ( 'clientRef', 'accountId' ),
-  accountId: { ...IntParam, lens: '~/display/mandate/accountId', testValue: '1' },
+  accountId: { ...IntParam, lens: '~/display/mandate/accountId', testValue: '1'},
   paymentId: { ...IntParam, lens: '~/selectedCollectionItem/paymentId', testValue: '123' },
 }
 
@@ -50,7 +50,7 @@ export const singleCollectionPaymentRD: ExampleRestD = {
     { restAction: { state: 'revalidate' }, storedProcedure: { name: 'auditrevalidate', schema: onlySchema, params: [ 'accountId', 'paymentId' ] } }
   ],
   states: {
-    cancel: { url: '/api/payment/cancel?{query}', useStoredProcedure: { name: 'cancelPayment', params: [ 'accountId', 'paymentId' ], schema: onlySchema } },
+    cancel: { url: '/api/payment/cancel?{query}', useSql: { sql: 'write ', params: [ 'accountId', 'paymentId' ], schema: onlySchema } },
     revalidate: { url: '/api/payment/revalidate?{query}', useStoredProcedure: { name: 'revalidate', params: [ 'accountId', 'paymentId' ], schema: onlySchema } },
   }
 }
@@ -64,4 +64,12 @@ export const createPaymentRD: ExampleRestD = {
   audit: [
     { restAction: 'create', storedProcedure: { name: 'auditCreate', schema: onlySchema, params: [ 'accountId' ] } },
   ],
+}
+
+
+export const overpaymentHistoryRD: ExampleRestD = {
+  params:   {...fromCommonIds ( 'clientRef', 'accountId' )},
+  dataDD: OverpaymentPageDD,
+  url: '/api/payment/overpayment/history?{query}',
+  actions: [ 'get' ]
 }

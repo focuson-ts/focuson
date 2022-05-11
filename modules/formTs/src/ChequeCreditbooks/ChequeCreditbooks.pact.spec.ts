@@ -110,7 +110,7 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
       },
     } )
     const lensTransforms: Transform<FState,any>[] = [
-    [Lenses.identity<FState>().focusQuery('ChequeCreditbooks').focusQuery('fromApi'), () => samples.sampleChequeCreditbooks0]
+      [Lenses.identity<FState>().focusQuery('ChequeCreditbooks').focusQuery('fromApi'), () => samples.sampleChequeCreditbooks0]
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
@@ -146,6 +146,44 @@ pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider
       willRespondWith: {
          status: 200,
          body: {"stateChequeCreditbookscancel": true}
+      },
+    } )
+    const lensTransforms: Transform<FState,any>[] = [
+    ]
+    const withIds = massTransform ( firstState, ...lensTransforms )
+    const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
+    const rawExpected:any = { ...withIds, restCommands: []}
+    const expected = rawExpected; // this rest action doesn't load data
+    expect ( newState.messages.length ).toEqual ( 1 )
+    expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)
+    expect ( { ...newState, messages: []}).toEqual ( expected )
+   })
+ })
+})
+
+//Rest chequeCreditBooks [object Object] pact test for ChequeCreditbooks
+pactWith ( { consumer: 'ChequeCreditbooks', provider: 'ChequeCreditbooksProvider', cors: true }, provider => {
+  describe ( 'ChequeCreditbooks - chequeCreditBooks rest state:revalidate', () => {
+   it ( 'should have a state:revalidate rest for ChequeCreditbooks', async () => {
+    const restCommand: RestCommand = { name: 'ChequeCreditbooks_ChequeCreditbooksRestDetails', restAction: {"state":"revalidate"} }
+    const firstState: FState = {
+       ...emptyState, restCommands: [ restCommand ],
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
+       pageSelection: [ { pageName: 'ChequeCreditbooks', pageMode: 'view' } ]
+    }
+    await provider.addInteraction ( {
+      state: 'default',
+      uponReceiving: 'a rest for ChequeCreditbooks chequeCreditBooks state:revalidate',
+      withRequest: {
+         method: 'POST',
+         path:   '/api/chequeCreditBooks/revalidate',
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
+         //no request body needed for state:revalidate,
+      },
+      willRespondWith: {
+         status: 200,
+         body: {"stateChequeCreditbooksrevalidate": true}
       },
     } )
     const lensTransforms: Transform<FState,any>[] = [

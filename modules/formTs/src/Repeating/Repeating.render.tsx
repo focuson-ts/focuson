@@ -30,7 +30,7 @@ export function RepeatingPage(){
   const nextOccupationGuard =  pageState(state)<domain.RepeatingPageDomain>().focusOn('selectedItem').optJsonOr(0) <  pageState(state)<domain.RepeatingPageDomain>().focusOn('fromApi').optJsonOr([]).length - 1
   const prevOccupationGuard =  pageState(state)<domain.RepeatingPageDomain>().focusOn('selectedItem').optJsonOr(0) >0
 const id=`page${index}`;
-  const buttons =    {addEntry:<ModalButton id={`${id}.addEntry`} text='addEntry'  state={state} modal = 'RepeatingLine'  
+  const allButtons =    {addEntry:<ModalButton id={`${id}.addEntry`} text='addEntry'  state={state} modal = 'RepeatingLine'  
         pageMode='create'
         focusOn='~/temp'
         copyOnClose={[{"to":"~/fromApi[$append]"}]}
@@ -52,15 +52,15 @@ const id=`page${index}`;
 
       return <>
           <Table id={`${id}`} state={state} mode={mode} order={["name","age"]} />
-      { buttons.addEntry } 
-      { buttons.edit } 
-      { buttons.prevOccupation } 
-      { buttons.nextOccupation } 
+      { allButtons.addEntry } 
+      { allButtons.edit } 
+      { allButtons.prevOccupation } 
+      { allButtons.nextOccupation } 
       </>})}
 
-export function RepeatingLine({id,state,mode,buttons}: FocusedProps<FState, RepeatingLineDomain,Context>){
+export function RepeatingLine({id,state,mode,allButtons,label}: FocusedProps<FState, RepeatingLineDomain,Context>){
   return <>
-    <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='Name' allButtons={buttons} required={true} />
-    <LabelAndNumberInput id={`${id}.age`} state={state.focusOn('age')} mode={mode} label='Age' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='Name' allButtons={allButtons} required={true} />
+    <LabelAndNumberInput id={`${id}.age`} state={state.focusOn('age')} mode={mode} label='Age' allButtons={allButtons} required={true} />
 </>
 }

@@ -1,4 +1,6 @@
+import * as empty from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.empty';
 import * as domain from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains';
+import * as render from "./OccupationAndIncomeSummary.render";
 import { LensProps } from "@focuson/state";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from "@focuson/pages";
@@ -22,10 +24,10 @@ export function AdditionalInformationModalPage(){
   return focusedPage<FState, AdditionalInformationDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
      ( state, d, mode, index ) => {
           const id=`page${index}`;
-          const buttons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} />,
+          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} />,
               commit:<ModalCommitButton id={`${id}.commit`}   state={state} />,}
           return <>
-          <AdditionalInformation id={`${id}`} state={state} mode={mode} buttons={buttons} />
-          { buttons.cancel } 
-          { buttons.commit } 
+          <AdditionalInformation id={`${id}`} state={state} mode={mode} label='' allButtons={allButtons} />
+          { allButtons.cancel } 
+          { allButtons.commit } 
           </>})}

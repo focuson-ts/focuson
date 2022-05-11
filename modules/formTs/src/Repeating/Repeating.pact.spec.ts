@@ -72,7 +72,7 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
       },
     } )
     const lensTransforms: Transform<FState,any>[] = [
-    [Lenses.identity<FState>().focusQuery('Repeating').focusQuery('fromApi'), () => samples.sampleRepeatingWholeData0]
+      [Lenses.identity<FState>().focusQuery('Repeating').focusQuery('fromApi'), () => samples.sampleRepeatingWholeData0]
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );

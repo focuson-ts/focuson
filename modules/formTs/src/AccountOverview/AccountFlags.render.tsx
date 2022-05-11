@@ -1,4 +1,6 @@
+import * as empty from '../AccountOverview/AccountOverview.empty';
 import * as domain from '../AccountOverview/AccountOverview.domains';
+import * as render from "./AccountOverview.render";
 import { LensProps } from "@focuson/state";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from "@focuson/pages";
@@ -22,10 +24,10 @@ export function AccountFlagsPage(){
   return focusedPage<FState, AccountAllFlagsDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
      ( state, d, mode, index ) => {
           const id=`page${index}`;
-          const buttons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} />,
+          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} />,
               commit:<ModalCommitButton id={`${id}.commit`}   state={state} />,}
           return <>
-          <AccountAllFlags id={`${id}`} state={state} mode={mode} buttons={buttons} />
-          { buttons.cancel } 
-          { buttons.commit } 
+          <AccountAllFlags id={`${id}`} state={state} mode={mode} label='' allButtons={allButtons} />
+          { allButtons.cancel } 
+          { allButtons.commit } 
           </>})}

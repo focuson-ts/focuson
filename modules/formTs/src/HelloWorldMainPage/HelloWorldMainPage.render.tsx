@@ -25,14 +25,14 @@ export function HelloWorldMainPagePage(){
   return focusedPageWithExtraState<FState, HelloWorldMainPagePageDomain, HelloWorldDomainDataDomain, Context> ( s => 'Hello World Main Page' ) ( state => state.focusOn('fromApi')) (
 ( fullState, state , full, d, mode, index) => {
 const id=`page${index}`;
-  const buttons ={}
+  const allButtons ={}
 
       return <>
-          <HelloWorldDomainData id={`${id}`} state={state} mode={mode} buttons={buttons} />
+          <HelloWorldDomainData id={`${id}`} state={state} mode={mode} label='' allButtons={allButtons} />
       </>})}
 
-export function HelloWorldDomainData({id,state,mode,buttons}: FocusedProps<FState, HelloWorldDomainDataDomain,Context>){
+export function HelloWorldDomainData({id,state,mode,allButtons,label}: FocusedProps<FState, HelloWorldDomainDataDomain,Context>){
   return <>
-    <LabelAndStringInput id={`${id}.message`} state={state.focusOn('message')} mode={mode} label='Hello world example' allButtons={buttons} required={true} />
+    <LabelAndStringInput id={`${id}.message`} state={state.focusOn('message')} mode={mode} label='Hello world example' allButtons={allButtons} required={true} />
 </>
 }

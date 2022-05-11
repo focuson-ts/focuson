@@ -17,6 +17,6 @@ export function ChequeCreditbooks_ChequeCreditbooksRestDetails ( cd: NameAndLens
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/api/chequeCreditBooks?{query}",
-    states : {"cancel":{"url":"/api/chequeCreditBooks/cancel?{query}"}}
+    states : {"cancel":{"url":"/api/chequeCreditBooks/cancel?{query}"},"revalidate":{"url":"/api/chequeCreditBooks/revalidate?{query}"}}
   }
 }

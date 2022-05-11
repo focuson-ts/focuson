@@ -1,7 +1,9 @@
 type Query{
   getHelloWorldDomainData:HelloWorldDomainData!
+  getPrintRecordItem(accountId: String!):[PrintRecordItem!]!
   getCollectionItem(accountId: String!, clientRef: String!):[CollectionItem!]!
   getCollectionSummary(accountId: String!, clientRef: String!):CollectionSummary!
+  getOverpaymentPage(accountId: String!, clientRef: String!):OverpaymentPage!
   getMandate(clientRef: String!):[Mandate!]!
   getAccountAllFlags(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):AccountAllFlags!
   getAccountOverviewAgreementType(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):AccountOverviewAgreementType!
@@ -283,6 +285,13 @@ type JointAccountCustomer{
   name: String!
   addresses: [JointAccountAddress!]!
 }
+type ListOfPayments{
+  standingOrders: SinglePrint!
+  openBankingStandingOrders: SinglePrint!
+  directDebits: SinglePrint!
+  billPayments: SinglePrint!
+  openBanking: SinglePrint!
+}
 type Mandate{
   sortCode: String!
   accountId: Int!
@@ -336,6 +345,16 @@ type OtherIncomeResponse{
   incomeFreqRef: String!
   amount: Int!
 }
+type OverpaymentHistoryLine{
+  amountReceived: Int!
+  date: String!
+  status: String!
+}
+type OverpaymentPage{
+  history: [OverpaymentHistoryLine!]!
+  drawDownDate: String!
+  initialBorrowing: Int!
+}
 type PostCodeDataLine{
   line1: String!
   line2: String!
@@ -351,9 +370,33 @@ type PostCodeNameAndAddress{
   line4: String!
   postcode: String!
 }
+type PrintRecordItem{
+  requestedBy: String!
+  requesterDetails: RequesterDetails!
+  listOfPayments: ListOfPayments!
+  includeSingleAndInitialDirectDebits: Boolean!
+  authorisedByCustomer: String!
+  alreadyPrinted: Boolean!
+}
 type RepeatingLine{
   name: String!
   age: Int!
+}
+type RequesterDetails{
+  title: String!
+  forename: String!
+  surname: String!
+  addressLine1: String!
+  addressLine2: String!
+  addressLine3: String!
+  addressLine4: String!
+  postcode: String!
+  phone: String!
+  fax: String!
+}
+type SinglePrint{
+  shouldPrint: Boolean!
+  numberOfItems: Int!
 }
 input ChequeCreditbooksInp{
   history: [ChequeCreditbooksHistoryLineInp!]!

@@ -15,10 +15,12 @@ import * as process from "process";
 import { AppConfig } from "./appConfig";
 import { LinkedAccountDetailsPD } from "./example/linkedAccount/linkedAccountDetails.pageD";
 import { TagFetcherDebug } from "@focuson/focuson";
+import { ListOfPaymentsPagePD } from "./example/ListOfPayments/listOfPayements.pageD";
 
 
 export const generatedPages: ExampleMainPage[] = [
   HelloWorldPage,
+  ListOfPaymentsPagePD,
   LinkedAccountDetailsPD,
   AccountOverviewMainPage,
   JointAccountPageD,

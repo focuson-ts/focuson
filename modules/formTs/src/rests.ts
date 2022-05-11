@@ -4,9 +4,11 @@ import { Lenses, NameAndLens} from "@focuson/lens"
 import { FState , commonIds} from "./common";
 
 import { HelloWorldMainPage_HelloWorldDomainDataRestDetails } from './HelloWorldMainPage/HelloWorldMainPage.rests';
+import { ListOfPaymentsPage_PrintRecordHistoryRestDetails } from './ListOfPaymentsPage/ListOfPaymentsPage.rests';
 import { LinkedAccountDetails_CollectionsListRestDetails } from './LinkedAccountDetails/LinkedAccountDetails.rests';
 import { LinkedAccountDetails_CollectionSummaryRestDetails } from './LinkedAccountDetails/LinkedAccountDetails.rests';
 import { LinkedAccountDetails_CreatePaymentRestDetails } from './LinkedAccountDetails/LinkedAccountDetails.rests';
+import { LinkedAccountDetails_OverpaymentPageRestDetails } from './LinkedAccountDetails/LinkedAccountDetails.rests';
 import { LinkedAccountDetails_CollectionItemRestDetails } from './LinkedAccountDetails/LinkedAccountDetails.rests';
 import { LinkedAccountDetails_MandateListRestDetails } from './LinkedAccountDetails/LinkedAccountDetails.rests';
 import { AccountOverview_AccountAllFlagsRestDetails } from './AccountOverview/AccountOverview.rests';
@@ -36,9 +38,11 @@ export function restUrlMutator ( r: RestAction, url: string ): string { return u
 
 export const restDetails: RestDetails<FState, SimpleMessage> = {
    HelloWorldMainPage_HelloWorldDomainDataRestDetails: HelloWorldMainPage_HelloWorldDomainDataRestDetails(commonIds, defaultDateFn),
+   ListOfPaymentsPage_PrintRecordHistoryRestDetails: ListOfPaymentsPage_PrintRecordHistoryRestDetails(commonIds, defaultDateFn),
    LinkedAccountDetails_CollectionsListRestDetails: LinkedAccountDetails_CollectionsListRestDetails(commonIds, defaultDateFn),
    LinkedAccountDetails_CollectionSummaryRestDetails: LinkedAccountDetails_CollectionSummaryRestDetails(commonIds, defaultDateFn),
    LinkedAccountDetails_CreatePaymentRestDetails: LinkedAccountDetails_CreatePaymentRestDetails(commonIds, defaultDateFn),
+   LinkedAccountDetails_OverpaymentPageRestDetails: LinkedAccountDetails_OverpaymentPageRestDetails(commonIds, defaultDateFn),
    LinkedAccountDetails_CollectionItemRestDetails: LinkedAccountDetails_CollectionItemRestDetails(commonIds, defaultDateFn),
    LinkedAccountDetails_MandateListRestDetails: LinkedAccountDetails_MandateListRestDetails(commonIds, defaultDateFn),
    AccountOverview_AccountAllFlagsRestDetails: AccountOverview_AccountAllFlagsRestDetails(commonIds, defaultDateFn),

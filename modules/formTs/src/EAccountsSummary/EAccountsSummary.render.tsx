@@ -33,7 +33,7 @@ export function EAccountsSummaryPage(){
   return focusedPageWithExtraState<FState, EAccountsSummaryPageDomain, EAccountsSummaryDomain, Context> ( s => 'E Accounts Summary' ) ( state => state.focusOn('fromApi')) (
 ( fullState, state , full, d, mode, index) => {
 const id=`page${index}`;
-  const buttons =    {amendExistingPlan:<ModalButton id={`${id}.amendExistingPlan`} text='amendExistingPlan'  state={state} modal = 'CreatePlan'  
+  const allButtons =    {amendExistingPlan:<ModalButton id={`${id}.amendExistingPlan`} text='amendExistingPlan'  state={state} modal = 'CreatePlan'  
         pageMode='edit'
         focusOn='~/tempCreatePlan'
         copy={[{"from":"~/fromApi/createPlan"}]}
@@ -54,39 +54,39 @@ const id=`page${index}`;
       refresh:<button>refresh of type ResetStateButton cannot be created yet</button>,}
 
       return <>
-          <EAccountsSummary id={`${id}`} state={state} mode={mode} buttons={buttons} />
-      { buttons.createNewPlan } 
-      { buttons.amendExistingPlan } 
-      { buttons.deleteExistingPlan } 
-      { buttons.refresh } 
+          <EAccountsSummary id={`${id}`} state={state} mode={mode} label='' allButtons={allButtons} />
+      { allButtons.createNewPlan } 
+      { allButtons.amendExistingPlan } 
+      { allButtons.deleteExistingPlan } 
+      { allButtons.refresh } 
       </>})}
 
-export function CreatePlan({id,state,mode,buttons}: FocusedProps<FState, CreatePlanDomain,Context>){
+export function CreatePlan({id,state,mode,allButtons,label}: FocusedProps<FState, CreatePlanDomain,Context>){
   return <>
-    <LabelAndDateInput id={`${id}.createPlanStart`} state={state.focusOn('createPlanStart')} mode={mode} label='Create Start' allButtons={buttons} />
-    <LabelAndDateInput id={`${id}.createPlanDate`} state={state.focusOn('createPlanDate')} mode={mode} label='Create Plan Date' allButtons={buttons} ariaLabel='The Create Plan Date' />
-    <LabelAndDateInput id={`${id}.createPlanEnd`} state={state.focusOn('createPlanEnd')} mode={mode} label='Create Plan End' allButtons={buttons} />
+    <LabelAndDateInput id={`${id}.createPlanStart`} state={state.focusOn('createPlanStart')} mode={mode} label='Create Start' allButtons={allButtons} />
+    <LabelAndDateInput id={`${id}.createPlanDate`} state={state.focusOn('createPlanDate')} mode={mode} label='Create Plan Date' allButtons={allButtons} ariaLabel='The Create Plan Date' />
+    <LabelAndDateInput id={`${id}.createPlanEnd`} state={state.focusOn('createPlanEnd')} mode={mode} label='Create Plan End' allButtons={allButtons} />
 </>
 }
 
-export function EAccountsSummary({id,state,mode,buttons}: FocusedProps<FState, EAccountsSummaryDomain,Context>){
+export function EAccountsSummary({id,state,mode,allButtons,label}: FocusedProps<FState, EAccountsSummaryDomain,Context>){
   return <>
-    <LabelAndBooleanInput id={`${id}.useEStatements`} state={state.focusOn('useEStatements')} mode={mode} label='Use E Statements' allButtons={buttons} />
+    <LabelAndBooleanInput id={`${id}.useEStatements`} state={state.focusOn('useEStatements')} mode={mode} label='Use E Statements' allButtons={allButtons} />
     <Table id={`${id}.eAccountsTable`} state={state.focusOn('eAccountsTable')} mode={mode} order={["accountId","displayType","description","virtualBankSeq","frequency","total"]} />
-    <LabelAndNumberInput id={`${id}.totalMonthlyCost`} state={state.focusOn('totalMonthlyCost')} mode={mode} label='Total Monthly Cost' allButtons={buttons} required={true} />
-    <LabelAndNumberInput id={`${id}.oneAccountBalance`} state={state.focusOn('oneAccountBalance')} mode={mode} label='One Account Balance' allButtons={buttons} required={true} />
-    <LabelAndNumberInput id={`${id}.currentAccountBalance`} state={state.focusOn('currentAccountBalance')} mode={mode} label='Current Account Balance' allButtons={buttons} required={true} />
-    <CreatePlan id={`${id}.createPlan`} state={state.focusOn('createPlan')} mode={mode} buttons={buttons} />
+    <LabelAndNumberInput id={`${id}.totalMonthlyCost`} state={state.focusOn('totalMonthlyCost')} mode={mode} label='Total Monthly Cost' allButtons={allButtons} required={true} />
+    <LabelAndNumberInput id={`${id}.oneAccountBalance`} state={state.focusOn('oneAccountBalance')} mode={mode} label='One Account Balance' allButtons={allButtons} required={true} />
+    <LabelAndNumberInput id={`${id}.currentAccountBalance`} state={state.focusOn('currentAccountBalance')} mode={mode} label='Current Account Balance' allButtons={allButtons} required={true} />
+    <CreatePlan id={`${id}.createPlan`} state={state.focusOn('createPlan')} mode={mode} label='Create Plan' allButtons={allButtons} />
 </>
 }
 
-export function EAccountSummary({id,state,mode,buttons}: FocusedProps<FState, EAccountSummaryDomain,Context>){
+export function EAccountSummary({id,state,mode,allButtons,label}: FocusedProps<FState, EAccountSummaryDomain,Context>){
   return <>
-    <LabelAndNumberInput id={`${id}.accountId`} state={state.focusOn('accountId')} mode={mode} label='Account Id' allButtons={buttons} required={true} min={10000000} max={99999999} />
-    <LabelAndRadio id={`${id}.displayType`} state={state.focusOn('displayType')} mode={mode} label='Display Type' allButtons={buttons} enums={{"savings":"Savings","checking":"Checking"}} />
-    <LabelAndStringInput id={`${id}.description`} state={state.focusOn('description')} mode={mode} label='Description' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.virtualBankSeq`} state={state.focusOn('virtualBankSeq')} mode={mode} label='Virtual Bank Seq' allButtons={buttons} required={true} />
-    <LabelAndNumberInput id={`${id}.total`} state={state.focusOn('total')} mode={mode} label='Total' allButtons={buttons} required={true} />
-    <LabelAndStringInput id={`${id}.frequency`} state={state.focusOn('frequency')} mode={mode} label='Frequency/Amount' allButtons={buttons} required={true} />
+    <LabelAndNumberInput id={`${id}.accountId`} state={state.focusOn('accountId')} mode={mode} label='Account Id' allButtons={allButtons} required={true} min={10000000} max={99999999} />
+    <LabelAndRadio id={`${id}.displayType`} state={state.focusOn('displayType')} mode={mode} label='Display Type' allButtons={allButtons} enums={{"savings":"Savings","checking":"Checking"}} />
+    <LabelAndStringInput id={`${id}.description`} state={state.focusOn('description')} mode={mode} label='Description' allButtons={allButtons} required={true} />
+    <LabelAndStringInput id={`${id}.virtualBankSeq`} state={state.focusOn('virtualBankSeq')} mode={mode} label='Virtual Bank Seq' allButtons={allButtons} required={true} />
+    <LabelAndNumberInput id={`${id}.total`} state={state.focusOn('total')} mode={mode} label='Total' allButtons={allButtons} required={true} />
+    <LabelAndStringInput id={`${id}.frequency`} state={state.focusOn('frequency')} mode={mode} label='Frequency/Amount' allButtons={allButtons} required={true} />
 </>
 }

@@ -2,8 +2,8 @@
 ## Common Params
 | Name | Location
 | --- | ---
-|clientRef|clientRef
 |accountId|accountId
+|clientRef|clientRef
 |applRef|applRef
 |brandRef|brandRef
 |dbName|dbName
@@ -14,9 +14,11 @@
 | Page | Rest | Url | Params | Access | Audit
 | --- | --- | ---  |  --- | --- | --- |
 |HelloWorldMainPage|restDataRD | /helloWorld?{query}|  |  | 
+|ListOfPaymentsPage|paymentHistory | /api/printrecordhistory?{query}| accountId |  | 
 |LinkedAccountDetails|collectionHistoryList | /api/collections/list?{query}| accountId,clientRef |  | 
 |LinkedAccountDetails|collectionSummary | /api/collections/summary?{query}| accountId,clientRef |  | 
 |LinkedAccountDetails|createPayment | /api/payment/create?{query}| accountId,clientRef,paymentId |  | create->auditCreate
+|LinkedAccountDetails|overpaymentHistory | /api/payment/overpayment/history?{query}| accountId,clientRef |  | 
 |LinkedAccountDetails|payments | /api/payment?{query}| accountId,clientRef,paymentId |  | state:cancel->auditCancel; state:revalidate->auditrevalidate
 |LinkedAccountDetails| | /api/payment/cancel?{query}| accountId,clientRef,paymentId |
 |LinkedAccountDetails| | /api/payment/revalidate?{query}| accountId,clientRef,paymentId |
@@ -42,6 +44,7 @@
 |CreateEAccount|eTransfer | /api/createEAccount/?{query}| accountId,applRef,brandRef,clientRef,createPlanId |  | 
 |ChequeCreditbooks|chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,clientRef |  | create->auditCreateCheckBook; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
 |ChequeCreditbooks| | /api/chequeCreditBooks/cancel?{query}| accountId,applRef,brandRef,clientRef |
+|ChequeCreditbooks| | /api/chequeCreditBooks/revalidate?{query}| accountId,applRef,brandRef,clientRef |
 |Repeating|repeating | /api/repeating?{query}| clientRef |  | 
 |PostCodeMainPage|address | /api/address?{query}|  |  | 
 |PostCodeMainPage|postcode | /api/postCode?{query}| dbName,postcode |  | 
@@ -58,10 +61,47 @@
     HelloWorldDomainData
 
 ---
+# ListOfPaymentsPage - MainPage
+## Common Params
+| Name | Location
+| --- | ---
+|accountId|accountId
+  ## domains 
+    ListOfPayments
+    PrintRecordHistory
+    PrintRecordItem
+    RequesterDetails
+    SinglePrint
+  ## rests   
+  |name|url|params|access|audit
+  | --- | --- | --- | --- | --- 
+    |paymentHistory | /api/printrecordhistory?{query}| accountId |  | 
+  ## modals  
+  |name|displayed with
+  | --- | --- 
+    | EditListOfPayments |PrintRecordItem
+  ## display 
+    PrintRecordHistory displayed using SelectedItem
+  ## buttons 
+    Modal Button ==> EditListOfPayments in mode create
+      Copy from {"from":"~/display[~/selected]"}
+      Focused on "~/tempListOfPayments"
+      Copy on close {"to":"~/display[$append]"} 
+    next         ListNextButton
+    prev         ListPrevButton
+  ## guards  
+  | PrintRecordItem|requestedBy|alreadyPrinted
+  | --- | --- | --- 
+  requesterDetails|m,j| 
+  authorisedByCustomer|m,j| 
+  
+
+---
 # LinkedAccountDetails - MainPage
 ## Common Params
 | Name | Location
 | --- | ---
+|accountId|accountId
 |clientRef|clientRef
   ## domains 
     CollectionItem
@@ -72,12 +112,16 @@
     Mandate
     MandateList
     MandateSearch
+    OverpaymentHistory
+    OverpaymentHistoryLine
+    OverpaymentPage
   ## rests   
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
     |collectionHistoryList | /api/collections/list?{query}| accountId,clientRef |  | 
     |collectionSummary | /api/collections/summary?{query}| accountId,clientRef |  | 
     |createPayment | /api/payment/create?{query}| accountId,clientRef,paymentId |  | create->auditCreate
+    |overpaymentHistory | /api/payment/overpayment/history?{query}| accountId,clientRef |  | 
     |payments | /api/payment?{query}| accountId,clientRef,paymentId |  | state:cancel->auditCancel; state:revalidate->auditrevalidate
     | | /api/payment/cancel?{query}| accountId,clientRef,paymentId |
     | | /api/payment/revalidate?{query}| accountId,clientRef,paymentId |
@@ -87,6 +131,7 @@
   | --- | --- 
     | SelectMandate |MandateSearch
     | CreatePayment |CreatePayment
+    | OverpaymentModalPage |OverpaymentPage
   ## display 
     LinkedAccountDetailsDisplay
   ## buttons 
@@ -415,6 +460,7 @@
   | --- | --- | --- | --- | --- 
     |chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,clientRef |  | create->auditCreateCheckBook; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
     | | /api/chequeCreditBooks/cancel?{query}| accountId,applRef,brandRef,clientRef |
+    | | /api/chequeCreditBooks/revalidate?{query}| accountId,applRef,brandRef,clientRef |
   ## modals  
   |name|displayed with
   | --- | --- 
