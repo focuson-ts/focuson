@@ -4,6 +4,14 @@ body {
     background:rgba(241, 241, 241, 0.5);
 }
 
+.border-bottom {
+  border-bottom: 1px solid #ddd;
+}
+
+.padding-bottom {
+  padding-bottom: 1rem;
+}
+
 .row {
     --bs-gutter-x: 1.5rem;
     --bs-gutter-y: 0;
@@ -71,7 +79,7 @@ input:valid{
 #container {
     min-height: 500px;
     display: block;
-    width: 100%;
+    width: 80%;
     background: #fff;
     padding: 5px 25px;
 }
@@ -296,12 +304,6 @@ select {
     visibility: visible;
     transform: scale(1.0);
     transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
-}
-
-#container {
-    position: relative;
-    /*width: 1024px;*/
-    width: auto;
 }
 
 /* #modalPage {
@@ -537,8 +539,8 @@ a.close {
 }
 
 #default_template {
-    border: 1px solid black;
-    padding: 10px
+    border: 1px solid #ddd;
+    padding: 10px;
 }
 
 .glassPane {
@@ -739,6 +741,24 @@ pre {
 
 .inputWidth80 select{
     width: 81% !important;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+  box-shadow: 0 8px 8px -4px lightblue;
+}
+
+.card-body {
+  flex: 1 1 auto;
+  padding: 1rem 1rem;
 }
 
 
