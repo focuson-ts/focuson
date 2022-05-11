@@ -1,7 +1,7 @@
-import { HasPageSelection, PageMode ,PageSelectionContext} from '@focuson/pages'
+import { fromPathFromRaw, HasPageSelection, PageMode ,PageSelectionContext, pageSelectionlens} from '@focuson/pages'
 import { defaultDateFn, HasSimpleMessages, SimpleMessage, NameAnd } from '@focuson/utils';
 import {  OnTagFetchErrorFn } from '@focuson/fetcher';
-import { identityOptics,NameAndLens } from '@focuson/lens';
+import { identityOptics,NameAndLens, Optional } from '@focuson/lens';
 import { HasTagHolder } from '@focuson/template';
  import { HasRestCommands } from '@focuson/rest'
 import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusOnContext, HasFocusOnDebug } from '@focuson/focuson';
@@ -9,6 +9,8 @@ import { LensProps } from '@focuson/state';
 import { pages } from "./pages";
 import { MyCombined } from "@focuson/form_components";
 import { HasHelloWorldMainPagePageDomain } from './HelloWorldMainPage/HelloWorldMainPage.domains';
+import { HasListOfPaymentsPagePageDomain } from './ListOfPaymentsPage/ListOfPaymentsPage.domains';
+import { HasLinkedAccountDetailsPageDomain } from './LinkedAccountDetails/LinkedAccountDetails.domains';
 import { HasAccountOverviewPageDomain } from './AccountOverview/AccountOverview.domains';
 import { HasJointAccountPageDomain } from './JointAccount/JointAccount.domains';
 import { HasOccupationAndIncomeSummaryPageDomain } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains';
@@ -21,6 +23,8 @@ import { HasPostCodeMainPagePageDomain } from './PostCodeMainPage/PostCodeMainPa
 
 export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,
   HasHelloWorldMainPagePageDomain,
+  HasListOfPaymentsPagePageDomain,
+  HasLinkedAccountDetailsPageDomain,
   HasAccountOverviewPageDomain,
   HasJointAccountPageDomain,
   HasOccupationAndIncomeSummaryPageDomain,
@@ -35,8 +39,8 @@ export interface HasCommonIds {CommonIds: CommonIds}
 export type CommonIds = {
   accountId?:string;
   applRef?:string;
-  brandId?:string;
   brandRef?:string;
+  clientRef?:string;
   createPlanId?:string;
   customerId?:string;
   dbName?:string;
@@ -48,8 +52,8 @@ export const commonIdsL = identityL.focusQuery('CommonIds');
 export const commonIds: NameAndLens<FState> = {
    accountId: commonIdsL.focusQuery('accountId'),
    applRef: commonIdsL.focusQuery('applRef'),
-   brandId: commonIdsL.focusQuery('brandId'),
    brandRef: commonIdsL.focusQuery('brandRef'),
+   clientRef: commonIdsL.focusQuery('clientRef'),
    createPlanId: commonIdsL.focusQuery('createPlanId'),
    customerId: commonIdsL.focusQuery('customerId'),
    dbName: commonIdsL.focusQuery('dbName'),
@@ -59,7 +63,8 @@ export const commonIds: NameAndLens<FState> = {
 export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{
   mode: PageMode;
   id: string;
-  buttons: NameAnd<JSX.Element>
+  label?:string;
+  allButtons: NameAnd<JSX.Element>;
 }
 export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPageSelection, T> ( onError?: OnTagFetchErrorFn<S, any, T, SimpleMessage> ) {
   return commonTagFetchProps<S, T> (
@@ -71,12 +76,14 @@ export const context: Context = {
    ...defaultPageSelectionAndRestCommandsContext<FState> ( pages, commonIds),
    combine: MyCombined
 }
+export const pathToLens: ( s: FState ) => ( path: string ) => Optional<FState, any> =
+    fromPathFromRaw ( pageSelectionlens<FState> (), pages )
 export const emptyState: FState = {
-  CommonIds: {"applRef":"appref","createPlanId":"tbd","dbName":"mock","brandId":"custId","accountId":"custId","customerId":"custId","employeeType":"basic","brandRef":"brandRef","usersRole":"user"},
+  CommonIds: {"dbName":"mock","clientRef":"custId","applRef":"appref","createPlanId":"tbd","accountId":"123","brandRef":"brandRef","customerId":"custId","employeeType":"basic","usersRole":"user"},
   tags: {},
   messages: [],
   pageSelection: [{ pageName: 'HelloWorldMainPage', firstTime: true, pageMode: 'view' }],
   HelloWorldMainPage:{},
   restCommands: [],
-  debug: {"fetcherDebug":true,"restDebug":false,"selectedPageDebug":false,"loadTreeDebug":false,"showTracing":false,"recordTrace":true,"accordions":[]}
+  debug: {"fetcherDebug":true,"restDebug":false,"selectedPageDebug":false,"loadTreeDebug":false,"showTracing":false,"recordTrace":true,"tagFetcherDebug":false,"accordions":[]}
   }

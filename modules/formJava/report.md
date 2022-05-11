@@ -3,61 +3,165 @@
 | Name | Location
 | --- | ---
 |accountId|accountId
-|customerId|customerId
-|brandId|brandId
-|dbName|dbName
-|createPlanId|createPlanId
-|employeeType|employeeType
+|clientRef|clientRef
 |applRef|applRef
 |brandRef|brandRef
+|dbName|dbName
+|createPlanId|createPlanId
+|customerId|customerId
+|employeeType|employeeType
 # All endpoints
 | Page | Rest | Url | Params | Access | Audit
 | --- | --- | ---  |  --- | --- | --- |
 |HelloWorldMainPage|restDataRD | /helloWorld?{query}|  |  | 
-|AccountOverview|accountFlags | /api/accountOverview/flags?{query}| accountId,customerId |  | 
-|AccountOverview|agreementType | /api/accountOverview/agreementType?{query}| accountId,customerId |  | 
-|AccountOverview|arrearsDetails | /api/accountOverview/arrearsDetails?{query}| accountId,customerId,startDate |  | 
-|AccountOverview|excessHistory | /api/accountOverview/excessHistory?{query}| accountId,customerId |  | 
-|AccountOverview|excessInfo | /api/accountOverview/excessInfo?{query}| accountId,customerId |  | 
-|AccountOverview|main | /api/accountOverview?{query}| accountId,customerId |  | 
-|AccountOverview|optOut | /api/accountOverview/optOut?{query}| accountId,customerId |  | 
-|AccountOverview|reason | /api/accountOverview/reason?{query}| accountId,customerId |  | 
-|JointAccount|jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName |  | 
-|OccupationAndIncomeSummary|additionalInformationRD | /customer/occupation/v2/additionalInfo?{query}| customerId |  | get->auditGetCustomeAdditionalInfo
-|OccupationAndIncomeSummary|businessDetailsRD | /customer/occupation/v2/businessDetails?{query}| customerId |  | get->auditGetBusinessDetails
+|ListOfPaymentsPage|paymentHistory | /api/printrecordhistory?{query}| accountId |  | 
+|LinkedAccountDetails|collectionHistoryList | /api/collections/list?{query}| accountId,clientRef |  | 
+|LinkedAccountDetails|collectionSummary | /api/collections/summary?{query}| accountId,clientRef |  | 
+|LinkedAccountDetails|createPayment | /api/payment/create?{query}| accountId,clientRef,paymentId |  | create->auditCreate
+|LinkedAccountDetails|overpaymentHistory | /api/payment/overpayment/history?{query}| accountId,clientRef |  | 
+|LinkedAccountDetails|payments | /api/payment?{query}| accountId,clientRef,paymentId |  | state:cancel->auditCancel; state:revalidate->auditrevalidate
+|LinkedAccountDetails| | /api/payment/cancel?{query}| accountId,clientRef,paymentId |
+|LinkedAccountDetails| | /api/payment/revalidate?{query}| accountId,clientRef,paymentId |
+|LinkedAccountDetails|searchMandate | /api/mandates/allForClient?{query}| clientRef |  | 
+|AccountOverview|accountFlags | /api/accountOverview/flags?{query}| accountId,applRef,brandRef,clientRef |  | 
+|AccountOverview|agreementType | /api/accountOverview/agreementType?{query}| accountId,applRef,brandRef,clientRef |  | 
+|AccountOverview|arrearsDetails | /api/accountOverview/arrearsDetails?{query}| accountId,applRef,brandRef,clientRef,startDate |  | 
+|AccountOverview|excessHistory | /api/accountOverview/excessHistory?{query}| accountId,applRef,brandRef,clientRef |  | 
+|AccountOverview|excessInfo | /api/accountOverview/excessInfo?{query}| accountId,applRef,brandRef,clientRef |  | 
+|AccountOverview|main | /api/accountOverview?{query}| accountId,applRef,brandRef,clientRef |  | 
+|AccountOverview|optOut | /api/accountOverview/optOut?{query}| accountId,applRef,brandRef,clientRef |  | 
+|AccountOverview|reason | /api/accountOverview/reason?{query}| accountId,applRef,brandRef,clientRef |  | 
+|JointAccount|jointAccount | /api/jointAccount?{query}| accountId,brandRef,dbName |  | 
+|OccupationAndIncomeSummary|additionalInformationRD | /customer/occupation/v2/additionalInfo?{query}| accountId,applRef,brandRef,clientRef |  | get->auditGetCustomeAdditionalInfo
+|OccupationAndIncomeSummary|businessDetailsRD | /customer/occupation/v2/businessDetails?{query}| accountId,applRef,brandRef,clientRef |  | get->auditGetBusinessDetails
 |OccupationAndIncomeSummary|dropdownsRD | /customer/occupation/v2/occupationDetails?{query}|  |  | 
-|OccupationAndIncomeSummary|occupationAndIncomeRD | /customer/occupation/v2/occupationIncomeDetails?{query}| customerId |  | get->auditGetCustomerOccupation; update->auditUpdateCustomerOccupation
-|OccupationAndIncomeSummary|otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}| customerId |  | get->auditGetBusinessDetails
-|EAccountsSummary|createPlanRestD | /api/createPlan?{query}| accountId,createPlanId,customerId |  | 
-|EAccountsSummary|eAccountsSummary | /api/accountsSummary?{query}| accountId,customerId,employeeType | employeeType in teamLeader | state:invalidate->auditStuff
-|EAccountsSummary| | /api/accountsSummary/invalidate?{query}| accountId,customerId,employeeType |
+|OccupationAndIncomeSummary|occupationAndIncomeRD | /customer/occupation/v2/occupationIncomeDetails?{query}| accountId,applRef,brandRef,clientRef |  | get->auditGetCustomerOccupation; update->auditUpdateCustomerOccupation
+|OccupationAndIncomeSummary|otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}| accountId,applRef,brandRef,clientRef |  | get->auditGetBusinessDetails
+|EAccountsSummary|createPlanRestD | /api/createPlan?{query}| accountId,applRef,brandRef,clientRef,createPlanId |  | 
+|EAccountsSummary|eAccountsSummary | /api/accountsSummary?{query}| accountId,applRef,brandRef,clientRef,customerId,employeeType | employeeType in teamLeader | state:invalidate->auditStuff
+|EAccountsSummary| | /api/accountsSummary/invalidate?{query}| accountId,applRef,brandRef,clientRef,customerId,employeeType |
 |ETransfer|eTransfer | /api/eTransfers?{query}| customerId |  | 
-|CreateEAccount|eTransfer | /api/createEAccount/?{query}| accountId,createPlanId,customerId |  | 
-|ChequeCreditbooks|chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,customerId |  | create->auditCreateCheckBook; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
-|ChequeCreditbooks| | /api/chequeCreditBooks/cancel?{query}| accountId,applRef,brandRef,customerId |
-|Repeating|repeating | /api/repeating?{query}| customerId |  | 
+|CreateEAccount|eTransfer | /api/createEAccount/?{query}| accountId,applRef,brandRef,clientRef,createPlanId |  | 
+|ChequeCreditbooks|chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,clientRef |  | create->auditCreateCheckBook; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
+|ChequeCreditbooks| | /api/chequeCreditBooks/cancel?{query}| accountId,applRef,brandRef,clientRef |
+|ChequeCreditbooks| | /api/chequeCreditBooks/revalidate?{query}| accountId,applRef,brandRef,clientRef |
+|Repeating|repeating | /api/repeating?{query}| clientRef |  | 
 |PostCodeMainPage|address | /api/address?{query}|  |  | 
-|PostCodeMainPage|postcode | /api/postCode?{query}| postcode |  | 
+|PostCodeMainPage|postcode | /api/postCode?{query}| dbName,postcode |  | 
 
 ---
-#HelloWorldMainPage - MainPage
-  ##domains 
+# HelloWorldMainPage - MainPage
+  ## domains 
     HelloWorldDomainData
-  ##rests   
+  ## rests   
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
     |restDataRD | /helloWorld?{query}|  |  | 
-  ##display 
+  ## display 
     HelloWorldDomainData
 
 ---
-#AccountOverview - MainPage
+# ListOfPaymentsPage - MainPage
 ## Common Params
 | Name | Location
 | --- | ---
 |accountId|accountId
-|customerId|customerId
-  ##domains 
+  ## domains 
+    ListOfPayments
+    PrintRecordHistory
+    PrintRecordItem
+    RequesterDetails
+    SinglePrint
+  ## rests   
+  |name|url|params|access|audit
+  | --- | --- | --- | --- | --- 
+    |paymentHistory | /api/printrecordhistory?{query}| accountId |  | 
+  ## modals  
+  |name|displayed with
+  | --- | --- 
+    | EditListOfPayments |PrintRecordItem
+  ## display 
+    PrintRecordHistory displayed using SelectedItem
+  ## buttons 
+    Modal Button ==> EditListOfPayments in mode create
+      Copy from {"from":"~/display[~/selected]"}
+      Focused on "~/tempListOfPayments"
+      Copy on close {"to":"~/display[$append]"} 
+    next         ListNextButton
+    prev         ListPrevButton
+  ## guards  
+  | PrintRecordItem|requestedBy|alreadyPrinted
+  | --- | --- | --- 
+  requesterDetails|m,j| 
+  authorisedByCustomer|m,j| 
+  
+
+---
+# LinkedAccountDetails - MainPage
+## Common Params
+| Name | Location
+| --- | ---
+|accountId|accountId
+|clientRef|clientRef
+  ## domains 
+    CollectionItem
+    CollectionsList
+    CollectionSummary
+    CreatePayment
+    LinkedAccountDetailsDisplay
+    Mandate
+    MandateList
+    MandateSearch
+    OverpaymentHistory
+    OverpaymentHistoryLine
+    OverpaymentPage
+  ## rests   
+  |name|url|params|access|audit
+  | --- | --- | --- | --- | --- 
+    |collectionHistoryList | /api/collections/list?{query}| accountId,clientRef |  | 
+    |collectionSummary | /api/collections/summary?{query}| accountId,clientRef |  | 
+    |createPayment | /api/payment/create?{query}| accountId,clientRef,paymentId |  | create->auditCreate
+    |overpaymentHistory | /api/payment/overpayment/history?{query}| accountId,clientRef |  | 
+    |payments | /api/payment?{query}| accountId,clientRef,paymentId |  | state:cancel->auditCancel; state:revalidate->auditrevalidate
+    | | /api/payment/cancel?{query}| accountId,clientRef,paymentId |
+    | | /api/payment/revalidate?{query}| accountId,clientRef,paymentId |
+    |searchMandate | /api/mandates/allForClient?{query}| clientRef |  | 
+  ## modals  
+  |name|displayed with
+  | --- | --- 
+    | SelectMandate |MandateSearch
+    | CreatePayment |CreatePayment
+    | OverpaymentModalPage |OverpaymentPage
+  ## display 
+    LinkedAccountDetailsDisplay
+  ## buttons 
+    cancelPayment RestButton
+    Modal Button ==> CreatePayment in mode create
+      Copy from [{"from":"~/display/collectionSummary/allowance","to":"~/createPayment/allowance"},{"from":"~/display/collectionSummary/period","to":"~/createPayment/period"}]
+      Focused on "~/createPayment"
+      RestOnCommit: createPayment/create
+    refreshMandate DeleteStateButton
+    Modal Button ==> SelectMandate in mode edit
+      Copy from [{"from":"~/display/mandate/sortCode","to":"~/selectMandateSearch/sortCode"},{"from":"~/display/mandate","to":"~/tempMandate"}]
+      Focused on "~/selectMandateSearch"
+      Copy on close {"from":"~/tempMandate","to":"~/display/mandate"} 
+  ## guards  
+  | CreatePayment|reasonIsAllowance
+  | --- | --- 
+  allowance|A
+  period|A
+  
+
+---
+# AccountOverview - MainPage
+## Common Params
+| Name | Location
+| --- | ---
+|accountId|accountId
+|applRef|applRef
+|brandRef|brandRef
+|clientRef|clientRef
+  ## domains 
     AccountAllFlags
     AccountAllFlagsList
     AccountOneFlag
@@ -79,18 +183,18 @@
     ArrearsDetails
     ArrearsDetailsLine
     ArrearsDetailsLines
-  ##rests   
+  ## rests   
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
-    |accountFlags | /api/accountOverview/flags?{query}| accountId,customerId |  | 
-    |agreementType | /api/accountOverview/agreementType?{query}| accountId,customerId |  | 
-    |arrearsDetails | /api/accountOverview/arrearsDetails?{query}| accountId,customerId,startDate |  | 
-    |excessHistory | /api/accountOverview/excessHistory?{query}| accountId,customerId |  | 
-    |excessInfo | /api/accountOverview/excessInfo?{query}| accountId,customerId |  | 
-    |main | /api/accountOverview?{query}| accountId,customerId |  | 
-    |optOut | /api/accountOverview/optOut?{query}| accountId,customerId |  | 
-    |reason | /api/accountOverview/reason?{query}| accountId,customerId |  | 
-  ##modals  
+    |accountFlags | /api/accountOverview/flags?{query}| accountId,applRef,brandRef,clientRef |  | 
+    |agreementType | /api/accountOverview/agreementType?{query}| accountId,applRef,brandRef,clientRef |  | 
+    |arrearsDetails | /api/accountOverview/arrearsDetails?{query}| accountId,applRef,brandRef,clientRef,startDate |  | 
+    |excessHistory | /api/accountOverview/excessHistory?{query}| accountId,applRef,brandRef,clientRef |  | 
+    |excessInfo | /api/accountOverview/excessInfo?{query}| accountId,applRef,brandRef,clientRef |  | 
+    |main | /api/accountOverview?{query}| accountId,applRef,brandRef,clientRef |  | 
+    |optOut | /api/accountOverview/optOut?{query}| accountId,applRef,brandRef,clientRef |  | 
+    |reason | /api/accountOverview/reason?{query}| accountId,applRef,brandRef,clientRef |  | 
+  ## modals  
   |name|displayed with
   | --- | --- 
     | ExcessInfoSearch |AccountOverviewExcessInfo
@@ -100,9 +204,9 @@
     | AccountFlags |AccountAllFlags
     | OptOut |AccountOverviewOptOut
     | AgreementType |AccountOverviewAgreementType
-  ##display 
+  ## display 
     AccountOverview
-  ##buttons 
+  ## buttons 
     Modal Button ==> AgreementType in mode view
       Focused on "~/agreementType"
     Modal Button ==> ArrearsDetails in mode view
@@ -121,33 +225,33 @@
       Focused on "~/reason"
 
 ---
-#JointAccount - MainPage
+# JointAccount - MainPage
 ## Common Params
 | Name | Location
 | --- | ---
 |accountId|accountId
-|brandId|brandId
+|brandRef|brandRef
 |dbName|dbName
-  ##domains 
+  ## domains 
     JointAccount
     JointAccountAddress
     JointAccountAddresses
     JointAccountCustomer
-  ##rests   
+  ## rests   
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
-    |jointAccount | /api/jointAccount?{query}| accountId,brandId,dbName |  | 
-  ##modals  
+    |jointAccount | /api/jointAccount?{query}| accountId,brandRef,dbName |  | 
+  ## modals  
   |name|displayed with
   | --- | --- 
     | JointAccountEditModalPage |JointAccountCustomer
-  ##display 
+  ## display 
     JointAccount
-  ##buttons 
+  ## buttons 
     Modal Button ==> JointAccountEditModalPage in mode edit
       Focused on "#selectedAccount"
     toggle       ToggleButton toggles ~/joint
-  ##dataMapping
+  ## dataMapping
   ## Table CUST_TBL (Schema TheSchema)
   |Display path | Database Field
   | --- | --- |
@@ -170,12 +274,15 @@
   
 
 ---
-#OccupationAndIncomeSummary - MainPage
+# OccupationAndIncomeSummary - MainPage
 ## Common Params
 | Name | Location
 | --- | ---
-|customerId|customerId
-  ##domains 
+|accountId|accountId
+|applRef|applRef
+|brandRef|brandRef
+|clientRef|clientRef
+  ## domains 
     AccountDetails
     AdditionalInformation
     BusinessDetails
@@ -194,15 +301,15 @@
     OccupationsListData
     OneOccupationIncomeDetails
     OtherIncomeResponse
-  ##rests   
+  ## rests   
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
-    |additionalInformationRD | /customer/occupation/v2/additionalInfo?{query}| customerId |  | get->auditGetCustomeAdditionalInfo
-    |businessDetailsRD | /customer/occupation/v2/businessDetails?{query}| customerId |  | get->auditGetBusinessDetails
+    |additionalInformationRD | /customer/occupation/v2/additionalInfo?{query}| accountId,applRef,brandRef,clientRef |  | get->auditGetCustomeAdditionalInfo
+    |businessDetailsRD | /customer/occupation/v2/businessDetails?{query}| accountId,applRef,brandRef,clientRef |  | get->auditGetBusinessDetails
     |dropdownsRD | /customer/occupation/v2/occupationDetails?{query}|  |  | 
-    |occupationAndIncomeRD | /customer/occupation/v2/occupationIncomeDetails?{query}| customerId |  | get->auditGetCustomerOccupation; update->auditUpdateCustomerOccupation
-    |otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}| customerId |  | get->auditGetBusinessDetails
-  ##modals  
+    |occupationAndIncomeRD | /customer/occupation/v2/occupationIncomeDetails?{query}| accountId,applRef,brandRef,clientRef |  | get->auditGetCustomerOccupation; update->auditUpdateCustomerOccupation
+    |otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}| accountId,applRef,brandRef,clientRef |  | get->auditGetBusinessDetails
+  ## modals  
   |name|displayed with
   | --- | --- 
     | OccupationIncomeModal |OneOccupationIncomeDetails
@@ -210,9 +317,9 @@
     | BusinessDetailsModal |BusinessDetailsMain
     | OtherSourcesOfIncomeModal |OtherIncomeResponse
     | ListOccupationsModal |ListOccupations
-  ##display 
+  ## display 
     OccupationAndIncomeFullDomain
-  ##buttons 
+  ## buttons 
     Modal Button ==> OccupationIncomeModal in mode create
       Focused on "~/temp"
       Copy on close {"to":"#currentOccupation/[$append]"} 
@@ -233,7 +340,7 @@
     Modal Button ==> OtherSourcesOfIncomeModal in mode edit
       Focused on "~/otherSourcesOfIncome"
     prevOccupation ListPrevButton
-  ##guards  
+  ## guards  
   | OneOccupationIncomeDetails|areYou|ownShareOfTheCompany|owningSharesPct|employmentType|otherSourceOfIncome
   | --- | --- | --- | --- | --- | --- 
   occupation|E,S| | | | 
@@ -254,32 +361,35 @@
   
 
 ---
-#EAccountsSummary - MainPage
+# EAccountsSummary - MainPage
 ## Common Params
 | Name | Location
 | --- | ---
 |accountId|accountId
+|applRef|applRef
+|brandRef|brandRef
+|clientRef|clientRef
 |createPlanId|createPlanId
 |customerId|customerId
 |employeeType|employeeType
-  ##domains 
+  ## domains 
     CreatePlan
     EAccountsSummary
     EAccountsSummaryTable
     EAccountSummary
-  ##rests   
+  ## rests   
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
-    |createPlanRestD | /api/createPlan?{query}| accountId,createPlanId,customerId |  | 
-    |eAccountsSummary | /api/accountsSummary?{query}| accountId,customerId,employeeType | employeeType in teamLeader | state:invalidate->auditStuff
-    | | /api/accountsSummary/invalidate?{query}| accountId,customerId,employeeType |
-  ##modals  
+    |createPlanRestD | /api/createPlan?{query}| accountId,applRef,brandRef,clientRef,createPlanId |  | 
+    |eAccountsSummary | /api/accountsSummary?{query}| accountId,applRef,brandRef,clientRef,customerId,employeeType | employeeType in teamLeader | state:invalidate->auditStuff
+    | | /api/accountsSummary/invalidate?{query}| accountId,applRef,brandRef,clientRef,customerId,employeeType |
+  ## modals  
   |name|displayed with
   | --- | --- 
     | CreatePlan |CreatePlan
-  ##display 
+  ## display 
     EAccountsSummary
-  ##buttons 
+  ## buttons 
     Modal Button ==> CreatePlan in mode edit
       Copy from {"from":"~/fromApi/createPlan"}
       Focused on "~/tempCreatePlan"
@@ -291,96 +401,99 @@
     refresh      ResetStateButton
 
 ---
-#ETransfer - MainPage
+# ETransfer - MainPage
 ## Common Params
 | Name | Location
 | --- | ---
 |customerId|customerId
-  ##domains 
+  ## domains 
     ETransferDataD
-  ##rests   
+  ## rests   
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
     |eTransfer | /api/eTransfers?{query}| customerId |  | 
-  ##display 
+  ## display 
     ETransferDataD
-  ##buttons 
+  ## buttons 
     cancel       ResetStateButton
     eTransfers   RestButton
     resetAll     ResetStateButton
 
 ---
-#CreateEAccount - MainPage
-## Common Params
-| Name | Location
-| --- | ---
-|accountId|accountId
-|createPlanId|createPlanId
-|customerId|customerId
-  ##domains 
-    CreateEAccountData
-  ##rests   
-  |name|url|params|access|audit
-  | --- | --- | --- | --- | --- 
-    |eTransfer | /api/createEAccount/?{query}| accountId,createPlanId,customerId |  | 
-  ##display 
-    CreateEAccountData
-  ##buttons 
-    cancel       ResetStateButton
-    createEAccounts RestButton
-    resetAll     ResetStateButton
-
----
-#ChequeCreditbooks - MainPage
+# CreateEAccount - MainPage
 ## Common Params
 | Name | Location
 | --- | ---
 |accountId|accountId
 |applRef|applRef
 |brandRef|brandRef
-|customerId|customerId
-  ##domains 
-    ChequeCreditbooks
-    ChequeCreditbooksHistory
-    ChequeCreditbooksHistoryLine
-  ##rests   
+|clientRef|clientRef
+|createPlanId|createPlanId
+  ## domains 
+    CreateEAccountData
+  ## rests   
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
-    |chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,customerId |  | create->auditCreateCheckBook; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
-    | | /api/chequeCreditBooks/cancel?{query}| accountId,applRef,brandRef,customerId |
-  ##modals  
-  |name|displayed with
-  | --- | --- 
-    | OrderChequeBookOrPayingInModal |ChequeCreditbooksHistoryLine
-  ##display 
-    ChequeCreditbooks
-  ##buttons 
-    chequeBook   ResetStateButton
-    Modal Button ==> OrderChequeBookOrPayingInModal in mode create
-      Focused on "~/tempCreatePlan"
-      RestOnCommit: chequeCreditBooks/create
-    payingInBook ResetStateButton
+    |eTransfer | /api/createEAccount/?{query}| accountId,applRef,brandRef,clientRef,createPlanId |  | 
+  ## display 
+    CreateEAccountData
+  ## buttons 
+    cancel       ResetStateButton
+    createEAccounts RestButton
+    resetAll     ResetStateButton
 
 ---
-#Repeating - MainPage
+# ChequeCreditbooks - MainPage
 ## Common Params
 | Name | Location
 | --- | ---
-|customerId|customerId
-  ##domains 
-    RepeatingLine
-    RepeatingWholeData
-  ##rests   
+|accountId|accountId
+|applRef|applRef
+|brandRef|brandRef
+|clientRef|clientRef
+  ## domains 
+    ChequeCreditbooks
+    ChequeCreditbooksHistory
+    ChequeCreditbooksHistoryLine
+  ## rests   
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
-    |repeating | /api/repeating?{query}| customerId |  | 
-  ##modals  
+    |chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,clientRef |  | create->auditCreateCheckBook; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
+    | | /api/chequeCreditBooks/cancel?{query}| accountId,applRef,brandRef,clientRef |
+    | | /api/chequeCreditBooks/revalidate?{query}| accountId,applRef,brandRef,clientRef |
+  ## modals  
+  |name|displayed with
+  | --- | --- 
+    | OrderChequeBookOrPayingInModal |ChequeCreditbooksHistoryLine
+  ## display 
+    ChequeCreditbooks
+  ## buttons 
+    cancelCheckBook RestButton
+    Modal Button ==> OrderChequeBookOrPayingInModal in mode create
+      Focused on "~/tempCreatePlan"
+      RestOnCommit: chequeCreditBooks/create
+    refresh      DeleteStateButton
+
+---
+# Repeating - MainPage
+## Common Params
+| Name | Location
+| --- | ---
+|clientRef|clientRef
+  ## domains 
+    RepeatingLine
+    RepeatingWholeData
+  ## rests   
+  |name|url|params|access|audit
+  | --- | --- | --- | --- | --- 
+    |repeating | /api/repeating?{query}| clientRef |  | 
+  ## modals  
   |name|displayed with
   | --- | --- 
     | RepeatingLine |RepeatingLine
-  ##display 
+  ## display 
     RepeatingWholeData displayed using Table
-  ##buttons 
+  ## buttons 
     Modal Button ==> RepeatingLine in mode create
       Focused on "~/temp"
       Copy on close {"to":"~/fromApi[$append]"} 
@@ -390,36 +503,49 @@
       Copy on close {"to":"~/fromApi/[~/selectedItem]"} 
     nextOccupation ListNextButton guarded by [<arrayEnd]
     prevOccupation ListPrevButton guarded by [>0]
-  ##guards  
+  ## guards  
   | Repeating button | condition
   | --- | --- |
   | nextOccupation | {"condition":"<arrayEnd","arrayPath":"~/fromApi","varPath":"~/selectedItem"}}
   | prevOccupation | {"condition":">0","path":"~/selectedItem"}}
 
 ---
-#PostCodeMainPage - MainPage
-  ##domains 
-    PostCodeData
+# PostCodeMainPage - MainPage
+## Common Params
+| Name | Location
+| --- | ---
+|dbName|dbName
+  ## domains 
     PostCodeDataLine
     PostCodeNameAndAddress
     PostCodeSearch
-  ##rests   
+    PostCodeSearchResponse
+  ## rests   
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
     |address | /api/address?{query}|  |  | 
-    |postcode | /api/postCode?{query}| postcode |  | 
-  ##modals  
+    |postcode | /api/postCode?{query}| dbName,postcode |  | 
+  ## modals  
   |name|displayed with
   | --- | --- 
     | PostCodeSearch |PostCodeSearch
-  ##display 
+  ## display 
     PostCodeNameAndAddress
-  ##buttons 
+  ## buttons 
     save         RestButton
     Modal Button ==> PostCodeSearch in mode edit
       Focused on "~/postcode"
-      Copy on close [{"from":"~/postcode/addressResults/line1","to":"~/main/line1"},{"from":"~/postcode/addressResults/line2","to":"~/main/line2"},{"from":"~/postcode/addressResults/line3","to":"~/main/line3"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/search","to":"~/main/postcode"}] 
-  ##dataMapping
+      Copy on close [{"from":"~/postcode/addressResults/line1","to":"~/main/line1"},{"from":"~/postcode/addressResults/line2","to":"~/main/line2"},{"from":"~/postcode/addressResults/line3","to":"~/main/line3"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/addressResults/postcode","to":"~/main/postcode"}] 
+  ## dataMapping
+  ## Table POSTCODE (Schema TheSchema)
+  |Display path | Database Field
+  | --- | --- |
+  | line1  |  zzline1 
+  | line2  |  zzline2 
+  | line3  |  zzline3 
+  | line4  |  zzline4 
+  | postcode  |  PC_POSTCODE 
+  
   ## Table ADD_TBL (Schema TheSchema)
   |Display path | Database Field
   | --- | --- |

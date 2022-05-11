@@ -2,10 +2,10 @@ import { fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
 import { loadTree,wouldLoad,FetcherTree } from "@focuson/fetcher";
 import { pactWith } from "jest-pact";
 import { rest, RestCommand, restL } from "@focuson/rest";
-import { simpleMessagesL } from "@focuson/pages";
+import { simpleMessagesL} from "@focuson/pages";
 import { Lenses, massTransform, Transform } from "@focuson/lens";
 import * as samples from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.samples'
-import {emptyState, FState , commonIds, identityL } from "../common";
+import {emptyState, FState , commonIds, identityL, pathToLens } from "../common";
 import * as rests from "../rests";
 import { restUrlMutator } from "../rests";
 import {AdditionalInformationFetcher} from './OccupationAndIncomeSummary.fetchers'
@@ -26,14 +26,14 @@ describe ( 'OccupationAndIncomeSummary - additionalInformationRD - fetcher', () 
       withRequest: {
         method: 'GET',
         path: '/customer/occupation/v2/additionalInfo',
-        query:{"customerId":"custId"}
+        query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"}
       },
       willRespondWith: {
         status: 200,
         body: samples.sampleAdditionalInformation0
        },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }], CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"} }
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
@@ -43,7 +43,7 @@ describe ( 'OccupationAndIncomeSummary - additionalInformationRD - fetcher', () 
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
       let expectedRaw: any = {
 ... withIds,
-      tags: {'OccupationAndIncomeSummary_~/additionalInformation': ["custId"]}
+      tags: {'OccupationAndIncomeSummary_~/additionalInformation': ["accId","appref","brandRef","custId"]}
       };
       const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('additionalInformation').set ( expectedRaw, samples.sampleAdditionalInformation0 )
       expect ( newState ).toEqual ( expected )
@@ -58,7 +58,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
     const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_AdditionalInformationRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
        pageSelection: [ { pageName: 'OccupationAndIncomeSummary', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -67,7 +67,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
       withRequest: {
          method: 'GET',
          path:   '/customer/occupation/v2/additionalInfo',
-         query:{"customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
          //no request body needed for get,
       },
       willRespondWith: {
@@ -79,7 +79,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('additionalInformation').set ( rawExpected, samples.sampleAdditionalInformation0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -99,14 +99,14 @@ describe ( 'OccupationAndIncomeSummary - businessDetailsRD - fetcher', () => {
       withRequest: {
         method: 'GET',
         path: '/customer/occupation/v2/businessDetails',
-        query:{"customerId":"custId"}
+        query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"}
       },
       willRespondWith: {
         status: 200,
         body: samples.sampleBusinessDetailsMain0
        },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }], CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"} }
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
@@ -116,7 +116,7 @@ describe ( 'OccupationAndIncomeSummary - businessDetailsRD - fetcher', () => {
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
       let expectedRaw: any = {
 ... withIds,
-      tags: {'OccupationAndIncomeSummary_~/businessDetails': ["custId"]}
+      tags: {'OccupationAndIncomeSummary_~/businessDetails': ["accId","appref","brandRef","custId"]}
       };
       const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('businessDetails').set ( expectedRaw, samples.sampleBusinessDetailsMain0 )
       expect ( newState ).toEqual ( expected )
@@ -131,7 +131,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
     const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_BusinessDetailsMainRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
        pageSelection: [ { pageName: 'OccupationAndIncomeSummary', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -140,7 +140,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
       withRequest: {
          method: 'GET',
          path:   '/customer/occupation/v2/businessDetails',
-         query:{"customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
          //no request body needed for get,
       },
       willRespondWith: {
@@ -152,7 +152,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('businessDetails').set ( rawExpected, samples.sampleBusinessDetailsMain0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -225,7 +225,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('dropdowns').set ( rawExpected, samples.sampleDropdowns0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -245,14 +245,14 @@ describe ( 'OccupationAndIncomeSummary - occupationAndIncomeRD - fetcher', () =>
       withRequest: {
         method: 'GET',
         path: '/customer/occupation/v2/occupationIncomeDetails',
-        query:{"customerId":"custId"}
+        query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"}
       },
       willRespondWith: {
         status: 200,
         body: samples.sampleOccupationAndIncomeFullDomain0
        },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }], CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"} }
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
@@ -262,7 +262,7 @@ describe ( 'OccupationAndIncomeSummary - occupationAndIncomeRD - fetcher', () =>
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
       let expectedRaw: any = {
 ... withIds,
-      tags: {'OccupationAndIncomeSummary_~/fromApi': ["custId"]}
+      tags: {'OccupationAndIncomeSummary_~/fromApi': ["accId","appref","brandRef","custId"]}
       };
       const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('fromApi').set ( expectedRaw, samples.sampleOccupationAndIncomeFullDomain0 )
       expect ( newState ).toEqual ( expected )
@@ -277,7 +277,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
     const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
        pageSelection: [ { pageName: 'OccupationAndIncomeSummary', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -286,7 +286,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
       withRequest: {
          method: 'GET',
          path:   '/customer/occupation/v2/occupationIncomeDetails',
-         query:{"customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
          //no request body needed for get,
       },
       willRespondWith: {
@@ -298,7 +298,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('fromApi').set ( rawExpected, samples.sampleOccupationAndIncomeFullDomain0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -315,7 +315,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
     const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDetails', restAction: "update" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
        pageSelection: [ { pageName: 'OccupationAndIncomeSummary', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -324,7 +324,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
       withRequest: {
          method: 'PUT',
          path:   '/customer/occupation/v2/occupationIncomeDetails',
-         query:{"customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
          body: JSON.stringify(samples.sampleOccupationAndIncomeFullDomain0),
       },
       willRespondWith: {
@@ -333,11 +333,11 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
       },
     } )
     const lensTransforms: Transform<FState,any>[] = [
-    [Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('fromApi'), () => samples.sampleOccupationAndIncomeFullDomain0]
+      [Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('fromApi'), () => samples.sampleOccupationAndIncomeFullDomain0]
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('fromApi').set ( rawExpected, samples.sampleOccupationAndIncomeFullDomain0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -357,14 +357,14 @@ describe ( 'OccupationAndIncomeSummary - otherSourcesOfIncomeRD - fetcher', () =
       withRequest: {
         method: 'GET',
         path: '/customer/occupation/v2/otherIncome',
-        query:{"customerId":"custId"}
+        query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"}
       },
       willRespondWith: {
         status: 200,
         body: samples.sampleOtherIncomeResponse0
        },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'OccupationAndIncomeSummary', pageMode: 'view' }], CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"} }
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
@@ -374,7 +374,7 @@ describe ( 'OccupationAndIncomeSummary - otherSourcesOfIncomeRD - fetcher', () =
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
       let expectedRaw: any = {
 ... withIds,
-      tags: {'OccupationAndIncomeSummary_~/otherSourcesOfIncome': ["custId"]}
+      tags: {'OccupationAndIncomeSummary_~/otherSourcesOfIncome': ["accId","appref","brandRef","custId"]}
       };
       const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('otherSourcesOfIncome').set ( expectedRaw, samples.sampleOtherIncomeResponse0 )
       expect ( newState ).toEqual ( expected )
@@ -389,7 +389,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
     const restCommand: RestCommand = { name: 'OccupationAndIncomeSummary_OtherIncomeResponseRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
        pageSelection: [ { pageName: 'OccupationAndIncomeSummary', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -398,7 +398,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
       withRequest: {
          method: 'GET',
          path:   '/customer/occupation/v2/otherIncome',
-         query:{"customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
          //no request body needed for get,
       },
       willRespondWith: {
@@ -410,7 +410,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('otherSourcesOfIncome').set ( rawExpected, samples.sampleOtherIncomeResponse0 )
     expect ( newState.messages.length ).toEqual ( 1 )

@@ -2,10 +2,10 @@ import { fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
 import { loadTree,wouldLoad,FetcherTree } from "@focuson/fetcher";
 import { pactWith } from "jest-pact";
 import { rest, RestCommand, restL } from "@focuson/rest";
-import { simpleMessagesL } from "@focuson/pages";
+import { simpleMessagesL} from "@focuson/pages";
 import { Lenses, massTransform, Transform } from "@focuson/lens";
 import * as samples from '../JointAccount/JointAccount.samples'
-import {emptyState, FState , commonIds, identityL } from "../common";
+import {emptyState, FState , commonIds, identityL, pathToLens } from "../common";
 import * as rests from "../rests";
 import { restUrlMutator } from "../rests";
 import {pre_JointAccountFetcher} from './JointAccount.fetchers'
@@ -22,14 +22,14 @@ describe ( 'JointAccount - jointAccount - fetcher', () => {
       withRequest: {
         method: 'GET',
         path: '/api/jointAccount',
-        query:{"accountId":"custId","brandId":"custId","dbName":"mock"}
+        query:{"accountId":"accId","brandRef":"brandRef","dbName":"mock"}
       },
       willRespondWith: {
         status: 200,
         body: samples.sampleJointAccount0
        },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'JointAccount', pageMode: 'view' }], CommonIds: {"accountId":"custId","brandId":"custId","dbName":"mock"} }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'JointAccount', pageMode: 'view' }], CommonIds: {"accountId":"accId","brandRef":"brandRef","dbName":"mock"} }
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
@@ -39,7 +39,7 @@ describe ( 'JointAccount - jointAccount - fetcher', () => {
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
       let expectedRaw: any = {
 ... withIds,
-      tags: {'JointAccount_~/fromApi': ["custId","custId","mock"]}
+      tags: {'JointAccount_~/fromApi': ["accId","brandRef","mock"]}
       };
       const expected = Lenses.identity<FState>().focusQuery('JointAccount').focusQuery('fromApi').set ( expectedRaw, samples.sampleJointAccount0 )
       expect ( newState ).toEqual ( expected )
@@ -54,7 +54,7 @@ pactWith ( { consumer: 'JointAccount', provider: 'JointAccountProvider', cors: t
     const restCommand: RestCommand = { name: 'JointAccount_pre_JointAccountRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"accountId":"custId","brandId":"custId","dbName":"mock"},
+       CommonIds: {"accountId":"accId","brandRef":"brandRef","dbName":"mock"},
        pageSelection: [ { pageName: 'JointAccount', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -63,7 +63,7 @@ pactWith ( { consumer: 'JointAccount', provider: 'JointAccountProvider', cors: t
       withRequest: {
          method: 'GET',
          path:   '/api/jointAccount',
-         query:{"accountId":"custId","brandId":"custId","dbName":"mock"},
+         query:{"accountId":"accId","brandRef":"brandRef","dbName":"mock"},
          //no request body needed for get,
       },
       willRespondWith: {
@@ -75,7 +75,7 @@ pactWith ( { consumer: 'JointAccount', provider: 'JointAccountProvider', cors: t
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('JointAccount').focusQuery('fromApi').set ( rawExpected, samples.sampleJointAccount0 )
     expect ( newState.messages.length ).toEqual ( 1 )

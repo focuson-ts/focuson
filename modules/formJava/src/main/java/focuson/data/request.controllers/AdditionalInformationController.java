@@ -11,6 +11,8 @@ import focuson.data.IManyGraphQl;
 import focuson.data.fetchers.IFetcher;
 import focuson.data.audit.OccupationAndIncomeSummary.AdditionalInformationAudit;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.sql.Connection;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
@@ -21,16 +23,21 @@ import java.util.Arrays;
   @Autowired
   public IManyGraphQl graphQL;
   @Autowired
+  public DataSource dataSource;
+  @Autowired
   AdditionalInformationAudit __audit;
     @GetMapping(value="/customer/occupation/v2/additionalInfo", produces="application/json")
-    public ResponseEntity getAdditionalInformation(@RequestParam String customerId) throws Exception{
-        __audit.AdditionalInformation_get_auditGetCustomeAdditionalInfo(IFetcher.mock,customerId);
-       return Transform.result(graphQL.get(IFetcher.mock),AdditionalInformationQueries.getAdditionalInformation(customerId), "getAdditionalInformation");
+    public ResponseEntity getAdditionalInformation(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
+        try (Connection connection = dataSource.getConnection()) {
+          //from OccupationAndIncomeSummary.rest[additionalInformationRD].audit["get"]
+          __audit.AdditionalInformation_get_auditGetCustomeAdditionalInfo(connection,IFetcher.mock,clientRef);
+          return Transform.result(connection,graphQL.get(IFetcher.mock),AdditionalInformationQueries.getAdditionalInformation(accountId, applRef, brandRef, clientRef), "getAdditionalInformation");
+        }
     }
 
     @GetMapping(value="/customer/occupation/v2/additionalInfo/query", produces="application/json")
-    public String querygetAdditionalInformation(@RequestParam String customerId) throws Exception{
-       return AdditionalInformationQueries.getAdditionalInformation(customerId);
+    public String querygetAdditionalInformation(@RequestParam String accountId, @RequestParam String applRef, @RequestParam String brandRef, @RequestParam String clientRef) throws Exception{
+       return AdditionalInformationQueries.getAdditionalInformation(accountId, applRef, brandRef, clientRef);
     }
 
   @GetMapping(value = "/customer/occupation/v2/additionalInfo/sample", produces = "application/json")

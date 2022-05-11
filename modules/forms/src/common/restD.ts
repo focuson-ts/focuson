@@ -5,6 +5,7 @@ import { AccessDetails, AuditDetail, ResolverD, Schema } from "./resolverD";
 import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 import { allMainPages, MainPageD, PageD, RestDefnInPageProperties } from "./pageD";
 import { getRestTypeDetails, RestActionDetail, StateAccessDetails } from "@focuson/rest";
+import { findChildResolvers, ResolverData } from "../codegen/makeJavaFetchersInterface";
 
 
 export type AllLensRestParams = CommonLensRestParam | LensRestParam
@@ -61,9 +62,31 @@ export interface StoredProcedureForStateDetails {
   name: string,
   params: string[]
 }
-export interface RestStateDetails extends StateAccessDetails {
+export interface RestStateDetailsUsingStoredProcedure {
+  url: string,
   useStoredProcedure: StoredProcedureForStateDetails
 }
+export function isRestStateDetailsUsingStoredProcedure ( r: RestStateDetails ): r is RestStateDetailsUsingStoredProcedure {
+  // @ts-ignore
+  return r.useStoredProcedure !== undefined
+}
+
+export interface SqlForStateDetails {
+  schema: Schema;
+  sql: string;
+  params: string[]
+
+}
+export interface RestStateDetailsUsingSql {
+  url: string,
+  useSql: SqlForStateDetails
+}
+export function isRestStateDetailsUsingSql ( r: RestStateDetails ): r is RestStateDetailsUsingStoredProcedure {
+  // @ts-ignore
+  return r.useSql !== undefined
+}
+export type  RestStateDetails = RestStateDetailsUsingStoredProcedure | RestStateDetailsUsingSql
+
 export interface RestD<G> {
   /** Only used for dedupping when the dataDd is repeated */
   namePrefix?: string;
@@ -160,6 +183,18 @@ export function flatMapRestAndActions<B, G, T> ( ps: PageD<B, G>[], fn: ( p: Mai
 }
 export function mapRestAndActions<B, G, T> ( pages: PageD<B, G>[], fn: ( p: MainPageD<B, G> ) => ( r: RestD<G> ) => ( action: RestAction ) => T ): T[] {
   return allMainPages ( pages ).flatMap ( p => sortedEntries ( p.rest ).flatMap ( ( [ name, rdp ] ) => rdp.rest.actions.map ( a => fn ( p ) ( rdp.rest ) ( a ) ) ) )
+}
+export function mapRest<B, G, T> ( pages: PageD<B, G>[], fn: ( p: MainPageD<B, G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => T ): T[] {
+  return allMainPages ( pages ).flatMap ( p => sortedEntries ( p.rest ).map ( ( [ name, rdp ] ) => fn ( p ) ( rdp.rest, name, rdp ) ) )
+}
+export function flatMapRest<B, G, T> ( pages: PageD<B, G>[], fn: ( p: MainPageD<B, G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => T[] ): T[] {
+  return allMainPages ( pages ).flatMap ( p => sortedEntries ( p.rest ).flatMap ( ( [ name, rdp ] ) => fn ( p ) ( rdp.rest, name, rdp ) ) )
+}
+export function mapRestAndResolver<B, G, T> ( pages: PageD<B, G>[], fn: ( p: MainPageD<B, G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => ( resolver: ResolverData, ) => T ): T[] {
+  return flatMapRest ( pages, p => ( r, restName, rdp ) => findChildResolvers ( r ).map ( (resolverData) => fn ( p ) ( r, restName, rdp ) ( resolverData ) ) )
+}
+export function flatMapRestAndResolver<B, G, T> ( pages: PageD<B, G>[], fn: ( p: MainPageD<B, G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => ( resolver: ResolverData, ) => T[] ): T[] {
+  return flatMapRest ( pages, p => ( r, restName, rdp ) => findChildResolvers ( r ).flatMap ( resolverData => fn ( p ) ( r, restName, rdp ) ( resolverData ) ) )
 }
 
 

@@ -8,11 +8,12 @@ import { FState } from "../common";
 import { Optional, Lenses, NameAndLens} from '@focuson/lens';
 //fetcher type true
 export function pre_JointAccountFetcher(fdLens:Optional<FState, domains.JointAccountPageDomain>,commonIds: NameAndLens<FState>) {
+//If you have a compilation here it might be because of the 'local' params in JointAccount.rest[jointAccount].params
   const localIds = {}
   return pageAndTagFetcher<FState, domains.JointAccountPageDomain, domains.JointAccountDomain, SimpleMessage>(
     common.commonFetch<FState,  domains.JointAccountDomain>(),
      'JointAccount',
-     '~/fromApi', fdLens, commonIds, localIds,["accountId","brandId","dbName"],[],
+     '~/fromApi', fdLens, commonIds, localIds,["accountId","brandRef","dbName"],[],
       //From JointAccount.rest[jointAccount].targetFromPath ~/fromApi Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
       Lenses.identity<domains.JointAccountPageDomain>().focusQuery('fromApi'),
      '/api/jointAccount?{query}')

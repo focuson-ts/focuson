@@ -2,10 +2,10 @@ import { fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
 import { loadTree,wouldLoad,FetcherTree } from "@focuson/fetcher";
 import { pactWith } from "jest-pact";
 import { rest, RestCommand, restL } from "@focuson/rest";
-import { simpleMessagesL } from "@focuson/pages";
+import { simpleMessagesL} from "@focuson/pages";
 import { Lenses, massTransform, Transform } from "@focuson/lens";
 import * as samples from '../Repeating/Repeating.samples'
-import {emptyState, FState , commonIds, identityL } from "../common";
+import {emptyState, FState , commonIds, identityL, pathToLens } from "../common";
 import * as rests from "../rests";
 import { restUrlMutator } from "../rests";
 import {RepeatingWholeDataFetcher} from './Repeating.fetchers'
@@ -22,14 +22,14 @@ describe ( 'Repeating - repeating - fetcher', () => {
       withRequest: {
         method: 'GET',
         path: '/api/repeating',
-        query:{"customerId":"custId"}
+        query:{"clientRef":"custId"}
       },
       willRespondWith: {
         status: 200,
         body: samples.sampleRepeatingWholeData0
        },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'Repeating', pageMode: 'view' }], CommonIds: {"customerId":"custId"} }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'Repeating', pageMode: 'view' }], CommonIds: {"clientRef":"custId"} }
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
@@ -54,7 +54,7 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
     const restCommand: RestCommand = { name: 'Repeating_RepeatingWholeDataRestDetails', restAction: "create" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"customerId":"custId"},
+       CommonIds: {"clientRef":"custId"},
        pageSelection: [ { pageName: 'Repeating', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -63,7 +63,7 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
       withRequest: {
          method: 'POST',
          path:   '/api/repeating',
-         query:{"customerId":"custId"},
+         query:{"clientRef":"custId"},
          body: JSON.stringify(samples.sampleRepeatingWholeData0),
       },
       willRespondWith: {
@@ -72,11 +72,11 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
       },
     } )
     const lensTransforms: Transform<FState,any>[] = [
-    [Lenses.identity<FState>().focusQuery('Repeating').focusQuery('fromApi'), () => samples.sampleRepeatingWholeData0]
+      [Lenses.identity<FState>().focusQuery('Repeating').focusQuery('fromApi'), () => samples.sampleRepeatingWholeData0]
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('Repeating').focusQuery('fromApi').set ( rawExpected, samples.sampleRepeatingWholeData0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -93,7 +93,7 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
     const restCommand: RestCommand = { name: 'Repeating_RepeatingWholeDataRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"customerId":"custId"},
+       CommonIds: {"clientRef":"custId"},
        pageSelection: [ { pageName: 'Repeating', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -102,7 +102,7 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
       withRequest: {
          method: 'GET',
          path:   '/api/repeating',
-         query:{"customerId":"custId"},
+         query:{"clientRef":"custId"},
          //no request body needed for get,
       },
       willRespondWith: {
@@ -114,7 +114,7 @@ pactWith ( { consumer: 'Repeating', provider: 'RepeatingProvider', cors: true },
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('Repeating').focusQuery('fromApi').set ( rawExpected, samples.sampleRepeatingWholeData0 )
     expect ( newState.messages.length ).toEqual ( 1 )

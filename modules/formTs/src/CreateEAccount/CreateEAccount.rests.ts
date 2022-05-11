@@ -13,7 +13,7 @@ export function CreateEAccount_CreateEAccountDataRestDetails ( cd: NameAndLens<F
 //From CreateEAccount.rest[eTransfer].targetFromPath (~/editing). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.CreateEAccountPageDomain>().focusQuery('editing'),
     cd, fdd,
-    ids: ["accountId","customerId"],
+    ids: ["accountId","applRef","brandRef","clientRef"],
     resourceId:  ["createPlanId"],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/api/createEAccount/?{query}",

@@ -13,7 +13,7 @@ export function OccupationAndIncomeSummary_AdditionalInformationRestDetails ( cd
 //From OccupationAndIncomeSummary.rest[additionalInformationRD].targetFromPath (~/additionalInformation). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('additionalInformation'),
     cd, fdd,
-    ids: ["customerId"],
+    ids: ["accountId","applRef","brandRef","clientRef"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/customer/occupation/v2/additionalInfo?{query}",
@@ -29,7 +29,7 @@ export function OccupationAndIncomeSummary_BusinessDetailsMainRestDetails ( cd: 
 //From OccupationAndIncomeSummary.rest[businessDetailsRD].targetFromPath (~/businessDetails). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('businessDetails'),
     cd, fdd,
-    ids: ["customerId"],
+    ids: ["accountId","applRef","brandRef","clientRef"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/customer/occupation/v2/businessDetails?{query}",
@@ -61,7 +61,7 @@ export function OccupationAndIncomeSummary_OccupationAndIncomeFullDomainRestDeta
 //From OccupationAndIncomeSummary.rest[occupationAndIncomeRD].targetFromPath (~/fromApi). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('fromApi'),
     cd, fdd,
-    ids: ["customerId"],
+    ids: ["accountId","applRef","brandRef","clientRef"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/customer/occupation/v2/occupationIncomeDetails?{query}",
@@ -77,7 +77,7 @@ export function OccupationAndIncomeSummary_OtherIncomeResponseRestDetails ( cd: 
 //From OccupationAndIncomeSummary.rest[otherSourcesOfIncomeRD].targetFromPath (~/otherSourcesOfIncome). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
     dLens: Lenses.identity<domains.OccupationAndIncomeSummaryPageDomain>().focusQuery('otherSourcesOfIncome'),
     cd, fdd,
-    ids: ["customerId"],
+    ids: ["accountId","applRef","brandRef","clientRef"],
     resourceId:  [],
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],
     url: "/customer/occupation/v2/otherIncome?{query}",

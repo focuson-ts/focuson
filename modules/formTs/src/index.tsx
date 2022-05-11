@@ -2,7 +2,7 @@ import {  PageMode, pageSelectionlens, SelectedPage, simpleMessagesL } from "@fo
 import { FocusOnConfig, setJsonForFocusOn } from "@focuson/focuson";
 import { getElement, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
-import { context, Context, emptyState, FState } from "./common";
+import { context, Context, emptyState, FState, pathToLens } from "./common";
 import { fetchWithDelay, fetchWithPrefix, loggingFetchFn, NameAnd, RestAction, SimpleMessage, sortedEntries } from "@focuson/utils";
 import { fetchers } from "./fetchers";
 import { pages } from "./pages";
@@ -41,7 +41,7 @@ const pageModeFor: NameAnd<PageMode> = {
   ETransfer: 'create',
   CreateEAccount: 'create'
 }
-let setJson = setJsonForFocusOn<FState, Context, SimpleMessage> ( config, context, ( s: LensState<FState, FState, Context> ): void =>
+let setJson = setJsonForFocusOn<FState, Context, SimpleMessage> ( config, context, pathToLens,( s: LensState<FState, FState, Context> ): void =>
   ReactDOM.render ( <div>
     <IndexPage state={s}>
        <SelectedPage state={s}/>
@@ -51,6 +51,6 @@ setJson ( {
   ...emptyState,
   pageSelection: [ { pageName: 'HelloWorldMainPage', firstTime: true, pageMode: "view" } ],
 // @ts-ignore
-  debug: {"fetcherDebug":true,"restDebug":false,"selectedPageDebug":false,"loadTreeDebug":false,"showTracing":false,"recordTrace":true,"accordions":[]}
+  debug: {"fetcherDebug":true,"restDebug":false,"selectedPageDebug":false,"loadTreeDebug":false,"showTracing":false,"recordTrace":true,"tagFetcherDebug":false,"accordions":[]}
   // currentSelectedModalPage: 'EAccountsSummary_CreatePlan'
 }, 'initial')

@@ -75,7 +75,7 @@ export const stateFocusQueryWithEmptyFromHere = <B, G> ( errorPrefix: string, pa
   }
 }
 export const stateForButton = <B, G> ( { parent, params, button, name }: CreateButtonData<B, G>, buttonName: string ) =>
-  ( path: string ) => `fullState${stateFocusQueryWithTildaFromPage ( `${buttonName} page ${parent}${name})`, params, parent, path )}`;
+  ( path: string ) => `fullState${stateFocusQueryWithTildaFromPage ( `${buttonName} page ${parent.name}${name})`, params, parent, path )}`;
 
 export const stateForButtonWithPath = <B, G> ( { parent, params, button, name , mainPage}: CreateButtonData<B, G>, buttonName: string ) =>
   ( path: string ) => `${stateQueryForParams ( `${buttonName} page ${parent}${name})`, params,mainPage, parent, path )}`;

@@ -1,7 +1,7 @@
 package focuson.data.queries.OccupationAndIncomeSummary;
 public class OccupationAndIncomeFullDomainQueries{
-  public static  String getOccupationAndIncomeFullDomain(String customerId){ 
-    return"query{getOccupationAndIncomeFullDomain(" + "customerId:" + "\"" + customerId + "\"" + "){"+
+  public static  String getOccupationAndIncomeFullDomain(String accountId,String applRef,String brandRef,String clientRef){ 
+    return"query{getOccupationAndIncomeFullDomain(" + "accountId:" + "\"" + accountId + "\""  + "," + "applRef:" + "\"" + applRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "clientRef:" + "\"" + clientRef + "\"" + "){"+
         "    mainCustomerName"+
         "    jointCustomerName"+
         "    mainClientRef"+
@@ -36,8 +36,8 @@ public class OccupationAndIncomeFullDomainQueries{
         "    }"+
         "  }"
   +"}";}
-  public static  String updateOccupationAndIncomeFullDomain(String customerId, String obj){ 
-    return"mutation{updateOccupationAndIncomeFullDomain(" + "customerId:" + "\"" + customerId + "\""  + ", obj:" + obj + "){"+
+  public static  String updateOccupationAndIncomeFullDomain(String accountId,String applRef,String brandRef,String clientRef, String obj){ 
+    return"mutation{updateOccupationAndIncomeFullDomain(" + "accountId:" + "\"" + accountId + "\""  + "," + "applRef:" + "\"" + applRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "clientRef:" + "\"" + clientRef + "\""  + ", obj:" + obj + "){"+
         "    mainCustomerName"+
         "    jointCustomerName"+
         "    mainClientRef"+

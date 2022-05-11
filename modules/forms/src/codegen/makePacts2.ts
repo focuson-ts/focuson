@@ -5,7 +5,7 @@ import { isRestLens, makeCommonValueForTest, makeParamValueForTest, postFixForEn
 import { TSParams } from "./config";
 import { lensFocusQueryWithSlashAndTildaFromIdentity, stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
 import { parsePath } from "@focuson/lens";
-import { filterParamsByRestAction, indentList } from "./codegen";
+import { addStringToEndOfAllButLast, filterParamsByRestAction, indentList } from "./codegen";
 import { getRestTypeDetails, getUrlForRestAction, printRestAction, RestActionDetail } from "@focuson/rest";
 import { CompDataD, isRepeatingDd } from "../common/dataD";
 
@@ -16,10 +16,10 @@ export function makeAllPactsForPage<B, G> ( params: TSParams, page: PageD<B, G> 
     `import { loadTree,wouldLoad,FetcherTree } from "@focuson/fetcher";`,
     `import { pactWith } from "jest-pact";`,
     `import { rest, RestCommand, restL } from "@focuson/rest";`,
-    `import { simpleMessagesL } from "@focuson/pages";`,
+    `import { simpleMessagesL} from "@focuson/pages";`,
     `import { Lenses, massTransform, Transform } from "@focuson/lens";`,
     `import * as samples from '../${page.name}/${page.name}.samples'`,
-    `import {emptyState, ${params.stateName} , commonIds, identityL } from "../common";`,
+    `import {emptyState, ${params.stateName} , commonIds, identityL, pathToLens } from "../common";`,
     `import * as rests from "../rests";`,
     `import { restUrlMutator } from "../rests";`,
     ...makeFetcherImports ( params, page ),
@@ -89,7 +89,7 @@ export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, re
     ...indentList ( indentList ( makeLensParamsTransformers ( params, page, restName, defn, action, initialStateBodyTransforms ) ) ),
     `    const withIds = massTransform ( firstState, ...lensTransforms )`,
     `    const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );`,
-    `    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )`,
+    `    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )`,
     `    const rawExpected:any = { ...withIds, restCommands: []}`,
     // ...suppressExpectedResult,
     ...setExpectedResult,
@@ -150,9 +150,8 @@ function makeLensParamsTransformers<B, G> ( params: TSParams, page: PageD<B, G>,
   const theseParams = visibleParams.map ( ( [ name, p ] ) => p )
 
   return [ `const lensTransforms: Transform<${params.stateName},any>[] = [`,
-    ...extraTransforms,
-    ...indentList ( theseParams.flatMap ( v =>
-      isRestLens ( v ) ? [ `[${lensFocusQueryWithSlashAndTildaFromIdentity ( `makeLensParams for page ${page.name} ${restName}`, params, page, v.lens )}, () =>${JSON.stringify ( v.testValue )} ]` ] : [] ) ),
+    ...indentList ( addStringToEndOfAllButLast ( "," ) ( [ ...extraTransforms, ...theseParams.flatMap ( v =>
+      isRestLens ( v ) ? [ `[${lensFocusQueryWithSlashAndTildaFromIdentity ( `makeLensParams for page ${page.name} ${restName}`, params, page, v.lens )}, () =>${JSON.stringify ( v.testValue )} ]` ] : [] ) ] ) ),
     `]` ]
 
 }

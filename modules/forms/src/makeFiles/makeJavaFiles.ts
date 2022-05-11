@@ -1,24 +1,25 @@
 import { copyFile, copyFiles, DirectorySpec, templateFile, writeToFile } from "@focuson/files";
 import { JavaWiringParams } from "../codegen/config";
 import fs from "fs";
-import { forEachRest, forEachRestAndActions, unique } from "../common/restD";
+import { forEachRest, forEachRestAndActions, mapRestAndResolver, unique } from "../common/restD";
 import { detailsLog, GenerateLogLevel, isRestStateChange, NameAnd, safeArray, safeString, sortedEntries } from "@focuson/utils";
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
-import { auditClassName, createTableSqlName, fetcherInterfaceName, fetcherPackageName, getSqlName, h2FetcherClassName, mockFetcherClassName, mockFetcherPackage, providerPactClassName, queryClassName, queryPackage, restControllerName, sqlMapFileName } from "../codegen/names";
+import { auditClassName, createTableSqlName, dbFetcherClassName, fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, getSqlName, mockFetcherClassName, mockFetcherClassNameForResolver, mockFetcherPackage, providerPactClassName, queryClassName, queryPackage, restControllerName, sqlMapFileName } from "../codegen/names";
 import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
-import { makeAllJavaWiring, makeJavaResolversInterface } from "../codegen/makeJavaResolvers";
-import { makeAllMockFetchers } from "../codegen/makeMockFetchers";
+
+import { makeMockFetcherFor, makeMockFetchersForRest } from "../codegen/makeMockFetchers";
 import { makeJavaVariablesForGraphQlQuery } from "../codegen/makeGraphQlQuery";
 import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
 // import { findSqlRoot, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, walkRoots } from "../codegen/makeJavaSql.tsxxx";
 import { createTableSql, findSqlLinkDataFromRootAndDataD, findSqlRoot, generateGetSql, makeMapsForRest, walkSqlRoots } from "../codegen/makeSqlFromEntities";
-import { makeH2Fetchers } from "../codegen/makeH2Fetchers";
+import { makeDBFetchers } from "../codegen/makeDBFetchers";
 import { makePactValidation } from "../codegen/makePactValidation";
 import { AppConfig } from "../appConfig";
-import { makeUseStoredProcedure } from "../codegen/makeUseStoredProcedure";
+import { makeStateChangeCode } from "../codegen/makeStateChangeCode";
 import { makeAudit } from "../codegen/makeAudit";
+import { makeAllJavaWiring, makeJavaFetcherInterfaceForResolver, makeJavaFetchersInterface } from "../codegen/makeJavaFetchersInterface";
 
 
 export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
@@ -35,7 +36,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   const javaFetcherRoot = javaCodeRoot + "/" + params.fetcherPackage
   const javaControllerRoot = javaCodeRoot + "/" + params.controllerPackage
   const javaMockFetcherRoot = javaCodeRoot + "/" + params.mockFetcherPackage
-  const javaH2FetcherRoot = javaCodeRoot + "/" + params.h2FetcherPackage
+  const javaH2FetcherRoot = javaCodeRoot + "/" + params.dbFetcherPackage
   const javaQueriesPackages = javaCodeRoot + "/" + params.queriesPackage
   const javaAuditPackage = javaCodeRoot + '/' + params.auditPackage
   const javaDbPackages = javaCodeRoot + "/" + params.dbPackage
@@ -95,14 +96,17 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
     () => rests.filter ( r => r.tables ).flatMap ( rest =>
       [ `--${safeString ( rest.namePrefix )} ${rest.dataDD.name} ${rest.url} ${JSON.stringify ( rest.params )}`,
         ...walkSqlRoots ( findSqlRoot ( rest.tables ), r =>
-          generateGetSql ( findSqlLinkDataFromRootAndDataD ( r, rest.dataDD ) ) ).map ( addStringToEndOfList ( ';\n' ) ).flat () ] ), details )
+          generateGetSql ( findSqlLinkDataFromRootAndDataD ( r, rest.dataDD, rest.params ) ) ).map ( addStringToEndOfList ( ';\n' ) ).flat () ] ), details )
 
   writeToFile ( `${javaResourcesRoot}/${params.schema}`, () => makeGraphQlSchema ( rests ), details )
   forEachRestAndActions ( pages, p => rest => action => {
     let fetcherFile = `${javaCodeRoot}/${params.fetcherPackage}/${p.name}/${fetcherInterfaceName ( params, rest, action )}.java`;
-    writeToFile ( fetcherFile, () => makeJavaResolversInterface ( params, p, rest, action ), details )
+    writeToFile ( fetcherFile, () => makeJavaFetchersInterface ( params, p, rest, action ), details )
   } )
-
+  mapRestAndResolver ( pages, p => rest => ( { resolver } ) => {
+    let fetcherFile = `${javaCodeRoot}/${params.fetcherPackage}/${p.name}/${fetcherInterfaceForResolverName ( params, rest, resolver )}.java`;
+    writeToFile ( fetcherFile, () => makeJavaFetcherInterfaceForResolver ( params, p, rest, resolver ), details )
+  } )
 
   writeToFile ( `${javaCodeRoot}/${params.wiringClass}.java`, () => makeAllJavaWiring ( params, pages, directorySpec ), details )
   templateFile ( `${javaCodeRoot}/${params.applicationName}.java`, 'templates/JavaApplicationTemplate.java', params, directorySpec, details )
@@ -113,20 +117,32 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
       thisFetcherPackage: fetcherPackageName ( params, p ),
       fetcherInterface: fetcherInterfaceName ( params, restD, action ),
       fetcherClass: mockFetcherClassName ( params, restD, action ),
-      content: makeAllMockFetchers ( params, restD, action ).join ( "\n" )
+      content: makeMockFetchersForRest ( params, restD, action ).join ( "\n" )
     }, directorySpec ) )
+  mapRestAndResolver ( pages, p => (restD) => (resolverData) => templateFile ( `${javaMockFetcherRoot}/${p.name}/${mockFetcherClassNameForResolver ( params, restD, resolverData.resolver )}.java`, 'templates/JavaFetcherClassTemplate.java',
+    {
+      ...params,
+      mockFetcherPackage: mockFetcherPackage ( params, p ),
+      thisFetcherPackage: fetcherPackageName ( params, p ),
+      fetcherInterface: fetcherInterfaceForResolverName ( params, restD, resolverData.resolver ),
+      fetcherClass: mockFetcherClassNameForResolver ( params, restD, resolverData.resolver ),
+      content: makeMockFetcherFor ( params ) ( resolverData ).join ( "\n" )
+    }, directorySpec ) )
+
 
   forEachRestAndActions ( pages, p => ( r, restName, rdp ) => a => {
     if ( a !== 'get' ) return;
     if ( rdp.rest.tables === undefined ) return;
-    writeToFile ( `${javaH2FetcherRoot}/${p.name}/${h2FetcherClassName ( params, rdp.rest, a )}.java`, () => makeH2Fetchers ( params, p, restName, rdp ) )
+    writeToFile ( `${javaH2FetcherRoot}/${p.name}/${dbFetcherClassName ( params, rdp.rest, a )}.java`, () => makeDBFetchers ( params, p, restName, rdp ) )
   } )
   forEachRestAndActions ( pages, p => ( r, restName, rdp ) => a => {
     if ( !isRestStateChange ( a ) ) return;
+    console.log ( 'state change code', p.name, restName, a )
     if ( rdp.rest.states === undefined ) return;
-    const procCode = makeUseStoredProcedure ( params, p, restName, rdp.rest, a )
+    const procCode = makeStateChangeCode ( params, p, restName, rdp.rest, a )
+    console.log ( 'proccode', procCode.length, dbFetcherClassName ( params, rdp.rest, a ) )
     if ( procCode.length > 0 )
-      writeToFile ( `${javaH2FetcherRoot}/${p.name}/${h2FetcherClassName ( params, rdp.rest, a )}.java`, () => procCode )
+      writeToFile ( `${javaH2FetcherRoot}/${p.name}/${dbFetcherClassName ( params, rdp.rest, a )}.java`, () => procCode )
   } )
   allMainPages ( pages ).flatMap ( mainPage =>
     sortedEntries ( mainPage.rest ).forEach ( ( [ restName, rdp ] ) => {
@@ -162,10 +178,10 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
       if ( !tables ) return
       detailsLog ( logLevel, 2, `Creating rest files for ${p.name} ${name}` )
       walkSqlRoots ( findSqlRoot ( tables ), ( root, path ) => {
-        const ld = findSqlLinkDataFromRootAndDataD ( root, rdp.rest.dataDD )
+        const ld = findSqlLinkDataFromRootAndDataD ( root, rdp.rest.dataDD, rdp.rest.params )
         let fileName = sqlMapFileName ( javaDbPackages, p, name, path ) + ".java";
         console.log ( 'name:', fileName )
-        writeToFile ( fileName, () => makeMapsForRest ( params, p, name, rdp.rest, ld, path, root.children.length ) )
+        writeToFile ( fileName, () => makeMapsForRest ( params, p, name, rdp, ld, path, root.children.length ) )
       } )
     } )
   } )

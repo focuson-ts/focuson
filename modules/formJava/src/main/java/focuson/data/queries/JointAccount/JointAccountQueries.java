@@ -1,7 +1,7 @@
 package focuson.data.queries.JointAccount;
 public class JointAccountQueries{
-  public static  String getpreJointAccount(String accountId,String brandId,String dbName){ 
-    return"query{getpreJointAccount(" + "accountId:" + "\"" + accountId + "\""  + "," + "brandId:" + "\"" + brandId + "\""  + "," + "dbName:" + "\"" + dbName + "\"" + "){"+
+  public static  String getpreJointAccount(String accountId,String brandRef,String dbName){ 
+    return"query{getpreJointAccount(" + "accountId:" + "\"" + accountId + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "dbName:" + "\"" + dbName + "\"" + "){"+
         "    balance"+
         "    main{"+
         "      name"+

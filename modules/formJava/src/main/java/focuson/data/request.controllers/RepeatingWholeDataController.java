@@ -10,6 +10,8 @@ import focuson.data.queries.Repeating.RepeatingWholeDataQueries;
 import focuson.data.IManyGraphQl;
 import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.sql.Connection;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
@@ -19,24 +21,30 @@ import java.util.Arrays;
 
   @Autowired
   public IManyGraphQl graphQL;
+  @Autowired
+  public DataSource dataSource;
     @PostMapping(value="/api/repeating", produces="application/json")
-    public ResponseEntity createRepeatingWholeData(@RequestParam String customerId, @RequestBody String body) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),RepeatingWholeDataQueries.createRepeatingLine(customerId,   Transform.removeQuoteFromProperties(body, List.class)), "createRepeatingLine");
+    public ResponseEntity createRepeatingWholeData(@RequestParam String clientRef, @RequestBody String body) throws Exception{
+        try (Connection connection = dataSource.getConnection()) {
+          return Transform.result(connection,graphQL.get(IFetcher.mock),RepeatingWholeDataQueries.createRepeatingLine(clientRef,   Transform.removeQuoteFromProperties(body, List.class)), "createRepeatingLine");
+        }
     }
 
     @GetMapping(value="/api/repeating", produces="application/json")
-    public ResponseEntity getRepeatingWholeData(@RequestParam String customerId) throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),RepeatingWholeDataQueries.getRepeatingLine(customerId), "getRepeatingLine");
+    public ResponseEntity getRepeatingWholeData(@RequestParam String clientRef) throws Exception{
+        try (Connection connection = dataSource.getConnection()) {
+          return Transform.result(connection,graphQL.get(IFetcher.mock),RepeatingWholeDataQueries.getRepeatingLine(clientRef), "getRepeatingLine");
+        }
     }
 
     @PostMapping(value="/api/repeating/query", produces="application/json")
-    public String querycreateRepeatingLine(@RequestParam String customerId, @RequestBody String body) throws Exception{
-       return RepeatingWholeDataQueries.createRepeatingLine(customerId,   Transform.removeQuoteFromProperties(body, List.class));
+    public String querycreateRepeatingLine(@RequestParam String clientRef, @RequestBody String body) throws Exception{
+       return RepeatingWholeDataQueries.createRepeatingLine(clientRef,   Transform.removeQuoteFromProperties(body, List.class));
     }
 
     @GetMapping(value="/api/repeating/query", produces="application/json")
-    public String querygetRepeatingLine(@RequestParam String customerId) throws Exception{
-       return RepeatingWholeDataQueries.getRepeatingLine(customerId);
+    public String querygetRepeatingLine(@RequestParam String clientRef) throws Exception{
+       return RepeatingWholeDataQueries.getRepeatingLine(clientRef);
     }
 
   @GetMapping(value = "/api/repeating/sample", produces = "application/json")

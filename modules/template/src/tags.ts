@@ -59,10 +59,10 @@ export const tags: TagOpsFn<[ string, string | undefined ][]> = ( urlConfig, res
 export function nameToLens<S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, restAction: RestAction ): GetNameFn<S, any> {
   return ( name: string ) => {
     if ( name === 'query' ) return { getOption: s => makeAEqualsB ( urlConfig, { failSilently: true } ) ( s, restAction ) }
+    const fromCd = urlConfig.cd[ name ]//local ovrerride common
+    if ( fromCd ) return fromCd
     const fromFdd = urlConfig.fdd[ name ]
     if ( fromFdd ) return urlConfig.fdLens.chain ( fromFdd )
-    const fromCd = urlConfig.cd[ name ]
-    if ( fromCd ) return fromCd
     return { getOption: () => name }
   }
 }

@@ -50,6 +50,7 @@ export const pageState = <S, T, C extends HasPageSelectionLens<S>> ( ls: LensSta
 export const prefixToLensFromRoot: NameAndLens<any> = { "/": Lenses.identity () };
 export const prefixToLensFromBasePath: NameAndLens<any> = { "~/": Lenses.identity () };
 
+
 export function lensForPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context extends PageSelectionContext<S>> ( mainPageD: MainPageDetails<S, D, Msgs, Config, Context>,
                                                                                                                                           currentPageD: OnePageDetails<S, D, Msgs, Config, Context>, base?: string ): Optional<S, any> {
   if ( isMainPageDetails ( currentPageD ) ) return currentPageD.lens
@@ -58,6 +59,20 @@ export function lensForPageDetails<S, D, Msgs, Config extends PageConfig<S, D, M
     '~': mainPageD.lens,
   }, mainPageD.namedOptionals ) )
 }
+export const fromPathFromRaw = <S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context extends PageSelectionContext<S>>
+( pageSelectionL: Optional<S, PageSelection[]>, pageDetails: MultiPageDetails<S, any> ) => ( s: S) =>(path: string ): Optional<S, any> => {
+  let selectedPageData: PageSelection[] = pageSelectionL.getOption ( s );
+  if ( selectedPageData === undefined ) throw Error ( `Calling lensForPageDetailsFromRaw without a selected page\n ${JSON.stringify ( s )}` )
+  const mainPageD: MainPageDetails<S, D, Msgs, Config, Context> = findMainPageDetails ( selectedPageData, pageDetails )
+  const currentPageD: OnePageDetails<S, D, Msgs, Config, Context> = pageDetails[ selectedPageData[ selectedPageData.length - 1 ].pageName ]
+  const builder = lensBuilder<S> ( {
+    '/': Lenses.identity (),
+    '~': mainPageD.lens,
+  }, mainPageD.namedOptionals )
+  return parsePath ( path, builder );
+};
+
+
 export const findOneSelectedPageDetails = <S, T, Context extends PageSelectionContext<S>> ( state: LensState<S, T, Context>, page0Details: MainPageDetails<S, any, any, any, Context>, pageCount: number ) =>
   ( ps: PageSelection, index: number ): PageDetailsForCombine => {
     // @ts-ignore
@@ -65,7 +80,7 @@ export const findOneSelectedPageDetails = <S, T, Context extends PageSelectionCo
     const pages = state.context.pages
     const { pageName, pageMode, focusOn } = ps
     const page = pages[ pageName ]
-    if ( !page ) throw Error ( `Cannot find page with name ${pageName}, legal Values are [${Object.keys ( pages ).join ( "," )}]` )
+    if ( !page ) throw Error ( `Cannot find page with name ${pageName}, legal Values are [${Object.keys ( pages ).join ( "," )}]\nIs this a modal page and you need to add it to the main page?` )
     const { config, pageFunction, pageType } = page
 
     const lsForPage = state.copyWithLens ( lensForPageDetails ( page0Details, page, focusOn ) )

@@ -13,10 +13,15 @@ import { JointAccountPageD } from "./example/jointAccount/jointAccount.pageD";
 import { HelloWorldPage } from "./example/HelloWorld/helloWorld.pageD";
 import * as process from "process";
 import { AppConfig } from "./appConfig";
+import { LinkedAccountDetailsPD } from "./example/linkedAccount/linkedAccountDetails.pageD";
+import { TagFetcherDebug } from "@focuson/focuson";
+import { ListOfPaymentsPagePD } from "./example/ListOfPayments/listOfPayements.pageD";
 
 
 export const generatedPages: ExampleMainPage[] = [
   HelloWorldPage,
+  ListOfPaymentsPagePD,
+  LinkedAccountDetailsPD,
   AccountOverviewMainPage,
   JointAccountPageD,
   // MainOccupationDetailsPageSummaryPD,
@@ -49,6 +54,6 @@ export const devAppConfig: AppConfig = {
   versionNumber: '0.0.1',
   fetch: `fetchWithDelay ( 1, fetchWithPrefix ( 'http://localhost:${javaPort}', loggingFetchFn ) )`,
   combine: MyCombineCD,
-  debug: { fetcherDebug: true, restDebug: false, selectedPageDebug: false, loadTreeDebug: false, showTracing: false, recordTrace: true, accordions: []}
+  debug: { fetcherDebug: true, restDebug: false, selectedPageDebug: false, loadTreeDebug: false, showTracing: false, recordTrace: true, tagFetcherDebug: false, accordions: [] }
 }
 

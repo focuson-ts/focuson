@@ -533,6 +533,52 @@ public class Sample{
          "  \"dateOrder\": \"2022-10-01\""+
          "}"
   );
+  public static Map sampleCollectionItem0 =  parse.parseMap(
+         "{"+
+         "  \"paymentId\": 123,"+
+         "  \"collectionDate\": \"2020-10-01\","+
+         "  \"amount\": 56657,"+
+         "  \"status\": \"C\""+
+         "}"
+  );
+  public static List sampleCollectionsList0 =  parse.parseList(
+         "["+
+         "  {"+
+         "    \"paymentId\": 123,"+
+         "    \"collectionDate\": \"2020-10-01\","+
+         "    \"amount\": 56657,"+
+         "    \"status\": \"C\""+
+         "  },"+
+         "  {"+
+         "    \"paymentId\": 456,"+
+         "    \"collectionDate\": \"2022-14-01\","+
+         "    \"amount\": 32834,"+
+         "    \"status\": \"P\""+
+         "  },"+
+         "  {"+
+         "    \"paymentId\": 123,"+
+         "    \"collectionDate\": \"2020-10-01\","+
+         "    \"amount\": 56657,"+
+         "    \"status\": \"C\""+
+         "  },"+
+         "  {"+
+         "    \"paymentId\": 456,"+
+         "    \"collectionDate\": \"2022-14-01\","+
+         "    \"amount\": 32834,"+
+         "    \"status\": \"P\""+
+         "  }"+
+         "]"
+  );
+  public static Map sampleCollectionSummary0 =  parse.parseMap(
+         "{"+
+         "  \"lastCollectionDate\": \"2021/10/6\","+
+         "  \"lastCollectionAmount\": 1234,"+
+         "  \"nextCollectionDate\": \"2022/10/6\","+
+         "  \"nextCollectionAmount\": 13434,"+
+         "  \"allowance\": 1000,"+
+         "  \"period\": \"Monthly\""+
+         "}"
+  );
   public static Map sampleContractTypesResponse0 =  parse.parseMap(
          "{"+
          "  \"contractTypeId\": 123,"+
@@ -545,6 +591,15 @@ public class Sample{
          "  \"type\": \"checking\","+
          "  \"savingsStyle\": \"adHoc\","+
          "  \"initialAmount\": 123"+
+         "}"
+  );
+  public static Map sampleCreatePayment0 =  parse.parseMap(
+         "{"+
+         "  \"amount\": 56657,"+
+         "  \"collectionDate\": \"2020-10-01\","+
+         "  \"reason\": \"\","+
+         "  \"allowance\": 123,"+
+         "  \"period\": \"Monthly\""+
          "}"
   );
   public static Map sampleCreatePlan0 =  parse.parseMap(
@@ -861,6 +916,52 @@ public class Sample{
          "  ]"+
          "}"
   );
+  public static Map sampleLinkedAccountDetailsDisplay0 =  parse.parseMap(
+         "{"+
+         "  \"mandate\": {"+
+         "    \"sortCode\": \"10-11-12\","+
+         "    \"accountId\": 12341234,"+
+         "    \"mandateStatus\": \"ACTIVE\","+
+         "    \"bankName\": \"Bank Of Happiness\","+
+         "    \"accountName\": \"F & J Bloggs\","+
+         "    \"mandateRef\": \"12099845-34\""+
+         "  },"+
+         "  \"collectionSummary\": {"+
+         "    \"lastCollectionDate\": \"2021/10/6\","+
+         "    \"lastCollectionAmount\": 1234,"+
+         "    \"nextCollectionDate\": \"2022/10/6\","+
+         "    \"nextCollectionAmount\": 13434,"+
+         "    \"allowance\": 1000,"+
+         "    \"period\": \"Monthly\""+
+         "  },"+
+         "  \"collectionHistory\": ["+
+         "    {"+
+         "      \"paymentId\": 123,"+
+         "      \"collectionDate\": \"2020-10-01\","+
+         "      \"amount\": 56657,"+
+         "      \"status\": \"C\""+
+         "    },"+
+         "    {"+
+         "      \"paymentId\": 456,"+
+         "      \"collectionDate\": \"2022-14-01\","+
+         "      \"amount\": 32834,"+
+         "      \"status\": \"P\""+
+         "    },"+
+         "    {"+
+         "      \"paymentId\": 123,"+
+         "      \"collectionDate\": \"2020-10-01\","+
+         "      \"amount\": 56657,"+
+         "      \"status\": \"C\""+
+         "    },"+
+         "    {"+
+         "      \"paymentId\": 456,"+
+         "      \"collectionDate\": \"2022-14-01\","+
+         "      \"amount\": 32834,"+
+         "      \"status\": \"P\""+
+         "    }"+
+         "  ]"+
+         "}"
+  );
   public static Map sampleListOccupations0 =  parse.parseMap(
          "{"+
          "  \"search\": \"Hair dresser\","+
@@ -877,6 +978,131 @@ public class Sample{
          "    {"+
          "      \"descTypeValue\": \"W54\","+
          "      \"descTypeName\": \"Engineer\""+
+         "    }"+
+         "  ]"+
+         "}"
+  );
+  public static Map sampleListOfPayments0 =  parse.parseMap(
+         "{"+
+         "  \"standingOrders\": {"+
+         "    \"shouldPrint\": true,"+
+         "    \"numberOfItems\": 1"+
+         "  },"+
+         "  \"openBankingStandingOrders\": {"+
+         "    \"shouldPrint\": false,"+
+         "    \"numberOfItems\": 2"+
+         "  },"+
+         "  \"directDebits\": {"+
+         "    \"shouldPrint\": true,"+
+         "    \"numberOfItems\": 3"+
+         "  },"+
+         "  \"billPayments\": {"+
+         "    \"shouldPrint\": false,"+
+         "    \"numberOfItems\": 4"+
+         "  },"+
+         "  \"openBanking\": {"+
+         "    \"shouldPrint\": true,"+
+         "    \"numberOfItems\": 5"+
+         "  }"+
+         "}"
+  );
+  public static Map sampleMandate0 =  parse.parseMap(
+         "{"+
+         "  \"sortCode\": \"10-11-12\","+
+         "  \"accountId\": 12341234,"+
+         "  \"mandateStatus\": \"ACTIVE\","+
+         "  \"bankName\": \"Bank Of Happiness\","+
+         "  \"accountName\": \"F & J Bloggs\","+
+         "  \"mandateRef\": \"12099845-34\""+
+         "}"
+  );
+  public static List sampleMandateList0 =  parse.parseList(
+         "["+
+         "  {"+
+         "    \"sortCode\": \"10-11-12\","+
+         "    \"accountId\": 12341234,"+
+         "    \"mandateStatus\": \"ACTIVE\","+
+         "    \"bankName\": \"Bank Of Happiness\","+
+         "    \"accountName\": \"F & J Bloggs\","+
+         "    \"mandateRef\": \"12099845-34\""+
+         "  },"+
+         "  {"+
+         "    \"sortCode\": \"23-54-12\","+
+         "    \"accountId\": 23456123,"+
+         "    \"mandateStatus\": \"ACTIVE\","+
+         "    \"bankName\": \"Royal Bank of Success\","+
+         "    \"accountName\": \"F & J Bloggs\","+
+         "    \"mandateRef\": \"12099845-78\""+
+         "  },"+
+         "  {"+
+         "    \"sortCode\": \"10-11-12\","+
+         "    \"accountId\": 3245454,"+
+         "    \"mandateStatus\": \"ACTIVE\","+
+         "    \"bankName\": \"Bank Of Happiness\","+
+         "    \"accountName\": \"F & J Bloggs\","+
+         "    \"mandateRef\": \"12099845-34\""+
+         "  },"+
+         "  {"+
+         "    \"sortCode\": \"23-54-12\","+
+         "    \"accountId\": 12341234,"+
+         "    \"mandateStatus\": \"ACTIVE\","+
+         "    \"bankName\": \"Royal Bank of Success\","+
+         "    \"accountName\": \"F & J Bloggs\","+
+         "    \"mandateRef\": \"12099845-78\""+
+         "  },"+
+         "  {"+
+         "    \"sortCode\": \"10-11-12\","+
+         "    \"accountId\": 23456123,"+
+         "    \"mandateStatus\": \"ACTIVE\","+
+         "    \"bankName\": \"Bank Of Happiness\","+
+         "    \"accountName\": \"F & J Bloggs\","+
+         "    \"mandateRef\": \"12099845-34\""+
+         "  }"+
+         "]"
+  );
+  public static Map sampleMandateSearch0 =  parse.parseMap(
+         "{"+
+         "  \"sortCode\": \"10-11-12\","+
+         "  \"searchResults\": ["+
+         "    {"+
+         "      \"sortCode\": \"10-11-12\","+
+         "      \"accountId\": 12341234,"+
+         "      \"mandateStatus\": \"ACTIVE\","+
+         "      \"bankName\": \"Bank Of Happiness\","+
+         "      \"accountName\": \"F & J Bloggs\","+
+         "      \"mandateRef\": \"12099845-34\""+
+         "    },"+
+         "    {"+
+         "      \"sortCode\": \"23-54-12\","+
+         "      \"accountId\": 23456123,"+
+         "      \"mandateStatus\": \"ACTIVE\","+
+         "      \"bankName\": \"Royal Bank of Success\","+
+         "      \"accountName\": \"F & J Bloggs\","+
+         "      \"mandateRef\": \"12099845-78\""+
+         "    },"+
+         "    {"+
+         "      \"sortCode\": \"10-11-12\","+
+         "      \"accountId\": 3245454,"+
+         "      \"mandateStatus\": \"ACTIVE\","+
+         "      \"bankName\": \"Bank Of Happiness\","+
+         "      \"accountName\": \"F & J Bloggs\","+
+         "      \"mandateRef\": \"12099845-34\""+
+         "    },"+
+         "    {"+
+         "      \"sortCode\": \"23-54-12\","+
+         "      \"accountId\": 12341234,"+
+         "      \"mandateStatus\": \"ACTIVE\","+
+         "      \"bankName\": \"Royal Bank of Success\","+
+         "      \"accountName\": \"F & J Bloggs\","+
+         "      \"mandateRef\": \"12099845-78\""+
+         "    },"+
+         "    {"+
+         "      \"sortCode\": \"10-11-12\","+
+         "      \"accountId\": 23456123,"+
+         "      \"mandateStatus\": \"ACTIVE\","+
+         "      \"bankName\": \"Bank Of Happiness\","+
+         "      \"accountName\": \"F & J Bloggs\","+
+         "      \"mandateRef\": \"12099845-34\""+
          "    }"+
          "  ]"+
          "}"
@@ -1035,34 +1261,62 @@ public class Sample{
          "  \"amount\": 123"+
          "}"
   );
-  public static List samplePostCodeData0 =  parse.parseList(
+  public static List sampleOverpaymentHistory0 =  parse.parseList(
          "["+
          "  {"+
-         "    \"line1\": \"4 Privet drive\","+
-         "    \"line2\": \"Little Whinging\","+
-         "    \"line3\": \"Surrey\","+
-         "    \"line4\": \"England\""+
+         "    \"amountReceived\": 1234,"+
+         "    \"date\": \"2020/10/1\","+
+         "    \"status\": \"CANCELLED\""+
          "  },"+
          "  {"+
-         "    \"line1\": \"27 Throughput Lane\","+
-         "    \"line2\": \"Woodfield\","+
-         "    \"line3\": \"\","+
-         "    \"line4\": \"Ireland\""+
+         "    \"amountReceived\": 3656734,"+
+         "    \"date\": \"2021/9/1\","+
+         "    \"status\": \"COLLECTED\""+
          "  },"+
          "  {"+
-         "    \"line1\": \"4 Privet drive\","+
-         "    \"line2\": \"Little Whinging\","+
-         "    \"line3\": \"Surrey\","+
-         "    \"line4\": \"England\""+
+         "    \"amountReceived\": 1234,"+
+         "    \"date\": \"2020/10/1\","+
+         "    \"status\": \"CANCELLED\""+
          "  }"+
          "]"
+  );
+  public static Map sampleOverpaymentHistoryLine0 =  parse.parseMap(
+         "{"+
+         "  \"amountReceived\": 1234,"+
+         "  \"date\": \"2020/10/1\","+
+         "  \"status\": \"CANCELLED\""+
+         "}"
+  );
+  public static Map sampleOverpaymentPage0 =  parse.parseMap(
+         "{"+
+         "  \"history\": ["+
+         "    {"+
+         "      \"amountReceived\": 1234,"+
+         "      \"date\": \"2020/10/1\","+
+         "      \"status\": \"CANCELLED\""+
+         "    },"+
+         "    {"+
+         "      \"amountReceived\": 3656734,"+
+         "      \"date\": \"2021/9/1\","+
+         "      \"status\": \"COLLECTED\""+
+         "    },"+
+         "    {"+
+         "      \"amountReceived\": 1234,"+
+         "      \"date\": \"2020/10/1\","+
+         "      \"status\": \"CANCELLED\""+
+         "    }"+
+         "  ],"+
+         "  \"drawDownDate\": \"2020/10/1\","+
+         "  \"initialBorrowing\": 100010"+
+         "}"
   );
   public static Map samplePostCodeDataLine0 =  parse.parseMap(
          "{"+
          "  \"line1\": \"4 Privet drive\","+
          "  \"line2\": \"Little Whinging\","+
          "  \"line3\": \"Surrey\","+
-         "  \"line4\": \"England\""+
+         "  \"line4\": \"England\","+
+         "  \"postcode\": \"LW12 5f\""+
          "}"
   );
   public static Map samplePostCodeNameAndAddress0 =  parse.parseMap(
@@ -1083,27 +1337,222 @@ public class Sample{
          "      \"line1\": \"4 Privet drive\","+
          "      \"line2\": \"Little Whinging\","+
          "      \"line3\": \"Surrey\","+
-         "      \"line4\": \"England\""+
+         "      \"line4\": \"England\","+
+         "      \"postcode\": \"LW12 5f\""+
          "    },"+
          "    {"+
          "      \"line1\": \"27 Throughput Lane\","+
          "      \"line2\": \"Woodfield\","+
          "      \"line3\": \"\","+
-         "      \"line4\": \"Ireland\""+
+         "      \"line4\": \"Ireland\","+
+         "      \"postcode\": \"IR45 3GT\""+
          "    },"+
          "    {"+
          "      \"line1\": \"4 Privet drive\","+
          "      \"line2\": \"Little Whinging\","+
          "      \"line3\": \"Surrey\","+
-         "      \"line4\": \"England\""+
+         "      \"line4\": \"England\","+
+         "      \"postcode\": \"LW12 5f\""+
          "    }"+
          "  ],"+
          "  \"addressResults\": {"+
          "    \"line1\": \"4 Privet drive\","+
          "    \"line2\": \"Little Whinging\","+
          "    \"line3\": \"Surrey\","+
-         "    \"line4\": \"England\""+
+         "    \"line4\": \"England\","+
+         "    \"postcode\": \"LW12 5f\""+
          "  }"+
+         "}"
+  );
+  public static List samplePostCodeSearchResponse0 =  parse.parseList(
+         "["+
+         "  {"+
+         "    \"line1\": \"4 Privet drive\","+
+         "    \"line2\": \"Little Whinging\","+
+         "    \"line3\": \"Surrey\","+
+         "    \"line4\": \"England\","+
+         "    \"postcode\": \"LW12 5f\""+
+         "  },"+
+         "  {"+
+         "    \"line1\": \"27 Throughput Lane\","+
+         "    \"line2\": \"Woodfield\","+
+         "    \"line3\": \"\","+
+         "    \"line4\": \"Ireland\","+
+         "    \"postcode\": \"IR45 3GT\""+
+         "  },"+
+         "  {"+
+         "    \"line1\": \"4 Privet drive\","+
+         "    \"line2\": \"Little Whinging\","+
+         "    \"line3\": \"Surrey\","+
+         "    \"line4\": \"England\","+
+         "    \"postcode\": \"LW12 5f\""+
+         "  }"+
+         "]"
+  );
+  public static List samplePrintRecordHistory0 =  parse.parseList(
+         "["+
+         "  {"+
+         "    \"requestedBy\": \"m\","+
+         "    \"requesterDetails\": {"+
+         "      \"title\": \"Mr\","+
+         "      \"forename\": \"Fred\","+
+         "      \"surname\": \"Bloggs\","+
+         "      \"addressLine1\": \"4 Privat Drive\","+
+         "      \"addressLine2\": \"Little Winging\","+
+         "      \"addressLine3\": \"Surrey\","+
+         "      \"addressLine4\": \"UK\","+
+         "      \"postcode\": \"HG1 1FL\","+
+         "      \"phone\": \"555 1234\","+
+         "      \"fax\": \"5556365\""+
+         "    },"+
+         "    \"listOfPayments\": {"+
+         "      \"standingOrders\": {"+
+         "        \"shouldPrint\": true,"+
+         "        \"numberOfItems\": 1"+
+         "      },"+
+         "      \"openBankingStandingOrders\": {"+
+         "        \"shouldPrint\": false,"+
+         "        \"numberOfItems\": 2"+
+         "      },"+
+         "      \"directDebits\": {"+
+         "        \"shouldPrint\": true,"+
+         "        \"numberOfItems\": 3"+
+         "      },"+
+         "      \"billPayments\": {"+
+         "        \"shouldPrint\": false,"+
+         "        \"numberOfItems\": 4"+
+         "      },"+
+         "      \"openBanking\": {"+
+         "        \"shouldPrint\": true,"+
+         "        \"numberOfItems\": 5"+
+         "      }"+
+         "    },"+
+         "    \"includeSingleAndInitialDirectDebits\": true,"+
+         "    \"authorisedByCustomer\": \"n\","+
+         "    \"alreadyPrinted\": true"+
+         "  },"+
+         "  {"+
+         "    \"requestedBy\": \"j\","+
+         "    \"requesterDetails\": {"+
+         "      \"title\": \"Mrs\","+
+         "      \"forename\": \"Fredrica\","+
+         "      \"surname\": \"Smith\","+
+         "      \"addressLine1\": \" 11 Green Acres\","+
+         "      \"addressLine2\": \"Nether Wallop\","+
+         "      \"addressLine3\": \"Aylesbury\","+
+         "      \"addressLine4\": \"UK\","+
+         "      \"postcode\": \"SO34 1DF\","+
+         "      \"phone\": \"555 2344\","+
+         "      \"fax\": \"555 1231\""+
+         "    },"+
+         "    \"listOfPayments\": {"+
+         "      \"standingOrders\": {"+
+         "        \"shouldPrint\": false,"+
+         "        \"numberOfItems\": 2"+
+         "      },"+
+         "      \"openBankingStandingOrders\": {"+
+         "        \"shouldPrint\": true,"+
+         "        \"numberOfItems\": 3"+
+         "      },"+
+         "      \"directDebits\": {"+
+         "        \"shouldPrint\": false,"+
+         "        \"numberOfItems\": 4"+
+         "      },"+
+         "      \"billPayments\": {"+
+         "        \"shouldPrint\": true,"+
+         "        \"numberOfItems\": 5"+
+         "      },"+
+         "      \"openBanking\": {"+
+         "        \"shouldPrint\": false,"+
+         "        \"numberOfItems\": 6"+
+         "      }"+
+         "    },"+
+         "    \"includeSingleAndInitialDirectDebits\": false,"+
+         "    \"authorisedByCustomer\": \"notyet\","+
+         "    \"alreadyPrinted\": false"+
+         "  },"+
+         "  {"+
+         "    \"requestedBy\": \"new bank\","+
+         "    \"requesterDetails\": {"+
+         "      \"title\": \"Mr\","+
+         "      \"forename\": \"Fred\","+
+         "      \"surname\": \"Bloggs\","+
+         "      \"addressLine1\": \"4 Privat Drive\","+
+         "      \"addressLine2\": \"Little Winging\","+
+         "      \"addressLine3\": \"Surrey\","+
+         "      \"addressLine4\": \"UK\","+
+         "      \"postcode\": \"HG1 1FL\","+
+         "      \"phone\": \"555 1234\","+
+         "      \"fax\": \"5556365\""+
+         "    },"+
+         "    \"listOfPayments\": {"+
+         "      \"standingOrders\": {"+
+         "        \"shouldPrint\": true,"+
+         "        \"numberOfItems\": 3"+
+         "      },"+
+         "      \"openBankingStandingOrders\": {"+
+         "        \"shouldPrint\": false,"+
+         "        \"numberOfItems\": 4"+
+         "      },"+
+         "      \"directDebits\": {"+
+         "        \"shouldPrint\": true,"+
+         "        \"numberOfItems\": 5"+
+         "      },"+
+         "      \"billPayments\": {"+
+         "        \"shouldPrint\": false,"+
+         "        \"numberOfItems\": 6"+
+         "      },"+
+         "      \"openBanking\": {"+
+         "        \"shouldPrint\": true,"+
+         "        \"numberOfItems\": 1"+
+         "      }"+
+         "    },"+
+         "    \"includeSingleAndInitialDirectDebits\": true,"+
+         "    \"authorisedByCustomer\": \"y\","+
+         "    \"alreadyPrinted\": true"+
+         "  }"+
+         "]"
+  );
+  public static Map samplePrintRecordItem0 =  parse.parseMap(
+         "{"+
+         "  \"requestedBy\": \"m\","+
+         "  \"requesterDetails\": {"+
+         "    \"title\": \"Mr\","+
+         "    \"forename\": \"Fred\","+
+         "    \"surname\": \"Bloggs\","+
+         "    \"addressLine1\": \"4 Privat Drive\","+
+         "    \"addressLine2\": \"Little Winging\","+
+         "    \"addressLine3\": \"Surrey\","+
+         "    \"addressLine4\": \"UK\","+
+         "    \"postcode\": \"HG1 1FL\","+
+         "    \"phone\": \"555 1234\","+
+         "    \"fax\": \"5556365\""+
+         "  },"+
+         "  \"listOfPayments\": {"+
+         "    \"standingOrders\": {"+
+         "      \"shouldPrint\": true,"+
+         "      \"numberOfItems\": 1"+
+         "    },"+
+         "    \"openBankingStandingOrders\": {"+
+         "      \"shouldPrint\": false,"+
+         "      \"numberOfItems\": 2"+
+         "    },"+
+         "    \"directDebits\": {"+
+         "      \"shouldPrint\": true,"+
+         "      \"numberOfItems\": 3"+
+         "    },"+
+         "    \"billPayments\": {"+
+         "      \"shouldPrint\": false,"+
+         "      \"numberOfItems\": 4"+
+         "    },"+
+         "    \"openBanking\": {"+
+         "      \"shouldPrint\": true,"+
+         "      \"numberOfItems\": 5"+
+         "    }"+
+         "  },"+
+         "  \"includeSingleAndInitialDirectDebits\": true,"+
+         "  \"authorisedByCustomer\": \"n\","+
+         "  \"alreadyPrinted\": true"+
          "}"
   );
   public static Map sampleRepeatingLine0 =  parse.parseMap(
@@ -1127,5 +1576,25 @@ public class Sample{
          "    \"age\": 123"+
          "  }"+
          "]"
+  );
+  public static Map sampleRequesterDetails0 =  parse.parseMap(
+         "{"+
+         "  \"title\": \"Mr\","+
+         "  \"forename\": \"Fred\","+
+         "  \"surname\": \"Bloggs\","+
+         "  \"addressLine1\": \"4 Privat Drive\","+
+         "  \"addressLine2\": \"Little Winging\","+
+         "  \"addressLine3\": \"Surrey\","+
+         "  \"addressLine4\": \"UK\","+
+         "  \"postcode\": \"HG1 1FL\","+
+         "  \"phone\": \"555 1234\","+
+         "  \"fax\": \"5556365\""+
+         "}"
+  );
+  public static Map sampleSinglePrint0 =  parse.parseMap(
+         "{"+
+         "  \"shouldPrint\": true,"+
+         "  \"numberOfItems\": 1"+
+         "}"
   );
 }

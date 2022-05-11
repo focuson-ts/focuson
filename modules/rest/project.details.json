@@ -8,7 +8,7 @@
     "links":        ["@focuson/lens", "@focuson/fetcher"],
     "extraDeps":    {},
     "extraDevDeps": {},
-    "tsc":          true
-  },
-  "test":        true
+    "tsc":          true,
+    "test":         true
+  }
 }

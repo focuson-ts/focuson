@@ -1,13 +1,14 @@
 import { dataDsIn, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { indentList } from "../codegen/codegen";
-import { NameAnd, safeArray, safeObject, safeString, sortedEntries, toArray } from "@focuson/utils";
+import { NameAnd, RestAction, safeArray, safeObject, safeString, sortedEntries, toArray } from "@focuson/utils";
 import { isModalButtonInPage, ModalButtonInPage } from "../buttons/modalButtons";
-import { ButtonD, isButtonWithControl } from "../buttons/allButtons";
+import { ButtonD, ButtonWithControl, isButtonWithControl } from "../buttons/allButtons";
 import { Guards, GuardWithCondition, isGuardButton } from "../buttons/guardButton";
 import { CompDataD, DataD, emptyDataFlatMap, flatMapDD, HasGuards, isComdDD, isRepeatingDd, OneDataDD } from "../common/dataD";
 import { isCommonLens, RestD, RestParams, unique } from "../common/restD";
 import { printRestAction } from "@focuson/rest";
 import { findAllFields, findAllTableAndFieldDatasIn, findSqlRoot, findTableAndFieldFromDataD, TableAndFieldAndAliasData, walkSqlRoots } from "../codegen/makeSqlFromEntities";
+import { isRestButtonInPage } from "../buttons/restButton";
 
 export interface FullReport<B, G> {
   reports: Report<B, G>[];
@@ -60,9 +61,9 @@ export function formatReport<B, G> ( r: Report<B, G> ): string[] {
     if ( d.general.length === 0 ) return []
     // if ( d.general.length === 0 ) return [ `# ${d.part} - None` ]
     const header = d.headers.length > 0 ? [ `|${d.headers.join ( "|" )}`, `|${d.headers.map ( u => ` --- ` ).join ( "|" )}` ] : []
-    return [ `##${name}`, ...header, ...d.dontIndent ? d.general : indentList ( d.general ) ];
+    return [ `## ${name}`, ...header, ...d.dontIndent ? d.general : indentList ( d.general ) ];
   } )
-  const name = `#${page.name} - ${page.pageType}`;
+  const name = `# ${page.name} - ${page.pageType}`;
   const errors: string[] = details.flatMap ( d => d.critical )
   const errorMarker: string[] = errors.length > 0 ? [ '' ] : []
   const paramsAndHeader = makeParamsAndHeader ( [ commonParams ] );
@@ -107,17 +108,14 @@ function justCommonParams ( ps: RestParams[] ): NameAnd<string> {
 
 export function makeReportFor<B extends ButtonD, G extends GuardWithCondition> ( page: MainPageD<B, G> ): Report<B, G> {
   const info = makeReportInfo ( page )
-  const details: ReportDetails[] = isMainPage ( page ) ?
-    [ makeDomainReport ( page, info ),
-      makeRestReport ( page, info ),
-      makeModalsReport ( page, info ),
-      makeDisplayReport ( page, info ),
-      makeButtonsReport ( page, info ),
-      makeGuardsReportForPage ( page ),
-      makeDataMappingReportForPage ( page ) ] :
-    [ makeDisplayReport ( page, info ),
-      makeButtonsReport ( page, info ),
-      makeGuardsReportForPage ( page ) ]
+  const details: ReportDetails[] = [
+    makeDomainReport ( page, info ),
+    makeRestReport ( page, info ),
+    makeModalsReport ( page, info ),
+    makeDisplayReport ( page, info ),
+    makeButtonsReport ( page, page, info ),
+    makeGuardsReportForPage ( page ),
+    makeDataMappingReportForPage ( page ) ]
   const commonParams = isMainPage ( page ) ? justCommonParams ( sortedEntries ( page.rest ).map ( ( [ name, rdp ] ) => rdp.rest.params ) ) : {}
   return { page, details, commonParams }
 }
@@ -187,7 +185,7 @@ export function makeDisplayReport<B, G> ( page: PageD<B, G>, info: ReportInfo ):
   return { part: 'display', headers: [], general: [ `${page.display.dataDD.name}${unusualDisplay}` ], critical: [] };
 
 }
-export function makeButtonsReport<B extends ButtonD, G extends GuardWithCondition> ( page: PageD<B, G>, info: ReportInfo ): ReportDetails {
+export function makeButtonsReport<B extends ButtonD, G extends GuardWithCondition> ( mainP: MainPageD<B, G>, page: PageD<B, G>, info: ReportInfo ): ReportDetails {
   const general = sortedEntries ( page.buttons ).flatMap ( ( [ name, button ] ) => {
     const actualButton = isGuardButton ( button ) ? button.guard : button
     const guardedString = isGuardButton ( button ) ? ` guarded by [${button.by.condition}]` : ``
@@ -197,7 +195,22 @@ export function makeButtonsReport<B extends ButtonD, G extends GuardWithConditio
     if ( isButtonWithControl ( actualButton ) ) return [ raw ]
     return [ `Unknown button Page ${page.name} Button ${name} ${JSON.stringify ( button )} ` ]
   } )
-  return { part: 'buttons', headers: [], general, critical: [] };
+  function checkRestIsLegal ( name: string, buttonType: string, restName: string, restD: RestD<G> | undefined, restAction: RestAction ): string[] {
+    if ( restD === undefined ) return [ `Page ${mainP.name}.buttons[${name}:${buttonType} ] has a restName ${restName}, which is not present in [${Object.keys ( mainP.rest )}]` ]
+    let stringifiedRestACtion = JSON.stringify ( restAction );
+    let legalActions = restD.actions.map ( s => JSON.stringify ( s ) );
+    if ( !legalActions.includes ( stringifiedRestACtion ) )
+      return [ `Page ${mainP.name}.buttons[${name}:${buttonType} ] has a restName ${restName} and a rest action of ${stringifiedRestACtion} which is not present in [${legalActions}]` ]
+    return []
+
+  }
+  const critical = sortedEntries ( page.buttons ).flatMap ( ( [ name, button ] ) => {
+    const actualButton: ButtonWithControl = isGuardButton ( button ) ? button.guard : button
+    if ( isModalButtonInPage ( actualButton ) && actualButton.restOnCommit ) return checkRestIsLegal ( name, actualButton.control, actualButton.restOnCommit.restName, mainP.rest[ actualButton.restOnCommit.restName ]?.rest, actualButton.restOnCommit.action )
+    if ( isRestButtonInPage ( actualButton ) ) return checkRestIsLegal ( name, actualButton.control, actualButton.restName, mainP.rest[ actualButton.restName ]?.rest, actualButton.action )
+    return []
+  } )
+  return { part: 'buttons', headers: [], general, critical };
 }
 function modalButtonData<G> ( button: ModalButtonInPage<G>, guardedBy: string ): string[] {
   const restOnCommit = button.restOnCommit ? [ `RestOnCommit: ${button.restOnCommit.restName}/${button.restOnCommit.action}` ] : []

@@ -81,7 +81,7 @@ export interface ModalPageD<Buttons, G> extends HasLayout,HasGuards<G> {
   pageType: 'ModalPage' | 'ModalPopup',
   name: string,
   modes: PageMode[],
-  display: { target: string, dataDD: DataD<G>, importFrom?: string }, //importFrom is deprecated
+  display: { target: string, dataDD: CompDataD<G>, importFrom?: string }, //importFrom is deprecated
   buttons: ButtonDefnInPage<Buttons>;
 }
 

@@ -12,6 +12,7 @@ import { LabelAndNumberInput } from '@focuson/form_components';
 import { LabelAndStringInput } from '@focuson/form_components';
 import { Radio } from '@focuson/form_components';
 import { LabelAndRadio } from '@focuson/form_components';
+import {DeleteStateButton} from '@focuson/form_components';
 import {ListNextButton} from '@focuson/form_components';
 import {ListPrevButton} from '@focuson/form_components';
 import {ModalButton} from '@focuson/pages';
@@ -27,27 +28,27 @@ export function CreateEAccountPage(){
   return focusedPageWithExtraState<FState, CreateEAccountPageDomain, CreateEAccountDataDomain, Context> ( s => 'Create E Account' ) ( state => state.focusOn('editing')) (
 ( fullState, state , full, d, mode, index) => {
 const id=`page${index}`;
-  const buttons =    {cancel:<button>cancel of type ResetStateButton cannot be created yet</button>,
+  const allButtons =    {cancel:<button>cancel of type ResetStateButton cannot be created yet</button>,
       createEAccounts:<RestButton state={state} id={`${id}.createEAccounts`} 
         name='createEAccounts'
-        action='create'
+        action={"create"}
         rest='CreateEAccount_CreateEAccountDataRestDetails'
         confirm={true}
        />,
       resetAll:<button>resetAll of type ResetStateButton cannot be created yet</button>,}
 
       return <>
-          <CreateEAccountData id={`${id}`} state={state} mode={mode} buttons={buttons} />
-      { buttons.createEAccounts } 
-      { buttons.resetAll } 
-      { buttons.cancel } 
+          <CreateEAccountData id={`${id}`} state={state} mode={mode} label='' allButtons={allButtons} />
+      { allButtons.createEAccounts } 
+      { allButtons.resetAll } 
+      { allButtons.cancel } 
       </>})}
 
-export function CreateEAccountData({id,state,mode,buttons}: FocusedProps<FState, CreateEAccountDataDomain,Context>){
+export function CreateEAccountData({id,state,mode,allButtons,label}: FocusedProps<FState, CreateEAccountDataDomain,Context>){
   return <>
-    <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='Name' allButtons={buttons} required={true} />
-    <LabelAndRadio id={`${id}.type`} state={state.focusOn('type')} mode={mode} label='Type' allButtons={buttons} enums={{"savings":"Savings","checking":"Checking"}} />
+    <LabelAndStringInput id={`${id}.name`} state={state.focusOn('name')} mode={mode} label='Name' allButtons={allButtons} required={true} />
+    <LabelAndRadio id={`${id}.type`} state={state.focusOn('type')} mode={mode} label='Type' allButtons={allButtons} enums={{"savings":"Savings","checking":"Checking"}} />
     <Radio id={`${id}.savingsStyle`} state={state.focusOn('savingsStyle')} mode={mode} enums={{"adHoc":"Save what you want, when you want it","payRegular":"Pay a regular amount until you reach a target","paySettime":"Pay a regular amount for a set time","targetTime":"Reach a target balance by a set time"}} />
-    <LabelAndNumberInput id={`${id}.initialAmount`} state={state.focusOn('initialAmount')} mode={mode} label='Initial Amount' allButtons={buttons} required={true} />
+    <LabelAndNumberInput id={`${id}.initialAmount`} state={state.focusOn('initialAmount')} mode={mode} label='Initial Amount' allButtons={allButtons} required={true} />
 </>
 }

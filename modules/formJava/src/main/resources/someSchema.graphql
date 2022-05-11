@@ -1,37 +1,44 @@
 type Query{
   getHelloWorldDomainData:HelloWorldDomainData!
-  getAccountAllFlags(accountId: String!, customerId: String!):AccountAllFlags!
-  getAccountOverviewAgreementType(accountId: String!, customerId: String!):AccountOverviewAgreementType!
-  getArrearsDetails(accountId: String!, customerId: String!, startDate: String!):ArrearsDetails!
-  getAccountOverviewHistory(accountId: String!, customerId: String!):AccountOverviewHistory!
-  getAccountOverviewExcessInfo(accountId: String!, customerId: String!):AccountOverviewExcessInfo!
-  getAccountOverview(accountId: String!, customerId: String!):AccountOverview!
-  getAccountOverviewOptOut(accountId: String!, customerId: String!):AccountOverviewOptOut!
-  getAccountOverviewReason(accountId: String!, customerId: String!):AccountOverviewReason!
-  getpreJointAccount(accountId: String!, brandId: String!, dbName: String!):JointAccount!
-  getAdditionalInformation(customerId: String!):AdditionalInformation!
-  getBusinessDetailsMain(customerId: String!):BusinessDetailsMain!
+  getPrintRecordItem(accountId: String!):[PrintRecordItem!]!
+  getCollectionItem(accountId: String!, clientRef: String!):[CollectionItem!]!
+  getCollectionSummary(accountId: String!, clientRef: String!):CollectionSummary!
+  getOverpaymentPage(accountId: String!, clientRef: String!):OverpaymentPage!
+  getMandate(clientRef: String!):[Mandate!]!
+  getAccountAllFlags(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):AccountAllFlags!
+  getAccountOverviewAgreementType(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):AccountOverviewAgreementType!
+  getArrearsDetails(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, startDate: String!):ArrearsDetails!
+  getAccountOverviewHistory(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):AccountOverviewHistory!
+  getAccountOverviewExcessInfo(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):AccountOverviewExcessInfo!
+  getAccountOverview(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):AccountOverview!
+  getAccountOverviewOptOut(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):AccountOverviewOptOut!
+  getAccountOverviewReason(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):AccountOverviewReason!
+  getpreJointAccount(accountId: String!, brandRef: String!, dbName: String!):JointAccount!
+  getAdditionalInformation(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):AdditionalInformation!
+  getBusinessDetailsMain(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):BusinessDetailsMain!
   getDropdowns:Dropdowns!
-  getOccupationAndIncomeFullDomain(customerId: String!):OccupationAndIncomeFullDomain!
-  getOtherIncomeResponse(customerId: String!):OtherIncomeResponse!
-  getCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):CreatePlan!
-  getEAccountsSummary(accountId: String!, customerId: String!, employeeType: String!):EAccountsSummary!
-  getCreateEAccountData(accountId: String!, createPlanId: String!, customerId: String!):CreateEAccountData!
-  getChequeCreditbooks(accountId: String!, applRef: String!, brandRef: String!, customerId: String!):ChequeCreditbooks!
-  getRepeatingLine(customerId: String!):[RepeatingLine!]!
-  getPostCodeDataLine(postcode: String!):[PostCodeDataLine!]!
+  getOccupationAndIncomeFullDomain(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):OccupationAndIncomeFullDomain!
+  getOtherIncomeResponse(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):OtherIncomeResponse!
+  getCreatePlan(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, createPlanId: String!):CreatePlan!
+  getEAccountsSummary(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, customerId: String!, employeeType: String!):EAccountsSummary!
+  getCreateEAccountData(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, createPlanId: String!):CreateEAccountData!
+  getChequeCreditbooks(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):ChequeCreditbooks!
+  getRepeatingLine(clientRef: String!):[RepeatingLine!]!
+  getPostCodeDataLine(dbName: String!, postcode: String!):[PostCodeDataLine!]!
 }
 type Mutation{
-  updateOccupationAndIncomeFullDomain(customerId: String!,obj: OccupationAndIncomeFullDomainInp!):OccupationAndIncomeFullDomain!
-  createCreatePlan(accountId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!
-  updateCreatePlan(accountId: String!, createPlanId: String!, customerId: String!,obj: CreatePlanInp!):CreatePlan!
-  deleteCreatePlan(accountId: String!, createPlanId: String!, customerId: String!):Boolean
-  stateEAccountsSummaryinvalidate(accountId: String!, customerId: String!, employeeType: String!):Boolean
+  createCreatePayment(accountId: String!, clientRef: String!, paymentId: String!,obj: CreatePaymentInp!):CreatePayment!
+  stateCollectionItemcancel(accountId: String!, clientRef: String!, paymentId: String!):Boolean
+  updateOccupationAndIncomeFullDomain(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!,obj: OccupationAndIncomeFullDomainInp!):OccupationAndIncomeFullDomain!
+  createCreatePlan(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!,obj: CreatePlanInp!):CreatePlan!
+  updateCreatePlan(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, createPlanId: String!,obj: CreatePlanInp!):CreatePlan!
+  deleteCreatePlan(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, createPlanId: String!):Boolean
+  stateEAccountsSummaryinvalidate(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, customerId: String!, employeeType: String!):Boolean
   createETransferDataD(customerId: String!,obj: ETransferDataDInp!):ETransferDataD!
-  createCreateEAccountData(accountId: String!, customerId: String!,obj: CreateEAccountDataInp!):CreateEAccountData!
-  createChequeCreditbooks(accountId: String!, applRef: String!, brandRef: String!, customerId: String!,obj: ChequeCreditbooksInp!):ChequeCreditbooks!
-  stateChequeCreditbookscancel(accountId: String!, applRef: String!, brandRef: String!, customerId: String!):Boolean
-  createRepeatingLine(customerId: String!,obj: [RepeatingLineInp!]!):[RepeatingLine!]!
+  createCreateEAccountData(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!,obj: CreateEAccountDataInp!):CreateEAccountData!
+  createChequeCreditbooks(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!,obj: ChequeCreditbooksInp!):ChequeCreditbooks!
+  stateChequeCreditbookscancel(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):Boolean
+  createRepeatingLine(clientRef: String!,obj: [RepeatingLineInp!]!):[RepeatingLine!]!
   createPostCodeNameAndAddress(,obj: PostCodeNameAndAddressInp!):PostCodeNameAndAddress!
 }
 type AccountAllFlags{
@@ -178,6 +185,20 @@ type ChequeCreditbooksHistoryLine{
   howOrdered: String!
   dateOrder: String!
 }
+type CollectionItem{
+  paymentId: Int!
+  collectionDate: String!
+  amount: Int!
+  status: String!
+}
+type CollectionSummary{
+  lastCollectionDate: String!
+  lastCollectionAmount: Int!
+  nextCollectionDate: String!
+  nextCollectionAmount: Int!
+  allowance: Int!
+  period: String!
+}
 type ContractTypesResponse{
   contractTypeId: Int!
   description: String!
@@ -187,6 +208,13 @@ type CreateEAccountData{
   type: String!
   savingsStyle: String!
   initialAmount: Int!
+}
+type CreatePayment{
+  amount: Int!
+  collectionDate: String!
+  reason: String!
+  allowance: Int!
+  period: String!
 }
 type CreatePlan{
   createPlanStart: String!
@@ -257,6 +285,21 @@ type JointAccountCustomer{
   name: String!
   addresses: [JointAccountAddress!]!
 }
+type ListOfPayments{
+  standingOrders: SinglePrint!
+  openBankingStandingOrders: SinglePrint!
+  directDebits: SinglePrint!
+  billPayments: SinglePrint!
+  openBanking: SinglePrint!
+}
+type Mandate{
+  sortCode: String!
+  accountId: Int!
+  mandateStatus: String!
+  bankName: String!
+  accountName: String!
+  mandateRef: String!
+}
 type OccupationAndIncomeFullDomain{
   mainCustomerName: String!
   jointCustomerName: String!
@@ -302,11 +345,22 @@ type OtherIncomeResponse{
   incomeFreqRef: String!
   amount: Int!
 }
+type OverpaymentHistoryLine{
+  amountReceived: Int!
+  date: String!
+  status: String!
+}
+type OverpaymentPage{
+  history: [OverpaymentHistoryLine!]!
+  drawDownDate: String!
+  initialBorrowing: Int!
+}
 type PostCodeDataLine{
   line1: String!
   line2: String!
   line3: String!
   line4: String!
+  postcode: String!
 }
 type PostCodeNameAndAddress{
   name: String!
@@ -316,9 +370,33 @@ type PostCodeNameAndAddress{
   line4: String!
   postcode: String!
 }
+type PrintRecordItem{
+  requestedBy: String!
+  requesterDetails: RequesterDetails!
+  listOfPayments: ListOfPayments!
+  includeSingleAndInitialDirectDebits: Boolean!
+  authorisedByCustomer: String!
+  alreadyPrinted: Boolean!
+}
 type RepeatingLine{
   name: String!
   age: Int!
+}
+type RequesterDetails{
+  title: String!
+  forename: String!
+  surname: String!
+  addressLine1: String!
+  addressLine2: String!
+  addressLine3: String!
+  addressLine4: String!
+  postcode: String!
+  phone: String!
+  fax: String!
+}
+type SinglePrint{
+  shouldPrint: Boolean!
+  numberOfItems: Int!
 }
 input ChequeCreditbooksInp{
   history: [ChequeCreditbooksHistoryLineInp!]!
@@ -333,6 +411,13 @@ input CreateEAccountDataInp{
   type: String!
   savingsStyle: String!
   initialAmount: Int!
+}
+input CreatePaymentInp{
+  amount: Int!
+  collectionDate: String!
+  reason: String!
+  allowance: Int!
+  period: String!
 }
 input CreatePlanInp{
   createPlanStart: String!

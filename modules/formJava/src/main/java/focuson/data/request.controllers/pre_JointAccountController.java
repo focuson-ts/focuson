@@ -10,6 +10,8 @@ import focuson.data.queries.JointAccount.JointAccountQueries;
 import focuson.data.IManyGraphQl;
 import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.sql.Connection;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
@@ -20,14 +22,18 @@ import focuson.data.db.JointAccount_jointAccountMaps ;
 
   @Autowired
   public IManyGraphQl graphQL;
+  @Autowired
+  public DataSource dataSource;
     @GetMapping(value="/api/jointAccount", produces="application/json")
-    public ResponseEntity getJointAccount(@RequestParam String accountId, @RequestParam String brandId, @RequestParam String dbName) throws Exception{
-       return Transform.result(graphQL.get(dbName),JointAccountQueries.getpreJointAccount(accountId, brandId, dbName), "getpreJointAccount");
+    public ResponseEntity getJointAccount(@RequestParam String accountId, @RequestParam String brandRef, @RequestParam String dbName) throws Exception{
+        try (Connection connection = dataSource.getConnection()) {
+          return Transform.result(connection,graphQL.get(dbName),JointAccountQueries.getpreJointAccount(accountId, brandRef, dbName), "getpreJointAccount");
+        }
     }
 
     @GetMapping(value="/api/jointAccount/query", produces="application/json")
-    public String querygetpreJointAccount(@RequestParam String accountId, @RequestParam String brandId, @RequestParam String dbName) throws Exception{
-       return JointAccountQueries.getpreJointAccount(accountId, brandId, dbName);
+    public String querygetpreJointAccount(@RequestParam String accountId, @RequestParam String brandRef, @RequestParam String dbName) throws Exception{
+       return JointAccountQueries.getpreJointAccount(accountId, brandRef, dbName);
     }
 
   @GetMapping(value = "/api/jointAccount/sample", produces = "application/json")

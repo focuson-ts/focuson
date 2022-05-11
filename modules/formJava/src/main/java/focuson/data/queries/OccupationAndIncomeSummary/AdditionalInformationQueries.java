@@ -1,7 +1,7 @@
 package focuson.data.queries.OccupationAndIncomeSummary;
 public class AdditionalInformationQueries{
-  public static  String getAdditionalInformation(String customerId){ 
-    return"query{getAdditionalInformation(" + "customerId:" + "\"" + customerId + "\"" + "){"+
+  public static  String getAdditionalInformation(String accountId,String applRef,String brandRef,String clientRef){ 
+    return"query{getAdditionalInformation(" + "accountId:" + "\"" + accountId + "\""  + "," + "applRef:" + "\"" + applRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "clientRef:" + "\"" + clientRef + "\"" + "){"+
         "    applicantName"+
         "    employerName"+
         "    addressLine1"+

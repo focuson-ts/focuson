@@ -27,16 +27,21 @@ export function makeContext ( appConfig: AppConfig, params: TSParams ): string[]
     `   ...defaultPageSelectionAndRestCommandsContext<FState> ( pages, commonIds),`,
     `   combine: ${appConfig.combine.name}`,
     `}` ]
-
 }
+
+export function makePathToLens ( params: TSParams ): string[] {
+  return [ `export const pathToLens: ( s: ${params.stateName} ) => ( path: string ) => Optional<${params.stateName}, any> =`,
+    `    fromPathFromRaw ( pageSelectionlens<${params.stateName}> (), pages )` ]
+}
+
 export function makeCommon<B, G> ( appConfig: AppConfig, params: TSParams, pds: PageD<B, G>[], rds: RestD<G>[], directorySpec: DirectorySpec ): string[] {
   const pageDomainsImport: string[] = pds.filter ( p => p.pageType === 'MainPage' ).map ( p => `import { ${hasDomainForPage ( p )} } from '${domainsFileName ( '.', params, p )}';` )
   let paramsWithSamples = findAllCommonParamsWithSamples ( pds, rds );
   return [
-    `import { HasPageSelection, PageMode ,PageSelectionContext} from '@focuson/pages'`,
+    `import { fromPathFromRaw, HasPageSelection, PageMode ,PageSelectionContext, pageSelectionlens} from '@focuson/pages'`,
     `import { defaultDateFn, HasSimpleMessages, SimpleMessage, NameAnd } from '@focuson/utils';`,
     `import {  OnTagFetchErrorFn } from '@focuson/fetcher';`,
-    `import { identityOptics,NameAndLens } from '@focuson/lens';`,
+    `import { identityOptics,NameAndLens, Optional } from '@focuson/lens';`,
     `import { HasTagHolder } from '@focuson/template';`,
     ` import { HasRestCommands } from '@focuson/rest'`,
     `import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusOnContext, HasFocusOnDebug } from '@focuson/focuson';`,
@@ -49,6 +54,7 @@ export function makeCommon<B, G> ( appConfig: AppConfig, params: TSParams, pds: 
     ...makeFullState ( params, pds ),
     ...makeCommonParams ( params, pds, rds, directorySpec ),
     ...makeContext ( appConfig, params ),
+    ...makePathToLens(params),
     ...makeStateWithSelectedPage ( appConfig, params, JSON.stringify ( paramsWithSamples ), pds[ 0 ].name ) //TODO this should be slicker and aggregated params for example
   ]
 }

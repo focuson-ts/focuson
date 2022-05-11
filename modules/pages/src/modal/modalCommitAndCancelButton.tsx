@@ -3,8 +3,9 @@ import { LensProps, reasonFor } from "@focuson/state";
 import { DateFn, safeArray } from "@focuson/utils";
 import { Transform } from "@focuson/lens";
 import { HasRestCommandL, RestCommand } from "@focuson/rest";
-import { hasValidationErrorAndReport } from "../validity";
+import { hasValidationErrorAndReport, isValidToCommit } from "../validity";
 import { HasSimpleMessageL } from "../simpleMessage";
+import { focusPageClassName } from "../PageTemplate";
 
 
 interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Context> {
@@ -20,10 +21,11 @@ export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( 
   return <button id={id} onClick={() => state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) )}>Cancel</button>
 }
 
-
 export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S>> ( { state, id, dateFn, validate, enabledBy, text }: ModalCommitButtonProps<S, Context> ) {
+  const realvalidate = validate === undefined ? true : validate
+  const valid = isValidToCommit ( focusPageClassName )
+  
   function onClick () {
-    const realvalidate = validate === undefined ? true : validate
     if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return
     const firstPage: PageSelection = mainPage ( state )
     const lastPage = currentPageSelectionTail ( state )
@@ -56,5 +58,5 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
       console.error ( 'ModalCommit button called and bad state.', lastPage )
   }
 
-  return <button id={id} disabled={enabledBy === false} onClick={onClick}>{text}</button>
+  return <button id={id} disabled={enabledBy === false || valid === false} onClick={onClick}>{text}</button>
 }

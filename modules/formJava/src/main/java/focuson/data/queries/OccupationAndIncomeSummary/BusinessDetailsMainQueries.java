@@ -1,7 +1,7 @@
 package focuson.data.queries.OccupationAndIncomeSummary;
 public class BusinessDetailsMainQueries{
-  public static  String getBusinessDetailsMain(String customerId){ 
-    return"query{getBusinessDetailsMain(" + "customerId:" + "\"" + customerId + "\"" + "){"+
+  public static  String getBusinessDetailsMain(String accountId,String applRef,String brandRef,String clientRef){ 
+    return"query{getBusinessDetailsMain(" + "accountId:" + "\"" + accountId + "\""  + "," + "applRef:" + "\"" + applRef + "\""  + "," + "brandRef:" + "\"" + brandRef + "\""  + "," + "clientRef:" + "\"" + clientRef + "\"" + "){"+
         "    businessDetails{"+
         "      applicantName"+
         "      businessName"+

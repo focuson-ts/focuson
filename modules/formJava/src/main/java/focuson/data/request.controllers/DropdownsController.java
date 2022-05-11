@@ -10,6 +10,8 @@ import focuson.data.queries.OccupationAndIncomeSummary.DropdownsQueries;
 import focuson.data.IManyGraphQl;
 import focuson.data.fetchers.IFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.sql.Connection;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
@@ -19,9 +21,13 @@ import java.util.Arrays;
 
   @Autowired
   public IManyGraphQl graphQL;
+  @Autowired
+  public DataSource dataSource;
     @GetMapping(value="/customer/occupation/v2/occupationDetails", produces="application/json")
     public ResponseEntity getDropdowns() throws Exception{
-       return Transform.result(graphQL.get(IFetcher.mock),DropdownsQueries.getDropdowns(), "getDropdowns");
+        try (Connection connection = dataSource.getConnection()) {
+          return Transform.result(connection,graphQL.get(IFetcher.mock),DropdownsQueries.getDropdowns(), "getDropdowns");
+        }
     }
 
     @GetMapping(value="/customer/occupation/v2/occupationDetails/query", produces="application/json")

@@ -47,8 +47,8 @@ function displayAndGetButton ( s: RestButtonStateForTest, setMain: ( s: RestButt
 }
 describe ( "RestButton", () => {
   it ( "should render as a button", () => {
-    const button = displayAndGetButton ( emptyS, () => {}, s => <RestButton rest='someRestName' action={'get'} state={s} id='someId'/> )
-    expect ( button.html () ).toEqual ( '<button rest="someRestName" action="get" state="[object Object]" id="someId"></button>' )
+    const button = displayAndGetButton ( emptyS, () => {}, s => <RestButton rest='someRestName' action={'get'} state={s} id='someId' name='someButtonName'/> )
+    expect ( button.html () ).toEqual ( '<button>someButtonName</button>' )
   } )
   it ( "should place a rest command in the state - simple RestAction", () => {
     var remembered: any = undefined

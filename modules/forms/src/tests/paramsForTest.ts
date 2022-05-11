@@ -11,7 +11,7 @@ export const paramsForTest: CombinedParams = {
   domainsFile: "domains",
   fetchersFile: "fetchers",
   mockFetcherPackage: "mockfetchers",
-  h2FetcherPackage: 'h2fetchers',
+  dbFetcherPackage: 'dbfetchers',
   controllerPackage: "controllers",
   restsFile: "rests",
   pactsFile: "pact.spec",

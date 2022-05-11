@@ -1,5 +1,5 @@
-import { identityOptics } from "@focuson/lens";
-import { MultiPageDetails, PageSelectionContext, pageSelectionlens, SelectedPage, simpleMessagesL, simpleMessagesPageConfig } from "@focuson/pages";
+import { identityOptics, Optional } from "@focuson/lens";
+import { fromPathFromRaw, MultiPageDetails, PageSelectionContext, pageSelectionlens, SelectedPage, simpleMessagesL, simpleMessagesPageConfig } from "@focuson/pages";
 import { getElement, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
 import { SearchPage, SearchQueryModalPage } from "./search/searchPage";
@@ -57,7 +57,10 @@ const config: FocusOnConfig<FullState, Context, SimpleMessage> = {
 }
 let rootElement = getElement ( "root" );
 console.log ( "set json" )
-let setJson = setJsonForFocusOn<FullState, Context, SimpleMessage> ( config, defaultPageSelectionContext ( pages ), ( s: LensState<FullState, FullState, PageSelectionContext<FullState>> ): void =>
+export const pathToLens: ( s: FullState ) => ( path: string ) => Optional<FullState, any> =
+               fromPathFromRaw ( pageSelectionlens<FullState> (), pages )
+
+let setJson = setJsonForFocusOn<FullState, Context, SimpleMessage> ( config, defaultPageSelectionContext ( pages ), pathToLens,( s: LensState<FullState, FullState, PageSelectionContext<FullState>> ): void =>
   ReactDOM.render ( <SelectedPage state={s}/>, rootElement ) )
 
 console.log ( "setting json" )

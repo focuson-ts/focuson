@@ -25,7 +25,7 @@ describe ( "makeButtons", () => {
       "    />,",
       "    deleteExistingPlan:<RestButton state={state} id={`${id}.deleteExistingPlan`} ",
       "      name='deleteExistingPlan'",
-      "      action='delete'",
+      "      action={'delete'}",
       "      rest='EAccountsSummary_CreatePlanRestDetails'",
       "      confirm={true}",
       "     />,",
@@ -77,14 +77,14 @@ describe ( "makeButtons", () => {
     expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage,PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "    {save:<RestButton state={state} id={`${id}.save`} ",
       "      name='save'",
-      "      action='create'",
+      "      action={'create'}",
       "      validate={false}",
       "      rest='PostCodeMainPage_PostCodeNameAndAddressRestDetails'",
       "     />,",
       "    search:<ModalButton id={`${id}.search`} text='search'  state={state} modal = 'PostCodeSearch'  ",
       "      pageMode='edit'",
       "      focusOn='~/postcode'",
-      "      copyOnClose={[{'from':'~/postcode/addressResults/line1','to':'~/main/line1'},{'from':'~/postcode/addressResults/line2','to':'~/main/line2'},{'from':'~/postcode/addressResults/line3','to':'~/main/line3'},{'from':'~/postcode/addressResults/line4','to':'~/main/line4'},{'from':'~/postcode/addressResults/line4','to':'~/main/line4'},{'from':'~/postcode/search','to':'~/main/postcode'}]}",
+      "      copyOnClose={[{'from':'~/postcode/addressResults/line1','to':'~/main/line1'},{'from':'~/postcode/addressResults/line2','to':'~/main/line2'},{'from':'~/postcode/addressResults/line3','to':'~/main/line3'},{'from':'~/postcode/addressResults/line4','to':'~/main/line4'},{'from':'~/postcode/addressResults/line4','to':'~/main/line4'},{'from':'~/postcode/addressResults/postcode','to':'~/main/postcode'}]}",
       "      copyJustString={[{'from':'~/main/postcode','to':'~/postcode/search'}]}",
       "    />,}"
     ])

@@ -23,10 +23,10 @@ describe ( "makeCommon", () => {
   it ( 'should make the common page', () => {
     let common = makeCommon ( devAppConfig, paramsForTest, [ EAccountsSummaryPD, CreatePlanPD, OccupationAndIncomeSummaryPD ], [ occupationAndIncomeRD, createPlanRestD ], { main: '.', backup: '.' } );
     expect ( common.map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "import { HasPageSelection, PageMode ,PageSelectionContext} from '@focuson/pages'",
+      "import { fromPathFromRaw, HasPageSelection, PageMode ,PageSelectionContext, pageSelectionlens} from '@focuson/pages'",
       "import { defaultDateFn, HasSimpleMessages, SimpleMessage, NameAnd } from '@focuson/utils';",
       "import {  OnTagFetchErrorFn } from '@focuson/fetcher';",
-      "import { identityOptics,NameAndLens } from '@focuson/lens';",
+      "import { identityOptics,NameAndLens, Optional } from '@focuson/lens';",
       "import { HasTagHolder } from '@focuson/template';",
       " import { HasRestCommands } from '@focuson/rest'",
       "import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusOnContext, HasFocusOnDebug } from '@focuson/focuson';",
@@ -43,22 +43,27 @@ describe ( "makeCommon", () => {
       "export interface HasCommonIds {CommonIds: CommonIds}",
       "export type CommonIds = {",
       "  accountId?:string;",
+      "  applRef?:string;",
+      "  brandRef?:string;",
+      "  clientRef?:string;",
       "  createPlanId?:string;",
-      "  customerId?:string;",
       "  usersRole?:string;",
       "}",
       "export const identityL = identityOptics<FState> ();",
       "export const commonIdsL = identityL.focusQuery('CommonIds');",
       "export const commonIds: NameAndLens<FState> = {",
       "   accountId: commonIdsL.focusQuery('accountId'),",
+      "   applRef: commonIdsL.focusQuery('applRef'),",
+      "   brandRef: commonIdsL.focusQuery('brandRef'),",
+      "   clientRef: commonIdsL.focusQuery('clientRef'),",
       "   createPlanId: commonIdsL.focusQuery('createPlanId'),",
-      "   customerId: commonIdsL.focusQuery('customerId'),",
       "   usersRole: commonIdsL.focusQuery('usersRole')",
       "}",
       "export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{",
       "  mode: PageMode;",
       "  id: string;",
-      "  buttons: NameAnd<JSX.Element>",
+      "  label?:string;",
+      "  allButtons: NameAnd<JSX.Element>;",
       "}",
       "export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPageSelection, T> ( onError?: OnTagFetchErrorFn<S, any, T, SimpleMessage> ) {",
       "  return commonTagFetchProps<S, T> (",
@@ -70,28 +75,41 @@ describe ( "makeCommon", () => {
       "   ...defaultPageSelectionAndRestCommandsContext<FState> ( pages, commonIds),",
       "   combine: MyCombined",
       "}",
+      "export const pathToLens: ( s: FState ) => ( path: string ) => Optional<FState, any> =",
+      "    fromPathFromRaw ( pageSelectionlens<FState> (), pages )",
       "export const emptyState: FState = {",
-      "  CommonIds: {'createPlanId':'tbd','customerId':'custId','accountId':'accId','usersRole':'user'},",
+      "  CommonIds: {'createPlanId':'tbd','clientRef':'custId','applRef':'appref','accountId':'accId','brandRef':'brandRef','usersRole':'user'},",
       "  tags: {},",
       "  messages: [],",
       "  pageSelection: [{ pageName: 'EAccountsSummary', firstTime: true, pageMode: 'view' }],",
       "  EAccountsSummary:{},",
       "  restCommands: [],",
-      "  debug: {'fetcherDebug':true,'restDebug':false,'selectedPageDebug':false,'loadTreeDebug':false,'showTracing':false,'recordTrace':true,'accordions':[]}",
+      "  debug: {'fetcherDebug':true,'restDebug':false,'selectedPageDebug':false,'loadTreeDebug':false,'showTracing':false,'recordTrace':true,'tagFetcherDebug':false,'accordions':[]}",
       "  }"
-    ] )
+    ])
 
   } )
 } )
 
 describe ( "findAllCommonParams", () => {
   it ( 'should find all the commons lens in the pages from rest', () => {
-    expect ( findAllCommonParams ( [], [ eAccountsSummaryRestD, createPlanRestD ] ) ).toEqual ( [ "accountId", "createPlanId", "customerId", "employeeType" ] )
+    expect ( findAllCommonParams ( [], [ eAccountsSummaryRestD, createPlanRestD ] ) ).toEqual ( [
+      "accountId",
+      "applRef",
+      "brandRef",
+      "clientRef",
+      "createPlanId",
+      "customerId",
+      "employeeType"
+    ] )
   } )
 
   it ( "should include the info from the pages", () => {
     expect ( findAllCommonParams ( [ OccupationAndIncomeSummaryPD ], [ eAccountsSummaryRestD, createPlanRestD ] ) ).toEqual ( [
       "accountId",
+      "applRef",
+      "brandRef",
+      "clientRef",
       "createPlanId",
       "customerId",
       "employeeType",
@@ -106,6 +124,9 @@ describe ( "makeCommonParams", () => {
       "export interface HasCommonIds {CommonIds: CommonIds}",
       "export type CommonIds = {",
       "  accountId?:string;",
+      "  applRef?:string;",
+      "  brandRef?:string;",
+      "  clientRef?:string;",
       "  customerId?:string;",
       "  employeeType?:string;",
       "  usersRole?:string;",
@@ -114,6 +135,9 @@ describe ( "makeCommonParams", () => {
       "export const commonIdsL = identityL.focusQuery('CommonIds');",
       "export const commonIds: NameAndLens<FState> = {",
       "   accountId: commonIdsL.focusQuery('accountId'),",
+      "   applRef: commonIdsL.focusQuery('applRef'),",
+      "   brandRef: commonIdsL.focusQuery('brandRef'),",
+      "   clientRef: commonIdsL.focusQuery('clientRef'),",
       "   customerId: commonIdsL.focusQuery('customerId'),",
       "   employeeType: commonIdsL.focusQuery('employeeType'),",
       "   usersRole: commonIdsL.focusQuery('usersRole')",
@@ -121,7 +145,8 @@ describe ( "makeCommonParams", () => {
       "export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{",
       "  mode: PageMode;",
       "  id: string;",
-      "  buttons: NameAnd<JSX.Element>",
+      "  label?:string;",
+      "  allButtons: NameAnd<JSX.Element>;",
       "}",
       "export function commonFetch<S extends HasSimpleMessages & HasTagHolder & HasPageSelection, T> ( onError?: OnTagFetchErrorFn<S, any, T, SimpleMessage> ) {",
       "  return commonTagFetchProps<S, T> (",

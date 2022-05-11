@@ -1,5 +1,10 @@
 import * as common from './common';
 import { HelloWorldDomainDataFetcher } from './HelloWorldMainPage/HelloWorldMainPage.fetchers';
+import { PrintRecordHistoryFetcher } from './ListOfPaymentsPage/ListOfPaymentsPage.fetchers';
+import { CollectionsListFetcher } from './LinkedAccountDetails/LinkedAccountDetails.fetchers';
+import { CollectionSummaryFetcher } from './LinkedAccountDetails/LinkedAccountDetails.fetchers';
+import { OverpaymentPageFetcher } from './LinkedAccountDetails/LinkedAccountDetails.fetchers';
+import { MandateListFetcher } from './LinkedAccountDetails/LinkedAccountDetails.fetchers';
 import { AccountAllFlagsFetcher } from './AccountOverview/AccountOverview.fetchers';
 import { AccountOverviewAgreementTypeFetcher } from './AccountOverview/AccountOverview.fetchers';
 import { ArrearsDetailsFetcher } from './AccountOverview/AccountOverview.fetchers';
@@ -17,7 +22,7 @@ import { OtherIncomeResponseFetcher } from './OccupationAndIncomeSummary/Occupat
 import { EAccountsSummaryFetcher } from './EAccountsSummary/EAccountsSummary.fetchers';
 import { ChequeCreditbooksFetcher } from './ChequeCreditbooks/ChequeCreditbooks.fetchers';
 import { RepeatingWholeDataFetcher } from './Repeating/Repeating.fetchers';
-import { PostCodeDataFetcher } from './PostCodeMainPage/PostCodeMainPage.fetchers';
+import { PostCodeSearchResponseFetcher } from './PostCodeMainPage/PostCodeMainPage.fetchers';
 import { FetcherTree,  } from "@focuson/fetcher";
 import { HasTagHolder } from "@focuson/template";
 import { HasPageSelection } from "@focuson/pages";
@@ -28,6 +33,11 @@ import { Optional, Lenses, NameAndLens} from '@focuson/lens';
 export const fetchers: FetcherTree<common.FState> = {
 fetchers: [
     HelloWorldDomainDataFetcher( identityL.focusQuery ( 'HelloWorldMainPage' ), commonIds ),
+    PrintRecordHistoryFetcher( identityL.focusQuery ( 'ListOfPaymentsPage' ), commonIds ),
+    CollectionsListFetcher( identityL.focusQuery ( 'LinkedAccountDetails' ), commonIds ),
+    CollectionSummaryFetcher( identityL.focusQuery ( 'LinkedAccountDetails' ), commonIds ),
+    OverpaymentPageFetcher( identityL.focusQuery ( 'LinkedAccountDetails' ), commonIds ),
+    MandateListFetcher( identityL.focusQuery ( 'LinkedAccountDetails' ), commonIds ),
     AccountAllFlagsFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
     AccountOverviewAgreementTypeFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
     ArrearsDetailsFetcher( identityL.focusQuery ( 'AccountOverview' ), commonIds ),
@@ -45,6 +55,6 @@ fetchers: [
     EAccountsSummaryFetcher( identityL.focusQuery ( 'EAccountsSummary' ), commonIds ),
     ChequeCreditbooksFetcher( identityL.focusQuery ( 'ChequeCreditbooks' ), commonIds ),
     RepeatingWholeDataFetcher( identityL.focusQuery ( 'Repeating' ), commonIds ),
-    PostCodeDataFetcher( identityL.focusQuery ( 'PostCodeMainPage' ), commonIds )
+    PostCodeSearchResponseFetcher( identityL.focusQuery ( 'PostCodeMainPage' ), commonIds )
 ],
 children: []}

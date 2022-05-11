@@ -15,6 +15,8 @@
       ]
     },
     "ls":             {"description": "lists all the projects", "commands": ["js:process.cwd()"]},
+    "ls-deps":             {"description": "lists all the projects, and which other projects they depend on",
+      "commands": ["js:'${projectDetails.name}  => '.padEnd(30,' ') + '${projectDetails.details.links}'"]},
     "ls-names":       {"description": "lists all the projects and their nams ", "commands": ["js:`${process.cwd().padEnd(50)} ${projectDetails.name}`"]},
     "clean":          {"description": "removes the dist directory", "commands": ["rm -rf dist", "rm -f .status", "rm -f .log", "rm -f .profile"]},
     "lsDist":         {

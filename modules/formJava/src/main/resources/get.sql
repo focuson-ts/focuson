@@ -1,4 +1,4 @@
---pre JointAccount /api/jointAccount?{query} {"accountId":{"rsSetter":"setInt","javaType":"int","javaParser":"Integer.parseInt","commonLens":"accountId","testValue":"custId"},"brandId":{"rsSetter":"setInt","javaType":"int","javaParser":"Integer.parseInt","commonLens":"brandId","testValue":"custId"},"dbName":{"rsSetter":"setString","javaType":"String","javaParser":"","commonLens":"dbName","testValue":"mock"}}
+--pre JointAccount /api/jointAccount?{query} {"accountId":{"rsSetter":"setInt","javaType":"int","javaParser":"Integer.parseInt","commonLens":"accountId","testValue":"accId"},"brandRef":{"rsSetter":"setInt","javaType":"int","javaParser":"Integer.parseInt","commonLens":"brandRef","testValue":"brandRef"},"dbName":{"rsSetter":"setString","javaType":"String","javaParser":"","commonLens":"dbName","testValue":"mock"}}
 select
   mainCustomer.nameId as mainCustomer_nameId,
   mainName.id as mainName_id,
@@ -57,4 +57,16 @@ select
   ADD_TBL.zzline4 as ADD_TBL_zzline4
  from
   ADD_TBL ADD_TBL
- where ;
+ ;
+
+-- PostCodeSearchResponse /api/postCode?{query} {"dbName":{"rsSetter":"setString","javaType":"String","javaParser":"","commonLens":"dbName","testValue":"mock"},"postcode":{"rsSetter":"setString","javaType":"String","javaParser":"","lens":"~/postcode/search","testValue":"LW12 4RG"}}
+select
+  POSTCODE.PC_POSTCODE as POSTCODE_PC_POSTCODE,
+  POSTCODE.zzline1 as POSTCODE_zzline1,
+  POSTCODE.zzline2 as POSTCODE_zzline2,
+  POSTCODE.zzline3 as POSTCODE_zzline3,
+  POSTCODE.zzline4 as POSTCODE_zzline4,
+  POSTCODE.PC_POSTCODE as POSTCODE_PC_POSTCODE
+ from
+  POSTCODE POSTCODE
+ where  POSTCODE.PC_POSTCODE like ?;

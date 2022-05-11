@@ -6,9 +6,9 @@ import { LensState } from "@focuson/state";
  * string and string[] are just the types
  *
  * */
-export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'string[]' | 'path' | 'pathValue'
+export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'string[]' | 'path' | 'pathValue' | 'objectAndRenderPrefix'
 
-type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons'
+type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons' | 'defaultToLabel'
 
 export interface OneDisplayCompParamD<T> {
   paramType: DisplayCompParamType;
@@ -29,6 +29,7 @@ export interface DisplayCompD extends SimpleDisplayComp {
 export const commonParams: DisplayCompParamD = {
   id: { paramType: 'object', needed: 'id' }, //object because it is calculated
   state: { paramType: 'state', needed: 'defaultToPath' },
+  readonly: { paramType: 'boolean', needed: 'no' },
   mode: { paramType: 'object', needed: 'no', default: 'mode' },
   ariaLabel: { paramType: 'string', needed: 'no' },
 }
@@ -89,7 +90,6 @@ export const LabelAndDateInputCD: DisplayCompD = {
 }
 
 
-
 //The data about to use a react component.
 export const TableCD: DisplayCompD = {
   import: "@focuson/form_components",   //so that I can write the import statement for the react component
@@ -99,10 +99,10 @@ export const TableCD: DisplayCompD = {
     order: { paramType: 'string[]', needed: 'yes' },
     copySelectedIndexTo: { paramType: 'pageState', needed: 'no' },
     copySelectedItemTo: { paramType: 'pageState', needed: 'no' },
-    joiners: {paramType: 'string', needed: 'no'},
-    prefixFilter: {paramType: 'path', needed: 'no' },
-    prefixColumn: {paramType: 'string', needed: 'no' },
-    maxCount: {paramType: 'string', needed: 'no' }
+    joiners: { paramType: 'string', needed: 'no' },
+    prefixFilter: { paramType: 'path', needed: 'no' },
+    prefixColumn: { paramType: 'string', needed: 'no' },
+    maxCount: { paramType: 'string', needed: 'no' }
   }
 }
 
@@ -112,14 +112,19 @@ export const SelectedItemCD: DisplayCompD = {
   params: {
     ...commonParams,
     index: { paramType: 'pathValue', needed: 'yes' },
-    display: { paramType: 'object', needed: 'yes' },
-    buttons: { paramType: 'object', needed: 'defaultToButtons' }
+    display: { paramType: 'objectAndRenderPrefix', needed: 'yes' },
+    allButtons: { paramType: 'object', needed: 'defaultToButtons' }
   }
 }
 export const LayoutCd: DisplayCompD = {
-  params: { details: { paramType: 'string', needed: 'yes' }, title: {paramType: 'string', needed: 'no'}, defaultProps: {paramType: 'string' , needed: 'no'} },
+  params: { details: { paramType: 'string', needed: 'yes' }, title: { paramType: 'string', needed: 'no' }, defaultProps: { paramType: 'string', needed: 'no' } },
   import: "@focuson/form_components",
   name: "Layout"
+}
+export const TwoElementWithTitleLayoutCD: DisplayCompD = {
+  params: { title: { paramType: 'object', needed: 'defaultToLabel' } },
+  import: "@focuson/form_components",
+  name: "TwoElementWithTitleLayout"
 }
 
 

@@ -2,10 +2,10 @@ import { fetchWithPrefix, loggingFetchFn } from "@focuson/utils";
 import { loadTree,wouldLoad,FetcherTree } from "@focuson/fetcher";
 import { pactWith } from "jest-pact";
 import { rest, RestCommand, restL } from "@focuson/rest";
-import { simpleMessagesL } from "@focuson/pages";
+import { simpleMessagesL} from "@focuson/pages";
 import { Lenses, massTransform, Transform } from "@focuson/lens";
 import * as samples from '../EAccountsSummary/EAccountsSummary.samples'
-import {emptyState, FState , commonIds, identityL } from "../common";
+import {emptyState, FState , commonIds, identityL, pathToLens } from "../common";
 import * as rests from "../rests";
 import { restUrlMutator } from "../rests";
 import {EAccountsSummaryFetcher} from './EAccountsSummary.fetchers'
@@ -19,7 +19,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
     const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId","createPlanId":"tbd"},
        pageSelection: [ { pageName: 'EAccountsSummary', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -28,7 +28,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
       withRequest: {
          method: 'GET',
          path:   '/api/createPlan',
-         query:{"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId","createPlanId":"tbd"},
          //no request body needed for get,
       },
       willRespondWith: {
@@ -40,7 +40,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('tempCreatePlan').set ( rawExpected, samples.sampleCreatePlan0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -57,7 +57,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
     const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: "create" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId","createPlanId":"tbd"},
        pageSelection: [ { pageName: 'EAccountsSummary', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -66,7 +66,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
       withRequest: {
          method: 'POST',
          path:   '/api/createPlan',
-         query:{"accountId":"accId","customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId"},
          body: JSON.stringify(samples.sampleCreatePlan0),
       },
       willRespondWith: {
@@ -75,11 +75,11 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
       },
     } )
     const lensTransforms: Transform<FState,any>[] = [
-    [Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('tempCreatePlan'), () => samples.sampleCreatePlan0]
+      [Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('tempCreatePlan'), () => samples.sampleCreatePlan0]
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('tempCreatePlan').set ( rawExpected, samples.sampleCreatePlan0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -96,7 +96,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
     const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: "update" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId","createPlanId":"tbd"},
        pageSelection: [ { pageName: 'EAccountsSummary', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -105,7 +105,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
       withRequest: {
          method: 'PUT',
          path:   '/api/createPlan',
-         query:{"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId","createPlanId":"tbd"},
          body: JSON.stringify(samples.sampleCreatePlan0),
       },
       willRespondWith: {
@@ -114,11 +114,11 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
       },
     } )
     const lensTransforms: Transform<FState,any>[] = [
-    [Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('tempCreatePlan'), () => samples.sampleCreatePlan0]
+      [Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('tempCreatePlan'), () => samples.sampleCreatePlan0]
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('tempCreatePlan').set ( rawExpected, samples.sampleCreatePlan0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -135,7 +135,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
     const restCommand: RestCommand = { name: 'EAccountsSummary_CreatePlanRestDetails', restAction: "delete" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId","createPlanId":"tbd"},
        pageSelection: [ { pageName: 'EAccountsSummary', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -144,7 +144,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
       withRequest: {
          method: 'DELETE',
          path:   '/api/createPlan',
-         query:{"accountId":"accId","createPlanId":"tbd","customerId":"custId"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId","createPlanId":"tbd"},
          //no request body needed for delete,
       },
       willRespondWith: {
@@ -156,7 +156,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = rawExpected; // this rest action doesn't load data
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -176,14 +176,14 @@ describe ( 'EAccountsSummary - eAccountsSummary - fetcher', () => {
       withRequest: {
         method: 'GET',
         path: '/api/accountsSummary',
-        query:{"accountId":"accId","customerId":"custId","employeeType":"basic"}
+        query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId","customerId":"custId","employeeType":"basic"}
       },
       willRespondWith: {
         status: 200,
         body: samples.sampleEAccountsSummary0
        },
       } )
-      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'EAccountsSummary', pageMode: 'view' }], CommonIds: {"accountId":"accId","customerId":"custId","employeeType":"basic"} }
+      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: 'EAccountsSummary', pageMode: 'view' }], CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId","customerId":"custId","employeeType":"basic"} }
   const lensTransforms: Transform<FState,any>[] = [
   ]
       const withIds = massTransform ( firstState, ...lensTransforms )
@@ -193,7 +193,7 @@ describe ( 'EAccountsSummary - eAccountsSummary - fetcher', () => {
       let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )
       let expectedRaw: any = {
 ... withIds,
-      tags: {'EAccountsSummary_~/fromApi': ["accId","custId","basic"]}
+      tags: {'EAccountsSummary_~/fromApi': ["accId","appref","brandRef","custId","custId","basic"]}
       };
       const expected = Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('fromApi').set ( expectedRaw, samples.sampleEAccountsSummary0 )
       expect ( newState ).toEqual ( expected )
@@ -208,7 +208,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
     const restCommand: RestCommand = { name: 'EAccountsSummary_EAccountsSummaryRestDetails', restAction: "get" }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"accountId":"accId","customerId":"custId","employeeType":"basic"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId","customerId":"custId","employeeType":"basic"},
        pageSelection: [ { pageName: 'EAccountsSummary', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -217,7 +217,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
       withRequest: {
          method: 'GET',
          path:   '/api/accountsSummary',
-         query:{"accountId":"accId","customerId":"custId","employeeType":"basic"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId","customerId":"custId","employeeType":"basic"},
          //no request body needed for get,
       },
       willRespondWith: {
@@ -229,7 +229,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('fromApi').set ( rawExpected, samples.sampleEAccountsSummary0 )
     expect ( newState.messages.length ).toEqual ( 1 )
@@ -246,7 +246,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
     const restCommand: RestCommand = { name: 'EAccountsSummary_EAccountsSummaryRestDetails', restAction: {"state":"invalidate"} }
     const firstState: FState = {
        ...emptyState, restCommands: [ restCommand ],
-       CommonIds: {"accountId":"accId","customerId":"custId","employeeType":"basic"},
+       CommonIds: {"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId","customerId":"custId","employeeType":"basic"},
        pageSelection: [ { pageName: 'EAccountsSummary', pageMode: 'view' } ]
     }
     await provider.addInteraction ( {
@@ -255,7 +255,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
       withRequest: {
          method: 'POST',
          path:   '/api/accountsSummary/invalidate',
-         query:{"accountId":"accId","customerId":"custId","employeeType":"basic"},
+         query:{"accountId":"accId","applRef":"appref","brandRef":"brandRef","clientRef":"custId","customerId":"custId","employeeType":"basic"},
          //no request body needed for state:invalidate,
       },
       willRespondWith: {
@@ -267,7 +267,7 @@ pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider',
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );
-    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, simpleMessagesL(), restL(), withIds )
+    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )
     const rawExpected:any = { ...withIds, restCommands: []}
     const expected = rawExpected; // this rest action doesn't load data
     expect ( newState.messages.length ).toEqual ( 1 )

@@ -263,7 +263,8 @@ export const accountOverviewOptOutDataD: ExampleDataD = {
 export const accountOverviewDataD: ExampleDataD = {
   name: "AccountOverview",
   description: "Account overview data definition",
-  layout: { component: LayoutCd, displayParams: { details: '[[4,3],[{"count":7,"labelWidth":30, "valueWidth":40}, {"count":6,"labelWidth":30, "valueWidth":30}]]', defaultProps: `{"labelWidth": 25}`}},
+  layout: { component: LayoutCd, displayParams: { details: '[[4,3],[{"count":7,"labelWidth":30, "valueWidth":40}, {"count":6,"labelWidth":30, "valueWidth":30}]]',
+      defaultProps: `{"labelWidth": 25}`}},
   structure: {
     score: { dataDD: IntegerDD, displayParams: { label: "Score" } },
     accountType: { dataDD: EAccountDisplayTypeDD, displayParams: { label: "Account Type" } },
