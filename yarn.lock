@@ -2314,6 +2314,93 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@focuson/fetcher@1.9.2":
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/@focuson/fetcher/-/fetcher-1.9.2.tgz#16c3d406959e67e9a4540b108c215f91e41712f9"
+  integrity sha512-7DEEB16u/+wZW3X7YbUn7KxW3PMN5Ldr6OxSR0QJZm8BHrszyCtPGRxcUu9bD+sUkEze4+vbjHkUUhe7Jj3wMw==
+  dependencies:
+    "@focuson/lens" "1.9.2"
+    "@focuson/state" "1.9.2"
+    "@focuson/template" "1.9.2"
+
+"@focuson/focuson@1.9.2":
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/@focuson/focuson/-/focuson-1.9.2.tgz#3fda288bed8cf2add9ccd861849e6a43c6b974a4"
+  integrity sha512-6N0utsRqyYO/uLN6Nxa7sDsqagg37/rCDyQbeP6HE6IUaPc55f5C74PAsQOd8hW8B16MrXP5XcZ6A+5vuowb9Q==
+  dependencies:
+    "@focuson/pages" "1.9.2"
+    "@focuson/poster" "1.9.2"
+
+"@focuson/form_components@1.9.2":
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/@focuson/form_components/-/form_components-1.9.2.tgz#798a5d3b301b9b153dc15ccfc041c119ca75ff22"
+  integrity sha512-Ayd5Kdt652SjMOvYIY5l8U3B0mdFRArLkdHKDVlGpgcUbIpUzD/rq9z5ZTf7+26wczADSZbqROVZ8M/ZGtMYPA==
+  dependencies:
+    "@focuson/focuson" "1.9.2"
+    "@focuson/state" "1.9.2"
+
+"@focuson/lens@1.9.2":
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/@focuson/lens/-/lens-1.9.2.tgz#7d1b1d9dfda2b2545c187ba7f5e689766808218c"
+  integrity sha512-I3OOQWYaie4JcQJct1kFk6ry3FE0iX21Il4Pnza5aMuHAou+XxsDoBOqc0Ajmc8/bVQGGmfeFlzU9/QtqwWFrQ==
+  dependencies:
+    "@focuson/utils" "1.9.2"
+
+"@focuson/pages@1.9.2":
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/@focuson/pages/-/pages-1.9.2.tgz#4626bf56dafe29372dd2e100314b11ab66b4c70f"
+  integrity sha512-f9hxFt5ntQ5uOtWoDAwOdp1XabgI1c1psKMEbcWvRh9VlFUy7z0eYs4Vm7tY6ohJ8ISUe5qfRw5cTKlnQ5va5g==
+  dependencies:
+    "@focuson/fetcher" "1.9.2"
+    "@focuson/lens" "1.9.2"
+    "@focuson/rest" "1.9.2"
+    "@focuson/state" "1.9.2"
+
+"@focuson/poster@1.9.2":
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/@focuson/poster/-/poster-1.9.2.tgz#c83b4578ada6aedac2c197928e5d1653cc0d8bfb"
+  integrity sha512-PgsoeYUEJ0KQCn/o8PTy2l39rmXVqi6SAf3ABF+1wG35nGrf/WpObpCXI5vuXjEnrYIppIQKf12w1xv4kRpI9g==
+  dependencies:
+    "@focuson/fetcher" "1.9.2"
+    "@focuson/lens" "1.9.2"
+
+"@focuson/rest@1.9.2":
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/@focuson/rest/-/rest-1.9.2.tgz#e32dcd57bc15401931520a66b6ef09e22262abfe"
+  integrity sha512-Dma3yGW872Wp5nMl6HA2QfbLwA8TM2qYMzfAI12/ko7DxBAzGczrpz8mpLigExIzY0xHbXAHrjxQAUd6fQpbeQ==
+  dependencies:
+    "@focuson/fetcher" "1.9.2"
+    "@focuson/lens" "1.9.2"
+
+"@focuson/state@1.9.2":
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/@focuson/state/-/state-1.9.2.tgz#522d364b48f87d2498a41ba236b7f2803260b38b"
+  integrity sha512-yTmQS5sYf9qHi9+BeBef2iRrvjCSDZNb+FdnwAnvqojIYU7GN7egTN5owCTNJWgh/yDkC36a3hxXCcZWTKZY3Q==
+  dependencies:
+    "@focuson/lens" "1.9.2"
+
+"@focuson/stories@1.9.2":
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/@focuson/stories/-/stories-1.9.2.tgz#ae06c5fe9f27542284fbe790329c1f3ccdbcaa74"
+  integrity sha512-vaCM6nr+0zQnvqkbylxvS2ra/g0nmzuhgNpmFS9+4mWQBffxa/iTByjLxJX1rYLqtwxKDcCede9V0yxmhIIVgA==
+  dependencies:
+    "@focuson/focuson" "1.9.2"
+    react "^17.0.1"
+    react-dom "^17.0.1"
+    typescript "^4.1.5"
+
+"@focuson/template@1.9.2":
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/@focuson/template/-/template-1.9.2.tgz#faed4f3a79228ee5b96abf3f0f143ee9086039f2"
+  integrity sha512-J1fyNiPr8RoAmnncfUgfdwJKo3LtcF0JTVQATOd4b/60EJ03xlbvfi7A6mUgYMT+yhBXKWP15UBvOYW5Y2VJUQ==
+
+"@focuson/utils@1.9.2":
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/@focuson/utils/-/utils-1.9.2.tgz#3d07f2df9a4f868669c9f25b86c8d367b1bcdc8b"
+  integrity sha512-Ew+YRB7UHfrf2mI3aNiNTluHy+jZ1eU0ivdj8Ef2hbIssVvn52b5lEHhKfnG4Coj6sZKmczIh6nJSGwiG1tmsA==
+  dependencies:
+    node-fetch "2.6.1"
+
 "@gar/promisify@^1.0.1":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.2.tgz#30aa825f11d438671d585bd44e7fd564535fc210"
