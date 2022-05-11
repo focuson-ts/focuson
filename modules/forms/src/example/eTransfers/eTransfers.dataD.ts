@@ -11,7 +11,7 @@ export const ETransferDataD: DataD<AllGuards> = {
   layout: { component: LayoutCd, displayParams: { details: '[[1],[3,3],[1,1]]' }  },
   structure: {
     account: { dataDD: AccountIdDD, displayParams: { label: "Account Id", min: 0 } },
-    dateOfETransfer: { dataDD: DateDD, displayParams: { datesExcluded: '~/holidays/', workingDaysInFuture: 5 }},
+    dateOfETransfer: { dataDD: DateDD, displayParams: { datesExcluded: '~/holidays/', workingDaysInFuture: 5, includeWeekends: true }},
     description: { dataDD: OneLineStringDD, sample: [ 'Why we are doing this transfer' ] },
     fromAccount: { dataDD: AccountIdDD },
     toAccount: { dataDD: AccountIdDD, },

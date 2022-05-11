@@ -17,10 +17,11 @@ export interface LabelAndDateProps<S, Context> extends CommonStateProps<S, strin
   fieldNameInHolidays?: string,
   workingDaysInPast?: number,
   workingDaysInFuture?: number,
+  includeWeekends?: boolean,
 }
 
 export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( props: LabelAndDateProps<S, Context> ) {
-  const { state, ariaLabel, id, mode, label, name, buttons, readonly, datesExcluded, fieldNameInHolidays, workingDaysInPast, workingDaysInFuture } = props
+  const { state, ariaLabel, id, mode, label, name, buttons, readonly, datesExcluded, fieldNameInHolidays, workingDaysInPast, workingDaysInFuture, includeWeekends } = props
 
   const datesToExclude = datesExcluded?.optJsonOr([]).map(d => d[fieldNameInHolidays? fieldNameInHolidays : 'holiday'])
   const datesToExcludeAsDateType = safeArray(datesToExclude).map(d => new Date(d))
@@ -30,7 +31,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
   };
 
   const isExcluded = (date: Date, datesList: string[]) => {
-    return datesList.length > 0 ? (isWeekday(date) && !isHoliday(date, datesList)) : isWeekday(date)
+    return includeWeekends ? !isHoliday(date, datesList) : (isWeekday(date) && !isHoliday(date, datesList))
   }
 
   const onChange = ( date: any ) => {
@@ -66,10 +67,12 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
   const selectedDate = new Date(state.optJsonOr(new Date().toDateString())) // TODO: Turn default date into arg
   return (<div className='labelAndDate'>
       <Label state={state} htmlFor={name} label={label}/>
-      {/* <input {...cleanInputProps ( props )} type='date' readOnly={mode === 'view' || readonly} onChange={onChange} value={state.optJsonOr ( '' )}/> */}
-      <DatePicker selected={selectedDate} onChange={(date) => onChange(date)} filterDate={(date) => isExcluded(date, safeArray(datesToExclude))}       
+      <DatePicker selected={selectedDate} onChange={(date) => onChange(date)} 
+      filterDate={includeWeekends ? undefined : isWeekday}
+      excludeDates={datesToExcludeAsDateType}
       minDate={minDate}
       highlightDates={datesToExcludeAsDateType}
+      disabled={mode === 'view' || readonly}
       placeholderText="Select a weekday"/>
       {makeButtons ( props.allButtons, props.buttons )}
     </div>)
