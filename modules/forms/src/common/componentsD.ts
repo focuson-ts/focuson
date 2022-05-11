@@ -88,7 +88,8 @@ export const LabelAndDateInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndDateInput",
   params: {
     ...commonParamsWithLabel,
-    datesExcluded:{ paramType: 'path', needed: 'no'}
+    datesExcluded:{ paramType: 'path', needed: 'no'},
+    workingDaysInFuture:{ paramType: 'object', needed: 'no'},
   }
 }
 

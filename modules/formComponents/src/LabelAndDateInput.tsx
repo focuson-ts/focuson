@@ -15,15 +15,14 @@ export interface LabelAndDateProps<S, Context> extends CommonStateProps<S, strin
   buttons?: string[]
   datesExcluded?: LensState<S,any[], Context>,
   fieldNameInHolidays?: string,
+  workingDaysInPast?: number,
   workingDaysInFuture?: number,
 }
 
 export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( props: LabelAndDateProps<S, Context> ) {
-  const { state, ariaLabel, id, mode, label, name, buttons, readonly, datesExcluded, fieldNameInHolidays, workingDaysInFuture } = props
+  const { state, ariaLabel, id, mode, label, name, buttons, readonly, datesExcluded, fieldNameInHolidays, workingDaysInPast, workingDaysInFuture } = props
 
   const datesToExclude = datesExcluded?.optJsonOr([]).map(d => d[fieldNameInHolidays? fieldNameInHolidays : 'holiday'])  
-  // const datesToExcludeAsDate = safeArray(datesToExclude).map(d => new Date(d)) 
-  // const highlightDatesToExclude = [{"react-datepicker__day--highlighted-custom-2": datesToExcludeAsDate}];
 
   const isHoliday = (date: any, dateList: any) => {
     return dateList.find((d:any) => new Date(d).toDateString() === date.toDateString());
@@ -44,7 +43,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
 
   const addDays = (date: Date, n: number) => {
     let count: number = 0
-    let endDate: Date = null
+    let endDate: Date = date
     while(count < n){
       endDate = new Date(date.setDate(date.getDate() + 1))
       if(isWeekday(endDate)) count++
@@ -53,7 +52,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
   }
   const subDays = (date: Date, n: number) => {
     let count: number = 0
-    let endDate: Date = null
+    let endDate: Date = date
     while(count < n){
       endDate = new Date(date.setDate(date.getDate() - 1))
       if(isWeekday(endDate)) count++
@@ -66,7 +65,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
       <Label state={state} htmlFor={name} label={label}/>
       {/* <input {...cleanInputProps ( props )} type='date' readOnly={mode === 'view' || readonly} onChange={onChange} value={state.optJsonOr ( '' )}/> */}
       <DatePicker selected={selectedDate} onChange={(date) => onChange(date)} filterDate={(date) => isExcluded(date, safeArray(datesToExclude))} 
-      includeDateIntervals={[{ start: subDays(new Date(), 5), end: addDays(new Date(), 5) },]}
+      includeDateIntervals={[{ start: subDays(new Date(), workingDaysInPast?workingDaysInPast:0), end: addDays(new Date(), workingDaysInFuture?workingDaysInFuture:0) },]}
       // highlightDates={datesToExcludeAsDate}
       placeholderText="Select a weekday"/>
       {makeButtons ( props.allButtons, props.buttons )}
