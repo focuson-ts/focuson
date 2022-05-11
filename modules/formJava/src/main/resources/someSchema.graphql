@@ -27,6 +27,8 @@ type Query{
   getPostCodeDataLine(dbName: String!, postcode: String!):[PostCodeDataLine!]!
 }
 type Mutation{
+  createsomePrefixPrintRecordItem(accountId: String!,obj: [PrintRecordItemInp!]!):[PrintRecordItem!]!
+  statesomePrefixPrintRecordItemprint(accountId: String!):[Boolean]!
   createCreatePayment(accountId: String!, clientRef: String!, paymentId: String!,obj: CreatePaymentInp!):CreatePayment!
   stateCollectionItemcancel(accountId: String!, clientRef: String!, paymentId: String!):Boolean
   updateOccupationAndIncomeFullDomain(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!,obj: OccupationAndIncomeFullDomainInp!):OccupationAndIncomeFullDomain!
@@ -435,6 +437,13 @@ input ETransferDataDInp{
   balance: Int!
   notes: String!
 }
+input ListOfPaymentsInp{
+  standingOrders: SinglePrintInp!
+  openBankingStandingOrders: SinglePrintInp!
+  directDebits: SinglePrintInp!
+  billPayments: SinglePrintInp!
+  openBanking: SinglePrintInp!
+}
 input OccupationAndIncomeFullDomainInp{
   mainCustomerName: String!
   jointCustomerName: String!
@@ -478,7 +487,31 @@ input PostCodeNameAndAddressInp{
   line4: String!
   postcode: String!
 }
+input PrintRecordItemInp{
+  requestedBy: String!
+  requesterDetails: RequesterDetailsInp!
+  listOfPayments: ListOfPaymentsInp!
+  includeSingleAndInitialDirectDebits: Boolean!
+  authorisedByCustomer: String!
+  alreadyPrinted: Boolean!
+}
 input RepeatingLineInp{
   name: String!
   age: Int!
+}
+input RequesterDetailsInp{
+  title: String!
+  forename: String!
+  surname: String!
+  addressLine1: String!
+  addressLine2: String!
+  addressLine3: String!
+  addressLine4: String!
+  postcode: String!
+  phone: String!
+  fax: String!
+}
+input SinglePrintInp{
+  shouldPrint: Boolean!
+  numberOfItems: Int!
 }

@@ -2,7 +2,7 @@ import { IntParam, RestD, RestParams } from "../../common/restD";
 import { ChequeCreditbooksDD, ChequeCreditbooksHistoryDD, ChequeCreditbooksHistoryLineDD } from "./chequeCreditBooks.dataD";
 import { AllGuards } from "../../buttons/guardButton";
 import { accountT, onlySchema } from "../database/tableNames";
-import { commonIds } from "../commonIds";
+import { commonIds, fromCommonIds } from "../commonIds";
 
 
 /** This should fully define the api*/

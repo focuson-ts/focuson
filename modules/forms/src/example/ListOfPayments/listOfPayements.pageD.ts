@@ -1,7 +1,7 @@
 import { ExampleMainPage, ExampleModalPage } from "../common";
 import { NatNumDd } from "../commonEnums";
 import { printRecordDD, PrintRecordHistoryDD } from "./listOfPayements.dataD";
-import { PrintRecordHistoryRD } from "./listOfPayements.restD";
+import { PrintRecordHistory1RD, PrintRecordHistoryRD } from "./listOfPayements.restD";
 
 export const EditlistOfPaymentsPagePD: ExampleModalPage = {
   pageType: 'ModalPage',
@@ -26,7 +26,8 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
   modes: [ 'edit' ],
   initialValue: { selected: 0 },
   rest: {
-    paymentHistory: { rest: PrintRecordHistoryRD, fetcher: true, targetFromPath: '~/display' }
+    paymentHistory: { rest: PrintRecordHistoryRD, fetcher: true, targetFromPath: '~/display' },
+    paymentHistoryNext: { rest: PrintRecordHistory1RD, fetcher: true, targetFromPath: '~/display' }
   },
   buttons: {
     prev: { control: 'ListPrevButton', list: '~/display', value: '~/selected' },

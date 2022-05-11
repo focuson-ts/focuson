@@ -17,7 +17,7 @@ export interface TableProps<S, T, Context> extends CommonStateProps<S, T[], Cont
   maxCount?: string
 }
 
-export function getValue<T> ( o: keyof T, row: T, joiners: undefined| string | string[] ): any {
+export function getValue<T> ( o: keyof T, row: T, joiners: undefined | string | string[] ): any {
   let result = makeIntoString ( o.toString (), row[ o ], findJoiner ( o.toString (), joiners ) );
   return result;
 }
@@ -36,15 +36,28 @@ export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, 
   function selectedClass ( i: number ) {return i === selected ? 'bg-primary' : undefined }
 
   const prefixFilterString = prefixFilter?.optJsonOr ( '' )
-  const filtered = prefixColumn && prefixFilter ? json.filter ( t => getValue ( prefixColumn, t, joiners ).toString ().startsWith ( prefixFilterString ) ) : json
-  const withMaxCount = maxCount !== undefined ? filtered.slice ( 0,Number.parseInt(maxCount) ) : filtered
+  function oneRow ( row: T, i: number ) {
+    return (<tr id={`${id}[${i}]`} className={selectedClass ( i )} key={i} onClick={onClick ( i )}>{order.map ( o =>
+      <td id={`${id}[${i}].${o}`} key={o.toString ()}>{getValue ( o, row, joiners )}</td> )}</tr>)
+  }
+  // const filtered = prefixColumn && prefixFilter ? json.filter ( t => getValue ( prefixColumn, t, joiners ).toString ().startsWith ( prefixFilterString ) ) : json
+  function filter ( t: T ) {
+    console.log ( 'filter', t )
+    console.log ( 'filter col & filter', prefixColumn, prefixFilterString )
+    console.log ( 'filter getVal', prefixColumn && prefixFilter && getValue ( prefixColumn, t, joiners ) )
+    console.log ( 'filter condition', prefixColumn && prefixFilter && getValue ( prefixColumn, t, joiners ) )
+    return prefixColumn && prefixFilter ? getValue ( prefixColumn, t, joiners ).toString ().startsWith ( prefixFilterString ) : true
+  }
+  let maxCountInt = maxCount ? Number.parseInt ( maxCount ) : 0;
+
+  let count = 0;
+  let tableBody = json.map ( ( row, i ) => (!maxCount || count++ <= maxCountInt) && filter ( row ) ? oneRow ( row, i ) : <></> );
+
   return <table id={id}>
     <thead>
     <tr>{orderJsx}</tr>
     </thead>
-    <tbody>{withMaxCount.map ( ( row, i ) =>
-      <tr id={`${id}[${i}]`} className={selectedClass ( i )} key={i} onClick={onClick ( i )}>{order.map ( o =>
-        <td id={`${id}[${i}].${o}`} key={o.toString ()}>{getValue ( o, row, joiners )}</td> )}</tr> )}</tbody>
+    <tbody>{tableBody}</tbody>
   </table>
 }
 

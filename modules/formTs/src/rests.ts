@@ -5,6 +5,7 @@ import { FState , commonIds} from "./common";
 
 import { HelloWorldMainPage_HelloWorldDomainDataRestDetails } from './HelloWorldMainPage/HelloWorldMainPage.rests';
 import { ListOfPaymentsPage_PrintRecordHistoryRestDetails } from './ListOfPaymentsPage/ListOfPaymentsPage.rests';
+import { ListOfPaymentsPage_somePrefix_PrintRecordHistoryRestDetails } from './ListOfPaymentsPage/ListOfPaymentsPage.rests';
 import { LinkedAccountDetails_CollectionsListRestDetails } from './LinkedAccountDetails/LinkedAccountDetails.rests';
 import { LinkedAccountDetails_CollectionSummaryRestDetails } from './LinkedAccountDetails/LinkedAccountDetails.rests';
 import { LinkedAccountDetails_CreatePaymentRestDetails } from './LinkedAccountDetails/LinkedAccountDetails.rests';
@@ -39,6 +40,7 @@ export function restUrlMutator ( r: RestAction, url: string ): string { return u
 export const restDetails: RestDetails<FState, SimpleMessage> = {
    HelloWorldMainPage_HelloWorldDomainDataRestDetails: HelloWorldMainPage_HelloWorldDomainDataRestDetails(commonIds, defaultDateFn),
    ListOfPaymentsPage_PrintRecordHistoryRestDetails: ListOfPaymentsPage_PrintRecordHistoryRestDetails(commonIds, defaultDateFn),
+   ListOfPaymentsPage_somePrefix_PrintRecordHistoryRestDetails: ListOfPaymentsPage_somePrefix_PrintRecordHistoryRestDetails(commonIds, defaultDateFn),
    LinkedAccountDetails_CollectionsListRestDetails: LinkedAccountDetails_CollectionsListRestDetails(commonIds, defaultDateFn),
    LinkedAccountDetails_CollectionSummaryRestDetails: LinkedAccountDetails_CollectionSummaryRestDetails(commonIds, defaultDateFn),
    LinkedAccountDetails_CreatePaymentRestDetails: LinkedAccountDetails_CreatePaymentRestDetails(commonIds, defaultDateFn),

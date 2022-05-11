@@ -1,6 +1,7 @@
 import * as common from './common';
 import { HelloWorldDomainDataFetcher } from './HelloWorldMainPage/HelloWorldMainPage.fetchers';
 import { PrintRecordHistoryFetcher } from './ListOfPaymentsPage/ListOfPaymentsPage.fetchers';
+import { somePrefix_PrintRecordHistoryFetcher } from './ListOfPaymentsPage/ListOfPaymentsPage.fetchers';
 import { CollectionsListFetcher } from './LinkedAccountDetails/LinkedAccountDetails.fetchers';
 import { CollectionSummaryFetcher } from './LinkedAccountDetails/LinkedAccountDetails.fetchers';
 import { OverpaymentPageFetcher } from './LinkedAccountDetails/LinkedAccountDetails.fetchers';
@@ -34,6 +35,7 @@ export const fetchers: FetcherTree<common.FState> = {
 fetchers: [
     HelloWorldDomainDataFetcher( identityL.focusQuery ( 'HelloWorldMainPage' ), commonIds ),
     PrintRecordHistoryFetcher( identityL.focusQuery ( 'ListOfPaymentsPage' ), commonIds ),
+    somePrefix_PrintRecordHistoryFetcher( identityL.focusQuery ( 'ListOfPaymentsPage' ), commonIds ),
     CollectionsListFetcher( identityL.focusQuery ( 'LinkedAccountDetails' ), commonIds ),
     CollectionSummaryFetcher( identityL.focusQuery ( 'LinkedAccountDetails' ), commonIds ),
     OverpaymentPageFetcher( identityL.focusQuery ( 'LinkedAccountDetails' ), commonIds ),

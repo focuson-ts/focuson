@@ -15,6 +15,8 @@
 | --- | --- | ---  |  --- | --- | --- |
 |HelloWorldMainPage|restDataRD | /helloWorld?{query}|  |  | 
 |ListOfPaymentsPage|paymentHistory | /api/printrecordhistory?{query}| accountId |  | 
+|ListOfPaymentsPage|paymentHistoryNext | /api/printrecordhistoryx?{query}| accountId |  | 
+|ListOfPaymentsPage| | /api/printrecord/print?{query}| accountId |
 |LinkedAccountDetails|collectionHistoryList | /api/collections/list?{query}| accountId,clientRef |  | 
 |LinkedAccountDetails|collectionSummary | /api/collections/summary?{query}| accountId,clientRef |  | 
 |LinkedAccountDetails|createPayment | /api/payment/create?{query}| accountId,clientRef,paymentId |  | create->auditCreate
@@ -76,6 +78,8 @@
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
     |paymentHistory | /api/printrecordhistory?{query}| accountId |  | 
+    |paymentHistoryNext | /api/printrecordhistoryx?{query}| accountId |  | 
+    | | /api/printrecord/print?{query}| accountId |
   ## modals  
   |name|displayed with
   | --- | --- 
