@@ -76,7 +76,7 @@ export const listComponentsIn = <G> ( dataDD: CompDataD<G> ): AllComponentData<G
   // return flatMapDD ( dataDD, listComponentsInFolder () );
 };
 
-export const processParam = <B, G> ( p: MainPageD<B, G>, params: TSParams, errorPrefix: string, dcd: DisplayCompD ) => ( name: string, s: number | string | string[] | boolean ) => {
+export const processParam = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params: TSParams, errorPrefix: string, dcd: DisplayCompD ) => ( name: string, s: number | string | string[] | boolean ) => {
   if ( dcd.params === undefined ) throw Error ( `${errorPrefix} Trying to get data for param ${name}, but no params have been defined` )
   const dcdType: OneDisplayCompParamD<any> | undefined = dcd.params[ name ]
   if ( dcdType === undefined ) throw Error ( `${errorPrefix}  param '${name}' not found in ${JSON.stringify ( Object.keys ( dcd.params ).sort () )}` )
@@ -94,12 +94,13 @@ export const processParam = <B, G> ( p: MainPageD<B, G>, params: TSParams, error
   }
   function processPath ( postFix: string ) {
     if ( typeof s !== 'string' ) throw new Error ( `${fullErrorPrefix} needs to be a string. Actually is ${typeof s}, with value ${JSON.stringify ( s )}` )
-    return `{${stateQueryForParams ( fullErrorPrefix + ` the path is ${s}`, params, p, p, s )}${postFix}}`
+    return `{${stateQueryForParams ( fullErrorPrefix + ` the path is ${s}`, params, mainPage, mainPage, s )}${postFix}}`
   }
 
   if ( dcdType.paramType === 'string' ) return processStringParam ()
   if ( dcdType.paramType === 'boolean' ) return processObjectParam ()
   if ( dcdType.paramType === 'object' ) return processObjectParam ()
+  if ( dcdType.paramType === 'objectAndRenderPrefix' ) return "{" + (mainPage.name == page.name ? '' : 'render.') + s + "}"
   if ( dcdType.paramType === 'string[]' ) return processStringArrayParam ()
   if ( dcdType.paramType === 'fullState' ) return processState ( 'fullState(state)', '' )
   if ( dcdType.paramType === 'pageState' ) return processState ( 'pageState(state)<any>()', '' )
@@ -113,16 +114,17 @@ export const processParam = <B, G> ( p: MainPageD<B, G>, params: TSParams, error
 };
 
 
-function makeParams<B, G> ( mainPage: MainPageD<B, G>, params: TSParams, errorPrefix: string, path: string[], optEnum: NameAnd<String> | undefined, display: DisplayCompD, definingParams: DisplayParamDD | undefined, displayParams: ComponentDisplayParams ) {
-  const processOneParam = processParam ( mainPage, params, errorPrefix, display )
+function makeParams<B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params: TSParams, errorPrefix: string, path: string[], optEnum: NameAnd<String> | undefined, display: DisplayCompD, definingParams: DisplayParamDD | undefined, displayParams: ComponentDisplayParams ) {
+  const processOneParam = processParam ( mainPage, page, params, errorPrefix, display )
   const dataDDParams: [ string, string ][] = definingParams ? Object.entries ( definingParams )
-    .map ( ( [ name, value ] ) => [ name, processOneParam ( name, value ) ] ) : []
+    .map ( ( [ name, value ] ) => { return [ name, processOneParam ( name, value ) ]; } ) : []
   const defaultParams: [ string, string ][] = Object.entries ( display.params ).flatMap ( ( [ name, param ] ) => {
     if ( param?.default ) return [ [ name, processOneParam ( name, param.default ) ] ]
     if ( param?.needed === 'defaultToCamelCaseOfName' ) return [ [ name, processOneParam ( name, decamelize ( path.slice ( -1 ) + "", ' ' ) ) ] ]
     if ( param?.needed === 'defaultToPath' ) return [ [ name, processOneParam ( name, path ) ] ]
     if ( param?.needed === 'defaultToLabel' ) return [ [ name, processOneParam ( name, 'label' ) ] ]
     if ( param?.needed === 'defaultToButtons' ) return [ [ name, processOneParam ( name, 'allButtons' ) ] ]
+
     if ( param?.needed === 'id' ) {
       const dot = path.length > 0 ? '.' : ''
       return [ [ name, processOneParam ( name, '`${id}' + dot + path.join ( "." ) + '`' ) ] ]
@@ -141,7 +143,7 @@ export function createOneReact<B, G> ( mainPage: MainPageD<B, G>, params: TSPara
   const name = display.name
   let errorPrefix = `Page ${pageD.name}, Datad ${dataDD.name} with path ${JSON.stringify ( path )}`;
   if ( name === undefined ) throw Error ( errorPrefix + " cannot find the name of the display component. Check it is a dataD or similar" )
-  const fullDisplayParams = makeParams ( mainPage, params, errorPrefix, path,
+  const fullDisplayParams = makeParams ( mainPage, pageD, params, errorPrefix, path,
     isPrimDd ( dataDD ) && dataDD.enum, display, dataDD.displayParams, displayParams );
 
   const displayParamsString = fullDisplayParams.map ( ( [ k, v ] ) => `${k}=${v}` ).join ( " " )
@@ -161,10 +163,10 @@ export function createAllReactCalls<B, G> ( mainPage: MainPageD<B, G>, params: T
   } )
 }
 
-function makeLayoutPrefixPostFix<B, G> ( mainPage: MainPageD<B, G>, tsparams: TSParams, errorPrefix: string, path: string[], hasLayout: HasLayout, defaultOpen: string, defaultClose: string ) {
+function makeLayoutPrefixPostFix<B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, tsparams: TSParams, errorPrefix: string, path: string[], hasLayout: HasLayout, defaultOpen: string, defaultClose: string ) {
   if ( hasLayout.layout ) {
     const { component, displayParams } = hasLayout.layout
-    const params = makeParams ( mainPage, tsparams, errorPrefix, path, undefined, component, displayParams, {} )
+    const params = makeParams ( mainPage, page, tsparams, errorPrefix, path, undefined, component, displayParams, {} )
     const layoutPrefixString = `<${component.name} ${params.map ( ( [ n, v ] ) => `${n}=${v}` ).join ( ' ' )}>`
     const layoutPostfixString = `</${component.name}>`
     return { layoutPrefixString, layoutPostfixString };
@@ -183,7 +185,7 @@ function makeGuardVariables<B, G extends GuardWithCondition> ( hasGuards: HasGua
 export const createReactComponent = <B, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, mainP: MainPageD<B, G>, page: PageD<B, G> ) => ( dataD: CompDataD<G> ): string[] => {
   const contents = indentList ( indentList ( createAllReactCalls ( mainP, params, page, listComponentsIn ( dataD ) ) ) )
   const guardStrings = isDataDd ( dataD ) ? makeGuardVariables ( dataD, makeGuard, params, mainP, page ) : []
-  const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( mainP, params, `createReactComponent-layout ${dataD.name}`, [], dataD, '<>', '</>' );
+  const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( mainP, page, params, `createReactComponent-layout ${dataD.name}`, [], dataD, '<>', '</>' );
   return [
     `export function ${componentName ( dataD )}({id,state,mode,allButtons,label}: FocusedProps<${params.stateName}, ${domainName ( dataD )},Context>){`,
     ...guardStrings,
@@ -206,7 +208,7 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
   const { dataDD } = pageD.display
   // const focus = focusOnFor ( pageD.display.target );
   const domName = domainName ( pageD.display.dataDD );
-  const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( mainP, params, `createReactModalPageComponent-layout ${pageD.name}`, [], pageD, "<>", '</>' );
+  const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( mainP, pageD, params, `createReactModalPageComponent-layout ${pageD.name}`, [], pageD, "<>", '</>' );
 
   const guards = makeGuardVariables ( pageD, makeGuard, params, mainP, pageD )
   return [
@@ -228,7 +230,7 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
 export function createReactMainPageComponent<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButtons: MakeButton<G>, pageD: MainPageD<B, G> ): string[] {
   const { dataDD } = pageD.display
   let errorPrefix: string = `createReactMainPageComponent-layout ${pageD.name}`;
-  const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( pageD, params, errorPrefix, [], pageD, `<>`, '</>' );
+  const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( pageD, pageD, params, errorPrefix, [], pageD, `<>`, '</>' );
   const guards = makeGuardVariables ( pageD, makeGuard, params, pageD, pageD )
   return [
     `export function ${pageComponentName ( pageD )}(){`,
@@ -252,7 +254,9 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
 
 export function createRenderPage<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, transformButtons: MakeButton<G>, mainP: MainPageD<B, G>, p: PageD<B, G> ): string[] {
   const imports = [ `import * as empty from '${emptyFileName ( '..', params, mainP )}';` ]
+  const renderImports = mainP.name === p.name ? [] : [ `import * as render from "./${mainP.name}.${params.renderFile}";` ]
   return [ ...imports, `import * as domain from '${domainsFileName ( '..', params, mainP )}';`,
+    ...renderImports,
     ...createAllReactComponents ( params, makeGuard, transformButtons, mainP, p ) ]
 }
 
@@ -261,6 +265,7 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
   const dataComponents = sortedEntries ( dataDsIn ( pages, false ) ).flatMap ( ( [ name, dataD ] ) => dataD.display ? [] : createReactComponent ( params, makeGuard, mainP, page ) ( dataD ) )
   const pageComponents = pages.flatMap ( p => createReactPageComponent ( params, makeGuard, makeButton, mainP, p ) )
   const optionalImports = isMainPage ( page ) ? [ `import { ${optionalsName ( page )} } from "${optionalsFileName ( `..`, params, page )}";` ] : []
+
   const imports = [
     `import { LensProps } from "@focuson/state";`,
     `import { FocusOnContext } from '@focuson/focuson';`,
@@ -269,8 +274,7 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
     `import { Lenses } from '@focuson/lens';`,
     `import { Guard } from "@focuson/form_components";`,
     `import { GuardButton } from "@focuson/form_components";`,
-    ...optionalImports
-
+    ...optionalImports,
   ]
   let pageDomain = noExtension ( params.pageDomainsFile );
   let domain = noExtension ( params.domainsFile );

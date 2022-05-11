@@ -1,5 +1,6 @@
 import * as empty from '../ChequeCreditbooks/ChequeCreditbooks.empty';
 import * as domain from '../ChequeCreditbooks/ChequeCreditbooks.domains';
+import * as render from "./ChequeCreditbooks.render";
 import { LensProps } from "@focuson/state";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from "@focuson/pages";

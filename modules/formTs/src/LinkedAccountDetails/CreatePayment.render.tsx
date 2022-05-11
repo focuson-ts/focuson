@@ -1,5 +1,6 @@
 import * as empty from '../LinkedAccountDetails/LinkedAccountDetails.empty';
 import * as domain from '../LinkedAccountDetails/LinkedAccountDetails.domains';
+import * as render from "./LinkedAccountDetails.render";
 import { LensProps } from "@focuson/state";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from "@focuson/pages";

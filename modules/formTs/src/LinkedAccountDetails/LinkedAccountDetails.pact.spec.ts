@@ -190,7 +190,7 @@ pactWith ( { consumer: 'LinkedAccountDetails', provider: 'LinkedAccountDetailsPr
       },
     } )
     const lensTransforms: Transform<FState,any>[] = [
-    [Lenses.identity<FState>().focusQuery('LinkedAccountDetails').focusQuery('createPayment'), () => samples.sampleCreatePayment0]
+      [Lenses.identity<FState>().focusQuery('LinkedAccountDetails').focusQuery('createPayment'), () => samples.sampleCreatePayment0],
       [Lenses.identity<FState>().focusQuery('LinkedAccountDetails').focusQuery('display').focusQuery('mandate').focusQuery('accountId'), () =>"1" ],
       [Lenses.identity<FState>().focusQuery('LinkedAccountDetails').focusQuery('selectedCollectionItem').focusQuery('paymentId'), () =>"123" ]
     ]

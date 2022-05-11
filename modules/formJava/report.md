@@ -84,8 +84,9 @@
     PrintRecordHistory displayed using SelectedItem
   ## buttons 
     Modal Button ==> EditListOfPayments in mode create
+      Copy from {"from":"~/display[~/selected]"}
       Focused on "~/tempListOfPayments"
-      Copy on close {"to":"~/display/[$append]"} 
+      Copy on close {"to":"~/display[$append]"} 
     next         ListNextButton
     prev         ListPrevButton
   ## guards  

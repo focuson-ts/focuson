@@ -1,5 +1,6 @@
 import * as empty from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.empty';
 import * as domain from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains';
+import * as render from "./OccupationAndIncomeSummary.render";
 import { LensProps } from "@focuson/state";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from "@focuson/pages";

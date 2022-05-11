@@ -6,7 +6,7 @@ import { LensState } from "@focuson/state";
  * string and string[] are just the types
  *
  * */
-export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'string[]' | 'path' | 'pathValue'
+export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'string[]' | 'path' | 'pathValue' | 'objectAndRenderPrefix'
 
 type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons' | 'defaultToLabel'
 
@@ -112,7 +112,7 @@ export const SelectedItemCD: DisplayCompD = {
   params: {
     ...commonParams,
     index: { paramType: 'pathValue', needed: 'yes' },
-    display: { paramType: 'object', needed: 'yes' },
+    display: { paramType: 'objectAndRenderPrefix', needed: 'yes' },
     allButtons: { paramType: 'object', needed: 'defaultToButtons' }
   }
 }

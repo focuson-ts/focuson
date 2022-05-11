@@ -333,7 +333,7 @@ pactWith ( { consumer: 'OccupationAndIncomeSummary', provider: 'OccupationAndInc
       },
     } )
     const lensTransforms: Transform<FState,any>[] = [
-    [Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('fromApi'), () => samples.sampleOccupationAndIncomeFullDomain0]
+      [Lenses.identity<FState>().focusQuery('OccupationAndIncomeSummary').focusQuery('fromApi'), () => samples.sampleOccupationAndIncomeFullDomain0]
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );

@@ -1,5 +1,6 @@
 import * as empty from '../Repeating/Repeating.empty';
 import * as domain from '../Repeating/Repeating.domains';
+import * as render from "./Repeating.render";
 import { LensProps } from "@focuson/state";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from "@focuson/pages";

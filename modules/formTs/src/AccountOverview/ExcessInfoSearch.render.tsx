@@ -1,5 +1,6 @@
 import * as empty from '../AccountOverview/AccountOverview.empty';
 import * as domain from '../AccountOverview/AccountOverview.domains';
+import * as render from "./AccountOverview.render";
 import { LensProps } from "@focuson/state";
 import { FocusOnContext } from '@focuson/focuson';
 import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from "@focuson/pages";

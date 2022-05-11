@@ -35,7 +35,7 @@ export const collectionHistoryListRD: ExampleRestD = {
 
 export const collectionPaymentParams: RestParams = {
   ...fromCommonIds ( 'clientRef', 'accountId' ),
-  accountId: { ...IntParam, lens: '~/display/mandate/accountId', testValue: '1' },
+  accountId: { ...IntParam, lens: '~/display/mandate/accountId', testValue: '1'},
   paymentId: { ...IntParam, lens: '~/selectedCollectionItem/paymentId', testValue: '123' },
 }
 

@@ -36,7 +36,7 @@ pactWith ( { consumer: 'CreateEAccount', provider: 'CreateEAccountProvider', cor
       },
     } )
     const lensTransforms: Transform<FState,any>[] = [
-    [Lenses.identity<FState>().focusQuery('CreateEAccount').focusQuery('editing'), () => samples.sampleCreateEAccountData0]
+      [Lenses.identity<FState>().focusQuery('CreateEAccount').focusQuery('editing'), () => samples.sampleCreateEAccountData0]
     ]
     const withIds = massTransform ( firstState, ...lensTransforms )
     const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );

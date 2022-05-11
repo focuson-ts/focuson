@@ -150,9 +150,8 @@ function makeLensParamsTransformers<B, G> ( params: TSParams, page: PageD<B, G>,
   const theseParams = visibleParams.map ( ( [ name, p ] ) => p )
 
   return [ `const lensTransforms: Transform<${params.stateName},any>[] = [`,
-    ...extraTransforms,
-    ...indentList ( addStringToEndOfAllButLast ( "," ) ( theseParams.flatMap ( v =>
-      isRestLens ( v ) ? [ `[${lensFocusQueryWithSlashAndTildaFromIdentity ( `makeLensParams for page ${page.name} ${restName}`, params, page, v.lens )}, () =>${JSON.stringify ( v.testValue )} ]` ] : [] ) ) ),
+    ...indentList ( addStringToEndOfAllButLast ( "," ) ( [ ...extraTransforms, ...theseParams.flatMap ( v =>
+      isRestLens ( v ) ? [ `[${lensFocusQueryWithSlashAndTildaFromIdentity ( `makeLensParams for page ${page.name} ${restName}`, params, page, v.lens )}, () =>${JSON.stringify ( v.testValue )} ]` ] : [] ) ] ) ),
     `]` ]
 
 }
