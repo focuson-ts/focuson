@@ -25,8 +25,19 @@ export const Input = <S, T extends any, P> ( tProps: TransformerProps<T> ) => {
   const { transformer, type } = tProps
   return <Props extends InputProps<S, T, Context> & P, Context> ( props: Props ) => {
     const { state, mode, id, name, ariaLabel, defaultValue, readonly } = props
-    const onChange = ( transformer: ( s: string ) => T, e: React.ChangeEvent<HTMLInputElement> ) =>
-      state.setJson ( transformer ( e.target.value ), reasonFor ( 'Input', 'onChange', id ) );
+    const onChange = ( transformer: ( s: string ) => T, e: React.ChangeEvent<HTMLInputElement> ) => {
+      console.log ( 'onChange', e )
+      console.log ( 'onChange - type', type )
+      console.log ( 'onChange-target', e.target )
+      console.log ( 'onChange-value', JSON.stringify(e.target.value) , typeof e.target.value)
+      if ( type === 'checkbox' )//why the input type = checkbox is different... I have no idea!
+      {
+        console.log('was boolean')
+        let newValue = e.target.value === 'true' ? 'false' : 'true';
+        state.setJson ( transformer ( newValue ), reasonFor ( 'Input', 'onChange', id ) );
+      } else
+        state.setJson ( transformer ( e.target.value ), reasonFor ( 'Input', 'onChange', id ) );
+    };
     return <input type={type} {...cleanInputProps ( props )} value={`${state.optJsonOr ( tProps.default )}`} disabled={mode === 'view' || readonly} onChange={( e ) => onChange ( transformer, e )}/>
   }
 }

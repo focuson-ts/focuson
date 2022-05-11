@@ -26,7 +26,7 @@ export const sampleListOfPayments0: domains.ListOfPaymentsDomain =
 export const samplePrintRecordHistory0: domains.PrintRecordHistoryDomain = 
 [
   {
-    "requestedBy": "someString",
+    "requestedBy": "m",
     "requesterDetails": {
       "title": "Mr",
       "forename": "Fred",
@@ -62,10 +62,11 @@ export const samplePrintRecordHistory0: domains.PrintRecordHistoryDomain =
       }
     },
     "includeSingleAndInitialDirectDebits": true,
-    "authorisedByCustomer": "n"
+    "authorisedByCustomer": "n",
+    "alreadyPrinted": true
   },
   {
-    "requestedBy": "anotherString",
+    "requestedBy": "j",
     "requesterDetails": {
       "title": "Mrs",
       "forename": "Fredrica",
@@ -101,10 +102,11 @@ export const samplePrintRecordHistory0: domains.PrintRecordHistoryDomain =
       }
     },
     "includeSingleAndInitialDirectDebits": false,
-    "authorisedByCustomer": "notyet"
+    "authorisedByCustomer": "notyet",
+    "alreadyPrinted": false
   },
   {
-    "requestedBy": "someString",
+    "requestedBy": "new bank",
     "requesterDetails": {
       "title": "Mr",
       "forename": "Fred",
@@ -140,12 +142,13 @@ export const samplePrintRecordHistory0: domains.PrintRecordHistoryDomain =
       }
     },
     "includeSingleAndInitialDirectDebits": true,
-    "authorisedByCustomer": "y"
+    "authorisedByCustomer": "y",
+    "alreadyPrinted": true
   }
 ]
 export const samplePrintRecordItem0: domains.PrintRecordItemDomain = 
 {
-  "requestedBy": "someString",
+  "requestedBy": "m",
   "requesterDetails": {
     "title": "Mr",
     "forename": "Fred",
@@ -181,7 +184,8 @@ export const samplePrintRecordItem0: domains.PrintRecordItemDomain =
     }
   },
   "includeSingleAndInitialDirectDebits": true,
-  "authorisedByCustomer": "n"
+  "authorisedByCustomer": "n",
+  "alreadyPrinted": true
 }
 export const sampleRequesterDetails0: domains.RequesterDetailsDomain = 
 {
@@ -227,7 +231,7 @@ export const sampleListOfPayments1: domains.ListOfPaymentsDomain =
 export const samplePrintRecordHistory1: domains.PrintRecordHistoryDomain = 
 [
   {
-    "requestedBy": "anotherString",
+    "requestedBy": "j",
     "requesterDetails": {
       "title": "Mrs",
       "forename": "Fredrica",
@@ -263,10 +267,11 @@ export const samplePrintRecordHistory1: domains.PrintRecordHistoryDomain =
       }
     },
     "includeSingleAndInitialDirectDebits": false,
-    "authorisedByCustomer": "notyet"
+    "authorisedByCustomer": "notyet",
+    "alreadyPrinted": false
   },
   {
-    "requestedBy": "someString",
+    "requestedBy": "j",
     "requesterDetails": {
       "title": "Mr",
       "forename": "Fred",
@@ -302,10 +307,11 @@ export const samplePrintRecordHistory1: domains.PrintRecordHistoryDomain =
       }
     },
     "includeSingleAndInitialDirectDebits": true,
-    "authorisedByCustomer": "notyet"
+    "authorisedByCustomer": "notyet",
+    "alreadyPrinted": true
   },
   {
-    "requestedBy": "anotherString",
+    "requestedBy": "new bank",
     "requesterDetails": {
       "title": "Mrs",
       "forename": "Fredrica",
@@ -341,12 +347,13 @@ export const samplePrintRecordHistory1: domains.PrintRecordHistoryDomain =
       }
     },
     "includeSingleAndInitialDirectDebits": false,
-    "authorisedByCustomer": "y"
+    "authorisedByCustomer": "y",
+    "alreadyPrinted": false
   }
 ]
 export const samplePrintRecordItem1: domains.PrintRecordItemDomain = 
 {
-  "requestedBy": "anotherString",
+  "requestedBy": "j",
   "requesterDetails": {
     "title": "Mrs",
     "forename": "Fredrica",
@@ -382,7 +389,8 @@ export const samplePrintRecordItem1: domains.PrintRecordItemDomain =
     }
   },
   "includeSingleAndInitialDirectDebits": false,
-  "authorisedByCustomer": "notyet"
+  "authorisedByCustomer": "notyet",
+  "alreadyPrinted": false
 }
 export const sampleRequesterDetails1: domains.RequesterDetailsDomain = 
 {
@@ -428,7 +436,7 @@ export const sampleListOfPayments2: domains.ListOfPaymentsDomain =
 export const samplePrintRecordHistory2: domains.PrintRecordHistoryDomain = 
 [
   {
-    "requestedBy": "someString",
+    "requestedBy": "new bank",
     "requesterDetails": {
       "title": "Mr",
       "forename": "Fred",
@@ -464,10 +472,11 @@ export const samplePrintRecordHistory2: domains.PrintRecordHistoryDomain =
       }
     },
     "includeSingleAndInitialDirectDebits": true,
-    "authorisedByCustomer": "y"
+    "authorisedByCustomer": "y",
+    "alreadyPrinted": true
   },
   {
-    "requestedBy": "anotherString",
+    "requestedBy": "j",
     "requesterDetails": {
       "title": "Mrs",
       "forename": "Fredrica",
@@ -503,10 +512,11 @@ export const samplePrintRecordHistory2: domains.PrintRecordHistoryDomain =
       }
     },
     "includeSingleAndInitialDirectDebits": false,
-    "authorisedByCustomer": "notyet"
+    "authorisedByCustomer": "notyet",
+    "alreadyPrinted": false
   },
   {
-    "requestedBy": "someString",
+    "requestedBy": "new bank",
     "requesterDetails": {
       "title": "Mr",
       "forename": "Fred",
@@ -542,12 +552,13 @@ export const samplePrintRecordHistory2: domains.PrintRecordHistoryDomain =
       }
     },
     "includeSingleAndInitialDirectDebits": true,
-    "authorisedByCustomer": "y"
+    "authorisedByCustomer": "y",
+    "alreadyPrinted": true
   }
 ]
 export const samplePrintRecordItem2: domains.PrintRecordItemDomain = 
 {
-  "requestedBy": "someString",
+  "requestedBy": "new bank",
   "requesterDetails": {
     "title": "Mr",
     "forename": "Fred",
@@ -583,7 +594,8 @@ export const samplePrintRecordItem2: domains.PrintRecordItemDomain =
     }
   },
   "includeSingleAndInitialDirectDebits": true,
-  "authorisedByCustomer": "y"
+  "authorisedByCustomer": "y",
+  "alreadyPrinted": true
 }
 export const sampleRequesterDetails2: domains.RequesterDetailsDomain = 
 {

@@ -17,6 +17,7 @@ export interface ListOfPaymentsDomain{
 export type PrintRecordHistoryDomain = PrintRecordItemDomain[]
 
 export interface PrintRecordItemDomain{
+  alreadyPrinted: boolean;
   authorisedByCustomer: string;
   includeSingleAndInitialDirectDebits: boolean;
   listOfPayments: ListOfPaymentsDomain;

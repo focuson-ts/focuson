@@ -62,7 +62,8 @@ export const emptyPrintRecordHistory:domains.PrintRecordHistoryDomain =
         }
       },
       "includeSingleAndInitialDirectDebits": false,
-      "authorisedByCustomer": ""
+      "authorisedByCustomer": "",
+      "alreadyPrinted": false
     }
   ]
 export const emptyPrintRecordItem:domains.PrintRecordItemDomain =
@@ -103,7 +104,8 @@ export const emptyPrintRecordItem:domains.PrintRecordItemDomain =
       }
     },
     "includeSingleAndInitialDirectDebits": false,
-    "authorisedByCustomer": ""
+    "authorisedByCustomer": "",
+    "alreadyPrinted": false
   }
 export const emptyRequesterDetails:domains.RequesterDetailsDomain =
   {

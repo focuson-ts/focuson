@@ -1392,7 +1392,7 @@ public class Sample{
   public static List samplePrintRecordHistory0 =  parse.parseList(
          "["+
          "  {"+
-         "    \"requestedBy\": \"someString\","+
+         "    \"requestedBy\": \"m\","+
          "    \"requesterDetails\": {"+
          "      \"title\": \"Mr\","+
          "      \"forename\": \"Fred\","+
@@ -1428,10 +1428,11 @@ public class Sample{
          "      }"+
          "    },"+
          "    \"includeSingleAndInitialDirectDebits\": true,"+
-         "    \"authorisedByCustomer\": \"n\""+
+         "    \"authorisedByCustomer\": \"n\","+
+         "    \"alreadyPrinted\": true"+
          "  },"+
          "  {"+
-         "    \"requestedBy\": \"anotherString\","+
+         "    \"requestedBy\": \"j\","+
          "    \"requesterDetails\": {"+
          "      \"title\": \"Mrs\","+
          "      \"forename\": \"Fredrica\","+
@@ -1467,10 +1468,11 @@ public class Sample{
          "      }"+
          "    },"+
          "    \"includeSingleAndInitialDirectDebits\": false,"+
-         "    \"authorisedByCustomer\": \"notyet\""+
+         "    \"authorisedByCustomer\": \"notyet\","+
+         "    \"alreadyPrinted\": false"+
          "  },"+
          "  {"+
-         "    \"requestedBy\": \"someString\","+
+         "    \"requestedBy\": \"new bank\","+
          "    \"requesterDetails\": {"+
          "      \"title\": \"Mr\","+
          "      \"forename\": \"Fred\","+
@@ -1506,13 +1508,14 @@ public class Sample{
          "      }"+
          "    },"+
          "    \"includeSingleAndInitialDirectDebits\": true,"+
-         "    \"authorisedByCustomer\": \"y\""+
+         "    \"authorisedByCustomer\": \"y\","+
+         "    \"alreadyPrinted\": true"+
          "  }"+
          "]"
   );
   public static Map samplePrintRecordItem0 =  parse.parseMap(
          "{"+
-         "  \"requestedBy\": \"someString\","+
+         "  \"requestedBy\": \"m\","+
          "  \"requesterDetails\": {"+
          "    \"title\": \"Mr\","+
          "    \"forename\": \"Fred\","+
@@ -1548,7 +1551,8 @@ public class Sample{
          "    }"+
          "  },"+
          "  \"includeSingleAndInitialDirectDebits\": true,"+
-         "  \"authorisedByCustomer\": \"n\""+
+         "  \"authorisedByCustomer\": \"n\","+
+         "  \"alreadyPrinted\": true"+
          "}"
   );
   public static Map sampleRepeatingLine0 =  parse.parseMap(

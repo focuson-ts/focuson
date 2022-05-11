@@ -376,6 +376,7 @@ type PrintRecordItem{
   listOfPayments: ListOfPayments!
   includeSingleAndInitialDirectDebits: Boolean!
   authorisedByCustomer: String!
+  alreadyPrinted: Boolean!
 }
 type RepeatingLine{
   name: String!

@@ -1,4 +1,4 @@
-| PrintRecordItem|requestedBy
-| --- | --- 
-requesterDetails|m,j
-authorisedByCustomer|m,j
+| PrintRecordItem|requestedBy|alreadyPrinted
+| --- | --- | --- 
+requesterDetails|m,j| 
+authorisedByCustomer|m,j| 

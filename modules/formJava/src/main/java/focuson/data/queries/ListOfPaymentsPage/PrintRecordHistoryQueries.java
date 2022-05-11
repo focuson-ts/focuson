@@ -39,6 +39,7 @@ public class PrintRecordHistoryQueries{
         "    }"+
         "    includeSingleAndInitialDirectDebits"+
         "    authorisedByCustomer"+
+        "    alreadyPrinted"+
         "  }"
   +"}";}
 }

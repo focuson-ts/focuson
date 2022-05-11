@@ -69,16 +69,19 @@ export const ListOfPaymentsDD: ExampleDataD = {
 export const printRecordDD: ExampleDataD = {
   name: 'PrintRecordItem',
   description: 'A single request for the list of payments that happened at a point at time, or will happen when we click print',
-  layout: { component: LayoutCd, displayParams: { details: '[[1,1],[1,2]]' } },
+  layout: { component: LayoutCd, displayParams: { details: '[[1,1],[1,3]]' } },
   guards: {
-    requestedBy: { condition: 'in', path: 'requestedBy', values: { j: 'joint', m: 'main', n: 'new bank' } }
+    requestedBy: { condition: 'in', path: 'requestedBy', values: { j: 'joint', m: 'main', n: 'new bank' } },
+    alreadyPrinted: { condition: 'equals', path: 'alreadyPrinted', value: true }
   },
+  sealedBy: 'alreadyPrinted',
   structure: {
-    requestedBy: { dataDD: StringDD },
+    requestedBy: { dataDD: StringDD, sample: ['m', 'j', 'new bank'] },
     requesterDetails: { dataDD: RequestDetailsDD, guard: { requestedBy: [ 'm', 'j' ] } },
     listOfPayments: { dataDD: ListOfPaymentsDD },
     includeSingleAndInitialDirectDebits: { dataDD: BooleanDD },
-    authorisedByCustomer: { dataDD: authorisedByCustomerDD, guard: { requestedBy: [ 'm', 'j' ] } }
+    authorisedByCustomer: { dataDD: authorisedByCustomerDD, guard: { requestedBy: [ 'm', 'j' ] } },
+    alreadyPrinted: { dataDD: BooleanDD, sampleOffset: 0}, //will be hidden but leaving visible for now. The sample offset means that the first one is not printed... just dev experimence
   }
 }
 

@@ -8,8 +8,8 @@ import { Lenses } from '@focuson/lens';
 import { Guard } from "@focuson/form_components";
 import { GuardButton } from "@focuson/form_components";
 import { ListOfPaymentsPageOptionals } from "../ListOfPaymentsPage/ListOfPaymentsPage.optionals";
-import { LabelAndDropdown } from '@focuson/form_components';
 import { LabelAndBooleanInput } from '@focuson/form_components';
+import { LabelAndDropdown } from '@focuson/form_components';
 import { LabelAndStringInput } from '@focuson/form_components';
 import { NumberInput } from '@focuson/form_components';
 import { BooleanInput } from '@focuson/form_components';
@@ -63,13 +63,17 @@ export function ListOfPayments({id,state,mode,allButtons,label}: FocusedProps<FS
 }
 
 export function PrintRecordItem({id,state,mode,allButtons,label}: FocusedProps<FState, PrintRecordItemDomain,Context>){
+const alreadyPrintedGuard =  state.focusOn('alreadyPrinted').optJson() === true;
 const requestedByGuard = state.focusOn('requestedBy').optJson();
-  return <Layout details='[[1,1],[1,2]]'>
+//added by sealed: "alreadyPrinted" in component PrintRecordItem. If it doesn't compile check the name and type of the guard variable named
+if (alreadyPrintedGuard) mode='view'
+  return <Layout details='[[1,1],[1,3]]'>
     <LabelAndStringInput id={`${id}.requestedBy`} state={state.focusOn('requestedBy')} mode={mode} label='Requested By' allButtons={allButtons} required={true} />
     <Guard value={requestedByGuard} cond={["m","j"]}><RequesterDetails id={`${id}.requesterDetails`} state={state.focusOn('requesterDetails')} mode={mode} label='Requester Details' allButtons={allButtons} /></Guard>
     <ListOfPayments id={`${id}.listOfPayments`} state={state.focusOn('listOfPayments')} mode={mode} label='List Of Payments' allButtons={allButtons} />
     <LabelAndBooleanInput id={`${id}.includeSingleAndInitialDirectDebits`} state={state.focusOn('includeSingleAndInitialDirectDebits')} mode={mode} label='Include Single And Initial Direct Debits' allButtons={allButtons} />
     <Guard value={requestedByGuard} cond={["m","j"]}><LabelAndDropdown id={`${id}.authorisedByCustomer`} state={state.focusOn('authorisedByCustomer')} mode={mode} label='Authorised By Customer' allButtons={allButtons} enums={{"n":"no","notyet":"Not Yet","y":"Yes"}} /></Guard>
+    <LabelAndBooleanInput id={`${id}.alreadyPrinted`} state={state.focusOn('alreadyPrinted')} mode={mode} label='Already Printed' allButtons={allButtons} />
 </Layout>
 }
 

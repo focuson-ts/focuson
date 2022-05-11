@@ -182,13 +182,24 @@ function makeGuardVariables<B, G extends GuardWithCondition> ( hasGuards: HasGua
 }
 
 
+function makeSealedString<B, G> (dataD: CompDataD<G> ): string[] {
+  if ( isDataDd ( dataD ) && dataD.sealedBy ) {
+    return [ `//added by sealed: ${JSON.stringify ( dataD.sealedBy )} in component ${dataD.name}. If it doesn't compile check the name and type of the guard variable named`,
+      `if (${dataD.sealedBy}Guard) mode='view'`
+    ]
+  }
+  return []
+
+}
 export const createReactComponent = <B, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, mainP: MainPageD<B, G>, page: PageD<B, G> ) => ( dataD: CompDataD<G> ): string[] => {
   const contents = indentList ( indentList ( createAllReactCalls ( mainP, params, page, listComponentsIn ( dataD ) ) ) )
   const guardStrings = isDataDd ( dataD ) ? makeGuardVariables ( dataD, makeGuard, params, mainP, page ) : []
   const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( mainP, page, params, `createReactComponent-layout ${dataD.name}`, [], dataD, '<>', '</>' );
+  const sealedString = makeSealedString (dataD )
   return [
     `export function ${componentName ( dataD )}({id,state,mode,allButtons,label}: FocusedProps<${params.stateName}, ${domainName ( dataD )},Context>){`,
     ...guardStrings,
+    ...sealedString,
     `  return ${layoutPrefixString}`,
     ...contents,
     layoutPostfixString,
