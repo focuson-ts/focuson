@@ -355,7 +355,7 @@ export function findStaticWheres ( sqlRoot: SqlRoot ): string[] { // things to i
   let staticWhereLinks = foldEntitys ( {
     foldMain ( childAccs: string[][], main: EntityAndWhere ): string[] {
       if ( main.staticWhere === undefined ) return childAccs.flat ()
-      return [ ...childAccs.flat (), ...main.staticWhere ]
+      return [ ...childAccs.flat (), main.staticWhere ]
     },
     foldMultiple ( childAccs: string[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, multiple: MultipleEntity ): string[] { return [] },
     foldSingle ( childAccs: string[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, single: SingleEntity ): string[] {

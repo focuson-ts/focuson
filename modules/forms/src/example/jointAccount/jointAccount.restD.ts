@@ -13,6 +13,7 @@ export const jointAccountRestD: RestD<any> = {
   initialSql: jointAccountSql,
   namePrefix: 'pre',
   tables: {
+    staticWhere: '123=123',
     where: [
       { table: accountT, alias: accountT.name, field: 'acc_id', paramName: 'accountId' },
       { table: accountT, alias: accountT.name, field: 'brand_id', paramName: 'brandRef' },
