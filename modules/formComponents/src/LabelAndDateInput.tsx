@@ -22,7 +22,7 @@ export interface LabelAndDateProps<S, Context> extends CommonStateProps<S, strin
 export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( props: LabelAndDateProps<S, Context> ) {
   const { state, ariaLabel, id, mode, label, name, buttons, readonly, datesExcluded, fieldNameInHolidays, workingDaysInPast, workingDaysInFuture } = props
 
-  const datesToExclude = datesExcluded?.optJsonOr([]).map(d => d[fieldNameInHolidays? fieldNameInHolidays : 'holiday'])  
+  const datesToExclude = datesExcluded?.optJsonOr([]).map(d => d[fieldNameInHolidays? fieldNameInHolidays : 'holiday'])
 
   const isHoliday = (date: any, dateList: any) => {
     return dateList.find((d:any) => new Date(d).toDateString() === date.toDateString());
@@ -43,29 +43,31 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
 
   const addDays = (date: Date, n: number) => {
     let count: number = 0
-    let endDate: Date = date
+    let newDate: Date = date
     while(count < n){
-      endDate = new Date(date.setDate(date.getDate() + 1))
-      if(isWeekday(endDate)) count++
+      newDate = new Date(date.setDate(date.getDate() + 1))
+      if(isWeekday(newDate)) count++
     }
-    return endDate
+    return newDate
   }
   const subDays = (date: Date, n: number) => {
     let count: number = 0
-    let endDate: Date = date
+    let newDate: Date = date
     while(count < n){
-      endDate = new Date(date.setDate(date.getDate() - 1))
-      if(isWeekday(endDate)) count++
+      newDate = new Date(date.setDate(date.getDate() - 1))
+      if(isWeekday(newDate)) count++
     }
-    return endDate
+    return newDate
   }
-  
+
+  const minDate = addDays(new Date(), workingDaysInFuture?workingDaysInFuture:0);
+
   const selectedDate = new Date(state.optJsonOr(new Date().toDateString())) // TODO: Turn default date into arg
   return (<div className='labelAndDate'>
       <Label state={state} htmlFor={name} label={label}/>
       {/* <input {...cleanInputProps ( props )} type='date' readOnly={mode === 'view' || readonly} onChange={onChange} value={state.optJsonOr ( '' )}/> */}
-      <DatePicker selected={selectedDate} onChange={(date) => onChange(date)} filterDate={(date) => isExcluded(date, safeArray(datesToExclude))} 
-      includeDateIntervals={[{ start: subDays(new Date(), workingDaysInPast?workingDaysInPast:0), end: addDays(new Date(), workingDaysInFuture?workingDaysInFuture:0) },]}
+      <DatePicker selected={selectedDate} onChange={(date) => onChange(date)} filterDate={(date) => isExcluded(date, safeArray(datesToExclude))}       
+      minDate={minDate}
       // highlightDates={datesToExcludeAsDate}
       placeholderText="Select a weekday"/>
       {makeButtons ( props.allButtons, props.buttons )}
