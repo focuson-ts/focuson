@@ -23,44 +23,45 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
   const { state, ariaLabel, id, mode, label, name, buttons, readonly, datesExcluded, fieldNameInHolidays, workingDaysInPast, workingDaysInFuture } = props
 
   const datesToExclude = datesExcluded?.optJsonOr([]).map(d => d[fieldNameInHolidays? fieldNameInHolidays : 'holiday'])
+  const datesToExcludeAsDateType = safeArray(datesToExclude).map(d => new Date(d))
 
-  const isHoliday = (date: any, dateList: any) => {
-    return dateList.find((d:any) => new Date(d).toDateString() === date.toDateString());
+  const isHoliday = (date: Date, datesList: string[]) => {
+    return datesList.find((d:string) => new Date(d).toDateString() === date.toDateString());
   };
 
-  const isExcluded = (date: any, dateList: any) => {
-    return isWeekday(date) && !isHoliday(date, dateList)
+  const isExcluded = (date: Date, datesList: string[]) => {
+    return datesList.length > 0 ? (isWeekday(date) && !isHoliday(date, datesList)) : isWeekday(date)
   }
 
   const onChange = ( date: any ) => {
     if(date) state.setJson ( date.toDateString(), reasonFor ( 'LabelAndDate', 'onChange', id ) )
   };
 
-  const isWeekday = (date: any) => {
+  const isWeekday = (date: Date) => {
     const day = date.getDay()
     return day !== 0 && day !== 6
   };
 
-  const addDays = (date: Date, n: number) => {
+  const addDays = (date: Date, datesList: string[], n: number) => {
     let count: number = 0
     let newDate: Date = date
     while(count < n){
       newDate = new Date(date.setDate(date.getDate() + 1))
-      if(isWeekday(newDate)) count++
+      if(isExcluded(newDate, datesList)) count++
     }
     return newDate
   }
-  const subDays = (date: Date, n: number) => {
+  const subDays = (date: Date, datesList: string[], n: number) => {
     let count: number = 0
     let newDate: Date = date
     while(count < n){
       newDate = new Date(date.setDate(date.getDate() - 1))
-      if(isWeekday(newDate)) count++
+      if(isExcluded(newDate, datesList)) count++
     }
     return newDate
   }
 
-  const minDate = addDays(new Date(), workingDaysInFuture?workingDaysInFuture:0);
+  const minDate = addDays(new Date(),safeArray(datesToExclude), workingDaysInFuture?workingDaysInFuture:0);
 
   const selectedDate = new Date(state.optJsonOr(new Date().toDateString())) // TODO: Turn default date into arg
   return (<div className='labelAndDate'>
@@ -68,7 +69,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
       {/* <input {...cleanInputProps ( props )} type='date' readOnly={mode === 'view' || readonly} onChange={onChange} value={state.optJsonOr ( '' )}/> */}
       <DatePicker selected={selectedDate} onChange={(date) => onChange(date)} filterDate={(date) => isExcluded(date, safeArray(datesToExclude))}       
       minDate={minDate}
-      // highlightDates={datesToExcludeAsDate}
+      highlightDates={datesToExcludeAsDateType}
       placeholderText="Select a weekday"/>
       {makeButtons ( props.allButtons, props.buttons )}
     </div>)
