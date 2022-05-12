@@ -24,7 +24,7 @@ export function CreatePlanPage(){
   return focusedPage<FState, CreatePlanDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
      ( state, d, mode, index ) => {
           const id=`page${index}`;
-          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} />,
+          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} text={undefined}state={state} />,
               commit:<ModalCommitButton id={`${id}.commit`}   state={state} />,}
           return <>
           <CreatePlan id={`${id}`} state={state} mode={mode} label='' allButtons={allButtons} />

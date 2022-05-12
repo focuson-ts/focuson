@@ -41,11 +41,17 @@ export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, 
       <td id={`${id}[${i}].${o}`} key={o.toString ()}>{getValue ( o, row, joiners )}</td> )}</tr>)
   }
   // const filtered = prefixColumn && prefixFilter ? json.filter ( t => getValue ( prefixColumn, t, joiners ).toString ().startsWith ( prefixFilterString ) ) : json
-  function filter ( t: T ) {return prefixColumn && prefixFilter ? json.filter ( t => getValue ( prefixColumn, t, joiners ).toString ().startsWith ( prefixFilterString ) ) : true }
+  function filter ( t: T ) {
+    console.log ( 'filter', t )
+    console.log ( 'filter col & filter', prefixColumn, prefixFilterString )
+    console.log ( 'filter getVal', prefixColumn && prefixFilter && getValue ( prefixColumn, t, joiners ) )
+    console.log ( 'filter condition', prefixColumn && prefixFilter && getValue ( prefixColumn, t, joiners ) )
+    return prefixColumn && prefixFilter ? getValue ( prefixColumn, t, joiners ).toString ().startsWith ( prefixFilterString ) : true
+  }
   let maxCountInt = maxCount ? Number.parseInt ( maxCount ) : 0;
 
   let count = 0;
-  let tableBody = json.map ( ( row, i ) => count++ <= maxCountInt && filter ( row ) ? oneRow ( row, i ) : <></> );
+  let tableBody = json.map ( ( row, i ) => (!maxCount || count++ <= maxCountInt) && filter ( row ) ? oneRow ( row, i ) : <></> );
 
   return <table id={id}>
     <thead>

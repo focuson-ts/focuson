@@ -51,7 +51,7 @@ export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, 
   let maxCountInt = maxCount ? Number.parseInt ( maxCount ) : 0;
 
   let count = 0;
-  let tableBody = json.map ( ( row, i ) => (!maxCount || count++ <= maxCountInt) && filter ( row ) ? oneRow ( row, i ) : <></> );
+  let tableBody = json.map ( ( row, i ) =>  filter ( row ) && (maxCount === undefined || count++ < maxCountInt)? oneRow ( row, i ) : <></> );
 
   return <table id={id}>
     <thead>

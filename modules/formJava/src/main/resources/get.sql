@@ -19,7 +19,7 @@ select
   CUST_TBL mainCustomer,
   NAME_TBL jointName,
   CUST_TBL jointCustomer
- where mainCustomer.nameId = mainName.id and ACC_TBL.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and ACC_TBL.jointCustomerId = jointCustomer.id and  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and 3=3 and 1=1 and ACC_TBL <> 'canceled';
+ where mainCustomer.nameId = mainName.id and ACC_TBL.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and ACC_TBL.jointCustomerId = jointCustomer.id and  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and 3=3 and 1=1 and 123=123 and ACC_TBL <> 'canceled';
 
 select
   ACC_TBL.acc_id as ACC_TBL_acc_id,
@@ -33,7 +33,7 @@ select
   ACC_TBL ACC_TBL,
   CUST_TBL mainCustomer,
   ADD_TBL mainAddress
- where  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and mainCustomer.id = mainAddress.customerId and ACC_TBL.mainCustomerId = mainCustomer.id and 2=2 and 1=1;
+ where  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and mainCustomer.id = mainAddress.customerId and ACC_TBL.mainCustomerId = mainCustomer.id and 123=123 and 2=2 and 1=1;
 
 select
   ACC_TBL.acc_id as ACC_TBL_acc_id,
@@ -47,7 +47,7 @@ select
   ACC_TBL ACC_TBL,
   CUST_TBL jointCustomer,
   ADD_TBL jointAddress
- where  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and jointCustomer.id = jointAddress.customerId and ACC_TBL.jointCustomerId = jointCustomer.id;
+ where  ACC_TBL.acc_id = ? and  ACC_TBL.brand_id = ? and jointCustomer.id = jointAddress.customerId and ACC_TBL.jointCustomerId = jointCustomer.id and 123=123;
 
 -- PostCodeNameAndAddress /api/address?{query} {}
 select

@@ -1,9 +1,8 @@
 import { ExampleRestD } from "../common";
 
-import { PrintRecordHistoryDD } from "./listOfPayements.dataD";
+import { AccountDetailsDD, CurrentPaymentCountsDD, PrintRecordHistoryDD } from "./listOfPayements.dataD";
 import { IntParam, RestParams } from "../../common/restD";
 import { onlySchema } from "../database/tableNames";
-
 
 export const PrintRecordHistoryParams: RestParams = {
   accountId: { ...IntParam, commonLens: 'accountId', testValue: '123' },
@@ -13,15 +12,20 @@ export const PrintRecordHistoryRD: ExampleRestD = {
   params: PrintRecordHistoryParams,
   dataDD: PrintRecordHistoryDD,
   url: '/api/printrecordhistory?{query}',
+  actions: [ 'get', { state: 'print' } ],
+  states: {
+    print: { url: '/api/print?{query}', useStoredProcedure: { name: 'print', params: [], schema: onlySchema } }
+  }
+}
+export const CurrentPaymentCountsRD: ExampleRestD = {
+  params: PrintRecordHistoryParams,
+  dataDD: CurrentPaymentCountsDD,
+  url: '/api/paymentcounts?{query}',
   actions: [ 'get' ],
 }
-export const PrintRecordHistory1RD: ExampleRestD = {
+export const accountAndAddressDetailsRD: ExampleRestD = {
   params: PrintRecordHistoryParams,
-  dataDD: PrintRecordHistoryDD,
-  namePrefix: 'somePrefix',
-  url: '/api/printrecordhistoryx?{query}',
-  actions: [ 'get' , 'create', {state: 'print'}],
-  states:{
-    print:{url:'/api/printrecord/print?{query}', useStoredProcedure: {name: 'someName', schema: onlySchema, params: []}}
-  }
+  dataDD: AccountDetailsDD,
+  url: '/api/payment/accountDetails?{query}',
+  actions: [ 'get' ],
 }

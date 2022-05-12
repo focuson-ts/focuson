@@ -1,11 +1,11 @@
-import { HasPageSelection, ModalButton, ModalCommitButton, PageDetailsForCombine, pageSelectionlens, simpleMessagesL } from "@focuson/pages";
+import { fromPathFromRaw, HasPageSelection, ModalButton, ModalCommitButton, MultiPageDetails, PageDetailsForCombine, pageSelectionlens, simpleMessagesL } from "@focuson/pages";
 import { HasRestCommands, restL } from "@focuson/rest";
 import { lensState, LensState } from "@focuson/state";
 import { shallow } from "enzyme";
 import { FocusOnContext } from "@focuson/focuson";
 import { enzymeSetup } from "./enzymeAdapterSetup";
 import { SimpleMessage } from "@focuson/utils";
-import { identityOptics } from "@focuson/lens";
+import { identityOptics, Lenses } from "@focuson/lens";
 
 enzymeSetup ()
 
@@ -55,12 +55,14 @@ const listS: ModalButtonStateForTest = {
   }
 }
 type Context = FocusOnContext<ModalButtonStateForTest>
+const pageDetails:MultiPageDetails<ModalButtonStateForTest,Context>= { mainPage: { lens: identityOptics<ModalButtonStateForTest> ().focusQuery ( 'mainPage' ), pageType: 'MainPage', pageFunction: () => <span/>, config: {}, pageMode: 'edit' } }
 const context: Context = {
   restL: restL<ModalButtonStateForTest> (),
   combine: ( state, pages: PageDetailsForCombine[] ): JSX.Element => <div>{pages.map ( p => p.element )}</div>,
   pageSelectionL: pageSelectionlens (),
   simpleMessagesL: simpleMessagesL (),
-  pages: { mainPage: { lens: identityOptics<ModalButtonStateForTest> ().focusQuery ( 'mainPage' ), pageType: 'MainPage', pageFunction: () => <span/>, config: {}, pageMode: 'edit' } },
+  pathToLens:  fromPathFromRaw(pageSelectionlens(),pageDetails),
+  pages:pageDetails,
   commonIds: {}
 }
 

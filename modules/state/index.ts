@@ -85,6 +85,7 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
     return new LensState ( this.main, this.dangerouslySetMain, this.optional.chain ( lens ), this.context )
   }
 
+
   /** When we want to focus on something like 'the nth item' then 'withChildLens' is used. This returns a context focused on the block of json under the lens passed in */
   copyWithLens<NewT> ( lens: Optional<Main, NewT> ): LensState<Main, NewT, Context> {
     return new LensState ( this.main, this.dangerouslySetMain, lens, this.context )
@@ -124,7 +125,10 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
     this.dangerouslySetMain ( result, r )
   }
 
-
+  chainNthFromPath ( state: LensState<Main, number, Context> ): LensState<Main, any, Context> {
+    // @ts-ignore We have to ignore because typescript doesn't allow type guards Main here is a T[]... we just have no way to prove it
+    return this.copyWithLens(Lenses.calculatedNth ( state.optional, this.optional ))
+  }
   /** 'Modify' the stored json. If the json is undefined, then 'nothing happen' (just like a map)` */
   transform ( fn: ( json: T ) => T, reason: any ) {
     const j = this.optional.getOption ( this.main )

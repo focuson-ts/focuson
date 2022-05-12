@@ -1,6 +1,6 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 
-import { CheckboxInputCD, LabelAndDropDownCD, LayoutCd, NumberInputCD, SelectedItemCD, TwoElementWithTitleLayoutCD } from "../../common/componentsD";
+import { CheckboxInputCD, DataDrivenFixedOptionDropDownAndDetailsCD, LabelAndDropDownCD, LayoutCd, NumberInputCD, SelectedItemCD, TwoElementWithTitleLayoutCD } from "../../common/componentsD";
 import { NatNumDd } from "../commonEnums";
 import { BooleanDD, NumberPrimitiveDD, OneLineStringDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
 import { CustomerStatus } from "@focuson/form_components";
@@ -34,7 +34,8 @@ export const RequestDetailsDD: ExampleDataD = {
     title: { dataDD: ReadOnlyStringDD, sample: [ 'Mr', 'Mrs' ] },
     forename: { dataDD: ReadOnlyStringDD, sample: [ 'Fred', 'Fredrica' ] },
     surname: { dataDD: ReadOnlyStringDD, sample: [ 'Bloggs', 'Smith' ] },
-    addressLine1: { dataDD: ReadOnlyStringDD, sample: [ '4 Privat Drive', ' 11 Green Acres' ] },
+    fullname: { dataDD: ReadOnlyStringDD, sample: [ 'Fred Bloggs', 'Fredrica Smith' ] },
+    addressLine1: { dataDD: ReadOnlyStringDD, sample: [ '4 Privat Drive', '11 Green Acres' ] },
     addressLine2: { dataDD: ReadOnlyStringDD, sample: [ 'Little Winging', 'Nether Wallop' ] },
     addressLine3: { dataDD: ReadOnlyStringDD, sample: [ 'Surrey', 'Aylesbury' ] },
     addressLine4: { dataDD: ReadOnlyStringDD, sample: [ 'UK' ] },
@@ -43,6 +44,16 @@ export const RequestDetailsDD: ExampleDataD = {
     fax: { dataDD: ReadOnlyStringDD, sample: [ '5556365', '555 1231' ] }
   }
 }
+
+export const AccountDetailsDD: ExampleDataD = {
+  name: 'AccountDetailsForListOfPayments',
+  description: 'The information about the people who have an account',
+  structure: {
+    main: { dataDD: RequestDetailsDD },
+    joint: { dataDD: RequestDetailsDD, sampleOffset: 1 },
+  }
+}
+
 export const SinglePrint: ExampleDataD = {
   name: 'SinglePrint',
   description: 'Should I print this and how many are there',
@@ -66,22 +77,46 @@ export const ListOfPaymentsDD: ExampleDataD = {
   }
 }
 
+export const CurrentPaymentCountsDD: ExampleDataD = {
+  name: 'CurrentPaymentCounts',
+  description: 'The counts of the current types of payments',
+  structure: {
+    standingOrders: { dataDD: NatNumDd, sample: [ 3, 1, 3 ] },
+    openBankingStandingOrders: { dataDD: NatNumDd, sample: [ 2, 4, 3 ] },
+    directDebits: { dataDD: NatNumDd, sample: [ 5, 5, 5 ] },
+    billPayments: { dataDD: NatNumDd, sample: [ 4, 2, 1 ] },
+    openBanking: { dataDD: NatNumDd, sample: [ 0, 1, 2 ] },
+  }
+}
+
+
 export const printRecordDD: ExampleDataD = {
   name: 'PrintRecordItem',
   description: 'A single request for the list of payments that happened at a point at time, or will happen when we click print',
-  layout: { component: LayoutCd, displayParams: { details: '[[1,1],[1,3]]' } },
+  layout: { component: LayoutCd, displayParams: { details: '[[1],[1,3]]' } },
   guards: {
     requestedBy: { condition: 'in', path: 'requestedBy', values: { j: 'joint', m: 'main', n: 'new bank' } },
     alreadyPrinted: { condition: 'equals', path: 'alreadyPrinted', value: true }
   },
   sealedBy: 'alreadyPrinted',
   structure: {
-    requestedBy: { dataDD: StringDD, sample: ['m', 'j', 'new bank'] },
-    requesterDetails: { dataDD: RequestDetailsDD, guard: { requestedBy: [ 'm', 'j' ] } },
+    requestedBy: {
+      dataDD: { ...StringDD, display: DataDrivenFixedOptionDropDownAndDetailsCD },
+      displayParams: {
+        details: {
+          M: { valuePath: '~/accountDetails/main/fullname', dataPath: '~/accountDetails/main', display: RequestDetailsDD.name },
+          J: { valuePath: '~/accountDetails/joint/fullname', dataPath: '~/accountDetails/joint', display: RequestDetailsDD.name },
+          N: { value: 'New Bank'},
+
+        }
+      },
+      sample: [ 'M', 'J', 'N' ]
+    },
+    // requesterDetails: { dataDD: RequestDetailsDD, guard: { requestedBy: [ 'M', 'J' ] } },
     listOfPayments: { dataDD: ListOfPaymentsDD },
     includeSingleAndInitialDirectDebits: { dataDD: BooleanDD },
-    authorisedByCustomer: { dataDD: authorisedByCustomerDD, guard: { requestedBy: [ 'm', 'j' ] } },
-    alreadyPrinted: { dataDD: BooleanDD, sampleOffset: 0}, //will be hidden but leaving visible for now. The sample offset means that the first one is not printed... just dev experimence
+    alreadyPrinted: { dataDD: BooleanDD }, //will be hidden but leaving visible for now.
+    // authorisedByCustomer: { dataDD: authorisedByCustomerDD},//, guard: { requestedBy: [ 'm', 'j' ] } },
   }
 }
 

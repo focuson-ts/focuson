@@ -1,5 +1,7 @@
 type Query{
   getHelloWorldDomainData:HelloWorldDomainData!
+  getAccountDetailsForListOfPayments(accountId: String!):AccountDetailsForListOfPayments!
+  getCurrentPaymentCounts(accountId: String!):CurrentPaymentCounts!
   getPrintRecordItem(accountId: String!):[PrintRecordItem!]!
   getCollectionItem(accountId: String!, clientRef: String!):[CollectionItem!]!
   getCollectionSummary(accountId: String!, clientRef: String!):CollectionSummary!
@@ -27,8 +29,7 @@ type Query{
   getPostCodeDataLine(dbName: String!, postcode: String!):[PostCodeDataLine!]!
 }
 type Mutation{
-  createsomePrefixPrintRecordItem(accountId: String!,obj: [PrintRecordItemInp!]!):[PrintRecordItem!]!
-  statesomePrefixPrintRecordItemprint(accountId: String!):[Boolean]!
+  statePrintRecordItemprint(accountId: String!):[Boolean]!
   createCreatePayment(accountId: String!, clientRef: String!, paymentId: String!,obj: CreatePaymentInp!):CreatePayment!
   stateCollectionItemcancel(accountId: String!, clientRef: String!, paymentId: String!):Boolean
   updateOccupationAndIncomeFullDomain(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!,obj: OccupationAndIncomeFullDomainInp!):OccupationAndIncomeFullDomain!
@@ -57,6 +58,10 @@ type AccountDetails{
   addressLine4: String!
   postcode: String!
   telephone: String!
+}
+type AccountDetailsForListOfPayments{
+  main: RequesterDetails!
+  joint: RequesterDetails!
 }
 type AccountOneFlag{
   flagName: String!
@@ -223,6 +228,13 @@ type CreatePlan{
   createPlanDate: String!
   createPlanEnd: String!
 }
+type CurrentPaymentCounts{
+  standingOrders: Int!
+  openBankingStandingOrders: Int!
+  directDebits: Int!
+  billPayments: Int!
+  openBanking: Int!
+}
 type DetailsOfNonRecurringItems{
   nonRecurringItems: String!
 }
@@ -374,10 +386,8 @@ type PostCodeNameAndAddress{
 }
 type PrintRecordItem{
   requestedBy: String!
-  requesterDetails: RequesterDetails!
   listOfPayments: ListOfPayments!
   includeSingleAndInitialDirectDebits: Boolean!
-  authorisedByCustomer: String!
   alreadyPrinted: Boolean!
 }
 type RepeatingLine{
@@ -388,6 +398,7 @@ type RequesterDetails{
   title: String!
   forename: String!
   surname: String!
+  fullname: String!
   addressLine1: String!
   addressLine2: String!
   addressLine3: String!
@@ -437,13 +448,6 @@ input ETransferDataDInp{
   balance: Int!
   notes: String!
 }
-input ListOfPaymentsInp{
-  standingOrders: SinglePrintInp!
-  openBankingStandingOrders: SinglePrintInp!
-  directDebits: SinglePrintInp!
-  billPayments: SinglePrintInp!
-  openBanking: SinglePrintInp!
-}
 input OccupationAndIncomeFullDomainInp{
   mainCustomerName: String!
   jointCustomerName: String!
@@ -487,31 +491,7 @@ input PostCodeNameAndAddressInp{
   line4: String!
   postcode: String!
 }
-input PrintRecordItemInp{
-  requestedBy: String!
-  requesterDetails: RequesterDetailsInp!
-  listOfPayments: ListOfPaymentsInp!
-  includeSingleAndInitialDirectDebits: Boolean!
-  authorisedByCustomer: String!
-  alreadyPrinted: Boolean!
-}
 input RepeatingLineInp{
   name: String!
   age: Int!
-}
-input RequesterDetailsInp{
-  title: String!
-  forename: String!
-  surname: String!
-  addressLine1: String!
-  addressLine2: String!
-  addressLine3: String!
-  addressLine4: String!
-  postcode: String!
-  phone: String!
-  fax: String!
-}
-input SinglePrintInp{
-  shouldPrint: Boolean!
-  numberOfItems: Int!
 }

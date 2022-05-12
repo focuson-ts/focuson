@@ -14,9 +14,10 @@
 | Page | Rest | Url | Params | Access | Audit
 | --- | --- | ---  |  --- | --- | --- |
 |HelloWorldMainPage|restDataRD | /helloWorld?{query}|  |  | 
+|ListOfPaymentsPage|accountDetails | /api/payment/accountDetails?{query}| accountId |  | 
+|ListOfPaymentsPage|currentPayments | /api/paymentcounts?{query}| accountId |  | 
 |ListOfPaymentsPage|paymentHistory | /api/printrecordhistory?{query}| accountId |  | 
-|ListOfPaymentsPage|paymentHistoryNext | /api/printrecordhistoryx?{query}| accountId |  | 
-|ListOfPaymentsPage| | /api/printrecord/print?{query}| accountId |
+|ListOfPaymentsPage| | /api/print?{query}| accountId |
 |LinkedAccountDetails|collectionHistoryList | /api/collections/list?{query}| accountId,clientRef |  | 
 |LinkedAccountDetails|collectionSummary | /api/collections/summary?{query}| accountId,clientRef |  | 
 |LinkedAccountDetails|createPayment | /api/payment/create?{query}| accountId,clientRef,paymentId |  | create->auditCreate
@@ -69,6 +70,8 @@
 | --- | ---
 |accountId|accountId
   ## domains 
+    AccountDetailsForListOfPayments
+    CurrentPaymentCounts
     ListOfPayments
     PrintRecordHistory
     PrintRecordItem
@@ -77,9 +80,10 @@
   ## rests   
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
+    |accountDetails | /api/payment/accountDetails?{query}| accountId |  | 
+    |currentPayments | /api/paymentcounts?{query}| accountId |  | 
     |paymentHistory | /api/printrecordhistory?{query}| accountId |  | 
-    |paymentHistoryNext | /api/printrecordhistoryx?{query}| accountId |  | 
-    | | /api/printrecord/print?{query}| accountId |
+    | | /api/print?{query}| accountId |
   ## modals  
   |name|displayed with
   | --- | --- 
@@ -88,16 +92,15 @@
     PrintRecordHistory displayed using SelectedItem
   ## buttons 
     Modal Button ==> EditListOfPayments in mode create
-      Copy from {"from":"~/display[~/selected]"}
+      Copy from [{"from":"~/currentPayments/standingOrders","to":"~/tempListOfPayments/listOfPayments/standingOrders/numberOfItems"},{"from":"~/currentPayments/openBankingStandingOrders","to":"~/tempListOfPayments/listOfPayments/openBankingStandingOrders/numberOfItems"},{"from":"~/currentPayments/directDebits","to":"~/tempListOfPayments/listOfPayments/directDebits/numberOfItems"},{"from":"~/currentPayments/billPayments","to":"~/tempListOfPayments/listOfPayments/billPayments/numberOfItems"},{"from":"~/currentPayments/openBanking","to":"~/tempListOfPayments/listOfPayments/openBanking/numberOfItems"}]
       Focused on "~/tempListOfPayments"
       Copy on close {"to":"~/display[$append]"} 
     next         ListNextButton
     prev         ListPrevButton
+    print        RestButton
   ## guards  
   | PrintRecordItem|requestedBy|alreadyPrinted
   | --- | --- | --- 
-  requesterDetails|m,j| 
-  authorisedByCustomer|m,j| 
   
 
 ---
