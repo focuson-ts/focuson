@@ -129,7 +129,12 @@ export const SelectedItemCD: DisplayCompD = {
   }
 }
 export const LayoutCd: DisplayCompD = {
-  params: { details: { paramType: 'string', needed: 'yes' }, title: { paramType: 'string', needed: 'no' }, defaultProps: { paramType: 'string', needed: 'no' } },
+  params: { 
+    details: { paramType: 'string', needed: 'yes' }, 
+    title: { paramType: 'string', needed: 'no' }, 
+    defaultProps: { paramType: 'string', needed: 'no' },
+    displayAsCards: { paramType: 'boolean', needed: 'no' },
+ },
   import: "@focuson/form_components",
   name: "Layout"
 }
