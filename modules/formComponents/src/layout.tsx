@@ -18,19 +18,21 @@ export function Layout<S, T, Context> ( { details, children, title, defaultProps
   const hrBetweenRows = true
   return <>
     {detailsAsMixedArr.map ( ( row: any, rowIndex: number ) =>
-      <div className="row my-1" key={rowIndex}><>
-        {hrBetweenRows && rowIndex > 0 ? <hr/> : <></>}
-        {row.map ( ( col: any, colIndex: number ) => <>
+      <div className="row my-1 padding-bottom" key={rowIndex}><>        
+        {row.map ( ( col: any, colIndex: number ) =>         
             <div className="col" key={elemIndex}>
-              {Children.map ( Array.isArray ( children ) ? children.slice ( (elemIndex > 0 ? elemArr[ elemIndex - 1 ] : 0), elemArr[ elemIndex++ ] ) : children, child => {
-                const labelWidthPct = typeof (detailsAsMixedArr[ rowIndex ][ colIndex ]) === 'object' ? detailsAsMixedArr[ rowIndex ][ colIndex ].labelWidth : ''
-                const inputWidthPct = typeof (detailsAsMixedArr[ rowIndex ][ colIndex ]) === 'object' ? detailsAsMixedArr[ rowIndex ][ colIndex ].valueWidth : ''
-                return (labelWidthPct || inputWidthPct)
-                  ? <div className={`${labelWidthPct ? `labelWidth${labelWidthPct}` : ''} ${inputWidthPct ? `inputWidth${inputWidthPct}` : ''}`}>{child}</div>
-                  : defaultPropsL ? <div className={`${defaultPropsL.labelWidth ? `labelWidth${defaultPropsL.labelWidth}` : ''} ${defaultPropsL.valueWidth ? `inputWidth${defaultPropsL.valueWidth}` : ''}`}>{child}</div> : child
-              } )}
+              <div className="card">
+                <div className="card-body">
+                {Children.map ( Array.isArray ( children ) ? children.slice ( (elemIndex > 0 ? elemArr[ elemIndex - 1 ] : 0), elemArr[ elemIndex++ ] ) : children, child => {
+                  const labelWidthPct = typeof (detailsAsMixedArr[ rowIndex ][ colIndex ]) === 'object' ? detailsAsMixedArr[ rowIndex ][ colIndex ].labelWidth : ''
+                  const inputWidthPct = typeof (detailsAsMixedArr[ rowIndex ][ colIndex ]) === 'object' ? detailsAsMixedArr[ rowIndex ][ colIndex ].valueWidth : ''
+                  return (labelWidthPct || inputWidthPct)
+                    ? <div className={`${labelWidthPct ? `labelWidth${labelWidthPct}` : ''} ${inputWidthPct ? `inputWidth${inputWidthPct}` : ''}`}>{child}</div>
+                    : defaultPropsL ? <div className={`${defaultPropsL.labelWidth ? `labelWidth${defaultPropsL.labelWidth}` : ''} ${defaultPropsL.valueWidth ? `inputWidth${defaultPropsL.valueWidth}` : ''}`}>{child}</div> : child
+                } )}
+                </div>
+              </div>
             </div>
-          </>
         )}</>
       </div>
     )}

@@ -1,5 +1,5 @@
 import { IntParam, RestD, RestParams } from "../../common/restD";
-import { ETransferDataD } from "./eTransfers.dataD";
+import { ETransferDataD, HolidayDataD } from "./eTransfers.dataD";
 import { AllGuards } from "../../buttons/guardButton";
 
 export const commonParams: RestParams = {
@@ -12,4 +12,12 @@ export const eTransferRestD: RestD<AllGuards> = {
   dataDD: ETransferDataD,
   url: '/api/eTransfers?{query}',
   actions: [ 'create' ]
+}
+
+
+export const holidayRestD: RestD<AllGuards> = {
+  params: {},
+  dataDD: HolidayDataD,
+  url: '/api/holidays',
+  actions: [ 'get' ]
 }
