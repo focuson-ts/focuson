@@ -1,7 +1,7 @@
-import { ExampleMainPage, ExampleModalPage } from "../common";
 import { NatNumDd } from "../commonEnums";
-import { printRecordDD, PrintRecordHistoryDD } from "./listOfPayements.dataD";
-import { PrintRecordHistoryRD } from "./listOfPayements.restD";
+import { AccountDetailsDD, CurrentPaymentCountsDD, printRecordDD, PrintRecordHistoryDD } from "./listOfPayements.dataD";
+import { accountAndAddressDetailsRD, CurrentPaymentCountsRD, PrintRecordHistoryRD } from "./listOfPayements.restD";
+import { ExampleMainPage, ExampleModalPage } from "../common";
 
 export const EditlistOfPaymentsPagePD: ExampleModalPage = {
   pageType: 'ModalPage',
@@ -9,8 +9,8 @@ export const EditlistOfPaymentsPagePD: ExampleModalPage = {
   display: { target: '~/tempListOfPayments', dataDD: printRecordDD },
   modes: [ 'edit' ],
   buttons: {
-    cancel: { control: 'ModalCancelButton' },
-    commit: { control: 'ModalCommitButton' }
+    cancel: { control: 'ModalCancelButton', text: 'back' },
+    commit: { control: 'ModalCommitButton', text: 'save' }
   }
 }
 export const ListOfPaymentsPagePD: ExampleMainPage = {
@@ -20,23 +20,36 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
   domain: {
     display: { dataDD: PrintRecordHistoryDD },
     tempListOfPayments: { dataDD: printRecordDD },
-    selected: { dataDD: NatNumDd }
+    selected: { dataDD: NatNumDd },
+    currentPayments: { dataDD: CurrentPaymentCountsDD },
+    accountDetails: { dataDD: AccountDetailsDD },
   },
   modals: [ { modal: EditlistOfPaymentsPagePD } ],
   modes: [ 'edit' ],
   initialValue: { selected: 0 },
   rest: {
-    paymentHistory: { rest: PrintRecordHistoryRD, fetcher: true, targetFromPath: '~/display' }
+    paymentHistory: { rest: PrintRecordHistoryRD, fetcher: true, targetFromPath: '~/display' },
+    currentPayments: { rest: CurrentPaymentCountsRD, fetcher: true, targetFromPath: '~/currentPayments' },
+    accountDetails: { rest: accountAndAddressDetailsRD, fetcher: true, targetFromPath: '~/accountDetails' },
+
   },
+  guards: { canPrint: { condition: 'equals', value: false, path: '~/display[~/selected]/alreadyPrinted' } },
   buttons: {
     prev: { control: 'ListPrevButton', list: '~/display', value: '~/selected' },
     next: { control: 'ListNextButton', list: '~/display', value: '~/selected' },
+    print: { control: 'RestButton', action: { state: 'print' }, restName: 'paymentHistory', enabledBy: 'canPrint', confirm: 'Really?', deleteOnSuccess: '~/display' },
     add: {
       control: 'ModalButton', modal: EditlistOfPaymentsPagePD, mode: 'create',
-      // createEmpty: PrintRecordHistoryDD,
       focusOn: '~/tempListOfPayments',
-      copy: { from: '~/display[~/selected]' },
-      // setToLengthOnClose: { variable: '~/selected', array: '~/display' },
+      createEmpty: printRecordDD,
+      copy: [
+        { from: '~/currentPayments/standingOrders', to: '~/tempListOfPayments/listOfPayments/standingOrders/numberOfItems' },
+        { from: '~/currentPayments/openBankingStandingOrders', to: '~/tempListOfPayments/listOfPayments/openBankingStandingOrders/numberOfItems' },
+        { from: '~/currentPayments/directDebits', to: '~/tempListOfPayments/listOfPayments/directDebits/numberOfItems' },
+        { from: '~/currentPayments/billPayments', to: '~/tempListOfPayments/listOfPayments/billPayments/numberOfItems' },
+        { from: '~/currentPayments/openBanking', to: '~/tempListOfPayments/listOfPayments/openBanking/numberOfItems' },
+      ],
+      setToLengthOnClose: { variable: '~/selected', array: '~/display' },
       copyOnClose: { to: '~/display[$append]' }
     }
   },

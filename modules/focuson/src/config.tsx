@@ -1,10 +1,11 @@
-import { focusPageClassName, HasPageSelection, HasSimpleMessageL, MultiPageDetails, PageDetailsForCombine, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages, simpleMessagesL } from "@focuson/pages";
+import { focusPageClassName, fromPathFromRaw, HasPageSelection, HasSimpleMessageL, MultiPageDetails, PageDetailsForCombine, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages, simpleMessagesL } from "@focuson/pages";
 import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
 import { FetcherTree, loadTree, wouldLoad, wouldLoadSummary } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
 import { Lens, Lenses, NameAndLens, Optional } from "@focuson/lens";
 import { FetchFn, HasSimpleMessages, RestAction } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestDetails } from "@focuson/rest";
+
 
 
 export function defaultCombine<S> ( state: LensState<S, any, any>, pages: PageDetailsForCombine[] ) {
@@ -26,18 +27,24 @@ export function defaultPageSelectionAndPostCommandsContext<S extends HasPageSele
     postCommandsL: Lenses.identity<S> ().focusQuery ( 'postCommands' )
   }
 }
+export interface HasPathToLens<S>{
+  pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>
+}
 
-
-export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S> {
+export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S> ,HasPathToLens<S>{
   commonIds: NameAndLens<S>;
+  pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>
 }
 export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSelection & HasRestCommands & HasSimpleMessages> ( pageDetails: MultiPageDetails<S, FocusOnContext<S>>, commonIds: NameAndLens<S> ):
   FocusOnContext<S> {
+  const pathToLens: ( s: S ) => ( path: string ) => Optional<S, any> =
+          fromPathFromRaw ( pageSelectionlens<S> (), pageDetails )
   return {
     ...defaultPageSelectionContext<S, FocusOnContext<S>> ( pageDetails ),
     restL: Lenses.identity<S> ().focusQuery ( 'restCommands' ),
     simpleMessagesL: simpleMessagesL (),
-    commonIds
+    commonIds,
+    pathToLens
   }
 }
 

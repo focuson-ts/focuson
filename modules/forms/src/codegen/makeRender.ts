@@ -46,7 +46,7 @@ export function isErrorComponentData<G> ( d: AllComponentData<G> ): d is ErrorCo
 }
 
 export interface ComponentDisplayParams {
-  [ name: string ]: boolean | string | string[] | number
+  [ name: string ]: boolean | string | string[] | number | NameAnd<any>
 }
 
 
@@ -76,7 +76,7 @@ export const listComponentsIn = <G> ( dataDD: CompDataD<G> ): AllComponentData<G
   // return flatMapDD ( dataDD, listComponentsInFolder () );
 };
 
-export const processParam = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params: TSParams, errorPrefix: string, dcd: DisplayCompD ) => ( name: string, s: number | string | string[] | boolean ) => {
+export const processParam = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params: TSParams, errorPrefix: string, dcd: DisplayCompD ) => ( name: string, s: number | string | string[] | boolean | NameAnd<any> ) => {
   if ( dcd.params === undefined ) throw Error ( `${errorPrefix} Trying to get data for param ${name}, but no params have been defined` )
   const dcdType: OneDisplayCompParamD<any> | undefined = dcd.params[ name ]
   if ( dcdType === undefined ) throw Error ( `${errorPrefix}  param '${name}' not found in ${JSON.stringify ( Object.keys ( dcd.params ).sort () )}` )
@@ -100,6 +100,8 @@ export const processParam = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G
   if ( dcdType.paramType === 'string' ) return processStringParam ()
   if ( dcdType.paramType === 'boolean' ) return processObjectParam ()
   if ( dcdType.paramType === 'object' ) return processObjectParam ()
+  if ( dcdType.paramType === 'json' ) return "{" + JSON.stringify ( s ) + "}"
+  if ( dcdType.paramType === 'jsonWithDisplayFn' ) return "{"+ JSON.stringify ( s,null,2 ).replace ( /"display":\s*"(\w*)"/g,  '"display":$1' ) + "}"
   if ( dcdType.paramType === 'objectAndRenderPrefix' ) return "{" + (mainPage.name == page.name ? '' : 'render.') + s + "}"
   if ( dcdType.paramType === 'string[]' ) return processStringArrayParam ()
   if ( dcdType.paramType === 'fullState' ) return processState ( 'fullState(state)', '' )
@@ -182,7 +184,7 @@ function makeGuardVariables<B, G extends GuardWithCondition> ( hasGuards: HasGua
 }
 
 
-function makeSealedString<B, G> (dataD: CompDataD<G> ): string[] {
+function makeSealedString<B, G> ( dataD: CompDataD<G> ): string[] {
   if ( isDataDd ( dataD ) && dataD.sealedBy ) {
     return [ `//added by sealed: ${JSON.stringify ( dataD.sealedBy )} in component ${dataD.name}. If it doesn't compile check the name and type of the guard variable named`,
       `if (${dataD.sealedBy}Guard) mode='view'`
@@ -195,7 +197,7 @@ export const createReactComponent = <B, G extends GuardWithCondition> ( params: 
   const contents = indentList ( indentList ( createAllReactCalls ( mainP, params, page, listComponentsIn ( dataD ) ) ) )
   const guardStrings = isDataDd ( dataD ) ? makeGuardVariables ( dataD, makeGuard, params, mainP, page ) : []
   const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( mainP, page, params, `createReactComponent-layout ${dataD.name}`, [], dataD, '<>', '</>' );
-  const sealedString = makeSealedString (dataD )
+  const sealedString = makeSealedString ( dataD )
   return [
     `export function ${componentName ( dataD )}({id,state,mode,allButtons,label}: FocusedProps<${params.stateName}, ${domainName ( dataD )},Context>){`,
     ...guardStrings,

@@ -2,7 +2,7 @@ import { lensState, LensState } from "@focuson/state";
 import { shallow } from "enzyme";
 
 import { enzymeSetup } from "./enzymeAdapterSetup";
-import { HasPageSelection, PageDetailsForCombine, pageSelectionlens, simpleMessagesL } from "@focuson/pages";
+import { fromPathFromRaw, HasPageSelection, MultiPageDetails, PageDetailsForCombine, pageSelectionlens, simpleMessagesL } from "@focuson/pages";
 import { HasRestCommands, restL } from "@focuson/rest";
 import { SimpleMessage } from "@focuson/utils";
 import { FocusOnContext } from "@focuson/focuson";
@@ -28,12 +28,14 @@ const emptyS: RestButtonStateForTest = {
   restCommands: [],
   mainPage: {}
 }
+let pageDetails: MultiPageDetails<RestButtonStateForTest, Context> = { mainPage: { lens: identityOptics<RestButtonStateForTest> ().focusQuery ( 'mainPage' ), pageType: 'MainPage', pageFunction: () => <span/>, config: {}, pageMode: 'edit' } };
 const context: Context = {
   restL: restL<RestButtonStateForTest> (),
   combine: ( state, pages: PageDetailsForCombine[] ): JSX.Element => <div>{pages.map ( p => p.element )}</div>,
   pageSelectionL: pageSelectionlens (),
   simpleMessagesL: simpleMessagesL (),
-  pages: { mainPage: { lens: identityOptics<RestButtonStateForTest> ().focusQuery ( 'mainPage' ), pageType: 'MainPage', pageFunction: () => <span/>, config: {}, pageMode: 'edit' } },
+  pathToLens: fromPathFromRaw ( pageSelectionlens (), pageDetails ),
+  pages: pageDetails,
   commonIds: {}
 }
 

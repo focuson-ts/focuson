@@ -1,5 +1,5 @@
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
-import { makeSimpleButton, optT } from "../codegen/codegen";
+import { makeSimpleButton, opt, optT } from "../codegen/codegen";
 import { EnabledBy, enabledByString } from "./enabledBy";
 
 
@@ -10,7 +10,8 @@ export interface ModalCommitButtonInPage extends EnabledBy {
   text?: string
 }
 export interface ModalCancelButtonInPage {
-  control: 'ModalCancelButton'
+  control: 'ModalCancelButton';
+  text?: string
 }
 
 
@@ -19,7 +20,7 @@ export function makeModalCommitButton<B extends ModalCommitButtonInPage, G> (): 
     import: "@focuson/pages",
     makeButton: ( { name, button } ) => {
       const id = '{`${id}`.' + button.text ? button.text : name + "}"
-      return [ [ `<ModalCommitButton id=${makeIdForButton ( button.text ? button.text : name )} ${enabledByString(button)}`, ...optT ( 'validate', button.validate ), ` state={state} />` ].join ( ' ' ) ];
+      return [ [ `<ModalCommitButton id=${makeIdForButton ( button.text ? button.text : name )} ${enabledByString(button)}`, ...opt ( 'text', button.text ),...optT ( 'validate', button.validate ), ` state={state} />` ].join ( ' ' ) ];
     }
   })
 }

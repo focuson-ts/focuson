@@ -51,7 +51,7 @@ export function optT<T> ( name: string, p: T | undefined ) {
 export const makeSimpleButton: <G> ( imp: string ) => ButtonCreator<ModalButtonInPage<G>, G> = imp => ({
   import: imp,
   makeButton: ( { name, button } ) =>
-    [ `<${button.control} id=${makeIdForButton ( button.text ? button.text : name )} state={state} />` ]
+    [ [ `<${button.control} id=${makeIdForButton ( button.text ? button.text : name )} state={state}`, ...opt ( 'text', button.text ), '/>' ].join ( ' ' ) ]
 })
 export const filterParamsByRestAction = ( restAction: RestAction ) => ( [ name, param ]: [ string, AllLensRestParams ] ) =>
   getRestTypeDetails ( restAction ).params.needsId ? true : !param.main

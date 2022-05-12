@@ -25,7 +25,7 @@ export function CreatePaymentPage(){
      ( state, d, mode, index ) => {
           const reasonHasBeenSelectedGuard =  pageState(state)<domain.LinkedAccountDetailsPageDomain>().focusOn('createPayment').focusOn('reason').optJson() !== "";
           const id=`page${index}`;
-          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} />,
+          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} text={undefined}state={state} />,
               commit:<ModalCommitButton id={`${id}.commit`} enabledBy={reasonHasBeenSelectedGuard}   state={state} />,
               overpaymentHistory:<ModalButton id={`${id}.overpaymentHistory`} text='overpaymentHistory'  state={state} modal = 'OverpaymentModalPage'  
                 pageMode='view'

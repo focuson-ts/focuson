@@ -62,7 +62,7 @@ export const providerPactClassName = <B, G> ( pd: MainPageD<B, G> ): string => p
 export const auditClassName = <B, G> ( r: RestD<G> ) => `${restNameWithPrefix ( r )}Audit`;
 export const auditMethodName = <B, G> ( r: RestD<G>, a: RestAction , sp: StoredProcedureForStateDetails) => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${sp.name}`;
 
-export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${r.dataDD.name}Queries`;
+export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${safeString(r.namePrefix)}${r.dataDD.name}Queries`;
 
 export const javaDbFileName = <B, G> ( params: JavaWiringParams, p: PageD<B, G> ): string => `${p.name}Db`;
 export const sqlDataSuffixFor = ( suffix: string, i: number ): string => suffix + "_" + i

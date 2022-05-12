@@ -6,7 +6,7 @@ import { LensState } from "@focuson/state";
  * string and string[] are just the types
  *
  * */
-export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'string[]' | 'path' | 'pathValue' | 'objectAndRenderPrefix'
+export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object'| 'json' | 'jsonWithDisplayFn'| 'string[]' | 'path' | 'pathValue' | 'objectAndRenderPrefix'
 
 type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons' | 'defaultToLabel'
 
@@ -95,6 +95,13 @@ export const LabelAndDateInputCD: DisplayCompD = {
 }
 
 
+export const DataDrivenFixedOptionDropDownAndDetailsCD: DisplayCompD = {
+  import: "@focuson/form_components", name: "DataDrivenFixedOptionDropDownAndDetails",
+  params: {
+    ...commonParamsWithLabel,
+    details: { paramType: "jsonWithDisplayFn", needed: 'yes' }
+  }
+}
 //The data about to use a react component.
 export const TableCD: DisplayCompD = {
   import: "@focuson/form_components",   //so that I can write the import statement for the react component

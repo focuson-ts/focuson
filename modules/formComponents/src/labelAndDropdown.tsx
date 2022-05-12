@@ -20,7 +20,7 @@ export function LabelAndDropdown<S, T, Context extends FocusOnContext<S>> ( prop
   const selectedName = Object.entries ( enums ).filter ( ( [ value, name ] ) => selected && name === enums[ selected ] )
   return (<div className='labelDropdown'>
       <Label state={state} htmlFor={name} label={label}/>
-      <select className='dropdown' value={selectedName?.[ 0 ]?.[ 0 ]} disabled={mode === 'view' || readonly} id={id} aria-label={ariaLabel} onChange={( e ) =>
+      <select className='dropdown' value={state.optJson()} disabled={mode === 'view' || readonly} id={id} aria-label={ariaLabel} onChange={( e ) =>
         state.setJson ( e.target.value, reasonFor ( 'LabelAndDropdown', 'onChange', id ) )}>
         {
           Object.entries ( enums ).map ( ( [ value, name ], key ) => (

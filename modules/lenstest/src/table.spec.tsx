@@ -121,7 +121,7 @@ describe ( "Table", () => {
       const table = displayAndGetTable ( { ...twoRowsWithC, filter: '5-' }, s => {}, s =>
         <Table order={[ 'a', 'b', 'c' ]} joiners='-' prefixColumn='c' prefixFilter={s.focusOn ( 'filter' )} state={s.focusOn ( 'contents' )} id='id'/> )
       expect ( table.html ().replace ( /"/g, "'" ) ).toEqual (
-        "<table id='id'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead><tbody><tr id='id[0]'><td id='id[0].a'>2</td><td id='id[0].b'>two</td><td id='id[0].c'>5-6</td></tr></tbody></table>" )
+        "<table id='id'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead><tbody><tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td><td id='id[1].c'>5-6</td></tr></tbody></table>" )
 
     } )
   } )
