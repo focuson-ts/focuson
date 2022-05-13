@@ -46,8 +46,9 @@ export const sampleCollectionSummary0: domains.CollectionSummaryDomain =
 export const sampleCreatePayment0: domains.CreatePaymentDomain = 
 {
   "amount": 56657,
+  "otherAmount": 56657,
   "collectionDate": "2020-10-01",
-  "reason": "",
+  "reason": "A",
   "allowance": 123,
   "period": "Monthly"
 }
@@ -286,8 +287,9 @@ export const sampleCollectionSummary1: domains.CollectionSummaryDomain =
 export const sampleCreatePayment1: domains.CreatePaymentDomain = 
 {
   "amount": 32834,
+  "otherAmount": 32834,
   "collectionDate": "2022-14-01",
-  "reason": "A",
+  "reason": "O",
   "allowance": 456,
   "period": "Yearly"
 }
@@ -526,8 +528,9 @@ export const sampleCollectionSummary2: domains.CollectionSummaryDomain =
 export const sampleCreatePayment2: domains.CreatePaymentDomain = 
 {
   "amount": 56657,
+  "otherAmount": 56657,
   "collectionDate": "2020-10-01",
-  "reason": "O",
+  "reason": "A",
   "allowance": 123,
   "period": "Monthly"
 }

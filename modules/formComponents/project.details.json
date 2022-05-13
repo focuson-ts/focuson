@@ -1,5 +1,5 @@
 {
-  "template":    "noreact",
+  "template":    "components",
   "name":        "@focuson/form_components",
   "description": "Components that can be used by @focuson/forms",
   "details":     {

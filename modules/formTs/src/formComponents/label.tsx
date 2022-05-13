@@ -9,5 +9,7 @@ export interface LabelProps<S, Context extends FocusOnContext<S>> extends LensPr
 }
 
 export function Label<S, Context extends FocusOnContext<S>> ( { state, label, htmlFor }: LabelProps<S, Context> ) {
-  return <label htmlFor={htmlFor}>{replaceTextUsingPath ( state,safeString(label) )}</label>
+  let string = label?.includes ( '{' ) ? replaceTextUsingPath ( state, safeString ( label ) ) : label;
+  return <label htmlFor={htmlFor}>{string}</label>
 }
+

@@ -30,6 +30,7 @@ import { OccupationAndIncomeSummary_OtherIncomeResponseRestDetails } from './Occ
 import { EAccountsSummary_CreatePlanRestDetails } from './EAccountsSummary/EAccountsSummary.rests';
 import { EAccountsSummary_EAccountsSummaryRestDetails } from './EAccountsSummary/EAccountsSummary.rests';
 import { ETransfer_ETransferDataDRestDetails } from './ETransfer/ETransfer.rests';
+import { ETransfer_HolidayDataRestDetails } from './ETransfer/ETransfer.rests';
 import { CreateEAccount_CreateEAccountDataRestDetails } from './CreateEAccount/CreateEAccount.rests';
 import { ChequeCreditbooks_ChequeCreditbooksRestDetails } from './ChequeCreditbooks/ChequeCreditbooks.rests';
 import { Repeating_RepeatingWholeDataRestDetails } from './Repeating/Repeating.rests';
@@ -66,6 +67,7 @@ export const restDetails: RestDetails<FState, SimpleMessage> = {
    EAccountsSummary_CreatePlanRestDetails: EAccountsSummary_CreatePlanRestDetails(commonIds, defaultDateFn),
    EAccountsSummary_EAccountsSummaryRestDetails: EAccountsSummary_EAccountsSummaryRestDetails(commonIds, defaultDateFn),
    ETransfer_ETransferDataDRestDetails: ETransfer_ETransferDataDRestDetails(commonIds, defaultDateFn),
+   ETransfer_HolidayDataRestDetails: ETransfer_HolidayDataRestDetails(commonIds, defaultDateFn),
    CreateEAccount_CreateEAccountDataRestDetails: CreateEAccount_CreateEAccountDataRestDetails(commonIds, defaultDateFn),
    ChequeCreditbooks_ChequeCreditbooksRestDetails: ChequeCreditbooks_ChequeCreditbooksRestDetails(commonIds, defaultDateFn),
    Repeating_RepeatingWholeDataRestDetails: Repeating_RepeatingWholeDataRestDetails(commonIds, defaultDateFn),

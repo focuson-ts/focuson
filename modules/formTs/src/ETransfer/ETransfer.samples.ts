@@ -12,6 +12,22 @@ export const sampleETransferDataD0: domains.ETransferDataDDomain =
   "balance": 123,
   "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
 }
+export const sampleHolidayData0: domains.HolidayDataDomain = 
+[
+  {
+    "holiday": "2022-05-17"
+  },
+  {
+    "holiday": "2022-05-20"
+  },
+  {
+    "holiday": "2022-05-26"
+  }
+]
+export const sampleSingleHoliday0: domains.SingleHolidayDomain = 
+{
+  "holiday": "2022-05-17"
+}
 export const sampleETransferDataD1: domains.ETransferDataDDomain = 
 {
   "account": 3233450,
@@ -24,6 +40,22 @@ export const sampleETransferDataD1: domains.ETransferDataDDomain =
   "balance": 456,
   "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
 }
+export const sampleHolidayData1: domains.HolidayDataDomain = 
+[
+  {
+    "holiday": "2022-05-20"
+  },
+  {
+    "holiday": "2022-05-17"
+  },
+  {
+    "holiday": "2022-05-20"
+  }
+]
+export const sampleSingleHoliday1: domains.SingleHolidayDomain = 
+{
+  "holiday": "2022-05-20"
+}
 export const sampleETransferDataD2: domains.ETransferDataDDomain = 
 {
   "account": 4333450,
@@ -35,4 +67,20 @@ export const sampleETransferDataD2: domains.ETransferDataDDomain =
   "type": "checking",
   "balance": 123,
   "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"
+}
+export const sampleHolidayData2: domains.HolidayDataDomain = 
+[
+  {
+    "holiday": "2022-05-26"
+  },
+  {
+    "holiday": "2022-05-27"
+  },
+  {
+    "holiday": "2022-05-17"
+  }
+]
+export const sampleSingleHoliday2: domains.SingleHolidayDomain = 
+{
+  "holiday": "2022-05-26"
 }

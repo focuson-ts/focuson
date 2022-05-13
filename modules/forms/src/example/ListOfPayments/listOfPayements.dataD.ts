@@ -2,7 +2,7 @@ import { ExampleDataD, ExampleRepeatingD } from "../common";
 
 import { CheckboxInputCD, DataDrivenFixedOptionDropDownAndDetailsCD, LabelAndDropDownCD, LayoutCd, NumberInputCD, SelectedItemCD, TwoElementWithTitleLayoutCD } from "../../common/componentsD";
 import { NatNumDd } from "../commonEnums";
-import { BooleanDD, NumberPrimitiveDD, OneLineStringDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
+import { AccountIdDD, BooleanDD, NumberPrimitiveDD, OneLineStringDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
 import { CustomerStatus } from "@focuson/form_components";
 
 export const authorisedByCustomerDD: StringPrimitiveDD = {
@@ -10,6 +10,7 @@ export const authorisedByCustomerDD: StringPrimitiveDD = {
   name: 'CustomerStatus',
   description: "Customer status enum",
   display: LabelAndDropDownCD,
+  displayParams: { pleaseSelect: 'select this please', required: true },
   enum: { n: 'no', notyet: 'Not Yet', y: 'Yes' },
 }
 
@@ -42,6 +43,24 @@ export const RequestDetailsDD: ExampleDataD = {
     postcode: { dataDD: ReadOnlyStringDD, sample: [ 'HG1 1FL', 'SO34 1DF' ] },
     phone: { dataDD: ReadOnlyStringDD, sample: [ '555 1234', '555 2344' ] },
     fax: { dataDD: ReadOnlyStringDD, sample: [ '5556365', '555 1231' ] }
+  }
+}
+
+export const newBankDetailsDD: ExampleDataD = {
+  name: 'NewBankDetails',
+  description: 'Not really sure what is going on here',
+  structure: {
+    title: { dataDD: StringDD, sample: [ 'Mr', 'Mrs' ] },
+    forename: { dataDD: ReadOnlyStringDD, sample: [ 'Fred', 'Fredrica' ] },
+    surname: { dataDD: ReadOnlyStringDD, sample: [ 'Bloggs', 'Smith' ] },
+    bank: { dataDD: ReadOnlyStringDD, sample: [ 'Fred', 'Fredrica' ] },
+    line1: { dataDD: OneLineStringDD, sample: [ '4 Privet drive', '27 Throughput Lane' ] },
+    line2: { dataDD: OneLineStringDD, sample: [ 'Little Whinging', 'Woodfield' ] },
+    line3: { dataDD: OneLineStringDD, sample: [ 'Surrey', '' ], displayParams: { required: false } },
+    line4: { dataDD: OneLineStringDD, sample: [ 'England', 'Ireland' ] },
+    postcode: { dataDD: OneLineStringDD, sample: [ 'LW12 5f', 'IR45 3GT' ] },
+    sortCode: { dataDD: OneLineStringDD, sample: [ '10-12-31', '34-43-23¶' ] },
+    accountNo: { dataDD: AccountIdDD, sample: [100233, 345345 ] }
   }
 }
 
@@ -81,11 +100,11 @@ export const CurrentPaymentCountsDD: ExampleDataD = {
   name: 'CurrentPaymentCounts',
   description: 'The counts of the current types of payments',
   structure: {
-    standingOrders: { dataDD: NatNumDd, sample: [ 3, 1, 3 ] },
-    openBankingStandingOrders: { dataDD: NatNumDd, sample: [ 2, 4, 3 ] },
-    directDebits: { dataDD: NatNumDd, sample: [ 5, 5, 5 ] },
-    billPayments: { dataDD: NatNumDd, sample: [ 4, 2, 1 ] },
-    openBanking: { dataDD: NatNumDd, sample: [ 0, 1, 2 ] },
+    standingOrders: { dataDD: NatNumDd, sample: [ 3, 1, 0 ] },
+    openBankingStandingOrders: { dataDD: NatNumDd, sample: [ 2, 4, 0 ] },
+    directDebits: { dataDD: NatNumDd, sample: [ 5, 5, 0 ] },
+    billPayments: { dataDD: NatNumDd, sample: [ 4, 2, 0 ] },
+    openBanking: { dataDD: NatNumDd, sample: [ 0, 1, 0 ] },
   }
 }
 
@@ -96,7 +115,7 @@ export const printRecordDD: ExampleDataD = {
   layout: { component: LayoutCd, displayParams: { details: '[[1],[1,3]]' } },
   guards: {
     requestedBy: { condition: 'in', path: 'requestedBy', values: { j: 'joint', m: 'main', n: 'new bank' } },
-    alreadyPrinted: { condition: 'equals', path: 'alreadyPrinted', value: true }
+    alreadyPrinted: { condition: 'equals', path: 'alreadyPrinted', value: true },
   },
   sealedBy: 'alreadyPrinted',
   structure: {
@@ -106,17 +125,18 @@ export const printRecordDD: ExampleDataD = {
         details: {
           M: { valuePath: '~/accountDetails/main/fullname', dataPath: '~/accountDetails/main', display: RequestDetailsDD.name },
           J: { valuePath: '~/accountDetails/joint/fullname', dataPath: '~/accountDetails/joint', display: RequestDetailsDD.name },
-          N: { value: 'New Bank'},
+          N: { value: 'New Bank' },
 
         }
       },
       sample: [ 'M', 'J', 'N' ]
     },
+    newBankDetails: { dataDD: newBankDetailsDD, hidden: true },
     // requesterDetails: { dataDD: RequestDetailsDD, guard: { requestedBy: [ 'M', 'J' ] } },
     listOfPayments: { dataDD: ListOfPaymentsDD },
     includeSingleAndInitialDirectDebits: { dataDD: BooleanDD },
-    alreadyPrinted: { dataDD: BooleanDD }, //will be hidden but leaving visible for now.
-    // authorisedByCustomer: { dataDD: authorisedByCustomerDD},//, guard: { requestedBy: [ 'm', 'j' ] } },
+    alreadyPrinted: { dataDD: BooleanDD, sample: [ false, true, false ] }, //will be hidden but leaving visible for now.
+    authorisedByCustomer: { dataDD: authorisedByCustomerDD, guard: { requestedBy: [ 'N' ] } },
   }
 }
 

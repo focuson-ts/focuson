@@ -93,15 +93,16 @@ export function CreatePayment({id,state,mode,allButtons,label}: FocusedProps<FSt
 const reasonIsAllowanceGuard = state.focusOn('reason').optJson();
   return <>
     <LabelAndNumberInput id={`${id}.amount`} state={state.focusOn('amount')} mode={mode} label='Amount' allButtons={allButtons} required={true} min={200} />
+    <LabelAndNumberInput id={`${id}.otherAmount`} state={state.focusOn('otherAmount')} mode={mode} label='Other Amount' allButtons={allButtons} required={true} min={200} />
     <LabelAndDateInput id={`${id}.collectionDate`} state={state.focusOn('collectionDate')} mode={mode} label='Collection Date' allButtons={allButtons} />
-    <LabelAndDropdown id={`${id}.reason`} state={state.focusOn('reason')} mode={mode} label='Reason' allButtons={allButtons} enums={{"":"Select...","A":"Allowance","O":"Overpayment"}} />
+    <LabelAndDropdown id={`${id}.reason`} state={state.focusOn('reason')} mode={mode} label='Reason' allButtons={allButtons} enums={{"A":"Allowance","O":"Overpayment"}} required={true} pleaseSelect='Seect...' />
     <Guard value={reasonIsAllowanceGuard} cond={["A"]}><LabelAndNumberInput id={`${id}.allowance`} state={state.focusOn('allowance')} mode={mode} label='Allowance' allButtons={allButtons} required={true} readonly={true} /></Guard>
     <Guard value={reasonIsAllowanceGuard} cond={["A"]}><LabelAndDropdown id={`${id}.period`} state={state.focusOn('period')} mode={mode} label='Period' allButtons={allButtons} enums={{"Monthly":"Monthly","Yearly":"Yearly"}} readonly={true} /></Guard>
 </>
 }
 
 export function LinkedAccountDetailsDisplay({id,state,mode,allButtons,label}: FocusedProps<FState, LinkedAccountDetailsDisplayDomain,Context>){
-  return <Layout details='[[1]]'>
+  return <Layout details='[[1]]' displayAsCards={true}>
     <Mandate id={`${id}.mandate`} state={state.focusOn('mandate')} mode={mode} label='Mandate' allButtons={allButtons} />
     <CollectionSummary id={`${id}.collectionSummary`} state={state.focusOn('collectionSummary')} mode={mode} label='Collection Summary' allButtons={allButtons} />
     <Table id={`${id}.collectionHistory`} state={state.focusOn('collectionHistory')} mode={mode} order={["collectionDate","amount","status"]} copySelectedIndexTo={pageState(state)<any>().focusOn('selectedCollectionIndex')} copySelectedItemTo={pageState(state)<any>().focusOn('selectedCollectionItem')} />

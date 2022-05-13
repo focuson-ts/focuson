@@ -85,6 +85,9 @@ export interface NameAnd<T> {
 export function sortedEntries<T> ( a: NameAnd<T> | undefined ): [ string, T ][] {
   return a ? Object.entries ( a ).sort ( ( [ n1, v1 ], [ n2, v2 ] ) => n1.localeCompare ( n2 ) ) : []
 }
+export function unsortedEntries<T> ( a: NameAnd<T> | undefined ): [ string, T ][] {
+  return a ? Object.entries ( a ) : []
+}
 
 export function findJoiner ( name: string, joiners: undefined | string | string[] ) {
   if ( joiners === undefined ) return ','

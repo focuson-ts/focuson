@@ -23,10 +23,10 @@ import {ValidationButton} from '@focuson/form_components';
 export function CreatePaymentPage(){
   return focusedPage<FState, CreatePaymentDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
      ( state, d, mode, index ) => {
-          const reasonHasBeenSelectedGuard =  pageState(state)<domain.LinkedAccountDetailsPageDomain>().focusOn('createPayment').focusOn('reason').optJson() !== "";
+          const amountEnoughGuard =  pageState(state)<domain.LinkedAccountDetailsPageDomain>().focusOn('createPayment').focusOn('otherAmount').optJsonOr(Number.MAX_VALUE) <  pageState(state)<domain.LinkedAccountDetailsPageDomain>().focusOn('createPayment').focusOn('amount').optJsonOr(Number.MIN_VALUE);
           const id=`page${index}`;
-          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} text={undefined}state={state} />,
-              commit:<ModalCommitButton id={`${id}.commit`} enabledBy={reasonHasBeenSelectedGuard}   state={state} />,
+          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} />,
+              commit:<ModalCommitButton id={`${id}.commit`} enabledBy={amountEnoughGuard}   state={state} />,
               overpaymentHistory:<ModalButton id={`${id}.overpaymentHistory`} text='overpaymentHistory'  state={state} modal = 'OverpaymentModalPage'  
                 pageMode='view'
                 focusOn='~/overpayment'

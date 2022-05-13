@@ -44,6 +44,7 @@
 |EAccountsSummary|eAccountsSummary | /api/accountsSummary?{query}| accountId,applRef,brandRef,clientRef,customerId,employeeType | employeeType in teamLeader | state:invalidate->auditStuff
 |EAccountsSummary| | /api/accountsSummary/invalidate?{query}| accountId,applRef,brandRef,clientRef,customerId,employeeType |
 |ETransfer|eTransfer | /api/eTransfers?{query}| customerId |  | 
+|ETransfer|holidays | /api/holidays|  |  | 
 |CreateEAccount|eTransfer | /api/createEAccount/?{query}| accountId,applRef,brandRef,clientRef,createPlanId |  | 
 |ChequeCreditbooks|chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,clientRef |  | create->auditCreateCheckBook; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
 |ChequeCreditbooks| | /api/chequeCreditBooks/cancel?{query}| accountId,applRef,brandRef,clientRef |
@@ -73,6 +74,7 @@
     AccountDetailsForListOfPayments
     CurrentPaymentCounts
     ListOfPayments
+    NewBankDetails
     PrintRecordHistory
     PrintRecordItem
     RequesterDetails
@@ -101,6 +103,7 @@
   ## guards  
   | PrintRecordItem|requestedBy|alreadyPrinted
   | --- | --- | --- 
+  authorisedByCustomer|N| 
   
 
 ---
@@ -415,10 +418,13 @@
 |customerId|customerId
   ## domains 
     ETransferDataD
+    HolidayData
+    SingleHoliday
   ## rests   
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
     |eTransfer | /api/eTransfers?{query}| customerId |  | 
+    |holidays | /api/holidays|  |  | 
   ## display 
     ETransferDataD
   ## buttons 

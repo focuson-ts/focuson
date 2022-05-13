@@ -2,7 +2,7 @@ import { AllDataDD, CompDataD, CompDataDD, DisplayParamDD, HasGuards, HasLayout,
 import { commonParams, commonParamsWithLabel, DisplayCompD, OneDisplayCompParamD, SimpleDisplayComp } from "../common/componentsD";
 import { dataDsIn, isMainPage, isModalPage, MainPageD, PageD } from "../common/pageD";
 
-import { decamelize, NameAnd, sortedEntries } from "@focuson/utils";
+import { decamelize, NameAnd, sortedEntries, unsortedEntries } from "@focuson/utils";
 import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, optionalsFileName, optionalsName, pageComponentName, pageDomainName } from "./names";
 import { addButtonsFromVariables, MakeButton, makeButtonsVariable, makeGuardButtonVariables } from "./makeButtons";
 import { focusOnFor, indentList, noExtension } from "./codegen";
@@ -176,7 +176,7 @@ function makeLayoutPrefixPostFix<B, G> ( mainPage: MainPageD<B, G>, page: PageD<
 }
 function makeGuardVariables<B, G extends GuardWithCondition> ( hasGuards: HasGuards<G>, makeGuard: MakeGuard<G>, params: TSParams, mainP: MainPageD<B, G>, page: PageD<B, G> ): string[] {
   if ( hasGuards.guards === undefined ) return []
-  return sortedEntries ( hasGuards.guards ).map ( ( [ name, guard ] ) => {
+  return unsortedEntries ( hasGuards.guards ).map ( ( [ name, guard ] ) => {
     const maker = makeGuard[ guard.condition ]
     if ( !maker ) throw new Error ( `Don't know how to process guard with name ${name}: ${JSON.stringify ( guard )}` )
     return maker.makeGuardVariable ( params, mainP, page, name, guard )

@@ -33,11 +33,24 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
     accountDetails: { rest: accountAndAddressDetailsRD, fetcher: true, targetFromPath: '~/accountDetails' },
 
   },
-  guards: { canPrint: { condition: 'equals', value: false, path: '~/display[~/selected]/alreadyPrinted' } },
+  guards: {
+    canPrint: { condition: 'equals', value: false, path: '~/display[~/selected]/alreadyPrinted' },
+    hasStandingOrders: { condition: '>0', path: '~/display[~/selected]/listOfPayments/standingOrders/numberOfItems' },
+    hasOpenBankingStandingOrders: { condition: '>0', path: '~/display[~/selected]/listOfPayments/openBankingStandingOrders/numberOfItems' },
+    hasDirectDebits: { condition: '>0', path: '~/display[~/selected]/listOfPayments/directDebits/numberOfItems' },
+    hasBillPayments: { condition: '>0', path: '~/display[~/selected]/listOfPayments/billPayments/numberOfItems' },
+    hasOpenBanking: { condition: '>0', path: '~/display[~/selected]/listOfPayments/openBanking/numberOfItems' },
+    hasSomethingToPrint: { condition: 'or', conditions: [ 'hasStandingOrders', 'hasOpenBankingStandingOrders', 'hasDirectDebits', 'hasBillPayments', 'hasOpenBanking' ] }
+  },
   buttons: {
     prev: { control: 'ListPrevButton', list: '~/display', value: '~/selected' },
     next: { control: 'ListNextButton', list: '~/display', value: '~/selected' },
-    print: { control: 'RestButton', action: { state: 'print' }, restName: 'paymentHistory', enabledBy: 'canPrint', confirm: 'Really?', deleteOnSuccess: '~/display' },
+    print: {
+      control: 'RestButton', action: { state: 'print' }, restName: 'paymentHistory',
+      enabledBy: [ 'canPrint', 'hasSomethingToPrint' ],
+      confirm: 'Really?',
+      deleteOnSuccess: '~/display'
+    },
     add: {
       control: 'ModalButton', modal: EditlistOfPaymentsPagePD, mode: 'create',
       focusOn: '~/tempListOfPayments',

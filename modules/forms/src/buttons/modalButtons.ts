@@ -10,7 +10,6 @@ import { EnabledBy, enabledByString } from "./enabledBy";
 export interface CommonModalButtonInPage<G> extends EnabledBy {
   control: string;
   text?: string;
-  enabledBy?: string;
   modal: PageD<any, G>,
   mode: PageMode,
   pageParams?: PageParams,

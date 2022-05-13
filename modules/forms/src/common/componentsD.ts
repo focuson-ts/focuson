@@ -6,7 +6,7 @@ import { LensState } from "@focuson/state";
  * string and string[] are just the types
  *
  * */
-export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object'| 'json' | 'jsonWithDisplayFn'| 'string[]' | 'path' | 'pathValue' | 'objectAndRenderPrefix'
+export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'json' | 'jsonWithDisplayFn' | 'string[]' | 'path' | 'pathValue' | 'objectAndRenderPrefix'
 
 type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons' | 'defaultToLabel'
 
@@ -88,9 +88,9 @@ export const LabelAndDateInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndDateInput",
   params: {
     ...commonParamsWithLabel,
-    datesExcluded:{ paramType: 'path', needed: 'no'},
-    workingDaysInFuture:{ paramType: 'object', needed: 'no'},
-    includeWeekends: {paramType:'boolean', needed: 'no'}
+    datesExcluded: { paramType: 'path', needed: 'no' },
+    workingDaysInFuture: { paramType: 'object', needed: 'no' },
+    includeWeekends: { paramType: 'boolean', needed: 'no' }
   }
 }
 
@@ -129,12 +129,12 @@ export const SelectedItemCD: DisplayCompD = {
   }
 }
 export const LayoutCd: DisplayCompD = {
-  params: { 
-    details: { paramType: 'string', needed: 'yes' }, 
-    title: { paramType: 'string', needed: 'no' }, 
+  params: {
+    details: { paramType: 'string', needed: 'yes' },
+    title: { paramType: 'string', needed: 'no' },
     defaultProps: { paramType: 'string', needed: 'no' },
     displayAsCards: { paramType: 'boolean', needed: 'no' },
- },
+  },
   import: "@focuson/form_components",
   name: "Layout"
 }
@@ -168,7 +168,12 @@ export const OptionalCD: DisplayCompD = {
 export const LabelAndDropDownCD: DisplayCompD = {
   import: '@focuson/form_components',
   name: "LabelAndDropdown",
-  params: { ...commonParamsWithLabel, ...enumParams }
+  params: {
+    ...commonParamsWithLabel, ...enumParams,
+    pleaseSelect: { paramType: 'string', needed: 'no' },
+    size: { paramType: 'object', needed: 'no' },
+    required: { paramType: 'boolean', needed: 'no' },
+  }
 }
 
 export const LabelAndTextAreaCD: DisplayCompD = {

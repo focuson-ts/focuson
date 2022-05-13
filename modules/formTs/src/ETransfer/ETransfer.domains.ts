@@ -2,6 +2,7 @@ export interface HasETransferPageDomain {   ETransfer?: ETransferPageDomain}
 
 export interface ETransferPageDomain{
   fromApi?:ETransferDataDDomain;
+  holidays?:SingleHolidayDomain[];
 }
 
 export interface ETransferDataDDomain{
@@ -14,4 +15,10 @@ export interface ETransferDataDDomain{
   notes: string;
   toAccount: number;
   type: string;
+}
+
+export type HolidayDataDomain = SingleHolidayDomain[]
+
+export interface SingleHolidayDomain{
+  holiday: string;
 }

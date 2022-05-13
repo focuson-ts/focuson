@@ -33,6 +33,7 @@ export interface CreatePaymentDomain{
   allowance: number;
   amount: number;
   collectionDate: string;
+  otherAmount: number;
   period: string;
   reason: string;
 }

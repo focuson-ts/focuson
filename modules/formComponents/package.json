@@ -12,10 +12,10 @@
     ]
   },
   "dependencies": {
-    "@focuson/state": "1.9.4",
-    "@focuson/focuson": "1.9.4",
     "@types/react-datepicker": "^4.4.1",
-    "react-datepicker": "^4.7.0"
+    "react-datepicker": "^4.7.0",
+    "@focuson/state": "1.9.6",
+    "@focuson/focuson": "1.9.6"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -47,8 +47,9 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.9.4",
-  "template": "noreact",
+  "version": "1.9.6",
+  "template": "components",
+  "name": "@focuson/form_components",
   "description": "Components that can be used by @focuson/forms",
   "details": {
     "ideify": true,
@@ -61,6 +62,5 @@
     "extraDeps": {},
     "extraDevDeps": {},
     "tsc": true
-  },
-  "name": "@focuson/form_components"
+  }
 }

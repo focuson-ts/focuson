@@ -28,6 +28,7 @@ export const emptyCollectionSummary:domains.CollectionSummaryDomain =
 export const emptyCreatePayment:domains.CreatePaymentDomain =
   {
     "amount": 0,
+    "otherAmount": 0,
     "collectionDate": "2022-1-1",
     "reason": "",
     "allowance": 0,

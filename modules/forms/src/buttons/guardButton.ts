@@ -6,7 +6,7 @@ import { MainPageD, PageD } from "../common/pageD";
 import { TSParams } from "../codegen/config";
 
 
-export type AllGuards = LocalVariableGuard | LocalVariableMoreThanZero | LocalVariableLessThanLengthMinusOne | LocalVariableValueEquals<any> | LocalVariableDefined
+export type AllGuards = LocalVariableGuard | LocalVariableMoreThanZero | LocalVariableLessThanLengthMinusOne | LocalVariableValueEquals<any> | LocalVariableDefined | ALessThanB | BinaryCondition | AndOrCondition | NotCondition
 
 function errorPrefix ( mainP: PageD<any, any>, p: PageD<any, any>, name: string, guard: any ) {
   if ( mainP.name === p.name ) return `MakeGuardVariable for ${p.name} ${name} ${JSON.stringify ( guard )}`
@@ -28,12 +28,44 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
     makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableValueEquals<any> ) =>
       `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson() === ${guard.value};`
   },
+  'a<b': {
+    imports: [],
+    makeGuardVariable: ( params, mainP, page, name, guard: ALessThanB ) =>
+      `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.aPath )}.optJsonOr(Number.MAX_VALUE) <  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.bPath )}.optJsonOr(Number.MIN_VALUE);`
+  },
+  '<#': {
+    imports: [],
+    makeGuardVariable: ( params, mainP, page, name, guard: BinaryCondition ) =>
+      `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJsonOr(Number.MAX_VALUE) <  ${guard.value};`
+  },
+
+  '>#': {
+    imports: [],
+    makeGuardVariable: ( params, mainP, page, name, guard: BinaryCondition ) =>
+      `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJsonOr(Number.MIN_VALUE) > ${guard.value}`
+  },
 
   notEquals: {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableValueEquals<any> ) =>
-      `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson() !== ${JSON.stringify(guard.value)};`
+      `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson() !== ${JSON.stringify ( guard.value )};`
   },
+  or: {
+    imports: [],
+    makeGuardVariable: ( params, mainP, page, name, guard: AndOrCondition ) =>
+      `const ${guardName ( name )} =  ${guard.conditions.map ( c => c + 'Guard' ).join ( "||" )};`
+  },
+  and: {
+    imports: [],
+    makeGuardVariable: ( params, mainP, page, name, guard: AndOrCondition ) =>
+      `const ${guardName ( name )} =  ${guard.conditions.map ( c => c + 'Guard' ).join ( "&&" )};`
+  },
+  not: {
+    imports: [],
+    makeGuardVariable: ( params, mainP, page, name, guard: NotCondition ) =>
+      `const ${guardName ( name )} =  !${guard.cond}Guard';`
+  },
+
 
   ">0": {
     imports: [],
@@ -74,6 +106,27 @@ export interface LocalVariableValueEquals<T> {
   path: string;
   value: T
 }
+
+export interface AndOrCondition {
+  condition: 'or' | 'and';
+  conditions: string[]
+}
+export interface NotCondition {
+  condition: 'not';
+  cond: string
+}
+export interface ALessThanB {
+  condition: 'a<b'
+  aPath: string;
+  bPath: string;
+}
+export interface BinaryCondition {
+  condition: '<#' | '>#'
+  path: string;
+  value: number
+}
+
+
 export interface LocalVariableDefined {
   condition: 'isDefined';
   path: string;

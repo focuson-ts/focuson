@@ -16,7 +16,7 @@ export interface HasEnum {
 
 export function sampleFromDataD<G> ( o: OneDataDD<G> | undefined, d: AllDataDD<G> ): string[] {
   const fromO: string[] = safeArray ( isOneDataDDForPrim<any, any, G> ( o ) ? o?.sample : [] )
-  if (fromO.length>0) return fromO
+  if ( fromO.length > 0 ) return fromO
   return isPrimDd ( d ) ? [ ...safeArray<any> ( d.sample ).map ( ( t: any ) => t ), ...safeArray ( d.enum ? Object.keys ( d.enum ) : [] ) ] : []
 }
 
@@ -68,10 +68,10 @@ export interface CommonDataDD extends HasLayout {
   guard?: NameAnd<string[]>
 }
 
-export interface HasGuards<G>{
+export interface HasGuards<G> {
   guards?: Guards<G>;
 }
-export interface DataD<G> extends CommonDataDD ,HasGuards<G>{
+export interface DataD<G> extends CommonDataDD, HasGuards<G> {
   structure: ManyDataDD<G>;
   table?: DBTable;
   sealedBy?: string;
@@ -324,6 +324,15 @@ export const BooleanDD: PrimitiveDD = {
   display: LabelAndCheckboxInputCD,
   sample: [ true, false ]
 }
+
+export const YesNoDD: PrimitiveDD = {
+  ...StringDD,
+  display: LabelAndCheckboxInputCD,
+  displayParams: { pleaseSelect: 'Select...' },
+  enum: { N: 'No', Y: 'Yes' }
+}
+
+
 export const DateDD: StringPrimitiveDD = {
   ...stringPrimDD,
   name: 'Date',

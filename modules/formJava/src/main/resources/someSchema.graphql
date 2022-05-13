@@ -23,6 +23,7 @@ type Query{
   getOtherIncomeResponse(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):OtherIncomeResponse!
   getCreatePlan(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, createPlanId: String!):CreatePlan!
   getEAccountsSummary(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, customerId: String!, employeeType: String!):EAccountsSummary!
+  getSingleHoliday:[SingleHoliday!]!
   getCreateEAccountData(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!, createPlanId: String!):CreateEAccountData!
   getChequeCreditbooks(accountId: String!, applRef: String!, brandRef: String!, clientRef: String!):ChequeCreditbooks!
   getRepeatingLine(clientRef: String!):[RepeatingLine!]!
@@ -218,6 +219,7 @@ type CreateEAccountData{
 }
 type CreatePayment{
   amount: Int!
+  otherAmount: Int!
   collectionDate: String!
   reason: String!
   allowance: Int!
@@ -314,6 +316,19 @@ type Mandate{
   accountName: String!
   mandateRef: String!
 }
+type NewBankDetails{
+  title: String!
+  forename: String!
+  surname: String!
+  bank: String!
+  line1: String!
+  line2: String!
+  line3: String!
+  line4: String!
+  postcode: String!
+  sortCode: String!
+  accountNo: Int!
+}
 type OccupationAndIncomeFullDomain{
   mainCustomerName: String!
   jointCustomerName: String!
@@ -386,9 +401,11 @@ type PostCodeNameAndAddress{
 }
 type PrintRecordItem{
   requestedBy: String!
+  newBankDetails: NewBankDetails!
   listOfPayments: ListOfPayments!
   includeSingleAndInitialDirectDebits: Boolean!
   alreadyPrinted: Boolean!
+  authorisedByCustomer: String!
 }
 type RepeatingLine{
   name: String!
@@ -406,6 +423,9 @@ type RequesterDetails{
   postcode: String!
   phone: String!
   fax: String!
+}
+type SingleHoliday{
+  holiday: String!
 }
 type SinglePrint{
   shouldPrint: Boolean!
@@ -427,6 +447,7 @@ input CreateEAccountDataInp{
 }
 input CreatePaymentInp{
   amount: Int!
+  otherAmount: Int!
   collectionDate: String!
   reason: String!
   allowance: Int!

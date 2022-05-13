@@ -24,6 +24,8 @@ import {ToggleButton} from '@focuson/form_components';
 import {ValidationButton} from '@focuson/form_components';
 import {ETransferPageDomain} from "../ETransfer/ETransfer.domains";
 import {ETransferDataDDomain} from "../ETransfer/ETransfer.domains"
+import {HolidayDataDomain} from "../ETransfer/ETransfer.domains"
+import {SingleHolidayDomain} from "../ETransfer/ETransfer.domains"
 export function ETransferPage(){
    //A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/fromApi
   return focusedPageWithExtraState<FState, ETransferPageDomain, ETransferDataDDomain, Context> ( s => 'E Transfer' ) ( state => state.focusOn('fromApi')) (
@@ -46,9 +48,9 @@ const id=`page${index}`;
       </>})}
 
 export function ETransferDataD({id,state,mode,allButtons,label}: FocusedProps<FState, ETransferDataDDomain,Context>){
-  return <Layout details='[[1],[3,3],[1,1]]'>
+  return <Layout details='[[1],[3,3],[1,1]]' displayAsCards={true}>
     <LabelAndNumberInput id={`${id}.account`} state={state.focusOn('account')} mode={mode} label='Account Id' allButtons={allButtons} required={true} min={0} max={99999999} />
-    <LabelAndDateInput id={`${id}.dateOfETransfer`} state={state.focusOn('dateOfETransfer')} mode={mode} label='Date Of E Transfer' allButtons={allButtons} />
+    <LabelAndDateInput id={`${id}.dateOfETransfer`} state={state.focusOn('dateOfETransfer')} mode={mode} label='Date Of E Transfer' allButtons={allButtons} datesExcluded={pageState(state)<domain.ETransferPageDomain>().focusOn('holidays')} workingDaysInFuture={5} includeWeekends={true} />
     <LabelAndStringInput id={`${id}.description`} state={state.focusOn('description')} mode={mode} label='Description' allButtons={allButtons} required={true} />
     <LabelAndNumberInput id={`${id}.fromAccount`} state={state.focusOn('fromAccount')} mode={mode} label='From Account' allButtons={allButtons} required={true} min={10000000} max={99999999} />
     <LabelAndNumberInput id={`${id}.toAccount`} state={state.focusOn('toAccount')} mode={mode} label='To Account' allButtons={allButtons} required={true} min={10000000} max={99999999} />
@@ -57,4 +59,10 @@ export function ETransferDataD({id,state,mode,allButtons,label}: FocusedProps<FS
     <LabelAndNumberInput id={`${id}.balance`} state={state.focusOn('balance')} mode={mode} label='Balance' allButtons={allButtons} required={true} />
     <LabelAndStringInput id={`${id}.notes`} state={state.focusOn('notes')} mode={mode} label='Notes' allButtons={allButtons} required={true} />
 </Layout>
+}
+
+export function SingleHoliday({id,state,mode,allButtons,label}: FocusedProps<FState, SingleHolidayDomain,Context>){
+  return <>
+    <LabelAndDateInput id={`${id}.holiday`} state={state.focusOn('holiday')} mode={mode} label='Holiday' allButtons={allButtons} />
+</>
 }

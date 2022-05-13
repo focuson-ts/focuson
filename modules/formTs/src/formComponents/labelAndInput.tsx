@@ -1,5 +1,5 @@
 import { BooleanValidations, CommonStateProps, NumberValidations, StringValidations } from "./common";
-import { Input, } from "./input";
+import { BooleanInput, cleanInputProps, Input, } from "./input";
 import { Label } from "./label";
 import { BooleanTransformer, NumberTransformer, StringTransformer } from "./transformers";
 import { NameAnd, safeArray } from "@focuson/utils";
@@ -32,6 +32,14 @@ const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> ) =>
     return < div className='labelValueButton'> {label}{input}{makeButtons ( props.allButtons, props.buttons )}</div>
   }
 
+export function LabelAndBooleanInput<S, Context extends FocusOnContext<S>> ( props: LabelAndInputProps<S, boolean, Context> ) {
+  const { state, mode, readonly } = props
+  const label = <Label state={props.state} htmlFor={props.name} label={props.label}/>;
+  const input = <BooleanInput {...props}/>
+  return < div className='labelValueButton'> {label}{input}{makeButtons ( props.allButtons, props.buttons )}</div>
+}
+
+
 export const LabelAndStringInput = LabelAndTInput<string, StringValidations> ( StringTransformer )
 export const LabelAndNumberInput = LabelAndTInput<number, NumberValidations> ( NumberTransformer )
-export const LabelAndBooleanInput = LabelAndTInput<boolean, BooleanValidations> ( BooleanTransformer )
+

@@ -22,6 +22,7 @@ import { DropdownsFetcher } from './OccupationAndIncomeSummary/OccupationAndInco
 import { OccupationAndIncomeFullDomainFetcher } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.fetchers';
 import { OtherIncomeResponseFetcher } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.fetchers';
 import { EAccountsSummaryFetcher } from './EAccountsSummary/EAccountsSummary.fetchers';
+import { HolidayDataFetcher } from './ETransfer/ETransfer.fetchers';
 import { ChequeCreditbooksFetcher } from './ChequeCreditbooks/ChequeCreditbooks.fetchers';
 import { RepeatingWholeDataFetcher } from './Repeating/Repeating.fetchers';
 import { PostCodeSearchResponseFetcher } from './PostCodeMainPage/PostCodeMainPage.fetchers';
@@ -57,6 +58,7 @@ fetchers: [
     OccupationAndIncomeFullDomainFetcher( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ),
     OtherIncomeResponseFetcher( identityL.focusQuery ( 'OccupationAndIncomeSummary' ), commonIds ),
     EAccountsSummaryFetcher( identityL.focusQuery ( 'EAccountsSummary' ), commonIds ),
+    HolidayDataFetcher( identityL.focusQuery ( 'ETransfer' ), commonIds ),
     ChequeCreditbooksFetcher( identityL.focusQuery ( 'ChequeCreditbooks' ), commonIds ),
     RepeatingWholeDataFetcher( identityL.focusQuery ( 'Repeating' ), commonIds ),
     PostCodeSearchResponseFetcher( identityL.focusQuery ( 'PostCodeMainPage' ), commonIds )

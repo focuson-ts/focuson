@@ -12,3 +12,13 @@ export const emptyETransferDataD:domains.ETransferDataDDomain =
     "balance": 0,
     "notes": ""
   }
+export const emptyHolidayData:domains.HolidayDataDomain =
+  [
+    {
+      "holiday": "2022-1-1"
+    }
+  ]
+export const emptySingleHoliday:domains.SingleHolidayDomain =
+  {
+    "holiday": "2022-1-1"
+  }

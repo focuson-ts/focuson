@@ -7,7 +7,8 @@ export const paymentReasonDD: StringPrimitiveDD = {
   name: 'PaymentReason',
   description: "An enum about why the payment is being mad",
   display: LabelAndDropDownCD,
-  enum: { '': 'Select...', 'A': 'Allowance', 'O': 'Overpayment' }
+  displayParams: { required: true, pleaseSelect: 'Seect...' },
+  enum: { 'A': 'Allowance', 'O': 'Overpayment' }
 }
 export const periodDD: StringPrimitiveDD = {
   ...OneLineStringDD,
@@ -115,6 +116,7 @@ export const CreatePaymentDD: ExampleDataD = {
   guards: { reasonIsAllowance: { condition: 'in', path: 'reason', values: paymentReasonDD.enum } },
   structure: {
     amount: { dataDD: MoneyDD, sample: [ 56657, 32834 ], displayParams: { min: 200 } },
+    otherAmount: { dataDD: MoneyDD, sample: [ 56657, 32834 ], displayParams: { min: 200 } },
     collectionDate: { dataDD: DateDD },
     reason: { dataDD: paymentReasonDD },
     allowance: { dataDD: MoneyDD, guard: { reasonIsAllowance: [ 'A' ] }, displayParams: { readonly: true } },

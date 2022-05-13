@@ -26,13 +26,9 @@ export const Input = <S, T extends any, P> ( tProps: TransformerProps<T> ) => {
   return <Props extends InputProps<S, T, Context> & P, Context> ( props: Props ) => {
     const { state, mode, id, name, ariaLabel, defaultValue, readonly } = props
     const onChange = ( transformer: ( s: string ) => T, e: React.ChangeEvent<HTMLInputElement> ) => {
-      console.log ( 'onChange', e )
-      console.log ( 'onChange - type', type )
-      console.log ( 'onChange-target', e.target )
-      console.log ( 'onChange-value', JSON.stringify(e.target.value) , typeof e.target.value)
       if ( type === 'checkbox' )//why the input type = checkbox is different... I have no idea!
       {
-        console.log('was boolean')
+        console.log ( 'was boolean' )
         let newValue = e.target.value === 'true' ? 'false' : 'true';
         state.setJson ( transformer ( newValue ), reasonFor ( 'Input', 'onChange', id ) );
       } else
@@ -42,7 +38,17 @@ export const Input = <S, T extends any, P> ( tProps: TransformerProps<T> ) => {
   }
 }
 
+export function BooleanInput<S, Context> ( props: InputProps<S, boolean, Context> ) {
+  const { state, mode, id, name, ariaLabel, defaultValue, readonly } = props
+  const onChange = ( e: React.ChangeEvent<HTMLInputElement> ) =>
+    state.setJson ( e.target.checked, reasonFor ( 'BooleanInput', 'onChange', id ) );
+  return <input type='checkbox' {...cleanInputProps ( props )}
+                checked={state.optJsonOr ( false )}
+                disabled={mode === 'view' || readonly}
+                onChange={( e ) => onChange ( e )}/>
+
+}
+
 export function StringInput<S, Context> ( props: InputProps<S, string, Context> & StringValidations ): JSX.Element {return Input<S, string, StringValidations> ( StringTransformer ) ( props )}
 export function NumberInput<S, Context> ( props: InputProps<S, number, Context> & NumberValidations ): JSX.Element {return Input<S, number, NumberValidations> ( NumberTransformer ) ( props )}
-export function BooleanInput<S, Context> ( props: InputProps<S, boolean, Context> & BooleanValidations ): JSX.Element {return Input<S, boolean, BooleanValidations> ( BooleanTransformer ) ( props )}
 
