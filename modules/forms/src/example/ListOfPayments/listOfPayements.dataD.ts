@@ -51,9 +51,9 @@ export const newBankDetailsDD: ExampleDataD = {
   description: 'Not really sure what is going on here',
   structure: {
     title: { dataDD: StringDD, sample: [ 'Mr', 'Mrs' ] },
-    forename: { dataDD: ReadOnlyStringDD, sample: [ 'Fred', 'Fredrica' ] },
-    surname: { dataDD: ReadOnlyStringDD, sample: [ 'Bloggs', 'Smith' ] },
-    bank: { dataDD: ReadOnlyStringDD, sample: [ 'Fred', 'Fredrica' ] },
+    forename: { dataDD: OneLineStringDD, sample: [ 'Fred', 'Fredrica' ] },
+    surname: { dataDD: OneLineStringDD, sample: [ 'Bloggs', 'Smith' ] },
+    bank: { dataDD: OneLineStringDD, sample: [ 'Fred', 'Fredrica' ] },
     line1: { dataDD: OneLineStringDD, sample: [ '4 Privet drive', '27 Throughput Lane' ] },
     line2: { dataDD: OneLineStringDD, sample: [ 'Little Whinging', 'Woodfield' ] },
     line3: { dataDD: OneLineStringDD, sample: [ 'Surrey', '' ], displayParams: { required: false } },
@@ -125,8 +125,7 @@ export const printRecordDD: ExampleDataD = {
         details: {
           M: { valuePath: '~/accountDetails/main/fullname', dataPath: '~/accountDetails/main', display: RequestDetailsDD.name },
           J: { valuePath: '~/accountDetails/joint/fullname', dataPath: '~/accountDetails/joint', display: RequestDetailsDD.name },
-          N: { value: 'New Bank' },
-
+          N: { value: 'New Bank', dataPath: 'newBankDetails', display: newBankDetailsDD.name },
         }
       },
       sample: [ 'M', 'J', 'N' ]

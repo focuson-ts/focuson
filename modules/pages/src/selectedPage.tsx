@@ -60,16 +60,23 @@ export function lensForPageDetails<S, D, Msgs, Config extends PageConfig<S, D, M
   }, mainPageD.namedOptionals ) )
 }
 export const fromPathFromRaw = <S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context extends PageSelectionContext<S>>
-( pageSelectionL: Optional<S, PageSelection[]>, pageDetails: MultiPageDetails<S, any> ) => ( s: S ) => ( path: string ): Optional<S, any> => {
+( pageSelectionL: Optional<S, PageSelection[]>, pageDetails: MultiPageDetails<S, any> ) => ( s: S, currentLens?: Optional<S, any> ) => {
   let selectedPageData: PageSelection[] = pageSelectionL.getOption ( s );
   if ( selectedPageData === undefined ) throw Error ( `Calling lensForPageDetailsFromRaw without a selected page\n ${JSON.stringify ( s )}` )
   const mainPageD: MainPageDetails<S, D, Msgs, Config, Context> = findMainPageDetails ( selectedPageData, pageDetails )
   // const currentPagePrefix = selectedPageData[ selectedPageData.length - 1 ].focusOn + "/"
-  const builder = lensBuilder<S> ( {
+  let prefixes: NameAndLens<S> = {
     '/': Lenses.identity (),
     '~': mainPageD.lens,
-  }, mainPageD.namedOptionals )
-  return parsePath ( path, builder );
+  };
+  if ( currentLens ) prefixes[ '' ] = currentLens
+  console.log ( 'currentLens', currentLens?.description )
+  console.log ( 'prefixes', prefixes )
+  const builder = lensBuilder<S> ( prefixes, mainPageD.namedOptionals )
+  return ( path: string ): Optional<S, any> => {
+    console.log ( 'prefixes', prefixes, 'path', path )
+    return parsePath ( path, builder );
+  }
 };
 
 

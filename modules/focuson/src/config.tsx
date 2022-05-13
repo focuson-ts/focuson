@@ -33,7 +33,7 @@ export interface HasPathToLens<S>{
 
 export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S> ,HasPathToLens<S>{
   commonIds: NameAndLens<S>;
-  pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>
+  pathToLens: ( s: S, currentLens?: Optional<S, any> ) => ( path: string ) => Optional<S, any>
 }
 export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSelection & HasRestCommands & HasSimpleMessages> ( pageDetails: MultiPageDetails<S, FocusOnContext<S>>, commonIds: NameAndLens<S> ):
   FocusOnContext<S> {

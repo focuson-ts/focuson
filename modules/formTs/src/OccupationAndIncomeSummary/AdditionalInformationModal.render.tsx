@@ -21,7 +21,7 @@ import {RestButton} from '@focuson/form_components';
 import {ToggleButton} from '@focuson/form_components';
 import {ValidationButton} from '@focuson/form_components';
 export function AdditionalInformationModalPage(){
-  return focusedPage<FState, AdditionalInformationDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
+  return focusedPage<FState, AdditionalInformationDomain, Context> ( s =>  'Additional Information Modal' ) (//If there is a compilation here have you added this to the 'domain' of the main page
      ( state, d, mode, index ) => {
           const id=`page${index}`;
           const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} />,

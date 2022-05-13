@@ -1,4 +1,4 @@
-import { LensProps } from "@focuson/state";
+import { LensProps, LensState } from "@focuson/state";
 import { NameAnd } from "@focuson/utils";
 import { FocusOnContext } from "@focuson/focuson";
 import { LabelAndDropdown } from "./labelAndDropdown";
@@ -13,6 +13,7 @@ export interface OneDropDownDetails<S, C> {
 }
 export interface DataDrivenFixedOptionDropDownAndDetailsProps<S> extends LensProps<S, string, FocusOnContext<S>> {
   id: string;
+  parentState: LensState<S, any, FocusOnContext<S>>;
   mode: PageMode;
   allButtons: NameAnd<JSX.Element>;
   label: string;
@@ -20,11 +21,13 @@ export interface DataDrivenFixedOptionDropDownAndDetailsProps<S> extends LensPro
 }
 
 function DropDownFromData<S> ( props: DataDrivenFixedOptionDropDownAndDetailsProps<S> ) {
-  const { state, id, details, label, mode, allButtons } = props
+  const { state, id, details, label, mode, allButtons,parentState } = props
   let s = state.main;
-  const pathToLens = state.context.pathToLens ( s )
+  console.log('DropDownFromData', state.optional)
+  const pathToLens = state.context.pathToLens ( s, parentState.optional )
   const values = Object.fromEntries ( Object.entries ( props.details ).map ( ( [ name, detail ] ) =>
     [ name, detail.value ? detail.value : detail.valuePath ? pathToLens ( detail.valuePath ).getOption ( s ) : '' ] ) )
+  console.log('DropDownFromData ended', parentState.optional)
   return <LabelAndDropdown label={label} enums={values} mode={mode} allButtons={allButtons} state={state} id={id}/>
 }
 
@@ -39,9 +42,9 @@ function TwoColRow ( { children }: TwoElements ) {
 }
 
 function DetailsFromData<S> ( props: DataDrivenFixedOptionDropDownAndDetailsProps<S> ) {
-  const { state, id, details, label, mode, allButtons } = props
+  const { state, id, details, label, mode, allButtons,parentState } = props
   let s = state.main;
-  const pathToLens = state.context.pathToLens ( s )
+  const pathToLens = state.context.pathToLens ( s, parentState.optional )
   const value = props.state.optJson ()
 
   const d = value === undefined ? undefined : details[ value ]

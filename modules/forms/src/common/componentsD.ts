@@ -8,7 +8,7 @@ import { LensState } from "@focuson/state";
  * */
 export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'json' | 'jsonWithDisplayFn' | 'string[]' | 'path' | 'pathValue' | 'objectAndRenderPrefix'
 
-type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons' | 'defaultToLabel'
+type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons' | 'defaultToLabel' |'defaultToParentState'
 
 export interface OneDisplayCompParamD<T> {
   paramType: DisplayCompParamType;
@@ -99,7 +99,8 @@ export const DataDrivenFixedOptionDropDownAndDetailsCD: DisplayCompD = {
   import: "@focuson/form_components", name: "DataDrivenFixedOptionDropDownAndDetails",
   params: {
     ...commonParamsWithLabel,
-    details: { paramType: "jsonWithDisplayFn", needed: 'yes' }
+    details: { paramType: "jsonWithDisplayFn", needed: 'yes' },
+    parentState: {paramType: 'object', needed: 'defaultToParentState'}
   }
 }
 //The data about to use a react component.

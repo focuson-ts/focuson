@@ -21,7 +21,7 @@ import {RestButton} from '@focuson/form_components';
 import {ToggleButton} from '@focuson/form_components';
 import {ValidationButton} from '@focuson/form_components';
 export function CreatePaymentPage(){
-  return focusedPage<FState, CreatePaymentDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
+  return focusedPage<FState, CreatePaymentDomain, Context> ( s =>  'Create Payment' ) (//If there is a compilation here have you added this to the 'domain' of the main page
      ( state, d, mode, index ) => {
           const amountEnoughGuard =  pageState(state)<domain.LinkedAccountDetailsPageDomain>().focusOn('createPayment').focusOn('otherAmount').optJsonOr(Number.MAX_VALUE) <  pageState(state)<domain.LinkedAccountDetailsPageDomain>().focusOn('createPayment').focusOn('amount').optJsonOr(Number.MIN_VALUE);
           const id=`page${index}`;

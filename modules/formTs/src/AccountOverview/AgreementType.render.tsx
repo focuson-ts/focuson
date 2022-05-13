@@ -21,7 +21,7 @@ import {RestButton} from '@focuson/form_components';
 import {ToggleButton} from '@focuson/form_components';
 import {ValidationButton} from '@focuson/form_components';
 export function AgreementTypePage(){
-  return focusedPage<FState, AccountOverviewAgreementTypeDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
+  return focusedPage<FState, AccountOverviewAgreementTypeDomain, Context> ( s =>  'Agreement Type' ) (//If there is a compilation here have you added this to the 'domain' of the main page
      ( state, d, mode, index ) => {
           const id=`page${index}`;
           const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} />,

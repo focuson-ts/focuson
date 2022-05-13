@@ -21,7 +21,7 @@ import {RestButton} from '@focuson/form_components';
 import {ToggleButton} from '@focuson/form_components';
 import {ValidationButton} from '@focuson/form_components';
 export function AccountFlagsPage(){
-  return focusedPage<FState, AccountAllFlagsDomain, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page
+  return focusedPage<FState, AccountAllFlagsDomain, Context> ( s =>  'Account Flags' ) (//If there is a compilation here have you added this to the 'domain' of the main page
      ( state, d, mode, index ) => {
           const id=`page${index}`;
           const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} />,

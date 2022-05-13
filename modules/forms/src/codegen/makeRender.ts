@@ -28,7 +28,7 @@ function componentDataForRootPage<G> ( d: CompDataD<G> ): ComponentData<G> {
 
 }
 function componentDataForPage<G> ( oneDataD: OneDataDD<G>, d: CompDataD<G> ): ComponentData<G> {
-  return { ...componentDataForRootPage ( d ), guard: oneDataD.guard }
+  return { ...componentDataForRootPage ( d ), guard: oneDataD.guard , hidden: oneDataD.hidden}
 
 }
 export interface ErrorComponentData {
@@ -126,6 +126,7 @@ function makeParams<B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params
     if ( param?.needed === 'defaultToPath' ) return [ [ name, processOneParam ( name, path ) ] ]
     if ( param?.needed === 'defaultToLabel' ) return [ [ name, processOneParam ( name, 'label' ) ] ]
     if ( param?.needed === 'defaultToButtons' ) return [ [ name, processOneParam ( name, 'allButtons' ) ] ]
+    if ( param?.needed === 'defaultToParentState' ) return [ [ name, processOneParam ( name, 'state' ) ] ]
 
     if ( param?.needed === 'id' ) {
       const dot = path.length > 0 ? '.' : ''
@@ -226,7 +227,7 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
   const guards = makeGuardVariables ( pageD, makeGuard, params, mainP, pageD )
   return [
     `export function ${pageComponentName ( pageD )}(){`,
-    `  return focusedPage<${params.stateName}, ${domName}, Context> ( s => '' ) (//If there is a compilation here have you added this to the 'domain' of the main page`,
+    `  return focusedPage<${params.stateName}, ${domName}, Context> ( s =>  '${decamelize ( pageD.name, ' ' )}' ) (//If there is a compilation here have you added this to the 'domain' of the main page`,
     `     ( state, d, mode, index ) => {`,
     ...(indentList ( indentList ( indentList ( indentList ( indentList ( [
       ...guards,
