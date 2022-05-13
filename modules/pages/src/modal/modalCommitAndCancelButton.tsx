@@ -40,7 +40,7 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
       const setToLengthOnCloseVariableL = fromPath ( toLengthOnClose?.variable )
       const setToLengthOnCloseTx: Transform<S, any>[] = [ [ setToLengthOnCloseVariableL, () => {
         let length = setToLengthOnCloseArrayL.getOption ( state.main )?.length;
-        console.log ( 'setToLengthOnCloseTx', 'array', setToLengthOnCloseArrayL.description, 'var', setToLengthOnCloseVariableL.description, length )
+        // console.log ( 'setToLengthOnCloseTx', 'array', setToLengthOnCloseArrayL.description, 'var', setToLengthOnCloseVariableL.description, length )
         return length;
       } ] ]
       return setToLengthOnCloseTx;

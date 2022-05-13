@@ -7,5 +7,8 @@ import { TagFetcherDebug } from "./tagFetcher";
 export interface HasFocusOnDebug {
   debug?: FocusOnDebug
 }
-export interface FocusOnDebug extends FetcherDebug, SelectedPageDebug,  RestDebug, TracingDebug, AccordionsInDebug, TagFetcherDebug {
+export interface GuardDebug {
+  guardDebug?: boolean
+}
+export interface FocusOnDebug extends FetcherDebug, SelectedPageDebug, RestDebug, TracingDebug, AccordionsInDebug, TagFetcherDebug, GuardDebug {
 }

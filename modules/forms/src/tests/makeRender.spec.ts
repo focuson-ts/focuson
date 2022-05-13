@@ -219,10 +219,10 @@ describe ( "makeComponentWithGuard", () => {
   it ( "should make guard variables in the order they were declared in", () => {
     expect ( createReactComponent ( paramsForTest, AllGuardCreator, OccupationAndIncomeSummaryPD, OccupationAndIncomeSummaryPD ) ( oneOccupationIncomeDetailsDD ).slice ( 0, 5 ).map ( r => r.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function OneOccupationIncomeDetails({id,state,mode,allButtons,label}: FocusedProps<FState, OneOccupationIncomeDetailsDomain,Context>){",
-      "const areYouGuard = state.focusOn('areYou').optJson();",
-      "const ownShareOfTheCompanyGuard = state.focusOn('ownShareOfTheCompany').optJson();",
-      "const owningSharesPctGuard = state.focusOn('owningSharesPct').optJson();",
-      "const employmentTypeGuard = state.focusOn('employmentType').optJson();"
+      "const guardDebug=state.main?.debug?.guardDebug",
+      "const areYouGuard = state.focusOn('areYou').optJson();if (guardDebug)console.log('OccupationAndIncomeSummary '+ id + '.areYou', areYouGuard);",
+      "const ownShareOfTheCompanyGuard = state.focusOn('ownShareOfTheCompany').optJson();if (guardDebug)console.log('OccupationAndIncomeSummary '+ id + '.ownShareOfTheCompany', ownShareOfTheCompanyGuard);",
+      "const owningSharesPctGuard = state.focusOn('owningSharesPct').optJson();if (guardDebug)console.log('OccupationAndIncomeSummary '+ id + '.owningSharesPct', owningSharesPctGuard);"
     ] )
   } )
 } )

@@ -23,7 +23,6 @@ function findValidityForSelect ( thisPage: Element, result: [ string, boolean ][
       let clazz = child.getAttribute ( 'class' );
       let recordedId = id ? id : "noIdForThisElement"
       let valid = !clazz.includes ( 'pleaseSelect' );
-      console.log ( 'findValidityForSelect', recordedId, child.value, !!child.value, child.selectedIndex, clazz, clazz, valid )
       result[ i ] = [ recordedId, valid ]
     }
   }
