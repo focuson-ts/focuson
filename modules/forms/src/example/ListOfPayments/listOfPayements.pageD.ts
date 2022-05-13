@@ -1,5 +1,5 @@
 import { NatNumDd } from "../commonEnums";
-import { AccountDetailsDD, CurrentPaymentCountsDD, printRecordDD, PrintRecordHistoryDD } from "./listOfPayements.dataD";
+import { AccountDetailsDD, addressSearchDD, CurrentPaymentCountsDD, printRecordDD, PrintRecordHistoryDD } from "./listOfPayements.dataD";
 import { accountAndAddressDetailsRD, CurrentPaymentCountsRD, PrintRecordHistoryRD } from "./listOfPayements.restD";
 import { ExampleMainPage, ExampleModalPage } from "../common";
 
@@ -7,6 +7,17 @@ export const EditlistOfPaymentsPagePD: ExampleModalPage = {
   pageType: 'ModalPage',
   name: 'EditListOfPayments',
   display: { target: '~/tempListOfPayments', dataDD: printRecordDD },
+  modes: [ 'edit' ],
+  buttons: {
+    cancel: { control: 'ModalCancelButton', text: 'back' },
+    commit: { control: 'ModalCommitButton', text: 'save' }
+  }
+}
+
+export const AddressModalPage: ExampleModalPage = {
+  pageType: 'ModalPage',
+  name: 'AddressModalPage',
+  display: { target: '~/address', dataDD: addressSearchDD },
   modes: [ 'edit' ],
   buttons: {
     cancel: { control: 'ModalCancelButton', text: 'back' },
@@ -23,8 +34,9 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
     selected: { dataDD: NatNumDd },
     currentPayments: { dataDD: CurrentPaymentCountsDD },
     accountDetails: { dataDD: AccountDetailsDD },
+    address: { dataDD: addressSearchDD },
   },
-  modals: [ { modal: EditlistOfPaymentsPagePD } ],
+  modals: [ { modal: EditlistOfPaymentsPagePD } , {modal: AddressModalPage}],
   modes: [ 'edit' ],
   initialValue: { selected: 0 },
   rest: {
@@ -64,6 +76,11 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
       ],
       setToLengthOnClose: { variable: '~/selected', array: '~/display' },
       copyOnClose: { to: '~/display[$append]' }
+    },
+    address: {
+      control: 'ModalButton', modal: AddressModalPage, mode: 'edit',
+      focusOn: '~/address',
+      createEmpty: addressSearchDD,
     }
   },
 }
