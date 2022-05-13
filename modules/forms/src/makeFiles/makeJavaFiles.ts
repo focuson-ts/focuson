@@ -1,7 +1,13 @@
 import { copyFile, copyFiles, DirectorySpec, templateFile, writeToFile } from "@focuson/files";
 import { JavaWiringParams } from "../codegen/config";
 import fs from "fs";
-import { forEachRest, forEachRestAndActions, mapRestAndResolver, unique } from "../common/restD";
+import {
+  forEachRest,
+  forEachRestAndActions,
+  mapRestAndResolver,
+  OneTableInsertSqlStrategyForNoIds,
+  unique
+} from "../common/restD";
 import { detailsLog, GenerateLogLevel, isRestStateChange, NameAnd, safeArray, safeString, sortedEntries } from "@focuson/utils";
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
@@ -13,13 +19,22 @@ import { makeMockFetcherFor, makeMockFetchersForRest } from "../codegen/makeMock
 import { makeJavaVariablesForGraphQlQuery } from "../codegen/makeGraphQlQuery";
 import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
 // import { findSqlRoot, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, walkRoots } from "../codegen/makeJavaSql.tsxxx";
-import { createTableSql, findSqlLinkDataFromRootAndDataD, findSqlRoot, generateGetSql, makeMapsForRest, walkSqlRoots } from "../codegen/makeSqlFromEntities";
+import {
+  createTableSql,
+  findSqlLinkDataFromRootAndDataD,
+  findSqlRoot,
+  generateGetSql,
+  makeInsertSqlForNoIds,
+  makeMapsForRest,
+  walkSqlRoots
+} from "../codegen/makeSqlFromEntities";
 import { makeDBFetchers } from "../codegen/makeDBFetchers";
 import { makePactValidation } from "../codegen/makePactValidation";
 import { AppConfig } from "../appConfig";
 import { makeStateChangeCode } from "../codegen/makeStateChangeCode";
 import { makeAudit } from "../codegen/makeAudit";
 import { makeAllJavaWiring, makeJavaFetcherInterfaceForResolver, makeJavaFetchersInterface } from "../codegen/makeJavaFetchersInterface";
+import {postCodeSearchTable} from "../example/database/tableNames";
 
 
 export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
@@ -155,6 +170,15 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
     writeToFile ( `${javaResourcesRoot}/data.sql`, () => dataSql )
   else
     fs.rmSync ( `${javaResourcesRoot}/data.sql`, { force: true } )
+
+  let insertSql = allMainPages ( pages ).flatMap ( mainPage =>
+    sortedEntries ( mainPage.rest )
+        .filter(( [ _, rdp ] ) => rdp.rest.strategy !== undefined)
+        .flatMap ( ( [ _, rdp ] ) => safeArray ( makeInsertSqlForNoIds(rdp.rest.dataDD, rdp.rest.strategy) ) ) );
+  if ( insertSql.length > 0 )
+    writeToFile ( `${javaResourcesRoot}/insertData.sql`, () => insertSql )
+  else
+    fs.rmSync ( `${javaResourcesRoot}/insertData.sql`, { force: true } )
 
   allMainPages ( pages ).forEach ( p => writeToFile ( `${javaTestRoot}/${providerPactClassName ( p )}.java`, () => makePactValidation ( params, appConfig.javaPort, p ) ) )
 

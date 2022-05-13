@@ -100,7 +100,9 @@ export const DataDrivenFixedOptionDropDownAndDetailsCD: DisplayCompD = {
   params: {
     ...commonParamsWithLabel,
     details: { paramType: "jsonWithDisplayFn", needed: 'yes' },
-    parentState: {paramType: 'object', needed: 'defaultToParentState'}
+    parentState: {paramType: 'object', needed: 'defaultToParentState'},
+    pleaseSelect: {paramType: 'string', needed: 'no'},
+
   }
 }
 //The data about to use a react component.

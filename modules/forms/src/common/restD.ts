@@ -1,7 +1,7 @@
 import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
 import { NameAnd, RestAction, safeArray, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction } from "../codegen/codegen";
-import { AccessDetails, AuditDetail, ResolverD, Schema } from "./resolverD";
+import {AccessDetails, AuditDetail, DBTable, ResolverD, Schema} from "./resolverD";
 import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 import { allMainPages, MainPageD, PageD, RestDefnInPageProperties } from "./pageD";
 import { getRestTypeDetails, RestActionDetail, StateAccessDetails } from "@focuson/rest";
@@ -66,6 +66,15 @@ export interface RestStateDetailsUsingStoredProcedure {
   url: string,
   useStoredProcedure: StoredProcedureForStateDetails
 }
+
+// export interface InsertSqlStrategy {
+//   type: string
+// }
+export interface OneTableInsertSqlStrategyForNoIds {
+  type: string
+  table: DBTable;
+}
+
 export function isRestStateDetailsUsingStoredProcedure ( r: RestStateDetails ): r is RestStateDetailsUsingStoredProcedure {
   // @ts-ignore
   return r.useStoredProcedure !== undefined
@@ -95,12 +104,23 @@ export interface RestD<G> {
   url: string,
   actions: RestAction[];
   resolver?: ResolverD;
+  /** @deprecated Replaced with ManualSqlStrategy */
   initialSql?: string[];
+  // strategy?: InsertSqlStrategy | InsertSqlStrategy[];
+  strategy?: OneTableInsertSqlStrategyForNoIds;
   tables?: EntityAndWhere;
   states?: NameAnd<RestStateDetails>;
   access?: AccessDetails[];
   audit?: AuditDetail[];
 }
+
+type InsertSqlStrategy = OneTableInsertSqlStrategyForNoIds | ManualSqlStrategy
+
+export interface ManualSqlStrategy {
+  type: "Manual"
+  sql: string[]
+}
+
 export interface EntityAndWhere {
   entity: MainEntity;
   where: WhereFromQuery[],

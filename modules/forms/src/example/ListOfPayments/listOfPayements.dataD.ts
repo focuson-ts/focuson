@@ -49,16 +49,17 @@ export const RequestDetailsDD: ExampleDataD = {
 export const newBankDetailsDD: ExampleDataD = {
   name: 'NewBankDetails',
   description: 'Not really sure what is going on here',
+  layout: { component: LayoutCd, displayParams: { details: '[[1,1,1], [1], [1], [1], [1], [1,1], [1,1]]' } },
   structure: {
     title: { dataDD: StringDD, sample: [ 'Mr', 'Mrs' ] },
     forename: { dataDD: OneLineStringDD, sample: [ 'Fred', 'Fredrica' ] },
     surname: { dataDD: OneLineStringDD, sample: [ 'Bloggs', 'Smith' ] },
-    bank: { dataDD: OneLineStringDD, sample: [ 'Fred', 'Fredrica' ] },
+    bank: { dataDD: OneLineStringDD, sample: [ 'Happy Bank', 'Sad Bank' ] },
     line1: { dataDD: OneLineStringDD, sample: [ '4 Privet drive', '27 Throughput Lane' ] },
     line2: { dataDD: OneLineStringDD, sample: [ 'Little Whinging', 'Woodfield' ] },
     line3: { dataDD: OneLineStringDD, sample: [ 'Surrey', '' ], displayParams: { required: false } },
     line4: { dataDD: OneLineStringDD, sample: [ 'England', 'Ireland' ] },
-    postcode: { dataDD: OneLineStringDD, sample: [ 'LW12 5f', 'IR45 3GT' ] },
+    postcode: { dataDD: OneLineStringDD, sample: [ 'LW12 5f', 'IR45 3GT' ], displayParams: { buttons: [ 'address' ] } },
     sortCode: { dataDD: OneLineStringDD, sample: [ '10-12-31', '34-43-23¶' ] },
     accountNo: { dataDD: AccountIdDD, sample: [100233, 345345 ] }
   }
@@ -107,6 +108,13 @@ export const CurrentPaymentCountsDD: ExampleDataD = {
     openBanking: { dataDD: NatNumDd, sample: [ 0, 1, 0 ] },
   }
 }
+export const addressSearchDD: ExampleDataD = {
+  name: 'AddressSearch',
+  description: 'Seraching for address by postcode',
+  structure: {
+    postcode: {dataDD: OneLineStringDD}
+  }
+}
 
 
 export const printRecordDD: ExampleDataD = {
@@ -122,6 +130,7 @@ export const printRecordDD: ExampleDataD = {
     requestedBy: {
       dataDD: { ...StringDD, display: DataDrivenFixedOptionDropDownAndDetailsCD },
       displayParams: {
+        pleaseSelect: 'Select...',
         details: {
           M: { valuePath: '~/accountDetails/main/fullname', dataPath: '~/accountDetails/main', display: RequestDetailsDD.name },
           J: { valuePath: '~/accountDetails/joint/fullname', dataPath: '~/accountDetails/joint', display: RequestDetailsDD.name },
