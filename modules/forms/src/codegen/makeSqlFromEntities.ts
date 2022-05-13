@@ -1,11 +1,19 @@
 import { DBTable } from "../common/resolverD";
 import { beforeAfterSeparator, beforeSeparator, ints, mapPathPlusInts, NameAnd, safeArray, safeString } from "@focuson/utils";
-import { AllLensRestParams, EntityAndWhere, RestParams, unique } from "../common/restD";
-import { CompDataD, emptyDataFlatMap, flatMapDD, isRepeatingDd } from "../common/dataD";
+import {
+  AllLensRestParams,
+  EntityAndWhere,
+  OneTableInsertSqlStrategyForNoIds,
+  RestParams,
+  unique
+} from "../common/restD";
+import {CompDataD, emptyDataFlatMap, flatMapDD, HasSample, isRepeatingDd, OneDataDD} from "../common/dataD";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addBrackets, addStringToEndOfAllButLast, indentList } from "./codegen";
 import { JavaWiringParams } from "./config";
 import { sqlListName, sqlMapName, sqlTafFieldName } from "./names";
+import {selectSample} from "./makeSample";
+import {InsertSqlStrategy} from "../../dist";
 
 export type DbValues = string | TableAndField
 
@@ -122,7 +130,8 @@ export interface SqlRoot {
 export function simplifySqlRoot ( s: SqlRoot ): string {
   return `main ${s.main.entity.table.name} path ${simplifyAliasAndChildEntityPath ( s.path )} root ${s.root.table.name} children [${s.children.map ( c => c.root.table.name ).join ( ',' )}] filterPath: ${s.filterPath}`
 }
-export function findSqlRoot ( m: EntityAndWhere ): SqlRoot {
+export function findSqlRoot ( m: EntityAndWhere | undefined): SqlRoot {
+  if (m === undefined) throw Error ("EntityAndWhere must be defined")
   return foldEntitys ( {
     foldMain ( childAccs: SqlRoot[][], main: EntityAndWhere, e: Entity ): SqlRoot[] {
       return [ { main, path: [], alias: main.entity.table.name, root: e, children: childAccs.flat () } ];
@@ -248,16 +257,16 @@ export function findWhereLinksForSqlRootGoingUp ( sqlRoot: SqlRoot ): WhereLink[
 }
 export const whereFieldToFieldDataFromTableWhereLink = <G> ( errorPrefix: string, name: string ): FieldData<G> => {
   const [ dbFieldName, theType ] = beforeAfterSeparator ( ":", name )
-  if ( theType === '' || theType === 'integer' ) return ({ dbFieldName, reactType: 'number', rsGetter: 'getInt', dbType: 'integer' })
-  if ( theType === 'string' ) return ({ dbFieldName, reactType: 'string', rsGetter: 'getString', dbType: 'varchar(255)' })
+  if ( theType === '' || theType === 'integer' ) return ({ dbFieldName, reactType: 'number', rsGetter: 'getInt', dbType: 'integer', sample: [] })
+  if ( theType === 'string' ) return ({ dbFieldName, reactType: 'string', rsGetter: 'getString', dbType: 'varchar(255)', sample: [] })
   throw Error ( `${errorPrefix} Cannot find whereFieldToFieldData for type [${theType}] in [${name}]` )
 };
 export const whereFieldToFieldDataFromTableQueryLink = <G> ( errorPrefix: string, w: WhereFromQuery, restParams: RestParams ): FieldData<G> => {
   const paramDetails = restParams[ w.paramName ]
   const dbFieldName = w.field
   if ( paramDetails === undefined ) throw Error ( `${errorPrefix}. Cannot find param in ${JSON.stringify ( w )}\nLegal values are ${Object.keys ( restParams )}` )
-  if ( paramDetails.javaType === 'String' ) return ({ dbFieldName, reactType: 'string', rsGetter: 'getString', dbType: 'varchar(255)' })
-  if ( paramDetails.javaType === 'int' ) return ({ dbFieldName, reactType: 'number', rsGetter: 'getInt', dbType: 'integer' })
+  if ( paramDetails.javaType === 'String' ) return ({ dbFieldName, reactType: 'string', rsGetter: 'getString', dbType: 'varchar(255)', sample: [] })
+  if ( paramDetails.javaType === 'int' ) return ({ dbFieldName, reactType: 'number', rsGetter: 'getInt', dbType: 'integer', sample: [] })
   throw Error ( `${errorPrefix} Cannot find whereFieldToFieldData for [${w.paramName}]  with java type [${paramDetails.javaType}] (paramDetails are ${JSON.stringify ( paramDetails )})` )
 };
 
@@ -272,7 +281,7 @@ export function findFieldsFromWhere<G> ( errorPrefix: string, ws: WhereLink[], r
   } )
 }
 
-interface FieldData<G> {
+interface FieldData<G> extends HasSample<any> {
   /** Can be undefined if only present in a where clause and needed for ids */
   fieldName?: string;
   path?: string[]
@@ -280,6 +289,7 @@ interface FieldData<G> {
   rsGetter: string;
   reactType: string;
   dbType: string;
+  sample?: string[]
 }
 interface TableAndFieldData<G> {
   table: DBTable;
@@ -301,14 +311,19 @@ export function findTableAndFieldFromDataD<G> ( dataD: CompDataD<G> ): TableAndF
     ...emptyDataFlatMap<TableAndFieldData<G>, any> (),
     walkPrim: ( path, parents, oneDataDD, dataDD ) => {
       const fieldName = path[ path.length - 1 ];
+      function selectSample ( oneDataDD: OneDataDD<G> ): string[] | undefined {
+        if ( oneDataDD.sample ) return oneDataDD.sample
+        return oneDataDD.dataDD.sample
+      }
+
       if ( oneDataDD?.db )
         if ( isTableAndField ( oneDataDD.db ) ) {
-          let fieldData: FieldData<any> = { dbFieldName: oneDataDD.db.field, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName, path };
+          let fieldData: FieldData<any> = { dbFieldName: oneDataDD.db.field, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName, path, sample: selectSample ( oneDataDD ) };
           return [ { table: oneDataDD.db.table, fieldData } ]
         } else {
           const parent = parents[ parents.length - 1 ]
           if ( !parent.table ) throw new Error ( `Have a field name [${oneDataDD.db} in ${path}], but there is no table in the parent ${parent.name}` )
-          let fieldData: FieldData<any> = { dbFieldName: oneDataDD.db, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName, path };
+          let fieldData: FieldData<any> = { dbFieldName: oneDataDD.db, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName, path, sample: selectSample ( oneDataDD ) };
           return [ { table: parent.table, fieldData: fieldData } ]
         }
       return []
@@ -616,4 +631,14 @@ export function findParamsForTable ( errorPrefix: string, params: RestParams, ta
     }
     return []
   } )
+}
+
+function sqlIfy ( a: any ): string {
+  return JSON.stringify ( a ).replace ( /"/g, "'" )
+}
+export function makeInsertSqlForNoIds ( dataD: CompDataD<any>, strategy: OneTableInsertSqlStrategyForNoIds ) {
+  const tafdsForThisTable: TableAndFieldData<any>[] = findTableAndFieldFromDataD ( dataD ).filter ( tafd => tafd.table.name === strategy.table.name );
+  const sampleCount = isRepeatingDd ( dataD ) ? (dataD.sampleCount ? dataD.sampleCount : 3) : 3
+  const is = [ ...Array ( sampleCount ).keys () ]
+  return is.map ( i => `insert into ${strategy.table.name}(${tafdsForThisTable.map ( fd => fd.fieldData.dbFieldName )}) values (${tafdsForThisTable.map ( fd => sqlIfy ( selectSample ( i, fd.fieldData ) ) ).join ( "," )});` )
 }

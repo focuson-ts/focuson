@@ -1,14 +1,55 @@
-import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findParamsForTable, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, JavaQueryParamDetails, makeMapsForRest, makeWhereClause, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldDataFromTableQueryLink, whereFieldToFieldDataFromTableWhereLink } from "../codegen/makeSqlFromEntities";
+import {
+  ChildEntity,
+  createTableSql,
+  EntityFolder,
+  findAliasAndTableLinksForLinkData,
+  findAllFields,
+  findAllTableAndFieldDatasIn,
+  findAllTableAndFieldsIn,
+  findFieldsFromWhere,
+  findParamsForTable,
+  findSqlLinkDataFromRootAndDataD,
+  findSqlRoot,
+  findTableAliasAndFieldFromDataD,
+  findTableAndFieldFromDataD,
+  findWhereLinksForSqlRoot,
+  findWhereLinksForSqlRootGoingUp,
+  foldEntitys,
+  generateGetSql,
+  JavaQueryParamDetails,
+  makeInsertSqlForNoIds,
+  makeMapsForRest,
+  makeWhereClause,
+  MultipleEntity,
+  simplifyAliasAndChildEntityPath,
+  simplifyAliasAndTables,
+  simplifySqlLinkData,
+  simplifySqlRoot,
+  simplifyTableAndFieldAndAliasDataArray,
+  simplifyTableAndFieldData,
+  simplifyTableAndFieldDataArray,
+  simplifyTableAndFieldsData,
+  simplifyWhereFromQuery,
+  simplifyWhereLinks,
+  SingleEntity,
+  walkSqlRoots,
+  whereFieldToFieldDataFromTableQueryLink,
+  whereFieldToFieldDataFromTableWhereLink
+} from "../codegen/makeSqlFromEntities";
 import { AllLensRestParams, EntityAndWhere, IntParam, StringParam, unique } from "../common/restD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
-import { nameAndAddressDataD, postCodeSearchResponseDD } from "../example/postCodeDemo/addressSearch.dataD";
-import { addressRestD } from "../example/postCodeDemo/addressSearch.restD";
+import {
+  nameAndAddressDataD,
+  postCodeDataLineD,
+  postCodeSearchResponseDD
+} from "../example/postCodeDemo/addressSearch.dataD";
+import {addressRestD, postcodeRestD} from "../example/postCodeDemo/addressSearch.restD";
 import { JointAccountPageD } from "../example/jointAccount/jointAccount.pageD";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
 import { paramsForTest } from "./paramsForTest";
 import { fromCommonIds } from "../example/commonIds";
-import { accountT } from "../example/database/tableNames";
+import {accountT, postCodeSearchTable} from "../example/database/tableNames";
 
 const jointAccountRestDTables = jointAccountRestD.tables
 if ( jointAccountRestDTables === undefined ) throw Error ( "addressRestDTables must be defined" )
@@ -18,6 +59,17 @@ const addressRestDParams = addressRestD.params
 if ( addressRestDTables === undefined ) throw Error ( "addressRestDTables must be defined" )
 
 
+describe ("Insert Queries", () => {
+  it ("should work for ______", () => {
+    expect (makeInsertSqlForNoIds(postCodeDataLineD, {type: 'OneTableInsertSqlStrategyForNoIds', table: postCodeSearchTable}))
+        .toEqual([
+          "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE) values ('4 Privet drive','Little Whinging','Surrey','England','LW12 5f');",
+          "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE) values ('27 Throughput Lane','Woodfield','','Ireland','IR45 3GT');",
+          "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE) values ('4 Privet drive','Little Whinging','Surrey','England','LW12 5f');"
+          ]
+        )
+  })
+})
 describe ( "EntityFolder", () => {
   it ( "should walk all the nodes", () => {
     const testFolder: EntityFolder<string[]> = {
@@ -89,13 +141,13 @@ describe ( "findWhereLinkDataForLinkData", () => {
 )
 describe ( "whereFieldToFieldData. Note that the undefined gets fixed later in the process", () => {
   it ( "should work with no type specified (defaulting to integer)", () => {
-    expect ( whereFieldToFieldDataFromTableWhereLink ( 'someErrorPrefix', 'someField' ) ).toEqual ( { "dbType": "integer", "dbFieldName": "someField", "reactType": "number", "rsGetter": "getInt" } )
+    expect ( whereFieldToFieldDataFromTableWhereLink ( 'someErrorPrefix', 'someField' ) ).toEqual ( { "dbType": "integer", "dbFieldName": "someField", "reactType": "number", "rsGetter": "getInt", "sample": []} )
   } )
   it ( "should work with string type specified", () => {
-    expect ( whereFieldToFieldDataFromTableWhereLink ( 'someErrorPrefix', 'someField:string' ) ).toEqual ( { "dbType": "varchar(255)", "dbFieldName": "someField", "reactType": "string", "rsGetter": "getString" } )
+    expect ( whereFieldToFieldDataFromTableWhereLink ( 'someErrorPrefix', 'someField:string' ) ).toEqual ( { "dbType": "varchar(255)", "dbFieldName": "someField", "reactType": "string", "rsGetter": "getString", "sample": [] } )
   } )
   it ( "should work with integer type specified ", () => {
-    expect ( whereFieldToFieldDataFromTableWhereLink ( 'someErrorPrefix', 'someField:integer' ) ).toEqual ( { "dbType": "integer", "dbFieldName": "someField", "reactType": "number", "rsGetter": "getInt" } )
+    expect ( whereFieldToFieldDataFromTableWhereLink ( 'someErrorPrefix', 'someField:integer' ) ).toEqual ( { "dbType": "integer", "dbFieldName": "someField", "reactType": "number", "rsGetter": "getInt", "sample": [] } )
   } )
 
   it ( "should work with where clauses - ints ", () => {
@@ -105,7 +157,8 @@ describe ( "whereFieldToFieldData. Note that the undefined gets fixed later in t
       "dbFieldName": "id",
       "dbType": "integer",
       "reactType": "number",
-      "rsGetter": "getInt"
+      "rsGetter": "getInt",
+      "sample": []
     } )
   } )
   it ( "should work with where clauses - strings ", () => {
@@ -115,7 +168,8 @@ describe ( "whereFieldToFieldData. Note that the undefined gets fixed later in t
       "dbFieldName": "id",
       "dbType": "varchar(255)",
       "reactType": "string",
-      "rsGetter": "getString"
+      "rsGetter": "getString",
+      "sample": []
     } )
   } )
 
