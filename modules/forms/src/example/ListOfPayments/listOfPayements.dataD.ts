@@ -130,6 +130,7 @@ export const printRecordDD: ExampleDataD = {
     requestedBy: {
       dataDD: { ...StringDD, display: DataDrivenFixedOptionDropDownAndDetailsCD },
       displayParams: {
+        pleaseSelect: 'Select...',
         details: {
           M: { valuePath: '~/accountDetails/main/fullname', dataPath: '~/accountDetails/main', display: RequestDetailsDD.name },
           J: { valuePath: '~/accountDetails/joint/fullname', dataPath: '~/accountDetails/joint', display: RequestDetailsDD.name },

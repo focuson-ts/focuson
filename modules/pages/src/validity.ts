@@ -3,13 +3,8 @@ import { createSimpleMessage, DateFn, safeArray } from "@focuson/utils";
 import { LensState, reasonFor } from "@focuson/state";
 import { HasSimpleMessageL } from "./simpleMessage";
 
-export function findValidityDetails ( pageHolderClass: string ): [ string, boolean ][] {
-  const allPages = document.getElementsByClassName ( pageHolderClass )
-  const thisPage = allPages.item ( allPages.length - 1 )
-  console.log ( 'thisPage', !!thisPage )
+function findValidityForInput ( thisPage: Element, result: [ string, boolean ][] ) {
   const inputs = thisPage?.getElementsByTagName ( "input" )
-  console.log ( 'inputs', inputs?.length )
-  const result: [ string, boolean ][] = []
   if ( inputs ) {
     for ( var i = 0; i < inputs.length; i++ ) {
       const child = inputs[ i ];
@@ -18,6 +13,27 @@ export function findValidityDetails ( pageHolderClass: string ): [ string, boole
       result[ i ] = [ recordedId, child.checkValidity () ]
     }
   }
+}
+function findValidityForSelect ( thisPage: Element, result: [ string, boolean ][] ) {
+  const selects = thisPage?.getElementsByTagName ( "select" )
+  if ( selects ) {
+    for ( var i = 0; i < selects.length; i++ ) {
+      const child = selects[ i ];
+      let id = child.getAttribute ( 'id' );
+      let clazz = child.getAttribute ( 'class' );
+      let recordedId = id ? id : "noIdForThisElement"
+      let valid = !clazz.includes ( 'pleaseSelect' );
+      console.log ( 'findValidityForSelect', recordedId, child.value, !!child.value, child.selectedIndex, clazz, clazz, valid )
+      result[ i ] = [ recordedId, valid ]
+    }
+  }
+}
+export function findValidityDetails ( pageHolderClass: string ): [ string, boolean ][] {
+  const allPages = document.getElementsByClassName ( pageHolderClass )
+  const thisPage: Element = allPages.item ( allPages.length - 1 )
+  const result: [ string, boolean ][] = []
+  findValidityForInput ( thisPage, result );
+  findValidityForSelect ( thisPage, result );
   return result
 }
 

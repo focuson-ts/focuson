@@ -72,6 +72,7 @@
 |accountId|accountId
   ## domains 
     AccountDetailsForListOfPayments
+    AddressSearch
     CurrentPaymentCounts
     ListOfPayments
     NewBankDetails
@@ -90,6 +91,7 @@
   |name|displayed with
   | --- | --- 
     | EditListOfPayments |PrintRecordItem
+    | AddressModalPage |AddressSearch
   ## display 
     PrintRecordHistory displayed using SelectedItem
   ## buttons 
@@ -97,6 +99,8 @@
       Copy from [{"from":"~/currentPayments/standingOrders","to":"~/tempListOfPayments/listOfPayments/standingOrders/numberOfItems"},{"from":"~/currentPayments/openBankingStandingOrders","to":"~/tempListOfPayments/listOfPayments/openBankingStandingOrders/numberOfItems"},{"from":"~/currentPayments/directDebits","to":"~/tempListOfPayments/listOfPayments/directDebits/numberOfItems"},{"from":"~/currentPayments/billPayments","to":"~/tempListOfPayments/listOfPayments/billPayments/numberOfItems"},{"from":"~/currentPayments/openBanking","to":"~/tempListOfPayments/listOfPayments/openBanking/numberOfItems"}]
       Focused on "~/tempListOfPayments"
       Copy on close {"to":"~/display[$append]"} 
+    Modal Button ==> AddressModalPage in mode edit
+      Focused on "~/address"
     next         ListNextButton
     prev         ListPrevButton
     print        RestButton

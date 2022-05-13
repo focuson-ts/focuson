@@ -20,12 +20,14 @@ export interface LabelAndDropdownProps<S, T, Context> extends CommonStateProps<S
 export function LabelAndDropdown<S, T, Context extends FocusOnContext<S>> ( props: LabelAndDropdownProps<S, string, Context> ) {
   const { enums, state, ariaLabel, id, mode, label, name, buttons, readonly, pleaseSelect, size, required } = props
   let selected = state.optJson ();
-  const selectedName = Object.entries ( enums ).filter ( ( [ value, name ] ) => selected && name === enums[ selected ] )
+  const hasValid = Object.keys ( enums ).includes ( selected )
+  const value = hasValid ? selected : undefined
+  const pleaseSelectClass = hasValid ? '' : ' pleaseSelect'
   return (<div className='labelDropdown'>
       <Label state={state} htmlFor={name} label={label}/>
-      <select className='dropdown' value={state.optJson ()} disabled={mode === 'view' || readonly} id={id} required={required} size={size} aria-label={ariaLabel} onChange={( e ) =>
+      <select className={`dropdown ${pleaseSelectClass}`} value={value} disabled={mode === 'view' || readonly} id={id} required={required} size={size} aria-label={ariaLabel} onChange={( e ) =>
         state.setJson ( e.target.value, reasonFor ( 'LabelAndDropdown', 'onChange', id ) )}>
-        {pleaseSelect ? <option disabled>{pleaseSelect}</option> : <></>}
+        {pleaseSelect && !hasValid && <option>{pleaseSelect}</option>}
         {
           Object.entries ( enums ).map ( ( [ value, name ], key ) => (
             <option key={key} value={value}>{name}</option>
