@@ -1,19 +1,12 @@
 import { DBTable } from "../common/resolverD";
 import { beforeAfterSeparator, beforeSeparator, ints, mapPathPlusInts, NameAnd, safeArray, safeString } from "@focuson/utils";
-import {
-  AllLensRestParams,
-  EntityAndWhere,
-  OneTableInsertSqlStrategyForNoIds,
-  RestParams,
-  unique
-} from "../common/restD";
-import {CompDataD, emptyDataFlatMap, flatMapDD, HasSample, isRepeatingDd, OneDataDD} from "../common/dataD";
+import { AllLensRestParams, EntityAndWhere, OneTableInsertSqlStrategyForNoIds, RestParams, unique } from "../common/restD";
+import { CompDataD, emptyDataFlatMap, flatMapDD, HasSample, isRepeatingDd, OneDataDD } from "../common/dataD";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addBrackets, addStringToEndOfAllButLast, indentList } from "./codegen";
 import { JavaWiringParams } from "./config";
 import { sqlListName, sqlMapName, sqlTafFieldName } from "./names";
-import {selectSample} from "./makeSample";
-import {InsertSqlStrategy} from "../../dist";
+import { selectSample } from "./makeSample";
 
 export type DbValues = string | TableAndField
 
