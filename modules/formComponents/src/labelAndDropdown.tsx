@@ -20,7 +20,7 @@ export interface LabelAndDropdownProps<S, T, Context> extends CommonStateProps<S
 export function LabelAndDropdown<S, T, Context extends FocusOnContext<S>> ( props: LabelAndDropdownProps<S, string, Context> ) {
   const { enums, state, ariaLabel, id, mode, label, name, buttons, readonly, pleaseSelect, size, required } = props
   let selected = state.optJson ();
-  const hasValid = Object.keys ( enums ).includes ( selected )
+  const hasValid = selected &&  Object.keys ( enums ).includes ( selected )
   const value = hasValid ? selected : undefined
   const pleaseSelectClass = hasValid ? '' : ' pleaseSelect'
   return (<div className='labelDropdown'>

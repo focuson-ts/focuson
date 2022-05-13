@@ -123,7 +123,7 @@ export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Deta
     const one: OneRestDetails<S, any, any, MSGS> = d[ name ]
 
     if ( debug ) console.log ( "restReq-onex", name, one )
-    if ( !one ) throw new Error ( `Cannot find page details for ${name} ${restAction}. Legal values are ${Object.keys ( d ).sort ()}` )
+    if ( !one ) throw new Error ( `Cannot find rest details for ${name} ${restAction}. Legal values are ${Object.keys ( d ).sort ()}` )
     try {
       let fdLens = one.fdLens;
       if ( debug ) {

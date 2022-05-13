@@ -64,19 +64,13 @@ export const fromPathFromRaw = <S, D, Msgs, Config extends PageConfig<S, D, Msgs
   let selectedPageData: PageSelection[] = pageSelectionL.getOption ( s );
   if ( selectedPageData === undefined ) throw Error ( `Calling lensForPageDetailsFromRaw without a selected page\n ${JSON.stringify ( s )}` )
   const mainPageD: MainPageDetails<S, D, Msgs, Config, Context> = findMainPageDetails ( selectedPageData, pageDetails )
-  // const currentPagePrefix = selectedPageData[ selectedPageData.length - 1 ].focusOn + "/"
   let prefixes: NameAndLens<S> = {
     '/': Lenses.identity (),
     '~': mainPageD.lens,
   };
   if ( currentLens ) prefixes[ '' ] = currentLens
-  console.log ( 'currentLens', currentLens?.description )
-  console.log ( 'prefixes', prefixes )
   const builder = lensBuilder<S> ( prefixes, mainPageD.namedOptionals )
-  return ( path: string ): Optional<S, any> => {
-    console.log ( 'prefixes', prefixes, 'path', path )
-    return parsePath ( path, builder );
-  }
+  return ( path: string ): Optional<S, any> => parsePath ( path, builder )
 };
 
 

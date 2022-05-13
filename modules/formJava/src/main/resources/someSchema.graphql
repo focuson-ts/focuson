@@ -3,6 +3,7 @@ type Query{
   getAccountDetailsForListOfPayments(accountId: String!):AccountDetailsForListOfPayments!
   getCurrentPaymentCounts(accountId: String!):CurrentPaymentCounts!
   getPrintRecordItem(accountId: String!):[PrintRecordItem!]!
+  getPostCodeDataLineForListOfPayments(dbName: String!, postcode: String!):[PostCodeDataLineForListOfPayments!]!
   getCollectionItem(accountId: String!, clientRef: String!):[CollectionItem!]!
   getCollectionSummary(accountId: String!, clientRef: String!):CollectionSummary!
   getOverpaymentPage(accountId: String!, clientRef: String!):OverpaymentPage!
@@ -391,6 +392,13 @@ type PostCodeDataLine{
   line4: String!
   postcode: String!
 }
+type PostCodeDataLineForListOfPayments{
+  line1: String!
+  line2: String!
+  line3: String!
+  line4: String!
+  postcode: String!
+}
 type PostCodeNameAndAddress{
   name: String!
   line1: String!
@@ -406,6 +414,7 @@ type PrintRecordItem{
   includeSingleAndInitialDirectDebits: Boolean!
   alreadyPrinted: Boolean!
   authorisedByCustomer: String!
+  datePrinted: String!
 }
 type RepeatingLine{
   name: String!

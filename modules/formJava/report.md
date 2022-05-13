@@ -3,10 +3,10 @@
 | Name | Location
 | --- | ---
 |accountId|accountId
+|dbName|dbName
 |clientRef|clientRef
 |applRef|applRef
 |brandRef|brandRef
-|dbName|dbName
 |createPlanId|createPlanId
 |customerId|customerId
 |employeeType|employeeType
@@ -18,6 +18,7 @@
 |ListOfPaymentsPage|currentPayments | /api/paymentcounts?{query}| accountId |  | 
 |ListOfPaymentsPage|paymentHistory | /api/printrecordhistory?{query}| accountId |  | 
 |ListOfPaymentsPage| | /api/print?{query}| accountId |
+|ListOfPaymentsPage|postcode | /api/listOfPayments/postCode?{query}| dbName,postcode |  | 
 |LinkedAccountDetails|collectionHistoryList | /api/collections/list?{query}| accountId,clientRef |  | 
 |LinkedAccountDetails|collectionSummary | /api/collections/summary?{query}| accountId,clientRef |  | 
 |LinkedAccountDetails|createPayment | /api/payment/create?{query}| accountId,clientRef,paymentId |  | create->auditCreate
@@ -70,12 +71,15 @@
 | Name | Location
 | --- | ---
 |accountId|accountId
+|dbName|dbName
   ## domains 
     AccountDetailsForListOfPayments
     AddressSearch
     CurrentPaymentCounts
     ListOfPayments
     NewBankDetails
+    PostCodeDataLineForListOfPayments
+    PostCodeSearchResponseForListOfPayments
     PrintRecordHistory
     PrintRecordItem
     RequesterDetails
@@ -87,6 +91,7 @@
     |currentPayments | /api/paymentcounts?{query}| accountId |  | 
     |paymentHistory | /api/printrecordhistory?{query}| accountId |  | 
     | | /api/print?{query}| accountId |
+    |postcode | /api/listOfPayments/postCode?{query}| dbName,postcode |  | 
   ## modals  
   |name|displayed with
   | --- | --- 
@@ -96,11 +101,13 @@
     PrintRecordHistory displayed using SelectedItem
   ## buttons 
     Modal Button ==> EditListOfPayments in mode create
-      Copy from [{"from":"~/currentPayments/standingOrders","to":"~/tempListOfPayments/listOfPayments/standingOrders/numberOfItems"},{"from":"~/currentPayments/openBankingStandingOrders","to":"~/tempListOfPayments/listOfPayments/openBankingStandingOrders/numberOfItems"},{"from":"~/currentPayments/directDebits","to":"~/tempListOfPayments/listOfPayments/directDebits/numberOfItems"},{"from":"~/currentPayments/billPayments","to":"~/tempListOfPayments/listOfPayments/billPayments/numberOfItems"},{"from":"~/currentPayments/openBanking","to":"~/tempListOfPayments/listOfPayments/openBanking/numberOfItems"}]
+      Copy from [{"from":"~/display[~/selected]"},{"from":"~/currentPayments/standingOrders","to":"~/tempListOfPayments/listOfPayments/standingOrders/numberOfItems"},{"from":"~/currentPayments/openBankingStandingOrders","to":"~/tempListOfPayments/listOfPayments/openBankingStandingOrders/numberOfItems"},{"from":"~/currentPayments/directDebits","to":"~/tempListOfPayments/listOfPayments/directDebits/numberOfItems"},{"from":"~/currentPayments/billPayments","to":"~/tempListOfPayments/listOfPayments/billPayments/numberOfItems"},{"from":"~/currentPayments/openBanking","to":"~/tempListOfPayments/listOfPayments/openBanking/numberOfItems"}]
       Focused on "~/tempListOfPayments"
       Copy on close {"to":"~/display[$append]"} 
-    Modal Button ==> AddressModalPage in mode edit
-      Focused on "~/address"
+    Modal Button ==> EditListOfPayments in mode edit
+      Copy from [{"from":"~/display[~/selected]"},{"from":"~/currentPayments/standingOrders","to":"~/tempListOfPayments/listOfPayments/standingOrders/numberOfItems"},{"from":"~/currentPayments/openBankingStandingOrders","to":"~/tempListOfPayments/listOfPayments/openBankingStandingOrders/numberOfItems"},{"from":"~/currentPayments/directDebits","to":"~/tempListOfPayments/listOfPayments/directDebits/numberOfItems"},{"from":"~/currentPayments/billPayments","to":"~/tempListOfPayments/listOfPayments/billPayments/numberOfItems"},{"from":"~/currentPayments/openBanking","to":"~/tempListOfPayments/listOfPayments/openBanking/numberOfItems"}]
+      Focused on "~/tempListOfPayments"
+      Copy on close {"to":"~/display[~/selected]"} 
     next         ListNextButton
     prev         ListPrevButton
     print        RestButton
@@ -108,6 +115,7 @@
   | PrintRecordItem|requestedBy|alreadyPrinted
   | --- | --- | --- 
   authorisedByCustomer|N| 
+  datePrinted| |true
   
 
 ---
@@ -552,7 +560,7 @@
     save         RestButton
     Modal Button ==> PostCodeSearch in mode edit
       Focused on "~/postcode"
-      Copy on close [{"from":"~/postcode/addressResults/line1","to":"~/main/line1"},{"from":"~/postcode/addressResults/line2","to":"~/main/line2"},{"from":"~/postcode/addressResults/line3","to":"~/main/line3"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/addressResults/postcode","to":"~/main/postcode"}] 
+      Copy on close [{"from":"~/postcode/addressResults/line1","to":"~/main/line1"},{"from":"~/postcode/addressResults/line2","to":"~/main/line2"},{"from":"~/postcode/addressResults/line3","to":"~/main/line3"},{"from":"~/postcode/addressResults/line4","to":"~/main/line4"},{"from":"~/postcode/addressResults/postcode","to":"~/main/postcode"}] 
   ## dataMapping
   ## Table POSTCODE (Schema TheSchema)
   |Display path | Database Field

@@ -1,12 +1,15 @@
 import { ButtonD } from "./allButtons";
-import { NameAnd } from "@focuson/utils";
+import { NameAnd, toArray } from "@focuson/utils";
 import { guardName } from "../codegen/names";
 import { stateQueryForGuards } from "../codegen/lens";
 import { MainPageD, PageD } from "../common/pageD";
 import { TSParams } from "../codegen/config";
+import { PageMode } from "@focuson/pages";
 
 
-export type AllGuards = LocalVariableGuard | LocalVariableMoreThanZero | LocalVariableLessThanLengthMinusOne | LocalVariableValueEquals<any> | LocalVariableDefined | ALessThanB | BinaryCondition | AndOrCondition | NotCondition
+export type AllGuards = LocalVariableGuard | LocalVariableMoreThanZero | LocalVariableLessThanLengthMinusOne |
+  LocalVariableValueEquals<any> | LocalVariableDefined | ALessThanB | BinaryCondition |
+  AndOrCondition | NotCondition | PageModeIs | ContainsGuard
 
 function errorPrefix ( mainP: PageD<any, any>, p: PageD<any, any>, name: string, guard: any ) {
   if ( mainP.name === p.name ) return `MakeGuardVariable for ${p.name} ${name} ${JSON.stringify ( guard )}`
@@ -65,8 +68,16 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
     makeGuardVariable: ( params, mainP, page, name, guard: NotCondition ) =>
       `const ${guardName ( name )} =  !${guard.cond}Guard';`
   },
-
-
+  pageModeIs: {
+    imports: [],
+    makeGuardVariable: ( params, mainP, page, name, guard: PageModeIs ) =>
+      `const ${guardName ( name )} =  ${JSON.stringify ( toArray ( guard.mode ) )}.includes(mode);`
+  },
+  "contains": {
+    imports: [],
+    makeGuardVariable: ( params, mainP, page, name, guard: ContainsGuard ) =>
+      `const ${guardName ( name )} =  ${JSON.stringify ( guard.values  )}.includes( ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJsonOr(''));`
+  },
   ">0": {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableMoreThanZero ) =>
@@ -97,6 +108,16 @@ export interface LocalVariableGuard {
   path: string,
   values: NameAnd<any> | undefined
 }
+export interface ContainsGuard{
+  condition: 'contains'
+  path: string,
+  values: string[]
+}
+export interface PageModeIs {
+  condition: 'pageModeIs'
+  mode: PageMode | PageMode[]
+}
+
 export interface LocalVariableMoreThanZero {
   condition: '>0'
   path: string
