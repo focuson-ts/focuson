@@ -1,11 +1,12 @@
 import { AllDataDD, CompDataD, compDataDIn } from "../common/dataD";
 import { MainPageD, ModalPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
-import { RestD, StoredProcedureForStateDetails } from "../common/restD";
+import { RestD, StoredProcedureMutation } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
 import { RestAction, safeString } from "@focuson/utils";
 import { JavaWiringParams, TSParams } from "./config";
 import { TableAndFieldAndAliasData } from "./makeSqlFromEntities";
 import { getRestTypeDetails, printRestAction, RestActionDetail, restActionForName } from "@focuson/rest";
+import { MutationDetail } from "../common/resolverD";
 
 export const guardName = ( s: string ) => s + "Guard"
 export const domainName = <G> ( d: CompDataD<G> ): string => d.name + "Domain";
@@ -59,8 +60,8 @@ export const fetcherVariableName = <G> ( params: JavaWiringParams, r: RestD<G>, 
 export const fetcherVariableNameForResolver = <G> ( params: JavaWiringParams, r: RestD<G>,resolverName: string ): string => `${restNameWithPrefix ( r )}_${resolverName}_${params.fetcherInterface}`;
 export const providerPactClassName = <B, G> ( pd: MainPageD<B, G> ): string => providerName ( pd ) + "Test";
 
-export const auditClassName = <B, G> ( r: RestD<G> ) => `${restNameWithPrefix ( r )}Audit`;
-export const auditMethodName = <B, G> ( r: RestD<G>, a: RestAction , sp: StoredProcedureForStateDetails) => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${sp.name}`;
+export const mutationClassName = <B, G> ( r: RestD<G> ) => `${restNameWithPrefix ( r )}Mutation`;
+export const mutationMethodName = <B, G> ( r: RestD<G>, a: RestAction , m: MutationDetail) => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${m.name}`;
 
 export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${safeString(r.namePrefix)}${r.dataDD.name}Queries`;
 

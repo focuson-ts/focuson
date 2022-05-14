@@ -12,7 +12,7 @@ export interface JavaWiringParams {
   queriesPackage: string,
   dbPackage: string,
   schema: string;
-  auditPackage: string;
+  mutatorPackage: string;
   defaultDbName: string
 }
 

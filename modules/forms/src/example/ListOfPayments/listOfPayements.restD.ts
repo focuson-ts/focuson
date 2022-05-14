@@ -16,7 +16,7 @@ export const PrintRecordHistoryRD: ExampleRestD = {
   url: '/api/printrecordhistory?{query}',
   actions: [ 'get', { state: 'print' } ],
   states: {
-    print: { url: '/api/print?{query}', useStoredProcedure: { name: 'print', params: [], schema: onlySchema } }
+    print: { url: '/api/print?{query}', params: [] }
   }
 }
 export const CurrentPaymentCountsRD: ExampleRestD = {

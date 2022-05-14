@@ -11,14 +11,15 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
   dataDD: ChequeCreditbooksDD,
   url: '/api/chequeCreditBooks?{query}', //or maybe accountId={accountId}&customerId={customerId}
   actions: [ 'get', 'create', { "state": 'cancel' }, { "state": 'revalidate' } ],
+
   states: {
-    cancel: { url: '/api/chequeCreditBooks/cancel?{query}', useStoredProcedure: { schema: onlySchema, name: 'cancelCheckBook', params: [ 'clientRef', 'accountId' ] } },
-    revalidate: { url: '/api/chequeCreditBooks/revalidate?{query}', useSql: { schema: onlySchema, sql: 'update something', params: [ 'clientRef', 'accountId' ] } }
+    cancel: { url: '/api/chequeCreditBooks/cancel?{query}', params: [ 'clientRef', 'accountId' ] },
+    revalidate: { url: '/api/chequeCreditBooks/revalidate?{query}', params: [ 'clientRef', 'accountId' ] }
   },
-  audit: [
-    { restAction: 'create', storedProcedure: { name: 'auditCreateCheckBook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
-    { restAction: 'get', storedProcedure: { name: 'auditGetCheckBook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
-    { restAction: { state: 'cancel' }, storedProcedure: { name: 'auditCancelCheckbook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
+  mutations: [
+    { restAction: 'create', mutateBy: { mutation: 'storedProc', name: 'auditCreateCheckBook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
+    { restAction: 'get', mutateBy: { mutation: 'storedProc', name: 'auditGetCheckBook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
+    { restAction: { state: 'cancel' }, mutateBy: { mutation: 'storedProc', name: 'auditCancelCheckbook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
   ]
 
 }

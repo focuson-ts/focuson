@@ -1,4 +1,4 @@
-import { makeAudit } from "../codegen/makeAudit";
+import { makeMutations } from "../codegen/makeMutations";
 import { paramsForTest } from "./paramsForTest";
 import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
@@ -6,7 +6,7 @@ import { eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.res
 
 describe ( "makeAudit", () => {
   it ( "should create an audit class with a method for each audit for that rest", () => {
-    expect ( makeAudit ( paramsForTest, EAccountsSummaryPD, eAccountsSummaryRestD ) ).toEqual ( [
+    expect ( makeMutations ( paramsForTest, EAccountsSummaryPD, eAccountsSummaryRestD ) ).toEqual ( [
       "package focuson.data.audit.EAccountsSummary;",
       "",
       "import org.springframework.beans.factory.annotation.Autowired;",

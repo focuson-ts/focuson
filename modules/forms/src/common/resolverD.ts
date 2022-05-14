@@ -1,7 +1,8 @@
 import { NameAnd, RestAction } from "@focuson/utils";
 import { OneDataDD } from "./dataD";
-import { StoredProcedureForStateDetails } from "./restD";
+import { flatMapRestAndResolver, RestD, SqlMutation, StoredProcedureMutation } from "./restD";
 import { deprecate } from "util";
+import { MainPageD } from "./pageD";
 
 export interface Schema {
   name: string
@@ -17,7 +18,7 @@ export interface DBTable {
   /** Any important comments or notes about this*/
   notes: string,
   /** How we audit the file */
-  audit: AuditDetails| AuditDetail[];
+  audit: AuditDetails| MutationsForRestAction[];
   /** How we access the file */
   access?: AccessDetails[];
 }
@@ -27,19 +28,29 @@ export interface AuditDetails {
   by: string
 }
 
-export function isAuditDetail(a: any): a is AuditDetail {
-  return a.restAction !== undefined
+export function isMutationsForRestAction( a: any): a is MutationsForRestAction {
+  return a.restAction !== undefined && a.mutateBy !== undefined
 }
 
-export interface AuditDetail{
+export interface MutationsForRestAction {
   restAction: RestAction;
-  storedProcedure: StoredProcedureForStateDetails | StoredProcedureForStateDetails[];
+  mutateBy: MutationDetail | MutationDetail[]
+}
+
+export type MutationDetail = StoredProcedureMutation | SqlMutation | ManualMutation
+
+export interface ManualMutation{
+  mutation: 'manual';
+  params: string[]
+  name: string;
+  code: string|string[]
 }
 
 export interface AccessDetails{
   restAction: RestAction;
   condition: AccessCondition | AccessCondition[]
 }
+
 export interface AccessCondition{
   type: 'in';
   param: string;

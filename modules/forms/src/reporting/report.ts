@@ -131,7 +131,7 @@ function accessDetails<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ): string {
   return safeArray ( rest.access ).flatMap ( a => toArray ( a.condition ).map ( c => `${c.param} ${c.type} ${c.values}` ) ).join ( "; " )
 }
 function auditDetails<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ): string {
-  return safeArray ( rest.audit ).flatMap ( a => `${printRestAction ( a.restAction )}->${toArray ( a.storedProcedure ).map ( s => s.name )}` ).join ( '; ' )
+  return safeArray ( rest.mutations ).flatMap ( a => `${printRestAction ( a.restAction )}->${toArray ( a.mutateBy ).map ( s => s.name )}` ).join ( '; ' )
 }
 
 export function makeRestReport<B, G> ( page: MainPageD<B, G>, info: ReportInfo ): ReportDetails {

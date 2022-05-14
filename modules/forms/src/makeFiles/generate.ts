@@ -43,7 +43,7 @@ export const params = {
   sampleClass: 'Sample',
   dbPackage: 'db',
   optionalsFile: 'optionals',
-  auditPackage:'audit'
+  mutatorPackage: 'mutator'
 };
 
 export const directorySpec: DirectorySpec = {
