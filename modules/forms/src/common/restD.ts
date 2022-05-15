@@ -1,7 +1,7 @@
 import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
 import { NameAnd, RestAction, safeArray, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction } from "../codegen/codegen";
-import { AccessDetails, DBTable, MutationsForRestAction, ResolverD, Schema } from "./resolverD";
+import { AccessDetails, DBTable, MutationsForRestAction, ResolverD } from "./resolverD";
 import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 import { allMainPages, MainPageD, PageD, RestDefnInPageProperties } from "./pageD";
 import { getRestTypeDetails, RestActionDetail } from "@focuson/rest";
@@ -54,40 +54,10 @@ export interface RestParams {
 export function postFixForEndpoint<G> ( restAction: RestAction ) {
   return '' //restAction === 'list' ? "/list" : ""
 }
-//  states: {
-//     invalidate: {url: '/api/accountsSummary/invalidate?{query}', useStoredProcedure: {  schema: onlySchema, name: 'sda', params: ['accountId', 'customerId']}}
-//   }
-export interface StoredProcedureMutation {
-  mutation: 'storedProc',
-  schema: Schema,
-  name: string,
-  params: string[]
-}
-export interface RestStateDetailsUsingStoredProcedure {
-  url: string,
-  useStoredProcedure: StoredProcedureMutation
-}
 
-// export interface InsertSqlStrategy {
-//   type: string
-// }
 export interface OneTableInsertSqlStrategyForNoIds {
   type: string
   table: DBTable;
-}
-
-export interface SqlMutation {
-  mutation: 'sql',
-  schema: Schema;
-  /**The name of the procedure that does this: should capture the intent of what this does */
-  name: string;
-  sql: string;
-  params: string[]
-
-}
-export interface RestStateDetailsUsingSql {
-  url: string,
-  useSql: SqlMutation
 }
 
 export interface RestStateDetails {

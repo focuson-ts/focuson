@@ -17,7 +17,17 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
     revalidate: { url: '/api/chequeCreditBooks/revalidate?{query}', params: [ 'clientRef', 'accountId' ] }
   },
   mutations: [
-    { restAction: 'create', mutateBy: { mutation: 'storedProc', name: 'auditCreateCheckBook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
+    {
+      restAction: 'create', mutateBy: [
+        {
+          mutation: 'storedProc', name: 'sequencename', params: [
+            { type: 'output', name: 'checkbookId', javaType: 'Integer', sqlType: 'INTEGER' },
+            { type: 'output', name: 'checkbookIdPart2', javaType: 'String', sqlType: 'CHAR' },
+          ], schema: onlySchema
+        },
+        // { mutation: 'IDFromSequence', name: 'sequencename', params: { type: 'output', name: 'checkbookId' }, schema: onlySchema },
+        { mutation: 'storedProc', name: 'auditCreateCheckBook', params: [ 'brandRef', 'accountId', 'checkbookId', 'checkbookIdPart2' ], schema: onlySchema } ]
+    },
     { restAction: 'get', mutateBy: { mutation: 'storedProc', name: 'auditGetCheckBook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
     { restAction: { state: 'cancel' }, mutateBy: { mutation: 'storedProc', name: 'auditCancelCheckbook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
   ]

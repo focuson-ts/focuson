@@ -13,7 +13,8 @@ export interface JavaWiringParams {
   dbPackage: string,
   schema: string;
   mutatorPackage: string;
-  defaultDbName: string
+  defaultDbName: string;
+  maxTuples: number
 }
 
 export interface TSParams {

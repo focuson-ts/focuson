@@ -43,6 +43,12 @@ export const defaultRestAction: RestTypeDetails = {
   'delete': { name: 'delete', method: 'DELETE', query: 'Mutation', params: { needsId: true }, output: { needsObj: false }, graphQPrefix: 'delete', graphQlPostfix: '' },
   'state': { name: 'state', method: 'POST', query: 'Mutation', params: { needsId: true }, output: { needsObj: false }, graphQPrefix: 'state', graphQlPostfix: '' },
 }
+export function restActionToDetails ( r: RestAction ): RestActionDetail {
+  if ( typeof r === 'string' ) return defaultRestAction[ r ]
+  if ( isRestStateChange ( r ) ) return defaultRestAction[ 'state' ]
+  throw Error ( `Don't know how to restActionToDetails(${JSON.stringify ( r )})` )
+}
+
 export function restActionToString ( r: RestAction ): string {
   return isRestStateChange ( r ) ? `state:${r.state}` : r
 }
@@ -159,7 +165,7 @@ const deleteAfterRest = <S> ( fromPath: ( path: string ) => Optional<S, any> ) =
   if ( restCommand.deleteOnSuccess === undefined ) return s
   return toArray ( restCommand.deleteOnSuccess ).reduce ( ( acc: S, path: string ) => fromPath ( path ).set ( acc, undefined ), s )
 };
-export function processAllRestResults<S, MSGS> ( messageL: Optional<S, MSGS[]>, restL: Optional<S, RestCommand[]>, pathToLens: (s: S) =>( path: string ) => Optional<S, any>, results: RestResult<S, MSGS, OneRestDetails<S, any, any, MSGS>>[], s: S ) {
+export function processAllRestResults<S, MSGS> ( messageL: Optional<S, MSGS[]>, restL: Optional<S, RestCommand[]>, pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>, results: RestResult<S, MSGS, OneRestDetails<S, any, any, MSGS>>[], s: S ) {
   const withResults: S = results.reduce ( processRestResult ( messageL ), s );
   const fromPath = pathToLens ( s )
   const withDeleteAfterRest: S = results.reduce ( ( acc, res ) =>
@@ -172,7 +178,7 @@ export async function rest<S, MSGS> (
   fetchFn: FetchFn,
   d: RestDetails<S, MSGS>,
   urlMutatorForRest: ( r: RestAction, url: string ) => string,
-  pathToLens: (s: S) => ( path: string ) => Optional<S, any>,
+  pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>,
   messageL: Optional<S, MSGS[]>,
   restL: Optional<S, RestCommand[]>,
   s: S ): Promise<S> {

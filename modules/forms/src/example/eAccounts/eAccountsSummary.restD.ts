@@ -20,7 +20,7 @@ export const eAccountsSummaryRestD: RestD<AllGuards> = {
     { restAction: { state: 'invalidate' }, condition: { type: 'in', param: 'employeeType', values: [ 'teamLeader' ] } }
   ],
   mutations: [
-    { restAction: { state: 'invalidate' }, mutateBy: { mutation: 'storedProc', name: 'auditStuff', params: [ 'accountId', 'clientRef' ], schema: onlySchema } }
+    { restAction: { state: 'invalidate' }, mutateBy: { mutation: 'storedProc', name: 'auditStuff', params: [ {type: 'string', value: 'someString'},'accountId', 'clientRef' ], schema: onlySchema } }
   ]
 }
 export const createPlanRestD: RestD<AllGuards> = {

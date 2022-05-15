@@ -21,7 +21,7 @@
 |ListOfPaymentsPage|postcode | /api/listOfPayments/postCode?{query}| dbName,postcode |  | 
 |LinkedAccountDetails|collectionHistoryList | /api/collections/list?{query}| accountId,clientRef |  | 
 |LinkedAccountDetails|collectionSummary | /api/collections/summary?{query}| accountId,clientRef |  | 
-|LinkedAccountDetails|createPayment | /api/payment/create?{query}| accountId,clientRef,paymentId |  | create->auditCreate
+|LinkedAccountDetails|createPayment | /api/payment/create?{query}| accountId,clientRef,paymentId |  | create->create,auditCreate
 |LinkedAccountDetails|overpaymentHistory | /api/payment/overpayment/history?{query}| accountId,clientRef |  | 
 |LinkedAccountDetails|payments | /api/payment?{query}| accountId,clientRef,paymentId |  | state:cancel->auditCancel; state:revalidate->auditrevalidate
 |LinkedAccountDetails| | /api/payment/cancel?{query}| accountId,clientRef,paymentId |
@@ -40,14 +40,14 @@
 |OccupationAndIncomeSummary|businessDetailsRD | /customer/occupation/v2/businessDetails?{query}| accountId,applRef,brandRef,clientRef |  | get->auditGetBusinessDetails
 |OccupationAndIncomeSummary|dropdownsRD | /customer/occupation/v2/occupationDetails?{query}|  |  | 
 |OccupationAndIncomeSummary|occupationAndIncomeRD | /customer/occupation/v2/occupationIncomeDetails?{query}| accountId,applRef,brandRef,clientRef |  | get->auditGetCustomerOccupation; update->auditUpdateCustomerOccupation
-|OccupationAndIncomeSummary|otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}| accountId,applRef,brandRef,clientRef |  | get->auditGetBusinessDetails
+|OccupationAndIncomeSummary|otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}| accountId,applRef,brandRef,clientRef |  | get->auditOtherIncome
 |EAccountsSummary|createPlanRestD | /api/createPlan?{query}| accountId,applRef,brandRef,clientRef,createPlanId |  | 
 |EAccountsSummary|eAccountsSummary | /api/accountsSummary?{query}| accountId,applRef,brandRef,clientRef,customerId,employeeType | employeeType in teamLeader | state:invalidate->auditStuff
 |EAccountsSummary| | /api/accountsSummary/invalidate?{query}| accountId,applRef,brandRef,clientRef,customerId,employeeType |
 |ETransfer|eTransfer | /api/eTransfers?{query}| customerId |  | 
 |ETransfer|holidays | /api/holidays|  |  | 
 |CreateEAccount|eTransfer | /api/createEAccount/?{query}| accountId,applRef,brandRef,clientRef,createPlanId |  | 
-|ChequeCreditbooks|chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,clientRef |  | create->auditCreateCheckBook; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
+|ChequeCreditbooks|chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,clientRef |  | create->sequencename,auditCreateCheckBook; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
 |ChequeCreditbooks| | /api/chequeCreditBooks/cancel?{query}| accountId,applRef,brandRef,clientRef |
 |ChequeCreditbooks| | /api/chequeCreditBooks/revalidate?{query}| accountId,applRef,brandRef,clientRef |
 |Repeating|repeating | /api/repeating?{query}| clientRef |  | 
@@ -142,7 +142,7 @@
   | --- | --- | --- | --- | --- 
     |collectionHistoryList | /api/collections/list?{query}| accountId,clientRef |  | 
     |collectionSummary | /api/collections/summary?{query}| accountId,clientRef |  | 
-    |createPayment | /api/payment/create?{query}| accountId,clientRef,paymentId |  | create->auditCreate
+    |createPayment | /api/payment/create?{query}| accountId,clientRef,paymentId |  | create->create,auditCreate
     |overpaymentHistory | /api/payment/overpayment/history?{query}| accountId,clientRef |  | 
     |payments | /api/payment?{query}| accountId,clientRef,paymentId |  | state:cancel->auditCancel; state:revalidate->auditrevalidate
     | | /api/payment/cancel?{query}| accountId,clientRef,paymentId |
@@ -330,7 +330,7 @@
     |businessDetailsRD | /customer/occupation/v2/businessDetails?{query}| accountId,applRef,brandRef,clientRef |  | get->auditGetBusinessDetails
     |dropdownsRD | /customer/occupation/v2/occupationDetails?{query}|  |  | 
     |occupationAndIncomeRD | /customer/occupation/v2/occupationIncomeDetails?{query}| accountId,applRef,brandRef,clientRef |  | get->auditGetCustomerOccupation; update->auditUpdateCustomerOccupation
-    |otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}| accountId,applRef,brandRef,clientRef |  | get->auditGetBusinessDetails
+    |otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}| accountId,applRef,brandRef,clientRef |  | get->auditOtherIncome
   ## modals  
   |name|displayed with
   | --- | --- 
@@ -483,7 +483,7 @@
   ## rests   
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
-    |chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,clientRef |  | create->auditCreateCheckBook; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
+    |chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,clientRef |  | create->sequencename,auditCreateCheckBook; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
     | | /api/chequeCreditBooks/cancel?{query}| accountId,applRef,brandRef,clientRef |
     | | /api/chequeCreditBooks/revalidate?{query}| accountId,applRef,brandRef,clientRef |
   ## modals  

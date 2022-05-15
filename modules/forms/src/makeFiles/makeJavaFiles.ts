@@ -34,7 +34,8 @@ import { AppConfig } from "../appConfig";
 
 import { makeMutations } from "../codegen/makeMutations";
 import { makeAllJavaWiring, makeJavaFetcherInterfaceForResolver, makeJavaFetchersInterface } from "../codegen/makeJavaFetchersInterface";
-import {postCodeSearchTable} from "../example/database/tableNames";
+import { postCodeSearchTable } from "../example/database/tableNames";
+import { makeTuples, tupleIndexes } from "../common/resolverD";
 
 
 export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
@@ -76,6 +77,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
     fs.mkdirSync ( `${javaQueriesPackages}/${p.name}`, { recursive: true } );
     fs.mkdirSync ( `${javaMutatorPackage}/${p.name}`, { recursive: true } )
   } )
+  fs.mkdirSync ( `${javaMutatorPackage}/utils`, { recursive: true } )
 
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
   const raw = allMainPages ( pages ).flatMap ( x => sortedEntries ( x.rest ) ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest );
@@ -134,7 +136,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
       fetcherClass: mockFetcherClassName ( params, restD, action ),
       content: makeMockFetchersForRest ( params, restD, action ).join ( "\n" )
     }, directorySpec ) )
-  mapRestAndResolver ( pages, p => (restD) => (resolverData) => templateFile ( `${javaMockFetcherRoot}/${p.name}/${mockFetcherClassNameForResolver ( params, restD, resolverData.resolver )}.java`, 'templates/JavaFetcherClassTemplate.java',
+  mapRestAndResolver ( pages, p => ( restD ) => ( resolverData ) => templateFile ( `${javaMockFetcherRoot}/${p.name}/${mockFetcherClassNameForResolver ( params, restD, resolverData.resolver )}.java`, 'templates/JavaFetcherClassTemplate.java',
     {
       ...params,
       mockFetcherPackage: mockFetcherPackage ( params, p ),
@@ -173,8 +175,8 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
   let insertSql = allMainPages ( pages ).flatMap ( mainPage =>
     sortedEntries ( mainPage.rest )
-        .filter(( [ _, rdp ] ) => rdp.rest.insertSqlStrategy !== undefined)
-        .flatMap ( ( [ _, rdp ] ) => safeArray ( makeInsertSqlForNoIds(rdp.rest.dataDD, rdp.rest.insertSqlStrategy) ) ) );
+      .filter ( ( [ _, rdp ] ) => rdp.rest.insertSqlStrategy !== undefined )
+      .flatMap ( ( [ _, rdp ] ) => safeArray ( makeInsertSqlForNoIds ( rdp.rest.dataDD, rdp.rest.insertSqlStrategy ) ) ) );
   if ( insertSql.length > 0 )
     writeToFile ( `${javaResourcesRoot}/insertData.sql`, () => insertSql )
   else
@@ -197,7 +199,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
   allMainPages ( pages ).map ( p => {
     Object.entries ( p.rest ).map ( ( [ name, rdp ] ) => {
-      writeToFile ( `${javaControllerRoot}/${restControllerName ( rdp.rest )}.java`, () => makeSpringEndpointsFor ( params, p, name, rdp.rest ), details )
+      writeToFile ( `${javaControllerRoot}/${restControllerName ( p, rdp.rest )}.java`, () => makeSpringEndpointsFor ( params, p, name, rdp.rest ), details )
       let tables = rdp.rest.tables;
       if ( !tables ) return
       detailsLog ( logLevel, 2, `Creating rest files for ${p.name} ${name}` )
@@ -205,7 +207,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
         const ld = findSqlLinkDataFromRootAndDataD ( root, rdp.rest.dataDD, rdp.rest.params )
         let fileName = sqlMapFileName ( javaDbPackages, p, name, path ) + ".java";
         console.log ( 'name:', fileName )
-        writeToFile ( fileName, () => makeMapsForRest ( params, p, name, rdp, ld, path, root.children.length ) )
+        writeToFile ( fileName, () => makeMapsForRest ( params, p, name, rdp, ld, path, root.children.length ), details )
       } )
     } )
   } )
@@ -213,9 +215,11 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   forEachRest ( pages, p => r => {
     const audit = makeMutations ( params, p, r )
     if ( audit.length > 0 )
-      writeToFile ( `${javaMutatorPackage}/${p.name}/${mutationClassName ( r )}.java`, () => audit )
+      writeToFile ( `${javaMutatorPackage}/${p.name}/${mutationClassName ( r )}.java`, () => audit, details )
 
   } )
+
+  tupleIndexes(params.maxTuples).map ( i => writeToFile ( `${javaMutatorPackage}/utils/Tuple${i}.java`, () => makeTuples ( params, i ) ), details )
 
   // rests.forEach ( rest => {
   //   if ( isSqlResolverD ( rest.resolver ) ) {

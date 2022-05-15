@@ -31,5 +31,6 @@ export const paramsForTest: CombinedParams = {
   sampleClass: 'Sample',
   dbPackage: 'db',
   defaultDbName: 'mock',
-  mutatorPackage: 'mutator'
+  mutatorPackage: 'mutator',
+  maxTuples: 2
 };

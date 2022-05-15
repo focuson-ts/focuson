@@ -137,4 +137,65 @@ This will easy the writing of the following
 * New buttons
 
 
+## Why are we removing GraphQL from the mutations
 
+When we started we assumed that GraphQL gave the same power over mutations that it does over queries. But it doesn't.
+With a query we can have partial queries and graph ql 'stiches them up'. BUT for mutations they are 'one thing'
+
+So it's a layer of abstraction and code and potential bugs with no benefit
+
+## How are we going to manage new item creation / ID management
+
+### Scenarios to consider
+* Making a thing that we will edit after we have made it 
+  * Making one thing and viewing it after the create
+  * Making an item in a list, and we continue editing. This is a special case of the above
+* Making a message and we shut down the gui and return when it is made (easy we can ignore ids)
+
+### Comments
+If there was just a simple id it would be easy. We would return the new id. Or the new object with ID in it. And the id management
+would be easy: we return it from the function that creates the id
+
+BUT the ids can be 'multiple'. i.e composite ids. And how are we going to represent that in Java?
+
+If we did it manually we would have to create a class for the ID unless the class already existed (String / Integer/...) as
+Java can only return one thing from a method. 
+
+### Patterns
+So one problem is 'how did the original code do ID management?'. Did it do it well. Oracle doesn't have a standard, it's
+just a tool box. Sequences are obviously an answer. We might get the next id from a sequence, change the sql ... Or maybe
+there was a trigger and somehow magically the row got the right answer? Which?
+
+We have to be able to deal with the patterns that occur. Probably
+* Get NEXT_ID from sequence, use id from sequence one or more times
+* Insert into row, and it's triggered and ... and in this case I don't know how to get the id... so we'd probably blow 
+away the master object and do a get. Might need to talk this over with an oracle guy.
+* Call a stored procedure and one of the returned values is the id
+
+### Solution for internal
+```typescript
+ restAction: 'create', mutateBy: [
+    { mutation: 'sql', name: 'getId', sql: 'select nextId from someSeq', params: [ {type: 'output', name: 'someId'} ] , schema: onlySchema},
+    { mutation: 'storedProc', name: 'create', params: [ {type: 'fromPrevious', name: 'someId'} ], schema: onlySchema },
+  ]
+```
+
+### As yet undecided: 
+How do we return this data/consume it on our (very constrained) gui
+* We could allow the developer to say 'return the getter passing these arguments in '. 
+  * Then we would copy the data over the data on the gui
+  * We could do this by an 'optional' argument in the parameter 
+* We could return all the ids used (where we need them or not) 
+  * This feels hard to consume
+```typescript
+ restAction: 'create', mutateBy: [
+    { mutation: 'sql', name: 'getId', sql: 'select nextId from someSeq', params: [ {type: 'output', name: 'someId', useInGetter: true} ] , schema: onlySchema},
+    { mutation: 'storedProc', name: 'create', params: [ {type: 'fromPrevious', name: 'someId'} ], schema: onlySchema },
+  ]
+```
+
+Realisation:
+* Just use the getter... We don't need a separate create/update etc.. query. Just the getter.
+* It will require ids... and it's the job of the developer to provide them
+* We can put a // From xxx... If this doesn't compile because an id doesn't exist you need to create it as output params with mutations
+* We can also detect if we make them all in the report.
