@@ -130,18 +130,23 @@ const dontSupportVariables = <S> ( info: ReportInfo, name: string, rdp: RestDefn
 function accessDetails<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ): string {
   return safeArray ( rest.access ).flatMap ( a => toArray ( a.condition ).map ( c => `${c.param} ${c.type} ${c.values}` ) ).join ( "; " )
 }
-function auditDetails<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ): string {
+function auditDetails<B, G> ( page: MainPageD<B, G>, restName: string, rest: RestD<G> ): string[] {
+  return rest.audits !== undefined ? [ `${page.name}.rest[${restName}].audits is defined. These currently do absolutely nothing, and will soon cause errors. Please migrate them to mutations` ] : []
+}
+function mutationDetails<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ): string {
   return safeArray ( rest.mutations ).flatMap ( a => `${printRestAction ( a.restAction )}->${toArray ( a.mutateBy ).map ( s => s.name )}` ).join ( '; ' )
 }
-
 export function makeRestReport<B, G> ( page: MainPageD<B, G>, info: ReportInfo ): ReportDetails {
   const general: string[] = sortedEntries ( page.rest ).flatMap ( ( [ name, rdp ] ) =>
-    [ `|${name} | ${rdp.rest.url}| ${sortedEntries ( rdp.rest.params ).map ( ( [ name, p ] ) => name )} | ${accessDetails ( page, rdp.rest )} | ${auditDetails ( page, rdp.rest )}`,
+    [ `|${name} | ${rdp.rest.url}| ${sortedEntries ( rdp.rest.params ).map ( ( [ name, p ] ) => name )} | ${accessDetails ( page, rdp.rest )} | ${function auditDetails<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ): string {
+      return safeArray ( rest.mutations ).flatMap ( a => `${printRestAction ( a.restAction )}->${toArray ( a.mutateBy ).map ( s => s.name )}` ).join ( '; ' )
+    } ( page, rdp.rest )}`,
       ...sortedEntries ( rdp.rest.states ).map ( ( [ stateName, details ] ) =>
         `| | ${details.url}| ${sortedEntries ( rdp.rest.params ).map ( ( [ name, p ] ) => name )} |` )
     ] )
   const critical: string[] = sortedEntries ( page.rest ).flatMap ( ( [ name, rdp ] ) => [
     ...notCreated ( info, rdp.rest.dataDD.name ),
+    ...auditDetails ( page, name, rdp.rest ),
     ...dontSupportVariables ( info, name, rdp ) ] )
   return { part: 'rests', headers: [ 'name', 'url', 'params', 'access', 'audit' ], general, critical }
 

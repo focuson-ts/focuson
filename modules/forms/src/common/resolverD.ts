@@ -3,6 +3,7 @@ import { OneDataDD } from "./dataD";
 import { JavaWiringParams } from "../codegen/config";
 import { indentList } from "../codegen/codegen";
 
+
 export interface Schema {
   name: string
 }
@@ -36,38 +37,43 @@ export interface MutationsForRestAction {
   mutateBy: MutationDetail | MutationDetail[]
 }
 
-export type MutationDetail = StoredProcedureMutation | SqlMutation | ManualMutation | IDFromSequenceMutation
+export type MutationDetail = StoredProcedureMutation | SqlMutation | ManualMutation // | IDFromSequenceMutation
 
-export interface IDFromSequenceMutation {
-  mutation: 'IDFromSequence',
-  schema: Schema;
-  name: string;
-  params: MutationParam
-}
+// export interface IDFromSequenceMutation {
+//   mutation: 'IDFromSequence',
+//   schema: Schema;
+//   name: string;
+//   params: MutationParam
+// }
 export interface SqlMutation {
   mutation: 'sql',
   schema: Schema;
   /**The name of the procedure that does this: should capture the intent of what this does */
   name: string;
   sql: string;
-  params: MutationParam | MutationParam[]
+  params: MutationParamForSql | MutationParamForSql[]
 }
 
 export interface StoredProcedureMutation {
   mutation: 'storedProc',
   schema: Schema,
   name: string,
-  params: MutationParam | MutationParam[]
+  params: MutationParamForStoredProc | MutationParamForStoredProc[]
 }
 
 export interface ManualMutation {
   mutation: 'manual';
-  params: MutationParam | MutationParam[]
+  import?: string|string[];
+  params: MutationParamForManual | MutationParamForManual[]
   name: string;
   code: string | string[]
 }
-export type MutationParam = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputMutationParam | NullMutationParam
+export type MutationParam = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForStoredProcMutationParam | OutputForSqlMutationParam | NullMutationParam | OutputForManualParam
+export type MutationParamForSql = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForSqlMutationParam | NullMutationParam
+export type MutationParamForStoredProc = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForStoredProcMutationParam | NullMutationParam
+export type MutationParamForManual = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | NullMutationParam| OutputForManualParam
 
+export type OutputMutationParam = OutputForSqlMutationParam | OutputForStoredProcMutationParam | OutputForManualParam
 export function inputParamName ( m: MutationParam ) {
   if ( typeof m === 'string' ) return [ m ]
   if ( m.type === 'input' ) return [ m.name ]
@@ -110,28 +116,36 @@ export function makeTuples ( params: JavaWiringParams, i: number ) {
 export function allInputParamNames ( m: MutationParam | MutationParam[] ): string[] {
   return toArray ( m ).flatMap ( inputParamName )
 }
-export function allOutputParams ( m: MutationParam | MutationParam[] ): OutputMutationParam[] {
-  return toArray ( m ).flatMap ( m => {
-    if ( typeof m === 'string' ) return []
-    if ( m.type === 'output' ) return [ m ]
-    return []
-  } )
+export function allSqlOutputParams ( m: MutationParam | MutationParam[] ): OutputForSqlMutationParam[] {
+  return toArray ( m ).flatMap ( m => isSqlOutputParam ( m ) ? [ m ] : [] )
 }
-
+export function allStoredProcOutputParams ( m: MutationParam | MutationParam[] ): OutputForStoredProcMutationParam[] {
+  return toArray ( m ).flatMap ( m => isStoredProcOutputParam ( m ) ? [ m ] : [] )
+}
+export function allOutputParams ( m: MutationParam | MutationParam[] ): OutputMutationParam[] {
+  return toArray ( m ).flatMap ( m => isSqlOutputParam ( m ) || isStoredProcOutputParam ( m ) ? [ m ] : [] )
+}
 export function javaTypeForOutput ( m: MutationParam | MutationParam[] ) {
   const outputs = allOutputParams ( m )
   if ( outputs.length == 0 ) return 'void'
   if ( outputs.length == 1 ) return outputs[ 0 ].javaType
-  if ( outputs.length > 6 ) throw Error ( 'Currently can only handle 6 output params' )
   return `Tuple${outputs.length}<${outputs.map ( o => o.javaType ).join ( "," )}>`
 }
 
 
-export function isOutputParam ( m: MutationParam ): m is OutputMutationParam {
-  return (typeof m !== 'string' && m.type === 'output')
+export function isSqlOutputParam ( m: MutationParam ): m is OutputForSqlMutationParam {
+  const ma: any = m
+  return isOutputParam ( m ) && ma.rsName !== undefined
+}
+export function isStoredProcOutputParam ( m: MutationParam ): m is OutputForStoredProcMutationParam {
+  const ma: any = m
+  return isOutputParam ( m ) && ma.javaType !== undefined
+}
+export function isOutputParam ( m: any ): m is OutputMutationParam {
+  return typeof m !== 'string' && m.type === 'output'
 }
 export function isInputParam ( m: MutationParam ) {
-  return (typeof m === 'string' || m.type !== 'output')
+  return (typeof m === 'string' || !(isSqlOutputParam ( m ) || isStoredProcOutputParam ( m )))
 }
 export function displayParam ( param: MutationParam ) {
   if ( typeof param === 'string' ) return param
@@ -155,11 +169,22 @@ interface ParamMutationParam {
   type: 'input';
   name: string
 }
-export interface OutputMutationParam {
+export interface OutputForStoredProcMutationParam {
   type: 'output';
   name: string;
   javaType: 'String' | 'Integer';
   sqlType: string;
+}
+export interface OutputForSqlMutationParam {
+  type: 'output';
+  name: string;
+  javaType: 'String' | 'Integer';
+  rsName: string;
+}
+export interface OutputForManualParam {
+  type: 'output';
+  name: string;
+  javaType: 'String' | 'Integer';
 }
 interface NullMutationParam {
   type: 'null';

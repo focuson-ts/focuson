@@ -1,4 +1,9 @@
 # All Pages
+# Critical Issues
+## Critical Issues in ChequeCreditbooks
+* ChequeCreditbooks.rest[chequeCreditBooks].audits is defined. These currently do absolutely nothing, and will soon cause errors. Please migrate them to mutations
+
+---
 ## Common Params
 | Name | Location
 | --- | ---
@@ -46,8 +51,8 @@
 |EAccountsSummary| | /api/accountsSummary/invalidate?{query}| accountId,applRef,brandRef,clientRef,customerId,employeeType |
 |ETransfer|eTransfer | /api/eTransfers?{query}| customerId |  | 
 |ETransfer|holidays | /api/holidays|  |  | 
-|CreateEAccount|eTransfer | /api/createEAccount/?{query}| accountId,applRef,brandRef,clientRef,createPlanId |  | 
-|ChequeCreditbooks|chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,clientRef |  | create->sequencename,auditCreateCheckBook; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
+|CreateEAccount|eTransfer | /api/createEAccount/?{query}| accountId,applRef,brandRef,clientRef,createPlanId |  | create->updateSql,getSql; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
+|ChequeCreditbooks|chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,clientRef |  | create->sequencename,auditCreateCheckBook,manualLog; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
 |ChequeCreditbooks| | /api/chequeCreditBooks/cancel?{query}| accountId,applRef,brandRef,clientRef |
 |ChequeCreditbooks| | /api/chequeCreditBooks/revalidate?{query}| accountId,applRef,brandRef,clientRef |
 |Repeating|repeating | /api/repeating?{query}| clientRef |  | 
@@ -459,7 +464,7 @@
   ## rests   
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
-    |eTransfer | /api/createEAccount/?{query}| accountId,applRef,brandRef,clientRef,createPlanId |  | 
+    |eTransfer | /api/createEAccount/?{query}| accountId,applRef,brandRef,clientRef,createPlanId |  | create->updateSql,getSql; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
   ## display 
     CreateEAccountData
   ## buttons 
@@ -469,6 +474,8 @@
 
 ---
 # ChequeCreditbooks - MainPage
+ChequeCreditbooks.rest[chequeCreditBooks].audits is defined. These currently do absolutely nothing, and will soon cause errors. Please migrate them to mutations
+
 ## Common Params
 | Name | Location
 | --- | ---
@@ -483,7 +490,7 @@
   ## rests   
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
-    |chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,clientRef |  | create->sequencename,auditCreateCheckBook; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
+    |chequeCreditBooks | /api/chequeCreditBooks?{query}| accountId,applRef,brandRef,clientRef |  | create->sequencename,auditCreateCheckBook,manualLog; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
     | | /api/chequeCreditBooks/cancel?{query}| accountId,applRef,brandRef,clientRef |
     | | /api/chequeCreditBooks/revalidate?{query}| accountId,applRef,brandRef,clientRef |
   ## modals  

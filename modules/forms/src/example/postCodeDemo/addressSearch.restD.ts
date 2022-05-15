@@ -26,7 +26,6 @@ export const postcodeRestD: RestD<AllGuards> = {
       { table: postCodeSearchTable, alias: postCodeSearchTable.name, field: 'PC_POSTCODE', paramName: 'postcode', comparator: 'like', paramPrefix: '%', paramPostfix: '%' }
     ]
   }
-
 }
 
 export const addressRestD: RestD<AllGuards> = {
