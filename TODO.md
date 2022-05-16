@@ -30,7 +30,7 @@ Graph ql
 * Don't have a connection in the context for queries, just for mutations
 * Make sure types are correct for resolvers (is it a map or a string/number?)
 
-Backend
+Backend - done
 * Allow manual states 
 * Allow multiple 'useStoredProc' and 'useSql' and 'a bit of manual code' 
 

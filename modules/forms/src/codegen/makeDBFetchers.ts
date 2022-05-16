@@ -7,6 +7,7 @@ import { indentList } from "./codegen";
 import { findParamsForTable } from "./makeSqlFromEntities";
 import { getRestTypeDetails } from "@focuson/rest";
 import { isRepeatingDd } from "../common/dataD";
+import { findJavaType } from "./makeJavaFetchersInterface";
 
 
 export function makeDBFetchers<B, G> ( params: JavaWiringParams, pageD: MainPageD<B, G>, restName: string, rdp: RestDefnInPageProperties<G> ): string[] {
@@ -17,7 +18,7 @@ export function makeDBFetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
   if ( rest.tables === undefined ) throw Error ( `Calling makeH2Fetchers when tables not defined for page ${pageD.name}` )
   const getAllParams = [ 'c',
     ...findParamsForTable ( `Error in page ${pageD.name} rest ${restName}`, rest.params, rest.tables )
-      .map ( ( {name, param } ) =>
+      .map ( ( { name, param } ) =>
         `${param.javaParser}(${name})` ) ].join ( ',' )
   const getDataFromRS: string[] = isRepeatingDd ( rdp.rest.dataDD ) ?
     [ `         List<Map<String, Object>> list = ${sqlMapName ( pageD, restName, [] )}.getAll(${getAllParams});`,
@@ -49,7 +50,7 @@ export function makeDBFetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
     `  @Autowired`,
     `  private DataSource dataSource;`,
     ``,
-    `  public DataFetcher ${resolverName ( rest, getRestTypeDetails ( 'get' ) )}() {`,
+    `  public DataFetcher<${findJavaType ( rest.dataDD )}> ${resolverName ( rest, getRestTypeDetails ( 'get' ) )}() {`,
     `    return dataFetchingEnvironment -> {`,
     ...indentList ( indentList ( indentList ( paramVariables ) ) ),
     `       Connection c = dataSource.getConnection();`,

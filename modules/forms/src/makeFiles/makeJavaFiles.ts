@@ -120,9 +120,9 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
     let fetcherFile = `${javaCodeRoot}/${params.fetcherPackage}/${p.name}/${fetcherInterfaceName ( params, rest, action )}.java`;
     writeToFile ( fetcherFile, () => makeJavaFetchersInterface ( params, p, rest, action ), details )
   } )
-  mapRestAndResolver ( pages, p => rest => ( { resolver } ) => {
+  mapRestAndResolver ( pages, p => rest => ( { resolver, javaType } ) => {
     let fetcherFile = `${javaCodeRoot}/${params.fetcherPackage}/${p.name}/${fetcherInterfaceForResolverName ( params, rest, resolver )}.java`;
-    writeToFile ( fetcherFile, () => makeJavaFetcherInterfaceForResolver ( params, p, rest, resolver ), details )
+    writeToFile ( fetcherFile, () => makeJavaFetcherInterfaceForResolver ( params, p, rest, resolver, javaType ), details )
   } )
 
   writeToFile ( `${javaCodeRoot}/${params.wiringClass}.java`, () => makeAllJavaWiring ( params, pages, directorySpec ), details )
@@ -219,7 +219,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
   } )
 
-  tupleIndexes(params.maxTuples).map ( i => writeToFile ( `${javaMutatorPackage}/utils/Tuple${i}.java`, () => makeTuples ( params, i ) ), details )
+  tupleIndexes ( params.maxTuples ).map ( i => writeToFile ( `${javaMutatorPackage}/utils/Tuple${i}.java`, () => makeTuples ( params, i ) ), details )
 
   // rests.forEach ( rest => {
   //   if ( isSqlResolverD ( rest.resolver ) ) {

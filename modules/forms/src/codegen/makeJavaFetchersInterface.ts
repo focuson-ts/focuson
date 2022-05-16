@@ -1,5 +1,5 @@
 import { flatMapRestAndActions, flatMapRestAndResolver, mapRest, mapRestAndActions, mapRestAndResolver, RestD } from "../common/restD";
-import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, OneDataDD, PrimitiveDD, RepeatingDataD, sampleFromDataD } from "../common/dataD";
+import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, isPrimDd, isRepeatingDd, OneDataDD, PrimitiveDD, RepeatingDataD, sampleFromDataD } from "../common/dataD";
 import { fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, fetcherVariableName, fetcherVariableNameForResolver, resolverName, sampleName } from "./names";
 import { JavaWiringParams } from "./config";
 import { applyToTemplate } from "@focuson/template";
@@ -10,28 +10,32 @@ import { getRestTypeDetails } from "@focuson/rest";
 
 
 export function makeJavaFetchersInterface<G> ( params: JavaWiringParams, page: MainPageD<any, G>, restD: RestD<G>, restAction: RestAction ): string[] {
+  let resolverData: ResolverData = findQueryMutationResolvers ( restD, restAction );
   return [
     `package ${fetcherPackageName ( params, page )};`,
     '',
     'import graphql.schema.DataFetcher;',
     'import java.util.Map;',
+    'import java.util.List;',
+
     `import ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
     '',
     `public interface ${fetcherInterfaceName ( params, restD, restAction )} extends IFetcher{`,
-    `   public DataFetcher<Map<String,Object>> ${findQueryMutationResolvers ( restD, restAction ).resolver}();`,
+    `   public DataFetcher<${resolverData.javaType}> ${resolverData.resolver}();`,
     '}' ]
 }
 
-export function makeJavaFetcherInterfaceForResolver<G> ( params: JavaWiringParams, page: MainPageD<any, G>, restD: RestD<G>, resolverName: string ): string[] {
+export function makeJavaFetcherInterfaceForResolver<G> ( params: JavaWiringParams, page: MainPageD<any, G>, restD: RestD<G>, resolverName: string, javaType: string ): string[] {
   return [
     `package ${fetcherPackageName ( params, page )};`,
     '',
     'import graphql.schema.DataFetcher;',
     'import java.util.Map;',
+    'import java.util.List;',
     `import ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
     '',
     `public interface ${fetcherInterfaceForResolverName ( params, restD, resolverName )} extends IFetcher{`,
-    `   public DataFetcher<Map<String,Object>> ${resolverName}();`,
+    `   public DataFetcher<${javaType}> ${resolverName}();`,
     // ...findUniqueDataDsAndRestTypeDetails ( restD ).flatMap ( ( [ datad, rad ] ) => `   public DataFetcher ${resolverName ( datad, rad )}();` ),
     '}' ]
 }
@@ -79,7 +83,7 @@ export interface ResolverData {
   /** In the case of the Query/Mutation = resolver. Other => the field name (both are logically the field name)*/
   name: string;
   needsObjectInOutput: boolean;
-
+  javaType: string;
   samplerName: string,
   /** Values that represent a sample. Will only be present for a field */
   sample: string[];
@@ -87,10 +91,15 @@ export interface ResolverData {
 export function findQueryMutationResolvers<G> ( r: RestD<G>, a: RestAction ): ResolverData {
   const rad = getRestTypeDetails ( a );
   let name = resolverName ( r, rad );
-  return ({ isRoot: true, parent: rad.query, resolver: name, name, samplerName: sampleName ( r.dataDD ), sample: [], needsObjectInOutput: getRestTypeDetails ( a ).output.needsObj })
+  return ({ isRoot: true, parent: rad.query, resolver: name, name, samplerName: sampleName ( r.dataDD ), sample: [], needsObjectInOutput: getRestTypeDetails ( a ).output.needsObj, javaType: findJavaType ( r.dataDD ) })
 
 }
 
+export function findJavaType ( dataDD: AllDataDD<any> ): string {
+  if ( isPrimDd ( dataDD ) ) return dataDD.javaType
+  if ( isRepeatingDd ( dataDD ) ) return `List<${findJavaType ( dataDD.dataDD )}>`
+  return "Map<String,Object>"
+}
 export function findChildResolvers<G> ( restD: RestD<G> ): ResolverData[] {
   function rData<D extends AllDataDD<G>> ( path: string[], parents: DataD<G>[], oneDataDD: OneDataDD<G> | undefined, dataDD: D ): ResolverData[] {
     return parents.length > 0 && dataDD.resolver ? [ {
@@ -100,7 +109,8 @@ export function findChildResolvers<G> ( restD: RestD<G> ): ResolverData[] {
       name: path[ path.length - 1 ],
       samplerName: sampleName ( dataDD ),
       sample: sampleFromDataD ( oneDataDD, dataDD ),
-      needsObjectInOutput: true
+      needsObjectInOutput: true,
+      javaType: findJavaType ( dataDD )
     } ] : []
   }
   const mapper: AllDataFlatMap<ResolverData, G> = {
