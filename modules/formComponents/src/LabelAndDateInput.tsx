@@ -4,8 +4,8 @@ import { FocusOnContext } from "@focuson/focuson";
 import { CommonStateProps } from "./common";
 import { Label } from "./label";
 import { makeButtons } from "./labelAndInput";
-// import { cleanInputProps } from "./input";
 import DatePicker from "react-datepicker";
+import { isValid } from 'date-fns';
 
 
 export interface LabelAndDateProps<S, Context> extends CommonStateProps<S, string, Context> {
@@ -65,15 +65,27 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
   const minDate = addDays(new Date(),safeArray(datesToExclude), workingDaysInFuture?workingDaysInFuture:0);
 
   const selectedDate = new Date(state.optJsonOr(new Date().toDateString())) // TODO: Turn default date into arg
+  let error = false
+
+  if (!isValid(selectedDate)) {        
+    error = true   
+  } 
+
   return (<div className='labelAndDate'>
       <Label state={state} htmlFor={name} label={label}/>
-      <DatePicker selected={selectedDate} onChange={(date) => onChange(date)} 
-      filterDate={includeWeekends ? undefined : isWeekday}
-      excludeDates={datesToExcludeAsDateType}
-      minDate={minDate}
-      highlightDates={datesToExcludeAsDateType}
-      disabled={mode === 'view' || readonly}
-      placeholderText="Select a weekday"/>
-      {makeButtons ( props.allButtons, props.buttons )}
+      <div>
+        <DatePicker 
+        selected={error ? null : selectedDate}
+        onChange={(date) => onChange(date)} 
+        filterDate={includeWeekends ? undefined : isWeekday}
+        excludeDates={datesToExcludeAsDateType}
+        minDate={minDate}
+        highlightDates={datesToExcludeAsDateType}
+        disabled={mode === 'view' || readonly}
+        className={error ? "red-border" : ""}
+        placeholderText="Select a date"/>
+        {makeButtons ( props.allButtons, props.buttons )}
+        {error && <div className="error-msg">Invalid Date: {state.optJsonOr('')}</div>}
+      </div>
     </div>)
 }
