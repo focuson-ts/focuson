@@ -12,7 +12,7 @@ import { detailsLog, GenerateLogLevel, isRestStateChange, NameAnd, safeArray, sa
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
-import { auditClassName, createTableSqlName, dbFetcherClassName, fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, getSqlName, mockFetcherClassName, mockFetcherClassNameForResolver, mockFetcherPackage, providerPactClassName, queryClassName, queryPackage, restControllerName, sqlMapFileName } from "../codegen/names";
+import { mutationClassName, createTableSqlName, dbFetcherClassName, fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, getSqlName, mockFetcherClassName, mockFetcherClassNameForResolver, mockFetcherPackage, providerPactClassName, queryClassName, queryPackage, restControllerName, sqlMapFileName } from "../codegen/names";
 import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
 
 import { makeMockFetcherFor, makeMockFetchersForRest } from "../codegen/makeMockFetchers";
@@ -31,10 +31,11 @@ import {
 import { makeDBFetchers } from "../codegen/makeDBFetchers";
 import { makePactValidation } from "../codegen/makePactValidation";
 import { AppConfig } from "../appConfig";
-import { makeStateChangeCode } from "../codegen/makeStateChangeCode";
-import { makeAudit } from "../codegen/makeAudit";
+
+import { makeMutations } from "../codegen/makeMutations";
 import { makeAllJavaWiring, makeJavaFetcherInterfaceForResolver, makeJavaFetchersInterface } from "../codegen/makeJavaFetchersInterface";
-import {postCodeSearchTable} from "../example/database/tableNames";
+import { postCodeSearchTable } from "../example/database/tableNames";
+import { makeTuples, tupleIndexes } from "../common/resolverD";
 
 
 export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
@@ -53,7 +54,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   const javaMockFetcherRoot = javaCodeRoot + "/" + params.mockFetcherPackage
   const javaH2FetcherRoot = javaCodeRoot + "/" + params.dbFetcherPackage
   const javaQueriesPackages = javaCodeRoot + "/" + params.queriesPackage
-  const javaAuditPackage = javaCodeRoot + '/' + params.auditPackage
+  const javaMutatorPackage = javaCodeRoot + '/' + params.mutatorPackage
   const javaDbPackages = javaCodeRoot + "/" + params.dbPackage
   // const javaSql = javaResourcesRoot + "/" + params.sqlDirectory
 
@@ -74,8 +75,9 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
     fs.mkdirSync ( `${javaMockFetcherRoot}/${p.name}`, { recursive: true } );
     fs.mkdirSync ( `${javaH2FetcherRoot}/${p.name}`, { recursive: true } );
     fs.mkdirSync ( `${javaQueriesPackages}/${p.name}`, { recursive: true } );
-    fs.mkdirSync ( `${javaAuditPackage}/${p.name}`, { recursive: true } )
+    fs.mkdirSync ( `${javaMutatorPackage}/${p.name}`, { recursive: true } )
   } )
+  fs.mkdirSync ( `${javaMutatorPackage}/utils`, { recursive: true } )
 
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
   const raw = allMainPages ( pages ).flatMap ( x => sortedEntries ( x.rest ) ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest );
@@ -118,9 +120,9 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
     let fetcherFile = `${javaCodeRoot}/${params.fetcherPackage}/${p.name}/${fetcherInterfaceName ( params, rest, action )}.java`;
     writeToFile ( fetcherFile, () => makeJavaFetchersInterface ( params, p, rest, action ), details )
   } )
-  mapRestAndResolver ( pages, p => rest => ( { resolver } ) => {
+  mapRestAndResolver ( pages, p => rest => ( { resolver, javaType } ) => {
     let fetcherFile = `${javaCodeRoot}/${params.fetcherPackage}/${p.name}/${fetcherInterfaceForResolverName ( params, rest, resolver )}.java`;
-    writeToFile ( fetcherFile, () => makeJavaFetcherInterfaceForResolver ( params, p, rest, resolver ), details )
+    writeToFile ( fetcherFile, () => makeJavaFetcherInterfaceForResolver ( params, p, rest, resolver, javaType ), details )
   } )
 
   writeToFile ( `${javaCodeRoot}/${params.wiringClass}.java`, () => makeAllJavaWiring ( params, pages, directorySpec ), details )
@@ -134,7 +136,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
       fetcherClass: mockFetcherClassName ( params, restD, action ),
       content: makeMockFetchersForRest ( params, restD, action ).join ( "\n" )
     }, directorySpec ) )
-  mapRestAndResolver ( pages, p => (restD) => (resolverData) => templateFile ( `${javaMockFetcherRoot}/${p.name}/${mockFetcherClassNameForResolver ( params, restD, resolverData.resolver )}.java`, 'templates/JavaFetcherClassTemplate.java',
+  mapRestAndResolver ( pages, p => ( restD ) => ( resolverData ) => templateFile ( `${javaMockFetcherRoot}/${p.name}/${mockFetcherClassNameForResolver ( params, restD, resolverData.resolver )}.java`, 'templates/JavaFetcherClassTemplate.java',
     {
       ...params,
       mockFetcherPackage: mockFetcherPackage ( params, p ),
@@ -150,15 +152,15 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
     if ( rdp.rest.tables === undefined ) return;
     writeToFile ( `${javaH2FetcherRoot}/${p.name}/${dbFetcherClassName ( params, rdp.rest, a )}.java`, () => makeDBFetchers ( params, p, restName, rdp ) )
   } )
-  forEachRestAndActions ( pages, p => ( r, restName, rdp ) => a => {
-    if ( !isRestStateChange ( a ) ) return;
-    console.log ( 'state change code', p.name, restName, a )
-    if ( rdp.rest.states === undefined ) return;
-    const procCode = makeStateChangeCode ( params, p, restName, rdp.rest, a )
-    console.log ( 'proccode', procCode.length, dbFetcherClassName ( params, rdp.rest, a ) )
-    if ( procCode.length > 0 )
-      writeToFile ( `${javaH2FetcherRoot}/${p.name}/${dbFetcherClassName ( params, rdp.rest, a )}.java`, () => procCode )
-  } )
+  // forEachRestAndActions ( pages, p => ( r, restName, rdp ) => a => {
+  //   if ( !isRestStateChange ( a ) ) return;
+  //   console.log ( 'state change code', p.name, restName, a )
+  //   if ( rdp.rest.states === undefined ) return;
+  //   const procCode = makeStateChangeCode ( params, p, restName, rdp.rest, a )
+  //   console.log ( 'proccode', procCode.length, dbFetcherClassName ( params, rdp.rest, a ) )
+  //   if ( procCode.length > 0 )
+  //     writeToFile ( `${javaH2FetcherRoot}/${p.name}/${dbFetcherClassName ( params, rdp.rest, a )}.java`, () => procCode )
+  // } )
   allMainPages ( pages ).flatMap ( mainPage =>
     sortedEntries ( mainPage.rest ).forEach ( ( [ restName, rdp ] ) => {
     } )
@@ -173,8 +175,8 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
   let insertSql = allMainPages ( pages ).flatMap ( mainPage =>
     sortedEntries ( mainPage.rest )
-        .filter(( [ _, rdp ] ) => rdp.rest.strategy !== undefined)
-        .flatMap ( ( [ _, rdp ] ) => safeArray ( makeInsertSqlForNoIds(rdp.rest.dataDD, rdp.rest.strategy) ) ) );
+      .filter ( ( [ _, rdp ] ) => rdp.rest.insertSqlStrategy !== undefined )
+      .flatMap ( ( [ _, rdp ] ) => safeArray ( makeInsertSqlForNoIds ( rdp.rest.dataDD, rdp.rest.insertSqlStrategy ) ) ) );
   if ( insertSql.length > 0 )
     writeToFile ( `${javaResourcesRoot}/insertData.sql`, () => insertSql )
   else
@@ -197,7 +199,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
   allMainPages ( pages ).map ( p => {
     Object.entries ( p.rest ).map ( ( [ name, rdp ] ) => {
-      writeToFile ( `${javaControllerRoot}/${restControllerName ( rdp.rest )}.java`, () => makeSpringEndpointsFor ( params, p, name, rdp.rest ), details )
+      writeToFile ( `${javaControllerRoot}/${restControllerName ( p, rdp.rest )}.java`, () => makeSpringEndpointsFor ( params, p, name, rdp.rest ), details )
       let tables = rdp.rest.tables;
       if ( !tables ) return
       detailsLog ( logLevel, 2, `Creating rest files for ${p.name} ${name}` )
@@ -205,17 +207,19 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
         const ld = findSqlLinkDataFromRootAndDataD ( root, rdp.rest.dataDD, rdp.rest.params )
         let fileName = sqlMapFileName ( javaDbPackages, p, name, path ) + ".java";
         console.log ( 'name:', fileName )
-        writeToFile ( fileName, () => makeMapsForRest ( params, p, name, rdp, ld, path, root.children.length ) )
+        writeToFile ( fileName, () => makeMapsForRest ( params, p, name, rdp, ld, path, root.children.length ), details )
       } )
     } )
   } )
 
   forEachRest ( pages, p => r => {
-    const audit = makeAudit ( params, p, r )
+    const audit = makeMutations ( params, p, r )
     if ( audit.length > 0 )
-      writeToFile ( `${javaAuditPackage}/${p.name}/${auditClassName ( r )}.java`, () => audit )
+      writeToFile ( `${javaMutatorPackage}/${p.name}/${mutationClassName ( r )}.java`, () => audit, details )
 
   } )
+
+  tupleIndexes ( params.maxTuples ).map ( i => writeToFile ( `${javaMutatorPackage}/utils/Tuple${i}.java`, () => makeTuples ( params, i ) ), details )
 
   // rests.forEach ( rest => {
   //   if ( isSqlResolverD ( rest.resolver ) ) {

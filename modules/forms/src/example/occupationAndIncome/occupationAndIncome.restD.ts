@@ -12,9 +12,9 @@ export const occupationAndIncomeRD: RestD<any> = {
   dataDD: occupationAndIncomeFullDomainDD,
   url: '/customer/occupation/v2/occupationIncomeDetails?{query}',
   actions: [ 'get', 'update' ],
-  audit: [
-    { restAction: 'get', storedProcedure: { name: 'auditGetCustomerOccupation', schema: onlySchema, params: [ 'clientRef' ] } },
-    { restAction: 'update', storedProcedure: { name: 'auditUpdateCustomerOccupation', schema: onlySchema, params: [ 'clientRef' ] } },
+  mutations: [
+    { restAction: 'get', mutateBy: { mutation: 'storedProc', name: 'auditGetCustomerOccupation', schema: onlySchema, params: [ 'clientRef' ] } },
+    { restAction: 'update', mutateBy: { mutation: 'storedProc', name: 'auditUpdateCustomerOccupation', schema: onlySchema, params: [ 'clientRef' ] } },
   ]
 }
 
@@ -30,8 +30,8 @@ export const additionalInfoRD: RestD<any> = {
   dataDD: additionalInformationDD,
   url: '/customer/occupation/v2/additionalInfo?{query}',
   actions: [ 'get' ],
-  audit: [
-    { restAction: 'get', storedProcedure: { name: 'auditGetCustomeAdditionalInfo', schema: onlySchema, params: [ 'clientRef' ] } },
+  mutations: [
+    { restAction: 'get', mutateBy: { mutation: 'storedProc', name: 'auditGetCustomeAdditionalInfo', schema: onlySchema, params: [ 'clientRef' ] } },
   ]
 }
 
@@ -40,8 +40,8 @@ export const businessDetailsRD: RestD<any> = {
   dataDD: businessDetailsMainDD,
   url: '/customer/occupation/v2/businessDetails?{query}',
   actions: [ 'get' ],
-  audit: [
-    { restAction: 'get', storedProcedure: { name: 'auditGetBusinessDetails', schema: onlySchema, params: [ 'clientRef' ] } },
+  mutations: [
+    { restAction: 'get', mutateBy: { mutation: 'storedProc', name: 'auditGetBusinessDetails', schema: onlySchema, params: [ 'clientRef' ] } },
   ]
 }
 
@@ -50,8 +50,8 @@ export const otherIncomeRD: RestD<any> = {
   dataDD: otherIncomeResponseDD,
   url: '/customer/occupation/v2/otherIncome?{query}',
   actions: [ 'get' ],
-  audit: [
-    { restAction: 'get', storedProcedure: { name: 'auditGetBusinessDetails', schema: onlySchema, params: [ 'clientRef' ] } },
+  mutations: [
+    { restAction: 'get', mutateBy: { mutation: 'storedProc', name: 'auditOtherIncome', schema: onlySchema, params: [ 'clientRef' ] } },
   ]
 }
 

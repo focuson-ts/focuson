@@ -84,7 +84,7 @@ describe ( "makeCommon", () => {
       "  pageSelection: [{ pageName: 'EAccountsSummary', firstTime: true, pageMode: 'view' }],",
       "  EAccountsSummary:{},",
       "  restCommands: [],",
-      "  debug: {'fetcherDebug':true,'restDebug':false,'selectedPageDebug':false,'loadTreeDebug':false,'showTracing':false,'recordTrace':true,'tagFetcherDebug':false,'accordions':[]}",
+      "  debug: {'fetcherDebug':false,'guardDebug':false,'restDebug':false,'selectedPageDebug':false,'loadTreeDebug':false,'showTracing':false,'recordTrace':true,'tagFetcherDebug':false,'accordions':[]}",
       "  }"
     ])
 

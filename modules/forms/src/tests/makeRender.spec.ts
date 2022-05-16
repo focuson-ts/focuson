@@ -200,7 +200,7 @@ describe ( " listComponentsIn", () => {
       "      search:<ModalButton id={`${id}.search`} text='search'  state={state} modal = 'PostCodeSearch'  ",
       "        pageMode='edit'",
       "        focusOn='~/postcode'",
-      "        copyOnClose={[{'from':'~/postcode/addressResults/line1','to':'~/main/line1'},{'from':'~/postcode/addressResults/line2','to':'~/main/line2'},{'from':'~/postcode/addressResults/line3','to':'~/main/line3'},{'from':'~/postcode/addressResults/line4','to':'~/main/line4'},{'from':'~/postcode/addressResults/line4','to':'~/main/line4'},{'from':'~/postcode/addressResults/postcode','to':'~/main/postcode'}]}",
+      "        copyOnClose={[{'from':'~/postcode/addressResults/line1','to':'~/main/line1'},{'from':'~/postcode/addressResults/line2','to':'~/main/line2'},{'from':'~/postcode/addressResults/line3','to':'~/main/line3'},{'from':'~/postcode/addressResults/line4','to':'~/main/line4'},{'from':'~/postcode/addressResults/postcode','to':'~/main/postcode'}]}",
       "        copyJustString={[{'from':'~/main/postcode','to':'~/postcode/search'}]}",
       "      />,}",
       "",
@@ -219,10 +219,10 @@ describe ( "makeComponentWithGuard", () => {
   it ( "should make guard variables in the order they were declared in", () => {
     expect ( createReactComponent ( paramsForTest, AllGuardCreator, OccupationAndIncomeSummaryPD, OccupationAndIncomeSummaryPD ) ( oneOccupationIncomeDetailsDD ).slice ( 0, 5 ).map ( r => r.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function OneOccupationIncomeDetails({id,state,mode,allButtons,label}: FocusedProps<FState, OneOccupationIncomeDetailsDomain,Context>){",
-      "const areYouGuard = state.focusOn('areYou').optJson();",
-      "const ownShareOfTheCompanyGuard = state.focusOn('ownShareOfTheCompany').optJson();",
-      "const owningSharesPctGuard = state.focusOn('owningSharesPct').optJson();",
-      "const employmentTypeGuard = state.focusOn('employmentType').optJson();"
+      "const guardDebug=state.main?.debug?.guardDebug",
+      "const areYouGuard = state.focusOn('areYou').optJson();if (guardDebug)console.log('OccupationAndIncomeSummary '+ id + '.areYou', areYouGuard);",
+      "const ownShareOfTheCompanyGuard = state.focusOn('ownShareOfTheCompany').optJson();if (guardDebug)console.log('OccupationAndIncomeSummary '+ id + '.ownShareOfTheCompany', ownShareOfTheCompanyGuard);",
+      "const owningSharesPctGuard = state.focusOn('owningSharesPct').optJson();if (guardDebug)console.log('OccupationAndIncomeSummary '+ id + '.owningSharesPct', owningSharesPctGuard);"
     ] )
   } )
 } )

@@ -12,8 +12,9 @@ export interface JavaWiringParams {
   queriesPackage: string,
   dbPackage: string,
   schema: string;
-  auditPackage: string;
-  defaultDbName: string
+  mutatorPackage: string;
+  defaultDbName: string;
+  maxTuples: number
 }
 
 export interface TSParams {

@@ -12,6 +12,7 @@ describe ( "makeJavaResolversInterface", () => {
       "",
       "import graphql.schema.DataFetcher;",
       "import java.util.Map;",
+      "import java.util.List;",
       "import focuson.data.fetchers.IFetcher;",
       "",
       "public interface EAccountsSummary_get_FFetcher extends IFetcher{",
@@ -20,15 +21,16 @@ describe ( "makeJavaResolversInterface", () => {
     ] )
   } )
   it ( "should make a java interface for a resolver", () => {
-    expect ( makeJavaFetcherInterfaceForResolver ( paramsForTest, EAccountsSummaryPD, eAccountsSummaryRestD, 'resolverName' ) ).toEqual ( [
+    expect ( makeJavaFetcherInterfaceForResolver ( paramsForTest, EAccountsSummaryPD, eAccountsSummaryRestD, 'resolverName', 'someJavaType' ) ).toEqual ( [
       "package focuson.data.fetchers.EAccountsSummary;",
       "",
       "import graphql.schema.DataFetcher;",
       "import java.util.Map;",
+      "import java.util.List;",
       "import focuson.data.fetchers.IFetcher;",
       "",
       "public interface EAccountsSummary_resolverName_FFetcher extends IFetcher{",
-      "   public DataFetcher<Map<String,Object>> resolverName();",
+      "   public DataFetcher<someJavaType> resolverName();",
       "}"
     ] )
   } )
@@ -38,6 +40,7 @@ describe ( "makeJavaResolversInterface", () => {
       "",
       "import graphql.schema.DataFetcher;",
       "import java.util.Map;",
+      "import java.util.List;",
       "import focuson.data.fetchers.IFetcher;",
       "",
       "public interface CreatePlan_update_FFetcher extends IFetcher{",
@@ -178,28 +181,28 @@ describe ( "makeAllJavaWiring", () => {
 describe ( "findAllResolvers2", () => {
   it ( "findResolvers2", () => {
     expect ( findChildResolvers ( eAccountsSummaryRestD ) ).toEqual ( [
-      { "isRoot": false, needsObjectInOutput: true, "name": "description", "parent": "EAccountSummary", "resolver": "getAccountSummaryDescription", "sample": [ "This account's description" ], "samplerName": "sampleOneLineString" },
-      { "isRoot": false, needsObjectInOutput: true, "name": "totalMonthlyCost", "parent": "EAccountsSummary", "resolver": "getTotalMonthlyCost", "sample": [ 1000 ], "samplerName": "sampleMoney" },
-      { "isRoot": false, needsObjectInOutput: true, "name": "oneAccountBalance", "parent": "EAccountsSummary", "resolver": "getOneAccountBalance", "sample": [ 9921 ], "samplerName": "sampleMoney" },
-      { "isRoot": false, needsObjectInOutput: true, "name": "currentAccountBalance", "parent": "EAccountsSummary", "resolver": "getCurrentAccountBalance", "sample": [ 12321 ], "samplerName": "sampleMoney" }
+      { "isRoot": false, needsObjectInOutput: true, "javaType": "String", "name": "description", "parent": "EAccountSummary", "resolver": "getAccountSummaryDescription", "sample": [ "This account's description" ], "samplerName": "sampleOneLineString" },
+      { "isRoot": false, needsObjectInOutput: true, "javaType": "Integer", "name": "totalMonthlyCost", "parent": "EAccountsSummary", "resolver": "getTotalMonthlyCost", "sample": [ 1000 ], "samplerName": "sampleMoney" },
+      { "isRoot": false, needsObjectInOutput: true, "javaType": "Integer", "name": "oneAccountBalance", "parent": "EAccountsSummary", "resolver": "getOneAccountBalance", "sample": [ 9921 ], "samplerName": "sampleMoney" },
+      { "isRoot": false, needsObjectInOutput: true, "javaType": "Integer", "name": "currentAccountBalance", "parent": "EAccountsSummary", "resolver": "getCurrentAccountBalance", "sample": [ 12321 ], "samplerName": "sampleMoney" }
     ] )
   } )
 
   it ( "findQueryMutationResolvers2", () => {
     expect ( findQueryMutationResolvers ( eAccountsSummaryRestD, 'get' ) ).toEqual (
-      { "isRoot": true, needsObjectInOutput: true, "name": "getEAccountsSummary", "parent": "Query", "resolver": "getEAccountsSummary", "sample": [], "samplerName": "sampleEAccountsSummary" }
+      { "isRoot": true, "javaType": "Map<String,Object>", needsObjectInOutput: true, "name": "getEAccountsSummary", "parent": "Query", "resolver": "getEAccountsSummary", "sample": [], "samplerName": "sampleEAccountsSummary" }
     )
     expect ( findQueryMutationResolvers ( createPlanRestD, "get" ) ).toEqual (
-      { "isRoot": true, needsObjectInOutput: true, "name": "getCreatePlan", "parent": "Query", "resolver": "getCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
+      { "isRoot": true, "javaType": "Map<String,Object>", needsObjectInOutput: true, "name": "getCreatePlan", "parent": "Query", "resolver": "getCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
     )
     expect ( findQueryMutationResolvers ( createPlanRestD, "create" ) ).toEqual (
-      { "isRoot": true, needsObjectInOutput: true, "name": "createCreatePlan", "parent": "Mutation", "resolver": "createCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
+      { "isRoot": true, "javaType": "Map<String,Object>", needsObjectInOutput: true, "name": "createCreatePlan", "parent": "Mutation", "resolver": "createCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
     )
     expect ( findQueryMutationResolvers ( createPlanRestD, "update" ) ).toEqual (
-      { "isRoot": true, needsObjectInOutput: true, "name": "updateCreatePlan", "parent": "Mutation", "resolver": "updateCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
+      { "isRoot": true, "javaType": "Map<String,Object>", needsObjectInOutput: true, "name": "updateCreatePlan", "parent": "Mutation", "resolver": "updateCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
     )
     expect ( findQueryMutationResolvers ( createPlanRestD, "delete" ) ).toEqual (
-      { "isRoot": true, needsObjectInOutput: false, "name": "deleteCreatePlan", "parent": "Mutation", "resolver": "deleteCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
+      { "isRoot": true, "javaType": "Map<String,Object>", needsObjectInOutput: false, "name": "deleteCreatePlan", "parent": "Mutation", "resolver": "deleteCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
     )
     // expect ( findQueryMutationResolvers ( createPlanRestD, "list" ) ).toEqual (
     //   { "isRoot": true, needsObjectInOutput: true, "name": "listCreatePlan", "parent": "Query", "resolver": "listCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
@@ -208,21 +211,21 @@ describe ( "findAllResolvers2", () => {
 
   it ( "findAllResolversFor with children - gets with children", () => {
     expect ( findAllResolversFor ( eAccountsSummaryRestD, 'get' ) ).toEqual ( [
-      { "isRoot": true, needsObjectInOutput: true, "name": "getEAccountsSummary", "parent": "Query", "resolver": "getEAccountsSummary", "sample": [], "samplerName": "sampleEAccountsSummary" },
-      { "isRoot": false, needsObjectInOutput: true, "name": "description", "parent": "EAccountSummary", "resolver": "getAccountSummaryDescription", "sample": [ "This account's description" ], "samplerName": "sampleOneLineString" },
-      { "isRoot": false, needsObjectInOutput: true, "name": "totalMonthlyCost", "parent": "EAccountsSummary", "resolver": "getTotalMonthlyCost", "sample": [ 1000 ], "samplerName": "sampleMoney" },
-      { "isRoot": false, needsObjectInOutput: true, "name": "oneAccountBalance", "parent": "EAccountsSummary", "resolver": "getOneAccountBalance", "sample": [ 9921 ], "samplerName": "sampleMoney" },
-      { "isRoot": false, needsObjectInOutput: true, "name": "currentAccountBalance", "parent": "EAccountsSummary", "resolver": "getCurrentAccountBalance", "sample": [ 12321 ], "samplerName": "sampleMoney" }
+      { "isRoot": true, needsObjectInOutput: true, "javaType": "Map<String,Object>", "name": "getEAccountsSummary", "parent": "Query", "resolver": "getEAccountsSummary", "sample": [], "samplerName": "sampleEAccountsSummary" },
+      { "isRoot": false, needsObjectInOutput: true, "javaType": "String", "name": "description", "parent": "EAccountSummary", "resolver": "getAccountSummaryDescription", "sample": [ "This account's description" ], "samplerName": "sampleOneLineString" },
+      { "isRoot": false, needsObjectInOutput: true, "javaType": "Integer", "name": "totalMonthlyCost", "parent": "EAccountsSummary", "resolver": "getTotalMonthlyCost", "sample": [ 1000 ], "samplerName": "sampleMoney" },
+      { "isRoot": false, needsObjectInOutput: true, "javaType": "Integer", "name": "oneAccountBalance", "parent": "EAccountsSummary", "resolver": "getOneAccountBalance", "sample": [ 9921 ], "samplerName": "sampleMoney" },
+      { "isRoot": false, needsObjectInOutput: true, "javaType": "Integer", "name": "currentAccountBalance", "parent": "EAccountsSummary", "resolver": "getCurrentAccountBalance", "sample": [ 12321 ], "samplerName": "sampleMoney" }
     ] )
   } )
   it ( "findAllResolversFor with children - with mutations", () => {
     expect ( findAllResolversFor ( createPlanRestD, 'update' ) ).toEqual ( [
-      { "isRoot": true, needsObjectInOutput: true, "name": "updateCreatePlan", "parent": "Mutation", "resolver": "updateCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
+      { "isRoot": true, needsObjectInOutput: true, "javaType": "Map<String,Object>", "name": "updateCreatePlan", "parent": "Mutation", "resolver": "updateCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
     ] )
   } )
   it ( "findAllResolversFor simple", () => {
     expect ( findAllResolversFor ( createPlanRestD, 'get' ) ).toEqual ( [
-      { "isRoot": true, needsObjectInOutput: true, "name": "getCreatePlan", "parent": "Query", "resolver": "getCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
+      { "isRoot": true, needsObjectInOutput: true, "javaType": "Map<String,Object>", "name": "getCreatePlan", "parent": "Query", "resolver": "getCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
     ] )
   } )
 
@@ -234,6 +237,7 @@ describe ( "findAllResolvers2", () => {
         "name": "getRepeatingLine",
         "parent": "Query",
         "resolver": "getRepeatingLine",
+        "javaType": "List<Map<String,Object>>",
         "sample": [],
         "samplerName": "sampleRepeatingWholeData"
       }
@@ -246,6 +250,7 @@ describe ( "findAllResolvers2", () => {
         needsObjectInOutput: true,
         "name": "createRepeatingLine",
         "parent": "Mutation",
+        "javaType": "List<Map<String,Object>>",
         "resolver": "createRepeatingLine",
         "sample": [],
         "samplerName": "sampleRepeatingWholeData"

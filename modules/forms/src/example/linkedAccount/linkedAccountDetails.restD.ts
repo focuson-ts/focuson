@@ -35,7 +35,7 @@ export const collectionHistoryListRD: ExampleRestD = {
 
 export const collectionPaymentParams: RestParams = {
   ...fromCommonIds ( 'clientRef', 'accountId' ),
-  accountId: { ...IntParam, lens: '~/display/mandate/accountId', testValue: '1'},
+  accountId: { ...IntParam, lens: '~/display/mandate/accountId', testValue: '1' },
   paymentId: { ...IntParam, lens: '~/selectedCollectionItem/paymentId', testValue: '123' },
 }
 
@@ -45,13 +45,13 @@ export const singleCollectionPaymentRD: ExampleRestD = {
   dataDD: CollectionItemDD,
   url: '/api/payment?{query}',
   actions: [ { state: 'cancel' }, { state: 'revalidate' } ],
-  audit: [
-    { restAction: { state: 'cancel' }, storedProcedure: { name: 'auditCancel', schema: onlySchema, params: [ 'accountId', 'paymentId' ] } },
-    { restAction: { state: 'revalidate' }, storedProcedure: { name: 'auditrevalidate', schema: onlySchema, params: [ 'accountId', 'paymentId' ] } }
+  mutations: [
+    { restAction: { state: 'cancel' }, mutateBy: { mutation: 'storedProc', name: 'auditCancel', schema: onlySchema, params: [ 'accountId', 'paymentId' ] } },
+    { restAction: { state: 'revalidate' }, mutateBy: { mutation: 'storedProc', name: 'auditrevalidate', schema: onlySchema, params: [ 'accountId', 'paymentId' ] } }
   ],
   states: {
-    cancel: { url: '/api/payment/cancel?{query}', useSql: { sql: 'write ', params: [ 'accountId', 'paymentId' ], schema: onlySchema } },
-    revalidate: { url: '/api/payment/revalidate?{query}', useStoredProcedure: { name: 'revalidate', params: [ 'accountId', 'paymentId' ], schema: onlySchema } },
+    cancel: { url: '/api/payment/cancel?{query}', params: [ 'accountId', 'paymentId' ] },
+    revalidate: { url: '/api/payment/revalidate?{query}', params: [ 'accountId', 'paymentId' ] },
   }
 }
 
@@ -61,14 +61,19 @@ export const createPaymentRD: ExampleRestD = {
   dataDD: CreatePaymentDD,
   url: '/api/payment/create?{query}',
   actions: [ 'create' ],
-  audit: [
-    { restAction: 'create', storedProcedure: { name: 'auditCreate', schema: onlySchema, params: [ 'accountId' ] } },
-  ],
+  mutations: [
+    {
+      restAction: 'create', mutateBy: [
+        { mutation: 'sql', name: 'create', sql: 'insert into', params: [ 'accountId' ] , schema: onlySchema},
+        { mutation: 'storedProc', name: 'auditCreate', params: [ 'accountId' ], schema: onlySchema },
+        // { mutation: 'manual', name: 'someMeaningfulName', code: [ 'some', 'lines', 'of code' ], params: [ 'accountId' ] },
+      ],
+    } ]
 }
 
 
 export const overpaymentHistoryRD: ExampleRestD = {
-  params:   {...fromCommonIds ( 'clientRef', 'accountId' )},
+  params: { ...fromCommonIds ( 'clientRef', 'accountId' ) },
   dataDD: OverpaymentPageDD,
   url: '/api/payment/overpayment/history?{query}',
   actions: [ 'get' ]

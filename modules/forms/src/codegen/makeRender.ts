@@ -28,7 +28,7 @@ function componentDataForRootPage<G> ( d: CompDataD<G> ): ComponentData<G> {
 
 }
 function componentDataForPage<G> ( oneDataD: OneDataDD<G>, d: CompDataD<G> ): ComponentData<G> {
-  return { ...componentDataForRootPage ( d ), guard: oneDataD.guard , hidden: oneDataD.hidden}
+  return { ...componentDataForRootPage ( d ), guard: oneDataD.guard, hidden: oneDataD.hidden }
 
 }
 export interface ErrorComponentData {
@@ -101,7 +101,7 @@ export const processParam = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G
   if ( dcdType.paramType === 'boolean' ) return processObjectParam ()
   if ( dcdType.paramType === 'object' ) return processObjectParam ()
   if ( dcdType.paramType === 'json' ) return "{" + JSON.stringify ( s ) + "}"
-  if ( dcdType.paramType === 'jsonWithDisplayFn' ) return "{"+ JSON.stringify ( s,null,2 ).replace ( /"display":\s*"(\w*)"/g,  '"display":$1' ) + "}"
+  if ( dcdType.paramType === 'jsonWithDisplayFn' ) return "{" + JSON.stringify ( s, null, 2 ).replace ( /"display":\s*"(\w*)"/g, '"display":$1' ) + "}"
   if ( dcdType.paramType === 'objectAndRenderPrefix' ) return "{" + (mainPage.name == page.name ? '' : 'render.') + s + "}"
   if ( dcdType.paramType === 'string[]' ) return processStringArrayParam ()
   if ( dcdType.paramType === 'fullState' ) return processState ( 'fullState(state)', '' )
@@ -177,11 +177,13 @@ function makeLayoutPrefixPostFix<B, G> ( mainPage: MainPageD<B, G>, page: PageD<
 }
 function makeGuardVariables<B, G extends GuardWithCondition> ( hasGuards: HasGuards<G>, makeGuard: MakeGuard<G>, params: TSParams, mainP: MainPageD<B, G>, page: PageD<B, G> ): string[] {
   if ( hasGuards.guards === undefined ) return []
-  return unsortedEntries ( hasGuards.guards ).map ( ( [ name, guard ] ) => {
+  let guards = unsortedEntries ( hasGuards.guards ).map ( ( [ name, guard ] ) => {
     const maker = makeGuard[ guard.condition ]
     if ( !maker ) throw new Error ( `Don't know how to process guard with name ${name}: ${JSON.stringify ( guard )}` )
-    return maker.makeGuardVariable ( params, mainP, page, name, guard )
+    const debugString = `;if (guardDebug)console.log('${mainP.name} '+ id + '.${name}', ${name}Guard);`
+    return maker.makeGuardVariable ( params, mainP, page, name, guard ) + debugString
   } );
+  return [ `const guardDebug=state.main?.debug?.guardDebug`, ...guards ];
 }
 
 
@@ -230,9 +232,9 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
     `  return focusedPage<${params.stateName}, ${domName}, Context> ( s =>  '${decamelize ( pageD.name, ' ' )}' ) (//If there is a compilation here have you added this to the 'domain' of the main page`,
     `     ( state, d, mode, index ) => {`,
     ...(indentList ( indentList ( indentList ( indentList ( indentList ( [
+      'const id=`page${index}`;',
       ...guards,
       ...makeGuardButtonVariables ( params, makeGuard, mainP, pageD ),
-      'const id=`page${index}`;',
       ...makeButtonsVariable ( params, makeGuard, makeButtons, mainP, pageD ),
       `return ${layoutPrefixString}`,
       ...createAllReactCalls ( mainP, params, pageD, [ componentDataForRootPage ( pageD.display.dataDD ) ] ),

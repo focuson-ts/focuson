@@ -14,13 +14,13 @@ export const eAccountsSummaryRestD: RestD<AllGuards> = {
   url: '/api/accountsSummary?{query}', //or maybe accountId={accountId}&customerId={customerId}
   actions: [ 'get', { state: 'invalidate' } ],
   states: {
-    invalidate: { url: '/api/accountsSummary/invalidate?{query}', useStoredProcedure: { schema: onlySchema, name: 'sda', params: [ 'accountId', 'clientRef' ] } }
+    invalidate: { url: '/api/accountsSummary/invalidate?{query}', params: [ 'accountId', 'clientRef' ] }
   },
   access: [
     { restAction: { state: 'invalidate' }, condition: { type: 'in', param: 'employeeType', values: [ 'teamLeader' ] } }
   ],
-  audit: [
-    { restAction: { state: 'invalidate' }, storedProcedure: { name: 'auditStuff', params: [ 'accountId', 'clientRef' ], schema: onlySchema } }
+  mutations: [
+    { restAction: { state: 'invalidate' }, mutateBy: { mutation: 'storedProc', name: 'auditStuff', params: [ {type: 'string', value: 'someString'},'accountId', 'clientRef' ], schema: onlySchema } }
   ]
 }
 export const createPlanRestD: RestD<AllGuards> = {

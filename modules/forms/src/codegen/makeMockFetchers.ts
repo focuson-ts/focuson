@@ -5,12 +5,12 @@ import { getRestTypeDetails } from "@focuson/rest";
 import { findAllResolversFor, findQueryMutationResolvers, ResolverData } from "./makeJavaFetchersInterface";
 
 
-export const makeMockFetcherFor = ( params: JavaWiringParams ) => ( { isRoot, samplerName, sample, resolver, needsObjectInOutput }: ResolverData ): string[] =>
+export const makeMockFetcherFor = ( params: JavaWiringParams ) => ( { isRoot, samplerName, sample, resolver, needsObjectInOutput, javaType }: ResolverData ): string[] =>
   needsObjectInOutput ?
     isRoot ?
-      [ ` public DataFetcher ${resolver}() {  return dataFetchingEnvironment -> ${params.sampleClass}.${samplerName}0;    }` ] :
-      [ `  public DataFetcher ${resolver} (){ return new StaticDataFetcher(${JSON.stringify ( safePick ( sample, 0 ) )});}` ] :
-    [ `  public DataFetcher ${resolver} (){ return new StaticDataFetcher(true);}` ]
+      [ ` public DataFetcher<${javaType}> ${resolver}() {  return dataFetchingEnvironment -> ${params.sampleClass}.${samplerName}0;    }` ] :
+      [ `  public DataFetcher<${javaType}> ${resolver} (){ return new StaticDataFetcher(${JSON.stringify ( safePick ( sample, 0 ) )});}` ] :
+    [ `  public DataFetcher<${javaType}> ${resolver} (){ return new StaticDataFetcher(true);}` ]
 
 
 export function makeMockFetchersForRest<G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string[] {

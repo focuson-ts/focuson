@@ -44,7 +44,6 @@ export const PostCodeMainPage: ExampleMainPage = {
         { from: '~/postcode/addressResults/line2', to: '~/main/line2' },
         { from: '~/postcode/addressResults/line3', to: '~/main/line3' },
         { from: '~/postcode/addressResults/line4', to: '~/main/line4' },
-        { from: '~/postcode/addressResults/line4', to: '~/main/line4' },
         { from: '~/postcode/addressResults/postcode', to: '~/main/postcode' }
       ]
     },

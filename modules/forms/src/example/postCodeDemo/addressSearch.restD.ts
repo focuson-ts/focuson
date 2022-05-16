@@ -16,7 +16,7 @@ export const postcodeRestD: RestD<AllGuards> = {
   url: '/api/postCode?{query}',
   actions: [ 'get' ],
   initialSql: addressSearchSql,
-  strategy: {type: 'OneTableInsertSqlStrategyForNoIds', table: postCodeSearchTable},
+  insertSqlStrategy: {type: 'OneTableInsertSqlStrategyForNoIds', table: postCodeSearchTable},
   tables: {
     entity: {
       type: 'Main',
@@ -26,7 +26,6 @@ export const postcodeRestD: RestD<AllGuards> = {
       { table: postCodeSearchTable, alias: postCodeSearchTable.name, field: 'PC_POSTCODE', paramName: 'postcode', comparator: 'like', paramPrefix: '%', paramPostfix: '%' }
     ]
   }
-
 }
 
 export const addressRestD: RestD<AllGuards> = {

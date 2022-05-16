@@ -85,22 +85,26 @@ export interface CommonPrimitiveDD<T> extends CommonDataDD, HasSample<T>, HasEnu
   graphQlType: string;
   rsGetter: string;
   dbType: string;
+  javaType: string;
 }
 
 export interface StringPrimitiveDD extends CommonPrimitiveDD<string> {
   reactType: 'string';
-  graphQlType: 'String'
+  graphQlType: 'String';
+  javaType: 'String'
 
 }
 export interface BooleanPrimitiveDD extends CommonPrimitiveDD<boolean> {
   reactType: 'boolean';
   emptyValue: false
   graphQlType: 'Boolean'
+  javaType: 'Boolean'
 }
 export interface NumberPrimitiveDD extends CommonPrimitiveDD<number> {
   reactType: 'number';
   emptyValue: number;
   graphQlType: 'Int' | 'Float'
+  javaType: 'Integer' | 'Float' | 'Double'
 }
 export type PrimitiveDD = StringPrimitiveDD | BooleanPrimitiveDD | NumberPrimitiveDD
 
@@ -231,13 +235,15 @@ interface StringPrimDD {
   graphQlType: 'String';
   rsGetter: 'getString';
   dbType: string
+  javaType: 'String'
 }
 export const stringPrimDD: StringPrimDD = {
   emptyValue: "",
   reactType: 'string',
   graphQlType: 'String',
   rsGetter: 'getString',
-  dbType: 'varchar(255)'
+  dbType: 'varchar(255)',
+  javaType: 'String'
 }
 interface NumberPrimDD {
   emptyValue: number,
@@ -245,14 +251,15 @@ interface NumberPrimDD {
   reactType: 'number',
   rsGetter: 'getInt';
   dbType: string
+  javaType: 'Integer' | 'Float' | 'Double'
 }
 export const numberPrimDD: NumberPrimDD = {
   emptyValue: 0,
   graphQlType: 'Int',
   reactType: 'number',
   rsGetter: 'getInt',
-  dbType: 'integer'
-
+  dbType: 'integer',
+  javaType: 'Integer'
 }
 
 export const CustomerIdDD: StringPrimitiveDD = {
@@ -317,6 +324,7 @@ export const BooleanDD: PrimitiveDD = {
   rsGetter: "getBoolean",
   dbType: 'boolean',
   name: 'Boolean',
+  javaType: 'Boolean',
   emptyValue: false,
   graphQlType: 'Boolean',
   reactType: 'boolean',

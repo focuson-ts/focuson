@@ -28,7 +28,7 @@ describe ( "makeDbFetchers", () => {
       "  @Autowired",
       "  private DataSource dataSource;",
       "",
-      "  public DataFetcher getpreJointAccount() {",
+      "  public DataFetcher<Map<String,Object>> getpreJointAccount() {",
       "    return dataFetchingEnvironment -> {",
       "      String accountId = dataFetchingEnvironment.getArgument(\"accountId\");",
       "      String brandRef = dataFetchingEnvironment.getArgument(\"brandRef\");",
@@ -50,7 +50,7 @@ describe ( "makeDbFetchers", () => {
       "      return IFetcher.db;",
       "  }",
       "}"
-    ] )
+    ])
   } )
   it ( "should make the java code for the fetcher - repeating item", () => {
     expect ( makeDBFetchers ( paramsForTest, PostCodeMainPage, 'postcode', PostCodeMainPage.rest.postcode ) ).toEqual ( [
@@ -75,7 +75,7 @@ describe ( "makeDbFetchers", () => {
       "  @Autowired",
       "  private DataSource dataSource;",
       "",
-      "  public DataFetcher getPostCodeDataLine() {",
+      "  public DataFetcher<List<Map<String,Object>>> getPostCodeDataLine() {",
       "    return dataFetchingEnvironment -> {",
       "      String dbName = dataFetchingEnvironment.getArgument(\"dbName\");",
       "      String postcode = dataFetchingEnvironment.getArgument(\"postcode\");",

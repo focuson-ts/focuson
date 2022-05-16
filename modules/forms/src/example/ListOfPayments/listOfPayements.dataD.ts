@@ -1,9 +1,11 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 
-import { CheckboxInputCD, DataDrivenFixedOptionDropDownAndDetailsCD, LabelAndDropDownCD, LayoutCd, NumberInputCD, SelectedItemCD, TwoElementWithTitleLayoutCD } from "../../common/componentsD";
+import { CheckboxInputCD, DataDrivenFixedOptionDropDownAndDetailsCD, LabelAndDropDownCD, LayoutCd, NumberInputCD, SelectedItemCD, TableCD, TwoElementWithTitleLayoutCD } from "../../common/componentsD";
 import { NatNumDd } from "../commonEnums";
-import { AccountIdDD, BooleanDD, NumberPrimitiveDD, OneLineStringDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
+import { AccountIdDD, BooleanDD, DataD, NumberPrimitiveDD, OneLineStringDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
 import { CustomerStatus } from "@focuson/form_components";
+import { AllGuards } from "../../buttons/guardButton";
+import { postCodeSearchTable } from "../database/tableNames";
 
 export const authorisedByCustomerDD: StringPrimitiveDD = {
   ...OneLineStringDD,
@@ -51,9 +53,9 @@ export const newBankDetailsDD: ExampleDataD = {
   description: 'Not really sure what is going on here',
   layout: { component: LayoutCd, displayParams: { details: '[[1,1,1], [1], [1], [1], [1], [1,1], [1,1]]' } },
   structure: {
-    title: { dataDD: StringDD, sample: [ 'Mr', 'Mrs' ] },
-    forename: { dataDD: OneLineStringDD, sample: [ 'Fred', 'Fredrica' ] },
-    surname: { dataDD: OneLineStringDD, sample: [ 'Bloggs', 'Smith' ] },
+    title: { dataDD: StringDD, sample: [ 'Mr', 'Mrs' ], displayParams: { required: false } },
+    forename: { dataDD: OneLineStringDD, sample: [ 'Fred', 'Fredrica' ], displayParams: { required: false } },
+    surname: { dataDD: OneLineStringDD, sample: [ 'Bloggs', 'Smith' ], displayParams: { required: false } },
     bank: { dataDD: OneLineStringDD, sample: [ 'Happy Bank', 'Sad Bank' ] },
     line1: { dataDD: OneLineStringDD, sample: [ '4 Privet drive', '27 Throughput Lane' ] },
     line2: { dataDD: OneLineStringDD, sample: [ 'Little Whinging', 'Woodfield' ] },
@@ -61,7 +63,7 @@ export const newBankDetailsDD: ExampleDataD = {
     line4: { dataDD: OneLineStringDD, sample: [ 'England', 'Ireland' ] },
     postcode: { dataDD: OneLineStringDD, sample: [ 'LW12 5f', 'IR45 3GT' ], displayParams: { buttons: [ 'address' ] } },
     sortCode: { dataDD: OneLineStringDD, sample: [ '10-12-31', '34-43-23¶' ] },
-    accountNo: { dataDD: AccountIdDD, sample: [100233, 345345 ] }
+    accountNo: { dataDD: AccountIdDD, sample: [ 100233, 345345 ] }
   }
 }
 
@@ -108,11 +110,38 @@ export const CurrentPaymentCountsDD: ExampleDataD = {
     openBanking: { dataDD: NatNumDd, sample: [ 0, 1, 0 ] },
   }
 }
+export const postCodeDataForListOfPaymentsLineD: DataD<AllGuards> = {
+  name: "PostCodeDataLineForListOfPayments",
+  description: "",
+  table: postCodeSearchTable,
+  structure: {
+    line1: { dataDD: OneLineStringDD, db: 'zzline1', sample: [ '4 Privet drive', '27 Throughput Lane' ] },
+    line2: { dataDD: OneLineStringDD, db: 'zzline2', sample: [ 'Little Whinging', 'Woodfield' ] },
+    line3: { dataDD: OneLineStringDD, db: 'zzline3', sample: [ 'Surrey', '' ] , displayParams: {required: false}},
+    line4: { dataDD: OneLineStringDD, db: 'zzline4', sample: [ 'England', 'Ireland' ] },
+    postcode: { dataDD: OneLineStringDD, db: 'PC_POSTCODE', sample: [ 'LW12 5f', 'IR45 3GT' ] }
+  }
+}
+
+export const postCodeSearchResponseDD: RepeatingDataD<AllGuards> = {
+  name: "PostCodeSearchResponseForListOfPayments",
+  description: "The array of all the data",
+  dataDD: postCodeDataForListOfPaymentsLineD,
+  paged: false,
+  display: TableCD,
+  displayParams: {
+    order: [ 'postcode', 'line1', 'line2', 'line3', 'line4' ],
+    copySelectedItemTo: [ 'selectedPostCodeAddress' ],
+    copySelectedIndexTo : ['selectedPostCodeIndex']
+  }
+}
+
 export const addressSearchDD: ExampleDataD = {
   name: 'AddressSearch',
-  description: 'Seraching for address by postcode',
+  description: 'Searching for address by postcode',
   structure: {
-    postcode: {dataDD: OneLineStringDD}
+    postcode: { dataDD: OneLineStringDD, displayParams: { buttons: [ 'search' ] } },
+    searchResult: {dataDD: postCodeSearchResponseDD}
   }
 }
 
@@ -120,7 +149,7 @@ export const addressSearchDD: ExampleDataD = {
 export const printRecordDD: ExampleDataD = {
   name: 'PrintRecordItem',
   description: 'A single request for the list of payments that happened at a point at time, or will happen when we click print',
-  layout: { component: LayoutCd, displayParams: { details: '[[1],[1,3]]' } },
+  layout: { component: LayoutCd, displayParams: { details: '[[1],[1,4]]' } },
   guards: {
     requestedBy: { condition: 'in', path: 'requestedBy', values: { j: 'joint', m: 'main', n: 'new bank' } },
     alreadyPrinted: { condition: 'equals', path: 'alreadyPrinted', value: true },
@@ -145,6 +174,7 @@ export const printRecordDD: ExampleDataD = {
     includeSingleAndInitialDirectDebits: { dataDD: BooleanDD },
     alreadyPrinted: { dataDD: BooleanDD, sample: [ false, true, false ] }, //will be hidden but leaving visible for now.
     authorisedByCustomer: { dataDD: authorisedByCustomerDD, guard: { requestedBy: [ 'N' ] } },
+    datePrinted: { dataDD: StringDD, guard: { alreadyPrinted: [ 'true' ] } }
   }
 }
 

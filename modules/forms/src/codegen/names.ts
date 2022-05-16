@@ -1,11 +1,12 @@
 import { AllDataDD, CompDataD, compDataDIn } from "../common/dataD";
 import { MainPageD, ModalPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
-import { RestD, StoredProcedureForStateDetails } from "../common/restD";
+import { RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
 import { RestAction, safeString } from "@focuson/utils";
 import { JavaWiringParams, TSParams } from "./config";
 import { TableAndFieldAndAliasData } from "./makeSqlFromEntities";
-import { getRestTypeDetails, printRestAction, RestActionDetail, restActionForName } from "@focuson/rest";
+import { RestActionDetail, restActionForName } from "@focuson/rest";
+import { MutationDetail } from "../common/resolverD";
 
 export const guardName = ( s: string ) => s + "Guard"
 export const domainName = <G> ( d: CompDataD<G> ): string => d.name + "Domain";
@@ -23,7 +24,7 @@ export function resolverName<G> ( rest: RestD<G>, action: RestActionDetail ) {
 export const sampleName = <G> ( dataD: AllDataDD<G> ) => "sample" + dataD.name;
 export const emptyName = <G> ( dataD: AllDataDD<G> ) => "empty" + dataD.name;
 
-export const restControllerName = <G> ( restD: RestD<G> ) => (restD.namePrefix ? `${restD.namePrefix}_` : '') + `${restD.dataDD.name}Controller`
+export const restControllerName = <B, G> ( p: MainPageD<B, G>, restD: RestD<G> ) => p.name + "_" + (restD.namePrefix ? `${restD.namePrefix}_` : '') + `${restD.dataDD.name}Controller`
 export const javaSqlCreateTableSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.createTableSql.sql`
 export const javaSqlReadSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.readTableSql.sql`
 
@@ -48,21 +49,22 @@ export const dbFetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G>, a
 export const mockFetcherPackage = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G> ): string => packageNameFor ( params, p, params.mockFetcherPackage );
 export const mockFetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${params.fetcherInterface}Mock`;
 export const mockFetcherClassNameForResolver = <G> ( params: JavaWiringParams, r: RestD<G>, resolver: string ): string => {
-  if (typeof resolver !== 'string') throw Error(`Resolver must be string. Actually is ${JSON.stringify(resolver)}`)
-  return `${restNameWithPrefix ( r )}_${resolver}_${params.fetcherInterface}MockR`; };
+  if ( typeof resolver !== 'string' ) throw Error ( `Resolver must be string. Actually is ${JSON.stringify ( resolver )}` )
+  return `${restNameWithPrefix ( r )}_${resolver}_${params.fetcherInterface}MockR`;
+};
 
 export const queryPackage = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G> ): string => packageNameFor ( params, p, params.queriesPackage );
 export const providerName = <B, G> ( p: MainPageD<B, G> ) => p.name + "Provider"
 
 export const fetcherName = <G> ( d: RestDefnInPageProperties<G> ): string => restNameWithPrefix ( d.rest ) + "Fetcher";
 export const fetcherVariableName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${params.fetcherInterface}`;
-export const fetcherVariableNameForResolver = <G> ( params: JavaWiringParams, r: RestD<G>,resolverName: string ): string => `${restNameWithPrefix ( r )}_${resolverName}_${params.fetcherInterface}`;
+export const fetcherVariableNameForResolver = <G> ( params: JavaWiringParams, r: RestD<G>, resolverName: string ): string => `${restNameWithPrefix ( r )}_${resolverName}_${params.fetcherInterface}`;
 export const providerPactClassName = <B, G> ( pd: MainPageD<B, G> ): string => providerName ( pd ) + "Test";
 
-export const auditClassName = <B, G> ( r: RestD<G> ) => `${restNameWithPrefix ( r )}Audit`;
-export const auditMethodName = <B, G> ( r: RestD<G>, a: RestAction , sp: StoredProcedureForStateDetails) => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${sp.name}`;
+export const mutationClassName = <B, G> ( r: RestD<G> ) => `${restNameWithPrefix ( r )}Mutation`;
+export const mutationMethodName = <B, G> ( r: RestD<G>, a: RestAction, m: MutationDetail ) => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${m.name}`;
 
-export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${safeString(r.namePrefix)}${r.dataDD.name}Queries`;
+export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${safeString ( r.namePrefix )}${r.dataDD.name}Queries`;
 
 export const javaDbFileName = <B, G> ( params: JavaWiringParams, p: PageD<B, G> ): string => `${p.name}Db`;
 export const sqlDataSuffixFor = ( suffix: string, i: number ): string => suffix + "_" + i

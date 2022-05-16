@@ -59,7 +59,7 @@ function PagesData<S, C extends FocusOnContext<S>> ( { state }: DebugProps<S, C>
         const pageDetails = state.context.pages[ page.pageName ]
         const lens = isMainPageDetails ( pageDetails ) ? pageDetails.lens : fromPathGivenState ( state ) ( safeString ( page.focusOn ) )
         const title = isMainPageDetails ( pageDetails ) ? "Main" : "Modal"
-        const pageData = lens.getOption ( state.main )
+        const pageData = safeArray(lens.getOption ( state.main ))
         const accordionsOpen = state.focusOn('debug').focusOn('accordions').optJsonOr([])
         const accordions = Object.keys(pageData)
 
@@ -149,6 +149,7 @@ export function ToggleDebugs<S, C extends PageSelectionContext<S>> ( { state }: 
     <li><ToggleOneDebug state={debugState} name='selectedPageDebug'/></li>
     <li><ToggleOneDebug state={debugState} name='loadTreeDebug'/></li>
     <li><ToggleOneDebug state={debugState} name='tagFetcherDebug'/></li>
+    <li><ToggleOneDebug state={debugState} name='guardDebug'/></li>
   </ul>
 
 }

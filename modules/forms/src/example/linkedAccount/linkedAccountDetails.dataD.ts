@@ -7,7 +7,7 @@ export const paymentReasonDD: StringPrimitiveDD = {
   name: 'PaymentReason',
   description: "An enum about why the payment is being mad",
   display: LabelAndDropDownCD,
-  displayParams: { required: true, pleaseSelect: 'Seect...' },
+  displayParams: { required: true, pleaseSelect: 'Select...' },
   enum: { 'A': 'Allowance', 'O': 'Overpayment' }
 }
 export const periodDD: StringPrimitiveDD = {
