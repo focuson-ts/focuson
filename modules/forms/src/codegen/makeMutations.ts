@@ -7,7 +7,7 @@ import { indentList } from "./codegen";
 import { allInputParamNames, allInputParams, allOutputParams, displayParam, importForTubles, isInputParam, isOutputParam, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, ManualMutation, MutationDetail, MutationParam, OutputMutationParam, paramName, SqlMutation, StoredProcedureMutation } from "../common/resolverD";
 
 
-function setObjectFor ( m: MutationParam, i: number ): string {
+export function setObjectFor ( m: MutationParam, i: number ): string {
   const index = i + 1
   if ( typeof m === 'string' ) return `s.setObject(${index}, ${m});`
   if ( m.type === 'input' ) return `s.setObject(${index}, ${m.name});`
@@ -25,7 +25,7 @@ export function allSetObjectForInputs ( m: MutationParam | MutationParam[] ): st
   return toArray ( m ).filter ( isInputParam ).map ( setObjectFor )
 }
 
-function returnStatement ( outputs: OutputMutationParam[] ): string {
+export function returnStatement ( outputs: OutputMutationParam[] ): string {
   if ( outputs.length === 0 ) return `return;`
   if ( outputs.length === 1 ) return `return ${outputs[ 0 ].name};`
   return `return new Tuple${outputs.length}<>(${outputs.map ( x => x.name ).join ( ',' )});`
@@ -34,7 +34,7 @@ function quoteIfString ( javaType: 'String' | 'Integer', value: number ) {
   if ( javaType === 'String' ) return '"' + value + '"'
   return value
 }
-function mockReturnStatement ( outputs: OutputMutationParam[] ): string {
+export function mockReturnStatement ( outputs: OutputMutationParam[] ): string {
   if ( outputs.length === 0 ) return `return;`
   if ( outputs.length === 1 ) return `return ${quoteIfString ( outputs[ 0 ].javaType, 0 )};`
   return `return new Tuple${outputs.length}<>(${outputs.map ( ( x, i ) => quoteIfString ( x.javaType, i ) ).join ( ',' )});`
@@ -47,7 +47,7 @@ function commonIfDbNameBlock<G> ( r: RestD<G>, paramsA: MutationParam[], restAct
     `           ${mockReturnStatement ( allOutputParams ( paramsA ) )}` ]
 }
 
-function getFromStatement ( from: string, m: MutationParam[] ) {
+export function getFromStatement ( from: string, m: MutationParam[] ) {
   return m.flatMap ( ( m, i ) => {
     if ( !isStoredProcOutputParam ( m ) ) return []
     return m.javaType === 'String' ?
@@ -56,7 +56,7 @@ function getFromStatement ( from: string, m: MutationParam[] ) {
   } )
 }
 
-function getFromResultSet ( from: string, m: MutationParam[] ) {
+export function getFromResultSet ( from: string, m: MutationParam[] ) {
   return m.flatMap ( ( m, i ) => {
     if ( !isSqlOutputParam ( m ) ) return []
     return m.javaType === 'String' ?
@@ -64,7 +64,7 @@ function getFromResultSet ( from: string, m: MutationParam[] ) {
       `Integer ${m.name} = ${from}.getInt("${m.rsName}");`
   } )
 }
-function typeForParamAsInput ( m: MutationParam ) {
+export function typeForParamAsInput ( m: MutationParam ) {
   if ( isOutputParam ( m ) ) return m.javaType;
   if ( typeof m === 'string' ) return 'Object'
   if ( m.type === 'integer' ) return 'Integer'

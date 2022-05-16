@@ -157,13 +157,13 @@ export function paramNameOrValue ( m: MutationParam ) {
   if ( m.type === 'null' ) return "null"
   return m.name
 }
-interface StringMutationParam {
+export interface StringMutationParam {
   type: 'string';
   value: string
 }
-interface IntegerMutationParam {
+export interface IntegerMutationParam {
   type: 'integer';
-  value: string
+  value: number
 }
 interface ParamMutationParam {
   type: 'input';
@@ -186,7 +186,7 @@ export interface OutputForManualParam {
   name: string;
   javaType: 'String' | 'Integer';
 }
-interface NullMutationParam {
+export interface NullMutationParam {
   type: 'null';
 }
 

@@ -1,10 +1,77 @@
-import { makeMutations } from "../codegen/makeMutations";
+import { getFromResultSet, getFromStatement, makeMutations, mockReturnStatement, returnStatement, setObjectFor, typeForParamAsInput } from "../codegen/makeMutations";
 import { paramsForTest } from "./paramsForTest";
 import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { chequeCreditBooksRestD } from "../example/chequeCreditBooks/chequeCreditBooks.restD";
 import { ChequeCreditbooksPD } from "../example/chequeCreditBooks/chequeCreditBooks.pageD";
+import { IntegerMutationParam, NullMutationParam, OutputForManualParam, OutputForSqlMutationParam, OutputForStoredProcMutationParam, StringMutationParam } from "../common/resolverD";
+
+const stringMP: StringMutationParam = { type: 'string', value: 'someString' }
+const integerMP: IntegerMutationParam = { type: "integer", value: 123 }
+const spOutputMP: OutputForStoredProcMutationParam = { type: "output", javaType: 'String', name: "someNameSP", sqlType: 'someSqlType' }
+const nullMP: NullMutationParam = { type: 'null' }
+const sqlOutputMP: OutputForSqlMutationParam = { type: "output", rsName: 'rsName', name: "someNameSql", javaType: 'String' }
+const manOutputMp: OutputForManualParam = { type: "output", javaType: 'Integer', name: 'someNameMan' }
+
+
+describe ( "getFromStatement", () => {
+  it ( "generate the code to get the mp from a CallableStatement", () => {
+    expect ( getFromStatement ( 'ss', [ stringMP, integerMP, spOutputMP, nullMP, sqlOutputMP, manOutputMp ] ) ).toEqual ( [
+      "String someNameSP = ss.getString(3);",
+      "String someNameSql = ss.getString(5);",
+      "Integer someNameMan = ss.getInt(6);"
+    ] )
+  } )
+} )
+describe ( "getFromResultSet", () => {
+  it ( "generate the code to get the mp from a ResultSet", () => {
+    expect ( getFromResultSet ( 'ss', [ stringMP, integerMP, spOutputMP, nullMP, sqlOutputMP, manOutputMp ] ) ).toEqual ( [
+      "String someNameSql = ss.getString(\"rsName\");"
+    ] )
+  } )
+} )
+describe ( "setObjectFor", () => {
+  it ( "generate the code to get the mp from a ResultSet", () => {
+    expect ( [ stringMP, integerMP, spOutputMP, nullMP ].map ( setObjectFor ) ).toEqual ( [
+      "s.setString(1, \"someString\");",
+      "s.setInt(2, 123);",
+      "s.registerOutParameter(3,java.sql.Types.someSqlType);",
+      "s.setObject(4,null);",
+    ] )
+  } )
+} )
+
+describe ( "typeForParamAsInput", () => {
+  it ( "the java type if the MutationParam was an input", () => {
+    expect ( [ stringMP, integerMP, spOutputMP, nullMP, sqlOutputMP, manOutputMp ].map ( typeForParamAsInput ) ).toEqual (
+      [ "String", "Integer", "String", "Object", "String", "Integer" ] )
+  } )
+} )
+describe ( "mockReturnStatement", () => {
+  it ( "void if no MPs", () => {
+    expect ( mockReturnStatement ( [] ) ).toEqual ( 'return;' )
+  } )
+  it ( "the javatype if one MP", () => {
+    expect ( mockReturnStatement ( [ manOutputMp ] ) ).toEqual ( "return 0;" )
+    expect ( mockReturnStatement ( [ spOutputMP ] ) ).toEqual ( 'return "0";' )
+  } )
+  it ( "A tuple if many MPs", () => {
+    expect ( mockReturnStatement ( [ spOutputMP, sqlOutputMP, manOutputMp ] ) ).toEqual ( 'return new Tuple3<>("0","1",2);' )
+  } )
+} )
+describe ( "returnStatement", () => {
+  it ( "void if no MPs", () => {
+    expect ( returnStatement ( [] ) ).toEqual ( 'return;' )
+  } )
+  it ( "the javatype if one MP", () => {
+    expect ( returnStatement ( [ spOutputMP, ] ) ).toEqual ( 'return someNameSP;' )
+  } )
+  it ( "A tuple if many MPs", () => {
+    expect ( returnStatement ( [ spOutputMP, sqlOutputMP, manOutputMp ] ) ).toEqual ( 'return new Tuple3<>(someNameSP,someNameSql,someNameMan);' )
+  } )
+} )
+
 
 describe ( "makeMutations", () => {
   it ( "should create an mutation class with a method for each mutation for that rest - simple", () => {
