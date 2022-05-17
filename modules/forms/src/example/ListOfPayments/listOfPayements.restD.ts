@@ -2,7 +2,7 @@ import { ExampleRestD } from "../common";
 
 import { AccountDetailsDD, CurrentPaymentCountsDD, postCodeSearchResponseDD, PrintRecordHistoryDD } from "./listOfPayements.dataD";
 import { IntParam, RestD, RestParams, StringParam } from "../../common/restD";
-import { onlySchema } from "../database/tableNames";
+import { accountT, onlySchema } from "../database/tableNames";
 import { AllGuards } from "../../buttons/guardButton";
 import { allCommonIds } from "../commonIds";
 
@@ -24,6 +24,10 @@ export const CurrentPaymentCountsRD: ExampleRestD = {
   dataDD: CurrentPaymentCountsDD,
   url: '/api/paymentcounts?{query}',
   actions: [ 'get' ],
+  tables: {
+    entity: { table: accountT, type: 'Main' },
+    where: [ { table: accountT, alias: accountT.name, field: 'accountId', paramName: 'accountId' }, ]
+  }
 }
 export const accountAndAddressDetailsRD: ExampleRestD = {
   params: PrintRecordHistoryParams,

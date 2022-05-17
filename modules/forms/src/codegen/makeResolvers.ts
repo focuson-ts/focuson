@@ -11,36 +11,43 @@ import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint
 import { indentList } from "./codegen";
 
 function declareInputParamsFromEndpoint<G> ( r: RestD<G> ): string[] {
-  return unique ( [ 'dbName',...Object.keys ( r.params ) ], t => t ).map ( name => `String ${name} = dataFetchingEnvironment.getArgument("${name}");` )
+  return unique ( [ 'dbName', ...Object.keys ( r.params ) ], t => t ).map ( name => `String ${name} = dataFetchingEnvironment.getArgument("${name}");` )
 }
 
 export function callResolvers<G> ( p: MainPageD<any, G>, restName: string, r: RestD<G>, restAction: RestAction, dbNameString: string, resolvers: MutationDetail[] ) {
-  return indentList ( resolvers.filter ( a => actionsEqual ( 'get', restAction ) ).flatMap ( ( md, i ) =>
+  return resolvers.filter ( a => actionsEqual ( 'get', restAction ) ).flatMap ( ( md, i ) =>
     [ `//from ${p.name}.rest[${restName}].resolvers[${JSON.stringify ( restAction )}]`,
       '//' + JSON.stringify ( md.params ),
       `${paramsDeclaration ( md, i )} ${mutationMethodName ( r, restAction, md )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
       ...outputParamsDeclaration ( md, i )
-    ] ) );
+    ] );
 }
-
+function addParams<G> ( resolvers: MutationDetail[] ) {
+  return resolvers.flatMap ( r => toArray ( r.params ) ).flatMap ( p => typeof p !== 'string' && p.type === 'output' ? [ `result.put("${p.name}", ${p.name});` ] : [] )
+}
 export function makeFetcherMethod<G> ( params: JavaWiringParams, p: MainPageD<any, any>, restName: string, r: RestD<G>, resolvers: MutationDetail[] ): string[] {
   return [
     `public DataFetcher<${findJavaType ( r.dataDD )}> ${resolverName ( r, defaultRestAction[ 'get' ] )}(){`,
-    '  return dataFetchingEnvironment -> {',
-    ...declareInputParamsFromEndpoint ( r ),
-    '      try(Connection connection = dataSource.getConnection()){',
-    '         Map<String,Object> result = new HashMap<>();',
-    ...callResolvers ( p, restName, r, 'get', 'dbName', resolvers ),
-    '         return result;',
-    '  }};',
-    '}'
+    ...indentList ( [
+      'return dataFetchingEnvironment -> {',
+      ...indentList ( [
+        ...declareInputParamsFromEndpoint ( r ),
+        'try(Connection connection = dataSource.getConnection()){',
+        ...indentList ( [
+          'Map<String,Object> result = new HashMap<>();',
+          ...callResolvers ( p, restName, r, 'get', 'dbName', resolvers ),
+          '',
+          ...addParams ( resolvers ),
+          'return result;' ] ),
+        '}};', ] ),
+      '}' ] )
   ]
 }
 //this is just hacking it in to see if it will work. Only works for get at moment
 export function makeResolvers<G> ( params: JavaWiringParams, p: MainPageD<any, any>, restName: string, r: RestD<G> ): string[] {
   let resolvers = Object.values ( safeObject ( r.resolvers ) ).flatMap ( toArray );
   if ( resolvers.length == 0 ) return []
-  const { methods, importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( resolvers.map ( r => ({ restAction: 'get', mutateBy: r }) ), p, r, params );
+  const { methods, importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( resolvers.map ( r => ({ restAction: 'get', mutateBy: r }) ), p, r, params , false);
   let interfaceName = fetcherInterfaceName ( params, r, 'get' );
   const fetcherMethod = makeFetcherMethod ( params, p, restName, r, resolvers )
   return [

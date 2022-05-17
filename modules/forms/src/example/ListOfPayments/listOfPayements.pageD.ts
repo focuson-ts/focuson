@@ -94,12 +94,14 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
   },
   guards: {
     canPrint: { condition: 'equals', value: false, path: '~/display[~/selected]/alreadyPrinted' },
+
     hasStandingOrders: { condition: '>0', path: '~/display[~/selected]/listOfPayments/standingOrders/numberOfItems' },
     hasOpenBankingStandingOrders: { condition: '>0', path: '~/display[~/selected]/listOfPayments/openBankingStandingOrders/numberOfItems' },
     hasDirectDebits: { condition: '>0', path: '~/display[~/selected]/listOfPayments/directDebits/numberOfItems' },
     hasBillPayments: { condition: '>0', path: '~/display[~/selected]/listOfPayments/billPayments/numberOfItems' },
     hasOpenBanking: { condition: '>0', path: '~/display[~/selected]/listOfPayments/openBanking/numberOfItems' },
     hasSomethingToPrint: { condition: 'or', conditions: [ 'hasStandingOrders', 'hasOpenBankingStandingOrders', 'hasDirectDebits', 'hasBillPayments', 'hasOpenBanking' ] },
+
     authorisedByUser: { condition: 'equals', value: '"y"', path: '~/display[~/selected]/authorisedByCustomer' },
     sendingToUser: { condition: 'contains', values: [ 'M', 'J' ], path: '~/display[~/selected]/requestedBy' },
     canClickPrint: { condition: 'or', conditions: [ 'sendingToUser', 'authorisedByUser' ] }
@@ -108,10 +110,10 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
     prev: { control: 'ListPrevButton', list: '~/display', value: '~/selected' },
     next: { control: 'ListNextButton', list: '~/display', value: '~/selected' },
     add: { ...addOrEditButton, mode: "create", copyOnClose: { to: '~/display[$append]' }, setToLengthOnClose: { variable: '~/selected', array: '~/display' } },
-    edit: { ...addOrEditButton, mode: "edit", copyOnClose: { to: '~/display[~/selected]' } },
+    edit: { ...addOrEditButton, mode: "edit", copyOnClose: { to: '~/display[~/selected]' }, enabledBy: 'canPrint' },
     print: {
       control: 'RestButton', action: { state: 'print' }, restName: 'paymentHistory',
-      enabledBy: [ 'canClickPrint', 'hasSomethingToPrint' ],
+      enabledBy: [ 'canClickPrint', 'hasSomethingToPrint', 'canPrint' ],
       confirm: 'Really?',
       deleteOnSuccess: '~/display'
     },
