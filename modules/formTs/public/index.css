@@ -834,7 +834,7 @@ pre {
   display: inline-block;
   padding: 0;
   border: 0;
-  width: 65%;
+  /* width: 65%; */
 }
 
 .react-datepicker {
@@ -1508,5 +1508,20 @@ pre {
 .react-datepicker__portal .react-datepicker__current-month,
 .react-datepicker__portal .react-datepicker-time__header {
   font-size: 1.44rem;
+}
+
+.error-msg {
+  color: #dc3545;
+  font-weight: bold;
+  display: flex;  
+  position: relative;
+}
+
+.red-border {
+  border: 3px solid #dc3545 !important;
+}
+
+.react-datepicker-wrapper input[type=text] {
+  width: auto;
 }
 

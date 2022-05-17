@@ -5,8 +5,8 @@ import { actionsEqual, beforeSeparator, isRestStateChange, RestAction, safeArray
 import { filterParamsByRestAction, indentList } from "./codegen";
 import { isRepeatingDd } from "../common/dataD";
 import { MainPageD } from "../common/pageD";
-import { getRestTypeDetails, getUrlForRestAction, restActionToDetails } from "@focuson/rest";
-import { AccessCondition, allInputParamNames, allOutputParams, displayParam, importForTubles, javaTypeForOutput, MutationDetail, MutationParam } from "../common/resolverD";
+import { getRestTypeDetails, getUrlForRestAction, restActionToDetails, restActionForName } from "@focuson/rest";
+import { AccessCondition, allInputParamNames, allOutputParams, displayParam, importForTubles, javaTypeForOutput, MutationDetail } from "../common/resolverD";
 
 
 function makeCommaIfHaveParams<G> ( r: RestD<G>, restAction: RestAction ) {
@@ -55,7 +55,7 @@ export function accessDetails ( params: JavaWiringParams, p: MainPageD<any, any>
 
 
 export function auditDetails ( params: JavaWiringParams, r: RestD<any>, restAction: RestAction ): string[] {
-  return safeArray ( r.mutations ).flatMap ( ad => toArray ( ad.mutateBy ).map ( sp => `_audit.${mutationMethodName ( r, restAction, sp )}(${toArray ( sp.params ).map ( displayParam ).join ( ',' )})` ) )
+  return safeArray ( r.mutations ).flatMap ( ad => toArray ( ad.mutateBy ).map ( sp => `_audit.${mutationMethodName ( r, restActionForName ( restAction ), sp )}(${toArray ( sp.params ).map ( displayParam ).join ( ',' )})` ) )
 }
 
 export function paramsDeclaration ( md: MutationDetail, i: number ) {
@@ -75,8 +75,8 @@ export function callMutationsCode<G> ( p: MainPageD<any, G>, restName: string, r
   const callMutations = indentList ( safeArray ( r.mutations ).filter ( a => actionsEqual ( a.restAction, restAction ) ).flatMap ( ad =>
     toArray ( ad.mutateBy ).flatMap ( ( md, i ) =>
       [ `//from ${p.name}.rest[${restName}].mutations[${JSON.stringify ( restAction )}]`,
-        '//'+ JSON.stringify(md.params),
-        `${paramsDeclaration ( md, i )}__mutations.${mutationMethodName ( r, restAction, md )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
+        '//' + JSON.stringify ( md.params ),
+        `${paramsDeclaration ( md, i )}__mutations.${mutationMethodName ( r, restActionForName(restAction), md )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
         ...outputParamsDeclaration ( md, i )
       ] ) ) )
   return callMutations;

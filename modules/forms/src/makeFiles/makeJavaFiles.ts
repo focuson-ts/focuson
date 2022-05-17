@@ -1,40 +1,25 @@
 import { copyFile, copyFiles, DirectorySpec, templateFile, writeToFile } from "@focuson/files";
 import { JavaWiringParams } from "../codegen/config";
 import fs from "fs";
-import {
-  forEachRest,
-  forEachRestAndActions,
-  mapRestAndResolver,
-  OneTableInsertSqlStrategyForNoIds,
-  unique
-} from "../common/restD";
-import { detailsLog, GenerateLogLevel, isRestStateChange, NameAnd, safeArray, safeString, sortedEntries } from "@focuson/utils";
+import { forEachRest, forEachRestAndActions, mapRestAndResolver, unique } from "../common/restD";
+import { detailsLog, GenerateLogLevel, NameAnd, safeArray, safeObject, safeString, sortedEntries, toArray } from "@focuson/utils";
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
-import { mutationClassName, createTableSqlName, dbFetcherClassName, fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, getSqlName, mockFetcherClassName, mockFetcherClassNameForResolver, mockFetcherPackage, providerPactClassName, queryClassName, queryPackage, restControllerName, sqlMapFileName, resolverClassName } from "../codegen/names";
+import { createTableSqlName, dbFetcherClassName, fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, getSqlName, mockFetcherClassName, mockFetcherClassNameForResolver, mockFetcherPackage, mutationClassName, providerPactClassName, queryClassName, queryPackage, resolverClassName, restControllerName, sqlMapFileName } from "../codegen/names";
 import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
 
 import { makeMockFetcherFor, makeMockFetchersForRest } from "../codegen/makeMockFetchers";
 import { makeJavaVariablesForGraphQlQuery } from "../codegen/makeGraphQlQuery";
 import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
 // import { findSqlRoot, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, walkRoots } from "../codegen/makeJavaSql.tsxxx";
-import {
-  createTableSql,
-  findSqlLinkDataFromRootAndDataD,
-  findSqlRoot,
-  generateGetSql,
-  makeInsertSqlForNoIds,
-  makeMapsForRest,
-  walkSqlRoots
-} from "../codegen/makeSqlFromEntities";
+import { createTableSql, findSqlLinkDataFromRootAndDataD, findSqlRoot, generateGetSql, makeInsertSqlForNoIds, makeMapsForRest, walkSqlRoots } from "../codegen/makeSqlFromEntities";
 import { makeDBFetchers } from "../codegen/makeDBFetchers";
 import { makePactValidation } from "../codegen/makePactValidation";
 import { AppConfig } from "../appConfig";
 
 import { makeMutations } from "../codegen/makeMutations";
 import { makeAllJavaWiring, makeJavaFetcherInterfaceForResolver, makeJavaFetchersInterface } from "../codegen/makeJavaFetchersInterface";
-import { postCodeSearchTable } from "../example/database/tableNames";
 import { makeTuples, tupleIndexes } from "../common/resolverD";
 import { makeResolvers } from "../codegen/makeResolvers";
 
@@ -66,11 +51,11 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   fs.mkdirSync ( `${javaTestRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaResourcesRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaScriptRoot}`, { recursive: true } )
-  fs.mkdirSync ( `${javaFetcherRoot}`, { recursive: true } )
-  fs.mkdirSync ( `${javaMockFetcherRoot}`, { recursive: true } )
-  fs.mkdirSync ( `${javaH2FetcherRoot}`, { recursive: true } )
-  fs.mkdirSync ( `${javaControllerRoot}`, { recursive: true } )
-  fs.mkdirSync ( `${javaQueriesPackages}`, { recursive: true } )
+  // fs.mkdirSync ( `${javaFetcherRoot}`, { recursive: true } )
+  // fs.mkdirSync ( `${javaMockFetcherRoot}`, { recursive: true } )
+  // fs.mkdirSync ( `${javaH2FetcherRoot}`, { recursive: true } )
+  // fs.mkdirSync ( `${javaControllerRoot}`, { recursive: true } )
+  // fs.mkdirSync ( `${javaQueriesPackages}`, { recursive: true } )
   fs.mkdirSync ( `${javaDbPackages}`, { recursive: true } )
   allMainPages ( pages ).forEach ( p => {
     fs.mkdirSync ( `${javaFetcherRoot}/${p.name}`, { recursive: true } );
@@ -210,15 +195,18 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   } )
 
   forEachRest ( pages, p => r => {
-    const mutation = makeMutations ( params, p, r )
+
+    const mutation = makeMutations ( params, p, r, toArray ( r.mutations ) )
     if ( mutation.length > 0 )
       writeToFile ( `${javaMutatorPackage}/${p.name}/${mutationClassName ( r )}.java`, () => mutation, details )
-
   } )
   forEachRest ( pages, p => ( r, restName ) => {
-    const resolver = makeResolvers ( params, p, restName, r )
-    if ( resolver.length > 0 )
-      writeToFile ( `${javaResolverPackage}/${p.name}/${resolverClassName ( r )}.java`, () => resolver, details )
+    Object.entries ( safeObject ( r.resolvers ) ).forEach ( ( [ name, res ] ) => {
+      const resolver = makeResolvers ( params, p, restName, r, name, res )
+      if ( resolver.length > 0 )
+        writeToFile ( `${javaResolverPackage}/${p.name}/${resolverClassName ( r )}.java`, () => resolver, details )
+
+    } )
 
   } )
 

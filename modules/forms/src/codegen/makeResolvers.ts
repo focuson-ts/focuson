@@ -1,8 +1,8 @@
 import { JavaWiringParams } from "./config";
 import { MainPageD } from "../common/pageD";
 import { RestD, unique } from "../common/restD";
-import { actionsEqual, RestAction, safeArray, safeObject, toArray } from "@focuson/utils";
-import { allInputParamNames, importForTubles, MutationDetail } from "../common/resolverD";
+import { toArray } from "@focuson/utils";
+import { allInputParamNames, importForTubles, MutationDetail, Resolvers } from "../common/resolverD";
 import { fetcherInterfaceName, fetcherPackageName, mutationMethodName, resolverClassName, resolverName } from "./names";
 import { makeCodeFragmentsForMutation } from "./makeMutations";
 import { findJavaType } from "./makeJavaFetchersInterface";
@@ -14,11 +14,11 @@ function declareInputParamsFromEndpoint<G> ( r: RestD<G> ): string[] {
   return unique ( [ 'dbName', ...Object.keys ( r.params ) ], t => t ).map ( name => `String ${name} = dataFetchingEnvironment.getArgument("${name}");` )
 }
 
-export function callResolvers<G> ( p: MainPageD<any, G>, restName: string, r: RestD<G>, restAction: RestAction, dbNameString: string, resolvers: MutationDetail[] ) {
-  return resolvers.filter ( a => actionsEqual ( 'get', restAction ) ).flatMap ( ( md, i ) =>
-    [ `//from ${p.name}.rest[${restName}].resolvers[${JSON.stringify ( restAction )}]`,
+export function callResolvers<G> ( p: MainPageD<any, G>, restName: string, r: RestD<G>, name: string, dbNameString: string, resolvers: MutationDetail[] ) {
+  return resolvers.flatMap ( ( md, i ) =>
+    [ `//from ${p.name}.rest[${restName}].resolvers[${JSON.stringify ( name )}]`,
       '//' + JSON.stringify ( md.params ),
-      `${paramsDeclaration ( md, i )} ${mutationMethodName ( r, restAction, md )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
+      `${paramsDeclaration ( md, i )} ${mutationMethodName ( r, name, md )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
       ...outputParamsDeclaration ( md, i )
     ] );
 }
@@ -44,10 +44,11 @@ export function makeFetcherMethod<G> ( params: JavaWiringParams, p: MainPageD<an
   ]
 }
 //this is just hacking it in to see if it will work. Only works for get at moment
-export function makeResolvers<G> ( params: JavaWiringParams, p: MainPageD<any, any>, restName: string, r: RestD<G> ): string[] {
-  let resolvers = Object.values ( safeObject ( r.resolvers ) ).flatMap ( toArray );
-  if ( resolvers.length == 0 ) return []
-  const { methods, importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( resolvers.map ( r => ({ restAction: 'get', mutateBy: r }) ), p, r, params , false);
+export function makeResolvers<G> ( params: JavaWiringParams, p: MainPageD<any, any>, restName: string, r: RestD<G>, resolverName: string, resolver: Resolvers ): string[] {
+  // let resolvers = Object.values ( safeObject ( r.resolvers ) ).flatMap ( toArray );
+  // if ( resolvers.length == 0 ) return []
+  let resolvers = toArray ( resolver );
+  const { methods, importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( resolvers, resolverName, p, r, params, false );
   let interfaceName = fetcherInterfaceName ( params, r, 'get' );
   const fetcherMethod = makeFetcherMethod ( params, p, restName, r, resolvers )
   return [
