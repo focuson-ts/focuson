@@ -58,33 +58,36 @@ export function auditDetails ( params: JavaWiringParams, r: RestD<any>, restActi
   return safeArray ( r.mutations ).flatMap ( ad => toArray ( ad.mutateBy ).map ( sp => `_audit.${mutationMethodName ( r, restAction, sp )}(${toArray ( sp.params ).map ( displayParam ).join ( ',' )})` ) )
 }
 
+export function paramsDeclaration ( md: MutationDetail, i: number ) {
+  const outputs = allOutputParams ( md.params )
+  if ( outputs.length === 1 ) return `${outputs[ 0 ].javaType} ${outputs[ 0 ].name} = `
+  const javaType = javaTypeForOutput ( md.params )
+  if ( javaType === 'void' ) return ''
+  return `${javaType} params${i} = `
+}
 
+export function outputParamsDeclaration ( md: MutationDetail, i: number ): string[] {
+  let ps = allOutputParams ( md.params );
+  return ps.length === 1 ? [] : ps.map ( ( m, pi ) => `${m.javaType} ${m.name} = params${i}.t${pi + 1};` )
+}
+
+export function callMutationsCode<G> ( p: MainPageD<any, G>, restName: string, r: RestD<G>, restAction: RestAction, dbNameString: string ) {
+  const callMutations = indentList ( safeArray ( r.mutations ).filter ( a => actionsEqual ( a.restAction, restAction ) ).flatMap ( ad =>
+    toArray ( ad.mutateBy ).flatMap ( ( md, i ) =>
+      [ `//from ${p.name}.rest[${restName}].mutations[${JSON.stringify ( restAction )}]`,
+        '//'+ JSON.stringify(md.params),
+        `${paramsDeclaration ( md, i )}__mutations.${mutationMethodName ( r, restAction, md )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
+        ...outputParamsDeclaration ( md, i )
+      ] ) ) )
+  return callMutations;
+}
 function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restName: string, r: RestD<G>, restAction: RestAction ): string[] {
   let safeParams: RestParams = safeObject ( r.params );
   const hasDbName = safeParams[ 'dbName' ] !== undefined
   const dbNameString = hasDbName ? 'dbName' : `IFetcher.${params.defaultDbName}`
   const url = getUrlForRestAction ( restAction, r.url, r.states )
   let selectionFromData = getRestTypeDetails ( restAction ).output.needsObj ? `"${queryName ( r, restAction )}"` : '""';
-
-  function paramsDeclaration ( sp: MutationDetail, i: number ) {
-    const outputs = allOutputParams ( sp.params )
-    if ( outputs.length === 1 ) return `${outputs[ 0 ].javaType} ${outputs[ 0 ].name} = `
-    const javaType = javaTypeForOutput ( sp.params )
-    if ( javaType === 'void' ) return ''
-    return `${javaType} params${i} = `
-  }
-
-  function outputParamsDeclaration ( sp: MutationDetail, i: number ): string[] {
-    let ps = allOutputParams ( sp.params );
-    return ps.length === 1 ? [] : ps.map ( ( m, pi ) => `${m.javaType} ${m.name} = params${i}.t${pi + 1};` )
-  }
-
-  const callMutations = indentList ( safeArray ( r.mutations ).filter ( a => actionsEqual ( a.restAction, restAction ) ).flatMap ( ad =>
-    toArray ( ad.mutateBy ).flatMap ( ( sp, i ) =>
-      [ `//from ${p.name}.rest[${restName}].mutations[${JSON.stringify ( restAction )}]`,
-        `${paramsDeclaration ( sp, i )}__mutations.${mutationMethodName ( r, restAction, sp )}(connection,${[ dbNameString, ...allInputParamNames ( sp.params ) ].join ( ',' )});`,
-        ...outputParamsDeclaration ( sp, i )
-      ] ) ) )
+  const callMutations = callMutationsCode ( p, restName, r, restAction, dbNameString );
 
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,

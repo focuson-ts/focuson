@@ -44,6 +44,7 @@ export const params = {
   dbPackage: 'db',
   optionalsFile: 'optionals',
   mutatorPackage: 'mutator',
+  resolversPackage: 'resolvers',
   maxTuples: 3
 };
 

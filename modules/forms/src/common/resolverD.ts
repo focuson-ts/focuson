@@ -28,9 +28,9 @@ export interface AuditDetails {
   by: string
 }
 
-export function isMutationsForRestAction ( a: any ): a is MutationsForRestAction {
-  return a.restAction !== undefined && a.mutateBy !== undefined
-}
+export type Resolvers =  MutationDetail | MutationDetail[]
+
+
 
 export interface MutationsForRestAction {
   restAction: RestAction;
@@ -63,15 +63,17 @@ export interface StoredProcedureMutation {
 
 export interface ManualMutation {
   mutation: 'manual';
-  import?: string|string[];
+  import?: string | string[];
   params: MutationParamForManual | MutationParamForManual[]
   name: string;
   code: string | string[]
 }
-export type MutationParam = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForStoredProcMutationParam | OutputForSqlMutationParam | NullMutationParam | OutputForManualParam
-export type MutationParamForSql = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForSqlMutationParam | NullMutationParam
-export type MutationParamForStoredProc = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForStoredProcMutationParam | NullMutationParam
-export type MutationParamForManual = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | NullMutationParam| OutputForManualParam
+
+
+export type MutationParam = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForStoredProcMutationParam | OutputForSqlMutationParam | NullMutationParam | OutputForManualParam | AutowiredMutationParam
+export type MutationParamForSql = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForSqlMutationParam | NullMutationParam| AutowiredMutationParam
+export type MutationParamForStoredProc = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForStoredProcMutationParam | NullMutationParam | AutowiredMutationParam
+export type MutationParamForManual = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | NullMutationParam | OutputForManualParam | AutowiredMutationParam
 
 export type OutputMutationParam = OutputForSqlMutationParam | OutputForStoredProcMutationParam | OutputForManualParam
 export function inputParamName ( m: MutationParam ) {
@@ -161,6 +163,13 @@ export interface StringMutationParam {
   type: 'string';
   value: string
 }
+export interface AutowiredMutationParam {
+  type: 'autowired';
+  import?: boolean;
+  name: string;
+  class: string;
+  method: string
+}
 export interface IntegerMutationParam {
   type: 'integer';
   value: number
@@ -215,19 +224,6 @@ export function isDBTable ( d: DBTableAndMaybeName ): d is DBTable {
 }
 export type DBTableAndMaybeName = DBTableAndName | DBTable
 
-/** This is 'are you a resolver or a data. As we add more types than sql resolver, we'll need this */
-export const isResolver = isSqlResolverD
-
-export type ResolverD = SqlResolverD | 'not defined yet'
-
-export interface SqlResolverD {
-  get: SqlGetDetails;
-}
-export function isSqlResolverD ( r: ResolverD ): r is SqlResolverD {
-  // @ts-ignore
-  return r?.get !== undefined
-}
-
 export interface Where {
   ids: string[];
   other?: string[]
@@ -239,14 +235,3 @@ export interface AliasAndWhere {
   where: Where;
 }
 
-export interface SqlGetDetails extends AliasAndWhere {
-  type: 'sql';
-  aliases: NameAnd<DBTableAndMaybeName>;
-  where: Where;
-  sql: GetSqlFromDataDDetails[]
-}
-export interface GetSqlFromDataDDetails extends AliasAndWhere {
-  dataD: OneDataDD<any>;
-  aliases: NameAnd<DBTableAndMaybeName>;
-  where: Where
-}

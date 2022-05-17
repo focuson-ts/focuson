@@ -4,7 +4,8 @@ import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationMethodName } from "./names";
 import { RestD, unique } from "../common/restD";
 import { indentList } from "./codegen";
-import { allInputParamNames, allInputParams, allOutputParams, displayParam, importForTubles, isInputParam, isOutputParam, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, ManualMutation, MutationDetail, MutationParam, OutputMutationParam, paramName, SqlMutation, StoredProcedureMutation } from "../common/resolverD";
+import { allInputParams, allOutputParams, displayParam, importForTubles, isInputParam, isOutputParam, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, OutputMutationParam, paramName, SqlMutation, StoredProcedureMutation } from "../common/resolverD";
+import { applyToTemplate } from "@focuson/template";
 
 
 export function setObjectFor ( m: MutationParam, i: number ): string {
@@ -13,6 +14,7 @@ export function setObjectFor ( m: MutationParam, i: number ): string {
   if ( m.type === 'input' ) return `s.setObject(${index}, ${m.name});`
   if ( m.type === 'null' ) return `s.setObject(${index},null);`
   if ( m.type === 'integer' ) return `s.setInt(${index}, ${m.value});`
+  if ( m.type === 'autowired' ) return `s.setObject(${index}, ${m.name}.${m.method}());`
   if ( m.type === 'string' ) return `s.setString(${index}, "${m.value.replace ( /"/g, '\"' )}");`
   if ( isStoredProcOutputParam ( m ) ) return `s.registerOutParameter(${index},java.sql.Types.${m.sqlType});`
   throw new Error ( `Don't know how to process ${JSON.stringify ( m )}` )
@@ -124,32 +126,48 @@ export function mutationCodeForManual<G> ( p: MainPageD<any, any>, r: RestD<G>, 
     `  }`,
   ];
 }
-export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, any>, r: RestD<G> ): string[] {
-  let mutations = safeArray ( r.mutations );
-  if ( mutations.length == 0 ) return []
+function makeMutationMethods<G> ( mutations: MutationsForRestAction[], p: MainPageD<any, any>, r: RestD<G> ) {
   const methods = mutations.flatMap ( ( { restAction, mutateBy } ) => toArray ( mutateBy ).flatMap ( ( m: MutationDetail ) => {
     if ( m.mutation === 'sql' ) return mutationCodeForSqlCalls ( p, r, restAction, m )
     if ( m.mutation === 'storedProc' ) return mutationCodeForStoredProcedureCalls ( p, r, restAction, m )
     if ( m.mutation === 'manual' ) return mutationCodeForManual ( p, r, restAction, m );
     throw Error ( `Don't know how to findCode (Page ${p.name}) for ${JSON.stringify ( m )}` )
   } ) )
+  return methods;
+}
+
+export function makeCodeFragmentsForMutation<G> ( mutations: MutationsForRestAction[], p: MainPageD<any, any>, r: RestD<G>, params: JavaWiringParams ) {
+  const methods = makeMutationMethods ( mutations, p, r );
+  const autowiring = mutations.flatMap ( ( { mutateBy } ) => toArray ( mutateBy ).flatMap ( m => toArray ( m.params ) ) ).flatMap ( mp =>
+    (typeof mp !== 'string' && mp.type === 'autowired' && mp.import !== false) ? [ { ...mp, class: applyToTemplate ( mp.class, params ) } ] : [] );
+  const importsFromParams: string[] = autowiring.map ( mp => `import ${mp.class};` )
+  const autowiringVariables = unique ( autowiring.map ( mp => `    ${mp.class} ${mp.name};` ), t => t ).flatMap ( mp => [ `    @Autowired`, mp, '' ] )
+  return { methods, importsFromParams, autowiringVariables };
+}
+export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, any>, r: RestD<G> ): string[] {
+  let mutations = safeArray ( r.mutations );
+  if ( mutations.length == 0 ) return []
+  const { methods, importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( mutations, p, r, params );
   return [
     `package ${params.thePackage}.${params.mutatorPackage}.${p.name};`,
     ``,
 
     `import ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
     `import org.springframework.stereotype.Component;`,
+    'import org.springframework.beans.factory.annotation.Autowired;',
     ``,
     `import java.sql.CallableStatement;`,
     `import java.sql.PreparedStatement;`,
     `import java.sql.ResultSet;`,
     `import java.sql.Connection;`,
     `import java.sql.SQLException;`,
+    ...importsFromParams,
     ...importForTubles ( params ),
     ...toArray ( r.mutations ).flatMap ( m => m.mutateBy ).flatMap ( m => m.mutation === 'manual' ? toArray ( m.import ) : [] ),
     `@Component`,
     `public class ${mutationClassName ( r )} {`,
     ``,
+    ...autowiringVariables,
     ...methods,
     ``,
     `}`

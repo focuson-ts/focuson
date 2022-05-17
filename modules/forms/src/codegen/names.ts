@@ -62,6 +62,7 @@ export const fetcherVariableNameForResolver = <G> ( params: JavaWiringParams, r:
 export const providerPactClassName = <B, G> ( pd: MainPageD<B, G> ): string => providerName ( pd ) + "Test";
 
 export const mutationClassName = <B, G> ( r: RestD<G> ) => `${restNameWithPrefix ( r )}Mutation`;
+export const resolverClassName = <B, G> ( r: RestD<G> ) => `${restNameWithPrefix ( r )}Resolver`;
 export const mutationMethodName = <B, G> ( r: RestD<G>, a: RestAction, m: MutationDetail ) => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${m.name}`;
 
 export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${safeString ( r.namePrefix )}${r.dataDD.name}Queries`;

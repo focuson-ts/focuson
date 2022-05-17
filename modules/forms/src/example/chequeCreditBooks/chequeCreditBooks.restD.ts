@@ -1,8 +1,8 @@
-import { IntParam, RestD, RestParams } from "../../common/restD";
-import { ChequeCreditbooksDD, ChequeCreditbooksHistoryDD, ChequeCreditbooksHistoryLineDD } from "./chequeCreditBooks.dataD";
+import { RestD } from "../../common/restD";
+import { ChequeCreditbooksDD } from "./chequeCreditBooks.dataD";
 import { AllGuards } from "../../buttons/guardButton";
-import { accountT, onlySchema } from "../database/tableNames";
-import { commonIds, fromCommonIds } from "../commonIds";
+import { onlySchema } from "../database/tableNames";
+import { commonIds } from "../commonIds";
 
 
 export const chequeCreditBooksRestD: RestD<AllGuards> = {
@@ -16,6 +16,20 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
     revalidate: { url: '/api/chequeCreditBooks/revalidate?{query}', params: [ 'clientRef', 'accountId' ] }
   },
   audits: [],
+  resolvers: {
+    'get': [ {
+      mutation: 'storedProc', name: 'getMeMyData1', schema: onlySchema, params: [
+        { type: 'output', name: 'val1', javaType: 'Integer', sqlType: 'INTEGER' },
+        { type: 'output', name: 'val2', javaType: 'String', sqlType: 'CHAR' },
+        { type: 'autowired', name: 'systemTime', class: '{thePackage}.utils.ITimeService', method: 'now', import: true } ]
+    },
+      {
+        mutation: 'storedProc', name: 'getMeMyData2', schema: onlySchema, params: [
+          { type: 'output', name: 'val3', javaType: 'Integer', sqlType: 'INTEGER' },
+          { type: 'output', name: 'val4', javaType: 'String', sqlType: 'CHAR' },
+          { type: 'autowired', name: 'systemTime', class: '{thePackage}.utils.ITimeService', method: 'now', import: true } ]
+      } ]
+  },
   mutations: [
     {
       restAction: 'create', mutateBy: [
@@ -23,6 +37,7 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
           mutation: 'storedProc', name: 'sequencename', params: [
             { type: 'output', name: 'checkbookId', javaType: 'Integer', sqlType: 'INTEGER' },
             { type: 'output', name: 'checkbookIdPart2', javaType: 'String', sqlType: 'CHAR' },
+            { type: 'autowired', name: 'systemTime', class: '{thePackage}.utils.ITimeService', method: 'now', import: true }
           ], schema: onlySchema
         },
         // { mutation: 'IDFromSequence', name: 'sequencename', params: { type: 'output', name: 'checkbookId' }, schema: onlySchema },
@@ -30,7 +45,7 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
         {
           mutation: 'manual', name: 'manualLog',
           import: 'import java.util.Date;',
-          params: [ 'checkbookId', 'checkbookIdPart2', { type: 'output', name: "now", javaType: "String" } ],
+          params: [ 'checkbookId', 'checkbookIdPart2' ],
           code: [
             `String now = new Date().toString(); // just showing we can return values and use them. Also demonstrates import`,
             `System.out.println(now + " checkbookid: " + checkbookId + " part2: " + checkbookIdPart2);`,

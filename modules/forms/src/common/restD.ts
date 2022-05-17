@@ -1,7 +1,7 @@
 import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
 import { NameAnd, RestAction, safeArray, sortedEntries } from "@focuson/utils";
 import { filterParamsByRestAction } from "../codegen/codegen";
-import { AccessDetails, DBTable, MutationsForRestAction, ResolverD } from "./resolverD";
+import { AccessDetails, DBTable, MutationsForRestAction, Resolvers } from "./resolverD";
 import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 import { allMainPages, MainPageD, PageD, RestDefnInPageProperties } from "./pageD";
 import { getRestTypeDetails, RestActionDetail } from "@focuson/rest";
@@ -72,17 +72,18 @@ export interface RestD<G> {
   dataDD: CompDataD<G>,
   url: string,
   actions: RestAction[];
-  resolver?: ResolverD;
   /** @deprecated Replaced with ManualSqlStrategy */
   initialSql?: string[];
   // strategy?: InsertSqlStrategy | InsertSqlStrategy[];
   insertSqlStrategy?: OneTableInsertSqlStrategyForNoIds;
-  tables?: EntityAndWhere;
   states?: NameAnd<RestStateDetails>;
   access?: AccessDetails[];
   audits?: any[] //doesn't do anything. Is just for legacy
   mutations?: MutationsForRestAction[];
+  resolvers?: NameAnd<Resolvers>;
+  tables?: EntityAndWhere;
 }
+
 
 type InsertSqlStrategy = OneTableInsertSqlStrategyForNoIds | ManualSqlStrategy
 
