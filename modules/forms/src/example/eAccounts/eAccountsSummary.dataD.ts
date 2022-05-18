@@ -40,7 +40,7 @@ export const CreatePlanDD: DataD<AllGuards> = {
   name: "CreatePlan",
   description: "The create plan data (actually just put in one place to allow a test for a structure)",
   structure: {
-    createPlanStart: { displayParams: { label: 'Create Start' }, dataDD: DateDD, sample: [ '2022-01-01' ] },
+    createPlanStart: { displayParams: { label: 'Create Start', dateFormat: 'yyyy/MM/dd' }, dataDD: DateDD, sample: [ '2022-01-01' ] },
     createPlanDate: { displayParams: { ariaLabel: 'The Create Plan Date' }, dataDD: DateDD, sample: [ '2022-03-01' ] },
     createPlanEnd: { dataDD: DateDD, sample: [ '2022-10-01' ] }
   }

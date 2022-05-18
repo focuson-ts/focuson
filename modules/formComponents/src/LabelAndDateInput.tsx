@@ -5,7 +5,7 @@ import { CommonStateProps } from "./common";
 import { Label } from "./label";
 import { makeButtons } from "./labelAndInput";
 import DatePicker from "react-datepicker";
-import { isValid } from 'date-fns';
+import { isValid, format } from 'date-fns';
 
 
 export interface LabelAndDateProps<S, Context> extends CommonStateProps<S, string, Context> {
@@ -18,10 +18,13 @@ export interface LabelAndDateProps<S, Context> extends CommonStateProps<S, strin
   workingDaysInPast?: number,
   workingDaysInFuture?: number,
   includeWeekends?: boolean,
+  dateFormat?: string
 }
 
 export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( props: LabelAndDateProps<S, Context> ) {
-  const { state, ariaLabel, id, mode, label, name, buttons, readonly, datesExcluded, fieldNameInHolidays, workingDaysInPast, workingDaysInFuture, includeWeekends } = props
+  const { state, ariaLabel, id, mode, label, name, buttons, readonly, datesExcluded, fieldNameInHolidays, workingDaysInPast, workingDaysInFuture, includeWeekends, dateFormat } = props
+
+  const dateFormatL = dateFormat ? dateFormat : 'yyyy/MM/dd'
 
   const datesToExclude = datesExcluded?.optJsonOr([]).map(d => d[fieldNameInHolidays? fieldNameInHolidays : 'holiday'])
   const datesToExcludeAsDateType = safeArray(datesToExclude).map(d => new Date(d))
@@ -35,7 +38,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
   }
 
   const onChange = ( date: any ) => {
-    if(date) state.setJson ( date.toDateString(), reasonFor ( 'LabelAndDate', 'onChange', id ) )
+    if(date) state.setJson ( format(date, dateFormatL), reasonFor ( 'LabelAndDate', 'onChange', id ) )
   };
 
   const isWeekday = (date: Date) => {
@@ -75,6 +78,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
       <Label state={state} htmlFor={name} label={label}/>
       <div>
         <DatePicker 
+        dateFormat={dateFormatL}
         todayButton="Select Today"
         selected={error ? null : selectedDate}
         onChange={(date) => onChange(date)} 

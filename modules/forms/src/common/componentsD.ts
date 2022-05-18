@@ -90,7 +90,8 @@ export const LabelAndDateInputCD: DisplayCompD = {
     ...commonParamsWithLabel,
     datesExcluded: { paramType: 'path', needed: 'no' },
     workingDaysInFuture: { paramType: 'object', needed: 'no' },
-    includeWeekends: { paramType: 'boolean', needed: 'no' }
+    includeWeekends: { paramType: 'boolean', needed: 'no' },
+    dateFormat: { paramType: 'string', needed: 'no' },
   }
 }
 
