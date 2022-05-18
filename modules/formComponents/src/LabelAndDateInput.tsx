@@ -75,6 +75,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
       <Label state={state} htmlFor={name} label={label}/>
       <div>
         <DatePicker 
+        todayButton="Select Today"
         selected={error ? null : selectedDate}
         onChange={(date) => onChange(date)} 
         filterDate={includeWeekends ? undefined : isWeekday}
