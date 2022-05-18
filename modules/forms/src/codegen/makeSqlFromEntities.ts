@@ -2,10 +2,10 @@ import { DBTable } from "../common/resolverD";
 import { beforeAfterSeparator, beforeSeparator, ints, mapPathPlusInts, NameAnd, safeArray, safeString } from "@focuson/utils";
 import { AllLensRestParams, EntityAndWhere, OneTableInsertSqlStrategyForNoIds, RestParams, unique } from "../common/restD";
 import { CompDataD, emptyDataFlatMap, flatMapDD, HasSample, isRepeatingDd, OneDataDD } from "../common/dataD";
-import { PageD, RestDefnInPageProperties } from "../common/pageD";
+import { MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addBrackets, addStringToEndOfAllButLast, indentList } from "./codegen";
 import { JavaWiringParams } from "./config";
-import { sqlListName, sqlMapName, sqlTafFieldName } from "./names";
+import { sqlListName, sqlMapName, sqlMapPackageName, sqlTafFieldName } from "./names";
 import { selectSample } from "./makeSample";
 
 export type DbValues = string | TableAndField
@@ -447,7 +447,7 @@ export function createTableSql<G> ( rdps: RestDefnInPageProperties<G>[] ): NameA
   return Object.fromEntries ( findAllTableAndFieldDatasIn ( rdps ).map ( taf => [ taf.table.name, createSql ( taf ) ] ) )
 }
 
-export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, rdp: RestDefnInPageProperties<G>, ld: SqlLinkData, path: number[], childCount: number ): string[] {
+export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, restName: string, rdp: RestDefnInPageProperties<G>, ld: SqlLinkData, path: number[], childCount: number ): string[] {
   const restD = rdp.rest;
   function mapName ( path: string[] ) {return path.length === 0 ? '_root' : safeArray ( path ).join ( "_" )}
 
@@ -491,7 +491,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
   } );
 
   return [
-    `package ${params.thePackage}.${params.dbPackage};`,
+    `package ${sqlMapPackageName ( params, p )};`,
     '',
     `import java.sql.ResultSet;`,
     `import java.sql.Connection;`,

@@ -4,7 +4,7 @@ import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationMethodName } from "./names";
 import { RestD, unique } from "../common/restD";
 import { indentList } from "./codegen";
-import { allInputParams, allOutputParams, displayParam, importForTubles, isInputParam, isOutputParam, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, OutputMutationParam, paramName, SqlMutation, StoredProcedureMutation } from "../common/resolverD";
+import { allInputParams, allOutputParams, AutowiredMutationParam, displayParam, importForTubles, isInputParam, isOutputParam, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, OutputMutationParam, paramName, SqlMutation, StoredProcedureMutation } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 
@@ -125,7 +125,7 @@ export function mutationCodeForManual<G> ( p: MainPageD<any, any>, r: RestD<G>, 
     `  }`,
   ];
 }
-function makeMutationMethods<G> ( mutations: MutationDetail[], name: string, p: MainPageD<any, any>, r: RestD<G>, includeMockIf?: boolean ) {
+export function makeMutationMethod<G> ( mutations: MutationDetail[], name: string, p: MainPageD<any, any>, r: RestD<G>, includeMockIf: boolean ) {
   const methods = mutations.flatMap ( ( mutateBy ) => toArray ( mutateBy ).flatMap ( ( m: MutationDetail ) => {
     if ( m.mutation === 'sql' ) return mutationCodeForSqlCalls ( p, r, name, m, includeMockIf )
     if ( m.mutation === 'storedProc' ) return mutationCodeForStoredProcedureCalls ( p, r, name, m, includeMockIf )
@@ -135,16 +135,18 @@ function makeMutationMethods<G> ( mutations: MutationDetail[], name: string, p: 
   return methods;
 }
 
-export function makeCodeFragmentsForMutation<G> ( mutations: MutationDetail[], name: string, p: MainPageD<any, any>, r: RestD<G>, params: JavaWiringParams, includeMockIf?: boolean ) {
-  const methods = makeMutationMethods ( mutations, name, p, r, includeMockIf );
-  const autowiring = mutations.flatMap ( ( mutateBy ) => toArray ( mutateBy ).flatMap ( m => toArray ( m.params ) ) ).flatMap ( mp =>
-    (typeof mp !== 'string' && mp.type === 'autowired' && mp.import !== false) ? [ { ...mp, class: applyToTemplate ( mp.class, params ) } ] : [] );
-  const importsFromParams: string[] = autowiring.map ( mp => `import ${mp.class};` )
-  const autowiringVariables = unique ( autowiring.map ( mp => `    ${mp.class} ${mp.name};` ), t => t ).flatMap ( mp => [ `    @Autowired`, mp, '' ] )
-  return { methods, importsFromParams, autowiringVariables };
+export function makeCodeFragmentsForMutation<G> ( mutations: MutationDetail[], p: MainPageD<any, any>, r: RestD<G>, params: JavaWiringParams, ) {
+  // const methods = makeMutationMethod ( mutations, name, p, r, includeMockIf );
+  const autowiring: AutowiredMutationParam[] = unique<AutowiredMutationParam> ( mutations.flatMap ( ( mutateBy ) => toArray ( mutateBy ).flatMap ( m => toArray ( m.params ) ) ).flatMap ( mp =>
+    (typeof mp !== 'string' && mp.type === 'autowired' && mp.import !== false) ? [ { ...mp, class: applyToTemplate ( mp.class, params ).join ( '' ) } ] : [] ), r => r.class );
+  const importsFromParams: string[] = unique ( autowiring, t => t.class ).flatMap ( mp => [ `//added by param ${mp.name}`, `import ${mp.class};` ] )
+  const autowiringVariables = autowiring.map ( mp => `    ${mp.class} ${mp.name};` ).flatMap ( mp => [ `    @Autowired`, mp, '' ] )
+  return { importsFromParams, autowiringVariables };
 }
-export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, any>, r: RestD<G>, mutation: MutationsForRestAction[] ): string[] {
-  const { methods, importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( mutation.flatMap ( m => toArray ( m.mutateBy ) ), restActionForName ( mutation.restAction ), p, r, params, true );
+export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, any>, r: RestD<G>, mutations: MutationsForRestAction[] ): string[] {
+  if ( mutations.length === 0 ) return []
+  const { importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( mutations.flatMap ( m => toArray ( m.mutateBy ) ), p, r, params );
+  const methods = mutations.flatMap ( mutation => makeMutationMethod ( toArray ( mutation.mutateBy ), restActionForName ( mutation.restAction ), p, r, true ) )
   return [
     `package ${params.thePackage}.${params.mutatorPackage}.${p.name};`,
     ``,

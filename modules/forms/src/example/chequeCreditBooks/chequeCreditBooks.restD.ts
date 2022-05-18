@@ -10,6 +10,8 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
   dataDD: ChequeCreditbooksDD,
   url: '/api/chequeCreditBooks?{query}', //or maybe accountId={accountId}&customerId={customerId}
   actions: [ 'get', 'create', { "state": 'cancel' }, { "state": 'revalidate' } ],
+
+
   states: {
     cancel: { url: '/api/chequeCreditBooks/cancel?{query}', params: [ 'clientRef', 'accountId' ] },
     revalidate: { url: '/api/chequeCreditBooks/revalidate?{query}', params: [ 'clientRef', 'accountId' ] }
@@ -40,7 +42,8 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
           ], schema: onlySchema
         },
         // { mutation: 'IDFromSequence', name: 'sequencename', params: { type: 'output', name: 'checkbookId' }, schema: onlySchema },
-        { mutation: 'storedProc', name: 'auditCreateCheckBook', params: [ 'brandRef', 'accountId', 'checkbookId', 'checkbookIdPart2' ], schema: onlySchema },
+        { mutation: 'storedProc', name: 'auditCreateCheckBook',
+          params: [ 'brandRef', 'accountId', 'checkbookId', 'checkbookIdPart2' ], schema: onlySchema },
         {
           mutation: 'manual', name: 'manualLog',
           import: 'import java.util.Date;',

@@ -9,7 +9,7 @@ describe ( "makeDbFetchers", () => {
     expect ( makeDBFetchers ( paramsForTest, JointAccountPageD, 'jointAccount', JointAccountPageD.rest.jointAccount ) ).toEqual ( [
       " package focuson.data.dbfetchers.JointAccount;",
       "",
-      "import  focuson.data.db.JointAccount_jointAccountMaps;",
+      "import  focuson.data.db.JointAccount.JointAccount_jointAccountMaps;",
       "import  focuson.data.fetchers.IFetcher;",
       "import  focuson.data.fetchers.JointAccount.pre_JointAccount_get_FFetcher;",
       "import graphql.schema.DataFetcher;",
@@ -56,7 +56,7 @@ describe ( "makeDbFetchers", () => {
     expect ( makeDBFetchers ( paramsForTest, PostCodeMainPage, 'postcode', PostCodeMainPage.rest.postcode ) ).toEqual ( [
       " package focuson.data.dbfetchers.PostCodeMainPage;",
       "",
-      "import  focuson.data.db.PostCodeMainPage_postcodeMaps;",
+      "import  focuson.data.db.PostCodeMainPage.PostCodeMainPage_postcodeMaps;",
       "import  focuson.data.fetchers.IFetcher;",
       "import  focuson.data.fetchers.PostCodeMainPage.PostCodeSearchResponse_get_FFetcher;",
       "import graphql.schema.DataFetcher;",

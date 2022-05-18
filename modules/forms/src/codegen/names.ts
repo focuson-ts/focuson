@@ -63,7 +63,7 @@ export const providerPactClassName = <B, G> ( pd: MainPageD<B, G> ): string => p
 
 export const mutationClassName = <B, G> ( r: RestD<G> ) => `${restNameWithPrefix ( r )}Mutation`;
 export const resolverClassName = <B, G> ( r: RestD<G> ) => `${restNameWithPrefix ( r )}Resolver`;
-export const mutationMethodName = <B, G> ( r: RestD<G>,res: string, m: MutationDetail ) => `${restNameWithPrefix ( r )}_${res}_${m.name}`;
+export const mutationMethodName = <B, G> ( r: RestD<G>, res: string, m: MutationDetail ) => `${restNameWithPrefix ( r )}_${res}_${m.name}`;
 
 export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${safeString ( r.namePrefix )}${r.dataDD.name}Queries`;
 
@@ -72,9 +72,9 @@ export const sqlDataSuffixFor = ( suffix: string, i: number ): string => suffix 
 
 export function sqlMapName<B, G> ( p: PageD<B, G>, restName: string, path: number[] ) {return `${p.name}_${restName}Maps${path.join ( "_" )}`}
 export function sqlListName<B, G> ( p: PageD<B, G>, restName: string, path: number[], i: number ) {return sqlMapName ( p, restName, [ ...path, i ] )}
-export function sqlMapFileName<B, G> ( root: string, p: PageD<B, G>, restName: string, path: number[] ) {return `${root}/${sqlMapName ( p, restName, path )}`}
+export function sqlMapFileName<B, G> ( root: string, p: PageD<B, G>, restName: string, path: number[] ) {return `${root}/${p.name}/${sqlMapName ( p, restName, path )}`}
 export function sqlTafFieldName<G> ( taf: TableAndFieldAndAliasData<G> ) {return `${taf.alias}_${taf.fieldData.dbFieldName}`}
-
+export function sqlMapPackageName<G> ( params: JavaWiringParams, p: MainPageD<any, G> ) {return `${params.thePackage}.${params.dbPackage}.${p.name}`}
 export const optionalsName = <B, G> ( p: PageD<B, G> ) => `${p.name}Optionals`
 
 export const someFileName = <B, G> ( root: string, pd: PageD<B, G>, postfix: string ): string => `${root}/${pd.name}/${pd.name}.${postfix}`;

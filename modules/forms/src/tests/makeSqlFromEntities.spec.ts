@@ -501,7 +501,7 @@ describe ( "makeMapsForRest", () => {
       return makeMapsForRest ( paramsForTest, JointAccountPageD, 'jointAccount', JointAccountPageD.rest.jointAccount, ld, path, r.children.length )
     } ).map ( s => s.map ( s => s.replace ( /"/g, "'" ) ) ) ).toEqual ( [
       [
-        "package focuson.data.db;",
+        "package focuson.data.db.JointAccount;",
         "",
         "import java.sql.ResultSet;",
         "import java.sql.Connection;",
@@ -680,7 +680,7 @@ describe ( "makeMapsForRest", () => {
         "}"
       ],
       [
-        "package focuson.data.db;",
+        "package focuson.data.db.JointAccount;",
         "",
         "import java.sql.ResultSet;",
         "import java.sql.Connection;",
@@ -836,7 +836,7 @@ describe ( "makeMapsForRest", () => {
         "}"
       ],
       [
-        "package focuson.data.db;",
+        "package focuson.data.db.JointAccount;",
         "",
         "import java.sql.ResultSet;",
         "import java.sql.Connection;",
@@ -1015,7 +1015,7 @@ describe ( "makeMapsForRest", () => {
       return makeMapsForRest ( paramsForTest, PostCodeMainPage, 'postcode', PostCodeMainPage.rest.postcode, ld, path, r.children.length )
     } ).map ( s => s.map ( s => s.replace ( /"/g, "'" ) ) ) ).toEqual ( [
       [
-        "package focuson.data.db;",
+        "package focuson.data.db.PostCodeMainPage;",
         "",
         "import java.sql.ResultSet;",
         "import java.sql.Connection;",

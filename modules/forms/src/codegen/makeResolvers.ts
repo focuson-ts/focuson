@@ -4,7 +4,7 @@ import { RestD, unique } from "../common/restD";
 import { toArray } from "@focuson/utils";
 import { allInputParamNames, importForTubles, MutationDetail, Resolvers } from "../common/resolverD";
 import { fetcherInterfaceName, fetcherPackageName, mutationMethodName, resolverClassName, resolverName } from "./names";
-import { makeCodeFragmentsForMutation } from "./makeMutations";
+import { makeCodeFragmentsForMutation, makeMutationMethod } from "./makeMutations";
 import { findJavaType } from "./makeJavaFetchersInterface";
 import { defaultRestAction } from "@focuson/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
@@ -48,7 +48,8 @@ export function makeResolvers<G> ( params: JavaWiringParams, p: MainPageD<any, a
   // let resolvers = Object.values ( safeObject ( r.resolvers ) ).flatMap ( toArray );
   // if ( resolvers.length == 0 ) return []
   let resolvers = toArray ( resolver );
-  const { methods, importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( resolvers, resolverName, p, r, params, false );
+  const { importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( resolvers, p, r, params );
+  const methods = makeMutationMethod ( resolvers, resolverName, p, r, false )
   let interfaceName = fetcherInterfaceName ( params, r, 'get' );
   const fetcherMethod = makeFetcherMethod ( params, p, restName, r, resolvers )
   return [

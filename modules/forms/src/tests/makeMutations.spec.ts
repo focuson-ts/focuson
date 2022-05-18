@@ -75,11 +75,12 @@ describe ( "returnStatement", () => {
 
 describe ( "makeMutations", () => {
   it ( "should create an mutation class with a method for each mutation for that rest - simple", () => {
-    expect ( makeMutations ( paramsForTest, EAccountsSummaryPD, eAccountsSummaryRestD ) ).toEqual ( [
+    expect ( makeMutations ( paramsForTest, EAccountsSummaryPD, eAccountsSummaryRestD, eAccountsSummaryRestD.mutations ) ).toEqual ( [
       "package focuson.data.mutator.EAccountsSummary;",
       "",
       "import focuson.data.fetchers.IFetcher;",
       "import org.springframework.stereotype.Component;",
+      "import org.springframework.beans.factory.annotation.Autowired;",
       "",
       "import java.sql.CallableStatement;",
       "import java.sql.PreparedStatement;",
@@ -108,31 +109,38 @@ describe ( "makeMutations", () => {
     ] )
   } )
   it ( "should create an mutation class with a method for each mutation for that rest - complex", () => {
-    expect ( makeMutations ( paramsForTest, ChequeCreditbooksPD, chequeCreditBooksRestD ) ).toEqual ( [
+    expect ( makeMutations ( paramsForTest, ChequeCreditbooksPD, chequeCreditBooksRestD, chequeCreditBooksRestD.mutations ) ).toEqual ( [
       "package focuson.data.mutator.ChequeCreditbooks;",
       "",
       "import focuson.data.fetchers.IFetcher;",
       "import org.springframework.stereotype.Component;",
+      "import org.springframework.beans.factory.annotation.Autowired;",
       "",
       "import java.sql.CallableStatement;",
       "import java.sql.PreparedStatement;",
       "import java.sql.ResultSet;",
       "import java.sql.Connection;",
       "import java.sql.SQLException;",
+      "//added by param systemTime",
+      "import focuson.data.utils.ITimeService;",
       "//If there is a compilation issue here is it because you need to set 'maxTuples'? Currently set to 2 ",
       "import focuson.data.mutator.utils.Tuple2;",
       "import java.util.Date;",
       "@Component",
       "public class ChequeCreditbooksMutation {",
       "",
+      "    @Autowired",
+      "    focuson.data.utils.ITimeService systemTime;",
+      "",
       "    public Tuple2<Integer,String> ChequeCreditbooks_create_sequencename(Connection connection, Object dbName) throws SQLException {",
       "        if (dbName.equals(IFetcher.mock)) {",
-      "           System.out.println(\"Mock audit: ChequeCreditbooks_create_sequencename( {'type':'output','name':'checkbookId','javaType':'Integer','sqlType':'INTEGER'}, {'type':'output','name':'checkbookIdPart2','javaType':'String','sqlType':'CHAR'}+ )\");",
+      "           System.out.println(\"Mock audit: ChequeCreditbooks_create_sequencename( {'type':'output','name':'checkbookId','javaType':'Integer','sqlType':'INTEGER'}, {'type':'output','name':'checkbookIdPart2','javaType':'String','sqlType':'CHAR'}, {'type':'autowired','name':'systemTime','class':'{thePackage}.utils.ITimeService','method':'now','import':true}+ )\");",
       "           return new Tuple2<>(0,\"1\");",
       "    }",
-      "    try (CallableStatement s = connection.prepareCall(\"call sequencename(?, ?)\")) {",
+      "    try (CallableStatement s = connection.prepareCall(\"call sequencename(?, ?, ?)\")) {",
       "      s.registerOutParameter(1,java.sql.Types.INTEGER);",
       "      s.registerOutParameter(2,java.sql.Types.CHAR);",
+      "      s.setObject(3, systemTime.now());",
       "      if (!s.execute()) throw new SQLException(\"Error in : ChequeCreditbooks_create_sequencename\");",
       "      Integer checkbookId = s.getInt(1);",
       "      String checkbookIdPart2 = s.getString(2);",
@@ -152,14 +160,14 @@ describe ( "makeMutations", () => {
       "      return;",
       "  }}",
       "//If you have a compiler error in the type here, did you match the types of the output params in your manual code with the declared types in the .restD?",
-      "    public String ChequeCreditbooks_create_manualLog(Connection connection, Object dbName, Object checkbookId, Object checkbookIdPart2) throws SQLException {",
+      "    public void ChequeCreditbooks_create_manualLog(Connection connection, Object dbName, Object checkbookId, Object checkbookIdPart2) throws SQLException {",
       "        if (dbName.equals(IFetcher.mock)) {",
-      "           System.out.println(\"Mock audit: ChequeCreditbooks_create_manualLog( checkbookId, checkbookIdPart2, {'type':'output','name':'now','javaType':'String'}+ )\");",
-      "           return \"0\";",
+      "           System.out.println(\"Mock audit: ChequeCreditbooks_create_manualLog( checkbookId, checkbookIdPart2+ )\");",
+      "           return;",
       "    }",
       "      String now = new Date().toString(); // just showing we can return values and use them. Also demonstrates import",
       "      System.out.println(now + \" checkbookid: \" + checkbookId + \" part2: \" + checkbookIdPart2);",
-      "      return now;",
+      "      return;",
       "  }",
       "    public void ChequeCreditbooks_get_auditGetCheckBook(Connection connection, Object dbName, Object brandRef, Object accountId) throws SQLException {",
       "        if (dbName.equals(IFetcher.mock)) {",
@@ -185,7 +193,7 @@ describe ( "makeMutations", () => {
       "  }}",
       "",
       "}"
-    ] )
+    ])
 
   } )
 } )

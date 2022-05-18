@@ -1,7 +1,7 @@
 import { CreatePlanDD, EAccountsSummaryDD } from "./eAccountsSummary.dataD";
 import { IntParam, RestD, StringParam } from "../../common/restD";
 import { AllGuards } from "../../buttons/guardButton";
-import { onlySchema } from "../database/tableNames";
+import { accountT, onlySchema } from "../database/tableNames";
 import { allCommonIds, commonIds } from "../commonIds";
 
 export const eAccountsSummaryRestD: RestD<AllGuards> = {

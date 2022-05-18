@@ -1,5 +1,5 @@
 import { postFixForEndpoint, RestD, RestParams } from "../common/restD";
-import { endPointName, mutationClassName, mutationMethodName, queryClassName, queryName, queryPackage, restControllerName, sampleName, sqlMapName } from "./names";
+import { endPointName, mutationClassName, mutationMethodName, queryClassName, queryName, queryPackage, restControllerName, sampleName, sqlMapName, sqlMapPackageName } from "./names";
 import { JavaWiringParams } from "./config";
 import { actionsEqual, beforeSeparator, isRestStateChange, RestAction, safeArray, safeObject, sortedEntries, toArray } from "@focuson/utils";
 import { filterParamsByRestAction, indentList } from "./codegen";
@@ -75,8 +75,7 @@ export function callMutationsCode<G> ( p: MainPageD<any, G>, restName: string, r
   const callMutations = indentList ( safeArray ( r.mutations ).filter ( a => actionsEqual ( a.restAction, restAction ) ).flatMap ( ad =>
     toArray ( ad.mutateBy ).flatMap ( ( md, i ) =>
       [ `//from ${p.name}.rest[${restName}].mutations[${JSON.stringify ( restAction )}]`,
-        '//' + JSON.stringify ( md.params ),
-        `${paramsDeclaration ( md, i )}__mutations.${mutationMethodName ( r, restActionForName(restAction), md )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
+        `${paramsDeclaration ( md, i )}__mutations.${mutationMethodName ( r, restActionForName ( restAction ), md )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
         ...outputParamsDeclaration ( md, i )
       ] ) ) )
   return callMutations;
@@ -133,7 +132,7 @@ function makeSqlEndpoint<B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, r
 export function makeSpringEndpointsFor<B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, restName: string, r: RestD<G> ): string[] {
   const endpoints: string[] = r.actions.flatMap ( action => makeEndpoint ( params, p, restName, r, action ) )
   const queries: string[] = r.actions.flatMap ( action => makeQueryEndpoint ( params, r, action ) )
-  const importForSql = r.tables === undefined ? [] : [ `import ${params.thePackage}.${params.dbPackage}.${sqlMapName ( p, restName, [] )} ; ` ]
+  const importForSql = r.tables === undefined ? [] : [ `import ${sqlMapPackageName ( params, p )}.${sqlMapName ( p, restName, [] )} ; ` ]
   const auditImports = safeArray ( r.mutations ).map ( ad => `import ${params.thePackage}.${params.mutatorPackage}.${p.name}.${mutationClassName ( r )};` )
   const auditVariables = safeArray ( r.mutations ).length > 0 ? indentList ( [ `@Autowired`, `${mutationClassName ( r )} __mutations;` ] ) : []
 

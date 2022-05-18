@@ -254,7 +254,7 @@ describe ( "makeSpringEndpoint", () => {
       "import java.util.Arrays;",
       "//If there is a compilation issue here is it because you need to set 'maxTuples'? Currently set to 2 ",
       "import focuson.data.mutator.utils.Tuple2;",
-      "import focuson.data.db.PostCodeMainPage_addressMaps ; ",
+      "import focuson.data.db.PostCodeMainPage.PostCodeMainPage_addressMaps ; ",
       "",
       "  @RestController",
       "  public class PostCodeMainPage_PostCodeNameAndAddressController {",

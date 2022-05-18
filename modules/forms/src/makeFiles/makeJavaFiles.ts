@@ -51,12 +51,12 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   fs.mkdirSync ( `${javaTestRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaResourcesRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaScriptRoot}`, { recursive: true } )
-  // fs.mkdirSync ( `${javaFetcherRoot}`, { recursive: true } )
-  // fs.mkdirSync ( `${javaMockFetcherRoot}`, { recursive: true } )
-  // fs.mkdirSync ( `${javaH2FetcherRoot}`, { recursive: true } )
-  // fs.mkdirSync ( `${javaControllerRoot}`, { recursive: true } )
-  // fs.mkdirSync ( `${javaQueriesPackages}`, { recursive: true } )
-  fs.mkdirSync ( `${javaDbPackages}`, { recursive: true } )
+  fs.mkdirSync ( `${javaFetcherRoot}`, { recursive: true } )
+  fs.mkdirSync ( `${javaMockFetcherRoot}`, { recursive: true } )
+  fs.mkdirSync ( `${javaH2FetcherRoot}`, { recursive: true } )
+  fs.mkdirSync ( `${javaControllerRoot}`, { recursive: true } )
+  fs.mkdirSync ( `${javaQueriesPackages}`, { recursive: true } )
+  // fs.mkdirSync ( `${javaDbPackages}`, { recursive: true } )
   allMainPages ( pages ).forEach ( p => {
     fs.mkdirSync ( `${javaFetcherRoot}/${p.name}`, { recursive: true } );
     fs.mkdirSync ( `${javaMockFetcherRoot}/${p.name}`, { recursive: true } );
@@ -64,9 +64,11 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
     fs.mkdirSync ( `${javaQueriesPackages}/${p.name}`, { recursive: true } );
     fs.mkdirSync ( `${javaMutatorPackage}/${p.name}`, { recursive: true } )
     fs.mkdirSync ( `${javaResolverPackage}/${p.name}`, { recursive: true } )
+    fs.mkdirSync ( `${javaDbPackages}/${p.name}`, { recursive: true } )
   } )
+  fs.mkdirSync ( `${javaCodeRoot}/utils`, { recursive: true } )
   fs.mkdirSync ( `${javaMutatorPackage}/utils`, { recursive: true } )
-
+// process.exit(2)
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
   const raw = allMainPages ( pages ).flatMap ( x => sortedEntries ( x.rest ) ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest );
   const rests = unique ( raw, r => r.dataDD.name + ":" + r.namePrefix )

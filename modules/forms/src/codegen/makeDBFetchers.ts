@@ -2,7 +2,7 @@ import { JavaWiringParams } from "./config";
 import { MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { sortedEntries } from "@focuson/utils";
 import { RestD } from "../common/restD";
-import { fetcherInterfaceName, fetcherName, fetcherPackageName, dbFetcherClassName, dbFetcherPackage, resolverName, sqlMapName } from "./names";
+import { fetcherInterfaceName, fetcherName, fetcherPackageName, dbFetcherClassName, dbFetcherPackage, resolverName, sqlMapName, sqlMapPackageName } from "./names";
 import { indentList } from "./codegen";
 import { findParamsForTable } from "./makeSqlFromEntities";
 import { getRestTypeDetails } from "@focuson/rest";
@@ -31,7 +31,7 @@ export function makeDBFetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
   return [
     ` package ${dbFetcherPackage ( params, pageD )};`,
     ``,
-    `import  ${params.thePackage}.${params.dbPackage}.${sqlMapName ( pageD, restName, [] )};`,
+    `import  ${sqlMapPackageName ( params, pageD )}.${sqlMapName ( pageD, restName, [] )};`,
     `import  ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
     `import  ${fetcherPackageName ( params, pageD )}.${fetcherInterfaceName ( params, rdp.rest, 'get' )};`,
     `import graphql.schema.DataFetcher;`,
