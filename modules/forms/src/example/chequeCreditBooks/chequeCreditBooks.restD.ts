@@ -18,7 +18,7 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
   },
   audits: [],
   resolvers: {
-    'get': [ {
+    'getChequeCreditbooks': [ {
       mutation: 'storedProc', name: 'getMeMyData1', schema: onlySchema, params: [
         { type: 'output', name: 'val1', javaType: 'Integer', sqlType: 'INTEGER' },
         { type: 'output', name: 'val2', javaType: 'String', sqlType: 'CHAR' },

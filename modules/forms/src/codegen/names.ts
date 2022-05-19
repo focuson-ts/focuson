@@ -5,7 +5,7 @@ import { rawTypeName } from "./makeGraphQlTypes";
 import { RestAction, safeString } from "@focuson/utils";
 import { JavaWiringParams, TSParams } from "./config";
 import { TableAndFieldAndAliasData } from "./makeSqlFromEntities";
-import { RestActionDetail, restActionForName } from "@focuson/rest";
+import { RestActionDetail, restActionForName, restActionToDetails } from "@focuson/rest";
 import { MutationDetail } from "../common/resolverD";
 
 export const guardName = ( s: string ) => s + "Guard"
@@ -16,10 +16,11 @@ export const pageComponentName = <B, G> ( d: PageD<B, G> ): string => d.name + "
 // export const pageComponent = ( p: PageD ): string => p.name;
 export const hasDomainForPage = <B, G> ( pd: PageD<B, G> ): string => "Has" + pageDomainName ( pd );
 export const pageDomainName = <B, G> ( pd: PageD<B, G> ): string => pd.name + "PageDomain"
-export function resolverName<G> ( rest: RestD<G>, action: RestActionDetail ) {
+export function resolverName<G> ( rest: RestD<G>, action: RestAction ) {
   let rawType = rawTypeName ( rest.dataDD );
+  const ad = restActionToDetails ( action )
   const prefix = rest.namePrefix ? rest.namePrefix : ''
-  return `${action.graphQPrefix}${prefix}${rawType}${action.graphQlPostfix}`
+  return `${ad.graphQPrefix}${restActionForName ( action )}${rawType}${ad.graphQlPostfix}`
 }
 export const sampleName = <G> ( dataD: AllDataDD<G> ) => "sample" + dataD.name;
 export const emptyName = <G> ( dataD: AllDataDD<G> ) => "empty" + dataD.name;
@@ -40,7 +41,7 @@ export const restDetailsName = <B, G> ( p: PageD<B, G>, restName: string, r: Res
 
 export const packageNameFor = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, thing: string ): string => `${params.thePackage}.${thing}.${p.name}`;
 export const fetcherPackageName = <G> ( params: JavaWiringParams, p: MainPageD<any, G> ): string => packageNameFor ( params, p, params.fetcherPackage );
-export const fetcherInterfaceName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${params.fetcherInterface}`;
+export const fetcherInterfaceName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => fetcherInterfaceForResolverName ( params, r, resolverName ( r, restActionToDetails ( a ) ) )
 export const fetcherInterfaceForResolverName = <G> ( params: JavaWiringParams, r: RestD<G>, resolverName: string ): string => `${restNameWithPrefix ( r )}_${resolverName}_${params.fetcherInterface}`;
 
 export const dbFetcherPackage = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G> ): string => packageNameFor ( params, p, params.dbFetcherPackage );
@@ -61,8 +62,9 @@ export const fetcherVariableName = <G> ( params: JavaWiringParams, r: RestD<G>, 
 export const fetcherVariableNameForResolver = <G> ( params: JavaWiringParams, r: RestD<G>, resolverName: string ): string => `${restNameWithPrefix ( r )}_${resolverName}_${params.fetcherInterface}`;
 export const providerPactClassName = <B, G> ( pd: MainPageD<B, G> ): string => providerName ( pd ) + "Test";
 
-export const mutationClassName = <B, G> ( r: RestD<G> ) => `${restNameWithPrefix ( r )}Mutation`;
-export const resolverClassName = <B, G> ( r: RestD<G> ) => `${restNameWithPrefix ( r )}Resolver`;
+export const mutationClassName = <B, G> ( r: RestD<G>, restAction: RestAction ) => `${restNameWithPrefix ( r )}_${restActionForName ( restAction )}Mutation`;
+export const mutationVariableName = <B, G> ( r: RestD<G>, restAction: RestAction ) => `__${restActionForName ( restAction )}Mutation`;
+export const resolverClassName = <B, G> ( r: RestD<G>, resolverName: string ) => `${restNameWithPrefix ( r )}_${resolverName}Resolver`;
 export const mutationMethodName = <B, G> ( r: RestD<G>, res: string, m: MutationDetail ) => `${restNameWithPrefix ( r )}_${res}_${m.name}`;
 
 export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${safeString ( r.namePrefix )}${r.dataDD.name}Queries`;

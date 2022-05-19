@@ -28,7 +28,7 @@ export interface AuditDetails {
   by: string
 }
 
-export type Resolvers =  MutationDetail | MutationDetail[]
+export type Mutations =  MutationDetail | MutationDetail[]
 
 
 

@@ -143,10 +143,9 @@ export function makeCodeFragmentsForMutation<G> ( mutations: MutationDetail[], p
   const autowiringVariables = autowiring.map ( mp => `    ${mp.class} ${mp.name};` ).flatMap ( mp => [ `    @Autowired`, mp, '' ] )
   return { importsFromParams, autowiringVariables };
 }
-export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, any>, r: RestD<G>, mutations: MutationsForRestAction[] ): string[] {
-  if ( mutations.length === 0 ) return []
-  const { importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( mutations.flatMap ( m => toArray ( m.mutateBy ) ), p, r, params );
-  const methods = mutations.flatMap ( mutation => makeMutationMethod ( toArray ( mutation.mutateBy ), restActionForName ( mutation.restAction ), p, r, true ) )
+export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, any>, r: RestD<G>, mutation: MutationsForRestAction ): string[] {
+  const { importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( toArray ( mutation.mutateBy ), p, r, params );
+  const methods = makeMutationMethod ( toArray ( mutation.mutateBy ), restActionForName ( mutation.restAction ), p, r, true )
   return [
     `package ${params.thePackage}.${params.mutatorPackage}.${p.name};`,
     ``,
@@ -164,7 +163,7 @@ export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, a
     ...importForTubles ( params ),
     ...toArray ( r.mutations ).flatMap ( m => m.mutateBy ).flatMap ( m => m.mutation === 'manual' ? toArray ( m.import ) : [] ),
     `@Component`,
-    `public class ${mutationClassName ( r )} {`,
+    `public class ${mutationClassName ( r, mutation.restAction )} {`,
     ``,
     ...autowiringVariables,
     ...methods,

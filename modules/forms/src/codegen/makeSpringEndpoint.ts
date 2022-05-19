@@ -1,5 +1,5 @@
 import { postFixForEndpoint, RestD, RestParams } from "../common/restD";
-import { endPointName, mutationClassName, mutationMethodName, queryClassName, queryName, queryPackage, restControllerName, sampleName, sqlMapName, sqlMapPackageName } from "./names";
+import { endPointName, mutationClassName, mutationMethodName, mutationVariableName, queryClassName, queryName, queryPackage, restControllerName, sampleName, sqlMapName, sqlMapPackageName } from "./names";
 import { JavaWiringParams } from "./config";
 import { actionsEqual, beforeSeparator, isRestStateChange, RestAction, safeArray, safeObject, sortedEntries, toArray } from "@focuson/utils";
 import { filterParamsByRestAction, indentList } from "./codegen";
@@ -75,7 +75,7 @@ export function callMutationsCode<G> ( p: MainPageD<any, G>, restName: string, r
   const callMutations = indentList ( safeArray ( r.mutations ).filter ( a => actionsEqual ( a.restAction, restAction ) ).flatMap ( ad =>
     toArray ( ad.mutateBy ).flatMap ( ( md, i ) =>
       [ `//from ${p.name}.rest[${restName}].mutations[${JSON.stringify ( restAction )}]`,
-        `${paramsDeclaration ( md, i )}__mutations.${mutationMethodName ( r, restActionForName ( restAction ), md )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
+        `${paramsDeclaration ( md, i )}${mutationVariableName ( r, restAction )}.${mutationMethodName ( r, restActionForName ( restAction ), md )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
         ...outputParamsDeclaration ( md, i )
       ] ) ) )
   return callMutations;
@@ -133,8 +133,8 @@ export function makeSpringEndpointsFor<B, G> ( params: JavaWiringParams, p: Main
   const endpoints: string[] = r.actions.flatMap ( action => makeEndpoint ( params, p, restName, r, action ) )
   const queries: string[] = r.actions.flatMap ( action => makeQueryEndpoint ( params, r, action ) )
   const importForSql = r.tables === undefined ? [] : [ `import ${sqlMapPackageName ( params, p )}.${sqlMapName ( p, restName, [] )} ; ` ]
-  const auditImports = safeArray ( r.mutations ).map ( ad => `import ${params.thePackage}.${params.mutatorPackage}.${p.name}.${mutationClassName ( r )};` )
-  const auditVariables = safeArray ( r.mutations ).length > 0 ? indentList ( [ `@Autowired`, `${mutationClassName ( r )} __mutations;` ] ) : []
+  const auditImports = safeArray ( r.mutations ).map ( m => `import ${params.thePackage}.${params.mutatorPackage}.${p.name}.${mutationClassName ( r, m.restAction )};` )
+  const mutationVariables = safeArray ( r.mutations ).flatMap ( m => indentList ( [ `@Autowired`, `${mutationClassName ( r, m.restAction )} ${mutationVariableName ( r, m.restAction )};` ] ) )
 
 
   return [
@@ -163,7 +163,7 @@ export function makeSpringEndpointsFor<B, G> ( params: JavaWiringParams, p: Main
     `  public class ${restControllerName ( p, r )} {`,
     ``,
     ...indentList ( [ `@Autowired`, `public IManyGraphQl graphQL;`, `@Autowired`, `public DataSource dataSource;` ] ),
-    ...auditVariables,
+    ...mutationVariables,
     ...endpoints,
     ...queries,
     ...makeSampleEndpoint ( params, r ),

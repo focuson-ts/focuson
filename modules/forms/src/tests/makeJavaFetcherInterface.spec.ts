@@ -1,4 +1,4 @@
-import { findAllResolversFor, findChildResolvers, findQueryMutationResolvers, makeAllJavaWiring, makeJavaFetcherInterfaceForResolver, makeJavaFetchersInterface } from "../codegen/makeJavaFetchersInterface";
+import { findAllResolversFor, findChildResolvers, findQueryMutationResolver, makeAllJavaWiring, makeJavaFetcherInterfaceForResolver, makeJavaFetchersInterface } from "../codegen/makeJavaFetchersInterface";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { repeatingRestRD } from "../example/repeating/repeating.restD";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
@@ -189,19 +189,19 @@ describe ( "findAllResolvers2", () => {
   } )
 
   it ( "findQueryMutationResolvers2", () => {
-    expect ( findQueryMutationResolvers ( eAccountsSummaryRestD, 'get' ) ).toEqual (
+    expect ( findQueryMutationResolver ( eAccountsSummaryRestD, 'get' ) ).toEqual (
       { "isRoot": true, "javaType": "Map<String,Object>", needsObjectInOutput: true, "name": "getEAccountsSummary", "parent": "Query", "resolver": "getEAccountsSummary", "sample": [], "samplerName": "sampleEAccountsSummary" }
     )
-    expect ( findQueryMutationResolvers ( createPlanRestD, "get" ) ).toEqual (
+    expect ( findQueryMutationResolver ( createPlanRestD, "get" ) ).toEqual (
       { "isRoot": true, "javaType": "Map<String,Object>", needsObjectInOutput: true, "name": "getCreatePlan", "parent": "Query", "resolver": "getCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
     )
-    expect ( findQueryMutationResolvers ( createPlanRestD, "create" ) ).toEqual (
+    expect ( findQueryMutationResolver ( createPlanRestD, "create" ) ).toEqual (
       { "isRoot": true, "javaType": "Map<String,Object>", needsObjectInOutput: true, "name": "createCreatePlan", "parent": "Mutation", "resolver": "createCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
     )
-    expect ( findQueryMutationResolvers ( createPlanRestD, "update" ) ).toEqual (
+    expect ( findQueryMutationResolver ( createPlanRestD, "update" ) ).toEqual (
       { "isRoot": true, "javaType": "Map<String,Object>", needsObjectInOutput: true, "name": "updateCreatePlan", "parent": "Mutation", "resolver": "updateCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
     )
-    expect ( findQueryMutationResolvers ( createPlanRestD, "delete" ) ).toEqual (
+    expect ( findQueryMutationResolver ( createPlanRestD, "delete" ) ).toEqual (
       { "isRoot": true, "javaType": "Map<String,Object>", needsObjectInOutput: false, "name": "deleteCreatePlan", "parent": "Mutation", "resolver": "deleteCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
     )
     // expect ( findQueryMutationResolvers ( createPlanRestD, "list" ) ).toEqual (

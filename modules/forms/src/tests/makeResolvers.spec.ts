@@ -3,6 +3,8 @@ import { paramsForTest } from "./paramsForTest";
 import { ChequeCreditbooksPD } from "../example/chequeCreditBooks/chequeCreditBooks.pageD";
 import { chequeCreditBooksRestD } from "../example/chequeCreditBooks/chequeCreditBooks.restD";
 import { toArray } from "@focuson/utils";
+import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
+import { eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 
 describe ( "makeResolvers", () => {
   it ( "should make resolvers", () => {
@@ -88,5 +90,8 @@ describe ( "makeResolvers", () => {
       "public String dbName() {return IFetcher.db; }",
       "}"
     ] )
+  } )
+  it ( "should make resolvers for non 'get' resolvers", () => {
+    expect ( makeResolvers ( paramsForTest, EAccountsSummaryPD, 'eAccountsSummary', eAccountsSummaryRestD, 'getTotalMonthlyCost', eAccountsSummaryRestD.resolvers.getTotalMonthlyCost ) ).toEqual ( [] )
   } )
 } )

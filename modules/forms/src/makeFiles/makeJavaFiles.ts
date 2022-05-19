@@ -6,7 +6,7 @@ import { detailsLog, GenerateLogLevel, NameAnd, safeArray, safeObject, safeStrin
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
-import { createTableSqlName, dbFetcherClassName, fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, getSqlName, mockFetcherClassName, mockFetcherClassNameForResolver, mockFetcherPackage, mutationClassName, providerPactClassName, queryClassName, queryPackage, resolverClassName, restControllerName, sqlMapFileName } from "../codegen/names";
+import { createTableSqlName, dbFetcherClassName, fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, getSqlName, mockFetcherClassName, mockFetcherClassNameForResolver, mockFetcherPackage, mutationClassName, providerPactClassName, queryClassName, queryPackage, resolverClassName, resolverName, restControllerName, sqlMapFileName } from "../codegen/names";
 import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
 
 import { makeMockFetcherFor, makeMockFetchersForRest } from "../codegen/makeMockFetchers";
@@ -19,9 +19,10 @@ import { makePactValidation } from "../codegen/makePactValidation";
 import { AppConfig } from "../appConfig";
 
 import { makeMutations } from "../codegen/makeMutations";
-import { makeAllJavaWiring, makeJavaFetcherInterfaceForResolver, makeJavaFetchersInterface } from "../codegen/makeJavaFetchersInterface";
+import { findChildResolvers, findJavaType, findQueryMutationResolver, makeAllJavaWiring, makeJavaFetcherInterfaceForResolver } from "../codegen/makeJavaFetchersInterface";
 import { makeTuples, tupleIndexes } from "../common/resolverD";
-import { makeResolvers } from "../codegen/makeResolvers";
+import { findResolverData, makeResolvers } from "../codegen/makeResolvers";
+import { restActionToDetails } from "@focuson/rest";
 
 
 export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
@@ -107,8 +108,9 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
   writeToFile ( `${javaResourcesRoot}/${params.schema}`, () => makeGraphQlSchema ( rests ), details )
   forEachRestAndActions ( pages, p => rest => action => {
-    let fetcherFile = `${javaCodeRoot}/${params.fetcherPackage}/${p.name}/${fetcherInterfaceName ( params, rest, action )}.java`;
-    writeToFile ( fetcherFile, () => makeJavaFetchersInterface ( params, p, rest, action ), details )
+    let name = resolverName ( rest, restActionToDetails ( action ) );
+    let fetcherFile = `${javaCodeRoot}/${params.fetcherPackage}/${p.name}/${fetcherInterfaceForResolverName ( params, rest, name )}.java`;
+    writeToFile ( fetcherFile, () => makeJavaFetcherInterfaceForResolver ( params, p, rest, name, findJavaType ( rest.dataDD ) ), details )
   } )
   mapRestAndResolver ( pages, p => rest => ( { resolver, javaType } ) => {
     let fetcherFile = `${javaCodeRoot}/${params.fetcherPackage}/${p.name}/${fetcherInterfaceForResolverName ( params, rest, resolver )}.java`;
@@ -197,19 +199,19 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   } )
 
   forEachRest ( pages, p => r => {
+      toArray ( r.mutations ).forEach ( m => {
+        writeToFile ( `${javaMutatorPackage}/${p.name}/${mutationClassName ( r, m.restAction )}.java`, () => makeMutations ( params, p, r, m ), details )
+      } )
+    }
+  )
 
-    const mutation = makeMutations ( params, p, r, toArray ( r.mutations ) )
-    if ( mutation.length > 0 )
-      writeToFile ( `${javaMutatorPackage}/${p.name}/${mutationClassName ( r )}.java`, () => mutation, details )
-  } )
   forEachRest ( pages, p => ( r, restName ) => {
+    const allResolverData = [ findQueryMutationResolver ( r, 'get' ), ...findChildResolvers ( r ) ]
     Object.entries ( safeObject ( r.resolvers ) ).forEach ( ( [ name, res ] ) => {
-      const resolver = makeResolvers ( params, p, restName, r, name, res )
-      if ( resolver.length > 0 )
-        writeToFile ( `${javaResolverPackage}/${p.name}/${resolverClassName ( r )}.java`, () => resolver, details )
-
+      const resolverData = findResolverData ( `${p.name}.rest[${restName}].resolvers[${name}]`, allResolverData, name )
+      writeToFile ( `${javaResolverPackage}/${p.name}/${resolverClassName ( r, resolverData.resolver )}.java`,
+        () => makeResolvers ( params, p, restName, r, name, res, resolverData ), details )
     } )
-
   } )
 
   tupleIndexes ( params.maxTuples ).map ( i => writeToFile ( `${javaMutatorPackage}/utils/Tuple${i}.java`, () => makeTuples ( params, i ) ), details )

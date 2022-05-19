@@ -2,10 +2,10 @@ import { JavaWiringParams } from "./config";
 import { MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { sortedEntries } from "@focuson/utils";
 import { RestD } from "../common/restD";
-import { fetcherInterfaceName, fetcherName, fetcherPackageName, dbFetcherClassName, dbFetcherPackage, resolverName, sqlMapName, sqlMapPackageName } from "./names";
+import { fetcherName, fetcherPackageName, dbFetcherClassName, dbFetcherPackage, resolverName, sqlMapName, sqlMapPackageName, fetcherInterfaceForResolverName, fetcherInterfaceName } from "./names";
 import { indentList } from "./codegen";
 import { findParamsForTable } from "./makeSqlFromEntities";
-import { getRestTypeDetails } from "@focuson/rest";
+import { getRestTypeDetails, restActionToDetails } from "@focuson/rest";
 import { isRepeatingDd } from "../common/dataD";
 import { findJavaType } from "./makeJavaFetchersInterface";
 

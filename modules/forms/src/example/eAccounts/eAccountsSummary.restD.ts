@@ -16,6 +16,11 @@ export const eAccountsSummaryRestD: RestD<AllGuards> = {
   states: {
     invalidate: { url: '/api/accountsSummary/invalidate?{query}', params: [ 'accountId', 'clientRef' ] }
   },
+  resolvers: {
+    totalMonthlyCost: {
+      mutation: 'storedProc', schema: onlySchema, params: [ 'accountId' ], name: 'getTotalMonthlyCostStoredProc'
+    }
+  },
   access: [
     { restAction: { state: 'invalidate' }, condition: { type: 'in', param: 'employeeType', values: [ 'teamLeader' ] } }
   ],
