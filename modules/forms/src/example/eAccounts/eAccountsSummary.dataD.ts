@@ -59,9 +59,9 @@ export const EAccountsSummaryDD: DataD<AllGuards> = {
   structure: {
     useEStatements: { dataDD: BooleanDD },
     eAccountsTable: { dataDD: EAccountsSummaryTableDD },
-    totalMonthlyCost: { dataDD: { ...MoneyDD,  resolver: 'getTotalMonthlyCost', sample: [ 1000 ] } },
-    oneAccountBalance: { dataDD: { ...MoneyDD, resolver: 'getOneAccountBalance', sample: [ 9921 ] } },
-    currentAccountBalance: { dataDD: { ...MoneyDD, resolver: 'getCurrentAccountBalance', sample: [ 12321 ] } },
+    totalMonthlyCost: { dataDD: { ...MoneyDD,  resolver: 'totalMonthlyCost', sample: [ 1000 ] } },
+    oneAccountBalance: { dataDD: { ...MoneyDD, resolver: 'oneAccountBalance', sample: [ 9921 ] } },
+    currentAccountBalance: { dataDD: { ...MoneyDD, resolver: 'currentAccountBalance', sample: [ 12321 ] } },
     createPlan: { dataDD: CreatePlanDD }
   }
 }

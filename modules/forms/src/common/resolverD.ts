@@ -28,8 +28,7 @@ export interface AuditDetails {
   by: string
 }
 
-export type Mutations =  MutationDetail | MutationDetail[]
-
+export type Mutations = MutationDetail | MutationDetail[]
 
 
 export interface MutationsForRestAction {
@@ -71,7 +70,7 @@ export interface ManualMutation {
 
 
 export type MutationParam = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForStoredProcMutationParam | OutputForSqlMutationParam | NullMutationParam | OutputForManualParam | AutowiredMutationParam
-export type MutationParamForSql = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForSqlMutationParam | NullMutationParam| AutowiredMutationParam
+export type MutationParamForSql = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForSqlMutationParam | NullMutationParam | AutowiredMutationParam
 export type MutationParamForStoredProc = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForStoredProcMutationParam | NullMutationParam | AutowiredMutationParam
 export type MutationParamForManual = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | NullMutationParam | OutputForManualParam | AutowiredMutationParam
 
@@ -190,10 +189,11 @@ export interface OutputForSqlMutationParam {
   javaType: 'String' | 'Integer';
   rsName: string;
 }
+export type AllJavaTypes = 'String' | 'Integer' | 'Map<String,Object>' | 'List<Map<String,Object>>' | 'Boolean'
 export interface OutputForManualParam {
   type: 'output';
   name: string;
-  javaType: 'String' | 'Integer';
+  javaType: AllJavaTypes;
 }
 export interface NullMutationParam {
   type: 'null';

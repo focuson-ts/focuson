@@ -90,8 +90,12 @@ export interface ResolverData {
 }
 export function findQueryMutationResolver<G> ( r: RestD<G>, a: RestAction ): ResolverData {
   const rad = getRestTypeDetails ( a );
-  let name = resolverName ( r, rad );
-  return ({ isRoot: true, parent: rad.query, resolver: name, name, samplerName: sampleName ( r.dataDD ), sample: [], needsObjectInOutput: getRestTypeDetails ( a ).output.needsObj, javaType: findJavaType ( r.dataDD ) })
+  let name = resolverName ( r, a );
+  return ({
+    isRoot: true, parent: rad.query, resolver: name, name, samplerName: sampleName ( r.dataDD ), sample: [],
+    needsObjectInOutput: getRestTypeDetails ( a ).output.needsObj,
+    javaType: findJavaType ( r.dataDD )
+  })
 
 }
 
@@ -110,7 +114,7 @@ export function findChildResolvers<G> ( restD: RestD<G> ): ResolverData[] {
       samplerName: sampleName ( dataDD ),
       sample: sampleFromDataD ( oneDataDD, dataDD ),
       needsObjectInOutput: true,
-      javaType: findJavaType ( dataDD )
+      javaType: findJavaType ( dataDD ),
     } ] : []
   }
   const mapper: AllDataFlatMap<ResolverData, G> = {

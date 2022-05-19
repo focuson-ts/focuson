@@ -108,7 +108,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
   writeToFile ( `${javaResourcesRoot}/${params.schema}`, () => makeGraphQlSchema ( rests ), details )
   forEachRestAndActions ( pages, p => rest => action => {
-    let name = resolverName ( rest, restActionToDetails ( action ) );
+    let name = resolverName ( rest, action );
     let fetcherFile = `${javaCodeRoot}/${params.fetcherPackage}/${p.name}/${fetcherInterfaceForResolverName ( params, rest, name )}.java`;
     writeToFile ( fetcherFile, () => makeJavaFetcherInterfaceForResolver ( params, p, rest, name, findJavaType ( rest.dataDD ) ), details )
   } )

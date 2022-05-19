@@ -1,4 +1,4 @@
-import { getFromResultSet, getFromStatement, makeMutations, mockReturnStatement, returnStatement, setObjectFor, typeForParamAsInput } from "../codegen/makeMutations";
+import { getFromResultSet, getFromStatement, makeMutations, mockReturnStatement, makeMutationResolverReturnStatement, setObjectFor, typeForParamAsInput } from "../codegen/makeMutations";
 import { paramsForTest } from "./paramsForTest";
 import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
@@ -62,20 +62,20 @@ describe ( "mockReturnStatement", () => {
 } )
 describe ( "returnStatement", () => {
   it ( "void if no MPs", () => {
-    expect ( returnStatement ( [] ) ).toEqual ( 'return;' )
+    expect ( makeMutationResolverReturnStatement ( [] ) ).toEqual ( 'return;' )
   } )
   it ( "the javatype if one MP", () => {
-    expect ( returnStatement ( [ spOutputMP, ] ) ).toEqual ( 'return someNameSP;' )
+    expect ( makeMutationResolverReturnStatement ( [ spOutputMP, ] ) ).toEqual ( 'return someNameSP;' )
   } )
   it ( "A tuple if many MPs", () => {
-    expect ( returnStatement ( [ spOutputMP, sqlOutputMP, manOutputMp ] ) ).toEqual ( 'return new Tuple3<>(someNameSP,someNameSql,someNameMan);' )
+    expect ( makeMutationResolverReturnStatement ( [ spOutputMP, sqlOutputMP, manOutputMp ] ) ).toEqual ( 'return new Tuple3<>(someNameSP,someNameSql,someNameMan);' )
   } )
 } )
 
 
 describe ( "makeMutations", () => {
   it ( "should create an mutation class with a method for each mutation for that rest - simple", () => {
-    expect ( makeMutations ( paramsForTest, EAccountsSummaryPD, eAccountsSummaryRestD, eAccountsSummaryRestD.mutations ) ).toEqual ( [
+    expect ( makeMutations ( paramsForTest, EAccountsSummaryPD, eAccountsSummaryRestD, eAccountsSummaryRestD.mutations[ 0 ] ) ).toEqual ( [
       "package focuson.data.mutator.EAccountsSummary;",
       "",
       "import focuson.data.fetchers.IFetcher;",
@@ -90,7 +90,7 @@ describe ( "makeMutations", () => {
       "//If there is a compilation issue here is it because you need to set 'maxTuples'? Currently set to 2 ",
       "import focuson.data.mutator.utils.Tuple2;",
       "@Component",
-      "public class EAccountsSummaryMutation {",
+      "public class EAccountsSummary_state_invalidateMutation {",
       "",
       "    public void EAccountsSummary_state_invalidate_auditStuff(Connection connection, Object dbName, Object accountId, Object clientRef) throws SQLException {",
       "        if (dbName.equals(IFetcher.mock)) {",
@@ -109,7 +109,7 @@ describe ( "makeMutations", () => {
     ] )
   } )
   it ( "should create an mutation class with a method for each mutation for that rest - complex", () => {
-    expect ( makeMutations ( paramsForTest, ChequeCreditbooksPD, chequeCreditBooksRestD, chequeCreditBooksRestD.mutations ) ).toEqual ( [
+    expect ( makeMutations ( paramsForTest, ChequeCreditbooksPD, chequeCreditBooksRestD, chequeCreditBooksRestD.mutations[ 0 ] ) ).toEqual ( [
       "package focuson.data.mutator.ChequeCreditbooks;",
       "",
       "import focuson.data.fetchers.IFetcher;",
@@ -126,8 +126,9 @@ describe ( "makeMutations", () => {
       "//If there is a compilation issue here is it because you need to set 'maxTuples'? Currently set to 2 ",
       "import focuson.data.mutator.utils.Tuple2;",
       "import java.util.Date;",
+      "import java.util.Date;",
       "@Component",
-      "public class ChequeCreditbooksMutation {",
+      "public class ChequeCreditbooks_createMutation {",
       "",
       "    @Autowired",
       "    focuson.data.utils.ITimeService systemTime;",
@@ -169,31 +170,9 @@ describe ( "makeMutations", () => {
       "      System.out.println(now + \" checkbookid: \" + checkbookId + \" part2: \" + checkbookIdPart2);",
       "      return;",
       "  }",
-      "    public void ChequeCreditbooks_get_auditGetCheckBook(Connection connection, Object dbName, Object brandRef, Object accountId) throws SQLException {",
-      "        if (dbName.equals(IFetcher.mock)) {",
-      "           System.out.println(\"Mock audit: ChequeCreditbooks_get_auditGetCheckBook( brandRef, accountId+ )\");",
-      "           return;",
-      "    }",
-      "    try (CallableStatement s = connection.prepareCall(\"call auditGetCheckBook(?, ?)\")) {",
-      "      s.setObject(1, brandRef);",
-      "      s.setObject(2, accountId);",
-      "      if (!s.execute()) throw new SQLException(\"Error in : ChequeCreditbooks_get_auditGetCheckBook\");",
-      "      return;",
-      "  }}",
-      "    public void ChequeCreditbooks_state_cancel_auditCancelCheckbook(Connection connection, Object dbName, Object brandRef, Object accountId) throws SQLException {",
-      "        if (dbName.equals(IFetcher.mock)) {",
-      "           System.out.println(\"Mock audit: ChequeCreditbooks_state_cancel_auditCancelCheckbook( brandRef, accountId+ )\");",
-      "           return;",
-      "    }",
-      "    try (CallableStatement s = connection.prepareCall(\"call auditCancelCheckbook(?, ?)\")) {",
-      "      s.setObject(1, brandRef);",
-      "      s.setObject(2, accountId);",
-      "      if (!s.execute()) throw new SQLException(\"Error in : ChequeCreditbooks_state_cancel_auditCancelCheckbook\");",
-      "      return;",
-      "  }}",
       "",
       "}"
-    ])
+    ] )
 
   } )
 } )

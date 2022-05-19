@@ -50,7 +50,7 @@ export function makeDBFetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
     `  @Autowired`,
     `  private DataSource dataSource;`,
     ``,
-    `  public DataFetcher<${findJavaType ( rest.dataDD )}> ${resolverName ( rest, getRestTypeDetails ( 'get' ) )}() {`,
+    `  public DataFetcher<${findJavaType ( rest.dataDD )}> ${resolverName ( rest,  'get' )}() {`,
     `    return dataFetchingEnvironment -> {`,
     ...indentList ( indentList ( indentList ( paramVariables ) ) ),
     `       Connection c = dataSource.getConnection();`,

@@ -4,7 +4,7 @@ import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationMethodName } from "./names";
 import { RestD, unique } from "../common/restD";
 import { indentList } from "./codegen";
-import { allInputParams, allOutputParams, AutowiredMutationParam, displayParam, importForTubles, isInputParam, isOutputParam, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, OutputMutationParam, paramName, SqlMutation, StoredProcedureMutation } from "../common/resolverD";
+import { allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, importForTubles, isInputParam, isOutputParam, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, OutputMutationParam, paramName, SqlMutation, StoredProcedureMutation } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 
@@ -28,12 +28,12 @@ export function allSetObjectForInputs ( m: MutationParam | MutationParam[] ): st
   return toArray ( m ).filter ( isInputParam ).map ( setObjectFor )
 }
 
-export function returnStatement ( outputs: OutputMutationParam[] ): string {
+export function makeMutationResolverReturnStatement ( outputs: OutputMutationParam[] ): string {
   if ( outputs.length === 0 ) return `return;`
   if ( outputs.length === 1 ) return `return ${outputs[ 0 ].name};`
   return `return new Tuple${outputs.length}<>(${outputs.map ( x => x.name ).join ( ',' )});`
 }
-function quoteIfString ( javaType: 'String' | 'Integer', value: number ) {
+function quoteIfString ( javaType: AllJavaTypes, value: number ) {
   if ( javaType === 'String' ) return '"' + value + '"'
   return value
 }
@@ -93,7 +93,7 @@ export function mutationCodeForSqlCalls<G> ( p: MainPageD<any, any>, r: RestD<G>
         ...allSetObjectForInputs ( m.params ),
         ...execute,
         ...getFromResultSet ( 'rs', paramsA ),
-        returnStatement ( allOutputParams ( paramsA ) )
+        makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) )
       ]
     ) ) ),
     `  }}`,
@@ -111,7 +111,7 @@ export function mutationCodeForStoredProcedureCalls<G> ( p: MainPageD<any, any>,
     `      if (!s.execute()) throw new SQLException("Error in : ${mutationMethodName ( r, name, m )}");`,
     ...indentList ( indentList ( indentList ( [
       ...getFromStatement ( 's', paramsA ),
-      returnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),
+      makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),
     `  }}`,
   ];
 }
@@ -121,7 +121,7 @@ export function mutationCodeForManual<G> ( p: MainPageD<any, any>, r: RestD<G>, 
     `//If you have a compiler error in the type here, did you match the types of the output params in your manual code with the declared types in the .restD?`,
     ...makeMethodDecl ( paramsA, r, name, m ),
     ...commonIfDbNameBlock ( r, paramsA, name, m, includeMockIf ),
-    ...indentList ( indentList ( indentList ( [ ...m.code, returnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),
+    ...indentList ( indentList ( indentList ( [ ...toArray ( m.code ), makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),
     `  }`,
   ];
 }
@@ -143,6 +143,9 @@ export function makeCodeFragmentsForMutation<G> ( mutations: MutationDetail[], p
   const autowiringVariables = autowiring.map ( mp => `    ${mp.class} ${mp.name};` ).flatMap ( mp => [ `    @Autowired`, mp, '' ] )
   return { importsFromParams, autowiringVariables };
 }
+export function importsFromManual ( mutation: MutationsForRestAction ): string[] {
+  return toArray ( mutation.mutateBy ).flatMap ( m => m.mutation === 'manual' ? toArray ( m.import ) : [] )
+}
 export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, any>, r: RestD<G>, mutation: MutationsForRestAction ): string[] {
   const { importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( toArray ( mutation.mutateBy ), p, r, params );
   const methods = makeMutationMethod ( toArray ( mutation.mutateBy ), restActionForName ( mutation.restAction ), p, r, true )
@@ -161,6 +164,7 @@ export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, a
     `import java.sql.SQLException;`,
     ...importsFromParams,
     ...importForTubles ( params ),
+    ...importsFromManual ( mutation ),
     ...toArray ( r.mutations ).flatMap ( m => m.mutateBy ).flatMap ( m => m.mutation === 'manual' ? toArray ( m.import ) : [] ),
     `@Component`,
     `public class ${mutationClassName ( r, mutation.restAction )} {`,

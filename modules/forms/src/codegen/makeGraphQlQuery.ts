@@ -39,7 +39,7 @@ export function makeQuery<G> ( r: RestD<G>, action: RestAction ): string[] {
   const resultFilter = needsResultFilter ? asMultilineJavaString ( flatMapDD ( r.dataDD, makeQueryFolder () ), '      ' ) : []
   const openingString = needsResultFilter ? '{"+' : '}";'
   const closingString = needsResultFilter ? '+"}";}' : '}'
-  return [ `"${prefix}{${resolverName ( r, getRestTypeDetails ( action ) )}${allParamsAndBrackets}${openingString}`,
+  return [ `"${prefix}{${resolverName ( r,  action  )}${allParamsAndBrackets}${openingString}`,
     ...resultFilter,
     closingString ]
 }

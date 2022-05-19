@@ -86,7 +86,7 @@ describe ( "makeCommon", () => {
       "  restCommands: [],",
       "  debug: {'fetcherDebug':false,'guardDebug':false,'restDebug':false,'selectedPageDebug':false,'loadTreeDebug':false,'showTracing':false,'recordTrace':true,'tagFetcherDebug':false,'accordions':[]}",
       "  }"
-    ])
+    ] )
 
   } )
 } )
@@ -100,6 +100,7 @@ describe ( "findAllCommonParams", () => {
       "clientRef",
       "createPlanId",
       "customerId",
+      "dbName",
       "employeeType"
     ] )
   } )
@@ -112,9 +113,10 @@ describe ( "findAllCommonParams", () => {
       "clientRef",
       "createPlanId",
       "customerId",
+      "dbName",
       "employeeType",
       "usersRole"
-    ])
+    ] )
   } )
 
 } )
@@ -128,6 +130,7 @@ describe ( "makeCommonParams", () => {
       "  brandRef?:string;",
       "  clientRef?:string;",
       "  customerId?:string;",
+      "  dbName?:string;",
       "  employeeType?:string;",
       "  usersRole?:string;",
       "}",
@@ -139,6 +142,7 @@ describe ( "makeCommonParams", () => {
       "   brandRef: commonIdsL.focusQuery('brandRef'),",
       "   clientRef: commonIdsL.focusQuery('clientRef'),",
       "   customerId: commonIdsL.focusQuery('customerId'),",
+      "   dbName: commonIdsL.focusQuery('dbName'),",
       "   employeeType: commonIdsL.focusQuery('employeeType'),",
       "   usersRole: commonIdsL.focusQuery('usersRole')",
       "}",

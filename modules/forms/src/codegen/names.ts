@@ -2,7 +2,7 @@ import { AllDataDD, CompDataD, compDataDIn } from "../common/dataD";
 import { MainPageD, ModalPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
-import { RestAction, safeString } from "@focuson/utils";
+import { isRestStateChange, RestAction, safeString } from "@focuson/utils";
 import { JavaWiringParams, TSParams } from "./config";
 import { TableAndFieldAndAliasData } from "./makeSqlFromEntities";
 import { RestActionDetail, restActionForName, restActionToDetails } from "@focuson/rest";
@@ -20,7 +20,8 @@ export function resolverName<G> ( rest: RestD<G>, action: RestAction ) {
   let rawType = rawTypeName ( rest.dataDD );
   const ad = restActionToDetails ( action )
   const prefix = rest.namePrefix ? rest.namePrefix : ''
-  return `${ad.graphQPrefix}${restActionForName ( action )}${rawType}${ad.graphQlPostfix}`
+  const postfix = isRestStateChange ( action ) ? action.state : ''
+  return `${ad.graphQPrefix}${postfix}${rawType}${ad.graphQlPostfix}`
 }
 export const sampleName = <G> ( dataD: AllDataDD<G> ) => "sample" + dataD.name;
 export const emptyName = <G> ( dataD: AllDataDD<G> ) => "empty" + dataD.name;
@@ -41,7 +42,7 @@ export const restDetailsName = <B, G> ( p: PageD<B, G>, restName: string, r: Res
 
 export const packageNameFor = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, thing: string ): string => `${params.thePackage}.${thing}.${p.name}`;
 export const fetcherPackageName = <G> ( params: JavaWiringParams, p: MainPageD<any, G> ): string => packageNameFor ( params, p, params.fetcherPackage );
-export const fetcherInterfaceName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => fetcherInterfaceForResolverName ( params, r, resolverName ( r, restActionToDetails ( a ) ) )
+export const fetcherInterfaceName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => fetcherInterfaceForResolverName ( params, r, resolverName ( r, a ) )
 export const fetcherInterfaceForResolverName = <G> ( params: JavaWiringParams, r: RestD<G>, resolverName: string ): string => `${restNameWithPrefix ( r )}_${resolverName}_${params.fetcherInterface}`;
 
 export const dbFetcherPackage = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G> ): string => packageNameFor ( params, p, params.dbFetcherPackage );
