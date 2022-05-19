@@ -55,9 +55,20 @@ export function postFixForEndpoint<G> ( restAction: RestAction ) {
   return '' //restAction === 'list' ? "/list" : ""
 }
 
-export interface OneTableInsertSqlStrategyForNoIds {
+export interface InsertSqlStrategyInterface {
   type: string
+}
+
+export interface OneTableInsertSqlStrategyForNoIds {
+  type: 'StrategyForNoIds';
   table: DBTable;
+}
+
+export interface OneTableInsertSqlStrategyForIds {
+  type: 'StrategyForIds';
+  table: DBTable;
+  idOffset: number;
+  idField: string;
 }
 
 export interface RestStateDetails {
@@ -75,8 +86,7 @@ export interface RestD<G> {
   resolver?: ResolverD;
   /** @deprecated Replaced with ManualSqlStrategy */
   initialSql?: string[];
-  // strategy?: InsertSqlStrategy | InsertSqlStrategy[];
-  insertSqlStrategy?: OneTableInsertSqlStrategyForNoIds;
+  insertSqlStrategy?: InsertSqlStrategy | InsertSqlStrategy[];
   tables?: EntityAndWhere;
   states?: NameAnd<RestStateDetails>;
   access?: AccessDetails[];
@@ -84,11 +94,11 @@ export interface RestD<G> {
   mutations?: MutationsForRestAction[];
 }
 
-type InsertSqlStrategy = OneTableInsertSqlStrategyForNoIds | ManualSqlStrategy
+export type InsertSqlStrategy = OneTableInsertSqlStrategyForIds | OneTableInsertSqlStrategyForNoIds | ManualSqlStrategy
 
 export interface ManualSqlStrategy {
-  type: "Manual"
-  sql: string[]
+  type: 'Manual';
+  sql: string[];
 }
 
 export interface EntityAndWhere {

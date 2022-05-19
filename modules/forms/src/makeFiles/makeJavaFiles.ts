@@ -4,11 +4,11 @@ import fs from "fs";
 import {
   forEachRest,
   forEachRestAndActions,
-  mapRestAndResolver,
+  mapRestAndResolver, OneTableInsertSqlStrategyForIds,
   OneTableInsertSqlStrategyForNoIds,
   unique
 } from "../common/restD";
-import { detailsLog, GenerateLogLevel, isRestStateChange, NameAnd, safeArray, safeString, sortedEntries } from "@focuson/utils";
+import { detailsLog, GenerateLogLevel, isRestStateChange, NameAnd, safeArray, toArray, safeString, sortedEntries } from "@focuson/utils";
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
@@ -23,7 +23,7 @@ import {
   createTableSql,
   findSqlLinkDataFromRootAndDataD,
   findSqlRoot,
-  generateGetSql,
+  generateGetSql, makeInsertSqlForIds,
   makeInsertSqlForNoIds,
   makeMapsForRest,
   walkSqlRoots
@@ -173,10 +173,19 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   else
     fs.rmSync ( `${javaResourcesRoot}/data.sql`, { force: true } )
 
-  let insertSql = allMainPages ( pages ).flatMap ( mainPage =>
+  let insertSql: string[] = allMainPages ( pages ).flatMap ( mainPage =>
     sortedEntries ( mainPage.rest )
       .filter ( ( [ _, rdp ] ) => rdp.rest.insertSqlStrategy !== undefined )
-      .flatMap ( ( [ _, rdp ] ) => safeArray ( makeInsertSqlForNoIds ( rdp.rest.dataDD, rdp.rest.insertSqlStrategy ) ) ) );
+      .flatMap ( ( [ _, rdp ] ) => {
+        const sA = toArray(rdp.rest.insertSqlStrategy);
+        return sA.flatMap( s => {
+          if (s.type === 'StrategyForIds')
+             return safeArray(makeInsertSqlForIds(rdp.rest.dataDD, s))
+          if (s.type === 'StrategyForNoIds')
+             return safeArray(makeInsertSqlForNoIds(rdp.rest.dataDD, s))
+        }
+      )
+      }));
   if ( insertSql.length > 0 )
     writeToFile ( `${javaResourcesRoot}/insertData.sql`, () => insertSql )
   else

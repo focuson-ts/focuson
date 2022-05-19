@@ -16,7 +16,7 @@ export const postcodeRestD: RestD<AllGuards> = {
   url: '/api/postCode?{query}',
   actions: [ 'get' ],
   initialSql: addressSearchSql,
-  insertSqlStrategy: {type: 'OneTableInsertSqlStrategyForNoIds', table: postCodeSearchTable},
+  insertSqlStrategy: {type: 'StrategyForIds', table: postCodeSearchTable, idOffset: 10, idField: "RandomIdName"},
   tables: {
     entity: {
       type: 'Main',
@@ -33,6 +33,7 @@ export const addressRestD: RestD<AllGuards> = {
   dataDD: nameAndAddressDataD,
   url: '/api/address?{query}',
   actions: [ 'create' ],
+  insertSqlStrategy: [{type: 'StrategyForIds', table: addT, idField: 'id', idOffset: 0}],
   tables: {
     entity: { type: 'Main', table: addT, children: {} },
     where: []

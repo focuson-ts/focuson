@@ -426,6 +426,15 @@
       RestOnCommit: createPlanRestD/create
     deleteExistingPlan RestButton
     refresh      ResetStateButton
+  ## dataMapping
+  ## Table CUST_TBL (Schema TheSchema)
+  |Display path | Database Field
+  | --- | --- |
+  
+  ## Table ACC_TBL (Schema TheSchema)
+  |Display path | Database Field
+  | --- | --- |
+  
 
 ---
 # ETransfer - MainPage

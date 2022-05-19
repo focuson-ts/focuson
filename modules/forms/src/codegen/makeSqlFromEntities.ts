@@ -1,6 +1,13 @@
 import { DBTable } from "../common/resolverD";
 import { beforeAfterSeparator, beforeSeparator, ints, mapPathPlusInts, NameAnd, safeArray, safeString } from "@focuson/utils";
-import { AllLensRestParams, EntityAndWhere, OneTableInsertSqlStrategyForNoIds, RestParams, unique } from "../common/restD";
+import {
+  AllLensRestParams,
+  EntityAndWhere, InsertSqlStrategy,
+  OneTableInsertSqlStrategyForIds,
+  OneTableInsertSqlStrategyForNoIds,
+  RestParams,
+  unique
+} from "../common/restD";
 import { CompDataD, emptyDataFlatMap, flatMapDD, HasSample, isRepeatingDd, OneDataDD } from "../common/dataD";
 import { PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addBrackets, addStringToEndOfAllButLast, indentList } from "./codegen";
@@ -282,7 +289,7 @@ interface FieldData<G> extends HasSample<any> {
   rsGetter: string;
   reactType: string;
   dbType: string;
-  sample?: string[]
+  sample?: string [] | number[];
 }
 interface TableAndFieldData<G> {
   table: DBTable;
@@ -631,7 +638,23 @@ function sqlIfy ( a: any ): string {
 }
 export function makeInsertSqlForNoIds ( dataD: CompDataD<any>, strategy: OneTableInsertSqlStrategyForNoIds ) {
   const tafdsForThisTable: TableAndFieldData<any>[] = findTableAndFieldFromDataD ( dataD ).filter ( tafd => tafd.table.name === strategy.table.name );
-  const sampleCount = isRepeatingDd ( dataD ) ? (dataD.sampleCount ? dataD.sampleCount : 3) : 3
+  const sampleCount = isRepeatingDd ( dataD ) && dataD.sampleCount ? dataD.sampleCount : 3
   const is = [ ...Array ( sampleCount ).keys () ]
-  return is.map ( i => `insert into ${strategy.table.name}(${tafdsForThisTable.map ( fd => fd.fieldData.dbFieldName )}) values (${tafdsForThisTable.map ( fd => sqlIfy ( selectSample ( i, fd.fieldData ) ) ).join ( "," )});` )
+  return is.map (i => `insert into ${strategy.table.name}(${tafdsForThisTable
+      .map ((fd: TableAndFieldData<any>) => fd.fieldData.dbFieldName )}) values (${tafdsForThisTable.map (fd => sqlIfy ( selectSample ( i, fd.fieldData ) ) ).join ( "," )});` );
+}
+
+export function makeInsertSqlForIds ( dataD: CompDataD<any>, strategy: OneTableInsertSqlStrategyForIds ) {
+  const tafdsForThisTable: TableAndFieldData<any>[] = findTableAndFieldFromDataD ( dataD )
+      .filter ( tafd => tafd.table.name === strategy.table.name );
+
+  tafdsForThisTable.unshift({table: strategy.table, fieldData:
+        {fieldName: strategy.idField, dbFieldName: strategy.idField, rsGetter: "", reactType: "", dbType: "",
+      sample: Array(5).fill(0).map((_, idx) => idx + strategy.idOffset)}});
+
+  const sampleCount = isRepeatingDd ( dataD ) && dataD.sampleCount ? dataD.sampleCount : 3
+  const is = [ ...Array ( sampleCount ).keys () ]
+  return is.map (i => `insert into ${strategy.table.name}(${tafdsForThisTable
+      .map ( fd => fd.fieldData.dbFieldName )}) values (${tafdsForThisTable
+      .map ( (fd: TableAndFieldData<any>) => sqlIfy ( selectSample ( i, fd.fieldData ) ) ).join ( "," )});` );
 }

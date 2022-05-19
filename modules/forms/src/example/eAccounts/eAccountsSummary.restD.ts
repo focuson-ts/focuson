@@ -1,7 +1,7 @@
 import { CreatePlanDD, EAccountsSummaryDD } from "./eAccountsSummary.dataD";
 import { IntParam, RestD, StringParam } from "../../common/restD";
 import { AllGuards } from "../../buttons/guardButton";
-import { onlySchema } from "../database/tableNames";
+import {accountT, addT, customerT, onlySchema} from "../database/tableNames";
 import { allCommonIds, commonIds } from "../commonIds";
 
 export const eAccountsSummaryRestD: RestD<AllGuards> = {
@@ -13,6 +13,15 @@ export const eAccountsSummaryRestD: RestD<AllGuards> = {
   dataDD: EAccountsSummaryDD,
   url: '/api/accountsSummary?{query}', //or maybe accountId={accountId}&customerId={customerId}
   actions: [ 'get', { state: 'invalidate' } ],
+  tables: {
+    entity: {type: 'Main', table: customerT, children: {
+      account: {type: 'Multiple', table: accountT,  idInParent: 'id', idInThis: 'customer' }
+      } },
+    where: [{table: customerT, alias: customerT.name, field: 'id', paramName: 'customerId'
+  }]
+  },
+  insertSqlStrategy: [{type: 'StrategyForIds', table: customerT, idField: 'id', idOffset: 0},
+    {type: 'StrategyForIds', table: accountT, idField: 'id', idOffset: 20}],
   states: {
     invalidate: { url: '/api/accountsSummary/invalidate?{query}', params: [ 'accountId', 'clientRef' ] }
   },
