@@ -45,7 +45,7 @@ export type MutationDetail = StoredProcedureMutation | SqlMutation | ManualMutat
 //   params: MutationParam
 // }
 export interface SqlMutation {
-  mutation: 'sql',
+  type: 'sql',
   schema: Schema;
   /**The name of the procedure that does this: should capture the intent of what this does */
   name: string;
@@ -54,14 +54,14 @@ export interface SqlMutation {
 }
 
 export interface StoredProcedureMutation {
-  mutation: 'storedProc',
+  type: 'storedProc',
   schema: Schema,
   name: string,
   params: MutationParamForStoredProc | MutationParamForStoredProc[]
 }
 
 export interface ManualMutation {
-  mutation: 'manual';
+  type: 'manual';
   import?: string | string[];
   params: MutationParamForManual | MutationParamForManual[]
   name: string;

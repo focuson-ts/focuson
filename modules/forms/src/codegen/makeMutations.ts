@@ -127,9 +127,9 @@ export function mutationCodeForManual<G> ( p: MainPageD<any, any>, r: RestD<G>, 
 }
 export function makeMutationMethod<G> ( mutations: MutationDetail[], name: string, p: MainPageD<any, any>, r: RestD<G>, includeMockIf: boolean ) {
   const methods = mutations.flatMap ( ( mutateBy ) => toArray ( mutateBy ).flatMap ( ( m: MutationDetail ) => {
-    if ( m.mutation === 'sql' ) return mutationCodeForSqlCalls ( p, r, name, m, includeMockIf )
-    if ( m.mutation === 'storedProc' ) return mutationCodeForStoredProcedureCalls ( p, r, name, m, includeMockIf )
-    if ( m.mutation === 'manual' ) return mutationCodeForManual ( p, r, name, m, includeMockIf );
+    if ( m.type === 'sql' ) return mutationCodeForSqlCalls ( p, r, name, m, includeMockIf )
+    if ( m.type === 'storedProc' ) return mutationCodeForStoredProcedureCalls ( p, r, name, m, includeMockIf )
+    if ( m.type === 'manual' ) return mutationCodeForManual ( p, r, name, m, includeMockIf );
     throw Error ( `Don't know how to findCode (Page ${p.name}) for ${JSON.stringify ( m )}` )
   } ) )
   return methods;
@@ -144,7 +144,7 @@ export function makeCodeFragmentsForMutation<G> ( mutations: MutationDetail[], p
   return { importsFromParams, autowiringVariables };
 }
 export function importsFromManual ( mutation: MutationsForRestAction ): string[] {
-  return toArray ( mutation.mutateBy ).flatMap ( m => m.mutation === 'manual' ? toArray ( m.import ) : [] )
+  return toArray ( mutation.mutateBy ).flatMap ( m => m.type === 'manual' ? toArray ( m.import ) : [] )
 }
 export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, any>, r: RestD<G>, mutation: MutationsForRestAction ): string[] {
   const { importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( toArray ( mutation.mutateBy ), p, r, params );
@@ -165,7 +165,7 @@ export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, a
     ...importsFromParams,
     ...importForTubles ( params ),
     ...importsFromManual ( mutation ),
-    ...toArray ( r.mutations ).flatMap ( m => m.mutateBy ).flatMap ( m => m.mutation === 'manual' ? toArray ( m.import ) : [] ),
+    ...toArray ( r.mutations ).flatMap ( m => m.mutateBy ).flatMap ( m => m.type === 'manual' ? toArray ( m.import ) : [] ),
     `@Component`,
     `public class ${mutationClassName ( r, mutation.restAction )} {`,
     ``,

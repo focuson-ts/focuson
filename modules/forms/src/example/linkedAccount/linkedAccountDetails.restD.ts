@@ -46,8 +46,8 @@ export const singleCollectionPaymentRD: ExampleRestD = {
   url: '/api/payment?{query}',
   actions: [ { state: 'cancel' }, { state: 'revalidate' } ],
   mutations: [
-    { restAction: { state: 'cancel' }, mutateBy: { mutation: 'storedProc', name: 'auditCancel', schema: onlySchema, params: [ 'accountId', 'paymentId' ] } },
-    { restAction: { state: 'revalidate' }, mutateBy: { mutation: 'storedProc', name: 'auditrevalidate', schema: onlySchema, params: [ 'accountId', 'paymentId' ] } }
+    { restAction: { state: 'cancel' }, mutateBy: { type: 'storedProc', name: 'auditCancel', schema: onlySchema, params: [ 'accountId', 'paymentId' ] } },
+    { restAction: { state: 'revalidate' }, mutateBy: { type: 'storedProc', name: 'auditrevalidate', schema: onlySchema, params: [ 'accountId', 'paymentId' ] } }
   ],
   states: {
     cancel: { url: '/api/payment/cancel?{query}', params: [ 'accountId', 'paymentId' ] },
@@ -64,8 +64,8 @@ export const createPaymentRD: ExampleRestD = {
   mutations: [
     {
       restAction: 'create', mutateBy: [
-        { mutation: 'sql', name: 'create', sql: 'insert into', params: [ 'accountId' ] , schema: onlySchema},
-        { mutation: 'storedProc', name: 'auditCreate', params: [ 'accountId' ], schema: onlySchema },
+        { type: 'sql', name: 'create', sql: 'insert into', params: [ 'accountId' ] , schema: onlySchema},
+        { type: 'storedProc', name: 'auditCreate', params: [ 'accountId' ], schema: onlySchema },
         // { mutation: 'manual', name: 'someMeaningfulName', code: [ 'some', 'lines', 'of code' ], params: [ 'accountId' ] },
       ],
     } ]

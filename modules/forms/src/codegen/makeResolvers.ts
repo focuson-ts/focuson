@@ -64,7 +64,7 @@ export function findResolverData ( errorPrefix: string, childResolverData: Resol
   throw Error ( `${errorPrefix} cannot find resolver ${resolverName}. Legal values are ${childResolverData.map ( r => r.name ).sort ()}` )
 }
 function importsFromManual ( resolver: Mutations ) {
-  return toArray ( resolver ).flatMap ( m => m.mutation === 'manual' ? toArray ( m.import ) : [] );
+  return toArray ( resolver ).flatMap ( m => m.type === 'manual' ? toArray ( m.import ) : [] );
 }
 //this is just hacking it in to see if it will work. Only works for get at moment
 export function makeResolvers<G> ( params: JavaWiringParams, p: MainPageD<any, any>, restName: string, r: RestD<G>, resolverName: string, resolver: Mutations, resolverData: ResolverData ): string[] {
@@ -96,7 +96,7 @@ export function makeResolvers<G> ( params: JavaWiringParams, p: MainPageD<any, a
     ...importsFromParams,
     ...importForTubles ( params ),
     ...importsFromManual ( resolver ),
-    ...toArray ( r.mutations ).flatMap ( m => m.mutateBy ).flatMap ( m => m.mutation === 'manual' ? toArray ( m.import ) : [] ),
+    ...toArray ( r.mutations ).flatMap ( m => m.mutateBy ).flatMap ( m => m.type === 'manual' ? toArray ( m.import ) : [] ),
     `@Component`,
     `public class ${resolverClassName ( r, resolverData.resolver )} implements ${interfaceName}{`,
     ``,
