@@ -11,8 +11,15 @@ export interface RadioProps<S, T, Context> extends CommonStateProps<S, T, Contex
 
 export function Radio<S, T, Context extends FocusOnContext<S>> ( { state, mode, enums, ariaLabel, id }: RadioProps<S, string, Context> ) {
   return <>{Object.entries ( enums ).map ( ( [ key, value ] ) => {
-    return <div className="p-2" onClick={() => state.setJson ( value, reasonFor ( 'Radio', 'onClick', id ) )} key={key}>
-      <input id={id + value} onChange={() => {}} checked={state.optJson () === value} value={state.optJson ()} type='radio' name={id} disabled={mode === 'view'} aria-label={ariaLabel}/>
+    const checked = state.optJson () === value
+    const cssChecked = checked ? 'checked' : ''
+
+    const disabled = mode === 'view'
+    const cssDisabled = disabled ? 'disabled' : ''
+    
+    return <div className={`radio-container ${cssChecked} ${cssDisabled}`} onClick={() => state.setJson ( value, reasonFor ( 'Radio', 'onClick', id ) )} key={key}>
+      <input id={id + value} onChange={() => {}} checked={checked} value={state.optJson ()} type='radio' name={id} disabled={disabled} aria-label={ariaLabel}/>
+      <span className="checkmark"></span>
       <Label state={state} htmlFor={key} label={value}/>
     </div>
   } )}</>

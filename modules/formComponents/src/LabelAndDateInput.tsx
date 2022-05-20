@@ -86,7 +86,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
         excludeDates={datesToExcludeAsDateType}
         minDate={minDate}
         highlightDates={datesToExcludeAsDateType}
-        disabled={mode === 'view' || readonly}
+        readOnly={mode === 'view' || readonly}
         className={error ? "red-border" : ""}
         placeholderText="Select a date"/>
         {makeButtons ( props.allButtons, props.buttons )}

@@ -23,9 +23,9 @@ export function LabelAndDropdown<S, T, Context extends FocusOnContext<S>> ( prop
   const hasValid = selected &&  Object.keys ( enums ).includes ( selected )
   const value = hasValid ? selected : undefined
   const pleaseSelectClass = hasValid ? '' : ' pleaseSelect'
-  return (<div className='labelDropdown'>
+  return (<div className='dropdown-container'>
       <Label state={state} htmlFor={name} label={label}/>
-      <select className={`dropdown ${pleaseSelectClass}`} value={value} disabled={mode === 'view' || readonly} id={id} required={required} size={size} aria-label={ariaLabel} onChange={( e ) =>
+      <select className={`select ${pleaseSelectClass}`} value={value} disabled={mode === 'view' || readonly} id={id} required={required} size={size} aria-label={ariaLabel} onChange={( e ) =>
         state.setJson ( e.target.value, reasonFor ( 'LabelAndDropdown', 'onChange', id ) )}>
         {pleaseSelect && !hasValid && <option>{pleaseSelect}</option>}
         {

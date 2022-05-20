@@ -34,7 +34,7 @@ export const Input = <S, T extends any, P> ( tProps: TransformerProps<T> ) => {
       } else
         state.setJson ( transformer ( e.target.value ), reasonFor ( 'Input', 'onChange', id ) );
     };
-    return <input type={type} {...cleanInputProps ( props )} value={`${state.optJsonOr ( tProps.default )}`} disabled={mode === 'view' || readonly} onChange={( e ) => onChange ( transformer, e )}/>
+    return <input className="input" type={type} {...cleanInputProps ( props )} value={`${state.optJsonOr ( tProps.default )}`} readOnly={mode === 'view' || readonly} onChange={( e ) => onChange ( transformer, e )}/>
   }
 }
 
