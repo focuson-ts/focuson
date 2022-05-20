@@ -64,7 +64,7 @@ export const createPaymentRD: ExampleRestD = {
   mutations: [
     {
       restAction: 'create', mutateBy: [
-        { type: 'sql', name: 'create', sql: 'insert into', params: [ 'accountId' ] , schema: onlySchema},
+        { type: 'sql', name: 'create', sql: 'insert into', params: [ 'accountId' ], schema: onlySchema },
         { type: 'storedProc', name: 'auditCreate', params: [ 'accountId' ], schema: onlySchema },
         // { mutation: 'manual', name: 'someMeaningfulName', code: [ 'some', 'lines', 'of code' ], params: [ 'accountId' ] },
       ],
@@ -73,8 +73,20 @@ export const createPaymentRD: ExampleRestD = {
 
 
 export const overpaymentHistoryRD: ExampleRestD = {
-  params: { ...fromCommonIds ( 'clientRef', 'accountId' ) },
+  params: { ...fromCommonIds ( 'clientRef', 'accountId', 'brandRef' ) },
   dataDD: OverpaymentPageDD,
   url: '/api/payment/overpayment/history?{query}',
-  actions: [ 'get' ]
+  actions: [ 'get' ],
+  resolvers: {
+    'getOverpaymentPage': [
+      {
+        type: "manual", params: [ 'brandRef', { name: 'jurisdictionCode', type: 'output', javaType: 'String' } ], name: 'CalculateJurisdictionCode',
+        code: [ 'String jurisdictionCode = brandRef == new Integer(10) ? "ROI": "GB";' ]
+      },
+      {
+        type: 'sql', sql: 'select DATE from holidaytable where jurisdictionCode = ?',
+        params: [ 'jurisdictionCode', { type: 'output', javaType: 'String', name: 'history', rsName: 'DATE' } ], name: 'getTheSql',
+        schema: onlySchema
+      } ]
+  }
 }

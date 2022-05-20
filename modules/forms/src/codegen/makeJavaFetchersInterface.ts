@@ -1,4 +1,4 @@
-import { flatMapRestAndActions, flatMapRestAndResolver, mapRestAndActions, mapRestAndResolver, RestD } from "../common/restD";
+import { flatMapRestAndActions, flatMapRestAndResolver, mapRestAndActions, mapRestAndResolver, RestD, unique } from "../common/restD";
 import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, isPrimDd, isRepeatingDd, OneDataDD, PrimitiveDD, RepeatingDataD, sampleFromDataD } from "../common/dataD";
 import { fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, fetcherVariableName, fetcherVariableNameForResolver, resolverName, sampleName } from "./names";
 import { JavaWiringParams } from "./config";
@@ -46,23 +46,24 @@ function makeWiring ( varName: string, parentName: string, resolver: string, nam
 
 
 export function makeAllJavaWiring<B, G> ( params: JavaWiringParams, ps: PageD<B, G>[], directorySpec: DirectorySpec ): string[] {
-  let imports = [
+  let imports = unique ( [
     ...mapRestAndActions ( ps, p => r => a => `import ${fetcherPackageName ( params, p )}.${fetcherInterfaceName ( params, r, a )};` ),
     ...mapRestAndResolver ( ps, p => r => ( { resolver } ) => `import ${fetcherPackageName ( params, p )}.${fetcherInterfaceForResolverName ( params, r, resolver )};` )
-  ]
+  ], t => t )
   let wiringForRest: string[] = mapRestAndActions ( ps, p => r => a => {
     const { parent, resolver, name, sample } = findQueryMutationResolver ( r, a )
     return makeWiring ( fetcherVariableName ( params, r, a ), parent, resolver, name )
   } )
   let wiringForResolvers: string[] = mapRestAndResolver ( ps, p => r => ( { resolver, parent, name } ) =>
     makeWiring ( fetcherVariableNameForResolver ( params, r, resolver ), parent, resolver, name ) )
-  let wiring = [ ...wiringForRest, ...wiringForResolvers ]
+  let wiring = unique ( [ ...wiringForRest, ...wiringForResolvers ], t => t )//we need this because of places where we return the same object from multiple end points.
 
 
-  let fetchers = [ ...(flatMapRestAndActions ( ps, p => r => a => [ `@Autowired`, `List<${fetcherInterfaceName ( params, r, a )}> ${fetcherVariableName ( params, r, a )};` ] )),
-    ...flatMapRestAndResolver ( ps, p => r => ( { resolver } ) => [
-      `@Autowired`,
-      `List<${fetcherInterfaceForResolverName ( params, r, resolver )}> ${fetcherVariableNameForResolver ( params, r, resolver )};` ] ) ]
+  let fetchersFromActions: [ string, string ][] = mapRestAndActions ( ps, p => r => a => [ `@Autowired`, `List<${fetcherInterfaceName ( params, r, a )}> ${fetcherVariableName ( params, r, a )};` ] );
+  let fetchersFromResolvers: [ string, string ][] = mapRestAndResolver ( ps, p => r => ( { resolver } ) => [
+    `@Autowired`,
+    `List<${fetcherInterfaceForResolverName ( params, r, resolver )}> ${fetcherVariableNameForResolver ( params, r, resolver )};` ] );
+  let fetchers: string[] = unique ( [ ...fetchersFromActions, ...fetchersFromResolvers ], t => t[ 1 ] ).flat ()
 
   const str: string = loadFile ( 'templates/JavaWiringTemplate.java', directorySpec ).toString ()
   return applyToTemplate ( str, {

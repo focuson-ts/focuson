@@ -26,8 +26,10 @@ export const eAccountsSummaryRestD: RestD<AllGuards> = {
         { type: 'output', name: 'eAccountsTable', javaType: 'List<Map<String,Object>>' },
         { type: 'output', name: 'createPlan', javaType: 'Map<String,Object>' },
       ],
-      code: [ `Boolean useEStatements = false; List eAccountsTable = new LinkedList();`,
-        `Map createPlan = new HashMap(); createPlan.put("createPlanStart", "");createPlan.put("createPlanDate", "");createPlan.put("createPlanEnd", "");` ]
+      code: [
+        `Boolean useEStatements = false; List eAccountsTable = new LinkedList();`,
+        `Map createPlan = new HashMap(); createPlan.put("createPlanStart", "");createPlan.put("createPlanDate", "");createPlan.put("createPlanEnd", "");`
+      ]
     },
     totalMonthlyCost: { type: 'manual', code: [ 'Integer totalMonthlyCost = 123;' ], params: [ 'accountId', { type: 'output', name: 'totalMonthlyCost', javaType: 'Integer' } ], name: 'getTotalMonthlyCostStoredProc' },
     oneAccountBalance: { type: 'manual', code: [ 'Integer oneAccountBalance = 234;' ], params: [ 'accountId', { type: 'output', name: 'oneAccountBalance', javaType: 'Integer' } ], name: 'getOneAccountBalance' },

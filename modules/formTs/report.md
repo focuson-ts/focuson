@@ -9,9 +9,9 @@
 | --- | ---
 |accountId|accountId
 |dbName|dbName
+|brandRef|brandRef
 |clientRef|clientRef
 |applRef|applRef
-|brandRef|brandRef
 |createPlanId|createPlanId
 |customerId|customerId
 |employeeType|employeeType
@@ -27,7 +27,7 @@
 |LinkedAccountDetails|collectionHistoryList | /api/collections/list?{query}| accountId,clientRef |  | 
 |LinkedAccountDetails|collectionSummary | /api/collections/summary?{query}| accountId,clientRef |  | 
 |LinkedAccountDetails|createPayment | /api/payment/create?{query}| accountId,clientRef,paymentId |  | create->create,auditCreate
-|LinkedAccountDetails|overpaymentHistory | /api/payment/overpayment/history?{query}| accountId,clientRef |  | 
+|LinkedAccountDetails|overpaymentHistory | /api/payment/overpayment/history?{query}| accountId,brandRef,clientRef |  | 
 |LinkedAccountDetails|payments | /api/payment?{query}| accountId,clientRef,paymentId |  | state:cancel->auditCancel; state:revalidate->auditrevalidate
 |LinkedAccountDetails| | /api/payment/cancel?{query}| accountId,clientRef,paymentId |
 |LinkedAccountDetails| | /api/payment/revalidate?{query}| accountId,clientRef,paymentId |
@@ -135,6 +135,7 @@
 | Name | Location
 | --- | ---
 |accountId|accountId
+|brandRef|brandRef
 |clientRef|clientRef
   ## domains 
     CollectionItem
@@ -154,7 +155,7 @@
     |collectionHistoryList | /api/collections/list?{query}| accountId,clientRef |  | 
     |collectionSummary | /api/collections/summary?{query}| accountId,clientRef |  | 
     |createPayment | /api/payment/create?{query}| accountId,clientRef,paymentId |  | create->create,auditCreate
-    |overpaymentHistory | /api/payment/overpayment/history?{query}| accountId,clientRef |  | 
+    |overpaymentHistory | /api/payment/overpayment/history?{query}| accountId,brandRef,clientRef |  | 
     |payments | /api/payment?{query}| accountId,clientRef,paymentId |  | state:cancel->auditCancel; state:revalidate->auditrevalidate
     | | /api/payment/cancel?{query}| accountId,clientRef,paymentId |
     | | /api/payment/revalidate?{query}| accountId,clientRef,paymentId |

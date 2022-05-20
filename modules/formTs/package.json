@@ -5,9 +5,9 @@
   "version":         "0.0.1",
   "private":         true,
   "dependencies":    {
-    "@focuson/focuson":           "1.10.3",
-    "@focuson/stories":           "1.10.3",
-    "@focuson/form_components":   "1.10.3",
+    "@focuson/focuson":           "1.11.1",
+    "@focuson/stories":           "1.11.1",
+    "@focuson/form_components":   "1.11.1",
     "@pact-foundation/pact-node": "^10.17.1",
     "react-datepicker":           "^4.7.0",
     "@types/react-datepicker":    "^4.4.1",
