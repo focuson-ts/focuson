@@ -1558,7 +1558,6 @@ pre {
     background: white;
     width: 100%;
     height: 42px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M6 6.785l-6-6L.785 0 6 5.215 11.215 0 12 .785z' fill='%23AD1982' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
 
 .react-datepicker-wrapper input[type=text]:focus {
