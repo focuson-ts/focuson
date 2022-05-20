@@ -8,7 +8,7 @@ export const JointAccountAddressDD: ExampleDataD = {
   description: "Addresses",
   table: addT, //just a default
   structure: {
-    line1: { dataDD: OneLineStringDD, db: 'zzline1' }, //db can be a string or a
+    line1: { dataDD: OneLineStringDD, db: { table: addT, field: 'zzline1', fieldAlias: 'zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode' } }, //db can be a string or a
     line2: { dataDD: OneLineStringDD, db: 'zzline2' },
   }
 }

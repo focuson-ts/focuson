@@ -1,4 +1,4 @@
-import { AllDataDD, CompDataD, compDataDIn } from "../common/dataD";
+import { AllDataDD, CompDataD, compDataDIn, OneDataDD } from "../common/dataD";
 import { MainPageD, ModalPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
@@ -30,7 +30,7 @@ export const restControllerName = <B, G> ( p: MainPageD<B, G>, restD: RestD<G> )
 export const javaSqlCreateTableSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.createTableSql.sql`
 export const javaSqlReadSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.readTableSql.sql`
 
-export const queryName = <G> ( restD: RestD<G>, action: RestAction ): string => { return restActionForName ( action ) +  compDataDIn ( restD.dataDD ).name; } //safeString ( restD.namePrefix ) +
+export const queryName = <G> ( restD: RestD<G>, action: RestAction ): string => { return restActionForName ( action ) + compDataDIn ( restD.dataDD ).name; } //safeString ( restD.namePrefix ) +
 export const createTableName = <G> ( restD: RestD<G> ): string => { return "createTable" + compDataDIn ( restD.dataDD ).name; }
 export const createTableSqlName = (): string => { return "schema"}
 export const getSqlName = (): string => { return "get"}
@@ -76,7 +76,7 @@ export const sqlDataSuffixFor = ( suffix: string, i: number ): string => suffix 
 export function sqlMapName<B, G> ( p: PageD<B, G>, restName: string, path: number[] ) {return `${p.name}_${restName}Maps${path.join ( "_" )}`}
 export function sqlListName<B, G> ( p: PageD<B, G>, restName: string, path: number[], i: number ) {return sqlMapName ( p, restName, [ ...path, i ] )}
 export function sqlMapFileName<B, G> ( root: string, p: PageD<B, G>, restName: string, path: number[] ) {return `${root}/${p.name}/${sqlMapName ( p, restName, path )}`}
-export function sqlTafFieldName<G> ( taf: TableAndFieldAndAliasData<G> ) {return `${taf.alias}_${taf.fieldData.dbFieldName}`}
+export function sqlTafFieldName<G> ( taf: TableAndFieldAndAliasData<G> ) {return taf.fieldData.dbFieldAlias ? taf.fieldData.dbFieldAlias : `${taf.alias}_${taf.fieldData.dbFieldName}`}
 export function sqlMapPackageName<G> ( params: JavaWiringParams, p: MainPageD<any, G> ) {return `${params.thePackage}.${params.dbPackage}.${p.name}`}
 export const optionalsName = <B, G> ( p: PageD<B, G> ) => `${p.name}Optionals`
 

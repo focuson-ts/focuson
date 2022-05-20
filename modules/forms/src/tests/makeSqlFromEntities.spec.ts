@@ -63,9 +63,12 @@ describe ("Insert Queries", () => {
   it ("should work for ______", () => {
     expect (makeInsertSqlForNoIds(postCodeDataLineD, {type: 'OneTableInsertSqlStrategyForNoIds', table: postCodeSearchTable}))
         .toEqual([
-          "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE) values ('4 Privet drive','Little Whinging','Surrey','England','LW12 5f');",
-          "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE) values ('27 Throughput Lane','Woodfield','','Ireland','IR45 3GT');",
-          "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE) values ('4 Privet drive','Little Whinging','Surrey','England','LW12 5f');"
+            "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE)",
+            "  values ('4 Privet drive','Little Whinging','Surrey','England','LW12 5f');",
+            "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE)",
+            "  values ('27 Throughput Lane','Woodfield','','Ireland','IR45 3GT');",
+            "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE)",
+            "  values ('4 Privet drive','Little Whinging','Surrey','England','LW12 5f');"
           ]
         )
   })
@@ -372,7 +375,7 @@ describe ( "generateGetSql", () => {
         "  mainCustomer.id as mainCustomer_id,",
         "  mainAddress.customerId as mainAddress_customerId,",
         "  ACC_TBL.mainCustomerId as ACC_TBL_mainCustomerId,",
-        "  mainAddress.zzline1 as mainAddress_zzline1,",
+        "  mainAddress.zzline1 as zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode,",
         "  mainAddress.zzline2 as mainAddress_zzline2",
         " from",
         "  ACC_TBL ACC_TBL,",
@@ -387,7 +390,7 @@ describe ( "generateGetSql", () => {
         "  jointCustomer.id as jointCustomer_id,",
         "  jointAddress.customerId as jointAddress_customerId,",
         "  ACC_TBL.jointCustomerId as ACC_TBL_jointCustomerId,",
-        "  jointAddress.zzline1 as jointAddress_zzline1,",
+        "  jointAddress.zzline1 as zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode,",
         "  jointAddress.zzline2 as jointAddress_zzline2",
         " from",
         "  ACC_TBL ACC_TBL,",
@@ -571,7 +574,7 @@ describe ( "makeMapsForRest", () => {
         "  '  mainCustomer.id as mainCustomer_id,\\n'+",
         "  '  mainAddress.customerId as mainAddress_customerId,\\n'+",
         "  '  ACC_TBL.mainCustomerId as ACC_TBL_mainCustomerId,\\n'+",
-        "  '  mainAddress.zzline1 as mainAddress_zzline1,\\n'+",
+        "  '  mainAddress.zzline1 as zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode,\\n'+",
         "  '  mainAddress.zzline2 as mainAddress_zzline2\\n'+",
         "  ' from\\n'+",
         "  '  ACC_TBL ACC_TBL,\\n'+",
@@ -585,7 +588,7 @@ describe ( "makeMapsForRest", () => {
         "  '  jointCustomer.id as jointCustomer_id,\\n'+",
         "  '  jointAddress.customerId as jointAddress_customerId,\\n'+",
         "  '  ACC_TBL.jointCustomerId as ACC_TBL_jointCustomerId,\\n'+",
-        "  '  jointAddress.zzline1 as jointAddress_zzline1,\\n'+",
+        "  '  jointAddress.zzline1 as zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode,\\n'+",
         "  '  jointAddress.zzline2 as jointAddress_zzline2\\n'+",
         "  ' from\\n'+",
         "  '  ACC_TBL ACC_TBL,\\n'+",
@@ -702,7 +705,7 @@ describe ( "makeMapsForRest", () => {
         "  '  mainCustomer.id as mainCustomer_id,'+",
         "  '  mainAddress.customerId as mainAddress_customerId,'+",
         "  '  ACC_TBL.mainCustomerId as ACC_TBL_mainCustomerId,'+",
-        "  '  mainAddress.zzline1 as mainAddress_zzline1,'+",
+        "  '  mainAddress.zzline1 as zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode,'+",
         "  '  mainAddress.zzline2 as mainAddress_zzline2'+",
         "  ' from'+",
         "  '  ACC_TBL ACC_TBL,'+",
@@ -742,7 +745,7 @@ describe ( "makeMapsForRest", () => {
         "  '  mainCustomer.id as mainCustomer_id,\\n'+",
         "  '  mainAddress.customerId as mainAddress_customerId,\\n'+",
         "  '  ACC_TBL.mainCustomerId as ACC_TBL_mainCustomerId,\\n'+",
-        "  '  mainAddress.zzline1 as mainAddress_zzline1,\\n'+",
+        "  '  mainAddress.zzline1 as zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode,\\n'+",
         "  '  mainAddress.zzline2 as mainAddress_zzline2\\n'+",
         "  ' from\\n'+",
         "  '  ACC_TBL ACC_TBL,\\n'+",
@@ -756,7 +759,7 @@ describe ( "makeMapsForRest", () => {
         "  '  jointCustomer.id as jointCustomer_id,\\n'+",
         "  '  jointAddress.customerId as jointAddress_customerId,\\n'+",
         "  '  ACC_TBL.jointCustomerId as ACC_TBL_jointCustomerId,\\n'+",
-        "  '  jointAddress.zzline1 as jointAddress_zzline1,\\n'+",
+        "  '  jointAddress.zzline1 as zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode,\\n'+",
         "  '  jointAddress.zzline2 as jointAddress_zzline2\\n'+",
         "  ' from\\n'+",
         "  '  ACC_TBL ACC_TBL,\\n'+",
@@ -820,7 +823,8 @@ describe ( "makeMapsForRest", () => {
         "  public final Map<String,Object> joint_addresses = new HashMap<>();",
         "  ",
         "  public JointAccount_jointAccountMaps0(ResultSet rs) throws SQLException{",
-        "    this.main_addresses.put('line1', rs.getString('mainAddress_zzline1'));",
+        "    //This is a very long  field alias. If it gives you problems consider giving it an explicit field alias in the dataDD",
+        "    this.main_addresses.put('line1', rs.getString('zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode'));",
         "    this.main_addresses.put('line2', rs.getString('mainAddress_zzline2'));",
         "    ",
         "    this.ACC_TBL_acc_id = rs.getInt('ACC_TBL_acc_id');",
@@ -858,7 +862,7 @@ describe ( "makeMapsForRest", () => {
         "  '  jointCustomer.id as jointCustomer_id,'+",
         "  '  jointAddress.customerId as jointAddress_customerId,'+",
         "  '  ACC_TBL.jointCustomerId as ACC_TBL_jointCustomerId,'+",
-        "  '  jointAddress.zzline1 as jointAddress_zzline1,'+",
+        "  '  jointAddress.zzline1 as zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode,'+",
         "  '  jointAddress.zzline2 as jointAddress_zzline2'+",
         "  ' from'+",
         "  '  ACC_TBL ACC_TBL,'+",
@@ -898,7 +902,7 @@ describe ( "makeMapsForRest", () => {
         "  '  mainCustomer.id as mainCustomer_id,\\n'+",
         "  '  mainAddress.customerId as mainAddress_customerId,\\n'+",
         "  '  ACC_TBL.mainCustomerId as ACC_TBL_mainCustomerId,\\n'+",
-        "  '  mainAddress.zzline1 as mainAddress_zzline1,\\n'+",
+        "  '  mainAddress.zzline1 as zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode,\\n'+",
         "  '  mainAddress.zzline2 as mainAddress_zzline2\\n'+",
         "  ' from\\n'+",
         "  '  ACC_TBL ACC_TBL,\\n'+",
@@ -912,7 +916,7 @@ describe ( "makeMapsForRest", () => {
         "  '  jointCustomer.id as jointCustomer_id,\\n'+",
         "  '  jointAddress.customerId as jointAddress_customerId,\\n'+",
         "  '  ACC_TBL.jointCustomerId as ACC_TBL_jointCustomerId,\\n'+",
-        "  '  jointAddress.zzline1 as jointAddress_zzline1,\\n'+",
+        "  '  jointAddress.zzline1 as zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode,\\n'+",
         "  '  jointAddress.zzline2 as jointAddress_zzline2\\n'+",
         "  ' from\\n'+",
         "  '  ACC_TBL ACC_TBL,\\n'+",
@@ -976,7 +980,8 @@ describe ( "makeMapsForRest", () => {
         "  public final Map<String,Object> joint_addresses = new HashMap<>();",
         "  ",
         "  public JointAccount_jointAccountMaps1(ResultSet rs) throws SQLException{",
-        "    this.joint_addresses.put('line1', rs.getString('jointAddress_zzline1'));",
+        "    //This is a very long  field alias. If it gives you problems consider giving it an explicit field alias in the dataDD",
+        "    this.joint_addresses.put('line1', rs.getString('zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode'));",
         "    this.joint_addresses.put('line2', rs.getString('jointAddress_zzline2'));",
         "    ",
         "    this.ACC_TBL_acc_id = rs.getInt('ACC_TBL_acc_id');",
@@ -991,7 +996,7 @@ describe ( "makeMapsForRest", () => {
         "  }",
         "}"
       ]
-    ] )
+    ])
   } )
   it ( "should  add 'where' to the sql if there is a where clause", () => {
     expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), ( r, path ) =>
