@@ -53,5 +53,5 @@ export const makeSimpleButton: <G> ( imp: string ) => ButtonCreator<ModalButtonI
   makeButton: ( { name, button } ) =>
     [ [ `<${button.control} id=${makeIdForButton ( button.text ? button.text : name )} state={state}`, ...opt ( 'text', button.text ), '/>' ].join ( ' ' ) ]
 })
-export const filterParamsByRestAction = ( restAction: RestAction ) => ( [ name, param ]: [ string, AllLensRestParams ] ) =>
+export const filterParamsByRestAction = ( restAction: RestAction ) => ( [ name, param ]: [ string, AllLensRestParams<any> ] ) =>
   getRestTypeDetails ( restAction ).params.needsId ? true : !param.main

@@ -42,7 +42,7 @@ export function makeOutputString ( name: string, needExtrabrackets: boolean, { p
 
 export const makeParamsString = ( restAction: RestAction ) => ( params: RestParams ): string => {
   //later for things like create where we don't know some of the ids these will need to be more clever.
-  return sortedEntries ( params ).filter ( filterParamsByRestAction ( restAction ) ).map ( ( [ name, p ] ) => `${name}: String!` ).join ( ", " )
+  return sortedEntries ( params ).filter ( filterParamsByRestAction ( restAction ) ).map ( ( [ name, p ] ) => `${name}: ${p.graphQlType}!` ).join ( ", " )
 };
 function extraParam<G> ( restD: RestD<G>, action: RestActionDetail ) {
   const prefix = ",obj: "

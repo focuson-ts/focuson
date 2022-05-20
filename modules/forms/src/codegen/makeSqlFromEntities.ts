@@ -533,7 +533,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: MainPageD<B
 
 export interface JavaQueryParamDetails {
   name: string;
-  param: AllLensRestParams
+  param: AllLensRestParams<any>
   paramPrefix?: string;
   paramPostfix?: string;
 }

@@ -27,13 +27,10 @@ export const OverpaymentMP: ExampleModalPage = {
 
 export const CreatePaymentMP: ExampleModalPage = {
   name: "CreatePayment",
-  guards: {
-    // reasonHasBeenSelected: { condition: 'notEquals', path: '~/createPayment/reason', value: '' },
-    amountEnough: { condition: 'a<b', aPath: '~/createPayment/otherAmount', bPath: '~/createPayment/amount' }
-  },
+
   buttons: {
     cancel: { control: 'ModalCancelButton' },
-    commit: { control: 'ModalCommitButton', enabledBy: 'amountEnough' },
+    commit: { control: 'ModalCommitButton' },
     overpaymentHistory: {
       control: 'ModalButton',
       mode: 'view', focusOn: '~/overpayment',

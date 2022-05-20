@@ -4,7 +4,7 @@ import { addStringToEndOfAllButLast, importsDotDot, indentList } from "./codegen
 import { TSParams } from "./config";
 import { applyToTemplate } from "@focuson/template";
 import { DirectorySpec, loadFile } from "@focuson/files";
-import { isCommonLens, RestD, unique } from "../common/restD";
+import { AllLensRestParams, CommonLensRestParam, isCommonLens, RestD, unique } from "../common/restD";
 import { sortedEntries } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
 import { AppConfig } from "../appConfig";
@@ -54,7 +54,7 @@ export function makeCommon<B, G> ( appConfig: AppConfig, params: TSParams, pds: 
     ...makeFullState ( params, pds ),
     ...makeCommonParams ( params, pds, rds, directorySpec ),
     ...makeContext ( appConfig, params ),
-    ...makePathToLens(params),
+    ...makePathToLens ( params ),
     ...makeStateWithSelectedPage ( appConfig, params, JSON.stringify ( paramsWithSamples ), pds[ 0 ].name ) //TODO this should be slicker and aggregated params for example
   ]
 }
@@ -74,8 +74,14 @@ export function makeStateWithSelectedPage ( appConfig: AppConfig, params: TSPara
   ]
 }
 
+export interface CommonParamsDetails {
+  name: string;
+  param: CommonLensRestParam<any>;
+  page: PageD<any, any>;
+  restD: RestD<any>;
+}
 export function findAllCommonParams<B, G> ( pds: PageD<B, G>[], rds: RestD<G>[] ): string[] {
-  let fromRests = rds.flatMap ( rd => sortedEntries ( rd.params ).flatMap ( ( [ name, lens ] ) => isCommonLens ( lens ) ? lens.commonLens : [] ) );
+  let fromRests = rds.flatMap ( rd => sortedEntries ( rd.params ).flatMap ( ( [ name, lens ] ) => isCommonLens ( lens ) ? [{name, param: lens.commonLens, page}] : [] ) );
   const fromPages = allMainPages ( pds ).flatMap ( p => sortedEntries ( p.commonParams ).map ( ( [ n, l ] ) => l.commonLens ) )
   return unique ( [ ...fromRests, ...fromPages ], x => x ).sort ()
 }
@@ -96,7 +102,7 @@ export function findAllCommonParamsWithSamples<B, G> ( pages: PageD<B, G>[], rds
 
 export function makeCommonParams<B, G> ( params: TSParams, pages: PageD<B, G>[], rds: RestD<G>[], directorySpec: DirectorySpec ) {
   let commonParams: string[] = findAllCommonParams ( pages, rds );
-  const commonParamDefns = commonParams.map ( s => '  ' + s + "?:string;\n" ).join ( "" )
+  const commonParamDefns = commonParams.map ( s => '  ' + s + `?:string;\n` ).join ( "" )
   const commonParamNameAndLens = commonParams.map ( s => `   ${s}: commonIdsL.focusQuery('${s}')` ).join ( ",\n" )
   return applyToTemplate ( loadFile ( 'templates/commonTemplate.ts', directorySpec ).toString (), { ...params, commonParamDefns, commonParamNameAndLens } )
 }

@@ -1,10 +1,10 @@
 import { IntParam, RestParams, StringParam } from "../common/restD";
 
 export const allCommonIds = {
-  brandRef: { ...IntParam, commonLens: 'brandRef', testValue: 'brandRef' },
-  applRef: { ...IntParam, commonLens: 'applRef', testValue: 'appref' },
-  clientRef: { ...IntParam, commonLens: 'clientRef', testValue: 'custId' },
-  accountId: { ...IntParam, commonLens: 'accountId', testValue: "accId" },
+  brandRef: { ...IntParam, commonLens: 'brandRef', testValue: 10 },
+  applRef: { ...IntParam, commonLens: 'applRef', testValue: 888 },
+  clientRef: { ...IntParam, commonLens: 'clientRef', testValue: 666 },
+  accountId: { ...IntParam, commonLens: 'accountId', testValue: 12342312 },
   employeeType: { ...StringParam, commonLens: 'employeeType', testValue: 'basic' },
   dbName: { ...StringParam, commonLens: 'dbName', testValue: 'mock' }
 }

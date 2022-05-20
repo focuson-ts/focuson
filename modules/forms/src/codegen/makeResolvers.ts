@@ -10,7 +10,8 @@ import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint
 import { indentList } from "./codegen";
 
 function declareInputParamsFromEndpoint<G> ( r: RestD<G> ): string[] {
-  return unique ( [ 'dbName', ...Object.keys ( r.params ) ], t => t ).map ( name => `String ${name} = dataFetchingEnvironment.getArgument("${name}");` )
+  return unique ( [ [ 'String dbName', 'dbName' ], ...Object.entries ( r.params ).map ( ( [ name, p ] ) => [ `${p.javaType} ${name}`, name ] ) ], t => t[ 0 ] )
+    .map ( ( [ typeAndName, name ] ) => `${typeAndName} = dataFetchingEnvironment.getArgument("${name}");` )
 }
 
 export function callResolvers<G> ( p: MainPageD<any, G>, restName: string, r: RestD<G>, name: string, dbNameString: string, resolvers: MutationDetail[] ) {

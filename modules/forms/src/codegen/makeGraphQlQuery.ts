@@ -46,7 +46,7 @@ export function makeQuery<G> ( r: RestD<G>, action: RestAction ): string[] {
 
 export const makeGraphQlQueryForOneAction = <G> ( r: RestD<G> ) => ( action: RestAction ) => {
   let params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( action ) );
-  const paramString = params.map ( ( [ name, p ], i ) => `String ${name}` ).join ( "," )
+  const paramString = params.map ( ( [ name, p ], i ) => `${p.javaType} ${name}` ).join ( "," )
   let zeroParams = paramString.length === 0;
   const comma = zeroParams ? '' : ', '
   const objParamString = getRestTypeDetails ( action ).params.needsObj ? `${comma}String obj` : ""

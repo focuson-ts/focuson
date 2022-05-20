@@ -8,47 +8,57 @@ import { getRestTypeDetails, RestActionDetail } from "@focuson/rest";
 import { findChildResolvers, ResolverData } from "../codegen/makeJavaFetchersInterface";
 
 
-export type AllLensRestParams = CommonLensRestParam | LensRestParam
+export type AllLensRestParams<T> = CommonLensRestParam<T> | LensRestParam<T>
 
-export const StringParam = {
+export interface ParamPrim<T> {
+  rsSetter: string,
+  javaType: string,
+  graphQlType: string
+  javaParser: string
+}
+export const StringParam: ParamPrim<string> = {
   rsSetter: 'setString',
   javaType: 'String',
+  graphQlType: 'String',
   javaParser: ''
 }
-export const IntParam = {
+export const IntParam: ParamPrim<number> = {
   rsSetter: 'setInt',
   javaType: 'int',
+  graphQlType: 'Int',
   javaParser: 'Integer.parseInt'
 }
 
-export interface CommonLensRestParam {
+export interface CommonLensRestParam<T> extends ParamPrim<T> {
   commonLens: string,
-  testValue: string,
+  testValue: T,
   main?: boolean,
   rsSetter: string;
   javaType: string;
+  graphQlType: string;
   javaParser: string;
 }
-export interface LensRestParam {
+export interface LensRestParam<T> extends ParamPrim<T> {
   lens: string,
   testValue: string,
   main?: boolean,
   rsSetter: string;
   javaType: string;
+  graphQlType: string;
   javaParser: string;
 }
 
-export function isCommonLens ( a: AllLensRestParams ): a is CommonLensRestParam {
+export function isCommonLens<T> ( a: AllLensRestParams<T> ): a is CommonLensRestParam<T> {
   // @ts-ignore
   return a.commonLens !== undefined
 }
-export function isRestLens ( a: AllLensRestParams ): a is LensRestParam {
+export function isRestLens<T> ( a: AllLensRestParams<T> ): a is LensRestParam<T> {
   // @ts-ignore
   return a.lens !== undefined
 }
 
 export interface RestParams {
-  [ name: string ]: AllLensRestParams
+  [ name: string ]: AllLensRestParams<any>
 }
 
 export function postFixForEndpoint<G> ( restAction: RestAction ) {
