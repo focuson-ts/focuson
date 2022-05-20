@@ -56,6 +56,7 @@ export interface SqlMutation {
 export interface StoredProcedureMutation {
   type: 'storedProc',
   schema: Schema,
+  package?: string;
   name: string,
   params: MutationParamForStoredProc | MutationParamForStoredProc[]
 }

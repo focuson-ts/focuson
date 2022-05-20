@@ -22,7 +22,7 @@ export const createEAccountRestD: RestD<any> = {
           ], schema: onlySchema
         } ]
     },
-    { restAction: 'get', mutateBy: { type: 'storedProc', name: 'auditGetCheckBook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
+    { restAction: 'get', mutateBy: { type: 'storedProc', package: 'somePackage', name: 'auditGetCheckBook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
     { restAction: { state: 'cancel' }, mutateBy: { type: 'storedProc', name: 'auditCancelCheckbook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
   ]
 

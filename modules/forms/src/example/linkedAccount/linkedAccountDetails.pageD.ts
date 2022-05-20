@@ -93,7 +93,6 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
         { from: '~/display/collectionSummary/period', to: '~/createPayment/period' } ],
       restOnCommit: { restName: 'createPayment', action: 'create', pathToDelete: [ '~/display/collectionSummary', '~/display/collectionHistory' ], result: 'refresh' }
     },
-
     cancelPayment: {
       control: "RestButton",
       restName: 'payments',

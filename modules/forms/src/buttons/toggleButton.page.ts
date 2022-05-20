@@ -1,6 +1,6 @@
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
-import { stateFocusQueryForRepl, indentList, opt } from "../codegen/codegen";
-import { stateFocusQueryWithTildaFromPage, stateForButton } from "../codegen/lens";
+import { indentList, opt } from "../codegen/codegen";
+import { stateForButton } from "../codegen/lens";
 import { EnabledBy, enabledByString } from "./enabledBy";
 
 

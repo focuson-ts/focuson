@@ -5,6 +5,7 @@ import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButto
 import { indentList, opt, optT } from "../codegen/codegen";
 import { emptyName, modalName, restDetailsName } from "../codegen/names";
 import { EnabledBy, enabledByString } from "./enabledBy";
+import { decamelize } from "@focuson/utils";
 
 
 export interface CommonModalButtonInPage<G> extends EnabledBy {
@@ -27,7 +28,7 @@ export function restForButton<B, G> ( parent: PageD<B, G>, rest?: RestOnCommit )
   const rd = parent.rest[ rest.restName ]
   if ( !rd ) throw new Error ( `Illegal rest name ${rest.restName} on page ${parent.name}. Legal values are ${Object.values ( parent.rest )}` )
   const deleteOnSuccess = rest.result === 'refresh' ? { deleteOnSuccess: rest.pathToDelete } : {}
-  return [ ` rest={${JSON.stringify ( { name: restDetailsName ( parent, rest.restName, rd.rest ), restAction: rest.action,...deleteOnSuccess } ) }}` ]
+  return [ ` rest={${JSON.stringify ( { name: restDetailsName ( parent, rest.restName, rd.rest ), restAction: rest.action, ...deleteOnSuccess } )}}` ]
 }
 
 export function isModalButtonInPage<G> ( m: any ): m is ModalButtonInPage<G> {
@@ -53,7 +54,7 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalButtonInPage<G>, G> {
 
         const copyOnCloseArray: CopyDetails[] = copyOnClose ? singleToList ( copyOnClose ) : undefined
         const copyFromArray: CopyDetails[] = copy ? singleToList ( copy ) : undefined
-        return [ `<${button.control} id=${makeIdForButton ( name )} ${enabledByString ( button )}text='${text ? text : name}'  state={state} modal = '${modalName ( parent, modal )}'  `,
+        return [ `<${button.control} id=${makeIdForButton ( name )} ${enabledByString ( button )}text='${text ? text : decamelize ( name, ' ' )}'  state={state} modal = '${modalName ( parent, modal )}'  `,
           ...indentList ( [
             ...opt ( 'pageMode', mode ),
             ...opt ( 'focusOn', focusOn ),

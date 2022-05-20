@@ -1,5 +1,5 @@
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
-import { RestAction, RestResult } from "@focuson/utils";
+import { decamelize, RestAction, RestResult } from "@focuson/utils";
 import { RestD } from "../common/restD";
 import { indentList, opt, optT } from "../codegen/codegen";
 import { restDetailsName } from "../codegen/names";
@@ -14,11 +14,11 @@ function makeRestButton<B extends RestButtonInPage<G>, G> (): ButtonCreator<Rest
   return {
     import: '@focuson/form_components',
     makeButton: ( { params, mainPage, parent, name, button } ) => {
-      const { action, confirm, restName, result, validate, enabledBy, deleteOnSuccess } = button
+      const { action, confirm, restName, validate, text, deleteOnSuccess } = button
       // if ( !isMainPage ( parent ) ) throw new Error ( 'Currently rest buttons are only valid on main pages' ) //Note: this is just for 'how do we specify them'
       const rest = mainPage.rest[ restName ]
       if ( !rest ) throw new Error ( `Rest button on page ${parent.name} uses restName ${restName} which doesn't exist\n${JSON.stringify ( button )}` )
-      return [ `<RestButton state={state} id=${makeIdForButton ( name )} ${enabledByString ( button )}`,
+      return [ `<RestButton state={state} id=${makeIdForButton ( name )} ${enabledByString ( button )} text='${text ? text : decamelize ( name, ' ' )}'`,
         ...indentList ( [
           ...opt ( 'name', name ),
           ...optT ( 'action', action ),
@@ -45,6 +45,7 @@ export interface RestButtonInPage<G> extends EnabledBy {
   confirm?: boolean | string;
   result?: RestResult;
   validate?: boolean;
+  text?: string;
   deleteOnSuccess?: string | string[]
 
 }

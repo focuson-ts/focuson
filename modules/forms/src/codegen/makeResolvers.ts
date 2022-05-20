@@ -42,7 +42,6 @@ export function makeFetcherMethod<G> ( params: JavaWiringParams, p: MainPageD<an
 
   return [
     `public DataFetcher<${resolverData.javaType}> ${resolverData.resolver}(){`,
-    `//${JSON.stringify ( resolverData )}`,
     ...indentList ( [
       'return dataFetchingEnvironment -> {',
       ...indentList ( [
@@ -77,7 +76,6 @@ export function makeResolvers<G> ( params: JavaWiringParams, p: MainPageD<any, a
   const fetcherMethod = indentList ( makeFetcherMethod ( params, p, restName, r, resolvers, resolverData ) )
   return [
     `package ${params.thePackage}.${params.resolversPackage}.${p.name};`,
-    `//${JSON.stringify ( resolverData )}`,
     ``,
     `import ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
     `import org.springframework.stereotype.Component;`,

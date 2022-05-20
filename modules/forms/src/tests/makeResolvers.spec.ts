@@ -13,7 +13,6 @@ describe ( "makeResolvers", () => {
       findQueryMutationResolver ( chequeCreditBooksRestD, 'get' )
     ) ).toEqual ( [
       "package focuson.data.resolvers.ChequeCreditbooks;",
-      "//{\"isRoot\":true,\"parent\":\"Query\",\"resolver\":\"getChequeCreditbooks\",\"name\":\"getChequeCreditbooks\",\"samplerName\":\"sampleChequeCreditbooks\",\"sample\":[],\"needsObjectInOutput\":true,\"javaType\":\"Map<String,Object>\"}",
       "",
       "import focuson.data.fetchers.IFetcher;",
       "import org.springframework.stereotype.Component;",
@@ -43,7 +42,6 @@ describe ( "makeResolvers", () => {
       "    focuson.data.utils.ITimeService systemTime;",
       "",
       "  public DataFetcher<Map<String,Object>> getChequeCreditbooks(){",
-      "  //{\"isRoot\":true,\"parent\":\"Query\",\"resolver\":\"getChequeCreditbooks\",\"name\":\"getChequeCreditbooks\",\"samplerName\":\"sampleChequeCreditbooks\",\"sample\":[],\"needsObjectInOutput\":true,\"javaType\":\"Map<String,Object>\"}",
       "    return dataFetchingEnvironment -> {",
       "      String dbName = dataFetchingEnvironment.getArgument(\"dbName\");",
       "      String brandRef = dataFetchingEnvironment.getArgument(\"brandRef\");",
@@ -69,7 +67,7 @@ describe ( "makeResolvers", () => {
       "    }",
       "",
       "    public Tuple2<Integer,String> ChequeCreditbooks_get_getMeMyData1(Connection connection, Object dbName) throws SQLException {",
-      "    try (CallableStatement s = connection.prepareCall(\"call getMeMyData1(?, ?, ?)\")) {",
+      "    try (CallableStatement s = connection.prepareCall(\"call somePackage.getMeMyData1(?, ?, ?)\")) {",
       "      s.registerOutParameter(1,java.sql.Types.INTEGER);",
       "      s.registerOutParameter(2,java.sql.Types.CHAR);",
       "      s.setObject(3, systemTime.now());",
@@ -99,7 +97,6 @@ describe ( "makeResolvers", () => {
       'getEAccountsSummary', eAccountsSummaryRestD.resolvers.totalMonthlyCost, findQueryMutationResolver ( eAccountsSummaryRestD, 'get' )
     ) ).toEqual ( [
       "package focuson.data.resolvers.EAccountsSummary;",
-      "//{\"isRoot\":true,\"parent\":\"Query\",\"resolver\":\"getEAccountsSummary\",\"name\":\"getEAccountsSummary\",\"samplerName\":\"sampleEAccountsSummary\",\"sample\":[],\"needsObjectInOutput\":true,\"javaType\":\"Map<String,Object>\"}",
       "",
       "import focuson.data.fetchers.IFetcher;",
       "import org.springframework.stereotype.Component;",
@@ -123,7 +120,6 @@ describe ( "makeResolvers", () => {
       "   @Autowired",
       "   private DataSource dataSource;",
       "  public DataFetcher<Map<String,Object>> getEAccountsSummary(){",
-      "  //{\"isRoot\":true,\"parent\":\"Query\",\"resolver\":\"getEAccountsSummary\",\"name\":\"getEAccountsSummary\",\"samplerName\":\"sampleEAccountsSummary\",\"sample\":[],\"needsObjectInOutput\":true,\"javaType\":\"Map<String,Object>\"}",
       "    return dataFetchingEnvironment -> {",
       "      String dbName = dataFetchingEnvironment.getArgument(\"dbName\");",
       "      String brandRef = dataFetchingEnvironment.getArgument(\"brandRef\");",
@@ -157,7 +153,6 @@ describe ( "makeResolvers", () => {
       'totalMonthlyCost', eAccountsSummaryRestD.resolvers.totalMonthlyCost, findResolverData ( 'someError', findChildResolvers ( eAccountsSummaryRestD ), 'totalMonthlyCost' )
     ) ).toEqual ( [
       "package focuson.data.resolvers.EAccountsSummary;",
-      "//{\"isRoot\":false,\"parent\":\"EAccountsSummary\",\"resolver\":\"totalMonthlyCost\",\"name\":\"totalMonthlyCost\",\"samplerName\":\"sampleMoney\",\"sample\":[1000],\"needsObjectInOutput\":true,\"javaType\":\"Integer\"}",
       "",
       "import focuson.data.fetchers.IFetcher;",
       "import org.springframework.stereotype.Component;",
@@ -181,7 +176,6 @@ describe ( "makeResolvers", () => {
       "   @Autowired",
       "   private DataSource dataSource;",
       "  public DataFetcher<Integer> totalMonthlyCost(){",
-      "  //{\"isRoot\":false,\"parent\":\"EAccountsSummary\",\"resolver\":\"totalMonthlyCost\",\"name\":\"totalMonthlyCost\",\"samplerName\":\"sampleMoney\",\"sample\":[1000],\"needsObjectInOutput\":true,\"javaType\":\"Integer\"}",
       "    return dataFetchingEnvironment -> {",
       "      String dbName = dataFetchingEnvironment.getArgument(\"dbName\");",
       "      String brandRef = dataFetchingEnvironment.getArgument(\"brandRef\");",

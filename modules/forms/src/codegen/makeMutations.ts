@@ -104,9 +104,10 @@ function makeMethodDecl<G> ( paramsA: MutationParam[], r: RestD<G>, name: string
 }
 export function mutationCodeForStoredProcedureCalls<G> ( p: MainPageD<any, any>, r: RestD<G>, name: string, m: StoredProcedureMutation, includeMockIf: boolean ): string[] {
   const paramsA = toArray ( m.params )
+  let fullName = m.package ? `${m.package}.${m.name}` : m.name;
   return [
     ...makeMethodDecl ( paramsA, r, name, m ),
-    ...commonIfDbNameBlock ( r, paramsA, name, m, includeMockIf ), `    try (CallableStatement s = connection.prepareCall("call ${m.name}(${toArray ( m.params ).map ( () => '?' ).join ( ", " )})")) {`,
+    ...commonIfDbNameBlock ( r, paramsA, name, m, includeMockIf ), `    try (CallableStatement s = connection.prepareCall("call ${fullName}(${toArray ( m.params ).map ( () => '?' ).join ( ", " )})")) {`,
     ...indentList ( indentList ( indentList ( allSetObjectForStoredProcs ( m.params ) ) ) ),
     `      if (!s.execute()) throw new SQLException("Error in : ${mutationMethodName ( r, name, m )}");`,
     ...indentList ( indentList ( indentList ( [

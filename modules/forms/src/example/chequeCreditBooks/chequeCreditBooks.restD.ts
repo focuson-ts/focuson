@@ -19,7 +19,7 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
   audits: [],
   resolvers: {
     'getChequeCreditbooks': [ {
-      type: 'storedProc', name: 'getMeMyData1', schema: onlySchema, params: [
+      type: 'storedProc', package: 'somePackage', name: 'getMeMyData1', schema: onlySchema, params: [
         { type: 'output', name: 'val1', javaType: 'Integer', sqlType: 'INTEGER' },
         { type: 'output', name: 'val2', javaType: 'String', sqlType: 'CHAR' },
         { type: 'autowired', name: 'systemTime', class: '{thePackage}.utils.ITimeService', method: 'now', import: true } ]
@@ -55,7 +55,7 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
         },
       ]
     },
-    { restAction: 'get', mutateBy: { type: 'storedProc', name: 'auditGetCheckBook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
+    { restAction: 'get', mutateBy: { type: 'storedProc',package: 'somePackage', name: 'auditGetCheckBook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
     { restAction: { state: 'cancel' }, mutateBy: { type: 'storedProc', name: 'auditCancelCheckbook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
   ]
 
