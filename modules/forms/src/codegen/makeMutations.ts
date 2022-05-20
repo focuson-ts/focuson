@@ -82,7 +82,7 @@ export function mutationCodeForSqlCalls<G> ( p: MainPageD<any, any>, r: RestD<G>
   const paramsA = toArray ( m.params )
   const execute = allOutputParams ( paramsA ).length == 0 ?
     [ `if (!s.execute()) throw new SQLException("Error in : ${mutationMethodName ( r, name, m )}");` ] :
-    [ `ResultSet rs = s.executeQuery("${m.sql}");`,
+    [ `ResultSet rs = s.executeQuery();`,
       `if (!rs.next()) throw new SQLException("Error in : ${mutationMethodName ( r, name, m )}. Cannot get first item. Sql was ${m.sql}");`,
     ]
   return [

@@ -24,9 +24,13 @@ export const CurrentPaymentCountsRD: ExampleRestD = {
   dataDD: CurrentPaymentCountsDD,
   url: '/api/paymentcounts?{query}',
   actions: [ 'get' ],
-  tables: {
-    entity: { table: accountT, type: 'Main' },
-    where: [ { table: accountT, alias: accountT.name, field: 'accountId', paramName: 'accountId' }, ]
+  resolvers: {
+    getCurrentPaymentCounts: {
+      type: 'sql', name: 'get', schema: onlySchema, sql: 'someSql', params: [
+        { type: 'output', javaType: 'Integer', rsName: 'xxx', name: 'standingOrders' },
+        { type: 'output', javaType: 'Integer', rsName: 'yyy', name: 'directDebits' },
+      ]
+    }
   }
 }
 export const accountAndAddressDetailsRD: ExampleRestD = {

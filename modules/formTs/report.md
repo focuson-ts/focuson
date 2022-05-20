@@ -122,12 +122,6 @@
   authorisedByCustomer|N| 
   datePrinted| |true
   
-  ## dataMapping
-  ## Table ACC_TBL (Schema TheSchema)
-  |Display path | Database Field
-  | --- | --- |
-  | standingOrders  |  directDebits 
-  
 
 ---
 # LinkedAccountDetails - MainPage
