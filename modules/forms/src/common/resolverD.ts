@@ -176,7 +176,9 @@ export interface IntegerMutationParam {
 }
 interface ParamMutationParam {
   type: 'input';
-  name: string
+  name: string;
+  javaType?: string
+
 }
 export interface OutputForStoredProcMutationParam {
   type: 'output';

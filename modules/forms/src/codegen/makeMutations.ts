@@ -1,8 +1,8 @@
 import { MainPageD } from "../common/pageD";
-import { toArray } from "@focuson/utils";
+import { NameAnd, safeObject, toArray } from "@focuson/utils";
 import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationMethodName } from "./names";
-import { RestD, unique } from "../common/restD";
+import { AllLensRestParams, RestD, unique } from "../common/restD";
 import { indentList } from "./codegen";
 import { allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, importForTubles, isInputParam, isOutputParam, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, OutputMutationParam, paramName, SqlMutation, StoredProcedureMutation } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
@@ -69,24 +69,30 @@ export function getFromResultSet ( from: string, m: MutationParam[] ) {
       `Integer ${m.name} = ${from}.getInt("${m.rsName}");`
   } )
 }
-export function typeForParamAsInput ( m: MutationParam ) {
+function findType ( errorPrefix: string, params: NameAnd<AllLensRestParams<any>>, name: string ) {
+  const param = params[ name ]
+  if ( param === undefined ) return 'Object'
+  return param.javaType
+}
+export const typeForParamAsInput = ( errorPrefix: string, params: NameAnd<AllLensRestParams<any>> ) => ( m: MutationParam ) => {
   if ( isOutputParam ( m ) ) return m.javaType;
-  if ( typeof m === 'string' ) return 'Object'
+  if ( typeof m === 'string' ) return findType ( errorPrefix, params, m )
+  if ( m.type === 'input' ) return m.javaType ? m.javaType : findType ( errorPrefix, params, m.name )
   if ( m.type === 'integer' ) return 'Integer'
   if ( m.type === 'string' ) return 'String'
   return 'Object'
-}
+};
 
 
-export function mutationCodeForSqlCalls<G> ( p: MainPageD<any, any>, r: RestD<G>, name: string, m: SqlMutation, includeMockIf: boolean ): string[] {
+export function mutationCodeForSqlCalls<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: SqlMutation, includeMockIf: boolean ): string[] {
   const paramsA = toArray ( m.params )
   const execute = allOutputParams ( paramsA ).length == 0 ?
-    [ `if (!s.execute()) throw new SQLException("Error in : ${mutationMethodName ( r, name, m )}");` ] :
+    [ `s.execute();` ] :
     [ `ResultSet rs = s.executeQuery();`,
-      `if (!rs.next()) throw new SQLException("Error in : ${mutationMethodName ( r, name, m )}. Cannot get first item. Sql was ${m.sql}");`,
+      `if (!rs.next()) throw new SQLException("Error in : ${mutationMethodName ( r, name, m )}. Cannot get first item. Sql was ${m.sql}\\n${errorPrefix}");`,
     ]
   return [
-    ...makeMethodDecl ( paramsA, r, name, m ),
+    ...makeMethodDecl ( errorPrefix, paramsA, r, name, m ),
     ...commonIfDbNameBlock ( r, paramsA, name, m, includeMockIf ),
     `    try (PreparedStatement s = connection.prepareStatement("${m.sql}")) {`,
     ...indentList ( indentList ( indentList ( [
@@ -99,38 +105,41 @@ export function mutationCodeForSqlCalls<G> ( p: MainPageD<any, any>, r: RestD<G>
     `  }}`,
   ];
 }
-function makeMethodDecl<G> ( paramsA: MutationParam[], r: RestD<G>, name: string, m: MutationDetail ) {
-  return [ `    public ${javaTypeForOutput ( paramsA )} ${mutationMethodName ( r, name, m )}(Connection connection, ${unique ( allInputParams ( [ 'dbName', ...paramsA ] ), p => paramName ( p ) ).map ( param => `${typeForParamAsInput ( param )} ${param.name}` ).join ( ", " )}) throws SQLException {` ];
+function makeMethodDecl<G> ( errorPrefix: string, paramsA: MutationParam[], r: RestD<G>, name: string, m: MutationDetail ) {
+  const params = safeObject ( r.params );
+  return [ `    public ${javaTypeForOutput ( paramsA )} ${mutationMethodName ( r, name, m )}(Connection connection, ${unique ( allInputParams ( [ 'dbName', ...paramsA ] ), p => paramName ( p ) )
+    .map ( param => `${typeForParamAsInput ( errorPrefix, params ) ( param )} ${param.name}` ).join ( ", " )}) throws SQLException {` ];
 }
-export function mutationCodeForStoredProcedureCalls<G> ( p: MainPageD<any, any>, r: RestD<G>, name: string, m: StoredProcedureMutation, includeMockIf: boolean ): string[] {
+export function mutationCodeForStoredProcedureCalls<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: StoredProcedureMutation, includeMockIf: boolean ): string[] {
   const paramsA = toArray ( m.params )
   let fullName = m.package ? `${m.package}.${m.name}` : m.name;
   return [
-    ...makeMethodDecl ( paramsA, r, name, m ),
+    ...makeMethodDecl ( errorPrefix, paramsA, r, name, m ),
     ...commonIfDbNameBlock ( r, paramsA, name, m, includeMockIf ), `    try (CallableStatement s = connection.prepareCall("call ${fullName}(${toArray ( m.params ).map ( () => '?' ).join ( ", " )})")) {`,
     ...indentList ( indentList ( indentList ( allSetObjectForStoredProcs ( m.params ) ) ) ),
-    `      if (!s.execute()) throw new SQLException("Error in : ${mutationMethodName ( r, name, m )}");`,
+    `      s.execute();`,
     ...indentList ( indentList ( indentList ( [
       ...getFromStatement ( 's', paramsA ),
       makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),
     `  }}`,
   ];
 }
-export function mutationCodeForManual<G> ( p: MainPageD<any, any>, r: RestD<G>, name: string, m: ManualMutation, includeMockIf: boolean ): string[] {
+export function mutationCodeForManual<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: ManualMutation, includeMockIf: boolean ): string[] {
   const paramsA = toArray ( m.params );
   return [
     `//If you have a compiler error in the type here, did you match the types of the output params in your manual code with the declared types in the .restD?`,
-    ...makeMethodDecl ( paramsA, r, name, m ),
+    ...makeMethodDecl ( errorPrefix, paramsA, r, name, m ),
     ...commonIfDbNameBlock ( r, paramsA, name, m, includeMockIf ),
     ...indentList ( indentList ( indentList ( [ ...toArray ( m.code ), makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),
     `  }`,
   ];
 }
-export function makeMutationMethod<G> ( mutations: MutationDetail[], name: string, p: MainPageD<any, any>, r: RestD<G>, includeMockIf: boolean ) {
+export function makeMutationMethod<G> ( errorPrefix: string, mutations: MutationDetail[], name: string, p: MainPageD<any, any>, r: RestD<G>, includeMockIf: boolean ) {
   const methods = mutations.flatMap ( ( mutateBy ) => toArray ( mutateBy ).flatMap ( ( m: MutationDetail ) => {
-    if ( m.type === 'sql' ) return mutationCodeForSqlCalls ( p, r, name, m, includeMockIf )
-    if ( m.type === 'storedProc' ) return mutationCodeForStoredProcedureCalls ( p, r, name, m, includeMockIf )
-    if ( m.type === 'manual' ) return mutationCodeForManual ( p, r, name, m, includeMockIf );
+    const newErrorPrefix = `${errorPrefix} Mutation ${m.name}`
+    if ( m.type === 'sql' ) return mutationCodeForSqlCalls ( newErrorPrefix, p, r, name, m, includeMockIf )
+    if ( m.type === 'storedProc' ) return mutationCodeForStoredProcedureCalls ( newErrorPrefix, p, r, name, m, includeMockIf )
+    if ( m.type === 'manual' ) return mutationCodeForManual ( newErrorPrefix, p, r, name, m, includeMockIf );
     throw Error ( `Don't know how to findCode (Page ${p.name}) for ${JSON.stringify ( m )}` )
   } ) )
   return methods;
@@ -147,9 +156,10 @@ export function makeCodeFragmentsForMutation<G> ( mutations: MutationDetail[], p
 export function importsFromManual ( mutation: MutationsForRestAction ): string[] {
   return toArray ( mutation.mutateBy ).flatMap ( m => m.type === 'manual' ? toArray ( m.import ) : [] )
 }
-export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, any>, r: RestD<G>, mutation: MutationsForRestAction ): string[] {
+export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, any>, restName: string, r: RestD<G>, mutation: MutationsForRestAction ): string[] {
+  const errorPrefix = `${p.name}.rest[${restName}]. Making mutations for ${restActionForName ( mutation.restAction )}.`
   const { importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( toArray ( mutation.mutateBy ), p, r, params );
-  const methods = makeMutationMethod ( toArray ( mutation.mutateBy ), restActionForName ( mutation.restAction ), p, r, true )
+  const methods = makeMutationMethod ( errorPrefix, toArray ( mutation.mutateBy ), restActionForName ( mutation.restAction ), p, r, true )
   return [
     `package ${params.thePackage}.${params.mutatorPackage}.${p.name};`,
     ``,

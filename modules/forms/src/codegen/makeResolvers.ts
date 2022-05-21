@@ -72,7 +72,7 @@ export function makeResolvers<G> ( params: JavaWiringParams, p: MainPageD<any, a
   // if ( resolvers.length == 0 ) return []
   let resolvers = toArray ( resolver );
   const { importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( resolvers, p, r, params );
-  const methods = makeMutationMethod ( resolvers, resolverName, p, r, false )
+  const methods = makeMutationMethod ( `${p.name}.rest[${restName}].resolvers[${resolverName}]`, resolvers, resolverName, p, r, false )
   let interfaceName = fetcherInterfaceForResolverName ( params, r, resolverData.resolver );
   const fetcherMethod = indentList ( makeFetcherMethod ( params, p, restName, r, resolvers, resolverData ) )
   return [

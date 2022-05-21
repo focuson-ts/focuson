@@ -198,9 +198,9 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
     } )
   } )
 
-  forEachRest ( pages, p => r => {
+  forEachRest ( pages, p => ( r, restName ) => {
       toArray ( r.mutations ).forEach ( m => {
-        writeToFile ( `${javaMutatorPackage}/${p.name}/${mutationClassName ( r, m.restAction )}.java`, () => makeMutations ( params, p, r, m ), details )
+        writeToFile ( `${javaMutatorPackage}/${p.name}/${mutationClassName ( r, m.restAction )}.java`, () => makeMutations ( params, p, restName, r, m ), details )
       } )
     }
   )

@@ -71,7 +71,7 @@ describe ( "makeResolvers", () => {
       "      s.registerOutParameter(1,java.sql.Types.INTEGER);",
       "      s.registerOutParameter(2,java.sql.Types.CHAR);",
       "      s.setObject(3, systemTime.now());",
-      "      if (!s.execute()) throw new SQLException(\"Error in : ChequeCreditbooks_get_getMeMyData1\");",
+      "      s.execute();",
       "      Integer val1 = s.getInt(1);",
       "      String val2 = s.getString(2);",
       "      return new Tuple2<>(val1,val2);",
@@ -81,7 +81,7 @@ describe ( "makeResolvers", () => {
       "      s.registerOutParameter(1,java.sql.Types.INTEGER);",
       "      s.registerOutParameter(2,java.sql.Types.CHAR);",
       "      s.setObject(3, systemTime.now());",
-      "      if (!s.execute()) throw new SQLException(\"Error in : ChequeCreditbooks_get_getMeMyData2\");",
+      "      s.execute();",
       "      Integer val3 = s.getInt(1);",
       "      String val4 = s.getString(2);",
       "      return new Tuple2<>(val3,val4);",
@@ -89,7 +89,7 @@ describe ( "makeResolvers", () => {
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ] )
+    ])
   } )
 
   it ( `should make a resolver for a 'get' that is done manually`, () => {
@@ -138,7 +138,7 @@ describe ( "makeResolvers", () => {
       "    }",
       "",
       "//If you have a compiler error in the type here, did you match the types of the output params in your manual code with the declared types in the .restD?",
-      "    public Integer EAccountsSummary_getEAccountsSummary_getTotalMonthlyCostStoredProc(Connection connection, Object dbName, Object accountId) throws SQLException {",
+      "    public Integer EAccountsSummary_getEAccountsSummary_getTotalMonthlyCostStoredProc(Connection connection, String dbName, int accountId) throws SQLException {",
       "      Integer totalMonthlyCost = 123;",
       "      return totalMonthlyCost;",
       "  }",
@@ -193,7 +193,7 @@ describe ( "makeResolvers", () => {
       "    }",
       "",
       "//If you have a compiler error in the type here, did you match the types of the output params in your manual code with the declared types in the .restD?",
-      "    public Integer EAccountsSummary_totalMonthlyCost_getTotalMonthlyCostStoredProc(Connection connection, Object dbName, Object accountId) throws SQLException {",
+      "    public Integer EAccountsSummary_totalMonthlyCost_getTotalMonthlyCostStoredProc(Connection connection, String dbName, int accountId) throws SQLException {",
       "      Integer totalMonthlyCost = 123;",
       "      return totalMonthlyCost;",
       "  }",
