@@ -4,11 +4,9 @@ import { AccountDetailsDD, CurrentPaymentCountsDD, postCodeSearchResponseDD, Pri
 import { IntParam, RestD, RestParams, StringParam } from "../../common/restD";
 import { accountT, onlySchema } from "../database/tableNames";
 import { AllGuards } from "../../buttons/guardButton";
-import { allCommonIds } from "../commonIds";
+import { allCommonIds, fromCommonIds } from "../commonIds";
 
-export const PrintRecordHistoryParams: RestParams = {
-  accountId: { ...IntParam, commonLens: 'accountId', testValue: '123' },
-}
+export const PrintRecordHistoryParams: RestParams = fromCommonIds('accountId')
 
 export const PrintRecordHistoryRD: ExampleRestD = {
   params: PrintRecordHistoryParams,

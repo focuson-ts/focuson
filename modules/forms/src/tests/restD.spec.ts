@@ -36,24 +36,24 @@ describe ( "findMustConstructForRest", () => {
 describe ( "makeCommonParamsValueForTest", () => {
   it ( "get the values out of the rest params - for a get", () => {
     expect ( makeParamValueForTest ( createPlanRestD, 'get' ) ).toEqual ( {
-      "accountId": "accId",
-      "applRef": "appref",
-      "brandRef": "brandRef",
-      "clientRef": "custId",
-      "createPlanId": "tbd"
+      "accountId": "12342312",
+      "applRef": "888",
+      "brandRef": "10",
+      "clientRef": "666",
+      "createPlanId": "777"
     } )
   } )
   it ( "get the values out of the rest params - for a create (no primary id)", () => {
     expect ( makeParamValueForTest ( createPlanRestD, 'create' ) ).toEqual ( {
-      "accountId": "accId",
-      "applRef": "appref",
-      "brandRef": "brandRef",
-      "clientRef": "custId"
+      "accountId": "12342312",
+      "applRef": "888",
+      "brandRef": "10",
+      "clientRef": "666"
     })
   } )
 
   it ( "should work with a mixture of common lens and normal lens", () => {
     expect ( JSON.stringify ( makeParamValueForTest ( arrearsDetailsRestD, 'get' ) ).replace ( /"/g, "'" ) ).toEqual (
-      "{'accountId':'accId','applRef':'appref','brandRef':'brandRef','clientRef':'custId','startDate':'2020-01-20'}" )
+      "{'accountId':'12342312','applRef':'888','brandRef':'10','clientRef':'666','startDate':'2020-01-20'}" )
   } )
 } )

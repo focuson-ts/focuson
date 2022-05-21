@@ -100,7 +100,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     writeToFile ( `${tsCode}/${params.restsFile}.ts`, () => makeRestDetailsPage ( params, allPages ), details )
     const rests = unique ( allPages.flatMap ( pd => isMainPage ( pd ) ? sortedEntries ( pd.rest ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest ) : [] ), r => r.dataDD.name )
 
-    writeToFile ( `${tsCode}/${params.commonFile}.ts`, () => makeCommon ( appConfig, params, allPages, rests, directorySpec ), details )
+    writeToFile ( `${tsCode}/${params.commonFile}.ts`, () => makeCommon ( appConfig, params, mainPs, directorySpec ), details )
     writeToFile ( `${tsCode}/${params.pagesFile}.ts`, () => makePages ( params, mainPs ), details )
 
 

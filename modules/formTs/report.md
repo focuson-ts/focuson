@@ -13,8 +13,8 @@
 |clientRef|clientRef
 |applRef|applRef
 |createPlanId|createPlanId
-|customerId|customerId
 |employeeType|employeeType
+|customerId|customerId
 # All endpoints
 | Page | Rest | Url | Params | Access | Audit
 | --- | --- | ---  |  --- | --- | --- |
@@ -47,8 +47,8 @@
 |OccupationAndIncomeSummary|occupationAndIncomeRD | /customer/occupation/v2/occupationIncomeDetails?{query}| accountId,applRef,brandRef,clientRef |  | get->auditGetCustomerOccupation; update->auditUpdateCustomerOccupation
 |OccupationAndIncomeSummary|otherSourcesOfIncomeRD | /customer/occupation/v2/otherIncome?{query}| accountId,applRef,brandRef,clientRef |  | get->auditOtherIncome
 |EAccountsSummary|createPlanRestD | /api/createPlan?{query}| accountId,applRef,brandRef,clientRef,createPlanId |  | 
-|EAccountsSummary|eAccountsSummary | /api/accountsSummary?{query}| accountId,applRef,brandRef,clientRef,customerId,dbName,employeeType | employeeType in teamLeader | state:invalidate->auditStuff
-|EAccountsSummary| | /api/accountsSummary/invalidate?{query}| accountId,applRef,brandRef,clientRef,customerId,dbName,employeeType |
+|EAccountsSummary|eAccountsSummary | /api/accountsSummary?{query}| accountId,applRef,brandRef,clientRef,dbName,employeeType | employeeType in teamLeader | state:invalidate->auditStuff
+|EAccountsSummary| | /api/accountsSummary/invalidate?{query}| accountId,applRef,brandRef,clientRef,dbName,employeeType |
 |ETransfer|eTransfer | /api/eTransfers?{query}| customerId |  | 
 |ETransfer|holidays | /api/holidays|  |  | 
 |CreateEAccount|eTransfer | /api/createEAccount/?{query}| accountId,applRef,brandRef,clientRef,createPlanId |  | create->updateSql,getSql; get->auditGetCheckBook; state:cancel->auditCancelCheckbook
@@ -398,7 +398,6 @@
 |brandRef|brandRef
 |clientRef|clientRef
 |createPlanId|createPlanId
-|customerId|customerId
 |dbName|dbName
 |employeeType|employeeType
   ## domains 
@@ -410,8 +409,8 @@
   |name|url|params|access|audit
   | --- | --- | --- | --- | --- 
     |createPlanRestD | /api/createPlan?{query}| accountId,applRef,brandRef,clientRef,createPlanId |  | 
-    |eAccountsSummary | /api/accountsSummary?{query}| accountId,applRef,brandRef,clientRef,customerId,dbName,employeeType | employeeType in teamLeader | state:invalidate->auditStuff
-    | | /api/accountsSummary/invalidate?{query}| accountId,applRef,brandRef,clientRef,customerId,dbName,employeeType |
+    |eAccountsSummary | /api/accountsSummary?{query}| accountId,applRef,brandRef,clientRef,dbName,employeeType | employeeType in teamLeader | state:invalidate->auditStuff
+    | | /api/accountsSummary/invalidate?{query}| accountId,applRef,brandRef,clientRef,dbName,employeeType |
   ## modals  
   |name|displayed with
   | --- | --- 

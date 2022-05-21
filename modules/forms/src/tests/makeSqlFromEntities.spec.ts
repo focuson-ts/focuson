@@ -476,7 +476,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "",
-        "//{'accountId':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':'accId'},'brandRef':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':'brandRef'},'dbName':{'rsSetter':'setString','javaType':'String','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
+        "//{'accountId':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':12342312},'brandRef':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':10},'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
         "public class JointAccount_jointAccountMaps {",
         "  @SuppressWarnings('SqlResolve')",
         "  public static String sql = 'select'+",
@@ -655,7 +655,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "",
-        "//{'accountId':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':'accId'},'brandRef':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':'brandRef'},'dbName':{'rsSetter':'setString','javaType':'String','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
+        "//{'accountId':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':12342312},'brandRef':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':10},'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
         "public class JointAccount_jointAccountMaps0 {",
         "  @SuppressWarnings('SqlResolve')",
         "  public static String sql = 'select'+",
@@ -812,7 +812,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "",
-        "//{'accountId':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':'accId'},'brandRef':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':'brandRef'},'dbName':{'rsSetter':'setString','javaType':'String','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
+        "//{'accountId':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':12342312},'brandRef':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':10},'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
         "public class JointAccount_jointAccountMaps1 {",
         "  @SuppressWarnings('SqlResolve')",
         "  public static String sql = 'select'+",
@@ -955,7 +955,7 @@ describe ( "makeMapsForRest", () => {
         "  }",
         "}"
       ]
-    ] )
+    ])
   } )
   it ( "should  add 'where' to the sql if there is a where clause", () => {
     expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), ( r, path ) =>
@@ -992,7 +992,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "",
-        "//{'dbName':{'rsSetter':'setString','javaType':'String','javaParser':'','commonLens':'dbName','testValue':'mock'},'postcode':{'rsSetter':'setString','javaType':'String','javaParser':'','lens':'~/postcode/search','testValue':'LW12 4RG'}}",
+        "//{'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'},'postcode':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','lens':'~/postcode/search','testValue':'LW12 4RG'}}",
         "public class PostCodeMainPage_postcodeMaps {",
         "  @SuppressWarnings('SqlResolve')",
         "  public static String sql = 'select'+",

@@ -3,7 +3,7 @@ import { ETransferDataD, HolidayDataD } from "./eTransfers.dataD";
 import { AllGuards } from "../../buttons/guardButton";
 
 export const commonParams: RestParams = {
-  customerId: { ...IntParam,commonLens: 'customerId' , testValue: 'custId' }
+  customerId: { ...IntParam,commonLens: 'customerId' , testValue:988834}
 }
 
 /** This should fully define the api*/

@@ -1,14 +1,14 @@
 import { CreatePlanDD, EAccountsSummaryDD } from "./eAccountsSummary.dataD";
-import { IntParam, RestD, StringParam } from "../../common/restD";
+import { IntParam, RestD } from "../../common/restD";
 import { AllGuards } from "../../buttons/guardButton";
-import { accountT, onlySchema } from "../database/tableNames";
+import { onlySchema } from "../database/tableNames";
 import { allCommonIds, commonIds, fromCommonIds } from "../commonIds";
 
 export const eAccountsSummaryRestD: RestD<AllGuards> = {
   params: {
     ...commonIds,
     ...fromCommonIds ( 'dbName' ),
-    customerId: { ...IntParam, commonLens: 'customerId', testValue: 'custId', main: true },
+    customerId: { ...IntParam, commonLens: 'clientRef', testValue: 988834, main: true },
     employeeType: allCommonIds.employeeType
   },
   dataDD: EAccountsSummaryDD,
@@ -44,7 +44,7 @@ export const eAccountsSummaryRestD: RestD<AllGuards> = {
   ]
 }
 export const createPlanRestD: RestD<AllGuards> = {
-  params: { ...commonIds, createPlanId: { ...IntParam, commonLens: 'createPlanId', testValue: 'tbd', main: true } },
+  params: { ...commonIds, createPlanId: { ...IntParam, commonLens: 'createPlanId', testValue: 777, main: true } },
   dataDD: CreatePlanDD,
   url: '/api/createPlan?{query}',
   actions: [ 'get', 'create', 'update', 'delete' ],

@@ -1,10 +1,8 @@
-import { findAllCommonParams, makeCommon, makeCommonParams, makeFullState } from "../codegen/makeCommon";
+import { findAllCommonParams, findAllCommonParamsDetails, findAllCommonParamsWithSamples, makeCommon, makeCommonParams, makeFullState, validateCommonParams } from "../codegen/makeCommon";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
-import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
-import { devAppConfig } from "../focuson.config";
-import { occupationAndIncomeRD } from "../example/occupationAndIncome/occupationAndIncome.restD";
+import { devAppConfig, generatedPages } from "../focuson.config";
 import { paramsForTest } from "./paramsForTest";
 
 
@@ -21,7 +19,7 @@ describe ( "makeFullState", () => {
 
 describe ( "makeCommon", () => {
   it ( 'should make the common page', () => {
-    let common = makeCommon ( devAppConfig, paramsForTest, [ EAccountsSummaryPD, CreatePlanPD, OccupationAndIncomeSummaryPD ], [ occupationAndIncomeRD, createPlanRestD ], { main: '.', backup: '.' } );
+    let common = makeCommon ( devAppConfig, paramsForTest, [ EAccountsSummaryPD, OccupationAndIncomeSummaryPD ], { main: '.', backup: '.' } );
     expect ( common.map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "import { fromPathFromRaw, HasPageSelection, PageMode ,PageSelectionContext, pageSelectionlens} from '@focuson/pages'",
       "import { defaultDateFn, HasSimpleMessages, SimpleMessage, NameAnd } from '@focuson/utils';",
@@ -42,22 +40,28 @@ describe ( "makeCommon", () => {
       "{}",
       "export interface HasCommonIds {CommonIds: CommonIds}",
       "export type CommonIds = {",
-      "  accountId?:string;",
-      "  applRef?:string;",
-      "  brandRef?:string;",
-      "  clientRef?:string;",
-      "  createPlanId?:string;",
-      "  usersRole?:string;",
+      "  accountId ? : number;",
+      "  applRef ? : number;",
+      "  brandRef ? : number;",
+      "  clientRef ? : number;",
+      "  createPlanId ? : number;",
+      "  clientRef ? : number;",
+      "  dbName ? : string;",
+      "  employeeType ? : string;",
+      "  usersRole ? : string;",
       "}",
       "export const identityL = identityOptics<FState> ();",
       "export const commonIdsL = identityL.focusQuery('CommonIds');",
       "export const commonIds: NameAndLens<FState> = {",
-      "   accountId: commonIdsL.focusQuery('accountId'),",
-      "   applRef: commonIdsL.focusQuery('applRef'),",
-      "   brandRef: commonIdsL.focusQuery('brandRef'),",
-      "   clientRef: commonIdsL.focusQuery('clientRef'),",
-      "   createPlanId: commonIdsL.focusQuery('createPlanId'),",
-      "   usersRole: commonIdsL.focusQuery('usersRole')",
+      "   accountId  :    commonIdsL.focusQuery ( 'accountId' ),",
+      "   applRef  :    commonIdsL.focusQuery ( 'applRef' ),",
+      "   brandRef  :    commonIdsL.focusQuery ( 'brandRef' ),",
+      "   clientRef  :    commonIdsL.focusQuery ( 'clientRef' ),",
+      "   createPlanId  :    commonIdsL.focusQuery ( 'createPlanId' ),",
+      "   customerId  :    commonIdsL.focusQuery ( 'clientRef' ),",
+      "   dbName  :    commonIdsL.focusQuery ( 'dbName' ),",
+      "   employeeType  :    commonIdsL.focusQuery ( 'employeeType' ),",
+      "   role  :    commonIdsL.focusQuery ( 'usersRole' )",
       "}",
       "export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{",
       "  mode: PageMode;",
@@ -78,7 +82,7 @@ describe ( "makeCommon", () => {
       "export const pathToLens: ( s: FState ) => ( path: string ) => Optional<FState, any> =",
       "    fromPathFromRaw ( pageSelectionlens<FState> (), pages )",
       "export const emptyState: FState = {",
-      "  CommonIds: {'createPlanId':'tbd','clientRef':'custId','applRef':'appref','accountId':'accId','brandRef':'brandRef','usersRole':'user'},",
+      "  CommonIds: {'accountId':12342312,'applRef':888,'brandRef':10,'clientRef':666,'createPlanId':777,'dbName':'mock','employeeType':'basic','usersRole':'user'},",
       "  tags: {},",
       "  messages: [],",
       "  pageSelection: [{ pageName: 'EAccountsSummary', firstTime: true, pageMode: 'view' }],",
@@ -86,65 +90,61 @@ describe ( "makeCommon", () => {
       "  restCommands: [],",
       "  debug: {'fetcherDebug':false,'guardDebug':false,'restDebug':false,'selectedPageDebug':false,'loadTreeDebug':false,'showTracing':false,'recordTrace':true,'tagFetcherDebug':false,'accordions':[]}",
       "  }"
-    ] )
+    ])
 
   } )
 } )
 
+describe ( "findAllCommonParamsWithSamples", () => {
+  expect ( findAllCommonParamsWithSamples ( generatedPages ) ).toEqual ( {
+    "accountId": 12342312,
+    "applRef": 888,
+    "brandRef": 10,
+    "clientRef": 666,
+    "createPlanId": 777,
+    "customerId": 988834,
+    "dbName": "mock",
+    "employeeType": "basic",
+    "usersRole": "user"
+  } )
+} )
+
+describe ( "Validate ", () => {
+  it ( "should return no errors in the generated pages", () => {
+    expect ( validateCommonParams ( findAllCommonParamsDetails ( generatedPages ) ) ).toEqual ( [] )
+
+  } )
+} )
 describe ( "findAllCommonParams", () => {
   it ( 'should find all the commons lens in the pages from rest', () => {
-    expect ( findAllCommonParams ( [], [ eAccountsSummaryRestD, createPlanRestD ] ) ).toEqual ( [
+    expect ( findAllCommonParams ( [ OccupationAndIncomeSummaryPD ] ) ).toEqual ( [
       "accountId",
       "applRef",
       "brandRef",
       "clientRef",
-      "createPlanId",
-      "customerId",
-      "dbName",
-      "employeeType"
+      "role"
     ] )
   } )
-
-  it ( "should include the info from the pages", () => {
-    expect ( findAllCommonParams ( [ OccupationAndIncomeSummaryPD ], [ eAccountsSummaryRestD, createPlanRestD ] ) ).toEqual ( [
-      "accountId",
-      "applRef",
-      "brandRef",
-      "clientRef",
-      "createPlanId",
-      "customerId",
-      "dbName",
-      "employeeType",
-      "usersRole"
-    ] )
-  } )
-
 } )
 describe ( "makeCommonParams", () => {
   it ( 'should make the code around "GetUrlParams" and the common block', () => {
-    expect ( makeCommonParams ( paramsForTest, [ OccupationAndIncomeSummaryPD ], [ eAccountsSummaryRestD ], { main: '.', backup: '.' } ) ).toEqual ( [
+    expect ( makeCommonParams ( paramsForTest, [ OccupationAndIncomeSummaryPD ], { main: '.', backup: '.' } ) ).toEqual ( [
       "export interface HasCommonIds {CommonIds: CommonIds}",
       "export type CommonIds = {",
-      "  accountId?:string;",
-      "  applRef?:string;",
-      "  brandRef?:string;",
-      "  clientRef?:string;",
-      "  customerId?:string;",
-      "  dbName?:string;",
-      "  employeeType?:string;",
-      "  usersRole?:string;",
+      "  accountId ? : number;",
+      "  applRef ? : number;",
+      "  brandRef ? : number;",
+      "  clientRef ? : number;",
+      "  usersRole ? : string;",
       "}",
       "export const identityL = identityOptics<FState> ();",
       "export const commonIdsL = identityL.focusQuery('CommonIds');",
       "export const commonIds: NameAndLens<FState> = {",
-      "   accountId: commonIdsL.focusQuery('accountId'),",
-      "   applRef: commonIdsL.focusQuery('applRef'),",
-      "   brandRef: commonIdsL.focusQuery('brandRef'),",
-      "   clientRef: commonIdsL.focusQuery('clientRef'),",
-      "   customerId: commonIdsL.focusQuery('customerId'),",
-      "   dbName: commonIdsL.focusQuery('dbName'),",
-      "   employeeType: commonIdsL.focusQuery('employeeType'),",
-      "   usersRole: commonIdsL.focusQuery('usersRole')",
+      "   accountId  :    commonIdsL.focusQuery ( 'accountId' ),",
+      "   applRef  :    commonIdsL.focusQuery ( 'applRef' ),",
+      "   brandRef  :    commonIdsL.focusQuery ( 'brandRef' ),",
+      "   clientRef  :    commonIdsL.focusQuery ( 'clientRef' ),",
+      "   role  :    commonIdsL.focusQuery ( 'usersRole' )",
       "}",
       "export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{",
       "  mode: PageMode;",
@@ -157,7 +157,7 @@ describe ( "makeCommonParams", () => {
       "    ( s, date ) => [], //later do the messaging",
       "    defaultDateFn ) ( onError ) //updateTagsAndMessagesOnError ( defaultErrorMessage )",
       "}"
-    ] )
+    ])
   } )
 
 } )

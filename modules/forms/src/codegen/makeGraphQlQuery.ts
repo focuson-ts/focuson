@@ -1,5 +1,5 @@
 import { AllDataFlatMap, DataD, flatMapDD, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
-import { RestD } from "../common/restD";
+import { AllLensRestParams, RestD } from "../common/restD";
 import { addStringToStartOfFirst, filterParamsByRestAction, indent } from "./codegen";
 import { queryName, resolverName } from "./names";
 import { asMultilineJavaString, RestAction, sortedEntries } from "@focuson/utils";
@@ -25,10 +25,13 @@ function makeQueryFolder<G> (): AllDataFlatMap<string, G> {
     }
   }
 }
-
+function quoteIfNeeded(name: string, param: AllLensRestParams<any>){
+  return param.graphQlType === 'String' ? `"\\"" + ${name} + "\\""` : name;
+}
 export function makeQuery<G> ( r: RestD<G>, action: RestAction ): string[] {
   let params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( action ) );
-  const paramString = params.map ( ( [ name, p ], i ) => `"${name}:" + "\\"" + ${name} + "\\"" ` ).join ( ` + "," + ` )
+  const paramString = params.map ( ( [ name, p ], i ) =>
+    `"${name}:" + ${quoteIfNeeded ( name, p )} ` ).join ( ` + "," + ` )
   const comma = params.length === 0 ? '' : ','
   const plus = params.length === 0 ? '' : '+ '
   const objParamString = getRestTypeDetails ( action ).params.needsObj ? ` ${plus}"${comma} obj:" + obj ` : ""

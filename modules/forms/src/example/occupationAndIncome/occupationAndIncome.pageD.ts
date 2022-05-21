@@ -6,7 +6,7 @@ import { businessDetailsMainDD } from "./businessDetails/businessDetails.dataD";
 import { ExampleMainPage, ExampleModalPage } from "../common";
 import { BooleanDD, IntegerDD } from "../../common/dataD";
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
-import { IntParam } from "../../common/restD";
+import { IntParam, StringParam } from "../../common/restD";
 
 export const listOccupationsModalPD: ExampleModalPage = {
   name: 'ListOccupationsModal',
@@ -88,7 +88,7 @@ export const businessDetailsModalPD: ExampleModalPage = {
 export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
   name: 'OccupationAndIncomeSummary',
   pageType: 'MainPage',
-  commonParams: { role: { ...IntParam, commonLens: 'usersRole', testValue: 'user' } },
+  commonParams: { role: { ...StringParam, commonLens: 'usersRole', testValue: 'user' } },
   /** This page can only view data */
   modes: [ 'view', 'edit', 'create' ],
   /** How we display the page.*/

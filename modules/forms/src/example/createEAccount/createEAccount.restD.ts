@@ -4,7 +4,7 @@ import { commonIds } from "../commonIds";
 import { onlySchema } from "../database/tableNames";
 
 export const createEAccountRestD: RestD<any> = {
-  params: { ...commonIds, createPlanId: { ...IntParam, commonLens: 'createPlanId', testValue: 'tbd', main: true } },
+  params: { ...commonIds, createPlanId: { ...IntParam, commonLens: 'createPlanId', testValue: 777, main: true } },
   dataDD: CreateEAccountDataD,
   url: '/api/createEAccount/?{query}',
   actions: [ 'create', 'get' ],

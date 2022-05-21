@@ -1,7 +1,7 @@
 import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
 import { NameAnd, RestAction, safeArray, safeObject, sortedEntries, toArray } from "@focuson/utils";
 import { filterParamsByRestAction } from "../codegen/codegen";
-import { AccessDetails, DBTable, MutationsForRestAction, Mutations, MutationDetail } from "./resolverD";
+import { AccessDetails, DBTable, MutationDetail, Mutations, MutationsForRestAction } from "./resolverD";
 import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 import { allMainPages, MainPageD, PageD, RestDefnInPageProperties } from "./pageD";
 import { getRestTypeDetails, RestActionDetail } from "@focuson/rest";
@@ -15,17 +15,20 @@ export interface ParamPrim<T> {
   javaType: string,
   graphQlType: string
   javaParser: string
+  typeScriptType: string
 }
 export const StringParam: ParamPrim<string> = {
   rsSetter: 'setString',
   javaType: 'String',
   graphQlType: 'String',
+  typeScriptType: 'string',
   javaParser: ''
 }
 export const IntParam: ParamPrim<number> = {
   rsSetter: 'setInt',
   javaType: 'int',
   graphQlType: 'Int',
+  typeScriptType: 'number',
   javaParser: 'Integer.parseInt'
 }
 
@@ -165,7 +168,7 @@ export function unique<T> ( ts: T[] | undefined, tagFn: ( t: T ) => string ): T[
 export function makeParamValueForTest<G> ( r: RestD<G>, restAction: RestAction ) {
   let visibleParams = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
   // const paramsInCorrectOrder = [ ...visibleParams.filter ( ( [ name, p ] ) => isRestLens ( p ) ), ...visibleParams.filter ( ( [ name, p ] ) => !isRestLens ( p ) ) ]
-  return Object.fromEntries ( visibleParams.map ( ( [ name, v ] ) => [ name, v.testValue ] ) )
+  return Object.fromEntries ( visibleParams.map ( ( [ name, v ] ) => [ name,   v.testValue.toString()  ] ) )
 }
 export function makeCommonValueForTest<G> ( r: RestD<G>, restAction: RestAction ) {
   let visibleParams = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
@@ -196,6 +199,17 @@ export function mapRestAndResolver<B, G, T> ( pages: PageD<B, G>[], fn: ( p: Mai
 }
 export function flatMapRestAndResolver<B, G, T> ( pages: PageD<B, G>[], fn: ( p: MainPageD<B, G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => ( resolver: ResolverData, ) => T[] ): T[] {
   return flatMapRest ( pages, p => ( r, restName, rdp ) => findChildResolvers ( r ).flatMap ( resolverData => fn ( p ) ( r, restName, rdp ) ( resolverData ) ) )
+}
+
+export function flatMapParams<T> ( pds: MainPageD<any, any>[], fn: ( p: MainPageD<any, any>, restName: string | undefined, r: RestD<any> | undefined, name: string, c: AllLensRestParams<any> ) => T[] ): T[] {
+  const fromPage: T[] = pds.flatMap ( page => sortedEntries ( page.commonParams ).flatMap ( ( [ name, c ] ) => fn ( page, undefined, undefined, name, c ) ) )
+  const fromRest: T[] = flatMapRest ( pds, ( page ) => ( rest, restName ) =>
+    sortedEntries ( rest.params ).flatMap ( ( [ name, c ] ) => fn ( page, restName, rest, name, c ) ) )
+  return [ ...fromRest, ...fromPage ]
+}
+export function flatMapCommonParams <T>( pds: MainPageD<any, any>[], fn: ( p: MainPageD<any, any>, restName: string | undefined, r: RestD<any> | undefined, name: string, c: CommonLensRestParam<any> ) => T[] ): T[] {
+  return flatMapParams ( pds, ( p, restName, r, name, c ) =>
+    isCommonLens ( c ) ? fn ( p, restName, r, name, c ) : [] )
 }
 
 
