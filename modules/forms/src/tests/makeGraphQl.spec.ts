@@ -5,7 +5,7 @@ import { addressRestD } from "../example/postCodeDemo/addressSearch.restD";
 
 describe ( "Making GraphQl from RestD", () => {
   it ( "should be possible to make a query ", () => {
-    expect ( makeQuery ( eAccountsSummaryRestD, 'get' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeQuery ('somePrefix', eAccountsSummaryRestD, 'get' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "'query{getEAccountsSummary(' + 'accountId:' + accountId  + ',' + 'applRef:' + applRef  + ',' + 'brandRef:' + brandRef  + ',' + 'clientRef:' + clientRef  + ',' + 'customerId:' + customerId  + ',' + 'dbName:' + '\\'' + dbName + '\\''  + ',' + 'employeeType:' + '\\'' + employeeType + '\\'' + '){'+",
       "      '    useEStatements'+",
       "      '    eAccountsTable{'+",
@@ -29,7 +29,7 @@ describe ( "Making GraphQl from RestD", () => {
     ])
   } )
   it ( "should include the 'main' params in a get", () => {
-    expect ( makeQuery ( createPlanRestD, 'get' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeQuery ('somePrefix', createPlanRestD, 'get' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "'query{getCreatePlan(' + 'accountId:' + accountId  + ',' + 'applRef:' + applRef  + ',' + 'brandRef:' + brandRef  + ',' + 'clientRef:' + clientRef  + ',' + 'createPlanId:' + createPlanId + '){'+",
       "      '    createPlanStart'+",
       "      '    createPlanDate'+",
@@ -49,7 +49,7 @@ describe ( "Making GraphQl from RestD", () => {
   //   ] )
   // } )
   it ( "should include the 'mutation' params in a update", () => {
-    expect ( makeQuery ( createPlanRestD, 'update' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeQuery ('somePrefix', createPlanRestD, 'update' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "'mutation{updateCreatePlan(' + 'accountId:' + accountId  + ',' + 'applRef:' + applRef  + ',' + 'brandRef:' + brandRef  + ',' + 'clientRef:' + clientRef  + ',' + 'createPlanId:' + createPlanId  + ', obj:' + obj + '){'+",
       "      '    createPlanStart'+",
       "      '    createPlanDate'+",
@@ -83,8 +83,8 @@ describe ( "Making GraphQl from RestD", () => {
       "      '    }'+",
       "      '  }'",
       "+'}';}",
-      "public static  String state_invalidateEAccountsSummary(int accountId,int applRef,int brandRef,int clientRef,int customerId,String dbName,String employeeType){ ",
-      "  return'mutation{stateinvalidateEAccountsSummary(' + 'accountId:' + accountId  + ',' + 'applRef:' + applRef  + ',' + 'brandRef:' + brandRef  + ',' + 'clientRef:' + clientRef  + ',' + 'customerId:' + customerId  + ',' + 'dbName:' + '\\'' + dbName + '\\''  + ',' + 'employeeType:' + '\\'' + employeeType + '\\'' + ')}';",
+      "public static  String state_invalidateEAccountsSummary(int accountId,int clientRef,String dbName,String employeeType){ ",
+      "  return'mutation{stateinvalidateEAccountsSummary(' + 'accountId:' + accountId  + ',' + 'clientRef:' + clientRef  + ',' + 'dbName:' + '\\'' + dbName + '\\''  + ',' + 'employeeType:' + '\\'' + employeeType + '\\'' + ')}';",
       "}"
     ])
   } )
@@ -105,7 +105,7 @@ describe ( "Making GraphQl from RestD", () => {
   } )
 
   it ( "should make a query for delete, returning a boolean so no {}", () => {
-    expect ( makeGraphQlQueryForOneAction ( createPlanRestD ) ( 'delete' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeGraphQlQueryForOneAction ('somePrefix', createPlanRestD ) ( 'delete' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "public static  String deleteCreatePlan(int accountId,int applRef,int brandRef,int clientRef,int createPlanId){ ",
       "  return'mutation{deleteCreatePlan(' + 'accountId:' + accountId  + ',' + 'applRef:' + applRef  + ',' + 'brandRef:' + brandRef  + ',' + 'clientRef:' + clientRef  + ',' + 'createPlanId:' + createPlanId + ')}';",
       "}"
@@ -113,9 +113,9 @@ describe ( "Making GraphQl from RestD", () => {
   } )
 
   it ( "should make a query for state change, returning a boolean so no {}", () => {
-    expect ( makeGraphQlQueryForOneAction ( eAccountsSummaryRestD ) ( { state: 'someState' } ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "public static  String state_someStateEAccountsSummary(int accountId,int applRef,int brandRef,int clientRef,int customerId,String dbName,String employeeType){ ",
-      "  return'mutation{statesomeStateEAccountsSummary(' + 'accountId:' + accountId  + ',' + 'applRef:' + applRef  + ',' + 'brandRef:' + brandRef  + ',' + 'clientRef:' + clientRef  + ',' + 'customerId:' + customerId  + ',' + 'dbName:' + '\\'' + dbName + '\\''  + ',' + 'employeeType:' + '\\'' + employeeType + '\\'' + ')}';",
+    expect ( makeGraphQlQueryForOneAction ('somePrefix', eAccountsSummaryRestD ) ( { state: 'invalidate' } ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+      "public static  String state_invalidateEAccountsSummary(int accountId,int clientRef,String dbName,String employeeType){ ",
+      "  return'mutation{stateinvalidateEAccountsSummary(' + 'accountId:' + accountId  + ',' + 'clientRef:' + clientRef  + ',' + 'dbName:' + '\\'' + dbName + '\\''  + ',' + 'employeeType:' + '\\'' + employeeType + '\\'' + ')}';",
       "}"
     ] )
   } )

@@ -165,13 +165,13 @@ export function unique<T> ( ts: T[] | undefined, tagFn: ( t: T ) => string ): T[
   return result
 }
 
-export function makeParamValueForTest<G> ( r: RestD<G>, restAction: RestAction ) {
-  let visibleParams = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
+export function makeParamValueForTest<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ) {
+  let visibleParams = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( errorPrefix, r, restAction ) );
   // const paramsInCorrectOrder = [ ...visibleParams.filter ( ( [ name, p ] ) => isRestLens ( p ) ), ...visibleParams.filter ( ( [ name, p ] ) => !isRestLens ( p ) ) ]
-  return Object.fromEntries ( visibleParams.map ( ( [ name, v ] ) => [ name,   v.testValue.toString()  ] ) )
+  return Object.fromEntries ( visibleParams.map ( ( [ name, v ] ) => [ name, v.testValue.toString () ] ) )
 }
-export function makeCommonValueForTest<G> ( r: RestD<G>, restAction: RestAction ) {
-  let visibleParams = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
+export function makeCommonValueForTest<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ) {
+  let visibleParams = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( errorPrefix, r, restAction ) );
   return Object.fromEntries ( visibleParams.filter ( ( [ name, p ] ) => isCommonLens ( p ) ).map ( ( [ name, v ] ) => [ name, v.testValue ] ) )
 }
 
@@ -207,7 +207,7 @@ export function flatMapParams<T> ( pds: MainPageD<any, any>[], fn: ( p: MainPage
     sortedEntries ( rest.params ).flatMap ( ( [ name, c ] ) => fn ( page, restName, rest, name, c ) ) )
   return [ ...fromRest, ...fromPage ]
 }
-export function flatMapCommonParams <T>( pds: MainPageD<any, any>[], fn: ( p: MainPageD<any, any>, restName: string | undefined, r: RestD<any> | undefined, name: string, c: CommonLensRestParam<any> ) => T[] ): T[] {
+export function flatMapCommonParams<T> ( pds: MainPageD<any, any>[], fn: ( p: MainPageD<any, any>, restName: string | undefined, r: RestD<any> | undefined, name: string, c: CommonLensRestParam<any> ) => T[] ): T[] {
   return flatMapParams ( pds, ( p, restName, r, name, c ) =>
     isCommonLens ( c ) ? fn ( p, restName, r, name, c ) : [] )
 }

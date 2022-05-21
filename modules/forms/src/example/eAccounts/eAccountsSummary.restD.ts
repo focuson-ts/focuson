@@ -15,7 +15,7 @@ export const eAccountsSummaryRestD: RestD<AllGuards> = {
   url: '/api/accountsSummary?{query}', //or maybe accountId={accountId}&customerId={customerId}
   actions: [ 'get', { state: 'invalidate' } ],
   states: {
-    invalidate: { url: '/api/accountsSummary/invalidate?{query}', params: [ 'accountId', 'clientRef' ] }
+    invalidate: { url: '/api/accountsSummary/invalidate?{query}', params: [ 'accountId', 'clientRef', 'employeeType', 'dbName' ] }
   },
   resolvers: {
     getEAccountsSummary: {

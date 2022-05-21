@@ -9,20 +9,20 @@ import { getRestTypeDetails, getUrlForRestAction, restActionToDetails, restActio
 import { AccessCondition, allInputParamNames, allOutputParams, displayParam, importForTubles, javaTypeForOutput, MutationDetail } from "../common/resolverD";
 
 
-function makeCommaIfHaveParams<G> ( r: RestD<G>, restAction: RestAction ) {
-  const params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
+function makeCommaIfHaveParams<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ) {
+  const params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( errorPrefix, r, restAction ) );
   return params.length === 0 ? '' : ', '
 }
 
-export function makeParamsForJava<G> ( r: RestD<G>, restAction: RestAction ): string {
-  const params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
-  const comma = makeCommaIfHaveParams ( r, restAction );
+export function makeParamsForJava<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ): string {
+  const params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( errorPrefix, r, restAction ) );
+  const comma = makeCommaIfHaveParams ( errorPrefix, r, restAction );
   const requestParam = getRestTypeDetails ( restAction ).params.needsObj ? `${comma}@RequestBody String body` : ""
   return params.map ( (( [ name, param ] ) => `@RequestParam ${param.javaType} ${name}`) ).join ( ", " ) + requestParam
 }
-function paramsForQuery<G> ( r: RestD<G>, restAction: RestAction ): string {
+function paramsForQuery<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ): string {
   const clazz = isRepeatingDd ( r.dataDD ) ? 'List' : 'Map'
-  let params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( restAction ) );
+  let params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( errorPrefix, r, restAction ) );
   const comma = params.length === 0 ? '' : ', '
   const objParam = getRestTypeDetails ( restAction ).params.needsObj ? `${comma}  Transform.removeQuoteFromProperties(body, ${clazz}.class)` : ""
   return params.map ( ( [ name, param ] ) => name ).join ( ", " ) + objParam
@@ -44,9 +44,10 @@ export function accessDetails ( params: JavaWiringParams, p: MainPageD<any, any>
   return allAccess.filter ( a => actionsEqual ( a.restAction, restAction ) ).flatMap (
     ( { restAction, condition } ) => toArray<AccessCondition> ( condition ).flatMap (
       ( cond ) => {
+        const hintString = isRestStateChange ( restAction ) ? ` - if you have a compilation error here check which parameters you defined in {yourRestD}.states[${restAction.state}]` : ''
         if ( cond.type === 'in' ) {
           const { param, values } = cond
-          return [ `//from ${p.name}.rest[${restName}.access[${JSON.stringify ( restAction )}]]`, `if (!Arrays.asList(${values.map ( v => `"${v}"` ).join ( "," )}).contains(${param})) return new ResponseEntity("", new HttpHeaders(), HttpStatus.FORBIDDEN);` ]
+          return [ `//from ${p.name}.rest[${restName}.access[${JSON.stringify ( restAction )}]${hintString}`, `if (!Arrays.asList(${values.map ( v => `"${v}"` ).join ( "," )}).contains(${param})) return new ResponseEntity("", new HttpHeaders(), HttpStatus.FORBIDDEN);` ]
         }
         throw Error ( `Page ${p.name}.rests[${restName}].access. action is ${restAction}. Do not recognise condition ${JSON.stringify ( cond )}` )
       } ) )
@@ -72,9 +73,10 @@ export function outputParamsDeclaration ( md: MutationDetail, i: number ): strin
 }
 
 export function callMutationsCode<G> ( p: MainPageD<any, G>, restName: string, r: RestD<G>, restAction: RestAction, dbNameString: string ) {
+  const hintString = isRestStateChange ( restAction ) ? ` - if you have a compilation error here check which parameters you defined in {yourRestD}.states[${restAction.state}]` : ''
   const callMutations = indentList ( safeArray ( r.mutations ).filter ( a => actionsEqual ( a.restAction, restAction ) ).flatMap ( ad =>
     toArray ( ad.mutateBy ).flatMap ( ( md, i ) =>
-      [ `//from ${p.name}.rest[${restName}].mutations[${JSON.stringify ( restAction )}]`,
+      [ `//from ${p.name}.rest[${restName}].mutations[${JSON.stringify ( restAction )}]${hintString}`,
         `${paramsDeclaration ( md, i )}${mutationVariableName ( r, restAction )}.${mutationMethodName ( r, restActionForName ( restAction ), md )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
         ...outputParamsDeclaration ( md, i )
       ] ) ) )
@@ -87,26 +89,27 @@ function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restN
   const url = getUrlForRestAction ( restAction, r.url, r.states )
   let selectionFromData = getRestTypeDetails ( restAction ).output.needsObj ? `"${queryName ( r, restAction )}"` : '""';
   const callMutations = callMutationsCode ( p, restName, r, restAction, dbNameString );
-
+  const errorPrefix = `${p.name}.rest[${restName}] ${JSON.stringify ( restName )}`
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,
-    `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
+    `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( errorPrefix, r, restAction )}) throws Exception{`,
     `        try (Connection connection = dataSource.getConnection()) {`,
     ...indentList ( indentList ( indentList ( indentList ( [ ...accessDetails ( params, p, restName, r, restAction ), ...callMutations ] ) ) ) ),
     restActionToDetails ( restAction ).output.needsObj ?
-      `          return Transform.result(connection,graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( r, restAction )}), ${selectionFromData});` :
+      `          return Transform.result(connection,graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( errorPrefix, r, restAction )}), ${selectionFromData});` :
       `          return  ResponseEntity.ok("");`,
     `        }`,
     `    }`,
     `` ];
 }
 
-function makeQueryEndpoint<G> ( params: JavaWiringParams, r: RestD<G>, restAction: RestAction ): string[] {
+function makeQueryEndpoint<G> ( params: JavaWiringParams, errorPrefix: string, r: RestD<G>, restAction: RestAction ): string[] {
+
   const url = getUrlForRestAction ( restAction, r.url, r.states )
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}/query", produces="application/json")`,
-    `    public String query${queryName ( r, restAction )}(${makeParamsForJava ( r, restAction )}) throws Exception{`,
-    `       return ${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( r, restAction )});`,
+    `    public String query${queryName ( r, restAction )}(${makeParamsForJava ( errorPrefix, r, restAction )}) throws Exception{`,
+    `       return ${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( errorPrefix, r, restAction )});`,
     `    }`,
     `` ];
 
@@ -130,8 +133,9 @@ function makeSqlEndpoint<B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, r
     `    }` ];
 }
 export function makeSpringEndpointsFor<B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, restName: string, r: RestD<G> ): string[] {
+  const errorPrefix = `${p.name}.rest[${restName}] ${JSON.stringify ( restName )}`
   const endpoints: string[] = r.actions.flatMap ( action => makeEndpoint ( params, p, restName, r, action ) )
-  const queries: string[] = r.actions.flatMap ( action => makeQueryEndpoint ( params, r, action ) )
+  const queries: string[] = r.actions.flatMap ( action => makeQueryEndpoint ( params, errorPrefix, r, action ) )
   const importForSql = r.tables === undefined ? [] : [ `import ${sqlMapPackageName ( params, p )}.${sqlMapName ( p, restName, [] )} ; ` ]
   const auditImports = safeArray ( r.mutations ).map ( m => `import ${params.thePackage}.${params.mutatorPackage}.${p.name}.${mutationClassName ( r, m.restAction )};` )
   const mutationVariables = safeArray ( r.mutations ).flatMap ( m => indentList ( [ `@Autowired`, `${mutationClassName ( r, m.restAction )} ${mutationVariableName ( r, m.restAction )};` ] ) )

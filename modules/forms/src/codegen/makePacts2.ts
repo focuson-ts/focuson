@@ -6,7 +6,7 @@ import { TSParams } from "./config";
 import { lensFocusQueryWithSlashAndTildaFromIdentity, stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
 import { parsePath } from "@focuson/lens";
 import { addStringToEndOfAllButLast, filterParamsByRestAction, indentList } from "./codegen";
-import { getRestTypeDetails, getUrlForRestAction, printRestAction, RestActionDetail } from "@focuson/rest";
+import { getRestTypeDetails, getUrlForRestAction, printRestAction, RestActionDetail, restActionForName } from "@focuson/rest";
 import { CompDataD, isRepeatingDd } from "../common/dataD";
 
 export function makeAllPactsForPage<B, G> ( params: TSParams, page: PageD<B, G> ): string[] {
@@ -43,14 +43,16 @@ export function makeAllPactsForRest<B, G> ( params: TSParams, page: MainPageD<B,
 }
 
 function getResponseBodyString<G> ( details: RestActionDetail, params: TSParams, dataD: CompDataD<G>, restD: RestD<G>, restAction: RestAction ) {
-  return details.output.needsObj ? `body: ${params.samplesFile}.${sampleName ( dataD )}0` : `body: {"${resolverName ( restD,  restAction  )}": true}`;
+  return details.output.needsObj ? `body: ${params.samplesFile}.${sampleName ( dataD )}0` : `body: {"${resolverName ( restD, restAction )}": true}`;
 }
 export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, restName: string, defn: RestDefnInPageProperties<G>, action: RestAction ): string[] {
   const rest = defn.rest
   const details = getRestTypeDetails ( action )
   const dataD = rest.dataDD
   // const [ id, resourceIds ] = findIds ( rest )
-  let paramsValueForTest = makeParamValueForTest ( rest, action );
+  const errorPrefix = `${page.name}.rest[${restName}] Action ${JSON.stringify ( action )}`
+
+  let paramsValueForTest = makeParamValueForTest ( errorPrefix, rest, action );
   const restActionName = printRestAction ( action )
   const requestBodyString = details.params.needsObj ? `body: JSON.stringify(${params.samplesFile}.${sampleName ( dataD )}0)` : `//no request body needed for ${restActionName}`
   const responseBodyString = getResponseBodyString ( details, params, dataD, rest, action )
@@ -69,7 +71,7 @@ export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, re
     `    const restCommand: RestCommand = { name: '${restDetailsName ( page, restName, rest )}', restAction: ${JSON.stringify ( action )} }`,
     `    const firstState: FState = {`,
     `       ...emptyState, restCommands: [ restCommand ],`,
-    `       CommonIds: ${JSON.stringify ( makeCommonValueForTest ( rest, 'get' ) )},`,
+    `       CommonIds: ${JSON.stringify ( makeCommonValueForTest ( errorPrefix, rest, 'get' ) )},`,
     `       pageSelection: [ { pageName: '${page.name}', pageMode: 'view' } ]`,
     `    }`,
     `    await provider.addInteraction ( {`,
@@ -106,7 +108,8 @@ export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, re
 export function makeFetcherPact<B, G> ( params: TSParams, page: MainPageD<B, G>, restName: string, defn: RestDefnInPageProperties<G> ): string[] {
   if ( !defn.fetcher ) return []
   let rest = defn.rest;
-  let paramsValueForTest = makeParamValueForTest ( rest, 'get' );
+  const errorPrefix = `${page.name}.rest[${restName}]`
+  let paramsValueForTest = makeParamValueForTest ( errorPrefix, rest, 'get' );
   return [
     `//GetFetcher pact test`,
     `pactWith ( { consumer: '${page.name}', provider: '${providerName ( page )}', cors: true }, provider => {`,
@@ -125,7 +128,7 @@ export function makeFetcherPact<B, G> ( params: TSParams, page: MainPageD<B, G>,
     `        body: ${params.samplesFile}.${sampleName ( rest.dataDD )}0`,
     `       },`,
     `      } )`,
-    `      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: '${page.name}', pageMode: 'view' }], CommonIds: ${JSON.stringify ( makeCommonValueForTest ( rest, 'get' ) )} }`,
+    `      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: '${page.name}', pageMode: 'view' }], CommonIds: ${JSON.stringify ( makeCommonValueForTest ( errorPrefix, rest, 'get' ) )} }`,
     ...indentList ( makeLensParamsTransformers ( params, page, restName, defn, 'get', [] ) ),
     `      const withIds = massTransform ( firstState, ...lensTransforms )`,
     `      const fetcher= ${fetcherName ( defn )} (Lenses.identity<${params.stateName}>().focusQuery('${page.name}'), commonIds ) `,
@@ -146,7 +149,7 @@ export function makeFetcherPact<B, G> ( params: TSParams, page: MainPageD<B, G>,
 }
 
 function makeLensParamsTransformers<B, G> ( params: TSParams, page: PageD<B, G>, restName: string, defn: RestDefnInPageProperties<G>, restAction: RestAction, extraTransforms: string[] ): string[] {
-  let visibleParams = sortedEntries ( defn.rest.params ).filter ( filterParamsByRestAction ( restAction ) );
+  let visibleParams = sortedEntries ( defn.rest.params ).filter ( filterParamsByRestAction ( `Page ${page.name}.rest[${restName}] ${restActionForName ( restAction )}`, defn.rest, restAction ) );
   const theseParams = visibleParams.map ( ( [ name, p ] ) => p )
 
   return [ `const lensTransforms: Transform<${params.stateName},any>[] = [`,

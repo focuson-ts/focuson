@@ -1,7 +1,7 @@
-import { RestAction } from "@focuson/utils";
+import { isRestStateChange, RestAction, safeObject } from "@focuson/utils";
 import { ButtonCreator, makeIdForButton } from "./makeButtons";
 import { ModalButtonInPage } from "../buttons/modalButtons";
-import { AllLensRestParams } from "../common/restD";
+import { AllLensRestParams, RestD } from "../common/restD";
 import { parsePath, stateCodeBuilder } from "@focuson/lens";
 import { PageD } from "../common/pageD";
 import { pageDomainName } from "./names";
@@ -53,5 +53,13 @@ export const makeSimpleButton: <G> ( imp: string ) => ButtonCreator<ModalButtonI
   makeButton: ( { name, button } ) =>
     [ [ `<${button.control} id=${makeIdForButton ( button.text ? button.text : name )} state={state}`, ...opt ( 'text', button.text ), '/>' ].join ( ' ' ) ]
 })
-export const filterParamsByRestAction = ( restAction: RestAction ) => ( [ name, param ]: [ string, AllLensRestParams<any> ] ) =>
-  getRestTypeDetails ( restAction ).params.needsId ? true : !param.main
+export const filterParamsByRestAction = ( errorPrefix: string, rest: RestD<any>, restAction: RestAction ) => {
+  if ( isRestStateChange ( restAction ) ) {
+    const stateDetails = safeObject ( rest.states )[ restAction.state ]
+    if ( stateDetails === undefined ) throw Error ( `${errorPrefix} Cannot find state ${restAction.state} Legal values are ${Object.keys (  safeObject ( rest.states ) )}` )
+    const legalParams = stateDetails.params
+    return ( [ name, param ]: [ string, AllLensRestParams<any> ] ) => legalParams.includes ( name )
+  } else
+    return ( [ name, param ]: [ string, AllLensRestParams<any> ] ) =>
+      getRestTypeDetails ( restAction ).params.needsId ? true : !param.main
+}

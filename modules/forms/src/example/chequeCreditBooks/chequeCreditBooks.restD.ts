@@ -13,7 +13,7 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
 
 
   states: {
-    cancel: { url: '/api/chequeCreditBooks/cancel?{query}', params: [ 'clientRef', 'accountId' ] },
+    cancel: { url: '/api/chequeCreditBooks/cancel?{query}', params: [ 'clientRef', 'accountId', 'brandRef' ] },
     revalidate: { url: '/api/chequeCreditBooks/revalidate?{query}', params: [ 'clientRef', 'accountId' ] }
   },
   audits: [],

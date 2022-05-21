@@ -40,9 +40,9 @@ export function makeOutputString ( name: string, needExtrabrackets: boolean, { p
 }
 
 
-export const makeParamsString = ( restAction: RestAction ) => ( params: RestParams ): string => {
+export const makeParamsString = ( errorPrefix: string, rest: RestD<any>, restAction: RestAction ) => ( params: RestParams ): string => {
   //later for things like create where we don't know some of the ids these will need to be more clever.
-  return sortedEntries ( params ).filter ( filterParamsByRestAction ( restAction ) ).map ( ( [ name, p ] ) => `${name}: ${p.graphQlType}!` ).join ( ", " )
+  return sortedEntries ( params ).filter ( filterParamsByRestAction ( errorPrefix, rest, restAction ) ).map ( ( [ name, p ] ) => `${name}: ${p.graphQlType}!` ).join ( ", " )
 };
 function extraParam<G> ( restD: RestD<G>, action: RestActionDetail ) {
   const prefix = ",obj: "
@@ -55,7 +55,8 @@ function extraParam<G> ( restD: RestD<G>, action: RestActionDetail ) {
 }
 export const oneQueryMutateLine = <G> ( [ restD, a, action ]: [ RestD<G>, RestAction, RestActionDetail ] ): string => {
   let rawType = rawTypeName ( restD.dataDD );
-  const paramString = "(" + makeParamsString ( a ) ( restD.params ) + extraParam ( restD, action ) + ")";
+  const errorPrefix = `Making rest with url ${restD.url} Action ${JSON.stringify ( action )}`
+  const paramString = "(" + makeParamsString ( errorPrefix, restD, a ) ( restD.params ) + extraParam ( restD, action ) + ")";
   const realParamString = paramString === '()' ? '' : paramString
   const needExtrabrackets = isRepeatingDd ( restD.dataDD )
   return `  ${resolverName ( restD, a )}${realParamString}:${makeOutputString ( rawType, needExtrabrackets, action )}`;

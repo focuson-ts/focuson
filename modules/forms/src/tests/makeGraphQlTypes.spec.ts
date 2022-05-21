@@ -20,7 +20,7 @@ describe ( "makeGraphQlSchema", () => {
     it ( "should make type Mutation", () => {
       expect ( makeQueryOrMutateBlock ( rs, 'Mutation' ) ).toEqual ( [
         "type Mutation{",
-        "  stateinvalidateEAccountsSummary(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, customerId: Int!, dbName: String!, employeeType: String!):Boolean",
+        "  stateinvalidateEAccountsSummary(accountId: Int!, clientRef: Int!, dbName: String!, employeeType: String!):Boolean",
         "  createCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!,obj: CreatePlanInp!):CreatePlan!",
         "  updateCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, createPlanId: Int!,obj: CreatePlanInp!):CreatePlan!",
         "  deleteCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, createPlanId: Int!):Boolean",
@@ -66,7 +66,7 @@ describe ( "makeGraphQlSchema", () => {
       "  getCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, createPlanId: Int!):CreatePlan!",
       "}",
       "type Mutation{",
-      "  stateinvalidateEAccountsSummary(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, customerId: Int!, dbName: String!, employeeType: String!):Boolean",
+      "  stateinvalidateEAccountsSummary(accountId: Int!, clientRef: Int!, dbName: String!, employeeType: String!):Boolean",
       "  createCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!,obj: CreatePlanInp!):CreatePlan!",
       "  updateCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, createPlanId: Int!,obj: CreatePlanInp!):CreatePlan!",
       "  deleteCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, createPlanId: Int!):Boolean",
