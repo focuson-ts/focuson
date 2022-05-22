@@ -97,7 +97,7 @@ function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restN
     ...indentList ( indentList ( indentList ( indentList ( [ ...accessDetails ( params, p, restName, r, restAction ), ...callMutations ] ) ) ) ),
     restActionToDetails ( restAction ).output.needsObj ?
       `          return Transform.result(connection,graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( errorPrefix, r, restAction )}), ${selectionFromData});` :
-      `          return  ResponseEntity.ok("");`,
+      `          return  ResponseEntity.ok("{}");`,
     `        }`,
     `    }`,
     `` ];

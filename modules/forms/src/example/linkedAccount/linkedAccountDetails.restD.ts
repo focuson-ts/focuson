@@ -16,7 +16,7 @@ export const allMandatesForClientRD: ExampleRestD = {
 
 export const collectionParams: RestParams = {
   ...linkedAccountParams,
-  accountId: { ...IntParam, lens: '~/display/mandate/accountId', testValue: '143598547-75' }
+  accountId: { ...IntParam, lens: '~/display/mandate/accountId', testValue: 143598 }
 }
 
 export const collectionSummaryRD: ExampleRestD = {

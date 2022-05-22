@@ -43,7 +43,7 @@ export function makeAllPactsForRest<B, G> ( params: TSParams, page: MainPageD<B,
 }
 
 function getResponseBodyString<G> ( details: RestActionDetail, params: TSParams, dataD: CompDataD<G>, restD: RestD<G>, restAction: RestAction ) {
-  return details.output.needsObj ? `body: ${params.samplesFile}.${sampleName ( dataD )}0` : `body: {"${resolverName ( restD, restAction )}": true}`;
+  return details.output.needsObj ? `body: ${params.samplesFile}.${sampleName ( dataD )}0` : `body: {}`;
 }
 export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, restName: string, defn: RestDefnInPageProperties<G>, action: RestAction ): string[] {
   const rest = defn.rest

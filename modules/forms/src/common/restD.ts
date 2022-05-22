@@ -43,7 +43,7 @@ export interface CommonLensRestParam<T> extends ParamPrim<T> {
 }
 export interface LensRestParam<T> extends ParamPrim<T> {
   lens: string,
-  testValue: string,
+  testValue: T,
   main?: boolean,
   rsSetter: string;
   javaType: string;
