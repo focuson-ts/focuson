@@ -5,11 +5,12 @@ import { chequeCreditBooksRestD } from "../example/chequeCreditBooks/chequeCredi
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { findChildResolvers, findQueryMutationResolver } from "../codegen/makeJavaFetchersInterface";
+import { safeObject } from "@focuson/utils";
 
 describe ( "makeResolvers", () => {
   it ( "should make resolvers", () => {
     expect ( makeResolvers ( paramsForTest, ChequeCreditbooksPD, 'chequeCreditBooks', chequeCreditBooksRestD,
-      'get', chequeCreditBooksRestD.resolvers.getChequeCreditbooks,
+      'get', safeObject ( chequeCreditBooksRestD.resolvers ).getChequeCreditbooks,
       findQueryMutationResolver ( chequeCreditBooksRestD, 'get' )
     ) ).toEqual ( [
       "package focuson.data.resolvers.ChequeCreditbooks;",
@@ -89,12 +90,12 @@ describe ( "makeResolvers", () => {
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ])
+    ] )
   } )
 
   it ( `should make a resolver for a 'get' that is done manually`, () => {
     expect ( makeResolvers ( paramsForTest, EAccountsSummaryPD, 'eAccountsSummary', eAccountsSummaryRestD,
-      'getEAccountsSummary', eAccountsSummaryRestD.resolvers.totalMonthlyCost, findQueryMutationResolver ( eAccountsSummaryRestD, 'get' )
+      'getEAccountsSummary', safeObject ( eAccountsSummaryRestD.resolvers ).totalMonthlyCost, findQueryMutationResolver ( eAccountsSummaryRestD, 'get' )
     ) ).toEqual ( [
       "package focuson.data.resolvers.EAccountsSummary;",
       "",
@@ -126,7 +127,6 @@ describe ( "makeResolvers", () => {
       "      int applRef = dataFetchingEnvironment.getArgument(\"applRef\");",
       "      int clientRef = dataFetchingEnvironment.getArgument(\"clientRef\");",
       "      int accountId = dataFetchingEnvironment.getArgument(\"accountId\");",
-      "      int customerId = dataFetchingEnvironment.getArgument(\"customerId\");",
       "      String employeeType = dataFetchingEnvironment.getArgument(\"employeeType\");",
       "      try(Connection connection = dataSource.getConnection()){",
       "        //from EAccountsSummary.rest[eAccountsSummary].resolvers[\"getEAccountsSummary\"]",
@@ -145,12 +145,12 @@ describe ( "makeResolvers", () => {
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ]);
+    ] );
 
   } )
   it ( "should make resolvers for non 'get' resolvers", () => {
     expect ( makeResolvers ( paramsForTest, EAccountsSummaryPD, 'eAccountsSummary', eAccountsSummaryRestD,
-      'totalMonthlyCost', eAccountsSummaryRestD.resolvers.totalMonthlyCost, findResolverData ( 'someError', findChildResolvers ( eAccountsSummaryRestD ), 'totalMonthlyCost' )
+      'totalMonthlyCost', safeObject ( eAccountsSummaryRestD.resolvers ).totalMonthlyCost, findResolverData ( 'someError', findChildResolvers ( eAccountsSummaryRestD ), 'totalMonthlyCost' )
     ) ).toEqual ( [
       "package focuson.data.resolvers.EAccountsSummary;",
       "",
@@ -182,7 +182,6 @@ describe ( "makeResolvers", () => {
       "      int applRef = dataFetchingEnvironment.getArgument(\"applRef\");",
       "      int clientRef = dataFetchingEnvironment.getArgument(\"clientRef\");",
       "      int accountId = dataFetchingEnvironment.getArgument(\"accountId\");",
-      "      int customerId = dataFetchingEnvironment.getArgument(\"customerId\");",
       "      String employeeType = dataFetchingEnvironment.getArgument(\"employeeType\");",
       "      try(Connection connection = dataSource.getConnection()){",
       "        //from EAccountsSummary.rest[eAccountsSummary].resolvers[\"totalMonthlyCost\"]",
@@ -200,6 +199,6 @@ describe ( "makeResolvers", () => {
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ])
+    ] )
   } )
 } )

@@ -22,7 +22,7 @@ function confirmIt ( c: boolean | string | undefined ) {
   return window.confirm ( text )
 }
 export function RestButton<S, C extends HasRestCommandL<S> & HasSimpleMessageL<S> & HasPageSelectionLens<S>> ( props: RestButtonProps<S, C> ) {
-  const { id, rest, action, result, state, text, confirm, validate, dateFn, deleteOnSuccess, enabledBy } = props
+  const { id, rest, action, result, state, text, confirm, validate, dateFn, deleteOnSuccess, enabledBy, name } = props
   function onClick () {
     const realvalidate = validate === undefined ? true : validate
     if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return
@@ -30,5 +30,5 @@ export function RestButton<S, C extends HasRestCommandL<S> & HasSimpleMessageL<S
       state.copyWithLens ( state.context.restL ).transform ( old => [ ...old, { restAction: action, name: rest, deleteOnSuccess } ], reasonFor ( 'RestButton', 'onClick', id ) )
   }
 
-  return <button disabled={enabledBy === false} onClick={onClick}>{text}</button>
+  return <button disabled={enabledBy === false} onClick={onClick}>{text ? text : name}</button>
 }

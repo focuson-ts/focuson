@@ -6,7 +6,7 @@ import { addressRestD } from "../example/postCodeDemo/addressSearch.restD";
 describe ( "Making GraphQl from RestD", () => {
   it ( "should be possible to make a query ", () => {
     expect ( makeQuery ('somePrefix', eAccountsSummaryRestD, 'get' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "'query{getEAccountsSummary(' + 'accountId:' + accountId  + ',' + 'applRef:' + applRef  + ',' + 'brandRef:' + brandRef  + ',' + 'clientRef:' + clientRef  + ',' + 'customerId:' + customerId  + ',' + 'dbName:' + '\\'' + dbName + '\\''  + ',' + 'employeeType:' + '\\'' + employeeType + '\\'' + '){'+",
+      "'query{getEAccountsSummary(' + 'accountId:' + accountId  + ',' + 'applRef:' + applRef  + ',' + 'brandRef:' + brandRef  + ',' + 'clientRef:' + clientRef  + ',' + 'dbName:' + '\\'' + dbName + '\\''  + ',' + 'employeeType:' + '\\'' + employeeType + '\\'' + '){'+",
       "      '    useEStatements'+",
       "      '    eAccountsTable{'+",
       "      '      accountId'+",
@@ -62,8 +62,8 @@ describe ( "Making GraphQl from RestD", () => {
 
   it ( "makeAllQueryForRest - should make java variables", () => {
     expect ( makeJavaVariablesForGraphQlQuery ( [ eAccountsSummaryRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "public static  String getEAccountsSummary(int accountId,int applRef,int brandRef,int clientRef,int customerId,String dbName,String employeeType){ ",
-      "  return'query{getEAccountsSummary(' + 'accountId:' + accountId  + ',' + 'applRef:' + applRef  + ',' + 'brandRef:' + brandRef  + ',' + 'clientRef:' + clientRef  + ',' + 'customerId:' + customerId  + ',' + 'dbName:' + '\\'' + dbName + '\\''  + ',' + 'employeeType:' + '\\'' + employeeType + '\\'' + '){'+",
+      "public static  String getEAccountsSummary(int accountId,int applRef,int brandRef,int clientRef,String dbName,String employeeType){ ",
+      "  return'query{getEAccountsSummary(' + 'accountId:' + accountId  + ',' + 'applRef:' + applRef  + ',' + 'brandRef:' + brandRef  + ',' + 'clientRef:' + clientRef  + ',' + 'dbName:' + '\\'' + dbName + '\\''  + ',' + 'employeeType:' + '\\'' + employeeType + '\\'' + '){'+",
       "      '    useEStatements'+",
       "      '    eAccountsTable{'+",
       "      '      accountId'+",

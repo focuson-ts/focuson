@@ -45,10 +45,9 @@ describe ( "makeCommon", () => {
       "  brandRef ? : number;",
       "  clientRef ? : number;",
       "  createPlanId ? : number;",
-      "  clientRef ? : number;",
       "  dbName ? : string;",
       "  employeeType ? : string;",
-      "  usersRole ? : string;",
+      "  role ? : string;",
       "}",
       "export const identityL = identityOptics<FState> ();",
       "export const commonIdsL = identityL.focusQuery('CommonIds');",
@@ -58,10 +57,9 @@ describe ( "makeCommon", () => {
       "   brandRef  :    commonIdsL.focusQuery ( 'brandRef' ),",
       "   clientRef  :    commonIdsL.focusQuery ( 'clientRef' ),",
       "   createPlanId  :    commonIdsL.focusQuery ( 'createPlanId' ),",
-      "   customerId  :    commonIdsL.focusQuery ( 'clientRef' ),",
       "   dbName  :    commonIdsL.focusQuery ( 'dbName' ),",
       "   employeeType  :    commonIdsL.focusQuery ( 'employeeType' ),",
-      "   role  :    commonIdsL.focusQuery ( 'usersRole' )",
+      "   role  :    commonIdsL.focusQuery ( 'role' )",
       "}",
       "export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{",
       "  mode: PageMode;",
@@ -82,7 +80,7 @@ describe ( "makeCommon", () => {
       "export const pathToLens: ( s: FState ) => ( path: string ) => Optional<FState, any> =",
       "    fromPathFromRaw ( pageSelectionlens<FState> (), pages )",
       "export const emptyState: FState = {",
-      "  CommonIds: {'accountId':12342312,'applRef':888,'brandRef':10,'clientRef':666,'createPlanId':777,'dbName':'mock','employeeType':'basic','usersRole':'user'},",
+      "  CommonIds: {'accountId':12342312,'applRef':888,'brandRef':10,'clientRef':666,'createPlanId':777,'dbName':'mock','employeeType':'basic','role':'user'},",
       "  tags: {},",
       "  messages: [],",
       "  pageSelection: [{ pageName: 'EAccountsSummary', firstTime: true, pageMode: 'view' }],",
@@ -90,22 +88,24 @@ describe ( "makeCommon", () => {
       "  restCommands: [],",
       "  debug: {'fetcherDebug':false,'guardDebug':false,'restDebug':false,'selectedPageDebug':false,'loadTreeDebug':false,'showTracing':false,'recordTrace':true,'tagFetcherDebug':false,'accordions':[]}",
       "  }"
-    ])
+    ] )
 
   } )
 } )
 
 describe ( "findAllCommonParamsWithSamples", () => {
-  expect ( findAllCommonParamsWithSamples ( generatedPages ) ).toEqual ( {
-    "accountId": 12342312,
-    "applRef": 888,
-    "brandRef": 10,
-    "clientRef": 666,
-    "createPlanId": 777,
-    "customerId": 988834,
-    "dbName": "mock",
-    "employeeType": "basic",
-    "usersRole": "user"
+  it ( "should do what it says on the tin", () => {
+    expect ( findAllCommonParamsWithSamples ( generatedPages ) ).toEqual ( {
+      "accountId": 12342312,
+      "applRef": 888,
+      "brandRef": 10,
+      "clientRef": 666,
+      "createPlanId": 777,
+      "customerId": 988834,
+      "dbName": "mock",
+      "employeeType": "basic",
+      "role": "user"
+    } )
   } )
 } )
 
@@ -135,7 +135,7 @@ describe ( "makeCommonParams", () => {
       "  applRef ? : number;",
       "  brandRef ? : number;",
       "  clientRef ? : number;",
-      "  usersRole ? : string;",
+      "  role ? : string;",
       "}",
       "export const identityL = identityOptics<FState> ();",
       "export const commonIdsL = identityL.focusQuery('CommonIds');",
@@ -144,7 +144,7 @@ describe ( "makeCommonParams", () => {
       "   applRef  :    commonIdsL.focusQuery ( 'applRef' ),",
       "   brandRef  :    commonIdsL.focusQuery ( 'brandRef' ),",
       "   clientRef  :    commonIdsL.focusQuery ( 'clientRef' ),",
-      "   role  :    commonIdsL.focusQuery ( 'usersRole' )",
+      "   role  :    commonIdsL.focusQuery ( 'role' )",
       "}",
       "export interface FocusedProps<S,D, Context> extends LensProps<S,D, Context>{",
       "  mode: PageMode;",
@@ -157,7 +157,7 @@ describe ( "makeCommonParams", () => {
       "    ( s, date ) => [], //later do the messaging",
       "    defaultDateFn ) ( onError ) //updateTagsAndMessagesOnError ( defaultErrorMessage )",
       "}"
-    ])
+    ] )
   } )
 
 } )

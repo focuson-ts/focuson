@@ -12,12 +12,12 @@ import { CreatePlanDD } from "../example/eAccounts/eAccountsSummary.dataD";
 
 describe ( "makeSpringEndpoint", () => {
   it ( "should makeParamsForJava", () => {
-    expect ( makeParamsForJava ('error',  createPlanRestD, 'get' ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam int createPlanId' )
+    expect ( makeParamsForJava ( 'error', createPlanRestD, 'get' ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam int createPlanId' )
     // expect ( makeParamsForJava ( createPlanRestD, 'list' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String customerId' )
     expect ( makeParamsForJava ( 'error', createPlanRestD, 'create' ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestBody String body' )
-    expect ( makeParamsForJava ('error',  createPlanRestD, 'update' ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam int createPlanId, @RequestBody String body' )
-    expect ( makeParamsForJava ('error',  createPlanRestD, 'delete' ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam int createPlanId' )
-    expect ( makeParamsForJava ('error',  createPlanRestD, 'getOption' ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam int createPlanId' )
+    expect ( makeParamsForJava ( 'error', createPlanRestD, 'update' ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam int createPlanId, @RequestBody String body' )
+    expect ( makeParamsForJava ( 'error', createPlanRestD, 'delete' ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam int createPlanId' )
+    expect ( makeParamsForJava ( 'error', createPlanRestD, 'getOption' ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam int createPlanId' )
   } )
   it ( "should make an endpoint for a rest", () => {
     expect ( makeSpringEndpointsFor ( paramsForTest, EAccountsSummaryPD, 'eAccountsSummary', eAccountsSummaryRestD ) ).toEqual ( [
@@ -52,9 +52,9 @@ describe ( "makeSpringEndpoint", () => {
       "  @Autowired",
       "  EAccountsSummary_state_invalidateMutation __state_invalidateMutation;",
       "    @GetMapping(value=\"/api/accountsSummary\", produces=\"application/json\")",
-      "    public ResponseEntity getEAccountsSummary(@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam int customerId, @RequestParam String dbName, @RequestParam String employeeType) throws Exception{",
+      "    public ResponseEntity getEAccountsSummary(@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam String dbName, @RequestParam String employeeType) throws Exception{",
       "        try (Connection connection = dataSource.getConnection()) {",
-      "          return Transform.result(connection,graphQL.get(dbName),EAccountsSummaryQueries.getEAccountsSummary(accountId, applRef, brandRef, clientRef, customerId, dbName, employeeType), \"getEAccountsSummary\");",
+      "          return Transform.result(connection,graphQL.get(dbName),EAccountsSummaryQueries.getEAccountsSummary(accountId, applRef, brandRef, clientRef, dbName, employeeType), \"getEAccountsSummary\");",
       "        }",
       "    }",
       "",
@@ -65,13 +65,13 @@ describe ( "makeSpringEndpoint", () => {
       "        if (!Arrays.asList(\"teamLeader\").contains(employeeType)) return new ResponseEntity(\"\", new HttpHeaders(), HttpStatus.FORBIDDEN);",
       "          //from EAccountsSummary.rest[eAccountsSummary].mutations[{\"state\":\"invalidate\"}] - if you have a compilation error here check which parameters you defined in {yourRestD}.states[invalidate]",
       "          __state_invalidateMutation.EAccountsSummary_state_invalidate_auditStuff(connection,dbName,accountId,clientRef);",
-      "          return  ResponseEntity.ok(\"\");",
+      "          return  ResponseEntity.ok(\"{}\");",
       "        }",
       "    }",
       "",
       "    @GetMapping(value=\"/api/accountsSummary/query\", produces=\"application/json\")",
-      "    public String querygetEAccountsSummary(@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam int customerId, @RequestParam String dbName, @RequestParam String employeeType) throws Exception{",
-      "       return EAccountsSummaryQueries.getEAccountsSummary(accountId, applRef, brandRef, clientRef, customerId, dbName, employeeType);",
+      "    public String querygetEAccountsSummary(@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam String dbName, @RequestParam String employeeType) throws Exception{",
+      "       return EAccountsSummaryQueries.getEAccountsSummary(accountId, applRef, brandRef, clientRef, dbName, employeeType);",
       "    }",
       "",
       "    @PostMapping(value=\"/api/accountsSummary/invalidate/query\", produces=\"application/json\")",
@@ -84,7 +84,7 @@ describe ( "makeSpringEndpoint", () => {
       "      return new ObjectMapper().writeValueAsString( Sample.sampleEAccountsSummary0);",
       "    }",
       "  }"
-    ])
+    ] )
   } )
   it ( "should make a second endpoint for a res", () => {
     expect ( makeSpringEndpointsFor ( paramsForTest, EAccountsSummaryPD, 'createPlanRestD', createPlanRestD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
@@ -139,7 +139,7 @@ describe ( "makeSpringEndpoint", () => {
       "    @DeleteMapping(value='/api/createPlan', produces='application/json')",
       "    public ResponseEntity deleteCreatePlan(@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam int createPlanId) throws Exception{",
       "        try (Connection connection = dataSource.getConnection()) {",
-      "          return  ResponseEntity.ok('');",
+      "          return  ResponseEntity.ok('{}');",
       "        }",
       "    }",
       "",
@@ -229,7 +229,7 @@ describe ( "makeSpringEndpoint", () => {
       "      return new ObjectMapper().writeValueAsString( Sample.sampleRepeatingWholeData0);",
       "    }",
       "  }"
-    ])
+    ] )
 
   } )
 
@@ -313,7 +313,7 @@ describe ( "accessDetails", () => {
     expect ( accessDetails ( paramsForTest, EAccountsSummaryPD, 'createPlanRestD', restD, 'get' ) ).toEqual ( [
       "//from EAccountsSummary.rest[createPlanRestD.access[\"get\"]",
       "if (!Arrays.asList(\"a\",\"b\").contains(p1)) return new ResponseEntity(\"\", new HttpHeaders(), HttpStatus.FORBIDDEN);"
-    ])
+    ] )
   } )
   it ( "should check that the correct end point has the correct access - many requirement", () => {
     expect ( accessDetails ( paramsForTest, EAccountsSummaryPD, 'createPlanRestD', restD, { state: 'hi' } ) ).toEqual ( [
@@ -321,6 +321,6 @@ describe ( "accessDetails", () => {
       "if (!Arrays.asList(\"c\").contains(p1)) return new ResponseEntity(\"\", new HttpHeaders(), HttpStatus.FORBIDDEN);",
       "//from EAccountsSummary.rest[createPlanRestD.access[{\"state\":\"hi\"}] - if you have a compilation error here check which parameters you defined in {yourRestD}.states[hi]",
       "if (!Arrays.asList(\"d\").contains(p2)) return new ResponseEntity(\"\", new HttpHeaders(), HttpStatus.FORBIDDEN);"
-    ])
+    ] )
   } )
 } )

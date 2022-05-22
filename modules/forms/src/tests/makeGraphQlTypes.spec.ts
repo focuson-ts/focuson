@@ -12,10 +12,10 @@ describe ( "makeGraphQlSchema", () => {
     it ( "should make type Query", () => {
       expect ( makeQueryOrMutateBlock ( rs, 'Query' ) ).toEqual ( [
         "type Query{",
-        "  getEAccountsSummary(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, customerId: Int!, dbName: String!, employeeType: String!):EAccountsSummary!",
+        "  getEAccountsSummary(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, dbName: String!, employeeType: String!):EAccountsSummary!",
         "  getCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, createPlanId: Int!):CreatePlan!",
         "}"
-      ] )
+      ])
     } )
     it ( "should make type Mutation", () => {
       expect ( makeQueryOrMutateBlock ( rs, 'Mutation' ) ).toEqual ( [
@@ -62,7 +62,7 @@ describe ( "makeGraphQlSchema", () => {
   it ( "should make a schema from RestDs", () => {
     expect ( makeGraphQlSchema ( rs ) ).toEqual ( [
       "type Query{",
-      "  getEAccountsSummary(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, customerId: Int!, dbName: String!, employeeType: String!):EAccountsSummary!",
+      "  getEAccountsSummary(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, dbName: String!, employeeType: String!):EAccountsSummary!",
       "  getCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, createPlanId: Int!):CreatePlan!",
       "}",
       "type Mutation{",

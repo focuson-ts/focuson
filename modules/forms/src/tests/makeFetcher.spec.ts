@@ -16,12 +16,12 @@ describe ( "makeAllFetchers", () => {
       "  return pageAndTagFetcher<FState, domains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDomain, SimpleMessage>(",
       "    common.commonFetch<FState,  domains.EAccountsSummaryDomain>(),",
       "     'EAccountsSummary',",
-      "     '~/fromApi', fdLens, commonIds, localIds,['accountId','applRef','brandRef','clientRef','dbName','employeeType'],['customerId'],",
+      "     '~/fromApi', fdLens, commonIds, localIds,['accountId','applRef','brandRef','dbName','employeeType'],['clientRef'],",
       "      //From EAccountsSummary.rest[eAccountsSummary].targetFromPath ~/fromApi Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?",
       "      Lenses.identity<domains.EAccountsSummaryPageDomain>().focusQuery('fromApi'),",
       "     '/api/accountsSummary?{query}')",
       "}"
-    ] )
+    ])
   } )
   it ( "should make a fetcher for a repeating", () => {
     expect ( makeAllFetchers ( paramsForTest, [ RepeatingPageD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
