@@ -1,5 +1,5 @@
 import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
-import { NameAnd, RestAction, safeArray, safeObject, sortedEntries, toArray } from "@focuson/utils";
+import { NameAnd, RestAction, safeObject, sortedEntries, toArray, unique } from "@focuson/utils";
 import { filterParamsByRestAction } from "../codegen/codegen";
 import { AccessDetails, DBTable, MutationDetail, Mutations, MutationsForRestAction } from "./resolverD";
 import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
@@ -150,19 +150,6 @@ export function findUniqueDataDsAndRestTypeDetails<G> ( rs: RestD<G>[] ): [ Rest
 
 export function findUniqueDataDsIn<G> ( rs: RestD<G>[] ): CompDataD<G>[] {
   return unique ( Object.values ( findAllDataDs ( rs.map ( r => r.dataDD ) ) ), d => d.name )
-}
-
-export function unique<T> ( ts: T[] | undefined, tagFn: ( t: T ) => string ): T[] {
-  const alreadyIn: Set<string> = new Set ()
-  var result: T[] = []
-  safeArray ( ts ).forEach ( t => {
-    const tag = tagFn ( t );
-    if ( !alreadyIn.has ( tag ) ) {
-      result.push ( t );
-      alreadyIn.add ( tag )
-    }
-  } )
-  return result
 }
 
 export function makeParamValueForTest<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ) {

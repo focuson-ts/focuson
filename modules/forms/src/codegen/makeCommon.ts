@@ -4,8 +4,8 @@ import { addStringToEndOfAllButLast, indentList } from "./codegen";
 import { TSParams } from "./config";
 import { applyToTemplate } from "@focuson/template";
 import { DirectorySpec, loadFile } from "@focuson/files";
-import { AllLensRestParams, CommonLensRestParam, flatMapCommonParams, flatMapParams, isCommonLens, RestD, unique } from "../common/restD";
-import { NameAnd, sortedEntries } from "@focuson/utils";
+import { AllLensRestParams, CommonLensRestParam, flatMapCommonParams, flatMapParams, isCommonLens, RestD} from "../common/restD";
+import { NameAnd, sortedEntries, unique } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
 import { AppConfig } from "../appConfig";
 
@@ -98,11 +98,17 @@ export interface CommonParamError {
 export function validateCommonParams ( cs: CommonParamsDetails[] ): CommonParamError[] {
   const summary = ( c: CommonParamsDetails ) => `Test value: ${c.param.testValue}. Types ${c.param.javaParser}+${c.param.javaType}+${c.param.graphQlType}+${c.param.rsSetter}`;
   const names = unique ( cs.map ( c => c.name ), t => t )
-  return names.flatMap ( name => {
+  let nameDuplicates = names.flatMap ( name => {
     const withSameName = cs.filter ( c => c.name === name );
     const uniqueOverImportantDetails = unique ( withSameName, summary )
     return uniqueOverImportantDetails.length > 1 ? { name, details: withSameName.map ( c => `${c.page.name}${c.restName ? `.rest[${c.restName}].params[${name}}]` : `.params[${name}]`} => ${summary ( c )}` ) } : [];
-  } )
+  } );
+  const nameMismatches: CommonParamError[] = cs.filter ( c => c.name != c.param.commonLens )
+    .map ( c => {
+      const ref = c.restName ? `.rest[${c.restName}]` : '.commonParams'
+      return ({ name: c.name, details: [ `${c.page.name}.${ref} Have common lens with name [${c.name}] which doesn't match the common lens [${c.param.commonLens}]. Currently this will give issues` ] });
+    } )
+  return [ ...nameDuplicates, ...nameMismatches ]
 }
 export function findAllCommonParamsWithSamples<B, G> ( pages: MainPageD<B, G>[] ): any {
   const lensAndValue: [ string, any ][] = flatMapCommonParams ( pages, ( p, restName, r, name, c ) =>
@@ -114,7 +120,7 @@ export function findAllCommonParamsWithSamples<B, G> ( pages: MainPageD<B, G>[] 
 //
 
 export function makeCommonParams<B, G> ( params: TSParams, pages: MainPageD<B, G>[], directorySpec: DirectorySpec ) {
-  let commonParams: CommonParamsDetails[] = unique ( findAllCommonParamsDetails ( pages ), t => t.name );
+  let commonParams: CommonParamsDetails[] = unique ( findAllCommonParamsDetails ( pages ), t => t.param.commonLens );
   const commonParamDefns = commonParams.map ( s => '  ' + s.param.commonLens + ` ? : ${s.param.typeScriptType};\n` ).join ( "" )
   const commonParamNameAndLens = commonParams.map ( s => `   ${s.name}  :    commonIdsL.focusQuery ( '${s.param.commonLens}' )` ).join ( ",\n" )
   return applyToTemplate ( loadFile ( 'templates/commonTemplate.ts', directorySpec ).toString (), { ...params, commonParamDefns, commonParamNameAndLens } )

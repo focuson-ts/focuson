@@ -1,8 +1,7 @@
 import { copyFile, copyFiles, DirectorySpec, templateFile, writeToFile } from "@focuson/files";
 import { TSParams } from "../codegen/config";
 import fs from "fs";
-import { unique } from "../common/restD";
-import { detailsLog, GenerateLogLevel, safeArray, sortedEntries } from "@focuson/utils";
+import { detailsLog, GenerateLogLevel, safeArray, sortedEntries, unique } from "@focuson/utils";
 import { allMainPages, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { createRenderPage } from "../codegen/makeRender";
 import { ButtonD } from "../buttons/allButtons";

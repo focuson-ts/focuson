@@ -1,10 +1,10 @@
-import { flatMapRestAndActions, flatMapRestAndResolver, mapRestAndActions, mapRestAndResolver, RestD, unique } from "../common/restD";
+import { flatMapRestAndActions, flatMapRestAndResolver, mapRestAndActions, mapRestAndResolver, RestD} from "../common/restD";
 import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, isPrimDd, isRepeatingDd, OneDataDD, PrimitiveDD, RepeatingDataD, sampleFromDataD } from "../common/dataD";
 import { fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, fetcherVariableName, fetcherVariableNameForResolver, resolverName, sampleName } from "./names";
 import { JavaWiringParams } from "./config";
 import { applyToTemplate } from "@focuson/template";
 import { DirectorySpec, loadFile } from "@focuson/files";
-import { RestAction } from "@focuson/utils";
+import { RestAction, unique } from "@focuson/utils";
 import { MainPageD, PageD } from "../common/pageD";
 import { getRestTypeDetails } from "@focuson/rest";
 

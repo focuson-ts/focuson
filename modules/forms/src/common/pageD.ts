@@ -1,6 +1,6 @@
 import { AllDataDD, CompDataD, DataD, findAllDataDs, HasGuards, HasLayout, isDataDd, NamesAndDataDs } from "./dataD";
-import { CommonLensRestParam, RestD, unique } from "./restD";
-import { NameAnd, RestAction, RestResult, safeString, sortedEntries } from "@focuson/utils";
+import { CommonLensRestParam, RestD} from "./restD";
+import { NameAnd, RestAction, RestResult, safeString, sortedEntries, unique } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
 import { getRestTypeDetails, RestActionDetail } from "@focuson/rest";
 

@@ -1,8 +1,8 @@
 import { MainPageD } from "../common/pageD";
-import { NameAnd, safeObject, toArray } from "@focuson/utils";
+import { NameAnd, safeObject, toArray, unique } from "@focuson/utils";
 import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationMethodName } from "./names";
-import { AllLensRestParams, RestD, unique } from "../common/restD";
+import { AllLensRestParams, RestD} from "../common/restD";
 import { indentList } from "./codegen";
 import { allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, importForTubles, isInputParam, isOutputParam, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, OutputMutationParam, paramName, SqlMutation, StoredProcedureMutation } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";

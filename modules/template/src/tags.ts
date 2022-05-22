@@ -1,6 +1,6 @@
 import { expand } from "./template";
 import { GetNameFn, NameAndLens, Optional } from "@focuson/lens";
-import { isRestStateChange, RestAction } from "@focuson/utils";
+import { isRestStateChange, RestAction, unique } from "@focuson/utils";
 
 
 export type Tags = (string | undefined)[]
@@ -38,8 +38,6 @@ export interface UrlConfig<S, FD, D> {
   dLens: Optional<FD, D>;
   resourceId: string [];
   ids: string [];
-
-
 }
 
 type TagOpsFn<T> = <S, FD, D>( urlConfig: UrlConfig<S, FD, D>, restAction: RestAction ) => ( m: S ) => T
@@ -58,11 +56,12 @@ export const tags: TagOpsFn<[ string, string | undefined ][]> = ( urlConfig, res
 
 export function nameToLens<S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, restAction: RestAction ): GetNameFn<S, any> {
   return ( name: string ) => {
-    if ( name === 'query' ) return { getOption: s => makeAEqualsB ( urlConfig, { failSilently: true } ) ( s, restAction ) }
-    const fromCd = urlConfig.cd[ name ]//local ovrerride common
-    if ( fromCd ) return fromCd
+    if ( name === 'query' )
+      return { getOption: s => makeAEqualsB ( urlConfig, { failSilently: true } ) ( s, restAction ) }
     const fromFdd = urlConfig.fdd[ name ]
     if ( fromFdd ) return urlConfig.fdLens.chain ( fromFdd )
+    const fromCd = urlConfig.cd[ name ]//local ovrerride common
+    if ( fromCd ) return fromCd
     return { getOption: () => name }
   }
 }
@@ -82,8 +81,8 @@ export function methodFor ( r: RestAction ) {
 export const bodyFor: TagOpsFn<RequestInit | undefined> =
                ( urlConfig, restAction ) => s => {
                  const method = methodFor ( restAction )
-                 if ( restAction === 'get' || restAction === 'getOption') return undefined // || restAction === 'list'
-                 if ( restAction === 'delete'|| isRestStateChange(restAction) ) return { method }
+                 if ( restAction === 'get' || restAction === 'getOption' ) return undefined // || restAction === 'list'
+                 if ( restAction === 'delete' || isRestStateChange ( restAction ) ) return { method }
                  let bodyL = urlConfig.fdLens.chain ( urlConfig.dLens );
                  const body: any = bodyL.getOption ( s )
                  if ( body ) {
@@ -105,12 +104,12 @@ export const makeAEqualsB = <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, { encod
   return ( main, restAction ) => {
     const nameLnFn = nameToLens ( urlConfig, restAction )
     const names = needsId ( restAction ) ? [ ...urlConfig.ids, ...urlConfig.resourceId ] : urlConfig.ids
-    return names.map ( name => {
+    return unique ( names.map ( name => {
         const value = nameLnFn ( name ).getOption ( main )
         if ( value !== undefined || failSilently ) return name + '=' + realEncoder ( value )
         throw new Error ( `Could not find [${name}] in makeAEqualsB. All names are ${names.join ( "." )}` )
       }
-    ).join ( realSeparator )
+    ), t => t ).join ( realSeparator )
   }
 };
 // export function regFor ( props: TagOpsProps ) {
@@ -125,8 +124,8 @@ const from = <S> ( n: NameAndLens<S>, name: string, s: S | undefined ): string |
 export const onePart = <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, props: MakeAEqualsBProps ) => ( s: S, restAction: RestAction ) => ( name: string ): string | undefined => {
   const { cd, fdd, fdLens } = urlConfig
   if ( name === 'query' ) return makeAEqualsB ( urlConfig, props ) ( s, restAction )
-  const fromFd = from ( fdd, name, fdLens.getOption ( s ) )
-  return fromFd !== undefined ? fromFd : from ( cd, name, s )
+  if ( fdd[ name ] !== undefined ) return from ( fdd, name, fdLens.getOption ( s ) )
+  return from ( cd, name, s )
 }
 
 
@@ -141,5 +140,5 @@ export interface TagOpsProps extends MakeAEqualsBProps {
 }
 
 export function needsId ( r: RestAction ): boolean {
-  return r === 'get' || r === 'getOption' || r === 'update' || r === 'delete' || isRestStateChange(r)
+  return r === 'get' || r === 'getOption' || r === 'update' || r === 'delete' || isRestStateChange ( r )
 }

@@ -55,7 +55,7 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
     createPayment: { dataDD: CreatePaymentDD },
     overpayment: { dataDD: OverpaymentPageDD }
   },
-  initialValue: undefined,
+  initialValue: 'empty',
   modals: [ { modal: SelectMandateMP }, { modal: CreatePaymentMP }, { modal: OverpaymentMP } ],
   modes: [ 'view' ],
   pageType: "MainPage",

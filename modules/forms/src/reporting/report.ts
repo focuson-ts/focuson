@@ -1,11 +1,11 @@
 import { dataDsIn, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { indentList } from "../codegen/codegen";
-import { NameAnd, RestAction, safeArray, sortedEntries, toArray } from "@focuson/utils";
+import { NameAnd, RestAction, safeArray, sortedEntries, toArray, unique } from "@focuson/utils";
 import { isModalButtonInPage, ModalButtonInPage } from "../buttons/modalButtons";
 import { ButtonD, ButtonWithControl, isButtonWithControl } from "../buttons/allButtons";
 import { GuardWithCondition, isGuardButton } from "../buttons/guardButton";
 import { CompDataD, emptyDataFlatMap, flatMapDD, HasGuards, isComdDD, isRepeatingDd, OneDataDD } from "../common/dataD";
-import { isCommonLens, RestD, RestParams, unique } from "../common/restD";
+import { isCommonLens, RestD, RestParams} from "../common/restD";
 import { printRestAction } from "@focuson/rest";
 import { findAllTableAndFieldDatasIn } from "../codegen/makeSqlFromEntities";
 import { isRestButtonInPage } from "../buttons/restButton";
@@ -153,6 +153,7 @@ function auditDetails<B, G> ( page: MainPageD<B, G>, restName: string, rest: Res
 function mutationDetails<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ): string {
   return safeArray ( rest.mutations ).flatMap ( a => `${printRestAction ( a.restAction )}->${toArray ( a.mutateBy ).map ( s => s.name )}` ).join ( '; ' )
 }
+
 export function makeRestReport<B, G> ( page: MainPageD<B, G>, info: ReportInfo ): ReportDetails {
   const general: string[] = sortedEntries ( page.rest ).flatMap ( ( [ name, rdp ] ) =>
     [ `|${name} | ${rdp.rest.url}| ${sortedEntries ( rdp.rest.params ).map ( ( [ name, p ] ) => name )} | ${accessDetails ( page, rdp.rest )} | ${function auditDetails<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ): string {

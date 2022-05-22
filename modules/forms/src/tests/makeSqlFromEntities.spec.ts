@@ -1,5 +1,5 @@
 import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findParamsForTable, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, JavaQueryParamDetails, makeInsertSqlForNoIds, makeMapsForRest, makeWhereClause, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldDataFromTableQueryLink, whereFieldToFieldDataFromTableWhereLink } from "../codegen/makeSqlFromEntities";
-import { AllLensRestParams, EntityAndWhere, IntParam, StringParam, unique } from "../common/restD";
+import { AllLensRestParams, EntityAndWhere, IntParam, StringParam} from "../common/restD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { nameAndAddressDataD, postCodeDataLineD, postCodeSearchResponseDD } from "../example/postCodeDemo/addressSearch.dataD";
 import { addressRestD } from "../example/postCodeDemo/addressSearch.restD";
@@ -9,6 +9,7 @@ import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
 import { paramsForTest } from "./paramsForTest";
 import { fromCommonIds } from "../example/commonIds";
 import { accountT, postCodeSearchTable } from "../example/database/tableNames";
+import { unique } from "@focuson/utils";
 
 const jointAccountRestDTables = jointAccountRestD.tables
 if ( jointAccountRestDTables === undefined ) throw Error ( "addressRestDTables must be defined" )

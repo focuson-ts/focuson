@@ -1,7 +1,6 @@
 import { TSParams } from "./config";
 import { isMainPage, OptionalD, PageD } from "../common/pageD";
-import { safeArray, sortedEntries } from "@focuson/utils";
-import { unique } from "../common/restD";
+import { safeArray, sortedEntries, unique } from "@focuson/utils";
 import { addStringToEndOfAllButLast, indentList } from "./codegen";
 import { optionalsName } from "./names";
 

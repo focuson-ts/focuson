@@ -1,7 +1,7 @@
 import { JavaWiringParams } from "./config";
 import { MainPageD } from "../common/pageD";
-import { RestD, unique } from "../common/restD";
-import { toArray } from "@focuson/utils";
+import { RestD} from "../common/restD";
+import { toArray, unique } from "@focuson/utils";
 import { allInputParamNames, importForTubles, MutationDetail, Mutations } from "../common/resolverD";
 import { fetcherInterfaceForResolverName, fetcherPackageName, mutationMethodName, resolverClassName } from "./names";
 import { makeCodeFragmentsForMutation, makeMutationMethod } from "./makeMutations";
