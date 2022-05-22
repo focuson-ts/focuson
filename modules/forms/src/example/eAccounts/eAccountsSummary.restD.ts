@@ -34,7 +34,6 @@ export const eAccountsSummaryRestD: RestD<AllGuards> = {
     totalMonthlyCost: { type: 'manual', code: [ 'Integer totalMonthlyCost = 123;' ], params: [ 'accountId', { type: 'output', name: 'totalMonthlyCost', javaType: 'Integer' } ], name: 'getTotalMonthlyCostStoredProc' },
     oneAccountBalance: { type: 'manual', code: [ 'Integer oneAccountBalance = 234;' ], params: [ 'accountId', { type: 'output', name: 'oneAccountBalance', javaType: 'Integer' } ], name: 'getOneAccountBalance' },
     currentAccountBalance: { type: 'manual', code: [ 'Integer currentAccountBalance = 345;' ], params: [ 'accountId', { type: 'output', name: 'currentAccountBalance', javaType: 'Integer' } ], name: 'getCurrentAccountBalance' }
-
   },
   access: [
     { restAction: { state: 'invalidate' }, condition: { type: 'in', param: 'employeeType', values: [ 'teamLeader' ] } }
