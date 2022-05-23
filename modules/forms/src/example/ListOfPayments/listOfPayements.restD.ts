@@ -2,13 +2,11 @@ import { ExampleRestD } from "../common";
 
 import { AccountDetailsDD, CurrentPaymentCountsDD, postCodeSearchResponseDD, PrintRecordHistoryDD } from "./listOfPayements.dataD";
 import { IntParam, RestD, RestParams, StringParam } from "../../common/restD";
-import { onlySchema } from "../database/tableNames";
+import { accountT, onlySchema } from "../database/tableNames";
 import { AllGuards } from "../../buttons/guardButton";
-import { allCommonIds } from "../commonIds";
+import { allCommonIds, fromCommonIds } from "../commonIds";
 
-export const PrintRecordHistoryParams: RestParams = {
-  accountId: { ...IntParam, commonLens: 'accountId', testValue: '123' },
-}
+export const PrintRecordHistoryParams: RestParams = fromCommonIds('accountId')
 
 export const PrintRecordHistoryRD: ExampleRestD = {
   params: PrintRecordHistoryParams,
@@ -24,6 +22,14 @@ export const CurrentPaymentCountsRD: ExampleRestD = {
   dataDD: CurrentPaymentCountsDD,
   url: '/api/paymentcounts?{query}',
   actions: [ 'get' ],
+  resolvers: {
+    getCurrentPaymentCounts: {
+      type: 'sql', name: 'get', schema: onlySchema, sql: 'someSql', params: [
+        { type: 'output', javaType: 'Integer', rsName: 'xxx', name: 'standingOrders' },
+        { type: 'output', javaType: 'Integer', rsName: 'yyy', name: 'directDebits' },
+      ]
+    }
+  }
 }
 export const accountAndAddressDetailsRD: ExampleRestD = {
   params: PrintRecordHistoryParams,

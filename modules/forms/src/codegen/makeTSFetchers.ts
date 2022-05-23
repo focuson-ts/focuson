@@ -16,7 +16,7 @@ export const makeFetcherCode = ( params: TSParams ) => <B, G> ( p: PageD<B, G> )
   const dataType = domainName ( d )
   const targetFromPath = def.targetFromPath;
   const [ ids, resourceIds ] = findIds ( def.rest )
-  const locals: [ string, LensRestParam ][] = sortedEntries ( def.rest.params ).flatMap ( ( [ n, l ] ) => isRestLens ( l ) ? [ [ n, l ] ] : [] )
+  const locals: [ string, LensRestParam<any> ][] = sortedEntries ( def.rest.params ).flatMap ( ( [ n, l ] ) => isRestLens ( l ) ? [ [ n, l ] ] : [] )
   const localLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: Lenses.identity< ${domain}.${pageDomainName ( p )}>()${lensFocusQueryFor ( l.lens )}` )
   const lensVariableString = [
     `//If you have a compilation here it might be because of the 'local' params in ${p.name}.rest[${restName}].params`,

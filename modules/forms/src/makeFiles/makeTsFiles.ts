@@ -1,8 +1,7 @@
 import { copyFile, copyFiles, DirectorySpec, templateFile, writeToFile } from "@focuson/files";
 import { TSParams } from "../codegen/config";
 import fs from "fs";
-import { unique } from "../common/restD";
-import { detailsLog, GenerateLogLevel, safeArray, sortedEntries } from "@focuson/utils";
+import { detailsLog, GenerateLogLevel, safeArray, sortedEntries, unique } from "@focuson/utils";
 import { allMainPages, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { createRenderPage } from "../codegen/makeRender";
 import { ButtonD } from "../buttons/allButtons";
@@ -100,7 +99,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     writeToFile ( `${tsCode}/${params.restsFile}.ts`, () => makeRestDetailsPage ( params, allPages ), details )
     const rests = unique ( allPages.flatMap ( pd => isMainPage ( pd ) ? sortedEntries ( pd.rest ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest ) : [] ), r => r.dataDD.name )
 
-    writeToFile ( `${tsCode}/${params.commonFile}.ts`, () => makeCommon ( appConfig, params, allPages, rests, directorySpec ), details )
+    writeToFile ( `${tsCode}/${params.commonFile}.ts`, () => makeCommon ( appConfig, params, mainPs, directorySpec ), details )
     writeToFile ( `${tsCode}/${params.pagesFile}.ts`, () => makePages ( params, mainPs ), details )
 
 

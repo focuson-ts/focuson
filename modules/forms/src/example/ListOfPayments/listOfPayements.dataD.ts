@@ -5,7 +5,7 @@ import { NatNumDd } from "../commonEnums";
 import { AccountIdDD, BooleanDD, DataD, NumberPrimitiveDD, OneLineStringDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
 import { CustomerStatus } from "@focuson/form_components";
 import { AllGuards } from "../../buttons/guardButton";
-import { postCodeSearchTable } from "../database/tableNames";
+import { accountT, postCodeSearchTable } from "../database/tableNames";
 
 export const authorisedByCustomerDD: StringPrimitiveDD = {
   ...OneLineStringDD,
@@ -37,7 +37,7 @@ export const RequestDetailsDD: ExampleDataD = {
     title: { dataDD: ReadOnlyStringDD, sample: [ 'Mr', 'Mrs' ] },
     forename: { dataDD: ReadOnlyStringDD, sample: [ 'Fred', 'Fredrica' ] },
     surname: { dataDD: ReadOnlyStringDD, sample: [ 'Bloggs', 'Smith' ] },
-    fullname: { dataDD: ReadOnlyStringDD, sample: [ 'Fred Bloggs', 'Fredrica Smith' ] },
+    fullname: { dataDD: {...ReadOnlyStringDD, resolver: 'fullname'}  , sample: [ 'Fred Bloggs', 'Fredrica Smith' ] },
     addressLine1: { dataDD: ReadOnlyStringDD, sample: [ '4 Privat Drive', '11 Green Acres' ] },
     addressLine2: { dataDD: ReadOnlyStringDD, sample: [ 'Little Winging', 'Nether Wallop' ] },
     addressLine3: { dataDD: ReadOnlyStringDD, sample: [ 'Surrey', 'Aylesbury' ] },
@@ -90,6 +90,7 @@ export const ListOfPaymentsDD: ExampleDataD = {
   name: 'ListOfPayments',
   description: 'The information about the person who requested the paymets',
   layout: { component: LayoutCd, displayParams: { details: '[[5,1]]' } },
+  table: accountT,
   structure: {
     standingOrders: { dataDD: SinglePrint, sampleOffset: 0 },
     openBankingStandingOrders: { dataDD: SinglePrint, sampleOffset: 1 },
@@ -102,8 +103,9 @@ export const ListOfPaymentsDD: ExampleDataD = {
 export const CurrentPaymentCountsDD: ExampleDataD = {
   name: 'CurrentPaymentCounts',
   description: 'The counts of the current types of payments',
+  table: accountT,
   structure: {
-    standingOrders: { dataDD: NatNumDd, sample: [ 3, 1, 0 ] },
+    standingOrders: { dataDD: NatNumDd, db: "directDebits", sample: [ 3, 1, 0 ] },
     openBankingStandingOrders: { dataDD: NatNumDd, sample: [ 2, 4, 0 ] },
     directDebits: { dataDD: NatNumDd, sample: [ 5, 5, 0 ] },
     billPayments: { dataDD: NatNumDd, sample: [ 4, 2, 0 ] },
@@ -117,7 +119,7 @@ export const postCodeDataForListOfPaymentsLineD: DataD<AllGuards> = {
   structure: {
     line1: { dataDD: OneLineStringDD, db: 'zzline1', sample: [ '4 Privet drive', '27 Throughput Lane' ] },
     line2: { dataDD: OneLineStringDD, db: 'zzline2', sample: [ 'Little Whinging', 'Woodfield' ] },
-    line3: { dataDD: OneLineStringDD, db: 'zzline3', sample: [ 'Surrey', '' ] , displayParams: {required: false}},
+    line3: { dataDD: OneLineStringDD, db: 'zzline3', sample: [ 'Surrey', '' ], displayParams: { required: false } },
     line4: { dataDD: OneLineStringDD, db: 'zzline4', sample: [ 'England', 'Ireland' ] },
     postcode: { dataDD: OneLineStringDD, db: 'PC_POSTCODE', sample: [ 'LW12 5f', 'IR45 3GT' ] }
   }
@@ -132,7 +134,7 @@ export const postCodeSearchResponseDD: RepeatingDataD<AllGuards> = {
   displayParams: {
     order: [ 'postcode', 'line1', 'line2', 'line3', 'line4' ],
     copySelectedItemTo: [ 'selectedPostCodeAddress' ],
-    copySelectedIndexTo : ['selectedPostCodeIndex']
+    copySelectedIndexTo: [ 'selectedPostCodeIndex' ]
   }
 }
 
@@ -141,7 +143,7 @@ export const addressSearchDD: ExampleDataD = {
   description: 'Searching for address by postcode',
   structure: {
     postcode: { dataDD: OneLineStringDD, displayParams: { buttons: [ 'search' ] } },
-    searchResult: {dataDD: postCodeSearchResponseDD}
+    searchResult: { dataDD: postCodeSearchResponseDD }
   }
 }
 

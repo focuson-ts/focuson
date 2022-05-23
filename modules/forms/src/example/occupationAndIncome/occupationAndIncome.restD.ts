@@ -13,8 +13,8 @@ export const occupationAndIncomeRD: RestD<any> = {
   url: '/customer/occupation/v2/occupationIncomeDetails?{query}',
   actions: [ 'get', 'update' ],
   mutations: [
-    { restAction: 'get', mutateBy: { mutation: 'storedProc', name: 'auditGetCustomerOccupation', schema: onlySchema, params: [ 'clientRef' ] } },
-    { restAction: 'update', mutateBy: { mutation: 'storedProc', name: 'auditUpdateCustomerOccupation', schema: onlySchema, params: [ 'clientRef' ] } },
+    { restAction: 'get', mutateBy: { type: 'storedProc', name: 'auditGetCustomerOccupation', schema: onlySchema, params: [ 'clientRef' ] } },
+    { restAction: 'update', mutateBy: { type: 'storedProc', name: 'auditUpdateCustomerOccupation', schema: onlySchema, params: [ 'clientRef' ] } },
   ]
 }
 
@@ -31,7 +31,7 @@ export const additionalInfoRD: RestD<any> = {
   url: '/customer/occupation/v2/additionalInfo?{query}',
   actions: [ 'get' ],
   mutations: [
-    { restAction: 'get', mutateBy: { mutation: 'storedProc', name: 'auditGetCustomeAdditionalInfo', schema: onlySchema, params: [ 'clientRef' ] } },
+    { restAction: 'get', mutateBy: { type: 'storedProc', name: 'auditGetCustomeAdditionalInfo', schema: onlySchema, params: [ 'clientRef' ] } },
   ]
 }
 
@@ -41,7 +41,7 @@ export const businessDetailsRD: RestD<any> = {
   url: '/customer/occupation/v2/businessDetails?{query}',
   actions: [ 'get' ],
   mutations: [
-    { restAction: 'get', mutateBy: { mutation: 'storedProc', name: 'auditGetBusinessDetails', schema: onlySchema, params: [ 'clientRef' ] } },
+    { restAction: 'get', mutateBy: { type: 'storedProc', name: 'auditGetBusinessDetails', schema: onlySchema, params: [ 'clientRef' ] } },
   ]
 }
 
@@ -51,7 +51,7 @@ export const otherIncomeRD: RestD<any> = {
   url: '/customer/occupation/v2/otherIncome?{query}',
   actions: [ 'get' ],
   mutations: [
-    { restAction: 'get', mutateBy: { mutation: 'storedProc', name: 'auditOtherIncome', schema: onlySchema, params: [ 'clientRef' ] } },
+    { restAction: 'get', mutateBy: { type: 'storedProc', name: 'auditOtherIncome', schema: onlySchema, params: [ 'clientRef' ] } },
   ]
 }
 

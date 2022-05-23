@@ -116,8 +116,7 @@ export const CreatePaymentDD: ExampleDataD = {
   guards: { reasonIsAllowance: { condition: 'in', path: 'reason', values: paymentReasonDD.enum } },
   structure: {
     amount: { dataDD: MoneyDD, sample: [ 56657, 32834 ], displayParams: { min: 200 } },
-    otherAmount: { dataDD: MoneyDD, sample: [ 56657, 32834 ], displayParams: { min: 200 } },
-    collectionDate: { dataDD: DateDD },
+    collectionDate: { dataDD: {...DateDD} },
     reason: { dataDD: paymentReasonDD },
     allowance: { dataDD: MoneyDD, guard: { reasonIsAllowance: [ 'A' ] }, displayParams: { readonly: true } },
     period: { dataDD: periodDD, guard: { reasonIsAllowance: [ 'A' ] }, displayParams: { readonly: true } }

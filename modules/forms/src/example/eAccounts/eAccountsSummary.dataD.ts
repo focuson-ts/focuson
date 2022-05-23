@@ -2,7 +2,7 @@ import { AccountIdDD, BooleanDD, DataD, DateDD, MoneyDD, OneLineStringDD, Repeat
 import { LabelAndRadioCD, LayoutCd, TableCD } from "../../common/componentsD";
 import { AllGuards } from "../../buttons/guardButton";
 import { Layout } from "@focuson/form_components";
-import { onlySchema } from "../database/tableNames";
+import { accountT, onlySchema } from "../database/tableNames";
 
 
 export const EAccountDisplayTypeDD: StringPrimitiveDD = {
@@ -18,6 +18,7 @@ export const EAccountDisplayTypeDD: StringPrimitiveDD = {
 export const EAccountSummaryDD: DataD<AllGuards> = {
   name: "EAccountSummary",
   description: "This is the summary data about a single EAccount",
+  table: accountT,
   structure: {
     accountId: { dataDD: AccountIdDD, displayParams: { label: "Account Id" } },
     displayType: { dataDD: EAccountDisplayTypeDD },//No label because it is derivable from the camelCase
@@ -58,9 +59,9 @@ export const EAccountsSummaryDD: DataD<AllGuards> = {
   structure: {
     useEStatements: { dataDD: BooleanDD },
     eAccountsTable: { dataDD: EAccountsSummaryTableDD },
-    totalMonthlyCost: { dataDD: { ...MoneyDD,  resolver: 'getTotalMonthlyCost', sample: [ 1000 ] } },
-    oneAccountBalance: { dataDD: { ...MoneyDD, resolver: 'getOneAccountBalance', sample: [ 9921 ] } },
-    currentAccountBalance: { dataDD: { ...MoneyDD, resolver: 'getCurrentAccountBalance', sample: [ 12321 ] } },
+    totalMonthlyCost: { dataDD: { ...MoneyDD,  resolver: 'totalMonthlyCost', sample: [ 1000 ] } },
+    oneAccountBalance: { dataDD: { ...MoneyDD, resolver: 'oneAccountBalance', sample: [ 9921 ] } },
+    currentAccountBalance: { dataDD: { ...MoneyDD, resolver: 'currentAccountBalance', sample: [ 12321 ] } },
     createPlan: { dataDD: CreatePlanDD }
   }
 }

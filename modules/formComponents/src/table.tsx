@@ -26,7 +26,7 @@ export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, 
   const json: T[] = safeArray ( state.optJson () )
   const onClick = ( row: number ) => ( e: any ) => {
     if ( copySelectedIndexTo || copySelectedItemTo ) {
-      console.log ( 'clicked row ', row )
+      // console.log ( 'clicked row ', row )
       const indexTx: Transform<S, number>[] = copySelectedIndexTo ? [ [ copySelectedIndexTo.optional, () => row ] ] : []
       const itemTx: Transform<S, T>[] = copySelectedItemTo ? [ [ copySelectedItemTo.optional, () => json[ row ] ] ] : []
       state.massTransform ( reasonFor ( 'Table', 'onClick', id, `selected row ${row}` ) ) ( ...[ ...indexTx, ...itemTx ] )
@@ -42,10 +42,10 @@ export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, 
   }
   // const filtered = prefixColumn && prefixFilter ? json.filter ( t => getValue ( prefixColumn, t, joiners ).toString ().startsWith ( prefixFilterString ) ) : json
   function filter ( t: T ) {
-    console.log ( 'filter', t )
-    console.log ( 'filter col & filter', prefixColumn, prefixFilterString )
-    console.log ( 'filter getVal', prefixColumn && prefixFilter && getValue ( prefixColumn, t, joiners ) )
-    console.log ( 'filter condition', prefixColumn && prefixFilter && getValue ( prefixColumn, t, joiners ) )
+    // console.log ( 'filter', t )
+    // console.log ( 'filter col & filter', prefixColumn, prefixFilterString )
+    // console.log ( 'filter getVal', prefixColumn && prefixFilter && getValue ( prefixColumn, t, joiners ) )
+    // console.log ( 'filter condition', prefixColumn && prefixFilter && getValue ( prefixColumn, t, joiners ) )
     return prefixColumn && prefixFilter ? getValue ( prefixColumn, t, joiners ).toString ().startsWith ( prefixFilterString ) : true
   }
   let maxCountInt = maxCount ? Number.parseInt ( maxCount ) : 0;

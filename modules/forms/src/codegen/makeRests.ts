@@ -1,28 +1,21 @@
-import { findIds, isRestLens, LensRestParam, unique } from "../common/restD";
+import { findIds, isRestLens, LensRestParam} from "../common/restD";
 import { domainName, domainsFileName, pageDomainName, restDetailsName, restFileName } from "./names";
 import { TSParams } from "./config";
 import { allRestAndActions, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
-import { sortedEntries } from "@focuson/utils";
+import { safeObject, sortedEntries, unique } from "@focuson/utils";
 import { addStringToEndOfAllButLast, indentList, lensFocusQueryFor, stateFocusQueryForRepl } from "./codegen";
 import { parsePath, stateCodeBuilder } from "@focuson/lens";
 import { lensFocusQueryWithSlashAndTildaFromIdentity, lensFocusQueryWithTildaFromPage } from "./lens";
 
 
-function cleanStates<G> ( r: RestDefnInPageProperties<G> ) {
-  if ( r.rest.states ) {
-    return Object.fromEntries ( Object.entries ( r.rest.states ).map ( ( [ name, stateDetails ] ) =>
-      [ name, {url: stateDetails.url} ] ) )
-  }
-  return {};
-}
 export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restName: string, r: RestDefnInPageProperties<G> ): string[] => {
   const [ ids, resourceIds ] = findIds ( r.rest )
   let pageDomain = `${params.domainsFile}.${pageDomainName ( p )}`;
-  const locals: [ string, LensRestParam ][] = sortedEntries ( r.rest.params ).flatMap ( ( [ n, l ] ) => isRestLens ( l ) ? [ [ n, l ] ] : [] )
+  const locals: [ string, LensRestParam<any> ][] = sortedEntries ( r.rest.params ).flatMap ( ( [ n, l ] ) => isRestLens ( l ) ? [ [ n, l ] ] : [] )
   const fddLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: Lenses.identity< ${pageDomain}>()${lensFocusQueryFor ( l.lens )}` )
   const compilationException = r.targetFromPath.indexOf ( '#' ) >= 0 ?
     [ `    //This compilation error is because you used a variable name in the target '${r.targetFromPath}'. Currently that is not supported` ] : []
-  const states = cleanStates ( r )
+  const states = safeObject ( r.rest.states )
   return [
     `//If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs`,
     `export function ${restDetailsName ( p, restName, r.rest )} ( cd: NameAndLens<${params.stateName}>, dateFn: DateFn  ): OneRestDetails<${params.stateName}, ${pageDomain}, ${params.domainsFile}.${domainName ( r.rest.dataDD )}, SimpleMessage> {`,

@@ -1,5 +1,5 @@
 import { reqFor, UrlConfig } from "@focuson/template";
-import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RestAction, safeArray, safeObject, sortedEntries, toArray } from "@focuson/utils";
+import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RestAction, RestStateChange, safeArray, safeObject, sortedEntries, toArray } from "@focuson/utils";
 import { identityOptics, massTransform, Optional, Transform } from "@focuson/lens";
 
 
@@ -70,7 +70,7 @@ export function getRestTypeDetails ( a: RestAction ): RestActionDetail {
 }
 
 
-export type StateAccessDetails = { url: string }
+export type StateAccessDetails = { url: string, params: string[] }
 export interface OneRestDetails<S, FD, D, MSGs> extends UrlConfig<S, FD, D> {
   url: string;
   states?: NameAnd<StateAccessDetails>,
@@ -117,6 +117,11 @@ export function getUrlForRestAction ( restAction: RestAction, url: string, state
   }
   return url
 }
+function findStateDetails<S, MSGS> ( one: OneRestDetails<S, any, any, MSGS>, restAction: RestStateChange ) {
+  let result = safeObject ( one.states )[ restAction.state ];
+  if ( result === undefined ) throw new Error ( `Illegal state [${restAction.state}] requested. Legal values are [${Object.keys ( safeObject ( one.states ) )}]` )
+  return result;
+}
 export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Details,
                                                                          restL: Optional<S, RestCommand[]>,
                                                                          urlMutatorForRest: ( r: RestAction, url: string ) => string,
@@ -139,7 +144,9 @@ export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Deta
       let rawUrl = getUrlForRestAction ( restAction, one.url, one.states );
       let url = urlMutatorForRest ( restAction, rawUrl );
       if ( debug ) console.log ( "restReq-url", url )
-      let request = reqFor ( { ...{ ...one, url }, fdLens }, restAction ) ( s ) ( url );
+      const ids = isRestStateChange ( restAction ) ? findStateDetails ( one, restAction )?.params : one.ids
+      const adjustedUrlConfig = { ...one, url, ids, fdLens }
+      let request = reqFor ( adjustedUrlConfig, restAction ) ( s ) ( url );
       if ( debug ) console.log ( "restReq-req", request )
       return [ command, one, ...request ]
     } catch ( e: any ) {

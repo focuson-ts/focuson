@@ -1,18 +1,20 @@
 import { dataDsIn, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { indentList } from "../codegen/codegen";
-import { NameAnd, RestAction, safeArray, safeObject, safeString, sortedEntries, toArray } from "@focuson/utils";
+import { NameAnd, RestAction, safeArray, sortedEntries, toArray, unique } from "@focuson/utils";
 import { isModalButtonInPage, ModalButtonInPage } from "../buttons/modalButtons";
 import { ButtonD, ButtonWithControl, isButtonWithControl } from "../buttons/allButtons";
-import { Guards, GuardWithCondition, isGuardButton } from "../buttons/guardButton";
-import { CompDataD, DataD, emptyDataFlatMap, flatMapDD, HasGuards, isComdDD, isRepeatingDd, OneDataDD } from "../common/dataD";
-import { isCommonLens, RestD, RestParams, unique } from "../common/restD";
+import { GuardWithCondition, isGuardButton } from "../buttons/guardButton";
+import { CompDataD, emptyDataFlatMap, flatMapDD, HasGuards, isComdDD, isRepeatingDd, OneDataDD } from "../common/dataD";
+import { isCommonLens, RestD, RestParams} from "../common/restD";
 import { printRestAction } from "@focuson/rest";
-import { findAllFields, findAllTableAndFieldDatasIn, findSqlRoot, findTableAndFieldFromDataD, TableAndFieldAndAliasData, walkSqlRoots } from "../codegen/makeSqlFromEntities";
+import { findAllTableAndFieldDatasIn } from "../codegen/makeSqlFromEntities";
 import { isRestButtonInPage } from "../buttons/restButton";
+import { CommonParamError, findAllCommonParamsDetails, validateCommonParams } from "../codegen/makeCommon";
 
 export interface FullReport<B, G> {
   reports: Report<B, G>[];
   criticals: string[]
+  commonParamErrors: CommonParamError[]
 }
 
 function makeFullReportCriticals<B, G> ( ps: MainPageD<B, G>[] ) {
@@ -21,11 +23,14 @@ function makeFullReportCriticals<B, G> ( ps: MainPageD<B, G>[] ) {
 }
 export function makeReportData<B extends ButtonD, G extends GuardWithCondition> ( ps: MainPageD<B, G>[] ): FullReport<B, G> {
   let reports: Report<B, G>[] = ps.map ( makeReportFor );
-  return { reports, criticals: makeFullReportCriticals ( ps ) }
+  const commonParamErrors: CommonParamError[] = validateCommonParams ( findAllCommonParamsDetails ( ps ) )
+  return { reports, criticals: makeFullReportCriticals ( ps ), commonParamErrors }
 }
 
 export function makeCriticalReport<B, G> ( report: FullReport<B, G> ): string[] {
-  let criticals = [ ...report.criticals, ...report.reports.flatMap ( ( { page, details } ) => criticalSummary ( page, details ) ) ];
+  const criticals = [ ...report.criticals, ...report.reports.flatMap ( ( { page, details } ) => criticalSummary ( page, details ) ) ];
+  if ( report.commonParamErrors.length > 0 )
+    criticals.push ( `* The Common Params have mismatched configuration. See full report for details` )
   if ( criticals.length > 0 ) return [ '# Critical Issues', ...criticals, '', '---' ]
   return [];
 }
@@ -38,7 +43,9 @@ export function makeReportHeader<B, G> ( report: FullReport<B, G> ): string[] {
     `| Page | Rest | Url | Params | Access | Audit`,
     `| --- | --- | ---  |  --- | --- | --- |`,
     ...reports.flatMap ( r => r.details.filter ( d => d.part === 'rests' ).flatMap ( d => d.general.map ( g => `|${r.page.name}${g}` ) ) ) ]
-  const paramsAndHeader = makeParamsAndHeader ( reports.map ( r => r.commonParams ) )
+
+  const paramsAndHeader = makeParamsAndHeader ( report.commonParamErrors, reports.map ( r => r.commonParams.commonParams ) )
+
   return [ `# All Pages`, ...critical, ...paramsAndHeader, ...rests, '', '---' ];
 }
 
@@ -49,9 +56,11 @@ export function makeReport<B extends ButtonD, G extends GuardWithCondition> ( re
   return [ ...header, ...main, ]
 }
 
-function makeParamsAndHeader ( commonParams: NameAnd<string>[] ) {
+function makeParamsAndHeader ( errors: CommonParamError[], commonParams: NameAnd<string>[] ) {
+  const errorDetails = errors.flatMap ( e => [ '* ' + e.name, ...e.details.map ( s => '    * ' + s ) ] )
+  const errorStrings = errorDetails.length>0?[`## Common Param Errors`,'It looks like the common params have been configured differently on different pages',...errorDetails, '', '## Common Param Details']:[]
   const params = unique ( commonParams.flatMap ( c => sortedEntries ( c ).flatMap ( ( [ name, value ] ) => `|${name}|${value}` ) ), s => s )
-  const paramsAndHeader = params.length == 0 ? [] : [ `## Common Params`, `| Name | Location`, '| --- | ---', ...params ]
+  const paramsAndHeader = params.length == 0 ? [] : [ `## Common Params`, ...errorStrings, `| Name | Location`, '| --- | ---', ...params ]
   return paramsAndHeader;
 }
 export function formatReport<B, G> ( r: Report<B, G> ): string[] {
@@ -66,7 +75,8 @@ export function formatReport<B, G> ( r: Report<B, G> ): string[] {
   const name = `# ${page.name} - ${page.pageType}`;
   const errors: string[] = details.flatMap ( d => d.critical )
   const errorMarker: string[] = errors.length > 0 ? [ '' ] : []
-  const paramsAndHeader = makeParamsAndHeader ( [ commonParams ] );
+
+  const paramsAndHeader = makeParamsAndHeader ( r.commonParams.errors,[ commonParams.commonParams ] );
   return [ name, ...errors, ...errorMarker, ...paramsAndHeader, ...indentList ( mainReport ), '', '---' ];
 }
 
@@ -95,10 +105,16 @@ function makeReportInfo<B, G> ( p: PageD<B, G> ): ReportInfo {
     generatedDomainNames: sortedEntries ( dataDsIn ( [ p ], false ) ).map ( ( [ name, d ] ) => d.name )
   }
 }
+export interface CommonParamsReport {
+  commonParams: NameAnd<string>;
+  errors: CommonParamError[]
+}
+
 export interface Report<B, G> {
   page: PageD<B, G>;
   details: ReportDetails[ ];
-  commonParams: NameAnd<string>;
+  commonParams: CommonParamsReport;
+
 }
 
 function justCommonParams ( ps: RestParams[] ): NameAnd<string> {
@@ -117,7 +133,8 @@ export function makeReportFor<B extends ButtonD, G extends GuardWithCondition> (
     makeGuardsReportForPage ( page ),
     makeDataMappingReportForPage ( page ) ]
   const commonParams = isMainPage ( page ) ? justCommonParams ( sortedEntries ( page.rest ).map ( ( [ name, rdp ] ) => rdp.rest.params ) ) : {}
-  return { page, details, commonParams }
+  const errors = validateCommonParams ( findAllCommonParamsDetails ( [ page ] ) )
+  return { page, details, commonParams: { commonParams, errors } }
 }
 
 const notCreated = ( { generatedDomainNames }: ReportInfo, name ): string[] => generatedDomainNames.indexOf ( name ) < 0 ?
@@ -136,6 +153,7 @@ function auditDetails<B, G> ( page: MainPageD<B, G>, restName: string, rest: Res
 function mutationDetails<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ): string {
   return safeArray ( rest.mutations ).flatMap ( a => `${printRestAction ( a.restAction )}->${toArray ( a.mutateBy ).map ( s => s.name )}` ).join ( '; ' )
 }
+
 export function makeRestReport<B, G> ( page: MainPageD<B, G>, info: ReportInfo ): ReportDetails {
   const general: string[] = sortedEntries ( page.rest ).flatMap ( ( [ name, rdp ] ) =>
     [ `|${name} | ${rdp.rest.url}| ${sortedEntries ( rdp.rest.params ).map ( ( [ name, p ] ) => name )} | ${accessDetails ( page, rdp.rest )} | ${function auditDetails<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ): string {

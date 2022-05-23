@@ -19,10 +19,9 @@ describe ( "makeReports", () => {
     it ( "should include the state data", () => {
       expect ( makeRestReport ( EAccountsSummaryPD, { generatedDomainNames: [] } ).general ).toEqual ( [
         "|createPlanRestD | /api/createPlan?{query}| accountId,applRef,brandRef,clientRef,createPlanId |  | ",
-        "|eAccountsSummary | /api/accountsSummary?{query}| accountId,applRef,brandRef,clientRef,customerId,employeeType | employeeType in teamLeader | state:invalidate->auditStuff",
-        "| | /api/accountsSummary/invalidate?{query}| accountId,applRef,brandRef,clientRef,customerId,employeeType |"
+        "|eAccountsSummary | /api/accountsSummary?{query}| accountId,applRef,brandRef,clientRef,dbName,employeeType | employeeType in teamLeader | state:invalidate->auditStuff",
+        "| | /api/accountsSummary/invalidate?{query}| accountId,applRef,brandRef,clientRef,dbName,employeeType |"
       ])
-
     } )
   } )
 

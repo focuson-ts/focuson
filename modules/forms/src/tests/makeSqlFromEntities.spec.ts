@@ -1,55 +1,15 @@
-import {
-  ChildEntity,
-  createTableSql,
-  EntityFolder,
-  findAliasAndTableLinksForLinkData,
-  findAllFields,
-  findAllTableAndFieldDatasIn,
-  findAllTableAndFieldsIn,
-  findFieldsFromWhere,
-  findParamsForTable,
-  findSqlLinkDataFromRootAndDataD,
-  findSqlRoot,
-  findTableAliasAndFieldFromDataD,
-  findTableAndFieldFromDataD,
-  findWhereLinksForSqlRoot,
-  findWhereLinksForSqlRootGoingUp,
-  foldEntitys,
-  generateGetSql,
-  JavaQueryParamDetails,
-  makeInsertSqlForNoIds,
-  makeMapsForRest,
-  makeWhereClause,
-  MultipleEntity,
-  simplifyAliasAndChildEntityPath,
-  simplifyAliasAndTables,
-  simplifySqlLinkData,
-  simplifySqlRoot,
-  simplifyTableAndFieldAndAliasDataArray,
-  simplifyTableAndFieldData,
-  simplifyTableAndFieldDataArray,
-  simplifyTableAndFieldsData,
-  simplifyWhereFromQuery,
-  simplifyWhereLinks,
-  SingleEntity,
-  walkSqlRoots,
-  whereFieldToFieldDataFromTableQueryLink,
-  whereFieldToFieldDataFromTableWhereLink
-} from "../codegen/makeSqlFromEntities";
-import { AllLensRestParams, EntityAndWhere, IntParam, StringParam, unique } from "../common/restD";
+import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findParamsForTable, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, JavaQueryParamDetails, makeInsertSqlForNoIds, makeMapsForRest, makeWhereClause, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldDataFromTableQueryLink, whereFieldToFieldDataFromTableWhereLink } from "../codegen/makeSqlFromEntities";
+import { AllLensRestParams, EntityAndWhere, IntParam, StringParam} from "../common/restD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
-import {
-  nameAndAddressDataD,
-  postCodeDataLineD,
-  postCodeSearchResponseDD
-} from "../example/postCodeDemo/addressSearch.dataD";
-import {addressRestD, postcodeRestD} from "../example/postCodeDemo/addressSearch.restD";
+import { nameAndAddressDataD, postCodeDataLineD, postCodeSearchResponseDD } from "../example/postCodeDemo/addressSearch.dataD";
+import { addressRestD } from "../example/postCodeDemo/addressSearch.restD";
 import { JointAccountPageD } from "../example/jointAccount/jointAccount.pageD";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
 import { paramsForTest } from "./paramsForTest";
 import { fromCommonIds } from "../example/commonIds";
-import {accountT, postCodeSearchTable} from "../example/database/tableNames";
+import { accountT, postCodeSearchTable } from "../example/database/tableNames";
+import { unique } from "@focuson/utils";
 
 const jointAccountRestDTables = jointAccountRestD.tables
 if ( jointAccountRestDTables === undefined ) throw Error ( "addressRestDTables must be defined" )
@@ -59,17 +19,20 @@ const addressRestDParams = addressRestD.params
 if ( addressRestDTables === undefined ) throw Error ( "addressRestDTables must be defined" )
 
 
-describe ("Insert Queries", () => {
-  it ("should work for ______", () => {
-    expect (makeInsertSqlForNoIds(postCodeDataLineD, {type: 'OneTableInsertSqlStrategyForNoIds', table: postCodeSearchTable}))
-        .toEqual([
-          "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE) values ('4 Privet drive','Little Whinging','Surrey','England','LW12 5f');",
-          "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE) values ('27 Throughput Lane','Woodfield','','Ireland','IR45 3GT');",
-          "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE) values ('4 Privet drive','Little Whinging','Surrey','England','LW12 5f');"
-          ]
-        )
-  })
-})
+describe ( "Insert Queries", () => {
+  it ( "should work for ______", () => {
+    expect ( makeInsertSqlForNoIds ( postCodeDataLineD, { type: 'OneTableInsertSqlStrategyForNoIds', table: postCodeSearchTable } ) )
+      .toEqual ( [
+          "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE)",
+          "  values ('4 Privet drive','Little Whinging','Surrey','England','LW12 5f');",
+          "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE)",
+          "  values ('27 Throughput Lane','Woodfield','','Ireland','IR45 3GT');",
+          "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE)",
+          "  values ('4 Privet drive','Little Whinging','Surrey','England','LW12 5f');"
+        ]
+      )
+  } )
+} )
 describe ( "EntityFolder", () => {
   it ( "should walk all the nodes", () => {
     const testFolder: EntityFolder<string[]> = {
@@ -141,7 +104,7 @@ describe ( "findWhereLinkDataForLinkData", () => {
 )
 describe ( "whereFieldToFieldData. Note that the undefined gets fixed later in the process", () => {
   it ( "should work with no type specified (defaulting to integer)", () => {
-    expect ( whereFieldToFieldDataFromTableWhereLink ( 'someErrorPrefix', 'someField' ) ).toEqual ( { "dbType": "integer", "dbFieldName": "someField", "reactType": "number", "rsGetter": "getInt", "sample": []} )
+    expect ( whereFieldToFieldDataFromTableWhereLink ( 'someErrorPrefix', 'someField' ) ).toEqual ( { "dbType": "integer", "dbFieldName": "someField", "reactType": "number", "rsGetter": "getInt", "sample": [] } )
   } )
   it ( "should work with string type specified", () => {
     expect ( whereFieldToFieldDataFromTableWhereLink ( 'someErrorPrefix', 'someField:string' ) ).toEqual ( { "dbType": "varchar(255)", "dbFieldName": "someField", "reactType": "string", "rsGetter": "getString", "sample": [] } )
@@ -372,7 +335,7 @@ describe ( "generateGetSql", () => {
         "  mainCustomer.id as mainCustomer_id,",
         "  mainAddress.customerId as mainAddress_customerId,",
         "  ACC_TBL.mainCustomerId as ACC_TBL_mainCustomerId,",
-        "  mainAddress.zzline1 as mainAddress_zzline1,",
+        "  mainAddress.zzline1 as zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode,",
         "  mainAddress.zzline2 as mainAddress_zzline2",
         " from",
         "  ACC_TBL ACC_TBL,",
@@ -387,7 +350,7 @@ describe ( "generateGetSql", () => {
         "  jointCustomer.id as jointCustomer_id,",
         "  jointAddress.customerId as jointAddress_customerId,",
         "  ACC_TBL.jointCustomerId as ACC_TBL_jointCustomerId,",
-        "  jointAddress.zzline1 as jointAddress_zzline1,",
+        "  jointAddress.zzline1 as zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode,",
         "  jointAddress.zzline2 as jointAddress_zzline2",
         " from",
         "  ACC_TBL ACC_TBL,",
@@ -501,7 +464,7 @@ describe ( "makeMapsForRest", () => {
       return makeMapsForRest ( paramsForTest, JointAccountPageD, 'jointAccount', JointAccountPageD.rest.jointAccount, ld, path, r.children.length )
     } ).map ( s => s.map ( s => s.replace ( /"/g, "'" ) ) ) ).toEqual ( [
       [
-        "package focuson.data.db;",
+        "package focuson.data.db.JointAccount;",
         "",
         "import java.sql.ResultSet;",
         "import java.sql.Connection;",
@@ -514,7 +477,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "",
-        "//{'accountId':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':'accId'},'brandRef':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':'brandRef'},'dbName':{'rsSetter':'setString','javaType':'String','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
+        "//{'accountId':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':12342312},'brandRef':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':10},'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
         "public class JointAccount_jointAccountMaps {",
         "  @SuppressWarnings('SqlResolve')",
         "  public static String sql = 'select'+",
@@ -571,7 +534,7 @@ describe ( "makeMapsForRest", () => {
         "  '  mainCustomer.id as mainCustomer_id,\\n'+",
         "  '  mainAddress.customerId as mainAddress_customerId,\\n'+",
         "  '  ACC_TBL.mainCustomerId as ACC_TBL_mainCustomerId,\\n'+",
-        "  '  mainAddress.zzline1 as mainAddress_zzline1,\\n'+",
+        "  '  mainAddress.zzline1 as zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode,\\n'+",
         "  '  mainAddress.zzline2 as mainAddress_zzline2\\n'+",
         "  ' from\\n'+",
         "  '  ACC_TBL ACC_TBL,\\n'+",
@@ -585,7 +548,7 @@ describe ( "makeMapsForRest", () => {
         "  '  jointCustomer.id as jointCustomer_id,\\n'+",
         "  '  jointAddress.customerId as jointAddress_customerId,\\n'+",
         "  '  ACC_TBL.jointCustomerId as ACC_TBL_jointCustomerId,\\n'+",
-        "  '  jointAddress.zzline1 as jointAddress_zzline1,\\n'+",
+        "  '  jointAddress.zzline1 as zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode,\\n'+",
         "  '  jointAddress.zzline2 as jointAddress_zzline2\\n'+",
         "  ' from\\n'+",
         "  '  ACC_TBL ACC_TBL,\\n'+",
@@ -680,7 +643,7 @@ describe ( "makeMapsForRest", () => {
         "}"
       ],
       [
-        "package focuson.data.db;",
+        "package focuson.data.db.JointAccount;",
         "",
         "import java.sql.ResultSet;",
         "import java.sql.Connection;",
@@ -693,7 +656,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "",
-        "//{'accountId':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':'accId'},'brandRef':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':'brandRef'},'dbName':{'rsSetter':'setString','javaType':'String','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
+        "//{'accountId':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':12342312},'brandRef':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':10},'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
         "public class JointAccount_jointAccountMaps0 {",
         "  @SuppressWarnings('SqlResolve')",
         "  public static String sql = 'select'+",
@@ -702,7 +665,7 @@ describe ( "makeMapsForRest", () => {
         "  '  mainCustomer.id as mainCustomer_id,'+",
         "  '  mainAddress.customerId as mainAddress_customerId,'+",
         "  '  ACC_TBL.mainCustomerId as ACC_TBL_mainCustomerId,'+",
-        "  '  mainAddress.zzline1 as mainAddress_zzline1,'+",
+        "  '  mainAddress.zzline1 as zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode,'+",
         "  '  mainAddress.zzline2 as mainAddress_zzline2'+",
         "  ' from'+",
         "  '  ACC_TBL ACC_TBL,'+",
@@ -742,7 +705,7 @@ describe ( "makeMapsForRest", () => {
         "  '  mainCustomer.id as mainCustomer_id,\\n'+",
         "  '  mainAddress.customerId as mainAddress_customerId,\\n'+",
         "  '  ACC_TBL.mainCustomerId as ACC_TBL_mainCustomerId,\\n'+",
-        "  '  mainAddress.zzline1 as mainAddress_zzline1,\\n'+",
+        "  '  mainAddress.zzline1 as zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode,\\n'+",
         "  '  mainAddress.zzline2 as mainAddress_zzline2\\n'+",
         "  ' from\\n'+",
         "  '  ACC_TBL ACC_TBL,\\n'+",
@@ -756,7 +719,7 @@ describe ( "makeMapsForRest", () => {
         "  '  jointCustomer.id as jointCustomer_id,\\n'+",
         "  '  jointAddress.customerId as jointAddress_customerId,\\n'+",
         "  '  ACC_TBL.jointCustomerId as ACC_TBL_jointCustomerId,\\n'+",
-        "  '  jointAddress.zzline1 as jointAddress_zzline1,\\n'+",
+        "  '  jointAddress.zzline1 as zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode,\\n'+",
         "  '  jointAddress.zzline2 as jointAddress_zzline2\\n'+",
         "  ' from\\n'+",
         "  '  ACC_TBL ACC_TBL,\\n'+",
@@ -820,7 +783,8 @@ describe ( "makeMapsForRest", () => {
         "  public final Map<String,Object> joint_addresses = new HashMap<>();",
         "  ",
         "  public JointAccount_jointAccountMaps0(ResultSet rs) throws SQLException{",
-        "    this.main_addresses.put('line1', rs.getString('mainAddress_zzline1'));",
+        "    //This is a very long  field alias. If it gives you problems consider giving it an explicit field alias in the dataDD",
+        "    this.main_addresses.put('line1', rs.getString('zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode'));",
         "    this.main_addresses.put('line2', rs.getString('mainAddress_zzline2'));",
         "    ",
         "    this.ACC_TBL_acc_id = rs.getInt('ACC_TBL_acc_id');",
@@ -836,7 +800,7 @@ describe ( "makeMapsForRest", () => {
         "}"
       ],
       [
-        "package focuson.data.db;",
+        "package focuson.data.db.JointAccount;",
         "",
         "import java.sql.ResultSet;",
         "import java.sql.Connection;",
@@ -849,7 +813,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "",
-        "//{'accountId':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':'accId'},'brandRef':{'rsSetter':'setInt','javaType':'int','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':'brandRef'},'dbName':{'rsSetter':'setString','javaType':'String','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
+        "//{'accountId':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':12342312},'brandRef':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':10},'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
         "public class JointAccount_jointAccountMaps1 {",
         "  @SuppressWarnings('SqlResolve')",
         "  public static String sql = 'select'+",
@@ -858,7 +822,7 @@ describe ( "makeMapsForRest", () => {
         "  '  jointCustomer.id as jointCustomer_id,'+",
         "  '  jointAddress.customerId as jointAddress_customerId,'+",
         "  '  ACC_TBL.jointCustomerId as ACC_TBL_jointCustomerId,'+",
-        "  '  jointAddress.zzline1 as jointAddress_zzline1,'+",
+        "  '  jointAddress.zzline1 as zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode,'+",
         "  '  jointAddress.zzline2 as jointAddress_zzline2'+",
         "  ' from'+",
         "  '  ACC_TBL ACC_TBL,'+",
@@ -898,7 +862,7 @@ describe ( "makeMapsForRest", () => {
         "  '  mainCustomer.id as mainCustomer_id,\\n'+",
         "  '  mainAddress.customerId as mainAddress_customerId,\\n'+",
         "  '  ACC_TBL.mainCustomerId as ACC_TBL_mainCustomerId,\\n'+",
-        "  '  mainAddress.zzline1 as mainAddress_zzline1,\\n'+",
+        "  '  mainAddress.zzline1 as zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode,\\n'+",
         "  '  mainAddress.zzline2 as mainAddress_zzline2\\n'+",
         "  ' from\\n'+",
         "  '  ACC_TBL ACC_TBL,\\n'+",
@@ -912,7 +876,7 @@ describe ( "makeMapsForRest", () => {
         "  '  jointCustomer.id as jointCustomer_id,\\n'+",
         "  '  jointAddress.customerId as jointAddress_customerId,\\n'+",
         "  '  ACC_TBL.jointCustomerId as ACC_TBL_jointCustomerId,\\n'+",
-        "  '  jointAddress.zzline1 as jointAddress_zzline1,\\n'+",
+        "  '  jointAddress.zzline1 as zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode,\\n'+",
         "  '  jointAddress.zzline2 as jointAddress_zzline2\\n'+",
         "  ' from\\n'+",
         "  '  ACC_TBL ACC_TBL,\\n'+",
@@ -976,7 +940,8 @@ describe ( "makeMapsForRest", () => {
         "  public final Map<String,Object> joint_addresses = new HashMap<>();",
         "  ",
         "  public JointAccount_jointAccountMaps1(ResultSet rs) throws SQLException{",
-        "    this.joint_addresses.put('line1', rs.getString('jointAddress_zzline1'));",
+        "    //This is a very long  field alias. If it gives you problems consider giving it an explicit field alias in the dataDD",
+        "    this.joint_addresses.put('line1', rs.getString('zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode'));",
         "    this.joint_addresses.put('line2', rs.getString('jointAddress_zzline2'));",
         "    ",
         "    this.ACC_TBL_acc_id = rs.getInt('ACC_TBL_acc_id');",
@@ -991,7 +956,7 @@ describe ( "makeMapsForRest", () => {
         "  }",
         "}"
       ]
-    ] )
+    ])
   } )
   it ( "should  add 'where' to the sql if there is a where clause", () => {
     expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), ( r, path ) =>
@@ -1015,7 +980,7 @@ describe ( "makeMapsForRest", () => {
       return makeMapsForRest ( paramsForTest, PostCodeMainPage, 'postcode', PostCodeMainPage.rest.postcode, ld, path, r.children.length )
     } ).map ( s => s.map ( s => s.replace ( /"/g, "'" ) ) ) ).toEqual ( [
       [
-        "package focuson.data.db;",
+        "package focuson.data.db.PostCodeMainPage;",
         "",
         "import java.sql.ResultSet;",
         "import java.sql.Connection;",
@@ -1028,7 +993,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "",
-        "//{'dbName':{'rsSetter':'setString','javaType':'String','javaParser':'','commonLens':'dbName','testValue':'mock'},'postcode':{'rsSetter':'setString','javaType':'String','javaParser':'','lens':'~/postcode/search','testValue':'LW12 4RG'}}",
+        "//{'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'},'postcode':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','lens':'~/postcode/search','testValue':'LW12 4RG'}}",
         "public class PostCodeMainPage_postcodeMaps {",
         "  @SuppressWarnings('SqlResolve')",
         "  public static String sql = 'select'+",
@@ -1082,9 +1047,9 @@ describe ( "makeMapsForRest", () => {
 } )
 
 describe ( "paramsForLinkedData", () => {
-  const accountId: AllLensRestParams = { ...IntParam, commonLens: 'accountId', testValue: 'custId' }
-  const brandRef: AllLensRestParams = { ...IntParam, commonLens: 'brandRef', testValue: 'custId' }
-  const dbName: AllLensRestParams = { ...StringParam, commonLens: 'dbName', testValue: 'mock' }
+  const accountId: AllLensRestParams<number> = { ...IntParam, commonLens: 'accountId', testValue: 123 }
+  const brandRef: AllLensRestParams<number> = { ...IntParam, commonLens: 'brandRef', testValue: 456 }
+  const dbName: AllLensRestParams<string> = { ...StringParam, commonLens: 'dbName', testValue: 'mock' }
 
   it ( "should find the params (in the correct order) from the wheres in the linked data", () => {
     function justNameAndParam ( ps: JavaQueryParamDetails[] ) {return ps.map ( ( { name, param } ) => [ name, param ] )}

@@ -1,11 +1,11 @@
 import { DBTable } from "../common/resolverD";
-import { beforeAfterSeparator, beforeSeparator, ints, mapPathPlusInts, NameAnd, safeArray, safeString } from "@focuson/utils";
-import { AllLensRestParams, EntityAndWhere, OneTableInsertSqlStrategyForNoIds, RestParams, unique } from "../common/restD";
+import { beforeAfterSeparator, beforeSeparator, ints, mapPathPlusInts, NameAnd, safeArray, safeString, unique } from "@focuson/utils";
+import { AllLensRestParams, EntityAndWhere, OneTableInsertSqlStrategyForNoIds, RestParams} from "../common/restD";
 import { CompDataD, emptyDataFlatMap, flatMapDD, HasSample, isRepeatingDd, OneDataDD } from "../common/dataD";
-import { PageD, RestDefnInPageProperties } from "../common/pageD";
+import { MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addBrackets, addStringToEndOfAllButLast, indentList } from "./codegen";
 import { JavaWiringParams } from "./config";
-import { sqlListName, sqlMapName, sqlTafFieldName } from "./names";
+import { sqlListName, sqlMapName, sqlMapPackageName, sqlTafFieldName } from "./names";
 import { selectSample } from "./makeSample";
 
 export type DbValues = string | TableAndField
@@ -13,6 +13,7 @@ export type DbValues = string | TableAndField
 export interface TableAndField {
   table: DBTable;
   field: string;
+  fieldAlias?: string
 }
 export interface TableAliasAndField extends TableAndField {
   alias: string
@@ -93,11 +94,11 @@ function foldChildEntity<Acc> ( folder: EntityFolder<Acc>, m: EntityAndWhere, pa
   if ( c.type === 'Single' ) return folder.foldSingle ( childAccs, m, path, name, fullFilterPath, c )
   throw  Error ( `Unknown type ${JSON.stringify ( c )}` )
 }
-interface FlatMapper<T> {
-  main ( main: MainEntity ): T[];
-  single ( main: MainEntity, path: [ string, ChildEntity ][], name: string, single: SingleEntity ): T[];
-  multiple ( main: MainEntity, path: [ string, ChildEntity ][], name: string, multiple: MultipleEntity ): T[];
-}
+// interface FlatMapper<T> {
+//   main ( main: MainEntity ): T[];
+//   single ( main: MainEntity, path: [ string, ChildEntity ][], name: string, single: SingleEntity ): T[];
+//   multiple ( main: MainEntity, path: [ string, ChildEntity ][], name: string, multiple: MultipleEntity ): T[];
+// }
 
 export function simplifyAliasAndChildEntityPath ( path: [ string, Entity ] [] ): string {return `[${path.map ( ( [ alias, child ] ) => `${alias} -> ${child.table.name}` ).join ( "," )}]`}
 export function simplifyWhereFromQuery ( whereFromQuery: WhereFromQuery[] ) {
@@ -112,7 +113,7 @@ export function simplifyTableAliasAndFields ( tafs: TableAliasAndField[] ): stri
 }
 
 export interface SqlRoot {
-    main: EntityAndWhere
+  main: EntityAndWhere
   path: [ string, ChildEntity ][];
   alias: string;
   root: Entity;
@@ -123,8 +124,8 @@ export interface SqlRoot {
 export function simplifySqlRoot ( s: SqlRoot ): string {
   return `main ${s.main.entity.table.name} path ${simplifyAliasAndChildEntityPath ( s.path )} root ${s.root.table.name} children [${s.children.map ( c => c.root.table.name ).join ( ',' )}] filterPath: ${s.filterPath}`
 }
-export function findSqlRoot ( m: EntityAndWhere | undefined): SqlRoot {
-  if (m === undefined) throw Error ("EntityAndWhere must be defined")
+export function findSqlRoot ( m: EntityAndWhere | undefined ): SqlRoot {
+  if ( m === undefined ) throw Error ( "EntityAndWhere must be defined" )
   return foldEntitys ( {
     foldMain ( childAccs: SqlRoot[][], main: EntityAndWhere, e: Entity ): SqlRoot[] {
       return [ { main, path: [], alias: main.entity.table.name, root: e, children: childAccs.flat () } ];
@@ -266,7 +267,7 @@ export const whereFieldToFieldDataFromTableQueryLink = <G> ( errorPrefix: string
 export function findFieldsFromWhere<G> ( errorPrefix: string, ws: WhereLink[], restParams: RestParams ): TableAndFieldAndAliasData<G>[] {
   return ws.flatMap ( w => {
     if ( isWhereFromQuery ( w ) ) {
-      return [ { ...w, fieldData: whereFieldToFieldDataFromTableQueryLink ( errorPrefix, w, restParams) } ]
+      return [ { ...w, fieldData: whereFieldToFieldDataFromTableQueryLink ( errorPrefix, w, restParams ) } ]
     }
     if ( isTableWhereLink ( w ) ) return [ { table: w.parentTable, alias: w.parentAlias, fieldData: whereFieldToFieldDataFromTableWhereLink ( errorPrefix, w.idInParent ) },
       { table: w.childTable, alias: w.childAlias, fieldData: whereFieldToFieldDataFromTableWhereLink ( errorPrefix, w.idInThis ) } ]
@@ -279,6 +280,7 @@ interface FieldData<G> extends HasSample<any> {
   fieldName?: string;
   path?: string[]
   dbFieldName: string;
+  dbFieldAlias?: string;
   rsGetter: string;
   reactType: string;
   dbType: string;
@@ -311,7 +313,7 @@ export function findTableAndFieldFromDataD<G> ( dataD: CompDataD<G> ): TableAndF
 
       if ( oneDataDD?.db )
         if ( isTableAndField ( oneDataDD.db ) ) {
-          let fieldData: FieldData<any> = { dbFieldName: oneDataDD.db.field, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName, path, sample: selectSample ( oneDataDD ) };
+          let fieldData: FieldData<any> = { dbFieldName: oneDataDD.db.field, dbFieldAlias: oneDataDD.db.fieldAlias, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName, path, sample: selectSample ( oneDataDD ) };
           return [ { table: oneDataDD.db.table, fieldData } ]
         } else {
           const parent = parents[ parents.length - 1 ]
@@ -385,10 +387,10 @@ export function findStaticWheresForSqlRootGoingUp ( sqlRoot: SqlRoot ): string[]
   } )
 }
 
-export function findSqlLinkDataFromRootAndDataD ( sqlRoot: SqlRoot, dataD: CompDataD<any> , restParams: RestParams): SqlLinkData {
+export function findSqlLinkDataFromRootAndDataD ( sqlRoot: SqlRoot, dataD: CompDataD<any>, restParams: RestParams ): SqlLinkData {
   const aliasAndTables = findAliasAndTableLinksForLinkData ( sqlRoot )
   const whereLinks: WhereLink[] = findWhereLinksForSqlRoot ( sqlRoot )
-  const fields: TableAndFieldAndAliasData<any>[] = findAllFields ( sqlRoot, dataD, whereLinks ,restParams)
+  const fields: TableAndFieldAndAliasData<any>[] = findAllFields ( sqlRoot, dataD, whereLinks, restParams )
   const staticWheres = findStaticWheres ( sqlRoot )
   return { whereLinks, aliasAndTables, sqlRoot, fields, staticWheres }
 }
@@ -447,7 +449,7 @@ export function createTableSql<G> ( rdps: RestDefnInPageProperties<G>[] ): NameA
   return Object.fromEntries ( findAllTableAndFieldDatasIn ( rdps ).map ( taf => [ taf.table.name, createSql ( taf ) ] ) )
 }
 
-export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, rdp: RestDefnInPageProperties<G>, ld: SqlLinkData, path: number[], childCount: number ): string[] {
+export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, restName: string, rdp: RestDefnInPageProperties<G>, ld: SqlLinkData, path: number[], childCount: number ): string[] {
   const restD = rdp.rest;
   function mapName ( path: string[] ) {return path.length === 0 ? '_root' : safeArray ( path ).join ( "_" )}
 
@@ -466,7 +468,11 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
     .filter ( taf => taf.fieldData.fieldName )
     .sort ( ( l, r ) => l.table.name.localeCompare ( r.table.name ) )
     .sort ( ( l, r ) => l.fieldData.dbFieldName.localeCompare ( r.fieldData.dbFieldName ) )
-    .map ( taf => `this.${mapName ( safeArray ( taf.fieldData.path ).slice ( 0, -1 ) )}.put("${taf.fieldData.fieldName}", rs.${taf.fieldData.rsGetter}("${sqlTafFieldName ( taf )}"));` )
+    .flatMap ( taf => {
+      let fieldAlias = sqlTafFieldName ( taf );
+      let result = `this.${mapName ( safeArray ( taf.fieldData.path ).slice ( 0, -1 ) )}.put("${taf.fieldData.fieldName}", rs.${taf.fieldData.rsGetter}("${fieldAlias}"));`;
+      return fieldAlias.length > 30 ? [ `//This is a very long  field alias. If it gives you problems consider giving it an explicit field alias in the dataDD`, result ] : result;
+    } )
   const setIds = onlyIds.map ( taf => `this.${sqlTafFieldName ( taf )} = rs.${taf.fieldData.rsGetter}("${sqlTafFieldName ( taf )}");` )
   const allPaths = unique ( flatMapDD<string[], G> ( restD.dataDD, {
     ...emptyDataFlatMap (),
@@ -491,7 +497,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
   } );
 
   return [
-    `package ${params.thePackage}.${params.dbPackage};`,
+    `package ${sqlMapPackageName ( params, p )};`,
     '',
     `import java.sql.ResultSet;`,
     `import java.sql.Connection;`,
@@ -527,7 +533,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>
 
 export interface JavaQueryParamDetails {
   name: string;
-  param: AllLensRestParams
+  param: AllLensRestParams<any>
   paramPrefix?: string;
   paramPostfix?: string;
 }
@@ -633,5 +639,6 @@ export function makeInsertSqlForNoIds ( dataD: CompDataD<any>, strategy: OneTabl
   const tafdsForThisTable: TableAndFieldData<any>[] = findTableAndFieldFromDataD ( dataD ).filter ( tafd => tafd.table.name === strategy.table.name );
   const sampleCount = isRepeatingDd ( dataD ) ? (dataD.sampleCount ? dataD.sampleCount : 3) : 3
   const is = [ ...Array ( sampleCount ).keys () ]
-  return is.map ( i => `insert into ${strategy.table.name}(${tafdsForThisTable.map ( fd => fd.fieldData.dbFieldName )}) values (${tafdsForThisTable.map ( fd => sqlIfy ( selectSample ( i, fd.fieldData ) ) ).join ( "," )});` )
+  return is.flatMap ( i => [ `insert into ${strategy.table.name}(${tafdsForThisTable.map ( fd => fd.fieldData.dbFieldName )})`,
+    `  values (${tafdsForThisTable.map ( fd => sqlIfy ( selectSample ( i, fd.fieldData ) ) ).join ( "," )});` ] )
 }

@@ -7,11 +7,13 @@ import { ButtonD } from "../buttons/allButtons";
 import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { MakeButton } from "../codegen/makeButtons";
 import { validate } from "./validateModel";
-import { unique } from "../common/restD";
-import { GenerateLogLevel, safeArray } from "@focuson/utils";
+import { foldPagesToRestToMutationsAndResolvers} from "../common/restD";
+import { GenerateLogLevel, safeArray, toArray, unique } from "@focuson/utils";
 import * as process from "process";
 import { makeCriticalReport, makeReport, makeReportData } from "../reporting/report";
 import { AppConfig } from "../appConfig";
+import { generatedPages } from "../focuson.config";
+import { allOutputParams } from "../common/resolverD";
 
 export const params = {
   defaultDbName: "mock",
@@ -44,6 +46,7 @@ export const params = {
   dbPackage: 'db',
   optionalsFile: 'optionals',
   mutatorPackage: 'mutator',
+  resolversPackage: 'resolvers',
   maxTuples: 3
 };
 
@@ -52,6 +55,11 @@ export const directorySpec: DirectorySpec = {
   backup: 'node_modules/@focuson/forms'
 }
 export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, directorySpec: DirectorySpec, appConfig: AppConfig, params: CombinedParams, javaOutputRoot: string, tsRoot: string, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G> ) => <B extends ButtonD> ( pages: MainPageD<B, G>[] ) => {
+  const paramsWithTuples = {
+    ...params, maxTuples: foldPagesToRestToMutationsAndResolvers<number> ( generatedPages, 0, ( mut ) =>
+      ( acc ) => Math.max ( acc, allOutputParams ( toArray ( mut.params ) ).length ) )
+  }
+
   if ( pages.length === 0 ) {
     console.log ( `no pages have been configured ${process.cwd ()}` )
     process.exit ( 2 )
@@ -64,11 +72,11 @@ export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLe
   validate ( pages )
   const fullPages = unique ( pages.flatMap ( p => [ p, ...safeArray ( p.modals ).map ( m => m.modal ) ] ), p => p.name )
 
-  console.log ( "focusOnVersion", params.focusOnVersion )
+  console.log ( "focusOnVersion", paramsWithTuples.focusOnVersion )
   if ( logLevel === 'detailed' ) console.log ( "Making Java Files" )
-  makeJavaFiles ( logLevel, appConfig, javaOutputRoot, params, directorySpec ) ( fullPages )
+  makeJavaFiles ( logLevel, appConfig, javaOutputRoot, paramsWithTuples, directorySpec ) ( fullPages )
   if ( logLevel === 'detailed' ) console.log ( "Making Typescript Files" )
-  makeTsFiles<G> ( logLevel, appConfig, tsRoot, params, makeGuards, makeButtons, directorySpec ) ( pages, fullPages )
+  makeTsFiles<G> ( logLevel, appConfig, tsRoot, paramsWithTuples, makeGuards, makeButtons, directorySpec ) ( pages, fullPages )
 
   const reportData = makeReportData<B, G> ( pages );
   const criticals = makeCriticalReport ( reportData );

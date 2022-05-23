@@ -2,10 +2,10 @@ import { JavaWiringParams } from "./config";
 import { MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { sortedEntries } from "@focuson/utils";
 import { RestD } from "../common/restD";
-import { fetcherInterfaceName, fetcherName, fetcherPackageName, dbFetcherClassName, dbFetcherPackage, resolverName, sqlMapName } from "./names";
+import { fetcherName, fetcherPackageName, dbFetcherClassName, dbFetcherPackage, resolverName, sqlMapName, sqlMapPackageName, fetcherInterfaceForResolverName, fetcherInterfaceName } from "./names";
 import { indentList } from "./codegen";
 import { findParamsForTable } from "./makeSqlFromEntities";
-import { getRestTypeDetails } from "@focuson/rest";
+import { getRestTypeDetails, restActionToDetails } from "@focuson/rest";
 import { isRepeatingDd } from "../common/dataD";
 import { findJavaType } from "./makeJavaFetchersInterface";
 
@@ -31,7 +31,7 @@ export function makeDBFetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
   return [
     ` package ${dbFetcherPackage ( params, pageD )};`,
     ``,
-    `import  ${params.thePackage}.${params.dbPackage}.${sqlMapName ( pageD, restName, [] )};`,
+    `import  ${sqlMapPackageName ( params, pageD )}.${sqlMapName ( pageD, restName, [] )};`,
     `import  ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
     `import  ${fetcherPackageName ( params, pageD )}.${fetcherInterfaceName ( params, rdp.rest, 'get' )};`,
     `import graphql.schema.DataFetcher;`,
@@ -50,7 +50,7 @@ export function makeDBFetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
     `  @Autowired`,
     `  private DataSource dataSource;`,
     ``,
-    `  public DataFetcher<${findJavaType ( rest.dataDD )}> ${resolverName ( rest, getRestTypeDetails ( 'get' ) )}() {`,
+    `  public DataFetcher<${findJavaType ( rest.dataDD )}> ${resolverName ( rest,  'get' )}() {`,
     `    return dataFetchingEnvironment -> {`,
     ...indentList ( indentList ( indentList ( paramVariables ) ) ),
     `       Connection c = dataSource.getConnection();`,

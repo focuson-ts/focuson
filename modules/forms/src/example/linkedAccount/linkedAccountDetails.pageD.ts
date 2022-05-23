@@ -27,13 +27,10 @@ export const OverpaymentMP: ExampleModalPage = {
 
 export const CreatePaymentMP: ExampleModalPage = {
   name: "CreatePayment",
-  guards: {
-    // reasonHasBeenSelected: { condition: 'notEquals', path: '~/createPayment/reason', value: '' },
-    amountEnough: { condition: 'a<b', aPath: '~/createPayment/otherAmount', bPath: '~/createPayment/amount' }
-  },
+
   buttons: {
     cancel: { control: 'ModalCancelButton' },
-    commit: { control: 'ModalCommitButton', enabledBy: 'amountEnough' },
+    commit: { control: 'ModalCommitButton' },
     overpaymentHistory: {
       control: 'ModalButton',
       mode: 'view', focusOn: '~/overpayment',
@@ -58,7 +55,7 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
     createPayment: { dataDD: CreatePaymentDD },
     overpayment: { dataDD: OverpaymentPageDD }
   },
-  initialValue: undefined,
+  initialValue: 'empty',
   modals: [ { modal: SelectMandateMP }, { modal: CreatePaymentMP }, { modal: OverpaymentMP } ],
   modes: [ 'view' ],
   pageType: "MainPage",
@@ -93,7 +90,6 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
         { from: '~/display/collectionSummary/period', to: '~/createPayment/period' } ],
       restOnCommit: { restName: 'createPayment', action: 'create', pathToDelete: [ '~/display/collectionSummary', '~/display/collectionHistory' ], result: 'refresh' }
     },
-
     cancelPayment: {
       control: "RestButton",
       restName: 'payments',

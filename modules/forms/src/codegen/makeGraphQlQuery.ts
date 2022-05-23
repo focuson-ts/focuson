@@ -1,5 +1,5 @@
 import { AllDataFlatMap, DataD, flatMapDD, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
-import { RestD } from "../common/restD";
+import { AllLensRestParams, RestD } from "../common/restD";
 import { addStringToStartOfFirst, filterParamsByRestAction, indent } from "./codegen";
 import { queryName, resolverName } from "./names";
 import { asMultilineJavaString, RestAction, sortedEntries } from "@focuson/utils";
@@ -25,10 +25,13 @@ function makeQueryFolder<G> (): AllDataFlatMap<string, G> {
     }
   }
 }
-
-export function makeQuery<G> ( r: RestD<G>, action: RestAction ): string[] {
-  let params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( action ) );
-  const paramString = params.map ( ( [ name, p ], i ) => `"${name}:" + "\\"" + ${name} + "\\"" ` ).join ( ` + "," + ` )
+function quoteIfNeeded ( name: string, param: AllLensRestParams<any> ) {
+  return param.graphQlType === 'String' ? `"\\"" + ${name} + "\\""` : name;
+}
+export function makeQuery<G> ( errorPrefix: string, r: RestD<G>, action: RestAction ): string[] {
+  let params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( errorPrefix, r, action ) );
+  const paramString = params.map ( ( [ name, p ], i ) =>
+    `"${name}:" + ${quoteIfNeeded ( name, p )} ` ).join ( ` + "," + ` )
   const comma = params.length === 0 ? '' : ','
   const plus = params.length === 0 ? '' : '+ '
   const objParamString = getRestTypeDetails ( action ).params.needsObj ? ` ${plus}"${comma} obj:" + obj ` : ""
@@ -39,20 +42,20 @@ export function makeQuery<G> ( r: RestD<G>, action: RestAction ): string[] {
   const resultFilter = needsResultFilter ? asMultilineJavaString ( flatMapDD ( r.dataDD, makeQueryFolder () ), '      ' ) : []
   const openingString = needsResultFilter ? '{"+' : '}";'
   const closingString = needsResultFilter ? '+"}";}' : '}'
-  return [ `"${prefix}{${resolverName ( r, getRestTypeDetails ( action ) )}${allParamsAndBrackets}${openingString}`,
+  return [ `"${prefix}{${resolverName ( r, action )}${allParamsAndBrackets}${openingString}`,
     ...resultFilter,
     closingString ]
 }
 
-export const makeGraphQlQueryForOneAction = <G> ( r: RestD<G> ) => ( action: RestAction ) => {
-  let params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( action ) );
-  const paramString = params.map ( ( [ name, p ], i ) => `String ${name}` ).join ( "," )
+export const makeGraphQlQueryForOneAction = <G> ( errorPrefix: string, r: RestD<G> ) => ( action: RestAction ) => {
+  let params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( errorPrefix, r, action ) );
+  const paramString = params.map ( ( [ name, p ], i ) => `${p.javaType} ${name}` ).join ( "," )
   let zeroParams = paramString.length === 0;
   const comma = zeroParams ? '' : ', '
   const objParamString = getRestTypeDetails ( action ).params.needsObj ? `${comma}String obj` : ""
   return [
     `public static  String ${queryName ( r, action )}(${paramString}${objParamString}){ `,
-    ...addStringToStartOfFirst ( '  return' ) ( makeQuery ( r, action ) ) ];
+    ...addStringToStartOfFirst ( '  return' ) ( makeQuery ( errorPrefix, r, action ) ) ];
 }
 export const makeJavaVariablesForGraphQlQuery = <G> ( rs: RestD<G>[] ): string[] =>
-  rs.flatMap ( r => r.actions.flatMap ( makeGraphQlQueryForOneAction ( r ) ) );
+  rs.flatMap ( r => r.actions.flatMap ( makeGraphQlQueryForOneAction ( `Making rest with url ${r.url}`, r ) ) );

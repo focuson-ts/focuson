@@ -1,11 +1,11 @@
-import { AllDataDD, CompDataD, compDataDIn } from "../common/dataD";
+import { AllDataDD, CompDataD, compDataDIn, OneDataDD } from "../common/dataD";
 import { MainPageD, ModalPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
-import { RestAction, safeString } from "@focuson/utils";
+import { isRestStateChange, RestAction, safeString } from "@focuson/utils";
 import { JavaWiringParams, TSParams } from "./config";
 import { TableAndFieldAndAliasData } from "./makeSqlFromEntities";
-import { RestActionDetail, restActionForName } from "@focuson/rest";
+import { RestActionDetail, restActionForName, restActionToDetails } from "@focuson/rest";
 import { MutationDetail } from "../common/resolverD";
 
 export const guardName = ( s: string ) => s + "Guard"
@@ -16,10 +16,12 @@ export const pageComponentName = <B, G> ( d: PageD<B, G> ): string => d.name + "
 // export const pageComponent = ( p: PageD ): string => p.name;
 export const hasDomainForPage = <B, G> ( pd: PageD<B, G> ): string => "Has" + pageDomainName ( pd );
 export const pageDomainName = <B, G> ( pd: PageD<B, G> ): string => pd.name + "PageDomain"
-export function resolverName<G> ( rest: RestD<G>, action: RestActionDetail ) {
+export function resolverName<G> ( rest: RestD<G>, action: RestAction ) {
   let rawType = rawTypeName ( rest.dataDD );
+  const ad = restActionToDetails ( action )
   const prefix = rest.namePrefix ? rest.namePrefix : ''
-  return `${action.graphQPrefix}${prefix}${rawType}${action.graphQlPostfix}`
+  const postfix = isRestStateChange ( action ) ? action.state : ''
+  return `${ad.graphQPrefix}${postfix}${rawType}${ad.graphQlPostfix}`
 }
 export const sampleName = <G> ( dataD: AllDataDD<G> ) => "sample" + dataD.name;
 export const emptyName = <G> ( dataD: AllDataDD<G> ) => "empty" + dataD.name;
@@ -28,7 +30,7 @@ export const restControllerName = <B, G> ( p: MainPageD<B, G>, restD: RestD<G> )
 export const javaSqlCreateTableSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.createTableSql.sql`
 export const javaSqlReadSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.readTableSql.sql`
 
-export const queryName = <G> ( restD: RestD<G>, action: RestAction ): string => { return restActionForName ( action ) + safeString ( restD.namePrefix ) + compDataDIn ( restD.dataDD ).name; }
+export const queryName = <G> ( restD: RestD<G>, action: RestAction ): string => { return restActionForName ( action ) + compDataDIn ( restD.dataDD ).name; } //safeString ( restD.namePrefix ) +
 export const createTableName = <G> ( restD: RestD<G> ): string => { return "createTable" + compDataDIn ( restD.dataDD ).name; }
 export const createTableSqlName = (): string => { return "schema"}
 export const getSqlName = (): string => { return "get"}
@@ -40,7 +42,7 @@ export const restDetailsName = <B, G> ( p: PageD<B, G>, restName: string, r: Res
 
 export const packageNameFor = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, thing: string ): string => `${params.thePackage}.${thing}.${p.name}`;
 export const fetcherPackageName = <G> ( params: JavaWiringParams, p: MainPageD<any, G> ): string => packageNameFor ( params, p, params.fetcherPackage );
-export const fetcherInterfaceName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${params.fetcherInterface}`;
+export const fetcherInterfaceName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => fetcherInterfaceForResolverName ( params, r, resolverName ( r, a ) )
 export const fetcherInterfaceForResolverName = <G> ( params: JavaWiringParams, r: RestD<G>, resolverName: string ): string => `${restNameWithPrefix ( r )}_${resolverName}_${params.fetcherInterface}`;
 
 export const dbFetcherPackage = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G> ): string => packageNameFor ( params, p, params.dbFetcherPackage );
@@ -61,8 +63,10 @@ export const fetcherVariableName = <G> ( params: JavaWiringParams, r: RestD<G>, 
 export const fetcherVariableNameForResolver = <G> ( params: JavaWiringParams, r: RestD<G>, resolverName: string ): string => `${restNameWithPrefix ( r )}_${resolverName}_${params.fetcherInterface}`;
 export const providerPactClassName = <B, G> ( pd: MainPageD<B, G> ): string => providerName ( pd ) + "Test";
 
-export const mutationClassName = <B, G> ( r: RestD<G> ) => `${restNameWithPrefix ( r )}Mutation`;
-export const mutationMethodName = <B, G> ( r: RestD<G>, a: RestAction, m: MutationDetail ) => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${m.name}`;
+export const mutationClassName = <B, G> ( r: RestD<G>, restAction: RestAction ) => `${restNameWithPrefix ( r )}_${restActionForName ( restAction )}Mutation`;
+export const mutationVariableName = <B, G> ( r: RestD<G>, restAction: RestAction ) => `__${restActionForName ( restAction )}Mutation`;
+export const resolverClassName = <B, G> ( r: RestD<G>, resolverName: string ) => `${restNameWithPrefix ( r )}_${resolverName}Resolver`;
+export const mutationMethodName = <B, G> ( r: RestD<G>, res: string, m: MutationDetail ) => `${restNameWithPrefix ( r )}_${res}_${m.name}`;
 
 export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${safeString ( r.namePrefix )}${r.dataDD.name}Queries`;
 
@@ -71,9 +75,9 @@ export const sqlDataSuffixFor = ( suffix: string, i: number ): string => suffix 
 
 export function sqlMapName<B, G> ( p: PageD<B, G>, restName: string, path: number[] ) {return `${p.name}_${restName}Maps${path.join ( "_" )}`}
 export function sqlListName<B, G> ( p: PageD<B, G>, restName: string, path: number[], i: number ) {return sqlMapName ( p, restName, [ ...path, i ] )}
-export function sqlMapFileName<B, G> ( root: string, p: PageD<B, G>, restName: string, path: number[] ) {return `${root}/${sqlMapName ( p, restName, path )}`}
-export function sqlTafFieldName<G> ( taf: TableAndFieldAndAliasData<G> ) {return `${taf.alias}_${taf.fieldData.dbFieldName}`}
-
+export function sqlMapFileName<B, G> ( root: string, p: PageD<B, G>, restName: string, path: number[] ) {return `${root}/${p.name}/${sqlMapName ( p, restName, path )}`}
+export function sqlTafFieldName<G> ( taf: TableAndFieldAndAliasData<G> ) {return taf.fieldData.dbFieldAlias ? taf.fieldData.dbFieldAlias : `${taf.alias}_${taf.fieldData.dbFieldName}`}
+export function sqlMapPackageName<G> ( params: JavaWiringParams, p: MainPageD<any, G> ) {return `${params.thePackage}.${params.dbPackage}.${p.name}`}
 export const optionalsName = <B, G> ( p: PageD<B, G> ) => `${p.name}Optionals`
 
 export const someFileName = <B, G> ( root: string, pd: PageD<B, G>, postfix: string ): string => `${root}/${pd.name}/${pd.name}.${postfix}`;

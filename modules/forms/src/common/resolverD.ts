@@ -28,9 +28,8 @@ export interface AuditDetails {
   by: string
 }
 
-export function isMutationsForRestAction ( a: any ): a is MutationsForRestAction {
-  return a.restAction !== undefined && a.mutateBy !== undefined
-}
+export type Mutations = MutationDetail | MutationDetail[]
+
 
 export interface MutationsForRestAction {
   restAction: RestAction;
@@ -46,7 +45,7 @@ export type MutationDetail = StoredProcedureMutation | SqlMutation | ManualMutat
 //   params: MutationParam
 // }
 export interface SqlMutation {
-  mutation: 'sql',
+  type: 'sql',
   schema: Schema;
   /**The name of the procedure that does this: should capture the intent of what this does */
   name: string;
@@ -55,23 +54,26 @@ export interface SqlMutation {
 }
 
 export interface StoredProcedureMutation {
-  mutation: 'storedProc',
+  type: 'storedProc',
   schema: Schema,
+  package?: string;
   name: string,
   params: MutationParamForStoredProc | MutationParamForStoredProc[]
 }
 
 export interface ManualMutation {
-  mutation: 'manual';
-  import?: string|string[];
+  type: 'manual';
+  import?: string | string[];
   params: MutationParamForManual | MutationParamForManual[]
   name: string;
   code: string | string[]
 }
-export type MutationParam = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForStoredProcMutationParam | OutputForSqlMutationParam | NullMutationParam | OutputForManualParam
-export type MutationParamForSql = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForSqlMutationParam | NullMutationParam
-export type MutationParamForStoredProc = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForStoredProcMutationParam | NullMutationParam
-export type MutationParamForManual = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | NullMutationParam| OutputForManualParam
+
+
+export type MutationParam = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForStoredProcMutationParam | OutputForSqlMutationParam | NullMutationParam | OutputForManualParam | AutowiredMutationParam
+export type MutationParamForSql = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForSqlMutationParam | NullMutationParam | AutowiredMutationParam
+export type MutationParamForStoredProc = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForStoredProcMutationParam | NullMutationParam | AutowiredMutationParam
+export type MutationParamForManual = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | NullMutationParam | OutputForManualParam | AutowiredMutationParam
 
 export type OutputMutationParam = OutputForSqlMutationParam | OutputForStoredProcMutationParam | OutputForManualParam
 export function inputParamName ( m: MutationParam ) {
@@ -161,13 +163,22 @@ export interface StringMutationParam {
   type: 'string';
   value: string
 }
+export interface AutowiredMutationParam {
+  type: 'autowired';
+  import?: boolean;
+  name: string;
+  class: string;
+  method: string
+}
 export interface IntegerMutationParam {
   type: 'integer';
   value: number
 }
 interface ParamMutationParam {
   type: 'input';
-  name: string
+  name: string;
+  javaType?: string
+
 }
 export interface OutputForStoredProcMutationParam {
   type: 'output';
@@ -181,10 +192,11 @@ export interface OutputForSqlMutationParam {
   javaType: 'String' | 'Integer';
   rsName: string;
 }
+export type AllJavaTypes = 'String' | 'Integer' | 'Map<String,Object>' | 'List<Map<String,Object>>' | 'Boolean'
 export interface OutputForManualParam {
   type: 'output';
   name: string;
-  javaType: 'String' | 'Integer';
+  javaType: AllJavaTypes;
 }
 export interface NullMutationParam {
   type: 'null';
@@ -215,19 +227,6 @@ export function isDBTable ( d: DBTableAndMaybeName ): d is DBTable {
 }
 export type DBTableAndMaybeName = DBTableAndName | DBTable
 
-/** This is 'are you a resolver or a data. As we add more types than sql resolver, we'll need this */
-export const isResolver = isSqlResolverD
-
-export type ResolverD = SqlResolverD | 'not defined yet'
-
-export interface SqlResolverD {
-  get: SqlGetDetails;
-}
-export function isSqlResolverD ( r: ResolverD ): r is SqlResolverD {
-  // @ts-ignore
-  return r?.get !== undefined
-}
-
 export interface Where {
   ids: string[];
   other?: string[]
@@ -239,14 +238,3 @@ export interface AliasAndWhere {
   where: Where;
 }
 
-export interface SqlGetDetails extends AliasAndWhere {
-  type: 'sql';
-  aliases: NameAnd<DBTableAndMaybeName>;
-  where: Where;
-  sql: GetSqlFromDataDDetails[]
-}
-export interface GetSqlFromDataDDetails extends AliasAndWhere {
-  dataD: OneDataDD<any>;
-  aliases: NameAnd<DBTableAndMaybeName>;
-  where: Where
-}

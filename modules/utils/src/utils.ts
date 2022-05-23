@@ -112,3 +112,15 @@ export function makeIntoString ( name: string, raw: any, joiners: undefined | st
   if ( Array.isArray ( raw ) ) return raw.map ( v => makeIntoString ( name, v, joiners ) ).join ( joiner )
   throw new Error ( `Cannot find value for ${name} in ${JSON.stringify ( raw )}` )
 }
+export function unique<T> ( ts: T[] | undefined, tagFn: ( t: T ) => string ): T[] {
+  const alreadyIn: Set<string> = new Set ()
+  var result: T[] = []
+  safeArray ( ts ).forEach ( t => {
+    const tag = tagFn ( t );
+    if ( !alreadyIn.has ( tag ) ) {
+      result.push ( t );
+      alreadyIn.add ( tag )
+    }
+  } )
+  return result
+}

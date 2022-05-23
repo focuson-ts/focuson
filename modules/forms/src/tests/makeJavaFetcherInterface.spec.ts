@@ -1,13 +1,14 @@
-import { findAllResolversFor, findChildResolvers, findQueryMutationResolvers, makeAllJavaWiring, makeJavaFetcherInterfaceForResolver, makeJavaFetchersInterface } from "../codegen/makeJavaFetchersInterface";
+import { findAllResolversFor, findChildResolvers, findJavaType, findQueryMutationResolver, makeAllJavaWiring, makeJavaFetcherInterfaceForResolver } from "../codegen/makeJavaFetchersInterface";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { repeatingRestRD } from "../example/repeating/repeating.restD";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { RepeatingPageD } from "../example/repeating/repeating.pageD";
 import { paramsForTest } from "./paramsForTest";
+import { resolverName } from "../codegen/names";
 
 describe ( "makeJavaResolversInterface", () => {
   it ( "should make a java interface when action is get", () => {
-    expect ( makeJavaFetchersInterface ( paramsForTest, EAccountsSummaryPD, eAccountsSummaryRestD, 'get' ) ).toEqual ( [
+    expect ( makeJavaFetcherInterfaceForResolver ( paramsForTest, EAccountsSummaryPD, eAccountsSummaryRestD, resolverName ( eAccountsSummaryRestD, 'get' ), findJavaType ( eAccountsSummaryRestD.dataDD ) ) ).toEqual ( [
       "package focuson.data.fetchers.EAccountsSummary;",
       "",
       "import graphql.schema.DataFetcher;",
@@ -15,7 +16,7 @@ describe ( "makeJavaResolversInterface", () => {
       "import java.util.List;",
       "import focuson.data.fetchers.IFetcher;",
       "",
-      "public interface EAccountsSummary_get_FFetcher extends IFetcher{",
+      "public interface EAccountsSummary_getEAccountsSummary_FFetcher extends IFetcher{",
       "   public DataFetcher<Map<String,Object>> getEAccountsSummary();",
       "}"
     ] )
@@ -35,7 +36,7 @@ describe ( "makeJavaResolversInterface", () => {
     ] )
   } )
   it ( "should make a java interface when action is update", () => {
-    expect ( makeJavaFetchersInterface ( paramsForTest, EAccountsSummaryPD, createPlanRestD, 'update' ) ).toEqual ( [
+    expect ( makeJavaFetcherInterfaceForResolver ( paramsForTest, EAccountsSummaryPD, createPlanRestD, resolverName ( createPlanRestD, 'update' ), 'update' ) ).toEqual ( [
       "package focuson.data.fetchers.EAccountsSummary;",
       "",
       "import graphql.schema.DataFetcher;",
@@ -43,8 +44,8 @@ describe ( "makeJavaResolversInterface", () => {
       "import java.util.List;",
       "import focuson.data.fetchers.IFetcher;",
       "",
-      "public interface CreatePlan_update_FFetcher extends IFetcher{",
-      "   public DataFetcher<Map<String,Object>> updateCreatePlan();",
+      "public interface CreatePlan_updateCreatePlan_FFetcher extends IFetcher{",
+      "   public DataFetcher<update> updateCreatePlan();",
       "}"
     ] )
   } )
@@ -80,44 +81,44 @@ describe ( "makeAllJavaWiring", () => {
       "import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;",
       "import java.util.function.Function;",
       "import java.util.stream.Collectors;",
-      "import focuson.data.fetchers.EAccountsSummary.CreatePlan_get_FFetcher;",
-      "import focuson.data.fetchers.EAccountsSummary.CreatePlan_create_FFetcher;",
-      "import focuson.data.fetchers.EAccountsSummary.CreatePlan_update_FFetcher;",
-      "import focuson.data.fetchers.EAccountsSummary.CreatePlan_delete_FFetcher;",
-      "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_get_FFetcher;",
-      "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_state_invalidate_FFetcher;",
-      "import focuson.data.fetchers.Repeating.RepeatingWholeData_create_FFetcher;",
-      "import focuson.data.fetchers.Repeating.RepeatingWholeData_get_FFetcher;",
+      "import focuson.data.fetchers.EAccountsSummary.CreatePlan_getCreatePlan_FFetcher;",
+      "import focuson.data.fetchers.EAccountsSummary.CreatePlan_createCreatePlan_FFetcher;",
+      "import focuson.data.fetchers.EAccountsSummary.CreatePlan_updateCreatePlan_FFetcher;",
+      "import focuson.data.fetchers.EAccountsSummary.CreatePlan_deleteCreatePlan_FFetcher;",
+      "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_getEAccountsSummary_FFetcher;",
+      "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_stateinvalidateEAccountsSummary_FFetcher;",
+      "import focuson.data.fetchers.Repeating.RepeatingWholeData_createRepeatingLine_FFetcher;",
+      "import focuson.data.fetchers.Repeating.RepeatingWholeData_getRepeatingLine_FFetcher;",
       "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_getAccountSummaryDescription_FFetcher;",
-      "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_getTotalMonthlyCost_FFetcher;",
-      "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_getOneAccountBalance_FFetcher;",
-      "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_getCurrentAccountBalance_FFetcher;",
+      "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_totalMonthlyCost_FFetcher;",
+      "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_oneAccountBalance_FFetcher;",
+      "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_currentAccountBalance_FFetcher;",
       "@Component",
       "public class Wiring  implements IManyGraphQl{",
       "      @Autowired",
-      "      List<CreatePlan_get_FFetcher> CreatePlan_get_FFetcher;",
+      "      List<CreatePlan_getCreatePlan_FFetcher> CreatePlan_get_FFetcher;",
       "      @Autowired",
-      "      List<CreatePlan_create_FFetcher> CreatePlan_create_FFetcher;",
+      "      List<CreatePlan_createCreatePlan_FFetcher> CreatePlan_create_FFetcher;",
       "      @Autowired",
-      "      List<CreatePlan_update_FFetcher> CreatePlan_update_FFetcher;",
+      "      List<CreatePlan_updateCreatePlan_FFetcher> CreatePlan_update_FFetcher;",
       "      @Autowired",
-      "      List<CreatePlan_delete_FFetcher> CreatePlan_delete_FFetcher;",
+      "      List<CreatePlan_deleteCreatePlan_FFetcher> CreatePlan_delete_FFetcher;",
       "      @Autowired",
-      "      List<EAccountsSummary_get_FFetcher> EAccountsSummary_get_FFetcher;",
+      "      List<EAccountsSummary_getEAccountsSummary_FFetcher> EAccountsSummary_get_FFetcher;",
       "      @Autowired",
-      "      List<EAccountsSummary_state_invalidate_FFetcher> EAccountsSummary_state_invalidate_FFetcher;",
+      "      List<EAccountsSummary_stateinvalidateEAccountsSummary_FFetcher> EAccountsSummary_state_invalidate_FFetcher;",
       "      @Autowired",
-      "      List<RepeatingWholeData_create_FFetcher> RepeatingWholeData_create_FFetcher;",
+      "      List<RepeatingWholeData_createRepeatingLine_FFetcher> RepeatingWholeData_create_FFetcher;",
       "      @Autowired",
-      "      List<RepeatingWholeData_get_FFetcher> RepeatingWholeData_get_FFetcher;",
+      "      List<RepeatingWholeData_getRepeatingLine_FFetcher> RepeatingWholeData_get_FFetcher;",
       "      @Autowired",
       "      List<EAccountsSummary_getAccountSummaryDescription_FFetcher> EAccountsSummary_getAccountSummaryDescription_FFetcher;",
       "      @Autowired",
-      "      List<EAccountsSummary_getTotalMonthlyCost_FFetcher> EAccountsSummary_getTotalMonthlyCost_FFetcher;",
+      "      List<EAccountsSummary_totalMonthlyCost_FFetcher> EAccountsSummary_totalMonthlyCost_FFetcher;",
       "      @Autowired",
-      "      List<EAccountsSummary_getOneAccountBalance_FFetcher> EAccountsSummary_getOneAccountBalance_FFetcher;",
+      "      List<EAccountsSummary_oneAccountBalance_FFetcher> EAccountsSummary_oneAccountBalance_FFetcher;",
       "      @Autowired",
-      "      List<EAccountsSummary_getCurrentAccountBalance_FFetcher> EAccountsSummary_getCurrentAccountBalance_FFetcher;",
+      "      List<EAccountsSummary_currentAccountBalance_FFetcher> EAccountsSummary_currentAccountBalance_FFetcher;",
       "   private String sdl;",
       "   private Map<String, GraphQL> cache = Collections.synchronizedMap(new HashMap<>()); //sucks and need to improve",
       "   @PostConstruct",
@@ -158,13 +159,13 @@ describe ( "makeAllJavaWiring", () => {
       "          .type(newTypeWiring('Mutation').dataFetcher('updateCreatePlan', find(CreatePlan_update_FFetcher, dbName, f ->f.updateCreatePlan())))",
       "          .type(newTypeWiring('Mutation').dataFetcher('deleteCreatePlan', find(CreatePlan_delete_FFetcher, dbName, f ->f.deleteCreatePlan())))",
       "          .type(newTypeWiring('Query').dataFetcher('getEAccountsSummary', find(EAccountsSummary_get_FFetcher, dbName, f ->f.getEAccountsSummary())))",
-      "          .type(newTypeWiring('Mutation').dataFetcher('stateEAccountsSummaryinvalidate', find(EAccountsSummary_state_invalidate_FFetcher, dbName, f ->f.stateEAccountsSummaryinvalidate())))",
+      "          .type(newTypeWiring('Mutation').dataFetcher('stateinvalidateEAccountsSummary', find(EAccountsSummary_state_invalidate_FFetcher, dbName, f ->f.stateinvalidateEAccountsSummary())))",
       "          .type(newTypeWiring('Mutation').dataFetcher('createRepeatingLine', find(RepeatingWholeData_create_FFetcher, dbName, f ->f.createRepeatingLine())))",
       "          .type(newTypeWiring('Query').dataFetcher('getRepeatingLine', find(RepeatingWholeData_get_FFetcher, dbName, f ->f.getRepeatingLine())))",
       "          .type(newTypeWiring('EAccountSummary').dataFetcher('description', find(EAccountsSummary_getAccountSummaryDescription_FFetcher, dbName, f ->f.getAccountSummaryDescription())))",
-      "          .type(newTypeWiring('EAccountsSummary').dataFetcher('totalMonthlyCost', find(EAccountsSummary_getTotalMonthlyCost_FFetcher, dbName, f ->f.getTotalMonthlyCost())))",
-      "          .type(newTypeWiring('EAccountsSummary').dataFetcher('oneAccountBalance', find(EAccountsSummary_getOneAccountBalance_FFetcher, dbName, f ->f.getOneAccountBalance())))",
-      "          .type(newTypeWiring('EAccountsSummary').dataFetcher('currentAccountBalance', find(EAccountsSummary_getCurrentAccountBalance_FFetcher, dbName, f ->f.getCurrentAccountBalance())))",
+      "          .type(newTypeWiring('EAccountsSummary').dataFetcher('totalMonthlyCost', find(EAccountsSummary_totalMonthlyCost_FFetcher, dbName, f ->f.totalMonthlyCost())))",
+      "          .type(newTypeWiring('EAccountsSummary').dataFetcher('oneAccountBalance', find(EAccountsSummary_oneAccountBalance_FFetcher, dbName, f ->f.oneAccountBalance())))",
+      "          .type(newTypeWiring('EAccountsSummary').dataFetcher('currentAccountBalance', find(EAccountsSummary_currentAccountBalance_FFetcher, dbName, f ->f.currentAccountBalance())))",
       "       .build();",
       "    }",
       "    @Bean",
@@ -182,26 +183,26 @@ describe ( "findAllResolvers2", () => {
   it ( "findResolvers2", () => {
     expect ( findChildResolvers ( eAccountsSummaryRestD ) ).toEqual ( [
       { "isRoot": false, needsObjectInOutput: true, "javaType": "String", "name": "description", "parent": "EAccountSummary", "resolver": "getAccountSummaryDescription", "sample": [ "This account's description" ], "samplerName": "sampleOneLineString" },
-      { "isRoot": false, needsObjectInOutput: true, "javaType": "Integer", "name": "totalMonthlyCost", "parent": "EAccountsSummary", "resolver": "getTotalMonthlyCost", "sample": [ 1000 ], "samplerName": "sampleMoney" },
-      { "isRoot": false, needsObjectInOutput: true, "javaType": "Integer", "name": "oneAccountBalance", "parent": "EAccountsSummary", "resolver": "getOneAccountBalance", "sample": [ 9921 ], "samplerName": "sampleMoney" },
-      { "isRoot": false, needsObjectInOutput: true, "javaType": "Integer", "name": "currentAccountBalance", "parent": "EAccountsSummary", "resolver": "getCurrentAccountBalance", "sample": [ 12321 ], "samplerName": "sampleMoney" }
+      { "isRoot": false, needsObjectInOutput: true, "javaType": "Integer", "name": "totalMonthlyCost", "parent": "EAccountsSummary", "resolver": "totalMonthlyCost", "sample": [ 1000 ], "samplerName": "sampleMoney" },
+      { "isRoot": false, needsObjectInOutput: true, "javaType": "Integer", "name": "oneAccountBalance", "parent": "EAccountsSummary", "resolver": "oneAccountBalance", "sample": [ 9921 ], "samplerName": "sampleMoney" },
+      { "isRoot": false, needsObjectInOutput: true, "javaType": "Integer", "name": "currentAccountBalance", "parent": "EAccountsSummary", "resolver": "currentAccountBalance", "sample": [ 12321 ], "samplerName": "sampleMoney" }
     ] )
   } )
 
   it ( "findQueryMutationResolvers2", () => {
-    expect ( findQueryMutationResolvers ( eAccountsSummaryRestD, 'get' ) ).toEqual (
+    expect ( findQueryMutationResolver ( eAccountsSummaryRestD, 'get' ) ).toEqual (
       { "isRoot": true, "javaType": "Map<String,Object>", needsObjectInOutput: true, "name": "getEAccountsSummary", "parent": "Query", "resolver": "getEAccountsSummary", "sample": [], "samplerName": "sampleEAccountsSummary" }
     )
-    expect ( findQueryMutationResolvers ( createPlanRestD, "get" ) ).toEqual (
+    expect ( findQueryMutationResolver ( createPlanRestD, "get" ) ).toEqual (
       { "isRoot": true, "javaType": "Map<String,Object>", needsObjectInOutput: true, "name": "getCreatePlan", "parent": "Query", "resolver": "getCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
     )
-    expect ( findQueryMutationResolvers ( createPlanRestD, "create" ) ).toEqual (
+    expect ( findQueryMutationResolver ( createPlanRestD, "create" ) ).toEqual (
       { "isRoot": true, "javaType": "Map<String,Object>", needsObjectInOutput: true, "name": "createCreatePlan", "parent": "Mutation", "resolver": "createCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
     )
-    expect ( findQueryMutationResolvers ( createPlanRestD, "update" ) ).toEqual (
+    expect ( findQueryMutationResolver ( createPlanRestD, "update" ) ).toEqual (
       { "isRoot": true, "javaType": "Map<String,Object>", needsObjectInOutput: true, "name": "updateCreatePlan", "parent": "Mutation", "resolver": "updateCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
     )
-    expect ( findQueryMutationResolvers ( createPlanRestD, "delete" ) ).toEqual (
+    expect ( findQueryMutationResolver ( createPlanRestD, "delete" ) ).toEqual (
       { "isRoot": true, "javaType": "Map<String,Object>", needsObjectInOutput: false, "name": "deleteCreatePlan", "parent": "Mutation", "resolver": "deleteCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
     )
     // expect ( findQueryMutationResolvers ( createPlanRestD, "list" ) ).toEqual (
@@ -213,9 +214,9 @@ describe ( "findAllResolvers2", () => {
     expect ( findAllResolversFor ( eAccountsSummaryRestD, 'get' ) ).toEqual ( [
       { "isRoot": true, needsObjectInOutput: true, "javaType": "Map<String,Object>", "name": "getEAccountsSummary", "parent": "Query", "resolver": "getEAccountsSummary", "sample": [], "samplerName": "sampleEAccountsSummary" },
       { "isRoot": false, needsObjectInOutput: true, "javaType": "String", "name": "description", "parent": "EAccountSummary", "resolver": "getAccountSummaryDescription", "sample": [ "This account's description" ], "samplerName": "sampleOneLineString" },
-      { "isRoot": false, needsObjectInOutput: true, "javaType": "Integer", "name": "totalMonthlyCost", "parent": "EAccountsSummary", "resolver": "getTotalMonthlyCost", "sample": [ 1000 ], "samplerName": "sampleMoney" },
-      { "isRoot": false, needsObjectInOutput: true, "javaType": "Integer", "name": "oneAccountBalance", "parent": "EAccountsSummary", "resolver": "getOneAccountBalance", "sample": [ 9921 ], "samplerName": "sampleMoney" },
-      { "isRoot": false, needsObjectInOutput: true, "javaType": "Integer", "name": "currentAccountBalance", "parent": "EAccountsSummary", "resolver": "getCurrentAccountBalance", "sample": [ 12321 ], "samplerName": "sampleMoney" }
+      { "isRoot": false, needsObjectInOutput: true, "javaType": "Integer", "name": "totalMonthlyCost", "parent": "EAccountsSummary", "resolver": "totalMonthlyCost", "sample": [ 1000 ], "samplerName": "sampleMoney" },
+      { "isRoot": false, needsObjectInOutput: true, "javaType": "Integer", "name": "oneAccountBalance", "parent": "EAccountsSummary", "resolver": "oneAccountBalance", "sample": [ 9921 ], "samplerName": "sampleMoney" },
+      { "isRoot": false, needsObjectInOutput: true, "javaType": "Integer", "name": "currentAccountBalance", "parent": "EAccountsSummary", "resolver": "currentAccountBalance", "sample": [ 12321 ], "samplerName": "sampleMoney" }
     ] )
   } )
   it ( "findAllResolversFor with children - with mutations", () => {

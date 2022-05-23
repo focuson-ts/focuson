@@ -6,7 +6,7 @@ import { businessDetailsMainDD } from "./businessDetails/businessDetails.dataD";
 import { ExampleMainPage, ExampleModalPage } from "../common";
 import { BooleanDD, IntegerDD } from "../../common/dataD";
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
-import { IntParam } from "../../common/restD";
+import { IntParam, StringParam } from "../../common/restD";
 
 export const listOccupationsModalPD: ExampleModalPage = {
   name: 'ListOccupationsModal',
@@ -88,7 +88,7 @@ export const businessDetailsModalPD: ExampleModalPage = {
 export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
   name: 'OccupationAndIncomeSummary',
   pageType: 'MainPage',
-  commonParams: { role: { ...IntParam, commonLens: 'usersRole', testValue: 'user' } },
+  commonParams: { role: { ...StringParam, commonLens: 'role', testValue: 'user' } },
   /** This page can only view data */
   modes: [ 'view', 'edit', 'create' ],
   /** How we display the page.*/
@@ -146,8 +146,8 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
 
   buttons: {
     mainOrJoint: { control: "ToggleButton", value: '~/mainOrJoint', buttonText: 'Showing {~/mainOrJoint|Main|Joint}' },
-    nextOccupation: { control: 'ListNextButton', value: '#selected', list: '#currentOccupation' },
     prevOccupation: { control: 'ListPrevButton', value: '#selected', list: '#currentOccupation' },
+    nextOccupation: { control: 'ListNextButton', value: '#selected', list: '#currentOccupation' },
 
     addEntry: {
       control: 'ModalButton', modal: occupationIncomeModalPD, mode: 'create',

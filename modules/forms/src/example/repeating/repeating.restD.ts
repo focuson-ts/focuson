@@ -1,10 +1,9 @@
 import { IntParam, RestD, RestParams } from "../../common/restD";
 import { AllGuards } from "../../buttons/guardButton";
 import { RepeatingWholeDataD } from "./repeating.dataD";
+import { fromCommonIds } from "../commonIds";
 
-export const repeatingIds: RestParams = {
-  clientRef: { ...IntParam, commonLens: 'clientRef', testValue: 'custId' },
-}
+export const repeatingIds: RestParams = fromCommonIds('clientRef')
 
 /** This should fully define the api*/
 export const repeatingRestRD: RestD<AllGuards> = {
