@@ -10,7 +10,6 @@ export const jointAccountRestD: RestD<any> = {
   dataDD: JointAccountDd,
   url: '/api/jointAccount?{query}',
   actions: [ 'get' ],
-  initialSql: jointAccountSql,
   namePrefix: 'pre',
   tables: {
     staticWhere: '123=123',
@@ -22,6 +21,7 @@ export const jointAccountRestD: RestD<any> = {
       type: 'Main',
       table: accountT,
       staticWhere: `${accountT.name} <> 'canceled'`,
+      idStrategy: {type: 'Manual', sql: jointAccountSql},
       children: {
         mainCustomer: {
           type: 'Single',

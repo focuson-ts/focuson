@@ -60,13 +60,13 @@ export interface InsertSqlStrategyInterface {
 }
 
 export interface OneTableInsertSqlStrategyForNoIds {
-  type: 'StrategyForNoIds';
-  table: DBTable;
+  type: 'WithoutId';
+  // table: DBTable;
 }
 
 export interface OneTableInsertSqlStrategyForIds {
-  type: 'StrategyForIds';
-  table: DBTable;
+  type: 'WithId';
+  // table: DBTable;
   idOffset: number;
   idField: string;
 }
@@ -86,7 +86,8 @@ export interface RestD<G> {
   resolver?: ResolverD;
   /** @deprecated Replaced with ManualSqlStrategy */
   initialSql?: string[];
-  insertSqlStrategy?: InsertSqlStrategy | InsertSqlStrategy[];
+  /** @deprecated Moved to be inside Entity */
+  insertSqlStrategy?: any;
   tables?: EntityAndWhere;
   states?: NameAnd<RestStateDetails>;
   access?: AccessDetails[];

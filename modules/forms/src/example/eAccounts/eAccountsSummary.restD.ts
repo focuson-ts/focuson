@@ -14,14 +14,17 @@ export const eAccountsSummaryRestD: RestD<AllGuards> = {
   url: '/api/accountsSummary?{query}', //or maybe accountId={accountId}&customerId={customerId}
   actions: [ 'get', { state: 'invalidate' } ],
   tables: {
-    entity: {type: 'Main', table: customerT, children: {
-      account: {type: 'Multiple', table: accountT,  idInParent: 'id', idInThis: 'customer' }
-      } },
+    entity: {type: 'Main', table: customerT,
+      // idStrategy: {type: 'WithId', idField: 'id', idOffset: 0},
+      children: {
+        account: {type: 'Multiple', table: accountT,  idInParent: 'id', idInThis: 'customer'}
+      }
+    },
     where: [{table: customerT, alias: customerT.name, field: 'id', paramName: 'customerId'
   }]
   },
-  insertSqlStrategy: [{type: 'StrategyForIds', table: customerT, idField: 'id', idOffset: 0},
-    {type: 'StrategyForIds', table: accountT, idField: 'id', idOffset: 20}],
+  // insertSqlStrategy: [{type: 'StrategyForIds', table: customerT, idField: 'id', idOffset: 0},
+  //   {type: 'StrategyForIds', table: accountT, idField: 'id', idOffset: 20}],
   states: {
     invalidate: { url: '/api/accountsSummary/invalidate?{query}', params: [ 'accountId', 'clientRef' ] }
   },

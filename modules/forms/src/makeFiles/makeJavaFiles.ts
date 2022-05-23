@@ -23,7 +23,7 @@ import {
   createTableSql,
   findSqlLinkDataFromRootAndDataD,
   findSqlRoot,
-  generateGetSql, makeInsertSqlForIds,
+  generateGetSql, getStrategy, hasStrategy, makeInsertSqlForIds,
   makeInsertSqlForNoIds,
   makeMapsForRest,
   walkSqlRoots
@@ -175,21 +175,18 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
   let insertSql: string[] = allMainPages ( pages ).flatMap ( mainPage =>
     sortedEntries ( mainPage.rest )
-      .filter ( ( [ _, rdp ] ) => rdp.rest.insertSqlStrategy !== undefined )
-      .flatMap ( ( [ _, rdp ] ) => {
-        const sA = toArray(rdp.rest.insertSqlStrategy);
-        return sA.flatMap( s => {
-          if (s.type === 'StrategyForIds')
-             return safeArray(makeInsertSqlForIds(rdp.rest.dataDD, s))
-          if (s.type === 'StrategyForNoIds')
-             return safeArray(makeInsertSqlForNoIds(rdp.rest.dataDD, s))
-        }
-      )
+        .flatMap ( ( [ _, rdp ] ) => {
+          return getStrategy(rdp?.rest?.tables?.entity).flatMap( s => {
+            if (s.type === 'WithId') return safeArray(makeInsertSqlForIds(rdp.rest.dataDD, rdp?.rest?.tables?.entity, s))
+            else if (s.type === 'WithoutId') return safeArray(makeInsertSqlForNoIds(rdp.rest.dataDD, rdp?.rest?.tables?.entity, s))
+            else if (s.type === 'Manual') return s.sql
+            else return []
+        })
       }));
   if ( insertSql.length > 0 )
-    writeToFile ( `${javaResourcesRoot}/insertData.sql`, () => insertSql )
+    writeToFile ( `${javaResourcesRoot}/data.sql`, () => insertSql )
   else
-    fs.rmSync ( `${javaResourcesRoot}/insertData.sql`, { force: true } )
+    fs.rmSync ( `${javaResourcesRoot}/data.sql`, { force: true } )
 
   allMainPages ( pages ).forEach ( p => writeToFile ( `${javaTestRoot}/${providerPactClassName ( p )}.java`, () => makePactValidation ( params, appConfig.javaPort, p ) ) )
 

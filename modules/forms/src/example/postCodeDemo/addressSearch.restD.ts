@@ -15,12 +15,11 @@ export const postcodeRestD: RestD<AllGuards> = {
   dataDD: postCodeSearchResponseDD,
   url: '/api/postCode?{query}',
   actions: [ 'get' ],
-  initialSql: addressSearchSql,
-  insertSqlStrategy: {type: 'StrategyForIds', table: postCodeSearchTable, idOffset: 10, idField: "RandomIdName"},
   tables: {
     entity: {
       type: 'Main',
-      table: postCodeSearchTable
+      table: postCodeSearchTable,
+      idStrategy: {type: 'Manual', sql: addressSearchSql},
     },
     where: [
       { table: postCodeSearchTable, alias: postCodeSearchTable.name, field: 'PC_POSTCODE', paramName: 'postcode', comparator: 'like', paramPrefix: '%', paramPostfix: '%' }
@@ -33,9 +32,9 @@ export const addressRestD: RestD<AllGuards> = {
   dataDD: nameAndAddressDataD,
   url: '/api/address?{query}',
   actions: [ 'create' ],
-  insertSqlStrategy: [{type: 'StrategyForIds', table: addT, idField: 'id', idOffset: 0}],
   tables: {
-    entity: { type: 'Main', table: addT, children: {} },
+    entity: { type: 'Main', table: addT, children: {}
+    },
     where: []
   }
 }
