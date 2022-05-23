@@ -1,7 +1,7 @@
 import { AllGuards } from "../../buttons/guardButton";
 import { nameAndAddressDataD, postCodeSearchResponseDD } from "./addressSearch.dataD";
 import { IntParam, RestD, RestParams, StringParam } from "../../common/restD";
-import { addT, postCodeSearchTable } from "../database/tableNames";
+import { addT, onlySchema, postCodeSearchTable } from "../database/tableNames";
 import { allCommonIds } from "../commonIds";
 import { addressSearchSql } from "./addressSearch.sql";
 
@@ -10,13 +10,15 @@ export const postcodeParams: RestParams = {
   postcode: { ...StringParam, lens: '~/postcode/search', testValue: 'LW12 4RG' }
 }
 
-export const postcodeRestD: RestD<AllGuards> = {
+export const rootPostCodeRestD: RestD<AllGuards> = {
   params: postcodeParams,
   dataDD: postCodeSearchResponseDD,
   url: '/api/postCode?{query}',
   actions: [ 'get' ],
-  initialSql: addressSearchSql,
-  insertSqlStrategy: {type: 'OneTableInsertSqlStrategyForNoIds', table: postCodeSearchTable},
+}
+export const postcodeRestD: RestD<AllGuards> = {
+  ...rootPostCodeRestD,
+  insertSqlStrategy: { type: 'OneTableInsertSqlStrategyForNoIds', table: postCodeSearchTable },
   tables: {
     entity: {
       type: 'Main',
@@ -26,6 +28,26 @@ export const postcodeRestD: RestD<AllGuards> = {
       { table: postCodeSearchTable, alias: postCodeSearchTable.name, field: 'PC_POSTCODE', paramName: 'postcode', comparator: 'like', paramPrefix: '%', paramPostfix: '%' }
     ]
   }
+}
+//This is here for test purposes
+export const postcodeWithResolversRestD: RestD<AllGuards> = {
+  ...rootPostCodeRestD,
+  resolvers: {
+    getPostCodeDataLine: [
+      {
+        type: 'manual', params: [ { type: "output", name: 'someValue', javaType: 'Integer' } ],
+        code: 'Integer someValue= 123;', name: 'audit'
+      },
+      {
+        type: 'sql', schema: onlySchema, sql: `select *` + `from ${postCodeSearchTable.name} where postcode like ?'`, list: true,
+        params: [
+          'someValue',
+          { type: 'output', name: 'line1', javaType: 'String', rsName: 'zzline1' },
+          { type: 'output', name: 'line2', javaType: 'String', rsName: 'zzline2' },
+          { type: 'output', name: 'line3', javaType: 'String', rsName: 'zzline3' },
+          { type: 'output', name: 'line4', javaType: 'String', rsName: 'zzline4' } ], name: 'get'
+      } ]
+  },
 }
 
 export const addressRestD: RestD<AllGuards> = {

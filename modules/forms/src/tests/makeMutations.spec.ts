@@ -1,4 +1,4 @@
-import { getFromResultSet, getFromStatement, makeMutations, mockReturnStatement, makeMutationResolverReturnStatement, setObjectFor, typeForParamAsInput } from "../codegen/makeMutations";
+import { getFromResultSetIntoVariables, getFromStatement, makeMutations, mockReturnStatement, makeMutationResolverReturnStatement, setObjectFor, typeForParamAsInput } from "../codegen/makeMutations";
 import { paramsForTest } from "./paramsForTest";
 import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
@@ -7,6 +7,7 @@ import { chequeCreditBooksRestD } from "../example/chequeCreditBooks/chequeCredi
 import { ChequeCreditbooksPD } from "../example/chequeCreditBooks/chequeCreditBooks.pageD";
 import { IntegerMutationParam, MutationParam, NullMutationParam, OutputForManualParam, OutputForSqlMutationParam, OutputForStoredProcMutationParam, StringMutationParam } from "../common/resolverD";
 import { fromCommonIds } from "../example/commonIds";
+import { safeArray } from "@focuson/utils";
 
 const stringMP: StringMutationParam = { type: 'string', value: 'someString' }
 const integerMP: IntegerMutationParam = { type: "integer", value: 123 }
@@ -27,7 +28,7 @@ describe ( "getFromStatement", () => {
 } )
 describe ( "getFromResultSet", () => {
   it ( "generate the code to get the mp from a ResultSet", () => {
-    expect ( getFromResultSet ( 'ss', [ stringMP, integerMP, spOutputMP, nullMP, sqlOutputMP, manOutputMp ] ) ).toEqual ( [
+    expect ( getFromResultSetIntoVariables ( 'ss', [ stringMP, integerMP, spOutputMP, nullMP, sqlOutputMP, manOutputMp ] ) ).toEqual ( [
       "String someNameSql = ss.getString(\"rsName\");"
     ] )
   } )
@@ -81,19 +82,22 @@ describe ( "returnStatement", () => {
 
 describe ( "makeMutations", () => {
   it ( "should create an mutation class with a method for each mutation for that rest - simple", () => {
-    expect ( makeMutations ( paramsForTest, EAccountsSummaryPD, 'theRestName', eAccountsSummaryRestD, eAccountsSummaryRestD.mutations[ 0 ] ) ).toEqual ([
+    expect ( makeMutations ( paramsForTest, EAccountsSummaryPD, 'theRestName', eAccountsSummaryRestD, safeArray(eAccountsSummaryRestD.mutations)[ 0 ] ) ).toEqual ([
       "package focuson.data.mutator.EAccountsSummary;",
       "",
       "import focuson.data.fetchers.IFetcher;",
       "import org.springframework.stereotype.Component;",
       "import org.springframework.beans.factory.annotation.Autowired;",
       "",
+      "import java.util.Map;",
+      "import java.util.HashMap;",
+      "import java.util.ArrayList;",
+      "import java.util.List;",
       "import java.sql.CallableStatement;",
       "import java.sql.PreparedStatement;",
       "import java.sql.ResultSet;",
       "import java.sql.Connection;",
       "import java.sql.SQLException;",
-      "//If there is a compilation issue here is it because you need to set 'maxTuples'? Currently set to 2 ",
       "import focuson.data.mutator.utils.Tuple2;",
       "@Component",
       "public class EAccountsSummary_state_invalidateMutation {",
@@ -115,13 +119,17 @@ describe ( "makeMutations", () => {
     ])
   } )
   it ( "should create an mutation class with a method for each mutation for that rest - complex", () => {
-    expect ( makeMutations ( paramsForTest, ChequeCreditbooksPD, 'theRestName', chequeCreditBooksRestD, chequeCreditBooksRestD.mutations[ 0 ] ) ).toEqual ([
+    expect ( makeMutations ( paramsForTest, ChequeCreditbooksPD, 'theRestName', chequeCreditBooksRestD, safeArray(chequeCreditBooksRestD.mutations)[ 0 ] ) ).toEqual ([
       "package focuson.data.mutator.ChequeCreditbooks;",
       "",
       "import focuson.data.fetchers.IFetcher;",
       "import org.springframework.stereotype.Component;",
       "import org.springframework.beans.factory.annotation.Autowired;",
       "",
+      "import java.util.Map;",
+      "import java.util.HashMap;",
+      "import java.util.ArrayList;",
+      "import java.util.List;",
       "import java.sql.CallableStatement;",
       "import java.sql.PreparedStatement;",
       "import java.sql.ResultSet;",
@@ -129,7 +137,6 @@ describe ( "makeMutations", () => {
       "import java.sql.SQLException;",
       "//added by param systemTime",
       "import focuson.data.utils.ITimeService;",
-      "//If there is a compilation issue here is it because you need to set 'maxTuples'? Currently set to 2 ",
       "import focuson.data.mutator.utils.Tuple2;",
       "import java.util.Date;",
       "import java.util.Date;",

@@ -31,7 +31,7 @@ export const eAccountsSummaryRestD: RestD<AllGuards> = {
         `Map createPlan = new HashMap(); createPlan.put("createPlanStart", "");createPlan.put("createPlanDate", "");createPlan.put("createPlanEnd", "");`
       ]
     },
-    totalMonthlyCost: { type: 'manual', code: [ 'Integer totalMonthlyCost = 123;' ], params: [ 'accountId', { type: 'output', name: 'totalMonthlyCost', javaType: 'Integer' } ], name: 'getTotalMonthlyCostStoredProc' },
+    totalMonthlyCost: { type: 'storedProc',   params: [ 'accountId', { type: 'output', name: 'totalMonthlyCost', javaType: 'Integer' , sqlType: 'INTEGER'} ], name: 'getTotalMonthlyCostStoredProc', schema: onlySchema },
     oneAccountBalance: { type: 'manual', code: [ 'Integer oneAccountBalance = 234;' ], params: [ 'accountId', { type: 'output', name: 'oneAccountBalance', javaType: 'Integer' } ], name: 'getOneAccountBalance' },
     currentAccountBalance: { type: 'manual', code: [ 'Integer currentAccountBalance = 345;' ], params: [ 'accountId', { type: 'output', name: 'currentAccountBalance', javaType: 'Integer' } ], name: 'getCurrentAccountBalance' }
   },
