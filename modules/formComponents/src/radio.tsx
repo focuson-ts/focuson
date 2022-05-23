@@ -1,15 +1,15 @@
 import { NameAnd } from "@focuson/utils";
-import { CommonStateProps } from "./common";
+import { CommonStateProps, LabelAlignment } from "./common";
 import { Label } from "./label";
 import { reasonFor } from "@focuson/state";
 import { FocusOnContext } from "@focuson/focuson";
 
-export interface RadioProps<S, T, Context> extends CommonStateProps<S, T, Context> {
+export interface RadioProps<S, T, Context> extends CommonStateProps<S, T, Context>, LabelAlignment {
   enums: NameAnd<string>;
   defaultValue?: string
 }
 
-export function Radio<S, T, Context extends FocusOnContext<S>> ( { state, mode, enums, ariaLabel, id }: RadioProps<S, string, Context> ) {
+export function Radio<S, T, Context extends FocusOnContext<S>> ( { state, mode, enums, ariaLabel, id, labelPosition }: RadioProps<S, string, Context> ) {
   return <>{Object.entries ( enums ).map ( ( [ key, value ] ) => {
     const checked = state.optJson () === value
     const cssChecked = checked ? 'checked' : ''
@@ -17,7 +17,7 @@ export function Radio<S, T, Context extends FocusOnContext<S>> ( { state, mode, 
     const disabled = mode === 'view'
     const cssDisabled = disabled ? 'disabled' : ''
     
-    return <div className={`radio-container ${cssChecked} ${cssDisabled}`} onClick={() => state.setJson ( value, reasonFor ( 'Radio', 'onClick', id ) )} key={key}>
+    return <div className={`radio-container ${labelPosition == 'Horizontal'? 'd-flex-inline' : ''} ${cssChecked} ${cssDisabled}`} onClick={() => state.setJson ( value, reasonFor ( 'Radio', 'onClick', id ) )} key={key}>
       <input id={id + value} onChange={() => {}} checked={checked} value={state.optJson ()} type='radio' name={id} disabled={disabled} aria-label={ariaLabel}/>
       <span className="checkmark"></span>
       <Label state={state} htmlFor={key} label={value}/>

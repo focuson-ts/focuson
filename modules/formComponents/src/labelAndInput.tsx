@@ -1,4 +1,4 @@
-import { BooleanValidations, CommonStateProps, NumberValidations, StringValidations } from "./common";
+import { BooleanValidations, CommonStateProps, LabelAlignment, NumberValidations, StringValidations } from "./common";
 import { BooleanInput, cleanInputProps, Input, } from "./input";
 import { Label } from "./label";
 import { BooleanTransformer, NumberTransformer, StringTransformer } from "./transformers";
@@ -6,14 +6,14 @@ import { NameAnd, safeArray } from "@focuson/utils";
 import { ButtonFromPage } from "./buttonFromPage";
 import { FocusOnContext } from "@focuson/focuson";
 
-export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T, Context> {
+export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T, Context>, LabelAlignment {
   label?: string;
   defaultValue?: string | number
   value?: string | number;
   readonly?: boolean;
   allButtons: NameAnd<JSX.Element>;
-  buttons?: string[]
-  noLabel?: boolean
+  buttons?: string[];
+  noLabel?: boolean;
 }
 
 export interface TransformerProps<T> {
@@ -30,7 +30,7 @@ const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> ) =>
   <S, Context extends FocusOnContext<S>> ( props: LabelAndInputProps<S, T, Context> & P ) => {
     const label = <Label state={props.state} htmlFor={props.name} label={props.label}/>;
     const input = Input<S, T, P> ( tProps )<LabelAndInputProps<S, T, Context> & P, Context> ( props );
-    return <div className='labelValueButton'> {props.noLabel ? '' : label}{input}{makeButtons ( props.allButtons, props.buttons )}</div>
+    return <div className={`labelValueButton ${props.labelPosition == 'Horizontal'? 'd-flex-inline' : ''}`}> {props.noLabel ? '' : label}{input}{makeButtons ( props.allButtons, props.buttons )}</div>
   }
 
 export function LabelAndBooleanInput<S, Context extends FocusOnContext<S>> ( props: LabelAndInputProps<S, boolean, Context> ) {

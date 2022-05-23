@@ -86,3 +86,7 @@ export interface CustomButtonType {
 }
 
 export const getButtonClassName = (buttonType: string | undefined) => (buttonType == 'primary' ? 'primary-btn' : (buttonType == 'secondary' ? 'secondary-btn' : 'button'))
+
+export interface LabelAlignment {
+  labelPosition?: 'Horizontal' | 'Vertical'
+}
