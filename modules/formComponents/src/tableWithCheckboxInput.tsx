@@ -27,7 +27,11 @@ export function TableWithCheckboxInput<S, T, Context> ( { id, order, state, copy
         <tr key={i} onClick={onClick ( i )}>{order.map ( (o, colIndex) => {
           return colIndex%2 == 0 
             ? <td key={o.toString ()}>{row[o]}</td> 
-            : <td key={o.toString ()}><input type="checkbox" value={row[o]+""} checked={!!row[o] === true}/></td>
+            : <td key={o.toString ()}>
+              <div className="checkbox-container">
+                <input type="checkbox" value={row[o]+""} checked={!!row[o] === true}/>
+                <span className="checkmark"></span>
+              </div></td>
         }
       )}</tr>
     )}</tbody>

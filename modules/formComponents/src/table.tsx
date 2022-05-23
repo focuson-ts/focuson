@@ -53,11 +53,11 @@ export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, 
   let count = 0;
   let tableBody = json.map ( ( row, i ) =>  filter ( row ) && (maxCount === undefined || count++ < maxCountInt)? oneRow ( row, i ) : <></> );
 
-  return <table id={id}>
+  return <table id={id} className="grid">
     <thead>
     <tr>{orderJsx}</tr>
     </thead>
-    <tbody>{tableBody}</tbody>
+    <tbody className="grid-sub">{tableBody}</tbody>
   </table>
 }
 

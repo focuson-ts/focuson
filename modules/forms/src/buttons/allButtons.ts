@@ -18,11 +18,13 @@ export function isButtonWithControl ( b: any ): b is ButtonWithControl {
 }
 export type ButtonD = ButtonWithControl | GuardButtonInPage<any, any>
 
+
+
 export type RawButtons<G> = ModalButtonInPage<G> | ModalCancelButtonInPage | ModalCommitButtonInPage |
   ResetStateButton | RestButtonInPage<G> | ListNextButtonInPage | ListPrevButtonInPage | ValidationButtonInPage | DeleteStateButtonInPage |
   ToggleButtonInPage<G>;
 
-export type AllButtonsInPage<G> = RawButtons<G> | GuardButtonInPage<AllButtonsInPage<G>, G>
+export type AllButtonsInPage<G> = (RawButtons<G> | GuardButtonInPage<AllButtonsInPage<G>, G>)
 
 export function makeButtons<G> (): MakeButton<G> {
   return {

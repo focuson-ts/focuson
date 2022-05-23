@@ -13,6 +13,7 @@ export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T
   readonly?: boolean;
   allButtons: NameAnd<JSX.Element>;
   buttons?: string[]
+  noLabel?: boolean
 }
 
 export interface TransformerProps<T> {
@@ -29,14 +30,14 @@ const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> ) =>
   <S, Context extends FocusOnContext<S>> ( props: LabelAndInputProps<S, T, Context> & P ) => {
     const label = <Label state={props.state} htmlFor={props.name} label={props.label}/>;
     const input = Input<S, T, P> ( tProps )<LabelAndInputProps<S, T, Context> & P, Context> ( props );
-    return < div className='labelValueButton'> {label}{input}{makeButtons ( props.allButtons, props.buttons )}</div>
+    return <div className='labelValueButton'> {props.noLabel ? '' : label}{input}{makeButtons ( props.allButtons, props.buttons )}</div>
   }
 
 export function LabelAndBooleanInput<S, Context extends FocusOnContext<S>> ( props: LabelAndInputProps<S, boolean, Context> ) {
   const { state, mode, readonly } = props
   const label = <Label state={props.state} htmlFor={props.name} label={props.label}/>;
   const input = <BooleanInput {...props}/>
-  return < div className='labelValueButton'> {label}{input}{makeButtons ( props.allButtons, props.buttons )}</div>
+  return <div className='labelValueButton checkbox-container'> {label}{input}{makeButtons ( props.allButtons, props.buttons )}</div>
 }
 
 

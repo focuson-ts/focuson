@@ -5,8 +5,9 @@ import { FocusOnContext } from "@focuson/focuson";
 import { FocusedProps } from "@focuson/pages";
 import { LabelAndNumberInput } from "./labelAndInput";
 import { Label } from "./label";
+import { CustomButtonType, getButtonClassName } from "./common";
 
-export interface PlusMinusButtonsAndInputProps<S, C> extends FocusedProps<S, number, C> {
+export interface PlusMinusButtonsAndInputProps<S, C> extends FocusedProps<S, number, C>, CustomButtonType {
   id: string,
   label: string,
   allButtons: NameAnd<JSX.Element>,
@@ -25,7 +26,7 @@ function modifyNumber(old: number, fn: (x: number) => number) {
   return newValue < 0 ? 0 : newValue
 }
 
-export function PlusMinusButtonsAndInput<S, C>({ state, id, label, allButtons, required, min, flags }: PlusMinusButtonsAndInputProps<S, FocusOnContext<S>>) {
+export function PlusMinusButtonsAndInput<S, C>({ state, id, label, allButtons, required, min, flags, buttonType }: PlusMinusButtonsAndInputProps<S, FocusOnContext<S>>) {
   
   const onClick = (fn: (x: number) => number) => () => {    
     const newNumber = modifyNumber(state.optJsonOr(0), fn)
@@ -39,9 +40,11 @@ export function PlusMinusButtonsAndInput<S, C>({ state, id, label, allButtons, r
   return <>
     <div className="labelValueButton">
       <Label state={state} htmlFor={id} label={label}/>
-      <button className="ml-0" id={`${id}.minus`} title="Minus" onClick={onClick(x => x - 1)}>-</button>
-      <LabelAndNumberInput id={id} allButtons={allButtons} required={required} min={min} state={state} mode='view' />
-      <button id={`${id}.plus`} title="Plus" onClick={onClick(x => x + 1)}>+</button>
+      <div className="d-flex-inline">
+        <button className={getButtonClassName(buttonType)} id={`${id}.minus`} title="Minus" onClick={onClick(x => x - 1)}>-</button>
+        <LabelAndNumberInput id={id} allButtons={allButtons} required={required} min={min} state={state} mode='view' noLabel={true}/>
+        <button className={getButtonClassName(buttonType)} id={`${id}.plus`} title="Plus" onClick={onClick(x => x + 1)}>+</button>
+      </div>
     </div>
   </>
 }

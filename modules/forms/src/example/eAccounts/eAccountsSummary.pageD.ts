@@ -40,9 +40,10 @@ export const EAccountsSummaryPD: ExampleMainPage = {
       control: 'ModalButton', modal: CreatePlanPD, mode: 'edit',
       focusOn: '~/tempCreatePlan',
       copy: { from: '~/fromApi/createPlan' },
-      restOnCommit: { restName: 'createPlanRestD', action: 'update', result: 'refresh' }
+      restOnCommit: { restName: 'createPlanRestD', action: 'update', result: 'refresh' },
+      buttonType: 'primary'
     },
-    deleteExistingPlan: { control: 'RestButton', restName: 'createPlanRestD', action: 'delete', confirm: true, result: 'refresh' },
+    deleteExistingPlan: { control: 'RestButton', restName: 'createPlanRestD', action: 'delete', confirm: true, result: 'refresh', buttonType: 'primary' },
     refresh: { control: 'ResetStateButton' },
     // requestInfo: { control: 'ModalButton', modal: CreatePlanPD, mode: 'view', mainData: 'TDB', tempData: 'TBD' },
   }

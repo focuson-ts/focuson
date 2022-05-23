@@ -2,6 +2,9 @@
 @import url("./input.css");
 @import url("./radio.css");
 @import url("./dropdown.css");
+@import url("./checkbox.css");
+@import url("./button.css");
+@import url("./table.css");
 
 
 body {
@@ -46,9 +49,10 @@ body {
 ol, ul {
     padding-left: 30px;
 }
+
 li {
     display: inline-block;
-    padding: 2px 2px 0 0;
+    padding: 10px 15px 0 0;
 }
 
 h1 {
@@ -58,13 +62,13 @@ h1 {
     /* font-weight: bold; */
 }
 
-table {
+/* table {
     border-collapse: collapse;
-}
+} */
 
-.outlined, table, th, td {
+/* .outlined, table, th, td {
     border: 1px solid;
-}
+} */
 
 .status {
     margin-bottom: 10px;
@@ -122,53 +126,6 @@ button:disabled {
     border: 2px solid gray;
 } */
 
-button {
-    color: var(--button-primary-foreground-color);
-    background-color: var(--button-primary-background-color);    
-    /* border-color: #0d6efd; */
-    border: var(--button-primary-border);
-    min-width: var(--button-primary-min-width);
-    display: inline-block;
-    /* font-weight: bold; */
-    /* line-height: 1.5; */
-    text-align: center;
-    text-decoration: none;
-    text-transform: capitalize;
-    vertical-align: middle;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
-    padding: var(--button-primary-inside-padding);
-    margin: 0.25rem !important;
-    font-size: var(--button-font-size);
-    line-height: var(--button-line-height);
-    border-radius: 0.25rem;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-}
-
-button:focus {
-    color: #fff;
-    background-color: #06439e;
-    border-color: #053b8b;
-    box-shadow: 0 0 0 0.25rem rgb(49 132 253 / 50%);
-}
-
-button:hover {
-    color: #fff;
-    background-color: #06439e;
-    border-color: #053b8b;
-}
-
-button:disabled {
-    color: #fff;
-    background-color: #0d6efd;
-    border-color: #0d6efd;
-    pointer-events: none;
-    opacity: .65;
-}
-
-
 /* input:read-only, input:disabled, select:read-only, select:disabled {
     background-color: #e9ecef;
     opacity: 1;
@@ -187,7 +144,7 @@ button:disabled {
     gap: 15px
 }
 
-table {
+/* table {
     border-collapse: collapse;
     width: 100%;
 }
@@ -198,33 +155,34 @@ th, td {
     border-bottom: 1px solid #ddd;
 }
 
-tr:hover {background-color: lightgray;}
+tr:hover {background-color: lightgray;} */
+
+table {
+    margin: 0 0 20px 0;
+}
 
 .labelDropdownButton {
     width: 100%;
-    display: flex;
+    /* display: flex; */
     align-items: center;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 0 0 20px 0;
 }
 
 .labelAndDate {
-    display: flex;
+    /* display: flex; */
     align-items: center;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 0 0 20px 0;
 }
 
 .labelDropdown {
-    display: flex;
+    /* display: flex; */
     align-items: center;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 0 0 20px 0;
 }
 
 .labelValue {
     justify-content: space-between;
-    display: flex;
+    /* display: flex; */
     align-items: center;
 }
 
@@ -232,21 +190,24 @@ tr:hover {background-color: lightgray;}
     /*width: 100%;*/
     /* display: flex; */
     align-items: center;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 0 0 20px 0;
 }
 
 .labelRadioButton{
-    display: flex;
+    /* display: flex; */
     align-items: center;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 0 0 20px 0;
 }
 
 label {
     color: var(--form-label-colour);
     font-size: var(--font-size-main);
-    width: 35%;
+    /* width: 35%; */
+}
+
+
+input#page1\.unpaidCardOrMisuseItems {
+  width: 100% !important;
 }
 
 /* input[type=text],input[type=number],input[type=date] {
@@ -353,10 +314,10 @@ select {
     margin-left: 0 !important;
 }
 
-table {
+/* table {
     caption-side: bottom;
     border-collapse: collapse;
-}
+} */
 
 caption {
     padding-top: 0.5rem;
@@ -365,12 +326,12 @@ caption {
     text-align: left;
 }
 
-th {
+/* th {
     text-align: inherit;
     text-align: -webkit-match-parent;
-}
+} */
 
-thead,
+/* thead,
 tbody,
 tfoot,
 tr,
@@ -379,56 +340,9 @@ th {
     border-color: inherit;
     border-style: solid;
     border-width: 0;
-}
+} */
 
-table {
-    --bs-table-bg: #f8f9fa;
-    --bs-table-striped-bg: #ecedee;
-    --bs-table-striped-color: #000;
-    --bs-table-active-bg: #dfe0e1;
-    --bs-table-active-color: #000;
-    --bs-table-hover-bg: #e5e6e7;
-    --bs-table-hover-color: #000;
-    color: #000;
-    border-color: #dfe0e1;
-    /*--bs-table-bg: transparent;*/
-    --bs-table-accent-bg: transparent;
-    /*--bs-table-striped-color: #212529;*/
-    --bs-table-striped-bg: rgba(0, 0, 0, 0.05);
-    /*--bs-table-active-color: #212529;*/
-    --bs-table-active-bg: rgba(0, 0, 0, 0.1);
-    /*--bs-table-hover-color: #212529;*/
-    --bs-table-hover-bg: rgba(0, 0, 0, 0.075);
-    width: 100%;
-    margin-bottom: 1rem;
-    /*color: #212529;*/
-    vertical-align: top;
-    /*border-color: #dee2e6;*/
-}
-table > :not(caption) > * > * {
-    padding: 0.5rem 0.5rem;
-    vertical-align: top;
-    background-color: var(--bs-table-bg);
-    /*border-bottom-width: 1px;*/
-    box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
-}
-table > tbody {
-    vertical-align: inherit;
-}
-table > thead {
-    vertical-align: bottom;
-}
-table > :not(:last-child) > :last-child > * {
-    border-bottom-color: currentColor;
-}
-table > thead > tr > th{
-    background-color: #d5d1d1;
-}
 
-table > tbody > tr:hover {
-    --bs-table-accent-bg: var(--bs-table-hover-bg);
-    color: var(--bs-table-hover-color);
-}
 
 /* input[type=text], input[type=number], input[type=date]{
     border: 1px solid #ced4da;
@@ -585,23 +499,7 @@ pre {
     color: olive;
 }
 
-.table-light {
-    --bs-table-bg: #f8f9fa;
-    --bs-table-striped-bg: #ecedee;
-    --bs-table-striped-color: #000;
-    --bs-table-active-bg: #dfe0e1;
-    --bs-table-active-color: #000;
-    --bs-table-hover-bg: #e5e6e7;
-    --bs-table-hover-color: #000;
-    color: #000;
-    border-color: #dfe0e1;
-}
-.table-bordered > :not(caption) > * {
-    border-width: 1px 0;
-}
-.table-bordered > :not(caption) > * > * {
-    border-width: 0 1px;
-}
+
 .border-primary {
     border-color: #0d6efd !important;
 }

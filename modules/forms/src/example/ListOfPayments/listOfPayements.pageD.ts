@@ -108,7 +108,7 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
     prev: { control: 'ListPrevButton', list: '~/display', value: '~/selected' },
     next: { control: 'ListNextButton', list: '~/display', value: '~/selected' },
     add: { ...addOrEditButton, mode: "create", copyOnClose: { to: '~/display[$append]' }, setToLengthOnClose: { variable: '~/selected', array: '~/display' } },
-    edit: { ...addOrEditButton, mode: "edit", copyOnClose: { to: '~/display[~/selected]' } },
+    edit: { ...addOrEditButton, mode: "edit", copyOnClose: { to: '~/display[~/selected]' }},
     print: {
       control: 'RestButton', action: { state: 'print' }, restName: 'paymentHistory',
       enabledBy: [ 'canClickPrint', 'hasSomethingToPrint' ],

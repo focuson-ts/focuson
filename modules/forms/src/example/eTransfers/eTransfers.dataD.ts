@@ -8,7 +8,7 @@ import { ExampleRepeatingD } from "../common";
 export const ETransferDataD: DataD<AllGuards> = {
   name: "ETransferDataD",
   description: "Allows us to make an etransfer",
-  layout: { component: LayoutCd, displayParams: { details: '[[1],[3,3],[1,1]]', displayAsCards: true }  },
+  layout: { component: LayoutCd, displayParams: { details: '[[1],[3,3],[1,1]]', displayAsCards: false }  },
   structure: {
     account: { dataDD: AccountIdDD, displayParams: { label: "Account Id", min: 0 } },
     dateOfETransfer: { dataDD: DateDD, displayParams: { datesExcluded: '~/holidays/', workingDaysInFuture: 5, includeWeekends: true }},
