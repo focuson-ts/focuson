@@ -46,6 +46,7 @@ export type MutationDetail = StoredProcedureMutation | SqlMutation | ManualMutat
 // }
 export interface SqlMutation {
   type: 'sql',
+  list?: boolean,
   schema: Schema;
   /**The name of the procedure that does this: should capture the intent of what this does */
   name: string;
@@ -55,6 +56,7 @@ export interface SqlMutation {
 
 export interface StoredProcedureMutation {
   type: 'storedProc',
+  list?: boolean,
   schema: Schema,
   package?: string;
   name: string,
@@ -63,6 +65,7 @@ export interface StoredProcedureMutation {
 
 export interface ManualMutation {
   type: 'manual';
+  list?: boolean,
   import?: string | string[];
   params: MutationParamForManual | MutationParamForManual[]
   name: string;
@@ -98,8 +101,7 @@ export function allInputParams ( m: MutationParam | MutationParam[] ): ParamMuta
 
 export function tupleIndexes ( maxTuples: number ) {return [ ...Array ( maxTuples + 1 ).keys () ].slice ( 2 );}
 export function importForTubles ( params: JavaWiringParams ) {
-  return [ `//If there is a compilation issue here is it because you need to set 'maxTuples'? Currently set to ${params.maxTuples} `,
-    ...tupleIndexes ( params.maxTuples ).map ( i => `import ${params.thePackage}.${params.mutatorPackage}.utils.Tuple${i};` ) ]
+  return tupleIndexes ( params.maxTuples ).map ( i => `import ${params.thePackage}.${params.mutatorPackage}.utils.Tuple${i};` )
 }
 export function makeTuples ( params: JavaWiringParams, i: number ) {
   const indexes = [ ...Array ( i + 1 ).keys () ].slice ( 1 )

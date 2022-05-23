@@ -1,4 +1,4 @@
-import { flatMapRestAndActions, flatMapRestAndResolver, mapRestAndActions, mapRestAndResolver, RestD} from "../common/restD";
+import { flatMapRestAndActions, flatMapRestAndResolver, mapRestAndActions, mapRestAndResolver, RestD } from "../common/restD";
 import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, isPrimDd, isRepeatingDd, OneDataDD, PrimitiveDD, RepeatingDataD, sampleFromDataD } from "../common/dataD";
 import { fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, fetcherVariableName, fetcherVariableNameForResolver, resolverName, sampleName } from "./names";
 import { JavaWiringParams } from "./config";
@@ -94,7 +94,7 @@ export function findQueryMutationResolver<G> ( r: RestD<G>, a: RestAction ): Res
   let name = resolverName ( r, a );
   return ({
     isRoot: true, parent: rad.query, resolver: name, name, samplerName: sampleName ( r.dataDD ), sample: [],
-    needsObjectInOutput: getRestTypeDetails ( a ).output.needsObj,
+    needsObjectInOutput: !!getRestTypeDetails ( a ).output.needsObj,
     javaType: findJavaType ( r.dataDD )
   })
 
