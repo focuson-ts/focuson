@@ -1,12 +1,10 @@
 import { directorySpec, generate, params } from "./makeFiles/generate";
 import *  as fse from "fs-extra";
-import { devAppConfig, focusOnVersion, generatedPages, javaOutputRoot, tsRoot } from "./focuson.config";
+import { devAppConfig, focusOnVersion,  javaOutputRoot, tsRoot } from "./appConfig";
 import { AllGuardCreator } from "./buttons/guardButton";
 import { makeButtons } from "./buttons/allButtons";
-import { GenerateLogLevel, safeObject, toArray } from "@focuson/utils";
-import { mapRestAndActions, RestD } from "./common/restD";
-import { MainPageD } from "./common/pageD";
-import { allOutputParams, MutationDetail } from "./common/resolverD";
+import { GenerateLogLevel } from "@focuson/utils";
+import { generatedPages } from "./focuson.config";
 
 
 const logLevel: GenerateLogLevel = 'detailed';

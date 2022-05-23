@@ -1,8 +1,7 @@
 import { ChequeCreditbooksDD, ChequeCreditbooksHistoryDD, ChequeCreditbooksHistoryLineDD } from "./chequeCreditBooks.dataD";
 import { chequeCreditBooksRestD } from "./chequeCreditBooks.restD";
-import { IntegerDD, PrimitiveDD } from "../../common/dataD";
+import { IntegerDD, NatNumDd, PrimitiveDD } from "../../common/dataD";
 import { ExampleMainPage, ExampleModalPage } from "../common";
-import { NatNumDd } from "../commonEnums";
 
 
 export const OrderChequeBookOrPayingInModalPD: ExampleModalPage = {

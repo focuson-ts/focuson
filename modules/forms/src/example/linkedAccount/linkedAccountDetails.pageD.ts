@@ -1,7 +1,8 @@
 import { ExampleMainPage, ExampleModalPage } from "../common";
 import { CollectionItemDD, CreatePaymentDD, linkedAccountDetailsDD, MandateDD, MandateSearchDD, OverpaymentPageDD, paymentReasonDD } from "./linkedAccountDetails.dataD";
 import { allMandatesForClientRD, collectionHistoryListRD, collectionSummaryRD, createPaymentRD, overpaymentHistoryRD, singleCollectionPaymentRD } from "./linkedAccountDetails.restD";
-import { NatNumDd } from "../commonEnums";
+import {  } from "../commonEnums";
+import { NatNumDd } from "../../common/dataD";
 
 export const SelectMandateMP: ExampleModalPage = {
   name: "SelectMandate",

@@ -12,9 +12,9 @@
     ]
   },
   "dependencies": {
-    "@focuson/utils": "1.12.0",
-    "@focuson/files": "1.12.0",
-    "@focuson/focuson": "1.12.0"
+    "@focuson/utils": "1.12.6",
+    "@focuson/files": "1.12.6",
+    "@focuson/focuson": "1.12.6"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -32,7 +32,14 @@
     "README.md",
     "dist/index.js",
     "dist/index.d.ts",
-    "dist/src/",
+    "dist/src/buttons",
+    "dist/src/codegen",
+    "dist/src/common",
+    "dist/src/makeFiles",
+    "dist/src/reporting",
+    "dist/src/appConfig.d.ts",
+    "dist/src/appConfig.js",
+    "dist/src/appConfig.js",
     "templates/"
   ],
   "keywords": [
@@ -48,7 +55,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.12.0",
+  "version": "1.12.6",
   "template": "forms",
   "description": "Allows us to define data that is stored in a database, or perhaps an api",
   "details": {
