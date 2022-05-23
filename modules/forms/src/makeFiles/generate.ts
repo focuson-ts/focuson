@@ -7,12 +7,11 @@ import { ButtonD } from "../buttons/allButtons";
 import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { MakeButton } from "../codegen/makeButtons";
 import { validate } from "./validateModel";
-import { foldPagesToRestToMutationsAndResolvers} from "../common/restD";
+import { foldPagesToRestToMutationsAndResolvers } from "../common/restD";
 import { GenerateLogLevel, safeArray, toArray, unique } from "@focuson/utils";
 import * as process from "process";
 import { makeCriticalReport, makeReport, makeReportData } from "../reporting/report";
 import { AppConfig } from "../appConfig";
-import { generatedPages } from "../focuson.config";
 import { allOutputParams } from "../common/resolverD";
 
 export const params = {
@@ -56,7 +55,7 @@ export const directorySpec: DirectorySpec = {
 }
 export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, directorySpec: DirectorySpec, appConfig: AppConfig, params: CombinedParams, javaOutputRoot: string, tsRoot: string, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G> ) => <B extends ButtonD> ( pages: MainPageD<B, G>[] ) => {
   const paramsWithTuples = {
-    ...params, maxTuples: foldPagesToRestToMutationsAndResolvers<number> ( generatedPages, 0, ( mut ) =>
+    ...params, maxTuples: foldPagesToRestToMutationsAndResolvers<number> ( pages, 0, ( mut ) =>
       ( acc ) => Math.max ( acc, allOutputParams ( toArray ( mut.params ) ).length ) )
   }
 

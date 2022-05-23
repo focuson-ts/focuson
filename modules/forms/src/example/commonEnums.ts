@@ -58,15 +58,6 @@ export const HowOften = {
   6: 'Weekly'
 }
 
-export const NatNumDd: NumberPrimitiveDD = {
-  ...numberPrimDD,
-  name: 'NaturalNumber',
-  description: "A positive integer",
-  display: LabelAndNumberInputCD,
-  displayParams: { min: 0 } ,
-  sample: [123, 456]
-}
-
 export const PaymentTypeDd: StringPrimitiveDD = {
   ...stringPrimDD,
   name: 'PaymentType',

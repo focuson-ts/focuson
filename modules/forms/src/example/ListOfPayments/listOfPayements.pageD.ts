@@ -1,4 +1,4 @@
-import { NatNumDd } from "../commonEnums";
+import {  } from "../commonEnums";
 import { AccountDetailsDD, addressSearchDD, CurrentPaymentCountsDD, postCodeDataForListOfPaymentsLineD, printRecordDD, PrintRecordHistoryDD } from "./listOfPayements.dataD";
 import { accountAndAddressDetailsRD, CurrentPaymentCountsRD, postcodeRestD, PrintRecordHistoryRD } from "./listOfPayements.restD";
 import { ExampleMainPage, ExampleModalPage } from "../common";
@@ -6,7 +6,7 @@ import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 import { ButtonDefnInPage } from "../../common/pageD";
 import { AllButtonsInPage, RawButtons } from "../../buttons/allButtons";
 import { AllGuards } from "../../buttons/guardButton";
-import { OneLineStringDD } from "../../common/dataD";
+import { NatNumDd, OneLineStringDD } from "../../common/dataD";
 
 export const AddressModalPage: ExampleModalPage = {
   pageType: 'ModalPage',
