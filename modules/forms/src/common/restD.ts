@@ -1,10 +1,10 @@
 import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
-import { NameAnd, RestAction, safeObject, sortedEntries, toArray, unique } from "@focuson/utils";
+import { NameAnd, RestAction, safeObject, safeString, sortedEntries, toArray, unique } from "@focuson/utils";
 import { filterParamsByRestAction } from "../codegen/codegen";
 import { AccessDetails, DBTable, MutationDetail, Mutations, MutationsForRestAction } from "./resolverD";
 import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 import { allMainPages, MainPageD, PageD, RestDefnInPageProperties } from "./pageD";
-import { getRestTypeDetails, RestActionDetail } from "@focuson/rest";
+import { getRestTypeDetails, RestActionDetail, restActionForName } from "@focuson/rest";
 import { findChildResolvers, ResolverData } from "../codegen/makeJavaFetchersInterface";
 
 
@@ -145,7 +145,7 @@ export function findUniqueDataDsAndRestTypeDetails<G> ( rs: RestD<G>[] ): [ Rest
     var x: [ RestD<G>, RestAction, RestActionDetail ][] = r.actions.map ( a => [ r, a, getRestTypeDetails ( a ) ] )
     return x
   } )
-  return unique<[ RestD<G>, RestAction, RestActionDetail ]> ( nonUnique, ( [ restD, a, rad ] ) => restD.dataDD.name + "," + a )
+  return unique<[ RestD<G>, RestAction, RestActionDetail ]> ( nonUnique, ( [ restD, a, rad ] ) => restD.dataDD.name + safeString ( restD.namePrefix ) + "," + restActionForName ( a ) )
 }
 
 export function findUniqueDataDsIn<G> ( rs: RestD<G>[] ): CompDataD<G>[] {

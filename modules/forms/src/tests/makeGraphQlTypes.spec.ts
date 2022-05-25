@@ -3,6 +3,9 @@ import { makeGraphQlSchema, makeQueryOrMutateBlock, makeSchemaBlock } from "../c
 import { CreatePlanDD, EAccountsSummaryDD, EAccountsSummaryTableDD, EAccountSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD";
 import { RepeatingPageD } from "../example/repeating/repeating.pageD";
 import { repeatingRestRD } from "../example/repeating/repeating.restD";
+import { ListOfPaymentsDD } from "../example/ListOfPayments/listOfPayements.dataD";
+import { ListOfPaymentsPagePD } from "../example/ListOfPayments/listOfPayements.pageD";
+import { PrintRecordHistoryRD, PrintRecordRD } from "../example/ListOfPayments/listOfPayements.restD";
 
 const rs = [ eAccountsSummaryRestD, createPlanRestD, eAccountsSummaryRestD, createPlanRestD ];
 describe ( "makeGraphQlSchema", () => {
@@ -15,7 +18,7 @@ describe ( "makeGraphQlSchema", () => {
         "  getEAccountsSummary(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, dbName: String!, employeeType: String!):EAccountsSummary!",
         "  getCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, createPlanId: Int!):CreatePlan!",
         "}"
-      ])
+      ] )
     } )
     it ( "should make type Mutation", () => {
       expect ( makeQueryOrMutateBlock ( rs, 'Mutation' ) ).toEqual ( [
@@ -25,7 +28,7 @@ describe ( "makeGraphQlSchema", () => {
         "  updateCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, createPlanId: Int!,obj: CreatePlanInp!):CreatePlan!",
         "  deleteCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, createPlanId: Int!):Boolean",
         "}"
-      ])
+      ] )
     } )
   } )
 
@@ -97,7 +100,7 @@ describe ( "makeGraphQlSchema", () => {
       "  createPlanDate: String!",
       "  createPlanEnd: String!",
       "}"
-    ])
+    ] )
   } )
 
   it ( "should make a schema for something with a repeating block in the fetcher", () => {
@@ -116,7 +119,87 @@ describe ( "makeGraphQlSchema", () => {
       "  name: String!",
       "  age: Int!",
       "}"
-    ])
-
+    ] )
   } )
+
+  it ( "should make sometthing with name prefixes", () => {
+    expect ( makeGraphQlSchema ( [PrintRecordHistoryRD, PrintRecordRD,  ] ) ).toEqual ( [
+      "type Query{",
+      "  gethistoryPrintRecordItem(accountId: Int!):[PrintRecordItem!]!",
+      "}",
+      "type Mutation{",
+      "  createsinglePrintRecordItem(accountId: Int!,obj: [PrintRecordItemInp!]!):[PrintRecordItem!]!",
+      "  stateprintsinglePrintRecordItem(id: Int!):[Boolean]!",
+      "}",
+      "type ListOfPayments{",
+      "  standingOrders: SinglePrint!",
+      "  openBankingStandingOrders: SinglePrint!",
+      "  directDebits: SinglePrint!",
+      "  billPayments: SinglePrint!",
+      "  openBanking: SinglePrint!",
+      "}",
+      "type NewBankDetails{",
+      "  title: String!",
+      "  forename: String!",
+      "  surname: String!",
+      "  bank: String!",
+      "  line1: String!",
+      "  line2: String!",
+      "  line3: String!",
+      "  line4: String!",
+      "  postcode: String!",
+      "  sortCode: String!",
+      "  accountNo: Int!",
+      "}",
+      "type PrintRecordItem{",
+      "  id: Int!",
+      "  requestedBy: String!",
+      "  newBankDetails: NewBankDetails!",
+      "  listOfPayments: ListOfPayments!",
+      "  includeSingleAndInitialDirectDebits: Boolean!",
+      "  alreadyPrinted: Boolean!",
+      "  authorisedByCustomer: String!",
+      "  datePrinted: String!",
+      "}",
+      "type SinglePrint{",
+      "  shouldPrint: Boolean!",
+      "  numberOfItems: Int!",
+      "}",
+      "input ListOfPaymentsInp{",
+      "  standingOrders: SinglePrintInp!",
+      "  openBankingStandingOrders: SinglePrintInp!",
+      "  directDebits: SinglePrintInp!",
+      "  billPayments: SinglePrintInp!",
+      "  openBanking: SinglePrintInp!",
+      "}",
+      "input NewBankDetailsInp{",
+      "  title: String!",
+      "  forename: String!",
+      "  surname: String!",
+      "  bank: String!",
+      "  line1: String!",
+      "  line2: String!",
+      "  line3: String!",
+      "  line4: String!",
+      "  postcode: String!",
+      "  sortCode: String!",
+      "  accountNo: Int!",
+      "}",
+      "input PrintRecordItemInp{",
+      "  id: Int!",
+      "  requestedBy: String!",
+      "  newBankDetails: NewBankDetailsInp!",
+      "  listOfPayments: ListOfPaymentsInp!",
+      "  includeSingleAndInitialDirectDebits: Boolean!",
+      "  alreadyPrinted: Boolean!",
+      "  authorisedByCustomer: String!",
+      "  datePrinted: String!",
+      "}",
+      "input SinglePrintInp{",
+      "  shouldPrint: Boolean!",
+      "  numberOfItems: Int!",
+      "}"
+    ] )
+  } )
+
 } )

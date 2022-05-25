@@ -1,24 +1,25 @@
-import { findIds, isRestLens, LensRestParam} from "../common/restD";
+import { findIds, isRestLens, LensRestParam } from "../common/restD";
 import { domainName, domainsFileName, pageDomainName, restDetailsName, restFileName } from "./names";
 import { TSParams } from "./config";
 import { allRestAndActions, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { safeObject, sortedEntries, unique } from "@focuson/utils";
-import { addStringToEndOfAllButLast, indentList, lensFocusQueryFor, stateFocusQueryForRepl } from "./codegen";
-import { parsePath, stateCodeBuilder } from "@focuson/lens";
-import { lensFocusQueryWithSlashAndTildaFromIdentity, lensFocusQueryWithTildaFromPage } from "./lens";
+import { addStringToEndOfAllButLast, indentList, lensFocusQueryFor } from "./codegen";
+import { lensFocusQueryWithTildaFromPage } from "./lens";
 
 
 export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restName: string, r: RestDefnInPageProperties<G> ): string[] => {
   const [ ids, resourceIds ] = findIds ( r.rest )
   let pageDomain = `${params.domainsFile}.${pageDomainName ( p )}`;
+
   const locals: [ string, LensRestParam<any> ][] = sortedEntries ( r.rest.params ).flatMap ( ( [ n, l ] ) => isRestLens ( l ) ? [ [ n, l ] ] : [] )
-  const fddLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: Lenses.identity< ${pageDomain}>()${lensFocusQueryFor ( l.lens )}` )
+  const fddLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: ${lensFocusQueryFor ( l.lens )}` )
   const compilationException = r.targetFromPath.indexOf ( '#' ) >= 0 ?
     [ `    //This compilation error is because you used a variable name in the target '${r.targetFromPath}'. Currently that is not supported` ] : []
   const states = safeObject ( r.rest.states )
   return [
     `//If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs`,
     `export function ${restDetailsName ( p, restName, r.rest )} ( cd: NameAndLens<${params.stateName}>, dateFn: DateFn  ): OneRestDetails<${params.stateName}, ${pageDomain}, ${params.domainsFile}.${domainName ( r.rest.dataDD )}, SimpleMessage> {`,
+    `  const pageIdL = Lenses.identity<${pageDomain}>()`,
     `  const fdd: NameAndLens<${pageDomain}> = {` + fddLens.join ( "," ) + "}",
     `  return {`,
     `    fdLens: Lenses.identity<${params.stateName}>().focusQuery('${p.name}'),`,
@@ -50,7 +51,7 @@ export function makeRestDetailsPage<B, G> ( params: TSParams, ps: PageD<B, G>[] 
     `import { RestDetails, OneRestDetails } from "@focuson/rest"`,
     `import { createSimpleMessage, DateFn, defaultDateFn, RestAction, insertBefore, SimpleMessage } from "@focuson/utils"`,
     `import { Lenses, NameAndLens} from "@focuson/lens"`,
-    `import { ${params.stateName} , commonIds} from "./${params.commonFile}";`,
+    `import { ${params.stateName} , commonIds, identityL} from "./${params.commonFile}";`,
     `` ]
   const imp = unique ( allRestAndActions ( ps ).map ( ( [ pd, name, rd, rad ] ) => `import { ${restDetailsName ( pd, name, rd.rest )} } from '${restFileName ( '.', params, pd )}';` ), x => x );
 

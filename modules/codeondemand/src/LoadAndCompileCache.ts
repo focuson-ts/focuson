@@ -55,7 +55,6 @@ export let defaultCompiler = <Result>(error: (msg: string, code: string, e: any)
     }
 }
 
-//TODO Change to just a set of functions with a create method
 export class LoadAndCompileCache<Result> implements ILoadAndCompileCache<Result> {
     private httploader: (url: string) => Promise<string>;
     private checker: UrlAndValueChecker

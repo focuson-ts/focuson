@@ -127,6 +127,10 @@ export class Optional<Main, Child> implements GetOptioner<Main, Child>, SetOptio
     return new Optional<Main, string> ( getter, setter, `chainIntoArray(${a})` )
   }
 
+  chainNthFromPath ( pathL: Optional<Main, number> ): Optional<Main, any> {
+    // @ts-ignore --Typescripts type system doesn't support type guards so we cannot express that Child must be an array and do better than any on the output
+    return Lenses.calculatedNth ( pathL, this )
+  }
   chainCalc ( pathL: Optional<Main, keyof Child> ): Optional<Main, Child[keyof Child]> {
     const lens = this
     function getter ( main: Main ) {
@@ -411,7 +415,7 @@ export class Lenses {
   static calculatedNth<Main, T> ( nL: Optional<Main, number>, opt: Optional<Main, T[]> ) {
     function getter ( m: Main ): T | undefined {
       const rawN = nL.getOption ( m )
-      return opt.getOption ( m )[ rawN ? rawN : 0 ]
+      return opt.getOption ( m )?.[ rawN ? rawN : 0 ]
     }
     function setter ( m: Main, t: T ): Main | undefined {
       const rawN = nL.getOption ( m )

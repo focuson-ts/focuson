@@ -17,7 +17,6 @@ import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { MakeButton } from "../codegen/makeButtons";
 import { makeAllPactsForPage } from "../codegen/makePacts2";
 import { makeOptionals } from "../codegen/makeOptionals";
-import { mainPage } from "@focuson/pages";
 import { makeGuardsReportForPage } from "../reporting/report";
 import { AppConfig } from "../appConfig";
 
@@ -93,8 +92,8 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
 
 
     writeToFile ( `${tsCode}/${params.fetchersFile}.ts`, () => [
-      ...makeFetcherDataStructureImport ( params, allPages ),
-      ...makeFetchersDataStructure ( params, { variableName: 'fetchers', stateName: params.stateName }, allPages ) ], details )
+      ...makeFetcherDataStructureImport ( params, mainPs ),
+      ...makeFetchersDataStructure ( params, { variableName: 'fetchers', stateName: params.stateName }, mainPs ) ], details )
 
     writeToFile ( `${tsCode}/${params.restsFile}.ts`, () => makeRestDetailsPage ( params, allPages ), details )
     const rests = unique ( allPages.flatMap ( pd => isMainPage ( pd ) ? sortedEntries ( pd.rest ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest ) : [] ), r => r.dataDD.name )

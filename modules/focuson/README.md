@@ -39,6 +39,6 @@ These are useful when the main state has the page selection as a `HasPageSelecti
 ## Modal Pages
 It is quite common to want 'popup' a modal page over the top of another page. This is very easy to do
 
-## Page configuration
+
 
 

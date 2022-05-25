@@ -180,8 +180,6 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
       copy: [
         { from: '#currentOccupation[#selected]/occupation', to: '~/occupation/search' },
         { from: '#currentOccupation[#selected]/occupation', to: '~/occupation/selectedOccupationName' },
-        // TODO FROM HAS TO BE AN ARRAY
-        // { from: ['{basePage}', 'dropdowns', 'occupationDescriptionResponse' ], to: ['{basePage}', 'occupation', 'searchResults'] },
       ],
       copyOnClose: [
         { from: '~/occupation/selectedOccupationName', to: '#currentOccupation[#selected]/occupation' },

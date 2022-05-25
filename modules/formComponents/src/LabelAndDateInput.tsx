@@ -67,7 +67,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
 
   const minDate = addDays(new Date(),safeArray(datesToExclude), workingDaysInFuture?workingDaysInFuture:0);
 
-  const selectedDate = new Date(state.optJsonOr(new Date().toDateString())) // TODO: Turn default date into arg
+  const selectedDate = new Date(state.optJsonOr(new Date().toDateString()))
   let error = false
 
   if (!isValid(selectedDate)) {        

@@ -1,6 +1,6 @@
-import {  } from "../commonEnums";
+import {} from "../commonEnums";
 import { AccountDetailsDD, addressSearchDD, CurrentPaymentCountsDD, postCodeDataForListOfPaymentsLineD, printRecordDD, PrintRecordHistoryDD } from "./listOfPayements.dataD";
-import { accountAndAddressDetailsRD, CurrentPaymentCountsRD, postcodeRestD, PrintRecordHistoryRD } from "./listOfPayements.restD";
+import { accountAndAddressDetailsRD, CurrentPaymentCountsRD, postcodeRestD, PrintRecordHistoryRD, PrintRecordRD } from "./listOfPayements.restD";
 import { ExampleMainPage, ExampleModalPage } from "../common";
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 import { ButtonDefnInPage } from "../../common/pageD";
@@ -88,6 +88,7 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
   initialValue: { selected: 0 },
   rest: {
     paymentHistory: { rest: PrintRecordHistoryRD, fetcher: true, targetFromPath: '~/display' },
+    onePayment: { rest: PrintRecordRD, fetcher: false, targetFromPath: '~/display[~/selected]' },
     currentPayments: { rest: CurrentPaymentCountsRD, fetcher: true, targetFromPath: '~/currentPayments' },
     accountDetails: { rest: accountAndAddressDetailsRD, fetcher: true, targetFromPath: '~/accountDetails' },
     postcode: { rest: postcodeRestD, targetFromPath: '~/addressSearch/searchResult' },
@@ -112,7 +113,7 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
     add: { ...addOrEditButton, mode: "create", copyOnClose: { to: '~/display[$append]' }, setToLengthOnClose: { variable: '~/selected', array: '~/display' } },
     edit: { ...addOrEditButton, mode: "edit", copyOnClose: { to: '~/display[~/selected]' }, enabledBy: 'canPrint' },
     print: {
-      control: 'RestButton', action: { state: 'print' }, restName: 'paymentHistory',
+      control: 'RestButton', action: { state: 'print' }, restName: 'onePayment',
       enabledBy: [ 'canClickPrint', 'hasSomethingToPrint', 'canPrint' ],
       confirm: 'Really?',
       deleteOnSuccess: '~/display'

@@ -157,6 +157,7 @@ export const printRecordDD: ExampleDataD = {
   },
   sealedBy: 'alreadyPrinted',
   structure: {
+    id: {dataDD: NatNumDd, hidden: true, sample: [1,2,3]},
     requestedBy: {
       dataDD: { ...StringDD, display: DataDrivenFixedOptionDropDownAndDetailsCD },
       displayParams: {

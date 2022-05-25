@@ -43,7 +43,6 @@ function calculateNewPageTxs<S, Context extends PageSelectionContext<S>, MSGs> (
     } else return []
   } )
 }
-//TODO Redo to allow for generations... that's interesting... But doable...needs thought...
 export const calculateFetcherTxs = <S, Context extends PageSelectionContext<S>, MSGs> ( config: FocusOnConfig<S, Context, MSGs>, s: S ): OneFetcherGeneration<S> => {
   let ws: WouldLoad[] = wouldLoad ( config.fetchers, s );
   const gen = ws.filter ( w => w.load ).map ( w => {

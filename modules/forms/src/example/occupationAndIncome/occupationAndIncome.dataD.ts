@@ -60,9 +60,6 @@ export const oneOccupationIncomeDetailsDD: ExampleDataD = {
     occupation: { dataDD: StringDD, displayParams: { label: "What is {~/mainOrJoint|your|their} occupation? ", buttons: [ 'list' ] }, guard: { areYou: [ 'E', 'S' ] }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].occupation ] },
     customerDescription: { dataDD: StringDD, displayParams: { label: "Customers description: " }, guard: { areYou: [ 'E', 'S' ] }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].customerDescription ] },
 
-    // TODO This needs to be displayed if regulatoryReport is Y
-    // applicantEmploymentSector: { dataDD: StringDD, displayParams: { label: "Applicant employment sector: " }, guard: { areYou: [ 'E', 'S' ] } },
-
     ownShareOfTheCompany: { dataDD: yesNoDD, displayParams: { label: "Do {~/mainOrJoint|you|they} own a share of the company? " }, guard: { areYou: [ 'E' ] } },
     owningSharesPct: { dataDD: yesNoDD, displayParams: { label: "Is this 20% or more of it? " }, guard: { areYou: [ 'E' ], ownShareOfTheCompany: [ 'Y' ] } },
 
@@ -82,9 +79,6 @@ export const oneOccupationIncomeDetailsDD: ExampleDataD = {
     establishedYear: { dataDD: StringDD, displayParams: { label: "When was it established? (MM/YYYY) " }, guard: { areYou: [ 'E', 'S' ], owningSharesPct: [ 'Y' ] }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].establishedYear ] },
     // @ts-ignore
     annualDrawing3Yrs: { dataDD: IntegerDD, displayParams: { label: "What are {~/mainOrJoint|your|their} average annual drawings over the past 3 years? " }, guard: { areYou: [ 'E', 'S' ], owningSharesPct: [ 'Y' ] }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].annualDrawing3Yrs ] },
-
-    // TODO This needs to be displayed if regulatoryReport is Y
-    // netMonthlyIncome: { dataDD: StringDD, displayParams: { label: "What is your net monthly income: " }, guard: { areYou: [ 'E', 'S' ] } },
 
     otherSourceOfIncome: { dataDD: yesNoDD, displayParams: { label: "Do {~/mainOrJoint|you|they} have another sources of income (e.g. rental income) ? ", buttons: [ 'otherSourcesOfIncome' ] }, },
 

@@ -10,6 +10,7 @@ describe ( "makeRest", () => {
     expect ( makeRest ( paramsForTest, EAccountsSummaryPD ) ( 'eAccountsSummary', EAccountsSummaryPD.rest.eAccountsSummary ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
       "//If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs",
       "export function EAccountsSummary_EAccountsSummaryRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.EAccountsSummaryDomain, SimpleMessage> {",
+      "  const pageIdL = Lenses.identity<domains.EAccountsSummaryPageDomain>()",
       "  const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}",
       "  return {",
       "    fdLens: Lenses.identity<FState>().focusQuery('EAccountsSummary'),",
@@ -30,6 +31,7 @@ describe ( "makeRest", () => {
     expect ( makeRest ( paramsForTest, EAccountsSummaryPD ) ( 'eAccountsSummary', EAccountsSummaryPD.rest.createPlanRestD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "//If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs",
       "export function EAccountsSummary_CreatePlanRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.EAccountsSummaryPageDomain, domains.CreatePlanDomain, SimpleMessage> {",
+      "  const pageIdL = Lenses.identity<domains.EAccountsSummaryPageDomain>()",
       "  const fdd: NameAndLens<domains.EAccountsSummaryPageDomain> = {}",
       "  return {",
       "    fdLens: Lenses.identity<FState>().focusQuery('EAccountsSummary'),",
@@ -51,6 +53,7 @@ describe ( "makeRest", () => {
     expect ( makeRest ( paramsForTest, RepeatingPageD ) ( 'repeating', RepeatingPageD.rest.repeating ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "//If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs",
       "export function Repeating_RepeatingWholeDataRestDetails ( cd: NameAndLens<FState>, dateFn: DateFn  ): OneRestDetails<FState, domains.RepeatingPageDomain, domains.RepeatingWholeDataDomain, SimpleMessage> {",
+      "  const pageIdL = Lenses.identity<domains.RepeatingPageDomain>()",
       "  const fdd: NameAndLens<domains.RepeatingPageDomain> = {}",
       "  return {",
       "    fdLens: Lenses.identity<FState>().focusQuery('Repeating'),",

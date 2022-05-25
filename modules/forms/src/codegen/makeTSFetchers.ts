@@ -17,13 +17,14 @@ export const makeFetcherCode = ( params: TSParams ) => <B, G> ( p: PageD<B, G> )
   const targetFromPath = def.targetFromPath;
   const [ ids, resourceIds ] = findIds ( def.rest )
   const locals: [ string, LensRestParam<any> ][] = sortedEntries ( def.rest.params ).flatMap ( ( [ n, l ] ) => isRestLens ( l ) ? [ [ n, l ] ] : [] )
-  const localLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: Lenses.identity< ${domain}.${pageDomainName ( p )}>()${lensFocusQueryFor ( l.lens )}` )
+  const localLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: ${lensFocusQueryFor ( l.lens )}` )
   const lensVariableString = [
     `//If you have a compilation here it might be because of the 'local' params in ${p.name}.rest[${restName}].params`,
     `  const localIds = {` + localLens.join ( "," ) + "}" ]
   return [
     `//fetcher type ${def.fetcher}`,
     `export function ${fetcherName ( def )}(fdLens:Optional<${params.stateName}, ${domain}.${pageDomainName ( p )}>,commonIds: NameAndLens<${params.stateName}>) {`,
+    `  const pageIdL = Lenses.identity< ${domain}.${pageDomainName ( p )}>()`,
     ...lensVariableString,
     `  return pageAndTagFetcher<${params.stateName}, ${domain}.${pageDomainName ( p )}, ${domain}.${dataType}, SimpleMessage>(`,
     `    ${common}.commonFetch<${params.stateName},  ${domain}.${dataType}>(),`,
@@ -59,7 +60,7 @@ export function makeFetchersImport<B, G> ( params: TSParams, p: PageD<B, G> ): s
     `import { HasPageSelection } from "@focuson/pages";`,
     `import { HasSimpleMessages, SimpleMessage } from '@focuson/utils';`,
     `import { pageAndTagFetcher } from "@focuson/focuson";`,
-    `import { ${params.stateName} } from "../${params.commonFile}";`,
+    `import { ${params.stateName}, identityL} from "../${params.commonFile}";`,
     `import { Optional, Lenses, NameAndLens} from '@focuson/lens';`
 
   ]

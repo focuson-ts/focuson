@@ -201,7 +201,7 @@ export function fetcherWithHolder<State, Holder, T> ( target: Optional<State, Ho
         if ( !x ) throw Error ( 'result of mutate was undefined' )
         return target.set ( s, holder.reverseGet ( x ) )
       };
-      return { requestInfo, requestInit, mutate: newMutate } //TODO what should we do if 'useThisInsteadOfLoad' is defined
+      return { requestInfo, requestInit, mutate: newMutate }
     },
     description: description ? description : `fetcherWithHolder(${target},${holder}, ${fetcher})`
   }

@@ -3,10 +3,6 @@ import { ButtonCreator, makeIdForButton } from "./makeButtons";
 import { ModalButtonInPage } from "../buttons/modalButtons";
 import { AllLensRestParams, RestD } from "../common/restD";
 import { parsePath, stateCodeBuilder } from "@focuson/lens";
-import { PageD } from "../common/pageD";
-import { pageDomainName } from "./names";
-import { TSParams } from "./config";
-import { stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
 import { getRestTypeDetails } from "@focuson/rest";
 
 export const importsDot = ( ...names: string[] ): string[] => names.map ( name => {
@@ -30,12 +26,12 @@ export const addStringToStartOfFirst = ( str: string ) => ( ss: string[] ): stri
   ss.length === 0 ? [ str ] : ss.map ( ( s, i ) => i === 0 ? str + s : s );
 export const addStringToEndOfList = ( str: string ) => ( ss: string[] ): string[] =>
   ss.map ( ( s, i ) => i === ss.length - 1 ? s + str : s );
-export const addBrackets = ( strOpen: string, strClose ) => ( ss: string[] ): string[] =>
+export const addBrackets = ( strOpen: string, strClose: string ) => ( ss: string[] ): string[] =>
   addStringToStartOfFirst ( strOpen ) ( addStringToEndOfList ( strClose ) ( ss ) )
 
 export const indent = ( path: string[], s: string ): string => ' '.repeat ( path.length * 2 + 2 ) + s;
 export const indentList = ( ss: string[] ): string[] => ss.map ( s => '  ' + s )
-export const lensFocusQueryFor = ( path: string ) => parsePath ( path, stateCodeBuilder ( { '': '', '~': '', '/': '' }, 'changeMe' ) ) //TODO This clearly needs sorting out.
+export const lensFocusQueryFor = ( path: string ) => parsePath ( path, stateCodeBuilder ( { '~': 'pageIdL', '/': 'identityL' }, 'pageId' ) )
 export const stateFocusQueryForRepl = ( s: 'state' | 'pageState' | 'fullState', path: string ) => `state: ${s} - ${path}`
 
 export const focusOnFor = ( path: string[] ) => path.map ( p => `.focusOn('${p}')` ).join ( '' )
@@ -56,7 +52,7 @@ export const makeSimpleButton: <G> ( imp: string ) => ButtonCreator<ModalButtonI
 export const filterParamsByRestAction = ( errorPrefix: string, rest: RestD<any>, restAction: RestAction ) => {
   if ( isRestStateChange ( restAction ) ) {
     const stateDetails = safeObject ( rest.states )[ restAction.state ]
-    if ( stateDetails === undefined ) throw Error ( `${errorPrefix} Cannot find state ${restAction.state} Legal values are ${Object.keys (  safeObject ( rest.states ) )}` )
+    if ( stateDetails === undefined ) throw Error ( `${errorPrefix} Cannot find state ${restAction.state} Legal values are ${Object.keys ( safeObject ( rest.states ) )}` )
     const legalParams = stateDetails.params
     return ( [ name, param ]: [ string, AllLensRestParams<any> ] ) => legalParams.includes ( name )
   } else

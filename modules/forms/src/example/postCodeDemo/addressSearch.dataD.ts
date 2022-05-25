@@ -3,19 +3,21 @@ import { AllGuards } from "../../buttons/guardButton";
 import { StringInputCD, TableCD } from "../../common/componentsD";
 import { addT, postCodeSearchTable } from "../database/tableNames";
 
+
 export const postCodeDataLineD: DataD<AllGuards> = {
   name: "PostCodeDataLine",
   description: "",
   table: postCodeSearchTable,
   structure: {
+  ...({
     line1: { dataDD: OneLineStringDD, db: 'zzline1', sample: [ '4 Privet drive', '27 Throughput Lane' ] },
     line2: { dataDD: OneLineStringDD, db: 'zzline2', sample: [ 'Little Whinging', 'Woodfield' ] },
-    line3: { dataDD: OneLineStringDD, db: 'zzline3', sample: [ 'Surrey', '' ] , displayParams: {required: false}},
+    line3: { dataDD: OneLineStringDD, db: 'zzline3', sample: [ 'Surrey', '' ], displayParams: { required: false } },
     line4: { dataDD: OneLineStringDD, db: 'zzline4', sample: [ 'England', 'Ireland' ] },
     postcode: { dataDD: OneLineStringDD, db: 'PC_POSTCODE', sample: [ 'LW12 5f', 'IR45 3GT' ] }
+  })
   }
 }
-
 
 export const postCodeSearchResponseDD: RepeatingDataD<AllGuards> = {
   name: "PostCodeSearchResponse",

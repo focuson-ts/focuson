@@ -6,17 +6,30 @@ import { accountT, onlySchema } from "../database/tableNames";
 import { AllGuards } from "../../buttons/guardButton";
 import { allCommonIds, fromCommonIds } from "../commonIds";
 
-export const PrintRecordHistoryParams: RestParams = fromCommonIds('accountId')
+export const PrintRecordHistoryParams: RestParams = fromCommonIds ( 'accountId' )
 
 export const PrintRecordHistoryRD: ExampleRestD = {
-  params: PrintRecordHistoryParams,
+  namePrefix: 'history',
+  params: { ...PrintRecordHistoryParams, },
   dataDD: PrintRecordHistoryDD,
-  url: '/api/printrecordhistory?{query}',
-  actions: [ 'get', { state: 'print' } ],
-  states: {
-    print: { url: '/api/print?{query}', params: [] }
-  }
+  url: '/api/printrecord/history?{query}',
+  actions: [ 'get' ],
 }
+
+export const PrintRecordRD: ExampleRestD = {
+  namePrefix: 'single',
+  params: {
+    ...PrintRecordHistoryParams,
+    id: { ...IntParam, lens: '~/display[~/selected]id', testValue: 888, main: true }
+  },
+  dataDD: PrintRecordHistoryDD,
+  url: '/api/printrecord?{query}',
+  actions: [ 'create', { state: 'print' } ],
+  states: { print: { url: '/api/print?{query}', params: [ 'id' ] } },
+  mutations: [ { restAction: { state: 'print' }, mutateBy: { type: 'storedProc', name: 'print', schema: onlySchema, params: [ 'id' ] } } ]
+}
+
+
 export const CurrentPaymentCountsRD: ExampleRestD = {
   params: PrintRecordHistoryParams,
   dataDD: CurrentPaymentCountsDD,
