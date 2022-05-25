@@ -12,7 +12,7 @@
     ]
   },
   "dependencies": {
-    "@focuson/focuson": "1.12.19"
+    "@focuson/focuson": "1.13.0"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -44,7 +44,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.12.19",
+  "version": "1.13.0",
   "template": "noreact",
   "description": "The tools needed to bind to redux, doesn't actually have a version of redux",
   "details": {
