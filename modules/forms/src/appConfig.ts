@@ -9,6 +9,7 @@ export interface AppConfig {
   versionNumber: string;
   tsPort: number;
   javaPort: number;
+  makeSqlStrings?: boolean; //default true
 }
 
 
@@ -37,6 +38,7 @@ export const devAppConfig: AppConfig = {
     fetcherDebug: false, guardDebug: false, restDebug: false, selectedPageDebug: false,
     loadTreeDebug: false, showTracing: false,
     recordTrace: true, tagFetcherDebug: false, accordions: []
-  }
+  },
+  makeSqlStrings: false
 }
 
