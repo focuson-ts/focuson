@@ -22,7 +22,6 @@ import { makeMutations } from "../codegen/makeMutations";
 import { findChildResolvers, findJavaType, findQueryMutationResolver, makeAllJavaWiring, makeJavaFetcherInterfaceForResolver } from "../codegen/makeJavaFetchersInterface";
 import { makeTuples, tupleIndexes } from "../common/resolverD";
 import { findResolverData, makeResolvers } from "../codegen/makeResolvers";
-import { restActionToDetails } from "@focuson/rest";
 
 
 export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
@@ -165,8 +164,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
     let insertSql = allMainPages ( pages ).flatMap ( mainPage =>
       sortedEntries ( mainPage.rest )
-        .filter ( ( [ _, rdp ] ) => rdp.rest.insertSqlStrategy !== undefined )
-        .flatMap ( ( [ _, rdp ] ) => safeArray ( makeInsertSqlForNoIds ( rdp.rest.dataDD, rdp.rest.insertSqlStrategy ) ) ) );
+        .flatMap ( ( [ _, rdp ] ) => (rdp.rest.insertSqlStrategy !== undefined) ? safeArray ( makeInsertSqlForNoIds ( rdp.rest.dataDD, rdp.rest.insertSqlStrategy ) ) : [] ) );
     if ( insertSql.length > 0 )
       writeToFile ( `${javaResourcesRoot}/insertData.sql`, () => insertSql )
   }

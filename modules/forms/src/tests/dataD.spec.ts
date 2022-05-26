@@ -1,5 +1,5 @@
 import { AccountIdDD, AllDataFolder, collectDataWalker, findAllDataDs, findDataDDIn, foldDataDD, isDataDd, isRepeatingDd } from "../common/dataD";
-import { CreatePlanDD, EAccountsSummaryDD, EAccountsSummaryTableDD, EAccountSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD";
+import { BalancesAndMonthlyCostDD, CreatePlanDD, EAccountsSummaryDD, EAccountsSummaryTableDD, EAccountSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD";
 import { start } from "repl";
 import { AllGuards, Guards } from "../buttons/guardButton";
 
@@ -39,9 +39,11 @@ describe ( "dataDD", () => {
       "eAccountsTable,frequency-prim-OneLineString{\"label\":\"Frequency/Amount\"}",
       "eAccountsTable-data-EAccountSummaryfalse",
       "eAccountsTable-rep-EAccountsSummaryTablefalse",
-      "totalMonthlyCost-prim-Money",
-      "oneAccountBalance-prim-Money",
-      "currentAccountBalance-prim-Money",
+      "balancesAndMonthlyCost-data-BalancesAndMonthlyCosttrue",
+      "balancesAndMonthlyCost,totalMonthlyCost-prim-Money",
+      "balancesAndMonthlyCost,oneAccountBalance-prim-Money",
+      "balancesAndMonthlyCost,currentAccountBalance-prim-Money",
+      "balancesAndMonthlyCost-data-BalancesAndMonthlyCostfalse",
       "createPlan-data-CreatePlantrue",
       "createPlan,createPlanStart-prim-Date{\"label\":\"Create Start\",\"dateFormat\":\"yyyy/MM/dd\"}",
       "createPlan,createPlanDate-prim-Date{\"ariaLabel\":\"The Create Plan Date\"}",
@@ -57,9 +59,11 @@ describe ( "dataDD", () => {
       "useEStatements-prim-Boolean",
       "eAccountsTable-rep-EAccountsSummaryTabletrue",
       "eAccountsTable-rep-EAccountsSummaryTablefalse",
-      "totalMonthlyCost-prim-Money",
-      "oneAccountBalance-prim-Money",
-      "currentAccountBalance-prim-Money",
+      "balancesAndMonthlyCost-data-BalancesAndMonthlyCosttrue",
+      "balancesAndMonthlyCost,totalMonthlyCost-prim-Money",
+      "balancesAndMonthlyCost,oneAccountBalance-prim-Money",
+      "balancesAndMonthlyCost,currentAccountBalance-prim-Money",
+      "balancesAndMonthlyCost-data-BalancesAndMonthlyCostfalse",
       "createPlan-data-CreatePlantrue",
       "createPlan,createPlanStart-prim-Date{\"label\":\"Create Start\",\"dateFormat\":\"yyyy/MM/dd\"}",
       "createPlan,createPlanDate-prim-Date{\"ariaLabel\":\"The Create Plan Date\"}",
@@ -72,19 +76,33 @@ describe ( "dataDD", () => {
 } )
 describe ( " findDataDDIn", () => {
   it ( "should find all the DataD", () => {
-    expect ( findDataDDIn ( EAccountsSummaryDD ) ).toEqual (
-      [ EAccountsSummaryDD, EAccountsSummaryTableDD, EAccountSummaryDD, CreatePlanDD ] )
+    expect ( findDataDDIn ( EAccountsSummaryDD ).map ( s => s.name ) ).toEqual ( [
+      "EAccountsSummary",
+      "EAccountsSummaryTable",
+      "EAccountSummary",
+      "BalancesAndMonthlyCost",
+      "CreatePlan"
+    ] )
   } )
 } )
 
 describe ( "findAllDataDs", () => {
   it ( "should find all the dataDs in a list of expressions, removing duplicates", () => {
-    expect ( findAllDataDs ( [ EAccountsSummaryDD, CreatePlanDD, EAccountSummaryDD, CreatePlanDD ] ) ).toEqual ( {
-      EAccountsSummary: EAccountsSummaryDD,
-      EAccountsSummaryTable: EAccountsSummaryTableDD,
-      CreatePlan: CreatePlanDD,
-      EAccountSummary: EAccountSummaryDD
-    } )
+    let allDataDs = findAllDataDs ( [ EAccountsSummaryDD, CreatePlanDD, EAccountSummaryDD, CreatePlanDD ] );
+    expect ( Object.keys ( allDataDs ) ).toEqual ( [
+      "EAccountsSummary",
+      "EAccountsSummaryTable",
+      "EAccountSummary",
+      "BalancesAndMonthlyCost",
+      "CreatePlan"
+    ] )
+    expect ( Object.values ( allDataDs ).map ( s => s.name ) ).toEqual ( [
+      "EAccountsSummary",
+      "EAccountsSummaryTable",
+      "EAccountSummary",
+      "BalancesAndMonthlyCost",
+      "CreatePlan"
+    ] )
   } )
 
 } )

@@ -37,12 +37,10 @@ describe ( "makeGraphQlSchema", () => {
       "input EAccountsSummaryxx{",
       "  useEStatements: Boolean",
       "  eAccountsTable: [EAccountSummaryxx]",
-      "  totalMonthlyCost: Int",
-      "  oneAccountBalance: Int",
-      "  currentAccountBalance: Int",
+      "  balancesAndMonthlyCost: BalancesAndMonthlyCostxx",
       "  createPlan: CreatePlanxx",
       "}"
-    ] )
+    ])
     expect ( makeSchemaBlock ( 'input', 'xx' ) ( EAccountSummaryDD ) ).toEqual ( [
       "input EAccountSummaryxx{",
       "  accountId: Int",
@@ -74,6 +72,11 @@ describe ( "makeGraphQlSchema", () => {
       "  updateCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, createPlanId: Int!,obj: CreatePlanInp!):CreatePlan",
       "  deleteCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, createPlanId: Int!):Boolean",
       "}",
+      "type BalancesAndMonthlyCost{",
+      "  totalMonthlyCost: Int",
+      "  oneAccountBalance: Int",
+      "  currentAccountBalance: Int",
+      "}",
       "type CreatePlan{",
       "  createPlanStart: String",
       "  createPlanDate: String",
@@ -82,9 +85,7 @@ describe ( "makeGraphQlSchema", () => {
       "type EAccountsSummary{",
       "  useEStatements: Boolean",
       "  eAccountsTable: [EAccountSummary]",
-      "  totalMonthlyCost: Int",
-      "  oneAccountBalance: Int",
-      "  currentAccountBalance: Int",
+      "  balancesAndMonthlyCost: BalancesAndMonthlyCost",
       "  createPlan: CreatePlan",
       "}",
       "type EAccountSummary{",

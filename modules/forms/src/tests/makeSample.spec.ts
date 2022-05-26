@@ -8,12 +8,16 @@ import { paramsForTest } from "./paramsForTest";
 describe ( "makeEmptyTs", () => {
   it ( "should make an empty data structure", () => {
     expect ( makeEmptyData ( EAccountsSummaryDD ) ).toEqual ( {
+      "balancesAndMonthlyCost": {
+        "currentAccountBalance": 0,
+        "oneAccountBalance": 0,
+        "totalMonthlyCost": 0
+      },
       "createPlan": {
         "createPlanDate": "2022-1-1",
         "createPlanEnd": "2022-1-1",
         "createPlanStart": "2022-1-1"
       },
-      "currentAccountBalance": 0,
       "eAccountsTable": [
         {
           "accountId": 0,
@@ -24,10 +28,8 @@ describe ( "makeEmptyTs", () => {
           "virtualBankSeq": ""
         }
       ],
-      "oneAccountBalance": 0,
-      "totalMonthlyCost": 0,
       "useEStatements": false
-    } )
+    })
   } )
 } )
 describe ( 'makeSample', () => {
@@ -38,12 +40,16 @@ describe ( 'makeSample', () => {
       "createPlanStart": "2022-01-01"
     } )
     expect ( makeTsSample ( EAccountsSummaryDD, 0 ) ).toEqual ( {
+      "balancesAndMonthlyCost": {
+        "currentAccountBalance": 12321,
+        "oneAccountBalance": 9921,
+        "totalMonthlyCost": 1000
+      },
       "createPlan": {
         "createPlanDate": "2022-03-01",
         "createPlanEnd": "2022-10-01",
         "createPlanStart": "2022-01-01"
       },
-      "currentAccountBalance": 12321,
       "eAccountsTable": [
         {
           "accountId": 1233450,
@@ -70,8 +76,6 @@ describe ( 'makeSample', () => {
           "virtualBankSeq": "seq3"
         }
       ],
-      "oneAccountBalance": 9921,
-      "totalMonthlyCost": 1000,
       "useEStatements": true
     })
   } )
@@ -110,9 +114,11 @@ describe ( "makeJavaVariable", () => {
       "       '      \\'frequency\\': \\'23\\''+",
       "       '    }'+",
       "       '  ],'+",
-      "       '  \\'totalMonthlyCost\\': 1000,'+",
-      "       '  \\'oneAccountBalance\\': 9921,'+",
-      "       '  \\'currentAccountBalance\\': 12321,'+",
+      "       '  \\'balancesAndMonthlyCost\\': {'+",
+      "       '    \\'totalMonthlyCost\\': 1000,'+",
+      "       '    \\'oneAccountBalance\\': 9921,'+",
+      "       '    \\'currentAccountBalance\\': 12321'+",
+      "       '  },'+",
       "       '  \\'createPlan\\': {'+",
       "       '    \\'createPlanStart\\': \\'2022-01-01\\','+",
       "       '    \\'createPlanDate\\': \\'2022-03-01\\','+",

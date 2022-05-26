@@ -64,7 +64,7 @@ export function makeFetcherMethodForMap<G> ( params: JavaWiringParams, p: MainPa
         ...declareInputParamsFromEndpoint ( r ),
         'try(Connection connection = dataSource.getConnection()){',
         ...indentList ( [
-          ...callResolvers ( p, restName, r, resolverData.name, 'dbName', resolvers ),
+          ...callResolvers ( p, restName, r, resolverData.resolver, 'dbName', resolvers ),
           ...makeCreateResult ( errorPrefix, resolvers, resolverData ),
         ] ),
         '}};', ] ),
@@ -73,9 +73,9 @@ export function makeFetcherMethodForMap<G> ( params: JavaWiringParams, p: MainPa
 }
 
 export function findResolverData ( errorPrefix: string, childResolverData: ResolverData[], resolverName: string ) {
-  const result = childResolverData.find ( rd => rd.name == resolverName )
+  const result = childResolverData.find ( rd => rd.resolver == resolverName )
   if ( result ) return result
-  throw Error ( `${errorPrefix} cannot find resolver ${resolverName}. Legal values are [${childResolverData.map ( r => r.name ).sort ()}]` )
+  throw Error (` ${errorPrefix} is defined, but there are no dataD elements that use it. Legal values are [${childResolverData.map ( r => r.resolver ).sort ()}` )
 }
 function importsFromManual ( resolver: Mutations ) {
   return toArray ( resolver ).flatMap ( m => m.type === 'manual' ? toArray ( m.import ) : [] );
