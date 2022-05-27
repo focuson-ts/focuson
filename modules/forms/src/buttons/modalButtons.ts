@@ -36,7 +36,8 @@ export function isModalButtonInPage<G> ( m: any ): m is ModalButtonInPage<G> {
 }
 export interface ModalButtonInPage<G> extends CommonModalButtonInPage<G> {
   control: 'ModalButton',
-  createEmpty?: DataD<G>
+  createEmpty?: DataD<G>;
+  createEmptyIfUndefined?: DataD<G>;
 }
 
 function singleToList<T> ( ts: T | T[] ): T[] {
@@ -48,9 +49,10 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalButtonInPage<G>, G> {
     import: "@focuson/pages",
     makeButton:
       ( { params, parent, name, button } ) => {
-        const { modal, mode, restOnCommit, focusOn, copy, createEmpty, copyOnClose, copyJustString, setToLengthOnClose, text, pageParams, enabledBy } = button
+        const { modal, mode, restOnCommit, focusOn, copy, createEmpty,createEmptyIfUndefined, copyOnClose, copyJustString, setToLengthOnClose, text, pageParams, enabledBy, } = button
         const createEmptyString = createEmpty ? [ `createEmpty={${params.emptyFile}.${emptyName ( createEmpty )}}` ] : []
-
+        const createEmptyIfUndefinedString = createEmptyIfUndefined ? [ `createEmptyIfUndefined={${params.emptyFile}.${emptyName ( createEmptyIfUndefined )}}` ] : []
+        createEmptyIfUndefined
 
         const copyOnCloseArray: CopyDetails[] = copyOnClose ? singleToList ( copyOnClose ) : undefined
         const copyFromArray: CopyDetails[] = copy ? singleToList ( copy ) : undefined
@@ -63,6 +65,7 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalButtonInPage<G>, G> {
             ...optT ( 'copyJustString', copyJustString ? singleToList ( copyJustString ) : undefined ),
             ...optT ( 'pageParams', pageParams ),
             ...createEmptyString,
+            ...createEmptyIfUndefinedString,
             ...optT ( 'setToLengthOnClose', setToLengthOnClose ),
             ...restForButton ( parent, restOnCommit ) ] ), '/>' ]
 

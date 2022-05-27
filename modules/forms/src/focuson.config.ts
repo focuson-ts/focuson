@@ -11,10 +11,11 @@ import { JointAccountPageD } from "./example/jointAccount/jointAccount.pageD";
 import { HelloWorldPage } from "./example/HelloWorld/helloWorld.pageD";
 import { LinkedAccountDetailsPD } from "./example/linkedAccount/linkedAccountDetails.pageD";
 import { ListOfPaymentsPagePD } from "./example/ListOfPayments/listOfPayements.pageD";
+import { PaymentsPageD } from "./example/payments/payments.pageD";
 
 
 export const generatedPages: ExampleMainPage[] = [
-  HelloWorldPage,
+  HelloWorldPage, PaymentsPageD,
   ListOfPaymentsPagePD,
   LinkedAccountDetailsPD,
   AccountOverviewMainPage,

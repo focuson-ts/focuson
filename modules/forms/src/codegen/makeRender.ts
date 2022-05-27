@@ -142,6 +142,8 @@ function makeParams<B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params
   return fullDisplayParams;
 }
 export function createOneReact<B, G> ( mainPage: MainPageD<B, G>, params: TSParams, pageD: PageD<B, G>, { path, dataDD, display, displayParams, guard }: ComponentData<G> ): string[] {
+  if ( display === undefined )
+    throw Error ( `Misconfigured component in page ${mainPage.name}. This is usually because you just added a field, and misconfigured the field. Unfortunately we can't work out which field it was.` )
   const name = display.name
   let errorPrefix = `Page ${pageD.name}, Datad ${dataDD.name} with path ${JSON.stringify ( path )}`;
   if ( name === undefined ) throw Error ( errorPrefix + " cannot find the name of the display component. Check it is a dataD or similar" )

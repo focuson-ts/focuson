@@ -59,15 +59,5 @@ export const postcodeRestD: RestD<AllGuards> = {
   dataDD: postCodeSearchResponseDD,
   url: '/api/listOfPayments/postCode?{query}',
   actions: [ 'get' ],
-  // initialSql: addressSearchSql,
-  // strategy: {type: 'OneTableInsertSqlStrategyForNoIds', table: postCodeSearchTable},
-  // tables: {
-  //   entity: {
-  //     type: 'Main',
-  //     table: postCodeSearchTable
-  //   },
-  //   where: [
-  //     { table: postCodeSearchTable, alias: postCodeSearchTable.name, field: 'PC_POSTCODE', paramName: 'postcode', comparator: 'like', paramPrefix: '%', paramPostfix: '%' }
-  //   ]
-  // }
+
 }

@@ -118,7 +118,7 @@ export const makeAEqualsB = <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, { encod
 
 // }
 
-function stringify ( s: any ): string | undefined { return s ? (typeof s === 'object') ? JSON.stringify ( s ) : s.toString () : undefined}
+function stringify ( s: any ): string | undefined { return s !== undefined ? (typeof s === 'object') ? JSON.stringify ( s ) : s.toString () : undefined}
 const from = <S> ( n: NameAndLens<S>, name: string, s: S | undefined ): string | undefined => stringify ( n[ name ]?.getOption ( s ) )
 
 export const onePart = <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, props: MakeAEqualsBProps ) => ( s: S, restAction: RestAction ) => ( name: string ): string | undefined => {
