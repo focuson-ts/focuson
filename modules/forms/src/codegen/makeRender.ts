@@ -298,7 +298,7 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
   const pageDomainsImports = pages.filter ( p => p.pageType === 'MainPage' ).map ( p => `import {${pageDomainName ( p )}} from "${domainsFileName ( '..', params, p )}";` )
   const domainImports = pages.flatMap ( p => sortedEntries ( dataDsIn ( [ p ] ) ).map ( ( [ name, dataD ] ) => `import {${domainName ( dataD )}} from "${domainsFileName ( '..', params, p )}"` ) )
   const modalDomainImports = pages.flatMap ( p => isModalPage ( p ) ? [
-    `//if there is an error message here... did you set the importFrom on this modal correctly, and also check that the PageD links to this DataD in a domain or rest block`,
+    `//if there is an error message here check that the PageD links to this DataD in a domain or rest block`,
     `import {${domainName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', mainP, p, params.domainsFile )}'; ` ] : [] )
   const modalRenderImports = pages.flatMap ( p => (isModalPage ( p ) && !p.display.dataDD.display) ? [
     `import {${componentName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', mainP, p, params.renderFile )}'` ] : [] )

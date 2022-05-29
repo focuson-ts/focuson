@@ -1,8 +1,7 @@
 import { AccountIdDD, BooleanDD, DataD, DateDD, MoneyDD, OneLineStringDD, RepeatingDataD, StringPrimitiveDD } from "../../common/dataD";
-import { LabelAndRadioCD, LayoutCd, TableCD } from "../../common/componentsD";
+import { LabelAndRadioCD, TableCD } from "../../common/componentsD";
 import { AllGuards } from "../../buttons/guardButton";
-import { Layout } from "@focuson/form_components";
-import { accountT, onlySchema } from "../database/tableNames";
+import { accountT } from "../database/tableNames";
 
 
 export const EAccountDisplayTypeDD: StringPrimitiveDD = {

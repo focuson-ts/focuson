@@ -106,7 +106,7 @@ export function anyIntoPrimitive ( raw: any, joiner: string ): string | number |
 }
 export function makeIntoString ( name: string, raw: any, joiners: undefined | string | string[] ): string {
   const t = typeof raw
-  if ( t === 'string' || t === 'boolean' || t === 'number' ) return raw
+  if (raw === undefined || t === 'string' || t === 'boolean' || t === 'number' ) return raw
   const joiner = findJoiner ( name, joiners )
   if ( t === 'object' ) return Object.values ( raw ).map ( v => makeIntoString ( name, v, joiners ) ).join ( joiner )
   if ( Array.isArray ( raw ) ) return raw.map ( v => makeIntoString ( name, v, joiners ) ).join ( joiner )

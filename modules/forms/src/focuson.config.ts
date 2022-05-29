@@ -12,10 +12,13 @@ import { HelloWorldPage } from "./example/HelloWorld/helloWorld.pageD";
 import { LinkedAccountDetailsPD } from "./example/linkedAccount/linkedAccountDetails.pageD";
 import { ListOfPaymentsPagePD } from "./example/ListOfPayments/listOfPayements.pageD";
 import { PaymentsPageD } from "./example/payments/payments.pageD";
+import { AuthoriseChargesPD } from "./example/authoriseCharges/authoriseCharges.pageD";
 
 
 export const generatedPages: ExampleMainPage[] = [
-  HelloWorldPage, PaymentsPageD,
+  HelloWorldPage,
+  AuthoriseChargesPD,
+  PaymentsPageD,
   ListOfPaymentsPagePD,
   LinkedAccountDetailsPD,
   AccountOverviewMainPage,
