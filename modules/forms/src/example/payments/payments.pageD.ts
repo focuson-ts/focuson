@@ -3,7 +3,7 @@ import { ExampleMainPage, ExampleModalPage } from "../common";
 import { addressSearchDD } from "../ListOfPayments/listOfPayements.dataD";
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 import { ChargeDetailsDD, PaymentDD, PaymentsLaunchDD, SummaryOfPaymentsLineDD } from "./payments.dataD";
-import { summaryOfPreviousPayments } from "./payments.restD";
+import { newPaymentsRD, summaryOfPreviousPaymentsRD } from "./payments.restD";
 import { NatNumDd } from "../../common/dataD";
 
 // export const ChargeDetailsPD: ExampleModalPage = {
@@ -44,7 +44,8 @@ export const PaymentsPageD: ExampleMainPage = {
   },
   modals: [ { modal: EditPaymentsPD } ],
   rest: {
-    listOfPreviousPayments: { rest: summaryOfPreviousPayments, fetcher: true, targetFromPath: '~/summary/summaryOfPaymentsTable' }
+    listOfPreviousPayments: { rest: summaryOfPreviousPaymentsRD, fetcher: true, targetFromPath: '~/summary/summaryOfPaymentsTable' },
+    newPayments: { rest: newPaymentsRD, targetFromPath: '~/onePayment' },
   },
   guards: {
     tableItemSelected: { condition: "isDefined", path: '~/selectedPaymentIndex' }

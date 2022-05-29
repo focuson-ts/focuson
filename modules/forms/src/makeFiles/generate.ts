@@ -55,8 +55,10 @@ export const directorySpec: DirectorySpec = {
 }
 export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, directorySpec: DirectorySpec, appConfig: AppConfig, params: CombinedParams, javaOutputRoot: string, tsRoot: string, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G> ) => <B extends ButtonD> ( pages: MainPageD<B, G>[] ) => {
   const paramsWithTuples = {
-    ...params, maxTuples: foldPagesToRestToMutationsAndResolvers<number> ( pages, 0, ( mut ) =>
-      ( acc ) => Math.max ( acc, allOutputParams ( toArray ( mut.params ) ).length ) )
+    ...params, maxTuples: foldPagesToRestToMutationsAndResolvers<number> ( pages, 0, {
+      simple: ( mut ) => ( acc ) => Math.max ( acc, allOutputParams ( toArray ( mut.params ) ).length ),
+      guarded: ( sel, guarded ) => ( acc ) =>acc
+    } )
   }
 
   if ( pages.length === 0 ) {

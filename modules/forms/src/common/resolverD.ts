@@ -33,10 +33,20 @@ export type Mutations = MutationDetail | MutationDetail[]
 
 export interface MutationsForRestAction {
   restAction: RestAction;
-  mutateBy: MutationDetail | MutationDetail[]
+  mutateBy: MutationDetail | MutationDetail[],
+  // guards?: NameAnd<MutationResolverGuard>
 }
 
-export type MutationDetail = StoredProcedureMutation | SqlMutation | ManualMutation // | IDFromSequenceMutation
+// interface MutationResolverValueGuard{
+//   type: 'value';
+//   dotPath: string;
+//   javaType: string;
+//
+// }
+// export type MutationResolverGuard= MutationResolverValueGuard
+
+
+export type MutationDetail = StoredProcedureMutation | SqlMutation | ManualMutation | SelectMutation // | IDFromSequenceMutation
 
 // export interface IDFromSequenceMutation {
 //   mutation: 'IDFromSequence',
@@ -44,6 +54,7 @@ export type MutationDetail = StoredProcedureMutation | SqlMutation | ManualMutat
 //   name: string;
 //   params: MutationParam
 // }
+
 export interface SqlMutation {
   type: 'sql',
   list?: boolean,
@@ -72,13 +83,39 @@ export interface ManualMutation {
   code: string | string[]
 }
 
+export interface SelectMutation {
+  type: 'case';
+  list?: false;
+  params: MutationParamForSelect | MutationParamForSelect[];
+  name: string;
+  select: GuardedMutation[]
+}
 
-export type MutationParam = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForStoredProcMutationParam | OutputForSqlMutationParam | NullMutationParam | OutputForManualParam | AutowiredMutationParam
+export type GuardedMutation = GuardedManualMutation | GuardedSqMutation | GuardedStoredProcedureMutation
+export interface GuardedManualMutation extends ManualMutation {
+  guard: string[]
+}
+export interface GuardedSqMutation extends SqlMutation {
+  guard: string[]
+}
+export interface GuardedStoredProcedureMutation extends StoredProcedureMutation {
+  guard: string[]
+}
+
+
+export type MutationParam = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForStoredProcMutationParam | OutputForSqlMutationParam | NullMutationParam | OutputForManualParam | AutowiredMutationParam | OutputForSelectMutationParam
 export type MutationParamForSql = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForSqlMutationParam | NullMutationParam | AutowiredMutationParam
 export type MutationParamForStoredProc = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForStoredProcMutationParam | NullMutationParam | AutowiredMutationParam
 export type MutationParamForManual = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | NullMutationParam | OutputForManualParam | AutowiredMutationParam
+export type MutationParamForSelect = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | NullMutationParam | OutputForSelectMutationParam | AutowiredMutationParam
 
-export type OutputMutationParam = OutputForSqlMutationParam | OutputForStoredProcMutationParam | OutputForManualParam
+export interface OutputForSelectMutationParam {
+  type: 'output';
+  name: string;
+  javaType: AllJavaTypes
+}
+
+export type OutputMutationParam = OutputForSqlMutationParam | OutputForStoredProcMutationParam | OutputForManualParam | OutputForSelectMutationParam
 export function inputParamName ( m: MutationParam ) {
   if ( typeof m === 'string' ) return [ m ]
   if ( m.type === 'input' ) return [ m.name ]

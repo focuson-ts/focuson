@@ -5,14 +5,14 @@ import { HasSimpleMessageL } from "./simpleMessage";
 
 function findValidityForInput ( thisPage: Element, result: [ string, boolean ][] ) {
   const inputs = thisPage?.getElementsByTagName ( "input" )
-  // if ( inputs ) {
-  //   for ( var i = 0; i < inputs.length; i++ ) {
-  //     const child = inputs[ i ];
-  //     let id = child.getAttribute ( 'id' );
-  //     let recordedId = id ? id : "noIdForThisElement"
-  //     result[ i ] = [ recordedId, child.checkValidity () ]
-  //   }
-  // }
+  if ( inputs ) {
+    for ( var i = 0; i < inputs.length; i++ ) {
+      const child = inputs[ i ];
+      let id = child.getAttribute ( 'id' );
+      let recordedId = id ? id : "noIdForThisElement"
+      result[ i ] = [ recordedId, child.checkValidity () ]
+    }
+  }
 }
 function findValidityForSelect ( thisPage: Element, result: [ string, boolean ][] ) {
   const selects = thisPage?.getElementsByTagName ( "select" )
@@ -32,7 +32,7 @@ export function findValidityDetails ( pageHolderClass: string ): [ string, boole
   const thisPage: Element = allPages.item ( allPages.length - 1 )
   const result: [ string, boolean ][] = []
   findValidityForInput ( thisPage, result );
-  // findValidityForSelect ( thisPage, result );
+  findValidityForSelect ( thisPage, result );
   return result
 }
 

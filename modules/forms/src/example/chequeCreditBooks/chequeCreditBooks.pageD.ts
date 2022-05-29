@@ -60,11 +60,12 @@ export const ChequeCreditbooksPD: ExampleMainPage = {
       pageParams: { position: { top: 123 } },
       focusOn: '~/tempCreatePlan',//not type checked here... should be type checked in target
       createEmpty: ChequeCreditbooksHistoryLineDD,
-      restOnCommit: { restName: 'chequeCreditBooks', action: 'create', result: 'refresh' }
+      restOnCommit: { restName: 'chequeCreditBooks', action: 'create', result: 'refresh', messageOnSuccess: 'Ordered cheque book' }
     },
     refresh: { control: 'DeleteStateButton', label: 'Refresh', path: [ '~/fromApi', '~/tempCreatePlan', '~/selectedBook' ] },
     cancelCheckBook: {
-      control: 'RestButton', restName: 'chequeCreditBooks', enabledBy: 'canCancel', confirm: 'Really?', action: { state: 'cancel' }
+      control: 'RestButton', restName: 'chequeCreditBooks', enabledBy: 'canCancel', confirm: 'Really?', action: { state: 'cancel' },
+      messageOnSuccess: 'Cancelled cheque book'
     }
   }
 }

@@ -76,6 +76,10 @@ export const amountDD: ExampleDataD = {
   name: 'Amount',
   description: '',
   layout: { component: LayoutCd, displayParams: { details: '[[1,1,1], [1]]' } },
+  guards: {
+    sterlingDefined: { condition: '>0', path: 'sterlingAmount' },
+    currencyDefined: { condition: '>0', path: 'currencyAmount' }
+  },
   structure: {
     currency: { dataDD: CurrencyEnum },
     sterlingAmount: { dataDD: MoneyDD, sample: [ 123, 2345, 5654 ] },

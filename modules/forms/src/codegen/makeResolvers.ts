@@ -15,15 +15,15 @@ function declareInputParamsFromEndpoint<G> ( r: RestD<G> ): string[] {
     .map ( ( [ typeAndName, name ] ) => `${typeAndName} = dataFetchingEnvironment.getArgument("${name}");` )
 }
 
-export function callResolvers<G> ( p: MainPageD<any, G>, restName: string, r: RestD<G>, name: string, dbNameString: string, resolvers: MutationDetail[] ) {
+export function callResolvers<G> ( p: MainPageD<any, G>, restName: string, r: RestD<G>, name: string, dbNameString: string, resolvers: MutationDetail[], indexPrefix: string ) {
   return resolvers.flatMap ( ( md, i ) => {
     if ( md.list )
       return [ `//from ${p.name}.rest[${restName}].resolvers[${JSON.stringify ( name )}]`,
-        `List<Map<String,Object>> params${i} = ${mutationMethodName ( r, name, md )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
+        `List<Map<String,Object>> params${i} = ${mutationMethodName ( r, name, md, indexPrefix + i )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
       ];
     else
       return [ `//from ${p.name}.rest[${restName}].resolvers[${JSON.stringify ( name )}]`,
-        `${paramsDeclaration ( md, i )} ${mutationMethodName ( r, name, md )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
+        `${paramsDeclaration ( md, i )} ${mutationMethodName ( r, name, md, indexPrefix + i )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
         ...outputParamsDeclaration ( md, i )
       ];
   } );
@@ -32,7 +32,7 @@ function addParams<G> ( resolvers: MutationDetail[] ) {
   return resolvers.flatMap ( r => toArray ( r.params ) ).flatMap ( p => typeof p !== 'string' && p.type === 'output' ? [ `result.put("${p.name}", ${p.name});` ] : [] )
 }
 
-function makeCreateResult ( errorPrefix: string, resolvers: MutationDetail[], resolverData: ResolverData ): string[] {
+export function makeCreateResult ( errorPrefix: string, resolvers: MutationDetail[], resolverData: ResolverData ): string[] {
   if ( resolverData.javaType === 'Map<String,Object>' ) return [
     `${resolverData.javaType} result=new HashMap<>();`,
     ...addParams ( resolvers ),
@@ -64,7 +64,7 @@ export function makeFetcherMethodForMap<G> ( params: JavaWiringParams, p: MainPa
         ...declareInputParamsFromEndpoint ( r ),
         'try(Connection connection = dataSource.getConnection()){',
         ...indentList ( [
-          ...callResolvers ( p, restName, r, resolverData.resolver, 'dbName', resolvers ),
+          ...callResolvers ( p, restName, r, resolverData.resolver, 'dbName', resolvers, '' ),
           ...makeCreateResult ( errorPrefix, resolvers, resolverData ),
         ] ),
         '}};', ] ),
@@ -75,7 +75,7 @@ export function makeFetcherMethodForMap<G> ( params: JavaWiringParams, p: MainPa
 export function findResolverData ( errorPrefix: string, childResolverData: ResolverData[], resolverName: string ) {
   const result = childResolverData.find ( rd => rd.resolver == resolverName )
   if ( result ) return result
-  throw Error (` ${errorPrefix} is defined, but there are no dataD elements that use it. Legal values are [${childResolverData.map ( r => r.resolver ).sort ()}` )
+  throw Error ( ` ${errorPrefix} is defined, but there are no dataD elements that use it. Legal values are [${childResolverData.map ( r => r.resolver ).sort ()}` )
 }
 function importsFromManual ( resolver: Mutations ) {
   return toArray ( resolver ).flatMap ( m => m.type === 'manual' ? toArray ( m.import ) : [] );
@@ -91,7 +91,7 @@ export function makeFetcherMethodForList<G> ( params: JavaWiringParams, p: MainP
         ...declareInputParamsFromEndpoint ( r ),
         'try(Connection connection = dataSource.getConnection()){',
         ...indentList ( [
-          ...callResolvers ( p, restName, r, resolverData.name, 'dbName', resolvers ),
+          ...callResolvers ( p, restName, r, resolverData.name, 'dbName', resolvers, '' ),
           ...makeCreateResult ( errorPrefix, resolvers, resolverData ),
         ] ),
         '}};', ] ),
@@ -105,7 +105,7 @@ export function makeResolvers<G> ( params: JavaWiringParams, p: MainPageD<any, a
   // if ( resolvers.length == 0 ) return []
   let resolvers = toArray ( resolver );
   const { importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( resolvers, p, r, params );
-  const methods = makeMutationMethod ( `${p.name}.rest[${restName}].resolvers[${resolverName}]`, resolvers, resolverName, p, r, false )
+  const methods = makeMutationMethod ( `${p.name}.rest[${restName}].resolvers[${resolverName}]`, resolvers, resolverName, p, r, false, '' )
   let interfaceName = fetcherInterfaceForResolverName ( params, r, resolverData.resolver );
   const fetcherMethod = indentList (
     isRepeatingDd ( r.dataDD ) ?

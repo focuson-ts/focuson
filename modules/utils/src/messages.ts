@@ -1,4 +1,3 @@
-
 export type SimpleMessageLevel = 'error' | 'warning' | 'info'
 /** A simple default messaging system. Often a project will have something more complex */
 
@@ -12,6 +11,7 @@ export interface SimpleMessage {
   time: string
 }
 
-export function createSimpleMessage ( level: SimpleMessageLevel, msg: string, time: string): SimpleMessage {
+export function createSimpleMessage ( level: SimpleMessageLevel, msg: string, time: string ): SimpleMessage {
   return { level, msg, time }
 }
+export const stringToSimpleMsg = ( dateFn: () => string, level: SimpleMessageLevel, ) => ( msg: string ): SimpleMessage => ({ level, msg, time: dateFn () });

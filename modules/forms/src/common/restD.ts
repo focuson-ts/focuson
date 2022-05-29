@@ -1,7 +1,7 @@
 import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
 import { NameAnd, RestAction, safeObject, safeString, sortedEntries, toArray, unique } from "@focuson/utils";
 import { filterParamsByRestAction } from "../codegen/codegen";
-import { AccessDetails, DBTable, MutationDetail, Mutations, MutationsForRestAction } from "./resolverD";
+import { AccessDetails, DBTable, GuardedMutation, MutationDetail, Mutations, MutationsForRestAction, SelectMutation } from "./resolverD";
 import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 import { allMainPages, MainPageD, PageD, RestDefnInPageProperties } from "./pageD";
 import { getRestTypeDetails, RestActionDetail, restActionForName } from "@focuson/rest";
@@ -208,11 +208,18 @@ export function forEachRestAndActions<B, G> ( ps: PageD<B, G>[], fn: ( p: MainPa
   return allMainPages ( ps ).forEach ( p => sortedEntries ( p.rest ).forEach ( ( [ restName, rdp ] ) => rdp.rest.actions.forEach ( a => fn ( p ) ( rdp.rest, restName, rdp ) ( a ) ) ) )
 }
 
-export function foldPagesToRestToMutationsAndResolvers<Acc> ( ps: MainPageD<any, any>[], acc: Acc, fn: ( mut: MutationDetail, p: MainPageD<any, any>, r: RestD<any> ) => ( acc: Acc ) => Acc ): Acc {
+export interface MutuationAndResolverFolder<Acc> {
+  simple: ( mut: MutationDetail, p: MainPageD<any, any>, r: RestD<any> ) => ( acc: Acc ) => Acc;
+  guarded: ( mut: SelectMutation, guarded: GuardedMutation, p: MainPageD<any, any>, r: RestD<any> ) => ( acc: Acc ) => Acc;
+}
+export function foldPagesToRestToMutationsAndResolvers<Acc> ( ps: MainPageD<any, any>[], acc: Acc, folder: MutuationAndResolverFolder<Acc> ): Acc {
   return ps.reduce ( ( acc, p ) => Object.entries ( p.rest ).reduce ( ( acc, [ name, rdp ] ) => {
-    const mutationsAcc = toArray ( rdp.rest.mutations ).flatMap ( mr => toArray ( mr.mutateBy ) ).reduce ( ( acc, m ) => fn ( m, p, rdp.rest ) ( acc ), acc )
-    const resolvers = Object.values ( safeObject ( rdp.rest.resolvers ) ).flatMap ( res => toArray ( res ) ).reduce ( ( acc, md ) => fn ( md, p, rdp.rest ) ( acc ), mutationsAcc )
+    const mutationsAcc = toArray ( rdp.rest.mutations ).flatMap ( mr => toArray ( mr.mutateBy ) ).reduce ( ( acc, m ) => {
+      let simple = folder.simple ( m, p, rdp.rest ) ( acc );
+      if ( m.type !== 'case' ) return simple;
+      return m.select.reduce ( ( acc, g ) => folder.guarded ( m, g, p, rdp.rest ) ( acc ), simple )
+    }, acc )
+    const resolvers = Object.values ( safeObject ( rdp.rest.resolvers ) ).flatMap ( res => toArray ( res ) ).reduce ( ( acc, md ) => folder.simple ( md, p, rdp.rest ) ( acc ), mutationsAcc )
     return resolvers
   }, acc ), acc )
 }
-

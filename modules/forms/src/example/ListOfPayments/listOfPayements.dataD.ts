@@ -36,7 +36,7 @@ export const RequestDetailsDD: ExampleDataD = {
     title: { dataDD: ReadOnlyStringDD, sample: [ 'Mr', 'Mrs' ] },
     forename: { dataDD: ReadOnlyStringDD, sample: [ 'Fred', 'Fredrica' ] },
     surname: { dataDD: ReadOnlyStringDD, sample: [ 'Bloggs', 'Smith' ] },
-    fullname: { dataDD: { ...ReadOnlyStringDD, resolver: 'fullname' }, sample: [ 'Fred Bloggs', 'Fredrica Smith' ] },
+    fullname: { dataDD: ReadOnlyStringDD, sample: [ 'Fred Bloggs', 'Fredrica Smith' ] },
     addressLine1: { dataDD: ReadOnlyStringDD, sample: [ '4 Privat Drive', '11 Green Acres' ] },
     addressLine2: { dataDD: ReadOnlyStringDD, sample: [ 'Little Winging', 'Nether Wallop' ] },
     addressLine3: { dataDD: ReadOnlyStringDD, sample: [ 'Surrey', 'Aylesbury' ] },
@@ -157,7 +157,7 @@ export const printRecordDD: ExampleDataD = {
   },
   sealedBy: 'alreadyPrinted',
   structure: {
-    id: {dataDD: NatNumDd, hidden: true, sample: [1,2,3]},
+    id: { dataDD: NatNumDd, hidden: true, sample: [ 1, 2, 3 ] },
     requestedBy: {
       dataDD: { ...StringDD, display: DataDrivenFixedOptionDropDownAndDetailsCD },
       displayParams: {

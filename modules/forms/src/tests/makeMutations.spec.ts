@@ -8,6 +8,8 @@ import { ChequeCreditbooksPD } from "../example/chequeCreditBooks/chequeCreditBo
 import { IntegerMutationParam, MutationParam, NullMutationParam, OutputForManualParam, OutputForSqlMutationParam, OutputForStoredProcMutationParam, StringMutationParam } from "../common/resolverD";
 import { fromCommonIds } from "../example/commonIds";
 import { safeArray } from "@focuson/utils";
+import { PaymentsPageD } from "../example/payments/payments.pageD";
+import { newPaymentsRD } from "../example/payments/payments.restD";
 
 const stringMP: StringMutationParam = { type: 'string', value: 'someString' }
 const integerMP: IntegerMutationParam = { type: "integer", value: 123 }
@@ -82,7 +84,7 @@ describe ( "returnStatement", () => {
 
 describe ( "makeMutations", () => {
   it ( "should create an mutation class with a method for each mutation for that rest - simple", () => {
-    expect ( makeMutations ( paramsForTest, EAccountsSummaryPD, 'theRestName', eAccountsSummaryRestD, safeArray(eAccountsSummaryRestD.mutations)[ 0 ] ) ).toEqual ([
+    expect ( makeMutations ( paramsForTest, EAccountsSummaryPD, 'theRestName', eAccountsSummaryRestD, safeArray ( eAccountsSummaryRestD.mutations )[ 0 ] ) ).toEqual ( [
       "package focuson.data.mutator.EAccountsSummary;",
       "",
       "import focuson.data.fetchers.IFetcher;",
@@ -116,10 +118,10 @@ describe ( "makeMutations", () => {
       "  }}",
       "",
       "}"
-    ])
+    ] )
   } )
   it ( "should create an mutation class with a method for each mutation for that rest - complex", () => {
-    expect ( makeMutations ( paramsForTest, ChequeCreditbooksPD, 'theRestName', chequeCreditBooksRestD, safeArray(chequeCreditBooksRestD.mutations)[ 0 ] ) ).toEqual ([
+    expect ( makeMutations ( paramsForTest, ChequeCreditbooksPD, 'theRestName', chequeCreditBooksRestD, safeArray ( chequeCreditBooksRestD.mutations )[ 0 ] ) ).toEqual ( [
       "package focuson.data.mutator.ChequeCreditbooks;",
       "",
       "import focuson.data.fetchers.IFetcher;",
@@ -185,7 +187,85 @@ describe ( "makeMutations", () => {
       "  }",
       "",
       "}"
-    ])
+    ] )
 
+  } )
+
+  it ( "should make mutations for cases: i.e. where only one of several mutations will happen depending on the situation", () => {
+    expect ( makeMutations ( paramsForTest, PaymentsPageD, 'newPayments', newPaymentsRD, safeArray ( newPaymentsRD.mutations )[ 0 ] ) ).toEqual ( [
+      "package focuson.data.mutator.Payments;",
+      "",
+      "import focuson.data.fetchers.IFetcher;",
+      "import org.springframework.stereotype.Component;",
+      "import org.springframework.beans.factory.annotation.Autowired;",
+      "",
+      "import java.util.Map;",
+      "import java.util.HashMap;",
+      "import java.util.ArrayList;",
+      "import java.util.List;",
+      "import java.sql.CallableStatement;",
+      "import java.sql.PreparedStatement;",
+      "import java.sql.ResultSet;",
+      "import java.sql.Connection;",
+      "import java.sql.SQLException;",
+      "import focuson.data.mutator.utils.Tuple2;",
+      "@Component",
+      "public class SummaryOfPaymentsTable_createMutation {",
+      "",
+      "//If you have a compiler error in the type here, did you match the types of the output params in your manual code with the declared types in the .restD?",
+      "    public Tuple2<String,Integer> SummaryOfPaymentsTable_create_create0(Connection connection, Object dbName, int brandRef, int accountId) throws SQLException {",
+      "        if (dbName.equals(IFetcher.mock)) {",
+      "           System.out.println(\"Mock audit: SummaryOfPaymentsTable_create_create0( brandRef, accountId, {'type':'output','name':'one','javaType':'String'}, {'type':'output','name':'two','javaType':'Integer'}+ )\");",
+      "           return new Tuple2<>(\"0\",1);",
+      "    }",
+      "      if (true && brandRef==3) {",
+      "        Tuple2<String,Integer> params0 = SummaryOfPaymentsTable_create_one0_0(connection,dbName,accountId);",
+      "        String one = params0.t1;",
+      "        Integer two = params0.t2;",
+      "        // If you have a compilation error here: do the output params match the output params in the 'case'?",
+      "        return new Tuple2<>(one,two);",
+      "      }",
+      "      if (true) {",
+      "        Tuple2<Integer,String> params1 = SummaryOfPaymentsTable_create_two0_1(connection,dbName,accountId);",
+      "        Integer two = params1.t1;",
+      "        String one = params1.t2;",
+      "        // If you have a compilation error here: do the output params match the output params in the 'case'?",
+      "        return new Tuple2<>(one,two);",
+      "      }",
+      "      throw new RuntimeException(\"No guard condition executed\");",
+      "  }",
+      "    public Tuple2<String,Integer> SummaryOfPaymentsTable_create_one0_0(Connection connection, Object dbName, int accountId) throws SQLException {",
+      "        if (dbName.equals(IFetcher.mock)) {",
+      "           System.out.println(\"Mock audit: SummaryOfPaymentsTable_create_one0_0( {'type':'string','value':'first'}, accountId, {'type':'output','name':'one','javaType':'String','sqlType':'CHAR'}, {'type':'output','name':'two','javaType':'Integer','sqlType':'INTEGER'}+ )\");",
+      "           return new Tuple2<>(\"0\",1);",
+      "    }",
+      "    try (CallableStatement s = connection.prepareCall(\"call bo11.one(?, ?, ?, ?)\")) {",
+      "      s.setString(1, \"first\");",
+      "      s.setObject(2, accountId);",
+      "      s.registerOutParameter(3,java.sql.Types.CHAR);",
+      "      s.registerOutParameter(4,java.sql.Types.INTEGER);",
+      "      s.execute();",
+      "      String one = s.getString(3);",
+      "      Integer two = s.getInt(4);",
+      "      return new Tuple2<>(one,two);",
+      "  }}",
+      "    public Tuple2<Integer,String> SummaryOfPaymentsTable_create_two0_1(Connection connection, Object dbName, int accountId) throws SQLException {",
+      "        if (dbName.equals(IFetcher.mock)) {",
+      "           System.out.println(\"Mock audit: SummaryOfPaymentsTable_create_two0_1( {'type':'string','value':'second'}, {'type':'output','name':'two','javaType':'Integer','sqlType':'INTEGER'}, {'type':'output','name':'one','javaType':'String','sqlType':'CHAR'}, accountId+ )\");",
+      "           return new Tuple2<>(0,\"1\");",
+      "    }",
+      "    try (CallableStatement s = connection.prepareCall(\"call bo11.two(?, ?, ?, ?)\")) {",
+      "      s.setString(1, \"second\");",
+      "      s.registerOutParameter(2,java.sql.Types.INTEGER);",
+      "      s.registerOutParameter(3,java.sql.Types.CHAR);",
+      "      s.setObject(4, accountId);",
+      "      s.execute();",
+      "      Integer two = s.getInt(2);",
+      "      String one = s.getString(3);",
+      "      return new Tuple2<>(two,one);",
+      "  }}",
+      "",
+      "}"
+    ] )
   } )
 } )
