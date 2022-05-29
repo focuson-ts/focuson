@@ -1,12 +1,12 @@
 import { ExampleRestD } from "../common";
-import { SummaryOfPaymentsLineDD, SummaryOfPaymentsTableDD } from "./payments.dataD";
+import { PaymentDD, SummaryOfPaymentsLineDD, SummaryOfPaymentsTableDD } from "./payments.dataD";
 import { onlySchema } from "../database/tableNames";
 import { commonIds, fromCommonIds } from "../commonIds";
 
 export const summaryOfPreviousPaymentsRD: ExampleRestD = {
   params: {},
   dataDD: SummaryOfPaymentsTableDD,
-  url: '/api/payments/?{query}',
+  url: '/api/payments/summary?{query}',
   actions: [ 'get' ]
 }
 
@@ -15,11 +15,12 @@ export const summaryOfPreviousPaymentsRD: ExampleRestD = {
 
 export const newPaymentsRD: ExampleRestD = {
   params: commonIds,
-  dataDD: SummaryOfPaymentsLineDD,
+  dataDD: PaymentDD,
+  namePrefix: 'oneLine',
   url: '/api/payments/?{query}',
   actions: [ 'create', 'get' ],
   resolvers: {
-    getSummaryOfPaymentsLine: {
+    getoneLinePayment: {
       type: 'case', name: 'case', params: [ 'brandRef', 'accountId',
         {type: 'output', name: 'nameOfPayee', javaType: 'String'},
         {type: 'output', name: 'sterlingAmount', javaType: 'Integer'},
