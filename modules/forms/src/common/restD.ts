@@ -40,6 +40,7 @@ export interface CommonLensRestParam<T> extends ParamPrim<T> {
   javaType: string;
   graphQlType: string;
   javaParser: string;
+  annotation?: string;
 }
 export interface LensRestParam<T> extends ParamPrim<T> {
   lens: string,
@@ -49,6 +50,7 @@ export interface LensRestParam<T> extends ParamPrim<T> {
   javaType: string;
   graphQlType: string;
   javaParser: string;
+  annotation?: string;
 }
 
 export function isCommonLens<T> ( a: AllLensRestParams<T> ): a is CommonLensRestParam<T> {

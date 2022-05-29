@@ -18,7 +18,7 @@ export function makeParamsForJava<G> ( errorPrefix: string, r: RestD<G>, restAct
   const params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( errorPrefix, r, restAction ) );
   const comma = makeCommaIfHaveParams ( errorPrefix, r, restAction );
   const requestParam = getRestTypeDetails ( restAction ).params.needsObj ? `${comma}@RequestBody String body` : ""
-  return params.map ( (( [ name, param ] ) => `@RequestParam ${param.javaType} ${name}`) ).join ( ", " ) + requestParam
+  return params.map ( (( [ name, param ] ) => `${param.annotation ? param.annotation : '@RequestParam'} ${param.javaType} ${name}`) ).join ( ", " ) + requestParam
 }
 function paramsForQuery<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ): string {
   const clazz = isRepeatingDd ( r.dataDD ) ? 'List' : 'Map'

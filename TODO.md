@@ -1,7 +1,7 @@
 Critical
 
 * Better messages. So RestButton or model button should include success message with pattern... Done
-* Header params.
+* Header params.  ... done
 * Guards on resolvers/mutations. .. mutations done, resolvers done - although verbose and we need to improve them
 * Decide how to do optimistic locking
 
