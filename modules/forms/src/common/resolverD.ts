@@ -209,6 +209,7 @@ export interface AutowiredMutationParam {
   class: string;
   method: string
 }
+export type JavaTypePrimitive = 'String' | 'Integer';
 export interface IntegerMutationParam {
   type: 'integer';
   value: number
@@ -216,19 +217,19 @@ export interface IntegerMutationParam {
 interface ParamMutationParam {
   type: 'input';
   name: string;
-  javaType?: string
+  javaType?: JavaTypePrimitive
 
 }
 export interface OutputForStoredProcMutationParam {
   type: 'output';
   name: string;
-  javaType: 'String' | 'Integer';
+  javaType: JavaTypePrimitive
   sqlType: string;
 }
 export interface OutputForSqlMutationParam {
   type: 'output';
   name: string;
-  javaType: 'String' | 'Integer';
+  javaType: JavaTypePrimitive;
   rsName: string;
 }
 export type AllJavaTypes = 'String' | 'Integer' | 'Map<String,Object>' | 'List<Map<String,Object>>' | 'Boolean'

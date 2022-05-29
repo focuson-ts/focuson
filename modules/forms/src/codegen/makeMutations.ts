@@ -33,7 +33,7 @@ export function allSetObjectForInputs ( m: MutationParam | MutationParam[] ): st
 export function makeMutationResolverReturnStatement ( outputs: OutputMutationParam[] ): string {
   if ( outputs.length === 0 ) return `return;`
   if ( outputs.length === 1 ) return `return ${outputs[ 0 ].name};`
-  return `return new Tuple${outputs.length}<>(${outputs.map ( x => x.name ).join ( ',' )});`
+  return `return new Tuple${outputs.length}<${outputs.map ( o => o.javaType ).join ( "," )}>(${outputs.map ( x => x.name ).join ( ',' )});`
 }
 function quoteIfString ( javaType: AllJavaTypes, value: number ) {
   if ( javaType === 'String' ) return '"' + value + '"'

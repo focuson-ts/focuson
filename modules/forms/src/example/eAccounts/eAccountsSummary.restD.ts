@@ -38,7 +38,7 @@ export const eAccountsSummaryRestD: RestD<AllGuards> = {
         { type: "null" },
         { type: "null" },
         { type: "null" },
-        { type: "string", value: "magicstring", javaType: 'VARCHAR' },
+        { type: "string", value: "magicstring" },
         { type: 'output', name: 'totalMonthlyCost', javaType: 'Integer', sqlType: 'INTEGER' },
         { type: 'output', name: 'oneAccountBalance', javaType: 'Integer', sqlType: 'INTEGER' },
         { type: 'output', name: 'currentAccountBalance', javaType: 'Integer', sqlType: 'INTEGER' },

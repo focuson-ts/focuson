@@ -54,11 +54,11 @@ describe ( "makeResolvers", () => {
       "      int accountId = dataFetchingEnvironment.getArgument(\"accountId\");",
       "      try(Connection connection = dataSource.getConnection()){",
       "        //from ChequeCreditbooks.rest[chequeCreditBooks].resolvers[\"getChequeCreditbooks\"]",
-      "        Tuple2<Integer,String> params0 =  ChequeCreditbooks_getChequeCreditbooks_getMeMyData1(connection,dbName);",
+      "        Tuple2<Integer,String> params0 =  ChequeCreditbooks_getChequeCreditbooks_getMeMyData10(connection,dbName);",
       "        Integer val1 = params0.t1;",
       "        String val2 = params0.t2;",
       "        //from ChequeCreditbooks.rest[chequeCreditBooks].resolvers[\"getChequeCreditbooks\"]",
-      "        Tuple2<Integer,String> params1 =  ChequeCreditbooks_getChequeCreditbooks_getMeMyData2(connection,dbName);",
+      "        Tuple2<Integer,String> params1 =  ChequeCreditbooks_getChequeCreditbooks_getMeMyData21(connection,dbName);",
       "        Integer val3 = params1.t1;",
       "        String val4 = params1.t2;",
       "        Map<String,Object> result=new HashMap<>();",
@@ -70,7 +70,7 @@ describe ( "makeResolvers", () => {
       "      }};",
       "    }",
       "",
-      "    public Tuple2<Integer,String> ChequeCreditbooks_get_getMeMyData1(Connection connection, Object dbName) throws SQLException {",
+      "    public Tuple2<Integer,String> ChequeCreditbooks_get_getMeMyData10(Connection connection, Object dbName) throws SQLException {",
       "    try (CallableStatement s = connection.prepareCall(\"call somePackage.getMeMyData1(?, ?, ?)\")) {",
       "      s.registerOutParameter(1,java.sql.Types.INTEGER);",
       "      s.registerOutParameter(2,java.sql.Types.CHAR);",
@@ -78,9 +78,9 @@ describe ( "makeResolvers", () => {
       "      s.execute();",
       "      Integer val1 = s.getInt(1);",
       "      String val2 = s.getString(2);",
-      "      return new Tuple2<>(val1,val2);",
+      "      return new Tuple2<Integer,String>(val1,val2);",
       "  }}",
-      "    public Tuple2<Integer,String> ChequeCreditbooks_get_getMeMyData2(Connection connection, Object dbName) throws SQLException {",
+      "    public Tuple2<Integer,String> ChequeCreditbooks_get_getMeMyData21(Connection connection, Object dbName) throws SQLException {",
       "    try (CallableStatement s = connection.prepareCall(\"call getMeMyData2(?, ?, ?)\")) {",
       "      s.registerOutParameter(1,java.sql.Types.INTEGER);",
       "      s.registerOutParameter(2,java.sql.Types.CHAR);",
@@ -88,7 +88,7 @@ describe ( "makeResolvers", () => {
       "      s.execute();",
       "      Integer val3 = s.getInt(1);",
       "      String val4 = s.getString(2);",
-      "      return new Tuple2<>(val3,val4);",
+      "      return new Tuple2<Integer,String>(val3,val4);",
       "  }}",
       "",
       "public String dbName() {return IFetcher.db; }",
@@ -134,7 +134,7 @@ describe ( "makeResolvers", () => {
       "      String employeeType = dataFetchingEnvironment.getArgument(\"employeeType\");",
       "      try(Connection connection = dataSource.getConnection()){",
       "        //from EAccountsSummary.rest[eAccountsSummary].resolvers[\"getEAccountsSummary\"]",
-      "        Integer totalMonthlyCost =  EAccountsSummary_getEAccountsSummary_totalMonthlyCost(connection,dbName,accountId);",
+      "        Integer totalMonthlyCost =  EAccountsSummary_getEAccountsSummary_totalMonthlyCost0(connection,dbName,accountId);",
       "        Map<String,Object> result=new HashMap<>();",
       "        result.put(\"totalMonthlyCost\", totalMonthlyCost);",
       "        return result;",
@@ -142,14 +142,14 @@ describe ( "makeResolvers", () => {
       "    }",
       "",
       "//If you have a compiler error in the type here, did you match the types of the output params in your manual code with the declared types in the .restD?",
-      "    public Integer EAccountsSummary_getEAccountsSummary_totalMonthlyCost(Connection connection, String dbName, int accountId) throws SQLException {",
+      "    public Integer EAccountsSummary_getEAccountsSummary_totalMonthlyCost0(Connection connection, String dbName, int accountId) throws SQLException {",
       "      Integer totalMonthlyCost = 234;",
       "      return totalMonthlyCost;",
       "  }",
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ] );
+    ]);
 
   } )
 
@@ -191,7 +191,7 @@ describe ( "makeResolvers", () => {
       "      String employeeType = dataFetchingEnvironment.getArgument('employeeType');",
       "      try(Connection connection = dataSource.getConnection()){",
       "        //from EAccountsSummary.rest[eAccountsSummary].resolvers['balancesAndMonthlyCostResolver']",
-      "        Tuple3<Integer,Integer,Integer> params0 =  EAccountsSummary_balancesAndMonthlyCostResolver_getTotalMonthlyCostStoredProc(connection,dbName,accountId);",
+      "        Tuple3<Integer,Integer,Integer> params0 =  EAccountsSummary_balancesAndMonthlyCostResolver_getTotalMonthlyCostStoredProc0(connection,dbName,accountId);",
       "        Integer totalMonthlyCost = params0.t1;",
       "        Integer oneAccountBalance = params0.t2;",
       "        Integer currentAccountBalance = params0.t3;",
@@ -203,7 +203,7 @@ describe ( "makeResolvers", () => {
       "      }};",
       "    }",
       "",
-      "    public Tuple3<Integer,Integer,Integer> EAccountsSummary_totalMonthlyCost_getTotalMonthlyCostStoredProc(Connection connection, String dbName, int accountId) throws SQLException {",
+      "    public Tuple3<Integer,Integer,Integer> EAccountsSummary_totalMonthlyCost_getTotalMonthlyCostStoredProc0(Connection connection, String dbName, int accountId) throws SQLException {",
       "    try (CallableStatement s = connection.prepareCall('call getTotalMonthlyCostStoredProc(?, ?, ?, ?, ?, ?, ?, ?, ?)')) {",
       "      s.setObject(1, accountId);",
       "      s.setObject(2,null);",
@@ -218,12 +218,12 @@ describe ( "makeResolvers", () => {
       "      Integer totalMonthlyCost = s.getInt(7);",
       "      Integer oneAccountBalance = s.getInt(8);",
       "      Integer currentAccountBalance = s.getInt(9);",
-      "      return new Tuple3<>(totalMonthlyCost,oneAccountBalance,currentAccountBalance);",
+      "      return new Tuple3<Integer,Integer,Integer>(totalMonthlyCost,oneAccountBalance,currentAccountBalance);",
       "  }}",
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ] )
+    ])
   } )
 
   it ( "should make resolvers for a sql list resolvers", () => {
@@ -260,20 +260,20 @@ describe ( "makeResolvers", () => {
       "      String postcode = dataFetchingEnvironment.getArgument(\"postcode\");",
       "      try(Connection connection = dataSource.getConnection()){",
       "        //from PostCodeMainPage.rest[postcode].resolvers[\"getPostCodeDataLine\"]",
-      "        Integer someValue =  PostCodeSearchResponse_getPostCodeDataLine_audit(connection,dbName);",
+      "        Integer someValue =  PostCodeSearchResponse_getPostCodeDataLine_audit0(connection,dbName);",
       "        //from PostCodeMainPage.rest[postcode].resolvers[\"getPostCodeDataLine\"]",
-      "        List<Map<String,Object>> params1 = PostCodeSearchResponse_getPostCodeDataLine_get(connection,dbName,someValue);",
+      "        List<Map<String,Object>> params1 = PostCodeSearchResponse_getPostCodeDataLine_get1(connection,dbName,someValue);",
       "        List<Map<String,Object>> result= params1;",
       "        return result;",
       "      }};",
       "    }",
       "",
       "//If you have a compiler error in the type here, did you match the types of the output params in your manual code with the declared types in the .restD?",
-      "    public Integer PostCodeSearchResponse_getPostCodeDataLine_audit(Connection connection, String dbName) throws SQLException {",
+      "    public Integer PostCodeSearchResponse_getPostCodeDataLine_audit0(Connection connection, String dbName) throws SQLException {",
       "      Integer someValue= 123;",
       "      return someValue;",
       "  }",
-      "    public List<Map<String,Object>> PostCodeSearchResponse_getPostCodeDataLine_get(Connection connection, String dbName, Object someValue) throws SQLException {",
+      "    public List<Map<String,Object>> PostCodeSearchResponse_getPostCodeDataLine_get1(Connection connection, String dbName, Object someValue) throws SQLException {",
       "    try (PreparedStatement s = connection.prepareStatement(\"select *from POSTCODE where postcode like ?'\")) {",
       "      s.setObject(1, someValue);",
       "      ResultSet rs = s.executeQuery();",
@@ -290,7 +290,7 @@ describe ( "makeResolvers", () => {
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ] )
+    ])
   } )
 
 

@@ -39,7 +39,7 @@ describe ( "makeSpringEndpoint", () => {
       "import java.util.List;",
       "import java.util.Map;",
       "import java.util.Arrays;",
-        "import focuson.data.mutator.utils.Tuple2;",
+      "import focuson.data.mutator.utils.Tuple2;",
       "",
       "  @RestController",
       "  public class EAccountsSummary_EAccountsSummaryController {",
@@ -63,7 +63,7 @@ describe ( "makeSpringEndpoint", () => {
       "        //from EAccountsSummary.rest[eAccountsSummary.access[{\"state\":\"invalidate\"}] - if you have a compilation error here check which parameters you defined in {yourRestD}.states[invalidate]",
       "        if (!Arrays.asList(\"teamLeader\").contains(employeeType)) return new ResponseEntity(\"\", new HttpHeaders(), HttpStatus.FORBIDDEN);",
       "          //from EAccountsSummary.rest[eAccountsSummary].mutations[{\"state\":\"invalidate\"}] - if you have a compilation error here check which parameters you defined in {yourRestD}.states[invalidate]",
-      "          __state_invalidateMutation.EAccountsSummary_state_invalidate_auditStuff(connection,dbName,accountId,clientRef);",
+      "          __state_invalidateMutation.EAccountsSummary_state_invalidate_auditStuff0(connection,dbName,accountId,clientRef);",
       "          return  ResponseEntity.ok(\"{}\");",
       "        }",
       "    }",
@@ -83,7 +83,7 @@ describe ( "makeSpringEndpoint", () => {
       "      return new ObjectMapper().writeValueAsString( Sample.sampleEAccountsSummary0);",
       "    }",
       "  }"
-    ] )
+    ])
   } )
   it ( "should make a second endpoint for a res", () => {
     expect ( makeSpringEndpointsFor ( paramsForTest, EAccountsSummaryPD, 'createPlanRestD', createPlanRestD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [

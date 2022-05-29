@@ -12,40 +12,48 @@ export const summaryOfPreviousPaymentsRD: ExampleRestD = {
 
 // const doMutate = ( ...conditions: string[] ) => ( params: MutationParamForStoredProc | MutationParamForStoredProc[] ): MutationDetail =>
 //   ({ type: 'storedProc', name: '', guardBy: conditions, params, schema: onlySchema, package: 'bo11' }); // ,
+
 export const newPaymentsRD: ExampleRestD = {
   params: commonIds,
   dataDD: SummaryOfPaymentsLineDD,
   url: '/api/payments/?{query}',
   actions: [ 'create', 'get' ],
-  // resolvers: {
-  //   getSummaryOfPaymentsLine: {
-  //     type: 'case', name: 'case', params: [ 'brandRef', 'accountId' ], select: [
-  //       {
-  //         guard: [ 'brandRef==3' ], type: 'sql', name: '', schema: onlySchema,
-  //         sql: 'select nameOfPayee,sterlingAmount,currencyAmount,amtInWords,forActionOn,dateCreated,status from tableForBrand3 where acc = accountId', params: [
-  //           'accountId',
-  //           { type: "output", javaType: 'String', rsName: 'nameOfPayee', name: 'nameOfPayee' },
-  //           { type: "output", javaType: 'Integer', rsName: 'sterlingAmount', name: 'sterlingAmount' },
-  //           { type: "output", javaType: 'Integer', rsName: 'currencyAmount', name: 'currencyAmount' },
-  //           { type: "output", javaType: 'String', rsName: 'amtInWords', name: 'amtInWords' },
-  //           { type: "output", javaType: 'String', rsName: 'forActionOn', name: 'forActionOn' },
-  //           { type: "output", javaType: 'String', rsName: 'dateCreated', name: 'dateCreated' },
-  //         ]
-  //       },
-  //       {
-  //         guard: [], type: 'sql', name: '', schema: onlySchema,
-  //         sql: 'select nameOfPayee,sterlingAmount,currencyAmount,amtInWords,forActionOn,dateCreated,status from tableForAllOtherBrands where acc = accountId', params: [
-  //           'accountId',
-  //           { type: "output", javaType: 'String', rsName: 'nameOfPayee', name: 'nameOfPayee' },
-  //           { type: "output", javaType: 'Integer', rsName: 'sterlingAmount', name: 'sterlingAmount' },
-  //           { type: "output", javaType: 'Integer', rsName: 'currencyAmount', name: 'currencyAmount' },
-  //           { type: "output", javaType: 'String', rsName: 'amtInWords', name: 'amtInWords' },
-  //           { type: "output", javaType: 'String', rsName: 'forActionOn', name: 'forActionOn' },
-  //           { type: "output", javaType: 'String', rsName: 'dateCreated', name: 'dateCreated' },
-  //         ]
-  //       }
-  //     ]
-  //   }
+  resolvers: {
+    getSummaryOfPaymentsLine: {
+      type: 'case', name: 'case', params: [ 'brandRef', 'accountId',
+        {type: 'output', name: 'nameOfPayee', javaType: 'String'},
+        {type: 'output', name: 'sterlingAmount', javaType: 'Integer'},
+        {type: 'output', name: 'currencyAmount', javaType: 'Integer'},
+        {type: 'output', name: 'amtInWords', javaType: 'String'},
+        {type: 'output', name: 'forActionOn', javaType: 'String'},
+        {type: 'output', name: 'dateCreated', javaType: 'String'},
+      ], select: [
+        {
+          guard: [ 'brandRef==3' ], type: 'sql', name: '', schema: onlySchema,
+          sql: 'select nameOfPayee,sterlingAmount,currencyAmount,amtInWords,forActionOn,dateCreated,status from tableForBrand3 where acc = accountId', params: [
+            'accountId',
+            { type: "output", javaType: 'String', rsName: 'nameOfPayee', name: 'nameOfPayee' },
+            { type: "output", javaType: 'Integer', rsName: 'sterlingAmount', name: 'sterlingAmount' },
+            { type: "output", javaType: 'Integer', rsName: 'currencyAmount', name: 'currencyAmount' },
+            { type: "output", javaType: 'String', rsName: 'amtInWords', name: 'amtInWords' },
+            { type: "output", javaType: 'String', rsName: 'forActionOn', name: 'forActionOn' },
+            { type: "output", javaType: 'String', rsName: 'dateCreated', name: 'dateCreated' },
+          ]
+        },
+        {
+          guard: [], type: 'sql', name: '', schema: onlySchema,
+          sql: 'select nameOfPayee,sterlingAmount,currencyAmount,amtInWords,forActionOn,dateCreated,status from tableForAllOtherBrands where acc = accountId', params: [
+            'accountId',
+            { type: "output", javaType: 'String', rsName: 'nameOfPayee', name: 'nameOfPayee' },
+            { type: "output", javaType: 'Integer', rsName: 'sterlingAmount', name: 'sterlingAmount' },
+            { type: "output", javaType: 'Integer', rsName: 'currencyAmount', name: 'currencyAmount' },
+            { type: "output", javaType: 'String', rsName: 'amtInWords', name: 'amtInWords' },
+            { type: "output", javaType: 'String', rsName: 'forActionOn', name: 'forActionOn' },
+            { type: "output", javaType: 'String', rsName: 'dateCreated', name: 'dateCreated' },
+          ]
+        }
+      ]
+    }
   },
 
   mutations: [ {
