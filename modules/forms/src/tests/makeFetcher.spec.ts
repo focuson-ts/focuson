@@ -7,6 +7,7 @@ import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { paramsForTest } from "./paramsForTest";
 import { ListOfPaymentsPagePD } from "../example/ListOfPayments/listOfPayements.pageD";
 import { safeObject } from "@focuson/utils";
+import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
 
 describe ( "makeAllFetchers", () => {
   it ( "should make a fetcher for a single item", () => {
@@ -60,6 +61,10 @@ describe ( "makeAllFetchers", () => {
       "}"
     ] )
   } )
+  // it ("should work with header lens as well as common lens", () =>{
+  // expect ( makeAllFetchers ( paramsForTest, [ OccupationAndIncomeSummaryPD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [])
+  //
+  // })
 
 } )
 

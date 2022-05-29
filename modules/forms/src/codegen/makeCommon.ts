@@ -4,7 +4,7 @@ import { addStringToEndOfAllButLast, indentList } from "./codegen";
 import { TSParams } from "./config";
 import { applyToTemplate } from "@focuson/template";
 import { DirectorySpec, loadFile } from "@focuson/files";
-import { AllLensRestParams, CommonLensRestParam, flatMapCommonParams, flatMapParams, isCommonLens, RestD} from "../common/restD";
+import { AllLensRestParams, CommonLensRestParam, flatMapCommonParams, flatMapParams, isCommonLens, isHeaderLens, RestD } from "../common/restD";
 import { NameAnd, sortedEntries, unique } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
 import { AppConfig } from "../appConfig";
@@ -86,7 +86,8 @@ const paramToDetails = <B, G> ( page: MainPageD<B, G>, restName?: string, rest?:
 
 export function findAllCommonParamsDetails<B, G> ( pds: MainPageD<B, G>[] ): CommonParamsDetails[] {
   return flatMapParams ( pds, ( page, restName, rest, name, param ) =>
-    isCommonLens ( param ) ? [ { name, param, page, rest, restName } ] : [] )
+    isCommonLens ( param ) ? [ { name, param, page, rest, restName } ] : isHeaderLens ( param ) ? [ { name, param: { ...param, commonLens: param.header }, page, rest, restName } ] : [] )
+  //TODO This is a fix while we work out how to deal with the head parameters differently
 }
 export const findAllCommonParams = <B, G> ( pds: MainPageD<B, G>[] ) => unique ( flatMapParams ( pds, ( page, restName, rest, name, param ) =>
   isCommonLens ( param ) ? [ name ] : [] ), t => t );

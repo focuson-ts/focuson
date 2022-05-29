@@ -1,12 +1,8 @@
 import React from 'react';
 import { Story } from "@storybook/react";
-
-import Store from "@sambego/storybook-state/Store";
 import { SBookProvider } from "./sbookProvider";
 import { HasPostCommand, PostButton } from "@focuson/poster";
 import { identityOptics } from "@focuson/lens";
-import { HasPageSelection, PageSelectionContext } from "@focuson/pages";
-import { defaultPageSelectionContext } from "@focuson/focuson";
 
 export default {
   component: PostButton,
