@@ -33,5 +33,6 @@ export const paramsForTest: CombinedParams = {
   defaultDbName: 'mock',
   mutatorPackage: 'mutator',
   resolversPackage: 'resolvers',
-  maxTuples: 2
+  maxTuples: 2,
+  theme: 'theme-dark'
 };

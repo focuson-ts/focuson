@@ -11,7 +11,7 @@ const logLevel: GenerateLogLevel = 'detailed';
 
 
 
-generate ( logLevel, directorySpec, devAppConfig, { ...params, focusOnVersion, thePackage: 'focuson.data' }, javaOutputRoot, tsRoot, AllGuardCreator, makeButtons () ) ( generatedPages )
+generate ( logLevel, directorySpec, devAppConfig, { ...params, focusOnVersion, thePackage: 'focuson.data', theme: 'theme-dark' }, javaOutputRoot, tsRoot, AllGuardCreator, makeButtons () ) ( generatedPages )
 
 
 fse.copySync ( '../formComponents/src', tsRoot + "/src/formComponents" )
