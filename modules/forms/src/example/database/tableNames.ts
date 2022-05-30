@@ -35,6 +35,7 @@ export const addT: DBTable = {
 
 export const postCodeSearchTable: DBTable = {
   schema: onlySchema,
+  prefix: 'search',
   name: 'POSTCODE',
   description: '',
   notes: '',

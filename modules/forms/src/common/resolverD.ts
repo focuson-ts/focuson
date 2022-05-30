@@ -11,6 +11,8 @@ export interface Schema {
 export interface DBTable {
   /** Which schema the database is in. For now we only support single schema worlds */
   schema: Schema;
+  /** a prefix that is added like xxx.<tableName> to queries */
+  prefix?: string;
   /** The physical name of the table */
   name: string,
   /** the business purpose of the table */

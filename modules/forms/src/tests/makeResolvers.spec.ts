@@ -284,6 +284,7 @@ describe ( "makeResolvers", () => {
       "        oneLine.put(\"line2\", rs.getString(\"zzline2\"));",
       "        oneLine.put(\"line3\", rs.getString(\"zzline3\"));",
       "        oneLine.put(\"line4\", rs.getString(\"zzline4\"));",
+      "        result.add(oneLine);",
       "      }",
       "      return result;",
       "  }}",

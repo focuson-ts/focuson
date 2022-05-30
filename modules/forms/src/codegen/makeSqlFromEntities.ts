@@ -415,8 +415,9 @@ export function makeWhereClause ( s: SqlLinkData ) {
   return whereList.length === 0 ? '' : 'where ' + whereList.join ( ' and ' );
 }
 export function generateGetSql ( s: SqlLinkData ): string[] {
+  function tableName(t: DBTable){ return t.prefix?`${t.prefix}.${t.name}`:t.name}
   return [ `select`, ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.fields.map ( taf => `${taf.alias}.${taf.fieldData.dbFieldName} as ${sqlTafFieldName ( taf )}` ) ) ),
-    ` from`, ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.aliasAndTables.map ( ( [ alias, table ] ) => `${table.name} ${alias}` ) ) ),
+    ` from`, ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.aliasAndTables.map ( ( [ alias, table ] ) => `${tableName(table)} ${alias}` ) ) ),
     ` ${(makeWhereClause ( s ))}` ]
 }
 

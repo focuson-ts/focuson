@@ -1013,7 +1013,7 @@ describe ( "makeMapsForRest", () => {
         "  '  POSTCODE.zzline4 as POSTCODE_zzline4,\\n'+",
         "  '  POSTCODE.PC_POSTCODE as POSTCODE_PC_POSTCODE\\n'+",
         "  ' from\\n'+",
-        "  '  POSTCODE POSTCODE\\n'+",
+        "  '  search.POSTCODE POSTCODE\\n'+",
         "  ' where  POSTCODE.PC_POSTCODE like ?\\n'+",
         "  '\\n';",
         "  public static List<PostCodeMainPage_postcodeMaps> get(Connection connection, String postcode) throws SQLException {",

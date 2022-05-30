@@ -129,7 +129,8 @@ export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPag
         `while (rs.next()){`,
         ...indentList ( [
           `Map<String,Object> oneLine = new HashMap();`,
-          ...getFromResultSetPutInMap ( 'oneLine', 'rs', paramsA ) ] ),
+          ...getFromResultSetPutInMap ( 'oneLine', 'rs', paramsA ),
+          `result.add(oneLine);` ] ),
         '}',
         `return result;`,
       ]
