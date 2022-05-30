@@ -115,6 +115,6 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     if ( fs.existsSync ( 'src/actions.ts' ) )
       copyFile ( tsCode + '/actions.ts', 'src/actions.ts' )
     else
-      copyFile ( tsCode + '/actions.ts', 'templates/actions.ts' )
+      copyFile ( tsCode + '/actions.ts', 'templates/actions.ts' , directorySpec)
 
   };
