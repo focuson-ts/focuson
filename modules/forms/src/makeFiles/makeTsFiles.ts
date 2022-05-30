@@ -113,6 +113,9 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
 
     // copyFiles ( tsRoot, 'templates/raw', directorySpec ) ( '.gitignore' )
     copyFiles ( tsStoryBook, 'templates/raw/ts/stories', directorySpec ) ( 'main.js', 'preview.js', 'preview-head.html' )
-    copyFiles ( tsPublic, 'templates/raw/ts/public', directorySpec ) ( 'favicon.ico', 'index.css', 'index.html', 'logo192.png', 'logo512.png', 'manifest.json', 'robots.txt' )
-
+    copyFiles ( tsPublic, 'templates/raw/ts/public', directorySpec ) ( 'favicon.ico', 'logo192.png', 'logo512.png', 'manifest.json', 'robots.txt' )
+    templateFile ( `${tsPublic}/index.css`, 'templates/raw/ts/public/index.css', params, directorySpec, details )
+    templateFile ( `${tsPublic}/index.html`, 'templates/raw/ts/public/index.html', params, directorySpec, details )
+    // console.log('params', params)
+    // console.log('params theme', params.theme)
   };
