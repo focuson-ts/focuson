@@ -8,10 +8,11 @@ import { ExampleRepeatingD } from "../common";
 export const ETransferDataD: DataD<AllGuards> = {
   name: "ETransferDataD",
   description: "Allows us to make an etransfer",
-  layout: { component: LayoutCd, displayParams: { details: '[[1],[3,3],[1,1]]', displayAsCards: false }  },
+  layout: { component: LayoutCd, displayParams: { details: '[[{"count":1,"labelWidth":70, "valueWidth":50}],[3,3],[1,1]]', displayAsCards: false }  },
   structure: {
     account: { dataDD: AccountIdDD, displayParams: { label: "Account Id", min: 0 } },
-    dateOfETransfer: { dataDD: DateDD, displayParams: { datesExcluded: '~/holidays/', workingDaysInFuture: 5, includeWeekends: true }},
+    // dateOfETransfer: { dataDD: DateDD, displayParams: { datesExcluded: '~/holidays/', workingDaysInFuture: 5, includeWeekends: true }},
+    dateOfETransfer: { dataDD: DateDD, displayParams: { datesExcluded: '~/holidays/', workingDaysInFuture: 5}},
     description: { dataDD: OneLineStringDD, sample: [ 'Why we are doing this transfer' ] },
     fromAccount: { dataDD: AccountIdDD },
     toAccount: { dataDD: AccountIdDD, },
@@ -26,7 +27,7 @@ export const SingleHolidayDataD: DataD<AllGuards> = {
   name: "SingleHoliday",
   description: "Single Holiday",
   structure: {
-    holiday: { dataDD: DateDD, sample: ['2022-05-17','2022-05-20','2022-05-26','2022-05-27']},    
+    holiday: { dataDD: DateDD, sample: ['2022-05-26','2022-06-28','2022-06-06','2022-06-17']},    
   }
 }
 

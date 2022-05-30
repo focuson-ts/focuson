@@ -263,8 +263,8 @@ export const accountOverviewOptOutDataD: ExampleDataD = {
 export const accountOverviewDataD: ExampleDataD = {
   name: "AccountOverview",
   description: "Account overview data definition",
-  layout: { component: LayoutCd, displayParams: { details: '[[4,3],[{"count":7,"labelWidth":30, "valueWidth":40}, {"count":6,"labelWidth":30, "valueWidth":30}]]',
-      defaultProps: `{"labelWidth": 25}`}},
+  // layout: { component: LayoutCd, displayParams: { details: '[[4,3],[{"count":7,"labelWidth":30, "valueWidth":40}, {"count":6,"labelWidth":30, "valueWidth":30}]]', defaultProps: `{"labelWidth": 25}`}},
+  layout: { component: LayoutCd, displayParams: { details: '[[4,3],[{"count":7,"labelWidth":70, "valueWidth":40}, {"count":6,"labelWidth":50, "valueWidth":50}]]', defaultProps: `{"labelWidth": 50, "valueWidth": 50}`, displayAsCards: true}},
   structure: {
     score: { dataDD: IntegerDD, displayParams: { label: "Score" } },
     accountType: { dataDD: EAccountDisplayTypeDD, displayParams: { label: "Account Type" } },
@@ -292,6 +292,7 @@ export const accountOverviewDataD: ExampleDataD = {
 export const accountOverviewExcessInfoDataD: ExampleDataD = {
   name: "AccountOverviewExcessInfo",
   description: "Account overview excess info data definition",
+  layout: { component: LayoutCd, displayParams: { details: '[[7]]', defaultProps: `{"valueWidth": 50}`, displayAsCards: true}},
   structure: {
     dayOfCurrentExcess: { dataDD: NatNumDd },
     currentExcessOnAccount: { dataDD: NatNumDd, displayParams: { label: "Current Excess on Account" } },

@@ -27,7 +27,7 @@ function confirmIt ( c: boolean | string | undefined ) {
   return window.confirm ( text )
 }
 export function RestButton<S, C extends HasRestCommandL<S> & HasSimpleMessageL<S> & HasPageSelectionLens<S>> ( props: RestButtonProps<S, C> ) {
-  const { id, rest, action, result, state, name, confirm, validate, dateFn, deleteOnSuccess, enabledBy, buttonType } = props
+  const { id, rest, action, result, state, name, confirm, validate, text, dateFn, deleteOnSuccess, enabledBy, buttonType } = props
         
   function onClick () {
     const realvalidate = validate === undefined ? true : validate

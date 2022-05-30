@@ -40,7 +40,7 @@ export function PlusMinusButtonsAndInput<S, C>({ state, id, label, allButtons, r
   return <>
     <div className="labelValueButton">
       <Label state={state} htmlFor={id} label={label}/>
-      <div className="d-flex-inline">
+      <div className="d-flex-inline w-40">
         <button className={getButtonClassName(buttonType)} id={`${id}.minus`} title="Minus" onClick={onClick(x => x - 1)}>-</button>
         <LabelAndNumberInput id={id} allButtons={allButtons} required={required} min={min} state={state} mode='view' noLabel={true}/>
         <button className={getButtonClassName(buttonType)} id={`${id}.plus`} title="Plus" onClick={onClick(x => x + 1)}>+</button>

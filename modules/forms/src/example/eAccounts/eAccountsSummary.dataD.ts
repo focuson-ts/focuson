@@ -55,6 +55,7 @@ export const oneAccountBalanceResolver: any = {
 export const EAccountsSummaryDD: DataD<AllGuards> = {
   name: "EAccountsSummary",
   description: "This is the summary data about all the EAccounts for a single user",
+  layout: { component: LayoutCd, displayParams: { details: '[[10]]', defaultProps: `{"valueWidth": 50}`}},
   // tableName: 'CustomerSUmmaryView',
   structure: {
     useEStatements: { dataDD: BooleanDD },

@@ -19,11 +19,11 @@ export function TableWithCheckboxInput<S, T, Context> ( { id, order, state, copy
     const itemTx: Transform<S, T>[] = copySelectedItemTo ? [ [ copySelectedItemTo.optional, () => json[ row ] ] ] : []
     state.massTransform ( reasonFor ( 'Table', 'onClick', id, `selected row ${row}` ) ) ( ...[ ...indexTx, ...itemTx ] )
   };
-  return <table id={id}>
+  return <table id={id} className="grid">
     <thead>
     <tr>{orderJsx}</tr>
     </thead>
-    <tbody>{json.map ( ( row, i ) =>
+    <tbody className="grid-sub">{json.map ( ( row, i ) =>
         <tr key={i} onClick={onClick ( i )}>{order.map ( (o, colIndex) => {
           return colIndex%2 == 0 
             ? <td key={o.toString ()}>{row[o]}</td> 

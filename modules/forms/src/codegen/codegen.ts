@@ -51,7 +51,10 @@ export function optT<T> ( name: string, p: T | undefined ) {
 export const makeSimpleButton: <G> ( imp: string ) => ButtonCreator<ModalButtonInPage<G>, G> = imp => ({
   import: imp,
   makeButton: ( { name, button } ) =>
-    [ [ `<${button.control} id=${makeIdForButton ( button.text ? button.text : name )} state={state}`, ...opt ( 'text', button.text ), '/>' ].join ( ' ' ) ]
+    [ [ `<${button.control} id=${makeIdForButton ( button.text ? button.text : name )} state={state}`, 
+    ...opt ( 'text', button.text ),
+    ...opt ( 'buttonType', button.buttonType ? button.buttonType : 'secondary' ),
+     '/>' ].join ( ' ' ) ]
 })
 export const filterParamsByRestAction = ( errorPrefix: string, rest: RestD<any>, restAction: RestAction ) => {
   if ( isRestStateChange ( restAction ) ) {

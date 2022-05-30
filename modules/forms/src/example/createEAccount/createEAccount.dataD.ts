@@ -1,6 +1,6 @@
 import { DataD, MoneyDD, OneLineStringDD, StringPrimitiveDD } from "../../common/dataD";
 import { EAccountDisplayTypeDD } from "../eAccounts/eAccountsSummary.dataD";
-import { RadioCD } from "../../common/componentsD";
+import { LayoutCd, RadioCD } from "../../common/componentsD";
 import { AllGuards } from "../../buttons/guardButton";
 
 const SavingsStyleDD: StringPrimitiveDD = {
@@ -19,6 +19,7 @@ const SavingsStyleDD: StringPrimitiveDD = {
 export const CreateEAccountDataD: DataD<AllGuards> = {
   name: "CreateEAccountData",
   description: "Let's make an eaccount together",
+  layout: { component: LayoutCd, displayParams: { details: '[[4]]', defaultProps: `{"valueWidth": 50}`}},
   structure: {
     name: { dataDD: OneLineStringDD },
     type: { dataDD: EAccountDisplayTypeDD },

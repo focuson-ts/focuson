@@ -123,34 +123,34 @@ export const AccountOverviewMainPage: ExampleMainPage = {
   buttons: {
     excessInfo: {
       control: 'ModalButton', modal: ExcessInfoModalPage, mode: 'view',
-      focusOn: '~/excessInfo'
+      focusOn: '~/excessInfo', buttonType: "secondary"
     },
     reason: {
       control: 'ModalButton', modal: ReasonModalPage, mode: 'view',
-      focusOn: '~/reason'
+      focusOn: '~/reason', buttonType: "secondary"
     },
     excessHistory: {
       control: 'ModalButton', modal: ExcessHistoryModalPage, mode: 'view',
-      focusOn:  '~/excessHistory'
+      focusOn:  '~/excessHistory', buttonType: "secondary"
     },
     arrearsDetails: {
       control: 'ModalButton', modal: ArrearsDetailsModalPage, mode: 'view',
-      focusOn: '~/arrearsDetails'
+      focusOn: '~/arrearsDetails', buttonType: "secondary"
     },
     flags: {
       control: 'ModalButton', modal: AccountFlagsModalPage, mode: 'edit',
       copy: { from: '~/accountFlags' },
       copyOnClose: { to: '~/accountFlags' },
       // restOnCommit: {rest: accountFlagsRestDD, action: 'update', result: 'refresh'},
-      focusOn: '~/editingAccountFlags'
+      focusOn: '~/editingAccountFlags', buttonType: "secondary"
     },
     optOut: {
       control: 'ModalButton', modal: OptOutModalPage, mode: 'view',
-      focusOn: '~/optOut'
+      focusOn: '~/optOut', buttonType: "secondary"
     },
     agreementType: {
       control: 'ModalButton', modal: AgreementTypeModalPage, mode: 'view',
-      focusOn: '~/agreementType'
+      focusOn: '~/agreementType', buttonType: "secondary"
     },
   }
 }
