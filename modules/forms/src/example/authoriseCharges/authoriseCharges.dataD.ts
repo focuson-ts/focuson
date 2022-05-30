@@ -51,15 +51,15 @@ export const OneChargeDataDD: ExampleDataD = {
   name: 'OneChargeData',
   description: 'All the data we see on the main authoriseCharges page',
   structure: {
-    chargeType: { dataDD: StringDD },
-    status: { dataDD: StringDD },
-    type: { dataDD: StringDD },
-    sortCode: { dataDD: StringDD },
-    accountNo: { dataDD: StringDD },
-    amount: { dataDD: StringDD },
-    narrative: { dataDD: StringDD },
-    approvedBy: { dataDD: StringDD },
-    authorisedBy: { dataDD: StringDD },
+    chargeType: { dataDD: StringDD, sample: [ 'Unpaid DD', 'Unpaid DD fee' ] },
+    status: { dataDD: StringDD, sample: [ 'PENDING', 'APROVED', 'AUTHORISED' ] },
+    type: { dataDD: StringDD, sample: [ 'DR', 'CR' ] },
+    sortCode: { dataDD: StringDD, sample: [ '166051', '166052' ] },
+    accountNo: { dataDD: StringDD, sample: [ '10009126' ] },
+    amount: { dataDD: StringDD, sample: [ '1.00', '1.00' ] },
+    narrative: { dataDD: StringDD, sample: [ 'unpaid DD' ] },
+    approvedBy: { dataDD: StringDD, sample: [ '', 'you' ] },
+    authorisedBy: { dataDD: StringDD, sample: [ '', '', 'you' ] },
     hold: { dataDD: BooleanDD }
   }
 }

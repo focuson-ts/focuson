@@ -37,7 +37,7 @@ export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, 
   const prefixFilterString = prefixFilter?.optJsonOr ( '' )
   const oneRow = ( row: T, i: number ) =>
     (<tr id={`${id}[${i}]`} className={selectedClass ( i )} key={i} onClick={onClick ( i )}>{order.map ( o =>
-      <td id={`${id}[${i}].${o}`} key={o.toString ()}>{getValue ( o, row, joiners )}</td> )}</tr>);
+      <td id={`${id}[${i}].${o.toString ()}`} key={o.toString ()}>{getValue ( o, row, joiners )}</td> )}</tr>);
   const filter = ( t: T ) => prefixColumn && prefixFilter ? getValue ( prefixColumn, t, joiners ).toString ().startsWith ( prefixFilterString ) : true;
   let maxCountInt = maxCount ? Number.parseInt ( maxCount ) : 0;
 

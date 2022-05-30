@@ -87,9 +87,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
       let report = makeGuardsReportForPage ( mainP ).general;
       if ( report.length > 0 )
         writeToFile ( guardReportFileName ( tsCode, params, mainP ) + ".md", () => report )
-
     } )
-
 
     writeToFile ( `${tsCode}/${params.fetchersFile}.ts`, () => [
       ...makeFetcherDataStructureImport ( params, mainPs ),
@@ -113,5 +111,10 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     // copyFiles ( tsRoot, 'templates/raw', directorySpec ) ( '.gitignore' )
     copyFiles ( tsStoryBook, 'templates/raw/ts/stories', directorySpec ) ( 'main.js', 'preview.js', 'preview-head.html' )
     copyFiles ( tsPublic, 'templates/raw/ts/public', directorySpec ) ( 'favicon.ico', 'index.css', 'index.html', 'logo192.png', 'logo512.png', 'manifest.json', 'robots.txt' )
+
+    if ( fs.existsSync ( 'src/actions.ts' ) )
+      copyFile ( tsCode + '/actions.ts', 'src/actions.ts' )
+    else
+      copyFile ( tsCode + '/actions.ts', 'templates/actions.ts' )
 
   };

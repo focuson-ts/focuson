@@ -2,7 +2,7 @@ import { AllDataDD, CompDataD, CompDataDD, DisplayParamDD, HasGuards, HasLayout,
 import { commonParams, commonParamsWithLabel, DisplayCompD, OneDisplayCompParamD, SimpleDisplayComp } from "../common/componentsD";
 import { dataDsIn, isMainPage, isModalPage, MainPageD, PageD } from "../common/pageD";
 
-import { decamelize, NameAnd, sortedEntries, unique, unsortedEntries } from "@focuson/utils";
+import { decamelize, NameAnd, sortedEntries, toArray, unique, unsortedEntries } from "@focuson/utils";
 import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, optionalsFileName, optionalsName, pageComponentName, pageDomainName } from "./names";
 import { addButtonsFromVariables, MakeButton, makeButtonsVariable, makeGuardButtonVariables } from "./makeButtons";
 import { focusOnFor, indentList, noExtension } from "./codegen";
@@ -291,6 +291,7 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
     `import { Lenses } from '@focuson/lens';`,
     `import { Guard } from "@focuson/form_components";`,
     `import { GuardButton } from "@focuson/form_components";`,
+    `import * as action from '../actions'`,
     ...optionalImports,
   ]
   let pageDomain = noExtension ( params.pageDomainsFile );

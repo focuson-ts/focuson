@@ -31,6 +31,6 @@ export const SummaryOfChargeDatesRD: ExampleRestD = {
     date: { ...StringParam, lens: '~/summaryOfChargesDates/date', testValue: '2022/12/1' }
   },
   url: "/api/charges/dates?{query}",
-  actions: [ 'get' ],
+  actions: [ 'get', 'update' ],
 }
 

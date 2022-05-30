@@ -12,7 +12,7 @@ import { CompDataD, isRepeatingDd } from "../common/dataD";
 export function makeAllPactsForPage<B, G> ( params: TSParams, page: PageD<B, G> ): string[] {
   if ( !isMainPage ( page ) ) return []
   return [
-    `import { fetchWithPrefix, loggingFetchFn } from "@focuson/utils";`,
+    `import { fetchWithPrefix, loggingFetchFn, stringToSimpleMsg } from "@focuson/utils";`,
     `import { loadTree,wouldLoad,FetcherTree } from "@focuson/fetcher";`,
     `import { pactWith } from "jest-pact";`,
     `import { rest, RestCommand, restL } from "@focuson/rest";`,
@@ -91,7 +91,7 @@ export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, re
     ...indentList ( indentList ( makeLensParamsTransformers ( params, page, restName, defn, action, initialStateBodyTransforms ) ) ),
     `    const withIds = massTransform ( firstState, ...lensTransforms )`,
     `    const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );`,
-    `    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), restL(), withIds )`,
+    `    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), stringToSimpleMsg(() => 'now', 'info'), restL(), withIds )`,
     `    const rawExpected:any = { ...withIds, restCommands: []}`,
     // ...suppressExpectedResult,
     ...setExpectedResult,
