@@ -1,0 +1,14 @@
+@import url("./core.css");
+@import url("./input.css");
+@import url("./radio.css");
+@import url("./dropdown.css");
+@import url("./checkbox.css");
+@import url("./button.css");
+@import url("./table.css");
+
+body .theme-dark{
+    font-family: var(--font-family-main);
+    font-size: var(--font-size-main);
+    color: var(--text-colour-main);
+    background: var(--main-background);
+}

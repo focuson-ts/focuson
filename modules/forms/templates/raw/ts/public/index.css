@@ -1,20 +1,5 @@
-@import url("./brand.css");
-@import url("./input.css");
-@import url("./radio.css");
-@import url("./dropdown.css");
-@import url("./checkbox.css");
-@import url("./button.css");
-@import url("./table.css");
-
-
-body {
-    font-family: "Century Gothic", Futura, sans-serif;
-    /* margin: 20px; */
-    font-size: var(--font-size-main);
-    /* background:rgba(241, 241, 241, 0.5); */
-    color: var(--text-colour-main);
-    background: var(--main-background);
-}
+@import url("./themes/theme-light/index.css");
+/* @import url("./themes/theme-dark/index.css"); */
 
 .border-bottom {
   border-bottom: 1px solid #ddd;
@@ -111,7 +96,7 @@ input:valid{
     padding: 1px 2px;
     text-align: center;
     text-decoration: none;
-    margin: 3px!important;
+    margin: 3px;
     transition-duration: 0.4s;
     cursor: pointer;
 }
@@ -205,11 +190,6 @@ label {
     /* width: 35%; */
 }
 
-
-input#page1\.unpaidCardOrMisuseItems {
-  width: 100% !important;
-}
-
 /* input[type=text],input[type=number],input[type=date] {
     width: 40%;
 } */
@@ -244,9 +224,12 @@ select {
 /* The Close Button */
 .close-button {
     color: #aaa;
-    float: right;
+    /* float: right; */
     font-size: 28px;
-    font-weight: bold;
+    /* font-weight: bold; */
+    position: absolute;
+    top: 0;
+    right: 5px;
 }
 
 .close-button:hover,
@@ -277,9 +260,9 @@ select {
     background-color: white;
 }
 
-.close-button:hover {
-    background-color: darkgray;
-}
+/* .close-button:hover {
+    background-color: black;
+} */
 
 .show-modal {
     opacity: 1;
@@ -302,16 +285,16 @@ select {
 }
 
 .mt-0 {
-    margin-top: 0 !important;
+    margin-top: 0;
 }
 .mr-0 {
-    margin-right: 0 !important;
+    margin-right: 0;
 }
 .mb-0 {
-    margin-bottom: 0 !important;
+    margin-bottom: 0;
 }
 .ml-0 {
-    margin-left: 0 !important;
+    margin-left: 0;
 }
 
 /* table {
@@ -385,7 +368,7 @@ a.close {
 .alert-info {
     color: #055160;
     background-color: #cff4fc;
-    border-color: #b6effb;
+    border: 1px solid #7cdff4;
 }
 .alert-info .alert-link {
     color: #04414d;
@@ -409,68 +392,77 @@ a.close {
     color: #0c4128;
 }
 
+.alert-warning {
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+}
+.alert-warning .alert-link {
+  color: #523e02;
+}
+
 .labelWidth10 label{
-    width: 10% !important;
+    width: 10%;
 }
 
 .labelWidth20 label{
-    width: 20% !important;
+    width: 20%;
 }
 
 .labelWidth25 label{
-    width: 25% !important;
+    width: 25%;
 }
 
 .labelWidth30 label{
-    width: 30% !important;
+    width: 30%;
 }
 
 .labelWidth40 label{
-    width: 40% !important;
+    width: 40%;
 }
 
 .labelWidth50 label{
-    width: 50% !important;
+    width: 50%;
 }
 
 .labelWidth60 label{
-    width: 60% !important;
+    width: 60%;
 }
 
 .labelWidth70 label{
-    width: 70% !important;
+    width: 70%;
 }
 
 .labelWidth80 label{
-    width: 80% !important;
+    width: 80%;
 }
 
 .inputWidth20 input[type=text], .inputWidth20 input[type=number], .inputWidth20 input[type=date] {
-    width: 20% !important;
+    width: 20%;
 }
 
 .inputWidth30 input[type=text], .inputWidth30 input[type=number], .inputWidth30 input[type=date]{
-    width: 30% !important;
+    width: 30%;
 }
 
 .inputWidth40 input[type=text], .inputWidth40 input[type=number], .inputWidth40 input[type=date]{
-    width: 40% !important;
+    width: 40%;
 }
 
 .inputWidth50 input[type=text], .inputWidth50 input[type=number], .inputWidth50 input[type=date]{
-    width: 50% !important;
+    width: 50%;
 }
 
 .inputWidth60 input[type=text], .inputWidth60 input[type=number], .inputWidth60 input[type=date]{
-    width: 60% !important;
+    width: 60%;
 }
 
 .inputWidth70 input[type=text], .inputWidth70 input[type=number], .inputWidth70 input[type=date]{
-    width: 70% !important;
+    width: 70%;
 }
 
 .inputWidth80 input[type=text], .inputWidth80 input[type=number], .inputWidth80 input[type=date]{
-    width: 80% !important;
+    width: 80%;
 }
 
 #default_template {
@@ -501,18 +493,18 @@ pre {
 
 
 .border-primary {
-    border-color: #0d6efd !important;
+    border-color: #0d6efd;
 }
 .border-secondary {
-    border-color: #6c757d !important;
+    border-color: #6c757d;
 }
 
 .border-info {
-    border-color: #0dcaf0 !important;
+    border-color: #0dcaf0;
 }
 
 .border-light {
-    border-color: #f8f9fa !important;
+    border-color: #f8f9fa;
 }
 
 #debug-container button {
@@ -614,7 +606,7 @@ pre {
 }
 
 .bg-primary {
-    /*background-color: #0d6efd !important;*/
+    /*background-color: #0d6efd;*/
     --bs-table-bg: #cfe2ff;
     --bs-table-striped-bg: #c5d7f2;
     --bs-table-striped-color: #000;
@@ -635,31 +627,31 @@ pre {
 }
 
 .inputWidth20 select{
-    width: 21% !important;
+    width: 20%;
 }
 
 .inputWidth30 select{
-    width: 31% !important;
+    width: 30%;
 }
 
 .inputWidth40 select{
-    width: 41% !important;
+    width: 40%;
 }
 
 .inputWidth50 select{
-    width: 51% !important;
+    width: 50%;
 }
 
 .inputWidth60 select{
-    width: 61% !important;
+    width: 60%;
 }
 
 .inputWidth70 select{
-    width: 71% !important;
+    width: 70%;
 }
 
 .inputWidth80 select{
-    width: 81% !important;
+    width: 80%;
 }
 
 .card {
@@ -672,7 +664,9 @@ pre {
   background-clip: border-box;
   border: 1px solid rgba(0, 0, 0, 0.125);
   border-radius: 0.25rem;
-  box-shadow: 0 8px 8px -4px lightblue;
+  /* box-shadow: 0 8px 8px -4px lightblue; */
+  box-shadow: 4px 8px 16px 0px rgb(170, 154, 181);
+  margin: 0 0 20px 0;
 }
 
 .card-body {
@@ -753,7 +747,7 @@ pre {
   display: inline-block;
   padding: 0;
   border: 0;
-  /* width: 65%; */
+  width: 50%;
 }
 
 .react-datepicker {
@@ -1129,14 +1123,15 @@ pre {
 .react-datepicker__quarter-text--highlighted,
 .react-datepicker__year-text--highlighted {
   border-radius: 0.3rem;
-  background-color: #3dcc4a;
-  color: #fff;
+  /* background-color: #3dcc4a; */
+  /* color: #fff; */
+  color: red !important;
 }
 .react-datepicker__day--highlighted:hover,
 .react-datepicker__month-text--highlighted:hover,
 .react-datepicker__quarter-text--highlighted:hover,
 .react-datepicker__year-text--highlighted:hover {
-  background-color: #32be3f;
+  /* background-color: #32be3f; */
 }
 .react-datepicker__day--highlighted-custom-1,
 .react-datepicker__month-text--highlighted-custom-1,
@@ -1256,7 +1251,7 @@ pre {
 .react-datepicker__input-container {
   position: relative;
   display: inline-block;
-  /* width: 100%; */
+  width: 100%;
 }
 
 .react-datepicker__year-read-view,
@@ -1437,7 +1432,7 @@ pre {
 }
 
 .red-border {
-  border: 3px solid #dc3545 !important;
+  border: 3px solid #dc3545;
 }
 
 .react-datepicker-wrapper input[type=text] {
@@ -1468,4 +1463,74 @@ pre {
   color: var(--dark-grey);
   padding-left: 8px;
   padding-right: 8px;
+}
+
+button + div.labelValueButton {
+  margin: 0;
+  /* width: 32%; */
+}
+
+.dropdown-container {
+  box-shadow: none;
+  width: 100%;
+  margin: 0 0 20px 0;
+}
+
+.react-datepicker__input-container input[type=text] {
+  width: 100%;
+  background-image: url("icons/calendar.svg");
+  background-repeat: no-repeat, repeat;
+  background-position: right 16px top 50%, 0 0;
+  background-size: .75em auto, 100%;    
+  background-color:var(--dropdown-container-background);
+}
+
+table.grid {
+  min-height: 150px;
+}
+
+button.button {
+  font-size: inherit;
+}
+
+div.card {
+  min-height:97.5%;
+}
+
+select.select {
+  margin: 0 20px 0 0;
+}
+
+input.input {
+  margin: 0 20px 0 0;
+}
+
+div.radio-container {
+  margin-bottom: 20px;
+}
+
+/* .dropdown-container button {
+  min-width: var(--button-secondary-min-width);  
+} */
+
+button[id^="selectPage"] {
+  min-width: 280px;
+}
+
+input#page1\.unpaidCardOrMisuseItems {
+  width: 100%;
+  margin: 0;
+}
+
+button#page1\.unpaidCardOrMisuseItems\.minus, button#page1\.unpaidCardOrMisuseItems\.plus {
+  /* padding: 0.38rem; */
+  margin: 0;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.w-40 {
+  width: 40%;
 }
