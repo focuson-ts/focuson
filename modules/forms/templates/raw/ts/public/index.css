@@ -1,5 +1,5 @@
-@import url("./themes/theme-light/index.css");
-/* @import url("./themes/theme-dark/index.css"); */
+/* @import url("./themes/{theme}/index.css"); */
+@import url("./themes/theme-dark/index.css");
 
 .border-bottom {
   border-bottom: 1px solid #ddd;
@@ -1514,7 +1514,7 @@ div.radio-container {
 } */
 
 button[id^="selectPage"] {
-  min-width: 280px;
+  min-width: 18.1rem;
 }
 
 input#page1\.unpaidCardOrMisuseItems {
