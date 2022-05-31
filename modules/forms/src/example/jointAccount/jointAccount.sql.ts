@@ -1,5 +1,5 @@
 export const jointAccountSql = [
-  `  INSERT INTO CUST_TBL (nameId, id)
+  `INSERT INTO CUST_TBL (nameId, id)
      values (101, 1001),
             (102, 1002),
             (103, 1003),

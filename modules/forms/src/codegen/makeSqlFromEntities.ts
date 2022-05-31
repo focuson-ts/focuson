@@ -1,6 +1,12 @@
 import { DBTable } from "../common/resolverD";
-import { beforeAfterSeparator, beforeSeparator, ints, mapPathPlusInts, NameAnd, safeArray, safeString, unique } from "@focuson/utils";
-import { AllLensRestParams, EntityAndWhere, OneTableInsertSqlStrategyForNoIds, RestParams} from "../common/restD";
+import { beforeAfterSeparator, beforeSeparator, ints, mapPathPlusInts, NameAnd, safeArray, toArray, safeString, unique } from "@focuson/utils";
+import {
+  AllLensRestParams,
+  EntityAndWhere,
+  InsertSqlStrategy, OneTableInsertSqlStrategyForIds,
+  OneTableInsertSqlStrategyForNoIds,
+  RestParams
+} from "../common/restD";
 import { CompDataD, emptyDataFlatMap, flatMapDD, HasSample, isRepeatingDd, OneDataDD } from "../common/dataD";
 import { MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addBrackets, addStringToEndOfAllButLast, indentList } from "./codegen";
@@ -50,9 +56,27 @@ export interface CommonEntity {
   children?: NameAnd<ChildEntity>;
   type: 'Main' | 'Multiple' | 'Single';
 }
-export interface MainEntity extends CommonEntity {
+export interface MainEntityWithoutStrategy extends CommonEntity {
   type: 'Main';
 }
+
+export interface MainEntityWithStrategy extends CommonEntity {
+  type: 'Main';
+  idField?: string,
+  idStrategy: InsertSqlStrategy | InsertSqlStrategy[];
+}
+
+export function hasStrategy(m: Entity | undefined): m is MainEntityWithStrategy {
+  const ma: any = m;
+  return m && m.type === 'Main' && ma.idStrategy
+}
+
+export function getStrategy(e: Entity | undefined): InsertSqlStrategy[] {
+  return hasStrategy(e) ? toArray(e.idStrategy) : []
+}
+export type MainEntity = MainEntityWithStrategy | MainEntityWithoutStrategy;
+
+
 export interface MultipleEntity extends CommonEntity {  //parent id is in the child
   type: 'Multiple';
   idInParent: string;
@@ -284,7 +308,7 @@ interface FieldData<G> extends HasSample<any> {
   rsGetter: string;
   reactType: string;
   dbType: string;
-  sample?: string[]
+  sample?: string[] | number[];
 }
 interface TableAndFieldData<G> {
   table: DBTable;
@@ -636,10 +660,27 @@ export function findParamsForTable ( errorPrefix: string, params: RestParams, ta
 function sqlIfy ( a: any ): string {
   return JSON.stringify ( a ).replace ( /"/g, "'" )
 }
-export function makeInsertSqlForNoIds ( dataD: CompDataD<any>, strategy: OneTableInsertSqlStrategyForNoIds ) {
-  const tafdsForThisTable: TableAndFieldData<any>[] = findTableAndFieldFromDataD ( dataD ).filter ( tafd => tafd.table.name === strategy.table.name );
-  const sampleCount = isRepeatingDd ( dataD ) ? (dataD.sampleCount ? dataD.sampleCount : 3) : 3
+export function makeInsertSqlForNoIds ( dataD: CompDataD<any>, entity: MainEntity | undefined, strategy: OneTableInsertSqlStrategyForNoIds ) {
+  if (entity === undefined) return [];
+  const tafdsForThisTable: TableAndFieldData<any>[] = findTableAndFieldFromDataD ( dataD ).filter ( tafd => tafd.table.name === entity.table.name );
+  const sampleCount = isRepeatingDd ( dataD ) && dataD.sampleCount ? dataD.sampleCount : 3
   const is = [ ...Array ( sampleCount ).keys () ]
-  return is.flatMap ( i => [ `insert into ${strategy.table.name}(${tafdsForThisTable.map ( fd => fd.fieldData.dbFieldName )})`,
-    `  values (${tafdsForThisTable.map ( fd => sqlIfy ( selectSample ( i, fd.fieldData ) ) ).join ( "," )});` ] )
+  return is.map (i => `INSERT INTO ${entity.table.name}(${tafdsForThisTable
+      .map ((fd: TableAndFieldData<any>) => fd.fieldData.dbFieldName )}) values (${tafdsForThisTable.map (fd => sqlIfy ( selectSample ( i, fd.fieldData ) ) ).join ( "," )});` );
+}
+
+export function makeInsertSqlForIds ( dataD: CompDataD<any>, entity: MainEntity | undefined, strategy: OneTableInsertSqlStrategyForIds ) {
+  if (entity === undefined) return [];
+  const tafdsForThisTable: TableAndFieldData<any>[] = findTableAndFieldFromDataD ( dataD )
+      .filter ( tafd => tafd.table.name === entity.table.name );
+
+  tafdsForThisTable.unshift({table: entity.table, fieldData:
+        {fieldName: strategy.idField, dbFieldName: strategy.idField, rsGetter: "", reactType: "", dbType: "",
+          sample: Array(5).fill(0).map((_, idx) => idx + strategy.idOffset)}});
+
+  const sampleCount = isRepeatingDd ( dataD ) && dataD.sampleCount ? dataD.sampleCount : 3
+  const is = [ ...Array ( sampleCount ).keys () ]
+  return is.map (i => `INSERT INTO ${entity.table.name}(${tafdsForThisTable
+      .map ( fd => fd.fieldData.dbFieldName )}) values (${tafdsForThisTable
+      .map ( (fd: TableAndFieldData<any>) => sqlIfy ( selectSample ( i, fd.fieldData ) ) ).join ( "," )});` );
 }

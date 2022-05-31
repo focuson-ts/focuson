@@ -13,7 +13,16 @@ import { makeMockFetcherFor, makeMockFetchersForRest } from "../codegen/makeMock
 import { makeJavaVariablesForGraphQlQuery } from "../codegen/makeGraphQlQuery";
 import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
 // import { findSqlRoot, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, walkRoots } from "../codegen/makeJavaSql.tsxxx";
-import { createTableSql, findSqlLinkDataFromRootAndDataD, findSqlRoot, generateGetSql, makeInsertSqlForNoIds, makeMapsForRest, walkSqlRoots } from "../codegen/makeSqlFromEntities";
+import {
+  createTableSql,
+  findSqlLinkDataFromRootAndDataD,
+  findSqlRoot,
+  generateGetSql, getStrategy,
+  makeInsertSqlForIds,
+  makeInsertSqlForNoIds,
+  makeMapsForRest,
+  walkSqlRoots
+} from "../codegen/makeSqlFromEntities";
 import { makeDBFetchers } from "../codegen/makeDBFetchers";
 import { makePactValidation } from "../codegen/makePactValidation";
 import { AppConfig } from "../appConfig";
@@ -155,18 +164,19 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   )
 
   fs.rmSync ( `${javaResourcesRoot}/data.sql`, { force: true } )
-  fs.rmSync ( `${javaResourcesRoot}/insertData.sql`, { force: true } )
   if ( appConfig.makeSqlStrings !== false ) {
     let dataSql = allMainPages ( pages ).flatMap ( mainPage =>
-      sortedEntries ( mainPage.rest ).flatMap ( ( [ restName, rdp ] ) => safeArray ( rdp.rest.initialSql ) ) );
+      sortedEntries ( mainPage.rest )
+          .flatMap ( ( [ _, rdp ] ) => {
+            return getStrategy(rdp?.rest?.tables?.entity).flatMap( s => {
+              if (s.type === 'WithId') return safeArray(makeInsertSqlForIds(rdp.rest.dataDD, rdp?.rest?.tables?.entity, s))
+              else if (s.type === 'WithoutId') return safeArray(makeInsertSqlForNoIds(rdp.rest.dataDD, rdp?.rest?.tables?.entity, s))
+              else if (s.type === 'Manual') return s.sql
+              else return []
+            })
+          }));
     if ( dataSql.length > 0 )
       writeToFile ( `${javaResourcesRoot}/data.sql`, () => dataSql )
-
-    let insertSql = allMainPages ( pages ).flatMap ( mainPage =>
-      sortedEntries ( mainPage.rest )
-        .flatMap ( ( [ _, rdp ] ) => (rdp.rest.insertSqlStrategy !== undefined) ? safeArray ( makeInsertSqlForNoIds ( rdp.rest.dataDD, rdp.rest.insertSqlStrategy ) ) : [] ) );
-    if ( insertSql.length > 0 )
-      writeToFile ( `${javaResourcesRoot}/insertData.sql`, () => insertSql )
   }
   allMainPages ( pages ).forEach ( p => writeToFile ( `${javaTestRoot}/${providerPactClassName ( p )}.java`, () => makePactValidation ( params, appConfig.javaPort, p ) ) )
 

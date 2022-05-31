@@ -150,6 +150,15 @@ function accessDetails<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ): string {
 function auditDetails<B, G> ( page: MainPageD<B, G>, restName: string, rest: RestD<G> ): string[] {
   return rest.audits !== undefined ? [ `${page.name}.rest[${restName}].audits is defined. These currently do absolutely nothing, and will soon cause errors. Please migrate them to mutations` ] : []
 }
+
+function initialSql<B, G> ( page: MainPageD<B, G>, restName: string, rest: RestD<G> ): string[] {
+  return rest.initialSql !== undefined ? [`${page.name}.rest[${restName}].initialSql is defined. This is deprecated and will be removed soon. Please use ManualSqlStrategy from Entity instead `] : []
+}
+
+function insertSqlStrategy<B, G> ( page: MainPageD<B, G>, restName: string, rest: RestD<G> ): string[] {
+  return rest.insertSqlStrategy !== undefined ? [`${page.name}.rest[${restName}].insertSqlStrategy is defined. This is deprecated and will be removed soon. Please use idStrategy from Entity instead `] : []
+}
+
 function mutationDetails<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ): string {
   return safeArray ( rest.mutations ).flatMap ( a => `${printRestAction ( a.restAction )}->${toArray ( a.mutateBy ).map ( s => s.name )}` ).join ( '; ' )
 }
@@ -164,6 +173,8 @@ export function makeRestReport<B, G> ( page: MainPageD<B, G>, info: ReportInfo )
     ] )
   const critical: string[] = sortedEntries ( page.rest ).flatMap ( ( [ name, rdp ] ) => [
     ...notCreated ( info, rdp.rest.dataDD.name ),
+    ...initialSql( page, name, rdp.rest),
+    ...insertSqlStrategy( page, name, rdp.rest),
     ...auditDetails ( page, name, rdp.rest ),
     ...dontSupportVariables ( info, name, rdp ) ] )
   return { part: 'rests', headers: [ 'name', 'url', 'params', 'access', 'audit' ], general, critical }

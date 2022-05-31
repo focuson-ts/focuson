@@ -85,9 +85,20 @@ export function postFixForEndpoint<G> ( restAction: RestAction ) {
   return '' //restAction === 'list' ? "/list" : ""
 }
 
-export interface OneTableInsertSqlStrategyForNoIds {
+export interface InsertSqlStrategyInterface {
   type: string
-  table: DBTable;
+}
+
+export interface OneTableInsertSqlStrategyForNoIds {
+  type: 'WithoutId';
+  // table: DBTable;
+}
+
+export interface OneTableInsertSqlStrategyForIds {
+  type: 'WithId';
+  // table: DBTable;
+  idOffset: number;
+  idField: string;
 }
 
 export interface RestStateDetails {
@@ -104,8 +115,8 @@ export interface RestD<G> {
   actions: RestAction[];
   /** @deprecated Replaced with ManualSqlStrategy */
   initialSql?: string[];
-  // strategy?: InsertSqlStrategy | InsertSqlStrategy[];
-  insertSqlStrategy?: OneTableInsertSqlStrategyForNoIds;
+  /** @deprecated Moved to be inside Entity */
+  insertSqlStrategy?: any;
   states?: NameAnd<RestStateDetails>;
   access?: AccessDetails[];
   audits?: any[] //doesn't do anything. Is just for legacy
@@ -115,7 +126,7 @@ export interface RestD<G> {
 }
 
 
-type InsertSqlStrategy = OneTableInsertSqlStrategyForNoIds | ManualSqlStrategy
+export type InsertSqlStrategy = OneTableInsertSqlStrategyForIds | OneTableInsertSqlStrategyForNoIds | ManualSqlStrategy
 
 export interface ManualSqlStrategy {
   type: "Manual"

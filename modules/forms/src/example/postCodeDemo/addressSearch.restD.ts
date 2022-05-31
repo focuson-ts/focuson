@@ -18,11 +18,12 @@ export const rootPostCodeRestD: RestD<AllGuards> = {
 }
 export const postcodeRestD: RestD<AllGuards> = {
   ...rootPostCodeRestD,
-  insertSqlStrategy: { type: 'OneTableInsertSqlStrategyForNoIds', table: postCodeSearchTable },
+  // insertSqlStrategy: { type: 'OneTableInsertSqlStrategyForNoIds', table: postCodeSearchTable },
   tables: {
     entity: {
       type: 'Main',
-      table: postCodeSearchTable
+      table: postCodeSearchTable,
+      idStrategy: {type: 'Manual', sql: addressSearchSql},
     },
     where: [
       { table: postCodeSearchTable, alias: postCodeSearchTable.name, field: 'PC_POSTCODE', paramName: 'postcode', comparator: 'like', paramPrefix: '%', paramPostfix: '%' }

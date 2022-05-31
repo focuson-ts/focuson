@@ -39,6 +39,6 @@ export const devAppConfig: AppConfig = {
     loadTreeDebug: false, showTracing: false,
     recordTrace: true, tagFetcherDebug: false, accordions: []
   },
-  makeSqlStrings: false
+  makeSqlStrings: true
 }
 

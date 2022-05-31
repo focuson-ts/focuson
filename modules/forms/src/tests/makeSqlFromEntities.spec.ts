@@ -19,20 +19,21 @@ const addressRestDParams = addressRestD.params
 if ( addressRestDTables === undefined ) throw Error ( "addressRestDTables must be defined" )
 
 
-describe ( "Insert Queries", () => {
-  it ( "should work for ______", () => {
-    expect ( makeInsertSqlForNoIds ( postCodeDataLineD, { type: 'OneTableInsertSqlStrategyForNoIds', table: postCodeSearchTable } ) )
-      .toEqual ( [
-          "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE)",
-          "  values ('4 Privet drive','Little Whinging','Surrey','England','LW12 5f');",
-          "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE)",
-          "  values ('27 Throughput Lane','Woodfield','','Ireland','IR45 3GT');",
-          "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE)",
-          "  values ('4 Privet drive','Little Whinging','Surrey','England','LW12 5f');"
-        ]
-      )
-  } )
-} )
+// describe ( "Insert Queries", () => {
+//   it ( "should work for ______", () => {
+//     expect ( makeInsertSqlForNoIds ( postCodeDataLineD, { type: 'OneTableInsertSqlStrategyForNoIds', table: postCodeSearchTable } ) )
+//       .toEqual ( [
+//           "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE)",
+//           "  values ('4 Privet drive','Little Whinging','Surrey','England','LW12 5f');",
+//           "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE)",
+//           "  values ('27 Throughput Lane','Woodfield','','Ireland','IR45 3GT');",
+//           "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE)",
+//           "  values ('4 Privet drive','Little Whinging','Surrey','England','LW12 5f');"
+//         ]
+//       )
+//   } )
+// } )
+
 describe ( "EntityFolder", () => {
   it ( "should walk all the nodes", () => {
     const testFolder: EntityFolder<string[]> = {
