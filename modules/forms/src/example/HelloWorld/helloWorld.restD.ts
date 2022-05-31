@@ -1,9 +1,28 @@
 import { helloWorldDD } from "./helloWorld.dataD";
 import { ExampleRestD } from "../common";
+import { onlySchema } from "../database/tableNames";
 
 export const helloWorldRD: ExampleRestD = {
   params: {},
   dataDD: helloWorldDD,
   url: '/helloWorld?{query}',
-  actions: [ 'get' ],
+  actions: [ 'get', 'update' ],
+
+  resolvers: {
+    getHelloWorldDomainData: {
+      type: 'sql', name: 'mycoolstoredproc', sql: 'select * from ' + 'HelloWorld', params: [
+        { type: "output", javaType: 'String', name: 'message1', rsName: 'MSG1' },
+        { type: "output", javaType: 'String', name: 'message2', rsName: 'MSG2' },
+      ], schema: onlySchema
+
+    }
+  },
+  mutations: [
+    // {
+    //   restAction: 'get', mutateBy: [
+    //     { type: 'storedProc', name: 'auditTheGetOfThis', schema: onlySchema, params: [ 'accountId' ] }
+    //
+    //   ]
+    // }
+  ]
 }

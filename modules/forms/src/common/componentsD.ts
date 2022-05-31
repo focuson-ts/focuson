@@ -169,7 +169,16 @@ export const OptionalCD: DisplayCompD = {
   name: "Optional",
   params: { ...commonParamsWithLabel }
 }
-
+export const DropDownCD: DisplayCompD = {
+  import: '@focuson/form_components',
+  name: "Dropdown",
+  params: {
+    ...commonParams, ...enumParams,
+    pleaseSelect: { paramType: 'string', needed: 'no' },
+    size: { paramType: 'object', needed: 'no' },
+    required: { paramType: 'boolean', needed: 'no' },
+  }
+}
 export const LabelAndDropDownCD: DisplayCompD = {
   import: '@focuson/form_components',
   name: "LabelAndDropdown",

@@ -1,4 +1,4 @@
-import { postFixForEndpoint, RestD, RestParams } from "../common/restD";
+import { isHeaderLens, postFixForEndpoint, RestD, RestParams } from "../common/restD";
 import { endPointName, mutationClassName, mutationMethodName, mutationVariableName, queryClassName, queryName, queryPackage, restControllerName, sampleName, sqlMapName, sqlMapPackageName } from "./names";
 import { JavaWiringParams } from "./config";
 import { actionsEqual, beforeSeparator, isRestStateChange, RestAction, safeArray, safeObject, sortedEntries, toArray } from "@focuson/utils";
@@ -18,7 +18,12 @@ export function makeParamsForJava<G> ( errorPrefix: string, r: RestD<G>, restAct
   const params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( errorPrefix, r, restAction ) );
   const comma = makeCommaIfHaveParams ( errorPrefix, r, restAction );
   const requestParam = getRestTypeDetails ( restAction ).params.needsObj ? `${comma}@RequestBody String body` : ""
-  return params.map ( (( [ name, param ] ) => `@RequestParam ${param.javaType} ${name}`) ).join ( ", " ) + requestParam
+  return params.map ( (( [ name, param ] ) => {
+    if ( isHeaderLens ( param ) )
+      return `${param.annotation ? param.annotation : '@RequestHeader @RequestParam'} ${param.javaType} ${name}`;
+    else
+      return `${param.annotation ? param.annotation : '@RequestParam'} ${param.javaType} ${name}`;
+  }) ).join ( ", " ) + requestParam
 }
 function paramsForQuery<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ): string {
   const clazz = isRepeatingDd ( r.dataDD ) ? 'List' : 'Map'
@@ -56,7 +61,7 @@ export function accessDetails ( params: JavaWiringParams, p: MainPageD<any, any>
 
 
 export function auditDetails ( params: JavaWiringParams, r: RestD<any>, restAction: RestAction ): string[] {
-  return safeArray ( r.mutations ).flatMap ( ad => toArray ( ad.mutateBy ).map ( sp => `_audit.${mutationMethodName ( r, restActionForName ( restAction ), sp )}(${toArray ( sp.params ).map ( displayParam ).join ( ',' )})` ) )
+  return safeArray ( r.mutations ).flatMap ( ad => toArray ( ad.mutateBy ).map ( ( md, i ) => `_audit.${mutationMethodName ( r, restActionForName ( restAction ), md, '' + i )}(${toArray ( md.params ).map ( displayParam ).join ( ',' )})` ) )
 }
 
 export function paramsDeclaration ( md: MutationDetail, i: number ) {
@@ -75,11 +80,12 @@ export function outputParamsDeclaration ( md: MutationDetail, i: number ): strin
 export function callMutationsCode<G> ( p: MainPageD<any, G>, restName: string, r: RestD<G>, restAction: RestAction, dbNameString: string ) {
   const hintString = isRestStateChange ( restAction ) ? ` - if you have a compilation error here check which parameters you defined in {yourRestD}.states[${restAction.state}]` : ''
   const callMutations = indentList ( safeArray ( r.mutations ).filter ( a => actionsEqual ( a.restAction, restAction ) ).flatMap ( ad =>
-    toArray ( ad.mutateBy ).flatMap ( ( md, i ) =>
-      [ `//from ${p.name}.rest[${restName}].mutations[${JSON.stringify ( restAction )}]${hintString}`,
-        `${paramsDeclaration ( md, i )}${mutationVariableName ( r, restAction )}.${mutationMethodName ( r, restActionForName ( restAction ), md )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
+    toArray ( ad.mutateBy ).flatMap ( ( md, i ) => {
+      return [ `//from ${p.name}.rest[${restName}].mutations[${JSON.stringify ( restAction )}]${hintString}`,
+        `${paramsDeclaration ( md, i )}${mutationVariableName ( r, restAction )}.${mutationMethodName ( r, restActionForName ( restAction ), md, '' + i )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
         ...outputParamsDeclaration ( md, i )
-      ] ) ) )
+      ];
+    } ) ) )
   return callMutations;
 }
 function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restName: string, r: RestD<G>, restAction: RestAction ): string[] {

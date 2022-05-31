@@ -10,15 +10,13 @@ describe ( "makeDomainFor", () => {
   it ( "should create an interface representing the dataD", () => {
     expect ( makeDomainForDataD ( EAccountsSummaryDD ) ).toEqual ( [
       "export interface EAccountsSummaryDomain{",
+      "  balancesAndMonthlyCost: BalancesAndMonthlyCostDomain;",
       "  createPlan: CreatePlanDomain;",
-      "  currentAccountBalance: number;",
       "  eAccountsTable: EAccountSummaryDomain[];",
-      "  oneAccountBalance: number;",
-      "  totalMonthlyCost: number;",
       "  useEStatements: boolean;",
       "}",
       ""
-    ] )
+    ])
     expect ( makeDomainForDataD ( EAccountSummaryDD ) ).toEqual ( [
       "export interface EAccountSummaryDomain{",
       "  accountId: number;",
@@ -45,8 +43,14 @@ describe ( "makeDomainFor", () => {
 } )
 
 describe ( "makeAllDomainsFor", () => {
-  it ( "should make all the interfaces for the apges", () => {
+  it ( "should make all the interfaces ", () => {
     expect ( makeAllDomainsFor ( [ EAccountsSummaryPD, CreatePlanPD, EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
+      "export interface BalancesAndMonthlyCostDomain{",
+      "  currentAccountBalance: number;",
+      "  oneAccountBalance: number;",
+      "  totalMonthlyCost: number;",
+      "}",
+      "",
       "export interface CreatePlanDomain{",
       "  createPlanDate: string;",
       "  createPlanEnd: string;",
@@ -54,11 +58,9 @@ describe ( "makeAllDomainsFor", () => {
       "}",
       "",
       "export interface EAccountsSummaryDomain{",
+      "  balancesAndMonthlyCost: BalancesAndMonthlyCostDomain;",
       "  createPlan: CreatePlanDomain;",
-      "  currentAccountBalance: number;",
       "  eAccountsTable: EAccountSummaryDomain[];",
-      "  oneAccountBalance: number;",
-      "  totalMonthlyCost: number;",
       "  useEStatements: boolean;",
       "}",
       "",
@@ -73,7 +75,7 @@ describe ( "makeAllDomainsFor", () => {
       "  virtualBankSeq: string;",
       "}",
       ""
-    ] )
+    ])
 
   } )
 } )

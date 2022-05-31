@@ -23,6 +23,7 @@ interface CommonRestOnCommit {
   action: RestAction,
   /** What happens when the rest is completed. Currently only 'refresh' which clears the 'main object' triggering a fetch. Later we will be more clever' */
   result: RestResult;
+  messageOnSuccess?: string
 
 }
 export interface RestOnCommitNothing extends CommonRestOnCommit {

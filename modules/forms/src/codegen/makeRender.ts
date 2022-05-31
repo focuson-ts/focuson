@@ -2,7 +2,7 @@ import { AllDataDD, CompDataD, CompDataDD, DisplayParamDD, HasGuards, HasLayout,
 import { commonParams, commonParamsWithLabel, DisplayCompD, OneDisplayCompParamD, SimpleDisplayComp } from "../common/componentsD";
 import { dataDsIn, isMainPage, isModalPage, MainPageD, PageD } from "../common/pageD";
 
-import { decamelize, NameAnd, sortedEntries, unique, unsortedEntries } from "@focuson/utils";
+import { decamelize, NameAnd, sortedEntries, toArray, unique, unsortedEntries } from "@focuson/utils";
 import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, optionalsFileName, optionalsName, pageComponentName, pageDomainName } from "./names";
 import { addButtonsFromVariables, MakeButton, makeButtonsVariable, makeGuardButtonVariables } from "./makeButtons";
 import { focusOnFor, indentList, noExtension } from "./codegen";
@@ -142,6 +142,8 @@ function makeParams<B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params
   return fullDisplayParams;
 }
 export function createOneReact<B, G> ( mainPage: MainPageD<B, G>, params: TSParams, pageD: PageD<B, G>, { path, dataDD, display, displayParams, guard }: ComponentData<G> ): string[] {
+  if ( display === undefined )
+    throw Error ( `Misconfigured component in page ${mainPage.name}. This is usually because you just added a field, and misconfigured the field. Unfortunately we can't work out which field it was.` )
   const name = display.name
   let errorPrefix = `Page ${pageD.name}, Datad ${dataDD.name} with path ${JSON.stringify ( path )}`;
   if ( name === undefined ) throw Error ( errorPrefix + " cannot find the name of the display component. Check it is a dataD or similar" )
@@ -289,6 +291,7 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
     `import { Lenses } from '@focuson/lens';`,
     `import { Guard } from "@focuson/form_components";`,
     `import { GuardButton } from "@focuson/form_components";`,
+    `import * as action from '../actions'`,
     ...optionalImports,
   ]
   let pageDomain = noExtension ( params.pageDomainsFile );
@@ -296,7 +299,7 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
   const pageDomainsImports = pages.filter ( p => p.pageType === 'MainPage' ).map ( p => `import {${pageDomainName ( p )}} from "${domainsFileName ( '..', params, p )}";` )
   const domainImports = pages.flatMap ( p => sortedEntries ( dataDsIn ( [ p ] ) ).map ( ( [ name, dataD ] ) => `import {${domainName ( dataD )}} from "${domainsFileName ( '..', params, p )}"` ) )
   const modalDomainImports = pages.flatMap ( p => isModalPage ( p ) ? [
-    `//if there is an error message here... did you set the importFrom on this modal correctly, and also check that the PageD links to this DataD in a domain or rest block`,
+    `//if there is an error message here check that the PageD links to this DataD in a domain or rest block`,
     `import {${domainName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', mainP, p, params.domainsFile )}'; ` ] : [] )
   const modalRenderImports = pages.flatMap ( p => (isModalPage ( p ) && !p.display.dataDD.display) ? [
     `import {${componentName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', mainP, p, params.renderFile )}'` ] : [] )

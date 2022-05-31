@@ -76,10 +76,6 @@ describe ( "lens fetcher", () => {
     const opticsTo = identityOptics<AB> ().focusQuery ( 'ab' ).focusQuery ( 'a' )
     let f: Fetcher<AB, string> = lensFetcher ( opticsTo, loadTrueF );
     expect ( f.shouldLoad ( {} ) ).toEqual ( ["emptyFocusedOnState"] )
-    // const {requestInfo, requestInit, mutate} = f.load({})
-    // expect(requestInfo).toEqual("load url from undefined")
-    // expect(requestInit).toEqual(reqInit)
-    // expect(mutate({})(200, "someNewA")).toEqual({}) //TODO so annoyingly we went to get it... but didn't put it in here... and didn;t throw an error.
   } )
   it ( "when state defined, holder is defined and condition is false", () => {
     const opticsTo = identityOptics<AB> ().focusQuery ( 'ab' ).focusQuery ( 'a' )

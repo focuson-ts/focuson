@@ -8,6 +8,8 @@ import { makeValidationButtons, ValidationButtonInPage } from "./ValidationDebug
 import { AllGuards, GuardButtonInPage } from "./guardButton";
 import { makeToggleButtons, ToggleButtonInPage } from "./toggleButton.page";
 import { DeleteStateButtonInPage, makeDeleteStateButtons } from "./DeleteStateButton";
+import { makeSelectPageButtons, SelectButtonInPage } from "./selectPageButton";
+import { ActionButtonInPage, makeActionButtons } from "./actionButton.page";
 
 export interface ButtonWithControl {
   control: string
@@ -22,19 +24,21 @@ export type ButtonD = ButtonWithControl | GuardButtonInPage<any, any>
 
 export type RawButtons<G> = ModalButtonInPage<G> | ModalCancelButtonInPage | ModalCommitButtonInPage |
   ResetStateButton | RestButtonInPage<G> | ListNextButtonInPage | ListPrevButtonInPage | ValidationButtonInPage | DeleteStateButtonInPage |
-  ToggleButtonInPage<G>;
+  ToggleButtonInPage<G> | SelectButtonInPage<G> | ActionButtonInPage<G>;
 
 export type AllButtonsInPage<G> = (RawButtons<G> | GuardButtonInPage<AllButtonsInPage<G>, G>)
 
 export function makeButtons<G> (): MakeButton<G> {
   return {
-    ...makeDeleteStateButtons(),
+    ...makeDeleteStateButtons (),
     ...makeModalButtons (),
     ...makeModalCloseButtons (),
     ...makeListMarkerButtons (),
     ...makeRestButtons (),
     ...makeValidationButtons (),
     ...makeToggleButtons (),
+    ...makeActionButtons(),
+    ...makeSelectPageButtons ()
   }
 }
 

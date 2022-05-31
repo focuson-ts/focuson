@@ -1,3 +1,4 @@
+export * from './src/appConfig'
 export * from './src/buttons/allButtons'
 export * from './src/buttons/guardButton'
 export * from './src/buttons/listButtons'

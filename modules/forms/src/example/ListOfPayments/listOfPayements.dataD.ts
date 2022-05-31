@@ -1,8 +1,7 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 
 import { CheckboxInputCD, DataDrivenFixedOptionDropDownAndDetailsCD, LabelAndDropDownCD, LayoutCd, NumberInputCD, SelectedItemCD, TableCD, TwoElementWithTitleLayoutCD } from "../../common/componentsD";
-import { NatNumDd } from "../commonEnums";
-import { AccountIdDD, BooleanDD, DataD, NumberPrimitiveDD, OneLineStringDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
+import { AccountIdDD, BooleanDD, DataD, NatNumDd, NumberPrimitiveDD, OneLineStringDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
 import { CustomerStatus } from "@focuson/form_components";
 import { AllGuards } from "../../buttons/guardButton";
 import { accountT, postCodeSearchTable } from "../database/tableNames";
@@ -37,7 +36,7 @@ export const RequestDetailsDD: ExampleDataD = {
     title: { dataDD: ReadOnlyStringDD, sample: [ 'Mr', 'Mrs' ] },
     forename: { dataDD: ReadOnlyStringDD, sample: [ 'Fred', 'Fredrica' ] },
     surname: { dataDD: ReadOnlyStringDD, sample: [ 'Bloggs', 'Smith' ] },
-    fullname: { dataDD: {...ReadOnlyStringDD, resolver: 'fullname'}  , sample: [ 'Fred Bloggs', 'Fredrica Smith' ] },
+    fullname: { dataDD: ReadOnlyStringDD, sample: [ 'Fred Bloggs', 'Fredrica Smith' ] },
     addressLine1: { dataDD: ReadOnlyStringDD, sample: [ '4 Privat Drive', '11 Green Acres' ] },
     addressLine2: { dataDD: ReadOnlyStringDD, sample: [ 'Little Winging', 'Nether Wallop' ] },
     addressLine3: { dataDD: ReadOnlyStringDD, sample: [ 'Surrey', 'Aylesbury' ] },
@@ -158,6 +157,7 @@ export const printRecordDD: ExampleDataD = {
   },
   sealedBy: 'alreadyPrinted',
   structure: {
+    id: { dataDD: NatNumDd, hidden: true, sample: [ 1, 2, 3 ] },
     requestedBy: {
       dataDD: { ...StringDD, display: DataDrivenFixedOptionDropDownAndDetailsCD },
       displayParams: {

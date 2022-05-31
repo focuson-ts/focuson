@@ -3,7 +3,7 @@ import { FocusOnConfig, setJsonForFocusOn } from "@focuson/focuson";
 import { getElement, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
 import { context, Context, emptyState, FState, pathToLens } from "./{commonFile}";
-import { fetchWithDelay, fetchWithPrefix, loggingFetchFn, NameAnd, RestAction, SimpleMessage, sortedEntries } from "@focuson/utils";
+import { fetchWithDelay, fetchWithPrefix, loggingFetchFn, NameAnd, RestAction, SimpleMessage, sortedEntries, stringToSimpleMsg } from "@focuson/utils";
 import { fetchers } from "./{fetchersFile}";
 import { pages } from "./{pagesFile}";
 import { restL } from "@focuson/rest";
@@ -35,6 +35,7 @@ export const config: FocusOnConfig<{stateName}, Context, SimpleMessage> = {
   /** The collection of all registered fetchers that will get data from the back end */
   fetchers,
   messageL: simpleMessagesL (),
+  stringToMsg: stringToSimpleMsg(() => new Date().toUTCString(), 'info'),
   restL: restL (),
   restDetails: restDetails
 }

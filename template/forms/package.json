@@ -28,7 +28,14 @@
     "README.md",
     "dist/index.js",
     "dist/index.d.ts",
-    "dist/src/",
+    "dist/src/buttons",
+    "dist/src/codegen",
+    "dist/src/common",
+    "dist/src/makeFiles",
+    "dist/src/reporting",
+    "dist/src/appConfig.d.ts",
+    "dist/src/appConfig.js",
+    "dist/src/appConfig.js",
     "templates/"
   ],
   "keywords":        [

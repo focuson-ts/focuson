@@ -26,7 +26,6 @@ export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, 
   const json: T[] = safeArray ( state.optJson () )
   const onClick = ( row: number ) => ( e: any ) => {
     if ( copySelectedIndexTo || copySelectedItemTo ) {
-      // console.log ( 'clicked row ', row )
       const indexTx: Transform<S, number>[] = copySelectedIndexTo ? [ [ copySelectedIndexTo.optional, () => row ] ] : []
       const itemTx: Transform<S, T>[] = copySelectedItemTo ? [ [ copySelectedItemTo.optional, () => json[ row ] ] ] : []
       state.massTransform ( reasonFor ( 'Table', 'onClick', id, `selected row ${row}` ) ) ( ...[ ...indexTx, ...itemTx ] )
@@ -36,22 +35,14 @@ export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, 
   function selectedClass ( i: number ) {return i === selected ? 'bg-primary' : undefined }
 
   const prefixFilterString = prefixFilter?.optJsonOr ( '' )
-  function oneRow ( row: T, i: number ) {
-    return (<tr id={`${id}[${i}]`} className={selectedClass ( i )} key={i} onClick={onClick ( i )}>{order.map ( o =>
-      <td id={`${id}[${i}].${o}`} key={o.toString ()}>{getValue ( o, row, joiners )}</td> )}</tr>)
-  }
-  // const filtered = prefixColumn && prefixFilter ? json.filter ( t => getValue ( prefixColumn, t, joiners ).toString ().startsWith ( prefixFilterString ) ) : json
-  function filter ( t: T ) {
-    // console.log ( 'filter', t )
-    // console.log ( 'filter col & filter', prefixColumn, prefixFilterString )
-    // console.log ( 'filter getVal', prefixColumn && prefixFilter && getValue ( prefixColumn, t, joiners ) )
-    // console.log ( 'filter condition', prefixColumn && prefixFilter && getValue ( prefixColumn, t, joiners ) )
-    return prefixColumn && prefixFilter ? getValue ( prefixColumn, t, joiners ).toString ().startsWith ( prefixFilterString ) : true
-  }
+  const oneRow = ( row: T, i: number ) =>
+    (<tr id={`${id}[${i}]`} className={selectedClass ( i )} key={i} onClick={onClick ( i )}>{order.map ( o =>
+      <td id={`${id}[${i}].${o.toString ()}`} key={o.toString ()}>{getValue ( o, row, joiners )}</td> )}</tr>);
+  const filter = ( t: T ) => prefixColumn && prefixFilter ? getValue ( prefixColumn, t, joiners ).toString ().startsWith ( prefixFilterString ) : true;
   let maxCountInt = maxCount ? Number.parseInt ( maxCount ) : 0;
 
   let count = 0;
-  let tableBody = json.map ( ( row, i ) =>  filter ( row ) && (maxCount === undefined || count++ < maxCountInt)? oneRow ( row, i ) : <></> );
+  let tableBody = json.map ( ( row, i ) => filter ( row ) && (maxCount === undefined || count++ < maxCountInt) ? oneRow ( row, i ) : <></> );
 
   return <table id={id} className="grid">
     <thead>

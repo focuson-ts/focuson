@@ -84,7 +84,8 @@ export interface RestCommand {
   name: string;
   restAction: RestAction;
   /** If set, after the rest action has succeeded the named path will be deleted in the state. This is allow us to trigger the fetchers, which will fetch the latest data */
-  deleteOnSuccess?: string | string[]
+  deleteOnSuccess?: string | string[];
+  messageOnSuccess?: string
 }
 export interface HasRestCommands {
   restCommands: RestCommand[]
@@ -102,11 +103,13 @@ export interface RestResult<S, MSGs, Cargo> {
   result: any
 }
 
-export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]> ) => ( s: S, { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): S => {
+export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]>, stringToMsg: ( msg: string ) => MSGs ) => ( s: S, { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): S => {
   const msgTransform: Transform<S, MSGs[]> = [ messageL, old => [ ...one.messages ( status, result ), ...old ] ]
+  const msgFromCommand: Transform<S, MSGs[]> | undefined = status < 300 && restCommand.messageOnSuccess ? [ messageL, old => [ stringToMsg ( restCommand.messageOnSuccess ), ...old ] ] : undefined
+  const actualMessagesTxs: Transform<S, MSGs[]> = msgFromCommand ? msgFromCommand : msgTransform
   const useResponse = getRestTypeDetails ( restCommand.restAction ).output.needsObj
   const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => result ] ] : []
-  let res = massTransform ( s, msgTransform, ...resultTransform );
+  let res = massTransform ( s, actualMessagesTxs, ...resultTransform );
   return res
 };
 export function getUrlForRestAction ( restAction: RestAction, url: string, states?: NameAnd<StateAccessDetails> ): string {
@@ -172,8 +175,8 @@ const deleteAfterRest = <S> ( fromPath: ( path: string ) => Optional<S, any> ) =
   if ( restCommand.deleteOnSuccess === undefined ) return s
   return toArray ( restCommand.deleteOnSuccess ).reduce ( ( acc: S, path: string ) => fromPath ( path ).set ( acc, undefined ), s )
 };
-export function processAllRestResults<S, MSGS> ( messageL: Optional<S, MSGS[]>, restL: Optional<S, RestCommand[]>, pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>, results: RestResult<S, MSGS, OneRestDetails<S, any, any, MSGS>>[], s: S ) {
-  const withResults: S = results.reduce ( processRestResult ( messageL ), s );
+export function processAllRestResults<S, MSGS> ( messageL: Optional<S, MSGS[]>, stringToMsg: ( msg: string ) => MSGS, restL: Optional<S, RestCommand[]>, pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>, results: RestResult<S, MSGS, OneRestDetails<S, any, any, MSGS>>[], s: S ) {
+  const withResults: S = results.reduce ( processRestResult ( messageL, stringToMsg ), s );
   const fromPath = pathToLens ( s )
   const withDeleteAfterRest: S = results.reduce ( ( acc, res ) =>
     deleteAfterRest ( fromPath ) ( acc, res.restCommand ), withResults )
@@ -187,6 +190,7 @@ export async function rest<S, MSGS> (
   urlMutatorForRest: ( r: RestAction, url: string ) => string,
   pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>,
   messageL: Optional<S, MSGS[]>,
+  stringToMsg: ( msg: string ) => MSGS,
   restL: Optional<S, RestCommand[]>,
   s: S ): Promise<S> {
   // @ts-ignore
@@ -198,7 +202,7 @@ export async function rest<S, MSGS> (
   if ( debug ) console.log ( "rest-requests", requests )
   const results = await massFetch ( fetchFn, requests )
   if ( debug ) console.log ( "rest-results", results )
-  const result = processAllRestResults<S, MSGS> ( messageL, restL, pathToLens, results, s );
+  const result = processAllRestResults<S, MSGS> ( messageL, stringToMsg, restL, pathToLens, results, s );
   if ( debug ) console.log ( "rest-result", result )
   return result
 }

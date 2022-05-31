@@ -1,8 +1,7 @@
 import { ChequeCreditbooksDD, ChequeCreditbooksHistoryDD, ChequeCreditbooksHistoryLineDD } from "./chequeCreditBooks.dataD";
 import { chequeCreditBooksRestD } from "./chequeCreditBooks.restD";
-import { IntegerDD, PrimitiveDD } from "../../common/dataD";
+import { IntegerDD, NatNumDd, PrimitiveDD } from "../../common/dataD";
 import { ExampleMainPage, ExampleModalPage } from "../common";
-import { NatNumDd } from "../commonEnums";
 
 
 export const OrderChequeBookOrPayingInModalPD: ExampleModalPage = {
@@ -61,11 +60,12 @@ export const ChequeCreditbooksPD: ExampleMainPage = {
       pageParams: { position: { top: 123 } },
       focusOn: '~/tempCreatePlan',//not type checked here... should be type checked in target
       createEmpty: ChequeCreditbooksHistoryLineDD,
-      restOnCommit: { restName: 'chequeCreditBooks', action: 'create', result: 'refresh' }
+      restOnCommit: { restName: 'chequeCreditBooks', action: 'create', result: 'refresh', messageOnSuccess: 'Ordered cheque book' }
     },
     refresh: { control: 'DeleteStateButton', label: 'Refresh', path: [ '~/fromApi', '~/tempCreatePlan', '~/selectedBook' ] },
     cancelCheckBook: {
-      control: 'RestButton', restName: 'chequeCreditBooks', enabledBy: 'canCancel', confirm: 'Really?', action: { state: 'cancel' }
+      control: 'RestButton', restName: 'chequeCreditBooks', enabledBy: 'canCancel', confirm: 'Really?', action: { state: 'cancel' },
+      messageOnSuccess: 'Cancelled cheque book'
     }
   }
 }

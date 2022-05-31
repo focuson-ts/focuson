@@ -7,7 +7,6 @@ import { FetchFn, HasSimpleMessages, RestAction } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestDetails } from "@focuson/rest";
 
 
-
 export function defaultCombine<S> ( state: LensState<S, any, any>, pages: PageDetailsForCombine[] ) {
   return <div className='combine'>{pages.map ( ( p, i ) => <div className={focusPageClassName} key={i}>{p.element}</div> )}</div>
 }
@@ -27,11 +26,11 @@ export function defaultPageSelectionAndPostCommandsContext<S extends HasPageSele
     postCommandsL: Lenses.identity<S> ().focusQuery ( 'postCommands' )
   }
 }
-export interface HasPathToLens<S>{
+export interface HasPathToLens<S> {
   pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>
 }
 
-export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S> ,HasPathToLens<S>{
+export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasPathToLens<S> {
   commonIds: NameAndLens<S>;
   pathToLens: ( s: S, currentLens?: Optional<S, any> ) => ( path: string ) => Optional<S, any>
 }
@@ -58,6 +57,7 @@ export interface FocusOnConfig<S, Context, MSGs> {
   postMutate: ( s: S ) => Promise<S>,
   /** A last ditch error handler  */
   onError: ( s: S, e: any ) => S,
+  stringToMsg: ( msg: string ) => MSGs,
 
   /** The lens to the current selected page */
   pageL: Lens<S, PageSelection[]>,
@@ -98,7 +98,7 @@ export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MS
     // @ts-ignore
     const debug: any = main.debug;
     const withDebug = debug?.recordTrace ? traceL<S> ().transform ( old => [ ...old ? old : [], reason ] ) ( main ) : main
-    const { fetchFn, preMutate, postMutate, onError, pages, restDetails, fetchers, restL, pageL, messageL } = config
+    const { fetchFn, preMutate, postMutate, onError, pages, restDetails, fetchers, restL, pageL, messageL, stringToMsg } = config
     const newStateFn = ( fs: S ) => publish ( lensState ( fs, setJsonForFocusOn ( config, context, pathToLens, publish ), 'setJson', context ) )
     try {
       if ( debug?.fetcherDebug ) console.log ( 'setJsonForFetchers - start', main )
@@ -106,7 +106,7 @@ export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MS
       const withPreMutate = preMutate ( withDebug )
       const firstPageProcesses: S = preMutateForPages<S, Context> ( context ) ( withPreMutate )
       if ( debug?.fetcherDebug ) console.log ( 'setJsonForFetchers - after premutate', firstPageProcesses )
-      const afterRest = await rest ( fetchFn, restDetails, config.restUrlMutator, pathToLens, messageL, restL, firstPageProcesses )
+      const afterRest = await rest ( fetchFn, restDetails, config.restUrlMutator, pathToLens, messageL,stringToMsg, restL, firstPageProcesses )
       if ( debug?.fetcherDebug || debug?.postDebug ) console.log ( 'setJsonForFetchers - afterRest', afterRest )
       if ( afterRest ) newStateFn ( afterRest )
       if ( debug?.fetcherDebug || debug?.postDebug ) console.log ( 'setJsonForFetchers - newStateFn', afterRest )

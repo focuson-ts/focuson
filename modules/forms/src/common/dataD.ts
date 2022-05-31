@@ -1,5 +1,5 @@
 //Common Data Definitions
-import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndNumberInputCD, LabelAndStringInputCD } from "./componentsD";
+import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndNumberInputCD, LabelAndStringInputCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeRender";
 import { NameAnd, safeArray } from "@focuson/utils";
 import { Guards } from "../buttons/guardButton";
@@ -347,7 +347,7 @@ export const DateDD: StringPrimitiveDD = {
   emptyValue: '2022-1-1',
   description: "The primitive representing a date (w/o time)",
   display: LabelAndDateInputCD,
-  sample: [ "2020-10-01", '2022-14-01' ]
+  sample: [ "2020/10/01", '2021/09/01', '2022/11/01' ]
 }
 
 export const DateTimeDD: PrimitiveDD = {

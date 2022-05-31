@@ -44,8 +44,8 @@ export const EAccountsSummaryPD: ExampleMainPage = {
       restOnCommit: { restName: 'createPlanRestD', action: 'update', result: 'refresh' },
       buttonType: 'secondary'
     },
-    deleteExistingPlan: { control: 'RestButton', restName: 'createPlanRestD', action: 'delete', confirm: true, result: 'refresh', buttonType: 'secondary' },
-    refresh: { control: 'ResetStateButton' },
+    deleteExistingPlan: { control: 'RestButton', restName: 'createPlanRestD', action: 'delete', confirm: true, result: 'refresh' },
+    // refresh: { control: 'ResetStateButton' },
     // requestInfo: { control: 'ModalButton', modal: CreatePlanPD, mode: 'view', mainData: 'TDB', tempData: 'TBD' },
   }
 }

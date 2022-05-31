@@ -17,7 +17,6 @@ import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { MakeButton } from "../codegen/makeButtons";
 import { makeAllPactsForPage } from "../codegen/makePacts2";
 import { makeOptionals } from "../codegen/makeOptionals";
-import { mainPage } from "@focuson/pages";
 import { makeGuardsReportForPage } from "../reporting/report";
 import { AppConfig } from "../appConfig";
 
@@ -88,13 +87,11 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
       let report = makeGuardsReportForPage ( mainP ).general;
       if ( report.length > 0 )
         writeToFile ( guardReportFileName ( tsCode, params, mainP ) + ".md", () => report )
-
     } )
 
-
     writeToFile ( `${tsCode}/${params.fetchersFile}.ts`, () => [
-      ...makeFetcherDataStructureImport ( params, allPages ),
-      ...makeFetchersDataStructure ( params, { variableName: 'fetchers', stateName: params.stateName }, allPages ) ], details )
+      ...makeFetcherDataStructureImport ( params, mainPs ),
+      ...makeFetchersDataStructure ( params, { variableName: 'fetchers', stateName: params.stateName }, mainPs ) ], details )
 
     writeToFile ( `${tsCode}/${params.restsFile}.ts`, () => makeRestDetailsPage ( params, allPages ), details )
     const rests = unique ( allPages.flatMap ( pd => isMainPage ( pd ) ? sortedEntries ( pd.rest ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest ) : [] ), r => r.dataDD.name )
@@ -116,6 +113,10 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     copyFiles ( tsPublic, 'templates/raw/ts/public', directorySpec ) ( 'favicon.ico', 'logo192.png', 'logo512.png', 'manifest.json', 'robots.txt' )
     templateFile ( `${tsPublic}/index.css`, 'templates/raw/ts/public/index.css', params, directorySpec, details )
     templateFile ( `${tsPublic}/index.html`, 'templates/raw/ts/public/index.html', params, directorySpec, details )
-    // console.log('params', params)
-    // console.log('params theme', params.theme)
+
+    if ( fs.existsSync ( 'src/actions.ts' ) )
+      copyFile ( tsCode + '/actions.ts', 'src/actions.ts' )
+    else
+      copyFile ( tsCode + '/actions.ts', 'templates/actions.ts' , directorySpec)
+
   };

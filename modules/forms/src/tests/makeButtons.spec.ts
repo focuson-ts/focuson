@@ -28,8 +28,7 @@ describe ( "makeButtons", () => {
       "      action={'delete'}",
       "      rest='EAccountsSummary_CreatePlanRestDetails'",
       "      confirm={true}",
-      "     />,",
-      "    refresh:<button>refresh of type ResetStateButton cannot be created yet</button>,}"
+      "     />,}"
     ])
   } )
   it ( "should create modal buttons with copy on close", () => {

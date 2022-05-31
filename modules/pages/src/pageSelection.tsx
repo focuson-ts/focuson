@@ -91,7 +91,6 @@ export function applyPageOps ( pageOps: PageOps, pageSelection: PageSelection ):
   }
 }
 export function page<S, Context extends HasPageSelectionLens<S>> ( context: Context, pageOps: PageOps, pageSelection: PageSelection ): Transform<S, PageSelection[]> {
-  //TODO we could check the page name here
   return [ context.pageSelectionL, applyPageOps ( pageOps, pageSelection ) ]
 }
 export function popPage<S, Context extends HasPageSelectionLens<S>> ( lensState: LensState<S, any, Context> ): Transform<S, PageSelection[]> {

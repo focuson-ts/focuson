@@ -7,7 +7,6 @@ export interface LayoutProps {
   defaultProps?: string;
   displayAsCards?: boolean;
 }
-// TODO LAYOUT TITLE ?
 export function Layout<S, T, Context> ( { details, children, title, defaultProps, displayAsCards }: LayoutProps ) {
   let elemIndex = 0
   const detailsAsMixedArr = JSON.parse ( details )

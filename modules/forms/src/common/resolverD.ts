@@ -11,6 +11,8 @@ export interface Schema {
 export interface DBTable {
   /** Which schema the database is in. For now we only support single schema worlds */
   schema: Schema;
+  /** a prefix that is added like xxx.<tableName> to queries */
+  prefix?: string;
   /** The physical name of the table */
   name: string,
   /** the business purpose of the table */
@@ -33,10 +35,20 @@ export type Mutations = MutationDetail | MutationDetail[]
 
 export interface MutationsForRestAction {
   restAction: RestAction;
-  mutateBy: MutationDetail | MutationDetail[]
+  mutateBy: MutationDetail | MutationDetail[],
+  // guards?: NameAnd<MutationResolverGuard>
 }
 
-export type MutationDetail = StoredProcedureMutation | SqlMutation | ManualMutation // | IDFromSequenceMutation
+// interface MutationResolverValueGuard{
+//   type: 'value';
+//   dotPath: string;
+//   javaType: string;
+//
+// }
+// export type MutationResolverGuard= MutationResolverValueGuard
+
+
+export type MutationDetail = StoredProcedureMutation | SqlMutation | ManualMutation | SelectMutation // | IDFromSequenceMutation
 
 // export interface IDFromSequenceMutation {
 //   mutation: 'IDFromSequence',
@@ -44,8 +56,10 @@ export type MutationDetail = StoredProcedureMutation | SqlMutation | ManualMutat
 //   name: string;
 //   params: MutationParam
 // }
+
 export interface SqlMutation {
   type: 'sql',
+  list?: boolean,
   schema: Schema;
   /**The name of the procedure that does this: should capture the intent of what this does */
   name: string;
@@ -55,6 +69,7 @@ export interface SqlMutation {
 
 export interface StoredProcedureMutation {
   type: 'storedProc',
+  list?: boolean,
   schema: Schema,
   package?: string;
   name: string,
@@ -63,19 +78,46 @@ export interface StoredProcedureMutation {
 
 export interface ManualMutation {
   type: 'manual';
+  list?: boolean,
   import?: string | string[];
   params: MutationParamForManual | MutationParamForManual[]
   name: string;
   code: string | string[]
 }
 
+export interface SelectMutation {
+  type: 'case';
+  list?: false;
+  params: MutationParamForSelect | MutationParamForSelect[];
+  name: string;
+  select: GuardedMutation[]
+}
 
-export type MutationParam = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForStoredProcMutationParam | OutputForSqlMutationParam | NullMutationParam | OutputForManualParam | AutowiredMutationParam
+export type GuardedMutation = GuardedManualMutation | GuardedSqMutation | GuardedStoredProcedureMutation
+export interface GuardedManualMutation extends ManualMutation {
+  guard: string[]
+}
+export interface GuardedSqMutation extends SqlMutation {
+  guard: string[]
+}
+export interface GuardedStoredProcedureMutation extends StoredProcedureMutation {
+  guard: string[]
+}
+
+
+export type MutationParam = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForStoredProcMutationParam | OutputForSqlMutationParam | NullMutationParam | OutputForManualParam | AutowiredMutationParam | OutputForSelectMutationParam
 export type MutationParamForSql = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForSqlMutationParam | NullMutationParam | AutowiredMutationParam
 export type MutationParamForStoredProc = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | OutputForStoredProcMutationParam | NullMutationParam | AutowiredMutationParam
 export type MutationParamForManual = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | NullMutationParam | OutputForManualParam | AutowiredMutationParam
+export type MutationParamForSelect = string | StringMutationParam | IntegerMutationParam | ParamMutationParam | NullMutationParam | OutputForSelectMutationParam | AutowiredMutationParam
 
-export type OutputMutationParam = OutputForSqlMutationParam | OutputForStoredProcMutationParam | OutputForManualParam
+export interface OutputForSelectMutationParam {
+  type: 'output';
+  name: string;
+  javaType: AllJavaTypes
+}
+
+export type OutputMutationParam = OutputForSqlMutationParam | OutputForStoredProcMutationParam | OutputForManualParam | OutputForSelectMutationParam
 export function inputParamName ( m: MutationParam ) {
   if ( typeof m === 'string' ) return [ m ]
   if ( m.type === 'input' ) return [ m.name ]
@@ -98,8 +140,7 @@ export function allInputParams ( m: MutationParam | MutationParam[] ): ParamMuta
 
 export function tupleIndexes ( maxTuples: number ) {return [ ...Array ( maxTuples + 1 ).keys () ].slice ( 2 );}
 export function importForTubles ( params: JavaWiringParams ) {
-  return [ `//If there is a compilation issue here is it because you need to set 'maxTuples'? Currently set to ${params.maxTuples} `,
-    ...tupleIndexes ( params.maxTuples ).map ( i => `import ${params.thePackage}.${params.mutatorPackage}.utils.Tuple${i};` ) ]
+  return tupleIndexes ( params.maxTuples ).map ( i => `import ${params.thePackage}.${params.mutatorPackage}.utils.Tuple${i};` )
 }
 export function makeTuples ( params: JavaWiringParams, i: number ) {
   const indexes = [ ...Array ( i + 1 ).keys () ].slice ( 1 )
@@ -170,6 +211,7 @@ export interface AutowiredMutationParam {
   class: string;
   method: string
 }
+export type JavaTypePrimitive = 'String' | 'Integer';
 export interface IntegerMutationParam {
   type: 'integer';
   value: number
@@ -177,19 +219,19 @@ export interface IntegerMutationParam {
 interface ParamMutationParam {
   type: 'input';
   name: string;
-  javaType?: string
+  javaType?: JavaTypePrimitive
 
 }
 export interface OutputForStoredProcMutationParam {
   type: 'output';
   name: string;
-  javaType: 'String' | 'Integer';
+  javaType: JavaTypePrimitive
   sqlType: string;
 }
 export interface OutputForSqlMutationParam {
   type: 'output';
   name: string;
-  javaType: 'String' | 'Integer';
+  javaType: JavaTypePrimitive;
   rsName: string;
 }
 export type AllJavaTypes = 'String' | 'Integer' | 'Map<String,Object>' | 'List<Map<String,Object>>' | 'Boolean'

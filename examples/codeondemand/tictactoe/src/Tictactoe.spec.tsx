@@ -83,11 +83,7 @@ describe("Tictactoe", () => {
             expect(square.text()).toEqual('X')
         })
 
-        //TODO Still working how to test state injection
-        // it("should have an onclick calls the onClickSquare in the domain", () => {
-        //     const domain: GameDomain = {loadJson: jest.fn(), onClickSquare: jest.fn()}
-        //     let state = lensContext(gameJson, jest.fn(), 'game')
-        //
+            //
         //     jest.spyOn(Square, 'useContext')
         //
         //     const square = render(<Square state={squareContext(state, 1)}/>)

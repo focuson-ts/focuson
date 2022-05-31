@@ -19,7 +19,8 @@ interface ModalCommitButtonProps<S, C> extends ModalCommitCancelButtonProps<S, C
   validate?: boolean
 }
 export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( { id, state, text, buttonType }: ModalCommitCancelButtonProps<S, Context> ) {
-  return <button className={getButtonClassName(buttonType)} id={id} onClick={() => state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) )}>{text ? text : 'Cancel'}</button>
+  let onClick = () => state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) );
+  return <button className={getButtonClassName(buttonType)} id={id} onClick={onClick}>{text ? text : 'Cancel'}</button>
 }
 
 
@@ -46,7 +47,6 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
       } ] ]
       return setToLengthOnCloseTx;
     }
-    const setToLengthOnCloseTx = findSetLengthOnClose ();
 
     const pageTransformer: Transform<S, any> = [ state.context.pageSelectionL, ( ps: PageSelection[] ) => ps.slice ( 0, -1 ) ]
     const restTransformers: Transform<S, any>[] = rest ? [ [ state.context.restL, ( ps: RestCommand[] ) => [ ...safeArray ( ps ), rest ] ] ] : []
@@ -54,7 +54,7 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
     const copyOnCloseTxs: Transform<S, any>[] = safeArray ( copyOnClose ).map ( ( { from, to } ) =>
       [ to ? fromPath ( to ) : focusLens, () => (from ? fromPath ( from ) : focusLens).getOption ( state.main ) ] )
     if ( lastPage ) {
-      state.massTransform ( reasonFor ( 'ModalCommit', 'onClick', id ) ) ( pageTransformer, ...restTransformers, ...copyOnCloseTxs, ...setToLengthOnCloseTx )
+      state.massTransform ( reasonFor ( 'ModalCommit', 'onClick', id ) ) ( pageTransformer, ...restTransformers, ...copyOnCloseTxs, ...findSetLengthOnClose() )
     } else
       console.error ( 'ModalCommit button called and bad state.', lastPage )
   }

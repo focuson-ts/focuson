@@ -12,3 +12,10 @@
   * Strong typing on java side parameters
   * Breaking change in mutations: `mutation` has been changed to `type`
   * Resolvers
+
+* [v1.14](/releaseNotes/v1.14.md)
+  * Action Buttons
+  * Case statements in resolvers/mutations
+  * Message on commit
+  * Control of annotation on params
+  * 

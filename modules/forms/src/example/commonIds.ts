@@ -3,9 +3,9 @@ import { IntParam, RestParams, StringParam } from "../common/restD";
 export const allCommonIds = {
   brandRef: { ...IntParam, commonLens: 'brandRef', testValue: 10 },
   applRef: { ...IntParam, commonLens: 'applRef', testValue: 888 },
-  clientRef: { ...IntParam, commonLens: 'clientRef', testValue: 666 },
+  clientRef: { ...IntParam, commonLens: 'clientRef', testValue: 666, annotation: '@RequestHeader @RequestParam' },
   accountId: { ...IntParam, commonLens: 'accountId', testValue: 12342312 },
-  employeeType: { ...StringParam, commonLens: 'employeeType', testValue: 'basic' },
+  employeeType: { ...StringParam, commonLens: 'employeeType', testValue: 'basic', annotation: '@RequestHeader @RequestParam' },
   dbName: { ...StringParam, commonLens: 'dbName', testValue: 'mock' }
 }
 

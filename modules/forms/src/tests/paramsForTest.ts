@@ -34,5 +34,5 @@ export const paramsForTest: CombinedParams = {
   mutatorPackage: 'mutator',
   resolversPackage: 'resolvers',
   maxTuples: 2,
-  theme: "theme-dark"
+  theme: 'theme-dark'
 };

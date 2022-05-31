@@ -14,6 +14,7 @@ describe ( "dataDsIn", () => {
       return n
     } )
     expect ( names ).toEqual ( [
+      "BalancesAndMonthlyCost",
       "CreatePlan",
       "EAccountsSummary",
       "EAccountsSummaryTable",
@@ -29,6 +30,7 @@ describe ( "dataDsIn", () => {
       return n
     } )
     expect ( names ).toEqual ( [
+      "BalancesAndMonthlyCost",
       "CreatePlan",
       "EAccountsSummary",
       "EAccountsSummaryTable"

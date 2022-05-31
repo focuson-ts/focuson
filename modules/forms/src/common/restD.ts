@@ -1,14 +1,14 @@
 import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
-import { NameAnd, RestAction, safeObject, sortedEntries, toArray, unique } from "@focuson/utils";
+import { NameAnd, RestAction, safeObject, safeString, sortedEntries, toArray, unique } from "@focuson/utils";
 import { filterParamsByRestAction } from "../codegen/codegen";
-import { AccessDetails, DBTable, MutationDetail, Mutations, MutationsForRestAction } from "./resolverD";
+import { AccessDetails, DBTable, GuardedMutation, MutationDetail, Mutations, MutationsForRestAction, SelectMutation } from "./resolverD";
 import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 import { allMainPages, MainPageD, PageD, RestDefnInPageProperties } from "./pageD";
-import { getRestTypeDetails, RestActionDetail } from "@focuson/rest";
+import { getRestTypeDetails, RestActionDetail, restActionForName } from "@focuson/rest";
 import { findChildResolvers, ResolverData } from "../codegen/makeJavaFetchersInterface";
 
 
-export type AllLensRestParams<T> = CommonLensRestParam<T> | LensRestParam<T>
+export type AllLensRestParams<T> = CommonLensRestParam<T> | LensRestParam<T> | HeaderRestParam<T>
 
 export interface ParamPrim<T> {
   rsSetter: string,
@@ -32,6 +32,17 @@ export const IntParam: ParamPrim<number> = {
   javaParser: 'Integer.parseInt'
 }
 
+export interface HeaderRestParam<T> extends ParamPrim<T> {
+  header: string,
+  testValue: T,
+  main?: false,
+  rsSetter: string;
+  javaType: string;
+  graphQlType: string;
+  javaParser: string;
+  annotation?: string;
+}
+
 export interface CommonLensRestParam<T> extends ParamPrim<T> {
   commonLens: string,
   testValue: T,
@@ -40,6 +51,7 @@ export interface CommonLensRestParam<T> extends ParamPrim<T> {
   javaType: string;
   graphQlType: string;
   javaParser: string;
+  annotation?: string;
 }
 export interface LensRestParam<T> extends ParamPrim<T> {
   lens: string,
@@ -49,6 +61,7 @@ export interface LensRestParam<T> extends ParamPrim<T> {
   javaType: string;
   graphQlType: string;
   javaParser: string;
+  annotation?: string;
 }
 
 export function isCommonLens<T> ( a: AllLensRestParams<T> ): a is CommonLensRestParam<T> {
@@ -58,6 +71,10 @@ export function isCommonLens<T> ( a: AllLensRestParams<T> ): a is CommonLensRest
 export function isRestLens<T> ( a: AllLensRestParams<T> ): a is LensRestParam<T> {
   // @ts-ignore
   return a.lens !== undefined
+}
+export function isHeaderLens<T> ( a: AllLensRestParams<T> ): a is HeaderRestParam<T> {
+  // @ts-ignore
+  return a.header !== undefined
 }
 
 export interface RestParams {
@@ -145,7 +162,7 @@ export function findUniqueDataDsAndRestTypeDetails<G> ( rs: RestD<G>[] ): [ Rest
     var x: [ RestD<G>, RestAction, RestActionDetail ][] = r.actions.map ( a => [ r, a, getRestTypeDetails ( a ) ] )
     return x
   } )
-  return unique<[ RestD<G>, RestAction, RestActionDetail ]> ( nonUnique, ( [ restD, a, rad ] ) => restD.dataDD.name + "," + a )
+  return unique<[ RestD<G>, RestAction, RestActionDetail ]> ( nonUnique, ( [ restD, a, rad ] ) => restD.dataDD.name + safeString ( restD.namePrefix ) + "," + restActionForName ( a ) )
 }
 
 export function findUniqueDataDsIn<G> ( rs: RestD<G>[] ): CompDataD<G>[] {
@@ -159,7 +176,7 @@ export function makeParamValueForTest<G> ( errorPrefix: string, r: RestD<G>, res
 }
 export function makeCommonValueForTest<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ) {
   let visibleParams = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( errorPrefix, r, restAction ) );
-  return Object.fromEntries ( visibleParams.filter ( ( [ name, p ] ) => isCommonLens ( p ) ).map ( ( [ name, v ] ) => [ name, v.testValue ] ) )
+  return Object.fromEntries ( visibleParams.filter ( ( [ name, p ] ) => isCommonLens ( p ) || isHeaderLens(p) ).map ( ( [ name, v ] ) => [ name, v.testValue ] ) )
 }
 
 export function findIds<G> ( rest: RestD<G> ) {
@@ -196,7 +213,7 @@ export function flatMapParams<T> ( pds: MainPageD<any, any>[], fn: ( p: MainPage
 }
 export function flatMapCommonParams<T> ( pds: MainPageD<any, any>[], fn: ( p: MainPageD<any, any>, restName: string | undefined, r: RestD<any> | undefined, name: string, c: CommonLensRestParam<any> ) => T[] ): T[] {
   return flatMapParams ( pds, ( p, restName, r, name, c ) =>
-    isCommonLens ( c ) ? fn ( p, restName, r, name, c ) : [] )
+    isCommonLens ( c ) ? fn ( p, restName, r, name, c ) : isHeaderLens ( c ) ? fn ( p, restName, r, name, { ...c, commonLens: c.header } ) : [] )
 }
 
 
@@ -208,11 +225,18 @@ export function forEachRestAndActions<B, G> ( ps: PageD<B, G>[], fn: ( p: MainPa
   return allMainPages ( ps ).forEach ( p => sortedEntries ( p.rest ).forEach ( ( [ restName, rdp ] ) => rdp.rest.actions.forEach ( a => fn ( p ) ( rdp.rest, restName, rdp ) ( a ) ) ) )
 }
 
-export function foldPagesToRestToMutationsAndResolvers<Acc> ( ps: MainPageD<any, any>[], acc: Acc, fn: ( mut: MutationDetail, p: MainPageD<any, any>, r: RestD<any> ) => ( acc: Acc ) => Acc ): Acc {
+export interface MutuationAndResolverFolder<Acc> {
+  simple: ( mut: MutationDetail, p: MainPageD<any, any>, r: RestD<any> ) => ( acc: Acc ) => Acc;
+  guarded: ( mut: SelectMutation, guarded: GuardedMutation, p: MainPageD<any, any>, r: RestD<any> ) => ( acc: Acc ) => Acc;
+}
+export function foldPagesToRestToMutationsAndResolvers<Acc> ( ps: MainPageD<any, any>[], acc: Acc, folder: MutuationAndResolverFolder<Acc> ): Acc {
   return ps.reduce ( ( acc, p ) => Object.entries ( p.rest ).reduce ( ( acc, [ name, rdp ] ) => {
-    const mutationsAcc = toArray ( rdp.rest.mutations ).flatMap ( mr => toArray ( mr.mutateBy ) ).reduce ( ( acc, m ) => fn ( m, p, rdp.rest ) ( acc ), acc )
-    const resolvers = Object.values ( safeObject ( rdp.rest.resolvers ) ).flatMap ( res => toArray ( res ) ).reduce ( ( acc, md ) => fn ( md, p, rdp.rest ) ( acc ), mutationsAcc )
+    const mutationsAcc = toArray ( rdp.rest.mutations ).flatMap ( mr => toArray ( mr.mutateBy ) ).reduce ( ( acc, m ) => {
+      let simple = folder.simple ( m, p, rdp.rest ) ( acc );
+      if ( m.type !== 'case' ) return simple;
+      return m.select.reduce ( ( acc, g ) => folder.guarded ( m, g, p, rdp.rest ) ( acc ), simple )
+    }, acc )
+    const resolvers = Object.values ( safeObject ( rdp.rest.resolvers ) ).flatMap ( res => toArray ( res ) ).reduce ( ( acc, md ) => folder.simple ( md, p, rdp.rest ) ( acc ), mutationsAcc )
     return resolvers
   }, acc ), acc )
 }
-

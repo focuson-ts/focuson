@@ -9,7 +9,7 @@ describe ( "flatMapActionDetails", () => {
       expect ( r ).toBe ( eAccountsSummaryRestD )
       return [ rt.name ]
     } )
-    expect ( found ).toEqual ( [ "get" , "state"] )
+    expect ( found ).toEqual ( [ "get", "state" ] )
   } )
   it ( "should work for createPlanRestD", () => {
     const found = flapMapActionDetails ( createPlanRestD, ( r, rt ) => {
@@ -27,7 +27,7 @@ describe ( "findMustConstructForRest", () => {
     let simpler = { objs: actual.objs.map ( x => x.name ), input: actual.input.map ( x => x.name ) }
     expect ( simpler ).toEqual ( {
       "input": [ "CreatePlan" ],
-      "objs": [ "CreatePlan", "EAccountsSummary", "EAccountsSummaryTable", "EAccountSummary" ]
+      "objs": [ "BalancesAndMonthlyCost", "CreatePlan", "EAccountsSummary", "EAccountsSummaryTable", "EAccountSummary" ]
     } )
   } )
 } )
@@ -44,16 +44,16 @@ describe ( "makeCommonParamsValueForTest", () => {
     } )
   } )
   it ( "get the values out of the rest params - for a create (no primary id)", () => {
-    expect ( makeParamValueForTest ('error',  createPlanRestD, 'create' ) ).toEqual ( {
+    expect ( makeParamValueForTest ( 'error', createPlanRestD, 'create' ) ).toEqual ( {
       "accountId": "12342312",
       "applRef": "888",
       "brandRef": "10",
       "clientRef": "666"
-    })
+    } )
   } )
 
   it ( "should work with a mixture of common lens and normal lens", () => {
-    expect ( JSON.stringify ( makeParamValueForTest ('error',  arrearsDetailsRestD, 'get' ) ).replace ( /"/g, "'" ) ).toEqual (
+    expect ( JSON.stringify ( makeParamValueForTest ( 'error', arrearsDetailsRestD, 'get' ) ).replace ( /"/g, "'" ) ).toEqual (
       "{'accountId':'12342312','applRef':'888','brandRef':'10','clientRef':'666','startDate':'2020-01-20'}" )
   } )
 } )

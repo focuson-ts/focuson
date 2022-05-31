@@ -54,7 +54,7 @@ export const AccountFlagsModalPage: ExampleModalPage = {
   name: "AccountFlags",
   pageType: "ModalPage",
   display: { dataDD: accountAllFlagsDataDD, target: '~/', importFrom: 'AccountOverview' },
-  modes: [ 'view' ],
+  modes: [ 'edit' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' },
     commit: { control: 'ModalCommitButton' }

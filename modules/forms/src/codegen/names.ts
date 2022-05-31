@@ -21,7 +21,7 @@ export function resolverName<G> ( rest: RestD<G>, action: RestAction ) {
   const ad = restActionToDetails ( action )
   const prefix = rest.namePrefix ? rest.namePrefix : ''
   const postfix = isRestStateChange ( action ) ? action.state : ''
-  return `${ad.graphQPrefix}${postfix}${rawType}${ad.graphQlPostfix}`
+  return `${ad.graphQPrefix}${postfix}${prefix}${rawType}${ad.graphQlPostfix}`
 }
 export const sampleName = <G> ( dataD: AllDataDD<G> ) => "sample" + dataD.name;
 export const emptyName = <G> ( dataD: AllDataDD<G> ) => "empty" + dataD.name;
@@ -30,7 +30,7 @@ export const restControllerName = <B, G> ( p: MainPageD<B, G>, restD: RestD<G> )
 export const javaSqlCreateTableSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.createTableSql.sql`
 export const javaSqlReadSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.readTableSql.sql`
 
-export const queryName = <G> ( restD: RestD<G>, action: RestAction ): string => { return restActionForName ( action ) + compDataDIn ( restD.dataDD ).name; } //safeString ( restD.namePrefix ) +
+export const queryName = <G> ( restD: RestD<G>, action: RestAction ): string => { return restActionForName ( action ) +safeString(restD.namePrefix) + compDataDIn ( restD.dataDD ).name; } //safeString ( restD.namePrefix ) +
 export const createTableName = <G> ( restD: RestD<G> ): string => { return "createTable" + compDataDIn ( restD.dataDD ).name; }
 export const createTableSqlName = (): string => { return "schema"}
 export const getSqlName = (): string => { return "get"}
@@ -66,7 +66,7 @@ export const providerPactClassName = <B, G> ( pd: MainPageD<B, G> ): string => p
 export const mutationClassName = <B, G> ( r: RestD<G>, restAction: RestAction ) => `${restNameWithPrefix ( r )}_${restActionForName ( restAction )}Mutation`;
 export const mutationVariableName = <B, G> ( r: RestD<G>, restAction: RestAction ) => `__${restActionForName ( restAction )}Mutation`;
 export const resolverClassName = <B, G> ( r: RestD<G>, resolverName: string ) => `${restNameWithPrefix ( r )}_${resolverName}Resolver`;
-export const mutationMethodName = <B, G> ( r: RestD<G>, res: string, m: MutationDetail ) => `${restNameWithPrefix ( r )}_${res}_${m.name}`;
+export const mutationMethodName = <B, G> ( r: RestD<G>, res: string, m: MutationDetail , index: string) => `${restNameWithPrefix ( r )}_${res}_${m.name}${index}`;
 
 export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${safeString ( r.namePrefix )}${r.dataDD.name}Queries`;
 

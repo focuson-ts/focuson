@@ -31,9 +31,23 @@ export const eAccountsSummaryRestD: RestD<AllGuards> = {
         `Map createPlan = new HashMap(); createPlan.put("createPlanStart", "");createPlan.put("createPlanDate", "");createPlan.put("createPlanEnd", "");`
       ]
     },
-    totalMonthlyCost: { type: 'manual', code: [ 'Integer totalMonthlyCost = 123;' ], params: [ 'accountId', { type: 'output', name: 'totalMonthlyCost', javaType: 'Integer' } ], name: 'getTotalMonthlyCostStoredProc' },
-    oneAccountBalance: { type: 'manual', code: [ 'Integer oneAccountBalance = 234;' ], params: [ 'accountId', { type: 'output', name: 'oneAccountBalance', javaType: 'Integer' } ], name: 'getOneAccountBalance' },
-    currentAccountBalance: { type: 'manual', code: [ 'Integer currentAccountBalance = 345;' ], params: [ 'accountId', { type: 'output', name: 'currentAccountBalance', javaType: 'Integer' } ], name: 'getCurrentAccountBalance' }
+    balancesAndMonthlyCostResolver: {
+      type: 'storedProc',
+      params: [ 'accountId',
+        { type: "null" },
+        { type: "null" },
+        { type: "null" },
+        { type: "null" },
+        { type: "string", value: "magicstring" },
+        { type: 'output', name: 'totalMonthlyCost', javaType: 'Integer', sqlType: 'INTEGER' },
+        { type: 'output', name: 'oneAccountBalance', javaType: 'Integer', sqlType: 'INTEGER' },
+        { type: 'output', name: 'currentAccountBalance', javaType: 'Integer', sqlType: 'INTEGER' },
+      ],
+      name: 'getTotalMonthlyCostStoredProc', schema: onlySchema
+    },
+    totalMonthlyCost: { type: 'manual', code: [ 'Integer totalMonthlyCost = 234;' ], params: [ 'accountId', { type: 'output', name: 'totalMonthlyCost', javaType: 'Integer' } ], name: 'totalMonthlyCost' },
+    // oneAccountBalance: { type: 'manual', code: [ 'Integer oneAccountBalance = 234;' ], params: [ 'accountId', { type: 'output', name: 'oneAccountBalance', javaType: 'Integer' } ], name: 'getOneAccountBalance' },
+    // currentAccountBalance: { type: 'manual', code: [ 'Integer currentAccountBalance = 345;' ], params: [ 'accountId', { type: 'output', name: 'currentAccountBalance', javaType: 'Integer' } ], name: 'getCurrentAccountBalance' }
   },
   access: [
     { restAction: { state: 'invalidate' }, condition: { type: 'in', param: 'employeeType', values: [ 'teamLeader' ] } }

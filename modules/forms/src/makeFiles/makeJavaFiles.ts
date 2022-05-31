@@ -1,7 +1,7 @@
 import { copyFile, copyFiles, DirectorySpec, templateFile, writeToFile } from "@focuson/files";
 import { JavaWiringParams } from "../codegen/config";
 import fs from "fs";
-import { forEachRest, forEachRestAndActions, mapRestAndResolver} from "../common/restD";
+import { forEachRest, forEachRestAndActions, mapRestAndResolver } from "../common/restD";
 import { detailsLog, GenerateLogLevel, NameAnd, safeArray, safeObject, safeString, sortedEntries, toArray, unique } from "@focuson/utils";
 import { allMainPages, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
@@ -22,7 +22,6 @@ import { makeMutations } from "../codegen/makeMutations";
 import { findChildResolvers, findJavaType, findQueryMutationResolver, makeAllJavaWiring, makeJavaFetcherInterfaceForResolver } from "../codegen/makeJavaFetchersInterface";
 import { makeTuples, tupleIndexes } from "../common/resolverD";
 import { findResolverData, makeResolvers } from "../codegen/makeResolvers";
-import { restActionToDetails } from "@focuson/rest";
 
 
 export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig, javaOutputRoot: string, params: JavaWiringParams, directorySpec: DirectorySpec ) => <B, G> ( pages: PageD<B, G>[] ) => {
@@ -98,7 +97,10 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
   const createTable: NameAnd<string[]> = createTableSql ( allRestDefns )
   // console.log ( JSON.stringify ( createTable, null, 2 ) )
-  if ( Object.entries ( createTable ).length > 0 ) writeToFile ( `${javaResourcesRoot}/${createTableSqlName ()}.sql`, () => Object.values ( createTable ).flatMap ( addStringToEndOfList ( ";\n" ) ), details )
+  if ( appConfig.makeSqlStrings !== false && Object.entries ( createTable ).length > 0 )
+    writeToFile ( `${javaResourcesRoot}/${createTableSqlName ()}.sql`, () => Object.values ( createTable ).flatMap ( addStringToEndOfList ( ";\n" ) ), details )
+  else
+    fs.rmSync ( `${javaResourcesRoot}/${createTableSqlName ()}.sql`, { force: true } )
 
   writeToFile ( `${javaResourcesRoot}/${getSqlName ()}.sql`,
     () => rests.filter ( r => r.tables ).flatMap ( rest =>
@@ -152,22 +154,20 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
     } )
   )
 
-  let dataSql = allMainPages ( pages ).flatMap ( mainPage =>
-    sortedEntries ( mainPage.rest ).flatMap ( ( [ restName, rdp ] ) => safeArray ( rdp.rest.initialSql ) ) );
-  if ( dataSql.length > 0 )
-    writeToFile ( `${javaResourcesRoot}/data.sql`, () => dataSql )
-  else
-    fs.rmSync ( `${javaResourcesRoot}/data.sql`, { force: true } )
+  fs.rmSync ( `${javaResourcesRoot}/data.sql`, { force: true } )
+  fs.rmSync ( `${javaResourcesRoot}/insertData.sql`, { force: true } )
+  if ( appConfig.makeSqlStrings !== false ) {
+    let dataSql = allMainPages ( pages ).flatMap ( mainPage =>
+      sortedEntries ( mainPage.rest ).flatMap ( ( [ restName, rdp ] ) => safeArray ( rdp.rest.initialSql ) ) );
+    if ( dataSql.length > 0 )
+      writeToFile ( `${javaResourcesRoot}/data.sql`, () => dataSql )
 
-  let insertSql = allMainPages ( pages ).flatMap ( mainPage =>
-    sortedEntries ( mainPage.rest )
-      .filter ( ( [ _, rdp ] ) => rdp.rest.insertSqlStrategy !== undefined )
-      .flatMap ( ( [ _, rdp ] ) => safeArray ( makeInsertSqlForNoIds ( rdp.rest.dataDD, rdp.rest.insertSqlStrategy ) ) ) );
-  if ( insertSql.length > 0 )
-    writeToFile ( `${javaResourcesRoot}/insertData.sql`, () => insertSql )
-  else
-    fs.rmSync ( `${javaResourcesRoot}/insertData.sql`, { force: true } )
-
+    let insertSql = allMainPages ( pages ).flatMap ( mainPage =>
+      sortedEntries ( mainPage.rest )
+        .flatMap ( ( [ _, rdp ] ) => (rdp.rest.insertSqlStrategy !== undefined) ? safeArray ( makeInsertSqlForNoIds ( rdp.rest.dataDD, rdp.rest.insertSqlStrategy ) ) : [] ) );
+    if ( insertSql.length > 0 )
+      writeToFile ( `${javaResourcesRoot}/insertData.sql`, () => insertSql )
+  }
   allMainPages ( pages ).forEach ( p => writeToFile ( `${javaTestRoot}/${providerPactClassName ( p )}.java`, () => makePactValidation ( params, appConfig.javaPort, p ) ) )
 
 

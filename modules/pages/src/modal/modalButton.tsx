@@ -24,14 +24,14 @@ export interface ModalButtonProps<S, Context> extends CustomButtonType {
   copy?: CopyDetails[],
   copyJustString?: CopyStringDetails[],
   copyOnClose?: CopyDetails[],
-  setToLengthOnClose?: SetToLengthOnClose  
+  setToLengthOnClose?: SetToLengthOnClose,
+  createEmptyIfUndefined?: any
 }
 
 
 export function ModalButton<S extends any, Context extends PageSelectionContext<S>> ( props: ModalButtonProps<S, Context> ): JSX.Element {
-  const { id, text, enabledBy, buttonType } = props
-  const { state, copy, copyJustString, modal, pageMode, rest, focusOn, copyOnClose, createEmpty, setToLengthOnClose, pageParams } = props
-  let onClick = () => {
+  const { id, text, enabledBy, state, copy, copyJustString, modal, pageMode, rest, focusOn, copyOnClose, createEmpty, setToLengthOnClose, createEmptyIfUndefined, pageParams, buttonType } = props
+  const onClick = () => {
     // const fromPath = fromPathFor ( state );
     const fromPage = fromPathGivenState ( state );
     const focusOnL = fromPage ( focusOn );
@@ -43,13 +43,18 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
         return [ fromPage ( to ), () => f ? anyIntoPrimitive ( f, joiner ) : f ];
       } )
     const emptyTx: Transform<S, any>[] = createEmpty ? [ [ focusOnL, ignore => createEmpty ] ] : [];
+    const emptyifUndefinedTx: Transform<S, any>[] = createEmptyIfUndefined ? [ [ focusOnL, existing => {
+      console.log ( "emptyifUndefinedTx - existing", existing )
+      console.log ( "emptyifUndefinedTx - emptyifUndefinedTx", emptyifUndefinedTx )
+      return existing ? existing : createEmptyIfUndefined;
+    } ] ] : [];
     state.massTransform ( reasonFor ( 'ModalButton', 'onClick', id ) ) (
       page<S, Context> ( state.context, 'popup', { pageName: modal, firstTime: true, pageMode, rest, focusOn, copyOnClose, setToLengthOnClose, pageParams } ),
       ...emptyTx,
+      ...emptyifUndefinedTx,
       ...copyTxs,
       ...copyJustStrings );
   };
-  const disabled = enabledBy === false  
-
+  const disabled = enabledBy === false
   return <button className={getButtonClassName(buttonType)} id={id} disabled={disabled} onClick={onClick}>{text}</button>
 }

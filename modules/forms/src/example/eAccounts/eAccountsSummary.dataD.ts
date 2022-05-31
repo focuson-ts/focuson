@@ -1,8 +1,7 @@
 import { AccountIdDD, BooleanDD, DataD, DateDD, MoneyDD, OneLineStringDD, RepeatingDataD, StringPrimitiveDD } from "../../common/dataD";
 import { LabelAndRadioCD, LayoutCd, TableCD } from "../../common/componentsD";
 import { AllGuards } from "../../buttons/guardButton";
-import { Layout } from "@focuson/form_components";
-import { accountT, onlySchema } from "../database/tableNames";
+import { accountT } from "../database/tableNames";
 
 
 export const EAccountDisplayTypeDD: StringPrimitiveDD = {
@@ -52,6 +51,18 @@ export const oneAccountBalanceResolver: any = {
   get: { kicks: 'name', params: [] },
   put: { sql: 'select {vars} from {table} where {query}', params: [] }
 }
+
+export const BalancesAndMonthlyCostDD: DataD<AllGuards> = {
+  name: "BalancesAndMonthlyCost",
+  description: "This is the summary data about all the EAccounts for a single user",
+  // tableName: 'CustomerSUmmaryView',
+  structure: {
+    totalMonthlyCost: { dataDD: { ...MoneyDD, resolver: 'totalMonthlyCost', sample: [ 1000 ] } },
+    oneAccountBalance: { dataDD: { ...MoneyDD,  sample: [ 9921 ] } },
+    currentAccountBalance: { dataDD: { ...MoneyDD,  sample: [ 12321 ] } },
+  }
+}
+
 export const EAccountsSummaryDD: DataD<AllGuards> = {
   name: "EAccountsSummary",
   description: "This is the summary data about all the EAccounts for a single user",
@@ -60,9 +71,7 @@ export const EAccountsSummaryDD: DataD<AllGuards> = {
   structure: {
     useEStatements: { dataDD: BooleanDD },
     eAccountsTable: { dataDD: EAccountsSummaryTableDD },
-    totalMonthlyCost: { dataDD: { ...MoneyDD,  resolver: 'totalMonthlyCost', sample: [ 1000 ] } },
-    oneAccountBalance: { dataDD: { ...MoneyDD, resolver: 'oneAccountBalance', sample: [ 9921 ] } },
-    currentAccountBalance: { dataDD: { ...MoneyDD, resolver: 'currentAccountBalance', sample: [ 12321 ] } },
+    balancesAndMonthlyCost: { dataDD: { ...BalancesAndMonthlyCostDD,  resolver: 'balancesAndMonthlyCostResolver', sample: [ 1000 ] } },
     createPlan: { dataDD: CreatePlanDD }
   }
 }

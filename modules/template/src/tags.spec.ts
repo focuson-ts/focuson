@@ -7,7 +7,7 @@ interface ChildTagTestState {
   data: string
 }
 interface TagTestState {
-  a?: string,
+  a?: string | number,
   b?: any,
   child: ChildTagTestState
 }
@@ -21,7 +21,11 @@ const state: TagTestState = {
   b: { x: 1 },
   child
 }
-
+const stateWithAzero: TagTestState = {
+  a: 0,
+  b: { x: 1 },
+  child
+}
 let identityState = Lenses.identity<TagTestState> ();
 let identityChild = Lenses.identity<ChildTagTestState> ();
 const urlConfig: UrlConfig<TagTestState, ChildTagTestState, string> = {
@@ -76,7 +80,10 @@ describe ( "url", () => {
     it ( "should return the tags found in the state from the definition in the urlConfig - including ids", () => {
       expect ( url ( urlConfig, 'get' ) ( state ) ( '/{dId}?{query}' ).replace ( /"/g, "'" ) ).toEqual ( "/4?aId=1&bId={'x':1}&cId=3&dId=4" )
     } )
+    it ("should handle the case when the data is zero", () =>{
+      expect ( url ( urlConfig, 'get' ) ( stateWithAzero ) ( '/{dId}?{query}' ).replace ( /"/g, "'" ) ).toEqual ( "/4?aId=0&bId={'x':1}&cId=3&dId=4" )
 
+    })
   } )
   describe ( "for restAction create", () => {
     it ( "should replace named ids ", () => {
