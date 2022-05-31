@@ -80,3 +80,13 @@ export const HowOften = {
   5: 'Fortnightly',
   6: 'Weekly'
 }
+
+export interface CustomButtonType {
+  buttonType?: 'primary' | 'secondary' | 'default'
+}
+
+export const getButtonClassName = (buttonType: string | undefined) => (buttonType == 'primary' ? 'primary-btn' : (buttonType == 'secondary' ? 'secondary-btn' : 'button'))
+
+export interface LabelAlignment {
+  labelPosition?: 'Horizontal' | 'Vertical'
+}

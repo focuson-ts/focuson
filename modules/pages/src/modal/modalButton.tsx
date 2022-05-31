@@ -3,13 +3,14 @@ import { CopyDetails, fromPathGivenState, page, PageMode, PageParams, PageSelect
 import { Transform } from "@focuson/lens";
 import { RestCommand } from "@focuson/rest";
 import { anyIntoPrimitive, safeArray } from "@focuson/utils";
+import { CustomButtonType, getButtonClassName } from "../common";
 
 export interface CopyStringDetails {
   from: string;
   to: string;
   joiner?: string
 }
-export interface ModalButtonProps<S, Context> {
+export interface ModalButtonProps<S, Context> extends CustomButtonType {
   state: LensState<S, any, Context>
   id?: string,
   text: string,
@@ -29,7 +30,7 @@ export interface ModalButtonProps<S, Context> {
 
 
 export function ModalButton<S extends any, Context extends PageSelectionContext<S>> ( props: ModalButtonProps<S, Context> ): JSX.Element {
-  const { id, text, enabledBy, state, copy, copyJustString, modal, pageMode, rest, focusOn, copyOnClose, createEmpty, setToLengthOnClose, createEmptyIfUndefined, pageParams } = props
+  const { id, text, enabledBy, state, copy, copyJustString, modal, pageMode, rest, focusOn, copyOnClose, createEmpty, setToLengthOnClose, createEmptyIfUndefined, pageParams, buttonType } = props
   const onClick = () => {
     // const fromPath = fromPathFor ( state );
     const fromPage = fromPathGivenState ( state );
@@ -55,5 +56,5 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
       ...copyJustStrings );
   };
   const disabled = enabledBy === false
-  return <button id={id} disabled={disabled} onClick={onClick}>{text}</button>
+  return <button className={getButtonClassName(buttonType)} id={id} disabled={disabled} onClick={onClick}>{text}</button>
 }

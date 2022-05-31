@@ -1,7 +1,7 @@
 import { NameAnd } from "@focuson/utils";
 import { reasonFor } from "@focuson/state";
 import { FocusOnContext } from "@focuson/focuson";
-import { CommonStateProps } from "./common";
+import { CommonStateProps, LabelAlignment } from "./common";
 import { Label } from "./label";
 import { makeButtons } from "./labelAndInput";
 
@@ -14,7 +14,7 @@ export interface DropdownProps<S, T, Context> extends CommonStateProps<S, T, Con
   size?: number;
   required?: boolean;
 }
-export interface LabelAndDropdownProps<S, T, Context> extends DropdownProps<S, T, Context> {
+export interface LabelAndDropdownProps<S, T, Context> extends DropdownProps<S, T, Context>, LabelAlignment {
   label: string;
   allButtons: NameAnd<JSX.Element>;
 }
@@ -25,7 +25,7 @@ export function LabelAndDropdown<S, T, Context extends FocusOnContext<S>> ( prop
   const hasValid = selected && Object.keys ( enums ).includes ( selected )
   const value = hasValid ? selected : undefined
   const pleaseSelectClass = hasValid ? '' : ' pleaseSelect'
-  return (<div className='labelDropdown'>
+  return (<div className={`dropdown-container ${props.labelPosition == 'Horizontal'? 'd-flex-inline' : ''}`}>
       <Label state={state} htmlFor={name} label={label}/>
       <Dropdown{...props} />{makeButtons ( props.allButtons, props.buttons )}
     </div>

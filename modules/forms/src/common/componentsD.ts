@@ -68,7 +68,8 @@ export const commonParamsWithLabel: DisplayCompParamD = {
   ...commonParams,
   label: { paramType: 'string', needed: 'defaultToCamelCaseOfName' },
   allButtons: { paramType: 'object', needed: 'defaultToButtons' },
-  buttons: { paramType: 'string[]', needed: 'no' }
+  buttons: { paramType: 'string[]', needed: 'no' },
+  labelPosition: { paramType: 'string', needed: 'no' },
 }
 export const LabelAndStringInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndStringInput",

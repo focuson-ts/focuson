@@ -15,5 +15,6 @@ generate ( logLevel, directorySpec, devAppConfig, { ...params, focusOnVersion, t
 
 
 fse.copySync ( '../formComponents/src', tsRoot + "/src/formComponents" )
+fse.copySync ( './templates/raw/ts/public', tsRoot + "/public" )
 
 

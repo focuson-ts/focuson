@@ -1,10 +1,10 @@
 import { HasRestCommandL } from "@focuson/rest";
 import { LensState, reasonFor } from "@focuson/state";
 import { DateFn, RestAction, RestResult } from "@focuson/utils";
-import { CommonStateProps } from "./common";
+import { CommonStateProps, CustomButtonType, getButtonClassName } from "./common";
 import { HasPageSelectionLens, HasSimpleMessageL, hasValidationErrorAndReport, replaceBasePath } from "@focuson/pages";
 
-export interface RestButtonProps<S, C> extends CommonStateProps<S, any, C> {
+export interface RestButtonProps<S, C> extends CommonStateProps<S, any, C>, CustomButtonType {
   rest: string;
   action: RestAction;
   confirm?: boolean | string;
@@ -23,7 +23,7 @@ function confirmIt ( c: boolean | string | undefined ) {
   return window.confirm ( text )
 }
 export function RestButton<S, C extends HasRestCommandL<S> & HasSimpleMessageL<S> & HasPageSelectionLens<S>> ( props: RestButtonProps<S, C> ) {
-  const { id, rest, action, result, state, text, confirm, validate, dateFn, deleteOnSuccess, enabledBy, name ,messageOnSuccess} = props
+  const { id, rest, action, result, state, text, confirm, validate, dateFn, deleteOnSuccess, enabledBy, name ,messageOnSuccess, buttonType} = props
   function onClick () {
     const realvalidate = validate === undefined ? true : validate
     if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return
@@ -31,5 +31,5 @@ export function RestButton<S, C extends HasRestCommandL<S> & HasSimpleMessageL<S
       state.copyWithLens ( state.context.restL ).transform ( old => [ ...old, { restAction: action, name: rest, deleteOnSuccess ,messageOnSuccess} ], reasonFor ( 'RestButton', 'onClick', id ) )
   }
 
-  return <button disabled={enabledBy === false} onClick={onClick}>{text ? text : name}</button>
+  return <button disabled={enabledBy === false} onClick={onClick} className={getButtonClassName(buttonType)}>{text ? text : name}</button>
 }

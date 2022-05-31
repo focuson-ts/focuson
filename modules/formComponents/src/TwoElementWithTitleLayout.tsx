@@ -4,5 +4,5 @@ export interface TwoElementWithTitleProps {
 }
 
 export function TwoElementWithTitleLayout ( { title, children }: TwoElementWithTitleProps ) {
-  return <span className='labelValueButton'><label>{title}</label>{children[ 0 ]}{children[ 1 ]}</span>
+  return <div className='labelValueButton'><label className="checkbox-container">{title}{children[ 0 ]}</label>{children[ 1 ]}</div>
 }

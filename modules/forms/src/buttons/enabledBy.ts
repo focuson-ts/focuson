@@ -1,6 +1,10 @@
 import { toArray } from "@focuson/utils";
 
-export interface EnabledBy {
+export interface CustomButtonType {
+  buttonType?: 'primary' | 'secondary' | 'button'
+}
+
+export interface EnabledBy extends CustomButtonType{
   enabledBy?: string | string[]
 }
 

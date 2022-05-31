@@ -1,0 +1,320 @@
+.grid {
+  display: block;
+  empty-cells: show;
+  border-spacing: 0;
+  border: var(--table-border, 0);
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size: var(--table-font);
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.grid thead::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+}
+
+.grid thead {
+  position: sticky;
+  display: block;
+  width: 100%;
+  overflow-y: var(--headScroll);
+  border-width: var(--table-border-width);
+  border-style: var(--table-border-style);
+  border-color: transparent transparent var(--table-border-color)  transparent;
+}
+
+.grid table::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+  border-left: var(--table-border);
+}
+
+.grid table::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-color);
+}
+
+.grid table::-webkit-scrollbar-thumb:window-inactive {
+  background: var(--scrollbar-color);
+}
+
+.grid tbody {
+  display: block; 
+  position: relative;
+  width: 100%; 
+  overflow-y: var(--gridScroll);
+}
+
+.grid tbody tr:nth-child(2) {
+  background: var(--table-row-background);
+}
+
+.grid tbody tr.grid-selected, .grid tbody tr:focus {
+  background: var(--table-row-selected-background);
+  border: none;
+  color: white;
+}
+
+.grid tbody tr:first-child td:last-child {
+  border-color: transparent;
+}
+
+.grid tbody td {
+  flex-basis: 100%;
+  flex-grow: 2;
+  display: block;
+  
+  padding: 8px 8px;
+  border-spacing: 0;
+  border-width: var(--table-border-width);
+  border-style: var(--table-border-style);
+  border-color: var(--table-border-color) var(--table-border-color) transparent transparent;
+}
+
+.grid tbody tr:first-child td {
+  border-color: transparent var(--table-border-color) transparent transparent;
+}
+
+.grid tbody td:last-child {
+  border-color: var(--table-border-color) transparent transparent transparent;
+}
+
+.grid tfoot::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+}
+
+.grid tfoot {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow-y: var(--headScroll);
+  border-width: var(--table-border-width);
+  border-style: var(--table-border-style);
+  border-color: var(--table-border-color) transparent transparent transparent;
+}
+
+.grid tfoot td.total {
+  padding: 9px !important;
+  border-left-style: 2px solid var(--grey);
+  border-right-style: none !important;
+  width: 100%;
+  overflow: hidden;
+}
+
+.grid tfoot td.blank:last-child {
+  padding: 9px !important;
+  border-right-width: 2px solid var(--grey);
+}
+
+.grid tfoot td.blank {
+  padding: 9px !important;
+  border-left-style: none !important;
+  border-right-style: none !important;
+  width: 100%;
+  overflow: hidden;
+}
+
+.grid tr {
+  width: 100%;
+  display: flex;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.grid th {
+  font-weight: var(--table-column-header-font-weight);
+  flex-basis: 100%;
+  flex-grow: 2;
+  display: block;
+  padding: 8px 8px;
+}
+
+.grid span.status-icon{
+  vertical-align: top;
+  right: 0;
+  top: 0;
+  position: absolute; 
+}
+
+.grid td.cell-content {
+  position: relative;
+}
+
+.grid.small-first-col td:first-child,
+.grid.small-first-col th:first-child {
+  flex-basis:20%;
+  flex-grow:1;
+}
+
+.grid-sub {
+  max-height: var(--gridHeight);
+}
+
+.small-col{flex-basis:10%;}
+
+.grid th.lead{
+  font-weight:bold;
+}
+
+.grid th.grid-expanded {
+  max-width: 35px;
+  padding: 0;
+}
+
+.grid td.grid-expanded {
+  display: flex;
+  flex-direction: column;
+  max-width: 35px;
+  padding: 0;
+  text-align: center;
+}
+
+.grid div.expand-icon {
+  position: relative;
+  top: 5px;
+  left: calc(50% - (var(--icon-expand-width) / 2));
+  background-image: var(--icon-expand);
+  background-repeat: no-repeat;
+  cursor: pointer;
+  height: var(--icon-expand-height);
+  width: var(--icon-expand-width);
+  margin-top: var(--icon-expand-margin);
+}
+
+.grid div.expandable-open {
+  display: inline-block;
+  transform: translateY(calc(var(--icon-expand-height) * -0.5)) scaleY(-1);
+}
+
+.grid th.longText {
+  padding-left:8px;
+  max-width: 20%;
+  white-space: pre;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+.grid td.longText {
+  max-width: 20%;
+  white-space: pre;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+.grid th.currency {
+  text-align: right;
+  width: 130px;
+  overflow: hidden;
+  max-width: 130px;
+  padding-right: 8px;
+}
+.grid td.currency {
+  text-align: right;
+  width: 130px;
+  max-width: 130px;
+  padding-right: 8px;
+}
+
+.grid th.balance {
+  text-align: right;
+  width: 130px;
+  overflow: hidden;
+  max-width: 130px;
+  padding-right: 11px;
+}
+.grid td.balance {
+  text-align: right;
+  width: 130px;
+  max-width: 130px;
+  padding-right: 8px;
+}
+
+.grid td.postcode, th.postcode {
+  text-align: left;
+  max-width: 20%;
+  white-space: pre;
+  overflow: hidden;
+}
+
+.collapsed {
+  visibility: collapse;
+}
+
+.grid td.description, th.description  {
+  text-align: left;
+  min-width: 30%;
+}
+
+.grid td.description div span {
+  text-align: left;
+  font-size: 13px;
+}
+
+.grid td.description div span:nth-child(2) {
+  text-align: left;
+  font-weight: bold;
+}
+
+.grid td.description div span:nth-child(2) {
+  text-align: left;
+  font-weight: bold;
+}
+
+.grid td.text {
+  text-align: left;
+  width: 100%;
+}
+.grid th.text {
+  text-align: left;
+  width: 100%;
+  padding-left:8px;
+}
+
+.grid td.amount {
+  text-align: left;
+  width: 130px;
+}
+.grid th.amount {
+  text-align: left;
+  width: 130px;
+}
+.grid th.date {
+  text-align: left;
+  width: 80px;
+  max-width: 80px;
+  padding-left:8px;
+}
+
+.grid th.percentage td.percentage {
+  text-align: left;
+  width: 80px;
+  max-width: 80px;
+  padding-left:8px;
+}
+
+.grid th.transactionfield {
+  width: 80px;
+  max-width: 80px;
+  padding-left:12px; 
+  text-align: left;
+}
+.grid td.transactionfield {
+  width: 80px;
+  max-width: 80px;
+  text-align: left;
+}
+.grid td.date {
+  width: 80px;
+  max-width: 80px;
+  padding-left:8px;
+  text-align: left;
+}
+.grid td.shorttext, th.shorttext {
+  width: 50px;
+  max-width: 50px;
+}
+
+.grid td.customText, th.customText  {
+  width: 150px;
+  max-width: 150px;
+}

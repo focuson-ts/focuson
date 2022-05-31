@@ -1,5 +1,5 @@
 import { AccountIdDD, BooleanDD, DataD, DateDD, MoneyDD, OneLineStringDD, RepeatingDataD, StringPrimitiveDD } from "../../common/dataD";
-import { LabelAndRadioCD, TableCD } from "../../common/componentsD";
+import { LabelAndRadioCD, LayoutCd, TableCD } from "../../common/componentsD";
 import { AllGuards } from "../../buttons/guardButton";
 import { accountT } from "../database/tableNames";
 
@@ -66,6 +66,7 @@ export const BalancesAndMonthlyCostDD: DataD<AllGuards> = {
 export const EAccountsSummaryDD: DataD<AllGuards> = {
   name: "EAccountsSummary",
   description: "This is the summary data about all the EAccounts for a single user",
+  layout: { component: LayoutCd, displayParams: { details: '[[10]]', defaultProps: `{"valueWidth": 50}`}},
   // tableName: 'CustomerSUmmaryView',
   structure: {
     useEStatements: { dataDD: BooleanDD },

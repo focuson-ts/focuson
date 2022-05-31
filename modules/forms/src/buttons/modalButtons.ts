@@ -50,7 +50,7 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalButtonInPage<G>, G> {
     import: "@focuson/pages",
     makeButton:
       ( { params, parent, name, button } ) => {
-        const { modal, mode, restOnCommit, focusOn, copy, createEmpty, createEmptyIfUndefined, copyOnClose, copyJustString, setToLengthOnClose, text, pageParams } = button
+        const { modal, mode, restOnCommit, focusOn, copy, createEmpty, createEmptyIfUndefined, copyOnClose, copyJustString, setToLengthOnClose, text, pageParams, buttonType } = button
         const createEmptyString = createEmpty ? [ `createEmpty={${params.emptyFile}.${emptyName ( createEmpty )}}` ] : []
         const createEmptyIfUndefinedString = createEmptyIfUndefined ? [ `createEmptyIfUndefined={${params.emptyFile}.${emptyName ( createEmptyIfUndefined )}}` ] : []
         createEmptyIfUndefined
@@ -61,6 +61,7 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalButtonInPage<G>, G> {
           ...indentList ( [
             ...opt ( 'pageMode', mode ),
             ...opt ( 'focusOn', focusOn ),
+            ...optT ( 'buttonType', buttonType ),
             ...optT ( 'copy', copyFromArray ),
             ...optT ( 'copyOnClose', copyOnCloseArray ),
             ...optT ( 'copyJustString', copyJustString ? singleToList ( copyJustString ) : undefined ),

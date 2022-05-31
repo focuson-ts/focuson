@@ -19,7 +19,7 @@ export function Layout<S, T, Context> ( { details, children, title, defaultProps
   
   return <>
     {detailsAsMixedArr.map ( ( row: any, rowIndex: number ) =>
-      <div className="row my-1 padding-bottom" key={rowIndex}><>        
+      <div className="row" key={rowIndex}><>        
         {row.map ( ( col: any, colIndex: number ) =>         
             <div className="col" key={elemIndex}>
               <div className={displayAsCards ? "card" : ""}><div className={displayAsCards ? "card-body" : ""}>

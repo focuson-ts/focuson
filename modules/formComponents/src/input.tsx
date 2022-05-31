@@ -18,6 +18,7 @@ export const cleanInputProps = <T extends NameAnd<any>> ( p: T ): T => {
   delete result.state
   delete result.readonly
   delete result.ariaLabel
+  delete result.noLabel
   return result
 };
 
@@ -34,7 +35,7 @@ export const Input = <S, T extends any, P> ( tProps: TransformerProps<T> ) => {
       } else
         state.setJson ( transformer ( e.target.value ), reasonFor ( 'Input', 'onChange', id ) );
     };
-    return <input type={type} {...cleanInputProps ( props )} value={`${state.optJsonOr ( tProps.default )}`} disabled={mode === 'view' || readonly} onChange={( e ) => onChange ( transformer, e )}/>
+    return <input className="input" type={type} {...cleanInputProps ( props )} value={`${state.optJsonOr ( tProps.default )}`} readOnly={mode === 'view' || readonly} onChange={( e ) => onChange ( transformer, e )}/>
   }
 }
 
@@ -42,10 +43,12 @@ export function BooleanInput<S, Context> ( props: InputProps<S, boolean, Context
   const { state, mode, id, name, ariaLabel, defaultValue, readonly } = props
   const onChange = ( e: React.ChangeEvent<HTMLInputElement> ) =>
     state.setJson ( e.target.checked, reasonFor ( 'BooleanInput', 'onChange', id ) );
-  return <input type='checkbox' {...cleanInputProps ( props )}
+  return <><input type='checkbox' {...cleanInputProps ( props )}
                 checked={state.optJsonOr ( false )}
                 disabled={mode === 'view' || readonly}
                 onChange={( e ) => onChange ( e )}/>
+                <span className="checkmark"></span>
+         </>
 
 }
 

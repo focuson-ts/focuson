@@ -1,14 +1,14 @@
 import { NameAnd, safeArray } from "@focuson/utils";
 import { LensState, reasonFor } from "@focuson/state";
 import { FocusOnContext } from "@focuson/focuson";
-import { CommonStateProps } from "./common";
+import { CommonStateProps, LabelAlignment } from "./common";
 import { Label } from "./label";
 import { makeButtons } from "./labelAndInput";
 import DatePicker from "react-datepicker";
 import { isValid, format } from 'date-fns';
 
 
-export interface LabelAndDateProps<S, Context> extends CommonStateProps<S, string, Context> {
+export interface LabelAndDateProps<S, Context> extends CommonStateProps<S, string, Context>, LabelAlignment {
   label: string;
   readonly?: boolean;
   allButtons: NameAnd<JSX.Element>;
@@ -74,7 +74,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
     error = true   
   } 
 
-  return (<div className='labelAndDate'>
+  return (<div className={`labelAndDate ${props.labelPosition == 'Horizontal'? 'd-flex-inline' : ''}`}>
       <Label state={state} htmlFor={name} label={label}/>
       <div>
         <DatePicker 
@@ -86,7 +86,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
         excludeDates={datesToExcludeAsDateType}
         minDate={minDate}
         highlightDates={datesToExcludeAsDateType}
-        disabled={mode === 'view' || readonly}
+        readOnly={mode === 'view' || readonly}
         className={error ? "red-border" : ""}
         placeholderText="Select a date"/>
         {makeButtons ( props.allButtons, props.buttons )}
