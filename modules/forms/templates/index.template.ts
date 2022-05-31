@@ -54,7 +54,7 @@ const pageModeFor: NameAnd<PageMode> = {
 }
 
 let setJson = setJsonForFocusOn<{stateName}, Context, SimpleMessage> ( config, context, pathToLens,( s: LensState<{stateName}, {stateName}, Context> ): void =>
-  ReactDOM.render ( <div className="theme-light">
+  ReactDOM.render ( <div>
     <IndexPage state={s}>
        <SelectedPage state={s}/>
     </IndexPage>
