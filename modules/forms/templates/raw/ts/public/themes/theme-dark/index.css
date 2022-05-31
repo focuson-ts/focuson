@@ -10,5 +10,4 @@ body .theme-dark{
     font-family: var(--font-family-main);
     font-size: var(--font-size-main);
     color: var(--text-colour-main);
-    background: var(--main-background);
 }

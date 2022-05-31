@@ -43,7 +43,8 @@ li {
 h1 {
     color: var(--h1-custom-brand-colour);
     font-size: var(--h1-custom-font-size);
-    line-height: var(--h1-custom-line-height);
+    margin: 1rem 0;
+    /* line-height: var(--h1-custom-line-height); */
     /* font-weight: bold; */
 }
 
@@ -255,7 +256,7 @@ select {
 .modalPopup-content {
     position: absolute;
     top: 20%;
-    left: 20%;
+    left: 35%;
     padding: 20px;
     background-color: white;
 }
