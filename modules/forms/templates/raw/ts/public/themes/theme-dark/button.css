@@ -2,7 +2,7 @@ button {
   font-family: var(--font-family-main);
 }
 
-.button {
+button, .button {
   position: relative;
   top: 0;
   left: 0;
@@ -10,9 +10,10 @@ button {
   border: 1px solid var(--button-default-border);
   color: var(--button-default-foreground-color);  
   padding: var(--button-default-inside-padding);
+  margin: var(--button-default-margin);
 }
 
-.button:after {
+button:after, .button:after {
   position: absolute;
   visibility: visible;
   opacity: 1;
@@ -30,13 +31,13 @@ button {
   transition: all 0.18s;
 }
 
-.button:hover {
+button:hover, .button:hover {
   top: 4px;
   left: 4px;
   transform: scale(0.98);
 }
 
-.button:hover:after {
+button:hover:after, .button:hover:after {
   visibility: visible;
   opacity: 1;
   bottom: 0;
@@ -76,7 +77,7 @@ button {
 .primary-btn:hover {
   top: 4px;
   left: 4px;
-  color: #fff;  
+  color: #fff;
   cursor: pointer;
   border: none;
   transform: scale(1.02);

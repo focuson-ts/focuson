@@ -509,24 +509,20 @@ pre {
 }
 
 #debug-container button {
-    background-color: brown;
-    border-color: brown;
-    /*width: 50px;*/
-    /*height: 50px;*/
-    /*background: green;*/
-    /*border-radius: 50%;*/
+    background-color: aliceblue;
+    color: #000;
 }
 
 #debug-bucket {
     display: inline-flex;
 }
 #debug-log button {
-    background-color: darkgoldenrod;
-    border-color: darkgoldenrod;
+    background-color: lightsteelblue;
+    color: #000;
 }
 #debug-trace button {
-    background-color: darkolivegreen;
-    border-color: darkolivegreen;
+    background-color: lightskyblue;
+    color: #000;
 }
 
 .accordion {
@@ -1488,10 +1484,6 @@ button + div.labelValueButton {
 
 table.grid {
   min-height: 150px;
-}
-
-button.button {
-  font-size: inherit;
 }
 
 div.card {

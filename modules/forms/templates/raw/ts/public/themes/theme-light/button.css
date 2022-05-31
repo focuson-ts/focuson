@@ -2,29 +2,46 @@ button {
   font-family: var(--font-family-main);
 }
 
-.button {
-  box-sizing: border-box;
-  cursor: pointer;
-  display: inline-block;
-  font-family: var(--font-family-main);
-  font-size: var(--button-font-size);
-  text-align: center;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: all 0.18s;
+button, .button {
+  position: relative;
+  top: 0;
+  left: 0;
+  background-color: var(--button-default-background-color);
+  border: 1px solid var(--button-default-border);
+  color: var(--button-default-foreground-color);  
+  padding: var(--button-default-inside-padding);
+  margin: var(--button-default-margin);
+}
+
+button:after, .button:after {
+  position: absolute;
+  visibility: visible;
+  opacity: 1;
+  bottom: -5px;
+  left: -1px;
+  right: 0;
+  width: calc(100% - 6px);
+  border-right: var(--button-default-bevel-size) solid transparent;
+  border-top: var(--button-default-bevel-size) solid var(--button-default-border);
+  border-left: var(--button-default-bevel-size) solid transparent;
+  content: '';
   -webkit-transition: all 0.18s;
   -moz-transition: all 0.18s;
   -o-transition: all 0.18s;
-  padding: var(--input-padding);
-  background-color: var(--button-default-background-color);
-  border: 1px solid transparent;
-  border-radius: 4px;
-  color: var(--button-default-foreground-color);
-  margin: 0 10px 0 0;
+  transition: all 0.18s;
 }
 
-.button:hover {
-  text-decoration: underline !important;
+button:hover, .button:hover {
+  top: 4px;
+  left: 4px;
+  transform: scale(0.98);
+}
+
+button:hover:after, .button:hover:after {
+  visibility: visible;
+  opacity: 1;
+  bottom: 0;
+  border-top: none;
 }
 
 .primary-btn {
