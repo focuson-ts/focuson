@@ -24,7 +24,7 @@ export type ButtonD = ButtonWithControl | GuardButtonInPage<any, any>
 
 export type RawButtons<G> = ModalButtonInPage<G> | ModalCancelButtonInPage | ModalCommitButtonInPage |
   ResetStateButton | RestButtonInPage<G> | ListNextButtonInPage | ListPrevButtonInPage | ValidationButtonInPage | DeleteStateButtonInPage |
-  ToggleButtonInPage<G> | SelectButtonInPage<G> | ActionButtonInPage<G>;
+  ToggleButtonInPage<G> | SelectButtonInPage<G> | ActionButtonInPage;
 
 export type AllButtonsInPage<G> = (RawButtons<G> | GuardButtonInPage<AllButtonsInPage<G>, G>)
 

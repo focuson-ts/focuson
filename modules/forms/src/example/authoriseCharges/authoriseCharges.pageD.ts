@@ -1,7 +1,7 @@
 import { ExampleDataD, ExampleMainPage, ExampleModalPage, ExampleRepeatingD } from "../common";
 import { NatNumDd } from "../../common/dataD";
 import { TableCD } from "../../common/componentsD";
-import { AuthoriseChargesSummaryDD, OneBrandDD, SelectOneBrandDD, summaryOfChargesDateDD, summaryOfChargesDateTableDD, summaryofChargesDD, summaryOfChargesSearchDD } from "./authoriseCharges.dataD";
+import { AuthoriseChargesSummaryDD, OneBrandDD, OneChargeDataDD, SelectOneBrandDD, summaryOfChargesDateDD, summaryOfChargesDateTableDD, summaryofChargesDD, summaryOfChargesSearchDD } from "./authoriseCharges.dataD";
 import { AuthorisedChargesRD, SelectOneBrandPageRD, SummaryOfChargeDatesRD } from "./authoriseCharges.restD";
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 
@@ -37,8 +37,8 @@ export const ViewChargesPage: ExampleModalPage = {
       copy: { from: '~/authorisedCharges/date', to: '~/summaryOfChargesDates/date' },
       copyOnClose: { from: '~/selectedDateItem/dateCreated', to: '~/authorisedCharges/date' },
     },
-    approvePendingFees: { control: "ActionButton", text: 'Approve Pending Fees', action: 'approvePendingFees' },
-    authoriseApprovedFees: { control: "ActionButton", text: 'Authorise Approved Fees', action: 'authoriseApprovedFees' },
+    approvePendingFees: { control: "ActionButton", path: '~/authorisedCharges/fromApi/editingData', text: 'Approve Pending Fees', action: 'approvePendingFees' },
+    authoriseApprovedFees: { control: "ActionButton", path: '~/authorisedCharges/fromApi/editingData', text: 'Authorise Approved Fees', action: 'authoriseApprovedFees' },
     summary: { control: 'ModalButton', modal: SummaryOfChargesPage, mode: 'view', focusOn: '~/summaryOfCharges' },
     save: { control: 'RestButton', restName: 'authorisedCharges', action: 'update', deleteOnSuccess: '~/authorisedCharges/fromApi' },
   }
@@ -53,6 +53,7 @@ export const AuthoriseChargesPD: ExampleMainPage = {
     selectedIndex: { dataDD: NatNumDd },
     selectedItem: { dataDD: OneBrandDD },
     authorisedCharges: { dataDD: AuthoriseChargesSummaryDD },
+    selectedCharge: {dataDD: OneChargeDataDD},
     summaryOfCharges: { dataDD: summaryofChargesDD },
 
     summaryOfChargesDates: { dataDD: summaryOfChargesSearchDD },

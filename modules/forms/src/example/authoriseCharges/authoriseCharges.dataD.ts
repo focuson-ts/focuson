@@ -1,6 +1,7 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 import { BooleanDD, DateDD, NatNumDd, StringDD } from "../../common/dataD";
 import { TableCD } from "../../common/componentsD";
+import { AuthoriseTableCD } from "./custom";
 
 export const summaryofChargesDD: ExampleDataD = {
   name: 'SummaryOfCharges',
@@ -52,23 +53,23 @@ export const OneChargeDataDD: ExampleDataD = {
   description: 'All the data we see on the main authoriseCharges page',
   structure: {
     chargeType: { dataDD: StringDD, sample: [ 'Unpaid DD', 'Unpaid DD fee' ] },
-    status: { dataDD: StringDD, sample: [ 'PENDING', 'APROVED', 'AUTHORISED' ] },
+    status: { dataDD: StringDD, sample: [ 'PENDING', 'APPROVED', 'AUTHORISED' ] },
     type: { dataDD: StringDD, sample: [ 'DR', 'CR' ] },
     sortCode: { dataDD: StringDD, sample: [ '166051', '166052' ] },
     accountNo: { dataDD: StringDD, sample: [ '10009126' ] },
     amount: { dataDD: StringDD, sample: [ '1.00', '1.00' ] },
     narrative: { dataDD: StringDD, sample: [ 'unpaid DD' ] },
-    approvedBy: { dataDD: StringDD, sample: [ '', 'you' ] },
-    authorisedBy: { dataDD: StringDD, sample: [ '', '', 'you' ] },
-    hold: { dataDD: BooleanDD }
+    approvedBy: { dataDD: StringDD, sample: [ '', 'The Boss', 'The Boss' ] },
+    authorisedBy: { dataDD: StringDD, sample: [ '', '', 'The Super Boss' ] },
+    hold: { dataDD: BooleanDD, sample: [ false, false, false ] }
   }
 }
 export const ListOfChargesDD: ExampleRepeatingD = {
   name: 'ListOfCharges',
   description: 'All the charges',
   dataDD: OneChargeDataDD,
-  display: TableCD,
-  displayParams: { order: [ 'chargeType', 'status', 'type', 'sortCode', 'accountNo', 'narrative', 'hold' ] },
+  display: AuthoriseTableCD,
+  displayParams: { order: [ 'chargeType', 'status', 'type', 'sortCode', 'accountNo', 'narrative', 'hold' ], copySelectedItemTo: '~/selectedCharge' },
   paged: false
 }
 

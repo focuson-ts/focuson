@@ -1,9 +1,23 @@
-import { LensState } from "@focuson/state";
+import { LensState, reasonFor } from "@focuson/state";
+import { AuthoriseTableData } from "@focuson/form_components";
+import { Lenses, massTransform, Transform } from "@focuson/lens";
 
-export function approvePendingFees<S, C> ( s: LensState<S, any, C>, id: string ) {
-  console.log ( "in approve pending fees" )
+function updateTable<S, D extends AuthoriseTableData, C> ( s: LensState<S, D[], C>, id: string, update: keyof D, fromValue: string, toValue: string ) {
+  const rows = s.optJsonOr ( [] )
+  const lens = s.optional
+  const txs: Transform<S, any>[] = rows.flatMap ( ( row, i ) =>
+    row.hold !== true && row.status === fromValue ? [ [ lens.chain ( Lenses.nth ( i ) ), old => {
+      let newValue = { ...old, status: toValue };
+      newValue[ update ] = 'you just now'
+      return newValue;
+    } ] ] : [] )
+  s.massTransform ( reasonFor ( 'ActionButton', 'onClick', id ) ) ( ...txs )
 }
-export function authoriseApprovedFees<S, C> ( s: LensState<S, any, C>, id: string ) {
-  console.log ( "in authorise" )
+
+export function approvePendingFees<S, D extends AuthoriseTableData, C> ( s: LensState<S, D[], C>, id: string ) {
+  updateTable ( s, id, 'approvedBy', 'PENDING', 'APPROVED' )
+}
+export function authoriseApprovedFees<S, D extends AuthoriseTableData, C> ( s: LensState<S, D[], C>, id: string ) {
+  updateTable ( s, id, 'authorisedBy', 'APPROVED', 'AUTHORISED' )
 
 }

@@ -1,4 +1,6 @@
 export * from './src/ActionButton'
+export * from './src/authoriseTable'
+export * from './src/accordion'
 export * from './src/common'
 export * from './src/DataDrivenFixedOptionDropDownAndDetails'
 export * from './src/debugState'

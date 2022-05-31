@@ -6,17 +6,20 @@ import { EnabledBy, enabledByString } from "./enabledBy";
 import { ButtonWithControl } from "./allButtons";
 import { PageMode } from "@focuson/pages";
 import { LensState } from "@focuson/state";
+import { Lens } from "@focuson/lens";
+import { stateForButtonWithPath } from "../codegen/lens";
 
 
-function makeActionButton<B extends ActionButtonInPage<G>, G> (): ButtonCreator<ActionButtonInPage<G>, G> {
+function makeActionButton<B extends ActionButtonInPage, G> (): ButtonCreator<ActionButtonInPage, G> {
   return {
-    import:  '@focuson/form_components',
-    makeButton: ( { params, mainPage, parent, name, button } ) => {
-      const { action, text } = button
-
-      return [ `<ActionButton state={state} id=${makeIdForButton ( name )} ${enabledByString ( button )} action={action.${action}}`,
+    import: '@focuson/form_components',
+    makeButton: data => {
+      const { params, mainPage, parent, name, button } = data
+      const { action, text, path } = button
+      const state = stateForButtonWithPath ( data, 'DeleteStateButton' ) ( path )
+      return [ `<ActionButton state={${state}} id=${makeIdForButton ( name )} ${enabledByString ( button )} action={action.${action}}`,
         ...indentList ( [
-          ...opt ( 'text', text )] ),
+          ...opt ( 'text', text ) ] ),
         ' />' ]
     }
   }
@@ -26,12 +29,13 @@ export function makeActionButtons<G> (): MakeButton<G> {
   return { ActionButton: makeActionButton () }
 }
 
-export function isActionButton<G> ( p: ButtonWithControl ): p is ActionButtonInPage<G> {
+export function isActionButton ( p: ButtonWithControl ): p is ActionButtonInPage {
   return p.control === 'ActionButton'
 }
-export interface ActionButtonInPage<G> extends EnabledBy {
+export interface ActionButtonInPage extends EnabledBy {
   control: 'ActionButton'
   text?: string;
-  action: string,
+  action: string;
+  path: string;
 }
 
