@@ -1,7 +1,7 @@
 import { ExampleDataD, ExampleMainPage, ExampleRepeatingD, ExampleRestD } from "../common";
 import { NatNumDd } from "../../common/dataD";
 import { TableCD } from "../../common/componentsD";
-import { AuthoriseChargesSummaryDataDD, AuthoriseChargesSummaryDD, OneBrandDD, SelectOneBrandDD, summaryOfChargesDateTableDD } from "./authoriseCharges.dataD";
+import { AuthoriseChargesSummaryDataDD, AuthoriseChargesSummaryDD, chargesSummaryDetailDD, OneBrandDD, SelectOneBrandDD, summaryOfChargesDateTableDD } from "./authoriseCharges.dataD";
 import { fromCommonIds } from "../commonIds";
 import { StringParam } from "../../common/restD";
 
@@ -31,6 +31,14 @@ export const SummaryOfChargeDatesRD: ExampleRestD = {
     date: { ...StringParam, lens: '~/summaryOfChargesDates/date', testValue: '2022/12/1' }
   },
   url: "/api/charges/dates?{query}",
+  actions: [ 'get' ],
+}
+
+export const SummaryOfChargesRD: ExampleRestD = {
+  dataDD: chargesSummaryDetailDD,
+  params: {
+  },
+  url: "/api/charges/details?{query}",
   actions: [ 'get' ],
 }
 

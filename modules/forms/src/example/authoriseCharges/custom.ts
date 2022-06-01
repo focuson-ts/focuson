@@ -7,6 +7,6 @@ export const AuthoriseTableCD: DisplayCompD = {
     ...commonParams,
     order: { paramType: 'string[]', needed: 'yes' },
     copySelectedItemTo: { paramType: 'path', needed: 'no' },
-    // copySelectedIndexTo: { paramType: 'pageState', needed: 'no' },
+    copySelectedIndexTo: { paramType: 'path', needed: 'no' },
   }
 }

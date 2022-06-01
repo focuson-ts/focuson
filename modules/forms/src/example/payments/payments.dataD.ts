@@ -77,13 +77,13 @@ export const amountDD: ExampleDataD = {
   description: '',
   layout: { component: LayoutCd, displayParams: { details: '[[1,1,1], [1]]' } },
   guards: {
-    sterlingDefined: { condition: '>0', path: 'sterlingAmount' },
-    currencyDefined: { condition: '>0', path: 'currencyAmount' }
+    sterlingZero: { condition: 'equals', path: 'sterlingAmount', value: 0 },
+    currencyZero: { condition: 'equals', path: 'currencyAmount', value: 0 }
   },
   structure: {
     currency: { dataDD: CurrencyEnum },
-    sterlingAmount: { dataDD: MoneyDD, sample: [ 123, 2345, 5654 ] },
-    currencyAmount: { dataDD: MoneyDD, sample: [ 222, 333, 444 ] },
+    sterlingAmount: { dataDD: MoneyDD, guard: { currencyZero: [ 'true' ] }, sample: [ 123, 2345, 5654 ] },
+    currencyAmount: { dataDD: MoneyDD, guard: { sterlingZero: [ 'true' ] }, sample: [ 222, 333, 444 ] },
     amountInWords: { dataDD: StringDD, sample: [ 'one hundred', 'two hundred', 'three hundred' ] },
   }
 

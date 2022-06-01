@@ -101,25 +101,14 @@ export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MS
     const { fetchFn, preMutate, postMutate, onError, pages, restDetails, fetchers, restL, pageL, messageL, stringToMsg } = config
     const newStateFn = ( fs: S ) => publish ( lensState ( fs, setJsonForFocusOn ( config, context, pathToLens, publish ), 'setJson', context ) )
     try {
-      if ( debug?.fetcherDebug ) console.log ( 'setJsonForFetchers - start', main )
-      if ( debug?.fetcherDebug ) console.log ( 'setJsonForFetchers - withDebug', withDebug )
       const withPreMutate = preMutate ( withDebug )
       const firstPageProcesses: S = preMutateForPages<S, Context> ( context ) ( withPreMutate )
-      if ( debug?.fetcherDebug ) console.log ( 'setJsonForFetchers - after premutate', firstPageProcesses )
       const afterRest = await rest ( fetchFn, restDetails, config.restUrlMutator, pathToLens, messageL,stringToMsg, restL, firstPageProcesses )
-      if ( debug?.fetcherDebug || debug?.postDebug ) console.log ( 'setJsonForFetchers - afterRest', afterRest )
       if ( afterRest ) newStateFn ( afterRest )
-      if ( debug?.fetcherDebug || debug?.postDebug ) console.log ( 'setJsonForFetchers - newStateFn', afterRest )
-      if ( debug?.whatLoad ) {
-        let w = wouldLoad ( fetchers, afterRest );
-        console.log ( "wouldLoad", wouldLoadSummary ( w ), w )
-      }
       let newMain = await loadTree ( fetchers, afterRest, fetchFn, debug )
         .then ( s => s ? s : onError ( s, Error ( 'could not load tree' ) ) )
         .catch ( e => onError ( afterRest, e ) )
-      if ( debug?.fetcherDebug ) console.log ( 'setJsonForFetchers - after load', newMain )
       let finalState = await postMutate ( newMain )
-      if ( debug?.fetcherDebug ) console.log ( 'setJsonForFetchers - final', finalState )
       newStateFn ( finalState )
       return finalState
     } catch ( e ) {

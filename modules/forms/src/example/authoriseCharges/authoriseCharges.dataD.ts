@@ -1,13 +1,9 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
-import { BooleanDD, DateDD, NatNumDd, StringDD } from "../../common/dataD";
+import { BooleanDD, DateDD, MoneyDD, NatNumDd, StringDD } from "../../common/dataD";
 import { TableCD } from "../../common/componentsD";
 import { AuthoriseTableCD } from "./custom";
 
-export const summaryofChargesDD: ExampleDataD = {
-  name: 'SummaryOfCharges',
-  description: 'the information in one row of the summary of',
-  structure: {}
-}
+
 export const summaryOfChargesDateDD: ExampleDataD = {
   name: 'SummaryOfChargesDate',
   description: 'The information about a date that has charges on it',
@@ -69,7 +65,7 @@ export const ListOfChargesDD: ExampleRepeatingD = {
   description: 'All the charges',
   dataDD: OneChargeDataDD,
   display: AuthoriseTableCD,
-  displayParams: { order: [ 'chargeType', 'status', 'type', 'sortCode', 'accountNo', 'narrative', 'hold' ], copySelectedItemTo: '~/selectedCharge' },
+  displayParams: { order: [ 'chargeType', 'status', 'type', 'sortCode', 'accountNo', 'amount', 'narrative', 'hold' ], copySelectedItemTo: '~/selectedCharge' },
   paged: false
 }
 
@@ -85,7 +81,57 @@ export const AuthoriseChargesSummaryDD: ExampleDataD = {
   name: 'AuthoriseChargesSummary',
   description: 'All the data we see on the main authoriseCharges page',
   structure: {
-    date: { dataDD: DateDD, displayParams: { buttons: [ 'selectDate' ] } },
+    date: { dataDD: StringDD, displayParams: { buttons: [ 'selectDate' ] } },
     fromApi: { dataDD: AuthoriseChargesSummaryDataDD },
+  }
+}
+export const SuspenseAccountLinesDD: ExampleDataD = {
+  name: 'SuspenseAccountLines',
+  description: 'A single line in the suspense accountdetails',
+  structure: {
+    suspenseAccount: { dataDD: StringDD, sample: [ 'Account charges - unpaid DD' ] },
+    value: { dataDD: MoneyDD, sample: [ 25, 25 ] },
+    status: { dataDD: StringDD, sample: [ 'PENDING', 'AUTHORISED' ] }
+  }
+}
+
+export const SuspenseAccountDetailsDD: ExampleRepeatingD = {
+  name: 'SuspenseAccountDetails',
+  description: 'the table of the account details',
+  dataDD: SuspenseAccountLinesDD,
+  display: TableCD,
+  displayParams: { order: [ 'suspenseAccount', 'value', 'status' ] },
+  paged: false
+}
+
+
+export const customerTransactionLineDD: ExampleDataD = {
+  name: 'CustomerTransactionLine',
+  description: 'One line for the customer transaction',
+  structure: {
+    surname: { dataDD: StringDD },
+    vir: { dataDD: StringDD },
+    accountNo: { dataDD: StringDD },
+    amount: { dataDD: MoneyDD },
+    charge: { dataDD: StringDD },
+    time: { dataDD: StringDD },
+  }
+}
+
+export const CustomerTransactionsDD: ExampleRepeatingD = {
+  name: 'CustomerTransactions',
+  description: 'the table of the customer transations',
+  dataDD: customerTransactionLineDD,
+  display: TableCD,
+  displayParams: { order: [ 'surname', 'vir', 'accountNo', 'amount', 'charge', 'time' ] },
+  paged: false
+}
+
+export const chargesSummaryDetailDD: ExampleDataD = {
+  name: 'ChargesSummaryDetail',
+  description: 'A summary of charges',
+  structure: {
+    suspenseAccount: { dataDD: SuspenseAccountDetailsDD },
+    customerTransactions: { dataDD: CustomerTransactionsDD },
   }
 }

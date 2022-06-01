@@ -94,6 +94,14 @@ export interface StringPrimitiveDD extends CommonPrimitiveDD<string> {
   javaType: 'String'
 
 }
+
+export interface DatePrimitiveDD extends CommonPrimitiveDD<string> {
+  reactType: 'string';
+  graphQlType: 'String';
+  javaType: 'String';
+  datePattern: string;
+
+}
 export interface BooleanPrimitiveDD extends CommonPrimitiveDD<boolean> {
   reactType: 'boolean';
   emptyValue: false
@@ -341,7 +349,8 @@ export const YesNoDD: PrimitiveDD = {
 }
 
 
-export const DateDD: StringPrimitiveDD = {
+export const DateDD: DatePrimitiveDD = {
+  datePattern: "yyyy/MM/dd",
   ...stringPrimDD,
   name: 'Date',
   emptyValue: '2022-1-1',

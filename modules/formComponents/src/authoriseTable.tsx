@@ -20,6 +20,7 @@ export interface AuthoriseTableProps<S, D extends AuthoriseTableData, C> extends
   mode: PageMode;
   // copySelectedIndexTo: LensState<S, D, C>;
   copySelectedItemTo: LensState<S, D, C>;
+  copySelectedIndexTo?: LensState<S, number, C>;
 }
 
 const noData = <td>No data</td>;
@@ -33,7 +34,7 @@ function LabelAndFixedNumber ( { id, label, number }: LabelAndFixedNumberProps )
   return <div className='labelValueButton'><label>{label}</label><input readOnly type='number' value={number}/></div>
 }
 export function AuthoriseTable<S, D extends AuthoriseTableData, C extends FocusOnContext<S>> ( props: AuthoriseTableProps<S, D, C> ) {
-  const { state, order, id, mode, copySelectedItemTo } = props
+  const { state, order, id, mode, copySelectedItemTo, copySelectedIndexTo } = props
   function haltBox ( row: D, i: number ) {
     const onClick = () => state.chainLens ( Lenses.nth ( i ) ).setJson ( { ...row, hold: !row.hold }, reasonFor ( `AuthoriseTable[${i}]`, 'onClick', id ) );
     return <input type='checkbox' onClick={onClick} checked={row.hold}/>
@@ -46,13 +47,16 @@ export function AuthoriseTable<S, D extends AuthoriseTableData, C extends FocusO
     return row[ o ];
   }
   const onClick = ( row: number ) => ( e: any ) => {
-    if ( copySelectedItemTo ) {
+    if ( copySelectedIndexTo || copySelectedItemTo ) {
+      const indexTx: Transform<S, number>[] = copySelectedIndexTo ? [ [ copySelectedIndexTo.optional, () => row ] ] : []
       const itemTx: Transform<S, D>[] = copySelectedItemTo ? [ [ copySelectedItemTo.optional, () => json[ row ] ] ] : []
-      state.massTransform ( reasonFor ( 'AuthoriseTable', 'onClick', id, `selected row ${row}` ) ) ( ...itemTx )
+      state.massTransform ( reasonFor ( 'Table', 'onClick', id, `selected row ${row}` ) ) ( ...[ ...indexTx, ...itemTx ] )
     }
   }
-  const putInTd = ( o: keyof D, i: number ) => ( a: any ) => o.toString () === 'hold' ? <td> {a}</td>: (<td key={o.toString ()} onClick={onClick ( i )}>{a}</td>) ;
-  const rows = json && json.length > 1 ? json.map ( ( row, i ) => <tr key={i}>{order.map ( o => putInTd ( o, i ) ( data ( row, o, i ) ) )}</tr> ) : <tr>{noData}</tr>
+  const putInTd = ( o: keyof D, i: number ) => ( a: any ) => o.toString () === 'hold' ? <td> {a}</td> : (<td key={o.toString ()} onClick={onClick ( i )}>{a}</td>);
+  const selected = copySelectedIndexTo?.optJson ()
+  function selectedClass ( i: number ) {return i === selected ? 'bg-primary' : undefined }
+  const rows = json && json.length > 1 ? json.map ( ( row, i ) => <tr key={i} className={selectedClass ( i )}>{order.map ( o => putInTd ( o, i ) ( data ( row, o, i ) ) )}</tr> ) : <tr>{noData}</tr>
   function stateFor ( k: keyof D ): LensState<S, any, C> {return copySelectedItemTo.focusOn ( k );}
   return <Layout details='[[1],[1,1],[1,1,1]]'>
     <table>
