@@ -1,0 +1,126 @@
+:root .theme-light{
+    --yellow: rgb(238, 241, 16);
+    --alice-blue: aliceblue;
+    --powder-blue: powderblue;
+    --aqua-dark: #1D7B8A;
+    --black: #000000;
+    --blue: #1a73e8;
+    --background-grey: #F9F9F9;
+    --dark-grey: #333333;
+    --dark-grey-2: #666666;
+    --focus: #389CD6;
+    --focus-green: #429448;
+    --green: #429448;
+    --grey: #C9C6C6;
+    --light-blue: #F3FAFE;
+    --magenta: #AD1982;
+    --mid-grey: #979797;
+    --primary-shadow: #086978;
+    --purple: #42145f;
+    --red: #DD0303;
+    --white: #FFFFFF;
+
+    --font-family-main: "Century Gothic", Futura, sans-serif;    
+    --font-size-main: 16px;
+    --text-colour-main: var(--dark-grey);
+    --main-background: var(--background-grey);
+
+    --color-text: var(--black);
+
+    --link-color: var(--magenta);
+    --link-text-decoration: underline;
+
+    --h1-custom-font-size: 40px;
+    --h1-custom-line-height: 56px;
+    --h1-custom-brand-colour: var(--purple);
+
+    --input-height: 44px;
+    --input-border: 1px solid var(--grey);
+    --input-padding: 10px 16px;
+    --input-font-family: var(--font-family-main);
+    --input-font-size: 16px;
+    --input-font-colour: #333333;
+    --input-readonly-color: #706f6f;
+    --input-border-focus: 2px solid var(--yellow);
+    --input-bevel-border-focus: 4px solid var(--focus);
+    --input-focus-padding: 8px 16px;
+
+    --input-border-error: 2px solid var(--red);
+    --input-bevel-border-error: 4px solid var(--red);
+    --input-error-padding: 8px 16px;
+    --input-bevel: 4px;
+
+    --button-primary-min-width: 96px;
+    --button-primary-background-color: var(--aqua-dark);
+    --button-primary-foreground-color: var(--white);
+    --button-primary-inside-padding: 10px 32px;
+    --button-primary-border: none;
+    --button-primary-margin: 0 0 0 20px;
+    --button-primary-bevel-size: 4px;
+    --button-primary-bevel-colour: var(--primary-shadow);
+
+    --button-secondary-min-width: 167px;
+    --button-secondary-background-color: var(--white);
+    --button-secondary-foreground-color: var(--magenta);
+    --button-secondary-inside-padding: 10px 32px;
+    --button-secondary-border: var(--magenta);    
+    --button-font-size: 18px;
+    --button-line-height: 24px;
+    --button-secondary-bevel-size: 4px;
+    --button-secondary-bevel-colour: var(--magenta);
+
+    --button-default-background-color: var(--white);
+    --button-default-foreground-color: var(--purple);
+    --button-default-min-width: 167px;
+    --button-default-inside-padding: 8px 26px;
+    --button-default-border: var(--purple); 
+    --button-default-bevel-size: 4px;
+    --button-default-bevel-colour: var(--purple);
+    --button-default-margin: 0 0 0 20px;
+
+    --form-label-colour: var(--dark-grey-2);
+    --radio-button-border: 1px solid var(--grey);
+    --radio-button-padding: 3px 0 7px 42px;
+    --radio-button-circle-color: var(--magenta);
+    --radio-button-circle-size: 25px;
+    --radio-button-selected-circle-size: 15px;
+    --radio-button-focused-border: 2px solid var(--magenta);
+    --radio-button-labelled-padding: 6px;
+    --radio-button-labelled-padding: 6px;
+    --radio-button-font-size: 14px;
+    --radio-button-margin-right: 40px;
+    --radio-button-labelled-focused-padding: 4px;
+    --radio-button-labelled-focused-border: 2px solid var(--focus);
+
+    --sub-panel-border: var(--mid-grey);
+    
+    --icon-expand-height: 16px;
+    --icon-expand-width: 16px;
+    --icon-expand-margin: 3px;
+
+    --table-border-width: 2px;
+    --table-border-style: solid;
+    --table-border-color: var(--grey);
+    --table-border: var(--table-border-width) var(--table-border-style) var(--table-border-color);
+    --table-row-background: var(--light-blue);
+    --table-row-odd-background: var(--alice-blue);
+    --table-row-even-background: var(--powder-blue);
+    --table-font: 14px;
+    --table-row-focus: 2px solid var(--focus);
+    --table-row-selected-background: var(--purple);
+    --lookup-border: 1px solid var(--grey);
+    --lookup-input-font-size: 1rem;
+
+    --dropdown-container-padding: 0;
+    --dropdown-container-margin: 2px 0 0 0;
+    --dropdown-container-line-height: 1.5;
+    --dropdown-container-background: var(--white);
+    --dropdown-container-border-radius: 0;
+    --dropdown-container-box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.1);
+
+    --dropdown-list-item-color: var(--dark-grey);
+    --dropdown-list-item-font-size: 1rem;    
+
+    --scrollbar-color: var(--grey);
+    --scrollbar-width: 8px;
+}

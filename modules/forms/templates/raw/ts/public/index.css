@@ -259,6 +259,8 @@ select {
     left: 35%;
     padding: 20px;
     background-color: white;
+    border: 3px solid black;
+    border-radius: 0.5rem;
 }
 
 /* .close-button:hover {
@@ -1453,7 +1455,6 @@ pre {
 .react-datepicker-wrapper input[type=text]:focus {
   font-size:var(--input-font-size);
   border: var( --input-border-focus);
-  border-bottom: var( --input-bevel-border-focus);
   outline: none;
   border-radius: 0 0 var(--input-bevel) var(--input-bevel);
   box-sizing: border-box;

@@ -17,48 +17,13 @@
   
   .radio-container input {
     position: absolute;
-    opacity: 0;
     cursor: pointer;
+    top: -4px;
+    left: 0;
+    border: 0px;
+    height: 2em;
   }
 
-  .radio-container .checkmark {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: var(--radio-button-circle-size);
-    width: var(--radio-button-circle-size);
-    border-radius: 50%;
-    border: var(--radio-button-border);
-  }
-  
-  .radio-container input:checked ~ .checkmark {
-    background-color: var(--white);
-    border: var(--radio-button-focused-border);
-  }
-  
-  .radio-container input:disabled ~ .checkmark {
-    opacity:.6;
-  }
-  
-  .radio-container .checkmark:after {
-    content: "";
-    position: absolute;
-    display: none;
-  }
-  
-  .radio-container input:checked ~ .checkmark:after {
-    display: block;
-  }
-  
-  .radio-container .checkmark:after {
-    top: 5px;
-    left: 5px;
-    width: var(--radio-button-selected-circle-size);
-    height: var(--radio-button-selected-circle-size);
-    border-radius: 50%;
-    background: var(--radio-button-circle-color);
-  }
-  
   .radiobutton-focused, .radio-container:focus {
     border: var(--radio-button-labelled-focused-border);
   }

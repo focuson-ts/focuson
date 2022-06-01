@@ -37,7 +37,6 @@
   .input[type="date"]:focus {
     font-size:var(--input-font-size);
     border: var( --input-border-focus);
-    border-bottom: var( --input-bevel-border-focus);
     outline: none;
     border-radius: 0 0 var(--input-bevel) var(--input-bevel);
     box-sizing: border-box;
@@ -53,7 +52,6 @@
   .input[type="text"]:focus, .input[type="number"]:focus {
     font-size:var(--input-font-size);
     border: var( --input-border-focus);
-    border-bottom: var( --input-bevel-border-focus);
     outline: none;
     border-radius: 0 0 var(--input-bevel) var(--input-bevel);
     padding: var(--input-focus-padding);
