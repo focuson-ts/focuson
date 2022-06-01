@@ -37,7 +37,7 @@ export function LabelAndBooleanInput<S, Context extends FocusOnContext<S>> ( pro
   const { state, mode, readonly } = props
   const label = <Label state={props.state} htmlFor={props.name} label={props.label}/>;
   const input = <BooleanInput {...props}/>
-  return <div className='labelValueButton checkbox-container'> {label}{input}{makeButtons ( props.allButtons, props.buttons )}</div>
+  return <div className='labelCheckboxButton checkbox-container'> {label}{input}{makeButtons ( props.allButtons, props.buttons )}</div>
 }
 
 

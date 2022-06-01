@@ -60,7 +60,7 @@
   .input-label {
     font-family: var(--input-font-family);
     color: var(--dark-grey-2);
-    margin-bottom: 8px;
+    /* margin-bottom: 8px; */
     display: flex;
   }
   

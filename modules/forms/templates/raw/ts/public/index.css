@@ -185,6 +185,12 @@ table {
     margin: 0 0 20px 0;
 }
 
+.labelCheckboxButton{
+  display: flex;
+  align-items: center;
+  margin: 0 0 20px 0;
+}
+
 label {
     color: var(--form-label-colour);
     font-size: var(--font-size-main);
