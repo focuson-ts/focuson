@@ -44,18 +44,23 @@
   overflow-y: var(--gridScroll);
 }
 
-.grid tbody tr:nth-child(odd) {
+/* .grid tbody tr:nth-child(odd) {
   background: var(--table-row-odd-background);
 }
 
 .grid tbody tr:nth-child(even) {
   background: var(--table-row-even-background);
-}
+} */
 
 .grid tbody tr.grid-selected, .grid tbody tr:focus {
-  background: var(--table-row-selected-background);
+  background: var(--table-row-selected-background) !important;
   border: none;
   color: white;
+}
+
+.grid tbody tr:hover {
+  background: var(--table-row-hovered-background);
+  border: none;
 }
 
 .grid tbody tr:first-child td:last-child {

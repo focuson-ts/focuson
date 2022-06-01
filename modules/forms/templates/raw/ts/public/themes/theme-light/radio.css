@@ -15,7 +15,7 @@
     color: var(--dark-grey);
   }
   
-  .radio-container input {
+  .radio-container input[type='radio'] {
     position: absolute;
     cursor: pointer;
     top: -4px;
@@ -27,4 +27,3 @@
   .radiobutton-focused, .radio-container:focus {
     border: var(--radio-button-labelled-focused-border);
   }
-  

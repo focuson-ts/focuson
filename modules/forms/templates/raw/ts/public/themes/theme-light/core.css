@@ -1,7 +1,9 @@
 :root .theme-light{
     --yellow: rgb(238, 241, 16);
-    --alice-blue: aliceblue;
-    --powder-blue: powderblue;
+    --lightgreen: #d0e2d1;
+    --lightmagenta: #e0cedb;
+    --alice-blue: #f0f8ff;
+    --powder-blue: #eaf6f7;
     --aqua-dark: #1D7B8A;
     --black: #000000;
     --blue: #1a73e8;
@@ -103,11 +105,12 @@
     --table-border-color: var(--grey);
     --table-border: var(--table-border-width) var(--table-border-style) var(--table-border-color);
     --table-row-background: var(--light-blue);
-    --table-row-odd-background: var(--alice-blue);
-    --table-row-even-background: var(--powder-blue);
+    --table-row-odd-background: var(--magenta);
+    --table-row-even-background: var(--magenta);
     --table-font: 14px;
     --table-row-focus: 2px solid var(--focus);
-    --table-row-selected-background: var(--purple);
+    --table-row-selected-background: var(--magenta);
+    --table-row-hovered-background: var(--lightmagenta);
     --lookup-border: 1px solid var(--grey);
     --lookup-input-font-size: 1rem;
 

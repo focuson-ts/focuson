@@ -32,7 +32,7 @@ export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, 
     }
   }
   const selected = copySelectedIndexTo?.optJson ()
-  function selectedClass ( i: number ) {return i === selected ? 'bg-primary' : undefined }
+  function selectedClass ( i: number ) {return i === selected ? 'grid-selected' : undefined }
 
   const prefixFilterString = prefixFilter?.optJsonOr ( '' )
   const oneRow = ( row: T, i: number ) =>

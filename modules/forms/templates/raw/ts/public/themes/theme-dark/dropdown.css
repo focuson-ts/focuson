@@ -79,7 +79,6 @@
 
   .select {
     min-height: 44px;
-    width: 100%;
     border: var(--lookup-border);
     color: var(--dropdown-list-item-color);
     font-family: var(--dropdown-container-font-family);
@@ -90,8 +89,8 @@
     background-repeat: no-repeat, repeat;
     background-position: right 16px top 50%, 0 0;
     background-size: .95em auto, 100%;
-    max-width: 280px;
     background-color:var(--dropdown-container-background);
+    -moz-appearance: none;
   }
   
   select.is-error {

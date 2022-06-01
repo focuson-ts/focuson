@@ -188,15 +188,15 @@ table {
 label {
     color: var(--form-label-colour);
     font-size: var(--font-size-main);
-    /* width: 35%; */
+    width: 50%;
 }
 
-/* input[type=text],input[type=number],input[type=date] {
-    width: 40%;
-} */
+input[type=text], input[type=number], input[type=date] {
+    width: 50%;
+}
 
 select {
-    width: 41%;
+    width: 50%;
 }
 
 /* input[type=radio], input[type=checkbox] {
@@ -602,19 +602,6 @@ pre {
 {
     background-color: #000000;
     color: #ffffff;
-}
-
-.bg-primary {
-    /*background-color: #0d6efd;*/
-    --bs-table-bg: #cfe2ff;
-    --bs-table-striped-bg: #c5d7f2;
-    --bs-table-striped-color: #000;
-    --bs-table-active-bg: #bacbe6;
-    --bs-table-active-color: #000;
-    --bs-table-hover-bg: #bfd1ec;
-    --bs-table-hover-color: #000;
-    color: #000;
-    border-color: #bacbe6;
 }
 
 .d-flex-inline {
@@ -1491,13 +1478,13 @@ div.card {
   min-height:97.5%;
 }
 
-select.select {
+/* select.select {
   margin: 0 20px 0 0;
-}
+} */
 
-input.input {
+/* input.input {
   margin: 0 20px 0 0;
-}
+} */
 
 div.radio-container {
   margin-bottom: 20px;
