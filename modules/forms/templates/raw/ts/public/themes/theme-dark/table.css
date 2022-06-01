@@ -44,8 +44,12 @@
   overflow-y: var(--gridScroll);
 }
 
-.grid tbody tr:nth-child(2) {
-  background: var(--table-row-background);
+.grid tbody tr:nth-child(odd) {
+  background: var(--table-row-odd-background);
+}
+
+.grid tbody tr:nth-child(even) {
+  background: var(--table-row-even-background);
 }
 
 .grid tbody tr.grid-selected, .grid tbody tr:focus {
@@ -185,136 +189,6 @@
   transform: translateY(calc(var(--icon-expand-height) * -0.5)) scaleY(-1);
 }
 
-.grid th.longText {
-  padding-left:8px;
-  max-width: 20%;
-  white-space: pre;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: left;
-}
-.grid td.longText {
-  max-width: 20%;
-  white-space: pre;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: left;
-}
-
-.grid th.currency {
-  text-align: right;
-  width: 130px;
-  overflow: hidden;
-  max-width: 130px;
-  padding-right: 8px;
-}
-.grid td.currency {
-  text-align: right;
-  width: 130px;
-  max-width: 130px;
-  padding-right: 8px;
-}
-
-.grid th.balance {
-  text-align: right;
-  width: 130px;
-  overflow: hidden;
-  max-width: 130px;
-  padding-right: 11px;
-}
-.grid td.balance {
-  text-align: right;
-  width: 130px;
-  max-width: 130px;
-  padding-right: 8px;
-}
-
-.grid td.postcode, th.postcode {
-  text-align: left;
-  max-width: 20%;
-  white-space: pre;
-  overflow: hidden;
-}
-
 .collapsed {
   visibility: collapse;
-}
-
-.grid td.description, th.description  {
-  text-align: left;
-  min-width: 30%;
-}
-
-.grid td.description div span {
-  text-align: left;
-  font-size: 13px;
-}
-
-.grid td.description div span:nth-child(2) {
-  text-align: left;
-  font-weight: bold;
-}
-
-.grid td.description div span:nth-child(2) {
-  text-align: left;
-  font-weight: bold;
-}
-
-.grid td.text {
-  text-align: left;
-  width: 100%;
-}
-.grid th.text {
-  text-align: left;
-  width: 100%;
-  padding-left:8px;
-}
-
-.grid td.amount {
-  text-align: left;
-  width: 130px;
-}
-.grid th.amount {
-  text-align: left;
-  width: 130px;
-}
-.grid th.date {
-  text-align: left;
-  width: 80px;
-  max-width: 80px;
-  padding-left:8px;
-}
-
-.grid th.percentage td.percentage {
-  text-align: left;
-  width: 80px;
-  max-width: 80px;
-  padding-left:8px;
-}
-
-.grid th.transactionfield {
-  width: 80px;
-  max-width: 80px;
-  padding-left:12px; 
-  text-align: left;
-}
-.grid td.transactionfield {
-  width: 80px;
-  max-width: 80px;
-  text-align: left;
-}
-.grid td.date {
-  width: 80px;
-  max-width: 80px;
-  padding-left:8px;
-  text-align: left;
-}
-.grid td.shorttext, th.shorttext {
-  width: 50px;
-  max-width: 50px;
-}
-
-.grid td.customText, th.customText  {
-  width: 150px;
-  max-width: 150px;
 }

@@ -62,7 +62,6 @@
   .is-focused {
     font-size:var(--input-font-size);
     border: var( --input-border-focus);
-    border-bottom: var( --input-bevel-border-focus);
     border-radius: 0 0 var(--input-bevel) var(--input-bevel);
     padding: var(--input-focus-padding);
     box-sizing: border-box;
