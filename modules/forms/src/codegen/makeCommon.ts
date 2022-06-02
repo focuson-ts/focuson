@@ -102,7 +102,7 @@ export function validateCommonParams ( cs: CommonParamsDetails[] ): CommonParamE
   let nameDuplicates = names.flatMap ( name => {
     const withSameName = cs.filter ( c => c.name === name );
     const uniqueOverImportantDetails = unique ( withSameName, summary )
-    return uniqueOverImportantDetails.length > 1 ? { name, details: withSameName.map ( c => `${c.page.name}${c.restName ? `.rest[${c.restName}].params[${name}}]` : `.params[${name}]`} => ${summary ( c )}` ) } : [];
+    return uniqueOverImportantDetails.length > 1 ? { name, details: withSameName.map ( c => `${summary ( c )} from ${c.page.name}${c.restName ? `.rest[${c.restName}].params[${name}}]` : `.params[${name}]`}` ).sort() } : [];
   } );
   const nameMismatches: CommonParamError[] = cs.filter ( c => c.name != c.param.commonLens )
     .map ( c => {

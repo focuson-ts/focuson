@@ -5,8 +5,9 @@ import { IntParam, RestD, RestParams, StringParam } from "../../common/restD";
 import { accountT, onlySchema } from "../database/tableNames";
 import { AllGuards } from "../../buttons/guardButton";
 import { allCommonIds, fromCommonIds } from "../commonIds";
+import { GuardedStoredProcedureMutation, MutationParamForStoredProc, OutputForSqlMutationParam } from "../../common/resolverD";
 
-export const PrintRecordHistoryParams: RestParams = fromCommonIds ( 'accountId' )
+export const PrintRecordHistoryParams: RestParams = fromCommonIds ( 'accountId', 'vbAcountSeq', 'employeeId' )//vbAcountSeq,rbsMtAccount,newBankSeq,employeeId,
 
 export const PrintRecordHistoryRD: ExampleRestD = {
   namePrefix: 'history',
@@ -16,17 +17,83 @@ export const PrintRecordHistoryRD: ExampleRestD = {
   actions: [ 'get' ],
 }
 
+function ind ( name: string ): MutationParamForStoredProc {return { type: 'input', name, javaType: 'String', setParam: `${name}.equals("Y") ? 1 : 0` }}
+function bankStuff ( guard: string[], packageName: string ): GuardedStoredProcedureMutation {
+  return ({
+    guard, type: 'storedProc', package: packageName, name: 'produce_list_of_payments', params: [
+      'vbAcountSeq',
+      'rbsMtAccount',
+      'newBankSeq',
+      'employeeId',
+      ind ( 'so_ind' ),
+      ind ( 'dd_ind' ),
+      'sortcode',
+      'accountNo',
+      ind ( 'obso_ind' ),
+      ind ( 'obbp_ind' ),
+      { type: 'output', name: 'outputMessage', javaType: 'Object', sqlType: 'VARCHAR' }
+    ], schema: onlySchema
+  })
+}
+function nonBankStuff ( guard: string, packageName: string ): GuardedStoredProcedureMutation {
+  return ({
+    guard: [ guard ], type: 'storedProc', package: packageName, name: 'produce_list_of_payments', params: [
+      'vbAcountSeq',
+      'rbsMtAccount',
+      { type: 'null' },
+      'employeeId',
+      'so_ind',
+      'dd_ind',
+      { type: 'null' },
+      { type: 'null' },
+      'accountNo',
+      'obso_ind',
+      'obbp_ind',
+      { type: 'output', name: 'outputMessage', javaType: 'String', sqlType: 'VARCHAR' }
+    ], schema: onlySchema
+  })
+}
+function outputParams ( ...names: string[] ): OutputForSqlMutationParam[] {
+  return names.map ( name => ({ type: 'output', javaType: 'String', name, rsName: name }) )
+}
 export const PrintRecordRD: ExampleRestD = {
   namePrefix: 'single',
   params: {
     ...PrintRecordHistoryParams,
-    id: { ...IntParam, lens: '~/display[~/selected]id', testValue: 888, main: true }
+    paymentId: { ...IntParam, lens: '~/display[~/selected]id', testValue: 888, main: true }
   },
   dataDD: PrintRecordHistoryDD,
   url: '/api/printrecord?{query}',
   actions: [ 'create', { state: 'print' } ],
-  states: { print: { url: '/api/print?{query}', params: [ 'id' ] } },
-  mutations: [ { restAction: { state: 'print' }, mutateBy: { type: 'storedProc', name: 'print', schema: onlySchema, params: [ 'id' ] } } ]
+  states: {
+    print: {
+      url: '/api/print?{query}',
+      params: [ 'vbAcountSeq', 'rbsMtAccount', 'newBankSeq', 'employeeId', 'paymentId', 'employeeId', 'accountId' ]
+    }
+  },
+  mutations: [ {
+    restAction: { state: 'print' },
+    mutateBy: [
+      {
+        type: "sql", name: 'getParamsFromStoredStuff', sql: 'select so_ind,dd_ind,bp_ind,obso_ind,obbp_ind, sortcode, fulfilmentType,accountNo,rbsMtAccount,newBankSeq from the_table_that_holds_the_data where account_id=? and paymentId = ?',
+        params: [ 'accountId', 'paymentId',
+          ...outputParams ( 'so_ind', 'dd_ind', 'bp_ind', 'obso_ind', 'obbp_ind', 'sortcode', 'accountNo', 'requestByRole', 'rbsMtAccount', 'fulfilmentType', 'newBankSeq' )
+        ],
+        schema: onlySchema
+      },
+      {
+        type: 'case', name: 'print',
+        params: [ 'fulfilmentType', 'requestByRole', 'vbAcountSeq', 'rbsMtAccount', 'employeeId', ind ( 'so_ind' ), ind ( 'dd_ind' ), ind ( 'bp_ind' ), ind ( 'obso_ind' ), ind ( 'obbp_ind' ), 'sortcode', 'accountNo', 'accountId', 'paymentId', 'newBankSeq' ],
+        select: [
+          bankStuff ( [ 'fulfilmentType.equals("BK")', 'requestByRole.equals("bank")' ], 'a10001' ),
+          bankStuff ( [ 'fulfilmentType.equals("OA")', 'requestByRole.equals("bank")' ], 'b10001' ),
+          bankStuff ( [ 'fulfilmentType.equals("OF")', 'requestByRole.equals("bank")' ], 'c10001' ),
+          nonBankStuff ( 'fulfilmentType.equals("BK")', 'a10001' ),
+          nonBankStuff ( 'fulfilmentType.equals("OA")', 'b10001' ),
+          nonBankStuff ( 'fulfilmentType.equals("OF")', 'c10001' ),
+        ]
+      } ]
+  } ]
 }
 
 

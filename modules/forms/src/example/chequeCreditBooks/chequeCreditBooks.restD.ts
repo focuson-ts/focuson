@@ -21,13 +21,13 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
       type: 'storedProc', package: 'somePackage', name: 'getMeMyData1', schema: onlySchema, params: [
         { type: 'output', name: 'val1', javaType: 'Integer', sqlType: 'INTEGER' },
         { type: 'output', name: 'val2', javaType: 'String', sqlType: 'CHAR' },
-        { type: 'autowired', name: 'systemTime', class: '{thePackage}.utils.ITimeService', method: 'now', import: true } ]
+        { type: 'autowired', name: 'systemTime', class: '{thePackage}.utils.ITimeService', method: 'now()', import: true } ]
     },
       {
         type: 'storedProc', name: 'getMeMyData2', schema: onlySchema, params: [
           { type: 'output', name: 'val3', javaType: 'Integer', sqlType: 'INTEGER' },
           { type: 'output', name: 'val4', javaType: 'String', sqlType: 'CHAR' },
-          { type: 'autowired', name: 'systemTime', class: '{thePackage}.utils.ITimeService', method: 'now', import: true } ]
+          { type: 'autowired', name: 'systemTime', class: '{thePackage}.utils.ITimeService', method: 'notused', setParam: 'systemTime.now()', import: true } ]
       } ]
   },
   mutations: [
@@ -37,12 +37,14 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
           type: 'storedProc', name: 'sequencename', params: [
             { type: 'output', name: 'checkbookId', javaType: 'Integer', sqlType: 'INTEGER' },
             { type: 'output', name: 'checkbookIdPart2', javaType: 'String', sqlType: 'CHAR' },
-            { type: 'autowired', name: 'systemTime', class: '{thePackage}.utils.ITimeService', method: 'now', import: true }
+            { type: 'autowired', name: 'systemTime', class: '{thePackage}.utils.ITimeService', method: 'now()', import: true }
           ], schema: onlySchema
         },
         // { mutation: 'IDFromSequence', name: 'sequencename', params: { type: 'output', name: 'checkbookId' }, schema: onlySchema },
-        { type: 'storedProc', name: 'auditCreateCheckBook',
-          params: [ 'brandRef', 'accountId', 'checkbookId', 'checkbookIdPart2' ], schema: onlySchema },
+        {
+          type: 'storedProc', name: 'auditCreateCheckBook',
+          params: [ 'brandRef', 'accountId', 'checkbookId', 'checkbookIdPart2' ], schema: onlySchema
+        },
         {
           type: 'manual', name: 'manualLog',
           import: 'import java.util.Date;',
@@ -54,7 +56,7 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
         },
       ]
     },
-    { restAction: 'get', mutateBy: { type: 'storedProc',package: 'somePackage', name: 'auditGetCheckBook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
+    { restAction: 'get', mutateBy: { type: 'storedProc', package: 'somePackage', name: 'auditGetCheckBook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
     { restAction: { state: 'cancel' }, mutateBy: { type: 'storedProc', name: 'auditCancelCheckbook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
   ]
 

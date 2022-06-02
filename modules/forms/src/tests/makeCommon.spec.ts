@@ -81,7 +81,7 @@ describe ( "makeCommon", () => {
       "export const pathToLens: ( s: FState ) => ( path: string ) => Optional<FState, any> =",
       "    fromPathFromRaw ( pageSelectionlens<FState> (), pages )",
       "export const emptyState: FState = {",
-      "  CommonIds: {'accountId':12342312,'applRef':888,'brandRef':10,'clientRef':666,'createPlanId':777,'dbName':'mock','employeeType':'basic','role':'user'},",
+      "  CommonIds: {'accountId':44444444,'applRef':22,'brandRef':10,'clientRef':333,'createPlanId':777,'dbName':'mock','employeeType':'basic','role':'user'},",
       "  tags: {},",
       "  messages: [],",
       "  pageSelection: [{ pageName: 'EAccountsSummary', firstTime: true, pageMode: 'view' }],",
@@ -89,7 +89,7 @@ describe ( "makeCommon", () => {
       "  restCommands: [],",
       "  debug: {'fetcherDebug':false,'guardDebug':false,'restDebug':false,'selectedPageDebug':false,'loadTreeDebug':false,'showTracing':false,'recordTrace':true,'tagFetcherDebug':false,'accordions':[]}",
       "  }"
-    ] )
+    ])
 
   } )
 } )
@@ -97,15 +97,17 @@ describe ( "makeCommon", () => {
 describe ( "findAllCommonParamsWithSamples", () => {
   it ( "should do what it says on the tin", () => {
     expect ( findAllCommonParamsWithSamples ( generatedPages ) ).toEqual ( {
-      "accountId": 12342312,
-      "applRef": 888,
+      "accountId": 44444444,
+      "applRef": 22,
       "brandRef": 10,
-      "clientRef": 666,
+      "clientRef": 333,
       "createPlanId": 777,
       "customerId": 988834,
       "dbName": "mock",
+      "employeeId": 666666,
       "employeeType": "basic",
-      "role": "user"
+      "role": "user",
+      "vbAcountSeq": 55555
     } )
   } )
 } )

@@ -92,7 +92,7 @@ describe ( 'makeFetches with a lens pointing to a parameter', () => {
       "  return pageAndTagFetcher<FState, domains.ListOfPaymentsPagePageDomain, domains.PrintRecordHistoryDomain, SimpleMessage>(",
       "    common.commonFetch<FState,  domains.PrintRecordHistoryDomain>(),",
       "     'ListOfPaymentsPage',",
-      "     '~/display', fdLens, commonIds, localIds,['accountId'],[],",
+      "     '~/display', fdLens, commonIds, localIds,['accountId','employeeId','vbAcountSeq'],[],",
       "      //From ListOfPaymentsPage.rest[paymentHistory].targetFromPath ~/display Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?",
       "      Lenses.identity<domains.ListOfPaymentsPagePageDomain>().focusQuery('display'),",
       "     '/api/printrecord/history?{query}')",

@@ -1,7 +1,7 @@
 import { ExampleDataD, ExampleMainPage, ExampleModalPage, ExampleRepeatingD } from "../common";
 import { NatNumDd } from "../../common/dataD";
 import { TableCD } from "../../common/componentsD";
-import { AuthoriseChargesSummaryDD, OneBrandDD, OneChargeDataDD, SelectOneBrandDD, summaryOfChargesDateDD, summaryOfChargesDateTableDD, summaryOfChargesSearchDD } from "./authoriseCharges.dataD";
+import { AuthoriseChargesSummaryDD, chargesSummaryDetailDD, OneBrandDD, OneChargeDataDD, SelectOneBrandDD, summaryOfChargesDateDD, summaryOfChargesDateTableDD, summaryOfChargesSearchDD } from "./authoriseCharges.dataD";
 import { AuthorisedChargesRD, SelectOneBrandPageRD, SummaryOfChargeDatesRD } from "./authoriseCharges.restD";
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 
@@ -9,7 +9,7 @@ export const SummaryOfChargesPage: ExampleModalPage = {
   name: 'SummaryOfCharges',
   pageType: 'ModalPopup',
   modes: [ 'view' ],
-  display: { dataDD: summaryofChargesDD, target: '~/summaryOfCharges' },
+  display: { dataDD: chargesSummaryDetailDD, target: '~/summaryOfCharges' },
   buttons: {
     close: { control: "ModalCancelButton" },
   }
@@ -54,7 +54,7 @@ export const AuthoriseChargesPD: ExampleMainPage = {
     selectedItem: { dataDD: OneBrandDD },
     authorisedCharges: { dataDD: AuthoriseChargesSummaryDD },
     selectedCharge: {dataDD: OneChargeDataDD},
-    summaryOfCharges: { dataDD: summaryofChargesDD },
+    summaryOfCharges: { dataDD: chargesSummaryDetailDD },
 
     summaryOfChargesDates: { dataDD: summaryOfChargesSearchDD },
     selectedDateIndex: { dataDD: NatNumDd },

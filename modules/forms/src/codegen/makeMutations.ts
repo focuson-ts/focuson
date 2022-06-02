@@ -1,25 +1,25 @@
 import { MainPageD } from "../common/pageD";
 import { NameAnd, safeObject, toArray, unique } from "@focuson/utils";
 import { JavaWiringParams } from "./config";
-import { mutationClassName, mutationMethodName, mutationVariableName } from "./names";
+import { mutationClassName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
 import { indentList } from "./codegen";
-import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, importForTubles, isInputParam, isOutputParam, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, OutputMutationParam, paramName, SelectMutation, SqlMutation, StoredProcedureMutation } from "../common/resolverD";
+import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, importForTubles, isInputParam, isOutputParam, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, paramName, SelectMutation, setParam, SqlMutation, StoredProcedureMutation } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
-import { callMutationsCode, outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
-import { makeCreateResult } from "./makeResolvers";
+import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
 
 
 export function setObjectFor ( m: MutationParam, i: number ): string {
   const index = i + 1
+  if ( isStoredProcOutputParam ( m ) ) return `s.registerOutParameter(${index},java.sql.Types.${m.sqlType});`
   if ( typeof m === 'string' ) return `s.setObject(${index}, ${m});`
-  if ( m.type === 'input' ) return `s.setObject(${index}, ${m.name});`
+  if ( m.type === 'input' ) return `s.setObject(${index}, ${nameOrSetParam ( m )});`
+  if ( setParam ( m ) ) return `s.setObject(${index}, ${setParam ( m )});`
+  if ( m.type === 'autowired' ) return `s.setObject(${index}, ${m.name}.${m.method});`;
   if ( m.type === 'null' ) return `s.setObject(${index},null);`
   if ( m.type === 'integer' ) return `s.setInt(${index}, ${m.value});`
-  if ( m.type === 'autowired' ) return `s.setObject(${index}, ${m.name}.${m.method}());`
   if ( m.type === 'string' ) return `s.setString(${index}, "${m.value.replace ( /"/g, '\"' )}");`
-  if ( isStoredProcOutputParam ( m ) ) return `s.registerOutParameter(${index},java.sql.Types.${m.sqlType});`
   throw new Error ( `Don't know how to process ${JSON.stringify ( m )}` )
 
 }

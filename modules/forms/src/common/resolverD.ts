@@ -204,14 +204,27 @@ export interface StringMutationParam {
   type: 'string';
   value: string
 }
+export interface HasSetParam{
+  setParam?: string;
+}
+export function nameOrSetParam(m: MutationParam){
+  const a: any = m
+  return a.setParam ? a.setParam : a.name;
+}
+export function  setParam(m: any) {
+  const a: any = m
+  return m.setParam
+}
+
 export interface AutowiredMutationParam {
   type: 'autowired';
   import?: boolean;
   name: string;
   class: string;
   method: string
+  setParam?: string;
 }
-export type JavaTypePrimitive = 'String' | 'Integer';
+export type JavaTypePrimitive = 'String' | 'Integer' | 'Object';
 export interface IntegerMutationParam {
   type: 'integer';
   value: number
@@ -219,7 +232,8 @@ export interface IntegerMutationParam {
 interface ParamMutationParam {
   type: 'input';
   name: string;
-  javaType?: JavaTypePrimitive
+  javaType?: JavaTypePrimitive;
+  setParam?: string;
 
 }
 export interface OutputForStoredProcMutationParam {
@@ -227,14 +241,14 @@ export interface OutputForStoredProcMutationParam {
   name: string;
   javaType: JavaTypePrimitive
   sqlType: string;
-}
+  }
 export interface OutputForSqlMutationParam {
   type: 'output';
   name: string;
   javaType: JavaTypePrimitive;
   rsName: string;
 }
-export type AllJavaTypes = 'String' | 'Integer' | 'Map<String,Object>' | 'List<Map<String,Object>>' | 'Boolean'
+export type AllJavaTypes = 'String' | 'Integer' | 'Object'| 'Map<String,Object>' | 'List<Map<String,Object>>' | 'Boolean'
 export interface OutputForManualParam {
   type: 'output';
   name: string;

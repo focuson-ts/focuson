@@ -151,7 +151,7 @@ describe ( "makeMutations", () => {
       "",
       "    public Tuple2<Integer,String> ChequeCreditbooks_create_sequencename0(Connection connection, Object dbName) throws SQLException {",
       "        if (dbName.equals(IFetcher.mock)) {",
-      "           System.out.println(\"Mock audit: ChequeCreditbooks_create_sequencename0( {'type':'output','name':'checkbookId','javaType':'Integer','sqlType':'INTEGER'}, {'type':'output','name':'checkbookIdPart2','javaType':'String','sqlType':'CHAR'}, {'type':'autowired','name':'systemTime','class':'{thePackage}.utils.ITimeService','method':'now','import':true}+ )\");",
+      "           System.out.println(\"Mock audit: ChequeCreditbooks_create_sequencename0( {'type':'output','name':'checkbookId','javaType':'Integer','sqlType':'INTEGER'}, {'type':'output','name':'checkbookIdPart2','javaType':'String','sqlType':'CHAR'}, {'type':'autowired','name':'systemTime','class':'{thePackage}.utils.ITimeService','method':'now()','import':true}+ )\");",
       "           return new Tuple2<>(0,\"1\");",
       "    }",
       "    try (CallableStatement s = connection.prepareCall(\"call sequencename(?, ?, ?)\")) {",

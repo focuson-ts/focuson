@@ -8,7 +8,7 @@ export const eAccountsSummaryRestD: RestD<AllGuards> = {
   params: {
     ...commonIds,
     ...fromCommonIds ( 'dbName' ),
-    clientRef: { ...IntParam, commonLens: 'clientRef', testValue: 666, main: true },
+    clientRef: { ...IntParam, commonLens: 'clientRef', testValue: 333, main: true },
     employeeType: allCommonIds.employeeType
   },
   dataDD: EAccountsSummaryDD,

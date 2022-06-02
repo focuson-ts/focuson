@@ -126,11 +126,11 @@ describe ( "makeGraphQlSchema", () => {
   it ( "should make sometthing with name prefixes", () => {
     expect ( makeGraphQlSchema ( [PrintRecordHistoryRD, PrintRecordRD,  ] ) ).toEqual ( [
       "type Query{",
-      "  gethistoryPrintRecordItem(accountId: Int!):[PrintRecordItem]",
+      "  gethistoryPrintRecordItem(accountId: Int!, employeeId: Int!, vbAcountSeq: Int!):[PrintRecordItem]",
       "}",
       "type Mutation{",
-      "  createsinglePrintRecordItem(accountId: Int!,obj: [PrintRecordItemInp!]!):[PrintRecordItem]",
-      "  stateprintsinglePrintRecordItem(id: Int!):[Boolean]",
+      "  createsinglePrintRecordItem(accountId: Int!, employeeId: Int!, vbAcountSeq: Int!,obj: [PrintRecordItemInp!]!):[PrintRecordItem]",
+      "  stateprintsinglePrintRecordItem(accountId: Int!, employeeId: Int!, paymentId: Int!, vbAcountSeq: Int!):[Boolean]",
       "}",
       "type ListOfPayments{",
       "  standingOrders: SinglePrint",
