@@ -57,11 +57,11 @@ export function AuthoriseTable<S, D extends AuthoriseTableData, C extends FocusO
     }
     return <input type='checkbox' onChange={onChange} checked={row.hold}/>
   }
-  const onClick = (  i: number ) => ( e: any ) => {
+  const onClick = ( i: number ) => ( e: any ) => {
 
-    if ( copySelectedIndexTo || copySelectedItemTo ) state.massTransform ( reasonFor ( 'Table', 'onClick', id, `selected row ${i}` ) ) ( ...updateSelected ( json[i], i ) )
+    if ( copySelectedIndexTo || copySelectedItemTo ) state.massTransform ( reasonFor ( 'Table', 'onClick', id, `selected row ${i}` ) ) ( ...updateSelected ( json[ i ], i ) )
   }
-  const putInTd = ( o: keyof D, i: number ) => ( a: any ) => o.toString () === 'hold' ? <td key={o.toString ()}> {a}</td> : (<td key={o.toString ()} onClick={onClick (i )}>{a}</td>);
+  const putInTd = ( o: keyof D, i: number ) => ( a: any ) => o.toString () === 'hold' ? <td key={o.toString ()}> {a}</td> : (<td key={o.toString ()} onClick={onClick ( i )}>{a}</td>);
   const selected = copySelectedIndexTo?.optJson ()
   function selectedClass ( i: number ) {return i === selected ? 'grid-selected' : undefined }
   const rows = json && json.length > 1 ? json.map ( ( row, i ) => <tr className={selectedClass ( i )} key={i}>{order.map ( o => putInTd ( o, i ) ( data ( row, o, i ) ) )}</tr> ) : <tr>{noData}</tr>

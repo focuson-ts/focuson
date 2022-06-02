@@ -34,13 +34,13 @@ export const ViewChargesPage: ExampleModalPage = {
   buttons: {
     selectDate: {
       control: 'ModalButton', text: 'list', modal: SelectChargesDatePage, mode: 'view', focusOn: '~/summaryOfChargesDates',
-      copy: { from: '~/authorisedCharges/date', to: '~/summaryOfChargesDates/date' },
-      copyOnClose: { from: '~/selectedDateItem/dateCreated', to: '~/authorisedCharges/date' },
+      copy: { from: '#authorisedDate', to: '~/summaryOfChargesDates/date' },
+      copyOnClose: { from: '~/selectedDateItem/dateCreated', to: '#authorisedDate' },
     },
-    approvePendingFees: { control: "ActionButton", path: '~/authorisedCharges/fromApi/editingData', text: 'Approve Pending Fees', action: 'approvePendingFees' },
-    authoriseApprovedFees: { control: "ActionButton", path: '~/authorisedCharges/fromApi/editingData', text: 'Authorise Approved Fees', action: 'authoriseApprovedFees' },
+    approvePendingFees: { control: "ActionButton", path: '#editingData', text: 'Approve Pending Fees', action: 'approvePendingFees' },
+    authoriseApprovedFees: { control: "ActionButton", path: '#editingData', text: 'Authorise Approved Fees', action: 'authoriseApprovedFees' },
     summary: { control: 'ModalButton', modal: SummaryOfChargesPage, mode: 'view', focusOn: '~/summaryOfCharges' },
-    save: { control: 'RestButton', restName: 'authorisedCharges', action: 'update', deleteOnSuccess: '~/authorisedCharges/fromApi' },
+    save: { control: 'RestButton', restName: 'authorisedCharges', action: 'update', deleteOnSuccess: '#fromApi' },
   }
 }
 export const AuthoriseChargesPD: ExampleMainPage = {
@@ -64,6 +64,13 @@ export const AuthoriseChargesPD: ExampleMainPage = {
   guards: {
     brandSelected: { condition: 'isDefined', path: '~/selectedIndex' }
   },
+  variables:{
+    fromApi:{constructedBy: 'path', path: '~/authorisedCharges/fromApi'},
+    searchResults:{constructedBy: 'path', path: '~/summaryOfChargesDates/searchResults'},
+    authorisedDate:{constructedBy: 'path', path: '~/authorisedCharges/date'},
+    authorisedCharges:{constructedBy: 'path', path: '~/authorisedCharges'},
+    editingData:{constructedBy: 'path', path: '~/authorisedCharges/fromApi/editingData'},
+  },
   rest: {
     loadBrand: { rest: SelectOneBrandPageRD, targetFromPath: '~/brand', fetcher: true },
     authorisedCharges: { rest: AuthorisedChargesRD, targetFromPath: '~/authorisedCharges/fromApi', fetcher: true },
@@ -75,7 +82,7 @@ export const AuthoriseChargesPD: ExampleMainPage = {
   },
   modes: [ 'view' ],
   buttons: {
-    select: { control: 'ModalButton', modal: ViewChargesPage, mode: 'edit', focusOn: '~/authorisedCharges', enabledBy: 'brandSelected' }
+    select: { control: 'ModalButton', modal: ViewChargesPage, mode: 'edit', focusOn: '#authorisedCharges', enabledBy: 'brandSelected' }
   }
 }
 

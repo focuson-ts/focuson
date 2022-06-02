@@ -35,12 +35,12 @@ export const lensFocusQueryWithTildaFromPage = <B, G> ( errorPrefix: string, par
     throw e
   }
 }
-export const stateFocusQueryWithTildaFromPage = <B, G> ( errorPrefix: string, params: TSParams, p: PageD<B, G>, path: string ) => {
+export const stateFocusQueryWithTildaFromPage = <B, G> ( errorPrefix: string, params: TSParams, mainPage: MainPageD<B, G>, p: PageD<B, G>, path: string ) => {
   try {
     return parsePath ( path, stateCodeBuilder ( {
       '/': `.copyWithLens(Lenses.identity<${params.domainsFile}.${pageDomainName ( p )}>())`,
       '~': ``,
-    }, optionalsName ( p ), 'focusOn' ) )
+    }, optionalsName ( mainPage ), 'focusOn' ) )
   } catch ( e: any ) {
     console.error ( errorPrefix )
     throw e
@@ -52,7 +52,7 @@ export const stateQueryForParams = <B, G> ( errorPrefix: string, params: TSParam
       '/': `fullState<${params.stateName},any,Context>(state)`,
       '~': `pageState(state)<domain.${pageDomainName ( mainPage )}>()`,
       '': 'state'
-    }, optionalsName ( p ), 'focusOn' ) )
+    }, optionalsName ( mainPage ), 'focusOn' ) )
   } catch ( e: any ) {
     console.error ( errorPrefix )
     throw e
@@ -63,27 +63,41 @@ export const stateQueryForGuards = <B, G> ( errorPrefix: string, params: TSParam
   return stateQueryForParams ( errorPrefix, params, mainPage, p, path )
 }
 
-export const stateFocusQueryWithEmptyFromHere = <B, G> ( errorPrefix: string, params: TSParams, p: PageD<B, G>, path: string ) => {
+export const stateFocusQueryWithEmptyFromHere = <B, G> ( errorPrefix: string, params: TSParams, mainPage: MainPageD<B, G>, p: PageD<B, G>, path: string ) => {
   try {
     return parsePath ( path, stateCodeBuilder ( {
       '/': `.copyWithLens(Lenses.identity<${params.domainsFile}.${pageDomainName ( p )}>())`,
       '': ``,
-    }, optionalsName ( p ), 'focusOn' ) )
+    }, optionalsName ( mainPage ), 'focusOn' ) )
   } catch ( e: any ) {
     console.error ( errorPrefix )
     throw e
   }
 }
-export const stateForButton = <B, G> ( { parent, params, button, name }: CreateButtonData<B, G>, buttonName: string ) =>
-  ( path: string ) => `fullState${stateFocusQueryWithTildaFromPage ( `${buttonName} page ${parent.name}${name})`, params, parent, path )}`;
+export const stateForButton = <B, G> ( { parent, params, button, name, mainPage }: CreateButtonData<B, G>, buttonName: string ) =>
+  ( path: string ) => `fullState${stateFocusQueryWithTildaFromPage ( `${buttonName} page ${parent.name}${name})`, params, mainPage, parent, path )}`;
 
-export const stateForButtonWithPath = <B, G> ( { parent, params, button, name , mainPage}: CreateButtonData<B, G>, buttonName: string ) =>
-  ( path: string ) => `${stateQueryForParams ( `${buttonName} page ${parent}${name})`, params,mainPage, parent, path )}`;
+export const stateForButtonWithPath = <B, G> ( { parent, params, button, name, mainPage }: CreateButtonData<B, G>, buttonName: string ) =>
+  ( path: string ) => `${stateQueryForParams ( `${buttonName} page ${parent}${name})`, params, mainPage, parent, path )}`;
 
-export const stateForGuardVariable = <B, G> ( page: PageD<B, G>, params: TSParams, guardName: string ) =>
-  ( path: string ) => `state${stateFocusQueryWithEmptyFromHere ( `Page ${page.name} guard variable ${guardName}`, params, page, path )}`;
+export const stateForGuardVariable = <B, G> (mainPage: MainPageD<B,G>, page: PageD<B, G>, params: TSParams, guardName: string ) =>
+  ( path: string ) => `state${stateFocusQueryWithEmptyFromHere ( `Page ${page.name} guard variable ${guardName}`, params, mainPage,page, path )}`;
 
 
-export const stateForGuardButton = <B, G> ( page: PageD<B, G>, params: TSParams, guardName: string ) =>
-  ( path: string ) => `fullState${stateFocusQueryWithTildaFromPage ( `Page ${page.name} guard variable ${guardName}`, params, page, path )}`;
+export const stateForGuardButton = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params: TSParams, guardName: string ) =>
+  ( path: string ) => `fullState${stateFocusQueryWithTildaFromPage ( `Page ${page.name} guard variable ${guardName}`, params, mainPage, page, path )}`;
 
+export function stateCodeBuilderWithSlashAndTildaFromIdFn<B, G> ( params: TSParams, p: PageD<B, G> ) {
+  return stateCodeBuilder ( {
+    '/': `id => id`,
+    '~': `id => id.focusQuery('${p.name}')`,
+  }, 'changeme' );
+}
+export const lensFocusQueryWithSlashAndTildaFromIdDn = <B, G> ( errorPrefix: string, params: TSParams, p: PageD<B, G>, path: string ): string => {
+  try {
+    return parsePath ( path, stateCodeBuilderWithSlashAndTildaFromIdFn ( params, p ) )
+  } catch ( e: any ) {
+    console.error ( errorPrefix )
+    throw e
+  }
+}

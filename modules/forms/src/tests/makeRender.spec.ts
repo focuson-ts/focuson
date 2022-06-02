@@ -152,6 +152,7 @@ describe ( " listComponentsIn", () => {
       "import { Guard } from '@focuson/form_components';",
       "import { GuardButton } from '@focuson/form_components';",
       "import * as action from '../actions'",
+      "import { OccupationAndIncomeSummaryOptionals } from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.optionals';",
       "//if there is an error message here check that the PageD links to this DataD in a domain or rest block",
       "import {ListOccupationsDomain} from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains'; ",
       "import {ListOccupations} from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.render'",

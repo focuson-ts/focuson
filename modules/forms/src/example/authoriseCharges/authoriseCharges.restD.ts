@@ -39,6 +39,6 @@ export const SummaryOfChargesRD: ExampleRestD = {
   params: {
   },
   url: "/api/charges/details?{query}",
-  actions: [ 'get' ],
+  actions: [ 'get'],
 }
 

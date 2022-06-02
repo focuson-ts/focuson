@@ -1,15 +1,15 @@
-import { AllDataDD, CompDataD, CompDataDD, DisplayParamDD, HasGuards, HasLayout, isDataDd, isPrimDd, isRepeatingDd, OneDataDD } from "../common/dataD";
-import { commonParams, commonParamsWithLabel, DisplayCompD, OneDisplayCompParamD, SimpleDisplayComp } from "../common/componentsD";
+import { AllDataDD, CompDataD, DisplayParamDD, HasGuards, HasLayout, isDataDd, isPrimDd, isRepeatingDd, OneDataDD } from "../common/dataD";
+import { commonParamsWithLabel, DisplayCompD, OneDisplayCompParamD, SimpleDisplayComp } from "../common/componentsD";
 import { dataDsIn, isMainPage, isModalPage, MainPageD, PageD } from "../common/pageD";
 
-import { decamelize, NameAnd, sortedEntries, toArray, unique, unsortedEntries } from "@focuson/utils";
+import { decamelize, NameAnd, sortedEntries, unique, unsortedEntries } from "@focuson/utils";
 import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, optionalsFileName, optionalsName, pageComponentName, pageDomainName } from "./names";
 import { addButtonsFromVariables, MakeButton, makeButtonsVariable, makeGuardButtonVariables } from "./makeButtons";
 import { focusOnFor, indentList, noExtension } from "./codegen";
 import { TSParams } from "./config";
 import { ButtonD } from "../buttons/allButtons";
 import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
-import { lensFocusQueryWithSlashAndTildaFromIdentity, stateFocusQueryWithTildaFromPage, stateQueryForGuards, stateQueryForParams } from "./lens";
+import { stateFocusQueryWithTildaFromPage, stateQueryForParams } from "./lens";
 
 
 export type AllComponentData<G> = ComponentData<G> | ErrorComponentData
@@ -252,7 +252,7 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
   return [
     `export function ${pageComponentName ( pageD )}(){`,
     `   //A compilation error here is often because you have specified the wrong path in display. The path you gave is ${pageD.display.target}`,
-    `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${decamelize ( pageD.name, ' ' )}' ) ( state => state${stateFocusQueryWithTildaFromPage ( `createReactMainPageComponent for page ${pageD.name}`, params, pageD, pageD.display.target )}) (`,
+    `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${decamelize ( pageD.name, ' ' )}' ) ( state => state${stateFocusQueryWithTildaFromPage ( `createReactMainPageComponent for page ${pageD.name}`, params, pageD, pageD, pageD.display.target )}) (`,
     `( fullState, state , full, d, mode, index) => {`,
     ...indentList ( makeGuardButtonVariables ( params, makeGuard, pageD, pageD ) ),
     'const id=`page${index}`;',
@@ -281,7 +281,6 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
   const pages = [ page ]
   const dataComponents = sortedEntries ( dataDsIn ( pages, false ) ).flatMap ( ( [ name, dataD ] ) => dataD.display ? [] : createReactComponent ( params, makeGuard, mainP, page ) ( dataD ) )
   const pageComponents = pages.flatMap ( p => createReactPageComponent ( params, makeGuard, makeButton, mainP, p ) )
-  const optionalImports = isMainPage ( page ) ? [ `import { ${optionalsName ( page )} } from "${optionalsFileName ( `..`, params, page )}";` ] : []
 
   const imports = [
     `import { LensProps } from "@focuson/state";`,
@@ -292,7 +291,7 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
     `import { Guard } from "@focuson/form_components";`,
     `import { GuardButton } from "@focuson/form_components";`,
     `import * as action from '../actions'`,
-    ...optionalImports,
+    `import { ${optionalsName ( mainP )} } from "${optionalsFileName ( `..`, params, mainP )}";`,
   ]
   let pageDomain = noExtension ( params.pageDomainsFile );
   let domain = noExtension ( params.domainsFile );

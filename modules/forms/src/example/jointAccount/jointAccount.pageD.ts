@@ -41,7 +41,7 @@ export const JointAccountPageD: ExampleMainPage = {
         return id.focusQuery ( 'JointAccount' ).focusQuery ( 'fromApi' ).focusQuery ( 'main' )
     }, '#currentOccupation' )
   }`
-    },
+    }
   },
   modals: [ { modal: JointAccountEditModalPageD } ],
 

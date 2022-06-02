@@ -103,12 +103,13 @@ export const CurrentPaymentCountsRD: ExampleRestD = {
   url: '/api/paymentcounts?{query}',
   actions: [ 'get' ],
   resolvers: {
-    getCurrentPaymentCounts: {
+    getCurrentPaymentCounts: [
+      {
       type: 'sql', name: 'get', schema: onlySchema, sql: 'someSql', params: [
         { type: 'output', javaType: 'Integer', rsName: 'xxx', name: 'standingOrders' },
         { type: 'output', javaType: 'Integer', rsName: 'yyy', name: 'directDebits' },
       ]
-    }
+    }]
   }
 }
 export const accountAndAddressDetailsRD: ExampleRestD = {

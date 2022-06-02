@@ -78,7 +78,7 @@ export function sqlListName<B, G> ( p: PageD<B, G>, restName: string, path: numb
 export function sqlMapFileName<B, G> ( root: string, p: PageD<B, G>, restName: string, path: number[] ) {return `${root}/${p.name}/${sqlMapName ( p, restName, path )}`}
 export function sqlTafFieldName<G> ( taf: TableAndFieldAndAliasData<G> ) {return taf.fieldData.dbFieldAlias ? taf.fieldData.dbFieldAlias : `${taf.alias}_${taf.fieldData.dbFieldName}`}
 export function sqlMapPackageName<G> ( params: JavaWiringParams, p: MainPageD<any, G> ) {return `${params.thePackage}.${params.dbPackage}.${p.name}`}
-export const optionalsName = <B, G> ( p: PageD<B, G> ) => `${p.name}Optionals`
+export const optionalsName = <B, G> ( p: MainPageD<B, G> ) => `${p.name}Optionals`
 
 export const someFileName = <B, G> ( root: string, pd: PageD<B, G>, postfix: string ): string => `${root}/${pd.name}/${pd.name}.${postfix}`;
 export const someFileNameFromMainPage = <B, G> ( root: string, mainPage: PageD<B, G>, pd: PageD<B, G>, postfix: string ): string => `${root}/${mainPage.name}/${pd.name}.${postfix}`;
