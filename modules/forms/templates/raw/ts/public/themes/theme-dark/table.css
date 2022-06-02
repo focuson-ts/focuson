@@ -24,6 +24,12 @@
   border-color: transparent transparent var(--table-border-color)  transparent;
 }
 
+.grid thead tr th {
+  background-color: black;
+  color: white;
+  font-weight: bold;
+}
+
 .grid table::-webkit-scrollbar {
   width: var(--scrollbar-width);
   border-left: var(--table-border);
