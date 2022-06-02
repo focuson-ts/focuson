@@ -2,7 +2,7 @@ import { ExampleDataD, ExampleMainPage, ExampleModalPage, ExampleRepeatingD } fr
 import { NatNumDd } from "../../common/dataD";
 import { TableCD } from "../../common/componentsD";
 import { AuthoriseChargesSummaryDD, chargesSummaryDetailDD, OneBrandDD, OneChargeDataDD, SelectOneBrandDD, summaryOfChargesDateDD, summaryOfChargesDateTableDD, summaryOfChargesSearchDD } from "./authoriseCharges.dataD";
-import { AuthorisedChargesRD, SelectOneBrandPageRD, SummaryOfChargeDatesRD } from "./authoriseCharges.restD";
+import { AuthorisedChargesRD, SelectOneBrandPageRD, SummaryOfChargeDatesRD, SummaryOfChargesRD } from "./authoriseCharges.restD";
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 
 export const SummaryOfChargesPage: ExampleModalPage = {
@@ -54,6 +54,7 @@ export const AuthoriseChargesPD: ExampleMainPage = {
     selectedItem: { dataDD: OneBrandDD },
     authorisedCharges: { dataDD: AuthoriseChargesSummaryDD },
     selectedCharge: {dataDD: OneChargeDataDD},
+    selectedChargeIndex: {dataDD: NatNumDd},
     summaryOfCharges: { dataDD: chargesSummaryDetailDD },
 
     summaryOfChargesDates: { dataDD: summaryOfChargesSearchDD },
@@ -66,7 +67,8 @@ export const AuthoriseChargesPD: ExampleMainPage = {
   rest: {
     loadBrand: { rest: SelectOneBrandPageRD, targetFromPath: '~/brand', fetcher: true },
     authorisedCharges: { rest: AuthorisedChargesRD, targetFromPath: '~/authorisedCharges/fromApi', fetcher: true },
-    summaryOfCharges: { rest: SummaryOfChargeDatesRD, targetFromPath: '~/summaryOfChargesDates/searchResults', fetcher: true }
+    summaryOfChargeDates: { rest: SummaryOfChargeDatesRD, targetFromPath: '~/summaryOfChargesDates/searchResults', fetcher: true },
+    summaryOfCharges: { rest: SummaryOfChargesRD, targetFromPath: '~/summaryOfCharges', fetcher: true }
   },
   initialValue: {
     authorisedCharges: { date: '2020/01/01' }

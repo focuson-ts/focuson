@@ -1,5 +1,5 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
-import { BooleanDD, DateDD, MoneyDD, NatNumDd, StringDD } from "../../common/dataD";
+import { AccountIdDD, BooleanDD, DateDD, MoneyDD, NatNumDd, StringDD } from "../../common/dataD";
 import { TableCD } from "../../common/componentsD";
 import { AuthoriseTableCD } from "./custom";
 
@@ -65,7 +65,8 @@ export const ListOfChargesDD: ExampleRepeatingD = {
   description: 'All the charges',
   dataDD: OneChargeDataDD,
   display: AuthoriseTableCD,
-  displayParams: { order: [ 'chargeType', 'status', 'type', 'sortCode', 'accountNo', 'amount', 'narrative', 'hold' ], copySelectedItemTo: '~/selectedCharge' },
+  displayParams: { order: [ 'chargeType', 'status', 'type', 'sortCode', 'accountNo', 'amount', 'narrative', 'hold' ],
+    copySelectedItemTo: '~/selectedCharge' ,copySelectedIndexTo: '~/selectedChargeIndex' },
   paged: false
 }
 
@@ -109,12 +110,12 @@ export const customerTransactionLineDD: ExampleDataD = {
   name: 'CustomerTransactionLine',
   description: 'One line for the customer transaction',
   structure: {
-    surname: { dataDD: StringDD },
-    vir: { dataDD: StringDD },
-    accountNo: { dataDD: StringDD },
-    amount: { dataDD: MoneyDD },
-    charge: { dataDD: StringDD },
-    time: { dataDD: StringDD },
+    surname: { dataDD: StringDD, sample: [ 'bloggs', 'smith' ] },
+    vir: { dataDD: StringDD, sample: [ 'vir1', 'vir2' ] },
+    accountNo: { dataDD: AccountIdDD, sample: [ 88888888, 99999999, 11111111 ] },
+    amount: { dataDD: MoneyDD, sample: [ 103, 202, 301 ] },
+    charge: { dataDD: MoneyDD, sample: [ 10, 10, 10 ] },
+    time: { dataDD: StringDD, sample: [ '2022/10/1', '2022/10/1', '2022/11/1' ] },
   }
 }
 

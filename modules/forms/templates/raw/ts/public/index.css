@@ -47,6 +47,12 @@ h1 {
     /* line-height: var(--h1-custom-line-height); */
     /* font-weight: bold; */
 }
+h2 {
+    color: var(--h1-custom-brand-colour);
+    margin: 1rem 0;
+    /* line-height: var(--h1-custom-line-height); */
+    /* font-weight: bold; */
+}
 
 /* table {
     border-collapse: collapse;

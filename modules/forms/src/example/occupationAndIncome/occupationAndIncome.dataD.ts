@@ -103,7 +103,7 @@ export const customerOccupationIncomeDetailsDD: ExampleRepeatingD = {
   display: SelectedItemCD,
   name: "CustomerOccupationIncomeDetails",
   description: "This is a summary customer occupations data",
-  displayParams: { index: '#selected', display: oneOccupationIncomeDetailsDD.name },
+  displayParams: { index: '#selected', display: oneOccupationIncomeDetailsDD.name,header: "Occupation ", showNofM: true },
   dataDD: oneOccupationIncomeDetailsDD
 }
 
@@ -111,6 +111,7 @@ export const customerOccupationIncomeDetailsDD: ExampleRepeatingD = {
 export const occupationAndIncomeFullDomainDD: ExampleDataD = {
   name: 'OccupationAndIncomeFullDomain',
   description: 'This is a summary about occupation and income details data',
+  layout: {component: LayoutCd, displayParams: {details: '[[1,1]]'}},
   structure: {
     mainCustomerName: { dataDD: StringDD, sample: [ occupationAndIncomeSample.mainCustomerName ] },
     jointCustomerName: { dataDD: StringDD, sample: [ occupationAndIncomeSample.jointCustomerName ] },

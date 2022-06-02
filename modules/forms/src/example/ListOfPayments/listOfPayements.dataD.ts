@@ -184,7 +184,7 @@ export const PrintRecordHistoryDD: ExampleRepeatingD = {
   name: 'PrintRecordHistory',
   dataDD: printRecordDD,
   display: SelectedItemCD,
-  displayParams: { index: '~/selected', display: printRecordDD.name },
+  displayParams: { index: '~/selected', display: printRecordDD.name , header: 'Request # ', showNofM: true},
   paged: false,
   description: 'This is the list of all the requests for past payments'
 }

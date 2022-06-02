@@ -129,6 +129,8 @@ export const SelectedItemCD: DisplayCompD = {
   params: {
     ...commonParams,
     index: { paramType: 'pathValue', needed: 'yes' },
+    header: { paramType: 'string', needed: 'no' },
+    showNofM: { paramType: 'boolean', needed: 'no' },
     display: { paramType: 'objectAndRenderPrefix', needed: 'yes' },
     allButtons: { paramType: 'object', needed: 'defaultToButtons' }
   }
