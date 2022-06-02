@@ -204,14 +204,28 @@ export interface StringMutationParam {
   type: 'string';
   value: string
 }
-export interface HasSetParam{
+export interface HasSetParam {
   setParam?: string;
 }
-export function nameOrSetParam(m: MutationParam){
+export function needsRequiredCheck ( paramsFromCall: MutationParam[], m: MutationParam ): boolean {
+  const a: any = m;
+  if ( typeof m === 'string' ) return false;
+  if (m.type=== 'input' ) return a.required !== false
+  return false
+}
+
+export function requiredmentCheckCodeForJava ( paramsFromCall: MutationParam[], m: MutationParam | MutationParam[] ): string[] {
+  return toArray ( m ).flatMap ( m => {
+    let name = inputParamName ( m );
+    const a: any = m
+    return needsRequiredCheck ( paramsFromCall, m ) ? [ `if (${name} == null) throw new IllegalArgumentException("${name} must not be null");//${JSON.stringify(m)} ${typeof m}` ] : []
+  } )
+}
+export function nameOrSetParam ( m: MutationParam ) {
   const a: any = m
   return a.setParam ? a.setParam : a.name;
 }
-export function  setParam(m: any) {
+export function setParam ( m: any ) {
   const a: any = m
   return m.setParam
 }
@@ -223,6 +237,7 @@ export interface AutowiredMutationParam {
   class: string;
   method: string
   setParam?: string;
+  required?: boolean;
 }
 export type JavaTypePrimitive = 'String' | 'Integer' | 'Object';
 export interface IntegerMutationParam {
@@ -234,6 +249,7 @@ interface ParamMutationParam {
   name: string;
   javaType?: JavaTypePrimitive;
   setParam?: string;
+  required?: boolean;
 
 }
 export interface OutputForStoredProcMutationParam {
@@ -241,14 +257,14 @@ export interface OutputForStoredProcMutationParam {
   name: string;
   javaType: JavaTypePrimitive
   sqlType: string;
-  }
+}
 export interface OutputForSqlMutationParam {
   type: 'output';
   name: string;
   javaType: JavaTypePrimitive;
   rsName: string;
 }
-export type AllJavaTypes = 'String' | 'Integer' | 'Object'| 'Map<String,Object>' | 'List<Map<String,Object>>' | 'Boolean'
+export type AllJavaTypes = 'String' | 'Integer' | 'Object' | 'Map<String,Object>' | 'List<Map<String,Object>>' | 'Boolean'
 export interface OutputForManualParam {
   type: 'output';
   name: string;

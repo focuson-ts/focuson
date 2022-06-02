@@ -4,7 +4,7 @@ import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
 import { indentList } from "./codegen";
-import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, importForTubles, isInputParam, isOutputParam, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, paramName, SelectMutation, setParam, SqlMutation, StoredProcedureMutation } from "../common/resolverD";
+import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, importForTubles, isInputParam, isOutputParam, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, needsRequiredCheck, OutputMutationParam, paramName, requiredmentCheckCodeForJava, SelectMutation, setParam, SqlMutation, StoredProcedureMutation } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
@@ -141,7 +141,7 @@ export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPag
 function makeMethodDecl<G> ( errorPrefix: string, paramsA: MutationParam[], resultType: string, r: RestD<G>, name: string, m: MutationDetail, index: string, ) {
   const params = safeObject ( r.params );
   return [ `    public ${resultType} ${mutationMethodName ( r, name, m, index )}(Connection connection, ${unique ( allInputParams ( [ 'dbName', ...paramsA ] ), p => paramName ( p ) )
-    .map ( param => `${typeForParamAsInput ( errorPrefix, params ) ( param )} ${param.name}` ).join ( ", " )}) throws SQLException {` ];
+    .map ( param => `${typeForParamAsInput ( errorPrefix, params ) ( param )} ${param.name}` ).join ( ", " )}) throws SQLException {`, ...indentList ( indentList ( indentList ( requiredmentCheckCodeForJava ( paramsA, m.params ) ) ) ) ];
 }
 export function mutationCodeForStoredProcedureCalls<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: StoredProcedureMutation, index, includeMockIf: boolean ): string[] {
   const paramsA = toArray ( m.params )
