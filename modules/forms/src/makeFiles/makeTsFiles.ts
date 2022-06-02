@@ -16,7 +16,7 @@ import { makeOneStory } from "../codegen/makeStories";
 import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { MakeButton } from "../codegen/makeButtons";
 import { makeAllPactsForPage } from "../codegen/makePacts2";
-import { makeOptionals } from "../codegen/makeOptionals";
+import { makeVariables } from "../codegen/makeVariables";
 import { makeGuardsReportForPage } from "../reporting/report";
 import { AppConfig } from "../appConfig";
 
@@ -79,7 +79,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
       writeToFile ( restFileName ( tsCode, params, mainP ) + ".ts", () => makeRests ( params, mainP ) )
       writeToFile ( storybookFileName ( tsCode, params, mainP ) + '.ts', () => makeOneStory ( params, mainP ), details )
 
-      writeToFile ( optionalsFileName ( tsCode, params, mainP ) + '.ts', () => makeOptionals ( params, mainP ) )
+      writeToFile ( optionalsFileName ( tsCode, params, mainP ) + '.ts', () => makeVariables ( params, mainP ) )
 
       if ( Object.keys ( mainP.rest ).length > 0 )
         writeToFile ( pactFileName ( tsCode, params, mainP ) + ".ts", () => makeAllPactsForPage ( params, mainP ) )

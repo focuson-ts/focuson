@@ -1,5 +1,5 @@
 import { AllDataDD, CompDataD, DataD, findAllDataDs, HasGuards, HasLayout, isDataDd, NamesAndDataDs } from "./dataD";
-import { CommonLensRestParam, RestD} from "./restD";
+import { CommonLensRestParam, RestD } from "./restD";
 import { NameAnd, RestAction, RestResult, safeString, sortedEntries, unique } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
 import { getRestTypeDetails, RestActionDetail } from "@focuson/rest";
@@ -57,11 +57,23 @@ export function isModalPage<B, G> ( p: PageD<B, G> ): p is ModalPageD<B, G> {
 }
 export type PageD<Buttons, G> = MainPageD<Buttons, G> | ModalPageD<Buttons, G>
 
-export interface OptionalD {
+
+export interface VariableByCodeD {
   constructedBy: 'code';
   imports?: string[];
+  purpose?: string;
   code: string;
 }
+export function allVariableByCode ( vs: VariableD[] ): VariableByCodeD[] {
+  return vs.flatMap ( x => x.constructedBy === 'code' ? [ x ] : [] )
+
+}
+export interface VariableByPathD {
+  constructedBy: 'path';
+  purpose?: string;
+  path: string
+}
+export type VariableD = VariableByCodeD | VariableByPathD
 
 export interface MainPageD<Buttons, G> extends HasLayout, HasGuards<G> {
   pageType: 'MainPage',
@@ -71,7 +83,7 @@ export interface MainPageD<Buttons, G> extends HasLayout, HasGuards<G> {
   display: { target: string, dataDD: CompDataD<G> },
   initialValue: 'empty' | any,
   domain: DomainDefnInPage<G>,
-  variables?: NameAnd<OptionalD>
+  variables?: NameAnd<VariableD>
   modals?: ModalData<Buttons, G>[],
   rest: RestDefnInPage<G>,
   /** The names and order of the visible buttons. If not populated uses definition order */

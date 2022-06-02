@@ -36,9 +36,9 @@ function LabelAndFixedNumber ( { id, label, number }: LabelAndFixedNumberProps )
 export function AuthoriseTable<S, D extends AuthoriseTableData, C extends FocusOnContext<S>> ( props: AuthoriseTableProps<S, D, C> ) {
   const { state, order, id, mode, copySelectedItemTo, copySelectedIndexTo } = props
   const json = state.optJsonOr ( [] );
-  function updateSelected ( row: number ): Transform<S, any>[] {
-    const indexTx: Transform<S, number>[] = copySelectedIndexTo ? [ [ copySelectedIndexTo.optional, () => row ] ] : []
-    const itemTx: Transform<S, D>[] = copySelectedItemTo ? [ [ copySelectedItemTo.optional, () => json[ row ] ] ] : []
+  function updateSelected ( row: D, i: number ): Transform<S, any>[] {
+    const indexTx: Transform<S, number>[] = copySelectedIndexTo ? [ [ copySelectedIndexTo.optional, () => i ] ] : []
+    const itemTx: Transform<S, D>[] = copySelectedItemTo ? [ [ copySelectedItemTo.optional, () => json[ i ] ] ] : []
     return [ ...indexTx, ...itemTx ]
   }
 
@@ -50,16 +50,18 @@ export function AuthoriseTable<S, D extends AuthoriseTableData, C extends FocusO
   }
   function haltBox ( row: D, i: number ) {
     const onChange = () => {
-      const txs = updateSelected ( i )
-      const thisTx: Transform<S, any> = [ state.optional.chain ( Lenses.nth ( i ) ), row => ({ ...row, hold: !row.hold }) ]
+      let newRow = { ...row, hold: !row.hold };
+      const txs = updateSelected ( newRow, i )
+      const thisTx: Transform<S, any> = [ state.optional.chain ( Lenses.nth ( i ) ), row => newRow ]
       state.massTransform ( reasonFor ( `AuthoriseTable[${i}]`, 'onChange', id ) ) ( ...txs, thisTx );
     }
     return <input type='checkbox' onChange={onChange} checked={row.hold}/>
   }
-  const onClick = ( row: number ) => ( e: any ) => {
-    if ( copySelectedIndexTo || copySelectedItemTo ) state.massTransform ( reasonFor ( 'Table', 'onClick', id, `selected row ${row}` ) ) ( ...updateSelected ( row ) )
+  const onClick = (  i: number ) => ( e: any ) => {
+
+    if ( copySelectedIndexTo || copySelectedItemTo ) state.massTransform ( reasonFor ( 'Table', 'onClick', id, `selected row ${i}` ) ) ( ...updateSelected ( json[i], i ) )
   }
-  const putInTd = ( o: keyof D, i: number ) => ( a: any ) => o.toString () === 'hold' ? <td key={o.toString ()}> {a}</td> : (<td key={o.toString ()} onClick={onClick ( i )}>{a}</td>);
+  const putInTd = ( o: keyof D, i: number ) => ( a: any ) => o.toString () === 'hold' ? <td key={o.toString ()}> {a}</td> : (<td key={o.toString ()} onClick={onClick (i )}>{a}</td>);
   const selected = copySelectedIndexTo?.optJson ()
   function selectedClass ( i: number ) {return i === selected ? 'grid-selected' : undefined }
   const rows = json && json.length > 1 ? json.map ( ( row, i ) => <tr className={selectedClass ( i )} key={i}>{order.map ( o => putInTd ( o, i ) ( data ( row, o, i ) ) )}</tr> ) : <tr>{noData}</tr>
