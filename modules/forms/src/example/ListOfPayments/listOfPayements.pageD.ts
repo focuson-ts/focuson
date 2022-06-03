@@ -57,7 +57,6 @@ const addOrEditButton: RawButtons<AllGuards> = {
   control: 'ModalButton', modal: EditlistOfPaymentsPagePD,
   mode: 'edit',
   focusOn: '~/tempListOfPayments',
-  enabledBy: 'canPrint',
   createEmpty: printRecordDD,
   copy: [
 

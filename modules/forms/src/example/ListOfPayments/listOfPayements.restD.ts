@@ -18,6 +18,7 @@ export const PrintRecordHistoryRD: ExampleRestD = {
 }
 
 function ind ( name: string ): MutationParamForStoredProc {return { type: 'input', name, javaType: 'String', setParam: `${name}.equals("Y") ? 1 : 0` }}
+
 function bankStuff ( guard: string[], packageName: string ): GuardedStoredProcedureMutation {
   return ({
     guard, type: 'storedProc', package: packageName, name: 'produce_list_of_payments', params: [
@@ -42,18 +43,18 @@ function nonBankStuff ( guard: string, packageName: string ): GuardedStoredProce
       'rbsMtAccount',
       { type: 'null' },
       'employeeId',
-      'so_ind',
-      'dd_ind',
+      ind ( 'so_ind' ),
+      ind ( 'dd_ind' ),
       { type: 'null' },
       { type: 'null' },
       'accountNo',
-      'obso_ind',
-      'obbp_ind',
+      ind ( 'obso_ind' ),
+      ind ( 'obbp_ind' ),
       { type: 'output', name: 'outputMessage', javaType: 'String', sqlType: 'VARCHAR' }
     ], schema: onlySchema
   })
 }
-function outputParams ( ...names: string[] ): OutputForSqlMutationParam[] {
+function stringOutputParams ( ...names: string[] ): OutputForSqlMutationParam[] {
   return names.map ( name => ({ type: 'output', javaType: 'String', name, rsName: name }) )
 }
 export const PrintRecordRD: ExampleRestD = {
@@ -68,16 +69,17 @@ export const PrintRecordRD: ExampleRestD = {
   states: {
     print: {
       url: '/api/print?{query}',
-      params: [ 'vbAcountSeq', 'rbsMtAccount', 'newBankSeq', 'employeeId', 'paymentId', 'employeeId', 'accountId' ]
+      params: {...fromCommonIds('vbAcountSeq', 'employeeId','employeeId', 'accountId' ),  paymentId: { ...IntParam, lens: '~/display[~/selected]id', testValue: 888, main: true } }
     }
   },
   mutations: [ {
     restAction: { state: 'print' },
     mutateBy: [
       {
-        type: "sql", name: 'getParamsFromStoredStuff', sql: 'select so_ind,dd_ind,bp_ind,obso_ind,obbp_ind, sortcode, fulfilmentType,accountNo,rbsMtAccount,newBankSeq from the_table_that_holds_the_data where account_id=? and paymentId = ?',
+        type: "sql", name: 'getParamsFromStoredStuff',
+        sql: 'select so_ind,dd_ind,bp_ind,obso_ind,obbp_ind, sortcode, fulfilmentType,accountNo,rbsMtAccount,newBankSeq from the_table_that_holds_the_data where account_id=? and paymentId = ?',
         params: [ 'accountId', 'paymentId',
-          ...outputParams ( 'so_ind', 'dd_ind', 'bp_ind', 'obso_ind', 'obbp_ind', 'sortcode', 'accountNo', 'requestByRole', 'rbsMtAccount', 'fulfilmentType', 'newBankSeq' )
+          ...stringOutputParams ( 'so_ind', 'dd_ind', 'bp_ind', 'obso_ind', 'obbp_ind', 'sortcode', 'accountNo', 'requestByRole', 'rbsMtAccount', 'fulfilmentType', 'newBankSeq' )
         ],
         schema: onlySchema
       },

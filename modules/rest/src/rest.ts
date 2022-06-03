@@ -68,9 +68,8 @@ export function restActionForName ( r: RestAction ): string {
 export function getRestTypeDetails ( a: RestAction ): RestActionDetail {
   return isRestStateChange ( a ) ? { ...defaultRestAction[ 'state' ], graphQlPostfix: a.state } : defaultRestAction[ a ];
 }
-
-
-export type StateAccessDetails = { url: string, params: string[] }
+export type emptyType = {}
+export type StateAccessDetails = { url: string, params: NameAnd<emptyType> } // we don't know what the params are, we just need the names
 export interface OneRestDetails<S, FD, D, MSGs> extends UrlConfig<S, FD, D> {
   url: string;
   states?: NameAnd<StateAccessDetails>,
@@ -147,8 +146,8 @@ export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Deta
       let rawUrl = getUrlForRestAction ( restAction, one.url, one.states );
       let url = urlMutatorForRest ( restAction, rawUrl );
       if ( debug ) console.log ( "restReq-url", url )
-      const ids = isRestStateChange ( restAction ) ? findStateDetails ( one, restAction )?.params : one.ids
-      const adjustedUrlConfig = { ...one, url, ids, fdLens }
+      const ids = isRestStateChange ( restAction ) ? Object.keys ( safeObject ( findStateDetails ( one, restAction )?.params ) ) : one.ids
+      const adjustedUrlConfig: OneRestDetails<S, any, any, MSGS> = { ...one, url, ids, fdLens }
       let request = reqFor ( adjustedUrlConfig, restAction ) ( s ) ( url );
       if ( debug ) console.log ( "restReq-req", request )
       return [ command, one, ...request ]

@@ -1,8 +1,8 @@
 import { AllDataFlatMap, DataD, flatMapDD, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
 import { AllLensRestParams, RestD } from "../common/restD";
-import { addStringToStartOfFirst, filterParamsByRestAction, indent } from "./codegen";
+import { addStringToStartOfFirst,  indent, paramsForRestAction } from "./codegen";
 import { queryName, resolverName } from "./names";
-import { asMultilineJavaString, RestAction, sortedEntries } from "@focuson/utils";
+import { asMultilineJavaString, RestAction } from "@focuson/utils";
 import { getRestTypeDetails } from "@focuson/rest";
 
 
@@ -29,7 +29,7 @@ function quoteIfNeeded ( name: string, param: AllLensRestParams<any> ) {
   return param.graphQlType === 'String' ? `"\\"" + ${name} + "\\""` : name;
 }
 export function makeQuery<G> ( errorPrefix: string, r: RestD<G>, action: RestAction ): string[] {
-  let params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( errorPrefix, r, action ) );
+  let params =  paramsForRestAction( errorPrefix, r, action );
   const paramString = params.map ( ( [ name, p ], i ) =>
     `"${name}:" + ${quoteIfNeeded ( name, p )} ` ).join ( ` + "," + ` )
   const comma = params.length === 0 ? '' : ','
@@ -48,7 +48,7 @@ export function makeQuery<G> ( errorPrefix: string, r: RestD<G>, action: RestAct
 }
 
 export const makeGraphQlQueryForOneAction = <G> ( errorPrefix: string, r: RestD<G> ) => ( action: RestAction ) => {
-  let params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( errorPrefix, r, action ) );
+  let params = paramsForRestAction( errorPrefix, r, action );
   const paramString = params.map ( ( [ name, p ], i ) => `${p.javaType} ${name}` ).join ( "," )
   let zeroParams = paramString.length === 0;
   const comma = zeroParams ? '' : ', '

@@ -1,7 +1,7 @@
-import { isRestStateChange, RestAction, safeObject } from "@focuson/utils";
+import { isRestStateChange, RestAction, RestStateChange, safeObject, sortedEntries } from "@focuson/utils";
 import { ButtonCreator, makeIdForButton } from "./makeButtons";
 import { ModalButtonInPage } from "../buttons/modalButtons";
-import { AllLensRestParams, RestD } from "../common/restD";
+import { AllLensRestParams, RestD, RestParams, RestStateDetails } from "../common/restD";
 import { parsePath, stateCodeBuilder } from "@focuson/lens";
 import { getRestTypeDetails } from "@focuson/rest";
 
@@ -47,18 +47,24 @@ export function optT<T> ( name: string, p: T | undefined ) {
 export const makeSimpleButton: <G> ( imp: string ) => ButtonCreator<ModalButtonInPage<G>, G> = imp => ({
   import: imp,
   makeButton: ( { name, button } ) =>
-    [ [ `<${button.control} id=${makeIdForButton ( button.text ? button.text : name )} state={state}`, 
-    ...opt ( 'text', button.text ),
-    ...opt ( 'buttonType', button.buttonType ? button.buttonType : 'secondary' ),
-     '/>' ].join ( ' ' ) ]
+    [ [ `<${button.control} id=${makeIdForButton ( button.text ? button.text : name )} state={state}`,
+      ...opt ( 'text', button.text ),
+      ...opt ( 'buttonType', button.buttonType ? button.buttonType : 'secondary' ),
+      '/>' ].join ( ' ' ) ]
 })
-export const filterParamsByRestAction = ( errorPrefix: string, rest: RestD<any>, restAction: RestAction ) => {
-  if ( isRestStateChange ( restAction ) ) {
-    const stateDetails = safeObject ( rest.states )[ restAction.state ]
-    if ( stateDetails === undefined ) throw Error ( `${errorPrefix} Cannot find state ${restAction.state} Legal values are ${Object.keys ( safeObject ( rest.states ) )}` )
-    const legalParams = stateDetails.params
-    return ( [ name, param ]: [ string, AllLensRestParams<any> ] ) => legalParams.includes ( name )
-  } else
-    return ( [ name, param ]: [ string, AllLensRestParams<any> ] ) =>
-      getRestTypeDetails ( restAction ).params.needsId ? true : !param.main
+
+function stateParams ( errorPrefix: string, rest: RestD<any>, restAction: RestStateChange ): RestParams {
+  const stateDetails: RestStateDetails | undefined = safeObject ( rest.states )[ restAction.state ]
+  if ( stateDetails === undefined ) throw Error ( `${errorPrefix} Cannot find state ${restAction.state} Legal values are ${Object.keys ( safeObject ( rest.states ) )}` )
+  if ( Array.isArray ( stateDetails.params ) ) throw Error ( `${errorPrefix} Breaking change introduced in v1.16. state params are no longer an array of strings, but instead just like normal params` )
+  return stateDetails.params
+
+}
+
+const filterParamsByRestAction = ( errorPrefix: string, rest: RestD<any>, restAction: RestAction ) => ( [ name, param ]: [ string, AllLensRestParams<any> ] ): boolean => {
+  return isRestStateChange ( restAction ) ? true : getRestTypeDetails ( restAction ).params.needsId ? true : !param.main;
+}
+export function paramsForRestAction ( errorPrefix: string, rest: RestD<any>, restAction: RestAction ) {
+  const params: RestParams = isRestStateChange ( restAction ) ? stateParams ( errorPrefix, rest, restAction ) : rest.params
+  return sortedEntries ( params ).filter ( filterParamsByRestAction ( errorPrefix, rest, restAction ) )
 }

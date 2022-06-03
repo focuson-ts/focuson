@@ -38,7 +38,7 @@ function oneRestDetails<S extends HasFullDomainForTest> ( cd: NameAndLens<S>, fd
     messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],
     url: "/some/url/{token}?{query}",
     states: {
-      newState: { url: "/some/new/state/{token}?{query}", params: [ 'token', 'id' ] }
+      newState: { url: "/some/new/state/{token}?{query}", params: { 'token': {}, 'id': {} } }
     }
   }
 }

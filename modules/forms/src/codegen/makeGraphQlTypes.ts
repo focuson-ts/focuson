@@ -1,8 +1,8 @@
 import { AllDataDD, AllDataFlatMap, CompDataD, compDataDIn, DataD, emptyDataFlatMap, flatMapDD, isDataDd, isRepeatingDd, OneDataDD } from "../common/dataD";
 import { findMustConstructForRest, findUniqueDataDsAndRestTypeDetails, RestD, RestParams } from "../common/restD";
 import { resolverName } from "./names";
-import { RestAction, sortedEntries } from "@focuson/utils";
-import { filterParamsByRestAction } from "./codegen";
+import { RestAction } from "@focuson/utils";
+import { paramsForRestAction } from "./codegen";
 import { QueryOrMutation, RestActionDetail, RestTypeDetails } from "@focuson/rest";
 
 export function makeGraphQlTypeFolder<G> ( { keyword, create, postfix }: RestTypeDetails ): AllDataFlatMap<string, G> {
@@ -32,7 +32,7 @@ export function makeOutputString ( name: string, needExtrabrackets: boolean, { p
 
 export const makeParamsString = ( errorPrefix: string, rest: RestD<any>, restAction: RestAction ) => ( params: RestParams ): string => {
   //later for things like create where we don't know some of the ids these will need to be more clever.
-  return sortedEntries ( params ).filter ( filterParamsByRestAction ( errorPrefix, rest, restAction ) ).map ( ( [ name, p ] ) => `${name}: ${p.graphQlType}!` ).join ( ", " )
+  return  paramsForRestAction( errorPrefix, rest, restAction ).map ( ( [ name, p ] ) => `${name}: ${p.graphQlType}!` ).join ( ", " )
 };
 function extraParam<G> ( restD: RestD<G>, action: RestActionDetail ) {
   const prefix = ",obj: "

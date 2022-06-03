@@ -5,7 +5,7 @@ import { isRestLens, makeCommonValueForTest, makeParamValueForTest, postFixForEn
 import { TSParams } from "./config";
 import { lensFocusQueryWithSlashAndTildaFromIdentity, stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
 import { parsePath } from "@focuson/lens";
-import { addStringToEndOfAllButLast, filterParamsByRestAction, indentList } from "./codegen";
+import { addStringToEndOfAllButLast,  indentList, paramsForRestAction } from "./codegen";
 import { getRestTypeDetails, getUrlForRestAction, printRestAction, RestActionDetail, restActionForName } from "@focuson/rest";
 import { CompDataD, isRepeatingDd } from "../common/dataD";
 
@@ -149,7 +149,7 @@ export function makeFetcherPact<B, G> ( params: TSParams, page: MainPageD<B, G>,
 }
 
 function makeLensParamsTransformers<B, G> ( params: TSParams, page: PageD<B, G>, restName: string, defn: RestDefnInPageProperties<G>, restAction: RestAction, extraTransforms: string[] ): string[] {
-  let visibleParams = sortedEntries ( defn.rest.params ).filter ( filterParamsByRestAction ( `Page ${page.name}.rest[${restName}] ${restActionForName ( restAction )}`, defn.rest, restAction ) );
+  let visibleParams = paramsForRestAction ( `Page ${page.name}.rest[${restName}] ${restActionForName ( restAction )}`, defn.rest, restAction );
   const theseParams = visibleParams.map ( ( [ name, p ] ) => p )
 
   return [ `const lensTransforms: Transform<${params.stateName},any>[] = [`,

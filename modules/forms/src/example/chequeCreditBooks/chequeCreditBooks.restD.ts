@@ -2,7 +2,7 @@ import { RestD } from "../../common/restD";
 import { ChequeCreditbooksDD } from "./chequeCreditBooks.dataD";
 import { AllGuards } from "../../buttons/guardButton";
 import { onlySchema } from "../database/tableNames";
-import { commonIds } from "../commonIds";
+import { commonIds, fromCommonIds } from "../commonIds";
 
 
 export const chequeCreditBooksRestD: RestD<AllGuards> = {
@@ -10,10 +10,9 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
   dataDD: ChequeCreditbooksDD,
   url: '/api/chequeCreditBooks?{query}', //or maybe accountId={accountId}&customerId={customerId}
   actions: [ 'get', 'create', { "state": 'cancel' }, { "state": 'revalidate' } ],
-
   states: {
-    cancel: { url: '/api/chequeCreditBooks/cancel?{query}', params: [ 'clientRef', 'accountId', 'brandRef' ] },
-    revalidate: { url: '/api/chequeCreditBooks/revalidate?{query}', params: [ 'clientRef', 'accountId' ] }
+    cancel: { url: '/api/chequeCreditBooks/cancel?{query}', params: fromCommonIds ( 'clientRef', 'accountId', 'brandRef' ) },
+    revalidate: { url: '/api/chequeCreditBooks/revalidate?{query}', params: fromCommonIds ( 'clientRef', 'accountId' ) }
   },
   audits: [],
   resolvers: {

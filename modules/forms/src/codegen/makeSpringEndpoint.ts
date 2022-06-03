@@ -1,21 +1,21 @@
 import { isHeaderLens, postFixForEndpoint, RestD, RestParams } from "../common/restD";
 import { endPointName, mutationClassName, mutationMethodName, mutationVariableName, queryClassName, queryName, queryPackage, restControllerName, sampleName, sqlMapName, sqlMapPackageName } from "./names";
 import { JavaWiringParams } from "./config";
-import { actionsEqual, beforeSeparator, isRestStateChange, RestAction, safeArray, safeObject, sortedEntries, toArray } from "@focuson/utils";
-import { filterParamsByRestAction, indentList } from "./codegen";
+import { actionsEqual, beforeSeparator, isRestStateChange, RestAction, safeArray, safeObject, toArray } from "@focuson/utils";
+import { indentList, paramsForRestAction } from "./codegen";
 import { isRepeatingDd } from "../common/dataD";
 import { MainPageD } from "../common/pageD";
-import { getRestTypeDetails, getUrlForRestAction, restActionToDetails, restActionForName } from "@focuson/rest";
+import { getRestTypeDetails, getUrlForRestAction, restActionForName, restActionToDetails } from "@focuson/rest";
 import { AccessCondition, allInputParamNames, allOutputParams, displayParam, importForTubles, javaTypeForOutput, MutationDetail } from "../common/resolverD";
 
 
 function makeCommaIfHaveParams<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ) {
-  const params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( errorPrefix, r, restAction ) );
+  const params = paramsForRestAction ( errorPrefix, r, restAction );
   return params.length === 0 ? '' : ', '
 }
 
 export function makeParamsForJava<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ): string {
-  const params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( errorPrefix, r, restAction ) );
+  const params = paramsForRestAction(errorPrefix, r, restAction ) ;
   const comma = makeCommaIfHaveParams ( errorPrefix, r, restAction );
   const requestParam = getRestTypeDetails ( restAction ).params.needsObj ? `${comma}@RequestBody String body` : ""
   return params.map ( (( [ name, param ] ) => {
@@ -27,7 +27,7 @@ export function makeParamsForJava<G> ( errorPrefix: string, r: RestD<G>, restAct
 }
 function paramsForQuery<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ): string {
   const clazz = isRepeatingDd ( r.dataDD ) ? 'List' : 'Map'
-  let params = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( errorPrefix, r, restAction ) );
+  let params =  paramsForRestAction ( errorPrefix, r, restAction );
   const comma = params.length === 0 ? '' : ', '
   const objParam = getRestTypeDetails ( restAction ).params.needsObj ? `${comma}  Transform.removeQuoteFromProperties(body, ${clazz}.class)` : ""
   return params.map ( ( [ name, param ] ) => name ).join ( ", " ) + objParam

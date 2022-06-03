@@ -1,10 +1,10 @@
 import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
 import { NameAnd, RestAction, safeObject, safeString, sortedEntries, toArray, unique } from "@focuson/utils";
-import { filterParamsByRestAction } from "../codegen/codegen";
-import { AccessDetails, DBTable, GuardedMutation, MutationDetail, Mutations, MutationsForRestAction, SelectMutation } from "./resolverD";
+import {  paramsForRestAction } from "../codegen/codegen";
+import { AccessDetails, GuardedMutation, MutationDetail, Mutations, MutationsForRestAction, SelectMutation } from "./resolverD";
 import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 import { allMainPages, MainPageD, PageD, RestDefnInPageProperties } from "./pageD";
-import { getRestTypeDetails, RestActionDetail, restActionForName } from "@focuson/rest";
+import { getRestTypeDetails, RestActionDetail, restActionForName, StateAccessDetails } from "@focuson/rest";
 import { findChildResolvers, ResolverData } from "../codegen/makeJavaFetchersInterface";
 
 
@@ -103,7 +103,7 @@ export interface OneTableInsertSqlStrategyForIds {
 
 export interface RestStateDetails {
   url: string;
-  params: string[]
+  params: RestParams
 }
 
 export interface RestD<G> {
@@ -181,13 +181,13 @@ export function findUniqueDataDsIn<G> ( rs: RestD<G>[] ): CompDataD<G>[] {
 }
 
 export function makeParamValueForTest<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ) {
-  let visibleParams = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( errorPrefix, r, restAction ) );
+  let visibleParams = paramsForRestAction ( errorPrefix, r, restAction );
   // const paramsInCorrectOrder = [ ...visibleParams.filter ( ( [ name, p ] ) => isRestLens ( p ) ), ...visibleParams.filter ( ( [ name, p ] ) => !isRestLens ( p ) ) ]
   return Object.fromEntries ( visibleParams.map ( ( [ name, v ] ) => [ name, v.testValue.toString () ] ) )
 }
 export function makeCommonValueForTest<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ) {
-  let visibleParams = sortedEntries ( r.params ).filter ( filterParamsByRestAction ( errorPrefix, r, restAction ) );
-  return Object.fromEntries ( visibleParams.filter ( ( [ name, p ] ) => isCommonLens ( p ) || isHeaderLens(p) ).map ( ( [ name, v ] ) => [ name, v.testValue ] ) )
+  let visibleParams = paramsForRestAction ( errorPrefix, r, restAction );
+  return Object.fromEntries ( visibleParams.filter ( ( [ name, p ] ) => isCommonLens ( p ) || isHeaderLens ( p ) ).map ( ( [ name, v ] ) => [ name, v.testValue ] ) )
 }
 
 export function findIds<G> ( rest: RestD<G> ) {
