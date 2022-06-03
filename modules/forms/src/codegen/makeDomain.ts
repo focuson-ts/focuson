@@ -13,7 +13,8 @@ export function domainTypeName<G> ( o: AllDataDD<G> ): string {
 
 export function oneDomainLine<G> ( [ name, o ]: [ string, OneDataDD<G> ] ): string {
   const brackets = isRepeatingDd ( o.dataDD ) ? '[]' : ''
-  return `  ${name}: ${domainTypeName ( o.dataDD )}${brackets};`
+  const questionMark = isPrimDd ( o.dataDD ) && o.dataDD.allowUndefined ? '?' : ''
+  return `  ${name}${questionMark}: ${domainTypeName ( o.dataDD )}${brackets};`
 }
 export function makeDomainForDataD<G> ( d: DataD<G> ): string[] {
   return [

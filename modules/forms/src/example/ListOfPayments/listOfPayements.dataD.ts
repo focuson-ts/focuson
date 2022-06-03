@@ -80,7 +80,7 @@ export const SinglePrint: ExampleDataD = {
   description: 'Should I print this and how many are there',
   layout: { component: TwoElementWithTitleLayoutCD },
   structure: {
-    shouldPrint: { dataDD: { ...BooleanDD, display: CheckboxInputCD } },
+    shouldPrint: { dataDD: { ...BooleanDD, emptyValue: true, display: CheckboxInputCD } },
     numberOfItems: { dataDD: { ...ReadOnlyNatNumDD }, sample: [ 1, 2, 3, 4, 5, 6 ] },
   }
 }
@@ -159,7 +159,7 @@ export const printRecordDD: ExampleDataD = {
   structure: {
     id: { dataDD: NatNumDd, hidden: true, sample: [ 1, 2, 3 ] },
     requestedBy: {
-      dataDD: { ...StringDD, display: DataDrivenFixedOptionDropDownAndDetailsCD },
+      dataDD: { ...StringDD, emptyValue: undefined, allowUndefined: true, display: DataDrivenFixedOptionDropDownAndDetailsCD },
       displayParams: {
         pleaseSelect: 'Select...',
         details: {
@@ -184,7 +184,7 @@ export const PrintRecordHistoryDD: ExampleRepeatingD = {
   name: 'PrintRecordHistory',
   dataDD: printRecordDD,
   display: SelectedItemCD,
-  displayParams: { index: '~/selected', display: printRecordDD.name , header: 'Request # ', showNofM: true},
+  displayParams: { index: '~/selected', display: printRecordDD.name, header: 'Request # ', showNofM: true },
   paged: false,
   description: 'This is the list of all the requests for past payments'
 }

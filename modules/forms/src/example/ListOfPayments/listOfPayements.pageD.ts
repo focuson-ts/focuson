@@ -7,6 +7,7 @@ import { ButtonDefnInPage } from "../../common/pageD";
 import { AllButtonsInPage, RawButtons } from "../../buttons/allButtons";
 import { AllGuards } from "../../buttons/guardButton";
 import { NatNumDd, OneLineStringDD } from "../../common/dataD";
+import { toArray } from "@focuson/utils";
 
 export const AddressModalPage: ExampleModalPage = {
   pageType: 'ModalPage',
@@ -59,7 +60,7 @@ const addOrEditButton: RawButtons<AllGuards> = {
   enabledBy: 'canPrint',
   createEmpty: printRecordDD,
   copy: [
-    { from: '~/display[~/selected]' },
+
     { from: '~/currentPayments/standingOrders', to: '~/tempListOfPayments/listOfPayments/standingOrders/numberOfItems' },
     { from: '~/currentPayments/openBankingStandingOrders', to: '~/tempListOfPayments/listOfPayments/openBankingStandingOrders/numberOfItems' },
     { from: '~/currentPayments/directDebits', to: '~/tempListOfPayments/listOfPayments/directDebits/numberOfItems' },
@@ -67,6 +68,21 @@ const addOrEditButton: RawButtons<AllGuards> = {
     { from: '~/currentPayments/openBanking', to: '~/tempListOfPayments/listOfPayments/openBanking/numberOfItems' },
   ],
   copyOnClose: { to: '~/display[~/selected]' }
+}
+
+const addButton: RawButtons<AllGuards> = {
+  ...addOrEditButton,
+  mode: "create",
+  copyOnClose: { to: '~/display[$append]' },
+  setToLengthOnClose: { variable: '~/selected', array: '~/display' }
+}
+
+const editButton: RawButtons<AllGuards> = {
+  ...addOrEditButton,
+  enabledBy: 'canPrint',
+  mode: "edit",
+  copyOnClose: { to: '~/display[~/selected]' },
+  copy: [ { from: '~/display[~/selected]' }, ...toArray ( addOrEditButton.copy ) ]
 }
 
 export const ListOfPaymentsPagePD: ExampleMainPage = {
@@ -110,8 +126,8 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
   buttons: {
     prev: { control: 'ListPrevButton', list: '~/display', value: '~/selected' },
     next: { control: 'ListNextButton', list: '~/display', value: '~/selected' },
-    add: { ...addOrEditButton, mode: "create", copyOnClose: { to: '~/display[$append]' }, setToLengthOnClose: { variable: '~/selected', array: '~/display' } },
-    edit: { ...addOrEditButton, mode: "edit", copyOnClose: { to: '~/display[~/selected]' }, enabledBy: 'canPrint' },
+    add: addButton,
+    edit: editButton,
     print: {
       control: 'RestButton', action: { state: 'print' }, restName: 'onePayment',
       enabledBy: [ 'canClickPrint', 'hasSomethingToPrint', 'canPrint' ],
