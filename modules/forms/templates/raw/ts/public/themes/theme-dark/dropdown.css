@@ -4,7 +4,6 @@
     font-family: var(--dropdown-container-font-family);
     padding: var(--dropdown-container-padding);
     margin: var(--dropdown-container-margin);
-    line-height: var(--dropdown-container-line-height);
     background: var(--dropdown-container-background);
     border-radius: var(--dropdown-container-border-radius);
     box-shadow: var(--dropdown-container-box-shadow);

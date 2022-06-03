@@ -76,7 +76,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
 
   return (<div className={`labelAndDate ${props.labelPosition == 'Horizontal'? 'd-flex-inline' : ''}`}>
       <Label state={state} htmlFor={name} label={label}/>
-      <div>
+      <div className={`${props.buttons && props.buttons.length > 0 ? 'inputAndButtons' : ''}`}>
         <DatePicker 
         dateFormat={dateFormatL}
         todayButton="Select Today"

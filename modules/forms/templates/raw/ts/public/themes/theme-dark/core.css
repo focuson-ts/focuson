@@ -26,6 +26,8 @@
     --text-colour-main: var(--dark-grey);
     --main-background: var(--background-grey);
 
+    --modal-border-color: var(--green);
+
     --color-text: var(--black);
 
     --link-color: var(--magenta);

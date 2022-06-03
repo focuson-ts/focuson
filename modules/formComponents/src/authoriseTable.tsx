@@ -68,8 +68,8 @@ export function AuthoriseTable<S, D extends AuthoriseTableData, C extends FocusO
   function stateFor ( k: keyof D ): LensState<S, any, C> {return copySelectedItemTo.focusOn ( k );}
   return <Layout details='[[1],[1,1],[1,1,1]]'>
     <table className='grid'>
+      <thead>{headers}</thead>
       <tbody className='grid-sub'>
-      {headers}
       {rows}
       </tbody>
     </table>

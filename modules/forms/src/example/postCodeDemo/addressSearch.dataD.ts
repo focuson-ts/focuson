@@ -1,6 +1,6 @@
 import { DataD, OneLineStringDD, RepeatingDataD } from "../../common/dataD";
 import { AllGuards } from "../../buttons/guardButton";
-import { StringInputCD, TableCD } from "../../common/componentsD";
+import { LayoutCd, StringInputCD, TableCD } from "../../common/componentsD";
 import { addT, postCodeSearchTable } from "../database/tableNames";
 
 
@@ -8,6 +8,7 @@ export const postCodeDataLineD: DataD<AllGuards> = {
   name: "PostCodeDataLine",
   description: "",
   table: postCodeSearchTable,
+  layout: { component: LayoutCd, displayParams: { details: '[[2,2]]'}},
   structure: {
   ...({
     line1: { dataDD: OneLineStringDD, db: 'zzline1', sample: [ '4 Privet drive', '27 Throughput Lane' ] },

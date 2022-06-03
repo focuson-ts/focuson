@@ -27,7 +27,9 @@ export function LabelAndDropdown<S, T, Context extends FocusOnContext<S>> ( prop
   const pleaseSelectClass = hasValid ? '' : ' pleaseSelect'
   return (<div className={`dropdown-container ${props.labelPosition == 'Horizontal'? 'd-flex-inline' : ''}`}>
       <Label state={state} htmlFor={name} label={label}/>
-      <Dropdown{...props} />{makeButtons ( props.allButtons, props.buttons )}
+      <div className={`${props.buttons && props.buttons.length > 0 ? 'dropdownAndButtons' : ''}`}>
+        <Dropdown{...props} />{makeButtons ( props.allButtons, props.buttons )}
+      </div>
     </div>
   )
 }
