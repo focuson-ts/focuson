@@ -200,21 +200,8 @@ table {
 label {
     color: var(--form-label-colour);
     font-size: var(--font-size-main);
-    width: 50%;
 }
 
-input[type=text], input[type=number], input[type=date] {
-    width: 50%;
-}
-
-select {
-    width: 50%;
-}
-
-/* input[type=radio], input[type=checkbox] {
-    vertical-align: middle;
-    margin: 0 5px;
-} */
 
 select {
     height: 1.625rem;
@@ -266,13 +253,14 @@ select {
 }
 
 .modalPopup-content {
-    position: absolute;
-    top: 20%;
-    left: 35%;
-    padding: 20px;
+    position: relative;
+    top: 10%;
+    left: 20%;
+    padding: 10px;
     background-color: white;
-    border: 3px solid black;
+    border: 5px solid var(--modal-border-color, black);
     border-radius: 0.5rem;
+    width: 50%;
 }
 
 /* .close-button:hover {
@@ -416,68 +404,89 @@ a.close {
   color: #523e02;
 }
 
-.labelWidth10 label{
+/* Default width for select and input elements */
+input[type=text], input[type=number], input[type=date], select{
+  width: 49%;
+}
+
+.labelWidth10 label, .inputWidth10 input[type=text], .inputWidth10 input[type=number], .inputWidth10 input[type=date], .inputWidth10 select{
     width: 10%;
 }
 
-.labelWidth20 label{
+.labelWidth15 label, .inputWidth15 input[type=text], .inputWidth15 input[type=number], .inputWidth15 input[type=date], .inputWidth15 select{
+    width: 15%;
+}
+
+.labelWidth20 label, .inputWidth20 input[type=text], .inputWidth20 input[type=number], .inputWidth20 input[type=date], .inputWidth20 select{
     width: 20%;
 }
 
-.labelWidth25 label{
+.labelWidth25 label, .inputWidth25 input[type=text], .inputWidth25 input[type=number], .inputWidth25 input[type=date], .inputWidth25 select{
     width: 25%;
 }
 
-.labelWidth30 label{
+.labelWidth30 label, .inputWidth30 input[type=text], .inputWidth30 input[type=number], .inputWidth30 input[type=date], .inputWidth30 select{
     width: 30%;
 }
 
-.labelWidth40 label{
+.labelWidth35 label, .inputWidth35 input[type=text], .inputWidth35 input[type=number], .inputWidth35 input[type=date], .inputWidth35 select{
+    width: 35%;
+}
+
+.labelWidth40 label, .inputWidth40 input[type=text], .inputWidth40 input[type=number], .inputWidth40 input[type=date], .inputWidth40 select{
     width: 40%;
 }
 
-.labelWidth50 label{
+.labelWidth45 label, .inputWidth45 input[type=text], .inputWidth45 input[type=number], .inputWidth45 input[type=date], .inputWidth45 select{
+    width: 45%;
+}
+
+.labelWidth49 label, .inputWidth49 input[type=text], .inputWidth49 input[type=number], .inputWidth49 input[type=date], .inputWidth49 select{
+    width: 49%;
+}
+
+.labelWidth50 label, .inputWidth50 input[type=text], .inputWidth50 input[type=number], .inputWidth50 input[type=date], .inputWidth50 select{
     width: 50%;
 }
 
-.labelWidth60 label{
+.labelWidth55 label, .inputWidth55 input[type=text], .inputWidth55 input[type=number], .inputWidth55 input[type=date], .inputWidth55 select{
+    width: 55%;
+}
+
+.labelWidth60 label, .inputWidth60 input[type=text], .inputWidth60 input[type=number], .inputWidth60 input[type=date], .inputWidth60 select{
     width: 60%;
 }
 
-.labelWidth70 label{
+.labelWidth65 label, .inputWidth65 input[type=text], .inputWidth65 input[type=number], .inputWidth65 input[type=date], .inputWidth65 select{
+    width: 65%;
+}
+
+.labelWidth70 label, .inputWidth70 input[type=text], .inputWidth70 input[type=number], .inputWidth70 input[type=date], .inputWidth70 select{
     width: 70%;
 }
 
-.labelWidth80 label{
+.labelWidth75 label, .inputWidth75 input[type=text], .inputWidth75 input[type=number], .inputWidth75 input[type=date], .inputWidth75 select{
+    width: 75%;
+}
+
+.labelWidth80 label, .inputWidth80 input[type=text], .inputWidth80 input[type=number], .inputWidth80 input[type=date], .inputWidth80 select{
     width: 80%;
 }
 
-.inputWidth20 input[type=text], .inputWidth20 input[type=number], .inputWidth20 input[type=date] {
-    width: 20%;
+.labelWidth85 label, .inputWidth85 input[type=text], .inputWidth85 input[type=number], .inputWidth85 input[type=date], .inputWidth85 select{
+    width: 85%;
 }
 
-.inputWidth30 input[type=text], .inputWidth30 input[type=number], .inputWidth30 input[type=date]{
-    width: 30%;
+.labelWidth90 label, .inputWidth90 input[type=text], .inputWidth90 input[type=number], .inputWidth90 input[type=date], .inputWidth90 select{
+    width: 90%;
 }
 
-.inputWidth40 input[type=text], .inputWidth40 input[type=number], .inputWidth40 input[type=date]{
-    width: 40%;
+.labelWidth95 label, .inputWidth95 input[type=text], .inputWidth95 input[type=number], .inputWidth95 input[type=date], .inputWidth95 select{
+    width: 95%;
 }
 
-.inputWidth50 input[type=text], .inputWidth50 input[type=number], .inputWidth50 input[type=date]{
-    width: 50%;
-}
-
-.inputWidth60 input[type=text], .inputWidth60 input[type=number], .inputWidth60 input[type=date]{
-    width: 60%;
-}
-
-.inputWidth70 input[type=text], .inputWidth70 input[type=number], .inputWidth70 input[type=date]{
-    width: 70%;
-}
-
-.inputWidth80 input[type=text], .inputWidth80 input[type=number], .inputWidth80 input[type=date]{
-    width: 80%;
+.labelWidth100 label, .inputWidth100 input[type=text], .inputWidth100 input[type=number], .inputWidth100 input[type=date], .inputWidth100 select{
+    width: 100%;
 }
 
 #default_template {
@@ -624,34 +633,6 @@ pre {
     padding: 2px;
 }
 
-.inputWidth20 select{
-    width: 20%;
-}
-
-.inputWidth30 select{
-    width: 30%;
-}
-
-.inputWidth40 select{
-    width: 40%;
-}
-
-.inputWidth50 select{
-    width: 50%;
-}
-
-.inputWidth60 select{
-    width: 60%;
-}
-
-.inputWidth70 select{
-    width: 70%;
-}
-
-.inputWidth80 select{
-    width: 80%;
-}
-
 .card {
   position: relative;
   display: flex;
@@ -745,7 +726,7 @@ pre {
   display: inline-block;
   padding: 0;
   border: 0;
-  width: 50%;
+  width: 100%;
 }
 
 .react-datepicker {
@@ -1447,7 +1428,7 @@ pre {
     color: var(--dark-grey-2);
     border-radius: var(--input-border-radius);
     background: white;
-    width: 100%;
+    /* width: 100%; */
     height: 42px;
 }
 
@@ -1464,7 +1445,7 @@ pre {
 
 button + div.labelValueButton {
   margin: 0;
-  /* width: 32%; */
+  width: 100%;
 }
 
 .dropdown-container {
@@ -1474,7 +1455,7 @@ button + div.labelValueButton {
 }
 
 .react-datepicker__input-container input[type=text] {
-  width: 100%;
+  /* width: 100%; */
   background-image: url("icons/calendar.svg");
   background-repeat: no-repeat, repeat;
   background-position: right 16px top 50%, 0 0;
@@ -1526,4 +1507,12 @@ button#page1\.unpaidCardOrMisuseItems\.minus, button#page1\.unpaidCardOrMisuseIt
 
 .w-40 {
   width: 40%;
+}
+
+.inputAndButtons, .dropdownAndButtons {
+  display: flex;  
+}
+
+.inputAndButtons > button.button, .dropdownAndButtons > button.button {
+  float: right;
 }
