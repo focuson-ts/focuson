@@ -18,8 +18,10 @@ import { MakeButton } from "../codegen/makeButtons";
 import { makeAllPactsForPage } from "../codegen/makePacts2";
 import { makeVariables } from "../codegen/makeVariables";
 import { makeGuardsReportForPage } from "../reporting/report";
-import { AppConfig } from "../appConfig";
+import { AppConfig, tsRoot } from "../appConfig";
+import * as fse from "fs-extra";
 
+const themes = [ 'theme-dark', 'theme-light' ]
 export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, appConfig: AppConfig, tsRoot: string, params: TSParams, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G>, directorySpec: DirectorySpec ) =>
   <B extends ButtonD> ( mainPs: MainPageD<B, G>[], allPages: PageD<B, G>[] ) => {
     //to help the readability of the writeFile/template files
@@ -36,7 +38,8 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
 
     fs.mkdirSync ( `${tsCode}`, { recursive: true } )
     fs.mkdirSync ( `${tsScripts}`, { recursive: true } )
-    fs.mkdirSync ( `${tsPublic}`, { recursive: true } )
+    fs.mkdirSync ( `${tsPublic}/themes`, { recursive: true } )
+    themes.forEach ( theme => fs.mkdirSync ( `${tsPublic}/themes/${theme}/icons`, { recursive: true } ) )
     fs.mkdirSync ( `${tsStoryBook}`, { recursive: true } )
     templateFile ( tsRoot + "/project.details.json", 'templates/ts.projectDetails.json', {
       ...params,
@@ -111,12 +114,16 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     // copyFiles ( tsRoot, 'templates/raw', directorySpec ) ( '.gitignore' )
     copyFiles ( tsStoryBook, 'templates/raw/ts/stories', directorySpec ) ( 'main.js', 'preview.js', 'preview-head.html' )
     copyFiles ( tsPublic, 'templates/raw/ts/public', directorySpec ) ( 'favicon.ico', 'logo192.png', 'logo512.png', 'manifest.json', 'robots.txt' )
+    function copyTheme ( theme: string ) {
+      copyFiles ( tsPublic + `/themes/${theme}`, `templates/raw/ts/public/themes/${theme}`, directorySpec ) ( 'button.css', 'checkbox.css', 'core.css', 'dropdown.css', 'index.css', 'input.css', 'radio.css', 'table.css' )
+      copyFiles ( tsPublic + `/themes/${theme}/icons`, `templates/raw/ts/public/themes/${theme}/icons`, directorySpec ) ( 'chevron-down.svg' )
+    }
+    themes.forEach ( copyTheme )
     templateFile ( `${tsPublic}/index.css`, 'templates/raw/ts/public/index.css', params, directorySpec, details )
     templateFile ( `${tsPublic}/index.html`, 'templates/raw/ts/public/index.html', params, directorySpec, details )
 
     if ( fs.existsSync ( 'src/actions.ts' ) )
       copyFile ( tsCode + '/actions.ts', 'src/actions.ts' )
     else
-      copyFile ( tsCode + '/actions.ts', 'templates/actions.ts' , directorySpec)
-
+      copyFile ( tsCode + '/actions.ts', 'templates/actions.ts', directorySpec )
   };

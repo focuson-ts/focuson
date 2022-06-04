@@ -46,7 +46,8 @@ export const params = {
   optionalsFile: 'optionals',
   mutatorPackage: 'mutator',
   resolversPackage: 'resolvers',
-  maxTuples: 3
+  maxTuples: 3,
+  theme:'theme-light'
 };
 
 export const directorySpec: DirectorySpec = {
