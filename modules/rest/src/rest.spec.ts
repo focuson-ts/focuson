@@ -35,7 +35,9 @@ function oneRestDetails<S extends HasFullDomainForTest> ( cd: NameAndLens<S>, fd
     fdd,
     ids: [ 'token' ],
     resourceId: [ 'id' ],
-    messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],
+    messages: ( status: number | undefined, body: any ): SimpleMessage[] => status == undefined ?
+      [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify ( body )}`, testDateFn () ) ] :
+      [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],
     url: "/some/url/{token}?{query}",
     states: {
       newState: { url: "/some/new/state/{token}?{query}", params: { 'token': {}, 'id': {} } }
@@ -52,11 +54,11 @@ function withRestCommand ( r: RestStateForTest, ...restCommands: RestCommand[] )
 function restMutatator ( r: RestAction, url: string ) { return insertBefore ( "?", "/" + (isRestStateChange ( r ) ? r.state : r), url )}
 describe ( "restReq", () => {
   const populatedState: RestStateForTest = { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } }
-  it ( "it should turn post commands in the state into fetch requests - empty", () => {
-    expect ( restReq ( restDetails, restL (), restMutatator, emptyRestState ) ).toEqual ( [] )
+  it ( "it should turn post commands into fetch requests - empty", () => {
+    expect ( restReq ( restDetails, [], restMutatator, emptyRestState ) ).toEqual ( [] )
   } )
-  it ( "it should turn post commands in the state into fetch requests - one", () => {
-    const results = restReq ( restDetails, restL (), restMutatator, withRestCommand ( populatedState, { restAction: 'update', name: 'one' } ) );
+  it ( "it should turn post commands  into fetch requests - one", () => {
+    const results = restReq ( restDetails, [ { restAction: 'update', name: 'one' } ], restMutatator, populatedState );
     expect ( results.map ( a => [ a[ 0 ], a[ 1 ].url, a[ 2 ], a[ 3 ] ] ) ).toEqual ( [
       [
         { "name": "one", "restAction": "update" },
@@ -66,15 +68,13 @@ describe ( "restReq", () => {
       ]
     ] )
   } )
-  it ( "it should turn post commands in the state into fetch requests - three", () => {
-    let results = restReq ( restDetails, restL (), restMutatator, withRestCommand ( populatedState,
-      { restAction: 'get', name: 'one' },
+  it ( "it should turn post commands iinto fetch requests - many", () => {
+    let results = restReq ( restDetails, [ { restAction: 'get', name: 'one' },
       { restAction: 'create', name: 'one' },
       { restAction: 'getOption', name: 'one' },
       { restAction: 'delete', name: 'one' },
       { restAction: 'update', name: 'one' },
-      { restAction: { state: 'newState' }, name: 'one' },
-    ) );
+      { restAction: { state: 'newState' }, name: 'one' } ], restMutatator, populatedState );
     expect ( results.map ( a => [ a[ 2 ], a[ 3 ] ] ) ).toEqual ( [
       [ "/some/url/someToken/get?token=someToken&id=someId", undefined ],
       [ "/some/url/someToken/create?token=someToken", { "body": "\"someData\"", "method": "post" } ],
@@ -120,7 +120,7 @@ describe ( "rest", () => {
       },
       "messages": [
         { "level": "info", "msg": "200/\"from/some/url/someToken/update?token=someToken&id=someId\"", "time": "timeForTest" },
-        { "level": "info", "msg": "undefined/\"deleteWentWrong\"", "time": "timeForTest" },
+        { "level": "error", "msg": "Cannot connect. \"deleteWentWrong\"", "time": "timeForTest" },
         { "level": "info", "msg": "200/\"from/some/url/someToken/getOption?token=someToken&id=someId\"", "time": "timeForTest" },
         { "level": "info", "msg": "200/\"from/some/url/someToken/create?token=someToken\"", "time": "timeForTest" },
         { "level": "info", "msg": "200/\"from/some/url/someToken/get?token=someToken&id=someId\"", "time": "timeForTest" }

@@ -21,7 +21,7 @@ function displayAndGetButton<T> ( s: DeleteStateForTest, setMain: ( s: DeleteSta
 describe ( "delete state button", () => {
   it ( "should render", () => {
     const comp = displayAndGetButton ( {}, s => {}, s => <DeleteStateButton id={'someId'} label='someLabel' states={[ s.focusOn ( "a" ), s.focusOn ( "b" ) ]}/> )
-    expect ( comp.html () ).toEqual ( "<button id=\"someId\">someLabel</button>" )
+    expect ( comp.html () ).toEqual ( "<button id=\"someId\" class=\"button\">someLabel</button>" )
   } )
 
   it ( "shouldnot do anything when 0 deletes and clicked", () => {

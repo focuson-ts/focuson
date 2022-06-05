@@ -5,6 +5,7 @@ import { lensState, LensState } from "@focuson/state";
 import { Lens, Lenses, NameAndLens, Optional } from "@focuson/lens";
 import { FetchFn, HasSimpleMessages, RestAction } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestDetails } from "@focuson/rest";
+import { FocusOnDebug, HasFocusOnDebug } from "./debug";
 
 
 export function defaultCombine<S> ( state: LensState<S, any, any>, pages: PageDetailsForCombine[] ) {
@@ -92,10 +93,29 @@ export interface AccordionsInDebug {
   accordions?: string[]
 }
 
+//If going to avoid race condition bugs need rest and fetch turned into mutations first.
+// export const setJsonMiddleware = <S extends HasFocusOnDebug, Context extends FocusOnContext<S>, MSGs> ( config: FocusOnConfig<S, Context, MSGs>, context: Context ) => ( dispatch: ( s: S ) => void ) => async ( main: S, reason: any ) => {
+//   const debug: any = main.debug;
+//   const withDebug = debug?.recordTrace ? traceL<S> ().transform ( old => [ ...old ? old : [], reason ] ) ( main ) : main
+//   const { fetchFn, preMutate, postMutate, onError, pages, restDetails, fetchers, restL, pageL, messageL, stringToMsg } = config
+//   const { pathToLens } = context
+//   try {
+//     const withPreMutate = preMutate ( withDebug )
+//     const firstPageProcesses: S = preMutateForPages<S, Context> ( context ) ( withPreMutate )
+//     const afterRest = await rest ( fetchFn, restDetails, config.restUrlMutator, pathToLens, messageL, stringToMsg, restL, firstPageProcesses )
+//   } catch ( e ) {
+//     console.error ( "An unexpected error occured. Rolling back the state", e )
+//     let newMain = onError ( main, e );
+//     dispatch ( newMain )
+//     return newMain
+//   }
+// };
+
+
 export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MSGs> ( config: FocusOnConfig<S, Context, MSGs>, context: Context, pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>, publish: ( lc: LensState<S, S, Context> ) => void ): ( s: S, reason: any ) => Promise<S> {
   return async ( main: S, reason: any ): Promise<S> => {
     console.log ( 'setJsonForFocusOn', reason )
-    // @ts-ignore
+    // @ts-ignore+
     const debug: any = main.debug;
     const withDebug = debug?.recordTrace ? traceL<S> ().transform ( old => [ ...old ? old : [], reason ] ) ( main ) : main
     const { fetchFn, preMutate, postMutate, onError, pages, restDetails, fetchers, restL, pageL, messageL, stringToMsg } = config
@@ -103,7 +123,7 @@ export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MS
     try {
       const withPreMutate = preMutate ( withDebug )
       const firstPageProcesses: S = preMutateForPages<S, Context> ( context ) ( withPreMutate )
-      const afterRest = await rest ( fetchFn, restDetails, config.restUrlMutator, pathToLens, messageL,stringToMsg, restL, firstPageProcesses )
+      const afterRest = await rest ( fetchFn, restDetails, config.restUrlMutator, pathToLens, messageL, stringToMsg, restL, firstPageProcesses )
       if ( afterRest ) newStateFn ( afterRest )
       let newMain = await loadTree ( fetchers, afterRest, fetchFn, debug )
         .then ( s => s ? s : onError ( s, Error ( 'could not load tree' ) ) )

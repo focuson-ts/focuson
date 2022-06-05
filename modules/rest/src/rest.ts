@@ -1,5 +1,5 @@
 import { reqFor, UrlConfig } from "@focuson/template";
-import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RestAction, RestStateChange, safeArray, safeObject, sortedEntries, toArray } from "@focuson/utils";
+import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RestAction, RestStateChange, safeArray, safeObject, safeString, sortedEntries, toArray } from "@focuson/utils";
 import { identityOptics, massTransform, Optional, Transform } from "@focuson/lens";
 
 
@@ -73,7 +73,7 @@ export type StateAccessDetails = { url: string, params: NameAnd<emptyType> } // 
 export interface OneRestDetails<S, FD, D, MSGs> extends UrlConfig<S, FD, D> {
   url: string;
   states?: NameAnd<StateAccessDetails>,
-  messages: ( status: number, body: any ) => MSGs[];//often the returning value will have messages in it. Usually a is of type Domain. When the rest action is Delete there may be no object returned, but might be MSGs
+  messages: ( status: number | undefined, body: any ) => MSGs[];//often the returning value will have messages in it. Usually a is of type Domain. When the rest action is Delete there may be no object returned, but might be MSGs
 }
 
 
@@ -102,15 +102,21 @@ export interface RestResult<S, MSGs, Cargo> {
   result: any
 }
 
-export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]>, stringToMsg: ( msg: string ) => MSGs ) => ( s: S, { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): S => {
-  const msgTransform: Transform<S, MSGs[]> = [ messageL, old => [ ...one.messages ( status, result ), ...old ] ]
-  const msgFromCommand: Transform<S, MSGs[]> | undefined = status < 300 && restCommand.messageOnSuccess ? [ messageL, old => [ stringToMsg ( restCommand.messageOnSuccess ), ...old ] ] : undefined
-  const actualMessagesTxs: Transform<S, MSGs[]> = msgFromCommand ? msgFromCommand : msgTransform
+export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, stringToMsg: ( msg: string ) => MSGs ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
+  const msgTransform: Transform<S, MSGs[]> = [ messageL, old => [ ...one.messages ( status, result ), ...safeArray ( old ) ] ]
+  let messageOnSuccess = restCommand.messageOnSuccess;
+  const msgFromCommand: Transform<S, MSGs[]> | undefined = messageOnSuccess && status && status < 300 ? [ messageL, old => [ stringToMsg ( safeString ( messageOnSuccess ) ), ...safeArray ( old ) ] ] : undefined
+  const actualMessagesTxs: Transform<S, any> = msgFromCommand ? msgFromCommand : msgTransform
   const useResponse = getRestTypeDetails ( restCommand.restAction ).output.needsObj
   const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => result ] ] : []
-  let res = massTransform ( s, actualMessagesTxs, ...resultTransform );
-  return res
+  return [ actualMessagesTxs, ...resultTransform ];
 };
+
+export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]>, stringToMsg: ( msg: string ) => MSGs ) => ( s: S, { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): S => {
+  const txs: Transform<S, any>[] = restResultToTx<S, MSGs> ( messageL, stringToMsg ) ( result )
+  return massTransform ( s, ...txs )
+};
+
 export function getUrlForRestAction ( restAction: RestAction, url: string, states?: NameAnd<StateAccessDetails> ): string {
   if ( isRestStateChange ( restAction ) ) {
     const url: string | undefined = safeObject ( states )[ restAction.state ]?.url
@@ -125,12 +131,11 @@ function findStateDetails<S, MSGS> ( one: OneRestDetails<S, any, any, MSGS>, res
   return result;
 }
 export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Details,
-                                                                         restL: Optional<S, RestCommand[]>,
+                                                                         commands: RestCommand[],
                                                                          urlMutatorForRest: ( r: RestAction, url: string ) => string,
                                                                          s: S ): [ RestCommand, OneRestDetails<S, any, any, any>, RequestInfo, RequestInit | undefined ][] {
   // @ts-ignore
   const debug = s.debug?.restDebug
-  const commands = safeArray ( restL.getOption ( s ) )
   return commands.map ( command => {
     const { name, restAction } = command
     const one: OneRestDetails<S, any, any, MSGS> = d[ name ]
@@ -183,6 +188,40 @@ export function processAllRestResults<S, MSGS> ( messageL: Optional<S, MSGS[]>, 
   return withCommandsRemoved
 }
 
+/** Executes all the rest commands returning a list of transformations. It doesn't remove the rest commands from S
+ This is valuable over the 'make a new S'for a few reasons:
+ * It makes testing the rest logic easier
+ * It reduces race conditions where user clicks will be ignore with slow networks... the transformations can be applied to the updated world. It's not a perfect solution though (that's a hard problem)
+ * It allows us (in the calling code) to add the restful data to the trace. This is great for 'understanding what happened' */
+export async function restToTransforms<S, MSGS> (
+  fetchFn: FetchFn,
+  d: RestDetails<S, MSGS>,
+  urlMutatorForRest: ( r: RestAction, url: string ) => string,
+  pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>,
+  messageL: Optional<S, MSGS[]>,
+  stringToMsg: ( msg: string ) => MSGS,
+  s: S, commands: RestCommand[] ): Promise<Transform<S, any>[]> {
+  // @ts-ignore
+  const debug = s.debug?.restDebug
+  if ( debug ) console.log ( "rest-commands", commands )
+  if ( commands.length == 0 ) return Promise.resolve ( [] )
+  const requests = restReq ( d, commands, urlMutatorForRest, s )
+  if ( debug ) console.log ( "rest-requests", requests )
+  const results = await massFetch ( fetchFn, requests )
+  if ( debug ) console.log ( "rest-results", results )
+  const deleteTx = ( d: string ): Transform<S, any> => [ pathToLens ( s ) ( d ), () => undefined ];
+  const withDeleteAfterRest: Transform<S, any>[] = results.flatMap ( res => toArray ( res.restCommand.deleteOnSuccess ).map ( deleteTx ) )
+  const txs: Transform<S, any>[] = [ ...results.flatMap ( restResultToTx ( messageL, stringToMsg ) ), ...withDeleteAfterRest ];
+  if ( debug ) console.log ( "rest-txs", txs.map ( ( [ p, d ] ) => [ p.description, d ] ) )
+  return txs
+}
+
+/** @deprecated
+ * This does everything for rest: processes the commands, removes the commands, processes the adding of rest commands to state
+ *
+ * It is deprecated because of the race condition it introduces: the users commands from the start to the time the rest command results are processed will be overwritten
+ * In addition it is hard to link this to the tracing system, so visibility about what is happening is much less
+ * */
 export async function rest<S, MSGS> (
   fetchFn: FetchFn,
   d: RestDetails<S, MSGS>,
@@ -192,16 +231,11 @@ export async function rest<S, MSGS> (
   stringToMsg: ( msg: string ) => MSGS,
   restL: Optional<S, RestCommand[]>,
   s: S ): Promise<S> {
+  const commands = restL.getOption ( s )
+  const txs: Transform<S, any>[] = await restToTransforms ( fetchFn, d, urlMutatorForRest, pathToLens, messageL, stringToMsg, s, safeArray ( commands ) )
+  const newS = massTransform ( s, ...txs, [ restL, () => [] ] )
   // @ts-ignore
   const debug = s.debug?.restDebug
-  const commands = restL.getOption ( s )
-  if ( debug ) console.log ( "rest-commands", commands )
-  if ( !commands || commands.length == 0 ) return Promise.resolve ( s )
-  const requests = restReq ( d, restL, urlMutatorForRest, s )
-  if ( debug ) console.log ( "rest-requests", requests )
-  const results = await massFetch ( fetchFn, requests )
-  if ( debug ) console.log ( "rest-results", results )
-  const result = processAllRestResults<S, MSGS> ( messageL, stringToMsg, restL, pathToLens, results, s );
-  if ( debug ) console.log ( "rest-result", result )
-  return result
+  if ( debug ) console.log ( "rest-result", newS )
+  return newS
 }

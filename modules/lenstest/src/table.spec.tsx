@@ -50,11 +50,11 @@ describe ( "Table", () => {
   describe ( "empty table", () => {
     it ( "should render an empty with no selected", () => {
       const table = displayAndGetTable ( {}, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id'/> )
-      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody></tbody></table>" )
+      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody class='grid-sub'></tbody></table>" )
     } )
     it ( "should render an empty with  selected", () => {
       const table = displayAndGetTable ( {}, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id' copySelectedIndexTo={s.focusOn ( 'selected' )}/> )
-      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody></tbody></table>" )
+      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody class='grid-sub'></tbody></table>" )
     } )
   } )
 
@@ -65,17 +65,12 @@ describe ( "Table", () => {
   describe ( "table without selected", () => {
     it ( "should render order a, b", () => {
       const table = displayAndGetTable ( twoRowsS0, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id'/> )
-      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id'>" +
-        "<thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead>" +
-        "<tbody><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td></tr>" +
-        "<tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td></tr></tbody></table>" )
+      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody class='grid-sub'><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td></tr><tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td></tr></tbody></table>" )
     } )
     it ( "should render order a, b, c and use the joiner, when joiner is a string", () => {
       const table = displayAndGetTable ( twoRowsWithC, s => {}, s => <Table order={[ 'a', 'b', 'c' ]} joiners='-' state={s.focusOn ( 'contents' )} id='id'/> )
       expect ( table.html ().replace ( /"/g, "'" ) ).toEqual (
-        "<table id='id'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead>" +
-        "<tbody><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td><td id='id[0].c'>3-4</td></tr>" +
-        "<tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td><td id='id[1].c'>5-6</td></tr></tbody></table>" )
+        "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead><tbody class='grid-sub'><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td><td id='id[0].c'>3-4</td></tr><tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td><td id='id[1].c'>5-6</td></tr></tbody></table>" )
     } )
 
 
@@ -83,16 +78,14 @@ describe ( "Table", () => {
     it ( "should render order a, b, c and use the joiner, when joiner is a string[]", () => {
       const table = displayAndGetTable ( twoRowsWithC, s => {}, s => <Table order={[ 'a', 'b', 'c' ]} joiners={[ 'c:*' ]} state={s.focusOn ( 'contents' )} id='id'/> )
       expect ( table.html ().replace ( /"/g, "'" ) ).toEqual (
-        "<table id='id'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead>" +
-        "<tbody><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td><td id='id[0].c'>3*4</td></tr>" +
-        "<tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td><td id='id[1].c'>5*6</td></tr></tbody></table>" )
+        "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead><tbody class='grid-sub'><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td><td id='id[0].c'>3*4</td></tr><tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td><td id='id[1].c'>5*6</td></tr></tbody></table>" )
     } )
 
 
 
     it ( "should render order b,a", () => {
       const table = displayAndGetTable ( twoRowsS0, s => {}, s => <Table order={[ 'b', 'a' ]} state={s.focusOn ( 'contents' )} id='id'/> )
-      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id'><thead><tr><th id='id.th[0]'>B</th><th id='id.th[1]'>A</th></tr></thead><tbody><tr id='id[0]'><td id='id[0].b'>one</td><td id='id[0].a'>1</td></tr><tr id='id[1]'><td id='id[1].b'>two</td><td id='id[1].a'>2</td></tr></tbody></table>" )
+      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>B</th><th id='id.th[1]'>A</th></tr></thead><tbody class='grid-sub'><tr id='id[0]'><td id='id[0].b'>one</td><td id='id[0].a'>1</td></tr><tr id='id[1]'><td id='id[1].b'>two</td><td id='id[1].a'>2</td></tr></tbody></table>" )
     } )
     it ( "should do nothing when selected", () => {
       const table = displayAndGetTable ( twoRowsS0, s => {throw Error ( 'should not be called' )}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id'/> )
@@ -108,20 +101,20 @@ describe ( "Table", () => {
       const table = displayAndGetTable ( twoRowsWithC, s => {}, s =>
         <Table order={[ 'a', 'b', 'c' ]} joiners='-' prefixColumn='a' prefixFilter={s.focusOn ( 'filter' )} state={s.focusOn ( 'contents' )} id='id'/> )
       expect ( table.html ().replace ( /"/g, "'" ) ).toEqual (
-        "<table id='id'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead><tbody><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td><td id='id[0].c'>3-4</td></tr><tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td><td id='id[1].c'>5-6</td></tr></tbody></table>" )
+        "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead><tbody class='grid-sub'><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td><td id='id[0].c'>3-4</td></tr><tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td><td id='id[1].c'>5-6</td></tr></tbody></table>" )
     } )
     it ( "should filter by the parameters if the filterPrefix and column are set, when the parameter is a string", () => {
       const table = displayAndGetTable ( { ...twoRowsWithC, filter: 'o' }, s => {}, s =>
         <Table order={[ 'a', 'b', 'c' ]} joiners='-' prefixColumn='b' prefixFilter={s.focusOn ( 'filter' )} state={s.focusOn ( 'contents' )} id='id'/> )
       expect ( table.html ().replace ( /"/g, "'" ) ).toEqual (
-        "<table id='id'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead><tbody><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td><td id='id[0].c'>3-4</td></tr></tbody></table>" )
+        "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead><tbody class='grid-sub'><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td><td id='id[0].c'>3-4</td></tr></tbody></table>" )
 
     } )
     it ( "should filter by the parameters if the filterPrefix and column are set, when the parameter is an object", () => {
       const table = displayAndGetTable ( { ...twoRowsWithC, filter: '5-' }, s => {}, s =>
         <Table order={[ 'a', 'b', 'c' ]} joiners='-' prefixColumn='c' prefixFilter={s.focusOn ( 'filter' )} state={s.focusOn ( 'contents' )} id='id'/> )
       expect ( table.html ().replace ( /"/g, "'" ) ).toEqual (
-        "<table id='id'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead><tbody><tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td><td id='id[1].c'>5-6</td></tr></tbody></table>" )
+        "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead><tbody class='grid-sub'><tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td><td id='id[1].c'>5-6</td></tr></tbody></table>" )
 
     } )
   } )
@@ -131,39 +124,36 @@ describe ( "Table", () => {
       const table = displayAndGetTable ( twoRowsWithC, s => {}, s =>
         <Table order={[ 'a', 'b', 'c' ]} joiners='-' state={s.focusOn ( 'contents' )} maxCount='0' id='id'/> )
       expect ( table.html ().replace ( /"/g, "'" ) ).toEqual (
-        "<table id='id'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead><tbody></tbody></table>" )
+        "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead><tbody class='grid-sub'></tbody></table>" )
 
     } )
     it ( "should obey the maxcount when that is one", () => {
       const table = displayAndGetTable ( twoRowsWithC, s => {}, s =>
         <Table order={[ 'a', 'b', 'c' ]} joiners='-' state={s.focusOn ( 'contents' )} maxCount='1' id='id'/> )
       expect ( table.html ().replace ( /"/g, "'" ) ).toEqual (
-        "<table id='id'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead><tbody><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td><td id='id[0].c'>3-4</td></tr></tbody></table>" )
+        "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead><tbody class='grid-sub'><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td><td id='id[0].c'>3-4</td></tr></tbody></table>" )
 
     } )
     it ( "should obey the max count when that is more than the data", () => {
       const table = displayAndGetTable ( twoRowsWithC, s => {}, s =>
         <Table order={[ 'a', 'b', 'c' ]} joiners='-' state={s.focusOn ( 'contents' )} maxCount='10' id='id'/> )
       expect ( table.html ().replace ( /"/g, "'" ) ).toEqual (
-        "<table id='id'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead><tbody><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td><td id='id[0].c'>3-4</td></tr><tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td><td id='id[1].c'>5-6</td></tr></tbody></table>" )
+        "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead><tbody class='grid-sub'><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td><td id='id[0].c'>3-4</td></tr><tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td><td id='id[1].c'>5-6</td></tr></tbody></table>" )
     } )
   } )
 
   describe ( "table with copySelectedIndexTo", () => {
     it ( "should render  nothing selected", () => {
       const table = displayAndGetTable ( twoRows, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id' copySelectedIndexTo={s.focusOn ( 'selected' )}/> )
-      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id'>" +
-        "<thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead>" +
-        "<tbody><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td></tr>" +
-        "<tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td></tr></tbody></table>" )
+      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody class='grid-sub'><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td></tr><tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td></tr></tbody></table>" )
     } )
     it ( "should render 0 selected", () => {
       const table = displayAndGetTable ( twoRowsS0, s => {}, s => <Table order={[ 'b', 'a' ]} state={s.focusOn ( 'contents' )} id='id' copySelectedIndexTo={s.focusOn ( 'selected' )}/> )
-      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id'><thead><tr><th id='id.th[0]'>B</th><th id='id.th[1]'>A</th></tr></thead><tbody><tr id='id[0]' class='bg-primary'><td id='id[0].b'>one</td><td id='id[0].a'>1</td></tr><tr id='id[1]'><td id='id[1].b'>two</td><td id='id[1].a'>2</td></tr></tbody></table>" )
+      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>B</th><th id='id.th[1]'>A</th></tr></thead><tbody class='grid-sub'><tr id='id[0]' class='grid-selected'><td id='id[0].b'>one</td><td id='id[0].a'>1</td></tr><tr id='id[1]'><td id='id[1].b'>two</td><td id='id[1].a'>2</td></tr></tbody></table>" )
     } )
     it ( "should render 1 selected", () => {
       const table = displayAndGetTable ( twoRowsS1, s => {}, s => <Table order={[ 'b', 'a' ]} state={s.focusOn ( 'contents' )} id='id' copySelectedIndexTo={s.focusOn ( 'selected' )}/> )
-      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id'><thead><tr><th id='id.th[0]'>B</th><th id='id.th[1]'>A</th></tr></thead><tbody><tr id='id[0]'><td id='id[0].b'>one</td><td id='id[0].a'>1</td></tr><tr id='id[1]' class='bg-primary'><td id='id[1].b'>two</td><td id='id[1].a'>2</td></tr></tbody></table>" )
+      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>B</th><th id='id.th[1]'>A</th></tr></thead><tbody class='grid-sub'><tr id='id[0]'><td id='id[0].b'>one</td><td id='id[0].a'>1</td></tr><tr id='id[1]' class='grid-selected'><td id='id[1].b'>two</td><td id='id[1].a'>2</td></tr></tbody></table>" )
     } )
     it ( "should change the selected when clicked", () => {
       var remembered: any = undefined
@@ -179,18 +169,15 @@ describe ( "Table", () => {
   describe ( "table with copySelectedItemTo", () => {
     it ( "should render  nothing selected", () => {
       const table = displayAndGetTable ( twoRows, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id' copySelectedItemTo={s.focusOn ( 'item' )}/> )
-      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id'>" +
-        "<thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead>" +
-        "<tbody><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td></tr>" +
-        "<tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td></tr></tbody></table>" )
+      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody class='grid-sub'><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td></tr><tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td></tr></tbody></table>" )
     } )
     it ( "should render 0 selected", () => {
       const table = displayAndGetTable ( twoRowsS0, s => {}, s => <Table order={[ 'b', 'a' ]} state={s.focusOn ( 'contents' )} id='id' copySelectedItemTo={s.focusOn ( 'item' )}/> )
-      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id'><thead><tr><th id='id.th[0]'>B</th><th id='id.th[1]'>A</th></tr></thead><tbody><tr id='id[0]'><td id='id[0].b'>one</td><td id='id[0].a'>1</td></tr><tr id='id[1]'><td id='id[1].b'>two</td><td id='id[1].a'>2</td></tr></tbody></table>" )
+      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>B</th><th id='id.th[1]'>A</th></tr></thead><tbody class='grid-sub'><tr id='id[0]'><td id='id[0].b'>one</td><td id='id[0].a'>1</td></tr><tr id='id[1]'><td id='id[1].b'>two</td><td id='id[1].a'>2</td></tr></tbody></table>" )
     } )
     it ( "should render 1 selected", () => {
       const table = displayAndGetTable ( twoRowsS1, s => {}, s => <Table order={[ 'b', 'a' ]} state={s.focusOn ( 'contents' )} id='id' copySelectedItemTo={s.focusOn ( 'item' )}/> )
-      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id'><thead><tr><th id='id.th[0]'>B</th><th id='id.th[1]'>A</th></tr></thead><tbody><tr id='id[0]'><td id='id[0].b'>one</td><td id='id[0].a'>1</td></tr><tr id='id[1]'><td id='id[1].b'>two</td><td id='id[1].a'>2</td></tr></tbody></table>" )
+      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>B</th><th id='id.th[1]'>A</th></tr></thead><tbody class='grid-sub'><tr id='id[0]'><td id='id[0].b'>one</td><td id='id[0].a'>1</td></tr><tr id='id[1]'><td id='id[1].b'>two</td><td id='id[1].a'>2</td></tr></tbody></table>" )
     } )
     it ( "should change the item when selected", () => {
       var remembered: any = undefined
