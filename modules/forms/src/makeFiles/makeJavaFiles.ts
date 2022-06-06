@@ -51,6 +51,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   const javaQueriesPackages = javaCodeRoot + "/" + params.queriesPackage
   const javaMutatorPackage = javaCodeRoot + '/' + params.mutatorPackage
   const javaResolverPackage = javaCodeRoot + '/' + params.resolversPackage
+  const javaUtilsRoot = javaCodeRoot + '/' + params.utilsPackage
   const javaDbPackages = javaCodeRoot + "/" + params.dbPackage
   // const javaSql = javaResourcesRoot + "/" + params.sqlDirectory
 
@@ -95,7 +96,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
   detailsLog ( logLevel, 1, 'java common copies' )
   templateFile ( `${javaAppRoot}/pom.xml`, 'templates/mvnTemplate.pom', { ...params, versionNumber: appConfig.versionNumber }, directorySpec )
-  templateFile ( javaCodeRoot + "/IManyGraphQl.java", "templates/raw/java/IManyGraphQl.java", params, directorySpec )
+  templateFile ( javaUtilsRoot + "/IManyGraphQl.java", "templates/raw/java/IManyGraphQl.java", params, directorySpec )
   templateFile ( javaCodeRoot + "/CorsConfig.java", "templates/raw/java/CorsConfig.java", params, directorySpec )
   templateFile ( `${javaCodeRoot}/SchemaController.java`, 'templates/raw/java/SchemaController.java', params, directorySpec )
   templateFile ( `${javaControllerRoot}/Transform.java`, 'templates/Transform.java', params, directorySpec )
@@ -128,7 +129,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
     writeToFile ( fetcherFile, () => makeJavaFetcherInterfaceForResolver ( params, p, rest, resolver, javaType ), details )
   } )
 
-  writeToFile ( `${javaCodeRoot}/${params.wiringClass}.java`, () => makeAllJavaWiring ( params, pages, directorySpec ), details )
+  writeToFile ( `${javaUtilsRoot}/${params.wiringClass}.java`, () => makeAllJavaWiring ( params, pages, directorySpec ), details )
   templateFile ( `${javaCodeRoot}/${params.applicationName}.java`, 'templates/JavaApplicationTemplate.java', params, directorySpec, details )
   templateFile ( `${javaCodeRoot}/utils/ITimeService.java`, 'templates/raw/java/utils/ITimeService.java', params, directorySpec, details )
   templateFile ( `${javaCodeRoot}/utils/RealTimeService.java`, 'templates/raw/java/utils/RealTimeService.java', params, directorySpec, details )
@@ -167,14 +168,14 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   if ( appConfig.makeSqlStrings !== false ) {
     let dataSql = allMainPages ( pages ).flatMap ( mainPage =>
       sortedEntries ( mainPage.rest )
-          .flatMap ( ( [ _, rdp ] ) => {
-            return getStrategy(rdp?.rest?.tables?.entity).flatMap( s => {
-              if (s.type === 'WithId') return safeArray(makeInsertSqlForIds(rdp.rest.dataDD, rdp?.rest?.tables?.entity, s))
-              else if (s.type === 'WithoutId') return safeArray(makeInsertSqlForNoIds(rdp.rest.dataDD, rdp?.rest?.tables?.entity, s))
-              else if (s.type === 'Manual') return s.sql
-              else return []
-            })
-          }));
+        .flatMap ( ( [ _, rdp ] ) => {
+          return getStrategy ( rdp?.rest?.tables?.entity ).flatMap ( s => {
+            if ( s.type === 'WithId' ) return safeArray ( makeInsertSqlForIds ( rdp.rest.dataDD, rdp?.rest?.tables?.entity, s ) )
+            else if ( s.type === 'WithoutId' ) return safeArray ( makeInsertSqlForNoIds ( rdp.rest.dataDD, rdp?.rest?.tables?.entity, s ) )
+            else if ( s.type === 'Manual' ) return s.sql
+            else return []
+          } )
+        } ) );
     if ( dataSql.length > 0 )
       writeToFile ( `${javaResourcesRoot}/data.sql`, () => dataSql )
   }

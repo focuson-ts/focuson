@@ -1,4 +1,4 @@
-package {thePackage};
+package {thePackage}.{utilsPackage};
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;

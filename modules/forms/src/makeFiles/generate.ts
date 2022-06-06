@@ -46,6 +46,7 @@ export const params = {
   optionalsFile: 'optionals',
   mutatorPackage: 'mutator',
   resolversPackage: 'resolvers',
+  utilsPackage: 'utils',
   maxTuples: 3,
   theme:'theme-light'
 };

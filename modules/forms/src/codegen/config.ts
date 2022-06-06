@@ -14,6 +14,7 @@ export interface JavaWiringParams {
   schema: string;
   mutatorPackage: string;
   resolversPackage: string;
+  utilsPackage: string;
   defaultDbName: string;
   maxTuples: number
 }

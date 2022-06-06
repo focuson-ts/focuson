@@ -1,4 +1,4 @@
-package {thePackage};
+package {thePackage}.{utilsPackage};
 
 import graphql.GraphQL;
 

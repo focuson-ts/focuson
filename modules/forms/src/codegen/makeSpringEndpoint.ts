@@ -157,7 +157,7 @@ export function makeSpringEndpointsFor<B, G> ( params: JavaWiringParams, p: Main
     `import org.springframework.http.HttpStatus;`,
     `import ${params.thePackage}.Sample;`,
     `import ${queryPackage ( params, p )}.${queryClassName ( params, r )};`,
-    `import ${params.thePackage}.IManyGraphQl;`,
+    `import ${params.thePackage}.${params.utilsPackage}.IManyGraphQl;`,
     `import ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
     ...auditImports,
     `import org.springframework.beans.factory.annotation.Autowired;`,
