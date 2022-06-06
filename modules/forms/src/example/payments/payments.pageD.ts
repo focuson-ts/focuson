@@ -62,7 +62,7 @@ export const PaymentsPageD: ExampleMainPage = {
     copy: {
       control: 'ModalButton', modal: EditPaymentsPD, mode: 'create', createEmpty: PaymentDD, focusOn: '~/onePayment',
       enabledBy: 'tableItemSelected',
-      copy: { from: '~/selectedPayment' }, copyOnClose: { to: '~/summary/payment' }
+      copy: [{ from: '~/selectedPayment/payeeName', 'to': '~/editablePayemnt/payeeName' }], copyOnClose: { to: '~/summary/payment' }
     },
     save: {
       control: 'RestButton', restName: 'newPayments', action: 'create', messageOnSuccess: 'Payment created'

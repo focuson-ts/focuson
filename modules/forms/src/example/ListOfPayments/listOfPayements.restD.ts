@@ -2,7 +2,7 @@ import { ExampleRestD } from "../common";
 
 import { AccountDetailsDD, CurrentPaymentCountsDD, postCodeSearchResponseDD, PrintRecordHistoryDD } from "./listOfPayements.dataD";
 import { IntParam, RestD, RestParams, StringParam } from "../../common/restD";
-import { accountT, onlySchema } from "../database/tableNames";
+import { onlySchema } from "../database/tableNames";
 import { AllGuards } from "../../buttons/guardButton";
 import { allCommonIds, fromCommonIds } from "../commonIds";
 import { GuardedStoredProcedureMutation, MutationParamForStoredProc, OutputForSqlMutationParam } from "../../common/resolverD";
@@ -85,7 +85,9 @@ export const PrintRecordRD: ExampleRestD = {
       },
       {
         type: 'case', name: 'print',
-        params: [ 'fulfilmentType', 'requestByRole', 'vbAcountSeq', 'rbsMtAccount', 'employeeId', ind ( 'so_ind' ), ind ( 'dd_ind' ), ind ( 'bp_ind' ), ind ( 'obso_ind' ), ind ( 'obbp_ind' ), 'sortcode', 'accountNo', 'accountId', 'paymentId', 'newBankSeq' ],
+        params: [ 'fulfilmentType', 'requestByRole', 'vbAcountSeq', 'rbsMtAccount', 'employeeId',
+          { type: 'input', name: 'so_ind', javaType: 'String', setParam: `${'so_ind'}.equals("Y") ? 1 : 0` },
+          ind ( 'dd_ind' ), ind ( 'bp_ind' ), ind ( 'obso_ind' ), ind ( 'obbp_ind' ), 'sortcode', 'accountNo', 'accountId', 'paymentId', 'newBankSeq' ],
         select: [
           bankStuff ( [ 'fulfilmentType.equals("BK")', 'requestByRole.equals("bank")' ], 'a10001' ),
           bankStuff ( [ 'fulfilmentType.equals("OA")', 'requestByRole.equals("bank")' ], 'b10001' ),

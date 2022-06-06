@@ -19,7 +19,9 @@ describe ( "makeRest", () => {
       "    cd, fdd,",
       "    ids: ['accountId','applRef','brandRef','dbName','employeeType'],",
       "    resourceId:  ['clientRef'],",
-      "    messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],",
+      "    messages: ( status: number | undefined, body: any ): SimpleMessage[] => status == undefined ?",
+      "      [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify ( body )}`, testDateFn () ) ] :",
+      "      [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],",
       "    url: '/api/accountsSummary?{query}',",
       "    states : {'invalidate':{'url':'/api/accountsSummary/invalidate?{query}','params':{'accountId':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':44444444},'clientRef':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'clientRef','testValue':333,'annotation':'@RequestHeader @RequestParam'},'employeeType':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'employeeType','testValue':'basic','annotation':'@RequestHeader @RequestParam'},'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'}}}}",
       "  }",
@@ -40,13 +42,15 @@ describe ( "makeRest", () => {
       "    cd, fdd,",
       "    ids: ['accountId','applRef','brandRef','clientRef'],",
       "    resourceId:  ['createPlanId'],",
-      "    messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],",
+      "    messages: ( status: number | undefined, body: any ): SimpleMessage[] => status == undefined ?",
+      "      [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify ( body )}`, testDateFn () ) ] :",
+      "      [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],",
       "    url: '/api/createPlan?{query}',",
       "    states : {}",
       "  }",
       "}",
       ""
-    ] )
+    ])
   } )
 
   it ( "should create rest for a repeating restD", () => {
@@ -62,7 +66,9 @@ describe ( "makeRest", () => {
       "    cd, fdd,",
       "    ids: ['clientRef'],",
       "    resourceId:  [],",
-      "    messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],",
+      "    messages: ( status: number | undefined, body: any ): SimpleMessage[] => status == undefined ?",
+      "      [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify ( body )}`, testDateFn () ) ] :",
+      "      [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],",
       "    url: '/api/repeating?{query}',",
       "    states : {}",
       "  }",

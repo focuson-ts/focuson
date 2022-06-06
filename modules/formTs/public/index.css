@@ -1,14 +1,11 @@
-/* @import url("./themes/{theme}/index.css"); */
+/* @import url("./themes/theme-dark/index.css"); */
 @import url("./themes/theme-dark/index.css");
-
 .border-bottom {
   border-bottom: 1px solid #ddd;
 }
-
 .padding-bottom {
   padding-bottom: 1rem;
 }
-
 .row {
     --bs-gutter-x: 1.5rem;
     --bs-gutter-y: 0;
@@ -26,20 +23,16 @@
     padding-left: calc(var(--bs-gutter-x) * .5);
     margin-top: var(--bs-gutter-y);
 }
-
 .col {
     flex: 1 0 0%;
 }
-
 ol, ul {
     padding-left: 30px;
 }
-
 li {
     display: inline-block;
     padding: 10px 15px 0 0;
 }
-
 h1 {
     color: var(--h1-custom-brand-colour);
     font-size: var(--h1-custom-font-size);
@@ -53,19 +46,15 @@ h2 {
     /* line-height: var(--h1-custom-line-height); */
     /* font-weight: bold; */
 }
-
 /* table {
     border-collapse: collapse;
 } */
-
 /* .outlined, table, th, td {
     border: 1px solid;
 } */
-
 .status {
     margin-bottom: 10px;
 }
-
 /* input { */
     /* font-size: revert; */
     /* height: var(--input-height); */
@@ -75,7 +64,6 @@ h2 {
     /* font-size: var(--input-font-size); */
     /* color:var(--input-font-colour);    */
 /* } */
-
 /* input.view {
     border: none;
     text-decoration: none;
@@ -87,7 +75,6 @@ input:invalid {
 input:valid{
     background: none; */
 /* } */
-
 #container {
     min-height: 500px;
     display: block;
@@ -95,7 +82,6 @@ input:valid{
     background: #fff;
     padding: 5px 25px;
 }
-
 /* button {
     min-width: 50px;
     background-color: white;
@@ -107,106 +93,86 @@ input:valid{
     transition-duration: 0.4s;
     cursor: pointer;
 }
-
 button:hover {
     background-color: lightgrey;
 }
-
 button:disabled {
     background-color: white;
     color: gray;
     border: 2px solid gray;
 } */
-
 /* input:read-only, input:disabled, select:read-only, select:disabled {
     background-color: #e9ecef;
     opacity: 1;
 } */
-
 .mainPage {
     border: 1px solid black;
     padding: 20px;
     height: auto;
     position: relative;
 }
-
 .layout {
     display: flex;
     flex-direction: column;
     gap: 15px
 }
-
 /* table {
     border-collapse: collapse;
     width: 100%;
 }
-
 th, td {
     padding: 8px;
     text-align: left;
     border-bottom: 1px solid #ddd;
 }
-
 tr:hover {background-color: lightgray;} */
-
 table {
     margin: 0 0 20px 0;
 }
-
 .labelDropdownButton {
     width: 100%;
     /* display: flex; */
     align-items: center;
     margin: 0 0 20px 0;
 }
-
 .labelAndDate {
     /* display: flex; */
     align-items: center;
     margin: 0 0 20px 0;
 }
-
 .labelDropdown {
     /* display: flex; */
     align-items: center;
     margin: 0 0 20px 0;
 }
-
 .labelValue {
     justify-content: space-between;
     /* display: flex; */
     align-items: center;
 }
-
 .labelValueButton {
     /*width: 100%;*/
     /* display: flex; */
     align-items: center;
     margin: 0 0 20px 0;
 }
-
 .labelRadioButton{
     /* display: flex; */
     align-items: center;
     margin: 0 0 20px 0;
 }
-
 .labelCheckboxButton{
   display: flex;
   align-items: center;
   margin: 0 0 20px 0;
 }
-
 label {
     color: var(--form-label-colour);
     font-size: var(--font-size-main);
 }
-
-
 select {
     height: 1.625rem;
 }
-
 #modalPage {
     position: absolute; /* Stay in place */
     left: 0;
@@ -214,13 +180,11 @@ select {
     width: 100%; /* Full width */
     height: 100%; /* Full height */
 }
-
 /* Modal Content/Box */
 #modalPage div#contentWrapper {
     background-color: #fefefe;
     height: 100%;
 }
-
 /* The Close Button */
 .close-button {
     color: #aaa;
@@ -231,14 +195,12 @@ select {
     top: 0;
     right: 5px;
 }
-
 .close-button:hover,
 .close-button:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;
 }
-
 .modalPopup {
     position: absolute;
     left: 0;
@@ -251,7 +213,6 @@ select {
     transform: scale(1.1);
     transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
 }
-
 .modalPopup-content {
     position: relative;
     top: 10%;
@@ -262,18 +223,15 @@ select {
     border-radius: 0.5rem;
     width: 50%;
 }
-
 /* .close-button:hover {
     background-color: black;
 } */
-
 .show-modal {
     opacity: 1;
     visibility: visible;
     transform: scale(1.0);
     transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
 }
-
 /* #modalPage {
     position: absolute;
     top: 130px;
@@ -281,12 +239,10 @@ select {
     width: 100%;
     height: 100%
 } */
-
 .modalPageContainer {
     position: absolute;
     top: 50px
 }
-
 .mt-0 {
     margin-top: 0;
 }
@@ -299,24 +255,20 @@ select {
 .ml-0 {
     margin-left: 0;
 }
-
 /* table {
     caption-side: bottom;
     border-collapse: collapse;
 } */
-
 caption {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     color: #6c757d;
     text-align: left;
 }
-
 /* th {
     text-align: inherit;
     text-align: -webkit-match-parent;
 } */
-
 /* thead,
 tbody,
 tfoot,
@@ -327,9 +279,6 @@ th {
     border-style: solid;
     border-width: 0;
 } */
-
-
-
 /* input[type=text], input[type=number], input[type=date]{
     border: 1px solid #ced4da;
     -webkit-appearance: none;
@@ -338,7 +287,6 @@ th {
     /*border-radius: 0.25rem;*/
     /* transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; */
 /* }  */
-
 .alert {
     position: relative;
     padding: 0.5rem;
@@ -346,15 +294,12 @@ th {
     border: 1px solid transparent;
     border-radius: 0.25rem;
 }
-
 .alert-heading {
     color: inherit;
 }
-
 .alert-link {
     font-weight: 700;
 }
-
 .alert-dismissible {
     padding-right: 3rem;
 }
@@ -367,7 +312,6 @@ a.close {
     text-transform: uppercase;
     cursor: pointer;
 }
-
 .alert-info {
     color: #055160;
     background-color: #cff4fc;
@@ -376,7 +320,6 @@ a.close {
 .alert-info .alert-link {
     color: #04414d;
 }
-
 .alert-danger {
     color: #842029;
     background-color: #f8d7da;
@@ -385,7 +328,6 @@ a.close {
 .alert-danger .alert-link {
     color: #6a1a21;
 }
-
 .alert-success {
     color: #0f5132;
     background-color: #d1e7dd;
@@ -394,7 +336,6 @@ a.close {
 .alert-success .alert-link {
     color: #0c4128;
 }
-
 .alert-warning {
   color: #856404;
   background-color: #fff3cd;
@@ -403,102 +344,78 @@ a.close {
 .alert-warning .alert-link {
   color: #523e02;
 }
-
 /* Default width for select and input elements */
 input[type=text], input[type=number], input[type=date], select{
   width: 49%;
 }
-
 .labelWidth10 label, .inputWidth10 input[type=text], .inputWidth10 input[type=number], .inputWidth10 input[type=date], .inputWidth10 select{
     width: 10%;
 }
-
 .labelWidth15 label, .inputWidth15 input[type=text], .inputWidth15 input[type=number], .inputWidth15 input[type=date], .inputWidth15 select{
     width: 15%;
 }
-
 .labelWidth20 label, .inputWidth20 input[type=text], .inputWidth20 input[type=number], .inputWidth20 input[type=date], .inputWidth20 select{
     width: 20%;
 }
-
 .labelWidth25 label, .inputWidth25 input[type=text], .inputWidth25 input[type=number], .inputWidth25 input[type=date], .inputWidth25 select{
     width: 25%;
 }
-
 .labelWidth30 label, .inputWidth30 input[type=text], .inputWidth30 input[type=number], .inputWidth30 input[type=date], .inputWidth30 select{
     width: 30%;
 }
-
 .labelWidth35 label, .inputWidth35 input[type=text], .inputWidth35 input[type=number], .inputWidth35 input[type=date], .inputWidth35 select{
     width: 35%;
 }
-
 .labelWidth40 label, .inputWidth40 input[type=text], .inputWidth40 input[type=number], .inputWidth40 input[type=date], .inputWidth40 select{
     width: 40%;
 }
-
 .labelWidth45 label, .inputWidth45 input[type=text], .inputWidth45 input[type=number], .inputWidth45 input[type=date], .inputWidth45 select{
     width: 45%;
 }
-
 .labelWidth49 label, .inputWidth49 input[type=text], .inputWidth49 input[type=number], .inputWidth49 input[type=date], .inputWidth49 select{
     width: 49%;
 }
-
 .labelWidth50 label, .inputWidth50 input[type=text], .inputWidth50 input[type=number], .inputWidth50 input[type=date], .inputWidth50 select{
     width: 50%;
 }
-
 .labelWidth55 label, .inputWidth55 input[type=text], .inputWidth55 input[type=number], .inputWidth55 input[type=date], .inputWidth55 select{
     width: 55%;
 }
-
 .labelWidth60 label, .inputWidth60 input[type=text], .inputWidth60 input[type=number], .inputWidth60 input[type=date], .inputWidth60 select{
     width: 60%;
 }
-
 .labelWidth65 label, .inputWidth65 input[type=text], .inputWidth65 input[type=number], .inputWidth65 input[type=date], .inputWidth65 select{
     width: 65%;
 }
-
 .labelWidth70 label, .inputWidth70 input[type=text], .inputWidth70 input[type=number], .inputWidth70 input[type=date], .inputWidth70 select{
     width: 70%;
 }
-
 .labelWidth75 label, .inputWidth75 input[type=text], .inputWidth75 input[type=number], .inputWidth75 input[type=date], .inputWidth75 select{
     width: 75%;
 }
-
 .labelWidth80 label, .inputWidth80 input[type=text], .inputWidth80 input[type=number], .inputWidth80 input[type=date], .inputWidth80 select{
     width: 80%;
 }
-
 .labelWidth85 label, .inputWidth85 input[type=text], .inputWidth85 input[type=number], .inputWidth85 input[type=date], .inputWidth85 select{
     width: 85%;
 }
-
 .labelWidth90 label, .inputWidth90 input[type=text], .inputWidth90 input[type=number], .inputWidth90 input[type=date], .inputWidth90 select{
     width: 90%;
 }
-
 .labelWidth95 label, .inputWidth95 input[type=text], .inputWidth95 input[type=number], .inputWidth95 input[type=date], .inputWidth95 select{
     width: 95%;
 }
-
 .labelWidth100 label, .inputWidth100 input[type=text], .inputWidth100 input[type=number], .inputWidth100 input[type=date], .inputWidth100 select{
     width: 100%;
 }
-
 #default_template {
     border: 1px solid #ddd;
     padding: 10px;
 }
-
 .glassPane {
     min-height: 600px;
     position: relative;
 }
-
 pre {
     background-color: ghostwhite;
     border: 1px solid silver;
@@ -514,28 +431,22 @@ pre {
 .json-string {
     color: olive;
 }
-
-
 .border-primary {
     border-color: #0d6efd;
 }
 .border-secondary {
     border-color: #6c757d;
 }
-
 .border-info {
     border-color: #0dcaf0;
 }
-
 .border-light {
     border-color: #f8f9fa;
 }
-
 #debug-container button {
     background-color: aliceblue;
     color: #000;
 }
-
 #debug-bucket {
     display: inline-flex;
 }
@@ -547,12 +458,10 @@ pre {
     background-color: lightskyblue;
     color: #000;
 }
-
 .accordion {
     max-width: 600px;
     margin: 2rem auto;
 }
-
 .accordion-title {
     display: flex;
     flex-direction: row;
@@ -560,32 +469,24 @@ pre {
     cursor: pointer;
     background-color: #21aeca;
 }
-
 .accordion-title:hover {
     background-color: #3ab4cc;
 }
-
 .accordion-title,
 .accordion-content {
     padding: 1rem;
 }
-
 .accordion-content {
     background-color: #39b9d2;
 }
-
 /*@media screen and (max-width: 1470px) {*/
 /*    body {*/
 /*        font-size: 18px;*/
 /*    }*/
-
 /*    .accordion {*/
 /*        width: 90%;*/
 /*    }*/
 /*}*/
-
-
-
 .toggleButton {
     border: 1px solid blue;
     background: aliceblue;
@@ -593,46 +494,37 @@ pre {
     margin: 0;
     border-radius: 0;
 }
-
 .px-10 {
     padding: 0 10px;
 }
-
 .px-20 {
     padding: 0 20px;
 }
-
 .extra-info{
     color: rgb(165, 159, 133);
     font-style: italic;
     padding: 0 0 0 10px;
 }
-
 .inline-block {
     display: inline-block;
 }
-
 #debug-pages-container button {
     background: brown;
     border: none;
     color: white;
 }
-
 #debug-pages-container table > thead > tr > th, #debug-state-container table > thead > tr > th, #debug-context-container table > thead > tr > th,
 #debug-raw-state-container table > thead > tr > th, #debug-tracing-container table > thead > tr > th
 {
     background-color: #000000;
     color: #ffffff;
 }
-
 .d-flex-inline {
     display: inline-flex;
 }
-
 .p-2 {
     padding: 2px;
 }
-
 .card {
   position: relative;
   display: flex;
@@ -647,15 +539,11 @@ pre {
   box-shadow: 4px 8px 16px 0px rgb(170, 154, 181);
   margin: 0 0 20px 0;
 }
-
 .card-body {
   flex: 1 1 auto;
   padding: 1rem 1rem;
 }
-
-
 /* React Datepicker */
-
 /* @charset "UTF-8"; */
 .react-datepicker__year-read-view--down-arrow,
 .react-datepicker__month-read-view--down-arrow,
@@ -689,7 +577,6 @@ pre {
 .react-datepicker-popper[data-placement^=top] .react-datepicker__triangle::before, .react-datepicker-popper[data-placement^=bottom] .react-datepicker__triangle::before {
   border-bottom-color: #aeaeae;
 }
-
 .react-datepicker-popper[data-placement^=bottom] .react-datepicker__triangle {
   top: 0;
   margin-top: -8px;
@@ -705,7 +592,6 @@ pre {
   top: -1px;
   border-bottom-color: #aeaeae;
 }
-
 .react-datepicker-popper[data-placement^=top] .react-datepicker__triangle {
   bottom: 0;
   margin-bottom: -8px;
@@ -721,14 +607,12 @@ pre {
   bottom: -1px;
   border-top-color: #aeaeae;
 }
-
 .react-datepicker-wrapper {
   display: inline-block;
   padding: 0;
   border: 0;
   width: 100%;
 }
-
 .react-datepicker {
   font-family: "Helvetica Neue", helvetica, arial, sans-serif;
   font-size: 0.8rem;
@@ -739,7 +623,6 @@ pre {
   display: inline-block;
   position: relative;
 }
-
 .react-datepicker--time-only .react-datepicker__triangle {
   left: 35px;
 }
@@ -751,12 +634,10 @@ pre {
   border-bottom-left-radius: 0.3rem;
   border-bottom-right-radius: 0.3rem;
 }
-
 .react-datepicker__triangle {
   position: absolute;
   left: 50px;
 }
-
 .react-datepicker-popper {
   z-index: 1;
 }
@@ -784,7 +665,6 @@ pre {
   left: 42px;
   right: auto;
 }
-
 .react-datepicker__header {
   text-align: center;
   background-color: #f0f0f0;
@@ -804,7 +684,6 @@ pre {
 .react-datepicker__header:not(.react-datepicker__header--has-time-select) {
   border-top-right-radius: 0.3rem;
 }
-
 .react-datepicker__year-dropdown-container--select,
 .react-datepicker__month-dropdown-container--select,
 .react-datepicker__month-year-dropdown-container--select,
@@ -814,7 +693,6 @@ pre {
   display: inline-block;
   margin: 0 2px;
 }
-
 .react-datepicker__current-month,
 .react-datepicker-time__header,
 .react-datepicker-year-header {
@@ -823,13 +701,11 @@ pre {
   font-weight: bold;
   font-size: 0.944rem;
 }
-
 .react-datepicker-time__header {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
-
 .react-datepicker__navigation {
   align-items: center;
   background: none;
@@ -872,7 +748,6 @@ pre {
 .react-datepicker__navigation:hover *::before {
   border-color: #a6a6a6;
 }
-
 .react-datepicker__navigation-icon {
   position: relative;
   top: -1px;
@@ -893,11 +768,9 @@ pre {
   transform: rotate(225deg);
   right: -7px;
 }
-
 .react-datepicker__month-container {
   float: left;
 }
-
 .react-datepicker__year {
   margin: 0.4rem;
   text-align: center;
@@ -912,7 +785,6 @@ pre {
   width: 4rem;
   margin: 2px;
 }
-
 .react-datepicker__month {
   margin: 0.4rem;
   text-align: center;
@@ -923,7 +795,6 @@ pre {
   width: 4rem;
   margin: 2px;
 }
-
 .react-datepicker__input-time-container {
   clear: both;
   width: 100%;
@@ -956,7 +827,6 @@ pre {
   margin-left: 5px;
   display: inline-block;
 }
-
 .react-datepicker__time-container {
   float: right;
   border-left: 1px solid #aeaeae;
@@ -1016,7 +886,6 @@ pre {
   cursor: default;
   background-color: transparent;
 }
-
 .react-datepicker__week-number {
   color: #ccc;
   display: inline-block;
@@ -1032,16 +901,13 @@ pre {
   border-radius: 0.3rem;
   background-color: #f0f0f0;
 }
-
 .react-datepicker__day-names,
 .react-datepicker__week {
   white-space: nowrap;
 }
-
 .react-datepicker__day-names {
   margin-bottom: -8px;
 }
-
 .react-datepicker__day-name,
 .react-datepicker__day,
 .react-datepicker__time-name {
@@ -1052,7 +918,6 @@ pre {
   text-align: center;
   margin: 0.166rem;
 }
-
 .react-datepicker__month--selected, .react-datepicker__month--in-selecting-range, .react-datepicker__month--in-range,
 .react-datepicker__quarter--selected,
 .react-datepicker__quarter--in-selecting-range,
@@ -1077,7 +942,6 @@ pre {
   cursor: default;
   background-color: transparent;
 }
-
 .react-datepicker__day,
 .react-datepicker__month-text,
 .react-datepicker__quarter-text,
@@ -1214,7 +1078,6 @@ pre {
 .react-datepicker__year-text--disabled:hover {
   background-color: transparent;
 }
-
 .react-datepicker__month-text.react-datepicker__month--selected:hover, .react-datepicker__month-text.react-datepicker__month--in-range:hover, .react-datepicker__month-text.react-datepicker__quarter--selected:hover, .react-datepicker__month-text.react-datepicker__quarter--in-range:hover,
 .react-datepicker__quarter-text.react-datepicker__month--selected:hover,
 .react-datepicker__quarter-text.react-datepicker__month--in-range:hover,
@@ -1226,13 +1089,11 @@ pre {
 .react-datepicker__quarter-text:hover {
   background-color: #f0f0f0;
 }
-
 .react-datepicker__input-container {
   position: relative;
   display: inline-block;
   width: 100%;
 }
-
 .react-datepicker__year-read-view,
 .react-datepicker__month-read-view,
 .react-datepicker__month-year-read-view {
@@ -1260,7 +1121,6 @@ pre {
   right: -16px;
   top: 0;
 }
-
 .react-datepicker__year-dropdown,
 .react-datepicker__month-dropdown,
 .react-datepicker__month-year-dropdown {
@@ -1285,7 +1145,6 @@ pre {
   height: 150px;
   overflow-y: scroll;
 }
-
 .react-datepicker__year-option,
 .react-datepicker__month-option,
 .react-datepicker__month-year-option {
@@ -1332,7 +1191,6 @@ pre {
   position: absolute;
   left: 15px;
 }
-
 .react-datepicker__close-icon {
   cursor: pointer;
   background-color: transparent;
@@ -1361,7 +1219,6 @@ pre {
   vertical-align: middle;
   content: "×";
 }
-
 .react-datepicker__today-button {
   background: #f0f0f0;
   border-top: 1px solid #aeaeae;
@@ -1371,7 +1228,6 @@ pre {
   padding: 5px 0;
   clear: left;
 }
-
 .react-datepicker__portal {
   position: fixed;
   width: 100vw;
@@ -1402,18 +1258,15 @@ pre {
 .react-datepicker__portal .react-datepicker-time__header {
   font-size: 1.44rem;
 }
-
 .error-msg {
   color: #dc3545;
   font-weight: bold;
   display: flex;  
   position: relative;
 }
-
 .red-border {
   border: 3px solid #dc3545;
 }
-
 .react-datepicker-wrapper input[type=text] {
   /* width: auto; */
     font-family: var(--input-font-family);
@@ -1431,7 +1284,6 @@ pre {
     /* width: 100%; */
     height: 42px;
 }
-
 .react-datepicker-wrapper input[type=text]:focus {
   font-size:var(--input-font-size);
   border: var( --input-border-focus);
@@ -1442,18 +1294,15 @@ pre {
   padding-left: 8px;
   padding-right: 8px;
 }
-
 button + div.labelValueButton {
   margin: 0;
   width: 100%;
 }
-
 .dropdown-container {
   box-shadow: none;
   width: 100%;
   margin: 0 0 20px 0;
 }
-
 .react-datepicker__input-container input[type=text] {
   /* width: 100%; */
   background-image: url("icons/calendar.svg");
@@ -1462,57 +1311,44 @@ button + div.labelValueButton {
   background-size: .75em auto, 100%;    
   background-color:var(--dropdown-container-background);
 }
-
 table.grid {
   min-height: 150px;
 }
-
 div.card {
   min-height:97.5%;
 }
-
 /* select.select {
   margin: 0 20px 0 0;
 } */
-
 /* input.input {
   margin: 0 20px 0 0;
 } */
-
 div.radio-container {
   margin-bottom: 20px;
 }
-
 /* .dropdown-container button {
   min-width: var(--button-secondary-min-width);  
 } */
-
 button[id^="selectPage"] {
   min-width: 18.1rem;
 }
-
 input#page1\.unpaidCardOrMisuseItems {
   width: 100%;
   margin: 0;
 }
-
 button#page1\.unpaidCardOrMisuseItems\.minus, button#page1\.unpaidCardOrMisuseItems\.plus {
   /* padding: 0.38rem; */
   margin: 0;
 }
-
 .w-100 {
   width: 100%;
 }
-
 .w-40 {
   width: 40%;
 }
-
 .inputAndButtons, .dropdownAndButtons {
   display: flex;  
 }
-
 .inputAndButtons > button.button, .dropdownAndButtons > button.button {
   float: right;
 }

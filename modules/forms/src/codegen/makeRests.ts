@@ -2,7 +2,7 @@ import { findIds, isRestLens, LensRestParam } from "../common/restD";
 import { domainName, domainsFileName, pageDomainName, restDetailsName, restFileName } from "./names";
 import { TSParams } from "./config";
 import { allRestAndActions, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
-import { safeObject, sortedEntries, unique } from "@focuson/utils";
+import { createSimpleMessage, safeObject, SimpleMessage, sortedEntries, testDateFn, unique } from "@focuson/utils";
 import { addStringToEndOfAllButLast, indentList, lensFocusQueryFor } from "./codegen";
 import { lensFocusQueryWithTildaFromPage } from "./lens";
 
@@ -29,7 +29,10 @@ export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restNam
     `    cd, fdd,`,
     `    ids: ${JSON.stringify ( ids )},`,
     `    resourceId:  ${JSON.stringify ( resourceIds )},`,
-    "    messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],",
+    "    messages: ( status: number | undefined, body: any ): SimpleMessage[] => status == undefined ?",
+    "      [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify ( body )}`, testDateFn () ) ] :",
+    "      [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],",
+    // "    messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],",
     `    url: "${r.rest.url}",`,
     `    states : ${JSON.stringify ( states )}`,
     `  }`,
@@ -41,7 +44,7 @@ export function makeRestImports<B, G> ( params: TSParams, p: PageD<B, G> ) {
   return [
     `import { OneRestDetails } from "@focuson/rest"`,
     `import * as domains from "${domainsFileName ( '..', params, p )}"`,
-    `import { createSimpleMessage, DateFn, defaultDateFn,  SimpleMessage } from "@focuson/utils"`,
+    `import { createSimpleMessage, DateFn, defaultDateFn,  SimpleMessage, testDateFn } from "@focuson/utils"`,
     `import { Lenses, NameAndLens} from "@focuson/lens"`,
     `` ]
 }
