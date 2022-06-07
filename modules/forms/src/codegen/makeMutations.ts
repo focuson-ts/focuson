@@ -99,12 +99,12 @@ export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: MainPage
   const execute = allOutputParams ( paramsA ).length == 0 ?
     [ `s.execute();` ] :
     [ `ResultSet rs = s.executeQuery();`,
-      `if (!rs.next()) throw new SQLException("Error in : ${mutationMethodName ( r, name, m, index )}. Cannot get first item. Index was ${index} Sql was ${m.sql}\\n${errorPrefix}");`,
+      `if (!rs.next()) throw new SQLException("Error in : ${mutationMethodName ( r, name, m, index )}. Cannot get first item. Index was ${index} Sql was ${m.sql.replace(/\n/g, ' ')}\\n${errorPrefix}");`,
     ]
   return [
     ...makeMethodDecl ( errorPrefix, paramsA, javaTypeForOutput ( paramsA ), r, name, m, index ),
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
-    `    try (PreparedStatement s = connection.prepareStatement("${m.sql}")) {`,
+    `    try (PreparedStatement s = connection.prepareStatement("${m.sql.replace ( /\n/g, ' ' )}")) {`,
     ...indentList ( indentList ( indentList ( [
         ...allSetObjectForInputs ( m.params ),
         ...execute,
@@ -118,10 +118,11 @@ export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: MainPage
 
 export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: SqlMutation, index: string, includeMockIf: boolean ): string[] {
   const paramsA = toArray ( m.params )
+  const sql = m.sql.replace ( /\n/g, ' ' );
   return [
     ...makeMethodDecl ( errorPrefix, paramsA, 'List<Map<String,Object>>', r, name, m, index ),
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
-    `    try (PreparedStatement s = connection.prepareStatement("${m.sql}")) {`,
+    `    try (PreparedStatement s = connection.prepareStatement("${sql}")) {`,
     ...indentList ( indentList ( indentList ( [
         ...allSetObjectForInputs ( m.params ),
         `ResultSet rs = s.executeQuery();`,

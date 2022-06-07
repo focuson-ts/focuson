@@ -69,7 +69,7 @@ export const PrintRecordRD: ExampleRestD = {
   states: {
     print: {
       url: '/api/print?{query}',
-      params: {...fromCommonIds('vbAcountSeq', 'employeeId','employeeId', 'accountId' ),  paymentId: { ...IntParam, lens: '~/display[~/selected]id', testValue: 888, main: true } }
+      params: { ...fromCommonIds ( 'vbAcountSeq', 'employeeId', 'employeeId', 'accountId' ), paymentId: { ...IntParam, lens: '~/display[~/selected]id', testValue: 888, main: true } }
     }
   },
   mutations: [ {
@@ -77,7 +77,19 @@ export const PrintRecordRD: ExampleRestD = {
     mutateBy: [
       {
         type: "sql", name: 'getParamsFromStoredStuff',
-        sql: 'select so_ind,dd_ind,bp_ind,obso_ind,obbp_ind, sortcode, fulfilmentType,accountNo,rbsMtAccount,newBankSeq from the_table_that_holds_the_data where account_id=? and paymentId = ?',
+        sql: `select so_ind,
+                     dd_ind,
+                     bp_ind,
+                     obso_ind,
+                     obbp_ind,
+                     sortcode,
+                     fulfilmentType,
+                     accountNo,
+                     rbsMtAccount,
+                     newBankSeq
+              from the_table_that_holds_the_data
+              where account_id = ?
+                and paymentId = ?`,
         params: [ 'accountId', 'paymentId',
           ...stringOutputParams ( 'so_ind', 'dd_ind', 'bp_ind', 'obso_ind', 'obbp_ind', 'sortcode', 'accountNo', 'requestByRole', 'rbsMtAccount', 'fulfilmentType', 'newBankSeq' )
         ],
@@ -86,7 +98,7 @@ export const PrintRecordRD: ExampleRestD = {
       {
         type: 'case', name: 'print',
         params: [ 'fulfilmentType', 'requestByRole', 'vbAcountSeq', 'rbsMtAccount', 'employeeId',
-          { type: 'input', name: 'so_ind', javaType: 'String', setParam: `${'so_ind'}.equals("Y") ? 1 : 0` },
+          { type: 'input', name: 'so_ind', javaType: 'String', setParam: `${'so_ind'}.equals ( "Y" ) ? 1 : 0` },
           ind ( 'dd_ind' ), ind ( 'bp_ind' ), ind ( 'obso_ind' ), ind ( 'obbp_ind' ), 'sortcode', 'accountNo', 'accountId', 'paymentId', 'newBankSeq' ],
         select: [
           bankStuff ( [ 'fulfilmentType.equals("BK")', 'requestByRole.equals("bank")' ], 'a10001' ),
