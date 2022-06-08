@@ -7,6 +7,7 @@ import { hasValidationErrorAndReport, isValidToCommit } from "../validity";
 import { HasSimpleMessageL } from "../simpleMessage";
 import { focusPageClassName } from "../PageTemplate";
 import { CustomButtonType, getButtonClassName } from "../common";
+import React, { useEffect, useRef } from "react";
 
 
 interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Context>, CustomButtonType {
@@ -20,15 +21,20 @@ interface ModalCommitButtonProps<S, C> extends ModalCommitCancelButtonProps<S, C
 }
 export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( { id, state, text, buttonType }: ModalCommitCancelButtonProps<S, Context> ) {
   let onClick = () => state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) );
-  return <button className={getButtonClassName(buttonType)} id={id} onClick={onClick}>{text ? text : 'Cancel'}</button>
+  return <button className={getButtonClassName ( buttonType )} id={id} onClick={onClick}>{text ? text : 'Cancel'}</button>
 }
 
 
 export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S>> ( { state, id, dateFn, validate, enabledBy, text, buttonType }: ModalCommitButtonProps<S, Context> ) {
-  const realvalidate = validate === undefined ? true : validate
-  const valid = realvalidate && isValidToCommit ( focusPageClassName )
+  const ref = useRef<HTMLButtonElement> ( null );
+  useEffect ( () => {
+    const realvalidate = validate === undefined ? true : validate
+    const valid = realvalidate && isValidToCommit ( focusPageClassName )
+    ref.current.disabled= enabledBy === false || !valid
+  } );
+
   function onClick () {
-    if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return
+    let rootNode: Node = ref.current.getRootNode ();
     const firstPage: PageSelection = mainPage ( state )
     const lastPage = currentPageSelectionTail ( state )
     const rest = lastPage?.rest;
@@ -59,5 +65,5 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
       console.error ( 'ModalCommit button called and bad state.', lastPage )
   }
 
-  return <button className={getButtonClassName(buttonType)} id={id} disabled={enabledBy === false || valid === false} onClick={onClick}>{text ? text : 'Commit'}</button>
+  return <button ref={ref} className={getButtonClassName ( buttonType )} id={id} onClick={onClick}>{text ? text : 'Commit'}</button>
 }
