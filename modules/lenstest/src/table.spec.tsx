@@ -73,7 +73,16 @@ describe ( "Table", () => {
         "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead><tbody class='grid-sub'><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td><td id='id[0].c'>3-4</td></tr><tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td><td id='id[1].c'>5-6</td></tr></tbody></table>" )
     } )
 
-
+    it ( "should still display when data is 'undefined'", () => {
+      let damagedData : any = { contents: [ { a: 1 }, { b: 'two' } ] };
+      const table = displayAndGetTable ( damagedData, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id'/> )
+      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody class='grid-sub'><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'></td></tr><tr id='id[1]'><td id='id[1].a'></td><td id='id[1].b'>two</td></tr></tbody></table>" )
+    } )
+    it ( "should still display when data is  null ", () => {
+      let damagedData : any = { contents: [ { a: 1, b: null }, { a: null,b: 'two' } ] };
+      const table = displayAndGetTable ( damagedData, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id'/> )
+      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody class='grid-sub'><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'></td></tr><tr id='id[1]'><td id='id[1].a'></td><td id='id[1].b'>two</td></tr></tbody></table>" )
+    } )
 
     it ( "should render order a, b, c and use the joiner, when joiner is a string[]", () => {
       const table = displayAndGetTable ( twoRowsWithC, s => {}, s => <Table order={[ 'a', 'b', 'c' ]} joiners={[ 'c:*' ]} state={s.focusOn ( 'contents' )} id='id'/> )
