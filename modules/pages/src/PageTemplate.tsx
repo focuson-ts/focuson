@@ -25,5 +25,5 @@ export function DefaultTemplate<S extends any, D extends any, Msgs, Context> ( {
   if ( debug ) console.log ( `DefaultTemplate.bodyFn`, bodyFn )
   const child: JSX.Element = bodyFn ( state, pageMode, index )
   if ( debug ) console.log ( `DefaultTemplate.child`, child )
-  return (<div id='default_template'><h1>{title ( state )}</h1>{child}</div>)
+  return (<div key={index} id='default_template'><h1>{title ( state )}</h1>{child}</div>)
 }

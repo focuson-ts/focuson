@@ -42,7 +42,7 @@ export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, 
   let maxCountInt = maxCount ? Number.parseInt ( maxCount ) : 0;
 
   let count = 0;
-  let tableBody = json.map ( ( row, i ) => filter ( row ) && (maxCount === undefined || count++ < maxCountInt) ? oneRow ( row, i ) : <></> );
+  let tableBody = json.map ( ( row, i ) => filter ( row ) && (maxCount === undefined || count++ < maxCountInt) ? oneRow ( row, i ) : null );
 
   return <table id={id} className="grid">
     <thead>

@@ -9,7 +9,7 @@ import { DebugState } from "./debugState";
 
 const modalPopupJSX = ( p: PageDetailsForCombine, i: number, messagesJSX: JSX.Element ) => {
   return (
-    <div className="modalPopup show-modal focus-page">
+    <div className="modalPopup show-modal focus-page" key={i}>
       <div className="modalPopup-content">
         {messagesJSX}
         {p.element}
@@ -44,8 +44,8 @@ export function MyCombined<S extends HasTagHolder & HasSimpleMessages, Context e
   const debug = state.optJson ()?.debug;
   const messagesJSX = <Messages state={state.focusOn ( 'messages' )}/>
   return <>
-    <div id='container' className='combine'>
-        <div className='glassPane'>
+    <div id='container' className='combine' >
+        <div className='glassPane' >
       {
         pages.map ( ( p, i ) => {
             if ( p.pageType === 'ModalPopup' ) return modalPopupJSX ( p, i, messagesJSX )

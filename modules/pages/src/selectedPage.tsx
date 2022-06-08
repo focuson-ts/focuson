@@ -18,7 +18,7 @@ export interface SelectedPageDebug {
 export function SelectedPage<S, Context extends PageSelectionContext<S>> ( { state }: LensProps<S, any, Context> ) {
   let combine = state.context.combine;
   let pages: PageDetailsForCombine[] = findSelectedPageDetails ( state );
-  return combine ? combine ( state, pages ) : <div>{pages}</div>
+  return combine ? combine ( state, pages ) : <div key={0}>{pages}</div>
 }
 
 export interface PageDetailsForCombine {
@@ -33,7 +33,9 @@ function findSelectedPageDetails<S, Context extends PageSelectionContext<S>> ( s
   let selectedPageData: PageSelection[] = currentPageSelection ( state );
   if ( debug ) console.log ( 'findSelectedPageDetails', selectedPageData )
 
-  return selectedPageData.map ( findOneSelectedPageDetails ( state, findMainPageDetails ( selectedPageData, state.context.pages ), selectedPageData.length ) )
+  let results = selectedPageData.map ( findOneSelectedPageDetails ( state, findMainPageDetails ( selectedPageData, state.context.pages ), selectedPageData.length ) );
+  // results.forEach((p, i) =>p.element.key=i)
+  return results
 }
 
 export function fullState<S, T, C> ( ls: LensState<S, T, C> ): LensState<S, S, C> {
