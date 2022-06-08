@@ -4,6 +4,10 @@ import { LensState, reasonFor } from "@focuson/state";
 import { HasSimpleMessageL } from "./simpleMessage";
 import React, { useEffect, useRef } from "react";
 
+export function getRefForDebounceLogic(id: string, debounce: number|undefined){
+  const ref = useRef<HTMLButtonElement> ( null );
+
+}
 export function getRefForValidateLogicToButton ( id: string, validate: boolean|undefined, enabledBy: boolean|undefined ): React.MutableRefObject<HTMLButtonElement> {
   const ref = useRef<HTMLButtonElement> ( null );
   useEffect ( () => {

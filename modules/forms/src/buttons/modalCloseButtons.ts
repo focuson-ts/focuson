@@ -5,7 +5,7 @@ import { EnabledBy, enabledByString } from "./enabledBy";
 
 export interface ModalCommitButtonInPage extends EnabledBy {
   control: 'ModalCommitButton';
-  enabledBy?: string;
+  enabledBy?: string | string[];
   validate?: boolean;
   text?: string
 }

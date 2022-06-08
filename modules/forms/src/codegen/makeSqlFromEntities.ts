@@ -66,21 +66,23 @@ export interface CommonEntity {
 }
 export interface MainEntityWithoutStrategy extends CommonEntity {
   type: 'Main';
+  alias?: string;
 }
 
 export interface MainEntityWithStrategy extends CommonEntity {
   type: 'Main';
-  idField?: string,
+  idField?: string;
+  alias?: string;
   idStrategy: InsertSqlStrategy | InsertSqlStrategy[];
 }
 
-export function hasStrategy(m: Entity | undefined): m is MainEntityWithStrategy {
+export function hasStrategy ( m: Entity | undefined ): m is MainEntityWithStrategy {
   const ma: any = m;
   return m && m.type === 'Main' && ma.idStrategy
 }
 
-export function getStrategy(e: Entity | undefined): InsertSqlStrategy[] {
-  return hasStrategy(e) ? toArray(e.idStrategy) : []
+export function getStrategy ( e: Entity | undefined ): InsertSqlStrategy[] {
+  return hasStrategy ( e ) ? toArray ( e.idStrategy ) : []
 }
 export type MainEntity = MainEntityWithStrategy | MainEntityWithoutStrategy;
 
@@ -160,7 +162,7 @@ export function findSqlRoot ( m: EntityAndWhere | undefined ): SqlRoot {
   if ( m === undefined ) throw Error ( "EntityAndWhere must be defined" )
   return foldEntitys ( {
     foldMain ( childAccs: SqlRoot[][], main: EntityAndWhere, e: Entity ): SqlRoot[] {
-      return [ { main, path: [], alias: main.entity.table.name, root: e, children: childAccs.flat () } ];
+      return [ { main, path: [], alias: main.entity.alias ? main.entity.alias : main.entity.table.name, root: e, children: childAccs.flat () } ];
     },
     foldMultiple ( childAccs: SqlRoot[][], main: EntityAndWhere, path: [ string, ChildEntity ][], alias: string, filterPath, multiple: MultipleEntity ): SqlRoot[] {
       return [ { main, path, alias, root: multiple, children: childAccs.flat (), filterPath } ];
@@ -346,16 +348,20 @@ export function findTableAndFieldFromDataD<G> ( dataD: CompDataD<G> ): TableAndF
 
       if ( oneDataDD?.db )
         if ( isTableAndField ( oneDataDD.db ) ) {
-          let fieldData: FieldData<any> = { dbFieldName: oneDataDD.db.field, dbFieldAlias: oneDataDD.db.fieldAlias,
+          let fieldData: FieldData<any> = {
+            dbFieldName: oneDataDD.db.field, dbFieldAlias: oneDataDD.db.fieldAlias,
             rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName, path,
-            sample: selectSample ( oneDataDD ), datePattern: oneDataDD.dataDD.datePattern };
+            sample: selectSample ( oneDataDD ), datePattern: oneDataDD.dataDD.datePattern
+          };
           return [ { table: oneDataDD.db.table, fieldData } ]
         } else {
           const parent = parents[ parents.length - 1 ]
           if ( !parent.table ) throw new Error ( `Have a field name [${oneDataDD.db} in ${path}], but there is no table in the parent ${parent.name}` )
-          let fieldData: FieldData<any> = { dbFieldName: oneDataDD.db, rsGetter: dataDD.rsGetter,
+          let fieldData: FieldData<any> = {
+            dbFieldName: oneDataDD.db, rsGetter: dataDD.rsGetter,
             reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName, path, sample: selectSample ( oneDataDD ),
-            datePattern: oneDataDD.dataDD.datePattern };
+            datePattern: oneDataDD.dataDD.datePattern
+          };
           return [ { table: parent.table, fieldData: fieldData } ]
         }
       return []
@@ -452,9 +458,9 @@ export function makeWhereClause ( s: SqlLinkData ) {
   return whereList.length === 0 ? '' : 'where ' + whereList.join ( ' and ' );
 }
 export function generateGetSql ( s: SqlLinkData ): string[] {
-  function tableName(t: DBTable){ return t.prefix?`${t.prefix}.${t.name}`:t.name}
+  function tableName ( t: DBTable ) { return t.prefix ? `${t.prefix}.${t.name}` : t.name}
   return [ `select`, ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.fields.map ( taf => `${taf.alias}.${taf.fieldData.dbFieldName} as ${sqlTafFieldName ( taf )}` ) ) ),
-    ` from`, ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.aliasAndTables.map ( ( [ alias, table ] ) => `${tableName(table)} ${alias}` ) ) ),
+    ` from`, ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.aliasAndTables.map ( ( [ alias, table ] ) => `${tableName ( table )} ${alias}` ) ) ),
     ` ${(makeWhereClause ( s ))}` ]
 }
 
@@ -503,10 +509,10 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: MainPageD<B
   const constParams = [ `ResultSet rs`, ...ints ( childCount ).map ( i => `List<${sqlListName ( p, restName, path, i )}> list${i}` ) ].join ( ',' )
   const sql = generateGetSql ( ld )
 
-  function createPutterString<T>(fieldData: FieldData<T>, fieldAlias: string) {
+  function createPutterString<T> ( fieldData: FieldData<T>, fieldAlias: string ) {
     return (fieldData.datePattern === undefined) ?
-        `this.${mapName(safeArray(fieldData.path).slice(0, -1))}.put("${fieldData.fieldName}", rs.${fieldData.rsGetter}("${fieldAlias}"));`
-        : `this.${mapName(safeArray(fieldData.path).slice(0, -1))}.put("${fieldData.fieldName}", new SimpleDateFormat("${fieldData.datePattern}").format(rs.${fieldData.rsGetter}("${fieldAlias}")));`;
+      `this.${mapName ( safeArray ( fieldData.path ).slice ( 0, -1 ) )}.put("${fieldData.fieldName}", rs.${fieldData.rsGetter}("${fieldAlias}"));`
+      : `this.${mapName ( safeArray ( fieldData.path ).slice ( 0, -1 ) )}.put("${fieldData.fieldName}", new SimpleDateFormat("${fieldData.datePattern}").format(rs.${fieldData.rsGetter}("${fieldAlias}")));`;
   }
 
   const putters = ld.fields
@@ -515,7 +521,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: MainPageD<B
     .sort ( ( l, r ) => l.fieldData.dbFieldName.localeCompare ( r.fieldData.dbFieldName ) )
     .flatMap ( taf => {
       let fieldAlias = sqlTafFieldName ( taf );
-      let result = createPutterString(taf.fieldData, fieldAlias)
+      let result = createPutterString ( taf.fieldData, fieldAlias )
       return fieldAlias.length > 30 ? [ `//This is a very long  field alias. If it gives you problems consider giving it an explicit field alias in the dataDD`, result ] : result;
     } )
   const setIds = onlyIds.map ( taf => `this.${sqlTafFieldName ( taf )} = rs.${taf.fieldData.rsGetter}("${sqlTafFieldName ( taf )}");` )
@@ -682,26 +688,31 @@ function sqlIfy ( a: any ): string {
   return JSON.stringify ( a ).replace ( /"/g, "'" )
 }
 export function makeInsertSqlForNoIds ( dataD: CompDataD<any>, entity: MainEntity | undefined, strategy: OneTableInsertSqlStrategyForNoIds ) {
-  if (entity === undefined) return [];
+  if ( entity === undefined ) return [];
   const tafdsForThisTable: TableAndFieldData<any>[] = findTableAndFieldFromDataD ( dataD ).filter ( tafd => tafd.table.name === entity.table.name );
   const sampleCount = isRepeatingDd ( dataD ) && dataD.sampleCount ? dataD.sampleCount : 3
   const is = [ ...Array ( sampleCount ).keys () ]
-  return is.map (i => `INSERT INTO ${entity.table.name}(${tafdsForThisTable
-      .map ((fd: TableAndFieldData<any>) => fd.fieldData.dbFieldName )}) values (${tafdsForThisTable.map (fd => sqlIfy ( selectSample ( i, fd.fieldData ) ) ).join ( "," )});` );
+  return is.map ( i => `INSERT INTO ${entity.table.name}(${tafdsForThisTable
+          .map ( ( fd: TableAndFieldData<any> ) => fd.fieldData.dbFieldName )}) values (${tafdsForThisTable.map ( fd => sqlIfy ( selectSample ( i, fd.fieldData ) ) ).join ( "," )});` );
 }
 
 export function makeInsertSqlForIds ( dataD: CompDataD<any>, entity: MainEntity | undefined, strategy: OneTableInsertSqlStrategyForIds ) {
-  if (entity === undefined) return [];
+  if ( entity === undefined ) return [];
   const tafdsForThisTable: TableAndFieldData<any>[] = findTableAndFieldFromDataD ( dataD )
-      .filter ( tafd => tafd.table.name === entity.table.name );
+    .filter ( tafd => tafd.table.name === entity.table.name );
 
-  tafdsForThisTable.unshift({table: entity.table, fieldData:
-        {fieldName: strategy.idField, dbFieldName: strategy.idField, rsGetter: "", reactType: "", dbType: "",
-          sample: Array(5).fill(0).map((_, idx) => idx + strategy.idOffset)}});
+  tafdsForThisTable.unshift ( {
+    table: entity.table, fieldData:
+      {
+        fieldName: strategy.idField, dbFieldName: strategy.idField, rsGetter: "", reactType: "", dbType: "",
+        sample: Array ( 5 ).fill ( 0 ).map ( ( _, idx ) => idx + strategy.idOffset )
+      }
+  } );
 
   const sampleCount = isRepeatingDd ( dataD ) && dataD.sampleCount ? dataD.sampleCount : 3
   const is = [ ...Array ( sampleCount ).keys () ]
-  return is.map (i => `INSERT INTO ${entity.table.name}(${tafdsForThisTable
-      .map ( fd => fd.fieldData.dbFieldName )}) values (${tafdsForThisTable
-      .map ( (fd: TableAndFieldData<any>) => sqlIfy ( selectSample ( i, fd.fieldData ) ) ).join ( "," )});` );
+  return is.map ( i => `INSERT INTO ${entity.table.name}(${tafdsForThisTable
+          .map ( fd => fd.fieldData.dbFieldName )})
+                        values (${tafdsForThisTable
+                                .map ( ( fd: TableAndFieldData<any> ) => sqlIfy ( selectSample ( i, fd.fieldData ) ) ).join ( "," )});` );
 }

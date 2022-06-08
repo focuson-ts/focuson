@@ -4,7 +4,7 @@ import { IntParam, RestD, RestParams, StringParam } from "../../common/restD";
 import { jointAccountSql } from "./jointAccount.sql";
 import { fromCommonIds } from "../commonIds";
 
-export const jointAccountParams: RestParams = fromCommonIds('accountId', 'brandRef', 'dbName')
+export const jointAccountParams: RestParams = fromCommonIds ( 'accountId', 'brandRef', 'dbName' )
 export const jointAccountRestD: RestD<any> = {
   params: jointAccountParams,
   dataDD: JointAccountDd,
@@ -14,19 +14,20 @@ export const jointAccountRestD: RestD<any> = {
   tables: {
     staticWhere: '123=123',
     where: [
-      { table: accountT, alias: accountT.name, field: 'acc_id', paramName: 'accountId' },
-      { table: accountT, alias: accountT.name, field: 'brand_id', paramName: 'brandRef' },
+      { table: accountT, alias: 'j', field: 'acc_id', paramName: 'accountId' },
+      { table: accountT, alias: 'j', field: 'brand_id', paramName: 'brandRef' },
     ],
     entity: {
       type: 'Main',
       table: accountT,
+      alias: 'j',
       staticWhere: `${accountT.name} <> 'canceled'`,
-      idStrategy: {type: 'Manual', sql: jointAccountSql},
+      idStrategy: { type: 'Manual', sql: jointAccountSql },
       children: {
         mainCustomer: {
           type: 'Single',
           table: customerT,
-          staticWhere:'1=1',
+          staticWhere: '1=1',
           filterPath: 'main', //if it exists then we are into path filtering and only variables with this path get this data. This is a / separated path
           idInParent: 'mainCustomerId:integer',
           idInThis: 'id:integer',

@@ -238,7 +238,7 @@ export interface AutowiredMutationParam {
   setParam?: string;
   required?: boolean;
 }
-export type JavaTypePrimitive = 'String' | 'Integer' |'Double';
+export type JavaTypePrimitive = 'String' | 'Integer' |'Double' | 'Object';
 export interface IntegerMutationParam {
   type: 'integer';
   value: number

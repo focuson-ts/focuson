@@ -3,6 +3,7 @@ import { reasonFor } from "@focuson/state";
 import { DateFn, RestAction, RestResult } from "@focuson/utils";
 import { CommonStateProps, CustomButtonType, getButtonClassName } from "./common";
 import { getRefForValidateLogicToButton, HasPageSelectionLens, HasSimpleMessageL, hasValidationErrorAndReport } from "@focuson/pages";
+import { useRef } from "react";
 
 export interface RestButtonProps<S, C> extends CommonStateProps<S, any, C>, CustomButtonType {
   rest: string;
@@ -25,7 +26,21 @@ function confirmIt ( c: boolean | string | undefined ) {
 export function RestButton<S, C extends HasRestCommandL<S> & HasSimpleMessageL<S> & HasPageSelectionLens<S>> ( props: RestButtonProps<S, C> ) {
   const { id, rest, action, result, state, text, confirm, validate, dateFn, deleteOnSuccess, enabledBy, name, messageOnSuccess, buttonType } = props
   const ref = getRefForValidateLogicToButton ( id,validate, enabledBy )
+  const debounceRef = useRef<Date> ( null )
+
+
   function onClick () {
+    const now = new Date ()
+    const lastClick = debounceRef.current
+    console.log("debounce logic - lastClick", lastClick)
+    console.log("debounce logic - now", now)
+    console.log("debounce logic - now - lastClick ", lastClick !== null && (now.getTime () - lastClick.getTime ()) )
+    if ( lastClick !== null && (now.getTime () - lastClick.getTime ()) < 1000 ) {
+      console.log("stopped bounce")
+      return
+    }
+    // @ts-ignore
+    debounceRef.current = lastClick
     const realvalidate = validate === undefined ? true : validate
     if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return
     if ( confirmIt ( confirm ) )

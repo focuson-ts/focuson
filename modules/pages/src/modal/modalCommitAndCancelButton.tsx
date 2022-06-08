@@ -25,10 +25,17 @@ export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( 
 }
 
 
-
 export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S>> ( { state, id, dateFn, validate, enabledBy, text, buttonType }: ModalCommitButtonProps<S, Context> ) {
-  const ref = getRefForValidateLogicToButton(id,validate, enabledBy)
+  const ref = getRefForValidateLogicToButton ( id, validate, enabledBy )
+  const debounceRef = useRef<Date> ( null )
   function onClick () {
+    const now = new Date ()
+    const lastClick = debounceRef.current
+    if ( lastClick !== null && (now.getTime () - lastClick.getTime ()) < 1000 ) {
+      console.log("stopped bounce")
+      return
+    }
+    debounceRef.current = lastClick
     const realvalidate = validate === undefined ? true : validate
     if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return
     const firstPage: PageSelection = mainPage ( state )
