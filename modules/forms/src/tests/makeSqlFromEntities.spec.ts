@@ -1,6 +1,44 @@
-import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findParamsForTable, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, JavaQueryParamDetails, makeInsertSqlForNoIds, makeMapsForRest, makeWhereClause, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldDataFromTableQueryLink, whereFieldToFieldDataFromTableWhereLink } from "../codegen/makeSqlFromEntities";
+import {
+  ChildEntity,
+  createTableSql,
+  EntityFolder,
+  findAliasAndTableLinksForLinkData,
+  findAllFields,
+  findAllTableAndFieldDatasIn,
+  findAllTableAndFieldsIn,
+  findFieldsFromWhere,
+  findParamsForTable,
+  findSqlLinkDataFromRootAndDataD,
+  findSqlRoot,
+  findTableAliasAndFieldFromDataD,
+  findTableAndFieldFromDataD,
+  findWhereLinksForSqlRoot,
+  findWhereLinksForSqlRootGoingUp,
+  foldEntitys,
+  generateGetSql, getStrategy,
+  JavaQueryParamDetails, MainEntity,
+  makeInsertSqlForIds,
+  makeInsertSqlForNoIds,
+  makeMapsForRest,
+  makeWhereClause,
+  MultipleEntity,
+  simplifyAliasAndChildEntityPath,
+  simplifyAliasAndTables,
+  simplifySqlLinkData,
+  simplifySqlRoot,
+  simplifyTableAndFieldAndAliasDataArray,
+  simplifyTableAndFieldData,
+  simplifyTableAndFieldDataArray,
+  simplifyTableAndFieldsData,
+  simplifyWhereFromQuery,
+  simplifyWhereLinks,
+  SingleEntity,
+  walkSqlRoots,
+  whereFieldToFieldDataFromTableQueryLink,
+  whereFieldToFieldDataFromTableWhereLink
+} from "../codegen/makeSqlFromEntities";
 import { AllLensRestParams, EntityAndWhere, IntParam, StringParam} from "../common/restD";
-import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
+import {JointAccountCustomerDD, JointAccountDd} from "../example/jointAccount/jointAccount.dataD";
 import { nameAndAddressDataD, postCodeDataLineD, postCodeSearchResponseDD } from "../example/postCodeDemo/addressSearch.dataD";
 import { addressRestD } from "../example/postCodeDemo/addressSearch.restD";
 import { JointAccountPageD } from "../example/jointAccount/jointAccount.pageD";
@@ -8,31 +46,26 @@ import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
 import { paramsForTest } from "./paramsForTest";
 import { fromCommonIds } from "../example/commonIds";
-import { accountT, postCodeSearchTable } from "../example/database/tableNames";
-import { unique } from "@focuson/utils";
+import {accountT, addT, customerT, nameT, postCodeSearchTable} from "../example/database/tableNames";
+import {safeArray, unique } from "@focuson/utils";
+import {CreatePlanDD, EAccountsSummaryDD} from "../example/eAccounts/eAccountsSummary.dataD";
+import {createPlanRestD, eAccountsSummaryRestD} from "../example/eAccounts/eAccountsSummary.restD";
+import {CreateEAccountPageD} from "../example/createEAccount/createEAccount.pageD";
+import {jointAccountSql} from "../example/jointAccount/jointAccount.sql";
+import {ExampleDataD} from "../example/common";
+import {DateDD, MoneyDD} from "../common/dataD";
 
 const jointAccountRestDTables = jointAccountRestD.tables
-if ( jointAccountRestDTables === undefined ) throw Error ( "addressRestDTables must be defined" )
+if ( jointAccountRestDTables === undefined ) throw Error ( "jointAccountRestDTables must be defined" )
+const eAccountsSummaryRestDTables = eAccountsSummaryRestD.tables
+const eAccountsSummaryRestParams = eAccountsSummaryRestD.params
+const createPlanRestDTables = createPlanRestD.tables
+// if ( createPlanRestDTables === undefined ) throw Error ( "createPlanRestDTables must be defined" )
+const createPlanRestParams = createPlanRestD.params
 const jointAccountRestParams = jointAccountRestD.params
 const addressRestDTables = addressRestD.tables
 const addressRestDParams = addressRestD.params
 if ( addressRestDTables === undefined ) throw Error ( "addressRestDTables must be defined" )
-
-
-// describe ( "Insert Queries", () => {
-//   it ( "should work for ______", () => {
-//     expect ( makeInsertSqlForNoIds ( postCodeDataLineD, { type: 'OneTableInsertSqlStrategyForNoIds', table: postCodeSearchTable } ) )
-//       .toEqual ( [
-//           "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE)",
-//           "  values ('4 Privet drive','Little Whinging','Surrey','England','LW12 5f');",
-//           "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE)",
-//           "  values ('27 Throughput Lane','Woodfield','','Ireland','IR45 3GT');",
-//           "insert into POSTCODE(zzline1,zzline2,zzline3,zzline4,PC_POSTCODE)",
-//           "  values ('4 Privet drive','Little Whinging','Surrey','England','LW12 5f');"
-//         ]
-//       )
-//   } )
-// } )
 
 describe ( "EntityFolder", () => {
   it ( "should walk all the nodes", () => {
@@ -477,6 +510,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Optional;",
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
+        "import java.text.SimpleDateFormat;",
         "",
         "//{'accountId':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':44444444},'brandRef':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':10},'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
         "public class JointAccount_jointAccountMaps {",
@@ -656,6 +690,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Optional;",
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
+        "import java.text.SimpleDateFormat;",
         "",
         "//{'accountId':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':44444444},'brandRef':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':10},'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
         "public class JointAccount_jointAccountMaps0 {",
@@ -813,6 +848,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Optional;",
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
+        "import java.text.SimpleDateFormat;",
         "",
         "//{'accountId':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':44444444},'brandRef':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':10},'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
         "public class JointAccount_jointAccountMaps1 {",
@@ -993,6 +1029,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Optional;",
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
+        "import java.text.SimpleDateFormat;",
         "",
         "//{'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'},'postcode':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','lens':'~/postcode/search','testValue':'LW12 4RG'}}",
         "public class PostCodeMainPage_postcodeMaps {",
@@ -1067,4 +1104,71 @@ describe ( "paramsForLinkedData", () => {
       expect ( () => findParamsForTable ( `error`, {}, jointAccountRestDTables ) ).toThrow ( 'error param brandRef is defined in where' )
     }
   )
+} )
+
+describe ( "Make INSERT SQL", () => {
+  const JointAccountDdForTest: ExampleDataD = {
+    name: "JointAccount",
+    description: "A sample project for an account with two customers",
+    table: accountT,
+    structure: {
+      // accountId: { dataDD: AccountIdDD, db: 'acc_id' },
+      balance: { dataDD: MoneyDD, db: 'blnc' },
+      sampleDate: { dataDD: DateDD, db: 'someDateField' },
+      main: { dataDD: JointAccountCustomerDD },
+      joint: { dataDD: JointAccountCustomerDD, sampleOffset: 1 }
+    }
+  };
+  it ( "should make SQL for manual queries", () => {
+    const entity: MainEntity = {
+      type: 'Main',
+      table: accountT,
+      staticWhere: `${accountT.name} <> 'canceled'`,
+      idStrategy: {type: 'Manual', sql: jointAccountSql},
+      children: { }
+    };
+
+    expect(
+    getStrategy(entity).flatMap( s => {
+      if (s.type === 'WithId') return safeArray(makeInsertSqlForIds(JointAccountDdForTest, entity, s))
+      else if (s.type === 'WithoutId') return safeArray(makeInsertSqlForNoIds(JointAccountDdForTest, entity, s))
+      else if (s.type === 'Manual') return s.sql
+      else return []
+    })).toEqual([
+      "INSERT INTO CUST_TBL (nameId, id)\n     values (101, 1001),\n            (102, 1002),\n            (103, 1003),\n            (104, 2001),\n            (105, 2002),\n            (106, 2003);",
+      "INSERT INTO NAME_TBL(id, zzname)\n   values (101, 'name One'),\n          (102, 'name Two'),\n          (103, 'name Three'),\n          (104, 'name Four'),\n          (105, 'name Five'),\n          (106, 'name Six');",
+      "INSERT INTO ACC_TBL (mainCustomerId, jointCustomerId, acc_id, brand_id, blnc)\n   values (1001, 2001, 1, 111, 1000),\n          (1002, 2002, 2, 222, 2000),\n          (1003, 2003, 3, 333, 3000);",
+      "INSERT INTO ADD_TBL(customerId, zzline1, zzline2, zzline3, zzline4)\n   values (1001, 'oneLineOne', 'oneLineTwo', 'oneLineThree', 'oneLineFour'),\n          (1002, 'twoLineOne', 'twoLineTwo', 'twoLineThree', 'twoLineFour'),\n          (1003, 'threeLineOne', 'threeLineTwo', 'threeLineThree', 'threeLineFour'),\n          (2001, 'fourLineOne', 'fourLineTwo', 'fourLineThree', 'fourLineFour'),\n          (2002, 'fiveLineOne', 'fiveLineTwo', 'fiveLineThree', 'fiveLineFour'),\n          (2002, 'sixLineOne', 'sixLineTwo', 'sixLineThree', 'sixLineFour');"
+    ]);
+  } );
+
+  it ( "should make SQL for with IDs", () => {
+    const entity: MainEntity = { type: 'Main', table: addT, children: {}, idStrategy: {type: "WithId", idField: "someId", idOffset: 100} };
+    expect(
+    getStrategy(entity).flatMap( s => {
+      if (s.type === 'WithId') return safeArray(makeInsertSqlForIds(JointAccountDdForTest, entity, s))
+      else if (s.type === 'WithoutId') return safeArray(makeInsertSqlForNoIds(JointAccountDdForTest, entity, s))
+      else if (s.type === 'Manual') return s.sql
+      else return []
+    })).toEqual([
+      "INSERT INTO ADD_TBL(someId,zzline1,zzline2,zzline1,zzline2) values (100,'This is a one line string','This is a one line string','This is a one line string','This is a one line string');",
+      "INSERT INTO ADD_TBL(someId,zzline1,zzline2,zzline1,zzline2) values (101,'another one line string','another one line string','another one line string','another one line string');",
+      "INSERT INTO ADD_TBL(someId,zzline1,zzline2,zzline1,zzline2) values (102,'This is a one line string','This is a one line string','This is a one line string','This is a one line string');"
+    ]);
+  } )
+
+  it ( "should make SQL for without IDs", () => {
+    const entity: MainEntity = { type: 'Main', table: addT, children: {}, idStrategy: {type: "WithoutId"} };
+    expect(
+        getStrategy(entity).flatMap( s => {
+          if (s.type === 'WithId') return safeArray(makeInsertSqlForIds(JointAccountDdForTest, entity, s))
+          else if (s.type === 'WithoutId') return safeArray(makeInsertSqlForNoIds(JointAccountDdForTest, entity, s))
+          else if (s.type === 'Manual') return s.sql
+          else return []
+        })).toEqual([
+      "INSERT INTO ADD_TBL(zzline1,zzline2,zzline1,zzline2) values ('This is a one line string','This is a one line string','This is a one line string','This is a one line string');",
+      "INSERT INTO ADD_TBL(zzline1,zzline2,zzline1,zzline2) values ('another one line string','another one line string','another one line string','another one line string');",
+      "INSERT INTO ADD_TBL(zzline1,zzline2,zzline1,zzline2) values ('This is a one line string','This is a one line string','This is a one line string','This is a one line string');"
+    ]);
+  } )
 } )

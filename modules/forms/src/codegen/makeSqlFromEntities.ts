@@ -7,7 +7,15 @@ import {
   OneTableInsertSqlStrategyForNoIds,
   RestParams
 } from "../common/restD";
-import { CompDataD, emptyDataFlatMap, flatMapDD, HasSample, isRepeatingDd, OneDataDD } from "../common/dataD";
+import {
+  CompDataD,
+  emptyDataFlatMap,
+  flatMapDD,
+  HasSample,
+  isRepeatingDd,
+  OneDataDD,
+  PrimitiveDD
+} from "../common/dataD";
 import { MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addBrackets, addStringToEndOfAllButLast, indentList } from "./codegen";
 import { JavaWiringParams } from "./config";
@@ -309,6 +317,7 @@ interface FieldData<G> extends HasSample<any> {
   reactType: string;
   dbType: string;
   sample?: string[] | number[];
+  datePattern?: string
 }
 interface TableAndFieldData<G> {
   table: DBTable;
@@ -328,7 +337,7 @@ interface TableAndFieldsData<G> {
 export function findTableAndFieldFromDataD<G> ( dataD: CompDataD<G> ): TableAndFieldData<G>[] {
   return flatMapDD<TableAndFieldData<G>, any> ( dataD, {
     ...emptyDataFlatMap<TableAndFieldData<G>, any> (),
-    walkPrim: ( path, parents, oneDataDD, dataDD ) => {
+    walkPrim: ( path, parents, oneDataDD, dataDD: PrimitiveDD ) => {
       const fieldName = path[ path.length - 1 ];
       function selectSample ( oneDataDD: OneDataDD<G> ): string[] | undefined {
         if ( oneDataDD.sample ) return oneDataDD.sample
@@ -337,12 +346,16 @@ export function findTableAndFieldFromDataD<G> ( dataD: CompDataD<G> ): TableAndF
 
       if ( oneDataDD?.db )
         if ( isTableAndField ( oneDataDD.db ) ) {
-          let fieldData: FieldData<any> = { dbFieldName: oneDataDD.db.field, dbFieldAlias: oneDataDD.db.fieldAlias, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName, path, sample: selectSample ( oneDataDD ) };
+          let fieldData: FieldData<any> = { dbFieldName: oneDataDD.db.field, dbFieldAlias: oneDataDD.db.fieldAlias,
+            rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName, path,
+            sample: selectSample ( oneDataDD ), datePattern: oneDataDD.dataDD.datePattern };
           return [ { table: oneDataDD.db.table, fieldData } ]
         } else {
           const parent = parents[ parents.length - 1 ]
           if ( !parent.table ) throw new Error ( `Have a field name [${oneDataDD.db} in ${path}], but there is no table in the parent ${parent.name}` )
-          let fieldData: FieldData<any> = { dbFieldName: oneDataDD.db, rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName, path, sample: selectSample ( oneDataDD ) };
+          let fieldData: FieldData<any> = { dbFieldName: oneDataDD.db, rsGetter: dataDD.rsGetter,
+            reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName, path, sample: selectSample ( oneDataDD ),
+            datePattern: oneDataDD.dataDD.datePattern };
           return [ { table: parent.table, fieldData: fieldData } ]
         }
       return []
@@ -489,13 +502,20 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: MainPageD<B
 
   const constParams = [ `ResultSet rs`, ...ints ( childCount ).map ( i => `List<${sqlListName ( p, restName, path, i )}> list${i}` ) ].join ( ',' )
   const sql = generateGetSql ( ld )
+
+  function createPutterString<T>(fieldData: FieldData<T>, fieldAlias: string) {
+    return (fieldData.datePattern === undefined) ?
+        `this.${mapName(safeArray(fieldData.path).slice(0, -1))}.put("${fieldData.fieldName}", rs.${fieldData.rsGetter}("${fieldAlias}"));`
+        : `this.${mapName(safeArray(fieldData.path).slice(0, -1))}.put("${fieldData.fieldName}", new SimpleDateFormat("${fieldData.datePattern}").format(rs.${fieldData.rsGetter}("${fieldAlias}")));`;
+  }
+
   const putters = ld.fields
     .filter ( taf => taf.fieldData.fieldName )
     .sort ( ( l, r ) => l.table.name.localeCompare ( r.table.name ) )
     .sort ( ( l, r ) => l.fieldData.dbFieldName.localeCompare ( r.fieldData.dbFieldName ) )
     .flatMap ( taf => {
       let fieldAlias = sqlTafFieldName ( taf );
-      let result = `this.${mapName ( safeArray ( taf.fieldData.path ).slice ( 0, -1 ) )}.put("${taf.fieldData.fieldName}", rs.${taf.fieldData.rsGetter}("${fieldAlias}"));`;
+      let result = createPutterString(taf.fieldData, fieldAlias)
       return fieldAlias.length > 30 ? [ `//This is a very long  field alias. If it gives you problems consider giving it an explicit field alias in the dataDD`, result ] : result;
     } )
   const setIds = onlyIds.map ( taf => `this.${sqlTafFieldName ( taf )} = rs.${taf.fieldData.rsGetter}("${sqlTafFieldName ( taf )}");` )
@@ -534,7 +554,8 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: MainPageD<B
     `import java.util.Optional;`,
     `import java.util.Map;`,
     `import java.util.stream.Collectors;`,
-    ``,
+    `import java.text.SimpleDateFormat;`,
+    '',
     `//${JSON.stringify ( restD.params )}`,
     `public class ${className} {`,
     ...indentList ( [

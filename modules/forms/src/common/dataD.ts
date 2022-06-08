@@ -97,11 +97,10 @@ export interface StringPrimitiveDD extends CommonPrimitiveDD<string> {
 }
 
 export interface DatePrimitiveDD extends CommonPrimitiveDD<string> {
+  datePattern: string;
   reactType: 'string';
   graphQlType: 'String';
-  javaType: 'String';
-  datePattern: string;
-
+  javaType: 'String'
 }
 export interface BooleanPrimitiveDD extends CommonPrimitiveDD<boolean> {
   reactType: 'boolean';
@@ -115,7 +114,7 @@ export interface NumberPrimitiveDD extends CommonPrimitiveDD<number> {
   graphQlType: 'Int' | 'Float'
   javaType: 'Integer' | 'Float' | 'Double'
 }
-export type PrimitiveDD = StringPrimitiveDD | BooleanPrimitiveDD | NumberPrimitiveDD
+export type PrimitiveDD = DatePrimitiveDD | StringPrimitiveDD | BooleanPrimitiveDD | NumberPrimitiveDD
 
 export interface RepeatingDataD<G> extends CommonDataDD {
   paged: boolean;
@@ -254,6 +253,22 @@ export const stringPrimDD: StringPrimDD = {
   dbType: 'varchar(255)',
   javaType: 'String'
 }
+interface DatePrimDD {
+  emptyValue: string;
+  reactType: 'string';
+  graphQlType: 'String';
+  rsGetter: 'getDate';
+  dbType: string
+  javaType: 'String'
+}
+export const datePrimDD: DatePrimDD = {
+  emptyValue: "2022/01/01",
+  reactType: 'string',
+  graphQlType: 'String',
+  rsGetter: 'getDate',
+  dbType: 'varchar(255)',
+  javaType: 'String'
+}
 interface NumberPrimDD {
   emptyValue: number,
   graphQlType: 'Int',
@@ -370,7 +385,7 @@ export const YesNoDD: PrimitiveDD = {
 
 export const DateDD: DatePrimitiveDD = {
   datePattern: "yyyy/MM/dd",
-  ...stringPrimDD,
+  ...datePrimDD,
   name: 'Date',
   emptyValue: '2022-1-1',
   description: "The primitive representing a date (w/o time)",
