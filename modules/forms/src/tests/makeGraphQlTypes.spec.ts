@@ -130,6 +130,7 @@ describe ( "makeGraphQlSchema", () => {
       "}",
       "type Mutation{",
       "  createsinglePrintRecordItem(accountId: Int!, employeeId: Int!, vbAcountSeq: Int!,obj: [PrintRecordItemInp!]!):[PrintRecordItem]",
+      "  updatesinglePrintRecordItem(accountId: Int!, employeeId: Int!, paymentId: Int!, vbAcountSeq: Int!,obj: [PrintRecordItemInp!]!):[PrintRecordItem]",
       "  stateprintsinglePrintRecordItem(accountId: Int!, employeeId: Int!, paymentId: Int!, vbAcountSeq: Int!):[Boolean]",
       "}",
       "type ListOfPayments{",

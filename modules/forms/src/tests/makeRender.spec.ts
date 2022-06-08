@@ -205,7 +205,7 @@ describe ( " listComponentsIn", () => {
       "  const allButtons =    {save:<RestButton state={state} id={`${id}.save`}  text='Save'",
       "        name='save'",
       "        action={'create'}",
-      "        validate={false}",
+      "        validate={true}",
       "        rest='PostCodeMainPage_PostCodeNameAndAddressRestDetails'",
       "       />,",
       "      search:<ModalButton id={`${id}.search`} text='Search'  state={state} modal = 'PostCodeSearch'  ",
