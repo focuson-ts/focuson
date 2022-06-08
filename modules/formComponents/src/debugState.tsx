@@ -53,7 +53,7 @@ function PagesData<S, C extends FocusOnContext<S>> ( { state }: DebugProps<S, C>
   const pages = safeArray ( state.context.pageSelectionL.getOption ( state.main ) )
   return <div id="debug-pages-container">
     <table className="table-bordered">
-      <thead><tr><th colSpan={3}>Pages</th></tr></thead>
+      <thead><tr><th colSpan={4}>Pages</th></tr></thead>
       <tbody>{pages.map ( ( p, index ) => {
         const page = pages[ index ]
         const pageDetails = state.context.pages[ page.pageName ]
@@ -64,6 +64,7 @@ function PagesData<S, C extends FocusOnContext<S>> ( { state }: DebugProps<S, C>
         const accordions = Object.keys(pageData)
 
         return <tr key={index}>
+          <td><Pages state={state}/></td>
           <td>{title} {page.pageName} - {safeString ( page.focusOn )}</td>
           <td>{lens?.description}</td>
           <td>
@@ -139,7 +140,7 @@ export function Tracing<S, C> ( { state }: LensProps<S, any, C> ) {
 interface DebugProps<S, Context> extends LensProps<S, any, Context> {}
 
 export function ToggleOneDebug<S, C extends PageSelectionContext<S>> ( { state, name }: LensProps<S, any, C> & { name: string } ) {
-  return <ToggleButton id={name} buttonText={`{/debug/${name}|Hiding|Showing} ${name}`} state={state.focusOn ( name )}/>
+  return <ToggleButton id={name} buttonText={`{/debug/${name}|Hide|Show} ${name}`} state={state.focusOn ( name )}/>
 }
 export function ToggleDebugs<S, C extends PageSelectionContext<S>> ( { state }: LensProps<S, any, C> ) {
   const debugState = state.copyWithLens ( Lenses.identity<any> ().focusQuery ( 'debug' ) )
@@ -181,15 +182,15 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
       {showTracingState.optJsonOr ( false ) && <Tracing state={state}/>}
       <div id="debug-state-container">
         <table className="table-bordered">
-        <thead><tr><th colSpan={3}>State</th></tr></thead>
+        <thead><tr><th colSpan={2}>State</th></tr></thead>
         <tbody>
         <tr>
-          <td><Pages state={state}/></td>
+          {/* <td><Pages state={state}/></td> */}
           <td><Tags state={state}/></td>
           <td><Rest state={state}/></td>
         </tr>
         <tr>
-          <td><Messages state={state}/></td>
+          {/* <td><Messages state={state}/></td> */}
           <td colSpan={2}><CommonIds {...props}/></td>
         </tr>
         </tbody>
@@ -216,6 +217,12 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
           <thead><tr><th colSpan={2}>Raw State</th></tr></thead>
           <tbody>
           <tr><td><pre>{JSON.stringify ( state.json (), null, 2 )}</pre></td></tr></tbody>
+        </table>
+      </div>
+      <div id="debug-messages-container">
+        <table className="table-bordered">
+          <thead><tr><th>Messages</th></tr></thead>
+          <tbody><tr><td><Messages state={state}/></td></tr></tbody>
         </table>
       </div>
     </div>

@@ -89,7 +89,7 @@ input:valid{
 /* } */
 
 #container {
-    min-height: 500px;
+    /* min-height: 500px; */
     display: block;
     /* width: 80%; */
     background: #fff;
@@ -194,7 +194,7 @@ table {
 .labelCheckboxButton{
   display: flex;
   align-items: center;
-  margin: 0 0 20px 0;
+  margin: 0 0 38px 0;
 }
 
 label {
@@ -495,7 +495,7 @@ input[type=text], input[type=number], input[type=date], select{
 }
 
 .glassPane {
-    min-height: 600px;
+    /* min-height: 600px; */
     position: relative;
 }
 
@@ -531,6 +531,11 @@ pre {
     border-color: #f8f9fa;
 }
 
+#debug-container {
+    padding: 10px 0;
+    font-size: 80%;
+}
+
 #debug-container button {
     background-color: aliceblue;
     color: #000;
@@ -539,13 +544,28 @@ pre {
 #debug-bucket {
     display: inline-flex;
 }
+
+#debug-log ul li, #debug-trace ul li{
+  /* display: table-cell; */
+  display: inline-block;
+  padding: 2px;
+  /* height: 100px; */
+  /* list-style-type: none; */
+  /* margin: 10px; */
+  /* vertical-align: middle; */
+}
+
 #debug-log button {
-    background-color: lightsteelblue;
-    color: #000;
+    /* background-color: lightsteelblue; */
+    /* color: #000; */
+    min-width: 10rem;
+    padding: 1px;
 }
 #debug-trace button {
-    background-color: lightskyblue;
-    color: #000;
+    /* background-color: lightskyblue;
+    color: #000; */
+    min-width: 6rem;
+    padding: 1px;
 }
 
 .accordion {
@@ -612,17 +632,58 @@ pre {
     display: inline-block;
 }
 
+#debug-state-container li {  
+  padding: 2px;
+}
+
+#debug-state-container label, #debug-state-container input {
+  font-size: inherit;
+  width: auto;
+}
+
+#debug-state-container select {
+  font-size: inherit;
+  width: auto;
+  padding-right: 2rem;
+}
+
 #debug-pages-container button {
     background: brown;
     border: none;
     color: white;
+    padding: 5px;
+    margin: 0 2px 2px 0;
+}
+
+#debug-pages-container, #debug-state-container, #debug-context-container,
+#debug-raw-state-container, #debug-tracing-container, #debug-messages-container
+{
+    overflow-x: auto;
+}
+
+#debug-pages-container table, #debug-state-container table, #debug-context-container table,
+#debug-raw-state-container table, #debug-tracing-container table, #debug-messages-container table
+{
+    width: 100%;
 }
 
 #debug-pages-container table > thead > tr > th, #debug-state-container table > thead > tr > th, #debug-context-container table > thead > tr > th,
-#debug-raw-state-container table > thead > tr > th, #debug-tracing-container table > thead > tr > th
+#debug-raw-state-container table > thead > tr > th, #debug-tracing-container table > thead > tr > th, #debug-messages-container table > thead > tr > th
 {
     background-color: #000000;
     color: #ffffff;
+}
+
+#debug-pages-container table > tbody > tr > td, #debug-state-container table > tbody > tr > td, #debug-context-container table > tbody > tr > td,
+#debug-raw-state-container table > tbody > tr > td, #debug-tracing-container table > tbody > tr > td, #debug-messages-container table > tbody > tr > td
+{
+    vertical-align: top;
+}
+
+#debug-pages-container table > tbody > tr > td > div > ul > li, #debug-state-container table > tbody > tr > td > div > ul > li, #debug-context-container table > tbody > tr > td > div > ul > li,
+#debug-raw-state-container table > tbody > tr > td > div > ul > li, #debug-tracing-container table > tbody > tr > td > div > ul > li, #debug-messages-container table > tbody > tr > td > div > ul > li
+{
+  word-break: break-all;
 }
 
 .d-flex-inline {
@@ -1515,4 +1576,8 @@ button#page1\.unpaidCardOrMisuseItems\.minus, button#page1\.unpaidCardOrMisuseIt
 
 .inputAndButtons > button.button, .dropdownAndButtons > button.button {
   float: right;
+}
+
+.TwoColRow select {
+  width: 98%;
 }
