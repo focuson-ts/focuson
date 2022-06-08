@@ -73,7 +73,8 @@ const addButton: RawButtons<AllGuards> = {
   ...addOrEditButton,
   mode: "create",
   copyOnClose: { to: '~/display[$append]' },
-  setToLengthOnClose: { variable: '~/selected', array: '~/display' }
+  setToLengthOnClose: { variable: '~/selected', array: '~/display' },
+  restOnCommit: {restName: 'onePayment', action: 'create', result: "refresh"}
 }
 
 const editButton: RawButtons<AllGuards> = {
@@ -81,7 +82,8 @@ const editButton: RawButtons<AllGuards> = {
   enabledBy: 'canPrint',
   mode: "edit",
   copyOnClose: { to: '~/display[~/selected]' },
-  copy: [ { from: '~/display[~/selected]' }, ...toArray ( addOrEditButton.copy ) ]
+  copy: [ { from: '~/display[~/selected]' }, ...toArray ( addOrEditButton.copy ) ],
+  restOnCommit: {restName: 'onePayment', action: 'update', result: "refresh"}
 }
 
 export const ListOfPaymentsPagePD: ExampleMainPage = {

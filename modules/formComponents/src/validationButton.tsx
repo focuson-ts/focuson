@@ -1,4 +1,3 @@
-import { LensState, reasonFor } from "@focuson/state";
 import { findValidityDetails } from "@focuson/pages";
 
 
@@ -8,8 +7,6 @@ export interface ValidationButtonProps<S, C> {
 
 }
 export function ValidationButton<S, C> ( { id, name }: ValidationButtonProps<S, C> ) {
-
-
   function onClick () {
     const validity = findValidityDetails ( ' focus-page' )
     const content = document.getElementById ( `${id}-result` )
@@ -20,6 +17,6 @@ export function ValidationButton<S, C> ( { id, name }: ValidationButtonProps<S, 
   }
   return <div>
     <button id={id} onClick={onClick}>ValidateDebug</button>
-    <pre id={id + '-result'}>They will go here</pre>
+    <pre id={id + '-result'}></pre>
   </div>
 }

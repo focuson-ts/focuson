@@ -1,8 +1,8 @@
 import { HasRestCommandL } from "@focuson/rest";
-import { LensState, reasonFor } from "@focuson/state";
+import { reasonFor } from "@focuson/state";
 import { DateFn, RestAction, RestResult } from "@focuson/utils";
 import { CommonStateProps, CustomButtonType, getButtonClassName } from "./common";
-import { HasPageSelectionLens, HasSimpleMessageL, hasValidationErrorAndReport, replaceBasePath } from "@focuson/pages";
+import { getRefForValidateLogicToButton, HasPageSelectionLens, HasSimpleMessageL, hasValidationErrorAndReport } from "@focuson/pages";
 
 export interface RestButtonProps<S, C> extends CommonStateProps<S, any, C>, CustomButtonType {
   rest: string;
@@ -13,7 +13,7 @@ export interface RestButtonProps<S, C> extends CommonStateProps<S, any, C>, Cust
   validate?: boolean;
   text?: string;
   deleteOnSuccess?: string | string[];
-  messageOnSuccess? :string;
+  messageOnSuccess?: string;
   dateFn?: DateFn
 }
 
@@ -23,13 +23,14 @@ function confirmIt ( c: boolean | string | undefined ) {
   return window.confirm ( text )
 }
 export function RestButton<S, C extends HasRestCommandL<S> & HasSimpleMessageL<S> & HasPageSelectionLens<S>> ( props: RestButtonProps<S, C> ) {
-  const { id, rest, action, result, state, text, confirm, validate, dateFn, deleteOnSuccess, enabledBy, name ,messageOnSuccess, buttonType} = props
+  const { id, rest, action, result, state, text, confirm, validate, dateFn, deleteOnSuccess, enabledBy, name, messageOnSuccess, buttonType } = props
+  const ref = getRefForValidateLogicToButton ( id,validate, enabledBy )
   function onClick () {
     const realvalidate = validate === undefined ? true : validate
     if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return
     if ( confirmIt ( confirm ) )
-      state.copyWithLens ( state.context.restL ).transform ( old => [ ...old, { restAction: action, name: rest, deleteOnSuccess ,messageOnSuccess} ], reasonFor ( 'RestButton', 'onClick', id ) )
+      state.copyWithLens ( state.context.restL ).transform ( old => [ ...old, { restAction: action, name: rest, deleteOnSuccess, messageOnSuccess } ], reasonFor ( 'RestButton', 'onClick', id ) )
   }
 
-  return <button disabled={enabledBy === false} onClick={onClick} className={getButtonClassName(buttonType)}>{text ? text : name}</button>
+  return <button ref={ref} onClick={onClick} className={getButtonClassName ( buttonType )}>{text ? text : name}</button>
 }

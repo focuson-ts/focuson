@@ -2,6 +2,25 @@ import { focusPageClassName } from "./PageTemplate";
 import { createSimpleMessage, DateFn, safeArray } from "@focuson/utils";
 import { LensState, reasonFor } from "@focuson/state";
 import { HasSimpleMessageL } from "./simpleMessage";
+import React, { useEffect, useRef } from "react";
+
+export function getRefForValidateLogicToButton ( id: string, validate: boolean|undefined, enabledBy: boolean|undefined ): React.MutableRefObject<HTMLButtonElement> {
+  const ref = useRef<HTMLButtonElement> ( null );
+  useEffect ( () => {
+    if ( validate === false ) {
+      ref.current.disabled = false
+      return
+    }
+    console.log ( 'getRefForValidateLogicToButton', id, 'validate', validate)
+    const valid =  isValidToCommit ( focusPageClassName )
+    console.log ( 'getRefForValidateLogicToButton - valid', id, valid )
+    let disabled = enabledBy === false || !valid;
+    console.log ( 'getRefForValidateLogicToButton - disabled', id, disabled )
+    ref.current.disabled = disabled
+  } );
+  return ref
+}
+
 
 function findValidityForInput ( thisPage: Element, result: [ string, boolean ][] ) {
   const inputs = thisPage?.getElementsByTagName ( "input" )
