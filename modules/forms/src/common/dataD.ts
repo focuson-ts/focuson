@@ -3,8 +3,8 @@ import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDro
 import { ComponentDisplayParams } from "../codegen/makeRender";
 import { NameAnd, safeArray } from "@focuson/utils";
 import { Guards } from "../buttons/guardButton";
-import { DBTable } from "./resolverD";
-import { DbValues } from "../codegen/makeSqlFromEntities";
+import { DBTable, isDbTableAndName } from "./resolverD";
+import { DbValues, isTableAndField } from "../codegen/makeSqlFromEntities";
 
 
 export interface HasSample<T> {
@@ -216,7 +216,6 @@ export function foldDataDD<Acc, G> ( dataDD: AllDataDD<G>, path: string[], paren
   return foldPrim ( zero, path, parents, oneDataDD, dataDD )
 }
 
-
 /** Finds and dedups all the unique DataDs in the list. Identity is based on name: so we assume if the name is the same, it's the same object.*/
 export function findAllDataDs<G> ( a: AllDataDD<G>[], stopAtDisplay?: boolean ): NamesAndDataDs<G> {
   var result: NamesAndDataDs<G> = {}
@@ -358,7 +357,7 @@ export const NatNumDd: NumberPrimitiveDD = {
 export const MoneyDD: NumberPrimitiveDD = {
   ...floatPrimDD,
   display: LabelAndNumberInputCD,
-  sample: [100.23, 200.45, 300],
+  sample: [ 100.23, 200.45, 300 ],
   description: "The primitive representing an amount of the local currency",
   name: 'Money'
 }

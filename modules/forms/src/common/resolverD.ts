@@ -19,10 +19,9 @@ export interface DBTable {
   description: string,
   /** Any important comments or notes about this*/
   notes: string,
-  /** How we audit the file */
-  audit: AuditDetails | MutationsForRestAction[];
-  /** How we access the file */
-  access?: AccessDetails[];
+  /** @deprecated does nothing*/
+  audit?: any;
+
 }
 /** * No longer used. Kept to avoid */
 export interface AuditDetails {

@@ -162,6 +162,9 @@ function insertSqlStrategy<B, G> ( page: MainPageD<B, G>, restName: string, rest
 function mutationDetails<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ): string {
   return safeArray ( rest.mutations ).flatMap ( a => `${printRestAction ( a.restAction )}->${toArray ( a.mutateBy ).map ( s => s.name )}` ).join ( '; ' )
 }
+function auditInTable<B,G>(page: MainPageD<B, G>, rest: RestD<G>){
+
+}
 
 export function makeRestReport<B, G> ( page: MainPageD<B, G>, info: ReportInfo ): ReportDetails {
   const general: string[] = sortedEntries ( page.rest ).flatMap ( ( [ name, rdp ] ) =>
