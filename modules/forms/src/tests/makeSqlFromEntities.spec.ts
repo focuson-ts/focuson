@@ -414,16 +414,16 @@ describe ( "createTableSql", () => {
     let rdps = [ JointAccountPageD.rest.jointAccount, PostCodeMainPage.rest.address, PostCodeMainPage.rest.postcode ];
     expect ( createTableSql ( rdps ) ).toEqual ( {
       "ACC_TBL": [
-        "create table ACC_TBL" + "(",
+        "create table ACC_TBL(",
         "  mainCustomerId integer,",
         "  jointCustomerId integer,",
         "  acc_id integer,",
         "  brand_id integer,",
-        "  blnc integer",
+        "  blnc number",
         ")"
       ],
       "ADD_TBL": [
-        "create table ADD_TBL" + "(",
+        "create table ADD_TBL(",
         "  customerId integer,",
         "  zzline1 varchar(255),",
         "  zzline2 varchar(255),",
@@ -432,19 +432,19 @@ describe ( "createTableSql", () => {
         ")"
       ],
       "CUST_TBL": [
-        "create table CUST_TBL" + "(",
+        "create table CUST_TBL(",
         "  nameId integer,",
         "  id integer",
         ")"
       ],
       "NAME_TBL": [
-        "create table NAME_TBL" + "(",
+        "create table NAME_TBL(",
         "  id integer,",
         "  zzname varchar(255)",
         ")"
       ],
       "POSTCODE": [
-        "create table POSTCODE" + "(",
+        "create table POSTCODE(",
         "  PC_POSTCODE varchar(255),",
         "  zzline1 varchar(255),",
         "  zzline2 varchar(255),",
@@ -618,7 +618,7 @@ describe ( "makeMapsForRest", () => {
         "  public final Map<String,Object> joint_addresses = new HashMap<>();",
         "  ",
         "  public JointAccount_jointAccountMaps(ResultSet rs,List<JointAccount_jointAccountMaps0> list0,List<JointAccount_jointAccountMaps1> list1) throws SQLException{",
-        "    this._root.put('balance', rs.getInt('ACC_TBL_blnc'));",
+        "    this._root.put('balance', rs.getDouble('ACC_TBL_blnc'));",
         "    this.main.put('name', rs.getString('mainName_zzname'));",
         "    this.joint.put('name', rs.getString('jointName_zzname'));",
         "    ",

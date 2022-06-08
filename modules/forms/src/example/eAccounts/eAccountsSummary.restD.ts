@@ -39,13 +39,13 @@ export const eAccountsSummaryRestD: RestD<AllGuards> = {
         { type: "null" },
         { type: "null" },
         { type: "string", value: "magicstring" },
-        { type: 'output', name: 'totalMonthlyCost', javaType: 'Integer', sqlType: 'INTEGER' },
-        { type: 'output', name: 'oneAccountBalance', javaType: 'Integer', sqlType: 'INTEGER' },
-        { type: 'output', name: 'currentAccountBalance', javaType: 'Integer', sqlType: 'INTEGER' },
+        { type: 'output', name: 'totalMonthlyCost', javaType: 'Double', sqlType: 'DOUBLE' },
+        { type: 'output', name: 'oneAccountBalance', javaType: 'Double', sqlType: 'DOUBLE' },
+        { type: 'output', name: 'currentAccountBalance', javaType: 'Double', sqlType: 'DOUBLE' },
       ],
       name: 'getTotalMonthlyCostStoredProc', schema: onlySchema
     },
-    totalMonthlyCost: { type: 'manual', code: [ 'Integer totalMonthlyCost = 234;' ], params: [ 'accountId', { type: 'output', name: 'totalMonthlyCost', javaType: 'Integer' } ], name: 'totalMonthlyCost' },
+    totalMonthlyCost: { type: 'manual', code: [ 'Double totalMonthlyCost = 234.0;' ], params: [ 'accountId', { type: 'output', name: 'totalMonthlyCost', javaType: 'Double' } ], name: 'totalMonthlyCost' },
     // oneAccountBalance: { type: 'manual', code: [ 'Integer oneAccountBalance = 234;' ], params: [ 'accountId', { type: 'output', name: 'oneAccountBalance', javaType: 'Integer' } ], name: 'getOneAccountBalance' },
     // currentAccountBalance: { type: 'manual', code: [ 'Integer currentAccountBalance = 345;' ], params: [ 'accountId', { type: 'output', name: 'currentAccountBalance', javaType: 'Integer' } ], name: 'getCurrentAccountBalance' }
   },

@@ -55,7 +55,7 @@ describe ( "makeJavaResolversInterface", () => {
 describe ( "makeAllJavaWiring", () => {
   it ( "should make a java file which will power a graphql spring boot app", () => {
     expect ( makeAllJavaWiring ( paramsForTest, [ EAccountsSummaryPD, RepeatingPageD ], { main: '.', backup: '.' } ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "package focuson.data;",
+      "package focuson.data.utils;",
       "import com.google.common.base.Charsets;",
       "import com.google.common.io.Resources;",
       "import graphql.GraphQL;",
@@ -202,7 +202,7 @@ describe ( "findAllResolvers2", () => {
       },
       {
         "isRoot": false,
-        "javaType": "Integer",
+        "javaType": "Double",
         "name": "totalMonthlyCost",
         "needsObjectInOutput": true,
         "parent": "BalancesAndMonthlyCost",
@@ -272,7 +272,7 @@ describe ( "findAllResolvers2", () => {
       },
       {
         "isRoot": false,
-        "javaType": "Integer",
+        "javaType": "Double",
         "name": "totalMonthlyCost",
         "needsObjectInOutput": true,
         "parent": "BalancesAndMonthlyCost",

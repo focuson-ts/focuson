@@ -170,7 +170,7 @@ export function tagFetcher<S, Full, T, MSGS> ( stf: SpecificTagFetcherProps<S, F
           if ( !resultWithoutMessages ) { console.error ( `Unexpected problem seting response and tags in state. ${this.description}` )}
           let messages = messagesFromTarget ( response, stf.dateFn () );
           if ( debug ) console.log ( 'tagFetcher.load.mutate.messages', messages )
-          let result = resultWithoutMessages ? messageL.setOption ( resultWithoutMessages, messages ) : undefined;
+          let result = resultWithoutMessages ? messageL.transform(old => [...old,...messages]) ( resultWithoutMessages ) : undefined;
           if ( !result ) {
             console.error ( 'tagFetcher.load.mutate - failed to set state' )
             console.log ( `tagAndTargetLens`, tagAndTargetLens.description, `messageL`, messageL.description )

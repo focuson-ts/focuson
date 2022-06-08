@@ -260,7 +260,7 @@ interface NumberPrimDD {
   reactType: 'number',
   rsGetter: 'getInt';
   dbType: string
-  javaType: 'Integer' | 'Float' | 'Double'
+  javaType: 'Integer'
 }
 export const numberPrimDD: NumberPrimDD = {
   emptyValue: 0,
@@ -269,6 +269,22 @@ export const numberPrimDD: NumberPrimDD = {
   rsGetter: 'getInt',
   dbType: 'integer',
   javaType: 'Integer'
+}
+interface FloatPrimDD {
+  emptyValue: number,
+  graphQlType: 'Float',
+  reactType: 'number',
+  rsGetter: 'getDouble';
+  dbType: string;
+  javaType: 'Float' | 'Double'
+}
+export const floatPrimDD: FloatPrimDD = {
+  emptyValue: 0,
+  graphQlType: 'Float',
+  reactType: 'number',
+  rsGetter: 'getDouble',
+  dbType: 'number',
+  javaType: 'Double'
 }
 
 export const CustomerIdDD: StringPrimitiveDD = {
@@ -325,7 +341,9 @@ export const NatNumDd: NumberPrimitiveDD = {
   sample: [ 123, 456 ]
 }
 export const MoneyDD: NumberPrimitiveDD = {
-  ...IntegerDD,
+  ...floatPrimDD,
+  display: LabelAndNumberInputCD,
+  sample: [100.23, 200.45, 300],
   description: "The primitive representing an amount of the local currency",
   name: 'Money'
 }

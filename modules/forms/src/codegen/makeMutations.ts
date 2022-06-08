@@ -4,7 +4,7 @@ import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
 import { indentList } from "./codegen";
-import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, importForTubles, isInputParam, isOutputParam, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, needsRequiredCheck, OutputMutationParam, paramName, requiredmentCheckCodeForJava, SelectMutation, setParam, SqlMutation, StoredProcedureMutation } from "../common/resolverD";
+import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, importForTubles, isInputParam, isOutputParam, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, paramName, requiredmentCheckCodeForJava, SelectMutation, setParam, SqlMutation, StoredProcedureMutation } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
@@ -54,21 +54,23 @@ function commonIfDbNameBlock<G> ( r: RestD<G>, paramsA: MutationParam[], name: s
   ] : []
 }
 
-export function getFromStatement ( from: string, m: MutationParam[] ) {
+export function getFromStatement (errorPrefix: string, from: string, m: MutationParam[] ): string[] {
   return m.flatMap ( ( m, i ) => {
     if ( !isStoredProcOutputParam ( m ) ) return []
-    return m.javaType === 'String' ?
-      `String ${m.name} = ${from}.getString(${i + 1});` :
-      `Integer ${m.name} = ${from}.getInt(${i + 1});`
+    if ( m.javaType === 'String' ) return [ `String ${m.name} = ${from}.getString(${i + 1});` ]
+    if ( m.javaType === 'Double' ) return [`Double ${m.name} = ${from}.getDouble(${i + 1});`]
+    if ( m.javaType === 'Integer' ) return [ `Integer ${m.name} = ${from}.getInt(${i + 1});` ]
+    throw  Error ( `${errorPrefix} don't know how to getFromStatement for ${JSON.stringify ( m )}` )
   } )
 }
 
-export function getFromResultSetIntoVariables ( from: string, m: MutationParam[] ) {
+export function getFromResultSetIntoVariables ( errorPrefix: string,from: string, m: MutationParam[] ): string[] {
   return m.flatMap ( ( m, i ) => {
     if ( !isSqlOutputParam ( m ) ) return []
-    return m.javaType === 'String' ?
-      `String ${m.name} = ${from}.getString("${m.rsName}");` :
-      `Integer ${m.name} = ${from}.getInt("${m.rsName}");`
+    if ( m.javaType === 'String' ) return [ `String ${m.name} = ${from}.getString("${m.rsName}");` ]
+    if ( m.javaType === 'Double' ) return [`Double ${m.name} = ${from}.getDouble(${i + 1});`]
+    if ( m.javaType === 'Integer' ) return [ `Integer ${m.name} = ${from}.getInt("${m.rsName}");` ]
+    throw new Error ( `${errorPrefix} don't know how to getFromResultSetIntoVariables for ${JSON.stringify ( m )}` )
   } )
 }
 export function getFromResultSetPutInMap ( map: string, from: string, m: MutationParam[] ) {
@@ -99,7 +101,7 @@ export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: MainPage
   const execute = allOutputParams ( paramsA ).length == 0 ?
     [ `s.execute();` ] :
     [ `ResultSet rs = s.executeQuery();`,
-      `if (!rs.next()) throw new SQLException("Error in : ${mutationMethodName ( r, name, m, index )}. Cannot get first item. Index was ${index} Sql was ${m.sql.replace(/\n/g, ' ')}\\n${errorPrefix}");`,
+      `if (!rs.next()) throw new SQLException("Error in : ${mutationMethodName ( r, name, m, index )}. Cannot get first item. Index was ${index} Sql was ${m.sql.replace ( /\n/g, ' ' )}\\n${errorPrefix}");`,
     ]
   return [
     ...makeMethodDecl ( errorPrefix, paramsA, javaTypeForOutput ( paramsA ), r, name, m, index ),
@@ -108,7 +110,7 @@ export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: MainPage
     ...indentList ( indentList ( indentList ( [
         ...allSetObjectForInputs ( m.params ),
         ...execute,
-        ...getFromResultSetIntoVariables ( 'rs', paramsA ),
+        ...getFromResultSetIntoVariables ( errorPrefix,'rs', paramsA ),
         makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) )
       ]
     ) ) ),
@@ -153,7 +155,7 @@ export function mutationCodeForStoredProcedureCalls<G> ( errorPrefix: string, p:
     ...indentList ( indentList ( indentList ( allSetObjectForStoredProcs ( m.params ) ) ) ),
     `      s.execute();`,
     ...indentList ( indentList ( indentList ( [
-      ...getFromStatement ( 's', paramsA ),
+      ...getFromStatement ( errorPrefix,'s', paramsA ),
       makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),
     `  }}`,
   ];

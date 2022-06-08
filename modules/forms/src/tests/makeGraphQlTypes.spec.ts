@@ -47,10 +47,10 @@ describe ( "makeGraphQlSchema", () => {
       "  displayType: String",
       "  description: String",
       "  virtualBankSeq: String",
-      "  total: Int",
+      "  total: Float",
       "  frequency: String",
       "}"
-    ] )
+    ])
     expect ( makeSchemaBlock ( 'input', 'xx' ) ( CreatePlanDD ) ).toEqual ( [
       "input CreatePlanxx{",
       "  createPlanStart: String",
@@ -73,9 +73,9 @@ describe ( "makeGraphQlSchema", () => {
       "  deleteCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, createPlanId: Int!):Boolean",
       "}",
       "type BalancesAndMonthlyCost{",
-      "  totalMonthlyCost: Int",
-      "  oneAccountBalance: Int",
-      "  currentAccountBalance: Int",
+      "  totalMonthlyCost: Float",
+      "  oneAccountBalance: Float",
+      "  currentAccountBalance: Float",
       "}",
       "type CreatePlan{",
       "  createPlanStart: String",
@@ -93,7 +93,7 @@ describe ( "makeGraphQlSchema", () => {
       "  displayType: String",
       "  description: String",
       "  virtualBankSeq: String",
-      "  total: Int",
+      "  total: Float",
       "  frequency: String",
       "}",
       "input CreatePlanInp{",

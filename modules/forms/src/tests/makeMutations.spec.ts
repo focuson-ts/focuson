@@ -21,7 +21,7 @@ const manOutputMp: OutputForManualParam = { type: "output", javaType: 'Integer',
 
 describe ( "getFromStatement", () => {
   it ( "generate the code to get the mp from a CallableStatement", () => {
-    expect ( getFromStatement ( 'ss', [ stringMP, integerMP, spOutputMP, nullMP, sqlOutputMP, manOutputMp ] ) ).toEqual ( [
+    expect ( getFromStatement ( `somePrefix`,'ss', [ stringMP, integerMP, spOutputMP, nullMP, sqlOutputMP, manOutputMp ] ) ).toEqual ( [
       "String someNameSP = ss.getString(3);",
       "String someNameSql = ss.getString(5);",
       "Integer someNameMan = ss.getInt(6);"
@@ -30,7 +30,7 @@ describe ( "getFromStatement", () => {
 } )
 describe ( "getFromResultSet", () => {
   it ( "generate the code to get the mp from a ResultSet", () => {
-    expect ( getFromResultSetIntoVariables ( 'ss', [ stringMP, integerMP, spOutputMP, nullMP, sqlOutputMP, manOutputMp ] ) ).toEqual ( [
+    expect ( getFromResultSetIntoVariables ( `somePrefix`,'ss', [ stringMP, integerMP, spOutputMP, nullMP, sqlOutputMP, manOutputMp ] ) ).toEqual ( [
       "String someNameSql = ss.getString(\"rsName\");"
     ] )
   } )

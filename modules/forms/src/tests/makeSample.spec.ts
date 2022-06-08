@@ -154,7 +154,7 @@ describe ( "makeJavaVariable", () => {
     expect ( makeSampleVariable ( paramsForTest, JointAccountDd, 0 ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export const sampleJointAccount0: domains.JointAccountDomain = ",
       "{",
-      "  'balance': 123,",
+      "  'balance': 100.23,",
       "  'main': {",
       "    'name': 'Fred Bloggs',",
       "    'addresses': [",

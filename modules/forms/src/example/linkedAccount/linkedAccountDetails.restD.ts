@@ -1,7 +1,7 @@
 import { ExampleRestD } from "../common";
 import { CollectionItemDD, CollectionListDD, CollectionSummaryDD, CreatePaymentDD, MandateListDD, OverpaymentPageDD } from "./linkedAccountDetails.dataD";
 
-import { IntParam, RestParams } from "../../common/restD";
+import { FloatParam, IntParam, RestParams } from "../../common/restD";
 import { onlySchema } from "../database/tableNames";
 import { fromCommonIds } from "../commonIds";
 
@@ -46,25 +46,25 @@ export const singleCollectionPaymentRD: ExampleRestD = {
   url: '/api/payment?{query}',
   actions: [ { state: 'cancel' }, { state: 'revalidate' } ],
   mutations: [
-    { restAction: { state: 'cancel' }, mutateBy: { type: 'storedProc', name: 'auditCancel', schema: onlySchema, params: [ 'accountId', 'paymentId' , 'brandRef'] } },
+    { restAction: { state: 'cancel' }, mutateBy: { type: 'storedProc', name: 'auditCancel', schema: onlySchema, params: [ 'accountId', 'paymentId', 'brandRef' ] } },
     { restAction: { state: 'revalidate' }, mutateBy: { type: 'storedProc', name: 'auditrevalidate', schema: onlySchema, params: [ 'accountId', 'paymentId' ] } }
   ],
   states: {
-    cancel: { url: '/api/payment/cancel?{query}', params: {...fromCommonIds( 'accountId', 'brandRef'),  paymentId: collectionPaymentParams.paymentId}  },
-    revalidate: { url: '/api/payment/revalidate?{query}', params: {...fromCommonIds(  'accountId'), paymentId: collectionPaymentParams.paymentId} },
+    cancel: { url: '/api/payment/cancel?{query}', params: { ...fromCommonIds ( 'accountId', 'brandRef' ), paymentId: collectionPaymentParams.paymentId } },
+    revalidate: { url: '/api/payment/revalidate?{query}', params: { ...fromCommonIds ( 'accountId' ), paymentId: collectionPaymentParams.paymentId } },
   }
 }
 
 
 export const createPaymentRD: ExampleRestD = {
-  params: collectionPaymentParams,
+  params: { ...collectionPaymentParams, amount: { ...FloatParam, lens: '~/createPayment/amount', testValue: '' } },
   dataDD: CreatePaymentDD,
   url: '/api/payment/create?{query}',
   actions: [ 'create' ],
   mutations: [
     {
       restAction: 'create', mutateBy: [
-        { type: 'sql', name: 'create', sql: 'insert into', params: [ 'accountId' ], schema: onlySchema },
+        { type: 'sql', name: 'create', sql: 'insert into', params: [ 'accountId','amount' ], schema: onlySchema },
         { type: 'storedProc', name: 'auditCreate', params: [ 'accountId' ], schema: onlySchema },
         // { mutation: 'manual', name: 'someMeaningfulName', code: [ 'some', 'lines', 'of code' ], params: [ 'accountId' ] },
       ],

@@ -31,6 +31,13 @@ export const IntParam: ParamPrim<number> = {
   typeScriptType: 'number',
   javaParser: 'Integer.parseInt'
 }
+export const FloatParam: ParamPrim<number> = {
+  rsSetter: 'setDouble',
+  javaType: 'Double',
+  graphQlType: 'Float',
+  typeScriptType: 'number',
+  javaParser: 'Double.parseDouble'
+}
 
 export interface HeaderRestParam<T> extends ParamPrim<T> {
   header: string,
