@@ -5,6 +5,7 @@ import { HasTagHolder } from "@focuson/template";
 import { HasSimpleMessages } from "@focuson/utils";
 import { FocusOnContext } from "@focuson/focuson";
 import { DebugState } from "./debugState";
+import { lastIndexOf } from "./common";
 
 
 const modalPopupJSX = ( p: PageDetailsForCombine, i: number, messagesJSX: JSX.Element ) => {
@@ -43,11 +44,14 @@ export function MyCombined<S extends HasTagHolder & HasSimpleMessages, Context e
 
   const debug = state.optJson ()?.debug;
   const messagesJSX = <Messages state={state.focusOn ( 'messages' )}/>
+  const lastIndexOfMainOrModalPage = lastIndexOf(pages, p => p.pageType === 'MainPage' || p.pageType === 'ModalPage')
+  const pagesToShow = pages.slice(lastIndexOfMainOrModalPage)
+  
   return <>
     <div id='container' className='combine' >
         <div className='glassPane' >
       {
-        pages.map ( ( p, i ) => {
+        pagesToShow.map ( ( p, i ) => {
             if ( p.pageType === 'ModalPopup' ) return modalPopupJSX ( p, i, messagesJSX )
             if ( p.pageType === 'ModalPage' ) return modalPageJSX ( p, i, messagesJSX )
             if ( p.pageType === 'MainPage' ) return mainPageJSX ( p, i, messagesJSX )

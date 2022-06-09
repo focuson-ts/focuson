@@ -91,3 +91,9 @@ export const getButtonClassName = (buttonType: string | undefined) => (buttonTyp
 export interface LabelAlignment {
   labelPosition?: 'Horizontal' | 'Vertical'
 }
+
+export function lastIndexOf<T>(ts: T[], fn: (t: T) => boolean): number {
+  const copy: T[] = [...ts].reverse()
+  const index = copy.findIndex(fn)
+  return ts.length - index - 1
+}
