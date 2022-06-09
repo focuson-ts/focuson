@@ -188,6 +188,11 @@ export function processAllRestResults<S, MSGS> ( messageL: Optional<S, MSGS[]>, 
   return withCommandsRemoved
 }
 
+interface RestCommandAndTxs<S> {
+  restCommand: RestCommand;
+  status?: number
+  txs: Transform<S, any>[];
+}
 /** Executes all the rest commands returning a list of transformations. It doesn't remove the rest commands from S
  This is valuable over the 'make a new S'for a few reasons:
  * It makes testing the rest logic easier
@@ -200,20 +205,27 @@ export async function restToTransforms<S, MSGS> (
   pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>,
   messageL: Optional<S, MSGS[]>,
   stringToMsg: ( msg: string ) => MSGS,
-  s: S, commands: RestCommand[] ): Promise<Transform<S, any>[]> {
+  s: S, commands: RestCommand[] ): Promise<RestCommandAndTxs<S>[]> {
   // @ts-ignore
   const debug = s.debug?.restDebug
   if ( debug ) console.log ( "rest-commands", commands )
   if ( commands.length == 0 ) return Promise.resolve ( [] )
   const requests = restReq ( d, commands, urlMutatorForRest, s )
   if ( debug ) console.log ( "rest-requests", requests )
-  const results = await massFetch ( fetchFn, requests )
+  const results: RestResult<S, MSGS, any>[] = await massFetch ( fetchFn, requests )
   if ( debug ) console.log ( "rest-results", results )
   const deleteTx = ( d: string ): Transform<S, any> => [ pathToLens ( s ) ( d ), () => undefined ];
-  const withDeleteAfterRest: Transform<S, any>[] = results.flatMap ( res => toArray ( res.restCommand.deleteOnSuccess ).map ( deleteTx ) )
-  const txs: Transform<S, any>[] = [ ...results.flatMap ( restResultToTx ( messageL, stringToMsg ) ), ...withDeleteAfterRest ];
-  if ( debug ) console.log ( "rest-txs", txs.map ( ( [ p, d ] ) => [ p.description, d ] ) )
-  return txs
+  const restCommandAndTxs: RestCommandAndTxs<S>[] = results.map ( res => {
+    const deleteTxs = toArray ( res.restCommand.deleteOnSuccess ).map ( deleteTx )
+    const restAndTxs: RestCommandAndTxs<S> = {
+      ...res,
+      txs: [ ...restResultToTx ( messageL, stringToMsg ) ( res ), ...deleteTxs ]
+    };
+    return restAndTxs
+  } )
+
+  if ( debug ) console.log ( "rest-txs ", restCommandAndTxs )
+  return restCommandAndTxs
 }
 
 /** @deprecated
@@ -230,12 +242,20 @@ export async function rest<S, MSGS> (
   messageL: Optional<S, MSGS[]>,
   stringToMsg: ( msg: string ) => MSGS,
   restL: Optional<S, RestCommand[]>,
+  traceL: Optional<S, any[]>,
   s: S ): Promise<S> {
   const commands = restL.getOption ( s )
-  const txs: Transform<S, any>[] = await restToTransforms ( fetchFn, d, urlMutatorForRest, pathToLens, messageL, stringToMsg, s, safeArray ( commands ) )
-  const newS = massTransform ( s, ...txs, [ restL, () => [] ] )
+  const restCommandAndTxs: RestCommandAndTxs<S>[] = await restToTransforms ( fetchFn, d, urlMutatorForRest, pathToLens, messageL, stringToMsg, s, safeArray ( commands ) )
   // @ts-ignore
-  const debug = s.debug?.restDebug
+  const [ debug, trace ] = [ s.debug?.restDebug, s.debug?.showTracing ]
+  const txsWithTrace: Transform<S, any>[] = trace ?
+    restCommandAndTxs.flatMap ( r => {
+      const traceTx: Transform<S, any> = [ traceL, old => [ ...(old ? old : []), { rest: r.restCommand } ] ]
+      return [ ...r.txs, traceTx ]
+    } )
+    : restCommandAndTxs.flatMap ( r => r.txs )
+  const newS = massTransform ( s, ...txsWithTrace, [ restL, () => [] ] )
+
   if ( debug ) console.log ( "rest-result", newS )
   return newS
 }
