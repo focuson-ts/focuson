@@ -40,7 +40,7 @@ export function RestButton<S, C extends HasRestCommandL<S> & HasSimpleMessageL<S
       return
     }
     // @ts-ignore
-    debounceRef.current = lastClick
+    debounceRef.current = now
     const realvalidate = validate === undefined ? true : validate
     if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return
     if ( confirmIt ( confirm ) )
