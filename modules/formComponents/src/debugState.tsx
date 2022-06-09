@@ -13,8 +13,12 @@ import { AccordionCollapseAll, AccordionExpandAll, AccordionWithInfo} from "./ac
 
 
 export function Tags<S extends HasTagHolder, C> ( { state }: LensProps<S, any, C> ) {
-  return <div>Tags
-    <ul>{sortedEntries ( state.main.tags ).map ( ( [ n, t ] ) => <li key={n}>{n}: {JSON.stringify ( t )}</li> )}</ul>
+  return <div>
+    <ul>{sortedEntries ( state.main.tags ).map ( ( [ n, t ] ) => <li key={n}>      
+      <span>
+            <span className="json-key">{n}</span> : <span className="json-value">{JSON.stringify ( t )}</span>
+        </span>
+      </li> )}</ul>
   </div>
 }
 export function Pages<S, C extends HasPageSelectionLens<S>> ( { state }: LensProps<S, any, C> ) {
@@ -53,7 +57,7 @@ function PagesData<S, C extends FocusOnContext<S>> ( { state }: DebugProps<S, C>
   const pages = safeArray ( state.context.pageSelectionL.getOption ( state.main ) )
   return <div id="debug-pages-container">
     <table className="table-bordered">
-      <thead><tr><th colSpan={4}>Pages</th></tr></thead>
+      <thead><tr><th colSpan={2}>Pages</th></tr></thead>
       <tbody>{pages.map ( ( p, index ) => {
         const page = pages[ index ]
         const pageDetails = state.context.pages[ page.pageName ]
@@ -64,9 +68,11 @@ function PagesData<S, C extends FocusOnContext<S>> ( { state }: DebugProps<S, C>
         const accordions = Object.keys(pageData)
 
         return <tr key={index}>
-          <td><Pages state={state}/></td>
-          <td>{title} {page.pageName} - {safeString ( page.focusOn )}</td>
-          <td>{lens?.description}</td>
+          <td>
+              <Pages state={state}/>
+              <div>{title} {page.pageName} - {safeString ( page.focusOn )}</div>
+              <div>{lens?.description}</div>
+          </td>
           <td>
             <div>
               <AccordionExpandAll id="expandAllPageButtons" buttonText="Expand All" state={state.focusOn('debug').focusOn ( 'accordions' )} list={accordions}/>
@@ -182,16 +188,16 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
       {showTracingState.optJsonOr ( false ) && <Tracing state={state}/>}
       <div id="debug-state-container">
         <table className="table-bordered">
-        <thead><tr><th colSpan={2}>State</th></tr></thead>
+        <thead><tr><th>State</th></tr></thead>
         <tbody>
-        <tr>
-          {/* <td><Pages state={state}/></td> */}
+        {/* <tr>
+          <td><Pages state={state}/></td>
           <td><Tags state={state}/></td>
           <td><Rest state={state}/></td>
-        </tr>
+        </tr> */}
         <tr>
           {/* <td><Messages state={state}/></td> */}
-          <td colSpan={2}><CommonIds {...props}/></td>
+          <td><CommonIds {...props}/></td>
         </tr>
         </tbody>
       </table>
@@ -210,6 +216,13 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
             <td>${state.context.restL.description}</td>
           </tr>
           </tbody>
+        </table>
+      </div>
+
+      <div id="debug-tags-container">
+        <table className="table-bordered">
+          <thead><tr><th>Tags</th></tr></thead>
+          <tbody><tr><td><Tags state={state}/></td></tr></tbody>
         </table>
       </div>
       <div id="debug-raw-state-container">

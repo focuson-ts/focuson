@@ -656,34 +656,45 @@ pre {
 }
 
 #debug-pages-container, #debug-state-container, #debug-context-container,
-#debug-raw-state-container, #debug-tracing-container, #debug-messages-container
+#debug-raw-state-container, #debug-tracing-container, #debug-messages-container, #debug-tags-container
 {
     overflow-x: auto;
 }
 
 #debug-pages-container table, #debug-state-container table, #debug-context-container table,
-#debug-raw-state-container table, #debug-tracing-container table, #debug-messages-container table
+#debug-raw-state-container table, #debug-tracing-container table, #debug-messages-container table, #debug-tags-container table
 {
     width: 100%;
 }
 
 #debug-pages-container table > thead > tr > th, #debug-state-container table > thead > tr > th, #debug-context-container table > thead > tr > th,
-#debug-raw-state-container table > thead > tr > th, #debug-tracing-container table > thead > tr > th, #debug-messages-container table > thead > tr > th
+#debug-raw-state-container table > thead > tr > th, #debug-tracing-container table > thead > tr > th, #debug-messages-container table > thead > tr > th, #debug-tags-container table > thead > tr > th
 {
     background-color: #000000;
     color: #ffffff;
 }
 
 #debug-pages-container table > tbody > tr > td, #debug-state-container table > tbody > tr > td, #debug-context-container table > tbody > tr > td,
-#debug-raw-state-container table > tbody > tr > td, #debug-tracing-container table > tbody > tr > td, #debug-messages-container table > tbody > tr > td
+#debug-raw-state-container table > tbody > tr > td, #debug-tracing-container table > tbody > tr > td, #debug-messages-container table > tbody > tr > td, #debug-tags-container table > tbody > tr > td
 {
     vertical-align: top;
 }
 
+#debug-pages-container table > tbody > tr > td > div > ul, #debug-state-container table > tbody > tr > td > div > ul, #debug-context-container table > tbody > tr > td > div > ul,
+#debug-raw-state-container table > tbody > tr > td > div > ul, #debug-tracing-container table > tbody > tr > td > div > ul, #debug-messages-container table > tbody > tr > td > div > ul
+{
+  padding: 0;
+}
+
 #debug-pages-container table > tbody > tr > td > div > ul > li, #debug-state-container table > tbody > tr > td > div > ul > li, #debug-context-container table > tbody > tr > td > div > ul > li,
-#debug-raw-state-container table > tbody > tr > td > div > ul > li, #debug-tracing-container table > tbody > tr > td > div > ul > li, #debug-messages-container table > tbody > tr > td > div > ul > li
+#debug-raw-state-container table > tbody > tr > td > div > ul > li, #debug-tracing-container table > tbody > tr > td > div > ul > li, #debug-messages-container table > tbody > tr > td > div > ul > li, #debug-tags-container table > thead > tr > th
 {
   word-break: break-all;
+}
+
+#debug-tags-container table > tbody > tr > td > div > ul > li {
+  /* display: block; */
+  min-width: 48%;
 }
 
 .d-flex-inline {
