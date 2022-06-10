@@ -11,15 +11,22 @@ interface FullDomainForTest {
 }
 interface RestStateForTest extends HasSimpleMessages, HasRestCommands, HasFullDomainForTest {
   token?: string;
-
+  debug?: { recordTrace?: boolean }
 }
-
+export function traceL<S> (): Optional<S, any> {
+  // @ts-ignore
+  return Lenses.identity<S> ().focusQuery ( 'trace' )
+}
 const simpleMessageL = identityOptics<RestStateForTest> ().focusQuery ( 'messages' )
 
 const emptyRestState: RestStateForTest = {
   messages: [], restCommands: [],
   token: 'someToken',
   fullDomain: {}
+}
+const emptyRestStateWithTrace: RestStateForTest = {
+  ...emptyRestState,
+  debug: { recordTrace: true }
 }
 const cd = {
   token: identityOptics<RestStateForTest> ().focusQuery ( 'token' )
@@ -106,7 +113,7 @@ const msgFn = stringToSimpleMsg ( () => 'now', 'info' );
 
 describe ( "rest", () => {
   it ( "should fetch the results and put them into the state, removing the rest commands", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: 'get', name: 'one' },
       { restAction: 'create', name: 'one' },
       { restAction: 'getOption', name: 'one' },
@@ -130,8 +137,68 @@ describe ( "rest", () => {
     } )
   } )
 
+  it ( "should fetch the results and put them into the state, removing the rest commands and record trace if debug set", async () => {
+    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (), withRestCommand ( { ...emptyRestStateWithTrace, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+      { restAction: 'get', name: 'one' },
+      { restAction: 'create', name: 'one' },
+      { restAction: 'getOption', name: 'one' },
+      { restAction: 'delete', name: 'one' },
+      { restAction: 'update', name: 'one' },
+    ) );
+    expect ( result ).toEqual ( {
+      "debug": { "recordTrace": true },
+      "fullDomain": {
+        "fromApi": "from/some/url/someToken/update?token=someToken&id=someId",
+        "idFromFullDomain": "someId"
+      },
+      "messages": [
+        { "level": "info", "msg": "200/\"from/some/url/someToken/update?token=someToken&id=someId\"", "time": "timeForTest" },
+        { "level": "error", "msg": "Cannot connect. \"deleteWentWrong\"", "time": "timeForTest" },
+        { "level": "info", "msg": "200/\"from/some/url/someToken/getOption?token=someToken&id=someId\"", "time": "timeForTest" },
+        { "level": "info", "msg": "200/\"from/some/url/someToken/create?token=someToken\"", "time": "timeForTest" },
+        { "level": "info", "msg": "200/\"from/some/url/someToken/get?token=someToken&id=someId\"", "time": "timeForTest" }
+      ],
+      "restCommands": [],
+      "token": "someToken",
+      "trace": [
+        {
+          "reason": { "name": "one", "restAction": "get" },
+          "txLens": [
+            [ "I.focus?(messages)", [ { "level": "info", "msg": "200/\"from/some/url/someToken/get?token=someToken&id=someId\"", "time": "timeForTest" } ] ],
+            [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "from/some/url/someToken/get?token=someToken&id=someId" ]
+          ]
+        },
+        {
+          "reason": { "name": "one", "restAction": "create" },
+          "txLens": [
+            [ "I.focus?(messages)", [ { "level": "info", "msg": "200/\"from/some/url/someToken/create?token=someToken\"", "time": "timeForTest" } ] ],
+            [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "from/some/url/someToken/create?token=someToken" ] ]
+        },
+        {
+          "reason": { "name": "one", "restAction": "getOption" },
+          "txLens": [
+            [ "I.focus?(messages)", [ { "level": "info", "msg": "200/\"from/some/url/someToken/getOption?token=someToken&id=someId\"", "time": "timeForTest" } ] ],
+            [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "from/some/url/someToken/getOption?token=someToken&id=someId" ] ]
+        },
+        {
+          "reason": { "name": "one", "restAction": "delete" },
+          "txLens": [
+            [ "I.focus?(messages)", [ { "level": "error", "msg": "Cannot connect. \"deleteWentWrong\"", "time": "timeForTest" } ] ]
+          ]
+        },
+        {
+          "reason": { "name": "one", "restAction": "update" },
+          "txLens": [
+            [ "I.focus?(messages)", [ { "level": "info", "msg": "200/\"from/some/url/someToken/update?token=someToken&id=someId\"", "time": "timeForTest" } ] ],
+            [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "from/some/url/someToken/update?token=someToken&id=someId" ]
+          ]
+        }
+      ]
+    } )
+  } )
+
   it ( "should process state changes without changing the domain object", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: { state: 'newState' }, name: 'one' }
     ) );
     expect ( result ).toEqual ( {
@@ -148,13 +215,13 @@ describe ( "rest", () => {
   } )
 
   it ( "should throw error with illegal state", async () => {
-    await expect ( rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+    await expect ( rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: { state: 'illegalState' }, name: 'one' }
     ) ) ).rejects.toThrow ( 'Requested state change is illegalState. The legal list is [newState]' )
   } )
 
   it ( "should delete items specified in the 'delete on success' - single item", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (),
+    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (),
       withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
         { restAction: { state: 'newState' }, name: 'one', deleteOnSuccess: '/token' }
       ) );
@@ -171,7 +238,7 @@ describe ( "rest", () => {
 
   } )
   it ( "should delete items specified in the 'delete on success' - multiple item", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (),
+    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (),
       withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
         { restAction: { state: 'newState' }, name: 'one', deleteOnSuccess: [ '/token', '/fullDomain/idFromFullDomain' ] }
       ) );

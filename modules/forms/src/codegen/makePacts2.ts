@@ -5,7 +5,7 @@ import { isRestLens, makeCommonValueForTest, makeParamValueForTest, postFixForEn
 import { TSParams } from "./config";
 import { lensFocusQueryWithSlashAndTildaFromIdentity, stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
 import { parsePath } from "@focuson/lens";
-import { addStringToEndOfAllButLast,  indentList, paramsForRestAction } from "./codegen";
+import { addStringToEndOfAllButLast, indentList, paramsForRestAction } from "./codegen";
 import { getRestTypeDetails, getUrlForRestAction, printRestAction, RestActionDetail, restActionForName } from "@focuson/rest";
 import { CompDataD, isRepeatingDd } from "../common/dataD";
 
@@ -22,6 +22,7 @@ export function makeAllPactsForPage<B, G> ( params: TSParams, page: PageD<B, G> 
     `import {emptyState, ${params.stateName} , commonIds, identityL, pathToLens } from "../common";`,
     `import * as rests from "../rests";`,
     `import { restUrlMutator } from "../rests";`,
+    `import { traceL } from "@focuson/focuson";`,
     ...makeFetcherImports ( params, page ),
     '',
     `describe("Allow pacts to be run from intelliJ for ${page.name}", () =>{})`,
@@ -70,7 +71,7 @@ export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, re
     `   it ( 'should have a ${restActionName} rest for ${dataD.name}', async () => {`,
     `    const restCommand: RestCommand = { name: '${restDetailsName ( page, restName, rest )}', restAction: ${JSON.stringify ( action )} }`,
     `    const firstState: FState = {`,
-    `       ...emptyState, restCommands: [ restCommand ],`,
+    `       ...emptyState,debug:{}, restCommands: [ restCommand ],`,
     `       CommonIds: ${JSON.stringify ( makeCommonValueForTest ( errorPrefix, rest, 'get' ) )},`,
     `       pageSelection: [ { pageName: '${page.name}', pageMode: 'view' } ]`,
     `    }`,
@@ -91,7 +92,7 @@ export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, re
     ...indentList ( indentList ( makeLensParamsTransformers ( params, page, restName, defn, action, initialStateBodyTransforms ) ) ),
     `    const withIds = massTransform ( firstState, ...lensTransforms )`,
     `    const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );`,
-    `    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), stringToSimpleMsg(() => 'now', 'info'), restL(), withIds )`,
+    `    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), stringToSimpleMsg(() => 'now', 'info'), restL(), traceL(), withIds )`,
     `    const rawExpected:any = { ...withIds, restCommands: []}`,
     // ...suppressExpectedResult,
     ...setExpectedResult,
@@ -128,7 +129,7 @@ export function makeFetcherPact<B, G> ( params: TSParams, page: MainPageD<B, G>,
     `        body: ${params.samplesFile}.${sampleName ( rest.dataDD )}0`,
     `       },`,
     `      } )`,
-    `      const firstState: FState  = { ...emptyState, pageSelection:[{ pageName: '${page.name}', pageMode: 'view' }], CommonIds: ${JSON.stringify ( makeCommonValueForTest ( errorPrefix, rest, 'get' ) )} }`,
+    `      const firstState: FState  = { ...emptyState,debug:{}, pageSelection:[{ pageName: '${page.name}', pageMode: 'view' }], CommonIds: ${JSON.stringify ( makeCommonValueForTest ( errorPrefix, rest, 'get' ) )} }`,
     ...indentList ( makeLensParamsTransformers ( params, page, restName, defn, 'get', [] ) ),
     `      const withIds = massTransform ( firstState, ...lensTransforms )`,
     `      const fetcher= ${fetcherName ( defn )} (Lenses.identity<${params.stateName}>().focusQuery('${page.name}'), commonIds ) `,

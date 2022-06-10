@@ -248,7 +248,7 @@ export async function rest<S, MSGS> (
   const commands = restL.getOption ( s )
   const restCommandAndTxs: RestCommandAndTxs<S>[] = await restToTransforms ( fetchFn, d, urlMutatorForRest, pathToLens, messageL, stringToMsg, s, safeArray ( commands ) )
   // @ts-ignore
-  const [ debug, trace ] = [ s.debug?.restDebug, s.debug?.showTracing ]
+  const [ debug, trace ] = [ s.debug?.restDebug, s.debug?.recordTrace ]
   console.log ( 'checking trace', trace )
   const txsWithTrace: Transform<S, any>[] = trace ?
     restCommandAndTxs.flatMap ( r => {
