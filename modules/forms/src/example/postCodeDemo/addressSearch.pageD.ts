@@ -48,7 +48,7 @@ export const PostCodeMainPage: ExampleMainPage = {
       ]
     },
     save: {
-      control: 'RestButton', restName: 'address', action: 'create', validate: true
+      control: 'RestButton', restName: 'address', action: 'create', validate: false
     }
   }
 }

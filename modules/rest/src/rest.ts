@@ -1,5 +1,5 @@
 import { reqFor, UrlConfig } from "@focuson/template";
-import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RestAction, RestStateChange, safeArray, safeObject, safeString, sortedEntries, toArray } from "@focuson/utils";
+import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RestAction, RestStateChange, resultOrErrorString, safeArray, safeObject, safeString, sortedEntries, toArray } from "@focuson/utils";
 import { identityOptics, massTransform, Optional, Transform } from "@focuson/lens";
 
 
@@ -206,6 +206,7 @@ export async function restToTransforms<S, MSGS> (
   messageL: Optional<S, MSGS[]>,
   stringToMsg: ( msg: string ) => MSGS,
   s: S, commands: RestCommand[] ): Promise<RestCommandAndTxs<S>[]> {
+  if ( s === undefined ) throw new Error ( `State was null` )
   // @ts-ignore
   const debug = s.debug?.restDebug
   if ( debug ) console.log ( "rest-commands", commands )
@@ -248,9 +249,12 @@ export async function rest<S, MSGS> (
   const restCommandAndTxs: RestCommandAndTxs<S>[] = await restToTransforms ( fetchFn, d, urlMutatorForRest, pathToLens, messageL, stringToMsg, s, safeArray ( commands ) )
   // @ts-ignore
   const [ debug, trace ] = [ s.debug?.restDebug, s.debug?.showTracing ]
+  console.log ( 'checking trace', trace )
   const txsWithTrace: Transform<S, any>[] = trace ?
     restCommandAndTxs.flatMap ( r => {
-      const traceTx: Transform<S, any> = [ traceL, old => [ ...(old ? old : []), { rest: r.restCommand } ] ]
+      let newTrace = { reason: r.restCommand , txLens: r.txs.map(( [l,fn]) =>[l.description,resultOrErrorString(() =>fn(l.getOption(s)))])};
+      console.log('newTrace', newTrace)
+      const traceTx: Transform<S, any> = [ traceL, old => [ ...(old ? old : []), newTrace ] ]
       return [ ...r.txs, traceTx ]
     } )
     : restCommandAndTxs.flatMap ( r => r.txs )

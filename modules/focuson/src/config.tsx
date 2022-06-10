@@ -123,7 +123,7 @@ export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MS
     try {
       const withPreMutate = preMutate ( withDebug )
       const firstPageProcesses: S = preMutateForPages<S, Context> ( context ) ( withPreMutate )
-      const afterRest = await rest ( fetchFn, restDetails, config.restUrlMutator, pathToLens, messageL, stringToMsg, restL, firstPageProcesses )
+      const afterRest = await rest ( fetchFn, restDetails, config.restUrlMutator, pathToLens, messageL, stringToMsg, restL, traceL(), firstPageProcesses )
       if ( afterRest ) newStateFn ( afterRest )
       let newMain = await loadTree ( fetchers, afterRest, fetchFn, debug )
         .then ( s => s ? s : onError ( s, Error ( 'could not load tree' ) ) )
