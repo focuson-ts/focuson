@@ -85,6 +85,7 @@ export interface RestCommand {
   /** If set, after the rest action has succeeded the named path will be deleted in the state. This is allow us to trigger the fetchers, which will fetch the latest data */
   deleteOnSuccess?: string | string[];
   messageOnSuccess?: string
+  comment?: string
 }
 export interface HasRestCommands {
   restCommands: RestCommand[]
@@ -188,7 +189,7 @@ export function processAllRestResults<S, MSGS> ( messageL: Optional<S, MSGS[]>, 
   return withCommandsRemoved
 }
 
-interface RestCommandAndTxs<S> {
+export interface RestCommandAndTxs<S> {
   restCommand: RestCommand;
   status?: number
   txs: Transform<S, any>[];
@@ -252,8 +253,8 @@ export async function rest<S, MSGS> (
   console.log ( 'checking trace', trace )
   const txsWithTrace: Transform<S, any>[] = trace ?
     restCommandAndTxs.flatMap ( r => {
-      let newTrace = { reason: r.restCommand , txLens: r.txs.map(( [l,fn]) =>[l.description,resultOrErrorString(() =>fn(l.getOption(s)))])};
-      console.log('newTrace', newTrace)
+      let newTrace = { reason: r.restCommand, txLens: r.txs.map ( ( [ l, fn ] ) => [ l.description, resultOrErrorString ( () => fn ( l.getOption ( s ) ) ) ] ) };
+      console.log ( 'newTrace', newTrace )
       const traceTx: Transform<S, any> = [ traceL, old => [ ...(old ? old : []), newTrace ] ]
       return [ ...r.txs, traceTx ]
     } )

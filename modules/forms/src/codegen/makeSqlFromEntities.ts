@@ -230,8 +230,11 @@ export function simplifySqlLinkData ( s: SqlLinkData ): string[] {
   return [ `sqlRoot: ${s.sqlRoot.root.table.name}`, `fields: ${simplifyTableAndFieldAndAliasDataArray ( s.fields ).join ( "," )}`, `aliasAndTables ${simplifyAliasAndTables ( s.aliasAndTables )}`, `where ${simplifyWhereLinks ( s.whereLinks )}` ]
 }
 
+function getAliasForMainEntity ( m: MainEntity ) {
+  return m.alias ? m.alias : m.table.name
+}
 export function getParentTableAndAlias<T> ( main: EntityAndWhere, path: [ string, ChildEntity ][], fn: ( c: Entity ) => T ): [ string, T ] {
-  if ( path.length === 0 ) return [ main.entity.table.name, fn ( main.entity ) ]
+  if ( path.length === 0 ) return [ getAliasForMainEntity ( main.entity ), fn ( main.entity ) ]
   const [ alias, c ] = path[ path.length - 1 ]
   return [ alias, fn ( c ) ]
 }
@@ -269,7 +272,7 @@ export function findWhereLinksForSqlRootGoingUp ( sqlRoot: SqlRoot ): WhereLink[
   if ( sqlRoot.root === sqlRoot.main.entity ) return []
 
   let sqlRootAndParentsPath: [ string, Entity ][] = [ [ sqlRoot.alias, sqlRoot.root ], ...sqlRoot.path ];
-  const upToMain: [ string, Entity ][] = [ ...sqlRootAndParentsPath, [ sqlRoot.main.entity.table.name, sqlRoot.main.entity ] ]
+  const upToMain: [ string, Entity ][] = [ ...sqlRootAndParentsPath, [ getAliasForMainEntity ( sqlRoot.main.entity ), sqlRoot.main.entity ] ]
   // console.log ( 'findWhereLinksForSqlRootGoingUp', upToMain.map ( ( [ alias, entity ] ) => `${alias} => ${entity.table.name}` ) )
   return sqlRootAndParentsPath.map ( ( p, i ) => {
     if ( p[ 1 ].type === 'Main' )
@@ -712,7 +715,5 @@ export function makeInsertSqlForIds ( dataD: CompDataD<any>, entity: MainEntity 
   const sampleCount = isRepeatingDd ( dataD ) && dataD.sampleCount ? dataD.sampleCount : 3
   const is = [ ...Array ( sampleCount ).keys () ]
   return is.map ( i => `INSERT INTO ${entity.table.name}(${tafdsForThisTable
-          .map ( fd => fd.fieldData.dbFieldName )})
-                        values (${tafdsForThisTable
-                                .map ( ( fd: TableAndFieldData<any> ) => sqlIfy ( selectSample ( i, fd.fieldData ) ) ).join ( "," )});` );
+          .map ( fd => fd.fieldData.dbFieldName )}) values (${tafdsForThisTable.map ( ( fd: TableAndFieldData<any> ) => sqlIfy ( selectSample ( i, fd.fieldData ) ) ).join ( "," )});` );
 }
