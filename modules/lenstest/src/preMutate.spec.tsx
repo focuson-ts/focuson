@@ -9,7 +9,8 @@ let viewPageMode: PageMode = "view";
 
 describe ( "preMutateForPages", () => {
   it ( "should throw an error if the page is not valid", () => {
-    expect ( () => preMutate ( invalidPageState ) ).toThrow ( 'Could not find details for unknownpage. LegalValues are firstPage,clearAtStart,init,secondPage,modalData,error' )
+    expect ( () =>
+      preMutate ( invalidPageState ) ).toThrow ( 'Could not find details for unknownpage. LegalValues are firstPage,clearAtStart,init,secondPage,modalData,error' )
   } )
 
   it ( "should return the state if firstTime not true", () => {

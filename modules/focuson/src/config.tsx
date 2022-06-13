@@ -128,8 +128,8 @@ export const processRestsAndFetchers = <S, Context extends FocusOnContext<S>, MS
     const pageSelections = safeArray ( pageSelectionL.getOption ( s ) )
     const pageName = safeString ( pageSelections?.[ 0 ]?.pageName )
     const fromFetchers = restCommandsFromFetchers ( tagHolderL, newFetchers, restDetails, pageName, s )
-    const allCommands = [ ...restCommands, ...fromFetchers ]
-    const txs = await restToTransforms ( fetchFn, restDetails, restUrlMutator, pathToLens, messageL, stringToMsg, s, allCommands )
+    const allCommands: RestCommand[] = [ ...restCommands, ...fromFetchers ]
+    const txs = await restToTransforms ( fetchFn, restDetails, restUrlMutator, pathToLens, messageL, traceL(),stringToMsg, s, allCommands )
     const result = addTagTxsForFetchers ( config.tagHolderL, txs )
     return result
   }

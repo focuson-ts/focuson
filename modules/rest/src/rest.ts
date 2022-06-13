@@ -27,21 +27,22 @@ export interface RestActionDetail {
   params: RestParamsDetails,
   output: RestOutputDetails,
   graphQPrefix: string,
-  graphQlPostfix: string
+  graphQlPostfix: string,
+  message: boolean
 }
 export interface RestTypeDetails {
   [ name: string ]: RestActionDetail
 }
 
 export const defaultRestAction: RestTypeDetails = {
-  'get': { name: 'get', method: 'GET', query: 'Query', params: { needsId: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'get', graphQlPostfix: '' },
+  'get': { name: 'get', method: 'GET', query: 'Query', params: { needsId: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'get', graphQlPostfix: '', message: false },
   // 'getString': { name: 'getString', query: 'Query', params: { needsId: true }, output: { needsPling: true }, graphQPrefix: 'get', graphQlPostfix: '' }, //special for mocks
-  'getOption': { name: 'getOption', method: 'GET', query: 'Query', params: { needsId: true }, output: { needsObj: true }, graphQPrefix: 'getOption', graphQlPostfix: '' },
+  'getOption': { name: 'getOption', method: 'GET', query: 'Query', params: { needsId: true }, output: { needsObj: true }, graphQPrefix: 'getOption', graphQlPostfix: '', message: false },
   // 'list': { name: 'list', method: 'GET', query: 'Query', params: {}, output: { needsObj: true, needsBrackets: true, needsPling: true }, graphQPrefix: 'list', graphQlPostfix: '' },
-  'update': { name: 'update', method: 'PUT', query: 'Mutation', params: { needsId: true, needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'update', graphQlPostfix: '' },
-  'create': { name: 'create', method: 'POST', query: 'Mutation', params: { needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'create', graphQlPostfix: '' },
-  'delete': { name: 'delete', method: 'DELETE', query: 'Mutation', params: { needsId: true }, output: { needsObj: false }, graphQPrefix: 'delete', graphQlPostfix: '' },
-  'state': { name: 'state', method: 'POST', query: 'Mutation', params: { needsId: true }, output: { needsObj: false }, graphQPrefix: 'state', graphQlPostfix: '' },
+  'update': { name: 'update', method: 'PUT', query: 'Mutation', params: { needsId: true, needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'update', graphQlPostfix: '', message: true },
+  'create': { name: 'create', method: 'POST', query: 'Mutation', params: { needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'create', graphQlPostfix: '', message: true },
+  'delete': { name: 'delete', method: 'DELETE', query: 'Mutation', params: { needsId: true }, output: { needsObj: false }, graphQPrefix: 'delete', graphQlPostfix: '', message: true },
+  'state': { name: 'state', method: 'POST', query: 'Mutation', params: { needsId: true }, output: { needsObj: false }, graphQPrefix: 'state', graphQlPostfix: '', message: true },
 }
 export function restActionToDetails ( r: RestAction ): RestActionDetail {
   if ( typeof r === 'string' ) return defaultRestAction[ r ]
@@ -106,13 +107,17 @@ export interface RestResult<S, MSGs, Cargo> {
 }
 
 export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, stringToMsg: ( msg: string ) => MSGs ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
-  const msgTransform: Transform<S, MSGs[]> = [ messageL, old => [ ...one.messages ( status, result ), ...safeArray ( old ) ] ]
-  let messageOnSuccess = restCommand.messageOnSuccess;
-  const msgFromCommand: Transform<S, MSGs[]> | undefined = messageOnSuccess && status && status < 300 ? [ messageL, old => [ stringToMsg ( safeString ( messageOnSuccess ) ), ...safeArray ( old ) ] ] : undefined
-  const actualMessagesTxs: Transform<S, any> = msgFromCommand ? msgFromCommand : msgTransform
+
+  let useMessageOnSucess = restCommand.messageOnSuccess && status && status < 300;
+  const msgs: MSGs[] = useMessageOnSucess ? [ stringToMsg ( safeString(restCommand.messageOnSuccess) ) ] :
+    restActionToDetails ( restCommand.restAction ).message ? [ stringToMsg ( `${status} ${JSON.stringify ( result )}` ) ] :
+      []
+
+  const msgTx: Transform<S, any>[] = msgs.length > 0 ? [ [ messageL, old => [...msgs, ...safeArray ( old ) ] ] ] : []
+
   const useResponse = getRestTypeDetails ( restCommand.restAction ).output.needsObj
   const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => result ] ] : []
-  let resultTxs: Transform<S, any>[] = [ actualMessagesTxs, ...resultTransform ];
+  let resultTxs: Transform<S, any>[] = [ ...msgTx, ...resultTransform ];
   return resultTxs;
 };
 
@@ -210,11 +215,14 @@ export async function restToTransforms<S, MSGS> (
   urlMutatorForRest: ( r: RestAction, url: string ) => string,
   pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>,
   messageL: Optional<S, MSGS[]>,
+  traceL: Optional<S, any[]>,
   stringToMsg: ( msg: string ) => MSGS,
   s: S, commands: RestCommand[] ): Promise<RestCommandAndTxs<S>[]> {
   if ( s === undefined ) throw new Error ( `State was null` )
   // @ts-ignore
   const debug = s.debug?.restDebug
+  // @ts-ignore
+  const tracing = s.debug?.recordTrace
   if ( debug ) console.log ( "rest-commands", commands )
   if ( commands.length == 0 ) return Promise.resolve ( [] )
   const requests = restReq ( d, commands, urlMutatorForRest, s )
@@ -224,8 +232,9 @@ export async function restToTransforms<S, MSGS> (
   const deleteTx = ( d: string ): Transform<S, any> => [ pathToLens ( s ) ( d ), () => undefined ];
   const restCommandAndTxs: RestCommandAndTxs<S>[] = results.map ( res => {
     const deleteTxs = toArray ( res.restCommand.deleteOnSuccess ).map ( deleteTx )
-    const txs = [ ...restResultToTx ( messageL, stringToMsg ) ( res ), ...deleteTxs ];
-    const restAndTxs: RestCommandAndTxs<S> = { ...res, txs };
+    const txs: Transform<S, any>[] = [ ...restResultToTx ( messageL, stringToMsg ) ( res ), ...deleteTxs ];
+    const trace: Transform<S, any>[] = tracing ? [ [ traceL, old => [ ...safeArray ( old ), { reason: res.restCommand, lensTxs: txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( s ) ) ] ) } ] ] ] : []
+    const restAndTxs: RestCommandAndTxs<S> = { ...res, txs: [ ...txs, ...trace ] };
     return restAndTxs
   } )
 
@@ -250,19 +259,19 @@ export async function rest<S, MSGS> (
   traceL: Optional<S, any[]>,
   s: S ): Promise<S> {
   const commands = restL.getOption ( s )
-  const restCommandAndTxs: RestCommandAndTxs<S>[] = await restToTransforms ( fetchFn, d, urlMutatorForRest, pathToLens, messageL, stringToMsg, s, safeArray ( commands ) )
+  const restCommandAndTxs: RestCommandAndTxs<S>[] = await restToTransforms ( fetchFn, d, urlMutatorForRest, pathToLens, messageL, traceL, stringToMsg, s, safeArray ( commands ) )
   // @ts-ignore
   const [ debug, trace ] = [ s.debug?.restDebug, s.debug?.recordTrace ]
   console.log ( 'checking trace', trace )
-  const txsWithTrace: Transform<S, any>[] = trace ?
-    restCommandAndTxs.flatMap ( r => {
-      let newTrace = { reason: r.restCommand, txLens: r.txs.map ( ( [ l, fn ] ) => [ l.description, resultOrErrorString ( () => fn ( l.getOption ( s ) ) ) ] ) };
-      console.log ( 'newTrace', newTrace )
-      const traceTx: Transform<S, any> = [ traceL, old => [ ...(old ? old : []), newTrace ] ]
-      return [ ...r.txs, traceTx ]
-    } )
-    : restCommandAndTxs.flatMap ( r => r.txs )
-  const newS = massTransform ( s, ...txsWithTrace, [ restL, () => [] ] )
+  // const txsWithTrace: Transform<S, any>[] = trace ?
+  //   restCommandAndTxs.flatMap ( r => {
+  //     let newTrace = { reason: r.restCommand, txLens: r.txs.map ( ( [ l, fn ] ) => [ l.description, resultOrErrorString ( () => fn ( l.getOption ( s ) ) ) ] ) };
+  //     console.log ( 'newTrace', newTrace )
+  //     const traceTx: Transform<S, any> = [ traceL, old => [ ...safeArray(old), newTrace ] ]
+  // return [ ...r.txs, traceTx ]
+  // } )
+  // : restCommandAndTxs.flatMap ( r => r.txs )
+  const newS = massTransform ( s, ...restCommandAndTxs.flatMap ( r => r.txs ), [ restL, () => [] ] )
 
   if ( debug ) console.log ( "rest-result", newS )
   return newS

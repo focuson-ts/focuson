@@ -27,7 +27,7 @@ export const dataDefinedState: PageSpecState = { ...emptyState, firstPage: 'one'
 export const firstPageSelectedState = stateWith ( rootState, [ 'firstPage', 'view', undefined ] )
 export const firstPageWithFirstTime: PageSpecState = stateWithFirstTimes ( rootState, [ 'firstPage', 'view', undefined ] )
 export const secondPageSelectedState = stateWith ( rootState, [ 'secondPage', 'view', undefined ] )
-export const invalidPageState = stateWith ( rootState, [ 'unknownpage', 'view', undefined ] )
+export const invalidPageState = stateWithFirstTimes ( rootState, [ 'unknownpage', 'view', undefined ] )
 
 export function stateWith ( main: PageSpecState, ...nameAndModes: [ string, PageMode, RestCommand | undefined ][] ): PageSpecState {
   return { ...main, pageSelection: nameAndModes.map ( ( [ pageName, pageMode, rest ] ) => ({ pageName, pageMode, rest }) ) }

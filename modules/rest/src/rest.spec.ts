@@ -122,15 +122,13 @@ describe ( "rest", () => {
     ) );
     expect ( result ).toEqual ( {
       "fullDomain": {
-        fromApi: "from/some/url/someToken/update?token=someToken&id=someId",
+        "fromApi": "from/some/url/someToken/update?token=someToken&id=someId",
         "idFromFullDomain": "someId"
       },
       "messages": [
-        { "level": "info", "msg": "200/\"from/some/url/someToken/update?token=someToken&id=someId\"", "time": "timeForTest" },
-        { "level": "error", "msg": "Cannot connect. \"deleteWentWrong\"", "time": "timeForTest" },
-        { "level": "info", "msg": "200/\"from/some/url/someToken/getOption?token=someToken&id=someId\"", "time": "timeForTest" },
-        { "level": "info", "msg": "200/\"from/some/url/someToken/create?token=someToken\"", "time": "timeForTest" },
-        { "level": "info", "msg": "200/\"from/some/url/someToken/get?token=someToken&id=someId\"", "time": "timeForTest" }
+        { "level": "info", "msg": "200 \"from/some/url/someToken/update?token=someToken&id=someId\"", "time": "now" },
+        { "level": "info", "msg": "undefined \"deleteWentWrong\"", "time": "now" },
+        { "level": "info", "msg": "200 \"from/some/url/someToken/create?token=someToken\"", "time": "now" }
       ],
       "restCommands": [],
       "token": "someToken"
@@ -145,56 +143,36 @@ describe ( "rest", () => {
       { restAction: 'delete', name: 'one' },
       { restAction: 'update', name: 'one' },
     ) );
-    expect ( result ).toEqual ( {
-      "debug": { "recordTrace": true },
-      "fullDomain": {
-        "fromApi": "from/some/url/someToken/update?token=someToken&id=someId",
-        "idFromFullDomain": "someId"
+    // @ts-ignore
+    const trace = result.trace
+    expect ( trace ).toEqual ( [
+      {
+        "lensTxs": [
+          [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "from/some/url/someToken/get?token=someToken&id=someId" ] ],
+        "reason": { "name": "one", "restAction": "get" }
       },
-      "messages": [
-        { "level": "info", "msg": "200/\"from/some/url/someToken/update?token=someToken&id=someId\"", "time": "timeForTest" },
-        { "level": "error", "msg": "Cannot connect. \"deleteWentWrong\"", "time": "timeForTest" },
-        { "level": "info", "msg": "200/\"from/some/url/someToken/getOption?token=someToken&id=someId\"", "time": "timeForTest" },
-        { "level": "info", "msg": "200/\"from/some/url/someToken/create?token=someToken\"", "time": "timeForTest" },
-        { "level": "info", "msg": "200/\"from/some/url/someToken/get?token=someToken&id=someId\"", "time": "timeForTest" }
-      ],
-      "restCommands": [],
-      "token": "someToken",
-      "trace": [
-        {
-          "reason": { "name": "one", "restAction": "get" },
-          "txLens": [
-            [ "I.focus?(messages)", [ { "level": "info", "msg": "200/\"from/some/url/someToken/get?token=someToken&id=someId\"", "time": "timeForTest" } ] ],
-            [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "from/some/url/someToken/get?token=someToken&id=someId" ]
-          ]
-        },
-        {
-          "reason": { "name": "one", "restAction": "create" },
-          "txLens": [
-            [ "I.focus?(messages)", [ { "level": "info", "msg": "200/\"from/some/url/someToken/create?token=someToken\"", "time": "timeForTest" } ] ],
-            [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "from/some/url/someToken/create?token=someToken" ] ]
-        },
-        {
-          "reason": { "name": "one", "restAction": "getOption" },
-          "txLens": [
-            [ "I.focus?(messages)", [ { "level": "info", "msg": "200/\"from/some/url/someToken/getOption?token=someToken&id=someId\"", "time": "timeForTest" } ] ],
-            [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "from/some/url/someToken/getOption?token=someToken&id=someId" ] ]
-        },
-        {
-          "reason": { "name": "one", "restAction": "delete" },
-          "txLens": [
-            [ "I.focus?(messages)", [ { "level": "error", "msg": "Cannot connect. \"deleteWentWrong\"", "time": "timeForTest" } ] ]
-          ]
-        },
-        {
-          "reason": { "name": "one", "restAction": "update" },
-          "txLens": [
-            [ "I.focus?(messages)", [ { "level": "info", "msg": "200/\"from/some/url/someToken/update?token=someToken&id=someId\"", "time": "timeForTest" } ] ],
-            [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "from/some/url/someToken/update?token=someToken&id=someId" ]
-          ]
-        }
-      ]
-    } )
+      {
+        "lensTxs": [
+          [ "I.focus?(messages)", [ { "level": "info", "msg": "200 \"from/some/url/someToken/create?token=someToken\"", "time": "now" } ] ],
+          [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "from/some/url/someToken/create?token=someToken" ] ],
+        "reason": { "name": "one", "restAction": "create" }
+      },
+      {
+        "lensTxs": [ [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "from/some/url/someToken/getOption?token=someToken&id=someId" ] ],
+        "reason": { "name": "one", "restAction": "getOption" }
+      },
+      {
+        "lensTxs": [
+          [ "I.focus?(messages)", [ { "level": "info", "msg": "undefined \"deleteWentWrong\"", "time": "now" } ] ] ],
+        "reason": { "name": "one", "restAction": "delete" }
+      },
+      {
+        "lensTxs": [
+          [ "I.focus?(messages)", [ { "level": "info", "msg": "200 \"from/some/url/someToken/update?token=someToken&id=someId\"", "time": "now" } ] ],
+          [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "from/some/url/someToken/update?token=someToken&id=someId" ] ],
+        "reason": { "name": "one", "restAction": "update" }
+      }
+    ] )
   } )
 
   it ( "should process state changes without changing the domain object", async () => {
@@ -207,8 +185,7 @@ describe ( "rest", () => {
         "idFromFullDomain": "someId"
       },
       "messages": [
-        { "level": "info", "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"", "time": "timeForTest" }
-      ],
+        { "level": "info", "msg": "200 \"from/some/new/state/someToken/newState?token=someToken&id=someId\"", "time": "now" } ],
       "restCommands": [],
       "token": "someToken"
     } )
@@ -231,7 +208,7 @@ describe ( "rest", () => {
         "idFromFullDomain": "someId"
       },
       "messages": [
-        { "level": "info", "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"", "time": "timeForTest" }
+        { "level": "info", "msg": "200 \"from/some/new/state/someToken/newState?token=someToken&id=someId\"", "time": "now" }
       ],
       "restCommands": []
     } )
@@ -248,7 +225,7 @@ describe ( "rest", () => {
         // "idFromFullDomain": "someId" deleted
       },
       "messages": [
-        { "level": "info", "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"", "time": "timeForTest" }
+        { "level": "info", "msg": "200 \"from/some/new/state/someToken/newState?token=someToken&id=someId\"", "time": "now" }
       ],
       "restCommands": []
     } )

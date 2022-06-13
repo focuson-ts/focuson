@@ -1,6 +1,6 @@
 import { OneRestDetails, RestCommand, RestDetails, restL, restToTransforms } from "@focuson/rest";
 import { createSimpleMessage, RestAction, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
-import { AllFetcherUsingRestConfig, defaultPageSelectionAndRestCommandsContext, FocusOnConfig, FocusOnContext, FocusOnDebug, processRestsAndFetchers, restCommandsFromFetchers } from "@focuson/focuson";
+import { AllFetcherUsingRestConfig, defaultPageSelectionAndRestCommandsContext, FocusOnConfig, FocusOnContext, FocusOnDebug, processRestsAndFetchers, restCommandsFromFetchers, traceL } from "@focuson/focuson";
 import { TagHolder } from "@focuson/template";
 import { Lenses, NameAndLens, Optional } from "@focuson/lens";
 import { MultiPageDetails, PageSelection, simpleMessagesL, simpleMessagesPageConfig } from "@focuson/pages";
@@ -25,7 +25,7 @@ const empty: StateForNewFetcherTests = {
   pageSelection: [ { pageName: 'pageName', pageMode: 'view' } ],
   restCommands: [],
   messages: [],
-  debug: { restDebug: true, tagFetcherDebug: true }
+  debug: { restDebug: false, tagFetcherDebug: false }
 }
 
 const pageIdL = Lenses.identity<StateForNewFetcherTests> ()
@@ -101,15 +101,12 @@ const pathToLens = ( s: StateForNewFetcherTests ) => ( path: string ): Optional<
 }
 describe ( "test setup for new fetcher", () => {
   it ( "just check the rest works ", async () => {
-    const [ actual ] = await restToTransforms<StateForNewFetcherTests, SimpleMessage> ( fetchFn, restDetails, someConfig.restUrlMutator, pathToLens, someConfig.messageL, someConfig.stringToMsg, empty,
+    const [ actual ] = await restToTransforms<StateForNewFetcherTests, SimpleMessage> ( fetchFn, restDetails, someConfig.restUrlMutator, pathToLens, someConfig.messageL, traceL (), someConfig.stringToMsg, empty,
       [ { name: 'someRestName', restAction: 'get' } ] )
     expect ( actual.restCommand ).toEqual ( { name: 'someRestName', restAction: 'get' } )
     expect ( actual.status ).toEqual ( 200 )
     const txs = actual.txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( empty ) ) ] )
-    expect ( txs ).toEqual ( [
-      [ "I.focus?(messages)", [ { "level": "info", "msg": "200/123", "time": "timeForTest" } ] ],
-      [ "I.focus?(data).chain(I.focus?(a))", 123 ]
-    ] )
+    expect ( txs ).toEqual ( [ [ "I.focus?(data).chain(I.focus?(a))", 123 ] ] )
   } )
 
 } )
@@ -133,20 +130,20 @@ describe ( "restCommandsFromFetchers should create a rest command when needed", 
         "comment": "Fetcher",
         "name": "someRestName",
         "restAction": "get",
-        "tagNameAndTags": { "tagName": "someTag", "tags": [ "111", "333" ] }
+        "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "333" ] }
       }
     ] )
   } )
   it ( "not populated tags defined and same - should load", () => {
     expect ( restCommandsFromFetchers ( someConfig.tagHolderL, someConfig.newFetchers, someConfig.restDetails, 'pageName',
       { ...empty, tags: { pageName_someTag: [ '111', '222' ] }, ids: { id1: 111, id2: 222 } } ) ).toEqual ( [
-      { "comment": "Fetcher", "name": "someRestName", "restAction": "get", "tagNameAndTags": { "tagName": "someTag", "tags": [ "111", "222" ] } }
+      { "comment": "Fetcher", "name": "someRestName", "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
     ] )
   } )
   it ( " populated tags not defined  - should load", () => {
     expect ( restCommandsFromFetchers ( someConfig.tagHolderL, someConfig.newFetchers, someConfig.restDetails, 'pageName',
       { ...empty, ids: { id1: 111, id2: 222 }, data: { a: 123 } } ) ).toEqual ( [
-      { "comment": "Fetcher", "name": "someRestName", "restAction": "get", "tagNameAndTags": { "tagName": "someTag", "tags": [ "111", "222" ] } }
+      { "comment": "Fetcher", "name": "someRestName", "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
     ] )
   } )
 } )
@@ -159,17 +156,38 @@ describe ( "processRestsAndFetchers", () => {
 
     expect ( actual.restCommand ).toEqual ( {
       name: 'someRestName', restAction: 'get', comment: 'Fetcher',
-      "tagNameAndTags": { "tagName": "someTag", "tags": [ "111", "222" ] }
+      "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] }
     } )
     expect ( actual.status ).toEqual ( 200 )
     const txs = actual.txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( empty ) ) ] )
     expect ( txs ).toEqual ( [
-      [ "I.focus?(messages)", [ { "level": "info", "msg": "200/123", "time": "timeForTest" } ] ],
       [ "I.focus?(data).chain(I.focus?(a))", 123 ],
-      [ "I.focus?(tags).focusOn(someTag)", [ "111", "222" ] ]
+      [ "I.focus?(tags).focusOn(pageName_someTag)", [ "111", "222" ] ]
     ] )
 
 
+  } )
+  it ( "should load and record trace if fetcher needs it and recordTrace is on", async () => {
+    const [ actual ] = await processRestsAndFetchers ( config (), defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {} ) ) ( [] ) (
+      { ...empty, ids: { id1: 111, id2: 222 }, debug: { recordTrace: true } }
+    )
+
+    expect ( actual.restCommand ).toEqual ( {
+      name: 'someRestName', restAction: 'get', comment: 'Fetcher',
+      "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] }
+    } )
+    expect ( actual.status ).toEqual ( 200 )
+    const txs = actual.txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( empty ) ) ] )
+    expect ( txs ).toEqual ( [
+      [ "I.focus?(data).chain(I.focus?(a))", 123 ],
+      [ "I.focus?(trace)",
+        [ {
+          "lensTxs": [ [ "I.focus?(data).chain(I.focus?(a))", 123 ] ],
+          "reason": { "comment": "Fetcher", "name": "someRestName", "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
+        } ]
+      ],
+      [ "I.focus?(tags).focusOn(pageName_someTag)", [ "111", "222" ] ]
+    ] )
   } )
   it ( "should not load if fetcher doesn't needs it", async () => {
     const actual = await processRestsAndFetchers ( config (), defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {} ) ) ( [] ) (
@@ -177,6 +195,5 @@ describe ( "processRestsAndFetchers", () => {
     )
     expect ( actual ).toEqual ( [] )
   } )
-
 
 } )
