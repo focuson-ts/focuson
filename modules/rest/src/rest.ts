@@ -1,4 +1,4 @@
-import { reqFor, UrlConfig } from "@focuson/template";
+import { reqFor, Tags, UrlConfig } from "@focuson/template";
 import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RestAction, RestStateChange, resultOrErrorString, safeArray, safeObject, safeString, sortedEntries, toArray } from "@focuson/utils";
 import { identityOptics, massTransform, Optional, Transform } from "@focuson/lens";
 
@@ -85,7 +85,9 @@ export interface RestCommand {
   /** If set, after the rest action has succeeded the named path will be deleted in the state. This is allow us to trigger the fetchers, which will fetch the latest data */
   deleteOnSuccess?: string | string[];
   messageOnSuccess?: string
-  comment?: string
+  comment?: string;
+  /** If the rest command was created by a fetcher these are the tags */
+  tagNameAndTags?: { tags: Tags, tagName: string }
 }
 export interface HasRestCommands {
   restCommands: RestCommand[]
@@ -110,7 +112,8 @@ export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, stringT
   const actualMessagesTxs: Transform<S, any> = msgFromCommand ? msgFromCommand : msgTransform
   const useResponse = getRestTypeDetails ( restCommand.restAction ).output.needsObj
   const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => result ] ] : []
-  return [ actualMessagesTxs, ...resultTransform ];
+  let resultTxs: Transform<S, any>[] = [ actualMessagesTxs, ...resultTransform ];
+  return resultTxs;
 };
 
 export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]>, stringToMsg: ( msg: string ) => MSGs ) => ( s: S, { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): S => {
@@ -194,6 +197,8 @@ export interface RestCommandAndTxs<S> {
   status?: number
   txs: Transform<S, any>[];
 }
+
+
 /** Executes all the rest commands returning a list of transformations. It doesn't remove the rest commands from S
  This is valuable over the 'make a new S'for a few reasons:
  * It makes testing the rest logic easier
@@ -219,10 +224,8 @@ export async function restToTransforms<S, MSGS> (
   const deleteTx = ( d: string ): Transform<S, any> => [ pathToLens ( s ) ( d ), () => undefined ];
   const restCommandAndTxs: RestCommandAndTxs<S>[] = results.map ( res => {
     const deleteTxs = toArray ( res.restCommand.deleteOnSuccess ).map ( deleteTx )
-    const restAndTxs: RestCommandAndTxs<S> = {
-      ...res,
-      txs: [ ...restResultToTx ( messageL, stringToMsg ) ( res ), ...deleteTxs ]
-    };
+    const txs = [ ...restResultToTx ( messageL, stringToMsg ) ( res ), ...deleteTxs ];
+    const restAndTxs: RestCommandAndTxs<S> = { ...res, txs };
     return restAndTxs
   } )
 

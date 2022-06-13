@@ -129,25 +129,24 @@ describe ( "restCommandsFromFetchers should create a rest command when needed", 
   it ( "current tags defined -tags different - should load", () => {
     expect ( restCommandsFromFetchers ( someConfig.tagHolderL, someConfig.newFetchers, someConfig.restDetails, 'pageName',
       { ...empty, tags: { pageName_someTag: [ '111', '222' ] }, ids: { id1: 111, id2: 333 }, data: { a: 123 } } ) ).toEqual ( [
-      { "comment": "Fetcher", "name": "someRestName", "restAction": "get" }
-    ] )
-  } )
-  it ( "populated tags defined -tags different - should load", () => {
-    expect ( restCommandsFromFetchers ( someConfig.tagHolderL, someConfig.newFetchers, someConfig.restDetails, 'pageName',
-      { ...empty, tags: { pageName_someTag: [ '111', '222' ] }, ids: { id1: 111, id2: 333 }, data: { a: 123 } } ) ).toEqual ( [
-      { "comment": "Fetcher", "name": "someRestName", "restAction": "get" }
+      {
+        "comment": "Fetcher",
+        "name": "someRestName",
+        "restAction": "get",
+        "tagNameAndTags": { "tagName": "someTag", "tags": [ "111", "333" ] }
+      }
     ] )
   } )
   it ( "not populated tags defined and same - should load", () => {
     expect ( restCommandsFromFetchers ( someConfig.tagHolderL, someConfig.newFetchers, someConfig.restDetails, 'pageName',
       { ...empty, tags: { pageName_someTag: [ '111', '222' ] }, ids: { id1: 111, id2: 222 } } ) ).toEqual ( [
-      { "comment": "Fetcher", "name": "someRestName", "restAction": "get" }
+      { "comment": "Fetcher", "name": "someRestName", "restAction": "get", "tagNameAndTags": { "tagName": "someTag", "tags": [ "111", "222" ] } }
     ] )
   } )
   it ( " populated tags not defined  - should load", () => {
     expect ( restCommandsFromFetchers ( someConfig.tagHolderL, someConfig.newFetchers, someConfig.restDetails, 'pageName',
       { ...empty, ids: { id1: 111, id2: 222 }, data: { a: 123 } } ) ).toEqual ( [
-      { "comment": "Fetcher", "name": "someRestName", "restAction": "get" }
+      { "comment": "Fetcher", "name": "someRestName", "restAction": "get", "tagNameAndTags": { "tagName": "someTag", "tags": [ "111", "222" ] } }
     ] )
   } )
 } )
@@ -158,12 +157,16 @@ describe ( "processRestsAndFetchers", () => {
       { ...empty, ids: { id1: 111, id2: 222 } }
     )
 
-    expect ( actual.restCommand ).toEqual ( { name: 'someRestName', restAction: 'get', comment: 'Fetcher' } )
+    expect ( actual.restCommand ).toEqual ( {
+      name: 'someRestName', restAction: 'get', comment: 'Fetcher',
+      "tagNameAndTags": { "tagName": "someTag", "tags": [ "111", "222" ] }
+    } )
     expect ( actual.status ).toEqual ( 200 )
     const txs = actual.txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( empty ) ) ] )
     expect ( txs ).toEqual ( [
       [ "I.focus?(messages)", [ { "level": "info", "msg": "200/123", "time": "timeForTest" } ] ],
-      [ "I.focus?(data).chain(I.focus?(a))", 123 ]
+      [ "I.focus?(data).chain(I.focus?(a))", 123 ],
+      [ "I.focus?(tags).focusOn(someTag)", [ "111", "222" ] ]
     ] )
 
 

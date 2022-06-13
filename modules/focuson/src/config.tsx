@@ -7,6 +7,7 @@ import { errorMonad, errorPromiseMonad, FetchFn, HasSimpleMessages, RestAction, 
 import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestCommandAndTxs, RestDetails, restToTransforms } from "@focuson/rest";
 import { TagHolder } from "@focuson/template";
 import { AllFetcherUsingRestConfig, restCommandsFromFetchers } from "./tagFetcherUsingRest";
+import { FocusOnDebug } from "./debug";
 
 
 export function defaultCombine<S> ( state: LensState<S, any, any>, pages: PageDetailsForCombine[] ) {
@@ -108,6 +109,17 @@ export function fromStoreFocusonDispatcher<S> ( store: () => S ): FocusonDispatc
     return massTransform ( store (), ...allTxs )
   };
 }
+function addTagTxsForFetchers<S> ( tagHolderL: Optional<S, TagHolder>, txs: RestCommandAndTxs<S>[] ): RestCommandAndTxs<S>[] {
+  return txs.map ( ( rcAndTx ) => {
+    const { restCommand, } = rcAndTx
+    if ( restCommand.tagNameAndTags ) {
+      let txs: Transform<S, any>[] = [ ...rcAndTx.txs, [ tagHolderL.focusOn ( restCommand.tagNameAndTags.tagName ), () => restCommand.tagNameAndTags.tags ] ];
+      return { ...rcAndTx, txs: txs }
+    } else
+      return rcAndTx
+  } )
+
+}
 export const processRestsAndFetchers = <S, Context extends FocusOnContext<S>, MSGs> ( config: FocusOnConfig<S, any, any>,
                                                                                       context: Context ) =>
   ( restCommands: RestCommand[] ) => async ( s: S ): Promise<RestCommandAndTxs<S> []> => {
@@ -118,7 +130,8 @@ export const processRestsAndFetchers = <S, Context extends FocusOnContext<S>, MS
     const fromFetchers = restCommandsFromFetchers ( tagHolderL, newFetchers, restDetails, pageName, s )
     const allCommands = [ ...restCommands, ...fromFetchers ]
     const txs = await restToTransforms ( fetchFn, restDetails, restUrlMutator, pathToLens, messageL, stringToMsg, s, allCommands )
-    return txs
+    const result = addTagTxsForFetchers ( config.tagHolderL, txs )
+    return result
   }
 
 function traceTransform<S> ( trace: any, s: S ): Transform<S, any> [] {
@@ -131,8 +144,13 @@ function traceTransform<S> ( trace: any, s: S ): Transform<S, any> [] {
 const dispatchRestAndFetchCommands = <S, Context extends FocusOnContext<S>, MSGs> ( config: FocusOnConfig<S, any, any>,
                                                                                     context: Context,
                                                                                     dispatch: FocusonDispatcher<S> ) => ( restCommands: RestCommand[] ) => async ( s: S ): Promise<S> => {
+  // @ts-ignore
+  const debug: FocusOnDebug = s.debug;
   const process = processRestsAndFetchers ( config, context );
-  const restsAndFetchers = await process ( restCommands ) ( s )
+  const restsAndFetchers: RestCommandAndTxs<S>[] = await process ( restCommands ) ( s )
+  // const traceTransforms =  debug.recordTrace ? restsAndFetchers.map{
+  //   res => res.
+  // } :[]
   return dispatch ( [], restsAndFetchers ) ( s )
 };
 

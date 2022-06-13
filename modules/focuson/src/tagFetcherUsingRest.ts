@@ -18,7 +18,6 @@ const fetcherToRestCommandsAndWhy = <S, FD, D, MSGs> ( tagHolderL: Optional<S, T
   // @ts-ignore
   const debug = s.debug?.tagFetcherDebug
   const { tagName, restName } = f
-  const restCommand: RestCommand = { restAction: 'get', name: restName, comment: 'Fetcher' }
   const theseRestDatails = restDetails[ restName ]
   if ( theseRestDatails === undefined )
     throw Error ( `Fetched misconfigured. ${JSON.stringify ( f )}. Legal restNames are ${Object.keys ( restDetails )}` )
@@ -30,6 +29,7 @@ const fetcherToRestCommandsAndWhy = <S, FD, D, MSGs> ( tagHolderL: Optional<S, T
   let tagAndNames = tagOps.tags ( theseRestDatails, 'get' ) ( s );
   if ( debug ) console.log ( 'tagAndNames', tagAndNames )
   const desiredTags = tagAndNames.map ( ( [ name, tag ] ) => tag )
+  const restCommand: RestCommand = { restAction: 'get', name: restName, comment: 'Fetcher', tagNameAndTags: {tagName, tags: desiredTags} }
   if ( debug ) console.log ( 'desired tags tags', desiredTags )
   if ( !areAllDefined ( desiredTags ) ) return [ undefined, tagName, `Undefined tags. ${tagAndNames.map ( ( [ name, tag ] ) => `${name}:${tag}` )}` ]
   let tagsDifferent = !arraysEqual ( desiredTags, currentTags );

@@ -15,11 +15,11 @@ export function getRefForValidateLogicToButton ( id: string, validate: boolean|u
       ref.current.disabled = false
       return
     }
-    console.log ( 'getRefForValidateLogicToButton', id, 'validate', validate)
+    // console.log ( 'getRefForValidateLogicToButton', id, 'validate', validate)
     const valid =  isValidToCommit ( focusPageClassName )
-    console.log ( 'getRefForValidateLogicToButton - valid', id, valid )
+    // console.log ( 'getRefForValidateLogicToButton - valid', id, valid )
     let disabled = enabledBy === false || !valid;
-    console.log ( 'getRefForValidateLogicToButton - disabled', id, disabled )
+    // console.log ( 'getRefForValidateLogicToButton - disabled', id, disabled )
     ref.current.disabled = disabled
   } );
   return ref
