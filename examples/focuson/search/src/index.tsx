@@ -28,11 +28,12 @@ export const restDetails: RestDetails<FullState, SimpleMessage> = {}
 
 
 const config: FocusOnConfig<FullState, Context, SimpleMessage> = {
+  newFetchers: {}, tagHolderL: identityOptics<FullState> ().focusQuery ( 'tags' ),
   restUrlMutator ( r: RestAction, url: string ): string { return url; },
   /** How data is sent to/fetched from apis */
   fetchFn: fetchWithDelay ( 2000, fetchWithPrefix ( 'http://localhost:8080', loggingFetchFn ) ),
   messageL: simpleMessagesL (),
-  stringToMsg: stringToSimpleMsg(() => new Date().toUTCString(), 'info'),
+  stringToMsg: stringToSimpleMsg ( () => new Date ().toUTCString (), 'info' ),
   /**A hook that is called before anything else.  */
   preMutate: ( s: FullState ) => s,
   /** A hook that is called after everything else.  */
@@ -61,7 +62,7 @@ console.log ( "set json" )
 export const pathToLens: ( s: FullState ) => ( path: string ) => Optional<FullState, any> =
                fromPathFromRaw ( pageSelectionlens<FullState> (), pages )
 
-let setJson = setJsonForFocusOn<FullState, Context, SimpleMessage> ( config, defaultPageSelectionContext ( pages ), pathToLens,( s: LensState<FullState, FullState, PageSelectionContext<FullState>> ): void =>
+let setJson = setJsonForFocusOn<FullState, Context, SimpleMessage> ( config, defaultPageSelectionContext ( pages ), pathToLens, ( s: LensState<FullState, FullState, PageSelectionContext<FullState>> ): void =>
   ReactDOM.render ( <SelectedPage state={s}/>, rootElement ) )
 
 console.log ( "setting json" )

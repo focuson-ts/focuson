@@ -16,15 +16,15 @@ export const preMutateForPages = <S, Context extends PageSelectionContext<S>> ( 
 function premutateOnePage<S, Context extends PageSelectionContext<S>> ( c: Context, s: S, i: number ): S {
   const pageSelections = c.pageSelectionL.getOption ( s )
   if ( !pageSelections || pageSelections.length === 0 ) throw Error ( `software error: calling premutateOnePage and there is no pageSelection. ${pageSelections}` )
-  const lens = c.pageSelectionL.chain ( Lenses.nth ( i ) )
-  const pageSelection = lens.getOption ( s )
+  const pageSelection = pageSelections [ i ]
   if ( !pageSelection ) throw Error ( `software error: Somehow failing to get a page Selection ${i} ${JSON.stringify ( s )}` )
   const { firstTime, pageName, focusOn } = pageSelection
-  const pageDetails: MultiPageDetails<S, any> = c.pages;
-  const details = pageDetails[ pageName ]
-  if ( !details ) throw new Error ( `Could not find details for ${pageName}. LegalValues are ${Object.keys ( pageDetails ).join ( "," )}` )
   if ( firstTime ) {
-    let mainPageD = findMainPageDetails(pageSelections, pageDetails );
+    const pageDetails: MultiPageDetails<S, any> = c.pages;
+    const details = pageDetails[ pageName ]
+    if ( !details ) throw new Error ( `Could not find details for ${pageName}. LegalValues are ${Object.keys ( pageDetails ).join ( "," )}` )
+    const lens = c.pageSelectionL.chain ( Lenses.nth ( i ) )
+    let mainPageD = findMainPageDetails ( pageSelections, pageDetails );
     const dataLens: Optional<S, any> = lensForPageDetails ( mainPageD, details, focusOn )
     let firstTimeLens = lens.focusOn ( 'firstTime' );
     if ( details.clearAtStart && details.initialValue ) throw new Error ( `page ${pageName} has both clear at start and initialValue set` )

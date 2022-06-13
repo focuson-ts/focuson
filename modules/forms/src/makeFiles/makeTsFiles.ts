@@ -7,7 +7,7 @@ import { createRenderPage } from "../codegen/makeRender";
 import { ButtonD } from "../buttons/allButtons";
 import { makeAllDomainsFor, makePageDomainsFor } from "../codegen/makeDomain";
 import { makeCommon } from "../codegen/makeCommon";
-import { makeAllFetchers, makeFetcherDataStructureImport, makeFetchersDataStructure, makeFetchersImport } from "../codegen/makeTSFetchers";
+import { makeAllFetchers, makeFetcherDataStructureImport, makeFetchersDataStructure, makeFetchersImport, makeNewFetchersDataStructure } from "../codegen/makeTSFetchers";
 import { makeRestDetailsPage, makeRests } from "../codegen/makeRests";
 import { makeAllEmptyData, makeAllSampleVariables } from "../codegen/makeSample";
 import { makePages } from "../codegen/makePages";
@@ -94,7 +94,8 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
 
     writeToFile ( `${tsCode}/${params.fetchersFile}.ts`, () => [
       ...makeFetcherDataStructureImport ( params, mainPs ),
-      ...makeFetchersDataStructure ( params, { variableName: 'fetchers', stateName: params.stateName }, mainPs ) ], details )
+      ...makeFetchersDataStructure ( params, { variableName: 'fetchers', stateName: params.stateName }, mainPs ),
+      ...makeNewFetchersDataStructure ( params, mainPs ) ], details )
 
     writeToFile ( `${tsCode}/${params.restsFile}.ts`, () => makeRestDetailsPage ( params, allPages ), details )
     const rests = unique ( allPages.flatMap ( pd => isMainPage ( pd ) ? sortedEntries ( pd.rest ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest ) : [] ), r => r.dataDD.name )

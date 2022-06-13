@@ -9,9 +9,13 @@ import { pages } from "./{pagesFile}";
 import { restL } from "@focuson/rest";
 import { restDetails, restUrlMutator } from "./{restsFile}";
 import { IndexPage } from "@focuson/form_components";
+import { newFetchers } from "./fetchers";
+import { identityL } from "./common";
 
 
 export const config: FocusOnConfig<{stateName}, Context, SimpleMessage> = {
+  newFetchers,
+  tagHolderL: identityL.focusQuery ( 'tags' ),
   restUrlMutator,
   /** How data is sent to/fetched from apis */
   fetchFn: {fetch},

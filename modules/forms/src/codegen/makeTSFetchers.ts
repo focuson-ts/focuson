@@ -1,6 +1,6 @@
 import { sortedEntries } from "@focuson/utils";
-import { isMainPage, PageD, RestDefnInPageProperties } from "../common/pageD";
-import { domainName, domainsFileName, fetcherFileName, fetcherName, pageDomainName } from "./names";
+import { isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
+import { domainName, domainsFileName, fetcherFileName, fetcherName, pageDomainName, restDetailsName } from "./names";
 import { TSParams } from "./config";
 import { addStringToEndOfAllButLast, importsDot, importsDotDot, lensFocusQueryFor, noExtension } from "./codegen";
 import { findIds, isRestLens, LensRestParam } from "../common/restD";
@@ -93,4 +93,12 @@ export function makeFetchersDataStructure<B, G> ( params: TSParams, { stateName,
     'children: []}',
   ]
 
+}
+
+
+export function makeNewFetchersDataStructure<B, G> ( params: TSParams, ps: MainPageD<B, G>[] ) {
+  const obj = Object.fromEntries ( ps.map ( p =>
+    [ p.name, sortedEntries ( p.rest ).filter ( t => t[ 1 ].fetcher ).map ( ( [ restName, rdp ] ) => ({ tagName: rdp.targetFromPath, restName: restDetailsName ( p, restName, rdp.rest ) }) ) ] )
+  )
+  return (`export const newFetchers = ` + JSON.stringify ( obj, null, 2 )).split ( "\n" )
 }

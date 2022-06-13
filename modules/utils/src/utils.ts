@@ -129,3 +129,36 @@ export function unique<T> ( ts: T[] | undefined, tagFn: ( t: T ) => string ): T[
 export function resultOrErrorString<T> ( fn: () => T ): T | string {
   try {return fn ()} catch ( e ) { return JSON.stringify ( e )}
 }
+
+export const errorMonad = <S extends any> ( s: S, debug: boolean, onError: ( s: S, e: any ) => S, ...fns: [ string, ( s: S ) => S ][] ) => {
+  var exit: boolean = false
+  return fns.reduce<S> ( ( acc, [ name, fn ] ) => {
+    if ( exit ) return acc
+    try {
+      let result = fn ( acc );
+      if ( debug ) console.log ( name, JSON.stringify ( result ) )
+      return result
+    } catch ( e ) {
+      exit = true
+      console.error ( `An unexpected error occured while ${name}`, e )
+      return onError ( acc, e )
+    }
+  }, s )
+}
+
+export const errorPromiseMonad = <S extends any> ( onError: ( s: S, e: any ) => S ) => ( s: S, debug: boolean, ...fns: [ string, ( s: S ) => Promise<S> ][] ): Promise<S> => {
+  var exit: boolean = false
+  return fns.reduce<Promise<S>> ( async ( acc, [ name, fn ] ) => {
+    return acc.then ( x => {
+      if ( exit ) return x
+      let result = fn ( x );
+      if ( debug ) console.log ( name, JSON.stringify ( result ) )
+      return result
+    } ).catch ( e => {
+      exit = true
+      console.error ( `An unexpected error occured while ${name}`, e )
+      return acc.then ( lastS => onError ( lastS, e ) )
+    } )
+  }, Promise.resolve ( s ) )
+
+}
