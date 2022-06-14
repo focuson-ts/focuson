@@ -2,7 +2,7 @@ import { focusPageClassName, fromPathFromRaw, HasPageSelection, HasSimpleMessage
 import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
 import { FetcherTree, loadTree } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
-import { Lens, Lenses, massTransform, NameAndLens, Optional, Transform } from "@focuson/lens";
+import { identityOptics, Lens, Lenses, massTransform, NameAndLens, Optional, Transform } from "@focuson/lens";
 import { errorMonad, errorPromiseMonad, FetchFn, HasSimpleMessages, RestAction, safeArray, safeString } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestCommandAndTxs, RestDetails, restToTransforms } from "@focuson/rest";
 import { TagHolder } from "@focuson/template";
@@ -84,8 +84,20 @@ export interface FocusOnConfig<S, Context, MSGs> {
   newFetchers: AllFetcherUsingRestConfig;
   /** If we need to mutate the url dependant on the rest action this does it. */
   restUrlMutator: ( r: RestAction, url: string ) => string;
+  /** A count used to say how many times we have been doing 'do a rest/fetcher loop'. Used to stop a poison setup where we constantly retry*/
+  restCountL: Optional<S, RestCount>
+  maxRestCount: number
 }
-
+export interface RestCount {
+  loopCount: number;
+  times: number
+}
+export interface HasRestCount{
+  restCount?: RestCount
+}
+export function restCountL<S extends HasRestCount>(): Optional<S, RestCount>{
+  return identityOptics<S>().focusQuery('restCount')
+}
 export function traceL<S> (): Optional<S, any> {
   // @ts-ignore
   return Lenses.identity<S> ().focusQuery ( 'trace' )
@@ -104,7 +116,7 @@ type FocusonDispatcher<S> = ( preTxs: Transform<S, any>[], rests: RestCommandAnd
 
 
 export function fromStoreFocusonDispatcher<S> ( store: () => S ): FocusonDispatcher<S> {
-  return ( txs, rests ) => ( originalS ) => {
+  return ( txs, rests ) => () => {
     const allTxs: Transform<S, any>[] = [ ...txs, ...rests.flatMap ( t => t.txs ) ]
     return massTransform ( store (), ...allTxs )
   };
@@ -129,7 +141,7 @@ export const processRestsAndFetchers = <S, Context extends FocusOnContext<S>, MS
     const pageName = safeString ( pageSelections?.[ 0 ]?.pageName )
     const fromFetchers = restCommandsFromFetchers ( tagHolderL, newFetchers, restDetails, pageName, s )
     const allCommands: RestCommand[] = [ ...restCommands, ...fromFetchers ]
-    const txs = await restToTransforms ( fetchFn, restDetails, restUrlMutator, pathToLens, messageL, traceL(),stringToMsg, s, allCommands )
+    const txs = await restToTransforms ( fetchFn, restDetails, restUrlMutator, pathToLens, messageL, traceL (), stringToMsg, s, allCommands )
     const result = addTagTxsForFetchers ( config.tagHolderL, txs )
     return result
   }
@@ -145,13 +157,22 @@ const dispatchRestAndFetchCommands = <S, Context extends FocusOnContext<S>, MSGs
                                                                                     context: Context,
                                                                                     dispatch: FocusonDispatcher<S> ) => ( restCommands: RestCommand[] ) => async ( s: S ): Promise<S> => {
   // @ts-ignore
-  const debug: FocusOnDebug = s.debug;
+  const debug: FocusOnDebug = s.debug?.restDebug;
   const process = processRestsAndFetchers ( config, context );
   const restsAndFetchers: RestCommandAndTxs<S>[] = await process ( restCommands ) ( s )
-  // const traceTransforms =  debug.recordTrace ? restsAndFetchers.map{
-  //   res => res.
-  // } :[]
-  return dispatch ( [], restsAndFetchers ) ( s )
+  const sWithCountIncreased = config.restCountL.transform ( restCount => {
+    const times = restCount ? restCount.times : 0
+    if ( restsAndFetchers.length === 0 ) {
+      if ( debug ) console.log ( 'finishing the fetchers: the count is zero' )
+      return { loopCount: 0, times };
+    }
+    const oldCount = restCount ? restCount.loopCount : 0
+    if ( oldCount > config.maxRestCount ) throw Error ( `Seem to be in infinite loop where we get something from backend which trigges another getting something from backend...` );
+    let result = { loopCount: oldCount ? oldCount + 1 : 1, times };
+    if ( debug ) console.log ( `dispatchRestAndFetchCommands - relooping count is ${JSON.stringify(result)}` )
+    return result
+  } ) ( s )
+  return dispatch ( [], restsAndFetchers ) ( sWithCountIncreased )
 };
 
 
@@ -169,13 +190,14 @@ export function setJsonWithDispatcherSettingTrace<S, Context extends FocusOnCont
       [ 'preMutate', preMutate ],
       [ 'dispatch pre rests', dispatch ( [ ...traceTransform ( reason, s ), deleteRestCommands ], [] ) ]//This updates the gui 'now' pre rest/fetcher goodness. We need to kill the rest commands to stop them being sent twice
     );
-    const result = await errorPromiseMonad ( onError ) (
-            start, debug,
-            [ 'dispatchRestAndFetchCommands', dispatchRestAndFetchCommands ( config, context, dispatch ) ( restCommands ) ],
-            [ 'postMutate', postMutate ]
-          )
-    ;
-    return result
+    let processRestsAndFetches = ( start: S, restCommands: RestCommand[] ) => errorPromiseMonad ( onError ) (
+      start, debug,
+      [ 'dispatchRestAndFetchCommands', dispatchRestAndFetchCommands ( config, context, dispatch ) ( restCommands ) ],
+      [ 'postMutate', postMutate ]
+    );
+    const result = await processRestsAndFetches ( start,restCommands )
+    const restsLoaded = config.restCountL.getOption ( result )
+    return restsLoaded.loopCount === 0 ? result : processRestsAndFetches ( result, [] );
   };
   return doit
 }

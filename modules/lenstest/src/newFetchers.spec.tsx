@@ -1,17 +1,18 @@
 import { OneRestDetails, RestCommand, RestDetails, restL, restToTransforms } from "@focuson/rest";
 import { createSimpleMessage, RestAction, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
-import { AllFetcherUsingRestConfig, defaultPageSelectionAndRestCommandsContext, FocusOnConfig, FocusOnContext, FocusOnDebug, processRestsAndFetchers, restCommandsFromFetchers, traceL } from "@focuson/focuson";
+import { AllFetcherUsingRestConfig, defaultPageSelectionAndRestCommandsContext, FocusOnConfig, FocusOnContext, FocusOnDebug, processRestsAndFetchers, restCommandsFromFetchers, restCountL, traceL } from "@focuson/focuson";
 import { TagHolder } from "@focuson/template";
 import { Lenses, NameAndLens, Optional } from "@focuson/lens";
 import { MultiPageDetails, PageSelection, simpleMessagesL, simpleMessagesPageConfig } from "@focuson/pages";
 import React from "react";
 import { processParam } from "@focuson/forms";
+import { HasRestCount } from "@focuson/focuson/src/config";
 
 
 interface NewFetcherDomain {
   a?: number
 }
-interface StateForNewFetcherTests {
+interface StateForNewFetcherTests extends HasRestCount{
   pageSelection: PageSelection[];
   restCommands: RestCommand[];
   messages: SimpleMessage[];
@@ -89,8 +90,9 @@ function config (): FocusOnConfig<StateForNewFetcherTests, FocusOnContext<StateF
     restL: restL (),
     restUrlMutator ( r: RestAction, url: string ): string {return url;},
     stringToMsg: stringToSimpleMsg ( testDateFn, 'info' ),
-    tagHolderL: pageIdL.focusQuery ( 'tags' )
-
+    tagHolderL: pageIdL.focusQuery ( 'tags' ),
+    maxRestCount: 5,
+    restCountL: restCountL ()
   }
 }
 const someConfig = config ()

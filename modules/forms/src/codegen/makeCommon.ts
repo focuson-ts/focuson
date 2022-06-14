@@ -11,7 +11,7 @@ import { AppConfig } from "../appConfig";
 
 export function makeFullState<B, G> ( params: TSParams, pds: PageD<B, G>[] ): string[] {
   const hasDomains = addStringToEndOfAllButLast ( ',' ) ( allMainPages ( pds ).map ( d => hasDomainForPage ( d ) ) )
-  const constant = [ 'HasSimpleMessages', 'HasPageSelection', `Has${params.commonParams}`, 'HasTagHolder', `HasRestCommands`, 'HasFocusOnDebug' ].join ( ',' )
+  const constant = [ 'HasSimpleMessages', 'HasPageSelection', `Has${params.commonParams}`, 'HasTagHolder', `HasRestCommands`, 'HasFocusOnDebug', 'HasRestCount' ].join ( ',' )
   return [
     `export interface ${params.stateName} extends ${constant},`,
     ...indentList ( hasDomains ), `{}` ]
@@ -44,7 +44,7 @@ export function makeCommon<B, G> ( appConfig: AppConfig, params: TSParams, pds: 
     `import { identityOptics,NameAndLens, Optional } from '@focuson/lens';`,
     `import { HasTagHolder } from '@focuson/template';`,
     ` import { HasRestCommands } from '@focuson/rest'`,
-    `import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusOnContext, HasFocusOnDebug } from '@focuson/focuson';`,
+    `import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusOnContext, HasFocusOnDebug, HasRestCount} from '@focuson/focuson';`,
     `import { LensProps } from '@focuson/state';`,
     `import { pages } from "./pages";`,
 

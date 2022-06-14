@@ -15,7 +15,7 @@ function makeCommaIfHaveParams<G> ( errorPrefix: string, r: RestD<G>, restAction
 }
 
 export function makeParamsForJava<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ): string {
-  const params = paramsForRestAction(errorPrefix, r, restAction ) ;
+  const params = paramsForRestAction ( errorPrefix, r, restAction );
   const comma = makeCommaIfHaveParams ( errorPrefix, r, restAction );
   const requestParam = getRestTypeDetails ( restAction ).params.needsObj ? `${comma}@RequestBody String body` : ""
   return params.map ( (( [ name, param ] ) => {
@@ -27,7 +27,7 @@ export function makeParamsForJava<G> ( errorPrefix: string, r: RestD<G>, restAct
 }
 function paramsForQuery<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ): string {
   const clazz = isRepeatingDd ( r.dataDD ) ? 'List' : 'Map'
-  let params =  paramsForRestAction ( errorPrefix, r, restAction );
+  let params = paramsForRestAction ( errorPrefix, r, restAction );
   const comma = params.length === 0 ? '' : ', '
   const objParam = getRestTypeDetails ( restAction ).params.needsObj ? `${comma}  Transform.removeQuoteFromProperties(body, ${clazz}.class)` : ""
   return params.map ( ( [ name, param ] ) => name ).join ( ", " ) + objParam
@@ -96,9 +96,12 @@ function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restN
   let selectionFromData = getRestTypeDetails ( restAction ).output.needsObj ? `"${queryName ( r, restAction )}"` : '""';
   const callMutations = callMutationsCode ( p, restName, r, restAction, dbNameString );
   const errorPrefix = `${p.name}.rest[${restName}] ${JSON.stringify ( restName )}`
+  const hasBody = getRestTypeDetails ( restAction ).params.needsObj
+  const makeJsonString = hasBody ? [ `         Map<String,Object> bodyAsJson = new ObjectMapper().readValue(body, Map.class);` ] : []
   return [
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,
     `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( errorPrefix, r, restAction )}) throws Exception{`,
+    ...makeJsonString,
     `        try (Connection connection = dataSource.getConnection()) {`,
     ...indentList ( indentList ( indentList ( indentList ( [ ...accessDetails ( params, p, restName, r, restAction ), ...callMutations ] ) ) ) ),
     restActionToDetails ( restAction ).output.needsObj ?

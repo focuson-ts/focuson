@@ -2,13 +2,15 @@ import { focusPageClassName } from "./PageTemplate";
 import { createSimpleMessage, DateFn, safeArray } from "@focuson/utils";
 import { LensState, reasonFor } from "@focuson/state";
 import { HasSimpleMessageL } from "./simpleMessage";
-import React, { useEffect, useRef } from "react";
+import React, { MutableRefObject, useEffect, useRef } from "react";
 
-export function getRefForDebounceLogic(id: string, debounce: number|undefined){
+
+
+
+export function getRefForDebounceLogic ( id: string, debounce: number | undefined ) {
   const ref = useRef<HTMLButtonElement> ( null );
-
 }
-export function getRefForValidateLogicToButton ( id: string, validate: boolean|undefined, enabledBy: boolean|undefined ): React.MutableRefObject<HTMLButtonElement> {
+export function getRefForValidateLogicToButton ( id: string, validate: boolean | undefined, enabledBy: boolean | undefined ): React.MutableRefObject<HTMLButtonElement> {
   const ref = useRef<HTMLButtonElement> ( null );
   useEffect ( () => {
     if ( validate === false ) {
@@ -16,7 +18,7 @@ export function getRefForValidateLogicToButton ( id: string, validate: boolean|u
       return
     }
     // console.log ( 'getRefForValidateLogicToButton', id, 'validate', validate)
-    const valid =  isValidToCommit ( focusPageClassName )
+    const valid = isValidToCommit ( focusPageClassName )
     // console.log ( 'getRefForValidateLogicToButton - valid', id, valid )
     let disabled = enabledBy === false || !valid;
     // console.log ( 'getRefForValidateLogicToButton - disabled', id, disabled )

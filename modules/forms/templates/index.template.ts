@@ -1,5 +1,5 @@
 import {  PageMode, pageSelectionlens, SelectedPage, simpleMessagesL } from "@focuson/pages";
-import { FocusOnConfig, setJsonForFocusOn } from "@focuson/focuson";
+import { FocusOnConfig, setJsonForFocusOn, setJsonUsingNewFetchersUsingFlux,restCountL } from "@focuson/focuson";
 import { getElement, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
 import { context, Context, emptyState, FState, pathToLens } from "./{commonFile}";
@@ -41,7 +41,9 @@ export const config: FocusOnConfig<{stateName}, Context, SimpleMessage> = {
   messageL: simpleMessagesL (),
   stringToMsg: stringToSimpleMsg(() => new Date().toUTCString(), 'info'),
   restL: restL (),
-  restDetails: restDetails
+  restDetails: restDetails,
+  restCountL: restCountL(),
+  maxRestCount: 5
 }
 
 
@@ -57,7 +59,7 @@ const pageModeFor: NameAnd<PageMode> = {
 
 }
 
-let setJson = setJsonForFocusOn<{stateName}, Context, SimpleMessage> ( config, context, pathToLens,( s: LensState<{stateName}, {stateName}, Context> ): void =>
+let setJson = setJsonUsingNewFetchersUsingFlux<FState, Context, SimpleMessage> ( config, context, ( s: LensState<FState, FState, Context> ): void =>
   ReactDOM.render ( <div>
     <IndexPage state={s}>
        <SelectedPage state={s}/>

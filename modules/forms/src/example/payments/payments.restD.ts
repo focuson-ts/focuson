@@ -59,7 +59,12 @@ export const newPaymentsRD: ExampleRestD = {
 
   mutations: [ {
     restAction: 'create',
-    mutateBy: {
+    mutateBy: [ ,
+      {type: 'sql', sql: 'insert into xxx (paymentType) values (?)',params:[
+          {type: 'autowired', name: 'ognl', import: true, class: 'somepackage.somepostfix.another.utils.IOGNL', method: 'ognl'}
+        ], name: 'insertIntoTheData', schema: onlySchema},
+
+           {
       type: 'case', name: 'create', params: [
         'brandRef', "accountId",
         { type: 'output', name: 'one', javaType: 'String' },
@@ -82,6 +87,6 @@ export const newPaymentsRD: ExampleRestD = {
           ], schema: onlySchema, package: 'bo11'
         },
       ]
-    }
+    }]
   } ]
 }

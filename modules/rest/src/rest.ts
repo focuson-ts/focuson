@@ -233,7 +233,7 @@ export async function restToTransforms<S, MSGS> (
   const restCommandAndTxs: RestCommandAndTxs<S>[] = results.map ( res => {
     const deleteTxs = toArray ( res.restCommand.deleteOnSuccess ).map ( deleteTx )
     const txs: Transform<S, any>[] = [ ...restResultToTx ( messageL, stringToMsg ) ( res ), ...deleteTxs ];
-    const trace: Transform<S, any>[] = tracing ? [ [ traceL, old => [ ...safeArray ( old ), { reason: res.restCommand, lensTxs: txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( s ) ) ] ) } ] ] ] : []
+    const trace: Transform<S, any>[] = tracing ? [ [ traceL, old => [ ...safeArray ( old ), { restCommand: res.restCommand, lensTxs: txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( s ) ) ] ) } ] ] ] : []
     const restAndTxs: RestCommandAndTxs<S> = { ...res, txs: [ ...txs, ...trace ] };
     return restAndTxs
   } )
