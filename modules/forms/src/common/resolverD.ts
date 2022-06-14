@@ -1,4 +1,4 @@
-import { NameAnd, RestAction, toArray } from "@focuson/utils";
+import { NameAnd, RestAction, SimpleMessageLevel, toArray } from "@focuson/utils";
 import { OneDataDD } from "./dataD";
 import { JavaWiringParams } from "../codegen/config";
 import { indentList } from "../codegen/codegen";
@@ -113,7 +113,8 @@ export type MutationParamForSelect = string | StringMutationParam | IntegerMutat
 export interface OutputForSelectMutationParam {
   type: 'output';
   name: string;
-  javaType: AllJavaTypes
+  javaType: AllJavaTypes;
+  msgLevel?: SimpleMessageLevel
 }
 
 export type OutputMutationParam = OutputForSqlMutationParam | OutputForStoredProcMutationParam | OutputForManualParam | OutputForSelectMutationParam
@@ -256,18 +257,21 @@ export interface OutputForStoredProcMutationParam {
   name: string;
   javaType: JavaTypePrimitive
   sqlType: string;
+  msgLevel?: SimpleMessageLevel
 }
 export interface OutputForSqlMutationParam {
   type: 'output';
   name: string;
   javaType: JavaTypePrimitive;
   rsName: string;
+  msgLevel?: SimpleMessageLevel
 }
 export type AllJavaTypes = 'String' | 'Integer' | 'Object' | 'Double'| 'Map<String,Object>' | 'List<Map<String,Object>>' | 'Boolean'
 export interface OutputForManualParam {
   type: 'output';
   name: string;
   javaType: AllJavaTypes;
+  msgLevel?: SimpleMessageLevel
 }
 export interface NullMutationParam {
   type: 'null';

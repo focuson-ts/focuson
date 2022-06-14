@@ -76,6 +76,8 @@ export function outputParamsDeclaration ( md: MutationDetail, i: number ): strin
   let ps = allOutputParams ( md.params );
   return ps.length === 1 ? [] : ps.map ( ( m, pi ) => `${m.javaType} ${m.name} = params${i}.t${pi + 1};` )
 }
+export const addOutputParamsToMessages = ( md: MutationDetail ): string[] =>
+  allOutputParams ( md.params ).filter ( p => p.msgLevel ).map ( p => `msgs.${p.msgLevel}.add(${p.name});` )
 
 export function callMutationsCode<G> ( p: MainPageD<any, G>, restName: string, r: RestD<G>, restAction: RestAction, dbNameString: string ) {
   const hintString = isRestStateChange ( restAction ) ? ` - if you have a compilation error here check which parameters you defined in {yourRestD}.states[${restAction.state}]` : ''
@@ -83,7 +85,8 @@ export function callMutationsCode<G> ( p: MainPageD<any, G>, restName: string, r
     toArray ( ad.mutateBy ).flatMap ( ( md, i ) => {
       return [ `//from ${p.name}.rest[${restName}].mutations[${JSON.stringify ( restAction )}]${hintString}`,
         `${paramsDeclaration ( md, i )}${mutationVariableName ( r, restAction )}.${mutationMethodName ( r, restActionForName ( restAction ), md, '' + i )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
-        ...outputParamsDeclaration ( md, i )
+        ...outputParamsDeclaration ( md, i ),
+        ...addOutputParamsToMessages ( md )
       ];
     } ) ) )
   return callMutations;
@@ -102,10 +105,11 @@ function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restN
     `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,
     `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( errorPrefix, r, restAction )}) throws Exception{`,
     ...makeJsonString,
+    `        Messages msgs = Transform.msgs();`,
     `        try (Connection connection = dataSource.getConnection()) {`,
     ...indentList ( indentList ( indentList ( indentList ( [ ...accessDetails ( params, p, restName, r, restAction ), ...callMutations ] ) ) ) ),
     restActionToDetails ( restAction ).output.needsObj ?
-      `          return Transform.result(connection,graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( errorPrefix, r, restAction )}), ${selectionFromData});` :
+      `          return Transform.result(connection,graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( errorPrefix, r, restAction )}), ${selectionFromData}, msgs);` :
       `          return  ResponseEntity.ok("{}");`,
     `        }`,
     `    }`,

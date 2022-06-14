@@ -10,7 +10,7 @@ import React from "react";
 interface NewFetcherDomain {
   a?: number
 }
-interface StateForNewFetcherTests extends HasRestCount{
+interface StateForNewFetcherTests extends HasRestCount {
   pageSelection: PageSelection[];
   restCommands: RestCommand[];
   messages: SimpleMessage[];
@@ -52,6 +52,7 @@ const pages: MultiPageDetails<StateForNewFetcherTests, FocusOnContext<StateForNe
 
 
 const oneRestDetails: OneRestDetails<StateForNewFetcherTests, NewFetcherDomain, number, SimpleMessage> = {
+  extractData ( status: number, body: any ): number {return body;},
   fdLens: pageIdL.focusQuery ( 'data' ),
 //From PostCodeMainPage.rest[address].targetFromPath (~/main). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
   dLens: dataidL.focusQuery ( 'a' ),
@@ -106,7 +107,22 @@ describe ( "test setup for new fetcher", () => {
     expect ( actual.restCommand ).toEqual ( { name: 'someRestName', restAction: 'get' } )
     expect ( actual.status ).toEqual ( 200 )
     const txs = actual.txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( empty ) ) ] )
-    expect ( txs ).toEqual ( [ [ "I.focus?(data).chain(I.focus?(a))", 123 ] ] )
+    expect ( txs ).toEqual ( [
+      [
+        "I.focus?(messages)",
+        [
+          {
+            "level": "info",
+            "msg": "200/123",
+            "time": "timeForTest"
+          }
+        ]
+      ],
+      [
+        "I.focus?(data).chain(I.focus?(a))",
+        123
+      ]
+    ] )
   } )
 
 } )
@@ -161,6 +177,8 @@ describe ( "processRestsAndFetchers", () => {
     expect ( actual.status ).toEqual ( 200 )
     const txs = actual.txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( empty ) ) ] )
     expect ( txs ).toEqual ( [
+      [ "I.focus?(messages)",
+        [ { "level": "info", "msg": "200/123", "time": "timeForTest" } ] ],
       [ "I.focus?(data).chain(I.focus?(a))", 123 ],
       [ "I.focus?(tags).focusOn(pageName_someTag)", [ "111", "222" ] ]
     ] )
@@ -179,10 +197,14 @@ describe ( "processRestsAndFetchers", () => {
     expect ( actual.status ).toEqual ( 200 )
     const txs = actual.txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( empty ) ) ] )
     expect ( txs ).toEqual ( [
+      [ "I.focus?(messages)", [ { "level": "info", "msg": "200/123", "time": "timeForTest" } ] ],
       [ "I.focus?(data).chain(I.focus?(a))", 123 ],
       [ "I.focus?(trace)",
         [ {
-          "lensTxs": [ [ "I.focus?(data).chain(I.focus?(a))", 123 ] ],
+          "lensTxs": [
+            [ "I.focus?(messages)", [ { "level": "info", "msg": "200/123", "time": "timeForTest" } ] ],
+            [ "I.focus?(data).chain(I.focus?(a))", 123 ],
+          ],
           "restCommand": { "comment": "Fetcher", "name": "someRestName", "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
         } ]
       ],

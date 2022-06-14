@@ -107,14 +107,13 @@ export interface RestResult<S, MSGs, Cargo> {
   result: any
 }
 
-export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, stringToMsg: ( msg: string ) => MSGs, extractData: ( status: number, body: any ) => any, ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
+export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, extractMsgs: ( status: number | undefined, body: any ) => MSGs[], stringToMsg: ( msg: string ) => MSGs, extractData: ( status: number, body: any ) => any, ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
 
   let useMessageOnSucess = restCommand.messageOnSuccess && status && status < 300;
-  const msgs: MSGs[] = useMessageOnSucess ? [ stringToMsg ( safeString ( restCommand.messageOnSuccess ) ) ] :
-    restActionToDetails ( restCommand.restAction ).message ? [ stringToMsg ( `${status} ${JSON.stringify ( result )}` ) ] :
-      []
+  const messagesFromBody = extractMsgs ( status, result )
+  const msgs: MSGs[] = useMessageOnSucess ? [ stringToMsg ( safeString ( restCommand.messageOnSuccess ) ) ] : []
 
-  const msgTx: Transform<S, any>[] = msgs.length > 0 ? [ [ messageL, old => [ ...msgs, ...safeArray ( old ) ] ] ] : []
+  const msgTx: Transform<S, any>[] = msgs.length > 0 || messagesFromBody.length > 0 ? [ [ messageL, old => [ ...msgs, ...messagesFromBody, ...safeArray ( old ) ] ] ] : []
 
   const useResponse = getRestTypeDetails ( restCommand.restAction ).output.needsObj
   const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => extractData ( status, result ) ] ] : []
@@ -123,7 +122,7 @@ export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, stringT
 };
 
 export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]>, stringToMsg: ( msg: string ) => MSGs ) => ( s: S, { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): S => {
-  const txs: Transform<S, any>[] = restResultToTx<S, MSGs> ( messageL, stringToMsg, one.extractData ) ( result )
+  const txs: Transform<S, any>[] = restResultToTx<S, MSGs> ( messageL, one.messages, stringToMsg, one.extractData ) ( result )
   return massTransform ( s, ...txs )
 };
 
@@ -234,7 +233,7 @@ export async function restToTransforms<S, MSGS> (
   const deleteTx = ( d: string ): Transform<S, any> => [ pathToLens ( s ) ( d ), () => undefined ];
   const restCommandAndTxs: RestCommandAndTxs<S>[] = results.map ( res => {
     const deleteTxs = toArray ( res.restCommand.deleteOnSuccess ).map ( deleteTx )
-    const txs: Transform<S, any>[] = [ ...restResultToTx ( messageL, stringToMsg, res.one.extractData ) ( res ), ...deleteTxs ];
+    const txs: Transform<S, any>[] = [ ...restResultToTx ( messageL, res.one.messages, stringToMsg, res.one.extractData ) ( res ), ...deleteTxs ];
     const trace: Transform<S, any>[] = tracing ? [ [ traceL, old => [ ...safeArray ( old ), { restCommand: res.restCommand, lensTxs: txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( s ) ) ] ) } ] ] ] : []
     const restAndTxs: RestCommandAndTxs<S> = { ...res, txs: [ ...txs, ...trace ] };
     return restAndTxs

@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -20,8 +21,23 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.IOException;
 
+class Messages{
+    public final List<String> error=new ArrayList<>(2);
+    public final List<String> info=new ArrayList<>(2);
+    public final List<String> warning=new ArrayList<>(2);
+    public final Map<String, Object> map = new HashMap<>();
+    public Messages(){
+        map.put("error", error);
+        map.put("info", info);
+        map.put("warning", warning);
+    }
+}
+
 public class Transform {
-    public static ResponseEntity<String> result(Connection connection,GraphQL graphQL, String query, String result) throws JsonProcessingException {
+
+    public static Messages msgs(){return new Messages();}
+
+    public static ResponseEntity<String> result(Connection connection,GraphQL graphQL, String query, String result, Messages msgs) throws JsonProcessingException {
         ExecutionInput executionInput = ExecutionInput.newExecutionInput().query(query).localContext(connection).build();
         ExecutionResult executionResult = graphQL.execute(executionInput);
         List<GraphQLError> errors = executionResult.getErrors();
@@ -32,13 +48,12 @@ public class Transform {
             Object data =  result.length()==0 ? rawData:rawData.get(result);
             Map res = new HashMap();
             res.put("data", data);
-            String body = new ObjectMapper().writeValueAsString(rawData);
+            res.put("messages", msgs.map);
             return new ResponseEntity(res, responseHeaders, HttpStatus.OK);
         }
         String body = new ObjectMapper().writeValueAsString(errors);
         return new ResponseEntity(body, responseHeaders, HttpStatus.BAD_REQUEST);
     }
-
     public static ObjectMapper mapper = new ObjectMapper();
     public static ObjectWriter prettyPrinter = mapper.writerWithDefaultPrettyPrinter();
     public static Pattern pattern = Pattern.compile("(?m)^\\s*\"[^\"]+\"");

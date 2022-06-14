@@ -19,15 +19,14 @@ describe ( "makeRest", () => {
       "    cd, fdd,",
       "    ids: ['accountId','applRef','brandRef','dbName','employeeType'],",
       "    resourceId:  ['clientRef'],",
-      "    messages: ( status: number | undefined, body: any ): SimpleMessage[] => status == undefined ?",
-      "      [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify ( body )}`, testDateFn () ) ] :",
-      "      [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],",
+      "    extractData: ( status: number, body: any ) => body.data,",
+      "    messages: extractMessages(dateFn),",
       "    url: '/api/accountsSummary?{query}',",
       "    states : {'invalidate':{'url':'/api/accountsSummary/invalidate?{query}','params':{'accountId':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':44444444},'clientRef':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'clientRef','testValue':333,'annotation':'@RequestHeader @RequestParam'},'employeeType':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'employeeType','testValue':'basic','annotation':'@RequestHeader @RequestParam'},'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'}}}}",
       "  }",
       "}",
       ""
-    ] )
+    ])
   } )
   it ( "should create posters for a restD with many actions", () => {
     expect ( makeRest ( paramsForTest, EAccountsSummaryPD ) ( 'eAccountsSummary', EAccountsSummaryPD.rest.createPlanRestD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
@@ -42,9 +41,8 @@ describe ( "makeRest", () => {
       "    cd, fdd,",
       "    ids: ['accountId','applRef','brandRef','clientRef'],",
       "    resourceId:  ['createPlanId'],",
-      "    messages: ( status: number | undefined, body: any ): SimpleMessage[] => status == undefined ?",
-      "      [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify ( body )}`, testDateFn () ) ] :",
-      "      [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],",
+      "    extractData: ( status: number, body: any ) => body.data,",
+      "    messages: extractMessages(dateFn),",
       "    url: '/api/createPlan?{query}',",
       "    states : {}",
       "  }",
@@ -66,15 +64,14 @@ describe ( "makeRest", () => {
       "    cd, fdd,",
       "    ids: ['clientRef'],",
       "    resourceId:  [],",
-      "    messages: ( status: number | undefined, body: any ): SimpleMessage[] => status == undefined ?",
-      "      [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify ( body )}`, testDateFn () ) ] :",
-      "      [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],",
+      "    extractData: ( status: number, body: any ) => body.data,",
+      "    messages: extractMessages(dateFn),",
       "    url: '/api/repeating?{query}',",
       "    states : {}",
       "  }",
       "}",
       ""
-    ] )
+    ])
 
   } )
 

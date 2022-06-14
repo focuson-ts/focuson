@@ -13,7 +13,24 @@ export const accountOverviewRestD: ExampleRestD = {
   params: commonIds,
   dataDD: accountOverviewDataD,
   url: '/api/accountOverview?{query}',
-  actions: [ 'get' ]
+  actions: [ 'get' ],
+  mutations: [
+    {
+      restAction: 'get', mutateBy:
+        {
+          type: 'manual', name: 'testForMessages', code: [ `
+          String errorMsg = "the error message";
+          String warningMsg = "the warning message";
+          String infoMsg = "the info message";
+          ` ], params: [
+            { type: 'output', javaType: 'String', name: 'errorMsg', msgLevel: 'error' },
+            { type: 'output', javaType: 'String', name: 'warningMsg', msgLevel: 'warning' },
+            { type: 'output', javaType: 'String', name: 'infoMsg', msgLevel: 'info' }
+          ]
+        }
+    }
+  ]
+
 }
 
 export const accountOverviewExcessInfoRestD: ExampleRestD = {

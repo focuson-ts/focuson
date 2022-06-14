@@ -6,7 +6,7 @@ import { isRestStateChange, RestAction, safeString } from "@focuson/utils";
 import { JavaWiringParams, TSParams } from "./config";
 import { TableAndFieldAndAliasData } from "./makeSqlFromEntities";
 import { RestActionDetail, restActionForName, restActionToDetails } from "@focuson/rest";
-import { MutationDetail } from "../common/resolverD";
+import { MutationDetail, OutputMutationParam } from "../common/resolverD";
 
 export const guardName = ( s: string ) => s + "Guard"
 export const domainName = <G> ( d: CompDataD<G> ): string => d.name + "Domain";
@@ -95,3 +95,4 @@ export const samplesFileName = <B, G> ( root: string, params: TSParams, pd: Page
 export const restFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.restsFile );
 export const fetcherFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.fetchersFile );
 export const optionalsFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.optionalsFile );
+
