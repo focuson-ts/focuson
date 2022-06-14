@@ -74,6 +74,11 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
     error = true   
   } 
 
+  const handleChangeRaw = (e: any) => {
+    const date = e.currentTarget.value    
+    state.setJson ( date, reasonFor ( 'LabelAndDate', 'onChange', id ) )    
+  }
+
   return (<div className={`labelAndDate ${props.labelPosition == 'Horizontal'? 'd-flex-inline' : ''}`}>
       <Label state={state} htmlFor={name} label={label}/>
       <div className={`${props.buttons && props.buttons.length > 0 ? 'inputAndButtons' : ''}`}>
@@ -88,9 +93,11 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
         highlightDates={datesToExcludeAsDateType}
         readOnly={mode === 'view' || readonly}
         className={error ? "red-border" : ""}
+        closeOnScroll={true}  
+        onChangeRaw={(e) => handleChangeRaw(e)}
         placeholderText="Select a date"/>
         {makeButtons ( props.allButtons, props.buttons )}
-        {error && <div className="error-msg">Invalid Date: {state.optJsonOr('')}</div>}
+        {error && <div className="custom-error">Invalid Date: {state.optJsonOr('')}</div>}
       </div>
     </div>)
 }
