@@ -29,9 +29,11 @@ export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restNam
     `    cd, fdd,`,
     `    ids: ${JSON.stringify ( ids )},`,
     `    resourceId:  ${JSON.stringify ( resourceIds )},`,
-    "    messages: ( status: number | undefined, body: any ): SimpleMessage[] => status == undefined ?",
-    "      [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify ( body )}`, testDateFn () ) ] :",
-    "      [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],",
+    `    extractData: ${params.extractData},`,
+    `    messages: extractMessages(dateFn),`,
+    // "    messages: ( status: number | undefined, body: any ): SimpleMessage[] => status == undefined ?",
+    // "      [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify ( body )}`, testDateFn () ) ] :",
+    // "      [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],",
     // "    messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],",
     `    url: "${r.rest.url}",`,
     `    states : ${JSON.stringify ( states )}`,
@@ -46,6 +48,7 @@ export function makeRestImports<B, G> ( params: TSParams, p: PageD<B, G> ) {
     `import * as domains from "${domainsFileName ( '..', params, p )}"`,
     `import { createSimpleMessage, DateFn, defaultDateFn,  SimpleMessage, testDateFn } from "@focuson/utils"`,
     `import { Lenses, NameAndLens} from "@focuson/lens"`,
+  `import { extractMessages } from "@focuson/pages";`,
     `` ]
 }
 

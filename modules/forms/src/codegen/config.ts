@@ -38,6 +38,7 @@ export interface TSParams {
   pagesFile: string;
   optionalsFile: string;
   theme: string;
+  extractData: string;
   }
 
 export interface CombinedParams extends JavaWiringParams, TSParams {}

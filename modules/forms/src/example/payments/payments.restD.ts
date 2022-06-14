@@ -22,12 +22,12 @@ export const newPaymentsRD: ExampleRestD = {
   resolvers: {
     getoneLinePayment: {
       type: 'case', name: 'case', params: [ 'brandRef', 'accountId',
-        {type: 'output', name: 'nameOfPayee', javaType: 'String'},
-        {type: 'output', name: 'sterlingAmount', javaType: 'Integer'},
-        {type: 'output', name: 'currencyAmount', javaType: 'Integer'},
-        {type: 'output', name: 'amtInWords', javaType: 'String'},
-        {type: 'output', name: 'forActionOn', javaType: 'String'},
-        {type: 'output', name: 'dateCreated', javaType: 'String'},
+        { type: 'output', name: 'nameOfPayee', javaType: 'String' },
+        { type: 'output', name: 'sterlingAmount', javaType: 'Integer' },
+        { type: 'output', name: 'currencyAmount', javaType: 'Integer' },
+        { type: 'output', name: 'amtInWords', javaType: 'String' },
+        { type: 'output', name: 'forActionOn', javaType: 'String' },
+        { type: 'output', name: 'dateCreated', javaType: 'String' },
       ], select: [
         {
           guard: [ 'brandRef==3' ], type: 'sql', name: '', schema: onlySchema,
@@ -59,12 +59,7 @@ export const newPaymentsRD: ExampleRestD = {
 
   mutations: [ {
     restAction: 'create',
-    mutateBy: [ ,
-      {type: 'sql', sql: 'insert into xxx (paymentType) values (?)',params:[
-          {type: 'autowired', name: 'ognl', import: true, class: 'somepackage.somepostfix.another.utils.IOGNL', method: 'ognl'}
-        ], name: 'insertIntoTheData', schema: onlySchema},
-
-           {
+    mutateBy: [ {
       type: 'case', name: 'create', params: [
         'brandRef', "accountId",
         { type: 'output', name: 'one', javaType: 'String' },
@@ -87,6 +82,6 @@ export const newPaymentsRD: ExampleRestD = {
           ], schema: onlySchema, package: 'bo11'
         },
       ]
-    }]
+    } ]
   } ]
 }

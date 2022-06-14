@@ -1,5 +1,5 @@
 import { reqFor, Tags, UrlConfig } from "@focuson/template";
-import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RestAction, RestStateChange, resultOrErrorString, safeArray, safeObject, safeString, sortedEntries, toArray } from "@focuson/utils";
+import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RestAction, RestStateChange, safeArray, safeObject, safeString, sortedEntries, toArray } from "@focuson/utils";
 import { identityOptics, massTransform, Optional, Transform } from "@focuson/lens";
 
 
@@ -74,6 +74,7 @@ export type StateAccessDetails = { url: string, params: NameAnd<emptyType> } // 
 export interface OneRestDetails<S, FD, D, MSGs> extends UrlConfig<S, FD, D> {
   url: string;
   states?: NameAnd<StateAccessDetails>,
+  extractData: ( status: number, body: any ) => D,
   messages: ( status: number | undefined, body: any ) => MSGs[];//often the returning value will have messages in it. Usually a is of type Domain. When the rest action is Delete there may be no object returned, but might be MSGs
 }
 
@@ -106,23 +107,23 @@ export interface RestResult<S, MSGs, Cargo> {
   result: any
 }
 
-export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, stringToMsg: ( msg: string ) => MSGs ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
+export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, stringToMsg: ( msg: string ) => MSGs, extractData: ( status: number, body: any ) => any, ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
 
   let useMessageOnSucess = restCommand.messageOnSuccess && status && status < 300;
-  const msgs: MSGs[] = useMessageOnSucess ? [ stringToMsg ( safeString(restCommand.messageOnSuccess) ) ] :
+  const msgs: MSGs[] = useMessageOnSucess ? [ stringToMsg ( safeString ( restCommand.messageOnSuccess ) ) ] :
     restActionToDetails ( restCommand.restAction ).message ? [ stringToMsg ( `${status} ${JSON.stringify ( result )}` ) ] :
       []
 
-  const msgTx: Transform<S, any>[] = msgs.length > 0 ? [ [ messageL, old => [...msgs, ...safeArray ( old ) ] ] ] : []
+  const msgTx: Transform<S, any>[] = msgs.length > 0 ? [ [ messageL, old => [ ...msgs, ...safeArray ( old ) ] ] ] : []
 
   const useResponse = getRestTypeDetails ( restCommand.restAction ).output.needsObj
-  const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => result ] ] : []
+  const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => extractData ( status, result ) ] ] : []
   let resultTxs: Transform<S, any>[] = [ ...msgTx, ...resultTransform ];
   return resultTxs;
 };
 
 export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]>, stringToMsg: ( msg: string ) => MSGs ) => ( s: S, { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): S => {
-  const txs: Transform<S, any>[] = restResultToTx<S, MSGs> ( messageL, stringToMsg ) ( result )
+  const txs: Transform<S, any>[] = restResultToTx<S, MSGs> ( messageL, stringToMsg, one.extractData ) ( result )
   return massTransform ( s, ...txs )
 };
 
@@ -200,6 +201,7 @@ export function processAllRestResults<S, MSGS> ( messageL: Optional<S, MSGS[]>, 
 export interface RestCommandAndTxs<S> {
   restCommand: RestCommand;
   status?: number
+  one: OneRestDetails<S, any, any, any>;
   txs: Transform<S, any>[];
 }
 
@@ -225,14 +227,14 @@ export async function restToTransforms<S, MSGS> (
   const tracing = s.debug?.recordTrace
   if ( debug ) console.log ( "rest-commands", commands )
   if ( commands.length == 0 ) return Promise.resolve ( [] )
-  const requests = restReq ( d, commands, urlMutatorForRest, s )
+  const requests: [ RestCommand, OneRestDetails<S, any, any, any>, RequestInfo, (RequestInit | undefined) ][] = restReq ( d, commands, urlMutatorForRest, s )
   if ( debug ) console.log ( "rest-requests", requests )
   const results: RestResult<S, MSGS, any>[] = await massFetch ( fetchFn, requests )
   if ( debug ) console.log ( "rest-results", results )
   const deleteTx = ( d: string ): Transform<S, any> => [ pathToLens ( s ) ( d ), () => undefined ];
   const restCommandAndTxs: RestCommandAndTxs<S>[] = results.map ( res => {
     const deleteTxs = toArray ( res.restCommand.deleteOnSuccess ).map ( deleteTx )
-    const txs: Transform<S, any>[] = [ ...restResultToTx ( messageL, stringToMsg ) ( res ), ...deleteTxs ];
+    const txs: Transform<S, any>[] = [ ...restResultToTx ( messageL, stringToMsg, res.one.extractData ) ( res ), ...deleteTxs ];
     const trace: Transform<S, any>[] = tracing ? [ [ traceL, old => [ ...safeArray ( old ), { restCommand: res.restCommand, lensTxs: txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( s ) ) ] ) } ] ] ] : []
     const restAndTxs: RestCommandAndTxs<S> = { ...res, txs: [ ...txs, ...trace ] };
     return restAndTxs

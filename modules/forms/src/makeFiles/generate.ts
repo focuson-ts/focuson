@@ -48,7 +48,9 @@ export const params = {
   resolversPackage: 'resolvers',
   utilsPackage: 'utils',
   maxTuples: 3,
-  theme:'theme-light'
+  theme:'theme-light',
+  extractData: `( status: number, body: any ) => body.data`,
+
 };
 
 export const directorySpec: DirectorySpec = {

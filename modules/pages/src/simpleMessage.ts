@@ -1,6 +1,7 @@
 import { Lenses, Optional } from "@focuson/lens";
 import { LensState } from "@focuson/state";
-import { HasSimpleMessages, SimpleMessage } from "@focuson/utils";
+import { createSimpleMessage, DateFn, HasSimpleMessages, SimpleMessage, stringToSimpleMsg, testDateFn, toArray } from "@focuson/utils";
+import { SimpleMessageLevel } from "@focuson/utils/src/messages";
 
 export interface HasSimpleMessageL<S> {
   simpleMessagesL: Optional<S, SimpleMessage[]>
@@ -15,3 +16,15 @@ export const mutateStateAddingMessagesFromSource = <S, SOURCE, MSG> ( messageL: 
     let simpleMessages = msgs ( api );
     return simpleMessages.length === 0 ? s : messageL.transform ( existing => [ ...existing, ...simpleMessages ] ) ( s )
   };
+
+
+export const extractMessages = ( dataFn: DateFn ) => ( status: number | undefined, body: any ) => {
+  function fromHeaderOrMessages ( m: any ) {
+    const fromOne = ( level: SimpleMessageLevel ) => toArray ( m?.[ level ] ).map ( stringToSimpleMsg ( dataFn, level ) );
+    return [ ...fromOne ( 'info' ), ...fromOne ( 'error' ), ...fromOne ( 'warning' ) ]
+  }
+  return status === undefined ?
+    [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify ( body )}`, testDateFn () ) ] :
+    [ ...fromHeaderOrMessages ( 'messages' ), ...fromHeaderOrMessages ( 'headerMessages' ) ];
+};
+

@@ -1,6 +1,6 @@
 import { createSimpleMessage, FetchFn, HasSimpleMessages, insertBefore, isRestStateChange, RestAction, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
 import { HasRestCommands, massFetch, OneRestDetails, rest, RestCommand, RestDetails, restL, restReq } from "./rest";
-import { identityOptics, lensBuilder, Lenses, NameAndLens, Optional, parsePath, PathBuilder } from "@focuson/lens";
+import { identityOptics, lensBuilder, Lenses, NameAndLens, Optional, parsePath } from "@focuson/lens";
 
 interface HasFullDomainForTest {
   fullDomain?: FullDomainForTest
@@ -34,14 +34,15 @@ const cd = {
 const fdd = {
   id: identityOptics<FullDomainForTest> ().focusQuery ( 'idFromFullDomain' )
 }
-function oneRestDetails<S extends HasFullDomainForTest> ( cd: NameAndLens<S>, fdd: NameAndLens<FullDomainForTest> ): OneRestDetails<S, FullDomainForTest, string, SimpleMessage> {
+function oneRestDetails ( cd: NameAndLens<RestStateForTest>, fdd: NameAndLens<FullDomainForTest> ): OneRestDetails<RestStateForTest, FullDomainForTest, string, SimpleMessage> {
   return {
-    fdLens: identityOptics<S> ().focusQuery ( 'fullDomain' ),
+    fdLens: identityOptics<RestStateForTest> ().focusQuery ( 'fullDomain' ),
     dLens: identityOptics<FullDomainForTest> ().focusQuery ( 'fromApi' ),
     cd,
     fdd,
     ids: [ 'token' ],
     resourceId: [ 'id' ],
+    extractData: ( status: number, body: any ): string => `Extracted[${status}].${body}`,
     messages: ( status: number | undefined, body: any ): SimpleMessage[] => status == undefined ?
       [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify ( body )}`, testDateFn () ) ] :
       [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],
@@ -122,7 +123,7 @@ describe ( "rest", () => {
     ) );
     expect ( result ).toEqual ( {
       "fullDomain": {
-        "fromApi": "from/some/url/someToken/update?token=someToken&id=someId",
+        "fromApi": "Extracted[200].from/some/url/someToken/update?token=someToken&id=someId",
         "idFromFullDomain": "someId"
       },
       "messages": [
@@ -148,29 +149,33 @@ describe ( "rest", () => {
     expect ( trace ).toEqual ( [
       {
         "lensTxs": [
-          [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "from/some/url/someToken/get?token=someToken&id=someId" ] ],
+          [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "Extracted[200].from/some/url/someToken/get?token=someToken&id=someId" ] ],
         "restCommand": { "name": "one", "restAction": "get" }
       },
       {
         "lensTxs": [
           [ "I.focus?(messages)", [ { "level": "info", "msg": "200 \"from/some/url/someToken/create?token=someToken\"", "time": "now" } ] ],
-          [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "from/some/url/someToken/create?token=someToken" ] ],
+          [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "Extracted[200].from/some/url/someToken/create?token=someToken" ]
+        ],
         "restCommand": { "name": "one", "restAction": "create" }
       },
       {
-        "lensTxs": [ [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "from/some/url/someToken/getOption?token=someToken&id=someId" ] ],
+        "lensTxs": [ [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "Extracted[200].from/some/url/someToken/getOption?token=someToken&id=someId" ] ],
         "restCommand": { "name": "one", "restAction": "getOption" }
       },
       {
         "lensTxs": [
-          [ "I.focus?(messages)", [ { "level": "info", "msg": "undefined \"deleteWentWrong\"", "time": "now" } ] ] ],
+          [ "I.focus?(messages)", [ { "level": "info", "msg": "undefined \"deleteWentWrong\"", "time": "now" } ] ]
+        ],
         "restCommand": { "name": "one", "restAction": "delete" }
       },
       {
         "lensTxs": [
           [ "I.focus?(messages)", [ { "level": "info", "msg": "200 \"from/some/url/someToken/update?token=someToken&id=someId\"", "time": "now" } ] ],
-          [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "from/some/url/someToken/update?token=someToken&id=someId" ] ],
-        "restCommand": { "name": "one", "restAction": "update" }
+          [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "Extracted[200].from/some/url/someToken/update?token=someToken&id=someId" ] ], "restCommand": {
+          "name": "one",
+          "restAction": "update"
+        }
       }
     ] )
   } )

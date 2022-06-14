@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.IOException;
@@ -29,8 +30,10 @@ public class Transform {
         if (errors.isEmpty()) {
             Map rawData = (Map) executionResult.toSpecification().get("data");
             Object data =  result.length()==0 ? rawData:rawData.get(result);
-            String body = new ObjectMapper().writeValueAsString(data);
-            return new ResponseEntity(body, responseHeaders, HttpStatus.OK);
+            Map res = new HashMap();
+            res.put("data", data);
+            String body = new ObjectMapper().writeValueAsString(rawData);
+            return new ResponseEntity(res, responseHeaders, HttpStatus.OK);
         }
         String body = new ObjectMapper().writeValueAsString(errors);
         return new ResponseEntity(body, responseHeaders, HttpStatus.BAD_REQUEST);
