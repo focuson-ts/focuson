@@ -4,14 +4,14 @@ import { getElement, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
 import { SearchPage, SearchQueryModalPage } from "./search/searchPage";
 import React from "react";
-import { defaultPageSelectionContext, FocusOnConfig, HasFocusOnDebug, setJsonForFocusOn } from "@focuson/focuson";
+import { defaultPageSelectionContext, FocusOnConfig, HasFocusOnDebug, HasRestCount, restCountL, setJsonForFocusOn } from "@focuson/focuson";
 import { defaultDateFn, fetchWithDelay, fetchWithPrefix, loggingFetchFn, RestAction, SimpleMessage, stringToSimpleMsg } from "@focuson/utils";
 import { SearchRequirements } from "./search/fullSearchDomain";
 import { fetchers } from "./fetchers";
 import { HasRestCommands, RestDetails, restL } from "@focuson/rest";
 
 type Context = PageSelectionContext<FullState>
-export interface FullState extends SearchRequirements, HasFocusOnDebug, HasRestCommands {}
+export interface FullState extends SearchRequirements, HasFocusOnDebug, HasRestCommands, HasRestCount {}
 
 
 function MyLoading () {
@@ -28,6 +28,8 @@ export const restDetails: RestDetails<FullState, SimpleMessage> = {}
 
 
 const config: FocusOnConfig<FullState, Context, SimpleMessage> = {
+  maxRestCount: 2,
+  restCountL: restCountL(),
   newFetchers: {}, tagHolderL: identityOptics<FullState> ().focusQuery ( 'tags' ),
   restUrlMutator ( r: RestAction, url: string ): string { return url; },
   /** How data is sent to/fetched from apis */

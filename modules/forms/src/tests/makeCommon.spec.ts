@@ -10,7 +10,7 @@ import { devAppConfig } from "../appConfig";
 describe ( "makeFullState", () => {
   it ( 'should make the FullState', () => {
     expect ( makeFullState ( paramsForTest, [ EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
-      "export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,",
+      "export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,HasRestCount,",
       "  HasEAccountsSummaryPageDomain",
       "{}"
     ] )
@@ -28,14 +28,14 @@ describe ( "makeCommon", () => {
       "import { identityOptics,NameAndLens, Optional } from '@focuson/lens';",
       "import { HasTagHolder } from '@focuson/template';",
       " import { HasRestCommands } from '@focuson/rest'",
-      "import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusOnContext, HasFocusOnDebug } from '@focuson/focuson';",
+      "import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusOnContext, HasFocusOnDebug, HasRestCount} from '@focuson/focuson';",
       "import { LensProps } from '@focuson/state';",
       "import { pages } from './pages';",
       "import { MyCombined } from '@focuson/form_components';",
       "import { HasEAccountsSummaryPageDomain } from './EAccountsSummary/EAccountsSummary.domains';",
       "import { HasOccupationAndIncomeSummaryPageDomain } from './OccupationAndIncomeSummary/OccupationAndIncomeSummary.domains';",
       "",
-      "export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,",
+      "export interface FState extends HasSimpleMessages,HasPageSelection,HasCommonIds,HasTagHolder,HasRestCommands,HasFocusOnDebug,HasRestCount,",
       "  HasEAccountsSummaryPageDomain,",
       "  HasOccupationAndIncomeSummaryPageDomain",
       "{}",

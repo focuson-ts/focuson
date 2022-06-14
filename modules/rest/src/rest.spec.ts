@@ -149,28 +149,28 @@ describe ( "rest", () => {
       {
         "lensTxs": [
           [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "from/some/url/someToken/get?token=someToken&id=someId" ] ],
-        "reason": { "name": "one", "restAction": "get" }
+        "restCommand": { "name": "one", "restAction": "get" }
       },
       {
         "lensTxs": [
           [ "I.focus?(messages)", [ { "level": "info", "msg": "200 \"from/some/url/someToken/create?token=someToken\"", "time": "now" } ] ],
           [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "from/some/url/someToken/create?token=someToken" ] ],
-        "reason": { "name": "one", "restAction": "create" }
+        "restCommand": { "name": "one", "restAction": "create" }
       },
       {
         "lensTxs": [ [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "from/some/url/someToken/getOption?token=someToken&id=someId" ] ],
-        "reason": { "name": "one", "restAction": "getOption" }
+        "restCommand": { "name": "one", "restAction": "getOption" }
       },
       {
         "lensTxs": [
           [ "I.focus?(messages)", [ { "level": "info", "msg": "undefined \"deleteWentWrong\"", "time": "now" } ] ] ],
-        "reason": { "name": "one", "restAction": "delete" }
+        "restCommand": { "name": "one", "restAction": "delete" }
       },
       {
         "lensTxs": [
           [ "I.focus?(messages)", [ { "level": "info", "msg": "200 \"from/some/url/someToken/update?token=someToken&id=someId\"", "time": "now" } ] ],
           [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "from/some/url/someToken/update?token=someToken&id=someId" ] ],
-        "reason": { "name": "one", "restAction": "update" }
+        "restCommand": { "name": "one", "restAction": "update" }
       }
     ] )
   } )
