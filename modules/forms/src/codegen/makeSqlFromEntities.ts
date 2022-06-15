@@ -251,7 +251,7 @@ export function findAliasAndTableLinksForLinkData ( m: SqlRoot ): [ string, DBTa
   }
   let zero: [ string, DBTable ][] = m.path.map ( d => [ d[ 0 ], d[ 1 ].table ] );
   let result = foldEntitys ( findAliasAndTablesLinksForLinkDataFolder, m.main, m.root, m.filterPath, [] );
-  return unique ( [ [ m.main.entity.table.name, m.main.entity.table ], ...zero, ...result ], ( [ alias, table ] ) => `${alias}:${table.name}` )
+  return unique ( [ [ getAliasForMainEntity(m.main.entity), m.main.entity.table ], ...zero, ...result ], ( [ alias, table ] ) => `${alias}:${table.name}` )
 }
 
 export function findWhereLinksForSqlRoot ( sqlRoot: SqlRoot ): WhereLink[] {
