@@ -2,7 +2,7 @@ import { LensState, reasonFor } from "@focuson/state";
 import { CopyDetails, fromPathGivenState, page, PageMode, PageParams, PageSelectionContext, SetToLengthOnClose } from "../pageSelection";
 import { Transform } from "@focuson/lens";
 import { RestCommand } from "@focuson/rest";
-import { anyIntoPrimitive, safeArray } from "@focuson/utils";
+import { anyIntoPrimitive, DateFn, safeArray } from "@focuson/utils";
 import { CustomButtonType, getButtonClassName } from "../common";
 
 export interface CopyStringDetails {
@@ -14,6 +14,7 @@ export interface ModalButtonProps<S, Context> extends CustomButtonType {
   state: LensState<S, any, Context>
   id?: string,
   text: string,
+  dateFn: DateFn,
   enabledBy?: boolean,
   modal: string,
   focusOn: string,
@@ -30,7 +31,7 @@ export interface ModalButtonProps<S, Context> extends CustomButtonType {
 
 
 export function ModalButton<S extends any, Context extends PageSelectionContext<S>> ( props: ModalButtonProps<S, Context> ): JSX.Element {
-  const { id, text, enabledBy, state, copy, copyJustString, modal, pageMode, rest, focusOn, copyOnClose, createEmpty, setToLengthOnClose, createEmptyIfUndefined, pageParams, buttonType } = props
+  const { id, text, enabledBy, state, copy, copyJustString, modal, pageMode, rest, focusOn, copyOnClose, createEmpty, setToLengthOnClose, createEmptyIfUndefined, pageParams, buttonType,dateFn } = props
   const onClick = () => {
     // const fromPath = fromPathFor ( state );
     const fromPage = fromPathGivenState ( state );
@@ -49,7 +50,7 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
       return existing ? existing : createEmptyIfUndefined;
     } ] ] : [];
     state.massTransform ( reasonFor ( 'ModalButton', 'onClick', id ) ) (
-      page<S, Context> ( state.context, 'popup', { pageName: modal, firstTime: true, pageMode, rest, focusOn, copyOnClose, setToLengthOnClose, pageParams } ),
+      page<S, Context> ( state.context, 'popup', { pageName: modal, firstTime: true, pageMode, rest, focusOn, copyOnClose, setToLengthOnClose, pageParams, time: dateFn() } ),
       ...emptyTx,
       ...emptyifUndefinedTx,
       ...copyTxs,

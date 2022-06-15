@@ -5,7 +5,7 @@ import { lensState } from "@focuson/state";
 import { fromPathFromRaw, fromPathGivenState, MultiPageDetails, PageSelection, pageSelectionlens } from "@focuson/pages";
 
 
-let pageSelection: PageSelection = { pageName: 'a', pageMode: 'view' };
+let pageSelection: PageSelection = { pageName: 'a', pageMode: 'view', time: 'now' };
 const x = { g: 1, h: [ 'h0', 'h1' ], i: { j: 2 } }
 
 const textForLabelState = {

@@ -10,7 +10,7 @@ import { enzymeSetup } from "./enzymeAdapterSetup";
 
 enzymeSetup ()
 
-let pageSelection: PageSelection = { pageName: 'a', pageMode: 'view' };
+let pageSelection: PageSelection = { pageName: 'a', pageMode: 'view' , time: 'now' };
 const x = { g: 1, h: [ 'h0', 'h1' ], i: { j: 2 } }
 
 const textForLabelState = {

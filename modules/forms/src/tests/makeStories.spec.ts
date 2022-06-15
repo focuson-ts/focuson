@@ -27,7 +27,7 @@ describe ( 'makeStories', () => {
       "}",
       " ",
       "const initial = {'main':{},'postcode':{'search':'','searchResults':[],'addressResults':{'line1':'','line2':'','line3':'','line4':''}}}",
-      "function pageSelection ( pageMode: PageMode ): PageSelection { return { pageName: 'PostCodeMainPage', pageMode}}",
+      "function pageSelection ( pageMode: PageMode ): PageSelection { return { pageName: 'PostCodeMainPage', pageMode, time: 'now'}}",
       "const Template: Story<StoryState> = ( args: StoryState ) =>{",
       "  const pageDetails: any = pages[ 'PostCodeMainPage' ];",
       "  const initial = pageDetails.initialValue?pageDetails.initialValue:{}",

@@ -66,7 +66,7 @@ export function makeStateWithSelectedPage ( appConfig: AppConfig, params: TSPara
     `  ${commonParams}: ${commonParamsValue},`,
     `  tags: {},`,
     `  messages: [],`,
-    `  pageSelection: [{ pageName: '${pageName}', firstTime: true, pageMode: '${pageMode ? pageMode : 'view'}' }],`,
+    `  pageSelection: [{ pageName: '${pageName}', firstTime: true, pageMode: '${pageMode ? pageMode : 'view'}', time: defaultDateFn() }],`,
     ...pageName ? [ `  ${pageName}:{},` ] : [],
     `  restCommands: [],`,
     `  debug: ${JSON.stringify ( appConfig.debug )}`,

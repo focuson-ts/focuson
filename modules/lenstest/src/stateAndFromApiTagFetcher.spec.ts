@@ -12,7 +12,7 @@ describe ( 'tagFetcher', () => {
 
     //and now some funny states... unlikely to get these, but just checking anyway
     expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag1: 't1', tags: { secondPage: [ 't1', undefined ] }, secondPage: {} } ) ).toEqual ( [ "Undefined tags. tag1Id:t1,tag2Id:undefined" ] )
-    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag2: 't2', tags: { secondPage: [ undefined, 't2' ] }, secondPage: {} } ) ).toEqual ( [ "Undefined tags. tag1Id:undefined,tag2Id:t2"] )
+    expect ( stateAndFromApiFetcher.shouldLoad ( { ...secondPageSelectedState, tag2: 't2', tags: { secondPage: [ undefined, 't2' ] }, secondPage: {} } ) ).toEqual ( [ "Undefined tags. tag1Id:undefined,tag2Id:t2" ] )
   } )
 
   it ( 'should load if the actual tags match the desired tags, but the target is undefined', () => {
@@ -50,7 +50,7 @@ describe ( 'tagFetcher', () => {
     const mutate: MutateFn<PageSpecState, string> = loadInfo.mutate
     expect ( mutate ( start ) ( 200, 'someString' ) ).toEqual ( {
       "messages": [ { "level": "info", "msg": "someString", "time": "timeForTest" } ],
-      "pageSelection": [ { "pageMode": "view", "pageName": "secondPage" } ],
+      "pageSelection": [ { "pageMode": "view", "pageName": "secondPage", "time": "now" } ],
       "restCommands": [],
       "secondPage": { "fromApi": "someString" },
       "tag1": "t1", "tag2": "t2",

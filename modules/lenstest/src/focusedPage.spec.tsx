@@ -8,7 +8,7 @@ enzymeSetup ()
 
 let view: PageMode = 'view';
 
-const nothingDisplayed: PageSpecState = { ...emptyState, messages: [], pageSelection: [ { pageName: 'nothing', pageMode: view } ] };
+const nothingDisplayed: PageSpecState = { ...emptyState, messages: [], pageSelection: [ { pageName: 'nothing', pageMode: view , time: 'now'} ] };
 
 describe ( "selectedPage", () => {
   // it ( "should display zero pages", () => {

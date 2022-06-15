@@ -46,7 +46,6 @@ export function MyCombined<S extends HasTagHolder & HasSimpleMessages, Context e
   const messagesJSX = <Messages state={state.focusOn ( 'messages' )}/>
   const lastIndexOfMainOrModalPage = lastIndexOf(pages, p => p.pageType === 'MainPage' || p.pageType === 'ModalPage')
   const pagesToShow = pages.slice(lastIndexOfMainOrModalPage)
-  
   return <>
     <div id='container' className='combine' >
         <div className='glassPane' >

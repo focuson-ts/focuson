@@ -35,6 +35,7 @@ export interface CopyDetails {
 export interface PageSelection {
   pageName: string;
   firstTime?: boolean;
+  time: string;
   pageMode: PageMode;
   onClose?: PageOnClose;
   rest?: RestCommand;

@@ -84,7 +84,7 @@ describe ( "makeCommon", () => {
       "  CommonIds: {'accountId':44444444,'applRef':22,'brandRef':10,'clientRef':333,'createPlanId':777,'dbName':'mock','employeeType':'basic','role':'user'},",
       "  tags: {},",
       "  messages: [],",
-      "  pageSelection: [{ pageName: 'EAccountsSummary', firstTime: true, pageMode: 'view' }],",
+      "  pageSelection: [{ pageName: 'EAccountsSummary', firstTime: true, pageMode: 'view', time: defaultDateFn() }],",
       "  EAccountsSummary:{},",
       "  restCommands: [],",
       "  debug: {'fetcherDebug':false,'guardDebug':false,'restDebug':false,'selectedPageDebug':false,'loadTreeDebug':false,'showTracing':false,'recordTrace':true,'tagFetcherDebug':false,'accordions':[]}",

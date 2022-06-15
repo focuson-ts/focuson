@@ -288,8 +288,8 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
     `import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from "@focuson/pages";`,
     `import { Context, FocusedProps, ${params.stateName}, identityL } from "../${params.commonFile}";`,
     `import { Lenses } from '@focuson/lens';`,
-    `import { Guard } from "@focuson/form_components";`,
-    `import { GuardButton } from "@focuson/form_components";`,
+    `import { Guard, GuardButton } from "@focuson/form_components";`,
+    `import { defaultDateFn } from "@focuson/utils";`,
     `import * as action from '../actions'`,
     `import { ${optionalsName ( mainP )} } from "${optionalsFileName ( `..`, params, mainP )}";`,
   ]

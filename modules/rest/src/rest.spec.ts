@@ -127,13 +127,35 @@ describe ( "rest", () => {
         "idFromFullDomain": "someId"
       },
       "messages": [
-        { "level": "info", "msg": "200 \"from/some/url/someToken/update?token=someToken&id=someId\"", "time": "now" },
-        { "level": "info", "msg": "undefined \"deleteWentWrong\"", "time": "now" },
-        { "level": "info", "msg": "200 \"from/some/url/someToken/create?token=someToken\"", "time": "now" }
+        {
+          "level": "info",
+          "msg": "200/\"from/some/url/someToken/update?token=someToken&id=someId\"",
+          "time": "timeForTest"
+        },
+        {
+          "level": "error",
+          "msg": "Cannot connect. \"deleteWentWrong\"",
+          "time": "timeForTest"
+        },
+        {
+          "level": "info",
+          "msg": "200/\"from/some/url/someToken/getOption?token=someToken&id=someId\"",
+          "time": "timeForTest"
+        },
+        {
+          "level": "info",
+          "msg": "200/\"from/some/url/someToken/create?token=someToken\"",
+          "time": "timeForTest"
+        },
+        {
+          "level": "info",
+          "msg": "200/\"from/some/url/someToken/get?token=someToken&id=someId\"",
+          "time": "timeForTest"
+        }
       ],
       "restCommands": [],
       "token": "someToken"
-    } )
+    })
   } )
 
   it ( "should fetch the results and put them into the state, removing the rest commands and record trace if debug set", async () => {
@@ -149,30 +171,106 @@ describe ( "rest", () => {
     expect ( trace ).toEqual ( [
       {
         "lensTxs": [
-          [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "Extracted[200].from/some/url/someToken/get?token=someToken&id=someId" ] ],
-        "restCommand": { "name": "one", "restAction": "get" }
-      },
-      {
-        "lensTxs": [
-          [ "I.focus?(messages)", [ { "level": "info", "msg": "200 \"from/some/url/someToken/create?token=someToken\"", "time": "now" } ] ],
-          [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "Extracted[200].from/some/url/someToken/create?token=someToken" ]
+          [
+            "I.focus?(messages)",
+            [
+              {
+                "level": "info",
+                "msg": "200/\"from/some/url/someToken/get?token=someToken&id=someId\"",
+                "time": "timeForTest"
+              }
+            ]
+          ],
+          [
+            "I.focus?(fullDomain).chain(I.focus?(fromApi))",
+            "Extracted[200].from/some/url/someToken/get?token=someToken&id=someId"
+          ]
         ],
-        "restCommand": { "name": "one", "restAction": "create" }
-      },
-      {
-        "lensTxs": [ [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "Extracted[200].from/some/url/someToken/getOption?token=someToken&id=someId" ] ],
-        "restCommand": { "name": "one", "restAction": "getOption" }
+        "restCommand": {
+          "name": "one",
+          "restAction": "get"
+        }
       },
       {
         "lensTxs": [
-          [ "I.focus?(messages)", [ { "level": "info", "msg": "undefined \"deleteWentWrong\"", "time": "now" } ] ]
+          [
+            "I.focus?(messages)",
+            [
+              {
+                "level": "info",
+                "msg": "200/\"from/some/url/someToken/create?token=someToken\"",
+                "time": "timeForTest"
+              }
+            ]
+          ],
+          [
+            "I.focus?(fullDomain).chain(I.focus?(fromApi))",
+            "Extracted[200].from/some/url/someToken/create?token=someToken"
+          ]
         ],
-        "restCommand": { "name": "one", "restAction": "delete" }
+        "restCommand": {
+          "name": "one",
+          "restAction": "create"
+        }
       },
       {
         "lensTxs": [
-          [ "I.focus?(messages)", [ { "level": "info", "msg": "200 \"from/some/url/someToken/update?token=someToken&id=someId\"", "time": "now" } ] ],
-          [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "Extracted[200].from/some/url/someToken/update?token=someToken&id=someId" ] ], "restCommand": {
+          [
+            "I.focus?(messages)",
+            [
+              {
+                "level": "info",
+                "msg": "200/\"from/some/url/someToken/getOption?token=someToken&id=someId\"",
+                "time": "timeForTest"
+              }
+            ]
+          ],
+          [
+            "I.focus?(fullDomain).chain(I.focus?(fromApi))",
+            "Extracted[200].from/some/url/someToken/getOption?token=someToken&id=someId"
+          ]
+        ],
+        "restCommand": {
+          "name": "one",
+          "restAction": "getOption"
+        }
+      },
+      {
+        "lensTxs": [
+          [
+            "I.focus?(messages)",
+            [
+              {
+                "level": "error",
+                "msg": "Cannot connect. \"deleteWentWrong\"",
+                "time": "timeForTest"
+              }
+            ]
+          ]
+        ],
+        "restCommand": {
+          "name": "one",
+          "restAction": "delete"
+        }
+      },
+      {
+        "lensTxs": [
+          [
+            "I.focus?(messages)",
+            [
+              {
+                "level": "info",
+                "msg": "200/\"from/some/url/someToken/update?token=someToken&id=someId\"",
+                "time": "timeForTest"
+              }
+            ]
+          ],
+          [
+            "I.focus?(fullDomain).chain(I.focus?(fromApi))",
+            "Extracted[200].from/some/url/someToken/update?token=someToken&id=someId"
+          ]
+        ],
+        "restCommand": {
           "name": "one",
           "restAction": "update"
         }
@@ -186,14 +284,19 @@ describe ( "rest", () => {
     ) );
     expect ( result ).toEqual ( {
       "fullDomain": {
-        "fromApi": "someData", //unchanged
+        "fromApi": "someData",
         "idFromFullDomain": "someId"
       },
       "messages": [
-        { "level": "info", "msg": "200 \"from/some/new/state/someToken/newState?token=someToken&id=someId\"", "time": "now" } ],
+        {
+          "level": "info",
+          "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"",
+          "time": "timeForTest"
+        }
+      ],
       "restCommands": [],
       "token": "someToken"
-    } )
+    })
   } )
 
   it ( "should throw error with illegal state", async () => {
@@ -209,14 +312,18 @@ describe ( "rest", () => {
       ) );
     expect ( result ).toEqual ( {
       "fullDomain": {
-        "fromApi": "someData", //unchanged
+        "fromApi": "someData",
         "idFromFullDomain": "someId"
       },
       "messages": [
-        { "level": "info", "msg": "200 \"from/some/new/state/someToken/newState?token=someToken&id=someId\"", "time": "now" }
+        {
+          "level": "info",
+          "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"",
+          "time": "timeForTest"
+        }
       ],
       "restCommands": []
-    } )
+    })
 
   } )
   it ( "should delete items specified in the 'delete on success' - multiple item", async () => {
@@ -226,14 +333,17 @@ describe ( "rest", () => {
       ) );
     expect ( result ).toEqual ( {
       "fullDomain": {
-        "fromApi": "someData", //unchanged
-        // "idFromFullDomain": "someId" deleted
+        "fromApi": "someData"
       },
       "messages": [
-        { "level": "info", "msg": "200 \"from/some/new/state/someToken/newState?token=someToken&id=someId\"", "time": "now" }
+        {
+          "level": "info",
+          "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"",
+          "time": "timeForTest"
+        }
       ],
       "restCommands": []
-    } )
+    })
 
   } )
 

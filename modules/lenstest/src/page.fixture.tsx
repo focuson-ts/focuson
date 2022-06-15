@@ -30,10 +30,10 @@ export const secondPageSelectedState = stateWith ( rootState, [ 'secondPage', 'v
 export const invalidPageState = stateWithFirstTimes ( rootState, [ 'unknownpage', 'view', undefined ] )
 
 export function stateWith ( main: PageSpecState, ...nameAndModes: [ string, PageMode, RestCommand | undefined ][] ): PageSpecState {
-  return { ...main, pageSelection: nameAndModes.map ( ( [ pageName, pageMode, rest ] ) => ({ pageName, pageMode, rest }) ) }
+  return { ...main, pageSelection: nameAndModes.map ( ( [ pageName, pageMode, rest ] ) => ({ pageName, pageMode, rest, time: 'now' }) ) }
 }
 export function stateWithFirstTimes ( main: PageSpecState, ...nameAndModes: [ string, PageMode, RestCommand | undefined ][] ): PageSpecState {
-  return { ...main, pageSelection: nameAndModes.map ( ( [ pageName, pageMode, rest ] ) => ({ pageName, pageMode, firstTime: true, rest }) ) }
+  return { ...main, pageSelection: nameAndModes.map ( ( [ pageName, pageMode, rest ] ) => ({ pageName, pageMode, firstTime: true, rest, time: 'now' }) ) }
 }
 export function lensStateWith ( main: PageSpecState, setMain: ( s: PageSpecState ) => void, ...nameAndModes: [ string, PageMode, RestCommand | undefined ][] ) {
   return lensState<PageSpecState, ContextForTest> ( stateWith ( main, ...nameAndModes ), setMain, 'displayMain / focusedPage', context )

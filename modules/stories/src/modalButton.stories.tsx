@@ -3,6 +3,7 @@ import { Story } from "@storybook/react";
 import { HasPageSelection, ModalButton, PageMode, PageSelectionContext } from "@focuson/pages";
 import { SBookProvider } from "./sbookProvider";
 import { defaultPageSelectionContext } from "@focuson/focuson";
+import { testDateFn } from "@focuson/utils";
 
 export default {
   component: ModalButton,
@@ -27,7 +28,7 @@ const Template: Story<ForModalPage> = ( args: ForModalPage ) =>
   SBookProvider<StateForModalButton, PageSelectionContext<StateForModalButton>> ( { pageSelection: [] },
     defaultPageSelectionContext<StateForModalButton, PageSelectionContext<StateForModalButton>> ( {} ),
     s => (
-      <ModalButton state={s} focusOn={'some/base'}{...args}/>
+      <ModalButton state={s} focusOn={'some/base'}{...args} dateFn={testDateFn}/>
     ) );
 
 

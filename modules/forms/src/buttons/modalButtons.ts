@@ -57,7 +57,7 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalButtonInPage<G>, G> {
 
         const copyOnCloseArray: CopyDetails[] = copyOnClose ? singleToList ( copyOnClose ) : undefined
         const copyFromArray: CopyDetails[] = copy ? singleToList ( copy ) : undefined
-        return [ `<${button.control} id=${makeIdForButton ( name )} ${enabledByString ( button )}text='${text ? text : decamelize ( name, ' ' )}'  state={state} modal = '${modalName ( parent, modal )}'  `,
+        return [ `<${button.control} id=${makeIdForButton ( name )} ${enabledByString ( button )}text='${text ? text : decamelize ( name, ' ' )}' dateFn={defaultDateFn} state={state} modal = '${modalName ( parent, modal )}'  `,
           ...indentList ( [
             ...opt ( 'pageMode', mode ),
             ...opt ( 'focusOn', focusOn ),

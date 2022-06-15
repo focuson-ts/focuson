@@ -6,6 +6,7 @@ import { ModalButton } from "./modalButton";
 import { HasPageSelection, PageSelectionContext, pageSelectionlens } from "../pageSelection";
 import { PageDetailsForCombine } from "../selectedPage";
 import { Lenses } from "@focuson/lens";
+import { testDateFn } from "@focuson/utils";
 
 enzymeSetup ()
 interface StateForModalButtonTest extends HasPageSelection {
@@ -20,13 +21,13 @@ const context: PageSelectionContext<StateForModalButtonTest> = {
 
 }
 
-let startState: StateForModalButtonTest = { pageSelection: [ { pageName: 'a', pageMode: 'view' } ] };
+let startState: StateForModalButtonTest = { pageSelection: [ { pageName: 'a', pageMode: 'view', time: 'now' } ] };
 describe ( "modal button", () => {
   it ( "should render with an id and title", () => {
     const state: LensState<StateForModalButtonTest, HasPageSelection, PageSelectionContext<StateForModalButtonTest>> =
             lensState<StateForModalButtonTest, PageSelectionContext<StateForModalButtonTest>> (
               startState, ( s: StateForModalButtonTest ) => {}, 'ModalButton', context )
-    const comp = mount ( <ModalButton text='someTitle' id='someId' state={state} modal={'someModal'} focusOn='' pageMode='view'/> )
+    const comp = mount ( <ModalButton text='someTitle' id='someId' state={state} modal={'someModal'} focusOn='' pageMode='view' dateFn={testDateFn}/> )
     const button = comp.find ( "button" )
     expect ( button.text () ).toEqual ( 'someTitle' )
 
@@ -36,13 +37,14 @@ describe ( "modal button", () => {
     const state: LensState<StateForModalButtonTest, HasPageSelection, PageSelectionContext<StateForModalButtonTest>> =
             lensState<StateForModalButtonTest, PageSelectionContext<StateForModalButtonTest>> (
               startState, ( s: StateForModalButtonTest ) => {remembered = s}, 'ModalButton', context )
-    const comp = mount ( <ModalButton text='someTitle' id='someId' state={state} modal={'someModal'} focusOn='~/' pageMode='edit'/> )
+    const comp = mount ( <ModalButton text='someTitle' id='someId' state={state} modal={'someModal'} focusOn='~/' pageMode='edit' dateFn={testDateFn}/> )
     const button = comp.find ( "button" )
     button.simulate ( 'click' )
     expect ( remembered ).toEqual ( {
       "pageSelection": [
-        { "pageMode": "view", "pageName": "a" },
-        { "firstTime": true, "focusOn": "~/", "pageMode": "edit", "pageName": "someModal" } ]
+        { "pageMode": "view", "pageName": "a", "time": "now" },
+        { "firstTime": true, "focusOn": "~/", "pageMode": "edit", "pageName": "someModal", "time": "timeForTest" }
+      ]
     } )
   } )
 
@@ -51,13 +53,15 @@ describe ( "modal button", () => {
     const state: LensState<StateForModalButtonTest, StateForModalButtonTest, PageSelectionContext<StateForModalButtonTest>> =
             lensState<StateForModalButtonTest, PageSelectionContext<StateForModalButtonTest>> (
               startState, ( s: StateForModalButtonTest ) => {remembered = s}, 'ModalButton', context )
-    const comp = mount ( <ModalButton text='someTitle' id='someId' state={state.focusOn ( 'data' )} modal={'someModal'} focusOn='~/' pageMode='edit' createEmpty='someData'/> )
+    const comp = mount ( <ModalButton text='someTitle' id='someId' state={state.focusOn ( 'data' )} modal={'someModal'} focusOn='~/' pageMode='edit' createEmpty='someData' dateFn={testDateFn}/> )
     const button = comp.find ( "button" )
     button.simulate ( 'click' )
     expect ( remembered ).toEqual ( {
-      "a": "someData", "pageSelection": [
-        { "pageMode": "view", "pageName": "a" },
-        { "firstTime": true, "focusOn": "~/", "pageMode": "edit", "pageName": "someModal" } ]
+      "a": "someData",
+      "pageSelection": [
+        { "pageMode": "view", "pageName": "a", "time": "now" },
+        { "firstTime": true, "focusOn": "~/", "pageMode": "edit", "pageName": "someModal", "time": "timeForTest" }
+      ]
     } )
 
   } )

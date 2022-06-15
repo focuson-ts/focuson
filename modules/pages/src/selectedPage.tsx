@@ -25,6 +25,7 @@ export interface PageDetailsForCombine {
   pageType?: string;
   element: JSX.Element;
   pageParams?: PageParams;
+  pageDisplayedTime: string;
 }
 
 function findSelectedPageDetails<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): PageDetailsForCombine[] {
@@ -94,8 +95,8 @@ export const findOneSelectedPageDetails = <S, T, Context extends PageSelectionCo
       let element = pageFunction ( { state: lsForPage } );
       if ( debug ) console.log ( "findOneSelectedPageDetails.legacy result", element )
       if ( debug ) console.log ( "findOneSelectedPageDetails.legacy result - json", JSON.stringify ( element ) )
-      return { element, pageType }
-    } else return displayOne ( config, pageType, pageFunction, ps.pageParams, lsForPage, pageMode, pageCount - index );
+      return { element, pageType, pageDisplayedTime: ps.time }
+    } else return displayOne ( config, pageType, pageFunction, ps.pageParams, ps.time, lsForPage, pageMode, pageCount - index );
   };
 
 export function findMainPageDetails<S> ( pageSelections: PageSelection[], pageDetails: MultiPageDetails<S, any> ) {
@@ -111,6 +112,7 @@ export function displayOne<S extends any, D extends any, Msgs, Context extends P
   pageType: string | undefined,
   focusedPage: FocusedPage<S, D, Context>,
   pageParams: PageParams | undefined,
+  pageDisplayedTime: string,
   s: LensState<S, D, Context>, pageMode: PageMode, index: number ): PageDetailsForCombine {
   // @ts-ignore
   const debug = s.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
@@ -121,6 +123,6 @@ export function displayOne<S extends any, D extends any, Msgs, Context extends P
   if ( debug ) console.log ( "displayMain.loading 2", loading )
   const element = template ( { state: s, focusedPage, loading, pageMode, index } )
   if ( debug ) console.log ( "displayMain.element 3", element );
-  return { element, pageType, pageParams }
+  return { element, pageType, pageParams, pageDisplayedTime }
 }
 

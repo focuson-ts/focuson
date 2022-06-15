@@ -1,12 +1,13 @@
 import { FullSearchDomain, SearchRequirements } from "./fullSearchDomain";
 import { HasPageSelection } from "@focuson/pages";
 import { HasPostCommand } from "@focuson/poster/src/posters";
+import { defaultDateFn } from "@focuson/utils";
 
 
 export const emptySearchRequirement: SearchRequirements & HasPageSelection & HasPostCommand<any, any> = {
   tags: {},
   messages: [],
-  pageSelection: [ { pageName: 'search', pageMode: 'view' } ],
+  pageSelection: [ { pageName: 'search', pageMode: 'view', time: defaultDateFn () } ],
   postCommands: [],
   // debug:{tagFetcherDebug: true}
 }

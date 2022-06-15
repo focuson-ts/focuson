@@ -3,7 +3,7 @@ import { FocusOnConfig, setJsonForFocusOn, setJsonUsingNewFetchersUsingFlux,rest
 import { getElement, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
 import { context, Context, emptyState, FState, pathToLens } from "./{commonFile}";
-import { fetchWithDelay, fetchWithPrefix, loggingFetchFn, NameAnd, RestAction, SimpleMessage, sortedEntries, stringToSimpleMsg } from "@focuson/utils";
+import { defaultDateFn, fetchWithDelay, fetchWithPrefix, loggingFetchFn, NameAnd, RestAction, SimpleMessage, sortedEntries, stringToSimpleMsg } from "@focuson/utils";
 import { fetchers } from "./{fetchersFile}";
 import { pages } from "./{pagesFile}";
 import { restL } from "@focuson/rest";
@@ -61,14 +61,14 @@ const pageModeFor: NameAnd<PageMode> = {
 
 let setJson = setJsonUsingNewFetchersUsingFlux<FState, Context, SimpleMessage> ( config, context, ( s: LensState<FState, FState, Context> ): void =>
   ReactDOM.render ( <div>
-    <IndexPage state={s}>
+    <IndexPage state={s} dateFn={defaultDateFn}>
        <SelectedPage state={s}/>
     </IndexPage>
   </div>, rootElement ) )
 
 setJson ( {
   ...emptyState,
-  pageSelection: [ { pageName: '{firstPage}', firstTime: true, pageMode: {pageMode} } ],
+  pageSelection: [ { pageName: '{firstPage}', firstTime: true, pageMode: {pageMode}, time: defaultDateFn() } ],
 // @ts-ignore
   debug: {debug}
   // currentSelectedModalPage: 'EAccountsSummary_CreatePlan'

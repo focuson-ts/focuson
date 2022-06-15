@@ -24,7 +24,7 @@ export interface RestButtonStateForTest extends HasPageSelection, HasRestCommand
 
 const emptyS: RestButtonStateForTest = {
   messages: [],
-  pageSelection: [ { "pageName": "mainPage", "pageMode": "view" } ],
+  pageSelection: [ { "pageName": "mainPage", "pageMode": "view", time: 'now' } ],
   restCommands: [],
   mainPage: {}
 }
@@ -59,7 +59,7 @@ describe ( "RestButton", () => {
     expect ( remembered ).toEqual ( {
       "mainPage": {},
       "messages": [],
-      "pageSelection": [ { "pageMode": "view", "pageName": "mainPage" } ],
+      "pageSelection": [ { "pageMode": "view", "pageName": "mainPage", "time": "now" } ],
       "restCommands": [ { "name": "someRestName", "restAction": "get" } ]
     } )
   } )
@@ -71,7 +71,7 @@ describe ( "RestButton", () => {
     expect ( remembered ).toEqual ( {
       "mainPage": {},
       "messages": [],
-      "pageSelection": [ { "pageMode": "view", "pageName": "mainPage" } ],
+      "pageSelection": [ { "pageMode": "view", "pageName": "mainPage", "time": "now" } ],
       "restCommands": [ { "name": "someRestName", "restAction": { "state": "newState" } } ]
     } )
   } )

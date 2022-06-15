@@ -38,7 +38,7 @@ export function makeOneMainStory<B, G> ( params: TSParams, p: MainPageD<B, G> ):
     `}`,
     ` `,
     p.initialValue === 'empty' ? `const initial = ${params.emptyFile}.${emptyName ( p.display.dataDD )}` : `const initial = ${JSON.stringify ( p.initialValue )}`,
-    `function pageSelection ( pageMode: PageMode ): PageSelection { return { pageName: '${p.name}', pageMode}}`,
+    `function pageSelection ( pageMode: PageMode ): PageSelection { return { pageName: '${p.name}', pageMode, time: 'now'}}`,
     `const Template: Story<StoryState> = ( args: StoryState ) =>{`,
     `  const pageDetails: any = pages[ '${p.name}' ];`,
     `  const initial = pageDetails.initialValue?pageDetails.initialValue:{}`,

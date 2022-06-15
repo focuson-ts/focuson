@@ -71,7 +71,7 @@ console.log ( "setting json" )
 setJson ( {
   messages: [],
   tags: {},
-  pageSelection: [ { pageName: "search", pageMode: 'edit' } ],
+  pageSelection: [ { pageName: "search", pageMode: 'edit' , time: defaultDateFn()} ],
   search: { query: "phil", queryResults: [] },
   debug: { selectedPageDebug: false, fetcherDebug: true },
   restCommands: []

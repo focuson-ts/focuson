@@ -20,7 +20,7 @@ describe ( "preMutateForPages", () => {
   it ( "should not clear the state if first time is false", () => {
     expect ( preMutate ( { ...stateWith ( rootState, [ 'clearAtStart', 'view' ,undefined] ), firstPage: 'data' } ) ).toEqual ( {
       "messages": [],
-      "pageSelection": [ { "pageMode": "view", "pageName": "clearAtStart" } ],
+      "pageSelection": [ { "pageMode": "view", "pageName": "clearAtStart", "time": "now", } ],
       "tags": {},
       restCommands:[],
       firstPage: 'data',
@@ -34,7 +34,7 @@ describe ( "preMutateForPages", () => {
         "messages": [],
         firstPage: undefined,
         restCommands:[],
-        "pageSelection": [ { "firstTime": false, "pageMode": "view", "pageName": "clearAtStart" } ],
+        "pageSelection": [ { "firstTime": false, "pageMode": "view", "pageName": "clearAtStart", "time": "now", } ],
         "tags": {},
         "tempData": "x"
       } )
@@ -46,7 +46,7 @@ describe ( "preMutateForPages", () => {
         "firstPage": "Initial Value",
         "messages": [],
         restCommands:[],
-        "pageSelection": [ { "firstTime": false, "pageMode": "view", "pageName": "init" } ],
+        "pageSelection": [ { "firstTime": false, "pageMode": "view", "pageName": "init", "time": "now", } ],
         "tags": {},
         "tempData": "x"
       } )
@@ -57,7 +57,7 @@ describe ( "preMutateForPages", () => {
         "firstPage": "some Data",
         "messages": [],
         restCommands:[],
-        "pageSelection": [ { "pageMode": "view", "pageName": "init" } ],
+        "pageSelection": [ { "pageMode": "view", "pageName": "init", "time": "now", } ],
         "tags": {},
         "tempData": "x"
       } )

@@ -21,7 +21,7 @@ interface StateForNewFetcherTests extends HasRestCount {
 }
 
 const empty: StateForNewFetcherTests = {
-  pageSelection: [ { pageName: 'pageName', pageMode: 'view' } ],
+  pageSelection: [ { pageName: 'pageName', pageMode: 'view', time: 'now' } ],
   restCommands: [],
   messages: [],
   debug: { restDebug: false, tagFetcherDebug: false }
