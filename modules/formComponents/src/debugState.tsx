@@ -23,7 +23,7 @@ export function Tags<S extends HasTagHolder, C> ( { state }: LensProps<S, any, C
 }
 export function Pages<S, C extends HasPageSelectionLens<S>> ( { state }: LensProps<S, any, C> ) {
   const pages = safeArray ( state.context.pageSelectionL.getOption ( state.main ) )
-  return <div>Pages
+  return <div>
     <ul>{pages.map ( ( p, i ) => <li key={i}>{JSON.stringify ( p )}</li> )}</ul>
   </div>
 }
@@ -69,7 +69,7 @@ function PagesData<S, C extends FocusOnContext<S>> ( { state }: DebugProps<S, C>
 
         return <tr key={index}>
           <td>
-              <Pages state={state}/>
+              <div>{JSON.stringify ( page )}</div>
               <div>{title} {page.pageName} - {safeString ( page.focusOn )}</div>
               <div>{lens?.description}</div>
           </td>

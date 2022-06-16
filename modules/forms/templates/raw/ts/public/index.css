@@ -774,6 +774,7 @@ pre {
 #debug-messages-container table>tbody>tr>td,
 #debug-tags-container table>tbody>tr>td {
   vertical-align: top;
+  width: 50%;
 }
 
 #debug-pages-container table>tbody>tr>td>div>ul,
@@ -1830,7 +1831,7 @@ button#page1\.unpaidCardOrMisuseItems\.plus {
   width: 98%;
 }
 
-#debug-tracing-container table>tbody>tr>td {
+#debug-tracing-container table>tbody>tr>td, #debug-pages-container table>tbody>tr>td{
   background: whitesmoke;
 }
 
