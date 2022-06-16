@@ -1,5 +1,5 @@
 //Common Data Definitions
-import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndNumberInputCD, LabelAndStringInputCD } from "./componentsD";
+import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndNumberInputCD, LabelAndStringInputCD, LabelAndTextAreaCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeRender";
 import { NameAnd, safeArray } from "@focuson/utils";
 import { Guards } from "../buttons/guardButton";
@@ -335,7 +335,7 @@ export const ManyLineStringDD: StringPrimitiveDD = {
   ...stringPrimDD,
   name: 'ManyLineString',
   description: "A string that needs many lines and uses a text Area",
-  display: LabelAndStringInputCD,
+  display: LabelAndTextAreaCD,
   sample: [ "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit" ]
 }
 export const IntegerDD: NumberPrimitiveDD = {

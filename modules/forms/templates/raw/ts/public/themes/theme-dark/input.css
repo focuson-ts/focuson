@@ -1,4 +1,4 @@
-.input[type="text"], .input[type="number"] {
+.input[type="text"], .input[type="number"], textarea.input {
     font-family: var(--input-font-family);
     font-size: var(--font-size-main);
     color: var(--color-text, #000000);
@@ -43,11 +43,11 @@
     padding-right: 8px;
   }
   
-  .input[type="text"]:-ms-input-placeholder, .input[type="number"]:-ms-input-placeholder {
+  .input[type="text"]:-ms-input-placeholder, .input[type="number"]:-ms-input-placeholder, textarea.input:-ms-input-placeholder {
     color: var(--input-placeholder-color);
   }
     
-  .input[type="text"]:focus, .input[type="number"]:focus {
+  .input[type="text"]:focus, .input[type="number"]:focus, textarea.input:focus {
     font-size:var(--input-font-size);
     border: var( --input-border-focus);
     outline: none;
@@ -68,12 +68,12 @@
     color: var(--red);
   }
 
-  .input[type="text"]:invalid,.input[type="number"]:invalid,.input[type="date"]:invalid {
+  .input[type="text"]:invalid,.input[type="number"]:invalid,.input[type="date"]:invalid,textarea.input:invalid {
     background: #ffdddd;
     border: 1px solid red;
   }
   
-  .input[type="text"]:valid,.input[type="number"]:valid,.input[type="date"]:valid  {
+  .input[type="text"]:valid,.input[type="number"]:valid,.input[type="date"]:valid,textarea.input:valid {
     background: none;
   }
   
