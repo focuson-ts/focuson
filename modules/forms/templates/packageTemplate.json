@@ -14,13 +14,16 @@
     "decamelize":                 "^4.0.0",
     "react":                      "^17.0.2",
     "react-dom":                  "^17.0.2",
-    "react-scripts":              "4.0.3"
+    "react-scripts":              "4.0.3",
+    "react-redux":                "^8.0.2",
+    "@reduxjs/toolkit":           "^1.8.2"
   },
   "files":           [
     "dist/"
   ],
   "devDependencies": {
     "@pact-foundation/pact":              "^9.17.3",
+    "@types/react-redux":                 "^7.1.24",
     "jest-watch-typeahead":               "^0.6.5",
     "@sambego/storybook-state":           "^2.0.1",
     "@storybook/addon-actions":           "^6.4.4",

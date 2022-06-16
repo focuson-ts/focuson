@@ -41,7 +41,7 @@ export interface SetJsonReason {
   lens: string;
 }
 export function isSetJsonReason ( reason: any ): reason is SetJsonReason {
-  return reason.reason !== undefined && reason.json !== undefined && reason.lens !== undefined
+  return reason?.reason !== undefined && reason?.json !== undefined && reason?.lens !== undefined
 }
 export interface MassTransformReason {
   reason: any;

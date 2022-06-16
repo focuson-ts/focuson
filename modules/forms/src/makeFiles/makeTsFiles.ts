@@ -109,7 +109,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
       { ...params, applicationName: params.applicationName.toLowerCase (), versionNumber: appConfig.versionNumber }, directorySpec, details )
     detailsLog ( logLevel, 1, 'copying files' )
     copyFiles ( tsRoot, 'templates/raw/ts', directorySpec ) ( '.env', 'README.md', 'tsconfig.json' )
-    copyFiles ( tsScripts, 'templates/scripts', directorySpec ) ( 'makePact.sh', 'makeJava.sh', 'makeJvmPact.sh', 'template.java', 'ports' )
+    // copyFiles ( tsScripts, 'templates/scripts', directorySpec ) ( 'makePact.sh', 'makeJava.sh', 'makeJvmPact.sh', 'template.java', 'ports' )
     copyFile ( tsRoot + '/.gitignore', 'templates/raw/gitignore', directorySpec )
 
     // copyFiles ( tsRoot, 'templates/raw', directorySpec ) ( '.gitignore' )
