@@ -11,6 +11,7 @@ import { fetchers, newFetchers } from "./fetchers";
 import { restDetails, restUrlMutator } from "./rests";
 import { pages } from "./pages";
 import { RestCommand, RestCommandAndTxs, restL } from "@focuson/rest";
+import { config } from "./config";
 
 
 export interface FocusOnSetMainAction<S> {
@@ -49,14 +50,6 @@ const FocusOnReducer: any = ( state: FState, action: any ) => {
   return state
 }
 
-
-export const start: FState = {
-  ...emptyState,
-  pageSelection: [ { pageName: 'HelloWorldMainPage', firstTime: true, pageMode: "view", time: defaultDateFn () } ],
-// @ts-ignore
-  debug: { "fetcherDebug": false, "guardDebug": false, "restDebug": false, "selectedPageDebug": false, "loadTreeDebug": false, "showTracing": false, "recordTrace": true, "tagFetcherDebug": true, "accordions": [] }
-  // currentSelectedModalPage: 'EAccountsSummary_CreatePlan'
-};
 
 function traceTransform<S> ( trace: any, s: S ): Transform<S, any> [] {
   // @ts-ignore
@@ -102,40 +95,11 @@ const focusOnMiddleware = <S extends HasFocusOnDebug, C extends FocusOnContext<S
   const res = await finalResultFn ( stateAfterImmediate, restCommands )
   const restsLoaded = config.restCountL.getOption ( res )
   console.log ( 'restsLoaded were ', restsLoaded, restsLoaded?.loopCount === 0 ? 'will stop looping' : 'need to loop' );
-  const finalResult = restsLoaded?.loopCount === 0 ? res : finalResultFn ( res, [] )
+  const finalResult = restsLoaded?.loopCount === 0 ? res : await finalResultFn ( res, [] )
   console.log ( 'finalResult is ', finalResult );
   return res;
 };
 
-export const config: FocusOnConfig<FState, Context, SimpleMessage> = {
-  newFetchers,
-  tagHolderL: identityL.focusQuery ( 'tags' ),
-  restUrlMutator,
-  /** How data is sent to/fetched from apis */
-  fetchFn: fetchWithDelay ( 1, fetchWithPrefix ( 'http://localhost:8080', loggingFetchFn ) ),
-  /**A hook that is called before anything else.  */
-  preMutate: ( s: FState ) => s,
-  /** A hook that is called after everything else.  */
-  postMutate: ( s: FState ) => Promise.resolve ( s ),
-  /** A last ditch error handler  */
-  onError: ( s: FState, e: any ) => {
-    console.error ( e );
-    return s;
-  },
-  /** The lens to the current selected page */
-  pageL: pageSelectionlens (),
-  /** The list of all registered pages that can be displayed with SelectedPage  */
-  pages,
-  /** The list of all registered posters that can send data to the back end   */
-  /** The collection of all registered fetchers that will get data from the back end */
-  fetchers,
-  messageL: simpleMessagesL (),
-  stringToMsg: stringToSimpleMsg ( () => new Date ().toUTCString (), 'info' ),
-  restL: restL (),
-  restDetails: restDetails,
-  restCountL: restCountL (),
-  maxRestCount: 5
-}
 //@ts-ignore
 export const store: Store<FState> = legacy_createStore ( FocusOnReducer, undefined, applyMiddleware ( focusOnMiddleware ( config, context ) ) );
 
