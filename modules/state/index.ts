@@ -41,14 +41,14 @@ export interface SetJsonReason {
   lens: string;
 }
 export function isSetJsonReason ( reason: any ): reason is SetJsonReason {
-  return reason?.reason !== undefined && reason?.json !== undefined && reason?.lens !== undefined
+  return reason && reason?.reason !== undefined && reason?.json !== undefined && reason?.lens !== undefined
 }
 export interface MassTransformReason {
   reason: any;
   txLens: [ string, any ] []; // the description of the lens and the value that will be put there.
 }
 export function isMassTransformReason ( reason: any ): reason is MassTransformReason {
-  return reason.reason !== undefined && reason.txLens !== undefined// && Array.isArray ( reason.txLens )
+  return reason && reason.reason !== undefined && reason.txLens !== undefined// && Array.isArray ( reason.txLens )
 }
 
 export class LensState<Main, T, Context> implements HasOptional<Main, T> {
