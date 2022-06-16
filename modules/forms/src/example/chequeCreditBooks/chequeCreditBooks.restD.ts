@@ -18,7 +18,7 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
   resolvers: {
     'getChequeCreditbooks': [ {
       type: 'storedProc', package: 'somePackage', name: 'getMeMyData1', schema: onlySchema, params: [
-        { type: 'output', name: 'val1', javaType: 'Integer', sqlType: 'INTEGER' },
+        { type: 'output', name: 'val1', javaType: 'Integer', sqlType: 'INTEGER'},
         { type: 'output', name: 'val2', javaType: 'String', sqlType: 'CHAR' },
         { type: 'autowired', name: 'systemTime', class: '{thePackage}.utils.ITimeService', method: 'now()', import: true } ]
     },

@@ -149,7 +149,13 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
         reason,
         txLens: ts.map ( t => [ t[ 0 ].description, t[ 1 ] ( t[ 0 ].getOption ( this.main ) ) ] )
       })
-      const newMain = ts.reduce ( ( acc, tx, i ) => tx[ 0 ].setOption ( acc, r.txLens[ i ][ 1 ] ), this.main )
+      const newMain = ts.reduce ( ( acc, tx, i ) => {
+        try {
+          return tx[ 0 ].setOption ( acc, r.txLens[ i ][ 1 ] )
+        }catch (e: any){
+          console.error(`had error in mass transform with ${tx[0]?.description}`, tx)
+        }
+      }, this.main )
       this.dangerouslySetMain ( newMain, r );
     }
   }

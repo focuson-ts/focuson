@@ -153,11 +153,12 @@ function traceTransform<S> ( trace: any, s: S ): Transform<S, any> [] {
 }
 
 
-const dispatchRestAndFetchCommands = <S, Context extends FocusOnContext<S>, MSGs> ( config: FocusOnConfig<S, any, any>,
+export const dispatchRestAndFetchCommands = <S, Context extends FocusOnContext<S>, MSGs> ( config: FocusOnConfig<S, any, any>,
                                                                                     context: Context,
                                                                                     dispatch: FocusonDispatcher<S> ) => ( restCommands: RestCommand[] ) => async ( s: S ): Promise<S> => {
   // @ts-ignore
-  const debug: FocusOnDebug = s.debug?.restDebug;
+  const debug: FocusOnDebug = s.debug?.restDebug || s.debug?.tagFetcherDebug;
+  if (debug) console.log(`dispatchRestAndFetchCommands relooping count is ${JSON.stringify(config.restCountL.getOption(s))} RestCommands: ${restCommands.length}`, restCommands,s)
   const process = processRestsAndFetchers ( config, context );
   const restsAndFetchers: RestCommandAndTxs<S>[] = await process ( restCommands ) ( s )
   const sWithCountIncreased = config.restCountL.transform ( restCount => {
@@ -169,7 +170,7 @@ const dispatchRestAndFetchCommands = <S, Context extends FocusOnContext<S>, MSGs
     const oldCount = restCount ? restCount.loopCount : 0
     if ( oldCount > config.maxRestCount ) throw Error ( `Seem to be in infinite loop where we get something from backend which trigges another getting something from backend...` );
     let result = { loopCount: oldCount ? oldCount + 1 : 1, times };
-    if ( debug ) console.log ( `dispatchRestAndFetchCommands - relooping count is ${JSON.stringify(result)}` )
+    if ( debug ) console.log ( `dispatchRestAndFetchCommands - end relooping count is now ${JSON.stringify(result)}` )
     return result
   } ) ( s )
   return dispatch ( [], restsAndFetchers ) ( sWithCountIncreased )

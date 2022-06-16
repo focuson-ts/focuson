@@ -1,7 +1,7 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 
-import { CheckboxInputCD, DataDrivenFixedOptionDropDownAndDetailsCD, LabelAndDropDownCD, LayoutCd, NumberInputCD, SelectedItemCD, TableCD, TwoElementWithTitleLayoutCD } from "../../common/componentsD";
-import { AccountIdDD, BooleanDD, DataD, NatNumDd, NumberPrimitiveDD, OneLineStringDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
+import { CheckboxAndNumberCD, DataDrivenFixedOptionDropDownAndDetailsCD, LabelAndDropDownCD, LayoutCd, NumberInputCD, SelectedItemCD, TableCD } from "../../common/componentsD";
+import { AccountIdDD, BooleanDD, DataD, NatNumDd, NumberPrimitiveDD, OneLineStringDD, PrimitiveDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
 import { CustomerStatus } from "@focuson/form_components";
 import { AllGuards } from "../../buttons/guardButton";
 import { accountT, postCodeSearchTable } from "../database/tableNames";
@@ -74,28 +74,34 @@ export const AccountDetailsDD: ExampleDataD = {
     joint: { dataDD: RequestDetailsDD, sampleOffset: 1 },
   }
 }
+//
+// export const SinglePrint: ExampleDataD = {
+//   name: 'SinglePrint',
+//   description: 'Should I print this and how many are there',
+//   layout: { component: TwoElementWithTitleLayoutCD },
+//   structure: {
+//     shouldPrint: { dataDD: { ...BooleanDD, emptyValue: true, display: CheckboxInputCD } },
+//     numberOfItems: { dataDD: { ...ReadOnlyNatNumDD }, sample: [ 1, 2, 3, 4, 5, 6 ] },
+//   }
+// }
 
-export const SinglePrint: ExampleDataD = {
-  name: 'SinglePrint',
-  description: 'Should I print this and how many are there',
-  layout: { component: TwoElementWithTitleLayoutCD },
-  structure: {
-    shouldPrint: { dataDD: { ...BooleanDD, emptyValue: true, display: CheckboxInputCD } },
-    numberOfItems: { dataDD: { ...ReadOnlyNatNumDD }, sample: [ 1, 2, 3, 4, 5, 6 ] },
-  }
+
+export const CheckboxAndNumberFromDatabaseDD: PrimitiveDD = {
+  ...BooleanDD,
+  display: CheckboxAndNumberCD,
 }
 
 export const ListOfPaymentsDD: ExampleDataD = {
   name: 'ListOfPayments',
-  description: 'The information about the person who requested the paymets',
+  description: 'The information about the person who requested the payments',
   layout: { component: LayoutCd, displayParams: { details: '[[5,1]]' } },
   table: accountT,
   structure: {
-    standingOrders: { dataDD: SinglePrint, sampleOffset: 0 },
-    openBankingStandingOrders: { dataDD: SinglePrint, sampleOffset: 1 },
-    directDebits: { dataDD: SinglePrint, sampleOffset: 2 },
-    billPayments: { dataDD: SinglePrint, sampleOffset: 3 },
-    openBanking: { dataDD: SinglePrint, sampleOffset: 4 },
+    standingOrders: { dataDD: CheckboxAndNumberFromDatabaseDD,  displayParams: {number: '~/currentPayments/standingOrders'},sampleOffset: 0 },
+    openBankingStandingOrders: { dataDD: CheckboxAndNumberFromDatabaseDD,  displayParams: {number: '~/currentPayments/openBankingStandingOrders'}, sampleOffset: 1 },
+    directDebits: { dataDD: CheckboxAndNumberFromDatabaseDD,  displayParams: {number: '~/currentPayments/directDebits'}, sampleOffset: 2 },
+    billPayments: { dataDD: CheckboxAndNumberFromDatabaseDD,  displayParams: {number: '~/currentPayments/billPayments'}, sampleOffset: 3 },
+    openBanking: { dataDD: CheckboxAndNumberFromDatabaseDD,  displayParams: {number: '~/currentPayments/openBanking'}, sampleOffset: 4 },
   }
 }
 

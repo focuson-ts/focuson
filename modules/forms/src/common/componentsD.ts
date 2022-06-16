@@ -8,7 +8,7 @@ import { LensState } from "@focuson/state";
  * */
 export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'json' | 'jsonWithDisplayFn' | 'string[]' | 'path' | 'pathValue' | 'objectAndRenderPrefix'
 
-type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons' | 'defaultToLabel' |'defaultToParentState'
+type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons' | 'defaultToLabel' | 'defaultToParentState'
 
 export interface OneDisplayCompParamD<T> {
   paramType: DisplayCompParamType;
@@ -102,8 +102,8 @@ export const DataDrivenFixedOptionDropDownAndDetailsCD: DisplayCompD = {
   params: {
     ...commonParamsWithLabel,
     details: { paramType: "jsonWithDisplayFn", needed: 'yes' },
-    parentState: {paramType: 'object', needed: 'defaultToParentState'},
-    pleaseSelect: {paramType: 'string', needed: 'no'},
+    parentState: { paramType: 'object', needed: 'defaultToParentState' },
+    pleaseSelect: { paramType: 'string', needed: 'no' },
 
   }
 }
@@ -213,4 +213,15 @@ export const UnpaidCardOrMisuseItemsCD: DisplayCompD = {
   import: '@focuson/form_components',
   name: "PlusMinusButtonsAndInput",
   params: { ...commonParamsWithLabel, ...intValidationParams, flags: { paramType: "pageState", needed: "yes" } },
+}
+
+export const CheckboxAndNumberCD: DisplayCompD = {
+  import: '@focuson/form_components',
+  name: "CheckboxAndNumber",
+  params: {
+    ...commonParams,
+    label: { paramType: 'string', needed: 'defaultToCamelCaseOfName' },
+    number: { paramType: 'path', needed: 'yes' }
+  }
+
 }

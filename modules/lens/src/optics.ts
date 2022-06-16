@@ -574,9 +574,14 @@ export function secondIn2<T1, T2> (): Optional<[ T1, T2 ], T2> {
 export type Transform<Main, Child> = [ Optional<Main, Child>, ( c: Child | undefined ) => Child ]
 export function massTransform<Main> ( main: Main, ...transforms: Transform<Main, any>[] ): Main {
   return transforms.reduce<Main> ( ( acc, [ o, fn ] ) => {
-    let result = o.setOption ( acc, fn ( o.getOption ( acc ) ) );
-    if ( result === undefined ) throw new Error ( `Cannot transform ${o.description}` )
-    return result;
+    try {
+      let result = o.setOption ( acc, fn ( o.getOption ( acc ) ) );
+      if ( result === undefined ) throw new Error ( `Cannot transform ${o.description}` )
+      return result;
+    } catch (e: any){
+      console.error(`Error in massTransform with ${o.description}`, o, fn, acc)
+      throw e
+    }
   }, main )
 }
 
