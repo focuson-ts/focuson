@@ -29,8 +29,8 @@ button:after, .button:after {
 }
 
 button:hover, .button:hover {
-  top: 4px;
-  left: 4px;
+  top: 2px;
+  left: 2px;
   transform: scale(0.98);
 }
 
@@ -69,8 +69,8 @@ button:hover:after, .button:hover:after {
 }
 
 .primary-btn:hover {
-  top: 4px;
-  left: 4px;
+  top: 2px;
+  left: 2px;
   color: #fff;
   cursor: pointer;
   border: none;
@@ -128,8 +128,8 @@ button:hover:after, .button:hover:after {
 }
 
 .secondary-btn:hover {
-  top: 4px;
-  left: 4px;
+  top: 2px;
+  left: 2px;
   transform: scale(0.98);
 }
 
