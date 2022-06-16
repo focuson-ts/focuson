@@ -97,3 +97,8 @@ export function lastIndexOf<T>(ts: T[], fn: (t: T) => boolean): number {
   const index = copy.findIndex(fn)
   return ts.length - index - 1
 }
+
+export function trimDownText(s: string, trimDownToSize: number): string {
+  const size = trimDownToSize ? trimDownToSize : 300;
+  return s.length > size ? s.slice ( 0, size ) + " ..." : s
+}
