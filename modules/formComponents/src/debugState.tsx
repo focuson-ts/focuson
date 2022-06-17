@@ -10,6 +10,8 @@ import { AssertPages, MakeTest } from "./makeTest";
 import { LabelAndStringInput } from "./labelAndInput";
 import { LabelAndDropdown } from "./labelAndDropdown";
 import { AccordionCollapseAll, AccordionExpandAll, AccordionWithInfo} from "./accordion";
+import { trimDownText } from "./common";
+import { CopyToClipboard } from "./CopyToClipboard";
 
 
 export function Tags<S extends HasTagHolder, C> ( { state }: LensProps<S, any, C> ) {
@@ -127,7 +129,16 @@ export function OneTracing ( reason: any ) {
     if ( isMassTransformReason ( r ) ) return <MassTransformTracing reason={r}/>
   }
   return <tr>
-    <td colSpan={2}>{JSON.stringify ( reason, )}</td>
+    <td colSpan={2}>
+        <CopyToClipboard textToCopy={JSON.stringify ( reason, )}/>
+        <div className="tooltip">
+        Reason:: {trimDownText(JSON.stringify ( reason, ), 100)}
+        <span className="tooltiptext">
+          <CopyToClipboard textToCopy={JSON.stringify ( reason, )}/>
+          <pre>{JSON.stringify ( reason, null, 2 )}</pre>
+        </span>
+      </div>
+    </td>
   </tr>
 }
 
