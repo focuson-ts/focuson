@@ -49,7 +49,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.19.3",
+  "version": "1.19.5",
   "template": "noreact",
   "name": "@focuson/cod",
   "description": "A command line tool to help with the code on demand",

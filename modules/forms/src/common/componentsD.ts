@@ -120,7 +120,8 @@ export const TableCD: DisplayCompD = {
     prefixFilter: { paramType: 'path', needed: 'no' },
     prefixColumn: { paramType: 'string', needed: 'no' },
     maxCount: { paramType: 'string', needed: 'no' },
-    emptyData: { paramType: 'string', needed: 'no' }
+    emptyData: { paramType: 'string', needed: 'no' },
+    tableTitle: { paramType: 'string', needed: 'no' }
   }
 }
 

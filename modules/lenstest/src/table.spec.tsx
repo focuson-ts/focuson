@@ -52,6 +52,10 @@ describe ( "Table", () => {
       const table = displayAndGetTable ( {}, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id'/> )
       expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody class='grid-sub'></tbody></table>" )
     } )
+    it ( "should render an empty with no selected and a title", () => {
+      const table = displayAndGetTable ( {}, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id' tableTitle='The title'/> )
+      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<h2>The title</h2><table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody class='grid-sub'></tbody></table>" )
+    } )
     it ( "should render an empty with no selected and an emptyData", () => {
       const table = displayAndGetTable ( {}, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id' emptyData='No Data' /> )
       expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead>" +

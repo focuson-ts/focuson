@@ -1,7 +1,7 @@
 {
   "name":            "{applicationName}",
-  "main":            "dist/index.pack.js",
-  "types":           "dist/index.pack.d.ts",
+  "main":            "dist/index.package.js",
+  "types":           "dist/index.package.d.ts",
   "version":         "{versionNumber}",
   "private":         true,
   "dependencies":    {
@@ -19,7 +19,8 @@
     "@reduxjs/toolkit":           "^1.8.2"
   },
   "files":           [
-    "dist/"
+    "dist/",
+    "public"
   ],
   "devDependencies": {
     "@pact-foundation/pact":              "^9.17.3",

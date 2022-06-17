@@ -15,6 +15,7 @@ export interface TableProps<S, T, Context> extends CommonStateProps<S, T[], Cont
   prefixColumn?: keyof T;
   maxCount?: string;
   emptyData?: string;
+  tableTitle?: string;
 }
 
 export function getValue<T> ( o: keyof T, row: T, joiners: undefined | string | string[] ): any {
@@ -42,7 +43,7 @@ export const rawTable = <S, T, Context> (
   onClick?: ( i: number, row: T ) => ( e: any ) => void,
   oneRow?: ( row: T, i: number, selectedClass: string | undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) => JSX.Element ) =>
   ( props: TableProps<S, T, Context> ) => {
-    const { id, order, state, copySelectedIndexTo, copySelectedItemTo, joiners, prefixFilter, prefixColumn, maxCount, emptyData } = props
+    const { id, order, state, copySelectedIndexTo, copySelectedItemTo, joiners, prefixFilter, prefixColumn, maxCount, emptyData, tableTitle } = props
     const actualOneRow = oneRow ? oneRow : defaultOneRow ( id, order, joiners )
     const actualOnClick = onClick ? onClick : defaultOnClick ( props )
     const orderJsx = order.map ( ( o, i ) => <th key={o.toString ()} id={`${id}.th[${i}]`}>{decamelize ( o.toString (), ' ' )}</th> )
@@ -59,13 +60,13 @@ export const rawTable = <S, T, Context> (
         <td colSpan={order.length + 100}>{emptyData}</td>
       </tr> :
       json.map ( ( row, i ) => filter ( row ) && (maxCount === undefined || count++ < maxCountInt) ? actualOneRow ( row, i, selectedClass ( i ), actualOnClick ) : null );
-
-    return <table id={id} className="grid">
+    const title = tableTitle ? <h2>{tableTitle}</h2> : null
+    return <>{title}<table id={id} className="grid">
       <thead>
       <tr>{orderJsx}</tr>
       </thead>
       <tbody className="grid-sub">{tableBody}</tbody>
-    </table>
+    </table></>
   };
 
 export const defaultOneRow = <T extends any> ( id: string, order: (keyof T)[], joiners: string | string[] | undefined, ...extraTds: (( i: number, row: T ) => JSX.Element)[] ) =>
@@ -93,5 +94,5 @@ export interface StructureTable<S, T, Context> extends CommonStateProps<S, T[], 
 }
 export function StructureTable<S, T, Context> ( props: TableProps<S, T, Context> ) {
   const { id, order, joiners } = props
-  return rawTable<S, T, Context>( defaultOnClick ( props ), defaultOneRow ( id, order, joiners ) ) ( props )
+  return rawTable<S, T, Context> ( defaultOnClick ( props ), defaultOneRow ( id, order, joiners ) ) ( props )
 }
