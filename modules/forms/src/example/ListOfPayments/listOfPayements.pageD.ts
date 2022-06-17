@@ -58,14 +58,6 @@ const addOrEditButton: RawButtons<AllGuards> = {
   mode: 'edit',
   focusOn: '~/tempListOfPayments',
   createEmpty: printRecordDD,
-  copy: [
-
-    { from: '~/currentPayments/standingOrders', to: '~/tempListOfPayments/listOfPayments/standingOrders/numberOfItems' },
-    { from: '~/currentPayments/openBankingStandingOrders', to: '~/tempListOfPayments/listOfPayments/openBankingStandingOrders/numberOfItems' },
-    { from: '~/currentPayments/directDebits', to: '~/tempListOfPayments/listOfPayments/directDebits/numberOfItems' },
-    { from: '~/currentPayments/billPayments', to: '~/tempListOfPayments/listOfPayments/billPayments/numberOfItems' },
-    { from: '~/currentPayments/openBanking', to: '~/tempListOfPayments/listOfPayments/openBanking/numberOfItems' },
-  ],
   copyOnClose: { to: '~/display[~/selected]' }
 }
 

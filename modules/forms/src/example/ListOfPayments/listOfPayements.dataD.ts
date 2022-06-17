@@ -1,7 +1,7 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 
 import { CheckboxAndNumberCD, DataDrivenFixedOptionDropDownAndDetailsCD, LabelAndDropDownCD, LayoutCd, NumberInputCD, SelectedItemCD, TableCD } from "../../common/componentsD";
-import { AccountIdDD, BooleanDD, DataD, NatNumDd, NumberPrimitiveDD, OneLineStringDD, PrimitiveDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
+import { AccountIdDD, BooleanDD, BooleanPrimitiveDD, DataD, NatNumDd, NumberPrimitiveDD, OneLineStringDD, PrimitiveDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
 import { CustomerStatus } from "@focuson/form_components";
 import { AllGuards } from "../../buttons/guardButton";
 import { accountT, postCodeSearchTable } from "../database/tableNames";
@@ -86,8 +86,9 @@ export const AccountDetailsDD: ExampleDataD = {
 // }
 
 
-export const CheckboxAndNumberFromDatabaseDD: PrimitiveDD = {
+export const CheckboxAndNumberFromDatabaseDD: BooleanPrimitiveDD = {
   ...BooleanDD,
+  emptyValue: true,
   display: CheckboxAndNumberCD,
 }
 

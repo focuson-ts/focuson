@@ -104,7 +104,7 @@ export interface DatePrimitiveDD extends CommonPrimitiveDD<string> {
 }
 export interface BooleanPrimitiveDD extends CommonPrimitiveDD<boolean> {
   reactType: 'boolean';
-  emptyValue: false
+  emptyValue: boolean
   graphQlType: 'Boolean'
   javaType: 'Boolean'
 }
@@ -361,7 +361,7 @@ export const MoneyDD: NumberPrimitiveDD = {
   description: "The primitive representing an amount of the local currency",
   name: 'Money'
 }
-export const BooleanDD: PrimitiveDD = {
+export const BooleanDD: BooleanPrimitiveDD = {
   rsGetter: "getBoolean",
   dbType: 'boolean',
   name: 'Boolean',
