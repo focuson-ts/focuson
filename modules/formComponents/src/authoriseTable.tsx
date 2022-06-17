@@ -4,8 +4,8 @@ import { PageMode } from "@focuson/pages";
 import { LabelAndStringInput } from "./labelAndInput";
 import { FocusOnContext } from "@focuson/focuson";
 import { Layout } from "./layout";
-import { decamelize } from "@focuson/utils";
 import { defaultOneRow, rawTable, transformsForUpdateSelected } from "./table";
+import { LabelAndFixedNumber } from "./labelAndFixedNumber";
 
 
 export interface AuthoriseTableData {
@@ -24,16 +24,6 @@ export interface AuthoriseTableProps<S, D extends AuthoriseTableData, C> extends
   copySelectedIndexTo?: LensState<S, number, C>;
 }
 
-const noData = <td>No data</td>;
-
-interface LabelAndFixedNumberProps {
-  id: string
-  label: string;
-  number: string;
-}
-function LabelAndFixedNumber ( { id, label, number }: LabelAndFixedNumberProps ) {
-  return <div className='labelValueButton'><label className='input-label'>{label}</label><input className='input' readOnly type='number' value={number}/></div>
-}
 export function AuthoriseTable<S, D extends AuthoriseTableData, C extends FocusOnContext<S>> ( props: AuthoriseTableProps<S, D, C> ) {
   const { state, order, id, mode, copySelectedItemTo, copySelectedIndexTo } = props
   function haltBox ( i: number, row: D ) {

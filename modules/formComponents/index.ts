@@ -14,6 +14,7 @@ export * from './src/input'
 export * from './src/label'
 export * from './src/LabelAndDateInput'
 export * from './src/labelAndInput'
+export * from './src/labelAndFixedNumber'
 export * from './src/labelAndDropdown'
 export * from './src/layout'
 export * from './src/listNextPrevButtons'
@@ -32,8 +33,6 @@ export * from './src/unpaidCardOrMisuseItems'
 export * from './src/validationButton'
 export * from './src/plusMinusButtonsAndInput'
 export * from './src/tableWithCheckboxInput'
-export { SelectedItem } from "./src/selectedItem";
-export { SelectedItemProps } from "./src/selectedItem";
 
 
 

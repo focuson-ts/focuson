@@ -66,18 +66,13 @@ export const PrintRecordRD: ExampleRestD = {
   dataDD: PrintRecordHistoryDD,
   url: '/api/printrecord?{query}',
   actions: [ 'create', 'update',{ state: 'print' } ],
-
   states: {
     print: {
       url: '/api/print?{query}',
       params: { ...fromCommonIds ( 'vbAcountSeq', 'employeeId', 'employeeId', 'accountId' ), paymentId: { ...IntParam, lens: '~/display[~/selected]id', testValue: 888, main: true } }
     }
   },
-  mutations: [
-
-
-
-    {
+  mutations: [ {
     restAction: { state: 'print' },
     mutateBy: [
       {
