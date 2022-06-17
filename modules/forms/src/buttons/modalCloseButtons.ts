@@ -1,6 +1,6 @@
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
 import { makeSimpleButton, opt, optT } from "../codegen/codegen";
-import { EnabledBy, enabledByString } from "./enabledBy";
+import { CustomButtonType, EnabledBy, enabledByString } from "./enabledBy";
 
 
 export interface ModalCommitButtonInPage extends EnabledBy {
@@ -9,7 +9,7 @@ export interface ModalCommitButtonInPage extends EnabledBy {
   validate?: boolean;
   text?: string
 }
-export interface ModalCancelButtonInPage {
+export interface ModalCancelButtonInPage extends CustomButtonType  {
   control: 'ModalCancelButton';
   text?: string
 }
