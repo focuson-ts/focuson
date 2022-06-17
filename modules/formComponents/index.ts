@@ -22,6 +22,7 @@ export * from './src/optional'
 export * from './src/radio'
 export * from './src/rest'
 export * from './src/searchListItems'
+export * from './src/selectedItem'
 export * from './src/table'
 export * from './src/textAreaInput'
 export * from './src/toggleButton'
@@ -31,6 +32,8 @@ export * from './src/unpaidCardOrMisuseItems'
 export * from './src/validationButton'
 export * from './src/plusMinusButtonsAndInput'
 export * from './src/tableWithCheckboxInput'
+export { SelectedItem } from "./src/selectedItem";
+export { SelectedItemProps } from "./src/selectedItem";
 
 
 
