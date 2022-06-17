@@ -101,6 +101,8 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   templateFile ( `${javaCodeRoot}/SchemaController.java`, 'templates/raw/java/SchemaController.java', params, directorySpec )
   templateFile ( `${javaControllerRoot}/Transform.java`, 'templates/Transform.java', params, directorySpec )
   templateFile ( `${javaFetcherRoot}/IFetcher.java`, 'templates/raw/java/IFetcher.java', params, directorySpec )
+  templateFile ( `${javaUtilsRoot}/IOGNL.java`, 'templates/raw/java/utils/IOGNL.java', params, directorySpec )
+  templateFile ( `${javaUtilsRoot}/OGNL.java`, 'templates/raw/java/utils/OGNL.java', params, directorySpec )
 
 
   const allRestDefns: RestDefnInPageProperties<G>[] = allMainPages ( pages ).flatMap ( p => sortedEntries ( p.rest ).map ( t => t[ 1 ] ) )

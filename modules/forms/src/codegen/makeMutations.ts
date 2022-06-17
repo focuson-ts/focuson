@@ -1,5 +1,5 @@
 import { MainPageD } from "../common/pageD";
-import { NameAnd, safeArray, safeObject, toArray, unique } from "@focuson/utils";
+import { NameAnd, safeObject, toArray, unique } from "@focuson/utils";
 import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
@@ -54,21 +54,21 @@ function commonIfDbNameBlock<G> ( r: RestD<G>, paramsA: MutationParam[], name: s
   ] : []
 }
 
-export function getFromStatement (errorPrefix: string, from: string, m: MutationParam[] ): string[] {
+export function getFromStatement ( errorPrefix: string, from: string, m: MutationParam[] ): string[] {
   return m.flatMap ( ( m, i ) => {
     if ( !isStoredProcOutputParam ( m ) ) return []
     if ( m.javaType === 'String' ) return [ `String ${m.name} = ${from}.getString(${i + 1});` ]
-    if ( m.javaType === 'Double' ) return [`Double ${m.name} = ${from}.getDouble(${i + 1});`]
+    if ( m.javaType === 'Double' ) return [ `Double ${m.name} = ${from}.getDouble(${i + 1});` ]
     if ( m.javaType === 'Integer' ) return [ `Integer ${m.name} = ${from}.getInt(${i + 1});` ]
     throw  Error ( `${errorPrefix} don't know how to getFromStatement for ${JSON.stringify ( m )}` )
   } )
 }
 
-export function getFromResultSetIntoVariables ( errorPrefix: string,from: string, m: MutationParam[] ): string[] {
+export function getFromResultSetIntoVariables ( errorPrefix: string, from: string, m: MutationParam[] ): string[] {
   return m.flatMap ( ( m, i ) => {
     if ( !isSqlOutputParam ( m ) ) return []
     if ( m.javaType === 'String' ) return [ `String ${m.name} = ${from}.getString("${m.rsName}");` ]
-    if ( m.javaType === 'Double' ) return [`Double ${m.name} = ${from}.getDouble(${i + 1});`]
+    if ( m.javaType === 'Double' ) return [ `Double ${m.name} = ${from}.getDouble(${i + 1});` ]
     if ( m.javaType === 'Integer' ) return [ `Integer ${m.name} = ${from}.getInt("${m.rsName}");` ]
     throw new Error ( `${errorPrefix} don't know how to getFromResultSetIntoVariables for ${JSON.stringify ( m )}` )
   } )
@@ -110,7 +110,7 @@ export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: MainPage
     ...indentList ( indentList ( indentList ( [
         ...allSetObjectForInputs ( m.params ),
         ...execute,
-        ...getFromResultSetIntoVariables ( errorPrefix,'rs', paramsA ),
+        ...getFromResultSetIntoVariables ( errorPrefix, 'rs', paramsA ),
         makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) )
       ]
     ) ) ),
@@ -155,7 +155,7 @@ export function mutationCodeForStoredProcedureCalls<G> ( errorPrefix: string, p:
     ...indentList ( indentList ( indentList ( allSetObjectForStoredProcs ( m.params ) ) ) ),
     `      s.execute();`,
     ...indentList ( indentList ( indentList ( [
-      ...getFromStatement ( errorPrefix,'s', paramsA ),
+      ...getFromStatement ( errorPrefix, 's', paramsA ),
       makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),
     `  }}`,
   ];
@@ -223,10 +223,9 @@ export function importsFromManual ( mutation: MutationsForRestAction ): string[]
   return toArray ( mutation.mutateBy ).flatMap ( m => m.type === 'manual' ? toArray ( m.import ) : [] )
 }
 
-export function classLevelAutowiring ( mutation: MutationsForRestAction ): string[] {
-  return mutation.autowired !== undefined ? toArray(mutation.autowired).flatMap(m => `@Autowired
-   public ${m.class} ${m.variableName};`) : []
-}
+export const classLevelAutowiring = ( params: JavaWiringParams ) => ( mutation: MutationsForRestAction ): string[] => mutation.autowired !== undefined ? toArray ( mutation.autowired ).flatMap ( m => indentList ( [
+  `@Autowired`,
+  `public ${applyToTemplate ( m.class, params )} ${m.variableName};` ] ) ) : [];
 
 export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, any>, restName: string, r: RestD<G>, mutation: MutationsForRestAction ): string[] {
   const errorPrefix = `${p.name}.rest[${restName}]. Making mutations for ${restActionForName ( mutation.restAction )}.`
@@ -257,7 +256,7 @@ export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, a
     `public class ${mutationClassName ( r, mutation.restAction )} {`,
     ``,
     ...autowiringVariables,
-    ...classLevelAutowiring( mutation ),
+    ...classLevelAutowiring ( params ) ( mutation ),
     ...methods,
     ``,
     `}`

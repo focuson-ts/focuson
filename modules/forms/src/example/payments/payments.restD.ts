@@ -30,7 +30,7 @@ export const newPaymentsRD: ExampleRestD = {
         { type: 'output', name: 'dateCreated', javaType: 'String' },
       ], select: [
         {
-          guard: [ 'brandRef==3' ], type: 'sql', name: '', schema: onlySchema,
+          guard: [ 'brandRef==3' ], type: 'sql', name: 'brandref3', schema: onlySchema,
           sql: 'select nameOfPayee,sterlingAmount,currencyAmount,amtInWords,forActionOn,dateCreated,status from tableForBrand3 where acc = accountId', params: [
             'accountId',
             { type: "output", javaType: 'String', rsName: 'nameOfPayee', name: 'nameOfPayee' },
@@ -42,7 +42,7 @@ export const newPaymentsRD: ExampleRestD = {
           ]
         },
         {
-          guard: [], type: 'sql', name: '', schema: onlySchema,
+          guard: [], type: 'sql',  schema: onlySchema,
           sql: 'select nameOfPayee,sterlingAmount,currencyAmount,amtInWords,forActionOn,dateCreated,status from tableForAllOtherBrands where acc = accountId', params: [
             'accountId',
             { type: "output", javaType: 'String', rsName: 'nameOfPayee', name: 'nameOfPayee' },
@@ -59,7 +59,7 @@ export const newPaymentsRD: ExampleRestD = {
 
   mutations: [ {
     restAction: 'create',
-    autowired: {class: 'package1.package2.ClassName', variableName: 'someVariable', imports: true},
+    autowired: {class: '{thePackage}.utils.IOGNL', variableName: 'ognl', imports: true},
     mutateBy: [ {
       type: 'case', name: 'create', params: [
         'brandRef', "accountId",
