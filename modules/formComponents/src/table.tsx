@@ -1,5 +1,5 @@
 import { CommonStateProps } from "./common";
-import { decamelize, findJoiner, makeIntoString, safeArray } from "@focuson/utils";
+import { decamelize, findJoiner, makeIntoString, safeArray, toArray } from "@focuson/utils";
 import { LensState, reasonFor } from "@focuson/state";
 import { Transform } from "@focuson/lens";
 
@@ -56,7 +56,7 @@ export const rawTable = <S, T, Context> (
     let count = 0;
     let tableBody = json.length === 0 && emptyData ?
       <tr id={`${id}[0]`}>
-        <td colSpan={order.length}>{emptyData}</td>
+        <td colSpan={order.length + 100}>{emptyData}</td>
       </tr> :
       json.map ( ( row, i ) => filter ( row ) && (maxCount === undefined || count++ < maxCountInt) ? actualOneRow ( row, i, selectedClass ( i ), actualOnClick ) : null );
 
@@ -68,12 +68,30 @@ export const rawTable = <S, T, Context> (
     </table>
   };
 
-export const defaultOneRow = <T extends any> ( id: string, order: (keyof T)[], joiners: string | string[] ) =>
+export const defaultOneRow = <T extends any> ( id: string, order: (keyof T)[], joiners: string | string[], ...extraTds: (( i: number, row: T ) => JSX.Element)[] ) =>
   ( row: T, i: number, clazz: string, onClick: ( i: number, row: T ) => ( e: any ) => void ) =>
     (<tr id={`${id}[${i}]`} className={clazz} key={i} onClick={onClick ( i, row )}>{order.map ( o =>
-      <td id={`${id}[${i}].${o.toString ()}`} key={o.toString ()}>{getValue ( o, row, joiners )}</td> )}</tr>);
+      <td id={`${id}[${i}].${o.toString ()}`} key={o.toString ()}>{getValue ( o, row, joiners )}</td> )}{extraTds.map ( e => <td>{e ( i, row )}</td> )}</tr>);
 
 export function Table<S, T, Context> ( props: TableProps<S, T, Context> ) {
+  const { id, order, joiners } = props
+  return rawTable ( defaultOnClick ( props ), defaultOneRow ( id, order, joiners ) ) ( props )
+}
+
+
+export interface StructureTable<S, T, Context> extends CommonStateProps<S, T[], Context> {
+  paths: string[];
+  /** If set then the selected index will be copied here as the table items are selected. */
+  copySelectedIndexTo?: LensState<S, number, Context>
+  /** If set then the selected index will be copied here as the table items are selected */
+  copySelectedItemTo?: LensState<S, T, Context>
+  joiners?: string | string[];
+  prefixFilter?: LensState<S, string, Context>; // column is hard coded. but the prefix is in the state
+  prefixColumn?: keyof T;
+  maxCount?: string;
+  emptyData?: string;
+}
+export function StructureTable<S, T, Context> ( props: TableProps<S, T, Context> ) {
   const { id, order, joiners } = props
   return rawTable ( defaultOnClick ( props ), defaultOneRow ( id, order, joiners ) ) ( props )
 }

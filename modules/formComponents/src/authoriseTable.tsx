@@ -5,7 +5,7 @@ import { LabelAndStringInput } from "./labelAndInput";
 import { FocusOnContext } from "@focuson/focuson";
 import { Layout } from "./layout";
 import { decamelize } from "@focuson/utils";
-import { rawTable, transformsForUpdateSelected } from "./table";
+import { defaultOneRow, rawTable, transformsForUpdateSelected } from "./table";
 
 
 export interface AuthoriseTableData {
@@ -36,14 +36,24 @@ function LabelAndFixedNumber ( { id, label, number }: LabelAndFixedNumberProps )
 }
 export function AuthoriseTable<S, D extends AuthoriseTableData, C extends FocusOnContext<S>> ( props: AuthoriseTableProps<S, D, C> ) {
   const { state, order, id, mode, copySelectedItemTo, copySelectedIndexTo } = props
+  function haltBox ( i: number, row: D ) {
+    const onChange = () => {
+      let newRow = { ...row, hold: !row.hold };
+      // const txs = transformsForUpdateSelected ( copySelectedIndexTo, copySelectedItemTo ) ( i, row )
+      const thisTx: Transform<S, any> = [ state.optional.chain ( Lenses.nth ( i ) ), row => newRow ]
+      state.massTransform ( reasonFor ( `AuthoriseTable[${i}]`, 'onChange', id ) ) (  thisTx );
+    }
+    return  <input type='checkbox' onChange={onChange} checked={row.hold}/>
+  }
   const onClick = ( i: number, row: D ) => ( e: any ) => {
     if ( copySelectedIndexTo || copySelectedItemTo ) {
       const txs = transformsForUpdateSelected ( copySelectedIndexTo, copySelectedItemTo ) ( i, row )
       state.massTransform ( reasonFor ( 'Table', 'onClick', id, `selected row ${i}` ) ) ( ...txs )
     }
   }
+
   function stateFor ( k: keyof D ): LensState<S, any, C> {return copySelectedItemTo.focusOn ( k );}
-  const AuthTable = rawTable ( onClick )
+  const AuthTable = rawTable ( onClick, defaultOneRow ( id, order, [], haltBox ) )
   return <Layout details='[[1],[1,1],[1,1,1]]'>
     <AuthTable{...props} />
     <LabelAndStringInput id={`${id}.approvedBy`} label='Approved By' state={stateFor ( 'approvedBy' )} mode='view' allButtons={{}}/>
