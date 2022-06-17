@@ -21,7 +21,7 @@ export const newPaymentsRD: ExampleRestD = {
   actions: [ 'create', 'get' ],
   resolvers: {
     getoneLinePayment: {
-      type: 'case', name: 'case', params: [ 'brandRef', 'accountId',
+      type: 'case', name: 'getOneLinePayment', params: [ 'brandRef', 'accountId',
         { type: 'output', name: 'nameOfPayee', javaType: 'String' },
         { type: 'output', name: 'sterlingAmount', javaType: 'Integer' },
         { type: 'output', name: 'currencyAmount', javaType: 'Integer' },
