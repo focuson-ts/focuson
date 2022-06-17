@@ -397,7 +397,7 @@ a.close {
 input[type=text],
 input[type=number],
 input[type=date],
-select {
+select, textarea.input {
   width: 49%;
 }
 
@@ -405,7 +405,8 @@ select {
 .inputWidth10 input[type=text],
 .inputWidth10 input[type=number],
 .inputWidth10 input[type=date],
-.inputWidth10 select {
+.inputWidth10 select,
+.inputWidth10 textarea.input {
   width: 10%;
 }
 
@@ -413,7 +414,8 @@ select {
 .inputWidth15 input[type=text],
 .inputWidth15 input[type=number],
 .inputWidth15 input[type=date],
-.inputWidth15 select {
+.inputWidth15 select,
+.inputWidth15 textarea.input {
   width: 15%;
 }
 
@@ -421,7 +423,8 @@ select {
 .inputWidth20 input[type=text],
 .inputWidth20 input[type=number],
 .inputWidth20 input[type=date],
-.inputWidth20 select {
+.inputWidth20 select,
+.inputWidth20 textarea.input {
   width: 20%;
 }
 
@@ -429,7 +432,8 @@ select {
 .inputWidth25 input[type=text],
 .inputWidth25 input[type=number],
 .inputWidth25 input[type=date],
-.inputWidth25 select {
+.inputWidth25 select,
+.inputWidth25 textarea.input {
   width: 25%;
 }
 
@@ -437,7 +441,8 @@ select {
 .inputWidth30 input[type=text],
 .inputWidth30 input[type=number],
 .inputWidth30 input[type=date],
-.inputWidth30 select {
+.inputWidth30 select,
+.inputWidth30 textarea.input {
   width: 30%;
 }
 
@@ -445,7 +450,8 @@ select {
 .inputWidth35 input[type=text],
 .inputWidth35 input[type=number],
 .inputWidth35 input[type=date],
-.inputWidth35 select {
+.inputWidth35 select,
+.inputWidth35 textarea.input {
   width: 35%;
 }
 
@@ -453,7 +459,8 @@ select {
 .inputWidth40 input[type=text],
 .inputWidth40 input[type=number],
 .inputWidth40 input[type=date],
-.inputWidth40 select {
+.inputWidth40 select,
+.inputWidth40 textarea.input {
   width: 40%;
 }
 
@@ -461,7 +468,8 @@ select {
 .inputWidth45 input[type=text],
 .inputWidth45 input[type=number],
 .inputWidth45 input[type=date],
-.inputWidth45 select {
+.inputWidth45 select,
+.inputWidth45 textarea.input {
   width: 45%;
 }
 
@@ -469,7 +477,8 @@ select {
 .inputWidth49 input[type=text],
 .inputWidth49 input[type=number],
 .inputWidth49 input[type=date],
-.inputWidth49 select {
+.inputWidth49 select,
+.inputWidth49 textarea.input {
   width: 49%;
 }
 
@@ -477,7 +486,8 @@ select {
 .inputWidth50 input[type=text],
 .inputWidth50 input[type=number],
 .inputWidth50 input[type=date],
-.inputWidth50 select {
+.inputWidth50 select,
+.inputWidth50 textarea.input {
   width: 50%;
 }
 
@@ -485,7 +495,8 @@ select {
 .inputWidth55 input[type=text],
 .inputWidth55 input[type=number],
 .inputWidth55 input[type=date],
-.inputWidth55 select {
+.inputWidth55 select,
+.inputWidth55 textarea.input {
   width: 55%;
 }
 
@@ -493,7 +504,8 @@ select {
 .inputWidth60 input[type=text],
 .inputWidth60 input[type=number],
 .inputWidth60 input[type=date],
-.inputWidth60 select {
+.inputWidth60 select,
+.inputWidth60 textarea.input {
   width: 60%;
 }
 
@@ -501,7 +513,8 @@ select {
 .inputWidth65 input[type=text],
 .inputWidth65 input[type=number],
 .inputWidth65 input[type=date],
-.inputWidth65 select {
+.inputWidth65 select,
+.inputWidth65 textarea.input {
   width: 65%;
 }
 
@@ -509,7 +522,8 @@ select {
 .inputWidth70 input[type=text],
 .inputWidth70 input[type=number],
 .inputWidth70 input[type=date],
-.inputWidth70 select {
+.inputWidth70 select,
+.inputWidth70 textarea.input {
   width: 70%;
 }
 
@@ -517,7 +531,8 @@ select {
 .inputWidth75 input[type=text],
 .inputWidth75 input[type=number],
 .inputWidth75 input[type=date],
-.inputWidth75 select {
+.inputWidth75 select,
+.inputWidth75 textarea.input {
   width: 75%;
 }
 
@@ -525,7 +540,8 @@ select {
 .inputWidth80 input[type=text],
 .inputWidth80 input[type=number],
 .inputWidth80 input[type=date],
-.inputWidth80 select {
+.inputWidth80 select,
+.inputWidth80 textarea.input {
   width: 80%;
 }
 
@@ -533,7 +549,8 @@ select {
 .inputWidth85 input[type=text],
 .inputWidth85 input[type=number],
 .inputWidth85 input[type=date],
-.inputWidth85 select {
+.inputWidth85 select,
+.inputWidth85 textarea.input {
   width: 85%;
 }
 
@@ -541,7 +558,8 @@ select {
 .inputWidth90 input[type=text],
 .inputWidth90 input[type=number],
 .inputWidth90 input[type=date],
-.inputWidth90 select {
+.inputWidth90 select,
+.inputWidth90 textarea.input {
   width: 90%;
 }
 
@@ -549,7 +567,8 @@ select {
 .inputWidth95 input[type=text],
 .inputWidth95 input[type=number],
 .inputWidth95 input[type=date],
-.inputWidth95 select {
+.inputWidth95 select,
+.inputWidth95 textarea.input {
   width: 95%;
 }
 
@@ -557,7 +576,8 @@ select {
 .inputWidth100 input[type=text],
 .inputWidth100 input[type=number],
 .inputWidth100 input[type=date],
-.inputWidth100 select {
+.inputWidth100 select,
+.inputWidth100 textarea.input {
   width: 100%;
 }
 
