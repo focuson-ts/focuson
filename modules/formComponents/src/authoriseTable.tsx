@@ -5,6 +5,7 @@ import { LabelAndStringInput } from "./labelAndInput";
 import { FocusOnContext } from "@focuson/focuson";
 import { Layout } from "./layout";
 import { decamelize } from "@focuson/utils";
+import { rawTable, transformsForUpdateSelected } from "./table";
 
 
 export interface AuthoriseTableData {
@@ -35,44 +36,16 @@ function LabelAndFixedNumber ( { id, label, number }: LabelAndFixedNumberProps )
 }
 export function AuthoriseTable<S, D extends AuthoriseTableData, C extends FocusOnContext<S>> ( props: AuthoriseTableProps<S, D, C> ) {
   const { state, order, id, mode, copySelectedItemTo, copySelectedIndexTo } = props
-  const json = state.optJsonOr ( [] );
-  function updateSelected ( row: D, i: number ): Transform<S, any>[] {
-    const indexTx: Transform<S, number>[] = copySelectedIndexTo ? [ [ copySelectedIndexTo.optional, () => i ] ] : []
-    const itemTx: Transform<S, D>[] = copySelectedItemTo ? [ [ copySelectedItemTo.optional, () => json[ i ] ] ] : []
-    return [ ...indexTx, ...itemTx ]
-  }
-
-  const headers = <tr>{order.map ( o => <th key={o.toString ()}>{decamelize ( o.toString (), ' ' )}</th> )}</tr>
-  function data ( row: D, o: keyof D, i: number ) {
-    if ( o === 'status' && row.hold ) return 'held'
-    if ( o === 'hold' ) return haltBox ( row, i )
-    return row[ o ];
-  }
-  function haltBox ( row: D, i: number ) {
-    const onChange = () => {
-      let newRow = { ...row, hold: !row.hold };
-      const txs = updateSelected ( newRow, i )
-      const thisTx: Transform<S, any> = [ state.optional.chain ( Lenses.nth ( i ) ), row => newRow ]
-      state.massTransform ( reasonFor ( `AuthoriseTable[${i}]`, 'onChange', id ) ) ( ...txs, thisTx );
+  const onClick = ( i: number, row: D ) => ( e: any ) => {
+    if ( copySelectedIndexTo || copySelectedItemTo ) {
+      const txs = transformsForUpdateSelected ( copySelectedIndexTo, copySelectedItemTo ) ( i, row )
+      state.massTransform ( reasonFor ( 'Table', 'onClick', id, `selected row ${i}` ) ) ( ...txs )
     }
-    return <input type='checkbox' onChange={onChange} checked={row.hold}/>
   }
-  const onClick = ( i: number ) => ( e: any ) => {
-
-    if ( copySelectedIndexTo || copySelectedItemTo ) state.massTransform ( reasonFor ( 'Table', 'onClick', id, `selected row ${i}` ) ) ( ...updateSelected ( json[ i ], i ) )
-  }
-  const putInTd = ( o: keyof D, i: number ) => ( a: any ) => o.toString () === 'hold' ? <td key={o.toString ()}> {a}</td> : (<td key={o.toString ()} onClick={onClick ( i )}>{a}</td>);
-  const selected = copySelectedIndexTo?.optJson ()
-  function selectedClass ( i: number ) {return i === selected ? 'grid-selected' : undefined }
-  const rows = json && json.length > 1 ? json.map ( ( row, i ) => <tr className={selectedClass ( i )} key={i}>{order.map ( o => putInTd ( o, i ) ( data ( row, o, i ) ) )}</tr> ) : <tr>{noData}</tr>
   function stateFor ( k: keyof D ): LensState<S, any, C> {return copySelectedItemTo.focusOn ( k );}
+  const AuthTable = rawTable ( onClick )
   return <Layout details='[[1],[1,1],[1,1,1]]'>
-    <table className='grid'>
-      <thead>{headers}</thead>
-      <tbody className='grid-sub'>
-      {rows}
-      </tbody>
-    </table>
+    <AuthTable{...props} />
     <LabelAndStringInput id={`${id}.approvedBy`} label='Approved By' state={stateFor ( 'approvedBy' )} mode='view' allButtons={{}}/>
     <LabelAndStringInput id={`${id}.authorisedBy`} label='Authorised By' state={stateFor ( 'authorisedBy' )} mode='view' allButtons={{}}/>
     <LabelAndFixedNumber id={`${id}.totalCredits`} label='Total Credits' number={'0.00'}/>
