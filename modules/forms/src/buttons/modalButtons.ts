@@ -5,7 +5,7 @@ import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButto
 import { indentList, opt, optT } from "../codegen/codegen";
 import { emptyName, modalName, restDetailsName } from "../codegen/names";
 import { EnabledBy, enabledByString } from "./enabledBy";
-import { decamelize } from "@focuson/utils";
+import { decamelize, toArray } from "@focuson/utils";
 
 
 export interface CommonModalButtonInPage<G> extends EnabledBy {
@@ -55,8 +55,8 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalButtonInPage<G>, G> {
         const createEmptyIfUndefinedString = createEmptyIfUndefined ? [ `createEmptyIfUndefined={${params.emptyFile}.${emptyName ( createEmptyIfUndefined )}}` ] : []
         createEmptyIfUndefined
 
-        const copyOnCloseArray: CopyDetails[] = copyOnClose ? singleToList ( copyOnClose ) : undefined
-        const copyFromArray: CopyDetails[] = copy ? singleToList ( copy ) : undefined
+        const copyOnCloseArray: CopyDetails[] | undefined = copyOnClose ? toArray ( copyOnClose ) : undefined
+        const copyFromArray: CopyDetails[] | undefined = copy ? toArray ( copy ) : undefined
         return [ `<${button.control} id=${makeIdForButton ( name )} ${enabledByString ( button )}text='${text ? text : decamelize ( name, ' ' )}' dateFn={defaultDateFn} state={state} modal = '${modalName ( parent, modal )}'  `,
           ...indentList ( [
             ...opt ( 'pageMode', mode ),

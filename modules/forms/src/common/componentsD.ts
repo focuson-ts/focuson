@@ -119,7 +119,8 @@ export const TableCD: DisplayCompD = {
     joiners: { paramType: 'string', needed: 'no' },
     prefixFilter: { paramType: 'path', needed: 'no' },
     prefixColumn: { paramType: 'string', needed: 'no' },
-    maxCount: { paramType: 'string', needed: 'no' }
+    maxCount: { paramType: 'string', needed: 'no' },
+    emptyData: { paramType: 'string', needed: 'no' }
   }
 }
 

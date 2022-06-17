@@ -44,6 +44,9 @@ export function opt ( name: string, p: string | undefined ) {
 export function optT<T> ( name: string, p: T | undefined ) {
   return p !== undefined ? [ `${name}={${JSON.stringify ( p )}}` ] : []
 }
+export function optObj<T> ( name: string, p: string | undefined ) {
+  return p !== undefined ? [ `${name}={${p}}` ] : []
+}
 export const makeSimpleButton: <G> ( imp: string ) => ButtonCreator<ModalButtonInPage<G>, G> = imp => ({
   import: imp,
   makeButton: ( { name, button } ) =>

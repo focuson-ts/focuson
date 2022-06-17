@@ -14,14 +14,15 @@ export interface TableProps<S, T, Context> extends CommonStateProps<S, T[], Cont
   joiners?: string | string[];
   prefixFilter?: LensState<S, string, Context>; // column is hard coded. but the prefix is in the state
   prefixColumn?: keyof T;
-  maxCount?: string
+  maxCount?: string;
+  emptyData?: string;
 }
 
 export function getValue<T> ( o: keyof T, row: T, joiners: undefined | string | string[] ): any {
   let result = makeIntoString ( o.toString (), row[ o ], findJoiner ( o.toString (), joiners ) );
   return result;
 }
-export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, copySelectedItemTo, joiners, prefixFilter, prefixColumn, maxCount }: TableProps<S, T, Context> ) {
+export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, copySelectedItemTo, joiners, prefixFilter, prefixColumn, maxCount, emptyData }: TableProps<S, T, Context> ) {
   const orderJsx = order.map ( ( o, i ) => <th key={o.toString ()} id={`${id}.th[${i}]`}>{decamelize ( o.toString (), ' ' )}</th> )
   const json: T[] = safeArray ( state.optJson () )
   const onClick = ( row: number ) => ( e: any ) => {
@@ -42,7 +43,11 @@ export function Table<S, T, Context> ( { id, order, state, copySelectedIndexTo, 
   let maxCountInt = maxCount ? Number.parseInt ( maxCount ) : 0;
 
   let count = 0;
-  let tableBody = json.map ( ( row, i ) => filter ( row ) && (maxCount === undefined || count++ < maxCountInt) ? oneRow ( row, i ) : null );
+  let tableBody = json.length === 0 && emptyData ?
+    <tr id={`${id}[0]`}>
+      <td colSpan={order.length}>{emptyData}</td>
+    </tr> :
+    json.map ( ( row, i ) => filter ( row ) && (maxCount === undefined || count++ < maxCountInt) ? oneRow ( row, i ) : null );
 
   return <table id={id} className="grid">
     <thead>

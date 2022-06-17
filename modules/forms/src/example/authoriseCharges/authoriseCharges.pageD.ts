@@ -37,7 +37,7 @@ export const ViewChargesPage: ExampleModalPage = {
       copy: { from: '#authorisedDate', to: '~/summaryOfChargesDates/date' },
       copyOnClose: { from: '~/selectedDateItem/dateCreated', to: '#authorisedDate' },
     },
-    approvePendingFees: { control: "ActionButton", path: '#editingData', text: 'Approve Pending Fees', action: 'approvePendingFees' },
+    approvePendingFees: { control: "ActionButton", path: '#editingData', text: 'Approve Pending Fees', action: 'approvePendingFees', path2: '~/selectedDateItem/dateCreated', path3: '~/selectedDateItem' },
     authoriseApprovedFees: { control: "ActionButton", path: '#editingData', text: 'Authorise Approved Fees', action: 'authoriseApprovedFees' },
     summary: { control: 'ModalButton', modal: SummaryOfChargesPage, mode: 'view', focusOn: '~/summaryOfCharges' },
     save: { control: 'RestButton', restName: 'authorisedCharges', action: 'update', deleteOnSuccess: '#fromApi' },
