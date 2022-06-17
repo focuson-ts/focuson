@@ -1,5 +1,5 @@
 import { MainPageD } from "../common/pageD";
-import { NameAnd, safeObject, toArray, unique } from "@focuson/utils";
+import { NameAnd, safeArray, safeObject, toArray, unique } from "@focuson/utils";
 import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
@@ -146,7 +146,7 @@ function makeMethodDecl<G> ( errorPrefix: string, paramsA: MutationParam[], resu
   return [ `    public ${resultType} ${mutationMethodName ( r, name, m, index )}(Connection connection, ${unique ( allInputParams ( [ 'dbName', ...paramsA ] ), p => paramName ( p ) )
     .map ( param => `${typeForParamAsInput ( errorPrefix, params ) ( param )} ${param.name}` ).join ( ", " )}) throws SQLException {`, ...indentList ( indentList ( indentList ( requiredmentCheckCodeForJava ( paramsA, m.params ) ) ) ) ];
 }
-export function mutationCodeForStoredProcedureCalls<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: StoredProcedureMutation, index, includeMockIf: boolean ): string[] {
+export function mutationCodeForStoredProcedureCalls<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: StoredProcedureMutation, index: string, includeMockIf: boolean ): string[] {
   const paramsA = toArray ( m.params )
   let fullName = m.package ? `${m.package}.${m.name}` : m.name;
   return [
@@ -193,7 +193,7 @@ export function mutationCodeForCase<G> ( errorPrefix: string, p: MainPageD<any, 
   ];
 }
 
-export function makeMutationMethod<G> ( errorPrefix: string, mutations: MutationDetail[], name: string, p: MainPageD<any, any>, r: RestD<G>, includeMockIf: boolean, indexPrefix: string ) {
+export function makeMutationMethod<G> ( errorPrefix: string, mutations: MutationDetail[], name: string, p: MainPageD<any, any>, r: RestD<G>, includeMockIf: boolean, indexPrefix: string ): string[] {
   const methods = mutations.flatMap ( ( mutateBy, index ) => toArray ( mutateBy ).flatMap ( ( m: MutationDetail ) => {
     const newErrorPrefix = `${errorPrefix} Mutation ${name} ${m.name}`
     if ( m.type === 'sql' && m.list ) return mutationCodeForSqlListCalls ( newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
@@ -222,6 +222,12 @@ export function makeCodeFragmentsForMutation<G> ( mutations: MutationDetail[], p
 export function importsFromManual ( mutation: MutationsForRestAction ): string[] {
   return toArray ( mutation.mutateBy ).flatMap ( m => m.type === 'manual' ? toArray ( m.import ) : [] )
 }
+
+export function classLevelAutowiring ( mutation: MutationsForRestAction ): string[] {
+  return mutation.autowired !== undefined ? toArray(mutation.autowired).flatMap(m => `@Autowired
+   public ${m.class} ${m.variableName};`) : []
+}
+
 export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, any>, restName: string, r: RestD<G>, mutation: MutationsForRestAction ): string[] {
   const errorPrefix = `${p.name}.rest[${restName}]. Making mutations for ${restActionForName ( mutation.restAction )}.`
   const { importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( toArray ( mutation.mutateBy ), p, r, params );
@@ -251,6 +257,7 @@ export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, a
     `public class ${mutationClassName ( r, mutation.restAction )} {`,
     ``,
     ...autowiringVariables,
+    ...classLevelAutowiring( mutation ),
     ...methods,
     ``,
     `}`

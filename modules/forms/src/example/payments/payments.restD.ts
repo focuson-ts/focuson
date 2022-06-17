@@ -59,6 +59,7 @@ export const newPaymentsRD: ExampleRestD = {
 
   mutations: [ {
     restAction: 'create',
+    autowired: {class: 'package1.package2.ClassName', variableName: 'someVariable', imports: true},
     mutateBy: [ {
       type: 'case', name: 'create', params: [
         'brandRef', "accountId",

@@ -34,6 +34,7 @@ export type Mutations = MutationDetail | MutationDetail[]
 
 export interface MutationsForRestAction {
   restAction: RestAction;
+  autowired?: Autowiring | Autowiring[];
   mutateBy: MutationDetail | MutationDetail[],
   // guards?: NameAnd<MutationResolverGuard>
 }
@@ -56,12 +57,18 @@ export type MutationDetail = StoredProcedureMutation | SqlMutation | ManualMutat
 //   params: MutationParam
 // }
 
+export interface Autowiring {
+  class: string,
+  variableName: string,
+  imports: boolean
+}
+
 export interface SqlMutation {
   type: 'sql',
   list?: boolean,
   schema: Schema;
   /**The name of the procedure that does this: should capture the intent of what this does */
-  name: string;
+  name?: string;
   sql: string;
   params: MutationParamForSql | MutationParamForSql[]
 }
@@ -80,7 +87,7 @@ export interface ManualMutation {
   list?: boolean,
   import?: string | string[];
   params: MutationParamForManual | MutationParamForManual[]
-  name: string;
+  name?: string;
   code: string | string[]
 }
 

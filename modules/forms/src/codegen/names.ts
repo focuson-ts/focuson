@@ -66,7 +66,7 @@ export const providerPactClassName = <B, G> ( pd: MainPageD<B, G> ): string => p
 export const mutationClassName = <B, G> ( r: RestD<G>, restAction: RestAction ) => `${restNameWithPrefix ( r )}_${restActionForName ( restAction )}Mutation`;
 export const mutationVariableName = <B, G> ( r: RestD<G>, restAction: RestAction ) => `__${restActionForName ( restAction )}Mutation`;
 export const resolverClassName = <B, G> ( r: RestD<G>, resolverName: string ) => `${restNameWithPrefix ( r )}_${resolverName}Resolver`;
-export const mutationMethodName = <B, G> ( r: RestD<G>, res: string, m: MutationDetail , index: string) => `${restNameWithPrefix ( r )}_${res}_${m.name}${index}`;
+export const mutationMethodName = <B, G> ( r: RestD<G>, res: string, m: MutationDetail , index: string) => m.name !== undefined? m.name : `${restNameWithPrefix ( r )}_${res}_${m.name}${index}`;
 
 export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${safeString ( r.namePrefix )}${r.dataDD.name}Queries`;
 
