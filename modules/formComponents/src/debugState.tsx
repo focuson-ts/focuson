@@ -130,10 +130,13 @@ export function OneTracing ( reason: any ) {
   }
   return <tr>
     <td colSpan={2}>
-      <div className="tooltip">
         <CopyToClipboard textToCopy={JSON.stringify ( reason, )}/>
+        <div className="tooltip">
         Reason:: {trimDownText(JSON.stringify ( reason, ), 100)}
-        <span className="tooltiptext"><pre>{JSON.stringify ( reason, null, 2 )}</pre></span>
+        <span className="tooltiptext">
+          <CopyToClipboard textToCopy={JSON.stringify ( reason, )}/>
+          <pre>{JSON.stringify ( reason, null, 2 )}</pre>
+        </span>
       </div>
     </td>
   </tr>
