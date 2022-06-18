@@ -15,8 +15,8 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "typescript": "^4.1.5",
-    "@focuson/focuson": "1.19.9",
-    "@focuson/fetcher": "1.19.9"
+    "@focuson/focuson": "1.19.10",
+    "@focuson/fetcher": "1.19.10"
   },
   "description": "A fully featured example project",
   "devDependencies": {
@@ -62,7 +62,7 @@
     "test:watch": "npm run test -- --watch",
     "storybook": "start-storybook -p 6006 -s public"
   },
-  "version": "1.19.9",
+  "version": "1.19.10",
   "eslintConfig": {
     "extends": [
       "react-app",
