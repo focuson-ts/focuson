@@ -1,5 +1,5 @@
 import { DataD } from "../common/dataD";
-import { isMainPage, PageD, RestOnCommit } from "../common/pageD";
+import { isMainPage, MainPageD, ModalPageD, PageD, RestOnCommit } from "../common/pageD";
 import { CopyDetails, CopyStringDetails, PageMode, PageParams, SetToLengthOnClose } from "@focuson/pages";
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
 import { indentList, opt, optT } from "../codegen/codegen";
@@ -7,20 +7,6 @@ import { emptyName, modalName, restDetailsName } from "../codegen/names";
 import { EnabledBy, enabledByString } from "./enabledBy";
 import { decamelize, toArray } from "@focuson/utils";
 
-
-export interface CommonModalButtonInPage<G> extends EnabledBy {
-  control: string;
-  text?: string;
-  modal: PageD<any, G>,
-  mode: PageMode,
-  pageParams?: PageParams,
-  restOnCommit?: RestOnCommit,
-  copy?: CopyDetails | CopyDetails[],
-  copyOnClose?: CopyDetails | CopyDetails[];
-  copyJustString?: CopyStringDetails | CopyStringDetails[],
-  focusOn: string,
-  setToLengthOnClose?: SetToLengthOnClose
-}
 
 export function restForButton<B, G> ( parent: PageD<B, G>, rest?: RestOnCommit ): string[] {
   if ( !rest ) return []
@@ -32,32 +18,55 @@ export function restForButton<B, G> ( parent: PageD<B, G>, rest?: RestOnCommit )
   return [ ` rest={${JSON.stringify ( { name: restDetailsName ( parent, restName, rd.rest ), restAction: action, messageOnSuccess, ...deleteOnSuccess } )}}` ]
 }
 
-export function isModalButtonInPage<G> ( m: any ): m is ModalButtonInPage<G> {
+export function isModalButtonInPage<G> ( m: any ): m is ModalOrMainButtonInPage<G> {
   return m.control === 'ModalButton'
 }
-export interface ModalButtonInPage<G> extends CommonModalButtonInPage<G> {
+
+export interface CommonModalButtonInPage<G> extends EnabledBy {
+  text?: string;
+  mode: PageMode,
+  pageParams?: PageParams,
+  restOnCommit?: RestOnCommit,
+  copy?: CopyDetails | CopyDetails[],
+  copyOnClose?: CopyDetails | CopyDetails[];
+  copyJustString?: CopyStringDetails | CopyStringDetails[],
+  setToLengthOnClose?: SetToLengthOnClose
   control: 'ModalButton',
   createEmpty?: DataD<G>;
   createEmptyIfUndefined?: DataD<G>;
 }
+export interface ModalPageButtonInPage<G> extends CommonModalButtonInPage<G> {
+  modal: ModalPageD<any, G>,
+  focusOn: string,
+}
+export function isModal<G> ( m: ModalOrMainButtonInPage<G> ): m is ModalPageButtonInPage<G> {
+  const a: any = m
+  return a.modal
+}
+export interface MainPageButtonInPage<G> extends CommonModalButtonInPage<G> {
+  main: MainPageD<any, G>,
+}
+export type ModalOrMainButtonInPage<G> = ModalPageButtonInPage<G> | MainPageButtonInPage<G>
 
 function singleToList<T> ( ts: T | T[] ): T[] {
   if ( Array.isArray ( ts ) ) return ts
   return [ ts ]
 }
-function makeModalButtonInPage<G> (): ButtonCreator<ModalButtonInPage<G>, G> {
+function makeModalButtonInPage<G> (): ButtonCreator<ModalOrMainButtonInPage<G>, G> {
   return {
     import: "@focuson/pages",
     makeButton:
       ( { params, parent, name, button } ) => {
-        const { modal, mode, restOnCommit, focusOn, copy, createEmpty, createEmptyIfUndefined, copyOnClose, copyJustString, setToLengthOnClose, text, pageParams, buttonType } = button
+        const { mode, restOnCommit, copy, createEmpty, createEmptyIfUndefined, copyOnClose, copyJustString, setToLengthOnClose, text, pageParams, buttonType } = button
         const createEmptyString = createEmpty ? [ `createEmpty={${params.emptyFile}.${emptyName ( createEmpty )}}` ] : []
         const createEmptyIfUndefinedString = createEmptyIfUndefined ? [ `createEmptyIfUndefined={${params.emptyFile}.${emptyName ( createEmptyIfUndefined )}}` ] : []
         createEmptyIfUndefined
 
         const copyOnCloseArray: CopyDetails[] | undefined = copyOnClose ? toArray ( copyOnClose ) : undefined
         const copyFromArray: CopyDetails[] | undefined = copy ? toArray ( copy ) : undefined
-        return [ `<${button.control} id=${makeIdForButton ( name )} ${enabledByString ( button )}text='${text ? text : decamelize ( name, ' ' )}' dateFn={defaultDateFn} state={state} modal = '${modalName ( parent, modal )}'  `,
+        const pageLink = isModal ( button ) ? `modal='${modalName ( parent, button.modal )}'` : `main='${button.main.name}'`
+        const focusOn = isModal ( button ) ? button.focusOn : undefined
+        return [ `<${button.control} id=${makeIdForButton ( name )} ${enabledByString ( button )}text='${text ? text : decamelize ( name, ' ' )}' dateFn={defaultDateFn} state={state} ${pageLink} `,
           ...indentList ( [
             ...opt ( 'pageMode', mode ),
             ...opt ( 'focusOn', focusOn ),

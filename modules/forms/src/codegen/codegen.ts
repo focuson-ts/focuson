@@ -1,6 +1,6 @@
 import { isRestStateChange, RestAction, RestStateChange, safeObject, sortedEntries } from "@focuson/utils";
 import { ButtonCreator, makeIdForButton } from "./makeButtons";
-import { ModalButtonInPage } from "../buttons/modalButtons";
+import { ModalOrMainButtonInPage } from "../buttons/modalButtons";
 import { AllLensRestParams, RestD, RestParams, RestStateDetails } from "../common/restD";
 import { parsePath, stateCodeBuilder } from "@focuson/lens";
 import { getRestTypeDetails } from "@focuson/rest";
@@ -47,7 +47,7 @@ export function optT<T> ( name: string, p: T | undefined ) {
 export function optObj<T> ( name: string, p: string | undefined ) {
   return p !== undefined ? [ `${name}={${p}}` ] : []
 }
-export const makeSimpleButton: <G> ( imp: string ) => ButtonCreator<ModalButtonInPage<G>, G> = imp => ({
+export const makeSimpleButton: <G> ( imp: string ) => ButtonCreator<ModalOrMainButtonInPage<G>, G> = imp => ({
   import: imp,
   makeButton: ( { name, button } ) =>
     [ [ `<${button.control} id=${makeIdForButton ( button.text ? button.text : name )} state={state}`,

@@ -1,4 +1,4 @@
-import { allMainPages, isMainPage, MainPageD, PageD } from "../common/pageD";
+import { allMainPages, flatMapToModal, isMainPage, isModalData, MainPageD, PageD } from "../common/pageD";
 import { TSParams } from "./config";
 import { modalName, optionalsFileName, optionalsName, pageComponentName, pageInState, renderFileName } from "./names";
 import { addStringToEndOfAllButLast } from "./codegen";
@@ -26,7 +26,7 @@ export interface ModalCreationData<B, G> {
 }
 export function walkModals<B, G> ( ps: PageD<B, G>[] ): ModalCreationData<B, G>[] {
   return allMainPages ( ps ).flatMap ( main => {
-    return safeArray ( main.modals ).map ( ( { modal } ) =>
+    return safeArray ( main.modals ).flatMap ( flatMapToModal ).map ( ( { modal } ) =>
       ({ name: modalName ( main, modal ), main, modal }) )
   } )
 }
@@ -39,9 +39,9 @@ export function makePages<B, G> ( params: TSParams, ps: MainPageD<B, G>[] ): str
   const modals = walkModals ( ps );
   const renderImports = ps.flatMap ( mainPage => [
     `import { ${pageComponentName ( mainPage )} } from '${renderFileName ( '.', params, mainPage, mainPage )}';`,
-    ...safeArray ( mainPage.modals ).map ( ( { modal } ) => `import { ${pageComponentName ( modal )} } from '${renderFileName ( '.', params, mainPage, modal )}';` )
+    ...safeArray ( mainPage.modals ).flatMap ( flatMapToModal ).map ( ( { modal } ) => `import { ${pageComponentName ( modal )} } from '${renderFileName ( '.', params, mainPage, modal )}';` )
   ] )
-  const optionalImports = ps .map ( p => `import { ${optionalsName ( p )} } from "${optionalsFileName ( '.', params, p )}"; ` )
+  const optionalImports = ps.map ( p => `import { ${optionalsName ( p )} } from "${optionalsFileName ( '.', params, p )}"; ` )
   return [
     `import { identityOptics } from "@focuson/lens";`,
     `import { Loading, MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";`,

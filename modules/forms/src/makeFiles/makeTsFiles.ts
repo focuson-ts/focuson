@@ -2,7 +2,7 @@ import { copyFile, copyFiles, DirectorySpec, templateFile, writeToFile } from "@
 import { TSParams } from "../codegen/config";
 import fs from "fs";
 import { detailsLog, GenerateLogLevel, safeArray, sortedEntries, unique } from "@focuson/utils";
-import { allMainPages, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
+import { allMainPages, flatMapToModal, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { createRenderPage } from "../codegen/makeRender";
 import { ButtonD } from "../buttons/allButtons";
 import { makeAllDomainsFor, makePageDomainsFor } from "../codegen/makeDomain";
@@ -57,7 +57,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
 
       writeToFile ( renderFileName ( tsCode, params, mainP, mainP ) + ".tsx",
         () => createRenderPage ( params, makeGuards, makeButtons, mainP, mainP ), details )
-      safeArray ( mainP.modals ).forEach ( ( { modal } ) => {
+      safeArray ( mainP.modals ).flatMap(flatMapToModal).forEach ( ( { modal } ) => {
           // fs.mkdirSync ( tsPage + "/" + modal.name, { recursive: true } )
           writeToFile ( renderFileName ( tsCode, params, mainP, modal ) + ".tsx",
             () => createRenderPage ( params, makeGuards, makeButtons, mainP, modal ), details );

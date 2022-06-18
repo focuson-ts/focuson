@@ -45,8 +45,21 @@ export interface ButtonDefnInPage<B> {
 }
 
 export type PageType = 'MainPage' | 'ModalPage' | 'ModalPopup'
+export type ModalOrMainData<B, G> = ModalData<B, G> | MainData<B, G>
 export interface ModalData<B, G> {
-  modal: PageD<B, G>
+  modal: ModalPageD<B, G>;
+}
+export function isModalData<B, G> ( m: ModalOrMainData<B, G> ): m is ModalData<B, G> {
+  const a: any = m
+  return a.modal
+}
+export const flatMapToModal = <B, G> ( m: ModalOrMainData<B, G> ) => isModalData ( m ) ? [ m ] : [];
+export function isMainData<B, G> ( m: ModalOrMainData<B, G> ): m is MainData<B, G> {
+  const a: any = m
+  return a.main
+}
+export interface MainData<B, G> {
+  main: MainPageD<B, G>;
 }
 
 export function isMainPage<B, G> ( p: PageD<B, G> ): p is MainPageD<B, G> {
@@ -84,7 +97,7 @@ export interface MainPageD<Buttons, G> extends HasLayout, HasGuards<G> {
   initialValue: 'empty' | any,
   domain: DomainDefnInPage<G>,
   variables?: NameAnd<VariableD>
-  modals?: ModalData<Buttons, G>[],
+  modals?: ModalOrMainData<Buttons, G>[],
   rest: RestDefnInPage<G>,
   /** The names and order of the visible buttons. If not populated uses definition order */
   buttonOrder?: string[];

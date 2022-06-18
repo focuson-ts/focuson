@@ -1,23 +1,24 @@
 import { LensState, reasonFor } from "@focuson/state";
 import { CopyDetails, fromPathGivenState, page, PageMode, PageParams, PageSelectionContext, SetToLengthOnClose } from "../pageSelection";
-import { Transform } from "@focuson/lens";
+import { Optional, Transform } from "@focuson/lens";
 import { RestCommand } from "@focuson/rest";
 import { anyIntoPrimitive, DateFn, safeArray } from "@focuson/utils";
 import { CustomButtonType, getButtonClassName } from "../common";
+import { fullState, pageState } from "../selectedPage";
+import { MultiPageDetails } from "../pageConfig";
+import { context } from "@focuson/example_state_cpq/dist/context";
 
 export interface CopyStringDetails {
   from: string;
   to: string;
   joiner?: string
 }
-export interface ModalButtonProps<S, Context> extends CustomButtonType {
+export interface CommonModalButtonProps<S, Context> extends CustomButtonType {
   state: LensState<S, any, Context>
   id?: string,
   text: string,
   dateFn: DateFn,
   enabledBy?: boolean,
-  modal: string,
-  focusOn: string,
   pageMode: PageMode,
   pageParams?: PageParams;
   rest?: RestCommand,
@@ -28,14 +29,34 @@ export interface ModalButtonProps<S, Context> extends CustomButtonType {
   setToLengthOnClose?: SetToLengthOnClose,
   createEmptyIfUndefined?: any
 }
+interface JustModalButtonProps<S, Context> extends CommonModalButtonProps<S, Context> {
+  modal: string,
+  focusOn: string,
+}
+function isModal<S, Context> ( m: ModalButtonProps<S, Context> ): m is JustModalButtonProps<S, Context> {
+  const a: any = m
+  return a.modal
+}
+interface MainModalButtonProps<S, Context> extends CommonModalButtonProps<S, Context> {
+  main: string
+}
 
+export type ModalButtonProps<S, Context> = JustModalButtonProps<S, Context> | MainModalButtonProps<S, Context>
 
+function findFocusL<S, Context> ( errorPrefix: string, props: ModalButtonProps<S, Context>, fromPage: ( path: string ) => Optional<S, any>, pages: MultiPageDetails<S, Context> ) {
+  if ( isModal ( props ) ) return fromPage ( props.focusOn )
+  const main = props.main
+  const onePage = pages[ main ]
+  if ( onePage === undefined ) throw Error ( `${errorPrefix} cannot find details for main page '${main}'. Legal names are [${Object.keys ( page )}]` )
+  if ( onePage.pageType !== 'MainPage' ) throw new Error ( `${errorPrefix} page ${main} should be a MainPage but is a ${onePage.pageType}` )
+  return onePage.lens
+}
 export function ModalButton<S extends any, Context extends PageSelectionContext<S>> ( props: ModalButtonProps<S, Context> ): JSX.Element {
-  const { id, text, enabledBy, state, copy, copyJustString, modal, pageMode, rest, focusOn, copyOnClose, createEmpty, setToLengthOnClose, createEmptyIfUndefined, pageParams, buttonType,dateFn } = props
+  const { id, text, enabledBy, state, copy, copyJustString, pageMode, rest, copyOnClose, createEmpty, setToLengthOnClose, createEmptyIfUndefined, pageParams, buttonType, dateFn } = props
   const onClick = () => {
     // const fromPath = fromPathFor ( state );
     const fromPage = fromPathGivenState ( state );
-    const focusOnL = fromPage ( focusOn );
+    const focusOnL = findFocusL<S, Context> ( `Modal button ${id}`, props, fromPage, state.context.pages );
     const copyTxs: Transform<S, any>[] = safeArray ( copy ).map ( ( { from, to } ) =>
       [ to ? fromPage ( to ) : focusOnL, () => (from ? fromPage ( from ) : focusOnL).getOption ( state.main ) ] )
     const copyJustStrings: Transform<S, any>[] = safeArray ( copyJustString ).map (
@@ -49,13 +70,15 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
       console.log ( "emptyifUndefinedTx - emptyifUndefinedTx", emptyifUndefinedTx )
       return existing ? existing : createEmptyIfUndefined;
     } ] ] : [];
+    const focusOn = isModal ( props ) ? props.focusOn : undefined
+    const pageName = isModal ( props ) ? props.modal : props.main.toString ()
     state.massTransform ( reasonFor ( 'ModalButton', 'onClick', id ) ) (
-      page<S, Context> ( state.context, 'popup', { pageName: modal, firstTime: true, pageMode, rest, focusOn, copyOnClose, setToLengthOnClose, pageParams, time: dateFn() } ),
+      page<S, Context> ( state.context, 'popup', { pageName, firstTime: true, pageMode, rest, focusOn, copyOnClose, setToLengthOnClose, pageParams, time: dateFn () } ),
       ...emptyTx,
       ...emptyifUndefinedTx,
       ...copyTxs,
       ...copyJustStrings );
   };
   const disabled = enabledBy === false
-  return <button className={getButtonClassName(buttonType)} id={id} disabled={disabled} onClick={onClick}>{text}</button>
+  return <button className={getButtonClassName ( buttonType )} id={id} disabled={disabled} onClick={onClick}>{text}</button>
 }

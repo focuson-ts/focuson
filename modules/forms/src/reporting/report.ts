@@ -1,11 +1,11 @@
-import { dataDsIn, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
+import { dataDsIn, flatMapToModal, isMainData, isMainPage, isModalData, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { indentList } from "../codegen/codegen";
 import { NameAnd, RestAction, safeArray, sortedEntries, toArray, unique } from "@focuson/utils";
-import { isModalButtonInPage, ModalButtonInPage } from "../buttons/modalButtons";
+import { isModal, isModalButtonInPage, ModalOrMainButtonInPage } from "../buttons/modalButtons";
 import { ButtonD, ButtonWithControl, isButtonWithControl } from "../buttons/allButtons";
 import { GuardWithCondition, isGuardButton } from "../buttons/guardButton";
 import { CompDataD, emptyDataFlatMap, flatMapDD, HasGuards, isComdDD, isRepeatingDd, OneDataDD } from "../common/dataD";
-import { isCommonLens, RestD, RestParams} from "../common/restD";
+import { isCommonLens, RestD, RestParams } from "../common/restD";
 import { printRestAction } from "@focuson/rest";
 import { findAllTableAndFieldDatasIn } from "../codegen/makeSqlFromEntities";
 import { isRestButtonInPage } from "../buttons/restButton";
@@ -18,7 +18,7 @@ export interface FullReport<B, G> {
 }
 
 function makeFullReportCriticals<B, G> ( ps: MainPageD<B, G>[] ) {
-  const allpages = ps.flatMap ( p => [ p.name, ...safeArray ( p.modals ).map ( m => m.modal.name ) ] )
+  const allpages = ps.flatMap ( p => [ p.name, ...safeArray ( p.modals ).flatMap ( flatMapToModal ).map ( m => m.modal.name ) ] )
   return findDuplicates ( allpages, p => p ).map ( name => `CRITICAL Multiple pages with name ${name}` )
 }
 export function makeReportData<B extends ButtonD, G extends GuardWithCondition> ( ps: MainPageD<B, G>[] ): FullReport<B, G> {
@@ -58,7 +58,7 @@ export function makeReport<B extends ButtonD, G extends GuardWithCondition> ( re
 
 function makeParamsAndHeader ( errors: CommonParamError[], commonParams: NameAnd<string>[] ) {
   const errorDetails = errors.flatMap ( e => [ '* ' + e.name, ...e.details.map ( s => '    * ' + s ) ] )
-  const errorStrings = errorDetails.length>0?[`## Common Param Errors`,'It looks like the common params have been configured differently on different pages',...errorDetails, '', '## Common Param Details']:[]
+  const errorStrings = errorDetails.length > 0 ? [ `## Common Param Errors`, 'It looks like the common params have been configured differently on different pages', ...errorDetails, '', '## Common Param Details' ] : []
   const params = unique ( commonParams.flatMap ( c => sortedEntries ( c ).flatMap ( ( [ name, value ] ) => `|${name}|${value}` ) ), s => s )
   const paramsAndHeader = params.length == 0 ? [] : [ `## Common Params`, ...errorStrings, `| Name | Location`, '| --- | ---', ...params ]
   return paramsAndHeader;
@@ -76,7 +76,7 @@ export function formatReport<B, G> ( r: Report<B, G> ): string[] {
   const errors: string[] = details.flatMap ( d => d.critical )
   const errorMarker: string[] = errors.length > 0 ? [ '' ] : []
 
-  const paramsAndHeader = makeParamsAndHeader ( r.commonParams.errors,[ commonParams.commonParams ] );
+  const paramsAndHeader = makeParamsAndHeader ( r.commonParams.errors, [ commonParams.commonParams ] );
   return [ name, ...errors, ...errorMarker, ...paramsAndHeader, ...indentList ( mainReport ), '', '---' ];
 }
 
@@ -152,17 +152,17 @@ function auditDetails<B, G> ( page: MainPageD<B, G>, restName: string, rest: Res
 }
 
 function initialSql<B, G> ( page: MainPageD<B, G>, restName: string, rest: RestD<G> ): string[] {
-  return rest.initialSql !== undefined ? [`${page.name}.rest[${restName}].initialSql is defined. This is deprecated and will be removed soon. Please use ManualSqlStrategy from Entity instead `] : []
+  return rest.initialSql !== undefined ? [ `${page.name}.rest[${restName}].initialSql is defined. This is deprecated and will be removed soon. Please use ManualSqlStrategy from Entity instead ` ] : []
 }
 
 function insertSqlStrategy<B, G> ( page: MainPageD<B, G>, restName: string, rest: RestD<G> ): string[] {
-  return rest.insertSqlStrategy !== undefined ? [`${page.name}.rest[${restName}].insertSqlStrategy is defined. This is deprecated and will be removed soon. Please use idStrategy from Entity instead `] : []
+  return rest.insertSqlStrategy !== undefined ? [ `${page.name}.rest[${restName}].insertSqlStrategy is defined. This is deprecated and will be removed soon. Please use idStrategy from Entity instead ` ] : []
 }
 
 function mutationDetails<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ): string {
   return safeArray ( rest.mutations ).flatMap ( a => `${printRestAction ( a.restAction )}->${toArray ( a.mutateBy ).map ( s => s.name )}` ).join ( '; ' )
 }
-function auditInTable<B,G>(page: MainPageD<B, G>, rest: RestD<G>){
+function auditInTable<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ) {
 
 }
 
@@ -176,8 +176,8 @@ export function makeRestReport<B, G> ( page: MainPageD<B, G>, info: ReportInfo )
     ] )
   const critical: string[] = sortedEntries ( page.rest ).flatMap ( ( [ name, rdp ] ) => [
     ...notCreated ( info, rdp.rest.dataDD.name ),
-    ...initialSql( page, name, rdp.rest),
-    ...insertSqlStrategy( page, name, rdp.rest),
+    ...initialSql ( page, name, rdp.rest ),
+    ...insertSqlStrategy ( page, name, rdp.rest ),
     ...auditDetails ( page, name, rdp.rest ),
     ...dontSupportVariables ( info, name, rdp ) ] )
   return { part: 'rests', headers: [ 'name', 'url', 'params', 'access', 'audit' ], general, critical }
@@ -210,10 +210,13 @@ export function makeDomainReport<B, G> ( page: MainPageD<B, G>, { generatedDomai
   return { part: 'domains', headers: [], general: generatedDomainNames, critical: duplicates };
 }
 export function makeModalsReport<B, G> ( page: MainPageD<B, G>, info: ReportInfo ): ReportDetails {
-  const general = safeArray ( page.modals ).flatMap ( m => [
-    `| ${m.modal.name} |${m.modal.display.dataDD.name}`
-  ] )
-  const critical = safeArray ( page.modals ).flatMap ( m => notCreated ( info, m.modal.display.dataDD.name ) )
+  const general = safeArray ( page.modals ).flatMap ( m => {
+      if ( isModalData ( m ) ) return [ `| ${m.modal.name} |${m.modal.display.dataDD.name}` ]
+      if ( isMainData ( m ) ) return [ `| Main ${m.main.name} |${m.main.display.dataDD.name}` ]
+      throw Error ( `Don't know how to process ${JSON.stringify ( m )}` )
+    }
+  )
+  const critical = safeArray ( page.modals ).flatMap ( flatMapToModal ).flatMap ( m => notCreated ( info, m.modal.display.dataDD.name ) )
   return { part: 'modals', headers: [ 'name', 'displayed with' ], general, critical };
 }
 export function makeDisplayReport<B, G> ( page: PageD<B, G>, info: ReportInfo ): ReportDetails {
@@ -249,13 +252,19 @@ export function makeButtonsReport<B extends ButtonD, G extends GuardWithConditio
   } )
   return { part: 'buttons', headers: [], general, critical };
 }
-function modalButtonData<G> ( button: ModalButtonInPage<G>, guardedBy: string ): string[] {
+function modalButtonData<G> ( button: ModalOrMainButtonInPage<G>, guardedBy: string ): string[] {
   const restOnCommit = button.restOnCommit ? [ `RestOnCommit: ${button.restOnCommit.restName}/${button.restOnCommit.action}` ] : []
   const copyOnClose = button.copyOnClose ? [ `Copy on close ${JSON.stringify ( button.copyOnClose )} ` ] : []
   const from = button.copy ? [ `Copy from ${JSON.stringify ( button.copy )}` ] : []
   const empty = button.createEmpty ? [ `Initialised as empty` ] : []
-  return [ `Modal Button ==> ${button.modal.name} in mode ${button.mode}${guardedBy}`, ...indentList ( [
-    ...from, `Focused on ${JSON.stringify ( button.focusOn )}`, ...restOnCommit, ...copyOnClose ] ) ]
+  return isModal(button) ?
+    [ `Modal Button ==> ${button.modal.name} in mode ${button.mode}${guardedBy}`, ...indentList ( [
+      ...from, `Focused on ${JSON.stringify ( button.focusOn )}`, ...restOnCommit, ...copyOnClose ] ) ]:
+    [ `Modal Button ==> ${button.main.name} in mode ${button.mode}${guardedBy}`, ...indentList ( [
+      ...from, `is opening a new main page`, ...restOnCommit, ...copyOnClose ] ) ]
+
+
+
 }
 
 function makeTitle<G> ( title: string, g: HasGuards<G> ): string[] {
@@ -285,7 +294,7 @@ function makeGuardButtonReportForPage<B, G extends GuardWithCondition> ( p: Page
 
 
 export function makeGuardsReportForPage<B, G extends GuardWithCondition> ( p: MainPageD<B, G> ): ReportDetails {
-  let pages: PageD<B, G>[] = [ p, ...safeArray ( p.modals ).map ( m => m.modal ) ];
+  let pages: PageD<B, G>[] = [ p, ...safeArray ( p.modals ).flatMap ( flatMapToModal ).map ( m => m.modal ) ];
   const fromDataDs = sortedEntries ( dataDsIn ( pages ) ).flatMap ( ( [ name, d ] ) => makeGuardReportForDataD ( d ) )
   const fromButtons: string[] = pages.flatMap ( makeGuardButtonReportForPage )
   return {

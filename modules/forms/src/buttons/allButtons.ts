@@ -1,4 +1,4 @@
-import { makeModalButtons, ModalButtonInPage } from "./modalButtons";
+import { makeModalButtons, ModalOrMainButtonInPage } from "./modalButtons";
 import { ResetStateButton } from "./stateButtons";
 import { ListNextButtonInPage, ListPrevButtonInPage, makeListMarkerButtons } from "./listButtons";
 import { MakeButton } from "../codegen/makeButtons";
@@ -22,7 +22,7 @@ export type ButtonD = ButtonWithControl | GuardButtonInPage<any, any>
 
 
 
-export type RawButtons<G> = ModalButtonInPage<G> | ModalCancelButtonInPage | ModalCommitButtonInPage |
+export type RawButtons<G> = ModalOrMainButtonInPage<G> | ModalCancelButtonInPage | ModalCommitButtonInPage |
   ResetStateButton | RestButtonInPage<G> | ListNextButtonInPage | ListPrevButtonInPage | ValidationButtonInPage | DeleteStateButtonInPage |
   ToggleButtonInPage<G> | SelectButtonInPage<G> | ActionButtonInPage;
 

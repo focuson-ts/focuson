@@ -1,5 +1,5 @@
 import { PageD } from "../common/pageD";
-import { isModalButtonInPage } from "../buttons/modalButtons";
+import { isModal, isModalButtonInPage } from "../buttons/modalButtons";
 import { sortedEntries } from "@focuson/utils";
 import { ButtonD, isButtonWithControl } from "../buttons/allButtons";
 import { indentList } from "../codegen/codegen";
@@ -44,6 +44,6 @@ export function findButtons<B extends ButtonD, G> ( pageD: PageD<B, G> ): Button
   return sortedEntries ( pageD.buttons ).map ( ( [ name, button ] ) => ({
     name,
     button,
-    children: isModalButtonInPage<G> ( button ) ? [ makeGraph ( button.modal ) ] : []
+    children: isModalButtonInPage<G> ( button ) ? [ makeGraph ( isModal ( button ) ? button.modal : button.main ) ] : []
   }) )
 }

@@ -1,4 +1,4 @@
-import { dataDsIn, isMainPage, PageD } from "../common/pageD";
+import { dataDsIn, flatMapToModal, isMainPage, PageD } from "../common/pageD";
 import { safeArray } from "@focuson/utils";
 import { findAllDataDs } from "../common/dataD";
 
@@ -24,7 +24,7 @@ export function validate<B, G> ( ps: PageD<B, G>[] ) {
     if ( isMainPage ( p ) ) {
       Object.entries ( p.rest ).forEach ( ( [ name, rest ] ) => validateName ( `DataD in Page ${p.name}.rest[${name}]`, rest.rest.dataDD.name ) )
       Object.entries ( p.domain ).forEach ( ( [ name, domain ] ) => validateName ( `DataD in Page ${p.name}.domain[${name}]`, domain.dataDD.name ) )
-      safeArray ( p.modals ).forEach ( ( modal, i ) => validateName ( `ModalPage in Page ${p.name}.modals[${i}]`, modal.modal.name ) )
+      safeArray ( p.modals ).flatMap ( flatMapToModal ).forEach ( ( modal, i ) => validateName ( `ModalPage in Page ${p.name}.modals[${i}]`, modal.modal.name ) )
     } else throw  Error ( `Modal page ${p.name} has been added to config. Only MainPages should be added` )
   } )
   Object.values ( dataDsIn ( ps ) ).forEach ( d => validateName ( `DataD`, d.name ) )

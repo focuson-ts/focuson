@@ -1,8 +1,8 @@
 import { ExampleMainPage, ExampleModalPage } from "../common";
-import { CollectionItemDD, CreatePaymentDD, linkedAccountDetailsDD, MandateDD, MandateSearchDD, OverpaymentPageDD, paymentReasonDD } from "./linkedAccountDetails.dataD";
-import { allMandatesForClientRD, collectionHistoryListRD, collectionSummaryRD, createPaymentRD, overpaymentHistoryRD, singleCollectionPaymentRD } from "./linkedAccountDetails.restD";
-import {  } from "../commonEnums";
+import { CollectionItemDD, CreatePaymentDD, linkedAccountDetailsDD, MandateDD, MandateSearchDD } from "./linkedAccountDetails.dataD";
+import { allMandatesForClientRD, collectionHistoryListRD, collectionSummaryRD, createPaymentRD, singleCollectionPaymentRD } from "./linkedAccountDetails.restD";
 import { NatNumDd } from "../../common/dataD";
+import { OverpaymentMainPage } from "../overpaymentHistory/overpaymentHistory.pageD";
 
 export const SelectMandateMP: ExampleModalPage = {
   name: "SelectMandate",
@@ -16,16 +16,6 @@ export const SelectMandateMP: ExampleModalPage = {
 }
 
 
-export const OverpaymentMP: ExampleModalPage = {
-  name: "OverpaymentModalPage",
-  buttons: {
-    cancel: { control: 'ModalCancelButton' },
-  },
-  pageType: 'ModalPopup',
-  display: { dataDD: OverpaymentPageDD, target: '~/overpayment' },
-  modes: [ 'view' ],
-}
-
 export const CreatePaymentMP: ExampleModalPage = {
   name: "CreatePayment",
 
@@ -34,8 +24,8 @@ export const CreatePaymentMP: ExampleModalPage = {
     commit: { control: 'ModalCommitButton' },
     overpaymentHistory: {
       control: 'ModalButton',
-      mode: 'view', focusOn: '~/overpayment',
-      modal: OverpaymentMP
+      mode: 'view',
+      main: OverpaymentMainPage
     },
   },
   pageType: 'ModalPopup',
@@ -54,10 +44,10 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
     selectedCollectionIndex: { dataDD: NatNumDd },
     selectedCollectionItem: { dataDD: CollectionItemDD },
     createPayment: { dataDD: CreatePaymentDD },
-    overpayment: { dataDD: OverpaymentPageDD }
+
   },
   initialValue: 'empty',
-  modals: [ { modal: SelectMandateMP }, { modal: CreatePaymentMP }, { modal: OverpaymentMP } ],
+  modals: [ { modal: SelectMandateMP }, { modal: CreatePaymentMP }, { main: OverpaymentMainPage } ],
   modes: [ 'view' ],
   pageType: "MainPage",
   rest: {
@@ -67,8 +57,6 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
     searchMandate: { rest: allMandatesForClientRD, targetFromPath: '~/selectMandateSearch/searchResults', fetcher: true },
     payments: { rest: singleCollectionPaymentRD, targetFromPath: '~/selectedCollectionItem' },
     createPayment: { rest: createPaymentRD, targetFromPath: '~/createPayment' },
-    overpaymentHistory: { rest: overpaymentHistoryRD, targetFromPath: '~/overpayment', fetcher: true },
-
   },
   guards: { haveLegalSelectedPayment: { condition: 'isDefined', path: '~/selectedCollectionItem/paymentId' } },
   buttons: {

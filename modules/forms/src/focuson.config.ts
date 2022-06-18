@@ -13,6 +13,7 @@ import { LinkedAccountDetailsPD } from "./example/linkedAccount/linkedAccountDet
 import { ListOfPaymentsPagePD } from "./example/ListOfPayments/listOfPayements.pageD";
 import { PaymentsPageD } from "./example/payments/payments.pageD";
 import { AuthoriseChargesPD } from "./example/authoriseCharges/authoriseCharges.pageD";
+import { OverpaymentMainPage } from "./example/overpaymentHistory/overpaymentHistory.pageD";
 
 
 export const generatedPages: ExampleMainPage[] = [
@@ -21,6 +22,7 @@ export const generatedPages: ExampleMainPage[] = [
   PaymentsPageD,
   ListOfPaymentsPagePD,
   LinkedAccountDetailsPD,
+  OverpaymentMainPage,
   AccountOverviewMainPage,
   JointAccountPageD,
   // MainOccupationDetailsPageSummaryPD,

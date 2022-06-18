@@ -1,6 +1,6 @@
 import { DirectorySpec, writeToFile } from "@focuson/files";
 import { CombinedParams } from "../codegen/config";
-import { MainPageD } from "../common/pageD";
+import { flatMapToModal, MainPageD } from "../common/pageD";
 import { makeJavaFiles } from "./makeJavaFiles";
 import { makeTsFiles } from "./makeTsFiles";
 import { ButtonD } from "../buttons/allButtons";
@@ -48,7 +48,7 @@ export const params = {
   resolversPackage: 'resolvers',
   utilsPackage: 'utils',
   maxTuples: 3,
-  theme:'theme-light',
+  theme: 'theme-light',
   extractData: `( status: number, body: any ) => body.data`,
 
 };
@@ -61,7 +61,7 @@ export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLe
   const paramsWithTuples = {
     ...params, maxTuples: foldPagesToRestToMutationsAndResolvers<number> ( pages, 0, {
       simple: ( mut ) => ( acc ) => Math.max ( acc, allOutputParams ( toArray ( mut.params ) ).length ),
-      guarded: ( sel, guarded ) => ( acc ) =>acc
+      guarded: ( sel, guarded ) => ( acc ) => acc
     } )
   }
 
@@ -75,7 +75,7 @@ export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLe
   }
 
   validate ( pages )
-  const fullPages = unique ( pages.flatMap ( p => [ p, ...safeArray ( p.modals ).map ( m => m.modal ) ] ), p => p.name )
+  const fullPages = unique ( pages.flatMap ( p => [ p, ...safeArray ( p.modals ).flatMap ( flatMapToModal ).map ( m => m.modal ) ] ), p => p.name )
 
   console.log ( "focusOnVersion", paramsWithTuples.focusOnVersion )
   if ( logLevel === 'detailed' ) console.log ( "Making Java Files" )
