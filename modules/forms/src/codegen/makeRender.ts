@@ -9,7 +9,7 @@ import { focusOnFor, indentList, noExtension } from "./codegen";
 import { TSParams } from "./config";
 import { ButtonD } from "../buttons/allButtons";
 import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
-import { stateFocusQueryWithTildaFromPage, stateQueryForParams } from "./lens";
+import { stateFocusQueryWithTildaFromPage, stateQueryForParams, stateQueryForPathsFnParams } from "./lens";
 
 
 export type AllComponentData<G> = ComponentData<G> | ErrorComponentData
@@ -95,6 +95,10 @@ export const processParam = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G
     if ( typeof s !== 'string' ) throw new Error ( `${fullErrorPrefix} needs to be a string. Actually is ${typeof s}, with value ${JSON.stringify ( s )}` )
     return `{${stateQueryForParams ( fullErrorPrefix + ` the path is ${s}`, params, mainPage, mainPage, s )}${postFix}}`
   }
+  function processNameAndPaths () {
+    if ( typeof s !== 'object' ) throw new Error ( `${fullErrorPrefix} needs to be an object of form {name: string,...}. Actually is ${typeof s}, with value ${JSON.stringify ( s )}` )
+    return '{{' + Object.entries ( s ).map ( ( [ name, path ] ) => `${name}:${stateQueryForPathsFnParams ( fullErrorPrefix + ` the path is ${s} name is ${name}, path is ${path}`, params, mainPage, mainPage, path )}` ).join ( ',' ) + '}}'
+  }
 
   if ( dcdType.paramType === 'string' ) return processStringParam ()
   if ( dcdType.paramType === 'boolean' ) return processObjectParam ()
@@ -110,6 +114,7 @@ export const processParam = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G
   if ( dcdType.paramType === 'pageStateValue' ) return processState ( 'pageState(state)<any>()', '.json()' )
   if ( dcdType.paramType === 'stateValue' ) return processState ( 'state', '.json()' )
   if ( dcdType.paramType === 'path' ) return processPath ( '' )
+  if ( dcdType.paramType === 'nameAndPaths' ) return processNameAndPaths ()
   if ( dcdType.paramType === 'pathValue' ) return processPath ( '.json()' )
   throw new Error ( `${fullErrorPrefix} with type ${dcdType.paramType} which can't be processed` )
 };

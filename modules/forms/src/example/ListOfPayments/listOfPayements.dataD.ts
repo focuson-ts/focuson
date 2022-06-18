@@ -1,6 +1,6 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 
-import { CheckboxAndNumberCD, DataDrivenFixedOptionDropDownAndDetailsCD, LabelAndDropDownCD, LayoutCd, NumberInputCD, SelectedItemCD, TableCD } from "../../common/componentsD";
+import { CheckboxAndNumberCD, DataDrivenFixedOptionDropDownAndDetailsCD, LabelAndDropDownCD, LayoutCd, NumberInputCD, SelectedItemCD, StructureTableCD, TableCD } from "../../common/componentsD";
 import { AccountIdDD, BooleanDD, BooleanPrimitiveDD, DataD, NatNumDd, NumberPrimitiveDD, OneLineStringDD, PrimitiveDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
 import { CustomerStatus } from "@focuson/form_components";
 import { AllGuards } from "../../buttons/guardButton";
@@ -98,11 +98,11 @@ export const ListOfPaymentsDD: ExampleDataD = {
   layout: { component: LayoutCd, displayParams: { details: '[[5,1]]' } },
   table: accountT,
   structure: {
-    standingOrders: { dataDD: CheckboxAndNumberFromDatabaseDD,  displayParams: {number: '~/currentPayments/standingOrders'},sampleOffset: 0 },
-    openBankingStandingOrders: { dataDD: CheckboxAndNumberFromDatabaseDD,  displayParams: {number: '~/currentPayments/openBankingStandingOrders'}, sampleOffset: 1 },
-    directDebits: { dataDD: CheckboxAndNumberFromDatabaseDD,  displayParams: {number: '~/currentPayments/directDebits'}, sampleOffset: 2 },
-    billPayments: { dataDD: CheckboxAndNumberFromDatabaseDD,  displayParams: {number: '~/currentPayments/billPayments'}, sampleOffset: 3 },
-    openBanking: { dataDD: CheckboxAndNumberFromDatabaseDD,  displayParams: {number: '~/currentPayments/openBanking'}, sampleOffset: 4 },
+    standingOrders: { dataDD: CheckboxAndNumberFromDatabaseDD, displayParams: { number: '~/currentPayments/standingOrders' }, sampleOffset: 0 },
+    openBankingStandingOrders: { dataDD: CheckboxAndNumberFromDatabaseDD, displayParams: { number: '~/currentPayments/openBankingStandingOrders' }, sampleOffset: 1 },
+    directDebits: { dataDD: CheckboxAndNumberFromDatabaseDD, displayParams: { number: '~/currentPayments/directDebits' }, sampleOffset: 2 },
+    billPayments: { dataDD: CheckboxAndNumberFromDatabaseDD, displayParams: { number: '~/currentPayments/billPayments' }, sampleOffset: 3 },
+    openBanking: { dataDD: CheckboxAndNumberFromDatabaseDD, displayParams: { number: '~/currentPayments/openBanking' }, sampleOffset: 4 },
   }
 }
 

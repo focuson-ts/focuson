@@ -6,7 +6,7 @@ import { LensState } from "@focuson/state";
  * string and string[] are just the types
  *
  * */
-export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'json' | 'jsonWithDisplayFn' | 'string[]' | 'path' | 'pathValue' | 'objectAndRenderPrefix'
+export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'json' | 'jsonWithDisplayFn' | 'string[]' | 'path' | 'nameAndPaths' | 'pathValue' | 'objectAndRenderPrefix'
 
 type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons' | 'defaultToLabel' | 'defaultToParentState'
 
@@ -107,21 +107,31 @@ export const DataDrivenFixedOptionDropDownAndDetailsCD: DisplayCompD = {
 
   }
 }
-//The data about to use a react component.
+
+const tableParams: DisplayCompParamD = {
+  ...commonParams,
+  order: { paramType: 'string[]', needed: 'yes' },
+  copySelectedIndexTo: { paramType: 'pageState', needed: 'no' },
+  copySelectedItemTo: { paramType: 'pageState', needed: 'no' },
+  joiners: { paramType: 'string', needed: 'no' },
+  prefixFilter: { paramType: 'path', needed: 'no' },
+  prefixColumn: { paramType: 'string', needed: 'no' },
+  maxCount: { paramType: 'string', needed: 'no' },
+  emptyData: { paramType: 'string', needed: 'no' },
+  tableTitle: { paramType: 'string', needed: 'no' }
+
+}
 export const TableCD: DisplayCompD = {
   import: "@focuson/form_components",   //so that I can write the import statement for the react component
   name: "Table",                        //The name of the react component
+  params: tableParams
+}
+export const StructureTableCD: DisplayCompD = {
+  import: "@focuson/form_components",   //so that I can write the import statement for the react component
+  name: "StructureTable",                        //The name of the react component
   params: {                             //configuration parameter for the react component
-    ...commonParams,
-    order: { paramType: 'string[]', needed: 'yes' },
-    copySelectedIndexTo: { paramType: 'pageState', needed: 'no' },
-    copySelectedItemTo: { paramType: 'pageState', needed: 'no' },
-    joiners: { paramType: 'string', needed: 'no' },
-    prefixFilter: { paramType: 'path', needed: 'no' },
-    prefixColumn: { paramType: 'string', needed: 'no' },
-    maxCount: { paramType: 'string', needed: 'no' },
-    emptyData: { paramType: 'string', needed: 'no' },
-    tableTitle: { paramType: 'string', needed: 'no' }
+    ...tableParams,
+    paths: { paramType: 'nameAndPaths', needed: 'yes' }
   }
 }
 

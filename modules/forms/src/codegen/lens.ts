@@ -58,6 +58,16 @@ export const stateQueryForParams = <B, G> ( errorPrefix: string, params: TSParam
     throw e
   }
 }
+export const stateQueryForPathsFnParams = <B, G> ( errorPrefix: string, params: TSParams, mainPage: MainPageD<B, G>, p: PageD<B, G>, path: string ) => {
+  try {
+    return parsePath ( path, stateCodeBuilder ( {
+      '': 'state=>state'
+    }, optionalsName ( mainPage ), 'focusOn' ) )
+  } catch ( e: any ) {
+    console.error ( errorPrefix )
+    throw e
+  }
+}
 export const stateQueryForGuards = <B, G> ( errorPrefix: string, params: TSParams, mainPage: MainPageD<B, G>, p: PageD<B, G>, path: string ) => {
   if ( path.indexOf ( '#' ) >= 0 ) throw new Error ( `${errorPrefix}\nCurrently guards cannot use variables. Path is ${path}` )
   return stateQueryForParams ( errorPrefix, params, mainPage, p, path )
