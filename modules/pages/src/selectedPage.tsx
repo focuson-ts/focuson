@@ -1,6 +1,6 @@
 import { LensProps, LensState } from "@focuson/state";
 
-import { currentPageSelection, HasPageSelectionLens, mainPage, PageMode, PageParams, PageSelection, PageSelectionContext } from "./pageSelection";
+import { currentPageSelection, HasPageSelectionLens, mainPage, mainPageFrom, page, PageMode, PageParams, PageSelection, PageSelectionContext } from "./pageSelection";
 import { FocusedPage } from "./focusedPage";
 import { isMainPageDetails, MainPageDetails, MultiPageDetails, OnePageDetails, PageConfig } from "./pageConfig";
 import { DefaultTemplate, PageTemplateProps } from "./PageTemplate";
@@ -32,7 +32,7 @@ function findSelectedPageDetails<S, Context extends PageSelectionContext<S>> ( s
   // @ts-ignore
   const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
   let selectedPageData: PageSelection[] = currentPageSelection ( state );
-  if ( debug ) console.log ( 'findSelectedPageDetails', selectedPageData )
+  if ( debug ) console.log ( 'findSelectedPageDetails - for Combine', selectedPageData )
 
   let results = selectedPageData.map ( findOneSelectedPageDetails ( state, findMainPageDetails ( selectedPageData, state.context.pages ), selectedPageData.length ) );
   // results.forEach((p, i) =>p.element.key=i)
@@ -100,9 +100,9 @@ export const findOneSelectedPageDetails = <S, T, Context extends PageSelectionCo
   };
 
 export function findMainPageDetails<S> ( pageSelections: PageSelection[], pageDetails: MultiPageDetails<S, any> ) {
-  const firstPage = pageSelections[ 0 ]
+  const firstPage = mainPageFrom(pageSelections)
   let page0Details: any = pageDetails[ firstPage.pageName ];
-  if ( page0Details.pageType !== 'MainPage' ) throw Error ( `Software error: first page ${firstPage.pageName} is not a main page` )
+  if ( page0Details.pageType !== 'MainPage' ) throw Error ( `Software error:  page ${firstPage.pageName} is not a main page.\nPageSelections: ${JSON.stringify(pageSelections)}\n\nfirstPage: ${firstPage}` )
   return page0Details
 }
 

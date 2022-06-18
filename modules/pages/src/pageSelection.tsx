@@ -86,8 +86,14 @@ export function replaceBasePageWithKnownPage ( pageName: string, path: string[] 
 export function applyPageOps ( pageOps: PageOps, pageSelection: PageSelection ): ( s: PageSelection[] | undefined ) => PageSelection[] {
   return ( old: PageSelection[] | undefined ) => {
     const ps = safeArray ( old )
-    if ( pageOps === 'popup' ) return [ ...ps, pageSelection ];
-    if ( pageOps === 'select' ) return [  pageSelection ];
+    if ( pageOps === 'popup' ) {
+      console.log('applyPageOps', pageOps,'old',  ps)
+      console.log('applyPageOps', 'pageSelection',pageSelection)
+      let result = [ ...ps, pageSelection ];
+      console.log('    ===>', result)
+      return result;
+    }
+    if ( pageOps === 'select' ) return [ pageSelection ];
     throw new Error ( `Cannot perform pageOps ${pageOps}` )
   }
 }
@@ -104,8 +110,12 @@ export function currentPageSelection<S, Context extends HasPageSelectionLens<S>>
 export function currentPageSelectionTail<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ): PageSelection {
   return pageSelections ( state ).slice ( -1 )?.[ 0 ]
 }
+export function mainPageFrom ( ps: PageSelection[] ): PageSelection | undefined {
+  return [...ps].reverse ().find ( p => p.focusOn === undefined )
+
+}
 export function mainPage<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ): PageSelection {
-  return pageSelections ( state )?.[ 0 ]
+  return mainPageFrom(pageSelections ( state ))
 }
 
 export function pageSelectionlens<S extends HasPageSelection> (): Lens<S, PageSelection[]> {

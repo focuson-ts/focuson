@@ -8,6 +8,7 @@ import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestCommandAndTxs,
 import { TagHolder } from "@focuson/template";
 import { AllFetcherUsingRestConfig, restCommandsFromFetchers } from "./tagFetcherUsingRest";
 import { FocusOnDebug } from "./debug";
+import { mainPageFrom } from "@focuson/pages";
 
 
 export function defaultCombine<S> ( state: LensState<S, any, any>, pages: PageDetailsForCombine[] ) {
@@ -92,11 +93,11 @@ export interface RestCount {
   loopCount: number;
   times: number
 }
-export interface HasRestCount{
+export interface HasRestCount {
   restCount?: RestCount
 }
-export function restCountL<S extends HasRestCount>(): Optional<S, RestCount>{
-  return identityOptics<S>().focusQuery('restCount')
+export function restCountL<S extends HasRestCount> (): Optional<S, RestCount> {
+  return identityOptics<S> ().focusQuery ( 'restCount' )
 }
 export function traceL<S> (): Optional<S, any> {
   // @ts-ignore
@@ -138,7 +139,9 @@ export const processRestsAndFetchers = <S, Context extends FocusOnContext<S>, MS
     const { fetchFn, restDetails, restUrlMutator, messageL, stringToMsg, tagHolderL, newFetchers } = config
     const { pageSelectionL, pathToLens } = context
     const pageSelections = safeArray ( pageSelectionL.getOption ( s ) )
-    const pageName = safeString ( pageSelections?.[ 0 ]?.pageName )
+    const pageName = safeString ( mainPageFrom ( pageSelections ).pageName )
+    console.log('processRestsAndFetchers - pageSelections', pageSelections)
+    console.log('processRestsAndFetchers - pageName', pageName)
     const fromFetchers = restCommandsFromFetchers ( tagHolderL, newFetchers, restDetails, pageName, s )
     const allCommands: RestCommand[] = [ ...restCommands, ...fromFetchers ]
     const txs = await restToTransforms ( fetchFn, restDetails, restUrlMutator, pathToLens, messageL, traceL (), stringToMsg, s, allCommands )
@@ -154,11 +157,11 @@ function traceTransform<S> ( trace: any, s: S ): Transform<S, any> [] {
 
 
 export const dispatchRestAndFetchCommands = <S, Context extends FocusOnContext<S>, MSGs> ( config: FocusOnConfig<S, any, any>,
-                                                                                    context: Context,
-                                                                                    dispatch: FocusonDispatcher<S> ) => ( restCommands: RestCommand[] ) => async ( s: S ): Promise<S> => {
+                                                                                           context: Context,
+                                                                                           dispatch: FocusonDispatcher<S> ) => ( restCommands: RestCommand[] ) => async ( s: S ): Promise<S> => {
   // @ts-ignore
   const debug: FocusOnDebug = s.debug?.restDebug || s.debug?.tagFetcherDebug;
-  if (debug) console.log(`dispatchRestAndFetchCommands relooping count is ${JSON.stringify(config.restCountL.getOption(s))} RestCommands: ${restCommands.length}`, restCommands,s)
+  if ( debug ) console.log ( `dispatchRestAndFetchCommands relooping count is ${JSON.stringify ( config.restCountL.getOption ( s ) )} RestCommands: ${restCommands.length}`, restCommands, s )
   const process = processRestsAndFetchers ( config, context );
   const restsAndFetchers: RestCommandAndTxs<S>[] = await process ( restCommands ) ( s )
   const sWithCountIncreased = config.restCountL.transform ( restCount => {
@@ -170,7 +173,7 @@ export const dispatchRestAndFetchCommands = <S, Context extends FocusOnContext<S
     const oldCount = restCount ? restCount.loopCount : 0
     if ( oldCount > config.maxRestCount ) throw Error ( `Seem to be in infinite loop where we get something from backend which trigges another getting something from backend...` );
     let result = { loopCount: oldCount ? oldCount + 1 : 1, times };
-    if ( debug ) console.log ( `dispatchRestAndFetchCommands - end relooping count is now ${JSON.stringify(result)}` )
+    if ( debug ) console.log ( `dispatchRestAndFetchCommands - end relooping count is now ${JSON.stringify ( result )}` )
     return result
   } ) ( s )
   return dispatch ( [], restsAndFetchers ) ( sWithCountIncreased )
@@ -196,7 +199,7 @@ export function setJsonWithDispatcherSettingTrace<S, Context extends FocusOnCont
       [ 'dispatchRestAndFetchCommands', dispatchRestAndFetchCommands ( config, context, dispatch ) ( restCommands ) ],
       [ 'postMutate', postMutate ]
     );
-    const result = await processRestsAndFetches ( start,restCommands )
+    const result = await processRestsAndFetches ( start, restCommands )
     const restsLoaded = config.restCountL.getOption ( result )
     return restsLoaded.loopCount === 0 ? result : processRestsAndFetches ( result, [] );
   };

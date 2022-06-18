@@ -65,7 +65,7 @@ describe ( "makeSpringEndpoint", () => {
       "        //from EAccountsSummary.rest[eAccountsSummary.access[{\"state\":\"invalidate\"}] - if you have a compilation error here check which parameters you defined in {yourRestD}.states[invalidate]",
       "        if (!Arrays.asList(\"teamLeader\").contains(employeeType)) return new ResponseEntity(\"\", new HttpHeaders(), HttpStatus.FORBIDDEN);",
       "          //from EAccountsSummary.rest[eAccountsSummary].mutations[{\"state\":\"invalidate\"}] - if you have a compilation error here check which parameters you defined in {yourRestD}.states[invalidate]",
-      "          __state_invalidateMutation.auditStuff(connection,dbName,accountId,clientRef);",
+      "          __state_invalidateMutation.auditStuff0(connection,dbName,accountId,clientRef);",
       "          return  ResponseEntity.ok(\"{}\");",
       "        }",
       "    }",

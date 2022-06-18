@@ -16,7 +16,7 @@ export const OverpaymentHistory: ExampleRepeatingD = {
   dataDD: OverpaymentHistoryLineDD,
   description: "All the history ",
   display: TableCD,
-  displayParams: { order: [ "amountReceived", 'date', 'status' ] },
+  displayParams: { order: [ "amountReceived", 'date', 'status' ], copySelectedIndexTo: [ 'selectedIndex' ] },
   name: "OverpaymentHistory",
   paged: false
 }
