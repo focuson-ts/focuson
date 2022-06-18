@@ -37,7 +37,7 @@ export const ViewChargesPage: ExampleModalPage = {
       copy: { from: '#authorisedDate', to: '~/summaryOfChargesDates/date' },
       copyOnClose: { from: '~/selectedDateItem/dateCreated', to: '#authorisedDate' },
     },
-    approvePendingFees: { control: "ActionButton", path: '#editingData', text: 'Approve Pending Fees', action: 'approvePendingFees', path2: '~/selectedDateItem/dateCreated', path3: '~/selectedDateItem' },
+    approvePendingFees: { control: "ActionButton", path: '#editingData', paths: { pathRepeated: '#editingData', otherData: '~/selectedDateItem/dateCreated' }, text: 'Approve Pending Fees', action: 'approvePendingFees' },
     authoriseApprovedFees: { control: "ActionButton", path: '#editingData', text: 'Authorise Approved Fees', action: 'authoriseApprovedFees' },
     summary: { control: 'ModalButton', modal: SummaryOfChargesPage, mode: 'view', focusOn: '~/summaryOfCharges' },
     save: { control: 'RestButton', restName: 'authorisedCharges', action: 'update', deleteOnSuccess: '#fromApi' },
@@ -53,8 +53,8 @@ export const AuthoriseChargesPD: ExampleMainPage = {
     selectedIndex: { dataDD: NatNumDd },
     selectedItem: { dataDD: OneBrandDD },
     authorisedCharges: { dataDD: AuthoriseChargesSummaryDD },
-    selectedCharge: {dataDD: OneChargeDataDD},
-    selectedChargeIndex: {dataDD: NatNumDd},
+    selectedCharge: { dataDD: OneChargeDataDD },
+    selectedChargeIndex: { dataDD: NatNumDd },
     summaryOfCharges: { dataDD: chargesSummaryDetailDD },
 
     summaryOfChargesDates: { dataDD: summaryOfChargesSearchDD },
@@ -64,12 +64,12 @@ export const AuthoriseChargesPD: ExampleMainPage = {
   guards: {
     brandSelected: { condition: 'isDefined', path: '~/selectedIndex' }
   },
-  variables:{
-    fromApi:{constructedBy: 'path', path: '~/authorisedCharges/fromApi'},
-    searchResults:{constructedBy: 'path', path: '~/summaryOfChargesDates/searchResults'},
-    authorisedDate:{constructedBy: 'path', path: '~/authorisedCharges/date'},
-    authorisedCharges:{constructedBy: 'path', path: '~/authorisedCharges'},
-    editingData:{constructedBy: 'path', path: '~/authorisedCharges/fromApi/editingData'},
+  variables: {
+    fromApi: { constructedBy: 'path', path: '~/authorisedCharges/fromApi' },
+    searchResults: { constructedBy: 'path', path: '~/summaryOfChargesDates/searchResults' },
+    authorisedDate: { constructedBy: 'path', path: '~/authorisedCharges/date' },
+    authorisedCharges: { constructedBy: 'path', path: '~/authorisedCharges' },
+    editingData: { constructedBy: 'path', path: '~/authorisedCharges/fromApi/editingData' },
   },
   rest: {
     loadBrand: { rest: SelectOneBrandPageRD, targetFromPath: '~/brand', fetcher: true },

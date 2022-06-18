@@ -1,15 +1,16 @@
 import { LensState } from "@focuson/state";
+import { NameAnd } from "@focuson/utils";
 
 export interface ActionButtonProps<S, C> {
   id: string;
   state: LensState<S, any, C>;
-  path2?: LensState<S, any, C>;
-  path3?: LensState<S, any, C>;
-  action: ( s: LensState<S, any, C>, id: string, path2?: LensState<S, any, C>, path3?: LensState<S, any, C> ) => void;
+  paths: NameAnd<( s: LensState<S, any, C> ) => LensState<S, any, C>>
+  action: ( s: LensState<S, any, C>, id: string, paths: NameAnd<LensState<S, any, C>> ) => void;
   text: string;
   enabledBy?: boolean;
 }
 
-export function ActionButton<S, C> ( { id, state, action, text, enabledBy, path2, path3 }: ActionButtonProps<S, C> ) {
-  return <button id={id} onClick={() => action ( state, id, path2, path3 )} disabled={enabledBy === false}>{text}</button>
+export function ActionButton<S, C> ( { id, state, action, text, enabledBy, paths }: ActionButtonProps<S, C> ) {
+  const pathsAsLens = Object.fromEntries ( Object.entries ( paths ).map ( ( [ name, fn ] ) => [ name, fn ( state ) ] ) )
+  return <button id={id} onClick={() => action ( state, id, pathsAsLens )} disabled={enabledBy === false}>{text}</button>
 }

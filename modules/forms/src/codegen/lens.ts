@@ -58,7 +58,20 @@ export const stateQueryForParams = <B, G> ( errorPrefix: string, params: TSParam
     throw e
   }
 }
-export const stateQueryForPathsFnParams = <B, G> ( errorPrefix: string, params: TSParams, mainPage: MainPageD<B, G>, p: PageD<B, G>, path: string ) => {
+export const stateQueryForPathsFnButtonParams = <B, G> ( errorPrefix: string, params: TSParams, mainPage: MainPageD<B, G>, p: PageD<B, G>, path: string ) => {
+  try {
+    let result = parsePath ( path, stateCodeBuilder ( {
+      '/': `state => fullState<${params.stateName},any,Context>(state)`,
+      '~': `state =>pageState(state)<domain.${pageDomainName ( mainPage )}>()`,
+      '': 'state => state'
+    }, optionalsName ( mainPage ), 'focusOn' ) );
+    return result
+  } catch ( e: any ) {
+    console.error ( errorPrefix )
+    throw e
+  }
+}
+export const stateQueryForPathsFnParams  = <B, G> ( errorPrefix: string, params: TSParams, mainPage: MainPageD<B, G>, p: PageD<B, G>, path: string ) => {
   try {
     return parsePath ( path, stateCodeBuilder ( {
       '': 'state=>state'
@@ -90,8 +103,8 @@ export const stateForButton = <B, G> ( { parent, params, button, name, mainPage 
 export const stateForButtonWithPath = <B, G> ( { parent, params, button, name, mainPage }: CreateButtonData<B, G>, buttonName: string ) =>
   ( path: string ) => `${stateQueryForParams ( `${buttonName} page ${parent}${name})`, params, mainPage, parent, path )}`;
 
-export const stateForGuardVariable = <B, G> (mainPage: MainPageD<B,G>, page: PageD<B, G>, params: TSParams, guardName: string ) =>
-  ( path: string ) => `state${stateFocusQueryWithEmptyFromHere ( `Page ${page.name} guard variable ${guardName}`, params, mainPage,page, path )}`;
+export const stateForGuardVariable = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params: TSParams, guardName: string ) =>
+  ( path: string ) => `state${stateFocusQueryWithEmptyFromHere ( `Page ${page.name} guard variable ${guardName}`, params, mainPage, page, path )}`;
 
 
 export const stateForGuardButton = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params: TSParams, guardName: string ) =>

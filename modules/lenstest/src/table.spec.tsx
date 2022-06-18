@@ -59,7 +59,7 @@ describe ( "Table", () => {
     it ( "should render an empty with no selected and an emptyData", () => {
       const table = displayAndGetTable ( {}, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id' emptyData='No Data' /> )
       expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead>" +
-        "<tbody class='grid-sub'><tr id='id[0]'><td colSpan='102'>No Data</td></tr></tbody></table>" )
+        "<tbody class='grid-sub'><tr id='id[0]'><td colSpan='2'>No Data</td></tr></tbody></table>" )
     } )
     it ( "should render an empty with  selected", () => {
       const table = displayAndGetTable ( {}, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id' copySelectedIndexTo={s.focusOn ( 'selected' )}/> )
