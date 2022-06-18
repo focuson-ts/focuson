@@ -70,6 +70,7 @@ export interface SqlMutation {
   /**The name of the procedure that does this: should capture the intent of what this does */
   name?: string;
   sql: string;
+  makeMock?: boolean
   params: MutationParamForSql | MutationParamForSql[]
 }
 
@@ -79,6 +80,7 @@ export interface StoredProcedureMutation {
   schema: Schema,
   package?: string;
   name: string,
+  makeMock?: boolean
   params: MutationParamForStoredProc | MutationParamForStoredProc[]
 }
 
@@ -88,6 +90,7 @@ export interface ManualMutation {
   import?: string | string[];
   params: MutationParamForManual | MutationParamForManual[]
   name?: string;
+  makeMock?: boolean
   code: string | string[]
 }
 
@@ -96,6 +99,7 @@ export interface SelectMutation {
   list?: false;
   params: MutationParamForSelect | MutationParamForSelect[];
   name: string;
+  makeMock?: boolean
   select: GuardedMutation[]
 }
 

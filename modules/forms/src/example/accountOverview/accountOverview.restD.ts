@@ -18,14 +18,18 @@ export const accountOverviewRestD: ExampleRestD = {
     {
       restAction: 'get', mutateBy:
         {
-          type: 'manual', name: 'testForMessages', code: [ `
+          type: 'manual', name: 'testForMessages', makeMock: false, code: [ `
           String errorMsg = "the error message";
           String warningMsg = "the warning message";
           String infoMsg = "the info message";
+          String emptyError = "";
+          String nullInfo = null;
           ` ], params: [
             { type: 'output', javaType: 'String', name: 'errorMsg', msgLevel: 'error' },
             { type: 'output', javaType: 'String', name: 'warningMsg', msgLevel: 'warning' },
-            { type: 'output', javaType: 'String', name: 'infoMsg', msgLevel: 'info' }
+            { type: 'output', javaType: 'String', name: 'infoMsg', msgLevel: 'info' },
+            { type: 'output', javaType: 'String', name: 'emptyError', msgLevel: 'error' },
+            { type: 'output', javaType: 'String', name: 'nullInfo', msgLevel: 'info' }
           ]
         }
     }

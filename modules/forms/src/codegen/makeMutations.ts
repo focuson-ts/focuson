@@ -47,7 +47,8 @@ export function mockReturnStatement ( outputs: OutputMutationParam[] ): string {
 
 function commonIfDbNameBlock<G> ( r: RestD<G>, paramsA: MutationParam[], name: string, m: MutationDetail, index: string, includeMockIf: boolean ) {
   const paramsForLog = paramsA.length === 0 ? '' : paramsA.map ( m => displayParam ( m ).replace ( /"/g, "'" ) ).join ( ", " ) + '+';
-  return includeMockIf ? [ `        if (dbName.equals(IFetcher.mock)) {`,
+  const makeMock = m.makeMock === undefined || m.makeMock === true
+  return includeMockIf && makeMock ? [ `        if (dbName.equals(IFetcher.mock)) {`,
     `           System.out.println("Mock audit: ${mutationMethodName ( r, name, m, index )}( ${paramsForLog} )");`,
     `           ${mockReturnStatement ( allOutputParams ( paramsA ) )}`,
     `    }`,

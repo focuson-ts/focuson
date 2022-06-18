@@ -31,6 +31,10 @@ class Messages{
         map.put("info", info);
         map.put("warning", warning);
     }
+    public void info(String s) { if (s != null && s.length() > 0) info.add(s) ;}
+    public void warning(String s) { if (s != null && s.length() > 0) warning.add(s) ;}
+    public void error(String s) { if (s != null && s.length() > 0) error.add(s) ;}
+
 }
 
 public class Transform {
