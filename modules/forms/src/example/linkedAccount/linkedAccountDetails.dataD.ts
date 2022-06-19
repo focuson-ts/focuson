@@ -30,12 +30,25 @@ const AccountDD: PrimitiveDD = {
 }
 
 
+export const SortCodePartDD: StringPrimitiveDD = {
+  ...OneLineStringDD
+}
+export const SortCodeDD: ExampleDataD = {
+  name: 'SortCode',
+  description: 'All the data displayed on the screen',
+  structure: {
+    one: { dataDD: SortCodePartDD, sample: [ '10', '20' ] },
+    two: { dataDD: SortCodePartDD, sample: [ '11', '12' ] },
+    three: { dataDD: SortCodePartDD, sample: [ '23', '24' ] }
+  }
+}
+
 export const MandateDD: ExampleDataD = {
   name: 'Mandate',
   description: 'All the data displayed on the screen',
   layout: { component: LayoutCd, displayParams: { details: '[[3,3]]' } },
   structure: {
-    sortCode: { dataDD: StringDD, sample: [ '10-11-12', '23-54-12' ] },
+    sortCode: { dataDD: SortCodeDD },
     accountId: { dataDD: AccountDD, sample: [ 12341234, 23456123, 3245454 ] },
     mandateStatus: { dataDD: StringDD, sample: [ 'ACTIVE' ] },
     bankName: { dataDD: StringDD, sample: [ 'Bank Of Happiness', 'Royal Bank of Success' ] },
@@ -54,6 +67,7 @@ export const MandateListDD: ExampleRepeatingD = {
     copySelectedItemTo: [ 'tempMandate' ],
     copySelectedIndexTo: [ 'selectIndex' ],
     prefixFilter: '~/selectMandateSearch/sortCode',
+    joiners: '-',
     prefixColumn: 'sortCode'
   },
   sampleCount: 5,
@@ -90,7 +104,7 @@ export const CreatePaymentDD: ExampleDataD = {
   guards: { reasonIsAllowance: { condition: 'in', path: 'reason', values: paymentReasonDD.enum } },
   structure: {
     amount: { dataDD: MoneyDD, sample: [ 56657, 32834 ], displayParams: { min: 200 } },
-    collectionDate: { dataDD: {...DateDD} },
+    collectionDate: { dataDD: { ...DateDD } },
     reason: { dataDD: paymentReasonDD },
     allowance: { dataDD: MoneyDD, guard: { reasonIsAllowance: [ 'A' ] }, displayParams: { readonly: true } },
     period: { dataDD: periodDD, guard: { reasonIsAllowance: [ 'A' ] }, displayParams: { readonly: true } }

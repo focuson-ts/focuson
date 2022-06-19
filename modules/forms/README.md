@@ -1,5 +1,7 @@
 # @focuson/forms
 
+For a cookbook of 'howtos' see [Cookbook]()
+
 This is a 'low code' mechanism for generating the apis and the react components for a website from a declarative representation. 
 
 It is mostly suited for things like 'Forms'. So simple crud, status, and so on.

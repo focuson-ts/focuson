@@ -137,13 +137,17 @@ describe ( "modal buttons", () => {
         messages: [],
         "pageSelection": [
           { "pageName": "mainPage", "pageMode": "view", "time": "now", },
-          { "focusOn": '~/temp', "firstTime": true, "pageMode": "view", "pageName": "someModal", copyOnClose: [ { to: "~/data" } ], "time": "timeForTest", } ],
+          {
+            "focusOn": '~/temp', "firstTime": true, "pageMode": "view", "pageName": "someModal",
+            copyOnClose: [ { to: "~/data" } ], "time": "timeForTest",
+          } ],
         "restCommands": [],
         mainPage: { "temp": { "data": "data" } }
       } )
 
       var remembered1: any = {}
       displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> ).simulate ( 'click' )
+      console.log ( JSON.stringify ( remembered1, null, 2 ) )
       expect ( remembered1 ).toEqual ( {
         messages: [],
         "mainPage": { "temp": { "data": "data" }, "data": { "data": "data" } },
@@ -349,8 +353,8 @@ it ( "should create empty, then copy back with a rest command", () => {
   expect ( remembered1 ).toEqual ( {
     messages: [],
     "mainPage": { "temp": { "data": "data" }, nested: { "data": { "data": "data" } } },
-    "pageSelection": [ { "pageMode": "view", "pageName": "mainPage", "time": "now"  } ],
-    "restCommands": [ { "name": "restName", "restAction": "update",} ]
+    "pageSelection": [ { "pageMode": "view", "pageName": "mainPage", "time": "now" } ],
+    "restCommands": [ { "name": "restName", "restAction": "update", } ]
   } )
 } )
 // describe ( "with nested lists of data", () => {

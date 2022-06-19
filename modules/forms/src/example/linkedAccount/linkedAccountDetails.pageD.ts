@@ -67,8 +67,10 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
       control: 'ModalButton',
       modal: SelectMandateMP, mode: 'edit', focusOn: '~/selectMandateSearch',
       copy: [
-        { from: '~/display/mandate/sortCode', to: '~/selectMandateSearch/sortCode' },
         { from: '~/display/mandate', to: '~/tempMandate' },
+      ],
+      copyJustString: [
+        { from: '~/display/mandate/sortCode', to: '~/selectMandateSearch/sortCode' },
       ],
       copyOnClose: { from: '~/tempMandate', to: '~/display/mandate' }
     },

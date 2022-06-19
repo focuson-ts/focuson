@@ -25,9 +25,10 @@ export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( 
 
 
 function findFocusL<S, Context extends PageSelectionContext<S>> ( errorPrefix: string, state: LensState<S, any, Context>, fromPath: ( path: string ) => Optional<S, any>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ) {
+  const lastPage = currentPageSelectionTail ( state )
+  if ( lastPage.focusOn ) return fromPath ( lastPage.focusOn )
   const mp: PageSelection = mainPage ( state, adjustPages )
   const pages = state.context.pages
-  if ( mp.focusOn ) return fromPath ( mp.focusOn )
   const onePage = pages[ mp.pageName ]
   if ( onePage === undefined ) throw Error ( `${errorPrefix} cannot find details for main page '${mp.pageName}'. Legal names are [${Object.keys ( pages )}]` )
   if ( onePage.pageType !== 'MainPage' ) throw new Error ( `${errorPrefix} page ${mp.pageName} should be a MainPage but is a ${onePage.pageType}` )
@@ -48,7 +49,7 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
     const pathForFrom = fromPathGivenState ( state );
 
     const focusLensForFrom = findFocusL ( `ModalCommitButton for ${id}`, state, pathForFrom )
-    const focusLensForTo = findFocusL ( `ModalCommitButton for ${id}`, state, pathForFrom, ps => ps.slice ( 0, -1 ) )
+    const focusLensForTo = findFocusL ( `ModalCommitButton for ${id}`, state, pathForTo, ps => ps.slice ( 0, -1 ) )
     function findSetLengthOnClose () {
       let toLengthOnClose = lastPage?.setToLengthOnClose;
       if ( toLengthOnClose === undefined ) return []
