@@ -4,9 +4,7 @@ import { Optional, Transform } from "@focuson/lens";
 import { RestCommand } from "@focuson/rest";
 import { anyIntoPrimitive, DateFn, safeArray } from "@focuson/utils";
 import { CustomButtonType, getButtonClassName } from "../common";
-import { fullState, pageState } from "../selectedPage";
 import { MultiPageDetails } from "../pageConfig";
-import { context } from "@focuson/example_state_cpq/dist/context";
 
 export interface CopyStringDetails {
   from: string;
@@ -43,11 +41,11 @@ interface MainModalButtonProps<S, Context> extends CommonModalButtonProps<S, Con
 
 export type ModalButtonProps<S, Context> = JustModalButtonProps<S, Context> | MainModalButtonProps<S, Context>
 
-function findFocusL<S, Context> ( errorPrefix: string, props: ModalButtonProps<S, Context>, fromPage: ( path: string ) => Optional<S, any>, pages: MultiPageDetails<S, Context> ) {
+export function findFocusLFromCurrentState<S, Context> ( errorPrefix: string, props: ModalButtonProps<S, Context>, fromPage: ( path: string ) => Optional<S, any>, pages: MultiPageDetails<S, Context> ) {
   if ( isModal ( props ) ) return fromPage ( props.focusOn )
   const main = props.main
   const onePage = pages[ main ]
-  if ( onePage === undefined ) throw Error ( `${errorPrefix} cannot find details for main page '${main}'. Legal names are [${Object.keys ( page )}]` )
+  if ( onePage === undefined ) throw Error ( `${errorPrefix} cannot find details for main page '${main}'. Legal names are [${Object.keys ( pages )}]` )
   if ( onePage.pageType !== 'MainPage' ) throw new Error ( `${errorPrefix} page ${main} should be a MainPage but is a ${onePage.pageType}` )
   return onePage.lens
 }
@@ -55,14 +53,19 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
   const { id, text, enabledBy, state, copy, copyJustString, pageMode, rest, copyOnClose, createEmpty, setToLengthOnClose, createEmptyIfUndefined, pageParams, buttonType, dateFn } = props
   const onClick = () => {
     // const fromPath = fromPathFor ( state );
-    const fromPage = fromPathGivenState ( state );
-    const focusOnL = findFocusL<S, Context> ( `Modal button ${id}`, props, fromPage, state.context.pages );
+    const focusOn = isModal ( props ) ? props.focusOn : undefined
+    const pageName = isModal ( props ) ? props.modal : props.main.toString ()
+    let newPageSelection = { pageName, firstTime: true, pageMode, rest, focusOn, copyOnClose, setToLengthOnClose, pageParams, time: dateFn () };
+    const fromPageFromFrom = fromPathGivenState ( state );
+    const fromPageForTo = fromPathGivenState ( state, ps => [ ...ps, newPageSelection ] );
+    let errorPrefix = `Modal button ${id}`;
+    const focusOnL = findFocusLFromCurrentState ( errorPrefix, props, fromPageFromFrom, state.context.pages )
     const copyTxs: Transform<S, any>[] = safeArray ( copy ).map ( ( { from, to } ) =>
-      [ to ? fromPage ( to ) : focusOnL, () => (from ? fromPage ( from ) : focusOnL).getOption ( state.main ) ] )
+      [ to ? fromPageForTo ( to ) : focusOnL, () => (from ? fromPageFromFrom ( from ) : focusOnL).getOption ( state.main ) ] )
     const copyJustStrings: Transform<S, any>[] = safeArray ( copyJustString ).map (
       ( { from, to, joiner } ) => {
-        let f = fromPage ( from ).getOption ( state.main );
-        return [ fromPage ( to ), () => f ? anyIntoPrimitive ( f, joiner ) : f ];
+        let f = fromPageFromFrom ( from ).getOption ( state.main );
+        return [ fromPageForTo ( to ), () => f ? anyIntoPrimitive ( f, joiner ? joiner : '' ) : f ];
       } )
     const emptyTx: Transform<S, any>[] = createEmpty ? [ [ focusOnL, ignore => createEmpty ] ] : [];
     const emptyifUndefinedTx: Transform<S, any>[] = createEmptyIfUndefined ? [ [ focusOnL, existing => {
@@ -70,10 +73,8 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
       console.log ( "emptyifUndefinedTx - emptyifUndefinedTx", emptyifUndefinedTx )
       return existing ? existing : createEmptyIfUndefined;
     } ] ] : [];
-    const focusOn = isModal ( props ) ? props.focusOn : undefined
-    const pageName = isModal ( props ) ? props.modal : props.main.toString ()
     state.massTransform ( reasonFor ( 'ModalButton', 'onClick', id ) ) (
-      page<S, Context> ( state.context, 'popup', { pageName, firstTime: true, pageMode, rest, focusOn, copyOnClose, setToLengthOnClose, pageParams, time: dateFn () } ),
+      page<S, Context> ( state.context, 'popup', newPageSelection ),
       ...emptyTx,
       ...emptyifUndefinedTx,
       ...copyTxs,

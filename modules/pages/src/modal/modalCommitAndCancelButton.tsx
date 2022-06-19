@@ -1,13 +1,12 @@
 import { currentPageSelectionTail, fromPathGivenState, mainPage, PageSelection, PageSelectionContext, popPage } from "../pageSelection";
-import { LensProps, reasonFor } from "@focuson/state";
+import { LensProps, LensState, reasonFor } from "@focuson/state";
 import { DateFn, safeArray } from "@focuson/utils";
-import { Transform } from "@focuson/lens";
+import { Optional, Transform } from "@focuson/lens";
 import { HasRestCommandL, RestCommand } from "@focuson/rest";
-import { getRefForValidateLogicToButton, hasValidationErrorAndReport, isValidToCommit } from "../validity";
+import { getRefForValidateLogicToButton, hasValidationErrorAndReport } from "../validity";
 import { HasSimpleMessageL } from "../simpleMessage";
-import { focusPageClassName } from "../PageTemplate";
 import { CustomButtonType, getButtonClassName } from "../common";
-import React, { MutableRefObject, useEffect, useRef } from "react";
+import React from "react";
 
 
 interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Context>, CustomButtonType {
@@ -25,30 +24,36 @@ export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( 
 }
 
 
+function findFocusL<S, Context extends PageSelectionContext<S>> ( errorPrefix: string, state: LensState<S, any, Context>, fromPath: ( path: string ) => Optional<S, any>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ) {
+  const mp: PageSelection = mainPage ( state, adjustPages )
+  const pages = state.context.pages
+  if ( mp.focusOn ) return fromPath ( mp.focusOn )
+  const onePage = pages[ mp.pageName ]
+  if ( onePage === undefined ) throw Error ( `${errorPrefix} cannot find details for main page '${mp.pageName}'. Legal names are [${Object.keys ( pages )}]` )
+  if ( onePage.pageType !== 'MainPage' ) throw new Error ( `${errorPrefix} page ${mp.pageName} should be a MainPage but is a ${onePage.pageType}` )
+  return onePage.lens
+}
 export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S>> ( { state, id, dateFn, validate, enabledBy, text, buttonType }: ModalCommitButtonProps<S, Context> ) {
   const ref = getRefForValidateLogicToButton ( id, validate, enabledBy )
-  const debounceRef = useRef<Date> ( null )
   function onClick () {
     const now = new Date ()
-    const lastClick = debounceRef.current
-    if ( lastClick !== null && (now.getTime () - lastClick.getTime ()) < 1000 ) {
-      console.log("stopped bounce")
-      return
-    }
-    debounceRef.current = lastClick
     const realvalidate = validate === undefined ? true : validate
     if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return
-    const firstPage: PageSelection = mainPage ( state )
+
     const lastPage = currentPageSelectionTail ( state )
     const rest = lastPage?.rest;
     const copyOnClose = lastPage?.copyOnClose
-    const fromPath = fromPathGivenState ( state );
-    const focusLens = fromPath ( lastPage.focusOn )
+
+    const pathForTo = fromPathGivenState ( state, ps => ps.slice ( 0, -1 ) );
+    const pathForFrom = fromPathGivenState ( state );
+
+    const focusLensForFrom = findFocusL ( `ModalCommitButton for ${id}`, state, pathForFrom )
+    const focusLensForTo = findFocusL ( `ModalCommitButton for ${id}`, state, pathForFrom, ps => ps.slice ( 0, -1 ) )
     function findSetLengthOnClose () {
       let toLengthOnClose = lastPage?.setToLengthOnClose;
       if ( toLengthOnClose === undefined ) return []
-      const setToLengthOnCloseArrayL = fromPath ( toLengthOnClose?.array )
-      const setToLengthOnCloseVariableL = fromPath ( toLengthOnClose?.variable )
+      const setToLengthOnCloseArrayL = pathForTo ( toLengthOnClose?.array )
+      const setToLengthOnCloseVariableL = pathForTo ( toLengthOnClose?.variable )
       const setToLengthOnCloseTx: Transform<S, any>[] = [ [ setToLengthOnCloseVariableL, () => {
         let length = setToLengthOnCloseArrayL.getOption ( state.main )?.length;
         // console.log ( 'setToLengthOnCloseTx', 'array', setToLengthOnCloseArrayL.description, 'var', setToLengthOnCloseVariableL.description, length )
@@ -61,7 +66,7 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
     const restTransformers: Transform<S, any>[] = rest ? [ [ state.context.restL, ( ps: RestCommand[] ) => [ ...safeArray ( ps ), rest ] ] ] : []
 
     const copyOnCloseTxs: Transform<S, any>[] = safeArray ( copyOnClose ).map ( ( { from, to } ) =>
-      [ to ? fromPath ( to ) : focusLens, () => (from ? fromPath ( from ) : focusLens).getOption ( state.main ) ] )
+      [ to ? pathForTo ( to ) : focusLensForTo, () => (from ? pathForFrom ( from ) : focusLensForFrom).getOption ( state.main ) ] )
     if ( lastPage ) {
       state.massTransform ( reasonFor ( 'ModalCommit', 'onClick', id ) ) ( pageTransformer, ...restTransformers, ...copyOnCloseTxs, ...findSetLengthOnClose () )
     } else

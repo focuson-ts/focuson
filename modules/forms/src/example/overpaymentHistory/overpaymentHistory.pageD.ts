@@ -14,5 +14,6 @@ export const OverpaymentMainPage: ExampleMainPage = {
   rest: { overpaymentHistory: { rest: overpaymentHistoryRD, targetFromPath: '~/overpayment', fetcher: true } },
   buttons: {
     cancel: { control: 'ModalCancelButton' },
+    commit: { control: 'ModalCommitButton' },
   },
 }

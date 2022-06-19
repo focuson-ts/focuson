@@ -2,17 +2,16 @@ import { focusPageClassName } from "./PageTemplate";
 import { createSimpleMessage, DateFn, safeArray } from "@focuson/utils";
 import { LensState, reasonFor } from "@focuson/state";
 import { HasSimpleMessageL } from "./simpleMessage";
-import React, { MutableRefObject, useEffect, useRef } from "react";
-
-
+import React, { useEffect, useRef } from "react";
 
 
 export function getRefForDebounceLogic ( id: string, debounce: number | undefined ) {
   const ref = useRef<HTMLButtonElement> ( null );
 }
-export function getRefForValidateLogicToButton ( id: string, validate: boolean | undefined, enabledBy: boolean | undefined ): React.MutableRefObject<HTMLButtonElement> {
+export function getRefForValidateLogicToButton ( id: string, validate: boolean | undefined, enabledBy: boolean | undefined ): React.RefObject<HTMLButtonElement> {
   const ref = useRef<HTMLButtonElement> ( null );
   useEffect ( () => {
+    if ( ref.current === null ) throw Error ( `Id ${id} has a ref which is null` )
     if ( validate === false ) {
       ref.current.disabled = false
       return
@@ -47,15 +46,16 @@ function findValidityForSelect ( thisPage: Element, result: [ string, boolean ][
       let id = child.getAttribute ( 'id' );
       let clazz = child.getAttribute ( 'class' );
       let recordedId = id ? id : "noIdForThisElement"
-      let valid = !clazz.includes ( 'pleaseSelect' );
+      let valid = !clazz?.includes ( 'pleaseSelect' );
       result[ i ] = [ recordedId, valid ]
     }
   }
 }
 export function findValidityDetails ( pageHolderClass: string ): [ string, boolean ][] {
   const allPages = document.getElementsByClassName ( pageHolderClass )
-  const thisPage: Element = allPages.item ( allPages.length - 1 )
+  const thisPage: Element | null = allPages.item ( allPages.length - 1 )
   const result: [ string, boolean ][] = []
+  if ( !thisPage ) return result
   findValidityForInput ( thisPage, result );
   findValidityForSelect ( thisPage, result );
   return result

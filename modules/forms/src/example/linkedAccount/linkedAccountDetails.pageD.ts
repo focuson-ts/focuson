@@ -25,8 +25,10 @@ export const CreatePaymentMP: ExampleModalPage = {
     overpaymentHistory: {
       control: 'ModalButton',
       mode: 'view',
-      main: OverpaymentMainPage
-    },
+      main: OverpaymentMainPage,
+      copy: { from: '~/rememberedForTest', to: '~/selectedIndex' },
+      copyOnClose: { from: '~/selectedIndex', to: '~/rememberedForTest' }
+    }
   },
   pageType: 'ModalPopup',
   display: { dataDD: CreatePaymentDD, target: '~/createPayment' },
@@ -44,6 +46,7 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
     selectedCollectionIndex: { dataDD: NatNumDd },
     selectedCollectionItem: { dataDD: CollectionItemDD },
     createPayment: { dataDD: CreatePaymentDD },
+    rememberedForTest: { dataDD: NatNumDd },
 
   },
   initialValue: 'empty',

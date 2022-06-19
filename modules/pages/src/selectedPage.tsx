@@ -1,12 +1,12 @@
 import { LensProps, LensState } from "@focuson/state";
 
-import { currentPageSelection, HasPageSelectionLens, mainPage, mainPageFrom, page, PageMode, PageParams, PageSelection, PageSelectionContext } from "./pageSelection";
+import { currentPageSelection, HasPageSelectionLens, mainPage, mainPageFrom, PageMode, PageParams, PageSelection, PageSelectionContext } from "./pageSelection";
 import { FocusedPage } from "./focusedPage";
 import { isMainPageDetails, MainPageDetails, MultiPageDetails, OnePageDetails, PageConfig } from "./pageConfig";
 import { DefaultTemplate, PageTemplateProps } from "./PageTemplate";
 import { Loading } from "./loading";
 import { lensBuilder, Lenses, NameAndLens, Optional, parsePath } from "@focuson/lens";
-import { safeString } from "@focuson/utils";
+import { safeArray, safeObject, safeString } from "@focuson/utils";
 
 export interface HasSelectedPageDebug {
   debug?: SelectedPageDebug
@@ -60,11 +60,11 @@ export function lensForPageDetails<S, D, Msgs, Config extends PageConfig<S, D, M
   return parsePath<Optional<S, any>> ( safeString ( base ), lensBuilder<S> ( {
     '/': Lenses.identity (),
     '~': mainPageD.lens,
-  }, mainPageD.namedOptionals ) )
+  }, safeObject ( mainPageD.namedOptionals ) ) )
 }
 export const fromPathFromRaw = <S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context extends PageSelectionContext<S>>
 ( pageSelectionL: Optional<S, PageSelection[]>, pageDetails: MultiPageDetails<S, any> ) => ( s: S, currentLens?: Optional<S, any> ) => {
-  let selectedPageData: PageSelection[] = pageSelectionL.getOption ( s );
+  let selectedPageData: PageSelection[] = safeArray ( pageSelectionL.getOption ( s ) );
   if ( selectedPageData === undefined ) throw Error ( `Calling lensForPageDetailsFromRaw without a selected page\n ${JSON.stringify ( s )}` )
   const mainPageD: MainPageDetails<S, D, Msgs, Config, Context> = findMainPageDetails ( selectedPageData, pageDetails )
   let prefixes: NameAndLens<S> = {
@@ -72,7 +72,7 @@ export const fromPathFromRaw = <S, D, Msgs, Config extends PageConfig<S, D, Msgs
     '~': mainPageD.lens,
   };
   if ( currentLens ) prefixes[ '' ] = currentLens
-  const builder = lensBuilder<S> ( prefixes, mainPageD.namedOptionals )
+  const builder = lensBuilder<S> ( prefixes, safeObject ( mainPageD.namedOptionals ) )
   return ( path: string ): Optional<S, any> => parsePath ( path, builder )
 };
 
@@ -100,9 +100,9 @@ export const findOneSelectedPageDetails = <S, T, Context extends PageSelectionCo
   };
 
 export function findMainPageDetails<S> ( pageSelections: PageSelection[], pageDetails: MultiPageDetails<S, any> ) {
-  const firstPage = mainPageFrom(pageSelections)
+  const firstPage = mainPageFrom ( pageSelections )
   let page0Details: any = pageDetails[ firstPage.pageName ];
-  if ( page0Details.pageType !== 'MainPage' ) throw Error ( `Software error:  page ${firstPage.pageName} is not a main page.\nPageSelections: ${JSON.stringify(pageSelections)}\n\nfirstPage: ${firstPage}` )
+  if ( page0Details.pageType !== 'MainPage' ) throw Error ( `Software error:  page ${firstPage.pageName} is not a main page.\nPageSelections: ${JSON.stringify ( pageSelections )}\n\nfirstPage: ${firstPage}` )
   return page0Details
 }
 
