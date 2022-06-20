@@ -138,6 +138,8 @@ export const postCodeSearchResponseDD: RepeatingDataD<AllGuards> = {
   paged: false,
   display: TableCD,
   displayParams: {
+    emptyData: 'No results',
+    tableTitle: 'Search results',
     order: [ 'postcode', 'line1', 'line2', 'line3', 'line4' ],
     copySelectedItemTo: [ 'selectedPostCodeAddress' ],
     copySelectedIndexTo: [ 'selectedPostCodeIndex' ]
