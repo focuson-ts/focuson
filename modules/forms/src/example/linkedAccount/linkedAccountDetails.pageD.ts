@@ -69,8 +69,9 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
       copy: [
         { from: '~/display/mandate', to: '~/tempMandate' },
       ],
+      deleteOnOpen: '~/selectIndex',
       copyJustString: [
-        { from: '~/display/mandate/sortCode', to: '~/selectMandateSearch/sortCode' },
+        { from: '~/display/mandate/sortCode', to: '~/selectMandateSearch/sortCode',joiner: '-' },
       ],
       copyOnClose: { from: '~/tempMandate', to: '~/display/mandate' }
     },

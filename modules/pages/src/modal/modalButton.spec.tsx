@@ -79,8 +79,26 @@ describe ( "modal button", () => {
       ],
       "restCommands": []
     } )
-
   } )
+
+  it ( "should delete on open", () => {
+    var remembered: any = {}
+    const state: LensState<StateForModalButtonTest, StateForModalButtonTest, Context> =
+            lensState<StateForModalButtonTest, Context> (
+              startState, ( s: StateForModalButtonTest ) => {remembered = s}, 'ModalButton', context )
+    const comp = mount ( <ModalButton text='someTitle' id='someId' state={state.focusOn ( 'data' )} modal={'someModal'} focusOn='~/' pageMode='edit' deleteOnOpen={['~']} dateFn={testDateFn}/> )
+    const button = comp.find ( "button" )
+    button.simulate ( 'click' )
+    expect ( remembered ).toEqual ( {
+      messages: [],
+      "pageSelection": [
+        { "pageMode": "view", "pageName": "a", "time": "now" },
+        { "firstTime": true, "focusOn": "~/", "pageMode": "edit", "pageName": "someModal", "time": "timeForTest" }
+      ],
+      "restCommands": []
+    } )
+  } )
+
 } )
 
 

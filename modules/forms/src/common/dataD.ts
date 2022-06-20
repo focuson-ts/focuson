@@ -361,6 +361,10 @@ export const MoneyDD: NumberPrimitiveDD = {
   description: "The primitive representing an amount of the local currency",
   name: 'Money'
 }
+export const PostiveMoneyDD: NumberPrimitiveDD = {
+  ...MoneyDD,
+  displayParams: { min: 0 }
+}
 export const BooleanDD: BooleanPrimitiveDD = {
   rsGetter: "getBoolean",
   dbType: 'boolean',

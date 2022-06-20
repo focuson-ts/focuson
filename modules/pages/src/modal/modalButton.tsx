@@ -2,7 +2,7 @@ import { LensState, reasonFor } from "@focuson/state";
 import { CopyDetails, fromPathGivenState, page, PageMode, PageParams, PageSelectionContext, SetToLengthOnClose } from "../pageSelection";
 import { Optional, Transform } from "@focuson/lens";
 import { RestCommand } from "@focuson/rest";
-import { anyIntoPrimitive, DateFn, safeArray } from "@focuson/utils";
+import { anyIntoPrimitive, DateFn, safeArray, toArray } from "@focuson/utils";
 import { CustomButtonType, getButtonClassName } from "../common";
 import { MultiPageDetails } from "../pageConfig";
 
@@ -22,6 +22,7 @@ export interface CommonModalButtonProps<S, Context> extends CustomButtonType {
   rest?: RestCommand,
   createEmpty?: any
   copy?: CopyDetails[],
+  deleteOnOpen?: string[],
   copyJustString?: CopyStringDetails[],
   copyOnClose?: CopyDetails[],
   setToLengthOnClose?: SetToLengthOnClose,
@@ -50,7 +51,7 @@ export function findFocusLFromCurrentState<S, Context> ( errorPrefix: string, pr
   return onePage.lens
 }
 export function ModalButton<S extends any, Context extends PageSelectionContext<S>> ( props: ModalButtonProps<S, Context> ): JSX.Element {
-  const { id, text, enabledBy, state, copy, copyJustString, pageMode, rest, copyOnClose, createEmpty, setToLengthOnClose, createEmptyIfUndefined, pageParams, buttonType, dateFn } = props
+  const { id, text, enabledBy, state, copy, copyJustString, pageMode, rest, copyOnClose, createEmpty, setToLengthOnClose, createEmptyIfUndefined, pageParams, buttonType, dateFn, deleteOnOpen } = props
   const onClick = () => {
     // const fromPath = fromPathFor ( state );
     const focusOn = isModal ( props ) ? props.focusOn : undefined
@@ -73,8 +74,10 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
       console.log ( "emptyifUndefinedTx - emptyifUndefinedTx", emptyifUndefinedTx )
       return existing ? existing : createEmptyIfUndefined;
     } ] ] : [];
+    const deleteOnOpenTxs: Transform<S, any>[] = toArray ( deleteOnOpen ).map ( d => [ fromPageForTo ( d ), () => undefined ] );
     state.massTransform ( reasonFor ( 'ModalButton', 'onClick', id ) ) (
       page<S, Context> ( state.context, 'popup', newPageSelection ),
+      ...deleteOnOpenTxs,
       ...emptyTx,
       ...emptyifUndefinedTx,
       ...copyTxs,
