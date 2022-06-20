@@ -98,7 +98,6 @@ describe ( "modal button", () => {
       "restCommands": []
     } )
   } )
-
 } )
 
 
