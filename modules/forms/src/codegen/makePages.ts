@@ -14,7 +14,7 @@ export const makeMainPage = <G> ( params: TSParams ) => <B> ( p: MainPageD<B, G>
     return lens.set ( {}, makeEmptyData ( p.display.dataDD ) )
   }
   const initialValue = p.initialValue === 'empty' ? makeEmpty ()[ p.name ] : p.initialValue
-  return p.pageType === 'MainPage' ?
+  return isMainPage ( p ) ?
     [ `    ${p.name}: {pageType: '${p.pageType}',  config: simpleMessagesConfig, lens: identity.focusQuery ( '${pageInState ( p )}' ), pageFunction: ${pageComponentName ( p )}(), initialValue: ${JSON.stringify ( initialValue )}, pageMode: '${p.modes[ 0 ]}',namedOptionals: ${optionalsName ( p )} }` ]
     : [];
 }

@@ -1,4 +1,4 @@
-import { allMainPages, MainPageD, PageD } from "../common/pageD";
+import { allMainPages, isMainPage, MainPageD, PageD } from "../common/pageD";
 import { domainsFileName, hasDomainForPage } from "./names";
 import { addStringToEndOfAllButLast, indentList } from "./codegen";
 import { TSParams } from "./config";
@@ -35,7 +35,7 @@ export function makePathToLens ( params: TSParams ): string[] {
 }
 
 export function makeCommon<B, G> ( appConfig: AppConfig, params: TSParams, pds: MainPageD<B, G>[], directorySpec: DirectorySpec ): string[] {
-  const pageDomainsImport: string[] = pds.filter ( p => p.pageType === 'MainPage' ).map ( p => `import { ${hasDomainForPage ( p )} } from '${domainsFileName ( '.', params, p )}';` )
+  const pageDomainsImport: string[] = pds.filter ( isMainPage ).map ( p => `import { ${hasDomainForPage ( p )} } from '${domainsFileName ( '.', params, p )}';` )
   let paramsWithSamples = findAllCommonParamsWithSamples ( pds );
   return [
     `import { fromPathFromRaw, HasPageSelection, PageMode ,PageSelectionContext, pageSelectionlens} from '@focuson/pages'`,

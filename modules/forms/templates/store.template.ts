@@ -5,7 +5,7 @@ import { defaultDateFn, errorMonad, errorPromiseMonad, fetchWithDelay, fetchWith
 import { lensState } from "@focuson/state";
 import { Reducer } from "react";
 import { dispatchRestAndFetchCommands, FocusOnConfig, FocusOnContext, FocusOnDebug, HasFocusOnDebug, restCountL, traceL } from "@focuson/focuson";
-import { massTransform, Transform } from "@focuson/lens";
+import { Lens, massTransform, Transform } from "@focuson/lens";
 import { pageSelectionlens, preMutateForPages, simpleMessagesL } from "@focuson/pages";
 import { fetchers, newFetchers } from "./fetchers";
 import { restDetails, restUrlMutator } from "./rests";
@@ -32,42 +32,38 @@ export interface FocusOnMassTxsAction<S> {
 function isFocusOnMassTxsAction<S> ( f: any ): f is FocusOnMassTxsAction<S> {
   return f.type === 'massTxs'
 }
-const FocusOnReducer: any = ( state: FState, action: any ) => {
-  if ( isFocusOnSetMainAction ( action ) ) {
+export const FocusOnReducer: any = <BigState, S> ( rootLens: Lens<BigState, S> ) => ( state: BigState, action: any ) => {
+  if ( isFocusOnSetMainAction<S> ( action ) ) {
     console.log ( "in reducer", action )
     console.log ( "in reducer.s", action.s )
-    return action.s;
+    return rootLens.set ( state, action.s );
   }
-  if ( isFocusOnMassTxsAction<FState> ( action ) ) {
+  if ( isFocusOnMassTxsAction<S> ( action ) ) {
     console.log ( "FocusOnReducer- action is massTxs", action.type, action.txs.map ( t => [ t[ 0 ].description, t[ 1 ] ( t[ 0 ].getOption ( action.s ) ) ] ) )
     // @ts-ignore
     console.log ( "in reducer.comment for mass txs", action.comment )
-    let result = massTransform ( action.s, ...action.txs );
+    let result: S = massTransform<S> ( action.s, ...action.txs );
     console.log ( 'finished FocusOnReducer/massTxs', result )
+    rootLens.set ( state, result )
     return result
   }
   console.log ( 'in reducer. I dont know what action it is', action )
   return state
 }
-
-
 function traceTransform<S> ( trace: any, s: S ): Transform<S, any> [] {
   // @ts-ignore
   const debug: any = s.debug;
   return debug?.recordTrace ? [ [ traceL<S> (), old => [ ...old ? old : [], trace ] ] ] : [];
 }
-
-const focusOnMiddleware = <S extends HasFocusOnDebug, C extends FocusOnContext<S>> ( config: FocusOnConfig<S, any, C>, context: C ) => ( store: any ) => ( dispatch: any ) => async ( action: any ) => {
+export const focusOnMiddleware = <BigState, S extends HasFocusOnDebug, C extends FocusOnContext<S>> ( config: FocusOnConfig<S, any, SimpleMessage>, context: C, rootLens: Lens<BigState, S> ) => ( store: any ) => ( dispatch: any ) => async ( action: any ) => {
   console.log ( 'focusOnMiddleware', action )
   if ( !isFocusOnSetMainAction<S> ( action ) ) {
     console.log ( 'focusOnMiddleware - not setMain so will return after dispatching it on' )
     return dispatch ( action );
   }
-
   const deleteRestCommands: Transform<S, any> = [ config.restL, () => [] ];
   const { preMutate, postMutate, onError } = config
   const { s, reason } = action
-
   const debug = s.debug?.restDebug === true
   const restCommands = safeArray ( config.restL.getOption ( s ) )
   let start: S = errorMonad ( s, debug, onError,
@@ -77,9 +73,8 @@ const focusOnMiddleware = <S extends HasFocusOnDebug, C extends FocusOnContext<S
   );
   // return start;
   console.log ( 'start', start )
-  const stateAfterImmediate = store.getState()
+  const stateAfterImmediate = rootLens.get ( store.getState () )
   console.log ( 'stateAfterImmediate', stateAfterImmediate )
-
   const focusOnDispatcher = ( preTxs: Transform<S, any>[], rests: RestCommandAndTxs<S>[] ) => ( originalS: S ): S => {
     dispatch ( { type: 'massTxs', txs: [ ...preTxs, ...rests.flatMap ( x => x.txs ) ], s: originalS, comment: 'fromFocusOnDispatcher' } )
     console.log ( 'ending focusonDistpatcher', store.getState () )
@@ -99,10 +94,4 @@ const focusOnMiddleware = <S extends HasFocusOnDebug, C extends FocusOnContext<S
   console.log ( 'finalResult is ', finalResult );
   return res;
 };
-
-//@ts-ignore
-export const store: Store<FState> = legacy_createStore ( FocusOnReducer, undefined, applyMiddleware ( focusOnMiddleware ( config, context ) ) );
-
-
-export function makeLs ( desc: string ) { return lensState ( store.getState (), ( s, reason ) => store.dispatch ( { type: 'setMain', s, reason } ), desc, context )}
-
+export function makeLs <S>( store: Store<S>,desc: string ) { return lensState ( store.getState (), ( s, reason ) => store.dispatch ( { type: 'setMain', s, reason } ), desc, context )}

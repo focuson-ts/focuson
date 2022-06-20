@@ -12,16 +12,17 @@ import { IndexPage } from "@focuson/form_components";
 import { newFetchers } from "./fetchers";
 import { identityL } from "./common";
 import { config, start } from "./config";
-import { makeLs, store } from "./store";
+import { focusOnMiddleware, FocusOnReducer, makeLs } from "./store";
+import { applyMiddleware, legacy_createStore } from "@reduxjs/toolkit";
 
-
+export const store: any = legacy_createStore ( FocusOnReducer(identityL), undefined, applyMiddleware ( focusOnMiddleware ( config, context, identityL ) ) );
 
 let rootElement = getElement ( "root" );
 console.log ( "set json" )
 store.subscribe ( () => {
   ReactDOM.render (
-    <IndexPage state={makeLs ( 'indexPage' )} dateFn={defaultDateFn}>
-  <SelectedPage state={makeLs ( 'selectedPage' )}/>
+    <IndexPage state={makeLs<{stateName}> ( store, 'indexPage' )} dateFn={defaultDateFn}>
+  <SelectedPage state={makeLs<{stateName}> ( store, 'selectedPage' )}/>
   </IndexPage>, rootElement )
 } )
 store.dispatch ( { type: 'setMain', s: start } )

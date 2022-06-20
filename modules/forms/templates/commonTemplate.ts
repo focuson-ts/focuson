@@ -3,10 +3,10 @@ export type {commonParams} = {
 {commonParamDefns}
 }
 
-export const identityL = identityOptics<FState> ();
+export const identityL = identityOptics<{stateName}> ();
 export const commonIdsL = identityL.focusQuery('CommonIds');
 
-export const commonIds: NameAndLens<FState> = {
+export const commonIds: NameAndLens<{stateName}> = {
 {commonParamNameAndLens}
 }
 

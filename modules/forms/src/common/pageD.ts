@@ -44,7 +44,7 @@ export interface ButtonDefnInPage<B> {
   [ name: string ]: B
 }
 
-export type PageType = 'MainPage' | 'ModalPage' | 'ModalPopup'
+export type PageType = 'MainPage' | 'ModalPage' | 'ModalPopup' | 'MainPopup'
 export type ModalOrMainData<B, G> = ModalData<B, G> | MainData<B, G>
 export interface ModalData<B, G> {
   modal: ModalPageD<B, G>;
@@ -89,7 +89,7 @@ export interface VariableByPathD {
 export type VariableD = VariableByCodeD | VariableByPathD
 
 export interface MainPageD<Buttons, G> extends HasLayout, HasGuards<G> {
-  pageType: 'MainPage',
+  pageType: 'MainPage' | 'MainPopup',
   commonParams?: NameAnd<CommonLensRestParam<any>>,
   name: string,
   modes: PageMode[],
@@ -103,6 +103,7 @@ export interface MainPageD<Buttons, G> extends HasLayout, HasGuards<G> {
   buttonOrder?: string[];
   buttons: ButtonDefnInPage<Buttons>;
 }
+
 export interface ModalPageD<Buttons, G> extends HasLayout, HasGuards<G> {
   pageType: 'ModalPage' | 'ModalPopup',
   name: string,
@@ -125,7 +126,6 @@ export function dataDsIn<B, G> ( pds: PageD<B, G>[], stopAtDisplay?: boolean ): 
   return result
 }
 
-
 export function allRestAndActions<B, G> ( pds: PageD<B, G>[] ): [ PageD<B, G>, string, RestDefnInPageProperties<G>, RestActionDetail ][] {
   return unique ( allMainPages ( pds ).flatMap ( pd => {
     return sortedEntries ( pd.rest ).flatMap ( ( [ name, rdp ] ) => {
@@ -134,7 +134,6 @@ export function allRestAndActions<B, G> ( pds: PageD<B, G>[] ): [ PageD<B, G>, s
     } )
   } ), ( [ p, name, r, rad ] ) => safeString ( r.rest.namePrefix ) + name + p.name + "," + r.rest.dataDD.name + "," + rad.name )
 }
-
 
 export function allMainPages<B, G> ( pds: PageD<B, G>[] ): MainPageD<B, G>[] {
   return pds.filter ( isMainPage )

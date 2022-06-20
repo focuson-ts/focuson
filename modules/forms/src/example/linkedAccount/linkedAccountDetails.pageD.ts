@@ -27,7 +27,7 @@ export const CreatePaymentMP: ExampleModalPage = {
       mode: 'view',
       main: OverpaymentMainPage,
       copy: { from: '~/rememberedForTest', to: '~/selectedIndex' },
-      copyOnClose: { from: '~/selectedIndex', to: '~/rememberedForTest' }
+      copyOnClose: { from: '~/selectedIndex', to: '~/rememberedForTest' },
     }
   },
   pageType: 'ModalPopup',
