@@ -32,7 +32,7 @@ function bankStuff ( guard: string[], packageName: string ): GuardedStoredProced
       'accountNo',
       ind ( 'obso_ind' ),
       ind ( 'obbp_ind' ),
-      { type: 'output', name: 'outputMessage', javaType: 'String', sqlType: 'VARCHAR' }
+      { type: 'output', name: 'outputMessage', javaType: 'String', sqlType: 'VARCHAR' , msgLevel: 'error'}
     ], schema: onlySchema
   })
 }

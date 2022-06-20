@@ -90,6 +90,7 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
       restName: 'payments',
       confirm: 'Really?',
       enabledBy: 'haveLegalSelectedPayment',
+      validate: false,
       action: { state: 'cancel' },
       deleteOnSuccess: [ '~/display/collectionSummary', '~/display/collectionHistory', '~/selectedCollectionIndex' ]
     },

@@ -47,11 +47,18 @@ export const singleCollectionPaymentRD: ExampleRestD = {
   url: '/api/payment?{query}',
   actions: [ { state: 'cancel' }, { state: 'revalidate' } ],
   mutations: [
-    { restAction: { state: 'cancel' }, mutateBy: { type: 'storedProc', name: 'auditCancel', schema: onlySchema, params: [ 'accountId', 'paymentId', 'brandRef' ] } },
+    { restAction: { state: 'cancel' },
+      mutateBy: { type: 'storedProc', name: 'auditCancel',
+        schema: onlySchema, params: [ 'accountId', 'paymentId', 'brandRef' ] } },
+
+
+
     { restAction: { state: 'revalidate' }, mutateBy: { type: 'storedProc', name: 'auditrevalidate', schema: onlySchema, params: [ 'accountId', 'paymentId' ] } }
   ],
   states: {
     cancel: { url: '/api/payment/cancel?{query}', params: { ...fromCommonIds ( 'accountId', 'brandRef' ), paymentId: collectionPaymentParams.paymentId } },
+
+
     revalidate: { url: '/api/payment/revalidate?{query}', params: { ...fromCommonIds ( 'accountId' ), paymentId: collectionPaymentParams.paymentId } },
   }
 }

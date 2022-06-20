@@ -45,6 +45,7 @@ export const intValidationParams: DisplayCompParamD = {
   required: { paramType: 'boolean', needed: 'no', default: true },
   min: { paramType: 'object', needed: 'no' },
   max: { paramType: 'object', needed: 'no' },
+  step: { paramType: 'object', needed: 'no' },
 }
 export const commonInputParams: DisplayCompParamD = {
   ...commonParams,
