@@ -61,7 +61,7 @@ export const newBankDetailsDD: ExampleDataD = {
     line3: { dataDD: OneLineStringDD, sample: [ 'Surrey', '' ], displayParams: { required: false } },
     line4: { dataDD: OneLineStringDD, sample: [ 'England', 'Ireland' ] },
     postcode: { dataDD: OneLineStringDD, sample: [ 'LW12 5f', 'IR45 3GT' ], displayParams: { buttons: [ 'address' ] } },
-    sortCode: { dataDD: OneLineStringDD, sample: [ '10-12-31', '34-43-23¶' ] },
+    sortCode: { dataDD: OneLineStringDD, sample: [ '10-12-31', '34-43-23' ], displayParams: { buttons: [ 'search' ] } },
     accountNo: { dataDD: AccountIdDD, sample: [ 100233, 345345 ] }
   }
 }

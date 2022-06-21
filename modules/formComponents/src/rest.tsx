@@ -2,7 +2,7 @@ import { HasRestCommandL } from "@focuson/rest";
 import { reasonFor } from "@focuson/state";
 import { DateFn, RestAction, RestResult } from "@focuson/utils";
 import { CommonStateProps, CustomButtonType, getButtonClassName } from "./common";
-import { getRefForValidateLogicToButton, HasPageSelectionLens, HasSimpleMessageL, hasValidationErrorAndReport } from "@focuson/pages";
+import { CopyDetails, getRefForValidateLogicToButton, HasPageSelectionLens, HasSimpleMessageL, hasValidationErrorAndReport } from "@focuson/pages";
 import { useRef } from "react";
 
 export interface RestButtonProps<S, C> extends CommonStateProps<S, any, C>, CustomButtonType {
@@ -14,6 +14,7 @@ export interface RestButtonProps<S, C> extends CommonStateProps<S, any, C>, Cust
   validate?: boolean;
   text?: string;
   deleteOnSuccess?: string | string[];
+  copyOnSuccess? : CopyDetails[];
   messageOnSuccess?: string;
   dateFn?: DateFn
 }
@@ -24,7 +25,7 @@ function confirmIt ( c: boolean | string | undefined ) {
   return window.confirm ( text )
 }
 export function RestButton<S, C extends HasRestCommandL<S> & HasSimpleMessageL<S> & HasPageSelectionLens<S>> ( props: RestButtonProps<S, C> ) {
-  const { id, rest, action, result, state, text, confirm, validate, dateFn, deleteOnSuccess, enabledBy, name, messageOnSuccess, buttonType } = props
+  const { id, rest, action, result, state, text, confirm, validate, dateFn, deleteOnSuccess, enabledBy, name, messageOnSuccess, buttonType,copyOnSuccess } = props
   const ref = getRefForValidateLogicToButton ( id,validate, enabledBy )
   const debounceRef = useRef<Date> ( null )
 
@@ -44,7 +45,7 @@ export function RestButton<S, C extends HasRestCommandL<S> & HasSimpleMessageL<S
     const realvalidate = validate === undefined ? true : validate
     if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return
     if ( confirmIt ( confirm ) )
-      state.copyWithLens ( state.context.restL ).transform ( old => [ ...old, { restAction: action, name: rest, deleteOnSuccess, messageOnSuccess } ], reasonFor ( 'RestButton', 'onClick', id ) )
+      state.copyWithLens ( state.context.restL ).transform ( old => [ ...old, { restAction: action, name: rest, deleteOnSuccess, messageOnSuccess,copyOnSuccess } ], reasonFor ( 'RestButton', 'onClick', id ) )
   }
 
   return <button ref={ref} onClick={onClick} className={getButtonClassName ( buttonType )}>{text ? text : name}</button>

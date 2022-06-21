@@ -1,6 +1,6 @@
 import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
 import { NameAnd, RestAction, safeObject, safeString, sortedEntries, toArray, unique } from "@focuson/utils";
-import {  paramsForRestAction } from "../codegen/codegen";
+import { paramsForRestAction } from "../codegen/codegen";
 import { AccessDetails, GuardedMutation, MutationDetail, Mutations, MutationsForRestAction, SelectMutation } from "./resolverD";
 import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 import { allMainPages, MainPageD, PageD, RestDefnInPageProperties } from "./pageD";
@@ -249,6 +249,7 @@ export interface MutuationAndResolverFolder<Acc> {
 }
 export function foldPagesToRestToMutationsAndResolvers<Acc> ( ps: MainPageD<any, any>[], acc: Acc, folder: MutuationAndResolverFolder<Acc> ): Acc {
   return ps.reduce ( ( acc, p ) => Object.entries ( p.rest ).reduce ( ( acc, [ name, rdp ] ) => {
+    if ( rdp.rest === undefined ) throw Error ( `Error in page ${p.name}.rest[${name}]. The rest is undefined.\n    ${JSON.stringify ( rdp )}` )
     const mutationsAcc = toArray ( rdp.rest.mutations ).flatMap ( mr => toArray ( mr.mutateBy ) ).reduce ( ( acc, m ) => {
       let simple = folder.simple ( m, p, rdp.rest ) ( acc );
       if ( m.type !== 'case' ) return simple;

@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@focuson/lens": "1.21.1",
+    "focuson@natwest/postcode": "1.2.2",
     "@focuson/fetcher": "1.21.1"
   },
   "devDependencies": {

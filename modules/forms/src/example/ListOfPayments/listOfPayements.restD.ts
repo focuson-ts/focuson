@@ -33,7 +33,7 @@ function bankStuff ( guard: string[], packageName: string ): GuardedStoredProced
       'accountNo',
       ind ( 'obso_ind' ),
       ind ( 'obbp_ind' ),
-      { type: 'output', name: 'outputMessage', javaType: 'String', sqlType: 'VARCHAR' , msgLevel: 'error'}
+      { type: 'output', name: 'outputMessage', javaType: 'String', sqlType: 'VARCHAR', msgLevel: 'error' }
     ], schema: onlySchema
   })
 }
@@ -66,7 +66,7 @@ export const PrintRecordRD: ExampleRestD = {
   },
   dataDD: PrintRecordHistoryDD,
   url: '/api/printrecord?{query}',
-  actions: [ 'create', 'update',{ state: 'print' } ],
+  actions: [ 'create', 'update', { state: 'print' } ],
   states: {
     print: {
       url: '/api/print?{query}',
@@ -122,11 +122,11 @@ export const CurrentPaymentCountsRD: ExampleRestD = {
   resolvers: {
     getCurrentPaymentCounts: [
       {
-      type: 'sql', name: 'get', schema: onlySchema, sql: 'someSql', params: [
-        { type: 'output', javaType: 'Integer', rsName: 'xxx', name: 'standingOrders' },
-        { type: 'output', javaType: 'Integer', rsName: 'yyy', name: 'directDebits' },
-      ]
-    }]
+        type: 'sql', name: 'get', schema: onlySchema, sql: 'someSql', params: [
+          { type: 'output', javaType: 'Integer', rsName: 'xxx', name: 'standingOrders' },
+          { type: 'output', javaType: 'Integer', rsName: 'yyy', name: 'directDebits' },
+        ]
+      } ]
   }
 }
 export const accountAndAddressDetailsRD: ExampleRestD = {
@@ -147,21 +147,20 @@ export const postcodeRestD: RestD<AllGuards> = {
 
 }
 
-export const addressLookupDataD: ExampleDataD = {
-  description: "",  name: "AddressLookup", structure: {
-    bankName: {dataDD: StringDD}
+export const sortCodeLookupDD: ExampleDataD = {
+  description: "", name: "AddressLookup", structure: {
+    bankName: { dataDD: StringDD, sample: [ 'Found bank 1', 'Found bank 2' ] }
   }
-
 }
 
-export const addressLookupParams: RestParams = {
+export const sortCodeLookupParams: RestParams = {
   dbName: { ...allCommonIds.dbName },
-  sortcode: { ...StringParam, lens: '~/addressSearch/sorcode', testValue: 'LW12 4RG' }
+  sortcode: { ...StringParam, lens: '~/tempListOfPayments/newBankDetails/sortCode', testValue: 'LW12 4RG' }
 }
-export const addressLookupRestD: RestD<AllGuards> = {
-  params: addressLookupParams,
-  dataDD: addressLookupDataD,
-  url: '/api/listOfPayments/postCode?{query}',
+export const sortcodeLookUpRD: RestD<AllGuards> = {
+  params: sortCodeLookupParams,
+  dataDD: sortCodeLookupDD,
+  url: '/api/listOfPayments/sortcode?{query}',
   actions: [ 'get' ],
 
 }
