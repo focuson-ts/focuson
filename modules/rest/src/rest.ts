@@ -1,6 +1,7 @@
 import { reqFor, Tags, UrlConfig } from "@focuson/template";
 import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RestAction, RestStateChange, safeArray, safeObject, safeString, sortedEntries, toArray } from "@focuson/utils";
 import { identityOptics, massTransform, Optional, Transform } from "@focuson/lens";
+import { CopyDetails } from "@focuson/pages";
 
 
 export interface RestDebug {
@@ -89,7 +90,8 @@ export interface RestCommand {
   messageOnSuccess?: string
   comment?: string;
   /** If the rest command was created by a fetcher these are the tags */
-  tagNameAndTags?: { tags: Tags, tagName: string }
+  tagNameAndTags?: { tags: Tags, tagName: string },
+  copyOnSuccess?: CopyDetails[]
 }
 export interface HasRestCommands {
   restCommands: RestCommand[]
@@ -188,14 +190,14 @@ const deleteAfterRest = <S> ( fromPath: ( path: string ) => Optional<S, any> ) =
   if ( restCommand.deleteOnSuccess === undefined ) return s
   return toArray ( restCommand.deleteOnSuccess ).reduce ( ( acc: S, path: string ) => fromPath ( path ).set ( acc, undefined ), s )
 };
-export function processAllRestResults<S, MSGS> ( messageL: Optional<S, MSGS[]>, stringToMsg: ( msg: string ) => MSGS, restL: Optional<S, RestCommand[]>, pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>, results: RestResult<S, MSGS, OneRestDetails<S, any, any, MSGS>>[], s: S ) {
-  const withResults: S = results.reduce ( processRestResult ( messageL, stringToMsg ), s );
-  const fromPath = pathToLens ( s )
-  const withDeleteAfterRest: S = results.reduce ( ( acc, res ) =>
-    deleteAfterRest ( fromPath ) ( acc, res.restCommand ), withResults )
-  const withCommandsRemoved: S = restL.set ( withDeleteAfterRest, [] );
-  return withCommandsRemoved
-}
+// export function processAllRestResults<S, MSGS> ( messageL: Optional<S, MSGS[]>, stringToMsg: ( msg: string ) => MSGS, restL: Optional<S, RestCommand[]>, pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>, results: RestResult<S, MSGS, OneRestDetails<S, any, any, MSGS>>[], s: S ) {
+//   const withResults: S = results.reduce ( processRestResult ( messageL, stringToMsg ), s );
+//   const fromPath = pathToLens ( s )
+//   const withDeleteAfterRest: S = results.reduce ( ( acc, res ) =>
+//     deleteAfterRest ( fromPath ) ( acc, res.restCommand ), withResults )
+//   const withCommandsRemoved: S = restL.set ( withDeleteAfterRest, [] );
+//   return withCommandsRemoved
+// }
 
 export interface RestCommandAndTxs<S> {
   restCommand: RestCommand;
@@ -230,10 +232,12 @@ export async function restToTransforms<S, MSGS> (
   if ( debug ) console.log ( "rest-requests", requests )
   const results: RestResult<S, MSGS, any>[] = await massFetch ( fetchFn, requests )
   if ( debug ) console.log ( "rest-results", results )
-  const deleteTx = ( d: string ): Transform<S, any> => [ pathToLens ( s ) ( d ), () => undefined ];
+  let toLens = pathToLens ( s );
+  const deleteTx = ( d: string ): Transform<S, any> => [ toLens ( d ), () => undefined ];
   const restCommandAndTxs: RestCommandAndTxs<S>[] = results.map ( res => {
-    const deleteTxs = toArray ( res.restCommand.deleteOnSuccess ).map ( deleteTx )
-    const txs: Transform<S, any>[] = [ ...restResultToTx ( messageL, res.one.messages, stringToMsg, res.one.extractData ) ( res ), ...deleteTxs ];
+    const deleteTxs: Transform<S, any>[] = toArray ( res.restCommand.deleteOnSuccess ).map ( deleteTx )
+    const copies : Transform<S, any>[]= toArray(res.restCommand.copyOnSuccess).map( cd => [toLens(cd.from), () => toLens(cd.to)])
+    const txs: Transform<S, any>[] = [ ...restResultToTx ( messageL, res.one.messages, stringToMsg, res.one.extractData ) ( res ), ...deleteTxs, ...copies ];
     const trace: Transform<S, any>[] = tracing ? [ [ traceL, old => [ ...safeArray ( old ), { restCommand: res.restCommand, lensTxs: txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( s ) ) ] ) } ] ] ] : []
     const restAndTxs: RestCommandAndTxs<S> = { ...res, txs: [ ...txs, ...trace ] };
     return restAndTxs

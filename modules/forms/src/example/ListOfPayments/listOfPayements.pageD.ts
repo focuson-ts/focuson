@@ -1,13 +1,12 @@
-import {} from "../commonEnums";
 import { AccountDetailsDD, addressSearchDD, CurrentPaymentCountsDD, postCodeDataForListOfPaymentsLineD, printRecordDD, PrintRecordHistoryDD } from "./listOfPayements.dataD";
-import { accountAndAddressDetailsRD, CurrentPaymentCountsRD, postcodeRestD, PrintRecordHistoryRD, PrintRecordRD } from "./listOfPayements.restD";
+import { accountAndAddressDetailsRD, CurrentPaymentCountsRD, postcodeRestD, PrintRecordHistoryRD, PrintRecordRD, sortCodeLookupDD, sortcodeLookUpRD } from "./listOfPayements.restD";
 import { ExampleMainPage, ExampleModalPage } from "../common";
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
-import { ButtonDefnInPage } from "../../common/pageD";
-import { AllButtonsInPage, RawButtons } from "../../buttons/allButtons";
+import { RawButtons } from "../../buttons/allButtons";
 import { AllGuards } from "../../buttons/guardButton";
 import { NatNumDd, OneLineStringDD } from "../../common/dataD";
 import { toArray } from "@focuson/utils";
+import { addressLookupDataD, addressLookupRD } from "../../../dist/src/example/ListOfPayments/listOfPayements.restD";
 
 export const AddressModalPage: ExampleModalPage = {
   pageType: 'ModalPage',
@@ -21,7 +20,7 @@ export const AddressModalPage: ExampleModalPage = {
     commit: { control: 'ModalCommitButton', text: 'save', enabledBy: 'userClickedResult' },
     search: {
       control: 'RestButton', action: 'get', restName: 'postcode',
-      deleteOnSuccess: '~/selectedPostCodeIndex'
+
     },
   }
 }
@@ -49,7 +48,9 @@ export const EditlistOfPaymentsPagePD: ExampleModalPage = {
         { from: '~/selectedPostCodeAddress/line4', to: '~/tempListOfPayments/newBankDetails/line4' },
         { from: '~/selectedPostCodeAddress/postcode', to: '~/tempListOfPayments/newBankDetails/postcode' }
       ]
-    }
+    },
+    search: { control: 'RestButton', restName: 'sortCodeLookup', action: 'get', validate: false,
+      copyOnSuccess: { from: '~/sortCodeLookup', to: '~/tempListOfPayments/newBankDetails/sortCode' }}
   },
 }
 
@@ -66,7 +67,7 @@ const addButton: RawButtons<AllGuards> = {
   mode: "create",
   copyOnClose: { to: '~/display[$append]' },
   setToLengthOnClose: { variable: '~/selected', array: '~/display' },
-  restOnCommit: {restName: 'onePayment', action: 'create', result: "refresh"}
+  restOnCommit: { restName: 'onePayment', action: 'create', result: "refresh" }
 }
 
 const editButton: RawButtons<AllGuards> = {
@@ -75,7 +76,7 @@ const editButton: RawButtons<AllGuards> = {
   mode: "edit",
   copyOnClose: { to: '~/display[~/selected]' },
   copy: [ { from: '~/display[~/selected]' }, ...toArray ( addOrEditButton.copy ) ],
-  restOnCommit: {restName: 'onePayment', action: 'update', result: "refresh"}
+  restOnCommit: { restName: 'onePayment', action: 'update', result: "refresh" }
 }
 
 export const ListOfPaymentsPagePD: ExampleMainPage = {
@@ -90,7 +91,8 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
     accountDetails: { dataDD: AccountDetailsDD },
     addressSearch: { dataDD: addressSearchDD },
     selectedPostCodeIndex: { dataDD: OneLineStringDD },
-    selectedPostCodeAddress: { dataDD: postCodeDataForListOfPaymentsLineD }
+    selectedPostCodeAddress: { dataDD: postCodeDataForListOfPaymentsLineD },
+    sortCodeLookup: { dataDD: sortCodeLookupDD }
   },
   modals: [ { modal: EditlistOfPaymentsPagePD }, { modal: AddressModalPage } ],
   modes: [ 'view' ],
@@ -101,24 +103,25 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
     currentPayments: { rest: CurrentPaymentCountsRD, fetcher: true, targetFromPath: '~/currentPayments' },
     accountDetails: { rest: accountAndAddressDetailsRD, fetcher: true, targetFromPath: '~/accountDetails' },
     postcode: { rest: postcodeRestD, targetFromPath: '~/addressSearch/searchResult' },
+    sortCodeLookup: { rest: sortcodeLookUpRD, targetFromPath: '~/sortCodeLookup' },
   },
-  variables:{
-    selectedItem: {constructedBy: 'path', path: '~/display[~/selected]'},
-    currentListOfPayments: {constructedBy: 'path', path: '#selectedItem/listOfPayments'}
+  variables: {
+    selectedItem: { constructedBy: 'path', path: '~/display[~/selected]' },
+    currentListOfPayments: { constructedBy: 'path', path: '#selectedItem/listOfPayments' }
   },
   guards: {
     canPrint: { condition: 'equals', value: false, path: '~/display[~/selected]/alreadyPrinted' },
 
-    needsStandingOrders: { condition: '>0 and true', number : '~/currentPayments/standingOrders', boolean:  '#currentListOfPayments/standingOrders' },
-    needsOpenBankingStandingOrders: { condition: '>0 and true', number : '~/currentPayments/openBankingStandingOrders', boolean:  '#currentListOfPayments/openBankingStandingOrders' },
-    needsDirectDirects: { condition: '>0 and true', number : '~/currentPayments/directDebits', boolean:  '#currentListOfPayments/directDebits' },
-    needBillPayments: { condition: '>0 and true', number : '~/currentPayments/billPayments', boolean:  '#currentListOfPayments/billPayments' },
-    needsOpenBanking: { condition: '>0 and true', number : '~/currentPayments/openBanking', boolean:  '#currentListOfPayments/billPayments' },
-    needsSomething: {condition: 'or', conditions: ['needsStandingOrders', 'needsOpenBankingStandingOrders', 'needsDirectDirects', 'needBillPayments', 'needsOpenBanking']},
+    needsStandingOrders: { condition: '>0 and true', number: '~/currentPayments/standingOrders', boolean: '#currentListOfPayments/standingOrders' },
+    needsOpenBankingStandingOrders: { condition: '>0 and true', number: '~/currentPayments/openBankingStandingOrders', boolean: '#currentListOfPayments/openBankingStandingOrders' },
+    needsDirectDirects: { condition: '>0 and true', number: '~/currentPayments/directDebits', boolean: '#currentListOfPayments/directDebits' },
+    needBillPayments: { condition: '>0 and true', number: '~/currentPayments/billPayments', boolean: '#currentListOfPayments/billPayments' },
+    needsOpenBanking: { condition: '>0 and true', number: '~/currentPayments/openBanking', boolean: '#currentListOfPayments/billPayments' },
+    needsSomething: { condition: 'or', conditions: [ 'needsStandingOrders', 'needsOpenBankingStandingOrders', 'needsDirectDirects', 'needBillPayments', 'needsOpenBanking' ] },
 
     authorisedByUser: { condition: 'equals', value: '"y"', path: '~/display[~/selected]/authorisedByCustomer' },
     sendingToUser: { condition: 'contains', values: [ 'M', 'J' ], path: '~/display[~/selected]/requestedBy' },
-    authorisedToSend: { condition: 'or', conditions: [ 'sendingToUser', 'authorisedByUser'] }
+    authorisedToSend: { condition: 'or', conditions: [ 'sendingToUser', 'authorisedByUser' ] }
   },
   buttons: {
     prev: { control: 'ListPrevButton', list: '~/display', value: '~/selected' },
@@ -129,8 +132,7 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
       control: 'RestButton', action: { state: 'print' }, restName: 'onePayment',
       enabledBy: [ 'authorisedToSend', 'needsSomething', 'canPrint' ],
       confirm: 'Really?',
-      deleteOnSuccess: '~/display'
+      deleteOnSuccess: '~/display',
     },
   },
 }
-
