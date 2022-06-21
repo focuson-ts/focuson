@@ -181,7 +181,7 @@ function makeLayoutPrefixPostFix<B, G> ( mainPage: MainPageD<B, G>, page: PageD<
     return { layoutPrefixString, layoutPostfixString };
   } else return { layoutPrefixString: defaultOpen, layoutPostfixString: defaultClose }
 }
-function makeGuardVariables<B, G extends GuardWithCondition> ( hasGuards: HasGuards<G>, makeGuard: MakeGuard<G>, params: TSParams, mainP: MainPageD<B, G>, page: PageD<B, G> ): string[] {
+export function makeGuardVariables<B, G extends GuardWithCondition> ( hasGuards: HasGuards<G>, makeGuard: MakeGuard<G>, params: TSParams, mainP: MainPageD<B, G>, page: PageD<B, G> ): string[] {
   if ( hasGuards.guards === undefined ) return []
   let guards = unsortedEntries ( hasGuards.guards ).map ( ( [ name, guard ] ) => {
     const maker = makeGuard[ guard.condition ]

@@ -102,19 +102,23 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
     accountDetails: { rest: accountAndAddressDetailsRD, fetcher: true, targetFromPath: '~/accountDetails' },
     postcode: { rest: postcodeRestD, targetFromPath: '~/addressSearch/searchResult' },
   },
+  variables:{
+    selectedItem: {constructedBy: 'path', path: '~/display[~/selected]'},
+    currentListOfPayments: {constructedBy: 'path', path: '#selectedItem/listOfPayments'}
+  },
   guards: {
     canPrint: { condition: 'equals', value: false, path: '~/display[~/selected]/alreadyPrinted' },
 
-    hasStandingOrders: { condition: '>0', path: '~/display[~/selected]/listOfPayments/standingOrders/numberOfItems' },
-    hasOpenBankingStandingOrders: { condition: '>0', path: '~/display[~/selected]/listOfPayments/openBankingStandingOrders/numberOfItems' },
-    hasDirectDebits: { condition: '>0', path: '~/display[~/selected]/listOfPayments/directDebits/numberOfItems' },
-    hasBillPayments: { condition: '>0', path: '~/display[~/selected]/listOfPayments/billPayments/numberOfItems' },
-    hasOpenBanking: { condition: '>0', path: '~/display[~/selected]/listOfPayments/openBanking/numberOfItems' },
-    hasSomethingToPrint: { condition: 'or', conditions: [ 'hasStandingOrders', 'hasOpenBankingStandingOrders', 'hasDirectDebits', 'hasBillPayments', 'hasOpenBanking' ] },
+    needsStandingOrders: { condition: '>0 and true', number : '~/currentPayments/standingOrders', boolean:  '#currentListOfPayments/standingOrders' },
+    needsOpenBankingStandingOrders: { condition: '>0 and true', number : '~/currentPayments/openBankingStandingOrders', boolean:  '#currentListOfPayments/openBankingStandingOrders' },
+    needsDirectDirects: { condition: '>0 and true', number : '~/currentPayments/directDebits', boolean:  '#currentListOfPayments/directDebits' },
+    needBillPayments: { condition: '>0 and true', number : '~/currentPayments/billPayments', boolean:  '#currentListOfPayments/billPayments' },
+    needsOpenBanking: { condition: '>0 and true', number : '~/currentPayments/openBanking', boolean:  '#currentListOfPayments/billPayments' },
+    needsSomething: {condition: 'or', conditions: ['needsStandingOrders', 'needsOpenBankingStandingOrders', 'needsDirectDirects', 'needBillPayments', 'needsOpenBanking']},
 
     authorisedByUser: { condition: 'equals', value: '"y"', path: '~/display[~/selected]/authorisedByCustomer' },
     sendingToUser: { condition: 'contains', values: [ 'M', 'J' ], path: '~/display[~/selected]/requestedBy' },
-    canClickPrint: { condition: 'or', conditions: [ 'sendingToUser', 'authorisedByUser' ] }
+    authorisedToSend: { condition: 'or', conditions: [ 'sendingToUser', 'authorisedByUser'] }
   },
   buttons: {
     prev: { control: 'ListPrevButton', list: '~/display', value: '~/selected' },
@@ -123,7 +127,7 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
     edit: editButton,
     print: {
       control: 'RestButton', action: { state: 'print' }, restName: 'onePayment',
-      enabledBy: [ 'canClickPrint', 'hasSomethingToPrint', 'canPrint' ],
+      enabledBy: [ 'authorisedToSend', 'needsSomething', 'canPrint' ],
       confirm: 'Really?',
       deleteOnSuccess: '~/display'
     },

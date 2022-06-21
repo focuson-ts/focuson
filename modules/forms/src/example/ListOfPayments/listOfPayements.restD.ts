@@ -1,11 +1,12 @@
-import { ExampleRestD } from "../common";
+import { ExampleDataD, ExampleRestD } from "../common";
 
 import { AccountDetailsDD, CurrentPaymentCountsDD, postCodeSearchResponseDD, PrintRecordHistoryDD } from "./listOfPayements.dataD";
-import { IntParam, RestD, RestParams, StringParam } from "../../common/restD";
+import { IntParam, OneTableInsertSqlStrategyForNoIds, RestD, RestParams, StringParam } from "../../common/restD";
 import { onlySchema } from "../database/tableNames";
 import { AllGuards } from "../../buttons/guardButton";
 import { allCommonIds, fromCommonIds } from "../commonIds";
 import { GuardedStoredProcedureMutation, MutationParamForStoredProc, OutputForSqlMutationParam } from "../../common/resolverD";
+import { StringDD } from "../../common/dataD";
 
 export const PrintRecordHistoryParams: RestParams = fromCommonIds ( 'accountId', 'vbAcountSeq', 'employeeId' )//vbAcountSeq,rbsMtAccount,newBankSeq,employeeId,
 
@@ -141,6 +142,25 @@ export const postcodeParams: RestParams = {
 export const postcodeRestD: RestD<AllGuards> = {
   params: postcodeParams,
   dataDD: postCodeSearchResponseDD,
+  url: '/api/listOfPayments/postCode?{query}',
+  actions: [ 'get' ],
+
+}
+
+export const addressLookupDataD: ExampleDataD = {
+  description: "",  name: "AddressLookup", structure: {
+    bankName: {dataDD: StringDD}
+  }
+
+}
+
+export const addressLookupParams: RestParams = {
+  dbName: { ...allCommonIds.dbName },
+  sortcode: { ...StringParam, lens: '~/addressSearch/sorcode', testValue: 'LW12 4RG' }
+}
+export const addressLookupRestD: RestD<AllGuards> = {
+  params: addressLookupParams,
+  dataDD: addressLookupDataD,
   url: '/api/listOfPayments/postCode?{query}',
   actions: [ 'get' ],
 

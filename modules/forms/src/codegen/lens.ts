@@ -71,7 +71,7 @@ export const stateQueryForPathsFnButtonParams = <B, G> ( errorPrefix: string, pa
     throw e
   }
 }
-export const stateQueryForPathsFnParams  = <B, G> ( errorPrefix: string, params: TSParams, mainPage: MainPageD<B, G>, p: PageD<B, G>, path: string ) => {
+export const stateQueryForPathsFnParams = <B, G> ( errorPrefix: string, params: TSParams, mainPage: MainPageD<B, G>, p: PageD<B, G>, path: string ) => {
   try {
     return parsePath ( path, stateCodeBuilder ( {
       '': 'state=>state'
@@ -82,7 +82,7 @@ export const stateQueryForPathsFnParams  = <B, G> ( errorPrefix: string, params:
   }
 }
 export const stateQueryForGuards = <B, G> ( errorPrefix: string, params: TSParams, mainPage: MainPageD<B, G>, p: PageD<B, G>, path: string ) => {
-  if ( path.indexOf ( '#' ) >= 0 ) throw new Error ( `${errorPrefix}\nCurrently guards cannot use variables. Path is ${path}` )
+  // if ( path.indexOf ( '#' ) >= 0 ) throw new Error ( `${errorPrefix}\nCurrently guards cannot use variables. Path is ${path}` )
   return stateQueryForParams ( errorPrefix, params, mainPage, p, path )
 }
 
@@ -110,15 +110,18 @@ export const stateForGuardVariable = <B, G> ( mainPage: MainPageD<B, G>, page: P
 export const stateForGuardButton = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params: TSParams, guardName: string ) =>
   ( path: string ) => `fullState${stateFocusQueryWithTildaFromPage ( `Page ${page.name} guard variable ${guardName}`, params, mainPage, page, path )}`;
 
-export function stateCodeBuilderWithSlashAndTildaFromIdFn<B, G> ( params: TSParams, p: PageD<B, G> ) {
-  return stateCodeBuilder ( {
-    '/': `id => id`,
-    '~': `id => id.focusQuery('${p.name}')`,
-  }, 'changeme' );
+export function stateCodeBuilderWithSlashAndTildaFromIdFn<B, G> ( params: TSParams, p: PageD<B, G>, optionalsName: string ) {
+  return {
+    ...stateCodeBuilder ( {
+      '/': `id`,
+      '~': `id.focusQuery('${p.name}')`,
+    }, optionalsName ),
+    initialVariable ( name: string ): string {return `${optionalsName}.${name}(identityL)`;},
+  }
 }
-export const lensFocusQueryWithSlashAndTildaFromIdDn = <B, G> ( errorPrefix: string, params: TSParams, p: PageD<B, G>, path: string ): string => {
+export const lensFocusQueryWithSlashAndTildaFromIdFn = <B, G> ( errorPrefix: string, params: TSParams, p: PageD<B, G>, optionalsName: string, path: string ): string => {
   try {
-    return parsePath ( path, stateCodeBuilderWithSlashAndTildaFromIdFn ( params, p ) )
+    return parsePath ( path, stateCodeBuilderWithSlashAndTildaFromIdFn ( params, p, optionalsName ) )
   } catch ( e: any ) {
     console.error ( errorPrefix )
     throw e

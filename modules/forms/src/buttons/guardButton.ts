@@ -9,7 +9,7 @@ import { PageMode } from "@focuson/pages";
 
 export type AllGuards = LocalVariableGuard | LocalVariableMoreThanZero | LocalVariableLessThanLengthMinusOne |
   LocalVariableValueEquals<any> | LocalVariableDefined | ALessThanB | BinaryCondition |
-  AndOrCondition | NotCondition | PageModeIs | ContainsGuard
+  AndOrCondition | NotCondition | PageModeIs | ContainsGuard | NumberAndBooleanCondition
 
 function errorPrefix ( mainP: PageD<any, any>, p: PageD<any, any>, name: string, guard: any ) {
   if ( mainP.name === p.name ) return `MakeGuardVariable for ${p.name} ${name} ${JSON.stringify ( guard )}`
@@ -76,13 +76,20 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
   "contains": {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: ContainsGuard ) =>
-      `const ${guardName ( name )} =  ${JSON.stringify ( guard.values  )}.includes( ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJsonOr(''))`
+      `const ${guardName ( name )} =  ${JSON.stringify ( guard.values )}.includes( ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJsonOr(''))`
   },
   ">0": {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableMoreThanZero ) =>
       `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJsonOr(0) >0`
   },
+
+  '>0 and true': {
+    imports: [],
+    makeGuardVariable: ( params, mainP, page, name, guard: NumberAndBooleanCondition ) =>
+      `const ${guardName ( name )} =  (${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.number )}.optJsonOr(0) >0) && ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.boolean )}.optJsonOr(false)      `
+  },
+
   "<arrayEnd": {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableLessThanLengthMinusOne ) =>
@@ -108,7 +115,7 @@ export interface LocalVariableGuard {
   path: string,
   values: NameAnd<any> | undefined
 }
-export interface ContainsGuard{
+export interface ContainsGuard {
   condition: 'contains'
   path: string,
   values: string[]
@@ -145,6 +152,11 @@ export interface BinaryCondition {
   condition: '<#' | '>#'
   path: string;
   value: number
+}
+export interface NumberAndBooleanCondition {
+  condition: '>0 and true'
+  number: string;
+  boolean: string
 }
 
 

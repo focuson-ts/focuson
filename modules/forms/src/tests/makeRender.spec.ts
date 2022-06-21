@@ -1,5 +1,5 @@
 import { EAccountsSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD";
-import { createAllReactCalls, createAllReactComponents, createReactComponent, createReactPageComponent, listComponentsIn, processParam } from "../codegen/makeRender";
+import { createAllReactCalls, createAllReactComponents, createReactComponent, createReactPageComponent, listComponentsIn, makeGuardVariables, processParam } from "../codegen/makeRender";
 import { DisplayCompParamType, LabelAndStringInputCD } from "../common/componentsD";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
@@ -10,6 +10,8 @@ import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { listOccupationsModalPD, OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
 import { oneOccupationIncomeDetailsDD } from "../example/occupationAndIncome/occupationAndIncome.dataD";
 import { paramsForTest } from "./paramsForTest";
+import { makeGuardButtonVariables } from "../codegen/makeButtons";
+import { ListOfPaymentsPagePD } from "../example/ListOfPayments/listOfPayements.pageD";
 
 //
 describe ( " listComponentsIn", () => {
@@ -286,4 +288,20 @@ describe ( "make components - the different parameter types", () => {
     expect ( makeParam ( 'path', '#one' ).replace ( /"/g, "'" ) ).toEqual ( "{state.copyWithLens(OccupationAndIncomeSummaryOptionals.one(identityL))}" )
   } )
 } )
-
+describe ( "makeGuardButtonVariables", () => {
+  it ( 'should make complex guards using variables', () => {
+    expect ( makeGuardVariables ( ListOfPaymentsPagePD, AllGuardCreator, paramsForTest, ListOfPaymentsPagePD, ListOfPaymentsPagePD ) ).toEqual ( [
+      "const guardDebug=state.main?.debug?.guardDebug",
+      "const canPrintGuard =  pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('display').chainNthFromPath(pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('selected')).focusOn('alreadyPrinted').optJson() === false;if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.canPrint', canPrintGuard);",
+      "const needsStandingOrdersGuard =  (pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('currentPayments').focusOn('standingOrders').optJsonOr(0) >0) && state.copyWithLens(ListOfPaymentsPageOptionals.currentListOfPayments(identityL)).focusOn('standingOrders').optJsonOr(false)      ;if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.needsStandingOrders', needsStandingOrdersGuard);",
+      "const needsOpenBankingStandingOrdersGuard =  (pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('currentPayments').focusOn('openBankingStandingOrders').optJsonOr(0) >0) && state.copyWithLens(ListOfPaymentsPageOptionals.currentListOfPayments(identityL)).focusOn('openBankingStandingOrders').optJsonOr(false)      ;if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.needsOpenBankingStandingOrders', needsOpenBankingStandingOrdersGuard);",
+      "const needsDirectDirectsGuard =  (pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('currentPayments').focusOn('directDebits').optJsonOr(0) >0) && state.copyWithLens(ListOfPaymentsPageOptionals.currentListOfPayments(identityL)).focusOn('directDebits').optJsonOr(false)      ;if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.needsDirectDirects', needsDirectDirectsGuard);",
+      "const needBillPaymentsGuard =  (pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('currentPayments').focusOn('billPayments').optJsonOr(0) >0) && state.copyWithLens(ListOfPaymentsPageOptionals.currentListOfPayments(identityL)).focusOn('billPayments').optJsonOr(false)      ;if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.needBillPayments', needBillPaymentsGuard);",
+      "const needsOpenBankingGuard =  (pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('currentPayments').focusOn('openBanking').optJsonOr(0) >0) && state.copyWithLens(ListOfPaymentsPageOptionals.currentListOfPayments(identityL)).focusOn('billPayments').optJsonOr(false)      ;if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.needsOpenBanking', needsOpenBankingGuard);",
+      "const needsSomethingGuard =  needsStandingOrdersGuard||needsOpenBankingStandingOrdersGuard||needsDirectDirectsGuard||needBillPaymentsGuard||needsOpenBankingGuard;if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.needsSomething', needsSomethingGuard);",
+      "const authorisedByUserGuard =  pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('display').chainNthFromPath(pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('selected')).focusOn('authorisedByCustomer').optJson() === \"y\";if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.authorisedByUser', authorisedByUserGuard);",
+      "const sendingToUserGuard =  [\"M\",\"J\"].includes( pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('display').chainNthFromPath(pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('selected')).focusOn('requestedBy').optJsonOr(''));if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.sendingToUser', sendingToUserGuard);",
+      "const authorisedToSendGuard =  sendingToUserGuard||authorisedByUserGuard;if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.authorisedToSend', authorisedToSendGuard);"
+    ])
+  } )
+} )

@@ -4,7 +4,8 @@ import { Optional, Transform } from "@focuson/lens";
 import { RestCommand } from "@focuson/rest";
 import { anyIntoPrimitive, DateFn, safeArray, toArray } from "@focuson/utils";
 import { CustomButtonType, getButtonClassName } from "../common";
-import { MultiPageDetails } from "../pageConfig";
+import { isMainPageDetails, MultiPageDetails } from "../pageConfig";
+import { canCommitOrCancel } from "./modalCommitAndCancelButton";
 
 export interface CopyStringDetails {
   from: string;
@@ -47,7 +48,7 @@ export function findFocusLFromCurrentState<S, Context> ( errorPrefix: string, pr
   const main = props.main
   const onePage = pages[ main ]
   if ( onePage === undefined ) throw Error ( `${errorPrefix} cannot find details for main page '${main}'. Legal names are [${Object.keys ( pages )}]` )
-  if ( onePage.pageType !== 'MainPage' ) throw new Error ( `${errorPrefix} page ${main} should be a MainPage but is a ${onePage.pageType}` )
+  if ( !isMainPageDetails ( onePage ) ) throw new Error ( `${errorPrefix} page ${main} should be a MainPage but is a ${onePage.pageType}` )
   return onePage.lens
 }
 export function ModalButton<S extends any, Context extends PageSelectionContext<S>> ( props: ModalButtonProps<S, Context> ): JSX.Element {

@@ -5,7 +5,7 @@ import { NatNumDd } from "../../common/dataD";
 
 export const OverpaymentMainPage: ExampleMainPage = {
   name: "OverpaymentMainPage",
-  pageType: 'MainPage',
+  pageType: 'MainPopup',
   display: { dataDD: OverpaymentPageDD, target: '~/overpayment' },
   modes: [ 'view' ],
   initialValue: undefined,

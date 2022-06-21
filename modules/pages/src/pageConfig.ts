@@ -27,12 +27,15 @@ export type OnePageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Con
 
 export interface MainPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> extends CommonPageDetails<S, D, Msgs, Config, Context> {
   lens: Optional<S, D>;
-  pageType: 'MainPage';
+  pageType: 'MainPage' | 'MainPopup';
   pageMode: PageMode;
   namedOptionals?: NameAndLensFn<S>;
 }
 export function isMainPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> ( o: OnePageDetails<S, D, Msgs, Config, Context> ): o is MainPageDetails<S, D, Msgs, Config, Context> {
-  return o.pageType === 'MainPage'
+  return o.pageType === 'MainPage' || o.pageType === 'MainPopup'
+}
+export function isPopup<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> ( o: OnePageDetails<S, D, Msgs, Config, Context> ):boolean {
+  return o.pageType === 'ModalPopup' || o.pageType === 'MainPopup'
 }
 export interface ModalPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> extends CommonPageDetails<S, D, Msgs, Config, Context> {
   pageType: 'ModalPopup' | 'ModalPage'

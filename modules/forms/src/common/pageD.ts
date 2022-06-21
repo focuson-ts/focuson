@@ -63,7 +63,7 @@ export interface MainData<B, G> {
 }
 
 export function isMainPage<B, G> ( p: PageD<B, G> ): p is MainPageD<B, G> {
-  return p.pageType === 'MainPage'
+  return p.pageType === 'MainPage' || p.pageType === 'MainPopup'
 }
 export function isModalPage<B, G> ( p: PageD<B, G> ): p is ModalPageD<B, G> {
   return p.pageType === 'ModalPage' || p.pageType === 'ModalPopup'

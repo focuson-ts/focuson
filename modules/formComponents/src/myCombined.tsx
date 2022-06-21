@@ -8,7 +8,7 @@ import { DebugState } from "./debugState";
 import { lastIndexOf } from "./common";
 
 
-const modalPopupJSX = ( p: PageDetailsForCombine, i: number, messagesJSX: JSX.Element ) => {
+const popupJSX = ( p: PageDetailsForCombine, i: number, messagesJSX: JSX.Element ) => {
   return (
     <div className="modalPopup show-modal focus-page" key={i}>
       <div className="modalPopup-content">
@@ -44,20 +44,22 @@ export function MyCombined<S extends HasTagHolder & HasSimpleMessages, Context e
 
   const debug = state.optJson ()?.debug;
   const messagesJSX = <Messages state={state.focusOn ( 'messages' )}/>
-  const lastIndexOfMainOrModalPage = lastIndexOf(pages, p => p.pageType === 'MainPage' || p.pageType === 'ModalPage')
-  const pagesToShow = pages.slice(lastIndexOfMainOrModalPage)
+  const lastIndexOfMainOrModalPage = lastIndexOf ( pages, p => p.pageType === 'MainPage' || p.pageType === 'ModalPage' )
+  const clippedPages = pages.slice ( lastIndexOfMainOrModalPage )
+  const pagesToShow = clippedPages.length === 0 ? pages : clippedPages // this occurs when we have a mainpop at the beginning
   return <>
-    <div id='container' className='combine' >
-        <div className='glassPane' >
-      {
-        pagesToShow.map ( ( p, i ) => {
-            if ( p.pageType === 'ModalPopup' ) return modalPopupJSX ( p, i, messagesJSX )
-            if ( p.pageType === 'ModalPage' ) return modalPageJSX ( p, i, messagesJSX )
-            if ( p.pageType === 'MainPage' ) return mainPageJSX ( p, i, messagesJSX )
-            throw new Error ( `Don't know how to process page type ${p.pageType}\n${JSON.stringify ( p )}` )
-          }
-        )}
-        </div>
+    <div id='container' className='combine'>
+      <div className='glassPane'>
+        {
+          pagesToShow.map ( ( p, i ) => {
+              if ( p.pageType === 'MainPopup' ) return popupJSX ( p, i, messagesJSX )
+              if ( p.pageType === 'ModalPopup' ) return popupJSX ( p, i, messagesJSX )
+              if ( p.pageType === 'ModalPage' ) return modalPageJSX ( p, i, messagesJSX )
+              if ( p.pageType === 'MainPage' ) return mainPageJSX ( p, i, messagesJSX )
+              throw new Error ( `Don't know how to process page type ${p.pageType}\n${JSON.stringify ( p )}` )
+            }
+          )}
+      </div>
       <DebugState state={state}/>
     </div>
   </>

@@ -1,4 +1,4 @@
-import { isMainPageDetails, PageSelectionContext, SelectPage } from "@focuson/pages";
+import { isMainPageDetails, isPopup, PageSelectionContext, SelectPage } from "@focuson/pages";
 import { LensProps, LensState } from "@focuson/state";
 import { Lenses } from "@focuson/lens";
 import { DateFn, sortedEntries } from "@focuson/utils";
@@ -18,7 +18,7 @@ export function IndexPage<S, Context extends PageSelectionContext<S>> ( { state,
       <ul>
         {sortedEntries ( state.context.pages ).filter ( ( [ name, pd ] ) => isMainPageDetails ( pd ) ).map ( ( [ name, pd ] ) => {
           if ( !isMainPageDetails ( pd ) ) throw Error ( 'software error' )
-          return <li key={name}><SelectPage state={state} id={`selectPage-${name}`} pageName={name} pageMode={pd.pageMode} dateFn={dateFn}/></li>;
+          return <li key={name}><SelectPage state={state} id={`selectPage-${name}`} pageName={name} pageMode={pd.pageMode} dateFn={dateFn} popup={isPopup(pd)}/></li>;
         } )}
 
       </ul>

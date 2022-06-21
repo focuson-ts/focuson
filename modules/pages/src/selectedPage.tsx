@@ -99,10 +99,10 @@ export const findOneSelectedPageDetails = <S, T, Context extends PageSelectionCo
     } else return displayOne ( config, pageType, pageFunction, ps.pageParams, ps.time, lsForPage, pageMode, pageCount - index );
   };
 
-export function findMainPageDetails<S> ( pageSelections: PageSelection[], pageDetails: MultiPageDetails<S, any> ) {
-  const firstPage = mainPageFrom ( pageSelections )
+export function findMainPageDetails<S> ( pageSelections: PageSelection[], pageDetails: MultiPageDetails<S, any> ): MainPageDetails<S, any, any, any, any> {
+  const firstPage: PageSelection = mainPageFrom ( pageSelections )
   let page0Details: any = pageDetails[ firstPage.pageName ];
-  if ( page0Details.pageType !== 'MainPage' ) throw Error ( `Software error:  page ${firstPage.pageName} is not a main page.\nPageSelections: ${JSON.stringify ( pageSelections )}\n\nfirstPage: ${firstPage}` )
+  if ( !isMainPageDetails<S, any, any, any, any> ( page0Details ) ) throw Error ( `Software error:  page ${firstPage.pageName} is not a main page.\nPageSelections: ${JSON.stringify ( pageSelections )}\n\nfirstPage: ${firstPage}` )
   return page0Details
 }
 

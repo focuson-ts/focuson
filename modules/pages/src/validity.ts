@@ -8,18 +8,18 @@ import React, { useEffect, useRef } from "react";
 export function getRefForDebounceLogic ( id: string, debounce: number | undefined ) {
   const ref = useRef<HTMLButtonElement> ( null );
 }
-export function getRefForValidateLogicToButton ( id: string, validate: boolean | undefined, enabledBy: boolean | undefined ): React.RefObject<HTMLButtonElement> {
+export function getRefForValidateLogicToButton ( id: string, validate: boolean | undefined, enabledBy: boolean | undefined, extraCondition?: boolean ): React.RefObject<HTMLButtonElement> {
   const ref = useRef<HTMLButtonElement> ( null );
   useEffect ( () => {
     if ( ref.current === null ) throw Error ( `Id ${id} has a ref which is null` )
     if ( validate === false ) {
-      ref.current.disabled = false
+      ref.current.disabled = enabledBy === false || extraCondition == false
       return
     }
     // console.log ( 'getRefForValidateLogicToButton', id, 'validate', validate)
     const valid = isValidToCommit ( focusPageClassName )
     // console.log ( 'getRefForValidateLogicToButton - valid', id, valid )
-    let disabled = enabledBy === false || !valid;
+    let disabled = enabledBy === false || !valid || extraCondition == false;
     // console.log ( 'getRefForValidateLogicToButton - disabled', id, disabled )
     ref.current.disabled = disabled
   } );
