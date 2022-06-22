@@ -42,7 +42,7 @@ export const newPaymentsRD: ExampleRestD = {
           ]
         },
         {
-          guard: [], type: 'sql',  schema: onlySchema,
+          guard: [], type: 'sql', schema: onlySchema,
           sql: 'select nameOfPayee,sterlingAmount,currencyAmount,amtInWords,forActionOn,dateCreated,status from tableForAllOtherBrands where acc = accountId', params: [
             'accountId',
             { type: "output", javaType: 'String', rsName: 'nameOfPayee', name: 'nameOfPayee' },

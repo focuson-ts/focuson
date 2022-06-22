@@ -1,7 +1,6 @@
 import { reqFor, Tags, UrlConfig } from "@focuson/template";
 import { beforeAfterSeparator, CopyDetails, FetchFn, isRestStateChange, NameAnd, RestAction, RestStateChange, safeArray, safeObject, safeString, sortedEntries, toArray } from "@focuson/utils";
-import { identityOptics, massTransform, Optional, Transform } from "@focuson/lens";
-
+import { identityOptics, lensBuilder, Lenses, massTransform, Optional, parsePath, Transform } from "@focuson/lens";
 
 
 export interface RestDebug {
@@ -109,7 +108,7 @@ export interface RestResult<S, MSGs, Cargo> {
   result: any
 }
 
-export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, extractMsgs: ( status: number | undefined, body: any ) => MSGs[], stringToMsg: ( msg: string ) => MSGs, extractData: ( status: number, body: any ) => any, ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
+export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, extractMsgs: ( status: number | undefined, body: any ) => MSGs[], toLens: ( path: string ) => Optional<S, any>, stringToMsg: ( msg: string ) => MSGs, extractData: ( status: number, body: any ) => any ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
 
   let useMessageOnSucess = restCommand.messageOnSuccess && status && status < 300;
   const messagesFromBody = extractMsgs ( status, result )
@@ -118,13 +117,18 @@ export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, extract
   const msgTx: Transform<S, any>[] = msgs.length > 0 || messagesFromBody.length > 0 ? [ [ messageL, old => [ ...msgs, ...messagesFromBody, ...safeArray ( old ) ] ] ] : []
 
   const useResponse = getRestTypeDetails ( restCommand.restAction ).output.needsObj
-  const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => extractData ( status, result ) ] ] : []
-  let resultTxs: Transform<S, any>[] = [ ...msgTx, ...resultTransform ];
+  const data = extractData ( status, result );
+  const toLensForData = ( s: string ) => parsePath<any> ( s, lensBuilder ( { '': Lenses.identity<any> () }, {} ) )
+  const copies: Transform<S, any>[] = toArray ( restCommand.copyOnSuccess ).map ( cd => [ toLens ( cd.to ), () => toLensForData ( cd.from ).getOption ( data ) ] )
+  console.log ( 'copies', copies )
+
+  const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => data ] ] : []
+  let resultTxs: Transform<S, any>[] = [ ...msgTx, ...resultTransform, ...copies ];
   return resultTxs;
 };
 
-export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]>, stringToMsg: ( msg: string ) => MSGs ) => ( s: S, { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): S => {
-  const txs: Transform<S, any>[] = restResultToTx<S, MSGs> ( messageL, one.messages, stringToMsg, one.extractData ) ( result )
+export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]>, pathToLens: ( path: string ) => Optional<S, any>, stringToMsg: ( msg: string ) => MSGs ) => ( s: S, { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): S => {
+  const txs: Transform<S, any>[] = restResultToTx<S, MSGs> ( messageL, one.messages, pathToLens, stringToMsg, one.extractData ) ( result )
   return massTransform ( s, ...txs )
 };
 
@@ -234,14 +238,15 @@ export async function restToTransforms<S, MSGS> (
   if ( debug ) console.log ( "rest-results", results )
   let toLens = pathToLens ( s );
   const deleteTx = ( d: string ): Transform<S, any> => [ toLens ( d ), () => undefined ];
-  console.log('about to restCommandsAndTxs', JSON.stringify(results))
+  console.log ( 'about to restCommandsAndTxs', JSON.stringify ( results ) )
+
   const restCommandAndTxs: RestCommandAndTxs<S>[] = results.map ( res => {
     const deleteTxs: Transform<S, any>[] = toArray ( res.restCommand.deleteOnSuccess ).map ( deleteTx )
-    // const copies : Transform<S, any>[]= toArray(res.restCommand.copyOnSuccess).map( cd => [toLens(cd.to), () => toLens(cd.from).getOption(res.result)])
-    // console.log('copies', copies)
-    const txs: Transform<S, any>[] = [ ...restResultToTx ( messageL, res.one.messages, stringToMsg, res.one.extractData ) ( res ), ...deleteTxs ];
+
+    const txs: Transform<S, any>[] = [ ...restResultToTx ( messageL, res.one.messages, toLens, stringToMsg, res.one.extractData ) ( res ), ...deleteTxs ];
     const trace: Transform<S, any>[] = tracing ? [ [ traceL, old => [ ...safeArray ( old ), { restCommand: res.restCommand, lensTxs: txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( s ) ) ] ) } ] ] ] : []
-    const restAndTxs: RestCommandAndTxs<S> = { ...res, txs: [ ...txs, ...trace ] };1
+    const restAndTxs: RestCommandAndTxs<S> = { ...res, txs: [ ...txs, ...trace ] };
+    1
     return restAndTxs
   } )
 
