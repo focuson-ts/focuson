@@ -49,7 +49,7 @@ export const EditlistOfPaymentsPagePD: ExampleModalPage = {
       ]
     },
     search: { control: 'RestButton', restName: 'sortCodeLookup', action: 'get', validate: false,
-      copyOnSuccess: { from: '~/sortCodeLookup/bankName', to: '~/tempListOfPayments/newBankDetails/bank' }
+      copyOnSuccess: { from: 'bankName', to: '~/tempListOfPayments/newBankDetails/bank' },
   }},
 }
 
