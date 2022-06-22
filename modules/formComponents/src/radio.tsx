@@ -9,8 +9,12 @@ export interface RadioProps<S, T, Context> extends CommonStateProps<S, T, Contex
   defaultValue?: string
 }
 
-export function Radio<S, T, Context extends FocusOnContext<S>> ( { state, mode, enums, ariaLabel, id, labelPosition }: RadioProps<S, string, Context> ) {
-  return <>{Object.entries ( enums ).map ( ( [ key, value ] ) => {
+export function Radio<S, T, Context extends FocusOnContext<S>> ( { state, mode, enums, ariaLabel, id, labelPosition, required }: RadioProps<S, string, Context> ) {
+  let selected = state.optJson ();
+  const hasValid = selected && Object.values ( enums ).includes ( selected )  
+  const cssValidInput = hasValid || !required ? '' : ' invalid'
+  
+  return <div className={`radio-group-container ${cssValidInput}`}>{Object.entries ( enums ).map ( ( [ key, value ] ) => {
     const checked = state.optJson () === value
     const cssChecked = checked ? 'checked' : ''
 
@@ -18,11 +22,11 @@ export function Radio<S, T, Context extends FocusOnContext<S>> ( { state, mode, 
     const cssDisabled = disabled ? 'disabled' : ''
     
     return <div className={`radio-container ${labelPosition == 'Horizontal'? 'd-flex-inline' : ''} ${cssChecked} ${cssDisabled}`} onClick={() => state.setJson ( value, reasonFor ( 'Radio', 'onClick', id ) )} key={key}>
-      <input id={id + value} onChange={() => {}} checked={checked} value={state.optJson ()} type='radio' name={id} disabled={disabled} aria-label={ariaLabel}/>
+      <input id={id + value} onChange={() => {}} checked={checked} value={state.optJson ()} type='radio' name={id} disabled={disabled} aria-label={ariaLabel} required={required}/>
       <span className="checkmark"></span>
       <Label state={state} htmlFor={key} label={value}/>
     </div>
-  } )}</>
+  } )}</div>
 }
 
 export interface LabelAndRadioProps<S, T, Context> extends RadioProps<S, T, Context> {
@@ -32,5 +36,5 @@ export interface LabelAndRadioProps<S, T, Context> extends RadioProps<S, T, Cont
 }
 export function LabelAndRadio<S, T, Context extends FocusOnContext<S>> ( props: LabelAndRadioProps<S, string, Context> ) {
   const { label, name } = props
-  return <div className="labelRadioButton"><Label state={props.state} htmlFor={name} label={label}/><span className="d-flex-inline"><Radio {...props}/></span></div>
+  return <div className="labelRadioButton"><Label state={props.state} htmlFor={name} label={label}/><Radio {...props}/></div>
 }

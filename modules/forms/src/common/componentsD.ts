@@ -175,7 +175,10 @@ export const RadioCD: DisplayCompD = {
 export const LabelAndRadioCD: DisplayCompD = {
   import: "@focuson/form_components",
   name: "LabelAndRadio",
-  params: { ...commonParamsWithLabel, ...enumParams }
+  params: { 
+    ...commonParamsWithLabel, ...enumParams,
+    required: { paramType: 'boolean', needed: 'no' },
+  }
 }
 
 
