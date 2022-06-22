@@ -45,8 +45,8 @@ function findValidityForSelect ( thisPage: Element, result: [ string, boolean ][
       const child = selects[ i ];
       let id = child.getAttribute ( 'id' );
       let clazz = child.getAttribute ( 'class' );
+      const valid = clazz.indexOf('invalid')<0
       let recordedId = id ? id : "noIdForThisElement"
-      let valid = !clazz?.includes ( 'pleaseSelect' );
       result[ i ] = [ recordedId, valid ]
     }
   }

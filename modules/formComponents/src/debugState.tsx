@@ -12,6 +12,7 @@ import { LabelAndDropdown } from "./labelAndDropdown";
 import { AccordionCollapseAll, AccordionExpandAll, AccordionWithInfo } from "./accordion";
 import { trimDownText } from "./common";
 import { CopyToClipboard } from "./CopyToClipboard";
+import { useRef, useEffect } from "react";
 
 
 export function Tags<S extends HasTagHolder, C> ( { state }: LensProps<S, any, C> ) {
@@ -185,6 +186,11 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
   const { state } = props
   let main: any = state.main;
   const { showDebug } = main.debug
+  const validationRef = useRef<HTMLDivElement> ( null )
+  useEffect ( () => {
+    if ( validationRef.current === null ) return
+    validationRef.current.innerText = JSON.stringify ( findValidityDetails ( focusPageClassName ) )
+  } )
   const debugState = state.copyWithLens ( Lenses.identity<any> ().focusQuery ( 'debug' ) )
   if ( showDebug ) {
     let showTracingState = debugState.focusOn ( 'showTracing' );
@@ -207,19 +213,8 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
         </div>
       </div>
       {showValidityState.optJsonOr ( false ) &&
-      <div id='debug-validation-container'>
-          <table className="table-bordered">
-              <thead>
-              <tr>
-                  <th>Validate</th>
-              </tr>
-              </thead>
-              <tbody>
-              {findValidityDetails ( focusPageClassName ).map ( x => <tr key={x.toString()}><td>{x[0]}</td><td>x[1]</td><td>{JSON.stringify ( x )}</td></tr> )}
-              </tbody>
-          </table>
-          <ul>
-          </ul>
+      <div id='debug-validation-container' ref={validationRef}>
+
       </div>}
 
       <div id="debug-state-container">
