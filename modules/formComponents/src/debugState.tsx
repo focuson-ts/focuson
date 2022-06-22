@@ -1,5 +1,5 @@
 import { isMassTransformReason, isSetJsonReason, LensProps, MassTransformReason, reasonFor, SetJsonReason } from "@focuson/state";
-import { fromPathGivenState, HasPageSelection, HasPageSelectionLens, isMainPageDetails, PageSelectionContext } from "@focuson/pages";
+import { findValidityDetails, focusPageClassName, fromPathGivenState, HasPageSelection, HasPageSelectionLens, isMainPageDetails, PageSelectionContext } from "@focuson/pages";
 import { HasTagHolder } from "@focuson/template";
 import { HasSimpleMessages, safeArray, safeString, SimpleMessage, sortedEntries } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands } from "@focuson/rest";
@@ -9,7 +9,7 @@ import { ToggleButton } from "./toggleButton";
 import { AssertPages, MakeTest } from "./makeTest";
 import { LabelAndStringInput } from "./labelAndInput";
 import { LabelAndDropdown } from "./labelAndDropdown";
-import { AccordionCollapseAll, AccordionExpandAll, AccordionWithInfo} from "./accordion";
+import { AccordionCollapseAll, AccordionExpandAll, AccordionWithInfo } from "./accordion";
 import { trimDownText } from "./common";
 import { CopyToClipboard } from "./CopyToClipboard";
 
@@ -20,7 +20,7 @@ export function Tags<S extends HasTagHolder, C> ( { state }: LensProps<S, any, C
       <span>
             <span className="json-key">{n}</span> : <span className="json-value">{JSON.stringify ( t )}</span>
         </span>
-      </li> )}</ul>
+    </li> )}</ul>
   </div>
 }
 export function Pages<S, C extends HasPageSelectionLens<S>> ( { state }: LensProps<S, any, C> ) {
@@ -59,37 +59,41 @@ function PagesData<S, C extends FocusOnContext<S>> ( { state }: DebugProps<S, C>
   const pages = safeArray ( state.context.pageSelectionL.getOption ( state.main ) )
   return <div id="debug-pages-container">
     <table className="table-bordered">
-      <thead><tr><th colSpan={2}>Pages</th></tr></thead>
+      <thead>
+      <tr>
+        <th colSpan={2}>Pages</th>
+      </tr>
+      </thead>
       <tbody>{pages.map ( ( p, index ) => {
         const page = pages[ index ]
         const pageDetails = state.context.pages[ page.pageName ]
         const lens = isMainPageDetails ( pageDetails ) ? pageDetails.lens : fromPathGivenState ( state ) ( safeString ( page.focusOn ) )
         const title = isMainPageDetails ( pageDetails ) ? "Main" : "Modal"
-        const pageData = safeArray(lens.getOption ( state.main ))
-        const accordionsOpen = state.focusOn('debug').focusOn('accordions').optJsonOr([])
-        const accordions = Object.keys(pageData)
+        const pageData = safeArray ( lens.getOption ( state.main ) )
+        const accordionsOpen = state.focusOn ( 'debug' ).focusOn ( 'accordions' ).optJsonOr ( [] )
+        const accordions = Object.keys ( pageData )
 
         return <tr key={index}>
           <td>
-              <div>{JSON.stringify ( page )}</div>
-              <div>{title} {page.pageName} - {safeString ( page.focusOn )}</div>
-              <div>{lens?.description}</div>
+            <div>{JSON.stringify ( page )}</div>
+            <div>{title} {page.pageName} - {safeString ( page.focusOn )}</div>
+            <div>{lens?.description}</div>
           </td>
           <td>
             <div>
-              <AccordionExpandAll id="expandAllPageButtons" buttonText="Expand All" state={state.focusOn('debug').focusOn ( 'accordions' )} list={accordions}/>
-              <AccordionCollapseAll id="collapseAllPageButtons" buttonText="Collapse All" state={state.focusOn('debug').focusOn ( 'accordions' )} list={accordions}/>
+              <AccordionExpandAll id="expandAllPageButtons" buttonText="Expand All" state={state.focusOn ( 'debug' ).focusOn ( 'accordions' )} list={accordions}/>
+              <AccordionCollapseAll id="collapseAllPageButtons" buttonText="Collapse All" state={state.focusOn ( 'debug' ).focusOn ( 'accordions' )} list={accordions}/>
             </div>
-            {Object.entries(pageData).map(([itemKey, itemVal], index) => {
+            {Object.entries ( pageData ).map ( ( [ itemKey, itemVal ], index ) => {
               return <div key={`${itemKey}-${index}`}>
-                  {(Array.isArray(itemVal) && itemVal.length > 0)
-                      ? <><AccordionWithInfo id={itemKey} buttonText={"-|+"} state={state.focusOn('debug').focusOn('accordions')} list={accordions} count={itemVal.length}/>{accordionsOpen.find((elem:string) => elem == itemKey) && <pre className="json-value">{JSON.stringify(itemVal, null, 2)}</pre>}</>
-                      : (typeof itemVal === 'object' && itemVal !== null)
-                          ? <><AccordionWithInfo id={itemKey} buttonText={"-|+"} state={state.focusOn('debug').focusOn('accordions')} list={accordions} count={Object.entries(itemVal).length}/>{accordionsOpen.find((elem:string) => elem == itemKey) && <pre className="json-value">{JSON.stringify(itemVal, null, 2)}</pre>}</>
-                          : <><span className="json-key">{itemKey}</span>: {typeof itemVal === 'boolean' ? <span className="json-value">{itemVal.toString()}</span> : <span className="json-string">{itemVal+""}</span>}</>
-                  }
-                  </div>
-            })}
+                {(Array.isArray ( itemVal ) && itemVal.length > 0)
+                  ? <><AccordionWithInfo id={itemKey} buttonText={"-|+"} state={state.focusOn ( 'debug' ).focusOn ( 'accordions' )} list={accordions} count={itemVal.length}/>{accordionsOpen.find ( ( elem: string ) => elem == itemKey ) && <pre className="json-value">{JSON.stringify ( itemVal, null, 2 )}</pre>}</>
+                  : (typeof itemVal === 'object' && itemVal !== null)
+                    ? <><AccordionWithInfo id={itemKey} buttonText={"-|+"} state={state.focusOn ( 'debug' ).focusOn ( 'accordions' )} list={accordions} count={Object.entries ( itemVal ).length}/>{accordionsOpen.find ( ( elem: string ) => elem == itemKey ) && <pre className="json-value">{JSON.stringify ( itemVal, null, 2 )}</pre>}</>
+                    : <><span className="json-key">{itemKey}</span>: {typeof itemVal === 'boolean' ? <span className="json-value">{itemVal.toString ()}</span> : <span className="json-string">{itemVal + ""}</span>}</>
+                }
+              </div>
+            } )}
           </td>
         </tr>
       } )}</tbody>
@@ -130,9 +134,9 @@ export function OneTracing ( reason: any ) {
   }
   return <tr>
     <td colSpan={2}>
-        <CopyToClipboard textToCopy={JSON.stringify ( reason, )}/>
-        <div className="tooltip">
-        Reason:: {trimDownText(JSON.stringify ( reason, ), 100)}
+      <CopyToClipboard textToCopy={JSON.stringify ( reason, )}/>
+      <div className="tooltip">
+        Reason:: {trimDownText ( JSON.stringify ( reason, ), 100 )}
         <span className="tooltiptext">
           <CopyToClipboard textToCopy={JSON.stringify ( reason, )}/>
           <pre>{JSON.stringify ( reason, null, 2 )}</pre>
@@ -144,13 +148,17 @@ export function OneTracing ( reason: any ) {
 
 export function Tracing<S, C> ( { state }: LensProps<S, any, C> ) {
   return <div id="debug-tracing-container">
-      <table className="table-bordered">
-        <thead><tr><th colSpan={2}>Tracing</th></tr></thead>
-        <tbody>
-          {state.copyWithLens ( traceL<S> () ).optJsonOr ( [] ).map ( ( r: any, i: number ) =>
-          <OneTracing key={i} reason={r}/> )}
-        </tbody>
-      </table>
+    <table className="table-bordered">
+      <thead>
+      <tr>
+        <th colSpan={2}>Tracing</th>
+      </tr>
+      </thead>
+      <tbody>
+      {state.copyWithLens ( traceL<S> () ).optJsonOr ( [] ).map ( ( r: any, i: number ) =>
+        <OneTracing key={i} reason={r}/> )}
+      </tbody>
+    </table>
   </div>
 }
 
@@ -168,6 +176,7 @@ export function ToggleDebugs<S, C extends PageSelectionContext<S>> ( { state }: 
     <li><ToggleOneDebug state={debugState} name='loadTreeDebug'/></li>
     <li><ToggleOneDebug state={debugState} name='tagFetcherDebug'/></li>
     <li><ToggleOneDebug state={debugState} name='guardDebug'/></li>
+    <li><ToggleOneDebug state={debugState} name='validityDebug'/></li>
   </ul>
 
 }
@@ -179,44 +188,68 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
   const debugState = state.copyWithLens ( Lenses.identity<any> ().focusQuery ( 'debug' ) )
   if ( showDebug ) {
     let showTracingState = debugState.focusOn ( 'showTracing' );
+    let showValidityState = debugState.focusOn ( 'validityDebug' );
     let recordTracingState = debugState.focusOn ( 'recordTrace' );
     return <div id="debug-container">
-        <ToggleButton id='hideDebug' buttonText='Hide Debug' state={debugState.focusOn ( 'showDebug' )}/>
-        <div id="debug-bucket">
-          <div id="debug-log">
+      <ToggleButton id='hideDebug' buttonText='Hide Debug' state={debugState.focusOn ( 'showDebug' )}/>
+      <div id="debug-bucket">
+        <div id="debug-log">
           <ToggleDebugs state={state}/>
-          </div>
-          <div id="debug-trace">
-                <ul>
-                  <li><ToggleButton id='debug.showTracing' buttonText='{/debug/showTracing|Show|Hide} Tracing ' state={showTracingState}/></li>
-                  <li><ToggleButton id='debug.recordTracing' buttonText='{/debug/recordTrace|Start|Stop} Trace ' state={recordTracingState}/></li>
-                  <li><ClearTrace state={state}/></li>
-                  <li><MakeTest state={state}/></li>
-                  <li><AssertPages state={state}/></li>
-                </ul>
-          </div>
         </div>
-      {showTracingState.optJsonOr ( false ) && <Tracing state={state}/>}
+        <div id="debug-trace">
+          <ul>
+            <li><ToggleButton id='debug.showTracing' buttonText='{/debug/showTracing|Show|Hide} Tracing ' state={showTracingState}/></li>
+            <li><ToggleButton id='debug.recordTracing' buttonText='{/debug/recordTrace|Start|Stop} Trace ' state={recordTracingState}/></li>
+            <li><ClearTrace state={state}/></li>
+            <li><MakeTest state={state}/></li>
+            <li><AssertPages state={state}/></li>
+          </ul>
+        </div>
+      </div>
+      {showValidityState.optJsonOr ( false ) &&
+      <div id='debug-validation-container'>
+          <table className="table-bordered">
+              <thead>
+              <tr>
+                  <th>Validate</th>
+              </tr>
+              </thead>
+              <tbody>
+              {findValidityDetails ( focusPageClassName ).map ( x => <tr key={x.toString()}><td>{x[0]}</td><td>x[1]</td><td>{JSON.stringify ( x )}</td></tr> )}
+              </tbody>
+          </table>
+          <ul>
+          </ul>
+      </div>}
+
       <div id="debug-state-container">
         <table className="table-bordered">
-        <thead><tr><th>State</th></tr></thead>
-        <tbody>
-        {/* <tr>
+          <thead>
+          <tr>
+            <th>State</th>
+          </tr>
+          </thead>
+          <tbody>
+          {/* <tr>
           <td><Pages state={state}/></td>
           <td><Tags state={state}/></td>
           <td><Rest state={state}/></td>
         </tr> */}
-        <tr>
-          {/* <td><Messages state={state}/></td> */}
-          <td><CommonIds {...props}/></td>
-        </tr>
-        </tbody>
-      </table>
+          <tr>
+            {/* <td><Messages state={state}/></td> */}
+            <td><CommonIds {...props}/></td>
+          </tr>
+          </tbody>
+        </table>
       </div>
       <PagesData {...props} />
       <div id="debug-context-container">
         <table className="table-bordered">
-          <thead><tr><th colSpan={2}>Context</th></tr></thead>
+          <thead>
+          <tr>
+            <th colSpan={2}>Context</th>
+          </tr>
+          </thead>
           <tbody>
           <tr>
             <td>Page Selection Lens:</td>
@@ -232,25 +265,50 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
 
       <div id="debug-tags-container">
         <table className="table-bordered">
-          <thead><tr><th>Tags</th></tr></thead>
-          <tbody><tr><td><Tags state={state}/></td></tr></tbody>
+          <thead>
+          <tr>
+            <th>Tags</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td><Tags state={state}/></td>
+          </tr>
+          </tbody>
         </table>
       </div>
       <div id="debug-raw-state-container">
         <table className="table-bordered">
-          <thead><tr><th colSpan={2}>Raw State</th></tr></thead>
+          <thead>
+          <tr>
+            <th colSpan={2}>Raw State</th>
+          </tr>
+          </thead>
           <tbody>
-          <tr><td><pre>{JSON.stringify ( state.json (), null, 2 )}</pre></td></tr></tbody>
+          <tr>
+            <td>
+              <pre>{JSON.stringify ( state.json (), null, 2 )}</pre>
+            </td>
+          </tr>
+          </tbody>
         </table>
       </div>
       <div id="debug-messages-container">
         <table className="table-bordered">
-          <thead><tr><th>Messages</th></tr></thead>
-          <tbody><tr><td><Messages state={state}/></td></tr></tbody>
+          <thead>
+          <tr>
+            <th>Messages</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td><Messages state={state}/></td>
+          </tr>
+          </tbody>
         </table>
       </div>
     </div>
-  } else return <div id="debug-container"> <ToggleButton id='showDebug' buttonText='Show Debug' state={debugState.focusOn ( 'showDebug' )}/></div>
+  } else return <div id="debug-container"><ToggleButton id='showDebug' buttonText='Show Debug' state={debugState.focusOn ( 'showDebug' )}/></div>
   // {PagesData ( { state, config } )}
 
 

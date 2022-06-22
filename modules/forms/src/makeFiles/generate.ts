@@ -49,8 +49,7 @@ export const params = {
   utilsPackage: 'utils',
   maxTuples: 3,
   theme: 'theme-light',
-  extractData: `( status: number, body: any ) => body.data`,
-
+  extractData: `( status: number | undefined, body: any ) => body.data`,
 };
 
 export const directorySpec: DirectorySpec = {

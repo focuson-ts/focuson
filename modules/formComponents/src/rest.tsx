@@ -1,6 +1,6 @@
 import { HasRestCommandL } from "@focuson/rest";
 import { reasonFor } from "@focuson/state";
-import { CopyDetails, DateFn, RestAction, RestResult } from "@focuson/utils";
+import { CopyDetails, DateFn, RequiredCopyDetails, RestAction, RestResult } from "@focuson/utils";
 import { CommonStateProps, CustomButtonType, getButtonClassName } from "./common";
 import {  getRefForValidateLogicToButton, HasPageSelectionLens, HasSimpleMessageL, hasValidationErrorAndReport } from "@focuson/pages";
 import { useRef } from "react";
@@ -14,7 +14,7 @@ export interface RestButtonProps<S, C> extends CommonStateProps<S, any, C>, Cust
   validate?: boolean;
   text?: string;
   deleteOnSuccess?: string | string[];
-  copyOnSuccess? : CopyDetails[];
+  copyOnSuccess? : RequiredCopyDetails[];
   messageOnSuccess?: string;
   dateFn?: DateFn
 }

@@ -6,7 +6,6 @@ import { fromPathFromRaw, HasPageSelection, MultiPageDetails, PageDetailsForComb
 import { HasRestCommands, restL } from "@focuson/rest";
 import { SimpleMessage } from "@focuson/utils";
 import { FocusOnContext } from "@focuson/focuson";
-import { ModalButtonStateForTest } from "./modalButton.integration.spec";
 import { identityOptics } from "@focuson/lens";
 import { RestButton } from "@focuson/form_components";
 
@@ -75,5 +74,23 @@ describe ( "RestButton", () => {
       "restCommands": [ { "name": "someRestName", "restAction": { "state": "newState" } } ]
     } )
   } )
-
+  it ( "should place a rest command in the state - copyOnSuccessAndDeleteOnSuccess", () => {
+    var remembered: any = undefined
+    const button = displayAndGetButton ( emptyS, s => remembered = s, s =>
+      <RestButton rest='someRestName' action={{ state: 'newState' }} state={s} id='someId'
+                  copyOnSuccess={[ { from: 'from', to: 'to' } ]}
+                  deleteOnSuccess={[ 'del1', 'del2' ]}/> )
+    button.simulate ( 'click' )
+    expect ( remembered ).toEqual ( {
+      "mainPage": {},
+      "messages": [],
+      "pageSelection": [ { "pageMode": "view", "pageName": "mainPage", "time": "now" } ],
+      "restCommands": [ {
+        "name": "someRestName",
+        "restAction": { "state": "newState" },
+        "copyOnSuccess": [ { "from": "from", "to": "to" } ],
+        "deleteOnSuccess": [ "del1", "del2" ],
+      } ]
+    } )
+  } )
 } )

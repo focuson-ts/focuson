@@ -42,7 +42,7 @@ function oneRestDetails ( cd: NameAndLens<RestStateForTest>, fdd: NameAndLens<Fu
     fdd,
     ids: [ 'token' ],
     resourceId: [ 'id' ],
-    extractData: ( status: number, body: any ): string => `Extracted[${status}].${body}`,
+    extractData: ( status: number|undefined, body: any ): string => `Extracted[${status}].${body}`,
     messages: ( status: number | undefined, body: any ): SimpleMessage[] => status == undefined ?
       [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify ( body )}`, testDateFn () ) ] :
       [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],
@@ -155,7 +155,7 @@ describe ( "rest", () => {
       ],
       "restCommands": [],
       "token": "someToken"
-    })
+    } )
   } )
 
   it ( "should fetch the results and put them into the state, removing the rest commands and record trace if debug set", async () => {
@@ -296,7 +296,7 @@ describe ( "rest", () => {
       ],
       "restCommands": [],
       "token": "someToken"
-    })
+    } )
   } )
 
   it ( "should throw error with illegal state", async () => {
@@ -323,7 +323,7 @@ describe ( "rest", () => {
         }
       ],
       "restCommands": []
-    })
+    } )
 
   } )
   it ( "should delete items specified in the 'delete on success' - multiple item", async () => {
@@ -343,9 +343,25 @@ describe ( "rest", () => {
         }
       ],
       "restCommands": []
-    })
+    } )
 
   } )
+  it ( "should copy items specified in the 'copyOnSuccess", async () => {
+    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (),
+      withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+        { restAction: { state: 'newState' }, name: 'one', copyOnSuccess: [ { from: '', to: '/somewhere' } ] }
+      ) );
+    expect ( result ).toEqual ( {
+      "fullDomain": {
+        "fromApi": "someData",
+        "idFromFullDomain": "someId"
+      },
+      "messages": [        {          "level": "info",          "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"",          "time": "timeForTest"        }      ],
+      "restCommands": [],
+      "somewhere": "Extracted[200].from/some/new/state/someToken/newState?token=someToken&id=someId",
+      "token": "someToken"
+    } )
 
+  } )
 } )
 

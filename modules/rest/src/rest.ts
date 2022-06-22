@@ -1,5 +1,5 @@
 import { reqFor, Tags, UrlConfig } from "@focuson/template";
-import { beforeAfterSeparator, CopyDetails, FetchFn, isRestStateChange, NameAnd, RestAction, RestStateChange, safeArray, safeObject, safeString, sortedEntries, toArray } from "@focuson/utils";
+import { beforeAfterSeparator, CopyDetails, FetchFn, isRestStateChange, NameAnd, RequiredCopyDetails, RestAction, RestStateChange, safeArray, safeObject, safeString, sortedEntries, toArray } from "@focuson/utils";
 import { identityOptics, lensBuilder, Lenses, massTransform, Optional, parsePath, Transform } from "@focuson/lens";
 
 
@@ -74,7 +74,7 @@ export type StateAccessDetails = { url: string, params: NameAnd<emptyType> } // 
 export interface OneRestDetails<S, FD, D, MSGs> extends UrlConfig<S, FD, D> {
   url: string;
   states?: NameAnd<StateAccessDetails>,
-  extractData: ( status: number, body: any ) => D,
+  extractData: ( status: number|undefined, body: any ) => D,
   messages: ( status: number | undefined, body: any ) => MSGs[];//often the returning value will have messages in it. Usually a is of type Domain. When the rest action is Delete there may be no object returned, but might be MSGs
 }
 
@@ -90,7 +90,7 @@ export interface RestCommand {
   comment?: string;
   /** If the rest command was created by a fetcher these are the tags */
   tagNameAndTags?: { tags: Tags, tagName: string },
-  copyOnSuccess?: CopyDetails[]
+  copyOnSuccess?: RequiredCopyDetails[]
 }
 export interface HasRestCommands {
   restCommands: RestCommand[]
@@ -108,7 +108,7 @@ export interface RestResult<S, MSGs, Cargo> {
   result: any
 }
 
-export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, extractMsgs: ( status: number | undefined, body: any ) => MSGs[], toLens: ( path: string ) => Optional<S, any>, stringToMsg: ( msg: string ) => MSGs, extractData: ( status: number, body: any ) => any ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
+export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, extractMsgs: ( status: number | undefined, body: any ) => MSGs[], toLens: ( path: string ) => Optional<S, any>, stringToMsg: ( msg: string ) => MSGs, extractData: ( status: number|undefined, body: any ) => any ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
 
   let useMessageOnSucess = restCommand.messageOnSuccess && status && status < 300;
   const messagesFromBody = extractMsgs ( status, result )
