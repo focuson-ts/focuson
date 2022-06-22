@@ -34,9 +34,10 @@ function isFocusOnMassTxsAction<S> ( f: any ): f is FocusOnMassTxsAction<S> {
 }
 export const FocusOnReducer: any = <BigState, S> ( rootLens: Lens<BigState, S> ) => ( state: BigState, action: any ) => {
   if (state===undefined)return start
+  console.log ( 'FocusOnReducer-state', state )
+  console.log ( 'FocusOnReducer-action', action )
   if ( isFocusOnSetMainAction<S> ( action ) ) {
-    console.log ( "in reducer", action )
-    console.log ( "in reducer.s", action.s )
+    console.log ( "it is a setMain", action )
     return rootLens.set ( state, action.s );
   }
   if ( isFocusOnMassTxsAction<S> ( action ) ) {
@@ -45,8 +46,9 @@ export const FocusOnReducer: any = <BigState, S> ( rootLens: Lens<BigState, S> )
     console.log ( "in reducer.comment for mass txs", action.comment )
     let result: S = massTransform<S> ( action.s, ...action.txs );
     console.log ( 'finished FocusOnReducer/massTxs', result )
-    rootLens.set ( state, result )
-    return result
+    let withRootLens = rootLens.set ( state, result );
+    console.log ( 'finished FocusOnReducer/withRootLens', withRootLens )
+    return withRootLens
   }
   console.log ( 'in reducer. I dont know what action it is', action )
   return state
@@ -78,8 +80,8 @@ export const focusOnMiddleware = <BigState, S extends HasFocusOnDebug, C extends
   console.log ( 'stateAfterImmediate', stateAfterImmediate )
   const focusOnDispatcher = ( preTxs: Transform<S, any>[], rests: RestCommandAndTxs<S>[] ) => ( originalS: S ): S => {
     dispatch ( { type: 'massTxs', txs: [ ...preTxs, ...rests.flatMap ( x => x.txs ) ], s: originalS, comment: 'fromFocusOnDispatcher' } )
-    console.log ( 'ending focusonDistpatcher', store.getState () )
-    return store.getState ();
+    console.log ( 'ending focusOnDispatcher (full state)', store.getState () )
+    return rootLens.get(store.getState ());
   }
   let finalResultFn = ( start: S, restCommands: RestCommand[] ) => errorPromiseMonad ( onError ) (
     start, debug,
@@ -95,4 +97,7 @@ export const focusOnMiddleware = <BigState, S extends HasFocusOnDebug, C extends
   console.log ( 'finalResult is ', finalResult );
   return res;
 };
-export function makeLs <S>( store: Store<S>,desc: string ) { return lensState ( store.getState (), ( s, reason ) => store.dispatch ( { type: 'setMain', s, reason } ), desc, context )}
+export function makeLs<S> ( store: Store<S>, child: string ) {
+  // @ts-ignore
+  return lensState ( store.getState ()[child], ( s, reason ) => store.dispatch ( { type: 'setMain', s, reason } ), child, context )
+}

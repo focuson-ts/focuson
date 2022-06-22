@@ -31,12 +31,16 @@ export interface PageDetailsForCombine {
 function findSelectedPageDetails<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): PageDetailsForCombine[] {
   // @ts-ignore
   const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
-  let selectedPageData: PageSelection[] = currentPageSelection ( state );
-  if ( debug ) console.log ( 'findSelectedPageDetails - for Combine', selectedPageData )
-
-  let results = selectedPageData.map ( findOneSelectedPageDetails ( state, findMainPageDetails ( selectedPageData, state.context.pages ), selectedPageData.length ) );
-  // results.forEach((p, i) =>p.element.key=i)
-  return results
+  try {
+    let selectedPageData: PageSelection[] = currentPageSelection ( state );
+    if ( debug ) console.log ( 'findSelectedPageDetails - for Combine', selectedPageData )
+    let results = selectedPageData.map ( findOneSelectedPageDetails ( state, findMainPageDetails ( selectedPageData, state.context.pages ), selectedPageData.length ) );
+    // results.forEach((p, i) =>p.element.key=i)
+    return results
+  } catch ( e: any ) {
+    console.log ( `Error in findSelectedPageDetails`, state.main )
+    throw e
+  }
 }
 
 export function fullState<S, T, C> ( ls: LensState<S, T, C> ): LensState<S, S, C> {

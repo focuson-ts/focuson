@@ -13,16 +13,23 @@ import { newFetchers } from "./fetchers";
 import { identityL } from "./common";
 import { config, start } from "./config";
 import { focusOnMiddleware, FocusOnReducer, makeLs } from "./store";
-import { applyMiddleware, legacy_createStore } from "@reduxjs/toolkit";
+import { applyMiddleware, legacy_createStore, combineReducers } from "@reduxjs/toolkit";
+import { Lenses } from '@focuson/lens'
 
-export const store: any = legacy_createStore ( FocusOnReducer(identityL), undefined, applyMiddleware ( focusOnMiddleware ( config, context, identityL ) ) );
-
+export const combineAll = combineReducers ( {
+  Rocket: FocusOnReducer ( identityL )
+} )
+export const store: any = legacy_createStore ( combineAll, undefined, applyMiddleware ( focusOnMiddleware ( config, context, Lenses.identity<any> ().focusOn ( 'Rocket' ) ) ) );
 let rootElement = getElement ( "root" );
 console.log ( "set json" )
 store.subscribe ( () => {
+  console.log ( "store.subscribe-render" )
   ReactDOM.render (
-    <IndexPage state={makeLs<{stateName}> ( store, 'indexPage' )} dateFn={defaultDateFn}>
-  <SelectedPage state={makeLs<{stateName}> ( store, 'selectedPage' )}/>
+    <IndexPage state={makeLs<{stateName}> ( store, 'Rocket' )} dateFn={defaultDateFn}>
+  <SelectedPage state={makeLs<{stateName}> ( store, 'Rocket' )}/>
   </IndexPage>, rootElement )
 } )
+
+console.log ( "dispatching" )
 store.dispatch ( { type: 'setMain', s: start } )
+console.log ( "dispatched" )
