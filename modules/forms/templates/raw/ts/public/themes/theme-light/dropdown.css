@@ -89,6 +89,7 @@
     background-position: right 16px top 50%, 0 0;
     background-size: .95em auto, 100%;
     background-color:var(--dropdown-container-background);
+    -moz-appearance: none;
   }
   
   select.is-error {
@@ -104,4 +105,18 @@
   select:disabled {
       opacity: 0.7;
   }
+
+  select:invalid, select.invalid, select.select:invalid {
+    background-color: #ffdddd;
+    border: 1px solid red;
+  }
   
+  select:focus, select.select:focus {
+    font-size:var(--input-font-size);
+    border: var( --input-border-focus);
+    outline: none;
+    border-radius: 0 0 var(--input-bevel) var(--input-bevel);
+    padding: var(--input-focus-padding);
+    box-sizing: border-box;
+    color: var(--dark-grey)
+  }

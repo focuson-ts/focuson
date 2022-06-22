@@ -39,7 +39,7 @@ export function Dropdown<S, T, Context extends FocusOnContext<S>> ( props: Dropd
   let selected = state.optJson ();
   const hasValid = selected && Object.keys ( enums ).includes ( selected )
   const value = hasValid ? selected : undefined
-  const pleaseSelectClass = hasValid ? '' : ' pleaseSelect'
+  const pleaseSelectClass = hasValid ? '' : ' invalid'
   return (
     <select className={`select ${pleaseSelectClass}`} value={value} disabled={mode === 'view' || readonly} id={id} required={required} size={size} aria-label={ariaLabel} onChange={( e ) =>
       state.setJson ( e.target.value, reasonFor ( 'LabelAndDropdown', 'onChange', id ) )}>
