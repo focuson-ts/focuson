@@ -110,8 +110,8 @@ export function findJoiner ( name: string, joiners: undefined | string | string[
 export function anyIntoPrimitive ( raw: any, joiner: string ): string | number | boolean {
   const t = typeof raw
   if ( t === 'string' || t === 'boolean' || t === 'number' ) return raw
-  if ( t === 'object' ) return Object.values ( raw ).map ( v => anyIntoPrimitive ( v, joiner ) ).join ( joiner )
-  if ( Array.isArray ( raw ) ) return raw.map ( v => anyIntoPrimitive ( v, joiner ) ).join ( joiner )
+  if ( t === 'object' ) return Object.values ( raw ).map ( v => anyIntoPrimitive ( v, joiner ) ).filter(p=>p !== '').join ( joiner )
+  if ( Array.isArray ( raw ) ) return raw.map ( v => anyIntoPrimitive ( v, joiner ) ).filter(p=>p !== '').join ( joiner )
   throw new Error ( `Don't know how to turn ${t} into a string. Details: '${JSON.stringify ( raw )}'}` )
 }
 export function makeIntoString ( name: string, raw: any, joiners: undefined | string | string[] ): string {

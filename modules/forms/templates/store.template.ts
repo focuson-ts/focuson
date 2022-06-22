@@ -11,7 +11,7 @@ import { fetchers, newFetchers } from "./fetchers";
 import { restDetails, restUrlMutator } from "./rests";
 import { pages } from "./pages";
 import { RestCommand, RestCommandAndTxs, restL } from "@focuson/rest";
-import { config } from "./config";
+import { config,start } from "./config";
 
 
 export interface FocusOnSetMainAction<S> {
@@ -33,6 +33,7 @@ function isFocusOnMassTxsAction<S> ( f: any ): f is FocusOnMassTxsAction<S> {
   return f.type === 'massTxs'
 }
 export const FocusOnReducer: any = <BigState, S> ( rootLens: Lens<BigState, S> ) => ( state: BigState, action: any ) => {
+  if (state===undefined)return start
   if ( isFocusOnSetMainAction<S> ( action ) ) {
     console.log ( "in reducer", action )
     console.log ( "in reducer.s", action.s )
