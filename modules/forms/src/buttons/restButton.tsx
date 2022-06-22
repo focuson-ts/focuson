@@ -1,10 +1,9 @@
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
-import { decamelize, RestAction, RestResult, toArray } from "@focuson/utils";
+import { CopyDetails, decamelize, RestAction, RestResult, toArray } from "@focuson/utils";
 import { indentList, opt, optT } from "../codegen/codegen";
 import { restDetailsName } from "../codegen/names";
 import { EnabledBy, enabledByString } from "./enabledBy";
 import { ButtonWithControl } from "./allButtons";
-import { CopyDetails } from "@focuson/pages";
 
 
 function makeRestButton<B extends RestButtonInPage<G>, G> (): ButtonCreator<RestButtonInPage<G>, G> {

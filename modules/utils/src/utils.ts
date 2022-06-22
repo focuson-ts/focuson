@@ -2,6 +2,12 @@ export type DateFn = () => string
 export const testDateFn: DateFn = () => "timeForTest";
 export const defaultDateFn: DateFn = () => new Date ().toISOString ();
 
+export interface CopyDetails {
+  from?: string;
+  to?: string
+}
+
+
 export function checkIsFunction ( functionToCheck: any ) {
   if ( !(typeof functionToCheck === "function") ) throw Error ( 'getter should be a function, instead is ' + JSON.stringify ( functionToCheck ) )
 }

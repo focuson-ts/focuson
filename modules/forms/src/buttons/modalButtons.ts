@@ -1,11 +1,11 @@
 import { DataD } from "../common/dataD";
 import { isMainPage, MainPageD, ModalPageD, PageD, RestOnCommit } from "../common/pageD";
-import { CopyDetails, CopyStringDetails, PageMode, PageParams, SetToLengthOnClose } from "@focuson/pages";
+import { CopyStringDetails, PageMode, PageParams, SetToLengthOnClose } from "@focuson/pages";
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
 import { indentList, opt, optT } from "../codegen/codegen";
 import { emptyName, modalName, restDetailsName } from "../codegen/names";
 import { EnabledBy, enabledByString } from "./enabledBy";
-import { decamelize, toArray } from "@focuson/utils";
+import { CopyDetails, decamelize, toArray } from "@focuson/utils";
 
 
 export function restForButton<B, G> ( parent: PageD<B, G>, rest?: RestOnCommit ): string[] {

@@ -6,7 +6,6 @@ import { RawButtons } from "../../buttons/allButtons";
 import { AllGuards } from "../../buttons/guardButton";
 import { NatNumDd, OneLineStringDD } from "../../common/dataD";
 import { toArray } from "@focuson/utils";
-import { addressLookupDataD, addressLookupRD } from "../../../dist/src/example/ListOfPayments/listOfPayements.restD";
 
 export const AddressModalPage: ExampleModalPage = {
   pageType: 'ModalPage',
@@ -50,8 +49,8 @@ export const EditlistOfPaymentsPagePD: ExampleModalPage = {
       ]
     },
     search: { control: 'RestButton', restName: 'sortCodeLookup', action: 'get', validate: false,
-      copyOnSuccess: { from: '~/sortCodeLookup', to: '~/tempListOfPayments/newBankDetails/sortCode' }}
-  },
+      copyOnSuccess: { from: '~/sortCodeLookup/bankName', to: '~/tempListOfPayments/newBankDetails/bank' }
+  }},
 }
 
 const addOrEditButton: RawButtons<AllGuards> = {

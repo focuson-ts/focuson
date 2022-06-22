@@ -1,8 +1,8 @@
 import { HasRestCommandL } from "@focuson/rest";
 import { reasonFor } from "@focuson/state";
-import { DateFn, RestAction, RestResult } from "@focuson/utils";
+import { CopyDetails, DateFn, RestAction, RestResult } from "@focuson/utils";
 import { CommonStateProps, CustomButtonType, getButtonClassName } from "./common";
-import { CopyDetails, getRefForValidateLogicToButton, HasPageSelectionLens, HasSimpleMessageL, hasValidationErrorAndReport } from "@focuson/pages";
+import {  getRefForValidateLogicToButton, HasPageSelectionLens, HasSimpleMessageL, hasValidationErrorAndReport } from "@focuson/pages";
 import { useRef } from "react";
 
 export interface RestButtonProps<S, C> extends CommonStateProps<S, any, C>, CustomButtonType {
