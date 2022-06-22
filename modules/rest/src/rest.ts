@@ -1,7 +1,7 @@
 import { reqFor, Tags, UrlConfig } from "@focuson/template";
-import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RestAction, RestStateChange, safeArray, safeObject, safeString, sortedEntries, toArray } from "@focuson/utils";
+import { beforeAfterSeparator, CopyDetails, FetchFn, isRestStateChange, NameAnd, RestAction, RestStateChange, safeArray, safeObject, safeString, sortedEntries, toArray } from "@focuson/utils";
 import { identityOptics, massTransform, Optional, Transform } from "@focuson/lens";
-import { CopyDetails } from "@focuson/pages";
+
 
 
 export interface RestDebug {
@@ -234,12 +234,14 @@ export async function restToTransforms<S, MSGS> (
   if ( debug ) console.log ( "rest-results", results )
   let toLens = pathToLens ( s );
   const deleteTx = ( d: string ): Transform<S, any> => [ toLens ( d ), () => undefined ];
+  console.log('about to restCommandsAndTxs', JSON.stringify(results))
   const restCommandAndTxs: RestCommandAndTxs<S>[] = results.map ( res => {
     const deleteTxs: Transform<S, any>[] = toArray ( res.restCommand.deleteOnSuccess ).map ( deleteTx )
-    const copies : Transform<S, any>[]= toArray(res.restCommand.copyOnSuccess).map( cd => [toLens(cd.from), () => toLens(cd.to)])
-    const txs: Transform<S, any>[] = [ ...restResultToTx ( messageL, res.one.messages, stringToMsg, res.one.extractData ) ( res ), ...deleteTxs, ...copies ];
+    // const copies : Transform<S, any>[]= toArray(res.restCommand.copyOnSuccess).map( cd => [toLens(cd.to), () => toLens(cd.from).getOption(res.result)])
+    // console.log('copies', copies)
+    const txs: Transform<S, any>[] = [ ...restResultToTx ( messageL, res.one.messages, stringToMsg, res.one.extractData ) ( res ), ...deleteTxs ];
     const trace: Transform<S, any>[] = tracing ? [ [ traceL, old => [ ...safeArray ( old ), { restCommand: res.restCommand, lensTxs: txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( s ) ) ] ) } ] ] ] : []
-    const restAndTxs: RestCommandAndTxs<S> = { ...res, txs: [ ...txs, ...trace ] };
+    const restAndTxs: RestCommandAndTxs<S> = { ...res, txs: [ ...txs, ...trace ] };1
     return restAndTxs
   } )
 

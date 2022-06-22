@@ -1,11 +1,10 @@
 import { LensState, reasonFor } from "@focuson/state";
-import { CopyDetails, fromPathGivenState, page, PageMode, PageParams, PageSelectionContext, SetToLengthOnClose } from "../pageSelection";
+import { fromPathGivenState, page, PageMode, PageParams, PageSelectionContext, SetToLengthOnClose } from "../pageSelection";
 import { Optional, Transform } from "@focuson/lens";
 import { RestCommand } from "@focuson/rest";
-import { anyIntoPrimitive, DateFn, safeArray, toArray } from "@focuson/utils";
+import { anyIntoPrimitive, CopyDetails, DateFn, safeArray, toArray } from "@focuson/utils";
 import { CustomButtonType, getButtonClassName } from "../common";
 import { isMainPageDetails, MultiPageDetails } from "../pageConfig";
-import { canCommitOrCancel } from "./modalCommitAndCancelButton";
 
 export interface CopyStringDetails {
   from: string;

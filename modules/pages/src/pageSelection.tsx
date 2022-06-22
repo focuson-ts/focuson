@@ -1,7 +1,7 @@
 import { identityOptics, Lens, lensBuilder, NameAndLensFn, Optional, parsePath, prefixNameAndLens, Transform } from "@focuson/lens";
 import { LensState } from "@focuson/state";
 import { HasMultiPageDetails, isMainPageDetails } from "./pageConfig";
-import { safeArray, safeObject } from "@focuson/utils";
+import { CopyDetails, safeArray, safeObject } from "@focuson/utils";
 import { RestCommand } from "@focuson/rest";
 import { PageDetailsForCombine } from "./selectedPage";
 
@@ -26,10 +26,6 @@ export interface PageOnClose {
 export interface SetToLengthOnClose {
   array: string,
   variable: string
-}
-export interface CopyDetails {
-  from?: string;
-  to?: string
 }
 
 export interface PageSelection {

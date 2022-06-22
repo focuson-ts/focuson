@@ -1,7 +1,7 @@
 import { ExampleDataD, ExampleRestD } from "../common";
 
 import { AccountDetailsDD, CurrentPaymentCountsDD, postCodeSearchResponseDD, PrintRecordHistoryDD } from "./listOfPayements.dataD";
-import { IntParam, OneTableInsertSqlStrategyForNoIds, RestD, RestParams, StringParam } from "../../common/restD";
+import { IntParam, RestD, RestParams, StringParam } from "../../common/restD";
 import { onlySchema } from "../database/tableNames";
 import { AllGuards } from "../../buttons/guardButton";
 import { allCommonIds, fromCommonIds } from "../commonIds";
