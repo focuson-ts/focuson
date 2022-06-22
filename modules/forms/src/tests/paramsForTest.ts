@@ -1,7 +1,7 @@
 import { CombinedParams } from "../codegen/config";
 
 export const paramsForTest: CombinedParams = {
-  extractData: `( status: number, body: any ) => body.data`,
+  extractData: `( status: number | undefined, body: any ) => body.data`,
   optionalsFile: "optionals",
   pagesFile: 'pages',
   focusOnVersion: "someFocusOnVersion",

@@ -1,4 +1,4 @@
-import { findIds, isRestLens, LensRestParam } from "../common/restD";
+import { AllLensRestParams, findIds, isRestLens, LensRestParam } from "../common/restD";
 import { domainName, domainsFileName, pageDomainName, restDetailsName, restFileName } from "./names";
 import { TSParams } from "./config";
 import { allRestAndActions, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";

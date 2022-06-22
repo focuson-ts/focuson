@@ -52,7 +52,7 @@ const pages: MultiPageDetails<StateForNewFetcherTests, FocusOnContext<StateForNe
 
 
 const oneRestDetails: OneRestDetails<StateForNewFetcherTests, NewFetcherDomain, number, SimpleMessage> = {
-  extractData ( status: number, body: any ): number {return body;},
+  extractData ( status: number|undefined, body: any ): number {return body;},
   fdLens: pageIdL.focusQuery ( 'data' ),
 //From PostCodeMainPage.rest[address].targetFromPath (~/main). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
   dLens: dataidL.focusQuery ( 'a' ),

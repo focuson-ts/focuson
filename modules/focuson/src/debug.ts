@@ -13,7 +13,10 @@ export interface GuardDebug {
 export interface ReduxDebug{
   reduxDebug?: boolean
 }
-export interface FocusOnDebug extends FetcherDebug, SelectedPageDebug, RestDebug, TracingDebug, AccordionsInDebug, TagFetcherDebug, GuardDebug, ReduxDebug {
+export interface ShowValidityDebug{
+  validityDebug?: boolean
+}
+export interface FocusOnDebug extends FetcherDebug, SelectedPageDebug, RestDebug, TracingDebug, AccordionsInDebug, TagFetcherDebug, GuardDebug, ReduxDebug, ShowValidityDebug {
 
 
 }
