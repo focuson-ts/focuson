@@ -31,9 +31,9 @@ export function AuthoriseTable<S, D extends AuthoriseTableData, C extends FocusO
       let newRow = { ...row, hold: !row.hold };
       // const txs = transformsForUpdateSelected ( copySelectedIndexTo, copySelectedItemTo ) ( i, row )
       const thisTx: Transform<S, any> = [ state.optional.chain ( Lenses.nth ( i ) ), row => newRow ]
-      state.massTransform ( reasonFor ( `AuthoriseTable[${i}]`, 'onChange', id ) ) (  thisTx );
+      state.massTransform ( reasonFor ( `AuthoriseTable[${i}]`, 'onChange', id ) ) ( thisTx );
     }
-    return  <input type='checkbox' onChange={onChange} checked={row.hold}/>
+    return <input type='checkbox' aria-label={`Halt for row ${i}`} onChange={onChange} checked={row.hold}/>
   }
   const onClick = ( i: number, row: D ) => ( e: any ) => {
     if ( copySelectedIndexTo || copySelectedItemTo ) {
@@ -43,7 +43,7 @@ export function AuthoriseTable<S, D extends AuthoriseTableData, C extends FocusO
   }
 
   function stateFor ( k: keyof D ): LensState<S, any, C> {return copySelectedItemTo.focusOn ( k );}
-  const AuthTable = rawTable<S, any, C> ([...order, 'Halt'], onClick, defaultOneRow ( id, order, [], haltBox ) )
+  const AuthTable = rawTable<S, any, C> ( [ ...order, 'Halt' ], onClick, defaultOneRow ( id, order, [], haltBox ) )
   return <Layout details='[[1],[1,1],[1,1,1]]'>
     <AuthTable{...props} />
     <LabelAndStringInput id={`${id}.approvedBy`} label='Approved By' state={stateFor ( 'approvedBy' )} mode='view' allButtons={{}}/>

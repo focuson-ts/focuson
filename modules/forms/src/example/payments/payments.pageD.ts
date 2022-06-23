@@ -1,6 +1,6 @@
 import { ExampleMainPage, ExampleModalPage } from "../common";
 import { PaymentDD, PaymentsLaunchDD, SummaryOfPaymentsLineDD } from "./payments.dataD";
-import { newPaymentsRD, summaryOfPreviousPaymentsRD } from "./payments.restD";
+import { currencyListDD, currencyRD, newPaymentsRD, summaryOfPreviousPaymentsRD } from "./payments.restD";
 import { NatNumDd } from "../../common/dataD";
 
 // export const ChargeDetailsPD: ExampleModalPage = {
@@ -38,11 +38,13 @@ export const PaymentsPageD: ExampleMainPage = {
     onePayment: { dataDD: PaymentDD },
     selectedPaymentIndex: { dataDD: NatNumDd },
     selectedPayment: { dataDD: SummaryOfPaymentsLineDD },
+    currency: { dataDD: currencyListDD }
   },
   modals: [ { modal: EditPaymentsPD } ],
   rest: {
     listOfPreviousPayments: { rest: summaryOfPreviousPaymentsRD, fetcher: true, targetFromPath: '~/summary/summaryOfPaymentsTable' },
     newPayments: { rest: newPaymentsRD, targetFromPath: '~/onePayment' },
+    currency: { rest: currencyRD, targetFromPath: '~/currency', fetcher: true },
   },
   guards: {
     tableItemSelected: { condition: "isDefined", path: '~/selectedPaymentIndex' }

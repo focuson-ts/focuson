@@ -1,6 +1,6 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 import { BooleanDD, DateDD, ManyDataDD, MoneyDD, StringDD, stringPrimDD, StringPrimitiveDD } from "../../common/dataD";
-import { DropDownCD, LabelAndDropDownCD, LabelAndRadioCD, LayoutCd, TableCD } from "../../common/componentsD";
+import { DropDownCD, LabelAndDropDownCD, LabelAndDropDownFromDataCD, LabelAndRadioCD, LayoutCd, TableCD } from "../../common/componentsD";
 import { AllGuards } from "../../buttons/guardButton";
 
 export const PaymentTypeDd: StringPrimitiveDD = {
@@ -24,8 +24,8 @@ export const CurrencyEnum: StringPrimitiveDD = {
   ...stringPrimDD,
   name: 'CurrencyEnum',
   description: "Euros or GBP",
-  display: DropDownCD,
-  enum: { GBP: "GBP", E: "Euros" }
+  display: LabelAndDropDownFromDataCD,
+  displayParams: { data: '~/currency', dataId: 'id', dataField: 'currency', pleaseSelect: 'Please select'  },
 }
 export const ChapsPaymentTypeDD: StringPrimitiveDD = {
   ...stringPrimDD,

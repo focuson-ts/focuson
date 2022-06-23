@@ -96,7 +96,20 @@ export const LabelAndDateInputCD: DisplayCompD = {
     dateFormat: { paramType: 'string', needed: 'no' },
   }
 }
+export const LabelAndDropDownFromDataCD: DisplayCompD = {
+  import: "@focuson/form_components",
+  name: "LabelAndDropDownFromData",
+  params: {
+    ...commonParamsWithLabel,
+    data: { paramType: "path", needed: 'yes' },
+    dataId: { paramType: 'string', needed: 'yes' },
+    dataField: { paramType: 'string', needed: 'yes' },
+    pleaseSelect: { paramType: 'string', needed: 'no' },
+    size: { paramType: 'object', needed: 'no' },
+    required: { paramType: 'boolean', needed: 'no' },
 
+  }
+}
 
 export const DataDrivenFixedOptionDropDownAndDetailsCD: DisplayCompD = {
   import: "@focuson/form_components", name: "DataDrivenFixedOptionDropDownAndDetails",
@@ -171,13 +184,15 @@ export const enumParams: DisplayCompParamD = { enums: { needed: 'defaultToEnum',
 export const RadioCD: DisplayCompD = {
   import: "@focuson/form_components",
   name: "Radio",
-  params: { ...commonParams, ...enumParams,
-    required: { paramType: 'boolean', needed: 'no', default: true } }
+  params: {
+    ...commonParams, ...enumParams,
+    required: { paramType: 'boolean', needed: 'no', default: true }
+  }
 }
 export const LabelAndRadioCD: DisplayCompD = {
   import: "@focuson/form_components",
   name: "LabelAndRadio",
-  params: { 
+  params: {
     ...commonParamsWithLabel, ...enumParams,
     required: { paramType: 'boolean', needed: 'no', default: true },
   }

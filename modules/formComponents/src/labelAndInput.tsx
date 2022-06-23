@@ -28,7 +28,7 @@ export function makeButtons ( allButtons: NameAnd<JSX.Element>, buttons?: string
 
 const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> ) =>
   <S, Context extends FocusOnContext<S>> ( props: LabelAndInputProps<S, T, Context> & P ) => {
-    const label = <Label state={props.state} htmlFor={props.name} label={props.label}/>;
+    const label = <Label state={props.state} htmlFor={props.id} label={props.label}/>;
     const input = Input<S, T, P> ( tProps )<LabelAndInputProps<S, T, Context> & P, Context> ( props );
     return <div className={`labelValueButton ${props.labelPosition == 'Horizontal'? 'd-flex-inline' : ''}`}> {props.noLabel ? '' : label}
               <div className={`${props.buttons && props.buttons.length > 0 ? 'inputAndButtons' : ''}`}>{input}{makeButtons ( props.allButtons, props.buttons )}</div>
@@ -37,7 +37,7 @@ const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> ) =>
 
 export function LabelAndBooleanInput<S, Context extends FocusOnContext<S>> ( props: LabelAndInputProps<S, boolean, Context> ) {
   const { state, mode, readonly } = props
-  const label = <Label state={props.state} htmlFor={props.name} label={props.label}/>;
+  const label = <Label state={props.state} htmlFor={props.id} label={props.label}/>;
   const input = <BooleanInput {...props}/>
   return <div className={`${props.buttons && props.buttons.length > 0 ? 'checkbox-container inputAndButtons' : 'checkbox-container'}`}> {label}{input}{makeButtons ( props.allButtons, props.buttons )}</div>
 }

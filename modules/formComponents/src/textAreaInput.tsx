@@ -51,7 +51,7 @@ export function LabelAndTextarea<S, T, Context extends FocusOnContext<S>> ( prop
   const { id, label, name, state, labelPosition, buttons, allButtons, noLabel } = props
   return (
     <div className={`labelValueButton ${labelPosition == 'Horizontal'? 'd-flex-inline' : ''}`}>
-      {noLabel ? '' : <Label state={state} htmlFor={name} label={label}/>}
+      {noLabel ? '' : <Label state={state} htmlFor={id} label={label}/>}
       <div className={`${buttons && buttons.length > 0 ? 'inputAndButtons' : ''}`}>
         <TextAreaInput {...props}/>{makeButtons ( allButtons, buttons )}
       </div>

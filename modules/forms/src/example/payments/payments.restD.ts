@@ -1,7 +1,9 @@
-import { ExampleRestD } from "../common";
+import { ExampleDataD, ExampleRepeatingD, ExampleRestD } from "../common";
 import { PaymentDD, SummaryOfPaymentsLineDD, SummaryOfPaymentsTableDD } from "./payments.dataD";
 import { onlySchema } from "../database/tableNames";
 import { commonIds, fromCommonIds } from "../commonIds";
+import { StringDD } from "../../common/dataD";
+import { LabelAndDropDownCD, LabelAndDropDownFromDataCD } from "../../common/componentsD";
 
 export const summaryOfPreviousPaymentsRD: ExampleRestD = {
   params: {},
@@ -59,7 +61,7 @@ export const newPaymentsRD: ExampleRestD = {
 
   mutations: [ {
     restAction: 'create',
-    autowired: {class: '{thePackage}.utils.IOGNL', variableName: 'ognl', imports: true},
+    autowired: { class: '{thePackage}.utils.IOGNL', variableName: 'ognl', imports: true },
     mutateBy: [ {
       type: 'case', name: 'create', params: [
         'brandRef', "accountId",
@@ -85,4 +87,28 @@ export const newPaymentsRD: ExampleRestD = {
       ]
     } ]
   } ]
+}
+export const currencyDD: ExampleDataD = {
+  name: 'Currency',
+  description: "id and name of the currency ",
+  structure: {
+    id: { dataDD: StringDD, sample: [ 'E', 'GBP' ] },
+    currency: { dataDD: StringDD, sample: [ 'Euro', 'GBP' ] },
+  }
+}
+export const currencyListDD: ExampleRepeatingD = {
+  name: 'CurrencyDropDown',
+  dataDD: currencyDD,
+  description: "",
+  display: LabelAndDropDownFromDataCD,
+  displayParams: { data: '~/currency', dataId: 'id', dataField: 'currency'},
+  paged: false,
+
+}
+export const currencyRD: ExampleRestD = {
+  params: {},
+  dataDD: currencyListDD,
+  namePrefix: 'oneLine',
+  url: '/api/currencies/?{query}',
+  actions: [ 'get' ]
 }
