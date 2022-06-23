@@ -300,7 +300,7 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
   ]
   let pageDomain = noExtension ( params.pageDomainsFile );
   let domain = noExtension ( params.domainsFile );
-  const pageDomainsImports = pages.filter (isMainPage ).map ( p => `import {${pageDomainName ( p )}} from "${domainsFileName ( '..', params, p )}";` )
+  const pageDomainsImports = pages.filter ( isMainPage ).map ( p => `import {${pageDomainName ( p )}} from "${domainsFileName ( '..', params, p )}";` )
   const domainImports = pages.flatMap ( p => sortedEntries ( dataDsIn ( [ p ] ) ).map ( ( [ name, dataD ] ) => `import {${domainName ( dataD )}} from "${domainsFileName ( '..', params, p )}"` ) )
   const modalDomainImports = pages.flatMap ( p => isModalPage ( p ) ? [
     `//if there is an error message here check that the PageD links to this DataD in a domain or rest block`,

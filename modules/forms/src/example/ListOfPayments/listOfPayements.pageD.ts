@@ -19,7 +19,6 @@ export const AddressModalPage: ExampleModalPage = {
     commit: { control: 'ModalCommitButton', text: 'save', enabledBy: 'userClickedResult' },
     search: {
       control: 'RestButton', action: 'get', restName: 'postcode',
-
     },
   }
 }
@@ -31,6 +30,7 @@ export const EditlistOfPaymentsPagePD: ExampleModalPage = {
   layout: { component: HideButtonsCD, displayParams: { hide: [ 'address' ] } },
   guards: {
     canPrint: { condition: 'equals', value: false, path: '~/tempListOfPayments/alreadyPrinted' },
+    sortCodeValid:{condition: 'regex', regex: /^[0-9]{2}[-][0-9]{2}[-][0-9]{2}$/, path: '~/tempListOfPayments/newBankDetails/sortCode' }
   },
   buttons: {
     cancel: { control: 'ModalCancelButton', text: 'back' },
@@ -49,6 +49,7 @@ export const EditlistOfPaymentsPagePD: ExampleModalPage = {
       ]
     },
     search: { control: 'RestButton', restName: 'sortCodeLookup', action: 'get', validate: false,
+      enabledBy: 'sortCodeValid',
       copyOnSuccess: { from: 'bankName', to: '~/tempListOfPayments/newBankDetails/bank' },
   }},
 }

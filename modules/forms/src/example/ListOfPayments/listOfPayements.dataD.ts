@@ -50,7 +50,7 @@ export const RequestDetailsDD: ExampleDataD = {
 export const newBankDetailsDD: ExampleDataD = {
   name: 'NewBankDetails',
   description: 'Not really sure what is going on here',
-  layout: { component: LayoutCd, displayParams: { details: '[1,1,1], [1], [1], [1], [1], [1,1], [1,1]]' } },
+  layout: { component: LayoutCd, displayParams: { details: '[[1,1,1], [1], [1], [1], [1], [1,1], [1,1]]' } },
   structure: {
     title: { dataDD: StringDD, sample: [ 'Mr', 'Mrs' ], displayParams: { required: false } },
     forename: { dataDD: OneLineStringDD, sample: [ 'Fred', 'Fredrica' ], displayParams: { required: false } },

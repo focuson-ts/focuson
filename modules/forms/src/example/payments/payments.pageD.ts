@@ -1,8 +1,5 @@
 import { ExampleMainPage, ExampleModalPage } from "../common";
-
-import { addressSearchDD } from "../ListOfPayments/listOfPayements.dataD";
-import { HideButtonsCD } from "../../buttons/hideButtonsCD";
-import { ChargeDetailsDD, PaymentDD, PaymentsLaunchDD, SummaryOfPaymentsLineDD } from "./payments.dataD";
+import { PaymentDD, PaymentsLaunchDD, SummaryOfPaymentsLineDD } from "./payments.dataD";
 import { newPaymentsRD, summaryOfPreviousPaymentsRD } from "./payments.restD";
 import { NatNumDd } from "../../common/dataD";
 
