@@ -1,4 +1,4 @@
-import { AllLensRestParams, findIds, isRestLens, LensRestParam } from "../common/restD";
+import {AllLensRestParams, findIds, isRestLens, LensRestParam} from "../common/restD";
 import { domainName, domainsFileName, pageDomainName, restDetailsName, restFileName } from "./names";
 import { TSParams } from "./config";
 import { allRestAndActions, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
@@ -11,7 +11,10 @@ export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restNam
   const [ ids, resourceIds ] = findIds ( r.rest )
   let pageDomain = `${params.domainsFile}.${pageDomainName ( p )}`;
 
-  const locals: [ string, LensRestParam<any> ][] = sortedEntries ( r.rest.params ).flatMap ( ( [ n, l ] ) => isRestLens ( l ) ? [ [ n, l ] ] : [] )
+  const paramsFromState: [string, AllLensRestParams<any>][] = sortedEntries(r.rest.states).flatMap(( [name, state]) => sortedEntries(state.params))
+  const paramsFromRest : [string, AllLensRestParams<any>][]= sortedEntries(r.rest.params)
+  const allParams  : [string, AllLensRestParams<any>][]= [...paramsFromRest, ...paramsFromState]
+  const locals: [ string, LensRestParam<any> ][] = allParams.flatMap ( ( [ n, l ] ) => isRestLens ( l ) ? [ [ n, l ] ] : [] )
   const fddLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: ${lensFocusQueryFor ( l.lens )}` )
   const compilationException = r.targetFromPath.indexOf ( '#' ) >= 0 ?
     [ `    //This compilation error is because you used a variable name in the target '${r.targetFromPath}'. Currently that is not supported` ] : []

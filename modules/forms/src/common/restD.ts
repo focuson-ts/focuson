@@ -227,7 +227,9 @@ export function flatMapParams<T> ( pds: MainPageD<any, any>[], fn: ( p: MainPage
   const fromPage: T[] = pds.flatMap ( page => sortedEntries ( page.commonParams ).flatMap ( ( [ name, c ] ) => fn ( page, undefined, undefined, name, c ) ) )
   const fromRest: T[] = flatMapRest ( pds, ( page ) => ( rest, restName ) =>
     sortedEntries ( rest.params ).flatMap ( ( [ name, c ] ) => fn ( page, restName, rest, name, c ) ) )
-  return [ ...fromRest, ...fromPage ]
+  const fromState: T[] = flatMapRest ( pds, ( page ) => ( rest, restName ) =>
+    sortedEntries ( rest.states ).flatMap ( ( [ name, s ] ) => sortedEntries(s.params).flatMap( ( [ name, p ] ) => (fn ( page, restName, rest, name, p ) ) )))
+  return [ ...fromRest, ...fromPage, ...fromState ]
 }
 export function flatMapCommonParams<T> ( pds: MainPageD<any, any>[], fn: ( p: MainPageD<any, any>, restName: string | undefined, r: RestD<any> | undefined, name: string, c: CommonLensRestParam<any> ) => T[] ): T[] {
   return flatMapParams ( pds, ( p, restName, r, name, c ) =>
