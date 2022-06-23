@@ -190,7 +190,7 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
   useEffect ( () => {
     if ( validationRef.current === null ) return
     const text = findValidityDetails ( focusPageClassName ).map ( ( [ name, value ] ) => `<span class='validity-${value}'>${name}</span>` )
-    validationRef.current.innerHTML = text.join ( '' )
+    validationRef.current.innerHTML = text.join ( ' ' )
   } )
   const debugState = state.copyWithLens ( Lenses.identity<any> ().focusQuery ( 'debug' ) )
   if ( showDebug ) {
