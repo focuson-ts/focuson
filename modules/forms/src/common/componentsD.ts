@@ -119,7 +119,8 @@ const tableParams: DisplayCompParamD = {
   prefixColumn: { paramType: 'string', needed: 'no' },
   maxCount: { paramType: 'string', needed: 'no' },
   emptyData: { paramType: 'string', needed: 'no' },
-  tableTitle: { paramType: 'string', needed: 'no' }
+  tableTitle: { paramType: 'string', needed: 'no' },
+  scrollAfter: { paramType: 'string', needed: 'no' }
 
 }
 export const TableCD: DisplayCompD = {

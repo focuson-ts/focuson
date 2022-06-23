@@ -55,8 +55,10 @@ export const SummaryOfPaymentsTableDD: ExampleRepeatingD = {
   description: "",
   dataDD: SummaryOfPaymentsLineDD,
   display: TableCD,
+  sampleCount: 10,
   displayParams: {
     order: [ 'nameOfPayee', 'currency', 'sterlingAmount', 'currencyAmount', 'dateCreated', 'forActionOn', 'status' ],
+    scrollAfter: '100px',
     copySelectedIndexTo: [ 'selectedPaymentIndex' ],
     copySelectedItemTo: [ 'selectedPayment' ]
   },

@@ -2,6 +2,7 @@ import { CommonStateProps } from "./common";
 import { decamelize, findJoiner, makeIntoString, NameAnd, safeArray } from "@focuson/utils";
 import { LensState, reasonFor } from "@focuson/state";
 import { Lenses, Transform } from "@focuson/lens";
+import { CSSProperties } from "react";
 
 export interface CommonTableProps<S, T, Context> extends CommonStateProps<S, T[], Context> {
   /** If set then the selected index will be copied here as the table items are selected. */
@@ -14,6 +15,7 @@ export interface CommonTableProps<S, T, Context> extends CommonStateProps<S, T[]
   maxCount?: string;
   emptyData?: string;
   tableTitle?: string;
+  scrollAfter?: string
 }
 export interface TableProps<S, T, Context> extends CommonTableProps<S, T, Context> {
   order: (keyof T)[];
@@ -46,7 +48,8 @@ export const rawTable = <S, T, Context> (
   onClick: ( i: number, row: T ) => ( e: any ) => void,
   oneRow: ( row: T, i: number, selectedClass: string | undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) => JSX.Element ) =>
   ( props: CommonTableProps<S, T, Context> ) => {
-    const { id, state, copySelectedIndexTo, copySelectedItemTo, joiners, prefixFilter, prefixColumn, maxCount, emptyData, tableTitle } = props
+    const { id, state, copySelectedIndexTo, copySelectedItemTo, joiners, prefixFilter, prefixColumn, maxCount, emptyData, tableTitle, scrollAfter } = props
+    const tbodyScroll: CSSProperties | undefined = scrollAfter ? { height: scrollAfter, overflow: 'auto' } : undefined
     const orderJsx = titles.map ( ( o, i ) => <th key={o.toString ()} id={`${id}.th[${i}]`}>{decamelize ( o.toString (), ' ' )}</th> )
     const json: T[] = safeArray ( state.optJson () )
     const selected = copySelectedIndexTo?.optJson ()
@@ -67,7 +70,7 @@ export const rawTable = <S, T, Context> (
         <thead>
         <tr>{orderJsx}</tr>
         </thead>
-        <tbody className="grid-sub">{tableBody}</tbody>
+        <tbody className="grid-sub" style={tbodyScroll}>{tableBody}</tbody>
       </table>
     </>
   };

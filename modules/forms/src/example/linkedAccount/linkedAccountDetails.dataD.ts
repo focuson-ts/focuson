@@ -1,6 +1,6 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 import { DateDD, IntegerDD, MoneyDD, OneLineStringDD, PrimitiveDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
-import { LabelAndDropDownCD, LayoutCd, TableCD } from "../../common/componentsD";
+import { LabelAndDropDownCD, LayoutCd, StructureTableCD, TableCD } from "../../common/componentsD";
 
 export const paymentReasonDD: StringPrimitiveDD = {
   ...OneLineStringDD,
@@ -125,9 +125,9 @@ export const CollectionItemDD: ExampleDataD = {
 export const CollectionListDD: ExampleRepeatingD = {
   name: "CollectionsList",
   description: "The list of collections or payments for the selection account",
-  display: TableCD,
+  display: StructureTableCD,
   displayParams: {
-    order: [ "collectionDate", 'amount', 'status' ],
+    paths: {cd: "collectionDate", amt: 'amount', sts: 'status' },
     copySelectedIndexTo: [ 'selectedCollectionIndex' ],
     copySelectedItemTo: [ 'selectedCollectionItem' ]
   },

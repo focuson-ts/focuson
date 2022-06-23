@@ -189,7 +189,8 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
   const validationRef = useRef<HTMLDivElement> ( null )
   useEffect ( () => {
     if ( validationRef.current === null ) return
-    validationRef.current.innerText = JSON.stringify ( findValidityDetails ( focusPageClassName ) )
+    const text = findValidityDetails ( focusPageClassName ).map ( ( [ name, value ] ) => `<span class='validity-${value}'>${name}</span>` )
+    validationRef.current.innerHTML = text.join ( '' )
   } )
   const debugState = state.copyWithLens ( Lenses.identity<any> ().focusQuery ( 'debug' ) )
   if ( showDebug ) {
