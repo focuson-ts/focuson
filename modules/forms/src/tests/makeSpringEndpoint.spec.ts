@@ -15,7 +15,9 @@ describe ( "makeSpringEndpoint", () => {
     expect ( makeParamsForJava ( 'error', createPlanRestD, 'get' ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestHeader @RequestParam int clientRef, @RequestParam int createPlanId' )
     // expect ( makeParamsForJava ( createPlanRestD, 'list' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String customerId' )
     expect ( makeParamsForJava ( 'error', createPlanRestD, 'create' ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestHeader @RequestParam int clientRef, @RequestBody String body' )
+    expect ( makeParamsForJava ( 'error', createPlanRestD, 'createWithoutFetch' ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestHeader @RequestParam int clientRef, @RequestBody String body' )
     expect ( makeParamsForJava ( 'error', createPlanRestD, 'update' ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestHeader @RequestParam int clientRef, @RequestParam int createPlanId, @RequestBody String body' )
+    expect ( makeParamsForJava ( 'error', createPlanRestD, 'updateWithoutFetch' ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestHeader @RequestParam int clientRef, @RequestParam int createPlanId, @RequestBody String body' )
     expect ( makeParamsForJava ( 'error', createPlanRestD, 'delete' ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestHeader @RequestParam int clientRef, @RequestParam int createPlanId' )
     expect ( makeParamsForJava ( 'error', createPlanRestD, 'getOption' ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestHeader @RequestParam int clientRef, @RequestParam int createPlanId' )
   } )
@@ -295,8 +297,9 @@ describe ( "makeSpringEndpoint", () => {
     ] )
   } )
 
-
 } )
+
+
 
 const restD: RestD<any> = {
   actions: [],
