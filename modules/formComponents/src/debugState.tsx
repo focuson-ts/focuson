@@ -166,7 +166,7 @@ export function Tracing<S, C> ( { state }: LensProps<S, any, C> ) {
 interface DebugProps<S, Context> extends LensProps<S, any, Context> {}
 
 export function ToggleOneDebug<S, C extends PageSelectionContext<S>> ( { state, name }: LensProps<S, any, C> & { name: string } ) {
-  return <ToggleButton id={name} buttonText={`{/debug/${name}|Hide|Show} ${name}`} state={state.focusOn ( name )}/>
+  return <ToggleButton id={name} buttonText={`{/debug/${name}|Hiding|Showing} ${name}`} state={state.focusOn ( name )}/>
 }
 export function ToggleDebugs<S, C extends PageSelectionContext<S>> ( { state }: LensProps<S, any, C> ) {
   const debugState = state.copyWithLens ( Lenses.identity<any> ().focusQuery ( 'debug' ) )
