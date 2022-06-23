@@ -1,5 +1,5 @@
 import { isMassTransformReason, isSetJsonReason, LensProps, MassTransformReason, reasonFor, SetJsonReason } from "@focuson/state";
-import { findValidityDetails, focusPageClassName, fromPathGivenState, HasPageSelection, HasPageSelectionLens, isMainPageDetails, PageSelectionContext } from "@focuson/pages";
+import { findThisPageElement, findValidityDetails, findValidityForInput, findValidityForSelect, focusPageClassName, fromPathGivenState, HasPageSelection, HasPageSelectionLens, isMainPageDetails, PageSelectionContext } from "@focuson/pages";
 import { HasTagHolder } from "@focuson/template";
 import { HasSimpleMessages, safeArray, safeString, SimpleMessage, sortedEntries } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands } from "@focuson/rest";
@@ -188,9 +188,13 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
   const { showDebug } = main.debug
   const validationRef = useRef<HTMLDivElement> ( null )
   useEffect ( () => {
+    function textFor ( title: string, details: [ string, boolean ][] ): string {
+      const text = details.map ( ( [ name, value ] ) => `<span class='validity-${value}'>${name}</span>` ).join ( ' ' )
+      return `<h3>${title}</h3>${text}`
+    }
     if ( validationRef.current === null ) return
-    const text = findValidityDetails ( focusPageClassName ).map ( ( [ name, value ] ) => `<span class='validity-${value}'>${name}</span>` )
-    validationRef.current.innerHTML = text.join ( ' ' )
+    const thisPage = findThisPageElement ( focusPageClassName )
+    validationRef.current.innerHTML = textFor ( 'inputs', findValidityForInput ( thisPage, false ) ) + textFor('selects', findValidityForSelect ( thisPage, false ))
   } )
   const debugState = state.copyWithLens ( Lenses.identity<any> ().focusQuery ( 'debug' ) )
   if ( showDebug ) {

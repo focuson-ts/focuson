@@ -8,7 +8,7 @@ import React, { useEffect, useRef } from "react";
 export function getRefForDebounceLogic ( id: string, debounce: number | undefined ) {
   const ref = useRef<HTMLButtonElement> ( null );
 }
-export function getRefForValidateLogicToButton ( id: string, validate: boolean | undefined, enabledBy: boolean | undefined, extraCondition?: boolean ): React.RefObject<HTMLButtonElement> {
+export function getRefForValidateLogicToButton ( id: string, debug: boolean, validate: boolean | undefined, enabledBy: boolean | undefined, extraCondition?: boolean ): React.RefObject<HTMLButtonElement> {
   const ref = useRef<HTMLButtonElement> ( null );
   useEffect ( () => {
     if ( ref.current === null ) throw Error ( `Id ${id} has a ref which is null` )
@@ -17,7 +17,7 @@ export function getRefForValidateLogicToButton ( id: string, validate: boolean |
       return
     }
     // console.log ( 'getRefForValidateLogicToButton', id, 'validate', validate)
-    const valid = isValidToCommit ( focusPageClassName )
+    const valid = isValidToCommit ( focusPageClassName, debug )
     // console.log ( 'getRefForValidateLogicToButton - valid', id, valid )
     let disabled = enabledBy === false || !valid || extraCondition == false;
     // console.log ( 'getRefForValidateLogicToButton - disabled', id, disabled )
@@ -27,47 +27,58 @@ export function getRefForValidateLogicToButton ( id: string, validate: boolean |
 }
 
 
-function findValidityForInput ( thisPage: Element, result: [ string, boolean ][] ) {
+export function findValidityForInput ( thisPage: Element, debug: boolean ): [ string, boolean ][] {
   const inputs = thisPage?.getElementsByTagName ( "input" )
+  const result: [ string, boolean ][] = []
   if ( inputs ) {
     for ( var i = 0; i < inputs.length; i++ ) {
       const child = inputs[ i ];
       let id = child.getAttribute ( 'id' );
       let recordedId = id ? id : "noIdForThisElement"
-      result[ i ] = [ recordedId, child.checkValidity () ]
+      let validity = child.checkValidity ();
+      if ( debug ) console.log ( 'findValidityForInput: ', id, validity )
+      result.push ( [ recordedId, validity ] )
     }
   }
+  return result
 }
-function findValidityForSelect ( thisPage: Element, result: [ string, boolean ][] ) {
+export function findValidityForSelect ( thisPage: Element, debug: boolean ): [ string, boolean ][] {
+  const result: [ string, boolean ][] = []
   const selects = thisPage?.getElementsByTagName ( "select" )
   if ( selects ) {
     for ( var i = 0; i < selects.length; i++ ) {
       const child = selects[ i ];
       let id = child.getAttribute ( 'id' );
       let clazz = child.getAttribute ( 'class' );
-      const valid = clazz.indexOf('invalid')<0
+      const valid = clazz.indexOf ( 'invalid' ) < 0
       let recordedId = id ? id : "noIdForThisElement"
-      result[ i ] = [ recordedId, valid ]
+      let thisResult: [string, boolean] = [ recordedId, valid ];
+      if ( debug ) console.log ( 'findValidityForSelect: ', id, thisResult )
+      result.push ( thisResult )
     }
   }
-}
-export function findValidityDetails ( pageHolderClass: string ): [ string, boolean ][] {
-  const allPages = document.getElementsByClassName ( pageHolderClass )
-  const thisPage: Element | null = allPages.item ( allPages.length - 1 )
-  const result: [ string, boolean ][] = []
-  if ( !thisPage ) return result
-  findValidityForInput ( thisPage, result );
-  findValidityForSelect ( thisPage, result );
   return result
 }
+export function findThisPageElement ( pageHolderClass: string ) {
+  const allPages = document.getElementsByClassName ( pageHolderClass )
+  const thisPage: Element | null = allPages.item ( allPages.length - 1 )
+  return thisPage;
+}
+export function findValidityDetails ( pageHolderClass: string, debug: boolean ): [ string, boolean ][] {
+  const thisPage = findThisPageElement ( pageHolderClass );
+  if ( !thisPage ) return []
+  return [ ...findValidityForInput ( thisPage, debug ), ...findValidityForSelect ( thisPage, debug ) ]
+}
 
-export function isValidToCommit ( pageHolderClass: string ): boolean {
-  return findValidityDetails ( pageHolderClass ).reduce ( ( acc: boolean, [ id, valid ] ) => acc && valid, true )
+export function isValidToCommit ( pageHolderClass: string, debug: boolean ): boolean {
+  return findValidityDetails ( pageHolderClass, debug ).reduce ( ( acc: boolean, [ id, valid ] ) => acc && valid, true )
 }
 
 export function hasValidationErrorAndReport<S, C extends HasSimpleMessageL<S>> ( id: string, state: LensState<S, any, C>, dateFn: DateFn | undefined ): boolean {
-  if ( !isValidToCommit ( focusPageClassName ) ) {
-    const message = "Cannot commit. Validation errors on\n" + findValidityDetails ( focusPageClassName ).filter ( t => !t[ 1 ] ).map ( t => t[ 0 ] ).join ( "\n" );
+  // @ts-ignore
+  const debug = state.main?.debug?.validityDebug
+  if ( !isValidToCommit ( focusPageClassName, debug ) ) {
+    const message = "Cannot commit. Validation errors on\n" + findValidityDetails ( focusPageClassName, debug ).filter ( t => !t[ 1 ] ).map ( t => t[ 0 ] ).join ( "\n" );
     console.error ( message )
     const realDateFn = dateFn ? dateFn : () => new Date ().toISOString ()
     state.copyWithLens ( state.context.simpleMessagesL ).transform ( msgs => [ ...safeArray ( msgs ),

@@ -8,7 +8,7 @@ export interface ValidationButtonProps<S, C> {
 }
 export function ValidationButton<S, C> ( { id, name }: ValidationButtonProps<S, C> ) {
   function onClick () {
-    const validity = findValidityDetails ( ' focus-page' )
+    const validity = findValidityDetails ( ' focus-page', true )
     const content = document.getElementById ( `${id}-result` )
     console.log ( 'content', content )
     if ( content ) {

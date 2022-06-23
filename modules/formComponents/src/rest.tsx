@@ -2,7 +2,7 @@ import { HasRestCommandL } from "@focuson/rest";
 import { reasonFor } from "@focuson/state";
 import { CopyDetails, DateFn, RequiredCopyDetails, RestAction, RestResult } from "@focuson/utils";
 import { CommonStateProps, CustomButtonType, getButtonClassName } from "./common";
-import {  getRefForValidateLogicToButton, HasPageSelectionLens, HasSimpleMessageL, hasValidationErrorAndReport } from "@focuson/pages";
+import { getRefForValidateLogicToButton, HasPageSelectionLens, HasSimpleMessageL, hasValidationErrorAndReport } from "@focuson/pages";
 import { useRef } from "react";
 
 export interface RestButtonProps<S, C> extends CommonStateProps<S, any, C>, CustomButtonType {
@@ -14,7 +14,7 @@ export interface RestButtonProps<S, C> extends CommonStateProps<S, any, C>, Cust
   validate?: boolean;
   text?: string;
   deleteOnSuccess?: string | string[];
-  copyOnSuccess? : RequiredCopyDetails[];
+  copyOnSuccess?: RequiredCopyDetails[];
   messageOnSuccess?: string;
   dateFn?: DateFn
 }
@@ -25,19 +25,20 @@ function confirmIt ( c: boolean | string | undefined ) {
   return window.confirm ( text )
 }
 export function RestButton<S, C extends HasRestCommandL<S> & HasSimpleMessageL<S> & HasPageSelectionLens<S>> ( props: RestButtonProps<S, C> ) {
-  const { id, rest, action, result, state, text, confirm, validate, dateFn, deleteOnSuccess, enabledBy, name, messageOnSuccess, buttonType,copyOnSuccess } = props
-  const ref = getRefForValidateLogicToButton ( id,validate, enabledBy )
+  const { id, rest, action, result, state, text, confirm, validate, dateFn, deleteOnSuccess, enabledBy, name, messageOnSuccess, buttonType, copyOnSuccess } = props
+  const debug = false//just to stop spamming: should already have all the validations visible if debugging is on
+  const ref = getRefForValidateLogicToButton ( id, debug, validate, enabledBy )
   const debounceRef = useRef<Date> ( null )
 
 
   function onClick () {
     const now = new Date ()
     const lastClick = debounceRef.current
-    console.log("debounce logic - lastClick", lastClick)
-    console.log("debounce logic - now", now)
-    console.log("debounce logic - now - lastClick ", lastClick !== null && (now.getTime () - lastClick.getTime ()) )
+    console.log ( "debounce logic - lastClick", lastClick )
+    console.log ( "debounce logic - now", now )
+    console.log ( "debounce logic - now - lastClick ", lastClick !== null && (now.getTime () - lastClick.getTime ()) )
     if ( lastClick !== null && (now.getTime () - lastClick.getTime ()) < 1000 ) {
-      console.log("stopped bounce")
+      console.log ( "stopped bounce" )
       return
     }
     // @ts-ignore
@@ -45,7 +46,7 @@ export function RestButton<S, C extends HasRestCommandL<S> & HasSimpleMessageL<S
     const realvalidate = validate === undefined ? true : validate
     if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return
     if ( confirmIt ( confirm ) )
-      state.copyWithLens ( state.context.restL ).transform ( old => [ ...old, { restAction: action, name: rest, deleteOnSuccess, messageOnSuccess,copyOnSuccess } ], reasonFor ( 'RestButton', 'onClick', id ) )
+      state.copyWithLens ( state.context.restL ).transform ( old => [ ...old, { restAction: action, name: rest, deleteOnSuccess, messageOnSuccess, copyOnSuccess } ], reasonFor ( 'RestButton', 'onClick', id ) )
   }
 
   return <button ref={ref} onClick={onClick} className={getButtonClassName ( buttonType )}>{text ? text : name}</button>

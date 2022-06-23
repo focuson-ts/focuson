@@ -40,7 +40,9 @@ export function canCommitOrCancel<S, Context extends PageSelectionContext<S>> ( 
 }
 
 export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S>> ( { state, id, dateFn, validate, enabledBy, text, buttonType }: ModalCommitButtonProps<S, Context> ) {
-  const ref = getRefForValidateLogicToButton ( id, validate, enabledBy, canCommitOrCancel(state) )
+  // @ts-ignore
+  const debug = state.main?.debug?.validityDebug
+  const ref = getRefForValidateLogicToButton ( id, debug,validate, enabledBy, canCommitOrCancel(state) )
   function onClick () {
     const now = new Date ()
     const realvalidate = validate === undefined ? true : validate

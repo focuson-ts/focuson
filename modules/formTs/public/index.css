@@ -83,11 +83,11 @@ input:valid{
   background: #fff;
   padding: 5px 25px;
 }
-#validity-true{
-   background-color: green;
+.validity-true{
 }
-#validity-false{
-   background-color: red;
+.validity-false{
+  background-color: red;
+  color: white;
 }
 /* button {
     min-width: 50px;
