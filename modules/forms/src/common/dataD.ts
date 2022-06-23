@@ -366,7 +366,7 @@ export const MoneyDD: NumberPrimitiveDD = {
   ...floatPrimDD,
   display: LabelAndNumberInputCD,
   sample: [ 100.23, 200.45, 300 ],
-  displayParams: { min: 0, step: 0.01 },
+  displayParams: {  step: 0.01 },
   description: "The primitive representing an amount of the local currency",
   name: 'Money'
 }
