@@ -52,8 +52,25 @@ export function findValidityForSelect ( thisPage: Element, debug: boolean ): [ s
       let clazz = child.getAttribute ( 'class' );
       const valid = clazz.indexOf ( 'invalid' ) < 0
       let recordedId = id ? id : "noIdForThisElement"
-      let thisResult: [string, boolean] = [ recordedId, valid ];
+      let thisResult: [ string, boolean ] = [ recordedId, valid ];
       if ( debug ) console.log ( 'findValidityForSelect: ', id, thisResult )
+      result.push ( thisResult )
+    }
+  }
+  return result
+}
+export function findValidityForRadio ( thisPage: Element, debug: boolean ): [ string, boolean ][] {
+  const result: [ string, boolean ][] = []
+  const radios = thisPage?.getElementsByClassName ( "radio-group-container" )
+  if ( radios ) {
+    for ( var i = 0; i < radios.length; i++ ) {
+      const child = radios[ i ];
+      let id = child.getAttribute ( 'id' );
+      let clazz = child.getAttribute ( 'class' );
+      const valid = clazz.indexOf ( 'invalid' ) < 0
+      let recordedId = id ? id : "noIdForThisElement"
+      let thisResult: [ string, boolean ] = [ recordedId, valid ];
+      if ( debug ) console.log ( 'findValidityForRadio: ', id, thisResult )
       result.push ( thisResult )
     }
   }
@@ -67,7 +84,9 @@ export function findThisPageElement ( pageHolderClass: string ) {
 export function findValidityDetails ( pageHolderClass: string, debug: boolean ): [ string, boolean ][] {
   const thisPage = findThisPageElement ( pageHolderClass );
   if ( !thisPage ) return []
-  return [ ...findValidityForInput ( thisPage, debug ), ...findValidityForSelect ( thisPage, debug ) ]
+  return [ ...findValidityForInput ( thisPage, debug ),
+    ...findValidityForSelect ( thisPage, debug ),
+    ...findValidityForRadio ( thisPage, debug ) ]
 }
 
 export function isValidToCommit ( pageHolderClass: string, debug: boolean ): boolean {

@@ -1,5 +1,5 @@
 import { isMassTransformReason, isSetJsonReason, LensProps, MassTransformReason, reasonFor, SetJsonReason } from "@focuson/state";
-import { findThisPageElement, findValidityDetails, findValidityForInput, findValidityForSelect, focusPageClassName, fromPathGivenState, HasPageSelection, HasPageSelectionLens, isMainPageDetails, PageSelectionContext } from "@focuson/pages";
+import { findThisPageElement, findValidityDetails, findValidityForInput, findValidityForRadio, findValidityForSelect, focusPageClassName, fromPathGivenState, HasPageSelection, HasPageSelectionLens, isMainPageDetails, PageSelectionContext } from "@focuson/pages";
 import { HasTagHolder } from "@focuson/template";
 import { HasSimpleMessages, safeArray, safeString, SimpleMessage, sortedEntries } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands } from "@focuson/rest";
@@ -194,7 +194,9 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
     }
     if ( validationRef.current === null ) return
     const thisPage = findThisPageElement ( focusPageClassName )
-    validationRef.current.innerHTML = textFor ( 'inputs', findValidityForInput ( thisPage, false ) ) + textFor('selects', findValidityForSelect ( thisPage, false ))
+    validationRef.current.innerHTML = textFor ( 'inputs', findValidityForInput ( thisPage, false ) ) +
+      textFor ( 'selects', findValidityForSelect ( thisPage, false ) ) +
+      textFor ( 'radios', findValidityForRadio ( thisPage, false ) )
   } )
   const debugState = state.copyWithLens ( Lenses.identity<any> ().focusQuery ( 'debug' ) )
   if ( showDebug ) {
