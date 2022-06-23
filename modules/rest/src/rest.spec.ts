@@ -42,7 +42,7 @@ function oneRestDetails ( cd: NameAndLens<RestStateForTest>, fdd: NameAndLens<Fu
     fdd,
     ids: [ 'token' ],
     resourceId: [ 'id' ],
-    extractData: ( status: number|undefined, body: any ): string => `Extracted[${status}].${body}`,
+    extractData: ( status: number | undefined, body: any ): string => `Extracted[${status}].${body}`,
     messages: ( status: number | undefined, body: any ): SimpleMessage[] => status == undefined ?
       [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify ( body )}`, testDateFn () ) ] :
       [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],
@@ -117,9 +117,11 @@ describe ( "rest", () => {
     const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: 'get', name: 'one' },
       { restAction: 'create', name: 'one' },
+      { restAction: 'createWithoutFetch', name: 'one' },
       { restAction: 'getOption', name: 'one' },
       { restAction: 'delete', name: 'one' },
       { restAction: 'update', name: 'one' },
+      { restAction: 'updateWithoutFetch', name: 'one' },
     ) );
     expect ( result ).toEqual ( {
       "fullDomain": {
@@ -127,6 +129,11 @@ describe ( "rest", () => {
         "idFromFullDomain": "someId"
       },
       "messages": [
+        {
+          "level": "info",
+          "msg": "200/\"from/some/url/someToken/updateWithoutFetch?token=someToken\"",
+          "time": "timeForTest"
+        },
         {
           "level": "info",
           "msg": "200/\"from/some/url/someToken/update?token=someToken&id=someId\"",
@@ -140,6 +147,11 @@ describe ( "rest", () => {
         {
           "level": "info",
           "msg": "200/\"from/some/url/someToken/getOption?token=someToken&id=someId\"",
+          "time": "timeForTest"
+        },
+        {
+          "level": "info",
+          "msg": "200/\"from/some/url/someToken/createWithoutFetch?token=someToken\"",
           "time": "timeForTest"
         },
         {
@@ -162,29 +174,19 @@ describe ( "rest", () => {
     const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (), withRestCommand ( { ...emptyRestStateWithTrace, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: 'get', name: 'one' },
       { restAction: 'create', name: 'one' },
+      { restAction: 'createWithoutFetch', name: 'one' },
       { restAction: 'getOption', name: 'one' },
       { restAction: 'delete', name: 'one' },
       { restAction: 'update', name: 'one' },
+      { restAction: 'updateWithoutFetch', name: 'one' },
     ) );
     // @ts-ignore
     const trace = result.trace
     expect ( trace ).toEqual ( [
       {
         "lensTxs": [
-          [
-            "I.focus?(messages)",
-            [
-              {
-                "level": "info",
-                "msg": "200/\"from/some/url/someToken/get?token=someToken&id=someId\"",
-                "time": "timeForTest"
-              }
-            ]
-          ],
-          [
-            "I.focus?(fullDomain).chain(I.focus?(fromApi))",
-            "Extracted[200].from/some/url/someToken/get?token=someToken&id=someId"
-          ]
+          [ "I.focus?(messages)", [ { "level": "info", "msg": "200/\"from/some/url/someToken/get?token=someToken&id=someId\"", "time": "timeForTest" } ] ],
+          [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "Extracted[200].from/some/url/someToken/get?token=someToken&id=someId" ]
         ],
         "restCommand": {
           "name": "one",
@@ -193,43 +195,24 @@ describe ( "rest", () => {
       },
       {
         "lensTxs": [
-          [
-            "I.focus?(messages)",
-            [
-              {
-                "level": "info",
-                "msg": "200/\"from/some/url/someToken/create?token=someToken\"",
-                "time": "timeForTest"
-              }
-            ]
-          ],
-          [
-            "I.focus?(fullDomain).chain(I.focus?(fromApi))",
-            "Extracted[200].from/some/url/someToken/create?token=someToken"
-          ]
-        ],
+          [ "I.focus?(messages)", [ { "level": "info", "msg": "200/\"from/some/url/someToken/create?token=someToken\"", "time": "timeForTest" } ] ],
+          [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "Extracted[200].from/some/url/someToken/create?token=someToken" ] ],
         "restCommand": {
           "name": "one",
           "restAction": "create"
         }
       },
       {
+        "lensTxs": [ [ "I.focus?(messages)", [ { "level": "info", "msg": "200/\"from/some/url/someToken/createWithoutFetch?token=someToken\"", "time": "timeForTest" } ] ] ],
+        "restCommand": {
+          "name": "one",
+          "restAction": "createWithoutFetch"
+        }
+      },
+      {
         "lensTxs": [
-          [
-            "I.focus?(messages)",
-            [
-              {
-                "level": "info",
-                "msg": "200/\"from/some/url/someToken/getOption?token=someToken&id=someId\"",
-                "time": "timeForTest"
-              }
-            ]
-          ],
-          [
-            "I.focus?(fullDomain).chain(I.focus?(fromApi))",
-            "Extracted[200].from/some/url/someToken/getOption?token=someToken&id=someId"
-          ]
-        ],
+          [ "I.focus?(messages)", [ { "level": "info", "msg": "200/\"from/some/url/someToken/getOption?token=someToken&id=someId\"", "time": "timeForTest" } ] ],
+          [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "Extracted[200].from/some/url/someToken/getOption?token=someToken&id=someId" ] ],
         "restCommand": {
           "name": "one",
           "restAction": "getOption"
@@ -237,17 +220,7 @@ describe ( "rest", () => {
       },
       {
         "lensTxs": [
-          [
-            "I.focus?(messages)",
-            [
-              {
-                "level": "error",
-                "msg": "Cannot connect. \"deleteWentWrong\"",
-                "time": "timeForTest"
-              }
-            ]
-          ]
-        ],
+          [ "I.focus?(messages)", [ { "level": "error", "msg": "Cannot connect. \"deleteWentWrong\"", "time": "timeForTest" } ] ] ],
         "restCommand": {
           "name": "one",
           "restAction": "delete"
@@ -255,24 +228,20 @@ describe ( "rest", () => {
       },
       {
         "lensTxs": [
-          [
-            "I.focus?(messages)",
-            [
-              {
-                "level": "info",
-                "msg": "200/\"from/some/url/someToken/update?token=someToken&id=someId\"",
-                "time": "timeForTest"
-              }
-            ]
-          ],
-          [
-            "I.focus?(fullDomain).chain(I.focus?(fromApi))",
-            "Extracted[200].from/some/url/someToken/update?token=someToken&id=someId"
-          ]
+          [ "I.focus?(messages)", [ { "level": "info", "msg": "200/\"from/some/url/someToken/update?token=someToken&id=someId\"", "time": "timeForTest" } ] ],
+          [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "Extracted[200].from/some/url/someToken/update?token=someToken&id=someId" ]
         ],
         "restCommand": {
           "name": "one",
           "restAction": "update"
+        }
+      },
+      {
+        "lensTxs": [
+          [ "I.focus?(messages)", [ { "level": "info", "msg": "200/\"from/some/url/someToken/updateWithoutFetch?token=someToken\"", "time": "timeForTest" } ] ] ],
+        "restCommand": {
+          "name": "one",
+          "restAction": "updateWithoutFetch"
         }
       }
     ] )
@@ -356,7 +325,7 @@ describe ( "rest", () => {
         "fromApi": "someData",
         "idFromFullDomain": "someId"
       },
-      "messages": [        {          "level": "info",          "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"",          "time": "timeForTest"        }      ],
+      "messages": [ { "level": "info", "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"", "time": "timeForTest" } ],
       "restCommands": [],
       "somewhere": "Extracted[200].from/some/new/state/someToken/newState?token=someToken&id=someId",
       "token": "someToken"

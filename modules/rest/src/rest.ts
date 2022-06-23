@@ -28,21 +28,24 @@ export interface RestActionDetail {
   output: RestOutputDetails,
   graphQPrefix: string,
   graphQlPostfix: string,
-  message: boolean
+  message: boolean;
+  annotation: string;
 }
 export interface RestTypeDetails {
   [ name: string ]: RestActionDetail
 }
 
 export const defaultRestAction: RestTypeDetails = {
-  'get': { name: 'get', method: 'GET', query: 'Query', params: { needsId: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'get', graphQlPostfix: '', message: false },
+  'get': { name: 'get', method: 'GET', query: 'Query', params: { needsId: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'get', graphQlPostfix: '', message: false, annotation: "GetMapping" },
   // 'getString': { name: 'getString', query: 'Query', params: { needsId: true }, output: { needsPling: true }, graphQPrefix: 'get', graphQlPostfix: '' }, //special for mocks
-  'getOption': { name: 'getOption', method: 'GET', query: 'Query', params: { needsId: true }, output: { needsObj: true }, graphQPrefix: 'getOption', graphQlPostfix: '', message: false },
+  'getOption': { name: 'getOption', method: 'GET', query: 'Query', params: { needsId: true }, output: { needsObj: true }, graphQPrefix: 'getOption', graphQlPostfix: '', message: false, annotation: "GetMapping" },
   // 'list': { name: 'list', method: 'GET', query: 'Query', params: {}, output: { needsObj: true, needsBrackets: true, needsPling: true }, graphQPrefix: 'list', graphQlPostfix: '' },
-  'update': { name: 'update', method: 'PUT', query: 'Mutation', params: { needsId: true, needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'update', graphQlPostfix: '', message: true },
-  'create': { name: 'create', method: 'POST', query: 'Mutation', params: { needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'create', graphQlPostfix: '', message: true },
-  'delete': { name: 'delete', method: 'DELETE', query: 'Mutation', params: { needsId: true }, output: { needsObj: false }, graphQPrefix: 'delete', graphQlPostfix: '', message: true },
-  'state': { name: 'state', method: 'POST', query: 'Mutation', params: { needsId: true }, output: { needsObj: false }, graphQPrefix: 'state', graphQlPostfix: '', message: true },
+  'update': { name: 'update', method: 'PUT', query: 'Mutation', params: { needsId: true, needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'updateWithoutFetch', graphQlPostfix: '', message: true, annotation: "PutMapping" },
+  'updateWithoutFetch': { name: 'update', method: 'PUT', query: 'Mutation', params: { needsId: true, needsObj: true }, output: { needsObj: false, needsPling: false }, graphQPrefix: 'update', graphQlPostfix: '', message: true, annotation: "PutMapping" },
+  'create': { name: 'create', method: 'POST', query: 'Mutation', params: { needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'create', graphQlPostfix: '', message: true, annotation: "PostMapping" },
+  'createWithoutFetch': { name: 'create', method: 'POST', query: 'Mutation', params: { needsObj: true }, output: { needsObj: false, needsPling: false }, graphQPrefix: 'createWithoutFetch', graphQlPostfix: '', message: true, annotation: "PostMapping" },
+  'delete': { name: 'delete', method: 'DELETE', query: 'Mutation', params: { needsId: true }, output: { needsObj: false }, graphQPrefix: 'delete', graphQlPostfix: '', message: true, annotation: "DeleteMapping" },
+  'state': { name: 'state', method: 'POST', query: 'Mutation', params: { needsId: true }, output: { needsObj: false }, graphQPrefix: 'state', graphQlPostfix: '', message: true, annotation: "PostMapping" },
 }
 export function restActionToDetails ( r: RestAction ): RestActionDetail {
   if ( typeof r === 'string' ) return defaultRestAction[ r ]
@@ -74,7 +77,7 @@ export type StateAccessDetails = { url: string, params: NameAnd<emptyType> } // 
 export interface OneRestDetails<S, FD, D, MSGs> extends UrlConfig<S, FD, D> {
   url: string;
   states?: NameAnd<StateAccessDetails>,
-  extractData: ( status: number|undefined, body: any ) => D,
+  extractData: ( status: number | undefined, body: any ) => D,
   messages: ( status: number | undefined, body: any ) => MSGs[];//often the returning value will have messages in it. Usually a is of type Domain. When the rest action is Delete there may be no object returned, but might be MSGs
 }
 
@@ -108,7 +111,7 @@ export interface RestResult<S, MSGs, Cargo> {
   result: any
 }
 
-export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, extractMsgs: ( status: number | undefined, body: any ) => MSGs[], toLens: ( path: string ) => Optional<S, any>, stringToMsg: ( msg: string ) => MSGs, extractData: ( status: number|undefined, body: any ) => any ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
+export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, extractMsgs: ( status: number | undefined, body: any ) => MSGs[], toLens: ( path: string ) => Optional<S, any>, stringToMsg: ( msg: string ) => MSGs, extractData: ( status: number | undefined, body: any ) => any ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
 
   let useMessageOnSucess = restCommand.messageOnSuccess && status && status < 300;
   const messagesFromBody = extractMsgs ( status, result )

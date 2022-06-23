@@ -5,7 +5,7 @@ import { actionsEqual, beforeSeparator, isRestStateChange, RestAction, safeArray
 import { indentList, paramsForRestAction } from "./codegen";
 import { isRepeatingDd } from "../common/dataD";
 import { MainPageD } from "../common/pageD";
-import { getRestTypeDetails, getUrlForRestAction, restActionForName, restActionToDetails } from "@focuson/rest";
+import { getRestTypeDetails, getUrlForRestAction, RestActionDetail, restActionForName, restActionToDetails } from "@focuson/rest";
 import { AccessCondition, allInputParamNames, allOutputParams, displayParam, importForTubles, javaTypeForOutput, MutationDetail } from "../common/resolverD";
 
 
@@ -33,15 +33,7 @@ function paramsForQuery<G> ( errorPrefix: string, r: RestD<G>, restAction: RestA
   return params.map ( ( [ name, param ] ) => name ).join ( ", " ) + objParam
 }
 
-function mappingAnnotation ( restAction: RestAction ) {
-  if ( restAction === 'get' ) return 'GetMapping'
-  if ( restAction === 'update' ) return 'PutMapping'
-  // if ( restAction === 'list' ) return 'GetMapping'
-  if ( restAction === 'create' ) return 'PostMapping'
-  if ( restAction === 'delete' ) return 'DeleteMapping'
-  if ( isRestStateChange ( (restAction) ) ) return 'PostMapping'
-  throw new Error ( `unknown rest action ${restAction} for mappingAnnotation` )
-}
+
 
 export function accessDetails ( params: JavaWiringParams, p: MainPageD<any, any>, restName: string, r: RestD<any>, restAction: RestAction ): string[] {
   const allAccess = safeArray ( r.access )
@@ -96,13 +88,14 @@ function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restN
   const hasDbName = safeParams[ 'dbName' ] !== undefined
   const dbNameString = hasDbName ? 'dbName' : `IFetcher.${params.defaultDbName}`
   const url = getUrlForRestAction ( restAction, r.url, r.states )
-  let selectionFromData = getRestTypeDetails ( restAction ).output.needsObj ? `"${queryName ( r, restAction )}"` : '""';
+  let restTypeDetails: RestActionDetail = getRestTypeDetails ( restAction );
+  let selectionFromData = restTypeDetails.output.needsObj ? `"${queryName ( r, restAction )}"` : '""';
   const callMutations = callMutationsCode ( p, restName, r, restAction, dbNameString );
   const errorPrefix = `${p.name}.rest[${restName}] ${JSON.stringify ( restName )}`
-  const hasBody = getRestTypeDetails ( restAction ).params.needsObj
+  const hasBody = restTypeDetails.params.needsObj
   const makeJsonString = hasBody ? [ `         Map<String,Object> bodyAsJson = new ObjectMapper().readValue(body, Map.class);` ] : []
   return [
-    `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,
+    `    @${restTypeDetails.annotation}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,
     `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( errorPrefix, r, restAction )}) throws Exception{`,
     ...makeJsonString,
     `        Messages msgs = Transform.msgs();`,
@@ -117,10 +110,10 @@ function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restN
 }
 
 function makeQueryEndpoint<G> ( params: JavaWiringParams, errorPrefix: string, r: RestD<G>, restAction: RestAction ): string[] {
-
+  let restTypeDetails: RestActionDetail = getRestTypeDetails ( restAction );
   const url = getUrlForRestAction ( restAction, r.url, r.states )
   return [
-    `    @${mappingAnnotation ( restAction )}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}/query", produces="application/json")`,
+    `    @${restTypeDetails.annotation}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}/query", produces="application/json")`,
     `    public String query${queryName ( r, restAction )}(${makeParamsForJava ( errorPrefix, r, restAction )}) throws Exception{`,
     `       return ${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( errorPrefix, r, restAction )});`,
     `    }`,
@@ -131,7 +124,7 @@ function makeQueryEndpoint<G> ( params: JavaWiringParams, errorPrefix: string, r
 
 function makeSampleEndpoint<G> ( params: JavaWiringParams, r: RestD<G> ): string[] {
   return [
-    `  @${mappingAnnotation ( 'get' )}(value = "${beforeSeparator ( "?", r.url )}/sample", produces = "application/json")`,
+    `  @${ getRestTypeDetails ( 'get' ).annotation}(value = "${beforeSeparator ( "?", r.url )}/sample", produces = "application/json")`,
     `    public static String sample${r.dataDD.name}() throws Exception {`,
     `      return new ObjectMapper().writeValueAsString( ${params.sampleClass}.${sampleName ( r.dataDD )}0);`,
     `    }` ];
@@ -140,7 +133,7 @@ function makeSampleEndpoint<G> ( params: JavaWiringParams, r: RestD<G> ): string
 function makeSqlEndpoint<B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, restName: string, r: RestD<G> ): string[] {
   if ( r.tables === undefined ) return []
   return [
-    `  @${mappingAnnotation ( 'get' )}(value = "${beforeSeparator ( "?", r.url )}/sql", produces = "text/html")`,
+    `  @${getRestTypeDetails ( 'get' ).annotation}(value = "${beforeSeparator ( "?", r.url )}/sql", produces = "text/html")`,
     `    public static String sql${r.dataDD.name}() throws Exception {`,
     `      return ${sqlMapName ( p, restName, [] )}.allSql;`,
     `    }` ];

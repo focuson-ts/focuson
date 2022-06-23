@@ -221,7 +221,7 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
       <div id='debug-validation-container' ref={validationRef}>
 
       </div>}
-
+      {showTracingState.optJsonOr ( false ) && <Tracing state={state}/>}
       <div id="debug-state-container">
         <table className="table-bordered">
           <thead>

@@ -17,6 +17,7 @@ export interface StringValidations {
 export interface NumberValidations {
   min?: number;
   max?: number;
+  step?: number
 }
 export interface BooleanValidations {}
 

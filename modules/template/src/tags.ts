@@ -73,7 +73,8 @@ export function methodFor ( r: RestAction ) {
   if ( isRestStateChange ( r ) ) return 'post'
   return {
     get: 'get', getOption: 'get', list: 'get',
-    delete: 'delete', create: 'post', update: 'put'
+    delete: 'delete', create: 'post', update: 'put',
+    updateWithoutFetch: 'put', createWithoutFetch: 'post'
   }[ r ]
 
 }

@@ -55,7 +55,7 @@ export const addressRestD: RestD<AllGuards> = {
   params: {},
   dataDD: nameAndAddressDataD,
   url: '/api/address?{query}',
-  actions: [ 'create' ],
+  actions: [ 'createWithoutFetch' ],
   tables: {
     entity: { type: 'Main', table: addT, children: {} },
     where: []
