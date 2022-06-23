@@ -1,5 +1,5 @@
 //Common Data Definitions
-import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndNumberInputCD, LabelAndStringInputCD, LabelAndTextAreaCD } from "./componentsD";
+import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndNumberInputCD, LabelAndStringInputCD, LabelAndTextAreaCD, NumberInputCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeRender";
 import { NameAnd, safeArray } from "@focuson/utils";
 import { Guards } from "../buttons/guardButton";
@@ -338,6 +338,14 @@ export const ManyLineStringDD: StringPrimitiveDD = {
   display: LabelAndTextAreaCD,
   sample: [ "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit" ]
 }
+
+export const ReadOnlyStringDD: StringPrimitiveDD = {
+  ...OneLineStringDD,
+  name: 'ReadOnlyString',
+  description: "A string that can only be viewed",
+  displayParams: { readonly: true }
+}
+
 export const IntegerDD: NumberPrimitiveDD = {
   ...numberPrimDD,
   name: 'Integer',
@@ -358,12 +366,13 @@ export const MoneyDD: NumberPrimitiveDD = {
   ...floatPrimDD,
   display: LabelAndNumberInputCD,
   sample: [ 100.23, 200.45, 300 ],
+  displayParams: { min: 0, step: 0.01 },
   description: "The primitive representing an amount of the local currency",
   name: 'Money'
 }
 export const PostiveMoneyDD: NumberPrimitiveDD = {
   ...MoneyDD,
-  displayParams: { min: 0 }
+  displayParams: { min: 0, step: 0.01 }
 }
 export const BooleanDD: BooleanPrimitiveDD = {
   rsGetter: "getBoolean",
@@ -405,3 +414,10 @@ export const DateTimeDD: PrimitiveDD = {
   sample: [ "2020-10-01T06:30:00", '2022-14-01T14:30:00' ]
 }
 
+export const ReadOnlyNatNumDD: NumberPrimitiveDD = {
+  ...NatNumDd,
+  name: 'ReadOnlyNatNum',
+  description: "A number that can only be viewed",
+  display: NumberInputCD,
+  displayParams: { readonly: true }
+}

@@ -171,14 +171,15 @@ export const enumParams: DisplayCompParamD = { enums: { needed: 'defaultToEnum',
 export const RadioCD: DisplayCompD = {
   import: "@focuson/form_components",
   name: "Radio",
-  params: { ...commonParams, ...enumParams }
+  params: { ...commonParams, ...enumParams,
+    required: { paramType: 'boolean', needed: 'no', default: true } }
 }
 export const LabelAndRadioCD: DisplayCompD = {
   import: "@focuson/form_components",
   name: "LabelAndRadio",
   params: { 
     ...commonParamsWithLabel, ...enumParams,
-    required: { paramType: 'boolean', needed: 'no' },
+    required: { paramType: 'boolean', needed: 'no', default: true },
   }
 }
 

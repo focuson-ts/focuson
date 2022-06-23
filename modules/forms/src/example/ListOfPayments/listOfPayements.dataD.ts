@@ -1,7 +1,7 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 
 import { CheckboxAndNumberCD, DataDrivenFixedOptionDropDownAndDetailsCD, LabelAndDropDownCD, LayoutCd, NumberInputCD, SelectedItemCD, StructureTableCD, TableCD } from "../../common/componentsD";
-import { AccountIdDD, BooleanDD, BooleanPrimitiveDD, DataD, NatNumDd, NumberPrimitiveDD, OneLineStringDD, PrimitiveDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
+import { AccountIdDD, BooleanDD, BooleanPrimitiveDD, DataD, NatNumDd, NumberPrimitiveDD, OneLineStringDD, PrimitiveDD, ReadOnlyStringDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
 import { CustomerStatus } from "@focuson/form_components";
 import { AllGuards } from "../../buttons/guardButton";
 import { accountT, postCodeSearchTable } from "../database/tableNames";
@@ -15,19 +15,7 @@ export const authorisedByCustomerDD: StringPrimitiveDD = {
   enum: { n: 'no', notyet: 'Not Yet', y: 'Yes' },
 }
 
-const ReadOnlyStringDD: StringPrimitiveDD = {
-  ...OneLineStringDD,
-  name: 'ReadOnlyString',
-  description: "A string that can only be viewed",
-  displayParams: { readonly: true }
-}
-const ReadOnlyNatNumDD: NumberPrimitiveDD = {
-  ...NatNumDd,
-  name: 'ReadOnlyNatNum',
-  description: "A number that can only be viewed",
-  display: NumberInputCD,
-  displayParams: { readonly: true }
-}
+
 export const RequestDetailsDD: ExampleDataD = {
   name: 'RequesterDetails',
   description: 'The information about the person who requested the paymets',

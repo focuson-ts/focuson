@@ -1,4 +1,4 @@
-import {AllLensRestParams, findIds, isRestLens, LensRestParam} from "../common/restD";
+import { AllLensRestParams, findIds, isRestLens, LensRestParam } from "../common/restD";
 import { domainName, domainsFileName, pageDomainName, restDetailsName, restFileName } from "./names";
 import { TSParams } from "./config";
 import { allRestAndActions, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
@@ -11,10 +11,10 @@ export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restNam
   const [ ids, resourceIds ] = findIds ( r.rest )
   let pageDomain = `${params.domainsFile}.${pageDomainName ( p )}`;
 
-  const paramsFromState: [string, AllLensRestParams<any>][] = sortedEntries(r.rest.states).flatMap(( [name, state]) => sortedEntries(state.params))
-  const paramsFromRest : [string, AllLensRestParams<any>][]= sortedEntries(r.rest.params)
-  const allParams  : [string, AllLensRestParams<any>][]= [...paramsFromRest, ...paramsFromState]
-  const locals: [ string, LensRestParam<any> ][] = allParams.flatMap ( ( [ n, l ] ) => isRestLens ( l ) ? [ [ n, l ] ] : [] )
+  const paramsFromState: [ string, AllLensRestParams<any> ][] = sortedEntries ( r.rest.states ).flatMap ( ( [ name, state ] ) => sortedEntries ( state.params ) )
+  const paramsFromRest: [ string, AllLensRestParams<any> ][] = sortedEntries ( r.rest.params )
+  const allParams: [ string, AllLensRestParams<any> ][] = [ ...paramsFromRest, ...paramsFromState ]
+  const locals: [ string, LensRestParam<any> ][] = unique ( allParams.flatMap ( ( [ n, l ] ) => isRestLens ( l ) ? [ [ n, l ] ] : [] ), t => t[ 0 ] + t[ 1 ] )
   const fddLens: string[] = locals.map ( ( [ n, l ] ) => `${n}: ${lensFocusQueryFor ( l.lens )}` )
   const compilationException = r.targetFromPath.indexOf ( '#' ) >= 0 ?
     [ `    //This compilation error is because you used a variable name in the target '${r.targetFromPath}'. Currently that is not supported` ] : []
@@ -23,6 +23,7 @@ export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restNam
     `//If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs`,
     `export function ${restDetailsName ( p, restName, r.rest )} ( cd: NameAndLens<${params.stateName}>, dateFn: DateFn  ): OneRestDetails<${params.stateName}, ${pageDomain}, ${params.domainsFile}.${domainName ( r.rest.dataDD )}, SimpleMessage> {`,
     `  const pageIdL = Lenses.identity<${pageDomain}>()`,
+    ` //If you get a compilation here with duplicate names is it because you have the same parameter in rest.params, or in the state params with the same name and different paths?`,
     `  const fdd: NameAndLens<${pageDomain}> = {` + fddLens.join ( "," ) + "}",
     `  return {`,
     `    fdLens: Lenses.identity<${params.stateName}>().focusQuery('${p.name}'),`,
@@ -51,7 +52,7 @@ export function makeRestImports<B, G> ( params: TSParams, p: PageD<B, G> ) {
     `import * as domains from "${domainsFileName ( '..', params, p )}"`,
     `import { createSimpleMessage, DateFn, defaultDateFn,  SimpleMessage, testDateFn } from "@focuson/utils"`,
     `import { Lenses, NameAndLens} from "@focuson/lens"`,
-  `import { extractMessages } from "@focuson/pages";`,
+    `import { extractMessages } from "@focuson/pages";`,
     `` ]
 }
 

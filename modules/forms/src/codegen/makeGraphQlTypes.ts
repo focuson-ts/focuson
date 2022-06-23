@@ -24,7 +24,7 @@ function theType<G> ( d: AllDataDD<G> ): string {
 
 
 export function makeOutputString ( name: string, needExtrabrackets: boolean, { params, query, output, graphQlPostfix }: RestActionDetail ) {
-  const obj = output.needsObj ? (name + (output.needsPling ?mandatoryPling : "")) : 'Boolean';
+  const obj = output.needsObj ? (name + (output.needsPling ? mandatoryPling : "")) : 'Boolean';
   const raw = output.needsBrackets ? "[" + obj + `]${mandatoryPling}` : obj
   return needExtrabrackets ? "[" + raw + `]${mandatoryPling}` : raw
 }
@@ -32,7 +32,10 @@ export function makeOutputString ( name: string, needExtrabrackets: boolean, { p
 
 export const makeParamsString = ( errorPrefix: string, rest: RestD<any>, restAction: RestAction ) => ( params: RestParams ): string => {
   //later for things like create where we don't know some of the ids these will need to be more clever.
-  return  paramsForRestAction( errorPrefix, rest, restAction ).map ( ( [ name, p ] ) => `${name}: ${p.graphQlType}!` ).join ( ", " )
+  return paramsForRestAction ( errorPrefix, rest, restAction ).map ( ( [ name, p ] ) => {
+    if (!p) throw Error(`${errorPrefix} The param is [${name}] with value [${p}].`)
+    return `${name}: ${p.graphQlType}!`;
+  } ).join ( ", " )
 };
 function extraParam<G> ( restD: RestD<G>, action: RestActionDetail ) {
   const prefix = ",obj: "
