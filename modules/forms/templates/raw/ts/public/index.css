@@ -106,8 +106,6 @@ input:valid{
   background-color: red;
   color: white;
 }
-<<<<<<< Updated upstream
-=======
 .display-guards{
  border:1px solid lightblue;
   background-color: lightgray;
@@ -118,7 +116,6 @@ input:valid{
 .guard-false{
   color: red;
 }
->>>>>>> Stashed changes
 /* button {
     min-width: 50px;
     background-color: white;
