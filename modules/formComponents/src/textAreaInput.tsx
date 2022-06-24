@@ -12,6 +12,7 @@ export interface TextareaProps<S, T, Context> extends CommonStateProps<S, T, Con
   defaultValue?: string
   value?: string
   buttons?: string[]
+  scrollAfter?: string;
   noLabel?: boolean;
 }
 
@@ -27,33 +28,36 @@ export const cleanTextareaProps = <T extends NameAnd<any>> ( p: T ): T => {
   return result
 };
 
-export function TextAreaInput<S, T, Context> (props: TextareaProps<S, string, Context> ) {
-  const { id, state, mode, readonly } = props
-  
+export function TextAreaInput<S, T, Context> ( props: TextareaProps<S, string, Context> ) {
+  const { id, state, mode, readonly, scrollAfter } = props
+
   return (
-        <textarea
-        {...cleanTextareaProps ( props )}
-        onChange={( e ) =>
-          state.setJson ( e.target?.value, reasonFor ( 'TextAreaInput', 'onChange', id ) )}
-        readOnly={mode === 'view' || readonly}
-        value={`${state.optJsonOr ('')}`}
-        className="input"
-      />
+    <textarea
+      style={scrollAfter ? { height: scrollAfter, overflow: 'auto' } : undefined}
+      {...cleanTextareaProps ( props )}
+      onChange={( e ) =>
+        state.setJson ( e.target?.value, reasonFor ( 'TextAreaInput', 'onChange', id ) )}
+      readOnly={mode === 'view' || readonly}
+      value={`${state.optJsonOr ( '' )}`}
+      className="input"
+    />
   );
 }
 
 export interface LabelAndTextareaProps<S, T, Context> extends TextareaProps<S, T, Context>, LabelAlignment {
   label: string;
+  scrollAfter?: string;
   allButtons: NameAnd<JSX.Element>;
 }
 
 export function LabelAndTextarea<S, T, Context extends FocusOnContext<S>> ( props: LabelAndTextareaProps<S, string, Context> ) {
   const { id, label, name, state, labelPosition, buttons, allButtons, noLabel } = props
+
   return (
-    <div className={`labelValueButton ${labelPosition == 'Horizontal'? 'd-flex-inline' : ''}`}>
+    <div className={`labelValueButton ${labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}>
       {noLabel ? '' : <Label state={state} htmlFor={id} label={label}/>}
       <div className={`${buttons && buttons.length > 0 ? 'inputAndButtons' : ''}`}>
-        <TextAreaInput {...props}/>{makeButtons ( allButtons, buttons )}
+        <TextAreaInput  {...props}/>{makeButtons ( allButtons, buttons )}
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import { CommonStateProps, LabelAlignment } from "./common";
 import { Label } from "./label";
 import { makeButtons } from "./labelAndInput";
 import DatePicker from "react-datepicker";
-import { isValid, format } from 'date-fns';
+import { isValid, format, parse } from 'date-fns';
 
 
 export interface LabelAndDateProps<S, Context> extends CommonStateProps<S, string, Context>, LabelAlignment {
@@ -20,7 +20,9 @@ export interface LabelAndDateProps<S, Context> extends CommonStateProps<S, strin
   includeWeekends?: boolean,
   dateFormat?: string
 }
-
+export const parseDate = ( format: string ) => ( date: string ): Date => {
+  return parse ( date.replace ( /\//g, '-' ), format.replace ( /\//g, '-' ), new Date () )
+};
 export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( props: LabelAndDateProps<S, Context> ) {
   const { state, ariaLabel, id, mode, label, name, buttons, readonly, datesExcluded, fieldNameInHolidays, workingDaysInPast, workingDaysInFuture, includeWeekends, dateFormat } = props
 

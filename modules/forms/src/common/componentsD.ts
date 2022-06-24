@@ -240,7 +240,7 @@ export const LabelAndDropDownWithVaryingContentCD: DisplayCompD = {
 export const LabelAndTextAreaCD: DisplayCompD = {
   import: '@focuson/form_components',
   name: "LabelAndTextarea",
-  params: { ...commonParamsWithLabel }
+  params: { ...commonParamsWithLabel, scrollAfter: { paramType: 'string', needed: 'no' } }
 }
 
 export const TableWithCheckboxInputCD: DisplayCompD = {

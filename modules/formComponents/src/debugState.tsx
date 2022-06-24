@@ -182,17 +182,14 @@ export function ToggleDebugs<S, C extends PageSelectionContext<S>> ( { state }: 
 
 }
 
-<<<<<<< Updated upstream
-=======
 export interface DisplayGuardsProps {
   guards: [ string, any ][]
 }
 export function DisplayGuards ( { guards }: DisplayGuardsProps ) {
   return <div className='display-guards'>
-    {guards.map ( ( [ name, value ], i ) => <span key={name} className={`guard-${value}`}>{i === 0 ? '' : ',  '}{name}:{`${value}`}</span> )}
+    {guards.map ( ( [ name, value ], i ) => <span key={name} className={`guard-${value}`}>{i===0?'':',  '}{name}:{`${value}`}</span> )}
   </div>
 }
->>>>>>> Stashed changes
 export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends FocusOnContext<S>> ( props: DebugProps<S, C> ) {
   const { state } = props
   let main: any = state.main;

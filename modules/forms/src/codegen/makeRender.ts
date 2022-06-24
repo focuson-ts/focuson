@@ -191,6 +191,11 @@ export function makeGuardVariables<B, G extends GuardWithCondition> ( hasGuards:
   } );
   return [ `const guardDebug=state.main?.debug?.guardDebug`, ...guards ];
 }
+export function makeDisplayGuard<B, G extends GuardWithCondition> ( hasGuards: HasGuards<G> ): string[] {
+  if ( hasGuards.guards === undefined ) return []
+  let guards = unsortedEntries ( hasGuards.guards ).map ( ( [ name, guard ] ) => `['${name}',${guardName ( name )}]` ).join ( ',' );
+  return [ `   {guardDebug ?<DisplayGuards guards={ [${guards}]} />:<></>}` ];
+}
 
 
 function makeSealedString<B, G> ( dataD: CompDataD<G> ): string[] {
@@ -205,6 +210,7 @@ function makeSealedString<B, G> ( dataD: CompDataD<G> ): string[] {
 export const createReactComponent = <B, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, mainP: MainPageD<B, G>, page: PageD<B, G> ) => ( dataD: CompDataD<G> ): string[] => {
   const contents = indentList ( indentList ( createAllReactCalls ( mainP, params, page, listComponentsIn ( dataD ) ) ) )
   const guardStrings = isDataDd ( dataD ) ? makeGuardVariables ( dataD, makeGuard, params, mainP, page ) : []
+  const displayGuardStrings = isDataDd ( dataD ) ? makeDisplayGuard ( dataD ) : []
   const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( mainP, page, params, `createReactComponent-layout ${dataD.name}`, [], dataD, '<>', '</>' );
   const sealedString = makeSealedString ( dataD )
   return [
@@ -212,6 +218,7 @@ export const createReactComponent = <B, G extends GuardWithCondition> ( params: 
     ...guardStrings,
     ...sealedString,
     `  return ${layoutPrefixString}`,
+    ...displayGuardStrings,
     ...contents,
     layoutPostfixString,
     '}', ''
@@ -243,6 +250,7 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
       ...makeGuardButtonVariables ( params, makeGuard, mainP, pageD ),
       ...makeButtonsVariable ( params, makeGuard, makeButtons, mainP, pageD ),
       `return ${layoutPrefixString}`,
+      ...makeDisplayGuard ( pageD ),
       ...createAllReactCalls ( mainP, params, pageD, [ componentDataForRootPage ( pageD.display.dataDD ) ] ),
       ...addButtonsFromVariables ( pageD ),
       `${layoutPostfixString}})}`
@@ -266,6 +274,7 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
     '',
     ...indentList ( indentList ( indentList ( [
       `return ${layoutPrefixString}`,
+      ...makeDisplayGuard ( pageD ),
       ...indentList ( indentList ( createAllReactCalls ( pageD, params, pageD, [ componentDataForRootPage ( pageD.display.dataDD ), ] ) ) ),
       ...addButtonsFromVariables ( pageD ),
       `${layoutPostfixString}})}`
@@ -293,7 +302,7 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
     `import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from "@focuson/pages";`,
     `import { Context, FocusedProps, ${params.stateName}, identityL } from "../${params.commonFile}";`,
     `import { Lenses } from '@focuson/lens';`,
-    `import { Guard, GuardButton } from "@focuson/form_components";`,
+    `import { DisplayGuards, Guard, GuardButton } from "@focuson/form_components";`,
     `import { defaultDateFn } from "@focuson/utils";`,
     `import * as action from '../actions'`,
     `import { ${optionalsName ( mainP )} } from "${optionalsFileName ( `..`, params, mainP )}";`,

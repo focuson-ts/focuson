@@ -159,7 +159,7 @@ export const PaymentDD: ExampleDataD = {
     paymentType: { dataDD: PaymentTypeDd },
     nameOfPayee: { dataDD: StringDD, sample: [ 'Bob', 'Phil', 'Andrew' ] },
     amount: { dataDD: amountDD },
-    forActionOn: { dataDD: DateDD, sample: [ '2022/12/5', '2022/12/6' ] },
+    forActionOn: { dataDD: DateDD, sample: [  '2022/12/5', '2022/12/6' ], displayParams: {dateFormat: 'dd-MM-yyyy'} },
     chargeDetails: { dataDD: ChargeDetailsDD },
     chapsDetails: { dataDD: ChapDetailsDD, guard: { paymentType: [ 'c' ] } },
     expressDetails: { dataDD: ExpressDetailsDD, guard: { paymentType: [ 'e' ] } }

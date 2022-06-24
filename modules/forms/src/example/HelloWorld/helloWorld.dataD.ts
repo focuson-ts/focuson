@@ -7,7 +7,7 @@ export const helloWorldDD: ExampleDataD = {
   description: 'This is a summary about hello world domain data',
   structure: {
     message1: { dataDD: StringDD, sample: [ 'Greetings  !' ] },
-    message2: { dataDD: ManyLineStringDD, sample: [ ' message !\nAnd here is a second line' ] },
+    message2: { dataDD: ManyLineStringDD, sample: [ ' message !\nAnd here is a second line' ], displayParams:{scrollAfter: '300px'} },
     dropdown1: { dataDD: YesNoDD },
     dropdown2: {
       dataDD: {
