@@ -106,6 +106,19 @@ input:valid{
   background-color: red;
   color: white;
 }
+<<<<<<< Updated upstream
+=======
+.display-guards{
+ border:1px solid lightblue;
+  background-color: lightgray;
+}
+.guard-true{
+  color: green;
+}
+.guard-false{
+  color: red;
+}
+>>>>>>> Stashed changes
 /* button {
     min-width: 50px;
     background-color: white;
@@ -784,6 +797,7 @@ pre {
 
 #debug-pages-container table>thead>tr>th,
 #debug-state-container table>thead>tr>th,
+#debug-validation-container table>thead>tr>th,
 #debug-context-container table>thead>tr>th,
 #debug-raw-state-container table>thead>tr>th,
 #debug-tracing-container table>thead>tr>th,

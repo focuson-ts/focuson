@@ -182,6 +182,17 @@ export function ToggleDebugs<S, C extends PageSelectionContext<S>> ( { state }: 
 
 }
 
+<<<<<<< Updated upstream
+=======
+export interface DisplayGuardsProps {
+  guards: [ string, any ][]
+}
+export function DisplayGuards ( { guards }: DisplayGuardsProps ) {
+  return <div className='display-guards'>
+    {guards.map ( ( [ name, value ], i ) => <span key={name} className={`guard-${value}`}>{i === 0 ? '' : ',  '}{name}:{`${value}`}</span> )}
+  </div>
+}
+>>>>>>> Stashed changes
 export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends FocusOnContext<S>> ( props: DebugProps<S, C> ) {
   const { state } = props
   let main: any = state.main;
@@ -194,7 +205,8 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
     }
     if ( validationRef.current === null ) return
     const thisPage = findThisPageElement ( focusPageClassName )
-    validationRef.current.innerHTML = textFor ( 'inputs', findValidityForInput ( thisPage, false ) ) +
+    validationRef.current.innerHTML =
+      textFor ( 'inputs', findValidityForInput ( thisPage, false ) ) +
       textFor ( 'selects', findValidityForSelect ( thisPage, false ) ) +
       textFor ( 'radios', findValidityForRadio ( thisPage, false ) )
   } )
@@ -220,7 +232,21 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
         </div>
       </div>
       {showValidityState.optJsonOr ( false ) &&
-      <div id='debug-validation-container' ref={validationRef}>
+      <div id='debug-validation-container'>
+          <table className="table-bordered">
+              <thead>
+              <tr>
+                  <th>Validations</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                  <td>
+                      <div ref={validationRef}/>
+                  </td>
+              </tr>
+              </tbody>
+          </table>
 
       </div>}
       {showTracingState.optJsonOr ( false ) && <Tracing state={state}/>}

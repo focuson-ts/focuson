@@ -35,7 +35,7 @@
 
     --h1-custom-font-size: 40px;
     --h1-custom-line-height: 56px;
-    --h1-custom-brand-colour: var(--green);
+    --h1-custom-brand-colour: var(--blue);
 
     --input-height: 44px;
     --input-border: 1px solid var(--grey);
@@ -54,7 +54,7 @@
     --input-bevel: 4px;
 
     --button-primary-min-width: 96px;
-    --button-primary-background-color: var(--green);
+    --button-primary-background-color: var(--blue);
     --button-primary-foreground-color: var(--white);
     --button-primary-inside-padding: 10px 32px;
     --button-primary-border: none;
@@ -73,21 +73,21 @@
     --button-secondary-bevel-colour: var(--magenta);
 
     --button-default-background-color: var(--white);
-    --button-default-foreground-color: var(--green);
+    --button-default-foreground-color: var(--blue);
     --button-default-min-width: 167px;
     --button-default-inside-padding: 8px 26px;
-    --button-default-border: var(--green);
+    --button-default-border: var(--blue);
     --button-default-bevel-size: 4px;
-    --button-default-bevel-colour: var(--green);
+    --button-default-bevel-colour: var(--blue);
     --button-default-margin: 0 0 0 20px;
 
     --form-label-colour: var(--dark-grey-2);
     --radio-button-border: 1px solid var(--grey);
     --radio-button-padding: 3px 0 7px 42px;
-    --radio-button-circle-color: var(--green);
+    --radio-button-circle-color: var(--blue);
     --radio-button-circle-size: 25px;
     --radio-button-selected-circle-size: 15px;
-    --radio-button-focused-border: 2px solid var(--green);
+    --radio-button-focused-border: 2px solid var(--blue);
     --radio-button-labelled-padding: 6px;
     --radio-button-labelled-padding: 6px;
     --radio-button-font-size: 14px;
