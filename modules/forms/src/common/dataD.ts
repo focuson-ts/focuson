@@ -389,7 +389,7 @@ export const BooleanDD: BooleanPrimitiveDD = {
 
 export const YesNoDD: PrimitiveDD = {
   ...StringDD,
-  display: LabelAndCheckboxInputCD,
+  display: LabelAndDropDownCD,
   displayParams: { pleaseSelect: 'Select...' },
   enum: { N: 'No', Y: 'Yes' }
 }
