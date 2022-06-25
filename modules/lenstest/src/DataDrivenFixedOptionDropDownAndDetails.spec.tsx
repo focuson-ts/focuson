@@ -59,26 +59,26 @@ describe ( 'DataDrivenFixedOptionDropDownAndDetails', () => {
     const comp = display ( empty, s => {}, s =>
       <DataDrivenFixedOptionDropDownAndDetails parentState={s} state={s.focusOn ( 'mainOrJointOrNew' )} id='someId' allButtons={{}} mode='view' label='someLabel' details={details}/> )
     expect ( comp.html () ).toEqual (
-      '<div style="display:flex"><div style="flex:50%"><div class="dropdown-container "><label class="input-label">someLabel</label><div class=""><select class="select " disabled="" id="someId" required=""><option selected="" value="M">theJointData</option><option value="J">theJointData</option><option value="N">New Bank</option></select></div></div></div><div style="flex:50%"><p>Label: someLabel Id: someId Mode: view Data: theJointData</p></div></div>' )
+      '<div style="display:flex"><div style="flex:50%"><div class="dropdown-container "><label for="someId" class="input-label">someLabel</label><div class=""><select class="select " disabled="" id="someId" required=""><option selected="" value="M">theJointData</option><option value="J">theJointData</option><option value="N">New Bank</option></select></div></div></div><div style="flex:50%"><p>Label: someLabel Id: someId Mode: view Data: theJointData</p></div></div>' )
   } )
   it ( 'should display joint', () => {
     const comp = display ( { ...empty, mainOrJointOrNew: 'J' }, s => {}, s => <DataDrivenFixedOptionDropDownAndDetails parentState={s} state={s.focusOn ( 'mainOrJointOrNew' )} id='someId' allButtons={{}} mode='view' label='someLabel' details={details}/> )
     expect ( comp.html () ).toEqual (
-      '<div style="display:flex"><div style="flex:50%"><div class="dropdown-container "><label class="input-label">someLabel</label><div class=""><select class="select " disabled="" id="someId" required=""><option value="M">theJointData</option><option selected="" value="J">theJointData</option><option value="N">New Bank</option></select></div></div></div><div style="flex:50%"><p>Label: someLabel Id: someId Mode: view Data: theJointData</p></div></div>' )
+      '<div style="display:flex"><div style="flex:50%"><div class="dropdown-container "><label for="someId" class="input-label">someLabel</label><div class=""><select class="select " disabled="" id="someId" required=""><option value="M">theJointData</option><option selected="" value="J">theJointData</option><option value="N">New Bank</option></select></div></div></div><div style="flex:50%"><p>Label: someLabel Id: someId Mode: view Data: theJointData</p></div></div>' )
   } )
   it ( 'should display when no data path or display', () => {
     const comp = display ( { ...empty, mainOrJointOrNew: 'N' }, s => {}, s => <DataDrivenFixedOptionDropDownAndDetails parentState={s} state={s.focusOn ( 'mainOrJointOrNew' )} id='someId' allButtons={{}} mode='view' label='someLabel' details={details}/> )
     expect ( comp.html () ).toEqual (
-      '<div style="display:flex"><div style="flex:50%"><div class="dropdown-container "><label class="input-label">someLabel</label><div class=""><select class="select " disabled="" id="someId" required=""><option value="M">theJointData</option><option value="J">theJointData</option><option selected="" value="N">New Bank</option></select></div></div></div><div style="flex:50%"><div></div></div></div>' )
+      '<div style="display:flex"><div style="flex:50%"><div class="dropdown-container "><label for="someId" class="input-label">someLabel</label><div class=""><select class="select " disabled="" id="someId" required=""><option value="M">theJointData</option><option value="J">theJointData</option><option selected="" value="N">New Bank</option></select></div></div></div><div style="flex:50%"><div></div></div></div>' )
   } )
   it ( 'should display when there is nothing at the value path', () => {
     const comp = display ( { ...empty, mainOrJointOrNew: 'J', jointName: undefined }, s => {}, s => <DataDrivenFixedOptionDropDownAndDetails parentState={s} state={s.focusOn ( 'mainOrJointOrNew' )} id='someId' allButtons={{}} mode='view' label='someLabel' details={details}/> )
     expect ( comp.html () ).toEqual (
-      '<div style="display:flex"><div style="flex:50%"><div class="dropdown-container "><label class="input-label">someLabel</label><div class=""><select class="select " disabled="" id="someId" required=""><option value="M">theJointData</option><option selected="" value="J">theJointData</option><option value="N">New Bank</option></select></div></div></div><div style="flex:50%"><p>Label: someLabel Id: someId Mode: view Data: theJointData</p></div></div>' )
+      '<div style="display:flex"><div style="flex:50%"><div class="dropdown-container "><label for="someId" class="input-label">someLabel</label><div class=""><select class="select " disabled="" id="someId" required=""><option value="M">theJointData</option><option selected="" value="J">theJointData</option><option value="N">New Bank</option></select></div></div></div><div style="flex:50%"><p>Label: someLabel Id: someId Mode: view Data: theJointData</p></div></div>' )
   } )
   it ( 'should display when there is nothing at the data path', () => {
     const comp = display ( { ...empty, mainOrJointOrNew: 'J', jointData: undefined }, s => {}, s => <DataDrivenFixedOptionDropDownAndDetails parentState={s} state={s.focusOn ( 'mainOrJointOrNew' )} id='someId' allButtons={{}} mode='view' label='someLabel' details={details}/> )
     expect ( comp.html () ).toEqual (
-      '<div style="display:flex"><div style="flex:50%"><div class="dropdown-container "><label class="input-label">someLabel</label><div class=""><select class="select " disabled="" id="someId" required=""><option value="M"></option><option selected="" value="J"></option><option value="N">New Bank</option></select></div></div></div><div style="flex:50%"><p>Label: someLabel Id: someId Mode: view Data: </p></div></div>' )
+      '<div style="display:flex"><div style="flex:50%"><div class="dropdown-container "><label for="someId" class="input-label">someLabel</label><div class=""><select class="select " disabled="" id="someId" required=""><option value="M"></option><option selected="" value="J"></option><option value="N">New Bank</option></select></div></div></div><div style="flex:50%"><p>Label: someLabel Id: someId Mode: view Data: </p></div></div>' )
   } )
 } )

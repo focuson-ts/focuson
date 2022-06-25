@@ -217,11 +217,12 @@ export const createReactComponent = <B, G extends GuardWithCondition> ( params: 
     `export function ${componentName ( dataD )}({id,state,mode,allButtons,label}: FocusedProps<${params.stateName}, ${domainName ( dataD )},Context>){`,
     ...guardStrings,
     ...sealedString,
-    `  return ${layoutPrefixString}`,
+    `  return<>`,
     ...displayGuardStrings,
+    layoutPrefixString,
     ...contents,
     layoutPostfixString,
-    '}', ''
+    '</>}', ''
   ]
 };
 
@@ -249,11 +250,12 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
       ...guards,
       ...makeGuardButtonVariables ( params, makeGuard, mainP, pageD ),
       ...makeButtonsVariable ( params, makeGuard, makeButtons, mainP, pageD ),
-      `return ${layoutPrefixString}`,
+      `return <>`,
       ...makeDisplayGuard ( pageD ),
+      layoutPrefixString,
       ...createAllReactCalls ( mainP, params, pageD, [ componentDataForRootPage ( pageD.display.dataDD ) ] ),
       ...addButtonsFromVariables ( pageD ),
-      `${layoutPostfixString}})}`
+      `${layoutPostfixString}</>})}`
     ] ) ) ) ) )),
   ]
 }
@@ -273,11 +275,12 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
     ...indentList ( makeButtonsVariable ( params, makeGuard, makeButtons, pageD, pageD ) ),
     '',
     ...indentList ( indentList ( indentList ( [
-      `return ${layoutPrefixString}`,
+      `return <>`,
       ...makeDisplayGuard ( pageD ),
+      layoutPrefixString,
       ...indentList ( indentList ( createAllReactCalls ( pageD, params, pageD, [ componentDataForRootPage ( pageD.display.dataDD ), ] ) ) ),
       ...addButtonsFromVariables ( pageD ),
-      `${layoutPostfixString}})}`
+      `${layoutPostfixString}</>})}`
     ] ) ) ),
     ''
   ]
