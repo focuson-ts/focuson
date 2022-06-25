@@ -270,3 +270,8 @@ export const CheckboxAndNumberCD: DisplayCompD = {
   }
 
 }
+
+export const CustomLayoutCD: DisplayCompD = {
+  import: "@focuson/form_components", name: "CustomLayout",
+  params: {}
+}

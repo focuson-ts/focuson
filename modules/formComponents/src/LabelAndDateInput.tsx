@@ -38,6 +38,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
   }
 
   const onChange = ( date: any ) => {
+    // Turns out that new Date('23/04/2022') gives invalid date as the default format in JS is MM/dd/yyyy
     if(date) state.setJson ( format(date, dateFormatL), reasonFor ( 'LabelAndDate', 'onChange', id ) )
   };
 
@@ -65,9 +66,19 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
     return newDate
   }
 
+  function parseDate(dateAsString: string) {
+    let dateAsStringL = dateAsString
+    if(isValid(new Date(dateAsString))) {
+      dateAsStringL = format(new Date(dateAsString), 'dd/MM/yyyy')
+    }   
+    const [day, month, year] = dateAsStringL.split("/") || dateAsString.split("-")
+    return new Date(parseInt(year), parseInt(month)-1, parseInt(day))
+  }
+
   const minDate = addDays(new Date(),safeArray(datesToExclude), workingDaysInFuture?workingDaysInFuture:0);
 
-  const selectedDate = new Date(state.optJsonOr(new Date().toDateString()))
+  const selectedDate = (dateFormatL.match('dd-MM-yyyy') || dateFormatL.match('dd/MM/yyyy')) ? parseDate(state.optJsonOr(new Date().toDateString())) : new Date(state.optJsonOr(new Date().toDateString()))
+
   let error = false
 
   if (!isValid(selectedDate)) {        

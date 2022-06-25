@@ -1,6 +1,6 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 
-import { CheckboxAndNumberCD, DataDrivenFixedOptionDropDownAndDetailsCD, LabelAndDropDownCD, LayoutCd, NumberInputCD, SelectedItemCD, StructureTableCD, TableCD } from "../../common/componentsD";
+import { CheckboxAndNumberCD, CustomLayoutCD, DataDrivenFixedOptionDropDownAndDetailsCD, LabelAndDropDownCD, LayoutCd, NumberInputCD, SelectedItemCD, StructureTableCD, TableCD } from "../../common/componentsD";
 import { AccountIdDD, BooleanDD, BooleanPrimitiveDD, DataD, NatNumDd, NumberPrimitiveDD, OneLineStringDD, PrimitiveDD, ReadOnlyStringDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
 import { CustomerStatus } from "@focuson/form_components";
 import { AllGuards } from "../../buttons/guardButton";
@@ -83,7 +83,8 @@ export const CheckboxAndNumberFromDatabaseDD: BooleanPrimitiveDD = {
 export const ListOfPaymentsDD: ExampleDataD = {
   name: 'ListOfPayments',
   description: 'The information about the person who requested the payments',
-  layout: { component: LayoutCd, displayParams: { details: '[[5,1]]' } },
+  // layout: { component: LayoutCd, displayParams: { details: '[[5]]' } },
+  layout: { component: CustomLayoutCD, displayParams: {} },
   table: accountT,
   structure: {
     standingOrders: { dataDD: CheckboxAndNumberFromDatabaseDD, displayParams: { number: '~/currentPayments/standingOrders' }, sampleOffset: 0 },
@@ -147,7 +148,7 @@ export const addressSearchDD: ExampleDataD = {
 export const printRecordDD: ExampleDataD = {
   name: 'PrintRecordItem',
   description: 'A single request for the list of payments that happened at a point at time, or will happen when we click print',
-  layout: { component: LayoutCd, displayParams: { details: '[[1],[1,4]]' } },
+  // layout: { component: LayoutCd, displayParams: { details: '[[1],[1,4]]' } },
   guards: {
     requestedBy: { condition: 'in', path: 'requestedBy', values: { j: 'joint', m: 'main', n: 'new bank' } },
     alreadyPrinted: { condition: 'equals', path: 'alreadyPrinted', value: true },

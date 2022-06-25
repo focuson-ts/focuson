@@ -34,9 +34,9 @@ interface TwoElements {
   children: [ JSX.Element, JSX.Element ];
 }
 function TwoColRow ( { children }: TwoElements ) {
-  return <div style={{ display: 'flex' }}>
-    <div style={{ flex: '50%' }}>{children[ 0 ]}</div>
-    <div style={{ flex: '50%' }}>{children[ 1 ]}</div>
+  return <div>
+    <div style={{ float: 'left', width:'30%' }}>{children[ 0 ]}</div>
+    <div style={{ float: 'right', width:'70%'  }}>{children[ 1 ]}</div>
   </div>
 }
 
