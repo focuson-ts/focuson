@@ -13,6 +13,10 @@ export function Messages<S, T, Context> ( { state }: MessagesProps<S, SimpleMess
     console.log ( 'State after remove one message ======>', state.optJson () )
   }
 
+  const removeAllMessages = ( ) => {    
+    state.setJson ( [], reasonFor ( 'Messages', 'onClick', undefined, 'Remove all messages' ) )    
+  }
+
   const cssClasses = ( messageType: SimpleMessageLevel ) => {
     if ( !messageType ) return;
 
@@ -42,6 +46,7 @@ export function Messages<S, T, Context> ( { state }: MessagesProps<S, SimpleMess
         state.json ().map ( ( message, index ) => {
             return <div key={index} className={cssClasses ( message.level )}>
               <span id={`messages[${index}].msg`} title={message.msg}> {getMessage ( message.msg )} </span>
+              <a id={`messages[${index}].close`} className="clear-button" onClick={() => removeAllMessages ( )}>Clear All</a>
               <a id={`messages[${index}].close`} className="close-button" onClick={() => removeMessage ( index )}>&times;</a>
             </div>
           }

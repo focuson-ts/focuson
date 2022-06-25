@@ -217,19 +217,24 @@ select {
   height: 1.625rem;
 }
 
-/* The Close Button */
 .close-button {
   color: #aaa;
-  /* float: right; */
   font-size: 28px;
-  /* font-weight: bold; */
   position: absolute;
   top: 0;
   right: 5px;
 }
 
-.close-button:hover,
-.close-button:focus {
+.clear-button {
+  color: #aaa;
+  font-size: 20px;
+  position: absolute;
+  top: 6px;
+  right: 40px;
+}
+
+.close-button:hover, .close-button:focus,
+.clear-button:hover, .clear-button:focus {
   color: black;
   text-decoration: none;
   cursor: pointer;

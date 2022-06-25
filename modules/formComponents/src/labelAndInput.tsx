@@ -36,10 +36,14 @@ const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> ) =>
   }
 
 export function LabelAndBooleanInput<S, Context extends FocusOnContext<S>> ( props: LabelAndInputProps<S, boolean, Context> ) {
-  const { state, mode, readonly } = props
+  const { state, mode, readonly, required } = props
+  const selected = state.optJson ();
+  const hasValid = selected  
+  const cssValidInput = hasValid || !required ? '' : ' invalid'
+  
   const label = <Label state={props.state} htmlFor={props.id} label={props.label}/>;
   const input = <BooleanInput {...props}/>
-  return <div className={`${props.buttons && props.buttons.length > 0 ? 'checkbox-container inputAndButtons' : 'checkbox-container'}`}> {label}{input}{makeButtons ( props.allButtons, props.buttons )}</div>
+  return <div className={`checkbox-container ${cssValidInput} ${props.buttons && props.buttons.length > 0 ? ' inputAndButtons' : ''}`}> {label}{input}{makeButtons ( props.allButtons, props.buttons )}</div>
 }
 
 

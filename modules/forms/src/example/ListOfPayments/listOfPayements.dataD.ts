@@ -91,7 +91,7 @@ export const ListOfPaymentsDD: ExampleDataD = {
     openBankingStandingOrders: { dataDD: CheckboxAndNumberFromDatabaseDD, displayParams: { number: '~/currentPayments/openBankingStandingOrders' }, sampleOffset: 1 },
     directDebits: { dataDD: CheckboxAndNumberFromDatabaseDD, displayParams: { number: '~/currentPayments/directDebits' }, sampleOffset: 2 },
     billPayments: { dataDD: CheckboxAndNumberFromDatabaseDD, displayParams: { number: '~/currentPayments/billPayments' }, sampleOffset: 3 },
-    openBanking: { dataDD: CheckboxAndNumberFromDatabaseDD, displayParams: { number: '~/currentPayments/openBanking' }, sampleOffset: 4 },
+    openBanking: { dataDD: CheckboxAndNumberFromDatabaseDD, displayParams: { number: '~/currentPayments/openBanking' , required: true}, sampleOffset: 4 },
   }
 }
 

@@ -266,7 +266,8 @@ export const CheckboxAndNumberCD: DisplayCompD = {
   params: {
     ...commonParams,
     label: { paramType: 'string', needed: 'defaultToCamelCaseOfName' },
-    number: { paramType: 'path', needed: 'yes' }
+    number: { paramType: 'path', needed: 'yes' },
+    required: { paramType: 'boolean', needed: 'no' },
   }
 
 }

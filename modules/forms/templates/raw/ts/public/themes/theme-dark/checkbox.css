@@ -69,3 +69,17 @@
     width: 24px;
     height: 24px;
   }
+
+  .checkbox-container:focus {
+    border: var(--radio-button-labelled-focused-border);
+    font-size:var(--input-font-size);    
+    outline: none;
+    border-radius: 0 0 var(--input-bevel) var(--input-bevel);    
+    box-sizing: border-box;
+    color: var(--dark-grey)
+  }  
+
+  .checkbox-container.invalid {    
+    outline: 1px solid red;
+    background-color: #ffdddd;
+  }
