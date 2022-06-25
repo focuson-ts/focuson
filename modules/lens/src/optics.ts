@@ -63,7 +63,7 @@ export class Optional<Main, Child> implements GetOptioner<Main, Child>, SetOptio
   focusOn<K extends keyof Child> ( k: K ): Optional<Main, Child[K]> {
     return new Optional<Main, Child[K]> (
       ( m ) => apply ( this.getOption ( m ),
-        c => c[ k ] ), ( m, v: Child[K] ) => apply ( this.getOption ( m ), c => this.set ( m, copyWithFieldSet ( c, k, v ) ) ), this.description + ".focusOn(" + k.toString() + ")" )
+        c => c[ k ] ), ( m, v: Child[K] ) => apply ( this.getOption ( m ), c => this.set ( m, copyWithFieldSet ( c, k, v ) ) ), this.description + ".focusOn(" + k.toString () + ")" )
   }
 
   /** Used to focus onto a child that might not be there. If you don't use this, then the type system is likely to complain if you try and carry on focusing. */
@@ -76,7 +76,7 @@ export class Optional<Main, Child> implements GetOptioner<Main, Child>, SetOptio
         let result = this.setOption ( m, copyWithFieldSet ( child, k, v ) );
         return result;
       },
-      this.description + ".focus?(" + k.toString() + ")" )
+      this.description + ".focus?(" + k.toString () + ")" )
   }
 
 
@@ -227,7 +227,7 @@ export class Lens<Main, Child> extends Optional<Main, Child> implements Getter<M
       ( m, c ) => this.set ( m,
         copyWithFieldSet (
           this.get ( m ), k, c ) ),
-      this.description + ".focusOn(" + k.toString() + ")" )
+      this.description + ".focusOn(" + k.toString () + ")" )
   }
 
   /** interface AB{
@@ -247,7 +247,7 @@ export class Lens<Main, Child> extends Optional<Main, Child> implements Getter<M
           copyWithFieldSet (
             // @ts-ignore
             this.get ( m ), k, v ) ),
-      this.description + ".focusWithDefault(" + k.toString() + ")" )
+      this.description + ".focusWithDefault(" + k.toString () + ")" )
   }
 
   chainLens = <T> ( o: Lens<Child, T> ): Lens<Main, T> => new Lens<Main, T> (
@@ -572,14 +572,17 @@ export function secondIn2<T1, T2> (): Optional<[ T1, T2 ], T2> {
 
 
 export type Transform<Main, Child> = [ Optional<Main, Child>, ( c: Child | undefined ) => Child ]
+export function displayTransformsInState<S> ( main: S, txs: Transform<S, any>[] ) {
+  return txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( main ) ) ] )
+}
 export function massTransform<Main> ( main: Main, ...transforms: Transform<Main, any>[] ): Main {
   return transforms.reduce<Main> ( ( acc, [ o, fn ] ) => {
     try {
       let result = o.setOption ( acc, fn ( o.getOption ( acc ) ) );
       if ( result === undefined ) throw new Error ( `Cannot transform ${o.description}` )
       return result;
-    } catch (e: any){
-      console.error(`Error in massTransform with ${o.description}`, o, fn, acc)
+    } catch ( e: any ) {
+      console.error ( `Error in massTransform with ${o.description}`, o, fn, acc )
       throw e
     }
   }, main )

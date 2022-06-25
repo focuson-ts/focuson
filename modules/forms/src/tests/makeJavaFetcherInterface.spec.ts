@@ -44,8 +44,8 @@ describe ( "makeJavaResolversInterface", () => {
       "import java.util.List;",
       "import focuson.data.fetchers.IFetcher;",
       "",
-      "public interface CreatePlan_updateCreatePlan_FFetcher extends IFetcher{",
-      "   public DataFetcher<update> updateCreatePlan();",
+      "public interface CreatePlan_updateWithoutFetchCreatePlan_FFetcher extends IFetcher{",
+      "   public DataFetcher<update> updateWithoutFetchCreatePlan();",
       "}"
     ] )
   } )
@@ -83,7 +83,7 @@ describe ( "makeAllJavaWiring", () => {
       "import java.util.stream.Collectors;",
       "import focuson.data.fetchers.EAccountsSummary.CreatePlan_getCreatePlan_FFetcher;",
       "import focuson.data.fetchers.EAccountsSummary.CreatePlan_createCreatePlan_FFetcher;",
-      "import focuson.data.fetchers.EAccountsSummary.CreatePlan_updateCreatePlan_FFetcher;",
+      "import focuson.data.fetchers.EAccountsSummary.CreatePlan_updateWithoutFetchCreatePlan_FFetcher;",
       "import focuson.data.fetchers.EAccountsSummary.CreatePlan_deleteCreatePlan_FFetcher;",
       "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_getEAccountsSummary_FFetcher;",
       "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_stateinvalidateEAccountsSummary_FFetcher;",
@@ -99,7 +99,7 @@ describe ( "makeAllJavaWiring", () => {
       "      @Autowired",
       "      List<CreatePlan_createCreatePlan_FFetcher> CreatePlan_create_FFetcher;",
       "      @Autowired",
-      "      List<CreatePlan_updateCreatePlan_FFetcher> CreatePlan_update_FFetcher;",
+      "      List<CreatePlan_updateWithoutFetchCreatePlan_FFetcher> CreatePlan_update_FFetcher;",
       "      @Autowired",
       "      List<CreatePlan_deleteCreatePlan_FFetcher> CreatePlan_delete_FFetcher;",
       "      @Autowired",
@@ -153,7 +153,7 @@ describe ( "makeAllJavaWiring", () => {
       "       return RuntimeWiring.newRuntimeWiring()",
       "          .type(newTypeWiring('Query').dataFetcher('getCreatePlan', find(CreatePlan_get_FFetcher, dbName, f ->f.getCreatePlan())))",
       "          .type(newTypeWiring('Mutation').dataFetcher('createCreatePlan', find(CreatePlan_create_FFetcher, dbName, f ->f.createCreatePlan())))",
-      "          .type(newTypeWiring('Mutation').dataFetcher('updateCreatePlan', find(CreatePlan_update_FFetcher, dbName, f ->f.updateCreatePlan())))",
+      "          .type(newTypeWiring('Mutation').dataFetcher('updateWithoutFetchCreatePlan', find(CreatePlan_update_FFetcher, dbName, f ->f.updateWithoutFetchCreatePlan())))",
       "          .type(newTypeWiring('Mutation').dataFetcher('deleteCreatePlan', find(CreatePlan_delete_FFetcher, dbName, f ->f.deleteCreatePlan())))",
       "          .type(newTypeWiring('Query').dataFetcher('getEAccountsSummary', find(EAccountsSummary_get_FFetcher, dbName, f ->f.getEAccountsSummary())))",
       "          .type(newTypeWiring('Mutation').dataFetcher('stateinvalidateEAccountsSummary', find(EAccountsSummary_state_invalidate_FFetcher, dbName, f ->f.stateinvalidateEAccountsSummary())))",
@@ -226,14 +226,10 @@ describe ( "findAllResolvers2", () => {
       { "isRoot": true, "javaType": "Map<String,Object>", needsObjectInOutput: true, "name": "createCreatePlan", "parent": "Mutation", "resolver": "createCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
     )
     expect ( findQueryMutationResolver ( createPlanRestD, "update" ) ).toEqual (
-      { "isRoot": true, "javaType": "Map<String,Object>", needsObjectInOutput: true, "name": "updateCreatePlan", "parent": "Mutation", "resolver": "updateCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
-    )
+      { "isRoot": true, "javaType": "Map<String,Object>", "name": "updateWithoutFetchCreatePlan", "needsObjectInOutput": true, "parent": "Mutation", "resolver": "updateWithoutFetchCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" }, )
     expect ( findQueryMutationResolver ( createPlanRestD, "delete" ) ).toEqual (
       { "isRoot": true, "javaType": "Map<String,Object>", needsObjectInOutput: false, "name": "deleteCreatePlan", "parent": "Mutation", "resolver": "deleteCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
     )
-    // expect ( findQueryMutationResolvers ( createPlanRestD, "list" ) ).toEqual (
-    //   { "isRoot": true, needsObjectInOutput: true, "name": "listCreatePlan", "parent": "Query", "resolver": "listCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
-    // )
   } )
 
   it ( "findAllResolversFor with children - gets with children", () => {
@@ -286,12 +282,20 @@ describe ( "findAllResolvers2", () => {
   } )
   it ( "findAllResolversFor with children - with mutations", () => {
     expect ( findAllResolversFor ( createPlanRestD, 'update' ) ).toEqual ( [
-      { "isRoot": true, needsObjectInOutput: true, "javaType": "Map<String,Object>", "name": "updateCreatePlan", "parent": "Mutation", "resolver": "updateCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
-    ] )
+      { "isRoot": true, "javaType": "Map<String,Object>", "name": "updateWithoutFetchCreatePlan", "needsObjectInOutput": true, "parent": "Mutation", "resolver": "updateWithoutFetchCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" } ] )
   } )
   it ( "findAllResolversFor simple", () => {
     expect ( findAllResolversFor ( createPlanRestD, 'get' ) ).toEqual ( [
-      { "isRoot": true, needsObjectInOutput: true, "javaType": "Map<String,Object>", "name": "getCreatePlan", "parent": "Query", "resolver": "getCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
+      {
+        "isRoot": true,
+        "javaType": "Map<String,Object>",
+        "name": "getCreatePlan",
+        "needsObjectInOutput": true,
+        "parent": "Query",
+        "resolver": "getCreatePlan",
+        "sample": [],
+        "samplerName": "sampleCreatePlan"
+      }
     ] )
   } )
 

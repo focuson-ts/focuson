@@ -25,10 +25,10 @@ describe ( "makeGraphQlSchema", () => {
         "type Mutation{",
         "  stateinvalidateEAccountsSummary(accountId: Int!, clientRef: Int!, dbName: String!, employeeType: String!):Boolean",
         "  createCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!,obj: CreatePlanInp!):CreatePlan",
-        "  updateCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, createPlanId: Int!,obj: CreatePlanInp!):CreatePlan",
+        "  updateWithoutFetchCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, createPlanId: Int!,obj: CreatePlanInp!):CreatePlan",
         "  deleteCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, createPlanId: Int!):Boolean",
         "}"
-      ] )
+      ])
     } )
   } )
 
@@ -69,7 +69,7 @@ describe ( "makeGraphQlSchema", () => {
       "type Mutation{",
       "  stateinvalidateEAccountsSummary(accountId: Int!, clientRef: Int!, dbName: String!, employeeType: String!):Boolean",
       "  createCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!,obj: CreatePlanInp!):CreatePlan",
-      "  updateCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, createPlanId: Int!,obj: CreatePlanInp!):CreatePlan",
+      "  updateWithoutFetchCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, createPlanId: Int!,obj: CreatePlanInp!):CreatePlan",
       "  deleteCreatePlan(accountId: Int!, applRef: Int!, brandRef: Int!, clientRef: Int!, createPlanId: Int!):Boolean",
       "}",
       "type BalancesAndMonthlyCost{",
@@ -101,7 +101,7 @@ describe ( "makeGraphQlSchema", () => {
       "  createPlanDate: String",
       "  createPlanEnd: String",
       "}"
-    ] )
+    ])
   } )
 
   it ( "should make a schema for something with a repeating block in the fetcher", () => {
@@ -130,7 +130,7 @@ describe ( "makeGraphQlSchema", () => {
       "}",
       "type Mutation{",
       "  createsinglePrintRecordItem(accountId: Int!, employeeId: Int!, vbAcountSeq: Int!,obj: [PrintRecordItemInp!]!):[PrintRecordItem]",
-      "  updatesinglePrintRecordItem(accountId: Int!, employeeId: Int!, paymentId: Int!, vbAcountSeq: Int!,obj: [PrintRecordItemInp!]!):[PrintRecordItem]",
+      "  updateWithoutFetchsinglePrintRecordItem(accountId: Int!, employeeId: Int!, paymentId: Int!, vbAcountSeq: Int!,obj: [PrintRecordItemInp!]!):[PrintRecordItem]",
       "  stateprintsinglePrintRecordItem(accountId: Int!, employeeId: Int!, paymentId: Int!, vbAcountSeq: Int!):[Boolean]",
       "}",
       "type ListOfPayments{",

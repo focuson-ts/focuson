@@ -1,6 +1,7 @@
 import { reqFor, Tags, UrlConfig } from "@focuson/template";
-import { beforeAfterSeparator, CopyDetails, FetchFn, isRestStateChange, NameAnd, RequiredCopyDetails, RestAction, RestStateChange, safeArray, safeObject, safeString, sortedEntries, toArray } from "@focuson/utils";
+import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RequiredCopyDetails, RestAction, RestStateChange, safeArray, safeObject, safeString, sortedEntries, toArray } from "@focuson/utils";
 import { identityOptics, lensBuilder, Lenses, massTransform, Optional, parsePath, Transform } from "@focuson/lens";
+import { ChangeCommand, CopyResultCommand, DeleteCommand, MessageCommand } from "./changeCommands";
 
 
 export interface RestDebug {
@@ -95,6 +96,16 @@ export interface RestCommand {
   tagNameAndTags?: { tags: Tags, tagName: string },
   copyOnSuccess?: RequiredCopyDetails[]
 }
+
+export function restCommandToChangeCommands<MSGs> ( r: RestCommand, status: number | undefined, messagesFromBody: string[] ): ChangeCommand[] {
+  const deletes: DeleteCommand[] = toArray ( r.deleteOnSuccess ).map ( path => ({ command: 'delete', path }) )
+  const messagesOnSuccess: MessageCommand[] = status && status < 300 ? toArray ( r.messageOnSuccess ).map ( msg => ({ command: 'message', msg }) ) : []
+  const messagesFrombody: MessageCommand[] = messagesFromBody.map ( msg => ({ command: 'message', msg }) )
+  const copies: CopyResultCommand[] = toArray ( r.copyOnSuccess ).map ( ( { from, to } ) => ({ command: 'copyResult', from, to }) )
+  return [ ...deletes, ...messagesOnSuccess, ...messagesFrombody, ...copies ]
+
+}
+
 export interface HasRestCommands {
   restCommands: RestCommand[]
 }

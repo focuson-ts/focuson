@@ -27,24 +27,25 @@ describe ( " listComponentsIn", () => {
   it ( "should createReactComponent", () => {
     expect ( createReactComponent ( paramsForTest, AllGuardCreator, EAccountsSummaryPD, EAccountsSummaryPD ) ( EAccountsSummaryDD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function EAccountsSummary({id,state,mode,allButtons,label}: FocusedProps<FState, EAccountsSummaryDomain,Context>){",
-      "  return <Layout details='[[10]]' defaultProps='{'valueWidth': 50}'>",
+      "  return<>",
+      "<Layout details='[[10]]' defaultProps='{'valueWidth': 50}'>",
       "    <LabelAndBooleanInput id={`${id}.useEStatements`} state={state.focusOn('useEStatements')} mode={mode} label='Use E Statements' allButtons={allButtons} />",
       "    <Table id={`${id}.eAccountsTable`} state={state.focusOn('eAccountsTable')} mode={mode} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} />",
       "    <BalancesAndMonthlyCost id={`${id}.balancesAndMonthlyCost`} state={state.focusOn('balancesAndMonthlyCost')} mode={mode} label='Balances And Monthly Cost' allButtons={allButtons} />",
       "    <CreatePlan id={`${id}.createPlan`} state={state.focusOn('createPlan')} mode={mode} label='Create Plan' allButtons={allButtons} />",
       "</Layout>",
-      "}",
+      "</>}",
       ""
     ] )
   } )
   it ( "should createAllReactComponents ", () => {
-    expect ( createAllReactComponents ( paramsForTest, AllGuardCreator, makeButtons (), EAccountsSummaryPD, EAccountsSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( createAllReactComponents ( paramsForTest, AllGuardCreator, makeButtons (), EAccountsSummaryPD, EAccountsSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
       "import { LensProps } from '@focuson/state';",
       "import { FocusOnContext } from '@focuson/focuson';",
       "import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from '@focuson/pages';",
       "import { Context, FocusedProps, FState, identityL } from '../common';",
       "import { Lenses } from '@focuson/lens';",
-      "import { Guard, GuardButton } from '@focuson/form_components';",
+      "import { DisplayGuards, Guard, GuardButton } from '@focuson/form_components';",
       "import { defaultDateFn } from '@focuson/utils';",
       "import * as action from '../actions'",
       "import { EAccountsSummaryOptionals } from '../EAccountsSummary/EAccountsSummary.optionals';",
@@ -99,59 +100,64 @@ describe ( " listComponentsIn", () => {
       "       />,}",
       "",
       "      return <>",
+      "      <>",
       "          <EAccountsSummary id={`${id}`} state={state} mode={mode} label='' allButtons={allButtons} />",
       "      { allButtons.createNewPlan } ",
       "      { allButtons.amendExistingPlan } ",
       "      { allButtons.deleteExistingPlan } ",
-      "      </>})}",
+      "      </></>})}",
       "",
       "export function BalancesAndMonthlyCost({id,state,mode,allButtons,label}: FocusedProps<FState, BalancesAndMonthlyCostDomain,Context>){",
-      "  return <>",
-      "    <LabelAndNumberInput id={`${id}.totalMonthlyCost`} state={state.focusOn('totalMonthlyCost')} mode={mode} label='Total Monthly Cost' allButtons={allButtons} required={true} />",
-      "    <LabelAndNumberInput id={`${id}.oneAccountBalance`} state={state.focusOn('oneAccountBalance')} mode={mode} label='One Account Balance' allButtons={allButtons} required={true} />",
-      "    <LabelAndNumberInput id={`${id}.currentAccountBalance`} state={state.focusOn('currentAccountBalance')} mode={mode} label='Current Account Balance' allButtons={allButtons} required={true} />",
+      "  return<>",
+      "<>",
+      "    <LabelAndNumberInput id={`${id}.totalMonthlyCost`} state={state.focusOn('totalMonthlyCost')} mode={mode} label='Total Monthly Cost' allButtons={allButtons} required={true} step={0.01} />",
+      "    <LabelAndNumberInput id={`${id}.oneAccountBalance`} state={state.focusOn('oneAccountBalance')} mode={mode} label='One Account Balance' allButtons={allButtons} required={true} step={0.01} />",
+      "    <LabelAndNumberInput id={`${id}.currentAccountBalance`} state={state.focusOn('currentAccountBalance')} mode={mode} label='Current Account Balance' allButtons={allButtons} required={true} step={0.01} />",
       "</>",
-      "}",
+      "</>}",
       "",
       "export function CreatePlan({id,state,mode,allButtons,label}: FocusedProps<FState, CreatePlanDomain,Context>){",
-      "  return <>",
+      "  return<>",
+      "<>",
       "    <LabelAndDateInput id={`${id}.createPlanStart`} state={state.focusOn('createPlanStart')} mode={mode} label='Create Start' allButtons={allButtons} dateFormat='yyyy/MM/dd' />",
       "    <LabelAndDateInput id={`${id}.createPlanDate`} state={state.focusOn('createPlanDate')} mode={mode} label='Create Plan Date' allButtons={allButtons} ariaLabel='The Create Plan Date' />",
       "    <LabelAndDateInput id={`${id}.createPlanEnd`} state={state.focusOn('createPlanEnd')} mode={mode} label='Create Plan End' allButtons={allButtons} />",
       "</>",
-      "}",
+      "</>}",
       "",
       "export function EAccountsSummary({id,state,mode,allButtons,label}: FocusedProps<FState, EAccountsSummaryDomain,Context>){",
-      "  return <Layout details='[[10]]' defaultProps='{'valueWidth': 50}'>",
+      "  return<>",
+      "<Layout details='[[10]]' defaultProps='{'valueWidth': 50}'>",
       "    <LabelAndBooleanInput id={`${id}.useEStatements`} state={state.focusOn('useEStatements')} mode={mode} label='Use E Statements' allButtons={allButtons} />",
       "    <Table id={`${id}.eAccountsTable`} state={state.focusOn('eAccountsTable')} mode={mode} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} />",
       "    <BalancesAndMonthlyCost id={`${id}.balancesAndMonthlyCost`} state={state.focusOn('balancesAndMonthlyCost')} mode={mode} label='Balances And Monthly Cost' allButtons={allButtons} />",
       "    <CreatePlan id={`${id}.createPlan`} state={state.focusOn('createPlan')} mode={mode} label='Create Plan' allButtons={allButtons} />",
       "</Layout>",
-      "}",
+      "</>}",
       "",
       "export function EAccountSummary({id,state,mode,allButtons,label}: FocusedProps<FState, EAccountSummaryDomain,Context>){",
-      "  return <>",
+      "  return<>",
+      "<>",
       "    <LabelAndNumberInput id={`${id}.accountId`} state={state.focusOn('accountId')} mode={mode} label='Account Id' allButtons={allButtons} required={true} min={10000000} max={99999999} />",
-      "    <LabelAndRadio id={`${id}.displayType`} state={state.focusOn('displayType')} mode={mode} label='Display Type' allButtons={allButtons} enums={{'savings':'Savings','checking':'Checking'}} />",
+      "    <LabelAndRadio id={`${id}.displayType`} state={state.focusOn('displayType')} mode={mode} label='Display Type' allButtons={allButtons} enums={{'savings':'Savings','checking':'Checking'}} required={true} />",
       "    <LabelAndStringInput id={`${id}.description`} state={state.focusOn('description')} mode={mode} label='Description' allButtons={allButtons} required={true} />",
       "    <LabelAndStringInput id={`${id}.virtualBankSeq`} state={state.focusOn('virtualBankSeq')} mode={mode} label='Virtual Bank Seq' allButtons={allButtons} required={true} />",
-      "    <LabelAndNumberInput id={`${id}.total`} state={state.focusOn('total')} mode={mode} label='Total' allButtons={allButtons} required={true} />",
+      "    <LabelAndNumberInput id={`${id}.total`} state={state.focusOn('total')} mode={mode} label='Total' allButtons={allButtons} required={true} step={0.01} />",
       "    <LabelAndStringInput id={`${id}.frequency`} state={state.focusOn('frequency')} mode={mode} label='Frequency/Amount' allButtons={allButtons} required={true} />",
       "</>",
-      "}",
+      "</>}",
       ""
     ] )
   } )
 
   it ( "should createAllReactComponents for a modal page that define a display on the data", () => {
-    expect ( createAllReactComponents ( paramsForTest, AllGuardCreator, makeButtons (), OccupationAndIncomeSummaryPD, listOccupationsModalPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( createAllReactComponents ( paramsForTest, AllGuardCreator, makeButtons (), OccupationAndIncomeSummaryPD, listOccupationsModalPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
       "import { LensProps } from '@focuson/state';",
       "import { FocusOnContext } from '@focuson/focuson';",
       "import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from '@focuson/pages';",
       "import { Context, FocusedProps, FState, identityL } from '../common';",
       "import { Lenses } from '@focuson/lens';",
-      "import { Guard, GuardButton } from '@focuson/form_components';",
+      "import { DisplayGuards, Guard, GuardButton } from '@focuson/form_components';",
       "import { defaultDateFn } from '@focuson/utils';",
       "import * as action from '../actions'",
       "import { OccupationAndIncomeSummaryOptionals } from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.optionals';",
@@ -176,10 +182,11 @@ describe ( " listComponentsIn", () => {
       "          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} buttonType='secondary' />,",
       "              commit:<ModalCommitButton id={`${id}.commit`}  buttonType='primary'  state={state} />,}",
       "          return <>",
+      "          <>",
       "          <ListOccupations id={`${id}`} state={state} mode={mode} label='' allButtons={allButtons} />",
       "          { allButtons.cancel } ",
       "          { allButtons.commit } ",
-      "          </>})}"
+      "          </></>})}"
     ] )
   } )
   it ( "should create a simple page", () => {
@@ -191,14 +198,15 @@ describe ( " listComponentsIn", () => {
       "          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} buttonType='secondary' />,",
       "              commit:<ModalCommitButton id={`${id}.commit`}  buttonType='primary'  state={state} />,}",
       "          return <>",
+      "          <>",
       "          <CreatePlan id={`${id}`} state={state} mode={mode} label='' allButtons={allButtons} />",
       "          { allButtons.cancel } ",
       "          { allButtons.commit } ",
-      "          </>})}"
-    ] )
+      "          </></>})}"
+    ])
   } )
   it ( "should create a page with a Layout", () => {
-    expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage, PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage, PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
       "export function PostCodeMainPagePage(){",
       "   //A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/main",
       "  return focusedPageWithExtraState<FState, PostCodeMainPagePageDomain, PostCodeNameAndAddressDomain, Context> ( s => 'Post Code Main Page' ) ( state => state.focusOn('main')) (",
@@ -206,7 +214,7 @@ describe ( " listComponentsIn", () => {
       "const id=`page${index}`;",
       "  const allButtons =    {save:<RestButton state={state} id={`${id}.save`}  text='Save'",
       "        name='save'",
-      "        action={'create'}",
+      "        action={'createWithoutFetch'}",
       "        validate={true}",
       "        rest='PostCodeMainPage_PostCodeNameAndAddressRestDetails'",
       "       />,",
@@ -217,13 +225,14 @@ describe ( " listComponentsIn", () => {
       "        copyJustString={[{'from':'~/main/postcode','to':'~/postcode/search'}]}",
       "      />,}",
       "",
-      "      return <HideButtonsLayout buttons={allButtons} hide={['search']}>",
+      "      return <>",
+      "      <HideButtonsLayout buttons={allButtons} hide={['search']}>",
       "          <PostCodeNameAndAddress id={`${id}`} state={state} mode={mode} label='' allButtons={allButtons} />",
       "      { allButtons.search } ",
       "      { allButtons.save } ",
-      "      </HideButtonsLayout>})}",
+      "      </HideButtonsLayout></>})}",
       ""
-    ] )
+    ])
   } )
 
 } )

@@ -52,7 +52,7 @@ describe ( "Making GraphQl from RestD", () => {
   // } )
   it ( "should include the 'mutation' params in a update", () => {
     expect ( makeQuery ('somePrefix', createPlanRestD, 'update' ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "'mutation{updateCreatePlan(' + 'accountId:' + accountId  + ',' + 'applRef:' + applRef  + ',' + 'brandRef:' + brandRef  + ',' + 'clientRef:' + clientRef  + ',' + 'createPlanId:' + createPlanId  + ', obj:' + obj + '){'+",
+      "'mutation{updateWithoutFetchCreatePlan(' + 'accountId:' + accountId  + ',' + 'applRef:' + applRef  + ',' + 'brandRef:' + brandRef  + ',' + 'clientRef:' + clientRef  + ',' + 'createPlanId:' + createPlanId  + ', obj:' + obj + '){'+",
       "      '    createPlanStart'+",
       "      '    createPlanDate'+",
       "      '    createPlanEnd'+",
@@ -95,17 +95,10 @@ describe ( "Making GraphQl from RestD", () => {
 
   it ( "should make a query with no params", () => {
     expect ( makeJavaVariablesForGraphQlQuery ( [ addressRestD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "public static  String createPostCodeNameAndAddress(String obj){ ",
-      "  return'mutation{createPostCodeNameAndAddress(' +  ' obj:' + obj + '){'+",
-      "      '    name'+",
-      "      '    line1'+",
-      "      '    line2'+",
-      "      '    line3'+",
-      "      '    line4'+",
-      "      '    postcode'+",
-      "      '  }'",
-      "+'}';}"
-    ] )
+      "public static  String createWithoutFetchPostCodeNameAndAddress(String obj){ ",
+      "  return'mutation{createWithoutFetchPostCodeNameAndAddress(' +  ' obj:' + obj + ')}';",
+      "}"
+    ])
   } )
 
   it ( "should make a query for delete, returning a boolean so no {}", () => {

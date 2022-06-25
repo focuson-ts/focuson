@@ -78,7 +78,7 @@ describe ( "makeButtons", () => {
     expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage,PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "    {save:<RestButton state={state} id={`${id}.save`}  text='Save'",
       "      name='save'",
-      "      action={'create'}",
+      "      action={'createWithoutFetch'}",
       "      validate={true}",
       "      rest='PostCodeMainPage_PostCodeNameAndAddressRestDetails'",
       "     />,",
