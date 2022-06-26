@@ -1,7 +1,7 @@
 import { reqFor, Tags, UrlConfig } from "@focuson/template";
-import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RequiredCopyDetails, RestAction, RestStateChange, safeArray, safeObject, safeString, sortedEntries, toArray } from "@focuson/utils";
+import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RequiredCopyDetails, RestAction, RestStateChange, safeArray, safeObject, sortedEntries, toArray } from "@focuson/utils";
 import { identityOptics, lensBuilder, Lenses, massTransform, Optional, parsePath, Transform } from "@focuson/lens";
-import { ChangeCommand, CopyResultCommand, DeleteCommand, MessageCommand } from "./changeCommands";
+import { ChangeCommand, CopyResultCommand, DeleteCommand, MessageCommand, processChangeCommandProcessor, restChangeCommandProcessors, RestProcessorsConfig } from "./changeCommands";
 
 
 export interface RestDebug {
@@ -97,14 +97,13 @@ export interface RestCommand {
   copyOnSuccess?: RequiredCopyDetails[]
 }
 
-export function restCommandToChangeCommands<MSGs> ( r: RestCommand, status: number | undefined, messagesFromBody: string[] ): ChangeCommand[] {
+export const restCommandToChangeCommands = <MSGs> ( stringToMsg: ( s: string ) => MSGs ) => ( r: RestCommand, status: number | undefined ): ChangeCommand[] => {
   const deletes: DeleteCommand[] = toArray ( r.deleteOnSuccess ).map ( path => ({ command: 'delete', path }) )
-  const messagesOnSuccess: MessageCommand[] = status && status < 300 ? toArray ( r.messageOnSuccess ).map ( msg => ({ command: 'message', msg }) ) : []
-  const messagesFrombody: MessageCommand[] = messagesFromBody.map ( msg => ({ command: 'message', msg }) )
+  const messagesOnSuccess: MessageCommand[] = status && status < 300 ? toArray ( r.messageOnSuccess ).map ( msg => ({ command: 'message', msg: msg }) ) : []
   const copies: CopyResultCommand[] = toArray ( r.copyOnSuccess ).map ( ( { from, to } ) => ({ command: 'copyResult', from, to }) )
-  return [ ...deletes, ...messagesOnSuccess, ...messagesFrombody, ...copies ]
+  return [ ...deletes, ...messagesOnSuccess, ...copies ]
 
-}
+};
 
 export interface HasRestCommands {
   restCommands: RestCommand[]
@@ -122,22 +121,17 @@ export interface RestResult<S, MSGs, Cargo> {
   result: any
 }
 
-export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, extractMsgs: ( status: number | undefined, body: any ) => MSGs[], toLens: ( path: string ) => Optional<S, any>, stringToMsg: ( msg: string ) => MSGs, extractData: ( status: number | undefined, body: any ) => any ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
-
-  let useMessageOnSucess = restCommand.messageOnSuccess && status && status < 300;
-  const messagesFromBody = extractMsgs ( status, result )
-  const msgs: MSGs[] = useMessageOnSucess ? [ stringToMsg ( safeString ( restCommand.messageOnSuccess ) ) ] : []
-
-  const msgTx: Transform<S, any>[] = msgs.length > 0 || messagesFromBody.length > 0 ? [ [ messageL, old => [ ...msgs, ...messagesFromBody, ...safeArray ( old ) ] ] ] : []
-
-  const useResponse = getRestTypeDetails ( restCommand.restAction ).output.needsObj
+export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, extractMsgs: ( status: number | undefined, body: any ) => MSGs[], toPathTolens: ( path: string ) => Optional<S, any>, stringToMsg: ( msg: string ) => MSGs, extractData: ( status: number | undefined, body: any ) => any ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
+  const messagesFromBody: MSGs[] = extractMsgs ( status, result )
+  const changeCommands = restCommandToChangeCommands ( stringToMsg ) ( restCommand, status )
+  const resultPathToLens = ( s: string ) => parsePath<any> ( s, lensBuilder ( { '': Lenses.identity<any> () }, {} ) )
+  const config: RestProcessorsConfig<S, any, MSGs> = { resultPathToLens, messageL, toPathTolens, stringToMsg }
   const data = extractData ( status, result );
-  const toLensForData = ( s: string ) => parsePath<any> ( s, lensBuilder ( { '': Lenses.identity<any> () }, {} ) )
-  const copies: Transform<S, any>[] = toArray ( restCommand.copyOnSuccess ).map ( cd => [ toLens ( cd.to ), () => toLensForData ( cd.from ).getOption ( data ) ] )
-  console.log ( 'copies', copies )
-
+  const changeTxs: Transform<S, any>[] = processChangeCommandProcessor ( '', restChangeCommandProcessors ( config ) ( data ), changeCommands );
+  const useResponse = getRestTypeDetails ( restCommand.restAction ).output.needsObj
   const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => data ] ] : []
-  let resultTxs: Transform<S, any>[] = [ ...msgTx, ...resultTransform, ...copies ];
+  const msgFromBodyTx: Transform<S, any> = [ messageL, old => [ ...messagesFromBody, ...old ] ]
+  let resultTxs: Transform<S, any>[] = [ msgFromBodyTx, ...changeTxs, ...resultTransform ];
   return resultTxs;
 };
 
