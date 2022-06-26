@@ -88,13 +88,16 @@ export type RestDetails<S, MSGs> = NameAnd<OneRestDetails<S, any, any, MSGs>>
 export interface RestCommand {
   name: string;
   restAction: RestAction;
-  /** If set, after the rest action has succeeded the named path will be deleted in the state. This is allow us to trigger the fetchers, which will fetch the latest data */
-  deleteOnSuccess?: string | string[];
-  messageOnSuccess?: string
   comment?: string;
   /** If the rest command was created by a fetcher these are the tags */
   tagNameAndTags?: { tags: Tags, tagName: string },
-  copyOnSuccess?: RequiredCopyDetails[]
+  changeOnSuccess?: ChangeCommand[]
+  /** @deprecated - moving to changeOnSuccess*/
+  copyOnSuccess?: RequiredCopyDetails[];
+  /** @deprecated - moving to changeOnSuccess. If set, after the rest action has succeeded the named path will be deleted in the state. This is allow us to trigger the fetchers, which will fetch the latest data */
+  deleteOnSuccess?: string | string[];
+  /** @deprecated - moving to changeOnSuccess*/
+  messageOnSuccess?: string
 }
 
 export const restCommandToChangeCommands = <MSGs> ( stringToMsg: ( s: string ) => MSGs ) => ( r: RestCommand, status: number | undefined ): ChangeCommand[] => {
@@ -127,11 +130,14 @@ export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, extract
   const resultPathToLens = ( s: string ) => parsePath<any> ( s, lensBuilder ( { '': Lenses.identity<any> () }, {} ) )
   const config: RestProcessorsConfig<S, any, MSGs> = { resultPathToLens, messageL, toPathTolens, stringToMsg }
   const data = extractData ( status, result );
-  const changeTxs: Transform<S, any>[] = processChangeCommandProcessor ( '', restChangeCommandProcessors ( config ) ( data ), changeCommands );
+  const processor = restChangeCommandProcessors ( config ) ( data );
+
+  const legacyChangeTxs: Transform<S, any>[] = processChangeCommandProcessor ( '', processor, changeCommands );
+  const changeTxs = processChangeCommandProcessor ( '', processor, toArray ( restCommand.changeOnSuccess ) )
   const useResponse = getRestTypeDetails ( restCommand.restAction ).output.needsObj
   const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => data ] ] : []
   const msgFromBodyTx: Transform<S, any> = [ messageL, old => [ ...messagesFromBody, ...old ] ]
-  let resultTxs: Transform<S, any>[] = [ msgFromBodyTx, ...changeTxs, ...resultTransform ];
+  let resultTxs: Transform<S, any>[] = [ msgFromBodyTx, ...legacyChangeTxs, ...changeTxs, ...resultTransform ];
   return resultTxs;
 };
 
@@ -198,18 +204,6 @@ export interface allLensForRest<S, MSGS> {
   traceL: Optional<S, any>
 }
 
-const deleteAfterRest = <S> ( fromPath: ( path: string ) => Optional<S, any> ) => ( s: S, restCommand: RestCommand ): S => {
-  if ( restCommand.deleteOnSuccess === undefined ) return s
-  return toArray ( restCommand.deleteOnSuccess ).reduce ( ( acc: S, path: string ) => fromPath ( path ).set ( acc, undefined ), s )
-};
-// export function processAllRestResults<S, MSGS> ( messageL: Optional<S, MSGS[]>, stringToMsg: ( msg: string ) => MSGS, restL: Optional<S, RestCommand[]>, pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>, results: RestResult<S, MSGS, OneRestDetails<S, any, any, MSGS>>[], s: S ) {
-//   const withResults: S = results.reduce ( processRestResult ( messageL, stringToMsg ), s );
-//   const fromPath = pathToLens ( s )
-//   const withDeleteAfterRest: S = results.reduce ( ( acc, res ) =>
-//     deleteAfterRest ( fromPath ) ( acc, res.restCommand ), withResults )
-//   const withCommandsRemoved: S = restL.set ( withDeleteAfterRest, [] );
-//   return withCommandsRemoved
-// }
 
 export interface RestCommandAndTxs<S> {
   restCommand: RestCommand;
@@ -245,13 +239,11 @@ export async function restToTransforms<S, MSGS> (
   const results: RestResult<S, MSGS, any>[] = await massFetch ( fetchFn, requests )
   if ( debug ) console.log ( "rest-results", results )
   let toLens = pathToLens ( s );
-  const deleteTx = ( d: string ): Transform<S, any> => [ toLens ( d ), () => undefined ];
   console.log ( 'about to restCommandsAndTxs', JSON.stringify ( results ) )
 
   const restCommandAndTxs: RestCommandAndTxs<S>[] = results.map ( res => {
-    const deleteTxs: Transform<S, any>[] = toArray ( res.restCommand.deleteOnSuccess ).map ( deleteTx )
 
-    const txs: Transform<S, any>[] = [ ...restResultToTx ( messageL, res.one.messages, toLens, stringToMsg, res.one.extractData ) ( res ), ...deleteTxs ];
+    const txs: Transform<S, any>[] = restResultToTx ( messageL, res.one.messages, toLens, stringToMsg, res.one.extractData ) ( res );
     const trace: Transform<S, any>[] = tracing ? [ [ traceL, old => [ ...safeArray ( old ), { restCommand: res.restCommand, lensTxs: txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( s ) ) ] ) } ] ] ] : []
     const restAndTxs: RestCommandAndTxs<S> = { ...res, txs: [ ...txs, ...trace ] };
     1

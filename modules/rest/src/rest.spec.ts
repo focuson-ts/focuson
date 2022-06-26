@@ -1,6 +1,7 @@
 import { createSimpleMessage, FetchFn, HasSimpleMessages, insertBefore, isRestStateChange, RestAction, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
 import { HasRestCommands, massFetch, OneRestDetails, rest, RestCommand, RestDetails, restL, restReq } from "./rest";
 import { identityOptics, lensBuilder, Lenses, NameAndLens, Optional, parsePath } from "@focuson/lens";
+import { CopyResultCommand, DeleteCommand } from "./changeCommands";
 
 interface HasFullDomainForTest {
   fullDomain?: FullDomainForTest
@@ -275,6 +276,71 @@ describe ( "rest", () => {
   } )
 
   it ( "should delete items specified in the 'delete on success' - single item", async () => {
+    const deleteCommand: DeleteCommand = { command: 'delete', path: '/token' };
+    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (),
+      withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+        { restAction: { state: 'newState' }, name: 'one', changeOnSuccess: [ deleteCommand ] }
+      ) );
+    expect ( result ).toEqual ( {
+      "fullDomain": {
+        "fromApi": "someData",
+        "idFromFullDomain": "someId"
+      },
+      "messages": [
+        {
+          "level": "info",
+          "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"",
+          "time": "timeForTest"
+        }
+      ],
+      "restCommands": []
+    } )
+
+  } )
+  it ( "should delete items specified in the 'delete on success' - multiple item", async () => {
+    const deleteCommands: DeleteCommand[] = [ { command: 'delete', path: '/token' }, { command: "delete", path: '/fullDomain/idFromFullDomain' } ];
+    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (),
+      withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+        { restAction: { state: 'newState' }, name: 'one', changeOnSuccess: deleteCommands }
+      ) );
+    expect ( result ).toEqual ( {
+      "fullDomain": {
+        "fromApi": "someData"
+      },
+      "messages": [
+        {
+          "level": "info",
+          "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"",
+          "time": "timeForTest"
+        }
+      ],
+      "restCommands": []
+    } )
+
+  } )
+  it ( "should copy items specified in the 'copyOnSuccess", async () => {
+    const copyCommand: CopyResultCommand = { command: 'copyResult', from: '', to: '/somewhere' }
+    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (),
+      withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+        { restAction: { state: 'newState' }, name: 'one', changeOnSuccess: [ copyCommand ] }
+      ) );
+    expect ( result ).toEqual ( {
+      "fullDomain": {
+        "fromApi": "someData",
+        "idFromFullDomain": "someId"
+      },
+      "messages": [ { "level": "info", "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"", "time": "timeForTest" } ],
+      "restCommands": [],
+      "somewhere": "Extracted[200].from/some/new/state/someToken/newState?token=someToken&id=someId",
+      "token": "someToken"
+    } )
+
+  } )
+} )
+
+describe ( "deprecated rest commands", () => {
+
+  it ( "should delete items specified in the 'delete on success' - single item", async () => {
     const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (),
       withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
         { restAction: { state: 'newState' }, name: 'one', deleteOnSuccess: '/token' }
@@ -333,4 +399,3 @@ describe ( "rest", () => {
 
   } )
 } )
-

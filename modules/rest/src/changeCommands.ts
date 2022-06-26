@@ -73,12 +73,13 @@ export const composeChangeCommandProcessors = <S> ( ...ps: ChangeCommandProcesso
 export function processChangeCommandProcessor<S> ( errorPrefix: string, p: ChangeCommandProcessor<S>, cs: ChangeCommand[] ): Transform<S, any>[] {
   return cs.flatMap ( c => {
     const result = p ( c )
-    if ( result === undefined ) throw Error ( `${errorPrefix}. Don't know how to process change command ${c}` )
+    if ( result === undefined ) throw Error ( `${errorPrefix}. Don't know how to process change command ${JSON.stringify(c)}` )
     return result
   } )
 }
 
-export type SimpleChangeCommands<MSGs> = DeleteCommand | MessageCommand | CopyCommand | SetChangeCommand
+export type RestChangeCommands = DeleteCommand | MessageCommand | CopyResultCommand | SetChangeCommand
+export type ModalChangeCommands = DeleteCommand | MessageCommand | CopyCommand | StrictCopyCommand | SetChangeCommand
 
 export interface DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> {
   toPathTolens: ( path: string ) => Optional<S, any>;
@@ -94,11 +95,11 @@ export interface ModalProcessorsConfig<S, MSGs> extends DeleteMessageStrictCopyS
 }
 
 export function deleteMessageSetProcessors<S, MSGs> ( config: DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> ): ChangeCommandProcessor<S> {
-  const { toPathTolens, messageL ,stringToMsg} = config
+  const { toPathTolens, messageL, stringToMsg } = config
   return composeChangeCommandProcessors (
     deleteCommandProcessor ( toPathTolens ),
     setCommandProcessor ( toPathTolens ),
-    messageCommandProcessor ( messageL,stringToMsg )
+    messageCommandProcessor ( messageL, stringToMsg )
   )
 }
 

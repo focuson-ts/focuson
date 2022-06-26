@@ -25,7 +25,7 @@ export const extractMessages = ( dataFn: DateFn ) => ( status: number | undefine
     return [ ...fromOne ( 'info' ), ...fromOne ( 'error' ), ...fromOne ( 'warning' ) ]
   }
   const result = status === undefined ?
-    [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify ( body )}`, testDateFn () ) ] :
+    [ createSimpleMessage ( 'error', `Cannot connect.`, testDateFn () ) ] :
     [ ...fromHeaderOrMessages ( body?.messages ), ...fromHeaderOrMessages ( body?.headerMessages ) ];
   return result;
 };

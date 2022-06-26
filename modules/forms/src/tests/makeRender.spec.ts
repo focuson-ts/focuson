@@ -216,6 +216,7 @@ describe ( " listComponentsIn", () => {
       "        name='save'",
       "        action={'createWithoutFetch'}",
       "        validate={true}",
+      "        onSuccess={[{'command':'message','msg':'Saved'}]}",
       "        rest='PostCodeMainPage_PostCodeNameAndAddressRestDetails'",
       "       />,",
       "      search:<ModalButton id={`${id}.search`} text='Search' dateFn={defaultDateFn} state={state} modal='PostCodeSearch' ",

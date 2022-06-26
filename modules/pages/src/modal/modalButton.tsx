@@ -22,8 +22,9 @@ export interface CommonModalButtonProps<S, Context> extends CustomButtonType {
   rest?: RestCommand,
   createEmpty?: any
   copy?: CopyDetails[],
-  deleteOnOpen?: string[],
   copyJustString?: CopyStringDetails[],
+
+  deleteOnOpen?: string[],
   copyOnClose?: CopyDetails[],
   setToLengthOnClose?: SetToLengthOnClose,
   createEmptyIfUndefined?: any

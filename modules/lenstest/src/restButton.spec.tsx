@@ -78,8 +78,10 @@ describe ( "RestButton", () => {
     var remembered: any = undefined
     const button = displayAndGetButton ( emptyS, s => remembered = s, s =>
       <RestButton rest='someRestName' action={{ state: 'newState' }} state={s} id='someId'
-                  copyOnSuccess={[ { from: 'from', to: 'to' } ]}
-                  deleteOnSuccess={[ 'del1', 'del2' ]}/> )
+                  onSuccess={[
+                    { command: 'copyResult', from: 'from', to: 'to' },
+                    { command: 'delete', path: 'del1' },
+                    { command: 'delete', path: 'del2' } ]}/> )
     button.simulate ( 'click' )
     expect ( remembered ).toEqual ( {
       "mainPage": {},
@@ -88,8 +90,11 @@ describe ( "RestButton", () => {
       "restCommands": [ {
         "name": "someRestName",
         "restAction": { "state": "newState" },
-        "copyOnSuccess": [ { "from": "from", "to": "to" } ],
-        "deleteOnSuccess": [ "del1", "del2" ],
+        "changeOnSuccess": [
+          { "command": "copyResult", "from": "from", "to": "to" },
+          { "command": "delete", "path": "del1" },
+          { "command": "delete", "path": "del2" }
+        ],
       } ]
     } )
   } )
