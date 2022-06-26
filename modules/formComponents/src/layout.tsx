@@ -18,7 +18,11 @@ function getLayoutAsArray ( details: string ) {
 export function Layout<S, T, Context> ( { details, children, title, defaultProps, displayAsCards }: LayoutProps ) {
   let elemIndex = 0
   const parsedDetails = getLayoutAsArray ( details )
-  if ( parsedDetails === undefined ) return <span><span className='validity-false'>Cannot parse layout {details}</span><br/><span>It should be an array of arrays.Most often like this [[1,1],[3],[5]] </span></span>
+  if ( parsedDetails === undefined ) return <div className="component-error"><div>Cannot parse layout {details}</div>
+    <div>It should be an array of arrays. Most often like this: </div>
+    <div>[[4,6]]</div>OR
+    <div>{JSON.stringify ( [[4,3],[{"count":7,"labelWidth":30, "valueWidth":40}, {"count":6,"labelWidth":30, "valueWidth":30}]] )}</div>
+    </div>
   const defaultPropsL = defaultProps && JSON.parse ( defaultProps )
   let numbersOnly = parsedDetails.map ( ( d: any, i: number ) => d.map ( ( item: any ) => typeof (item) === "object" ? item.count : item ) )
   let elemArr: number[] = numbersOnly.flat ().map ( ( val: any, i: any, arr: any ) => arr[ i ] += arr[ i - 1 ] ? arr[ i - 1 ] : 0 )

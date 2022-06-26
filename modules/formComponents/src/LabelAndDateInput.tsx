@@ -26,6 +26,15 @@ function isValidDateFormat(dateFormat: string) {
   return acceptableDateFormats.includes(dateFormat)
 }
 
+function parseDate(dateAsString: string) {
+  let dateAsStringL = dateAsString
+  if(isValid(new Date(dateAsString))) {
+    dateAsStringL = format(new Date(dateAsString), 'dd/MM/yyyy')
+  }   
+  const [day, month, year] = dateAsStringL.split("/") || dateAsString.split("-")
+  return new Date(parseInt(year), parseInt(month)-1, parseInt(day))
+}
+
 export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( props: LabelAndDateProps<S, Context> ) {
   const { state, ariaLabel, id, mode, label, name, buttons, readonly, datesExcluded, fieldNameInHolidays, workingDaysInPast, workingDaysInFuture, includeWeekends, dateFormat } = props
 
@@ -80,15 +89,6 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
       if(isExcluded(newDate, datesList)) count++
     }
     return newDate
-  }
-
-  function parseDate(dateAsString: string) {
-    let dateAsStringL = dateAsString
-    if(isValid(new Date(dateAsString))) {
-      dateAsStringL = format(new Date(dateAsString), 'dd/MM/yyyy')
-    }   
-    const [day, month, year] = dateAsStringL.split("/") || dateAsString.split("-")
-    return new Date(parseInt(year), parseInt(month)-1, parseInt(day))
   }
 
   const minDate = addDays(new Date(),safeArray(datesToExclude), workingDaysInFuture?workingDaysInFuture:0);

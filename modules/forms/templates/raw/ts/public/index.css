@@ -1948,4 +1948,6 @@ button#page1\.unpaidCardOrMisuseItems\.plus {
   background-color: #ffdddd;
   border: 1px solid red;
   width: 50%;
+  padding: 2px;
+  margin: 20px;
 }
