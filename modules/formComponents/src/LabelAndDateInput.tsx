@@ -21,8 +21,24 @@ export interface LabelAndDateProps<S, Context> extends CommonStateProps<S, strin
   dateFormat?: string
 }
 
+function isValidDateFormat(dateFormat: string) { 
+  const acceptableDateFormats = ['dd/MM/yyyy', 'dd-MM-yyyy', 'MM/dd/yyyy', 'MM-dd-yyyy', 'yyyy/MM/dd', 'yyyy-MM-dd']
+  return acceptableDateFormats.includes(dateFormat)
+}
+
 export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( props: LabelAndDateProps<S, Context> ) {
   const { state, ariaLabel, id, mode, label, name, buttons, readonly, datesExcluded, fieldNameInHolidays, workingDaysInPast, workingDaysInFuture, includeWeekends, dateFormat } = props
+
+  let error = false
+
+  if(dateFormat && !isValidDateFormat(dateFormat)) {
+    return <div className={`labelAndDate ${props.labelPosition == 'Horizontal'? 'd-flex-inline' : ''}`}>
+    <div className="label">{label}</div>
+    <div className="component-error">
+      <div>Invalid date format found!</div><div>Acceptable date formats - 'dd/MM/yyyy', 'dd-MM-yyyy', 'MM/dd/yyyy', 'MM-dd-yyyy', 'yyyy/MM/dd', 'yyyy-MM-dd' </div>
+    </div>
+    </div>
+  }  
 
   const dateFormatL = dateFormat ? dateFormat : 'yyyy/MM/dd'
 
@@ -38,7 +54,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
   }
 
   const onChange = ( date: any ) => {
-    // Turns out that new Date('23/04/2022') gives invalid date as the default format in JS is MM/dd/yyyy
+    // Turns out that new Date('23/04/2022') gives invalid date as the format acceptable in JS is either MM/dd/yyyy or yyyy/MM/dd an NOT dd/MM/yyyy
     if(date) state.setJson ( format(date, dateFormatL), reasonFor ( 'LabelAndDate', 'onChange', id ) )
   };
 
@@ -77,9 +93,10 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
 
   const minDate = addDays(new Date(),safeArray(datesToExclude), workingDaysInFuture?workingDaysInFuture:0);
 
+  // Turns out that new Date('23/04/2022') gives invalid date as the default format in JS is MM/dd/yyyy. Format yyy/MM/dd is also acceptable but NOT dd/MM/yyyy. Explicit function written to parse dates in dd/MM/yyyy or dd-MM-yyyy format
   const selectedDate = (dateFormatL.match('dd-MM-yyyy') || dateFormatL.match('dd/MM/yyyy')) ? parseDate(state.optJsonOr(new Date().toDateString())) : new Date(state.optJsonOr(new Date().toDateString()))
 
-  let error = false
+  
 
   if (!isValid(selectedDate)) {        
     error = true   
@@ -106,7 +123,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
         className={error ? "red-border" : ""}
         closeOnScroll={true}  
         onChangeRaw={(e) => handleChangeRaw(e)}
-        placeholderText="Select a date"/>
+        placeholderText={dateFormatL}/>
         {makeButtons ( props.allButtons, props.buttons )}
         {error && <div className="custom-error">Invalid Date: {state.optJsonOr('')}</div>}
       </div>

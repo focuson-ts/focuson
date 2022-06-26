@@ -1943,3 +1943,9 @@ button#page1\.unpaidCardOrMisuseItems\.plus {
 .hide-copy-icon {
   display: none;
 }
+
+.component-error {
+  background-color: #ffdddd;
+  border: 1px solid red;
+  width: 50%;
+}
