@@ -50,7 +50,7 @@ export function findValidityForSelect ( thisPage: Element, debug: boolean ): [ s
       const child = selects[ i ];
       let id = child.getAttribute ( 'id' );
       let clazz = child.getAttribute ( 'class' );
-      const valid = clazz.indexOf ( 'invalid' ) < 0
+      const valid = !clazz || clazz.indexOf ( 'invalid' ) < 0
       let recordedId = id ? id : "noIdForThisElement"
       let thisResult: [ string, boolean ] = [ recordedId, valid ];
       if ( debug ) console.log ( 'findValidityForSelect: ', id, thisResult )
@@ -67,7 +67,7 @@ export function findValidityForRadio ( thisPage: Element, debug: boolean ): [ st
       const child = radios[ i ];
       let id = child.getAttribute ( 'id' );
       let clazz = child.getAttribute ( 'class' );
-      const valid = clazz.indexOf ( 'invalid' ) < 0
+      const valid = !clazz || clazz.indexOf ( 'invalid' ) < 0
       let recordedId = id ? id : "noIdForThisElement"
       let thisResult: [ string, boolean ] = [ recordedId, valid ];
       if ( debug ) console.log ( 'findValidityForRadio: ', id, thisResult )

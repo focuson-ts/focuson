@@ -1,9 +1,10 @@
 import React from 'react';
 import { Story } from "@storybook/react";
-import { HasPageSelection, ModalButton, PageMode, PageSelectionContext } from "@focuson/pages";
+import { HasPageSelection, HasSimpleMessageL, ModalButton, PageMode, PageSelectionContext, simpleMessagesL } from "@focuson/pages";
 import { SBookProvider } from "./sbookProvider";
-import { defaultPageSelectionContext } from "@focuson/focuson";
-import { testDateFn } from "@focuson/utils";
+import { defaultPageSelectionAndRestCommandsContext, defaultPageSelectionContext, FocusOnContext } from "@focuson/focuson";
+import { HasSimpleMessages, testDateFn } from "@focuson/utils";
+import { HasRestCommands } from "@focuson/rest";
 
 export default {
   component: ModalButton,
@@ -19,14 +20,14 @@ interface ForModalPage {
 }
 
 
-interface StateForModalButton extends HasPageSelection {
+interface StateForModalButton extends HasPageSelection, HasSimpleMessages, HasRestCommands {
 
 }
 
 
 const Template: Story<ForModalPage> = ( args: ForModalPage ) =>
-  SBookProvider<StateForModalButton, PageSelectionContext<StateForModalButton>> ( { pageSelection: [] },
-    defaultPageSelectionContext<StateForModalButton, PageSelectionContext<StateForModalButton>> ( {} ),
+  SBookProvider<StateForModalButton, FocusOnContext<StateForModalButton>> ( { pageSelection: [], messages: [], restCommands: [] },
+    defaultPageSelectionAndRestCommandsContext<StateForModalButton> ( {}, {} ),
     s => (
       <ModalButton state={s} focusOn={'some/base'}{...args} dateFn={testDateFn}/>
     ) );

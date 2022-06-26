@@ -63,9 +63,6 @@ export const PaymentsPageD: ExampleMainPage = {
       enabledBy: 'tableItemSelected',
       copy: [ { from: '~/selectedPayment/payeeName', 'to': '~/editablePayemnt/payeeName' } ], copyOnClose: { to: '~/summary/payment' }
     },
-    save: {
-      control: 'RestButton', restName: 'newPayments', action: 'create', messageOnSuccess: 'Payment created'
-    },
     // cancel: { control: 'RestButton', validate: false, enabledBy: ['tableItemSelected','tableItemSelected','tableItemSelected','tableItemSelected'], restName: 'newPayments', action: 'create', messageOnSuccess: 'canceled', confirm: "dont say yes" }
   }
 }

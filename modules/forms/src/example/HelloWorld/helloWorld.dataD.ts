@@ -12,7 +12,7 @@ export const helloWorldDD: ExampleDataD = {
     dropdown2: {
       dataDD: {
         ...StringDD, display: LabelAndDropDownWithVaryingContentCD, displayParams: {
-          selector: '~/fromApi/dropdown1',
+          selector: 'dropdown1',
           pleaseSelect: "please select",
           enums: {
             N: { no1: 'No1', no2: 'no2' },

@@ -6,6 +6,7 @@ import { indentList, opt, optT } from "../codegen/codegen";
 import { emptyName, modalName, restDetailsName } from "../codegen/names";
 import { EnabledBy, enabledByString } from "./enabledBy";
 import { CopyDetails, decamelize, toArray } from "@focuson/utils";
+import { ModalChangeCommands } from "@focuson/rest";
 
 
 export function restForButton<B, G> ( parent: PageD<B, G>, rest?: RestOnCommit ): string[] {
@@ -29,6 +30,7 @@ export interface CommonModalButtonInPage<G> extends EnabledBy {
   restOnCommit?: RestOnCommit,
   copy?: CopyDetails | CopyDetails[],
   copyOnClose?: CopyDetails | CopyDetails[];
+  change?: ModalChangeCommands | ModalChangeCommands[];
   copyJustString?: CopyStringDetails | CopyStringDetails[],
   setToLengthOnClose?: SetToLengthOnClose;
   deleteOnOpen?: string | string[];
@@ -58,7 +60,7 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalOrMainButtonInPage<G>, 
     import: "@focuson/pages",
     makeButton:
       ( { params, parent, name, button } ) => {
-        const { mode, restOnCommit, copy, createEmpty, createEmptyIfUndefined, copyOnClose, copyJustString, setToLengthOnClose, text, pageParams, buttonType, deleteOnOpen } = button
+        const { mode, restOnCommit, copy, createEmpty, createEmptyIfUndefined, copyOnClose, copyJustString, setToLengthOnClose, text, pageParams, buttonType, deleteOnOpen,change } = button
         const createEmptyString = createEmpty ? [ `createEmpty={${params.emptyFile}.${emptyName ( createEmpty )}}` ] : []
         const createEmptyIfUndefinedString = createEmptyIfUndefined ? [ `createEmptyIfUndefined={${params.emptyFile}.${emptyName ( createEmptyIfUndefined )}}` ] : []
         createEmptyIfUndefined
@@ -77,6 +79,7 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalOrMainButtonInPage<G>, 
             ...optT ( 'copyJustString', copyJustString ? singleToList ( copyJustString ) : undefined ),
             ...optT ( 'pageParams', pageParams ),
             ...optT ( 'deleteOnOpen', deleteOnOpen ? toArray ( deleteOnOpen ) : undefined ),
+            ...optT ( 'change', change ),
             ...createEmptyString,
             ...createEmptyIfUndefinedString,
             ...optT ( 'setToLengthOnClose', setToLengthOnClose ),

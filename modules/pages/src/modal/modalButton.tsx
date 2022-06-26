@@ -1,10 +1,11 @@
 import { LensState, reasonFor } from "@focuson/state";
 import { fromPathGivenState, page, PageMode, PageParams, PageSelectionContext, SetToLengthOnClose } from "../pageSelection";
 import { Optional, Transform } from "@focuson/lens";
-import { RestCommand } from "@focuson/rest";
-import { anyIntoPrimitive, CopyDetails, DateFn, safeArray, toArray } from "@focuson/utils";
+import { CopyCommand, DeleteCommand, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand, SetChangeCommand } from "@focuson/rest";
+import { anyIntoPrimitive, CopyDetails, DateFn, safeArray, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
 import { CustomButtonType, getButtonClassName } from "../common";
 import { isMainPageDetails, MultiPageDetails } from "../pageConfig";
+import { HasSimpleMessageL } from "../simpleMessage";
 
 export interface CopyStringDetails {
   from: string;
@@ -21,6 +22,7 @@ export interface CommonModalButtonProps<S, Context> extends CustomButtonType {
   pageParams?: PageParams;
   rest?: RestCommand,
   createEmpty?: any
+  change?: ModalChangeCommands | ModalChangeCommands[]
   copy?: CopyDetails[],
   copyJustString?: CopyStringDetails[],
 
@@ -51,38 +53,51 @@ export function findFocusLFromCurrentState<S, Context> ( errorPrefix: string, pr
   if ( !isMainPageDetails ( onePage ) ) throw new Error ( `${errorPrefix} page ${main} should be a MainPage but is a ${onePage.pageType}` )
   return onePage.lens
 }
-export function ModalButton<S extends any, Context extends PageSelectionContext<S>> ( props: ModalButtonProps<S, Context> ): JSX.Element {
-  const { id, text, enabledBy, state, copy, copyJustString, pageMode, rest, copyOnClose, createEmpty, setToLengthOnClose, createEmptyIfUndefined, pageParams, buttonType, dateFn, deleteOnOpen } = props
+
+function buttonToChangeCommands<S, Context extends PageSelectionContext<S> & HasSimpleMessageL<S>> ( props: ModalButtonProps<S, Context> ): ModalChangeCommands[] {
+  const { copy, createEmpty, change, deleteOnOpen } = props
+  const emptyPath = isModal ( props ) ? props.focusOn : '~'
+  const copyCommands: CopyCommand[] = toArray ( copy ).map ( copy => ({ ...copy, command: 'copy' }) )
+  const emptyTxs: SetChangeCommand[] = createEmpty ? [ { command: 'set', path: emptyPath, value: createEmpty } ] : []
+  const deleteTxs: DeleteCommand[] = toArray ( deleteOnOpen ).map ( path => ({ command: 'delete', path }) )
+  const result: ModalChangeCommands[] = [ ...emptyTxs, ...copyCommands, ...deleteTxs, ...toArray ( change ) ]
+  return result
+}
+
+function makeContext<S, Context extends PageSelectionContext<S> & HasSimpleMessageL<S>> ( errorPrefix: string, state: LensState<S, any, Context>, newPageSelection: { firstTime: boolean; rest: RestCommand | undefined; pageMode: "view" | "create" | "edit"; focusOn: string | undefined; copyOnClose: CopyDetails[] | undefined; pageParams: PageParams | undefined; setToLengthOnClose: SetToLengthOnClose | undefined; time: string; pageName: string }, props: JustModalButtonProps<S, Context> | MainModalButtonProps<S, Context>, dateFn: () => string ) {
+  const fromPathTolens = fromPathGivenState ( state );
+  const toPathTolens = fromPathGivenState ( state, ps => [ ...ps, newPageSelection ] );
+  const focusOnL = findFocusLFromCurrentState ( errorPrefix, props, fromPathTolens, state.context.pages )
+
+  const config: ModalProcessorsConfig<S, SimpleMessage> = { stringToMsg: stringToSimpleMsg ( dateFn, 'info' ), fromPathTolens, toPathTolens, defaultL: focusOnL, messageL: state.context.simpleMessagesL };
+  return config;
+}
+export function ModalButton<S extends any, Context extends PageSelectionContext<S> & HasSimpleMessageL<S>> ( props: ModalButtonProps<S, Context> ): JSX.Element {
+  const { id, text, enabledBy, state, copy, copyJustString, pageMode, rest, copyOnClose, createEmpty, change, setToLengthOnClose, createEmptyIfUndefined, pageParams, buttonType, dateFn, deleteOnOpen } = props
   const onClick = () => {
     // const fromPath = fromPathFor ( state );
+    const errorPrefix = `Modal button ${id}`;
     const focusOn = isModal ( props ) ? props.focusOn : undefined
     const pageName = isModal ( props ) ? props.modal : props.main.toString ()
-    let newPageSelection = { pageName, firstTime: true, pageMode, rest, focusOn, copyOnClose, setToLengthOnClose, pageParams, time: dateFn () };
-    const fromPageFromFrom = fromPathGivenState ( state );
-    const fromPageForTo = fromPathGivenState ( state, ps => [ ...ps, newPageSelection ] );
-    let errorPrefix = `Modal button ${id}`;
-    const focusOnL = findFocusLFromCurrentState ( errorPrefix, props, fromPageFromFrom, state.context.pages )
-    const copyTxs: Transform<S, any>[] = safeArray ( copy ).map ( ( { from, to } ) =>
-      [ to ? fromPageForTo ( to ) : focusOnL, () => (from ? fromPageFromFrom ( from ) : focusOnL).getOption ( state.main ) ] )
+    const newPageSelection = { pageName, firstTime: true, pageMode, rest, focusOn, copyOnClose, setToLengthOnClose, pageParams, time: dateFn () };
+    const config = makeContext ( errorPrefix, state, newPageSelection, props, dateFn );
+
     const copyJustStrings: Transform<S, any>[] = safeArray ( copyJustString ).map (
       ( { from, to, joiner } ) => {
-        let f = fromPageFromFrom ( from ).getOption ( state.main );
-        return [ fromPageForTo ( to ), () => f ? anyIntoPrimitive ( f, joiner ? joiner : '' ) : f ];
+        let f = config.fromPathTolens ( from ).getOption ( state.main );
+        return [ config.toPathTolens ( to ), () => f ? anyIntoPrimitive ( f, joiner ? joiner : '' ) : f ];
       } )
-    const emptyTx: Transform<S, any>[] = createEmpty ? [ [ focusOnL, ignore => createEmpty ] ] : [];
-    const emptyifUndefinedTx: Transform<S, any>[] = createEmptyIfUndefined ? [ [ focusOnL, existing => {
-      console.log ( "emptyifUndefinedTx - existing", existing )
-      console.log ( "emptyifUndefinedTx - emptyifUndefinedTx", emptyifUndefinedTx )
-      return existing ? existing : createEmptyIfUndefined;
-    } ] ] : [];
-    const deleteOnOpenTxs: Transform<S, any>[] = toArray ( deleteOnOpen ).map ( d => [ fromPageForTo ( d ), () => undefined ] );
+
+    const emptyifUndefinedTx: Transform<S, any>[] = createEmptyIfUndefined ? [ [ config.defaultL, existing => existing ? existing : createEmptyIfUndefined ] ] : [];
+    const changeCommands = buttonToChangeCommands ( props )
+
+    const changeTxs = processChangeCommandProcessor ( errorPrefix, modalCommandProcessors ( config ) ( state.main ), changeCommands )
+
     state.massTransform ( reasonFor ( 'ModalButton', 'onClick', id ) ) (
       page<S, Context> ( state.context, 'popup', newPageSelection ),
-      ...deleteOnOpenTxs,
-      ...emptyTx,
       ...emptyifUndefinedTx,
-      ...copyTxs,
-      ...copyJustStrings );
+      ...copyJustStrings,
+      ...changeTxs );
   };
   const disabled = enabledBy === false
   return <button className={getButtonClassName ( buttonType )} id={id} disabled={disabled} onClick={onClick}>{text}</button>
