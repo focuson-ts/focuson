@@ -1338,97 +1338,6 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@focuson/fetcher@1.22.2":
-  version "1.22.2"
-  resolved "https://registry.yarnpkg.com/@focuson/fetcher/-/fetcher-1.22.2.tgz#778e2e503b70f6acda09628d5a1465f87a122f33"
-  integrity sha512-L9c0C9kfcZxg4nSy9ovnqtX0bmQhzHK8ss12n5FjjCHm1a8zoZEaqv1Kl0L4ovNFvsnMi+2Co6EomlIUVr6rjw==
-  dependencies:
-    "@focuson/lens" "1.22.2"
-    "@focuson/state" "1.22.2"
-    "@focuson/template" "1.22.2"
-
-"@focuson/focuson@1.22.2":
-  version "1.22.2"
-  resolved "https://registry.yarnpkg.com/@focuson/focuson/-/focuson-1.22.2.tgz#21d5566c6db5a8e5d470ce75c7d65c349d68c419"
-  integrity sha512-jXpO3oaTQGIVTvqoxzV2ezQWsmWQQkUZN8fDH8W2HVJlumiOoZfbiIflGm+Ok7BCr/q8/OiA13zbtDUoN71FfA==
-  dependencies:
-    "@focuson/pages" "1.22.2"
-    "@focuson/poster" "1.22.2"
-
-"@focuson/form_components@1.22.2":
-  version "1.22.2"
-  resolved "https://registry.yarnpkg.com/@focuson/form_components/-/form_components-1.22.2.tgz#e97dc108d61baac3a19b23cf4059863de130aad3"
-  integrity sha512-kP/lDscFLtf9JoOTldxnGEYWzKegUpUzU/xx+5kHSfayJ3yFbNx1Us1Z4zjJ4n4tj7qaOfIkdz8iUeJNTYjSIg==
-  dependencies:
-    "@focuson/focuson" "1.22.2"
-    "@focuson/state" "1.22.2"
-    "@types/react-datepicker" "^4.4.1"
-    react-datepicker "^4.7.0"
-
-"@focuson/lens@1.22.2":
-  version "1.22.2"
-  resolved "https://registry.yarnpkg.com/@focuson/lens/-/lens-1.22.2.tgz#dfe8f6b7fbbfb46eaf4ee5a4127987154757e810"
-  integrity sha512-js60OthWn1GYGMi1CZ84j3WVhP2huwxQQrD6BzLIR34b87bN8n5wt1GC2+CHRxPy/rcIWZE0eMUyjXAmc0DWHQ==
-  dependencies:
-    "@focuson/utils" "1.22.2"
-
-"@focuson/pages@1.22.2":
-  version "1.22.2"
-  resolved "https://registry.yarnpkg.com/@focuson/pages/-/pages-1.22.2.tgz#1b660e52d902d24796b7ec831f637a8b644fb7ba"
-  integrity sha512-ZpSGflLE/ow/uDhoNPsEIgmCz4sw2fJJ+ewE0Sr8FMu74aH8Aiu6bEFKqsMsnAIQvz6x69tqMOWjvtK1Eiihig==
-  dependencies:
-    "@focuson/fetcher" "1.22.2"
-    "@focuson/lens" "1.22.2"
-    "@focuson/rest" "1.22.2"
-    "@focuson/state" "1.22.2"
-
-"@focuson/poster@1.22.2":
-  version "1.22.2"
-  resolved "https://registry.yarnpkg.com/@focuson/poster/-/poster-1.22.2.tgz#07c317bae118a737d3743c665df708a8e52c74c3"
-  integrity sha512-J03Z4Pleep0Vtk1A+aVMpW+rYr5Z8AB9Xz390DyLsI60TvG2rlFruU8Va5oXWluZvUZMNf3D+XilS2vbHdrlHQ==
-  dependencies:
-    "@focuson/fetcher" "1.22.2"
-    "@focuson/lens" "1.22.2"
-
-"@focuson/rest@1.22.2":
-  version "1.22.2"
-  resolved "https://registry.yarnpkg.com/@focuson/rest/-/rest-1.22.2.tgz#d4309da72eae24b0b996752f6325a61b2a7bdf13"
-  integrity sha512-M84Wj9uWNaKC2Eu2AmZ8RHwY40gsR6d/cQ4B7TyhWC4VUFSymySId/WMuXcSgKsryDBTqVA0t0aPCF3n8LUmSQ==
-  dependencies:
-    "@focuson/fetcher" "1.22.2"
-    "@focuson/lens" "1.22.2"
-
-"@focuson/state@1.22.2":
-  version "1.22.2"
-  resolved "https://registry.yarnpkg.com/@focuson/state/-/state-1.22.2.tgz#eed7397b817aca4dac5f904faba2af562665f837"
-  integrity sha512-nyPBRd7btYBEuRzS9Cxj65b7BxltyUS9bQehoNVgDpcHIE6/OUvT70eeuoISOHgZhOpEkA5Plmfh2arG4UHWxg==
-  dependencies:
-    "@focuson/lens" "1.22.2"
-
-"@focuson/stories@1.22.2":
-  version "1.22.2"
-  resolved "https://registry.yarnpkg.com/@focuson/stories/-/stories-1.22.2.tgz#4cf7c010bd5c4f237fbf0983943d238ead870922"
-  integrity sha512-LpdmklbxiZpSW2BxMAkAYJM13cDFGtEKMgzwsEm6QQ3jlQeJk69l3Wvx+S/3evL9lcTzRU5hp2g3nMINd6mLVw==
-  dependencies:
-    "@focuson/focuson" "1.22.2"
-    react "^17.0.1"
-    react-dom "^17.0.1"
-    typescript "^4.1.5"
-
-"@focuson/template@1.22.2":
-  version "1.22.2"
-  resolved "https://registry.yarnpkg.com/@focuson/template/-/template-1.22.2.tgz#409a8958bbdeda025a0f89b1ec5b1a7f62f91e94"
-  integrity sha512-WUVJn9GhbZRXQmKr70dei78k4GKFf/v0v6Yr81yYDyyYqIQKTdL/UkPQLJoWZnGawvQVVQzSkcFa9y9ojVfqCw==
-  dependencies:
-    "@focuson/utils" "1.22.2"
-
-"@focuson/utils@1.22.2":
-  version "1.22.2"
-  resolved "https://registry.yarnpkg.com/@focuson/utils/-/utils-1.22.2.tgz#dcc8276f7fe7dc9a40029ab82595670ff6f87c70"
-  integrity sha512-pL7zDcwDwHnQmD8KItT6pwOsDa/GCFBV8agurXUrhIvN8N7YdRTHDeZXe8UPQ5ohR2WnTKzz+/AGFurfHxRYcQ==
-  dependencies:
-    node-fetch "2.6.1"
-
 "@gar/promisify@^1.0.1":
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.3.tgz#555193ab2e3bb3b6adc3d551c9c030d9e860daf6"
@@ -15452,9 +15361,9 @@ qs@6.10.3:
     side-channel "^1.0.4"
 
 qs@^6.10.0, qs@^6.6.0:
-  version "6.10.5"
-  resolved "https://registry.yarnpkg.com/qs/-/qs-6.10.5.tgz#974715920a80ff6a262264acd2c7e6c2a53282b4"
-  integrity sha512-O5RlPh0VFtR78y79rgcgKK4wbAI0C5zGVLztOIdpWX6ep368q5Hv6XRxDvXuZ9q3C6v+e3n8UfZZJw7IIG27eQ==
+  version "6.11.0"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.11.0.tgz#fd0d963446f7a65e1367e01abd85429453f0c37a"
+  integrity sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q==
   dependencies:
     side-channel "^1.0.4"
 
@@ -15814,9 +15723,9 @@ react-hotkeys@2.0.0:
     prop-types "^15.6.1"
 
 react-i18next@^11.8.5:
-  version "11.17.2"
-  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.17.2.tgz#4ca77a20bedfa607e4e863dcc85963d1a180e2e9"
-  integrity sha512-/HG4XSResWDY450cFmoUqLgCYDu8VYMFISGcMnZlxRSV05naj3+F7DoebwnPu6z/akA3Wd0Xe7KGTYdywL9z9g==
+  version "11.17.3"
+  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.17.3.tgz#eff742f162f1a413056fb510e8b830d42c8c020d"
+  integrity sha512-rIrLl5cLDoHdXFWdjKurRpatA3MPC9j3yTZidv0GmJEea5+XGXl42p7NupA1dmghoLGOXllShNUobgPYtgEcRA==
   dependencies:
     "@babel/runtime" "^7.14.5"
     html-escaper "^2.0.2"

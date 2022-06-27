@@ -3,9 +3,10 @@ import { SimpleMessage, SimpleMessageLevel } from "@focuson/utils";
 import { LensProps, reasonFor } from "@focuson/state";
 
 export interface MessagesProps<S, T, Context> extends LensProps<S, T, Context> {
+  pageDisplayTime: string
 }
-export function Messages<S, T, Context> ( { state }: MessagesProps<S, SimpleMessage[], Context> ) {
-
+export function Messages<S, T, Context> ( { state, pageDisplayTime }: MessagesProps<S, SimpleMessage[], Context> ) {
+  const pageTime = new Date ( pageDisplayTime ).getTime ()
   const removeMessage = ( index: number ) => {
     const messagesArray = [ ...state.json () ]
     messagesArray.splice ( index, 1 )
@@ -40,10 +41,12 @@ export function Messages<S, T, Context> ( { state }: MessagesProps<S, SimpleMess
     <div className="m-3">
       {
         state.json ().map ( ( message, index ) => {
-            return <div key={index} className={cssClasses ( message.level )}>
-              <span id={`messages[${index}].msg`} title={message.msg}> {getMessage ( message.msg )} </span>
-              <a id={`messages[${index}].close`} className="close-button" onClick={() => removeMessage ( index )}>&times;</a>
-            </div>
+            if ( new Date ( message.time ).getTime () >= pageTime )
+              return <div key={index} className={cssClasses ( message.level )}>
+                <span id={`messages[${index}].msg`} title={message.msg}> {getMessage ( message.msg )} </span>
+                <a id={`messages[${index}].close`} className="close-button" onClick={() => removeMessage ( index )}>&times;</a>
+              </div>
+            else return <></>
           }
         )}
     </div>

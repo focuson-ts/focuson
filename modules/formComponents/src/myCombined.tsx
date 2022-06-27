@@ -2,7 +2,7 @@ import { focusPageClassName, PageDetailsForCombine } from "@focuson/pages";
 import { LensState } from "@focuson/state";
 import { Messages } from "./messages";
 import { HasTagHolder } from "@focuson/template";
-import { HasSimpleMessages } from "@focuson/utils";
+import { HasSimpleMessages, SimpleMessage } from "@focuson/utils";
 import { FocusOnContext } from "@focuson/focuson";
 import { DebugState } from "./debugState";
 import { lastIndexOf } from "./common";
@@ -43,7 +43,6 @@ const mainPageJSX = ( p: PageDetailsForCombine, i: number, messagesJSX: JSX.Elem
 export function MyCombined<S extends HasTagHolder & HasSimpleMessages, Context extends FocusOnContext<S>> ( state: LensState<S, any, Context>, pages: PageDetailsForCombine[] ): JSX.Element {
 
   const debug = state.optJson ()?.debug;
-  const messagesJSX = <Messages state={state.focusOn ( 'messages' )}/>
   const lastIndexOfMainOrModalPage = lastIndexOf ( pages, p => p.pageType === 'MainPage' || p.pageType === 'ModalPage' )
   const clippedPages = pages.slice ( lastIndexOfMainOrModalPage )
   const pagesToShow = clippedPages.length === 0 ? pages : clippedPages // this occurs when we have a mainpop at the beginning
@@ -52,6 +51,9 @@ export function MyCombined<S extends HasTagHolder & HasSimpleMessages, Context e
       <div className='glassPane'>
         {
           pagesToShow.map ( ( p, i ) => {
+
+              const messagesJSX = <Messages state={state.focusOn ( 'messages' )} pageDisplayTime = {p.pageDisplayedTime}/>
+
               if ( p.pageType === 'MainPopup' ) return popupJSX ( p, i, messagesJSX )
               if ( p.pageType === 'ModalPopup' ) return popupJSX ( p, i, messagesJSX )
               if ( p.pageType === 'ModalPage' ) return modalPageJSX ( p, i, messagesJSX )

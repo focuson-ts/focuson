@@ -32,7 +32,7 @@ export const ExcessHistoryModalPage: ExampleModalPage = {
 
 export const ExcessInfoModalPage: ExampleModalPage = {
   name: "ExcessInfoSearch",
-  pageType: "ModalPage",
+  pageType: "ModalPopup",
   display: { dataDD: accountOverviewExcessInfoDataD, target: '~/', importFrom: 'AccountOverview' },
   modes: [ 'view' ],
   buttons: {
@@ -42,7 +42,7 @@ export const ExcessInfoModalPage: ExampleModalPage = {
 }
 export const ReasonModalPage: ExampleModalPage = {
   name: "Reason",
-  pageType: "ModalPage",
+  pageType: "ModalPopup",
   display: { dataDD: accountOverviewReasonDataD, target: '~/', importFrom: 'AccountOverview' },
   modes: [ 'view' ],
   buttons: {

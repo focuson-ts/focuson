@@ -19,6 +19,7 @@ export const cleanInputProps = <T extends NameAnd<any>> ( p: T ): T => {
   delete result.readonly
   delete result.ariaLabel
   delete result.noLabel
+  delete result.scrollAfter
   return result
 };
 
