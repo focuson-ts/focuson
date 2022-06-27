@@ -1071,7 +1071,7 @@ pre {
   overflow: hidden;
 }
 
-.react-datepicker__navigation {
+.react-datepicker__navigation, .react-datepicker__navigation:hover, .react-datepicker__navigation::after {
   align-items: center;
   background: none;
   display: flex;
@@ -1087,6 +1087,7 @@ pre {
   width: 32px;
   text-indent: -999em;
   overflow: hidden;
+  left: inherit;
 }
 
 .react-datepicker__navigation--previous {
