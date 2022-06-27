@@ -4,7 +4,33 @@ import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
 import { indentList } from "./codegen";
-import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, importForTubles, isInputParam, isOutputParam, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, paramName, requiredmentCheckCodeForJava, SelectMutation, setParam, SqlMutation, StoredProcedureMutation } from "../common/resolverD";
+import {
+  allInputParamNames,
+  allInputParams,
+  AllJavaTypes,
+  allOutputParams,
+  AutowiredMutationParam,
+  displayParam,
+  importForTubles,
+  isInputParam,
+  isOutputParam,
+  isSqlOutputParam,
+  isStoredProcOutputParam,
+  javaTypeForOutput,
+  ManualMutation,
+  MutationDetail,
+  MutationParam,
+  MutationsForRestAction,
+  nameOrSetParam,
+  OutputMutationParam,
+  paramName,
+  requiredmentCheckCodeForJava,
+  RSGetterForJavaType,
+  SelectMutation,
+  setParam,
+  SqlMutation,
+  StoredProcedureMutation
+} from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
@@ -77,9 +103,7 @@ export function getFromResultSetIntoVariables ( errorPrefix: string, from: strin
 export function getFromResultSetPutInMap ( map: string, from: string, m: MutationParam[] ) {
   return m.flatMap ( ( m, i ) => {
     if ( !isSqlOutputParam ( m ) ) return []
-    return m.javaType === 'String' ?
-      `${map}.put("${m.name}", ${from}.getString("${m.rsName}"));` :
-      `${map}.put("${m.name}", ${from}.getInt("${m.rsName}"));`
+    return `${map}.put("${m.name}", ${from}.${RSGetterForJavaType[m.javaType]}("${m.rsName}"));`
   } )
 }
 function findType ( errorPrefix: string, params: NameAnd<AllLensRestParams<any>>, name: string ) {

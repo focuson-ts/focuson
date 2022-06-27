@@ -251,6 +251,14 @@ export interface AutowiredMutationParam {
   required?: boolean;
 }
 export type JavaTypePrimitive = 'String' | 'Integer' |'Double' | 'Object';
+
+export const RSGetterForJavaType = {
+  String: 'getString',
+  Integer: 'getInt',
+  Double: 'getDouble',
+  Object: 'getObject'
+}
+
 export interface IntegerMutationParam {
   type: 'integer';
   value: number
