@@ -94,6 +94,9 @@ export const LabelAndDateInputCD: DisplayCompD = {
     workingDaysInFuture: { paramType: 'object', needed: 'no' },
     includeWeekends: { paramType: 'boolean', needed: 'no' },
     dateFormat: { paramType: 'string', needed: 'no' },
+    invalidDateMessage: { paramType: 'string', needed: 'no' },
+    firstAvailableDate: { paramType: 'path', needed: 'no' },
+    serverDateTime: { paramType: 'path', needed: 'no' },
   }
 }
 export const LabelAndDropDownFromDataCD: DisplayCompD = {

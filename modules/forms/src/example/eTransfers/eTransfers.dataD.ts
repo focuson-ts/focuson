@@ -12,7 +12,7 @@ export const ETransferDataD: DataD<AllGuards> = {
   structure: {
     account: { dataDD: AccountIdDD, displayParams: { label: "Account Id", min: 0 } },
     // dateOfETransfer: { dataDD: DateDD, displayParams: { datesExcluded: '~/holidays/', workingDaysInFuture: 5, includeWeekends: true }},
-    dateOfETransfer: { dataDD: DateDD, displayParams: { datesExcluded: '~/holidays/', workingDaysInFuture: 5}},
+    dateOfETransfer: { dataDD: DateDD, displayParams: { datesExcluded: '~/holidays/', firstAvailableDate: '~/firstAvailableDate/', workingDaysInFuture: 5}},
     description: { dataDD: OneLineStringDD, sample: [ 'Why we are doing this transfer' ] },
     fromAccount: { dataDD: AccountIdDD },
     toAccount: { dataDD: AccountIdDD, },
@@ -37,4 +37,12 @@ export const HolidayDataD: ExampleRepeatingD = {
   dataDD: SingleHolidayDataD,
   name: "HolidayData",
   description: ""
+}
+
+export const FirstAvailableDateDataD: DataD<AllGuards> = {
+  name: "FirstAvailableDate",
+  description: "First Available Date",
+  structure: {
+    firstAvailableDate: { dataDD: DateDD, sample: ['2022-06-30']},    
+  }
 }

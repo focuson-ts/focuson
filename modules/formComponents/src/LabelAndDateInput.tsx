@@ -18,7 +18,10 @@ export interface LabelAndDateProps<S, Context> extends CommonStateProps<S, strin
   workingDaysInPast?: number,
   workingDaysInFuture?: number,
   includeWeekends?: boolean,
-  dateFormat?: string
+  dateFormat?: string,
+  invalidDateMessage?: string,
+  firstAvailableDate?: LensState<S,any, Context>,
+  serverDateTime?: string
 }
 
 function isValidDateFormat(dateFormat: string) { 
@@ -28,7 +31,9 @@ function isValidDateFormat(dateFormat: string) {
 
 function parseDate(dateAsString: string) {
   let dateAsStringL = dateAsString
-  if(isValid(new Date(dateAsString))) {
+  const regexForYYYYMMDD1 = /^\d{4}\/\d{2}\/\d{2}$/;
+  const regexForYYYYMMDD2 = /^\d{4}\-\d{2}\-\d{2}$/;
+  if(isValid(new Date(dateAsString)) && (dateAsString.match(regexForYYYYMMDD1) || dateAsString.match(regexForYYYYMMDD2))) {// Corner case where 10/08/2022 (a valid date in MM/dd/yyyy) converted to 08/10/2022 (dd/MM/yyyy)
     dateAsStringL = format(new Date(dateAsString), 'dd/MM/yyyy')
   }   
   const [day, month, year] = dateAsStringL.split("/") || dateAsString.split("-")
@@ -36,7 +41,7 @@ function parseDate(dateAsString: string) {
 }
 
 export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( props: LabelAndDateProps<S, Context> ) {
-  const { state, ariaLabel, id, mode, label, name, buttons, readonly, datesExcluded, fieldNameInHolidays, workingDaysInPast, workingDaysInFuture, includeWeekends, dateFormat } = props
+  const { state, ariaLabel, id, mode, label, name, buttons, readonly, datesExcluded, fieldNameInHolidays, workingDaysInPast, workingDaysInFuture, includeWeekends, dateFormat, invalidDateMessage, firstAvailableDate, serverDateTime } = props
 
   let error = false
 
@@ -50,6 +55,11 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
   }  
 
   const dateFormatL = dateFormat ? dateFormat : 'yyyy/MM/dd'
+
+  // First available date
+  const firstAvailableDateL = firstAvailableDate?.optJsonOr('').firstAvailableDate
+
+  const viewModeOrReadonly = (mode === 'view' || readonly)
 
   const datesToExclude = datesExcluded?.optJsonOr([]).map(d => d[fieldNameInHolidays? fieldNameInHolidays : 'holiday'])
   const datesToExcludeAsDateType = safeArray(datesToExclude).map(d => new Date(d))
@@ -119,13 +129,13 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
         excludeDates={datesToExcludeAsDateType}
         minDate={minDate}
         highlightDates={datesToExcludeAsDateType}
-        readOnly={mode === 'view' || readonly}
+        readOnly={viewModeOrReadonly}
         className={error ? "red-border" : ""}
         closeOnScroll={true}  
         onChangeRaw={(e) => handleChangeRaw(e)}
-        placeholderText={dateFormatL}/>
+        placeholderText={state.optJsonOr('') ? state.optJsonOr('') : dateFormatL}/>
         {makeButtons ( props.allButtons, props.buttons )}
-        {error && <div className="custom-error">Invalid Date: {state.optJsonOr('')}</div>}
+        {error && !(viewModeOrReadonly) && <div className="custom-error">{invalidDateMessage ? invalidDateMessage : 'Invalid Date'}: {state.optJsonOr('')}</div>}
       </div>
     </div>)
 }

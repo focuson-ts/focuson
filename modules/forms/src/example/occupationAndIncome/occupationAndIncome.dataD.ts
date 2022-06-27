@@ -65,7 +65,7 @@ export const oneOccupationIncomeDetailsDD: ExampleDataD = {
 
     workFor: { dataDD: StringDD, displayParams: { label: "Who do {~/mainOrJoint|you|they} work for? " }, guard: { areYou: [ 'E' ], owningSharesPct: [ 'N' ] }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].workFor ] },
     employmentType: { dataDD: employmentTypeDD, displayParams: { label: "Is this employment... " }, guard: { areYou: [ 'E' ], owningSharesPct: [ 'N' ] }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].employmentType ] },
-    empStartDate: { dataDD: DateDD, displayParams: { label: "When did this employment start? (mm/yyyy) " }, guard: { areYou: [ 'E' ], employmentType: [ '1' ] }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].empStartDate ] },
+    empStartDate: { dataDD: DateDD, displayParams: { label: "When did this employment start? (mm/yyyy) ", invalidDateMessage: 'Please provide a valid date' }, guard: { areYou: [ 'E' ], employmentType: [ '1' ] }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].empStartDate ] },
     empEndDate: { dataDD: DateDD, displayParams: { label: "When will it finish? (mm/yyyy) " }, guard: { areYou: [ 'E' ], employmentType: [ '2', '3' ] }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].empEndDate ] },
     // @ts-ignore
     annualSalaryBeforeDeduction: { dataDD: IntegerDD, displayParams: { label: "What is {~/mainOrJoint|your|their} annual salary? (before deductions) " }, guard: { areYou: [ 'E' ], owningSharesPct: [ 'N' ] }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].annualSalaryBeforeDeduction ] },
