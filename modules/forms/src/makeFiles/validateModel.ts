@@ -22,7 +22,15 @@ export function validate<B, G> ( ps: PageD<B, G>[] ) {
   ps.forEach ( p => {
     validateNameUnique ( `PageD `, pdNames, p.name );
     if ( isMainPage ( p ) ) {
-      Object.entries ( p.rest ).forEach ( ( [ name, rest ] ) => validateName ( `DataD in Page ${p.name}.rest[${name}]`, rest.rest.dataDD.name ) )
+      Object.entries ( p.rest ).forEach ( ( [ name, rest ] ) => {
+        let prefix = `DataD in Page ${p.name}.rest[${name}]`;
+        try {
+          validateName ( prefix, rest.rest.dataDD.name );
+        } catch ( e: any ) {
+          console.log ( `${prefix}. 'rest.rest.dataDD is' `, JSON.stringify ( rest.rest.dataDD, null, 2 ) )
+          throw e
+        }
+      } )
       Object.entries ( p.domain ).forEach ( ( [ name, domain ] ) => validateName ( `DataD in Page ${p.name}.domain[${name}]`, domain.dataDD.name ) )
       safeArray ( p.modals ).flatMap ( flatMapToModal ).forEach ( ( modal, i ) => validateName ( `ModalPage in Page ${p.name}.modals[${i}]`, modal.modal.name ) )
     } else throw  Error ( `Modal page ${p.name} has been added to config. Only MainPages should be added` )

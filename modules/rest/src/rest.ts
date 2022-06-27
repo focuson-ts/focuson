@@ -136,6 +136,7 @@ export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, extract
   const changeTxs = processChangeCommandProcessor ( '', processor, toArray ( restCommand.changeOnSuccess ) )
   const useResponse = getRestTypeDetails ( restCommand.restAction ).output.needsObj
   const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => data ] ] : []
+  const errorTransform: Transform<S, any>[] = status && status >= 400 ? [] : []
   const msgFromBodyTx: Transform<S, any> = [ messageL, old => [ ...messagesFromBody, ...old ] ]
   let resultTxs: Transform<S, any>[] = [ msgFromBodyTx, ...legacyChangeTxs, ...changeTxs, ...resultTransform ];
   return resultTxs;
@@ -212,13 +213,7 @@ export interface RestCommandAndTxs<S> {
   txs: Transform<S, any>[];
 }
 
-
-/** Executes all the rest commands returning a list of transformations. It doesn't remove the rest commands from S
- This is valuable over the 'make a new S'for a few reasons:
- * It makes testing the rest logic easier
- * It reduces race conditions where user clicks will be ignore with slow networks... the transformations can be applied to the updated world. It's not a perfect solution though (that's a hard problem)
- * It allows us (in the calling code) to add the restful data to the trace. This is great for 'understanding what happened' */
-export async function restToTransforms<S, MSGS> (
+export interface RestToTransformProps<S, MSGS> {
   fetchFn: FetchFn,
   d: RestDetails<S, MSGS>,
   urlMutatorForRest: ( r: RestAction, url: string ) => string,
@@ -226,6 +221,16 @@ export async function restToTransforms<S, MSGS> (
   messageL: Optional<S, MSGS[]>,
   traceL: Optional<S, any[]>,
   stringToMsg: ( msg: string ) => MSGS,
+}
+
+
+/** Executes all the rest commands returning a list of transformations. It doesn't remove the rest commands from S
+ This is valuable over the 'make a new S'for a few reasons:
+ * It makes testing the rest logic easier
+ * It reduces race conditions where user clicks will be ignore with slow networks... the transformations can be applied to the updated world. It's not a perfect solution though (that's a hard problem)
+ * It allows us (in the calling code) to add the restful data to the trace. This is great for 'understanding what happened' */
+export async function restToTransforms<S, MSGS> (
+  props: RestToTransformProps<S, MSGS>,
   s: S, commands: RestCommand[] ): Promise<RestCommandAndTxs<S>[]> {
   if ( s === undefined ) throw new Error ( `State was null` )
   // @ts-ignore
@@ -234,6 +239,8 @@ export async function restToTransforms<S, MSGS> (
   const tracing = s.debug?.recordTrace
   if ( debug ) console.log ( "rest-commands", commands )
   if ( commands.length == 0 ) return Promise.resolve ( [] )
+  const { d, urlMutatorForRest, pathToLens, stringToMsg, messageL, fetchFn, traceL } = props
+
   const requests: [ RestCommand, OneRestDetails<S, any, any, any>, RequestInfo, (RequestInit | undefined) ][] = restReq ( d, commands, urlMutatorForRest, s )
   if ( debug ) console.log ( "rest-requests", requests )
   const results: RestResult<S, MSGS, any>[] = await massFetch ( fetchFn, requests )
@@ -261,28 +268,14 @@ export async function restToTransforms<S, MSGS> (
  * In addition it is hard to link this to the tracing system, so visibility about what is happening is much less
  * */
 export async function rest<S, MSGS> (
-  fetchFn: FetchFn,
-  d: RestDetails<S, MSGS>,
-  urlMutatorForRest: ( r: RestAction, url: string ) => string,
-  pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>,
-  messageL: Optional<S, MSGS[]>,
-  stringToMsg: ( msg: string ) => MSGS,
+  props: RestToTransformProps<S, MSGS>,
   restL: Optional<S, RestCommand[]>,
-  traceL: Optional<S, any[]>,
   s: S ): Promise<S> {
   const commands = restL.getOption ( s )
-  const restCommandAndTxs: RestCommandAndTxs<S>[] = await restToTransforms ( fetchFn, d, urlMutatorForRest, pathToLens, messageL, traceL, stringToMsg, s, safeArray ( commands ) )
+  const restCommandAndTxs: RestCommandAndTxs<S>[] = await restToTransforms ( props, s, safeArray ( commands ) )
   // @ts-ignore
   const [ debug, trace ] = [ s.debug?.restDebug, s.debug?.recordTrace ]
   console.log ( 'checking trace', trace )
-  // const txsWithTrace: Transform<S, any>[] = trace ?
-  //   restCommandAndTxs.flatMap ( r => {
-  //     let newTrace = { reason: r.restCommand, txLens: r.txs.map ( ( [ l, fn ] ) => [ l.description, resultOrErrorString ( () => fn ( l.getOption ( s ) ) ) ] ) };
-  //     console.log ( 'newTrace', newTrace )
-  //     const traceTx: Transform<S, any> = [ traceL, old => [ ...safeArray(old), newTrace ] ]
-  // return [ ...r.txs, traceTx ]
-  // } )
-  // : restCommandAndTxs.flatMap ( r => r.txs )
   const newS = massTransform ( s, ...restCommandAndTxs.flatMap ( r => r.txs ), [ restL, () => [] ] )
 
   if ( debug ) console.log ( "rest-result", newS )

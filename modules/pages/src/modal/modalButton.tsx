@@ -49,7 +49,7 @@ export function findFocusLFromCurrentState<S, Context> ( errorPrefix: string, pr
   if ( isModal ( props ) ) return fromPage ( props.focusOn )
   const main = props.main
   const onePage = pages[ main ]
-  if ( onePage === undefined ) throw Error ( `${errorPrefix} cannot find details for main page '${main}'. Legal names are [${Object.keys ( pages )}]` )
+  if ( onePage === undefined ) throw Error ( `${errorPrefix} cannot find details for main page '${main}'. Legal names are [${Object.keys ( pages )}]\n` )
   if ( !isMainPageDetails ( onePage ) ) throw new Error ( `${errorPrefix} page ${main} should be a MainPage but is a ${onePage.pageType}` )
   return onePage.lens
 }

@@ -4,7 +4,7 @@ import { FetcherTree, loadTree } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
 import { identityOptics, Lens, Lenses, massTransform, NameAndLens, Optional, Transform } from "@focuson/lens";
 import { errorMonad, errorPromiseMonad, FetchFn, HasSimpleMessages, RestAction, safeArray, safeString } from "@focuson/utils";
-import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestCommandAndTxs, RestDetails, restToTransforms } from "@focuson/rest";
+import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestCommandAndTxs, RestDetails, RestToTransformProps, restToTransforms } from "@focuson/rest";
 import { TagHolder } from "@focuson/template";
 import { AllFetcherUsingRestConfig, restCommandsFromFetchers } from "./tagFetcherUsingRest";
 import { FocusOnDebug } from "./debug";
@@ -140,11 +140,12 @@ export const processRestsAndFetchers = <S, Context extends FocusOnContext<S>, MS
     const { pageSelectionL, pathToLens } = context
     const pageSelections = safeArray ( pageSelectionL.getOption ( s ) )
     const pageName = safeString ( mainPageFrom ( pageSelections ).pageName )
-    console.log('processRestsAndFetchers - pageSelections', pageSelections)
-    console.log('processRestsAndFetchers - pageName', pageName)
+    console.log ( 'processRestsAndFetchers - pageSelections', pageSelections )
+    console.log ( 'processRestsAndFetchers - pageName', pageName )
     const fromFetchers = restCommandsFromFetchers ( tagHolderL, newFetchers, restDetails, pageName, s )
     const allCommands: RestCommand[] = [ ...restCommands, ...fromFetchers ]
-    const txs = await restToTransforms ( fetchFn, restDetails, restUrlMutator, pathToLens, messageL, traceL (), stringToMsg, s, allCommands )
+    const restProps: RestToTransformProps<S, MSGs> = { fetchFn, d: restDetails, pathToLens, messageL, stringToMsg, traceL: traceL (), urlMutatorForRest: restUrlMutator }
+    const txs = await restToTransforms ( restProps, s, allCommands )
     const result = addTagTxsForFetchers ( config.tagHolderL, txs )
     return result
   }
@@ -230,7 +231,8 @@ export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MS
     try {
       const withPreMutate = preMutate ( withDebug )
       const firstPageProcesses: S = preMutateForPages<S, Context> ( context ) ( withPreMutate )
-      const afterRest = await rest ( fetchFn, restDetails, config.restUrlMutator, pathToLens, messageL, stringToMsg, restL, traceL (), firstPageProcesses )
+      const restProps: RestToTransformProps<S, MSGs> = { fetchFn, d: restDetails, pathToLens, messageL, stringToMsg, traceL: traceL (), urlMutatorForRest: config.restUrlMutator }
+      const afterRest = await rest ( restProps, restL, firstPageProcesses )
       if ( afterRest ) newStateFn ( afterRest )
       let newMain = await loadTree ( fetchers, afterRest, fetchFn, debug )
         .then ( s => s ? s : onError ( s, Error ( 'could not load tree' ) ) )

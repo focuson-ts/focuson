@@ -1,10 +1,11 @@
-import { OneRestDetails, RestCommand, RestDetails, restL, restToTransforms } from "@focuson/rest";
+import { OneRestDetails, RestCommand, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
 import { createSimpleMessage, RestAction, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
 import { AllFetcherUsingRestConfig, defaultPageSelectionAndRestCommandsContext, FocusOnConfig, FocusOnContext, FocusOnDebug, HasRestCount, processRestsAndFetchers, restCommandsFromFetchers, restCountL, traceL } from "@focuson/focuson";
 import { TagHolder } from "@focuson/template";
 import { Lenses, NameAndLens, Optional } from "@focuson/lens";
 import { MultiPageDetails, PageSelection, simpleMessagesL, simpleMessagesPageConfig } from "@focuson/pages";
 import React from "react";
+import { restUrlMutator } from "exampleapp/src/rests";
 
 
 interface NewFetcherDomain {
@@ -52,7 +53,7 @@ const pages: MultiPageDetails<StateForNewFetcherTests, FocusOnContext<StateForNe
 
 
 const oneRestDetails: OneRestDetails<StateForNewFetcherTests, NewFetcherDomain, number, SimpleMessage> = {
-  extractData ( status: number|undefined, body: any ): number {return body;},
+  extractData ( status: number | undefined, body: any ): number {return body;},
   fdLens: pageIdL.focusQuery ( 'data' ),
 //From PostCodeMainPage.rest[address].targetFromPath (~/main). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?
   dLens: dataidL.focusQuery ( 'a' ),
@@ -102,8 +103,8 @@ const pathToLens = ( s: StateForNewFetcherTests ) => ( path: string ): Optional<
 }
 describe ( "test setup for new fetcher", () => {
   it ( "just check the rest works ", async () => {
-    const [ actual ] = await restToTransforms<StateForNewFetcherTests, SimpleMessage> ( fetchFn, restDetails, someConfig.restUrlMutator, pathToLens, someConfig.messageL, traceL (), someConfig.stringToMsg, empty,
-      [ { name: 'someRestName', restAction: 'get' } ] )
+    const props: RestToTransformProps<StateForNewFetcherTests, SimpleMessage> = { fetchFn, d: restDetails, urlMutatorForRest: someConfig.restUrlMutator, pathToLens, messageL: someConfig.messageL, traceL: traceL (), stringToMsg: someConfig.stringToMsg }
+    const [ actual ] = await restToTransforms<StateForNewFetcherTests, SimpleMessage> ( props, empty, [ { name: 'someRestName', restAction: 'get' } ] )
     expect ( actual.restCommand ).toEqual ( { name: 'someRestName', restAction: 'get' } )
     expect ( actual.status ).toEqual ( 200 )
     const txs = actual.txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( empty ) ) ] )

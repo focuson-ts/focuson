@@ -48,7 +48,7 @@ describe ( "makePacts", () => {
     ] )
   } )
   it ( "make a rest pact for get", () => {
-    expect ( makeRestPact ( paramsForTest, EAccountsSummaryPD, 'someRestName', EAccountsSummaryPD.rest.createPlanRestD, 'get' ) ).toEqual ( [
+    expect ( makeRestPact ( paramsForTest, EAccountsSummaryPD, 'someRestName', EAccountsSummaryPD.rest.createPlanRestD, 'get' ) ).toEqual ([
       "//Rest someRestName get pact test for EAccountsSummary",
       "pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider', cors: true }, provider => {",
       "  describe ( 'EAccountsSummary - someRestName rest get', () => {",
@@ -77,12 +77,12 @@ describe ( "makePacts", () => {
       "    ]",
       "    const withIds = massTransform ( firstState, ...lensTransforms )",
       "    const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );",
-      "    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), stringToSimpleMsg(() => 'now', 'info'), restL(), traceL(), withIds )",
+      "    const props: RestToTransformProps<FState, SimpleMessage> = {",
+      "       fetchFn, d: rests.restDetails, urlMutatorForRest: restUrlMutator, pathToLens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( () => 'now', 'info' ), traceL: traceL ()",
+      "    }",
+      "    const newState = await rest ( props, restL(), withIds )",
       "    const rawExpected:any = { ...withIds, restCommands: []}",
       "    const expected = Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('tempCreatePlan').set ( rawExpected, samples.sampleCreatePlan0 )",
-      "    expect ( newState.messages.length ).toEqual ( 1 )",
-      "    expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)",
-      "    expect ( { ...newState, messages: []}).toEqual ( expected )",
       "   })",
       " })",
       "})",
@@ -91,7 +91,7 @@ describe ( "makePacts", () => {
 
   } )
   it ( "make a rest pact for create", () => {
-    expect ( makeRestPact ( paramsForTest, EAccountsSummaryPD, 'someRestName', EAccountsSummaryPD.rest.createPlanRestD, 'create' ) ).toEqual ( [
+    expect ( makeRestPact ( paramsForTest, EAccountsSummaryPD, 'someRestName', EAccountsSummaryPD.rest.createPlanRestD, 'create' ) ).toEqual ([
       "//Rest someRestName create pact test for EAccountsSummary",
       "pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider', cors: true }, provider => {",
       "  describe ( 'EAccountsSummary - someRestName rest create', () => {",
@@ -121,12 +121,12 @@ describe ( "makePacts", () => {
       "    ]",
       "    const withIds = massTransform ( firstState, ...lensTransforms )",
       "    const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );",
-      "    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), stringToSimpleMsg(() => 'now', 'info'), restL(), traceL(), withIds )",
+      "    const props: RestToTransformProps<FState, SimpleMessage> = {",
+      "       fetchFn, d: rests.restDetails, urlMutatorForRest: restUrlMutator, pathToLens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( () => 'now', 'info' ), traceL: traceL ()",
+      "    }",
+      "    const newState = await rest ( props, restL(), withIds )",
       "    const rawExpected:any = { ...withIds, restCommands: []}",
       "    const expected = Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('tempCreatePlan').set ( rawExpected, samples.sampleCreatePlan0 )",
-      "    expect ( newState.messages.length ).toEqual ( 1 )",
-      "    expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)",
-      "    expect ( { ...newState, messages: []}).toEqual ( expected )",
       "   })",
       " })",
       "})",
@@ -134,7 +134,7 @@ describe ( "makePacts", () => {
     ] )
   } )
   it ( "make a rest pact for update", () => {
-    expect ( makeRestPact ( paramsForTest, EAccountsSummaryPD, 'someRestName', EAccountsSummaryPD.rest.createPlanRestD, 'update' ) ).toEqual ( [
+    expect ( makeRestPact ( paramsForTest, EAccountsSummaryPD, 'someRestName', EAccountsSummaryPD.rest.createPlanRestD, 'update' ) ).toEqual ([
       "//Rest someRestName update pact test for EAccountsSummary",
       "pactWith ( { consumer: 'EAccountsSummary', provider: 'EAccountsSummaryProvider', cors: true }, provider => {",
       "  describe ( 'EAccountsSummary - someRestName rest update', () => {",
@@ -164,12 +164,12 @@ describe ( "makePacts", () => {
       "    ]",
       "    const withIds = massTransform ( firstState, ...lensTransforms )",
       "    const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );",
-      "    const newState = await rest ( fetchFn, rests.restDetails, restUrlMutator, pathToLens, simpleMessagesL(), stringToSimpleMsg(() => 'now', 'info'), restL(), traceL(), withIds )",
+      "    const props: RestToTransformProps<FState, SimpleMessage> = {",
+      "       fetchFn, d: rests.restDetails, urlMutatorForRest: restUrlMutator, pathToLens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( () => 'now', 'info' ), traceL: traceL ()",
+      "    }",
+      "    const newState = await rest ( props, restL(), withIds )",
       "    const rawExpected:any = { ...withIds, restCommands: []}",
       "    const expected = Lenses.identity<FState>().focusQuery('EAccountsSummary').focusQuery('tempCreatePlan').set ( rawExpected, samples.sampleCreatePlan0 )",
-      "    expect ( newState.messages.length ).toEqual ( 1 )",
-      "    expect ( newState.messages[ 0 ].msg).toMatch(/^200.*/)",
-      "    expect ( { ...newState, messages: []}).toEqual ( expected )",
       "   })",
       " })",
       "})",

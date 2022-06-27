@@ -1,5 +1,5 @@
 import { createSimpleMessage, FetchFn, HasSimpleMessages, insertBefore, isRestStateChange, RestAction, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
-import { HasRestCommands, massFetch, OneRestDetails, rest, RestCommand, RestDetails, restL, restReq } from "./rest";
+import { HasRestCommands, massFetch, OneRestDetails, rest, RestCommand, RestDetails, restL, restReq, RestToTransformProps } from "./rest";
 import { identityOptics, lensBuilder, Lenses, NameAndLens, Optional, parsePath } from "@focuson/lens";
 import { CopyResultCommand, DeleteCommand } from "./changeCommands";
 
@@ -113,9 +113,10 @@ describe ( "massFetch", () => {
 const pathToLens: ( s: RestStateForTest ) => ( path: string ) => Optional<RestStateForTest, any> = ( unused ) => path => parsePath ( path, lensBuilder<RestStateForTest> ( { '/': Lenses.identity () }, {} ) )
 const msgFn = stringToSimpleMsg ( () => 'now', 'info' );
 
+const props: RestToTransformProps<RestStateForTest, SimpleMessage> = { fetchFn: mockFetch, d: restDetails, urlMutatorForRest: restMutatator, pathToLens, messageL: simpleMessageL, stringToMsg: msgFn, traceL: traceL () };
 describe ( "rest", () => {
   it ( "should fetch the results and put them into the state, removing the rest commands", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+    const result = await rest<RestStateForTest, SimpleMessage> ( props, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: 'get', name: 'one' },
       { restAction: 'create', name: 'one' },
       { restAction: 'createWithoutFetch', name: 'one' },
@@ -172,7 +173,7 @@ describe ( "rest", () => {
   } )
 
   it ( "should fetch the results and put them into the state, removing the rest commands and record trace if debug set", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (), withRestCommand ( { ...emptyRestStateWithTrace, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+    const result = await rest<RestStateForTest, SimpleMessage> ( props, restL (), withRestCommand ( { ...emptyRestStateWithTrace, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: 'get', name: 'one' },
       { restAction: 'create', name: 'one' },
       { restAction: 'createWithoutFetch', name: 'one' },
@@ -249,7 +250,7 @@ describe ( "rest", () => {
   } )
 
   it ( "should process state changes without changing the domain object", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+    const result = await rest<RestStateForTest, SimpleMessage> ( props, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: { state: 'newState' }, name: 'one' }
     ) );
     expect ( result ).toEqual ( {
@@ -270,17 +271,16 @@ describe ( "rest", () => {
   } )
 
   it ( "should throw error with illegal state", async () => {
-    await expect ( rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+    await expect ( rest<RestStateForTest, SimpleMessage> ( props, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: { state: 'illegalState' }, name: 'one' }
     ) ) ).rejects.toThrow ( 'Requested state change is illegalState. The legal list is [newState]' )
   } )
 
   it ( "should delete items specified in the 'delete on success' - single item", async () => {
     const deleteCommand: DeleteCommand = { command: 'delete', path: '/token' };
-    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (),
-      withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
-        { restAction: { state: 'newState' }, name: 'one', changeOnSuccess: [ deleteCommand ] }
-      ) );
+    const result = await rest<RestStateForTest, SimpleMessage> ( props, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+      { restAction: { state: 'newState' }, name: 'one', changeOnSuccess: [ deleteCommand ] }
+    ) );
     expect ( result ).toEqual ( {
       "fullDomain": {
         "fromApi": "someData",
@@ -299,7 +299,7 @@ describe ( "rest", () => {
   } )
   it ( "should delete items specified in the 'delete on success' - multiple item", async () => {
     const deleteCommands: DeleteCommand[] = [ { command: 'delete', path: '/token' }, { command: "delete", path: '/fullDomain/idFromFullDomain' } ];
-    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (),
+    const result = await rest<RestStateForTest, SimpleMessage> (props,  restL (),
       withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
         { restAction: { state: 'newState' }, name: 'one', changeOnSuccess: deleteCommands }
       ) );
@@ -320,7 +320,7 @@ describe ( "rest", () => {
   } )
   it ( "should copy items specified in the 'copyOnSuccess", async () => {
     const copyCommand: CopyResultCommand = { command: 'copyResult', from: '', to: '/somewhere' }
-    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (),
+    const result = await rest<RestStateForTest, SimpleMessage> ( props, restL (),
       withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
         { restAction: { state: 'newState' }, name: 'one', changeOnSuccess: [ copyCommand ] }
       ) );
@@ -341,7 +341,7 @@ describe ( "rest", () => {
 describe ( "deprecated rest commands", () => {
 
   it ( "should delete items specified in the 'delete on success' - single item", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (),
+    const result = await rest<RestStateForTest, SimpleMessage> ( props ,restL (),
       withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
         { restAction: { state: 'newState' }, name: 'one', deleteOnSuccess: '/token' }
       ) );
@@ -362,7 +362,7 @@ describe ( "deprecated rest commands", () => {
 
   } )
   it ( "should delete items specified in the 'delete on success' - multiple item", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (),
+    const result = await rest<RestStateForTest, SimpleMessage> ( props, restL (),
       withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
         { restAction: { state: 'newState' }, name: 'one', deleteOnSuccess: [ '/token', '/fullDomain/idFromFullDomain' ] }
       ) );
@@ -382,7 +382,7 @@ describe ( "deprecated rest commands", () => {
 
   } )
   it ( "should copy items specified in the 'copyOnSuccess", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage> ( mockFetch, restDetails, restMutatator, pathToLens, simpleMessageL, msgFn, restL (), traceL (),
+    const result = await rest<RestStateForTest, SimpleMessage> ( props, restL (),
       withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
         { restAction: { state: 'newState' }, name: 'one', copyOnSuccess: [ { from: '', to: '/somewhere' } ] }
       ) );
