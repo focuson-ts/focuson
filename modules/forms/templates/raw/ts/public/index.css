@@ -991,6 +991,7 @@ pre {
 
 .react-datepicker-popper[data-placement^=bottom] {
   padding-top: 10px;
+  padding-left: 25%;
 }
 
 .react-datepicker-popper[data-placement=bottom-end] .react-datepicker__triangle,
@@ -1001,6 +1002,7 @@ pre {
 
 .react-datepicker-popper[data-placement^=top] {
   padding-bottom: 10px;
+  padding-left: 25%;
 }
 
 .react-datepicker-popper[data-placement^=right] {
