@@ -44,7 +44,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
     return <div className={`labelAndDate ${props.labelPosition == 'Horizontal'? 'd-flex-inline' : ''}`}>
     <div className="label">{label}</div>
     <div className="component-error">
-      <div>Invalid date format found!</div><div>Acceptable date formats - 'dd/MM/yyyy', 'dd-MM-yyyy', 'MM/dd/yyyy', 'MM-dd-yyyy', 'yyyy/MM/dd', 'yyyy-MM-dd' </div>
+      <div>Invalid date format {dateFormat}</div><div>Acceptable date formats - dd/MM/yyyy, dd-MM-yyyy, MM/dd/yyyy', 'MM-dd-yyyy', 'yyyy/MM/dd', 'yyyy-MM-dd' </div>
     </div>
     </div>
   }  
