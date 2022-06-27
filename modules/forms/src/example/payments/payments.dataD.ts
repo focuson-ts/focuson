@@ -1,5 +1,5 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
-import { BooleanDD, DateDD, ManyDataDD, MoneyDD, StringDD, stringPrimDD, StringPrimitiveDD } from "../../common/dataD";
+import { BooleanDD, DateDD, DateDDMMYYY_DD, ManyDataDD, MoneyDD, StringDD, stringPrimDD, StringPrimitiveDD } from "../../common/dataD";
 import { DropDownCD, LabelAndDropDownCD, LabelAndDropDownFromDataCD, LabelAndRadioCD, LayoutCd, TableCD } from "../../common/componentsD";
 import { AllGuards } from "../../buttons/guardButton";
 
@@ -25,7 +25,7 @@ export const CurrencyEnum: StringPrimitiveDD = {
   name: 'CurrencyEnum',
   description: "Euros or GBP",
   display: LabelAndDropDownFromDataCD,
-  displayParams: { data: '~/currency', dataId: 'id', dataField: 'currency', pleaseSelect: 'Please select'  },
+  displayParams: { data: '~/currency', dataId: 'id', dataField: 'currency', pleaseSelect: 'Please select' },
 }
 export const ChapsPaymentTypeDD: StringPrimitiveDD = {
   ...stringPrimDD,
@@ -45,7 +45,7 @@ export const SummaryOfPaymentsLineDD: ExampleDataD = {
     sterlingAmount: { dataDD: MoneyDD, sample: [ 123, 2345, 5654 ] },
     currencyAmount: { dataDD: MoneyDD, sample: [ 222, 333, 444 ] },
     amtInWords: { dataDD: StringDD, sample: [ 'one hundred', 'two hundred', 'three hundred' ] },
-    forActionOn: { dataDD: DateDD, sample: [ '2022/12/5', '2022/12/6' ] },
+    forActionOn: { dataDD: DateDDMMYYY_DD, sample: [ '5/12/2021', '6/12/2022' ], },
     dateCreated: { dataDD: DateDD },
     status: { dataDD: StringDD, sample: [ 'cancel', 'paid', '' ] },
   }
@@ -159,7 +159,7 @@ export const PaymentDD: ExampleDataD = {
     paymentType: { dataDD: PaymentTypeDd },
     nameOfPayee: { dataDD: StringDD, sample: [ 'Bob', 'Phil', 'Andrew' ] },
     amount: { dataDD: amountDD },
-    forActionOn: { dataDD: DateDD, sample: [  '2022/12/5', '2022/12/6' ], displayParams: {dateFormat: 'dd-MM-yyyy'} },
+    forActionOn: { dataDD: DateDDMMYYY_DD, sample: [ '5/12/2021', '6/12/2022' ] },
     chargeDetails: { dataDD: ChargeDetailsDD },
     chapsDetails: { dataDD: ChapDetailsDD, guard: { paymentType: [ 'c' ] } },
     expressDetails: { dataDD: ExpressDetailsDD, guard: { paymentType: [ 'e' ] } }

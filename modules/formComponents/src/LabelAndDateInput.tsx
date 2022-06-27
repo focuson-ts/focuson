@@ -13,7 +13,7 @@ export interface LabelAndDateProps<S, Context> extends CommonStateProps<S, strin
   readonly?: boolean;
   allButtons: NameAnd<JSX.Element>;
   buttons?: string[]
-  datesExcluded?: LensState<S,any[], Context>,
+  datesExcluded?: LensState<S, any[], Context>,
   fieldNameInHolidays?: string,
   workingDaysInPast?: number,
   workingDaysInFuture?: number,
@@ -28,78 +28,81 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
 
   const dateFormatL = dateFormat ? dateFormat : 'yyyy/MM/dd'
 
-  const datesToExclude = datesExcluded?.optJsonOr([]).map(d => d[fieldNameInHolidays? fieldNameInHolidays : 'holiday'])
-  const datesToExcludeAsDateType = safeArray(datesToExclude).map(d => new Date(d))
+  const datesToExclude = datesExcluded?.optJsonOr ( [] ).map ( d => d[ fieldNameInHolidays ? fieldNameInHolidays : 'holiday' ] )
+  const datesToExcludeAsDateType = safeArray ( datesToExclude ).map ( d => new Date ( d ) )
 
-  const isHoliday = (date: Date, datesList: string[]) => {
-    return datesList.find((d:string) => new Date(d).toDateString() === date.toDateString());
+  const isHoliday = ( date: Date, datesList: string[] ) => {
+    return datesList.find ( ( d: string ) => new Date ( d ).toDateString () === date.toDateString () );
   };
 
-  const isExcluded = (date: Date, datesList: string[]) => {
-    return includeWeekends ? !isHoliday(date, datesList) : (isWeekday(date) && !isHoliday(date, datesList))
+  const isExcluded = ( date: Date, datesList: string[] ) => {
+    return includeWeekends ? !isHoliday ( date, datesList ) : (isWeekday ( date ) && !isHoliday ( date, datesList ))
   }
 
   const onChange = ( date: any ) => {
-    if(date) state.setJson ( format(date, dateFormatL), reasonFor ( 'LabelAndDate', 'onChange', id ) )
+    if ( date ) state.setJson ( format ( date, dateFormatL ), reasonFor ( 'LabelAndDate', 'onChange', id ) )
   };
 
-  const isWeekday = (date: Date) => {
-    const day = date.getDay()
+  const isWeekday = ( date: Date ) => {
+    const day = date.getDay ()
     return day !== 0 && day !== 6
   };
 
-  const addDays = (date: Date, datesList: string[], n: number) => {
+  const addDays = ( date: Date, datesList: string[], n: number ) => {
     let count: number = 0
     let newDate: Date = date
-    while(count < n){
-      newDate = new Date(date.setDate(date.getDate() + 1))
-      if(isExcluded(newDate, datesList)) count++
+    while ( count < n ) {
+      newDate = new Date ( date.setDate ( date.getDate () + 1 ) )
+      if ( isExcluded ( newDate, datesList ) ) count++
     }
     return newDate
   }
-  const subDays = (date: Date, datesList: string[], n: number) => {
+  const subDays = ( date: Date, datesList: string[], n: number ) => {
     let count: number = 0
     let newDate: Date = date
-    while(count < n){
-      newDate = new Date(date.setDate(date.getDate() - 1))
-      if(isExcluded(newDate, datesList)) count++
+    while ( count < n ) {
+      newDate = new Date ( date.setDate ( date.getDate () - 1 ) )
+      if ( isExcluded ( newDate, datesList ) ) count++
     }
     return newDate
   }
 
-  const minDate = addDays(new Date(),safeArray(datesToExclude), workingDaysInFuture?workingDaysInFuture:0);
+  const minDate = addDays ( new Date (), safeArray ( datesToExclude ), workingDaysInFuture ? workingDaysInFuture : 0 );
 
-  const selectedDate = new Date(state.optJsonOr(new Date().toDateString()))
+  const selectedDateString = state.optJson ()
+  const selectedDate = selectedDateString ? parseDate ( dateFormatL ) ( selectedDateString ) : undefined
   let error = false
-
-  if (!isValid(selectedDate)) {        
-    error = true   
-  } 
-
-  const handleChangeRaw = (e: any) => {
-    const date = e.currentTarget.value    
-    state.setJson ( date, reasonFor ( 'LabelAndDate', 'onChange', id ) )    
+  console.log ( 'selectedDateString', selectedDateString )
+  console.log ( 'pattern', dateFormatL )
+  console.log ( 'selectedDate', selectedDate )
+  if ( !isValid ( selectedDate ) ) {
+    error = true
   }
 
-  return (<div className={`labelAndDate ${props.labelPosition == 'Horizontal'? 'd-flex-inline' : ''}`}>
-      <Label state={state} htmlFor={name}  label={label}/>
-      <div className={`${props.buttons && props.buttons.length > 0 ? 'inputAndButtons' : ''}`}>
-        <DatePicker id={id}
-        dateFormat={dateFormatL}
-        todayButton="Select Today"
-        selected={error ? null : selectedDate}
-        onChange={(date) => onChange(date)} 
-        filterDate={includeWeekends ? undefined : isWeekday}
-        excludeDates={datesToExcludeAsDateType}
-        minDate={minDate}
-        highlightDates={datesToExcludeAsDateType}
-        readOnly={mode === 'view' || readonly}
-        className={error ? "red-border" : ""}
-        closeOnScroll={true}  
-        onChangeRaw={(e) => handleChangeRaw(e)}
-        placeholderText="Select a date"/>
-        {makeButtons ( props.allButtons, props.buttons )}
-        {error && <div className="custom-error">Invalid Date: {state.optJsonOr('')}</div>}
-      </div>
-    </div>)
+  const handleChangeRaw = ( e: any ) => {
+    const date = e.currentTarget.value
+    state.setJson ( date, reasonFor ( 'LabelAndDate', 'onChange', id ) )
+  }
+
+  return (<div className={`labelAndDate ${props.labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}>
+    <Label state={state} htmlFor={name} label={label}/>
+    <div className={`${props.buttons && props.buttons.length > 0 ? 'inputAndButtons' : ''}`}>
+      <DatePicker id={id}
+                  dateFormat={dateFormatL}
+                  todayButton="Select Today"
+                  selected={error ? null : selectedDate}
+                  onChange={( date ) => onChange ( date )}
+                  filterDate={includeWeekends ? undefined : isWeekday}
+                  excludeDates={datesToExcludeAsDateType}
+                  minDate={minDate}
+                  highlightDates={datesToExcludeAsDateType}
+                  readOnly={mode === 'view' || readonly}
+                  className={error ? "red-border" : ""}
+                  closeOnScroll={true}
+                  onChangeRaw={( e ) => handleChangeRaw ( e )}
+                  placeholderText="Select a date"/>
+      {makeButtons ( props.allButtons, props.buttons )}
+      {error && <div className="custom-error">Invalid Date: {state.optJsonOr ( '' )}</div>}
+    </div>
+  </div>)
 }
