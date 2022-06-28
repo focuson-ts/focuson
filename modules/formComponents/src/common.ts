@@ -1,5 +1,7 @@
 import { LensState } from "@focuson/state";
 import { PageMode } from "@focuson/pages";
+import { NameAnd } from "@focuson/utils";
+import { InputChangeCommands, ModalChangeCommands } from "@focuson/rest";
 
 
 export interface CommonComponentProps {
@@ -12,7 +14,7 @@ export interface CommonComponentProps {
 export interface StringValidations {
   minlength?: number;
   maxlength?: number;
-  pattern? : string;
+  pattern?: string;
 }
 export interface NumberValidations {
   min?: number;
@@ -26,31 +28,36 @@ export interface CommonStateProps<S, T, Context> extends CommonComponentProps {
   state: LensState<S, T, Context>;
 }
 
+export interface InputOnChangeProps<S, Context> {
+  parentState?: LensState<S, any, Context>;
+  onChange?: NameAnd<InputChangeCommands | InputChangeCommands[]>
+
+}
 export enum ContactTitle {
-  X = '',
-  MR = 'Mr',
-  MRS = 'Mrs',
-  MISS = 'Miss',
-  MS = 'Ms',
-  DR = 'Dr',
-  REV = 'Rev',
-  PROF = 'Prof',
-  SIR = 'Sir',
-  CAPTAIN = 'Captain',
-  LADY = 'Lady',
-  MAJOR = 'Major',
-  MASTER = 'Master',
-  LORD = 'Lord',
-  COLONEL = 'Colonel',
-  BARON = 'Baron',
-  VISCOUNT = 'Viscount',
+  X         = '',
+  MR        = 'Mr',
+  MRS       = 'Mrs',
+  MISS      = 'Miss',
+  MS        = 'Ms',
+  DR        = 'Dr',
+  REV       = 'Rev',
+  PROF      = 'Prof',
+  SIR       = 'Sir',
+  CAPTAIN   = 'Captain',
+  LADY      = 'Lady',
+  MAJOR     = 'Major',
+  MASTER    = 'Master',
+  LORD      = 'Lord',
+  COLONEL   = 'Colonel',
+  BARON     = 'Baron',
+  VISCOUNT  = 'Viscount',
   BRIGADIER = 'Brigadier',
   LIEUT_COL = 'Lieut Col',
-  FRAU = 'Frau',
-  HERR = 'Herr',
-  FATHER = 'Father',
-  MESSRS = 'Messrs',
-  MADAM = 'Madam'
+  FRAU      = 'Frau',
+  HERR      = 'Herr',
+  FATHER    = 'Father',
+  MESSRS    = 'Messrs',
+  MADAM     = 'Madam'
 }
 export const CustomerStatus = {
   X: '',
@@ -87,19 +94,19 @@ export interface CustomButtonType {
   buttonType?: 'primary' | 'secondary' | 'default'
 }
 
-export const getButtonClassName = (buttonType: string | undefined) => (buttonType == 'primary' ? 'primary-btn' : (buttonType == 'secondary' ? 'secondary-btn' : 'button'))
+export const getButtonClassName = ( buttonType: string | undefined ) => (buttonType == 'primary' ? 'primary-btn' : (buttonType == 'secondary' ? 'secondary-btn' : 'button'))
 
 export interface LabelAlignment {
   labelPosition?: 'Horizontal' | 'Vertical'
 }
 
-export function lastIndexOf<T>(ts: T[], fn: (t: T) => boolean): number {
-  const copy: T[] = [...ts].reverse()
-  const index = copy.findIndex(fn)
+export function lastIndexOf<T> ( ts: T[], fn: ( t: T ) => boolean ): number {
+  const copy: T[] = [ ...ts ].reverse ()
+  const index = copy.findIndex ( fn )
   return ts.length - index - 1
 }
 
-export function trimDownText(s: string, trimDownToSize: number): string {
+export function trimDownText ( s: string, trimDownToSize: number ): string {
   const size = trimDownToSize ? trimDownToSize : 300;
   return s.length > size ? s.slice ( 0, size ) + " ..." : s
 }

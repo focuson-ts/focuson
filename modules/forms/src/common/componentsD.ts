@@ -8,7 +8,7 @@ import { LensState } from "@focuson/state";
  * */
 export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'json' | 'jsonWithDisplayFn' | 'string[]' | 'path' | 'nameAndPaths' | 'pathValue' | 'objectAndRenderPrefix'
 
-type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons' | 'defaultToLabel' | 'defaultToParentState'
+type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons' | 'defaultToLabel' | 'defaultToParentState'| 'defaultToParentStateIfOnChange'
 
 export interface OneDisplayCompParamD<T> {
   paramType: DisplayCompParamType;
@@ -210,7 +210,7 @@ export const DropDownCD: DisplayCompD = {
   name: "Dropdown",
   params: {
     ...commonParams, ...enumParams,
-    parentState: { paramType: 'object', needed: 'defaultToParentState' },
+    parentState: { paramType: 'object', needed: 'defaultToParentStateIfOnChange' },
     pleaseSelect: { paramType: 'string', needed: 'no' },
     size: { paramType: 'object', needed: 'no' },
     required: { paramType: 'boolean', needed: 'no' },
@@ -221,7 +221,7 @@ export const LabelAndDropDownCD: DisplayCompD = {
   name: "LabelAndDropdown",
   params: {
     ...commonParamsWithLabel, ...enumParams,
-    parentState: {paramType: 'object', needed: 'defaultToParentState'},
+    parentState: {paramType: 'object', needed: 'defaultToParentStateIfOnChange'},
     pleaseSelect: { paramType: 'string', needed: 'no' },
     size: { paramType: 'object', needed: 'no' },
     required: { paramType: 'boolean', needed: 'no' },
@@ -233,7 +233,7 @@ export const LabelAndDropDownWithVaryingContentCD: DisplayCompD = {
   name: "LabelAndDropDownWithVaryingContent",
   params: {
     ...commonParamsWithLabel,
-    parentState: {paramType: 'object', needed: 'defaultToParentState'},
+    parentState: {paramType: 'object', needed: 'defaultToParentStateIfOnChange'},
     selector: { paramType: 'path', needed: 'yes' },
     enums: { paramType: 'json', needed: 'yes' },
     pleaseSelect: { paramType: 'string', needed: 'no' },

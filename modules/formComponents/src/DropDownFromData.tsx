@@ -1,14 +1,14 @@
 import { LensProps, LensState } from "@focuson/state";
-import { CommonStateProps } from "./common";
+import { CommonStateProps, InputOnChangeProps } from "./common";
 import { LabelAndDropdown } from "./labelAndDropdown";
 import { NameAnd } from "@focuson/utils";
 import { FocusOnContext } from "@focuson/focuson";
 import { cleanInputProps } from "./input";
 import { DropDownWithVaryingContentProps } from "./DropDownWithVaryingContent";
 
-export interface DropDownFromDataProps<S, T, C> extends CommonStateProps<S, string, C> {
+export interface DropDownFromDataProps<S, T, C> extends CommonStateProps<S, string, C>, InputOnChangeProps<S, C> {
   label: string;
-  parentState: LensState<S, any, C>;
+  parentState?: LensState<S, any, C>;
   data: LensState<S, T[], C>;
   dataId: keyof T;
   dataField: keyof T;
@@ -23,6 +23,5 @@ export function LabelAndDropDownFromData<S, T, C extends FocusOnContext<S>> ( pr
 
   const actualData = data.optJsonOr ( [] )
   const enums = Object.fromEntries ( actualData.map ( t => [ t[ dataId ], t[ dataField ] ] ) )
-  const cleanProps: Omit<DropDownFromDataProps<S, T, C>, 'parentState'> = cleanInputProps ( props )
-  return <LabelAndDropdown parentState={parentState} {...cleanProps} state={state} allButtons={allButtons} enums={enums}/>
+  return <LabelAndDropdown parentState={parentState} {...props} state={state} allButtons={allButtons} enums={enums}/>
 }

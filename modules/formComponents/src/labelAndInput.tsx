@@ -2,9 +2,12 @@ import { BooleanValidations, CommonStateProps, LabelAlignment, NumberValidations
 import { BooleanInput, cleanInputProps, Input, } from "./input";
 import { Label } from "./label";
 import { BooleanTransformer, NumberTransformer, StringTransformer } from "./transformers";
-import { NameAnd, safeArray } from "@focuson/utils";
+import { defaultDateFn, NameAnd, safeArray, stringToSimpleMsg, toArray } from "@focuson/utils";
 import { ButtonFromPage } from "./buttonFromPage";
 import { FocusOnContext } from "@focuson/focuson";
+import { LensState } from "@focuson/state";
+import { Transform } from "@focuson/lens";
+import { InputChangeCommands, inputCommandProcessors, processChangeCommandProcessor } from "@focuson/rest";
 
 export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T, Context>, LabelAlignment {
   label?: string;
@@ -25,6 +28,13 @@ export function makeButtons ( allButtons: NameAnd<JSX.Element>, buttons?: string
   return safeArray ( buttons ).map ( ( b, i ) =>
     <ButtonFromPage key={b} button={b} buttons={allButtons}/> )
 }
+export function makeInputChangeTxs<S, C extends FocusOnContext<S>> ( id: string, parentState: LensState<S, any, C>, change?: InputChangeCommands | InputChangeCommands[] ): Transform<S, any>[] {
+  const { simpleMessagesL, pathToLens, } = parentState.context
+  if ( parentState === undefined ) return []
+  const config = { toPathTolens: pathToLens ( parentState.main, parentState.optional ), stringToMsg: stringToSimpleMsg ( defaultDateFn, 'info' ), messageL: simpleMessagesL };
+  return processChangeCommandProcessor ( `Modal button.${id}`, inputCommandProcessors ( config ) ( parentState.main ), toArray ( change ) );
+}
+
 
 const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> ) =>
   <S, Context extends FocusOnContext<S>> ( props: LabelAndInputProps<S, T, Context> & P ) => {

@@ -1,4 +1,6 @@
 import { Optional, Transform } from "@focuson/lens";
+import { LensState } from "@focuson/state";
+import { defaultDateFn, stringToSimpleMsg, toArray } from "@focuson/utils";
 
 export interface ChangeCommand {
   command: string
@@ -77,6 +79,8 @@ export function processChangeCommandProcessor<S> ( errorPrefix: string, p: Chang
     return result
   } )
 }
+
+
 
 export type RestChangeCommands = DeleteCommand | MessageCommand | CopyResultCommand | SetChangeCommand
 export type ModalChangeCommands = DeleteCommand | MessageCommand | CopyCommand | SetChangeCommand
