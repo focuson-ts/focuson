@@ -1,5 +1,5 @@
 import { HasSimpleMessages, safeArray, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
-import { CopyCommand, copyCommandProcessor, CopyResultCommand, copyResultCommandProcessor, DeleteCommand, deleteCommandProcessor, DeleteMessageStrictCopySetProcessorsConfig, MessageCommand, messageCommandProcessor, modalCommandProcessors, ModalProcessorsConfig, restChangeCommandProcessors, RestProcessorsConfig, SetChangeCommand, setCommandProcessor, StrictCopyCommand, strictCopyCommandProcessor } from "./changeCommands";
+import { CopyCommand, copyCommandProcessor, CopyResultCommand, copyResultCommandProcessor, DeleteCommand, deleteCommandProcessor, DeleteMessageStrictCopySetProcessorsConfig, MessageCommand, messageCommandProcessor, modalCommandProcessors, ModalProcessorsConfig, restChangeCommandProcessors, RestAndInputProcessorsConfig, SetChangeCommand, setCommandProcessor, StrictCopyCommand, strictCopyCommandProcessor } from "./changeCommands";
 import { displayTransformsInState, lensBuilder, Lenses, parsePath } from "@focuson/lens";
 
 interface abc {
@@ -29,7 +29,7 @@ const froma12WithAMessage: StateForChangeCommads = { messages: [ { level: 'error
 const config: DeleteMessageStrictCopySetProcessorsConfig<StateForChangeCommads, SimpleMessage> = {
   toPathTolens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( testDateFn, 'info' )
 }
-const restConfig: RestProcessorsConfig<StateForChangeCommads, any, SimpleMessage> = {
+const restConfig: RestAndInputProcessorsConfig<StateForChangeCommads, any, SimpleMessage> = {
   ...config, resultPathToLens
 }
 const modalConfig: ModalProcessorsConfig<StateForChangeCommads, SimpleMessage> = {

@@ -5,8 +5,9 @@ import { NameAnd } from "@focuson/utils";
 import { FocusOnContext } from "@focuson/focuson";
 import { cleanInputProps } from "./input";
 
-export interface DropDownWithVaryingContentProps<S,  C> extends CommonStateProps<S, string, C> {
+export interface DropDownWithVaryingContentProps<S, C> extends CommonStateProps<S, string, C> {
   label: string;
+  parentState: LensState<S, any, C>;
   selector: LensState<S, string, C> //this is the data about which enum we want
   enums: NameAnd<NameAnd<string>>
   allButtons: NameAnd<any>;
@@ -16,8 +17,9 @@ export interface DropDownWithVaryingContentProps<S,  C> extends CommonStateProps
 }
 
 export function LabelAndDropDownWithVaryingContent<S, C extends FocusOnContext<S>> ( props: DropDownWithVaryingContentProps<S, C> ) {
-  const { state,selector, enums, allButtons } = props
-  const s = selector.optJson()
-  const selectedEnums = s?enums[s]: {}
-  return <LabelAndDropdown {...cleanInputProps ( props )} state={state} allButtons={allButtons} enums={selectedEnums}/>
+  const { parentState, state, selector, enums, allButtons } = props
+  const s = selector.optJson ()
+  const selectedEnums = s ? enums[ s ] : {}
+  const cleanProps: Omit<DropDownWithVaryingContentProps<S, C>, 'parentState'> = cleanInputProps ( props )
+  return <LabelAndDropdown parentState={parentState} {...cleanProps} state={state} allButtons={allButtons} enums={selectedEnums}/>
 }

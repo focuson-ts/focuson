@@ -101,6 +101,7 @@ export const LabelAndDropDownFromDataCD: DisplayCompD = {
   name: "LabelAndDropDownFromData",
   params: {
     ...commonParamsWithLabel,
+    parentState: { paramType: 'object', needed: 'defaultToParentState' },
     data: { paramType: "path", needed: 'yes' },
     dataId: { paramType: 'string', needed: 'yes' },
     dataField: { paramType: 'string', needed: 'yes' },
@@ -209,6 +210,7 @@ export const DropDownCD: DisplayCompD = {
   name: "Dropdown",
   params: {
     ...commonParams, ...enumParams,
+    parentState: { paramType: 'object', needed: 'defaultToParentState' },
     pleaseSelect: { paramType: 'string', needed: 'no' },
     size: { paramType: 'object', needed: 'no' },
     required: { paramType: 'boolean', needed: 'no' },
@@ -219,9 +221,11 @@ export const LabelAndDropDownCD: DisplayCompD = {
   name: "LabelAndDropdown",
   params: {
     ...commonParamsWithLabel, ...enumParams,
+    parentState: {paramType: 'object', needed: 'defaultToParentState'},
     pleaseSelect: { paramType: 'string', needed: 'no' },
     size: { paramType: 'object', needed: 'no' },
     required: { paramType: 'boolean', needed: 'no' },
+    onChange: {paramType: 'json', needed: 'no'}
   }
 }
 export const LabelAndDropDownWithVaryingContentCD: DisplayCompD = {
@@ -229,6 +233,7 @@ export const LabelAndDropDownWithVaryingContentCD: DisplayCompD = {
   name: "LabelAndDropDownWithVaryingContent",
   params: {
     ...commonParamsWithLabel,
+    parentState: {paramType: 'object', needed: 'defaultToParentState'},
     selector: { paramType: 'path', needed: 'yes' },
     enums: { paramType: 'json', needed: 'yes' },
     pleaseSelect: { paramType: 'string', needed: 'no' },

@@ -46,7 +46,7 @@ export function CommonIds<S, C extends FocusOnContext<S>> ( { state }: DebugProp
   const commonIds = state.context.commonIds
   return <><p>Common Ids</p>
     <ul>{sortedEntries ( commonIds ).map ( ( [ n, l ] ) => {
-      if ( n === 'dbName' ) return <li key={n}><LabelAndDropdown id={`commonIds.${n}`} state={state.copyWithLens ( l )} label={n} allButtons={{}} enums={{ mock: 'Mock', db: 'Database' }}/></li>;
+      if ( n === 'dbName' ) return <li key={n}><LabelAndDropdown id={`commonIds.${n}`} parentState={state} state={state.copyWithLens ( l )} label={n} allButtons={{}} enums={{ mock: 'Mock', db: 'Database' }}/></li>;
       return <li key={n}><LabelAndStringInput id={`commonIds.${n}`} state={state.copyWithLens ( l )} label={n} allButtons={{}}/></li>;
     } )}</ul>
   </>

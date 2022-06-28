@@ -8,7 +8,12 @@ export const helloWorldDD: ExampleDataD = {
   structure: {
     message1: { dataDD: StringDD, sample: [ 'Greetings  !' ] },
     message2: { dataDD: ManyLineStringDD, sample: [ ' message !\nAnd here is a second line' ], displayParams:{scrollAfter: '300px'} },
-    dropdown1: { dataDD: YesNoDD },
+    dropdown1: { dataDD: YesNoDD, displayParams: {
+      onChange: {
+        N: {command: 'set', path: 'dropdown2', value: 'no1'},
+        Y: {command: 'set', path: 'dropdown2', value: 'yes2'}
+      }
+      } },
     dropdown2: {
       dataDD: {
         ...StringDD, display: LabelAndDropDownWithVaryingContentCD, displayParams: {
@@ -16,7 +21,7 @@ export const helloWorldDD: ExampleDataD = {
           pleaseSelect: "please select",
           enums: {
             N: { no1: 'No1', no2: 'no2' },
-            Y: { yes1: 'Yes1', yes22: 'yes2' },
+            Y: { yes1: 'Yes1', yes2: 'yes2' },
           }
         }
       }

@@ -27,7 +27,7 @@ function DropDownFromData<S> ( props: DataDrivenFixedOptionDropDownAndDetailsPro
   const pathToLens = state.context.pathToLens ( s, parentState.optional )
   const values = Object.fromEntries ( Object.entries ( props.details ).map ( ( [ name, detail ] ) =>
     [ name, detail.value ? detail.value : detail.valuePath ? pathToLens ( detail.valuePath ).getOption ( s ) : '' ] ) )
-  return <LabelAndDropdown label={label} enums={values} mode={mode} allButtons={allButtons} state={state} id={id} pleaseSelect={pleaseSelect} required={true}/>
+  return <LabelAndDropdown parentState={parentState} label={label} enums={values} mode={mode} allButtons={allButtons} state={state} id={id} pleaseSelect={pleaseSelect} required={true}/>
 }
 
 interface TwoElements {
