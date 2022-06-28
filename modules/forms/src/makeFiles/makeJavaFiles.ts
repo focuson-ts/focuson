@@ -132,6 +132,8 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   } )
 
   writeToFile ( `${javaUtilsRoot}/${params.wiringClass}.java`, () => makeAllJavaWiring ( params, pages, directorySpec ), details )
+  templateFile ( `${javaUtilsRoot}/LoggedDataSource.java`, 'templates/raw/java/utils/LoggedDataSource.java', params, directorySpec, details )
+  templateFile ( `${javaUtilsRoot}/Messages.java`, 'templates/raw/java/utils/Messages.java', params, directorySpec, details )
   templateFile ( `${javaCodeRoot}/${params.applicationName}.java`, 'templates/JavaApplicationTemplate.java', params, directorySpec, details )
   templateFile ( `${javaCodeRoot}/utils/ITimeService.java`, 'templates/raw/java/utils/ITimeService.java', params, directorySpec, details )
   templateFile ( `${javaCodeRoot}/utils/RealTimeService.java`, 'templates/raw/java/utils/RealTimeService.java', params, directorySpec, details )

@@ -11,7 +11,7 @@ export function simpleMessagesLFn<S extends HasSimpleMessages, D, Context> (): (
   return ( s, d ) => s.focusOn ( "messages" )
 }
 
-export const mutateStateAddingMessagesFromSource = <S, SOURCE, MSG> ( messageL: Optional<S, SimpleMessage[]>, msgs: ( a: SOURCE ) => SimpleMessage[] ) =>
+export const mutateStateAddingMessagesFromSource = <S, SOURCE, MSG> ( messageL: Optional<S, MSG[]>, stringToErrorMsg: ( s: string ) => MSG ) => ( msgs: ( a: SOURCE ) => MSG[] ) =>
   ( s: S, api: SOURCE ): S => {
     let simpleMessages = msgs ( api );
     return simpleMessages.length === 0 ? s : messageL.transform ( existing => [ ...existing, ...simpleMessages ] ) ( s )
@@ -24,9 +24,9 @@ export const extractMessages = ( dataFn: DateFn ) => ( status: number | undefine
     const fromOne = ( level: SimpleMessageLevel ) => toArray ( m?.[ level ] ).map ( stringToSimpleMsg ( dataFn, level ) );
     return [ ...fromOne ( 'info' ), ...fromOne ( 'error' ), ...fromOne ( 'warning' ) ]
   }
-  const result = status === undefined ?
-    [ createSimpleMessage ( 'error', `Cannot connect.`, testDateFn () ) ] :
-    [ ...fromHeaderOrMessages ( body?.messages ), ...fromHeaderOrMessages ( body?.headerMessages ) ];
-  return result;
+  if ( status === undefined ) return [ createSimpleMessage ( 'error', `Cannot connect.`, testDateFn () ) ]
+  let messages = [ ...fromHeaderOrMessages ( body?.messages ), ...fromHeaderOrMessages ( body?.headerMessages ) ];
+  if ( status < 400 || messages.length > 0 ) return messages
+  return [ stringToSimpleMsg ( dataFn, 'error' ) ( `${status} returned and no messages` ) ];
 };
 

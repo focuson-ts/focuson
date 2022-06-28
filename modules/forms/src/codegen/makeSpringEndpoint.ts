@@ -34,7 +34,6 @@ function paramsForQuery<G> ( errorPrefix: string, r: RestD<G>, restAction: RestA
 }
 
 
-
 export function accessDetails ( params: JavaWiringParams, p: MainPageD<any, any>, restName: string, r: RestD<any>, restAction: RestAction ): string[] {
   const allAccess = safeArray ( r.access )
   const legalParamNames = Object.keys ( r.params )
@@ -76,7 +75,7 @@ export function callMutationsCode<G> ( p: MainPageD<any, G>, restName: string, r
   const callMutations = indentList ( safeArray ( r.mutations ).filter ( a => actionsEqual ( a.restAction, restAction ) ).flatMap ( ad =>
     toArray ( ad.mutateBy ).flatMap ( ( md, i ) => {
       return [ `//from ${p.name}.rest[${restName}].mutations[${JSON.stringify ( restAction )}]${hintString}`,
-        `${paramsDeclaration ( md, i )}${mutationVariableName ( r, restAction )}.${mutationMethodName ( r, restActionForName ( restAction ), md, '' + i )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
+        `${paramsDeclaration ( md, i )}${mutationVariableName ( r, restAction )}.${mutationMethodName ( r, restActionForName ( restAction ), md, '' + i )}(connection,${[ 'msgs', dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
         ...outputParamsDeclaration ( md, i ),
         ...addOutputParamsToMessages ( md )
       ];
@@ -94,17 +93,20 @@ function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restN
   const errorPrefix = `${p.name}.rest[${restName}] ${JSON.stringify ( restName )}`
   const hasBody = restTypeDetails.params.needsObj
   const makeJsonString = hasBody ? [ `         Map<String,Object> bodyAsJson = new ObjectMapper().readValue(body, Map.class);` ] : []
+  const openConnection = callMutations.length > 0 ? [ `        Connection connection = dataSource.getConnection(getClass());`,
+    `        try  {`, ] : []
+  const closeConnection = callMutations.length > 0 ? [ `        } finally {dataSource.close(getClass(),connection);}`, ] : []
   return [
     `    @${restTypeDetails.annotation}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,
     `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( errorPrefix, r, restAction )}) throws Exception{`,
     ...makeJsonString,
     `        Messages msgs = Transform.msgs();`,
-    `        try (Connection connection = dataSource.getConnection()) {`,
+    ...openConnection,
     ...indentList ( indentList ( indentList ( indentList ( [ ...accessDetails ( params, p, restName, r, restAction ), ...callMutations ] ) ) ) ),
     restActionToDetails ( restAction ).output.needsObj ?
-      `          return Transform.result(connection,graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( errorPrefix, r, restAction )}), ${selectionFromData}, msgs);` :
+      `          return Transform.result(graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( errorPrefix, r, restAction )}), ${selectionFromData}, msgs);` :
       `          return  ResponseEntity.ok("{}");`,
-    `        }`,
+    ...closeConnection,
     `    }`,
     `` ];
 }
@@ -124,7 +126,7 @@ function makeQueryEndpoint<G> ( params: JavaWiringParams, errorPrefix: string, r
 
 function makeSampleEndpoint<G> ( params: JavaWiringParams, r: RestD<G> ): string[] {
   return [
-    `  @${ getRestTypeDetails ( 'get' ).annotation}(value = "${beforeSeparator ( "?", r.url )}/sample", produces = "application/json")`,
+    `  @${getRestTypeDetails ( 'get' ).annotation}(value = "${beforeSeparator ( "?", r.url )}/sample", produces = "application/json")`,
     `    public static String sample${r.dataDD.name}() throws Exception {`,
     `      return new ObjectMapper().writeValueAsString( ${params.sampleClass}.${sampleName ( r.dataDD )}0);`,
     `    }` ];
@@ -163,6 +165,8 @@ export function makeSpringEndpointsFor<B, G> ( params: JavaWiringParams, p: Main
     `import org.springframework.beans.factory.annotation.Autowired;`,
     `import java.sql.Connection;`,
     `import javax.sql.DataSource;`,
+    `import ${params.thePackage}.${params.utilsPackage}.LoggedDataSource;`,
+    `import ${params.thePackage}.${params.utilsPackage}.Messages;`,
     `import java.util.List;`,
     `import java.util.Map;`,
     `import java.util.Arrays;`,
@@ -172,7 +176,7 @@ export function makeSpringEndpointsFor<B, G> ( params: JavaWiringParams, p: Main
     `  @RestController`,
     `  public class ${restControllerName ( p, r )} {`,
     ``,
-    ...indentList ( [ `@Autowired`, `public IManyGraphQl graphQL;`, `@Autowired`, `public DataSource dataSource;` ] ),
+    ...indentList ( [ `@Autowired`, `public IManyGraphQl graphQL;`, `@Autowired`, `public LoggedDataSource dataSource;` ] ),
     ...mutationVariables,
     ...endpoints,
     ...queries,

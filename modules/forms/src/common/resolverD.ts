@@ -48,7 +48,7 @@ export interface MutationsForRestAction {
 // export type MutationResolverGuard= MutationResolverValueGuard
 
 
-export type MutationDetail = StoredProcedureMutation | SqlMutation | ManualMutation | SelectMutation // | IDFromSequenceMutation
+export type MutationDetail = StoredProcedureMutation | SqlMutation | SqlMutationThatIsAList | ManualMutation | SelectMutation // | IDFromSequenceMutation
 
 // export interface IDFromSequenceMutation {
 //   mutation: 'IDFromSequence',
@@ -65,13 +65,21 @@ export interface Autowiring {
 
 export interface SqlMutation {
   type: 'sql',
-  list?: boolean,
   schema: Schema;
   /**The name of the procedure that does this: should capture the intent of what this does */
   name?: string;
   sql: string;
   makeMock?: boolean
   params: MutationParamForSql | MutationParamForSql[]
+}
+
+export interface SqlMutationThatIsAList extends SqlMutation {
+  list?: boolean,
+  messageOnEmptyData?: string
+}
+export function isSqlMutationThatIsAList ( s: MutationDetail ): s is SqlMutationThatIsAList {
+  const a: any = s
+  return s.type === 'sql' && a.list
 }
 
 export interface StoredProcedureMutation {
@@ -103,11 +111,14 @@ export interface SelectMutation {
   select: GuardedMutation[]
 }
 
-export type GuardedMutation = GuardedManualMutation | GuardedSqMutation | GuardedStoredProcedureMutation
+export type GuardedMutation = GuardedManualMutation | GuardedSqMutation | GuardedStoredProcedureMutation | GuardedSqMutationThatIsAList
 export interface GuardedManualMutation extends ManualMutation {
   guard: string[]
 }
 export interface GuardedSqMutation extends SqlMutation {
+  guard: string[]
+}
+export interface GuardedSqMutationThatIsAList extends SqlMutationThatIsAList {
   guard: string[]
 }
 export interface GuardedStoredProcedureMutation extends StoredProcedureMutation {
@@ -221,7 +232,7 @@ export interface HasSetParam {
 export function needsRequiredCheck ( paramsFromCall: MutationParam[], m: MutationParam ): boolean {
   const a: any = m;
   if ( typeof m === 'string' ) return false;
-  if (m.type=== 'input' ) return a.required !== false
+  if ( m.type === 'input' ) return a.required !== false
   return false
 }
 
@@ -229,7 +240,7 @@ export function requiredmentCheckCodeForJava ( paramsFromCall: MutationParam[], 
   return toArray ( m ).flatMap ( m => {
     let name = inputParamName ( m );
     const a: any = m
-    return needsRequiredCheck ( paramsFromCall, m ) ? [ `if (${name} == null) throw new IllegalArgumentException("${name} must not be null");//${JSON.stringify(m)} ${typeof m}` ] : []
+    return needsRequiredCheck ( paramsFromCall, m ) ? [ `if (${name} == null) throw new IllegalArgumentException("${name} must not be null");//${JSON.stringify ( m )} ${typeof m}` ] : []
   } )
 }
 export function nameOrSetParam ( m: MutationParam ) {
@@ -250,7 +261,7 @@ export interface AutowiredMutationParam {
   setParam?: string;
   required?: boolean;
 }
-export type JavaTypePrimitive = 'String' | 'Integer' |'Double' | 'Object';
+export type JavaTypePrimitive = 'String' | 'Integer' | 'Double' | 'Object';
 
 export const RSGetterForJavaType = {
   String: 'getString',
@@ -285,7 +296,7 @@ export interface OutputForSqlMutationParam {
   rsName: string;
   msgLevel?: SimpleMessageLevel
 }
-export type AllJavaTypes = 'String' | 'Integer' | 'Object' | 'Double'| 'Map<String,Object>' | 'List<Map<String,Object>>' | 'Boolean'
+export type AllJavaTypes = 'String' | 'Integer' | 'Object' | 'Double' | 'Map<String,Object>' | 'List<Map<String,Object>>' | 'Boolean'
 export interface OutputForManualParam {
   type: 'output';
   name: string;

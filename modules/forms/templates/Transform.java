@@ -20,29 +20,13 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.IOException;
-
-class Messages{
-    public final List<String> error=new ArrayList<>(2);
-    public final List<String> info=new ArrayList<>(2);
-    public final List<String> warning=new ArrayList<>(2);
-    public final Map<String, Object> map = new HashMap<>();
-    public Messages(){
-        map.put("error", error);
-        map.put("info", info);
-        map.put("warning", warning);
-    }
-    public void info(String s) { if (s != null && s.length() > 0) info.add(s) ;}
-    public void warning(String s) { if (s != null && s.length() > 0) warning.add(s) ;}
-    public void error(String s) { if (s != null && s.length() > 0) error.add(s) ;}
-
-}
-
+import {thePackage}.{utilsPackage}.Messages;
 public class Transform {
 
     public static Messages msgs(){return new Messages();}
 
-    public static ResponseEntity<String> result(Connection connection,GraphQL graphQL, String query, String result, Messages msgs) throws JsonProcessingException {
-        ExecutionInput executionInput = ExecutionInput.newExecutionInput().query(query).localContext(connection).build();
+    public static ResponseEntity<String> result(GraphQL graphQL, String query, String result, Messages msgs) throws JsonProcessingException {
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput().query(query).localContext(msgs).build();
         ExecutionResult executionResult = graphQL.execute(executionInput);
         List<GraphQLError> errors = executionResult.getErrors();
         final HttpHeaders responseHeaders = new HttpHeaders();

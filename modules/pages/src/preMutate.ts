@@ -22,7 +22,7 @@ function premutateOnePage<S, Context extends PageSelectionContext<S>> ( c: Conte
   if ( firstTime ) {
     const pageDetails: MultiPageDetails<S, any> = c.pages;
     const details = pageDetails[ pageName ]
-    if ( !details ) throw new Error ( `Could not find details for ${pageName}. LegalValues are ${Object.keys ( pageDetails ).join ( "," )}` )
+    if ( !details ) throw new Error ( `Could not find details for ${pageName}. LegalValues are ${Object.keys ( pageDetails ).join ( "," )}\nIs this a modal page that you need to add to the main page\n` )
     const lens = c.pageSelectionL.chain ( Lenses.nth ( i ) )
     let mainPageD = findMainPageDetails ( pageSelections, pageDetails );
     const dataLens: Optional<S, any> = lensForPageDetails ( mainPageD, details, focusOn )

@@ -13,7 +13,7 @@ import {
   displayParam,
   importForTubles,
   isInputParam,
-  isOutputParam,
+  isOutputParam, isSqlMutationThatIsAList,
   isSqlOutputParam,
   isStoredProcOutputParam,
   javaTypeForOutput,
@@ -28,7 +28,7 @@ import {
   RSGetterForJavaType,
   SelectMutation,
   setParam,
-  SqlMutation,
+  SqlMutation, SqlMutationThatIsAList,
   StoredProcedureMutation
 } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
@@ -103,13 +103,12 @@ export function getFromResultSetIntoVariables ( errorPrefix: string, from: strin
 export function getFromResultSetPutInMap ( map: string, from: string, m: MutationParam[] ) {
   return m.flatMap ( ( m, i ) => {
     if ( !isSqlOutputParam ( m ) ) return []
-    return `${map}.put("${m.name}", ${from}.${RSGetterForJavaType[m.javaType]}("${m.rsName}"));`
+    return `${map}.put("${m.name}", ${from}.${RSGetterForJavaType[ m.javaType ]}("${m.rsName}"));`
   } )
 }
 function findType ( errorPrefix: string, params: NameAnd<AllLensRestParams<any>>, name: string ) {
   const param = params[ name ]
-  if ( param === undefined ) return 'Object'
-  return param.javaType
+  return param === undefined ? 'Object' : param.javaType;
 }
 export const typeForParamAsInput = ( errorPrefix: string, params: NameAnd<AllLensRestParams<any>> ) => ( m: MutationParam ) => {
   if ( isOutputParam ( m ) ) return m.javaType;
@@ -143,7 +142,7 @@ export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: MainPage
   ];
 }
 
-export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: SqlMutation, index: string, includeMockIf: boolean ): string[] {
+export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: SqlMutationThatIsAList, index: string, includeMockIf: boolean ): string[] {
   const paramsA = toArray ( m.params )
   const sql = m.sql.replace ( /\n/g, ' ' );
   return [
@@ -168,8 +167,9 @@ export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPag
 }
 function makeMethodDecl<G> ( errorPrefix: string, paramsA: MutationParam[], resultType: string, r: RestD<G>, name: string, m: MutationDetail, index: string, ) {
   const params = safeObject ( r.params );
-  return [ `    public ${resultType} ${mutationMethodName ( r, name, m, index )}(Connection connection, ${unique ( allInputParams ( [ 'dbName', ...paramsA ] ), p => paramName ( p ) )
-    .map ( param => `${typeForParamAsInput ( errorPrefix, params ) ( param )} ${param.name}` ).join ( ", " )}) throws SQLException {`, ...indentList ( indentList ( indentList ( requiredmentCheckCodeForJava ( paramsA, m.params ) ) ) ) ];
+  let paramStrings = unique ( allInputParams ( [ 'dbName', ...paramsA ] ), p => paramName ( p ) )
+    .map ( param => `${typeForParamAsInput ( errorPrefix, params ) ( param )} ${param.name}` ).join ( ", " );
+  return [ `    public ${resultType} ${mutationMethodName ( r, name, m, index )}(Connection connection, Messages msgs, ${paramStrings}) throws SQLException {`, ...indentList ( indentList ( indentList ( requiredmentCheckCodeForJava ( paramsA, m.params ) ) ) ) ];
 }
 export function mutationCodeForStoredProcedureCalls<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: StoredProcedureMutation, index: string, includeMockIf: boolean ): string[] {
   const paramsA = toArray ( m.params )
@@ -200,7 +200,7 @@ export function mutationCodeForCase<G> ( errorPrefix: string, p: MainPageD<any, 
   const paramsA = toArray ( m.params );
   const callingCode: string[] = m.select.flatMap ( ( gm, i ) => {
     return [ `if (${[ 'true', ...gm.guard ].join ( ' && ' )}) {`,
-      ...indentList ( [ `${paramsDeclaration ( gm, i )}${mutationMethodName ( r, name, gm, indexPrefix + index + "_" + i )}(connection,${[ 'dbName', ...allInputParamNames ( gm.params ) ].join ( ',' )});`,
+      ...indentList ( [ `${paramsDeclaration ( gm, i )}${mutationMethodName ( r, name, gm, indexPrefix + index + "_" + i )}(connection,msgs,${[ 'dbName', ...allInputParamNames ( gm.params ) ].join ( ',' )});`,
         ...outputParamsDeclaration ( gm, i ),
         `// If you have a compilation error here: do the output params match the output params in the 'case'?`,
         makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ),
@@ -221,7 +221,7 @@ export function mutationCodeForCase<G> ( errorPrefix: string, p: MainPageD<any, 
 export function makeMutationMethod<G> ( errorPrefix: string, mutations: MutationDetail[], name: string, p: MainPageD<any, any>, r: RestD<G>, includeMockIf: boolean, indexPrefix: string ): string[] {
   const methods = mutations.flatMap ( ( mutateBy, index ) => toArray ( mutateBy ).flatMap ( ( m: MutationDetail ) => {
     const newErrorPrefix = `${errorPrefix} Mutation ${name} ${m.name}`
-    if ( m.type === 'sql' && m.list ) return mutationCodeForSqlListCalls ( newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
+    if ( isSqlMutationThatIsAList ( m ) ) return mutationCodeForSqlListCalls ( newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
     if ( m.type === 'sql' ) return mutationCodeForSqlMapCalls ( newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
     if ( m.type === 'storedProc' ) return mutationCodeForStoredProcedureCalls ( newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
     if ( m.type === 'manual' ) return mutationCodeForManual ( newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf );
@@ -273,6 +273,7 @@ export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, a
     `import java.sql.ResultSet;`,
     `import java.sql.Connection;`,
     `import java.sql.SQLException;`,
+    `import ${params.thePackage}.${params.utilsPackage}.Messages;`,
     ...importsFromParams,
     ...importForTubles ( params ),
     ...importsFromManual ( mutation ),

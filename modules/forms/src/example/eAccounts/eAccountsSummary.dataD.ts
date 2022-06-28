@@ -11,8 +11,6 @@ export const EAccountDisplayTypeDD: StringPrimitiveDD = {
   description: "The component that displays an EAccountDisplayType (savings/checking)",
   display: LabelAndRadioCD,
   enum: { savings: 'Savings', checking: 'Checking' },
-  displayParams:{required: true}
-  //Note samples come from enum
 }
 
 export const EAccountSummaryDD: DataD<AllGuards> = {

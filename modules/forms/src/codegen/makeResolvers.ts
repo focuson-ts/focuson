@@ -2,7 +2,7 @@ import { JavaWiringParams } from "./config";
 import { MainPageD } from "../common/pageD";
 import { RestD } from "../common/restD";
 import { toArray, unique } from "@focuson/utils";
-import { allInputParamNames, importForTubles, MutationDetail, Mutations } from "../common/resolverD";
+import { allInputParamNames, importForTubles, isSqlMutationThatIsAList, MutationDetail, Mutations } from "../common/resolverD";
 import { fetcherInterfaceForResolverName, fetcherPackageName, mutationMethodName, resolverClassName } from "./names";
 import { makeCodeFragmentsForMutation, makeMutationMethod } from "./makeMutations";
 import { ResolverData } from "./makeJavaFetchersInterface";
@@ -17,13 +17,13 @@ function declareInputParamsFromEndpoint<G> ( r: RestD<G> ): string[] {
 
 export function callResolvers<G> ( p: MainPageD<any, G>, restName: string, r: RestD<G>, name: string, dbNameString: string, resolvers: MutationDetail[], indexPrefix: string ) {
   return resolvers.flatMap ( ( md, i ) => {
-    if ( md.list )
+    if ( isSqlMutationThatIsAList ( md ) )
       return [ `//from ${p.name}.rest[${restName}].resolvers[${JSON.stringify ( name )}]`,
-        `List<Map<String,Object>> params${i} = ${mutationMethodName ( r, name, md, indexPrefix + i )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
+        `List<Map<String,Object>> params${i} = ${mutationMethodName ( r, name, md, indexPrefix + i )}(connection,msgs,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
       ];
     else
       return [ `//from ${p.name}.rest[${restName}].resolvers[${JSON.stringify ( name )}]`,
-        `${paramsDeclaration ( md, i )} ${mutationMethodName ( r, name, md, indexPrefix + i )}(connection,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
+        `${paramsDeclaration ( md, i )} ${mutationMethodName ( r, name, md, indexPrefix + i )}(connection,msgs,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
         ...outputParamsDeclaration ( md, i )
       ];
   } );
@@ -39,7 +39,7 @@ export function makeCreateResult ( errorPrefix: string, resolvers: MutationDetai
     `return result;`
   ]
   if ( resolverData.javaType === 'List<Map<String,Object>>' ) {
-    const lastList = resolvers.reverse ().findIndex ( r => r.list )
+    const lastList = resolvers.reverse ().findIndex ( isSqlMutationThatIsAList )
     return [
       `List<Map<String,Object>> result= ${lastList >= 0 ? `params${resolvers.length - lastList - 1};` : "There isn't a resolver that is marked as a list;"}`,
       `return result;`
@@ -62,13 +62,16 @@ export function makeFetcherMethodForMap<G> ( params: JavaWiringParams, p: MainPa
       'return dataFetchingEnvironment -> {',
       ...indentList ( [
         ...declareInputParamsFromEndpoint ( r ),
-        'try(Connection connection = dataSource.getConnection()){',
+        `Messages msgs=dataFetchingEnvironment.getLocalContext();`,
+        `Connection connection = dataSource.getConnection(getClass());`,
+        `try  {`,
+        // 'try(Connection connection = dataSource.getConnection()){',
         ...indentList ( [
           ...callResolvers ( p, restName, r, resolverData.resolver, 'dbName', resolvers, '' ),
           ...makeCreateResult ( errorPrefix, resolvers, resolverData ),
         ] ),
-        '}};', ] ),
-      '}' ] )
+        ' } finally {dataSource.close(getClass(),connection);}', ] ),
+      '};}' ] )
   ]
 }
 
@@ -89,13 +92,16 @@ export function makeFetcherMethodForList<G> ( params: JavaWiringParams, p: MainP
       'return dataFetchingEnvironment -> {',
       ...indentList ( [
         ...declareInputParamsFromEndpoint ( r ),
-        'try(Connection connection = dataSource.getConnection()){',
+        ` Messages msgs=dataFetchingEnvironment.getLocalContext();`,
+        `Connection connection = dataSource.getConnection(getClass());`,
+        `try  {`,
         ...indentList ( [
           ...callResolvers ( p, restName, r, resolverData.name, 'dbName', resolvers, '' ),
           ...makeCreateResult ( errorPrefix, resolvers, resolverData ),
         ] ),
-        '}};', ] ),
-      '}' ] )
+        ' } finally {dataSource.close(getClass(),connection);}', ] ),
+      '};}' ] )
+
   ]
 }
 
@@ -127,9 +133,10 @@ export function makeResolvers<G> ( params: JavaWiringParams, p: MainPageD<any, a
     `import java.sql.ResultSet;`,
     `import java.sql.Connection;`,
     `import java.sql.SQLException;`,
-    'import javax.sql.DataSource;',
     'import graphql.schema.DataFetcher;',
     `import ${fetcherPackageName ( params, p )}.${interfaceName};`,
+    `import ${params.thePackage}.${params.utilsPackage}.LoggedDataSource;`,
+    `import ${params.thePackage}.${params.utilsPackage}.Messages;`,
     ...importsFromParams,
     ...importForTubles ( params ),
     ...importsFromManual ( resolver ),
@@ -138,7 +145,7 @@ export function makeResolvers<G> ( params: JavaWiringParams, p: MainPageD<any, a
     `public class ${resolverClassName ( r, resolverData.resolver )} implements ${interfaceName}{`,
     ``,
     '   @Autowired',
-    '   private DataSource dataSource;',
+    '   private LoggedDataSource dataSource;',
     ...autowiringVariables,
     ...fetcherMethod,
     '',
