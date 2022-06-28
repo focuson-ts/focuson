@@ -145,6 +145,7 @@ export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: MainPage
 export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: SqlMutationThatIsAList, index: string, includeMockIf: boolean ): string[] {
   const paramsA = toArray ( m.params )
   const sql = m.sql.replace ( /\n/g, ' ' );
+  const messageLine = m.messageOnEmptyData ? [ `if (result.isEmpty()) msgs.error(${JSON.stringify ( m.messageOnEmptyData )});` ] : []
   return [
     ...makeMethodDecl ( errorPrefix, paramsA, 'List<Map<String,Object>>', r, name, m, index ),
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
@@ -159,6 +160,7 @@ export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPag
           ...getFromResultSetPutInMap ( 'oneLine', 'rs', paramsA ),
           `result.add(oneLine);` ] ),
         '}',
+        ...messageLine,
         `return result;`,
       ]
     ) ) ),

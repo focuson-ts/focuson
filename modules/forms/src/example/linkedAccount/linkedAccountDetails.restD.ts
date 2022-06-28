@@ -65,7 +65,7 @@ export const singleCollectionPaymentRD: ExampleRestD = {
 
 
 export const createPaymentRD: ExampleRestD = {
-  params: { ...collectionPaymentParams, amount: { ...FloatParam, lens: '~/createPayment/amount', testValue: '' } },
+  params: { ...fromCommonIds ( 'clientRef', 'accountId' ), amount: { ...FloatParam, lens: '~/createPayment/amount', testValue: '' } },
   dataDD: CreatePaymentDD,
   url: '/api/payment/create?{query}',
   actions: [ 'create' ],

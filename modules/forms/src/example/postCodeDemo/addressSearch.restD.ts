@@ -40,7 +40,7 @@ export const postcodeWithResolversRestD: RestD<AllGuards> = {
         code: 'Integer someValue= 123;', name: 'audit'
       },
       {
-        type: 'sql', schema: onlySchema, sql: `select *` + `from ${postCodeSearchTable.name} where postcode like ?'`, list: true,
+        type: 'sql', schema: onlySchema, sql: `select *` + `from ${postCodeSearchTable.name} where postcode like ?`, list: true,
         messageOnEmptyData: 'There was no result',
         params: [
           'someValue',
