@@ -48,7 +48,7 @@ export function Dropdown<S, T, Context extends FocusOnContext<S>> ( props: Dropd
   }
   return (
     <select className={`select ${cssValidInput}`} value={value} disabled={mode === 'view' || readonly} id={id} required={required} size={size} aria-label={ariaLabel} onChange={onChangeEventHandler}>
-      {pleaseSelect && !hasValid && <option>{pleaseSelect}</option>}
+      {pleaseSelect && !hasValid && <option selected>{pleaseSelect}</option>}
       {Object.entries (safeObject( enums )).map ( ( [ value, name ], key ) => (
         <option key={key} value={value}>{name}</option>
       ) )}

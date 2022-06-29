@@ -366,7 +366,7 @@ export const MoneyDD: NumberPrimitiveDD = {
   ...floatPrimDD,
   display: LabelAndNumberInputCD,
   sample: [ 100.23, 200.45, 300 ],
-  displayParams: {  step: 0.01 },
+  displayParams: { step: 0.01 },
   description: "The primitive representing an amount of the local currency",
   name: 'Money'
 }
@@ -393,13 +393,19 @@ export const YesNoDD: PrimitiveDD = {
   displayParams: { pleaseSelect: 'Select...' },
   enum: { N: 'No', Y: 'Yes' }
 }
-export const reason: PrimitiveDD = {
+export const reasonsEnum = { Reason1: 'Because I wanted to', Reason2: 'I just di d it', Reason3: "Who cares" }
+export const reasonDD: PrimitiveDD = {
   ...StringDD,
   display: LabelAndDropDownCD,
   displayParams: { pleaseSelect: 'Select...' },
-  enum: { Reason1: 'Because I wanted to', Reason2: 'I just di d it', Reason3: "Who cares" }
+  enum: reasonsEnum
 }
-export const nextAction: PrimitiveDD = {
+export const actionEnum = { action1: 'Shoot the messenger', action2: 'Throw a paddy', action3: "Say thank you" }
+export type ActionEnums = typeof actionEnum
+export function actionEnums<K extends keyof ActionEnums> ( ...as: K[] ) {
+  return Object.fromEntries ( as.map ( a => [ a, actionEnum[ a ] ] ) )
+}
+export const nextActionDD: PrimitiveDD = {
   ...StringDD,
   display: LabelAndDropDownWithVaryingContentCD,
   displayParams: { pleaseSelect: 'Select...' },
@@ -414,7 +420,7 @@ export const DateDD: DatePrimitiveDD = {
   emptyValue: '2022/1/1',
   description: "The primitive representing a date (w/o time)",
   display: LabelAndDateInputCD,
-  displayParams: {dateFormat: "yyyy/MM/dd"},
+  displayParams: { dateFormat: "yyyy/MM/dd" },
   sample: [ "2020/10/01", '2021/09/01', '2022/11/01' ]
 }
 export const DateDDMMYYY_DD: DatePrimitiveDD = {
@@ -424,7 +430,7 @@ export const DateDDMMYYY_DD: DatePrimitiveDD = {
   emptyValue: '1/1/2022',
   description: "The primitive representing a date (w/o time)",
   display: LabelAndDateInputCD,
-  displayParams: {dateFormat:"dd/MM/yyyy"},
+  displayParams: { dateFormat: "dd/MM/yyyy" },
   sample: [ "21/1/2020", '23/2/2021', '10/3/2/2022' ]
 }
 
