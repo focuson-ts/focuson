@@ -1,4 +1,4 @@
-import { NameAnd, RestAction, SimpleMessageLevel, toArray } from "@focuson/utils";
+import { NameAnd, RestAction, SimpleMessageLevel, toArray, unique } from "@focuson/utils";
 import { OneDataDD } from "./dataD";
 import { JavaWiringParams } from "../codegen/config";
 import { indentList } from "../codegen/codegen";
@@ -179,7 +179,7 @@ export function makeTuples ( params: JavaWiringParams, i: number ) {
 
 }
 export function allInputParamNames ( m: MutationParam | MutationParam[] ): string[] {
-  return toArray ( m ).flatMap ( inputParamName )
+  return unique(toArray ( m ).flatMap ( inputParamName ), p => p)
 }
 export function allSqlOutputParams ( m: MutationParam | MutationParam[] ): OutputForSqlMutationParam[] {
   return toArray ( m ).flatMap ( m => isSqlOutputParam ( m ) ? [ m ] : [] )

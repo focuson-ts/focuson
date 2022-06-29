@@ -21,8 +21,8 @@ export const helloWorldDD: ExampleDataD = {
     dropdown1: {
       dataDD: reasonDD, displayParams: {
         specificOnChange: {
-          Reason1: { command: 'set', path: 'dropdown2', value: 'action1' },
-          Reason2: { command: 'delete', path: 'dropdown2' },
+          Reason1: { command: 'delete', path: 'dropdown2' },
+          Reason2: { command: 'set', path: 'dropdown2', value: 'action1' },
           Reason3: { command: 'set', path: 'dropdown2', value: 'action3' }
         }
       }

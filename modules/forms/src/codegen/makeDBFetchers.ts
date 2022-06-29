@@ -23,8 +23,10 @@ export function makeDBFetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
     [ `         List<Map<String, Object>> list = ${sqlMapName ( pageD, restName, [] )}.getAll(${getAllParams});`,
       `         return list;`, ] :
     [ `         Optional<Map<String, Object>> opt = ${sqlMapName ( pageD, restName, [] )}.getAll(${getAllParams});`,
-      `         Map json = opt.get();`,
-      `         return json;`, ]
+      `         if (opt.isPresent()) { `,
+      `            Map json = opt.get();`,
+      `            return json;`,
+      `         } else throw new FocusonNotFound404Exception(msgs);`]
 
 
   return [
@@ -37,7 +39,9 @@ export function makeDBFetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
     `import org.springframework.beans.factory.annotation.Autowired;`,
     `import org.springframework.stereotype.Component;`,
     ``,
-    `import javax.sql.DataSource;`,
+    `import ${params.thePackage}.${params.utilsPackage}.LoggedDataSource;`,
+    `import ${params.thePackage}.${params.utilsPackage}.Messages;`,
+    `import ${params.thePackage}.${params.utilsPackage}.FocusonNotFound404Exception;`,
     `import java.sql.Connection;`,
     `import java.util.Map;`,
     `import java.util.List;`,
@@ -47,17 +51,18 @@ export function makeDBFetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
     `public class ${dbFetcherClassName ( params, rest, 'get' )} implements ${fetcherInterfaceName ( params, rest, "get" )} {`,
     ``,
     `  @Autowired`,
-    `  private DataSource dataSource;`,
+    `  private LoggedDataSource dataSource;`,
     ``,
     `  public DataFetcher<${findJavaType ( rest.dataDD )}> ${resolverName ( rest, 'get' )}() {`,
     `    return dataFetchingEnvironment -> {`,
     ...indentList ( indentList ( indentList ( paramVariables ) ) ),
-    `       Connection c = dataSource.getConnection();`,
+    `       Messages msgs = dataFetchingEnvironment.getLocalContext();`,
+    `       Connection c = dataSource.getConnection(getClass());`,
     `       try {`,
     `         //from the data type in ${pageD.name}.rest[${restName}].dataDD which is a ${rdp.rest.dataDD.name} `,
     ...getDataFromRS,
     `       } finally {`,
-    `         c.close();`,
+    `        dataSource.close(getClass(), c);`,
     `       }`,
     `    };`,
     `  }`,

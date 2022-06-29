@@ -1,4 +1,4 @@
-package {thePackage}.utils;
+package {thePackage}.{utilsPackage};
 
 import java.util.Date;
 
