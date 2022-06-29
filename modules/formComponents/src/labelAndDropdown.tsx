@@ -1,13 +1,13 @@
 import { NameAnd } from "@focuson/utils";
 import { reasonFor } from "@focuson/state";
 import { FocusOnContext } from "@focuson/focuson";
-import { CommonStateProps, InputOnChangeProps, LabelAlignment } from "./common";
+import { CommonStateProps, DropDownOnChangeProps, LabelAlignment } from "./common";
 import { Label } from "./label";
 import { makeButtons, makeInputChangeTxs } from "./labelAndInput";
 
 import { ChangeEvent } from "react";
 
-export interface DropdownProps<S, T, Context> extends CommonStateProps<S, T, Context>, InputOnChangeProps<S, Context> {
+export interface DropdownProps<S, T, Context> extends CommonStateProps<S, T, Context>, DropDownOnChangeProps<S, Context> {
   enums: NameAnd<string>;
   readonly?: boolean
   buttons?: string[];
@@ -32,7 +32,7 @@ export function LabelAndDropdown<S, T, Context extends FocusOnContext<S>> ( prop
   )
 }
 export function Dropdown<S, T, Context extends FocusOnContext<S>> ( props: DropdownProps<S, string, Context> ) {
-  const { enums, parentState, state, ariaLabel, id, mode, onChange, readonly, pleaseSelect, size, required } = props
+  const { enums, parentState, state, ariaLabel, id, mode, onChange, specificOnChange, readonly, pleaseSelect, size, required } = props
   let selected = state.optJson ();
   if ( selected !== undefined && typeof selected !== 'string' ) throw new Error ( `Component ${id} has a selected value which isn't a string. It is ${JSON.stringify ( selected, null, 2 )}` )
   const hasValid = selected && Object.keys ( enums ).includes ( selected )
@@ -40,7 +40,11 @@ export function Dropdown<S, T, Context extends FocusOnContext<S>> ( props: Dropd
   const cssValidInput = hasValid || required === false ? '' : ' invalid'
   const onChangeEventHandler = ( e: ChangeEvent<HTMLSelectElement> ) => {
     const newValue = e.target.value;
-    state.massTransform ( reasonFor ( 'LabelAndDropdown', 'onChange', id ) ) ( [ state.optional, () => newValue ], ...(makeInputChangeTxs ( id, parentState, onChange?.[ newValue ] )) );
+    state.massTransform ( reasonFor ( 'LabelAndDropdown', 'onChange', id ) ) (
+      [ state.optional, () => newValue ],
+      ...makeInputChangeTxs ( id, parentState, specificOnChange?.[ newValue ] ),
+      ...makeInputChangeTxs ( id, parentState, onChange ),
+    );
   }
   return (
     <select className={`select ${cssValidInput}`} value={value} disabled={mode === 'view' || readonly} id={id} required={required} size={size} aria-label={ariaLabel} onChange={onChangeEventHandler}>

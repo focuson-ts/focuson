@@ -1,12 +1,12 @@
 import { LensProps, LensState } from "@focuson/state";
-import { CommonStateProps, InputOnChangeProps } from "./common";
+import { CommonStateProps, DropDownOnChangeProps } from "./common";
 import { LabelAndDropdown } from "./labelAndDropdown";
 import { NameAnd } from "@focuson/utils";
 import { FocusOnContext } from "@focuson/focuson";
 import { cleanInputProps } from "./input";
 import { DropDownWithVaryingContentProps } from "./DropDownWithVaryingContent";
 
-export interface DropDownFromDataProps<S, T, C> extends CommonStateProps<S, string, C>, InputOnChangeProps<S, C> {
+export interface DropDownFromDataProps<S, T, C> extends CommonStateProps<S, string, C>, DropDownOnChangeProps<S, C> {
   label: string;
   parentState?: LensState<S, any, C>;
   data: LensState<S, T[], C>;

@@ -131,7 +131,9 @@ function makeParams<B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params
     if ( param?.needed === 'defaultToLabel' ) return [ [ name, processOneParam ( name, 'label' ) ] ]
     if ( param?.needed === 'defaultToButtons' ) return [ [ name, processOneParam ( name, 'allButtons' ) ] ]
     if ( param?.needed === 'defaultToParentState' ) return [ [ name, processOneParam ( name, 'state' ) ] ]
-    if ( param?.needed === 'defaultToParentStateIfOnChange' ) return Object.keys ( display.params ).includes ( 'onChange' ) ? [ [ name, processOneParam ( name, 'state' ) ] ] : [];
+    if ( param?.needed === 'defaultToParentStateIfOnChange' )
+      return Object.keys ( display.params ).includes ( 'onChange' ) || Object.keys ( display.params ).includes ( 'specificOnChange' ) ?
+        [ [ name, processOneParam ( name, 'state' ) ] ] : [];
     if ( param?.needed === 'id' ) {
       const dot = path.length > 0 ? '.' : ''
       return [ [ name, processOneParam ( name, '`${id}' + dot + path.join ( "." ) + '`' ) ] ]

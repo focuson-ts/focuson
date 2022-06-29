@@ -28,10 +28,14 @@ export interface CommonStateProps<S, T, Context> extends CommonComponentProps {
   state: LensState<S, T, Context>;
 }
 
+export interface DropDownOnChangeProps<S, Context> extends InputOnChangeProps<S, Context>{
+  parentState?: LensState<S, any, Context>;
+  specificOnChange?: NameAnd<InputChangeCommands | InputChangeCommands[]>
+}
+
 export interface InputOnChangeProps<S, Context> {
   parentState?: LensState<S, any, Context>;
-  onChange?: NameAnd<InputChangeCommands | InputChangeCommands[]>
-
+  onChange?: InputChangeCommands | InputChangeCommands[]
 }
 export enum ContactTitle {
   X         = '',

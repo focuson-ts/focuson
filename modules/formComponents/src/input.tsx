@@ -1,11 +1,13 @@
-import { BooleanValidations, CommonStateProps, NumberValidations, StringValidations } from "./common";
+import { CommonStateProps, InputOnChangeProps, NumberValidations, StringValidations } from "./common";
 import { reasonFor } from "@focuson/state";
 import React from "react";
-import { TransformerProps } from "./labelAndInput";
-import { BooleanTransformer, NumberTransformer, StringTransformer } from "./transformers";
+import { makeInputChangeTxs, TransformerProps } from "./labelAndInput";
+import { NumberTransformer, StringTransformer } from "./transformers";
 import { NameAnd } from "@focuson/utils";
 
-export interface InputProps<S, T, Context> extends CommonStateProps<S, T, Context> {
+import { FocusOnContext } from "@focuson/focuson";
+
+export interface InputProps<S, T, Context> extends CommonStateProps<S, T, Context>, InputOnChangeProps<S, Context> {
   defaultValue?: string | number;
   readonly?: boolean;
   enums?: NameAnd<string>;
@@ -26,34 +28,28 @@ export const cleanInputProps = <T extends NameAnd<any>> ( p: T ): T => {
 
 export const Input = <S, T extends any, P> ( tProps: TransformerProps<T> ) => {
   const { transformer, type } = tProps
-  return <Props extends InputProps<S, T, Context> & P, Context> ( props: Props ) => {
-    const { state, mode, id, name, ariaLabel, defaultValue, readonly } = props
-    const onChange = ( transformer: ( s: string ) => T, e: React.ChangeEvent<HTMLInputElement> ) => {
-      if ( type === 'checkbox' )//why the input type = checkbox is different... I have no idea!
-      {
-        console.log ( 'was boolean' )
-        let newValue = e.target.value === 'true' ? 'false' : 'true';
-        state.setJson ( transformer ( newValue ), reasonFor ( 'Input', 'onChange', id ) );
-      } else
-        state.setJson ( transformer ( e.target.value ), reasonFor ( 'Input', 'onChange', id ) );
+  return <Props extends InputProps<S, T, Context> & P, Context extends FocusOnContext<S>> ( props: Props ) => {
+    const { state, mode, id, parentState, onChange, readonly } = props
+    const onChangeEventHandler = ( transformer: ( s: string ) => T, e: React.ChangeEvent<HTMLInputElement> ) => {
+      if ( type === 'checkbox' ) throw Error ( 'Input processing checkbox' )
+      state.massTransform ( reasonFor ( 'Input', 'onChange', id ) ) ( [ state.optional, () => e.target.value ], ...makeInputChangeTxs ( id, parentState, onChange ) );
     };
-    return <input className="input" type={type} {...cleanInputProps ( props )} value={`${state.optJsonOr ( tProps.default )}`} readOnly={mode === 'view' || readonly} onChange={( e ) => onChange ( transformer, e )}/>
+    return <input className="input" type={type} {...cleanInputProps ( props )} value={`${state.optJsonOr ( tProps.default )}`} readOnly={mode === 'view' || readonly} onChange={( e ) => onChangeEventHandler ( transformer, e )}/>
   }
 }
 
-export function BooleanInput<S, Context> ( props: InputProps<S, boolean, Context> ) {
-  const { state, mode, id, name, ariaLabel, defaultValue, readonly } = props
-  const onChange = ( e: React.ChangeEvent<HTMLInputElement> ) =>
-    state.setJson ( e.target.checked, reasonFor ( 'BooleanInput', 'onChange', id ) );
+export function BooleanInput<S, Context extends FocusOnContext<S>> ( props: InputProps<S, boolean, Context> ) {
+  const { state, mode, id, parentState, onChange, readonly } = props
+  const onChangeEventHandler = ( e: React.ChangeEvent<HTMLInputElement> ) => state.massTransform ( reasonFor ( 'BooleanInput', 'onChange', id ) ) ( [ state.optional, () => e.target.checked ], ...makeInputChangeTxs ( id, parentState, onChange ) );
   return <><input type='checkbox' {...cleanInputProps ( props )}
-                checked={state.optJsonOr ( false )}
-                disabled={mode === 'view' || readonly}
-                onChange={( e ) => onChange ( e )}/>
-                <span className="checkmark"></span>
-         </>
+                  checked={state.optJsonOr ( false )}
+                  disabled={mode === 'view' || readonly}
+                  onChange={( e ) => onChangeEventHandler ( e )}/>
+    <span className="checkmark"></span>
+  </>
 
 }
 
-export function StringInput<S, Context> ( props: InputProps<S, string, Context> & StringValidations ): JSX.Element {return Input<S, string, StringValidations> ( StringTransformer ) ( props )}
-export function NumberInput<S, Context> ( props: InputProps<S, number, Context> & NumberValidations ): JSX.Element {return Input<S, number, NumberValidations> ( NumberTransformer ) ( props )}
+export function StringInput<S, Context extends FocusOnContext<S>> ( props: InputProps<S, string, Context> & StringValidations ): JSX.Element {return Input<S, string, StringValidations> ( StringTransformer ) ( props )}
+export function NumberInput<S, Context extends FocusOnContext<S>> ( props: InputProps<S, number, Context> & NumberValidations ): JSX.Element {return Input<S, number, NumberValidations> ( NumberTransformer ) ( props )}
 

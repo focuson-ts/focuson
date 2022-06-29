@@ -2,11 +2,11 @@ import { FocusOnContext } from '@focuson/focuson';
 import { reasonFor } from '@focuson/state';
 import { NameAnd } from '@focuson/utils';
 
-import { CommonStateProps, LabelAlignment } from "./common";
+import { CommonStateProps, InputOnChangeProps, LabelAlignment } from "./common";
 import { Label } from './label';
-import { makeButtons } from './labelAndInput';
+import { makeButtons, makeInputChangeTxs } from './labelAndInput';
 
-export interface TextareaProps<S, T, Context> extends CommonStateProps<S, T, Context>, LabelAlignment {
+export interface TextareaProps<S, T, Context> extends CommonStateProps<S, T, Context>, LabelAlignment, InputOnChangeProps<S, Context> {
   maxLength?: number
   readonly?: boolean
   defaultValue?: string
@@ -28,15 +28,16 @@ export const cleanTextareaProps = <T extends NameAnd<any>> ( p: T ): T => {
   return result
 };
 
-export function TextAreaInput<S, T, Context> ( props: TextareaProps<S, string, Context> ) {
-  const { id, state, mode, readonly, scrollAfter } = props
+export function TextAreaInput<S, T, Context extends FocusOnContext<S>> ( props: TextareaProps<S, string, Context> ) {
+  const { id, state, mode, readonly, scrollAfter, parentState, onChange } = props
 
   return (
     <textarea
       style={scrollAfter ? { height: scrollAfter, overflow: 'auto' } : undefined}
       {...cleanTextareaProps ( props )}
-      onChange={( e ) =>
-        state.setJson ( e.target?.value, reasonFor ( 'TextAreaInput', 'onChange', id ) )}
+      onChange={( e ) => {
+        state.massTransform ( reasonFor ( 'TextAreaInput', 'onChange', id ) ) ( [ state.optional, () => e.target.value ], ...makeInputChangeTxs ( id, parentState, onChange ) );
+      }}
       readOnly={mode === 'view' || readonly}
       value={`${state.optJsonOr ( '' )}`}
       className="input"

@@ -8,7 +8,7 @@ import { LensState } from "@focuson/state";
  * */
 export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'json' | 'jsonWithDisplayFn' | 'string[]' | 'path' | 'nameAndPaths' | 'pathValue' | 'objectAndRenderPrefix'
 
-type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons' | 'defaultToLabel' | 'defaultToParentState'| 'defaultToParentStateIfOnChange'
+type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons' | 'defaultToLabel' | 'defaultToParentState' | 'defaultToParentStateIfOnChange'
 
 export interface OneDisplayCompParamD<T> {
   paramType: DisplayCompParamType;
@@ -62,7 +62,7 @@ export const NumberInputCD: DisplayCompD = {
 
 export const CheckboxInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "BooleanInput",
-  params: commonInputParams
+  params: commonInputParams,
 }
 
 export const commonParamsWithLabel: DisplayCompParamD = {
@@ -72,19 +72,34 @@ export const commonParamsWithLabel: DisplayCompParamD = {
   buttons: { paramType: 'string[]', needed: 'no' },
   labelPosition: { paramType: 'string', needed: 'no' },
 }
+
+const onChangeAndParentState: DisplayCompParamD = {
+  onChange: { paramType: 'json', needed: 'no' },
+  parentState: { paramType: 'object', needed: 'defaultToParentStateIfOnChange' },
+}
+const specificOnChangeAndParentState: DisplayCompParamD = {
+  ...onChangeAndParentState,
+  specificOnChange: { paramType: 'json', needed: 'no' },
+}
 export const LabelAndStringInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndStringInput",
-  params: { ...commonParamsWithLabel, ...stringValidationParams }
+  params: {
+    ...commonParamsWithLabel, ...stringValidationParams,
+    ...onChangeAndParentState
+  }
 }
 
 export const LabelAndNumberInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndNumberInput",
-  params: { ...commonParamsWithLabel, ...intValidationParams }
+  params: {
+    ...commonParamsWithLabel, ...intValidationParams,
+    ...onChangeAndParentState
+  }
 }
 
 export const LabelAndCheckboxInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndBooleanInput",
-  params: commonParamsWithLabel
+  params: { ...commonParamsWithLabel, ...onChangeAndParentState }
 }
 export const LabelAndDateInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndDateInput",
@@ -101,7 +116,7 @@ export const LabelAndDropDownFromDataCD: DisplayCompD = {
   name: "LabelAndDropDownFromData",
   params: {
     ...commonParamsWithLabel,
-    parentState: { paramType: 'object', needed: 'defaultToParentState' },
+    ...specificOnChangeAndParentState,
     data: { paramType: "path", needed: 'yes' },
     dataId: { paramType: 'string', needed: 'yes' },
     dataField: { paramType: 'string', needed: 'yes' },
@@ -116,8 +131,8 @@ export const DataDrivenFixedOptionDropDownAndDetailsCD: DisplayCompD = {
   import: "@focuson/form_components", name: "DataDrivenFixedOptionDropDownAndDetails",
   params: {
     ...commonParamsWithLabel,
+    ...specificOnChangeAndParentState,
     details: { paramType: "jsonWithDisplayFn", needed: 'yes' },
-    parentState: { paramType: 'object', needed: 'defaultToParentState' },
     pleaseSelect: { paramType: 'string', needed: 'no' },
 
   }
@@ -210,7 +225,7 @@ export const DropDownCD: DisplayCompD = {
   name: "Dropdown",
   params: {
     ...commonParams, ...enumParams,
-    parentState: { paramType: 'object', needed: 'defaultToParentStateIfOnChange' },
+    ...specificOnChangeAndParentState,
     pleaseSelect: { paramType: 'string', needed: 'no' },
     size: { paramType: 'object', needed: 'no' },
     required: { paramType: 'boolean', needed: 'no' },
@@ -221,11 +236,10 @@ export const LabelAndDropDownCD: DisplayCompD = {
   name: "LabelAndDropdown",
   params: {
     ...commonParamsWithLabel, ...enumParams,
-    parentState: {paramType: 'object', needed: 'defaultToParentStateIfOnChange'},
+    ...specificOnChangeAndParentState,
     pleaseSelect: { paramType: 'string', needed: 'no' },
     size: { paramType: 'object', needed: 'no' },
     required: { paramType: 'boolean', needed: 'no' },
-    onChange: {paramType: 'json', needed: 'no'}
   }
 }
 export const LabelAndDropDownWithVaryingContentCD: DisplayCompD = {
@@ -233,7 +247,7 @@ export const LabelAndDropDownWithVaryingContentCD: DisplayCompD = {
   name: "LabelAndDropDownWithVaryingContent",
   params: {
     ...commonParamsWithLabel,
-    parentState: {paramType: 'object', needed: 'defaultToParentStateIfOnChange'},
+    ...specificOnChangeAndParentState,
     selector: { paramType: 'path', needed: 'yes' },
     enums: { paramType: 'json', needed: 'yes' },
     pleaseSelect: { paramType: 'string', needed: 'no' },
@@ -245,9 +259,12 @@ export const LabelAndDropDownWithVaryingContentCD: DisplayCompD = {
 export const LabelAndTextAreaCD: DisplayCompD = {
   import: '@focuson/form_components',
   name: "LabelAndTextarea",
-  params: { ...commonParamsWithLabel, scrollAfter: { paramType: 'string', needed: 'no' },
+  params: {
+    ...commonParamsWithLabel, scrollAfter: { paramType: 'string', needed: 'no' },
+    ...onChangeAndParentState,
     required: { paramType: 'boolean', needed: 'no', default: true },
-    maxlength: { paramType: 'object', needed: 'no' },}
+    maxlength: { paramType: 'object', needed: 'no' },
+  }
 }
 
 export const TableWithCheckboxInputCD: DisplayCompD = {
