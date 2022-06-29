@@ -1,5 +1,5 @@
 //Common Data Definitions
-import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndNumberInputCD, LabelAndStringInputCD, LabelAndTextAreaCD, NumberInputCD } from "./componentsD";
+import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndDropDownWithVaryingContentCD, LabelAndNumberInputCD, LabelAndStringInputCD, LabelAndTextAreaCD, NumberInputCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeRender";
 import { NameAnd, safeArray } from "@focuson/utils";
 import { Guards } from "../buttons/guardButton";
@@ -392,6 +392,18 @@ export const YesNoDD: PrimitiveDD = {
   display: LabelAndDropDownCD,
   displayParams: { pleaseSelect: 'Select...' },
   enum: { N: 'No', Y: 'Yes' }
+}
+export const reason: PrimitiveDD = {
+  ...StringDD,
+  display: LabelAndDropDownCD,
+  displayParams: { pleaseSelect: 'Select...' },
+  enum: { Reason1: 'Because I wanted to', Reason2: 'I just di d it', Reason3: "Who cares" }
+}
+export const nextAction: PrimitiveDD = {
+  ...StringDD,
+  display: LabelAndDropDownWithVaryingContentCD,
+  displayParams: { pleaseSelect: 'Select...' },
+  // enum: { action1: 'Shoot the messenger', action2: 'Throw a paddy', action3: "Say thank you" }
 }
 
 

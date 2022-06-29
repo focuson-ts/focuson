@@ -22,8 +22,8 @@ export const cleanTextareaProps = <T extends NameAnd<any>> ( p: T ): T => {
   delete result.label
   delete result.allButtons
   delete result.state
-  delete result.readonly
-  delete result.ariaLabel
+  delete result.parentState
+  delete result.scrollAfter
   delete result.noLabel
   return result
 };

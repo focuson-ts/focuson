@@ -1,4 +1,4 @@
-import { NameAnd } from "@focuson/utils";
+import { NameAnd, safeObject } from "@focuson/utils";
 import { reasonFor } from "@focuson/state";
 import { FocusOnContext } from "@focuson/focuson";
 import { CommonStateProps, DropDownOnChangeProps, LabelAlignment } from "./common";
@@ -35,7 +35,7 @@ export function Dropdown<S, T, Context extends FocusOnContext<S>> ( props: Dropd
   const { enums, parentState, state, ariaLabel, id, mode, onChange, specificOnChange, readonly, pleaseSelect, size, required } = props
   let selected = state.optJson ();
   if ( selected !== undefined && typeof selected !== 'string' ) throw new Error ( `Component ${id} has a selected value which isn't a string. It is ${JSON.stringify ( selected, null, 2 )}` )
-  const hasValid = selected && Object.keys ( enums ).includes ( selected )
+  const hasValid = selected && Object.keys (safeObject(enums) ).includes ( selected )
   const value = hasValid ? selected : undefined
   const cssValidInput = hasValid || required === false ? '' : ' invalid'
   const onChangeEventHandler = ( e: ChangeEvent<HTMLSelectElement> ) => {
@@ -49,7 +49,7 @@ export function Dropdown<S, T, Context extends FocusOnContext<S>> ( props: Dropd
   return (
     <select className={`select ${cssValidInput}`} value={value} disabled={mode === 'view' || readonly} id={id} required={required} size={size} aria-label={ariaLabel} onChange={onChangeEventHandler}>
       {pleaseSelect && !hasValid && <option>{pleaseSelect}</option>}
-      {Object.entries ( enums ).map ( ( [ value, name ], key ) => (
+      {Object.entries (safeObject( enums )).map ( ( [ value, name ], key ) => (
         <option key={key} value={value}>{name}</option>
       ) )}
     </select>

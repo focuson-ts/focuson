@@ -1,30 +1,37 @@
 import { ExampleDataD } from "../common";
-import { ManyLineStringDD, StringDD, YesNoDD } from "../../common/dataD";
+import { ManyLineStringDD, nextAction, reason, StringDD, YesNoDD } from "../../common/dataD";
 import { LabelAndDropDownWithVaryingContentCD } from "../../common/componentsD";
 
 export const helloWorldDD: ExampleDataD = {
   name: 'HelloWorldDomainData',
   description: 'This is a summary about hello world domain data',
   structure: {
-    message1: { dataDD: StringDD, sample: [ 'Greetings  !' ], displayParams: {
-      onChange:{command: 'message', msg: 'hello'}
-      } },
-    message2: { dataDD: ManyLineStringDD, sample: [ ' message !\nAnd here is a second line' ], displayParams:{scrollAfter: '300px'} },
-    dropdown1: { dataDD: YesNoDD, displayParams: {
-      specificOnChange: {
-        N: {command: 'set', path: 'dropdown2', value: 'no1'},
-        Y: {command: 'set', path: 'dropdown2', value: 'yes2'}
+    message1: {
+      dataDD: StringDD, sample: [ 'Greetings  !' ], displayParams: {
+        onChange: { command: 'message', msg: 'hello' }
       }
-      } },
+    },
+    message2: { dataDD: ManyLineStringDD, sample: [ ' message !\nAnd here is a second line' ], displayParams: { scrollAfter: '300px' } },
+
+    dropdown1: {
+      dataDD: reason, displayParams: {
+        specificOnChange: {
+          Reason1: { command: 'set', path: 'dropdown2', value: 'action1' },
+          Reason2: { command: 'set', path: 'dropdown2', value: 'action1' },
+          Reason3: { command: 'set', path: 'dropdown2', value: 'action3' }
+        }
+      }
+    },
+
     dropdown2: {
-      dataDD: {
-        ...StringDD, display: LabelAndDropDownWithVaryingContentCD, displayParams: {
-          selector: 'dropdown1',
-          pleaseSelect: "please select",
-          enums: {
-            N: { no1: 'No1', no2: 'no2' },
-            Y: { yes1: 'Yes1', yes2: 'yes2' },
-          }
+      dataDD: nextAction,
+      displayParams: {
+        selector: 'dropdown1',
+        pleaseSelect: "please select",
+        enums: {
+          Reason1: { action1: 'Shoot the messenger', action2: 'Throw a paddy' },
+          Reason2: { action1: 'Shoot the messenger', action3: "Say thank you" },
+          Reason3: { action3: "Say thank you" }
         }
       }
     }
