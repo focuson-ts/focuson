@@ -29,5 +29,6 @@ export const FourOhFourSearchDD: ExampleDataD = {
     id: { dataDD: StringDD },
     singleResult: { dataDD: FourOhFourDataD },
     multipleResult: { dataDD: FourOhFourDataTableD },
+    singleResultByResolver: { dataDD: FourOhFourDataD },
   }
 }

@@ -26,7 +26,7 @@ export const extractMessages = ( dataFn: DateFn ) => ( status: number | undefine
   }
   if ( status === undefined ) return [ createSimpleMessage ( 'error', `Cannot connect.`, testDateFn () ) ]
   let messages = [ ...fromHeaderOrMessages ( body?.messages ), ...fromHeaderOrMessages ( body?.headerMessages ) ];
-  if ( status < 400 || messages.length > 0 ) return messages
+  if ( status < 400 || status == 404 || messages.length > 0 ) return messages
   return [ stringToSimpleMsg ( dataFn, 'error' ) ( `${status} returned and no messages` ) ];
 };
 

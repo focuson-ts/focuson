@@ -6,6 +6,7 @@ import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
 import graphql.GraphQLError;
+import graphql.ExceptionWhileDataFetching;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,14 @@ public class Transform {
             res.put("data", data);
             res.put("messages", msgs.map);
             return new ResponseEntity(res, responseHeaders, HttpStatus.OK);
+        }
+        if (errors.size() == 1) {
+            GraphQLError graphQLError = errors.get(0);
+            if (graphQLError instanceof ExceptionWhileDataFetching) {
+                Throwable throwable = ((ExceptionWhileDataFetching) graphQLError).getException();
+                if (throwable instanceof RuntimeException)
+                    throw (RuntimeException) throwable;
+            }
         }
         String body = new ObjectMapper().writeValueAsString(errors);
         return new ResponseEntity(body, responseHeaders, HttpStatus.BAD_REQUEST);

@@ -52,16 +52,21 @@ export const PaymentsPageD: ExampleMainPage = {
   buttons: {
     new: {
       control: 'ModalButton', modal: EditPaymentsPD, mode: 'create', createEmpty: PaymentDD, focusOn: '~/onePayment',
-      copyOnClose: { to: '~/summary/payment' }
+      copyOnClose: { to: '~/summary/payment' },
+      copy: {from: '~/summary/payment/paymentType',to: '~/onePayment/paymentType'},
+      change: {command: 'set', path: '~/summary/payment/action', value: 'new'}
+
     },
     amend: {
       control: 'ModalButton', modal: EditPaymentsPD, mode: 'create', createEmpty: PaymentDD, focusOn: '~/onePayment',
-      copy: { from: '~/summary/payment' }, copyOnClose: { to: '~/summary/payment' }
+      copy: { from: '~/summary/payment' }, copyOnClose: { to: '~/summary/payment' },
+      change: {command: 'set', path: '~/summary/payment/action', value: 'amend'}
     },
     copy: {
       control: 'ModalButton', modal: EditPaymentsPD, mode: 'create', createEmpty: PaymentDD, focusOn: '~/onePayment',
       enabledBy: 'tableItemSelected',
-      copy: [ { from: '~/selectedPayment/payeeName', 'to': '~/editablePayemnt/payeeName' } ], copyOnClose: { to: '~/summary/payment' }
+      copy: [ { from: '~/selectedPayment/payeeName', 'to': '~/editablePayemnt/payeeName' } ], copyOnClose: { to: '~/summary/payment' },
+      change: {command: 'set', path: '~/summary/payment/action', value: 'copy'}
     },
     // cancel: { control: 'RestButton', validate: false, enabledBy: ['tableItemSelected','tableItemSelected','tableItemSelected','tableItemSelected'], restName: 'newPayments', action: 'create', messageOnSuccess: 'canceled', confirm: "dont say yes" }
   }
