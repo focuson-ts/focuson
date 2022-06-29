@@ -116,12 +116,7 @@ describe ( "reqFn", () => {
         [ "/1/2/3/4?aId=1&bId=2&cId=3&dId=4", undefined ] )
     } )
   } )
-  describe ( "for restAction getOption", () => {
-    it ( "should replace named ids, no body", () => {
-      expect ( reqFor ( urlConfig, 'getOption' ) ( simplerState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
-        [ "/1/2/3/4?aId=1&bId=2&cId=3&dId=4", undefined ] )
-    } )
-  } )
+
   // describe ( "for restAction list", () => {
   //   it ( "should replace named ids, no body", () => {
   //     expect ( reqFor ( urlConfig, 'list' ) ( simplerState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (

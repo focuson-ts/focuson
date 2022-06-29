@@ -4,7 +4,7 @@ import { onlySchema } from "../database/tableNames";
 import { StringParam } from "../../common/restD";
 
 export const helloWorldRD: ExampleRestD = {
-  params: { mandateId: { ...StringParam, lens: "", testValue: '' } },
+  params: {},
   dataDD: helloWorldDD,
   url: '/helloWorld?{query}',
   actions: [ 'get', 'update' ],
@@ -13,11 +13,7 @@ export const helloWorldRD: ExampleRestD = {
     getHelloWorldDomainData: [
       {
         type: 'sql', name: 'mycoolstoredproc', sql: 'select * from ' + 'HelloWorld where ?,?,?,?',params: [
-          'mandateId',
-          'mandateId',
-          'mandateId',
-          'mandateId',
-          { type: "output", javaType: 'String', name: 'message1', rsName: 'MSG1' },
+         { type: "output", javaType: 'String', name: 'message1', rsName: 'MSG1' },
           { type: "output", javaType: 'String', name: 'message2', rsName: 'MSG2' },
         ], schema: onlySchema
 

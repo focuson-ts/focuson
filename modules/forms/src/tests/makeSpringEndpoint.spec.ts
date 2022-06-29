@@ -19,7 +19,6 @@ describe ( "makeSpringEndpoint", () => {
     expect ( makeParamsForJava ( 'error', createPlanRestD, 'update' ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestHeader @RequestParam int clientRef, @RequestParam int createPlanId, @RequestBody String body' )
     expect ( makeParamsForJava ( 'error', createPlanRestD, 'updateWithoutFetch' ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestHeader @RequestParam int clientRef, @RequestParam int createPlanId, @RequestBody String body' )
     expect ( makeParamsForJava ( 'error', createPlanRestD, 'delete' ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestHeader @RequestParam int clientRef, @RequestParam int createPlanId' )
-    expect ( makeParamsForJava ( 'error', createPlanRestD, 'getOption' ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestHeader @RequestParam int clientRef, @RequestParam int createPlanId' )
   } )
   it ( "should make an endpoint for a rest", () => {
     expect ( makeSpringEndpointsFor ( paramsForTest, EAccountsSummaryPD, 'eAccountsSummary', eAccountsSummaryRestD ) ).toEqual ( [

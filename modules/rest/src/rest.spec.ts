@@ -80,14 +80,12 @@ describe ( "restReq", () => {
   it ( "it should turn post commands iinto fetch requests - many", () => {
     let results = restReq ( restDetails, [ { restAction: 'get', name: 'one' },
       { restAction: 'create', name: 'one' },
-      { restAction: 'getOption', name: 'one' },
       { restAction: 'delete', name: 'one' },
       { restAction: 'update', name: 'one' },
       { restAction: { state: 'newState' }, name: 'one' } ], restMutatator, populatedState );
     expect ( results.map ( a => [ a[ 2 ], a[ 3 ] ] ) ).toEqual ( [
       [ "/some/url/someToken/get?token=someToken&id=someId", undefined ],
       [ "/some/url/someToken/create?token=someToken", { "body": "\"someData\"", "method": "post" } ],
-      [ "/some/url/someToken/getOption?token=someToken&id=someId", undefined ],
       [ "/some/url/someToken/delete?token=someToken&id=someId", { "method": "delete" } ],
       [ "/some/url/someToken/update?token=someToken&id=someId", { "body": "\"someData\"", "method": "put" } ],
       [ "/some/new/state/someToken/newState?token=someToken&id=someId", { "method": "post" } ] ]
@@ -120,8 +118,7 @@ describe ( "rest", () => {
       { restAction: 'get', name: 'one' },
       { restAction: 'create', name: 'one' },
       { restAction: 'createWithoutFetch', name: 'one' },
-      { restAction: 'getOption', name: 'one' },
-      { restAction: 'delete', name: 'one' },
+            { restAction: 'delete', name: 'one' },
       { restAction: 'update', name: 'one' },
       { restAction: 'updateWithoutFetch', name: 'one' },
     ) );
@@ -146,11 +143,7 @@ describe ( "rest", () => {
           "msg": "Cannot connect. \"deleteWentWrong\"",
           "time": "timeForTest"
         },
-        {
-          "level": "info",
-          "msg": "200/\"from/some/url/someToken/getOption?token=someToken&id=someId\"",
-          "time": "timeForTest"
-        },
+
         {
           "level": "info",
           "msg": "200/\"from/some/url/someToken/createWithoutFetch?token=someToken\"",
@@ -177,7 +170,7 @@ describe ( "rest", () => {
       { restAction: 'get', name: 'one' },
       { restAction: 'create', name: 'one' },
       { restAction: 'createWithoutFetch', name: 'one' },
-      { restAction: 'getOption', name: 'one' },
+
       { restAction: 'delete', name: 'one' },
       { restAction: 'update', name: 'one' },
       { restAction: 'updateWithoutFetch', name: 'one' },
@@ -209,15 +202,6 @@ describe ( "rest", () => {
         "restCommand": {
           "name": "one",
           "restAction": "createWithoutFetch"
-        }
-      },
-      {
-        "lensTxs": [
-          [ "I.focus?(messages)", [ { "level": "info", "msg": "200/\"from/some/url/someToken/getOption?token=someToken&id=someId\"", "time": "timeForTest" } ] ],
-          [ "I.focus?(fullDomain).chain(I.focus?(fromApi))", "Extracted[200].from/some/url/someToken/getOption?token=someToken&id=someId" ] ],
-        "restCommand": {
-          "name": "one",
-          "restAction": "getOption"
         }
       },
       {

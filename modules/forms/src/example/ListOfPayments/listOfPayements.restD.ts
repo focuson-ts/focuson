@@ -161,6 +161,6 @@ export const sortcodeLookUpRD: RestD<AllGuards> = {
   params: sortCodeLookupParams,
   dataDD: sortCodeLookupDD,
   url: '/api/listOfPayments/sortcode?{query}',
-  actions: [ 'getOption' ],
+  actions: [ 'get' ],
 
 }
