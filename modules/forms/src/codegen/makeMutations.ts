@@ -121,11 +121,16 @@ export const typeForParamAsInput = ( errorPrefix: string, params: NameAnd<AllLen
 
 
 export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: SqlMutation, index: string, includeMockIf: boolean ): string[] {
+
   const paramsA = toArray ( m.params )
+  const exception = m.noDataIs404 ?
+    'FocusonNotFound404Exception(msgs)' :
+    `SQLException("Error in : ${mutationMethodName ( r, name, m, index )}. Cannot get first item. Index was ${index} Sql was ${m.sql.replace ( /\n/g, ' ' )}\\n${errorPrefix}")`
+
   const execute = allOutputParams ( paramsA ).length == 0 ?
     [ `s.execute();` ] :
     [ `ResultSet rs = s.executeQuery();`,
-      `if (!rs.next()) throw new SQLException("Error in : ${mutationMethodName ( r, name, m, index )}. Cannot get first item. Index was ${index} Sql was ${m.sql.replace ( /\n/g, ' ' )}\\n${errorPrefix}");`,
+      `if (!rs.next()) throw new ${exception};`,
     ]
   return [
     ...makeMethodDecl ( errorPrefix, paramsA, javaTypeForOutput ( paramsA ), r, name, m, index ),
@@ -266,6 +271,7 @@ export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, a
     `import org.springframework.stereotype.Component;`,
     'import org.springframework.beans.factory.annotation.Autowired;',
     ``,
+    `import ${params.thePackage}.${params.utilsPackage}.FocusonNotFound404Exception;`,
     `import java.util.Map;`,
     `import java.util.HashMap;`,
     `import java.util.ArrayList;`,

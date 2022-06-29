@@ -15,9 +15,11 @@ import { PaymentsPageD } from "./example/payments/payments.pageD";
 import { AuthoriseChargesPD } from "./example/authoriseCharges/authoriseCharges.pageD";
 import { OverpaymentMainPage } from "./example/overpaymentHistory/overpaymentHistory.pageD";
 import { OnChangePageD } from "./example/onChange/onChange.pageD";
+import { FourOhFourPageD } from "./example/FourOhFour/FourOhFour.pageD";
 
 
 export const generatedPages: ExampleMainPage[] = [
+  FourOhFourPageD,
   OnChangePageD,
   HelloWorldPage,
   AuthoriseChargesPD,

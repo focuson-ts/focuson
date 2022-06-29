@@ -71,6 +71,7 @@ export interface SqlMutation {
   sql: string;
   makeMock?: boolean
   params: MutationParamForSql | MutationParamForSql[]
+  noDataIs404?: boolean
 }
 
 export interface SqlMutationThatIsAList extends SqlMutation {

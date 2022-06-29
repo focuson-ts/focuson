@@ -12,7 +12,7 @@ export const helloWorldRD: ExampleRestD = {
   resolvers: {
     getHelloWorldDomainData: [
       {
-        type: 'sql', name: 'mycoolstoredproc', sql: 'select * from ' + 'HelloWorld where ?,?,?,?',params: [
+        type: 'sql', name: 'mycoolstoredproc', sql: 'select * from ' + 'HelloWorld where ?,?,?,?', noDataIs404: true,params: [
          { type: "output", javaType: 'String', name: 'message1', rsName: 'MSG1' },
           { type: "output", javaType: 'String', name: 'message2', rsName: 'MSG2' },
         ], schema: onlySchema

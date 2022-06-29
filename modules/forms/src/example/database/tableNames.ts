@@ -36,3 +36,9 @@ export const postCodeSearchTable: DBTable = {
   description: '',
   notes: '',
 }
+export const fourOhFourTable: DBTable = {
+  name: "FourOhFour",
+  description: "For checking 404 issues",
+  notes: "",
+  schema: onlySchema
+}

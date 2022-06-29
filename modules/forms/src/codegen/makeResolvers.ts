@@ -137,6 +137,7 @@ export function makeResolvers<G> ( params: JavaWiringParams, p: MainPageD<any, a
     `import ${fetcherPackageName ( params, p )}.${interfaceName};`,
     `import ${params.thePackage}.${params.utilsPackage}.LoggedDataSource;`,
     `import ${params.thePackage}.${params.utilsPackage}.Messages;`,
+    `import ${params.thePackage}.${params.utilsPackage}.FocusonNotFound404Exception;`,
     ...importsFromParams,
     ...importForTubles ( params ),
     ...importsFromManual ( resolver ),
