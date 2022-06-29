@@ -14,6 +14,7 @@ export interface TextareaProps<S, T, Context> extends CommonStateProps<S, T, Con
   buttons?: string[]
   scrollAfter?: string;
   noLabel?: boolean;
+  enabledBy?: boolean
 }
 
 export const cleanTextareaProps = <T extends NameAnd<any>> ( p: T ): T => {
@@ -31,7 +32,7 @@ export const cleanTextareaProps = <T extends NameAnd<any>> ( p: T ): T => {
 };
 
 export function TextAreaInput<S, T, Context extends FocusOnContext<S>> ( props: TextareaProps<S, string, Context> ) {
-  const { id, state, mode, readonly, scrollAfter, parentState, onChange } = props
+  const { id, state, mode, readonly, scrollAfter, parentState, onChange, enabledBy } = props
 
   return (
     <textarea
@@ -40,7 +41,7 @@ export function TextAreaInput<S, T, Context extends FocusOnContext<S>> ( props: 
       onChange={( e ) => {
         state.massTransform ( reasonFor ( 'TextAreaInput', 'onChange', id ) ) ( [ state.optional, () => e.target.value ], ...makeInputChangeTxs ( id, parentState, onChange ) );
       }}
-      readOnly={mode === 'view' || readonly}
+      readOnly={mode === 'view' || readonly || enabledBy === false}
       value={`${state.optJsonOr ( '' )}`}
       className="input"
     />
@@ -60,7 +61,7 @@ export function LabelAndTextarea<S, T, Context extends FocusOnContext<S>> ( prop
     <div className={`labelValueButton ${labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}>
       {noLabel ? '' : <Label state={state} htmlFor={id} label={label}/>}
       <div className={`${buttons && buttons.length > 0 ? 'inputAndButtons' : ''}`}>
-        <TextAreaInput  {...props} readonly={props.readonly=== true || props.enabledBy===false}/>{makeButtons ( allButtons, buttons ) }</div>
+        <TextAreaInput  {...props} />{makeButtons ( allButtons, buttons )}</div>
     </div>
   );
 }
