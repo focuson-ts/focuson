@@ -6,7 +6,8 @@ import { LensState } from "@focuson/state";
  * string and string[] are just the types
  *
  * */
-export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'fullStateValue' | 'object' | 'json' | 'jsonWithDisplayFn' | 'string[]' | 'path' | 'nameAndPaths' | 'pathValue' | 'objectAndRenderPrefix'
+export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' |
+  'fullStateValue' | 'object' | 'json' | 'jsonWithDisplayFn' | 'string[]' | 'path' | 'nameAndPaths' | 'pathValue' | 'objectAndRenderPrefix' | 'guards'
 
 type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons' | 'defaultToLabel' | 'defaultToParentState' | 'defaultToParentStateIfOnChange'
 
@@ -77,6 +78,10 @@ const onChangeAndParentState: DisplayCompParamD = {
   onChange: { paramType: 'json', needed: 'no' },
   parentState: { paramType: 'object', needed: 'defaultToParentStateIfOnChange' },
 }
+const enabledByForInputs: DisplayCompParamD = {
+  enabledBy: { paramType: 'guards', needed: 'no' },
+}
+
 const specificOnChangeAndParentState: DisplayCompParamD = {
   ...onChangeAndParentState,
   specificOnChange: { paramType: 'json', needed: 'no' },
@@ -84,7 +89,7 @@ const specificOnChangeAndParentState: DisplayCompParamD = {
 export const LabelAndStringInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndStringInput",
   params: {
-    ...commonParamsWithLabel, ...stringValidationParams,
+    ...commonParamsWithLabel, ...stringValidationParams,...enabledByForInputs,
     ...onChangeAndParentState
   }
 }
@@ -92,14 +97,14 @@ export const LabelAndStringInputCD: DisplayCompD = {
 export const LabelAndNumberInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndNumberInput",
   params: {
-    ...commonParamsWithLabel, ...intValidationParams,
+    ...commonParamsWithLabel, ...intValidationParams,...enabledByForInputs,
     ...onChangeAndParentState
   }
 }
 
 export const LabelAndCheckboxInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndBooleanInput",
-  params: { ...commonParamsWithLabel, ...onChangeAndParentState }
+  params: { ...commonParamsWithLabel, ...onChangeAndParentState, ...enabledByForInputs,}
 }
 export const LabelAndDateInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndDateInput",
@@ -117,6 +122,7 @@ export const LabelAndDropDownFromDataCD: DisplayCompD = {
   params: {
     ...commonParamsWithLabel,
     ...specificOnChangeAndParentState,
+    ...enabledByForInputs,
     data: { paramType: "path", needed: 'yes' },
     dataId: { paramType: 'string', needed: 'yes' },
     dataField: { paramType: 'string', needed: 'yes' },
@@ -132,6 +138,7 @@ export const DataDrivenFixedOptionDropDownAndDetailsCD: DisplayCompD = {
   params: {
     ...commonParamsWithLabel,
     ...specificOnChangeAndParentState,
+    ...enabledByForInputs,
     details: { paramType: "jsonWithDisplayFn", needed: 'yes' },
     pleaseSelect: { paramType: 'string', needed: 'no' },
 
@@ -210,6 +217,7 @@ export const LabelAndRadioCD: DisplayCompD = {
   name: "LabelAndRadio",
   params: {
     ...commonParamsWithLabel, ...enumParams,
+    ...enabledByForInputs,
     required: { paramType: 'boolean', needed: 'no', default: true },
   }
 }
@@ -226,6 +234,7 @@ export const DropDownCD: DisplayCompD = {
   params: {
     ...commonParams, ...enumParams,
     ...specificOnChangeAndParentState,
+    ...enabledByForInputs,
     pleaseSelect: { paramType: 'string', needed: 'no' },
     size: { paramType: 'object', needed: 'no' },
     required: { paramType: 'boolean', needed: 'no' },
@@ -237,6 +246,7 @@ export const LabelAndDropDownCD: DisplayCompD = {
   params: {
     ...commonParamsWithLabel, ...enumParams,
     ...specificOnChangeAndParentState,
+    ...enabledByForInputs,
     pleaseSelect: { paramType: 'string', needed: 'no' },
     size: { paramType: 'object', needed: 'no' },
     required: { paramType: 'boolean', needed: 'no' },
@@ -248,6 +258,7 @@ export const LabelAndDropDownWithVaryingContentCD: DisplayCompD = {
   params: {
     ...commonParamsWithLabel,
     ...specificOnChangeAndParentState,
+    ...enabledByForInputs,
     selector: { paramType: 'path', needed: 'yes' },
     enums: { paramType: 'json', needed: 'yes' },
     pleaseSelect: { paramType: 'string', needed: 'no' },
@@ -262,6 +273,7 @@ export const LabelAndTextAreaCD: DisplayCompD = {
   params: {
     ...commonParamsWithLabel, scrollAfter: { paramType: 'string', needed: 'no' },
     ...onChangeAndParentState,
+    ...enabledByForInputs,
     required: { paramType: 'boolean', needed: 'no', default: true },
     maxlength: { paramType: 'object', needed: 'no' },
   }

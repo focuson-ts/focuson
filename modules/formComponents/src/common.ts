@@ -1,6 +1,6 @@
 import { LensState } from "@focuson/state";
 import { PageMode } from "@focuson/pages";
-import { NameAnd } from "@focuson/utils";
+import { NameAnd, toArray } from "@focuson/utils";
 import { InputChangeCommands, ModalChangeCommands } from "@focuson/rest";
 
 
@@ -28,7 +28,12 @@ export interface CommonStateProps<S, T, Context> extends CommonComponentProps {
   state: LensState<S, T, Context>;
 }
 
-export interface DropDownOnChangeProps<S, Context> extends InputOnChangeProps<S, Context>{
+export interface InputEnabledProps {
+  enabledBy?: boolean
+}
+
+
+export interface DropDownOnChangeProps<S, Context> extends InputOnChangeProps<S, Context> {
   parentState?: LensState<S, any, Context>;
   specificOnChange?: NameAnd<InputChangeCommands | InputChangeCommands[]>
 }

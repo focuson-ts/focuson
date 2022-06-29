@@ -2,7 +2,7 @@ import { FocusOnContext } from '@focuson/focuson';
 import { reasonFor } from '@focuson/state';
 import { NameAnd } from '@focuson/utils';
 
-import { CommonStateProps, InputOnChangeProps, LabelAlignment } from "./common";
+import { CommonStateProps, InputEnabledProps, InputOnChangeProps, LabelAlignment } from "./common";
 import { Label } from './label';
 import { makeButtons, makeInputChangeTxs } from './labelAndInput';
 
@@ -22,6 +22,8 @@ export const cleanTextareaProps = <T extends NameAnd<any>> ( p: T ): T => {
   delete result.label
   delete result.allButtons
   delete result.state
+  delete result.readOnly
+  delete result.enabledBy
   delete result.parentState
   delete result.scrollAfter
   delete result.noLabel
@@ -45,7 +47,7 @@ export function TextAreaInput<S, T, Context extends FocusOnContext<S>> ( props: 
   );
 }
 
-export interface LabelAndTextareaProps<S, T, Context> extends TextareaProps<S, T, Context>, LabelAlignment {
+export interface LabelAndTextareaProps<S, T, Context> extends TextareaProps<S, T, Context>, LabelAlignment, InputEnabledProps {
   label: string;
   scrollAfter?: string;
   allButtons: NameAnd<JSX.Element>;
@@ -58,8 +60,7 @@ export function LabelAndTextarea<S, T, Context extends FocusOnContext<S>> ( prop
     <div className={`labelValueButton ${labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}>
       {noLabel ? '' : <Label state={state} htmlFor={id} label={label}/>}
       <div className={`${buttons && buttons.length > 0 ? 'inputAndButtons' : ''}`}>
-        <TextAreaInput  {...props}/>{makeButtons ( allButtons, buttons )}
-      </div>
+        <TextAreaInput  {...props} readonly={props.readonly=== true || props.enabledBy===false}/>{makeButtons ( allButtons, buttons ) }</div>
     </div>
   );
 }

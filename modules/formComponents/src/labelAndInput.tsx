@@ -17,6 +17,7 @@ export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T
   allButtons: NameAnd<JSX.Element>;
   buttons?: string[];
   noLabel?: boolean;
+  enabledBy?: boolean;
 }
 
 export interface TransformerProps<T> {

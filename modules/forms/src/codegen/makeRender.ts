@@ -2,7 +2,7 @@ import { AllDataDD, CompDataD, DisplayParamDD, HasGuards, HasLayout, isDataDd, i
 import { commonParamsWithLabel, DisplayCompD, OneDisplayCompParamD, SimpleDisplayComp } from "../common/componentsD";
 import { dataDsIn, isMainPage, isModalPage, MainPageD, PageD } from "../common/pageD";
 
-import { decamelize, NameAnd, sortedEntries, unique, unsortedEntries } from "@focuson/utils";
+import { decamelize, NameAnd, sortedEntries, toArray, unique, unsortedEntries } from "@focuson/utils";
 import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, optionalsFileName, optionalsName, pageComponentName, pageDomainName } from "./names";
 import { addButtonsFromVariables, MakeButton, makeButtonsVariable, makeGuardButtonVariables } from "./makeButtons";
 import { focusOnFor, indentList, noExtension } from "./codegen";
@@ -116,6 +116,10 @@ export const processParam = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G
   if ( dcdType.paramType === 'path' ) return processPath ( '' )
   if ( dcdType.paramType === 'nameAndPaths' ) return processNameAndPaths ()
   if ( dcdType.paramType === 'pathValue' ) return processPath ( '.json()' )
+  if ( dcdType.paramType === 'guards' ) {
+    if ( typeof s === 'string' || Array.isArray ( s ) ) return "{"+toArray<string> ( s ).map ( guardName ).join(' && ') +"}"
+    throw Error ( `${fullErrorPrefix} for guards. Could not process ${JSON.stringify ( s )}` )
+  }
   throw new Error ( `${fullErrorPrefix} with type ${dcdType.paramType} which can't be processed` )
 };
 
