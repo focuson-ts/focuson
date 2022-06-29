@@ -1,6 +1,6 @@
 import { reqFor, Tags, UrlConfig } from "@focuson/template";
 import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RequiredCopyDetails, RestAction, RestStateChange, safeArray, safeObject, sortedEntries, toArray } from "@focuson/utils";
-import { identityOptics, lensBuilder, Lenses, massTransform, Optional, parsePath, Transform } from "@focuson/lens";
+import { displayTransformsInState, identityOptics, lensBuilder, Lenses, massTransform, Optional, parsePath, Transform } from "@focuson/lens";
 import { ChangeCommand, CopyResultCommand, DeleteCommand, MessageCommand, processChangeCommandProcessor, restChangeCommandProcessors, RestAndInputProcessorsConfig } from "./changeCommands";
 
 
@@ -98,6 +98,7 @@ export interface RestCommand {
   deleteOnSuccess?: string | string[];
   /** @deprecated - moving to changeOnSuccess*/
   messageOnSuccess?: string
+  on404?: ChangeCommand[]
 }
 
 export const restCommandToChangeCommands = <MSGs> ( stringToMsg: ( s: string ) => MSGs ) => ( r: RestCommand, status: number | undefined ): ChangeCommand[] => {
@@ -136,9 +137,10 @@ export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, extract
   const changeTxs = processChangeCommandProcessor ( '', processor, toArray ( restCommand.changeOnSuccess ) )
   const useResponse = getRestTypeDetails ( restCommand.restAction ).output.needsObj
   const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => data ] ] : []
-  const errorTransform: Transform<S, any>[] = status && status >= 400 ? [] : []
+  const on404Transforms: Transform<S, any>[] = status && status == 404 ? processChangeCommandProcessor ( '', processor, toArray ( restCommand.on404 ) ) : []
+  console.log('on404Transforms', on404Transforms)
   const msgFromBodyTx: Transform<S, any> = [ messageL, old => [ ...messagesFromBody, ...old ] ]
-  let resultTxs: Transform<S, any>[] = [ msgFromBodyTx, ...legacyChangeTxs, ...changeTxs, ...resultTransform ];
+  let resultTxs: Transform<S, any>[] = [ msgFromBodyTx, ...on404Transforms, ...legacyChangeTxs, ...changeTxs, ...resultTransform ];
   return resultTxs;
 };
 

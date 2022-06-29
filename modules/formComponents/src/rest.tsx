@@ -14,6 +14,7 @@ export interface RestButtonProps<S, C, MSGs> extends CommonStateProps<S, any, C>
   validate?: boolean;
   text?: string;
   onSuccess?: RestChangeCommands[];
+  on404?: RestChangeCommands[];
   dateFn?: DateFn
 }
 
@@ -23,7 +24,7 @@ function confirmIt ( c: boolean | string | undefined ) {
   return window.confirm ( text )
 }
 export function RestButton<S, C extends HasRestCommandL<S> & HasSimpleMessageL<S> & HasPageSelectionLens<S>> ( props: RestButtonProps<S, C, SimpleMessage> ) {
-  const { id, rest, action, result, state, text, confirm, validate, dateFn, onSuccess, enabledBy, name, buttonType } = props
+  const { id, rest, action, result, state, text, confirm, validate, dateFn, onSuccess, enabledBy, name, buttonType , on404} = props
   const debug = false//just to stop spamming: should already have all the validations visible if debugging is on
   const ref = getRefForValidateLogicToButton ( id, debug, validate, enabledBy )
   const debounceRef = useRef<Date> ( null )
@@ -44,7 +45,7 @@ export function RestButton<S, C extends HasRestCommandL<S> & HasSimpleMessageL<S
     const realvalidate = validate === undefined ? true : validate
     if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return
     if ( confirmIt ( confirm ) )
-      state.copyWithLens ( state.context.restL ).transform ( old => [ ...old, { restAction: action, name: rest, changeOnSuccess: onSuccess } ], reasonFor ( 'RestButton', 'onClick', id ) )
+      state.copyWithLens ( state.context.restL ).transform ( old => [ ...old, { restAction: action, name: rest, changeOnSuccess: onSuccess, on404 } ], reasonFor ( 'RestButton', 'onClick', id ) )
   }
 
   return <button ref={ref} onClick={onClick} className={getButtonClassName ( buttonType )}>{text ? text : name}</button>
