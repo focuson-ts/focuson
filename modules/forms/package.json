@@ -12,9 +12,9 @@
     ]
   },
   "dependencies": {
-    "@focuson/utils": "1.23.10",
-    "@focuson/files": "1.23.10",
-    "@focuson/focuson": "1.23.10"
+    "@focuson/utils": "1.23.11",
+    "@focuson/files": "1.23.11",
+    "@focuson/focuson": "1.23.11"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -55,7 +55,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.23.10",
+  "version": "1.23.11",
   "template": "forms",
   "description": "Allows us to define data that is stored in a database, or perhaps an api",
   "details": {
