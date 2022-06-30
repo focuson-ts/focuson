@@ -46,6 +46,8 @@ export function makeDBFetchers<B, G> ( params: JavaWiringParams, pageD: MainPage
     `import java.util.Map;`,
     `import java.util.List;`,
     `import java.util.Optional;`,
+    `import java.util.Date;`,
+    `import java.text.SimpleDateFormat;`,
     ``,
     `  @Component`,
     `public class ${dbFetcherClassName ( params, rest, 'get' )} implements ${fetcherInterfaceName ( params, rest, "get" )} {`,

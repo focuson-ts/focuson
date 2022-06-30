@@ -262,13 +262,14 @@ export interface AutowiredMutationParam {
   setParam?: string;
   required?: boolean;
 }
-export type JavaTypePrimitive = 'String' | 'Integer' | 'Double' | 'Object';
+export type JavaTypePrimitive = 'String' | 'Integer' | 'Double' | 'Object' | 'Date';
 
 export const RSGetterForJavaType = {
   String: 'getString',
   Integer: 'getInt',
   Double: 'getDouble',
-  Object: 'getObject'
+  Object: 'getObject',
+  Date: 'getDate'
 }
 
 export interface IntegerMutationParam {
@@ -289,6 +290,7 @@ export interface OutputForStoredProcMutationParam {
   javaType: JavaTypePrimitive
   sqlType: string;
   msgLevel?: SimpleMessageLevel
+  datePattern?: string
 }
 export interface OutputForSqlMutationParam {
   type: 'output';
@@ -296,13 +298,15 @@ export interface OutputForSqlMutationParam {
   javaType: JavaTypePrimitive;
   rsName: string;
   msgLevel?: SimpleMessageLevel
+  datePattern?: string
 }
-export type AllJavaTypes = 'String' | 'Integer' | 'Object' | 'Double' | 'Map<String,Object>' | 'List<Map<String,Object>>' | 'Boolean'
+export type AllJavaTypes = JavaTypePrimitive | 'Map<String,Object>' | 'List<Map<String,Object>>' | 'Boolean'
 export interface OutputForManualParam {
   type: 'output';
   name: string;
   javaType: AllJavaTypes;
   msgLevel?: SimpleMessageLevel
+  datePattern?: string
 }
 export interface NullMutationParam {
   type: 'null';

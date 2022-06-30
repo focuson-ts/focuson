@@ -40,7 +40,7 @@ export const newPaymentsRD: ExampleRestD = {
             { type: "output", javaType: 'Integer', rsName: 'currencyAmount', name: 'currencyAmount' },
             { type: "output", javaType: 'String', rsName: 'amtInWords', name: 'amtInWords' },
             { type: "output", javaType: 'String', rsName: 'forActionOn', name: 'forActionOn' },
-            { type: "output", javaType: 'String', rsName: 'dateCreated', name: 'dateCreated' },
+            { type: "output", javaType: 'String', rsName: 'dateCreated', name: 'dateCreated', datePattern: 'dd-MM-yyyy' },
           ]
         },
         {
@@ -63,7 +63,7 @@ export const newPaymentsRD: ExampleRestD = {
     restAction: 'create',
     autowired: { class: '{thePackage}.utils.IOGNL', variableName: 'ognl', imports: true },
     mutateBy: [ {
-      type: 'case', name: 'create', params: [
+         type: 'case', name: 'create', params: [
         'brandRef', "accountId",
         { type: 'output', name: 'one', javaType: 'String' },
         { type: 'output', name: 'two', javaType: 'Integer' },

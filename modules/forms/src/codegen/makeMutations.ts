@@ -16,7 +16,7 @@ import {
   isOutputParam, isSqlMutationThatIsAList,
   isSqlOutputParam,
   isStoredProcOutputParam,
-  javaTypeForOutput,
+  javaTypeForOutput, JavaTypePrimitive,
   ManualMutation,
   MutationDetail,
   MutationParam,
@@ -84,28 +84,35 @@ function commonIfDbNameBlock<G> ( r: RestD<G>, paramsA: MutationParam[], name: s
 export function getFromStatement ( errorPrefix: string, from: string, m: MutationParam[] ): string[] {
   return m.flatMap ( ( m, i ) => {
     if ( !isStoredProcOutputParam ( m ) ) return []
-    if ( m.javaType === 'String' ) return [ `String ${m.name} = ${from}.getString(${i + 1});` ]
-    if ( m.javaType === 'Double' ) return [ `Double ${m.name} = ${from}.getDouble(${i + 1});` ]
-    if ( m.javaType === 'Integer' ) return [ `Integer ${m.name} = ${from}.getInt(${i + 1});` ]
-    throw  Error ( `${errorPrefix} don't know how to getFromStatement for ${JSON.stringify ( m )}` )
+    return [ `${m.javaType} ${m.name} = ${addFormat(errorPrefix, m.datePattern, m.javaType, from, i + 1)};` ]
+    throw new Error ( `${errorPrefix} don't know how to getFromStatement for ${JSON.stringify ( m )}` )
   } )
 }
 
 export function getFromResultSetIntoVariables ( errorPrefix: string, from: string, m: MutationParam[] ): string[] {
   return m.flatMap ( ( m, i ) => {
     if ( !isSqlOutputParam ( m ) ) return []
-    if ( m.javaType === 'String' ) return [ `String ${m.name} = ${from}.getString("${m.rsName}");` ]
-    if ( m.javaType === 'Double' ) return [ `Double ${m.name} = ${from}.getDouble(${i + 1});` ]
-    if ( m.javaType === 'Integer' ) return [ `Integer ${m.name} = ${from}.getInt("${m.rsName}");` ]
+    return [ `${m.javaType} ${m.name} = ${addFormat(errorPrefix, m.datePattern, m.javaType, from, m.rsName)};` ]
     throw new Error ( `${errorPrefix} don't know how to getFromResultSetIntoVariables for ${JSON.stringify ( m )}` )
   } )
 }
-export function getFromResultSetPutInMap ( map: string, from: string, m: MutationParam[] ) {
+
+export function getFromResultSetPutInMap (errorPrefix: string, map: string, from: string, m: MutationParam[] ) {
   return m.flatMap ( ( m, i ) => {
     if ( !isSqlOutputParam ( m ) ) return []
     return `${map}.put("${m.name}", ${from}.${RSGetterForJavaType[ m.javaType ]}("${m.rsName}"));`
   } )
 }
+
+export function addFormat(errorPrefix: string, datePattern: string | undefined, javaType: JavaTypePrimitive, from: string, argument: string | number): string {
+  const body = `${from}.${RSGetterForJavaType[javaType]}("${argument}")`
+  if (!datePattern) return body
+  switch (javaType) {
+    case "String": return `new SimpleDateFormat("${datePattern}").format(${body})`
+    default: throw new Error ( `${errorPrefix} don't know how to addFormat for ${datePattern}, ${javaType}` )
+  }
+}
+
 function findType ( errorPrefix: string, params: NameAnd<AllLensRestParams<any>>, name: string ) {
   const param = params[ name ]
   return param === undefined ? 'Object' : param.javaType;
@@ -162,7 +169,7 @@ export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPag
         `while (rs.next()){`,
         ...indentList ( [
           `Map<String,Object> oneLine = new HashMap();`,
-          ...getFromResultSetPutInMap ( 'oneLine', 'rs', paramsA ),
+          ...getFromResultSetPutInMap (errorPrefix, 'oneLine', 'rs', paramsA ),
           `result.add(oneLine);` ] ),
         '}',
         ...messageLine,
@@ -276,11 +283,13 @@ export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, a
     `import java.util.HashMap;`,
     `import java.util.ArrayList;`,
     `import java.util.List;`,
+    `import java.util.Date;`,
     `import java.sql.CallableStatement;`,
     `import java.sql.PreparedStatement;`,
     `import java.sql.ResultSet;`,
     `import java.sql.Connection;`,
     `import java.sql.SQLException;`,
+    `import java.text.SimpleDateFormat;`,
     `import ${params.thePackage}.${params.utilsPackage}.Messages;`,
     ...importsFromParams,
     ...importForTubles ( params ),

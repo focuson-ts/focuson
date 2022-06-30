@@ -1,4 +1,4 @@
-import { AccountIdDD, MoneyDD, OneLineStringDD } from "../../common/dataD";
+import {AccountIdDD, DateDD, MoneyDD, OneLineStringDD} from "../../common/dataD";
 import { TableCD } from "../../common/componentsD";
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 import { accountT, addT, nameT } from "../database/tableNames";
@@ -40,6 +40,7 @@ export const JointAccountDd: ExampleDataD = {
   structure: {
     // accountId: { dataDD: AccountIdDD, db: 'acc_id' },
     balance: { dataDD: MoneyDD, db: 'blnc' },
+    // dateField: { dataDD: DateDD, db: 'someDateField' },
     main: { dataDD: JointAccountCustomerDD },
     joint: { dataDD: JointAccountCustomerDD, sampleOffset: 1 }
   }
