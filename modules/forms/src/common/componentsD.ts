@@ -156,7 +156,9 @@ const tableParams: DisplayCompParamD = {
   maxCount: { paramType: 'string', needed: 'no' },
   emptyData: { paramType: 'string', needed: 'no' },
   tableTitle: { paramType: 'string', needed: 'no' },
-  scrollAfter: { paramType: 'string', needed: 'no' }
+  scrollAfter: { paramType: 'string', needed: 'no' },
+  rights: { paramType: 'string[]', needed: 'no' },
+
 
 }
 export const TableCD: DisplayCompD = {

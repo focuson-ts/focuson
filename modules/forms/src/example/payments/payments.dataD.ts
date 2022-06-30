@@ -1,7 +1,6 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
-import { BooleanDD, DateDD, DateDDMMYYY_DD, ManyDataDD, MoneyDD, StringDD, stringPrimDD, StringPrimitiveDD } from "../../common/dataD";
-import { DropDownCD, LabelAndDropDownCD, LabelAndDropDownFromDataCD, LabelAndRadioCD, LayoutCd, TableCD } from "../../common/componentsD";
-import { AllGuards } from "../../buttons/guardButton";
+import { BooleanDD, DateDD, DateDDMMYYY_DD, MoneyDD, StringDD, stringPrimDD, StringPrimitiveDD } from "../../common/dataD";
+import { LabelAndDropDownCD, LabelAndDropDownFromDataCD, LabelAndRadioCD, LayoutCd, TableCD } from "../../common/componentsD";
 
 export const PaymentTypeDd: StringPrimitiveDD = {
   ...stringPrimDD,
@@ -58,6 +57,7 @@ export const SummaryOfPaymentsTableDD: ExampleRepeatingD = {
   sampleCount: 10,
   displayParams: {
     order: [ 'nameOfPayee', 'currency', 'sterlingAmount', 'currencyAmount', 'dateCreated', 'forActionOn', 'status' ],
+    rights: ['sterlingAmount', 'currencyAmount',  'dateCreated', 'forActionOn', 'status' ],
     scrollAfter: '100px',
     copySelectedIndexTo: [ 'selectedPaymentIndex' ],
     copySelectedItemTo: [ 'selectedPayment' ]

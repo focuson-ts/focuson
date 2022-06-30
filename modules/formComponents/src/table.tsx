@@ -15,7 +15,9 @@ export interface CommonTableProps<S, T, Context> extends CommonStateProps<S, T[]
   maxCount?: string;
   emptyData?: string;
   tableTitle?: string;
-  scrollAfter?: string
+  scrollAfter?: string;
+  /** A list of fields that we want to be right justified */
+  rights?: string[]
 }
 export interface TableProps<S, T, Context> extends CommonTableProps<S, T, Context> {
   order: (keyof T)[];
@@ -43,12 +45,13 @@ export function defaultOnClick<S, Context, T> ( props: CommonTableProps<S, T, Co
   }
   return onClick;
 }
+export type OneRowFn<T> = ( row: T, i: number, selectedClass: string | undefined, rights: string[]|undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) => JSX.Element
 export const rawTable = <S, T, Context> (
   titles: any[],
   onClick: ( i: number, row: T ) => ( e: any ) => void,
-  oneRow: ( row: T, i: number, selectedClass: string | undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) => JSX.Element ) =>
+  oneRow: OneRowFn<T> ) =>
   ( props: CommonTableProps<S, T, Context> ) => {
-    const { id, state, copySelectedIndexTo, copySelectedItemTo, joiners, prefixFilter, prefixColumn, maxCount, emptyData, tableTitle, scrollAfter } = props
+    const { id, state, copySelectedIndexTo, copySelectedItemTo, joiners, prefixFilter, prefixColumn, maxCount, emptyData, tableTitle, scrollAfter, rights } = props
     const tbodyScroll: CSSProperties | undefined = scrollAfter ? { height: scrollAfter, overflow: 'auto' } : undefined
     const orderJsx = titles.map ( ( o, i ) => <th key={o.toString ()} id={`${id}.th[${i}]`}>{decamelize ( o.toString (), ' ' )}</th> )
     const json: T[] = safeArray ( state.optJson () )
@@ -63,7 +66,7 @@ export const rawTable = <S, T, Context> (
       <tr id={`${id}[0]`}>
         <td colSpan={titles.length}>{emptyData}</td>
       </tr> :
-      json.map ( ( row, i ) => filter ( row ) && (maxCount === undefined || count++ < maxCountInt) ? oneRow ( row, i, selectedClass ( i ), onClick ) : null );
+      json.map ( ( row, i ) => filter ( row ) && (maxCount === undefined || count++ < maxCountInt) ? oneRow ( row, i, selectedClass ( i ), rights, onClick ) : null );
     const title = tableTitle ? <h2>{tableTitle}</h2> : null
     return <>{title}
       <table id={id} className="grid">
@@ -75,10 +78,14 @@ export const rawTable = <S, T, Context> (
     </>
   };
 
-export const defaultOneRow = <T extends any> ( id: string, order: (keyof T)[], joiners: string | string[] | undefined, ...extraTds: (( i: number, row: T ) => JSX.Element)[] ) =>
-  ( row: T, i: number, clazz: string | undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) =>
+function tdClass ( rights: string[] | undefined, s: any ) {
+  if ( !rights ) return ''
+  return rights.includes ( s ) ? 'right' : ''
+}
+export const defaultOneRow = <T extends any> ( id: string, order: (keyof T)[], joiners: string | string[] | undefined, ...extraTds: (( i: number, row: T ) => JSX.Element)[] ): OneRowFn<T> =>
+  ( row: T, i: number, clazz: string | undefined, rights: string[]|undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) =>
     (<tr id={`${id}[${i}]`} className={clazz} key={i} onClick={onClick ( i, row )}>{order.map ( o =>
-      <td id={`${id}[${i}].${o.toString ()}`} key={o.toString ()}>{getValue ( o, row, joiners )}</td> )}{extraTds.map ( e => <td>{e ( i, row )}</td> )}</tr>);
+      <td id={`${id}[${i}].${o.toString ()}`} className={tdClass ( rights, o )} key={o.toString ()}>{getValue ( o, row, joiners )}</td> )}{extraTds.map ( e => <td>{e ( i, row )}</td> )}</tr>);
 
 export function Table<S, T, Context> ( props: TableProps<S, T, Context> ) {
   const { id, order, joiners } = props
@@ -87,12 +94,12 @@ export function Table<S, T, Context> ( props: TableProps<S, T, Context> ) {
 
 
 export const oneRowForStructure = <S, T extends any, Context>
-( id: string, state: LensState<S, T[], Context>, paths: NameAnd<( s: LensState<S, T, Context> ) => LensState<S, any, Context>>, ...extraTds: (( i: number, row: T ) => JSX.Element)[] ) =>
-  ( row: T, i: number, clazz: string | undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) => {
+( id: string, state: LensState<S, T[], Context>, paths: NameAnd<( s: LensState<S, T, Context> ) => LensState<S, any, Context>>, ...extraTds: (( i: number, row: T ) => JSX.Element)[] ): OneRowFn<T> =>
+  ( row: T, i: number, clazz: string | undefined, rights: string[]|undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) => {
     const rowState = state.chainLens ( Lenses.nth ( i ) )
     return (<tr id={`${id}[${i}]`} className={clazz} key={i} onClick={onClick ( i, row )}>{Object.values ( paths ).map ( ( o, col ) => {
       const colState = o ( rowState )
-      return <td id={`${id}[${i}].${col}`} key={col}>{colState.optJson ()}</td>
+      return <td id={`${id}[${i}].${col}`} className={tdClass ( rights, o )} key={col}>{colState.optJson ()}</td>
     } )}{extraTds.map ( e => <td>{e ( i, row )}</td> )}</tr>);
   }
 

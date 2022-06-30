@@ -1,3 +1,7 @@
+.right {
+  text-align: right;
+}
+
 .grid {
   display: block;
   empty-cells: show;
