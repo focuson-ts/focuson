@@ -1,5 +1,5 @@
 import React from 'react';
-import { SimpleMessage, SimpleMessageLevel } from "@focuson/utils";
+import { ariaRoleForMessageLevel, SimpleMessage, SimpleMessageLevel } from "@focuson/utils";
 import { LensProps, reasonFor } from "@focuson/state";
 
 export interface MessagesProps<S, T, Context> extends LensProps<S, T, Context> {
@@ -7,12 +7,16 @@ export interface MessagesProps<S, T, Context> extends LensProps<S, T, Context> {
 }
 export function Messages<S, T, Context> ( { state, pageDisplayTime }: MessagesProps<S, SimpleMessage[], Context> ) {
   const pageTime = new Date ( pageDisplayTime ).getTime ()
+  let simpleMessages = state.optJsonOr ( [] );
+  let actualMessages = simpleMessages.filter ( message => new Date ( message.time ).getTime () >= pageTime );
+  if ( actualMessages.length === 0 ) return <></>
+
   const removeMessage = ( index: number ) => {
-    const messagesArray = [ ...state.json () ]
+    const messagesArray = [ ...simpleMessages ]
     messagesArray.splice ( index, 1 )
-    state.setJson ( messagesArray, reasonFor ( 'Messages', 'onClick', undefined, 'Remove message' ) )
-    console.log ( 'State after remove one message ======>', state.optJson () )
+    state.setJson ( messagesArray, reasonFor ( 'Messages', 'onClick', `messages[${index}].close`, 'Remove message' ) )
   }
+
 
   const cssClasses = ( messageType: SimpleMessageLevel ) => {
     if ( !messageType ) return;
@@ -35,18 +39,17 @@ export function Messages<S, T, Context> ( { state, pageDisplayTime }: MessagesPr
     return message.length > size ? message.slice ( 0, size ) + " ..." : message
   }
 
-  if ( !state.json ().length ) return null;
+  if ( !simpleMessages.length ) return null;
+
 
   return (
-    <div className="m-3">
+    <div className="m-3 messages">
       {
-        state.json ().map ( ( message, index ) => {
-            if ( new Date ( message.time ).getTime () >= pageTime )
-              return <div key={index} className={cssClasses ( message.level )}>
-                <span id={`messages[${index}].msg`} title={message.msg}> {getMessage ( message.msg )} </span>
-                <a id={`messages[${index}].close`} className="close-button" onClick={() => removeMessage ( index )}>&times;</a>
-              </div>
-            else return <></>
+        actualMessages.map ( ( message, index ) => {
+            return <div key={index} className={cssClasses ( message.level )}>
+              <span id={`messages[${index}].msg`} role={ariaRoleForMessageLevel ( message.level )} title={message.msg}> {getMessage ( message.msg )} </span>
+              <a id={`messages[${index}].close`} className="close-button" onClick={() => removeMessage ( index )}>&times;</a>
+            </div>
           }
         )}
     </div>

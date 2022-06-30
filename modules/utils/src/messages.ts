@@ -11,6 +11,14 @@ export interface SimpleMessage {
   time: string
 }
 
+export function ariaRoleForMessageLevel(l: SimpleMessageLevel){
+  switch ( l ) {
+    case 'info': return 'status';
+    case 'warning': return 'alert';
+    case 'error': return 'alert';
+    default: throw new Error(`No idea how to set ariaRoleForMessageLevel ${l}`)
+  }
+}
 export function createSimpleMessage ( level: SimpleMessageLevel, msg: string, time: string ): SimpleMessage {
   return { level, msg, time }
 }

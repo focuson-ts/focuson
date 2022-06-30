@@ -285,6 +285,11 @@ th {
     /*border-radius: 0.25rem;*/
 /* transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; */
 /* }  */
+.messages {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #dc3545;
+}
 .alert {
   position: relative;
   padding: 0.5rem;
