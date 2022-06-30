@@ -92,6 +92,7 @@ describe ( "makeMutations", () => {
       "import org.springframework.stereotype.Component;",
       "import org.springframework.beans.factory.annotation.Autowired;",
       "",
+      "import focuson.data.utils.FocusonNotFound404Exception;",
       "import java.util.Map;",
       "import java.util.HashMap;",
       "import java.util.ArrayList;",
@@ -123,13 +124,14 @@ describe ( "makeMutations", () => {
     ] )
   } )
   it ( "should create an mutation class with a method for each mutation for that rest - complex", () => {
-    expect ( makeMutations ( paramsForTest, ChequeCreditbooksPD, 'theRestName', chequeCreditBooksRestD, safeArray ( chequeCreditBooksRestD.mutations )[ 0 ] ) ).toEqual ( [
+    expect ( makeMutations ( paramsForTest, ChequeCreditbooksPD, 'theRestName', chequeCreditBooksRestD, safeArray ( chequeCreditBooksRestD.mutations )[ 0 ] ) ).toEqual ([
       "package focuson.data.mutator.ChequeCreditbooks;",
       "",
       "import focuson.data.fetchers.IFetcher;",
       "import org.springframework.stereotype.Component;",
       "import org.springframework.beans.factory.annotation.Autowired;",
       "",
+      "import focuson.data.utils.FocusonNotFound404Exception;",
       "import java.util.Map;",
       "import java.util.HashMap;",
       "import java.util.ArrayList;",
@@ -202,6 +204,7 @@ describe ( "makeMutations", () => {
       "import org.springframework.stereotype.Component;",
       "import org.springframework.beans.factory.annotation.Autowired;",
       "",
+      "import focuson.data.utils.FocusonNotFound404Exception;",
       "import java.util.Map;",
       "import java.util.HashMap;",
       "import java.util.ArrayList;",

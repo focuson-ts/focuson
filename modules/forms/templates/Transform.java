@@ -35,9 +35,7 @@ public class Transform {
         if (errors.isEmpty()) {
             Map rawData = (Map) executionResult.toSpecification().get("data");
             Object data =  result.length()==0 ? rawData:rawData.get(result);
-            Map res = new HashMap();
-            res.put("data", data);
-            res.put("messages", msgs.map);
+            Map res = msgs.result(data);
             return new ResponseEntity(res, responseHeaders, HttpStatus.OK);
         }
         if (errors.size() == 1) {

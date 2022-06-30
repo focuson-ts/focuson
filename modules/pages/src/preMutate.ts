@@ -1,7 +1,7 @@
 //** This clears up the state if it is the first time something is called */
 import { PageSelection, PageSelectionContext } from "./pageSelection";
 import { Lenses, Optional } from "@focuson/lens";
-import { safeArray } from "@focuson/utils";
+import { safeArray, toArray } from "@focuson/utils";
 import { findMainPageDetails, lensForPageDetails } from "./selectedPage";
 import { MultiPageDetails } from "./pageConfig";
 
@@ -25,6 +25,7 @@ function premutateOnePage<S, Context extends PageSelectionContext<S>> ( c: Conte
     if ( !details ) throw new Error ( `Could not find details for ${pageName}. LegalValues are ${Object.keys ( pageDetails ).join ( "," )}\nIs this a modal page that you need to add to the main page\n` )
     const lens = c.pageSelectionL.chain ( Lenses.nth ( i ) )
     let mainPageD = findMainPageDetails ( pageSelections, pageDetails );
+    const commands = toArray(details.onOpen)
     const dataLens: Optional<S, any> = lensForPageDetails ( mainPageD, details, focusOn )
     let firstTimeLens = lens.focusOn ( 'firstTime' );
     if ( details.clearAtStart && details.initialValue ) throw new Error ( `page ${pageName} has both clear at start and initialValue set` )

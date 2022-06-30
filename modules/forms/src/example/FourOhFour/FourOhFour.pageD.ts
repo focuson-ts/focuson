@@ -16,7 +16,9 @@ export const FourOhFourPageD: ExampleMainPage = {
     singleByResolver: { rest: fourOhFourSingleByResolverRD, targetFromPath: '~/display/singleResultByResolver', fetcher: true },
   },
   buttons: {
-    single: { control: 'RestButton', restName: 'single', result: 'nothing', action: 'get' , on404: {command: 'message', msg: 'single 404'}},
+    single: { control: 'RestButton', restName: 'single', result: 'nothing', action: 'get' ,
+      on404: {command: 'message', msg: 'single 404'}
+    },
     multiple: { control: 'RestButton', restName: 'multiple', result: 'nothing', action: 'get' , on404: {command: 'message', msg: 'multiple 404'}},
     singleByResolver: { control: 'RestButton', restName: 'singleByResolver', result: 'nothing', action: 'get' , on404: {command: 'message', msg: 'singleByResolver 404'}},
   }

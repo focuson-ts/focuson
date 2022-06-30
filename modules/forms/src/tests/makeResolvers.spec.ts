@@ -34,6 +34,7 @@ describe ( "makeResolvers", () => {
       "import focuson.data.fetchers.ChequeCreditbooks.ChequeCreditbooks_getChequeCreditbooks_FFetcher;",
       "import focuson.data.utils.LoggedDataSource;",
       "import focuson.data.utils.Messages;",
+      "import focuson.data.utils.FocusonNotFound404Exception;",
       "//added by param systemTime",
       "import focuson.data.utils.ITimeService;",
       "import focuson.data.mutator.utils.Tuple2;",
@@ -96,7 +97,7 @@ describe ( "makeResolvers", () => {
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ] )
+    ])
   } )
 
   it ( `should make a resolver for a 'get' that is done manually`, () => {
@@ -122,6 +123,7 @@ describe ( "makeResolvers", () => {
       "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_getEAccountsSummary_FFetcher;",
       "import focuson.data.utils.LoggedDataSource;",
       "import focuson.data.utils.Messages;",
+      "import focuson.data.utils.FocusonNotFound404Exception;",
       "import focuson.data.mutator.utils.Tuple2;",
       "@Component",
       "public class EAccountsSummary_getEAccountsSummaryResolver implements EAccountsSummary_getEAccountsSummary_FFetcher{",
@@ -182,6 +184,7 @@ describe ( "makeResolvers", () => {
       "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_balancesAndMonthlyCostResolver_FFetcher;",
       "import focuson.data.utils.LoggedDataSource;",
       "import focuson.data.utils.Messages;",
+      "import focuson.data.utils.FocusonNotFound404Exception;",
       "import focuson.data.mutator.utils.Tuple2;",
       "@Component",
       "public class EAccountsSummary_balancesAndMonthlyCostResolverResolver implements EAccountsSummary_balancesAndMonthlyCostResolver_FFetcher{",
@@ -258,6 +261,7 @@ describe ( "makeResolvers", () => {
       "import focuson.data.fetchers.PostCodeMainPage.PostCodeSearchResponse_getPostCodeDataLine_FFetcher;",
       "import focuson.data.utils.LoggedDataSource;",
       "import focuson.data.utils.Messages;",
+      "import focuson.data.utils.FocusonNotFound404Exception;",
       "import focuson.data.mutator.utils.Tuple2;",
       "@Component",
       "public class PostCodeSearchResponse_getPostCodeDataLineResolver implements PostCodeSearchResponse_getPostCodeDataLine_FFetcher{",

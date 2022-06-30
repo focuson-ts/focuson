@@ -96,16 +96,17 @@ function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restN
   const openConnection = callMutations.length > 0 ? [ `        Connection connection = dataSource.getConnection(getClass());`,
     `        try  {`, ] : []
   const closeConnection = callMutations.length > 0 ? [ `        } finally {dataSource.close(getClass(),connection);}`, ] : []
+  let resultStatement = restActionToDetails ( restAction ).output.needsObj ?
+    [ `          return Transform.result(graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( errorPrefix, r, restAction )}), ${selectionFromData}, msgs);` ] :
+    [ `         return  ResponseEntity.ok(msgs.emptyResult());`];
   return [
     `    @${restTypeDetails.annotation}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,
     `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( errorPrefix, r, restAction )}) throws Exception{`,
     ...makeJsonString,
-    `        Messages msgs = Transform.msgs();`,
+    `         Messages msgs = Transform.msgs();`,
     ...openConnection,
     ...indentList ( indentList ( indentList ( indentList ( [ ...accessDetails ( params, p, restName, r, restAction ), ...callMutations ] ) ) ) ),
-    restActionToDetails ( restAction ).output.needsObj ?
-      `          return Transform.result(graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( errorPrefix, r, restAction )}), ${selectionFromData}, msgs);` :
-      `          return  ResponseEntity.ok("{}");`,
+    ...resultStatement,
     ...closeConnection,
     `    }`,
     `` ];
