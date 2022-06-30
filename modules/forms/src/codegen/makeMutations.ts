@@ -100,15 +100,16 @@ export function getFromResultSetIntoVariables ( errorPrefix: string, from: strin
 export function getFromResultSetPutInMap (errorPrefix: string, map: string, from: string, m: MutationParam[] ) {
   return m.flatMap ( ( m, i ) => {
     if ( !isSqlOutputParam ( m ) ) return []
-    return `${map}.put("${m.name}", ${from}.${RSGetterForJavaType[ m.javaType ]}("${m.rsName}"));`
+    return `${map}.put("${m.name}", ${addFormat(errorPrefix, m.datePattern, m.javaType, from, m.rsName)});`
   } )
 }
 
-export function addFormat(errorPrefix: string, datePattern: string | undefined, javaType: JavaTypePrimitive, from: string, argument: string | number): string {
+  export function addFormat(errorPrefix: string, datePattern: string | undefined, javaType: JavaTypePrimitive, from: string, argument: string | number): string {
   const body = `${from}.${RSGetterForJavaType[javaType]}("${argument}")`
   if (!datePattern) return body
   switch (javaType) {
-    case "String": return `new SimpleDateFormat("${datePattern}").format(${body})`
+    case "String": return `new SimpleDateFormat("${datePattern}").format(${from}.getDate("${argument}"))`
+    //    oneLine.put("line1", new SimpleDateFormat("dd-MM-yyyy").format(new java.sql.Date(rs.getDate("zzline1").getTime())));
     default: throw new Error ( `${errorPrefix} don't know how to addFormat for ${datePattern}, ${javaType}` )
   }
 }

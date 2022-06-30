@@ -44,7 +44,7 @@ export const postcodeWithResolversRestD: RestD<AllGuards> = {
         messageOnEmptyData: 'There was no result',
         params: [
           'someValue',
-          { type: 'output', name: 'line1', javaType: 'String', rsName: 'zzline1' },
+          { type: 'output', name: 'line1', javaType: 'String', rsName: 'zzline1', datePattern: 'dd-MM-yyyy' },
           { type: 'output', name: 'line2', javaType: 'String', rsName: 'zzline2' },
           { type: 'output', name: 'line3', javaType: 'String', rsName: 'zzline3' },
           { type: 'output', name: 'line4', javaType: 'String', rsName: 'zzline4' } ], name: 'get'
