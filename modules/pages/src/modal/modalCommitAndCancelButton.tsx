@@ -9,6 +9,11 @@ import { CustomButtonType, getButtonClassName } from "../common";
 import React from "react";
 import { isMainPageDetails } from "../pageConfig";
 
+export function confirmIt ( c: boolean | string | undefined ) {
+  if ( c === undefined || c === false ) return true
+  const text = (typeof c === 'string') ? c : 'Are you sure'
+  return window.confirm ( text )
+}
 
 interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Context>, CustomButtonType {
   id: string;
@@ -17,6 +22,7 @@ interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Con
   text?: string
 }
 interface ModalCommitButtonProps<S, C> extends ModalCommitCancelButtonProps<S, C> {
+  confirm?: string | boolean;
   validate?: boolean
 }
 export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( { id, state, text, buttonType }: ModalCommitCancelButtonProps<S, Context> ) {
@@ -32,18 +38,20 @@ function findFocusL<S, Context extends PageSelectionContext<S>> ( errorPrefix: s
   const pages = state.context.pages
   const onePage = pages[ mp.pageName ]
   if ( onePage === undefined ) throw Error ( `${errorPrefix} cannot find details for main page '${mp.pageName}'. Legal names are [${Object.keys ( pages )}]` )
-  if ( !isMainPageDetails(onePage) ) throw new Error ( `${errorPrefix} page ${mp.pageName} should be a MainPage but is a ${onePage.pageType}` )
+  if ( !isMainPageDetails ( onePage ) ) throw new Error ( `${errorPrefix} page ${mp.pageName} should be a MainPage but is a ${onePage.pageType}` )
   return onePage.lens
 }
 export function canCommitOrCancel<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ) {
   return safeArray ( state.context.pageSelectionL.getOption ( state.main ) ).length > 1
 }
 
-export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S>> ( { state, id, dateFn, validate, enabledBy, text, buttonType }: ModalCommitButtonProps<S, Context> ) {
+export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S>> ( { state, id, dateFn, validate, enabledBy, text, buttonType, confirm }: ModalCommitButtonProps<S, Context> ) {
   // @ts-ignore
   const debug = state.main?.debug?.validityDebug
-  const ref = getRefForValidateLogicToButton ( id, debug,validate, enabledBy, canCommitOrCancel(state) )
+  const ref = getRefForValidateLogicToButton ( id, debug, validate, enabledBy, canCommitOrCancel ( state ) )
   function onClick () {
+    console.log('modal commit', confirm)
+    if ( !confirmIt ( confirm ) ) return
     const now = new Date ()
     const realvalidate = validate === undefined ? true : validate
     if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return

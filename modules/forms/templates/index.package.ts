@@ -1,2 +1,3 @@
 export * from './store'
-export { emptyState } from './common'
+export { emptyState, context } from './common'
+export {config, start} from './config'

@@ -21,7 +21,7 @@ export const CreatePaymentMP: ExampleModalPage = {
 
   buttons: {
     cancel: { control: 'ModalCancelButton' },
-    commit: { control: 'ModalCommitButton' },
+    commit: { control: 'ModalCommitButton', confirm: "Do you really want to create this payment?" },
     overpaymentHistory: {
       control: 'ModalButton',
       mode: 'view',

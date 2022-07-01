@@ -21,7 +21,8 @@ export function Radio<S, T, Context extends FocusOnContext<S>> ( { state, mode, 
     const disabled = mode === 'view'
     const cssDisabled = disabled ? 'disabled' : ''
 
-    return <div className={`radio-container ${labelPosition == 'Horizontal' ? 'd-flex-inline' : ''} ${cssChecked} ${cssDisabled}`} onClick={() => state.setJson ( value, reasonFor ( 'Radio', 'onClick', id ) )} key={key}>
+    let onClick = () => state.setJson ( key, reasonFor ( 'Radio', 'onClick', id ) );
+    return <div className={`radio-container ${labelPosition == 'Horizontal' ? 'd-flex-inline' : ''} ${cssChecked} ${cssDisabled}`} onClick={onClick} key={key}>
       <input id={id + value} onChange={() => {}} checked={checked} value={state.optJson ()} type='radio' name={id} disabled={disabled} aria-label={ariaLabel} required={required}/>
       <span className="checkmark"></span>
       <Label state={state} htmlFor={id + value} label={value}/>

@@ -7,9 +7,10 @@ export interface ModalCommitButtonInPage extends EnabledBy {
   control: 'ModalCommitButton';
   enabledBy?: string | string[];
   validate?: boolean;
+  confirm?: boolean | string;
   text?: string
 }
-export interface ModalCancelButtonInPage extends CustomButtonType  {
+export interface ModalCancelButtonInPage extends CustomButtonType {
   control: 'ModalCancelButton';
   text?: string
 }
@@ -20,11 +21,12 @@ export function makeModalCommitButton<B extends ModalCommitButtonInPage, G> (): 
     import: "@focuson/pages",
     makeButton: ( { name, button } ) => {
       const id = '{`${id}`.' + button.text ? button.text : name + "}"
-      return [ [ `<ModalCommitButton id=${makeIdForButton ( button.text ? button.text : name )} ${enabledByString(button)}`, 
-      ...opt ( 'text', button.text ),
-      ...opt ( 'buttonType', button.buttonType ? button.buttonType : 'primary'),
-      ...optT ( 'validate', button.validate ),
-       ` state={state} />` ].join ( ' ' ) ];
+      return [ [ `<ModalCommitButton id=${makeIdForButton ( button.text ? button.text : name )} ${enabledByString ( button )}`,
+        ...opt ( 'text', button.text ),
+        ...optT ( 'confirm', button.confirm ),
+        ...opt ( 'buttonType', button.buttonType ? button.buttonType : 'primary' ),
+        ...optT ( 'validate', button.validate ),
+        ` state={state} />` ].join ( ' ' ) ];
     }
   })
 }
