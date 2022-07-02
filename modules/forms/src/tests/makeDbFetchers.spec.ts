@@ -23,6 +23,8 @@ describe ( "makeDbFetchers", () => {
       "import java.util.Map;",
       "import java.util.List;",
       "import java.util.Optional;",
+      "import java.util.Date;",
+      "import java.text.SimpleDateFormat;",
       "",
       "  @Component",
       "public class pre_JointAccount_get_FFetcherDB implements pre_JointAccount_getpreJointAccount_FFetcher {",
@@ -55,7 +57,7 @@ describe ( "makeDbFetchers", () => {
       "      return IFetcher.db;",
       "  }",
       "}"
-    ])
+    ] )
   } )
   it ( "should make the java code for the fetcher - repeating item", () => {
     expect ( makeDBFetchers ( paramsForTest, PostCodeMainPage, 'postcode', PostCodeMainPage.rest.postcode ) ).toEqual ( [
@@ -75,6 +77,8 @@ describe ( "makeDbFetchers", () => {
       "import java.util.Map;",
       "import java.util.List;",
       "import java.util.Optional;",
+         "import java.util.Date;",
+         "import java.text.SimpleDateFormat;",
       "",
       "  @Component",
       "public class PostCodeSearchResponse_get_FFetcherDB implements PostCodeSearchResponse_getPostCodeDataLine_FFetcher {",
@@ -103,7 +107,7 @@ describe ( "makeDbFetchers", () => {
       "      return IFetcher.db;",
       "  }",
       "}"
-    ])
+    ] )
   } )
 
 } )

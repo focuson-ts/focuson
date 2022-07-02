@@ -2,7 +2,7 @@ import { AllDataDD, CompDataD, DataD, findAllDataDs, HasGuards, HasLayout, isDat
 import { CommonLensRestParam, RestD } from "./restD";
 import { NameAnd, RestAction, RestResult, safeString, sortedEntries, unique } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
-import { getRestTypeDetails, RestActionDetail } from "@focuson/rest";
+import { ChangeCommand, getRestTypeDetails, ModalChangeCommands, RestActionDetail, RestChangeCommands } from "@focuson/rest";
 
 
 export interface DomainDefnInPage<G> {
@@ -24,7 +24,8 @@ interface CommonRestOnCommit {
   /** What happens when the rest is completed. Currently only 'refresh' which clears the 'main object' triggering a fetch. Later we will be more clever' */
   result: RestResult;
   messageOnSuccess?: string
-
+  changeOnSuccess?:RestChangeCommands| RestChangeCommands[]
+  on404?: RestChangeCommands | RestChangeCommands[]
 }
 export interface RestOnCommitNothing extends CommonRestOnCommit {
   result: 'nothing';

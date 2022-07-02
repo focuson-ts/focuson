@@ -29,7 +29,7 @@ export const PostCodeMainPage: ExampleMainPage = {
   modals: [ { modal: PostCodeModalPage } ],
   modes: [ 'edit' ],
   rest: {
-    postcode: { rest: postcodeWithResolversRestD, targetFromPath: '~/postcode/searchResults', fetcher: true },
+    postcode: { rest: postcodeRestD, targetFromPath: '~/postcode/searchResults', fetcher: true },
     address: { rest: addressRestD, targetFromPath: '~/main' }
   },
   buttonOrder: [ 'save' ],//hide the search button

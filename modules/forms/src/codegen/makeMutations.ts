@@ -84,7 +84,7 @@ function commonIfDbNameBlock<G> ( r: RestD<G>, paramsA: MutationParam[], name: s
 export function getFromStatement ( errorPrefix: string, from: string, m: MutationParam[] ): string[] {
   return m.flatMap ( ( m, i ) => {
     if ( !isStoredProcOutputParam ( m ) ) return []
-    return [ `${m.javaType} ${m.name} = ${addFormat(errorPrefix, m.datePattern, m.javaType, from, i + 1)};` ]
+    return [ `${m.javaType} ${m.name} = ${addFormat ( errorPrefix, m.datePattern, m.javaType, from, i + 1 )};` ]
     throw new Error ( `${errorPrefix} don't know how to getFromStatement for ${JSON.stringify ( m )}` )
   } )
 }
@@ -92,25 +92,28 @@ export function getFromStatement ( errorPrefix: string, from: string, m: Mutatio
 export function getFromResultSetIntoVariables ( errorPrefix: string, from: string, m: MutationParam[] ): string[] {
   return m.flatMap ( ( m, i ) => {
     if ( !isSqlOutputParam ( m ) ) return []
-    return [ `${m.javaType} ${m.name} = ${addFormat(errorPrefix, m.datePattern, m.javaType, from, m.rsName)};` ]
+    return [ `${m.javaType} ${m.name} = ${addFormat ( errorPrefix, m.datePattern, m.javaType, from, m.rsName )};` ]
     throw new Error ( `${errorPrefix} don't know how to getFromResultSetIntoVariables for ${JSON.stringify ( m )}` )
   } )
 }
 
-export function getFromResultSetPutInMap (errorPrefix: string, map: string, from: string, m: MutationParam[] ) {
+export function getFromResultSetPutInMap ( errorPrefix: string, map: string, from: string, m: MutationParam[] ) {
   return m.flatMap ( ( m, i ) => {
     if ( !isSqlOutputParam ( m ) ) return []
-    return `${map}.put("${m.name}", ${addFormat(errorPrefix, m.datePattern, m.javaType, from, m.rsName)});`
+    return `${map}.put("${m.name}", ${addFormat ( errorPrefix, m.datePattern, m.javaType, from, m.rsName )});`
   } )
 }
 
-  export function addFormat(errorPrefix: string, datePattern: string | undefined, javaType: JavaTypePrimitive, from: string, argument: string | number): string {
-  const body = `${from}.${RSGetterForJavaType[javaType]}("${argument}")`
-  if (!datePattern) return body
-  switch (javaType) {
-    case "String": return `new SimpleDateFormat("${datePattern}").format(${from}.getDate("${argument}"))`
+export function addFormat ( errorPrefix: string, datePattern: string | undefined, javaType: JavaTypePrimitive, from: string, argument: string | number ): string {
+  const arg = typeof argument === 'number' ? argument : `"${argument}"`
+  const body = `${from}.${RSGetterForJavaType[ javaType ]}(${arg})`
+  if ( !datePattern ) return body
+  switch ( javaType ) {
+    case "String":
+      return `new SimpleDateFormat("${datePattern}").format(${from}.getDate(${arg}))`
     //    oneLine.put("line1", new SimpleDateFormat("dd-MM-yyyy").format(new java.sql.Date(rs.getDate("zzline1").getTime())));
-    default: throw new Error ( `${errorPrefix} don't know how to addFormat for ${datePattern}, ${javaType}` )
+    default:
+      throw new Error ( `${errorPrefix} don't know how to addFormat for ${datePattern}, ${javaType}` )
   }
 }
 
@@ -170,7 +173,7 @@ export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPag
         `while (rs.next()){`,
         ...indentList ( [
           `Map<String,Object> oneLine = new HashMap();`,
-          ...getFromResultSetPutInMap (errorPrefix, 'oneLine', 'rs', paramsA ),
+          ...getFromResultSetPutInMap ( errorPrefix, 'oneLine', 'rs', paramsA ),
           `result.add(oneLine);` ] ),
         '}',
         ...messageLine,

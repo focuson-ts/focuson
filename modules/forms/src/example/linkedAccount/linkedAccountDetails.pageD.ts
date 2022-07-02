@@ -71,7 +71,7 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
       ],
       deleteOnOpen: '~/selectIndex',
       copyJustString: [
-        { from: '~/display/mandate/sortCode', to: '~/selectMandateSearch/sortCode',joiner: '-' },
+        { from: '~/display/mandate/sortCode', to: '~/selectMandateSearch/sortCode', joiner: '-' },
       ],
       copyOnClose: { from: '~/tempMandate', to: '~/display/mandate' }
     },
@@ -83,7 +83,14 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
       copy: [
         { from: '~/display/collectionSummary/allowance', to: '~/createPayment/allowance' },
         { from: '~/display/collectionSummary/period', to: '~/createPayment/period' } ],
-      restOnCommit: { restName: 'createPayment', action: 'create', pathToDelete: [ '~/display/collectionSummary', '~/display/collectionHistory' ], result: 'refresh' }
+      changeOnClose: { command: 'message', msg: 'sending payment request' },
+      restOnCommit: {
+        restName: 'createPayment', action: 'create',
+        pathToDelete: [ '~/display/collectionSummary', '~/display/collectionHistory' ],
+        changeOnSuccess: { command: 'message', msg: 'made payment' },
+        on404: { command: 'message', msg: '404 happened' },
+        result: 'refresh'
+      }
     },
     cancelPayment: {
       control: "RestButton",

@@ -1,7 +1,7 @@
 import { reqFor, Tags, UrlConfig } from "@focuson/template";
 import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RequiredCopyDetails, RestAction, RestStateChange, safeArray, safeObject, sortedEntries, toArray } from "@focuson/utils";
 import { displayTransformsInState, identityOptics, lensBuilder, Lenses, massTransform, Optional, parsePath, Transform } from "@focuson/lens";
-import { ChangeCommand, CopyResultCommand, DeleteCommand, MessageCommand, processChangeCommandProcessor, restChangeCommandProcessors, RestAndInputProcessorsConfig } from "./changeCommands";
+import { ChangeCommand, CopyResultCommand, DeleteCommand, MessageCommand, processChangeCommandProcessor, restChangeCommandProcessors, RestAndInputProcessorsConfig, RestChangeCommands } from "./changeCommands";
 
 
 export interface RestDebug {
@@ -91,14 +91,14 @@ export interface RestCommand {
   comment?: string;
   /** If the rest command was created by a fetcher these are the tags */
   tagNameAndTags?: { tags: Tags, tagName: string },
-  changeOnSuccess?: ChangeCommand[]
   /** @deprecated - moving to changeOnSuccess*/
   copyOnSuccess?: RequiredCopyDetails[];
   /** @deprecated - moving to changeOnSuccess. If set, after the rest action has succeeded the named path will be deleted in the state. This is allow us to trigger the fetchers, which will fetch the latest data */
   deleteOnSuccess?: string | string[];
   /** @deprecated - moving to changeOnSuccess*/
   messageOnSuccess?: string
-  on404?: ChangeCommand[]
+  changeOnSuccess?: RestChangeCommands[]
+  on404?: RestChangeCommands[]
 }
 
 export const restCommandToChangeCommands = <MSGs> ( stringToMsg: ( s: string ) => MSGs ) => ( r: RestCommand, status: number | undefined ): ChangeCommand[] => {

@@ -47,6 +47,11 @@ export function toArray<T> ( ts: T | T[] | undefined ): T[] {
   if ( Array.isArray ( ts ) ) return ts
   return [ ts ]
 }
+export function toArrayOrUndefined<T> ( ts: T | T[] | undefined ): T[] | undefined {
+  if ( ts === undefined ) return undefined
+  if ( Array.isArray ( ts ) ) return ts
+  return [ ts ]
+}
 export function safeString ( s: string | undefined ) { return s ? s : ''}
 export function safePick ( s: string[] | undefined, i: number ) {
   const sa = safeArray ( s )

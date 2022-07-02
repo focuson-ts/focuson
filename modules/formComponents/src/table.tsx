@@ -79,8 +79,8 @@ export const rawTable = <S, T, Context> (
   };
 
 function tdClass ( rights: string[] | undefined, s: any ) {
-  if ( !rights ) return ''
-  return rights.includes ( s ) ? 'right' : ''
+  if ( !rights ) return undefined
+  return rights.includes ( s ) ? 'right' : undefined
 }
 export const defaultOneRow = <T extends any> ( id: string, order: (keyof T)[], joiners: string | string[] | undefined, ...extraTds: (( i: number, row: T ) => JSX.Element)[] ): OneRowFn<T> =>
   ( row: T, i: number, clazz: string | undefined, rights: string[]|undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) =>

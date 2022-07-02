@@ -1,5 +1,5 @@
 import { LensState, reasonFor } from "@focuson/state";
-import { fromPathGivenState, page, PageMode, PageParams, PageSelectionContext, SetToLengthOnClose } from "../pageSelection";
+import { fromPathGivenState, page, PageMode, PageParams, PageSelection, PageSelectionContext, SetToLengthOnClose } from "../pageSelection";
 import { Optional, Transform } from "@focuson/lens";
 import { CopyCommand, DeleteCommand, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand, SetChangeCommand } from "@focuson/rest";
 import { anyIntoPrimitive, CopyDetails, DateFn, safeArray, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
@@ -23,9 +23,10 @@ export interface CommonModalButtonProps<S, Context> extends CustomButtonType {
   rest?: RestCommand,
   createEmpty?: any
   change?: ModalChangeCommands | ModalChangeCommands[]
+  changeOnClose?: ModalChangeCommands | ModalChangeCommands[]
   copy?: CopyDetails[],
   copyJustString?: CopyStringDetails[],
-
+  /** This only exists to allow the generated code to make an object that will give compilation issues if the target of focuson doesn't exist. It isn't used */
   deleteOnOpen?: string[],
   copyOnClose?: CopyDetails[],
   setToLengthOnClose?: SetToLengthOnClose,
@@ -34,6 +35,7 @@ export interface CommonModalButtonProps<S, Context> extends CustomButtonType {
 interface JustModalButtonProps<S, Context> extends CommonModalButtonProps<S, Context> {
   modal: string,
   focusOn: string,
+  focusOnLensForCompileCheck?: LensState<S, any, Context>;
 }
 function isModal<S, Context> ( m: ModalButtonProps<S, Context> ): m is JustModalButtonProps<S, Context> {
   const a: any = m
@@ -64,23 +66,35 @@ function buttonToChangeCommands<S, Context extends PageSelectionContext<S> & Has
   return result
 }
 
-function makeContext<S, Context extends PageSelectionContext<S> & HasSimpleMessageL<S>> ( errorPrefix: string, state: LensState<S, any, Context>, newPageSelection: { firstTime: boolean; rest: RestCommand | undefined; pageMode: "view" | "create" | "edit"; focusOn: string | undefined; copyOnClose: CopyDetails[] | undefined; pageParams: PageParams | undefined; setToLengthOnClose: SetToLengthOnClose | undefined; time: string; pageName: string }, props: JustModalButtonProps<S, Context> | MainModalButtonProps<S, Context>, dateFn: () => string ) {
+function makeModalProcessorsConfig<S, Context extends PageSelectionContext<S> & HasSimpleMessageL<S>> (
+  errorPrefix: string,
+  state: LensState<S, any, Context>,
+  newPageSelection: PageSelection,
+  props: JustModalButtonProps<S, Context> | MainModalButtonProps<S, Context>,
+  dateFn: () => string ): ModalProcessorsConfig<S, SimpleMessage> {
   const fromPathTolens = fromPathGivenState ( state );
   const toPathTolens = fromPathGivenState ( state, ps => [ ...ps, newPageSelection ] );
   const focusOnL = findFocusLFromCurrentState ( errorPrefix, props, fromPathTolens, state.context.pages )
+
 
   const config: ModalProcessorsConfig<S, SimpleMessage> = { stringToMsg: stringToSimpleMsg ( dateFn, 'info' ), fromPathTolens, toPathTolens, defaultL: focusOnL, messageL: state.context.simpleMessagesL };
   return config;
 }
 export function ModalButton<S extends any, Context extends PageSelectionContext<S> & HasSimpleMessageL<S>> ( props: ModalButtonProps<S, Context> ): JSX.Element {
-  const { id, text, enabledBy, state, copy, copyJustString, pageMode, rest, copyOnClose, createEmpty, change, setToLengthOnClose, createEmptyIfUndefined, pageParams, buttonType, dateFn, deleteOnOpen } = props
+  const {
+          id, text, enabledBy, state, copy, copyJustString, pageMode, rest, copyOnClose, createEmpty, change, setToLengthOnClose,
+          createEmptyIfUndefined, pageParams, buttonType, dateFn, changeOnClose
+        } = props
   const onClick = () => {
     // const fromPath = fromPathFor ( state );
     const errorPrefix = `Modal button ${id}`;
     const focusOn = isModal ( props ) ? props.focusOn : undefined
     const pageName = isModal ( props ) ? props.modal : props.main.toString ()
-    const newPageSelection = { pageName, firstTime: true, pageMode, rest, focusOn, copyOnClose, setToLengthOnClose, pageParams, time: dateFn () };
-    const config = makeContext ( errorPrefix, state, newPageSelection, props, dateFn );
+    const newPageSelection: PageSelection = {
+      pageName, firstTime: true, pageMode, rest, focusOn, copyOnClose, setToLengthOnClose,
+      pageParams, time: dateFn (), changeOnClose
+    };
+    const config = makeModalProcessorsConfig ( errorPrefix, state, newPageSelection, props, dateFn );
 
     const copyJustStrings: Transform<S, any>[] = safeArray ( copyJustString ).map (
       ( { from, to, joiner } ) => {

@@ -2,7 +2,7 @@ import { identityOptics, Lens, lensBuilder, NameAndLensFn, Optional, parsePath, 
 import { LensState } from "@focuson/state";
 import { HasMultiPageDetails, isMainPageDetails } from "./pageConfig";
 import { CopyDetails, safeArray, safeObject } from "@focuson/utils";
-import { RestCommand } from "@focuson/rest";
+import { ModalChangeCommands, RestCommand } from "@focuson/rest";
 import { PageDetailsForCombine } from "./selectedPage";
 
 
@@ -36,6 +36,7 @@ export interface PageSelection {
   onClose?: PageOnClose;
   rest?: RestCommand;
   copyOnClose?: CopyDetails[];
+  changeOnClose?: ModalChangeCommands | ModalChangeCommands[];
   focusOn?: string;
   setToLengthOnClose?: SetToLengthOnClose;
   pageParams?: PageParams;

@@ -176,13 +176,13 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
     },
     list: {
       control: 'ModalButton', modal: listOccupationsModalPD, mode: 'edit',
-      focusOn: '~/occupation',
+      focusOn: '~/searchList',
       copy: [
-        { from: '#currentOccupation[#selected]/occupation', to: '~/occupation/search' },
-        { from: '#currentOccupation[#selected]/occupation', to: '~/occupation/selectedOccupationName' },
+        { from: '#currentOccupation[#selected]/occupation', to: '~/searchList/search' },
+        { from: '#currentOccupation[#selected]/occupation', to: '~/searchList/selectedOccupationName' },
       ],
       copyOnClose: [
-        { from: '~/occupation/selectedOccupationName', to: '#currentOccupation[#selected]/occupation' },
+        { from: '~/searchList/selectedOccupationName', to: '#currentOccupation[#selected]/occupation' },
       ]
     },
   }
