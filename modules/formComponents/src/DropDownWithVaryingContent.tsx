@@ -1,16 +1,15 @@
-import { LensProps, LensState } from "@focuson/state";
+import { LensState } from "@focuson/state";
 import { CommonStateProps, DropDownOnChangeProps } from "./common";
 import { LabelAndDropdown } from "./labelAndDropdown";
 import { NameAnd } from "@focuson/utils";
 import { FocusOnContext } from "@focuson/focuson";
-import { cleanInputProps } from "./input";
+import { HasButtons } from "./makeButtons";
 
-export interface DropDownWithVaryingContentProps<S, C> extends CommonStateProps<S, string, C>, DropDownOnChangeProps<S, C> {
+export interface DropDownWithVaryingContentProps<S, C> extends CommonStateProps<S, string, C>, DropDownOnChangeProps<S, C>,HasButtons {
   label: string;
   parentState?: LensState<S, any, C>;
   selector: LensState<S, string, C> //this is the data about which enum we want
   enums: NameAnd<NameAnd<string>>
-  allButtons: NameAnd<any>;
   pleaseSelect?: string;
   size?: number;
   required?: boolean;

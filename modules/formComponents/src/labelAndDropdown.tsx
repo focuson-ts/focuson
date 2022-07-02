@@ -3,14 +3,14 @@ import { reasonFor } from "@focuson/state";
 import { FocusOnContext } from "@focuson/focuson";
 import { CommonStateProps, DropDownOnChangeProps, LabelAlignment } from "./common";
 import { Label } from "./label";
-import { makeButtons, makeInputChangeTxs } from "./labelAndInput";
+import { makeInputChangeTxs } from "./labelAndInput";
 
 import { ChangeEvent } from "react";
+import { HasButtons, makeButtons } from "./makeButtons";
 
-export interface DropdownProps<S, T, Context> extends CommonStateProps<S, T, Context>, DropDownOnChangeProps<S, Context> {
+export interface DropdownProps<S, T, Context> extends CommonStateProps<S, T, Context>, DropDownOnChangeProps<S, Context> ,HasButtons{
   enums: NameAnd<string>;
   readonly?: boolean
-  buttons?: string[];
   pleaseSelect?: string;
   size?: number;
   enabledBy?: boolean;
@@ -18,7 +18,6 @@ export interface DropdownProps<S, T, Context> extends CommonStateProps<S, T, Con
 }
 export interface LabelAndDropdownProps<S, T, Context> extends DropdownProps<S, T, Context>, LabelAlignment {
   label: string;
-  allButtons: NameAnd<JSX.Element>;
 }
 
 export function LabelAndDropdown<S, T, Context extends FocusOnContext<S>> ( props: LabelAndDropdownProps<S, string, Context> ) {
@@ -27,7 +26,7 @@ export function LabelAndDropdown<S, T, Context extends FocusOnContext<S>> ( prop
   return (<div className={`dropdown-container ${props.labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}>
       <Label state={state} htmlFor={id} label={label}/>
       <div className={`${props.buttons && props.buttons.length > 0 ? 'dropdownAndButtons' : ''}`}>
-        <Dropdown{...props} />{makeButtons ( props.allButtons, props.buttons )}
+        <Dropdown{...props} />{makeButtons ( props )}
       </div>
     </div>
   )

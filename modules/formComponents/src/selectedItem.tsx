@@ -2,14 +2,14 @@ import { LensProps, LensState } from "@focuson/state";
 import { PageMode } from "@focuson/pages";
 import { NameAnd } from "@focuson/utils";
 import { Lenses } from "@focuson/lens";
+import { HasButtons } from "./makeButtons";
 
-export interface SelectedItemProps<FS, S, T, Context> extends LensProps<S, T[], Context> {
+export interface SelectedItemProps<FS, S, T, Context> extends LensProps<S, T[], Context>, HasButtons {
   index: number;//LensState<FS, number, Context>;
   mode: PageMode;
   id: string;
   header?: string;
   showNofM?: boolean;
-  allButtons: NameAnd<JSX.Element>
   display: ( { state, mode, id, allButtons }: { state: LensState<S, T, Context>, mode: PageMode, id: string, allButtons: NameAnd<JSX.Element> } ) => JSX.Element
 }
 

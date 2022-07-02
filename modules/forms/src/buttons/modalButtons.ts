@@ -7,6 +7,7 @@ import { emptyName, modalName, restDetailsName } from "../codegen/names";
 import { EnabledBy, enabledByString } from "./enabledBy";
 import { CopyDetails, decamelize, toArray } from "@focuson/utils";
 import { ModalChangeCommands } from "@focuson/rest";
+import { stateFocusQueryWithEmptyFromHere, stateQueryForParams, stateQueryForPathsFnButtonParams } from "../codegen/lens";
 
 
 export function restForButton<B, G> ( parent: PageD<B, G>, rest?: RestOnCommit ): string[] {
@@ -59,7 +60,7 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalOrMainButtonInPage<G>, 
   return {
     import: "@focuson/pages",
     makeButton:
-      ( { params, parent, name, button } ) => {
+      ( { params, mainPage, parent, name, button } ) => {
         const { mode, restOnCommit, copy, createEmpty, createEmptyIfUndefined, copyOnClose, copyJustString, setToLengthOnClose, text, pageParams, buttonType, deleteOnOpen,change } = button
         const createEmptyString = createEmpty ? [ `createEmpty={${params.emptyFile}.${emptyName ( createEmpty )}}` ] : []
         const createEmptyIfUndefinedString = createEmptyIfUndefined ? [ `createEmptyIfUndefined={${params.emptyFile}.${emptyName ( createEmptyIfUndefined )}}` ] : []
@@ -69,10 +70,11 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalOrMainButtonInPage<G>, 
         const copyFromArray: CopyDetails[] | undefined = copy ? toArray ( copy ) : undefined
         const pageLink = isModal ( button ) ? `modal='${modalName ( parent, button.modal )}'` : `main='${button.main.name}'`
         const focusOn = isModal ( button ) ? button.focusOn : undefined
+        const focusonString = focusOn? stateQueryForParams(`Modal button Page ${parent.name} / ${name}`, params, mainPage, parent, focusOn ): undefined
         return [ `<${button.control} id=${makeIdForButton ( name )} ${enabledByString ( button )}text='${text ? text : decamelize ( name, ' ' )}' dateFn={defaultDateFn} state={state} ${pageLink} `,
           ...indentList ( [
             ...opt ( 'pageMode', mode ),
-            ...opt ( 'focusOn', focusOn ),
+            ...optT ( 'focusOn', focusonString ),
             ...optT ( 'buttonType', buttonType ),
             ...optT ( 'copy', copyFromArray ),
             ...optT ( 'copyOnClose', copyOnCloseArray ),

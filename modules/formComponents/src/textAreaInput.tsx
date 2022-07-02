@@ -4,7 +4,8 @@ import { NameAnd } from '@focuson/utils';
 
 import { CommonStateProps, InputEnabledProps, InputOnChangeProps, LabelAlignment } from "./common";
 import { Label } from './label';
-import { makeButtons, makeInputChangeTxs } from './labelAndInput';
+import { makeInputChangeTxs } from './labelAndInput';
+import { makeButtons } from "./makeButtons";
 
 export interface TextareaProps<S, T, Context> extends CommonStateProps<S, T, Context>, LabelAlignment, InputOnChangeProps<S, Context> {
   maxLength?: number
@@ -55,13 +56,13 @@ export interface LabelAndTextareaProps<S, T, Context> extends TextareaProps<S, T
 }
 
 export function LabelAndTextarea<S, T, Context extends FocusOnContext<S>> ( props: LabelAndTextareaProps<S, string, Context> ) {
-  const { id, label, name, state, labelPosition, buttons, allButtons, noLabel } = props
+  const { id, label, name, state, labelPosition, buttons, noLabel } = props
 
   return (
     <div className={`labelValueButton ${labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}>
       {noLabel ? '' : <Label state={state} htmlFor={id} label={label}/>}
       <div className={`${buttons && buttons.length > 0 ? 'inputAndButtons' : ''}`}>
-        <TextAreaInput  {...props} />{makeButtons ( allButtons, buttons )}</div>
+        <TextAreaInput  {...props} />{makeButtons ( props )}</div>
     </div>
   );
 }

@@ -103,7 +103,7 @@ export const CreatePaymentDD: ExampleDataD = {
   description: 'The data needed to make a payment',
   guards: { reasonIsAllowance: { condition: 'in', path: 'reason', values: paymentReasonDD.enum } },
   structure: {
-    amount: { dataDD: MoneyDD, sample: [ 56657, 32834 ], displayParams: { min: 200 } },
+    amount: { dataDD: MoneyDD, sample: [ 56657, 32834 ]},//, displayParams: { min: 200 } },
     collectionDate: { dataDD: { ...DateDD } },
     reason: { dataDD: paymentReasonDD },
     allowance: { dataDD: MoneyDD, guard: { reasonIsAllowance: [ 'A' ] }, displayParams: { readonly: true } },

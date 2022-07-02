@@ -10,6 +10,8 @@ export const OnChangePageD: ExampleMainPage = {
   modals: [], modes: [ 'edit' ],
   name: "OnChange", pageType: 'MainPage',
   rest: {},
-  buttons: {}
+  buttons: {
+    button: { control: 'ValidationButton' }
+  }
 
 }

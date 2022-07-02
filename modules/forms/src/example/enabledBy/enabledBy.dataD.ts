@@ -1,6 +1,7 @@
 import { ExampleDataD } from "../common";
 import { yesNoDD } from "../SingleOccupation/singleOccupation.dataD";
-import { actionEnums, ManyLineStringDD, NatNumDd, nextActionDD, reasonDD, StringDD } from "../../common/dataD";
+import { ManyLineStringDD, NatNumDd, StringDD } from "../../common/dataD";
+import { actionEnums, nextActionDD, reasonDD } from "../onChange/onChange.dataD";
 
 export const enabledByDataD: ExampleDataD = {
   name: 'EnabledBy',

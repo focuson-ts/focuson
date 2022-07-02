@@ -1,13 +1,13 @@
-import { CommonStateProps, DropDownOnChangeProps, InputOnChangeProps, LabelAlignment, NumberValidations, StringValidations } from "./common";
+import { CommonStateProps, InputOnChangeProps, LabelAlignment, NumberValidations, StringValidations } from "./common";
 import { BooleanInput, Input, } from "./input";
 import { Label } from "./label";
 import { NumberTransformer, StringTransformer } from "./transformers";
-import { defaultDateFn, NameAnd, safeArray, stringToSimpleMsg, toArray } from "@focuson/utils";
-import { ButtonFromPage } from "./buttonFromPage";
+import { defaultDateFn, NameAnd, stringToSimpleMsg, toArray } from "@focuson/utils";
 import { FocusOnContext } from "@focuson/focuson";
 import { LensState } from "@focuson/state";
 import { Transform } from "@focuson/lens";
 import { InputChangeCommands, inputCommandProcessors, processChangeCommandProcessor } from "@focuson/rest";
+import { makeButtons } from "./makeButtons";
 
 export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T, Context>, LabelAlignment, InputOnChangeProps<S, Context> {
   label?: string;
@@ -25,10 +25,6 @@ export interface TransformerProps<T> {
   type: string;
   default: T;
 }
-export function makeButtons ( allButtons: NameAnd<JSX.Element>, buttons?: string[] ) {
-  return safeArray ( buttons ).map ( ( b, i ) =>
-    <ButtonFromPage key={b} button={b} buttons={allButtons}/> )
-}
 export function makeInputChangeTxs<S, C extends FocusOnContext<S>> ( id: string, parentState: LensState<S, any, C> | undefined, change?: InputChangeCommands | InputChangeCommands[] ): Transform<S, any>[] {
   if ( parentState === undefined ) return []
   const { simpleMessagesL, pathToLens } = parentState.context
@@ -41,7 +37,7 @@ const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> ) =>
     const label = <Label state={props.state} htmlFor={props.id} label={props.label}/>;
     const input = Input<S, T, P> ( tProps )<LabelAndInputProps<S, T, Context> & P, Context> ( props );
     return <div className={`labelValueButton ${props.labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}> {props.noLabel ? '' : label}
-      <div className={`${props.buttons && props.buttons.length > 0 ? 'inputAndButtons' : ''}`}>{input}{makeButtons ( props.allButtons, props.buttons )}</div>
+      <div className={`${props.buttons && props.buttons.length > 0 ? 'inputAndButtons' : ''}`}>{input}{makeButtons ( props )}</div>
     </div>
   }
 
@@ -49,7 +45,7 @@ export function LabelAndBooleanInput<S, Context extends FocusOnContext<S>> ( pro
   const { state, mode, readonly } = props
   const label = <Label state={props.state} htmlFor={props.id} label={props.label}/>;
   const input = <BooleanInput {...props}/>
-  return <div className={`${props.buttons && props.buttons.length > 0 ? 'checkbox-container inputAndButtons' : 'checkbox-container'}`}> {label}{input}{makeButtons ( props.allButtons, props.buttons )}</div>
+  return <div className={`${props.buttons && props.buttons.length > 0 ? 'checkbox-container inputAndButtons' : 'checkbox-container'}`}> {label}{input}{makeButtons ( props )}</div>
 }
 
 export const LabelAndStringInput = LabelAndTInput<string, StringValidations> ( StringTransformer )

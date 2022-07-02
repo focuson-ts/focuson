@@ -393,25 +393,6 @@ export const YesNoDD: PrimitiveDD = {
   displayParams: { pleaseSelect: 'Select...' },
   enum: { N: 'No', Y: 'Yes' }
 }
-export const reasonsEnum = { Reason1: 'Because I wanted to', Reason2: 'I just di d it', Reason3: "Who cares" }
-export const reasonDD: PrimitiveDD = {
-  ...StringDD,
-  display: LabelAndDropDownCD,
-  displayParams: { pleaseSelect: 'Select...' },
-  enum: reasonsEnum
-}
-export const actionEnum = { action1: 'Shoot the messenger', action2: 'Throw a paddy', action3: "Say thank you" }
-export type ActionEnums = typeof actionEnum
-export function actionEnums<K extends keyof ActionEnums> ( ...as: K[] ) {
-  return Object.fromEntries ( as.map ( a => [ a, actionEnum[ a ] ] ) )
-}
-export const nextActionDD: PrimitiveDD = {
-  ...StringDD,
-  display: LabelAndDropDownWithVaryingContentCD,
-  displayParams: { pleaseSelect: 'Select...' },
-  // enum: { action1: 'Shoot the messenger', action2: 'Throw a paddy', action3: "Say thank you" }
-}
-
 
 export const DateDD: DatePrimitiveDD = {
   datePattern: "yyyy/MM/dd",

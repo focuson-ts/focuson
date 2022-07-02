@@ -20,6 +20,7 @@ export * from './src/labelAndFixedNumber'
 export * from './src/labelAndDropdown'
 export * from './src/layout'
 export * from './src/listNextPrevButtons'
+export * from './src/makeButtons'
 export * from './src/myCombined'
 export * from './src/optional'
 export * from './src/radio'
@@ -35,6 +36,7 @@ export * from './src/unpaidCardOrMisuseItems'
 export * from './src/validationButton'
 export * from './src/plusMinusButtonsAndInput'
 export * from './src/tableWithCheckboxInput'
+export { makeButtons } from "./src/makeButtons";
 
 
 

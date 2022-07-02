@@ -3,9 +3,9 @@ import { LensState, reasonFor } from "@focuson/state";
 import { FocusOnContext } from "@focuson/focuson";
 import { CommonStateProps, LabelAlignment } from "./common";
 import { Label } from "./label";
-import { makeButtons } from "./labelAndInput";
 import DatePicker from "react-datepicker";
 import { isValid, format, parse } from 'date-fns';
+import { makeButtons } from "./makeButtons";
 
 
 export interface LabelAndDateProps<S, Context> extends CommonStateProps<S, string, Context>, LabelAlignment {
@@ -101,7 +101,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
                   closeOnScroll={true}
                   onChangeRaw={( e ) => handleChangeRaw ( e )}
                   placeholderText="Select a date"/>
-      {makeButtons ( props.allButtons, props.buttons )}
+      {makeButtons ( props )}
       {error && <div className="custom-error">Invalid Date: {state.optJsonOr ( '' )}</div>}
     </div>
   </div>)

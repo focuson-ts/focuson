@@ -10,10 +10,7 @@ export const helloWorldDD: ExampleDataD = {
         onChange: { command: 'message', msg: 'hello' },
       }
     },
-    message2: {
-      dataDD: ManyLineStringDD, sample: [ ' message !\nAnd here is a second line' ], displayParams: {
-        scrollAfter: '300px'
-      }
-    },
+    message2: { dataDD: ManyLineStringDD, sample: [ ' message !\nAnd here is a second line' ], displayParams: { scrollAfter: '300px' } },
   }
 }
+
