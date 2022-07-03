@@ -1,19 +1,12 @@
-import {  PageMode, pageSelectionlens, SelectedPage, simpleMessagesL } from "@focuson/pages";
-import { FocusOnConfig, setJsonForFocusOn, setJsonUsingNewFetchersUsingFlux,restCountL } from "@focuson/focuson";
-import { getElement, LensState } from "@focuson/state";
+import { SelectedPage } from "@focuson/pages";
+import { getElement } from "@focuson/state";
 import ReactDOM from "react-dom";
-import { context, Context, emptyState, FState, pathToLens } from "./{commonFile}";
-import { defaultDateFn, fetchWithDelay, fetchWithPrefix, loggingFetchFn, NameAnd, RestAction, SimpleMessage, sortedEntries, stringToSimpleMsg } from "@focuson/utils";
-import { fetchers } from "./{fetchersFile}";
-import { pages } from "./{pagesFile}";
-import { restL } from "@focuson/rest";
-import { restDetails, restUrlMutator } from "./{restsFile}";
+import { context, {stateName}, identityL } from "./{commonFile}";
+import { defaultDateFn } from "@focuson/utils";
 import { IndexPage } from "@focuson/form_components";
-import { newFetchers } from "./fetchers";
-import { identityL } from "./common";
 import { config, start } from "./config";
 import { focusOnMiddleware, FocusOnReducer, makeLs } from "./store";
-import { applyMiddleware, legacy_createStore, combineReducers } from "@reduxjs/toolkit";
+import { applyMiddleware, combineReducers, legacy_createStore } from "@reduxjs/toolkit";
 import { Lenses } from '@focuson/lens'
 
 export const combineAll = combineReducers ( {

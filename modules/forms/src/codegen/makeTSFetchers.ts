@@ -70,7 +70,7 @@ export function makeFetcherDataStructureImport<B, G> ( params: TSParams, pages: 
   const fetcherImports = fetchers.map ( ( [ page, restName, prop ] ) => `import { ${fetcherName ( prop )} } from '${fetcherFileName ( '.', params, page )}';` )
   return [
     ...importsDot ( params.commonFile ),
-    ...fetcherImports,
+    // ...fetcherImports,
     `import { FetcherTree,  } from "@focuson/fetcher";`,
     `import { HasTagHolder } from "@focuson/template";`,
     `import { HasPageSelection } from "@focuson/pages";`,

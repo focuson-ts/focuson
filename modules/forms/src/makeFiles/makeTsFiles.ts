@@ -75,9 +75,9 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
         `import * as domains from '${domainsFileName ( '..', params, mainP )}'`, '',
         ...makeAllEmptyData ( params, [ mainP ] ) ], details )
 
-      writeToFile ( fetcherFileName ( tsCode, params, mainP ) + ".ts", () => [
-        ...makeFetchersImport ( params, mainP ),
-        ...(makeAllFetchers ( params, [ mainP ] )) ], details )
+      // writeToFile ( fetcherFileName ( tsCode, params, mainP ) + ".ts", () => [
+      //   ...makeFetchersImport ( params, mainP ),
+      //   ...(makeAllFetchers ( params, [ mainP ] )) ], details )
 
       writeToFile ( restFileName ( tsCode, params, mainP ) + ".ts", () => makeRests ( params, mainP ) )
       writeToFile ( storybookFileName ( tsCode, params, mainP ) + '.ts', () => makeOneStory ( params, mainP ), details )
@@ -94,7 +94,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
 
     writeToFile ( `${tsCode}/${params.fetchersFile}.ts`, () => [
       ...makeFetcherDataStructureImport ( params, mainPs ),
-      ...makeFetchersDataStructure ( params, { variableName: 'fetchers', stateName: params.stateName }, mainPs ),
+      // ...makeFetchersDataStructure ( params, { variableName: 'fetchers', stateName: params.stateName }, mainPs ),
       ...makeNewFetchersDataStructure ( params, mainPs ) ], details )
 
     writeToFile ( `${tsCode}/${params.restsFile}.ts`, () => makeRestDetailsPage ( params, allPages ), details )

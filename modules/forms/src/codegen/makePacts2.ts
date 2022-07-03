@@ -8,6 +8,7 @@ import { parsePath } from "@focuson/lens";
 import { addStringToEndOfAllButLast, indentList, paramsForRestAction } from "./codegen";
 import { getRestTypeDetails, getUrlForRestAction, printRestAction, RestActionDetail, restActionForName } from "@focuson/rest";
 import { CompDataD, isRepeatingDd } from "../common/dataD";
+import { config } from "exampleapp/src/config";
 
 export function makeAllPactsForPage<B, G> ( params: TSParams, page: PageD<B, G> ): string[] {
   if ( !isMainPage ( page ) ) return []
@@ -22,8 +23,9 @@ export function makeAllPactsForPage<B, G> ( params: TSParams, page: PageD<B, G> 
     `import {emptyState, ${params.stateName} , commonIds, identityL, pathToLens } from "../common";`,
     `import * as rests from "../rests";`,
     `import { restUrlMutator } from "../rests";`,
-    `import { traceL } from "@focuson/focuson";`,
-    ...makeFetcherImports ( params, page ),
+    `import { restCommandsFromFetchers, traceL } from "@focuson/focuson";`,
+    `import { config } from "../config";`,
+    // ...makeFetcherImports ( params, page ),
     '',
     `describe("Allow pacts to be run from intelliJ for ${page.name}", () =>{})`,
     ``,
@@ -113,43 +115,24 @@ export function makeFetcherPact<B, G> ( params: TSParams, page: MainPageD<B, G>,
   if ( !defn.fetcher ) return []
   let rest = defn.rest;
   const errorPrefix = `${page.name}.rest[${restName}]`
-  let paramsValueForTest = makeParamValueForTest ( errorPrefix, rest, 'get' );
   return [
     `//GetFetcher pact test`,
-    `pactWith ( { consumer: '${page.name}', provider: '${providerName ( page )}', cors: true }, provider => {`,
     `describe ( '${page.name} - ${restName} - fetcher', () => {`,
-    `  it ( 'should have a  fetcher for ${rest.dataDD.name}', async () => {`,
-    `    await provider.addInteraction ( {`,
-    `      state: 'default',`,
-    `      uponReceiving: 'A request for ${rest.dataDD.name}',`,
-    `      withRequest: {`,
-    `        method: 'GET',`,
-    `        path: '${beforeSeparator ( "?", rest.url )}',`,
-    `        query:${JSON.stringify ( paramsValueForTest )}`,
-    `      },`,
-    `      willRespondWith: {`,
-    `        status: 200,`,
-    `        body: ${params.samplesFile}.${sampleName ( rest.dataDD )}0`,
-    `       },`,
-    `      } )`,
-    `      const firstState: FState  = { ...emptyState,debug:{}, pageSelection:[{ pageName: '${page.name}', pageMode: 'view', time: 'now' }], CommonIds: ${JSON.stringify ( makeCommonValueForTest ( errorPrefix, rest, 'get' ) )} }`,
-    ...indentList ( makeLensParamsTransformers ( params, page, restName, defn, 'get', [] ) ),
-    `      const withIds = massTransform ( firstState, ...lensTransforms )`,
-    `      const fetcher= ${fetcherName ( defn )} (Lenses.identity<${params.stateName}>().focusQuery('${page.name}'), commonIds ) `,
-    `      expect(fetcher.shouldLoad(withIds)).toEqual([]) // If this fails there is something wrong with the state`,
-    `      const f: FetcherTree<${params.stateName}> = { fetchers: [fetcher], children: [] }`,
-    `      let newState = await loadTree (f, withIds, fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn ), {fetcherDebug: false, loadTreeDebug: false}  )`,
-    `      let expectedRaw: any = {`,
-    `... withIds,`,
-    `      tags: {'${page.name}_${defn.targetFromPath}': ${JSON.stringify ( Object.values ( paramsValueForTest ) )}}`,
-    `      };`,
-    `      const expected = ${parsePath ( defn.targetFromPath, stateCodeBuilderWithSlashAndTildaFromIdentity ( params, page ) )}.set ( expectedRaw, ${params.samplesFile}.${sampleName ( rest.dataDD )}0 )`,
-    `      expect ( newState ).toEqual ( expected )`,
-    `    })`,
-    `  })`,
+    ...indentList ( [
+      `it ( 'should have a  fetcher for ${rest.dataDD.name}', async () => {`,
+      ...indentList ( [
+        `const firstState: FState  = { ...emptyState,debug:{}, pageSelection:[{ pageName: '${page.name}', pageMode: 'view', time: 'now' }], CommonIds: ${JSON.stringify ( makeCommonValueForTest ( errorPrefix, rest, 'get' ) )} }`,
+        ...makeLensParamsTransformers ( params, page, restName, defn, 'get', [] ),
+        `const withIds = massTransform ( firstState, ...lensTransforms )`,
+        `const restCommands: RestCommand[] = restCommandsFromFetchers ( config.tagHolderL, config.newFetchers, config.restDetails, '${page.name}', withIds )`,
+        `expect ( restCommands.length ).toBeGreaterThan(0)`,
+        `const restCommand = restCommands.find(rc =>rc.name==='${restDetailsName ( page, restName, rest )}')`,
+        `expect ( restCommand?.restAction ).toEqual ('get')`,
+      ] ),
+      `})`,
+    ] ),
     `})`,
-    ``,
-  ]
+    ``, ]
 }
 
 function makeLensParamsTransformers<B, G> ( params: TSParams, page: PageD<B, G>, restName: string, defn: RestDefnInPageProperties<G>, restAction: RestAction, extraTransforms: string[] ): string[] {

@@ -78,7 +78,6 @@ function fetchFn ( a: any, b: any ): Promise<[ number, number ]> {
 function config (): FocusOnConfig<StateForNewFetcherTests, FocusOnContext<StateForNewFetcherTests>, SimpleMessage> {
   return {
     fetchFn: fetchFn,
-    fetchers: { fetchers: [], children: [] },
     messageL: simpleMessagesL (),
     newFetchers: newFetchers,
     onError ( s: StateForNewFetcherTests, e: any ): StateForNewFetcherTests {throw Error ( `on error. ${e}\n${JSON.stringify ( s )}` )},

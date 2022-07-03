@@ -1,4 +1,4 @@
-import { focusPageClassName, fromPathFromRaw, HasPageSelection, HasSimpleMessageL, MultiPageDetails, PageDetailsForCombine, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages, simpleMessagesL } from "@focuson/pages";
+import { focusPageClassName, fromPathFromRaw, HasPageSelection, HasSimpleMessageL, mainPageFrom, MultiPageDetails, PageDetailsForCombine, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages, simpleMessagesL } from "@focuson/pages";
 import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
 import { FetcherTree, loadTree } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
@@ -8,7 +8,6 @@ import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestCommandAndTxs,
 import { TagHolder } from "@focuson/template";
 import { AllFetcherUsingRestConfig, restCommandsFromFetchers } from "./tagFetcherUsingRest";
 import { FocusOnDebug } from "./debug";
-import { mainPageFrom } from "@focuson/pages";
 
 
 export function defaultCombine<S> ( state: LensState<S, any, any>, pages: PageDetailsForCombine[] ) {
@@ -79,8 +78,8 @@ export interface FocusOnConfig<S, Context, MSGs> {
   /** The optional that points to where the tags for the fetchers are stored */
   tagHolderL: Optional<S, TagHolder>;
 
-  /** The collection of all registered fetchers that will get data from the back end */
-  fetchers: FetcherTree<S>,
+  /** @deprecated The collection of all registered fetchers that will get data from the back end.Replaced by newFetchers */
+  fetchers?: FetcherTree<S>,
 
   newFetchers: AllFetcherUsingRestConfig;
   /** If we need to mutate the url dependant on the rest action this does it. */
@@ -220,13 +219,15 @@ export function setJsonUsingNewFetchersUsingFlux<S, Context extends FocusOnConte
 }
 
 
+/** @deprecated Uses old fetchers */
 export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MSGs> ( config: FocusOnConfig<S, Context, MSGs>, context: Context, pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>, publish: ( lc: LensState<S, S, Context> ) => void ): ( s: S, reason: any ) => Promise<S> {
   return async ( main: S, trace: any ): Promise<S> => {
     console.log ( 'setJsonForFocusOn', trace )
     // @ts-ignore
     const debug: any = main.debug;
     const withDebug = debug?.recordTrace ? traceL<S> ().transform ( old => [ ...old ? old : [], trace ] ) ( main ) : main
-    const { fetchFn, preMutate, postMutate, onError, pages, restDetails, fetchers, restL, pageL, messageL, stringToMsg } = config
+    const { fetchFn, preMutate, postMutate, onError, fetchers, restDetails, restL, messageL, stringToMsg } = config
+    if ( !fetchers ) throw new Error ( `setJsonForFocusOn needs the old style fetchers in the config ` )
     const newStateFn = ( fs: S ) => publish ( lensState ( fs, setJsonForFocusOn ( config, context, pathToLens, publish ), 'setJson', context ) )
     try {
       const withPreMutate = preMutate ( withDebug )

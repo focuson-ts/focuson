@@ -7,7 +7,7 @@ import { Reducer } from "react";
 import { dispatchRestAndFetchCommands, FocusOnConfig, FocusOnContext, FocusOnDebug, HasFocusOnDebug, restCountL, traceL } from "@focuson/focuson";
 import { Lens, massTransform, Transform } from "@focuson/lens";
 import { pageSelectionlens, preMutateForPages, simpleMessagesL } from "@focuson/pages";
-import { fetchers, newFetchers } from "./fetchers";
+import {  newFetchers } from "./fetchers";
 import { restDetails, restUrlMutator } from "./rests";
 import { pages } from "./pages";
 import { RestCommand, RestCommandAndTxs, restL } from "@focuson/rest";

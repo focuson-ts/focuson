@@ -4,7 +4,7 @@ import { getElement, LensState } from "@focuson/state";
 import ReactDOM from "react-dom";
 import { context, Context, emptyState, FState, pathToLens } from "./{commonFile}";
 import { defaultDateFn, fetchWithDelay, fetchWithPrefix, loggingFetchFn, NameAnd, RestAction, SimpleMessage, sortedEntries, stringToSimpleMsg } from "@focuson/utils";
-import { fetchers } from "./{fetchersFile}";
+// import { fetchers } from "./{fetchersFile}";
 import { pages } from "./{pagesFile}";
 import { restL } from "@focuson/rest";
 import { restDetails, restUrlMutator } from "./{restsFile}";
@@ -33,11 +33,7 @@ export const config: FocusOnConfig<{stateName}, Context, SimpleMessage> = {
   pageL: pageSelectionlens (),
   /** The list of all registered pages that can be displayed with SelectedPage  */
   pages,
-
-
-  /** The list of all registered posters that can send data to the back end   */
-  /** The collection of all registered fetchers that will get data from the back end */
-  fetchers,
+  // fetchers,
   messageL: simpleMessagesL (),
   stringToMsg: stringToSimpleMsg(() => new Date().toUTCString(), 'info'),
   restL: restL (),
