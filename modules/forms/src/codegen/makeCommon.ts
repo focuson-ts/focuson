@@ -23,10 +23,11 @@ export function makeContext ( appConfig: AppConfig, params: TSParams ): string[]
 
   return [
     `export type Context = FocusOnContext<${params.stateName}>`,
-    `export const context: Context = {`,
-    `   ...defaultPageSelectionAndRestCommandsContext<FState> ( pages, commonIds),`,
-    `   combine: ${appConfig.combine.name}`,
-    `}` ]
+    // `export const context: Context = {`,
+    // `   ...defaultPageSelectionAndRestCommandsContext<FState> (  pages, commonIds,newFetchers,restDetails),`,
+    // `   combine: ${appConfig.combine.name}`,
+    // `}`
+  ]
 }
 
 export function makePathToLens ( params: TSParams ): string[] {
@@ -47,7 +48,8 @@ export function makeCommon<B, G> ( appConfig: AppConfig, params: TSParams, pds: 
     `import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusOnContext, HasFocusOnDebug, HasRestCount} from '@focuson/focuson';`,
     `import { LensProps } from '@focuson/state';`,
     `import { pages } from "./pages";`,
-
+    `import { newFetchers } from "./${params.fetchersFile}";`,
+    `import { restDetails } from "./${params.restsFile}";`,
     `import { ${appConfig.combine.name} } from "${appConfig.combine.import}";`,
     ...pageDomainsImport,
     '',
@@ -102,7 +104,7 @@ export function validateCommonParams ( cs: CommonParamsDetails[] ): CommonParamE
   let nameDuplicates = names.flatMap ( name => {
     const withSameName = cs.filter ( c => c.name === name );
     const uniqueOverImportantDetails = unique ( withSameName, summary )
-    return uniqueOverImportantDetails.length > 1 ? { name, details: withSameName.map ( c => `${summary ( c )} from ${c.page.name}${c.restName ? `.rest[${c.restName}].params[${name}}]` : `.params[${name}]`}` ).sort() } : [];
+    return uniqueOverImportantDetails.length > 1 ? { name, details: withSameName.map ( c => `${summary ( c )} from ${c.page.name}${c.restName ? `.rest[${c.restName}].params[${name}}]` : `.params[${name}]`}` ).sort () } : [];
   } );
   const nameMismatches: CommonParamError[] = cs.filter ( c => c.name != c.param.commonLens )
     .map ( c => {

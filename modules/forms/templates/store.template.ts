@@ -1,6 +1,6 @@
 import { applyMiddleware } from 'redux'
 import { legacy_createStore, Store } from '@reduxjs/toolkit'
-import { Context, context, emptyState, FState, identityL } from "./common";
+import { Context, emptyState, FState, identityL } from "./common";
 import { defaultDateFn, errorMonad, errorPromiseMonad, fetchWithDelay, fetchWithPrefix, loggingFetchFn, safeArray, SimpleMessage, stringToSimpleMsg } from "@focuson/utils";
 import { lensState } from "@focuson/state";
 import { Reducer } from "react";
@@ -11,7 +11,7 @@ import {  newFetchers } from "./fetchers";
 import { restDetails, restUrlMutator } from "./rests";
 import { pages } from "./pages";
 import { RestCommand, RestCommandAndTxs, restL } from "@focuson/rest";
-import { config,start } from "./config";
+import { config, context, start } from "./config";
 
 
 export interface FocusOnSetMainAction<S> {

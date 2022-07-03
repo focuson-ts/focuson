@@ -3,9 +3,9 @@ import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
 import { FetcherTree, loadTree } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
 import { identityOptics, Lens, Lenses, massTransform, NameAndLens, Optional, Transform } from "@focuson/lens";
-import { errorMonad, errorPromiseMonad, FetchFn, HasSimpleMessages, RestAction, safeArray, safeString } from "@focuson/utils";
-import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestCommandAndTxs, RestDetails, RestToTransformProps, restToTransforms } from "@focuson/rest";
-import { TagHolder } from "@focuson/template";
+import { errorMonad, errorPromiseMonad, FetchFn, HasSimpleMessages, RestAction, safeArray, safeString, SimpleMessage } from "@focuson/utils";
+import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestCommandAndTxs, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
+import { HasTagHolder, TagHolder } from "@focuson/template";
 import { AllFetcherUsingRestConfig, restCommandsFromFetchers } from "./tagFetcherUsingRest";
 import { FocusOnDebug } from "./debug";
 
@@ -32,26 +32,42 @@ export function defaultPageSelectionAndPostCommandsContext<S extends HasPageSele
 export interface HasPathToLens<S> {
   pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>
 }
+export interface HasFetchersAndRest<S, MSGs> {
+  newFetchers: AllFetcherUsingRestConfig;
+  /** The list of all registered posters that can send data to the back end   */
+  restDetails: RestDetails<S, MSGs>,
 
-export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasPathToLens<S> {
+  /** The lens to the list of PostCommands*/
+  restL: Optional<S, RestCommand[]>,
+
+  /** The optional that points to where the tags for the fetchers are stored */
+  tagHolderL: Optional<S, TagHolder>;
+}
+export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasPathToLens<S>, HasFetchersAndRest<S, SimpleMessage> {
   commonIds: NameAndLens<S>;
   pathToLens: ( s: S, currentLens?: Optional<S, any> ) => ( path: string ) => Optional<S, any>
 }
-export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSelection & HasRestCommands & HasSimpleMessages> ( pageDetails: MultiPageDetails<S, FocusOnContext<S>>, commonIds: NameAndLens<S> ):
-  FocusOnContext<S> {
+export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSelection & HasRestCommands & HasSimpleMessages & HasTagHolder>
+( pageDetails: MultiPageDetails<S, FocusOnContext<S>>, commonIds: NameAndLens<S>,
+  newFetchers: AllFetcherUsingRestConfig,
+  restDetails: RestDetails<S, SimpleMessage> ): FocusOnContext<S> {
   const pathToLens: ( s: S ) => ( path: string ) => Optional<S, any> =
           fromPathFromRaw ( pageSelectionlens<S> (), pageDetails )
+  // const{restL, tagHolderL, newFetchers} =
   return {
     ...defaultPageSelectionContext<S, FocusOnContext<S>> ( pageDetails ),
-    restL: Lenses.identity<S> ().focusQuery ( 'restCommands' ),
     simpleMessagesL: simpleMessagesL (),
     commonIds,
-    pathToLens
+    pathToLens,
+    restL: restL<S> (),
+    tagHolderL: Lenses.identity<S> ().focusQuery ( 'tags' ),
+    newFetchers,
+    restDetails
   }
 }
 
 
-export interface FocusOnConfig<S, Context, MSGs> {
+export interface FocusOnConfig<S, Context, MSGs> extends HasFetchersAndRest<S, MSGs> {
   /** How data is sent to/fetched from apis */
   fetchFn: FetchFn,
   /** A hook that is called before anything else.  */
@@ -63,25 +79,14 @@ export interface FocusOnConfig<S, Context, MSGs> {
   stringToMsg: ( msg: string ) => MSGs,
 
   /** The lens to the current selected page */
-  pageL: Lens<S, PageSelection[]>,
+  pageL: Optional<S, PageSelection[]>,
   /** The list of all registered pages that can be displayed with SelectedPage  */
   pages: MultiPageDetails<S, Context>,
-
   messageL: Optional<S, MSGs[]>;
-
-
-  /** The lens to the list of PostCommands*/
-  restL: Optional<S, RestCommand[]>,
-  /** The list of all registered posters that can send data to the back end   */
-  restDetails: RestDetails<S, MSGs>,
-
-  /** The optional that points to where the tags for the fetchers are stored */
-  tagHolderL: Optional<S, TagHolder>;
-
   /** @deprecated The collection of all registered fetchers that will get data from the back end.Replaced by newFetchers */
   fetchers?: FetcherTree<S>,
 
-  newFetchers: AllFetcherUsingRestConfig;
+
   /** If we need to mutate the url dependant on the rest action this does it. */
   restUrlMutator: ( r: RestAction, url: string ) => string;
   /** A count used to say how many times we have been doing 'do a rest/fetcher loop'. Used to stop a poison setup where we constantly retry*/

@@ -1,7 +1,8 @@
 import { SelectedPage } from "@focuson/pages";
 import { getElement } from "@focuson/state";
 import ReactDOM from "react-dom";
-import { context, {stateName}, identityL } from "./{commonFile}";
+import {  {stateName}, identityL } from "./{commonFile}";
+import { context } from "./config";
 import { defaultDateFn } from "@focuson/utils";
 import { IndexPage } from "@focuson/form_components";
 import { config, start } from "./config";

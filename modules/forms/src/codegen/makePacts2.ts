@@ -1,14 +1,13 @@
 import { isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { beforeSeparator, RestAction, sortedEntries } from "@focuson/utils";
-import { fetcherName, providerName, queryName, resolverName, restDetailsName, sampleName } from "./names";
+import { fetcherName, providerName, restDetailsName, sampleName } from "./names";
 import { isRestLens, makeCommonValueForTest, makeParamValueForTest, postFixForEndpoint, RestD } from "../common/restD";
 import { TSParams } from "./config";
 import { lensFocusQueryWithSlashAndTildaFromIdentity, stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
 import { parsePath } from "@focuson/lens";
 import { addStringToEndOfAllButLast, indentList, paramsForRestAction } from "./codegen";
 import { getRestTypeDetails, getUrlForRestAction, printRestAction, RestActionDetail, restActionForName } from "@focuson/rest";
-import { CompDataD, isRepeatingDd } from "../common/dataD";
-import { config } from "exampleapp/src/config";
+import { CompDataD } from "../common/dataD";
 
 export function makeAllPactsForPage<B, G> ( params: TSParams, page: PageD<B, G> ): string[] {
   if ( !isMainPage ( page ) ) return []

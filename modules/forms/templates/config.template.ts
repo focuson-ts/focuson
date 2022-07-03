@@ -1,21 +1,19 @@
-import {  PageMode, pageSelectionlens, SelectedPage, simpleMessagesL } from "@focuson/pages";
-import { FocusOnConfig, setJsonForFocusOn, setJsonUsingNewFetchersUsingFlux,restCountL } from "@focuson/focuson";
-import { getElement, LensState } from "@focuson/state";
-import ReactDOM from "react-dom";
-import { context, Context, emptyState, FState, pathToLens } from "./{commonFile}";
-import { defaultDateFn, fetchWithDelay, fetchWithPrefix, loggingFetchFn, NameAnd, RestAction, SimpleMessage, sortedEntries, stringToSimpleMsg } from "@focuson/utils";
-// import { fetchers } from "./{fetchersFile}";
-import { pages } from "./{pagesFile}";
-import { restL } from "@focuson/rest";
+import { simpleMessagesL } from "@focuson/pages";
+import { defaultPageSelectionAndRestCommandsContext, FocusOnConfig, restCountL } from "@focuson/focuson";
+import { commonIds, Context, emptyState, FState } from "./{commonFile}";
+import { defaultDateFn, fetchWithDelay, fetchWithPrefix, loggingFetchFn, SimpleMessage, stringToSimpleMsg } from "@focuson/utils";
 import { restDetails, restUrlMutator } from "./{restsFile}";
-import { IndexPage } from "@focuson/form_components";
-import { newFetchers } from "./fetchers";
-import { identityL } from "./common";
+import { newFetchers } from "./{fetchersFile}";
+import { pages } from "./{pagesFile}";
+import {MyCombined} from '@focuson/form_components';
 
-
+export const context: Context = {
+  ...defaultPageSelectionAndRestCommandsContext<FState> ( pages, commonIds, newFetchers, restDetails ),
+  combine: MyCombined
+}
 export const config: FocusOnConfig<{stateName}, Context, SimpleMessage> = {
   newFetchers,
-  tagHolderL: identityL.focusQuery ( 'tags' ),
+  tagHolderL: context.tagHolderL,
   restUrlMutator,
   /** How data is sent to/fetched from apis */
   fetchFn: {fetch},
@@ -30,13 +28,13 @@ export const config: FocusOnConfig<{stateName}, Context, SimpleMessage> = {
   },
 
   /** The lens to the current selected page */
-  pageL: pageSelectionlens (),
+  pageL: context.pageSelectionL,
   /** The list of all registered pages that can be displayed with SelectedPage  */
-  pages,
+  pages: context.pages,
   // fetchers,
   messageL: simpleMessagesL (),
   stringToMsg: stringToSimpleMsg(() => new Date().toUTCString(), 'info'),
-  restL: restL (),
+  restL: context.restL,
   restDetails: restDetails,
   restCountL: restCountL(),
   maxRestCount: 5
