@@ -3,11 +3,12 @@ import { BooleanInput, Input, } from "./input";
 import { Label } from "./label";
 import { NumberTransformer, StringTransformer } from "./transformers";
 import { defaultDateFn, NameAnd, stringToSimpleMsg, toArray } from "@focuson/utils";
-import { FocusOnContext } from "@focuson/focuson";
+import { FocusOnContext, HasPathToLens } from "@focuson/focuson";
 import { LensState } from "@focuson/state";
 import { Transform } from "@focuson/lens";
 import { InputChangeCommands, inputCommandProcessors, processChangeCommandProcessor } from "@focuson/rest";
 import { makeButtons } from "./makeButtons";
+import { HasSimpleMessageL } from "@focuson/pages";
 
 export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T, Context>, LabelAlignment, InputOnChangeProps<S, Context> {
   label?: string;
@@ -25,7 +26,7 @@ export interface TransformerProps<T> {
   type: string;
   default: T;
 }
-export function makeInputChangeTxs<S, C extends FocusOnContext<S>> ( id: string, parentState: LensState<S, any, C> | undefined, change?: InputChangeCommands | InputChangeCommands[] ): Transform<S, any>[] {
+export function makeInputChangeTxs<S, C extends HasSimpleMessageL<S> & HasPathToLens<S>> ( id: string, parentState: LensState<S, any, C> | undefined, change?: InputChangeCommands | InputChangeCommands[] ): Transform<S, any>[] {
   if ( parentState === undefined ) return []
   const { simpleMessagesL, pathToLens } = parentState.context
   const config = { toPathTolens: pathToLens ( parentState.main, parentState.optional ), stringToMsg: stringToSimpleMsg ( defaultDateFn, 'info' ), messageL: simpleMessagesL };

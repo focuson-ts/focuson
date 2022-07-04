@@ -1,7 +1,7 @@
 import { LensProps, LensState } from "@focuson/state";
 import { NameAnd } from "@focuson/utils";
 import { FocusOnContext } from "@focuson/focuson";
-import { LabelAndDropdown } from "./labelAndDropdown";
+import { ContextForDropdown, LabelAndDropdown } from "./labelAndDropdown";
 import { PageMode } from "@focuson/pages";
 
 
@@ -11,14 +11,15 @@ export interface OneDropDownDetails<S, C> {
   dataPath?: string; // the path to data display in the RHS
   display?: ( props: any ) => JSX.Element;// the component to display the data
 }
-export interface DataDrivenFixedOptionDropDownAndDetailsProps<S> extends LensProps<S, string, FocusOnContext<S>> {
+
+export interface DataDrivenFixedOptionDropDownAndDetailsProps<S> extends LensProps<S, string, ContextForDropdown<S>> {
   id: string;
-  parentState: LensState<S, any, FocusOnContext<S>>;
+  parentState: LensState<S, any, ContextForDropdown<S>>;
   mode: PageMode;
   allButtons: NameAnd<JSX.Element>;
   label: string;
   pleaseSelect?: string;
-  details: NameAnd<OneDropDownDetails<S, FocusOnContext<S>>>
+  details: NameAnd<OneDropDownDetails<S, ContextForDropdown<S>>>
 }
 
 function DropDownFromData<S> ( props: DataDrivenFixedOptionDropDownAndDetailsProps<S> ) {

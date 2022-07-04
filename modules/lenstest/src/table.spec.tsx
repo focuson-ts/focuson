@@ -2,7 +2,7 @@ import { lensState, LensState } from "@focuson/state";
 import { shallow } from "enzyme";
 import { ModalButtonStateForTest } from "./modalButton.integration.spec";
 import { enzymeSetup } from "./enzymeAdapterSetup";
-import { getValue, Table } from "@focuson/form_components";
+import { getValueForTable, Table } from "@focuson/form_components";
 import { findJoiner, safeArray } from "@focuson/utils";
 
 enzymeSetup ()
@@ -41,9 +41,9 @@ describe ( "Table", () => {
 
   describe ( "getValue", () => {
     it ( "should getValue", () => {
-      expect ( getValue<TableContents> ( 'a', safeArray ( twoRows.contents )[ 0 ], '-' ) ).toEqual ( 1 )
-      expect ( getValue<TableContents> ( 'b', safeArray ( twoRows.contents )[ 0 ], '-' ) ).toEqual ( "one" )
-      expect ( getValue<TableContents> ( 'c', safeArray ( twoRowsWithC.contents )[ 0 ], '-' ) ).toEqual ( "3-4" )
+      expect ( getValueForTable<TableContents> ( 'a', safeArray ( twoRows.contents )[ 0 ], '-' ) ).toEqual ( 1 )
+      expect ( getValueForTable<TableContents> ( 'b', safeArray ( twoRows.contents )[ 0 ], '-' ) ).toEqual ( "one" )
+      expect ( getValueForTable<TableContents> ( 'c', safeArray ( twoRowsWithC.contents )[ 0 ], '-' ) ).toEqual ( "3-4" )
     } )
   } )
 

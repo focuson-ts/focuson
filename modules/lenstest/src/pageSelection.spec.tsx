@@ -10,6 +10,7 @@ const x = { g: 1, h: [ 'h0', 'h1' ], i: { j: 2 } }
 
 const textForLabelState = {
   messages: [],
+  tags:{},
   pageSelection: [ pageSelection ],
   restCommands: [],
   a: {
@@ -35,7 +36,8 @@ const abxL = identity.focusOn ( 'a' ).focusQuery ( 'b' ).focusQuery ( 'x' )
 const pageDetails: MultiPageDetails<TextForLabelState, FocusOnContext<TextForLabelState>> = {
   a: { config: {}, pageType: 'MainPage', pageFunction: () => <span/>, lens: aL, pageMode: 'edit' }
 }
-const state = lensState ( textForLabelState, s => {}, '', defaultPageSelectionAndRestCommandsContext<TextForLabelState> ( pageDetails, {} ) )
+const state = lensState ( textForLabelState, s => {}, '',
+  defaultPageSelectionAndRestCommandsContext<TextForLabelState> ( pageDetails, {}, {}, {} ) )
 
 // const fromPath: ( path: string[], description?: string ) => Optional<TextForLabelState, any> = fromPathFor ( state )
 let stateabx = state.copyWithLens ( abxL );
@@ -114,10 +116,10 @@ describe ( "fromPathStringFor. Page is 'a'. The current lens is a/b/x", () => {
 //Note that the raw behaviour is tested about. Here we just check we make suitable lens
 describe ( "fromPathFromRaw", () => {
   it ( "should make lens", () => {
-    const fromPath = fromPathFromRaw ( pageSelectionlens<TextForLabelState> (), pageDetails)( textForLabelState )
+    const fromPath = fromPathFromRaw ( pageSelectionlens<TextForLabelState> (), pageDetails ) ( textForLabelState )
     expect ( fromPath ( "~/b/c" ).description ).toEqual ( 'I.focus?(a).focus?(b).focus?(c)' )
     expect ( fromPath ( "/a/b/c" ).description ).toEqual ( 'I.focus?(a).focus?(b).focus?(c)' )
-    expect ( () =>fromPath ( "b/c" ).description ).toThrow("Error parsing 'b/c'. Cannot find initial  ''")
+    expect ( () => fromPath ( "b/c" ).description ).toThrow ( "Error parsing 'b/c'. Cannot find initial  ''" )
   } )
 
 } )

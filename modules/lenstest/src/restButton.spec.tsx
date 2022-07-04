@@ -6,8 +6,9 @@ import { fromPathFromRaw, HasPageSelection, MultiPageDetails, PageDetailsForComb
 import { HasRestCommands, restL } from "@focuson/rest";
 import { SimpleMessage } from "@focuson/utils";
 import { FocusOnContext } from "@focuson/focuson";
-import { identityOptics } from "@focuson/lens";
+import { identityOptics, Lenses } from "@focuson/lens";
 import { RestButton } from "@focuson/form_components";
+import { HasTagHolder } from "@focuson/template";
 
 enzymeSetup ()
 
@@ -16,13 +17,14 @@ interface PageData {
   b?: string;
 }
 
-export interface RestButtonStateForTest extends HasPageSelection, HasRestCommands {
+export interface RestButtonStateForTest extends HasPageSelection, HasRestCommands , HasTagHolder{
   messages: SimpleMessage[],
   mainPage?: PageData
 }
 
 const emptyS: RestButtonStateForTest = {
   messages: [],
+  tags:{},
   pageSelection: [ { "pageName": "mainPage", "pageMode": "view", time: 'now' } ],
   restCommands: [],
   mainPage: {}
@@ -35,7 +37,10 @@ const context: Context = {
   simpleMessagesL: simpleMessagesL (),
   pathToLens: fromPathFromRaw ( pageSelectionlens (), pageDetails ),
   pages: pageDetails,
-  commonIds: {}
+  commonIds: {},
+  newFetchers: {},
+  restDetails: {},
+  tagHolderL: Lenses.identity<RestButtonStateForTest> ().focusQuery ( 'tags' ),
 }
 
 
@@ -58,6 +63,7 @@ describe ( "RestButton", () => {
     expect ( remembered ).toEqual ( {
       "mainPage": {},
       "messages": [],
+      "tags": {},
       "pageSelection": [ { "pageMode": "view", "pageName": "mainPage", "time": "now" } ],
       "restCommands": [ { "name": "someRestName", "restAction": "get" } ]
     } )
@@ -70,6 +76,7 @@ describe ( "RestButton", () => {
     expect ( remembered ).toEqual ( {
       "mainPage": {},
       "messages": [],
+      "tags": {},
       "pageSelection": [ { "pageMode": "view", "pageName": "mainPage", "time": "now" } ],
       "restCommands": [ { "name": "someRestName", "restAction": { "state": "newState" } } ]
     } )
@@ -85,6 +92,7 @@ describe ( "RestButton", () => {
     button.simulate ( 'click' )
     expect ( remembered ).toEqual ( {
       "mainPage": {},
+      "tags": {},
       "messages": [],
       "pageSelection": [ { "pageMode": "view", "pageName": "mainPage", "time": "now" } ],
       "restCommands": [ {

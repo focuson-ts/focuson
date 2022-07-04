@@ -30,7 +30,7 @@ export function defaultPageSelectionAndPostCommandsContext<S extends HasPageSele
   }
 }
 export interface HasPathToLens<S> {
-  pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>
+  pathToLens: ( s: S, currentLens?: Optional<S, any> ) => ( path: string ) => Optional<S, any>
 }
 export interface HasFetchersAndRest<S, MSGs> {
   newFetchers: AllFetcherUsingRestConfig;
@@ -45,7 +45,7 @@ export interface HasFetchersAndRest<S, MSGs> {
 }
 export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasPathToLens<S>, HasFetchersAndRest<S, SimpleMessage> {
   commonIds: NameAndLens<S>;
-  pathToLens: ( s: S, currentLens?: Optional<S, any> ) => ( path: string ) => Optional<S, any>
+
 }
 export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSelection & HasRestCommands & HasSimpleMessages & HasTagHolder>
 ( pageDetails: MultiPageDetails<S, FocusOnContext<S>>, commonIds: NameAndLens<S>,

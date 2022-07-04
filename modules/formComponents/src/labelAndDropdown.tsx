@@ -1,12 +1,14 @@
 import { NameAnd, safeObject } from "@focuson/utils";
 import { reasonFor } from "@focuson/state";
-import { FocusOnContext } from "@focuson/focuson";
+import { HasPathToLens } from "@focuson/focuson";
 import { CommonStateProps, DropDownOnChangeProps, LabelAlignment } from "./common";
 import { Label } from "./label";
 import { makeInputChangeTxs } from "./labelAndInput";
 
 import { ChangeEvent } from "react";
 import { HasButtons, makeButtons } from "./makeButtons";
+import { HasSimpleMessageL, PageSelectionContext } from "@focuson/pages";
+import { HasRestCommandL } from "@focuson/rest";
 
 export interface DropdownProps<S, T, Context> extends CommonStateProps<S, T, Context>, DropDownOnChangeProps<S, Context> ,HasButtons{
   enums: NameAnd<string>;
@@ -16,11 +18,13 @@ export interface DropdownProps<S, T, Context> extends CommonStateProps<S, T, Con
   enabledBy?: boolean;
   required?: boolean;
 }
+export type ContextForDropdown<S> =  PageSelectionContext<S>& HasRestCommandL<S>& HasSimpleMessageL<S>& HasPathToLens<S>
+
 export interface LabelAndDropdownProps<S, T, Context> extends DropdownProps<S, T, Context>, LabelAlignment {
   label: string;
 }
 
-export function LabelAndDropdown<S, T, Context extends FocusOnContext<S>> ( props: LabelAndDropdownProps<S, string, Context> ) {
+export function LabelAndDropdown<S, T, Context extends ContextForDropdown<S>> ( props: LabelAndDropdownProps<S, string, Context> ) {
   const { id, state, label } = props
 
   return (<div className={`dropdown-container ${props.labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}>
@@ -31,7 +35,7 @@ export function LabelAndDropdown<S, T, Context extends FocusOnContext<S>> ( prop
     </div>
   )
 }
-export function Dropdown<S, T, Context extends FocusOnContext<S>> ( props: DropdownProps<S, string, Context> ) {
+export function Dropdown<S, T, Context extends ContextForDropdown<S>> ( props: DropdownProps<S, string, Context> ) {
   const { enums, parentState, state, ariaLabel, id, mode, onChange, specificOnChange, readonly, pleaseSelect, size, required, enabledBy } = props
   let selected = state.optJson ();
   if ( selected !== undefined && typeof selected !== 'string' ) throw new Error ( `Component ${id} has a selected value which isn't a string. It is ${JSON.stringify ( selected, null, 2 )}` )

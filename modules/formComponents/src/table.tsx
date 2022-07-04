@@ -24,7 +24,7 @@ export interface TableProps<S, T, Context> extends CommonTableProps<S, T, Contex
 
 }
 
-export function getValue<T> ( o: keyof T, row: T, joiners: undefined | string | string[] ): any {
+export function getValueForTable<T> ( o: keyof T, row: T, joiners: undefined | string | string[] ): any {
   let result = makeIntoString ( o.toString (), row[ o ], findJoiner ( o.toString (), joiners ) );
   return result;
 }
@@ -45,7 +45,7 @@ export function defaultOnClick<S, Context, T> ( props: CommonTableProps<S, T, Co
   }
   return onClick;
 }
-export type OneRowFn<T> = ( row: T, i: number, selectedClass: string | undefined, rights: string[]|undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) => JSX.Element
+export type OneRowFn<T> = ( row: T, i: number, selectedClass: string | undefined, rights: string[] | undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) => JSX.Element
 export const rawTable = <S, T, Context> (
   titles: any[],
   onClick: ( i: number, row: T ) => ( e: any ) => void,
@@ -59,7 +59,7 @@ export const rawTable = <S, T, Context> (
     function selectedClass ( i: number ) {return i === selected ? 'grid-selected' : undefined }
 
     const prefixFilterString = prefixFilter?.optJsonOr ( '' )
-    const filter = ( t: T ) => prefixColumn && prefixFilter ? getValue ( prefixColumn, t, joiners ).toString ().startsWith ( prefixFilterString ) : true;
+    const filter = ( t: T ) => prefixColumn && prefixFilter ? getValueForTable ( prefixColumn, t, joiners ).toString ().startsWith ( prefixFilterString ) : true;
     let maxCountInt = maxCount ? Number.parseInt ( maxCount ) : 0;
     let count = 0;
     let tableBody = json.length === 0 && emptyData ?
@@ -78,14 +78,16 @@ export const rawTable = <S, T, Context> (
     </>
   };
 
-function tdClass ( rights: string[] | undefined, s: any ) {
+export function tdClassForTable ( rights: string[] | undefined, s: any ) {
   if ( !rights ) return undefined
   return rights.includes ( s ) ? 'right' : undefined
 }
-export const defaultOneRow = <T extends any> ( id: string, order: (keyof T)[], joiners: string | string[] | undefined, ...extraTds: (( i: number, row: T ) => JSX.Element)[] ): OneRowFn<T> =>
-  ( row: T, i: number, clazz: string | undefined, rights: string[]|undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) =>
+export const defaultOneRowWithGetValue = <T extends any> ( getValue: ( o: keyof T, row: T, joiners: undefined | string | string[] ) => any ) => ( id: string, order: (keyof T)[], joiners: string | string[] | undefined, ...extraTds: (( i: number, row: T ) => JSX.Element)[] ): OneRowFn<T> =>
+  ( row: T, i: number, clazz: string | undefined, rights: string[] | undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) =>
     (<tr id={`${id}[${i}]`} className={clazz} key={i} onClick={onClick ( i, row )}>{order.map ( o =>
-      <td id={`${id}[${i}].${o.toString ()}`} className={tdClass ( rights, o )} key={o.toString ()}>{getValue ( o, row, joiners )}</td> )}{extraTds.map ( e => <td>{e ( i, row )}</td> )}</tr>);
+      <td id={`${id}[${i}].${o.toString ()}`} className={tdClassForTable ( rights, o )} key={o.toString ()}>{getValue ( o, row, joiners )}</td> )}{extraTds.map ( e => <td>{e ( i, row )}</td> )}</tr>);
+
+export const defaultOneRow = defaultOneRowWithGetValue ( getValueForTable )
 
 export function Table<S, T, Context> ( props: TableProps<S, T, Context> ) {
   const { id, order, joiners } = props
@@ -95,11 +97,11 @@ export function Table<S, T, Context> ( props: TableProps<S, T, Context> ) {
 
 export const oneRowForStructure = <S, T extends any, Context>
 ( id: string, state: LensState<S, T[], Context>, paths: NameAnd<( s: LensState<S, T, Context> ) => LensState<S, any, Context>>, ...extraTds: (( i: number, row: T ) => JSX.Element)[] ): OneRowFn<T> =>
-  ( row: T, i: number, clazz: string | undefined, rights: string[]|undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) => {
+  ( row: T, i: number, clazz: string | undefined, rights: string[] | undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) => {
     const rowState = state.chainLens ( Lenses.nth ( i ) )
     return (<tr id={`${id}[${i}]`} className={clazz} key={i} onClick={onClick ( i, row )}>{Object.values ( paths ).map ( ( o, col ) => {
       const colState = o ( rowState )
-      return <td id={`${id}[${i}].${col}`} className={tdClass ( rights, o )} key={col}>{colState.optJson ()}</td>
+      return <td id={`${id}[${i}].${col}`} className={tdClassForTable ( rights, o )} key={col}>{colState.optJson ()}</td>
     } )}{extraTds.map ( e => <td>{e ( i, row )}</td> )}</tr>);
   }
 

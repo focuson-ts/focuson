@@ -5,6 +5,7 @@ import { SBookProvider } from "./sbookProvider";
 import { defaultPageSelectionAndRestCommandsContext, defaultPageSelectionContext, FocusOnContext } from "@focuson/focuson";
 import { HasSimpleMessages, testDateFn } from "@focuson/utils";
 import { HasRestCommands } from "@focuson/rest";
+import { HasTagHolder } from "@focuson/template";
 
 export default {
   component: ModalButton,
@@ -20,14 +21,14 @@ interface ForModalPage {
 }
 
 
-interface StateForModalButton extends HasPageSelection, HasSimpleMessages, HasRestCommands {
+interface StateForModalButton extends HasPageSelection, HasSimpleMessages, HasRestCommands, HasTagHolder{
 
 }
 
 
 const Template: Story<ForModalPage> = ( args: ForModalPage ) =>
-  SBookProvider<StateForModalButton, FocusOnContext<StateForModalButton>> ( { pageSelection: [], messages: [], restCommands: [] },
-    defaultPageSelectionAndRestCommandsContext<StateForModalButton> ( {}, {} ),
+  SBookProvider<StateForModalButton, FocusOnContext<StateForModalButton>> ( { pageSelection: [], messages: [], restCommands: [] , tags: {}},
+    defaultPageSelectionAndRestCommandsContext<StateForModalButton> ( {}, {}, {}, {} ),
     s => (
       <ModalButton state={s} focusOn={'some/base'}{...args} dateFn={testDateFn}/>
     ) );

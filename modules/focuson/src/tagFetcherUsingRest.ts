@@ -15,6 +15,9 @@ export interface FetcherUsingRestConfig {
 export type  AllFetcherUsingRestConfig = NameAnd<FetcherUsingRestConfig[]>
 
 const fetcherToRestCommandsAndWhy = <S, FD, D, MSGs> ( tagHolderL: Optional<S, TagHolder>, f: FetcherUsingRestConfig, restDetails: RestDetails<S, MSGs> ) => ( s: S, pageName: string ): [ RestCommand | undefined, string, string ] => {
+  if (tagHolderL===null) throw Error(`tagHolderL is null`)
+  if (f===null) throw Error(`f is null`)
+  if (restDetails===null) throw Error(`restDetails is null`)
   // @ts-ignore
   const debug = s.debug?.tagFetcherDebug
   const { tagName, restName } = f
@@ -22,6 +25,7 @@ const fetcherToRestCommandsAndWhy = <S, FD, D, MSGs> ( tagHolderL: Optional<S, T
   if ( theseRestDatails === undefined )
     throw Error ( `Fetched misconfigured. ${JSON.stringify ( f )}. Legal restNames are ${Object.keys ( restDetails )}` )
   const { fdLens, dLens } = theseRestDatails
+  console.log('making makeTagLens', tagHolderL, pageName, tagName)
   const tagL = makeTagLens ( tagHolderL, pageName, tagName )
   let targetLens = fdLens.chain ( dLens );
   const currentTags = tagL.getOption ( s );

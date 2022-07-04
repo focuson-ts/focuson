@@ -5,7 +5,8 @@ import { shallow } from "enzyme";
 import { FocusOnContext } from "@focuson/focuson";
 import { enzymeSetup } from "./enzymeAdapterSetup";
 import { SimpleMessage, testDateFn } from "@focuson/utils";
-import { identityOptics } from "@focuson/lens";
+import { identityOptics, Lenses } from "@focuson/lens";
+import { HasTagHolder, TagHolder } from "@focuson/template";
 
 enzymeSetup ()
 
@@ -25,12 +26,13 @@ interface PageData {
   }
 }
 
-export interface ModalButtonStateForTest extends HasPageSelection, HasRestCommands {
+export interface ModalButtonStateForTest extends HasPageSelection, HasRestCommands, HasTagHolder {
   messages: SimpleMessage[],
   mainPage: PageData
 }
 const emptyS: ModalButtonStateForTest = {
   messages: [],
+  tags:{},
   pageSelection: [ { "pageName": "mainPage", "pageMode": "view", time: 'now' } ],
   restCommands: [],
   mainPage: {}
@@ -63,7 +65,10 @@ const context: Context = {
   simpleMessagesL: simpleMessagesL (),
   pathToLens: fromPathFromRaw ( pageSelectionlens (), pageDetails ),
   pages: pageDetails,
-  commonIds: {}
+  commonIds: {},
+  newFetchers: {},
+  restDetails: {},
+  tagHolderL: Lenses.identity<ModalButtonStateForTest> ().focusQuery ( 'tags' ),
 }
 
 function displayAndGetButton ( s: ModalButtonStateForTest, setMain: ( s: ModalButtonStateForTest ) => void, fn: ( s: LensState<ModalButtonStateForTest, PageData, Context> ) => JSX.Element ) {
@@ -81,6 +86,7 @@ describe ( "modal buttons", () => {
       button.simulate ( 'click' )
       expect ( remembered ).toEqual ( {
         messages: [],
+        "tags": {},
         mainPage: {
           "child": { "data": "a" },
           "temp": { "data": "a" }
@@ -96,6 +102,7 @@ describe ( "modal buttons", () => {
       button.simulate ( 'click' )
       expect ( remembered ).toEqual ( {
         messages: [],
+        "tags": {},
         "pageSelection": [ { "pageName": "mainPage", "pageMode": "view", "time": "now", }, { "focusOn": "~/temp", "firstTime": true, "pageMode": "view", "pageName": "someModal", "time": "timeForTest", } ],
         "restCommands": [],
         mainPage: { "temp": { "data": "data" } }
@@ -135,6 +142,7 @@ describe ( "modal buttons", () => {
         .simulate ( 'click' )
       expect ( remembered ).toEqual ( {
         messages: [],
+        "tags": {},
         "pageSelection": [
           { "pageName": "mainPage", "pageMode": "view", "time": "now", },
           {
@@ -150,6 +158,7 @@ describe ( "modal buttons", () => {
       console.log ( JSON.stringify ( remembered1, null, 2 ) )
       expect ( remembered1 ).toEqual ( {
         messages: [],
+        "tags": {},
         "mainPage": { "temp": { "data": "data" }, "data": { "data": "data" } },
         "pageSelection": [ { "pageMode": "view", "pageName": "mainPage", "time": "now", } ],
         "restCommands": []
@@ -166,6 +175,7 @@ describe ( "modal buttons", () => {
       expect ( remembered ).toEqual ( {
         "mainPage": { "temp": { "data": "data" } },
         "messages": [],
+        "tags": {},
         "pageSelection": [
           { "pageMode": "view", "pageName": "mainPage", "time": "now", },
           {
@@ -181,6 +191,7 @@ describe ( "modal buttons", () => {
       displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> ).simulate ( 'click' )
       expect ( remembered1 ).toEqual ( {
         messages: [],
+        "tags": {},
         "mainPage": { "temp": { "data": "data" }, "data": { "data": "data" } },
         "pageSelection": [ { "pageMode": "view", "pageName": "mainPage", "time": "now", } ],
         "restCommands": [ { "name": "restName", "restAction": "update" } ]
@@ -198,6 +209,7 @@ describe ( "with nested child", () => {
     button.simulate ( 'click' )
     expect ( remembered ).toEqual ( {
       messages: [],
+      "tags": {},
       mainPage: {
         nested: { "child": { "data": "a" } },
         "temp": { "data": "a" }
@@ -214,6 +226,7 @@ describe ( "with nested child", () => {
       .simulate ( 'click' )
     expect ( remembered ).toEqual ( {
       messages: [],
+      "tags": {},
       "pageSelection": [ { "pageName": "mainPage", "pageMode": "view", "time": "now", }, {
         "firstTime": true, "pageMode": "view", "pageName": "someModal",
         "focusOn": "~/temp",
@@ -228,6 +241,7 @@ describe ( "with nested child", () => {
     displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> ).simulate ( 'click' )
     expect ( remembered1 ).toEqual ( {
       messages: [],
+      "tags": {},
       "mainPage": { "temp": { "data": "data" }, nested: { "data": { "data": "data" } } },
       "pageSelection": [ { "pageMode": "view", "pageName": "mainPage", "time": "now" } ],
       "restCommands": []
@@ -242,6 +256,7 @@ describe ( "with nested child", () => {
       .simulate ( 'click' )
     expect ( remembered ).toEqual ( {
       messages: [],
+      "tags": {},
       "pageSelection": [
         { "pageName": "mainPage", "pageMode": "view", time: 'now' },
         {
@@ -256,6 +271,7 @@ describe ( "with nested child", () => {
     displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> ).simulate ( 'click' )
     expect ( remembered1 ).toEqual ( {
       messages: [],
+      "tags": {},
       "mainPage": { "temp": { "data": "data" }, nested: { "data": { "data": "data" } } },
       "pageSelection": [ { "pageMode": "view", "pageName": "mainPage", "time": "now", } ],
       "restCommands": [ { "name": "restName", "restAction": "update" } ]
@@ -272,6 +288,7 @@ describe ( "with lists of data", () => {
     button.simulate ( 'click' )
     expect ( remembered ).toEqual ( {
       messages: [],
+      "tags": {},
       mainPage: {
         "index": 1,
         list: [ { data: '0' }, { data: '1' }, { data: '2' } ],
@@ -311,6 +328,7 @@ it ( "should create empty, then copy back", () => {
     .simulate ( 'click' )
   expect ( remembered ).toEqual ( {
     messages: [],
+    "tags": {},
     "pageSelection": [ { "pageName": "mainPage", "pageMode": "view", "time": "now" },
       {
         "focusOn": "~/temp", "firstTime": true, "pageMode": "view", "pageName": "someModal",
@@ -324,6 +342,7 @@ it ( "should create empty, then copy back", () => {
   displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> ).simulate ( 'click' )
   expect ( remembered1 ).toEqual ( {
     messages: [],
+    "tags": {},
     "mainPage": { "temp": { "data": "data" }, nested: { "data": { "data": "data" } } },
     "pageSelection": [ { "pageMode": "view", "pageName": "mainPage", "time": "now" } ],
     "restCommands": []
@@ -338,6 +357,7 @@ it ( "should create empty, then copy back with a rest command", () => {
     .simulate ( 'click' )
   expect ( remembered ).toEqual ( {
     messages: [],
+    "tags": {},
     "pageSelection": [
       { "pageName": "mainPage", "pageMode": "view", "time": "now", },
       {
@@ -352,6 +372,7 @@ it ( "should create empty, then copy back with a rest command", () => {
   displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> ).simulate ( 'click' )
   expect ( remembered1 ).toEqual ( {
     messages: [],
+    "tags": {},
     "mainPage": { "temp": { "data": "data" }, nested: { "data": { "data": "data" } } },
     "pageSelection": [ { "pageMode": "view", "pageName": "mainPage", "time": "now" } ],
     "restCommands": [ { "name": "restName", "restAction": "update", } ]

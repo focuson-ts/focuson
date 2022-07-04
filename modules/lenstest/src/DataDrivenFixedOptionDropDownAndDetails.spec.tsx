@@ -2,23 +2,22 @@ import { lensState, LensState } from "@focuson/state";
 import { shallow } from "enzyme";
 import { HasRestCommands, restL } from "@focuson/rest";
 import { HasPageSelection, PageDetailsForCombine, PageMode, pageSelectionlens, simpleMessagesL } from "@focuson/pages";
-import { FocusOnContext } from "@focuson/focuson";
-import { DataDrivenFixedOptionDropDownAndDetails, OneDropDownDetails } from "@focuson/form_components";
+import { ContextForDropdown, DataDrivenFixedOptionDropDownAndDetails, OneDropDownDetails } from "@focuson/form_components";
 import { HasSimpleMessages, NameAnd } from "@focuson/utils";
 import { enzymeSetup } from "./enzymeAdapterSetup";
 import { Lenses } from "@focuson/lens";
 
 enzymeSetup ()
 
-type Context = FocusOnContext<DataDrivenState>
+type Context = ContextForDropdown <DataDrivenState>
 const context: Context = {
   restL: restL<DataDrivenState> (),
-  combine: ( state, pages: PageDetailsForCombine[] ): JSX.Element => <div>{pages.map ( p => p.element )}</div>,
+  combine: ( state: LensState<DataDrivenState, any, Context>, pages: PageDetailsForCombine[] ): JSX.Element => <div>{pages.map ( p => p.element )}</div>,
   pageSelectionL: pageSelectionlens (),
   simpleMessagesL: simpleMessagesL (),
   pathToLens: () => () => Lenses.identity<DataDrivenState> ().focusQuery ( 'jointData' ), //just something to compile we aren't using it
   pages: {},
-  commonIds: {}
+  // commonIds: {}
 }
 function display ( s: DataDrivenState, setMain: ( s: DataDrivenState ) => void, fn: ( s: LensState<DataDrivenState, DataDrivenState, Context> ) => JSX.Element ) {
   const comp = shallow ( fn ( lensState<DataDrivenState, Context> ( s, setMain, 'DataDriven', context ) ) )

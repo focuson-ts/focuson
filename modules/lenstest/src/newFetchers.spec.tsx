@@ -5,7 +5,6 @@ import { TagHolder } from "@focuson/template";
 import { Lenses, NameAndLens, Optional } from "@focuson/lens";
 import { MultiPageDetails, PageSelection, simpleMessagesL, simpleMessagesPageConfig } from "@focuson/pages";
 import React from "react";
-import { restUrlMutator } from "exampleapp/src/rests";
 
 
 interface NewFetcherDomain {
@@ -17,12 +16,13 @@ interface StateForNewFetcherTests extends HasRestCount {
   messages: SimpleMessage[];
   ids?: { id1?: number, id2?: number },
   data?: NewFetcherDomain;
-  tags?: TagHolder;
+  tags: TagHolder;
   debug?: FocusOnDebug;
 }
 
 const empty: StateForNewFetcherTests = {
   pageSelection: [ { pageName: 'pageName', pageMode: 'view', time: 'now' } ],
+  tags: {},
   restCommands: [],
   messages: [],
   debug: { restDebug: false, tagFetcherDebug: false }
@@ -166,7 +166,8 @@ describe ( "restCommandsFromFetchers should create a rest command when needed", 
 
 describe ( "processRestsAndFetchers", () => {
   it ( "should load if fetcher needs it", async () => {
-    const [ actual ] = await processRestsAndFetchers ( config (), defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {} ) ) ( [] ) (
+    const [ actual ] = await processRestsAndFetchers ( config (),
+      defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails ) ) ( [] ) (
       { ...empty, ids: { id1: 111, id2: 222 } }
     )
 
@@ -186,7 +187,7 @@ describe ( "processRestsAndFetchers", () => {
 
   } )
   it ( "should load and record trace if fetcher needs it and recordTrace is on", async () => {
-    const [ actual ] = await processRestsAndFetchers ( config (), defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {} ) ) ( [] ) (
+    const [ actual ] = await processRestsAndFetchers ( config (), defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails ) ) ( [] ) (
       { ...empty, ids: { id1: 111, id2: 222 }, debug: { recordTrace: true } }
     )
 
@@ -212,7 +213,7 @@ describe ( "processRestsAndFetchers", () => {
     ] )
   } )
   it ( "should not load if fetcher doesn't needs it", async () => {
-    const actual = await processRestsAndFetchers ( config (), defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {} ) ) ( [] ) (
+    const actual = await processRestsAndFetchers ( config (), defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails ) ) ( [] ) (
       empty
     )
     expect ( actual ).toEqual ( [] )

@@ -1,10 +1,10 @@
 import { isMassTransformReason, isSetJsonReason, LensProps, MassTransformReason, reasonFor, SetJsonReason } from "@focuson/state";
-import { findThisPageElement, findValidityDetails, findValidityForInput, findValidityForRadio, findValidityForSelect, focusPageClassName, fromPathGivenState, HasPageSelection, HasPageSelectionLens, isMainPageDetails, PageSelectionContext } from "@focuson/pages";
-import { HasTagHolder } from "@focuson/template";
-import { HasSimpleMessages, safeArray, safeString, SimpleMessage, sortedEntries } from "@focuson/utils";
-import { HasRestCommandL, HasRestCommands } from "@focuson/rest";
-import { FocusOnConfig, FocusOnContext, traceL } from "@focuson/focuson";
-import { Lenses, NameAndLens } from "@focuson/lens";
+import { findThisPageElement, findValidityForInput, findValidityForRadio, findValidityForSelect, focusPageClassName, fromPathGivenState, HasPageSelectionLens, isMainPageDetails, mainPage, PageSelection, PageSelectionContext } from "@focuson/pages";
+import { HasTagHolder, tagOps } from "@focuson/template";
+import { HasSimpleMessages, safeArray, safeObject, safeString, SimpleMessage, sortedEntries, toArray } from "@focuson/utils";
+import { HasRestCommandL, OneRestDetails, RestDetails } from "@focuson/rest";
+import { FocusOnContext, traceL } from "@focuson/focuson";
+import { Lenses, Optional } from "@focuson/lens";
 import { ToggleButton } from "./toggleButton";
 import { AssertPages, MakeTest } from "./makeTest";
 import { LabelAndStringInput } from "./labelAndInput";
@@ -12,7 +12,7 @@ import { LabelAndDropdown } from "./labelAndDropdown";
 import { AccordionCollapseAll, AccordionExpandAll, AccordionWithInfo } from "./accordion";
 import { trimDownText } from "./common";
 import { CopyToClipboard } from "./CopyToClipboard";
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 
 export function Tags<S extends HasTagHolder, C> ( { state }: LensProps<S, any, C> ) {
@@ -187,8 +187,89 @@ export interface DisplayGuardsProps {
 }
 export function DisplayGuards ( { guards }: DisplayGuardsProps ) {
   return <div className='display-guards'>
-    {guards.map ( ( [ name, value ], i ) => <span key={name} className={`guard-${value}`}>{i===0?'':',  '}{name}:{`${value}`}</span> )}
+    {guards.map ( ( [ name, value ], i ) => <span key={name} className={`guard-${value}`}>{i === 0 ? '' : ',  '}{name}:{`${value}`}</span> )}
   </div>
+}
+const findTagLens = <S extends any> ( { cd, fdd }: RestDetails<S, SimpleMessage>[string], id: string ) => fdd[ id ] ? fdd[ id ] : cd[ id ];
+function TagTable<S, FD, D> ( rest: OneRestDetails<S, FD, D, SimpleMessage>, theseTags: (string | undefined)[], desiredTags: [ string, (string | undefined) ][] ) {
+  if ( rest.ids.length === 0 ) return <div>There are no ids</div>
+  return <table className="fetcher-debug">
+    <thead>
+    <th>Id</th>
+    <th>Path to id</th>
+    <th>value (must be defined for load)</th>
+    <th>Remembered value in 'tags'</th>
+    </thead>
+    <tbody>
+    {rest.ids.map ( ( id, tagIndex ) => {
+      const tagLens: Optional<any, any> = findTagLens ( rest, id )
+      let thisRememberedTag = theseTags?.[ tagIndex ];
+      console.log ( 'tag index', tagIndex, id, thisRememberedTag )
+      let thisTag = desiredTags[ tagIndex ][ 1 ];
+      return <tr key={id}>
+        <td>{id}</td>
+        <td>{tagLens.description}</td>
+        <td>{thisTag?JSON.stringify(thisTag):'undefined'}</td>
+        <td>{thisRememberedTag ? JSON.stringify ( thisRememberedTag ) : 'undefined'}</td>
+      </tr>;
+    } )}</tbody>
+  </table>;
+}
+function Fetchers<S, C extends FocusOnContext<S>> ( { state }: LensProps<S, any, C> ) {
+  // @ts-ignore
+  const debug = state.main?.debug?.tagFetcherDebug
+  if ( !debug ) return <></>
+
+  const page: PageSelection = mainPage ( state )
+  const tagsInState = safeObject ( state.context.tagHolderL.getOption ( state.main ) )
+  console.log ( 'Tags', tagsInState )
+  return <div>
+    {toArray ( state.context.newFetchers?.[ page.pageName ] ).map ( ( f, i ) => {
+        const rest = state.context.restDetails[ f.restName ]
+        const tagName = `${page.pageName}_${f.tagName}`
+        const theseTags = tagsInState?.[ tagName ]
+        console.log ( 'theseTags', tagName, theseTags )
+        const { tags } = tagOps
+        const desiredTags = tags ( rest, 'get' ) ( state.main );
+      let json = state.copyWithLens ( rest.fdLens ).chainLens ( rest.dLens ).optJson ();
+      return <div><h2>Rest {f.restName} </h2>
+          <dl>
+            <dt>url</dt>
+            <dd>{rest.url}</dd>
+            <dt>Tags</dt>
+            <dd>
+              {TagTable ( rest, theseTags, desiredTags )}
+            </dd>
+            <dt>Target path</dt>
+            <td>{f.tagName}</td>
+            <dt>Target - This must be undefined for the fetcher to load data</dt>
+            <dd>
+              <pre>{json?JSON.stringify ( json, null, 2 ):'undefined'}</pre>
+            </dd>
+          </dl>
+        </div>
+      }
+    )}
+  </div>
+}
+function DebugTags<S extends HasTagHolder, C extends FocusOnContext<S>> ( { state }: LensProps<S, any, C> ) {
+  return <div id="debug-tags-container">
+    <table className="table-bordered">
+      <thead>
+      <tr>
+        <th>Tag Fetchers</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td><Fetchers state={state}/></td>
+      </tr>
+      <tr>
+        <td><Tags state={state}/></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>;
 }
 export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends FocusOnContext<S>> ( props: DebugProps<S, C> ) {
   const { state } = props
@@ -288,20 +369,7 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
         </table>
       </div>
 
-      <div id="debug-tags-container">
-        <table className="table-bordered">
-          <thead>
-          <tr>
-            <th>Tags</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td><Tags state={state}/></td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
+      <DebugTags state={state}/>
       <div id="debug-raw-state-container">
         <table className="table-bordered">
           <thead>
