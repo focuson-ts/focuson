@@ -206,10 +206,11 @@ function TagTable<S, FD, D> ( rest: OneRestDetails<S, FD, D, SimpleMessage>, the
       let thisRememberedTag = theseTags?.[ tagIndex ];
       console.log ( 'tag index', tagIndex, id, thisRememberedTag )
       let thisTag = desiredTags[ tagIndex ][ 1 ];
+      const classForUndefinedTag = thisTag? undefined: 'debug-tag-undefined'
       return <tr key={id}>
         <td>{id}</td>
         <td>{tagLens.description}</td>
-        <td>{thisTag?JSON.stringify(thisTag):'undefined'}</td>
+        <td className={classForUndefinedTag}>{thisTag?JSON.stringify(thisTag):'undefined'}</td>
         <td>{thisRememberedTag ? JSON.stringify ( thisRememberedTag ) : 'undefined'}</td>
       </tr>;
     } )}</tbody>

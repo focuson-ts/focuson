@@ -14,6 +14,9 @@ input::-webkit-inner-spin-button {
 .fetcher-debug>table>thead>th{
     text-align: left;
 }
+.debug-tag-undefined {
+    background-color: red;
+}
 /* Firefox */
 input[type=number] {
     -moz-appearance: textfield;
