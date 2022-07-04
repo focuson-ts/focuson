@@ -27,7 +27,8 @@ export type DbValues = string | TableAndField
 export interface TableAndField {
   table: DBTable;
   field: string;
-  fieldAlias?: string
+  fieldAlias?: string;
+
 }
 export interface TableAliasAndField extends TableAndField {
   alias: string
