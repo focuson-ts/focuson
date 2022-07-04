@@ -296,10 +296,10 @@ export const whereFieldToFieldDataFromTableWhereLink = <G> ( errorPrefix: string
 export const whereFieldToFieldDataFromTableQueryLink = <G> ( errorPrefix: string, w: WhereFromQuery, restParams: RestParams ): FieldData<G> => {
   const paramDetails = restParams[ w.paramName ]
   const dbFieldName = w.field
-  if ( paramDetails === undefined ) throw Error ( `${errorPrefix}. Cannot find param in ${JSON.stringify ( w )}\nLegal values are ${Object.keys ( restParams )}` )
+  if ( paramDetails === undefined ) throw Error ( `${errorPrefix}. Cannot find param [${w.paramName}] in ${JSON.stringify ( w )}\nLegal values are ${Object.keys ( restParams )}` )
   if ( paramDetails.javaType === 'String' ) return ({ dbFieldName, reactType: 'string', rsGetter: 'getString', dbType: 'varchar(255)', sample: [] })
   if ( paramDetails.javaType === 'int' ) return ({ dbFieldName, reactType: 'number', rsGetter: 'getInt', dbType: 'integer', sample: [] })
-  throw Error ( `${errorPrefix} Cannot find whereFieldToFieldData for [${w.paramName}]  with java type [${paramDetails.javaType}] (paramDetails are ${JSON.stringify ( paramDetails )})` )
+  throw Error ( `${errorPrefix} Cannot find whereFieldToFieldData for param [${w.paramName}]  with java type [${paramDetails.javaType}] (paramDetails are ${JSON.stringify ( paramDetails )})` )
 };
 
 export function findFieldsFromWhere<G> ( errorPrefix: string, ws: WhereLink[], restParams: RestParams ): TableAndFieldAndAliasData<G>[] {

@@ -8,6 +8,8 @@ import { findChildResolvers, findQueryMutationResolver } from "../codegen/makeJa
 import { safeObject } from "@focuson/utils";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { postcodeWithResolversRestD } from "../example/postCodeDemo/addressSearch.restD";
+import { ListOfPaymentsPagePD } from "../example/ListOfPayments/listOfPayements.pageD";
+import { accountAndAddressDetailsRD } from "../example/ListOfPayments/listOfPayements.restD";
 
 describe ( "makeResolvers", () => {
   it ( "should make resolvers", () => {
@@ -37,6 +39,7 @@ describe ( "makeResolvers", () => {
       "import focuson.data.utils.LoggedDataSource;",
       "import focuson.data.utils.Messages;",
       "import focuson.data.utils.FocusonNotFound404Exception;",
+      "import static focuson.data.utils.GraphQlUtils.getData;",
       "//added by param systemTime",
       "import focuson.data.utils.ITimeService;",
       "import focuson.data.mutator.utils.Tuple2;",
@@ -51,11 +54,11 @@ describe ( "makeResolvers", () => {
       "",
       "  public DataFetcher<Map<String,Object>> getChequeCreditbooks(){",
       "    return dataFetchingEnvironment -> {",
-      "      String dbName = dataFetchingEnvironment.getArgument(\"dbName\");",
-      "      int brandRef = dataFetchingEnvironment.getArgument(\"brandRef\");",
-      "      int applRef = dataFetchingEnvironment.getArgument(\"applRef\");",
-      "      int clientRef = dataFetchingEnvironment.getArgument(\"clientRef\");",
-      "      int accountId = dataFetchingEnvironment.getArgument(\"accountId\");",
+      "      String dbName =  getData(dataFetchingEnvironment, \"dbName\");",
+      "      int brandRef =  getData(dataFetchingEnvironment, \"brandRef\");",
+      "      int applRef =  getData(dataFetchingEnvironment, \"applRef\");",
+      "      int clientRef =  getData(dataFetchingEnvironment, \"clientRef\");",
+      "      int accountId =  getData(dataFetchingEnvironment, \"accountId\");",
       "      Messages msgs=dataFetchingEnvironment.getLocalContext();",
       "      Connection connection = dataSource.getConnection(getClass());",
       "      try  {",
@@ -99,7 +102,7 @@ describe ( "makeResolvers", () => {
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ])
+    ] )
   } )
 
   it ( `should make a resolver for a 'get' that is done manually`, () => {
@@ -128,6 +131,7 @@ describe ( "makeResolvers", () => {
       "import focuson.data.utils.LoggedDataSource;",
       "import focuson.data.utils.Messages;",
       "import focuson.data.utils.FocusonNotFound404Exception;",
+      "import static focuson.data.utils.GraphQlUtils.getData;",
       "import focuson.data.mutator.utils.Tuple2;",
       "@Component",
       "public class EAccountsSummary_getEAccountsSummaryResolver implements EAccountsSummary_getEAccountsSummary_FFetcher{",
@@ -136,12 +140,12 @@ describe ( "makeResolvers", () => {
       "   private LoggedDataSource dataSource;",
       "  public DataFetcher<Map<String,Object>> getEAccountsSummary(){",
       "    return dataFetchingEnvironment -> {",
-      "      String dbName = dataFetchingEnvironment.getArgument(\"dbName\");",
-      "      int brandRef = dataFetchingEnvironment.getArgument(\"brandRef\");",
-      "      int applRef = dataFetchingEnvironment.getArgument(\"applRef\");",
-      "      int clientRef = dataFetchingEnvironment.getArgument(\"clientRef\");",
-      "      int accountId = dataFetchingEnvironment.getArgument(\"accountId\");",
-      "      String employeeType = dataFetchingEnvironment.getArgument(\"employeeType\");",
+      "      String dbName =  getData(dataFetchingEnvironment, \"dbName\");",
+      "      int brandRef =  getData(dataFetchingEnvironment, \"brandRef\");",
+      "      int applRef =  getData(dataFetchingEnvironment, \"applRef\");",
+      "      int clientRef =  getData(dataFetchingEnvironment, \"clientRef\");",
+      "      int accountId =  getData(dataFetchingEnvironment, \"accountId\");",
+      "      String employeeType =  getData(dataFetchingEnvironment, \"employeeType\");",
       "      Messages msgs=dataFetchingEnvironment.getLocalContext();",
       "      Connection connection = dataSource.getConnection(getClass());",
       "      try  {",
@@ -168,7 +172,7 @@ describe ( "makeResolvers", () => {
   it ( "should make resolvers for non 'get' resolvers", () => {
     expect ( makeResolvers ( paramsForTest, EAccountsSummaryPD, 'eAccountsSummary', eAccountsSummaryRestD,
       'totalMonthlyCost', safeObject ( eAccountsSummaryRestD.resolvers ).balancesAndMonthlyCostResolver, findResolverData ( 'someError', findChildResolvers ( eAccountsSummaryRestD ), 'balancesAndMonthlyCostResolver' )
-    )        .map(s => s.replace(/"/g, "'")) ).toEqual ( [
+    ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "package focuson.data.resolvers.EAccountsSummary;",
       "",
       "import focuson.data.fetchers.IFetcher;",
@@ -191,6 +195,7 @@ describe ( "makeResolvers", () => {
       "import focuson.data.utils.LoggedDataSource;",
       "import focuson.data.utils.Messages;",
       "import focuson.data.utils.FocusonNotFound404Exception;",
+      "import static focuson.data.utils.GraphQlUtils.getData;",
       "import focuson.data.mutator.utils.Tuple2;",
       "@Component",
       "public class EAccountsSummary_balancesAndMonthlyCostResolverResolver implements EAccountsSummary_balancesAndMonthlyCostResolver_FFetcher{",
@@ -199,12 +204,12 @@ describe ( "makeResolvers", () => {
       "   private LoggedDataSource dataSource;",
       "  public DataFetcher<Map<String,Object>> balancesAndMonthlyCostResolver(){",
       "    return dataFetchingEnvironment -> {",
-      "      String dbName = dataFetchingEnvironment.getArgument('dbName');",
-      "      int brandRef = dataFetchingEnvironment.getArgument('brandRef');",
-      "      int applRef = dataFetchingEnvironment.getArgument('applRef');",
-      "      int clientRef = dataFetchingEnvironment.getArgument('clientRef');",
-      "      int accountId = dataFetchingEnvironment.getArgument('accountId');",
-      "      String employeeType = dataFetchingEnvironment.getArgument('employeeType');",
+      "      String dbName =  getData(dataFetchingEnvironment, 'dbName');",
+      "      int brandRef =  getData(dataFetchingEnvironment, 'brandRef');",
+      "      int applRef =  getData(dataFetchingEnvironment, 'applRef');",
+      "      int clientRef =  getData(dataFetchingEnvironment, 'clientRef');",
+      "      int accountId =  getData(dataFetchingEnvironment, 'accountId');",
+      "      String employeeType =  getData(dataFetchingEnvironment, 'employeeType');",
       "      Messages msgs=dataFetchingEnvironment.getLocalContext();",
       "      Connection connection = dataSource.getConnection(getClass());",
       "      try  {",
@@ -241,7 +246,7 @@ describe ( "makeResolvers", () => {
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ])
+    ] )
   } )
 
   it ( "should make resolvers for a sql list resolvers", () => {
@@ -270,6 +275,7 @@ describe ( "makeResolvers", () => {
       "import focuson.data.utils.LoggedDataSource;",
       "import focuson.data.utils.Messages;",
       "import focuson.data.utils.FocusonNotFound404Exception;",
+      "import static focuson.data.utils.GraphQlUtils.getData;",
       "import focuson.data.mutator.utils.Tuple2;",
       "@Component",
       "public class PostCodeSearchResponse_getPostCodeDataLineResolver implements PostCodeSearchResponse_getPostCodeDataLine_FFetcher{",
@@ -278,8 +284,8 @@ describe ( "makeResolvers", () => {
       "   private LoggedDataSource dataSource;",
       "  public DataFetcher<List<Map<String,Object>>> getPostCodeDataLine(){",
       "    return dataFetchingEnvironment -> {",
-      "      String dbName = dataFetchingEnvironment.getArgument(\"dbName\");",
-      "      String postcode = dataFetchingEnvironment.getArgument(\"postcode\");",
+      "      String dbName =  getData(dataFetchingEnvironment, \"dbName\");",
+      "      String postcode =  getData(dataFetchingEnvironment, \"postcode\");",
       "       Messages msgs=dataFetchingEnvironment.getLocalContext();",
       "      Connection connection = dataSource.getConnection(getClass());",
       "      try  {",
@@ -316,8 +322,71 @@ describe ( "makeResolvers", () => {
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ])
+    ] )
   } )
 
-
+  it ( 'should make a resolver for using fromParent types', () => {
+    expect ( makeResolvers ( paramsForTest, ListOfPaymentsPagePD, 'accountDetails', accountAndAddressDetailsRD,
+      'getFullName', safeObject ( accountAndAddressDetailsRD.resolvers ).getFullName,
+      findQueryMutationResolver ( accountAndAddressDetailsRD, 'get' ) ) ).toEqual ( [
+      "package focuson.data.resolvers.ListOfPaymentsPage;",
+      "",
+      "import focuson.data.fetchers.IFetcher;",
+      "import org.springframework.stereotype.Component;",
+      "import org.springframework.beans.factory.annotation.Autowired;",
+      "",
+      "import java.util.List;",
+      "import java.util.ArrayList;",
+      "import java.util.Map;",
+      "import java.util.HashMap;",
+      "import java.util.Date;",
+      "import java.sql.CallableStatement;",
+      "import java.sql.PreparedStatement;",
+      "import java.sql.ResultSet;",
+      "import java.sql.Connection;",
+      "import java.sql.SQLException;",
+      "import graphql.schema.DataFetcher;",
+      "import java.text.SimpleDateFormat;",
+      "import focuson.data.fetchers.ListOfPaymentsPage.AccountDetailsForListOfPayments_getAccountDetailsForListOfPayments_FFetcher;",
+      "import focuson.data.utils.LoggedDataSource;",
+      "import focuson.data.utils.Messages;",
+      "import focuson.data.utils.FocusonNotFound404Exception;",
+      "import static focuson.data.utils.GraphQlUtils.getData;",
+      "import focuson.data.mutator.utils.Tuple2;",
+      "@Component",
+      "public class AccountDetailsForListOfPayments_getAccountDetailsForListOfPaymentsResolver implements AccountDetailsForListOfPayments_getAccountDetailsForListOfPayments_FFetcher{",
+      "",
+      "   @Autowired",
+      "   private LoggedDataSource dataSource;",
+      "  public DataFetcher<Map<String,Object>> getAccountDetailsForListOfPayments(){",
+      "    return dataFetchingEnvironment -> {",
+      "      String dbName =  getData(dataFetchingEnvironment, \"dbName\");",
+      "      int accountId =  getData(dataFetchingEnvironment, \"accountId\");",
+      "      int vbAcountSeq =  getData(dataFetchingEnvironment, \"vbAcountSeq\");",
+      "      int employeeId =  getData(dataFetchingEnvironment, \"employeeId\");",
+      "      int clientRef =  getData(dataFetchingEnvironment, \"clientRef\");",
+      "      Map<String,Object> paramsFromParent = dataFetchingEnvironment.getSource();",
+      "      String forename = (String)paramsFromParent.get(\"forename\");",
+      "      String surname = (String)paramsFromParent.get(\"surname\");",
+      "      Messages msgs=dataFetchingEnvironment.getLocalContext();",
+      "      Connection connection = dataSource.getConnection(getClass());",
+      "      try  {",
+      "        //from ListOfPaymentsPage.rest[accountDetails].resolvers[\"getAccountDetailsForListOfPayments\"]",
+      "        String fullname =  AccountDetailsForListOfPayments_getAccountDetailsForListOfPayments_undefined0(connection,msgs,dbName,forename,surname);",
+      "        Map<String,Object> result=new HashMap<>();",
+      "        result.put(\"fullname\", fullname);",
+      "        return result;",
+      "       } finally {dataSource.close(getClass(),connection);}",
+      "    };}",
+      "",
+      "//If you have a compiler error in the type here, did you match the types of the output params in your manual code with the declared types in the .restD?",
+      "    public String AccountDetailsForListOfPayments_getFullName_undefined0(Connection connection, Messages msgs, Object dbName, String forename, String surname) throws SQLException {",
+      "      String fullname = forename + \"++++\" + surname;",
+      "      return fullname;",
+      "  }",
+      "",
+      "public String dbName() {return IFetcher.db; }",
+      "}"
+    ])
+  } )
 } )

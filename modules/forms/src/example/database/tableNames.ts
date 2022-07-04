@@ -42,3 +42,12 @@ export const fourOhFourTable: DBTable = {
   notes: "",
   schema: onlySchema
 }
+export const loanAppTable: DBTable = {
+  name: 'loan_applicants', schema: onlySchema, description: '', notes: ''
+}
+export const clientNames_C10T: DBTable = {
+  name: 'C10', schema: onlySchema, description: '', notes: ''
+}
+export const clientAddress_C60T: DBTable = {
+  name: 'C60', schema: onlySchema, description: '', notes: ''
+}

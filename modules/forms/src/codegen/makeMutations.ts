@@ -13,7 +13,7 @@ import {
   displayParam,
   importForTubles,
   isInputParam,
-  isOutputParam, isSqlMutationThatIsAList,
+  isOutputParam, isParentMutationParam, isSqlMutationThatIsAList,
   isSqlOutputParam,
   isStoredProcOutputParam,
   javaTypeForOutput, JavaTypePrimitive,
@@ -130,7 +130,7 @@ function findType ( errorPrefix: string, params: NameAnd<AllLensRestParams<any>>
 export const typeForParamAsInput = ( errorPrefix: string, params: NameAnd<AllLensRestParams<any>> ) => ( m: MutationParam ) => {
   if ( isOutputParam ( m ) ) return m.javaType;
   if ( typeof m === 'string' ) return findType ( errorPrefix, params, m )
-  if ( m.type === 'input' ) return m.javaType ? m.javaType : findType ( errorPrefix, params, m.name )
+  if ( m.type === 'input' || isParentMutationParam(m) ) return m.javaType ? m.javaType : findType ( errorPrefix, params, m.name )
   if ( m.type === 'integer' ) return 'Integer'
   if ( m.type === 'string' ) return 'String'
   return 'Object'

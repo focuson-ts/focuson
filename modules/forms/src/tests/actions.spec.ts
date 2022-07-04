@@ -1,13 +1,13 @@
 import { AuthoriseTableData } from "exampleapp/src/formComponents/authoriseTable";
-import { approvePendingFees, authoriseApprovedFees } from "./actions";
 import { lensState, LensState } from "@focuson/state";
+import { approvePendingFees, authoriseApprovedFees } from "../actions";
 
-const pending: AuthoriseTableData = { status: 'PENDING' }
-const pendingHeld: AuthoriseTableData = { status: 'PENDING', hold: true }
-const approved: AuthoriseTableData = { status: 'APPROVED' }
-const approvedHeld: AuthoriseTableData = { status: 'APPROVED', hold: true }
-const authorised: AuthoriseTableData = { status: 'AUTHORISED' }
-const authorisedHeld: AuthoriseTableData = { status: 'AUTHORISED', hold: true }
+const pending: AuthoriseTableData = { status: 'PENDING', type: 'CR', amount: '1.00' }
+const pendingHeld: AuthoriseTableData = { status: 'PENDING', hold: true, type: 'CR', amount: '1.00' }
+const approved: AuthoriseTableData = { status: 'APPROVED', type: 'CR', amount: '1.00' }
+const approvedHeld: AuthoriseTableData = { status: 'APPROVED', hold: true, type: 'CR', amount: '1.00' }
+const authorised: AuthoriseTableData = { status: 'AUTHORISED', type: 'CR', amount: '1.00' }
+const authorisedHeld: AuthoriseTableData = { status: 'AUTHORISED', hold: true, type: 'CR', amount: '1.00' }
 
 interface Holder {
   data: AuthoriseTableData[];
@@ -19,8 +19,8 @@ describe ( "actions", () => {
     var remembered: any = {}
     approvePendingFees ( state ( m => remembered = m ) ( pending, pending, pendingHeld, pendingHeld, approved, approvedHeld, authorised, authorisedHeld ), 'someId' )
     expect ( remembered.data ).toEqual ( [
-      { "approvedBy": "you just now", "status": "APPROVED" },
-      { "approvedBy": "you just now", "status": "APPROVED" },
+      { "approvedBy": "you just now", "status": "APPROVED", type: 'CR', amount: '1.00' },
+      { "approvedBy": "you just now", "status": "APPROVED", type: 'CR', amount: '1.00' },
       pendingHeld, pendingHeld,
       approved, approvedHeld, authorised, authorisedHeld
     ] )
@@ -29,7 +29,7 @@ describe ( "actions", () => {
     var remembered: any = {}
     authoriseApprovedFees ( state ( m => remembered = m ) ( pending, pending, pendingHeld, pendingHeld, approved, approvedHeld, authorised, authorisedHeld ), 'someId' )
     expect ( remembered.data ).toEqual ( [
-      pending, pending, pendingHeld, pendingHeld, { "authorisedBy": "you just now", status: 'AUTHORISED' }, approvedHeld, authorised, authorisedHeld
+      pending, pending, pendingHeld, pendingHeld, { "authorisedBy": "you just now", status: 'AUTHORISED', type: 'CR', amount: '1.00' }, approvedHeld, authorised, authorisedHeld
     ] )
   } )
 } )

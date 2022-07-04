@@ -2,11 +2,12 @@ import { ExampleDataD, ExampleRestD } from "../common";
 
 import { AccountDetailsDD, CurrentPaymentCountsDD, postCodeSearchResponseDD, PrintRecordHistoryDD } from "./listOfPayements.dataD";
 import { IntParam, RestD, RestParams, StringParam } from "../../common/restD";
-import { onlySchema } from "../database/tableNames";
+import { accountT, clientAddress_C60T, clientNames_C10T, loanAppTable, onlySchema } from "../database/tableNames";
 import { AllGuards } from "../../buttons/guardButton";
 import { allCommonIds, fromCommonIds } from "../commonIds";
-import { GuardedStoredProcedureMutation, MutationParamForStoredProc, OutputForSqlMutationParam } from "../../common/resolverD";
+import { DBTable, GuardedStoredProcedureMutation, MutationParamForStoredProc, OutputForSqlMutationParam } from "../../common/resolverD";
 import { StringDD } from "../../common/dataD";
+import { ChildEntity } from "../../codegen/makeSqlFromEntities";
 
 export const PrintRecordHistoryParams: RestParams = fromCommonIds ( 'accountId', 'vbAcountSeq', 'employeeId' )//vbAcountSeq,rbsMtAccount,newBankSeq,employeeId,
 
@@ -129,11 +130,47 @@ export const CurrentPaymentCountsRD: ExampleRestD = {
       } ]
   }
 }
+
+function customerAndAddress ( filterPath: string, indicator: string ): ChildEntity {
+  return {
+    table: clientNames_C10T, type: 'Single', idInParent: 'client_ref', idInThis: 'cliref', staticWhere: `ind = '${indicator}'`,
+    filterPath,
+    children: {
+      mainAddress: { table: clientAddress_C60T, type: 'Single', idInParent: 'cliref', idInThis: 'cliref' }
+    }
+  }
+}
+
 export const accountAndAddressDetailsRD: ExampleRestD = {
-  params: PrintRecordHistoryParams,
+  params: {
+    ...PrintRecordHistoryParams,
+    ...fromCommonIds ( 'clientRef' )
+  },
   dataDD: AccountDetailsDD,
   url: '/api/payment/accountDetails?{query}',
   actions: [ 'get' ],
+  resolvers: {
+    getFullName: {
+      type: 'manual',
+      params: [
+        { type: 'fromParent', name: 'forename', javaType: 'String' },
+        { type: 'fromParent', name: 'surname', javaType: 'String' },
+        { type: 'output', name: 'fullname', javaType: 'String' },
+      ],
+      code: `String fullname = forename + "++++" + surname;`,
+    },
+  },
+  tables: {
+    entity: {
+      type: 'Main',
+      table: loanAppTable,
+      children: {
+        main: customerAndAddress ( 'main', 'M' ),
+        joint: customerAndAddress ( 'joint', 'J' )
+      }
+    },
+    where: [ { table: loanAppTable, alias: loanAppTable.name, field: 'client_ref', paramName: 'clientRef' } ]
+  }
 }
 export const postcodeParams: RestParams = {
   dbName: { ...allCommonIds.dbName },

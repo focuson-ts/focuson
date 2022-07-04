@@ -65,7 +65,8 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
   buttons: {
     selectMandate: {
       control: 'ModalButton',
-      modal: SelectMandateMP, mode: 'edit', focusOn: '~/selectMandateSearch',
+      modal: SelectMandateMP, mode: 'edit',
+      focusOn: '~/selectMandateSearchxxxx',
       copy: [
         { from: '~/display/mandate', to: '~/tempMandate' },
       ],

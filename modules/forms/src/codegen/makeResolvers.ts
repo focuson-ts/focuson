@@ -2,7 +2,7 @@ import { JavaWiringParams } from "./config";
 import { MainPageD } from "../common/pageD";
 import { RestD } from "../common/restD";
 import { toArray, unique } from "@focuson/utils";
-import { allInputParamNames, importForTubles, isSqlMutationThatIsAList, MutationDetail, Mutations } from "../common/resolverD";
+import { allInputParamNames, allParentMutationParams, importForTubles, isSqlMutationThatIsAList, MutationDetail, Mutations } from "../common/resolverD";
 import { fetcherInterfaceForResolverName, fetcherPackageName, mutationMethodName, resolverClassName } from "./names";
 import { makeCodeFragmentsForMutation, makeMutationMethod } from "./makeMutations";
 import { ResolverData } from "./makeJavaFetchersInterface";
@@ -12,7 +12,7 @@ import { isRepeatingDd } from "../common/dataD";
 
 function declareInputParamsFromEndpoint<G> ( r: RestD<G> ): string[] {
   return unique ( [ [ 'String dbName', 'dbName' ], ...Object.entries ( r.params ).map ( ( [ name, p ] ) => [ `${p.javaType} ${name}`, name ] ) ], t => t[ 0 ] )
-    .map ( ( [ typeAndName, name ] ) => `${typeAndName} = dataFetchingEnvironment.getArgument("${name}");` )
+    .map ( ( [ typeAndName, name ] ) => `${typeAndName} =  getData(dataFetchingEnvironment, "${name}");` )//      Integer accountId =getData(dataFetchingEnvironment, "accountId", Integer.class);
 }
 
 export function callResolvers<G> ( p: MainPageD<any, G>, restName: string, r: RestD<G>, name: string, dbNameString: string, resolvers: MutationDetail[], indexPrefix: string ) {
@@ -62,6 +62,7 @@ export function makeFetcherMethodForMap<G> ( params: JavaWiringParams, p: MainPa
       'return dataFetchingEnvironment -> {',
       ...indentList ( [
         ...declareInputParamsFromEndpoint ( r ),
+        ...declareInputParamsFromParent ( r, resolvers ),
         `Messages msgs=dataFetchingEnvironment.getLocalContext();`,
         `Connection connection = dataSource.getConnection(getClass());`,
         `try  {`,
@@ -84,6 +85,12 @@ function importsFromManual ( resolver: Mutations ) {
   return toArray ( resolver ).flatMap ( m => m.type === 'manual' ? toArray ( m.import ) : [] );
 }
 
+function declareInputParamsFromParent<G> ( r: RestD<G>, resolvers: MutationDetail[] ): string[] {
+  const parentMParams = resolvers.flatMap ( r => allParentMutationParams ( r.params ) )
+  if ( parentMParams.length === 0 ) return []
+  return [ `Map<String,Object> paramsFromParent = dataFetchingEnvironment.getSource();`,
+    ...parentMParams.map ( p => `${p.javaType} ${p.name} = (${p.javaType})paramsFromParent.get("${p.name}");` ) ];
+}
 export function makeFetcherMethodForList<G> ( params: JavaWiringParams, p: MainPageD<any, any>, restName: string, r: RestD<G>, resolvers: MutationDetail[], resolverData: ResolverData ): string[] {
   const errorPrefix = `${p.name}.rest[${restName}].resolvers[${resolverData.name}]`
   return [
@@ -92,6 +99,7 @@ export function makeFetcherMethodForList<G> ( params: JavaWiringParams, p: MainP
       'return dataFetchingEnvironment -> {',
       ...indentList ( [
         ...declareInputParamsFromEndpoint ( r ),
+        ...declareInputParamsFromParent ( r, resolvers ),
         ` Messages msgs=dataFetchingEnvironment.getLocalContext();`,
         `Connection connection = dataSource.getConnection(getClass());`,
         `try  {`,
@@ -140,6 +148,7 @@ export function makeResolvers<G> ( params: JavaWiringParams, p: MainPageD<any, a
     `import ${params.thePackage}.${params.utilsPackage}.LoggedDataSource;`,
     `import ${params.thePackage}.${params.utilsPackage}.Messages;`,
     `import ${params.thePackage}.${params.utilsPackage}.FocusonNotFound404Exception;`,
+    `import static ${params.thePackage}.${params.utilsPackage}.GraphQlUtils.getData;`,
     ...importsFromParams,
     ...importForTubles ( params ),
     ...importsFromManual ( resolver ),

@@ -103,6 +103,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   templateFile ( `${javaFetcherRoot}/IFetcher.java`, 'templates/raw/java/IFetcher.java', params, directorySpec )
   templateFile ( `${javaUtilsRoot}/IOGNL.java`, 'templates/raw/java/utils/IOGNL.java', params, directorySpec )
   templateFile ( `${javaUtilsRoot}/OGNL.java`, 'templates/raw/java/utils/OGNL.java', params, directorySpec )
+  templateFile ( `${javaUtilsRoot}/GraphQlUtils.java`, 'templates/raw/java/utils/GraphQlUtils.java', params, directorySpec )
 
 
   const allRestDefns: RestDefnInPageProperties<G>[] = allMainPages ( pages ).flatMap ( p => sortedEntries ( p.rest ).map ( t => t[ 1 ] ) )

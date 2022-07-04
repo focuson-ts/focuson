@@ -4,7 +4,7 @@ import { CheckboxAndNumberCD, DataDrivenFixedOptionDropDownAndDetailsCD, LabelAn
 import { AccountIdDD, BooleanDD, BooleanPrimitiveDD, DataD, NatNumDd, NumberPrimitiveDD, OneLineStringDD, PrimitiveDD, ReadOnlyStringDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
 import { CustomerStatus } from "@focuson/form_components";
 import { AllGuards } from "../../buttons/guardButton";
-import { accountT, postCodeSearchTable } from "../database/tableNames";
+import { accountT, clientAddress_C60T, clientNames_C10T, customerT, postCodeSearchTable } from "../database/tableNames";
 
 export const authorisedByCustomerDD: StringPrimitiveDD = {
   ...OneLineStringDD,
@@ -20,17 +20,18 @@ export const RequestDetailsDD: ExampleDataD = {
   name: 'RequesterDetails',
   description: 'The information about the person who requested the paymets',
   layout: { component: LayoutCd, displayParams: { details: '[[1,1,1], [1], [1], [1], [1,1], [1,1]]' } },
+
   structure: {
-    title: { dataDD: ReadOnlyStringDD, sample: [ 'Mr', 'Mrs' ] },
-    forename: { dataDD: ReadOnlyStringDD, sample: [ 'Fred', 'Fredrica' ] },
-    surname: { dataDD: ReadOnlyStringDD, sample: [ 'Bloggs', 'Smith' ] },
-    fullname: { dataDD: ReadOnlyStringDD, sample: [ 'Fred Bloggs', 'Fredrica Smith' ] },
-    addressLine1: { dataDD: ReadOnlyStringDD, sample: [ '4 Privat Drive', '11 Green Acres' ] },
-    addressLine2: { dataDD: ReadOnlyStringDD, sample: [ 'Little Winging', 'Nether Wallop' ] },
-    addressLine3: { dataDD: ReadOnlyStringDD, sample: [ 'Surrey', 'Aylesbury' ] },
-    addressLine4: { dataDD: ReadOnlyStringDD, sample: [ 'UK' ] },
-    postcode: { dataDD: ReadOnlyStringDD, sample: [ 'HG1 1FL', 'SO34 1DF' ] },
-    phone: { dataDD: ReadOnlyStringDD, sample: [ '555 1234', '555 2344' ] },
+    title: { dataDD: ReadOnlyStringDD, db: { table: clientNames_C10T, field: 'ttl' }, sample: [ 'Mr', 'Mrs' ] },
+    forename: { dataDD: ReadOnlyStringDD, db: { table: clientNames_C10T, field: 'clifor' }, sample: [ 'Fred', 'Fredrica' ] },
+    surname: { dataDD: ReadOnlyStringDD, db: { table: clientNames_C10T, field: 'clisur' }, sample: [ 'Bloggs', 'Smith' ] },
+    fullname: { dataDD: { ...ReadOnlyStringDD, resolver: 'getFullName' }, sample: [ 'Fred Bloggs', 'Fredrica Smith' ] },
+    addressLine1: { dataDD: ReadOnlyStringDD, db: { table: clientAddress_C60T, field: 'adrlneone' }, sample: [ '4 Privat Drive', '11 Green Acres' ] },
+    addressLine2: { dataDD: ReadOnlyStringDD, db: { table: clientAddress_C60T, field: 'adrlneontwo' }, sample: [ 'Little Winging', 'Nether Wallop' ] },
+    addressLine3: { dataDD: ReadOnlyStringDD, db: { table: clientAddress_C60T, field: 'adrlnethr' }, sample: [ 'Surrey', 'Aylesbury' ] },
+    addressLine4: { dataDD: ReadOnlyStringDD, db: { table: clientAddress_C60T, field: 'adrlnefor' }, sample: [ 'UK' ] },
+    postcode: { dataDD: ReadOnlyStringDD, db: { table: clientAddress_C60T, field: 'pcd' },  sample: [ 'HG1 1FL', 'SO34 1DF' ] },
+    phone: { dataDD: ReadOnlyStringDD,  db: { table: clientAddress_C60T, field: 'phone' }, sample: [ '555 1234', '555 2344' ] },
     fax: { dataDD: ReadOnlyStringDD, sample: [ '5556365', '555 1231' ] }
   }
 }
