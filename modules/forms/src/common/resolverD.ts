@@ -282,6 +282,7 @@ interface ParamMutationParam {
   javaType?: JavaTypePrimitive;
   setParam?: string;
   required?: boolean;
+  datePattern?: string;
 
 }
 export interface OutputForStoredProcMutationParam {
