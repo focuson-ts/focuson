@@ -1,5 +1,4 @@
 import { NameAnd, RestAction, SimpleMessageLevel, toArray, unique } from "@focuson/utils";
-import { OneDataDD } from "./dataD";
 import { JavaWiringParams } from "../codegen/config";
 import { indentList } from "../codegen/codegen";
 
@@ -127,11 +126,11 @@ export interface GuardedStoredProcedureMutation extends StoredProcedureMutation 
 }
 
 
-export type MutationParam = string | StringMutationParam | IntegerMutationParam | InputMutationParam | OutputForStoredProcMutationParam | OutputForSqlMutationParam | NullMutationParam | OutputForManualParam | AutowiredMutationParam | OutputForSelectMutationParam | FromParentMutationParam
-export type MutationParamForSql = string | StringMutationParam | IntegerMutationParam | InputMutationParam | OutputForSqlMutationParam | NullMutationParam | AutowiredMutationParam | FromParentMutationParam
-export type MutationParamForStoredProc = string | StringMutationParam | IntegerMutationParam | InputMutationParam | OutputForStoredProcMutationParam | NullMutationParam | AutowiredMutationParam | FromParentMutationParam
-export type MutationParamForManual = string | StringMutationParam | IntegerMutationParam | InputMutationParam | NullMutationParam | OutputForManualParam | AutowiredMutationParam | FromParentMutationParam
-export type MutationParamForSelect = string | StringMutationParam | IntegerMutationParam | InputMutationParam | NullMutationParam | OutputForSelectMutationParam | AutowiredMutationParam | FromParentMutationParam
+export type MutationParam = string | StringMutationParam | IntegerMutationParam | InputMutationParam | OutputForStoredProcMutationParam | OutputForSqlMutationParam | NullMutationParam | OutputForManualParam | AutowiredMutationParam | OutputForSelectMutationParam | FromParentMutationParam | BodyMutationParam
+export type MutationParamForSql = string | StringMutationParam | IntegerMutationParam | InputMutationParam | OutputForSqlMutationParam | NullMutationParam | AutowiredMutationParam | FromParentMutationParam | BodyMutationParam
+export type MutationParamForStoredProc = string | StringMutationParam | IntegerMutationParam | InputMutationParam | OutputForStoredProcMutationParam | NullMutationParam | AutowiredMutationParam | FromParentMutationParam | BodyMutationParam
+export type MutationParamForManual = string | StringMutationParam | IntegerMutationParam | InputMutationParam | NullMutationParam | OutputForManualParam | AutowiredMutationParam | FromParentMutationParam | BodyMutationParam
+export type MutationParamForSelect = string | StringMutationParam | IntegerMutationParam | InputMutationParam | NullMutationParam | OutputForSelectMutationParam | AutowiredMutationParam | FromParentMutationParam | BodyMutationParam
 
 export interface OutputForSelectMutationParam {
   type: 'output';
@@ -143,8 +142,7 @@ export interface OutputForSelectMutationParam {
 export type OutputMutationParam = OutputForSqlMutationParam | OutputForStoredProcMutationParam | OutputForManualParam | OutputForSelectMutationParam
 export function inputParamName ( m: MutationParam ) {
   if ( typeof m === 'string' ) return [ m ]
-  if ( m.type === 'input' ) return [ m.name ]
-  if ( isParentMutationParam ( m ) ) return [ m.name ]
+  if ( isInputParam ( m ) ) return [ m.name ]
   return []
 }
 export function paramName ( m: MutationParam ): string {
@@ -156,8 +154,7 @@ export function paramName ( m: MutationParam ): string {
 export function allInputParams ( m: MutationParam | MutationParam[] ): InputMutationParam[] {
   return toArray ( m ).flatMap <InputMutationParam> ( m => {
       if ( typeof m === "string" ) return [ { type: 'input', name: m } ];
-      if ( m.type === 'input' ) return [ m ]
-      if ( isParentMutationParam ( m ) ) return [ m ]
+      if ( isInputParam ( m ) ) return [ m ]
       return []
     }
   )
@@ -212,8 +209,8 @@ export function isStoredProcOutputParam ( m: MutationParam ): m is OutputForStor
 export function isOutputParam ( m: any ): m is OutputMutationParam {
   return typeof m !== 'string' && m.type === 'output'
 }
-export function isInputParam ( m: MutationParam ) {
-  return (typeof m === 'string' || !(isSqlOutputParam ( m ) || isStoredProcOutputParam ( m )))
+export function isInputParam ( m: MutationParam ): m is InputMutationParam {
+  return typeof m === 'string' || m.type == 'input'|| isBodyMutationParam(m) || isParentMutationParam(m)
 }
 export function displayParam ( param: MutationParam ) {
   if ( typeof param === 'string' ) return param
@@ -278,7 +275,7 @@ export interface IntegerMutationParam {
   type: 'integer';
   value: number
 }
-type InputMutationParam = SimpleInputMutationParam | FromParentMutationParam
+type InputMutationParam = SimpleInputMutationParam | FromParentMutationParam | BodyMutationParam
 interface SimpleInputMutationParam {
   type: 'input';
   name: string;
@@ -299,8 +296,20 @@ export function isParentMutationParam ( p: MutationParam ): p is FromParentMutat
   const a: any = p
   return a.type === 'fromParent'
 }
-export function allParentMutationParams ( ps: MutationParam| MutationParam[] ): FromParentMutationParam[] {
-  return toArray(ps).flatMap(p => isParentMutationParam(p) ? [p] : [])
+export function allParentMutationParams ( ps: MutationParam | MutationParam[] ): FromParentMutationParam[] {
+  return toArray ( ps ).flatMap ( p => isParentMutationParam ( p ) ? [ p ] : [] )
+}
+interface BodyMutationParam {
+  type: 'body';
+  name: string;
+  javaType?: JavaTypePrimitive;
+  setParam?: string;
+  required?: boolean;
+  datePattern?: string;
+}
+export function isBodyMutationParam ( p: MutationParam ): p is BodyMutationParam {
+  const a: any = p
+  return a.type === 'body'
 }
 
 export interface OutputForStoredProcMutationParam {

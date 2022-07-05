@@ -40,7 +40,7 @@ export function setObjectFor ( m: MutationParam, i: number ): string {
   const index = i + 1
   if ( isStoredProcOutputParam ( m ) ) return `s.registerOutParameter(${index},java.sql.Types.${m.sqlType});`
   if ( typeof m === 'string' ) return `s.setObject(${index}, ${m});`
-  if ( m.type === 'input' ) return processInput(m.javaType, m.datePattern, m.name, index, m);
+  if ( isInputParam(m) ) return processInput(m.javaType, m.datePattern, m.name, index, m);
   if ( setParam ( m ) ) return `s.setObject(${index}, ${setParam ( m )});`
   if ( m.type === 'autowired' ) return `s.setObject(${index}, ${m.name}.${m.method});`;
   if ( m.type === 'null' ) return `s.setObject(${index},null);`
@@ -130,7 +130,7 @@ function findType ( errorPrefix: string, params: NameAnd<AllLensRestParams<any>>
 export const typeForParamAsInput = ( errorPrefix: string, params: NameAnd<AllLensRestParams<any>> ) => ( m: MutationParam ) => {
   if ( isOutputParam ( m ) ) return m.javaType;
   if ( typeof m === 'string' ) return findType ( errorPrefix, params, m )
-  if ( m.type === 'input' || isParentMutationParam(m) ) return m.javaType ? m.javaType : findType ( errorPrefix, params, m.name )
+  if ( isInputParam(m)) return m.javaType ? m.javaType : findType ( errorPrefix, params, m.name )
   if ( m.type === 'integer' ) return 'Integer'
   if ( m.type === 'string' ) return 'String'
   return 'Object'

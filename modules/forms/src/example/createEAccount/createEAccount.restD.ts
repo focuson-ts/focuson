@@ -20,7 +20,18 @@ export const createEAccountRestD: RestD<any> = {
             { type: 'string', value: 'eAccount' },
             { type: 'output', name: 'nextAccountId', javaType: 'Integer', rsName: 'nextid' },
           ], schema: onlySchema
-        } ]
+        },
+        // {
+        //   type: 'sql', name: 'getSql', sql: 'update createPlan set v1=?,v2=?,v3=? where seqName=?', params: [
+        //
+        //     { type: 'body', name: 'v1InJson', javaType: 'String' },
+        //     { type: 'body', name: 'v2InJson', javaType: 'String' },
+        //     { type: 'body', name: 'v3InJson', javaType: 'String' },
+        //     'createPlanId'
+        //   ], schema: onlySchema
+        // }
+
+      ]
     },
     { restAction: 'get', mutateBy: { type: 'storedProc', package: 'somePackage', name: 'auditGetCheckBook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
     { restAction: { state: 'cancel' }, mutateBy: { type: 'storedProc', name: 'auditCancelCheckbook', params: [ 'brandRef', 'accountId' ], schema: onlySchema } },
