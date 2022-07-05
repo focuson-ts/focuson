@@ -68,7 +68,7 @@ export const createPaymentRD: ExampleRestD = {
   params: { ...fromCommonIds ( 'clientRef', 'accountId' ), amount: { ...FloatParam, lens: '~/createPayment/amount', testValue: '' } },
   dataDD: CreatePaymentDD,
   url: '/api/payment/create?{query}',
-  actions: [ 'create' ],
+  actions: [ 'create'],
   mutations: [
     {
       restAction: 'create', mutateBy: [

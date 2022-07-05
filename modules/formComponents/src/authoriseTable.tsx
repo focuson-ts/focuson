@@ -49,10 +49,14 @@ export function AuthoriseTable<S, D extends AuthoriseTableData, C extends FocusO
   const data = state.optJsonOr ( [] )
   const credits = sum ( data, 'CR' )
   const debits = sum ( data, 'DR' )
+  // @ts-ignore
+  const approvedByS: LensState<S, string, C> = copySelectedItemTo.focusOn ( 'approvedBy' );
+  // @ts-ignore
+  const authorisedByS: LensState<S, string, C> = copySelectedItemTo.focusOn ( 'authorisedBy' );
   return <Layout details='[[1],[1,1],[1,1,1]]'>
     <AuthTable{...props} />
-    <LabelAndStringInput id={`${id}.approvedBy`} label='Approved By' state={copySelectedItemTo.focusOn ( 'approvedBy' )} mode='view' allButtons={{}}/>
-    <LabelAndStringInput id={`${id}.authorisedBy`} label='Authorised By' state={copySelectedItemTo.focusOn ( 'authorisedBy' )} mode='view' allButtons={{}}/>
+    <LabelAndStringInput id={`${id}.approvedBy`} label='Approved By' state={approvedByS} mode='view' allButtons={{}}/>
+    <LabelAndStringInput id={`${id}.authorisedBy`} label='Authorised By' state={authorisedByS} mode='view' allButtons={{}}/>
     <LabelAndFixedNumber id={`${id}.totalCredits`} label='Total Credits' number={credits}/>
     <LabelAndFixedNumber id={`${id}.totalDebuts`} label='Total Debits' number={debits}/>
     <LabelAndFixedNumber id={`${id}.waste`} label='Waste' number={'0.00'}/>

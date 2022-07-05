@@ -47,7 +47,6 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
     selectedCollectionItem: { dataDD: CollectionItemDD },
     createPayment: { dataDD: CreatePaymentDD },
     rememberedForTest: { dataDD: NatNumDd },
-
   },
   initialValue: 'empty',
   modals: [ { modal: SelectMandateMP }, { modal: CreatePaymentMP }, { main: OverpaymentMainPage } ],
@@ -66,7 +65,7 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
     selectMandate: {
       control: 'ModalButton',
       modal: SelectMandateMP, mode: 'edit',
-      focusOn: '~/selectMandateSearchxxxx',
+      focusOn: '~/selectMandateSearch',
       copy: [
         { from: '~/display/mandate', to: '~/tempMandate' },
       ],
@@ -78,7 +77,8 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
     },
     createPayment: {
       control: 'ModalButton',
-      mode: 'create', focusOn: '~/createPayment',
+      mode: 'create',
+      focusOn: '~/createPayment',
       modal: CreatePaymentMP,
       createEmpty: CreatePaymentDD,
       copy: [
