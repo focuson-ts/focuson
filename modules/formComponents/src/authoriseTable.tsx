@@ -33,7 +33,6 @@ const getValueForAuthorisedTable = <T extends AuthoriseTableData> ( o: keyof T, 
 const haltBox = <S, D extends AuthoriseTableData, C> ( state: LensState<S, D[], C>, id: string ) => ( i: number, row: D ) => {
   const onChange = () => {
     let newRow = { ...row, hold: !row.hold };
-    // const txs = transformsForUpdateSelected ( copySelectedIndexTo, copySelectedItemTo ) ( i, row )
     const thisTx: Transform<S, any> = [ state.optional.chain ( Lenses.nth ( i ) ), row => newRow ]
     state.massTransform ( reasonFor ( `AuthoriseTable[${i}]`, 'onChange', id ) ) ( thisTx );
   }
@@ -43,6 +42,7 @@ const haltBox = <S, D extends AuthoriseTableData, C> ( state: LensState<S, D[], 
 function sum<D extends AuthoriseTableData> ( ds: D[], crOrDr: 'CR' | 'DR' ): string {
   return "" + ds.reduce ( ( acc, v ) => v.type == crOrDr ? acc + Number.parseFloat ( v.amount ) : acc, 0 )
 }
+
 export function AuthoriseTable<S, D extends AuthoriseTableData, C extends FocusOnContext<S>> ( props: AuthoriseTableProps<S, D, C> ) {
   const { state, order, id, mode, copySelectedItemTo } = props
   const AuthTable = rawTable<S, any, C> ( [ ...order, 'Halt' ], defaultOnClick ( props ), defaultOneRowWithGetValue ( getValueForAuthorisedTable ) ( id, order, [], haltBox ( state, id ) ) )

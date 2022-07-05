@@ -140,6 +140,7 @@ export const accountAndAddressDetailsRD: ExampleRestD = {
   url: '/api/payment/accountDetails?{query}',
   actions: [ 'get' ],
   resolvers: {
+
     getFullName: {
       type: 'manual',
       params: [
@@ -148,8 +149,10 @@ export const accountAndAddressDetailsRD: ExampleRestD = {
         { type: 'fromParent', name: 'surname', javaType: 'String' },
         { type: 'output', name: 'fullname', javaType: 'String' },
       ],
-      code: `String fullname = title + " "+  forename + " " + surname;`,
+      code: `String fullname = title + " " + forename + " " + surname;`,
     },
+
+
   },
   tables: {
     entity: {
@@ -157,14 +160,14 @@ export const accountAndAddressDetailsRD: ExampleRestD = {
       table: loanAppTable,
       children: {
         main: {
-          table: clientNames_C10T, type: 'Single', idInParent: 'client_ref', idInThis: 'cliref', staticWhere: `ind = '${'M'}'`,
+          table: clientNames_C10T, type: 'Single', idInParent: 'client_ref', idInThis: 'cliref', staticWhere: `ind = 'M'`,
           filterPath: 'main',
           children: {
             mainAddress: { table: clientAddress_C60T, type: 'Single', idInParent: 'cliref', idInThis: 'cliref'}
           }
         },
         joint: {
-          table: clientNames_C10T, type: 'Single', idInParent: 'client_ref', idInThis: 'cliref', staticWhere: `ind = '${'J'}'`,
+          table: clientNames_C10T, type: 'Single', idInParent: 'client_ref', idInThis: 'cliref', staticWhere: `ind = 'J'`,
           filterPath: 'joint',
           children: {
             jointAddress: { table: clientAddress_C60T, type: 'Single', idInParent: 'cliref', idInThis: 'cliref' }

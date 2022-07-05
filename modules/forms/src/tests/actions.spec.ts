@@ -14,7 +14,9 @@ interface Holder {
 }
 const state = ( setMain: ( h: any ) => void ) => ( ...data: AuthoriseTableData[] ): LensState<Holder, AuthoriseTableData[], any> =>
   lensState ( { data }, setMain, '', {} ).focusOn ( 'data' );
+
 describe ( "actions", () => {
+
   it ( "approvePending should update pendings if they are not held", () => {
     var remembered: any = {}
     approvePendingFees ( state ( m => remembered = m ) ( pending, pending, pendingHeld, pendingHeld, approved, approvedHeld, authorised, authorisedHeld ), 'someId' )
@@ -25,6 +27,7 @@ describe ( "actions", () => {
       approved, approvedHeld, authorised, authorisedHeld
     ] )
   } )
+
   it ( "authoriseApprovedFees should update approved if they are not held", () => {
     var remembered: any = {}
     authoriseApprovedFees ( state ( m => remembered = m ) ( pending, pending, pendingHeld, pendingHeld, approved, approvedHeld, authorised, authorisedHeld ), 'someId' )

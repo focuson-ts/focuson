@@ -4,33 +4,7 @@ import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
 import { indentList } from "./codegen";
-import {
-  allInputParamNames,
-  allInputParams,
-  AllJavaTypes,
-  allOutputParams,
-  AutowiredMutationParam,
-  displayParam,
-  importForTubles,
-  isInputParam,
-  isOutputParam, isParentMutationParam, isSqlMutationThatIsAList,
-  isSqlOutputParam,
-  isStoredProcOutputParam,
-  javaTypeForOutput, JavaTypePrimitive,
-  ManualMutation,
-  MutationDetail,
-  MutationParam,
-  MutationsForRestAction,
-  nameOrSetParam,
-  OutputMutationParam,
-  paramName,
-  requiredmentCheckCodeForJava,
-  RSGetterForJavaType,
-  SelectMutation,
-  setParam,
-  SqlMutation, SqlMutationThatIsAList,
-  StoredProcedureMutation
-} from "../common/resolverD";
+import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, importForTubles, isBodyMutationParam, isInputParam, isOutputParam, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, paramName, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
@@ -40,7 +14,8 @@ export function setObjectFor ( m: MutationParam, i: number ): string {
   const index = i + 1
   if ( isStoredProcOutputParam ( m ) ) return `s.registerOutParameter(${index},java.sql.Types.${m.sqlType});`
   if ( typeof m === 'string' ) return `s.setObject(${index}, ${m});`
-  if ( isInputParam(m) ) return processInput(m.javaType, m.datePattern, m.name, index, m);
+  if ( isBodyMutationParam ( m ) ) return processInput ( m.javaType, m.datePattern, index, m );
+  if ( isInputParam ( m ) ) return processInput ( m.javaType, m.datePattern, index, m );
   if ( setParam ( m ) ) return `s.setObject(${index}, ${setParam ( m )});`
   if ( m.type === 'autowired' ) return `s.setObject(${index}, ${m.name}.${m.method});`;
   if ( m.type === 'null' ) return `s.setObject(${index},null);`
@@ -49,12 +24,15 @@ export function setObjectFor ( m: MutationParam, i: number ): string {
   throw new Error ( `Don't know how to process ${JSON.stringify ( m )}` )
 }
 
-function processInput(javaType: JavaTypePrimitive | undefined, datePattern: string | undefined, name: string, index: number, m: MutationParam): string {
-  const body = `s.setObject(${index}, ${nameOrSetParam ( m )});`;
-  if (datePattern === undefined) return body;
-  switch (javaType) {
-    case "String": return `s.setDate(${index}, DateFormatter.parseDate("${datePattern}", ${name}));`;
-    default: throw new Error ( `makeMutations: don't know how to addFormat for ${datePattern}, ${javaType}` )
+function processInput ( javaType: JavaTypePrimitive | undefined, datePattern: string | undefined, index: number, m: MutationParam ): string {
+  let name = nameOrSetParam ( m );
+  const body = `s.setObject(${index}, ${name});`;
+  if ( datePattern === undefined ) return body;
+  switch ( javaType ) {
+    case "String":
+      return `s.setDate(${index}, DateFormatter.parseDate("${datePattern}", ${name}));`;
+    default:
+      throw new Error ( `makeMutations: don't know how to addFormat for ${datePattern}, ${javaType}` )
   }
 }
 
@@ -93,7 +71,7 @@ function commonIfDbNameBlock<G> ( r: RestD<G>, paramsA: MutationParam[], name: s
 export function getFromStatement ( errorPrefix: string, from: string, m: MutationParam[] ): string[] {
   return m.flatMap ( ( m, i ) => {
     if ( !isStoredProcOutputParam ( m ) ) return []
-    return [ `${m.javaType} ${m.name} = ${addFormat(errorPrefix, m.datePattern, m.javaType, from, i + 1)};` ]
+    return [ `${m.javaType} ${m.name} = ${addFormat ( errorPrefix, m.datePattern, m.javaType, from, i + 1 )};` ]
     throw new Error ( `${errorPrefix} don't know how to getFromStatement for ${JSON.stringify ( m )}` )
   } )
 }
@@ -101,25 +79,27 @@ export function getFromStatement ( errorPrefix: string, from: string, m: Mutatio
 export function getFromResultSetIntoVariables ( errorPrefix: string, from: string, m: MutationParam[] ): string[] {
   return m.flatMap ( ( m, i ) => {
     if ( !isSqlOutputParam ( m ) ) return []
-    return [ `${m.javaType} ${m.name} = ${addFormat(errorPrefix, m.datePattern, m.javaType, from, m.rsName)};` ]
+    return [ `${m.javaType} ${m.name} = ${addFormat ( errorPrefix, m.datePattern, m.javaType, from, m.rsName )};` ]
     throw new Error ( `${errorPrefix} don't know how to getFromResultSetIntoVariables for ${JSON.stringify ( m )}` )
   } )
 }
 
-export function getFromResultSetPutInMap (errorPrefix: string, map: string, from: string, m: MutationParam[] ) {
+export function getFromResultSetPutInMap ( errorPrefix: string, map: string, from: string, m: MutationParam[] ) {
   return m.flatMap ( ( m, i ) => {
     if ( !isSqlOutputParam ( m ) ) return []
-    return `${map}.put("${m.name}", ${addFormat(errorPrefix, m.datePattern, m.javaType, from, m.rsName)});`
+    return `${map}.put("${m.name}", ${addFormat ( errorPrefix, m.datePattern, m.javaType, from, m.rsName )});`
   } )
 }
 
-  export function addFormat(errorPrefix: string, datePattern: string | undefined, javaType: JavaTypePrimitive, from: string, argument: string | number): string {
-  const arg = typeof argument === 'number' ? argument: `"${argument}"`
-  const body = `${from}.${RSGetterForJavaType[javaType]}(${arg})`;
-  if (!datePattern) return body
-  switch (javaType) {
-    case "String": return `new SimpleDateFormat("${datePattern}").format(${from}.getDate("${argument}"))`
-    default: throw new Error ( `${errorPrefix} don't know how to addFormat for ${datePattern}, ${javaType}` )
+export function addFormat ( errorPrefix: string, datePattern: string | undefined, javaType: JavaTypePrimitive, from: string, argument: string | number ): string {
+  const arg = typeof argument === 'number' ? argument : `"${argument}"`
+  const body = `${from}.${RSGetterForJavaType[ javaType ]}(${arg})`;
+  if ( !datePattern ) return body
+  switch ( javaType ) {
+    case "String":
+      return `new SimpleDateFormat("${datePattern}").format(${from}.getDate("${argument}"))`
+    default:
+      throw new Error ( `${errorPrefix} don't know how to addFormat for ${datePattern}, ${javaType}` )
   }
 }
 
@@ -130,7 +110,8 @@ function findType ( errorPrefix: string, params: NameAnd<AllLensRestParams<any>>
 export const typeForParamAsInput = ( errorPrefix: string, params: NameAnd<AllLensRestParams<any>> ) => ( m: MutationParam ) => {
   if ( isOutputParam ( m ) ) return m.javaType;
   if ( typeof m === 'string' ) return findType ( errorPrefix, params, m )
-  if ( isInputParam(m)) return m.javaType ? m.javaType : findType ( errorPrefix, params, m.name )
+  if ( isBodyMutationParam ( m ) ) return m.javaType ? m.javaType : 'Object'
+  if ( isInputParam ( m ) ) return m.javaType ? m.javaType : findType ( errorPrefix, params, m.name )
   if ( m.type === 'integer' ) return 'Integer'
   if ( m.type === 'string' ) return 'String'
   return 'Object'
@@ -179,7 +160,7 @@ export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPag
         `while (rs.next()){`,
         ...indentList ( [
           `Map<String,Object> oneLine = new HashMap();`,
-          ...getFromResultSetPutInMap (errorPrefix, 'oneLine', 'rs', paramsA ),
+          ...getFromResultSetPutInMap ( errorPrefix, 'oneLine', 'rs', paramsA ),
           `result.add(oneLine);` ] ),
         '}',
         ...messageLine,
@@ -192,7 +173,7 @@ export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPag
 function makeMethodDecl<G> ( errorPrefix: string, paramsA: MutationParam[], resultType: string, r: RestD<G>, name: string, m: MutationDetail, index: string, ) {
   const params = safeObject ( r.params );
   let paramStrings = unique ( allInputParams ( [ 'dbName', ...paramsA ] ), p => paramName ( p ) )
-    .map ( param => `${typeForParamAsInput ( errorPrefix, params ) ( param )} ${param.name}` ).join ( ", " );
+    .map ( param => `${typeForParamAsInput ( errorPrefix, params ) ( param )} ${paramName ( param )}` ).join ( ", " );
   return [ `    public ${resultType} ${mutationMethodName ( r, name, m, index )}(Connection connection, Messages msgs, ${paramStrings}) throws SQLException {`, ...indentList ( indentList ( indentList ( requiredmentCheckCodeForJava ( paramsA, m.params ) ) ) ) ];
 }
 export function mutationCodeForStoredProcedureCalls<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: StoredProcedureMutation, index: string, includeMockIf: boolean ): string[] {
@@ -301,6 +282,7 @@ export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, a
     `import java.sql.Connection;`,
     `import java.sql.SQLException;`,
     `import java.text.SimpleDateFormat;`,
+    `import ${params.thePackage}.${params.utilsPackage}.IOGNL;`,
     `import ${params.thePackage}.${params.utilsPackage}.Messages;`,
     ...importsFromParams,
     ...importForTubles ( params ),
@@ -309,6 +291,7 @@ export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, a
     `@Component`,
     `public class ${mutationClassName ( r, mutation.restAction )} {`,
     ``,
+    `@Autowired IOGNL ognlForBodyAsJson;`,
     ...autowiringVariables,
     ...classLevelAutowiring ( params ) ( mutation ),
     ...methods,

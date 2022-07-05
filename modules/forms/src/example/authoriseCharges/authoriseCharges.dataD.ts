@@ -66,7 +66,8 @@ export const ListOfChargesDD: ExampleRepeatingD = {
   dataDD: OneChargeDataDD,
   display: AuthoriseTableCD,
   displayParams: { order: [ 'chargeType', 'status', 'type', 'sortCode', 'accountNo', 'amount', 'narrative', 'hold' ],
-    copySelectedItemTo: '~/selectedCharge' ,copySelectedIndexTo: '~/selectedChargeIndex' },
+    copySelectedItemTo: '~/selectedCharge' ,
+    copySelectedIndexTo: '~/selectedChargeIndex' },
   paged: false
 }
 

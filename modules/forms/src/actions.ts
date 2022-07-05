@@ -1,6 +1,6 @@
 import { LensState, reasonFor } from "@focuson/state";
 import { AuthoriseTableData } from "@focuson/form_components";
-import { Lenses, massTransform, Transform } from "@focuson/lens";
+import { Lenses, Transform } from "@focuson/lens";
 
 
 function updateTable<S, D extends AuthoriseTableData, C> ( s: LensState<S, D[], C>, id: string, update: keyof D, fromValue: string, toValue: string ) {
@@ -14,7 +14,6 @@ function updateTable<S, D extends AuthoriseTableData, C> ( s: LensState<S, D[], 
           newValue[ update ] = 'you just now'
           return newValue;
         } ]
-
     ] : [] )
   s.massTransform ( reasonFor ( 'ActionButton', 'onClick', id ) ) ( ...txs )
 }

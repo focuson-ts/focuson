@@ -30,8 +30,8 @@ export const RequestDetailsDD: ExampleDataD = {
     addressLine2: { dataDD: ReadOnlyStringDD, db: { table: clientAddress_C60T, field: 'adrlneontwo' }, sample: [ 'Little Winging', 'Nether Wallop' ] },
     addressLine3: { dataDD: ReadOnlyStringDD, db: { table: clientAddress_C60T, field: 'adrlnethr' }, sample: [ 'Surrey', 'Aylesbury' ] },
     addressLine4: { dataDD: ReadOnlyStringDD, db: { table: clientAddress_C60T, field: 'adrlnefor' }, sample: [ 'UK' ] },
-    postcode: { dataDD: ReadOnlyStringDD, db: { table: clientAddress_C60T, field: 'pcd' },  sample: [ 'HG1 1FL', 'SO34 1DF' ] },
-    phone: { dataDD: ReadOnlyStringDD,  db: { table: clientAddress_C60T, field: 'phone' }, sample: [ '555 1234', '555 2344' ] },
+    postcode: { dataDD: ReadOnlyStringDD, db: { table: clientAddress_C60T, field: 'pcd' }, sample: [ 'HG1 1FL', 'SO34 1DF' ] },
+    phone: { dataDD: ReadOnlyStringDD, db: { table: clientAddress_C60T, field: 'phone' }, sample: [ '555 1234', '555 2344' ] },
     fax: { dataDD: ReadOnlyStringDD, sample: [ '5556365', '555 1231' ] }
   }
 }

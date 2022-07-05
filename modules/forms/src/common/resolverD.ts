@@ -142,22 +142,28 @@ export interface OutputForSelectMutationParam {
 export type OutputMutationParam = OutputForSqlMutationParam | OutputForStoredProcMutationParam | OutputForManualParam | OutputForSelectMutationParam
 export function inputParamName ( m: MutationParam ) {
   if ( typeof m === 'string' ) return [ m ]
+  if ( isBodyMutationParam ( m ) ) return [ m.path ]
   if ( isInputParam ( m ) ) return [ m.name ]
   return []
 }
 export function paramName ( m: MutationParam ): string {
   if ( typeof m === 'string' ) return m
   if ( m.type === 'string' || m.type === 'integer' || m.type === 'null' ) return ''
+  if ( isBodyMutationParam ( m ) ) return m.path
   return m.name
 
 }
 export function allInputParams ( m: MutationParam | MutationParam[] ): InputMutationParam[] {
-  return toArray ( m ).flatMap <InputMutationParam> ( m => {
+  const ms = toArray ( m );
+  const hasBodyParams = ms.find ( isBodyMutationParam ) !== undefined
+  const bodyParam: InputMutationParam[] = hasBodyParams ? [ { type: 'input', name: 'bodyAsJson', javaType: 'Map<String,Object>' } ] : []
+  return [ ...ms.flatMap <InputMutationParam> ( m => {
       if ( typeof m === "string" ) return [ { type: 'input', name: m } ];
+      if ( isBodyMutationParam ( m ) ) return []
       if ( isInputParam ( m ) ) return [ m ]
       return []
     }
-  )
+  ), ...bodyParam, ]
 }
 
 export function tupleIndexes ( maxTuples: number ) {return [ ...Array ( maxTuples + 1 ).keys () ].slice ( 2 );}
@@ -179,7 +185,7 @@ export function makeTuples ( params: JavaWiringParams, i: number ) {
 
 }
 export function allInputParamNames ( m: MutationParam | MutationParam[] ): string[] {
-  return unique ( toArray ( m ).flatMap ( inputParamName ), p => p )
+  return unique ( allInputParams ( m ).flatMap ( inputParamName ), p => p )
 }
 export function allSqlOutputParams ( m: MutationParam | MutationParam[] ): OutputForSqlMutationParam[] {
   return toArray ( m ).flatMap ( m => isSqlOutputParam ( m ) ? [ m ] : [] )
@@ -210,16 +216,17 @@ export function isOutputParam ( m: any ): m is OutputMutationParam {
   return typeof m !== 'string' && m.type === 'output'
 }
 export function isInputParam ( m: MutationParam ): m is InputMutationParam {
-  return typeof m === 'string' || m.type == 'input'|| isBodyMutationParam(m) || isParentMutationParam(m)
+  return typeof m === 'string' || m.type == 'input' || isBodyMutationParam ( m ) || isParentMutationParam ( m )
 }
 export function displayParam ( param: MutationParam ) {
   if ( typeof param === 'string' ) return param
   return JSON.stringify ( param )
 }
-export function paramNameOrValue ( m: MutationParam ) {
+export function paramNamePathOrValue ( m: MutationParam ) {
   if ( typeof m === 'string' ) return m
   if ( m.type === 'string' || m.type === 'integer' ) return m.value
   if ( m.type === 'null' ) return "null"
+  if ( isBodyMutationParam ( m ) ) return m.path
   return m.name
 }
 export interface StringMutationParam {
@@ -245,7 +252,9 @@ export function requiredmentCheckCodeForJava ( paramsFromCall: MutationParam[], 
 }
 export function nameOrSetParam ( m: MutationParam ) {
   const a: any = m
-  return a.setParam ? a.setParam : a.name;
+  if ( a.setParam ) return a.setParam
+  if ( isBodyMutationParam ( m ) ) return `ognlForBodyAsJson.getData(bodyAsJson, "${m.path}", ${m.javaType ? m.javaType : 'Object'}.class)`
+  return a.name;
 }
 export function setParam ( m: any ) {
   const a: any = m
@@ -261,7 +270,7 @@ export interface AutowiredMutationParam {
   setParam?: string;
   required?: boolean;
 }
-export type JavaTypePrimitive = 'String' | 'Integer' | 'Double' | 'Object' | 'Date';
+export type JavaTypePrimitive = 'String' | 'Integer' | 'Double' | 'Object' | 'Date' | 'Map<String,Object>';
 
 export const RSGetterForJavaType = {
   String: 'getString',
@@ -301,7 +310,7 @@ export function allParentMutationParams ( ps: MutationParam | MutationParam[] ):
 }
 interface BodyMutationParam {
   type: 'body';
-  name: string;
+  path: string;
   javaType?: JavaTypePrimitive;
   setParam?: string;
   required?: boolean;
