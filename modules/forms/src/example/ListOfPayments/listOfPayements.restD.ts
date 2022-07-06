@@ -158,21 +158,23 @@ export const accountAndAddressDetailsRD: ExampleRestD = {
     entity: {
       type: 'Main',
       table: loanAppTable,
+      staticWhere: `${loanAppTable.name}.ind='M'`,
       children: {
+        secondayAppTable: {type: 'Single',    filterPath: 'joint',table: loanAppTable, idInParent: 'client_ref', idInThis: 'client_ref', staticWhere: `secondayAppTable.ind='j'`, children:{
+            joint: {
+              table: clientNames_C10T, type: 'Single', idInParent: 'client_ref', idInThis: 'cliref',
+              children: {
+                jointAddress: { table: clientAddress_C60T, type: 'Single', idInParent: 'cliref', idInThis: 'cliref' }
+              }
+            }
+          }},
         main: {
-          table: clientNames_C10T, type: 'Single', idInParent: 'client_ref', idInThis: 'cliref', staticWhere: `ind = 'M'`,
+          table: clientNames_C10T, type: 'Single', idInParent: 'client_ref', idInThis: 'cliref',
           filterPath: 'main',
           children: {
             mainAddress: { table: clientAddress_C60T, type: 'Single', idInParent: 'cliref', idInThis: 'cliref'}
           }
         },
-        joint: {
-          table: clientNames_C10T, type: 'Single', idInParent: 'client_ref', idInThis: 'cliref', staticWhere: `ind = 'J'`,
-          filterPath: 'joint',
-          children: {
-            jointAddress: { table: clientAddress_C60T, type: 'Single', idInParent: 'cliref', idInThis: 'cliref' }
-          }
-        }
       }
     },
     where: [ { table: loanAppTable, alias: loanAppTable.name, field: 'client_ref', paramName: 'clientRef' } ]

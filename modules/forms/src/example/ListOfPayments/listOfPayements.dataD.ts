@@ -1,7 +1,7 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 
 import { CheckboxAndNumberCD, DataDrivenFixedOptionDropDownAndDetailsCD, LabelAndDropDownCD, LayoutCd, NumberInputCD, SelectedItemCD, StructureTableCD, TableCD } from "../../common/componentsD";
-import { AccountIdDD, BooleanDD, BooleanPrimitiveDD, DataD, NatNumDd, NumberPrimitiveDD, OneLineStringDD, PrimitiveDD, ReadOnlyStringDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
+import { AccountIdDD, BooleanDD, BooleanPrimitiveDD, DataD, DateDD, NatNumDd, NumberPrimitiveDD, OneLineStringDD, PrimitiveDD, ReadOnlyStringDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
 import { CustomerStatus } from "@focuson/form_components";
 import { AllGuards } from "../../buttons/guardButton";
 import { accountT, clientAddress_C60T, clientNames_C10T, customerT, postCodeSearchTable } from "../database/tableNames";
@@ -23,6 +23,7 @@ export const RequestDetailsDD: ExampleDataD = {
 
   structure: {
     title: { dataDD: ReadOnlyStringDD, db: { table: clientNames_C10T, field: 'ttl' }, sample: [ 'Mr', 'Mrs' ] },
+    date: { dataDD: DateDD, db: { table: clientNames_C10T, field: 'startData', datePattern: 'dd/MM/yyyy' } },
     forename: { dataDD: ReadOnlyStringDD, db: { table: clientNames_C10T, field: 'clifor' }, sample: [ 'Fred', 'Fredrica' ] },
     surname: { dataDD: ReadOnlyStringDD, db: { table: clientNames_C10T, field: 'clisur' }, sample: [ 'Bloggs', 'Smith' ] },
     fullname: { dataDD: { ...ReadOnlyStringDD, resolver: 'getFullName' }, sample: [ 'Fred Bloggs', 'Fredrica Smith' ] },
