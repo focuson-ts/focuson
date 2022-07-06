@@ -44,7 +44,7 @@ export const SummaryOfPaymentsLineDD: ExampleDataD = {
     sterlingAmount: { dataDD: MoneyDD, sample: [ 123, 2345, 5654 ] },
     currencyAmount: { dataDD: MoneyDD, sample: [ 222, 333, 444 ] },
     amtInWords: { dataDD: StringDD, sample: [ 'one hundred', 'two hundred', 'three hundred' ] },
-    forActionOn: { dataDD: DateDDMMYYY_DD, sample: [ '5/12/2021', '6/12/2022' ], },
+    forActionOn: { dataDD: DateDDMMYYY_DD,sample: [ '5/12/2021', '6/12/2022' ], },
     dateCreated: { dataDD: DateDD },
     status: { dataDD: StringDD, sample: [ 'cancel', 'paid', '' ] },
   }
