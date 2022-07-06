@@ -57,6 +57,9 @@ export const eAccountsSummaryRestD: RestD<AllGuards> = {
   ]
 }
 export const createPlanRestD: RestD<AllGuards> = {
+  description: "We don't really know what a createPlan is",
+  notes: "but we made some notes about it",
+  authorisation: 'someAuthString',
   params: { ...commonIds, createPlanId: { ...IntParam, commonLens: 'createPlanId', testValue: 777, main: true } },
   dataDD: CreatePlanDD,
   url: '/api/createPlan?{query}',

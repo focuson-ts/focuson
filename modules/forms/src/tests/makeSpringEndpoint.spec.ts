@@ -1,4 +1,4 @@
-import { accessDetails, makeParamsForJava, makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
+import { accessDetails, endpointAnnotation, makeParamsForJava, makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { repeatingRestRD } from "../example/repeating/repeating.restD";
 import { addressRestD } from "../example/postCodeDemo/addressSearch.restD";
@@ -9,6 +9,69 @@ import { paramsForTest } from "./paramsForTest";
 import { IntParam, RestD, StringParam } from "../common/restD";
 import { CreatePlanDD } from "../example/eAccounts/eAccountsSummary.dataD";
 
+describe ( "endpointAnnotation", () => {
+  const rdWithFields = {
+    ...createPlanRestD,
+    description: "We don't really know what a createPlan is",
+    notes: "but we made some notes about it",
+    authorisations: [ 'a1', 'a2' ]
+  }
+  const rdNoFields = {
+    ...createPlanRestD,
+    description: undefined,
+    notes: undefined,
+    authorisations: undefined
+  }
+  it ( "should return empty array if no annotations in the params", () => {
+    expect ( endpointAnnotation ( { ...paramsForTest, endpointAnnotations: [] }, EAccountsSummaryPD, 'createPlanRestD', rdWithFields, 'get', 'endpoint' ) ).toEqual ( [] )
+    expect ( endpointAnnotation ( { ...paramsForTest, endpointAnnotations: [] }, EAccountsSummaryPD, 'createPlanRestD', rdNoFields, 'get', 'endpoint' ) ).toEqual ( [] )
+  } )
+  it ( "should return endpointAnnotations without {} in them", () => {
+    const expected = [ 'First', 'Second' ]
+    expect ( endpointAnnotation ( { ...paramsForTest, endpointAnnotations: [ 'First', 'Second', 'Some{thing}', '{with} brackets' ] }, EAccountsSummaryPD, 'createPlanRestD', rdWithFields, 'get', 'endpoint' ) ).toEqual ( expected )
+    expect ( endpointAnnotation ( { ...paramsForTest, endpointAnnotations: [ 'First', 'Second', 'Some{thing}', '{with} brackets' ] }, EAccountsSummaryPD, 'createPlanRestD', rdNoFields, 'get', 'endpoint' ) ).toEqual ( expected )
+  } )
+  it ( "should return endpointAnnotations that match, but hide strings that aren't in the params - purpose = endpoint", () => {
+    const expected = [ 'First', 'Second' ]
+    expect ( endpointAnnotation ( {
+        ...paramsForTest, endpointAnnotations: [
+          'Description {description}', 'Notes {notes}', 'thisvalue {isNotIn}', 'Restname {restName}', 'Url: {url}', 'RestNamne: {restName}', 'Authorisation: {authorisation}' ]
+      },
+      EAccountsSummaryPD, 'createPlanRestD', rdWithFields, 'get', 'endpoint' ) ).toEqual (
+      [ "Description We don't really know what a createPlan is",
+        "Notes but we made some notes about it",
+        "Restname createPlanRestD",
+        "Url: /api/createPlan?{query}",
+        "RestNamne: createPlanRestD",
+          "Authorisation: someAuthString",
+      ] )
+  } )
+  // it ( "shouldn't return notes if they are not in", () => {
+  //   expect ( endpointAnnotation ( {
+  //       ...paramsForTest, endpointAnnotations: [
+  //         'Note {note}',
+  //         'Description {description}',
+  //         'NoteAndDescription {note} {description}' ]
+  //     },
+  //     EAccountsSummaryPD, 'createPlanRestD', rdNoFields, 'get', 'endpoint' ) ).toEqual (
+  //     [ "Description We don't really know what a createPlan is",
+  //       "Notes but we made some notes about it",
+  //       "Restname createPlanRestD",
+  //       "Url: /api/createPlan?{query}"
+  //     ] )
+  // } )
+  it ( "should return endpointAnnotations that match - purpose != endpoint", () => {
+    const expected = [ 'First', 'Second' ]
+    expect ( endpointAnnotation ( { ...paramsForTest, endpointAnnotations: [ 'Description {description}', 'Notes {notes}', 'Restname {restName}' ] }, EAccountsSummaryPD, 'createPlanRestD', rdNoFields, 'get', 'somethingelse' ) ).toEqual (
+      [
+        "Description This is a helper endpoint",
+        "Notes ",
+        "Restname createPlanRestD"
+      ] )
+  } )
+
+
+} )
 
 describe ( "makeSpringEndpoint", () => {
   it ( "should makeParamsForJava", () => {
@@ -45,6 +108,7 @@ describe ( "makeSpringEndpoint", () => {
       "import focuson.data.mutator.utils.Tuple2;",
       "",
       "  @RestController",
+      "  @CrossOrigin()",
       "  public class EAccountsSummary_EAccountsSummaryController {",
       "",
       "  @Autowired",
@@ -53,12 +117,14 @@ describe ( "makeSpringEndpoint", () => {
       "  public LoggedDataSource dataSource;",
       "  @Autowired",
       "  EAccountsSummary_state_invalidateMutation __state_invalidateMutation;",
+      "  @EndPointAnnotation()",
       "    @GetMapping(value=\"/api/accountsSummary\", produces=\"application/json\")",
       "    public ResponseEntity getEAccountsSummary(@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam String dbName, @RequestHeader @RequestParam String employeeType) throws Exception{",
       "         Messages msgs = Transform.msgs();",
       "          return Transform.result(graphQL.get(dbName),EAccountsSummaryQueries.getEAccountsSummary(accountId, applRef, brandRef, clientRef, dbName, employeeType), \"getEAccountsSummary\", msgs);",
       "    }",
       "",
+      "  @EndPointAnnotation()",
       "    @PostMapping(value=\"/api/accountsSummary/invalidate\", produces=\"application/json\")",
       "    public ResponseEntity state_invalidateEAccountsSummary(@RequestParam int accountId, @RequestHeader @RequestParam int clientRef, @RequestParam String dbName, @RequestHeader @RequestParam String employeeType) throws Exception{",
       "         Messages msgs = Transform.msgs();",
@@ -72,16 +138,19 @@ describe ( "makeSpringEndpoint", () => {
       "        } finally {dataSource.close(getClass(),connection);}",
       "    }",
       "",
+      "  @EndPointAnnotation()",
       "    @GetMapping(value=\"/api/accountsSummary/query\", produces=\"application/json\")",
       "    public String querygetEAccountsSummary(@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam String dbName, @RequestHeader @RequestParam String employeeType) throws Exception{",
       "       return EAccountsSummaryQueries.getEAccountsSummary(accountId, applRef, brandRef, clientRef, dbName, employeeType);",
       "    }",
       "",
+      "  @EndPointAnnotation()",
       "    @PostMapping(value=\"/api/accountsSummary/invalidate/query\", produces=\"application/json\")",
       "    public String querystate_invalidateEAccountsSummary(@RequestParam int accountId, @RequestHeader @RequestParam int clientRef, @RequestParam String dbName, @RequestHeader @RequestParam String employeeType) throws Exception{",
       "       return EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, clientRef, dbName, employeeType);",
       "    }",
       "",
+      "  @EndPointAnnotation()",
       "  @GetMapping(value = \"/api/accountsSummary/sample\", produces = \"application/json\")",
       "    public static String sampleEAccountsSummary() throws Exception {",
       "      return new ObjectMapper().writeValueAsString( Sample.sampleEAccountsSummary0);",
@@ -113,18 +182,21 @@ describe ( "makeSpringEndpoint", () => {
       "import focuson.data.mutator.utils.Tuple2;",
       "",
       "  @RestController",
+      "  @CrossOrigin()",
       "  public class EAccountsSummary_CreatePlanController {",
       "",
       "  @Autowired",
       "  public IManyGraphQl graphQL;",
       "  @Autowired",
       "  public LoggedDataSource dataSource;",
+      "  @EndPointAnnotation()",
       "    @GetMapping(value='/api/createPlan', produces='application/json')",
       "    public ResponseEntity getCreatePlan(@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestHeader @RequestParam int clientRef, @RequestParam int createPlanId) throws Exception{",
       "         Messages msgs = Transform.msgs();",
       "          return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.getCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId), 'getCreatePlan', msgs);",
       "    }",
       "",
+      "  @EndPointAnnotation()",
       "    @PostMapping(value='/api/createPlan', produces='application/json')",
       "    public ResponseEntity createCreatePlan(@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestHeader @RequestParam int clientRef, @RequestBody String body) throws Exception{",
       "         Map<String,Object> bodyAsJson = new ObjectMapper().readValue(body, Map.class);",
@@ -132,6 +204,7 @@ describe ( "makeSpringEndpoint", () => {
       "          return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.createCreatePlan(accountId, applRef, brandRef, clientRef,   Transform.removeQuoteFromProperties(body, Map.class)), 'createCreatePlan', msgs);",
       "    }",
       "",
+      "  @EndPointAnnotation()",
       "    @PutMapping(value='/api/createPlan', produces='application/json')",
       "    public ResponseEntity updateCreatePlan(@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestHeader @RequestParam int clientRef, @RequestParam int createPlanId, @RequestBody String body) throws Exception{",
       "         Map<String,Object> bodyAsJson = new ObjectMapper().readValue(body, Map.class);",
@@ -139,32 +212,38 @@ describe ( "makeSpringEndpoint", () => {
       "          return Transform.result(graphQL.get(IFetcher.mock),CreatePlanQueries.updateCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId,   Transform.removeQuoteFromProperties(body, Map.class)), 'updateCreatePlan', msgs);",
       "    }",
       "",
+      "  @EndPointAnnotation()",
       "    @DeleteMapping(value='/api/createPlan', produces='application/json')",
       "    public ResponseEntity deleteCreatePlan(@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestHeader @RequestParam int clientRef, @RequestParam int createPlanId) throws Exception{",
       "         Messages msgs = Transform.msgs();",
       "         return  ResponseEntity.ok(msgs.emptyResult());",
       "    }",
       "",
+      "  @EndPointAnnotation()",
       "    @GetMapping(value='/api/createPlan/query', produces='application/json')",
       "    public String querygetCreatePlan(@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestHeader @RequestParam int clientRef, @RequestParam int createPlanId) throws Exception{",
       "       return CreatePlanQueries.getCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId);",
       "    }",
       "",
+      "  @EndPointAnnotation()",
       "    @PostMapping(value='/api/createPlan/query', produces='application/json')",
       "    public String querycreateCreatePlan(@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestHeader @RequestParam int clientRef, @RequestBody String body) throws Exception{",
       "       return CreatePlanQueries.createCreatePlan(accountId, applRef, brandRef, clientRef,   Transform.removeQuoteFromProperties(body, Map.class));",
       "    }",
       "",
+      "  @EndPointAnnotation()",
       "    @PutMapping(value='/api/createPlan/query', produces='application/json')",
       "    public String queryupdateCreatePlan(@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestHeader @RequestParam int clientRef, @RequestParam int createPlanId, @RequestBody String body) throws Exception{",
       "       return CreatePlanQueries.updateCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId,   Transform.removeQuoteFromProperties(body, Map.class));",
       "    }",
       "",
+      "  @EndPointAnnotation()",
       "    @DeleteMapping(value='/api/createPlan/query', produces='application/json')",
       "    public String querydeleteCreatePlan(@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestHeader @RequestParam int clientRef, @RequestParam int createPlanId) throws Exception{",
       "       return CreatePlanQueries.deleteCreatePlan(accountId, applRef, brandRef, clientRef, createPlanId);",
       "    }",
       "",
+      "  @EndPointAnnotation()",
       "  @GetMapping(value = '/api/createPlan/sample', produces = 'application/json')",
       "    public static String sampleCreatePlan() throws Exception {",
       "      return new ObjectMapper().writeValueAsString( Sample.sampleCreatePlan0);",
@@ -197,12 +276,14 @@ describe ( "makeSpringEndpoint", () => {
       "import focuson.data.mutator.utils.Tuple2;",
       "",
       "  @RestController",
+      "  @CrossOrigin()",
       "  public class Repeating_RepeatingWholeDataController {",
       "",
       "  @Autowired",
       "  public IManyGraphQl graphQL;",
       "  @Autowired",
       "  public LoggedDataSource dataSource;",
+      "  @EndPointAnnotation()",
       "    @PostMapping(value='/api/repeating', produces='application/json')",
       "    public ResponseEntity createRepeatingWholeData(@RequestHeader @RequestParam int clientRef, @RequestBody String body) throws Exception{",
       "         Map<String,Object> bodyAsJson = new ObjectMapper().readValue(body, Map.class);",
@@ -210,22 +291,26 @@ describe ( "makeSpringEndpoint", () => {
       "          return Transform.result(graphQL.get(IFetcher.mock),RepeatingWholeDataQueries.createRepeatingLine(clientRef,   Transform.removeQuoteFromProperties(body, List.class)), 'createRepeatingLine', msgs);",
       "    }",
       "",
+      "  @EndPointAnnotation()",
       "    @GetMapping(value='/api/repeating', produces='application/json')",
       "    public ResponseEntity getRepeatingWholeData(@RequestHeader @RequestParam int clientRef) throws Exception{",
       "         Messages msgs = Transform.msgs();",
       "          return Transform.result(graphQL.get(IFetcher.mock),RepeatingWholeDataQueries.getRepeatingLine(clientRef), 'getRepeatingLine', msgs);",
       "    }",
       "",
+      "  @EndPointAnnotation()",
       "    @PostMapping(value='/api/repeating/query', produces='application/json')",
       "    public String querycreateRepeatingLine(@RequestHeader @RequestParam int clientRef, @RequestBody String body) throws Exception{",
       "       return RepeatingWholeDataQueries.createRepeatingLine(clientRef,   Transform.removeQuoteFromProperties(body, List.class));",
       "    }",
       "",
+      "  @EndPointAnnotation()",
       "    @GetMapping(value='/api/repeating/query', produces='application/json')",
       "    public String querygetRepeatingLine(@RequestHeader @RequestParam int clientRef) throws Exception{",
       "       return RepeatingWholeDataQueries.getRepeatingLine(clientRef);",
       "    }",
       "",
+      "  @EndPointAnnotation()",
       "  @GetMapping(value = '/api/repeating/sample', produces = 'application/json')",
       "    public static String sampleRepeatingWholeData() throws Exception {",
       "      return new ObjectMapper().writeValueAsString( Sample.sampleRepeatingWholeData0);",
@@ -259,12 +344,14 @@ describe ( "makeSpringEndpoint", () => {
       "import focuson.data.db.PostCodeMainPage.PostCodeMainPage_addressMaps ; ",
       "",
       "  @RestController",
+      "  @CrossOrigin()",
       "  public class PostCodeMainPage_PostCodeNameAndAddressController {",
       "",
       "  @Autowired",
       "  public IManyGraphQl graphQL;",
       "  @Autowired",
       "  public LoggedDataSource dataSource;",
+      "  @EndPointAnnotation()",
       "    @PostMapping(value='/api/address', produces='application/json')",
       "    public ResponseEntity createWithoutFetchPostCodeNameAndAddress(@RequestBody String body) throws Exception{",
       "         Map<String,Object> bodyAsJson = new ObjectMapper().readValue(body, Map.class);",
@@ -272,11 +359,13 @@ describe ( "makeSpringEndpoint", () => {
       "         return  ResponseEntity.ok(msgs.emptyResult());",
       "    }",
       "",
+      "  @EndPointAnnotation()",
       "    @PostMapping(value='/api/address/query', produces='application/json')",
       "    public String querycreateWithoutFetchPostCodeNameAndAddress(@RequestBody String body) throws Exception{",
       "       return PostCodeNameAndAddressQueries.createWithoutFetchPostCodeNameAndAddress(  Transform.removeQuoteFromProperties(body, Map.class));",
       "    }",
       "",
+      "  @EndPointAnnotation()",
       "  @GetMapping(value = '/api/address/sample', produces = 'application/json')",
       "    public static String samplePostCodeNameAndAddress() throws Exception {",
       "      return new ObjectMapper().writeValueAsString( Sample.samplePostCodeNameAndAddress0);",
@@ -290,7 +379,6 @@ describe ( "makeSpringEndpoint", () => {
   } )
 
 } )
-
 
 
 const restD: RestD<any> = {

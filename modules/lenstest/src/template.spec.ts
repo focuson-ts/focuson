@@ -1,5 +1,5 @@
 import { GetOptioner, Lenses, nameLensFn } from "@focuson/lens";
-import { applyToTemplate, expand } from "@focuson/template";
+import { applyToTemplate, applyToTemplateOrUndefinedIfNoParamsPresent, expand } from "@focuson/template";
 
 
 interface TemplateTestState {
@@ -45,7 +45,6 @@ describe ( "expand", () => {
 )
 
 
-
 describe ( "applyToTemplate", () => {
   it ( "should replace a list of strings which is the input strings modified by the parats", () => {
     const params = { a: 1, b: 2 }
@@ -63,3 +62,15 @@ describe ( "applyToTemplate", () => {
     expect ( applyToTemplate ( "a={a}&b={b}", params ) ).toEqual ( [ "a=1&b=[2,3]" ] )
   } )
 } )
+
+describe ( 'applyToTemplateOrUndefinedIfNoParamsPresent', () => {
+  const a1b2 = { a: 1, b: 2 }
+  it ( 'should return undefined or the mapped data', () => {
+    expect ( applyToTemplateOrUndefinedIfNoParamsPresent ( "a={a}&b={b}", a1b2 ) ).toEqual ( "a=1&b=2" )
+    expect ( applyToTemplateOrUndefinedIfNoParamsPresent ( "a={a}&b={b}", {} ) ).toEqual ( undefined )
+  } );
+  it ( 'should return template if there are no {}', () => {
+    expect ( applyToTemplateOrUndefinedIfNoParamsPresent ( "someTemplateWithNoBrackets", a1b2 ) ).toEqual ( 'someTemplateWithNoBrackets' )
+    expect ( applyToTemplateOrUndefinedIfNoParamsPresent ( "someTemplateWithNoBrackets", {  } ) ).toEqual ( 'someTemplateWithNoBrackets' )
+  } );
+} );

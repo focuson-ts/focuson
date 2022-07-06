@@ -7,6 +7,7 @@ import { isRepeatingDd } from "../common/dataD";
 import { MainPageD } from "../common/pageD";
 import { getRestTypeDetails, getUrlForRestAction, RestActionDetail, restActionForName, restActionToDetails } from "@focuson/rest";
 import { AccessCondition, allInputParamNames, allOutputParams, displayParam, importForTubles, javaTypeForOutput, MutationDetail } from "../common/resolverD";
+import { applyToTemplateOrUndefinedIfNoParamsPresent } from "@focuson/template";
 
 
 function makeCommaIfHaveParams<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ) {
@@ -82,6 +83,12 @@ export function callMutationsCode<G> ( p: MainPageD<any, G>, restName: string, r
     } ) ) )
   return callMutations;
 }
+export function endpointAnnotation<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restName: string, r: RestD<G>, restAction: RestAction, purpose: string ): string[] {
+  const description = purpose === 'endpoint' ? r.description : `This is a helper endpoint`
+  const notes = purpose === 'endpoint' ? r.notes : undefined
+  const fullParams = { ...params, ...r, restAction, purpose, notes, description, restName }
+  return safeArray ( params.endpointAnnotations ).map ( a => applyToTemplateOrUndefinedIfNoParamsPresent ( a, fullParams ) ).flatMap ( s => s ? [ s ] : [] )
+}
 function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restName: string, r: RestD<G>, restAction: RestAction ): string[] {
   let safeParams: RestParams = safeObject ( r.params );
   const hasDbName = safeParams[ 'dbName' ] !== undefined
@@ -100,6 +107,7 @@ function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restN
     [ `          return Transform.result(graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( errorPrefix, r, restAction )}), ${selectionFromData}, msgs);` ] :
     [ `         return  ResponseEntity.ok(msgs.emptyResult());` ];
   return [
+    ...indentList ( endpointAnnotation ( params, p, restName, r, restAction, 'endpoint' ) ),
     `    @${restTypeDetails.annotation}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,
     `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( errorPrefix, r, restAction )}) throws Exception{`,
     ...makeJsonString,
@@ -114,10 +122,11 @@ function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restN
     `` ];
 }
 
-function makeQueryEndpoint<G> ( params: JavaWiringParams, errorPrefix: string, r: RestD<G>, restAction: RestAction ): string[] {
+function makeQueryEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restName: string, errorPrefix: string, r: RestD<G>, restAction: RestAction ): string[] {
   let restTypeDetails: RestActionDetail = getRestTypeDetails ( restAction );
   const url = getUrlForRestAction ( restAction, r.url, r.states )
   return [
+    ...indentList ( endpointAnnotation ( params, p, restName, r, restAction, 'query' ) ),
     `    @${restTypeDetails.annotation}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}/query", produces="application/json")`,
     `    public String query${queryName ( r, restAction )}(${makeParamsForJava ( errorPrefix, r, restAction )}) throws Exception{`,
     `       return ${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( errorPrefix, r, restAction )});`,
@@ -127,8 +136,9 @@ function makeQueryEndpoint<G> ( params: JavaWiringParams, errorPrefix: string, r
 }
 
 
-function makeSampleEndpoint<G> ( params: JavaWiringParams, r: RestD<G> ): string[] {
+function makeSampleEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restName: string, r: RestD<G>, restAction: RestAction ): string[] {
   return [
+    ...indentList ( endpointAnnotation ( params, p, restName, r, restAction, 'query' ) ),
     `  @${getRestTypeDetails ( 'get' ).annotation}(value = "${beforeSeparator ( "?", r.url )}/sample", produces = "application/json")`,
     `    public static String sample${r.dataDD.name}() throws Exception {`,
     `      return new ObjectMapper().writeValueAsString( ${params.sampleClass}.${sampleName ( r.dataDD )}0);`,
@@ -146,7 +156,7 @@ function makeSqlEndpoint<B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, r
 export function makeSpringEndpointsFor<B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, restName: string, r: RestD<G> ): string[] {
   const errorPrefix = `${p.name}.rest[${restName}] ${JSON.stringify ( restName )}`
   const endpoints: string[] = r.actions.flatMap ( action => makeEndpoint ( params, p, restName, r, action ) )
-  const queries: string[] = r.actions.flatMap ( action => makeQueryEndpoint ( params, errorPrefix, r, action ) )
+  const queries: string[] = r.actions.flatMap ( action => makeQueryEndpoint ( params, p, restName, errorPrefix, r, action ) )
   const importForSql = r.tables === undefined ? [] : [ `import ${sqlMapPackageName ( params, p )}.${sqlMapName ( p, restName, [] )} ; ` ]
   const auditImports = safeArray ( r.mutations ).map ( m => `import ${params.thePackage}.${params.mutatorPackage}.${p.name}.${mutationClassName ( r, m.restAction )};` )
   const mutationVariables = safeArray ( r.mutations ).flatMap ( m => indentList ( [ `@Autowired`, `${mutationClassName ( r, m.restAction )} ${mutationVariableName ( r, m.restAction )};` ] ) )
@@ -177,13 +187,14 @@ export function makeSpringEndpointsFor<B, G> ( params: JavaWiringParams, p: Main
     ...importForSql,
     '',
     `  @RestController`,
+    ...indentList ( params.controllerAnnotations ),
     `  public class ${restControllerName ( p, r )} {`,
     ``,
     ...indentList ( [ `@Autowired`, `public IManyGraphQl graphQL;`, `@Autowired`, `public LoggedDataSource dataSource;` ] ),
     ...mutationVariables,
     ...endpoints,
     ...queries,
-    ...makeSampleEndpoint ( params, r ),
+    ...makeSampleEndpoint ( params, p, restName, r, 'get' ),
     ...makeSqlEndpoint ( params, p, restName, r ),
     `  }` ]
   // ...makeCreateTableEndpoints ( params, r ),

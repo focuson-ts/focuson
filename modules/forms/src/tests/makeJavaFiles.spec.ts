@@ -43,9 +43,9 @@ describe ( "Make INSERT SQL", () => {
       else if (s.type === 'Manual') return s.sql
       else return []
     })).toEqual([
-      "INSERT INTO ADD_TBL(someId,zzline1,zzline2,zzline1,zzline2) values (100,'This is a one line string','This is a one line string','This is a one line string','This is a one line string');",
-      "INSERT INTO ADD_TBL(someId,zzline1,zzline2,zzline1,zzline2) values (101,'another one line string','another one line string','another one line string','another one line string');",
-      "INSERT INTO ADD_TBL(someId,zzline1,zzline2,zzline1,zzline2) values (102,'This is a one line string','This is a one line string','This is a one line string','This is a one line string');"
+      "INSERT INTO ADD_TBL(someId,zzline1,zzline2,zzline1,zzline2)values (100,'This is a one line string','This is a one line string','This is a one line string','This is a one line string');",
+      "INSERT INTO ADD_TBL(someId,zzline1,zzline2,zzline1,zzline2)values (101,'another one line string','another one line string','another one line string','another one line string');",
+      "INSERT INTO ADD_TBL(someId,zzline1,zzline2,zzline1,zzline2)values (102,'This is a one line string','This is a one line string','This is a one line string','This is a one line string');"
     ]);
   } )
 
@@ -58,9 +58,9 @@ describe ( "Make INSERT SQL", () => {
           else if (s.type === 'Manual') return s.sql
           else return []
         })).toEqual([
-      "INSERT INTO ADD_TBL(zzline1,zzline2,zzline1,zzline2) values ('This is a one line string','This is a one line string','This is a one line string','This is a one line string');",
-      "INSERT INTO ADD_TBL(zzline1,zzline2,zzline1,zzline2) values ('another one line string','another one line string','another one line string','another one line string');",
-      "INSERT INTO ADD_TBL(zzline1,zzline2,zzline1,zzline2) values ('This is a one line string','This is a one line string','This is a one line string','This is a one line string');"
+      "INSERT INTO ADD_TBL(zzline1,zzline2,zzline1,zzline2)values ('This is a one line string','This is a one line string','This is a one line string','This is a one line string');",
+      "INSERT INTO ADD_TBL(zzline1,zzline2,zzline1,zzline2)values ('another one line string','another one line string','another one line string','another one line string');",
+      "INSERT INTO ADD_TBL(zzline1,zzline2,zzline1,zzline2)values ('This is a one line string','This is a one line string','This is a one line string','This is a one line string');"
     ]);
   } )
 } )

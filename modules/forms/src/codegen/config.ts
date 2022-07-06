@@ -16,7 +16,9 @@ export interface JavaWiringParams {
   resolversPackage: string;
   utilsPackage: string;
   defaultDbName: string;
-  maxTuples: number
+  maxTuples: number;
+  controllerAnnotations: string[],
+  endpointAnnotations: string[]
 }
 
 export interface TSParams {

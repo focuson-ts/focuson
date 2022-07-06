@@ -264,7 +264,6 @@ export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, a
   return [
     `package ${params.thePackage}.${params.mutatorPackage}.${p.name};`,
     ``,
-
     `import ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
     `import org.springframework.stereotype.Component;`,
     'import org.springframework.beans.factory.annotation.Autowired;',
@@ -291,7 +290,7 @@ export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, a
     `@Component`,
     `public class ${mutationClassName ( r, mutation.restAction )} {`,
     ``,
-    `@Autowired IOGNL ognlForBodyAsJson;`,
+    `    @Autowired IOGNL ognlForBodyAsJson;`,
     ...autowiringVariables,
     ...classLevelAutowiring ( params ) ( mutation ),
     ...methods,

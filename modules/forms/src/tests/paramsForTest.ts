@@ -36,5 +36,7 @@ export const paramsForTest: CombinedParams = {
   resolversPackage: 'resolvers',
   utilsPackage: 'utils',
   maxTuples: 2,
-  theme: 'theme-dark'
+  theme: 'theme-dark',
+  controllerAnnotations: ["@CrossOrigin()"],
+  endpointAnnotations: ["@EndPointAnnotation()"],
 };

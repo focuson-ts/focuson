@@ -116,6 +116,9 @@ export interface RestStateDetails {
 export interface RestD<G> {
   /** Only used for dedupping when the dataDd is repeated */
   namePrefix?: string;
+  description?: string;
+  notes?: string;
+  authorisation?: string;
   params: RestParams,
   dataDD: CompDataD<G>,
   url: string,

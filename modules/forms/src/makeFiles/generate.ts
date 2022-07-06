@@ -50,6 +50,8 @@ export const params = {
   maxTuples: 3,
   theme: 'theme-light',
   extractData: `( status: number | undefined, body: any ) => body.data`,
+  controllerAnnotations: ["@CrossOrigin()"],
+  endpointAnnotations:[]// ['@ApiOperation(value="{description}",notes="{notes}")', '@PreAuthorise("{authorisation}")']
 };
 
 export const directorySpec: DirectorySpec = {

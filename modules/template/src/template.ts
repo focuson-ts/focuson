@@ -33,10 +33,21 @@ export function stringOrStringify ( raw: any ): any {
   return (typeof raw === 'object') ? JSON.stringify ( raw ) : (raw === undefined ? '' : raw)
 }
 export function applyToTemplate ( template: string, params: NameAnd<any> ): string [] {
-  let sorted: [ string, string ][] = sortedEntries ( params );
-  return sorted.reduce ( ( acc: string, [ name, value ]: [ string, string ] ) => {
-    const regex = new RegExp ( "{" + name + "}", 'g' )
-    return acc.replace ( regex, stringOrStringify ( value ) )
-  }, template.replace ( /\r/g, '\n' ) ).split ( '\n' ).filter ( s => s.length > 0 )
+  const mapped = applyToTemplateOrUndefinedIfNoParamsPresent ( template, params )
+  const result = mapped ? mapped : template
+  return result.split ( '\n' ).filter ( s => s.length > 0 )
+
 }
 
+export function applyToTemplateOrUndefinedIfNoParamsPresent ( template: string, params: NameAnd<any> ): string | undefined {
+  if (template.indexOf('{') <0) return template
+  const cleanedTemplate = template.replace ( /\r/g, '\n' )
+  const sorted: [ string, string ][] = sortedEntries ( params );
+  var present = false
+  const result = sorted.reduce ( ( acc: string, [ name, value ]: [ string, string ] ) => {
+    const regex = new RegExp ( "{" + name + "}", 'g' )
+    present = present || regex.test ( acc )
+    return acc.replace ( regex, stringOrStringify ( value ) )
+  }, cleanedTemplate )
+  return present ? result : undefined
+}

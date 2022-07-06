@@ -699,8 +699,8 @@ export function makeInsertSqlForNoIds ( dataD: CompDataD<any>, entity: MainEntit
   const sampleCount = isRepeatingDd ( dataD ) && dataD.sampleCount ? dataD.sampleCount : 3
   const is = [ ...Array ( sampleCount ).keys () ]
   return is.map ( i => `INSERT INTO ${entity.table.name}(${tafdsForThisTable
-          .map ( ( fd: TableAndFieldData<any> ) => fd.fieldData.dbFieldName )})
-                        values (${tafdsForThisTable.map ( fd => sqlIfy ( selectSample ( i, fd.fieldData ) ) ).join ( "," )});` );
+                  .map ( ( fd: TableAndFieldData<any> ) => fd.fieldData.dbFieldName )})` +
+    `values (${tafdsForThisTable.map ( fd => sqlIfy ( selectSample ( i, fd.fieldData ) ) ).join ( "," )});` );
 }
 
 export function makeInsertSqlForIds ( dataD: CompDataD<any>, entity: MainEntity | undefined, strategy: OneTableInsertSqlStrategyForIds ) {
@@ -719,6 +719,6 @@ export function makeInsertSqlForIds ( dataD: CompDataD<any>, entity: MainEntity 
   const sampleCount = isRepeatingDd ( dataD ) && dataD.sampleCount ? dataD.sampleCount : 3
   const is = [ ...Array ( sampleCount ).keys () ]
   return is.map ( i => `INSERT INTO ${entity.table.name}(${tafdsForThisTable
-          .map ( fd => fd.fieldData.dbFieldName )})
-                        values (${tafdsForThisTable.map ( ( fd: TableAndFieldData<any> ) => sqlIfy ( selectSample ( i, fd.fieldData ) ) ).join ( "," )});` );
+                  .map ( fd => fd.fieldData.dbFieldName )})` +
+    `values (${tafdsForThisTable.map ( ( fd: TableAndFieldData<any> ) => sqlIfy ( selectSample ( i, fd.fieldData ) ) ).join ( "," )});` );
 }
