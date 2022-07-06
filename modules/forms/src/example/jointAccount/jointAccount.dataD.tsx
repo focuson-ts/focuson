@@ -9,7 +9,7 @@ export const JointAccountAddressDD: ExampleDataD = {
   table: addT, //just a default
   structure: {
     line1: { dataDD: OneLineStringDD, db: { table: addT, field: 'zzline1', fieldAlias: 'zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode' } }, //db can be a string or a
-    line2: { dataDD: OneLineStringDD, db: 'zzline2' },
+    line2: { dataDD: OneLineStringDD, db: { table: addT, field: 'zzline2', datePattern: 'dd-MM-yyyy' }}
   }
 }
 export const JointAccountAddressesDD: ExampleRepeatingD = { //No db stuff here.

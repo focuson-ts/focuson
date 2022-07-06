@@ -28,7 +28,7 @@ export interface TableAndField {
   table: DBTable;
   field: string;
   fieldAlias?: string;
-
+  datePattern?: string;
 }
 export interface TableAliasAndField extends TableAndField {
   alias: string
@@ -355,7 +355,7 @@ export function findTableAndFieldFromDataD<G> ( dataD: CompDataD<G> ): TableAndF
           let fieldData: FieldData<any> = {
             dbFieldName: oneDataDD.db.field, dbFieldAlias: oneDataDD.db.fieldAlias,
             rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName, path,
-            sample: selectSample ( oneDataDD ), datePattern: oneDataDD.dataDD.datePattern
+            sample: selectSample ( oneDataDD ), datePattern: oneDataDD.db.datePattern
           };
           return [ { table: oneDataDD.db.table, fieldData } ]
         } else {
@@ -518,7 +518,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: MainPageD<B
   function createPutterString<T> ( fieldData: FieldData<T>, fieldAlias: string ) {
     return (fieldData.datePattern === undefined) ?
       `this.${mapName ( safeArray ( fieldData.path ).slice ( 0, -1 ) )}.put("${fieldData.fieldName}", rs.${fieldData.rsGetter}("${fieldAlias}"));`
-      : `this.${mapName ( safeArray ( fieldData.path ).slice ( 0, -1 ) )}.put("${fieldData.fieldName}", new SimpleDateFormat("${fieldData.datePattern}").format(rs.${fieldData.rsGetter}("${fieldAlias}")));`;
+      : `this.${mapName ( safeArray ( fieldData.path ).slice ( 0, -1 ) )}.put("${fieldData.fieldName}", new SimpleDateFormat("${fieldData.datePattern}").format(rs.getDate("${fieldAlias}")));`;
   }
 
   const putters = ld.fields
