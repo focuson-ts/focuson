@@ -13,6 +13,7 @@ export interface DropDownFromDataProps<S, T, C> extends CommonStateProps<S, stri
   pleaseSelect?: string;
   size?: number;
   required?: boolean;
+  readonly?: boolean
 }
 
 export function LabelAndDropDownFromData<S, T, C extends FocusOnContext<S>> ( props: DropDownFromDataProps<S, T, C> ) {

@@ -13,6 +13,7 @@ export interface DropDownWithVaryingContentProps<S, C> extends CommonStateProps<
   pleaseSelect?: string;
   size?: number;
   required?: boolean;
+  readonly?: boolean
 }
 
 export function LabelAndDropDownWithVaryingContent<S, C extends FocusOnContext<S>> ( props: DropDownWithVaryingContentProps<S, C> ) {
