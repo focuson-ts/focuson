@@ -5,4 +5,5 @@ export * from './src/messages'
 export * from './src/sharedTypes'
 export * from './src/decamelize'
 export * from './src/logging'
+export * from './src/validate'
 

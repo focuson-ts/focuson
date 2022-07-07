@@ -1,8 +1,8 @@
-import { CommonStateProps, InputOnChangeProps, LabelAlignment, NumberValidations, StringValidations } from "./common";
+import { CommonStateProps, InputOnChangeProps, LabelAlignment } from "./common";
 import { BooleanInput, Input, } from "./input";
 import { Label } from "./label";
 import { NumberTransformer, StringTransformer } from "./transformers";
-import { defaultDateFn, NameAnd, stringToSimpleMsg, toArray } from "@focuson/utils";
+import { defaultDateFn, NameAnd, NumberValidations, stringToSimpleMsg, StringValidations, toArray } from "@focuson/utils";
 import { FocusOnContext, HasPathToLens } from "@focuson/focuson";
 import { LensState } from "@focuson/state";
 import { Transform } from "@focuson/lens";

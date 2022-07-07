@@ -1,6 +1,7 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 import { DateDD, IntegerDD, MoneyDD, OneLineStringDD, PrimitiveDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
 import { LabelAndDropDownCD, LayoutCd, StructureTableCD, TableCD } from "../../common/componentsD";
+import { validate } from '../../makeFiles/validateModel';
 
 export const paymentReasonDD: StringPrimitiveDD = {
   ...OneLineStringDD,
@@ -31,8 +32,10 @@ const AccountDD: PrimitiveDD = {
 
 
 export const SortCodePartDD: StringPrimitiveDD = {
-  ...OneLineStringDD
+  ...OneLineStringDD,
+  // validate: { pattern: '^[0-9][0-9]$' }
 }
+
 export const SortCodeDD: ExampleDataD = {
   name: 'SortCode',
   description: 'All the data displayed on the screen',
@@ -51,7 +54,7 @@ export const MandateDD: ExampleDataD = {
     sortCode: { dataDD: SortCodeDD },
     accountId: { dataDD: AccountDD, sample: [ 12341234, 23456123, 3245454 ] },
     mandateStatus: { dataDD: StringDD, sample: [ 'ACTIVE' ] },
-    bankName: { dataDD: StringDD, sample: [ 'Bank Of Happiness', 'Royal Bank of Success' ] },
+    bankName: { dataDD: StringDD, sample: [ 'Bank Of Happiness', 'Royal Bank of Success' ], }, // validate: { pattern: "^[0-9A-Za-z .,']$" } },
     accountName: { dataDD: StringDD, sample: [ 'F & J Bloggs' ] },
     mandateRef: { dataDD: StringDD, sample: [ '12099845-34', '12099845-78' ] }
   }

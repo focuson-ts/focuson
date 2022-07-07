@@ -1,9 +1,9 @@
-import { CommonStateProps, InputEnabledProps, InputOnChangeProps, NumberValidations, StringValidations } from "./common";
+import { CommonStateProps, InputEnabledProps, InputOnChangeProps } from "./common";
 import { reasonFor } from "@focuson/state";
 import React from "react";
 import { makeInputChangeTxs, TransformerProps } from "./labelAndInput";
 import { NumberTransformer, StringTransformer } from "./transformers";
-import { NameAnd } from "@focuson/utils";
+import { NameAnd, NumberValidations, StringValidations } from "@focuson/utils";
 
 import { FocusOnContext } from "@focuson/focuson";
 

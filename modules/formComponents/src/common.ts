@@ -11,18 +11,6 @@ export interface CommonComponentProps {
   mode?: PageMode;
   required?: boolean;
 }
-export interface StringValidations {
-  minlength?: number;
-  maxlength?: number;
-  pattern?: string;
-}
-export interface NumberValidations {
-  min?: number;
-  max?: number;
-  step?: number
-}
-export interface BooleanValidations {}
-
 
 export interface CommonStateProps<S, T, Context> extends CommonComponentProps {
   state: LensState<S, T, Context>;
