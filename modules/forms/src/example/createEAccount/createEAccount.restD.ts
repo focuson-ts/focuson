@@ -28,7 +28,8 @@ export const createEAccountRestD: RestD<any> = {
             { type: 'body', path: 'v3InJson', javaType: 'String' },
             'accountId'
           ], schema: onlySchema
-        }
+        },
+        { type: "message", message: 'It worked!!!' }
 
       ]
     },

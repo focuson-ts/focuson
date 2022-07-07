@@ -2,7 +2,7 @@ import { JavaWiringParams } from "./config";
 import { MainPageD } from "../common/pageD";
 import { RestD } from "../common/restD";
 import { toArray, unique } from "@focuson/utils";
-import { allInputParamNames, allParentMutationParams, importForTubles, isSqlMutationThatIsAList, MutationDetail, Mutations } from "../common/resolverD";
+import { allInputParamNames, allParentMutationParams, importForTubles, isSqlMutationThatIsAList, MutationDetail, Mutations, parametersFor } from "../common/resolverD";
 import { fetcherInterfaceForResolverName, fetcherPackageName, mutationMethodName, resolverClassName } from "./names";
 import { makeCodeFragmentsForMutation, makeMutationMethod } from "./makeMutations";
 import { ResolverData } from "./makeJavaFetchersInterface";
@@ -23,13 +23,13 @@ export function callResolvers<G> ( p: MainPageD<any, G>, restName: string, r: Re
       ];
     else
       return [ `//from ${p.name}.rest[${restName}].resolvers[${JSON.stringify ( name )}]`,
-        `${paramsDeclaration ( md, i )} ${mutationMethodName ( r, name, md, indexPrefix + i )}(connection,msgs,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
+        `${paramsDeclaration ( md, i )} ${mutationMethodName ( r, name, md, indexPrefix + i )}(connection,msgs,${[ dbNameString, ...allInputParamNames ( parametersFor(md) ) ].join ( ',' )});`,
         ...outputParamsDeclaration ( md, i )
       ];
   } );
 }
 function addParams<G> ( resolvers: MutationDetail[] ) {
-  return resolvers.flatMap ( r => toArray ( r.params ) ).flatMap ( p => typeof p !== 'string' && p.type === 'output' ? [ `result.put("${p.name}", ${p.name});` ] : [] )
+  return resolvers.flatMap ( r => toArray (parametersFor(r) ) ).flatMap ( p => typeof p !== 'string' && p.type === 'output' ? [ `result.put("${p.name}", ${p.name});` ] : [] )
 }
 
 export function makeCreateResult ( errorPrefix: string, resolvers: MutationDetail[], resolverData: ResolverData ): string[] {
@@ -86,7 +86,7 @@ function importsFromManual ( resolver: Mutations ) {
 }
 
 function declareInputParamsFromParent<G> ( r: RestD<G>, resolvers: MutationDetail[] ): string[] {
-  const parentMParams = resolvers.flatMap ( r => allParentMutationParams ( r.params ) )
+  const parentMParams = resolvers.flatMap ( r => allParentMutationParams (parametersFor(r)  ) )
   if ( parentMParams.length === 0 ) return []
   return [ `Map<String,Object> paramsFromParent = dataFetchingEnvironment.getSource();`,
     ...parentMParams.map ( p => `${p.javaType} ${p.name} = (${p.javaType})paramsFromParent.get("${p.name}");` ) ];

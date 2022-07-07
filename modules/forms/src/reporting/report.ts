@@ -10,6 +10,7 @@ import { printRestAction } from "@focuson/rest";
 import { findAllTableAndFieldDatasIn } from "../codegen/makeSqlFromEntities";
 import { isRestButtonInPage } from "../buttons/restButton";
 import { CommonParamError, findAllCommonParamsDetails, validateCommonParams } from "../codegen/makeCommon";
+import { mutationDetailsName } from "../codegen/names";
 
 export interface FullReport<B, G> {
   reports: Report<B, G>[];
@@ -160,7 +161,8 @@ function insertSqlStrategy<B, G> ( page: MainPageD<B, G>, restName: string, rest
 }
 
 function mutationDetails<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ): string {
-  return safeArray ( rest.mutations ).flatMap ( a => `${printRestAction ( a.restAction )}->${toArray ( a.mutateBy ).map ( s => s.name )}` ).join ( '; ' )
+  return safeArray ( rest.mutations ).flatMap ( ( a, index ) => `${printRestAction ( a.restAction )}->${toArray ( a.mutateBy )
+    .map ( s => mutationDetailsName ( s, index.toString () ) )}` ).join ( '; ' )
 }
 function auditInTable<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ) {
 
@@ -169,7 +171,8 @@ function auditInTable<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ) {
 export function makeRestReport<B, G> ( page: MainPageD<B, G>, info: ReportInfo ): ReportDetails {
   const general: string[] = sortedEntries ( page.rest ).flatMap ( ( [ name, rdp ] ) =>
     [ `|${name} | ${rdp.rest.url}| ${sortedEntries ( rdp.rest.params ).map ( ( [ name, p ] ) => name )} | ${accessDetails ( page, rdp.rest )} | ${function auditDetails<B, G> ( page: MainPageD<B, G>, rest: RestD<G> ): string {
-      return safeArray ( rest.mutations ).flatMap ( a => `${printRestAction ( a.restAction )}->${toArray ( a.mutateBy ).map ( s => s.name )}` ).join ( '; ' )
+      return safeArray ( rest.mutations ).flatMap ( ( a, index ) => `${printRestAction ( a.restAction )}->${toArray ( a.mutateBy )
+        .map ( s => mutationDetailsName ( s, index.toString () ) )}` ).join ( '; ' )
     } ( page, rdp.rest )}`,
       ...sortedEntries ( rdp.rest.states ).map ( ( [ stateName, details ] ) =>
         `| | ${details.url}| ${sortedEntries ( rdp.rest.params ).map ( ( [ name, p ] ) => name )} |` )
@@ -257,12 +260,11 @@ function modalButtonData<G> ( button: ModalOrMainButtonInPage<G>, guardedBy: str
   const copyOnClose = button.copyOnClose ? [ `Copy on close ${JSON.stringify ( button.copyOnClose )} ` ] : []
   const from = button.copy ? [ `Copy from ${JSON.stringify ( button.copy )}` ] : []
   const empty = button.createEmpty ? [ `Initialised as empty` ] : []
-  return isModal(button) ?
+  return isModal ( button ) ?
     [ `Modal Button ==> ${button.modal.name} in mode ${button.mode}${guardedBy}`, ...indentList ( [
-      ...from, `Focused on ${JSON.stringify ( button.focusOn )}`, ...restOnCommit, ...copyOnClose ] ) ]:
+      ...from, `Focused on ${JSON.stringify ( button.focusOn )}`, ...restOnCommit, ...copyOnClose ] ) ] :
     [ `Modal Button ==> ${button.main.name} in mode ${button.mode}${guardedBy}`, ...indentList ( [
       ...from, `is opening a new main page`, ...restOnCommit, ...copyOnClose ] ) ]
-
 
 
 }

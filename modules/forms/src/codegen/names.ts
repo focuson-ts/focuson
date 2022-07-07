@@ -6,7 +6,7 @@ import { isRestStateChange, RestAction, safeString } from "@focuson/utils";
 import { JavaWiringParams, TSParams } from "./config";
 import { TableAndFieldAndAliasData } from "./makeSqlFromEntities";
 import { RestActionDetail, restActionForName, restActionToDetails } from "@focuson/rest";
-import { MutationDetail, OutputMutationParam } from "../common/resolverD";
+import { isMessageMutation, MutationDetail, OutputMutationParam } from "../common/resolverD";
 
 export const guardName = ( s: string ) => s + "Guard"
 export const domainName = <G> ( d: CompDataD<G> ): string => d.name + "Domain";
@@ -66,7 +66,11 @@ export const providerPactClassName = <B, G> ( pd: MainPageD<B, G> ): string => p
 export const mutationClassName = <B, G> ( r: RestD<G>, restAction: RestAction ) => `${restNameWithPrefix ( r )}_${restActionForName ( restAction )}Mutation`;
 export const mutationVariableName = <B, G> ( r: RestD<G>, restAction: RestAction ) => `__${restActionForName ( restAction )}Mutation`;
 export const resolverClassName = <B, G> ( r: RestD<G>, resolverName: string ) => `${restNameWithPrefix ( r )}_${resolverName}Resolver`;
-export const mutationMethodName = <B, G> ( r: RestD<G>, res: string, m: MutationDetail, index: string ) => m.name !== undefined ? m.name + index : `${restNameWithPrefix ( r )}_${res}_${m.name}${index}`;
+export const mutationDetailsName = ( md: MutationDetail, index: string ): string | undefined => isMessageMutation ( md ) ? `message${index}` : md.name;
+export const mutationMethodName = <B, G> ( r: RestD<G>, res: string, m: MutationDetail, index: string ) => {
+  const name = mutationDetailsName ( m, index )
+  return name !== undefined ? name + index : `${restNameWithPrefix ( r )}_${res}_${name}${index}`;
+};
 
 export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): string => `${safeString ( r.namePrefix )}${r.dataDD.name}Queries`;
 

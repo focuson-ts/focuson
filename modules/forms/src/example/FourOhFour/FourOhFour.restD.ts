@@ -12,6 +12,11 @@ export const fourOhFourSingleRD: ExampleRestD = {
   dataDD: FourOhFourDataD,
   url: '/api/fourOhFourSingle?{query}',
   actions: [ 'get' ],
+  mutations: [
+    { restAction: 'get', mutateBy: { type: 'message', message: 'info message!' } },
+    { restAction: 'get', mutateBy: { type: 'message', message: 'warning message!', level: 'warning' } },
+    { restAction: 'get', mutateBy: { type: 'message', message: 'error message!', level: 'error' } }
+  ],
   tables: {
     entity: {
       type: 'Main',

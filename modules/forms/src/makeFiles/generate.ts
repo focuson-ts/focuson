@@ -12,7 +12,7 @@ import { GenerateLogLevel, safeArray, toArray, unique } from "@focuson/utils";
 import * as process from "process";
 import { makeCriticalReport, makeReport, makeReportData } from "../reporting/report";
 import { AppConfig } from "../appConfig";
-import { allOutputParams } from "../common/resolverD";
+import { allOutputParams, parametersFor } from "../common/resolverD";
 
 export const params = {
   defaultDbName: "mock",
@@ -50,8 +50,8 @@ export const params = {
   maxTuples: 3,
   theme: 'theme-light',
   extractData: `( status: number | undefined, body: any ) => body.data`,
-  controllerAnnotations: ["@CrossOrigin()"],
-  endpointAnnotations:[]// ['@ApiOperation(value="{description}",notes="{notes}")', '@PreAuthorise("{authorisation}")']
+  controllerAnnotations: [ "@CrossOrigin()" ],
+  endpointAnnotations: []// ['@ApiOperation(value="{description}",notes="{notes}")', '@PreAuthorise("{authorisation}")']
 };
 
 export const directorySpec: DirectorySpec = {
@@ -61,7 +61,7 @@ export const directorySpec: DirectorySpec = {
 export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, directorySpec: DirectorySpec, appConfig: AppConfig, params: CombinedParams, javaOutputRoot: string, tsRoot: string, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G> ) => <B extends ButtonD> ( pages: MainPageD<B, G>[] ) => {
   const paramsWithTuples = {
     ...params, maxTuples: foldPagesToRestToMutationsAndResolvers<number> ( pages, 0, {
-      simple: ( mut ) => ( acc ) => Math.max ( acc, allOutputParams ( toArray ( mut.params ) ).length ),
+      simple: ( mut ) => ( acc ) => Math.max ( acc, allOutputParams ( parametersFor ( mut ) ).length ),
       guarded: ( sel, guarded ) => ( acc ) => acc
     } )
   }

@@ -46,8 +46,18 @@ export interface MutationsForRestAction {
 // }
 // export type MutationResolverGuard= MutationResolverValueGuard
 
+export function parametersFor ( m: MutationDetail ): MutationParam[] {
+  if ( isMessageMutation ( m ) ) return []
+  return toArray ( m.params )
+}
 
-export type MutationDetail = StoredProcedureMutation | SqlMutation | SqlMutationThatIsAList | ManualMutation | SelectMutation // | IDFromSequenceMutation
+export function getMakeMock(m: MutationDetail) : boolean {
+  if (isMessageMutation(m)) return false
+  return m.makeMock ? m.makeMock : true
+}
+export type MutationDetail = StoredProcedureMutation |
+  SqlMutation | SqlMutationThatIsAList |
+  ManualMutation | SelectMutation | MessageMutation
 
 // export interface IDFromSequenceMutation {
 //   mutation: 'IDFromSequence',
@@ -72,7 +82,14 @@ export interface SqlMutation {
   params: MutationParamForSql | MutationParamForSql[]
   noDataIs404?: boolean
 }
-
+export interface MessageMutation {
+  type: 'message',
+  message: string,
+  level?: SimpleMessageLevel
+}
+export function isMessageMutation ( s: MutationDetail ): s is MessageMutation {
+  return s.type === 'message'
+}
 export interface SqlMutationThatIsAList extends SqlMutation {
   list?: boolean,
   messageOnEmptyData?: string
@@ -81,6 +98,7 @@ export function isSqlMutationThatIsAList ( s: MutationDetail ): s is SqlMutation
   const a: any = s
   return s.type === 'sql' && a.list
 }
+
 
 export interface StoredProcedureMutation {
   type: 'storedProc',
