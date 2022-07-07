@@ -15,7 +15,7 @@ export function Radio<S, T, Context extends FocusOnContext<S>> ( { state, mode, 
   const cssValidInput = hasValid || !required ? '' : ' invalid'
 
   return <div className={`radio-group-container ${cssValidInput}`} id={id}>{Object.entries ( enums ).map ( ( [ key, value ] ) => {
-    const checked = state.optJson () === value
+    const checked = state.optJson () === key
     const cssChecked = checked ? 'checked' : ''
 
     const disabled = mode === 'view'
