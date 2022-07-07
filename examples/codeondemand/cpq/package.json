@@ -16,9 +16,9 @@
     "react-dom": "^17.0.1",
     "typescript": "^4.1.5",
     "crypto-js": "^4.0.0",
-    "@focuson/lens": "1.25.2",
-    "@focuson/nav": "1.25.2",
-    "@focuson/codeondemand": "1.25.2"
+    "@focuson/lens": "1.25.3",
+    "@focuson/nav": "1.25.3",
+    "@focuson/codeondemand": "1.25.3"
   },
   "description": "Demonstrating the code on demand approach for configure price quotation",
   "devDependencies": {
@@ -61,7 +61,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.25.2",
+  "version": "1.25.3",
   "template": "codeondemand",
   "name": "@focuson/examples_codeondemand_cpq",
   "details": {
