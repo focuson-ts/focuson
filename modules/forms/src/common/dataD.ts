@@ -1,11 +1,11 @@
 //Common Data Definitions
-import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndDropDownWithVaryingContentCD, LabelAndNumberInputCD, LabelAndStringInputCD, LabelAndTextAreaCD, NumberInputCD } from "./componentsD";
+import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndNumberInputCD, LabelAndStringInputCD, LabelAndTextAreaCD, NumberInputCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeRender";
-import { NameAnd, safeArray } from "@focuson/utils";
+import { NameAnd, safeArray, StringValidations, NumberValidations } from "@focuson/utils";
 import { Guards } from "../buttons/guardButton";
-import { DBTable, isDbTableAndName } from "./resolverD";
-import { DbValues, isTableAndField } from "../codegen/makeSqlFromEntities";
-
+import { DBTable } from "./resolverD";
+import { DbValues } from "../codegen/makeSqlFromEntities";
+import { BooleanValidations } from '../../../utils/src/validate';
 
 export interface HasSample<T> {
   sample?: T[]
@@ -93,26 +93,29 @@ export interface StringPrimitiveDD extends CommonPrimitiveDD<string> {
   reactType: 'string';
   graphQlType: 'String';
   javaType: 'String'
-
+  validate?: StringValidations;
 }
 
 export interface DatePrimitiveDD extends CommonPrimitiveDD<string> {
   datePattern: string;
   reactType: 'string';
   graphQlType: 'String';
-  javaType: 'String'
+  javaType: 'String',
+  validate?: { required?: boolean };
 }
 export interface BooleanPrimitiveDD extends CommonPrimitiveDD<boolean> {
   reactType: 'boolean';
   emptyValue: boolean
   graphQlType: 'Boolean'
-  javaType: 'Boolean'
+  javaType: 'Boolean',
+  validate?: BooleanValidations;
 }
 export interface NumberPrimitiveDD extends CommonPrimitiveDD<number> {
   reactType: 'number';
   emptyValue: number;
   graphQlType: 'Int' | 'Float'
   javaType: 'Integer' | 'Float' | 'Double'
+  validate?: NumberValidations
 }
 export type PrimitiveDD = DatePrimitiveDD | StringPrimitiveDD | BooleanPrimitiveDD | NumberPrimitiveDD
 
@@ -313,7 +316,7 @@ export const AccountIdDD: NumberPrimitiveDD = {
   name: 'AccountId',
   description: "An account id",
   display: LabelAndNumberInputCD,
-  displayParams: { min: 10000000, max: 99999999 },
+  validate: { min: 10000000, max: 99999999 },
   sample: [ 1233450, 3233450, 4333450 ]
 }
 export const StringDD: StringPrimitiveDD = {
@@ -343,7 +346,7 @@ export const ReadOnlyStringDD: StringPrimitiveDD = {
   ...OneLineStringDD,
   name: 'ReadOnlyString',
   description: "A string that can only be viewed",
-  displayParams: { readonly: true }
+  displayParams: { readonly: true },
 }
 
 export const IntegerDD: NumberPrimitiveDD = {
@@ -359,20 +362,20 @@ export const NatNumDd: NumberPrimitiveDD = {
   name: 'NaturalNumber',
   description: "A positive integer",
   display: LabelAndNumberInputCD,
-  displayParams: { min: 0 },
-  sample: [ 123, 456 ]
+  sample: [ 123, 456 ],
+  validate: { min: 0 }
 }
 export const MoneyDD: NumberPrimitiveDD = {
   ...floatPrimDD,
   display: LabelAndNumberInputCD,
   sample: [ 100.23, 200.45, 300 ],
-  displayParams: { step: 0.01 },
   description: "The primitive representing an amount of the local currency",
-  name: 'Money'
+  name: 'Money',
+  validate: { step: 0.01 }
 }
-export const PostiveMoneyDD: NumberPrimitiveDD = {
+export const PositiveMoneyDD: NumberPrimitiveDD = {
   ...MoneyDD,
-  displayParams: { min: 0, step: 0.01 }
+  validate: { min: 0, step: 0.01 }
 }
 export const BooleanDD: BooleanPrimitiveDD = {
   rsGetter: "getBoolean",
@@ -402,7 +405,7 @@ export const DateDD: DatePrimitiveDD = {
   description: "The primitive representing a date (w/o time)",
   display: LabelAndDateInputCD,
   displayParams: { dateFormat: "yyyy/MM/dd" },
-  sample: [ "2020/10/01", '2021/09/01', '2022/11/01' ]
+  sample: [ "2020/10/01", '2021/09/01', '2022/11/01' ],
 }
 export const DateDDMMYYY_DD: DatePrimitiveDD = {
   datePattern: "dd/MM/yyyy",
@@ -412,7 +415,7 @@ export const DateDDMMYYY_DD: DatePrimitiveDD = {
   description: "The primitive representing a date (w/o time)",
   display: LabelAndDateInputCD,
   displayParams: { dateFormat: "dd/MM/yyyy" },
-  sample: [ "21/1/2020", '23/2/2021', '10/3/2/2022' ]
+  sample: [ "21/1/2020", '23/2/2021', '10/3/2/2022' ],
 }
 
 export const DateTimeDD: PrimitiveDD = {

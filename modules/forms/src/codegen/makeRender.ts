@@ -2,7 +2,7 @@ import { AllDataDD, CompDataD, DisplayParamDD, HasGuards, HasLayout, isDataDd, i
 import { commonParamsWithLabel, DisplayCompD, OneDisplayCompParamD, SimpleDisplayComp } from "../common/componentsD";
 import { dataDsIn, isMainPage, isModalPage, MainPageD, PageD } from "../common/pageD";
 
-import { decamelize, NameAnd, sortedEntries, toArray, unique, unsortedEntries } from "@focuson/utils";
+import { decamelize, NameAnd, safeObject, sortedEntries, toArray, unique, unsortedEntries, Validations } from "@focuson/utils";
 import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, optionalsFileName, optionalsName, pageComponentName, pageDomainName } from "./names";
 import { addButtonsFromVariables, MakeButton, makeButtonsVariable, makeGuardButtonVariables } from "./makeButtons";
 import { focusOnFor, indentList, noExtension } from "./codegen";
@@ -124,7 +124,13 @@ export const processParam = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G
 };
 
 
-function makeParams<B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params: TSParams, errorPrefix: string, path: string[], optEnum: NameAnd<String> | undefined, display: DisplayCompD, definingParams: DisplayParamDD | undefined, displayParams: ComponentDisplayParams ) {
+function toReactParam([name, value]: [string, any]): [string, string] {
+  if (typeof value === 'string') return [name, `"${value}"`];
+  else return [name, `{${value}}`]
+}
+
+function makeParams<B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params: TSParams, errorPrefix: string, path: string[], optEnum: NameAnd<String> | undefined, 
+  display: DisplayCompD, definingParams: DisplayParamDD | undefined, displayParams: ComponentDisplayParams, validations: Validations ) {
   const processOneParam = processParam ( mainPage, page, params, errorPrefix, display )
   const dataDDParams: [ string, string ][] = definingParams ? Object.entries ( definingParams )
     .map ( ( [ name, value ] ) => { return [ name, processOneParam ( name, value ) ]; } ) : []
@@ -151,7 +157,7 @@ function makeParams<B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params
     return []
   } )
   const displayParamsA: [ string, string ][] = displayParams ? Object.entries ( displayParams ).map ( ( [ name, value ] ) => [ name, processOneParam ( name, value ) ] ) : []
-  const fullDisplayParams = Object.entries ( Object.fromEntries ( [ ...defaultParams, ...dataDDParams, ...displayParamsA ] ) )
+  const fullDisplayParams = Object.entries ( Object.fromEntries ( [ ...defaultParams, ...dataDDParams, ...displayParamsA, ...Object.entries( validations ).map(toReactParam) ] ) )
   return fullDisplayParams;
 }
 export function createOneReact<B, G> ( mainPage: MainPageD<B, G>, params: TSParams, pageD: PageD<B, G>, { path, dataDD, display, displayParams, guard }: ComponentData<G> ): string[] {
@@ -160,8 +166,9 @@ export function createOneReact<B, G> ( mainPage: MainPageD<B, G>, params: TSPara
   const name = display.name
   let errorPrefix = `Page ${pageD.name}, Datad ${dataDD.name} with path ${JSON.stringify ( path )}`;
   if ( name === undefined ) throw Error ( errorPrefix + " cannot find the name of the display component. Check it is a dataD or similar" )
+  const validate = isPrimDd(dataDD) && dataDD.validate ? dataDD.validate : {};
   const fullDisplayParams = makeParams ( mainPage, pageD, params, errorPrefix, path,
-    isPrimDd ( dataDD ) && dataDD.enum, display, dataDD.displayParams, displayParams );
+    isPrimDd ( dataDD ) && dataDD.enum, display, dataDD.displayParams, displayParams, validate );
 
   const displayParamsString = fullDisplayParams.map ( ( [ k, v ] ) => `${k}=${v}` ).join ( " " )
 
@@ -183,7 +190,7 @@ export function createAllReactCalls<B, G> ( mainPage: MainPageD<B, G>, params: T
 function makeLayoutPrefixPostFix<B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, tsparams: TSParams, errorPrefix: string, path: string[], hasLayout: HasLayout, defaultOpen: string, defaultClose: string ) {
   if ( hasLayout.layout ) {
     const { component, displayParams } = hasLayout.layout
-    const params = makeParams ( mainPage, page, tsparams, errorPrefix, path, undefined, component, displayParams, {} )
+    const params = makeParams ( mainPage, page, tsparams, errorPrefix, path, undefined, component, displayParams, {}, {} )
     const layoutPrefixString = `<${component.name} ${params.map ( ( [ n, v ] ) => `${n}=${v}` ).join ( ' ' )}>`
     const layoutPostfixString = `</${component.name}>`
     return { layoutPrefixString, layoutPostfixString };
@@ -204,7 +211,6 @@ export function makeDisplayGuard<B, G extends GuardWithCondition> ( hasGuards: H
   let guards = unsortedEntries ( hasGuards.guards ).map ( ( [ name, guard ] ) => `['${name}',${guardName ( name )}]` ).join ( ',' );
   return [ `   {guardDebug ?<DisplayGuards guards={ [${guards}]} />:<></>}` ];
 }
-
 
 function makeSealedString<B, G> ( dataD: CompDataD<G> ): string[] {
   if ( isDataDd ( dataD ) && dataD.sealedBy ) {

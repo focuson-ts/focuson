@@ -1,7 +1,6 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
-import { DateDD, IntegerDD, MoneyDD, OneLineStringDD, PrimitiveDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
+import { DateDD, IntegerDD, MoneyDD, NumberPrimitiveDD, OneLineStringDD, PositiveMoneyDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
 import { LabelAndDropDownCD, LayoutCd, StructureTableCD, TableCD } from "../../common/componentsD";
-import { validate } from '../../makeFiles/validateModel';
 
 export const paymentReasonDD: StringPrimitiveDD = {
   ...OneLineStringDD,
@@ -25,15 +24,17 @@ export const paymentStatus: StringPrimitiveDD = {
   display: LabelAndDropDownCD,
   enum: { 'COLLECTED': 'COLLECTED', 'CANCELLED': 'CANCELLED' }
 }
-const AccountDD: PrimitiveDD = {
+
+const AccountDD: NumberPrimitiveDD = {
   ...IntegerDD,
-  name: "Account"
+  name: "Account",
+  validate: { min: 0, max: 99999999, step: 1, required: true }
 }
 
 
 export const SortCodePartDD: StringPrimitiveDD = {
   ...OneLineStringDD,
-  // validate: { pattern: '^[0-9][0-9]$' }
+  validate: { pattern: '^[0-9][0-9]$' }
 }
 
 export const SortCodeDD: ExampleDataD = {
@@ -106,7 +107,7 @@ export const CreatePaymentDD: ExampleDataD = {
   description: 'The data needed to make a payment',
   guards: { reasonIsAllowance: { condition: 'in', path: 'reason', values: paymentReasonDD.enum } },
   structure: {
-    amount: { dataDD: MoneyDD, sample: [ 56657, 32834 ]},//, displayParams: { min: 200 } },
+    amount: { dataDD: PositiveMoneyDD, sample: [ 56657, 32834 ]},//, displayParams: { min: 200 } },
     collectionDate: { dataDD: DateDD  },
     reason: { dataDD: paymentReasonDD },
     allowance: { dataDD: MoneyDD, guard: { reasonIsAllowance: [ 'A' ] }, displayParams: { readonly: true } },
