@@ -13,7 +13,7 @@ const logLevel: GenerateLogLevel = 'detailed';
 generate ( logLevel, directorySpec, devAppConfig, {
     ...params,
   controllerAnnotations: [ "@CrossOrigin()" ],
-  endpointAnnotations: ['@SomeSecurityAnnotation("{description} + {url}")'],
+  endpointAnnotations:[],// ['@SomeSecurityAnnotation("{description} + {url}")'],
     focusOnVersion,
     thePackage: 'somepackage.somepostfix.another',
     theme: 'theme-dark'

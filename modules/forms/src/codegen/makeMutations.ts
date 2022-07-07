@@ -4,7 +4,7 @@ import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationDetailsName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
 import { indentList } from "./codegen";
-import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, getMakeMock, importForTubles, isBodyMutationParam, isInputParam, isOutputParam, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MessageMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
+import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, getMakeMock, importForTubles, isBodyMutationParam, isInputParam, isMessageMutation, isOutputParam, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MessageMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
@@ -204,13 +204,16 @@ export function mutationCodeForManual<G> ( errorPrefix: string, p: MainPageD<any
 export function mutationCodeForCase<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: SelectMutation, index: number, includeMockIf: boolean, indexPrefix: string ): string[] {
   const paramsA = toArray ( m.params );
   const callingCode: string[] = m.select.flatMap ( ( gm, i ) => {
-    return [ `if (${[ 'true', ...gm.guard ].join ( ' && ' )}) {`,
-      ...indentList ( [ `${paramsDeclaration ( gm, i )}${mutationMethodName ( r, name, gm, indexPrefix + index + "_" + i )}(connection,msgs,${[ 'dbName', ...allInputParamNames ( gm.params ) ].join ( ',' )});`,
-        ...outputParamsDeclaration ( gm, i ),
-        `// If you have a compilation error here: do the output params match the output params in the 'case'?`,
-        makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ),
-      '}'
-    ]
+    const ifStatement = `if (${[ 'true', ...gm.guard ].join ( ' && ' )})`;
+    return isMessageMutation ( gm ) ?
+      [ ifStatement + '{', `   msgs.${gm.level ? gm.level : 'info'}("${gm.message}");`, '   return;', '}' ] :
+      [ `if (${[ 'true', ...gm.guard ].join ( ' && ' )}) {`,
+        ...indentList ( [ `${paramsDeclaration ( gm, i )}${mutationMethodName ( r, name, gm, indexPrefix + index + "_" + i )}(connection,msgs,${[ 'dbName', ...allInputParamNames ( parametersFor ( gm ) ) ].join ( ',' )});`,
+          ...outputParamsDeclaration ( gm, i ),
+          `// If you have a compilation error here: do the output params match the output params in the 'case'?`,
+          makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ),
+        '}'
+      ];
   } )
   return [
     `//If you have a compiler error in the type here, did you match the types of the output params in your manual code with the declared types in the .restD?`,
@@ -235,19 +238,19 @@ export function makeMutationMethod<G> ( errorPrefix: string, mutations: Mutation
       const clausesCode = makeMutationMethod ( errorPrefix, m.select, name, p, r, includeMockIf, indexPrefix + index + '_' );
       return [ ...caseCode, ...clausesCode ];
     }
-    if (m.type === 'message')return mutationCodeForMessage()
+    if ( m.type === 'message' ) return mutationCodeForMessage ()
     throw Error ( `Don't know how to findCode (Page ${p.name}) for ${JSON.stringify ( m )}` )
   } ) )
   return methods;
 }
 
-export function mutationCodeForMessage(): string[]{
+export function mutationCodeForMessage (): string[] {
   return [] // we return the empty string because this code is handled in the endpoint controller
 }
 
 export function makeCodeFragmentsForMutation<G> ( mutations: MutationDetail[], p: MainPageD<any, any>, r: RestD<G>, params: JavaWiringParams, ) {
   // const methods = makeMutationMethod ( mutations, name, p, r, includeMockIf );
-  const autowiring: AutowiredMutationParam[] = unique<AutowiredMutationParam> ( mutations.flatMap ( ( mutateBy ) => toArray ( mutateBy ).flatMap ( m => toArray ( parametersFor(m) ) ) ).flatMap ( mp =>
+  const autowiring: AutowiredMutationParam[] = unique<AutowiredMutationParam> ( mutations.flatMap ( ( mutateBy ) => toArray ( mutateBy ).flatMap ( m => toArray ( parametersFor ( m ) ) ) ).flatMap ( mp =>
     (typeof mp !== 'string' && mp.type === 'autowired' && mp.import !== false) ? [ { ...mp, class: applyToTemplate ( mp.class, params ).join ( '' ) } ] : [] ), r => r.class );
   const importsFromParams: string[] = unique ( autowiring, t => t.class ).flatMap ( mp => [ `//added by param ${mp.name}`, `import ${mp.class};` ] )
   const autowiringVariables = autowiring.map ( mp => `    ${mp.class} ${mp.name};` ).flatMap ( mp => [ `    @Autowired`, mp, '' ] )

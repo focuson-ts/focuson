@@ -129,7 +129,7 @@ export interface SelectMutation {
   select: GuardedMutation[]
 }
 
-export type GuardedMutation = GuardedManualMutation | GuardedSqMutation | GuardedStoredProcedureMutation | GuardedSqMutationThatIsAList
+export type GuardedMutation = GuardedManualMutation | GuardedSqMutation | GuardedStoredProcedureMutation | GuardedSqMutationThatIsAList| GuardedMessageMutation
 export interface GuardedManualMutation extends ManualMutation {
   guard: string[]
 }
@@ -140,6 +140,9 @@ export interface GuardedSqMutationThatIsAList extends SqlMutationThatIsAList {
   guard: string[]
 }
 export interface GuardedStoredProcedureMutation extends StoredProcedureMutation {
+  guard: string[]
+}
+export interface GuardedMessageMutation extends MessageMutation {
   guard: string[]
 }
 

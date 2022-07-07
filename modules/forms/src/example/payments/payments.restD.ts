@@ -22,48 +22,59 @@ export const newPaymentsRD: ExampleRestD = {
   url: '/api/payments/?{query}',
   actions: [ 'create', 'get' ],
   resolvers: {
-    getoneLinePayment: {
-      type: 'case', name: 'getOneLinePayment', params: [ 'brandRef', 'accountId',
-        { type: 'output', name: 'nameOfPayee', javaType: 'String' },
-        { type: 'output', name: 'sterlingAmount', javaType: 'Integer' },
-        { type: 'output', name: 'currencyAmount', javaType: 'Integer' },
-        { type: 'output', name: 'amtInWords', javaType: 'String' },
-        { type: 'output', name: 'forActionOn', javaType: 'String' },
-        { type: 'output', name: 'dateCreated', javaType: 'String' },
-      ], select: [
-        {
-          guard: [ 'brandRef==3' ], type: 'sql', name: 'brandref3', schema: onlySchema,
-          sql: 'select nameOfPayee,sterlingAmount,currencyAmount,amtInWords,forActionOn,dateCreated,status from tableForBrand3 where acc = accountId', params: [
-            'accountId',
-            { type: "output", javaType: 'String', rsName: 'nameOfPayee', name: 'nameOfPayee' },
-            { type: "output", javaType: 'Integer', rsName: 'sterlingAmount', name: 'sterlingAmount' },
-            { type: "output", javaType: 'Integer', rsName: 'currencyAmount', name: 'currencyAmount' },
-            { type: "output", javaType: 'String', rsName: 'amtInWords', name: 'amtInWords' },
-            { type: "output", javaType: 'String', rsName: 'forActionOn', name: 'forActionOn' },
-            { type: "output", javaType: 'String', rsName: 'dateCreated', name: 'dateCreated', datePattern: 'dd-MM-yyyy' },
-          ]
-        },
-        {
-          guard: [], type: 'sql', schema: onlySchema,
-          sql: 'select nameOfPayee,sterlingAmount,currencyAmount,amtInWords,forActionOn,dateCreated,status from tableForAllOtherBrands where acc = accountId', params: [
-            'accountId',
-            { type: "output", javaType: 'String', rsName: 'nameOfPayee', name: 'nameOfPayee' },
-            { type: "output", javaType: 'Integer', rsName: 'sterlingAmount', name: 'sterlingAmount' },
-            { type: "output", javaType: 'Integer', rsName: 'currencyAmount', name: 'currencyAmount' },
-            { type: "output", javaType: 'String', rsName: 'amtInWords', name: 'amtInWords' },
-            { type: "output", javaType: 'String', rsName: 'forActionOn', name: 'forActionOn' },
-            { type: "output", javaType: 'String', rsName: 'dateCreated', name: 'dateCreated' },
-          ]
-        }
-      ]
-    }
+    getoneLinePayment: [
+      { type: 'message', message: 'getOneLinePayment was called' },
+      {
+        type: 'case', name: 'sendSomeMessageDependingOnBrand', params: [ 'brandRef' ], select: [
+          { guard: [ 'brandRef==1' ], type: 'message', message: 'brand 1' },
+          { guard: [ 'brandRef==2' ], type: 'message', message: 'brand 2' },
+          { guard: [ 'brandRef==3' ], type: 'message', message: 'brand 3' },
+          { guard: [], type: 'manual', code: '//avoid exception on drop through', params: [] }
+
+        ]
+      },
+      {
+        type: 'case', name: 'getOneLinePayment', params: [ 'brandRef', 'accountId',
+          { type: 'output', name: 'nameOfPayee', javaType: 'String' },
+          { type: 'output', name: 'sterlingAmount', javaType: 'Integer' },
+          { type: 'output', name: 'currencyAmount', javaType: 'Integer' },
+          { type: 'output', name: 'amtInWords', javaType: 'String' },
+          { type: 'output', name: 'forActionOn', javaType: 'String' },
+          { type: 'output', name: 'dateCreated', javaType: 'String' },
+        ], select: [
+          {
+            guard: [ 'brandRef==3' ], type: 'sql', name: 'brandref3', schema: onlySchema,
+            sql: 'select nameOfPayee,sterlingAmount,currencyAmount,amtInWords,forActionOn,dateCreated,status from tableForBrand3 where acc = accountId', params: [
+              'accountId',
+              { type: "output", javaType: 'String', rsName: 'nameOfPayee', name: 'nameOfPayee' },
+              { type: "output", javaType: 'Integer', rsName: 'sterlingAmount', name: 'sterlingAmount' },
+              { type: "output", javaType: 'Integer', rsName: 'currencyAmount', name: 'currencyAmount' },
+              { type: "output", javaType: 'String', rsName: 'amtInWords', name: 'amtInWords' },
+              { type: "output", javaType: 'String', rsName: 'forActionOn', name: 'forActionOn' },
+              { type: "output", javaType: 'String', rsName: 'dateCreated', name: 'dateCreated', datePattern: 'dd-MM-yyyy' },
+            ]
+          },
+          {
+            guard: [], type: 'sql', schema: onlySchema,
+            sql: 'select nameOfPayee,sterlingAmount,currencyAmount,amtInWords,forActionOn,dateCreated,status from tableForAllOtherBrands where acc = accountId', params: [
+              'accountId',
+              { type: "output", javaType: 'String', rsName: 'nameOfPayee', name: 'nameOfPayee' },
+              { type: "output", javaType: 'Integer', rsName: 'sterlingAmount', name: 'sterlingAmount' },
+              { type: "output", javaType: 'Integer', rsName: 'currencyAmount', name: 'currencyAmount' },
+              { type: "output", javaType: 'String', rsName: 'amtInWords', name: 'amtInWords' },
+              { type: "output", javaType: 'String', rsName: 'forActionOn', name: 'forActionOn' },
+              { type: "output", javaType: 'String', rsName: 'dateCreated', name: 'dateCreated' },
+            ]
+          }
+        ]
+      } ]
   },
 
   mutations: [ {
     restAction: 'create',
     autowired: { class: '{thePackage}.utils.IOGNL', variableName: 'ognl', imports: true },
     mutateBy: [ {
-         type: 'case', name: 'create', params: [
+      type: 'case', name: 'create', params: [
         'brandRef', "accountId",
         { type: 'output', name: 'one', javaType: 'String' },
         { type: 'output', name: 'two', javaType: 'Integer' },
@@ -101,7 +112,7 @@ export const currencyListDD: ExampleRepeatingD = {
   dataDD: currencyDD,
   description: "",
   display: LabelAndDropDownFromDataCD,
-  displayParams: { data: '~/currency', dataId: 'id', dataField: 'currency'},
+  displayParams: { data: '~/currency', dataId: 'id', dataField: 'currency' },
   paged: false,
 
 }

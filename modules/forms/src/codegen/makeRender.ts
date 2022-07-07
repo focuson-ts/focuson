@@ -128,6 +128,8 @@ function makeParams<B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params
   const processOneParam = processParam ( mainPage, page, params, errorPrefix, display )
   const dataDDParams: [ string, string ][] = definingParams ? Object.entries ( definingParams )
     .map ( ( [ name, value ] ) => { return [ name, processOneParam ( name, value ) ]; } ) : []
+  if (display === undefined) throw Error(`${errorPrefix} the display component was undefined.`)
+  if (display.params === undefined) throw Error(`${errorPrefix} the params were undefined. Are you using a custom CD and did you set the params`)
   const defaultParams: [ string, string ][] = Object.entries ( display.params ).flatMap ( ( [ name, param ] ) => {
     if ( param?.default ) return [ [ name, processOneParam ( name, param.default ) ] ]
     if ( param?.needed === 'defaultToCamelCaseOfName' ) return [ [ name, processOneParam ( name, decamelize ( path.slice ( -1 ) + "", ' ' ) ) ] ]

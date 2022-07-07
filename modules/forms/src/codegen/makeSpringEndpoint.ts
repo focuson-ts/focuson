@@ -80,9 +80,9 @@ export function callMutationsCode<G> ( p: MainPageD<any, G>, restName: string, r
         [ `msgs.${md.level ? md.level : 'info'}("${md.message}");` ] : [
         `${paramsDeclaration ( md, i )}${mutationVariableName ( r, restAction )}.${mutationMethodName ( r, restActionForName ( restAction ), md, '' + i )}(connection,${[ 'msgs',
           dbNameString, ...allInputParamNames ( parametersFor ( md ) ) ].join ( ',' )});`,
-        ...outputParamsDeclaration ( md, i ),
-        ...addOutputParamsToMessages ( md )
-      ];
+          ...outputParamsDeclaration ( md, i ),
+          ...addOutputParamsToMessages ( md )
+        ];
     } ) ) )
   return [ `//from ${p.name}.rest[${restName}].mutations[${JSON.stringify ( restAction )}]${hintString}`, ...callMutations ];
 }
