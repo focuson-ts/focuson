@@ -24,7 +24,7 @@ const nextActionDD: PrimitiveDD = {
 }
 
 export const currencyListDD: ExampleRepeatingD = {
-  name: 'CurrencyDropDown',
+  name: 'CurrencyDropDownForReadOnly',
   dataDD: currencyDD,
   description: "",
   display: LabelAndDropDownFromDataCD,

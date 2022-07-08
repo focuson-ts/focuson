@@ -1,5 +1,6 @@
 import { ExampleRestD } from "../common";
-import { currencyListDD } from "../payments/payments.restD";
+import { currencyListDD } from "./readonly.dataD";
+
 
 export const currencyRD: ExampleRestD = {
   params: {},
