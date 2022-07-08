@@ -4,7 +4,7 @@ import { FocusOnContext } from "@focuson/focuson";
 import { CommonStateProps, LabelAlignment } from "./common";
 import { Label } from "./label";
 import DatePicker from "react-datepicker";
-import { isValid, format, parse } from 'date-fns';
+import { format, isValid, parse } from 'date-fns';
 import { makeButtons } from "./makeButtons";
 
 
@@ -29,7 +29,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
   const dateFormatL = dateFormat ? dateFormat : 'yyyy/MM/dd'
 
   const datesToExclude = datesExcluded?.optJsonOr ( [] ).map ( d => d[ fieldNameInHolidays ? fieldNameInHolidays : 'holiday' ] )
-  const datesToExcludeAsDateType = safeArray ( datesToExclude ).map ( d => new Date ( d ) )
+  const datesToExcludeAsDateType = safeArray ( datesToExclude ).map ( d => parseDate(dateFormat) ( d ) )
 
   const isHoliday = ( date: Date, datesList: string[] ) => {
     return datesList.find ( ( d: string ) => new Date ( d ).toDateString () === date.toDateString () );
