@@ -8,7 +8,7 @@ import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { MakeButton } from "../codegen/makeButtons";
 import { validate } from "./validateModel";
 import { foldPagesToRestToMutationsAndResolvers } from "../common/restD";
-import { GenerateLogLevel, safeArray, toArray, unique } from "@focuson/utils";
+import { GenerateLogLevel, safeArray, unique } from "@focuson/utils";
 import * as process from "process";
 import { makeCriticalReport, makeReport, makeReportData } from "../reporting/report";
 import { AppConfig } from "../appConfig";
@@ -58,12 +58,20 @@ export const directorySpec: DirectorySpec = {
   main: '.',
   backup: 'node_modules/@focuson/forms'
 }
+export function maxTuplesFor<B, G> ( pages: MainPageD<B, G>[] ) {
+  return foldPagesToRestToMutationsAndResolvers<number> ( pages, 0, {
+    simple: ( mut ) => ( acc ) => {
+      let fromMd: number = Math.max ( acc, allOutputParams ( parametersFor ( mut ) ).length );
+      return mut.type === 'case' ?
+        mut.select.reduce ( ( acc, smd ) => Math.max (allOutputParams (  parametersFor ( smd )).length, acc ), fromMd ) :
+        fromMd
+    },
+    guarded: ( sel, guarded ) => ( acc ) => acc
+  })
+}
 export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, directorySpec: DirectorySpec, appConfig: AppConfig, params: CombinedParams, javaOutputRoot: string, tsRoot: string, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G> ) => <B extends ButtonD> ( pages: MainPageD<B, G>[] ) => {
   const paramsWithTuples = {
-    ...params, maxTuples: foldPagesToRestToMutationsAndResolvers<number> ( pages, 0, {
-      simple: ( mut ) => ( acc ) => Math.max ( acc, allOutputParams ( parametersFor ( mut ) ).length ),
-      guarded: ( sel, guarded ) => ( acc ) => acc
-    } )
+    ...params, maxTuples: maxTuplesFor ( pages )
   }
 
   if ( pages.length === 0 ) {
