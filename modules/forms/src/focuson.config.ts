@@ -17,10 +17,12 @@ import { OverpaymentMainPage } from "./example/overpaymentHistory/overpaymentHis
 import { OnChangePageD } from "./example/onChange/onChange.pageD";
 import { FourOhFourPageD } from "./example/FourOhFour/FourOhFour.pageD";
 import { EnabledByPageD } from "./example/enabledBy/enabledBy.pageD";
+import { ReadOnlyPageD } from "./example/readonly/readOnly.pageD";
 
 
 export const generatedPages: ExampleMainPage[] = [
   EnabledByPageD,
+  ReadOnlyPageD,
   FourOhFourPageD,
   OnChangePageD,
   HelloWorldPage,

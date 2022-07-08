@@ -35,7 +35,7 @@ export interface LabelAndRadioProps<S, T, Context> extends RadioProps<S, T, Cont
   allButtons: NameAnd<JSX.Element>;
   buttons?: string[];
 }
-export function LabelAndRadio<S, T, Context extends FocusOnContext<S>> ( props: LabelAndRadioProps<S, string, Context> ) {
+export function LabelAndRadio<S, Context extends FocusOnContext<S>> ( props: LabelAndRadioProps<S, string, Context> ) {
   const { label, name } = props
   return <div className="labelRadioButton"><Label state={props.state} htmlFor={name} label={label}/><Radio {...props}/></div>
 }
