@@ -1,6 +1,5 @@
 import { JointAccountPageD } from "../example/jointAccount/jointAccount.pageD";
 import { makeDBFetchers } from "../codegen/makeDBFetchers";
-import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
 import { paramsForTest } from "./paramsForTest";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 

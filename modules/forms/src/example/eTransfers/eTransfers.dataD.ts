@@ -1,4 +1,4 @@
-import { AccountIdDD, DataD, DateDD, ManyLineStringDD, MoneyDD, OneLineStringDD, RepeatingDataD } from "../../common/dataD";
+import { AccountIdDD, DataD, DateDD, ManyLineStringDD, MoneyDD, OneLineStringDD } from "../../common/dataD";
 import { EAccountDisplayTypeDD } from "../eAccounts/eAccountsSummary.dataD";
 import { AllGuards } from "../../buttons/guardButton";
 import { LayoutCd, TableCD } from "../../common/componentsD";

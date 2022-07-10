@@ -1,7 +1,5 @@
-import { ExampleDataD, ExampleMainPage, ExampleRepeatingD, ExampleRestD } from "../common";
-import { NatNumDd } from "../../common/dataD";
-import { TableCD } from "../../common/componentsD";
-import { AuthoriseChargesSummaryDataDD, AuthoriseChargesSummaryDD, chargesSummaryDetailDD, OneBrandDD, SelectOneBrandDD, summaryOfChargesDateTableDD } from "./authoriseCharges.dataD";
+import { ExampleRestD } from "../common";
+import { AuthoriseChargesSummaryDataDD, chargesSummaryDetailDD, SelectOneBrandDD, summaryOfChargesDateTableDD } from "./authoriseCharges.dataD";
 import { fromCommonIds } from "../commonIds";
 import { StringParam } from "../../common/restD";
 

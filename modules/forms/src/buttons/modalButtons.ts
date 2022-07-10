@@ -7,7 +7,7 @@ import { emptyName, modalName, restDetailsName } from "../codegen/names";
 import { EnabledBy, enabledByString } from "./enabledBy";
 import { CopyDetails, decamelize, toArray, toArrayOrUndefined } from "@focuson/utils";
 import { ModalChangeCommands, RestCommand } from "@focuson/rest";
-import { stateFocusQueryWithEmptyFromHere, stateQueryForParams, stateQueryForPathsFnButtonParams } from "../codegen/lens";
+import { stateQueryForParams } from "../codegen/lens";
 
 
 export function restForButton<B, G> ( parent: PageD<B, G>, rest?: RestOnCommit ): string[] {

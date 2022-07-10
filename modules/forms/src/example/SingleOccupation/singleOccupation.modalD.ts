@@ -1,10 +1,5 @@
 import { ExampleModalPage } from "../common";
-import {
-  additionalInfoFirstDD,
-  additionalInfoSecondDD, listOccupationsDD,
-  oneOccupationIncomeDetailsDD,
-  otherIncomeResponseDD
-} from "./singleOccupation.dataD";
+import { additionalInfoFirstDD, additionalInfoSecondDD, listOccupationsDD, oneOccupationIncomeDetailsDD, otherIncomeResponseDD } from "./singleOccupation.dataD";
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 
 

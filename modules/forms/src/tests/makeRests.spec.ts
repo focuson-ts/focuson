@@ -1,7 +1,6 @@
 import { makeRest } from "../codegen/makeRests";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { RepeatingPageD } from "../example/repeating/repeating.pageD";
-import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { paramsForTest } from "./paramsForTest";
 
 
@@ -23,7 +22,9 @@ describe ( "makeRest", () => {
       "    extractData: ( status: number | undefined, body: any ) => body.data,",
       "    messages: extractMessages(dateFn),",
       "    url: '/api/accountsSummary?{query}',",
-      "    states : {'invalidate':{'url':'/api/accountsSummary/invalidate?{query}','params':{'accountId':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':44444444},'clientRef':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'clientRef','testValue':333,'annotation':'@RequestHeader @RequestParam'},'employeeType':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'employeeType','testValue':'basic','annotation':'@RequestHeader @RequestParam'},'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'}}}}",
+      "    states : {",
+      "      invalidate: {url: '/api/accountsSummary/invalidate?{query}',params: ['accountId','clientRef','employeeType','dbName']}",
+      "    }",
       "  }",
       "}",
       ""
@@ -46,7 +47,8 @@ describe ( "makeRest", () => {
       "    extractData: ( status: number | undefined, body: any ) => body.data,",
       "    messages: extractMessages(dateFn),",
       "    url: '/api/createPlan?{query}',",
-      "    states : {}",
+      "    states : {",
+      "    }",
       "  }",
       "}",
       ""
@@ -70,7 +72,8 @@ describe ( "makeRest", () => {
       "    extractData: ( status: number | undefined, body: any ) => body.data,",
       "    messages: extractMessages(dateFn),",
       "    url: '/api/repeating?{query}',",
-      "    states : {}",
+      "    states : {",
+      "    }",
       "  }",
       "}",
       ""

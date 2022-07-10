@@ -1,7 +1,6 @@
 import { helloWorldDD } from "./helloWorld.dataD";
 import { ExampleRestD } from "../common";
 import { onlySchema } from "../database/tableNames";
-import { StringParam } from "../../common/restD";
 
 export const helloWorldRD: ExampleRestD = {
   params: {},

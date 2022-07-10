@@ -1,12 +1,12 @@
-import { customerStatusDD, dropdownsDD, employmentTypeDD, listOccupationsDD, occupationAndIncomeFullDomainDD, oneOccupationIncomeDetailsDD, yesNoDD } from "./occupationAndIncome.dataD";
-import { additionalInfoRD, businessDetailsRD, occupationDetailsRD, occupationAndIncomeRD, otherIncomeRD } from "./occupationAndIncome.restD";
+import { dropdownsDD, listOccupationsDD, occupationAndIncomeFullDomainDD, oneOccupationIncomeDetailsDD } from "./occupationAndIncome.dataD";
+import { additionalInfoRD, businessDetailsRD, occupationAndIncomeRD, occupationDetailsRD, otherIncomeRD } from "./occupationAndIncome.restD";
 import { additionalInformationDD } from "./additionalInformation/additionalInformation.dataD";
 import { otherIncomeResponseDD } from "./otherSourcesOfIncome/otherSourcesOfIncome.dataD";
 import { businessDetailsMainDD } from "./businessDetails/businessDetails.dataD";
 import { ExampleMainPage, ExampleModalPage } from "../common";
 import { BooleanDD, IntegerDD } from "../../common/dataD";
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
-import { IntParam, StringParam } from "../../common/restD";
+import { StringParam } from "../../common/restD";
 
 export const listOccupationsModalPD: ExampleModalPage = {
   name: 'ListOccupationsModal',

@@ -1,11 +1,10 @@
 //Common Data Definitions
 import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndNumberInputCD, LabelAndStringInputCD, LabelAndTextAreaCD, NumberInputCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeRender";
-import { NameAnd, safeArray, StringValidations, NumberValidations } from "@focuson/utils";
+import { BooleanValidations, NameAnd, NumberValidations, safeArray, StringValidations } from "@focuson/utils";
 import { Guards } from "../buttons/guardButton";
 import { DBTable } from "./resolverD";
 import { DbValues } from "../codegen/makeSqlFromEntities";
-import { BooleanValidations } from '../../../utils/src/validate';
 
 export interface HasSample<T> {
   sample?: T[]

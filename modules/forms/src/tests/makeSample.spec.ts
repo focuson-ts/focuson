@@ -1,6 +1,5 @@
 import { makeEmptyData, makeJavaVariable, makeSampleVariable, makeTsSample } from "../codegen/makeSample";
 import { CreatePlanDD, EAccountsSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD";
-import { RepeatingPageD } from "../example/repeating/repeating.pageD";
 import { RepeatingWholeDataD } from "../example/repeating/repeating.dataD";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { paramsForTest } from "./paramsForTest";

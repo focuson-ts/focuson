@@ -88,7 +88,7 @@ describe ( "restReq", () => {
       [ "/some/url/someToken/create?token=someToken", { "body": "\"someData\"", "method": "post" } ],
       [ "/some/url/someToken/delete?token=someToken&id=someId", { "method": "delete" } ],
       [ "/some/url/someToken/update?token=someToken&id=someId", { "body": "\"someData\"", "method": "put" } ],
-      [ "/some/new/state/someToken/newState?token=someToken&id=someId", { "method": "post" } ] ]
+      [ "/some/new/state/someToken/newState?token=someToken&id=someId", { "method": "post", "body": "\"someData\"" } ] ]
     )
   } )
 } )

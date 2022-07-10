@@ -1,9 +1,6 @@
 import { makePages } from "../codegen/makePages";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
-import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
-import { repeatingRestRD } from "../example/repeating/repeating.restD";
-import { RepeatingLinePageD, RepeatingPageD } from "../example/repeating/repeating.pageD";
-import { RepeatingWholeDataD } from "../example/repeating/repeating.dataD";
+import { RepeatingPageD } from "../example/repeating/repeating.pageD";
 import { CreateEAccountPageD } from "../example/createEAccount/createEAccount.pageD";
 import { paramsForTest } from "./paramsForTest";
 

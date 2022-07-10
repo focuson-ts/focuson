@@ -1,6 +1,6 @@
 import { ExampleRestD } from "../common";
 import { FourOhFourDataD, FourOhFourDataTableD } from "./FourOhFour.dataD";
-import { OneTableInsertSqlStrategyForIds, StringParam } from "../../common/restD";
+import { StringParam } from "../../common/restD";
 import { fourOhFourTable, onlySchema } from "../database/tableNames";
 import { fromCommonIds } from "../commonIds";
 

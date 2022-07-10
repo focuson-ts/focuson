@@ -1,6 +1,5 @@
 import { SimpleDisplayComp } from "./common/componentsD";
 import { loadFile } from "@focuson/files";
-import process from "process";
 
 export interface AppConfig {
   fetch: string;

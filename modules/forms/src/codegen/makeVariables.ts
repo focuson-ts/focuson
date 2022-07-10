@@ -1,6 +1,6 @@
 import { TSParams } from "./config";
 import { MainPageD, VariableByCodeD, VariableByPathD } from "../common/pageD";
-import { safeArray, safeObject, sortedEntries, unique } from "@focuson/utils";
+import { safeArray, safeObject, unique } from "@focuson/utils";
 import { addStringToEndOfAllButLast, indentList } from "./codegen";
 import { optionalsName } from "./names";
 import { lensFocusQueryWithSlashAndTildaFromIdFn } from "./lens";

@@ -3,7 +3,6 @@ import { currencyListDD, readonlyDD } from "./readonly.dataD";
 import { currencyRD } from "./readOnly.restD";
 
 
-
 export const ReadOnlyPageD: ExampleMainPage = {
   display: { dataDD: readonlyDD, target: '~/onChange' },
   domain: {

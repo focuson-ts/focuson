@@ -1,13 +1,9 @@
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
-import { decamelize, NameAnd, safeObject } from "@focuson/utils";
-import { indentList, opt, optObj, optT } from "../codegen/codegen";
-import { restDetailsName } from "../codegen/names";
+import { NameAnd, safeObject } from "@focuson/utils";
+import { indentList, opt } from "../codegen/codegen";
 import { EnabledBy, enabledByString } from "./enabledBy";
 import { ButtonWithControl } from "./allButtons";
-import { PageMode } from "@focuson/pages";
-import { LensState } from "@focuson/state";
-import { Lens } from "@focuson/lens";
-import { stateForButtonWithPath, stateQueryForPathsFnButtonParams, stateQueryForPathsFnParams } from "../codegen/lens";
+import { stateForButtonWithPath, stateQueryForPathsFnButtonParams } from "../codegen/lens";
 
 
 function makeActionButton<B extends ActionButtonInPage, G> (): ButtonCreator<ActionButtonInPage, G> {

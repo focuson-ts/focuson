@@ -1,4 +1,4 @@
-import {CustomerStatus, YesNo} from "@focuson/form_components";
+import { CustomerStatus, YesNo } from "@focuson/form_components";
 
 export const occupationAndIncomeSample = {
     regulatoryReport: 'N',

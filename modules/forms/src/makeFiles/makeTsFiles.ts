@@ -7,19 +7,18 @@ import { createRenderPage } from "../codegen/makeRender";
 import { ButtonD } from "../buttons/allButtons";
 import { makeAllDomainsFor, makePageDomainsFor } from "../codegen/makeDomain";
 import { makeCommon } from "../codegen/makeCommon";
-import { makeAllFetchers, makeFetcherDataStructureImport, makeFetchersDataStructure, makeFetchersImport, makeNewFetchersDataStructure } from "../codegen/makeTSFetchers";
+import { makeFetcherDataStructureImport, makeNewFetchersDataStructure } from "../codegen/makeTSFetchers";
 import { makeRestDetailsPage, makeRests } from "../codegen/makeRests";
 import { makeAllEmptyData, makeAllSampleVariables } from "../codegen/makeSample";
 import { makePages } from "../codegen/makePages";
-import { domainsFileName, emptyFileName, fetcherFileName, guardReportFileName, optionalsFileName, pactFileName, renderFileName, restFileName, samplesFileName, storybookFileName } from "../codegen/names";
+import { domainsFileName, emptyFileName, guardReportFileName, optionalsFileName, pactFileName, renderFileName, restFileName, samplesFileName, storybookFileName } from "../codegen/names";
 import { makeOneStory } from "../codegen/makeStories";
 import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { MakeButton } from "../codegen/makeButtons";
 import { makeAllPactsForPage } from "../codegen/makePacts2";
 import { makeVariables } from "../codegen/makeVariables";
 import { makeGuardsReportForPage } from "../reporting/report";
-import { AppConfig, tsRoot } from "../appConfig";
-import * as fse from "fs-extra";
+import { AppConfig } from "../appConfig";
 
 const themes = [ 'theme-dark', 'theme-light' ]
 export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, appConfig: AppConfig, tsRoot: string, params: TSParams, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G>, directorySpec: DirectorySpec ) =>

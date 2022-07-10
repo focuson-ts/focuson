@@ -1,12 +1,12 @@
-import { AllDataDD, CompDataD, compDataDIn, OneDataDD } from "../common/dataD";
+import { AllDataDD, CompDataD, compDataDIn } from "../common/dataD";
 import { MainPageD, ModalPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
 import { isRestStateChange, RestAction, safeString } from "@focuson/utils";
 import { JavaWiringParams, TSParams } from "./config";
 import { TableAndFieldAndAliasData } from "./makeSqlFromEntities";
-import { RestActionDetail, restActionForName, restActionToDetails } from "@focuson/rest";
-import { isMessageMutation, MutationDetail, OutputMutationParam } from "../common/resolverD";
+import { restActionForName, restActionToDetails } from "@focuson/rest";
+import { isMessageMutation, MutationDetail } from "../common/resolverD";
 
 export const guardName = ( s: string ) => s + "Guard"
 export const domainName = <G> ( d: CompDataD<G> ): string => d.name + "Domain";

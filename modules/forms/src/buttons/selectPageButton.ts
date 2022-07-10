@@ -1,7 +1,5 @@
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
-import { decamelize } from "@focuson/utils";
-import { indentList, opt, optT } from "../codegen/codegen";
-import { restDetailsName } from "../codegen/names";
+import { indentList, opt } from "../codegen/codegen";
 import { EnabledBy, enabledByString } from "./enabledBy";
 import { ButtonWithControl } from "./allButtons";
 import { PageMode } from "@focuson/pages";

@@ -2,12 +2,10 @@ import { makeAllFetchers, makeFetcherCode, makeFetchersDataStructure } from "../
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 import { RepeatingPageD } from "../example/repeating/repeating.pageD";
-import { postcodeRestD } from "../example/postCodeDemo/addressSearch.restD";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { paramsForTest } from "./paramsForTest";
 import { ListOfPaymentsPagePD } from "../example/ListOfPayments/listOfPayements.pageD";
 import { safeObject } from "@focuson/utils";
-import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
 
 describe ( "makeAllFetchers", () => {
   it ( "should make a fetcher for a single item", () => {

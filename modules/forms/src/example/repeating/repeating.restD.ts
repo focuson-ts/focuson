@@ -1,4 +1,4 @@
-import { IntParam, RestD, RestParams } from "../../common/restD";
+import { RestD, RestParams } from "../../common/restD";
 import { AllGuards } from "../../buttons/guardButton";
 import { RepeatingWholeDataD } from "./repeating.dataD";
 import { fromCommonIds } from "../commonIds";

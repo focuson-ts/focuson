@@ -1,7 +1,6 @@
-import { ExampleDataD, ExampleMainPage, ExampleModalPage, ExampleRepeatingD } from "../common";
+import { ExampleMainPage, ExampleModalPage } from "../common";
 import { NatNumDd } from "../../common/dataD";
-import { TableCD } from "../../common/componentsD";
-import { AuthoriseChargesSummaryDD, chargesSummaryDetailDD, OneBrandDD, OneChargeDataDD, SelectOneBrandDD, summaryOfChargesDateDD, summaryOfChargesDateTableDD, summaryOfChargesSearchDD } from "./authoriseCharges.dataD";
+import { AuthoriseChargesSummaryDD, chargesSummaryDetailDD, OneBrandDD, OneChargeDataDD, SelectOneBrandDD, summaryOfChargesDateDD, summaryOfChargesSearchDD } from "./authoriseCharges.dataD";
 import { AuthorisedChargesRD, SelectOneBrandPageRD, SummaryOfChargeDatesRD, SummaryOfChargesRD } from "./authoriseCharges.restD";
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 

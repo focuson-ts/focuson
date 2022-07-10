@@ -1,4 +1,4 @@
-import { allMainPages, flatMapToModal, isMainPage, isModalData, MainPageD, PageD } from "../common/pageD";
+import { allMainPages, flatMapToModal, isMainPage, MainPageD, PageD } from "../common/pageD";
 import { TSParams } from "./config";
 import { modalName, optionalsFileName, optionalsName, pageComponentName, pageInState, renderFileName } from "./names";
 import { addStringToEndOfAllButLast } from "./codegen";

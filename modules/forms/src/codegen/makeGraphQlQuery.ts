@@ -1,6 +1,6 @@
 import { AllDataFlatMap, DataD, flatMapDD, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
 import { AllLensRestParams, RestD } from "../common/restD";
-import { addStringToStartOfFirst,  indent, paramsForRestAction } from "./codegen";
+import { addStringToStartOfFirst, indent, paramsForRestAction } from "./codegen";
 import { queryName, resolverName } from "./names";
 import { asMultilineJavaString, RestAction } from "@focuson/utils";
 import { getRestTypeDetails } from "@focuson/rest";

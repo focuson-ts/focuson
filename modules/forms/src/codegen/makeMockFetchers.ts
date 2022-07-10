@@ -1,8 +1,7 @@
 import { RestD } from "../common/restD";
 import { JavaWiringParams } from "./config";
 import { RestAction, safePick } from "@focuson/utils";
-import { getRestTypeDetails } from "@focuson/rest";
-import { findAllResolversFor, findQueryMutationResolver, ResolverData } from "./makeJavaFetchersInterface";
+import { findQueryMutationResolver, ResolverData } from "./makeJavaFetchersInterface";
 
 
 export const makeMockFetcherFor = ( params: JavaWiringParams ) => ( { isRoot, samplerName, sample, resolver, needsObjectInOutput, javaType }: ResolverData ): string[] =>

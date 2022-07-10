@@ -1,10 +1,7 @@
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { makeGraphQlSchema, makeQueryOrMutateBlock, makeSchemaBlock } from "../codegen/makeGraphQlTypes";
-import { CreatePlanDD, EAccountsSummaryDD, EAccountsSummaryTableDD, EAccountSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD";
-import { RepeatingPageD } from "../example/repeating/repeating.pageD";
+import { CreatePlanDD, EAccountsSummaryDD, EAccountSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD";
 import { repeatingRestRD } from "../example/repeating/repeating.restD";
-import { ListOfPaymentsDD } from "../example/ListOfPayments/listOfPayements.dataD";
-import { ListOfPaymentsPagePD } from "../example/ListOfPayments/listOfPayements.pageD";
 import { PrintRecordHistoryRD, PrintRecordRD } from "../example/ListOfPayments/listOfPayements.restD";
 
 const rs = [ eAccountsSummaryRestD, createPlanRestD, eAccountsSummaryRestD, createPlanRestD ];

@@ -1,6 +1,6 @@
 import { AllDataDD, AllDataFolder, CompDataD, DataD, foldDataDD, HasEnum, HasSample, isDataDd, isRepeatingDd, OneDataDD, PrimitiveDD, RepeatingDataD } from "../common/dataD";
 import { asMultilineJavaString, safeArray, safePick, sortedEntries } from "@focuson/utils";
-import { Lenses, parsePath } from "@focuson/lens";
+import { parsePath } from "@focuson/lens";
 import { domainName, emptyName, sampleName } from "./names";
 import { dataDsIn, PageD } from "../common/pageD";
 import { TSParams } from "./config";

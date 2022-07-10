@@ -1,59 +1,19 @@
-import {
-  ChildEntity,
-  createTableSql,
-  EntityFolder,
-  findAliasAndTableLinksForLinkData,
-  findAllFields,
-  findAllTableAndFieldDatasIn,
-  findAllTableAndFieldsIn,
-  findFieldsFromWhere,
-  findParamsForTable,
-  findSqlLinkDataFromRootAndDataD,
-  findSqlRoot,
-  findTableAliasAndFieldFromDataD,
-  findTableAndFieldFromDataD,
-  findWhereLinksForSqlRoot,
-  findWhereLinksForSqlRootGoingUp,
-  foldEntitys,
-  generateGetSql, getStrategy,
-  JavaQueryParamDetails, MainEntity,
-  makeInsertSqlForIds,
-  makeInsertSqlForNoIds,
-  makeMapsForRest,
-  makeWhereClause,
-  MultipleEntity,
-  simplifyAliasAndChildEntityPath,
-  simplifyAliasAndTables,
-  simplifySqlLinkData,
-  simplifySqlRoot,
-  simplifyTableAndFieldAndAliasDataArray,
-  simplifyTableAndFieldData,
-  simplifyTableAndFieldDataArray,
-  simplifyTableAndFieldsData,
-  simplifyWhereFromQuery,
-  simplifyWhereLinks,
-  SingleEntity,
-  walkSqlRoots,
-  whereFieldToFieldDataFromTableQueryLink,
-  whereFieldToFieldDataFromTableWhereLink
-} from "../codegen/makeSqlFromEntities";
-import { AllLensRestParams, EntityAndWhere, IntParam, StringParam} from "../common/restD";
-import {JointAccountCustomerDD, JointAccountDd} from "../example/jointAccount/jointAccount.dataD";
-import { nameAndAddressDataD, postCodeDataLineD, postCodeSearchResponseDD } from "../example/postCodeDemo/addressSearch.dataD";
+import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findParamsForTable, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, getStrategy, JavaQueryParamDetails, MainEntity, makeInsertSqlForIds, makeInsertSqlForNoIds, makeMapsForRest, makeWhereClause, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldDataFromTableQueryLink, whereFieldToFieldDataFromTableWhereLink } from "../codegen/makeSqlFromEntities";
+import { AllLensRestParams, EntityAndWhere, IntParam, StringParam } from "../common/restD";
+import { JointAccountCustomerDD, JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
+import { nameAndAddressDataD, postCodeSearchResponseDD } from "../example/postCodeDemo/addressSearch.dataD";
 import { addressRestD } from "../example/postCodeDemo/addressSearch.restD";
 import { JointAccountPageD } from "../example/jointAccount/jointAccount.pageD";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
 import { paramsForTest } from "./paramsForTest";
 import { fromCommonIds } from "../example/commonIds";
-import {accountT, addT, customerT, nameT, postCodeSearchTable} from "../example/database/tableNames";
-import {safeArray, unique } from "@focuson/utils";
-import {CreatePlanDD, EAccountsSummaryDD} from "../example/eAccounts/eAccountsSummary.dataD";
-import {createPlanRestD, eAccountsSummaryRestD} from "../example/eAccounts/eAccountsSummary.restD";
-import {CreateEAccountPageD} from "../example/createEAccount/createEAccount.pageD";
-import {jointAccountSql} from "../example/jointAccount/jointAccount.sql";
-import {ExampleDataD} from "../example/common";
-import {DateDD, MoneyDD} from "../common/dataD";
+import { accountT, addT } from "../example/database/tableNames";
+import { safeArray, unique } from "@focuson/utils";
+import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
+import { jointAccountSql } from "../example/jointAccount/jointAccount.sql";
+import { ExampleDataD } from "../example/common";
+import { DateDD, MoneyDD } from "../common/dataD";
 
 const jointAccountRestDTables = jointAccountRestD.tables
 if ( jointAccountRestDTables === undefined ) throw Error ( "jointAccountRestDTables must be defined" )

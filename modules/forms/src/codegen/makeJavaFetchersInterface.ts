@@ -1,4 +1,4 @@
-import { flatMapRestAndActions, flatMapRestAndResolver, mapRestAndActions, mapRestAndResolver, RestD } from "../common/restD";
+import { mapRestAndActions, mapRestAndResolver, RestD } from "../common/restD";
 import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, isPrimDd, isRepeatingDd, OneDataDD, PrimitiveDD, RepeatingDataD, sampleFromDataD } from "../common/dataD";
 import { fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, fetcherVariableName, fetcherVariableNameForResolver, resolverName, sampleName } from "./names";
 import { JavaWiringParams } from "./config";

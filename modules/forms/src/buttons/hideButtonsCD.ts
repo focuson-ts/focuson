@@ -1,4 +1,4 @@
-import { DisplayCompD, SimpleDisplayComp } from "../common/componentsD";
+import { DisplayCompD } from "../common/componentsD";
 
 export const HideButtonsCD: DisplayCompD = {
   import: "@focuson/form_components",

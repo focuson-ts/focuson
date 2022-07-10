@@ -1,15 +1,9 @@
 import { yesNoDD } from "../occupationAndIncome/occupationAndIncome.dataD";
 import { ExampleDataD, ExampleRepeatingD } from "../common";
-import { BooleanDD, DateDD, IntegerDD, MoneyDD, NatNumDd, OneLineStringDD, ManyLineStringDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
+import { BooleanDD, DateDD, IntegerDD, ManyLineStringDD, MoneyDD, NatNumDd, OneLineStringDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
 import { EAccountDisplayTypeDD } from "../eAccounts/eAccountsSummary.dataD";
 import { PaymentTypeDd } from "../commonEnums";
-import {
-  LabelAndDropDownCD,
-  LayoutCd,
-  TableCD,
-  TableWithCheckboxInputCD,
-  UnpaidCardOrMisuseItemsCD
-} from "../../common/componentsD";
+import { LabelAndDropDownCD, LayoutCd, TableCD, TableWithCheckboxInputCD, UnpaidCardOrMisuseItemsCD } from "../../common/componentsD";
 
 // import { ExampleDataD, ExampleRepeatingD, NatNumDd, PaymentTypeDd } from "../common";
 // import { BooleanDD, DateDD, IntegerDD, ManyLineStringDD, MoneyDD, OneLineStringDD, StringDD, StringPrimitiveDD } from "@focuson/forms";

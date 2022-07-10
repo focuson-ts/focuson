@@ -2,7 +2,7 @@ import { AllDataDD, CompDataD, DataD, findAllDataDs, HasGuards, HasLayout, isDat
 import { CommonLensRestParam, RestD } from "./restD";
 import { NameAnd, RestAction, RestResult, safeString, sortedEntries, unique } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
-import { ChangeCommand, getRestTypeDetails, ModalChangeCommands, RestActionDetail, RestChangeCommands } from "@focuson/rest";
+import { getRestTypeDetails, RestActionDetail, RestChangeCommands } from "@focuson/rest";
 
 
 export interface DomainDefnInPage<G> {

@@ -2,7 +2,7 @@ import { findAllCommonParams, findAllCommonParamsDetails, findAllCommonParamsWit
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
-import {  generatedPages } from "../focuson.config";
+import { generatedPages } from "../focuson.config";
 import { paramsForTest } from "./paramsForTest";
 import { devAppConfig } from "../appConfig";
 

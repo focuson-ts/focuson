@@ -1,5 +1,3 @@
-import { LensState } from "@focuson/state";
-
 /** A state is a string[] that means 'turn into a state  'from' the current state
  * A full state is a string[] that means 'turn into a state from the root'.
  * In general 'state' doesn't break encapsulation, pagestate and fullState do. pageState is slightly cleaner becaues the damage doesn't leave the page

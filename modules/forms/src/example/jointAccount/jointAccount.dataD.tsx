@@ -1,4 +1,4 @@
-import { AccountIdDD, DateDD, MoneyDD, OneLineStringDD } from "../../common/dataD";
+import { MoneyDD, OneLineStringDD } from "../../common/dataD";
 import { TableCD } from "../../common/componentsD";
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 import { accountT, addT, nameT } from "../database/tableNames";

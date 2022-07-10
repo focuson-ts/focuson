@@ -1,6 +1,5 @@
 import { makeMockFetcherFor, makeMockFetchersForRest } from "../codegen/makeMockFetchers";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
-import { repeatingRestRD } from "../example/repeating/repeating.restD";
 import { paramsForTest } from "./paramsForTest";
 import { ResolverData } from "../codegen/makeJavaFetchersInterface";
 

@@ -1,6 +1,6 @@
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
-import { opt, optT } from "../codegen/codegen";
-import { stateForButton, stateForButtonWithPath } from "../codegen/lens";
+import { opt } from "../codegen/codegen";
+import { stateForButtonWithPath } from "../codegen/lens";
 import { toArray } from "@focuson/utils";
 import { CustomButtonType } from "./enabledBy";
 

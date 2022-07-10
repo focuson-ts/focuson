@@ -1,6 +1,6 @@
 import { AllGuards } from "../../buttons/guardButton";
 import { nameAndAddressDataD, postCodeSearchResponseDD } from "./addressSearch.dataD";
-import { IntParam, RestD, RestParams, StringParam } from "../../common/restD";
+import { RestD, RestParams, StringParam } from "../../common/restD";
 import { addT, onlySchema, postCodeSearchTable } from "../database/tableNames";
 import { allCommonIds } from "../commonIds";
 import { addressSearchSql } from "./addressSearch.sql";

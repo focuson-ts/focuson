@@ -2,7 +2,7 @@ import { AllDataDD, CompDataD, DisplayParamDD, HasGuards, HasLayout, isDataDd, i
 import { commonParamsWithLabel, DisplayCompD, OneDisplayCompParamD, SimpleDisplayComp } from "../common/componentsD";
 import { dataDsIn, isMainPage, isModalPage, MainPageD, PageD } from "../common/pageD";
 
-import { decamelize, NameAnd, safeObject, sortedEntries, toArray, unique, unsortedEntries, Validations } from "@focuson/utils";
+import { decamelize, NameAnd, sortedEntries, toArray, unique, unsortedEntries, Validations } from "@focuson/utils";
 import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, optionalsFileName, optionalsName, pageComponentName, pageDomainName } from "./names";
 import { addButtonsFromVariables, MakeButton, makeButtonsVariable, makeGuardButtonVariables } from "./makeButtons";
 import { focusOnFor, indentList, noExtension } from "./codegen";

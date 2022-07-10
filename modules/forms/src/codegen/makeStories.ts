@@ -1,7 +1,7 @@
 import { isMainPage, isModalPage, MainPageD, PageD } from "../common/pageD";
 import { TSParams } from "./config";
 import { domainName, domainsFileName, emptyFileName, emptyName, pageComponentName, renderFileName, sampleName, samplesFileName } from "./names";
-import { parsePath, stateCodeBuilder } from "@focuson/lens";
+import { parsePath } from "@focuson/lens";
 import { stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
 
 

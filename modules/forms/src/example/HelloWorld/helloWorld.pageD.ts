@@ -1,7 +1,6 @@
-import { ExampleMainPage, ExampleModalPage } from "../common";
+import { ExampleMainPage } from "../common";
 import { helloWorldDD } from "./helloWorld.dataD";
 import { helloWorldRD } from "./helloWorld.restD";
-import { JointAccountCustomerDD } from "../jointAccount/jointAccount.dataD";
 
 
 export const HelloWorldPage: ExampleMainPage = {

@@ -7,10 +7,7 @@ import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
 import { HelloWorldPage } from "../example/HelloWorld/helloWorld.pageD";
 import { helloWorldDD } from "../example/HelloWorld/helloWorld.dataD";
 import { ExampleDataD } from "../example/common";
-import { StringDD } from "../common/dataD";
-import { helloWorldSample } from "../example/HelloWorld/helloWorld.sample";
 import { MainOccupationDetailsPageSummaryPD } from "../example/SingleOccupation/singleOccupation.pageD";
-import { editOccupationIncomeSummaryModalPD } from "../example/SingleOccupation/singleOccupation.modalD";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 
 

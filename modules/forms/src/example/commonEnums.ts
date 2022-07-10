@@ -1,5 +1,5 @@
-import { numberPrimDD, NumberPrimitiveDD, stringPrimDD, StringPrimitiveDD } from "../common/dataD";
-import { LabelAndDropDownCD, LabelAndNumberInputCD } from "../common/componentsD";
+import { stringPrimDD, StringPrimitiveDD } from "../common/dataD";
+import { LabelAndDropDownCD } from "../common/componentsD";
 
 export enum ContactTitle {
   X = '',

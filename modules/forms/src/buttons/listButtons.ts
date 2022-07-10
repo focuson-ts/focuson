@@ -1,6 +1,5 @@
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
-import { stateFocusQueryForRepl } from "../codegen/codegen";
-import { stateFocusQueryWithTildaFromPage, stateForButton, stateForButtonWithPath } from "../codegen/lens";
+import { stateForButtonWithPath } from "../codegen/lens";
 import { EnabledBy, enabledByString } from "./enabledBy";
 
 export interface CommonListButtonInPage  extends EnabledBy{

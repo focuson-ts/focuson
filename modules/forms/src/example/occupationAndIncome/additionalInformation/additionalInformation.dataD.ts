@@ -1,7 +1,7 @@
 /* ---------------- ADDITIONAL INFORMATION START ---------------- */
 
 import { ExampleDataD } from "../../common";
-import {additionalInformationSample} from "./additionalInformation.sample";
+import { additionalInformationSample } from "./additionalInformation.sample";
 import { StringDD } from "../../../common/dataD";
 
 export const additionalInformationDD: ExampleDataD = {

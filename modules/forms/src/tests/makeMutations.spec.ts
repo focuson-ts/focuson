@@ -1,6 +1,5 @@
-import { getFromResultSetIntoVariables, getFromStatement, makeMutations, mockReturnStatement, makeMutationResolverReturnStatement, setObjectFor, typeForParamAsInput } from "../codegen/makeMutations";
+import { getFromResultSetIntoVariables, getFromStatement, makeMutationResolverReturnStatement, makeMutations, mockReturnStatement, setObjectFor, typeForParamAsInput } from "../codegen/makeMutations";
 import { paramsForTest } from "./paramsForTest";
-import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { chequeCreditBooksRestD } from "../example/chequeCreditBooks/chequeCreditBooks.restD";

@@ -1,7 +1,7 @@
 import { AllDataDD, DataD, isDataDd, isPrimDd, isRepeatingDd, OneDataDD, RepeatingDataD } from "../common/dataD";
 import { domainName, hasDomainForPage, pageDomainName } from "./names";
 import { sortedEntries } from "@focuson/utils";
-import { allMainPages, dataDsIn, isModalPage, PageD } from "../common/pageD";
+import { allMainPages, dataDsIn, PageD } from "../common/pageD";
 import { TSParams } from "./config";
 import { indentList } from "./codegen";
 

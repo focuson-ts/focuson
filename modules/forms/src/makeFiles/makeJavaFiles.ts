@@ -13,16 +13,7 @@ import { makeMockFetcherFor, makeMockFetchersForRest } from "../codegen/makeMock
 import { makeJavaVariablesForGraphQlQuery } from "../codegen/makeGraphQlQuery";
 import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
 // import { findSqlRoot, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, walkRoots } from "../codegen/makeJavaSql.tsxxx";
-import {
-  createTableSql,
-  findSqlLinkDataFromRootAndDataD,
-  findSqlRoot,
-  generateGetSql, getStrategy,
-  makeInsertSqlForIds,
-  makeInsertSqlForNoIds,
-  makeMapsForRest,
-  walkSqlRoots
-} from "../codegen/makeSqlFromEntities";
+import { createTableSql, findSqlLinkDataFromRootAndDataD, findSqlRoot, generateGetSql, getStrategy, makeInsertSqlForIds, makeInsertSqlForNoIds, makeMapsForRest, walkSqlRoots } from "../codegen/makeSqlFromEntities";
 import { makeDBFetchers } from "../codegen/makeDBFetchers";
 import { makePactValidation } from "../codegen/makePactValidation";
 import { AppConfig } from "../appConfig";

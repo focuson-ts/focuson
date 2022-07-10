@@ -1,12 +1,12 @@
 import { isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
-import { beforeSeparator, NameAnd, RestAction, safeObject, sortedEntries } from "@focuson/utils";
+import { beforeSeparator, RestAction, safeObject, sortedEntries } from "@focuson/utils";
 import { fetcherName, providerName, restDetailsName, sampleName } from "./names";
-import { isRestLens, makeCommonValueForTest, makeParamValueForTest, postFixForEndpoint, RestD, RestStateDetails, stateToNameAndUrlAndParamsForState } from "../common/restD";
+import { isRestLens, makeCommonValueForTest, makeParamValueForTest, postFixForEndpoint, RestD, stateToNameAndUrlAndParamsForState } from "../common/restD";
 import { TSParams } from "./config";
 import { lensFocusQueryWithSlashAndTildaFromIdentity, stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
 import { parsePath } from "@focuson/lens";
 import { addStringToEndOfAllButLast, indentList, paramsForRestAction } from "./codegen";
-import { getRestTypeDetails, getUrlForRestAction, printRestAction, RestActionDetail, restActionForName, UrlAndParamsForState } from "@focuson/rest";
+import { getRestTypeDetails, getUrlForRestAction, printRestAction, RestActionDetail, restActionForName } from "@focuson/rest";
 import { CompDataD } from "../common/dataD";
 
 export function makeAllPactsForPage<B, G> ( params: TSParams, page: PageD<B, G> ): string[] {

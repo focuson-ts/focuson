@@ -1,6 +1,6 @@
 import { EAccountsSummaryPD } from "./eAccountsSummary.pageD";
 import { CreateEAccountPageD } from "../createEAccount/createEAccount.pageD";
-import { createPlanRestD, eAccountsSummaryRestD } from "./eAccountsSummary.restD";
+import { eAccountsSummaryRestD } from "./eAccountsSummary.restD";
 import { CreatePlanDD, EAccountsSummaryDD } from "./eAccountsSummary.dataD";
 
 //This allows us to make pact tests AND selenium tests

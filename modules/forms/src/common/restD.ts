@@ -4,7 +4,7 @@ import { paramsForRestAction } from "../codegen/codegen";
 import { AccessDetails, GuardedMutation, MutationDetail, Mutations, MutationsForRestAction, SelectMutation } from "./resolverD";
 import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 import { allMainPages, MainPageD, PageD, RestDefnInPageProperties } from "./pageD";
-import { getRestTypeDetails, RestActionDetail, restActionForName, StateAccessDetails, UrlAndParamsForState } from "@focuson/rest";
+import { getRestTypeDetails, RestActionDetail, restActionForName, UrlAndParamsForState } from "@focuson/rest";
 import { findChildResolvers, ResolverData } from "../codegen/makeJavaFetchersInterface";
 
 

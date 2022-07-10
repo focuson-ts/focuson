@@ -4,7 +4,7 @@ import { domainName, domainsFileName, fetcherFileName, fetcherName, pageDomainNa
 import { TSParams } from "./config";
 import { addStringToEndOfAllButLast, importsDot, importsDotDot, lensFocusQueryFor, noExtension } from "./codegen";
 import { findIds, isRestLens, LensRestParam } from "../common/restD";
-import { lensFocusQueryWithSlashAndTildaFromIdentity, lensFocusQueryWithTildaFromPage } from "./lens";
+import { lensFocusQueryWithTildaFromPage } from "./lens";
 
 
 export const makeFetcherCode = ( params: TSParams ) => <B, G> ( p: PageD<B, G> ) => ( restName: string, def: RestDefnInPageProperties<G> ): string[] => {

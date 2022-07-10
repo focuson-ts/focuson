@@ -1,6 +1,6 @@
 import { DataD, OneLineStringDD, RepeatingDataD } from "../../common/dataD";
 import { AllGuards } from "../../buttons/guardButton";
-import { LayoutCd, StringInputCD, StructureTableCD, TableCD } from "../../common/componentsD";
+import { LayoutCd, StringInputCD, StructureTableCD } from "../../common/componentsD";
 import { addT, postCodeSearchTable } from "../database/tableNames";
 
 

@@ -5,7 +5,7 @@ import { MakeButton } from "../codegen/makeButtons";
 import { makeModalCloseButtons, ModalCancelButtonInPage, ModalCommitButtonInPage } from "./modalCloseButtons";
 import { makeRestButtons, RestButtonInPage } from "./restButton";
 import { makeValidationButtons, ValidationButtonInPage } from "./ValidationDebugButton";
-import { AllGuards, GuardButtonInPage } from "./guardButton";
+import { GuardButtonInPage } from "./guardButton";
 import { makeToggleButtons, ToggleButtonInPage } from "./toggleButton.page";
 import { DeleteStateButtonInPage, makeDeleteStateButtons } from "./DeleteStateButton";
 import { makeSelectPageButtons, SelectButtonInPage } from "./selectPageButton";
