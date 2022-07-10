@@ -197,10 +197,6 @@ export interface TableWhereLink {
 }
 export type WhereLink = TableWhereLink | WhereFromQuery
 
-export interface LeftJoinData {
-  onString: string;
-
-}
 function simplifyWhereLink ( wl: WhereLink ) {
   if ( isTableWhereLink ( wl ) ) return `Table: parent${wl.parentAlias}:${wl.parentTable.name}.${wl.idInParent} == child ${wl.childAlias}:${wl.childTable.name}.${wl.idInThis}`
   if ( isWhereFromQuery ( wl ) ) return `Table: query ${wl.paramName} == child ${wl.alias}:${wl.table.name}.${wl.field}`
