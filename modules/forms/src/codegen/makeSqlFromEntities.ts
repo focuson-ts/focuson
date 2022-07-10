@@ -17,7 +17,13 @@ import {
   PrimitiveDD
 } from "../common/dataD";
 import { MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
-import { addBrackets, addStringToEndOfAllButLast, indentList } from "./codegen";
+import {
+  addBrackets,
+  addStringToEndOfAllButFirstAndLast,
+  addStringToEndOfAllButLast,
+  addStringToStartOfAllButFirst,
+  indentList
+} from "./codegen";
 import { JavaWiringParams } from "./config";
 import { sqlListName, sqlMapName, sqlMapPackageName, sqlTafFieldName } from "./names";
 import { selectSample } from "./makeSample";
@@ -68,6 +74,7 @@ export interface CommonEntity {
 export interface MainEntityWithoutStrategy extends CommonEntity {
   type: 'Main';
   alias?: string;
+  useLeftJoin?: boolean;
 }
 
 export interface MainEntityWithStrategy extends CommonEntity {
@@ -75,6 +82,7 @@ export interface MainEntityWithStrategy extends CommonEntity {
   idField?: string;
   alias?: string;
   idStrategy: InsertSqlStrategy | InsertSqlStrategy[];
+  useLeftJoin?: boolean;
 }
 
 export function hasStrategy ( m: Entity | undefined ): m is MainEntityWithStrategy {
@@ -188,6 +196,11 @@ export interface TableWhereLink {
   idInThis: string;
 }
 export type WhereLink = TableWhereLink | WhereFromQuery
+
+export interface LeftJoinData {
+  onString: string;
+
+}
 function simplifyWhereLink ( wl: WhereLink ) {
   if ( isTableWhereLink ( wl ) ) return `Table: parent${wl.parentAlias}:${wl.parentTable.name}.${wl.idInParent} == child ${wl.childAlias}:${wl.childTable.name}.${wl.idInThis}`
   if ( isWhereFromQuery ( wl ) ) return `Table: query ${wl.paramName} == child ${wl.alias}:${wl.table.name}.${wl.field}`
@@ -215,7 +228,7 @@ export interface SqlLinkData {
   sqlRoot: SqlRoot;
   aliasAndTables: [ string, DBTable ][];
   fields: TableAndFieldAndAliasData<any>[],
-  staticWheres: string[],
+  staticWheres: StaticWhere[],
   whereLinks: WhereLink[]
 }
 export function simplifyAliasAndTables ( ats: [ string, DBTable ] [] ) {return ats.map ( ( [ alias, table ] ) => `${alias}->${table.name}` ).join ( "," )}
@@ -408,29 +421,34 @@ export function findAllFields<G> ( sqlRoot: SqlRoot, dataD: CompDataD<any>, wher
   return unique ( [ ...fromWhere, ...tfAliasFromData ], t => simplifyTableAndFieldAndAliasData ( t, true ) )
 }
 
-export function findStaticWheres ( sqlRoot: SqlRoot ): string[] { // things to ignore: path, childAlias
+export interface StaticWhere {
+  where: string;
+  alias: string;
+}
+
+export function findStaticWheres ( sqlRoot: SqlRoot ): StaticWhere[] { // things to ignore: path, childAlias
   let staticWhereLinks = foldEntitys ( {
-    foldMain ( childAccs: string[][], main: EntityAndWhere ): string[] {
+    foldMain (childAccs: StaticWhere[][], main: EntityAndWhere ): StaticWhere[] {
       if ( main.staticWhere === undefined ) return childAccs.flat ()
-      return [ ...childAccs.flat (), main.staticWhere ]
+      return [ ...childAccs.flat (), { where: main.staticWhere, alias: main.entity.alias } ]
     },
-    foldMultiple ( childAccs: string[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, multiple: MultipleEntity ): string[] { return [] },
-    foldSingle ( childAccs: string[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, single: SingleEntity ): string[] {
+    foldMultiple (childAccs: StaticWhere[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, multiple: MultipleEntity ): StaticWhere[] { return [] },
+    foldSingle (childAccs: StaticWhere[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, single: SingleEntity ): StaticWhere[] {
       if ( single.staticWhere === undefined ) return childAccs.flat ()
-      return [ ...childAccs.flat (), single.staticWhere ]
+      return [ ...childAccs.flat (), { where: single.staticWhere, alias: childAlias } ]
     }
   }, sqlRoot.main, sqlRoot.root, sqlRoot.filterPath, [] );
   return [ ...staticWhereLinks.flat (), ...findStaticWheresForSqlRootGoingUp ( sqlRoot ) ]
 }
 
-export function findStaticWheresForSqlRootGoingUp ( sqlRoot: SqlRoot ): string[] {
+export function findStaticWheresForSqlRootGoingUp ( sqlRoot: SqlRoot ): StaticWhere[] {
   if ( sqlRoot.root === sqlRoot.main.entity )
-    return sqlRoot.root.staticWhere != undefined ? [ sqlRoot.root.staticWhere ] : []
+    return sqlRoot.root.staticWhere != undefined ? [ { where: sqlRoot.root.staticWhere, alias: sqlRoot.alias } ] : []
 
   let sqlRootAndParentsPath: [ string, Entity ][] = [ [ sqlRoot.alias, sqlRoot.root ], ...sqlRoot.path ];
   return sqlRootAndParentsPath.map ( ( p, _ ) => {
-    if ( p[ 1 ].staticWhere === undefined ) return "";
-    return p[ 1 ].staticWhere
+    if ( p[ 1 ].staticWhere === undefined ) return undefined;
+    return { where: p[ 1 ].staticWhere, alias: p[ 1 ].table.name }
   } )
 }
 
@@ -443,7 +461,7 @@ export function findSqlLinkDataFromRootAndDataD ( sqlRoot: SqlRoot, dataD: CompD
 }
 
 
-export function makeWhereClauseStringsFrom ( ws: WhereLink[] ) {
+export function makeWhereClauseStringsFrom ( ws: WhereLink[] ): string[] {
   return ws.map ( ( w ) => {
     if ( isTableWhereLink ( w ) ) {
       const { parentAlias, idInParent, childAlias, idInThis } = w
@@ -457,17 +475,61 @@ export function makeWhereClauseStringsFrom ( ws: WhereLink[] ) {
   } )
 }
 
+// TableWhereLinks would already be included during ON clauses
+export const findRootWhereClauses = (whereLinks: WhereLink[], rootAlias: string): WhereLink[] =>
+    whereLinks.filter((wl: WhereLink) => isWhereFromQuery(wl) && wl.alias === rootAlias )
+
 export function makeWhereClause ( s: SqlLinkData ) {
-  let whereList = [ ...makeWhereClauseStringsFrom ( s.whereLinks ), ...s.staticWheres.filter ( s => s !== '' ) ];
+  let whereList = [ ...makeWhereClauseStringsFrom ( s.whereLinks ), ...s.staticWheres.filter ( s => s !== undefined && s.where !== '' ).map(sw => sw.where) ];
   return whereList.length === 0 ? '' : 'where ' + whereList.join ( ' and ' );
 }
-export function generateGetSql ( s: SqlLinkData ): string[] {
-  function tableName ( t: DBTable ) { return t.prefix ? `${t.prefix}.${t.name}` : t.name}
+
+export function generateGetSqlWithoutLeftJoin ( s: SqlLinkData ): string[] {
   return [ `select`,
     ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.fields.map ( taf => `${taf.alias}.${taf.fieldData.dbFieldName} as ${sqlTafFieldName ( taf )}` ) ) ),
     ` from`,
     ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.aliasAndTables.map ( ( [ alias, table ] ) => `${tableName ( table )} ${alias}` ) ) ),
     ` ${(makeWhereClause ( s ))}` ]
+}
+
+export function makeOnClause(table: DBTable, alias: string, s: SqlLinkData): string {
+  const tableWhereLinks: WhereLink[] = s.whereLinks.filter((wl: WhereLink) =>
+      isTableWhereLink(wl) && wl.childAlias === alias && wl.childAlias !== s.sqlRoot.alias);
+
+  const queryWhereLinks: WhereLink[] = s.whereLinks.filter((wl: WhereLink) =>
+      isWhereFromQuery(wl) && wl.alias === alias && wl.alias !== s.sqlRoot.alias)
+
+  const wl = tableWhereLinks.concat(queryWhereLinks)
+  const sw: StaticWhere[] = s.staticWheres.filter((sw: StaticWhere) => sw.alias !== s.sqlRoot.alias && sw.alias === alias)
+
+  let whereList: string[] = makeWhereClauseStringsFrom(wl);
+  whereList.unshift(...sw.map(_ => _.where));
+  return whereList.length === 0 ? `${tableName ( table )} ${alias}` : `${tableName ( table )} ${alias} ON ` + whereList.join ( ' AND ' );
+}
+
+export function generateGetSql(s: SqlLinkData): string[] {
+  if (s.sqlRoot.main.entity.useLeftJoin) return generateGetSqlWithLeftJoin(s)
+  else return generateGetSqlWithoutLeftJoin(s);
+}
+
+export function tableName ( t: DBTable ) { return t.prefix ? `${t.prefix}.${t.name}` : t.name}
+
+function makeWhereClauseForLeftJoinQuery(s: SqlLinkData): string {
+  const normalWheres: string[] = makeWhereClauseStringsFrom(findRootWhereClauses(s.whereLinks, s.sqlRoot.alias))
+  const sw = s.staticWheres.filter((sw: StaticWhere) => sw.alias === s.sqlRoot.alias).map(sw => sw.where)
+  const mergedWheres: string[] = normalWheres.concat(sw)
+
+  return mergedWheres.length === 0 ? '' : ` where${mergedWheres.join(' AND ')}`
+}
+
+export function generateGetSqlWithLeftJoin ( s: SqlLinkData ): string[] {
+  const sortedAliasAndTables = s.aliasAndTables.slice(1).reverse()
+  sortedAliasAndTables.unshift(s.aliasAndTables[0])
+  return [ `select`,
+    ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.fields.map ( taf => `${taf.alias}.${taf.fieldData.dbFieldName} as ${sqlTafFieldName ( taf )}` ) ) ),
+    ` from`,
+    ...indentList ( addStringToEndOfAllButFirstAndLast ( ',' ) ( addStringToStartOfAllButFirst ( 'LEFT JOIN ' ) (sortedAliasAndTables.map ( ( [ alias, table ] ) =>
+        `${(makeOnClause(table, alias, s))}` ) ) )), makeWhereClauseForLeftJoinQuery(s) ]
 }
 
 export const findAllTableAndFieldsIn = <G> ( rdps: RestDefnInPageProperties<G>[] ) => unique ( rdps.flatMap ( rdp => {

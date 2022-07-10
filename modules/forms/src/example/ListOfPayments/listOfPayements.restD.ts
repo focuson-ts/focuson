@@ -158,6 +158,7 @@ export const accountAndAddressDetailsRD: ExampleRestD = {
     entity: {
       type: 'Main',
       table: loanAppTable,
+      useLeftJoin: true,
       staticWhere: `${loanAppTable.name}.ind='M'`,
       children: {
         secondayAppTable: {type: 'Single',    filterPath: 'joint',table: loanAppTable, idInParent: 'client_ref', idInThis: 'client_ref', staticWhere: `secondayAppTable.ind='j'`, children:{
