@@ -49,7 +49,7 @@ function oneRestDetails ( cd: NameAndLens<RestStateForTest>, fdd: NameAndLens<Fu
       [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],
     url: "/some/url/{token}?{query}",
     states: {
-      newState: { url: "/some/new/state/{token}?{query}", params: { 'token': {}, 'id': {} } }
+      newState: { url: "/some/new/state/{token}?{query}", params: ['token','id'] }
     }
   }
 }

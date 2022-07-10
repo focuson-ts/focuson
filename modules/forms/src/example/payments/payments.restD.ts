@@ -142,7 +142,7 @@ export const ValidatePayeeRD: ExampleRestD = {
   url: '/api/payeedetails/validate?{query}',
   actions: [ { state: 'validate' } ],
   states: {
-    validate: { params: {}, url: '/api/payeedetails/validate?{query}', returns: [ 'payeeStatus' ] }
+    validate: { params: {}, url: '/api/payeedetails/validate?{query}', bodyFrom: '~/onePayment', returns: [ 'payeeStatus' ] }
   },
   mutations: [
     {

@@ -1,14 +1,21 @@
-import { AllLensRestParams, findIds, isRestLens, LensRestParam } from "../common/restD";
+import { AllLensRestParams, findIds, isRestLens, LensRestParam, RestStateDetails } from "../common/restD";
 import { domainName, domainsFileName, pageDomainName, restDetailsName, restFileName } from "./names";
 import { TSParams } from "./config";
 import { allRestAndActions, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { NameAnd, safeObject, SimpleMessage, sortedEntries, unique } from "@focuson/utils";
 import { addStringToEndOfAllButLast, indentList, lensFocusQueryFor } from "./codegen";
-import { lensFocusQueryWithTildaFromPage } from "./lens";
+import { lensFocusQueryWithSlashAndTildaFromIdentity, lensFocusQueryWithTildaFromPage } from "./lens";
 
-const cleanState = ( s: NameAnd<any> ): any =>
-  Object.fromEntries ( Object.entries ( safeObject ( s ) ).map ( ( [ name, value ] ) => [ name, { ...value, returns: undefined, mergeDataOnResponse: undefined } ] ) );
-export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restName: string, r: RestDefnInPageProperties<G> ): string[] => {
+const makeStates = <B, G> ( errorPrefix: string, tsparams: TSParams, p: MainPageD<B, G> ) => ( s: NameAnd<RestStateDetails> ): string[] =>
+  Object.entries ( safeObject ( s ) ).map ( ( [ name, { url, params, bodyFrom } ] ) =>
+    `${name}: {url: ${JSON.stringify ( url )},params: ${JSON.stringify ( Object.keys ( safeObject ( params ) ) )}${
+      bodyFrom ?
+        `, bodyFrom: ${lensFocusQueryWithSlashAndTildaFromIdentity ( errorPrefix, tsparams, p, bodyFrom )}` :
+        ''
+    }}` )
+//[ name, { url: JSON.stringify(url), params: JSON.stringify(params), bodyFrom: bodyFrom ? lensFocusQueryWithSlashAndTildaFromIdentity ( errorPrefix, tsparams, p, bodyFrom ) : undefined } ] ) );
+
+export const makeRest = <B, G> ( params: TSParams, p: MainPageD<B, G> ) => ( restName: string, r: RestDefnInPageProperties<G> ): string[] => {
   const [ ids, resourceIds ] = findIds ( r.rest )
   let pageDomain = `${params.domainsFile}.${pageDomainName ( p )}`;
 
@@ -20,6 +27,7 @@ export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restNam
   const compilationException = r.targetFromPath.indexOf ( '#' ) >= 0 ?
     [ `    //This compilation error is because you used a variable name in the target '${r.targetFromPath}'. Currently that is not supported` ] : []
   const states = safeObject ( r.rest.states )
+  const errorPrefix = `${p.name}.rest[${restName}]`;
   return [
     `//If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs`,
     `export function ${restDetailsName ( p, restName, r.rest )} ( cd: NameAndLens<${params.stateName}>, dateFn: DateFn  ): OneRestDetails<${params.stateName}, ${pageDomain}, ${params.domainsFile}.${domainName ( r.rest.dataDD )}, SimpleMessage> {`,
@@ -29,7 +37,7 @@ export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restNam
     `  return {`,
     `    fdLens: Lenses.identity<${params.stateName}>().focusQuery('${p.name}'),`,
     ...indentList ( compilationException ),
-    `//From ${p.name}.rest[${restName}].targetFromPath (${r.targetFromPath}). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?`,
+    `//From ${errorPrefix}.targetFromPath (${r.targetFromPath}). Does the path exist? Is the 'type' at the end of the path, the type that rest is fetching?`,
     `    dLens: ${lensFocusQueryWithTildaFromPage ( `makeRest for page ${p.name}, ${restName}`, params, p, r.targetFromPath )},`,
     `    cd, fdd,`,
     `    ids: ${JSON.stringify ( ids )},`,
@@ -37,7 +45,9 @@ export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restNam
     `    extractData: ${params.extractData},`,
     `    messages: extractMessages(dateFn),`,
     `    url: "${r.rest.url}",`,
-    `    states : ${JSON.stringify ( cleanState ( states ) )}`,
+    `    states : {`,
+    ...indentList ( indentList ( indentList ( addStringToEndOfAllButLast ( "," ) ( makeStates ( errorPrefix, params, p ) ( states ) ) ) ) ),
+    '    }',
     `  }`,
     `}`,
     ``,

@@ -4,7 +4,7 @@ import { paramsForRestAction } from "../codegen/codegen";
 import { AccessDetails, GuardedMutation, MutationDetail, Mutations, MutationsForRestAction, SelectMutation } from "./resolverD";
 import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 import { allMainPages, MainPageD, PageD, RestDefnInPageProperties } from "./pageD";
-import { getRestTypeDetails, RestActionDetail, restActionForName, StateAccessDetails } from "@focuson/rest";
+import { getRestTypeDetails, RestActionDetail, restActionForName, StateAccessDetails, UrlAndParamsForState } from "@focuson/rest";
 import { findChildResolvers, ResolverData } from "../codegen/makeJavaFetchersInterface";
 
 
@@ -111,9 +111,12 @@ export interface OneTableInsertSqlStrategyForIds {
 export type RestStateDetails = {
   url: string;
   params: RestParams;
-  requestBodyFrom?: string;
+  bodyFrom?: string;
   returns?: string[]
   mergeDataOnResponse?: boolean
+}
+export function stateToNameAndUrlAndParamsForState ( state: NameAnd<RestStateDetails> |undefined): NameAnd<UrlAndParamsForState> {
+  return Object.fromEntries ( Object.entries (safeObject( state )).map ( ( [ name, { url, params } ] ) => [ name, { url, params: Object.keys ( params ) } ] ) );
 }
 
 export interface RestD<G> {

@@ -1,4 +1,4 @@
-import { isHeaderLens, postFixForEndpoint, RestD, RestParams } from "../common/restD";
+import { isHeaderLens, postFixForEndpoint, RestD, RestParams, stateToNameAndUrlAndParamsForState } from "../common/restD";
 import { endPointName, mutationClassName, mutationMethodName, mutationVariableName, queryClassName, queryName, queryPackage, restControllerName, sampleName, sqlMapName, sqlMapPackageName } from "./names";
 import { JavaWiringParams } from "./config";
 import { actionsEqual, beforeSeparator, isRestStateChange, RestAction, safeArray, safeObject, toArray, unique } from "@focuson/utils";
@@ -112,7 +112,7 @@ function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restN
   let safeParams: RestParams = safeObject ( r.params );
   const hasDbName = safeParams[ 'dbName' ] !== undefined
   const dbNameString = hasDbName ? 'dbName' : `IFetcher.${params.defaultDbName}`
-  const url = getUrlForRestAction ( restAction, r.url, r.states )
+  const url = getUrlForRestAction ( restAction, r.url, stateToNameAndUrlAndParamsForState(r.states) )
   let restTypeDetails: RestActionDetail = getRestTypeDetails ( restAction );
   let selectionFromData = restTypeDetails.output.needsObj ? `"${queryName ( r, restAction )}"` : '""';
   const callMutations = callMutationsCode ( p, restName, r, restAction, dbNameString );
@@ -141,7 +141,7 @@ function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restN
 
 function makeQueryEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restName: string, errorPrefix: string, r: RestD<G>, restAction: RestAction ): string[] {
   let restTypeDetails: RestActionDetail = getRestTypeDetails ( restAction );
-  const url = getUrlForRestAction ( restAction, r.url, r.states )
+  const url = getUrlForRestAction ( restAction, r.url, stateToNameAndUrlAndParamsForState(r.states) )
   return [
     ...indentList ( endpointAnnotation ( params, p, restName, r, restAction, 'query' ) ),
     `    @${restTypeDetails.annotation}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}/query", produces="application/json")`,

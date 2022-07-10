@@ -1,12 +1,12 @@
 import { isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
-import { beforeSeparator, RestAction, sortedEntries } from "@focuson/utils";
+import { beforeSeparator, NameAnd, RestAction, safeObject, sortedEntries } from "@focuson/utils";
 import { fetcherName, providerName, restDetailsName, sampleName } from "./names";
-import { isRestLens, makeCommonValueForTest, makeParamValueForTest, postFixForEndpoint, RestD } from "../common/restD";
+import { isRestLens, makeCommonValueForTest, makeParamValueForTest, postFixForEndpoint, RestD, RestStateDetails, stateToNameAndUrlAndParamsForState } from "../common/restD";
 import { TSParams } from "./config";
 import { lensFocusQueryWithSlashAndTildaFromIdentity, stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
 import { parsePath } from "@focuson/lens";
 import { addStringToEndOfAllButLast, indentList, paramsForRestAction } from "./codegen";
-import { getRestTypeDetails, getUrlForRestAction, printRestAction, RestActionDetail, restActionForName } from "@focuson/rest";
+import { getRestTypeDetails, getUrlForRestAction, printRestAction, RestActionDetail, restActionForName, UrlAndParamsForState } from "@focuson/rest";
 import { CompDataD } from "../common/dataD";
 
 export function makeAllPactsForPage<B, G> ( params: TSParams, page: PageD<B, G> ): string[] {
@@ -47,6 +47,7 @@ export function makeAllPactsForRest<B, G> ( params: TSParams, page: MainPageD<B,
 function getResponseBodyString<G> ( details: RestActionDetail, params: TSParams, dataD: CompDataD<G>, restD: RestD<G>, restAction: RestAction ) {
   return details.output.needsObj ? `body: ${params.samplesFile}.${sampleName ( dataD )}0` : `body: {}`;
 }
+
 export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, restName: string, defn: RestDefnInPageProperties<G>, action: RestAction ): string[] {
   const rest = defn.rest
   const details = getRestTypeDetails ( action )
@@ -61,7 +62,7 @@ export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, re
   // const suppressExpectedResult = details.output.needsObj ? [] : [ `// @ts-ignore` ]
   const initialStateBodyTransforms = details.params.needsObj ? [ `[${lensFocusQueryWithSlashAndTildaFromIdentity ( `initialStateBodyTransform for page ${page.name} ${restName}`, params, page, defn.targetFromPath )}, () => ${params.samplesFile}.${sampleName ( dataD )}0]` ] : []
   let expectedResult = details.output.needsObj ? `${params.samplesFile}.${sampleName ( dataD )}0` : `{}`; //Not really sure the best way to do this.
-  let url = getUrlForRestAction ( action, rest.url, rest.states );
+  let url = getUrlForRestAction ( action, rest.url, stateToNameAndUrlAndParamsForState ( safeObject ( rest.states ) ) );
   const setExpectedResult: string[] = getRestTypeDetails ( action ).output.needsObj ?
     [ `    const expected = ${parsePath ( defn.targetFromPath, stateCodeBuilderWithSlashAndTildaFromIdentity ( params, page ) )}.set ( rawExpected, ${expectedResult} )` ] :
     [ `    const expected = rawExpected; // this rest action doesn't load data` ];

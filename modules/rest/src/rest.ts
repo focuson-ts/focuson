@@ -1,7 +1,7 @@
 import { reqFor, Tags, UrlConfig } from "@focuson/template";
 import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RequiredCopyDetails, RestAction, RestStateChange, safeArray, safeObject, sortedEntries, toArray } from "@focuson/utils";
-import { displayTransformsInState, identityOptics, lensBuilder, Lenses, massTransform, Optional, parsePath, Transform } from "@focuson/lens";
-import { ChangeCommand, CopyResultCommand, DeleteCommand, MessageCommand, processChangeCommandProcessor, restChangeCommandProcessors, RestAndInputProcessorsConfig, RestChangeCommands } from "./changeCommands";
+import { identityOptics, lensBuilder, Lenses, massTransform, Optional, parsePath, Transform } from "@focuson/lens";
+import { ChangeCommand, CopyResultCommand, DeleteCommand, MessageCommand, processChangeCommandProcessor, RestAndInputProcessorsConfig, restChangeCommandProcessors, RestChangeCommands } from "./changeCommands";
 
 
 export interface RestDebug {
@@ -47,10 +47,12 @@ export const defaultRestAction: RestTypeDetails = {
   'createWithoutFetch': { name: 'create', method: 'POST', query: 'Mutation', params: { needsObj: true }, output: { needsObj: false, needsPling: false }, graphQPrefix: 'createWithoutFetch', graphQlPostfix: '', message: true, annotation: "PostMapping" },
   'delete': { name: 'delete', method: 'DELETE', query: 'Mutation', params: { needsId: true }, output: { needsObj: false }, graphQPrefix: 'delete', graphQlPostfix: '', message: true, annotation: "DeleteMapping" },
 
-  'state': { name: 'state', method: 'POST', query: 'Mutation',
+  'state': {
+    name: 'state', method: 'POST', query: 'Mutation',
     params: { needsId: true, needsObj: true },
     output: { needsObj: false },
-    graphQPrefix: 'state', graphQlPostfix: '', message: true, annotation: "PostMapping" },
+    graphQPrefix: 'state', graphQlPostfix: '', message: true, annotation: "PostMapping"
+  },
 }
 export function restActionToDetails ( r: RestAction ): RestActionDetail {
   if ( typeof r === 'string' ) return defaultRestAction[ r ]
@@ -78,10 +80,12 @@ export function getRestTypeDetails ( a: RestAction ): RestActionDetail {
   return isRestStateChange ( a ) ? { ...defaultRestAction[ 'state' ], graphQlPostfix: a.state } : defaultRestAction[ a ];
 }
 export type emptyType = {}
-export type StateAccessDetails = { url: string, params: NameAnd<emptyType> } // we don't know what the params are, we just need the names
+
+export type UrlAndParamsForState = { url: string, params: string[] } // we don't know what the params are, we just need the names
+export type StateAccessDetails<S> = UrlAndParamsForState & { bodyFrom?: Optional<S, any>; }
 export interface OneRestDetails<S, FD, D, MSGs> extends UrlConfig<S, FD, D> {
   url: string;
-  states?: NameAnd<StateAccessDetails>,
+  states?: NameAnd<StateAccessDetails<S>>,
   extractData: ( status: number | undefined, body: any ) => D,
   messages: ( status: number | undefined, body: any ) => MSGs[];//often the returning value will have messages in it. Usually a is of type Domain. When the rest action is Delete there may be no object returned, but might be MSGs
 }
@@ -152,7 +156,7 @@ export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]>, path
   return massTransform ( s, ...txs )
 };
 
-export function getUrlForRestAction ( restAction: RestAction, url: string, states?: NameAnd<StateAccessDetails> ): string {
+export function getUrlForRestAction<S> ( restAction: RestAction, url: string, states?: NameAnd<UrlAndParamsForState> ): string {
   if ( isRestStateChange ( restAction ) ) {
     const url: string | undefined = safeObject ( states )[ restAction.state ]?.url
     if ( url === undefined ) throw Error ( `Requested state change is ${restAction.state}. The legal list is [${sortedEntries ( states ).map ( x => x[ 0 ] )}]\nThe base url is ${url}` )
@@ -165,6 +169,18 @@ function findStateDetails<S, MSGS> ( one: OneRestDetails<S, any, any, MSGS>, res
   if ( result === undefined ) throw new Error ( `Illegal state [${restAction.state}] requested. Legal values are [${Object.keys ( safeObject ( one.states ) )}]` )
   return result;
 }
+function makeModifiedUrlConfig<S, MSGS> ( restAction: "get" | "updateWithoutFetch" | "update" | "create" | "createWithoutFetch" | "delete" | RestStateChange, one: OneRestDetails<S, any, any, MSGS>, url: string, fdLens: Optional<S, any> ) {
+  if ( isRestStateChange ( restAction ) ) {
+    const details = findStateDetails ( one, restAction );
+    if ( details ) {
+      const ids = safeArray ( details?.params )
+      const bodyFrom = details.bodyFrom ? details.bodyFrom : one.bodyFrom
+      return { ...one, url, ids, fdLens, bodyFrom };
+    }
+  }
+  return one
+}
+
 export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Details,
                                                                          commands: RestCommand[],
                                                                          urlMutatorForRest: ( r: RestAction, url: string ) => string,
@@ -186,8 +202,7 @@ export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Deta
       let rawUrl = getUrlForRestAction ( restAction, one.url, one.states );
       let url = urlMutatorForRest ( restAction, rawUrl );
       if ( debug ) console.log ( "restReq-url", url )
-      const ids = isRestStateChange ( restAction ) ? Object.keys ( safeObject ( findStateDetails ( one, restAction )?.params ) ) : one.ids
-      const adjustedUrlConfig: OneRestDetails<S, any, any, MSGS> = { ...one, url, ids, fdLens }
+      const adjustedUrlConfig = makeModifiedUrlConfig ( restAction, one, url, fdLens );
       let request = reqFor ( adjustedUrlConfig, restAction ) ( s ) ( url );
       if ( debug ) console.log ( "restReq-req", request )
       return [ command, one, ...request ]

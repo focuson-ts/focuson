@@ -31,7 +31,7 @@ export const addStringToStartOfFirst = ( str: string ) => ( ss: string[] ): stri
 export const addStringToEndOfList = ( str: string ) => ( ss: string[] ): string[] =>
   ss.map ( ( s, i ) => i === ss.length - 1 ? s + str : s );
 export const addBrackets = ( strOpen: string, strClose: string ) => ( ss: string[] ): string[] =>
-  addStringToStartOfFirst ( strOpen ) ( addStringToEndOfList ( strClose ) ( ss ) )
+  ss.length === 0 ? [ '{}' ] : addStringToStartOfFirst ( strOpen ) ( addStringToEndOfList ( strClose ) ( ss ) )
 
 export const indent = ( path: string[], s: string ): string => ' '.repeat ( path.length * 2 + 2 ) + s;
 export const indentList = ( ss: string[] ): string[] => ss.map ( s => '  ' + s )
