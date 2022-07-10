@@ -2,7 +2,6 @@ import { ExampleDataD, ExampleRepeatingD } from "../common";
 import { BooleanDD, ManyLineStringDD, NatNumDd, PrimitiveDD, StringDD, stringPrimDD, StringPrimitiveDD } from "../../common/dataD";
 import { yesNoDD } from "../SingleOccupation/singleOccupation.dataD";
 import { LabelAndDropDownCD, LabelAndDropDownFromDataCD, LabelAndDropDownWithVaryingContentCD } from "../../common/componentsD";
-import { currencyDD } from "../payments/payments.restD";
 
 export const reasonsEnum = { Reason1: 'Because I wanted to', Reason2: 'I just di d it', Reason3: "Who cares" }
 export const reasonDD: PrimitiveDD = {
@@ -22,7 +21,14 @@ const nextActionDD: PrimitiveDD = {
   displayParams: { pleaseSelect: 'Select...' },
   // enum: { action1: 'Shoot the messenger', action2: 'Throw a paddy', action3: "Say thank you" }
 }
-
+export const currencyDD: ExampleDataD = {
+  name: 'CurrencyForReadonly',
+  description: "id and name of the currency ",
+  structure: {
+    id: { dataDD: StringDD, sample: [ 'E', 'GBP' ] },
+    currency: { dataDD: StringDD, sample: [ 'Euro', 'GBP' ] },
+  }
+}
 export const currencyListDD: ExampleRepeatingD = {
   name: 'CurrencyDropDownForReadOnly',
   dataDD: currencyDD,

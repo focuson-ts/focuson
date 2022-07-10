@@ -26,9 +26,21 @@ describe ( "findMustConstructForRest", () => {
     let actual = findMustConstructForRest ( [ eAccountsSummaryRestD, createPlanRestD, eAccountsSummaryRestD, createPlanRestD ] );
     let simpler = { objs: actual.objs.map ( x => x.name ), input: actual.input.map ( x => x.name ) }
     expect ( simpler ).toEqual ( {
-      "input": [ "CreatePlan" ],
-      "objs": [ "BalancesAndMonthlyCost", "CreatePlan", "EAccountsSummary", "EAccountsSummaryTable", "EAccountSummary" ]
-    } )
+      "input": [
+        "BalancesAndMonthlyCost",
+        "CreatePlan",
+        "EAccountsSummary",
+        "EAccountsSummaryTable",
+        "EAccountSummary"
+      ],
+      "objs": [
+        "BalancesAndMonthlyCost",
+        "CreatePlan",
+        "EAccountsSummary",
+        "EAccountsSummaryTable",
+        "EAccountSummary"
+      ]
+    })
   } )
 } )
 

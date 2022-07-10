@@ -1,6 +1,7 @@
 import { makeGraphQlQueryForOneAction, makeJavaVariablesForGraphQlQuery, makeQuery } from "../codegen/makeGraphQlQuery";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { addressRestD } from "../example/postCodeDemo/addressSearch.restD";
+import { chequeCreditBooksRestD } from "../example/chequeCreditBooks/chequeCreditBooks.restD";
 
 
 describe ( "Making GraphQl from RestD", () => {
@@ -87,8 +88,8 @@ describe ( "Making GraphQl from RestD", () => {
       "      '    }'+",
       "      '  }'",
       "+'}';}",
-      "public static  String state_invalidateEAccountsSummary(int accountId,int clientRef,String dbName,String employeeType){ ",
-      "  return'mutation{stateinvalidateEAccountsSummary(' + 'accountId:' + accountId  + ',' + 'clientRef:' + clientRef  + ',' + 'dbName:' + '\\'' + dbName + '\\''  + ',' + 'employeeType:' + '\\'' + employeeType + '\\'' + ')}';",
+      "public static  String state_invalidateEAccountsSummary(int accountId,int clientRef,String dbName,String employeeType, String obj){ ",
+      "  return'mutation{stateinvalidateEAccountsSummary(' + 'accountId:' + accountId  + ',' + 'clientRef:' + clientRef  + ',' + 'dbName:' + '\\'' + dbName + '\\''  + ',' + 'employeeType:' + '\\'' + employeeType + '\\''  + ', obj:' + obj + ')}';",
       "}"
     ])
   } )
@@ -109,12 +110,19 @@ describe ( "Making GraphQl from RestD", () => {
     ] )
   } )
 
-  it ( "should make a query for state change, returning a boolean so no {}", () => {
-    expect ( makeGraphQlQueryForOneAction ('somePrefix', eAccountsSummaryRestD ) ( { state: 'invalidate' } ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "public static  String state_invalidateEAccountsSummary(int accountId,int clientRef,String dbName,String employeeType){ ",
-      "  return'mutation{stateinvalidateEAccountsSummary(' + 'accountId:' + accountId  + ',' + 'clientRef:' + clientRef  + ',' + 'dbName:' + '\\'' + dbName + '\\''  + ',' + 'employeeType:' + '\\'' + employeeType + '\\'' + ')}';",
+  it ( "should make a query for state change, returning a boolean", () => {
+    expect ( makeGraphQlQueryForOneAction ('somePrefix', chequeCreditBooksRestD ) ( { state: 'cancel' } ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+      "public static  String state_cancelChequeCreditbooks(int accountId,int brandRef,int clientRef, String obj){ ",
+      "  return'mutation{statecancelChequeCreditbooks(' + 'accountId:' + accountId  + ',' + 'brandRef:' + brandRef  + ',' + 'clientRef:' + clientRef  + ', obj:' + obj + ')}';",
       "}"
     ] )
+  } )
+  it ( "should make a query for state change, returning a 'returns'", () => {
+    expect ( makeGraphQlQueryForOneAction ('somePrefix', eAccountsSummaryRestD ) ( { state: 'invalidate' } ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+      "public static  String state_invalidateEAccountsSummary(int accountId,int clientRef,String dbName,String employeeType, String obj){ ",
+      "  return'mutation{stateinvalidateEAccountsSummary(' + 'accountId:' + accountId  + ',' + 'clientRef:' + clientRef  + ',' + 'dbName:' + '\\'' + dbName + '\\''  + ',' + 'employeeType:' + '\\'' + employeeType + '\\''  + ', obj:' + obj + ')}';",
+      "}"
+    ])
   } )
 
 } )

@@ -1,6 +1,6 @@
 import { ExampleMainPage, ExampleModalPage } from "../common";
-import { PaymentDD, PaymentsLaunchDD, SummaryOfPaymentsLineDD } from "./payments.dataD";
-import { currencyListDD, currencyRD, newPaymentsRD, summaryOfPreviousPaymentsRD } from "./payments.restD";
+import { PaymentDD, PaymentsLaunchDD, SummaryOfPaymentsLineDD, ValidatedPayeeDetailsDD } from "./payments.dataD";
+import { currencyListDD, currencyRD, newPaymentsRD, summaryOfPreviousPaymentsRD, ValidatePayeeRD } from "./payments.restD";
 import { NatNumDd } from "../../common/dataD";
 
 // export const ChargeDetailsPD: ExampleModalPage = {
@@ -21,6 +21,7 @@ export const EditPaymentsPD: ExampleModalPage = {
   buttons: {
     commit: { control: 'ModalCommitButton', text: 'save' },
     cancel: { control: 'ModalCancelButton', text: 'back' },
+    validate: {control: 'RestButton', restName: 'validatePayee', action: {state: 'validate'}, validate: false}
     // chargeDetails: { control: 'ModalButton', modal: ChargeDetailsPD, mode: 'edit', focusOn: '~/onePayment/chargeDetails',
     // createEmptyIfUndefined: ChargeDetailsDD
     // },
@@ -38,13 +39,15 @@ export const PaymentsPageD: ExampleMainPage = {
     onePayment: { dataDD: PaymentDD },
     selectedPaymentIndex: { dataDD: NatNumDd },
     selectedPayment: { dataDD: SummaryOfPaymentsLineDD },
-    currency: { dataDD: currencyListDD }
+    currency: { dataDD: currencyListDD },
+    validatedPayeeDetails:{dataDD: ValidatedPayeeDetailsDD}
   },
   modals: [ { modal: EditPaymentsPD } ],
   rest: {
     listOfPreviousPayments: { rest: summaryOfPreviousPaymentsRD, fetcher: true, targetFromPath: '~/summary/summaryOfPaymentsTable' },
     newPayments: { rest: newPaymentsRD, targetFromPath: '~/onePayment' },
     currency: { rest: currencyRD, targetFromPath: '~/currency', fetcher: true },
+    validatePayee: {rest: ValidatePayeeRD, targetFromPath: '~/validatedPayeeDetails'}
   },
   guards: {
     tableItemSelected: { condition: "isDefined", path: '~/selectedPaymentIndex' }

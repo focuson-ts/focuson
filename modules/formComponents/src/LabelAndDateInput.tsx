@@ -29,7 +29,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
   const dateFormatL = dateFormat ? dateFormat : 'yyyy/MM/dd'
 
   const datesToExclude = datesExcluded?.optJsonOr ( [] ).map ( d => d[ fieldNameInHolidays ? fieldNameInHolidays : 'holiday' ] )
-  const datesToExcludeAsDateType = safeArray ( datesToExclude ).map ( d => parseDate(dateFormat) ( d ) )
+  const datesToExcludeAsDateType = safeArray ( datesToExclude ).map ( d => parseDate(dateFormatL) ( d ) )
 
   const isHoliday = ( date: Date, datesList: string[] ) => {
     return datesList.find ( ( d: string ) => new Date ( d ).toDateString () === date.toDateString () );

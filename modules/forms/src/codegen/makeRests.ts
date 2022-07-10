@@ -2,11 +2,12 @@ import { AllLensRestParams, findIds, isRestLens, LensRestParam } from "../common
 import { domainName, domainsFileName, pageDomainName, restDetailsName, restFileName } from "./names";
 import { TSParams } from "./config";
 import { allRestAndActions, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
-import { createSimpleMessage, safeObject, SimpleMessage, sortedEntries, testDateFn, unique } from "@focuson/utils";
+import { NameAnd, safeObject, SimpleMessage, sortedEntries, unique } from "@focuson/utils";
 import { addStringToEndOfAllButLast, indentList, lensFocusQueryFor } from "./codegen";
 import { lensFocusQueryWithTildaFromPage } from "./lens";
 
-
+const cleanState = ( s: NameAnd<any> ): any =>
+  Object.fromEntries ( Object.entries ( safeObject ( s ) ).map ( ( [ name, value ] ) => [ name, { ...value, returns: undefined, mergeDataOnResponse: undefined } ] ) );
 export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restName: string, r: RestDefnInPageProperties<G> ): string[] => {
   const [ ids, resourceIds ] = findIds ( r.rest )
   let pageDomain = `${params.domainsFile}.${pageDomainName ( p )}`;
@@ -35,12 +36,8 @@ export const makeRest = <B, G> ( params: TSParams, p: PageD<B, G> ) => ( restNam
     `    resourceId:  ${JSON.stringify ( resourceIds )},`,
     `    extractData: ${params.extractData},`,
     `    messages: extractMessages(dateFn),`,
-    // "    messages: ( status: number | undefined, body: any ): SimpleMessage[] => status == undefined ?",
-    // "      [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify ( body )}`, testDateFn () ) ] :",
-    // "      [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],",
-    // "    messages: ( status: number, body: any ): SimpleMessage[] => [ createSimpleMessage ( 'info', `${status} /${JSON.stringify ( body )}`, dateFn () ) ],",
     `    url: "${r.rest.url}",`,
-    `    states : ${JSON.stringify ( states )}`,
+    `    states : ${JSON.stringify ( cleanState ( states ) )}`,
     `  }`,
     `}`,
     ``,

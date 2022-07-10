@@ -126,7 +126,9 @@ export const ExpressDetailsDD: ExampleDataD = {
   structure: {
     payeeBank: { dataDD: PayeeBankDD },
     payeeDetails: { dataDD: PayeeDetailsDD },
-    paymentType: { dataDD: ChapsPaymentTypeDD }
+    paymentType: { dataDD: ChapsPaymentTypeDD },
+    payeeStatus: {dataDD: StringDD}
+
   }
 }
 export const ChapDetailsDD: ExampleDataD = {
@@ -175,5 +177,14 @@ export const PaymentsLaunchDD: ExampleDataD = {
   structure: {
     payment: { dataDD: PaymentDD },
     summaryOfPaymentsTable: { dataDD: SummaryOfPaymentsTableDD }
+  }
+}
+
+export const ValidatedPayeeDetailsDD: ExampleDataD = {
+  name: 'ValidatedPayeeDetails',
+  description: '',
+  structure: {
+    payeeStatus: {dataDD: StringDD}
+
   }
 }

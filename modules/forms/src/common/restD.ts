@@ -108,9 +108,11 @@ export interface OneTableInsertSqlStrategyForIds {
   idField: string;
 }
 
-export interface RestStateDetails {
+export type RestStateDetails = {
   url: string;
-  params: RestParams
+  params: RestParams;
+  returns?: string[]
+  mergeDataOnResponse?: boolean
 }
 
 export interface RestD<G> {
@@ -231,7 +233,7 @@ export function flatMapParams<T> ( pds: MainPageD<any, any>[], fn: ( p: MainPage
   const fromRest: T[] = flatMapRest ( pds, ( page ) => ( rest, restName ) =>
     sortedEntries ( rest.params ).flatMap ( ( [ name, c ] ) => fn ( page, restName, rest, name, c ) ) )
   const fromState: T[] = flatMapRest ( pds, ( page ) => ( rest, restName ) =>
-    sortedEntries ( rest.states ).flatMap ( ( [ name, s ] ) => sortedEntries(s.params).flatMap( ( [ name, p ] ) => (fn ( page, restName, rest, name, p ) ) )))
+    sortedEntries ( rest.states ).flatMap ( ( [ name, s ] ) => sortedEntries ( s.params ).flatMap ( ( [ name, p ] ) => (fn ( page, restName, rest, name, p )) ) ) )
   return [ ...fromRest, ...fromPage, ...fromState ]
 }
 export function flatMapCommonParams<T> ( pds: MainPageD<any, any>[], fn: ( p: MainPageD<any, any>, restName: string | undefined, r: RestD<any> | undefined, name: string, c: CommonLensRestParam<any> ) => T[] ): T[] {

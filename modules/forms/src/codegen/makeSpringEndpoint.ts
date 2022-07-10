@@ -78,8 +78,8 @@ export function callMutationsCode<G> ( p: MainPageD<any, G>, restName: string, r
     toArray ( ad.mutateBy ).flatMap ( ( md, i ) => {
       return isMessageMutation ( md ) ?
         [ `msgs.${md.level ? md.level : 'info'}("${md.message}");` ] : [
-        `${paramsDeclaration ( md, i )}${mutationVariableName ( r, restAction )}.${mutationMethodName ( r, restActionForName ( restAction ), md, '' + i )}(connection,${[ 'msgs',
-          dbNameString, ...allInputParamNames ( parametersFor ( md ) ) ].join ( ',' )});`,
+          `${paramsDeclaration ( md, i )}${mutationVariableName ( r, restAction )}.${mutationMethodName ( r, restActionForName ( restAction ), md, '' + i )}(connection,${[ 'msgs',
+            dbNameString, ...allInputParamNames ( parametersFor ( md ) ) ].join ( ',' )});`,
           ...outputParamsDeclaration ( md, i ),
           ...addOutputParamsToMessages ( md )
         ];
@@ -91,6 +91,22 @@ export function endpointAnnotation<G> ( params: JavaWiringParams, p: MainPageD<a
   const notes = purpose === 'endpoint' ? r.notes : undefined
   const fullParams = { ...params, ...r, restAction, purpose, notes, description, restName }
   return safeArray ( params.endpointAnnotations ).map ( a => applyToTemplateOrUndefinedIfNoParamsPresent ( a, fullParams ) ).flatMap ( s => s ? [ s ] : [] )
+}
+function makeReturnStatement<G> ( params: JavaWiringParams, errorPrefix: string, r: RestD<G>, restAction: RestAction, dbNameString: string, selectionFromData: string ) {
+  if ( isRestStateChange ( restAction ) ) {
+    const stateDetails = safeObject ( r.states )[ restAction.state ]
+    if ( stateDetails !== undefined ) {
+      if ( stateDetails.returns ) {
+        return [ `        Map resultMap= new HashMap();`,
+          ...stateDetails.returns.map ( r => `        resultMap.put("${r}",${r});` ),
+          `         return  ResponseEntity.ok(msgs.result(resultMap));`
+        ]
+      }
+    }
+  }
+  return restActionToDetails ( restAction ).output.needsObj ?
+    [ `          return Transform.result(graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( errorPrefix, r, restAction )}), ${selectionFromData}, msgs);` ] :
+    [ `         return  ResponseEntity.ok(msgs.emptyResult());` ];
 }
 function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restName: string, r: RestD<G>, restAction: RestAction ): string[] {
   let safeParams: RestParams = safeObject ( r.params );
@@ -106,9 +122,7 @@ function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restN
   const openConnection = callMutations.length > 1 ? [ `        Connection connection = dataSource.getConnection(getClass());`,
     `        try  {`, ] : []
   const closeConnection = callMutations.length > 1 ? [ `        } finally {dataSource.close(getClass(),connection);}`, ] : []
-  let resultStatement = restActionToDetails ( restAction ).output.needsObj ?
-    [ `          return Transform.result(graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( errorPrefix, r, restAction )}), ${selectionFromData}, msgs);` ] :
-    [ `         return  ResponseEntity.ok(msgs.emptyResult());` ];
+  let resultStatement = makeReturnStatement ( params, errorPrefix, r, restAction, dbNameString, selectionFromData );
   return [
     ...indentList ( endpointAnnotation ( params, p, restName, r, restAction, 'endpoint' ) ),
     `    @${restTypeDetails.annotation}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,
@@ -186,6 +200,7 @@ export function makeSpringEndpointsFor<B, G> ( params: JavaWiringParams, p: Main
     `import ${params.thePackage}.${params.utilsPackage}.Messages;`,
     `import java.util.List;`,
     `import java.util.Map;`,
+    `import java.util.HashMap;`,
     `import java.util.Arrays;`,
     ...importForTubles ( params ),
     ...importForSql,

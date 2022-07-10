@@ -1,6 +1,7 @@
 import { ExampleMainPage } from "../common";
 import { currencyListDD, readonlyDD } from "./readonly.dataD";
-import { currencyRD } from "../payments/payments.restD";
+import { currencyRD } from "./readOnly.restD";
+
 
 
 export const ReadOnlyPageD: ExampleMainPage = {
@@ -14,7 +15,7 @@ export const ReadOnlyPageD: ExampleMainPage = {
   modals: [], modes: [ 'edit' ],
   name: "ReadOnly", pageType: 'MainPage',
   rest: {
-    currency: { rest: currencyRD, targetFromPath: '~/currency', fetcher: true },
+    currencyForReadOnly: { rest: currencyRD, targetFromPath: '~/currency', fetcher: true },
   },
   buttons: {
   }

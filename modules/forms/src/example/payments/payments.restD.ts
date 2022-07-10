@@ -1,9 +1,9 @@
 import { ExampleDataD, ExampleRepeatingD, ExampleRestD } from "../common";
-import { PaymentDD, SummaryOfPaymentsLineDD, SummaryOfPaymentsTableDD } from "./payments.dataD";
+import { PaymentDD, SummaryOfPaymentsTableDD, ValidatedPayeeDetailsDD } from "./payments.dataD";
 import { onlySchema } from "../database/tableNames";
-import { commonIds, fromCommonIds } from "../commonIds";
+import { commonIds } from "../commonIds";
 import { StringDD } from "../../common/dataD";
-import { LabelAndDropDownCD, LabelAndDropDownFromDataCD } from "../../common/componentsD";
+import { LabelAndDropDownFromDataCD } from "../../common/componentsD";
 
 export const summaryOfPreviousPaymentsRD: ExampleRestD = {
   params: {},
@@ -135,4 +135,22 @@ export const currencyRD: ExampleRestD = {
   namePrefix: 'oneLine',
   url: '/api/currencies/?{query}',
   actions: [ 'get' ]
+}
+export const ValidatePayeeRD: ExampleRestD = {
+  params: {},
+  dataDD: ValidatedPayeeDetailsDD,
+  url: '/api/payeedetails/validate?{query}',
+  actions: [ { state: 'validate' } ],
+  states: {
+    validate: { params: {}, url: '/api/payeedetails/validate?{query}', returns: [ 'payeeStatus' ] }
+  },
+  mutations: [
+    {
+      restAction: { state: 'validate' }, mutateBy: {
+        type: 'manual', code: 'String payeeStatus= "SUCCEEDED!!!!!";', makeMock: false,  params: [
+          { type: 'output', name: 'payeeStatus', javaType: 'String' }
+        ]
+      }
+    }
+  ]
 }

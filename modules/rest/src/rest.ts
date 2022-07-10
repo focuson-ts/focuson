@@ -46,7 +46,11 @@ export const defaultRestAction: RestTypeDetails = {
   'create': { name: 'create', method: 'POST', query: 'Mutation', params: { needsObj: true }, output: { needsObj: true, needsPling: true }, graphQPrefix: 'create', graphQlPostfix: '', message: true, annotation: "PostMapping" },
   'createWithoutFetch': { name: 'create', method: 'POST', query: 'Mutation', params: { needsObj: true }, output: { needsObj: false, needsPling: false }, graphQPrefix: 'createWithoutFetch', graphQlPostfix: '', message: true, annotation: "PostMapping" },
   'delete': { name: 'delete', method: 'DELETE', query: 'Mutation', params: { needsId: true }, output: { needsObj: false }, graphQPrefix: 'delete', graphQlPostfix: '', message: true, annotation: "DeleteMapping" },
-  'state': { name: 'state', method: 'POST', query: 'Mutation', params: { needsId: true }, output: { needsObj: false }, graphQPrefix: 'state', graphQlPostfix: '', message: true, annotation: "PostMapping" },
+
+  'state': { name: 'state', method: 'POST', query: 'Mutation',
+    params: { needsId: true, needsObj: true },
+    output: { needsObj: false },
+    graphQPrefix: 'state', graphQlPostfix: '', message: true, annotation: "PostMapping" },
 }
 export function restActionToDetails ( r: RestAction ): RestActionDetail {
   if ( typeof r === 'string' ) return defaultRestAction[ r ]
