@@ -111,6 +111,7 @@ export interface OneTableInsertSqlStrategyForIds {
 export type RestStateDetails = {
   url: string;
   params: RestParams;
+  requestBodyFrom?: string;
   returns?: string[]
   mergeDataOnResponse?: boolean
 }

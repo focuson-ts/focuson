@@ -35,6 +35,7 @@ export interface UrlConfig<S, FD, D> {
   cd: NameAndLens<S>;
   fdd: NameAndLens<FD>;
   fdLens: Optional<S, FD>;
+  bodyFrom?: Optional<S, any>; //defaults to fdLens
   dLens: Optional<FD, D>;
   resourceId: string [];
   ids: string [];
@@ -49,9 +50,9 @@ export interface TagOps {
 }
 
 
-export const tags: TagOpsFn<[ string, string | undefined ][]> = ( urlConfig, restAction ) => <S> ( s ) => {
+export const tags: TagOpsFn<[ string, string | undefined ][]> = <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, restAction: RestAction ) => ( s: S ) => {
   const names = needsId ( restAction ) ? [ ...urlConfig.resourceId, ...urlConfig.ids ] : urlConfig.ids
-  return names.sort ().map ( name => [ name, onePart ( urlConfig, { failSilently: true } ) ( s, restAction ) ( name ) ] )
+  return names.sort ().map ( name => [ name, onePart<S, FD, D> ( urlConfig, { failSilently: true } ) ( s, restAction ) ( name ) ] )
 }
 
 export function nameToLens<S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, restAction: RestAction ): GetNameFn<S, any> {
@@ -84,7 +85,7 @@ export const bodyFor: TagOpsFn<RequestInit | undefined> =
                  const method = methodFor ( restAction )
                  if ( restAction === 'get' ) return undefined // || restAction === 'list'
                  if ( restAction === 'delete' || isRestStateChange ( restAction ) ) return { method }
-                 let bodyL = urlConfig.fdLens.chain ( urlConfig.dLens );
+                 let bodyL = urlConfig.bodyFrom ? urlConfig.bodyFrom : urlConfig.fdLens.chain ( urlConfig.dLens );
                  const body: any = bodyL.getOption ( s )
                  if ( body ) {
                    console.log ( "made body for ", body )
@@ -94,8 +95,8 @@ export const bodyFor: TagOpsFn<RequestInit | undefined> =
                }
 
 export const reqFor: TagOpsFn<( url: string ) => [ RequestInfo, RequestInit | undefined ]> =
-               ( urlConfig, restAction ) => <S> ( s ) =>
-                 u => [ url ( urlConfig, restAction ) ( s ) ( u ), bodyFor ( urlConfig, restAction ) ( s ) ]
+               <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, restAction: RestAction ) => ( s: S ) =>
+                 u => [ url ( urlConfig, restAction ) ( s ) ( u ), bodyFor<S, FD, D> ( urlConfig, restAction ) ( s ) ]
 
 export const tagOps: TagOps = ({ tags, reqFor });
 
@@ -120,7 +121,8 @@ export const makeAEqualsB = <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, { encod
 // }
 
 function stringify ( s: any ): string | undefined { return s !== undefined ? (typeof s === 'object') ? JSON.stringify ( s ) : s.toString () : undefined}
-const from = <S> ( n: NameAndLens<S>, name: string, s: S | undefined ): string | undefined => stringify ( n[ name ]?.getOption ( s ) )
+
+const from = <S> ( n: NameAndLens<S>, name: string, s: S | undefined ): string | undefined => stringify ( s ? n[ name ]?.getOption ( s ) : undefined )
 
 export const onePart = <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, props: MakeAEqualsBProps ) => ( s: S, restAction: RestAction ) => ( name: string ): string | undefined => {
   const { cd, fdd, fdLens } = urlConfig
@@ -141,5 +143,5 @@ export interface TagOpsProps extends MakeAEqualsBProps {
 }
 
 export function needsId ( r: RestAction ): boolean {
-  return r === 'get' ||  r === 'update' || r === 'delete' || isRestStateChange ( r )
+  return r === 'get' || r === 'update' || r === 'delete' || isRestStateChange ( r )
 }

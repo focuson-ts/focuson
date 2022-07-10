@@ -9,7 +9,8 @@ interface ChildTagTestState {
 interface TagTestState {
   a?: string | number,
   b?: any,
-  child: ChildTagTestState
+  child: ChildTagTestState;
+  bodyForParam?: { c: string, d: string }
 }
 const child: ChildTagTestState = {
   c: '3',
@@ -41,12 +42,21 @@ const urlConfig: UrlConfig<TagTestState, ChildTagTestState, string> = {
 describe ( "tags", () => {
   describe ( "for restAction get", () => {
     it ( "should return the tags found in the state from the definition in the urlConfig including the id ", () => {
-      expect ( tags ( urlConfig, 'get' ) ( state ).map ( ( [ name, s ] ) => [ name, s.replace ( /"/g, "'" ) ] ) ).toEqual ( [ "4", "1", "{'x':1}", "3" ] )
+      expect ( tags ( urlConfig, 'get' ) ( state ).map ( ( [ name, s ] ) => [ name, s?.replace ( /"/g, "'" ) ] ) ).toEqual ( [
+        [ "aId", "1" ],
+        [ "bId", "{'x':1}" ],
+        [ "cId", "3" ],
+        [ "dId", "4" ]
+      ] )
     } )
   } )
   describe ( "for restAction create", () => {
     it ( "should return the tags found in the state from the definition in the urlConfig, not including the id ", () => {
-      expect ( tags ( urlConfig, 'create' ) ( state ).map ( ( [ name, s ] ) => [ name, s.replace ( /"/g, "'" ) ] ) ).toEqual ( [ "1", "{'x':1}", "3" ] )
+      expect ( tags ( urlConfig, 'create' ) ( state ).map ( ( [ name, s ] ) => [ name, s?.replace ( /"/g, "'" ) ] ) ).toEqual ( [
+        [ "aId", "1" ],
+        [ "bId", "{'x':1}" ],
+        [ "cId", "3" ]
+      ] )
     } )
 
   } )
@@ -80,10 +90,10 @@ describe ( "url", () => {
     it ( "should return the tags found in the state from the definition in the urlConfig - including ids", () => {
       expect ( url ( urlConfig, 'get' ) ( state ) ( '/{dId}?{query}' ).replace ( /"/g, "'" ) ).toEqual ( "/4?aId=1&bId={'x':1}&cId=3&dId=4" )
     } )
-    it ("should handle the case when the data is zero", () =>{
+    it ( "should handle the case when the data is zero", () => {
       expect ( url ( urlConfig, 'get' ) ( stateWithAzero ) ( '/{dId}?{query}' ).replace ( /"/g, "'" ) ).toEqual ( "/4?aId=0&bId={'x':1}&cId=3&dId=4" )
 
-    })
+    } )
   } )
   describe ( "for restAction create", () => {
     it ( "should replace named ids ", () => {
@@ -101,7 +111,13 @@ describe ( "reqFn", () => {
   describe ( "for restAction create", () => {
     it ( "should replace named ids,  body", () => {
       expect ( reqFor ( urlConfig, 'create' ) ( simplerState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
-        [ "/1/2/3/4?aId=1&bId=2&cId=3", { "body": "someData", "method": "post" } ] )
+        [
+          "/1/2/3/4?aId=1&bId=2&cId=3",
+          {
+            "body": "\"someData\"",
+            "method": "post"
+          }
+        ] )
     } )
   } )
   describe ( "for restAction delete", () => {
@@ -117,17 +133,32 @@ describe ( "reqFn", () => {
     } )
   } )
 
-  // describe ( "for restAction list", () => {
-  //   it ( "should replace named ids, no body", () => {
-  //     expect ( reqFor ( urlConfig, 'list' ) ( simplerState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
-  //       [ "/1/2/3/4?aId=1&bId=2&cId=3", undefined ] )
-  //   } )
-  // } )
   describe ( "for restAction update", () => {
     it ( "should replace named ids,  body", () => {
       expect ( reqFor ( urlConfig, 'update' ) ( simplerState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
-        [ "/1/2/3/4?aId=1&bId=2&cId=3&dId=4", { "body": "someData", "method": "put" } ] )
+        [
+          "/1/2/3/4?aId=1&bId=2&cId=3&dId=4",
+          {
+            "body": "\"someData\"",
+            "method": "put"
+          }
+        ] )
     } )
   } )
 
+  describe ( "'bodyFrom'", () => {
+    let bodyFromState: TagTestState = { ...state, b: 2, bodyForParam: { c: 'C', d: 'D' } }
+
+    it ( "should replace named ids,  body", () => {
+      expect ( reqFor ( { ...urlConfig, bodyFrom: identityState.focusQuery ( 'bodyForParam' ) }, 'update' ) ( bodyFromState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
+        [
+          "/1/2/3/4?aId=1&bId=2&cId=3&dId=4",
+          {
+            "body": "{\"c\":\"C\",\"d\":\"D\"}", //note that the body is a string
+            "method": "put"
+          }
+        ] )
+    } )
+
+  } )
 } )

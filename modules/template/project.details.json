@@ -5,10 +5,12 @@
   "details":     {
     "ideify":       true,
     "publish":      true,
-    "links":        ["@focuson/utils"
+    "links":        [
+      "@focuson/utils"
     ],
     "extraDeps":    {},
     "extraDevDeps": {},
-    "tsc":          true
+    "tsc":          true,
+    "test":         true
   }
 }
