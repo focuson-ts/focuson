@@ -169,7 +169,7 @@ function findStateDetails<S, MSGS> ( one: OneRestDetails<S, any, any, MSGS>, res
   if ( result === undefined ) throw new Error ( `Illegal state [${restAction.state}] requested. Legal values are [${Object.keys ( safeObject ( one.states ) )}]` )
   return result;
 }
-function makeModifiedUrlConfig<S, MSGS> ( restAction: "get" | "updateWithoutFetch" | "update" | "create" | "createWithoutFetch" | "delete" | RestStateChange, one: OneRestDetails<S, any, any, MSGS>, url: string, fdLens: Optional<S, any> ) {
+function makeModifiedUrlConfig<S, MSGS> ( restAction: RestAction, one: OneRestDetails<S, any, any, MSGS>, url: string, fdLens: Optional<S, any> ) {
   if ( isRestStateChange ( restAction ) ) {
     const details = findStateDetails ( one, restAction );
     if ( details ) {

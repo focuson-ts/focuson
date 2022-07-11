@@ -21,7 +21,8 @@ export const EditPaymentsPD: ExampleModalPage = {
   buttons: {
     commit: { control: 'ModalCommitButton', text: 'save' },
     cancel: { control: 'ModalCancelButton', text: 'back' },
-    validate: {control: 'RestButton', restName: 'validatePayee', action: {state: 'validate'}, validate: false}
+    validate: {control: 'RestButton', restName: 'validatePayee', action: {state: 'validate'}, validate: false,
+      copyOnSuccess: {from: 'payeeStatus', to: '~/singlePayment/payeeStatus'}}
     // chargeDetails: { control: 'ModalButton', modal: ChargeDetailsPD, mode: 'edit', focusOn: '~/onePayment/chargeDetails',
     // createEmptyIfUndefined: ChargeDetailsDD
     // },
