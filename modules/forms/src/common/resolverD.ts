@@ -53,7 +53,7 @@ export function parametersFor ( m: MutationDetail ): MutationParam[] {
 
 export function getMakeMock(m: MutationDetail) : boolean {
   if (isMessageMutation(m)) return false
-  return m.makeMock ? m.makeMock : true
+  return m.makeMock === undefined? false :  m.makeMock
 }
 export type MutationDetail = StoredProcedureMutation |
   SqlMutation | SqlMutationThatIsAList |
@@ -298,7 +298,8 @@ export const RSGetterForJavaType = {
   Integer: 'getInt',
   Double: 'getDouble',
   Object: 'getObject',
-  Date: 'getDate'
+  Date: 'getDate',
+  'Map<String,Object>': undefined
 }
 
 export interface IntegerMutationParam {

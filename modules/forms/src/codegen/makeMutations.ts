@@ -60,7 +60,8 @@ export function mockReturnStatement ( outputs: OutputMutationParam[] ): string {
 
 function commonIfDbNameBlock<G> ( r: RestD<G>, paramsA: MutationParam[], name: string, m: MutationDetail, index: string, includeMockIf: boolean ) {
   const paramsForLog = paramsA.length === 0 ? '' : paramsA.map ( m => displayParam ( m ).replace ( /"/g, "'" ) ).join ( ", " ) + '+';
-  return includeMockIf && getMakeMock ( m ) ? [ `        if (dbName.equals(IFetcher.mock)) {`,
+  let makeMock = includeMockIf && getMakeMock ( m );
+  return makeMock ? [ `        if (dbName.equals(IFetcher.mock)) {`,
     `           System.out.println("Mock audit: ${mutationMethodName ( r, name, m, index )}( ${paramsForLog} )");`,
     `           ${mockReturnStatement ( allOutputParams ( paramsA ) )}`,
     `    }`,
@@ -92,7 +93,9 @@ export function getFromResultSetPutInMap ( errorPrefix: string, map: string, fro
 
 export function addFormat ( errorPrefix: string, datePattern: string | undefined, javaType: JavaTypePrimitive, from: string, argument: string | number ): string {
   const arg = typeof argument === 'number' ? argument : `"${argument}"`
-  const body = `${from}.${RSGetterForJavaType[ javaType ]}(${arg})`;
+  let rsGetter = RSGetterForJavaType[ javaType ];
+  if ( rsGetter === undefined ) throw Error ( `${errorPrefix} Trying to do an rsGetter and the field is a ${javaType} ` )
+  const body = `${from}.${rsGetter}(${arg})`;
   if ( !datePattern ) return body
   switch ( javaType ) {
     case "String":

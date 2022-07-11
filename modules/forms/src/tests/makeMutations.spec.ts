@@ -8,7 +8,7 @@ import { IntegerMutationParam, MutationParam, NullMutationParam, OutputForManual
 import { fromCommonIds } from "../example/commonIds";
 import { safeArray } from "@focuson/utils";
 import { PaymentsPageD } from "../example/payments/payments.pageD";
-import { newPaymentsRD } from "../example/payments/payments.restD";
+import { newPaymentsRD, ValidatePayeeRD } from "../example/payments/payments.restD";
 
 const stringMP: StringMutationParam = { type: 'string', value: 'someString' }
 const integerMP: IntegerMutationParam = { type: "integer", value: 123 }
@@ -331,4 +331,45 @@ describe ( "makeMutations", () => {
       "}"
     ])
   } )
+
+  it ("shouldn't make mock in message types when makeMock false selected", () =>{
+    expect ( makeMutations ( paramsForTest, PaymentsPageD, 'newPayments', ValidatePayeeRD, safeArray ( ValidatePayeeRD.mutations )[ 0 ] ) ).toEqual ( [
+      "package focuson.data.mutator.Payments;",
+      "",
+      "import focuson.data.fetchers.IFetcher;",
+      "import org.springframework.stereotype.Component;",
+      "import org.springframework.beans.factory.annotation.Autowired;",
+      "",
+      "import focuson.data.utils.FocusonNotFound404Exception;",
+      "import focuson.data.utils.DateFormatter;",
+      "import java.util.Map;",
+      "import java.util.HashMap;",
+      "import java.util.ArrayList;",
+      "import java.util.List;",
+      "import java.util.Date;",
+      "import java.sql.CallableStatement;",
+      "import java.sql.PreparedStatement;",
+      "import java.sql.ResultSet;",
+      "import java.sql.Connection;",
+      "import java.sql.SQLException;",
+      "import java.text.SimpleDateFormat;",
+      "import focuson.data.utils.IOGNL;",
+      "import focuson.data.utils.Messages;",
+      "import focuson.data.mutator.utils.Tuple2;",
+      "@Component",
+      "public class ValidatedPayeeDetails_state_validateMutation {",
+      "",
+      "    @Autowired IOGNL ognlForBodyAsJson;",
+      "//If you have a compiler error in the type here, did you match the types of the output params in your manual code with the declared types in the .restD?",
+      "    public String ValidatedPayeeDetails_state_validate_undefined0(Connection connection, Messages msgs, Object dbName) throws SQLException {",
+      "      String payeeStatus= \"SUCCEEDED!!!!!\";",
+      "      return payeeStatus;",
+      "  }",
+      "",
+      "}"
+    ])
+
+
+  })
+
 } )
