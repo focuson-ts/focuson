@@ -18,15 +18,15 @@ export const mutateStateAddingMessagesFromSource = <S, SOURCE, MSG> ( messageL: 
   };
 
 
-export const extractMessages = ( dataFn: DateFn ) => ( status: number | undefined, body: any ) => {
+export const extractMessages = ( dateFn: DateFn ) => ( status: number | undefined, body: any ) => {
   function fromHeaderOrMessages ( m: any ) {
     if ( m === undefined ) return []
-    const fromOne = ( level: SimpleMessageLevel ) => toArray ( m?.[ level ] ).map ( stringToSimpleMsg ( dataFn, level ) );
+    const fromOne = ( level: SimpleMessageLevel ) => toArray ( m?.[ level ] ).map ( stringToSimpleMsg ( dateFn, level ) );
     return [ ...fromOne ( 'info' ), ...fromOne ( 'error' ), ...fromOne ( 'warning' ) ]
   }
-  if ( status === undefined ) return [ createSimpleMessage ( 'error', `Cannot connect.`, testDateFn () ) ]
+  if ( status === undefined ) return [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify(body)}`, dateFn() ) ]
   let messages = [ ...fromHeaderOrMessages ( body?.messages ), ...fromHeaderOrMessages ( body?.headerMessages ) ];
   if ( status < 400 || status == 404 || messages.length > 0 ) return messages
-  return [ stringToSimpleMsg ( dataFn, 'error' ) ( `${status} returned and no messages` ) ];
+  return [ stringToSimpleMsg ( dateFn, 'error' ) ( `${status} returned and no messages` ) ];
 };
 

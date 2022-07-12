@@ -269,11 +269,9 @@ export async function restToTransforms<S, MSGS> (
   if ( debug ) console.log ( 'results from fetching rest commands', results  )
 
   const restCommandAndTxs: RestCommandAndTxs<S>[] = results.map ( res => {
-
     const txs: Transform<S, any>[] = restResultToTx ( messageL, res.one.messages, toLens, stringToMsg, res.one.extractData ) ( res );
     const trace: Transform<S, any>[] = tracing ? [ [ traceL, old => [ ...safeArray ( old ), { restCommand: res.restCommand, lensTxs: txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( s ) ) ] ) } ] ] ] : []
     const restAndTxs: RestCommandAndTxs<S> = { ...res, txs: [ ...txs, ...trace ] };
-    1
     return restAndTxs
   } )
 
