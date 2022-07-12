@@ -1,4 +1,4 @@
-import { acceptDate, DateInfo, errorsAnd, Holidays, parseDate, validateDateInfo } from "./LabelAndDateInput2";
+import { acceptDate, DateInfo, errorsAnd, firstAllowedDate, Holidays, parseDate, validateDateInfo } from "./LabelAndDateInput2";
 
 interface StateForLabelAndStateInput2 {
   dateInfo?: DateInfo;
@@ -30,6 +30,8 @@ function date ( d: Date | string[] ) {
   if ( Array.isArray ( d ) ) throw Error ()
   return d
 }
+const toDate = parseDate ( '', dateFormat )
+
 describe ( "parseDate", () => {
   it ( "should parse dates", () => {
     expect ( date ( parseDate ( 'somePrefix', 'dd/MM/yyyy' ) ( '7/11/2022' ) ).toISOString () ).toEqual ( nov7 )
@@ -68,41 +70,95 @@ describe ( "validateDateInfo", () => {
     } )
   } )
 } )
+
+describe ( "acceptDate", () => {
+  describe ( "futureOk", () => {
+    it ( "should return empty errors if the date is in the future", () => {
+      const accept = acceptDate ( dateFormat, 'GB', okDateInfo ) ( { type: 'future', dateFormat } );
+      expect ( accept ( new Date ( "2022/11/7" ) ) ).toEqual ( [] ) //today
+      expect ( accept ( new Date ( "2022/12/1" ) ) ).toEqual ( [] )
+      expect ( accept ( new Date ( "2022/10/3" ) ) ).toEqual ( [ "is before first valid date" ] )
+    } )
+  } )
+  describe ( "pastOk", () => {
+    it ( "should return empty errors if the date is in the past", () => {
+      const accept = acceptDate ( dateFormat, 'GB', okDateInfo ) ( { type: 'past', dateFormat } );
+      expect ( accept ( new Date ( "2022/11/7" ) ) ).toEqual ( [] ) //today
+      expect ( accept ( new Date ( "2022/12/1" ) ) ).toEqual ( [ 'is in the future' ] )
+      expect ( accept ( new Date ( "2022/10/3" ) ) ).toEqual ( [] )
+    } )
+  } )
+  describe ( "weekendsOK", () => {
+    it ( "should return empty errors  no matter the date if 'allowsWeekends' is true", () => {
+      const accept = acceptDate ( dateFormat, 'GB', okDateInfo ) ( { type: 'future', dateFormat, allowsWeekends: true } );
+      expect ( accept ( new Date ( "2022/11/7" ) ) ).toEqual ( [] ) //today
+      expect ( accept ( new Date ( "2022/11/12" ) ) ).toEqual ( [] )
+      expect ( accept ( new Date ( "2022/11/8" ) ) ).toEqual ( [] )
+    } )
+    it ( "should return  errors  if a weekend if 'allowsWeekends' is false ", () => {
+      const accept = acceptDate ( dateFormat, 'GB', okDateInfo ) ( { type: 'future', dateFormat, allowsWeekends: false } );
+      expect ( accept ( new Date ( "2022/11/7" ) ) ).toEqual ( [] ) //today
+      expect ( accept ( new Date ( "2022/11/12" ) ) ).toEqual ( [ "is a weekend" ] )
+      expect ( accept ( new Date ( "2022/11/8" ) ) ).toEqual ( [] )
+    } )
+    it ( "should default to allowsWeekends true", () => {
+      const accept = acceptDate ( dateFormat, 'GB', okDateInfo ) ( { type: 'future', dateFormat, allowsWeekends: undefined } );
+      expect ( accept ( new Date ( "2022/11/7" ) ) ).toEqual ( [] ) //today
+      expect ( accept ( new Date ( "2022/11/12" ) ) ).toEqual ( [] )
+      expect ( accept ( new Date ( "2022/11/8" ) ) ).toEqual ( [] )
+    } )
+  } )
+} )
+
+// describe ( 'firstAllowedDate', () => {
+//   const udi = validateDateInfo ( dateFormat, okDateInfo )
+//   if ( Array.isArray ( udi ) ) throw Error ( 'okDateInfo is actually not ok' )
+//   it ( "should ignore weekends and holidays when those are ignored", () => {
+//     expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat } ).toString () ).toEqual ( new Date ( '2022/11/7' ).toString () )
+//     expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, minWorkingDaysBefore: 1 } ).toString () ).toEqual ( toDate ( '8/11/2022' ).toString () )
+//     expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, minWorkingDaysBefore: 10 } ).toString () ).toEqual ( toDate ( '17/11/2022' ).toString () )
+//   } )
+//   it ( "should take account of  weekends  when those are not allowed", () => {
+//     expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false } ).toString () ).toEqual ( toDate ( '7/11/2022' ).toString () )
+//     expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false, minWorkingDaysBefore: 10 } ).toString () ).toEqual ( toDate ( '21/11/2022' ).toString () )
+//     expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false, minWorkingDaysBefore: 20 } ).toString () ).toEqual ( toDate ( '8/11/2022' ).toString () )
 //
-// describe ( "acceptDate", () => {
-//   describe ( "futureOk", () => {
-//     it ( "should return empty errors if the date is in the future", () => {
-//       const accept = acceptDate ( dateFormat, 'GB', okDateInfo ) ( { type: 'future', dateFormat } );
-//       expect ( accept ( new Date ( "2022/12/1" ) ) ).toEqual ( [] )
-//       expect ( accept ( new Date ( "2022/10/3" ) ) ).toEqual ( [ "is before first valid date" ] )
-//       fail()
-//       //add today
-//     } )
 //   } )
-//   describe ( "pastOk", () => {
-//     it ( "should return empty errors if the date is in the past", () => {
-//       const accept = acceptDate ( dateFormat, 'GB', okDateInfo ) ( { type: 'past', dateFormat } );
-//       expect ( accept ( new Date ( "2022/12/1" ) ) ).toEqual ( [ 'is in the future' ] )
-//       expect ( accept ( new Date ( "2022/10/3" ) ) ).toEqual ( [] )
-//       fail()
-//       //add today
-//     } )
-//   } )
-//   describe ( "weekendsOK", () => {
-//     it ( "should return empty errors  no matter the date if 'allowsWeekends' is true", () => {
-//       const accept = acceptDate ( dateFormat, 'GB', okDateInfo ) ( { type: 'future', dateFormat, allowsWeekends: true } );
-//       expect ( accept ( new Date ( "2022/11/12" ) ) ).toEqual ( [] )
-//       expect ( accept ( new Date ( "2022/11/8" ) ) ).toEqual ( [] )
-//     } )
-//     it ( "should return  errors  if a weekend if 'allowsWeekends' is false ", () => {
-//       const accept = acceptDate ( dateFormat, 'GB', okDateInfo ) ( { type: 'future', dateFormat, allowsWeekends: false } );
-//       expect ( accept ( new Date ( "2022/11/12" ) ) ).toEqual ( [] )
-//       expect ( accept ( new Date ( "2022/11/8" ) ) ).toEqual ( [] )
-//     } )
-//     it ( "should default to allowsWeekends true", () => {
-//       const accept = acceptDate ( dateFormat, 'GB', okDateInfo ) ( { type: 'future', dateFormat, allowsWeekends: undefined } );
-//       expect ( accept ( new Date ( "2022/11/12" ) ) ).toEqual ( [] )
-//       expect ( accept ( new Date ( "2022/11/8" ) ) ).toEqual ( [] )
-//     } )
-//   } )
-// } )
+//   it ( "should take account of  holidays  when those are allowed", () => {} )
+//
+// } );
+
+describe ( "holidaysOk", () => {
+  //     { date: '12/11/2022', jurisdiction: 'GB' },
+  //     { date: '12/11/2022', jurisdiction: 'I' },
+  //     { date: '15/11/2022', jurisdiction: 'GB' },
+  //     { date: '17/11/2022', jurisdiction: 'I' },
+  it ( "should return empty errors no matter the date if 'allowHolidays'is true", () => {
+    const accept = acceptDate ( dateFormat, 'GB', okDateInfo ) ( { type: 'future', dateFormat, allowHolidays: true } );
+    expect ( accept ( new Date ( "2022/11/7" ) ) ).toEqual ( [] ) //today
+    expect ( accept ( new Date ( "2022/11/12" ) ) ).toEqual ( [] )
+    expect ( accept ( new Date ( "2022/11/15" ) ) ).toEqual ( [] )
+    expect ( accept ( new Date ( "2022/11/17" ) ) ).toEqual ( [] )
+  } )
+  it ( "should return empty errors no matter the date if 'allowHolidays'is undefined", () => {
+    const accept = acceptDate ( dateFormat, 'GB', okDateInfo ) ( { type: 'future', dateFormat, allowHolidays: undefined } );
+    expect ( accept ( new Date ( "2022/11/7" ) ) ).toEqual ( [] ) //today
+    expect ( accept ( new Date ( "2022/11/12" ) ) ).toEqual ( [] )
+    expect ( accept ( new Date ( "2022/11/15" ) ) ).toEqual ( [] )
+    expect ( accept ( new Date ( "2022/11/17" ) ) ).toEqual ( [] )
+  } )
+  it ( "should return an error if 'allowHolidays'is false, and the date is a holiday in the jurisdiction", () => {
+    const accept = acceptDate ( dateFormat, 'GB', okDateInfo ) ( { type: 'future', dateFormat, allowHolidays: false } );
+    expect ( accept ( new Date ( "2022/11/7" ) ) ).toEqual ( [] ) //today
+    expect ( accept ( new Date ( "2022/11/12" ) ) ).toEqual ( [ "is a holiday" ] )
+    expect ( accept ( new Date ( "2022/11/15" ) ) ).toEqual ( [ "is a holiday" ] )
+    expect ( accept ( new Date ( "2022/11/17" ) ) ).toEqual ( [] )
+  } )
+  it ( "should return an error if 'allowHolidays'is false, and the date is a holiday in any jurisdiction when the jurisdiction is undefined", () => {
+    const accept = acceptDate ( dateFormat, undefined, okDateInfo ) ( { type: 'future', dateFormat, allowHolidays: false } );
+    expect ( accept ( new Date ( "2022/11/7" ) ) ).toEqual ( [] ) //today
+    expect ( accept ( new Date ( "2022/11/12" ) ) ).toEqual ( [ "is a holiday" ] )
+    expect ( accept ( new Date ( "2022/11/15" ) ) ).toEqual ( [ "is a holiday" ] )
+    expect ( accept ( new Date ( "2022/11/17" ) ) ).toEqual ( [ "is a holiday" ] )
+  } )
+} )

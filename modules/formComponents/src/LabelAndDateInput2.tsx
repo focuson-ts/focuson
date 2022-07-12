@@ -31,7 +31,7 @@ interface CommonDateRange<S, C> {
   dateFormat: DateFormat
   allowsWeekends?: boolean;
   allowHolidays?: boolean;
-  defaultDay?:  string
+  defaultDay?: string
 }
 export interface DateRangeInPast<S, C> extends CommonDateRange<S, C> {
   type: 'past'
@@ -67,15 +67,22 @@ export const parseDate = ( prefix: string, format: string ) => ( date: string ):
 
 type DateValidation = <S, C>( dateRange: DateRange<S, C> ) => ( date: Date ) => string[]
 
-const holidaysOK = ( neededJurisdiction: string, holidays: UsableHolidays[] ): DateValidation => dateRange => ( neededDate: Date ): string[] => {
-  if ( dateRange.allowsWeekends ) return []
-  const found = holidays.find ( ( { jurisdiction, date } ) => (neededJurisdiction === undefined || neededJurisdiction === jurisdiction) && date === neededDate )
+const matchesHoliday = ( neededJurisdiction: string | undefined, neededDate: Date ) => ( h: UsableHolidays ) => {
+  const { date, jurisdiction } = h
+  let j = neededJurisdiction === undefined || neededJurisdiction === jurisdiction;
+  let d = date.getTime () === neededDate.getTime ();
+  let result = j && d;
+  return result;
+};
+const holidaysOK = ( neededJurisdiction: string | undefined, holidays: UsableHolidays[] ): DateValidation => dateRange => ( neededDate: Date ): string[] => {
+  if ( dateRange.allowHolidays !== false ) return []
+  const found = holidays.find ( matchesHoliday ( neededJurisdiction, neededDate ) )
   if ( found ) return [ 'is a holiday' ]
   return []
 }
 
 const weekEndsOk: DateValidation = dateRange => ( date: Date ): string[] => {
-  if ( dateRange.allowsWeekends ) return []
+  if ( dateRange.allowsWeekends !== false ) return []
   return [ 0, 6 ].includes ( date.getDay () ) ? [ 'is a weekend' ] : [];
 }
 
@@ -83,13 +90,13 @@ const futureOk = ( today: Date ): DateValidation => dateRange => {
   const firstValidDate = today
   return date => {
     if ( isDateRangeInFuture ( dateRange ) ) {
-      return date.getTime () > firstValidDate.getTime () ? [] : [ `is before first valid date` ]
+      return date.getTime () >= firstValidDate.getTime () ? [] : [ `is before first valid date` ]
     } else return []
   };
 }
 const pastOk = ( today: Date ): DateValidation => dateRange => date => {
   if ( isDateRangeInPast ( dateRange ) ) {
-    return date.getTime () < today.getTime () ? [] : [ `is in the future` ]
+    return date.getTime () <= today.getTime () ? [] : [ `is in the future` ]
   } else return []
 }
 
@@ -117,13 +124,28 @@ export function validateDateInfo ( dateFormat: DateFormat, dateInfo: DateInfo | 
 
 }
 
-export function acceptDate ( dateFormat: DateFormat, jurisdiction: string, dateInfo: DateInfo ): DateValidation {
-  const usableInfo = validateDateInfo ( dateFormat, dateInfo )
-  if ( Array.isArray ( usableInfo ) ) throw new Error ( `Problem in dateInfo\n${JSON.stringify ( usableInfo )}` )
-  const { holidays, today } = usableInfo
+export function firstAllowedDate<S, C> ( jurisdiction: string | undefined, udi: UsableDateInfo, dateRange: DateRangeInFuture<S, C> ) {
+  if ( dateRange.minWorkingDaysBefore === undefined ) return udi.today
+  if ( dateRange.minWorkingDaysBefore < 0 ) throw Error ( `Illegal argument: ${JSON.stringify ( dateRange )}` )
+  const date = new Date ( udi.today.getTime () )
+  var count = 0
+  const accept = acceptDateWithUsable ( dateRange.dateFormat, jurisdiction, udi ) ( dateRange );
+  while ( count < dateRange.minWorkingDaysBefore ) {
+    if ( accept ( date ).length === 0 ) count++
+    date.setDate ( date.getDate () + 1 )
+  }
+  return date
+}
+function acceptDateWithUsable ( dateFormat: DateFormat, jurisdiction: string | undefined, udi: UsableDateInfo ): DateValidation {
+  const { holidays, today } = udi
   return combine (
     holidaysOK ( jurisdiction, holidays ),
     futureOk ( today ),
     pastOk ( today ),
     weekEndsOk )
+}
+export function acceptDate ( dateFormat: DateFormat, jurisdiction: string | undefined, dateInfo: DateInfo ): DateValidation {
+  const usableInfo = validateDateInfo ( dateFormat, dateInfo )
+  if ( Array.isArray ( usableInfo ) ) throw new Error ( `Problem in dateInfo\n${JSON.stringify ( usableInfo )}` )
+  return acceptDateWithUsable ( dateFormat, jurisdiction, usableInfo )
 }
