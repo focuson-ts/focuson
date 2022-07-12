@@ -172,7 +172,6 @@ export const dispatchRestAndFetchCommands = <S, Context extends FocusOnContext<S
   const sWithCountIncreased = config.restCountL.transform ( restCount => {
     const times = restCount ? restCount.times : 0
     if ( restsAndFetchers.length === 0 ) {
-      if ( debug ) console.log ( 'finishing the fetchers: the count is zero' )
       return { loopCount: 0, times };
     }
     const oldCount = restCount ? restCount.loopCount : 0

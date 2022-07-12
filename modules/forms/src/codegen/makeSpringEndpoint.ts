@@ -204,6 +204,7 @@ export function makeSpringEndpointsFor<B, G> ( params: JavaWiringParams, p: Main
     `import java.util.Arrays;`,
     ...importForTubles ( params ),
     ...importForSql,
+    ...safeArray(params.endpointImports). map(n => `import ${n};`),
     '',
     `  @RestController`,
     ...indentList ( params.controllerAnnotations ),

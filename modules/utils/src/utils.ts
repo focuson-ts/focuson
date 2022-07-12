@@ -151,7 +151,7 @@ export const errorMonad = <S extends any> ( s: S, debug: boolean, onError: ( s: 
     if ( exit ) return acc
     try {
       let result = fn ( acc );
-      if ( debug ) console.log ( name, JSON.stringify ( result ) )
+      if ( debug ) console.log ( name, result )
       return result
     } catch ( e ) {
       exit = true
@@ -167,7 +167,7 @@ export const errorPromiseMonad = <S extends any> ( onError: ( s: S, e: any ) => 
     return acc.then ( x => {
       if ( exit ) return x
       let result = fn ( x );
-      if ( debug ) console.log ( name, JSON.stringify ( result ) )
+      if ( debug ) console.log ( name, result )
       return result
     } ).catch ( e => {
       exit = true

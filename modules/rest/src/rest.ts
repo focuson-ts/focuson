@@ -146,7 +146,7 @@ export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, extract
   const useResponse = getRestTypeDetails ( restCommand.restAction ).output.needsObj
   const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => data ] ] : []
   const on404Transforms: Transform<S, any>[] = status && status == 404 ? processChangeCommandProcessor ( '', processor, toArray ( restCommand.on404 ) ) : []
-  const msgFromBodyTx: Transform<S, any> = [ messageL, old => [ ...messagesFromBody, ...old ] ]
+  const msgFromBodyTx: Transform<S, any> = [ messageL, old => [ ...messagesFromBody, ...safeArray(old) ] ]
   let resultTxs: Transform<S, any>[] = [ msgFromBodyTx, ...on404Transforms, ...legacyChangeTxs, ...changeTxs, ...resultTransform ];
   return resultTxs;
 };
@@ -266,7 +266,7 @@ export async function restToTransforms<S, MSGS> (
   const results: RestResult<S, MSGS, any>[] = await massFetch ( fetchFn, requests )
   if ( debug ) console.log ( "rest-results", results )
   let toLens = pathToLens ( s );
-  console.log ( 'about to restCommandsAndTxs', JSON.stringify ( results ) )
+  console.log ( 'results from fetching rest commands', results  )
 
   const restCommandAndTxs: RestCommandAndTxs<S>[] = results.map ( res => {
 

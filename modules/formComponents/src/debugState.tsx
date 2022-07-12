@@ -1,9 +1,9 @@
-import { isMassTransformReason, isSetJsonReason, LensProps, MassTransformReason, reasonFor, SetJsonReason } from "@focuson/state";
+import { isMassTransformReason, isSetJsonReason, LensProps, LensState, MassTransformReason, reasonFor, SetJsonReason } from "@focuson/state";
 import { findThisPageElement, findValidityForInput, findValidityForRadio, findValidityForSelect, focusPageClassName, fromPathGivenState, HasPageSelectionLens, isMainPageDetails, mainPage, PageSelection, PageSelectionContext } from "@focuson/pages";
-import { HasTagHolder, tagOps } from "@focuson/template";
+import { HasTagHolder, TagHolder, tagOps } from "@focuson/template";
 import { HasSimpleMessages, safeArray, safeObject, safeString, SimpleMessage, sortedEntries, toArray } from "@focuson/utils";
 import { HasRestCommandL, OneRestDetails, RestDetails } from "@focuson/rest";
-import { FocusOnContext, traceL } from "@focuson/focuson";
+import { FocusOnContext, restCommandsAndWhyFromFetchers, traceL } from "@focuson/focuson";
 import { Lenses, Optional } from "@focuson/lens";
 import { ToggleButton } from "./toggleButton";
 import { AssertPages, MakeTest } from "./makeTest";
@@ -13,6 +13,8 @@ import { AccordionCollapseAll, AccordionExpandAll, AccordionWithInfo } from "./a
 import { trimDownText } from "./common";
 import { CopyToClipboard } from "./CopyToClipboard";
 import { useEffect, useRef } from "react";
+import { DeleteStateButton } from "./deleteStateButton";
+import { SetStateButton } from "./setStateButton";
 
 
 export function Tags<S extends HasTagHolder, C> ( { state }: LensProps<S, any, C> ) {
@@ -206,11 +208,11 @@ function TagTable<S, FD, D> ( rest: OneRestDetails<S, FD, D, SimpleMessage>, the
       let thisRememberedTag = theseTags?.[ tagIndex ];
       console.log ( 'tag index', tagIndex, id, thisRememberedTag )
       let thisTag = desiredTags[ tagIndex ][ 1 ];
-      const classForUndefinedTag = thisTag? undefined: 'debug-tag-undefined'
+      const classForUndefinedTag = thisTag ? undefined : 'debug-tag-undefined'
       return <tr key={id}>
         <td>{id}</td>
         <td>{tagLens.description}</td>
-        <td className={classForUndefinedTag}>{thisTag?JSON.stringify(thisTag):'undefined'}</td>
+        <td className={classForUndefinedTag}>{thisTag ? JSON.stringify ( thisTag ) : 'undefined'}</td>
         <td>{thisRememberedTag ? JSON.stringify ( thisRememberedTag ) : 'undefined'}</td>
       </tr>;
     } )}</tbody>
@@ -224,7 +226,10 @@ function Fetchers<S, C extends FocusOnContext<S>> ( { state }: LensProps<S, any,
   const page: PageSelection = mainPage ( state )
   const tagsInState = safeObject ( state.context.tagHolderL.getOption ( state.main ) )
   console.log ( 'Tags', tagsInState )
+  let { tagHolderL, newFetchers, restDetails } = state.context
+  let fromFetchers = restCommandsAndWhyFromFetchers ( tagHolderL, newFetchers, restDetails, page.pageName, state.json () );
   return <div>
+    <h2>Rest commands</h2>
     {toArray ( state.context.newFetchers?.[ page.pageName ] ).map ( ( f, i ) => {
         const rest = state.context.restDetails[ f.restName ]
         const tagName = `${page.pageName}_${f.tagName}`
@@ -232,8 +237,8 @@ function Fetchers<S, C extends FocusOnContext<S>> ( { state }: LensProps<S, any,
         console.log ( 'theseTags', tagName, theseTags )
         const { tags } = tagOps
         const desiredTags = tags ( rest, 'get' ) ( state.main );
-      let json = state.copyWithLens ( rest.fdLens ).chainLens ( rest.dLens ).optJson ();
-      return <div><h2>Rest {f.restName} </h2>
+        let json = state.copyWithLens ( rest.fdLens ).chainLens ( rest.dLens ).optJson ();
+        return <div><h3>Rest {f.restName} </h3>
           <dl>
             <dt>url</dt>
             <dd>{rest.url}</dd>
@@ -242,10 +247,12 @@ function Fetchers<S, C extends FocusOnContext<S>> ( { state }: LensProps<S, any,
               {TagTable ( rest, theseTags, desiredTags )}
             </dd>
             <dt>Target path</dt>
-            <td>{f.tagName}</td>
+            <dd>{f.tagName}</dd>
+            <dt>Summary</dt>
+            <dd>{fromFetchers.flatMap ( ( [ restCommand, tagName, reason ] ) => tagName == f.tagName ? [ reason ] : [] )}</dd>
             <dt>Target - This must be undefined for the fetcher to load data</dt>
             <dd>
-              <pre>{json?JSON.stringify ( json, null, 2 ):'undefined'}</pre>
+              <pre>{json ? JSON.stringify ( json, null, 2 ) : 'undefined'}</pre>
             </dd>
           </dl>
         </div>
@@ -272,6 +279,7 @@ function DebugTags<S extends HasTagHolder, C extends FocusOnContext<S>> ( { stat
     </table>
   </div>;
 }
+
 export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends FocusOnContext<S>> ( props: DebugProps<S, C> ) {
   const { state } = props
   let main: any = state.main;
@@ -294,6 +302,8 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
     let showTracingState = debugState.focusOn ( 'showTracing' );
     let showValidityState = debugState.focusOn ( 'validityDebug' );
     let recordTracingState = debugState.focusOn ( 'recordTrace' );
+    let clearTagsState: LensState<S, TagHolder, C> = state.copyWithLens ( state.context.tagHolderL )
+    let clearMessagesState: LensState<S, SimpleMessage[], C> = state.copyWithLens ( state.context.simpleMessagesL )
     return <div id="debug-container">
       <ToggleButton id='hideDebug' buttonText='Hide Debug' state={debugState.focusOn ( 'showDebug' )}/>
       <div id="debug-bucket">
@@ -305,6 +315,8 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
             <li><ToggleButton id='debug.showTracing' buttonText='{/debug/showTracing|Show|Hide} Tracing ' state={showTracingState}/></li>
             <li><ToggleButton id='debug.recordTracing' buttonText='{/debug/recordTrace|Start|Stop} Trace ' state={recordTracingState}/></li>
             <li><ClearTrace state={state}/></li>
+            <li><SetStateButton id='debug.clearMessage' label='Clear Messages' state={ clearMessagesState } target={[]}/></li>
+            <li><SetStateButton id='debug.clearTags' label='Clear Tags' state={ clearTagsState } target={{}}/></li>
             <li><MakeTest state={state}/></li>
             <li><AssertPages state={state}/></li>
           </ul>

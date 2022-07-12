@@ -156,7 +156,6 @@ export function tagFetcher<S, Full, T, MSGS> ( stf: SpecificTagFetcherProps<S, F
       const tagAndNames = tagOps.tags ( stf, 'get' ) ( s );
       const desiredTags = tagAndNames.map ( ( [ name, tag ] ) => tag )
       if ( !areAllDefined ( desiredTags ) ) throw partialFnUsageError ( result, s );
-      if ( debug ) console.log ( 'tagFetcher.load.tags', desiredTags )
       const req = tagOps.reqFor ( stf, 'get' ) ( s ) ( stf.url );
       if ( !req ) throw partialFnUsageError ( result, s );
       const [ info, init ] = req;
@@ -169,7 +168,6 @@ export function tagFetcher<S, Full, T, MSGS> ( stf: SpecificTagFetcherProps<S, F
           let resultWithoutMessages: S | undefined = tagAndTargetLens.setOption ( state, [ desiredTags, response ] );
           if ( !resultWithoutMessages ) { console.error ( `Unexpected problem seting response and tags in state. ${this.description}` )}
           let messages = messagesFromTarget ( response, stf.dateFn () );
-          if ( debug ) console.log ( 'tagFetcher.load.mutate.messages', messages )
           let result = resultWithoutMessages ? messageL.transform(old => [...old,...messages]) ( resultWithoutMessages ) : undefined;
           if ( !result ) {
             console.error ( 'tagFetcher.load.mutate - failed to set state' )

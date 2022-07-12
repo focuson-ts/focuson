@@ -10,6 +10,7 @@ export interface DeleteStateButtonProps<S, C>  extends CustomButtonType{
   label: string;
   states: LensState<S, any, C>[];
 
+
 }
 export function DeleteStateButton<S, C > ( { id, label, states, buttonType }: DeleteStateButtonProps<S, C> ) {
   

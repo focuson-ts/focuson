@@ -25,16 +25,12 @@ const fetcherToRestCommandsAndWhy = <S, FD, D, MSGs> ( tagHolderL: Optional<S, T
   if ( theseRestDatails === undefined )
     throw Error ( `Fetched misconfigured. ${JSON.stringify ( f )}. Legal restNames are ${Object.keys ( restDetails )}` )
   const { fdLens, dLens } = theseRestDatails
-  console.log('making makeTagLens', tagHolderL, pageName, tagName)
   const tagL = makeTagLens ( tagHolderL, pageName, tagName )
   let targetLens = fdLens.chain ( dLens );
   const currentTags = tagL.getOption ( s );
-  if ( debug ) console.log ( 'current tags', tagL.description, currentTags )
   let tagAndNames = tagOps.tags ( theseRestDatails, 'get' ) ( s );
-  if ( debug ) console.log ( 'tagAndNames', tagAndNames )
   const desiredTags = tagAndNames.map ( ( [ name, tag ] ) => tag )
   const restCommand: RestCommand = { restAction: 'get', name: restName, comment: 'Fetcher', tagNameAndTags: {tagName: `${pageName}_${tagName}`, tags: desiredTags} }
-  if ( debug ) console.log ( 'desired tags tags', desiredTags )
   if ( !areAllDefined ( desiredTags ) ) return [ undefined, tagName, `Undefined tags. ${tagAndNames.map ( ( [ name, tag ] ) => `${name}:${tag}` )}` ]
   let tagsDifferent = !arraysEqual ( desiredTags, currentTags );
   let target = targetLens.getOption ( s );

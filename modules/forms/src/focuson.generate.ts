@@ -12,12 +12,13 @@ const logLevel: GenerateLogLevel = 'detailed';
 
 generate ( logLevel, directorySpec, devAppConfig, {
     ...params,
-  controllerAnnotations: [ "@CrossOrigin()" ],
-  endpointAnnotations:[],// ['@SomeSecurityAnnotation("{description} + {url}")'],
+    controllerAnnotations: [ "@CrossOrigin()" ],
+    endpointAnnotations: [],// ['@SomeSecurityAnnotation("{description} + {url}")'],
+    endpointImports: [],
     focusOnVersion,
     thePackage: 'somepackage.somepostfix.another',
     theme: 'theme-dark'
- ,
+    ,
   },
   javaOutputRoot, tsRoot, AllGuardCreator, makeButtons () ) ( generatedPages )
 

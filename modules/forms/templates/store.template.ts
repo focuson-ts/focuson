@@ -37,17 +37,13 @@ export const FocusOnReducer: any = <BigState, S> ( rootLens: Lens<BigState, S> )
   console.log ( 'FocusOnReducer-state', state )
   console.log ( 'FocusOnReducer-action', action )
   if ( isFocusOnSetMainAction<S> ( action ) ) {
-    console.log ( "it is a setMain", action )
     return rootLens.set ( state, action.s );
   }
   if ( isFocusOnMassTxsAction<S> ( action ) ) {
     console.log ( "FocusOnReducer- action is massTxs", action.type, action.txs.map ( t => [ t[ 0 ].description, t[ 1 ] ( t[ 0 ].getOption ( action.s ) ) ] ) )
-    // @ts-ignore
-    console.log ( "in reducer.comment for mass txs", action.comment )
     let result: S = massTransform<S> ( action.s, ...action.txs );
     console.log ( 'finished FocusOnReducer/massTxs', result )
     let withRootLens = rootLens.set ( state, result );
-    console.log ( 'finished FocusOnReducer/withRootLens', withRootLens )
     return withRootLens
   }
   console.log ( 'in reducer. I dont know what action it is', action )
@@ -75,9 +71,7 @@ export const focusOnMiddleware = <BigState, S extends HasFocusOnDebug, C extends
     [ 'dispatch pre rests', s => dispatch ( { type: 'massTxs', s, txs: [ ...traceTransform ( reason, s ), deleteRestCommands ], comment: 'dispatchPreRests' } ) ]//This updates the gui 'now' pre rest/fetcher goodness. We need to kill the rest commands to stop them being sent twice
   );
   // return start;
-  console.log ( 'start', start )
   const stateAfterImmediate = rootLens.get ( store.getState () )
-  console.log ( 'stateAfterImmediate', stateAfterImmediate )
   const focusOnDispatcher = ( preTxs: Transform<S, any>[], rests: RestCommandAndTxs<S>[] ) => ( originalS: S ): S => {
     dispatch ( { type: 'massTxs', txs: [ ...preTxs, ...rests.flatMap ( x => x.txs ) ], s: originalS, comment: 'fromFocusOnDispatcher' } )
     console.log ( 'ending focusOnDispatcher (full state)', store.getState () )
@@ -94,7 +88,7 @@ export const focusOnMiddleware = <BigState, S extends HasFocusOnDebug, C extends
   const restsLoaded = config.restCountL.getOption ( res )
   console.log ( 'restsLoaded were ', restsLoaded, restsLoaded?.loopCount === 0 ? 'will stop looping' : 'need to loop' );
   const finalResult = restsLoaded?.loopCount === 0 ? res : await finalResultFn ( res, [] )
-  console.log ( 'finalResult is ', finalResult );
+  console.log ( 'focusOnMiddleware - finalResult is ', finalResult );
   return res;
 };
 export function makeLs<S> ( store: Store<S>, child: string ) {
