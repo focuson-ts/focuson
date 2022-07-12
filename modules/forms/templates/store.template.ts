@@ -37,12 +37,13 @@ export const FocusOnReducer: any = <BigState, S> ( rootLens: Lens<BigState, S> )
   // @ts-ignore
   const debug = rootLens.get ( state )?.debug?.reduxDebug === true
   if ( debug ) console.log ( 'FocusOnReducer-action', action )
-  if ( debug ) console.log ( '  FocusOnReducer', state )
+  // if ( debug ) console.log ( '  FocusOnReducer', state )
   if ( isFocusOnSetMainAction<S> ( action ) ) {
     return rootLens.set ( state, action.s );
   }
   if ( isFocusOnMassTxsAction<S> ( action ) ) {
     if ( debug ) console.log ( "  FocusOnReducer- action is massTxs", action.type, action.txs.map ( t => [ t[ 0 ].description, t[ 1 ] ( t[ 0 ].getOption ( action.s ) ) ] ) )
+    if (action.txs.length===0){console.log("  nothing to do..."); return state}
     let result: S = massTransform<S> ( action.s, ...action.txs );
     if ( debug ) console.log ( '  finished FocusOnReducer/massTxs', result )
     let withRootLens = rootLens.set ( state, result );
@@ -60,6 +61,7 @@ export const focusOnMiddleware = <BigState, S extends HasFocusOnDebug, C extends
   if ( !isFocusOnSetMainAction<S> ( action ) ) {
     return dispatch ( action );
   }
+  const clearCount: Transform<S, any> = [config.restCountL, () => undefined]
   const deleteRestCommands: Transform<S, any> = [ config.restL, () => [] ];
   const { preMutate, postMutate, onError } = config
   const { s, reason } = action
@@ -70,7 +72,7 @@ export const focusOnMiddleware = <BigState, S extends HasFocusOnDebug, C extends
   let start: S = errorMonad ( s, debug, onError,
     [ 'preMutateForPages', preMutateForPages<S, C> ( context ) ],
     [ 'preMutate', preMutate ],
-    [ 'dispatch pre rests', s => dispatch ( { type: 'massTxs', s, txs: [ ...traceTransform ( reason, s ), deleteRestCommands ], comment: 'dispatchPreRests' } ) ]//This updates the gui 'now' pre rest/fetcher goodness. We need to kill the rest commands to stop them being sent twice
+    [ 'dispatch pre rests', s => dispatch ( { type: 'massTxs', s, txs: [ ...traceTransform ( reason, s ), deleteRestCommands,clearCount ], comment: 'dispatchPreRests' } ) ]//This updates the gui 'now' pre rest/fetcher goodness. We need to kill the rest commands to stop them being sent twice
   );
   // return start;
   const stateAfterImmediate = rootLens.get ( store.getState () )

@@ -80,12 +80,15 @@ function makeModalProcessorsConfig<S, Context extends PageSelectionContext<S> & 
   const config: ModalProcessorsConfig<S, SimpleMessage> = { stringToMsg: stringToSimpleMsg ( dateFn, 'info' ), fromPathTolens, toPathTolens, defaultL: focusOnL, messageL: state.context.simpleMessagesL };
   return config;
 }
+
+
 export function ModalButton<S extends any, Context extends PageSelectionContext<S> & HasSimpleMessageL<S>> ( props: ModalButtonProps<S, Context> ): JSX.Element {
   const {
           id, text, enabledBy, state, copy, copyJustString, pageMode, rest, copyOnClose, createEmpty, change, setToLengthOnClose,
           createEmptyIfUndefined, pageParams, buttonType, dateFn, changeOnClose
         } = props
   const onClick = () => {
+
     // const fromPath = fromPathFor ( state );
     const errorPrefix = `Modal button ${id}`;
     const focusOn = isModal ( props ) ? props.focusOn : undefined

@@ -35,6 +35,11 @@ export function loggingFetchFn<T> ( re: RequestInfo, init?: RequestInit ): Promi
   console.log ( "fetching from", re, init )
   return defaultFetchFn ( re, init )
 }
+/** Normally we would use the defaultFetchFn or the loggingFetchFn */
+export function loggingResultFetchFn<T> ( re: RequestInfo, init?: RequestInit ): Promise<[ number, T ]> {
+  console.log ( "fetching from", re, init )
+  return defaultFetchFn ( re, init )
+}
 
 
 export function fetchWithPrefix ( prefix: string, fetchFn: FetchFn ): FetchFn {

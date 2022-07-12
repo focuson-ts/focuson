@@ -20,13 +20,14 @@ interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Con
   enabledBy?: boolean;
   dateFn?: DateFn;
   text?: string
+  confirm?: string | boolean;
+
 }
 interface ModalCommitButtonProps<S, C> extends ModalCommitCancelButtonProps<S, C> {
-  confirm?: string | boolean;
   validate?: boolean
 }
-export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( { id, state, text, buttonType }: ModalCommitCancelButtonProps<S, Context> ) {
-  let onClick = () => state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) );
+export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( { id, state, text, buttonType, confirm }: ModalCommitCancelButtonProps<S, Context> ) {
+  let onClick = () => { if ( confirmIt ( confirm ) ) state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) );}
   return <button className={getButtonClassName ( buttonType )} id={id} disabled={!canCommitOrCancel ( state )} onClick={onClick}>{text ? text : 'Cancel'} </button>
 }
 

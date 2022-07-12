@@ -1,5 +1,5 @@
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
-import { makeSimpleButton, opt, optT } from "../codegen/codegen";
+import { opt, optT } from "../codegen/codegen";
 import { CustomButtonType, EnabledBy, enabledByString } from "./enabledBy";
 
 
@@ -12,7 +12,8 @@ export interface ModalCommitButtonInPage extends EnabledBy {
 }
 export interface ModalCancelButtonInPage extends CustomButtonType {
   control: 'ModalCancelButton';
-  text?: string
+  text?: string;
+  confirm?: boolean | string;
 }
 
 
@@ -30,6 +31,15 @@ export function makeModalCommitButton<B extends ModalCommitButtonInPage, G> (): 
     }
   })
 }
+export const makeSimpleButton: <G> ( imp: string ) => ButtonCreator<ModalCommitButtonInPage, G> = imp => ({
+  import: imp,
+  makeButton: ( { name, button } ) =>
+    [ [ `<${button.control} id=${makeIdForButton ( button.text ? button.text : name )} state={state}`,
+      ...opt ( 'text', button.text ),
+      ...optT ( 'confirm', button.confirm ),
+      ...opt ( 'buttonType', button.buttonType ? button.buttonType : 'secondary' ),
+      '/>' ].join ( ' ' ) ]
+})
 
 export function makeModalCloseButtons<G> (): MakeButton<G> {
   return {

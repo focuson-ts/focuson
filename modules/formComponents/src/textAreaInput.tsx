@@ -53,6 +53,7 @@ export interface LabelAndTextareaProps<S, T, Context> extends TextareaProps<S, T
   label: string;
   scrollAfter?: string;
   allButtons: NameAnd<JSX.Element>;
+  maxLength?: number
 }
 
 export function LabelAndTextarea<S, T, Context extends FocusOnContext<S>> ( props: LabelAndTextareaProps<S, string, Context> ) {

@@ -20,7 +20,7 @@ export const EditPaymentsPD: ExampleModalPage = {
   modes: [ 'edit', 'create' ],
   buttons: {
     commit: { control: 'ModalCommitButton', text: 'save' },
-    cancel: { control: 'ModalCancelButton', text: 'back' },
+    cancel: { control: 'ModalCancelButton', text: 'back',  confirm: 'Are you sure?' },
     validate: {control: 'RestButton', restName: 'validatePayee', action: {state: 'validate'}, validate: false,
       copyOnSuccess: {from: 'payeeStatus', to: '~/singlePayment/payeeStatus'}}
     // chargeDetails: { control: 'ModalButton', modal: ChargeDetailsPD, mode: 'edit', focusOn: '~/onePayment/chargeDetails',

@@ -130,8 +130,10 @@ export function firstAllowedDate<S, C> ( jurisdiction: string | undefined, udi: 
   const date = new Date ( udi.today.getTime () )
   var count = 0
   const accept = acceptDateWithUsable ( dateRange.dateFormat, jurisdiction, udi ) ( dateRange );
+  var ok = false
   while ( count < dateRange.minWorkingDaysBefore ) {
-    if ( accept ( date ).length === 0 ) count++
+    ok =  accept ( date ).length === 0
+    if (ok ) count++
     date.setDate ( date.getDate () + 1 )
   }
   return date

@@ -122,9 +122,10 @@ describe ( "acceptDate", () => {
 //     expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false } ).toString () ).toEqual ( toDate ( '7/11/2022' ).toString () )
 //     expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false, minWorkingDaysBefore: 10 } ).toString () ).toEqual ( toDate ( '21/11/2022' ).toString () )
 //     expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false, minWorkingDaysBefore: 20 } ).toString () ).toEqual ( toDate ( '8/11/2022' ).toString () )
+//   } )
+//   it ( "should take account of  holidays  when those are allowed", () => {
 //
 //   } )
-//   it ( "should take account of  holidays  when those are allowed", () => {} )
 //
 // } );
 

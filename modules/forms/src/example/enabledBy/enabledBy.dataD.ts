@@ -36,7 +36,7 @@ export const enabledByDataD: ExampleDataD = {
     },
     string: { dataDD: StringDD, displayParams: { enabledBy: 'yes' } },
     number: { dataDD: NatNumDd, displayParams: { enabledBy: 'no' } },
-    textArea: { dataDD: ManyLineStringDD, displayParams: { enabledBy: [ 'yes' ] } },
+    textArea: { dataDD: ManyLineStringDD, displayParams: { enabledBy: [ 'yes' ], maxlength: 200 } },
 
   }
 }

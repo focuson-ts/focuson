@@ -51,14 +51,7 @@ export function optT<T> ( name: string, p: T | undefined ) {
 export function optObj<T> ( name: string, p: string | undefined ) {
   return p !== undefined ? [ `${name}={${p}}` ] : []
 }
-export const makeSimpleButton: <G> ( imp: string ) => ButtonCreator<ModalOrMainButtonInPage<G>, G> = imp => ({
-  import: imp,
-  makeButton: ( { name, button } ) =>
-    [ [ `<${button.control} id=${makeIdForButton ( button.text ? button.text : name )} state={state}`,
-      ...opt ( 'text', button.text ),
-      ...opt ( 'buttonType', button.buttonType ? button.buttonType : 'secondary' ),
-      '/>' ].join ( ' ' ) ]
-})
+
 
 function stateParams ( errorPrefix: string, rest: RestD<any>, restAction: RestStateChange ): RestParams {
   const stateDetails: RestStateDetails | undefined = safeObject ( rest.states )[ restAction.state ]

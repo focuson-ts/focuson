@@ -167,17 +167,18 @@ export const dispatchRestAndFetchCommands = <S, Context extends FocusOnContext<S
                                                                                            context: Context,
                                                                                            dispatch: FocusonDispatcher<S> ) => ( restCommands: RestCommand[] ) => async ( s: S ): Promise<S> => {
   // @ts-ignore
-  const debug: FocusOnDebug = s.debug?.restDebug || s.debug?.tagFetcherDebug;
+  const debug: FocusOnDebug = s.debug?.restDebug ||s.debug?.reduxDebug || s.debug?.tagFetcherDebug;
   if ( debug ) console.log ( `dispatchRestAndFetchCommands relooping count is ${JSON.stringify ( config.restCountL.getOption ( s ) )} RestCommands: ${restCommands.length}`, restCommands, s )
   const process = processRestsAndFetchers ( config, context );
   const restsAndFetchers: RestCommandAndTxs<S>[] = await process ( restCommands ) ( s )
   const sWithCountIncreased = config.restCountL.transform ( restCount => {
-    const times = restCount ? restCount.times : 0
+    const times = restCount ? restCount.times+1 : 1
     if ( restsAndFetchers.length === 0 ) {
+      if(debug)console.log("  There are no restOrFetcher so resetting loop count to zero")
       return { loopCount: 0, times };
     }
     const oldCount = restCount ? restCount.loopCount : 0
-    if ( oldCount > config.maxRestCount ) throw Error ( `Seem to be in infinite loop where we get something from backend which trigges another getting something from backend...` );
+    if ( oldCount > config.maxRestCount ) throw Error ( `Seem to be in infinite loop where we get something from backend which trigges another getting something from backend.... MaxRestCount ${config.maxRestCount}, Loopcount = ${oldCount}` );
     let result = { loopCount: oldCount ? oldCount + 1 : 1, times };
     if ( debug ) console.log ( `dispatchRestAndFetchCommands - end relooping count is now ${JSON.stringify ( result )}` )
     return result
