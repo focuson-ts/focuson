@@ -1339,6 +1339,97 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@focuson/fetcher@1.26.2":
+  version "1.26.2"
+  resolved "https://registry.yarnpkg.com/@focuson/fetcher/-/fetcher-1.26.2.tgz#27601a1b6c9d1178cd6f64934a722bbf61af426e"
+  integrity sha512-jpHI+DYZrI9Yeb5Sl3OvA84adVOasVtPFk8pNk1UPLorIT7wn71lSGSD9IQLkLTAOcS9aotoOAzFmR7vfbmscQ==
+  dependencies:
+    "@focuson/lens" "1.26.2"
+    "@focuson/state" "1.26.2"
+    "@focuson/template" "1.26.2"
+
+"@focuson/focuson@1.26.2":
+  version "1.26.2"
+  resolved "https://registry.yarnpkg.com/@focuson/focuson/-/focuson-1.26.2.tgz#216cc8ffd7e3c4d5fb3f1eafb3b549ce381ae6a8"
+  integrity sha512-eOIvO5ERtmKSZhFYS6C2Ozc8TzoEqSuF0+2iB1H6btQRdxXQjaHtWp8X4+MUPwI9eLl/dngGQrujp6G7ns76Yg==
+  dependencies:
+    "@focuson/pages" "1.26.2"
+    "@focuson/poster" "1.26.2"
+
+"@focuson/form_components@1.26.2":
+  version "1.26.2"
+  resolved "https://registry.yarnpkg.com/@focuson/form_components/-/form_components-1.26.2.tgz#56a69ef9782ad1f595de19de3a5eb99c1a609eff"
+  integrity sha512-PBomYQyJ8lcC7nxS/1qx9dF5OnPA6+j6Qssqe4/3JO78Q3ZLdHllw7GoFTeMmE5iOhl0sV9a0M9dq1mxS2+4TQ==
+  dependencies:
+    "@focuson/focuson" "1.26.2"
+    "@focuson/state" "1.26.2"
+    "@types/react-datepicker" "^4.4.1"
+    react-datepicker "^4.7.0"
+
+"@focuson/lens@1.26.2":
+  version "1.26.2"
+  resolved "https://registry.yarnpkg.com/@focuson/lens/-/lens-1.26.2.tgz#e90b84d53525a5b44946401eee76c944d426a138"
+  integrity sha512-FOWgCJ1RzKseG907JNmMXrGaYYYulv44AIv/YGRsRxCu5xxmZwH2suYh+3nZO4VoLbgU+YmRTojRVuS1gwJN/w==
+  dependencies:
+    "@focuson/utils" "1.26.2"
+
+"@focuson/pages@1.26.2":
+  version "1.26.2"
+  resolved "https://registry.yarnpkg.com/@focuson/pages/-/pages-1.26.2.tgz#e9cfa3df446576c767ce4e2ec609abcc3f5fe4e7"
+  integrity sha512-NKGf0DwjVcuSEuYe4O1uahTNGf5kHxnbTM+4jpMNibxLEjpfoE8ve/px6qLVsth5Gpy1Say3qwV90cPw9o+VdQ==
+  dependencies:
+    "@focuson/fetcher" "1.26.2"
+    "@focuson/lens" "1.26.2"
+    "@focuson/rest" "1.26.2"
+    "@focuson/state" "1.26.2"
+
+"@focuson/poster@1.26.2":
+  version "1.26.2"
+  resolved "https://registry.yarnpkg.com/@focuson/poster/-/poster-1.26.2.tgz#71fa3c458f7226f08a98b484b31c9f0b8a0f9917"
+  integrity sha512-9x1eyi0pWRxWd8ZHNFv5U2u9qZVfOeIS4Hw55yAKeq8PYUdS4jwS4MjJonxyQyAeK+Ej5zzPGgDk2g66vDr14Q==
+  dependencies:
+    "@focuson/fetcher" "1.26.2"
+    "@focuson/lens" "1.26.2"
+
+"@focuson/rest@1.26.2":
+  version "1.26.2"
+  resolved "https://registry.yarnpkg.com/@focuson/rest/-/rest-1.26.2.tgz#f57a429d5dca8bf5f11885abd3b0e4243210c6aa"
+  integrity sha512-rspaLLx1i+n2TYXy+ZybdT7iWvaT7dOSYTllWIzY0yk3iO88o8Z/swI2bfrSQ09FYc8izOktV6qxkUqST4hRPQ==
+  dependencies:
+    "@focuson/fetcher" "1.26.2"
+    "@focuson/lens" "1.26.2"
+
+"@focuson/state@1.26.2":
+  version "1.26.2"
+  resolved "https://registry.yarnpkg.com/@focuson/state/-/state-1.26.2.tgz#7338409e9913832b9010c53a855e1fa1ad495abd"
+  integrity sha512-vt9pROnqroVjatOh+X1KQ2Z3AEImP3A/5fiVvF5falc2u/mkV9LT9qkhYn6mv/pkvOXgwslPbULsamQS/rXvqw==
+  dependencies:
+    "@focuson/lens" "1.26.2"
+
+"@focuson/stories@1.26.2":
+  version "1.26.2"
+  resolved "https://registry.yarnpkg.com/@focuson/stories/-/stories-1.26.2.tgz#9d274cd525cf15d058e7a45bfec2105960f79852"
+  integrity sha512-j2/CXj6T5CX0nFcFQqByGAmAgTO/+vKWpSmDx3TWAy5h+yYZiOxEBHRYyGL2SSUDEuMoR/ulsB1/CEW72x4MAg==
+  dependencies:
+    "@focuson/focuson" "1.26.2"
+    react "^17.0.1"
+    react-dom "^17.0.1"
+    typescript "^4.1.5"
+
+"@focuson/template@1.26.2":
+  version "1.26.2"
+  resolved "https://registry.yarnpkg.com/@focuson/template/-/template-1.26.2.tgz#7a01249900ec02408e8a6588d129ccf90858402e"
+  integrity sha512-HgmvRhDY8O1i+WRCqsjG8prStYKcBP2rW40O8yFbCYP1ZPFuqvbWrdkIkP+C2uRVW697dBXmdVzPcrklTqh17Q==
+  dependencies:
+    "@focuson/utils" "1.26.2"
+
+"@focuson/utils@1.26.2":
+  version "1.26.2"
+  resolved "https://registry.yarnpkg.com/@focuson/utils/-/utils-1.26.2.tgz#1e5897a8e6993f2b011bb27d300df93997727d7d"
+  integrity sha512-c3AUpYWnhdtZTwonG2BHT6WmvgN72yQwif6L7NsGsCbUSDfOXPm6xdi1rKcvVJp+YcOyAU2cggTExNTfzemvWQ==
+  dependencies:
+    node-fetch "2.6.1"
+
 "@gar/promisify@^1.0.1":
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.3.tgz#555193ab2e3bb3b6adc3d551c9c030d9e860daf6"

@@ -140,12 +140,14 @@ function addTagTxsForFetchers<S> ( tagHolderL: Optional<S, TagHolder>, txs: Rest
 export const processRestsAndFetchers = <S, Context extends FocusOnContext<S>, MSGs> ( config: FocusOnConfig<S, any, any>,
                                                                                       context: Context ) =>
   ( restCommands: RestCommand[] ) => async ( s: S ): Promise<RestCommandAndTxs<S> []> => {
+    // @ts-ignore
+    const debug: any = s.debug?.restDebug;
     const { fetchFn, restDetails, restUrlMutator, messageL, stringToMsg, tagHolderL, newFetchers } = config
     const { pageSelectionL, pathToLens } = context
     const pageSelections = safeArray ( pageSelectionL.getOption ( s ) )
     const pageName = safeString ( mainPageFrom ( pageSelections ).pageName )
-    console.log ( 'processRestsAndFetchers - pageSelections', pageSelections )
-    console.log ( 'processRestsAndFetchers - pageName', pageName )
+   if (debug) console.log ( 'processRestsAndFetchers - pageSelections', pageSelections )
+    if (debug)console.log ( 'processRestsAndFetchers - pageName', pageName )
     const fromFetchers = restCommandsFromFetchers ( tagHolderL, newFetchers, restDetails, pageName, s )
     const allCommands: RestCommand[] = [ ...restCommands, ...fromFetchers ]
     const restProps: RestToTransformProps<S, MSGs> = { fetchFn, d: restDetails, pathToLens, messageL, stringToMsg, traceL: traceL (), urlMutatorForRest: restUrlMutator }

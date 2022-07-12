@@ -17,7 +17,6 @@ export const store: any = legacy_createStore ( combineAll, undefined, applyMiddl
 let rootElement = getElement ( "root" );
 console.log ( "set json" )
 store.subscribe ( () => {
-  console.log ( "store.subscribe-render" )
   ReactDOM.render (
     <IndexPage state={makeLs<{stateName}> ( store, 'Rocket' )} dateFn={defaultDateFn}>
   <SelectedPage state={makeLs<{stateName}> ( store, 'Rocket' )}/>

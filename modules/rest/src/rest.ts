@@ -266,7 +266,7 @@ export async function restToTransforms<S, MSGS> (
   const results: RestResult<S, MSGS, any>[] = await massFetch ( fetchFn, requests )
   if ( debug ) console.log ( "rest-results", results )
   let toLens = pathToLens ( s );
-  console.log ( 'results from fetching rest commands', results  )
+  if ( debug ) console.log ( 'results from fetching rest commands', results  )
 
   const restCommandAndTxs: RestCommandAndTxs<S>[] = results.map ( res => {
 

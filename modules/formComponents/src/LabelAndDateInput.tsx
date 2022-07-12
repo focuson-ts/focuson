@@ -72,9 +72,6 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
   const selectedDateString = state.optJson ()
   const selectedDate = selectedDateString ? parseDate ( dateFormatL ) ( selectedDateString ) : undefined
   let error = false
-  console.log ( 'selectedDateString', selectedDateString )
-  console.log ( 'pattern', dateFormatL )
-  console.log ( 'selectedDate', selectedDate )
   if ( !isValid ( selectedDate ) ) {
     error = true
   }

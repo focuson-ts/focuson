@@ -175,6 +175,7 @@ export function ToggleDebugs<S, C extends PageSelectionContext<S>> ( { state }: 
   return <ul>
     <li><ToggleOneDebug state={debugState} name='fetcherDebug'/></li>
     <li><ToggleOneDebug state={debugState} name='restDebug'/></li>
+    <li><ToggleOneDebug state={debugState} name='reduxDebug'/></li>
     <li><ToggleOneDebug state={debugState} name='selectedPageDebug'/></li>
     <li><ToggleOneDebug state={debugState} name='loadTreeDebug'/></li>
     <li><ToggleOneDebug state={debugState} name='tagFetcherDebug'/></li>
@@ -197,16 +198,17 @@ function TagTable<S, FD, D> ( rest: OneRestDetails<S, FD, D, SimpleMessage>, the
   if ( rest.ids.length === 0 ) return <div>There are no ids</div>
   return <table className="fetcher-debug">
     <thead>
-    <th>Id</th>
-    <th>Path to id</th>
-    <th>value (must be defined for load)</th>
-    <th>Remembered value in 'tags'</th>
+    <tr>
+      <th>Id</th>
+      <th>Path to id</th>
+      <th>value (must be defined for load)</th>
+      <th>Remembered value in 'tags'</th>
+    </tr>
     </thead>
     <tbody>
     {rest.ids.map ( ( id, tagIndex ) => {
       const tagLens: Optional<any, any> = findTagLens ( rest, id )
       let thisRememberedTag = theseTags?.[ tagIndex ];
-      console.log ( 'tag index', tagIndex, id, thisRememberedTag )
       let thisTag = desiredTags[ tagIndex ][ 1 ];
       const classForUndefinedTag = thisTag ? undefined : 'debug-tag-undefined'
       return <tr key={id}>
@@ -225,31 +227,29 @@ function Fetchers<S, C extends FocusOnContext<S>> ( { state }: LensProps<S, any,
 
   const page: PageSelection = mainPage ( state )
   const tagsInState = safeObject ( state.context.tagHolderL.getOption ( state.main ) )
-  console.log ( 'Tags', tagsInState )
   let { tagHolderL, newFetchers, restDetails } = state.context
-  let fromFetchers = restCommandsAndWhyFromFetchers ( tagHolderL, newFetchers, restDetails, page.pageName, state.json () );
+  let fromFetchers = restCommandsAndWhyFromFetchers ( tagHolderL, newFetchers, restDetails, page.pageName, {...state.json (), debug: {}} );
   return <div>
     <h2>Rest commands</h2>
     {toArray ( state.context.newFetchers?.[ page.pageName ] ).map ( ( f, i ) => {
         const rest = state.context.restDetails[ f.restName ]
         const tagName = `${page.pageName}_${f.tagName}`
         const theseTags = tagsInState?.[ tagName ]
-        console.log ( 'theseTags', tagName, theseTags )
         const { tags } = tagOps
         const desiredTags = tags ( rest, 'get' ) ( state.main );
         let json = state.copyWithLens ( rest.fdLens ).chainLens ( rest.dLens ).optJson ();
-        return <div><h3>Rest {f.restName} </h3>
+        return <div key={i}><h3>Rest {f.restName} </h3>
           <dl>
             <dt>url</dt>
             <dd>{rest.url}</dd>
+            <dt>Summary</dt>
+            <dd>{fromFetchers.flatMap ( ( [ restCommand, tagName, reason ] ) => tagName == f.tagName ? [ reason ] : [] )}</dd>
             <dt>Tags</dt>
             <dd>
               {TagTable ( rest, theseTags, desiredTags )}
             </dd>
             <dt>Target path</dt>
             <dd>{f.tagName}</dd>
-            <dt>Summary</dt>
-            <dd>{fromFetchers.flatMap ( ( [ restCommand, tagName, reason ] ) => tagName == f.tagName ? [ reason ] : [] )}</dd>
             <dt>Target - This must be undefined for the fetcher to load data</dt>
             <dd>
               <pre>{json ? JSON.stringify ( json, null, 2 ) : 'undefined'}</pre>
@@ -315,8 +315,8 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
             <li><ToggleButton id='debug.showTracing' buttonText='{/debug/showTracing|Show|Hide} Tracing ' state={showTracingState}/></li>
             <li><ToggleButton id='debug.recordTracing' buttonText='{/debug/recordTrace|Start|Stop} Trace ' state={recordTracingState}/></li>
             <li><ClearTrace state={state}/></li>
-            <li><SetStateButton id='debug.clearMessage' label='Clear Messages' state={ clearMessagesState } target={[]}/></li>
-            <li><SetStateButton id='debug.clearTags' label='Clear Tags' state={ clearTagsState } target={{}}/></li>
+            <li><SetStateButton id='debug.clearMessage' label='Clear Messages' state={clearMessagesState} target={[]}/></li>
+            <li><SetStateButton id='debug.clearTags' label='Clear Tags' state={clearTagsState} target={{}}/></li>
             <li><MakeTest state={state}/></li>
             <li><AssertPages state={state}/></li>
           </ul>

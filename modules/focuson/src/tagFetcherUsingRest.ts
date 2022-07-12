@@ -52,7 +52,7 @@ export function restCommandsFromFetchers<S, MSGs> ( tagHolderL: Optional<S, TagH
   // @ts-ignore
   const debug = s.debug?.tagFetcherDebug
   return rcAndWhy.flatMap ( ( [ rc, tagName, why ] ) => {
-    if ( debug ) console.log ( 'restCommandsFromFetchers', tagName, why )
+    if ( debug ) console.log ( '  restCommandsFromFetchers', tagName, why )
     return rc ? [ rc ] : []
   } )
 }
