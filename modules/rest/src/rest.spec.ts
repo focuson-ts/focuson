@@ -257,7 +257,7 @@ describe ( "rest", () => {
   it ( "should throw error with illegal state", async () => {
     await expect ( rest<RestStateForTest, SimpleMessage> ( props, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: { state: 'illegalState' }, name: 'one' }
-    ) ) ).rejects.toThrow ( 'Requested state change is illegalState. The legal list is [newState]' )
+    ) ) ).rejects.toThrow ( 'Illegal state [illegalState] requested. Legal values are [newState]' )
   } )
 
   it ( "should delete items specified in the 'delete on success' - single item", async () => {

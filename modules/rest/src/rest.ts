@@ -81,7 +81,7 @@ export function getRestTypeDetails ( a: RestAction ): RestActionDetail {
 }
 export type emptyType = {}
 
-export type UrlAndParamsForState = { url: string, params: string[] } // we don't know what the params are, we just need the names
+export type UrlAndParamsForState = { url?: string, params?: string[] } // we don't know what the params are, we just need the names
 export type StateAccessDetails<S> = UrlAndParamsForState & { bodyFrom?: Optional<S, any>; }
 export interface OneRestDetails<S, FD, D, MSGs> extends UrlConfig<S, FD, D> {
   url: string;
@@ -156,29 +156,24 @@ export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]>, path
   return massTransform ( s, ...txs )
 };
 
-export function getUrlForRestAction<S> ( restAction: RestAction, url: string, states?: NameAnd<UrlAndParamsForState> ): string {
-  if ( isRestStateChange ( restAction ) ) {
-    const url: string | undefined = safeObject ( states )[ restAction.state ]?.url
-    if ( url === undefined ) throw Error ( `Requested state change is ${restAction.state}. The legal list is [${sortedEntries ( states ).map ( x => x[ 0 ] )}]\nThe base url is ${url}` )
-    return url;
-  }
-  return url
-}
 function findStateDetails<S, MSGS> ( one: OneRestDetails<S, any, any, MSGS>, restAction: RestStateChange ) {
   let result = safeObject ( one.states )[ restAction.state ];
   if ( result === undefined ) throw new Error ( `Illegal state [${restAction.state}] requested. Legal values are [${Object.keys ( safeObject ( one.states ) )}]` )
   return result;
 }
-function makeModifiedUrlConfig<S, MSGS> ( restAction: RestAction, one: OneRestDetails<S, any, any, MSGS>, url: string, fdLens: Optional<S, any> ) {
+function makeModifiedUrlConfig<S, MSGS> ( restAction: RestAction, one: OneRestDetails<S, any, any, MSGS>,
+                                          urlMutatorForRest: ( r: RestAction, url: string ) => string,
+                                          fdLens: Optional<S, any> ) {
   if ( isRestStateChange ( restAction ) ) {
     const details = findStateDetails ( one, restAction );
     if ( details ) {
-      const ids = safeArray ( details?.params )
+      const url = urlMutatorForRest(restAction, details.url ? details.url : one.url)
+      const ids = safeArray ( details?.params ) !== undefined ? safeArray ( details?.params ) : one.ids
       const bodyFrom = details.bodyFrom ? details.bodyFrom : one.bodyFrom
       return { ...one, url, ids, fdLens, bodyFrom };
     }
   }
-  return one
+  return {...one, url: urlMutatorForRest(restAction, one.url)}
 }
 
 export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Details,
@@ -199,11 +194,8 @@ export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Deta
         console.log ( "restReq-fdLens", fdLens.description, fdLens )
         console.log ( "restReq-dLens", one.dLens.description, one.dLens );
       }
-      let rawUrl = getUrlForRestAction ( restAction, one.url, one.states );
-      let url = urlMutatorForRest ( restAction, rawUrl );
-      if ( debug ) console.log ( "restReq-url", url )
-      const adjustedUrlConfig = makeModifiedUrlConfig ( restAction, one, url, fdLens );
-      let request = reqFor ( adjustedUrlConfig, restAction ) ( s ) ( url );
+      const adjustedUrlConfig = makeModifiedUrlConfig ( restAction, one, urlMutatorForRest, fdLens );
+      let request = reqFor ( adjustedUrlConfig, restAction ) ( s ) ( adjustedUrlConfig.url );
       if ( debug ) console.log ( "restReq-req", request )
       return [ command, one, ...request ]
     } catch ( e: any ) {
