@@ -53,7 +53,7 @@ export function parametersFor ( m: MutationDetail ): MutationParam[] {
 
 export function getMakeMock(m: MutationDetail) : boolean {
   if (isMessageMutation(m)) return false
-  return m.makeMock === undefined? false :  m.makeMock
+  return m.makeMock === undefined? true :  m.makeMock
 }
 export type MutationDetail = StoredProcedureMutation |
   SqlMutation | SqlMutationThatIsAList |

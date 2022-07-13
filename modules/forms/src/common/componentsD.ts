@@ -87,7 +87,7 @@ const specificOnChangeAndParentState: DisplayCompParamD = {
 export const LabelAndStringInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndStringInput",
   params: {
-    ...commonParamsWithLabel, ...stringValidationParams,...enabledByForInputs,
+    ...commonParamsWithLabel, ...stringValidationParams, ...enabledByForInputs,
     ...onChangeAndParentState
   }
 }
@@ -95,14 +95,14 @@ export const LabelAndStringInputCD: DisplayCompD = {
 export const LabelAndNumberInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndNumberInput",
   params: {
-    ...commonParamsWithLabel, ...intValidationParams,...enabledByForInputs,
+    ...commonParamsWithLabel, ...intValidationParams, ...enabledByForInputs,
     ...onChangeAndParentState
   }
 }
 
 export const LabelAndCheckboxInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndBooleanInput",
-  params: { ...commonParamsWithLabel, ...onChangeAndParentState, ...enabledByForInputs,}
+  params: { ...commonParamsWithLabel, ...onChangeAndParentState, ...enabledByForInputs, }
 }
 export const LabelAndDateInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndDateInput",
@@ -111,7 +111,7 @@ export const LabelAndDateInputCD: DisplayCompD = {
     datesExcluded: { paramType: 'path', needed: 'no' },
     workingDaysInFuture: { paramType: 'object', needed: 'no' },
     includeWeekends: { paramType: 'boolean', needed: 'no' },
-    fieldNameInHolidays: {paramType: 'string', needed: 'no'},
+    fieldNameInHolidays: { paramType: 'string', needed: 'no' },
     dateFormat: { paramType: 'string', needed: 'no' },
   }
 }
@@ -164,6 +164,15 @@ export const TableCD: DisplayCompD = {
   import: "@focuson/form_components",   //so that I can write the import statement for the react component
   name: "Table",                        //The name of the react component
   params: tableParams
+}
+export const TableWithVaryingOrderCD: DisplayCompD = {
+  import: "@focuson/form_components",   //so that I can write the import statement for the react component
+  name: "TableWithVaryingOrder",                        //The name of the react component
+  params: {
+    ...tableParams,
+    order: { paramType: 'json', needed: 'yes' },
+    select: { paramType: 'path', needed: 'yes' }
+  }
 }
 export const StructureTableCD: DisplayCompD = {
   import: "@focuson/form_components",   //so that I can write the import statement for the react component

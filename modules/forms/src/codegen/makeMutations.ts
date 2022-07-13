@@ -99,7 +99,7 @@ export function addFormat ( errorPrefix: string, datePattern: string | undefined
   if ( !datePattern ) return body
   switch ( javaType ) {
     case "String":
-      return `new SimpleDateFormat("${datePattern}").format(${from}.getDate("${argument}"))`
+      return `new SimpleDateFormat("${datePattern}").format(${from}.getDate(${arg}))`
     default:
       throw new Error ( `${errorPrefix} don't know how to addFormat for ${datePattern}, ${javaType}` )
   }

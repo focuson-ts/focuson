@@ -1,6 +1,6 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 import { BooleanDD, DateDD, DateDDMMYYY_DD, MoneyDD, StringDD, stringPrimDD, StringPrimitiveDD } from "../../common/dataD";
-import { LabelAndDropDownCD, LabelAndDropDownFromDataCD, LabelAndRadioCD, LayoutCd, TableCD } from "../../common/componentsD";
+import { LabelAndDropDownCD, LabelAndDropDownFromDataCD, LabelAndRadioCD, LayoutCd, TableWithVaryingOrderCD } from "../../common/componentsD";
 
 export const PaymentTypeDd: StringPrimitiveDD = {
   ...stringPrimDD,
@@ -39,12 +39,12 @@ export const SummaryOfPaymentsLineDD: ExampleDataD = {
   description: "This is the data loaded from the backend for one line.",
   name: "SummaryOfPaymentsLine",
   structure: {
-    currency: { dataDD: {...StringDD, emptyValue: 'GBP'}, sample: [ 'Euro', 'GBP' ]  },
+    currency: { dataDD: { ...StringDD, emptyValue: 'GBP' }, sample: [ 'Euro', 'GBP' ] },
     nameOfPayee: { dataDD: StringDD, sample: [ 'Bob', 'Phil', 'Andrew' ] },
     sterlingAmount: { dataDD: MoneyDD, sample: [ 123, 2345, 5654 ] },
     currencyAmount: { dataDD: MoneyDD, sample: [ 222, 333, 444 ] },
     amtInWords: { dataDD: StringDD, sample: [ 'one hundred', 'two hundred', 'three hundred' ] },
-    forActionOn: { dataDD: DateDDMMYYY_DD,sample: [ '5/12/2021', '6/12/2022' ], },
+    forActionOn: { dataDD: DateDDMMYYY_DD, sample: [ '5/12/2021', '6/12/2022' ], },
     dateCreated: { dataDD: DateDD },
     status: { dataDD: StringDD, sample: [ 'cancel', 'paid', '' ] },
   }
@@ -53,11 +53,15 @@ export const SummaryOfPaymentsTableDD: ExampleRepeatingD = {
   name: "SummaryOfPaymentsTable",
   description: "",
   dataDD: SummaryOfPaymentsLineDD,
-  display: TableCD,
+  display: TableWithVaryingOrderCD,
   sampleCount: 10,
   displayParams: {
-    order: [ 'nameOfPayee', 'currency', 'sterlingAmount', 'currencyAmount', 'dateCreated', 'forActionOn', 'status' ],
-    rights: ['sterlingAmount', 'currencyAmount',  'dateCreated', 'forActionOn', 'status' ],
+    order: {
+      e: [ 'nameOfPayee', 'currency', 'sterlingAmount', 'currencyAmount', 'dateCreated', 'forActionOn', 'status' ],
+      c: [ 'nameOfPayee', 'sterlingAmount', 'dateCreated', 'forActionOn', 'status' ],
+    },
+    select: '~/summary/payment/paymentType',
+    rights: [ 'sterlingAmount', 'currencyAmount', 'dateCreated', 'forActionOn', 'status' ],
     scrollAfter: '100px',
     copySelectedIndexTo: [ 'selectedPaymentIndex' ],
     copySelectedItemTo: [ 'selectedPayment' ]
@@ -127,7 +131,7 @@ export const ExpressDetailsDD: ExampleDataD = {
     payeeBank: { dataDD: PayeeBankDD },
     payeeDetails: { dataDD: PayeeDetailsDD },
     paymentType: { dataDD: ChapsPaymentTypeDD },
-    payeeStatus: {dataDD: StringDD}
+    payeeStatus: { dataDD: StringDD }
 
   }
 }
@@ -156,11 +160,12 @@ export const PaymentDD: ExampleDataD = {
   name: 'Payment',
   description: '',
   layout: { component: LayoutCd, displayParams: { details: '[[2,1]]' } },
-  guards: { paymentType: { condition: 'in', path: 'paymentType', values: PaymentTypeDd.enum },
-    action:  { condition: 'in', path: 'action', values: { copy: 'copy', ammend: 'ammend', new: 'new'} } ,
+  guards: {
+    paymentType: { condition: 'in', path: 'paymentType', values: PaymentTypeDd.enum },
+    action: { condition: 'in', path: 'action', values: { copy: 'copy', ammend: 'ammend', new: 'new' } },
   },
   structure: {
-    action: {dataDD: StringDD, hidden: true},// AM I new edit or amend
+    action: { dataDD: StringDD, hidden: true },// AM I new edit or amend
     paymentType: { dataDD: PaymentTypeDd },
     nameOfPayee: { dataDD: StringDD, sample: [ 'Bob', 'Phil', 'Andrew' ] },
     amount: { dataDD: amountDD },
@@ -184,7 +189,7 @@ export const ValidatedPayeeDetailsDD: ExampleDataD = {
   name: 'ValidatedPayeeDetails',
   description: '',
   structure: {
-    payeeStatus: {dataDD: StringDD}
+    payeeStatus: { dataDD: StringDD }
 
   }
 }

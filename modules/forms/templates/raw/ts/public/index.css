@@ -175,6 +175,7 @@ button:disabled {
     padding: 20px;
     height: auto;
     position: relative;
+    position: relative;
 }
 
 .layout {

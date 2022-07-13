@@ -173,7 +173,7 @@ describe ( "makeMutations", () => {
       "      s.setObject(3, systemTime.now());",
       "      s.execute();",
       "      Integer checkbookId = s.getInt(1);",
-      "      String checkbookIdPart2 = new SimpleDateFormat(\"dd-MM-yyyy\").format(s.getDate(\"2\"));",
+      "      String checkbookIdPart2 = new SimpleDateFormat(\"dd-MM-yyyy\").format(s.getDate(2));",
       "      return new Tuple2<Integer,String>(checkbookId,checkbookIdPart2);",
       "  }}",
       "    public void auditCreateCheckBook1(Connection connection, Messages msgs, Object dbName, int brandRef, int accountId, Object checkbookId, String checkbookIdPart2) throws SQLException {",

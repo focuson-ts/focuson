@@ -8,7 +8,7 @@ import { makeInputChangeTxs } from './labelAndInput';
 import { makeButtons } from "./makeButtons";
 
 export interface TextareaProps<S, T, Context> extends CommonStateProps<S, T, Context>, LabelAlignment, InputOnChangeProps<S, Context> {
-  maxLength?: number
+  maxlength?: number
   readonly?: boolean
   defaultValue?: string
   value?: string
@@ -53,7 +53,7 @@ export interface LabelAndTextareaProps<S, T, Context> extends TextareaProps<S, T
   label: string;
   scrollAfter?: string;
   allButtons: NameAnd<JSX.Element>;
-  maxLength?: number
+  maxlength?: number
 }
 
 export function LabelAndTextarea<S, T, Context extends FocusOnContext<S>> ( props: LabelAndTextareaProps<S, string, Context> ) {

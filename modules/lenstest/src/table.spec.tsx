@@ -1,9 +1,9 @@
 import { lensState, LensState } from "@focuson/state";
 import { shallow } from "enzyme";
-import { ModalButtonStateForTest } from "./modalButton.integration.spec";
 import { enzymeSetup } from "./enzymeAdapterSetup";
 import { getValueForTable, Table } from "@focuson/form_components";
 import { findJoiner, safeArray } from "@focuson/utils";
+import { TableWithVaryingOrder } from "../../formComponents/src/tableWithVaryingOrder";
 
 enzymeSetup ()
 
@@ -18,12 +18,17 @@ interface TableStateForTest {
   selected?: number;
   item?: TableContents
   filter?: string
+  selector?: string
 }
 interface SortCode {
   one: number;
   two: number;
   three: number;
 }
+let twoRows: TableStateForTest = { contents: [ { a: 1, b: 'one' }, { a: 2, b: 'two' } ] };
+let twoRowsWithC: TableStateForTest = { contents: [ { a: 1, b: 'one', c: { d: 3, e: 4 } }, { a: 2, b: 'two', c: { d: 5, e: 6 } } ] };
+let twoRowsS0 = { ...twoRows, selected: 0 };
+let twoRowsS1 = { ...twoRows, selected: 1 };
 
 function displayAndGetTable ( s: TableStateForTest, setMain: ( s: TableStateForTest ) => void, fn: ( s: LensState<TableStateForTest, TableStateForTest, Context> ) => JSX.Element ) {
   return shallow ( fn ( lensState<TableStateForTest, Context> ( s, setMain, 'ModalButton', {} ) ) )
@@ -57,7 +62,7 @@ describe ( "Table", () => {
       expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<h2>The title</h2><table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody class='grid-sub'></tbody></table>" )
     } )
     it ( "should render an empty with no selected and an emptyData", () => {
-      const table = displayAndGetTable ( {}, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id' emptyData='No Data' /> )
+      const table = displayAndGetTable ( {}, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id' emptyData='No Data'/> )
       expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead>" +
         "<tbody class='grid-sub'><tr id='id[0]'><td colSpan='2'>No Data</td></tr></tbody></table>" )
     } )
@@ -67,10 +72,6 @@ describe ( "Table", () => {
     } )
   } )
 
-  let twoRows: TableStateForTest = { contents: [ { a: 1, b: 'one' }, { a: 2, b: 'two' } ] };
-  let twoRowsWithC: TableStateForTest = { contents: [ { a: 1, b: 'one', c: { d: 3, e: 4 } }, { a: 2, b: 'two', c: { d: 5, e: 6 } } ] };
-  let twoRowsS0 = { ...twoRows, selected: 0 };
-  let twoRowsS1 = { ...twoRows, selected: 1 };
   describe ( "table without selected", () => {
     it ( "should render order a, b", () => {
       const table = displayAndGetTable ( twoRowsS0, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id'/> )
@@ -83,12 +84,12 @@ describe ( "Table", () => {
     } )
 
     it ( "should still display when data is 'undefined'", () => {
-      let damagedData : any = { contents: [ { a: 1 }, { b: 'two' } ] };
+      let damagedData: any = { contents: [ { a: 1 }, { b: 'two' } ] };
       const table = displayAndGetTable ( damagedData, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id'/> )
       expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody class='grid-sub'><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'></td></tr><tr id='id[1]'><td id='id[1].a'></td><td id='id[1].b'>two</td></tr></tbody></table>" )
     } )
     it ( "should still display when data is  null ", () => {
-      let damagedData : any = { contents: [ { a: 1, b: null }, { a: null,b: 'two' } ] };
+      let damagedData: any = { contents: [ { a: 1, b: null }, { a: null, b: 'two' } ] };
       const table = displayAndGetTable ( damagedData, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id'/> )
       expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody class='grid-sub'><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'></td></tr><tr id='id[1]'><td id='id[1].a'></td><td id='id[1].b'>two</td></tr></tbody></table>" )
     } )
@@ -98,7 +99,6 @@ describe ( "Table", () => {
       expect ( table.html ().replace ( /"/g, "'" ) ).toEqual (
         "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th><th id='id.th[2]'>C</th></tr></thead><tbody class='grid-sub'><tr id='id[0]'><td id='id[0].a'>1</td><td id='id[0].b'>one</td><td id='id[0].c'>3*4</td></tr><tr id='id[1]'><td id='id[1].a'>2</td><td id='id[1].b'>two</td><td id='id[1].c'>5*6</td></tr></tbody></table>" )
     } )
-
 
 
     it ( "should render order b,a", () => {
@@ -221,4 +221,37 @@ describe ( "Table", () => {
       expect ( remembered ).toEqual ( { "contents": [ { "a": 1, "b": "one" }, { "a": 2, "b": "two" } ], "selected": 1, item: { a: 2, b: 'two' } } )
     } )
   } )
+} )
+
+describe ( "TableWithVaryingContext", () => {
+  const order = {
+    one: [ 'a', 'b' ],
+    two: [ 'b', 'a' ]
+  }
+  it ( "should display nothing when selector undefined", () => {
+    const table = displayAndGetTable ( { ...twoRows, selector: undefined }, s => {}, s => <TableWithVaryingOrder order={order} select={s.focusOn ( 'selector' )} state={s.focusOn ( 'contents' )} id='id'/> )
+    expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "" )
+
+  } )
+  it ( "should display nothing when order doesn't exist", () => {
+    const table = displayAndGetTable ( { ...twoRows, selector: 'invalid' }, s => {}, s => <TableWithVaryingOrder order={order} select={s.focusOn ( 'selector' )} state={s.focusOn ( 'contents' )} id='id'/> )
+    expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "" )
+
+  } )
+  it ( "should display ab when selector is one", () => {
+    const table = displayAndGetTable ( { ...twoRows, selector: 'one' }, s => {}, s => <TableWithVaryingOrder order={order} select={s.focusOn ( 'selector' )} state={s.focusOn ( 'contents' )} id='id'/> )
+    expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead" +
+      "><tbody class='grid-sub'><tr id='id[0]'><td id='id[0].a'>1</td>" +
+      "<td id='id[0].b'>one</td></tr><tr id='id[1]'><td id='id[1].a'>2</td>" +
+      "<td id='id[1].b'>two</td></tr></tbody></table>" )
+
+  } )
+  it ( "should display ba when selector is two", () => {
+    const table = displayAndGetTable ( { ...twoRows, selector: 'two' }, s => {}, s => <TableWithVaryingOrder order={order} select={s.focusOn ( 'selector' )} state={s.focusOn ( 'contents' )} id='id'/> )
+    expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'>" +
+      "<thead><tr><th id='id.th[0]'>B</th><th id='id.th[1]'>A</th></tr></thead>" +
+      "<tbody class='grid-sub'><tr id='id[0]'><td id='id[0].b'>one</td><td id='id[0].a'>1</td></tr>" +
+      "<tr id='id[1]'><td id='id[1].b'>two</td><td id='id[1].a'>2</td></tr></tbody></table>" )
+  } )
+
 } )

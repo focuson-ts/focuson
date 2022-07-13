@@ -3,6 +3,7 @@ import { yesNoDD } from "../SingleOccupation/singleOccupation.dataD";
 import { ManyLineStringDD, NatNumDd, StringDD } from "../../common/dataD";
 import { actionEnums, nextActionDD, reasonDD } from "../onChange/onChange.dataD";
 
+
 export const enabledByDataD: ExampleDataD = {
   name: 'EnabledBy',
   description: "",

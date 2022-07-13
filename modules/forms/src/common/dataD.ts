@@ -48,7 +48,7 @@ export interface ManyDataDD<G> {
 }
 
 export interface DisplayParamDD {
-  [ name: string ]: boolean | number | string | string[] | NameAnd<string>
+  [ name: string ]: boolean | number | string | string[] | NameAnd<string> | NameAnd<string[]>
 }
 
 export interface HasLayout {

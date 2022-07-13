@@ -31,7 +31,7 @@ export const EditPaymentsPD: ExampleModalPage = {
 export const PaymentsPageD: ExampleMainPage = {
   name: 'Payments',
   pageType: 'MainPage',
-  modes: [ 'view' ],
+  modes: [ 'edit' ],
   display: { target: '~/summary', dataDD: PaymentsLaunchDD },
   initialValue: 'empty',
   // initialValue: { summary: {payment:{}} },
