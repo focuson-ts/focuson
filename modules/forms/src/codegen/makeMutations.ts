@@ -99,7 +99,7 @@ export function addFormat ( errorPrefix: string, datePattern: string | undefined
   if ( !datePattern ) return body
   switch ( javaType ) {
     case "String":
-      return `new SimpleDateFormat("${datePattern}").format(${from}.getDate(${arg}))`
+      return ` DateFormatter.formatDate("${datePattern}", ${from}.getDate(${arg}))`
     default:
       throw new Error ( `${errorPrefix} don't know how to addFormat for ${datePattern}, ${javaType}` )
   }
@@ -290,8 +290,8 @@ export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, a
     `import java.sql.ResultSet;`,
     `import java.sql.Connection;`,
     `import java.sql.SQLException;`,
-    `import java.text.SimpleDateFormat;`,
     `import ${params.thePackage}.${params.utilsPackage}.IOGNL;`,
+    `import ${params.thePackage}.${params.utilsPackage}.DateFormatter;`,
     `import ${params.thePackage}.${params.utilsPackage}.Messages;`,
     ...importsFromParams,
     ...importForTubles ( params ),

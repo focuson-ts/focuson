@@ -556,7 +556,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: MainPageD<B
   function createPutterString<T> ( fieldData: FieldData<T>, fieldAlias: string ) {
     return (fieldData.datePattern === undefined) ?
       `this.${mapName ( safeArray ( fieldData.path ).slice ( 0, -1 ) )}.put("${fieldData.fieldName}", rs.${fieldData.rsGetter}("${fieldAlias}"));`
-      : `this.${mapName ( safeArray ( fieldData.path ).slice ( 0, -1 ) )}.put("${fieldData.fieldName}", new SimpleDateFormat("${fieldData.datePattern}").format(rs.getDate("${fieldAlias}")));`;
+      : `this.${mapName ( safeArray ( fieldData.path ).slice ( 0, -1 ) )}.put("${fieldData.fieldName}", DateFormatter.formatDate("${fieldData.datePattern}",rs.getDate("${fieldAlias}")));`;
   }
 
   const putters = ld.fields
@@ -604,7 +604,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: MainPageD<B
     `import java.util.Optional;`,
     `import java.util.Map;`,
     `import java.util.stream.Collectors;`,
-    `import java.text.SimpleDateFormat;`,
+    `import ${params.thePackage}.${params.utilsPackage}.DateFormatter;`,
     '',
     `//${JSON.stringify ( restD.params )}`,
     `public class ${className} {`,

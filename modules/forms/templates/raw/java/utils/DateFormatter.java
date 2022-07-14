@@ -14,4 +14,9 @@ public class DateFormatter {
             throw new RuntimeException(e);
         }
     }
+    public static String formatDate(String format, Date input) {
+        if (input == null) return null;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        return simpleDateFormat.format(input);
+    }
 }
