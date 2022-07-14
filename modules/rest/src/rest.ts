@@ -156,6 +156,15 @@ export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]>, path
   return massTransform ( s, ...txs )
 };
 
+export function getUrlForRestAction<S> ( restAction: RestAction, url: string, states?: NameAnd<UrlAndParamsForState> ): string {
+  if ( isRestStateChange ( restAction ) ) {
+    const url: string | undefined = safeObject ( states )[ restAction.state ]?.url
+    if ( url === undefined ) throw Error ( `Requested state change is ${restAction.state}. The legal list is [${sortedEntries ( states ).map ( x => x[ 0 ] )}]\nThe base url is ${url}` )
+    return url;
+  }
+  return url
+}
+
 function findStateDetails<S, MSGS> ( one: OneRestDetails<S, any, any, MSGS>, restAction: RestStateChange ) {
   let result = safeObject ( one.states )[ restAction.state ];
   if ( result === undefined ) throw new Error ( `Illegal state [${restAction.state}] requested. Legal values are [${Object.keys ( safeObject ( one.states ) )}]` )
