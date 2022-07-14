@@ -495,7 +495,7 @@ function makeWhereClauseForLeftJoinQuery(s: SqlLinkData): string {
   const sw = s.staticWheres.filter((sw: StaticWhere) => sw.alias === s.sqlRoot.alias).map(sw => sw.where)
   const mergedWheres: string[] = normalWheres.concat(sw)
 
-  return mergedWheres.length === 0 ? '' : ` where${mergedWheres.join(' AND ')}`
+  return mergedWheres.length === 0 ? '' : ` where ${mergedWheres.join(' AND ')}`
 }
 
 export function generateGetSqlWithLeftJoin ( s: SqlLinkData ): string[] {
@@ -504,7 +504,7 @@ export function generateGetSqlWithLeftJoin ( s: SqlLinkData ): string[] {
   return [ `select`,
     ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.fields.map ( taf => `${taf.alias}.${taf.fieldData.dbFieldName} as ${sqlTafFieldName ( taf )}` ) ) ),
     ` from`,
-    ...indentList ( addStringToEndOfAllButFirstAndLast ( '' ) ( addStringToStartOfAllButFirst ( 'LEFT JOIN ' ) (sortedAliasAndTables.map ( ( [ alias, table ] ) =>
+    ...indentList ( ( addStringToStartOfAllButFirst ( 'LEFT JOIN ' ) (sortedAliasAndTables.map ( ( [ alias, table ] ) =>
         `${(makeOnClause(table, alias, s))}` ) ) )), makeWhereClauseForLeftJoinQuery(s) ]
 }
 
