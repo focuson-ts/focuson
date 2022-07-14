@@ -504,7 +504,7 @@ export function generateGetSqlWithLeftJoin ( s: SqlLinkData ): string[] {
   return [ `select`,
     ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.fields.map ( taf => `${taf.alias}.${taf.fieldData.dbFieldName} as ${sqlTafFieldName ( taf )}` ) ) ),
     ` from`,
-    ...indentList ( addStringToEndOfAllButFirstAndLast ( ',' ) ( addStringToStartOfAllButFirst ( 'LEFT JOIN ' ) (sortedAliasAndTables.map ( ( [ alias, table ] ) =>
+    ...indentList ( addStringToEndOfAllButFirstAndLast ( '' ) ( addStringToStartOfAllButFirst ( 'LEFT JOIN ' ) (sortedAliasAndTables.map ( ( [ alias, table ] ) =>
         `${(makeOnClause(table, alias, s))}` ) ) )), makeWhereClauseForLeftJoinQuery(s) ]
 }
 

@@ -110,24 +110,58 @@ describe ( "acceptDate", () => {
   } )
 } )
 
-// describe ( 'firstAllowedDate', () => {
-//   const udi = validateDateInfo ( dateFormat, okDateInfo )
-//   if ( Array.isArray ( udi ) ) throw Error ( 'okDateInfo is actually not ok' )
-//   it ( "should ignore weekends and holidays when those are ignored", () => {
-//     expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat } ).toString () ).toEqual ( new Date ( '2022/11/7' ).toString () )
-//     expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, minWorkingDaysBefore: 1 } ).toString () ).toEqual ( toDate ( '8/11/2022' ).toString () )
-//     expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, minWorkingDaysBefore: 10 } ).toString () ).toEqual ( toDate ( '17/11/2022' ).toString () )
-//   } )
-//   it ( "should take account of  weekends  when those are not allowed", () => {
-//     expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false } ).toString () ).toEqual ( toDate ( '7/11/2022' ).toString () )
-//     expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false, minWorkingDaysBefore: 10 } ).toString () ).toEqual ( toDate ( '21/11/2022' ).toString () )
-//     expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false, minWorkingDaysBefore: 20 } ).toString () ).toEqual ( toDate ( '8/11/2022' ).toString () )
-//   } )
-//   it ( "should take account of  holidays  when those are allowed", () => {
-//
-//   } )
-//
-// } );
+describe ( 'firstAllowedDate', () => {
+  const udi = validateDateInfo ( dateFormat, okDateInfo )
+  if ( Array.isArray ( udi ) ) throw Error ( 'okDateInfo is actually not ok' )
+  it ( "should ignore weekends and holidays when those are ignored", () => {
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat } )?.toString () ).toEqual ( toDate ( '7/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, minWorkingDaysBefore: 1 } )?.toString () ).toEqual ( toDate ( '8/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, minWorkingDaysBefore: 2 } )?.toString () ).toEqual ( toDate ( '9/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, minWorkingDaysBefore: 10 } )?.toString () ).toEqual ( toDate ( '17/11/2022' ).toString () )
+  } )
+  it ( "should take account of  weekends  when those are not allowed", () => {
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false } )?.toString () ).toEqual ( toDate ( '7/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false, minWorkingDaysBefore: 1 } )?.toString () ).toEqual ( toDate ( '8/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false, minWorkingDaysBefore: 2 } )?.toString () ).toEqual ( toDate ( '9/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false, minWorkingDaysBefore: 3 } )?.toString () ).toEqual ( toDate ( '10/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false, minWorkingDaysBefore: 4 } )?.toString () ).toEqual ( toDate ( '11/11/2022' ).toString () )
+    //weekend
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false, minWorkingDaysBefore: 5 } )?.toString () ).toEqual ( toDate ( '14/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false, minWorkingDaysBefore: 6 } )?.toString () ).toEqual ( toDate ( '15/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false, minWorkingDaysBefore: 7 } )?.toString () ).toEqual ( toDate ( '16/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false, minWorkingDaysBefore: 8 } )?.toString () ).toEqual ( toDate ( '17/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false, minWorkingDaysBefore: 9 } )?.toString () ).toEqual ( toDate ( '18/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false, minWorkingDaysBefore: 10 } )?.toString () ).toEqual ( toDate ( '21/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowsWeekends: false, minWorkingDaysBefore: 20 } )?.toString () ).toEqual ( toDate ( '5/12/2022' ).toString () )
+  } )
+  it ( "should take account of  holidays  when those are not allowed", () => {
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowHolidays: false } )?.toString () ).toEqual ( toDate ( '7/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowHolidays: false, minWorkingDaysBefore: 1 } )?.toString () ).toEqual ( toDate ( '8/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowHolidays: false, minWorkingDaysBefore: 2 } )?.toString () ).toEqual ( toDate ( '9/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowHolidays: false, minWorkingDaysBefore: 3 } )?.toString () ).toEqual ( toDate ( '10/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowHolidays: false, minWorkingDaysBefore: 4 } )?.toString () ).toEqual ( toDate ( '11/11/2022' ).toString () )
+    //holiday
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowHolidays: false, minWorkingDaysBefore: 5 } )?.toString () ).toEqual ( toDate ( '13/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowHolidays: false, minWorkingDaysBefore: 6 } )?.toString () ).toEqual ( toDate ( '14/11/2022' ).toString () )
+    //holiday
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowHolidays: false, minWorkingDaysBefore: 7 } )?.toString () ).toEqual ( toDate ( '16/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowHolidays: false, minWorkingDaysBefore: 8 } )?.toString () ).toEqual ( toDate ( '17/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowHolidays: false, minWorkingDaysBefore: 9 } )?.toString () ).toEqual ( toDate ( '18/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowHolidays: false, minWorkingDaysBefore: 10 } )?.toString () ).toEqual ( toDate ( '19/11/2022' ).toString () )
+    expect ( firstAllowedDate ( 'GB', udi, { type: 'future', dateFormat, allowHolidays: false, minWorkingDaysBefore: 20 } )?.toString () ).toEqual ( toDate ( '29/11/2022' ).toString () )
+  } )
+} )
+
+describe ( "afterMinWorkingDaysBefore", () => {
+  const udi = validateDateInfo ( dateFormat, okDateInfo )
+  if ( Array.isArray ( udi ) ) throw Error ( 'okDateInfo is actually not ok' )
+
+  it ( "It should take account of the minWorkingDaysBefore", () => {
+    const accept = acceptDate ( dateFormat, 'GB', okDateInfo ) ( { type: 'future', dateFormat, minWorkingDaysBefore: 7 } );
+    expect ( accept ( new Date ( '15/11/2022' ) ) ).toEqual ( ['is before first valid date'] )
+    expect ( accept ( new Date ( '16/11/2022' ) ) ).toEqual ( [] )
+  } )
+} )
 
 describe ( "holidaysOk", () => {
   //     { date: '12/11/2022', jurisdiction: 'GB' },
