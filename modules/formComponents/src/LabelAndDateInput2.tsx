@@ -11,6 +11,7 @@ export interface DatePickerDetails {
 export interface DateInfo {
   today: string;
   holidays: Holidays[];
+  dateFormat: DateFormat
 }
 
 export interface Holidays {
@@ -117,8 +118,9 @@ function map<T> ( d: Date | string[], fn: ( d: Date ) => T ): T | string[] {
   return fn ( d )
 }
 
-export function validateDateInfo ( dateFormat: DateFormat, dateInfo: DateInfo | undefined ): UsableDateInfo | string[] {
+export function validateDateInfo ( dateInfo: DateInfo | undefined ): UsableDateInfo | string[] {
   if ( dateInfo === undefined ) return { today: new Date (), holidays: [] }
+  const dateFormat = dateInfo.dateFormat;
   const [ holidayErrors, holidays ] = errorsAnd ( safeArray ( dateInfo.holidays ).map ( ( { date, jurisdiction }, i ) =>
     map ( parseDate ( `holidays[${i}]`, dateFormat ) ( date ), date => ({ date, jurisdiction }) ) ) )
   const [ todayErrors, todayDates ] = errorsAnd ( [ parseDate ( 'today', dateFormat ) ( dateInfo.today ) ] )
@@ -144,11 +146,9 @@ export function firstAllowedDate<S, C> ( jurisdiction: string | undefined, udi: 
         if ( ok ) count++
       }
     }
-
   }
-
 }
-function acceptDateWithUsable ( dateFormat: DateFormat, jurisdiction: string | undefined, udi: UsableDateInfo ): DateValidation {
+function acceptDateWithUsable (  jurisdiction: string | undefined, udi: UsableDateInfo ): DateValidation {
   const { holidays, today } = udi
   return combine (
     futureOk ( jurisdiction, udi ),
@@ -156,8 +156,8 @@ function acceptDateWithUsable ( dateFormat: DateFormat, jurisdiction: string | u
     holidaysOK ( jurisdiction, holidays ),
     weekEndsOk )
 }
-export function acceptDate ( dateFormat: DateFormat, jurisdiction: string | undefined, dateInfo: DateInfo ): DateValidation {
-  const usableInfo = validateDateInfo ( dateFormat, dateInfo )
+export function acceptDate ( jurisdiction: string | undefined, dateInfo: DateInfo ): DateValidation {
+  const usableInfo = validateDateInfo ( dateInfo )
   if ( Array.isArray ( usableInfo ) ) throw new Error ( `Problem in dateInfo\n${JSON.stringify ( usableInfo )}` )
-  return acceptDateWithUsable ( dateFormat, jurisdiction, usableInfo )
+  return acceptDateWithUsable (  jurisdiction, usableInfo )
 }
