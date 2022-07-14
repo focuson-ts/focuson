@@ -86,10 +86,14 @@ const weekEndsOk: DateValidation = dateRange => ( date: Date ): string[] => {
   return [ 0, 6 ].includes ( date.getDay () ) ? [ 'is a weekend' ] : [];
 }
 
-const futureOk = ( today: Date ): DateValidation => dateRange => {
-  const firstValidDate = today
+const futureOk = ( jurisdiction: string | undefined, udi: UsableDateInfo ): DateValidation => dateRange => {
+  const firstValidDate = firstAllowedDate ( jurisdiction, udi, dateRange )
   return date => {
     if ( isDateRangeInFuture ( dateRange ) ) {
+      if ( firstValidDate === undefined ) {
+        console.error ( 'error - undefined firstValidDate', udi, jurisdiction, dateRange )
+        throw Error ( `Cannot work out if date is in future because firstValidDate is undefined` )
+      }
       return date.getTime () >= firstValidDate.getTime () ? [] : [ `is before first valid date` ]
     } else return []
   };
@@ -124,26 +128,32 @@ export function validateDateInfo ( dateFormat: DateFormat, dateInfo: DateInfo | 
 
 }
 
-export function firstAllowedDate<S, C> ( jurisdiction: string | undefined, udi: UsableDateInfo, dateRange: DateRangeInFuture<S, C> ) {
-  if ( dateRange.minWorkingDaysBefore === undefined ) return udi.today
-  if ( dateRange.minWorkingDaysBefore < 0 ) throw Error ( `Illegal argument: ${JSON.stringify ( dateRange )}` )
-  const date = new Date ( udi.today.getTime () )
-  var count = 0
-  const accept = acceptDateWithUsable ( dateRange.dateFormat, jurisdiction, udi ) ( dateRange );
-  var ok = false
-  while ( count < dateRange.minWorkingDaysBefore ) {
-    ok =  accept ( date ).length === 0
-    if (ok ) count++
-    date.setDate ( date.getDate () + 1 )
+export function firstAllowedDate<S, C> ( jurisdiction: string | undefined, udi: UsableDateInfo, dateRange: DateRange<S, C> ) {
+  if ( isDateRangeInFuture ( dateRange ) ) {
+    const checkDate = combine ( holidaysOK ( jurisdiction, udi.holidays ), weekEndsOk ) ( dateRange )
+    if ( dateRange.minWorkingDaysBefore === undefined ) return udi.today
+    if ( dateRange.minWorkingDaysBefore < 0 ) throw Error ( `Illegal argument: ${JSON.stringify ( dateRange )}` )
+    const date = new Date ( udi.today.getTime () )
+    var count = 0
+    while ( true ) {
+      const ok = checkDate ( date ).length === 0
+      if ( ok && count >= dateRange.minWorkingDaysBefore )
+        return date
+      else {
+        date.setDate ( date.getDate () + 1 )
+        if ( ok ) count++
+      }
+    }
+
   }
-  return date
+
 }
 function acceptDateWithUsable ( dateFormat: DateFormat, jurisdiction: string | undefined, udi: UsableDateInfo ): DateValidation {
   const { holidays, today } = udi
   return combine (
-    holidaysOK ( jurisdiction, holidays ),
-    futureOk ( today ),
+    futureOk ( jurisdiction, udi ),
     pastOk ( today ),
+    holidaysOK ( jurisdiction, holidays ),
     weekEndsOk )
 }
 export function acceptDate ( dateFormat: DateFormat, jurisdiction: string | undefined, dateInfo: DateInfo ): DateValidation {
