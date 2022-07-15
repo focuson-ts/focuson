@@ -47,33 +47,33 @@ describe ( "parseDate", () => {
   } )
 } )
 
-// describe ( "validateDateInfo", () => {
-//   it ( "should turn strings into dates", () => {
-//     const [ errors, [ dateInfo ] ] = errorsAnd ( [ validateDateInfo ( okDateInfo ) ] )
-//     expect ( errors ).toHaveLength ( 0 )
-//     const { holidays, today } = dateInfo
-//     expect ( today.toISOString () ).toEqual ( nov7 )
-//     expect ( holidays.map ( ( { date, jurisdiction } ) => `${jurisdiction}:${date.toISOString ()}` ) ).toEqual ( [
-//       `GB:${nov12}`,
-//       `I:${nov12}`,
-//       `GB:${nov15}`,
-//       `I:${nov17}`
-//     ] )
-//   } )
-//   describe ( "should return issues", () => {
-//     it ( "should report issues with today", () => {
-//       const [ errors, [ dateInfo ] ] = errorsAnd ( [ validateDateInfo ( { ...okDateInfo, today: 'junk' } ) ] )
-//       expect ( errors ).toEqual ( [ "today Invalid date [junk]. Use dd/MM/yyyy" ] )
-//     } )
-//     it ( "should report issues with holidayDates", () => {
-//       const [ errors, [ dateInfo ] ] = errorsAnd ( [ validateDateInfo ( badDateInfo ) ] )
-//       expect ( errors ).toEqual ( [
-//         "holidays[0] Invalid date [bad1]. Use dd/MM/yyyy",
-//         "holidays[1] Invalid date [bad2]. Use dd/MM/yyyy"
-//       ] )
-//     } )
-//   } )
-// } )
+describe ( "validateDateInfo", () => {
+  it ( "should turn strings into dates", () => {
+    const [ errors, [ dateInfo ] ] = errorsAnd ( [ validateDateInfo ( okDateInfo, undefined, { dateFormat } ) ] )
+    expect ( errors ).toHaveLength ( 0 )
+    const { holidays, today } = dateInfo
+    expect ( today.toISOString () ).toEqual ( nov7 )
+    expect ( holidays.map ( d => d.toISOString () ) ).toEqual ( [
+      `${nov12}`,
+      `${nov12}`,
+      `:${nov15}`,
+      `${nov17}`
+    ] )
+  } )
+  describe ( "should return issues", () => {
+    it ( "should report issues with today", () => {
+      const [ errors, [ dateInfo ] ] = errorsAnd ( [ validateDateInfo ( { ...okDateInfo, today: 'junk' }, undefined, { dateFormat } ) ] )
+      expect ( errors ).toEqual ( [ "today Invalid date [junk]. Use dd/MM/yyyy" ] )
+    } )
+    it ( "should report issues with holidayDates", () => {
+      const [ errors, [ dateInfo ] ] = errorsAnd ( [ validateDateInfo ( badDateInfo , undefined, { dateFormat }) ] )
+      expect ( errors ).toEqual ( [
+        "holidays[0] Invalid date [bad1]. Use dd/MM/yyyy",
+        "holidays[1] Invalid date [bad2]. Use dd/MM/yyyy"
+      ] )
+    } )
+  } )
+} )
 
 describe ( "acceptDate", () => {
   describe ( "futureOk", () => {
