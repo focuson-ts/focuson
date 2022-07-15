@@ -115,6 +115,16 @@ export const LabelAndDateInputCD: DisplayCompD = {
     dateFormat: { paramType: 'string', needed: 'no' },
   }
 }
+export const DatePicker2CD: DisplayCompD = {
+  import: "@focuson/form_components", name: "DatePicker2",
+  params: {
+    ...commonParamsWithLabel,
+    dateFormat: { paramType: 'string', needed: 'no' },
+    dateRange: { paramType: 'json', needed: 'no' },
+    jurisdiction: { paramType: 'path', needed: 'no' },
+    dateInfo: { paramType: 'path', needed: 'no' },
+  }
+}
 export const LabelAndDropDownFromDataCD: DisplayCompD = {
   import: "@focuson/form_components",
   name: "LabelAndDropDownFromData",
