@@ -56,7 +56,7 @@ describe ( "validateDateInfo", () => {
     expect ( holidays.map ( d => d.toISOString () ) ).toEqual ( [
       `${nov12}`,
       `${nov12}`,
-      `:${nov15}`,
+      `${nov15}`,
       `${nov17}`
     ] )
   } )

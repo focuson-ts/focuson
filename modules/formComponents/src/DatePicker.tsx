@@ -114,7 +114,7 @@ const errorsBooleanFn = <T extends any> ( fn: ( t: T ) => string[] ): ( t: T ) =
 export function validateDateInfo<S, C> ( dateInfo: DateInfo | undefined, targetJurisdiction: string | undefined, dateRange: DateRange<S, C> ): UsableDateInfo | string[] {
   if ( dateInfo === undefined ) return { today: new Date (), holidays: [], firstValidDate: undefined }
   const dateFormat = dateInfo.dateFormat;
-  const [ holidayErrors, holidays ] = errorsAnd ( safeArray ( dateInfo.holidays ).filter ( h => h.jurisdiction === targetJurisdiction )
+  const [ holidayErrors, holidays ] = errorsAnd ( safeArray ( dateInfo.holidays ).filter ( h => h.jurisdiction === targetJurisdiction || targetJurisdiction === undefined )
     .map ( ( { date, jurisdiction }, i ) =>
       parseDate ( `holidays[${i}]`, dateFormat ) ( date ) ) )
   const [ todayErrors, todayDates ] = errorsAnd ( [ parseDate ( 'today', dateFormat ) ( dateInfo.today ) ] )
