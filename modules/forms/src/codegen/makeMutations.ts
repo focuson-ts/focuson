@@ -4,7 +4,41 @@ import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationDetailsName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
 import { indentList } from "./codegen";
-import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, getMakeMock, importForTubles, isBodyMutationParam, isInputParam, isMessageMutation, isOutputParam, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
+import {
+  allInputParamNames,
+  allInputParams,
+  AllJavaTypes,
+  allOutputParams,
+  AutowiredMutationParam,
+  displayParam,
+  getMakeMock,
+  importForTubles,
+  isBodyMutationParam,
+  isInputParam,
+  isMessageMutation,
+  isOutputParam,
+  isSqlMutationThatIsAList,
+  isSqlOutputParam,
+  isStoredProcOutputParam,
+  javaTypeForOutput,
+  JavaTypePrimitive,
+  ManualMutation,
+  MutationDetail,
+  MutationParam,
+  MutationParamForStoredProc,
+  MutationsForRestAction,
+  nameOrSetParam,
+  OutputMutationParam,
+  parametersFor,
+  paramName, paramNamePathOrValue,
+  requiredmentCheckCodeForJava,
+  RSGetterForJavaType,
+  SelectMutation,
+  setParam,
+  SqlMutation,
+  SqlMutationThatIsAList,
+  StoredProcedureMutation
+} from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
@@ -120,12 +154,11 @@ export const typeForParamAsInput = ( errorPrefix: string, params: NameAnd<AllLen
 };
 
 export function preTransactionLogger (prefix: MutationDetail, paramsA: MutationParam[] ): string {
-  let arg1 = prefix.type
-  if (prefix.type === "storedProc") arg1 = "storedProc"
+  let arg1 = prefix.type === "storedProc" ? "storedProc" : prefix.type
   if (paramsA.filter( isInputParam ).length == 0) return `      logger.debug(MessageFormat.format("${prefix.type}: {${0}}", ${arg1}));`;
   let i = 1;
-  const prefixNamesAndIndex = `${prefix.type}: {${0}}, `.concat( paramsA.filter( isInputParam ).map(p => `${p}: {${i++}}`).join( ", " ) );
-  return `      logger.debug(MessageFormat.format("${prefixNamesAndIndex}", ${arg1}, ${paramsA.filter( isInputParam )}));`;
+  const prefixNamesAndIndex = `${prefix.type}: {${0}}, `.concat( paramsA.filter( isInputParam ).map(p => `${paramNamePathOrValue(p)}: {${i++}}`).join( ", " ) );
+  return `      logger.debug(MessageFormat.format("${prefixNamesAndIndex}", ${arg1}, ${paramsA.filter( isInputParam ).map(p => paramNamePathOrValue(p))}));`;
 }
 
 export function postTransactionLogger (paramsA: MutationParam[] ): string {
@@ -169,15 +202,18 @@ export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: MainPage
 
 export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: SqlMutationThatIsAList, index: string, includeMockIf: boolean ): string[] {
   const paramsA = toArray ( m.params )
-  const sql = m.sql.replace ( /\n/g, ' ' );
   const messageLine = m.messageOnEmptyData ? [ `if (result.isEmpty()) msgs.error(${JSON.stringify ( m.messageOnEmptyData )});` ] : []
   return [
     ...makeMethodDecl ( errorPrefix, paramsA, 'List<Map<String,Object>>', r, name, m, index ),
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
-    `    try (PreparedStatement s = connection.prepareStatement("${sql}")) {`,
+    `    String sql = "${m.sql.replace ( /\n|\t|\s/gm, ' ' )}";`,
+    `    try (PreparedStatement s = connection.prepareStatement(sql)) {`,
+         preTransactionLogger(m, paramsA),
     ...indentList ( indentList ( indentList ( [
         ...allSetObjectForInputs ( m.params ),
+        `long start = System.nanoTime();`,
         `ResultSet rs = s.executeQuery();`,
+        `long durationMs = (System.nanoTime() - start) / 1000;`,
         `List<Map<String,Object>> result = new ArrayList();`,
         `while (rs.next()){`,
         ...indentList ( [
@@ -186,6 +222,7 @@ export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPag
           `result.add(oneLine);` ] ),
         '}',
         ...messageLine,
+          postTransactionLogger(paramsA),
         `return result;`,
       ]
     ) ) ),
