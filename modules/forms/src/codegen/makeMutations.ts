@@ -120,10 +120,12 @@ export const typeForParamAsInput = ( errorPrefix: string, params: NameAnd<AllLen
 };
 
 export function preTransactionLogger (prefix: MutationDetail, paramsA: MutationParam[] ): string {
-  if (paramsA.filter( isInputParam ).length == 0) return `      logger.debug(MessageFormat.format("${prefix.type}: {${0}}", ${prefix.type}));`;
+  let arg1 = prefix.type
+  if (prefix.type === "storedProc") arg1 = "storedProc"
+  if (paramsA.filter( isInputParam ).length == 0) return `      logger.debug(MessageFormat.format("${prefix.type}: {${0}}", ${arg1}));`;
   let i = 1;
   const prefixNamesAndIndex = `${prefix.type}: {${0}}, `.concat( paramsA.filter( isInputParam ).map(p => `${p}: {${i++}}`).join( ", " ) );
-  return `      logger.debug(MessageFormat.format("${prefixNamesAndIndex}", ${prefix.type}, ${paramsA.filter( isInputParam )}));`;
+  return `      logger.debug(MessageFormat.format("${prefixNamesAndIndex}", ${arg1}, ${paramsA.filter( isInputParam )}));`;
 }
 
 export function postTransactionLogger (paramsA: MutationParam[] ): string {
@@ -202,11 +204,16 @@ export function mutationCodeForStoredProcedureCalls<G> ( errorPrefix: string, p:
   let fullName = m.package ? `${m.package}.${m.name}` : m.name;
   return [
     ...makeMethodDecl ( errorPrefix, paramsA, javaTypeForOutput ( paramsA ), r, name, m, index ),
-    ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ), `    try (CallableStatement s = connection.prepareCall("call ${fullName}(${toArray ( m.params ).map ( () => '?' ).join ( ", " )})")) {`,
+    `      String storedProc = "call ${fullName}(${toArray ( m.params ).map ( () => '?' ).join ( ", " )})";`,
+    ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ), `    try (CallableStatement s = connection.prepareCall(storedProc)) {`,
+    preTransactionLogger(m, paramsA),
     ...indentList ( indentList ( indentList ( allSetObjectForStoredProcs ( m.params ) ) ) ),
+    `      long start = System.nanoTime();`,
     `      s.execute();`,
+    `      long durationMs = (System.nanoTime() - start) / 1000;`,
     ...indentList ( indentList ( indentList ( [
       ...getFromStatement ( errorPrefix, 's', paramsA ),
+      postTransactionLogger(paramsA),
       makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),
     `  }}`,
   ];
