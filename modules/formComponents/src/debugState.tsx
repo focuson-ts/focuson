@@ -181,6 +181,7 @@ export function ToggleDebugs<S, C extends PageSelectionContext<S>> ( { state }: 
     <li><ToggleOneDebug state={debugState} name='tagFetcherDebug'/></li>
     <li><ToggleOneDebug state={debugState} name='guardDebug'/></li>
     <li><ToggleOneDebug state={debugState} name='validityDebug'/></li>
+    <li><ToggleOneDebug state={debugState} name='dateDebug'/></li>
   </ul>
 
 }

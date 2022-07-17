@@ -34,9 +34,9 @@ export const devAppConfig: AppConfig = {
   fetch: `fetchWithDelay ( 1, fetchWithPrefix ( 'http://localhost:${javaPort}', loggingFetchFn ) )`,
   combine: MyCombineCD,
   debug: {
-    fetcherDebug: false, guardDebug: false, restDebug: false,  reduxDebug: false, selectedPageDebug: false,
-    loadTreeDebug: false, showTracing: false,
-    recordTrace: true, tagFetcherDebug: false,validityDebug: false, accordions: []
+    fetcherDebug: false, guardDebug: false, restDebug: false, reduxDebug: false, selectedPageDebug: false,
+    loadTreeDebug: false, showTracing: false, dateDebug: false,
+    recordTrace: true, tagFetcherDebug: false, validityDebug: false, accordions: []
   },
   makeSqlStrings: true
 }

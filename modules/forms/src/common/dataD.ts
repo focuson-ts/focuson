@@ -1,5 +1,5 @@
 //Common Data Definitions
-import { DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndNumberInputCD, LabelAndStringInputCD, LabelAndTextAreaCD, NumberInputCD } from "./componentsD";
+import { DatePicker2CD, DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndNumberInputCD, LabelAndStringInputCD, LabelAndTextAreaCD, NumberInputCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeRender";
 import { BooleanValidations, NameAnd, NumberValidations, safeArray, StringValidations } from "@focuson/utils";
 import { Guards } from "../buttons/guardButton";
@@ -405,6 +405,17 @@ export const DateDD: DatePrimitiveDD = {
   display: LabelAndDateInputCD,
   displayParams: { dateFormat: "yyyy/MM/dd" },
   sample: [ "2020/10/01", '2021/09/01', '2022/11/01' ],
+}
+export const DateWithDatePickerDD: DatePrimitiveDD = {
+  datePattern: "dd/MM/yyy",
+  ...datePrimDD,
+  name: 'Date',
+  emptyValue: undefined,
+  allowUndefined: true,
+  description: "The primitive representing a date (w/o time)",
+  display: DatePicker2CD,
+  displayParams: { dateFormat: "dd/MM/yyyy" },
+  sample: [ "1/10/2022", '01/11/2022', '01/12/2022' ],
 }
 export const DateDDMMYYY_DD: DatePrimitiveDD = {
   datePattern: "dd/MM/yyyy",

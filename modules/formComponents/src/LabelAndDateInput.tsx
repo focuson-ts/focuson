@@ -20,7 +20,7 @@ export interface LabelAndDateProps<S, Context> extends CommonStateProps<S, strin
   includeWeekends?: boolean,
   dateFormat?: string
 }
-export const parseDate = ( format: string ) => ( date: string ): Date => {
+export const legacyParseDate = ( format: string ) => ( date: string ): Date => {
   return parse ( date.replace ( /\//g, '-' ), format.replace ( /\//g, '-' ), new Date () )
 };
 export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( props: LabelAndDateProps<S, Context> ) {
@@ -29,7 +29,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
   const dateFormatL = dateFormat ? dateFormat : 'yyyy/MM/dd'
 
   const datesToExclude = datesExcluded?.optJsonOr ( [] ).map ( d => d[ fieldNameInHolidays ? fieldNameInHolidays : 'holiday' ] )
-  const datesToExcludeAsDateType = safeArray ( datesToExclude ).map ( d => parseDate(dateFormatL) ( d ) )
+  const datesToExcludeAsDateType = safeArray ( datesToExclude ).map ( d => legacyParseDate(dateFormatL) ( d ) )
 
   const isHoliday = ( date: Date, datesList: string[] ) => {
     return datesList.find ( ( d: string ) => new Date ( d ).toDateString () === date.toDateString () );
@@ -70,7 +70,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
   const minDate = addDays ( new Date (), safeArray ( datesToExclude ), workingDaysInFuture ? workingDaysInFuture : 0 );
 
   const selectedDateString = state.optJson ()
-  const selectedDate = selectedDateString ? parseDate ( dateFormatL ) ( selectedDateString ) : undefined
+  const selectedDate = selectedDateString ? legacyParseDate ( dateFormatL ) ( selectedDateString ) : undefined
   let error = false
   if ( !isValid ( selectedDate ) ) {
     error = true
@@ -80,6 +80,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
     const date = e.currentTarget.value
     state.setJson ( date, reasonFor ( 'LabelAndDate', 'onChange', id ) )
   }
+
 
   return (<div className={`labelAndDate ${props.labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}>
     <Label state={state} htmlFor={name} label={label}/>

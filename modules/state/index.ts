@@ -7,7 +7,7 @@ export interface LensProps<Main, T, Context> {
   state: LensState<Main, T, Context>
 }
 
-type SetJsonReasonEvent = 'onClick' | 'onChange' | 'textChanged'
+type SetJsonReasonEvent = 'onClick' | 'onChange' | 'textChanged' | 'changeRaw'
 /** The reason we changed the json if it was a component event */
 export interface SetJsonReasonForComponent {
   component?: string;
@@ -127,7 +127,7 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
 
   chainNthFromPath ( state: LensState<Main, number, Context> ): LensState<Main, any, Context> {
     // @ts-ignore We have to ignore because typescript doesn't allow type guards Main here is a T[]... we just have no way to prove it
-    return this.copyWithLens(Lenses.calculatedNth ( state.optional, this.optional ))
+    return this.copyWithLens ( Lenses.calculatedNth ( state.optional, this.optional ) )
   }
   /** 'Modify' the stored json. If the json is undefined, then 'nothing happen' (just like a map)` */
   transform ( fn: ( json: T ) => T, reason: any ) {
@@ -152,8 +152,8 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
       const newMain = ts.reduce ( ( acc, tx, i ) => {
         try {
           return tx[ 0 ].setOption ( acc, r.txLens[ i ][ 1 ] )
-        }catch (e: any){
-          console.error(`had error in mass transform with ${tx[0]?.description}`, tx)
+        } catch ( e: any ) {
+          console.error ( `had error in mass transform with ${tx[ 0 ]?.description}`, tx )
         }
       }, this.main )
       this.dangerouslySetMain ( newMain, r );

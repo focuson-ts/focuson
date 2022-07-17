@@ -10,13 +10,16 @@ export interface HasFocusOnDebug {
 export interface GuardDebug {
   guardDebug?: boolean
 }
-export interface ReduxDebug{
+export interface ReduxDebug {
   reduxDebug?: boolean
 }
-export interface ShowValidityDebug{
+export interface ShowValidityDebug {
   validityDebug?: boolean
 }
-export interface FocusOnDebug extends FetcherDebug, SelectedPageDebug, RestDebug, TracingDebug, AccordionsInDebug, TagFetcherDebug, GuardDebug, ReduxDebug, ShowValidityDebug {
+export interface DateDebug {
+  dateDebug?: boolean
+}
+export interface FocusOnDebug extends FetcherDebug, SelectedPageDebug, RestDebug, TracingDebug, AccordionsInDebug, TagFetcherDebug, GuardDebug, ReduxDebug, ShowValidityDebug, DateDebug {
 
 
 }

@@ -1,11 +1,13 @@
 import { NameAnd, safeArray } from "@focuson/utils";
 import { CommonStateProps, LabelAlignment } from "./common";
-import { parse } from 'date-fns';
-import { LensState } from "@focuson/state";
+import { format, parse } from 'date-fns';
+import { LensState, reasonFor } from "@focuson/state";
 import { PageSelectionContext } from "@focuson/pages";
 import { Label } from "./label";
 import { makeButtons } from "./makeButtons";
 import ReactDatePicker from "react-datepicker";
+import { DateDebug } from "@focuson/focuson";
+import { useRef } from "react";
 
 
 type DateFormat = 'dd/MM/yyyy' | 'yyyy/MM/dd'
@@ -30,8 +32,7 @@ export interface UsableDateInfo {
   holidays: Date[];
 }
 interface CommonDateRange<S, C> {
-  dateFormat: DateFormat
-  allowsWeekends?: boolean;
+  allowWeekends?: boolean;
   allowHolidays?: boolean;
   defaultDay?: boolean
 }
@@ -70,7 +71,7 @@ const holidaysOK = <S, C> ( holidays: Date[], dateRange: DateRange<S, C> ): Date
 }
 
 const weekEndsOk = <S, C> ( dateRange: DateRange<S, C> ): DateValidation => ( date: Date ): string[] => {
-  if ( dateRange.allowsWeekends !== false ) return []
+  if ( dateRange.allowWeekends !== false ) return []
   return [ 0, 6 ].includes ( date.getDay () ) ? [ 'is a weekend' ] : [];
 }
 
@@ -111,7 +112,7 @@ function map<T> ( d: Date | string[], fn: ( d: Date ) => T ): T | string[] {
 const noErrorsBooleanFn = <T extends any> ( fn: ( t: T ) => string[] ): ( t: T ) => boolean => t => fn ( t ).length === 0;
 const errorsBooleanFn = <T extends any> ( fn: ( t: T ) => string[] ): ( t: T ) => boolean => t => fn ( t ).length > 0;
 
-export function validateDateInfo<S, C> ( dateInfo: DateInfo | undefined, targetJurisdiction: string | undefined, dateRange: DateRange<S, C> ): UsableDateInfo | string[] {
+export function validateDateInfo<S, C> ( dateInfo: DateInfo | undefined, targetJurisdiction: string | undefined, dateRange: DateRange<S, C>, debug?: boolean ): UsableDateInfo | string[] {
   if ( dateInfo === undefined ) return { today: new Date (), holidays: [], firstValidDate: undefined }
   const dateFormat = dateInfo.dateFormat;
   const [ holidayErrors, holidays ] = errorsAnd ( safeArray ( dateInfo.holidays ).filter ( h => h.jurisdiction === targetJurisdiction || targetJurisdiction === undefined )
@@ -119,6 +120,7 @@ export function validateDateInfo<S, C> ( dateInfo: DateInfo | undefined, targetJ
       parseDate ( `holidays[${i}]`, dateFormat ) ( date ) ) )
   const [ todayErrors, todayDates ] = errorsAnd ( [ parseDate ( 'today', dateFormat ) ( dateInfo.today ) ] )
   const errors = [ ...todayErrors, ...holidayErrors ]
+  if ( debug ) console.log ( 'validateDateInfo', dateInfo, errors )
   if ( errors.length > 0 ) return errors
   const today = todayDates[ 0 ]
   const firstValidDate = firstAllowedDate ( today, holidays, dateRange )
@@ -140,7 +142,7 @@ export function firstAllowedDate<S, C> ( today: Date | undefined, holidays: Date
         return date
       else {
         date.setDate ( date.getDate () + 1 )
-        if ( ok ) count++
+        if ( ok ) count = count + 1
       }
     }
   }
@@ -160,23 +162,22 @@ export function acceptDateForTest<S, C> ( jurisdiction: string | undefined, date
 }
 
 interface InfoTheDatePickerNeeds {
-  dateFormat: DateFormat,
   dateFilter: ( d: Date ) => boolean;
   holidays: Date[];
   defaultDate: Date | undefined;
 }
 
-export function calcInfoTheDatePickerNeeds<S, C> ( jurisdiction: string | undefined, dateInfo: DateInfo | undefined, dateRange: undefined | DateRange<S, C> ): InfoTheDatePickerNeeds {
-  const dateFormat = dateRange ? dateRange.dateFormat : 'dd/MM/yyyy'
-  const actualDateRange: DateRange<S, C> = dateRange ? dateRange : { dateFormat }
+export function calcInfoTheDatePickerNeeds<S, C> ( id: string, jurisdiction: string | undefined, dateInfo: DateInfo | undefined, dateFormat: DateFormat, dateRange: undefined | DateRange<S, C>, debug: boolean ): InfoTheDatePickerNeeds {
+  const actualDateRange: DateRange<S, C> = dateRange ? dateRange : {}
   const usableInfo = validateDateInfo ( dateInfo, jurisdiction, actualDateRange )
   if ( Array.isArray ( usableInfo ) ) throw  new Error ( `Problem in dateInfo\n${JSON.stringify ( usableInfo )}` )
-  return {
-    dateFormat,
+  let result = {
     dateFilter: noErrorsBooleanFn ( acceptDate ( usableInfo, actualDateRange ) ),
     defaultDate: usableInfo.today,
     holidays: usableInfo.holidays
-  }
+  };
+  if ( debug ) console.log ( 'calcInfoTheDatePickerNeeds', id, dateInfo, result, )
+  return result
 }
 
 interface SelectedDate {
@@ -191,6 +192,7 @@ function selectedDate<S, C> ( state: LensState<S, string, C>, dateFormat: string
   if ( errors.length > 0 ) return { dateString, date: defaultDate, selectedDateErrors: errors }
   return { dateString, date, selectedDateErrors: errors }
 }
+
 export interface DatePickerProps<S, C> extends CommonStateProps<S, string, C>, LabelAlignment {
   label: string;
   readonly?: boolean;
@@ -203,27 +205,43 @@ export interface DatePickerProps<S, C> extends CommonStateProps<S, string, C>, L
 }
 
 export function DatePicker<S, C extends PageSelectionContext<S>> ( props: DatePickerProps<S, C> ) {
-  const { state, jurisdiction, dateInfo, dateRange, name, label, id, mode, readonly } = props
-  const { dateFormat, defaultDate, dateFilter, holidays } = calcInfoTheDatePickerNeeds ( jurisdiction?.optJson (), dateInfo?.optJson (), dateRange )
-  const { dateString, date, selectedDateErrors } = selectedDate ( state, dateFormat, defaultDate )
-  function onChange ( e: any/* probably a date or an array of dates if we are selecting a range (which we aren't)*/ ) {}
-  function onChangeRaw ( e: React.FocusEvent<HTMLInputElement> ) {}
+  const { state, jurisdiction, dateInfo, dateRange, name, label, id, mode, readonly, dateFormat } = props
+  const main: any = state.main
+  const debug = main?.debug?.dateDebug
+  console.log ( 'dateDebug is ', debug )
 
+  const { defaultDate, dateFilter, holidays } = calcInfoTheDatePickerNeeds ( id, jurisdiction?.optJson (), dateInfo?.optJson (), dateFormat, dateRange, debug )
+  const { dateString, date, selectedDateErrors } = selectedDate ( state, dateFormat, defaultDate )
+  function onChange ( e: any/* probably a date or an array of dates if we are selecting a range (which we aren't)*/ ) {
+    let formattedDate = format ( e, dateFormat );
+    if ( debug ) console.log ( 'datePicker.onChange', id, e, dateFormat, formattedDate, debug )
+    state.setJson ( formattedDate, reasonFor ( 'DatePicker', 'onChange', id ) )
+  }
+  function onChangeRaw ( e: React.FocusEvent<HTMLInputElement> ) {
+    if ( debug ) console.log ( 'datePicker.onChangeRaw', id, e.target?.value, 'changed' )
+    state.setJson ( e.target?.value, reasonFor ( 'DatePicker', 'changeRaw', id ) )
+  }
+  let value = state.optJson ();
+  console.log ( 'datePicker', id, 'value', value, 'date', date )
+  let error = selectedDateErrors.length > 0;
+  // const ref=useRef<any>(null)
   return <div className={`labelAndDate ${props.labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}>
     <Label state={state} htmlFor={name} label={label}/>
-    <div className={`${props.buttons && props.buttons.length > 0 ? 'inputAndButtons' : ''}`}>
+    <div className={`${props.buttons && props.buttons.length > 0 ? 'inputAndButtons' : ''} `}>
       <ReactDatePicker id={id}
-                  dateFormat={dateFormat}
-                  todayButton="Select Today"
-                  selected={date}
-                  onChange={( date ) => onChange ( date )}
-                  filterDate={dateFilter}
-                  highlightDates={holidays}
-                  readOnly={mode === 'view' || readonly}
-                  className={selectedDateErrors.length > 0 ? "red-border" : ""}
-                  closeOnScroll={true}
-                  onChangeRaw={onChangeRaw}
-                  placeholderText="Select a date"/>
+                       // customInputRef={ref}
+                       dateFormat={dateFormat}
+                       todayButton="Select Today"
+                       selected={error ? undefined : date}
+                       onChange={( date ) => onChange ( date )}
+                       filterDate={dateFilter}
+                       highlightDates={holidays}
+                       readOnly={mode === 'view' || readonly}
+                       className={error ? "red-border" : ""}
+                       closeOnScroll={true}
+                       onChangeRaw={onChangeRaw}
+                       value={error ? value : undefined} // whats going on here? Well the value is read as a date. And the date picker might change it
+                       placeholderText="Select a date"/>
       {makeButtons ( props )}
     </div>
   </div>

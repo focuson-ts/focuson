@@ -116,7 +116,7 @@ export const LabelAndDateInputCD: DisplayCompD = {
   }
 }
 export const DatePicker2CD: DisplayCompD = {
-  import: "@focuson/form_components", name: "DatePicker2",
+  import: "@focuson/form_components", name: "DatePicker",
   params: {
     ...commonParamsWithLabel,
     dateFormat: { paramType: 'string', needed: 'no' },

@@ -1790,7 +1790,7 @@ pre {
 }
 
 .red-border {
-    border: 3px solid #dc3545;
+    border: 3px solid #dc3545 !important;
 }
 
 .react-datepicker-wrapper input[type=text] {

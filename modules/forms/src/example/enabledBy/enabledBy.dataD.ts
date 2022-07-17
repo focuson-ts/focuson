@@ -1,6 +1,6 @@
 import { ExampleDataD } from "../common";
 import { yesNoDD } from "../SingleOccupation/singleOccupation.dataD";
-import { ManyLineStringDD, NatNumDd, StringDD } from "../../common/dataD";
+import { DateDD, DateWithDatePickerDD, ManyLineStringDD, NatNumDd, StringDD } from "../../common/dataD";
 import { actionEnums, nextActionDD, reasonDD } from "../onChange/onChange.dataD";
 
 
@@ -38,6 +38,7 @@ export const enabledByDataD: ExampleDataD = {
     string: { dataDD: StringDD, displayParams: { enabledBy: 'yes' } },
     number: { dataDD: NatNumDd, displayParams: { enabledBy: 'no' } },
     textArea: { dataDD: ManyLineStringDD, displayParams: { enabledBy: [ 'yes' ], maxlength: 200 } },
+    date: { dataDD: DateWithDatePickerDD }
 
   }
 }
