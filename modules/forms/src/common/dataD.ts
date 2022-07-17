@@ -95,8 +95,13 @@ export interface StringPrimitiveDD extends CommonPrimitiveDD<string> {
   validate?: StringValidations;
 }
 
+export interface Pattern {
+  type: 'Date' | 'String' | 'Integer' | 'Double';
+  pattern: string
+}
 export interface DatePrimitiveDD extends CommonPrimitiveDD<string> {
-  datePattern: string;
+  // datePattern: string;
+  format: Pattern;
   reactType: 'string';
   graphQlType: 'String';
   javaType: 'String',
@@ -397,7 +402,7 @@ export const YesNoDD: PrimitiveDD = {
 }
 
 export const DateDD: DatePrimitiveDD = {
-  datePattern: "yyyy/MM/dd",
+  format: { type: 'Date', pattern: "yyyy/MM/dd" },
   ...datePrimDD,
   name: 'Date',
   emptyValue: '2022/1/1',
@@ -407,7 +412,7 @@ export const DateDD: DatePrimitiveDD = {
   sample: [ "2020/10/01", '2021/09/01', '2022/11/01' ],
 }
 export const DateWithDatePickerDD: DatePrimitiveDD = {
-  datePattern: "dd/MM/yyy",
+  format: { type: 'Date', pattern: "dd/MM/yyy" },
   ...datePrimDD,
   name: 'Date',
   emptyValue: undefined,
@@ -418,7 +423,7 @@ export const DateWithDatePickerDD: DatePrimitiveDD = {
   sample: [ "1/10/2022", '01/11/2022', '01/12/2022' ],
 }
 export const DateDDMMYYY_DD: DatePrimitiveDD = {
-  datePattern: "dd/MM/yyyy",
+  format: { type: 'Date', pattern: "dd/MM/yyyy"},
   ...datePrimDD,
   name: 'Date',
   emptyValue: '1/1/2022',

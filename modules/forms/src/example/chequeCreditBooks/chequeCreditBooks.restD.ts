@@ -19,13 +19,13 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
     'getChequeCreditbooks': [ {
       type: 'storedProc', package: 'somePackage', name: 'getMeMyData1', schema: onlySchema, params: [
         { type: 'output', name: 'val1', javaType: 'Integer', sqlType: 'INTEGER', },
-        { type: 'output', name: 'val2', javaType: 'String', sqlType: 'DATE', datePattern: 'dd-MM-yyyy' },
+        { type: 'output', name: 'val2', javaType: 'String', sqlType: 'DATE', format: { type: 'Date', pattern: 'dd-MM-yyyy' } },
         { type: 'autowired', name: 'systemTime', class: '{thePackage}.utils.ITimeService', method: 'now()', import: true } ]
     },
       {
         type: 'storedProc', name: 'getMeMyData2', schema: onlySchema, params: [
-          { type: 'output', name: 'val3', javaType: 'String', sqlType: 'DATE', datePattern: "dd-MM-yyyy" },
-          { type: 'output', name: 'val4', javaType: 'String', sqlType: 'CHAR', msgLevel: 'error'},
+          { type: 'output', name: 'val3', javaType: 'String', sqlType: 'DATE', format: { type: 'Date', pattern: "dd-MM-yyyy" } },
+          { type: 'output', name: 'val4', javaType: 'String', sqlType: 'CHAR', msgLevel: 'error' },
           { type: 'autowired', name: 'systemTime', class: '{thePackage}.utils.ITimeService', method: 'notused', setParam: 'systemTime.now()', import: true } ]
       } ]
   },
@@ -35,7 +35,7 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
         {
           type: 'storedProc', name: 'sequencename', params: [
             { type: 'output', name: 'checkbookId', javaType: 'Integer', sqlType: 'INTEGER' },
-            { type: 'output', name: 'checkbookIdPart2', javaType: 'String', sqlType: 'DATE', datePattern: 'dd-MM-yyyy' },
+            { type: 'output', name: 'checkbookIdPart2', javaType: 'String', sqlType: 'DATE', format: { type: 'Date', pattern: 'dd-MM-yyyy' } },
             { type: 'autowired', name: 'systemTime', class: '{thePackage}.utils.ITimeService', method: 'now()', import: true }
           ], schema: onlySchema
         },
@@ -43,7 +43,7 @@ export const chequeCreditBooksRestD: RestD<AllGuards> = {
         {
           type: 'storedProc', name: 'auditCreateCheckBook',
           params: [ 'brandRef', 'accountId', 'checkbookId',
-            {type: 'input', name: 'checkbookIdPart2', javaType: 'String', datePattern: 'dd-MM-yyyy'} ], schema: onlySchema
+            { type: 'input', name: 'checkbookIdPart2', javaType: 'String', format: { type: 'Date', pattern: 'dd-MM-yyyy' } } ], schema: onlySchema
         },
         {
           type: 'manual', name: 'manualLog',

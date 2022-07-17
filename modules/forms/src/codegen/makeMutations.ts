@@ -8,39 +8,47 @@ import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, Auto
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
+import { Pattern } from "../common/dataD";
 
 
-export function setObjectFor ( m: MutationParam, i: number ): string {
+export const setObjectFor = ( errorPrefix: string ) => ( m: MutationParam, i: number ): string => {
   const index = i + 1
   if ( isStoredProcOutputParam ( m ) ) return `s.registerOutParameter(${index},java.sql.Types.${m.sqlType});`
   if ( typeof m === 'string' ) return `s.setObject(${index}, ${m});`
-  if ( isBodyMutationParam ( m ) ) return processInput ( m.javaType, m.datePattern, index, m );
-  if ( isInputParam ( m ) ) return processInput ( m.javaType, m.datePattern, index, m );
+  if ( isBodyMutationParam ( m ) ) return processInput ( errorPrefix, m.javaType, m.format, index, m );
+  if ( isInputParam ( m ) ) return processInput ( errorPrefix, m.javaType, m.format, index, m );
   if ( setParam ( m ) ) return `s.setObject(${index}, ${setParam ( m )});`
   if ( m.type === 'autowired' ) return `s.setObject(${index}, ${m.name}.${m.method});`;
   if ( m.type === 'null' ) return `s.setObject(${index},null);`
   if ( m.type === 'integer' ) return `s.setInt(${index}, ${m.value});`
   if ( m.type === 'string' ) return `s.setString(${index}, "${m.value.replace ( /"/g, '\"' )}");`
   throw new Error ( `Don't know how to process ${JSON.stringify ( m )}` )
-}
+};
 
-function processInput ( javaType: JavaTypePrimitive | undefined, datePattern: string | undefined, index: number, m: MutationParam ): string {
+function processInput ( errorPrefix, javaType: JavaTypePrimitive | undefined, format: Pattern | undefined, index: number, m: MutationParam ): string {
   let name = nameOrSetParam ( m );
   const body = `s.setObject(${index}, ${name});`;
-  if ( datePattern === undefined ) return body;
+  if ( format === undefined ) return body;
   switch ( javaType ) {
     case "String":
-      return `s.setDate(${index}, DateFormatter.parseDate("${datePattern}", ${name}));`;
+      switch ( format.type ) {
+        case "Date":
+          return `s.setDate(${index}, DateFormatter.parseDate("${format.pattern}", ${name}));`;
+        case "Double":
+        case "Integer":
+        case "String":
+          throw new Error ( `${errorPrefix} don't know how to addFormat for a String for ${format}, ${javaType}` )
+      }
     default:
-      throw new Error ( `makeMutations: don't know how to addFormat for ${datePattern}, ${javaType}` )
+      throw new Error ( `${errorPrefix} makeMutations: don't know how to addFormat for ${format}, ${javaType}` )
   }
 }
 
-export function allSetObjectForStoredProcs ( m: MutationParam | MutationParam[] ): string[] {
-  return toArray ( m ).filter ( m => !isSqlOutputParam ( m ) ).map ( setObjectFor )
+export function allSetObjectForStoredProcs ( errorPrefix: string, m: MutationParam | MutationParam[] ): string[] {
+  return toArray ( m ).filter ( m => !isSqlOutputParam ( m ) ).map ( setObjectFor ( errorPrefix ) )
 }
-export function allSetObjectForInputs ( m: MutationParam | MutationParam[] ): string[] {
-  return toArray ( m ).filter ( isInputParam ).map ( setObjectFor )
+export function allSetObjectForInputs ( errorPrefix: string, m: MutationParam | MutationParam[] ): string[] {
+  return toArray ( m ).filter ( isInputParam ).map ( setObjectFor ( errorPrefix ) )
 }
 
 export function makeMutationResolverReturnStatement ( outputs: OutputMutationParam[] ): string {
@@ -71,37 +79,44 @@ function commonIfDbNameBlock<G> ( r: RestD<G>, paramsA: MutationParam[], name: s
 export function getFromStatement ( errorPrefix: string, from: string, m: MutationParam[] ): string[] {
   return m.flatMap ( ( m, i ) => {
     if ( !isStoredProcOutputParam ( m ) ) return []
-    return [ `${m.javaType} ${m.name} = ${addFormat ( errorPrefix, m.datePattern, m.javaType, from, i + 1 )};` ]
-    throw new Error ( `${errorPrefix} don't know how to getFromStatement for ${JSON.stringify ( m )}` )
+    return [ `${m.javaType} ${m.name} = ${addFormat ( errorPrefix, m.format, m.javaType, from, i + 1 )};` ]
+    // throw new Error ( `${errorPrefix} don't know how to getFromStatement for ${JSON.stringify ( m )}` )
   } )
 }
 
 export function getFromResultSetIntoVariables ( errorPrefix: string, from: string, m: MutationParam[] ): string[] {
-  return m.flatMap ( ( m, i ) => {
+  return m.flatMap ( ( m ) => {
     if ( !isSqlOutputParam ( m ) ) return []
-    return [ `${m.javaType} ${m.name} = ${addFormat ( errorPrefix, m.datePattern, m.javaType, from, m.rsName )};` ]
-    throw new Error ( `${errorPrefix} don't know how to getFromResultSetIntoVariables for ${JSON.stringify ( m )}` )
+    return [ `${m.javaType} ${m.name} = ${addFormat ( errorPrefix, m.format, m.javaType, from, m.rsName )};` ]
+    // throw new Error ( `${errorPrefix} don't know how to getFromResultSetIntoVariables for ${JSON.stringify ( m )}` )
   } )
 }
 
 export function getFromResultSetPutInMap ( errorPrefix: string, map: string, from: string, m: MutationParam[] ) {
-  return m.flatMap ( ( m, i ) => {
+  return m.flatMap ( ( m ) => {
     if ( !isSqlOutputParam ( m ) ) return []
-    return `${map}.put("${m.name}", ${addFormat ( errorPrefix, m.datePattern, m.javaType, from, m.rsName )});`
+    return `${map}.put("${m.name}", ${addFormat ( errorPrefix, m.format, m.javaType, from, m.rsName )});`
   } )
 }
 
-export function addFormat ( errorPrefix: string, datePattern: string | undefined, javaType: JavaTypePrimitive, from: string, argument: string | number ): string {
+export function addFormat ( errorPrefix: string, format: Pattern | undefined, javaType: JavaTypePrimitive, from: string, argument: string | number ): string {
   const arg = typeof argument === 'number' ? argument : `"${argument}"`
   let rsGetter = RSGetterForJavaType[ javaType ];
   if ( rsGetter === undefined ) throw Error ( `${errorPrefix} Trying to do an rsGetter and the field is a ${javaType} ` )
   const body = `${from}.${rsGetter}(${arg})`;
-  if ( !datePattern ) return body
+  if ( !format ) return body
   switch ( javaType ) {
     case "String":
-      return ` DateFormatter.formatDate("${datePattern}", ${from}.getDate(${arg}))`
+      switch ( format.type ) {
+        case "Date":
+          return ` DateFormatter.formatDate("${format.pattern}", ${from}.getDate(${arg}))`
+        case "Double":
+        case "Integer":
+        case "String":
+          throw new Error ( `${errorPrefix} don't know how to addFormat for a String for ${format}, ${javaType}` )
+      }
     default:
-      throw new Error ( `${errorPrefix} don't know how to addFormat for ${datePattern}, ${javaType}` )
+      throw new Error ( `${errorPrefix} don't know how to addFormat for ${format}, ${javaType}` )
   }
 }
 
@@ -137,7 +152,7 @@ export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: MainPage
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
     `    try (PreparedStatement s = connection.prepareStatement("${m.sql.replace ( /\n/g, ' ' )}")) {`,
     ...indentList ( indentList ( indentList ( [
-        ...allSetObjectForInputs ( m.params ),
+        ...allSetObjectForInputs ( errorPrefix, m.params ),
         ...execute,
         ...getFromResultSetIntoVariables ( errorPrefix, 'rs', paramsA ),
         makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) )
@@ -156,7 +171,7 @@ export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPag
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
     `    try (PreparedStatement s = connection.prepareStatement("${sql}")) {`,
     ...indentList ( indentList ( indentList ( [
-        ...allSetObjectForInputs ( m.params ),
+        ...allSetObjectForInputs ( errorPrefix, m.params ),
         `ResultSet rs = s.executeQuery();`,
         `List<Map<String,Object>> result = new ArrayList();`,
         `while (rs.next()){`,
@@ -185,7 +200,7 @@ export function mutationCodeForStoredProcedureCalls<G> ( errorPrefix: string, p:
   return [
     ...makeMethodDecl ( errorPrefix, paramsA, javaTypeForOutput ( paramsA ), r, name, m, index ),
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ), `    try (CallableStatement s = connection.prepareCall("call ${fullName}(${toArray ( m.params ).map ( () => '?' ).join ( ", " )})")) {`,
-    ...indentList ( indentList ( indentList ( allSetObjectForStoredProcs ( m.params ) ) ) ),
+    ...indentList ( indentList ( indentList ( allSetObjectForStoredProcs ( errorPrefix, m.params ) ) ) ),
     `      s.execute();`,
     ...indentList ( indentList ( indentList ( [
       ...getFromStatement ( errorPrefix, 's', paramsA ),

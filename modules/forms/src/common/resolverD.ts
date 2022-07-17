@@ -1,6 +1,7 @@
 import { NameAnd, RestAction, SimpleMessageLevel, toArray, unique } from "@focuson/utils";
 import { JavaWiringParams } from "../codegen/config";
 import { indentList } from "../codegen/codegen";
+import { Pattern } from "./dataD";
 
 
 export interface Schema {
@@ -51,9 +52,9 @@ export function parametersFor ( m: MutationDetail ): MutationParam[] {
   return toArray ( m.params )
 }
 
-export function getMakeMock(m: MutationDetail) : boolean {
-  if (isMessageMutation(m)) return false
-  return m.makeMock === undefined? true :  m.makeMock
+export function getMakeMock ( m: MutationDetail ): boolean {
+  if ( isMessageMutation ( m ) ) return false
+  return m.makeMock === undefined ? true : m.makeMock
 }
 export type MutationDetail = StoredProcedureMutation |
   SqlMutation | SqlMutationThatIsAList |
@@ -129,7 +130,7 @@ export interface SelectMutation {
   select: GuardedMutation[]
 }
 
-export type GuardedMutation = GuardedManualMutation | GuardedSqMutation | GuardedStoredProcedureMutation | GuardedSqMutationThatIsAList| GuardedMessageMutation
+export type GuardedMutation = GuardedManualMutation | GuardedSqMutation | GuardedStoredProcedureMutation | GuardedSqMutationThatIsAList | GuardedMessageMutation
 export interface GuardedManualMutation extends ManualMutation {
   guard: string[]
 }
@@ -313,7 +314,7 @@ interface SimpleInputMutationParam {
   javaType?: JavaTypePrimitive;
   setParam?: string;
   required?: boolean;
-  datePattern?: string;
+  format?: Pattern
 }
 interface FromParentMutationParam {
   type: 'fromParent';
@@ -321,7 +322,7 @@ interface FromParentMutationParam {
   javaType?: JavaTypePrimitive;
   setParam?: string;
   required?: boolean;
-  datePattern?: string;
+  format?: Pattern
 }
 export function isParentMutationParam ( p: MutationParam ): p is FromParentMutationParam {
   const a: any = p
@@ -336,7 +337,7 @@ interface BodyMutationParam {
   javaType?: JavaTypePrimitive;
   setParam?: string;
   required?: boolean;
-  datePattern?: string;
+  format?: Pattern
 }
 export function isBodyMutationParam ( p: MutationParam ): p is BodyMutationParam {
   const a: any = p
@@ -349,7 +350,7 @@ export interface OutputForStoredProcMutationParam {
   javaType: JavaTypePrimitive
   sqlType: string;
   msgLevel?: SimpleMessageLevel
-  datePattern?: string
+  format?: Pattern
 }
 export interface OutputForSqlMutationParam {
   type: 'output';
@@ -357,7 +358,7 @@ export interface OutputForSqlMutationParam {
   javaType: JavaTypePrimitive;
   rsName: string;
   msgLevel?: SimpleMessageLevel
-  datePattern?: string
+  format?: Pattern
 }
 export type AllJavaTypes = JavaTypePrimitive | 'Map<String,Object>' | 'List<Map<String,Object>>' | 'Boolean'
 export interface OutputForManualParam {
@@ -365,7 +366,8 @@ export interface OutputForManualParam {
   name: string;
   javaType: AllJavaTypes;
   msgLevel?: SimpleMessageLevel
-  datePattern?: string
+  format?: Pattern
+
 }
 export interface NullMutationParam {
   type: 'null';

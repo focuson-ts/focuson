@@ -34,12 +34,12 @@ describe ( "makeResolvers", () => {
       "import java.sql.Connection;",
       "import java.sql.SQLException;",
       "import graphql.schema.DataFetcher;",
-      "import java.text.SimpleDateFormat;",
       "import focuson.data.fetchers.ChequeCreditbooks.ChequeCreditbooks_getChequeCreditbooks_FFetcher;",
       "import focuson.data.utils.LoggedDataSource;",
       "import focuson.data.utils.Messages;",
       "import focuson.data.utils.FocusonNotFound404Exception;",
       "import static focuson.data.utils.GraphQlUtils.getData;",
+      "import focuson.data.utils.DateFormatter;",
       "//added by param systemTime",
       "import focuson.data.utils.ITimeService;",
       "import focuson.data.mutator.utils.Tuple2;",
@@ -86,7 +86,7 @@ describe ( "makeResolvers", () => {
       "      s.setObject(3, systemTime.now());",
       "      s.execute();",
       "      Integer val1 = s.getInt(1);",
-      "      String val2 = new SimpleDateFormat(\"dd-MM-yyyy\").format(s.getDate(2));",
+      "      String val2 =  DateFormatter.formatDate(\"dd-MM-yyyy\", s.getDate(2));",
       "      return new Tuple2<Integer,String>(val1,val2);",
       "  }}",
       "    public Tuple2<String,String> getMeMyData21(Connection connection, Messages msgs, Object dbName) throws SQLException {",
@@ -95,20 +95,20 @@ describe ( "makeResolvers", () => {
       "      s.registerOutParameter(2,java.sql.Types.CHAR);",
       "      s.setObject(3, systemTime.now());",
       "      s.execute();",
-      "      String val3 = new SimpleDateFormat(\"dd-MM-yyyy\").format(s.getDate(1));",
+      "      String val3 =  DateFormatter.formatDate(\"dd-MM-yyyy\", s.getDate(1));",
       "      String val4 = s.getString(2);",
       "      return new Tuple2<String,String>(val3,val4);",
       "  }}",
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ] )
+    ])
   } )
 
   it ( `should make a resolver for a 'get' that is done manually`, () => {
     expect ( makeResolvers ( paramsForTest, EAccountsSummaryPD, 'eAccountsSummary', eAccountsSummaryRestD,
       'getEAccountsSummary', safeObject ( eAccountsSummaryRestD.resolvers ).totalMonthlyCost, findQueryMutationResolver ( eAccountsSummaryRestD, 'get' )
-    ) ).toEqual ( [
+    ) ).toEqual ([
       "package focuson.data.resolvers.EAccountsSummary;",
       "",
       "import focuson.data.fetchers.IFetcher;",
@@ -126,12 +126,12 @@ describe ( "makeResolvers", () => {
       "import java.sql.Connection;",
       "import java.sql.SQLException;",
       "import graphql.schema.DataFetcher;",
-      "import java.text.SimpleDateFormat;",
       "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_getEAccountsSummary_FFetcher;",
       "import focuson.data.utils.LoggedDataSource;",
       "import focuson.data.utils.Messages;",
       "import focuson.data.utils.FocusonNotFound404Exception;",
       "import static focuson.data.utils.GraphQlUtils.getData;",
+      "import focuson.data.utils.DateFormatter;",
       "import focuson.data.mutator.utils.Tuple2;",
       "@Component",
       "public class EAccountsSummary_getEAccountsSummaryResolver implements EAccountsSummary_getEAccountsSummary_FFetcher{",
@@ -172,7 +172,7 @@ describe ( "makeResolvers", () => {
   it ( "should make resolvers for non 'get' resolvers", () => {
     expect ( makeResolvers ( paramsForTest, EAccountsSummaryPD, 'eAccountsSummary', eAccountsSummaryRestD,
       'totalMonthlyCost', safeObject ( eAccountsSummaryRestD.resolvers ).balancesAndMonthlyCostResolver, findResolverData ( 'someError', findChildResolvers ( eAccountsSummaryRestD ), 'balancesAndMonthlyCostResolver' )
-    ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
       "package focuson.data.resolvers.EAccountsSummary;",
       "",
       "import focuson.data.fetchers.IFetcher;",
@@ -190,12 +190,12 @@ describe ( "makeResolvers", () => {
       "import java.sql.Connection;",
       "import java.sql.SQLException;",
       "import graphql.schema.DataFetcher;",
-      "import java.text.SimpleDateFormat;",
       "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_balancesAndMonthlyCostResolver_FFetcher;",
       "import focuson.data.utils.LoggedDataSource;",
       "import focuson.data.utils.Messages;",
       "import focuson.data.utils.FocusonNotFound404Exception;",
       "import static focuson.data.utils.GraphQlUtils.getData;",
+      "import focuson.data.utils.DateFormatter;",
       "import focuson.data.mutator.utils.Tuple2;",
       "@Component",
       "public class EAccountsSummary_balancesAndMonthlyCostResolverResolver implements EAccountsSummary_balancesAndMonthlyCostResolver_FFetcher{",
@@ -246,13 +246,13 @@ describe ( "makeResolvers", () => {
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ] )
+    ])
   } )
 
   it ( "should make resolvers for a sql list resolvers", () => {
     expect ( makeResolvers ( paramsForTest, PostCodeMainPage, 'postcode', postcodeWithResolversRestD,
       'getPostCodeDataLine', safeObject ( postcodeWithResolversRestD.resolvers ).getPostCodeDataLine, findQueryMutationResolver ( postcodeWithResolversRestD, 'get' )
-    ) ).toEqual ( [
+    ) ).toEqual ([
       "package focuson.data.resolvers.PostCodeMainPage;",
       "",
       "import focuson.data.fetchers.IFetcher;",
@@ -270,12 +270,12 @@ describe ( "makeResolvers", () => {
       "import java.sql.Connection;",
       "import java.sql.SQLException;",
       "import graphql.schema.DataFetcher;",
-      "import java.text.SimpleDateFormat;",
       "import focuson.data.fetchers.PostCodeMainPage.PostCodeSearchResponse_getPostCodeDataLine_FFetcher;",
       "import focuson.data.utils.LoggedDataSource;",
       "import focuson.data.utils.Messages;",
       "import focuson.data.utils.FocusonNotFound404Exception;",
       "import static focuson.data.utils.GraphQlUtils.getData;",
+      "import focuson.data.utils.DateFormatter;",
       "import focuson.data.mutator.utils.Tuple2;",
       "@Component",
       "public class PostCodeSearchResponse_getPostCodeDataLineResolver implements PostCodeSearchResponse_getPostCodeDataLine_FFetcher{",
@@ -310,7 +310,7 @@ describe ( "makeResolvers", () => {
       "      List<Map<String,Object>> result = new ArrayList();",
       "      while (rs.next()){",
       "        Map<String,Object> oneLine = new HashMap();",
-      "        oneLine.put(\"line1\", new SimpleDateFormat(\"dd-MM-yyyy\").format(rs.getDate(\"zzline1\")));",
+      "        oneLine.put(\"line1\",  DateFormatter.formatDate(\"dd-MM-yyyy\", rs.getDate(\"zzline1\")));",
       "        oneLine.put(\"line2\", rs.getString(\"zzline2\"));",
       "        oneLine.put(\"line3\", rs.getString(\"zzline3\"));",
       "        oneLine.put(\"line4\", rs.getString(\"zzline4\"));",
@@ -346,12 +346,12 @@ describe ( "makeResolvers", () => {
       "import java.sql.Connection;",
       "import java.sql.SQLException;",
       "import graphql.schema.DataFetcher;",
-      "import java.text.SimpleDateFormat;",
       "import focuson.data.fetchers.ListOfPaymentsPage.AccountDetailsForListOfPayments_getAccountDetailsForListOfPayments_FFetcher;",
       "import focuson.data.utils.LoggedDataSource;",
       "import focuson.data.utils.Messages;",
       "import focuson.data.utils.FocusonNotFound404Exception;",
       "import static focuson.data.utils.GraphQlUtils.getData;",
+      "import focuson.data.utils.DateFormatter;",
       "import focuson.data.mutator.utils.Tuple2;",
       "@Component",
       "public class AccountDetailsForListOfPayments_getAccountDetailsForListOfPaymentsResolver implements AccountDetailsForListOfPayments_getAccountDetailsForListOfPayments_FFetcher{",

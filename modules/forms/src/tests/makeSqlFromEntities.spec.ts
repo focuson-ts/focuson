@@ -470,7 +470,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Optional;",
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
-        "import java.text.SimpleDateFormat;",
+        "import focuson.data.utils.DateFormatter;",
         "",
         "//{'accountId':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':44444444},'brandRef':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':10},'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
         "public class JointAccount_jointAccountMaps {",
@@ -650,7 +650,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Optional;",
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
-        "import java.text.SimpleDateFormat;",
+        "import focuson.data.utils.DateFormatter;",
         "",
         "//{'accountId':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':44444444},'brandRef':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':10},'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
         "public class JointAccount_jointAccountMaps0 {",
@@ -781,7 +781,7 @@ describe ( "makeMapsForRest", () => {
         "  public JointAccount_jointAccountMaps0(ResultSet rs) throws SQLException{",
         "    //This is a very long  field alias. If it gives you problems consider giving it an explicit field alias in the dataDD",
         "    this.main_addresses.put('line1', rs.getString('zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode'));",
-        "    this.main_addresses.put('line2', new SimpleDateFormat('dd-MM-yyyy').format(rs.getDate('mainAddress_zzline2')));",
+        "    this.main_addresses.put('line2', DateFormatter.formatDate('dd-MM-yyyy',rs.getDate('mainAddress_zzline2')));",
         "    ",
         "    this.j_acc_id = rs.getInt('j_acc_id');",
         "    this.j_brand_id = rs.getInt('j_brand_id');",
@@ -808,7 +808,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Optional;",
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
-        "import java.text.SimpleDateFormat;",
+        "import focuson.data.utils.DateFormatter;",
         "",
         "//{'accountId':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':44444444},'brandRef':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':10},'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
         "public class JointAccount_jointAccountMaps1 {",
@@ -939,7 +939,7 @@ describe ( "makeMapsForRest", () => {
         "  public JointAccount_jointAccountMaps1(ResultSet rs) throws SQLException{",
         "    //This is a very long  field alias. If it gives you problems consider giving it an explicit field alias in the dataDD",
         "    this.joint_addresses.put('line1', rs.getString('zzline1FieldAliasItIsVeryLongToLetUsTestIfWeGetACommentInTheGeneratedCode'));",
-        "    this.joint_addresses.put('line2', new SimpleDateFormat('dd-MM-yyyy').format(rs.getDate('jointAddress_zzline2')));",
+        "    this.joint_addresses.put('line2', DateFormatter.formatDate('dd-MM-yyyy',rs.getDate('jointAddress_zzline2')));",
         "    ",
         "    this.j_acc_id = rs.getInt('j_acc_id');",
         "    this.j_brand_id = rs.getInt('j_brand_id');",
@@ -989,7 +989,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Optional;",
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
-        "import java.text.SimpleDateFormat;",
+        "import focuson.data.utils.DateFormatter;",
         "",
         "//{'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'},'postcode':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','lens':'~/postcode/search','testValue':'LW12 4RG'}}",
         "public class PostCodeMainPage_postcodeMaps {",
@@ -1039,7 +1039,7 @@ describe ( "makeMapsForRest", () => {
         "  }",
         "}"
       ]
-    ] )
+    ])
 
   } )
 } )

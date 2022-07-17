@@ -23,7 +23,7 @@ export const RequestDetailsDD: ExampleDataD = {
 
   structure: {
     title: { dataDD: ReadOnlyStringDD, db: { table: clientNames_C10T, field: 'ttl' }, sample: [ 'Mr', 'Mrs' ] },
-    date: { dataDD: DateDD, db: { table: clientNames_C10T, field: 'startData', datePattern: 'dd/MM/yyyy' } },
+    date: { dataDD: DateDD, db: { table: clientNames_C10T, field: 'startData', format: { type: 'Date', pattern: 'dd/MM/yyyy' } } },
     forename: { dataDD: ReadOnlyStringDD, db: { table: clientNames_C10T, field: 'clifor' }, sample: [ 'Fred', 'Fredrica' ] },
     surname: { dataDD: ReadOnlyStringDD, db: { table: clientNames_C10T, field: 'clisur' }, sample: [ 'Bloggs', 'Smith' ] },
     fullname: { dataDD: { ...ReadOnlyStringDD, resolver: 'getFullName' }, sample: [ 'Fred Bloggs', 'Fredrica Smith' ] },

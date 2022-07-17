@@ -20,7 +20,7 @@ const manOutputMp: OutputForManualParam = { type: "output", javaType: 'Integer',
 
 describe ( "getFromStatement", () => {
   it ( "generate the code to get the mp from a CallableStatement", () => {
-    expect ( getFromStatement ( `somePrefix`,'ss', [ stringMP, integerMP, spOutputMP, nullMP, sqlOutputMP, manOutputMp ] ) ).toEqual ( [
+    expect ( getFromStatement ( `somePrefix`, 'ss', [ stringMP, integerMP, spOutputMP, nullMP, sqlOutputMP, manOutputMp ] ) ).toEqual ( [
       "String someNameSP = ss.getString(3);",
       "String someNameSql = ss.getString(5);",
       "Integer someNameMan = ss.getInt(6);"
@@ -29,14 +29,14 @@ describe ( "getFromStatement", () => {
 } )
 describe ( "getFromResultSet", () => {
   it ( "generate the code to get the mp from a ResultSet", () => {
-    expect ( getFromResultSetIntoVariables ( `somePrefix`,'ss', [ stringMP, integerMP, spOutputMP, nullMP, sqlOutputMP, manOutputMp ] ) ).toEqual ( [
+    expect ( getFromResultSetIntoVariables ( `somePrefix`, 'ss', [ stringMP, integerMP, spOutputMP, nullMP, sqlOutputMP, manOutputMp ] ) ).toEqual ( [
       "String someNameSql = ss.getString(\"rsName\");"
     ] )
   } )
 } )
 describe ( "setObjectFor", () => {
   it ( "generate the code to get the mp from a ResultSet", () => {
-    expect ( [ stringMP, integerMP, spOutputMP, nullMP ].map ( setObjectFor ) ).toEqual ( [
+    expect ( [ stringMP, integerMP, spOutputMP, nullMP ].map ( setObjectFor ( 'errorPrefix' ) ) ).toEqual ( [
       "s.setString(1, \"someString\");",
       "s.setInt(2, 123);",
       "s.registerOutParameter(3,java.sql.Types.someSqlType);",
@@ -84,7 +84,7 @@ describe ( "returnStatement", () => {
 
 describe ( "makeMutations", () => {
   it ( "should create an mutation class with a method for each mutation for that rest - simple", () => {
-    expect ( makeMutations ( paramsForTest, EAccountsSummaryPD, 'theRestName', eAccountsSummaryRestD, safeArray ( eAccountsSummaryRestD.mutations )[ 0 ] ) ).toEqual ( [
+    expect ( makeMutations ( paramsForTest, EAccountsSummaryPD, 'theRestName', eAccountsSummaryRestD, safeArray ( eAccountsSummaryRestD.mutations )[ 0 ] ) ).toEqual ([
       "package focuson.data.mutator.EAccountsSummary;",
       "",
       "import focuson.data.fetchers.IFetcher;",
@@ -103,8 +103,8 @@ describe ( "makeMutations", () => {
       "import java.sql.ResultSet;",
       "import java.sql.Connection;",
       "import java.sql.SQLException;",
-      "import java.text.SimpleDateFormat;",
       "import focuson.data.utils.IOGNL;",
+      "import focuson.data.utils.DateFormatter;",
       "import focuson.data.utils.Messages;",
       "import focuson.data.mutator.utils.Tuple2;",
       "@Component",
@@ -147,8 +147,8 @@ describe ( "makeMutations", () => {
       "import java.sql.ResultSet;",
       "import java.sql.Connection;",
       "import java.sql.SQLException;",
-      "import java.text.SimpleDateFormat;",
       "import focuson.data.utils.IOGNL;",
+      "import focuson.data.utils.DateFormatter;",
       "import focuson.data.utils.Messages;",
       "//added by param systemTime",
       "import focuson.data.utils.ITimeService;",
@@ -164,7 +164,7 @@ describe ( "makeMutations", () => {
       "",
       "    public Tuple2<Integer,String> sequencename0(Connection connection, Messages msgs, Object dbName) throws SQLException {",
       "        if (dbName.equals(IFetcher.mock)) {",
-      "           System.out.println(\"Mock audit: sequencename0( {'type':'output','name':'checkbookId','javaType':'Integer','sqlType':'INTEGER'}, {'type':'output','name':'checkbookIdPart2','javaType':'String','sqlType':'DATE','datePattern':'dd-MM-yyyy'}, {'type':'autowired','name':'systemTime','class':'{thePackage}.utils.ITimeService','method':'now()','import':true}+ )\");",
+      "           System.out.println(\"Mock audit: sequencename0( {'type':'output','name':'checkbookId','javaType':'Integer','sqlType':'INTEGER'}, {'type':'output','name':'checkbookIdPart2','javaType':'String','sqlType':'DATE','format':{'type':'Date','pattern':'dd-MM-yyyy'}}, {'type':'autowired','name':'systemTime','class':'{thePackage}.utils.ITimeService','method':'now()','import':true}+ )\");",
       "           return new Tuple2<>(0,\"1\");",
       "    }",
       "    try (CallableStatement s = connection.prepareCall(\"call sequencename(?, ?, ?)\")) {",
@@ -173,13 +173,13 @@ describe ( "makeMutations", () => {
       "      s.setObject(3, systemTime.now());",
       "      s.execute();",
       "      Integer checkbookId = s.getInt(1);",
-      "      String checkbookIdPart2 = new SimpleDateFormat(\"dd-MM-yyyy\").format(s.getDate(2));",
+      "      String checkbookIdPart2 =  DateFormatter.formatDate(\"dd-MM-yyyy\", s.getDate(2));",
       "      return new Tuple2<Integer,String>(checkbookId,checkbookIdPart2);",
       "  }}",
       "    public void auditCreateCheckBook1(Connection connection, Messages msgs, Object dbName, int brandRef, int accountId, Object checkbookId, String checkbookIdPart2) throws SQLException {",
-      "      if (checkbookIdPart2 == null) throw new IllegalArgumentException(\"checkbookIdPart2 must not be null\");//{\"type\":\"input\",\"name\":\"checkbookIdPart2\",\"javaType\":\"String\",\"datePattern\":\"dd-MM-yyyy\"} object",
+      "      if (checkbookIdPart2 == null) throw new IllegalArgumentException(\"checkbookIdPart2 must not be null\");//{\"type\":\"input\",\"name\":\"checkbookIdPart2\",\"javaType\":\"String\",\"format\":{\"type\":\"Date\",\"pattern\":\"dd-MM-yyyy\"}} object",
       "        if (dbName.equals(IFetcher.mock)) {",
-      "           System.out.println(\"Mock audit: auditCreateCheckBook1( brandRef, accountId, checkbookId, {'type':'input','name':'checkbookIdPart2','javaType':'String','datePattern':'dd-MM-yyyy'}+ )\");",
+      "           System.out.println(\"Mock audit: auditCreateCheckBook1( brandRef, accountId, checkbookId, {'type':'input','name':'checkbookIdPart2','javaType':'String','format':{'type':'Date','pattern':'dd-MM-yyyy'}}+ )\");",
       "           return;",
       "    }",
       "    try (CallableStatement s = connection.prepareCall(\"call auditCreateCheckBook(?, ?, ?, ?)\")) {",
@@ -202,12 +202,12 @@ describe ( "makeMutations", () => {
       "  }",
       "",
       "}"
-    ])
+    ] )
 
   } )
 
   it ( "should make mutations for cases: i.e. where only one of several mutations will happen depending on the situation", () => {
-    expect ( makeMutations ( paramsForTest, PaymentsPageD, 'newPayments', newPaymentsRD, safeArray ( newPaymentsRD.mutations )[ 0 ] ) ).toEqual ( [
+    expect ( makeMutations ( paramsForTest, PaymentsPageD, 'newPayments', newPaymentsRD, safeArray ( newPaymentsRD.mutations )[ 0 ] ) ).toEqual ([
       "package focuson.data.mutator.Payments;",
       "",
       "import focuson.data.fetchers.IFetcher;",
@@ -226,8 +226,8 @@ describe ( "makeMutations", () => {
       "import java.sql.ResultSet;",
       "import java.sql.Connection;",
       "import java.sql.SQLException;",
-      "import java.text.SimpleDateFormat;",
       "import focuson.data.utils.IOGNL;",
+      "import focuson.data.utils.DateFormatter;",
       "import focuson.data.utils.Messages;",
       "import focuson.data.mutator.utils.Tuple2;",
       "@Component",
@@ -329,11 +329,11 @@ describe ( "makeMutations", () => {
       "  }}",
       "",
       "}"
-    ])
+    ] )
   } )
 
-  it ("shouldn't make mock in message types when makeMock false selected", () =>{
-    expect ( makeMutations ( paramsForTest, PaymentsPageD, 'newPayments', ValidatePayeeRD, safeArray ( ValidatePayeeRD.mutations )[ 0 ] ) ).toEqual ( [
+  it ( "shouldn't make mock in message types when makeMock false selected", () => {
+    expect ( makeMutations ( paramsForTest, PaymentsPageD, 'newPayments', ValidatePayeeRD, safeArray ( ValidatePayeeRD.mutations )[ 0 ] ) ).toEqual ([
       "package focuson.data.mutator.Payments;",
       "",
       "import focuson.data.fetchers.IFetcher;",
@@ -352,8 +352,8 @@ describe ( "makeMutations", () => {
       "import java.sql.ResultSet;",
       "import java.sql.Connection;",
       "import java.sql.SQLException;",
-      "import java.text.SimpleDateFormat;",
       "import focuson.data.utils.IOGNL;",
+      "import focuson.data.utils.DateFormatter;",
       "import focuson.data.utils.Messages;",
       "import focuson.data.mutator.utils.Tuple2;",
       "@Component",
@@ -370,6 +370,6 @@ describe ( "makeMutations", () => {
     ])
 
 
-  })
+  } )
 
 } )

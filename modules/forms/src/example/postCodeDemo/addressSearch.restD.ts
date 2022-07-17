@@ -23,7 +23,7 @@ export const postcodeRestD: RestD<AllGuards> = {
     entity: {
       type: 'Main',
       table: postCodeSearchTable,
-      idStrategy: {type: 'Manual', sql: addressSearchSql},
+      idStrategy: { type: 'Manual', sql: addressSearchSql },
     },
     where: [
       { table: postCodeSearchTable, alias: postCodeSearchTable.name, field: 'PC_POSTCODE', paramName: 'postcode', comparator: 'like', paramPrefix: '%', paramPostfix: '%' }
@@ -46,7 +46,7 @@ export const postcodeWithResolversRestD: RestD<AllGuards> = {
         messageOnEmptyData: 'There was no result',
         params: [
           'someValue',
-          { type: 'output', name: 'line1', javaType: 'String', rsName: 'zzline1', datePattern: 'dd-MM-yyyy' },
+          { type: 'output', name: 'line1', javaType: 'String', rsName: 'zzline1', format: { type: 'Date', pattern: 'dd-MM-yyyy' } },
           { type: 'output', name: 'line2', javaType: 'String', rsName: 'zzline2' },
           { type: 'output', name: 'line3', javaType: 'String', rsName: 'zzline3' },
           { type: 'output', name: 'line4', javaType: 'String', rsName: 'zzline4' } ], name: 'get'

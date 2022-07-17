@@ -1,7 +1,7 @@
 import { DBTable } from "../common/resolverD";
 import { beforeAfterSeparator, beforeSeparator, ints, mapPathPlusInts, NameAnd, safeArray, safeString, toArray, unique } from "@focuson/utils";
 import { AllLensRestParams, EntityAndWhere, InsertSqlStrategy, OneTableInsertSqlStrategyForIds, OneTableInsertSqlStrategyForNoIds, RestParams } from "../common/restD";
-import { CompDataD, emptyDataFlatMap, flatMapDD, HasSample, isRepeatingDd, OneDataDD, PrimitiveDD } from "../common/dataD";
+import { CompDataD, emptyDataFlatMap, flatMapDD, HasSample, isRepeatingDd, OneDataDD, Pattern, PrimitiveDD } from "../common/dataD";
 import { MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { addBrackets, addStringToEndOfAllButFirstAndLast, addStringToEndOfAllButLast, addStringToStartOfAllButFirst, indentList } from "./codegen";
 import { JavaWiringParams } from "./config";
@@ -14,7 +14,7 @@ export interface TableAndField {
   table: DBTable;
   field: string;
   fieldAlias?: string;
-  datePattern?: string;
+  format?: Pattern;
 }
 export interface TableAliasAndField extends TableAndField {
   alias: string
@@ -312,7 +312,7 @@ interface FieldData<G> extends HasSample<any> {
   reactType: string;
   dbType: string;
   sample?: string[] | number[];
-  datePattern?: string
+  format?: Pattern
 }
 interface TableAndFieldData<G> {
   table: DBTable;
@@ -344,7 +344,7 @@ export function findTableAndFieldFromDataD<G> ( dataD: CompDataD<G> ): TableAndF
           let fieldData: FieldData<any> = {
             dbFieldName: oneDataDD.db.field, dbFieldAlias: oneDataDD.db.fieldAlias,
             rsGetter: dataDD.rsGetter, reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName, path,
-            sample: selectSample ( oneDataDD ), datePattern: oneDataDD.db.datePattern
+            sample: selectSample ( oneDataDD ), format: oneDataDD.db.format
           };
           return [ { table: oneDataDD.db.table, fieldData } ]
         } else {
@@ -353,7 +353,7 @@ export function findTableAndFieldFromDataD<G> ( dataD: CompDataD<G> ): TableAndF
           let fieldData: FieldData<any> = {
             dbFieldName: oneDataDD.db, rsGetter: dataDD.rsGetter,
             reactType: dataDD.reactType, dbType: dataDD.dbType, fieldName, path, sample: selectSample ( oneDataDD ),
-            datePattern: oneDataDD.dataDD.datePattern
+            format: oneDataDD.dataDD.format
           };
           return [ { table: parent.table, fieldData: fieldData } ]
         }
@@ -404,12 +404,12 @@ export interface StaticWhere {
 
 export function findStaticWheres ( sqlRoot: SqlRoot ): StaticWhere[] { // things to ignore: path, childAlias
   let staticWhereLinks = foldEntitys ( {
-    foldMain (childAccs: StaticWhere[][], main: EntityAndWhere ): StaticWhere[] {
+    foldMain ( childAccs: StaticWhere[][], main: EntityAndWhere ): StaticWhere[] {
       if ( main.staticWhere === undefined ) return childAccs.flat ()
       return [ ...childAccs.flat (), { where: main.staticWhere, alias: main.entity.alias } ]
     },
-    foldMultiple (childAccs: StaticWhere[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, multiple: MultipleEntity ): StaticWhere[] { return [] },
-    foldSingle (childAccs: StaticWhere[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, single: SingleEntity ): StaticWhere[] {
+    foldMultiple ( childAccs: StaticWhere[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, multiple: MultipleEntity ): StaticWhere[] { return [] },
+    foldSingle ( childAccs: StaticWhere[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, single: SingleEntity ): StaticWhere[] {
       if ( single.staticWhere === undefined ) return childAccs.flat ()
       return [ ...childAccs.flat (), { where: single.staticWhere, alias: childAlias } ]
     }
@@ -452,11 +452,11 @@ export function makeWhereClauseStringsFrom ( ws: WhereLink[] ): string[] {
 }
 
 // TableWhereLinks would already be included during ON clauses
-export const findRootWhereClauses = (whereLinks: WhereLink[], rootAlias: string): WhereLink[] =>
-    whereLinks.filter((wl: WhereLink) => isWhereFromQuery(wl) && wl.alias === rootAlias )
+export const findRootWhereClauses = ( whereLinks: WhereLink[], rootAlias: string ): WhereLink[] =>
+  whereLinks.filter ( ( wl: WhereLink ) => isWhereFromQuery ( wl ) && wl.alias === rootAlias )
 
 export function makeWhereClause ( s: SqlLinkData ) {
-  let whereList = [ ...makeWhereClauseStringsFrom ( s.whereLinks ), ...s.staticWheres.filter ( s => s !== undefined && s.where !== '' ).map(sw => sw.where) ];
+  let whereList = [ ...makeWhereClauseStringsFrom ( s.whereLinks ), ...s.staticWheres.filter ( s => s !== undefined && s.where !== '' ).map ( sw => sw.where ) ];
   return whereList.length === 0 ? '' : 'where ' + whereList.join ( ' and ' );
 }
 
@@ -468,39 +468,39 @@ export function generateGetSqlWithoutLeftJoin ( s: SqlLinkData ): string[] {
     ` ${(makeWhereClause ( s ))}` ]
 }
 
-export function makeOnClause(table: DBTable, alias: string, s: SqlLinkData): string {
-  const tableWhereLinks: WhereLink[] = s.whereLinks.filter((wl: WhereLink) =>
-      isTableWhereLink(wl) && wl.childAlias === alias && wl.childAlias !== s.sqlRoot.alias);
+export function makeOnClause ( table: DBTable, alias: string, s: SqlLinkData ): string {
+  const tableWhereLinks: WhereLink[] = s.whereLinks.filter ( ( wl: WhereLink ) =>
+    isTableWhereLink ( wl ) && wl.childAlias === alias && wl.childAlias !== s.sqlRoot.alias );
 
-  const queryWhereLinks: WhereLink[] = s.whereLinks.filter((wl: WhereLink) =>
-      isWhereFromQuery(wl) && wl.alias === alias && wl.alias !== s.sqlRoot.alias)
+  const queryWhereLinks: WhereLink[] = s.whereLinks.filter ( ( wl: WhereLink ) =>
+    isWhereFromQuery ( wl ) && wl.alias === alias && wl.alias !== s.sqlRoot.alias )
 
-  const wl = tableWhereLinks.concat(queryWhereLinks)
-  const sw: StaticWhere[] = s.staticWheres.filter((sw: StaticWhere) => sw.alias !== s.sqlRoot.alias && sw.alias === alias)
+  const wl = tableWhereLinks.concat ( queryWhereLinks )
+  const sw: StaticWhere[] = s.staticWheres.filter ( ( sw: StaticWhere ) => sw.alias !== s.sqlRoot.alias && sw.alias === alias )
 
-  let whereList: string[] = makeWhereClauseStringsFrom(wl);
-  whereList.unshift(...sw.map(_ => _.where));
+  let whereList: string[] = makeWhereClauseStringsFrom ( wl );
+  whereList.unshift ( ...sw.map ( _ => _.where ) );
   return whereList.length === 0 ? `${tableName ( table )} ${alias}` : `${tableName ( table )} ${alias} ON ` + whereList.join ( ' AND ' );
 }
 
-export function generateGetSql(s: SqlLinkData): string[] {
-  if (s.sqlRoot.main.entity.useLeftJoin) return generateGetSqlWithLeftJoin(s)
-  else return generateGetSqlWithoutLeftJoin(s);
+export function generateGetSql ( s: SqlLinkData ): string[] {
+  if ( s.sqlRoot.main.entity.useLeftJoin ) return generateGetSqlWithLeftJoin ( s )
+  else return generateGetSqlWithoutLeftJoin ( s );
 }
 
 export function tableName ( t: DBTable ) { return t.prefix ? `${t.prefix}.${t.name}` : t.name}
 
-function makeWhereClauseForLeftJoinQuery(s: SqlLinkData): string {
-  const normalWheres: string[] = makeWhereClauseStringsFrom(findRootWhereClauses(s.whereLinks, s.sqlRoot.alias))
-  const sw = s.staticWheres.filter((sw: StaticWhere) => sw.alias === s.sqlRoot.alias).map(sw => sw.where)
-  const mergedWheres: string[] = normalWheres.concat(sw)
+function makeWhereClauseForLeftJoinQuery ( s: SqlLinkData ): string {
+  const normalWheres: string[] = makeWhereClauseStringsFrom ( findRootWhereClauses ( s.whereLinks, s.sqlRoot.alias ) )
+  const sw = s.staticWheres.filter ( ( sw: StaticWhere ) => sw.alias === s.sqlRoot.alias ).map ( sw => sw.where )
+  const mergedWheres: string[] = normalWheres.concat ( sw )
 
   return mergedWheres.length === 0 ? '' : ` where ${mergedWheres.join(' AND ')}`
 }
 
 export function generateGetSqlWithLeftJoin ( s: SqlLinkData ): string[] {
-  const sortedAliasAndTables = s.aliasAndTables.slice(1).reverse()
-  sortedAliasAndTables.unshift(s.aliasAndTables[0])
+  const sortedAliasAndTables = s.aliasAndTables.slice ( 1 ).reverse ()
+  sortedAliasAndTables.unshift ( s.aliasAndTables[ 0 ] )
   return [ `select`,
     ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.fields.map ( taf => `${taf.alias}.${taf.fieldData.dbFieldName} as ${sqlTafFieldName ( taf )}` ) ) ),
     ` from`,
@@ -554,9 +554,9 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: MainPageD<B
   const sql = generateGetSql ( ld )
 
   function createPutterString<T> ( fieldData: FieldData<T>, fieldAlias: string ) {
-    return (fieldData.datePattern === undefined) ?
-      `this.${mapName ( safeArray ( fieldData.path ).slice ( 0, -1 ) )}.put("${fieldData.fieldName}", rs.${fieldData.rsGetter}("${fieldAlias}"));`
-      : `this.${mapName ( safeArray ( fieldData.path ).slice ( 0, -1 ) )}.put("${fieldData.fieldName}", DateFormatter.formatDate("${fieldData.datePattern}",rs.getDate("${fieldAlias}")));`;
+    return (fieldData.format && fieldData.format.type === 'Date') ?
+      `this.${mapName ( safeArray ( fieldData.path ).slice ( 0, -1 ) )}.put("${fieldData.fieldName}", DateFormatter.formatDate("${fieldData.format.pattern}",rs.getDate("${fieldAlias}")));`
+      : `this.${mapName ( safeArray ( fieldData.path ).slice ( 0, -1 ) )}.put("${fieldData.fieldName}", rs.${fieldData.rsGetter}("${fieldAlias}"));`;
   }
 
   const putters = ld.fields

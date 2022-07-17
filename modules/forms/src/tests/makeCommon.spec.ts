@@ -21,7 +21,7 @@ describe ( "makeFullState", () => {
 describe ( "makeCommon", () => {
   it ( 'should make the common page', () => {
     let common = makeCommon ( devAppConfig, paramsForTest, [ EAccountsSummaryPD, OccupationAndIncomeSummaryPD ], { main: '.', backup: '.' } );
-    expect ( common.map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( common.map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
       "import { fromPathFromRaw, HasPageSelection, PageMode ,PageSelectionContext, pageSelectionlens} from '@focuson/pages'",
       "import { defaultDateFn, HasSimpleMessages, SimpleMessage, NameAnd } from '@focuson/utils';",
       "import {  OnTagFetchErrorFn } from '@focuson/fetcher';",
@@ -85,7 +85,7 @@ describe ( "makeCommon", () => {
       "  pageSelection: [{ pageName: 'EAccountsSummary', firstTime: true, pageMode: 'view', time: defaultDateFn() }],",
       "  EAccountsSummary:{},",
       "  restCommands: [],",
-      "  debug: {'fetcherDebug':false,'guardDebug':false,'restDebug':false,'reduxDebug':false,'selectedPageDebug':false,'loadTreeDebug':false,'showTracing':false,'recordTrace':true,'tagFetcherDebug':false,'validityDebug':false,'accordions':[]}",
+      "  debug: {'fetcherDebug':false,'guardDebug':false,'restDebug':false,'reduxDebug':false,'selectedPageDebug':false,'loadTreeDebug':false,'showTracing':false,'dateDebug':false,'recordTrace':true,'tagFetcherDebug':false,'validityDebug':false,'accordions':[]}",
       "  }"
     ])
 

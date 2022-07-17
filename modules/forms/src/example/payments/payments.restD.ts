@@ -51,7 +51,7 @@ export const newPaymentsRD: ExampleRestD = {
               { type: "output", javaType: 'Integer', rsName: 'currencyAmount', name: 'currencyAmount' },
               { type: "output", javaType: 'String', rsName: 'amtInWords', name: 'amtInWords' },
               { type: "output", javaType: 'String', rsName: 'forActionOn', name: 'forActionOn' },
-              { type: "output", javaType: 'String', rsName: 'dateCreated', name: 'dateCreated', datePattern: 'dd-MM-yyyy' },
+              { type: "output", javaType: 'String', rsName: 'dateCreated', name: 'dateCreated', format: { type: 'Date', pattern: 'dd-MM-yyyy' } },
             ]
           },
           {
@@ -147,7 +147,7 @@ export const ValidatePayeeRD: ExampleRestD = {
   mutations: [
     {
       restAction: { state: 'validate' }, mutateBy: {
-        type: 'manual', code: 'String payeeStatus= "SUCCEEDED!!!!!";', makeMock: false,  params: [
+        type: 'manual', code: 'String payeeStatus= "SUCCEEDED!!!!!";', makeMock: false, params: [
           { type: 'output', name: 'payeeStatus', javaType: 'String' }
         ]
       }

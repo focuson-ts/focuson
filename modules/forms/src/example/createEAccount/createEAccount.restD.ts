@@ -24,7 +24,7 @@ export const createEAccountRestD: RestD<any> = {
         {
           type: 'sql', name: 'getSql', sql: 'update createPlan set v1=?,v2=?,v3=? where seqName=?', params: [
             { type: 'body', path: 'a.b.c.v1InJson', javaType: 'String' },
-            { type: 'body', path: 'v2InJson', javaType: 'String', datePattern: 'dd/MM/yyyy' },
+            { type: 'body', path: 'v2InJson', javaType: 'String',format: {type: 'Date', pattern: 'dd/MM/yyyy'} },
             { type: 'body', path: 'v3InJson', javaType: 'String' },
             'accountId'
           ], schema: onlySchema
