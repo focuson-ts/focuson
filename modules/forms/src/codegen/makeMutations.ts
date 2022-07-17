@@ -1,5 +1,5 @@
 import { MainPageD } from "../common/pageD";
-import { NameAnd, safeObject, toArray, unique } from "@focuson/utils";
+import {decamelize, NameAnd, safeObject, toArray, unique} from "@focuson/utils";
 import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationDetailsName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
@@ -42,6 +42,7 @@ import {
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
+import {type} from "os";
 
 
 export function setObjectFor ( m: MutationParam, i: number ): string {
@@ -153,12 +154,18 @@ export const typeForParamAsInput = ( errorPrefix: string, params: NameAnd<AllLen
   return 'Object'
 };
 
-export function preTransactionLogger (prefix: MutationDetail, paramsA: MutationParam[] ): string {
-  let arg1 = prefix.type === "storedProc" ? "storedProc" : prefix.type
+
+export function preTransactionLogger(prefix: MutationDetail, paramsA: MutationParam[]): string {
+  const arg1 = prefix.type === "storedProc" ? "storedProc" : prefix.type
+  const hasBodyParams = paramsA.filter( isBodyMutationParam ).length > 0
   if (paramsA.filter( isInputParam ).length == 0) return `      logger.debug(MessageFormat.format("${prefix.type}: {${0}}", ${arg1}));`;
   let i = 1;
-  const prefixNamesAndIndex = `${prefix.type}: {${0}}, `.concat( paramsA.filter( isInputParam ).map(p => `${paramNamePathOrValue(p)}: {${i++}}`).join( ", " ) );
-  return `      logger.debug(MessageFormat.format("${prefixNamesAndIndex}", ${arg1}, ${paramsA.filter( isInputParam ).map(p => paramNamePathOrValue(p))}));`;
+  const prefixNamesAndIndex = `${prefix.type}: {${0}}, `
+      .concat( paramsA.filter( isInputParam ).filter(p => !isBodyMutationParam(p) ).map(p => `${paramNamePathOrValue(p)}: {${i++}}`).join( ", " ) )
+      .concat( hasBodyParams ? `, bodyAsJson: {${i++}}` : `` );
+  return `      logger.debug(MessageFormat.format("${prefixNamesAndIndex}", ${arg1},${paramsA
+      .filter( isInputParam ).filter(p => !isBodyMutationParam(p) ).map(p => (paramNamePathOrValue(p)))}`
+      .concat( hasBodyParams ? `, bodyAsJson` : `` ).concat(`));`);
 }
 
 export function postTransactionLogger (paramsA: MutationParam[] ): string {
