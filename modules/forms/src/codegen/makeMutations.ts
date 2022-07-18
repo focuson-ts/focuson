@@ -25,7 +25,7 @@ export const setObjectFor = ( errorPrefix: string ) => ( m: MutationParam, i: nu
   throw new Error ( `Don't know how to process ${JSON.stringify ( m )}` )
 };
 
-function processInput ( errorPrefix, javaType: JavaTypePrimitive | undefined, format: Pattern | undefined, index: number, m: MutationParam ): string {
+function processInput ( errorPrefix: string, javaType: JavaTypePrimitive | undefined, format: Pattern | undefined, index: number, m: MutationParam ): string {
   let name = nameOrSetParam ( m );
   const body = `s.setObject(${index}, ${name});`;
   if ( format === undefined ) return body;
