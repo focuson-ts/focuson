@@ -1,5 +1,6 @@
 import { LensState } from "@focuson/state";
-import { fromPathGivenState, PageSelectionContext } from "@focuson/pages";
+import { fromPathGivenState, PageSelectionContext } from "./pageSelection";
+
 
 export function replaceTextUsingPath<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context>, label: string ) {
   const from = fromPathGivenState ( state )

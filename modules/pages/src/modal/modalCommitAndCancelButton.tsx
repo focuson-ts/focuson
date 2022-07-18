@@ -1,6 +1,6 @@
 import { currentPageSelectionTail, fromPathGivenState, mainPage, PageSelection, PageSelectionContext, popPage } from "../pageSelection";
 import { LensProps, LensState, reasonFor } from "@focuson/state";
-import { DateFn, defaultDateFn, safeArray, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
+import { DateFn, defaultDateFn, safeArray, safeString, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
 import { Optional, Transform } from "@focuson/lens";
 import { HasRestCommandL, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand } from "@focuson/rest";
 import { getRefForValidateLogicToButton, hasValidationErrorAndReport } from "../validity";
@@ -8,12 +8,15 @@ import { HasSimpleMessageL } from "../simpleMessage";
 import { CustomButtonType, getButtonClassName } from "../common";
 import React from "react";
 import { isMainPageDetails } from "../pageConfig";
+import { replaceTextUsingPath } from "../replace";
 
-export function confirmIt ( c: boolean | string | undefined ) {
+
+export const confirmIt = <S, C extends PageSelectionContext<S>> ( state: LensState<S, any, C>, c: boolean | string | undefined ) => {
   if ( c === undefined || c === false ) return true
-  const text = (typeof c === 'string') ? c : 'Are you sure'
+  const rawText = (typeof c === 'string') ? c : 'Are you sure'
+  const text = rawText?.includes ( '{' ) ? replaceTextUsingPath ( state, safeString ( rawText ) ) : rawText;
   return window.confirm ( text )
-}
+};
 
 interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Context>, CustomButtonType {
   id: string;
@@ -27,7 +30,7 @@ interface ModalCommitButtonProps<S, C> extends ModalCommitCancelButtonProps<S, C
   validate?: boolean
 }
 export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( { id, state, text, buttonType, confirm }: ModalCommitCancelButtonProps<S, Context> ) {
-  let onClick = () => { if ( confirmIt ( confirm ) ) state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) );}
+  let onClick = () => { if ( confirmIt ( state, confirm ) ) state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) );}
   return <button className={getButtonClassName ( buttonType )} id={id} disabled={!canCommitOrCancel ( state )} onClick={onClick}>{text ? text : 'Cancel'} </button>
 }
 
@@ -53,7 +56,7 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
   const ref = getRefForValidateLogicToButton ( id, debug, validate, enabledBy, canCommitOrCancel ( state ) )
   function onClick () {
     console.log ( 'modal commit', confirm )
-    if ( !confirmIt ( confirm ) ) return
+    if ( !confirmIt ( state, confirm ) ) return
     const now = new Date ()
     const realvalidate = validate === undefined ? true : validate
     if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return

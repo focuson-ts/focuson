@@ -1,8 +1,9 @@
 import { CommonStateProps } from "./common";
-import { decamelize, findJoiner, makeIntoString, NameAnd, safeArray } from "@focuson/utils";
+import { decamelize, findJoiner, makeIntoString, NameAnd, safeArray, safeString } from "@focuson/utils";
 import { LensState, reasonFor } from "@focuson/state";
 import { Lenses, Transform } from "@focuson/lens";
 import { CSSProperties } from "react";
+import { PageSelectionContext, replaceTextUsingPath } from "@focuson/pages";
 
 export interface CommonTableProps<S, T, Context> extends CommonStateProps<S, T[], Context> {
   /** If set then the selected index will be copied here as the table items are selected. */
@@ -46,7 +47,7 @@ export function defaultOnClick<S, Context, T> ( props: CommonTableProps<S, T, Co
   return onClick;
 }
 export type OneRowFn<T> = ( row: T, i: number, selectedClass: string | undefined, rights: string[] | undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) => JSX.Element
-export const rawTable = <S, T, Context> (
+export const rawTable = <S, T, Context extends PageSelectionContext<S>> (
   titles: any[],
   onClick: ( i: number, row: T ) => ( e: any ) => void,
   oneRow: OneRowFn<T> ) =>
@@ -67,7 +68,7 @@ export const rawTable = <S, T, Context> (
         <td colSpan={titles.length}>{emptyData}</td>
       </tr> :
       json.map ( ( row, i ) => filter ( row ) && (maxCount === undefined || count++ < maxCountInt) ? oneRow ( row, i, selectedClass ( i ), rights, onClick ) : null );
-    const title = tableTitle ? <h2>{tableTitle}</h2> : null
+    const title = tableTitle ? <h2>{replaceTextUsingPath ( state, tableTitle ) }</h2> : null
     return <>{title}
       <table id={id} className="grid">
         <thead>
@@ -89,7 +90,7 @@ export const defaultOneRowWithGetValue = <T extends any> ( getValue: ( o: keyof 
 
 export const defaultOneRow = defaultOneRowWithGetValue ( getValueForTable )
 
-export function Table<S, T, Context> ( props: TableProps<S, T, Context> ) {
+export function Table<S, T, Context extends PageSelectionContext<S>> ( props: TableProps<S, T, Context> ) {
   const { id, order, joiners } = props
   return rawTable<S, T, Context> ( order, defaultOnClick ( props ), defaultOneRow ( id, order, joiners ) ) ( props )
 }
@@ -109,7 +110,7 @@ export const oneRowForStructure = <S, T extends any, Context>
 export interface StructureTableProps<S, T, Context> extends CommonTableProps<S, T, Context> {
   paths: NameAnd<( s: LensState<S, T, Context> ) => LensState<S, any, Context>>;
 }
-export function StructureTable<S, T, Context> ( props: StructureTableProps<S, T, Context> ) {
+export function StructureTable<S, T, Context extends PageSelectionContext<S>> ( props: StructureTableProps<S, T, Context> ) {
   const { id, state, paths } = props
   return rawTable<S, T, Context> ( Object.keys ( paths ), defaultOnClick ( props ), oneRowForStructure ( id, state, paths ) ) ( props )
 }

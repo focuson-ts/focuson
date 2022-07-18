@@ -1,6 +1,7 @@
 import { LensProps, LensState } from "@focuson/state";
 import { CommonTableProps, Table } from "./table";
 import { NameAnd } from "@focuson/utils";
+import { PageSelectionContext } from "@focuson/pages";
 
 
 export interface TableWithVaryingOrderProps<S, T, C> extends CommonTableProps<S, T, C> {
@@ -8,7 +9,7 @@ export interface TableWithVaryingOrderProps<S, T, C> extends CommonTableProps<S,
   select: LensState<S, string, C>
 }
 
-export function TableWithVaryingOrder<S, T, C> ( props: TableWithVaryingOrderProps<S, T, C> ) {
+export function TableWithVaryingOrder<S, T, C extends PageSelectionContext<S>> ( props: TableWithVaryingOrderProps<S, T, C> ) {
   const { select, order } = props
   const cleanedProps: any = { ...props }
   delete cleanedProps.order

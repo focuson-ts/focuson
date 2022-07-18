@@ -208,7 +208,6 @@ export function DatePicker<S, C extends PageSelectionContext<S>> ( props: DatePi
   const { state, jurisdiction, dateInfo, dateRange, name, label, id, mode, readonly, dateFormat } = props
   const main: any = state.main
   const debug = main?.debug?.dateDebug
-  console.log ( 'dateDebug is ', debug )
 
   const { defaultDate, dateFilter, holidays } = calcInfoTheDatePickerNeeds ( id, jurisdiction?.optJson (), dateInfo?.optJson (), dateFormat, dateRange, debug )
   const { dateString, date, selectedDateErrors } = selectedDate ( state, dateFormat, defaultDate )
@@ -222,14 +221,14 @@ export function DatePicker<S, C extends PageSelectionContext<S>> ( props: DatePi
     state.setJson ( e.target?.value, reasonFor ( 'DatePicker', 'changeRaw', id ) )
   }
   let value = state.optJson ();
-  console.log ( 'datePicker', id, 'value', value, 'date', date )
+  if ( debug ) console.log ( 'datePicker', id, 'value', value, 'date', date )
   let error = selectedDateErrors.length > 0;
   // const ref=useRef<any>(null)
   return <div className={`labelAndDate ${props.labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}>
     <Label state={state} htmlFor={name} label={label}/>
     <div className={`${props.buttons && props.buttons.length > 0 ? 'inputAndButtons' : ''} `}>
       <ReactDatePicker id={id}
-                       // customInputRef={ref}
+        // customInputRef={ref}
                        dateFormat={dateFormat}
                        todayButton="Select Today"
                        selected={error ? undefined : date}

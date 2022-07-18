@@ -2,7 +2,7 @@ import { HasRestCommandL, RestChangeCommands } from "@focuson/rest";
 import { reasonFor } from "@focuson/state";
 import { DateFn, RestAction, RestResult, SimpleMessage } from "@focuson/utils";
 import { CommonStateProps, CustomButtonType, getButtonClassName } from "./common";
-import { getRefForValidateLogicToButton, HasPageSelectionLens, HasSimpleMessageL, hasValidationErrorAndReport } from "@focuson/pages";
+import { confirmIt, getRefForValidateLogicToButton, HasPageSelectionLens, HasSimpleMessageL, hasValidationErrorAndReport, PageSelectionContext } from "@focuson/pages";
 import { useRef } from "react";
 
 export interface RestButtonProps<S, C, MSGs> extends CommonStateProps<S, any, C>, CustomButtonType {
@@ -18,12 +18,8 @@ export interface RestButtonProps<S, C, MSGs> extends CommonStateProps<S, any, C>
   dateFn?: DateFn
 }
 
-function confirmIt ( c: boolean | string | undefined ) {
-  if ( c === undefined || c === false ) return true
-  const text = (typeof c === 'string') ? c : 'Are you sure'
-  return window.confirm ( text )
-}
-export function RestButton<S, C extends HasRestCommandL<S> & HasSimpleMessageL<S> & HasPageSelectionLens<S>> ( props: RestButtonProps<S, C, SimpleMessage> ) {
+
+export function RestButton<S, C extends PageSelectionContext<S> &HasRestCommandL<S> & HasSimpleMessageL<S> > ( props: RestButtonProps<S, C, SimpleMessage> ) {
   const { id, rest, action, result, state, text, confirm, validate, dateFn, onSuccess, enabledBy, name, buttonType , on404} = props
   const debug = false//just to stop spamming: should already have all the validations visible if debugging is on
   const ref = getRefForValidateLogicToButton ( id, debug, validate, enabledBy )
@@ -44,7 +40,7 @@ export function RestButton<S, C extends HasRestCommandL<S> & HasSimpleMessageL<S
     debounceRef.current = now
     const realvalidate = validate === undefined ? true : validate
     if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return
-    if ( confirmIt ( confirm ) )
+    if ( confirmIt ( state,confirm ) )
       state.copyWithLens ( state.context.restL ).transform ( old => [ ...old, { restAction: action, name: rest, changeOnSuccess: onSuccess, on404 } ], reasonFor ( 'RestButton', 'onClick', id ) )
   }
 

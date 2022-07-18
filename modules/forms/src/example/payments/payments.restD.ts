@@ -21,8 +21,11 @@ export const newPaymentsRD: ExampleRestD = {
   namePrefix: 'oneLine',
   url: '/api/payments/?{query}',
   actions: [ 'create', 'get' ],
+  // access:[{restAction: 'create', condition: {type: 'dateNotWeekEndOrHoliday', param: ''}}],
+  // access:[{restAction: 'create', condition: {type: 'dateNotWeekEndOrHoliday', param: ''}}],
   resolvers: {
     getoneLinePayment: [
+      {type:'storedProc', name: 'checkNotHolidayOrWeekend', params:[{type: 'body', path: 'thePAthToTheDate'}],schema: onlySchema },
       { type: 'message', message: 'getOneLinePayment was called' },
       {
         type: 'case', name: 'sendSomeMessageDependingOnBrand', params: [ 'brandRef' ], select: [

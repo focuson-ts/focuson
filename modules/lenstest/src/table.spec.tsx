@@ -4,34 +4,43 @@ import { enzymeSetup } from "./enzymeAdapterSetup";
 import { getValueForTable, Table } from "@focuson/form_components";
 import { findJoiner, safeArray } from "@focuson/utils";
 import { TableWithVaryingOrder } from "../../formComponents/src/tableWithVaryingOrder";
+import { HasPageSelection, PageSelectionContext, pageSelectionlens } from "@focuson/pages";
+import { identityOptics } from "@focuson/lens";
 
 enzymeSetup ()
 
-type Context = {}
+type Context = PageSelectionContext<TableStateForTest>
+const context: Context = {
+  combine: ( state, pages ) => { throw new Error ( "Function not implemented." ); },
+  pageSelectionL: pageSelectionlens (),
+  pages: { main: { pageMode: 'edit', pageType: 'MainPage', lens: identityOptics (), config: {}, pageFunction: props => <></> } }
+}
 interface TableContents {
   a: number;
   b: string;
   c?: { d: number, e: number };
 }
-interface TableStateForTest {
+interface TableStateForTest extends HasPageSelection {
   contents?: TableContents[];
   selected?: number;
   item?: TableContents
   filter?: string
   selector?: string
+  someData?: string
 }
 interface SortCode {
   one: number;
   two: number;
   three: number;
 }
-let twoRows: TableStateForTest = { contents: [ { a: 1, b: 'one' }, { a: 2, b: 'two' } ] };
-let twoRowsWithC: TableStateForTest = { contents: [ { a: 1, b: 'one', c: { d: 3, e: 4 } }, { a: 2, b: 'two', c: { d: 5, e: 6 } } ] };
-let twoRowsS0 = { ...twoRows, selected: 0 };
-let twoRowsS1 = { ...twoRows, selected: 1 };
+const empty: TableStateForTest = { pageSelection: [ { pageName: 'main', time: 'someTime', pageMode: 'edit' } ] };
+const twoRows: TableStateForTest = { contents: [ { a: 1, b: 'one' }, { a: 2, b: 'two' } ], ...empty };
+const twoRowsWithC: TableStateForTest = { contents: [ { a: 1, b: 'one', c: { d: 3, e: 4 } }, { a: 2, b: 'two', c: { d: 5, e: 6 } } ], ...empty };
+const twoRowsS0 = { ...twoRows, selected: 0 };
+const twoRowsS1 = { ...twoRows, selected: 1 };
 
 function displayAndGetTable ( s: TableStateForTest, setMain: ( s: TableStateForTest ) => void, fn: ( s: LensState<TableStateForTest, TableStateForTest, Context> ) => JSX.Element ) {
-  return shallow ( fn ( lensState<TableStateForTest, Context> ( s, setMain, 'ModalButton', {} ) ) )
+  return shallow ( fn ( lensState<TableStateForTest, Context> ( s, setMain, 'ModalButton', context ) ) )
 }
 
 describe ( "Table", () => {
@@ -54,20 +63,24 @@ describe ( "Table", () => {
 
   describe ( "empty table", () => {
     it ( "should render an empty with no selected", () => {
-      const table = displayAndGetTable ( {}, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id'/> )
+      const table = displayAndGetTable ( empty, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id'/> )
       expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody class='grid-sub'></tbody></table>" )
     } )
-    it ( "should render an empty with no selected and a title", () => {
-      const table = displayAndGetTable ( {}, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id' tableTitle='The title'/> )
-      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<h2>The title</h2><table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody class='grid-sub'></tbody></table>" )
+    it ( "should render an empty with no selected and a title pointing at undefined", () => {
+      const table = displayAndGetTable ( empty, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id' tableTitle='The title [{/someData}]'/> )
+      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<h2>The title [undefined]</h2><table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody class='grid-sub'></tbody></table>" )
+    } )
+    it ( "should render an empty with no selected and a title pointing at date", () => {
+      const table = displayAndGetTable ( {...empty, someData: "123"}, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id' tableTitle='The title [{/someData}]'/> )
+      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<h2>The title [123]</h2><table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody class='grid-sub'></tbody></table>" )
     } )
     it ( "should render an empty with no selected and an emptyData", () => {
-      const table = displayAndGetTable ( {}, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id' emptyData='No Data'/> )
+      const table = displayAndGetTable ( empty, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id' emptyData='No Data'/> )
       expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead>" +
         "<tbody class='grid-sub'><tr id='id[0]'><td colSpan='2'>No Data</td></tr></tbody></table>" )
     } )
     it ( "should render an empty with  selected", () => {
-      const table = displayAndGetTable ( {}, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id' copySelectedIndexTo={s.focusOn ( 'selected' )}/> )
+      const table = displayAndGetTable ( empty, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id' copySelectedIndexTo={s.focusOn ( 'selected' )}/> )
       expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody class='grid-sub'></tbody></table>" )
     } )
   } )
@@ -179,9 +192,9 @@ describe ( "Table", () => {
       const rows = table.find ( "tr" )
       expect ( rows.length ).toEqual ( 3 )
       rows.at ( 1 ).simulate ( "click" )
-      expect ( remembered ).toEqual ( { "contents": [ { "a": 1, "b": "one" }, { "a": 2, "b": "two" } ], "selected": 0 } )
+      expect ( remembered ).toEqual ( { ...empty, "contents": [ { "a": 1, "b": "one" }, { "a": 2, "b": "two" } ], "selected": 0 } )
       rows.at ( 2 ).simulate ( "click" )
-      expect ( remembered ).toEqual ( { "contents": [ { "a": 1, "b": "one" }, { "a": 2, "b": "two" } ], "selected": 1 } )
+      expect ( remembered ).toEqual ( { ...empty, "contents": [ { "a": 1, "b": "one" }, { "a": 2, "b": "two" } ], "selected": 1 } )
     } )
   } )
   describe ( "table with copySelectedItemTo", () => {
@@ -203,9 +216,9 @@ describe ( "Table", () => {
       const rows = table.find ( "tr" )
       expect ( rows.length ).toEqual ( 3 )
       rows.at ( 1 ).simulate ( "click" )
-      expect ( remembered ).toEqual ( { "contents": [ { "a": 1, "b": "one" }, { "a": 2, "b": "two" } ], "selected": 0, item: { a: 1, b: 'one' } } )
+      expect ( remembered ).toEqual ( { ...empty, "contents": [ { "a": 1, "b": "one" }, { "a": 2, "b": "two" } ], "selected": 0, item: { a: 1, b: 'one' } } )
       rows.at ( 2 ).simulate ( "click" )
-      expect ( remembered ).toEqual ( { "contents": [ { "a": 1, "b": "one" }, { "a": 2, "b": "two" } ], "selected": 0, item: { a: 2, b: 'two' } } )
+      expect ( remembered ).toEqual ( { ...empty, "contents": [ { "a": 1, "b": "one" }, { "a": 2, "b": "two" } ], "selected": 0, item: { a: 2, b: 'two' } } )
     } )
   } )
   describe ( "table with copySelectedItemTo and copySelectedIndexTo", () => {
@@ -216,9 +229,9 @@ describe ( "Table", () => {
       const rows = table.find ( "tr" )
       expect ( rows.length ).toEqual ( 3 )
       rows.at ( 1 ).simulate ( "click" )
-      expect ( remembered ).toEqual ( { "contents": [ { "a": 1, "b": "one" }, { "a": 2, "b": "two" } ], "selected": 0, item: { a: 1, b: 'one' } } )
+      expect ( remembered ).toEqual ( { ...empty, "contents": [ { "a": 1, "b": "one" }, { "a": 2, "b": "two" } ], "selected": 0, item: { a: 1, b: 'one' } } )
       rows.at ( 2 ).simulate ( "click" )
-      expect ( remembered ).toEqual ( { "contents": [ { "a": 1, "b": "one" }, { "a": 2, "b": "two" } ], "selected": 1, item: { a: 2, b: 'two' } } )
+      expect ( remembered ).toEqual ( { ...empty, "contents": [ { "a": 1, "b": "one" }, { "a": 2, "b": "two" } ], "selected": 1, item: { a: 2, b: 'two' } } )
     } )
   } )
 } )
