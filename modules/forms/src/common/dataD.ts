@@ -93,6 +93,7 @@ export interface StringPrimitiveDD extends CommonPrimitiveDD<string> {
   graphQlType: 'String';
   javaType: 'String'
   validate?: StringValidations;
+  format?: Pattern;
 }
 
 export interface Pattern {
@@ -377,6 +378,16 @@ export const MoneyDD: NumberPrimitiveDD = {
   name: 'Money',
   validate: { step: 0.01 }
 }
+export const MoneyStringDD: StringPrimitiveDD = {
+  ...stringPrimDD,
+  display: LabelAndStringInputCD,
+  format: { type: 'Double', pattern: '%,2f' },
+  displayParams: { readonly: true },
+  sample: [ '100.23', '200.45', '300.00' ],
+  name: 'DisplayMoney',
+  description: "The primitive representing an amount of the local currency that is represented as a string",
+  validate: { pattern: '^[-+]?[0-9]*\\.?[0-9]?[0-9]?$' }
+}
 export const PositiveMoneyDD: NumberPrimitiveDD = {
   ...MoneyDD,
   validate: { min: 0, step: 0.01 }
@@ -423,7 +434,7 @@ export const DateWithDatePickerDD: DatePrimitiveDD = {
   sample: [ "1/10/2022", '01/11/2022', '01/12/2022' ],
 }
 export const DateDDMMYYY_DD: DatePrimitiveDD = {
-  format: { type: 'Date', pattern: "dd/MM/yyyy"},
+  format: { type: 'Date', pattern: "dd/MM/yyyy" },
   ...datePrimDD,
   name: 'Date',
   emptyValue: '1/1/2022',

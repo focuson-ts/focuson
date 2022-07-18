@@ -9,6 +9,8 @@ import { fromCommonIds } from "../example/commonIds";
 import { safeArray } from "@focuson/utils";
 import { PaymentsPageD } from "../example/payments/payments.pageD";
 import { newPaymentsRD, ValidatePayeeRD } from "../example/payments/payments.restD";
+import { LinkedAccountDetailsPD } from "../example/linkedAccount/linkedAccountDetails.pageD";
+import { collectionHistoryListRD } from "../example/linkedAccount/linkedAccountDetails.restD";
 
 const stringMP: StringMutationParam = { type: 'string', value: 'someString' }
 const integerMP: IntegerMutationParam = { type: "integer", value: 123 }
@@ -173,7 +175,7 @@ describe ( "makeMutations", () => {
       "      s.setObject(3, systemTime.now());",
       "      s.execute();",
       "      Integer checkbookId = s.getInt(1);",
-      "      String checkbookIdPart2 =  DateFormatter.formatDate(\"dd-MM-yyyy\", s.getDate(2));",
+      "      String checkbookIdPart2 = DateFormatter.formatDate(\"dd-MM-yyyy\", s.getDate(2));",
       "      return new Tuple2<Integer,String>(checkbookId,checkbookIdPart2);",
       "  }}",
       "    public void auditCreateCheckBook1(Connection connection, Messages msgs, Object dbName, int brandRef, int accountId, Object checkbookId, String checkbookIdPart2) throws SQLException {",
@@ -372,4 +374,47 @@ describe ( "makeMutations", () => {
 
   } )
 
+  it ("should make mutations for the formats", () =>{
+    expect ( makeMutations ( paramsForTest, LinkedAccountDetailsPD, 'collectionHistoryList', collectionHistoryListRD,
+      safeArray ( collectionHistoryListRD.mutations )[ 0 ] ).map(l => l.replace(/"/g, "'")) ).toEqual ([
+      "package focuson.data.mutator.LinkedAccountDetails;",
+      "",
+      "import focuson.data.fetchers.IFetcher;",
+      "import org.springframework.stereotype.Component;",
+      "import org.springframework.beans.factory.annotation.Autowired;",
+      "",
+      "import focuson.data.utils.FocusonNotFound404Exception;",
+      "import focuson.data.utils.DateFormatter;",
+      "import java.util.Map;",
+      "import java.util.HashMap;",
+      "import java.util.ArrayList;",
+      "import java.util.List;",
+      "import java.util.Date;",
+      "import java.sql.CallableStatement;",
+      "import java.sql.PreparedStatement;",
+      "import java.sql.ResultSet;",
+      "import java.sql.Connection;",
+      "import java.sql.SQLException;",
+      "import focuson.data.utils.IOGNL;",
+      "import focuson.data.utils.DateFormatter;",
+      "import focuson.data.utils.Messages;",
+      "import focuson.data.mutator.utils.Tuple2;",
+      "@Component",
+      "public class CollectionsList_getMutation {",
+      "",
+      "    @Autowired IOGNL ognlForBodyAsJson;",
+      "    public Tuple3<String,String,String> CollectionsList_get_undefined0(Connection connection, Messages msgs, Object dbName) throws SQLException {",
+      "    try (PreparedStatement s = connection.prepareStatement('select amount as amountd, id , amount as amounts                                             from Collection_History')) {",
+      "      ResultSet rs = s.executeQuery();",
+      "      if (!rs.next()) throw new SQLException('Error in : CollectionsList_get_undefined0. Cannot get first item. Index was 0 Sql was select amount as amountd, id , amount as amounts                                             from Collection_History\\nLinkedAccountDetails.rest[collectionHistoryList]. Making mutations for get. Mutation get undefined');",
+      "      String amtDouble = String.format('%,2f', rs.getDouble('amountd'));",
+      "      String id = String.format('%d', rs.getInt('id'));",
+      "      String amtString = String.format('%s', rs.getString('amounts'));",
+      "      return new Tuple3<String,String,String>(amtDouble,id,amtString);",
+      "  }}",
+      "",
+      "}"
+    ])
+
+  })
 } )

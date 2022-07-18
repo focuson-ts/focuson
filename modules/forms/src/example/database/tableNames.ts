@@ -51,3 +51,10 @@ export const clientNames_C10T: DBTable = {
 export const clientAddress_C60T: DBTable = {
   name: 'C60', schema: onlySchema, description: '', notes: ''
 }
+export const collectionHistoryTableDD: DBTable = {
+  description: "",
+  name: "Collection_History",
+  notes: "",
+  schema: onlySchema
+
+}

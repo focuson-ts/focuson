@@ -3,6 +3,8 @@ import { AllButtonsInPage } from "../buttons/allButtons";
 import { AllGuards } from "../buttons/guardButton";
 import { RestD } from "../common/restD";
 import { DataD, RepeatingDataD } from "../common/dataD";
+import { DBTable } from "../common/resolverD";
+import { onlySchema } from "./database/tableNames";
 
 export type ExampleButtons = AllButtonsInPage<AllGuards>
 

@@ -109,11 +109,14 @@ export function addFormat ( errorPrefix: string, format: Pattern | undefined, ja
     case "String":
       switch ( format.type ) {
         case "Date":
-          return ` DateFormatter.formatDate("${format.pattern}", ${from}.getDate(${arg}))`
+          return `DateFormatter.formatDate("${format.pattern}", ${from}.getDate(${arg}))`
         case "Double":
-        case "Integer":
         case "String":
-          throw new Error ( `${errorPrefix} don't know how to addFormat for a String for ${format}, ${javaType}` )
+          return `String.format("${format.pattern}", ${from}.get${format.type}(${arg}))`
+        case "Integer":
+          return `String.format("${format.pattern}", ${from}.getInt(${arg}))`
+        default:
+          throw new Error ( `${errorPrefix} don't know how to addFormat for a String for ${JSON.stringify ( format )}, ${javaType}` )
       }
     default:
       throw new Error ( `${errorPrefix} don't know how to addFormat for ${format}, ${javaType}` )

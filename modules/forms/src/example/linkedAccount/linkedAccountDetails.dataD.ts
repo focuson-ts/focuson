@@ -1,6 +1,7 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
-import { DateDD, IntegerDD, MoneyDD, NumberPrimitiveDD, OneLineStringDD, PositiveMoneyDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
+import { DateDD, IntegerDD, MoneyDD, MoneyStringDD, NumberPrimitiveDD, OneLineStringDD, PositiveMoneyDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
 import { LabelAndDropDownCD, LayoutCd, StructureTableCD, TableCD } from "../../common/componentsD";
+import { collectionHistoryTableDD } from "../database/tableNames";
 
 export const paymentReasonDD: StringPrimitiveDD = {
   ...OneLineStringDD,
@@ -93,9 +94,9 @@ export const CollectionSummaryDD: ExampleDataD = {
   layout: { component: LayoutCd, displayParams: { details: '[[2,2]]' } },
   structure: {
     lastCollectionDate: { dataDD: StringDD, sample: [ '2021/10/6', '2021/12/5' ] },
-    lastCollectionAmount: { dataDD: MoneyDD, sample: [ 1234, 456455 ] },
+    lastCollectionAmount: { dataDD: MoneyStringDD, sample: [ '12.34', '4564.55' ] },
     nextCollectionDate: { dataDD: StringDD, sample: [ '2022/10/6', '2022/12/6' ] },
-    nextCollectionAmount: { dataDD: MoneyDD, sample: [ 13434, 123455 ] },
+    nextCollectionAmount: { dataDD: MoneyStringDD, sample: [ '134.34', '1234.55' ] },
     allowance: { dataDD: MoneyDD, sample: [ 1000, 2000 ], hidden: true },
     period: { dataDD: periodDD, hidden: true },
   }
@@ -107,8 +108,8 @@ export const CreatePaymentDD: ExampleDataD = {
   description: 'The data needed to make a payment',
   guards: { reasonIsAllowance: { condition: 'in', path: 'reason', values: paymentReasonDD.enum } },
   structure: {
-    amount: { dataDD: PositiveMoneyDD, sample: [ 56657, 32834 ]},//, displayParams: { min: 200 } },
-    collectionDate: { dataDD: DateDD  },
+    amount: { dataDD: MoneyStringDD, sample: [ '566.57', '328.34' ] },//, displayParams: { min: 200 } },
+    collectionDate: { dataDD: DateDD },
     reason: { dataDD: paymentReasonDD },
     allowance: { dataDD: MoneyDD, guard: { reasonIsAllowance: [ 'A' ] }, displayParams: { readonly: true } },
     period: { dataDD: periodDD, guard: { reasonIsAllowance: [ 'A' ] }, displayParams: { readonly: true } }
@@ -118,25 +119,26 @@ export const CreatePaymentDD: ExampleDataD = {
 export const CollectionItemDD: ExampleDataD = {
   name: 'CollectionItem',
   description: 'All the data displayed on the screen',
+  table: collectionHistoryTableDD,
   structure: {
-    paymentId: { dataDD: IntegerDD },
-    collectionDate: { dataDD: DateDD },
-    amount: { dataDD: MoneyDD, sample: [ 56657, 32834 ] },
-    status: { dataDD: StringDD, sample: [ 'C', 'P' ] }
+    paymentId: { dataDD: IntegerDD, db: 'id' },
+    collectionDate: { dataDD: DateDD, db: 'collection_date' },
+    amount: { dataDD: MoneyStringDD, db: { table: collectionHistoryTableDD, field: 'amount', format: { type: 'Double', pattern: '%,2f' } }, sample: [ '566.00', '328.34' ] },
+    status: { dataDD: StringDD, db: 'status', sample: [ 'C', 'P' ] }
   }
 }
 
 export const CollectionListDD: ExampleRepeatingD = {
   name: "CollectionsList",
+  dataDD: CollectionItemDD,
   description: "The list of collections or payments for the selection account",
   display: StructureTableCD,
   displayParams: {
-    paths: {cd: "collectionDate", amt: 'amount', sts: 'status' },
+    paths: { cd: "collectionDate", amt: 'amount', sts: 'status' },
     copySelectedIndexTo: [ 'selectedCollectionIndex' ],
     copySelectedItemTo: [ 'selectedCollectionItem' ]
   },
   sampleCount: 4,
-  dataDD: CollectionItemDD,
   paged: false
 }
 

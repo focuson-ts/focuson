@@ -495,7 +495,7 @@ function makeWhereClauseForLeftJoinQuery ( s: SqlLinkData ): string {
   const sw = s.staticWheres.filter ( ( sw: StaticWhere ) => sw.alias === s.sqlRoot.alias ).map ( sw => sw.where )
   const mergedWheres: string[] = normalWheres.concat ( sw )
 
-  return mergedWheres.length === 0 ? '' : ` where ${mergedWheres.join(' AND ')}`
+  return mergedWheres.length === 0 ? '' : ` where ${mergedWheres.join ( ' AND ' )}`
 }
 
 export function generateGetSqlWithLeftJoin ( s: SqlLinkData ): string[] {
@@ -504,8 +504,8 @@ export function generateGetSqlWithLeftJoin ( s: SqlLinkData ): string[] {
   return [ `select`,
     ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.fields.map ( taf => `${taf.alias}.${taf.fieldData.dbFieldName} as ${sqlTafFieldName ( taf )}` ) ) ),
     ` from`,
-    ...indentList ( ( addStringToStartOfAllButFirst ( 'LEFT JOIN ' ) (sortedAliasAndTables.map ( ( [ alias, table ] ) =>
-        `${(makeOnClause(table, alias, s))}` ) ) )), makeWhereClauseForLeftJoinQuery(s) ]
+    ...indentList ( (addStringToStartOfAllButFirst ( 'LEFT JOIN ' ) ( sortedAliasAndTables.map ( ( [ alias, table ] ) =>
+      `${(makeOnClause ( table, alias, s ))}` ) )) ), makeWhereClauseForLeftJoinQuery ( s ) ]
 }
 
 export const findAllTableAndFieldsIn = <G> ( rdps: RestDefnInPageProperties<G>[] ) => unique ( rdps.flatMap ( rdp => {
@@ -553,11 +553,20 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: MainPageD<B
   const constParams = [ `ResultSet rs`, ...ints ( childCount ).map ( i => `List<${sqlListName ( p, restName, path, i )}> list${i}` ) ].join ( ',' )
   const sql = generateGetSql ( ld )
 
-  function createPutterString<T> ( fieldData: FieldData<T>, fieldAlias: string ) {
-    return (fieldData.format && fieldData.format.type === 'Date') ?
-      `this.${mapName ( safeArray ( fieldData.path ).slice ( 0, -1 ) )}.put("${fieldData.fieldName}", DateFormatter.formatDate("${fieldData.format.pattern}",rs.getDate("${fieldAlias}")));`
-      : `this.${mapName ( safeArray ( fieldData.path ).slice ( 0, -1 ) )}.put("${fieldData.fieldName}", rs.${fieldData.rsGetter}("${fieldAlias}"));`;
-  }
+  const createPutterString = <T> ( errorPrefix: string ) => ( fieldData: FieldData<T>, fieldAlias: string ) => {
+    let format = fieldData.format;
+    if ( !format ) return `this.${mapName ( safeArray ( fieldData.path ).slice ( 0, -1 ) )}.put("${fieldData.fieldName}", rs.${fieldData.rsGetter}("${fieldAlias}"));`;
+    switch ( format.type ) {
+      case "Date":
+        return `this.${mapName ( safeArray ( fieldData.path ).slice ( 0, -1 ) )}.put("${fieldData.fieldName}", DateFormatter.formatDate("${format.pattern}",rs.getDate("${fieldAlias}")));`
+      case "Double":
+      case "String":
+      case "Integer":
+        return `this.${mapName ( safeArray ( fieldData.path ).slice ( 0, -1 ) )}.put("${fieldData.fieldName}", String.format("${format.pattern}", rs.get${format.type}("${fieldAlias}")));`
+      default:
+        throw Error ( `${errorPrefix} Don't know how to process format ${JSON.stringify ( format )}` )
+    }
+  };
 
   const putters = ld.fields
     .filter ( taf => taf.fieldData.fieldName )
@@ -565,7 +574,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: MainPageD<B
     .sort ( ( l, r ) => l.fieldData.dbFieldName.localeCompare ( r.fieldData.dbFieldName ) )
     .flatMap ( taf => {
       let fieldAlias = sqlTafFieldName ( taf );
-      let result = createPutterString ( taf.fieldData, fieldAlias )
+      let result = createPutterString ( `Rest ${p.name}.rest[${restName}]` ) ( taf.fieldData, fieldAlias )
       return fieldAlias.length > 30 ? [ `//This is a very long  field alias. If it gives you problems consider giving it an explicit field alias in the dataDD`, result ] : result;
     } )
   const setIds = onlyIds.map ( taf => `this.${sqlTafFieldName ( taf )} = rs.${taf.fieldData.rsGetter}("${sqlTafFieldName ( taf )}");` )

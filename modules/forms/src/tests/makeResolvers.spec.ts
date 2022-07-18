@@ -86,7 +86,7 @@ describe ( "makeResolvers", () => {
       "      s.setObject(3, systemTime.now());",
       "      s.execute();",
       "      Integer val1 = s.getInt(1);",
-      "      String val2 =  DateFormatter.formatDate(\"dd-MM-yyyy\", s.getDate(2));",
+      "      String val2 = DateFormatter.formatDate(\"dd-MM-yyyy\", s.getDate(2));",
       "      return new Tuple2<Integer,String>(val1,val2);",
       "  }}",
       "    public Tuple2<String,String> getMeMyData21(Connection connection, Messages msgs, Object dbName) throws SQLException {",
@@ -95,7 +95,7 @@ describe ( "makeResolvers", () => {
       "      s.registerOutParameter(2,java.sql.Types.CHAR);",
       "      s.setObject(3, systemTime.now());",
       "      s.execute();",
-      "      String val3 =  DateFormatter.formatDate(\"dd-MM-yyyy\", s.getDate(1));",
+      "      String val3 = DateFormatter.formatDate(\"dd-MM-yyyy\", s.getDate(1));",
       "      String val4 = s.getString(2);",
       "      return new Tuple2<String,String>(val3,val4);",
       "  }}",
@@ -310,7 +310,7 @@ describe ( "makeResolvers", () => {
       "      List<Map<String,Object>> result = new ArrayList();",
       "      while (rs.next()){",
       "        Map<String,Object> oneLine = new HashMap();",
-      "        oneLine.put(\"line1\",  DateFormatter.formatDate(\"dd-MM-yyyy\", rs.getDate(\"zzline1\")));",
+      "        oneLine.put(\"line1\", DateFormatter.formatDate(\"dd-MM-yyyy\", rs.getDate(\"zzline1\")));",
       "        oneLine.put(\"line2\", rs.getString(\"zzline2\"));",
       "        oneLine.put(\"line3\", rs.getString(\"zzline3\"));",
       "        oneLine.put(\"line4\", rs.getString(\"zzline4\"));",
@@ -322,7 +322,7 @@ describe ( "makeResolvers", () => {
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ] )
+    ])
   } )
 
   it ( 'should make a resolver for using fromParent types', () => {
