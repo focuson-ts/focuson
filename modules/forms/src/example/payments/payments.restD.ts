@@ -25,7 +25,7 @@ export const newPaymentsRD: ExampleRestD = {
   // access:[{restAction: 'create', condition: {type: 'dateNotWeekEndOrHoliday', param: ''}}],
   resolvers: {
     getoneLinePayment: [
-      {type:'storedProc', name: 'checkNotHolidayOrWeekend', params:[{type: 'body', path: 'thePAthToTheDate'}],schema: onlySchema },
+      // {type:'storedProc', name: 'checkNotHolidayOrWeekend', params:[{type: 'body', path: 'thePAthToTheDate'}],schema: onlySchema },
       { type: 'message', message: 'getOneLinePayment was called' },
       {
         type: 'case', name: 'sendSomeMessageDependingOnBrand', params: [ 'brandRef' ], select: [

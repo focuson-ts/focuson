@@ -673,22 +673,17 @@ export function preTransactionSqlLogger(paramsA: JavaQueryParamDetails[]): strin
   return `    logger.debug(MessageFormat.format("${prefixNamesAndIndex}", sql, ${paramsA.map( p => p.name )}));`;
 }
 
-// export function postTransactionSqlLogger(paramsA: []): string {
-//   if (paramsA.length == 0) return `    logger.debug(MessageFormat.format("Duration: {${0}}", durationMs));`;
-//   let i = 1;
-//   const prefixNamesAndIndex = `Duration: {${0}}, `.concat( paramsA.map ( p => `${( p.name )}: {${i++}}`).join ( ", " ) );
-//   return `    logger.debug(MessageFormat.format("${prefixNamesAndIndex}", durationMs, ${paramsA.map( p => p.name )}));`;
-// }
-
 function makeGetRestForMainOrChild<B, G> ( p: PageD<B, G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[], repeating: Boolean ) {
   const mapName = `${sqlMapName ( p, restName, path )}`;
   const retreiveData: string[] = repeating ?
     [ `      List<${mapName}> result = new LinkedList<>();`,
       `      while (rs.next())`,
       `        result.add(${newMap ( mapName, childCount, [] )});`,
+      `      logger.debug(MessageFormat.format("Duration: {0}, result: {1}", (System.nanoTime() - start) / 1000000.0, result ));`,
       `      return result;`,
     ] :
-    [ `      return rs.next() ? Optional.of(${newMap ( mapName, childCount, [] )}) : Optional.empty();` ]
+    [ `      logger.debug(MessageFormat.format("Duration: {0}", (System.nanoTime() - start) / 1000000.0));`,
+      `      return rs.next() ? Optional.of(${newMap ( mapName, childCount, [] )}) : Optional.empty();` ]
 
   function addPrefixPostFix ( { name, paramPrefix, paramPostfix }: JavaQueryParamDetails ): string {
     return (paramPrefix ? '"' + paramPrefix + '"+' : '') + name + (paramPostfix ? '+"' + paramPostfix + '"' : '')
@@ -701,11 +696,9 @@ function makeGetRestForMainOrChild<B, G> ( p: PageD<B, G>, restName: string, pat
     preTransactionSqlLogger(queryParams),
     `    long start = System.nanoTime();`,
     `    ResultSet rs = statement.executeQuery();`,
-    `    long durationMs = (System.nanoTime() - start) / 1000;`,
     `    try {`,
     ...retreiveData,
     `    } finally {`,
-    `      logger.debug(MessageFormat.format("Duration: {0}, results: {1}", durationMs, rs.toString()));`,
     `      rs.close();`,
     `      statement.close();`,
     `    }`,
