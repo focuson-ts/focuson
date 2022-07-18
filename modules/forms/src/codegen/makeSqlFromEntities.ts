@@ -603,6 +603,9 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: MainPageD<B
   return [
     `package ${sqlMapPackageName ( params, p )};`,
     '',
+    `import org.slf4j.Logger;`,
+    `import org.slf4j.LoggerFactory;`,
+    `import java.text.MessageFormat;`,
     `import java.sql.ResultSet;`,
     `import java.sql.Connection;`,
     `import java.sql.PreparedStatement;`,
@@ -617,6 +620,9 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: MainPageD<B
     '',
     `//${JSON.stringify ( restD.params )}`,
     `public class ${className} {`,
+      ``,
+      `  static Logger logger = LoggerFactory.getLogger(${className}.class);`,
+      ``,
     ...indentList ( [
       `@SuppressWarnings("SqlResolve")`,
       ...addBrackets ( 'public static String sql = ', ';' ) ( addStringToEndOfAllButLast ( '+' ) ( sql.map ( s => '"' + s.replace ( /""/g, '\"' ) + '"' ) ) ),
@@ -660,6 +666,20 @@ function makeGetRestForChild<B, G> ( p: PageD<B, G>, restName: string, path: num
 
 }
 
+export function preTransactionSqlLogger(paramsA: JavaQueryParamDetails[]): string {
+  if (paramsA.length == 0) return `    logger.debug(MessageFormat.format("sql: {${0}}", sql));`;
+  let i = 1;
+  const prefixNamesAndIndex = `sql: {${0}}, `.concat( paramsA.map ( p => `${( p.name )}: {${i++}}`).join ( ", " ) );
+  return `    logger.debug(MessageFormat.format("${prefixNamesAndIndex}", sql, ${paramsA.map( p => p.name )}));`;
+}
+
+// export function postTransactionSqlLogger(paramsA: []): string {
+//   if (paramsA.length == 0) return `    logger.debug(MessageFormat.format("Duration: {${0}}", durationMs));`;
+//   let i = 1;
+//   const prefixNamesAndIndex = `Duration: {${0}}, `.concat( paramsA.map ( p => `${( p.name )}: {${i++}}`).join ( ", " ) );
+//   return `    logger.debug(MessageFormat.format("${prefixNamesAndIndex}", durationMs, ${paramsA.map( p => p.name )}));`;
+// }
+
 function makeGetRestForMainOrChild<B, G> ( p: PageD<B, G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[], repeating: Boolean ) {
   const mapName = `${sqlMapName ( p, restName, path )}`;
   const retreiveData: string[] = repeating ?
@@ -675,12 +695,17 @@ function makeGetRestForMainOrChild<B, G> ( p: PageD<B, G>, restName: string, pat
   }
   return [
     `public static ${repeating ? 'List' : 'Optional'}<${mapName}> get${path.join ( '_' )}(${getParameters ( childCount, p, restName, [], queryParams )}) throws SQLException {`,
-    `    PreparedStatement statement = connection.prepareStatement(${mapName}.sql);`,
+    `    String sql = ${mapName}.sql;`,
+    `    PreparedStatement statement = connection.prepareStatement(sql);`,
     ...indentList ( indentList ( queryParams.map ( ( paramDetails, i ) => `statement.${paramDetails.param.rsSetter}(${i + 1},${addPrefixPostFix ( paramDetails )});` ) ) ),
+    preTransactionSqlLogger(queryParams),
+    `    long start = System.nanoTime();`,
     `    ResultSet rs = statement.executeQuery();`,
+    `    long durationMs = (System.nanoTime() - start) / 1000;`,
     `    try {`,
     ...retreiveData,
     `    } finally {`,
+    `      logger.debug(MessageFormat.format("Duration: {0}, results: {1}", durationMs, rs.toString()));`,
     `      rs.close();`,
     `      statement.close();`,
     `    }`,

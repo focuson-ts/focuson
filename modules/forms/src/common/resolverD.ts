@@ -244,7 +244,7 @@ export function displayParam ( param: MutationParam ) {
   if ( typeof param === 'string' ) return param
   return JSON.stringify ( param )
 }
-export function paramNamePathOrValue ( m: MutationParam ) {
+export function paramNamePathOrValue ( m: MutationParam ): string|number {
   if ( typeof m === 'string' ) return m
   if ( m.type === 'string' || m.type === 'integer' ) return m.value
   if ( m.type === 'null' ) return "null"

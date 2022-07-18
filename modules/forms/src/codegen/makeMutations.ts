@@ -4,7 +4,7 @@ import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationDetailsName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
 import { indentList } from "./codegen";
-import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, getMakeMock, importForTubles, isBodyMutationParam, isInputParam, isMessageMutation, isOutputParam, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
+import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, getMakeMock, importForTubles, isBodyMutationParam, isInputParam, isMessageMutation, isOutputParam, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
@@ -138,6 +138,24 @@ export const typeForParamAsInput = ( errorPrefix: string, params: NameAnd<AllLen
 };
 
 
+export function preTransactionLogger ( prefix: MutationDetail, paramsA: MutationParam[] ): string {
+  const hasBodyParams = paramsA.filter ( isBodyMutationParam ).length > 0
+  const inputParams = paramsA.filter ( isInputParam );
+  if ( inputParams.length == 0 ) return `      logger.debug(MessageFormat.format("${prefix.type}: {0}", ${prefix.type}));`;
+  const inputParamsWithoutBody = inputParams.filter ( p => !isBodyMutationParam ( p ) );
+  const paramNamesAndValues = [
+    `${prefix.type}: {0}`,
+          ...inputParamsWithoutBody.map ( ( p, i ) => `${paramNamePathOrValue ( p )}: {${i + 1}}` ),
+    hasBodyParams ? `bodyAsJson: {${paramsA.length}}` : `` ].join(',')
+  return `      logger.debug(MessageFormat.format("${paramNamesAndValues}", ${prefix.type},${inputParamsWithoutBody.map ( paramNamePathOrValue )}${hasBodyParams ? ', bodyAsJson' : ''}));`;
+}
+
+export function postTransactionLogger ( paramsA: MutationParam[] ): string {
+  if ( paramsA.filter ( isOutputParam ).length == 0 ) return `logger.debug(MessageFormat.format("Duration: {0,number,#.##}", (System.nanoTime() - start) / 1000000.0));`;
+  const prefixNamesAndIndex = `Duration: {0,number,#.##}, `.concat ( paramsA.filter ( isOutputParam ).map ( (p,i) => `${p.name}: {${i+1}}` ).join ( ", " ) );
+  return `logger.debug(MessageFormat.format("${prefixNamesAndIndex}", (System.nanoTime() - start) / 1000000.0, ${paramsA.filter ( isOutputParam ).map ( p => p.name )}));`;
+}
+
 export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: SqlMutation, index: string, includeMockIf: boolean ): string[] {
 
   const paramsA = toArray ( m.params )
@@ -153,11 +171,15 @@ export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: MainPage
   return [
     ...makeMethodDecl ( errorPrefix, paramsA, javaTypeForOutput ( paramsA ), r, name, m, index ),
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
-    `    try (PreparedStatement s = connection.prepareStatement("${m.sql.replace ( /\n/g, ' ' )}")) {`,
+    `    String sql = "${m.sql.replace ( /\n|\t|\s/gm, ' ' )}";`,
+    `    try (PreparedStatement s = connection.prepareStatement(sql)) {`,
+    preTransactionLogger ( m, paramsA ),
     ...indentList ( indentList ( indentList ( [
         ...allSetObjectForInputs ( errorPrefix, m.params ),
+      `long start = System.nanoTime();`,
         ...execute,
         ...getFromResultSetIntoVariables ( errorPrefix, 'rs', paramsA ),
+      postTransactionLogger ( paramsA ),
         makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) )
       ]
     ) ) ),
@@ -172,9 +194,12 @@ export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPag
   return [
     ...makeMethodDecl ( errorPrefix, paramsA, 'List<Map<String,Object>>', r, name, m, index ),
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
-    `    try (PreparedStatement s = connection.prepareStatement("${sql}")) {`,
+    `    String sql = "${m.sql.replace ( /\n|\t|\s/gm, ' ' )}";`,
+    `    try (PreparedStatement s = connection.prepareStatement(sql)) {`,
+    preTransactionLogger ( m, paramsA ),
     ...indentList ( indentList ( indentList ( [
         ...allSetObjectForInputs ( errorPrefix, m.params ),
+      `long start = System.nanoTime();`,
         `ResultSet rs = s.executeQuery();`,
         `List<Map<String,Object>> result = new ArrayList();`,
         `while (rs.next()){`,
@@ -184,6 +209,7 @@ export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPag
           `result.add(oneLine);` ] ),
         '}',
         ...messageLine,
+        postTransactionLogger ( paramsA ),
         `return result;`,
       ]
     ) ) ),
@@ -202,11 +228,15 @@ export function mutationCodeForStoredProcedureCalls<G> ( errorPrefix: string, p:
   let fullName = m.package ? `${m.package}.${m.name}` : m.name;
   return [
     ...makeMethodDecl ( errorPrefix, paramsA, javaTypeForOutput ( paramsA ), r, name, m, index ),
-    ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ), `    try (CallableStatement s = connection.prepareCall("call ${fullName}(${toArray ( m.params ).map ( () => '?' ).join ( ", " )})")) {`,
+    `      String storedProc = "call ${fullName}(${toArray ( m.params ).map ( () => '?' ).join ( ", " )})";`,
+    ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ), `    try (CallableStatement s = connection.prepareCall(storedProc)) {`,
+    preTransactionLogger ( m, paramsA ),
     ...indentList ( indentList ( indentList ( allSetObjectForStoredProcs ( errorPrefix, m.params ) ) ) ),
+    `      long start = System.nanoTime();`,
     `      s.execute();`,
     ...indentList ( indentList ( indentList ( [
       ...getFromStatement ( errorPrefix, 's', paramsA ),
+      postTransactionLogger ( paramsA ),
       makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),
     `  }}`,
   ];
@@ -298,6 +328,9 @@ export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, a
     ``,
     `import ${params.thePackage}.${params.utilsPackage}.FocusonNotFound404Exception;`,
     `import ${params.thePackage}.${params.utilsPackage}.DateFormatter;`,
+    `import org.slf4j.Logger;`,
+    `import org.slf4j.LoggerFactory;`,
+    `import java.text.MessageFormat;`,
     `import java.util.Map;`,
     `import java.util.HashMap;`,
     `import java.util.ArrayList;`,
@@ -317,6 +350,8 @@ export function makeMutations<G> ( params: JavaWiringParams, p: MainPageD<any, a
     ...toArray ( r.mutations ).flatMap ( m => m.mutateBy ).flatMap ( m => m.type === 'manual' ? toArray ( m.import ) : [] ),
     `@Component`,
     `public class ${mutationClassName ( r, mutation.restAction )} {`,
+    ``,
+    `Logger logger = LoggerFactory.getLogger(getClass());`,
     ``,
     `    @Autowired IOGNL ognlForBodyAsJson;`,
     ...autowiringVariables,
