@@ -1,5 +1,5 @@
 import { MainPageD } from "../common/pageD";
-import {decamelize, NameAnd, safeObject, toArray, unique} from "@focuson/utils";
+import { decamelize, NameAnd, safeObject, toArray, unique } from "@focuson/utils";
 import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationDetailsName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
@@ -42,7 +42,7 @@ import {
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
-import {type} from "os";
+import { type } from "os";
 
 
 export function setObjectFor ( m: MutationParam, i: number ): string {
@@ -155,24 +155,22 @@ export const typeForParamAsInput = ( errorPrefix: string, params: NameAnd<AllLen
 };
 
 
-export function preTransactionLogger(prefix: MutationDetail, paramsA: MutationParam[]): string {
-  const arg1 = prefix.type === "storedProc" ? "storedProc" : prefix.type
-  const hasBodyParams = paramsA.filter( isBodyMutationParam ).length > 0
-  if (paramsA.filter( isInputParam ).length == 0) return `      logger.debug(MessageFormat.format("${prefix.type}: {${0}}", ${arg1}));`;
-  let i = 1;
-  const prefixNamesAndIndex = `${prefix.type}: {${0}}, `
-      .concat( paramsA.filter( isInputParam ).filter(p => !isBodyMutationParam(p) ).map(p => `${paramNamePathOrValue(p)}: {${i++}}`).join( ", " ) )
-      .concat( hasBodyParams ? `, bodyAsJson: {${i++}}` : `` );
-  return `      logger.debug(MessageFormat.format("${prefixNamesAndIndex}", ${arg1},${paramsA
-      .filter( isInputParam ).filter(p => !isBodyMutationParam(p) ).map(p => (paramNamePathOrValue(p)))}`
-      .concat( hasBodyParams ? `, bodyAsJson` : `` ).concat(`));`);
+export function preTransactionLogger ( prefix: MutationDetail, paramsA: MutationParam[] ): string {
+  const hasBodyParams = paramsA.filter ( isBodyMutationParam ).length > 0
+  const inputParams = paramsA.filter ( isInputParam );
+  if ( inputParams.length == 0 ) return `      logger.debug(MessageFormat.format("${prefix.type}: {0}", ${prefix.type}));`;
+  const inputParamsWithoutBody = inputParams.filter ( p => !isBodyMutationParam ( p ) );
+  const paramNamesAndValues = [
+    `${prefix.type}: {0}`,
+          ...inputParamsWithoutBody.map ( ( p, i ) => `${paramNamePathOrValue ( p )}: {${i + 1}}` ),
+    hasBodyParams ? `bodyAsJson: {${paramsA.length}}` : `` ].join(',')
+  return `      logger.debug(MessageFormat.format("${paramNamesAndValues}", ${prefix.type},${inputParamsWithoutBody.map ( paramNamePathOrValue )}${hasBodyParams ? ', bodyAsJson' : ''}));`;
 }
 
-export function postTransactionLogger (paramsA: MutationParam[] ): string {
-  if (paramsA.filter( isOutputParam ).length == 0) return `logger.debug(MessageFormat.format("Duration: {${0}}", durationMs));`;
-  let i = 1;
-  const prefixNamesAndIndex = `Duration: {${0}}, `.concat( paramsA.filter( isOutputParam ).map( p => `${p.name}: {${i++}}`).join( ", " ) );
-  return `logger.debug(MessageFormat.format("${prefixNamesAndIndex}", durationMs, ${paramsA.filter( isOutputParam ).map(p => p.name)}));`;
+export function postTransactionLogger ( paramsA: MutationParam[] ): string {
+  if ( paramsA.filter ( isOutputParam ).length == 0 ) return `logger.debug(MessageFormat.format("Duration: {0,number,#.##}", (System.nanoTime() - start) / 1000000.0));`;
+  const prefixNamesAndIndex = `Duration: {0,number,#.##}, `.concat ( paramsA.filter ( isOutputParam ).map ( (p,i) => `${p.name}: {${i+1}}` ).join ( ", " ) );
+  return `logger.debug(MessageFormat.format("${prefixNamesAndIndex}", (System.nanoTime() - start) / 1000000.0, ${paramsA.filter ( isOutputParam ).map ( p => p.name )}));`;
 }
 
 export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: SqlMutation, index: string, includeMockIf: boolean ): string[] {
@@ -192,14 +190,13 @@ export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: MainPage
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
     `    String sql = "${m.sql.replace ( /\n|\t|\s/gm, ' ' )}";`,
     `    try (PreparedStatement s = connection.prepareStatement(sql)) {`,
-         preTransactionLogger(m, paramsA),
+    preTransactionLogger ( m, paramsA ),
     ...indentList ( indentList ( indentList ( [
         ...allSetObjectForInputs ( m.params ),
         `long start = System.nanoTime();`,
         ...execute,
-        `long durationMs = (System.nanoTime() - start) / 1000;`,
         ...getFromResultSetIntoVariables ( errorPrefix, 'rs', paramsA ),
-        postTransactionLogger(paramsA),
+        postTransactionLogger ( paramsA ),
         makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) )
       ]
     ) ) ),
@@ -215,12 +212,11 @@ export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPag
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
     `    String sql = "${m.sql.replace ( /\n|\t|\s/gm, ' ' )}";`,
     `    try (PreparedStatement s = connection.prepareStatement(sql)) {`,
-         preTransactionLogger(m, paramsA),
+    preTransactionLogger ( m, paramsA ),
     ...indentList ( indentList ( indentList ( [
         ...allSetObjectForInputs ( m.params ),
         `long start = System.nanoTime();`,
         `ResultSet rs = s.executeQuery();`,
-        `long durationMs = (System.nanoTime() - start) / 1000;`,
         `List<Map<String,Object>> result = new ArrayList();`,
         `while (rs.next()){`,
         ...indentList ( [
@@ -229,7 +225,7 @@ export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPag
           `result.add(oneLine);` ] ),
         '}',
         ...messageLine,
-          postTransactionLogger(paramsA),
+        postTransactionLogger ( paramsA ),
         `return result;`,
       ]
     ) ) ),
@@ -250,14 +246,13 @@ export function mutationCodeForStoredProcedureCalls<G> ( errorPrefix: string, p:
     ...makeMethodDecl ( errorPrefix, paramsA, javaTypeForOutput ( paramsA ), r, name, m, index ),
     `      String storedProc = "call ${fullName}(${toArray ( m.params ).map ( () => '?' ).join ( ", " )})";`,
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ), `    try (CallableStatement s = connection.prepareCall(storedProc)) {`,
-    preTransactionLogger(m, paramsA),
+    preTransactionLogger ( m, paramsA ),
     ...indentList ( indentList ( indentList ( allSetObjectForStoredProcs ( m.params ) ) ) ),
     `      long start = System.nanoTime();`,
     `      s.execute();`,
-    `      long durationMs = (System.nanoTime() - start) / 1000;`,
     ...indentList ( indentList ( indentList ( [
       ...getFromStatement ( errorPrefix, 's', paramsA ),
-      postTransactionLogger(paramsA),
+      postTransactionLogger ( paramsA ),
       makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),
     `  }}`,
   ];
