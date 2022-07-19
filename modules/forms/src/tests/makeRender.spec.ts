@@ -199,7 +199,7 @@ describe ( " listComponentsIn", () => {
       "  return focusedPage<FState, CreatePlanDomain, Context> ( s =>  'Create Plan' ) (//If there is a compilation here have you added this to the 'domain' of the main page",
       "     ( state, d, mode, index ) => {",
       "          const id=`page${index}`;",
-      "          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} buttonType='secondary' />,",
+      "          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} confirm={'It will start on {~/tempCreatePlan/createPlanStart}'} buttonType='secondary' />,",
       "              commit:<ModalCommitButton id={`${id}.commit`}  buttonType='primary'  state={state} />,}",
       "          return <>",
       "          <>",

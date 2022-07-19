@@ -19,10 +19,12 @@ import { FourOhFourPageD } from "./example/FourOhFour/FourOhFour.pageD";
 import { EnabledByPageD } from "./example/enabledBy/enabledBy.pageD";
 import { ReadOnlyPageD } from "./example/readonly/readOnly.pageD";
 import { DatesPageD } from "./example/dates/dates.pageD";
+import { initialPageD } from "./example/initiial/initial.pageD";
 
 
 export const generatedPages: ExampleMainPage[] = [
   DatesPageD,
+  initialPageD,
   EnabledByPageD,
   ReadOnlyPageD,
   FourOhFourPageD,

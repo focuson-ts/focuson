@@ -212,9 +212,15 @@ export function DatePicker<S, C extends PageSelectionContext<S>> ( props: DatePi
   const { defaultDate, dateFilter, holidays } = calcInfoTheDatePickerNeeds ( id, jurisdiction?.optJson (), dateInfo?.optJson (), dateFormat, dateRange, debug )
   const { dateString, date, selectedDateErrors } = selectedDate ( state, dateFormat, defaultDate )
   function onChange ( e: any/* probably a date or an array of dates if we are selecting a range (which we aren't)*/ ) {
-    let formattedDate = format ( e, dateFormat );
-    if ( debug ) console.log ( 'datePicker.onChange', id, e, dateFormat, formattedDate, debug )
-    state.setJson ( formattedDate, reasonFor ( 'DatePicker', 'onChange', id ) )
+    try {
+      let formattedDate = format ( e, dateFormat );
+      if ( debug ) console.log ( 'datePicker.onChange', id, e, dateFormat, formattedDate, debug )
+      state.setJson ( formattedDate, reasonFor ( 'DatePicker', 'onChange', id ) )
+    } catch ( err ) {
+      console.error ( "e is", e)
+      console.error ( "e is", e.toISOString())
+      throw err
+    }
   }
   function onChangeRaw ( e: React.FocusEvent<HTMLInputElement> ) {
     if ( debug ) console.log ( 'datePicker.onChangeRaw', id, e.target?.value, 'changed' )

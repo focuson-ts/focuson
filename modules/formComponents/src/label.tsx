@@ -1,7 +1,6 @@
 import { LensProps } from "@focuson/state";
-import { replaceTextUsingPath } from "@focuson/focuson";
+import { PageSelectionContext, replaceTextUsingPath } from "@focuson/pages";
 import { safeString } from "@focuson/utils";
-import { PageSelectionContext } from "@focuson/pages";
 
 
 export interface LabelProps<S, Context extends PageSelectionContext<S>> extends LensProps<S, any, Context> {
