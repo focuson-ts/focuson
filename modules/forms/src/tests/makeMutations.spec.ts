@@ -1,4 +1,4 @@
-import { getFromResultSetIntoVariables, getFromStatement, makeMutationResolverReturnStatement, makeMutations, mockReturnStatement, setObjectFor, typeForParamAsInput } from "../codegen/makeMutations";
+import { getFromResultSetIntoVariables, getFromStatement, makeMutationResolverReturnStatement, makeMutations, mockReturnStatement, mutationCodeForFunctionCalls, setObjectFor, typeForParamAsInput } from "../codegen/makeMutations";
 import { paramsForTest } from "./paramsForTest";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
@@ -6,11 +6,13 @@ import { chequeCreditBooksRestD } from "../example/chequeCreditBooks/chequeCredi
 import { ChequeCreditbooksPD } from "../example/chequeCreditBooks/chequeCreditBooks.pageD";
 import { IntegerMutationParam, MutationParam, NullMutationParam, OutputForManualParam, OutputForSqlMutationParam, OutputForStoredProcMutationParam, StringMutationParam } from "../common/resolverD";
 import { fromCommonIds } from "../example/commonIds";
-import { safeArray } from "@focuson/utils";
+import { safeArray, safeObject } from "@focuson/utils";
 import { PaymentsPageD } from "../example/payments/payments.pageD";
 import { newPaymentsRD, ValidatePayeeRD } from "../example/payments/payments.restD";
 import { LinkedAccountDetailsPD } from "../example/linkedAccount/linkedAccountDetails.pageD";
-import { collectionHistoryListRD } from "../example/linkedAccount/linkedAccountDetails.restD";
+import { collectionHistoryListRD, collectionSummaryRD } from "../example/linkedAccount/linkedAccountDetails.restD";
+import { makeResolvers } from "../codegen/makeResolvers";
+import { findQueryMutationResolver } from "../codegen/makeJavaFetchersInterface";
 
 const stringMP: StringMutationParam = { type: 'string', value: 'someString' }
 const integerMP: IntegerMutationParam = { type: "integer", value: 123 }
@@ -83,8 +85,36 @@ describe ( "returnStatement", () => {
   } )
 } )
 
+describe("sql functions", () =>{
+  it ("should make resolver for a sqlfunction", () =>{
+    let sqlFunctionMutation: any = safeObject ( collectionSummaryRD.resolvers ).getAccountType;
+    expect ( mutationCodeForFunctionCalls ('errorPrefix', LinkedAccountDetailsPD,  collectionSummaryRD,
+      'getAccountType', sqlFunctionMutation, "I", false).map(s => s.replace(/"/g, "'"))).toEqual ([
+      "    public Integer getAccountTypeI(Connection connection, Messages msgs, Object dbName, int accountId) throws SQLException {",
+      "      String sqlFunction = '{? = call b00.getAccountType(?)}';",
+      "      try (CallableStatement s = connection.prepareCall(sqlFunction)) {",
+      "      logger.debug(MessageFormat.format('sqlFunction: {0},accountId: {1},', sqlFunction,accountId));",
+      "      s.registerOutParameter(1,java.sql.Types.INTEGER);",
+      "      s.setObject(2, accountId);",
+      "      long start = System.nanoTime();",
+      "      s.execute();",
+      "      Integer accountType = s.getInt(1);",
+      "      logger.debug(MessageFormat.format('Duration: {0,number,#.##}, accountType: {1}', (System.nanoTime() - start) / 1000000.0, accountType));",
+      "      return accountType;",
+      "  }}"
+    ])
+  })
+
+
+
+
+})
+
 
 describe ( "makeMutations", () => {
+
+
+
   it ( "should create an mutation class with a method for each mutation for that rest - simple", () => {
     expect ( makeMutations ( paramsForTest, EAccountsSummaryPD, 'theRestName', eAccountsSummaryRestD, safeArray ( eAccountsSummaryRestD.mutations )[ 0 ] ) ).toEqual ([
       "package focuson.data.mutator.EAccountsSummary;",
@@ -359,12 +389,12 @@ describe ( "makeMutations", () => {
       "",
       "    @Autowired IOGNL ognlForBodyAsJson;",
       "    public Tuple3<String,String,String> CollectionsList_get_undefined0(Connection connection, Messages msgs, Object dbName) throws SQLException {",
-      "    String sql = 'select amount as amountd, id , amount as amounts                                             from Collection_History';",
+      "    String sql = 'select amount as amountd, id, amount as amounts                                             from Collection_History';",
       "    try (PreparedStatement s = connection.prepareStatement(sql)) {",
       "      logger.debug(MessageFormat.format('sql: {0}', sql));",
       "      long start = System.nanoTime();",
       "      ResultSet rs = s.executeQuery();",
-      "      if (!rs.next()) throw new SQLException('Error in : CollectionsList_get_undefined0. Cannot get first item. Index was 0 Sql was select amount as amountd, id , amount as amounts                                             from Collection_History\\nLinkedAccountDetails.rest[collectionHistoryList]. Making mutations for get. Mutation get undefined');",
+      "      if (!rs.next()) throw new SQLException('Error in : CollectionsList_get_undefined0. Cannot get first item. Index was 0 Sql was select amount as amountd, id, amount as amounts                                             from Collection_History\\nLinkedAccountDetails.rest[collectionHistoryList]. Making mutations for get. Mutation get undefined');",
       "      String amtDouble = String.format('%,2f', rs.getDouble('amountd'));",
       "      String id = String.format('%d', rs.getInt('id'));",
       "      String amtString = String.format('%s', rs.getString('amounts'));",

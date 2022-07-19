@@ -4,7 +4,7 @@ import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationDetailsName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
 import { indentList } from "./codegen";
-import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, getMakeMock, importForTubles, isBodyMutationParam, isInputParam, isMessageMutation, isOutputParam, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
+import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, getMakeMock, importForTubles, isBodyMutationParam, isInputParam, isMessageMutation, isOutputParam, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlFunctionMutation, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
@@ -225,6 +225,25 @@ function makeMethodDecl<G> ( errorPrefix: string, paramsA: MutationParam[], resu
   return [ `    public ${resultType} ${mutationMethodName ( r, name, m, index )}(Connection connection, Messages msgs, ${paramStrings}) throws SQLException {`,
     ...indentList ( indentList ( indentList ( requiredmentCheckCodeForJava ( paramsA, parametersFor ( m ) ) ) ) ) ];
 }
+export function mutationCodeForFunctionCalls<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: SqlFunctionMutation, index: string, includeMockIf: boolean ): string[] {
+  const paramsA = toArray ( m.params )
+  let fullName = m.package ? `${m.package}.${m.name}` : m.name;
+  return [
+    ...makeMethodDecl ( errorPrefix, paramsA, javaTypeForOutput ( paramsA ), r, name, m, index ),
+    `      String sqlFunction = "{? = call ${fullName}(${toArray ( m.params ).slice(1).map ( () => '?' ).join ( ", " )})}";`,
+    ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
+    `      try (CallableStatement s = connection.prepareCall(sqlFunction)) {`,
+    preTransactionLogger ( m.type, paramsA ),
+    ...indentList ( indentList ( indentList ( allSetObjectForStoredProcs ( errorPrefix, m.params ) ) ) ),
+    `      long start = System.nanoTime();`,
+    `      s.execute();`,
+    ...indentList ( indentList ( indentList ( [
+      ...getFromStatement ( errorPrefix, 's', paramsA ),
+      postTransactionLogger ( paramsA, isSqlMutationThatIsAList(m) ),
+      makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),
+    `  }}`,
+  ];
+}
 export function mutationCodeForStoredProcedureCalls<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: StoredProcedureMutation, index: string, includeMockIf: boolean ): string[] {
   const paramsA = toArray ( m.params )
   let fullName = m.package ? `${m.package}.${m.name}` : m.name;
@@ -243,6 +262,7 @@ export function mutationCodeForStoredProcedureCalls<G> ( errorPrefix: string, p:
     `  }}`,
   ];
 }
+
 export function mutationCodeForManual<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: ManualMutation, index: string, includeMockIf: boolean ): string[] {
   const paramsA = toArray ( m.params );
   return [
@@ -285,6 +305,7 @@ export function makeMutationMethod<G> ( errorPrefix: string, mutations: Mutation
     if ( isSqlMutationThatIsAList ( m ) ) return mutationCodeForSqlListCalls ( newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
     if ( m.type === 'sql' ) return mutationCodeForSqlMapCalls ( newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
     if ( m.type === 'storedProc' ) return mutationCodeForStoredProcedureCalls ( newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
+    if ( m.type === 'sqlFunction' ) return mutationCodeForFunctionCalls ( newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
     if ( m.type === 'manual' ) return mutationCodeForManual ( newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf );
     if ( m.type === 'case' ) {
       const caseCode = mutationCodeForCase ( newErrorPrefix, p, r, name, m, index, includeMockIf, indexPrefix );
@@ -292,7 +313,7 @@ export function makeMutationMethod<G> ( errorPrefix: string, mutations: Mutation
       return [ ...caseCode, ...clausesCode ];
     }
     if ( m.type === 'message' ) return mutationCodeForMessage ()
-    throw Error ( `Don't know how to findCode (Page ${p.name}) for ${JSON.stringify ( m )}` )
+    throw Error ( `Don't know how to makeMutationMethod (Page ${p.name}) for ${JSON.stringify ( m )}` )
   } ) )
   return methods;
 }

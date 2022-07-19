@@ -56,7 +56,7 @@ export function getMakeMock ( m: MutationDetail ): boolean {
   if ( isMessageMutation ( m ) ) return false
   return m.makeMock === undefined ? true : m.makeMock
 }
-export type MutationDetail = StoredProcedureMutation |
+export type MutationDetail = StoredProcedureMutation |SqlFunctionMutation|
   SqlMutation | SqlMutationThatIsAList |
   ManualMutation | SelectMutation | MessageMutation
 
@@ -110,6 +110,15 @@ export interface StoredProcedureMutation {
   makeMock?: boolean
   params: MutationParamForStoredProc | MutationParamForStoredProc[]
 }
+export interface SqlFunctionMutation {
+  type: 'sqlFunction',
+  list?: boolean,
+  schema: Schema,
+  package?: string;
+  name: string,
+  makeMock?: boolean,
+  params: MutationParamForSqlFunction | MutationParamForSqlFunction[]
+}
 
 export interface ManualMutation {
   type: 'manual';
@@ -130,11 +139,14 @@ export interface SelectMutation {
   select: GuardedMutation[]
 }
 
-export type GuardedMutation = GuardedManualMutation | GuardedSqMutation | GuardedStoredProcedureMutation | GuardedSqMutationThatIsAList | GuardedMessageMutation
+export type GuardedMutation = GuardedManualMutation | GuardedSqMutation | GuardedStoredProcedureMutation | GuardedSqMutationThatIsAList | GuardedMessageMutation | GuardedSqlFunctionMutation
 export interface GuardedManualMutation extends ManualMutation {
   guard: string[]
 }
 export interface GuardedSqMutation extends SqlMutation {
+  guard: string[]
+}
+export interface GuardedSqlFunctionMutation extends SqlFunctionMutation {
   guard: string[]
 }
 export interface GuardedSqMutationThatIsAList extends SqlMutationThatIsAList {
@@ -148,11 +160,15 @@ export interface GuardedMessageMutation extends MessageMutation {
 }
 
 
-export type MutationParam = string | StringMutationParam | IntegerMutationParam | InputMutationParam | OutputForStoredProcMutationParam | OutputForSqlMutationParam | NullMutationParam | OutputForManualParam | AutowiredMutationParam | OutputForSelectMutationParam | FromParentMutationParam | BodyMutationParam
-export type MutationParamForSql = string | StringMutationParam | IntegerMutationParam | InputMutationParam | OutputForSqlMutationParam | NullMutationParam | AutowiredMutationParam | FromParentMutationParam | BodyMutationParam
-export type MutationParamForStoredProc = string | StringMutationParam | IntegerMutationParam | InputMutationParam | OutputForStoredProcMutationParam | NullMutationParam | AutowiredMutationParam | FromParentMutationParam | BodyMutationParam
-export type MutationParamForManual = string | StringMutationParam | IntegerMutationParam | InputMutationParam | NullMutationParam | OutputForManualParam | AutowiredMutationParam | FromParentMutationParam | BodyMutationParam
-export type MutationParamForSelect = string | StringMutationParam | IntegerMutationParam | InputMutationParam | NullMutationParam | OutputForSelectMutationParam | AutowiredMutationParam | FromParentMutationParam | BodyMutationParam
+export type CommonMutationParam = string | StringMutationParam | IntegerMutationParam | InputMutationParam |NullMutationParam |  AutowiredMutationParam  | FromParentMutationParam | BodyMutationParam
+
+export type MutationParamForSql = CommonMutationParam |  OutputForSqlMutationParam
+export type MutationParamForStoredProc = CommonMutationParam | OutputForStoredProcMutationParam
+export type MutationParamForSqlFunction = MutationParamForStoredProc
+export type MutationParamForManual = CommonMutationParam  | OutputForManualParam
+export type MutationParamForSelect = CommonMutationParam | OutputForSelectMutationParam
+
+export type MutationParam =CommonMutationParam |  OutputForStoredProcMutationParam | OutputForSqlMutationParam | OutputForManualParam | OutputForSelectMutationParam
 
 export interface OutputForSelectMutationParam {
   type: 'output';

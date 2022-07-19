@@ -97,6 +97,7 @@ export const CollectionSummaryDD: ExampleDataD = {
     lastCollectionAmount: { dataDD: MoneyStringDD, sample: [ '12.34', '4564.55' ] },
     nextCollectionDate: { dataDD: StringDD, sample: [ '2022/10/6', '2022/12/6' ] },
     nextCollectionAmount: { dataDD: MoneyStringDD, sample: [ '134.34', '1234.55' ] },
+    accountType: { dataDD: {...IntegerDD, resolver: 'getAccountType'},  hidden: true, sample: [ 8, 12, 16 ] },
     allowance: { dataDD: MoneyDD, sample: [ 1000, 2000 ], hidden: true },
     period: { dataDD: periodDD, hidden: true },
   }

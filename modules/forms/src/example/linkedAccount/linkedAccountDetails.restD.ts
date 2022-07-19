@@ -24,7 +24,16 @@ export const collectionSummaryRD: ExampleRestD = {
   params: collectionParams,
   dataDD: CollectionSummaryDD,
   url: '/api/collections/summary?{query}',
-  actions: [ 'get' ]
+  actions: [ 'get' ],
+  resolvers: {
+    getAccountType: {
+      type: 'sqlFunction', name: 'getAccountType', package: 'b00', schema: onlySchema,
+      params: [
+        { type: 'output', name: 'accountType', javaType: 'Integer', sqlType: 'INTEGER' },
+        'accountId',
+      ]
+    }
+  }
 }
 export const collectionHistoryListRD: ExampleRestD = {
   params: collectionParams,
@@ -43,7 +52,7 @@ export const collectionHistoryListRD: ExampleRestD = {
   mutations: [
     {
       restAction: 'get', mutateBy: [ {
-        type: 'sql', makeMock: false, sql: `select amount as amountd, id , amount as amounts
+        type: 'sql', makeMock: false, sql: `select amount as amountd, id, amount as amounts
                                             from ${collectionHistoryTableDD.name}`, params: [
           { type: 'output', name: 'amtDouble', format: { type: 'Double', pattern: '%,2f' }, rsName: 'amountd', javaType: 'String' },
           { type: 'output', name: 'id', format: { type: 'Integer', pattern: '%d' }, rsName: 'id', javaType: 'String' },

@@ -5,13 +5,19 @@ import { chequeCreditBooksRestD } from "../example/chequeCreditBooks/chequeCredi
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { findChildResolvers, findQueryMutationResolver } from "../codegen/makeJavaFetchersInterface";
-import { safeObject } from "@focuson/utils";
+import { safeArray, safeObject } from "@focuson/utils";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { postcodeWithResolversRestD } from "../example/postCodeDemo/addressSearch.restD";
 import { ListOfPaymentsPagePD } from "../example/ListOfPayments/listOfPayements.pageD";
 import { accountAndAddressDetailsRD } from "../example/ListOfPayments/listOfPayements.restD";
+import { makeMutations } from "../codegen/makeMutations";
+import { LinkedAccountDetailsPD } from "../example/linkedAccount/linkedAccountDetails.pageD";
+import { collectionSummaryRD } from "../example/linkedAccount/linkedAccountDetails.restD";
 
 describe ( "makeResolvers", () => {
+
+
+
   it ( "should make resolvers", () => {
     expect ( makeResolvers ( paramsForTest, ChequeCreditbooksPD, 'chequeCreditBooks', chequeCreditBooksRestD,
       'get', safeObject ( chequeCreditBooksRestD.resolvers ).getChequeCreditbooks,
