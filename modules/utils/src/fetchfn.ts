@@ -3,7 +3,7 @@
  * T is probably not meaningful if the status code is not a 2xx
  * */
 
-var isNode = new Function ( "try {return this===global;}catch(e){return false;}" );
+var isNode = process.env['IN_BROWSER_FOR_FOCUSON'] === 'true' ? false :  new Function ( "try {return this===global;}catch(e){return false;}" );
 const actualFetch = isNode ? require ( "node-fetch" ) : fetch
 
 export function delay ( ms: number ) {
