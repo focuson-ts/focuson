@@ -74,7 +74,6 @@ export const ChargeDetailsDD: ExampleDataD = {
   description: '',
   structure: {
     debitedFrom: { dataDD: ChargeDetailsEnum },
-
   }
 }
 
@@ -98,7 +97,6 @@ export const amountDD: ExampleDataD = {
 export const PayeeBankDD: ExampleDataD = {
   name: 'PayeeBank',
   description: '',
-  // layout: { component: LayoutCd, displayParams: { details: '[[1,7]]' } },
   structure: {
     name: { dataDD: StringDD },
     addressLine1: { dataDD: StringDD },
@@ -113,7 +111,6 @@ export const PayeeBankDD: ExampleDataD = {
 export const PayeeDetailsDD: ExampleDataD = {
   name: 'PayeeDetails',
   description: '',
-  // layout: { component: LayoutCd, displayParams: { details: '[[2,1]]' } },
   structure: {
     addressLine1: { dataDD: StringDD },
     addressLine2: { dataDD: StringDD },

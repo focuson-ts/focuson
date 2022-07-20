@@ -30,7 +30,6 @@ export const collectionSummaryRD: ExampleRestD = {
       type: 'sqlFunction', name: 'getAccountType', package: 'b00', schema: onlySchema,
       params: [
         { type: 'output', name: 'accountType', javaType: 'Integer', sqlType: 'INTEGER' },
-        { type: 'body', path: 'a.b.c.accountId'},
       ]
     }
   }

@@ -145,8 +145,8 @@ export function preTransactionLogger ( type: string, paramsA: MutationParam[] ):
   const inputParamsWithoutBody = inputParams.filter ( p => !isBodyMutationParam ( p ) );
   const paramNamesAndValues = [
     `${type}: {0}`,
-          ...inputParamsWithoutBody.map ( ( p, i ) => `${paramNamePathOrValue ( p )}: {${i + 1}}` ),
-    hasBodyParams ? `bodyAsJson: {${inputParamsWithoutBody.length}}` : `` ].join(',')
+    ...inputParamsWithoutBody.map ( ( p, i ) => `${paramNamePathOrValue ( p )}: {${i + 1}}` ),
+    hasBodyParams ? `bodyAsJson: {${inputParamsWithoutBody.length}}` : `` ].join ( ',' )
   return `      logger.debug(MessageFormat.format("${paramNamesAndValues}", ${type},${inputParamsWithoutBody.map ( paramNamePathOrValue )}${hasBodyParams ? ',bodyAsJson' : ''}));`;
 }
 
@@ -154,10 +154,12 @@ export function postTransactionLogger ( paramsA: MutationParam[], isList: boolea
   let outputParams = paramsA.filter ( isOutputParam );
   if ( outputParams.length == 0 ) return `logger.debug(MessageFormat.format("Duration: {0,number,#.##}", (System.nanoTime() - start) / 1000000.0));`;
   if ( isList ) return `logger.debug(MessageFormat.format("Duration: {0,number,#.##}, result: {1}", (System.nanoTime() - start) / 1000000.0), result);`;
-  const prefixNamesAndIndex = `Duration: {0,number,#.##}, `.concat ( outputParams.map ( (p,i) => `${p.name}: {${i+1}}` ).join ( ", " ) );
+  const prefixNamesAndIndex = `Duration: {0,number,#.##}, `.concat ( outputParams.map ( ( p, i ) => `${p.name}: {${i + 1}}` ).join ( ", " ) );
   return `logger.debug(MessageFormat.format("${prefixNamesAndIndex}", (System.nanoTime() - start) / 1000000.0, ${outputParams.map ( p => p.name )}));`;
 }
-
+function cleanSql ( sql: string ) {
+  return sql.replace ( /\n|\t|\s/gm, ' ' ).replace ( /\s\s+/g, ' ' )
+}
 export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: SqlMutation, index: string, includeMockIf: boolean ): string[] {
 
   const paramsA = toArray ( m.params )
@@ -165,23 +167,25 @@ export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: MainPage
     'FocusonNotFound404Exception(msgs)' :
     `SQLException("Error in : ${mutationMethodName ( r, name, m, index )}. Cannot get first item. Index was ${index} Sql was ${m.sql.replace ( /\n/g, ' ' )}\\n${errorPrefix}")`
 
+  const rsNextLine = m.messageOnEmptyData ?
+    `if (!rs.next()) {msgs.error(${JSON.stringify ( m.messageOnEmptyData )});throw new ${exception};}` :
+    `if (!rs.next())throw new ${exception};`
+
   const execute = allOutputParams ( paramsA ).length == 0 ?
     [ `s.execute();` ] :
-    [ `ResultSet rs = s.executeQuery();`,
-      `if (!rs.next()) {msgs.error(${JSON.stringify ( m.messageOnEmptyData )});throw new ${exception};}`,
-    ]
+    [ `ResultSet rs = s.executeQuery();`, rsNextLine ]
   return [
     ...makeMethodDecl ( errorPrefix, paramsA, javaTypeForOutput ( paramsA ), r, name, m, index ),
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
-    `    String sql = "${m.sql.replace ( /\n|\t|\s/gm, ' ' )}";`,
+    `    String sql = "${cleanSql ( m.sql )}";`,
     `    try (PreparedStatement s = connection.prepareStatement(sql)) {`,
     preTransactionLogger ( m.type, paramsA ),
     ...indentList ( indentList ( indentList ( [
         ...allSetObjectForInputs ( errorPrefix, m.params ),
-      `long start = System.nanoTime();`,
+        `long start = System.nanoTime();`,
         ...execute,
         ...getFromResultSetIntoVariables ( errorPrefix, 'rs', paramsA ),
-      postTransactionLogger ( paramsA, isSqlMutationThatIsAList(m) ),
+        postTransactionLogger ( paramsA, isSqlMutationThatIsAList ( m ) ),
         makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) )
       ]
     ) ) ),
@@ -191,17 +195,16 @@ export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: MainPage
 
 export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: SqlMutationThatIsAList, index: string, includeMockIf: boolean ): string[] {
   const paramsA = toArray ( m.params )
-  const sql = m.sql.replace ( /\n/g, ' ' );
   const messageLine = m.messageOnEmptyData ? [ `if (result.isEmpty()) msgs.error(${JSON.stringify ( m.messageOnEmptyData )});` ] : []
   return [
     ...makeMethodDecl ( errorPrefix, paramsA, 'List<Map<String,Object>>', r, name, m, index ),
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
-    `    String sql = "${m.sql.replace ( /\n|\t|\s/gm, ' ' )}";`,
+    `    String sql = "${cleanSql ( m.sql )}";`,
     `    try (PreparedStatement s = connection.prepareStatement(sql)) {`,
     preTransactionLogger ( m.type, paramsA ),
     ...indentList ( indentList ( indentList ( [
         ...allSetObjectForInputs ( errorPrefix, m.params ),
-      `long start = System.nanoTime();`,
+        `long start = System.nanoTime();`,
         `ResultSet rs = s.executeQuery();`,
         `List<Map<String,Object>> result = new ArrayList();`,
         `while (rs.next()){`,
@@ -211,7 +214,7 @@ export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: MainPag
           `result.add(oneLine);` ] ),
         '}',
         ...messageLine,
-        postTransactionLogger ( paramsA, isSqlMutationThatIsAList(m) ),
+        postTransactionLogger ( paramsA, isSqlMutationThatIsAList ( m ) ),
         `return result;`,
       ]
     ) ) ),
@@ -230,7 +233,7 @@ export function mutationCodeForFunctionCalls<G> ( errorPrefix: string, p: MainPa
   let fullName = m.package ? `${m.package}.${m.name}` : m.name;
   return [
     ...makeMethodDecl ( errorPrefix, paramsA, javaTypeForOutput ( paramsA ), r, name, m, index ),
-    `      String sqlFunction = "{? = call ${fullName}(${toArray ( m.params ).slice(1).map ( () => '?' ).join ( ", " )})}";`,
+    `      String sqlFunction = "{? = call ${fullName}(${toArray ( m.params ).slice ( 1 ).map ( () => '?' ).join ( ", " )})}";`,
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
     `      try (CallableStatement s = connection.prepareCall(sqlFunction)) {`,
     preTransactionLogger ( m.type, paramsA ),
@@ -239,7 +242,7 @@ export function mutationCodeForFunctionCalls<G> ( errorPrefix: string, p: MainPa
     `      s.execute();`,
     ...indentList ( indentList ( indentList ( [
       ...getFromStatement ( errorPrefix, 's', paramsA ),
-      postTransactionLogger ( paramsA, isSqlMutationThatIsAList(m) ),
+      postTransactionLogger ( paramsA, isSqlMutationThatIsAList ( m ) ),
       makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),
     `  }}`,
   ];
@@ -257,7 +260,7 @@ export function mutationCodeForStoredProcedureCalls<G> ( errorPrefix: string, p:
     `      s.execute();`,
     ...indentList ( indentList ( indentList ( [
       ...getFromStatement ( errorPrefix, 's', paramsA ),
-      postTransactionLogger ( paramsA, isSqlMutationThatIsAList(m) ),
+      postTransactionLogger ( paramsA, isSqlMutationThatIsAList ( m ) ),
       makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),
     `  }}`,
   ];
