@@ -168,7 +168,7 @@ export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: MainPage
   const execute = allOutputParams ( paramsA ).length == 0 ?
     [ `s.execute();` ] :
     [ `ResultSet rs = s.executeQuery();`,
-      `if (!rs.next()) throw new ${exception};`,
+      `if (!rs.next()) {msgs.error(${JSON.stringify ( m.messageOnEmptyData )});throw new ${exception};}`,
     ]
   return [
     ...makeMethodDecl ( errorPrefix, paramsA, javaTypeForOutput ( paramsA ), r, name, m, index ),

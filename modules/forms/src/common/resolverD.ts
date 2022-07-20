@@ -82,6 +82,7 @@ export interface SqlMutation {
   makeMock?: boolean
   params: MutationParamForSql | MutationParamForSql[]
   noDataIs404?: boolean
+  messageOnEmptyData?: string
 }
 export interface MessageMutation {
   type: 'message',
@@ -93,7 +94,6 @@ export function isMessageMutation ( s: MutationDetail ): s is MessageMutation {
 }
 export interface SqlMutationThatIsAList extends SqlMutation {
   list?: boolean,
-  messageOnEmptyData?: string
 }
 export function isSqlMutationThatIsAList ( s: MutationDetail ): s is SqlMutationThatIsAList {
   const a: any = s

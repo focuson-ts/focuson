@@ -19,5 +19,12 @@ export const datesDataD: ExampleDataD = {
         dateRange: { type: 'future', allowWeekends: false, allowHolidays: false, minWorkingDaysBefore: 5 }
       }
     },
+    holidays: {  dataDD: DateWithDatePickerDD, displayParams: {
+          // dateInfo: '~/',
+        dateRange: { type: 'future', allowWeekends: false, allowHolidays: false, minWorkingDaysBefore: 5
+        }
+      }
+    }
+
   }
 }

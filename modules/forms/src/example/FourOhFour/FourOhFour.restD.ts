@@ -55,7 +55,7 @@ export const fourOhFourSingleByResolverRD: ExampleRestD = {
         type: 'sql', sql: `select somex, datax
                            from ${fourOhFourTable.name}
                            where id = ?`,
-        noDataIs404: true,
+        noDataIs404: true, messageOnEmptyData: 'single 404 message',
         schema: onlySchema, params: [ 'id',
           { type: 'output', name: 'some', rsName: 'somex', javaType: 'String' },
           { type: 'output', name: 'data', rsName: 'datax', javaType: 'String' },
