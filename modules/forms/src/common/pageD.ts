@@ -13,7 +13,8 @@ export interface DomainDefnInPage<G> {
 export interface RestDefnInPageProperties<G> {
   rest: RestD<G>,
   targetFromPath: string,
-  fetcher?: boolean
+  fetcher?: boolean;
+  postFetchCommands?: RestChangeCommands | RestChangeCommands[]
 }
 export interface RestDefnInPage<G> {
   [ name: string ]: RestDefnInPageProperties<G>
@@ -24,7 +25,7 @@ interface CommonRestOnCommit {
   /** What happens when the rest is completed. Currently only 'refresh' which clears the 'main object' triggering a fetch. Later we will be more clever' */
   result: RestResult;
   messageOnSuccess?: string
-  changeOnSuccess?:RestChangeCommands| RestChangeCommands[]
+  changeOnSuccess?: RestChangeCommands | RestChangeCommands[]
   on404?: RestChangeCommands | RestChangeCommands[]
 }
 export interface RestOnCommitNothing extends CommonRestOnCommit {

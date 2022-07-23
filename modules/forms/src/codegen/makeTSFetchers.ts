@@ -1,4 +1,4 @@
-import { sortedEntries } from "@focuson/utils";
+import { sortedEntries, toArray } from "@focuson/utils";
 import { isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { domainName, domainsFileName, fetcherFileName, fetcherName, pageDomainName, restDetailsName } from "./names";
 import { TSParams } from "./config";
@@ -59,7 +59,7 @@ export function makeFetchersImport<B, G> ( params: TSParams, p: PageD<B, G> ): s
     `import { HasTagHolder } from "@focuson/template";`,
     `import { HasPageSelection } from "@focuson/pages";`,
     `import { HasSimpleMessages, SimpleMessage } from '@focuson/utils';`,
-    `import { pageAndTagFetcher } from "@focuson/focuson";`,
+    `import {  pageAndTagFetcher } from "@focuson/focuson";`,
     `import { ${params.stateName}, identityL} from "../${params.commonFile}";`,
     `import { Optional, Lenses, NameAndLens} from '@focuson/lens';`
 
@@ -75,7 +75,7 @@ export function makeFetcherDataStructureImport<B, G> ( params: TSParams, pages: 
     `import { HasTagHolder } from "@focuson/template";`,
     `import { HasPageSelection } from "@focuson/pages";`,
     `import { HasSimpleMessages, SimpleMessage } from '@focuson/utils';`,
-    `import { pageAndTagFetcher } from "@focuson/focuson";`,
+    `import { AllFetcherUsingRestConfig, pageAndTagFetcher } from "@focuson/focuson";`,
     `import { commonIds, identityL } from './${params.commonFile}';`,
     `import { Optional, Lenses, NameAndLens} from '@focuson/lens';`
 
@@ -98,7 +98,8 @@ export function makeFetchersDataStructure<B, G> ( params: TSParams, { stateName,
 
 export function makeNewFetchersDataStructure<B, G> ( params: TSParams, ps: MainPageD<B, G>[] ) {
   const obj = Object.fromEntries ( ps.map ( p =>
-    [ p.name, sortedEntries ( p.rest ).filter ( t => t[ 1 ].fetcher ).map ( ( [ restName, rdp ] ) => ({ tagName: rdp.targetFromPath, restName: restDetailsName ( p, restName, rdp.rest ) }) ) ] )
+    [ p.name, sortedEntries ( p.rest ).filter ( t => t[ 1 ].fetcher ).map ( ( [ restName, rdp ] ) =>
+      ({ tagName: rdp.targetFromPath, restName: restDetailsName ( p, restName, rdp.rest ),postFetchCommands: toArray(rdp.postFetchCommands) }) ) ] )
   )
-  return (`export const newFetchers = ` + JSON.stringify ( obj, null, 2 )).split ( "\n" )
+  return (`export const newFetchers: AllFetcherUsingRestConfig = ` + JSON.stringify ( obj, null, 2 )).split ( "\n" )
 }

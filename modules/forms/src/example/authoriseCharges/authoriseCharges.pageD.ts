@@ -36,9 +36,11 @@ export const ViewChargesPage: ExampleModalPage = {
       copy: { from: '#authorisedDate', to: '~/summaryOfChargesDates/date' },
       copyOnClose: { from: '~/selectedDateItem/dateCreated', to: '#authorisedDate' },
     },
-    approvePendingFees: { control: "ActionButton", path: '#editingData',
+    approvePendingFees: {
+      control: "ActionButton", path: '#editingData',
       // paths: { pathRepeated: '#editingData', otherData: '~/selectedDateItem/dateCreated' },
-      text: 'Approve Pending Fees', action: 'approvePendingFees' },
+      text: 'Approve Pending Fees', action: 'approvePendingFees'
+    },
     authoriseApprovedFees: { control: "ActionButton", path: '#editingData', text: 'Authorise Approved Fees', action: 'authoriseApprovedFees' },
     summary: { control: 'ModalButton', modal: SummaryOfChargesPage, mode: 'view', focusOn: '~/summaryOfCharges' },
     save: { control: 'RestButton', restName: 'authorisedCharges', action: 'update', deleteOnSuccess: '#fromApi' },
@@ -74,7 +76,10 @@ export const AuthoriseChargesPD: ExampleMainPage = {
   },
   rest: {
     loadBrand: { rest: SelectOneBrandPageRD, targetFromPath: '~/brand', fetcher: true },
-    authorisedCharges: { rest: AuthorisedChargesRD, targetFromPath: '~/authorisedCharges/fromApi', fetcher: true },
+    authorisedCharges: {
+      rest: AuthorisedChargesRD, targetFromPath: '~/authorisedCharges/fromApi', fetcher: true,
+      postFetchCommands: { command: 'message', msg: 'loading the authorised charges' }
+    },
     summaryOfChargeDates: { rest: SummaryOfChargeDatesRD, targetFromPath: '~/summaryOfChargesDates/searchResults', fetcher: true },
     summaryOfCharges: { rest: SummaryOfChargesRD, targetFromPath: '~/summaryOfCharges', fetcher: true }
   },
