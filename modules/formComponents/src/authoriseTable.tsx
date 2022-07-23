@@ -53,6 +53,7 @@ export function AuthoriseTable<S, D extends AuthoriseTableData, C extends FocusO
   const approvedByS: LensState<S, string, C> = copySelectedItemTo.focusOn ( 'approvedBy' );
   // @ts-ignore
   const authorisedByS: LensState<S, string, C> = copySelectedItemTo.focusOn ( 'authorisedBy' );
+
   return <Layout details='[[1],[1,1],[1,1,1]]'>
     <AuthTable{...props} />
     <LabelAndStringInput id={`${id}.approvedBy`} label='Approved By' state={approvedByS} mode='view' allButtons={{}}/>

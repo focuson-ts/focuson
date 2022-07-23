@@ -1,11 +1,11 @@
 import { applyFetcher } from '@focuson/fetcher';
 import { simpleFetcherWithMessages } from "./tagFetcher.fixture";
-import { defaultFetchFn, fetchWithPrefix } from "@focuson/utils";
+import { defaultFetchFn, fetchWithPrefix, setIsNodeFetchForTests } from "@focuson/utils";
 import { firstPageSelectedState } from "./page.fixture";
 
 
 // const tagFetcherTestStateL = Lenses.identity<PageSpecState> ( 'state' )
-
+setIsNodeFetchForTests()
 
 describe ( 'tagFetcher', () => {
   it ( 'should not load if the tags are not all present', () => {

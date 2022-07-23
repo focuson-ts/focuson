@@ -16,6 +16,23 @@ export const rootPostCodeRestD: RestD<AllGuards> = {
   url: '/api/postCode?{query}',
   actions: [ 'get' ],
 }
+
+export const postcodeForManualRestD: RestD<AllGuards> = {
+  ...rootPostCodeRestD,
+  // insertSqlStrategy: { type: 'OneTableInsertSqlStrategyForNoIds', table: postCodeSearchTable },
+  resolvers: {
+    getPostCodeDataLine: [
+      {
+        type: 'manual', code: 'List<Map<String,Object>>getPostCodeDataLine = Arrays.asList();', name: 'getPostcode', params: [
+          'postcode',
+          { type: "output", name: 'getPostCodeDataLine', javaType: 'List<Map<String,Object>>' } ],
+        import: 'import java.util.Arrays;'
+      }
+    ]
+  }
+}
+
+
 export const postcodeRestD: RestD<AllGuards> = {
   ...rootPostCodeRestD,
   // insertSqlStrategy: { type: 'OneTableInsertSqlStrategyForNoIds', table: postCodeSearchTable },
@@ -30,8 +47,6 @@ export const postcodeRestD: RestD<AllGuards> = {
     ]
   }
 }
-
-
 //This is here for test purposes
 export const postcodeWithResolversRestD: RestD<AllGuards> = {
   ...rootPostCodeRestD,

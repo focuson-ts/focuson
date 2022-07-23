@@ -3,8 +3,13 @@
  * T is probably not meaningful if the status code is not a 2xx
  * */
 
-var isNode = process.env['IN_BROWSER_FOR_FOCUSON'] === 'true' ? false :  new Function ( "try {return this===global;}catch(e){return false;}" );
-const actualFetch = isNode ? require ( "node-fetch" ) : fetch
+
+export function setIsNodeFetchForTests(){
+  isNode = true
+}
+export var isNode = false;
+// try {isNode= this===global;}catch(e){isNode= false;}
+// const actualFetch = isNode ? require ( "node-fetch" ) : fetch
 
 export function delay ( ms: number ) {
   return new Promise ( resolve => {
@@ -17,6 +22,16 @@ export interface FetchFn {
   ( re: RequestInfo, init?: RequestInit ): Promise<[ number, any ]>
 }
 
+var nodeFetch: any = undefined
+function actualFetch ( requestInfo: RequestInfo, init: RequestInit ) {
+  if ( isNode ) {
+    if ( !nodeFetch ) {
+      nodeFetch = require ( "node-fetch" )
+    }
+    return nodeFetch ( requestInfo, init )
+  }
+  return fetch ( requestInfo, init )
+}
 /** Normally we would use the defaultFetchFn or the loggingFetchFn */
 export const defaultFetchFn = <T> ( re: RequestInfo, init?: RequestInit ): Promise<[ number, T ]> => {
   if ( re === "" ) throw Error ( 'calling defaultFetchFn with empty string as url' )

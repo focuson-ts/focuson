@@ -51,6 +51,7 @@ export function allSetObjectForInputs ( errorPrefix: string, m: MutationParam | 
   return toArray ( m ).filter ( isInputParam ).map ( setObjectFor ( errorPrefix ) )
 }
 
+
 export function makeMutationResolverReturnStatement ( outputs: OutputMutationParam[] ): string {
   if ( outputs.length === 0 ) return `return;`
   if ( outputs.length === 1 ) return `return ${outputs[ 0 ].name};`
@@ -269,7 +270,8 @@ export function mutationCodeForStoredProcedureCalls<G> ( errorPrefix: string, p:
 export function mutationCodeForManual<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: ManualMutation, index: string, includeMockIf: boolean ): string[] {
   const paramsA = toArray ( m.params );
   return [
-    `//If you have a compiler error in the type here, did you match the types of the output params in your manual code with the declared types in the .restD?`,
+    `//If you have a compilation error in the type here, did you match the types of the output params in your manual code with the declared types in the .restD?`,
+    `//If you have a compiation error because of a 'cannot resolve symbol' you may need to add the class to the 'imports'`,
     ...makeMethodDecl ( errorPrefix, paramsA, javaTypeForOutput ( paramsA ), r, name, m, index ),
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
     ...indentList ( indentList ( indentList ( [ ...toArray ( m.code ), makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),

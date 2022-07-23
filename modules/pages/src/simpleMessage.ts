@@ -27,23 +27,24 @@ function parseBodyOrError ( body: any ): any {
   }
 }
 
+export var msgsDebug = false
 export const extractMessages = ( dateFn: DateFn ) => ( status: number | undefined, body: any ) => {
   function fromHeaderOrMessages ( m: any ) {
-    console.log ( 'in fromHeaderOrMessages', m )
+    if ( msgsDebug ) console.log ( 'in fromHeaderOrMessages', m )
     if ( m === undefined ) return []
     const fromOne = ( level: SimpleMessageLevel ) => {
       let result = toArray ( m?.[ level ] ).map ( stringToSimpleMsg ( dateFn, level ) );
-      console.log ( 'from one', level, result, m?.[ level ] )
+      if ( msgsDebug ) console.log ( 'from one', level, result, m?.[ level ] )
       return result;
     };
     return [ ...fromOne ( 'info' ), ...fromOne ( 'error' ), ...fromOne ( 'warning' ) ]
   }
   if ( status === undefined ) {
-    console.log ( 'status undefined' );
+    if ( msgsDebug ) console.log ( 'status undefined' );
     return [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify ( body )}`, dateFn () ) ]
   }
-  const realBody = parseBodyOrError(body)
-  if (typeof  realBody === 'string') return  [ createSimpleMessage ( 'error', `Status ${status}. Body was ${body}`, dateFn () ) ]
+  const realBody = parseBodyOrError ( body )
+  if ( typeof realBody === 'string' ) return [ createSimpleMessage ( 'error', `Status ${status}. Body was ${body}`, dateFn () ) ]
   const messages = fromHeaderOrMessages ( realBody?.messages );
   const headersMessages = fromHeaderOrMessages ( realBody?.headerMessages );
   const fullMessages = [ ...messages, ...headersMessages ];
