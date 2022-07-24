@@ -6,8 +6,6 @@ import { PageSelectionContext } from "@focuson/pages";
 import { Label } from "./label";
 import { makeButtons } from "./makeButtons";
 import ReactDatePicker from "react-datepicker";
-import { DateDebug } from "@focuson/focuson";
-import { useRef } from "react";
 
 
 type DateFormat = 'dd/MM/yyyy' | 'yyyy/MM/dd'
@@ -18,7 +16,7 @@ export interface DatePickerDetails {
 export interface DateInfo {
   today: string;
   holidays: Holidays[];
-  dateFormat: DateFormat
+  dateFormat: string
 }
 
 export interface Holidays {
@@ -173,7 +171,7 @@ export function calcInfoTheDatePickerNeeds<S, C> ( id: string, jurisdiction: str
   if ( Array.isArray ( usableInfo ) ) throw  new Error ( `Problem in dateInfo\n${JSON.stringify ( usableInfo )}` )
   let result = {
     dateFilter: noErrorsBooleanFn ( acceptDate ( usableInfo, actualDateRange ) ),
-    defaultDate: usableInfo.today,
+    defaultDate: usableInfo.firstValidDate ? usableInfo.firstValidDate : usableInfo.today,
     holidays: usableInfo.holidays
   };
   if ( debug ) console.log ( 'calcInfoTheDatePickerNeeds', id, dateInfo, result, )
@@ -181,16 +179,16 @@ export function calcInfoTheDatePickerNeeds<S, C> ( id: string, jurisdiction: str
 }
 
 interface SelectedDate {
-  dateString: string | undefined;
   date: Date | undefined;
+  scrollToDate: Date | undefined
   selectedDateErrors: string[]
 }
-function selectedDate<S, C> ( state: LensState<S, string, C>, dateFormat: string, defaultDate: Date | undefined ): SelectedDate {
+function selectedDate<S, C> ( state: LensState<S, string, C>, dateFormat: string, defaultScrollToDate: Date | undefined ): SelectedDate {
   const dateString = state.optJson ()
-  if ( dateString === undefined ) return ({ dateString: undefined, date: undefined, selectedDateErrors: [] })
-  const [ errors, date ] = errorsAndT ( parseDate ( `selectedDate`, dateFormat ) ( dateString ) )
-  if ( errors.length > 0 ) return { dateString, date: defaultDate, selectedDateErrors: errors }
-  return { dateString, date, selectedDateErrors: errors }
+  if ( dateString === undefined ) return ({ date: undefined, scrollToDate: defaultScrollToDate, selectedDateErrors: [] })
+  const [ selectedDateErrors, date ] = errorsAndT ( parseDate ( `selectedDate`, dateFormat ) ( dateString ) )
+  const scrollToDate = date ? date : defaultScrollToDate;
+  return { date, scrollToDate, selectedDateErrors }
 }
 
 export interface DatePickerProps<S, C> extends CommonStateProps<S, string, C>, LabelAlignment {
@@ -201,7 +199,7 @@ export interface DatePickerProps<S, C> extends CommonStateProps<S, string, C>, L
   dateFormat: DateFormat;
   dateRange?: DateRange<S, C>;
   jurisdiction?: LensState<S, string, C>;
-  dateInfo?: LensState<S, DateInfo, C>
+  dateInfo?: LensState<S, DateInfo, C>;
 }
 
 export function DatePicker<S, C extends PageSelectionContext<S>> ( props: DatePickerProps<S, C> ) {
@@ -210,15 +208,15 @@ export function DatePicker<S, C extends PageSelectionContext<S>> ( props: DatePi
   const debug = main?.debug?.dateDebug
 
   const { defaultDate, dateFilter, holidays } = calcInfoTheDatePickerNeeds ( id, jurisdiction?.optJson (), dateInfo?.optJson (), dateFormat, dateRange, debug )
-  const { dateString, date, selectedDateErrors } = selectedDate ( state, dateFormat, defaultDate )
+  const { date, selectedDateErrors, scrollToDate } = selectedDate ( state, dateFormat, defaultDate )
   function onChange ( e: any/* probably a date or an array of dates if we are selecting a range (which we aren't)*/ ) {
     try {
       let formattedDate = format ( e, dateFormat );
       if ( debug ) console.log ( 'datePicker.onChange', id, e, dateFormat, formattedDate, debug )
       state.setJson ( formattedDate, reasonFor ( 'DatePicker', 'onChange', id ) )
     } catch ( err ) {
-      console.error ( "e is", e)
-      console.error ( "e is", e.toISOString())
+      console.error ( "e is", e )
+      console.error ( "e is", e.toISOString () )
       throw err
     }
   }
@@ -230,13 +228,15 @@ export function DatePicker<S, C extends PageSelectionContext<S>> ( props: DatePi
   if ( debug ) console.log ( 'datePicker', id, 'value', value, 'date', date )
   let error = selectedDateErrors.length > 0;
   // const ref=useRef<any>(null)
+
   return <div className={`labelAndDate ${props.labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}>
     <Label state={state} htmlFor={name} label={label}/>
     <div className={`${props.buttons && props.buttons.length > 0 ? 'inputAndButtons' : ''} `}>
       <ReactDatePicker id={id}
         // customInputRef={ref}
                        dateFormat={dateFormat}
-                       todayButton="Select Today"
+                       todayButton='Today'
+                       openToDate={scrollToDate}
                        selected={error ? undefined : date}
                        onChange={( date ) => onChange ( date )}
                        filterDate={dateFilter}

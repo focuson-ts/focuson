@@ -39,7 +39,7 @@ const cd: NameAndLens<StateForNewFetcherTests> = {
 }
 
 const newFetchers: AllFetcherUsingRestConfig = {
-  pageName: [ { tagName: 'someTag', restName: 'someRestName' } ]
+  pageName: [ { tagName: 'someTag', restName: 'someRestName', postFetchCommands: [] } ]
 }
 function MyLoading () {
   return <p>Loading</p>
@@ -61,7 +61,7 @@ const oneRestDetails: OneRestDetails<StateForNewFetcherTests, NewFetcherDomain, 
   fdd,
   ids: [ 'id1', 'id2' ],
   resourceId: [],
-  messages: ( status: number | undefined, body: any ): SimpleMessage[] => status == undefined ?
+  messages: ( status: number | undefined, body: any ): SimpleMessage[] => status === undefined ?
     [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify ( body )}`, testDateFn () ) ] :
     [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],
   url: "/api/address?{query}",
@@ -144,6 +144,7 @@ describe ( "restCommandsFromFetchers should create a rest command when needed", 
       { ...empty, tags: { pageName_someTag: [ '111', '222' ] }, ids: { id1: 111, id2: 333 }, data: { a: 123 } } ) ).toEqual ( [
       {
         "comment": "Fetcher",
+        "changeOnSuccess":  [],
         "name": "someRestName",
         "restAction": "get",
         "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "333" ] }
@@ -153,13 +154,13 @@ describe ( "restCommandsFromFetchers should create a rest command when needed", 
   it ( "not populated tags defined and same - should load", () => {
     expect ( restCommandsFromFetchers ( someConfig.tagHolderL, someConfig.newFetchers, someConfig.restDetails, 'pageName',
       { ...empty, tags: { pageName_someTag: [ '111', '222' ] }, ids: { id1: 111, id2: 222 } } ) ).toEqual ( [
-      { "comment": "Fetcher", "name": "someRestName", "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
+      { "comment": "Fetcher","changeOnSuccess":  [], "name": "someRestName", "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
     ] )
   } )
   it ( " populated tags not defined  - should load", () => {
     expect ( restCommandsFromFetchers ( someConfig.tagHolderL, someConfig.newFetchers, someConfig.restDetails, 'pageName',
       { ...empty, ids: { id1: 111, id2: 222 }, data: { a: 123 } } ) ).toEqual ( [
-      { "comment": "Fetcher", "name": "someRestName", "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
+      { "comment": "Fetcher", "changeOnSuccess":  [],"name": "someRestName", "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
     ] )
   } )
 } )
@@ -172,7 +173,7 @@ describe ( "processRestsAndFetchers", () => {
     )
 
     expect ( actual.restCommand ).toEqual ( {
-      name: 'someRestName', restAction: 'get', comment: 'Fetcher',
+      name: 'someRestName', restAction: 'get', comment: 'Fetcher',"changeOnSuccess":  [],
       "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] }
     } )
     expect ( actual.status ).toEqual ( 200 )
@@ -192,7 +193,7 @@ describe ( "processRestsAndFetchers", () => {
     )
 
     expect ( actual.restCommand ).toEqual ( {
-      name: 'someRestName', restAction: 'get', comment: 'Fetcher',
+      name: 'someRestName', restAction: 'get', comment: 'Fetcher', "changeOnSuccess":  [],
       "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] }
     } )
     expect ( actual.status ).toEqual ( 200 )
@@ -206,7 +207,7 @@ describe ( "processRestsAndFetchers", () => {
             [ "I.focus?(messages)", [ { "level": "info", "msg": "200/123", "time": "timeForTest" } ] ],
             [ "I.focus?(data).chain(I.focus?(a))", 123 ],
           ],
-          "restCommand": { "comment": "Fetcher", "name": "someRestName", "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
+          "restCommand": { "comment": "Fetcher", "changeOnSuccess":  [],"name": "someRestName", "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
         } ]
       ],
       [ "I.focus?(tags).focusOn(pageName_someTag)", [ "111", "222" ] ]

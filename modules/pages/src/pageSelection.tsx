@@ -83,13 +83,7 @@ export function replaceBasePageWithKnownPage ( pageName: string, path: string[] 
 export function applyPageOps ( pageOps: PageOps, pageSelection: PageSelection ): ( s: PageSelection[] | undefined ) => PageSelection[] {
   return ( old: PageSelection[] | undefined ) => {
     const ps = safeArray ( old )
-    if ( pageOps === 'popup' ) {
-      console.log ( 'applyPageOps', pageOps, 'old', ps )
-      console.log ( 'applyPageOps', 'pageSelection', pageSelection )
-      let result = [ ...ps, pageSelection ];
-      console.log ( '    ===>', result )
-      return result;
-    }
+    if ( pageOps === 'popup' ) return [ ...ps, pageSelection ];
     if ( pageOps === 'select' ) return [ pageSelection ];
     throw new Error ( `Cannot perform pageOps ${pageOps}` )
   }

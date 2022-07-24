@@ -86,7 +86,7 @@ export function tdClassForTable ( rights: string[] | undefined, s: any ) {
 export const defaultOneRowWithGetValue = <T extends any> ( getValue: ( o: keyof T, row: T, joiners: undefined | string | string[] ) => any ) => ( id: string, order: (keyof T)[], joiners: string | string[] | undefined, ...extraTds: (( i: number, row: T ) => JSX.Element)[] ): OneRowFn<T> =>
   ( row: T, i: number, clazz: string | undefined, rights: string[] | undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) =>
     (<tr id={`${id}[${i}]`} className={clazz} key={i} onClick={onClick ( i, row )}>{order.map ( o =>
-      <td id={`${id}[${i}].${o.toString ()}`} className={tdClassForTable ( rights, o )} key={o.toString ()}>{getValue ( o, row, joiners )}</td> )}{extraTds.map ( e => <td>{e ( i, row )}</td> )}</tr>);
+      <td id={`${id}[${i}].${o.toString ()}`} className={tdClassForTable ( rights, o )} key={o.toString ()}>{getValue ( o, row, joiners )}</td> )}{extraTds.map ( (e,i) => <td key={`extra${i}`}>{e ( i, row )}</td> )}</tr>);
 
 export const defaultOneRow = defaultOneRowWithGetValue ( getValueForTable )
 

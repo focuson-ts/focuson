@@ -104,6 +104,7 @@ describe ( "findAllCommonParamsWithSamples", () => {
       "dbName": "mock",
       "employeeId": 666666,
       "employeeType": "basic",
+      "jurisdiction": "GB",
       "role": "user",
       "vbAcountSeq": 55555
     } )
