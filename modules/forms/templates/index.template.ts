@@ -6,20 +6,21 @@ import { context } from "./config";
 import { defaultDateFn } from "@focuson/utils";
 import { IndexPage } from "@focuson/form_components";
 import { config, start } from "./config";
-import { focusOnMiddleware, FocusOnReducer, makeLs } from "./store";
+import { focusOnMiddlewareFor{teamName}, {teamName}Reducer, makeLsFor{teamName} } from "./store";
 import { applyMiddleware, combineReducers, legacy_createStore } from "@reduxjs/toolkit";
 import { Lenses } from '@focuson/lens'
 
 export const combineAll = combineReducers ( {
-   {teamName}: FocusOnReducer ( identityL )
+   {teamName}: {teamName}Reducer ( identityL )
 } )
-export const store: any = legacy_createStore ( combineAll, undefined, applyMiddleware ( focusOnMiddleware ( config, context, Lenses.identity<any> ().focusOn ( '{teamName}' ) ) ) );
+export const store: any = legacy_createStore ( combineAll, undefined, applyMiddleware ( 
+  focusOnMiddlewareFor{teamName} ( config, context, Lenses.identity<any> ().focusOn ( '{teamName}' ) ) ) );
 let rootElement = getElement ( "root" );
 console.log ( "set json" )
 store.subscribe ( () => {
   ReactDOM.render (
-    <IndexPage state={makeLs<{stateName}> ( store, '{teamName}' )} dateFn={defaultDateFn}>
-  <SelectedPage state={makeLs<{stateName}> ( store, '{teamName}' )}/>
+    <IndexPage state={makeLsFor{teamName}<{stateName}> ( store, '{teamName}' )} dateFn={defaultDateFn}>
+  <SelectedPage state={makeLsFor{teamName}<{stateName}> ( store, '{teamName}' )}/>
   </IndexPage>, rootElement )
 } )
 

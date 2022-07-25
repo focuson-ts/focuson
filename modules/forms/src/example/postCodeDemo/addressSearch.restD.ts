@@ -14,14 +14,12 @@ export const rootPostCodeRestD: RestD<AllGuards> = {
   params: postcodeParams,
   dataDD: postCodeSearchResponseDD,
   url: '/api/postCode?{query}',
-  actions: [ 'get' ],
-  namePrefix: 'original',
+  actions: [ 'get' ]
 }
 
 export const postcodeForManualRestD: RestD<AllGuards> = {
   params: postcodeParams,
   dataDD: postCodeSearchResponseDD,
-  namePrefix: 'manual',
   url: '/api/postCode/manual?{query}',
   actions: [ 'get' ],
   // insertSqlStrategy: { type: 'OneTableInsertSqlStrategyForNoIds', table: postCodeSearchTable },
