@@ -15,8 +15,8 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "typescript": "^4.1.5",
-    "@focuson/lens": "1.29.2",
-    "@focuson/state": "1.29.2"
+    "@focuson/lens": "1.30.0",
+    "@focuson/state": "1.30.0"
   },
   "description": "The redux 'counter' example' using lens",
   "devDependencies": {
@@ -58,7 +58,7 @@
     "test:watch": "npm run test -- --watch",
     "storybook": "start-storybook -p 6006 -s public"
   },
-  "version": "1.29.2",
+  "version": "1.30.0",
   "eslintConfig": {
     "extends": [
       "react-app",
