@@ -147,7 +147,7 @@ export function processPath<Build> ( s: ParseState<Build>, p: PathBuilder<Build>
   }
 }
 
-export const replaceTextFn = <S> ( errorPrefix: string, s: S, from: ( path: string ) => Optional<S, any> ) => ( f: string ) => {
+export function replaceTextFn<S> ( errorPrefix: string, s: S, from: ( path: string ) => Optional<S, any>, f: string ): string {
   const parts = f.slice ( 1, -1 ).split ( "|" )
   const value = from ( parts[ 0 ] ).getOption ( s )
   if ( parts.length == 1 ) return `${value}`
@@ -159,7 +159,8 @@ export const replaceTextFn = <S> ( errorPrefix: string, s: S, from: ( path: stri
     if ( value >= 0 && value <= parts.length ) return parts[ value + 1 ]
     throw new Error ( `${errorPrefix} Replacing string ${f} and it's a string [${value}], but there are ${parts.length - 1} options, and this value is out of range` )
   }
-};
+}
+
 export function replaceTextUsingPathForS<S> ( errorPrefix: string, s: S, fromPath: ( path: string ) => Optional<S, any>, string: string ): string {
-  return string.replace ( /{[^}]*}/g, replaceTextFn ( errorPrefix, s, fromPath ) );
+  return string.replace ( /{[^}]*}/g, str => replaceTextFn ( errorPrefix, s, fromPath, str ) );
 }

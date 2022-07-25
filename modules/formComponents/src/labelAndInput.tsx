@@ -29,7 +29,12 @@ export interface TransformerProps<T> {
 export function makeInputChangeTxs<S, C extends HasSimpleMessageL<S> & HasPathToLens<S>> ( id: string, parentState: LensState<S, any, C> | undefined, change?: InputChangeCommands | InputChangeCommands[] ): Transform<S, any>[] {
   if ( parentState === undefined ) return []
   const { simpleMessagesL, pathToLens } = parentState.context
-  const config = { toPathTolens: pathToLens ( parentState.main, parentState.optional ), stringToMsg: stringToSimpleMsg ( defaultDateFn, 'info' ), messageL: simpleMessagesL };
+  const config = {
+    toPathTolens: pathToLens ( parentState.main, parentState.optional ),
+    stringToMsg: stringToSimpleMsg ( defaultDateFn, 'info' ),
+    messageL: simpleMessagesL,
+    s: parentState.main
+  };
   return processChangeCommandProcessor ( `Modal button.${id}`, inputCommandProcessors ( config ) ( parentState.main ), toArray ( change ) );
 }
 

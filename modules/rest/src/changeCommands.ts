@@ -1,6 +1,5 @@
 import { Optional, Transform } from "@focuson/lens";
-import { LensState } from "@focuson/state";
-import { defaultDateFn, stringToSimpleMsg, toArray } from "@focuson/utils";
+import { replaceTextFn } from "@focuson/lens";
 
 export interface ChangeCommand {
   command: string
@@ -54,8 +53,17 @@ export interface MessageCommand extends ChangeCommand {
   msg: string;
 }
 const isMessageCommand = ( c: ChangeCommand ): c is MessageCommand => c.command === 'message';
-export const messageCommandProcessor = <S, MSGs> ( msgL: Optional<S, MSGs[]>, stringToMsg: ( s: string ) => MSGs ): ChangeCommandProcessor<S> =>
-  ( c ) => isMessageCommand ( c ) ? [ [ msgL, old => [ stringToMsg ( c.msg ), ...old ] ] ] : undefined
+export const messageCommandProcessor = <S, MSGs> ( config: DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> ): ChangeCommandProcessor<S> => {
+  const { messageL, stringToMsg, toPathTolens, s } = config
+  return c => {
+    if ( isMessageCommand ( c ) ) {
+      //@ts-ignore
+      const replacer: ( str: string ) => string = str => replaceTextFn<S> ( '', s, toPathTolens, str );
+      const res = c.msg.replace ( /{[^}]*}/g, replacer )
+      return [ [ messageL, old => [ stringToMsg ( res ), ...old ] ] ];
+    }
+  }
+}
 
 export interface CopyResultCommand extends ChangeCommand {
   command: 'copyResult',
@@ -81,7 +89,6 @@ export function processChangeCommandProcessor<S> ( errorPrefix: string, p: Chang
 }
 
 
-
 export type RestChangeCommands = DeleteCommand | MessageCommand | CopyResultCommand | SetChangeCommand
 export type ModalChangeCommands = DeleteCommand | MessageCommand | CopyCommand | SetChangeCommand
 export type InputChangeCommands = DeleteCommand | MessageCommand | StrictCopyCommand | SetChangeCommand
@@ -89,7 +96,8 @@ export type InputChangeCommands = DeleteCommand | MessageCommand | StrictCopyCom
 export interface DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> {
   toPathTolens: ( path: string ) => Optional<S, any>;
   messageL: Optional<S, MSGs[]>;
-  stringToMsg: ( s: string ) => MSGs
+  stringToMsg: ( s: string ) => MSGs;
+  s: S
 }
 export interface RestAndInputProcessorsConfig<S, Result, MSGs> extends DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> {
   resultPathToLens: ( path: string ) => Optional<Result, any>,
@@ -105,7 +113,7 @@ export function deleteMessageSetProcessors<S, MSGs> ( config: DeleteMessageStric
   return composeChangeCommandProcessors (
     deleteCommandProcessor ( toPathTolens ),
     setCommandProcessor ( toPathTolens ),
-    messageCommandProcessor ( messageL, stringToMsg )
+    messageCommandProcessor ( config )
   )
 }
 

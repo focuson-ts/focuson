@@ -88,7 +88,7 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
       restOnCommit: {
         restName: 'createPayment', action: 'create',
         pathToDelete: [ '~/display/collectionSummary', '~/display/collectionHistory' ],
-        changeOnSuccess: { command: 'message', msg: 'made payment' },
+        changeOnSuccess: { command: 'message', msg: 'made payment {/CommonIds/accountId}' },
         on404: { command: 'message', msg: '404 happened' },
         result: 'refresh'
       }

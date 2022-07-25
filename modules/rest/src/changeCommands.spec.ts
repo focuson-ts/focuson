@@ -27,6 +27,7 @@ const froma12Withz: StateForChangeCommads = { messages: [], fromA: { a: { b: "on
 
 const froma12WithAMessage: StateForChangeCommads = { messages: [ { level: 'error', msg: 'a', time: 'someTime' } ], fromA: { a: { b: "one", c: "two" } } }
 const config: DeleteMessageStrictCopySetProcessorsConfig<StateForChangeCommads, SimpleMessage> = {
+  s: empty,
   toPathTolens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( testDateFn, 'info' )
 }
 const restConfig: RestAndInputProcessorsConfig<StateForChangeCommads, any, SimpleMessage> = {
@@ -123,8 +124,7 @@ describe ( " copy command", () => {
   } )
 } )
 describe ( "messageCommandProcessor", () => {
-
-  const processor = messageCommandProcessor<StateForChangeCommads, SimpleMessage> ( simpleMessagesL (), config.stringToMsg );
+  const processor = messageCommandProcessor<StateForChangeCommads, SimpleMessage> ( config );
   const command: MessageCommand = { command: 'message', msg: 'someMessage' };
   const expected = [
     [

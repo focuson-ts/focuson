@@ -133,11 +133,11 @@ export interface RestResult<S, MSGs, Cargo> {
   result: any
 }
 
-export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, extractMsgs: ( status: number | undefined, body: any ) => MSGs[], toPathTolens: ( path: string ) => Optional<S, any>, stringToMsg: ( msg: string ) => MSGs, extractData: ( status: number | undefined, body: any ) => any ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
+export const restResultToTx = <S, MSGs> ( s: S, messageL: Optional<S, MSGs[]>, extractMsgs: ( status: number | undefined, body: any ) => MSGs[], toPathTolens: ( path: string ) => Optional<S, any>, stringToMsg: ( msg: string ) => MSGs, extractData: ( status: number | undefined, body: any ) => any ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
   const messagesFromBody: MSGs[] = extractMsgs ( status, result )
   const changeCommands = restCommandToChangeCommands ( stringToMsg ) ( restCommand, status )
   const resultPathToLens = ( s: string ) => parsePath<any> ( s, lensBuilder ( { '': Lenses.identity<any> () }, {} ) )
-  const config: RestAndInputProcessorsConfig<S, any, MSGs> = { resultPathToLens, messageL, toPathTolens, stringToMsg }
+  const config: RestAndInputProcessorsConfig<S, any, MSGs> = { resultPathToLens, messageL, toPathTolens, stringToMsg, s }
   const data = extractData ( status, result );
   const processor = restChangeCommandProcessors ( config ) ( data );
 
@@ -146,13 +146,13 @@ export const restResultToTx = <S, MSGs> ( messageL: Optional<S, MSGs[]>, extract
   const useResponse = getRestTypeDetails ( restCommand.restAction ).output.needsObj
   const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => data ] ] : []
   const on404Transforms: Transform<S, any>[] = status && status == 404 ? processChangeCommandProcessor ( '', processor, toArray ( restCommand.on404 ) ) : []
-  const msgFromBodyTx: Transform<S, any> = [ messageL, old => [ ...messagesFromBody, ...safeArray(old) ] ]
+  const msgFromBodyTx: Transform<S, any> = [ messageL, old => [ ...messagesFromBody, ...safeArray ( old ) ] ]
   let resultTxs: Transform<S, any>[] = [ msgFromBodyTx, ...on404Transforms, ...legacyChangeTxs, ...changeTxs, ...resultTransform ];
   return resultTxs;
 };
 
 export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]>, pathToLens: ( path: string ) => Optional<S, any>, stringToMsg: ( msg: string ) => MSGs ) => ( s: S, { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): S => {
-  const txs: Transform<S, any>[] = restResultToTx<S, MSGs> ( messageL, one.messages, pathToLens, stringToMsg, one.extractData ) ( result )
+  const txs: Transform<S, any>[] = restResultToTx<S, MSGs> ( s, messageL, one.messages, pathToLens, stringToMsg, one.extractData ) ( result )
   return massTransform ( s, ...txs )
 };
 
@@ -176,13 +176,13 @@ function makeModifiedUrlConfig<S, MSGS> ( restAction: RestAction, one: OneRestDe
   if ( isRestStateChange ( restAction ) ) {
     const details = findStateDetails ( one, restAction );
     if ( details ) {
-      const url = urlMutatorForRest(restAction, details.url ? details.url : one.url)
+      const url = urlMutatorForRest ( restAction, details.url ? details.url : one.url )
       const ids = safeArray ( details?.params ) !== undefined ? safeArray ( details?.params ) : one.ids
       const bodyFrom = details.bodyFrom ? details.bodyFrom : one.bodyFrom
       return { ...one, url, ids, fdLens, bodyFrom };
     }
   }
-  return {...one, url: urlMutatorForRest(restAction, one.url)}
+  return { ...one, url: urlMutatorForRest ( restAction, one.url ) }
 }
 
 export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Details,
@@ -267,10 +267,10 @@ export async function restToTransforms<S, MSGS> (
   const results: RestResult<S, MSGS, any>[] = await massFetch ( fetchFn, requests )
   if ( debug ) console.log ( "rest-results", results )
   let toLens = pathToLens ( s );
-  if ( debug ) console.log ( 'results from fetching rest commands', results  )
+  if ( debug ) console.log ( 'results from fetching rest commands', results )
 
   const restCommandAndTxs: RestCommandAndTxs<S>[] = results.map ( res => {
-    const txs: Transform<S, any>[] = restResultToTx ( messageL, res.one.messages, toLens, stringToMsg, res.one.extractData ) ( res );
+    const txs: Transform<S, any>[] = restResultToTx ( s, messageL, res.one.messages, toLens, stringToMsg, res.one.extractData ) ( res );
     const trace: Transform<S, any>[] = tracing ? [ [ traceL, old => [ ...safeArray ( old ), { restCommand: res.restCommand, lensTxs: txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( s ) ) ] ) } ] ] ] : []
     const restAndTxs: RestCommandAndTxs<S> = { ...res, txs: [ ...txs, ...trace ] };
     return restAndTxs

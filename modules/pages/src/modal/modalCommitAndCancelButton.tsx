@@ -92,7 +92,12 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
     const errorPrefix = `ModalCommit ${id}`
 
     const config: ModalProcessorsConfig<S, SimpleMessage> = {
-      stringToMsg: stringToSimpleMsg ( dateFn, 'info' ), fromPathTolens, toPathTolens, defaultL: focusLensForTo, messageL: state.context.simpleMessagesL
+      stringToMsg: stringToSimpleMsg ( dateFn, 'info' ),
+      fromPathTolens,
+      toPathTolens,
+      defaultL: focusLensForTo,
+      messageL: state.context.simpleMessagesL,
+      s: state.main
     };
     console.log ( 'dateFnInMakeModalProcessor', dateFn )
     console.log ( 'dateFnInMakeModalProcessor ()', dateFn () )

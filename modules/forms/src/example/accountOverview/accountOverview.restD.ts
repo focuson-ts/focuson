@@ -19,7 +19,7 @@ export const accountOverviewRestD: ExampleRestD = {
       restAction: 'get', mutateBy:
         {
           type: 'manual', name: 'testForMessages', makeMock: false, code: [ `
-          String errorMsg = "the error message";
+          String errorMsg = "the error message {/CommonIds/accountId}";
           String warningMsg = "the warning message";
           String infoMsg = "the info message";
           String emptyError = "";

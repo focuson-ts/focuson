@@ -77,7 +77,14 @@ function makeModalProcessorsConfig<S, Context extends PageSelectionContext<S> & 
   const focusOnL = findFocusLFromCurrentState ( errorPrefix, props, fromPathTolens, state.context.pages )
 
 
-  const config: ModalProcessorsConfig<S, SimpleMessage> = { stringToMsg: stringToSimpleMsg ( dateFn, 'info' ), fromPathTolens, toPathTolens, defaultL: focusOnL, messageL: state.context.simpleMessagesL };
+  const config: ModalProcessorsConfig<S, SimpleMessage> = {
+    stringToMsg: stringToSimpleMsg ( dateFn, 'info' ),
+    fromPathTolens,
+    toPathTolens,
+    defaultL: focusOnL,
+    messageL: state.context.simpleMessagesL,
+    s: state.main
+  };
   return config;
 }
 
