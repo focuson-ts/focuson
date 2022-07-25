@@ -95,7 +95,7 @@ export const focusOnMiddleware = <BigState, S extends HasFocusOnDebug, C extends
   if ( debug ) console.log ( 'focusOnMiddleware - finalResult is ', finalResult );
   return res;
 };
-export function makeLs<S> ( store: Store<S>, child: string ) {
+export function makeLs<S> ( store: Store<S>, team: string ) {
   // @ts-ignore
-  return lensState ( store.getState ()[ child ], ( s, reason ) => store.dispatch ( { type: 'setMain', s, reason } ), child, context )
+  return lensState ( store.getState ()[ team ], ( s, reason ) => store.dispatch ( { type: 'setMain', s, team, reason } ), team, context )
 }

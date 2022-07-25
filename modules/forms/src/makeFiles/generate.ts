@@ -49,9 +49,11 @@ export const params = {
   utilsPackage: 'utils',
   maxTuples: 3,
   theme: 'theme-light',
+  teamName: 'focuson',
   extractData: `( status: number | undefined, body: any ) => body.data`,
   controllerAnnotations: [ "@CrossOrigin()" ],
-  endpointAnnotations: []// ['@ApiOperation(value="{description}",notes="{notes}")', '@PreAuthorise("{authorisation}")']
+  endpointAnnotations: [],// ['@ApiOperation(value="{description}",notes="{notes}")', '@PreAuthorise("{authorisation}")']
+
 };
 
 export const directorySpec: DirectorySpec = {

@@ -1,6 +1,6 @@
 import { ExampleMainPage, ExampleModalPage } from "../common";
 import { nameAndAddressDataD, postCodeSearchDataD } from "./addressSearch.dataD";
-import { addressRestD, postcodeRestD } from "./addressSearch.restD";
+import { addressRestD, postcodeForManualRestD, postcodeRestD } from "./addressSearch.restD";
 import { IntegerDD } from "../../common/dataD";
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 

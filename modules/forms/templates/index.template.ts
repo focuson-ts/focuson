@@ -11,18 +11,18 @@ import { applyMiddleware, combineReducers, legacy_createStore } from "@reduxjs/t
 import { Lenses } from '@focuson/lens'
 
 export const combineAll = combineReducers ( {
-  Rocket: FocusOnReducer ( identityL )
+   {teamName}: FocusOnReducer ( identityL )
 } )
-export const store: any = legacy_createStore ( combineAll, undefined, applyMiddleware ( focusOnMiddleware ( config, context, Lenses.identity<any> ().focusOn ( 'Rocket' ) ) ) );
+export const store: any = legacy_createStore ( combineAll, undefined, applyMiddleware ( focusOnMiddleware ( config, context, Lenses.identity<any> ().focusOn ( '{teamName}' ) ) ) );
 let rootElement = getElement ( "root" );
 console.log ( "set json" )
 store.subscribe ( () => {
   ReactDOM.render (
-    <IndexPage state={makeLs<{stateName}> ( store, 'Rocket' )} dateFn={defaultDateFn}>
-  <SelectedPage state={makeLs<{stateName}> ( store, 'Rocket' )}/>
+    <IndexPage state={makeLs<{stateName}> ( store, '{teamName}' )} dateFn={defaultDateFn}>
+  <SelectedPage state={makeLs<{stateName}> ( store, '{teamName}' )}/>
   </IndexPage>, rootElement )
 } )
 
 console.log ( "dispatching" )
-store.dispatch ( { type: 'setMain', s: start } )
+store.dispatch ( { type: 'setMain', s: start, team: '{teamName}' } )
 console.log ( "dispatched" )

@@ -37,6 +37,7 @@ export const paramsForTest: CombinedParams = {
   utilsPackage: 'utils',
   maxTuples: 2,
   theme: 'theme-dark',
-  controllerAnnotations: ["@CrossOrigin()"],
-  endpointAnnotations: ["@EndPointAnnotation()"],
+  controllerAnnotations: [ "@CrossOrigin()" ],
+  endpointAnnotations: [ "@EndPointAnnotation()" ],
+  teamName: 'focuson'
 };

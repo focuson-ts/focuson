@@ -53,9 +53,7 @@ export const datesDataD: ExampleDataD = {
       dataDD: {...DateWithDatePickerDD, emptyValue: undefined, allowUndefined: true}, displayParams: {
         dateInfo: '~/dateInfo',
         jurisdiction: '/CommonIds/jurisdiction',
-        dateRange: {
-          type: 'future', allowWeekends: false, allowHolidays: false, minWorkingDaysBefore: 5
-        }
+        dateRange: { type: 'future', allowWeekends: false, allowHolidays: false, minWorkingDaysBefore: 5        }
       }
     }
 

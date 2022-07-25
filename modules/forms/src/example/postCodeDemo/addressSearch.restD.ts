@@ -15,18 +15,25 @@ export const rootPostCodeRestD: RestD<AllGuards> = {
   dataDD: postCodeSearchResponseDD,
   url: '/api/postCode?{query}',
   actions: [ 'get' ],
+  namePrefix: 'original',
 }
 
 export const postcodeForManualRestD: RestD<AllGuards> = {
-  ...rootPostCodeRestD,
+  params: postcodeParams,
+  dataDD: postCodeSearchResponseDD,
+  namePrefix: 'manual',
+  url: '/api/postCode/manual?{query}',
+  actions: [ 'get' ],
   // insertSqlStrategy: { type: 'OneTableInsertSqlStrategyForNoIds', table: postCodeSearchTable },
   resolvers: {
-    getPostCodeDataLine: [
+    getmanualPostCodeDataLine: [
       {
-        type: 'manual', code: 'List<Map<String,Object>>getPostCodeDataLine = Arrays.asList();', name: 'getPostcode', params: [
+        type: 'manual', code: 'List<Map<String, Object>> getmanualPostCodeDataLine = PostcodeClient.get(postcode);',
+        name: 'getPostcode',
+        params: [
           'postcode',
-          { type: "output", name: 'getPostCodeDataLine', javaType: 'List<Map<String,Object>>' } ],
-        import: 'import java.util.Arrays;'
+          { type: "output", name: 'getmanualPostCodeDataLine', javaType: 'List<Map<String,Object>>' } ],
+        import: 'import somepackage.somepostfix.another.utils.PostcodeClient;'
       }
     ]
   }
