@@ -8,7 +8,7 @@ export const PaymentTypeDd: StringPrimitiveDD = {
   description: "A payment type",
   display: LabelAndDropDownCD,
   displayParams: { pleaseSelect: 'Please select' },
-  enum: { e: "Express money transfer", c: 'Chaps' }
+  enum: { EMT: "Express money transfer", CHAPS: 'Chaps' }
 }
 
 export const ChargeDetailsEnum: StringPrimitiveDD = {

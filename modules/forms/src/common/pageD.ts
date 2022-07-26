@@ -95,6 +95,7 @@ export type VariableD = VariableByCodeD | VariableByPathD
 export interface MainPageD<Buttons, G> extends HasLayout, HasGuards<G> {
   pageType: 'MainPage' | 'MainPopup',
   commonParams?: NameAnd<CommonLensRestParam<any>>,
+  title?: string;
   name: string,
   modes: PageMode[],
   display: { target: string, dataDD: CompDataD<G> },
@@ -110,6 +111,7 @@ export interface MainPageD<Buttons, G> extends HasLayout, HasGuards<G> {
 
 export interface ModalPageD<Buttons, G> extends HasLayout, HasGuards<G> {
   pageType: 'ModalPage' | 'ModalPopup',
+  title?: string;
   name: string,
   modes: PageMode[],
   display: { target: string, dataDD: CompDataD<G>, importFrom?: string }, //importFrom is deprecated

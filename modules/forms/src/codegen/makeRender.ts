@@ -117,25 +117,25 @@ export const processParam = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G
   if ( dcdType.paramType === 'nameAndPaths' ) return processNameAndPaths ()
   if ( dcdType.paramType === 'pathValue' ) return processPath ( '.json()' )
   if ( dcdType.paramType === 'guards' ) {
-    if ( typeof s === 'string' || Array.isArray ( s ) ) return "{"+toArray<string> ( s ).map ( guardName ).join(' && ') +"}"
+    if ( typeof s === 'string' || Array.isArray ( s ) ) return "{" + toArray<string> ( s ).map ( guardName ).join ( ' && ' ) + "}"
     throw Error ( `${fullErrorPrefix} for guards. Could not process ${JSON.stringify ( s )}` )
   }
   throw new Error ( `${fullErrorPrefix} with type ${dcdType.paramType} which can't be processed` )
 };
 
 
-function toReactParam([name, value]: [string, any]): [string, string] {
-  if (typeof value === 'string') return [name, `"${value}"`];
-  else return [name, `{${value}}`]
+function toReactParam ( [ name, value ]: [ string, any ] ): [ string, string ] {
+  if ( typeof value === 'string' ) return [ name, `"${value}"` ];
+  else return [ name, `{${value}}` ]
 }
 
-function makeParams<B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params: TSParams, errorPrefix: string, path: string[], optEnum: NameAnd<String> | undefined, 
-  display: DisplayCompD, definingParams: DisplayParamDD | undefined, displayParams: ComponentDisplayParams, validations: Validations ) {
+function makeParams<B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params: TSParams, errorPrefix: string, path: string[], optEnum: NameAnd<String> | undefined,
+                            display: DisplayCompD, definingParams: DisplayParamDD | undefined, displayParams: ComponentDisplayParams, validations: Validations ) {
   const processOneParam = processParam ( mainPage, page, params, errorPrefix, display )
   const dataDDParams: [ string, string ][] = definingParams ? Object.entries ( definingParams )
     .map ( ( [ name, value ] ) => { return [ name, processOneParam ( name, value ) ]; } ) : []
-  if (display === undefined) throw Error(`${errorPrefix} the display component was undefined.`)
-  if (display.params === undefined) throw Error(`${errorPrefix} the params were undefined. Are you using a custom CD and did you set the params`)
+  if ( display === undefined ) throw Error ( `${errorPrefix} the display component was undefined.` )
+  if ( display.params === undefined ) throw Error ( `${errorPrefix} the params were undefined. Are you using a custom CD and did you set the params` )
   const defaultParams: [ string, string ][] = Object.entries ( display.params ).flatMap ( ( [ name, param ] ) => {
     if ( param?.default ) return [ [ name, processOneParam ( name, param.default ) ] ]
     if ( param?.needed === 'defaultToCamelCaseOfName' ) return [ [ name, processOneParam ( name, decamelize ( path.slice ( -1 ) + "", ' ' ) ) ] ]
@@ -157,7 +157,7 @@ function makeParams<B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params
     return []
   } )
   const displayParamsA: [ string, string ][] = displayParams ? Object.entries ( displayParams ).map ( ( [ name, value ] ) => [ name, processOneParam ( name, value ) ] ) : []
-  const fullDisplayParams = Object.entries ( Object.fromEntries ( [ ...defaultParams, ...dataDDParams, ...displayParamsA, ...Object.entries( validations ).map(toReactParam) ] ) )
+  const fullDisplayParams = Object.entries ( Object.fromEntries ( [ ...defaultParams, ...dataDDParams, ...displayParamsA, ...Object.entries ( validations ).map ( toReactParam ) ] ) )
   return fullDisplayParams;
 }
 export function createOneReact<B, G> ( mainPage: MainPageD<B, G>, params: TSParams, pageD: PageD<B, G>, { path, dataDD, display, displayParams, guard }: ComponentData<G> ): string[] {
@@ -166,7 +166,7 @@ export function createOneReact<B, G> ( mainPage: MainPageD<B, G>, params: TSPara
   const name = display.name
   let errorPrefix = `Page ${pageD.name}, Datad ${dataDD.name} with path ${JSON.stringify ( path )}`;
   if ( name === undefined ) throw Error ( errorPrefix + " cannot find the name of the display component. Check it is a dataD or similar" )
-  const validate = isPrimDd(dataDD) && dataDD.validate ? dataDD.validate : {};
+  const validate = isPrimDd ( dataDD ) && dataDD.validate ? dataDD.validate : {};
   const fullDisplayParams = makeParams ( mainPage, pageD, params, errorPrefix, path,
     isPrimDd ( dataDD ) && dataDD.enum, display, dataDD.displayParams, displayParams, validate );
 
@@ -248,6 +248,10 @@ export const createReactPageComponent = <B extends ButtonD, G extends GuardWithC
   throw new Error ( `Unknown page type ${pageD.pageType} in ${pageD.name}` )
 };
 
+function makeTitle<B, G> ( pageD: PageD<B, G>) {
+  const title = pageD.title ? `replaceTextUsingPath(s,'${pageD.title}')` : `'${decamelize ( pageD.name, ' ' )}' `;
+  return title;
+}
 export function createReactModalPageComponent<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButtons: MakeButton<G>, mainP: MainPageD<B, G>, pageD: PageD<B, G> ): string[] {
   const { dataDD } = pageD.display
   // const focus = focusOnFor ( pageD.display.target );
@@ -257,7 +261,7 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
   const guards = makeGuardVariables ( pageD, makeGuard, params, mainP, pageD )
   return [
     `export function ${pageComponentName ( pageD )}(){`,
-    `  return focusedPage<${params.stateName}, ${domName}, Context> ( s =>  '${decamelize ( pageD.name, ' ' )}' ) (//If there is a compilation here have you added this to the 'domain' of the main page`,
+    `  return focusedPage<${params.stateName}, ${domName}, Context> ( s => ${(makeTitle ( pageD ))} ) (//If there is a compilation here have you added this to the 'domain' of the main page`,
     `     ( state, d, mode, index ) => {`,
     ...(indentList ( indentList ( indentList ( indentList ( indentList ( [
       'const id=`page${index}`;',
@@ -278,10 +282,11 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
   let errorPrefix: string = `createReactMainPageComponent-layout ${pageD.name}`;
   const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( pageD, pageD, params, errorPrefix, [], pageD, `<>`, '</>' );
   const guards = makeGuardVariables ( pageD, makeGuard, params, pageD, pageD )
+
   return [
     `export function ${pageComponentName ( pageD )}(){`,
     `   //A compilation error here is often because you have specified the wrong path in display. The path you gave is ${pageD.display.target}`,
-    `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => '${decamelize ( pageD.name, ' ' )}' ) ( state => state${stateFocusQueryWithTildaFromPage ( `createReactMainPageComponent for page ${pageD.name}`, params, pageD, pageD, pageD.display.target )}) (`,
+    `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => ${makeTitle(pageD)}) ( state => state${stateFocusQueryWithTildaFromPage ( `createReactMainPageComponent for page ${pageD.name}`, params, pageD, pageD, pageD.display.target )}) (`,
     `( fullState, state , full, d, mode, index) => {`,
     ...indentList ( makeGuardButtonVariables ( params, makeGuard, pageD, pageD ) ),
     'const id=`page${index}`;',
@@ -316,7 +321,7 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
   const imports = [
     `import { LensProps } from "@focuson/state";`,
     `import { FocusOnContext } from '@focuson/focuson';`,
-    `import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from "@focuson/pages";`,
+    `import {  focusedPage, focusedPageWithExtraState, fullState, pageState, replaceTextUsingPath} from "@focuson/pages";`,
     `import { Context, FocusedProps, ${params.stateName}, identityL } from "../${params.commonFile}";`,
     `import { Lenses } from '@focuson/lens';`,
     `import { DisplayGuards, Guard, GuardButton } from "@focuson/form_components";`,

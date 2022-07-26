@@ -26,6 +26,7 @@ export const ValidatePD: ExampleModalPage = {
 }
 export const EditPaymentsPD: ExampleModalPage = {
   pageType: 'ModalPage',
+  title: 'Payments {~/onePayment/paymentType}',
   name: 'EditPaymentsModalPage',
   display: { target: '~/onePayment', dataDD: PaymentDD },
   modes: [ 'edit', 'create' ],
