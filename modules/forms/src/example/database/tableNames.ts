@@ -58,3 +58,10 @@ export const collectionHistoryTableDD: DBTable = {
   schema: onlySchema
 
 }
+export const authorisedChargesTableDD: DBTable = {
+  description: "",
+  name: "Authorised_Charges",
+  notes: "",
+  schema: onlySchema
+
+}

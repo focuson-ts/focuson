@@ -187,9 +187,10 @@ export interface WhereFromQuery {
   table: DBTable;
   alias: string
   field: string;
-  comparator?: '=' | '<>' | 'like' | '>' | '<'; // defaults to =. We can use this for 'like' or for <> or > or <
+  comparator?: '=' | '<>' | 'like' | '>' | '<' | 'sameday'; // defaults to =. We can use this for 'like' or for <> or > or <
   paramPrefix?: '%'; //added to the start of the parameter. For use with like
   paramPostfix?: '%';//added to the end of the parameter. For use with like
+  pattern?: string //Use for things like the sameday comparator
 }
 export function isWhereFromQuery ( w: WhereLink ): w is WhereFromQuery {
   // @ts-ignore
@@ -445,7 +446,13 @@ export function makeWhereClauseStringsFrom ( ws: WhereLink[] ): string[] {
     }
     if ( isWhereFromQuery ( w ) ) {
       const comparator = w.comparator ? w.comparator : '='
-      return ` ${w.alias}.${w.field} ${comparator} ?`
+      switch ( comparator ) {
+        case "sameday":
+          const pattern = w.pattern?w.pattern : 'DD/MM/YYYY'
+          return `to_char(${w.alias}.${w.field}, '${pattern}') = ?`
+        default:
+          return ` ${w.alias}.${w.field} ${comparator} ?`
+      }
     }
     throw new Error ( `Unknown where link ${JSON.stringify ( w )}` )
   } )
@@ -620,9 +627,9 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: MainPageD<B
     '',
     `//${JSON.stringify ( restD.params )}`,
     `public class ${className} {`,
-      ``,
-      `  static Logger logger = LoggerFactory.getLogger(${className}.class);`,
-      ``,
+    ``,
+    `  static Logger logger = LoggerFactory.getLogger(${className}.class);`,
+    ``,
     ...indentList ( [
       `@SuppressWarnings("SqlResolve")`,
       ...addBrackets ( 'public static String sql = ', ';' ) ( addStringToEndOfAllButLast ( '+' ) ( sql.map ( s => '"' + s.replace ( /""/g, '\"' ) + '"' ) ) ),
@@ -666,11 +673,11 @@ function makeGetRestForChild<B, G> ( p: PageD<B, G>, restName: string, path: num
 
 }
 
-export function preTransactionSqlLogger(paramsA: JavaQueryParamDetails[]): string {
-  if (paramsA.length == 0) return `    logger.debug(MessageFormat.format("sql: {${0}}", sql));`;
+export function preTransactionSqlLogger ( paramsA: JavaQueryParamDetails[] ): string {
+  if ( paramsA.length == 0 ) return `    logger.debug(MessageFormat.format("sql: {${0}}", sql));`;
   let i = 1;
-  const prefixNamesAndIndex = `sql: {${0}}, `.concat( paramsA.map ( p => `${( p.name )}: {${i++}}`).join ( ", " ) );
-  return `    logger.debug(MessageFormat.format("${prefixNamesAndIndex}", sql, ${paramsA.map( p => p.name )}));`;
+  const prefixNamesAndIndex = `sql: {${0}}, `.concat ( paramsA.map ( p => `${(p.name)}: {${i++}}` ).join ( ", " ) );
+  return `    logger.debug(MessageFormat.format("${prefixNamesAndIndex}", sql, ${paramsA.map ( p => p.name )}));`;
 }
 
 function makeGetRestForMainOrChild<B, G> ( p: PageD<B, G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[], repeating: Boolean ) {
@@ -693,7 +700,7 @@ function makeGetRestForMainOrChild<B, G> ( p: PageD<B, G>, restName: string, pat
     `    String sql = ${mapName}.sql;`,
     `    PreparedStatement statement = connection.prepareStatement(sql);`,
     ...indentList ( indentList ( queryParams.map ( ( paramDetails, i ) => `statement.${paramDetails.param.rsSetter}(${i + 1},${addPrefixPostFix ( paramDetails )});` ) ) ),
-    preTransactionSqlLogger(queryParams),
+    preTransactionSqlLogger ( queryParams ),
     `    long start = System.nanoTime();`,
     `    ResultSet rs = statement.executeQuery();`,
     `    try {`,

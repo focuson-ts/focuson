@@ -2,6 +2,7 @@ import { ExampleDataD, ExampleRepeatingD } from "../common";
 import { AccountIdDD, BooleanDD, DateDD, MoneyDD, NatNumDd, StringDD } from "../../common/dataD";
 import { TableCD } from "../../common/componentsD";
 import { AuthoriseTableCD } from "./custom";
+import { authorisedChargesTableDD } from "../database/tableNames";
 
 
 export const summaryOfChargesDateDD: ExampleDataD = {
@@ -47,16 +48,17 @@ export const SelectOneBrandDD: ExampleRepeatingD = {
 export const OneChargeDataDD: ExampleDataD = {
   name: 'OneChargeData',
   description: 'All the data we see on the main authoriseCharges page',
+  table: authorisedChargesTableDD,
   structure: {
-    chargeType: { dataDD: StringDD, sample: [ 'Unpaid DD', 'Unpaid DD fee' ] },
-    status: { dataDD: StringDD, sample: [ 'PENDING', 'APPROVED', 'AUTHORISED' ] },
-    type: { dataDD: StringDD, sample: [ 'DR', 'CR' ] },
-    sortCode: { dataDD: StringDD, sample: [ '166051', '166052' ] },
-    accountNo: { dataDD: StringDD, sample: [ '10009126' ] },
-    amount: { dataDD: StringDD, sample: [ '1.00', '1.00' ] },
-    narrative: { dataDD: StringDD, sample: [ 'unpaid DD' ] },
-    approvedBy: { dataDD: StringDD, sample: [ '', 'The Boss', 'The Boss' ] },
-    authorisedBy: { dataDD: StringDD, sample: [ '', '', 'The Super Boss' ] },
+    chargeType: { dataDD: StringDD, db:  'chargeType', sample: [ 'Unpaid DD', 'Unpaid DD fee' ] },
+    status: { dataDD: StringDD, db: 'status' ,sample: [ 'PENDING', 'APPROVED', 'AUTHORISED' ] },
+    type: { dataDD: StringDD,db: 'type', sample: [ 'DR', 'CR' ] },
+    sortCode: { dataDD: StringDD,db: 'sortCode', sample: [ '166051', '166052' ] },
+    accountNo: { dataDD: StringDD,db:  'accountNo', sample: [ '10009126' ] },
+    amount: { dataDD: StringDD, db: 'amount',sample: [ '1.00', '1.00' ] },
+    narrative: { dataDD: StringDD,db: 'narrative', sample: [ 'unpaid DD' ] },
+    approvedBy: { dataDD: StringDD, db: 'approvedBy',sample: [ '', 'The Boss', 'The Boss' ] },
+    authorisedBy: { dataDD: StringDD, db: 'authorisedBy', sample: [ '', '', 'The Super Boss' ] },
     hold: { dataDD: BooleanDD, sample: [ false, false, false ] }
   }
 }

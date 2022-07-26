@@ -2,6 +2,7 @@ import { ExampleRestD } from "../common";
 import { AuthoriseChargesSummaryDataDD, chargesSummaryDetailDD, SelectOneBrandDD, summaryOfChargesDateTableDD } from "./authoriseCharges.dataD";
 import { fromCommonIds } from "../commonIds";
 import { StringParam } from "../../common/restD";
+import { authorisedChargesTableDD } from "../database/tableNames";
 
 
 export const SelectOneBrandPageRD: ExampleRestD = {
@@ -19,7 +20,11 @@ export const AuthorisedChargesRD: ExampleRestD = {
     date: { ...StringParam, lens: '~/authorisedCharges/date', testValue: '2022/12/1' }
   },
   url: "/api/charges/summary?{query}",
-  actions: [ 'get', 'update' ]
+  actions: [ 'get', 'update' ],
+  tables: {
+    entity: {table: authorisedChargesTableDD, alias: 'A', type: 'Main'},
+    where: [{table: authorisedChargesTableDD, alias: "A", field: 'date', comparator: 'sameday', paramName: 'date'}]
+  }
 }
 
 export const SummaryOfChargeDatesRD: ExampleRestD = {
