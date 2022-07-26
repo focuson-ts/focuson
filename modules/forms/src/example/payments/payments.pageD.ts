@@ -37,7 +37,8 @@ export const EditPaymentsPD: ExampleModalPage = {
       control: 'ModalButton', modal: ValidatePD, focusOn: '~/nothing', mode: 'view',
       createEmpty: nothingDD,
       restOnOpen: { restName: 'validatePayee', action: { state: 'validate' } },
-      copyOnSuccess: { from: 'payeeStatus', to: '~/singlePayment/payeeStatus' }
+      copyOnSuccess: { from: 'payeeStatus', to: '~/singlePayment/payeeStatus' },
+      changeOnClose: {command: 'deleteAllMessages'}
     }
     // chargeDetails: { control: 'ModalButton', modal: ChargeDetailsPD, mode: 'edit', focusOn: '~/onePayment/chargeDetails',
     // createEmptyIfUndefined: ChargeDetailsDD

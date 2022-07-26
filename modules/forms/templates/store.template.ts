@@ -38,13 +38,13 @@ export const {teamName}Reducer: any = <BigState, S> ( rootLens: Lens<BigState, S
   if ( state === undefined ) return start
   // @ts-ignore
   const debug = rootLens.get ( state )?.debug?.reduxDebug === true
-  if ( debug ) console.log ( 'FocusOnReducer-action', action )
+  if ( debug ) console.log ( ' {teamName}Reducer-action', action )
   // if ( debug ) console.log ( '  FocusOnReducer', state )
-  if ( isFocusOnSetMainAction<S> ( action ) ) {
+  if ( isFocusOnSetMainAction<S> ( action ) && action.team=== '{teamName}' ) {
     return rootLens.set ( state, action.s );
   }
-  if ( isFocusOnMassTxsAction<S> ( action ) ) {
-    if ( debug ) console.log ( "  FocusOnReducer- action is massTxs", action.type, action.txs.map ( t => [ t[ 0 ].description, t[ 1 ] ( t[ 0 ].getOption ( action.s ) ) ] ) )
+  if ( isFocusOnMassTxsAction<S> ( action ) && action.team=== '{teamName}' ) {
+    if ( debug ) console.log ( "   {teamName}Reducer- action is massTxs", action.type, action.txs.map ( t => [ t[ 0 ].description, t[ 1 ] ( t[ 0 ].getOption ( action.s ) ) ] ) )
     if ( action.txs.length === 0 ) {
       console.log ( "  nothing to do..." );
       return state
@@ -54,7 +54,7 @@ export const {teamName}Reducer: any = <BigState, S> ( rootLens: Lens<BigState, S
     let withRootLens = rootLens.set ( state, result );
     return withRootLens
   }
-  if ( debug ) console.log ( 'in reducer. I dont know what action it is', action )
+  if ( debug ) console.log ( '{teamName}Reducer. Not processing', action )
   return state
 }
 function traceTransform<S> ( trace: any, s: S ): Transform<S, any> [] {
@@ -76,20 +76,18 @@ export const focusOnMiddlewareFor{teamName} = <BigState, S extends HasFocusOnDeb
   let start: S = errorMonad ( s, debug, onError,
     [ 'preMutateForPages', preMutateForPages<S, C> ( context ) ],
     [ 'preMutate', preMutate ],
-    [ 'dispatch pre rests', s => dispatch ( { type: 'massTxs', s, txs: [ ...traceTransform ( reason, s ), deleteRestCommands, clearCount ], comment: 'dispatchPreRests' } ) ]//This updates the gui 'now' pre rest/fetcher goodness. We need to kill the rest commands to stop them being sent twice
+    [ 'dispatch pre rests', s => dispatch ( { type: 'massTxs', s, team: '{teamName}', txs: [ ...traceTransform ( reason, s ), deleteRestCommands, clearCount ], comment: 'dispatchPreRests' } ) ]//This updates the gui 'now' pre rest/fetcher goodness. We need to kill the rest commands to stop them being sent twice
   );
   // return start;
   const stateAfterImmediate = rootLens.get ( store.getState () )
   const focusOnDispatcher = ( preTxs: Transform<S, any>[], rests: RestCommandAndTxs<S>[] ) => ( originalS: S ): S => {
-    dispatch ( { type: 'massTxs', txs: [ ...preTxs, ...rests.flatMap ( x => x.txs ) ], s: originalS, comment: 'fromFocusOnDispatcher' } )
+    dispatch ( { type: 'massTxs', team: '{teamName}',txs: [ ...preTxs, ...rests.flatMap ( x => x.txs ) ], s: originalS, comment: 'fromFocusOnDispatcher' } )
     if ( debug ) console.log ( 'ending focusOnDispatcher (full state)', store.getState () )
     return rootLens.get ( store.getState () );
   }
   let finalResultFn = ( start: S, restCommands: RestCommand[] ) => errorPromiseMonad ( onError ) (
     start, debug,
-    [ 'dispatchRestAndFetchCommands',
-      s =>
-        dispatchRestAndFetchCommands ( config, context, focusOnDispatcher ) ( restCommands ) ( s ) ],
+    [ 'dispatchRestAndFetchCommands',  s => dispatchRestAndFetchCommands ( config, context, focusOnDispatcher ) ( restCommands ) ( s ) ],
     [ 'postMutate', postMutate ]
   );
   const res = await finalResultFn ( stateAfterImmediate, restCommands )

@@ -4,13 +4,22 @@ import { LensProps, reasonFor } from "@focuson/state";
 
 export interface MessagesProps<S, T, Context> extends LensProps<S, T, Context> {
   pageDisplayTime: string
+  nextPageDisplayTime: string | undefined
 }
-export function Messages<S, T, Context> ( { state, pageDisplayTime }: MessagesProps<S, SimpleMessage[], Context> ) {
-  const pageTime = new Date ( pageDisplayTime ).getTime ()
-  let simpleMessages = state.optJsonOr ( [] );
-  let actualMessages = simpleMessages.filter ( message => new Date ( message.time ).getTime () >= pageTime );
-  if ( actualMessages.length === 0 ) return <></>
+const canDisplayInThisWindow = ( pageTime: number, nextPageTime: number | undefined ) => ( message: SimpleMessage ): boolean => {
+  const time = new Date ( message.time ).getTime ();
+  if ( time >= pageTime )
+    if ( nextPageTime === undefined || time < nextPageTime )
+      return true
+  return false
+};
 
+export function Messages<S, T, Context> ( { state, pageDisplayTime, nextPageDisplayTime }: MessagesProps<S, SimpleMessage[], Context> ) {
+  const pageTime = new Date ( pageDisplayTime ).getTime ()
+  const nextPageTime = nextPageDisplayTime ? new Date ( nextPageDisplayTime ).getTime () : undefined
+  const simpleMessages = state.optJsonOr ( [] );
+  const actualMessages = simpleMessages.filter ( canDisplayInThisWindow ( pageTime, nextPageTime ) );
+  if ( actualMessages.length === 0 ) return <></>
   const removeMessage = ( index: number ) => {
     const messagesArray = [ ...simpleMessages ]
     messagesArray.splice ( index, 1 )

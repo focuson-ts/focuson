@@ -51,9 +51,8 @@ export function MyCombined<S extends HasTagHolder & HasSimpleMessages, Context e
       <div className='glassPane'>
         {
           pagesToShow.map ( ( p, i ) => {
-
-              const messagesJSX = <Messages state={state.focusOn ( 'messages' )} pageDisplayTime = {p.pageDisplayedTime}/>
-
+              const nextPageTime = pagesToShow[ i + 1 ]?.pageDisplayedTime
+              const messagesJSX = <Messages state={state.focusOn ( 'messages' )} pageDisplayTime={p.pageDisplayedTime} nextPageDisplayTime={nextPageTime}/>
               if ( p.pageType === 'MainPopup' ) return popupJSX ( p, i, messagesJSX )
               if ( p.pageType === 'ModalPopup' ) return popupJSX ( p, i, messagesJSX )
               if ( p.pageType === 'ModalPage' ) return modalPageJSX ( p, i, messagesJSX )
