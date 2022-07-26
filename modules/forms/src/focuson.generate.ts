@@ -17,8 +17,7 @@ generate ( logLevel, directorySpec, devAppConfig, {
     endpointImports: [],
     focusOnVersion,
     thePackage: 'somepackage.somepostfix.another',
-    theme: 'theme-dark'
-    ,
+    theme: 'theme-dark',
   },
   javaOutputRoot, tsRoot, AllGuardCreator, makeButtons () ) ( generatedPages )
 

@@ -115,6 +115,13 @@ export const newPaymentsRD: ExampleRestD = {
     } ]
   } ]
 }
+
+export const nothingDD: ExampleDataD = {
+  name: 'Nothing',
+  description: "An empty object",
+  structure: {}
+}
+
 export const currencyDD: ExampleDataD = {
   name: 'Currency',
   description: "id and name of the currency ",
@@ -149,11 +156,13 @@ export const ValidatePayeeRD: ExampleRestD = {
   },
   mutations: [
     {
-      restAction: { state: 'validate' }, mutateBy: {
+      restAction: { state: 'validate' }, mutateBy: [ {
         type: 'manual', code: 'String payeeStatus= "SUCCEEDED!!!!!";', makeMock: false, params: [
           { type: 'output', name: 'payeeStatus', javaType: 'String' }
         ]
-      }
+      },
+        { type: 'message', message: 'someMessageFromBackend' },
+        { type: 'message', message: 'someotherMessageFromBackend' }, ]
     }
   ]
 }

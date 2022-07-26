@@ -19,11 +19,9 @@ export interface RestDefnInPageProperties<G> {
 export interface RestDefnInPage<G> {
   [ name: string ]: RestDefnInPageProperties<G>
 }
-interface CommonRestOnCommit {
+export interface CommonRestOnCommit {
   restName: string,
   action: RestAction,
-  /** What happens when the rest is completed. Currently only 'refresh' which clears the 'main object' triggering a fetch. Later we will be more clever' */
-  result: RestResult;
   messageOnSuccess?: string
   changeOnSuccess?: RestChangeCommands | RestChangeCommands[]
   on404?: RestChangeCommands | RestChangeCommands[]
@@ -38,6 +36,10 @@ export interface RestOnCommitRefresh extends CommonRestOnCommit {
    * This reason we have a path is that sometimes we do 'rest' on a list item, and need to refresh the list
    * At the moment the paths must start with /, but that might relax later*/
   pathToDelete?: string[]
+}
+export function isRestOnCommitRefresh(r: CommonRestOnCommit): r is RestOnCommitRefresh {
+  const a: any = r;
+  return a.result === 'refresh'
 }
 export type RestOnCommit = RestOnCommitNothing | RestOnCommitRefresh
 

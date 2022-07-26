@@ -39,7 +39,8 @@ export const datesDataD: ExampleDataD = {
   description: "",
   structure: {
     empty: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified' } },
-    emptyAndRequired: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified - readonly', readonly: true } },
+    emptyAndReadonly: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified - readonly', readonly: true } },
+    emptyAndNotRequired: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified - required false',required: false } },
     value: { dataDD: { ...DateWithDatePickerDD, emptyValue: '1/7/2022' }, displayParams: { label: 'Specified 1/7/2022' } },
     valueDateFormat: { dataDD: { ...DateWithDatePickerDD, emptyValue: '2022/7/1' }, displayParams: { label: 'Specified 1/7/2022 ', dateFormat: 'yyyy/MM/dd' } },
     future: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Future', dateRange: { type: 'future' } } },

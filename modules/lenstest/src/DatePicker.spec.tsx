@@ -251,4 +251,8 @@ describe ( "DatePicker", () => {
       "<div class='labelAndDate '><label class='input-label'>someLabel</label><div class=' '><div class='react-datepicker-wrapper'><div class='react-datepicker__input-container'><input type='text' id='someId' placeholder='Select a date' class='' value=''></div></div></div></div>" )
   } )
 
+  it ("should handled required property", () =>{
+    fail()
+  })
+
 } )

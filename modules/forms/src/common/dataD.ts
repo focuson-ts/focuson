@@ -388,7 +388,7 @@ export const MoneyDD: NumberPrimitiveDD = {
 export const MoneyStringDD: StringPrimitiveDD = {
   ...stringPrimDD,
   display: LabelAndStringInputCD,
-  format: { type: 'Double', pattern: '%,2f' },
+  format: { type: 'Double', pattern: '%.2f' },
   displayParams: { readonly: true },
   sample: [ '100.23', '200.45', '300.00' ],
   name: 'DisplayMoney',

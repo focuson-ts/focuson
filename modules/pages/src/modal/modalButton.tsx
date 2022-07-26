@@ -1,7 +1,7 @@
 import { LensState, reasonFor } from "@focuson/state";
 import { fromPathGivenState, page, PageMode, PageParams, PageSelection, PageSelectionContext, SetToLengthOnClose } from "../pageSelection";
 import { Optional, Transform } from "@focuson/lens";
-import { CopyCommand, DeleteCommand, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand, SetChangeCommand } from "@focuson/rest";
+import { CopyCommand, DeleteCommand, HasRestCommandL, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand, SetChangeCommand } from "@focuson/rest";
 import { anyIntoPrimitive, CopyDetails, DateFn, safeArray, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
 import { CustomButtonType, getButtonClassName } from "../common";
 import { isMainPageDetails, MultiPageDetails } from "../pageConfig";
@@ -30,7 +30,8 @@ export interface CommonModalButtonProps<S, Context> extends CustomButtonType {
   deleteOnOpen?: string[],
   copyOnClose?: CopyDetails[],
   setToLengthOnClose?: SetToLengthOnClose,
-  createEmptyIfUndefined?: any
+  createEmptyIfUndefined?: any;
+  restOnOpen?: RestCommand | RestCommand[]
 }
 interface JustModalButtonProps<S, Context> extends CommonModalButtonProps<S, Context> {
   modal: string,
@@ -89,10 +90,10 @@ function makeModalProcessorsConfig<S, Context extends PageSelectionContext<S> & 
 }
 
 
-export function ModalButton<S extends any, Context extends PageSelectionContext<S> & HasSimpleMessageL<S>> ( props: ModalButtonProps<S, Context> ): JSX.Element {
+export function ModalButton<S extends any, Context extends PageSelectionContext<S> & HasSimpleMessageL<S> & HasRestCommandL<S>> ( props: ModalButtonProps<S, Context> ): JSX.Element {
   const {
           id, text, enabledBy, state, copy, copyJustString, pageMode, rest, copyOnClose, createEmpty, change, setToLengthOnClose,
-          createEmptyIfUndefined, pageParams, buttonType, dateFn, changeOnClose
+          createEmptyIfUndefined, pageParams, buttonType, dateFn, changeOnClose, restOnOpen
         } = props
   const onClick = () => {
 
@@ -104,6 +105,7 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
       pageName, firstTime: true, pageMode, rest, focusOn, copyOnClose, setToLengthOnClose,
       pageParams, time: dateFn (), changeOnClose
     };
+
     const config = makeModalProcessorsConfig ( errorPrefix, state, newPageSelection, props, dateFn );
 
     const copyJustStrings: Transform<S, any>[] = safeArray ( copyJustString ).map (
@@ -116,9 +118,12 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
     const changeCommands = buttonToChangeCommands ( props )
 
     const changeTxs = processChangeCommandProcessor ( errorPrefix, modalCommandProcessors ( config ) ( state.main ), changeCommands )
+    const restL = state.context.restL
+    const restOnOpensTxs: Transform<S, any>[] = restOnOpen ? [ [ restL, old => [ ...old, ...toArray ( restOnOpen ) ] ] ] : []
 
     state.massTransform ( reasonFor ( 'ModalButton', 'onClick', id ) ) (
       page<S, Context> ( state.context, 'popup', newPageSelection ),
+      ...restOnOpensTxs,
       ...emptyifUndefinedTx,
       ...copyJustStrings,
       ...changeTxs );

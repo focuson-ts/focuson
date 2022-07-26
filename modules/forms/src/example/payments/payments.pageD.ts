@@ -1,6 +1,6 @@
 import { ExampleMainPage, ExampleModalPage } from "../common";
 import { PaymentDD, PaymentsLaunchDD, SummaryOfPaymentsLineDD, ValidatedPayeeDetailsDD } from "./payments.dataD";
-import { currencyListDD, currencyRD, newPaymentsRD, summaryOfPreviousPaymentsRD, ValidatePayeeRD } from "./payments.restD";
+import { currencyListDD, currencyRD, newPaymentsRD, nothingDD, summaryOfPreviousPaymentsRD, ValidatePayeeRD } from "./payments.restD";
 import { NatNumDd } from "../../common/dataD";
 
 // export const ChargeDetailsPD: ExampleModalPage = {
@@ -13,6 +13,17 @@ import { NatNumDd } from "../../common/dataD";
 //     cancel: { control: 'ModalCancelButton', text: 'back' },
 //   }
 // }
+
+
+export const ValidatePD: ExampleModalPage = {
+  pageType: 'ModalPopup',
+  name: 'ValidatePayeeModalPage',
+  display: { target: '~/nothing', dataDD: nothingDD },
+  modes: [ 'view' ],
+  buttons: {
+    ok: { control: "ModalCommitButton", text: 'ok' }
+  }
+}
 export const EditPaymentsPD: ExampleModalPage = {
   pageType: 'ModalPage',
   name: 'EditPaymentsModalPage',
@@ -20,9 +31,13 @@ export const EditPaymentsPD: ExampleModalPage = {
   modes: [ 'edit', 'create' ],
   buttons: {
     commit: { control: 'ModalCommitButton', text: 'save' },
-    cancel: { control: 'ModalCancelButton', text: 'back',  confirm: 'Are you sure?' },
-    validate: {control: 'RestButton', restName: 'validatePayee', action: {state: 'validate'}, validate: false,
-      copyOnSuccess: {from: 'payeeStatus', to: '~/singlePayment/payeeStatus'}}
+    cancel: { control: 'ModalCancelButton', text: 'back', confirm: 'Are you sure?' },
+    validate: {
+      control: 'ModalButton', modal: ValidatePD, focusOn: '~/nothing', mode: 'view',
+      createEmpty: nothingDD,
+      restOnOpen: { restName: 'validatePayee', action: { state: 'validate' } },
+      copyOnSuccess: { from: 'payeeStatus', to: '~/singlePayment/payeeStatus' }
+    }
     // chargeDetails: { control: 'ModalButton', modal: ChargeDetailsPD, mode: 'edit', focusOn: '~/onePayment/chargeDetails',
     // createEmptyIfUndefined: ChargeDetailsDD
     // },
@@ -41,14 +56,15 @@ export const PaymentsPageD: ExampleMainPage = {
     selectedPaymentIndex: { dataDD: NatNumDd },
     selectedPayment: { dataDD: SummaryOfPaymentsLineDD },
     currency: { dataDD: currencyListDD },
-    validatedPayeeDetails:{dataDD: ValidatedPayeeDetailsDD}
+    nothing: { dataDD: nothingDD },
+    validatedPayeeDetails: { dataDD: ValidatedPayeeDetailsDD }
   },
-  modals: [ { modal: EditPaymentsPD } ],
+  modals: [ { modal: EditPaymentsPD }, { modal: ValidatePD } ],
   rest: {
     listOfPreviousPayments: { rest: summaryOfPreviousPaymentsRD, fetcher: true, targetFromPath: '~/summary/summaryOfPaymentsTable' },
     newPayments: { rest: newPaymentsRD, targetFromPath: '~/onePayment' },
     currency: { rest: currencyRD, targetFromPath: '~/currency', fetcher: true },
-    validatePayee: {rest: ValidatePayeeRD, targetFromPath: '~/validatedPayeeDetails'}
+    validatePayee: { rest: ValidatePayeeRD, targetFromPath: '~/validatedPayeeDetails' }
   },
   guards: {
     tableItemSelected: { condition: "isDefined", path: '~/selectedPaymentIndex' }
@@ -57,20 +73,20 @@ export const PaymentsPageD: ExampleMainPage = {
     new: {
       control: 'ModalButton', modal: EditPaymentsPD, mode: 'create', createEmpty: PaymentDD, focusOn: '~/onePayment',
       copyOnClose: { to: '~/summary/payment' },
-      copy: {from: '~/summary/payment/paymentType',to: '~/onePayment/paymentType'},
-      change: {command: 'set', path: '~/summary/payment/action', value: 'new'}
+      copy: { from: '~/summary/payment/paymentType', to: '~/onePayment/paymentType' },
+      change: { command: 'set', path: '~/summary/payment/action', value: 'new' }
 
     },
     amend: {
       control: 'ModalButton', modal: EditPaymentsPD, mode: 'create', createEmpty: PaymentDD, focusOn: '~/onePayment',
       copy: { from: '~/summary/payment' }, copyOnClose: { to: '~/summary/payment' },
-      change: {command: 'set', path: '~/summary/payment/action', value: 'amend'}
+      change: { command: 'set', path: '~/summary/payment/action', value: 'amend' }
     },
     copy: {
       control: 'ModalButton', modal: EditPaymentsPD, mode: 'create', createEmpty: PaymentDD, focusOn: '~/onePayment',
       enabledBy: 'tableItemSelected',
       copy: [ { from: '~/selectedPayment/payeeName', 'to': '~/editablePayemnt/payeeName' } ], copyOnClose: { to: '~/summary/payment' },
-      change: {command: 'set', path: '~/summary/payment/action', value: 'copy'}
+      change: { command: 'set', path: '~/summary/payment/action', value: 'copy' }
     },
     // cancel: { control: 'RestButton', validate: false, enabledBy: ['tableItemSelected','tableItemSelected','tableItemSelected','tableItemSelected'], restName: 'newPayments', action: 'create', messageOnSuccess: 'canceled', confirm: "dont say yes" }
   }

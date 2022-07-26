@@ -1,5 +1,5 @@
 import { DataD } from "../common/dataD";
-import { isMainPage, MainPageD, ModalPageD, PageD, RestOnCommit } from "../common/pageD";
+import { CommonRestOnCommit, isMainPage, isRestOnCommitRefresh, MainPageD, ModalPageD, PageD, RestOnCommit } from "../common/pageD";
 import { CopyStringDetails, PageMode, PageParams, SetToLengthOnClose } from "@focuson/pages";
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
 import { indentList, opt, optObj, optT } from "../codegen/codegen";
@@ -10,17 +10,21 @@ import { ModalChangeCommands, RestCommand } from "@focuson/rest";
 import { stateQueryForParams } from "../codegen/lens";
 
 
-export function restForButton<B, G> ( parent: PageD<B, G>, rest?: RestOnCommit ): string[] {
-  if ( !rest ) return []
+function restCommandForButton<B, G> ( parent: PageD<B, G>, rest?: CommonRestOnCommit ): RestCommand {
   if ( !isMainPage ( parent ) ) throw new Error ( `Cannot have a rest for button on a page that isn't a main page at the moment. Page is ${parent.name}. Rest is ${JSON.stringify ( rest )}` )
   const rd = parent.rest[ rest.restName ]
   if ( !rd ) throw new Error ( `Illegal rest name ${rest.restName} on page ${parent.name}. Legal values are ${Object.values ( parent.rest )}` )
-  const deleteOnSuccess = rest.result === 'refresh' ? { deleteOnSuccess: rest.pathToDelete } : {}
+  const deleteOnSuccess = isRestOnCommitRefresh ( rest ) ? { deleteOnSuccess: rest.pathToDelete } : {}
   const { action, restName, messageOnSuccess } = rest
   let restCommand: RestCommand = {
     name: restDetailsName ( parent, restName, rd.rest ),
     restAction: action, messageOnSuccess, ...deleteOnSuccess, on404: toArrayOrUndefined ( rest.on404 ), changeOnSuccess: toArrayOrUndefined ( rest.changeOnSuccess )
   };
+  return restCommand
+}
+export function restForButton<B, G> ( parent: PageD<B, G>, rest?: RestOnCommit ): string[] {
+  if ( !rest ) return []
+  const restCommand = restCommandForButton ( parent, rest )
   return [ ` rest={${JSON.stringify ( restCommand )}}` ]
 }
 
@@ -39,6 +43,7 @@ export interface CommonModalButtonInPage<G> extends EnabledBy {
   changeOnClose?: ModalChangeCommands | ModalChangeCommands[];
   changeOnRestSuccessful?: ModalChangeCommands | ModalChangeCommands[];
   changeOnRest404?: ModalChangeCommands | ModalChangeCommands[];
+  restOnOpen?: CommonRestOnCommit | CommonRestOnCommit[]
   copyJustString?: CopyStringDetails | CopyStringDetails[],
   setToLengthOnClose?: SetToLengthOnClose;
   deleteOnOpen?: string | string[];
@@ -68,7 +73,7 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalOrMainButtonInPage<G>, 
     import: "@focuson/pages",
     makeButton:
       ( { params, mainPage, parent, name, button } ) => {
-        const { mode, restOnCommit, copy, createEmpty, createEmptyIfUndefined, copyOnClose, copyJustString, setToLengthOnClose, text, pageParams, buttonType, deleteOnOpen, change, changeOnClose } = button
+        const { mode, restOnCommit, copy, createEmpty, createEmptyIfUndefined, copyOnClose, copyJustString, setToLengthOnClose, text, pageParams, buttonType, deleteOnOpen, change, changeOnClose, restOnOpen } = button
         const createEmptyString = createEmpty ? [ `createEmpty={${params.emptyFile}.${emptyName ( createEmpty )}}` ] : []
         const createEmptyIfUndefinedString = createEmptyIfUndefined ? [ `createEmptyIfUndefined={${params.emptyFile}.${emptyName ( createEmptyIfUndefined )}}` ] : []
         createEmptyIfUndefined
@@ -78,6 +83,7 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalOrMainButtonInPage<G>, 
         const pageLink = isModal ( button ) ? `modal='${modalName ( parent, button.modal )}'` : `main='${button.main.name}'`
         const focusOn = isModal ( button ) ? button.focusOn : undefined
         const focusOnLensForCompileCheck = focusOn ? stateQueryForParams ( `Modal button Page ${parent.name} / ${name}`, params, mainPage, parent, focusOn ) : undefined
+        const restsOnOpen = restOnOpen ? toArray ( restOnOpen ).map ( r => restCommandForButton ( mainPage, r ) ) : undefined
         return [ `<${button.control} id=${makeIdForButton ( name )} ${enabledByString ( button )}text='${text ? text : decamelize ( name, ' ' )}' dateFn={defaultDateFn} state={state} ${pageLink} `,
           ...indentList ( [
             ...opt ( 'pageMode', mode ),
@@ -87,6 +93,7 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalOrMainButtonInPage<G>, 
             ...optT ( 'buttonType', buttonType ),
             ...optT ( 'copy', copyFromArray ),
             ...optT ( 'copyOnClose', copyOnCloseArray ),
+            ...optT ( 'restOnOpen', restsOnOpen ),
             ...optT ( 'copyJustString', copyJustString ? singleToList ( copyJustString ) : undefined ),
             ...optT ( 'pageParams', pageParams ),
             ...optT ( 'deleteOnOpen', deleteOnOpen ? toArray ( deleteOnOpen ) : undefined ),
