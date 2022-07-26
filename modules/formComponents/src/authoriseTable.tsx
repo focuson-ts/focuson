@@ -6,6 +6,7 @@ import { FocusOnContext } from "@focuson/focuson";
 import { Layout } from "./layout";
 import { defaultOnClick, defaultOneRowWithGetValue, getValueForTable, rawTable, TableProps } from "./table";
 import { LabelAndFixedNumber } from "./labelAndFixedNumber";
+import { safeArray } from "@focuson/utils";
 
 
 export interface AuthoriseTableData {
@@ -34,7 +35,7 @@ const haltBox = <S, D extends AuthoriseTableData, C> ( state: LensState<S, D[], 
 };
 
 function sum<D extends AuthoriseTableData> ( ds: D[], crOrDr: 'CR' | 'DR' ): string {
-  return "" + ds.reduce ( ( acc, v ) => v.type == crOrDr ? acc + Number.parseFloat ( v.amount ) : acc, 0 )
+  return "" + safeArray(ds).reduce ( ( acc, v ) => v.type == crOrDr ? acc + Number.parseFloat ( v.amount ) : acc, 0 )
 }
 
 export function AuthoriseTable<S, D extends AuthoriseTableData, C extends FocusOnContext<S>> ( props: AuthoriseTableProps<S, D, C> ) {

@@ -73,12 +73,16 @@ export const AuthoriseChargesPD: ExampleMainPage = {
     authorisedDate: { constructedBy: 'path', path: '~/authorisedCharges/date' },
     authorisedCharges: { constructedBy: 'path', path: '~/authorisedCharges' },
     editingData: { constructedBy: 'path', path: '~/authorisedCharges/fromApi/editingData' },
+    originalData: { constructedBy: 'path', path: '~/authorisedCharges/fromApi/originalData' },
   },
   rest: {
     loadBrand: { rest: SelectOneBrandPageRD, targetFromPath: '~/brand', fetcher: true },
     authorisedCharges: {
-      rest: AuthorisedChargesRD, targetFromPath: '~/authorisedCharges/fromApi', fetcher: true,
-      postFetchCommands: { command: 'message', msg: 'loading the authorised charges' }
+      rest: AuthorisedChargesRD, targetFromPath: '~/authorisedCharges/fromApi/editingData', fetcher: true,
+      postFetchCommands: [
+        { command: 'message', msg: 'loading the authorised charges' },
+        { command: 'copyResult', from: '', to: '~/authorisedCharges/fromApi/originalData' }
+      ]
     },
     summaryOfChargeDates: { rest: SummaryOfChargeDatesRD, targetFromPath: '~/summaryOfChargesDates/searchResults', fetcher: true },
     summaryOfCharges: { rest: SummaryOfChargesRD, targetFromPath: '~/summaryOfCharges', fetcher: true }

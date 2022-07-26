@@ -41,7 +41,10 @@ export function copyWithFieldSet<T, K extends keyof T> ( t: T, k: K, v: T[K] ) {
   return result
 }
 export function safeObject<T> ( t: NameAnd<T> | undefined ) { return t ? t : {}}
-export function safeArray<T> ( ts: T[] | undefined ) { return ts ? ts : []}
+export function safeArray<T> ( ts: T[] | undefined ) {
+  if ( ts !== undefined && !Array.isArray ( ts ) ) throw new Error ( `Should have an array. Instead have ${JSON.stringify ( ts )}` )
+  return ts ? ts : []
+}
 export function toArray<T> ( ts: T | T[] | undefined ): T[] {
   if ( ts === undefined ) return []
   if ( Array.isArray ( ts ) ) return ts

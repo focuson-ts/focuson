@@ -1,5 +1,5 @@
 import { ExampleRestD } from "../common";
-import { AuthoriseChargesSummaryDataDD, chargesSummaryDetailDD, SelectOneBrandDD, summaryOfChargesDateTableDD } from "./authoriseCharges.dataD";
+import { AuthoriseChargesSummaryDataDD, chargesSummaryDetailDD, ListOfChargesDD, SelectOneBrandDD, summaryOfChargesDateTableDD } from "./authoriseCharges.dataD";
 import { fromCommonIds } from "../commonIds";
 import { StringParam } from "../../common/restD";
 import { authorisedChargesTableDD } from "../database/tableNames";
@@ -14,7 +14,7 @@ export const SelectOneBrandPageRD: ExampleRestD = {
 
 
 export const AuthorisedChargesRD: ExampleRestD = {
-  dataDD: AuthoriseChargesSummaryDataDD,
+  dataDD: ListOfChargesDD,
   params: {
     ...fromCommonIds ( 'brandRef', 'clientRef' ),
     date: { ...StringParam, lens: '~/authorisedCharges/date', testValue: '2022/12/1' }

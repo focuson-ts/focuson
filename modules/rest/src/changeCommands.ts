@@ -75,7 +75,8 @@ function isCopyResultCommand ( c: ChangeCommand ): c is CopyResultCommand {
 }
 export const copyResultCommandProcessor = <S, Result> ( pathToResultL: ( path: string ) => Optional<Result, any>, toPathToLens: ( path: string ) => Optional<S, any> ) =>
   ( result: Result ): ChangeCommandProcessor<S> =>
-    ( c ) => isCopyResultCommand ( c ) ? [ [ toPathToLens ( c.to ), () => pathToResultL ( c.from ).getOption ( result ) ] ] : undefined
+    ( c ) => isCopyResultCommand ( c ) ? [ [ toPathToLens ( c.to ),
+      () => c.from === '' ? result : pathToResultL ( c.from ).getOption ( result ) ] ] : undefined
 
 export const composeChangeCommandProcessors = <S> ( ...ps: ChangeCommandProcessor<S>[] ): ChangeCommandProcessor<S> =>
   ( c ) => { return ps.reduce<Transform<S, any>[] | undefined> ( ( acc, p ) => acc === undefined ? p ( c ) : acc, undefined ); };
