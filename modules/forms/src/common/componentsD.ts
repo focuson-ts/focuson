@@ -154,7 +154,7 @@ export const DataDrivenFixedOptionDropDownAndDetailsCD: DisplayCompD = {
   }
 }
 
-const tableParams: DisplayCompParamD = {
+export const tableParams: DisplayCompParamD = {
   ...commonParams,
   order: { paramType: 'string[]', needed: 'yes' },
   copySelectedIndexTo: { paramType: 'pageState', needed: 'no' },

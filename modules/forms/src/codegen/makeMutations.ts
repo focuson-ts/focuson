@@ -30,6 +30,12 @@ function processInput ( errorPrefix: string, javaType: JavaTypePrimitive | undef
   const body = `s.setObject(${index}, ${name});`;
   if ( format === undefined ) return body;
   switch ( javaType ) {
+    case "Boolean":
+      switch ( format.type ) {
+        case "Boolean":
+          return `${name}? s.setString("${format.true}") : s.setString("${format.false}")`
+      }
+      break;
     case "String":
       switch ( format.type ) {
         case "Date":
@@ -39,9 +45,9 @@ function processInput ( errorPrefix: string, javaType: JavaTypePrimitive | undef
         case "String":
           throw new Error ( `${errorPrefix} don't know how to addFormat for a String for ${format}, ${javaType}` )
       }
-    default:
-      throw new Error ( `${errorPrefix} makeMutations: don't know how to addFormat for ${format}, ${javaType}` )
+      break;
   }
+  throw new Error ( `${errorPrefix} makeMutations: don't know how to addFormat for ${format}, ${javaType}` )
 }
 
 export function allSetObjectForStoredProcs ( errorPrefix: string, m: MutationParam | MutationParam[] ): string[] {
@@ -107,6 +113,11 @@ export function addFormat ( errorPrefix: string, format: Pattern | undefined, ja
   const body = `${from}.${rsGetter}(${arg})`;
   if ( !format ) return body
   switch ( javaType ) {
+    case "Boolean":
+      switch ( format.type ) {
+        case "Boolean":
+          return `${from}.getString(${arg}).equals("${format.true}")`
+      }
     case "String":
       switch ( format.type ) {
         case "Date":

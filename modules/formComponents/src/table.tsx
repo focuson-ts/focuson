@@ -20,9 +20,8 @@ export interface CommonTableProps<S, T, Context> extends CommonStateProps<S, T[]
   /** A list of fields that we want to be right justified */
   rights?: string[]
 }
-export interface TableProps<S, T, Context> extends CommonTableProps<S, T, Context> {
+export interface  TableProps<S, T, Context> extends CommonTableProps<S, T, Context> {
   order: (keyof T)[];
-
 }
 
 export function getValueForTable<T> ( o: keyof T, row: T, joiners: undefined | string | string[] ): any {

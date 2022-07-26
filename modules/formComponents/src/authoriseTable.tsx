@@ -4,7 +4,7 @@ import { PageMode } from "@focuson/pages";
 import { LabelAndStringInput } from "./labelAndInput";
 import { FocusOnContext } from "@focuson/focuson";
 import { Layout } from "./layout";
-import { defaultOnClick, defaultOneRowWithGetValue, getValueForTable, rawTable } from "./table";
+import { defaultOnClick, defaultOneRowWithGetValue, getValueForTable, rawTable, TableProps } from "./table";
 import { LabelAndFixedNumber } from "./labelAndFixedNumber";
 
 
@@ -17,13 +17,7 @@ export interface AuthoriseTableData {
   amount: string;
 }
 
-export interface AuthoriseTableProps<S, D extends AuthoriseTableData, C> extends LensProps<S, D[], C> {
-  id: string;
-  order: (keyof D)[];
-  mode: PageMode;
-  // copySelectedIndexTo: LensState<S, D, C>;
-  copySelectedItemTo: LensState<S, D, C>;
-  copySelectedIndexTo?: LensState<S, number, C>;
+export interface AuthoriseTableProps<S, D extends AuthoriseTableData, C> extends TableProps<S, D, C> {
 }
 
 const getValueForAuthorisedTable = <T extends AuthoriseTableData> ( o: keyof T, row: T, joiners: undefined | string | string[] ) => {

@@ -308,7 +308,7 @@ export interface AutowiredMutationParam {
   setParam?: string;
   required?: boolean;
 }
-export type JavaTypePrimitive = 'String' | 'Integer' | 'Double' | 'Object' | 'Date' | 'Map<String,Object>';
+export type JavaTypePrimitive = 'String' | 'Integer' | 'Double' | 'Object' | 'Boolean' | 'Date' | 'Map<String,Object>';
 
 export const RSGetterForJavaType = {
   String: 'getString',

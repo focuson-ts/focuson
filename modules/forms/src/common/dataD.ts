@@ -96,10 +96,17 @@ export interface StringPrimitiveDD extends CommonPrimitiveDD<string> {
   format?: Pattern;
 }
 
-export interface Pattern {
+export interface BooleanPattern {
+  type: 'Boolean'
+  true: string
+  false: string
+}
+export interface NormalPattern {
   type: 'Date' | 'String' | 'Integer' | 'Double';
   pattern: string
 }
+export type  Pattern   = BooleanPattern | NormalPattern
+
 export interface DatePrimitiveDD extends CommonPrimitiveDD<string> {
   // datePattern: string;
   format: Pattern;

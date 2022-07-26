@@ -6,6 +6,7 @@ export const AuthoriseTableCD: DisplayCompD = {
   params: {                             //configuration parameter for the react component
     ...commonParams,
     order: { paramType: 'string[]', needed: 'yes' },
+    scrollAfter: { paramType: 'string', needed: 'no' },
     copySelectedItemTo: { paramType: 'path', needed: 'no' },
     copySelectedIndexTo: { paramType: 'path', needed: 'no' },
   }
