@@ -173,7 +173,7 @@ export const printRecordDD: ExampleDataD = {
     // requesterDetails: { dataDD: RequestDetailsDD, guard: { requestedBy: [ 'M', 'J' ] } },
     listOfPayments: { dataDD: ListOfPaymentsDD },
     includeSingleAndInitialDirectDebits: { dataDD: BooleanDD },
-    alreadyPrinted: { dataDD: BooleanDD, sample: [ false, true, false ] }, //will be hidden but leaving visible for now.
+    alreadyPrinted: { dataDD: {...BooleanDD, resolver: 'alreadyPrinted'}, sample: [ false, true, false ] }, //will be hidden but leaving visible for now.
     authorisedByCustomer: { dataDD: authorisedByCustomerDD, guard: { requestedBy: [ 'N' ] } },
     datePrinted: { dataDD: StringDD, guard: { alreadyPrinted: [ 'true' ] } }
   }

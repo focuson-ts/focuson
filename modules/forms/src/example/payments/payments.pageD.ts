@@ -1,7 +1,8 @@
 import { ExampleMainPage, ExampleModalPage } from "../common";
 import { PaymentDD, PaymentsLaunchDD, SummaryOfPaymentsLineDD, ValidatedPayeeDetailsDD } from "./payments.dataD";
-import { currencyListDD, currencyRD, newPaymentsRD, nothingDD, summaryOfPreviousPaymentsRD, ValidatePayeeRD } from "./payments.restD";
+import { currencyListDD, currencyRD, newPaymentsRD,  summaryOfPreviousPaymentsRD, ValidatePayeeRD } from "./payments.restD";
 import { NatNumDd } from "../../common/dataD";
+import { nothingDD } from "../../common/commonDataDs";
 
 // export const ChargeDetailsPD: ExampleModalPage = {
 //   pageType: 'ModalPopup',

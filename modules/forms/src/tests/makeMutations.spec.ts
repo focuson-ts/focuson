@@ -4,7 +4,7 @@ import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD"
 import { eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { chequeCreditBooksRestD } from "../example/chequeCreditBooks/chequeCreditBooks.restD";
 import { ChequeCreditbooksPD } from "../example/chequeCreditBooks/chequeCreditBooks.pageD";
-import { IntegerMutationParam, MutationParam, NullMutationParam, OutputForManualParam, OutputForSqlMutationParam, OutputForStoredProcMutationParam, StringMutationParam } from "../common/resolverD";
+import { InputMutationParam, IntegerMutationParam, MutationParam, NullMutationParam, OutputForManualParam, OutputForSqlMutationParam, OutputForStoredProcMutationParam, StringMutationParam } from "../common/resolverD";
 import { fromCommonIds } from "../example/commonIds";
 import { safeArray, safeObject } from "@focuson/utils";
 import { PaymentsPageD } from "../example/payments/payments.pageD";
@@ -17,6 +17,18 @@ import { findQueryMutationResolver } from "../codegen/makeJavaFetchersInterface"
 const stringMP: StringMutationParam = { type: 'string', value: 'someString' }
 const integerMP: IntegerMutationParam = { type: "integer", value: 123 }
 const spOutputMP: OutputForStoredProcMutationParam = { type: "output", javaType: 'String', name: "someNameSP", sqlType: 'someSqlType' }
+const inputWithDateFormatMP: InputMutationParam = { type: "input", javaType: 'String', name: "someNameSP", format: { type: 'Date', pattern: 'dd/MM/yyyy' } }
+const inputWithBooleanFormatMP: InputMutationParam = { type: "input", javaType: 'Boolean', name: "someNameSP", format: { type: 'Boolean', true: 'Y', false: 'N' } }
+const spOutputWithDoubleFormatMP: OutputForStoredProcMutationParam = { type: "output", javaType: 'String', name: "someNameSP", sqlType: 'someSqlType', format: { type: 'Double', pattern: '%.2f' } }
+const spOutputWithIntegerFormatMP: OutputForStoredProcMutationParam = { type: "output", javaType: 'String', name: "someNameSP", sqlType: 'someSqlType', format: { type: 'Integer', pattern: '%10i' } }
+const spOutputWithStringFormatMP: OutputForStoredProcMutationParam = { type: "output", javaType: 'String', name: "someNameSP", sqlType: 'someSqlType', format: { type: 'String', pattern: '%20s' } }
+const spOutputWithDateFormatMP: OutputForStoredProcMutationParam = { type: "output", javaType: 'String', name: "someNameSP", sqlType: 'someSqlType', format: { type: 'Date', pattern: 'dd/MM/yyyy' } }
+const spOutputWithBooleanFormatMP: OutputForStoredProcMutationParam = { type: "output", javaType: 'Boolean', name: "someNameSP", sqlType: 'someSqlType', format: { type: 'Boolean', true: 'Y', false: 'N' } }
+const sqlOutputWithDoubleFormatMP: OutputForSqlMutationParam = { type: "output", javaType: 'String', name: "someNameSP", rsName: 'theRsName', format: { type: 'Double', pattern: '%.2f' } }
+const sqlOutputWithIntegerFormatMP: OutputForSqlMutationParam = { type: "output", javaType: 'String', name: "someNameSP", rsName: 'theRsname', format: { type: 'Integer', pattern: '%10i' } }
+const sqlOutputWithStringFormatMP: OutputForSqlMutationParam = { type: "output", javaType: 'String', name: "someNameSP", rsName: 'theRsname', format: { type: 'String', pattern: '%20s' } }
+const sqlOutputWithDateFormatMP: OutputForSqlMutationParam = { type: "output", javaType: 'String', name: "someNameSP", rsName: 'theRsname', format: { type: 'Date', pattern: 'dd/MM/yyyy' } }
+const sqlOutputWithBooleanFormatMP: OutputForSqlMutationParam = { type: "output", javaType: 'Boolean', name: "someNameSP", rsName: 'theRsname', format: { type: 'Boolean', true: 'Y', false: 'N' } }
 const nullMP: NullMutationParam = { type: 'null' }
 const sqlOutputMP: OutputForSqlMutationParam = { type: "output", rsName: 'rsName', name: "someNameSql", javaType: 'String' }
 const manOutputMp: OutputForManualParam = { type: "output", javaType: 'Integer', name: 'someNameMan' }
@@ -37,6 +49,16 @@ describe ( "getFromResultSet", () => {
       "String someNameSql = ss.getString(\"rsName\");"
     ] )
   } )
+  it ( "generate the code to get the mp from a ResultSet with patterns", () => {
+    expect ( getFromResultSetIntoVariables ( `somePrefix`, 'ss', [ sqlOutputWithDoubleFormatMP, sqlOutputWithIntegerFormatMP, sqlOutputWithStringFormatMP, sqlOutputWithDateFormatMP, sqlOutputWithBooleanFormatMP ] )
+      .map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+      "String someNameSP = String.format('%.2f', ss.getDouble('theRsName'));",
+      "String someNameSP = String.format('%10i', ss.getInt('theRsname'));",
+      "String someNameSP = String.format('%20s', ss.getString('theRsname'));",
+      "String someNameSP = DateFormatter.formatDate('dd/MM/yyyy', ss.getDate('theRsname'));",
+      "Boolean someNameSP = ss.getString('theRsname').equals('Y');"
+    ] )
+  } )
 } )
 describe ( "setObjectFor", () => {
   it ( "generate the code to get the mp from a ResultSet", () => {
@@ -47,6 +69,31 @@ describe ( "setObjectFor", () => {
       "s.setObject(4,null);",
     ] )
   } )
+  it ( "should handle formats for strings - outputs", () => {
+    expect ( [ spOutputWithDoubleFormatMP, spOutputWithIntegerFormatMP, spOutputWithStringFormatMP, spOutputWithDateFormatMP ].map ( setObjectFor ( 'errorPrefix' ) ) ).toEqual ( [
+      "s.registerOutParameter(1,java.sql.Types.someSqlType);",
+      "s.registerOutParameter(2,java.sql.Types.someSqlType);",
+      "s.registerOutParameter(3,java.sql.Types.someSqlType);",
+      "s.registerOutParameter(4,java.sql.Types.someSqlType);"
+    ] )
+  } )
+  it ( "should handle formats for booleans - outputs", () => {
+    expect ( [ spOutputWithBooleanFormatMP ].map ( setObjectFor ( 'errorPrefix' ) ) ).toEqual ( [
+      "s.registerOutParameter(1,java.sql.Types.someSqlType);", ] )
+
+  } )
+  it ( "should handle formats for date - inputs", () => {
+    expect ( [ inputWithDateFormatMP ].map ( setObjectFor ( 'errorPrefix' ) ) ).toEqual ( [
+      "s.setDate(1, DateFormatter.parseDate(\"dd/MM/yyyy\", someNameSP));"
+    ] )
+  } )
+  it ( "should handle formats for boolean - inputs", () => {
+    expect ( [ inputWithBooleanFormatMP ].map ( setObjectFor ( 'errorPrefix' ) ) ).toEqual ( [
+      "s.setString(1,someNameSP? \"Y\":\"N\");"
+    ] )
+
+  } )
+
 } )
 
 describe ( "typeForParamAsInput", () => {
@@ -85,11 +132,11 @@ describe ( "returnStatement", () => {
   } )
 } )
 
-describe("sql functions", () =>{
-  it ("should make resolver for a sqlfunction", () =>{
+describe ( "sql functions", () => {
+  it ( "should make resolver for a sqlfunction", () => {
     let sqlFunctionMutation: any = safeObject ( collectionSummaryRD.resolvers ).getAccountType;
-    expect ( mutationCodeForFunctionCalls ('errorPrefix', LinkedAccountDetailsPD,  collectionSummaryRD,
-      'getAccountType', sqlFunctionMutation, "I", false).map(s => s.replace(/"/g, "'"))).toEqual ([
+    expect ( mutationCodeForFunctionCalls ( 'errorPrefix', LinkedAccountDetailsPD, collectionSummaryRD,
+      'getAccountType', sqlFunctionMutation, "I", false ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "    public Integer getAccountTypeI(Connection connection, Messages msgs, Object dbName) throws SQLException {",
       "      String sqlFunction = '{? = call b00.getAccountType()}';",
       "      try (CallableStatement s = connection.prepareCall(sqlFunction)) {",
@@ -101,21 +148,18 @@ describe("sql functions", () =>{
       "      logger.debug(MessageFormat.format('Duration: {0,number,#.##}, accountType: {1}', (System.nanoTime() - start) / 1000000.0, accountType));",
       "      return accountType;",
       "  }}"
-    ])
-  })
+    ] )
+  } )
 
 
-
-
-})
+} )
 
 
 describe ( "makeMutations", () => {
 
 
-
   it ( "should create an mutation class with a method for each mutation for that rest - simple", () => {
-    expect ( makeMutations ( paramsForTest, EAccountsSummaryPD, 'theRestName', eAccountsSummaryRestD, safeArray ( eAccountsSummaryRestD.mutations )[ 0 ] ) ).toEqual ([
+    expect ( makeMutations ( paramsForTest, EAccountsSummaryPD, 'theRestName', eAccountsSummaryRestD, safeArray ( eAccountsSummaryRestD.mutations )[ 0 ] ) ).toEqual ( [
       "package focuson.data.mutator.EAccountsSummary;",
       "",
       "import focuson.data.fetchers.IFetcher;",
@@ -170,7 +214,7 @@ describe ( "makeMutations", () => {
   } )
 
   it ( "should make mutations for cases: i.e. where only one of several mutations will happen depending on the situation", () => {
-    expect ( makeMutations ( paramsForTest, PaymentsPageD, 'newPayments', newPaymentsRD, safeArray ( newPaymentsRD.mutations )[ 0 ] ).map(s => s.replace(/"/g, "'")) ).toEqual ([
+    expect ( makeMutations ( paramsForTest, PaymentsPageD, 'newPayments', newPaymentsRD, safeArray ( newPaymentsRD.mutations )[ 0 ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "package focuson.data.mutator.Payments;",
       "",
       "import focuson.data.fetchers.IFetcher;",
@@ -309,7 +353,7 @@ describe ( "makeMutations", () => {
   } )
 
   it ( "shouldn't make mock in message types when makeMock false selected", () => {
-    expect ( makeMutations ( paramsForTest, PaymentsPageD, 'newPayments', ValidatePayeeRD, safeArray ( ValidatePayeeRD.mutations )[ 0 ] ) ).toEqual ([
+    expect ( makeMutations ( paramsForTest, PaymentsPageD, 'newPayments', ValidatePayeeRD, safeArray ( ValidatePayeeRD.mutations )[ 0 ] ) ).toEqual ( [
       "package focuson.data.mutator.Payments;",
       "",
       "import focuson.data.fetchers.IFetcher;",
@@ -349,14 +393,14 @@ describe ( "makeMutations", () => {
       "  }",
       "",
       "}"
-    ])
+    ] )
 
 
   } )
 
-  it ("should make mutations for the formats", () =>{
+  it ( "should make mutations for the formats", () => {
     expect ( makeMutations ( paramsForTest, LinkedAccountDetailsPD, 'collectionHistoryList', collectionHistoryListRD,
-      safeArray ( collectionHistoryListRD.mutations )[ 0 ] ).map(l => l.replace(/"/g, "'")) ).toEqual ([
+      safeArray ( collectionHistoryListRD.mutations )[ 0 ] ).map ( l => l.replace ( /"/g, "'" ) ) ).toEqual ( [
       "package focuson.data.mutator.LinkedAccountDetails;",
       "",
       "import focuson.data.fetchers.IFetcher;",
@@ -403,7 +447,7 @@ describe ( "makeMutations", () => {
       "  }}",
       "",
       "}"
-    ])
+    ] )
 
-  })
+  } )
 } )

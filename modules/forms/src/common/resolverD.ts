@@ -316,14 +316,15 @@ export const RSGetterForJavaType = {
   Double: 'getDouble',
   Object: 'getObject',
   Date: 'getDate',
-  'Map<String,Object>': undefined
+  'Map<String,Object>': undefined,
+  'Boolean': undefined
 }
 
 export interface IntegerMutationParam {
   type: 'integer';
   value: number
 }
-type InputMutationParam = SimpleInputMutationParam | FromParentMutationParam | BodyMutationParam
+export type InputMutationParam = SimpleInputMutationParam | FromParentMutationParam | BodyMutationParam
 interface SimpleInputMutationParam {
   type: 'input';
   name: string;

@@ -33,7 +33,7 @@ function processInput ( errorPrefix: string, javaType: JavaTypePrimitive | undef
     case "Boolean":
       switch ( format.type ) {
         case "Boolean":
-          return `${name}? s.setString("${format.true}") : s.setString("${format.false}")`
+          return `s.setString(${index},${name}? "${format.true}":"${format.false}");`
       }
       break;
     case "String":
@@ -43,7 +43,7 @@ function processInput ( errorPrefix: string, javaType: JavaTypePrimitive | undef
         case "Double":
         case "Integer":
         case "String":
-          throw new Error ( `${errorPrefix} don't know how to addFormat for a String for ${format}, ${javaType}` )
+          throw new Error ( `${errorPrefix} don't know how to addFormat for a String for ${JSON.stringify(format)}, ${javaType}` )
       }
       break;
   }
@@ -63,14 +63,15 @@ export function makeMutationResolverReturnStatement ( outputs: OutputMutationPar
   if ( outputs.length === 1 ) return `return ${outputs[ 0 ].name};`
   return `return new Tuple${outputs.length}<${outputs.map ( o => o.javaType ).join ( "," )}>(${outputs.map ( x => x.name ).join ( ',' )});`
 }
-function quoteIfString ( javaType: AllJavaTypes, value: number ) {
+function toStringForMock ( javaType: AllJavaTypes, value: number ) {
   if ( javaType === 'String' ) return '"' + value + '"'
+  if ( javaType === 'Boolean' ) return (value % 2 === 0 ? 'true' : 'false')
   return value
 }
 export function mockReturnStatement ( outputs: OutputMutationParam[] ): string {
   if ( outputs.length === 0 ) return `return;`
-  if ( outputs.length === 1 ) return `return ${quoteIfString ( outputs[ 0 ].javaType, 0 )};`
-  return `return new Tuple${outputs.length}<>(${outputs.map ( ( x, i ) => quoteIfString ( x.javaType, i ) ).join ( ',' )});`
+  if ( outputs.length === 1 ) return `return ${toStringForMock ( outputs[ 0 ].javaType, 0 )};`
+  return `return new Tuple${outputs.length}<>(${outputs.map ( ( x, i ) => toStringForMock ( x.javaType, i ) ).join ( ',' )});`
 }
 
 function commonIfDbNameBlock<G> ( r: RestD<G>, paramsA: MutationParam[], name: string, m: MutationDetail, index: string, includeMockIf: boolean ) {
@@ -109,15 +110,18 @@ export function getFromResultSetPutInMap ( errorPrefix: string, map: string, fro
 export function addFormat ( errorPrefix: string, format: Pattern | undefined, javaType: JavaTypePrimitive, from: string, argument: string | number ): string {
   const arg = typeof argument === 'number' ? argument : `"${argument}"`
   let rsGetter = RSGetterForJavaType[ javaType ];
-  if ( rsGetter === undefined ) throw Error ( `${errorPrefix} Trying to do an rsGetter and the field is a ${javaType} ` )
-  const body = `${from}.${rsGetter}(${arg})`;
-  if ( !format ) return body
+  if ( !format ) {
+    if ( rsGetter === undefined ) throw Error ( `${errorPrefix} Trying to do an rsGetter and the field is a ${javaType} ` )
+    const body = `${from}.${rsGetter}(${arg})`;
+    return body
+  }
   switch ( javaType ) {
     case "Boolean":
       switch ( format.type ) {
         case "Boolean":
           return `${from}.getString(${arg}).equals("${format.true}")`
       }
+      break;
     case "String":
       switch ( format.type ) {
         case "Date":
@@ -130,9 +134,8 @@ export function addFormat ( errorPrefix: string, format: Pattern | undefined, ja
         default:
           throw new Error ( `${errorPrefix} don't know how to addFormat for a String for ${JSON.stringify ( format )}, ${javaType}` )
       }
-    default:
-      throw new Error ( `${errorPrefix} don't know how to addFormat for ${format}, ${javaType}` )
   }
+  throw new Error ( `${errorPrefix} don't know how to addFormat for ${format}, ${javaType}` )
 }
 
 function findType ( errorPrefix: string, params: NameAnd<AllLensRestParams<any>>, name: string ) {

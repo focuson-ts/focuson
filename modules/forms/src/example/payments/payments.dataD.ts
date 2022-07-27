@@ -57,8 +57,8 @@ export const SummaryOfPaymentsTableDD: ExampleRepeatingD = {
   sampleCount: 10,
   displayParams: {
     order: {
-      e: [ 'nameOfPayee', 'currency', 'sterlingAmount', 'currencyAmount', 'dateCreated', 'forActionOn', 'status' ],
-      c: [ 'nameOfPayee', 'sterlingAmount', 'dateCreated', 'forActionOn', 'status' ],
+      EMT: [ 'nameOfPayee', 'currency', 'sterlingAmount', 'currencyAmount', 'dateCreated', 'forActionOn', 'status' ],
+      CHAPS: [ 'nameOfPayee', 'sterlingAmount', 'dateCreated', 'forActionOn', 'status' ],
     },
     select: '~/summary/payment/paymentType',
     rights: [ 'sterlingAmount', 'currencyAmount', 'dateCreated', 'forActionOn', 'status' ],

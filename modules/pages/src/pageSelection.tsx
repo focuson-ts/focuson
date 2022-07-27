@@ -53,7 +53,12 @@ export interface PageSelectionContext<S> extends HasPageSelectionLens<S>, HasMul
 
 
 export function pageSelections<S, Context extends HasPageSelectionLens<S>> ( s: LensState<S, any, Context> ): PageSelection[] {
-  return safeArray ( s.context.pageSelectionL.getOption ( s.main ) )
+  const pageSelectionL = s.context.pageSelectionL;
+  if ( pageSelectionL === undefined ) {
+    console.error ( s.context );
+    throw Error ( `configuration error. PageSelection is undefined` )
+  }
+  return safeArray ( pageSelectionL.getOption ( s.main ) )
 }
 /** Select replaces the currently selected page (or adds it if empty).
  * Popup adds the page to the stack of pages in pageSelection

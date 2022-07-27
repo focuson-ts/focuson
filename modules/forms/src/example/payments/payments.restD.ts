@@ -116,11 +116,7 @@ export const newPaymentsRD: ExampleRestD = {
   } ]
 }
 
-export const nothingDD: ExampleDataD = {
-  name: 'Nothing',
-  description: "An empty object",
-  structure: {}
-}
+
 
 export const currencyDD: ExampleDataD = {
   name: 'Currency',

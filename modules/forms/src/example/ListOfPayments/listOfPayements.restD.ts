@@ -18,7 +18,9 @@ export const PrintRecordHistoryRD: ExampleRestD = {
   actions: [ 'get' ],
 }
 
-function ind ( name: string ): MutationParamForStoredProc {return { type: 'input', name, javaType: 'String', setParam: `${name}.equals("Y") ? 1 : 0` }}
+function ind ( name: string ): MutationParamForStoredProc {
+  return { type: 'input', name, javaType: 'Boolean', format: { type: 'Boolean', true: 'Y', false: 'N' } }
+}
 
 function bankStuff ( guard: string[], packageName: string ): GuardedStoredProcedureMutation {
   return ({
@@ -58,6 +60,9 @@ function nonBankStuff ( guard: string, packageName: string ): GuardedStoredProce
 function stringOutputParams ( ...names: string[] ): OutputForSqlMutationParam[] {
   return names.map ( name => ({ type: 'output', javaType: 'String', name, rsName: name }) )
 }
+function booleanOutputParams ( ...names: string[] ): OutputForSqlMutationParam[] {
+  return names.map ( name => ({ type: 'output', javaType: 'Boolean', name, rsName: name, format: { type: "Boolean", true: 'Y', false: 'N' } }) )
+}
 export const PrintRecordRD: ExampleRestD = {
   namePrefix: 'single',
   params: {
@@ -92,14 +97,15 @@ export const PrintRecordRD: ExampleRestD = {
               where account_id = ?
                 and paymentId = ?`,
         params: [ 'accountId', 'paymentId',
-          ...stringOutputParams ( 'so_ind', 'dd_ind', 'bp_ind', 'obso_ind', 'obbp_ind', 'sortcode', 'accountNo', 'requestByRole', 'rbsMtAccount', 'fulfilmentType', 'newBankSeq' )
+          ...stringOutputParams ( 'sortcode', 'accountNo', 'requestByRole', 'rbsMtAccount', 'fulfilmentType', 'newBankSeq' ),
+          ...booleanOutputParams ( 'so_ind', 'dd_ind', 'bp_ind', 'obso_ind', 'obbp_ind' )
         ],
         schema: onlySchema
       },
       {
         type: 'case', name: 'print',
         params: [ 'fulfilmentType', 'requestByRole', 'vbAcountSeq', 'rbsMtAccount', 'employeeId',
-          { type: 'input', name: 'so_ind', javaType: 'String', setParam: `${'so_ind'}.equals ( "Y" ) ? 1 : 0` },
+          { type: 'input', name: 'so_ind', javaType: 'Boolean', format: { type: "Boolean", false: '0', true: '1' } },
           ind ( 'dd_ind' ), ind ( 'bp_ind' ), ind ( 'obso_ind' ), ind ( 'obbp_ind' ), 'sortcode', 'accountNo', 'accountId', 'paymentId', 'newBankSeq' ],
         select: [
           bankStuff ( [ 'fulfilmentType.equals("BK")', 'requestByRole.equals("bank")' ], 'a10001' ),
@@ -160,19 +166,21 @@ export const accountAndAddressDetailsRD: ExampleRestD = {
       useLeftJoin: true,
       staticWhere: `${loanAppTable.name}.ind='M'`,
       children: {
-        secondayAppTable: {type: 'Single',    filterPath: 'joint',table: loanAppTable, idInParent: 'client_ref', idInThis: 'client_ref', staticWhere: `secondayAppTable.ind='j'`, children:{
+        secondayAppTable: {
+          type: 'Single', filterPath: 'joint', table: loanAppTable, idInParent: 'client_ref', idInThis: 'client_ref', staticWhere: `secondayAppTable.ind='j'`, children: {
             joint: {
               table: clientNames_C10T, type: 'Single', idInParent: 'client_ref', idInThis: 'cliref',
               children: {
                 jointAddress: { table: clientAddress_C60T, type: 'Single', idInParent: 'cliref', idInThis: 'cliref' }
               }
             }
-          }},
+          }
+        },
         main: {
           table: clientNames_C10T, type: 'Single', idInParent: 'client_ref', idInThis: 'cliref',
           filterPath: 'main',
           children: {
-            mainAddress: { table: clientAddress_C60T, type: 'Single', idInParent: 'cliref', idInThis: 'cliref'}
+            mainAddress: { table: clientAddress_C60T, type: 'Single', idInParent: 'cliref', idInThis: 'cliref' }
           }
         },
       }

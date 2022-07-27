@@ -42,7 +42,7 @@ describe ( " listComponentsIn", () => {
     expect ( createAllReactComponents ( paramsForTest, AllGuardCreator, makeButtons (), EAccountsSummaryPD, EAccountsSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
       "import { LensProps } from '@focuson/state';",
       "import { FocusOnContext } from '@focuson/focuson';",
-      "import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from '@focuson/pages';",
+      "import {  focusedPage, focusedPageWithExtraState, fullState, pageState, replaceTextUsingPath} from '@focuson/pages';",
       "import { Context, FocusedProps, FState, identityL } from '../common';",
       "import { Lenses } from '@focuson/lens';",
       "import { DisplayGuards, Guard, GuardButton } from '@focuson/form_components';",
@@ -158,7 +158,7 @@ describe ( " listComponentsIn", () => {
     expect ( createAllReactComponents ( paramsForTest, AllGuardCreator, makeButtons (), OccupationAndIncomeSummaryPD, listOccupationsModalPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
       "import { LensProps } from '@focuson/state';",
       "import { FocusOnContext } from '@focuson/focuson';",
-      "import {  focusedPage, focusedPageWithExtraState, fullState, pageState} from '@focuson/pages';",
+      "import {  focusedPage, focusedPageWithExtraState, fullState, pageState, replaceTextUsingPath} from '@focuson/pages';",
       "import { Context, FocusedProps, FState, identityL } from '../common';",
       "import { Lenses } from '@focuson/lens';",
       "import { DisplayGuards, Guard, GuardButton } from '@focuson/form_components';",
@@ -180,7 +180,7 @@ describe ( " listComponentsIn", () => {
       "import {ToggleButton} from '@focuson/form_components';",
       "import {ValidationButton} from '@focuson/form_components';",
       "export function ListOccupationsModalPage(){",
-      "  return focusedPage<FState, ListOccupationsDomain, Context> ( s =>  'List Occupations Modal' ) (//If there is a compilation here have you added this to the 'domain' of the main page",
+      "  return focusedPage<FState, ListOccupationsDomain, Context> ( s => 'List Occupations Modal'  ) (//If there is a compilation here have you added this to the 'domain' of the main page",
       "     ( state, d, mode, index ) => {",
       "          const id=`page${index}`;",
       "          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} buttonType='secondary' />,",
@@ -191,12 +191,12 @@ describe ( " listComponentsIn", () => {
       "          { allButtons.cancel } ",
       "          { allButtons.commit } ",
       "          </></>})}"
-    ] )
+    ])
   } )
   it ( "should create a simple page", () => {
     expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), EAccountsSummaryPD, CreatePlanPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function CreatePlanPage(){",
-      "  return focusedPage<FState, CreatePlanDomain, Context> ( s =>  'Create Plan' ) (//If there is a compilation here have you added this to the 'domain' of the main page",
+      "  return focusedPage<FState, CreatePlanDomain, Context> ( s => 'Create Plan'  ) (//If there is a compilation here have you added this to the 'domain' of the main page",
       "     ( state, d, mode, index ) => {",
       "          const id=`page${index}`;",
       "          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} confirm={'It will start on {~/tempCreatePlan/createPlanStart}'} buttonType='secondary' />,",
