@@ -97,7 +97,7 @@ export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, re
     `    const props: RestToTransformProps<${params.stateName}, SimpleMessage> = {`,
     `       fetchFn, d: rests.restDetails, urlMutatorForRest: restUrlMutator, pathToLens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( () => 'now', 'info' ), traceL: traceL ()`,
     `    }`,
-    `    const newState = await rest ( props, restL(), withIds )`,
+    `    const newState = await rest ( props, restL(), () =>withIds )`,
     `    const rawExpected:any = { ...withIds, restCommands: []}`,
     // ...suppressExpectedResult,
     ...setExpectedResult,

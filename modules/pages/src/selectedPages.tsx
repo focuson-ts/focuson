@@ -13,7 +13,8 @@ export interface SelectPageProps<S, Context> extends LensProps<S, any, Context> 
 export function SelectPage<S, Context extends PageSelectionContext<S>> ( { id, state, pageName, pageMode, text, dateFn, popup }: SelectPageProps<S, Context> ) {
   const className = popup === true ? 'secondary-btn' : 'primary-btn'
   return <button className={className} id={id}
-                 onClick={() => state.massTransform ( reasonFor ( 'SelectPage', 'onClick', id ) ) (
+                 onClick={() => state.massTransform (
+                   reasonFor ( 'SelectPage', 'onClick', id ) ) (
     page ( state.context, 'select', { pageName, firstTime: true, pageMode, time: dateFn () } ) )}>
 
     {text ? text : decamelize ( pageName, ' ' )}</button>

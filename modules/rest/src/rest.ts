@@ -294,10 +294,10 @@ export async function rest<S, MSGS> (
   sFn: () => S ): Promise<S> {
   const commands = restL.getOption ( sFn() )
   const restCommandAndTxs: RestCommandAndTxs<S>[] = await restToTransforms ( props, sFn, safeArray ( commands ) )
-  // @ts-ignore
-  const [ debug, trace ] = [ s.debug?.restDebug, s.debug?.recordTrace ]
-  console.log ( 'checking trace', trace )
   const sNow = sFn ()
+  // @ts-ignore
+  const [ debug, trace ] = [ sNow.debug?.restDebug, sNow.debug?.recordTrace ]
+  console.log ( 'checking trace', trace )
   const newS = massTransform ( sNow, ...restCommandAndTxs.flatMap ( r => r.txs ), [ restL, () => [] ] )
 
   if ( debug ) console.log ( "rest-result", newS )
