@@ -9,7 +9,7 @@ import { Lenses } from "@focuson/lens";
 import { SimpleMessage, testDateFn } from "@focuson/utils";
 import { ModalCancelButton, ModalCommitButton } from "./modalCommitAndCancelButton";
 import { HasSimpleMessageL, simpleMessagesL } from "../simpleMessage";
-import { HasRestCommandL, HasRestCommands, restL } from "@focuson/rest";
+import { HasRestCommandL, HasRestCommands, RestCommand, restL } from "@focuson/rest";
 
 enzymeSetup ()
 interface StateForModalButtonTest extends HasPageSelection, HasRestCommands {
@@ -86,7 +86,7 @@ describe ( "modal button", () => {
     const state: LensState<StateForModalButtonTest, StateForModalButtonTest, Context> =
             lensState<StateForModalButtonTest, Context> (
               startState, ( s: StateForModalButtonTest ) => {remembered = s}, 'ModalButton', context )
-    const comp = mount ( <ModalButton text='someTitle' id='someId' state={state.focusOn ( 'data' )} modal={'someModal'} focusOn='~/' pageMode='edit' deleteOnOpen={['~']} dateFn={testDateFn}/> )
+    const comp = mount ( <ModalButton text='someTitle' id='someId' state={state.focusOn ( 'data' )} modal={'someModal'} focusOn='~/' pageMode='edit' deleteOnOpen={[ '~' ]} dateFn={testDateFn}/> )
     const button = comp.find ( "button" )
     button.simulate ( 'click' )
     expect ( remembered ).toEqual ( {
@@ -168,4 +168,21 @@ describe ( "modal button adding a main page", () => {
   } )
 
 
+} )
+
+describe ( "restOnOpen", () => {
+  it ( "should create restCommands when clicked", () => {
+    var remembered: any = {}
+    const state: LensState<StateForModalButtonTest, StateForModalButtonTest, Context> =
+            lensState<StateForModalButtonTest, Context> (
+              startState, ( s: StateForModalButtonTest ) => {remembered = s}, 'ModalButton', context )
+    const restOnOpen: RestCommand = { name: 'someRestName', restAction: 'get' };
+    const comp = mount ( <ModalButton text='someTitle' id='someId' state={state} main={'b'}
+                                      pageMode='edit'
+                                      restOnOpen={restOnOpen}
+                                      dateFn={testDateFn}/> )
+    const button = comp.find ( "button" )
+    button.simulate ( 'click' )
+    expect ( remembered.restCommands ).toEqual ( [ restOnOpen ] )
+  } )
 } )

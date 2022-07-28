@@ -85,17 +85,19 @@ export const focusOnMiddlewareFor{teamName} = <BigState, S extends HasFocusOnDeb
     if ( debug ) console.log ( 'ending focusOnDispatcher (full state)', store.getState () )
     return rootLens.get ( store.getState () );
   }
-  let finalResultFn = ( start: S, restCommands: RestCommand[] ) => errorPromiseMonad ( onError ) (
-    start, debug,
-    [ 'dispatchRestAndFetchCommands',  s => dispatchRestAndFetchCommands ( config, context, focusOnDispatcher ) ( restCommands ) ( s ) ],
-    [ 'postMutate', postMutate ]
-  );
-  const res = await finalResultFn ( stateAfterImmediate, restCommands )
-  const restsLoaded = config.restCountL.getOption ( res )
-  if ( debug ) console.log ( 'restsLoaded were ', restsLoaded, restsLoaded?.loopCount === 0 ? 'will stop looping' : 'need to loop' );
-  const finalResult = restsLoaded?.loopCount === 0 ? res : await finalResultFn ( res, [] )
-  if ( debug ) console.log ( 'focusOnMiddleware - finalResult is ', finalResult );
-  return res;
+  return dispatchRestAndFetchCommands ( config, context, focusOnDispatcher ) ( restCommands )(() =>rootLens.get ( store.getState () ))
+  //
+  // let finalResultFn = ( start: S, restCommands: RestCommand[] ) => errorPromiseMonad ( onError ) (
+  //   start, debug,
+  //   [ 'dispatchRestAndFetchCommands',  s => dispatchRestAndFetchCommands ( config, context, focusOnDispatcher ) ( restCommands ) ( s ) ],
+  //   [ 'postMutate', postMutate ]
+  // );
+  // const res = await finalResultFn ( stateAfterImmediate, restCommands )
+  // const restsLoaded = config.restCountL.getOption ( res )
+  // if ( debug ) console.log ( 'restsLoaded were ', restsLoaded, restsLoaded?.loopCount === 0 ? 'will stop looping' : 'need to loop' );
+  // const finalResult = restsLoaded?.loopCount === 0 ? res : await finalResultFn ( res, [] )
+  // if ( debug ) console.log ( 'focusOnMiddleware - finalResult is ', finalResult );
+  // return res;
 };
 export function makeLsFor{teamName}<S> ( store: Store<S>, team: string ) {
   // @ts-ignore

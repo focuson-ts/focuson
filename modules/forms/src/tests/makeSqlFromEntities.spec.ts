@@ -1,4 +1,4 @@
-import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findParamsForTable, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, getStrategy, JavaQueryParamDetails, MainEntity, makeInsertSqlForIds, makeInsertSqlForNoIds, makeMapsForRest, makeWhereClause, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldDataFromTableQueryLink, whereFieldToFieldDataFromTableWhereLink } from "../codegen/makeSqlFromEntities";
+import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findParamsForTable, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, getStrategy, JavaQueryParamDetails, MainEntity, makeInsertSqlForIds, makeInsertSqlForNoIds, makeMapsForRest, makeWhereClause, makeWhereClauseStringsFrom, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldDataFromTableQueryLink, whereFieldToFieldDataFromTableWhereLink } from "../codegen/makeSqlFromEntities";
 import { AllLensRestParams, EntityAndWhere, IntParam, StringParam } from "../common/restD";
 import { JointAccountCustomerDD, JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { nameAndAddressDataD, postCodeSearchResponseDD } from "../example/postCodeDemo/addressSearch.dataD";
@@ -66,7 +66,7 @@ describe ( "findAliasAndTablesLinksForLinkDataFolder", () => {
       "j->ACC_TBL,mainName->NAME_TBL,mainCustomer->CUST_TBL,jointName->NAME_TBL,jointCustomer->CUST_TBL",
       "j->ACC_TBL,mainCustomer->CUST_TBL,mainAddress->ADD_TBL",
       "j->ACC_TBL,jointCustomer->CUST_TBL,jointAddress->ADD_TBL"
-    ])
+    ] )
   } )
 } )
 describe ( "findWhereLinkDataForLinkData", () => {
@@ -92,7 +92,7 @@ describe ( "findWhereLinkDataForLinkData", () => {
           "jointCustomer:CUST_TBL.id == jointAddress:ADD_TBL.customerId",
           "j:ACC_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer"
         ]
-      ])
+      ] )
     } )
   }
 )
@@ -161,7 +161,7 @@ describe ( "findFieldsFromWhere", () => {
         "jointAddress:ADD_TBL.customerId/undefined",
         "j:ACC_TBL.jointCustomerId/undefined"
       ]
-    ])
+    ] )
   } )
 
 } )
@@ -294,6 +294,20 @@ describe ( "findSqlLinkDataFromRootAndDataD", () => {
         "where param accountId == j:ACC_TBL.acc_id,param brandRef == j:ACC_TBL.brand_id,jointCustomer:CUST_TBL.id == jointAddress:ADD_TBL.customerId,j:ACC_TBL.jointCustomerId:integer == jointCustomer:CUST_TBL.id:integer"
       ]
     ] )
+  } )
+} )
+describe ( "makeWhereClauseStringsFrom", () => {
+  it ( "should make where clauses", () => {
+    expect ( makeWhereClauseStringsFrom ( [ { table: accountT, field: 'f1', alias: 'a', paramName: 'p1' } ] ) ).toEqual ( [" a.f1 = ?" ] )
+    expect ( makeWhereClauseStringsFrom ( [ { table: accountT, field: 'f1', alias: 'a', paramName: 'p1', comparator: '=' } ] ) ).toEqual ( [ " a.f1 = ?" ] )
+    expect ( makeWhereClauseStringsFrom ( [ { table: accountT, field: 'f1', alias: 'a', paramName: 'p1', comparator: '>' } ] ) ).toEqual ( [ " a.f1 > ?" ] )
+    expect ( makeWhereClauseStringsFrom ( [ { table: accountT, field: 'f1', alias: 'a', paramName: 'p1', comparator: '<' } ] ) ).toEqual ( [ " a.f1 < ?" ] )
+    expect ( makeWhereClauseStringsFrom ( [ { table: accountT, field: 'f1', alias: 'a', paramName: 'p1', comparator: '<>' } ] ) ).toEqual ( [ " a.f1 <> ?" ] )
+    expect ( makeWhereClauseStringsFrom ( [ { table: accountT, field: 'f1', alias: 'a', paramName: 'p1', comparator: 'like' } ] ) ).toEqual ( [ " a.f1 like ?" ] )
+    expect ( makeWhereClauseStringsFrom ( [ { table: accountT, field: 'f1', alias: 'a', paramName: 'p1', comparator: 'like', paramPostfix: '%' } ] ) ).toEqual ( [ " a.f1 like ?" ] )
+    expect ( makeWhereClauseStringsFrom ( [ { table: accountT, field: 'f1', alias: 'a', paramName: 'p1', comparator: 'like', paramPrefix: '%' } ] ) ).toEqual ( [ " a.f1 like ?" ] )
+    expect ( makeWhereClauseStringsFrom ( [ { table: accountT, field: 'f1', alias: 'a', paramName: 'p1', comparator: 'like', paramPrefix: '%', paramPostfix: '%' } ] ) ).toEqual ( [ " a.f1 like ?" ] )
+    expect ( makeWhereClauseStringsFrom ( [ { table: accountT, field: 'f1', alias: 'a', paramName: 'p1', comparator: 'sameday' } ] ) ).toEqual ( ["to_char(a.f1, 'DD/MM/YYYY') = ?" ] )
   } )
 } )
 describe ( "generateGetSql", () => {
@@ -1007,7 +1021,7 @@ describe ( "makeMapsForRest", () => {
         "  }",
         "}"
       ]
-    ])
+    ] )
   } )
   it ( "should  add 'where' to the sql if there is a where clause", () => {
     expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), ( r, path ) =>
@@ -1015,7 +1029,7 @@ describe ( "makeMapsForRest", () => {
       "where mainCustomer.nameId = mainName.id and j.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and j.jointCustomerId = jointCustomer.id and  j.acc_id = ? and  j.brand_id = ? and 3=3 and 1=1 and 123=123 and ACC_TBL <> 'canceled'",
       "where  j.acc_id = ? and  j.brand_id = ? and mainCustomer.id = mainAddress.customerId and j.mainCustomerId = mainCustomer.id and 123=123 and 2=2 and 1=1",
       "where  j.acc_id = ? and  j.brand_id = ? and jointCustomer.id = jointAddress.customerId and j.jointCustomerId = jointCustomer.id and 123=123"
-    ])
+    ] )
   } )
   it ( "should not add 'where' to the sql if there isn't a where clause", () => {
 
@@ -1103,7 +1117,7 @@ describe ( "makeMapsForRest", () => {
         "  }",
         "}"
       ]
-    ])
+    ] )
   } )
 } )
 
@@ -1147,51 +1161,51 @@ describe ( "Make INSERT SQL", () => {
       type: 'Main',
       table: accountT,
       staticWhere: `${accountT.name} <> 'canceled'`,
-      idStrategy: {type: 'Manual', sql: jointAccountSql},
-      children: { }
+      idStrategy: { type: 'Manual', sql: jointAccountSql },
+      children: {}
     };
 
-    expect(
-    getStrategy(entity).flatMap( s => {
-      if (s.type === 'WithId') return safeArray(makeInsertSqlForIds(JointAccountDdForTest, entity, s))
-      else if (s.type === 'WithoutId') return safeArray(makeInsertSqlForNoIds(JointAccountDdForTest, entity, s))
-      else if (s.type === 'Manual') return s.sql
-      else return []
-    })).toEqual([
+    expect (
+      getStrategy ( entity ).flatMap ( s => {
+        if ( s.type === 'WithId' ) return safeArray ( makeInsertSqlForIds ( JointAccountDdForTest, entity, s ) )
+        else if ( s.type === 'WithoutId' ) return safeArray ( makeInsertSqlForNoIds ( JointAccountDdForTest, entity, s ) )
+        else if ( s.type === 'Manual' ) return s.sql
+        else return []
+      } ) ).toEqual ( [
       "INSERT INTO CUST_TBL (nameId, id)\n     values (101, 1001),\n            (102, 1002),\n            (103, 1003),\n            (104, 2001),\n            (105, 2002),\n            (106, 2003);",
       "INSERT INTO NAME_TBL(id, zzname)\n   values (101, 'name One'),\n          (102, 'name Two'),\n          (103, 'name Three'),\n          (104, 'name Four'),\n          (105, 'name Five'),\n          (106, 'name Six');",
       "INSERT INTO ACC_TBL (mainCustomerId, jointCustomerId, acc_id, brand_id, blnc)\n   values (1001, 2001, 1, 111, 1000),\n          (1002, 2002, 2, 222, 2000),\n          (1003, 2003, 3, 333, 3000);",
       "INSERT INTO ADD_TBL(customerId, zzline1, zzline2, zzline3, zzline4)\n   values (1001, 'oneLineOne', 'oneLineTwo', 'oneLineThree', 'oneLineFour'),\n          (1002, 'twoLineOne', 'twoLineTwo', 'twoLineThree', 'twoLineFour'),\n          (1003, 'threeLineOne', 'threeLineTwo', 'threeLineThree', 'threeLineFour'),\n          (2001, 'fourLineOne', 'fourLineTwo', 'fourLineThree', 'fourLineFour'),\n          (2002, 'fiveLineOne', 'fiveLineTwo', 'fiveLineThree', 'fiveLineFour'),\n          (2002, 'sixLineOne', 'sixLineTwo', 'sixLineThree', 'sixLineFour');"
-    ]);
+    ] );
   } );
 
   it ( "should make SQL for with IDs", () => {
-    const entity: MainEntity = { type: 'Main', table: addT, children: {}, idStrategy: {type: "WithId", idField: "someId", idOffset: 100} };
-    expect(
-    getStrategy(entity).flatMap( s => {
-      if (s.type === 'WithId') return safeArray(makeInsertSqlForIds(JointAccountDdForTest, entity, s))
-      else if (s.type === 'WithoutId') return safeArray(makeInsertSqlForNoIds(JointAccountDdForTest, entity, s))
-      else if (s.type === 'Manual') return s.sql
-      else return []
-    })).toEqual([
+    const entity: MainEntity = { type: 'Main', table: addT, children: {}, idStrategy: { type: "WithId", idField: "someId", idOffset: 100 } };
+    expect (
+      getStrategy ( entity ).flatMap ( s => {
+        if ( s.type === 'WithId' ) return safeArray ( makeInsertSqlForIds ( JointAccountDdForTest, entity, s ) )
+        else if ( s.type === 'WithoutId' ) return safeArray ( makeInsertSqlForNoIds ( JointAccountDdForTest, entity, s ) )
+        else if ( s.type === 'Manual' ) return s.sql
+        else return []
+      } ) ).toEqual ( [
       "INSERT INTO ADD_TBL(someId,zzline1,zzline2,zzline1,zzline2)values (100,'This is a one line string','This is a one line string','This is a one line string','This is a one line string');",
       "INSERT INTO ADD_TBL(someId,zzline1,zzline2,zzline1,zzline2)values (101,'another one line string','another one line string','another one line string','another one line string');",
       "INSERT INTO ADD_TBL(someId,zzline1,zzline2,zzline1,zzline2)values (102,'This is a one line string','This is a one line string','This is a one line string','This is a one line string');"
-    ]);
+    ] );
   } )
 
   it ( "should make SQL for without IDs", () => {
-    const entity: MainEntity = { type: 'Main', table: addT, children: {}, idStrategy: {type: "WithoutId"} };
-    expect(
-        getStrategy(entity).flatMap( s => {
-          if (s.type === 'WithId') return safeArray(makeInsertSqlForIds(JointAccountDdForTest, entity, s))
-          else if (s.type === 'WithoutId') return safeArray(makeInsertSqlForNoIds(JointAccountDdForTest, entity, s))
-          else if (s.type === 'Manual') return s.sql
-          else return []
-        })).toEqual([
+    const entity: MainEntity = { type: 'Main', table: addT, children: {}, idStrategy: { type: "WithoutId" } };
+    expect (
+      getStrategy ( entity ).flatMap ( s => {
+        if ( s.type === 'WithId' ) return safeArray ( makeInsertSqlForIds ( JointAccountDdForTest, entity, s ) )
+        else if ( s.type === 'WithoutId' ) return safeArray ( makeInsertSqlForNoIds ( JointAccountDdForTest, entity, s ) )
+        else if ( s.type === 'Manual' ) return s.sql
+        else return []
+      } ) ).toEqual ( [
       "INSERT INTO ADD_TBL(zzline1,zzline2,zzline1,zzline2)values ('This is a one line string','This is a one line string','This is a one line string','This is a one line string');",
       "INSERT INTO ADD_TBL(zzline1,zzline2,zzline1,zzline2)values ('another one line string','another one line string','another one line string','another one line string');",
       "INSERT INTO ADD_TBL(zzline1,zzline2,zzline1,zzline2)values ('This is a one line string','This is a one line string','This is a one line string','This is a one line string');"
-    ]);
+    ] );
   } )
 } )

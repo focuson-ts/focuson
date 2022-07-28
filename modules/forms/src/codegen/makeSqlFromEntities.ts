@@ -407,7 +407,7 @@ export function findStaticWheres ( sqlRoot: SqlRoot ): StaticWhere[] { // things
   let staticWhereLinks = foldEntitys ( {
     foldMain ( childAccs: StaticWhere[][], main: EntityAndWhere ): StaticWhere[] {
       if ( main.staticWhere === undefined ) return childAccs.flat ()
-      return [ ...childAccs.flat (), { where: main.staticWhere, alias: main.entity.alias } ]
+      return [ ...childAccs.flat (), { where: main.staticWhere, alias: main.entity.alias ? main.entity.alias : main.entity.table.name } ]
     },
     foldMultiple ( childAccs: StaticWhere[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, multiple: MultipleEntity ): StaticWhere[] { return [] },
     foldSingle ( childAccs: StaticWhere[][], main: EntityAndWhere, path: [ string, ChildEntity ][], childAlias: string, filterPath, single: SingleEntity ): StaticWhere[] {
@@ -423,9 +423,9 @@ export function findStaticWheresForSqlRootGoingUp ( sqlRoot: SqlRoot ): StaticWh
     return sqlRoot.root.staticWhere != undefined ? [ { where: sqlRoot.root.staticWhere, alias: sqlRoot.alias } ] : []
 
   let sqlRootAndParentsPath: [ string, Entity ][] = [ [ sqlRoot.alias, sqlRoot.root ], ...sqlRoot.path ];
-  return sqlRootAndParentsPath.map ( ( p, _ ) => {
-    if ( p[ 1 ].staticWhere === undefined ) return undefined;
-    return { where: p[ 1 ].staticWhere, alias: p[ 1 ].table.name }
+  return sqlRootAndParentsPath.flatMap ( ( p, _ ) => {
+    if ( p[ 1 ].staticWhere === undefined ) return [];
+    return [ { where: p[ 1 ].staticWhere, alias: p[ 1 ].table.name } ]
   } )
 }
 
@@ -448,7 +448,7 @@ export function makeWhereClauseStringsFrom ( ws: WhereLink[] ): string[] {
       const comparator = w.comparator ? w.comparator : '='
       switch ( comparator ) {
         case "sameday":
-          const pattern = w.pattern?w.pattern : 'DD/MM/YYYY'
+          const pattern = w.pattern ? w.pattern : 'DD/MM/YYYY'
           return `to_char(${w.alias}.${w.field}, '${pattern}') = ?`
         default:
           return ` ${w.alias}.${w.field} ${comparator} ?`

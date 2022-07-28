@@ -2,8 +2,8 @@ import { focusPageClassName, fromPathFromRaw, HasPageSelection, HasSimpleMessage
 import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
 import { FetcherTree, loadTree } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
-import { identityOptics, Lens, Lenses, massTransform, NameAndLens, Optional, Transform } from "@focuson/lens";
-import { errorMonad, errorPromiseMonad, FetchFn, HasSimpleMessages, RestAction, safeArray, safeString, SimpleMessage } from "@focuson/utils";
+import { identityOptics, Lenses, massTransform, NameAndLens, Optional, Transform } from "@focuson/lens";
+import { errorMonad, FetchFn, HasSimpleMessages, RestAction, safeArray, safeString, SimpleMessage } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestCommandAndTxs, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
 import { HasTagHolder, TagHolder } from "@focuson/template";
 import { AllFetcherUsingRestConfig, restCommandsFromFetchers } from "./tagFetcherUsingRest";
@@ -139,19 +139,20 @@ function addTagTxsForFetchers<S> ( tagHolderL: Optional<S, TagHolder>, txs: Rest
 }
 export const processRestsAndFetchers = <S, Context extends FocusOnContext<S>, MSGs> ( config: FocusOnConfig<S, any, any>,
                                                                                       context: Context ) =>
-  ( restCommands: RestCommand[] ) => async ( s: S ): Promise<RestCommandAndTxs<S> []> => {
+  ( restCommands: RestCommand[] ) => async ( sFn: () => S ): Promise<RestCommandAndTxs<S> []> => {
+    const s = sFn ()
     // @ts-ignore
     const debug: any = s.debug?.restDebug;
     const { fetchFn, restDetails, restUrlMutator, messageL, stringToMsg, tagHolderL, newFetchers } = config
     const { pageSelectionL, pathToLens } = context
     const pageSelections = safeArray ( pageSelectionL.getOption ( s ) )
     const pageName = safeString ( mainPageFrom ( pageSelections ).pageName )
-   if (debug) console.log ( 'processRestsAndFetchers - pageSelections', pageSelections )
-    if (debug)console.log ( 'processRestsAndFetchers - pageName', pageName )
+    if ( debug ) console.log ( 'processRestsAndFetchers - pageSelections', pageSelections )
+    if ( debug ) console.log ( 'processRestsAndFetchers - pageName', pageName )
     const fromFetchers = restCommandsFromFetchers ( tagHolderL, newFetchers, restDetails, pageName, s )
     const allCommands: RestCommand[] = [ ...restCommands, ...fromFetchers ]
     const restProps: RestToTransformProps<S, MSGs> = { fetchFn, d: restDetails, pathToLens, messageL, stringToMsg, traceL: traceL (), urlMutatorForRest: restUrlMutator }
-    const txs = await restToTransforms ( restProps, s, allCommands )
+    const txs = await restToTransforms ( restProps, sFn, allCommands )
     const result = addTagTxsForFetchers ( config.tagHolderL, txs )
     return result
   }
@@ -165,16 +166,18 @@ function traceTransform<S> ( trace: any, s: S ): Transform<S, any> [] {
 
 export const dispatchRestAndFetchCommands = <S, Context extends FocusOnContext<S>, MSGs> ( config: FocusOnConfig<S, any, any>,
                                                                                            context: Context,
-                                                                                           dispatch: FocusonDispatcher<S> ) => ( restCommands: RestCommand[] ) => async ( s: S ): Promise<S> => {
+                                                                                           dispatch: FocusonDispatcher<S> ) => ( restCommands: RestCommand[] ) => async ( sFn: () => S ): Promise<S> => {
+  const startS = sFn ()
   // @ts-ignore
-  const debug: FocusOnDebug = s.debug?.restDebug ||s.debug?.reduxDebug || s.debug?.tagFetcherDebug;
-  if ( debug ) console.log ( `dispatchRestAndFetchCommands relooping count is ${JSON.stringify ( config.restCountL.getOption ( s ) )} RestCommands: ${restCommands.length}`, restCommands, s )
+  const debug: FocusOnDebug = startS.debug?.restDebug || startS.debug?.reduxDebug || startS.debug?.tagFetcherDebug;
+  if ( debug ) console.log ( `dispatchRestAndFetchCommands relooping count is ${JSON.stringify ( config.restCountL.getOption ( startS ) )} RestCommands: ${restCommands.length}`, restCommands, startS )
   const process = processRestsAndFetchers ( config, context );
-  const restsAndFetchers: RestCommandAndTxs<S>[] = await process ( restCommands ) ( s )
+  const restsAndFetchers: RestCommandAndTxs<S>[] = await process ( restCommands ) ( sFn )
+  const sAfterRestAndFetchers = sFn ()
   const sWithCountIncreased = config.restCountL.transform ( restCount => {
-    const times = restCount ? restCount.times+1 : 1
+    const times = restCount ? restCount.times + 1 : 1
     if ( restsAndFetchers.length === 0 ) {
-      if(debug)console.log("  There are no restOrFetcher so resetting loop count to zero")
+      if ( debug ) console.log ( "  There are no restOrFetcher so resetting loop count to zero" )
       return { loopCount: 0, times };
     }
     const oldCount = restCount ? restCount.loopCount : 0
@@ -182,51 +185,47 @@ export const dispatchRestAndFetchCommands = <S, Context extends FocusOnContext<S
     let result = { loopCount: oldCount ? oldCount + 1 : 1, times };
     if ( debug ) console.log ( `dispatchRestAndFetchCommands - end relooping count is now ${JSON.stringify ( result )}` )
     return result
-  } ) ( s )
+  } ) ( sAfterRestAndFetchers )
   return dispatch ( [], restsAndFetchers ) ( sWithCountIncreased )
 };
 
 
 export function setJsonWithDispatcherSettingTrace<S, Context extends FocusOnContext<S>, MSGs> ( config: FocusOnConfig<S, any, any>,
                                                                                                 context: Context,
-                                                                                                dispatch: FocusonDispatcher<S> ): ( s: S, reason: any ) => Promise<S> {
+                                                                                                dispatch: FocusonDispatcher<S> ): ( sFn: () => S, reason: any ) => Promise<S> {
 
   const deleteRestCommands: Transform<S, any> = [ config.restL, () => [] ];
   const { preMutate, postMutate, onError } = config
-  const doit = async ( s, reason ) => {
-    const debug = s.debug?.restDebug
-    const restCommands = safeArray ( config.restL.getOption ( s ) )
-    let start = errorMonad ( s, debug, onError,
+  return async ( sFn: () => S, reason: any ) => {
+    const startS = sFn ();
+    // @ts-ignore
+    const debug = startS.debug?.restDebug
+    const restCommands = safeArray ( config.restL.getOption ( startS ) )
+    let start = errorMonad ( startS, debug, onError,
       [ 'preMutateForPages', preMutateForPages<S, Context> ( context ) ],
       [ 'preMutate', preMutate ],
-      [ 'dispatch pre rests', dispatch ( [ ...traceTransform ( reason, s ), deleteRestCommands ], [] ) ]//This updates the gui 'now' pre rest/fetcher goodness. We need to kill the rest commands to stop them being sent twice
+      [ 'dispatch pre rests', dispatch ( [ ...traceTransform ( reason, startS ), deleteRestCommands ], [] ) ]//This updates the gui 'now' pre rest/fetcher goodness. We need to kill the rest commands to stop them being sent twice
     );
-    let processRestsAndFetches = ( start: S, restCommands: RestCommand[] ) => errorPromiseMonad ( onError ) (
-      start, debug,
-      [ 'dispatchRestAndFetchCommands', dispatchRestAndFetchCommands ( config, context, dispatch ) ( restCommands ) ],
-      [ 'postMutate', postMutate ]
-    );
-    const result = await processRestsAndFetches ( start, restCommands )
-    const restsLoaded = config.restCountL.getOption ( result )
-    return restsLoaded.loopCount === 0 ? result : processRestsAndFetches ( result, [] );
+    await dispatchRestAndFetchCommands ( config, context, dispatch ) ( restCommands ) ( sFn )
+    const postRestAndFetchS = sFn ()
+    return postRestAndFetchS
   };
-  return doit
 }
 export function setJsonUsingNewFetchersUsingFlux<S, Context extends FocusOnContext<S>, MSGs> ( config: FocusOnConfig<S, any, any>,
                                                                                                context: Context,
-                                                                                               publish: ( lensState: LensState<S, S, Context> ) => void ): ( s: S, reason: any ) => void {
+                                                                                               publish: ( lensState: LensState<S, S, Context> ) => void ): ( originalS, reason: any ) => void {
 
   const simpleFocusonDispatcher = ( txs: Transform<S, any>[], rests: RestCommandAndTxs<S>[] ) => ( originalS: S ): S => {
     const allTxs: Transform<S, any>[] = [ ...txs, ...rests.flatMap ( t => t.txs ) ]
     const newState = massTransform ( originalS, ...allTxs );
-    publish ( lensState ( newState, setJsonUsingNewFetchersUsingFlux ( config, context, publish ), 'state', context ) )
+    publish ( lensState ( newState, ( s, reason ) => setJsonUsingNewFetchersUsingFlux ( config, context, publish ) ( s, reason ), 'state', context ) )
     return newState
   };
   return setJsonWithDispatcherSettingTrace ( config, context, simpleFocusonDispatcher )
 }
 
 
-/** @deprecated Uses old fetchers */
+/** @deprecated Uses old fetchers, doesn't use redux and has issues with slow fetchers/rest actions */
 export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MSGs> ( config: FocusOnConfig<S, Context, MSGs>, context: Context, pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>, publish: ( lc: LensState<S, S, Context> ) => void ): ( s: S, reason: any ) => Promise<S> {
   return async ( main: S, trace: any ): Promise<S> => {
     console.log ( 'setJsonForFocusOn', trace )
@@ -240,7 +239,7 @@ export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MS
       const withPreMutate = preMutate ( withDebug )
       const firstPageProcesses: S = preMutateForPages<S, Context> ( context ) ( withPreMutate )
       const restProps: RestToTransformProps<S, MSGs> = { fetchFn, d: restDetails, pathToLens, messageL, stringToMsg, traceL: traceL (), urlMutatorForRest: config.restUrlMutator }
-      const afterRest = await rest ( restProps, restL, firstPageProcesses )
+      const afterRest = await rest ( restProps, restL, () => firstPageProcesses )
       if ( afterRest ) newStateFn ( afterRest )
       let newMain = await loadTree ( fetchers, afterRest, fetchFn, debug )
         .then ( s => s ? s : onError ( s, Error ( 'could not load tree' ) ) )

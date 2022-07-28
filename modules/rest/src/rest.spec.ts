@@ -56,8 +56,8 @@ function oneRestDetails ( cd: NameAndLens<RestStateForTest>, fdd: NameAndLens<Fu
 const restDetails: RestDetails<RestStateForTest, SimpleMessage> = {
   one: oneRestDetails ( cd, fdd )
 }
-function withRestCommand ( r: RestStateForTest, ...restCommands: RestCommand[] ): RestStateForTest {
-  return { ...r, restCommands }
+function withRestCommand ( r: RestStateForTest, ...restCommands: RestCommand[] ):() => RestStateForTest {
+  return () =>({ ...r, restCommands })
 }
 
 function restMutatator ( r: RestAction, url: string ) { return insertBefore ( "?", "/" + (isRestStateChange ( r ) ? r.state : r), url )}

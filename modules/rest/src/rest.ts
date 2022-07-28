@@ -252,26 +252,28 @@ export interface RestToTransformProps<S, MSGS> {
  * It allows us (in the calling code) to add the restful data to the trace. This is great for 'understanding what happened' */
 export async function restToTransforms<S, MSGS> (
   props: RestToTransformProps<S, MSGS>,
-  s: S, commands: RestCommand[] ): Promise<RestCommandAndTxs<S>[]> {
-  if ( s === undefined ) throw new Error ( `State was null` )
+  sFn: () => S, commands: RestCommand[] ): Promise<RestCommandAndTxs<S>[]> {
+  const startS = sFn ()
+  if ( startS === undefined ) throw new Error ( `State was null` )
   // @ts-ignore
-  const debug = s.debug?.restDebug
+  const debug = startS.debug?.restDebug
   // @ts-ignore
-  const tracing = s.debug?.recordTrace
+  const tracing = startS.debug?.recordTrace
   if ( debug ) console.log ( "rest-commands", commands )
   if ( commands.length == 0 ) return Promise.resolve ( [] )
   const { d, urlMutatorForRest, pathToLens, stringToMsg, messageL, fetchFn, traceL } = props
 
-  const requests: [ RestCommand, OneRestDetails<S, any, any, any>, RequestInfo, (RequestInit | undefined) ][] = restReq ( d, commands, urlMutatorForRest, s )
+  const requests: [ RestCommand, OneRestDetails<S, any, any, any>, RequestInfo, (RequestInit | undefined) ][] = restReq ( d, commands, urlMutatorForRest, startS )
   if ( debug ) console.log ( "rest-requests", requests )
   const results: RestResult<S, MSGS, any>[] = await massFetch ( fetchFn, requests )
+  const sAfterFetch = sFn ()
   if ( debug ) console.log ( "rest-results", results )
-  let toLens = pathToLens ( s );
+  let toLens = pathToLens ( sAfterFetch );
   if ( debug ) console.log ( 'results from fetching rest commands', results )
 
   const restCommandAndTxs: RestCommandAndTxs<S>[] = results.map ( res => {
-    const txs: Transform<S, any>[] = restResultToTx ( s, messageL, res.one.messages, toLens, stringToMsg, res.one.extractData ) ( res );
-    const trace: Transform<S, any>[] = tracing ? [ [ traceL, old => [ ...safeArray ( old ), { restCommand: res.restCommand, lensTxs: txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( s ) ) ] ) } ] ] ] : []
+    const txs: Transform<S, any>[] = restResultToTx ( sAfterFetch, messageL, res.one.messages, toLens, stringToMsg, res.one.extractData ) ( res );
+    const trace: Transform<S, any>[] = tracing ? [ [ traceL, old => [ ...safeArray ( old ), { restCommand: res.restCommand, lensTxs: txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( sAfterFetch ) ) ] ) } ] ] ] : []
     const restAndTxs: RestCommandAndTxs<S> = { ...res, txs: [ ...txs, ...trace ] };
     return restAndTxs
   } )
@@ -289,13 +291,14 @@ export async function restToTransforms<S, MSGS> (
 export async function rest<S, MSGS> (
   props: RestToTransformProps<S, MSGS>,
   restL: Optional<S, RestCommand[]>,
-  s: S ): Promise<S> {
-  const commands = restL.getOption ( s )
-  const restCommandAndTxs: RestCommandAndTxs<S>[] = await restToTransforms ( props, s, safeArray ( commands ) )
+  sFn: () => S ): Promise<S> {
+  const commands = restL.getOption ( sFn() )
+  const restCommandAndTxs: RestCommandAndTxs<S>[] = await restToTransforms ( props, sFn, safeArray ( commands ) )
   // @ts-ignore
   const [ debug, trace ] = [ s.debug?.restDebug, s.debug?.recordTrace ]
   console.log ( 'checking trace', trace )
-  const newS = massTransform ( s, ...restCommandAndTxs.flatMap ( r => r.txs ), [ restL, () => [] ] )
+  const sNow = sFn ()
+  const newS = massTransform ( sNow, ...restCommandAndTxs.flatMap ( r => r.txs ), [ restL, () => [] ] )
 
   if ( debug ) console.log ( "rest-result", newS )
   return newS
