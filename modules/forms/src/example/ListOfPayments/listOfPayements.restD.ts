@@ -116,27 +116,6 @@ export const PrintRecordRD: ExampleRestD = {
           nonBankStuff ( 'fulfilmentType.equals("OF")', 'c10001' ),
         ]
       } ]
-  }, {
-    restAction: 'create',
-    mutateBy: [
-      {type: 'sql', params: [], sql: 'select the new sequences',schema: onlySchema, name: 'get the sequences'},
-      {type: 'case', params: [], select: [
-          {guard: ['main/joint'], type: 'sql', sql: '', params:[], schema: onlySchema, },
-          {guard: [], type: 'sql', sql: 'do the first table insert', params:[], schema: onlySchema, }
-        ], name: 'select1'},
-      {type: 'case', params: [], select: [
-          {guard: ['main/joint'], type: 'manual',code: '', params: [] },
-          {guard: [], type: 'sql', sql: 'do the second table insert', params:[], schema: onlySchema, }
-        ], name: 'select1'},
-      {type: 'case', params: [], select: [
-          {guard: ['main/joint'], type: 'manual',code: '', params: [] },
-          {guard: [], type: 'sql', sql: 'do the third table insert', params:[], schema: onlySchema, }
-        ], name: 'select1'},
-      {type: 'case', params: [], select: [
-          {guard: ['main/joint'], type: 'manual',code: '', params: [] },
-          {guard: [], type: 'sql', sql: 'do the fourth table insert', params:[], schema: onlySchema, }
-        ], name: 'select1'},
-    ]
   } ]
 }
 
