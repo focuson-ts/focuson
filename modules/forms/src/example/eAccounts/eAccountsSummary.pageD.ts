@@ -13,7 +13,7 @@ export const EAccountsSummaryPD: ExampleMainPage = {
   /** How we display the page.*/
   display: { target: '~/fromApi', dataDD: EAccountsSummaryDD },
   /** When the page is selected for the first time this is the initial state */
-  initialValue: {},
+  initialValue: { command: 'set', path: '~/fromApi', value: {} },
   /** This defines the domain data structures in react*/
   domain: {
     fromApi: { dataDD: EAccountsSummaryDD },

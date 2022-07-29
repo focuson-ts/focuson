@@ -23,7 +23,7 @@ export const JointAccountPageD: ExampleMainPage = {
   /** How we display the page.*/
   display: { target: '~/fromApi', dataDD: JointAccountDd },
   /** When the page is selected for the first time this is the initial state */
-  initialValue: { joint: false },
+  initialValue: { command: 'set', path: '~/joint', value: false },
   /** This defines the domain data structures in react*/
   domain: {
     fromApi: { dataDD: JointAccountDd },

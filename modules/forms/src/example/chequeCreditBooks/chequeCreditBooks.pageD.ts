@@ -34,7 +34,7 @@ export const ChequeCreditbooksPD: ExampleMainPage = {
   /** How we display the page.*/
   display: { target: '~/fromApi', dataDD: ChequeCreditbooksDD },
   /** When the page is selected for the first time this is the initial state */
-  initialValue: {},
+  initialValue: 'empty',
   /** This defines the domain data structures in react*/
   domain: {
     fromApi: { dataDD: ChequeCreditbooksDD },

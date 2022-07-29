@@ -87,9 +87,7 @@ export const AuthoriseChargesPD: ExampleMainPage = {
     summaryOfChargeDates: { rest: SummaryOfChargeDatesRD, targetFromPath: '~/summaryOfChargesDates/searchResults', fetcher: true },
     summaryOfCharges: { rest: SummaryOfChargesRD, targetFromPath: '~/summaryOfCharges', fetcher: true }
   },
-  initialValue: {
-    authorisedCharges: { date: '2020/01/01' }
-  },
+  initialValue: { command: 'set', path: '~/authorisedCharges/date', value: '2020/01/01' },
   modes: [ 'view' ],
   buttons: {
     select: { control: 'ModalButton', modal: ViewChargesPage, mode: 'edit', focusOn: '#authorisedCharges', enabledBy: 'brandSelected' }

@@ -101,15 +101,9 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
   ],
   display: { target: '~/fromApi', dataDD: occupationAndIncomeFullDomainDD },
   /** When the page is selected for the first time this is the initial state */
-  initialValue: {
-    selectedItem: 0,
-    occupation: {
-      search: '',
-      selectedOccupationName: '',
-      searchResults: [],
-    },
-    mainOrJoint: false
-  },
+  initialValue: [ 'empty',
+    { command: 'set', path: 'selectedItem', value: 0 },
+    { command: 'set', path: 'mainOrJoint', value: false } ],
 
   /** This defines the domain data structures in react*/
   domain: {

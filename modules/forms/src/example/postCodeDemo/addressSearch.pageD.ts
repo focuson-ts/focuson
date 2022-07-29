@@ -25,7 +25,7 @@ export const PostCodeMainPage: ExampleMainPage = {
     postcode: { dataDD: postCodeSearchDataD },
     selectedPostcodeIndex: { dataDD: IntegerDD },
   },
-  initialValue: { main: {}, postcode: { search: '', searchResults: [], addressResults: { line1: '', line2: '', line3: '', line4: '' } } },
+  initialValue: 'empty',
   modals: [ { modal: PostCodeModalPage } ],
   modes: [ 'edit' ],
   rest: {

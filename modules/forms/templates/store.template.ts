@@ -4,7 +4,7 @@ import { Context, emptyState, FState, identityL } from "./common";
 import { defaultDateFn, errorMonad, errorPromiseMonad, fetchWithDelay, fetchWithPrefix, loggingFetchFn, safeArray, SimpleMessage, stringToSimpleMsg } from "@focuson/utils";
 import { lensState } from "@focuson/state";
 import { Reducer } from "react";
-import { dispatchRestAndFetchCommands, FocusOnConfig, FocusOnContext, FocusOnDebug, HasFocusOnDebug, restCountL, traceL } from "@focuson/focuson";
+import { dispatchRestAndFetchCommands, FocusOnConfig, FocusOnContext, FocusOnDebug, HasFocusOnDebug, restCountL, traceL, makeProcessorsConfig} from "@focuson/focuson";
 import { Lens, massTransform, Transform } from "@focuson/lens";
 import { pageSelectionlens, preMutateForPages, simpleMessagesL } from "@focuson/pages";
 import { newFetchers } from "./fetchers";
@@ -73,8 +73,9 @@ export const focusOnMiddlewareFor{teamName} = <BigState, S extends HasFocusOnDeb
   const debug = s.debug?.reduxDebug === true
   if ( debug ) console.log ( 'focusOnMiddleware', action )
   const restCommands = safeArray ( config.restL.getOption ( s ) )
+  const processorsConfig = makeProcessorsConfig ( s, context );
   let start: S = errorMonad ( s, debug, onError,
-    [ 'preMutateForPages', preMutateForPages<S, C> ( context ) ],
+    [ 'preMutateForPages', preMutateForPages<S, C> ( context,processorsConfig ) ],
     [ 'preMutate', preMutate ],
     [ 'dispatch pre rests', s => dispatch ( { type: 'massTxs', s, team: '{teamName}', txs: [ ...traceTransform ( reason, s ), deleteRestCommands, clearCount ], comment: 'dispatchPreRests' } ) ]//This updates the gui 'now' pre rest/fetcher goodness. We need to kill the rest commands to stop them being sent twice
   );

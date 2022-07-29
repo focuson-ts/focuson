@@ -54,10 +54,19 @@ export function pageSpecStateConfig<D> (): PageConfig<PageSpecState, D, SimpleMe
 export const pageDetails: MultiPageDetails<PageSpecState, ContextForTest> = {
   firstPage: { pageType: 'MainPage', config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'firstPage' ), pageFunction: DisplayPageSpecState ( 'firstPage' ), pageMode: 'edit' },
   clearAtStart: { pageType: 'MainPage', config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'firstPage' ), pageFunction: DisplayPageSpecState ( 'firstPage' ), clearAtStart: true, pageMode: 'edit' },
-  init: { pageType: 'MainPage', config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'firstPage' ), pageFunction: DisplayPageSpecState ( 'firstPage' ), initialValue: "Initial Value", pageMode: 'edit' },
+  init: {
+    pageType: 'MainPage', config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'firstPage' ), pageFunction: DisplayPageSpecState ( 'firstPage' ),
+    initialValue: [ { command: 'set', path: '~', value: "Initial Value" } ], pageMode: 'edit'
+  },
   secondPage: { pageType: 'MainPage', config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'secondPage' ).focusQuery ( 'fromApi' ), pageFunction: DisplayPageSpecState ( 'secondPage' ), clearAtStart: true, pageMode: 'edit' },
-  modalData: { pageType: 'MainPage', config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'tempData' ), pageFunction: DisplayPageSpecState ( 'modalData' ), initialValue: "someValue", pageMode: 'edit' },
-  error: { pageType: 'MainPage', config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'tempData' ), pageFunction: DisplayPageSpecState ( 'error' ), clearAtStart: true, initialValue: "someValue", pageMode: 'edit' },
+  modalData: {
+    pageType: 'MainPage', config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'tempData' ), pageFunction: DisplayPageSpecState ( 'modalData' ),
+    initialValue: [ { command: 'set', path: '~', value: "Initial Value" } ], pageMode: 'edit'
+  },
+  error: {
+    pageType: 'MainPage', config: pageSpecStateConfig (), lens: identityOptics<PageSpecState> ().focusQuery ( 'tempData' ), pageFunction: DisplayPageSpecState ( 'error' ), clearAtStart: true,
+    initialValue: [ { command: 'set', path: '~', value: "Initial Value" } ], pageMode: 'edit'
+  },
 }
 export type PageDetails = typeof pageDetails
 

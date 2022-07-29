@@ -30,7 +30,7 @@ export const EditlistOfPaymentsPagePD: ExampleModalPage = {
   layout: { component: HideButtonsCD, displayParams: { hide: [ 'address' ] } },
   guards: {
     canPrint: { condition: 'equals', value: false, path: '~/tempListOfPayments/alreadyPrinted' },
-    sortCodeValid:{condition: 'regex', regex: /^[0-9]{2}[-][0-9]{2}[-][0-9]{2}$/, path: '~/tempListOfPayments/newBankDetails/sortCode' }
+    sortCodeValid: { condition: 'regex', regex: /^[0-9]{2}[-][0-9]{2}[-][0-9]{2}$/, path: '~/tempListOfPayments/newBankDetails/sortCode' }
   },
   buttons: {
     cancel: { control: 'ModalCancelButton', text: 'back' },
@@ -48,10 +48,12 @@ export const EditlistOfPaymentsPagePD: ExampleModalPage = {
         { from: '~/selectedPostCodeAddress/postcode', to: '~/tempListOfPayments/newBankDetails/postcode' }
       ]
     },
-    search: { control: 'RestButton', restName: 'sortCodeLookup', action: 'get', validate: false,
+    search: {
+      control: 'RestButton', restName: 'sortCodeLookup', action: 'get', validate: false,
       enabledBy: 'sortCodeValid',
       copyOnSuccess: { from: 'bankName', to: '~/tempListOfPayments/newBankDetails/bank' },
-  }},
+    }
+  },
 }
 
 const addOrEditButton: RawButtons<AllGuards> = {
@@ -96,7 +98,7 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
   },
   modals: [ { modal: EditlistOfPaymentsPagePD }, { modal: AddressModalPage } ],
   modes: [ 'view' ],
-  initialValue: { selected: 0 },
+  initialValue: { command: 'set', path: 'selected', value: 0 },
   rest: {
     paymentHistory: { rest: PrintRecordHistoryRD, fetcher: true, targetFromPath: '~/display' },
     onePayment: { rest: PrintRecordRD, fetcher: false, targetFromPath: '~/display[~/selected]' },

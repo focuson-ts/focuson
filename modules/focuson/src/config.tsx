@@ -1,10 +1,10 @@
-import { focusPageClassName, fromPathFromRaw, HasPageSelection, HasSimpleMessageL, mainPageFrom, MultiPageDetails, PageDetailsForCombine, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages, simpleMessagesL } from "@focuson/pages";
+import { focusPageClassName, fromPathFromRaw, fromPathGivenState, HasPageSelection, HasSimpleMessageL, mainPageFrom, MultiPageDetails, PageDetailsForCombine, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages, simpleMessagesL } from "@focuson/pages";
 import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
 import { FetcherTree, loadTree } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
 import { identityOptics, Lenses, massTransform, NameAndLens, Optional, Transform } from "@focuson/lens";
-import { errorMonad, FetchFn, HasSimpleMessages, RestAction, safeArray, safeString, SimpleMessage } from "@focuson/utils";
-import { HasRestCommandL, HasRestCommands, rest, RestCommand, RestCommandAndTxs, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
+import { defaultDateFn, errorMonad, FetchFn, HasSimpleMessages, RestAction, safeArray, safeString, SimpleMessage, stringToSimpleMsg } from "@focuson/utils";
+import { HasRestCommandL, HasRestCommands, ModalProcessorsConfig, rest, RestCommand, RestCommandAndTxs, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
 import { HasTagHolder, TagHolder } from "@focuson/template";
 import { AllFetcherUsingRestConfig, restCommandsFromFetchers } from "./tagFetcherUsingRest";
 import { FocusOnDebug } from "./debug";
@@ -190,9 +190,21 @@ export const dispatchRestAndFetchCommands = <S, Context extends FocusOnContext<S
 };
 
 
-export function setJsonWithDispatcherSettingTrace<S, Context extends FocusOnContext<S>, MSGs> ( config: FocusOnConfig<S, any, any>,
-                                                                                                context: Context,
-                                                                                                dispatch: FocusonDispatcher<S> ): ( sFn: () => S, reason: any ) => Promise<S> {
+export function makeProcessorsConfig<S, Context extends FocusOnContext<S>> ( startS: S, context: Context ) {
+  const pathToLens = fromPathGivenState ( lensState ( startS, () => {throw Error ()}, '', context ) )
+  const processorsConfig: ModalProcessorsConfig<S, SimpleMessage> = {
+    messageL: context.simpleMessagesL,
+    defaultL: Lenses.identity (),
+    stringToMsg: stringToSimpleMsg ( defaultDateFn, 'info' ),
+    s: startS,
+    fromPathTolens: pathToLens,
+    toPathTolens: pathToLens,
+  }
+  return processorsConfig;
+}
+export function setJsonWithDispatcherSettingTrace<S, Context extends FocusOnContext<S>> ( config: FocusOnConfig<S, any, SimpleMessage>,
+                                                                                          context: Context,
+                                                                                          dispatch: FocusonDispatcher<S> ): ( sFn: () => S, reason: any ) => Promise<S> {
 
   const deleteRestCommands: Transform<S, any> = [ config.restL, () => [] ];
   const { preMutate, postMutate, onError } = config
@@ -201,8 +213,9 @@ export function setJsonWithDispatcherSettingTrace<S, Context extends FocusOnCont
     // @ts-ignore
     const debug = startS.debug?.restDebug
     const restCommands = safeArray ( config.restL.getOption ( startS ) )
+    const processorsConfig = makeProcessorsConfig ( startS, context );
     let start = errorMonad ( startS, debug, onError,
-      [ 'preMutateForPages', preMutateForPages<S, Context> ( context ) ],
+      [ 'preMutateForPages', preMutateForPages<S, Context> ( context, processorsConfig ) ],
       [ 'preMutate', preMutate ],
       [ 'dispatch pre rests', dispatch ( [ ...traceTransform ( reason, startS ), deleteRestCommands ], [] ) ]//This updates the gui 'now' pre rest/fetcher goodness. We need to kill the rest commands to stop them being sent twice
     );
@@ -226,7 +239,7 @@ export function setJsonUsingNewFetchersUsingFlux<S, Context extends FocusOnConte
 
 
 /** @deprecated Uses old fetchers, doesn't use redux and has issues with slow fetchers/rest actions */
-export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MSGs> ( config: FocusOnConfig<S, Context, MSGs>, context: Context, pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>, publish: ( lc: LensState<S, S, Context> ) => void ): ( s: S, reason: any ) => Promise<S> {
+export function setJsonForFocusOn<S, Context extends FocusOnContext<S>> ( config: FocusOnConfig<S, Context, SimpleMessage>, context: Context, pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>, publish: ( lc: LensState<S, S, Context> ) => void ): ( s: S, reason: any ) => Promise<S> {
   return async ( main: S, trace: any ): Promise<S> => {
     console.log ( 'setJsonForFocusOn', trace )
     // @ts-ignore
@@ -237,8 +250,9 @@ export function setJsonForFocusOn<S, Context extends PageSelectionContext<S>, MS
     const newStateFn = ( fs: S ) => publish ( lensState ( fs, setJsonForFocusOn ( config, context, pathToLens, publish ), 'setJson', context ) )
     try {
       const withPreMutate = preMutate ( withDebug )
-      const firstPageProcesses: S = preMutateForPages<S, Context> ( context ) ( withPreMutate )
-      const restProps: RestToTransformProps<S, MSGs> = { fetchFn, d: restDetails, pathToLens, messageL, stringToMsg, traceL: traceL (), urlMutatorForRest: config.restUrlMutator }
+      const processorsConfig = makeProcessorsConfig ( main, context );
+      const firstPageProcesses: S = preMutateForPages<S, Context> ( context, processorsConfig ) ( withPreMutate )
+      const restProps: RestToTransformProps<S, SimpleMessage> = { fetchFn, d: restDetails, pathToLens, messageL, stringToMsg, traceL: traceL (), urlMutatorForRest: config.restUrlMutator }
       const afterRest = await rest ( restProps, restL, () => firstPageProcesses )
       if ( afterRest ) newStateFn ( afterRest )
       let newMain = await loadTree ( fetchers, afterRest, fetchFn, debug )

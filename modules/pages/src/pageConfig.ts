@@ -5,7 +5,7 @@ import { FocusedPage } from "./focusedPage";
 import { PageTemplateProps } from "./PageTemplate";
 import { HasSimpleMessages, SimpleMessage } from "@focuson/utils";
 import { PageMode } from "./pageSelection";
-import { InputChangeCommands, ModalChangeCommands } from "@focuson/rest";
+import { InputChangeCommands, ModalChangeCommands, NewPageChangeCommands } from "@focuson/rest";
 
 export interface MultiPageDetails<S, Context> {
   [ name: string ]: OnePageDetails<S, any, any, any, Context>
@@ -20,7 +20,7 @@ export interface CommonPageDetails<S, D, Msgs, Config extends PageConfig<S, D, M
   config: Config,
   pageFunction: PageFunctionType<S, D, Context>,
   clearAtStart?: boolean  // if set then the PageState is reset at the beginning,
-  initialValue?: D, //If set then this is injected at the beginning. Clear at start overrides this
+  initialValue?: NewPageChangeCommands[], //If set then this is injected at the beginning. Clear at start overrides this
   onOpen?: ModalChangeCommands[],
   onlySetInitialIfUndefined?: boolean
 }

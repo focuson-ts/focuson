@@ -11,7 +11,7 @@ import { accountFlagsRestDD, accountOverviewAgreementTypeRestDD, accountOverview
 export const ArrearsDetailsModalPage: ExampleModalPage = {
   name: "ArrearsDetails",
   pageType: "ModalPage",
-  display: { dataDD: arrearsDetailsDataD, target: '~/', importFrom: 'AccountOverview' },
+  display: { dataDD: arrearsDetailsDataD, target: '~/' },
   modes: [ 'view' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' }
@@ -21,7 +21,7 @@ export const ArrearsDetailsModalPage: ExampleModalPage = {
 export const ExcessHistoryModalPage: ExampleModalPage = {
   name: "ExcessHistory",
   pageType: "ModalPage",
-  display: { dataDD: accountOverviewExcessHistoryDataD, target: '~/', importFrom: 'AccountOverview' },
+  display: { dataDD: accountOverviewExcessHistoryDataD, target: '~/' },
   modes: [ 'view' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -33,7 +33,7 @@ export const ExcessHistoryModalPage: ExampleModalPage = {
 export const ExcessInfoModalPage: ExampleModalPage = {
   name: "ExcessInfoSearch",
   pageType: "ModalPopup",
-  display: { dataDD: accountOverviewExcessInfoDataD, target: '~/', importFrom: 'AccountOverview' },
+  display: { dataDD: accountOverviewExcessInfoDataD, target: '~/' },
   modes: [ 'view' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -43,7 +43,7 @@ export const ExcessInfoModalPage: ExampleModalPage = {
 export const ReasonModalPage: ExampleModalPage = {
   name: "Reason",
   pageType: "ModalPopup",
-  display: { dataDD: accountOverviewReasonDataD, target: '~/', importFrom: 'AccountOverview' },
+  display: { dataDD: accountOverviewReasonDataD, target: '~/' },
   modes: [ 'view' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -53,7 +53,7 @@ export const ReasonModalPage: ExampleModalPage = {
 export const AccountFlagsModalPage: ExampleModalPage = {
   name: "AccountFlags",
   pageType: "ModalPage",
-  display: { dataDD: accountAllFlagsDataDD, target: '~/', importFrom: 'AccountOverview' },
+  display: { dataDD: accountAllFlagsDataDD, target: '~/' },
   modes: [ 'edit' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -64,7 +64,7 @@ export const AccountFlagsModalPage: ExampleModalPage = {
 export const OptOutModalPage: ExampleModalPage = {
   name: "OptOut",
   pageType: "ModalPage",
-  display: { dataDD: accountOverviewOptOutDataD, target: '~/', importFrom: 'AccountOverview' },
+  display: { dataDD: accountOverviewOptOutDataD, target: '~/' },
   modes: [ 'view' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -75,7 +75,7 @@ export const OptOutModalPage: ExampleModalPage = {
 export const AgreementTypeModalPage: ExampleModalPage = {
   name: "AgreementType",
   pageType: "ModalPage",
-  display: { dataDD: accountOverviewAgreementTypeDataD, target: '~/', importFrom: 'AccountOverview' },
+  display: { dataDD: accountOverviewAgreementTypeDataD, target: '~/' },
   modes: [ 'view' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -99,10 +99,10 @@ export const AccountOverviewMainPage: ExampleMainPage = {
     optOut: { dataDD: accountOverviewOptOutDataD },
     agreementType: { dataDD: accountOverviewAgreementTypeDataD },
   },
-  initialValue: {},
+  initialValue: { command: 'set', path: '~/main', value: {} },
   modals: [ { modal: ExcessInfoModalPage },
     { modal: ReasonModalPage },
-    { modal: ExcessHistoryModalPage},
+    { modal: ExcessHistoryModalPage },
     { modal: ArrearsDetailsModalPage },
     { modal: AccountFlagsModalPage },
     { modal: OptOutModalPage },
@@ -119,7 +119,7 @@ export const AccountOverviewMainPage: ExampleMainPage = {
     optOut: { rest: accountOverviewOptOutRestDD, targetFromPath: '~/optOut', fetcher: true },
     agreementType: { rest: accountOverviewAgreementTypeRestDD, targetFromPath: '~/agreementType', fetcher: true },
   },
-  layout: {component: HideButtonsCD, displayParams: {hide: ['reason', 'arrearsDetails',  'excessHistory']}},
+  layout: { component: HideButtonsCD, displayParams: { hide: [ 'reason', 'arrearsDetails', 'excessHistory' ] } },
   buttons: {
     excessInfo: {
       control: 'ModalButton', modal: ExcessInfoModalPage, mode: 'view',
@@ -131,7 +131,7 @@ export const AccountOverviewMainPage: ExampleMainPage = {
     },
     excessHistory: {
       control: 'ModalButton', modal: ExcessHistoryModalPage, mode: 'view',
-      focusOn:  '~/excessHistory', buttonType: "secondary"
+      focusOn: '~/excessHistory', buttonType: "secondary"
     },
     arrearsDetails: {
       control: 'ModalButton', modal: ArrearsDetailsModalPage, mode: 'view',

@@ -2,7 +2,7 @@ import { AllDataDD, CompDataD, DataD, findAllDataDs, HasGuards, HasLayout, isDat
 import { CommonLensRestParam, RestD } from "./restD";
 import { NameAnd, RestAction, RestResult, safeString, sortedEntries, unique } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
-import { getRestTypeDetails, RestActionDetail, RestChangeCommands } from "@focuson/rest";
+import { ChangeCommand, getRestTypeDetails, NewPageChangeCommands, RestActionDetail, RestChangeCommands } from "@focuson/rest";
 
 
 export interface DomainDefnInPage<G> {
@@ -37,7 +37,7 @@ export interface RestOnCommitRefresh extends CommonRestOnCommit {
    * At the moment the paths must start with /, but that might relax later*/
   pathToDelete?: string[]
 }
-export function isRestOnCommitRefresh(r: CommonRestOnCommit): r is RestOnCommitRefresh {
+export function isRestOnCommitRefresh ( r: CommonRestOnCommit ): r is RestOnCommitRefresh {
   const a: any = r;
   return a.result === 'refresh'
 }
@@ -92,14 +92,20 @@ export interface VariableByPathD {
 }
 export type VariableD = VariableByCodeD | VariableByPathD
 
+export interface PageDisplay<G> {
+  target: string,
+  dataDD: CompDataD<G>
+}
+type NewPageCommandOrEmpty = 'empty' | NewPageChangeCommands
+export type InitialValue = NewPageCommandOrEmpty | NewPageCommandOrEmpty[]
 export interface MainPageD<Buttons, G> extends HasLayout, HasGuards<G> {
   pageType: 'MainPage' | 'MainPopup',
   commonParams?: NameAnd<CommonLensRestParam<any>>,
   title?: string;
   name: string,
   modes: PageMode[],
-  display: { target: string, dataDD: CompDataD<G> },
-  initialValue: 'empty' | any,
+  display: PageDisplay<G>,
+  initialValue?: InitialValue
   domain: DomainDefnInPage<G>,
   variables?: NameAnd<VariableD>
   modals?: ModalOrMainData<Buttons, G>[],
@@ -114,7 +120,7 @@ export interface ModalPageD<Buttons, G> extends HasLayout, HasGuards<G> {
   title?: string;
   name: string,
   modes: PageMode[],
-  display: { target: string, dataDD: CompDataD<G>, importFrom?: string }, //importFrom is deprecated
+  display: PageDisplay<G>, //importFrom is deprecated
   buttons: ButtonDefnInPage<Buttons>;
 }
 

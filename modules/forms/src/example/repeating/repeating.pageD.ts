@@ -6,7 +6,7 @@ import { IntegerDD } from "../../common/dataD";
 export const RepeatingLinePageD: ExampleModalPage = {
   name: "RepeatingLine",
   pageType: "ModalPage",
-  display: { target: '~/temp', dataDD: RepeatingLineDataD},
+  display: { target: '~/temp', dataDD: RepeatingLineDataD },
   modes: [ 'create', 'edit' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' },
@@ -25,7 +25,7 @@ export const RepeatingPageD: ExampleMainPage = {
   /** How we display the page.*/
   display: { target: fromApiPath, dataDD: RepeatingWholeDataD },
   /** When the page is selected for the first time this is the initial state */
-  initialValue: {selectedItem:0},
+  initialValue: { command: 'set', path: '~/selectedItem', value: 0 },
   /** This defines the domain data structures in react*/
   domain: {
     temp: { dataDD: RepeatingLineDataD },

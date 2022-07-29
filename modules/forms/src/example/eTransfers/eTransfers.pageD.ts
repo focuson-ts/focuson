@@ -13,7 +13,7 @@ export const ETransferPageD: ExampleMainPage = {
   /** How we display the page.*/
   display: { target: '~/fromApi', dataDD: ETransferDataD },
   /** When the page is selected for the first time this is the initial state */
-  initialValue: { fromApi: {} },
+  initialValue: { command: 'set', path: '~/fromApi', value: {} },
   /** This defines the domain data structures in react*/
   domain: {
     fromApi: { dataDD: ETransferDataD },
