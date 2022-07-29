@@ -39,7 +39,7 @@ export const SummaryOfChargeDatesRD: ExampleRestD = {
 
 export const SummaryOfChargesRD: ExampleRestD = {
   dataDD: chargesSummaryDetailDD,
-  params: { date: { ...StringParam, lens: '~/', testValue: '1/6/2016' } },
+  params: { date: { ...StringParam, lens: '~/summaryOfChargesDates/date', testValue: '1/6/2016' } },
   url: "/api/charges/details?{query}",
   actions: [ 'get' ],
   tables: {

@@ -78,8 +78,8 @@ describe ( "delete page tags command", () => {
   it ( "should place a undefined at the target - modal", () => {
     expect ( displayTransformsInState ( state, safeArray ( modalProcessor ( state ) ( deleteTagsCommand ) ) ) ).toEqual ( expected )
   } )
-  it ( "should place a undefined at the target - rest", () => {
-    expect ( displayTransformsInState ( state, safeArray ( restProcessor ( state ) ( deleteTagsCommand ) ) ) ).toEqual ( expected )
+  it ( "should  ignore the command - rest", () => {
+    expect ( displayTransformsInState ( state, safeArray ( restProcessor ( state ) ( deleteTagsCommand ) ) ) ).toEqual ( [] )
   } )
 } )
 describe ( "strict copy command", () => {

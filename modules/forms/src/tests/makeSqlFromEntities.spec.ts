@@ -1,4 +1,4 @@
-import { ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findParamsForTable, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, getStrategy, JavaQueryParamDetails, MainEntity, makeInsertSqlForIds, makeInsertSqlForNoIds, makeMapsForRest, makeWhereClause, makeWhereClauseStringsFrom, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldDataFromTableQueryLink, whereFieldToFieldDataFromTableWhereLink } from "../codegen/makeSqlFromEntities";
+import { addPrefixPostFix, ChildEntity, createTableSql, EntityFolder, findAliasAndTableLinksForLinkData, findAllFields, findAllTableAndFieldDatasIn, findAllTableAndFieldsIn, findFieldsFromWhere, findParamsForTable, findSqlLinkDataFromRootAndDataD, findSqlRoot, findTableAliasAndFieldFromDataD, findTableAndFieldFromDataD, findWhereLinksForSqlRoot, findWhereLinksForSqlRootGoingUp, foldEntitys, generateGetSql, getStrategy, JavaQueryParamDetails, MainEntity, makeInsertSqlForIds, makeInsertSqlForNoIds, makeMapsForRest, makeWhereClause, makeWhereClauseStringsFrom, MultipleEntity, simplifyAliasAndChildEntityPath, simplifyAliasAndTables, simplifySqlLinkData, simplifySqlRoot, simplifyTableAndFieldAndAliasDataArray, simplifyTableAndFieldData, simplifyTableAndFieldDataArray, simplifyTableAndFieldsData, simplifyWhereFromQuery, simplifyWhereLinks, SingleEntity, walkSqlRoots, whereFieldToFieldDataFromTableQueryLink, whereFieldToFieldDataFromTableWhereLink } from "../codegen/makeSqlFromEntities";
 import { AllLensRestParams, EntityAndWhere, IntParam, StringParam } from "../common/restD";
 import { JointAccountCustomerDD, JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { nameAndAddressDataD, postCodeSearchResponseDD } from "../example/postCodeDemo/addressSearch.dataD";
@@ -7,7 +7,7 @@ import { JointAccountPageD } from "../example/jointAccount/jointAccount.pageD";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
 import { paramsForTest } from "./paramsForTest";
-import { fromCommonIds } from "../example/commonIds";
+import { allCommonIds, commonIds, fromCommonIds } from "../example/commonIds";
 import { accountT, addT } from "../example/database/tableNames";
 import { safeArray, unique } from "@focuson/utils";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
@@ -298,7 +298,7 @@ describe ( "findSqlLinkDataFromRootAndDataD", () => {
 } )
 describe ( "makeWhereClauseStringsFrom", () => {
   it ( "should make where clauses", () => {
-    expect ( makeWhereClauseStringsFrom ( [ { table: accountT, field: 'f1', alias: 'a', paramName: 'p1' } ] ) ).toEqual ( [" a.f1 = ?" ] )
+    expect ( makeWhereClauseStringsFrom ( [ { table: accountT, field: 'f1', alias: 'a', paramName: 'p1' } ] ) ).toEqual ( [ " a.f1 = ?" ] )
     expect ( makeWhereClauseStringsFrom ( [ { table: accountT, field: 'f1', alias: 'a', paramName: 'p1', comparator: '=' } ] ) ).toEqual ( [ " a.f1 = ?" ] )
     expect ( makeWhereClauseStringsFrom ( [ { table: accountT, field: 'f1', alias: 'a', paramName: 'p1', comparator: '>' } ] ) ).toEqual ( [ " a.f1 > ?" ] )
     expect ( makeWhereClauseStringsFrom ( [ { table: accountT, field: 'f1', alias: 'a', paramName: 'p1', comparator: '<' } ] ) ).toEqual ( [ " a.f1 < ?" ] )
@@ -307,7 +307,7 @@ describe ( "makeWhereClauseStringsFrom", () => {
     expect ( makeWhereClauseStringsFrom ( [ { table: accountT, field: 'f1', alias: 'a', paramName: 'p1', comparator: 'like', paramPostfix: '%' } ] ) ).toEqual ( [ " a.f1 like ?" ] )
     expect ( makeWhereClauseStringsFrom ( [ { table: accountT, field: 'f1', alias: 'a', paramName: 'p1', comparator: 'like', paramPrefix: '%' } ] ) ).toEqual ( [ " a.f1 like ?" ] )
     expect ( makeWhereClauseStringsFrom ( [ { table: accountT, field: 'f1', alias: 'a', paramName: 'p1', comparator: 'like', paramPrefix: '%', paramPostfix: '%' } ] ) ).toEqual ( [ " a.f1 like ?" ] )
-    expect ( makeWhereClauseStringsFrom ( [ { table: accountT, field: 'f1', alias: 'a', paramName: 'p1', comparator: 'sameday' } ] ) ).toEqual ( ["to_char(a.f1, 'DD/MM/YYYY') = ?" ] )
+    expect ( makeWhereClauseStringsFrom ( [ { table: accountT, field: 'f1', alias: 'a', paramName: 'p1', comparator: 'sameday' } ] ) ).toEqual ( [ "to_char(a.f1, 'DD/MM/YYYY') = ?" ] )
   } )
 } )
 describe ( "generateGetSql", () => {
@@ -463,6 +463,21 @@ describe ( "createTableSql", () => {
   } )
 
 
+} )
+
+describe ( "addPrefixPostFix", () => {
+  it ( "should return the name if nothing special", () => {
+    expect ( addPrefixPostFix ( { name: 'name', param: allCommonIds.brandRef } ) ).toEqual ( 'name' )
+  } )
+  it ( "should add prefix/postfix if needed", () => {
+    expect ( addPrefixPostFix ( { name: 'name', paramPrefix: '%', paramPostfix: '%', param: allCommonIds.brandRef } ) ).toEqual ( '"%"+name+"%"' )
+    expect ( addPrefixPostFix ( { name: 'name', paramPrefix: '%', param: allCommonIds.brandRef } ) ).toEqual ( '"%"+name' )
+    expect ( addPrefixPostFix ( { name: 'name', paramPostfix: '%', param: allCommonIds.brandRef } ) ).toEqual ( 'name+"%"' )
+
+  } )
+  it ( "should use the pattern if provided", () => {
+    expect ( addPrefixPostFix ( { name: 'name', datePattern: 'xx/yy/zzzz', param: allCommonIds.brandRef } ) ).toEqual ( 'DateFormatter.stringToDateString("xx/yy/zzzz",name)' )
+  } )
 } )
 
 describe ( "makeMapsForRest", () => {

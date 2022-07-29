@@ -680,6 +680,11 @@ export function preTransactionSqlLogger ( paramsA: JavaQueryParamDetails[] ): st
   const prefixNamesAndIndex = `sql: {${0}}, `.concat ( paramsA.map ( p => `${(p.name)}: {${i++}}` ).join ( ", " ) );
   return `    logger.debug(MessageFormat.format("${prefixNamesAndIndex}", sql, ${paramsA.map ( p => p.name )}));`;
 }
+export function addPrefixPostFix ( details: JavaQueryParamDetails ): string {
+  const { name, paramPrefix, paramPostfix, datePattern } = details
+  if ( datePattern ) return `DateFormatter.stringToDateString("${datePattern}",${name})`;
+  return (paramPrefix ? '"' + paramPrefix + '"+' : '') + name + (paramPostfix ? '+"' + paramPostfix + '"' : '')
+}
 
 function makeGetRestForMainOrChild<B, G> ( p: PageD<B, G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[], repeating: Boolean ) {
   const mapName = `${sqlMapName ( p, restName, path )}`;
@@ -693,11 +698,6 @@ function makeGetRestForMainOrChild<B, G> ( p: PageD<B, G>, restName: string, pat
     [ `      logger.debug(MessageFormat.format("Duration: {0}", (System.nanoTime() - start) / 1000000.0));`,
       `      return rs.next() ? Optional.of(${newMap ( mapName, childCount, [] )}) : Optional.empty();` ]
 
-  function addPrefixPostFix ( details: JavaQueryParamDetails ): string {
-    const { name, paramPrefix, paramPostfix, datePattern } = details
-    if ( datePattern ) return `DateFormatter.stringToDateString("${datePattern}",${name})`;
-    return (paramPrefix ? '"' + paramPrefix + '"+' : '') + name + (paramPostfix ? '+"' + paramPostfix + '"' : '') + `/*${JSON.stringify ( details )}*/`
-  }
   return [
     `public static ${repeating ? 'List' : 'Optional'}<${mapName}> get${path.join ( '_' )}(${getParameters ( childCount, p, restName, [], queryParams )}) throws SQLException {`,
     `    String sql = ${mapName}.sql;`,
