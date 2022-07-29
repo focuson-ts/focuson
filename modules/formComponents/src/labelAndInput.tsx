@@ -5,8 +5,8 @@ import { NumberTransformer, StringTransformer } from "./transformers";
 import { defaultDateFn, NameAnd, NumberValidations, SimpleMessage, stringToSimpleMsg, StringValidations, toArray } from "@focuson/utils";
 import { FocusOnContext, HasPathToLens } from "@focuson/focuson";
 import { LensState } from "@focuson/state";
-import { Optional, Transform } from "@focuson/lens";
-import { InputChangeCommands, inputCommandProcessors, InputProcessorsConfig, ModalProcessorsConfig, processChangeCommandProcessor } from "@focuson/rest";
+import { Transform } from "@focuson/lens";
+import { InputChangeCommands, inputCommandProcessors, InputProcessorsConfig, processChangeCommandProcessor } from "@focuson/rest";
 import { makeButtons } from "./makeButtons";
 import { HasSimpleMessageL } from "@focuson/pages";
 
@@ -30,10 +30,6 @@ export function makeInputChangeTxs<S, C extends HasSimpleMessageL<S> & HasPathTo
   if ( parentState === undefined ) return []
   const { simpleMessagesL, pathToLens } = parentState.context
   const config: InputProcessorsConfig<S, SimpleMessage> = {
-    pageNameFn<S> ( s: S ): string {
-      return "";
-    },
-    tagHolderL: parentState.context.ta,
     toPathTolens: pathToLens ( parentState.main, parentState.optional ),
     stringToMsg: stringToSimpleMsg ( defaultDateFn, 'info' ),
     messageL: simpleMessagesL,

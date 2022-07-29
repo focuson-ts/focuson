@@ -31,14 +31,14 @@ const froma12WithAMessage: StateForChangeCommands = { messages: [ { level: 'erro
 const config: DeleteMessageStrictCopySetProcessorsConfig<StateForChangeCommands, SimpleMessage> = {
   s: empty,
   toPathTolens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( testDateFn, 'info' ),
-  pageNameFn: s => 'somePage',
-  tagHolderL: Lenses.identity<StateForChangeCommands> ().focusQuery ( 'tags' )
 }
 const restConfig: RestAndInputProcessorsConfig<StateForChangeCommands, any, SimpleMessage> = {
   ...config, resultPathToLens
 }
 const modalConfig: ModalProcessorsConfig<StateForChangeCommands, SimpleMessage> = {
-  ...config, fromPathTolens, defaultL
+  ...config, fromPathTolens, defaultL,
+  pageNameFn: s => 'somePage',
+  tagHolderL: Lenses.identity<StateForChangeCommands> ().focusQuery ( 'tags' )
 }
 const result = { y: 'y', z: { a: { b: 'from', c: 'res' } } }
 const restProcessor = restChangeCommandProcessors ( restConfig )
@@ -65,8 +65,8 @@ describe ( "delete command", () => {
 } )
 
 describe ( "delete page tags command", () => {
-  const processor = ( s: StateForChangeCommands ) => deletePageTagsCommandProcessor ( config.tagHolderL, config.pageNameFn, s );
-  const state = { ...froma12, tags: { otherPage: [], 'somePage_~/somePath': [], 'somePage_asd': [], } }
+  const processor = ( s: StateForChangeCommands ) => deletePageTagsCommandProcessor ( modalConfig.tagHolderL, modalConfig.pageNameFn, s );
+  const state: StateForChangeCommands = { ...froma12, tags: { otherPage: [], 'somePage_~/somePath': [], 'somePage_asd': [], } }
   let expected = [ [ "I.focus?(tags)", { "otherPage": [] } ] ];
   const deleteTagsCommand: DeletePageTagsCommand = { command: 'deletePageTags' };
   it ( "should ignore none deletePageTags", () => {

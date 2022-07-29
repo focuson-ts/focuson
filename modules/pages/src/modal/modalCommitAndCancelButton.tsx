@@ -1,5 +1,5 @@
 import { currentPageSelectionTail, fromPathGivenState, mainPage, PageSelection, PageSelectionContext, popPage } from "../pageSelection";
-import { LensProps, LensState, reasonFor } from "@focuson/state";
+import { LensProps, lensState, LensState, reasonFor } from "@focuson/state";
 import { DateFn, defaultDateFn, safeArray, safeString, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
 import { Optional, Transform } from "@focuson/lens";
 import { HasRestCommandL, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand } from "@focuson/rest";
@@ -9,6 +9,7 @@ import { CustomButtonType, getButtonClassName } from "../common";
 import React from "react";
 import { isMainPageDetails } from "../pageConfig";
 import { replaceTextUsingPath } from "../replace";
+import { HasTagHolderL } from "@focuson/template";
 
 
 export const confirmIt = <S, C extends PageSelectionContext<S>> ( state: LensState<S, any, C>, c: boolean | string | undefined ) => {
@@ -49,7 +50,7 @@ export function canCommitOrCancel<S, Context extends PageSelectionContext<S>> ( 
   return safeArray ( state.context.pageSelectionL.getOption ( state.main ) ).length > 1
 }
 
-export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S>> ( { state, id, dateFn, validate, enabledBy, text, buttonType, confirm }: ModalCommitButtonProps<S, Context> ) {
+export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S> & HasTagHolderL<S>> ( { state, id, dateFn, validate, enabledBy, text, buttonType, confirm }: ModalCommitButtonProps<S, Context> ) {
   // @ts-ignore
   const debug = state.main?.debug?.validityDebug
   if ( dateFn === undefined ) dateFn = defaultDateFn
@@ -92,6 +93,8 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
     const errorPrefix = `ModalCommit ${id}`
 
     const config: ModalProcessorsConfig<S, SimpleMessage> = {
+      pageNameFn: ( s: S ) => mainPage ( lensState<S, Context> ( s, () => {throw Error ()}, '', state.context ) ).pageName,
+      tagHolderL: state.context.tagHolderL,
       stringToMsg: stringToSimpleMsg ( dateFn, 'info' ),
       fromPathTolens,
       toPathTolens,

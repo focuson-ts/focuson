@@ -10,6 +10,7 @@ import { SimpleMessage, testDateFn } from "@focuson/utils";
 import { ModalCancelButton, ModalCommitButton } from "./modalCommitAndCancelButton";
 import { HasSimpleMessageL, simpleMessagesL } from "../simpleMessage";
 import { HasRestCommandL, HasRestCommands, RestCommand, restL } from "@focuson/rest";
+import { HasTagHolderL, TagHolder } from "@focuson/template";
 
 enzymeSetup ()
 interface StateForModalButtonTest extends HasPageSelection, HasRestCommands {
@@ -17,8 +18,9 @@ interface StateForModalButtonTest extends HasPageSelection, HasRestCommands {
   data?: string,
   a?: number
   b?: number
+  tags?: TagHolder
 }
-type Context = PageSelectionContext<StateForModalButtonTest> & HasSimpleMessageL<StateForModalButtonTest> & HasRestCommandL<StateForModalButtonTest>
+type Context = PageSelectionContext<StateForModalButtonTest> & HasSimpleMessageL<StateForModalButtonTest> & HasRestCommandL<StateForModalButtonTest> & HasTagHolderL<StateForModalButtonTest>
 
 const context: Context = {
   simpleMessagesL: simpleMessagesL<StateForModalButtonTest> (),
@@ -28,7 +30,8 @@ const context: Context = {
     a: { lens: Lenses.identity<StateForModalButtonTest> ().focusQuery ( 'a' ), pageFunction: () => <span/>, config: {}, pageType: 'MainPage', pageMode: "edit" },
     b: { lens: Lenses.identity<StateForModalButtonTest> ().focusQuery ( 'b' ), pageFunction: () => <span/>, config: {}, pageType: 'MainPage', pageMode: "edit" },
   },
-  restL: restL ()
+  restL: restL (),
+  tagHolderL: Lenses.identity<StateForModalButtonTest> ().focusQuery ( 'tags' )
 
 }
 

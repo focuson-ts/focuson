@@ -138,7 +138,7 @@ export interface ModalProcessorsConfig<S, MSGs> extends DeleteMessageStrictCopyS
   fromPathTolens: ( path: string ) => Optional<S, any>,
   defaultL: Optional<S, any>;
 }
-export type  InputProcessorsConfig<S, MSGs> = DeleteMessageStrictCopySetProcessorsDeleteTagsConfig<S, MSGs>
+export type  InputProcessorsConfig<S, MSGs> = DeleteMessageStrictCopySetProcessorsConfig<S, MSGs>
 
 export function deleteMessageSetProcessors<S, MSGs> ( config: DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> ): ChangeCommandProcessor<S> {
   const { toPathTolens, messageL,  s } = config

@@ -1,11 +1,12 @@
 import { LensState, reasonFor } from "@focuson/state";
-import { fromPathGivenState, page, PageMode, PageParams, PageSelection, PageSelectionContext, SetToLengthOnClose } from "../pageSelection";
+import { fromPathGivenState, mainPage, page, PageMode, PageParams, PageSelection, PageSelectionContext, SetToLengthOnClose } from "../pageSelection";
 import { Optional, Transform } from "@focuson/lens";
 import { CopyCommand, DeleteCommand, HasRestCommandL, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand, SetChangeCommand } from "@focuson/rest";
 import { anyIntoPrimitive, CopyDetails, DateFn, safeArray, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
 import { CustomButtonType, getButtonClassName } from "../common";
 import { isMainPageDetails, MultiPageDetails } from "../pageConfig";
 import { HasSimpleMessageL } from "../simpleMessage";
+import { HasTagHolderL } from "@focuson/template";
 
 export interface CopyStringDetails {
   from: string;
@@ -67,7 +68,7 @@ function buttonToChangeCommands<S, Context extends PageSelectionContext<S> & Has
   return result
 }
 
-function makeModalProcessorsConfig<S, Context extends PageSelectionContext<S> & HasSimpleMessageL<S>> (
+function makeModalProcessorsConfig<S, Context extends PageSelectionContext<S> & HasSimpleMessageL<S> & HasTagHolderL<S>> (
   errorPrefix: string,
   state: LensState<S, any, Context>,
   newPageSelection: PageSelection,
@@ -77,8 +78,9 @@ function makeModalProcessorsConfig<S, Context extends PageSelectionContext<S> & 
   const toPathTolens = fromPathGivenState ( state, ps => [ ...ps, newPageSelection ] );
   const focusOnL = findFocusLFromCurrentState ( errorPrefix, props, fromPathTolens, state.context.pages )
 
-
   const config: ModalProcessorsConfig<S, SimpleMessage> = {
+    pageNameFn: ( s: S ) => mainPage ( state ).pageName,
+    tagHolderL: state.context.tagHolderL,
     stringToMsg: stringToSimpleMsg ( dateFn, 'info' ),
     fromPathTolens,
     toPathTolens,
@@ -90,7 +92,7 @@ function makeModalProcessorsConfig<S, Context extends PageSelectionContext<S> & 
 }
 
 
-export function ModalButton<S extends any, Context extends PageSelectionContext<S> & HasSimpleMessageL<S> & HasRestCommandL<S>> ( props: ModalButtonProps<S, Context> ): JSX.Element {
+export function ModalButton<S extends any, Context extends PageSelectionContext<S> & HasSimpleMessageL<S> & HasRestCommandL<S> & HasTagHolderL<S>> ( props: ModalButtonProps<S, Context> ): JSX.Element {
   const {
           id, text, enabledBy, state, copy, copyJustString, pageMode, rest, copyOnClose, createEmpty, change, setToLengthOnClose,
           createEmptyIfUndefined, pageParams, buttonType, dateFn, changeOnClose, restOnOpen

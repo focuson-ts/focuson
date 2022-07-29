@@ -9,6 +9,9 @@ export type NamePlusTags = [ string, string | undefined ][]
 export interface HasTagHolder {
   tags: TagHolder
 }
+export interface HasTagHolderL<S> {
+  tagHolderL: Optional<S,TagHolder>
+}
 /** The tags are the 'bits of data' that tell us if we need to load something'
  * For example a statement needs a customer id. If the customer id changes then we need to fetch the statement data again
  */
