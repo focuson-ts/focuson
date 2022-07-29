@@ -65,24 +65,21 @@ export function pageSelections<S, Context extends HasPageSelectionLens<S>> ( s: 
  */
 export type PageOps = 'select' | 'popup'
 
-function getPageName<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ) {
-  let json = state.context.pageSelectionL.getOption ( state.main );
-  let result = json?.[ 0 ]?.pageName;
-  if ( result === undefined ) throw new Error ( 'Cannot get first page name' + JSON.stringify ( json ) )
-  return result;
-}
-export function replaceBasePath<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context>, path: string[] ) {
-  return path.map ( p => p === '{basePage}' ? getPageName ( state ) : p )
-}
+//  function getFirstPageName<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ) {
+//   let json = state.context.pageSelectionL.getOption ( state.main );
+//   let result = json?.[ 0 ]?.pageName;
+//   if ( result === undefined ) throw new Error ( 'Cannot get first page name' + JSON.stringify ( json ) )
+//   return result;
+// }
+// export function replaceBasePath<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context>, path: string[] ) {
+//   return path.map ( p => p === '{basePage}' ? getFirstPageName ( state ) : p )
+// }
 
 
 export function fromPathGivenState<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ): ( path: string ) => Optional<S, any> {
   const [ lens, namedOptionals ] = firstPageDataLensAndOptionals ( state, adjustPages )
   if ( !lens ) throw Error ( `Cannot 'fromPathGivenState' because there is no selected page` )
   return ( path: string ) => parsePath<Optional<S, any>> ( path, lensBuilder<S> ( prefixNameAndLens<S> ( [ '~', lens ], [ '', state.optional ] ), namedOptionals ? namedOptionals : {} ) );
-}
-export function replaceBasePageWithKnownPage ( pageName: string, path: string[] ): string[] {
-  return path.map ( part => part === '{basePage}' ? pageName : part )
 }
 
 export function applyPageOps ( pageOps: PageOps, pageSelection: PageSelection ): ( s: PageSelection[] | undefined ) => PageSelection[] {

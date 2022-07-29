@@ -2,11 +2,11 @@ import { CommonStateProps, InputOnChangeProps, LabelAlignment } from "./common";
 import { BooleanInput, Input, } from "./input";
 import { Label } from "./label";
 import { NumberTransformer, StringTransformer } from "./transformers";
-import { defaultDateFn, NameAnd, NumberValidations, stringToSimpleMsg, StringValidations, toArray } from "@focuson/utils";
+import { defaultDateFn, NameAnd, NumberValidations, SimpleMessage, stringToSimpleMsg, StringValidations, toArray } from "@focuson/utils";
 import { FocusOnContext, HasPathToLens } from "@focuson/focuson";
 import { LensState } from "@focuson/state";
-import { Transform } from "@focuson/lens";
-import { InputChangeCommands, inputCommandProcessors, processChangeCommandProcessor } from "@focuson/rest";
+import { Optional, Transform } from "@focuson/lens";
+import { InputChangeCommands, inputCommandProcessors, InputProcessorsConfig, ModalProcessorsConfig, processChangeCommandProcessor } from "@focuson/rest";
 import { makeButtons } from "./makeButtons";
 import { HasSimpleMessageL } from "@focuson/pages";
 
@@ -29,7 +29,11 @@ export interface TransformerProps<T> {
 export function makeInputChangeTxs<S, C extends HasSimpleMessageL<S> & HasPathToLens<S>> ( id: string, parentState: LensState<S, any, C> | undefined, change?: InputChangeCommands | InputChangeCommands[] ): Transform<S, any>[] {
   if ( parentState === undefined ) return []
   const { simpleMessagesL, pathToLens } = parentState.context
-  const config = {
+  const config: InputProcessorsConfig<S, SimpleMessage> = {
+    pageNameFn<S> ( s: S ): string {
+      return "";
+    },
+    tagHolderL: parentState.context.ta,
     toPathTolens: pathToLens ( parentState.main, parentState.optional ),
     stringToMsg: stringToSimpleMsg ( defaultDateFn, 'info' ),
     messageL: simpleMessagesL,

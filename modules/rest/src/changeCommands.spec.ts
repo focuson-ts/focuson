@@ -1,6 +1,7 @@
 import { HasSimpleMessages, safeArray, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
-import { CopyCommand, copyCommandProcessor, CopyResultCommand, copyResultCommandProcessor, DeleteCommand, deleteCommandProcessor, DeleteMessageStrictCopySetProcessorsConfig, MessageCommand, messageCommandProcessor, modalCommandProcessors, ModalProcessorsConfig, restChangeCommandProcessors, RestAndInputProcessorsConfig, SetChangeCommand, setCommandProcessor, StrictCopyCommand, strictCopyCommandProcessor } from "./changeCommands";
+import { CopyCommand, copyCommandProcessor, CopyResultCommand, copyResultCommandProcessor, DeleteCommand, deleteCommandProcessor, DeleteMessageStrictCopySetProcessorsConfig, MessageCommand, messageCommandProcessor, modalCommandProcessors, ModalProcessorsConfig, restChangeCommandProcessors, RestAndInputProcessorsConfig, SetChangeCommand, setCommandProcessor, StrictCopyCommand, strictCopyCommandProcessor, deletePageTagsCommandProcessor, DeletePageTagsCommand } from "./changeCommands";
 import { displayTransformsInState, lensBuilder, Lenses, parsePath } from "@focuson/lens";
+import { TagHolder } from "@focuson/template";
 
 interface abc {
   a: { b?: string, c?: string }
@@ -9,31 +10,34 @@ interface yz {
   y?: string,
   z?: abc
 }
-interface StateForChangeCommads extends HasSimpleMessages {
+interface StateForChangeCommands extends HasSimpleMessages {
   fromA?: abc,
   toA?: abc,
   x?: yz,
+  tags?: TagHolder
 }
 const simpleMessagesL = <S extends HasSimpleMessages> () => Lenses.identity<S> ().focusQuery ( 'messages' );
-const fromPathTolens = ( p: string ) => parsePath ( p, lensBuilder ( { '/': Lenses.identity<StateForChangeCommads> ().focusQuery ( 'fromA' ) }, {} ) )
-const toPathTolens = ( p: string ) => parsePath ( p, lensBuilder ( { '/': Lenses.identity<StateForChangeCommads> ().focusQuery ( 'toA' ) }, {} ) )
+const fromPathTolens = ( p: string ) => parsePath ( p, lensBuilder ( { '/': Lenses.identity<StateForChangeCommands> ().focusQuery ( 'fromA' ) }, {} ) )
+const toPathTolens = ( p: string ) => parsePath ( p, lensBuilder ( { '/': Lenses.identity<StateForChangeCommands> ().focusQuery ( 'toA' ) }, {} ) )
 const resultPathToLens = ( p: string ) => parsePath ( p, lensBuilder (
 // @ts-ignore
   { '/': Lenses.identity<yz> ( 'resultPath' ) }, {} ) )
-const defaultL = Lenses.identity<StateForChangeCommads> ( 'default' ).focusQuery ( 'x' ).focusQuery ( 'z' ).focusQuery ( 'a' )
-const empty: StateForChangeCommads = { messages: [] }
-const froma12: StateForChangeCommads = { messages: [], fromA: { a: { b: "one", c: "two" } } }
-const froma12Withz: StateForChangeCommads = { messages: [], fromA: { a: { b: "one", c: "two" } }, x: { z: { a: { b: 'from', c: 'default' } } } }
+const defaultL = Lenses.identity<StateForChangeCommands> ( 'default' ).focusQuery ( 'x' ).focusQuery ( 'z' ).focusQuery ( 'a' )
+const empty: StateForChangeCommands = { messages: [] }
+const froma12: StateForChangeCommands = { messages: [], fromA: { a: { b: "one", c: "two" } } }
+const froma12Withz: StateForChangeCommands = { messages: [], fromA: { a: { b: "one", c: "two" } }, x: { z: { a: { b: 'from', c: 'default' } } } }
 
-const froma12WithAMessage: StateForChangeCommads = { messages: [ { level: 'error', msg: 'a', time: 'someTime' } ], fromA: { a: { b: "one", c: "two" } } }
-const config: DeleteMessageStrictCopySetProcessorsConfig<StateForChangeCommads, SimpleMessage> = {
+const froma12WithAMessage: StateForChangeCommands = { messages: [ { level: 'error', msg: 'a', time: 'someTime' } ], fromA: { a: { b: "one", c: "two" } } }
+const config: DeleteMessageStrictCopySetProcessorsConfig<StateForChangeCommands, SimpleMessage> = {
   s: empty,
-  toPathTolens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( testDateFn, 'info' )
+  toPathTolens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( testDateFn, 'info' ),
+  pageNameFn: s => 'somePage',
+  tagHolderL: Lenses.identity<StateForChangeCommands> ().focusQuery ( 'tags' )
 }
-const restConfig: RestAndInputProcessorsConfig<StateForChangeCommads, any, SimpleMessage> = {
+const restConfig: RestAndInputProcessorsConfig<StateForChangeCommands, any, SimpleMessage> = {
   ...config, resultPathToLens
 }
-const modalConfig: ModalProcessorsConfig<StateForChangeCommads, SimpleMessage> = {
+const modalConfig: ModalProcessorsConfig<StateForChangeCommands, SimpleMessage> = {
   ...config, fromPathTolens, defaultL
 }
 const result = { y: 'y', z: { a: { b: 'from', c: 'res' } } }
@@ -60,6 +64,24 @@ describe ( "delete command", () => {
   } )
 } )
 
+describe ( "delete page tags command", () => {
+  const processor = ( s: StateForChangeCommands ) => deletePageTagsCommandProcessor ( config.tagHolderL, config.pageNameFn, s );
+  const state = { ...froma12, tags: { otherPage: [], 'somePage_~/somePath': [], 'somePage_asd': [], } }
+  let expected = [ [ "I.focus?(tags)", { "otherPage": [] } ] ];
+  const deleteTagsCommand: DeletePageTagsCommand = { command: 'deletePageTags' };
+  it ( "should ignore none deletePageTags", () => {
+    expect ( processor ( { ...froma12 } ) ( { command: 'something' } ) ).toEqual ( undefined )
+  } )
+  it ( "should remove tags starting with the current page (somePage)", () => {
+    expect ( displayTransformsInState ( state, safeArray ( processor ( state ) ( deleteTagsCommand ) ) ) ).toEqual ( expected )
+  } )
+  it ( "should place a undefined at the target - modal", () => {
+    expect ( displayTransformsInState ( state, safeArray ( modalProcessor ( state ) ( deleteTagsCommand ) ) ) ).toEqual ( expected )
+  } )
+  it ( "should place a undefined at the target - rest", () => {
+    expect ( displayTransformsInState ( state, safeArray ( restProcessor ( state ) ( deleteTagsCommand ) ) ) ).toEqual ( expected )
+  } )
+} )
 describe ( "strict copy command", () => {
   const command: StrictCopyCommand = { command: 'copy', from: '/a', to: '/b' };
   const processor = strictCopyCommandProcessor ( fromPathTolens, toPathTolens );
@@ -124,7 +146,7 @@ describe ( " copy command", () => {
   } )
 } )
 describe ( "messageCommandProcessor", () => {
-  const processor = messageCommandProcessor<StateForChangeCommads, SimpleMessage> ( config );
+  const processor = messageCommandProcessor<StateForChangeCommands, SimpleMessage> ( config );
   const command: MessageCommand = { command: 'message', msg: 'someMessage' };
   const expected = [
     [
@@ -166,7 +188,7 @@ describe ( "setCommandProcessor", () => {
 } )
 
 describe ( "copyResultCommandProcessor", () => {
-  const processor = copyResultCommandProcessor<StateForChangeCommads, yz> ( resultPathToLens, toPathTolens )
+  const processor = copyResultCommandProcessor<StateForChangeCommands, yz> ( resultPathToLens, toPathTolens )
   const command: CopyResultCommand = { command: 'copyResult', from: '/z/a', to: '/a' };
   it ( "should ignore none copyResultCommands", () => {
     expect ( processor ( result ) ( { command: 'something' } ) ).toEqual ( undefined )

@@ -1,4 +1,4 @@
-import { focusPageClassName, fromPathFromRaw, fromPathGivenState, HasPageSelection, HasSimpleMessageL, mainPageFrom, MultiPageDetails, PageDetailsForCombine, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages, simpleMessagesL } from "@focuson/pages";
+import { focusPageClassName, fromPathFromRaw, fromPathGivenState, HasPageSelection, HasSimpleMessageL, mainPage, mainPageFrom, MultiPageDetails, PageDetailsForCombine, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages, simpleMessagesL } from "@focuson/pages";
 import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
 import { FetcherTree, loadTree } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
@@ -193,12 +193,14 @@ export const dispatchRestAndFetchCommands = <S, Context extends FocusOnContext<S
 export function makeProcessorsConfig<S, Context extends FocusOnContext<S>> ( startS: S, context: Context ) {
   const pathToLens = fromPathGivenState ( lensState ( startS, () => {throw Error ()}, '', context ) )
   const processorsConfig: ModalProcessorsConfig<S, SimpleMessage> = {
+    pageNameFn: ( s: S ) => mainPage<S, Context> ( lensState ( s, () => {throw Error ()}, '', context ) ).pageName,
+    tagHolderL: context.tagHolderL,
     messageL: context.simpleMessagesL,
     defaultL: Lenses.identity (),
     stringToMsg: stringToSimpleMsg ( defaultDateFn, 'info' ),
     s: startS,
     fromPathTolens: pathToLens,
-    toPathTolens: pathToLens,
+    toPathTolens: pathToLens
   }
   return processorsConfig;
 }

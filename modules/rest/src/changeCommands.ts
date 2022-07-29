@@ -1,5 +1,7 @@
 import { Optional, Transform } from "@focuson/lens";
 import { replaceTextFn } from "@focuson/lens";
+import { TagHolder } from "@focuson/template";
+import { filterObject, safeObject } from "@focuson/utils";
 
 export interface ChangeCommand {
   command: string
@@ -13,6 +15,20 @@ export interface DeleteCommand extends ChangeCommand {
 const isDeleteCommand = ( c: ChangeCommand ): c is DeleteCommand => c.command === 'delete';
 export const deleteCommandProcessor = <S> ( pathToLens: ( path: string ) => Optional<S, any> ): ChangeCommandProcessor<S> =>
   ( c ) => isDeleteCommand ( c ) ? [ [ pathToLens ( c.path ), () => undefined ] ] : undefined;
+
+
+export interface DeletePageTagsCommand extends ChangeCommand {
+  command: 'deletePageTags';
+}
+const isDeletePageTagsCommand = ( c: ChangeCommand ): c is DeletePageTagsCommand => c.command === 'deletePageTags';
+export const deletePageTagsCommandProcessor = <S> ( tagHolderL: Optional<S, TagHolder>, pageNameFn: ( s: S ) => string, s: S ): ChangeCommandProcessor<S> =>
+  ( c ) => {
+    if ( isDeletePageTagsCommand ( c ) ) {
+      const marker = pageNameFn ( s ) + "_"
+      return [ [ tagHolderL, tags => filterObject ( tags, ( [ name, v ] ) => !name.startsWith ( marker ) ) ] ]
+    }
+  }
+
 
 export interface SetChangeCommand extends ChangeCommand {
   command: 'set'
@@ -108,22 +124,27 @@ export interface DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> {
   stringToMsg: ( s: string ) => MSGs;
   s: S
 }
+export interface DeleteMessageStrictCopySetProcessorsDeleteTagsConfig<S, MSGs> extends DeleteMessageStrictCopySetProcessorsConfig<S,MSGs> {
+  tagHolderL: Optional<S, TagHolder>,
+  pageNameFn: ( s: S ) => string,
+}
 export interface RestAndInputProcessorsConfig<S, Result, MSGs> extends DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> {
   resultPathToLens: ( path: string ) => Optional<Result, any>,
 }
 export interface HasModalProcessorsConfig<S, MSGS> {
   processorsConfig: ModalProcessorsConfig<S, MSGS>
 }
-export interface ModalProcessorsConfig<S, MSGs> extends DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> {
+export interface ModalProcessorsConfig<S, MSGs> extends DeleteMessageStrictCopySetProcessorsDeleteTagsConfig<S, MSGs> {
   fromPathTolens: ( path: string ) => Optional<S, any>,
   defaultL: Optional<S, any>;
 }
-export type  InputProcessorsConfig<S, MSGs> = DeleteMessageStrictCopySetProcessorsConfig<S, MSGs>
+export type  InputProcessorsConfig<S, MSGs> = DeleteMessageStrictCopySetProcessorsDeleteTagsConfig<S, MSGs>
 
 export function deleteMessageSetProcessors<S, MSGs> ( config: DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> ): ChangeCommandProcessor<S> {
-  const { toPathTolens, messageL, stringToMsg } = config
+  const { toPathTolens, messageL,  s } = config
   return composeChangeCommandProcessors (
-    processDeleteAllMessagesCommand ( config.messageL ),
+    processDeleteAllMessagesCommand ( messageL ),
+
     deleteCommandProcessor ( toPathTolens ),
     setCommandProcessor ( toPathTolens ),
     messageCommandProcessor ( config )
@@ -137,8 +158,9 @@ export const restChangeCommandProcessors = <S, Result, MSGs> ( config: RestAndIn
       copyResultCommandProcessor ( config.resultPathToLens, config.toPathTolens ) ( result ) );
 
 export const modalCommandProcessors = <S, MSGs> ( config: ModalProcessorsConfig<S, MSGs> ) => ( s: S ) => {
-  const { fromPathTolens, toPathTolens, defaultL } = config
+  const { fromPathTolens, toPathTolens,tagHolderL, pageNameFn, defaultL } = config
   return composeChangeCommandProcessors (
+    deletePageTagsCommandProcessor ( tagHolderL, pageNameFn, s ),
     deleteMessageSetProcessors ( config ),
     copyCommandProcessor ( fromPathTolens, toPathTolens, defaultL ) ( s ) );
 };

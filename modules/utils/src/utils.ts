@@ -40,11 +40,23 @@ export function copyWithFieldSet<T, K extends keyof T> ( t: T, k: K, v: T[K] ) {
   result[ k ] = v
   return result
 }
-export function safeObject<T> ( t: NameAnd<T> | undefined ) { return t ? t : {}}
+export function safeObject<T> ( t: NameAnd<T> | undefined ): NameAnd<T> { return t ? t : {}}
+export function mapObject<T, T1> ( t: NameAnd<T>, fn: ( t: T ) => T1 ): NameAnd<T1> {
+  return Object.fromEntries ( Object.entries ( safeObject ( t ) ).map ( ( [ name, value ] ) => [ name, fn ( value ) ] ) )
+}
+export function filterMapObject<T, T1> ( t: NameAnd<T>, filter: ( [ name, t ]: [ string, T ] ) => boolean, fn: ( t: T ) => T1 ): NameAnd<T1> {
+  return Object.fromEntries ( Object.entries ( safeObject ( t ) ).filter ( filter ).map ( ( [ name, value ] ) => [ name, fn ( value ) ] ) )
+}
+export function filterObject<T> ( t: NameAnd<T>, filter: ( [ name, t ]: [ string, T ] ) => boolean ): NameAnd<T> {
+  return Object.fromEntries ( Object.entries ( safeObject ( t ) ).filter ( filter ) )
+}
+
 export function safeArray<T> ( ts: T[] | undefined ) {
   if ( ts !== undefined && !Array.isArray ( ts ) ) throw new Error ( `Should have an array. Instead have ${JSON.stringify ( ts )}` )
   return ts ? ts : []
 }
+
+
 export function toArray<T> ( ts: T | T[] | undefined ): T[] {
   if ( ts === undefined ) return []
   if ( Array.isArray ( ts ) ) return ts
