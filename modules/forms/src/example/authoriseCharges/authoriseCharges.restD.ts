@@ -22,8 +22,8 @@ export const AuthorisedChargesRD: ExampleRestD = {
   url: "/api/charges/summary?{query}",
   actions: [ 'get', 'update' ],
   tables: {
-    entity: {table: authorisedChargesTableDD, alias: 'A', type: 'Main'},
-    where: [{table: authorisedChargesTableDD, alias: "A", field: 'date', comparator: 'sameday', paramName: 'date'}]
+    entity: { table: authorisedChargesTableDD, alias: 'A', type: 'Main' },
+    where: [ { table: authorisedChargesTableDD, alias: "A", field: 'date', comparator: 'sameday', paramName: 'date' } ]
   }
 }
 
@@ -39,8 +39,12 @@ export const SummaryOfChargeDatesRD: ExampleRestD = {
 
 export const SummaryOfChargesRD: ExampleRestD = {
   dataDD: chargesSummaryDetailDD,
-  params: {},
+  params: { date: { ...StringParam, lens: '~/', testValue: '1/6/2016' } },
   url: "/api/charges/details?{query}",
   actions: [ 'get' ],
+  tables: {
+    entity: { type: "Main", table: authorisedChargesTableDD, alias: 'A' },
+    where: [ { table: authorisedChargesTableDD, alias: "A", field: 'date', comparator: 'sameday', pattern: 'dd/MM/yyyy', paramName: 'date' } ]
+  }
 }
 

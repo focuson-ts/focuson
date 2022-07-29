@@ -19,4 +19,13 @@ public class DateFormatter {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         return simpleDateFormat.format(input);
     }
+    public static String stringToDateString(String format, String input) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        try {
+            return simpleDateFormat.format(simpleDateFormat.parse(input));
+        } catch (ParseException e) {
+            throw new RuntimeException("Expected format " + format + " but actually had " + input, e);
+        }
+    }
+
 }

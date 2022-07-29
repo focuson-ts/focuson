@@ -654,6 +654,7 @@ export interface JavaQueryParamDetails {
   param: AllLensRestParams<any>
   paramPrefix?: string;
   paramPostfix?: string;
+  datePattern?: string
 }
 
 function getParameters<B, G> ( childCount: number, p: PageD<B, G>, restName: string, path: number[], queryParams: JavaQueryParamDetails[] ) {
@@ -692,8 +693,10 @@ function makeGetRestForMainOrChild<B, G> ( p: PageD<B, G>, restName: string, pat
     [ `      logger.debug(MessageFormat.format("Duration: {0}", (System.nanoTime() - start) / 1000000.0));`,
       `      return rs.next() ? Optional.of(${newMap ( mapName, childCount, [] )}) : Optional.empty();` ]
 
-  function addPrefixPostFix ( { name, paramPrefix, paramPostfix }: JavaQueryParamDetails ): string {
-    return (paramPrefix ? '"' + paramPrefix + '"+' : '') + name + (paramPostfix ? '+"' + paramPostfix + '"' : '')
+  function addPrefixPostFix ( details: JavaQueryParamDetails ): string {
+    const { name, paramPrefix, paramPostfix, datePattern } = details
+    if ( datePattern ) return `DateFormatter.stringToDateString("${datePattern}",${name})`;
+    return (paramPrefix ? '"' + paramPrefix + '"+' : '') + name + (paramPostfix ? '+"' + paramPostfix + '"' : '') + `/*${JSON.stringify ( details )}*/`
   }
   return [
     `public static ${repeating ? 'List' : 'Optional'}<${mapName}> get${path.join ( '_' )}(${getParameters ( childCount, p, restName, [], queryParams )}) throws SQLException {`,
@@ -755,7 +758,7 @@ export function findParamsForTable ( errorPrefix: string, params: RestParams, ta
     if ( isWhereFromQuery ( wl ) ) {
       let param = params[ wl.paramName ];
       if ( param == undefined ) throw Error ( `${errorPrefix} param ${wl.paramName} is defined in where ${JSON.stringify ( wl )}\nBut not available in the params[${Object.keys ( params )}]` )
-      let result = { name: wl.paramName, param, paramPrefix, paramPostfix };
+      let result: JavaQueryParamDetails = { name: wl.paramName, param, paramPrefix, paramPostfix, datePattern: wl.pattern };
       return [ result ]
     }
     return []
