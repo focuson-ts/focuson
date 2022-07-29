@@ -2,7 +2,7 @@ import { Lenses } from "@focuson/lens";
 import { defaultPageSelectionAndRestCommandsContext, FocusOnContext } from "@focuson/focuson";
 
 import { lensState } from "@focuson/state";
-import { fromPathFromRaw, fromPathGivenState, MultiPageDetails, PageSelection, pageSelectionlens } from "@focuson/pages";
+import { applyPageOps, fromPathFromRaw, fromPathGivenState, MultiPageDetails, PageSelection, pageSelectionlens } from "@focuson/pages";
 
 
 let pageSelection: PageSelection = { pageName: 'a', pageMode: 'view', time: 'now' };
@@ -10,7 +10,7 @@ const x = { g: 1, h: [ 'h0', 'h1' ], i: { j: 2 } }
 
 const textForLabelState = {
   messages: [],
-  tags:{},
+  tags: {},
   pageSelection: [ pageSelection ],
   restCommands: [],
   a: {
@@ -45,6 +45,45 @@ const fromL = ( path: string ) => fromPathGivenState ( stateabx ) ( path )
 const from = ( path: string ) => fromL ( path ).getOption ( state.main )
 const set = ( path: string, value: any ) => fromL ( path ).set ( state.main, value )
 
+const ps1: PageSelection = { pageName: 'one', pageMode: 'view', time: 'time1' }
+const ps2: PageSelection = { pageName: 'two', pageMode: 'view', time: 'time2' }
+const ps3: PageSelection = { pageName: 'three', pageMode: 'view', time: 'time3' }
+const psNew: PageSelection = { pageName: 'new', pageMode: 'view', time: 'timeNew' }
+describe ( "applyPageOps", () => {
+  describe ( "should select - replace whatever is there with this page", () => {
+    it ( "should select with no current pages", () => {
+      expect ( applyPageOps ( 'select', psNew ) ( [] ) ).toEqual ( [ psNew ] )
+    } )
+    it ( "should select with one or more pages", () => {
+      expect ( applyPageOps ( 'select', psNew ) ( [ ps1 ] ) ).toEqual ( [ psNew ] )
+      expect ( applyPageOps ( 'select', psNew ) ( [ ps1, ps2, ps3 ] ) ).toEqual ( [ psNew ] )
+
+    } )
+  } )
+  describe ( "should popup - add this page", () => {
+    it ( "should popup with no current pages", () => {
+      expect ( applyPageOps ( 'popup', psNew ) ( [] ) ).toEqual ( [ psNew ] )
+    } )
+    it ( "should popup with no one pages", () => {
+      expect ( applyPageOps ( 'popup', psNew ) ( [ ps1 ] ) ).toEqual ( [ ps1, psNew ] )
+      expect ( applyPageOps ( 'popup', psNew ) ( [ ps1, ps2 ] ) ).toEqual ( [ ps1, ps2, psNew ] )
+      expect ( applyPageOps ( 'popup', psNew ) ( [ ps1, ps2, ps3 ] ) ).toEqual ( [ ps1, ps2, ps3, psNew ] )
+
+    } )
+  } )
+  describe ( "should replace - replace the top page", () => {
+    it ( "should replace with no current pages", () => {
+      expect ( applyPageOps ( 'replace', psNew ) ( [] ) ).toEqual ( [ psNew ] )
+    } )
+    it ( "should replace the top page", () => {
+      expect ( applyPageOps ( 'replace', psNew ) ( [ ps1 ] ) ).toEqual ( [ psNew ] )
+      expect ( applyPageOps ( 'replace', psNew ) ( [ ps1, ps2 ] ) ).toEqual ( [ ps1, psNew ] )
+      expect ( applyPageOps ( 'replace', psNew ) ( [ ps1, ps2, ps3 ] ) ).toEqual ( [ ps1, ps2, psNew ] )
+
+    } )
+
+  } )
+} )
 
 describe ( "fromPathStringFor. Page is 'a'. The current lens is a/b/x", () => {
   it ( "should default to a path from 'here'. i.e. a/b/x'", () => {

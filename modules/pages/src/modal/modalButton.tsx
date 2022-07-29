@@ -1,5 +1,5 @@
 import { LensState, reasonFor } from "@focuson/state";
-import { fromPathGivenState, mainPage, page, PageMode, PageParams, PageSelection, PageSelectionContext, SetToLengthOnClose } from "../pageSelection";
+import { fromPathGivenState, mainPage, page, PageMode, PageOps, PageParams, PageSelection, PageSelectionContext, SetToLengthOnClose } from "../pageSelection";
 import { Optional, Transform } from "@focuson/lens";
 import { CopyCommand, DeleteCommand, HasRestCommandL, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand, SetChangeCommand } from "@focuson/rest";
 import { anyIntoPrimitive, CopyDetails, DateFn, safeArray, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
@@ -18,6 +18,7 @@ export interface CommonModalButtonProps<S, Context> extends CustomButtonType {
   id?: string,
   text: string,
   dateFn: DateFn,
+  pageOp?: PageOps;
   enabledBy?: boolean,
   pageMode: PageMode,
   pageParams?: PageParams;
@@ -95,7 +96,7 @@ function makeModalProcessorsConfig<S, Context extends PageSelectionContext<S> & 
 export function ModalButton<S extends any, Context extends PageSelectionContext<S> & HasSimpleMessageL<S> & HasRestCommandL<S> & HasTagHolderL<S>> ( props: ModalButtonProps<S, Context> ): JSX.Element {
   const {
           id, text, enabledBy, state, copy, copyJustString, pageMode, rest, copyOnClose, createEmpty, change, setToLengthOnClose,
-          createEmptyIfUndefined, pageParams, buttonType, dateFn, changeOnClose, restOnOpen
+          createEmptyIfUndefined, pageParams, buttonType, dateFn, changeOnClose, restOnOpen, pageOp
         } = props
   const onClick = () => {
 
@@ -124,7 +125,7 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
     const restOnOpensTxs: Transform<S, any>[] = restOnOpen ? [ [ restL, old => [ ...old, ...toArray ( restOnOpen ) ] ] ] : []
 
     state.massTransform ( reasonFor ( 'ModalButton', 'onClick', id ) ) (
-      page<S, Context> ( state.context, 'popup', newPageSelection ),
+      page<S, Context> ( state.context, pageOp ? pageOp : 'popup', newPageSelection ),
       ...restOnOpensTxs,
       ...emptyifUndefinedTx,
       ...copyJustStrings,

@@ -20,10 +20,12 @@ import { EnabledByPageD } from "./example/enabledBy/enabledBy.pageD";
 import { ReadOnlyPageD } from "./example/readonly/readOnly.pageD";
 import { DatesPageD } from "./example/dates/dates.pageD";
 import { initialPageD } from "./example/initiial/initial.pageD";
+import { wizardPD } from "./example/wizard/wizard.pageD";
 
 
 export const generatedPages: ExampleMainPage[] = [
   DatesPageD,
+  wizardPD,
   initialPageD,
   EnabledByPageD,
   ReadOnlyPageD,

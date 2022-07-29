@@ -62,8 +62,9 @@ export function pageSelections<S, Context extends HasPageSelectionLens<S>> ( s: 
 }
 /** Select replaces the currently selected page (or adds it if empty).
  * Popup adds the page to the stack of pages in pageSelection
+ * Replace will replace the 'current' page
  */
-export type PageOps = 'select' | 'popup'
+export type PageOps = 'select' | 'popup' | 'replace'
 
 //  function getFirstPageName<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ) {
 //   let json = state.context.pageSelectionL.getOption ( state.main );
@@ -87,6 +88,7 @@ export function applyPageOps ( pageOps: PageOps, pageSelection: PageSelection ):
     const ps = safeArray ( old )
     if ( pageOps === 'popup' ) return [ ...ps, pageSelection ];
     if ( pageOps === 'select' ) return [ pageSelection ];
+    if ( pageOps === 'replace' ) return [ ...ps.slice ( 0, ps.length - 1 ), pageSelection ];
     throw new Error ( `Cannot perform pageOps ${pageOps}` )
   }
 }
