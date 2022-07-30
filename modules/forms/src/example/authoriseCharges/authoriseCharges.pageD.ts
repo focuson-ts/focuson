@@ -3,6 +3,7 @@ import { NatNumDd } from "../../common/dataD";
 import { AuthoriseChargesSummaryDD, chargesSummaryDetailDD, OneBrandDD, OneChargeDataDD, SelectOneBrandDD, summaryOfChargesDateDD, summaryOfChargesSearchDD } from "./authoriseCharges.dataD";
 import { AuthorisedChargesRD, SelectOneBrandPageRD, SummaryOfChargeDatesRD, SummaryOfChargesRD } from "./authoriseCharges.restD";
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
+import { StringParam } from "../../common/restD";
 
 export const SummaryOfChargesPage: ExampleModalPage = {
   name: 'SummaryOfCharges',
@@ -49,6 +50,8 @@ export const ViewChargesPage: ExampleModalPage = {
 export const AuthoriseChargesPD: ExampleMainPage = {
   name: 'AuthoriseCharges',
   pageType: "MainPage",
+  commonParams: { today: { ...StringParam, commonLens: 'today', testValue: '29/07/2022' } },
+  initialValue: [ { command: 'copy', from: '/CommonIds/today', to: '~/authorisedCharges/date' } ],
   modals: [ { modal: ViewChargesPage }, { modal: SummaryOfChargesPage }, { modal: SelectChargesDatePage } ],
   display: { target: '~/brand', dataDD: SelectOneBrandDD },
   domain: {
@@ -87,7 +90,6 @@ export const AuthoriseChargesPD: ExampleMainPage = {
     summaryOfChargeDates: { rest: SummaryOfChargeDatesRD, targetFromPath: '~/summaryOfChargesDates/searchResults', fetcher: true },
     summaryOfCharges: { rest: SummaryOfChargesRD, targetFromPath: '~/summaryOfCharges', fetcher: true }
   },
-  initialValue: { command: 'set', path: '~/authorisedCharges/date', value: '2020/01/01' },
   modes: [ 'view' ],
   buttons: {
     select: { control: 'ModalButton', modal: ViewChargesPage, mode: 'edit', focusOn: '#authorisedCharges', enabledBy: 'brandSelected' }

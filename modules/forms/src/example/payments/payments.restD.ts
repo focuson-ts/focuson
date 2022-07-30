@@ -47,7 +47,15 @@ export const newPaymentsRD: ExampleRestD = {
         ], select: [
           {
             guard: [ 'brandRef==3' ], type: 'sql', name: 'brandref3', schema: onlySchema,
-            sql: 'select nameOfPayee,sterlingAmount,currencyAmount,amtInWords,forActionOn,dateCreated,status from tableForBrand3 where acc = accountId', params: [
+            sql: `select nameOfPayee,
+                         sterlingAmount,
+                         currencyAmount,
+                         amtInWords,
+                         forActionOn,
+                         dateCreated,
+                         status
+                  from tableForBrand3
+                  where acc = accountId`, params: [
               'accountId',
               { type: "output", javaType: 'String', rsName: 'nameOfPayee', name: 'nameOfPayee' },
               { type: "output", javaType: 'Integer', rsName: 'sterlingAmount', name: 'sterlingAmount' },
@@ -58,21 +66,26 @@ export const newPaymentsRD: ExampleRestD = {
             ]
           },
           {
-            guard: [], type: 'sql', schema: onlySchema,
-            sql: 'select nameOfPayee,sterlingAmount,currencyAmount,amtInWords,forActionOn,dateCreated,status from tableForAllOtherBrands where acc = accountId', params: [
-              'accountId',
-              { type: "output", javaType: 'String', rsName: 'nameOfPayee', name: 'nameOfPayee' },
-              { type: "output", javaType: 'Integer', rsName: 'sterlingAmount', name: 'sterlingAmount' },
-              { type: "output", javaType: 'Integer', rsName: 'currencyAmount', name: 'currencyAmount' },
-              { type: "output", javaType: 'String', rsName: 'amtInWords', name: 'amtInWords' },
-              { type: "output", javaType: 'String', rsName: 'forActionOn', name: 'forActionOn' },
-              { type: "output", javaType: 'String', rsName: 'dateCreated', name: 'dateCreated' },
-            ]
+            guard: [],
+            type: 'multiple',
+            mutations: [
+              {
+                type: 'sql', schema: onlySchema,
+                sql: 'select nameOfPayee,sterlingAmount,currencyAmount,amtInWords,forActionOn,dateCreated,status from tableForAllOtherBrands where acc = accountId', params: [
+                  'accountId',
+                  { type: "output", javaType: 'String', rsName: 'nameOfPayee', name: 'nameOfPayee' },
+                  { type: "output", javaType: 'Integer', rsName: 'sterlingAmount', name: 'sterlingAmount' },
+                  { type: "output", javaType: 'Integer', rsName: 'currencyAmount', name: 'currencyAmount' },
+                  { type: "output", javaType: 'String', rsName: 'amtInWords', name: 'amtInWords' },
+                  { type: "output", javaType: 'String', rsName: 'forActionOn', name: 'forActionOn' },
+                  { type: "output", javaType: 'String', rsName: 'dateCreated', name: 'dateCreated' },
+                ]
+              },
+              { type: 'message', message: 'somemessage' } ]
           }
         ]
       } ]
   },
-
   mutations: [ {
     restAction: 'create',
     autowired: { class: '{thePackage}.utils.IOGNL', variableName: 'ognl', imports: true },
@@ -115,7 +128,6 @@ export const newPaymentsRD: ExampleRestD = {
     } ]
   } ]
 }
-
 
 
 export const currencyDD: ExampleDataD = {

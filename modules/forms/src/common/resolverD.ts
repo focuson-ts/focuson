@@ -48,17 +48,17 @@ export interface MutationsForRestAction {
 // export type MutationResolverGuard= MutationResolverValueGuard
 
 export function parametersFor ( m: MutationDetail ): MutationParam[] {
-  if ( isMessageMutation ( m ) ) return []
+  if ( isMessageMutation ( m ) || isMultipleMutation ( m ) ) return []
   return toArray ( m.params )
 }
 
 export function getMakeMock ( m: MutationDetail ): boolean {
-  if ( isMessageMutation ( m ) ) return false
+  if ( isMessageMutation ( m ) || isMultipleMutation ( m ) ) return false
   return m.makeMock === undefined ? true : m.makeMock
 }
-export type MutationDetail = StoredProcedureMutation |SqlFunctionMutation|
+export type MutationDetail = StoredProcedureMutation | SqlFunctionMutation |
   SqlMutation | SqlMutationThatIsAList |
-  ManualMutation | SelectMutation | MessageMutation
+  ManualMutation | SelectMutation | MessageMutation | MultipleMutation
 
 // export interface IDFromSequenceMutation {
 //   mutation: 'IDFromSequence',
@@ -130,6 +130,15 @@ export interface ManualMutation {
   code: string | string[]
 }
 
+export interface MultipleMutation {
+  type: 'multiple',
+  name?: 'string',
+  mutations: MutationDetail[]
+}
+export function isMultipleMutation ( m: MutationDetail ): m is MultipleMutation {
+  return m.type === 'multiple'
+}
+
 export interface SelectMutation {
   type: 'case';
   list?: false;
@@ -139,8 +148,11 @@ export interface SelectMutation {
   select: GuardedMutation[]
 }
 
-export type GuardedMutation = GuardedManualMutation | GuardedSqMutation | GuardedStoredProcedureMutation | GuardedSqMutationThatIsAList | GuardedMessageMutation | GuardedSqlFunctionMutation
+export type GuardedMutation = GuardedManualMutation | GuardedSqMutation | GuardedStoredProcedureMutation | GuardedSqMutationThatIsAList | GuardedMessageMutation | GuardedSqlFunctionMutation | GuardedMultipleMutation
 export interface GuardedManualMutation extends ManualMutation {
+  guard: string[]
+}
+export interface GuardedMultipleMutation extends MultipleMutation {
   guard: string[]
 }
 export interface GuardedSqMutation extends SqlMutation {
@@ -160,15 +172,15 @@ export interface GuardedMessageMutation extends MessageMutation {
 }
 
 
-export type CommonMutationParam = string | StringMutationParam | IntegerMutationParam | InputMutationParam |NullMutationParam |  AutowiredMutationParam  | FromParentMutationParam | BodyMutationParam
+export type CommonMutationParam = string | StringMutationParam | IntegerMutationParam | InputMutationParam | NullMutationParam | AutowiredMutationParam | FromParentMutationParam | BodyMutationParam
 
-export type MutationParamForSql = CommonMutationParam |  OutputForSqlMutationParam
+export type MutationParamForSql = CommonMutationParam | OutputForSqlMutationParam
 export type MutationParamForStoredProc = CommonMutationParam | OutputForStoredProcMutationParam
 export type MutationParamForSqlFunction = MutationParamForStoredProc
-export type MutationParamForManual = CommonMutationParam  | OutputForManualParam
+export type MutationParamForManual = CommonMutationParam | OutputForManualParam
 export type MutationParamForSelect = CommonMutationParam | OutputForSelectMutationParam
 
-export type MutationParam =CommonMutationParam |  OutputForStoredProcMutationParam | OutputForSqlMutationParam | OutputForManualParam | OutputForSelectMutationParam
+export type MutationParam = CommonMutationParam | OutputForStoredProcMutationParam | OutputForSqlMutationParam | OutputForManualParam | OutputForSelectMutationParam
 
 export interface OutputForSelectMutationParam {
   type: 'output';
@@ -260,7 +272,7 @@ export function displayParam ( param: MutationParam ) {
   if ( typeof param === 'string' ) return param
   return JSON.stringify ( param )
 }
-export function paramNamePathOrValue ( m: MutationParam ): string|number {
+export function paramNamePathOrValue ( m: MutationParam ): string | number {
   if ( typeof m === 'string' ) return m
   if ( m.type === 'string' || m.type === 'integer' ) return m.value
   if ( m.type === 'null' ) return "null"

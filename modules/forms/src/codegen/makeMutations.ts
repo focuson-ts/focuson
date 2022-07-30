@@ -4,7 +4,7 @@ import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationDetailsName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
 import { indentList } from "./codegen";
-import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, getMakeMock, importForTubles, isBodyMutationParam, isInputParam, isMessageMutation, isOutputParam, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlFunctionMutation, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
+import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, getMakeMock, importForTubles, isBodyMutationParam, isInputParam, isMessageMutation, isMultipleMutation, isOutputParam, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlFunctionMutation, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
@@ -43,7 +43,7 @@ function processInput ( errorPrefix: string, javaType: JavaTypePrimitive | undef
         case "Double":
         case "Integer":
         case "String":
-          throw new Error ( `${errorPrefix} don't know how to addFormat for a String for ${JSON.stringify(format)}, ${javaType}` )
+          throw new Error ( `${errorPrefix} don't know how to addFormat for a String for ${JSON.stringify ( format )}, ${javaType}` )
       }
       break;
   }
@@ -173,7 +173,7 @@ export function postTransactionLogger ( paramsA: MutationParam[], isList: boolea
   return `logger.debug(MessageFormat.format("${prefixNamesAndIndex}", (System.nanoTime() - start) / 1000000.0, ${outputParams.map ( p => p.name )}));`;
 }
 function cleanSql ( sql: string ) {
-  return sql.replace ( /\n|\t|\s/gm, ' ' ).replace ( /\s\s+/g, ' ' )
+  return sql.split ( /\n/g ).map ( s => `"${s.trim ()} "` ).filter ( s => s.length > 0 ).join ( "+\n      " )
 }
 export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: SqlMutation, index: string, includeMockIf: boolean ): string[] {
 
@@ -192,7 +192,7 @@ export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: MainPage
   return [
     ...makeMethodDecl ( errorPrefix, paramsA, javaTypeForOutput ( paramsA ), r, name, m, index ),
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
-    `    String sql = "${cleanSql ( m.sql )}";`,
+    `    String sql = ${cleanSql ( m.sql )};`,
     `    try (PreparedStatement s = connection.prepareStatement(sql)) {`,
     preTransactionLogger ( m.type, paramsA ),
     ...indentList ( indentList ( indentList ( [
@@ -285,7 +285,7 @@ export function mutationCodeForManual<G> ( errorPrefix: string, p: MainPageD<any
   const paramsA = toArray ( m.params );
   return [
     `//If you have a compilation error in the type here, did you match the types of the output params in your manual code with the declared types in the .restD?`,
-    `//If you have a compiation error because of a 'cannot resolve symbol' you may need to add the class to the 'imports'`,
+    `//If you have a compilation error because of a 'cannot resolve symbol' you may need to add the class to the 'imports'`,
     ...makeMethodDecl ( errorPrefix, paramsA, javaTypeForOutput ( paramsA ), r, name, m, index ),
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
     ...indentList ( indentList ( indentList ( [ ...toArray ( m.code ), makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),
@@ -293,20 +293,23 @@ export function mutationCodeForManual<G> ( errorPrefix: string, p: MainPageD<any
   ];
 }
 
+export function mutationCodeForOne<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: MutationDetail, index: number, includeMockIf: boolean, indexPrefix: string ): string[] {
+  if ( isMessageMutation ( m ) ) return [ `   msgs.${m.level ? m.level : 'info'}("${m.message}");` ]
+  if ( isMultipleMutation ( m ) ) return m.mutations.flatMap ( ( m, i ) => mutationCodeForOne ( errorPrefix, p, r, name, m, i, includeMockIf, indexPrefix + '_' + index ) )
+
+  return indentList ( [
+    `${paramsDeclaration ( m, index )}${mutationMethodName ( r, name, m, indexPrefix + '_' + index )}(connection,msgs,${[ 'dbName', ...allInputParamNames ( parametersFor ( m ) ) ].join ( ',' )});`,
+    `//If you get a compilation in the following variables because of a name conflict: check the output params. Each output param can only be defined once.`,
+    ...outputParamsDeclaration ( m, index ) ] )
+}
 export function mutationCodeForCase<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: SelectMutation, index: number, includeMockIf: boolean, indexPrefix: string ): string[] {
   const paramsA = toArray ( m.params );
-  const callingCode: string[] = m.select.flatMap ( ( gm, i ) => {
-    const ifStatement = `if (${[ 'true', ...gm.guard ].join ( ' && ' )})`;
-    return isMessageMutation ( gm ) ?
-      [ ifStatement + '{', `   msgs.${gm.level ? gm.level : 'info'}("${gm.message}");`, '   return;', '}' ] :
-      [ `if (${[ 'true', ...gm.guard ].join ( ' && ' )}) {`,
-        ...indentList ( [ `${paramsDeclaration ( gm, i )}${mutationMethodName ( r, name, gm, indexPrefix + index + "_" + i )}(connection,msgs,${[ 'dbName', ...allInputParamNames ( parametersFor ( gm ) ) ].join ( ',' )});`,
-          ...outputParamsDeclaration ( gm, i ),
-          `// If you have a compilation error here: do the output params match the output params in the 'case'?`,
-          makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ),
-        '}'
-      ];
-  } )
+  const callingCode: string[] = m.select.flatMap ( ( gm, i ) =>
+    [ `if (${[ 'true', ...gm.guard ].join ( ' && ' )}){`,
+      ...mutationCodeForOne ( errorPrefix, p, r, name, gm, i, includeMockIf, indexPrefix + index ),
+      `// If you have a compilation error here: do the output params match the output params in the 'case'?`,
+      makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ),
+      '}' ] )
   return [
     `//If you have a compiler error in the type here, did you match the types of the output params in your manual code with the declared types in the .restD?`,
     ...makeMethodDecl ( errorPrefix, paramsA, javaTypeForOutput ( paramsA ), r, name, m, indexPrefix + index ),
@@ -332,6 +335,7 @@ export function makeMutationMethod<G> ( errorPrefix: string, mutations: Mutation
       return [ ...caseCode, ...clausesCode ];
     }
     if ( m.type === 'message' ) return mutationCodeForMessage ()
+    if ( m.type === 'multiple' ) return makeMutationMethod ( errorPrefix, m.mutations, name, p, r, includeMockIf, indexPrefix + index + '_' )
     throw Error ( `Don't know how to makeMutationMethod (Page ${p.name}) for ${JSON.stringify ( m )}` )
   } ) )
   return methods;
