@@ -4,7 +4,7 @@ import { CreateEAccountPageD } from "./example/createEAccount/createEAccount.pag
 import { ChequeCreditbooksPD } from "./example/chequeCreditBooks/chequeCreditBooks.pageD";
 import { RepeatingPageD } from "./example/repeating/repeating.pageD";
 import { PostCodeMainPage } from "./example/postCodeDemo/addressSearch.pageD";
-import { ExampleMainPage } from "./example/common";
+import { ExampleMainPage, ExampleRefD } from "./example/common";
 import { OccupationAndIncomeSummaryPD } from "./example/occupationAndIncome/occupationAndIncome.pageD";
 import { AccountOverviewMainPage } from "./example/accountOverview/accountOverview.pageD";
 import { JointAccountPageD } from "./example/jointAccount/jointAccount.pageD";
@@ -21,7 +21,9 @@ import { ReadOnlyPageD } from "./example/readonly/readOnly.pageD";
 import { DatesPageD } from "./example/dates/dates.pageD";
 import { initialPageD } from "./example/initiial/initial.pageD";
 import { wizardPD } from "./example/wizard/wizard.pageD";
+import { dateInfoRefD } from "./example/common.refD.ts/dateInfoRefD";
 
+export const generatedRefs: ExampleRefD[]=[dateInfoRefD]
 
 export const generatedPages: ExampleMainPage[] = [
   DatesPageD,

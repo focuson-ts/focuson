@@ -2,8 +2,8 @@ import { DBTable } from "../common/resolverD";
 import { beforeAfterSeparator, beforeSeparator, ints, mapPathPlusInts, NameAnd, safeArray, safeString, toArray, unique } from "@focuson/utils";
 import { AllLensRestParams, EntityAndWhere, InsertSqlStrategy, OneTableInsertSqlStrategyForIds, OneTableInsertSqlStrategyForNoIds, RestParams } from "../common/restD";
 import { CompDataD, emptyDataFlatMap, flatMapDD, HasSample, isRepeatingDd, OneDataDD, Pattern, PrimitiveDD } from "../common/dataD";
-import { MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
-import { addBrackets, addStringToEndOfAllButFirstAndLast, addStringToEndOfAllButLast, addStringToStartOfAllButFirst, indentList } from "./codegen";
+import { RefD, RestDefnInPageProperties } from "../common/pageD";
+import { addBrackets, addStringToEndOfAllButLast, addStringToStartOfAllButFirst, indentList } from "./codegen";
 import { JavaWiringParams } from "./config";
 import { sqlListName, sqlMapName, sqlMapPackageName, sqlTafFieldName } from "./names";
 import { selectSample } from "./makeSample";
@@ -544,7 +544,7 @@ export function createTableSql<G> ( rdps: RestDefnInPageProperties<G>[] ): NameA
   return Object.fromEntries ( findAllTableAndFieldDatasIn ( rdps ).map ( taf => [ taf.table.name, createSql ( taf ) ] ) )
 }
 
-export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, restName: string, rdp: RestDefnInPageProperties<G>, ld: SqlLinkData, path: number[], childCount: number ): string[] {
+export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, ld: SqlLinkData, path: number[], childCount: number ): string[] {
   const restD = rdp.rest;
   function mapName ( path: string[] ) {return path.length === 0 ? '_root' : safeArray ( path ).join ( "_" )}
 
@@ -657,7 +657,7 @@ export interface JavaQueryParamDetails {
   datePattern?: string
 }
 
-function getParameters<B, G> ( childCount: number, p: PageD<B, G>, restName: string, path: number[], queryParams: JavaQueryParamDetails[] ) {
+function getParameters<B, G> ( childCount: number, p: RefD<G>, restName: string, path: number[], queryParams: JavaQueryParamDetails[] ) {
   return [ 'Connection connection', ...queryParams.map ( ( { name, param, paramPostfix, paramPrefix } ) =>
     `${param.javaType} ${name}` ), ...mapPathPlusInts ( path, childCount ) ( pathAndI => `List<${sqlMapName ( p, restName, pathAndI )}> list${pathAndI}` ) ].join ( ", " );
 }
@@ -665,11 +665,11 @@ function newMap ( mapName: string, childCount: number, path: number[] ) {
   return `new ${mapName}(${[ 'rs', ...ints ( childCount ).map ( i => `list${i}` ) ].join ( "," )})`
 }
 
-function makeGetRestForRoot<B, G> ( p: PageD<B, G>, restName: string, rdp: RestDefnInPageProperties<G>, childCount: number, queryParams: JavaQueryParamDetails[] ) {
+function makeGetRestForRoot<B, G> ( p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, childCount: number, queryParams: JavaQueryParamDetails[] ) {
   return makeGetRestForMainOrChild ( p, restName, [], childCount, queryParams, isRepeatingDd ( rdp.rest.dataDD ) )
 }
 
-function makeGetRestForChild<B, G> ( p: PageD<B, G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[] ) {
+function makeGetRestForChild<B, G> ( p: RefD<G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[] ) {
   return makeGetRestForMainOrChild ( p, restName, path, childCount, queryParams, true )
 
 }
@@ -686,7 +686,7 @@ export function addPrefixPostFix ( details: JavaQueryParamDetails ): string {
   return (paramPrefix ? '"' + paramPrefix + '"+' : '') + name + (paramPostfix ? '+"' + paramPostfix + '"' : '')
 }
 
-function makeGetRestForMainOrChild<B, G> ( p: PageD<B, G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[], repeating: Boolean ) {
+function makeGetRestForMainOrChild<B, G> ( p: RefD<G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[], repeating: Boolean ) {
   const mapName = `${sqlMapName ( p, restName, path )}`;
   const retreiveData: string[] = repeating ?
     [ `      List<${mapName}> result = new LinkedList<>();`,
@@ -716,7 +716,7 @@ function makeGetRestForMainOrChild<B, G> ( p: PageD<B, G>, restName: string, pat
   ]
 }
 
-export function makeGetForRestFromLinkData<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, rdp: RestDefnInPageProperties<G>, queryParams: JavaQueryParamDetails[], path: number[], childCount: number ) {
+export function makeGetForRestFromLinkData<B, G> ( params: JavaWiringParams, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, queryParams: JavaQueryParamDetails[], path: number[], childCount: number ) {
   return path.length === 0 ? makeGetRestForRoot ( p, restName, rdp, childCount, queryParams ) : makeGetRestForChild ( p, restName, path, childCount, queryParams );
 }
 interface QueryAndGetters {
@@ -727,7 +727,7 @@ interface QueryAndGetters {
 function isListOrOptional<G> ( rdp: RestDefnInPageProperties<G> ) {
   return isRepeatingDd ( rdp.rest.dataDD ) ? 'List' : 'Optional';
 }
-export function makeAllGetsAndAllSqlForRest<B, G> ( params: JavaWiringParams, p: PageD<B, G>, restName: string, rdp: RestDefnInPageProperties<G> ): string[] {
+export function makeAllGetsAndAllSqlForRest<B, G> ( params: JavaWiringParams, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G> ): string[] {
   const restD = rdp.rest
   if ( restD.tables === undefined ) throw Error ( `somehow have a sql root without a tables in ${p.name} ${restName}` )
   let sqlRoot = findSqlRoot ( restD.tables );

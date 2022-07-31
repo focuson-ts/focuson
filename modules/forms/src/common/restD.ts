@@ -1,9 +1,9 @@
 import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
 import { NameAnd, RestAction, safeObject, safeString, sortedEntries, toArray, unique } from "@focuson/utils";
 import { paramsForRestAction } from "../codegen/codegen";
-import { AccessDetails, GuardedMutation, MutationDetail, Mutations, MutationsForRestAction, PrimaryMutationDetail, PrimaryMutations, SelectMutation } from "./resolverD";
+import { AccessDetails, GuardedMutation, MutationDetail, MutationsForRestAction, PrimaryMutations, SelectMutation } from "./resolverD";
 import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
-import { allMainPages, MainPageD, PageD, RestDefnInPageProperties } from "./pageD";
+import { allMainPages, MainPageD, PageD, RefD, RestDefnInPageProperties } from "./pageD";
 import { getRestTypeDetails, RestActionDetail, restActionForName, UrlAndParamsForState } from "@focuson/rest";
 import { findChildResolvers, ResolverData } from "../codegen/makeJavaFetchersInterface";
 
@@ -115,8 +115,8 @@ export type RestStateDetails = {
   returns?: string[]
   mergeDataOnResponse?: boolean
 }
-export function stateToNameAndUrlAndParamsForState ( state: NameAnd<RestStateDetails> |undefined): NameAnd<UrlAndParamsForState> {
-  return Object.fromEntries ( Object.entries (safeObject( state )).map ( ( [ name, { url, params } ] ) => [ name, { url, params: Object.keys ( params ) } ] ) );
+export function stateToNameAndUrlAndParamsForState ( state: NameAnd<RestStateDetails> | undefined ): NameAnd<UrlAndParamsForState> {
+  return Object.fromEntries ( Object.entries ( safeObject ( state ) ).map ( ( [ name, { url, params } ] ) => [ name, { url, params: Object.keys ( params ) } ] ) );
 }
 
 export interface RestD<G> {
@@ -225,8 +225,14 @@ export function mapRest<B, G, T> ( pages: PageD<B, G>[], fn: ( p: MainPageD<B, G
 export function flatMapRest<B, G, T> ( pages: PageD<B, G>[], fn: ( p: MainPageD<B, G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => T[] ): T[] {
   return allMainPages ( pages ).flatMap ( p => sortedEntries ( p.rest ).flatMap ( ( [ name, rdp ] ) => fn ( p ) ( rdp.rest, name, rdp ) ) )
 }
+export function flatMapRestAndRefs<B, G, T> ( pages: PageD<B, G>[], refs: RefD<G>[], fn: ( p: RefD<G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => T[] ): T[] {
+  return [ ...refs, ...allMainPages ( pages ) ].flatMap ( p => sortedEntries ( p.rest ).flatMap ( ( [ name, rdp ] ) => fn ( p ) ( rdp.rest, name, rdp ) ) )
+}
 export function mapRestAndResolver<B, G, T> ( pages: PageD<B, G>[], fn: ( p: MainPageD<B, G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => ( resolver: ResolverData, ) => T ): T[] {
   return flatMapRest ( pages, p => ( r, restName, rdp ) => findChildResolvers ( r ).map ( ( resolverData ) => fn ( p ) ( r, restName, rdp ) ( resolverData ) ) )
+}
+export function mapRestAndResolverincRefs<B, G, T> ( pages: PageD<B, G>[], refs: RefD<G>[], fn: ( p: RefD<G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => ( resolver: ResolverData, ) => T ): T[] {
+  return flatMapRestAndRefs ( pages, refs, p => ( r, restName, rdp ) => findChildResolvers ( r ).map ( ( resolverData ) => fn ( p ) ( r, restName, rdp ) ( resolverData ) ) )
 }
 export function flatMapRestAndResolver<B, G, T> ( pages: PageD<B, G>[], fn: ( p: MainPageD<B, G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => ( resolver: ResolverData, ) => T[] ): T[] {
   return flatMapRest ( pages, p => ( r, restName, rdp ) => findChildResolvers ( r ).flatMap ( resolverData => fn ( p ) ( r, restName, rdp ) ( resolverData ) ) )
@@ -246,19 +252,24 @@ export function flatMapCommonParams<T> ( pds: MainPageD<any, any>[], fn: ( p: Ma
 }
 
 
-export function forEachRest<B, G> ( ps: PageD<B, G>[], fn: ( p: MainPageD<B, G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => void ) {
-  return allMainPages ( ps ).forEach ( p => sortedEntries ( p.rest ).forEach ( ( [ restName, rdp ] ) => fn ( p ) ( rdp.rest, restName, rdp ) ) )
+export function forEachRest<B, G> ( ps: RefD<G>[], fn: ( p: RefD< G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => void ) {
+  return ps.forEach ( p => sortedEntries ( p.rest ).forEach ( ( [ restName, rdp ] ) => fn ( p ) ( rdp.rest, restName, rdp ) ) )
 
 }
 export function forEachRestAndActions<B, G> ( ps: PageD<B, G>[], fn: ( p: MainPageD<B, G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => ( action: RestAction ) => void ) {
   return allMainPages ( ps ).forEach ( p => sortedEntries ( p.rest ).forEach ( ( [ restName, rdp ] ) => rdp.rest.actions.forEach ( a => fn ( p ) ( rdp.rest, restName, rdp ) ( a ) ) ) )
 }
-
-export interface MutuationAndResolverFolder<Acc> {
-  simple: ( mut: MutationDetail, p: MainPageD<any, any>, r: RestD<any> ) => ( acc: Acc ) => Acc;
-  guarded: ( mut: SelectMutation, guarded: GuardedMutation, p: MainPageD<any, any>, r: RestD<any> ) => ( acc: Acc ) => Acc;
+export function forEachRestAndActionsUsingRefs<B, G> ( ps: PageD<B, G>[], refs: RefD<G>[], fn: ( p: RefD<G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => ( action: RestAction ) => void ) {
+  const frompages: RefD<G>[] = allMainPages ( ps );
+  const allNamed = [ ...frompages, ...refs ]
+  return allNamed.forEach ( p => sortedEntries ( p.rest ).forEach ( ( [ restName, rdp ] ) => rdp.rest.actions.forEach ( a => fn ( p ) ( rdp.rest, restName, rdp ) ( a ) ) ) )
 }
-export function foldPagesToRestToMutationsAndResolvers<Acc> ( ps: MainPageD<any, any>[], acc: Acc, folder: MutuationAndResolverFolder<Acc> ): Acc {
+
+export interface MutuationAndResolverFolder<G,Acc> {
+  simple: ( mut: MutationDetail, p: RefD<G>, r: RestD<any> ) => ( acc: Acc ) => Acc;
+  guarded: ( mut: SelectMutation, guarded: GuardedMutation, p: RefD<G>, r: RestD<any> ) => ( acc: Acc ) => Acc;
+}
+export function foldPagesToRestToMutationsAndResolvers<G,Acc> ( ps: RefD<G>[], acc: Acc, folder: MutuationAndResolverFolder<G,Acc> ): Acc {
   return ps.reduce ( ( acc, p ) => Object.entries ( p.rest ).reduce ( ( acc, [ name, rdp ] ) => {
     if ( rdp.rest === undefined ) throw Error ( `Error in page ${p.name}.rest[${name}]. The rest is undefined.\n    ${JSON.stringify ( rdp )}` )
     const mutationsAcc = toArray ( rdp.rest.mutations ).flatMap ( mr => toArray ( mr.mutateBy ) ).reduce ( ( acc, m ) => {

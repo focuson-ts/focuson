@@ -1,6 +1,6 @@
 import { DirectorySpec, writeToFile } from "@focuson/files";
 import { CombinedParams } from "../codegen/config";
-import { flatMapToModal, MainPageD } from "../common/pageD";
+import { flatMapToModal, MainPageD, RefD } from "../common/pageD";
 import { makeJavaFiles } from "./makeJavaFiles";
 import { makeTsFiles } from "./makeTsFiles";
 import { ButtonD } from "../buttons/allButtons";
@@ -8,7 +8,7 @@ import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { MakeButton } from "../codegen/makeButtons";
 import { validate } from "./validateModel";
 import { foldPagesToRestToMutationsAndResolvers } from "../common/restD";
-import { GenerateLogLevel, safeArray, unique } from "@focuson/utils";
+import { GenerateLogLevel, safeArray, toArray, unique } from "@focuson/utils";
 import * as process from "process";
 import { makeCriticalReport, makeReport, makeReportData } from "../reporting/report";
 import { AppConfig } from "../appConfig";
@@ -60,20 +60,21 @@ export const directorySpec: DirectorySpec = {
   main: '.',
   backup: 'node_modules/@focuson/forms'
 }
-export function maxTuplesFor<B, G> ( pages: MainPageD<B, G>[] ) {
-  return foldPagesToRestToMutationsAndResolvers<number> ( pages, 0, {
+export function maxTuplesFor<G> ( pages: RefD<G>[] ) {
+  return foldPagesToRestToMutationsAndResolvers<G, number> ( pages, 0, {
     simple: ( mut ) => ( acc ) => {
       let fromMd: number = Math.max ( acc, allOutputParams ( parametersFor ( mut ) ).length );
       return mut.type === 'case' ?
-        mut.select.reduce ( ( acc, smd ) => Math.max (allOutputParams (  parametersFor ( smd )).length, acc ), fromMd ) :
+        mut.select.reduce ( ( acc, smd ) => Math.max ( allOutputParams ( parametersFor ( smd ) ).length, acc ), fromMd ) :
         fromMd
     },
     guarded: ( sel, guarded ) => ( acc ) => acc
-  })
+  } )
 }
-export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, directorySpec: DirectorySpec, appConfig: AppConfig, params: CombinedParams, javaOutputRoot: string, tsRoot: string, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G> ) => <B extends ButtonD> ( pages: MainPageD<B, G>[] ) => {
+export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, directorySpec: DirectorySpec, appConfig: AppConfig, params: CombinedParams, javaOutputRoot: string, tsRoot: string, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G> ) => <B extends ButtonD> ( pages: MainPageD<B, G>[], references?: RefD<G>[] ) => {
+  const refs = toArray ( references );
   const paramsWithTuples = {
-    ...params, maxTuples: maxTuplesFor ( pages )
+    ...params, maxTuples: maxTuplesFor ( [ ...refs, ...pages ] )
   }
 
   if ( pages.length === 0 ) {
@@ -90,9 +91,9 @@ export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLe
 
   console.log ( "focusOnVersion", paramsWithTuples.focusOnVersion )
   if ( logLevel === 'detailed' ) console.log ( "Making Java Files" )
-  makeJavaFiles ( logLevel, appConfig, javaOutputRoot, paramsWithTuples, directorySpec ) ( fullPages )
+  makeJavaFiles ( logLevel, appConfig, javaOutputRoot, paramsWithTuples, directorySpec ) ( fullPages, refs )
   if ( logLevel === 'detailed' ) console.log ( "Making Typescript Files" )
-  makeTsFiles<G> ( logLevel, appConfig, tsRoot, paramsWithTuples, makeGuards, makeButtons, directorySpec ) ( pages, fullPages )
+  makeTsFiles<G> ( logLevel, appConfig, tsRoot, paramsWithTuples, makeGuards, makeButtons, directorySpec ) ( pages, fullPages, refs )
 
   const reportData = makeReportData<B, G> ( pages );
   const criticals = makeCriticalReport ( reportData );

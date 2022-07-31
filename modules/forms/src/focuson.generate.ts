@@ -4,7 +4,7 @@ import { devAppConfig, focusOnVersion, javaOutputRoot, tsRoot } from "./appConfi
 import { AllGuardCreator } from "./buttons/guardButton";
 import { makeButtons } from "./buttons/allButtons";
 import { GenerateLogLevel } from "@focuson/utils";
-import { generatedPages } from "./focuson.config";
+import { generatedPages, generatedRefs } from "./focuson.config";
 
 
 const logLevel: GenerateLogLevel = 'detailed';
@@ -19,7 +19,7 @@ generate ( logLevel, directorySpec, devAppConfig, {
     thePackage: 'somepackage.somepostfix.another',
     theme: 'theme-dark',
   },
-  javaOutputRoot, tsRoot, AllGuardCreator, makeButtons () ) ( generatedPages )
+  javaOutputRoot, tsRoot, AllGuardCreator, makeButtons () ) ( generatedPages, generatedRefs )
 
 
 fse.copySync ( '../formComponents/src', tsRoot + "/src/formComponents" )

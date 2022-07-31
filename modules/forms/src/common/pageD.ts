@@ -1,6 +1,6 @@
 import { AllDataDD, CompDataD, DataD, findAllDataDs, HasGuards, HasLayout, isDataDd, NamesAndDataDs } from "./dataD";
 import { CommonLensRestParam, RestD } from "./restD";
-import { NameAnd, RestAction, RestResult, safeString, sortedEntries, unique } from "@focuson/utils";
+import { HasName, NameAnd, RestAction, RestResult, safeString, sortedEntries, unique } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
 import { ChangeCommand, getRestTypeDetails, NewPageChangeCommands, RestActionDetail, RestChangeCommands } from "@focuson/rest";
 
@@ -98,7 +98,11 @@ export interface PageDisplay<G> {
 }
 type NewPageCommandOrEmpty = 'empty' | NewPageChangeCommands
 export type InitialValue = NewPageCommandOrEmpty | NewPageCommandOrEmpty[]
-export interface MainPageD<Buttons, G> extends HasLayout, HasGuards<G> {
+export interface RefD<G> extends HasName{
+  rest: RestDefnInPage<G>,
+  domain: DomainDefnInPage<G>,
+}
+export interface MainPageD<Buttons, G> extends HasLayout, HasGuards<G>, RefD<G>, HasName {
   pageType: 'MainPage' | 'MainPopup',
   commonParams?: NameAnd<CommonLensRestParam<any>>,
   title?: string;
@@ -106,16 +110,18 @@ export interface MainPageD<Buttons, G> extends HasLayout, HasGuards<G> {
   modes: PageMode[],
   display: PageDisplay<G>,
   initialValue?: InitialValue
-  domain: DomainDefnInPage<G>,
   variables?: NameAnd<VariableD>
   modals?: ModalOrMainData<Buttons, G>[],
+
+  domain: DomainDefnInPage<G>,
   rest: RestDefnInPage<G>,
+
   /** The names and order of the visible buttons. If not populated uses definition order */
   buttonOrder?: string[];
   buttons: ButtonDefnInPage<Buttons>;
 }
 
-export interface ModalPageD<Buttons, G> extends HasLayout, HasGuards<G> {
+export interface ModalPageD<Buttons, G> extends HasLayout, HasGuards<G>, HasName {
   pageType: 'ModalPage' | 'ModalPopup',
   title?: string;
   name: string,

@@ -2,6 +2,9 @@ export type DateFn = () => string
 export const testDateFn: DateFn = () => "timeForTest";
 export const defaultDateFn: DateFn = () => new Date ().toISOString ();
 
+export interface HasName{
+  name: string
+}
 export interface CopyDetails {
   from?: string;
   to?: string

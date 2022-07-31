@@ -1,8 +1,8 @@
 import { JavaWiringParams } from "./config";
-import { MainPageD } from "../common/pageD";
+import { RefD } from "../common/pageD";
 import { RestD } from "../common/restD";
 import { toArray, unique } from "@focuson/utils";
-import { allInputParamNames, allOutputParams, allParentMutationParams, importForTubles, isMessageMutation, isSqlMutationThatIsAList, ManualMutation, MutationDetail, Mutations, OutputMutationParam, parametersFor } from "../common/resolverD";
+import { allInputParamNames, allOutputParams, allParentMutationParams, importForTubles, isMessageMutation, isSqlMutationThatIsAList, ManualMutation, MutationDetail, Mutations, parametersFor } from "../common/resolverD";
 import { fetcherInterfaceForResolverName, fetcherPackageName, mutationMethodName, resolverClassName } from "./names";
 import { makeCodeFragmentsForMutation, makeMutationMethod } from "./makeMutations";
 import { ResolverData } from "./makeJavaFetchersInterface";
@@ -15,7 +15,7 @@ function declareInputParamsFromEndpoint<G> ( r: RestD<G> ): string[] {
     .map ( ( [ typeAndName, name ] ) => `${typeAndName} =  getData(dataFetchingEnvironment, "${name}");` )//      Integer accountId =getData(dataFetchingEnvironment, "accountId", Integer.class);
 }
 
-export function callResolvers<G> ( p: MainPageD<any, G>, restName: string, r: RestD<G>, name: string, dbNameString: string, resolvers: MutationDetail[], indexPrefix: string ) {
+export function callResolvers<G> ( p:RefD<G>, restName: string, r: RestD<G>, name: string, dbNameString: string, resolvers: MutationDetail[], indexPrefix: string ) {
   return resolvers.flatMap ( ( md, i ) => {
     if ( isMessageMutation ( md ) ) return [ `msgs.${md.level ? md.level : 'info'}("${md.message}");` ]
     if ( isSqlMutationThatIsAList ( md ) )
@@ -71,7 +71,7 @@ export function makeCreateResult ( errorPrefix: string, resolvers: MutationDetai
 
 }
 
-export function makeFetcherMethodForMap<G> ( params: JavaWiringParams, p: MainPageD<any, any>, restName: string, r: RestD<G>, resolvers: MutationDetail[], resolverData: ResolverData ): string[] {
+export function makeFetcherMethodForMap<G> ( params: JavaWiringParams, p: RefD<G>, restName: string, r: RestD<G>, resolvers: MutationDetail[], resolverData: ResolverData ): string[] {
   const errorPrefix = `${p.name}.rest[${restName}].resolvers[${resolverData.name}]`
 
   return [
@@ -110,7 +110,7 @@ function declareInputParamsFromParent<G> ( r: RestD<G>, resolvers: MutationDetai
   return [ `Map<String,Object> paramsFromParent = dataFetchingEnvironment.getSource();`,
     ...parentMParams.map ( p => `${p.javaType} ${p.name} = (${p.javaType})paramsFromParent.get("${p.name}");` ) ];
 }
-export function makeFetcherMethodForList<G> ( params: JavaWiringParams, p: MainPageD<any, any>, restName: string, r: RestD<G>, resolvers: MutationDetail[], resolverData: ResolverData ): string[] {
+export function makeFetcherMethodForList<G> ( params: JavaWiringParams, p: RefD<G>, restName: string, r: RestD<G>, resolvers: MutationDetail[], resolverData: ResolverData ): string[] {
   const errorPrefix = `${p.name}.rest[${restName}].resolvers[${resolverData.name}]`
   return [
     `public DataFetcher<${resolverData.javaType}> ${resolverData.resolver}(){`,
@@ -133,7 +133,7 @@ export function makeFetcherMethodForList<G> ( params: JavaWiringParams, p: MainP
 }
 
 
-export function makeResolvers<G> ( params: JavaWiringParams, p: MainPageD<any, any>, restName: string, r: RestD<G>, resolverName: string, resolver: Mutations, resolverData: ResolverData ): string[] {
+export function makeResolvers<G> ( params: JavaWiringParams, p:RefD<G>, restName: string, r: RestD<G>, resolverName: string, resolver: Mutations, resolverData: ResolverData ): string[] {
   // let resolvers = Object.values ( safeObject ( r.resolvers ) ).flatMap ( toArray );
   // if ( resolvers.length == 0 ) return []
   let resolvers = toArray ( resolver );

@@ -234,10 +234,6 @@ Two options:
 * regular triggers. 'every ten mins', 'every hour', 'at eight o'clock every day'...
 * Part of the flux loop
 
-## Data recorded
-We still need tags... and if they change the data loaded changes. 
-We probably want to record 'when it was made'. And there is little downside in doing this for regular data
-We could change the tag structure to support that...
 
 ## sharing
 We want many of these to be shared across teams. If we have four teams and two releases each we don't want eight regular calls for today and holiday and currencies...
@@ -246,8 +242,15 @@ Some of these will be delivered by the central team (perhaps most). Others by th
 
 I propose we keep this data under the 'CommonData' location. Indexed by name under there (dateInfo)
 
+We will have lists of fetchers and we can compose these from the different teams
+
+## how do we declare them
+Call them 'ReferenceData' They have a domain and a .
+Clearly we want a list of fetchers... so that's like the rest block in a page.
+We probably want multipe of thes
+
 ## Steps
 * Add time to the tags.
-* Make lists of fetchers by staleness...  (these should compose)
+* Make lists of fetchers by staleness
 * Have a widget to run the fetchers at the right time 
 * Add CommonData to the debugger

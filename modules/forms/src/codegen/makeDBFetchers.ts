@@ -1,5 +1,5 @@
 import { JavaWiringParams } from "./config";
-import { MainPageD, RestDefnInPageProperties } from "../common/pageD";
+import { MainPageD, RefD, RestDefnInPageProperties } from "../common/pageD";
 import { sortedEntries } from "@focuson/utils";
 import { dbFetcherClassName, dbFetcherPackage, fetcherInterfaceName, fetcherPackageName, resolverName, sqlMapName, sqlMapPackageName } from "./names";
 import { indentList } from "./codegen";
@@ -8,7 +8,7 @@ import { isRepeatingDd } from "../common/dataD";
 import { findJavaType } from "./makeJavaFetchersInterface";
 
 
-export function makeDBFetchers<B, G> ( params: JavaWiringParams, pageD: MainPageD<B, G>, restName: string, rdp: RestDefnInPageProperties<G> ): string[] {
+export function makeDBFetchers<B, G> ( params: JavaWiringParams, pageD: RefD< G>, restName: string, rdp: RestDefnInPageProperties<G> ): string[] {
   const rest = rdp.rest
   if ( rest.actions.indexOf ( 'get' ) < 0 ) return []
   const paramVariables = sortedEntries ( rest.params ).map ( ( [ name, props ] ) =>

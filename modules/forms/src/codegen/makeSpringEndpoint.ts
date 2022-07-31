@@ -4,7 +4,7 @@ import { JavaWiringParams } from "./config";
 import { actionsEqual, beforeSeparator, isRestStateChange, RestAction, safeArray, safeObject, toArray, unique } from "@focuson/utils";
 import { indentList, paramsForRestAction } from "./codegen";
 import { isRepeatingDd } from "../common/dataD";
-import { MainPageD } from "../common/pageD";
+import { RefD } from "../common/pageD";
 import { getRestTypeDetails, getUrlForRestAction, RestActionDetail, restActionForName, restActionToDetails } from "@focuson/rest";
 import { AccessCondition, allInputParamNames, allOutputParams, displayParam, importForTubles, isMessageMutation, javaTypeForOutput, MutationDetail, parametersFor } from "../common/resolverD";
 import { applyToTemplateOrUndefinedIfNoParamsPresent } from "@focuson/template";
@@ -35,7 +35,7 @@ function paramsForQuery<G> ( errorPrefix: string, r: RestD<G>, restAction: RestA
 }
 
 
-export function accessDetails ( params: JavaWiringParams, p: MainPageD<any, any>, restName: string, r: RestD<any>, restAction: RestAction ): string[] {
+export function accessDetails<G> ( params: JavaWiringParams, p: RefD<G>, restName: string, r: RestD<G>, restAction: RestAction ): string[] {
   const allAccess = safeArray ( r.access )
   const legalParamNames = Object.keys ( r.params )
   return allAccess.filter ( a => actionsEqual ( a.restAction, restAction ) ).flatMap (
@@ -72,7 +72,7 @@ export function outputParamsDeclaration ( md: MutationDetail, i: number ): strin
 export const addOutputParamsToMessages = ( md: MutationDetail ): string[] =>
   allOutputParams ( parametersFor ( md ) ).filter ( p => p.msgLevel ).map ( p => `msgs.${p.msgLevel}(${p.name});` )
 
-export function callMutationsCode<G> ( p: MainPageD<any, G>, restName: string, r: RestD<G>, restAction: RestAction, dbNameString: string ) {
+export function callMutationsCode<G> ( p: RefD<G>, restName: string, r: RestD<G>, restAction: RestAction, dbNameString: string ) {
   const hintString = isRestStateChange ( restAction ) ? ` - if you have a compilation error here check which parameters you defined in {yourRestD}.states[${restAction.state}]` : ''
   const callMutations = indentList ( safeArray ( r.mutations ).filter ( a => actionsEqual ( a.restAction, restAction ) ).flatMap ( ad =>
     toArray ( ad.mutateBy ).flatMap ( ( md, i ) => {
@@ -86,7 +86,7 @@ export function callMutationsCode<G> ( p: MainPageD<any, G>, restName: string, r
     } ) ) )
   return [ `//from ${p.name}.rest[${restName}].mutations[${JSON.stringify ( restAction )}]${hintString}`, ...callMutations ];
 }
-export function endpointAnnotation<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restName: string, r: RestD<G>, restAction: RestAction, purpose: string ): string[] {
+export function endpointAnnotation<G> ( params: JavaWiringParams, p: RefD<G>, restName: string, r: RestD<G>, restAction: RestAction, purpose: string ): string[] {
   const description = purpose === 'endpoint' ? r.description : `This is a helper endpoint`
   const notes = purpose === 'endpoint' ? r.notes : undefined
   const fullParams = { ...params, ...r, restAction, purpose, notes, description, restName }
@@ -108,11 +108,11 @@ function makeReturnStatement<G> ( params: JavaWiringParams, errorPrefix: string,
     [ `          return Transform.result(graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( errorPrefix, r, restAction )}), ${selectionFromData}, msgs);` ] :
     [ `         return  ResponseEntity.ok(msgs.emptyResult());` ];
 }
-function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restName: string, r: RestD<G>, restAction: RestAction ): string[] {
+function makeEndpoint<G> ( params: JavaWiringParams, p: RefD<G>, restName: string, r: RestD<G>, restAction: RestAction ): string[] {
   let safeParams: RestParams = safeObject ( r.params );
   const hasDbName = safeParams[ 'dbName' ] !== undefined
   const dbNameString = hasDbName ? 'dbName' : `IFetcher.${params.defaultDbName}`
-  const url = getUrlForRestAction ( restAction, r.url, stateToNameAndUrlAndParamsForState(r.states) )
+  const url = getUrlForRestAction ( restAction, r.url, stateToNameAndUrlAndParamsForState ( r.states ) )
   let restTypeDetails: RestActionDetail = getRestTypeDetails ( restAction );
   let selectionFromData = restTypeDetails.output.needsObj ? `"${queryName ( r, restAction )}"` : '""';
   const callMutations = callMutationsCode ( p, restName, r, restAction, dbNameString );
@@ -139,9 +139,9 @@ function makeEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restN
     `` ];
 }
 
-function makeQueryEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restName: string, errorPrefix: string, r: RestD<G>, restAction: RestAction ): string[] {
+function makeQueryEndpoint<G> ( params: JavaWiringParams, p: RefD<G>, restName: string, errorPrefix: string, r: RestD<G>, restAction: RestAction ): string[] {
   let restTypeDetails: RestActionDetail = getRestTypeDetails ( restAction );
-  const url = getUrlForRestAction ( restAction, r.url, stateToNameAndUrlAndParamsForState(r.states) )
+  const url = getUrlForRestAction ( restAction, r.url, stateToNameAndUrlAndParamsForState ( r.states ) )
   return [
     ...indentList ( endpointAnnotation ( params, p, restName, r, restAction, 'query' ) ),
     `    @${restTypeDetails.annotation}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}/query", produces="application/json")`,
@@ -153,7 +153,7 @@ function makeQueryEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, 
 }
 
 
-function makeSampleEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>, restName: string, r: RestD<G>, restAction: RestAction ): string[] {
+function makeSampleEndpoint<G> ( params: JavaWiringParams, p: RefD<G>, restName: string, r: RestD<G>, restAction: RestAction ): string[] {
   return [
     ...indentList ( endpointAnnotation ( params, p, restName, r, restAction, 'query' ) ),
     `  @${getRestTypeDetails ( 'get' ).annotation}(value = "${beforeSeparator ( "?", r.url )}/sample", produces = "application/json")`,
@@ -162,7 +162,7 @@ function makeSampleEndpoint<G> ( params: JavaWiringParams, p: MainPageD<any, G>,
     `    }` ];
 }
 
-function makeSqlEndpoint<B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, restName: string, r: RestD<G> ): string[] {
+function makeSqlEndpoint<B, G> ( params: JavaWiringParams, p: RefD<G>, restName: string, r: RestD<G> ): string[] {
   if ( r.tables === undefined ) return []
   return [
     `  @${getRestTypeDetails ( 'get' ).annotation}(value = "${beforeSeparator ( "?", r.url )}/sql", produces = "text/html")`,
@@ -170,7 +170,7 @@ function makeSqlEndpoint<B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, r
     `      return ${sqlMapName ( p, restName, [] )}.allSql;`,
     `    }` ];
 }
-export function makeSpringEndpointsFor<B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, restName: string, r: RestD<G> ): string[] {
+export function makeSpringEndpointsFor<G> ( params: JavaWiringParams, p: RefD<G>, restName: string, r: RestD<G> ): string[] {
   const errorPrefix = `${p.name}.rest[${restName}] ${JSON.stringify ( restName )}`
   const endpoints: string[] = r.actions.flatMap ( action => makeEndpoint ( params, p, restName, r, action ) )
   const queries: string[] = r.actions.flatMap ( action => makeQueryEndpoint ( params, p, restName, errorPrefix, r, action ) )
@@ -204,7 +204,7 @@ export function makeSpringEndpointsFor<B, G> ( params: JavaWiringParams, p: Main
     `import java.util.Arrays;`,
     ...importForTubles ( params ),
     ...importForSql,
-    ...safeArray(params.endpointImports). map(n => `import ${n};`),
+    ...safeArray ( params.endpointImports ).map ( n => `import ${n};` ),
     '',
     `  @RestController`,
     ...indentList ( params.controllerAnnotations ),

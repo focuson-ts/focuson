@@ -2,7 +2,7 @@ import { copyFile, copyFiles, DirectorySpec, templateFile, writeToFile } from "@
 import { TSParams } from "../codegen/config";
 import fs from "fs";
 import { detailsLog, GenerateLogLevel, safeArray, sortedEntries, unique } from "@focuson/utils";
-import { allMainPages, flatMapToModal, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
+import { allMainPages, flatMapToModal, isMainPage, MainPageD, PageD, RefD, RestDefnInPageProperties } from "../common/pageD";
 import { createRenderPage } from "../codegen/makeRender";
 import { ButtonD } from "../buttons/allButtons";
 import { makeAllDomainsFor, makePageDomainsFor } from "../codegen/makeDomain";
@@ -22,7 +22,7 @@ import { AppConfig } from "../appConfig";
 
 const themes = [ 'theme-dark', 'theme-light' ]
 export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, appConfig: AppConfig, tsRoot: string, params: TSParams, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G>, directorySpec: DirectorySpec ) =>
-  <B extends ButtonD> ( mainPs: MainPageD<B, G>[], allPages: PageD<B, G>[] ) => {
+  <B extends ButtonD> ( mainPs: MainPageD<B, G>[], allPages: PageD<B, G>[], refs: RefD<G>[] ) => {
     //to help the readability of the writeFile/template files
     const details = logLevel === 'detailed' ? 2 : -1
     const minimal = logLevel === 'minimal' ? 2 : -1

@@ -1,8 +1,8 @@
 import { AllDataDD, CompDataD, compDataDIn } from "../common/dataD";
-import { MainPageD, ModalPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
+import { MainPageD, ModalPageD, PageD, RefD, RestDefnInPageProperties } from "../common/pageD";
 import { RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
-import { isRestStateChange, RestAction, safeString } from "@focuson/utils";
+import { HasName, isRestStateChange, RestAction, safeString } from "@focuson/utils";
 import { JavaWiringParams, TSParams } from "./config";
 import { TableAndFieldAndAliasData } from "./makeSqlFromEntities";
 import { restActionForName, restActionToDetails } from "@focuson/rest";
@@ -26,7 +26,7 @@ export function resolverName<G> ( rest: RestD<G>, action: RestAction ) {
 export const sampleName = <G> ( dataD: AllDataDD<G> ) => "sample" + dataD.name;
 export const emptyName = <G> ( dataD: AllDataDD<G> ) => "empty" + dataD.name;
 
-export const restControllerName = <B, G> ( p: MainPageD<B, G>, restD: RestD<G> ) => p.name + "_" + (restD.namePrefix ? `${restD.namePrefix}_` : '') + `${restD.dataDD.name}Controller`
+export const restControllerName = <B, G> ( p: RefD<G>, restD: RestD<G> ) => p.name + "_" + (restD.namePrefix ? `${restD.namePrefix}_` : '') + `${restD.dataDD.name}Controller`
 export const javaSqlCreateTableSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.createTableSql.sql`
 export const javaSqlReadSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.readTableSql.sql`
 
@@ -40,28 +40,28 @@ export const modalName = <B, G> ( p: PageD<B, G>, modal: PageD<B, G> ) => modal.
 export const restNameWithPrefix = <G> ( r: RestD<G> ) => r.namePrefix ? r.namePrefix + "_" + r.dataDD.name : r.dataDD.name
 export const restDetailsName = <B, G> ( p: PageD<B, G>, restName: string, r: RestD<G> ) => p.name + "_" + restNameWithPrefix ( r ) + "RestDetails"
 
-export const packageNameFor = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G>, thing: string ): string => `${params.thePackage}.${thing}.${p.name}`;
-export const fetcherPackageName = <G> ( params: JavaWiringParams, p: MainPageD<any, G> ): string => packageNameFor ( params, p, params.fetcherPackage );
+export const packageNameFor = <B, G> ( params: JavaWiringParams, p: HasName, thing: string ): string => `${params.thePackage}.${thing}.${p.name}`;
+export const fetcherPackageName = <G> ( params: JavaWiringParams, p: HasName ): string => packageNameFor ( params, p, params.fetcherPackage );
 export const fetcherInterfaceName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => fetcherInterfaceForResolverName ( params, r, resolverName ( r, a ) )
 export const fetcherInterfaceForResolverName = <G> ( params: JavaWiringParams, r: RestD<G>, resolverName: string ): string => `${restNameWithPrefix ( r )}_${resolverName}_${params.fetcherInterface}`;
 
-export const dbFetcherPackage = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G> ): string => packageNameFor ( params, p, params.dbFetcherPackage );
+export const dbFetcherPackage = <B, G> ( params: JavaWiringParams, p: HasName ): string => packageNameFor ( params, p, params.dbFetcherPackage );
 export const dbFetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G>, action: RestAction ): string => `${restNameWithPrefix ( r )}_${restActionForName ( action )}_${params.fetcherInterface}DB`;
 
-export const mockFetcherPackage = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G> ): string => packageNameFor ( params, p, params.mockFetcherPackage );
+export const mockFetcherPackage = <B, G> ( params: JavaWiringParams, p: HasName ): string => packageNameFor ( params, p, params.mockFetcherPackage );
 export const mockFetcherClassName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${params.fetcherInterface}Mock`;
 export const mockFetcherClassNameForResolver = <G> ( params: JavaWiringParams, r: RestD<G>, resolver: string ): string => {
   if ( typeof resolver !== 'string' ) throw Error ( `Resolver must be string. Actually is ${JSON.stringify ( resolver )}` )
   return `${restNameWithPrefix ( r )}_${resolver}_${params.fetcherInterface}MockR`;
 };
 
-export const queryPackage = <B, G> ( params: JavaWiringParams, p: MainPageD<B, G> ): string => packageNameFor ( params, p, params.queriesPackage );
-export const providerName = <B, G> ( p: MainPageD<B, G> ) => p.name + "Provider"
+export const queryPackage = <B, G> ( params: JavaWiringParams, p: RefD<G> ): string => packageNameFor ( params, p, params.queriesPackage );
+export const providerName = <B, G> ( p: HasName ) => p.name + "Provider"
 
 export const fetcherName = <G> ( d: RestDefnInPageProperties<G> ): string => restNameWithPrefix ( d.rest ) + "Fetcher";
 export const fetcherVariableName = <G> ( params: JavaWiringParams, r: RestD<G>, a: RestAction ): string => `${restNameWithPrefix ( r )}_${restActionForName ( a )}_${params.fetcherInterface}`;
 export const fetcherVariableNameForResolver = <G> ( params: JavaWiringParams, r: RestD<G>, resolverName: string ): string => `${restNameWithPrefix ( r )}_${resolverName}_${params.fetcherInterface}`;
-export const providerPactClassName = <B, G> ( pd: MainPageD<B, G> ): string => providerName ( pd ) + "Test";
+export const providerPactClassName = <B, G> ( pd: RefD<G> ): string => providerName ( pd ) + "Test";
 
 export const mutationClassName = <B, G> ( r: RestD<G>, restAction: RestAction ) => `${restNameWithPrefix ( r )}_${restActionForName ( restAction )}Mutation`;
 export const mutationVariableName = <B, G> ( r: RestD<G>, restAction: RestAction ) => `__${restActionForName ( restAction )}Mutation`;
@@ -77,11 +77,11 @@ export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): str
 export const javaDbFileName = <B, G> ( params: JavaWiringParams, p: PageD<B, G> ): string => `${p.name}Db`;
 export const sqlDataSuffixFor = ( suffix: string, i: number ): string => suffix + "_" + i
 
-export function sqlMapName<B, G> ( p: PageD<B, G>, restName: string, path: number[] ) {return `${p.name}_${restName}Maps${path.join ( "_" )}`}
-export function sqlListName<B, G> ( p: PageD<B, G>, restName: string, path: number[], i: number ) {return sqlMapName ( p, restName, [ ...path, i ] )}
-export function sqlMapFileName<B, G> ( root: string, p: PageD<B, G>, restName: string, path: number[] ) {return `${root}/${p.name}/${sqlMapName ( p, restName, path )}`}
+export function sqlMapName<B, G> ( p: RefD<G>, restName: string, path: number[] ) {return `${p.name}_${restName}Maps${path.join ( "_" )}`}
+export function sqlListName<B, G> ( p: RefD<G>, restName: string, path: number[], i: number ) {return sqlMapName ( p, restName, [ ...path, i ] )}
+export function sqlMapFileName<B, G> ( root: string, p: RefD<G>, restName: string, path: number[] ) {return `${root}/${p.name}/${sqlMapName ( p, restName, path )}`}
 export function sqlTafFieldName<G> ( taf: TableAndFieldAndAliasData<G> ) {return taf.fieldData.dbFieldAlias ? taf.fieldData.dbFieldAlias : `${taf.alias}_${taf.fieldData.dbFieldName}`}
-export function sqlMapPackageName<G> ( params: JavaWiringParams, p: MainPageD<any, G> ) {return `${params.thePackage}.${params.dbPackage}.${p.name}`}
+export function sqlMapPackageName<G> ( params: JavaWiringParams, p: RefD<G> ) {return `${params.thePackage}.${params.dbPackage}.${p.name}`}
 export const optionalsName = <B, G> ( p: MainPageD<B, G> ) => `${p.name}Optionals`
 
 export const someFileName = <B, G> ( root: string, pd: PageD<B, G>, postfix: string ): string => `${root}/${pd.name}/${pd.name}.${postfix}`;

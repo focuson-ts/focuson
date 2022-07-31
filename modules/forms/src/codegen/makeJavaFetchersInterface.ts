@@ -5,7 +5,7 @@ import { JavaWiringParams } from "./config";
 import { applyToTemplate } from "@focuson/template";
 import { DirectorySpec, loadFile } from "@focuson/files";
 import { RestAction, unique } from "@focuson/utils";
-import { MainPageD, PageD } from "../common/pageD";
+import { PageD, RefD } from "../common/pageD";
 import { getRestTypeDetails } from "@focuson/rest";
 
 
@@ -25,7 +25,7 @@ import { getRestTypeDetails } from "@focuson/rest";
 //     '}' ]
 // }
 //
-export function makeJavaFetcherInterfaceForResolver<G> ( params: JavaWiringParams, page: MainPageD<any, G>, restD: RestD<G>, resolverName: string, javaType: string ): string[] {
+export function makeJavaFetcherInterfaceForResolver<G> ( params: JavaWiringParams, page: RefD<G>, restD: RestD<G>, resolverName: string, javaType: string ): string[] {
   return [
     `package ${fetcherPackageName ( params, page )};`,
     '',

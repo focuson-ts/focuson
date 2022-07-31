@@ -1,8 +1,8 @@
-import { MainPageD } from "../common/pageD";
+import { MainPageD, RefD } from "../common/pageD";
 import { JavaWiringParams } from "./config";
 import { providerName, providerPactClassName } from "./names";
 
-export function makePactValidation<B, G> ( params: JavaWiringParams, port: number, page: MainPageD<B, G> ) {
+export function makePactValidation<B, G> ( params: JavaWiringParams, port: number, page: RefD<G> ) {
   return [
     `package ${params.thePackage};`,
     `import au.com.dius.pact.provider.junit.PactRunner;`,
