@@ -29,6 +29,7 @@ export interface AuditDetails {
   by: string
 }
 
+export type PrimaryMutations = PrimaryMutationDetail| PrimaryMutationDetail[]
 export type Mutations = MutationDetail | MutationDetail[]
 
 
@@ -56,9 +57,10 @@ export function getMakeMock ( m: MutationDetail ): boolean {
   if ( isMessageMutation ( m ) || isMultipleMutation ( m ) ) return false
   return m.makeMock === undefined ? true : m.makeMock
 }
-export type MutationDetail = StoredProcedureMutation | SqlFunctionMutation |
+export type PrimaryMutationDetail =  StoredProcedureMutation | SqlFunctionMutation |
   SqlMutation | SqlMutationThatIsAList |
-  ManualMutation | SelectMutation | MessageMutation | MultipleMutation
+  ManualMutation | SelectMutation | MessageMutation
+export type MutationDetail =  PrimaryMutationDetail| MultipleMutation
 
 // export interface IDFromSequenceMutation {
 //   mutation: 'IDFromSequence',

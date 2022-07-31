@@ -1,7 +1,7 @@
 import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
 import { NameAnd, RestAction, safeObject, safeString, sortedEntries, toArray, unique } from "@focuson/utils";
 import { paramsForRestAction } from "../codegen/codegen";
-import { AccessDetails, GuardedMutation, MutationDetail, Mutations, MutationsForRestAction, SelectMutation } from "./resolverD";
+import { AccessDetails, GuardedMutation, MutationDetail, Mutations, MutationsForRestAction, PrimaryMutationDetail, PrimaryMutations, SelectMutation } from "./resolverD";
 import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 import { allMainPages, MainPageD, PageD, RestDefnInPageProperties } from "./pageD";
 import { getRestTypeDetails, RestActionDetail, restActionForName, UrlAndParamsForState } from "@focuson/rest";
@@ -137,7 +137,7 @@ export interface RestD<G> {
   access?: AccessDetails[];
   audits?: any[] //doesn't do anything. Is just for legacy
   mutations?: MutationsForRestAction[];
-  resolvers?: NameAnd<Mutations>;
+  resolvers?: NameAnd<PrimaryMutations>;
   tables?: EntityAndWhere;
 }
 

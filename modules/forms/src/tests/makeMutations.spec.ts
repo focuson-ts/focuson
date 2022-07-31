@@ -214,7 +214,7 @@ describe ( "makeMutations", () => {
   } )
 
   it ( "should make mutations for cases: i.e. where only one of several mutations will happen depending on the situation", () => {
-    expect ( makeMutations ( paramsForTest, PaymentsPageD, 'newPayments', newPaymentsRD, safeArray ( newPaymentsRD.mutations )[ 0 ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeMutations ( paramsForTest, PaymentsPageD, 'newPayments', newPaymentsRD, safeArray ( newPaymentsRD.mutations )[ 0 ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
       "package focuson.data.mutator.Payments;",
       "",
       "import focuson.data.fetchers.IFetcher;",
@@ -254,8 +254,9 @@ describe ( "makeMutations", () => {
       "           System.out.println('Mock audit: create0( brandRef, accountId, {'type':'output','name':'one','javaType':'String'}, {'type':'output','name':'two','javaType':'Integer'}+ )');",
       "           return new Tuple2<>('0',1);",
       "    }",
-      "      if (true && brandRef==3) {",
+      "      if (true && brandRef==3){",
       "        Tuple15<String,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer> params0 = one0_0(connection,msgs,dbName,accountId);",
+      "        //If you get a compilation in the following variables because of a name conflict: check the output params. Each output param can only be defined once.",
       "        String one = params0.t1;",
       "        Integer two = params0.t2;",
       "        Integer three = params0.t3;",
@@ -271,15 +272,16 @@ describe ( "makeMutations", () => {
       "        Integer thirteen = params0.t13;",
       "        Integer fourteen = params0.t14;",
       "        Integer fiveteen = params0.t15;",
-      "        // If you have a compilation error here: do the output params match the output params in the 'case'?",
-      "        return new Tuple2<String,Integer>(one,two);",
+      "      // If you have a compilation error here: do the output params match the output params in the 'case'?",
+      "      return new Tuple2<String,Integer>(one,two);",
       "      }",
-      "      if (true) {",
+      "      if (true){",
       "        Tuple2<Integer,String> params1 = two0_1(connection,msgs,dbName,accountId);",
+      "        //If you get a compilation in the following variables because of a name conflict: check the output params. Each output param can only be defined once.",
       "        Integer two = params1.t1;",
       "        String one = params1.t2;",
-      "        // If you have a compilation error here: do the output params match the output params in the 'case'?",
-      "        return new Tuple2<String,Integer>(one,two);",
+      "      // If you have a compilation error here: do the output params match the output params in the 'case'?",
+      "      return new Tuple2<String,Integer>(one,two);",
       "      }",
       "      throw new RuntimeException('No guard condition executed');",
       "  }",
@@ -386,7 +388,7 @@ describe ( "makeMutations", () => {
       "",
       "    @Autowired IOGNL ognlForBodyAsJson;",
       "//If you have a compilation error in the type here, did you match the types of the output params in your manual code with the declared types in the .restD?",
-      "//If you have a compiation error because of a 'cannot resolve symbol' you may need to add the class to the 'imports'",
+      "//If you have a compilation error because of a 'cannot resolve symbol' you may need to add the class to the 'imports'",
       "    public String ValidatedPayeeDetails_state_validate_undefined0(Connection connection, Messages msgs, Object dbName) throws SQLException {",
       "      String payeeStatus= \"SUCCEEDED!!!!!\";",
       "      return payeeStatus;",
@@ -433,7 +435,7 @@ describe ( "makeMutations", () => {
       "",
       "    @Autowired IOGNL ognlForBodyAsJson;",
       "    public Tuple3<String,String,String> CollectionsList_get_undefined0(Connection connection, Messages msgs, Object dbName) throws SQLException {",
-      "    String sql = 'select amount as amountd, id, amount as amounts from Collection_History';",
+      "    String sql = 'select amount as amountd, id, amount as amounts '+\n      'from Collection_History ';",
       "    try (PreparedStatement s = connection.prepareStatement(sql)) {",
       "      logger.debug(MessageFormat.format('sql: {0}', sql));",
       "      long start = System.nanoTime();",
@@ -447,7 +449,7 @@ describe ( "makeMutations", () => {
       "  }}",
       "",
       "}"
-    ] )
+    ])
 
   } )
 } )

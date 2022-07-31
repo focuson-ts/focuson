@@ -106,6 +106,7 @@ describe ( "findAllCommonParamsWithSamples", () => {
       "employeeType": "basic",
       "jurisdiction": "GB",
       "role": "user",
+      "today": "29/07/2022",
       "vbAcountSeq": 55555
     } )
   } )

@@ -199,3 +199,55 @@ Realisation:
 * It will require ids... and it's the job of the developer to provide them
 * We can put a // From xxx... If this doesn't compile because an id doesn't exist you need to create it as output params with mutations
 * We can also detect if we make them all in the report.
+
+
+# Initial data
+We get initial data (CommonIds and other things) from two places:
+* Other pages that have already executed and done their thing. Like the login pages, or search pages
+* An API for things like dates and holidays and ...
+
+## Data from other pages
+CommonIds and we can have CommonData by 'just doing it'. If we are in control of adding things, the copy commands are enough. If it's another page outside 
+ourcontrol, we just need to know where the data is and as control is passed to us update our state.
+
+## Date and holidays
+'Today' is a particularly interesting idea. Is it the browser today or the bank today? It doesn't take long to answer that it should be the
+server today. Other answers lead to awkwardness. 
+
+`Today` is interesting because it changes over time. If the browser makes a local cache of '`today`' how often should it change that local copy? 
+We also want the browser to cache holidays, and the 'staleness requirement' for holidays is different to the staleness for `today`.
+
+Let's assume we have two apis for this. And then generalise it to N. We effectively want N fetchers to execute. The logic for these fetchers
+is slightly different. We want to execute these fetchers regularly.
+* Type A: always update (used for `today`) and override the cached values
+* Type B: check `regularly` (use for holidays and currency and lists of brands and stuff). Where `regularly` is the cache staleness setting
+
+So suppose we add the idea of cache staleness
+* Every 10 minutes (works for `today` quite well)
+* Every hour (works for long lived reference data)
+* ...
+
+* We can have a list of fetchers at each staleness setting. 
+
+## Updating
+Two options:
+* regular triggers. 'every ten mins', 'every hour', 'at eight o'clock every day'...
+* Part of the flux loop
+
+## Data recorded
+We still need tags... and if they change the data loaded changes. 
+We probably want to record 'when it was made'. And there is little downside in doing this for regular data
+We could change the tag structure to support that...
+
+## sharing
+We want many of these to be shared across teams. If we have four teams and two releases each we don't want eight regular calls for today and holiday and currencies...
+
+Some of these will be delivered by the central team (perhaps most). Others by the individual teams.
+
+I propose we keep this data under the 'CommonData' location. Indexed by name under there (dateInfo)
+
+## Steps
+* Add time to the tags.
+* Make lists of fetchers by staleness...  (these should compose)
+* Have a widget to run the fetchers at the right time 
+* Add CommonData to the debugger

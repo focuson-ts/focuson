@@ -294,7 +294,7 @@ export function mutationCodeForManual<G> ( errorPrefix: string, p: MainPageD<any
 }
 
 export function mutationCodeForOne<G> ( errorPrefix: string, p: MainPageD<any, any>, r: RestD<G>, name: string, m: MutationDetail, index: number, includeMockIf: boolean, indexPrefix: string ): string[] {
-  if ( isMessageMutation ( m ) ) return [ `   msgs.${m.level ? m.level : 'info'}("${m.message}");` ]
+  if ( isMessageMutation ( m ) ) return [ `  msgs.${m.level ? m.level : 'info'}("${m.message}");` ]
   if ( isMultipleMutation ( m ) ) return m.mutations.flatMap ( ( m, i ) => mutationCodeForOne ( errorPrefix, p, r, name, m, i, includeMockIf, indexPrefix + '_' + index ) )
 
   return indentList ( [
