@@ -12,7 +12,7 @@
     ]
   },
   "dependencies": {
-    "@focuson/utils": "1.32.0"
+    "@focuson/utils": "1.32.1"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -44,7 +44,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.32.0",
+  "version": "1.32.1",
   "template": "noreact",
   "description": "A simple implementation of lens using type script",
   "details": {

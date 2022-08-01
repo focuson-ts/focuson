@@ -19,7 +19,8 @@ export interface JavaWiringParams {
   maxTuples: number;
   controllerAnnotations: string[],
   endpointAnnotations: string[],
-  endpointImports?: string[]
+  endpointImports?: string[],
+  debugLevel: 'info' | 'debug' | 'none'
 }
 
 export interface TSParams {
@@ -43,7 +44,7 @@ export interface TSParams {
   theme: string;
   extractData: string;
   teamName: string;
-  }
+}
 
 export interface CombinedParams extends JavaWiringParams, TSParams {}
 

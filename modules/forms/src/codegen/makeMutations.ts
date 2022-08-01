@@ -153,29 +153,33 @@ export const typeForParamAsInput = ( errorPrefix: string, params: NameAnd<AllLen
 };
 
 
-export function preTransactionLogger ( type: string, paramsA: MutationParam[] ): string {
+export function preTransactionLogger ( params: JavaWiringParams, type: string, paramsA: MutationParam[] ): string[] {
+  const debugLevel = params.debugLevel;
+  if (debugLevel==='none')return[]
   const hasBodyParams = paramsA.filter ( isBodyMutationParam ).length > 0
   const inputParams = paramsA.filter ( isInputParam );
-  if ( inputParams.length == 0 ) return `      logger.debug(MessageFormat.format("${type}: {0}", ${type}));`;
+  if ( inputParams.length == 0 ) return [ `      logger.${debugLevel}(MessageFormat.format("${type}: {0}", ${type}));` ];
   const inputParamsWithoutBody = inputParams.filter ( p => !isBodyMutationParam ( p ) );
   const paramNamesAndValues = [
     `${type}: {0}`,
     ...inputParamsWithoutBody.map ( ( p, i ) => `${paramNamePathOrValue ( p )}: {${i + 1}}` ),
     hasBodyParams ? `bodyAsJson: {${inputParamsWithoutBody.length}}` : `` ].join ( ',' )
-  return `      logger.debug(MessageFormat.format("${paramNamesAndValues}", ${type},${inputParamsWithoutBody.map ( paramNamePathOrValue )}${hasBodyParams ? ',bodyAsJson' : ''}));`;
+  return [ `      logger.${debugLevel}(MessageFormat.format("${paramNamesAndValues}", ${type},${inputParamsWithoutBody.map ( paramNamePathOrValue )}${hasBodyParams ? ',bodyAsJson' : ''}));` ];
 }
 
-export function postTransactionLogger ( paramsA: MutationParam[], isList: boolean ): string {
+export function postTransactionLogger ( params: JavaWiringParams, paramsA: MutationParam[], isList: boolean ): string[] {
+  const debugLevel = params.debugLevel;
+  if (debugLevel==='none')return[]
   let outputParams = paramsA.filter ( isOutputParam );
-  if ( outputParams.length == 0 ) return `logger.debug(MessageFormat.format("Duration: {0,number,#.##}", (System.nanoTime() - start) / 1000000.0));`;
-  if ( isList ) return `logger.debug(MessageFormat.format("Duration: {0,number,#.##}, result: {1}", (System.nanoTime() - start) / 1000000.0), result);`;
+  if ( outputParams.length == 0 ) return [ `logger.${debugLevel}(MessageFormat.format("Duration: {0,number,#.##}", (System.nanoTime() - start) / 1000000.0));` ];
+  if ( isList ) return [ `logger.debug(MessageFormat.format("Duration: {0,number,#.##}, result: {1}", (System.nanoTime() - start) / 1000000.0), result);` ];
   const prefixNamesAndIndex = `Duration: {0,number,#.##}, `.concat ( outputParams.map ( ( p, i ) => `${p.name}: {${i + 1}}` ).join ( ", " ) );
-  return `logger.debug(MessageFormat.format("${prefixNamesAndIndex}", (System.nanoTime() - start) / 1000000.0, ${outputParams.map ( p => p.name )}));`;
+  return [ `logger.${debugLevel}(MessageFormat.format("${prefixNamesAndIndex}", (System.nanoTime() - start) / 1000000.0, ${outputParams.map ( p => p.name )}));` ];
 }
 function cleanSql ( sql: string ) {
   return sql.split ( /\n/g ).map ( s => `"${s.trim ()} "` ).filter ( s => s.length > 0 ).join ( "+\n      " )
 }
-export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: RefD<G>, r: RestD<G>, name: string, m: SqlMutation, index: string, includeMockIf: boolean ): string[] {
+export function mutationCodeForSqlMapCalls<G> ( params: JavaWiringParams, errorPrefix: string, p: RefD<G>, r: RestD<G>, name: string, m: SqlMutation, index: string, includeMockIf: boolean ): string[] {
 
   const paramsA = toArray ( m.params )
   const exception = m.noDataIs404 ?
@@ -194,13 +198,13 @@ export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: RefD<G>,
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
     `    String sql = ${cleanSql ( m.sql )};`,
     `    try (PreparedStatement s = connection.prepareStatement(sql)) {`,
-    preTransactionLogger ( m.type, paramsA ),
+    ...preTransactionLogger ( params, m.type, paramsA ),
     ...indentList ( indentList ( indentList ( [
         ...allSetObjectForInputs ( errorPrefix, m.params ),
         `long start = System.nanoTime();`,
         ...execute,
         ...getFromResultSetIntoVariables ( errorPrefix, 'rs', paramsA ),
-        postTransactionLogger ( paramsA, isSqlMutationThatIsAList ( m ) ),
+        ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ),
         makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) )
       ]
     ) ) ),
@@ -208,7 +212,7 @@ export function mutationCodeForSqlMapCalls<G> ( errorPrefix: string, p: RefD<G>,
   ];
 }
 
-export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: RefD<G>, r: RestD<G>, name: string, m: SqlMutationThatIsAList, index: string, includeMockIf: boolean ): string[] {
+export function mutationCodeForSqlListCalls<G> ( params: JavaWiringParams, errorPrefix: string, p: RefD<G>, r: RestD<G>, name: string, m: SqlMutationThatIsAList, index: string, includeMockIf: boolean ): string[] {
   const paramsA = toArray ( m.params )
   const messageLine = m.messageOnEmptyData ? [ `if (result.isEmpty()) msgs.error(${JSON.stringify ( m.messageOnEmptyData )});` ] : []
   return [
@@ -216,7 +220,7 @@ export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: RefD<G>
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
     `    String sql = "${cleanSql ( m.sql )}";`,
     `    try (PreparedStatement s = connection.prepareStatement(sql)) {`,
-    preTransactionLogger ( m.type, paramsA ),
+    ...preTransactionLogger ( params, m.type, paramsA ),
     ...indentList ( indentList ( indentList ( [
         ...allSetObjectForInputs ( errorPrefix, m.params ),
         `long start = System.nanoTime();`,
@@ -229,7 +233,7 @@ export function mutationCodeForSqlListCalls<G> ( errorPrefix: string, p: RefD<G>
           `result.add(oneLine);` ] ),
         '}',
         ...messageLine,
-        postTransactionLogger ( paramsA, isSqlMutationThatIsAList ( m ) ),
+        ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ),
         `return result;`,
       ]
     ) ) ),
@@ -243,7 +247,7 @@ function makeMethodDecl<G> ( errorPrefix: string, paramsA: MutationParam[], resu
   return [ `    public ${resultType} ${mutationMethodName ( r, name, m, index )}(Connection connection, Messages msgs, ${paramStrings}) throws SQLException {`,
     ...indentList ( indentList ( indentList ( requiredmentCheckCodeForJava ( paramsA, parametersFor ( m ) ) ) ) ) ];
 }
-export function mutationCodeForFunctionCalls<G> ( errorPrefix: string, p:RefD<G>, r: RestD<G>, name: string, m: SqlFunctionMutation, index: string, includeMockIf: boolean ): string[] {
+export function mutationCodeForFunctionCalls<G> ( params: JavaWiringParams, errorPrefix: string, p: RefD<G>, r: RestD<G>, name: string, m: SqlFunctionMutation, index: string, includeMockIf: boolean ): string[] {
   const paramsA = toArray ( m.params )
   let fullName = m.package ? `${m.package}.${m.name}` : m.name;
   return [
@@ -251,31 +255,31 @@ export function mutationCodeForFunctionCalls<G> ( errorPrefix: string, p:RefD<G>
     `      String sqlFunction = "{? = call ${fullName}(${toArray ( m.params ).slice ( 1 ).map ( () => '?' ).join ( ", " )})}";`,
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
     `      try (CallableStatement s = connection.prepareCall(sqlFunction)) {`,
-    preTransactionLogger ( m.type, paramsA ),
+    ...preTransactionLogger ( params, m.type, paramsA ),
     ...indentList ( indentList ( indentList ( allSetObjectForStoredProcs ( errorPrefix, m.params ) ) ) ),
     `      long start = System.nanoTime();`,
     `      s.execute();`,
     ...indentList ( indentList ( indentList ( [
       ...getFromStatement ( errorPrefix, 's', paramsA ),
-      postTransactionLogger ( paramsA, isSqlMutationThatIsAList ( m ) ),
+      ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ),
       makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),
     `  }}`,
   ];
 }
-export function mutationCodeForStoredProcedureCalls<G> ( errorPrefix: string, p: RefD<G>, r: RestD<G>, name: string, m: StoredProcedureMutation, index: string, includeMockIf: boolean ): string[] {
+export function mutationCodeForStoredProcedureCalls<G> ( params: JavaWiringParams, errorPrefix: string, p: RefD<G>, r: RestD<G>, name: string, m: StoredProcedureMutation, index: string, includeMockIf: boolean ): string[] {
   const paramsA = toArray ( m.params )
   let fullName = m.package ? `${m.package}.${m.name}` : m.name;
   return [
     ...makeMethodDecl ( errorPrefix, paramsA, javaTypeForOutput ( paramsA ), r, name, m, index ),
     `      String storedProc = "call ${fullName}(${toArray ( m.params ).map ( () => '?' ).join ( ", " )})";`,
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ), `    try (CallableStatement s = connection.prepareCall(storedProc)) {`,
-    preTransactionLogger ( m.type, paramsA ),
+    ...preTransactionLogger ( params, m.type, paramsA ),
     ...indentList ( indentList ( indentList ( allSetObjectForStoredProcs ( errorPrefix, m.params ) ) ) ),
     `      long start = System.nanoTime();`,
     `      s.execute();`,
     ...indentList ( indentList ( indentList ( [
       ...getFromStatement ( errorPrefix, 's', paramsA ),
-      postTransactionLogger ( paramsA, isSqlMutationThatIsAList ( m ) ),
+      ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ),
       makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),
     `  }}`,
   ];
@@ -321,21 +325,21 @@ export function mutationCodeForCase<G> ( errorPrefix: string, p: RefD<G>, r: Res
   ];
 }
 
-export function makeMutationMethod<G> ( errorPrefix: string, mutations: MutationDetail[], name: string, p: RefD<G>, r: RestD<G>, includeMockIf: boolean, indexPrefix: string ): string[] {
+export function makeMutationMethod<G> ( params: JavaWiringParams, errorPrefix: string, mutations: MutationDetail[], name: string, p: RefD<G>, r: RestD<G>, includeMockIf: boolean, indexPrefix: string ): string[] {
   const methods = mutations.flatMap ( ( mutateBy, index ) => toArray ( mutateBy ).flatMap ( ( m: MutationDetail ) => {
     const newErrorPrefix = `${errorPrefix} Mutation ${name} ${mutationDetailsName ( m, index.toString () )}`
-    if ( isSqlMutationThatIsAList ( m ) ) return mutationCodeForSqlListCalls ( newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
-    if ( m.type === 'sql' ) return mutationCodeForSqlMapCalls ( newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
-    if ( m.type === 'storedProc' ) return mutationCodeForStoredProcedureCalls ( newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
-    if ( m.type === 'sqlFunction' ) return mutationCodeForFunctionCalls ( newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
+    if ( isSqlMutationThatIsAList ( m ) ) return mutationCodeForSqlListCalls ( params, newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
+    if ( m.type === 'sql' ) return mutationCodeForSqlMapCalls ( params, newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
+    if ( m.type === 'storedProc' ) return mutationCodeForStoredProcedureCalls ( params, newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
+    if ( m.type === 'sqlFunction' ) return mutationCodeForFunctionCalls ( params, newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
     if ( m.type === 'manual' ) return mutationCodeForManual ( newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf );
     if ( m.type === 'case' ) {
       const caseCode = mutationCodeForCase ( newErrorPrefix, p, r, name, m, index, includeMockIf, indexPrefix );
-      const clausesCode = makeMutationMethod ( errorPrefix, m.select, name, p, r, includeMockIf, indexPrefix + index + '_' );
+      const clausesCode = makeMutationMethod ( params, errorPrefix, m.select, name, p, r, includeMockIf, indexPrefix + index + '_' );
       return [ ...caseCode, ...clausesCode ];
     }
     if ( m.type === 'message' ) return mutationCodeForMessage ()
-    if ( m.type === 'multiple' ) return makeMutationMethod ( errorPrefix, m.mutations, name, p, r, includeMockIf, indexPrefix + index + '_' )
+    if ( m.type === 'multiple' ) return makeMutationMethod ( params, errorPrefix, m.mutations, name, p, r, includeMockIf, indexPrefix + index + '_' )
     throw Error ( `Don't know how to makeMutationMethod (Page ${p.name}) for ${JSON.stringify ( m )}` )
   } ) )
   return methods;
@@ -364,7 +368,7 @@ export const classLevelAutowiring = ( params: JavaWiringParams ) => ( mutation: 
 export function makeMutations<G> ( params: JavaWiringParams, p: RefD<G>, restName: string, r: RestD<G>, mutation: MutationsForRestAction ): string[] {
   const errorPrefix = `${p.name}.rest[${restName}]. Making mutations for ${restActionForName ( mutation.restAction )}.`
   const { importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( toArray ( mutation.mutateBy ), p, r, params );
-  const methods = makeMutationMethod ( errorPrefix, toArray ( mutation.mutateBy ), restActionForName ( mutation.restAction ), p, r, true, '' )
+  const methods = makeMutationMethod ( params, errorPrefix, toArray ( mutation.mutateBy ), restActionForName ( mutation.restAction ), p, r, true, '' )
   return [
     `package ${params.thePackage}.${params.mutatorPackage}.${p.name};`,
     ``,

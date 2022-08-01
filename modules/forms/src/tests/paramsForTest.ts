@@ -39,5 +39,6 @@ export const paramsForTest: CombinedParams = {
   theme: 'theme-dark',
   controllerAnnotations: [ "@CrossOrigin()" ],
   endpointAnnotations: [ "@EndPointAnnotation()" ],
-  teamName: 'focuson'
+  teamName: 'focuson',
+  debugLevel: 'info'
 };

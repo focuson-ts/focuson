@@ -14,7 +14,7 @@ import { makeCriticalReport, makeReport, makeReportData } from "../reporting/rep
 import { AppConfig } from "../appConfig";
 import { allOutputParams, parametersFor } from "../common/resolverD";
 
-export const params = {
+export const params: Omit<CombinedParams, 'focusOnVersion'>  = {
   defaultDbName: "mock",
   pagesFile: 'pages',
   commonParams: "CommonIds",
@@ -53,7 +53,7 @@ export const params = {
   extractData: `( status: number | undefined, body: any ) => body.data`,
   controllerAnnotations: [ "@CrossOrigin()" ],
   endpointAnnotations: [],// ['@ApiOperation(value="{description}",notes="{notes}")', '@PreAuthorise("{authorisation}")']
-
+  debugLevel: 'info'
 };
 
 export const directorySpec: DirectorySpec = {

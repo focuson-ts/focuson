@@ -9,7 +9,6 @@ import { generatedPages, generatedRefs } from "./focuson.config";
 
 const logLevel: GenerateLogLevel = 'detailed';
 
-
 generate ( logLevel, directorySpec, devAppConfig, {
     ...params,
     controllerAnnotations: [ "@CrossOrigin()" ],
@@ -17,7 +16,8 @@ generate ( logLevel, directorySpec, devAppConfig, {
     endpointImports: [],
     focusOnVersion,
     thePackage: 'somepackage.somepostfix.another',
-    theme: 'theme-dark'
+    theme: 'theme-dark',
+    debugLevel: 'info'
   },
   javaOutputRoot, tsRoot, AllGuardCreator, makeButtons () ) ( generatedPages, generatedRefs )
 

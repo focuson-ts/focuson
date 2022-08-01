@@ -15,7 +15,7 @@ function declareInputParamsFromEndpoint<G> ( r: RestD<G> ): string[] {
     .map ( ( [ typeAndName, name ] ) => `${typeAndName} =  getData(dataFetchingEnvironment, "${name}");` )//      Integer accountId =getData(dataFetchingEnvironment, "accountId", Integer.class);
 }
 
-export function callResolvers<G> ( p:RefD<G>, restName: string, r: RestD<G>, name: string, dbNameString: string, resolvers: MutationDetail[], indexPrefix: string ) {
+export function callResolvers<G> ( p: RefD<G>, restName: string, r: RestD<G>, name: string, dbNameString: string, resolvers: MutationDetail[], indexPrefix: string ) {
   return resolvers.flatMap ( ( md, i ) => {
     if ( isMessageMutation ( md ) ) return [ `msgs.${md.level ? md.level : 'info'}("${md.message}");` ]
     if ( isSqlMutationThatIsAList ( md ) )
@@ -133,12 +133,12 @@ export function makeFetcherMethodForList<G> ( params: JavaWiringParams, p: RefD<
 }
 
 
-export function makeResolvers<G> ( params: JavaWiringParams, p:RefD<G>, restName: string, r: RestD<G>, resolverName: string, resolver: Mutations, resolverData: ResolverData ): string[] {
+export function makeResolvers<G> ( params: JavaWiringParams, p: RefD<G>, restName: string, r: RestD<G>, resolverName: string, resolver: Mutations, resolverData: ResolverData ): string[] {
   // let resolvers = Object.values ( safeObject ( r.resolvers ) ).flatMap ( toArray );
   // if ( resolvers.length == 0 ) return []
   let resolvers = toArray ( resolver );
   const { importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( resolvers, p, r, params );
-  const methods = makeMutationMethod ( `${p.name}.rest[${restName}].resolvers[${resolverName}]`, resolvers, resolverName, p, r, false, '' )
+  const methods = makeMutationMethod ( params, `${p.name}.rest[${restName}].resolvers[${resolverName}]`, resolvers, resolverName, p, r, false, '' )
   let interfaceName = fetcherInterfaceForResolverName ( params, r, resolverData.resolver );
   const fetcherMethod = indentList (
     isRepeatingDd ( r.dataDD ) ?

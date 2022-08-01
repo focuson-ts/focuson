@@ -665,20 +665,22 @@ function newMap ( mapName: string, childCount: number, path: number[] ) {
   return `new ${mapName}(${[ 'rs', ...ints ( childCount ).map ( i => `list${i}` ) ].join ( "," )})`
 }
 
-function makeGetRestForRoot<B, G> ( p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, childCount: number, queryParams: JavaQueryParamDetails[] ) {
-  return makeGetRestForMainOrChild ( p, restName, [], childCount, queryParams, isRepeatingDd ( rdp.rest.dataDD ) )
+function makeGetRestForRoot<B, G> ( params: JavaWiringParams,p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, childCount: number, queryParams: JavaQueryParamDetails[] ) {
+  return makeGetRestForMainOrChild (params, p, restName, [], childCount, queryParams, isRepeatingDd ( rdp.rest.dataDD ) )
 }
 
-function makeGetRestForChild<B, G> ( p: RefD<G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[] ) {
-  return makeGetRestForMainOrChild ( p, restName, path, childCount, queryParams, true )
+function makeGetRestForChild<B, G> ( params: JavaWiringParams,p: RefD<G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[] ) {
+  return makeGetRestForMainOrChild ( params,p, restName, path, childCount, queryParams, true )
 
 }
 
-export function preTransactionSqlLogger ( paramsA: JavaQueryParamDetails[] ): string {
-  if ( paramsA.length == 0 ) return `    logger.debug(MessageFormat.format("sql: {${0}}", sql));`;
+export function preTransactionSqlLogger (params: JavaWiringParams, paramsA: JavaQueryParamDetails[] ): string[] {
+  const debugLevel = params.debugLevel;
+  if (debugLevel=== 'none')return []
+  if ( paramsA.length == 0 ) return [`    logger.debug(MessageFormat.format("sql: {${0}}", sql));`];
   let i = 1;
   const prefixNamesAndIndex = `sql: {${0}}, `.concat ( paramsA.map ( p => `${(p.name)}: {${i++}}` ).join ( ", " ) );
-  return `    logger.debug(MessageFormat.format("${prefixNamesAndIndex}", sql, ${paramsA.map ( p => p.name )}));`;
+  return [`    logger.${debugLevel}(MessageFormat.format("${prefixNamesAndIndex}", sql, ${paramsA.map ( p => p.name )}));`];
 }
 export function addPrefixPostFix ( details: JavaQueryParamDetails ): string {
   const { name, paramPrefix, paramPostfix, datePattern } = details
@@ -686,7 +688,7 @@ export function addPrefixPostFix ( details: JavaQueryParamDetails ): string {
   return (paramPrefix ? '"' + paramPrefix + '"+' : '') + name + (paramPostfix ? '+"' + paramPostfix + '"' : '')
 }
 
-function makeGetRestForMainOrChild<B, G> ( p: RefD<G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[], repeating: Boolean ) {
+function makeGetRestForMainOrChild<B, G> ( params: JavaWiringParams,p: RefD<G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[], repeating: Boolean ) {
   const mapName = `${sqlMapName ( p, restName, path )}`;
   const retreiveData: string[] = repeating ?
     [ `      List<${mapName}> result = new LinkedList<>();`,
@@ -703,7 +705,7 @@ function makeGetRestForMainOrChild<B, G> ( p: RefD<G>, restName: string, path: n
     `    String sql = ${mapName}.sql;`,
     `    PreparedStatement statement = connection.prepareStatement(sql);`,
     ...indentList ( indentList ( queryParams.map ( ( paramDetails, i ) => `statement.${paramDetails.param.rsSetter}(${i + 1},${addPrefixPostFix ( paramDetails )});` ) ) ),
-    preTransactionSqlLogger ( queryParams ),
+    ...preTransactionSqlLogger (params, queryParams ),
     `    long start = System.nanoTime();`,
     `    ResultSet rs = statement.executeQuery();`,
     `    try {`,
@@ -717,7 +719,7 @@ function makeGetRestForMainOrChild<B, G> ( p: RefD<G>, restName: string, path: n
 }
 
 export function makeGetForRestFromLinkData<B, G> ( params: JavaWiringParams, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, queryParams: JavaQueryParamDetails[], path: number[], childCount: number ) {
-  return path.length === 0 ? makeGetRestForRoot ( p, restName, rdp, childCount, queryParams ) : makeGetRestForChild ( p, restName, path, childCount, queryParams );
+  return path.length === 0 ? makeGetRestForRoot ( params,p, restName, rdp, childCount, queryParams ) : makeGetRestForChild (params, p, restName, path, childCount, queryParams );
 }
 interface QueryAndGetters {
   query: JavaQueryParamDetails[],
