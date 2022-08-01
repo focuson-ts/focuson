@@ -135,7 +135,7 @@ export function addFormat ( errorPrefix: string, format: Pattern | undefined, ja
           throw new Error ( `${errorPrefix} don't know how to addFormat for a String for ${JSON.stringify ( format )}, ${javaType}` )
       }
   }
-  throw new Error ( `${errorPrefix} don't know how to addFormat for ${format}, ${javaType}` )
+  throw new Error ( `${errorPrefix} don't know how to addFormat for ${JSON.stringify(format)}, ${javaType}` )
 }
 
 function findType ( errorPrefix: string, params: NameAnd<AllLensRestParams<any>>, name: string ) {
@@ -177,7 +177,7 @@ export function postTransactionLogger ( params: JavaWiringParams, paramsA: Mutat
   return [ `logger.${debugLevel}(MessageFormat.format("${prefixNamesAndIndex}", (System.nanoTime() - start) / 1000000.0, ${outputParams.map ( p => p.name )}));` ];
 }
 function cleanSql ( sql: string ) {
-  return sql.split ( /\n/g ).map ( s => `"${s.trim ()} "` ).filter ( s => s.length > 0 ).join ( "+\n      " )
+  return sql.split ( /\n/g ).filter ( s => s.length > 0 ).map ( s => `"${s.trim ()} "` ).join ( "+\n      " )
 }
 export function mutationCodeForSqlMapCalls<G> ( params: JavaWiringParams, errorPrefix: string, p: RefD<G>, r: RestD<G>, name: string, m: SqlMutation, index: string, includeMockIf: boolean ): string[] {
 
@@ -218,7 +218,7 @@ export function mutationCodeForSqlListCalls<G> ( params: JavaWiringParams, error
   return [
     ...makeMethodDecl ( errorPrefix, paramsA, 'List<Map<String,Object>>', r, name, m, index ),
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
-    `    String sql = "${cleanSql ( m.sql )}";`,
+    `    String sql = ${cleanSql ( m.sql )};`,
     `    try (PreparedStatement s = connection.prepareStatement(sql)) {`,
     ...preTransactionLogger ( params, m.type, paramsA ),
     ...indentList ( indentList ( indentList ( [

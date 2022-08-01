@@ -115,7 +115,7 @@ export function processChangeCommandProcessor<S> ( errorPrefix: string, p: Chang
 type CommonCommands = DeleteCommand | MessageCommand | SetChangeCommand | DeleteAllMessages
 export type RestChangeCommands = CommonCommands | CopyResultCommand
 export type ModalChangeCommands = CommonCommands | CopyCommand
-export type NewPageChangeCommands = CommonCommands | CopyCommand
+export type NewPageChangeCommands = CommonCommands | CopyCommand | DeletePageTagsCommand
 export type InputChangeCommands = CommonCommands | StrictCopyCommand
 
 export interface DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> {

@@ -135,7 +135,7 @@ describe ( "returnStatement", () => {
 describe ( "sql functions", () => {
   it ( "should make resolver for a sqlfunction", () => {
     let sqlFunctionMutation: any = safeObject ( collectionSummaryRD.resolvers ).getAccountType;
-    expect ( mutationCodeForFunctionCalls ( 'errorPrefix', LinkedAccountDetailsPD, collectionSummaryRD,
+    expect ( mutationCodeForFunctionCalls ( paramsForTest, 'errorPrefix', LinkedAccountDetailsPD, collectionSummaryRD,
       'getAccountType', sqlFunctionMutation, "I", false ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "    public Integer getAccountTypeI(Connection connection, Messages msgs, Object dbName) throws SQLException {",
       "      String sqlFunction = '{? = call b00.getAccountType()}';",
@@ -214,7 +214,7 @@ describe ( "makeMutations", () => {
   } )
 
   it ( "should make mutations for cases: i.e. where only one of several mutations will happen depending on the situation", () => {
-    expect ( makeMutations ( paramsForTest, PaymentsPageD, 'newPayments', newPaymentsRD, safeArray ( newPaymentsRD.mutations )[ 0 ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
+    expect ( makeMutations ( paramsForTest, PaymentsPageD, 'newPayments', newPaymentsRD, safeArray ( newPaymentsRD.mutations )[ 0 ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "package focuson.data.mutator.Payments;",
       "",
       "import focuson.data.fetchers.IFetcher;",
@@ -449,7 +449,7 @@ describe ( "makeMutations", () => {
       "  }}",
       "",
       "}"
-    ])
+    ] )
 
   } )
 } )

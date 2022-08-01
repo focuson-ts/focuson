@@ -359,7 +359,7 @@ describe ( "makeResolvers", () => {
       "      return someValue;",
       "  }",
       "    public List<Map<String,Object>> get1(Connection connection, Messages msgs, String dbName, Object someValue) throws SQLException {",
-      "    String sql = \"\"select *from POSTCODE where postcode like ? \"\";",
+      "    String sql = \"select *from POSTCODE where postcode like ? \";",
       "    try (PreparedStatement s = connection.prepareStatement(sql)) {",
       "      logger.debug(MessageFormat.format(\"sql: {0},someValue: {1},\", sql,someValue));",
       "      s.setObject(1, someValue);",

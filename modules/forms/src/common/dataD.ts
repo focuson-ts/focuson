@@ -1,5 +1,5 @@
 //Common Data Definitions
-import { DatePicker2CD, DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndNumberInputCD, LabelAndStringInputCD, LabelAndTextAreaCD, NumberInputCD } from "./componentsD";
+import { DatePicker2CD, DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndNumberInputCD, LabelAndRadioCD, LabelAndStringInputCD, LabelAndTextAreaCD, NumberInputCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeRender";
 import { BooleanValidations, NameAnd, NumberValidations, safeArray, StringValidations } from "@focuson/utils";
 import { Guards } from "../buttons/guardButton";
@@ -418,7 +418,11 @@ export const YesNoDD: PrimitiveDD = {
   displayParams: { pleaseSelect: 'Select...' },
   enum: { N: 'No', Y: 'Yes' }
 }
-
+export const YesNoRadioDD: PrimitiveDD = {
+  ...StringDD,
+  display: LabelAndRadioCD,
+  enum: { N: 'No', Y: 'Yes' }
+}
 export const DateDD: DatePrimitiveDD = {
   format: { type: 'Date', pattern: "yyyy/MM/dd" },
   ...datePrimDD,

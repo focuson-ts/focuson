@@ -11,7 +11,7 @@ export interface RadioProps<S, T, Context> extends CommonStateProps<S, T, Contex
 
 export function Radio<S, T, Context extends FocusOnContext<S>> ( { state, mode, enums, ariaLabel, id, labelPosition, required }: RadioProps<S, string, Context> ) {
   let selected = state.optJson ();
-  const hasValid = selected && Object.values ( enums ).includes ( selected )
+  const hasValid = selected && Object.keys ( enums ).includes ( selected )
   const cssValidInput = hasValid || !required ? '' : ' invalid'
 
   return <div className={`radio-group-container ${cssValidInput}`} id={id}>{Object.entries ( enums ).map ( ( [ key, value ] ) => {

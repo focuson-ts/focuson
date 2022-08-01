@@ -22,10 +22,12 @@ import { DatesPageD } from "./example/dates/dates.pageD";
 import { initialPageD } from "./example/initiial/initial.pageD";
 import { wizardPD } from "./example/wizard/wizard.pageD";
 import { dateInfoRefD } from "./example/common.refD.ts/dateInfoRefD";
+import { ModalButtonsPageD } from "./example/modalButtons/modalButtonsPageD";
 
-export const generatedRefs: ExampleRefD[]=[dateInfoRefD]
+export const generatedRefs: ExampleRefD[] = [ dateInfoRefD ]
 
 export const generatedPages: ExampleMainPage[] = [
+  ModalButtonsPageD,
   DatesPageD,
   wizardPD,
   initialPageD,
