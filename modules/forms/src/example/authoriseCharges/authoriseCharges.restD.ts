@@ -23,7 +23,7 @@ export const AuthorisedChargesRD: ExampleRestD = {
   actions: [ 'get', 'update' ],
   tables: {
     entity: { table: authorisedChargesTableDD, alias: 'A', type: 'Main' },
-    where: [ { table: authorisedChargesTableDD, alias: "A", field: 'date', comparator: 'sameday', paramName: 'date' } ]
+    where: [ { table: authorisedChargesTableDD, alias: "A", field: 'date', comparator: 'sameday', paramName: 'date', pattern: 'dd/MM/yyyy' } ]
   }
 }
 
