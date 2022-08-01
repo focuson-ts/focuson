@@ -1,8 +1,9 @@
 import { lensBuilder, Lenses, Optional, parsePath, PathBuilder, prefixNameAndLens, stateCodeBuilder } from "@focuson/lens";
 import { TSParams } from "./config";
-import { MainPageD, PageD } from "../common/pageD";
+import { MainPageD, PageD, RefD } from "../common/pageD";
 import { optionalsName, pageDomainName } from "./names";
 import { CreateButtonData } from "./makeButtons";
+import { HasName } from "@focuson/utils";
 
 export function pathBuilderForLensIncPage ( pageName: string ): PathBuilder<Optional<any, any>> {
   return lensBuilder ( prefixNameAndLens<any> ( [ '~', Lenses.identity<any> ().focusQuery ( pageName ) ] ), {} )
@@ -11,13 +12,13 @@ export function pathBuilderForLensWithPageAsIdentity (): PathBuilder<Optional<an
   return lensBuilder ( prefixNameAndLens<any> ( [ '~', Lenses.identity<any> () ], [ '', Lenses.identity<any> () ] ), {} )
 }
 
-export function stateCodeBuilderWithSlashAndTildaFromIdentity<B, G> ( params: TSParams, p: PageD<B, G> ) {
+export function stateCodeBuilderWithSlashAndTildaFromIdentity< G> ( params: TSParams, p: RefD< G> ) {
   return stateCodeBuilder ( {
     '/': `Lenses.identity<${params.stateName}>()`,
     '~': `Lenses.identity<${params.stateName}>().focusQuery('${p.name}')`,
   }, 'changeme' );
 }
-export const lensFocusQueryWithSlashAndTildaFromIdentity = <B, G> ( errorPrefix: string, params: TSParams, p: PageD<B, G>, path: string ): string => {
+export const lensFocusQueryWithSlashAndTildaFromIdentity = <G> ( errorPrefix: string, params: TSParams, p: RefD<G>, path: string ): string => {
   try {
     return parsePath ( path, stateCodeBuilderWithSlashAndTildaFromIdentity ( params, p ) )
   } catch ( e: any ) {
@@ -25,7 +26,7 @@ export const lensFocusQueryWithSlashAndTildaFromIdentity = <B, G> ( errorPrefix:
     throw e
   }
 }
-export const lensFocusQueryWithTildaFromPage = <B, G> ( errorPrefix: string, params: TSParams, p: PageD<B, G>, path: string ) => {
+export const lensFocusQueryWithTildaFromPage = <G> ( errorPrefix: string, params: TSParams, p: RefD<G>, path: string ) => {
   try {
     return parsePath ( path, stateCodeBuilder ( {
       '~': `Lenses.identity<${params.domainsFile}.${pageDomainName ( p )}>()`,
@@ -35,7 +36,7 @@ export const lensFocusQueryWithTildaFromPage = <B, G> ( errorPrefix: string, par
     throw e
   }
 }
-export const stateFocusQueryWithTildaFromPage = <B, G> ( errorPrefix: string, params: TSParams, mainPage: MainPageD<B, G>, p: PageD<B, G>, path: string ) => {
+export const stateFocusQueryWithTildaFromPage = < G> ( errorPrefix: string, params: TSParams, mainPage: RefD< G>, p: HasName, path: string ) => {
   try {
     return parsePath ( path, stateCodeBuilder ( {
       '/': `.copyWithLens(Lenses.identity<${params.domainsFile}.${pageDomainName ( p )}>())`,

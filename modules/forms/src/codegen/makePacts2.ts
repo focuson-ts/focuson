@@ -1,4 +1,4 @@
-import { isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
+import { isMainPage, MainPageD, PageD, RefD, RestDefnInPageProperties } from "../common/pageD";
 import { beforeSeparator, RestAction, safeObject, sortedEntries } from "@focuson/utils";
 import { fetcherName, providerName, restDetailsName, sampleName } from "./names";
 import { isRestLens, makeCommonValueForTest, makeParamValueForTest, postFixForEndpoint, RestD, stateToNameAndUrlAndParamsForState } from "../common/restD";
@@ -9,7 +9,7 @@ import { addStringToEndOfAllButLast, indentList, paramsForRestAction } from "./c
 import { getRestTypeDetails, getUrlForRestAction, printRestAction, RestActionDetail, restActionForName } from "@focuson/rest";
 import { CompDataD } from "../common/dataD";
 
-export function makeAllPactsForPage<B, G> ( params: TSParams, page: PageD<B, G> ): string[] {
+export function makeAllPactsForPage<G> ( params: TSParams, page: RefD<G> ): string[] {
   if ( !isMainPage ( page ) ) return []
   return [
     `import { fetchWithPrefix, loggingFetchFn, stringToSimpleMsg, SimpleMessage } from "@focuson/utils";`,
@@ -135,7 +135,7 @@ export function makeFetcherPact<B, G> ( params: TSParams, page: MainPageD<B, G>,
     ``, ]
 }
 
-function makeLensParamsTransformers<B, G> ( params: TSParams, page: PageD<B, G>, restName: string, defn: RestDefnInPageProperties<G>, restAction: RestAction, extraTransforms: string[] ): string[] {
+function makeLensParamsTransformers<G> ( params: TSParams, page: RefD<G>, restName: string, defn: RestDefnInPageProperties<G>, restAction: RestAction, extraTransforms: string[] ): string[] {
   let visibleParams = paramsForRestAction ( `Page ${page.name}.rest[${restName}] ${restActionForName ( restAction )}`, defn.rest, restAction );
   const theseParams = visibleParams.map ( ( [ name, p ] ) => p )
 

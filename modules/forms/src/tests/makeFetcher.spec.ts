@@ -1,6 +1,5 @@
 import { makeAllFetchers, makeFetcherCode, makeFetchersDataStructure } from "../codegen/makeTSFetchers";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
-import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 import { RepeatingPageD } from "../example/repeating/repeating.pageD";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { paramsForTest } from "./paramsForTest";
@@ -9,7 +8,7 @@ import { safeObject } from "@focuson/utils";
 
 describe ( "makeAllFetchers", () => {
   it ( "should make a fetcher for a single item", () => {
-    expect ( makeAllFetchers ( paramsForTest, [ EAccountsSummaryPD, CreatePlanPD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeAllFetchers ( paramsForTest, [ EAccountsSummaryPD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "//fetcher type true",
       "export function EAccountsSummaryFetcher(fdLens:Optional<FState, domains.EAccountsSummaryPageDomain>,commonIds: NameAndLens<FState>) {",
       "  const pageIdL = Lenses.identity< domains.EAccountsSummaryPageDomain>()",
@@ -68,7 +67,7 @@ describe ( "makeAllFetchers", () => {
 
 describe ( 'makeFetchersDataStructure', () => {
   it ( "should record all the fetchers", () => {
-    expect ( makeFetchersDataStructure ( paramsForTest, { variableName: 'fetchers', stateName: 'theState' }, [ EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
+    expect ( makeFetchersDataStructure ( paramsForTest, { variableName: 'fetchers', stateName: 'theState' }, [ EAccountsSummaryPD ] ) ).toEqual ( [
       "export const fetchers: FetcherTree<common.theState> = {",
       "fetchers: [",
       "    EAccountsSummaryFetcher( identityL.focusQuery ( 'EAccountsSummary' ), commonIds )",

@@ -248,7 +248,7 @@ export const createReactPageComponent = <B extends ButtonD, G extends GuardWithC
   throw new Error ( `Unknown page type ${pageD.pageType} in ${pageD.name}` )
 };
 
-function makeTitle<B, G> ( pageD: PageD<B, G>) {
+function makeTitle<B, G> ( pageD: PageD<B, G> ) {
   const title = pageD.title ? `replaceTextUsingPath(s,'${pageD.title}')` : `'${decamelize ( pageD.name, ' ' )}' `;
   return title;
 }
@@ -286,7 +286,7 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
   return [
     `export function ${pageComponentName ( pageD )}(){`,
     `   //A compilation error here is often because you have specified the wrong path in display. The path you gave is ${pageD.display.target}`,
-    `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => ${makeTitle(pageD)}) ( state => state${stateFocusQueryWithTildaFromPage ( `createReactMainPageComponent for page ${pageD.name}`, params, pageD, pageD, pageD.display.target )}) (`,
+    `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => ${makeTitle ( pageD )}) ( state => state${stateFocusQueryWithTildaFromPage ( `createReactMainPageComponent for page ${pageD.name}`, params, pageD, pageD, pageD.display.target )}) (`,
     `( fullState, state , full, d, mode, index) => {`,
     ...indentList ( makeGuardButtonVariables ( params, makeGuard, pageD, pageD ) ),
     'const id=`page${index}`;',

@@ -2,7 +2,7 @@ import { AllDataDD, AllDataFolder, CompDataD, DataD, foldDataDD, HasEnum, HasSam
 import { asMultilineJavaString, safeArray, safePick, sortedEntries } from "@focuson/utils";
 import { parsePath } from "@focuson/lens";
 import { domainName, emptyName, sampleName } from "./names";
-import { dataDsIn, PageD } from "../common/pageD";
+import { dataDsIn, RefD } from "../common/pageD";
 import { TSParams } from "./config";
 import { indentList } from "./codegen";
 import { pathBuilderForLensWithPageAsIdentity } from "./lens";
@@ -27,7 +27,7 @@ const addData = <G> ( start: boolean, path: string[], acc: any, d: DataD<G> ) =>
 
 export function selectSample ( i: number, ...ds: (HasSample<any> | undefined | HasEnum)[] ) {
   const enums: string[] = safeArray<any> ( ds ).flatMap ( d => sortedEntries ( d?.enum ).map ( x => x[ 0 ] ) )
-  const samples: string[] = safeArray(safeArray<any> ( ds ).find ( d => d?.sample && d.sample.length > 0 )?.sample)
+  const samples: string[] = safeArray ( safeArray<any> ( ds ).find ( d => d?.sample && d.sample.length > 0 )?.sample )
   return safePick ( enums.length > 0 ? enums : samples, i )
 }
 
@@ -63,7 +63,7 @@ export function makeSampleVariable<G> ( params: TSParams, d: CompDataD<G>, i: nu
     ...JSON.stringify ( makeTsSample ( d, i ), null, 2 ).split ( '\n' )
   ]
 }
-export function makeAllSampleVariables<B, G> ( params: TSParams, ps: PageD<B, G>[], i: number ): string[] {
+export function makeAllSampleVariables<G> ( params: TSParams, ps: RefD<G>[], i: number ): string[] {
   return sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ name, dataD ] ) => makeSampleVariable ( params, dataD, i ) )
 }
 
@@ -83,11 +83,11 @@ export function makeJavaVariable<G> ( d: CompDataD<G>, i: number ): string[] {
   if ( isRepeatingDd ( (d) ) )
     return [ `public static List ${sampleName ( d ) + i} =  parse.parseList(`, ...makeJavaSample ( d, i ), ");" ]
 }
-export function makeAllJavaVariableName<B, G> ( ps: PageD<B, G>[], i: number ): string[] {
+export function makeAllJavaVariableName<G> ( ps: RefD<G>[], i: number ): string[] {
   return sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ name, dataD ] ) => makeJavaVariable ( dataD, i ) )
 }
 
-export function makeAllEmptyData<B, G> ( params: TSParams, ps: PageD<B, G>[] ): string[] {
+export function makeAllEmptyData<G> ( params: TSParams, ps: RefD<G>[] ): string[] {
   return sortedEntries ( dataDsIn ( ps, false ) ).flatMap ( ( [ name, dd ] ) =>
     [ `export const ${emptyName ( dd )}:${params.domainsFile}.${domainName ( dd )} =`, ...indentList ( JSON.stringify ( makeEmptyData ( dd ), null, 2 ).split ( "\n" ) ) ] )
 }

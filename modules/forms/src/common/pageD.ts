@@ -1,8 +1,8 @@
 import { AllDataDD, CompDataD, DataD, findAllDataDs, HasGuards, HasLayout, isDataDd, NamesAndDataDs } from "./dataD";
 import { CommonLensRestParam, RestD } from "./restD";
-import { HasName, NameAnd, RestAction, RestResult, safeString, sortedEntries, unique } from "@focuson/utils";
+import { HasName, NameAnd, RestAction, safeString, sortedEntries, unique } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
-import { ChangeCommand, getRestTypeDetails, NewPageChangeCommands, RestActionDetail, RestChangeCommands } from "@focuson/rest";
+import { getRestTypeDetails, NewPageChangeCommands, RestActionDetail, RestChangeCommands } from "@focuson/rest";
 
 
 export interface DomainDefnInPage<G> {
@@ -66,8 +66,9 @@ export interface MainData<B, G> {
   main: MainPageD<B, G>;
 }
 
-export function isMainPage<B, G> ( p: PageD<B, G> ): p is MainPageD<B, G> {
-  return p.pageType === 'MainPage' || p.pageType === 'MainPopup'
+export function isMainPage<B, G> ( p: RefD<G> | PageD<B, G> ): p is MainPageD<B, G> {
+  const a: any = p
+  return a.pageType === 'MainPage' || a.pageType === 'MainPopup'
 }
 export function isModalPage<B, G> ( p: PageD<B, G> ): p is ModalPageD<B, G> {
   return p.pageType === 'ModalPage' || p.pageType === 'ModalPopup'
@@ -98,13 +99,17 @@ export interface PageDisplay<G> {
 }
 type NewPageCommandOrEmpty = 'empty' | NewPageChangeCommands
 export type InitialValue = NewPageCommandOrEmpty | NewPageCommandOrEmpty[]
-export interface RefD<G> extends HasName{
+export interface RefD<G> extends HasName {
   rest: RestDefnInPage<G>,
   domain: DomainDefnInPage<G>,
+  commonParams?: NameAnd<CommonLensRestParam<any>>,
+}
+export function isRefD<G> ( p: PageD<any, G> | RefD<G> ): p is RefD<G> {
+  const a: any = p
+  return a.rest ? true : false;
 }
 export interface MainPageD<Buttons, G> extends HasLayout, HasGuards<G>, RefD<G>, HasName {
   pageType: 'MainPage' | 'MainPopup',
-  commonParams?: NameAnd<CommonLensRestParam<any>>,
   title?: string;
   name: string,
   modes: PageMode[],
@@ -112,9 +117,6 @@ export interface MainPageD<Buttons, G> extends HasLayout, HasGuards<G>, RefD<G>,
   initialValue?: InitialValue
   variables?: NameAnd<VariableD>
   modals?: ModalOrMainData<Buttons, G>[],
-
-  domain: DomainDefnInPage<G>,
-  rest: RestDefnInPage<G>,
 
   /** The names and order of the visible buttons. If not populated uses definition order */
   buttonOrder?: string[];
@@ -131,12 +133,12 @@ export interface ModalPageD<Buttons, G> extends HasLayout, HasGuards<G>, HasName
 }
 
 
-export function dataDsIn<B, G> ( pds: PageD<B, G>[], stopAtDisplay?: boolean ): NamesAndDataDs<G> {
-  let mainPages = allMainPages ( pds );
-  const pageDataDs: CompDataD<G>[] = mainPages.flatMap ( pd => sortedEntries ( pd.rest )
+export function dataDsIn<G> ( pds: (RefD<G> | PageD<any, G>)[], stopAtDisplay?: boolean ): NamesAndDataDs<G> {
+  const refs = allRefs ( pds );
+  const pageDataDs: CompDataD<G>[] = refs.flatMap ( pd => sortedEntries ( pd.rest )
     .map ( ( [ na, restPD ]: [ string, RestDefnInPageProperties<G> ] ) => restPD.rest.dataDD ) )
   // pageDataDs.forEach ( d => console.log ( 'pageDataD - rest', d.name ) )
-  const domainDataDs: DataD<G>[] = mainPages.flatMap ( pd => sortedEntries ( pd.domain ) )
+  const domainDataDs: DataD<G>[] = refs.flatMap ( pd => sortedEntries ( pd.domain ) )
     .flatMap ( ( [ name, domain ] ) => isDataDd ( domain.dataDD ) ? [ domain.dataDD ] : [] )
   // pageDataDs.forEach ( d => console.log ( 'domainDataDs ', d.name ) )
   let result = findAllDataDs ( [ ...pageDataDs, ...domainDataDs ], stopAtDisplay );
@@ -144,10 +146,10 @@ export function dataDsIn<B, G> ( pds: PageD<B, G>[], stopAtDisplay?: boolean ): 
   return result
 }
 
-export function allRestAndActions<B, G> ( pds: PageD<B, G>[] ): [ PageD<B, G>, string, RestDefnInPageProperties<G>, RestActionDetail ][] {
-  return unique ( allMainPages ( pds ).flatMap ( pd => {
+export function allRestAndActions<G> ( pds: RefD<G>[] ): [ RefD<G>, string, RestDefnInPageProperties<G>, RestActionDetail ][] {
+  return unique ( pds.flatMap ( pd => {
     return sortedEntries ( pd.rest ).flatMap ( ( [ name, rdp ] ) => {
-      const y: [ PageD<B, G>, string, RestDefnInPageProperties<G>, RestActionDetail ][] = rdp.rest.actions.map ( a => [ pd, name, rdp, getRestTypeDetails ( a ) ] )
+      const y: [ RefD<G>, string, RestDefnInPageProperties<G>, RestActionDetail ][] = rdp.rest.actions.map ( a => [ pd, name, rdp, getRestTypeDetails ( a ) ] )
       return y
     } )
   } ), ( [ p, name, r, rad ] ) => safeString ( r.rest.namePrefix ) + name + p.name + "," + r.rest.dataDD.name + "," + rad.name )
@@ -155,5 +157,8 @@ export function allRestAndActions<B, G> ( pds: PageD<B, G>[] ): [ PageD<B, G>, s
 
 export function allMainPages<B, G> ( pds: PageD<B, G>[] ): MainPageD<B, G>[] {
   return pds.filter ( isMainPage )
+}
+export function allRefs<G> ( pds: (RefD<G> | PageD<any, G>)[] ): RefD<G>[] {
+  return pds.filter ( isRefD )
 }
 

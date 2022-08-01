@@ -1,5 +1,5 @@
 import { AllDataDD, CompDataD, compDataDIn } from "../common/dataD";
-import { MainPageD, ModalPageD, PageD, RefD, RestDefnInPageProperties } from "../common/pageD";
+import { ModalPageD, PageD, RefD, RestDefnInPageProperties } from "../common/pageD";
 import { RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
 import { HasName, isRestStateChange, RestAction, safeString } from "@focuson/utils";
@@ -14,8 +14,8 @@ export const componentName = <G> ( d: CompDataD<G> ): string => d.display ? d.di
 export const pageInState = <B, G> ( p: PageD<B, G> ): string => p.name
 export const pageComponentName = <B, G> ( d: PageD<B, G> ): string => d.name + "Page";
 // export const pageComponent = ( p: PageD ): string => p.name;
-export const hasDomainForPage = <B, G> ( pd: PageD<B, G> ): string => "Has" + pageDomainName ( pd );
-export const pageDomainName = <B, G> ( pd: PageD<B, G> ): string => pd.name + "PageDomain"
+export const hasDomainForPage = <G> ( pd: RefD<G> ): string => "Has" + pageDomainName ( pd );
+export const pageDomainName = ( pd: HasName ): string => pd.name + "PageDomain"
 export function resolverName<G> ( rest: RestD<G>, action: RestAction ) {
   let rawType = rawTypeName ( rest.dataDD );
   const ad = restActionToDetails ( action )
@@ -38,7 +38,7 @@ export const endPointName = <G> ( restD: RestD<G>, action: RestAction ): string 
 
 export const modalName = <B, G> ( p: PageD<B, G>, modal: PageD<B, G> ) => modal.name
 export const restNameWithPrefix = <G> ( r: RestD<G> ) => r.namePrefix ? r.namePrefix + "_" + r.dataDD.name : r.dataDD.name
-export const restDetailsName = <B, G> ( p: PageD<B, G>, restName: string, r: RestD<G> ) => p.name + "_" + restNameWithPrefix ( r ) + "RestDetails"
+export const restDetailsName = <G> ( p: RefD<G>, restName: string, r: RestD<G> ) => p.name + "_" + restNameWithPrefix ( r ) + "RestDetails"
 
 export const packageNameFor = <B, G> ( params: JavaWiringParams, p: HasName, thing: string ): string => `${params.thePackage}.${thing}.${p.name}`;
 export const fetcherPackageName = <G> ( params: JavaWiringParams, p: HasName ): string => packageNameFor ( params, p, params.fetcherPackage );
@@ -82,21 +82,21 @@ export function sqlListName<B, G> ( p: RefD<G>, restName: string, path: number[]
 export function sqlMapFileName<B, G> ( root: string, p: RefD<G>, restName: string, path: number[] ) {return `${root}/${p.name}/${sqlMapName ( p, restName, path )}`}
 export function sqlTafFieldName<G> ( taf: TableAndFieldAndAliasData<G> ) {return taf.fieldData.dbFieldAlias ? taf.fieldData.dbFieldAlias : `${taf.alias}_${taf.fieldData.dbFieldName}`}
 export function sqlMapPackageName<G> ( params: JavaWiringParams, p: RefD<G> ) {return `${params.thePackage}.${params.dbPackage}.${p.name}`}
-export const optionalsName = <B, G> ( p: MainPageD<B, G> ) => `${p.name}Optionals`
+export const optionalsName = ( p: HasName ) => `${p.name}Optionals`
 
-export const someFileName = <B, G> ( root: string, pd: PageD<B, G>, postfix: string ): string => `${root}/${pd.name}/${pd.name}.${postfix}`;
-export const someFileNameFromMainPage = <B, G> ( root: string, mainPage: PageD<B, G>, pd: PageD<B, G>, postfix: string ): string => `${root}/${mainPage.name}/${pd.name}.${postfix}`;
-export const modalImportFromFileName = <B, G> ( root: string, mainP: MainPageD<B, G>, p: ModalPageD<B, G>, suffix: string ): string => `${root}/${mainP.name}/${mainP.name}.${suffix}`
+export const someFileName = ( root: string, pd: HasName, postfix: string ): string => `${root}/${pd.name}/${pd.name}.${postfix}`;
+export const someFileNameFromMainPage = <G> ( root: string, mainPage: RefD<G>, pd: HasName, postfix: string ): string => `${root}/${mainPage.name}/${pd.name}.${postfix}`;
+export const modalImportFromFileName = <B, G> ( root: string, mainP: RefD<G>, p: ModalPageD<B, G>, suffix: string ): string => `${root}/${mainP.name}/${mainP.name}.${suffix}`
 
 
-export const storybookFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, `stories` );
-export const renderFileName = <B, G> ( root: string, params: TSParams, mainPage: MainPageD<B, G>, pd: PageD<B, G> ): string => someFileNameFromMainPage ( root, mainPage, pd, params.renderFile );
-export const guardReportFileName = <B, G> ( root: string, params: TSParams, mainPage: MainPageD<B, G> ): string => someFileName ( root, mainPage, params.guardReportFile );
-export const domainsFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.domainsFile );
-export const emptyFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.emptyFile );
-export const pactFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.pactsFile );
-export const samplesFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.samplesFile );
-export const restFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.restsFile );
-export const fetcherFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.fetchersFile );
-export const optionalsFileName = <B, G> ( root: string, params: TSParams, pd: PageD<B, G> ): string => someFileName ( root, pd, params.optionalsFile );
+export const storybookFileName = <G> ( root: string, params: TSParams, pd: RefD<G> ): string => someFileName ( root, pd, `stories` );
+export const renderFileName = <B, G> ( root: string, params: TSParams, mainPage: RefD<G>, pd: PageD<B, G> ): string => someFileNameFromMainPage ( root, mainPage, pd, params.renderFile );
+export const guardReportFileName = <G> ( root: string, params: TSParams, mainPage: RefD<G> ): string => someFileName ( root, mainPage, params.guardReportFile );
+export const domainsFileName = ( root: string, params: TSParams, pd: HasName ): string => someFileName ( root, pd, params.domainsFile );
+export const emptyFileName = <G> ( root: string, params: TSParams, pd: RefD<G> ): string => someFileName ( root, pd, params.emptyFile );
+export const pactFileName = <G> ( root: string, params: TSParams, pd: RefD<G> ): string => someFileName ( root, pd, params.pactsFile );
+export const samplesFileName = <G> ( root: string, params: TSParams, pd: RefD<G> ): string => someFileName ( root, pd, params.samplesFile );
+export const restFileName = <G> ( root: string, params: TSParams, pd: RefD<G> ): string => someFileName ( root, pd, params.restsFile );
+export const fetcherFileName = <G> ( root: string, params: TSParams, pd: RefD<G> ): string => someFileName ( root, pd, params.fetchersFile );
+export const optionalsFileName = <G> ( root: string, params: TSParams, pd: RefD<G> ): string => someFileName ( root, pd, params.optionalsFile );
 

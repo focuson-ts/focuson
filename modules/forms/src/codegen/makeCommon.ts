@@ -1,4 +1,4 @@
-import { allMainPages, isMainPage, MainPageD, PageD } from "../common/pageD";
+import { MainPageD, RefD } from "../common/pageD";
 import { domainsFileName, hasDomainForPage } from "./names";
 import { addStringToEndOfAllButLast, indentList } from "./codegen";
 import { TSParams } from "./config";
@@ -9,8 +9,8 @@ import { NameAnd, sortedEntries, unique } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
 import { AppConfig } from "../appConfig";
 
-export function makeFullState<B, G> ( params: TSParams, pds: PageD<B, G>[] ): string[] {
-  const hasDomains = addStringToEndOfAllButLast ( ',' ) ( allMainPages ( pds ).map ( d => hasDomainForPage ( d ) ) )
+export function makeFullState<G> ( params: TSParams, pds: RefD< G>[] ): string[] {
+  const hasDomains = addStringToEndOfAllButLast ( ',' ) ( pds .map ( d => hasDomainForPage ( d ) ) )
   const constant = [ 'HasSimpleMessages', 'HasPageSelection', `Has${params.commonParams}`, 'HasTagHolder', `HasRestCommands`, 'HasFocusOnDebug', 'HasRestCount' ].join ( ',' )
   return [
     `export interface ${params.stateName} extends ${constant},`,
@@ -35,8 +35,8 @@ export function makePathToLens ( params: TSParams ): string[] {
     `    fromPathFromRaw ( pageSelectionlens<${params.stateName}> (), pages )` ]
 }
 
-export function makeCommon<B, G> ( appConfig: AppConfig, params: TSParams, pds: MainPageD<B, G>[], directorySpec: DirectorySpec ): string[] {
-  const pageDomainsImport: string[] = pds.filter ( isMainPage ).map ( p => `import { ${hasDomainForPage ( p )} } from '${domainsFileName ( '.', params, p )}';` )
+export function makeCommon<G> ( appConfig: AppConfig, params: TSParams, pds: RefD< G>[], directorySpec: DirectorySpec ): string[] {
+  const pageDomainsImport: string[] = pds.map ( p => `import { ${hasDomainForPage ( p )} } from '${domainsFileName ( '.', params, p )}';` )
   let paramsWithSamples = findAllCommonParamsWithSamples ( pds );
   return [
     `import { fromPathFromRaw, HasPageSelection, PageMode ,PageSelectionContext, pageSelectionlens} from '@focuson/pages'`,
@@ -79,14 +79,14 @@ export function makeStateWithSelectedPage ( appConfig: AppConfig, params: TSPara
 export interface CommonParamsDetails {
   name: string;
   param: CommonLensRestParam<any>;
-  page: MainPageD<any, any>;
+  page: RefD< any>;
   restName?: string
   rest?: RestD<any>;
 }
 const paramToDetails = <B, G> ( page: MainPageD<B, G>, restName?: string, rest?: RestD<G> ) => ( params: NameAnd<AllLensRestParams<any>> ) =>
   sortedEntries ( params ).flatMap<CommonParamsDetails> ( ( [ name, param ] ) => isCommonLens ( param ) ? [ { name, param, page, restName, rest } ] : [] )
 
-export function findAllCommonParamsDetails<B, G> ( pds: MainPageD<B, G>[] ): CommonParamsDetails[] {
+export function findAllCommonParamsDetails< G> ( pds: RefD< G>[] ): CommonParamsDetails[] {
   return flatMapParams ( pds, ( page, restName, rest, name, param ) =>
     isCommonLens ( param ) ? [ { name, param, page, rest, restName } ] : isHeaderLens ( param ) ? [ { name, param: { ...param, commonLens: param.header }, page, rest, restName } ] : [] )
   //TODO This is a fix while we work out how to deal with the head parameters differently
@@ -113,7 +113,7 @@ export function validateCommonParams ( cs: CommonParamsDetails[] ): CommonParamE
     } )
   return [ ...nameDuplicates, ...nameMismatches ]
 }
-export function findAllCommonParamsWithSamples<B, G> ( pages: MainPageD<B, G>[] ): any {
+export function findAllCommonParamsWithSamples< G> ( pages: RefD< G>[] ): any {
   const lensAndValue: [ string, any ][] = flatMapCommonParams ( pages, ( p, restName, r, name, c ) =>
     [ [ c.commonLens, c.testValue ] ] )
   const result = unique ( lensAndValue.sort ( ( l, r ) => l[ 0 ].localeCompare ( l[ 0 ] ) ), x => x[ 0 ] )
@@ -122,7 +122,7 @@ export function findAllCommonParamsWithSamples<B, G> ( pages: MainPageD<B, G>[] 
 
 //
 
-export function makeCommonParams<B, G> ( params: TSParams, pages: MainPageD<B, G>[], directorySpec: DirectorySpec ) {
+export function makeCommonParams<G> ( params: TSParams, pages: RefD< G>[], directorySpec: DirectorySpec ) {
   let commonParams: CommonParamsDetails[] = unique ( findAllCommonParamsDetails ( pages ), t => t.param.commonLens );
   const commonParamDefns = commonParams.map ( s => '  ' + s.param.commonLens + ` ? : ${s.param.typeScriptType};\n` ).join ( "" )
   const commonParamNameAndLens = commonParams.map ( s => `   ${s.name}  :    commonIdsL.focusQuery ( '${s.param.commonLens}' )` ).join ( ",\n" )

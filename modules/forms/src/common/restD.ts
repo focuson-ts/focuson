@@ -238,21 +238,21 @@ export function flatMapRestAndResolver<B, G, T> ( pages: PageD<B, G>[], fn: ( p:
   return flatMapRest ( pages, p => ( r, restName, rdp ) => findChildResolvers ( r ).flatMap ( resolverData => fn ( p ) ( r, restName, rdp ) ( resolverData ) ) )
 }
 
-export function flatMapParams<T> ( pds: MainPageD<any, any>[], fn: ( p: MainPageD<any, any>, restName: string | undefined, r: RestD<any> | undefined, name: string, c: AllLensRestParams<any> ) => T[] ): T[] {
+export function flatMapParams<T> ( pds: RefD<any>[], fn: ( p: RefD<any>, restName: string | undefined, r: RestD<any> | undefined, name: string, c: AllLensRestParams<any> ) => T[] ): T[] {
   const fromPage: T[] = pds.flatMap ( page => sortedEntries ( page.commonParams ).flatMap ( ( [ name, c ] ) => fn ( page, undefined, undefined, name, c ) ) )
-  const fromRest: T[] = flatMapRest ( pds, ( page ) => ( rest, restName ) =>
+  const fromRest: T[] = flatMapRestAndRefs ( [], pds, ( page ) => ( rest, restName ) =>
     sortedEntries ( rest.params ).flatMap ( ( [ name, c ] ) => fn ( page, restName, rest, name, c ) ) )
-  const fromState: T[] = flatMapRest ( pds, ( page ) => ( rest, restName ) =>
+  const fromState: T[] = flatMapRestAndRefs ( [], pds, ( page ) => ( rest, restName ) =>
     sortedEntries ( rest.states ).flatMap ( ( [ name, s ] ) => sortedEntries ( s.params ).flatMap ( ( [ name, p ] ) => (fn ( page, restName, rest, name, p )) ) ) )
   return [ ...fromRest, ...fromPage, ...fromState ]
 }
-export function flatMapCommonParams<T> ( pds: MainPageD<any, any>[], fn: ( p: MainPageD<any, any>, restName: string | undefined, r: RestD<any> | undefined, name: string, c: CommonLensRestParam<any> ) => T[] ): T[] {
+export function flatMapCommonParams<T> ( pds: RefD<any>[], fn: ( p: RefD<any>, restName: string | undefined, r: RestD<any> | undefined, name: string, c: CommonLensRestParam<any> ) => T[] ): T[] {
   return flatMapParams ( pds, ( p, restName, r, name, c ) =>
     isCommonLens ( c ) ? fn ( p, restName, r, name, c ) : isHeaderLens ( c ) ? fn ( p, restName, r, name, { ...c, commonLens: c.header } ) : [] )
 }
 
 
-export function forEachRest<B, G> ( ps: RefD<G>[], fn: ( p: RefD< G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => void ) {
+export function forEachRest<B, G> ( ps: RefD<G>[], fn: ( p: RefD<G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => void ) {
   return ps.forEach ( p => sortedEntries ( p.rest ).forEach ( ( [ restName, rdp ] ) => fn ( p ) ( rdp.rest, restName, rdp ) ) )
 
 }
@@ -265,11 +265,11 @@ export function forEachRestAndActionsUsingRefs<B, G> ( ps: PageD<B, G>[], refs: 
   return allNamed.forEach ( p => sortedEntries ( p.rest ).forEach ( ( [ restName, rdp ] ) => rdp.rest.actions.forEach ( a => fn ( p ) ( rdp.rest, restName, rdp ) ( a ) ) ) )
 }
 
-export interface MutuationAndResolverFolder<G,Acc> {
+export interface MutuationAndResolverFolder<G, Acc> {
   simple: ( mut: MutationDetail, p: RefD<G>, r: RestD<any> ) => ( acc: Acc ) => Acc;
   guarded: ( mut: SelectMutation, guarded: GuardedMutation, p: RefD<G>, r: RestD<any> ) => ( acc: Acc ) => Acc;
 }
-export function foldPagesToRestToMutationsAndResolvers<G,Acc> ( ps: RefD<G>[], acc: Acc, folder: MutuationAndResolverFolder<G,Acc> ): Acc {
+export function foldPagesToRestToMutationsAndResolvers<G, Acc> ( ps: RefD<G>[], acc: Acc, folder: MutuationAndResolverFolder<G, Acc> ): Acc {
   return ps.reduce ( ( acc, p ) => Object.entries ( p.rest ).reduce ( ( acc, [ name, rdp ] ) => {
     if ( rdp.rest === undefined ) throw Error ( `Error in page ${p.name}.rest[${name}]. The rest is undefined.\n    ${JSON.stringify ( rdp )}` )
     const mutationsAcc = toArray ( rdp.rest.mutations ).flatMap ( mr => toArray ( mr.mutateBy ) ).reduce ( ( acc, m ) => {

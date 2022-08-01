@@ -182,7 +182,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
 
   templateFile ( `${javaCodeRoot}/${params.sampleClass}.java`, 'templates/JavaSampleTemplate.java',
-    { ...params, content: indentList ( makeAllJavaVariableName ( pages, 0 ) ).join ( "\n" ) }, directorySpec, details )
+    { ...params, content: indentList ( makeAllJavaVariableName ( allRefs, 0 ) ).join ( "\n" ) }, directorySpec, details )
   forEachRest ( allRefs, p => r =>
     templateFile ( `${javaQueriesPackages}/${p.name}/${queryClassName ( params, r )}.java`, 'templates/JavaQueryTemplate.java',
       {

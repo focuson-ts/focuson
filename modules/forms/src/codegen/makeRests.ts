@@ -1,12 +1,12 @@
 import { AllLensRestParams, findIds, isRestLens, LensRestParam, RestStateDetails } from "../common/restD";
 import { domainName, domainsFileName, pageDomainName, restDetailsName, restFileName } from "./names";
 import { TSParams } from "./config";
-import { allRestAndActions, isMainPage, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
+import { allRestAndActions, isMainPage, RefD, RestDefnInPageProperties } from "../common/pageD";
 import { NameAnd, safeObject, SimpleMessage, sortedEntries, unique } from "@focuson/utils";
 import { addStringToEndOfAllButLast, indentList, lensFocusQueryFor } from "./codegen";
 import { lensFocusQueryWithSlashAndTildaFromIdentity, lensFocusQueryWithTildaFromPage } from "./lens";
 
-const makeStates = <B, G> ( errorPrefix: string, tsparams: TSParams, p: MainPageD<B, G> ) => ( s: NameAnd<RestStateDetails> ): string[] =>
+const makeStates = <G> ( errorPrefix: string, tsparams: TSParams, p: RefD<G> ) => ( s: NameAnd<RestStateDetails> ): string[] =>
   Object.entries ( safeObject ( s ) ).map ( ( [ name, { url, params, bodyFrom } ] ) =>
     `${name}: {url: ${JSON.stringify ( url )},params: ${JSON.stringify ( Object.keys ( safeObject ( params ) ) )}${
       bodyFrom ?
@@ -15,7 +15,7 @@ const makeStates = <B, G> ( errorPrefix: string, tsparams: TSParams, p: MainPage
     }}` )
 //[ name, { url: JSON.stringify(url), params: JSON.stringify(params), bodyFrom: bodyFrom ? lensFocusQueryWithSlashAndTildaFromIdentity ( errorPrefix, tsparams, p, bodyFrom ) : undefined } ] ) );
 
-export const makeRest = <B, G> ( params: TSParams, p: MainPageD<B, G> ) => ( restName: string, r: RestDefnInPageProperties<G> ): string[] => {
+export const makeRest = <G> ( params: TSParams, p: RefD<G> ) => ( restName: string, r: RestDefnInPageProperties<G> ): string[] => {
   const [ ids, resourceIds ] = findIds ( r.rest )
   let pageDomain = `${params.domainsFile}.${pageDomainName ( p )}`;
 
@@ -53,7 +53,7 @@ export const makeRest = <B, G> ( params: TSParams, p: MainPageD<B, G> ) => ( res
     ``,
   ]
 };
-export function makeRestImports<B, G> ( params: TSParams, p: PageD<B, G> ) {
+export function makeRestImports<G> ( params: TSParams, p: RefD<G> ) {
   return [
     `import { OneRestDetails } from "@focuson/rest"`,
     `import * as domains from "${domainsFileName ( '..', params, p )}"`,
@@ -63,7 +63,7 @@ export function makeRestImports<B, G> ( params: TSParams, p: PageD<B, G> ) {
     `` ]
 }
 
-export function makeRestDetailsPage<B, G> ( params: TSParams, ps: PageD<B, G>[] ): string[] {
+export function makeRestDetailsPage<G> ( params: TSParams, ps: RefD<G>[] ): string[] {
   const imports = [
     `import { RestDetails, OneRestDetails } from "@focuson/rest"`,
     `import { createSimpleMessage, DateFn, defaultDateFn, RestAction, insertBefore, SimpleMessage } from "@focuson/utils"`,
@@ -74,7 +74,7 @@ export function makeRestDetailsPage<B, G> ( params: TSParams, ps: PageD<B, G>[] 
 
   return [ ...imports, ...imp, ...makeRestDetails ( params, ps ) ]
 }
-export function makeRestDetails<B, G> ( params: TSParams, ps: PageD<B, G>[] ): string[] {
+export function makeRestDetails<G> ( params: TSParams, ps: RefD<G>[] ): string[] {
   return [
     '',
     // "export function restUrlMutator ( r: RestAction, url: string ): string { return insertBefore ( '?', r === 'list' ? '/list' : '', url )}", '',
@@ -86,7 +86,7 @@ export function makeRestDetails<B, G> ( params: TSParams, ps: PageD<B, G>[] ): s
     `}`, '' ]
 }
 
-export function makeRests<B, G> ( params: TSParams, pd: MainPageD<B, G> ): string[] {
+export function makeRests<G> ( params: TSParams, pd: RefD<G> ): string[] {
   let rests = sortedEntries ( pd.rest ).flatMap ( ( [ name, rd ] ) => makeRest ( params, pd ) ( name, rd ) );
   let imports = rests.length > 0 ? makeRestImports ( params, pd ) : []
   return [ ...imports, `import { ${params.stateName} } from "../common"`, '', ...rests ]

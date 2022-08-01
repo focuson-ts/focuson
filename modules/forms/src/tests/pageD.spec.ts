@@ -38,7 +38,7 @@ describe ( "dataDsIn", () => {
 
 describe ( "allRestAndActions", () => {
   it ( "should find the unque rests and actions", () => {
-    expect ( allRestAndActions ( [ EAccountsSummaryPD, CreatePlanPD, EAccountsSummaryPD, CreatePlanPD ] ).//
+    expect ( allRestAndActions ( [ EAccountsSummaryPD, EAccountsSummaryPD ] ).//
       map ( ( [ page, restName, rdp, rad ] ) =>
         JSON.stringify ( [ page.name, restName, rdp.rest.dataDD.name, rad.name ] ).replace ( /"/g, "'" ) ) ).toEqual ( [
       "['EAccountsSummary','createPlanRestD','CreatePlan','get']",

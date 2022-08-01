@@ -1,7 +1,7 @@
 import { AllDataDD, DataD, isDataDd, isPrimDd, isRepeatingDd, OneDataDD, RepeatingDataD } from "../common/dataD";
 import { domainName, hasDomainForPage, pageDomainName } from "./names";
 import { sortedEntries } from "@focuson/utils";
-import { allMainPages, dataDsIn, PageD } from "../common/pageD";
+import { dataDsIn, RefD } from "../common/pageD";
 import { TSParams } from "./config";
 import { indentList } from "./codegen";
 
@@ -26,7 +26,7 @@ export function makeDomainForRepD<G> ( d: RepeatingDataD<G> ): string[] {
   return [
     `export type ${domainName ( d )} = ${domainName ( d.dataDD )}[]`, '' ]
 }
-export function makeAllDomainsFor<B, G> ( ps: PageD<B, G>[] ): string[] {
+export function makeAllDomainsFor< G> ( ps: RefD< G>[] ): string[] {
   return sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ name, dataD ] ) => {
     if ( isDataDd ( dataD ) ) return makeDomainForDataD ( dataD );
     if ( isRepeatingDd ( dataD ) ) return makeDomainForRepD ( dataD )
@@ -34,8 +34,8 @@ export function makeAllDomainsFor<B, G> ( ps: PageD<B, G>[] ): string[] {
   } )
 }
 
-export function makeHasDomainsFor<B, G> ( p: PageD<B, G> ): string[] {
-  if ( p.pageType === 'ModalPage' ) return []
+export function makeHasDomainsFor<G> ( p: RefD<G> ): string[] {
+  // if ( p.pageType === 'ModalPage' ) return []
   return [ `export interface ${hasDomainForPage ( p )} {   ${p.name}?: ${pageDomainName ( p )}}`, '' ]
 }
 
@@ -46,9 +46,9 @@ export function typeNameFor<G> ( params: TSParams, d: AllDataDD<G> ): string {
 
 }
 
-export function makePageDomainsFor<B, G> ( params: TSParams, ps: PageD<B, G>[] ): string[] {
+export function makePageDomainsFor<G> ( params: TSParams, ps: RefD<G>[] ): string[] {
   return [
-    ...allMainPages ( ps ).flatMap ( p => [
+    ...ps.flatMap ( p => [
       ...makeHasDomainsFor ( p ),
       `export interface ${pageDomainName ( p )}{`,
       ...indentList ( sortedEntries ( p.domain ).map ( ( [ name, dd ] ) => `${name}?:${typeNameFor ( params, dd.dataDD )};` ) ),

@@ -1,8 +1,7 @@
 import { makeAllDomainsFor, makeDomainForDataD, makePageDomainsFor } from "../codegen/makeDomain";
 import { CreatePlanDD, EAccountsSummaryDD, EAccountSummaryDD } from "../example/eAccounts/eAccountsSummary.dataD";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
-import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
-import { RepeatingLinePageD, RepeatingPageD } from "../example/repeating/repeating.pageD";
+import { RepeatingPageD } from "../example/repeating/repeating.pageD";
 import { paramsForTest } from "./paramsForTest";
 
 
@@ -44,7 +43,7 @@ describe ( "makeDomainFor", () => {
 
 describe ( "makeAllDomainsFor", () => {
   it ( "should make all the interfaces ", () => {
-    expect ( makeAllDomainsFor ( [ EAccountsSummaryPD, CreatePlanPD, EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
+    expect ( makeAllDomainsFor ( [ EAccountsSummaryPD,  EAccountsSummaryPD ] ) ).toEqual ( [
       "export interface BalancesAndMonthlyCostDomain{",
       "  currentAccountBalance: number;",
       "  oneAccountBalance: number;",
@@ -82,7 +81,7 @@ describe ( "makeAllDomainsFor", () => {
 
 describe ( "makePageDomainsFor", () => {
   it ( " Should make the has, and the page domain", () => {
-    expect ( makePageDomainsFor ( paramsForTest, [ EAccountsSummaryPD, CreatePlanPD ] ) ).toEqual ( [
+    expect ( makePageDomainsFor ( paramsForTest, [ EAccountsSummaryPD ] ) ).toEqual ( [
       "export interface HasEAccountsSummaryPageDomain {   EAccountsSummary?: EAccountsSummaryPageDomain}",
       "",
       "export interface EAccountsSummaryPageDomain{",
@@ -98,7 +97,7 @@ describe ( "makePageDomainsFor", () => {
 
 describe ( "make for repeating", () => {
   it ( "should make domains", () => {
-    expect ( makeAllDomainsFor ( [ RepeatingPageD, RepeatingLinePageD ] ) ).toEqual ( [
+    expect ( makeAllDomainsFor ( [ RepeatingPageD ] ) ).toEqual ( [
       "export interface RepeatingLineDomain{",
       "  age: number;",
       "  name: string;",
@@ -112,7 +111,7 @@ describe ( "make for repeating", () => {
 
 
   it ( "should make pageDomains", () => {
-    expect ( makePageDomainsFor ( paramsForTest, [ RepeatingPageD, RepeatingLinePageD ] ) ).toEqual ( [
+    expect ( makePageDomainsFor ( paramsForTest, [ RepeatingPageD ] ) ).toEqual ( [
       "export interface HasRepeatingPageDomain {   Repeating?: RepeatingPageDomain}",
       "",
       "export interface RepeatingPageDomain{",
