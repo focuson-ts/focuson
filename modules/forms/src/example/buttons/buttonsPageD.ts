@@ -3,7 +3,7 @@ import { StringDD, YesNoDD, YesNoRadioDD } from "../../common/dataD";
 import { LabelAndRadioCD } from "../../common/componentsD";
 
 export const ModalButtonDomain: ExampleDataD = {
-  name: 'ModalButtons',
+  name: 'Buttons',
   description: '',
   structure: {
     line1: { dataDD: StringDD },
@@ -14,7 +14,7 @@ export const ModalButtonDomain: ExampleDataD = {
 }
 
 export const ModalButtonsModalPageD: ExampleModalPage = {
-  name: 'ModalButtonsModalPage',
+  name: 'ButtonsModalPage',
   pageType: 'ModalPopup',
   modes: [ 'edit' ],
   display: { dataDD: ModalButtonDomain, target: '~/display' }, // need to get rid of target!!!
@@ -23,8 +23,8 @@ export const ModalButtonsModalPageD: ExampleModalPage = {
     back: { control: "ModalCancelButton" }
   }
 }
-export const ModalButtonsPageD: ExampleMainPage = {
-  name: 'ModalButtons',
+export const ButtonsPageD: ExampleMainPage = {
+  name: 'Buttons',
   pageType: "MainPage",
   display: { dataDD: ModalButtonDomain, target: '~display' },
   modes: [ 'view' ],
@@ -37,7 +37,8 @@ export const ModalButtonsPageD: ExampleMainPage = {
   },
   rest: {},
   buttons: {
-    nukeTemp: { control: "DeleteStateButton", path: ['~/temp1','~/temp2'] },
+    nukeTemp: { control: "DeleteStateButton", path: [ '~/temp1', '~/temp2' ] },
+    copyLine1ToLine2: { control: "CommandButton", command: { command: 'copy', from: '~/display/line1', to: '~/display/line2' } },
     createEmpty: {
       control: 'ModalButton', focusOn: '~/temp1', modal: ModalButtonsModalPageD, mode: 'create', createEmpty: ModalButtonDomain,
       copyOnClose: { to: '~/display' }

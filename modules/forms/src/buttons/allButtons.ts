@@ -10,6 +10,7 @@ import { makeToggleButtons, ToggleButtonInPage } from "./toggleButton.page";
 import { DeleteStateButtonInPage, makeDeleteStateButtons } from "./DeleteStateButton";
 import { makeSelectPageButtons, SelectButtonInPage } from "./selectPageButton";
 import { ActionButtonInPage, makeActionButtons } from "./actionButton.page";
+import { CommandButtonInPage, makeCommandButtons } from "./CommandButton";
 
 export interface ButtonWithControl {
   control: string
@@ -21,10 +22,9 @@ export function isButtonWithControl ( b: any ): b is ButtonWithControl {
 export type ButtonD = ButtonWithControl | GuardButtonInPage<any, any>
 
 
-
 export type RawButtons<G> = ModalOrMainButtonInPage<G> | ModalCancelButtonInPage | ModalCommitButtonInPage |
   ResetStateButton | RestButtonInPage<G> | ListNextButtonInPage | ListPrevButtonInPage | ValidationButtonInPage | DeleteStateButtonInPage |
-  ToggleButtonInPage<G> | SelectButtonInPage<G> | ActionButtonInPage;
+  ToggleButtonInPage<G> | SelectButtonInPage<G> | ActionButtonInPage | CommandButtonInPage
 
 export type AllButtonsInPage<G> = (RawButtons<G> | GuardButtonInPage<AllButtonsInPage<G>, G>)
 
@@ -37,8 +37,9 @@ export function makeButtons<G> (): MakeButton<G> {
     ...makeRestButtons (),
     ...makeValidationButtons (),
     ...makeToggleButtons (),
-    ...makeActionButtons(),
-    ...makeSelectPageButtons ()
+    ...makeActionButtons (),
+    ...makeSelectPageButtons (),
+    ...makeCommandButtons ()
   }
 }
 

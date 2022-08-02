@@ -572,9 +572,14 @@ export function secondIn2<T1, T2> (): Optional<[ T1, T2 ], T2> {
 
 
 export type Transform<Main, Child> = [ Optional<Main, Child>, ( c: Child | undefined ) => Child ]
-export function displayTransformsInState<S> ( main: S, txs: Transform<S, any>[] ) {
-  return txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( main ) ) ] )
+interface DisplayTransform {
+  opt: string
+  value: any
 }
+export function displayTransformsInState<S> ( main: S, txs: Transform<S, any>[] ): DisplayTransform[] {
+  return txs.map ( ( [ l, tx ] ) => ({ opt: l.description, value: tx ( l.getOption ( main ) ) }) )
+}
+
 export function massTransform<Main> ( main: Main, ...transforms: Transform<Main, any>[] ): Main {
   return transforms.reduce<Main> ( ( acc, [ o, fn ] ) => {
     try {

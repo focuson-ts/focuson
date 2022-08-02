@@ -1,6 +1,7 @@
 export * from './src/ActionButton'
 export * from './src/authoriseTable'
 export * from './src/accordion'
+export * from './src/commandButton'
 export * from './src/common'
 export * from './src/CheckboxAndNumber'
 export * from './src/DataDrivenFixedOptionDropDownAndDetails'

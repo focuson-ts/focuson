@@ -62,7 +62,10 @@ const isStrictCopyCommand = ( c: ChangeCommand ): c is StrictCopyCommand => {
 }
 
 export const strictCopyCommandProcessor = <S> ( fromPathToLens: ( path: string ) => Optional<S, any>, toPathToLens: ( path: string ) => Optional<S, any> ) => ( s: S ): ChangeCommandProcessor<S> =>
-  ( c ) => isStrictCopyCommand ( c ) ? [ [ toPathToLens ( c.to ), () => fromPathToLens ( c.from ).getOption ( s ) ] ] : undefined;
+  ( c ) => isStrictCopyCommand ( c ) ? [ [ toPathToLens ( c.to ), () => {
+    // console.log ( 'strictCommandProcessor', s,c, fromPathToLens ( c.from ).description, fromPathToLens(c.from).getOption(s) )
+    return fromPathToLens ( c.from ).getOption ( s );
+  } ] ] : undefined;
 
 export interface MessageCommand extends ChangeCommand {
   command: 'message'
@@ -117,6 +120,8 @@ export type RestChangeCommands = CommonCommands | CopyResultCommand
 export type ModalChangeCommands = CommonCommands | CopyCommand
 export type NewPageChangeCommands = CommonCommands | CopyCommand | DeletePageTagsCommand
 export type InputChangeCommands = CommonCommands | StrictCopyCommand
+export type CommandButtonChangeCommands = CommonCommands | StrictCopyCommand
+
 
 export interface DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> {
   toPathTolens: ( path: string ) => Optional<S, any>;
@@ -144,7 +149,6 @@ export function deleteMessageSetProcessors<S, MSGs> ( config: DeleteMessageStric
   const { toPathTolens, messageL, s } = config
   return composeChangeCommandProcessors (
     processDeleteAllMessagesCommand ( messageL ),
-
     deleteCommandProcessor ( toPathTolens ),
     setCommandProcessor ( toPathTolens ),
     messageCommandProcessor ( config )
@@ -175,6 +179,12 @@ export const newPageCommandProcessors = <S, MSGs> ( config: ModalProcessorsConfi
 
 
 export const inputCommandProcessors = <S, MSGs> ( config: InputProcessorsConfig<S, MSGs> ) => ( s: S ) => {
+  const { toPathTolens } = config
+  return composeChangeCommandProcessors (
+    deleteMessageSetProcessors ( config ),
+    strictCopyCommandProcessor ( toPathTolens, toPathTolens ) ( s ) );
+};
+export const commandButtonCommandProcessors = <S, MSGs> ( config: InputProcessorsConfig<S, MSGs> ) => ( s: S ) => {
   const { toPathTolens } = config
   return composeChangeCommandProcessors (
     deleteMessageSetProcessors ( config ),
