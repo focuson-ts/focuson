@@ -7,7 +7,11 @@ import { CustomButtonType, getButtonClassName } from "../common";
 import { isMainPageDetails, MultiPageDetails } from "../pageConfig";
 import { HasSimpleMessageL } from "../simpleMessage";
 import { HasTagHolderL } from "@focuson/template";
+import { displayTransformsInState } from "@focuson/lens";
 
+export interface ModalDebug {
+  modalDebug?: boolean
+}
 export interface CopyStringDetails {
   from: string;
   to: string;
@@ -98,9 +102,11 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
           id, text, enabledBy, state, copy, copyJustString, pageMode, rest, copyOnClose, createEmpty, change, setToLengthOnClose,
           createEmptyIfUndefined, pageParams, buttonType, dateFn, changeOnClose, restOnOpen, pageOp
         } = props
-  const onClick = () => {
 
+  const onClick = () => {
     // const fromPath = fromPathFor ( state );
+    // @ts-ignore
+    const debug = state.main.debug?.modalDebug
     const errorPrefix = `Modal button ${id}`;
     const focusOn = isModal ( props ) ? props.focusOn : undefined
     const pageName = isModal ( props ) ? props.modal : props.main.toString ()
@@ -108,6 +114,7 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
       pageName, firstTime: true, pageMode, rest, focusOn, copyOnClose, setToLengthOnClose,
       pageParams, time: dateFn (), changeOnClose
     };
+    if ( debug ) console.log ( `${errorPrefix} newPageSelection`, newPageSelection )
 
     const config = makeModalProcessorsConfig ( errorPrefix, state, newPageSelection, props, dateFn );
 
@@ -123,13 +130,21 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
     const changeTxs = processChangeCommandProcessor ( errorPrefix, modalCommandProcessors ( config ) ( state.main ), changeCommands )
     const restL = state.context.restL
     const restOnOpensTxs: Transform<S, any>[] = restOnOpen ? [ [ restL, old => [ ...old, ...toArray ( restOnOpen ) ] ] ] : []
-
+    function log ( name: string, value: Transform<S, any>[] ) {
+      if ( debug ) {
+        const main: S = state.optJson ();
+        if ( main === undefined ) throw Error ()
+        const display = displayTransformsInState<S> ( main, value );
+        console.log ( errorPrefix,name, display )
+      }
+      return value
+    }
     state.massTransform ( reasonFor ( 'ModalButton', 'onClick', id ) ) (
       page<S, Context> ( state.context, pageOp ? pageOp : 'popup', newPageSelection ),
-      ...restOnOpensTxs,
-      ...emptyifUndefinedTx,
-      ...copyJustStrings,
-      ...changeTxs );
+      ...log ( 'restOnOpenTxs', restOnOpensTxs ),
+      ...log ( 'emptyIfUndefinedTx', emptyifUndefinedTx ),
+      ...log ( 'copyJustStrings', copyJustStrings ),
+      ...log ( 'changeTxs', changeTxs ) );
   };
   const disabled = enabledBy === false
   return <button className={getButtonClassName ( buttonType )} id={id} disabled={disabled} onClick={onClick}>{text}</button>
