@@ -69,7 +69,7 @@ const addButton: RawButtons<AllGuards> = {
   mode: "create",
   copyOnClose: { to: '~/display[$append]' },
   setToLengthOnClose: { variable: '~/selected', array: '~/display' },
-  restOnCommit: { restName: 'onePayment', action: 'create', result: "refresh" }
+  restOnCommit: { restName: 'onePayment', action: 'create', result: "refresh", pathToDelete: ['~/display'] }
 }
 
 const editButton: RawButtons<AllGuards> = {
@@ -78,7 +78,7 @@ const editButton: RawButtons<AllGuards> = {
   mode: "edit",
   copyOnClose: { to: '~/display[~/selected]' },
   copy: [ { from: '~/display[~/selected]' }, ...toArray ( addOrEditButton.copy ) ],
-  restOnCommit: { restName: 'onePayment', action: 'update', result: "refresh" }
+  restOnCommit: { restName: 'onePayment', action: 'update', result: "refresh" , pathToDelete: ['~/display'] }
 }
 
 export const ListOfPaymentsPagePD: ExampleMainPage = {
@@ -98,7 +98,7 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
   },
   modals: [ { modal: EditlistOfPaymentsPagePD }, { modal: AddressModalPage } ],
   modes: [ 'view' ],
-  initialValue: { command: 'set', path: 'selected', value: 0 },
+  initialValue: { command: 'set', path: '~/selected', value: 0 },
   rest: {
     paymentHistory: { rest: PrintRecordHistoryRD, fetcher: true, targetFromPath: '~/display' },
     onePayment: { rest: PrintRecordRD, fetcher: false, targetFromPath: '~/display[~/selected]' },

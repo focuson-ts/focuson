@@ -50,7 +50,10 @@ export const ViewChargesPage: ExampleModalPage = {
 export const AuthoriseChargesPD: ExampleMainPage = {
   name: 'AuthoriseCharges',
   pageType: "MainPage",
-  commonParams: { today: { ...StringParam, commonLens: 'today', testValue: '29/07/2022' } },
+  commonParams: {
+    today: { ...StringParam, commonLens: 'today', testValue: '29/07/2022' },
+    operatorName: { ...StringParam, commonLens: 'operatorName', testValue: 'Phil' }
+  },
   initialValue: [ { command: 'copy', from: '/CommonIds/today', to: '~/authorisedCharges/date' } ],
   modals: [ { modal: ViewChargesPage }, { modal: SummaryOfChargesPage }, { modal: SelectChargesDatePage } ],
   display: { target: '~/brand', dataDD: SelectOneBrandDD },

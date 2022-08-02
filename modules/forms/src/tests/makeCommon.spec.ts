@@ -85,7 +85,7 @@ describe ( "makeCommon", () => {
       "  pageSelection: [{ pageName: 'EAccountsSummary', firstTime: true, pageMode: 'view', time: defaultDateFn() }],",
       "  EAccountsSummary:{},",
       "  restCommands: [],",
-      "  debug: {'fetcherDebug':false,'guardDebug':false,'restDebug':false,'reduxDebug':false,'selectedPageDebug':false,'loadTreeDebug':false,'showTracing':false,'dateDebug':false,'recordTrace':true,'tagFetcherDebug':false,'validityDebug':false,'accordions':[]}",
+      "  debug: {'fetcherDebug':false,'guardDebug':false,'restDebug':false,'reduxDebug':false,'selectedPageDebug':false,'loadTreeDebug':false,'showTracing':false,'dateDebug':false,'recordTrace':true,'tagFetcherDebug':false,'validityDebug':false,'modalDebug':false,'accordions':[]}",
       "  }"
     ] )
 
@@ -105,6 +105,7 @@ describe ( "findAllCommonParamsWithSamples", () => {
       "employeeId": 666666,
       "employeeType": "basic",
       "jurisdiction": "GB",
+      "operatorName": "Phil",
       "role": "user",
       "today": "29/07/2022",
       "vbAcountSeq": 55555

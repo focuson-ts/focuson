@@ -39,6 +39,7 @@ function findSelectedPageDetails<S, Context extends PageSelectionContext<S>> ( s
     return results
   } catch ( e: any ) {
     console.log ( `Error in findSelectedPageDetails`, state.main )
+    console.log ( 'stack', e.stack )
     throw e
   }
 }

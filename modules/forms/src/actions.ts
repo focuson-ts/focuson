@@ -4,6 +4,8 @@ import { Lenses, Transform } from "@focuson/lens";
 
 
 function updateTable<S, D extends AuthoriseTableData, C> ( s: LensState<S, D[], C>, id: string, update: keyof D, fromValue: string, toValue: string ) {
+ // @ts-ignore
+  const operatorName = s.main?.CommonIds?.operatorName;
   const rows = s.optJsonOr ( [] )
   const lens = s.optional
   const txs: Transform<S, any>[] = rows.flatMap ( ( row, i ) =>
@@ -11,7 +13,7 @@ function updateTable<S, D extends AuthoriseTableData, C> ( s: LensState<S, D[], 
       [ lens.chain ( Lenses.nth ( i ) ),
         old => {
           let newValue = { ...old, status: toValue };
-          newValue[ update ] = 'you just now'
+          newValue[ update ] = operatorName
           return newValue;
         } ]
     ] : [] )

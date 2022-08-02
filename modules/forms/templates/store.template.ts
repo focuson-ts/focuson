@@ -86,7 +86,19 @@ export const focusOnMiddlewareFor{teamName} = <BigState, S extends HasFocusOnDeb
     if ( debug ) console.log ( 'ending focusOnDispatcher (full state)', store.getState () )
     return rootLens.get ( store.getState () );
   }
-  return dispatchRestAndFetchCommands ( config, context, focusOnDispatcher ) ( restCommands )(() =>rootLens.get ( store.getState () ))
+  let result = await dispatchRestAndFetchCommands ( config, context, focusOnDispatcher ) ( restCommands ) ( () => rootLens.get ( store.getState () ) );
+  const restsLoaded = config.restCountL.getOption ( result )
+  if ( debug ) {
+    console.log ( 'restsLoaded were ', restsLoaded, restsLoaded === undefined || restsLoaded?.loopCount === 0 ? 'no need to loop' : 'need to loop' );
+  }
+  if ( restsLoaded ) {
+    result = await dispatchRestAndFetchCommands ( config, context, focusOnDispatcher ) ( [] ) ( () => rootLens.get ( store.getState () ) );
+    const restsLoaded2 = config.restCountL.getOption ( result )
+    if ( debug ) {
+      console.log ( 'second restsLoaded were ', restsLoaded2, restsLoaded.loopCount === restsLoaded2?.loopCount ? 'will stop looping' : 'need to loop' );
+    }
+  }
+  return result
   //
   // let finalResultFn = ( start: S, restCommands: RestCommand[] ) => errorPromiseMonad ( onError ) (
   //   start, debug,
