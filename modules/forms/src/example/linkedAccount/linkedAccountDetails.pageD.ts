@@ -48,7 +48,7 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
     createPayment: { dataDD: CreatePaymentDD },
     rememberedForTest: { dataDD: NatNumDd },
   },
-  initialValue: [ 'empty', { command: 'message', msg: 'started' } ],
+  initialValue: [ 'empty', { command: 'message', msg: 'started' }, { command: "deletePageTags" } ],
   modals: [ { modal: SelectMandateMP }, { modal: CreatePaymentMP }, { main: OverpaymentMainPage } ],
   modes: [ 'view' ],
   pageType: "MainPage",

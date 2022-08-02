@@ -124,7 +124,7 @@ export interface DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> {
   stringToMsg: ( s: string ) => MSGs;
   s: S
 }
-export interface DeleteMessageStrictCopySetProcessorsDeleteTagsConfig<S, MSGs> extends DeleteMessageStrictCopySetProcessorsConfig<S,MSGs> {
+export interface DeleteMessageStrictCopySetProcessorsDeleteTagsConfig<S, MSGs> extends DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> {
   tagHolderL: Optional<S, TagHolder>,
   pageNameFn: ( s: S ) => string,
 }
@@ -141,7 +141,7 @@ export interface ModalProcessorsConfig<S, MSGs> extends DeleteMessageStrictCopyS
 export type  InputProcessorsConfig<S, MSGs> = DeleteMessageStrictCopySetProcessorsConfig<S, MSGs>
 
 export function deleteMessageSetProcessors<S, MSGs> ( config: DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> ): ChangeCommandProcessor<S> {
-  const { toPathTolens, messageL,  s } = config
+  const { toPathTolens, messageL, s } = config
   return composeChangeCommandProcessors (
     processDeleteAllMessagesCommand ( messageL ),
 
@@ -158,7 +158,7 @@ export const restChangeCommandProcessors = <S, Result, MSGs> ( config: RestAndIn
       copyResultCommandProcessor ( config.resultPathToLens, config.toPathTolens ) ( result ) );
 
 export const modalCommandProcessors = <S, MSGs> ( config: ModalProcessorsConfig<S, MSGs> ) => ( s: S ) => {
-  const { fromPathTolens, toPathTolens,tagHolderL, pageNameFn, defaultL } = config
+  const { fromPathTolens, toPathTolens, tagHolderL, pageNameFn, defaultL } = config
   return composeChangeCommandProcessors (
     deletePageTagsCommandProcessor ( tagHolderL, pageNameFn, s ),
     deleteMessageSetProcessors ( config ),
@@ -168,6 +168,7 @@ export const modalCommandProcessors = <S, MSGs> ( config: ModalProcessorsConfig<
 export const newPageCommandProcessors = <S, MSGs> ( config: ModalProcessorsConfig<S, MSGs> ) => ( s: S ): ChangeCommandProcessor<S> => {
   const { fromPathTolens, toPathTolens, defaultL } = config
   return composeChangeCommandProcessors (
+    deletePageTagsCommandProcessor ( config.tagHolderL, config.pageNameFn, s ),
     deleteMessageSetProcessors ( config ),
     copyCommandProcessor ( fromPathTolens, toPathTolens, defaultL ) ( s ) );
 };

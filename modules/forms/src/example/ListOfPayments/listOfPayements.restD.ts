@@ -71,52 +71,73 @@ export const PrintRecordRD: ExampleRestD = {
   },
   dataDD: PrintRecordHistoryDD,
   url: '/api/printrecord?{query}',
-  actions: [ 'create', 'update', { state: 'print' } ],
+  actions: [ 'createWithoutFetch', 'updateWithoutFetch', { state: 'print' } ],
   states: {
     print: {
       url: '/api/print?{query}',
       params: { ...fromCommonIds ( 'vbAcountSeq', 'employeeId', 'employeeId', 'accountId' ), paymentId: { ...IntParam, lens: '~/display[~/selected]id', testValue: 888, main: true } }
     }
   },
-  mutations: [ {
-    restAction: { state: 'print' },
-    mutateBy: [
-      {
-        type: "sql", name: 'getParamsFromStoredStuff',
-        sql: `select so_ind,
-                     dd_ind,
-                     bp_ind,
-                     obso_ind,
-                     obbp_ind,
-                     sortcode,
-                     fulfilmentType,
-                     accountNo,
-                     rbsMtAccount,
-                     newBankSeq
-              from the_table_that_holds_the_data
-              where account_id = ?
-                and paymentId = ?`,
-        params: [ 'accountId', 'paymentId',
-          ...stringOutputParams ( 'sortcode', 'accountNo', 'requestByRole', 'rbsMtAccount', 'fulfilmentType', 'newBankSeq' ),
-          ...booleanOutputParams ( 'so_ind', 'dd_ind', 'bp_ind', 'obso_ind', 'obbp_ind' )
-        ],
-        schema: onlySchema
-      },
-      {
-        type: 'case', name: 'print',
-        params: [ 'fulfilmentType', 'requestByRole', 'vbAcountSeq', 'rbsMtAccount', 'employeeId',
-          { type: 'input', name: 'so_ind', javaType: 'Boolean', format: { type: "Boolean", false: '0', true: '1' } },
-          ind ( 'dd_ind' ), ind ( 'bp_ind' ), ind ( 'obso_ind' ), ind ( 'obbp_ind' ), 'sortcode', 'accountNo', 'accountId', 'paymentId', 'newBankSeq' ],
+  mutations: [
+    {
+      restAction: { state: 'print' },
+      mutateBy: [
+        {
+          type: "sql", name: 'getParamsFromStoredStuff',
+          sql: `select so_ind,
+                       dd_ind,
+                       bp_ind,
+                       obso_ind,
+                       obbp_ind,
+                       sortcode,
+                       fulfilmentType,
+                       accountNo,
+                       rbsMtAccount,
+                       newBankSeq
+                from the_table_that_holds_the_data
+                where account_id = ?
+                  and paymentId = ?`,
+          params: [ 'accountId', 'paymentId',
+            ...stringOutputParams ( 'sortcode', 'accountNo', 'requestByRole', 'rbsMtAccount', 'fulfilmentType', 'newBankSeq' ),
+            ...booleanOutputParams ( 'so_ind', 'dd_ind', 'bp_ind', 'obso_ind', 'obbp_ind' )
+          ],
+          schema: onlySchema
+        },
+        {
+          type: 'case', name: 'print',
+          params: [ 'fulfilmentType', 'requestByRole', 'vbAcountSeq', 'rbsMtAccount', 'employeeId',
+            { type: 'input', name: 'so_ind', javaType: 'Boolean', format: { type: "Boolean", false: '0', true: '1' } },
+            ind ( 'dd_ind' ), ind ( 'bp_ind' ), ind ( 'obso_ind' ), ind ( 'obbp_ind' ), 'sortcode', 'accountNo', 'accountId', 'paymentId', 'newBankSeq' ],
+          select: [
+            bankStuff ( [ 'fulfilmentType.equals("BK")', 'requestByRole.equals("bank")' ], 'a10001' ),
+            bankStuff ( [ 'fulfilmentType.equals("OA")', 'requestByRole.equals("bank")' ], 'b10001' ),
+            bankStuff ( [ 'fulfilmentType.equals("OF")', 'requestByRole.equals("bank")' ], 'c10001' ),
+            nonBankStuff ( 'fulfilmentType.equals("BK")', 'a10001' ),
+            nonBankStuff ( 'fulfilmentType.equals("OA")', 'b10001' ),
+            nonBankStuff ( 'fulfilmentType.equals("OF")', 'c10001' ),
+          ]
+        } ]
+    },
+    {
+      restAction: 'createWithoutFetch', mutateBy: [ {
+        type: 'case', params: [ 'accountId' ],
         select: [
-          bankStuff ( [ 'fulfilmentType.equals("BK")', 'requestByRole.equals("bank")' ], 'a10001' ),
-          bankStuff ( [ 'fulfilmentType.equals("OA")', 'requestByRole.equals("bank")' ], 'b10001' ),
-          bankStuff ( [ 'fulfilmentType.equals("OF")', 'requestByRole.equals("bank")' ], 'c10001' ),
-          nonBankStuff ( 'fulfilmentType.equals("BK")', 'a10001' ),
-          nonBankStuff ( 'fulfilmentType.equals("OA")', 'b10001' ),
-          nonBankStuff ( 'fulfilmentType.equals("OF")', 'c10001' ),
-        ]
-      } ]
-  } ]
+          { guard: [], type: 'sql', params: [ 'accountId' ], schema: onlySchema, sql: 'insert sqlNoBank' },
+          {
+            guard: [], type: 'multiple', mutations: [
+              { type: 'sql', params: [ 'accountId' ], schema: onlySchema, sql: 'insert sqlBank1' },
+              { type: 'sql', params: [ 'accountId' ], schema: onlySchema, sql: 'insert sqlBank2' },
+              { type: 'sql', params: [ 'accountId' ], schema: onlySchema, sql: 'insert sqlBank3' },
+              { type: 'sql', params: [ 'accountId' ], schema: onlySchema, sql: 'insert sqlBank4' },
+            ]
+          }
+        ],
+        name: 'createWithoutFetch'
+      }
+      ]
+    }
+
+  ]
 }
 
 
