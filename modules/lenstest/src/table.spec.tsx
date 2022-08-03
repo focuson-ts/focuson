@@ -3,7 +3,7 @@ import { shallow } from "enzyme";
 import { enzymeSetup } from "./enzymeAdapterSetup";
 import { getValueForTable, Table } from "@focuson/form_components";
 import { findJoiner, safeArray } from "@focuson/utils";
-import { TableWithVaryingOrder } from "../../formComponents/src/tableWithVaryingOrder";
+import { TableWithVaryingOrder } from "@focuson/form_components";
 import { HasPageSelection, PageSelectionContext, pageSelectionlens } from "@focuson/pages";
 import { identityOptics } from "@focuson/lens";
 
@@ -68,7 +68,7 @@ describe ( "Table", () => {
     } )
     it ( "should render an empty with no selected and a title pointing at undefined", () => {
       const table = displayAndGetTable ( empty, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id' tableTitle='The title [{/someData}]'/> )
-      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<h2>The title [undefined]</h2><table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody class='grid-sub'></tbody></table>" )
+      expect ( table.html ().replace ( /"/g, "'" ) ).toEqual ( "<h2>The title []</h2><table id='id' class='grid'><thead><tr><th id='id.th[0]'>A</th><th id='id.th[1]'>B</th></tr></thead><tbody class='grid-sub'></tbody></table>" )
     } )
     it ( "should render an empty with no selected and a title pointing at date", () => {
       const table = displayAndGetTable ( {...empty, someData: "123"}, s => {}, s => <Table order={[ 'a', 'b' ]} state={s.focusOn ( 'contents' )} id='id' tableTitle='The title [{/someData}]'/> )

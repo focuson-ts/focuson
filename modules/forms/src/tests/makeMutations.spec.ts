@@ -2,8 +2,6 @@ import { getFromResultSetIntoVariables, getFromStatement, makeMutationResolverRe
 import { paramsForTest } from "./paramsForTest";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
-import { chequeCreditBooksRestD } from "../example/chequeCreditBooks/chequeCreditBooks.restD";
-import { ChequeCreditbooksPD } from "../example/chequeCreditBooks/chequeCreditBooks.pageD";
 import { InputMutationParam, IntegerMutationParam, MutationParam, NullMutationParam, OutputForManualParam, OutputForSqlMutationParam, OutputForStoredProcMutationParam, StringMutationParam } from "../common/resolverD";
 import { fromCommonIds } from "../example/commonIds";
 import { safeArray, safeObject } from "@focuson/utils";
@@ -11,8 +9,6 @@ import { PaymentsPageD } from "../example/payments/payments.pageD";
 import { newPaymentsRD, ValidatePayeeRD } from "../example/payments/payments.restD";
 import { LinkedAccountDetailsPD } from "../example/linkedAccount/linkedAccountDetails.pageD";
 import { collectionHistoryListRD, collectionSummaryRD } from "../example/linkedAccount/linkedAccountDetails.restD";
-import { makeResolvers } from "../codegen/makeResolvers";
-import { findQueryMutationResolver } from "../codegen/makeJavaFetchersInterface";
 
 const stringMP: StringMutationParam = { type: 'string', value: 'someString' }
 const integerMP: IntegerMutationParam = { type: "integer", value: 123 }
