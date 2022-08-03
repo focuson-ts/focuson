@@ -1,4 +1,4 @@
-import { getFromResultSetIntoVariables, getFromStatement, makeMutationResolverReturnStatement, makeMutations, mockReturnStatement, mutationCodeForFunctionCalls, setObjectFor, typeForParamAsInput } from "../codegen/makeMutations";
+import { getFromResultSetIntoVariables, getFromStatement, makeMutationResolverReturnStatement, makeMutations, mockReturnStatement, mutationCodeForFunctionCalls, preTransactionLogger, setObjectFor, typeForParamAsInput } from "../codegen/makeMutations";
 import { paramsForTest } from "./paramsForTest";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
@@ -42,6 +42,38 @@ describe ( "getFromStatement", () => {
       "Integer someNameMan = ss.getInt(6);"
     ] )
   } )
+} )
+describe ( 'preTransactionLogger', () => {
+  const inputb: InputMutationParam = { type: 'input', javaType: "String", name: 'b' }
+  const inputbodyb: InputMutationParam = { type: 'body', javaType: "String", path: 'b' }
+  const inputd: InputMutationParam = { type: 'input', javaType: "String", name: 'd' }
+  const inputbodyd: InputMutationParam = { type: 'body', javaType: "String", path: 'd' }
+  const inputBodyAsJson: InputMutationParam = { type: 'input', javaType: "Map<String,Object>", name: 'bodyAsJson' }
+  const output: OutputForSqlMutationParam = { type: 'output', javaType: "Map<String,Object>", name: 'bodyAsJson', rsName: 'someRsName' }
+
+  it ( "should make a log statement when no body parameters", () => {
+    expect ( preTransactionLogger ( paramsForTest, 'TheResultType', [ 'a', output ] ) ).toEqual ( [
+      "      logger.debug(MessageFormat.format(\"TheResultType: {0},a: {1}\",TheResultType,a));"
+    ] )
+    expect ( preTransactionLogger ( paramsForTest, 'TheResultType', [ inputb, output ] ) ).toEqual ( [
+      "      logger.debug(MessageFormat.format(\"TheResultType: {0},b: {1}\",TheResultType,b));"
+    ] )
+    expect ( preTransactionLogger ( paramsForTest, 'TheResultType', [ 'a', 'c', 'e', output ] ) ).toEqual ( [
+      "      logger.debug(MessageFormat.format(\"TheResultType: {0},a: {1},c: {2},e: {3}\",TheResultType,a,c,e));"
+    ] )
+    expect ( preTransactionLogger ( paramsForTest, 'TheResultType', [ 'a', inputb, 'c', inputd, 'e', output ] ) ).toEqual ( [
+      "      logger.debug(MessageFormat.format(\"TheResultType: {0},a: {1},b: {2},c: {3},d: {4},e: {5}\",TheResultType,a,b,c,d,e));"
+    ] )
+  } )
+  it ( "should make a log statement when body parameters", () => {
+    expect ( preTransactionLogger ( paramsForTest, 'TheResultType', [ inputbodyb, output ] ) ).toEqual ( [
+      "      logger.debug(MessageFormat.format(\"TheResultType: {0},bodyAsJson: {1}\",TheResultType));"
+    ] )
+    expect ( preTransactionLogger ( paramsForTest, 'TheResultType', [ 'a', inputbodyb, 'c', inputbodyd, 'e', output ] ) ).toEqual ( [
+      "      logger.debug(MessageFormat.format(\"TheResultType: {0},a: {1},c: {2},e: {3},bodyAsJson: {4}\",TheResultType,a,c,e));"
+    ] )
+  } )
+
 } )
 describe ( "getFromResultSet", () => {
   it ( "generate the code to get the mp from a ResultSet", () => {

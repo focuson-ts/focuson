@@ -135,7 +135,7 @@ export function addFormat ( errorPrefix: string, format: Pattern | undefined, ja
           throw new Error ( `${errorPrefix} don't know how to addFormat for a String for ${JSON.stringify ( format )}, ${javaType}` )
       }
   }
-  throw new Error ( `${errorPrefix} don't know how to addFormat for ${JSON.stringify(format)}, ${javaType}` )
+  throw new Error ( `${errorPrefix} don't know how to addFormat for ${JSON.stringify ( format )}, ${javaType}` )
 }
 
 function findType ( errorPrefix: string, params: NameAnd<AllLensRestParams<any>>, name: string ) {
@@ -155,21 +155,21 @@ export const typeForParamAsInput = ( errorPrefix: string, params: NameAnd<AllLen
 
 export function preTransactionLogger ( params: JavaWiringParams, type: string, paramsA: MutationParam[] ): string[] {
   const debugLevel = params.debugLevel;
-  if (debugLevel==='none')return[]
+  if ( debugLevel === 'none' ) return []
   const hasBodyParams = paramsA.filter ( isBodyMutationParam ).length > 0
   const inputParams = paramsA.filter ( isInputParam );
   if ( inputParams.length == 0 ) return [ `      logger.${debugLevel}(MessageFormat.format("${type}: {0}", ${type}));` ];
+
   const inputParamsWithoutBody = inputParams.filter ( p => !isBodyMutationParam ( p ) );
-  const paramNamesAndValues = [
-    `${type}: {0}`,
-    ...inputParamsWithoutBody.map ( ( p, i ) => `${paramNamePathOrValue ( p )}: {${i + 1}}` ),
-    hasBodyParams ? `bodyAsJson: {${inputParamsWithoutBody.length}}` : `` ].join ( ',' )
-  return [ `      logger.${debugLevel}(MessageFormat.format("${paramNamesAndValues}", ${type},${inputParamsWithoutBody.map ( paramNamePathOrValue )}${hasBodyParams ? ',bodyAsJson' : ''}));` ];
+  const paramsToLog = [ ...inputParamsWithoutBody, ...hasBodyParams ? [ 'bodyAsJson' ] : [] ]
+  const paramNamesAndValues = [ `${type}: {0}`, ...paramsToLog.map ( ( p, i ) => `${paramNamePathOrValue ( p )}: {${i + 1}}` ) ].join ( ',' )
+  const messageFormatParams = [ `"${paramNamesAndValues}"`, `${type}`, ...inputParamsWithoutBody.map ( paramNamePathOrValue ) ]
+  return [ `      logger.${debugLevel}(MessageFormat.format(${messageFormatParams.join ( ',' )}));` ];
 }
 
 export function postTransactionLogger ( params: JavaWiringParams, paramsA: MutationParam[], isList: boolean ): string[] {
   const debugLevel = params.debugLevel;
-  if (debugLevel==='none')return[]
+  if ( debugLevel === 'none' ) return []
   let outputParams = paramsA.filter ( isOutputParam );
   if ( outputParams.length == 0 ) return [ `logger.${debugLevel}(MessageFormat.format("Duration: {0,number,#.##}", (System.nanoTime() - start) / 1000000.0));` ];
   if ( isList ) return [ `logger.debug(MessageFormat.format("Duration: {0,number,#.##}, result: {1}", (System.nanoTime() - start) / 1000000.0), result);` ];

@@ -1,7 +1,6 @@
-import { Optional, Transform } from "@focuson/lens";
-import { replaceTextFn } from "@focuson/lens";
+import { Optional, replaceTextFn, Transform } from "@focuson/lens";
 import { TagHolder } from "@focuson/template";
-import { filterObject, safeObject } from "@focuson/utils";
+import { filterObject } from "@focuson/utils";
 
 export interface ChangeCommand {
   command: string
