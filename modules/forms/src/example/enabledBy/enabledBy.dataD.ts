@@ -2,6 +2,7 @@ import { ExampleDataD } from "../common";
 import { yesNoDD } from "../SingleOccupation/singleOccupation.dataD";
 import { DateDD, DateWithDatePickerDD, ManyLineStringDD, NatNumDd, StringDD } from "../../common/dataD";
 import { actionEnums, nextActionDD, reasonDD } from "../onChange/onChange.dataD";
+import { DisplayStringWithLookupCD } from "../../common/componentsD";
 
 
 export const enabledByDataD: ExampleDataD = {
@@ -14,7 +15,11 @@ export const enabledByDataD: ExampleDataD = {
   structure: {
     dropdown: { dataDD: yesNoDD },
     dropdownWithNull: { dataDD: { ...yesNoDD, emptyValue: null, allowNull: true } },
-    dropdownWithUndefined: { dataDD: { ...yesNoDD, emptyValue: undefined , allowUndefined: true} },
+    dropdownWithUndefined: { dataDD: { ...yesNoDD, emptyValue: undefined, allowUndefined: true } },
+    displayStringWithLookup: {
+      dataDD: { ...StringDD, display: DisplayStringWithLookupCD, emptyValue: 'A' },
+      displayParams: { lookup: { A: 'The value was A', B: 'The value was B' } }
+    },
     dropdown1: {
       dataDD: reasonDD, displayParams: {
         enabledBy: 'yes',

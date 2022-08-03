@@ -20,7 +20,7 @@ export interface CommonTableProps<S, T, Context> extends CommonStateProps<S, T[]
   /** A list of fields that we want to be right justified */
   rights?: string[]
 }
-export interface  TableProps<S, T, Context> extends CommonTableProps<S, T, Context> {
+export interface TableProps<S, T, Context> extends CommonTableProps<S, T, Context> {
   order: (keyof T)[];
 }
 
@@ -67,7 +67,7 @@ export const rawTable = <S, T, Context extends PageSelectionContext<S>> (
         <td colSpan={titles.length}>{emptyData}</td>
       </tr> :
       json.map ( ( row, i ) => filter ( row ) && (maxCount === undefined || count++ < maxCountInt) ? oneRow ( row, i, selectedClass ( i ), rights, onClick ) : null );
-    const title = tableTitle ? <h2>{replaceTextUsingPath ( state, tableTitle ) }</h2> : null
+    const title = tableTitle ? <h2>{replaceTextUsingPath ( state, tableTitle )}</h2> : null
     return <>{title}
       <table id={id} className="grid">
         <thead>
@@ -82,10 +82,11 @@ export function tdClassForTable ( rights: string[] | undefined, s: any ) {
   if ( !rights ) return undefined
   return rights.includes ( s ) ? 'right' : undefined
 }
-export const defaultOneRowWithGetValue = <T extends any> ( getValue: ( o: keyof T, row: T, joiners: undefined | string | string[] ) => any ) => ( id: string, order: (keyof T)[], joiners: string | string[] | undefined, ...extraTds: (( i: number, row: T ) => JSX.Element)[] ): OneRowFn<T> =>
-  ( row: T, i: number, clazz: string | undefined, rights: string[] | undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) =>
-    (<tr id={`${id}[${i}]`} className={clazz} key={i} onClick={onClick ( i, row )}>{order.map ( o =>
-      <td id={`${id}[${i}].${o.toString ()}`} className={tdClassForTable ( rights, o )} key={o.toString ()}>{getValue ( o, row, joiners )}</td> )}{extraTds.map ( (e,i) => <td key={`extra${i}`}>{e ( i, row )}</td> )}</tr>);
+export const defaultOneRowWithGetValue = <T extends any> ( getValue: ( o: keyof T, row: T, joiners: undefined | string | string[] ) => any ) =>
+  ( id: string, order: (keyof T)[], joiners: string | string[] | undefined, ...extraTds: (( i: number, row: T ) => JSX.Element)[] ): OneRowFn<T> =>
+    ( row: T, i: number, clazz: string | undefined, rights: string[] | undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) =>
+      (<tr id={`${id}[${i}]`} className={clazz} key={i} onClick={onClick ( i, row )}>{order.map ( o =>
+        <td id={`${id}[${i}].${o.toString ()}`} className={tdClassForTable ( rights, o )} key={o.toString ()}>{getValue ( o, row, joiners )}</td> )}{extraTds.map ( ( e, j ) => <td key={`extra${j}`}>{e ( i, row )}</td> )}</tr>);
 
 export const defaultOneRow = defaultOneRowWithGetValue ( getValueForTable )
 

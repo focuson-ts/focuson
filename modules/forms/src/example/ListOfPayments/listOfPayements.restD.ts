@@ -125,7 +125,9 @@ export const PrintRecordRD: ExampleRestD = {
           { guard: [], type: 'sql', params: [ 'accountId' ], schema: onlySchema, sql: 'insert sqlNoBank' },
           {
             guard: [], type: 'multiple', mutations: [
-              { type: 'sql', params: [ 'accountId' ], schema: onlySchema, sql: 'insert sqlBank1' },
+              { type: 'sql', params: [ 'accountId',
+                  {type: 'body', javaType: 'String', path: 'a.b'}
+                ], schema: onlySchema, sql: 'insert sqlBank1' },
               { type: 'sql', params: [ 'accountId' ], schema: onlySchema, sql: 'insert sqlBank2' },
               { type: 'sql', params: [ 'accountId' ], schema: onlySchema, sql: 'insert sqlBank3' },
               { type: 'sql', params: [ 'accountId' ], schema: onlySchema, sql: 'insert sqlBank4' },

@@ -1,3 +1,5 @@
+import { NameAnd } from "@focuson/utils";
+
 /** A state is a string[] that means 'turn into a state  'from' the current state
  * A full state is a string[] that means 'turn into a state from the root'.
  * In general 'state' doesn't break encapsulation, pagestate and fullState do. pageState is slightly cleaner becaues the damage doesn't leave the page
@@ -64,6 +66,16 @@ export const CheckboxInputCD: DisplayCompD = {
   params: commonInputParams,
 }
 
+export const DisplayStringWithLookupCD: DisplayCompD = {
+  import: "@focuson/form_components", name: "DisplayStringWithLookup",
+  params: {
+    ...commonParams,
+    lookup: { paramType: 'json', needed: 'no' },
+    className: { paramType: 'string', needed: 'no' },
+    ifUndefined: { paramType: 'string', needed: 'no' }
+  }
+
+}
 export const commonParamsWithLabel: DisplayCompParamD = {
   ...commonParams,
   label: { paramType: 'string', needed: 'defaultToCamelCaseOfName' },
