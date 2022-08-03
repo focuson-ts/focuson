@@ -60,6 +60,7 @@ export function auditDetails ( params: JavaWiringParams, r: RestD<any>, restActi
 export function paramsDeclaration ( md: MutationDetail, i: number ) {
   const outputs = allOutputParams ( parametersFor ( md ) )
   if ( outputs.length === 1 ) return `${outputs[ 0 ].javaType} ${outputs[ 0 ].name} = `
+  if (md.type === 'case' && md.list) return `List<Map<String,Object>> result = `
   const javaType = javaTypeForOutput ( parametersFor ( md ) )
   if ( javaType === 'void' ) return ''
   return `${javaType} params${i} = `

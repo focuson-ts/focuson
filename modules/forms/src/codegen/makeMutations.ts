@@ -3,7 +3,7 @@ import { NameAnd, safeObject, toArray, unique } from "@focuson/utils";
 import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationDetailsName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
-import { indentList } from "./codegen";
+import { addStringToStartOfFirst, indentList } from "./codegen";
 import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, getMakeMock, importForTubles, isBodyMutationParam, isInputParam, isMessageMutation, isMultipleMutation, isOutputParam, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlFunctionMutation, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
@@ -324,6 +324,22 @@ export function mutationCodeForCase<G> ( errorPrefix: string, p: RefD<G>, r: Res
     `  }`,
   ];
 }
+export function mutationCodeForCaseThatIsAList<G> ( errorPrefix: string, p: RefD<G>, r: RestD<G>, name: string, m: SelectMutation, index: number, includeMockIf: boolean, indexPrefix: string ): string[] {
+  const paramsA = toArray ( m.params );
+  const callingCode: string[] = m.select.flatMap ( ( gm, i ) =>
+    [ `if (${[ 'true', ...gm.guard ].join ( ' && ' )}){`,
+      ...addStringToStartOfFirst ( 'return' ) ( mutationCodeForOne ( errorPrefix, p, r, name, gm, i, includeMockIf, indexPrefix + index ) ),
+      '}' ] )
+  return [
+    `//If you have a compiler error in the type here, did you match the types of the output params in your manual code with the declared types in the .restD?`,
+    ...makeMethodDecl ( errorPrefix, paramsA, 'List<Map<String,Object>>', r, name, m, indexPrefix + index ),
+    ...commonIfDbNameBlock ( r, paramsA, name, m, indexPrefix + index, includeMockIf ),
+    ...indentList ( indentList ( indentList ( [
+      ...callingCode,
+      `throw new RuntimeException("No guard condition executed");` ] ) ) ),
+    `  }`,
+  ];
+}
 
 export function makeMutationMethod<G> ( params: JavaWiringParams, errorPrefix: string, mutations: MutationDetail[], name: string, p: RefD<G>, r: RestD<G>, includeMockIf: boolean, indexPrefix: string ): string[] {
   const methods = mutations.flatMap ( ( mutateBy, index ) => toArray ( mutateBy ).flatMap ( ( m: MutationDetail ) => {
@@ -334,7 +350,9 @@ export function makeMutationMethod<G> ( params: JavaWiringParams, errorPrefix: s
     if ( m.type === 'sqlFunction' ) return mutationCodeForFunctionCalls ( params, newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
     if ( m.type === 'manual' ) return mutationCodeForManual ( newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf );
     if ( m.type === 'case' ) {
-      const caseCode = mutationCodeForCase ( newErrorPrefix, p, r, name, m, index, includeMockIf, indexPrefix );
+      const caseCode = m.list ?
+        mutationCodeForCaseThatIsAList ( newErrorPrefix, p, r, name, m, index, includeMockIf, indexPrefix ) :
+        mutationCodeForCase ( newErrorPrefix, p, r, name, m, index, includeMockIf, indexPrefix );
       const clausesCode = makeMutationMethod ( params, errorPrefix, m.select, name, p, r, includeMockIf, indexPrefix + index + '_' );
       return [ ...caseCode, ...clausesCode ];
     }

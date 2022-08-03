@@ -29,7 +29,7 @@ export interface AuditDetails {
   by: string
 }
 
-export type PrimaryMutations = PrimaryMutationDetail| PrimaryMutationDetail[]
+export type PrimaryMutations = PrimaryMutationDetail | PrimaryMutationDetail[]
 export type Mutations = MutationDetail | MutationDetail[]
 
 
@@ -57,10 +57,10 @@ export function getMakeMock ( m: MutationDetail ): boolean {
   if ( isMessageMutation ( m ) || isMultipleMutation ( m ) ) return false
   return m.makeMock === undefined ? true : m.makeMock
 }
-export type PrimaryMutationDetail =  StoredProcedureMutation | SqlFunctionMutation |
+export type PrimaryMutationDetail = StoredProcedureMutation | SqlFunctionMutation |
   SqlMutation | SqlMutationThatIsAList |
   ManualMutation | SelectMutation | MessageMutation
-export type MutationDetail =  PrimaryMutationDetail| MultipleMutation
+export type MutationDetail = PrimaryMutationDetail | MultipleMutation
 
 // export interface IDFromSequenceMutation {
 //   mutation: 'IDFromSequence',
@@ -143,12 +143,17 @@ export function isMultipleMutation ( m: MutationDetail ): m is MultipleMutation 
 
 export interface SelectMutation {
   type: 'case';
-  list?: false;
+  list?: boolean;
   params: MutationParamForSelect | MutationParamForSelect[];
   name: string;
   makeMock?: boolean
   select: GuardedMutation[]
 }
+export function isSelectMutationThatIsAList ( s: MutationDetail ): s is SelectMutation {
+  const a: any = s
+  return s.type === 'case' && a.list
+}
+
 
 export type GuardedMutation = GuardedManualMutation | GuardedSqMutation | GuardedStoredProcedureMutation | GuardedSqMutationThatIsAList | GuardedMessageMutation | GuardedSqlFunctionMutation | GuardedMultipleMutation
 export interface GuardedManualMutation extends ManualMutation {

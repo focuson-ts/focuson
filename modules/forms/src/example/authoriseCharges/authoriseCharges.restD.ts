@@ -2,7 +2,7 @@ import { ExampleRestD } from "../common";
 import { AuthoriseChargesSummaryDataDD, chargesSummaryDetailDD, ListOfChargesDD, SelectOneBrandDD, summaryOfChargesDateTableDD } from "./authoriseCharges.dataD";
 import { fromCommonIds } from "../commonIds";
 import { StringParam } from "../../common/restD";
-import { authorisedChargesTableDD } from "../database/tableNames";
+import { authorisedChargesTableDD, onlySchema } from "../database/tableNames";
 
 
 export const SelectOneBrandPageRD: ExampleRestD = {
@@ -35,6 +35,18 @@ export const SummaryOfChargeDatesRD: ExampleRestD = {
   },
   url: "/api/charges/dates?{query}",
   actions: [ 'get' ],
+  resolvers: {
+    getSummaryOfChargesDate: {
+      type: 'case',
+      name: 'getTheStuff',
+      params: [ 'brandRef' ],
+      list: true,
+      select: [
+        { guard: [], type: 'sql', schema: onlySchema, sql: 'somesql', params: [ 'brandRef',  ], list: true },
+        { guard: [], type: 'sql', schema: onlySchema, sql: 'someOtherSql', params: [ 'brandRef' ], list: true }
+      ]
+    }
+  }
 }
 
 export const SummaryOfChargesRD: ExampleRestD = {

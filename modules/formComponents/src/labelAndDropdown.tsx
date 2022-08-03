@@ -38,7 +38,8 @@ export function LabelAndDropdown<S, T, Context extends ContextForDropdown<S>> ( 
 export function Dropdown<S, T, Context extends ContextForDropdown<S>> ( props: DropdownProps<S, string, Context> ) {
   const { enums, parentState, state, ariaLabel, id, mode, onChange, specificOnChange, readonly, pleaseSelect, size, required, enabledBy } = props
   let selected = state.optJson ();
-  if ( selected !== undefined && typeof selected !== 'string' ) throw new Error ( `Component ${id} has a selected value which isn't a string. It is ${JSON.stringify ( selected, null, 2 )}` )
+  const statementDefined = !(selected === undefined || selected === null);
+  if ( statementDefined && typeof selected !== 'string' ) throw new Error ( `Component ${id} has a selected value which isn't a string. It is ${JSON.stringify ( selected, null, 2 )}` )
   const hasValid = selected && Object.keys ( safeObject ( enums ) ).includes ( selected )
   const value = hasValid ? selected : undefined
   const cssValidInput = hasValid || required === false ? '' : ' invalid'
