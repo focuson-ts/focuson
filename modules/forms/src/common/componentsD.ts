@@ -1,5 +1,3 @@
-import { NameAnd } from "@focuson/utils";
-
 /** A state is a string[] that means 'turn into a state  'from' the current state
  * A full state is a string[] that means 'turn into a state from the root'.
  * In general 'state' doesn't break encapsulation, pagestate and fullState do. pageState is slightly cleaner becaues the damage doesn't leave the page
@@ -74,8 +72,19 @@ export const DisplayStringWithLookupCD: DisplayCompD = {
     className: { paramType: 'string', needed: 'no' },
     ifUndefined: { paramType: 'string', needed: 'no' }
   }
-
 }
+export const WithTextLayoutCD: DisplayCompD = {
+  import: "@focuson/form_components", name: "WithTextLayout",
+  params: {
+    ...commonParams,
+    text: { paramType: "string", needed: 'yes' },
+    holderClassName: { paramType: "string", needed: 'no' },
+    textClassName: { paramType: "string", needed: 'no' },
+    childrenClassName: { paramType: "string", needed: 'no' }
+  }
+}
+
+
 export const commonParamsWithLabel: DisplayCompParamD = {
   ...commonParams,
   label: { paramType: 'string', needed: 'defaultToCamelCaseOfName' },
@@ -220,8 +229,12 @@ export const SelectedItemCD: DisplayCompD = {
 }
 export const LayoutCd: DisplayCompD = {
   params: {
+    state: { paramType: 'state', needed: 'defaultToPath' },
     details: { paramType: 'string', needed: 'yes' },
     title: { paramType: 'string', needed: 'no' },
+    titleClassName: { paramType: 'string', needed: 'no' },
+    rightHandTitle: { paramType: 'string', needed: 'no' },
+    rightHandClassName: { paramType: 'string', needed: 'no' },
     defaultProps: { paramType: 'string', needed: 'no' },
     displayAsCards: { paramType: 'boolean', needed: 'no' },
   },

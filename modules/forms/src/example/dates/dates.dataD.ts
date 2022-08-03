@@ -1,7 +1,7 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 import { DateWithDatePickerDD, StringDD } from "../../common/dataD";
 import {} from "../eTransfers/eTransfers.dataD";
-import { TableCD } from "../../common/componentsD";
+import { LayoutCd, TableCD } from "../../common/componentsD";
 
 export const HolidayDataD: ExampleDataD = {
   name: 'HolidayLine',
@@ -37,10 +37,11 @@ export const DateInfoDataD: ExampleDataD = {
 export const datesDataD: ExampleDataD = {
   name: 'Dates',
   description: "",
+  layout: { component: LayoutCd, displayParams: { details: '[[1]]', title: 'Some Title {empty}', rightHandTitle: 'Some Right Hand Title {empty}' } },
   structure: {
     empty: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified' } },
     emptyAndReadonly: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified - readonly', readonly: true } },
-    emptyAndNotRequired: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified - required false',required: false } },
+    emptyAndNotRequired: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified - required false', required: false } },
     value: { dataDD: { ...DateWithDatePickerDD, emptyValue: '1/7/2022' }, displayParams: { label: 'Specified 1/7/2022' } },
     valueDateFormat: { dataDD: { ...DateWithDatePickerDD, emptyValue: '2022/7/1' }, displayParams: { label: 'Specified 1/7/2022 ', dateFormat: 'yyyy/MM/dd' } },
     future: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Future', dateRange: { type: 'future' } } },
@@ -51,10 +52,10 @@ export const datesDataD: ExampleDataD = {
       }
     },
     holidays: {
-      dataDD: {...DateWithDatePickerDD, emptyValue: undefined, allowUndefined: true}, displayParams: {
+      dataDD: { ...DateWithDatePickerDD, emptyValue: undefined, allowUndefined: true }, displayParams: {
         dateInfo: '~/dateInfo',
         jurisdiction: '/CommonIds/jurisdiction',
-        dateRange: { type: 'future', allowWeekends: false, allowHolidays: false, minWorkingDaysBefore: 5        }
+        dateRange: { type: 'future', allowWeekends: false, allowHolidays: false, minWorkingDaysBefore: 5 }
       }
     }
 

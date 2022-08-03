@@ -1,9 +1,17 @@
 import { Children } from "react";
+import { FocusOnContext, makeProcessorsConfig } from "@focuson/focuson";
+import { LensProps } from "@focuson/state";
+import { inputCommandProcessors, processChangeCommandProcessor } from "@focuson/rest";
+import { replaceTextUsingPath } from "@focuson/pages";
+import { safeString } from "@focuson/utils";
 
-export interface LayoutProps {
+export interface LayoutProps<S, C> extends LensProps<S, any, C> {
   details: string;
   children: JSX.Element | JSX.Element[];
   title?: string;
+  titleClassName?: string;
+  rightHandTitle?: string
+  rightHandClassName?: string
   defaultProps?: string;
   displayAsCards?: boolean;
 }
@@ -15,7 +23,7 @@ function getLayoutAsArray ( details: string ) {
     return undefined
   }
 }
-export function Layout<S, T, Context> ( { details, children, title, defaultProps, displayAsCards }: LayoutProps ) {
+export function Layout<S, C extends FocusOnContext<S>> ( { state, details, children, title, titleClassName, rightHandTitle, rightHandClassName, defaultProps, displayAsCards }: LayoutProps<S, C> ) {
   let elemIndex = 0
   const parsedDetails = getLayoutAsArray ( details )
   if ( parsedDetails === undefined ) return <span><span className='validity-false'>Cannot parse layout {details}</span><br/><span>It should be an array of arrays.Most often like this [[1,1],[3],[5]] </span></span>
@@ -26,7 +34,10 @@ export function Layout<S, T, Context> ( { details, children, title, defaultProps
   const totalElementsToRenderCount = Array.isArray ( children ) ? children.length : 0
   const hrBetweenRows = true
 
+
   return <>
+    {(title || rightHandTitle) && <div className="layout-title-holder">{title && <div className={titleClassName ? titleClassName : 'layout-title'}>{replaceTextUsingPath ( state, safeString ( title ) )}</div>}
+      {title && <div className={rightHandClassName ? rightHandClassName : 'layout-right-title'}>{replaceTextUsingPath ( state, safeString ( rightHandTitle ) )}</div>}</div>}
     {parsedDetails.map ( ( row: any, rowIndex: number ) =>
       <div className="row" key={rowIndex}><>
         {row.map ( ( col: any, colIndex: number ) =>

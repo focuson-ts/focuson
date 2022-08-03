@@ -2,7 +2,7 @@ import { ExampleDataD } from "../common";
 import { yesNoDD } from "../SingleOccupation/singleOccupation.dataD";
 import { DateDD, DateWithDatePickerDD, ManyLineStringDD, NatNumDd, StringDD } from "../../common/dataD";
 import { actionEnums, nextActionDD, reasonDD } from "../onChange/onChange.dataD";
-import { DisplayStringWithLookupCD } from "../../common/componentsD";
+import { DisplayStringWithLookupCD, WithTextLayoutCD } from "../../common/componentsD";
 
 
 export const enabledByDataD: ExampleDataD = {
@@ -12,6 +12,7 @@ export const enabledByDataD: ExampleDataD = {
     yes: { condition: 'equals', path: 'dropdown', value: '"Y"' },
     no: { condition: 'equals', path: 'dropdown', value: '"N"' }
   },
+  layout: { component: WithTextLayoutCD, displayParams: { text: 'Some Exciting text {dropdown}' } },
   structure: {
     dropdown: { dataDD: yesNoDD },
     dropdownWithNull: { dataDD: { ...yesNoDD, emptyValue: null, allowNull: true } },

@@ -35,7 +35,7 @@ const haltBox = <S, D extends AuthoriseTableData, C> ( state: LensState<S, D[], 
 };
 
 function sum<D extends AuthoriseTableData> ( ds: D[], crOrDr: 'CR' | 'DR' ): string {
-  return "" + safeArray(ds).reduce ( ( acc, v ) => v.type == crOrDr ? acc + Number.parseFloat ( v.amount ) : acc, 0 )
+  return "" + safeArray ( ds ).reduce ( ( acc, v ) => v.type == crOrDr ? acc + Number.parseFloat ( v.amount ) : acc, 0 )
 }
 
 export function AuthoriseTable<S, D extends AuthoriseTableData, C extends FocusOnContext<S>> ( props: AuthoriseTableProps<S, D, C> ) {
@@ -49,7 +49,7 @@ export function AuthoriseTable<S, D extends AuthoriseTableData, C extends FocusO
   // @ts-ignore
   const authorisedByS: LensState<S, string, C> = copySelectedItemTo.focusOn ( 'authorisedBy' );
 
-  return <Layout details='[[1],[1,1],[1,1,1]]'>
+  return <Layout state={state} details='[[1],[1,1],[1,1,1]]'>
     <AuthTable{...props} />
     <LabelAndStringInput id={`${id}.approvedBy`} label='Approved By' state={approvedByS} mode='view' allButtons={{}}/>
     <LabelAndStringInput id={`${id}.authorisedBy`} label='Authorised By' state={authorisedByS} mode='view' allButtons={{}}/>

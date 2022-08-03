@@ -150,6 +150,7 @@ export function processPath<Build> ( s: ParseState<Build>, p: PathBuilder<Build>
 export function replaceTextFn<S> ( errorPrefix: string, s: S, from: ( path: string ) => Optional<S, any>, f: string ): string {
   const parts = f.slice ( 1, -1 ).split ( "|" )
   const value = from ( parts[ 0 ] ).getOption ( s )
+  if (value === undefined) return ''
   if ( parts.length == 1 ) return `${value}`
   if ( typeof value == 'boolean' ) {
     if ( parts.length == 3 ) return value ? parts[ 2 ] : parts[ 1 ]
