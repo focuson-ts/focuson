@@ -307,10 +307,12 @@ export function requiredmentCheckCodeForJava ( paramsFromCall: MutationParam[], 
     return needsRequiredCheck ( paramsFromCall, m ) ? [ `if (${name} == null) throw new IllegalArgumentException("${name} must not be null");//${JSON.stringify ( m )} ${typeof m}` ] : []
   } )
 }
-export function nameOrSetParam ( m: MutationParam ) {
+export function nameOrSetParam ( m: InputMutationParam ) {
   const a: any = m
   if ( a.setParam ) return a.setParam
+  if ( isBodyMutationParam ( m ) && m.ifNull ) return `ognlForBodyAsJson.getStringOr(bodyAsJson, "${m.path}", "${m.ifNull}")`
   if ( isBodyMutationParam ( m ) ) return `ognlForBodyAsJson.getData(bodyAsJson, "${m.path}", ${m.javaType ? m.javaType : 'Object'}.class)`
+  if ( m.ifNull ) return `${a.name} == null ? "${m.ifNull}": ${a.name}`
   return a.name;
 }
 export function setParam ( m: any ) {
@@ -351,6 +353,8 @@ interface SimpleInputMutationParam {
   setParam?: string;
   required?: boolean;
   format?: Pattern
+  ifNull?: string
+
 }
 interface FromParentMutationParam {
   type: 'fromParent';
@@ -359,6 +363,8 @@ interface FromParentMutationParam {
   setParam?: string;
   required?: boolean;
   format?: Pattern
+  ifNull?: string
+
 }
 export function isParentMutationParam ( p: MutationParam ): p is FromParentMutationParam {
   const a: any = p
@@ -373,7 +379,8 @@ interface BodyMutationParam {
   javaType?: JavaTypePrimitive;
   setParam?: string;
   required?: boolean;
-  format?: Pattern
+  format?: Pattern;
+  ifNull?: string
 }
 export function isBodyMutationParam ( p: MutationParam ): p is BodyMutationParam {
   const a: any = p

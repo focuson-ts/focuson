@@ -4,7 +4,7 @@ import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationDetailsName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
 import { addStringToStartOfFirst, indentList } from "./codegen";
-import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, getMakeMock, importForTubles, isBodyMutationParam, isInputParam, isMessageMutation, isMultipleMutation, isOutputParam, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlFunctionMutation, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
+import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, getMakeMock, importForTubles, InputMutationParam, isBodyMutationParam, isInputParam, isMessageMutation, isMultipleMutation, isOutputParam, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlFunctionMutation, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
@@ -25,10 +25,10 @@ export const setObjectFor = ( errorPrefix: string ) => ( m: MutationParam, i: nu
   throw new Error ( `Don't know how to process ${JSON.stringify ( m )}` )
 };
 
-function processInput ( errorPrefix: string, javaType: JavaTypePrimitive | undefined, format: Pattern | undefined, index: number, m: MutationParam ): string {
-  let name = nameOrSetParam ( m );
-  const body = `s.setObject(${index}, ${name});`;
-  if ( format === undefined ) return body;
+function processInput ( errorPrefix: string, javaType: JavaTypePrimitive | undefined, format: Pattern | undefined, index: number, m: InputMutationParam ): string {
+  const name = nameOrSetParam ( m );
+
+  if ( format === undefined ) return `s.setObject(${index}, ${name});`;
   switch ( javaType ) {
     case "Boolean":
       switch ( format.type ) {

@@ -120,14 +120,17 @@ export const PrintRecordRD: ExampleRestD = {
     },
     {
       restAction: 'createWithoutFetch', mutateBy: [ {
-        type: 'case', params: [ 'accountId' ],
+        type: 'case', params: [ 'accountId', { type: "input", name: 'bodyAsJson', javaType: 'Map<String,Object>' } ],
         select: [
           { guard: [], type: 'sql', params: [ 'accountId' ], schema: onlySchema, sql: 'insert sqlNoBank' },
           {
             guard: [], type: 'multiple', mutations: [
-              { type: 'sql', params: [ 'accountId',
-                  {type: 'body', javaType: 'String', path: 'a.b'}
-                ], schema: onlySchema, sql: 'insert sqlBank1' },
+              {
+                type: 'sql', params: [
+                  { type: 'input', javaType: 'Object', name: 'accountId', ifNull: ' ' },
+                  { type: 'body', javaType: 'String', path: 'a.b', ifNull: ' ' }
+                ], schema: onlySchema, sql: 'insert sqlBank1'
+              },
               { type: 'sql', params: [ 'accountId' ], schema: onlySchema, sql: 'insert sqlBank2' },
               { type: 'sql', params: [ 'accountId' ], schema: onlySchema, sql: 'insert sqlBank3' },
               { type: 'sql', params: [ 'accountId' ], schema: onlySchema, sql: 'insert sqlBank4' },
