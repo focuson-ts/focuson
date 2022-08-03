@@ -80,6 +80,7 @@ export type CompDataD<G> = DataD<G> | RepeatingDataD<G>
 export interface CommonPrimitiveDD<T> extends CommonDataDD, HasSample<T>, HasEnum {
   emptyValue: T | undefined;
   allowUndefined?: boolean;
+  allowNull?: boolean;
   label?: string;
   display: DisplayCompD;
   graphQlType: string;

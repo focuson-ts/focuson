@@ -11,10 +11,15 @@ export function domainTypeName<G> ( o: AllDataDD<G> ): string {
   return o.reactType
 }
 
+interface c {
+  d: string | null
+  e: (string | null)[]
+}
 export function oneDomainLine<G> ( [ name, o ]: [ string, OneDataDD<G> ] ): string {
-  const brackets = isRepeatingDd ( o.dataDD ) ? '[]' : ''
   const questionMark = isPrimDd ( o.dataDD ) && o.dataDD.allowUndefined ? '?' : ''
-  return `  ${name}${questionMark}: ${domainTypeName ( o.dataDD )}${brackets};`
+  const allowNull = isPrimDd ( o.dataDD ) && o.dataDD.allowNull ? '|null' : ''
+  const squareBrackets = isRepeatingDd ( o.dataDD ) ? '[]' : ''
+  return `  ${name}${questionMark}: ${(domainTypeName ( o.dataDD ))}${allowNull}${squareBrackets};`
 }
 export function makeDomainForDataD<G> ( d: DataD<G> ): string[] {
   return [
@@ -26,7 +31,7 @@ export function makeDomainForRepD<G> ( d: RepeatingDataD<G> ): string[] {
   return [
     `export type ${domainName ( d )} = ${domainName ( d.dataDD )}[]`, '' ]
 }
-export function makeAllDomainsFor< G> ( ps: RefD< G>[] ): string[] {
+export function makeAllDomainsFor<G> ( ps: RefD<G>[] ): string[] {
   return sortedEntries ( dataDsIn ( ps ) ).flatMap ( ( [ name, dataD ] ) => {
     if ( isDataDd ( dataD ) ) return makeDomainForDataD ( dataD );
     if ( isRepeatingDd ( dataD ) ) return makeDomainForRepD ( dataD )

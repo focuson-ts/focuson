@@ -10,7 +10,7 @@ import { HasButtons, makeButtons } from "./makeButtons";
 import { HasSimpleMessageL, PageSelectionContext } from "@focuson/pages";
 import { HasRestCommandL } from "@focuson/rest";
 
-export interface DropdownProps<S, T, Context> extends CommonStateProps<S, T, Context>, DropDownOnChangeProps<S, Context> ,HasButtons{
+export interface DropdownProps<S, T, Context> extends CommonStateProps<S, T , Context>, DropDownOnChangeProps<S, Context> ,HasButtons{
   enums: NameAnd<string>;
   readonly?: boolean
   pleaseSelect?: string;
@@ -24,7 +24,7 @@ export interface LabelAndDropdownProps<S, T, Context> extends DropdownProps<S, T
   label: string;
 }
 
-export function LabelAndDropdown<S, T, Context extends ContextForDropdown<S>> ( props: LabelAndDropdownProps<S, string, Context> ) {
+export function LabelAndDropdown<S, T, Context extends ContextForDropdown<S>> ( props: LabelAndDropdownProps<S, T, Context> ) {
   const { id, state, label } = props
 
   return (<div className={`dropdown-container ${props.labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}>
@@ -35,13 +35,13 @@ export function LabelAndDropdown<S, T, Context extends ContextForDropdown<S>> ( 
     </div>
   )
 }
-export function Dropdown<S, T, Context extends ContextForDropdown<S>> ( props: DropdownProps<S, string, Context> ) {
+export function Dropdown<S, T, Context extends ContextForDropdown<S>> ( props: DropdownProps<S, T, Context> ) {
   const { enums, parentState, state, ariaLabel, id, mode, onChange, specificOnChange, readonly, pleaseSelect, size, required, enabledBy } = props
   let selected = state.optJson ();
   const statementDefined = !(selected === undefined || selected === null);
   if ( statementDefined && typeof selected !== 'string' ) throw new Error ( `Component ${id} has a selected value which isn't a string. It is ${JSON.stringify ( selected, null, 2 )}` )
-  const hasValid = selected && Object.keys ( safeObject ( enums ) ).includes ( selected )
-  const value = hasValid ? selected : undefined
+  const hasValid = selected && Object.keys ( safeObject ( enums ) ).includes ( selected.toString() )
+  const value = hasValid ? selected.toString() : undefined
   const cssValidInput = hasValid || required === false ? '' : ' invalid'
   const onChangeEventHandler = ( e: ChangeEvent<HTMLSelectElement> ) => {
     const newValue = e.target.value;

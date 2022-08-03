@@ -13,6 +13,8 @@ export const enabledByDataD: ExampleDataD = {
   },
   structure: {
     dropdown: { dataDD: yesNoDD },
+    dropdownWithNull: { dataDD: { ...yesNoDD, emptyValue: null, allowNull: true } },
+    dropdownWithUndefined: { dataDD: { ...yesNoDD, emptyValue: undefined , allowUndefined: true} },
     dropdown1: {
       dataDD: reasonDD, displayParams: {
         enabledBy: 'yes',
