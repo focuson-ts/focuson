@@ -76,7 +76,7 @@ export const DisplayStringWithLookupCD: DisplayCompD = {
 export const WithTextLayoutCD: DisplayCompD = {
   import: "@focuson/form_components", name: "WithTextLayout",
   params: {
-    ...commonParams,
+    state: { paramType: 'state', needed: 'defaultToPath' },
     text: { paramType: "string", needed: 'yes' },
     holderClassName: { paramType: "string", needed: 'no' },
     textClassName: { paramType: "string", needed: 'no' },

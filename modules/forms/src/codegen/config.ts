@@ -44,6 +44,7 @@ export interface TSParams {
   theme: string;
   extractData: string;
   teamName: string;
+  cssDirectory: string|undefined;
 }
 
 export interface CombinedParams extends JavaWiringParams, TSParams {}

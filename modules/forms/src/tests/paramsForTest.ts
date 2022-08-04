@@ -40,5 +40,6 @@ export const paramsForTest: CombinedParams = {
   controllerAnnotations: [ "@CrossOrigin()" ],
   endpointAnnotations: [ "@EndPointAnnotation()" ],
   teamName: 'focuson',
-  debugLevel: 'debug'
+  debugLevel: 'debug',
+  cssDirectory: undefined
 };

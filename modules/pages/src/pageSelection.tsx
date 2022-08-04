@@ -79,8 +79,8 @@ export type PageOps = 'select' | 'popup' | 'replace'
 
 export function fromPathGivenState<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ): ( path: string ) => Optional<S, any> {
   const [ lens, namedOptionals ] = firstPageDataLensAndOptionals ( state, adjustPages )
-  if ( !lens ) throw Error ( `Cannot 'fromPathGivenState' because there is no selected page` )
-  return ( path: string ) => parsePath<Optional<S, any>> ( path, lensBuilder<S> ( prefixNameAndLens<S> ( [ '~', lens ], [ '', state.optional ] ), namedOptionals ? namedOptionals : {} ) );
+  const prefixs = lens ? prefixNameAndLens<S> ( [ '~', lens ], [ '', state.optional ] ) : prefixNameAndLens<S> ( [ '', state.optional ] );
+  return ( path: string ) => parsePath<Optional<S, any>> ( path, lensBuilder<S> ( prefixs, namedOptionals ? namedOptionals : {} ) );
 }
 
 export function applyPageOps ( pageOps: PageOps, pageSelection: PageSelection ): ( s: PageSelection[] | undefined ) => PageSelection[] {
@@ -106,15 +106,22 @@ export function currentPageSelectionTail<S, Context extends HasPageSelectionLens
   return pageSelections ( state ).slice ( -1 )?.[ 0 ]
 }
 export function mainPageFrom ( ps: PageSelection[] ): PageSelection {
-  let result = [ ...ps ].reverse ().find ( p => p.focusOn === undefined );
+  let result = mainPageOrUndefinedFrom ( ps )
   if ( result === undefined ) throw Error ( `Cannot find main page. Pages are ${JSON.stringify ( ps )}` )
   return result
-
+}
+export function mainPageOrUndefinedFrom ( ps: PageSelection[] ): PageSelection {
+  return [ ...ps ].reverse ().find ( p => p.focusOn === undefined )
 }
 export function mainPage<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ): PageSelection {
   const realAdjustPages = adjustPages ? adjustPages : ( ps: PageSelection[] ) => ps
   let adjustedPages = realAdjustPages ( pageSelections ( state ) );
   return mainPageFrom ( adjustedPages )
+}
+export function mainPageorUndefined<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ): PageSelection {
+  const realAdjustPages = adjustPages ? adjustPages : ( ps: PageSelection[] ) => ps
+  let adjustedPages = realAdjustPages ( pageSelections ( state ) );
+  return mainPageOrUndefinedFrom ( adjustedPages )
 }
 
 export function pageSelectionlens<S extends HasPageSelection> (): Lens<S, PageSelection[]> {
@@ -122,9 +129,10 @@ export function pageSelectionlens<S extends HasPageSelection> (): Lens<S, PageSe
 }
 
 
-function firstPageDataLensAndOptionals<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ): [ Optional<S, any> | undefined, NameAndLensFn<S> ] {
-  let pageSelection = mainPage<S, Context> ( state, adjustPages );
-  // if ( pageSelection === undefined ) return undefined
+function firstPageDataLensAndOptionals<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ):
+  [ Optional<S, any> | undefined, NameAndLensFn<S> ] {
+  let pageSelection = mainPageorUndefined<S, Context> ( state, adjustPages );
+  if ( pageSelection === undefined ) return [ undefined, {} ]
   const { pageName, focusOn } = pageSelection
   if ( focusOn !== undefined ) throw Error ( 'Main page should only have a lens not a focusOn' )
   const page = state.context.pages[ pageName ]

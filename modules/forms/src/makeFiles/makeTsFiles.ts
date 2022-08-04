@@ -1,4 +1,4 @@
-import { copyFile, copyFiles, DirectorySpec, templateFile, writeToFile } from "@focuson/files";
+import { copyFile, copyFiles, CopyFilesRecursively, DirectorySpec, GetFilelistRecursively2, templateFile, writeToFile } from "@focuson/files";
 import { TSParams } from "../codegen/config";
 import fs from "fs";
 import { detailsLog, GenerateLogLevel, safeArray, sortedEntries, unique } from "@focuson/utils";
@@ -39,6 +39,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     fs.mkdirSync ( `${tsCode}`, { recursive: true } )
     fs.mkdirSync ( `${tsScripts}`, { recursive: true } )
     fs.mkdirSync ( `${tsPublic}/themes`, { recursive: true } )
+    fs.mkdirSync ( `${tsPublic}/css`, { recursive: true } )
     themes.forEach ( theme => fs.mkdirSync ( `${tsPublic}/themes/${theme}/icons`, { recursive: true } ) )
     fs.mkdirSync ( `${tsStoryBook}`, { recursive: true } )
     templateFile ( tsRoot + "/project.details.json", 'templates/ts.projectDetails.json', {
@@ -127,10 +128,18 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     }
     themes.forEach ( copyTheme )
     templateFile ( `${tsPublic}/index.css`, 'templates/raw/ts/public/index.css', params, directorySpec, details )
-    templateFile ( `${tsPublic}/index.html`, 'templates/raw/ts/public/index.html', params, directorySpec, details )
+    const cssImports = params.cssDirectory ? GetFilelistRecursively2 ( params.cssDirectory, 0 )
+      .filter ( res => !res.isDir && res.file.endsWith ( '.css' ) )
+      .map ( ( { isDir, file } ) => `    <link rel="stylesheet" href="%PUBLIC_URL%/css/${file}" type="text/css">` ).join ( "\n" ) : []
+    templateFile ( `${tsPublic}/index.html`, 'templates/raw/ts/public/index.html', { ...params, cssImports }, directorySpec, details )
 
     if ( fs.existsSync ( 'src/actions.ts' ) )
       copyFile ( tsCode + '/actions.ts', 'src/actions.ts' )
     else
       copyFile ( tsCode + '/actions.ts', 'templates/actions.ts', directorySpec )
+
+    if ( params.cssDirectory && fs.existsSync ( params.cssDirectory ) )
+      CopyFilesRecursively ( params.cssDirectory, `${tsPublic}/css`, 0 )
+    else
+      console.log ( `Not copying css files in cssDirectory [${params.cssDirectory}]` )
   };

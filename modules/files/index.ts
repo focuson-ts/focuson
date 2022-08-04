@@ -60,3 +60,52 @@ export function templateFile ( name: string, inputName: string, template: any, d
   writeToFile ( name, () => applyToTemplate ( loadFile ( inputName, directorySpec ), template ), logDepth )
 
 }
+
+export interface GetFileResult {
+  isDir: boolean
+  path: string
+  file: string
+}
+/**
+ * serach files and directories recursively.
+ *  Option: you can limit search path depth.
+ * @param {string} targetpath search base path
+ * @param {number} depth recursive depth. default = no depth limit
+ * @returns list of { path:absolute path, file: name, isDir:is directory } of files and dirs in targetpath
+ */
+export const GetFilelistRecursively2 = (( targetpath: string, depth: number = -1 ): GetFileResult[] => {
+  let result = [];
+  let dirs = fs.readdirSync ( targetpath );
+  dirs.forEach ( file => {
+    let filepath = targetpath + "/" + file;
+    let isDir = fs.lstatSync ( filepath ).isDirectory ();
+    result.push ( { path: filepath, isDir: isDir, file } );
+    if ( isDir ) {
+      if ( depth == 0 ) return result;
+      result = result.concat ( GetFilelistRecursively2 ( filepath, depth - 1 ) );
+    }
+  } );
+  return result;
+});
+
+/**
+ * Recursively copies folders and files under the specified path with the same structure.
+ * If the destination directory does not exist, a folder will be created and copied into it.
+ * In case of insufficient permissions or insufficient capacity, it will detect an exception and stop.
+ * @param {string} srcpath copy from the path
+ * @param {string} destpath copy to the path
+ */
+export const CopyFilesRecursively = (( srcpath: string, destpath: string, depth: number = -1 ) => {
+  if ( !fs.existsSync ( destpath ) ) {
+    fs.mkdirSync ( destpath, { recursive: true } );
+  }
+  let targetList = GetFilelistRecursively2 ( srcpath, depth );
+  targetList.forEach ( node => {
+    let newpath = destpath + node.path.substring ( srcpath.length );
+    if ( node.isDir ) {
+      if ( !fs.existsSync ( destpath ) ) fs.mkdirSync ( newpath );
+    } else {
+      fs.copyFile ( node.path, newpath, err => {if ( err ) throw err} );
+    }
+  } );
+});
