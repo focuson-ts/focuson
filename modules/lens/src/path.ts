@@ -148,16 +148,19 @@ export function processPath<Build> ( s: ParseState<Build>, p: PathBuilder<Build>
 }
 
 export function replaceTextFn<S> ( errorPrefix: string, s: S, from: ( path: string ) => Optional<S, any>, f: string ): string {
+  function escape ( s: string ) {//this exists so that we don't get user data displayed.
+    return s.replace ( /</g, '&lt;' ).replace ( />/g, '&gt;' )
+  }
   const parts = f.slice ( 1, -1 ).split ( "|" )
   const value = from ( parts[ 0 ] ).getOption ( s )
-  if (value === undefined) return ''
-  if ( parts.length == 1 ) return `${value}`
+  if ( value === undefined ) return ''
+  if ( parts.length == 1 ) return escape ( `${value}` )
   if ( typeof value == 'boolean' ) {
-    if ( parts.length == 3 ) return value ? parts[ 2 ] : parts[ 1 ]
+    if ( parts.length == 3 ) return escape ( value ? parts[ 2 ] : parts[ 1 ] )
     throw new Error ( `${errorPrefix} Replacing string ${f} and it's a boolean [${value}], but there are ${parts.length - 1} options, not 2` )
   }
   if ( typeof value == 'number' ) {
-    if ( value >= 0 && value <= parts.length ) return parts[ value + 1 ]
+    if ( value >= 0 && value <= parts.length ) return escape ( parts[ value + 1 ] )
     throw new Error ( `${errorPrefix} Replacing string ${f} and it's a string [${value}], but there are ${parts.length - 1} options, and this value is out of range` )
   }
 }
