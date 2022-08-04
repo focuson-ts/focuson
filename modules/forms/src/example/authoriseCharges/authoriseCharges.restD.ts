@@ -42,8 +42,41 @@ export const SummaryOfChargeDatesRD: ExampleRestD = {
       params: [ 'brandRef' ],
       list: true,
       select: [
-        { guard: [], type: 'sql', schema: onlySchema, sql: 'somesql', params: [ 'brandRef',  ], list: true },
-        { guard: [], type: 'sql', schema: onlySchema, sql: 'someOtherSql', params: [ 'brandRef' ], list: true }
+        {
+          guard: [], type: 'multiple', mutations: [
+            {
+              type: 'sql', schema: onlySchema, sql: 'select something from somewhere', params: [
+                { type: 'output', name: 'something', rsName: 'something', javaType: 'String' }
+              ]
+            },
+            {
+              type: 'sql', schema: onlySchema, sql: 'somesql', params: [ 'brandRef', 'something',
+                { type: 'output', javaType: 'String', name: 'bob', rsName: 'bob' }
+              ], list: true
+            },
+            { type: 'sql', schema: onlySchema, sql: 'insert something in audit file', params: 'brandRef' } ]
+        },
+        {
+          guard: [], type: 'sql', schema: onlySchema, sql: 'someOtherSql', params: [ 'brandRef',
+            { type: 'output', javaType: 'String', name: 'bill', rsName: 'bil' },
+            { type: 'output', javaType: 'String', name: 'bob', rsName: 'bob' }
+          ], list: true
+        },
+        {
+          guard: [], type: 'multiple', mutations: [
+            {
+              type: 'sql', schema: onlySchema, sql: 'select something from somewhere', params: [
+                { type: 'output', name: 'something', rsName: 'something', javaType: 'String' }
+              ]
+            },
+            {
+              type: 'sql', schema: onlySchema, sql: 'somesql', params: [ 'brandRef', 'something',
+                { type: 'output', javaType: 'String', name: 'bob', rsName: 'bob' }
+              ], list: true
+            },
+            { type: 'sql', schema: onlySchema, sql: 'insert something in audit file', params: 'brandRef' } ]
+        },
+
       ]
     }
   }

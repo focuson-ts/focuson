@@ -4,7 +4,7 @@ import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationDetailsName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
 import { addStringToStartOfFirst, indentList } from "./codegen";
-import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, getMakeMock, importForTubles, InputMutationParam, isBodyMutationParam, isInputParam, isMessageMutation, isMultipleMutation, isOutputParam, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlFunctionMutation, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
+import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, getMakeMock, importForTubles, InputMutationParam, isBodyMutationParam, isInputParam, isMessageMutation, isMultipleMutation, isMutationThatIsaList, isOutputParam, isSelectMutationThatIsAList, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlFunctionMutation, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
@@ -58,6 +58,19 @@ export function allSetObjectForInputs ( errorPrefix: string, m: MutationParam | 
 }
 
 
+export function makeMutationResolverReturnStatementForList ( m: MutationDetail, index: number ): string {
+  if ( isSqlMutationThatIsAList ( m ) ) return `return params${index};`
+  if ( isSelectMutationThatIsAList ( m ) ) {
+    const i = [ ...m.select ].reverse ().findIndex ( isMutationThatIsaList )
+    if ( i >= 0 ) return `return params${i};`
+  }
+  if ( isMultipleMutation ( m ) ) {
+    const i = [ ...m.mutations ].reverse ().findIndex ( isMutationThatIsaList )
+    if ( i >= 0 ) return `return params${i};`
+  }
+  throw new Error ( `Cannot makeMutationResolverReturnStatment for ${index} ${JSON.stringify ( m )}` )
+
+}
 export function makeMutationResolverReturnStatement ( outputs: OutputMutationParam[] ): string {
   if ( outputs.length === 0 ) return `return;`
   if ( outputs.length === 1 ) return `return ${outputs[ 0 ].name};`
@@ -301,8 +314,10 @@ export function mutationCodeForOne<G> ( errorPrefix: string, p: RefD<G>, r: Rest
   if ( isMessageMutation ( m ) ) return [ `  msgs.${m.level ? m.level : 'info'}("${m.message}");` ]
   if ( isMultipleMutation ( m ) ) return m.mutations.flatMap ( ( m, i ) => mutationCodeForOne ( errorPrefix, p, r, name, m, i, includeMockIf, indexPrefix + '_' + index ) )
 
+  const callMethod = `${paramsDeclaration ( m, index )}${mutationMethodName ( r, name, m, indexPrefix + '_' + index )}(connection,msgs,${[ 'dbName', ...allInputParamNames ( parametersFor ( m ) ) ].join ( ',' )});`;
+  if ( isSqlMutationThatIsAList ( m ) || isSelectMutationThatIsAList ( m ) ) return indentList ( [ callMethod ] )
   return indentList ( [
-    `${paramsDeclaration ( m, index )}${mutationMethodName ( r, name, m, indexPrefix + '_' + index )}(connection,msgs,${[ 'dbName', ...allInputParamNames ( parametersFor ( m ) ) ].join ( ',' )});`,
+    callMethod,
     `//If you get a compilation in the following variables because of a name conflict: check the output params. Each output param can only be defined once.`,
     ...outputParamsDeclaration ( m, index ) ] )
 }
@@ -328,7 +343,8 @@ export function mutationCodeForCaseThatIsAList<G> ( errorPrefix: string, p: RefD
   const paramsA = toArray ( m.params );
   const callingCode: string[] = m.select.flatMap ( ( gm, i ) =>
     [ `if (${[ 'true', ...gm.guard ].join ( ' && ' )}){`,
-      ...addStringToStartOfFirst ( 'return' ) ( mutationCodeForOne ( errorPrefix, p, r, name, gm, i, includeMockIf, indexPrefix + index ) ),
+      ...mutationCodeForOne ( errorPrefix, p, r, name, gm, i, includeMockIf, indexPrefix + index ),
+      makeMutationResolverReturnStatementForList ( gm, i ),
       '}' ] )
   return [
     `//If you have a compiler error in the type here, did you match the types of the output params in your manual code with the declared types in the .restD?`,

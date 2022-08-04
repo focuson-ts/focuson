@@ -102,6 +102,9 @@ export function isSqlMutationThatIsAList ( s: MutationDetail ): s is SqlMutation
   return s.type === 'sql' && a.list
 }
 
+export function isMutationThatIsaList(m: MutationDetail): m is (SqlMutationThatIsAList | SelectMutation) {
+  return isSqlMutationThatIsAList(m) || isSelectMutationThatIsAList(m)
+}
 
 export interface StoredProcedureMutation {
   type: 'storedProc',

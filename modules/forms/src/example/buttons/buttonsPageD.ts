@@ -38,7 +38,9 @@ export const ButtonsPageD: ExampleMainPage = {
   rest: {},
   buttons: {
     nukeTemp: { control: "DeleteStateButton", path: [ '~/temp1', '~/temp2' ] },
-    copyLine1ToLine2: { control: "CommandButton", command: { command: 'copy', from: '~/display/line1', to: '~/display/line2' } },
+
+    copyLine1ToLine2: { control: "CommandButton", command: [{ command: 'copy', from: '~/display/line1', to: '~/display/line2' }] },
+
     createEmpty: {
       control: 'ModalButton', focusOn: '~/temp1', modal: ModalButtonsModalPageD, mode: 'create', createEmpty: ModalButtonDomain,
       copyOnClose: { to: '~/display' }

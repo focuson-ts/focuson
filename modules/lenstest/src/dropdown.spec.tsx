@@ -14,7 +14,6 @@ interface LabelAndDropDownState extends HasRestCommands, HasPageSelection, HasSi
   data?: string | null
   otherData?: string
 }
-
 function dropDown ( label: string, s: LabelAndDropDownState, setMain: ( s: LabelAndDropDownState ) => void ) {
   return mount ( <LabelAndDropdown label={label} enums={{ a: 'A', b: 'B' }} state={lensState ( s, setMain, 'desc', context () ).focusOn ( 'data' )} id='someId' allButtons={{}}/> )
 }

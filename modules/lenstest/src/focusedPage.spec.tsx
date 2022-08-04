@@ -8,7 +8,7 @@ enzymeSetup ()
 
 let view: PageMode = 'view';
 
-const nothingDisplayed: PageSpecState = { ...emptyState, messages: [], pageSelection: [ { pageName: 'nothing', pageMode: view , time: 'now'} ] };
+const nothingDisplayed: PageSpecState = { ...emptyState, messages: [], pageSelection: [ { pageName: 'nothing', pageMode: view, time: 'now' } ] };
 
 describe ( "selectedPage", () => {
   // it ( "should display zero pages", () => {
@@ -19,35 +19,61 @@ describe ( "selectedPage", () => {
   // } )
 
   it ( "should display one page", () => {
-    const state = lensStateWith ( dataDefinedState, () => {}, [ 'firstPage', 'edit' ,undefined] )
+    const state = lensStateWith ( dataDefinedState, () => {}, [ 'firstPage', 'edit', undefined ] )
     const comp = mount ( <SelectedPage state={state}/> )
-    expect ( comp.text () ).toEqual ( "[firstPageTitle]:firstPage[one]/edit" )
+    expect ( comp.html () ).toEqual ( "<div class=\"combine\"><div class=\"focus-page\"><div id=\"default_template\">" +
+      "<h1>[firstPageTitle]:</h1>" +
+      "<p>firstPage[one]/edit</p>" +
+      "</div></div></div>" )
   } )
 
   it ( "should display two pages", () => {
-    const state = lensStateWith ( dataDefinedState, () => {}, [ 'firstPage', 'edit',undefined ], [ 'secondPage', 'view' ,undefined] )
+    const state = lensStateWith ( dataDefinedState, () => {}, [ 'firstPage', 'edit', undefined ], [ 'secondPage', 'view', undefined ] )
     const comp = shallow ( <SelectedPage state={state}/> )
     // expect ( comp.html () ).toEqual ( '' )
-    expect ( comp.text () ).toEqual ( "[firstPageTitle]:firstPage[one]/edit[secondPageTitle]:secondPage[two]/view" )
+    expect ( comp.html () ).toEqual ( '<div class="combine"><div class="focus-page"><div id="default_template">' +
+      '<h1>[firstPageTitle]:</h1>' +
+      '<p>firstPage[one]/edit</p></div></div>' +
+      '<div class="focus-page"><div id="default_template">' +
+      '<h1>[secondPageTitle]:</h1>' +
+      '<p>secondPage[two]/view</p></div></div></div>' )
   } )
 
   it ( "should display three pages", () => {
-    const state = lensStateWith ( dataDefinedState, () => {}, [ 'firstPage', 'edit',undefined ], [ 'secondPage', 'view',undefined ], [ 'modalData', 'edit',undefined ] )
+    const state = lensStateWith ( dataDefinedState, () => {}, [ 'firstPage', 'edit', undefined ], [ 'secondPage', 'view', undefined ], [ 'modalData', 'edit', undefined ] )
     const comp = shallow ( <SelectedPage state={state}/> )
     // expect ( comp.html () ).toEqual ( '' )
-    expect ( comp.text () ).toEqual ( "[firstPageTitle]:firstPage[one]/edit[secondPageTitle]:secondPage[two]/view[modalDataTitle]:modalData[x]/edit" )
+    expect ( comp.html () ).toEqual (
+      '<div class="combine"><div class="focus-page"><div id="default_template">' +
+      '<h1>[firstPageTitle]:</h1>' +
+      '<p>firstPage[one]/edit</p></div></div>' +
+      '<div class="focus-page"><div id="default_template">' +
+      '<h1>[secondPageTitle]:</h1>' +
+      '<p>secondPage[two]/view</p></div></div>' +
+      '<div class="focus-page"><div id="default_template">' +
+      '<h1>[modalDataTitle]:</h1>' +
+      '<p>modalData[x]/edit</p></div></div></div>' )
   } )
 
   it ( "shouldbe using the combine for multiple pages", () => {
-    const state = lensStateWith ( dataDefinedState, () => {}, [ 'firstPage', 'edit',undefined ], [ 'secondPage', 'view',undefined ], [ 'modalData', 'edit' ,undefined] )
+    const state = lensStateWith ( dataDefinedState, () => {}, [ 'firstPage', 'edit', undefined ], [ 'secondPage', 'view', undefined ], [ 'modalData', 'edit', undefined ] )
     const comp = shallow ( <SelectedPage state={state}/> )
     expect ( comp.find ( '.combine' ).length ).toEqual ( 1 )
 
   } )
   it ( "display loading when no data", () => {
-    const state = lensStateWith ( rootState, () => {}, [ 'firstPage', 'edit',undefined ], [ 'secondPage', 'view' ,undefined], [ 'modalData', 'edit',undefined ] )
+    const state = lensStateWith ( rootState, () => {}, [ 'firstPage', 'edit', undefined ], [ 'secondPage', 'view', undefined ], [ 'modalData', 'edit', undefined ] )
     const comp = shallow ( <SelectedPage state={state}/> )
-    expect ( comp.text () ).toEqual ( "[firstPageTitle]:Loading<ModalCancelButton />[secondPageTitle]:Loading<ModalCancelButton />[modalDataTitle]:modalData[x]/edit" )
+    expect ( comp.html () ).toEqual ( '<div class="combine">' +
+      '<div class="focus-page"><div id="default_template">' +
+      '<h1>[firstPageTitle]:</h1>' +
+      '<div><p>Loading</p><button class="button" id="loading.cancel">Cancel </button></div></div></div>' +
+      '<div class="focus-page"><div id="default_template">' +
+      '<h1>[secondPageTitle]:</h1>' +
+      '<div><p>Loading</p><button class="button" id="loading.cancel">Cancel </button></div></div></div>' +
+      '<div class="focus-page"><div id="default_template">' +
+      '<h1>[modalDataTitle]:</h1>' +
+      '<p>modalData[x]/edit</p></div></div></div>' )
 
   } )
 } )

@@ -6,7 +6,7 @@ import { indentList, paramsForRestAction } from "./codegen";
 import { isRepeatingDd } from "../common/dataD";
 import { RefD } from "../common/pageD";
 import { getRestTypeDetails, getUrlForRestAction, RestActionDetail, restActionForName, restActionToDetails } from "@focuson/rest";
-import { AccessCondition, allInputParamNames, allOutputParams, displayParam, importForTubles, isMessageMutation, javaTypeForOutput, MutationDetail, parametersFor } from "../common/resolverD";
+import { AccessCondition, allInputParamNames, allOutputParams, displayParam, importForTubles, isMessageMutation, isSelectMutationThatIsAList, isSqlMutationThatIsAList, javaTypeForOutput, MutationDetail, parametersFor } from "../common/resolverD";
 import { applyToTemplateOrUndefinedIfNoParamsPresent } from "@focuson/template";
 
 
@@ -58,9 +58,9 @@ export function auditDetails ( params: JavaWiringParams, r: RestD<any>, restActi
 }
 
 export function paramsDeclaration ( md: MutationDetail, i: number ) {
+  if ( isSqlMutationThatIsAList ( md ) || isSelectMutationThatIsAList ( md ) ) return `List<Map<String,Object>> params${i} = `
   const outputs = allOutputParams ( parametersFor ( md ) )
   if ( outputs.length === 1 ) return `${outputs[ 0 ].javaType} ${outputs[ 0 ].name} = `
-  if (md.type === 'case' && md.list) return `List<Map<String,Object>> result = `
   const javaType = javaTypeForOutput ( parametersFor ( md ) )
   if ( javaType === 'void' ) return ''
   return `${javaType} params${i} = `

@@ -18,7 +18,7 @@ function declareInputParamsFromEndpoint<G> ( r: RestD<G> ): string[] {
 export function callResolvers<G> ( p: RefD<G>, restName: string, r: RestD<G>, name: string, dbNameString: string, resolvers: MutationDetail[], indexPrefix: string ) {
   return resolvers.flatMap ( ( md, i ) => {
     if ( isMessageMutation ( md ) ) return [ `msgs.${md.level ? md.level : 'info'}("${md.message}");` ]
-    if ( isSqlMutationThatIsAList ( md )  || isSelectMutationThatIsAList(md) )
+    if ( isSqlMutationThatIsAList ( md ) || isSelectMutationThatIsAList ( md ) )
       return [ `//from ${p.name}.rest[${restName}].resolvers[${JSON.stringify ( name )}]`,
         `List<Map<String,Object>> params${i} = ${mutationMethodName ( r, name, md, indexPrefix + i )}(connection,msgs,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
       ];
@@ -38,17 +38,9 @@ function findManualMutationThatIsAList ( md: MutationDetail, name: string ): md 
   return md.type === 'manual' && allOutputParams ( md.params ).find ( p => p.name === name && p.javaType === 'List<Map<String,Object>>' ) !== undefined
 }
 
-function makeCreateResultForSqlMutationlist ( revResolvers: MutationDetail[] ) {
-  const lastList = revResolvers.findIndex ( isSqlMutationThatIsAList )
+function makeCreateResultForlist ( revResolvers: MutationDetail[] ) {
+  const lastList = revResolvers.findIndex ( m => isSqlMutationThatIsAList ( m ) || isSelectMutationThatIsAList ( m ) )
   return [
-    `List<Map<String,Object>> result= ${lastList >= 0 ? `params${revResolvers.length - lastList - 1};` : "There isn't a resolver that is marked as a list;"}`,
-    `return result;`
-  ]
-}
-function makeCreateResultForSqlCaselist ( revResolvers: MutationDetail[] ) {
-  const lastList = revResolvers.findIndex ( isSelectMutationThatIsAList )
-  return [
-    `//If you have a compilation message here saying that paramsx is not defined, do you actually have an output variable in the mutations`,
     `List<Map<String,Object>> result= ${lastList >= 0 ? `params${revResolvers.length - lastList - 1};` : "There isn't a resolver that is marked as a list;"}`,
     `return result;`
   ]
@@ -68,9 +60,9 @@ export function makeCreateResult ( errorPrefix: string, resolvers: MutationDetai
   if ( resolverData.javaType === 'List<Map<String,Object>>' ) {
     let revResolvers = [ ...resolvers ].reverse ();
 
-    const resolver: any = revResolvers.find ( md => isSqlMutationThatIsAList ( md ) || findManualMutationThatIsAList ( md, resolverData.name )  || isSelectMutationThatIsAList(md))
-    if ( resolver && isSqlMutationThatIsAList ( resolver )  ) return makeCreateResultForSqlMutationlist ( revResolvers )
-    if ( resolver && isSelectMutationThatIsAList ( resolver )  ) return makeCreateResultForSqlCaselist ( revResolvers )
+    const resolver: any = revResolvers.find ( md => isSqlMutationThatIsAList ( md ) || findManualMutationThatIsAList ( md, resolverData.name ) || isSelectMutationThatIsAList ( md ) )
+    if ( resolver && isSqlMutationThatIsAList ( resolver ) ) return makeCreateResultForlist ( revResolvers )
+    if ( resolver && isSelectMutationThatIsAList ( resolver ) ) return makeCreateResultForlist ( revResolvers )
     if ( resolver && resolver.type === 'Manual' ) return makeCreateResultForManualList ( errorPrefix, resolver, resolverData )
     if ( resolver === undefined ) return [ `There isn't a resolver that is marked as a list, or a manual mutation with an output param name ${resolverData.name} of type List<Map<String,Object>>;` ]
   }

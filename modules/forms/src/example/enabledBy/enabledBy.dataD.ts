@@ -12,15 +12,17 @@ export const enabledByDataD: ExampleDataD = {
     yes: { condition: 'equals', path: 'dropdown', value: '"Y"' },
     no: { condition: 'equals', path: 'dropdown', value: '"N"' }
   },
-  layout: { component: WithTextLayoutCD, displayParams: { text: 'Some Exciting text {dropdown}' } },
+  layout: { component: WithTextLayoutCD, displayParams: { text: 'Some <b>Exciting</b> text {dropdown}' } },
   structure: {
     dropdown: { dataDD: yesNoDD },
     dropdownWithNull: { dataDD: { ...yesNoDD, emptyValue: null, allowNull: true } },
     dropdownWithUndefined: { dataDD: { ...yesNoDD, emptyValue: undefined, allowUndefined: true } },
+
     displayStringWithLookup: {
       dataDD: { ...StringDD, display: DisplayStringWithLookupCD, emptyValue: 'A' },
-      displayParams: { lookup: { A: 'The value was A', B: 'The value was B' } }
+      displayParams: { lookup: { A: 'The <b>value</b> was A', B: 'The value was B' } }
     },
+
     dropdown1: {
       dataDD: reasonDD, displayParams: {
         enabledBy: 'yes',

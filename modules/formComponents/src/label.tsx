@@ -10,6 +10,6 @@ export interface LabelProps<S, Context extends PageSelectionContext<S>> extends 
 
 export function Label<S, Context extends PageSelectionContext<S>> ( { state, label, htmlFor }: LabelProps<S, Context> ) {
   let string = label?.includes ( '{' ) ? replaceTextUsingPath ( state, safeString ( label ) ) : label;
-  return <label htmlFor={htmlFor} className="input-label">{string}</label>
+  return <label htmlFor={htmlFor} className="input-label" dangerouslySetInnerHTML={{ __html: string ? string : '' }}/>
 }
 

@@ -36,8 +36,8 @@ export function Layout<S, C extends FocusOnContext<S>> ( { state, details, child
 
 
   return <>
-    {(title || rightHandTitle) && <div className="layout-title-holder">{title && <div className={titleClassName ? titleClassName : 'layout-title'}>{replaceTextUsingPath ( state, safeString ( title ) )}</div>}
-      {title && <div className={rightHandClassName ? rightHandClassName : 'layout-right-title'}>{replaceTextUsingPath ( state, safeString ( rightHandTitle ) )}</div>}</div>}
+    {(title || rightHandTitle) && <div className="layout-title-holder">{title && <div className={titleClassName ? titleClassName : 'layout-title'} dangerouslySetInnerHTML={{ __html: replaceTextUsingPath ( state, safeString ( title ) ) }}/>}
+      {rightHandTitle && <div className={rightHandClassName ? rightHandClassName : 'layout-right-title'}>{replaceTextUsingPath ( state, safeString ( rightHandTitle ) )}</div>}</div>}
     {parsedDetails.map ( ( row: any, rowIndex: number ) =>
       <div className="row" key={rowIndex}><>
         {row.map ( ( col: any, colIndex: number ) =>

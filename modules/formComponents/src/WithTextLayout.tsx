@@ -13,7 +13,7 @@ export interface WithTextLayoutProps<S, C> {
 }
 export function WithTextLayout<S, C extends FocusOnContext<S>> ( { children, text, holderClassName, textClassName, childrenClassName, state }: WithTextLayoutProps<S, C> ) {
   return <div className={holderClassName}>
-    <div className={textClassName}>{replaceTextUsingPath ( state, text )}</div>
+    <div className={textClassName} dangerouslySetInnerHTML={{ __html: replaceTextUsingPath ( state, text ) }}/>
     <div className={childrenClassName}>{children}</div>
   </div>
 }

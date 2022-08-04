@@ -7,6 +7,7 @@ const wizard4: ExampleModalPage = {
   display: { dataDD: nothingDD, target: '~/nothing' },
   modes: [ 'view' ],
   name: "Wizard4",
+  title: '<i>Wizard</i> Four',
   buttons: {
     finished: { control: "ModalCommitButton", text: 'Finished' },
     cancel: { control: 'ModalCancelButton' }

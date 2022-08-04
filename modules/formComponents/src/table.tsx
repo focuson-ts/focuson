@@ -67,7 +67,7 @@ export const rawTable = <S, T, Context extends PageSelectionContext<S>> (
         <td colSpan={titles.length}>{emptyData}</td>
       </tr> :
       json.map ( ( row, i ) => filter ( row ) && (maxCount === undefined || count++ < maxCountInt) ? oneRow ( row, i, selectedClass ( i ), rights, onClick ) : null );
-    const title = tableTitle ? <h2>{replaceTextUsingPath ( state, tableTitle )}</h2> : null
+    const title = tableTitle ? <h2 dangerouslySetInnerHTML={{__html: replaceTextUsingPath ( state, tableTitle )}} /> : null
     return <>{title}
       <table id={id} className="grid">
         <thead>

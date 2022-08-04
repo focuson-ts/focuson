@@ -55,33 +55,37 @@ const state = lensState ( textForLabelState, s => {}, '',
 describe ( "Label", () => {
   it ( "should display plain text", () => {
     const nav = shallow ( <Label state={state} label='Hello World'/> )
-    expect ( nav.text () ).toEqual ( 'Hello World' )
+    expect ( nav.html () ).toEqual ( '<label class="input-label">Hello World</label>' )
   } )
 
   it ( "should display the text at the end of a path", () => {
     const nav = shallow ( <Label state={state} label='Hello {~/e} World'/> )
-    expect ( nav.text () ).toEqual ( 'Hello 5 World' )
+    expect ( nav.html () ).toEqual ( '<label class="input-label">Hello 5 World</label>' )
   } )
   it ( "should display the text at the end of a path with [$last]", () => {
     const nav = shallow ( <Label state={state} label='Hello {~/d[$last]} World'/> )
-    expect ( nav.text () ).toEqual ( 'Hello five World' )
+    expect ( nav.html () ).toEqual ( '<label class="input-label">Hello five World</label>' )
   } )
   it ( "should display the text at the end of a path with [~/e]", () => {
     const nav = shallow ( <Label state={state} label='Hello {~/d[~/e]} World'/> )
-    expect ( nav.text () ).toEqual ( 'Hello five World' )
+    expect ( nav.html () ).toEqual ( '<label class="input-label">Hello five World</label>' )
   } )
   it ( "should display the text using lookup from boolean {boolean|if false|if true} - false", () => {
     const nav = shallow ( <Label state={state} label='Hello {~/false|falseHappened|trueHappened} World'/> )
-    expect ( nav.text () ).toEqual ( 'Hello falseHappened World' )
+    expect ( nav.html () ).toEqual ( '<label class="input-label">Hello falseHappened World</label>' )
   } )
   it ( "should display the text using lookup from boolean {boolean|if false|if true} - true", () => {
     const nav = shallow ( <Label state={state} label='Hello {~/true|falseHappened|trueHappened} World'/> )
-    expect ( nav.text () ).toEqual ( 'Hello trueHappened World' )
+    expect ( nav.html () ).toEqual ( '<label class="input-label">Hello trueHappened World</label>' )
   } )
 
   it ( "should display the text using lookup from number {number|if 0| if 1| if 2} - false", () => {
     const nav = shallow ( <Label state={state} label='Hello {~/e|zero|one|two|three|four|five} World'/> )
-    expect ( nav.text () ).toEqual ( 'Hello five World' )
+    expect ( nav.html () ).toEqual ( '<label class="input-label">Hello five World</label>' )
+  } )
+  it ( "should display the text using html", () => {
+    const nav = shallow ( <Label state={state} label='Hello <b>world</b>'/> )
+    expect ( nav.html () ).toEqual ( '<label class="input-label">Hello <b>world</b></label>' )
   } )
 
 } )
