@@ -59,14 +59,18 @@ public class {wiringClass}  implements IManyGraphQl{
         return schemaGenerator.makeExecutableSchema(typeRegistry, runtimeWiring);
    }
 
-   public<T extends IFetcher, Res> DataFetcher<Res> find(List<T> list,String dbName,Function<T, DataFetcher<Res>>fn){
+   public<T extends IFetcher, Res> DataFetcher<Res> find(Class<T> clazz, List<T> list,String dbName,Function<T, DataFetcher<Res>>fn){
         List<T> result=list.stream().filter(f->f.dbName().equals(dbName)).collect(Collectors.toList());
         if(result.size()==1)return fn.apply(result.get(0));
         String names=". Had "+result.stream().map(s->s.getClass().getName()).collect(Collectors.joining(","));
         return new DataFetcher<Res>(){
             @Override
             public Res get(DataFetchingEnvironment dataFetchingEnvironment)throws Exception{
-                throw new RuntimeException("Cannot find the unique fetcher for "+dbName+names);
+
+                throw new RuntimeException("Cannot find the unique fetcher for class "+ clazz.getSimpleName() + " " + dbName+ " candidates are [" + names + "]\n" +
+                                           "//If this error is thrown it is often for one of the following reasons\n"+
+                                           "//   Are you calling the endpoint with the correct verb? For example you have a create endpoint and you are calling it using createWithoutFetch\n"+
+                                           "//   Are you calling it with dbName=db, and you haven't get implemented a back end?");
             }
         };
    }

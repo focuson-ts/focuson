@@ -40,8 +40,8 @@ export function makeJavaFetcherInterfaceForResolver<G> ( params: JavaWiringParam
     '}' ]
 }
 
-function makeWiring ( varName: string, parentName: string, resolver: string, name: string ): string {
-  return `.type(newTypeWiring("${parentName}").dataFetcher("${name}", find(${varName}, dbName, f ->f.${resolver}())))`;
+function makeWiring ( interfaceName: string, varName: string, parentName: string, resolver: string, name: string ): string {
+  return `.type(newTypeWiring("${parentName}").dataFetcher("${name}", find(${interfaceName}.class, ${varName}, dbName, f ->f.${resolver}())))`;
 }
 
 
@@ -52,10 +52,10 @@ export function makeAllJavaWiring<B, G> ( params: JavaWiringParams, ps: PageD<B,
   ], t => t )
   let wiringForRest: string[] = mapRestAndActions ( ps, p => r => a => {
     const { parent, resolver, name, sample } = findQueryMutationResolver ( r, a )
-    return makeWiring ( fetcherVariableName ( params, r, a ), parent, resolver, name )
+    return makeWiring ( fetcherInterfaceName ( params, r, a ), fetcherVariableName ( params, r, a ), parent, resolver, name )
   } )
   let wiringForResolvers: string[] = mapRestAndResolver ( ps, p => r => ( { resolver, parent, name } ) =>
-    makeWiring ( fetcherVariableNameForResolver ( params, r, resolver ), parent, resolver, name ) )
+    makeWiring ( fetcherInterfaceForResolverName ( params, r, resolver ), fetcherVariableNameForResolver ( params, r, resolver ), parent, resolver, name ) )
   let wiring = unique ( [ ...wiringForRest, ...wiringForResolvers ], t => t )//we need this because of places where we return the same object from multiple end points.
 
 
