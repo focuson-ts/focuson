@@ -10,7 +10,6 @@ import { getRestTypeDetails, getUrlForRestAction, printRestAction, RestActionDet
 import { CompDataD } from "../common/dataD";
 
 export function makeAllPactsForPage<G> ( params: TSParams, page: RefD<G> ): string[] {
-  if ( !isMainPage ( page ) ) return []
   return [
     `import { fetchWithPrefix, loggingFetchFn, stringToSimpleMsg, SimpleMessage } from "@focuson/utils";`,
     `import { loadTree,wouldLoad,FetcherTree } from "@focuson/fetcher";`,
@@ -32,11 +31,11 @@ export function makeAllPactsForPage<G> ( params: TSParams, page: RefD<G> ): stri
   ]
 }
 
-export function makeFetcherImports<B, G> ( params: TSParams, p: PageD<B, G> ): string[] {
+export function makeFetcherImports<G> ( params: TSParams, p: RefD<G> ): string[] {
   if ( !isMainPage ( p ) ) return [];
   return sortedEntries ( p.rest ).filter ( ( [ name, defn ] ) => defn.fetcher ).map ( ( [ name, defn ] ) => `import {${fetcherName ( defn )}} from './${p.name}.fetchers'` )
 }
-export function makeAllPactsForRest<B, G> ( params: TSParams, page: MainPageD<B, G>, restName: string, defn: RestDefnInPageProperties<G> ): string[] {
+export function makeAllPactsForRest<G> ( params: TSParams, page: RefD<G>, restName: string, defn: RestDefnInPageProperties<G> ): string[] {
   const rest = defn.rest
   return [
     ...makeFetcherPact ( params, page, restName, defn ),
@@ -48,7 +47,7 @@ function getResponseBodyString<G> ( details: RestActionDetail, params: TSParams,
   return details.output.needsObj ? `body: ${params.samplesFile}.${sampleName ( dataD )}0` : `body: {}`;
 }
 
-export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, restName: string, defn: RestDefnInPageProperties<G>, action: RestAction ): string[] {
+export function makeRestPact<G> ( params: TSParams, page: RefD<G>, restName: string, defn: RestDefnInPageProperties<G>, action: RestAction ): string[] {
   const rest = defn.rest
   const details = getRestTypeDetails ( action )
   const dataD = rest.dataDD
@@ -111,8 +110,9 @@ export function makeRestPact<B, G> ( params: TSParams, page: MainPageD<B, G>, re
 }
 
 
-export function makeFetcherPact<B, G> ( params: TSParams, page: MainPageD<B, G>, restName: string, defn: RestDefnInPageProperties<G> ): string[] {
+export function makeFetcherPact<G> ( params: TSParams, page: RefD<G>, restName: string, defn: RestDefnInPageProperties<G> ): string[] {
   if ( !defn.fetcher ) return []
+  if ( !isMainPage ( page ) ) return []
   let rest = defn.rest;
   const errorPrefix = `${page.name}.rest[${restName}]`
   return [

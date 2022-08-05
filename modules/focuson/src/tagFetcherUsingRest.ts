@@ -3,7 +3,7 @@ import { Optional } from '@focuson/lens';
 // import { createSimpleMessage, HasPageSelection, HasSimpleMessages, PageSelection, SimpleMessage } from "@focuson/pages";
 import { areAllDefined, arraysEqual, NameAnd } from "@focuson/utils";
 import { TagHolder, tagOps } from "@focuson/template";
-import { RestChangeCommands, RestCommand, RestDetails } from "@focuson/rest";
+import { OneRestDetails, RestChangeCommands, RestCommand, RestDetails } from "@focuson/rest";
 import { makeTagLens } from "./tagFetcher";
 
 
@@ -15,21 +15,15 @@ export interface FetcherUsingRestConfig {
 
 export type  AllFetcherUsingRestConfig = NameAnd<FetcherUsingRestConfig[]>
 
-const fetcherToRestCommandsAndWhy = <S, FD, D, MSGs> ( tagHolderL: Optional<S, TagHolder>, f: FetcherUsingRestConfig, restDetails: RestDetails<S, MSGs> ) => ( s: S, pageName: string ): [ RestCommand | undefined, string, string ] => {
-  if ( tagHolderL === null ) throw Error ( `tagHolderL is null` )
-  if ( f === null ) throw Error ( `f is null` )
-  if ( restDetails === null ) throw Error ( `restDetails is null` )
+export const findRestCommands = <S> ( tagHolderL: Optional<S, TagHolder> ) => <FD, D, MSGs> ( oneRestDetails: OneRestDetails<S, FD, D, MSGs>, pageName: string, f: FetcherUsingRestConfig, s: S ): [ RestCommand | undefined, string, string ] => {
   // @ts-ignore
   const debug = s.debug?.tagFetcherDebug
+  const { fdLens, dLens } = oneRestDetails
   const { tagName, restName } = f
-  const theseRestDatails = restDetails[ restName ]
-  if ( theseRestDatails === undefined )
-    throw Error ( `Fetched misconfigured. ${JSON.stringify ( f )}. Legal restNames are ${Object.keys ( restDetails )}` )
-  const { fdLens, dLens } = theseRestDatails
   const tagL = makeTagLens ( tagHolderL, pageName, tagName )
   let targetLens = fdLens.chain ( dLens );
   const currentTags = tagL.getOption ( s );
-  let tagAndNames = tagOps.tags ( theseRestDatails, 'get' ) ( s );
+  let tagAndNames = tagOps.tags ( oneRestDetails, 'get' ) ( s );
   const desiredTags = tagAndNames.map ( ( [ name, tag ] ) => tag )
   const restCommand: RestCommand = { restAction: 'get', name: restName, comment: 'Fetcher', tagNameAndTags: { tagName: `${pageName}_${tagName}`, tags: desiredTags }, changeOnSuccess: f.postFetchCommands }
   if ( !areAllDefined ( desiredTags ) ) return [ undefined, tagName, `Undefined tags. ${tagAndNames.map ( ( [ name, tag ] ) => `${name}:${tag}` )}` ]
@@ -44,6 +38,18 @@ const fetcherToRestCommandsAndWhy = <S, FD, D, MSGs> ( tagHolderL: Optional<S, T
     return [ restCommand, tagName, `Tags different ${JSON.stringify ( currentTags )} !== ${JSON.stringify ( desiredTags )}` ]
   }
   return [ undefined, tagName, 'Tags all the same, and target defined' ];
+};
+const fetcherToRestCommandsAndWhy = <S, FD, D, MSGs> ( tagHolderL: Optional<S, TagHolder>, f: FetcherUsingRestConfig, restDetails: RestDetails<S, MSGs> ) => ( s: S, pageName: string ): [ RestCommand | undefined, string, string ] => {
+  if ( tagHolderL === null ) throw Error ( `tagHolderL is null` )
+  if ( f === null ) throw Error ( `f is null` )
+  if ( restDetails === null ) throw Error ( `restDetails is null` )
+  // @ts-ignore
+  const debug = s.debug?.tagFetcherDebug
+  const { tagName, restName } = f
+  const theseRestDetails = restDetails[ restName ]
+  if ( theseRestDetails === undefined )
+    throw Error ( `Fetched misconfigured. ${JSON.stringify ( f )}. Legal restNames are ${Object.keys ( restDetails )}` )
+  return findRestCommands ( tagHolderL ) ( theseRestDetails, pageName, f, s );
 }
 
 export function restCommandsAndWhyFromFetchers<S, MSGs> ( tagHolderL: Optional<S, TagHolder>, allF: AllFetcherUsingRestConfig, restDetails: RestDetails<S, MSGs>, pageName: string, s: S ): [ RestCommand | undefined, string, string ][] {
